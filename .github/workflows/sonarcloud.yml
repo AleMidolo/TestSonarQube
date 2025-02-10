@@ -19,7 +19,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'  # Use the Python version you need
+          python-version: 'latest'  # Automatically use the latest stable version of Python
 
       - name: Install dependencies
         run: |
@@ -28,9 +28,9 @@ jobs:
 
       - name: Install SonarScanner
         run: |
-          wget https://github.com/SonarSource/sonar-scanner-cli/releases/download/4.8.0.2856/sonar-scanner-cli-4.8.0.2856-linux.zip
-          unzip sonar-scanner-cli-4.8.0.2856-linux.zip
-          sudo mv sonar-scanner-4.8.0.2856-linux /opt/sonar-scanner
+          wget https://github.com/SonarSource/sonar-scanner-cli/releases/download/4.9.0.4725/sonar-scanner-cli-4.9.0.4725-linux.zip
+          unzip sonar-scanner-cli-4.9.0.4725-linux.zip
+          sudo mv sonar-scanner-4.9.0.4725-linux /opt/sonar-scanner
           export PATH=$PATH:/opt/sonar-scanner/bin
 
       - name: Run SonarCloud Analysis
