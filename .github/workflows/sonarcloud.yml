@@ -19,7 +19,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 'latest'  # Automatically use the latest stable version of Python
+          python-version: '3.11'  # Automatically use the latest stable version of Python
 
       - name: Install dependencies
         run: |
