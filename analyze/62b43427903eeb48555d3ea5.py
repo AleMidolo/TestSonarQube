@@ -1,19 +1,11 @@
 def format(
-                self,
-                sql: AnyStr,
-                params: Union[Dict[Union[str, int], Any], Sequence[Any]],
-        ) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
-    if isinstance(sql, bytes):
-        sql = sql.decode('utf-8')
-    
+        self,
+        sql: AnyStr,
+        params: Union[Dict[Union[str, int], Any], Sequence[Any]],
+) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
+    converted_sql = self._converter.convert(sql)
     if isinstance(params, dict):
-        out_params = {key: f'OUT_{value}' for key, value in params.items()}
+        converted_params = {key: self._converter.convert(value) for key, value in params.items()}
     else:
-        out_params = [f'OUT_{value}' for value in params]
-
-    formatted_sql = sql.replace('?', '%s')  # Example of converting to a different placeholder style
-
-    if isinstance(sql, str):
-        return formatted_sql, out_params
-    else:
-        return formatted_sql.encode('utf-8'), out_params
+        converted_params = [self._converter.convert(value) for value in params]
+    return converted_sql, converted_params

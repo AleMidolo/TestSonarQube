@@ -1,11 +1,18 @@
 def dehydrate_time(value):
     """
-    Disidratatore per valori di tipo `time`.
+    Dehydrator for `time` values.
 
-    :param value: 
+    :param value: Time instance to dehydrate
     :type value: Time
-    :return:
+    :return: Dictionary representation of the Time instance
     """
-    if value is None:
-        return None
-    return value.isoformat()
+    if not isinstance(value, Time):
+        raise ValueError("Expected a Time instance")
+    
+    return {
+        'ticks': value.ticks,
+        'hours': value.hours,
+        'minutes': value.minutes,
+        'seconds': value.seconds,
+        'microseconds': value.microseconds
+    }

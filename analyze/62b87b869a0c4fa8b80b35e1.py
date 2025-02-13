@@ -3,25 +3,30 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     if make_value is None:
         make_value = lambda bin_: bin_
 
-    coordinates = []
-    values = []
+    if get_coordinate not in ["left", "right", "middle"]:
+        raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
 
-    for i, bin_ in enumerate(hist):
+    graph_data = []
+    bin_edges = hist.edges
+    bin_contents = hist.contents
+
+    for i, content in enumerate(bin_contents):
         if get_coordinate == "left":
-            coord = bin_.left
+            x = bin_edges[i]
         elif get_coordinate == "right":
-            coord = bin_.right
-        elif get_coordinate == "middle":
-            coord = bin_.center
-        else:
-            raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
+            x = bin_edges[i + 1]
+        else:  # middle
+            x = (bin_edges[i] + bin_edges[i + 1]) / 2
 
-        coordinates.append(coord)
-        values.append(make_value(bin_))
+        value = make_value(content)
+        if isinstance(value, tuple):
+            graph_data.append((x, *value))
+        else:
+            graph_data.append((x, value))
 
     if scale is True:
-        # Assuming hist has a scale method or attribute
-        scale = hist.scale()
+        graph_scale = hist.scale
+    else:
+        graph_scale = scale
 
-    graph_data = {field_names[i]: values[i] for i in range(len(field_names))}
-    return graph_data
+    return Graph(data=graph_data, field_names=field_names, scale=graph_scale)

@@ -1,12 +1,4 @@
 def values(self, *keys):
-    """
-    Restituisce i valori del record, con la possibilità di filtrare per includere solo determinati valori in base all'indice o alla chiave.
-
-    :param keys: indici o chiavi degli elementi da includere; se non viene fornito nessun parametro, verranno inclusi tutti i valori  
-    :return: lista di valori  
-    :rtype: list
-    """
     if not keys:
-        return list(self.record.values())
-    
-    return [self.record[key] for key in keys if key in self.record]
+        return list(self.index.values())
+    return [self.index[key] for key in keys if key in self.index]

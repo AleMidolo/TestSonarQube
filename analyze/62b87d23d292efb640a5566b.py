@@ -1,32 +1,26 @@
 import subprocess
 import os
 
-def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=False, env=None):
-    """
-    Esegui il comando specificato.
-    """
+def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     if cwd is None:
         cwd = os.getcwd()
     
     if env is None:
-        env = os.environ
-
-    stderr = subprocess.DEVNULL if nascondi_stderr else None
-
-    process = subprocess.Popen(
-        [comandi] + argomenti,
-        cwd=cwd,
-        env=env,
-        stdout=subprocess.PIPE,
-        stderr=stderr
-    )
-
-    if verbose:
-        print(f"Esecuzione comando: {comandi} {' '.join(argomenti)} in {cwd}")
-
-    stdout, _ = process.communicate()
-
-    if process.returncode != 0:
-        raise subprocess.CalledProcessError(process.returncode, comandi)
-
-    return stdout.decode('utf-8').strip()
+        env = os.environ.copy()
+    
+    if isinstance(commands, str):
+        commands = [commands]
+    
+    results = []
+    
+    for command in commands:
+        full_command = [command] + args
+        if verbose:
+            print(f"Running command: {' '.join(full_command)} in {cwd}")
+        
+        stderr = subprocess.DEVNULL if hide_stderr else None
+        
+        result = subprocess.run(full_command, cwd=cwd, env=env, stderr=stderr)
+        results.append(result)
+    
+    return results

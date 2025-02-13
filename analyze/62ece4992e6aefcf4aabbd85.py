@@ -1,13 +1,18 @@
-def find_roots(graph, rdflib.RDFS.subClassOf):
-    roots = set()
-    subclasses = set()
+from typing import Optional, Set
+from rdflib import Graph, URIRef
 
-    for s, p, o in graph:
-        if p == rdflib.RDFS.subClassOf:
-            subclasses.add(s)
-
-    for s in subclasses:
-        if (s, rdflib.RDFS.subClassOf, None) not in graph:
-            roots.add(s)
-
+def find_roots(
+    graph: Graph, prop: URIRef, roots: Optional[Set["Node"]] = None
+) -> Set["Node"]:
+    if roots is None:
+        roots = set()
+    
+    all_children = {s for s, p, o in graph.triples((None, prop, None))}
+    all_parents = {o for s, p, o in graph.triples((None, prop, None))}
+    
+    for parent in all_parents:
+        if parent not in all_children:
+            roots.add(parent)
+            find_roots(graph, prop, roots)
+    
     return roots

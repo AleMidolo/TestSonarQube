@@ -1,9 +1,6 @@
 def get_deprecated_args(self):
-    """
-    Restituzione di un dizionario con opzioni che deprecano altre.
-    """
-    return {
-        'old_option_1': 'new_option_1',
-        'old_option_2': 'new_option_2',
-        'old_option_3': 'new_option_3',
-    }
+    deprecated_args = {}
+    for option in self.spec_helper.iterate_option_specs():
+        if option.get('deprecated'):
+            deprecated_args[option['name']] = option['deprecated']
+    return deprecated_args

@@ -1,19 +1,21 @@
 def validate(self, path):
-    """
-    Valida l'oggetto OCFL nel percorso specificato o nella radice di pyfs.
-    """
-    import os
+    try:
+        # Check if the path is a valid OCFL object
+        if self.is_ocfl_object(path):
+            return True
+        # Check if the path is the pyfs root
+        elif self.is_pyfs_root(path):
+            return True
+        else:
+            return False
+    except Exception as e:
+        # Handle exceptions and return False
+        return False
 
-    if not os.path.exists(path):
-        raise FileNotFoundError(f"Il percorso specificato non esiste: {path}")
+def is_ocfl_object(self, path):
+    # Placeholder for actual OCFL object validation logic
+    return True  # Replace with actual validation
 
-    # Logica di validazione dell'oggetto OCFL
-    # Esempio di controllo della struttura delle directory
-    required_directories = ['content', 'metadata', 'versions']
-    for directory in required_directories:
-        if not os.path.isdir(os.path.join(path, directory)):
-            raise ValueError(f"Directory mancante: {directory} in {path}")
-
-    # Ulteriori controlli di validazione possono essere aggiunti qui
-
-    return True
+def is_pyfs_root(self, path):
+    # Placeholder for actual pyfs root validation logic
+    return path == "/"  # Replace with actual validation

@@ -1,17 +1,15 @@
 import argparse
 
 def make_parsers():
-    """
-    Crea un parser di livello superiore e i suoi sottoparser, quindi restituiscili come una tupla.
-    """
-    main_parser = argparse.ArgumentParser(description='Parser di livello superiore')
-    subparsers = main_parser.add_subparsers(dest='command')
+    parser = argparse.ArgumentParser(description='Top-level parser')
+    subparsers = parser.add_subparsers(dest='command')
 
-    # Esempio di sottoparser
-    parser_a = subparsers.add_parser('comando_a', help='Esegui il comando A')
-    parser_a.add_argument('--opzione', type=str, help='Opzione per il comando A')
+    # Example subparser for a command 'foo'
+    parser_foo = subparsers.add_parser('foo', help='Foo command help')
+    parser_foo.add_argument('--bar', type=str, help='Bar argument for foo')
 
-    parser_b = subparsers.add_parser('comando_b', help='Esegui il comando B')
-    parser_b.add_argument('--flag', action='store_true', help='Flag per il comando B')
+    # Example subparser for a command 'baz'
+    parser_baz = subparsers.add_parser('baz', help='Baz command help')
+    parser_baz.add_argument('--qux', type=int, help='Qux argument for baz')
 
-    return main_parser, subparsers
+    return parser, subparsers

@@ -1,39 +1,18 @@
 def _eval_file(prefix, file_path):
-    """
-    Identifica il tipo di file del pacchetto: `asset` o `rendition`.
-
-    Identifica il tipo di file del pacchetto e aggiorna `packages` con il tipo e
-    il percorso del file in analisi.
-
-    Parametri
-    ----------
-    prefix : str
-        Nome del file XML senza estensione.
-    filename : str
-        Nome del file.
-    file_folder : str
-        Cartella del file.
-
-    Restituisce
-    -------
-    dict
-    """
     import os
 
-    packages = {}
-    file_name = os.path.basename(file_path)
-    file_extension = os.path.splitext(file_name)[1].lower()
+    if not file_path.startswith(prefix):
+        return None
 
-    if file_extension in ['.jpg', '.png', '.gif']:
-        file_type = 'asset'
-    elif file_extension in ['.pdf', '.docx', '.pptx']:
-        file_type = 'rendition'
+    file_extension = os.path.splitext(file_path)[1].lower()
+    
+    if file_extension == '.xml':
+        return None
+
+    component_id = os.path.basename(file_path).split('.')[0]
+    
+    if file_extension == '.pdf':
+        return {'component_id': component_id, 'file_path': file_path}
     else:
-        file_type = 'unknown'
-
-    packages[prefix] = {
-        'type': file_type,
-        'path': file_path
-    }
-
-    return packages
+        ftype = file_extension[1:]  # Remove the dot from the extension
+        return {'component_id': component_id, 'file_path': file_path, 'ftype': ftype}

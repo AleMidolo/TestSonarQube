@@ -1,8 +1,10 @@
-from typing import Sequence
 import random
+from typing import Sequence
+
+FIXED_RANDOM_SEED = 42
 
 def _shuffled(seq: Sequence[str]) -> list[str]:
-    random.seed(0)  # Imposta un seme per il mescolamento deterministico
+    random.seed(FIXED_RANDOM_SEED)
     shuffled_seq = list(seq)
     random.shuffle(shuffled_seq)
     return shuffled_seq

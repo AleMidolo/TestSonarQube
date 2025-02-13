@@ -1,23 +1,13 @@
 def cachedmethod(cache, key=hashkey, lock=None):
-    """
-    Decorator per racchiudere un metodo di classe o di istanza con una funzione memoizzante che salva i risultati in una cache.
-    """
     def decorator(func):
-        def wrapper(self, *args, **kwargs):
-            if lock:
-                with lock:
-                    cache_key = key(self, *args, **kwargs)
-                    if cache_key in cache:
-                        return cache[cache_key]
-                    result = func(self, *args, **kwargs)
+        def wrapper(*args, **kwargs):
+            cache_key = key(*args, **kwargs)
+            if cache_key in cache:
+                return cache[cache_key]
+            with (lock if lock else dummy_lock):
+                if cache_key not in cache:
+                    result = func(*args, **kwargs)
                     cache[cache_key] = result
-                    return result
-            else:
-                cache_key = key(self, *args, **kwargs)
-                if cache_key in cache:
-                    return cache[cache_key]
-                result = func(self, *args, **kwargs)
-                cache[cache_key] = result
-                return result
+            return cache[cache_key]
         return wrapper
     return decorator

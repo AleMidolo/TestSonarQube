@@ -3,13 +3,14 @@ import re
 
 def find_tags(text: str, replacer: callable = None) -> Tuple[Set, str]:
     tags = set()
-    def replacer_function(match):
+    
+    def replace_tag(match):
         tag = match.group(1)
         tags.add(tag)
         return replacer(tag) if replacer else tag
 
-    # Regex to find tags, ignoring those in code blocks
+    # Regex to find tags, ignoring those inside code blocks
     pattern = r'(?<!`)(#\w+)(?!`)'
-    modified_text = re.sub(pattern, replacer_function, text)
+    replaced_text = re.sub(pattern, replace_tag, text)
     
-    return tags, modified_text
+    return tags, replaced_text

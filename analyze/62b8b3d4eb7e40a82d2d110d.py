@@ -1,8 +1,3 @@
 def _c_optimizations_required():
-    """
-    Restituisce un valore vero se le ottimizzazioni in C sono richieste.
-
-    Questo utilizza la variabile ``PURE_PYTHON`` come     
-    documentato in `_use_c_impl`.
-    """
+    from some_module import PURE_PYTHON  # Replace 'some_module' with the actual module name
     return not PURE_PYTHON

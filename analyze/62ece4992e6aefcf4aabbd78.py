@@ -1,8 +1,11 @@
 def is_local(host):
-    """
-    Verifica se l'host è il localhost.
+    import socket
 
-    :param host: Il nome host o l'indirizzo IP.  
-    :return: True se l'host è il localhost.
-    """
-    return host in ('localhost', '127.0.0.1', '::1')
+    localhost_aliases = {'localhost', '127.0.0.1'}
+    try:
+        local_ip = socket.gethostbyname(socket.gethostname())
+        localhost_aliases.add(local_ip)
+    except socket.error:
+        pass
+
+    return host in localhost_aliases

@@ -1,30 +1,27 @@
 def validate(self, inventory, extract_spec_version=False):
-    """
-    Convalida un inventario specificato.
-
-    Se `extract_spec_version` è impostato su `True`, verrà esaminato il valore del tipo (`type`) 
-    per determinare la versione della specifica. Nel caso in cui non sia presente un valore per 
-    il tipo o questo non sia valido, verranno eseguiti altri test basati sulla versione specificata 
-    in `self.spec_version`.
-    """
     if extract_spec_version:
-        if 'type' in inventory and inventory['type'] in self.valid_types:
-            self.spec_version = inventory['type']
+        type_value = inventory.get('type')
+        if type_value in ['v1', 'v2', 'v3']:
+            spec_version = type_value
         else:
-            self.spec_version = self.default_spec_version
-
-    # Esegui ulteriori convalide basate su self.spec_version
-    if self.spec_version == '1.0':
-        return self.validate_v1(inventory)
-    elif self.spec_version == '2.0':
-        return self.validate_v2(inventory)
+            spec_version = self.spec_version
     else:
-        raise ValueError("Versione della specifica non valida.")
-    
-def validate_v1(self, inventory):
-    # Logica di convalida per la versione 1.0
-    pass
+        spec_version = self.spec_version
 
-def validate_v2(self, inventory):
-    # Logica di convalida per la versione 2.0
-    pass
+    # Perform validation based on spec_version
+    if spec_version == 'v1':
+        # Validation logic for version 1
+        pass
+    elif spec_version == 'v2':
+        # Validation logic for version 2
+        pass
+    elif spec_version == 'v3':
+        # Validation logic for version 3
+        pass
+    else:
+        raise ValueError("Invalid specification version")
+
+    # Additional inventory validation logic
+    # ...
+
+    return True  # or return validation results

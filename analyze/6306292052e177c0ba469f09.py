@@ -1,14 +1,22 @@
 def identify_request(request: RequestType):
-    """
-    Prova a identificare se si tratta di una richiesta Diaspora.
+    import json
+    import xml.etree.ElementTree as ET
 
-    Prova prima con un messaggio pubblico. Poi con un messaggio privato. Infine, verifica se si tratta di un payload legacy.
-    """
-    if request.is_public_message():
-        return "Public Message"
-    elif request.is_private_message():
-        return "Private Message"
-    elif request.is_legacy_payload():
-        return "Legacy Payload"
-    else:
-        return "Unknown Request"
+    # Check for JSON events
+    try:
+        body = request.get_json()
+        if 'events' in body:
+            return True
+    except Exception:
+        pass
+
+    # Check for XML Magic_ENV_TAG
+    try:
+        body = request.get_data(as_text=True)
+        root = ET.fromstring(body)
+        if root.tag == 'Magic_ENV_TAG':
+            return True
+    except Exception:
+        pass
+
+    return False

@@ -1,7 +1,12 @@
-def registra_gestore_vcs(vcs, metodo):  # decorator
-    """Crea un decorator per contrassegnare un metodo come gestore di un VCS."""
-    def decorator(func):
-        func.vcs = vcs
-        func.metodo = metodo
-        return func
-    return decorator
+def register_vcs_handler(vcs, method):  # decorator
+    """Create decorator to mark a method as the handler of a VCS."""
+
+    def decorate(f):
+        if not hasattr(register_vcs_handler, 'handlers'):
+            register_vcs_handler.handlers = {}
+        if vcs not in register_vcs_handler.handlers:
+            register_vcs_handler.handlers[vcs] = {}
+        register_vcs_handler.handlers[vcs][method] = f
+        return f
+
+    return decorate

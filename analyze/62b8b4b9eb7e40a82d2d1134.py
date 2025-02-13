@@ -1,5 +1,5 @@
 def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
-    """Restituisce i nomi e le descrizioni degli attributi definiti dall'interfaccia."""
+    """Return attribute names and descriptions defined by interface."""
     if not all:
-        return {attr: desc for attr, desc in self.interface_attributes.items() if not desc.hidden}
-    return {attr: desc for attr, desc in self.interface_attributes.items()}
+        return {name: desc for name, desc in self.__class__.__dict__.items() if not name.startswith('__')}
+    return {name: desc for name, desc in self.__class__.__dict__.items()}

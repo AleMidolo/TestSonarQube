@@ -1,17 +1,21 @@
-def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
-    import os
-    import sys
+import os
+import sys
 
+def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     if sys.platform == "win32":
         normalized_cmd = []
-        for part in cmd:
-            if part.startswith("#!") and len(part) > 2:
-                shebang = part[2:]
-                if os.path.isfile(shebang):
-                    normalized_cmd.append(shebang)
-                else:
-                    normalized_cmd.append(part)
+        for arg in cmd:
+            if arg.endswith('.py'):
+                # Check for shebang
+                with open(arg, 'r') as f:
+                    first_line = f.readline().strip()
+                    if first_line.startswith('#!'):
+                        # Normalize the path to the executable
+                        exe_path = os.path.normpath(arg)
+                        normalized_cmd.append(exe_path)
+                    else:
+                        normalized_cmd.append(os.path.normpath(arg))
             else:
-                normalized_cmd.append(part)
+                normalized_cmd.append(os.path.normpath(arg))
         return tuple(normalized_cmd)
     return cmd

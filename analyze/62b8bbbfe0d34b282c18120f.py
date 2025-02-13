@@ -1,13 +1,12 @@
 def file_to_textbuffer(file_name, encoding):
-    """
-    Carica un file in un buffer di testo (UTF-8), utilizzando la codifica specificata durante la lettura.
-    ATTENZIONE: Questo metodo leggerà l'intero file IN MEMORIA.
-    :param file_name: Nome del file.
+    """Load a file toward a text buffer (UTF-8), using the specify encoding while reading.
+    CAUTION : This will read the whole file IN MEMORY.
+    :param file_name: File name.
     :type file_name: str
-    :param encoding: Codifica da utilizzare.
+    :param encoding: Encoding to use.
     :type encoding: str
-    :return: Un buffer di testo o None in caso di errore.
-    :rtype: str
+    :return: A text buffer or None in case of error.
+    :rtype str
     """
     try:
         with open(file_name, 'r', encoding=encoding) as file:

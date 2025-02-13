@@ -1,14 +1,15 @@
 def protocol_handlers(cls, protocol_version=None):
     if protocol_version is not None and not isinstance(protocol_version, tuple):
-        raise TypeError("La versione del protocollo deve essere passata come una tupla")
-
-    handlers = {
-        (3, 5): "HandlerFor3_5",
-        (4, 0): "HandlerFor4_0",
-        (4, 1): "HandlerFor4_1",
+        raise TypeError("protocol_version must be a tuple")
+    
+    available_handlers = {
+        (3, 0): 'HandlerV3_0',
+        (3, 1): 'HandlerV3_1',
+        (3, 5): 'HandlerV3_5',
+        (4, 0): 'HandlerV4_0',
     }
-
+    
     if protocol_version is not None:
-        return {protocol_version: handlers.get(protocol_version)} if protocol_version in handlers else {}
-
-    return handlers
+        return {protocol_version: available_handlers.get(protocol_version)} if protocol_version in available_handlers else {}
+    
+    return available_handlers

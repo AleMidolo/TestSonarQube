@@ -1,5 +1,2 @@
 def workspace_manager(cls):
-    """
-    Ottiene il gestore dello spazio di lavoro.
-    """
-    return cls.workspace_manager()
+    return cls._get_service(ServiceName.WORKSPACE_MANAGER)

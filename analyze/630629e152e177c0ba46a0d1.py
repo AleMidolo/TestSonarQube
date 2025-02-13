@@ -1,13 +1,9 @@
-from typing import Optional
 import requests
+from typing import Optional
 
 def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
-    """
-    Prova a recuperare un documento webfinger conforme a RFC7033. Non genera eccezioni in caso di fallimento.
-    """
     try:
-        url = f"https://{handle}/.well-known/webfinger?resource=acct:{handle}"
-        response = requests.get(url)
+        response = requests.get(f"https://webfinger.example.com/.well-known/webfinger?resource=acct:{handle}")
         if response.status_code == 200:
             return response.text
     except requests.RequestException:

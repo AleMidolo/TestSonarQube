@@ -1,19 +1,20 @@
 import subprocess
-import os
 import sys
+import os
 
-def subprocess_run_helper(func, *args, timeout, extra_env=None):
-    if extra_env is None:
-        extra_env = {}
+def subprocess_run_helper(func, *args, timeout=None, extra_env=None):
+    module_name = func.__module__
+    function_name = func.__name__
     
     # Prepare the command to run
-    command = [sys.executable, '-c', f'import {func.__module__}; {func.__module__}.{func.__name__}(*{args})']
+    command = [sys.executable, '-c', f'import {module_name}; {module_name}.{function_name}(*{args})']
     
-    # Merge the current environment with the extra environment
+    # Set up the environment
     env = os.environ.copy()
-    env.update(extra_env)
+    if extra_env:
+        env.update(extra_env)
     
     # Run the subprocess
-    result = subprocess.run(command, env=env, timeout=timeout, capture_output=True, text=True)
+    result = subprocess.run(command, env=env, timeout=timeout)
     
     return result

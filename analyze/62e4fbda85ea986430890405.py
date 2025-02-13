@@ -1,3 +1,11 @@
+import subprocess
+import os
+import shlex
+from typing import Sequence, Any, Tuple
+
+def _get_platform_max_length() -> int:
+    return os.pathconf('.', 'PC_PATH_MAX')
+
 def xargs(
         cmd: tuple[str, ...],
         varargs: Sequence[str],
@@ -6,22 +14,24 @@ def xargs(
         target_concurrency: int = 1,
         _max_length: int = _get_platform_max_length(),
         **kwargs: Any,
-) -> tuple[int, bytes]:
-    import subprocess
-    from multiprocessing import Pool
-
-    def run_command(args):
-        return subprocess.run(cmd + args, capture_output=True)
-
+) -> Tuple[int, bytes]:
     if color:
-        # Implement color handling if needed
-        pass
+        pty = subprocess.Popen(['script', '-q', '/dev/null'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        cmd = ('/bin/bash', '-c', ' '.join(cmd))
+    else:
+        pty = None
 
-    # Chunk varargs into target_concurrency parts
-    chunk_size = (len(varargs) + target_concurrency - 1) // target_concurrency
-    chunks = [varargs[i:i + chunk_size] for i in range(0, len(varargs), chunk_size)]
+    args = []
+    for arg in varargs:
+        args.append(arg)
+        if len(' '.join(args)) >= _max_length:
+            subprocess.run(cmd + tuple(args), **kwargs)
+            args = []
 
-    with Pool(target_concurrency) as pool:
-        results = pool.map(run_command, chunks)
+    if args:
+        subprocess.run(cmd + tuple(args), **kwargs)
 
-    return sum(result.returncode for result in results), b''.join(result.stdout for result in results)
+    if pty:
+        pty.terminate()
+
+    return 0, b''

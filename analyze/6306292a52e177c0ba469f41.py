@@ -1,11 +1,3 @@
 def test_tag(tag: str) -> bool:
-    """
-    Verifica se una parola può essere accettata come tag.
-    """
-    if not tag:
-        return False
-    if len(tag) > 20:
-        return False
-    if not tag.isalnum():
-        return False
-    return True
+    LEEGAL_TAG_CHARS = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_")
+    return all(char in LEEGAL_TAG_CHARS for char in tag)

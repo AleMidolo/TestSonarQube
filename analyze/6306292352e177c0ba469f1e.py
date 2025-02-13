@@ -1,15 +1,20 @@
 def process_text_links(text):
-    """
-    Elabora i collegamenti nel testo, aggiungendo alcuni attributi e trasformando i collegamenti testuali in link cliccabili.
-    """
     import re
-
-    def replace_link(match):
-        url = match.group(0)
-        return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
-
-    # Regex per trovare i collegamenti nel testo
+    
+    # Function to add attributes to a link
+    def add_attributes(link):
+        return f'<a href="{link}" target="_blank" rel="noopener noreferrer">{link}</a>'
+    
+    # Regex to find URLs in the text
     url_pattern = r'(https?://[^\s]+)'
-    processed_text = re.sub(url_pattern, replace_link, text)
-
-    return processed_text
+    
+    # Replace URLs with linkified versions
+    text_with_links = re.sub(url_pattern, lambda match: add_attributes(match.group(0)), text)
+    
+    # Regex to find textual links (e.g., example.com)
+    text_link_pattern = r'(?<!\w)([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(?!\w)'
+    
+    # Replace textual links with linkified versions
+    final_text = re.sub(text_link_pattern, lambda match: add_attributes('http://' + match.group(1)), text_with_links)
+    
+    return final_text

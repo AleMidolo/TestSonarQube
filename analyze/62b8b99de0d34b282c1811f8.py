@@ -1,7 +1,4 @@
-def _reset_logging(cls):  
-    """
-    Reimposta
-    """
+def _reset_logging(cls):
     import logging
     for handler in logging.root.handlers[:]:
         logging.root.removeHandler(handler)

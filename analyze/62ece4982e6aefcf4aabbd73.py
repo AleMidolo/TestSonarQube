@@ -1,15 +1,13 @@
 import re
-import sys
+import os
+import platform as sys_platform
 
 def split(s, platform='this'):
     if platform == 'this':
-        platform = 1 if sys.platform.startswith(('linux', 'darwin')) else 0
-
+        platform = 1 if sys_platform.system() != 'Windows' else 0
     if platform == 1:  # POSIX
-        pattern = r'(?<!\\)(?:\"([^\"]*)\"|\'([^\']*)\'|(\S+))'
-    else:  # Windows/CMD
-        pattern = r'(?<!\\)(?:\"([^\"]*)\"|(\S+))'
-
-    matches = re.findall(pattern, s)
-    result = [m[0] or m[1] or m[2] for m in matches]
-    return [arg.replace('\\"', '"').replace("\\'", "'") for arg in result]
+        return re.findall(r'(?:"([^"]*)"|\'([^\']*)|(\S+))', s)
+    elif platform == 0:  # Windows/CMD
+        return re.findall(r'(?:"([^"]*)"|(\S+))', s)
+    else:
+        raise ValueError("Unsupported platform value")

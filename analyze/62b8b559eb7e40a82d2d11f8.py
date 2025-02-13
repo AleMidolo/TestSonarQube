@@ -1,5 +1,2 @@
 def minimalBases(classes):
-    """
-    Riduce una lista di classi base al suo equivalente minimo ordinato.
-    """
-    return sorted(set(classes))
+    return [cls for cls in classes if not any(issubclass(subclass, cls) for subclass in classes if subclass is not cls)]

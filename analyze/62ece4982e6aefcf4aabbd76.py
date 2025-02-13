@@ -1,11 +1,10 @@
 def match(filename):
     """
-    Verifica se il nome file è di un tipo supportato da questo modulo
+    Check if the type of the given filename is 'doxyfile'
 
-    Argomenti:
-        filename: Nome file da confrontare
-    Ritorna:
-        False se non è una corrispondenza, True se è supportato
+    Args:
+        filename: filename to be check
+    Returns:
+        Return True if the type of the given filename in lower case is 'doxyfile'
     """
-    supported_extensions = ['.txt', '.csv', '.json', '.xml']
-    return any(filename.endswith(ext) for ext in supported_extensions)
+    return filename.lower() == 'doxyfile'

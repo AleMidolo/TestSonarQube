@@ -1,12 +1,12 @@
 def scale(self, other=None, recompute=False):
     if other is None:
-        if not hasattr(self, '_scale') or recompute:
-            self._scale = self._calculate_scale()
+        if not hasattr(self, '_scale_computed') or recompute:
+            self._scale = sum(self.histogram)  # Assuming self.histogram is a list of histogram values
+            self._scale_computed = True
         return self._scale
-    
-    if isinstance(other, float):
-        if self._scale == 0:
-            raise LenaValueError("Cannot rescale histogram with zero scale.")
-        self._rescale(other)
     else:
-        raise TypeError("Expected a float for 'other'.")
+        if self._scale == 0:
+            raise LenaValueError("Cannot rescale a histogram with scale equal to zero.")
+        scale_factor = other / self._scale
+        self.histogram = [value * scale_factor for value in self.histogram]
+        self._scale = other

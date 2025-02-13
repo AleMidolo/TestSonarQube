@@ -6,16 +6,17 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
     command = ['ansible-playbook', playbook_path]
 
     if verbose:
-        command.append(f'-v{"v" * (verbose - 1)}')
+        command.append('-' + 'v' * verbose)
 
     if extra_vars:
-        command.append('--extra-vars')
-        command.append(json.dumps(extra_vars))
+        extra_vars_str = ' '.join(f"{key}={value}" for key, value in extra_vars.items())
+        command.append(f'--extra-vars="{extra_vars_str}"')
 
     if ansible_args:
         for key, value in ansible_args.items():
             command.append(f'--{key}')
-            command.append(str(value))
+            if value is not None:
+                command.append(str(value))
 
     result = subprocess.run(command, cwd=ir_workspace.path, capture_output=True, text=True)
 

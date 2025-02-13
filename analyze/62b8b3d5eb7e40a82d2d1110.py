@@ -1,6 +1,6 @@
 def _c_optimizations_available():
     try:
-        import some_c_optimization_module  # Sostituisci con il modulo reale
+        import some_c_optimization_module  # Replace with actual module name
         return some_c_optimization_module
     except ImportError:
-        raise ImportError("Le ottimizzazioni C sono richieste ma non disponibili.")
+        raise ImportError("C optimizations are required but not available.")

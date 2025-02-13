@@ -1,33 +1,27 @@
 def verifyObject(iface, candidate, tentative=False):
     from zope.interface import providedBy, Invalid
-    from inspect import signature, Parameter
+    from inspect import signature, isfunction
 
     errors = []
 
-    if not tentative and not providedBy(candidate).isImplementedBy(iface):
+    if not tentative and not providedBy(candidate).isOrExtends(iface):
         errors.append(f"{candidate} does not provide {iface}")
 
     required_methods = iface.names()
-    for method_name, _ in required_methods:
+    for method_name, method in required_methods:
         if not hasattr(candidate, method_name):
             errors.append(f"{candidate} is missing method {method_name}")
             continue
         
-        method = getattr(candidate, method_name)
-        if not callable(method):
-            errors.append(f"{method_name} in {candidate} is not callable")
+        candidate_method = getattr(candidate, method_name)
+        if not isfunction(candidate_method):
+            errors.append(f"{candidate}.{method_name} is not a method")
             continue
         
-        iface_signature = signature(getattr(iface, method_name))
-        candidate_signature = signature(method)
-
-        if len(iface_signature.parameters) != len(candidate_signature.parameters):
-            errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
-            continue
-
-        for param in iface_signature.parameters.values():
-            if param.default is Parameter.empty and param.name not in candidate_signature.parameters:
-                errors.append(f"{method_name} in {candidate} is missing required parameter {param.name}")
+        iface_signature = signature(method)
+        candidate_signature = signature(candidate_method)
+        if iface_signature != candidate_signature:
+            errors.append(f"{candidate}.{method_name} has incorrect signature")
 
     required_attributes = iface.names()
     for attr_name, _ in required_attributes:
@@ -35,8 +29,6 @@ def verifyObject(iface, candidate, tentative=False):
             errors.append(f"{candidate} is missing attribute {attr_name}")
 
     if errors:
-        if len(errors) == 1:
-            raise Invalid(errors[0])
         raise Invalid(errors)
 
     return True
