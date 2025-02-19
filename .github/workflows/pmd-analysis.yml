@@ -19,10 +19,9 @@ jobs:
         with:
           rulesets: 'ruleset.xml'
           analyzeModifiedFilesOnly: false
-          format: 'sarif'
-          output: 'pmd-report.sarif'
+          uploadSarifReport: true 
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: 'pmd-report.sarif'
+          sarif_file: pmd-report.sarif 
