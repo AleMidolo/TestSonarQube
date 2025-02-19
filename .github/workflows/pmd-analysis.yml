@@ -15,6 +15,13 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
+      - name: Install PMD
+        run: |
+          wget https://github.com/pmd/pmd/releases/latest/download/pmd-bin.zip
+          unzip pmd-bin.zip
+          mv pmd-bin-* pmd
+          echo "$GITHUB_WORKSPACE/pmd/bin" >> $GITHUB_PATH
+
       - name: Run PMD and save results
         run: |
           mkdir -p pmd-reports
