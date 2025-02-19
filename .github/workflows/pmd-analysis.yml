@@ -15,8 +15,13 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
-      - name: Run PMD
-        uses: pmd/pmd-github-action@v2
+      - name: Run PMD and save results
+        run: |
+          mkdir -p pmd-reports
+          pmd check -d . -R ruleset.xml -f text -r pmd-reports/pmd-results.txt
+
+      - name: Upload PMD results
+        uses: actions/upload-artifact@v4
         with:
-          rulesets: 'ruleset.xml'
-          sourcePath: '.' # Scan all Java files in the repository
+          name: pmd-report
+          path: pmd-reports/pmd-results.txt
