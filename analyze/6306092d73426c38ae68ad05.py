@@ -20,4 +20,5 @@ def get_option_spec(self, command_name, argument_name):
         if argument_name in option_specs[command_name]:
             return option_specs[command_name][argument_name]
     
-    return None  # Retorna None si no se encuentra la especificación
+    # Si no se encuentra la especificación, devolver None o lanzar una excepción
+    return None

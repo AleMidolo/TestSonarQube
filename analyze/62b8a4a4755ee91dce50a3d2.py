@@ -11,18 +11,13 @@ def _fromutc(self, dt):
     if dt.tzinfo is None:
         raise ValueError("El objeto datetime debe ser consciente de la zona horaria")
 
-    # Obtener la hora UTC del objeto datetime
-    utc_dt = dt.astimezone(self.utc)
-
-    # Calcular el nuevo objeto datetime en la zona horaria actual
-    new_dt = utc_dt.astimezone(self)
+    # Convertir el datetime a la nueva zona horaria
+    new_dt = dt.astimezone(self)
 
     # Determinar si el datetime es ambiguo
     if new_dt.dst() != timedelta(0):
         # Si hay un cambio de horario, verificar si es la primera ocurrencia
-        if new_dt < self._fold:
-            new_dt = new_dt.replace(fold=0)
-        else:
-            new_dt = new_dt.replace(fold=1)
+        if new_dt < self.utcoffset() + self.dst():
+            raise ValueError("El datetime es ambiguo y no se puede determinar su estado")
 
     return new_dt

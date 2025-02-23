@@ -9,5 +9,5 @@ def _get_resource_name_regex():
         (re.Pattern): las expresiones regulares compiladas, para validar  
         el nombre del recurso.
     """
-    resource_name_regex = re.compile(r'^[a-zA-Z0-9-_]+$')
-    return resource_name_regex
+    resource_name_regex = r'^[a-zA-Z0-9-_]+$'
+    return re.compile(resource_name_regex)

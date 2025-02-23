@@ -23,7 +23,7 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     if not all([parsed_url.scheme, parsed_url.netloc, parsed_url.path]):
         raise ValueError("El enlace proporcionado no es válido.")
     
-    image_id = parsed_url.path.split('/')[-1]  # Suponiendo que el ID de la imagen es el último segmento del path
+    image_id = parsed_url.path.split('/')[-1]  # Asumiendo que el ID de la imagen es el último segmento del path
     netloc = parsed_url.netloc
     use_ssl = parsed_url.scheme == 'https'
     

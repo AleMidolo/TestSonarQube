@@ -34,13 +34,11 @@ def _verify(iface, candidate, tentative=False, vtype=None):
 
     errors = []
 
-    # Check if candidate provides the interface
-    if not tentative and not providedBy(candidate, iface):
+    if not tentative and not providedBy(candidate).isOrExtends(iface):
         errors.append(f"{candidate} does not provide {iface}")
 
-    # Check required methods
     required_methods = iface.names()
-    for method_name, _ in required_methods:
+    for method_name in required_methods:
         if not hasattr(candidate, method_name):
             errors.append(f"{candidate} is missing method {method_name}")
             continue
@@ -52,8 +50,11 @@ def _verify(iface, candidate, tentative=False, vtype=None):
         
         # Check method signature
         iface_method = iface.lookup(method_name)
-        if signature(method) != signature(iface_method):
-            errors.append(f"Signature of {method_name} in {candidate} does not match")
+        if iface_method is not None:
+            iface_signature = signature(iface_method)
+            candidate_signature = signature(method)
+            if iface_signature != candidate_signature:
+                errors.append(f"Signature mismatch for {method_name} in {candidate}")
 
     # Check required attributes
     required_attributes = iface.attributes()

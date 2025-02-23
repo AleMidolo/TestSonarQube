@@ -19,9 +19,11 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
             # Clean up expired items
             if key in cache:
                 if current_time - timestamps[key] < ttl:
+                    # Refresh the order of the cache
                     cache.move_to_end(key)
                     return cache[key]
                 else:
+                    # Remove expired item
                     del cache[key]
                     del timestamps[key]
 

@@ -1,5 +1,5 @@
 import re
-import platform as sys_platform
+import sys
 
 def split(s, platform='this'):
     """
@@ -12,12 +12,12 @@ def split(s, platform='this'):
       (otros valores están reservados).
     """
     if platform == 'this':
-        platform = 1 if sys_platform.system() != 'Windows' else 0
+        platform = 1 if sys.platform.startswith(('linux', 'darwin')) else 0
 
     if platform == 1:  # POSIX
         pattern = r'(?:"([^"]*)"|\'([^\']*)|(\S+))'
     elif platform == 0:  # Windows
-        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+)?)'
+        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+))'
     else:
         raise ValueError("Unsupported platform value")
 
