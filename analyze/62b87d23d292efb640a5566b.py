@@ -5,15 +5,15 @@ def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=Fal
     """
     Esegui il comando specificato.
     """
-    if cwd is not None:
-        cwd = os.path.abspath(cwd)
+    if cwd is None:
+        cwd = os.getcwd()
     
-    command = [comandi] + argomenti
-    stderr = subprocess.DEVNULL if nascondi_stderr else None
+    full_command = [comandi] + argomenti
+    stderr_option = subprocess.DEVNULL if nascondi_stderr else None
     
     if verbose:
-        print(f"Running command: {' '.join(command)} in {cwd}")
+        print(f"Running command: {' '.join(full_command)} in {cwd}")
     
-    result = subprocess.run(command, cwd=cwd, env=env, stderr=stderr)
+    result = subprocess.run(full_command, cwd=cwd, env=env, stderr=stderr_option)
     
     return result.returncode

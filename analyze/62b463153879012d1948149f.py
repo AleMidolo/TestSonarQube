@@ -23,7 +23,7 @@ def _eval_file(prefix, file_path):
 
     # Determine the file type based on the file extension
     _, file_extension = os.path.splitext(file_path)
-    
+
     if file_extension in ['.jpg', '.png', '.gif']:
         file_type = 'asset'
     elif file_extension in ['.pdf', '.docx', '.pptx']:

@@ -11,8 +11,5 @@ def normalized(self):
         Restituisce un oggetto di tipo :class:`dateutil.relativedelta.relativedelta`.
     """
     total_days = int(self.days) + int(self.hours // 24)
-    total_hours = int(self.hours) % 24
-    total_minutes = int(self.minutes) + int(self.seconds // 60)
-    total_seconds = int(self.seconds) % 60
-
-    return relativedelta(days=total_days, hours=total_hours, minutes=total_minutes, seconds=total_seconds)
+    total_hours = int(self.hours % 24)
+    return relativedelta(days=total_days, hours=total_hours)

@@ -16,11 +16,11 @@ def _legacy_mergeOrderings(orderings):
     """
     from collections import defaultdict, deque
 
-    # Create a graph to represent the orderings
+    # Create a graph and a count of incoming edges
     graph = defaultdict(list)
     in_degree = defaultdict(int)
     
-    # Build the graph and in-degree count
+    # Build the graph
     for ordering in orderings:
         for i in range(len(ordering)):
             if i > 0:

@@ -7,4 +7,4 @@ def _dump_string(obj, dumper=None):
     elif isinstance(obj, bytes):
         return obj.decode('utf-8')
     else:
-        raise TypeError("Expected a string or bytes, got {}".format(type(obj).__name__))
+        raise TypeError("Expected a string or bytes, got {}".format(type(obj)))

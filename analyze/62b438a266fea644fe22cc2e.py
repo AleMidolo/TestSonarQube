@@ -9,10 +9,10 @@ def parse_arguments(*unparsed_arguments):
 
     # Esempio di sotto-parser
     parser_a = subparsers.add_parser('command_a')
-    parser_a.add_argument('--option_a', type=int, help='Opzione per il comando A')
+    parser_a.add_argument('--option_a', type=str, help='Option for command_a')
 
     parser_b = subparsers.add_parser('command_b')
-    parser_b.add_argument('--option_b', type=str, help='Opzione per il comando B')
+    parser_b.add_argument('--option_b', type=int, help='Option for command_b')
 
     # Analizza gli argomenti
     args = parser.parse_args(unparsed_arguments)
