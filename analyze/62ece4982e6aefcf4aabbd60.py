@@ -24,6 +24,7 @@ def size_to_bytes(size: str) -> int:
     """
     size = size.strip().upper()
     multipliers = {
+        'B': 1,
         'K': 1000,
         'M': 1000**2,
         'G': 1000**3,
@@ -37,10 +38,10 @@ def size_to_bytes(size: str) -> int:
     
     for suffix, multiplier in multipliers.items():
         if size.endswith(suffix):
-            number_part = size[:-1]
-            try:
-                return int(float(number_part) * multiplier)
-            except ValueError:
+            number_part = size[:-1].strip()
+            if number_part.isdigit():
+                return int(number_part) * multiplier
+            else:
                 raise ValueError("Invalid size format")
     
     raise ValueError("Invalid size format")

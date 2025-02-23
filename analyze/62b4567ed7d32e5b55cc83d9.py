@@ -66,21 +66,20 @@ def deep_merge_nodes(nodes):
             merged[key_value] = value
         else:
             if isinstance(value, MappingNode):
-                merged[key_value] = deep_merge(merged[key_value], value)
+                merged[key_value] = deep_merge_mapping(merged[key_value], value)
             else:
                 merged[key_value] = value
 
     return [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged.items()]
 
-def deep_merge(dict1, dict2):
-    """Helper function to merge two MappingNode instances."""
-    for key, value in dict2.value:
-        if key in dict1.value:
-            existing_value = dict1.value[key]
-            if isinstance(existing_value, MappingNode) and isinstance(value, MappingNode):
-                deep_merge(existing_value, value)
+def deep_merge_mapping(existing, new):
+    merged = existing.value.copy()
+    for key, value in new.value:
+        if key in merged:
+            if isinstance(value, MappingNode):
+                merged[key] = deep_merge_mapping(merged[key], value)
             else:
-                dict1.value[key] = value
+                merged[key] = value
         else:
-            dict1.value[key] = value
-    return dict1
+            merged[key] = value
+    return MappingNode(tag='tag:yaml.org,2002:map', value=list(merged.items()))

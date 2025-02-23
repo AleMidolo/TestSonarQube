@@ -7,11 +7,12 @@ def merge_extra_vars(vars_dict, extra_vars=None):
     """
     if extra_vars is None:
         return vars_dict
-    
+
     for var in extra_vars:
         if isinstance(var, dict):
             vars_dict.update(var)
         else:
-            raise ValueError("extra_vars should be a list of dictionaries.")
-    
+            key, value = var.split('=', 1)
+            vars_dict[key] = value
+
     return vars_dict

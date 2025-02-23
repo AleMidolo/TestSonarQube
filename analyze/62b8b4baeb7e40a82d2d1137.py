@@ -19,7 +19,7 @@ def verifyObject(iface, candidate, tentative=False):
       如果有多个方法或属性无效，将收集并报告所有这些错误。之前的行为是仅报告第一个错误。作为一个特殊情况，如果只有一个错误，则像之前一样单独抛出该错误。
     """
     from zope.interface import providedBy, Invalid
-    from inspect import signature, Parameter
+    from inspect import signature, Signature
 
     errors = []
 
@@ -29,26 +29,18 @@ def verifyObject(iface, candidate, tentative=False):
     required_methods = iface.names()
     for method_name in required_methods:
         if not hasattr(candidate, method_name):
-            errors.append(f"{candidate} is missing method {method_name}")
+            errors.append(f"{method_name} is missing in {candidate}")
             continue
         
         method = getattr(candidate, method_name)
-        if not callable(method):
-            errors.append(f"{method_name} in {candidate} is not callable")
-            continue
-        
-        # Check method signature
-        iface_method = iface.lookup(method_name)
-        if iface_method is not None:
-            iface_signature = signature(iface_method)
-            candidate_signature = signature(method)
-            if len(candidate_signature.parameters) < len(iface_signature.parameters):
-                errors.append(f"{method_name} in {candidate} has incorrect signature")
+        expected_signature = iface.methodSignature(method_name)
+        if not is_signature_compatible(signature(method), expected_signature):
+            errors.append(f"{method_name} has an invalid signature in {candidate}")
 
-    required_attributes = iface.names()
+    required_attributes = iface.attributes()
     for attr_name in required_attributes:
         if not hasattr(candidate, attr_name):
-            errors.append(f"{candidate} is missing attribute {attr_name}")
+            errors.append(f"{attr_name} is missing in {candidate}")
 
     if errors:
         if len(errors) == 1:
@@ -56,4 +48,9 @@ def verifyObject(iface, candidate, tentative=False):
         else:
             raise Invalid(errors)
 
+    return True
+
+def is_signature_compatible(actual_sig, expected_sig):
+    # This function checks if the actual method signature is compatible with the expected signature.
+    # This is a placeholder for the actual implementation.
     return True

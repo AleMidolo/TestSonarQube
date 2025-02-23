@@ -6,10 +6,8 @@ def parse_arguments(*arguments):
     """
     parser = argparse.ArgumentParser()
     
-    # 添加一些常见的参数示例
-    parser.add_argument('--input', type=str, help='输入文件路径')
-    parser.add_argument('--output', type=str, help='输出文件路径')
-    parser.add_argument('--verbose', action='store_true', help='启用详细输出')
+    # 这里可以根据需要添加参数
+    parser.add_argument('--example', type=str, help='示例参数')
     
     # 解析传入的参数
     parsed_args = parser.parse_args(arguments)

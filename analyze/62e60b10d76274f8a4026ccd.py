@@ -11,7 +11,7 @@ def data(self, *keys):
     result = {}
 
     if not keys:
-        return record  # 如果没有提供键，返回所有记录
+        return record
 
     for key in keys:
         if isinstance(key, int):
@@ -19,6 +19,6 @@ def data(self, *keys):
                 raise IndexError("索引超出范围")
             result[key] = record[key]
         else:
-            result[key] = record.get(key, None)  # 如果键不存在，返回 None
+            result[key] = record.get(key, None)
 
     return result

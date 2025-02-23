@@ -2,14 +2,12 @@ def popitem(self):
     """
     移除并返回最少使用的键值对。
     """
-    if not self.cache:
-        raise KeyError("popitem(): cache is empty")
+    if not self.data:
+        raise KeyError("popitem(): dictionary is empty")
     
-    # Find the least recently used item
-    least_used_key = min(self.usage_count, key=self.usage_count.get)
-    
-    # Remove the item from the cache and usage count
-    value = self.cache.pop(least_used_key)
-    del self.usage_count[least_used_key]
+    # Assuming self.data is a dictionary-like structure with usage tracking
+    least_used_key = min(self.usage, key=self.usage.get)
+    value = self.data.pop(least_used_key)
+    del self.usage[least_used_key]
     
     return least_used_key, value

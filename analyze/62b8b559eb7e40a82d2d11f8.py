@@ -3,18 +3,18 @@ def minimalBases(classes):
     以列表格式返回所有没有子类的类。
     将基类列表简化为其有序的最小等价集合。
     """
-    # 创建一个集合来存储所有类及其子类
+    # 创建一个集合来存储所有类
     all_classes = set(classes)
-    subclasses = set()
+    # 创建一个集合来存储没有子类的类
+    no_subclass_classes = set(all_classes)
 
-    # 遍历每个类，查找其子类
+    # 遍历所有类，找出有子类的类
     for cls in classes:
+        # 如果cls是其他类的子类，则从没有子类的类中移除
         for other_cls in classes:
-            if cls != other_cls and cls in other_cls:
-                subclasses.add(other_cls)
+            if cls != other_cls and issubclass(other_cls, cls):
+                no_subclass_classes.discard(cls)
+                break
 
-    # 找到没有子类的类
-    minimal_classes = all_classes - subclasses
-
-    # 返回有序的最小等价集合
-    return sorted(minimal_classes)
+    # 返回没有子类的类的有序列表
+    return sorted(no_subclass_classes)
