@@ -10,7 +10,7 @@ def from_raw_values(cls, values):
     """
     bookmarks = []
     for value in values:
-        # Supponiamo che ogni valore sia una stringa formattata come "nome:url"
-        name, url = value.split(':', 1)
-        bookmarks.append({'name': name.strip(), 'url': url.strip()})
+        # Assuming each value is a bookmark in the format "title:url"
+        title, url = value.split(':', 1)
+        bookmarks.append({'title': title.strip(), 'url': url.strip()})
     return cls(bookmarks)

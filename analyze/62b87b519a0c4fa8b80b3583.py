@@ -16,22 +16,22 @@ def scale(self, other=None):
     Tutti gli errori associati vengono ridimensionati insieme alla loro coordinata.
     """
     if other is None:
-        return self.scale_value  # Restituisce la scala attuale
+        return self.scale_value  # Assuming scale_value is an attribute of the class
 
-    if not isinstance(other, (int, float)):
-        raise ValueError("Il valore di 'other' deve essere un numero.")
+    if not isinstance(other, (int, float)) or other <= 0:
+        raise LenaValueError("La scala deve essere un valore numerico positivo.")
 
-    if self.scale_value is None or self.scale_value == 0:
-        raise LenaValueError("La scala è sconosciuta o pari a zero.")
+    # Assuming we have a method to get the last coordinate field
+    last_coordinate = self.get_last_coordinate_field()
+    
+    if last_coordinate is None or last_coordinate.scale_value == 0:
+        raise LenaValueError("La scala del grafico è sconosciuta o pari a zero.")
 
-    # Ridimensiona l'ultima coordinata
-    if self.dimension == 2:
-        self.y_scale *= other
-    elif self.dimension == 3:
-        self.z_scale *= other
+    # Scale the last coordinate
+    last_coordinate.scale_value = other
 
-    # Ridimensiona gli errori associati
+    # Scale associated errors if any
     for error in self.errors:
-        error.scale *= other
+        error.scale_value = other
 
-    return self.scale_value
+    return other

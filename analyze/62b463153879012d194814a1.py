@@ -6,4 +6,5 @@ def add_rendition(self, lang, file_path):
     """
     if not hasattr(self, 'renditions'):
         self.renditions = {}
+    
     self.renditions[lang] = file_path

@@ -1,5 +1,3 @@
-import requests
-
 def send_document(url, data, timeout=10, method="post", *args, **kwargs):
     """
     Metodo di supporto per inviare un documento tramite POST.
@@ -12,11 +10,14 @@ def send_document(url, data, timeout=10, method="post", *args, **kwargs):
     :arg method: Metodo da utilizzare, predefinito: post  
     :returns: Tupla contenente il codice di stato (int o None) e l'errore (istanza della classe di eccezione o None)
     """
+    import requests
+
     try:
         if method.lower() == "post":
             response = requests.post(url, data=data, timeout=timeout, *args, **kwargs)
         else:
-            response = requests.request(method, url, data=data, timeout=timeout, *args, **kwargs)
+            raise ValueError("Unsupported method: {}".format(method))
+
         return response.status_code, None
     except Exception as e:
         return None, e

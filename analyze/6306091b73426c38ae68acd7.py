@@ -11,14 +11,14 @@ def ansible_config_manager(cls):
     from ansible.inventory.host import Host
     from ansible.inventory.group import Group
 
-    display = Display()
+    # Initialize necessary components
     loader = DataLoader()
     inventory = InventoryManager(loader=loader, sources='path/to/inventory')
     variable_manager = VariableManager(loader=loader, inventory=inventory)
 
+    # Return the configuration manager
     return {
         'loader': loader,
         'inventory': inventory,
-        'variable_manager': variable_manager,
-        'display': display
+        'variable_manager': variable_manager
     }

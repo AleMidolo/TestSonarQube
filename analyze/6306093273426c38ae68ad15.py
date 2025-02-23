@@ -12,16 +12,18 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     import subprocess
     import json
 
-    # Costruire il comando Ansible
-    ansible_command = ['ansible-playbook'] + cli_args
+    # Prepare the command
+    command = ['ansible-playbook'] + cli_args
     if vars_dict:
-        ansible_command += ['--extra-vars', json.dumps(vars_dict)]
+        extra_vars = json.dumps(vars_dict)
+        command += ['--extra-vars', extra_vars]
 
-    # Eseguire il comando
-    result = subprocess.run(ansible_command, capture_output=True, text=True)
+    # Execute the command
+    result = subprocess.run(command, capture_output=True, text=True)
 
-    # Gestire l'output e gli errori
+    # Check for errors
     if result.returncode != 0:
         raise RuntimeError(f"Ansible playbook execution failed: {result.stderr}")
 
+    # Return the results
     return result.stdout

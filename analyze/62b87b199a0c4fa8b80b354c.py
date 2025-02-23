@@ -4,7 +4,11 @@ def _get_seq_with_type(seq, bufsize=None):
     La sequenza è derivata da *seq*  
     (oppure è *seq*, se quest'ultima è di un tipo sequenza).
     """
-    if isinstance(seq, (list, tuple, set)):
-        return (seq, type(seq))
+    if isinstance(seq, (list, tuple, set, str)):
+        return seq, type(seq)
     else:
-        return (list(seq), type(seq))
+        if bufsize is not None:
+            seq = list(seq)[:bufsize]
+        else:
+            seq = list(seq)
+        return seq, type(seq)

@@ -8,25 +8,12 @@ def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=Fal
     if cwd is None:
         cwd = os.getcwd()
     
-    if env is None:
-        env = os.environ
-
-    stderr = subprocess.DEVNULL if nascondi_stderr else None
-
-    process = subprocess.Popen(
-        [comandi] + argomenti,
-        cwd=cwd,
-        env=env,
-        stdout=subprocess.PIPE,
-        stderr=stderr
-    )
-
+    full_command = [comandi] + argomenti
+    stderr_option = subprocess.DEVNULL if nascondi_stderr else None
+    
     if verbose:
-        print(f"Esecuzione comando: {comandi} {' '.join(argomenti)} in {cwd}")
-
-    stdout, _ = process.communicate()
-
-    if process.returncode != 0:
-        raise subprocess.CalledProcessError(process.returncode, comandi)
-
-    return stdout.decode('utf-8').strip()
+        print(f"Esecuzione comando: {' '.join(full_command)} in {cwd}")
+    
+    result = subprocess.run(full_command, cwd=cwd, env=env, stderr=stderr_option)
+    
+    return result.returncode

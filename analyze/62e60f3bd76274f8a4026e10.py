@@ -4,10 +4,22 @@ def dehydrate_timedelta(value):
     """
     Deidratatore per valori di tipo `timedelta`.
 
-    :param value:  
+    :param value: 
     :type value: timedelta  
     :return: 
     """
     if not isinstance(value, timedelta):
-        raise ValueError("Il valore deve essere di tipo timedelta.")
-    return value.total_seconds()
+        raise ValueError("Input must be a timedelta object.")
+    
+    total_seconds = int(value.total_seconds())
+    days = total_seconds // 86400
+    hours = (total_seconds % 86400) // 3600
+    minutes = (total_seconds % 3600) // 60
+    seconds = total_seconds % 60
+    
+    return {
+        'days': days,
+        'hours': hours,
+        'minutes': minutes,
+        'seconds': seconds
+    }

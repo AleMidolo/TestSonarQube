@@ -6,4 +6,10 @@ def dehydrate_point(value):
     :type value: Point  
     :return: 
     """
-    return {'x': value.x, 'y': value.y}
+    if not isinstance(value, Point):
+        raise ValueError("Expected a Point instance")
+    
+    return {
+        'x': value.x,
+        'y': value.y
+    }

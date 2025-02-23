@@ -1,3 +1,5 @@
+from datetime import datetime
+
 def default_tzinfo(dt, tzinfo):
     """
     Imposta il parametro ``tzinfo`` solo sui datetime privi di informazioni sul fuso orario (naive).
@@ -8,7 +10,6 @@ def default_tzinfo(dt, tzinfo):
 
         >>> from dateutil.tz import tzoffset
         >>> from dateutil.parser import parse
-        >>> from dateutil.utils import default_tzinfo
         >>> dflt_tz = tzoffset("EST", -18000)
         >>> print(default_tzinfo(parse('2014-01-01 12:30 UTC'), dflt_tz))
         2014-01-01 12:30:00+00:00

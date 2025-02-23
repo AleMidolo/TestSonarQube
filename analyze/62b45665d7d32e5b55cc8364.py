@@ -12,6 +12,6 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
             parsed_args, remaining_arguments = parser.parse_known_args(remaining_arguments)
             parsed_results[name] = parsed_args
         except SystemExit:
-            continue
-    
+            continue  # Ignore errors from parsers that cannot parse the arguments
+
     return parsed_results, remaining_arguments

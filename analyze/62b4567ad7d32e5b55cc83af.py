@@ -6,6 +6,11 @@ def parse_arguments(*arguments):
     analizza gli argomenti e restituiscili come un'istanza di ArgumentParser.
     """
     parser = argparse.ArgumentParser()
-    for arg in arguments:
-        parser.add_argument(arg)
-    return parser.parse_args(arguments)
+    
+    # Aggiungi qui gli argomenti che desideri analizzare
+    # Esempio: parser.add_argument('--example', help='Esempio di argomento')
+
+    # Analizza gli argomenti forniti
+    parsed_args = parser.parse_args(arguments)
+    
+    return parsed_args

@@ -6,7 +6,5 @@ def _dump_string(obj, dumper=None):
         return obj
     elif isinstance(obj, bytes):
         return obj.decode('utf-8')
-    elif dumper is not None:
-        return dumper(obj)
     else:
-        raise TypeError("Object of type '{}' is not serializable".format(type(obj).__name__))
+        raise TypeError("Expected a string or bytes, got {}".format(type(obj)))

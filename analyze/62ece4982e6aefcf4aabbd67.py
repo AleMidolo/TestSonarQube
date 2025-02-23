@@ -9,4 +9,10 @@ def vertex3tuple(vertices):
     #A    B    C    D  -> dei vertici
     '''
     n = len(vertices)
-    return tuple((vertices[i-1], vertices[i], vertices[(i+1) % n]) for i in range(n))
+    result = []
+    for i in range(n):
+        left = vertices[i - 1]  # il vertice a sinistra
+        center = vertices[i]     # il vertice corrente
+        right = vertices[(i + 1) % n]  # il vertice a destra, con wrap-around
+        result.append((left, center, right))
+    return result

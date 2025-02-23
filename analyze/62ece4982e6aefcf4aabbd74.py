@@ -10,6 +10,12 @@ def prepare_repository_from_archive(
     filename: Optional[str] = None,
     tmp_path: Union[Path, str] = "/tmp",
 ) -> str:
+    """
+    Dato un `archive_path` esistente, decomprimilo.  
+    Restituisce un URL del repository del file che può essere utilizzato come URL di origine.
+
+    Questo metodo non gestisce il caso in cui l'archivio passato non esista.
+    """
     tmp_path = Path(tmp_path)
     tmp_path.mkdir(parents=True, exist_ok=True)
 

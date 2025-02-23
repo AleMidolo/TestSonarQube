@@ -1,5 +1,3 @@
-import os
-
 def was_processed(processed, path_name, verbose):
     """
     Verifica se un file o una directory è già stato elaborato.
@@ -17,8 +15,10 @@ def was_processed(processed, path_name, verbose):
     Returns:
         True se il percorso è già presente nel set. False altrimenti.
     """
+    import os
+
     absolute_path = os.path.abspath(path_name)
-    
+
     if absolute_path in processed:
         if verbose:
             print(f"Il percorso '{absolute_path}' è già stato elaborato.")

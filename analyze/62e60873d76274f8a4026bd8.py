@@ -15,14 +15,14 @@ def protocol_handlers(cls, protocol_version=None):
     if protocol_version is not None and not isinstance(protocol_version, tuple):
         raise TypeError("La versione del protocollo deve essere una tupla.")
 
-    handlers = {
+    # Simulazione di un dizionario di gestori di protocollo
+    protocol_handlers_dict = {
         (3, 5): "Handler35",
         (4, 0): "Handler40",
         (4, 1): "Handler41",
-        # Aggiungere altri gestori di protocollo qui
     }
 
     if protocol_version is not None:
-        return {protocol_version: handlers.get(protocol_version)} if protocol_version in handlers else {}
+        return {protocol_version: protocol_handlers_dict.get(protocol_version)} if protocol_version in protocol_handlers_dict else {}
 
-    return handlers
+    return protocol_handlers_dict

@@ -17,17 +17,18 @@ def verify_relayable_signature(public_key, doc, signature):
     # Parse the XML document
     root = etree.fromstring(doc)
 
-    # Extract the signed data
-    signed_data = etree.tostring(root, method='c14n', exclusive=True)
+    # Extract the signed data and the signature
+    signed_data = root.find('.//SignedInfo').text
+    signature_value = root.find('.//SignatureValue').text
 
     # Verify the signature
     try:
         public_key.verify(
-            signature,
-            signed_data,
+            signature_value.encode(),
+            signed_data.encode(),
             padding.PKCS1v15(),
             hashes.SHA256()
         )
         return True
-    except Exception:
+    except Exception as e:
         return False

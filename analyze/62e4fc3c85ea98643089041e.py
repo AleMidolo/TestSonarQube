@@ -4,12 +4,12 @@ def _inline_r_setup(code: str) -> str:
     """
     import rpy2.robjects as ro
 
-    # Imposta le opzioni di R
+    # Set R options
     ro.r('options(stringsAsFactors = FALSE)')
-    ro.r('options(scipen = 999)')  # Disabilita la notazione scientifica
-    ro.r('options(max.print = 1000)')  # Limita il numero di righe stampate
+    ro.r('options(scipen = 999)')  # Disable scientific notation
+    ro.r('options(max.print = 1000)')  # Set maximum print size
 
-    # Esegui il codice R fornito
+    # Execute the provided R code
     ro.r(code)
 
     return "R setup complete and code executed."

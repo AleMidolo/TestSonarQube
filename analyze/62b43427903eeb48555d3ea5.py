@@ -1,19 +1,30 @@
+from typing import AnyStr, Union, Dict, Sequence, Tuple
+
 def format(
                 self,
                 sql: AnyStr,
                 params: Union[Dict[Union[str, int], Any], Sequence[Any]],
         ) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
+    """
+    Converte la query SQL per utilizzare i parametri in stile "out" invece dei parametri in stile "in".
+
+    **sql** (:class:`str` o :class:`bytes`) è la query SQL.
+
+    Restituisce una :class:`tuple` contenente:
+
+    - La query SQL formattata (:class:`str` o :class:`bytes`).
+
+    - L'insieme dei parametri convertiti in stile "out" (:class:`dict` o :class:`list`).
+    """
+    # Example implementation (this should be replaced with actual logic)
     if isinstance(sql, bytes):
-        sql = sql.decode('utf-8')
-    
+        formatted_sql = sql.decode('utf-8')
+    else:
+        formatted_sql = sql
+
     if isinstance(params, dict):
         out_params = {key: f'OUT_{value}' for key, value in params.items()}
     else:
         out_params = [f'OUT_{value}' for value in params]
 
-    formatted_sql = sql.replace('?', '%s')  # Example of converting to a different placeholder style
-
-    if isinstance(sql, str):
-        return formatted_sql, out_params
-    else:
-        return formatted_sql.encode('utf-8'), out_params
+    return formatted_sql, out_params

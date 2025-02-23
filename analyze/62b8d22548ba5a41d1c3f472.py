@@ -4,18 +4,23 @@ def cachedmethod(cache, key=hashkey, lock=None):
     """
     def decorator(func):
         def wrapper(self, *args, **kwargs):
+            # Generate the cache key
+            cache_key = key(self, *args, **kwargs)
+            # Check if the result is already cached
+            if cache_key in cache:
+                return cache[cache_key]
+            # Acquire lock if provided
             if lock:
                 with lock:
-                    cache_key = key(self, *args, **kwargs)
+                    # Check again in case another thread has cached the result
                     if cache_key in cache:
                         return cache[cache_key]
+                    # Call the function and cache the result
                     result = func(self, *args, **kwargs)
                     cache[cache_key] = result
                     return result
             else:
-                cache_key = key(self, *args, **kwargs)
-                if cache_key in cache:
-                    return cache[cache_key]
+                # Call the function and cache the result
                 result = func(self, *args, **kwargs)
                 cache[cache_key] = result
                 return result

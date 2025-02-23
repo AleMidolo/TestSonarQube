@@ -21,8 +21,9 @@ def regex_dict(item):
     Ritorna:
         dizionario con le chiavi convertite in regex.
     """
-    regex_item = {}
+    regex_dict = {}
     for key, value in item.items():
+        # Converti la chiave in regex
         regex_key = re.escape(key).replace(r'\*', '.*').replace(r'\?', '.')
-        regex_item[regex_key] = value
-    return regex_item
+        regex_dict[regex_key] = value
+    return regex_dict

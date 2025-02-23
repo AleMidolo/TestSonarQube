@@ -1,7 +1,3 @@
-import zipfile
-import os
-from collections import defaultdict
-
 def _explore_zipfile(zip_path):
     """
     Ottiene i dati dei pacchetti dal percorso zip fornito.
@@ -17,13 +13,18 @@ def _explore_zipfile(zip_path):
     -------
     dict
     """
+    import zipfile
+    from collections import defaultdict
+    import os
+
     data_dict = defaultdict(list)
-    
+
     with zipfile.ZipFile(zip_path, 'r') as zip_file:
         for file_info in zip_file.infolist():
             if file_info.filename.endswith('.xml'):
                 base_name = os.path.splitext(os.path.basename(file_info.filename))[0]
                 with zip_file.open(file_info.filename) as file:
-                    data_dict[base_name].append(file.read())
-    
+                    data = file.read()
+                    data_dict[base_name].append(data)
+
     return dict(data_dict)

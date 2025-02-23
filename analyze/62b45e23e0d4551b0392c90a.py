@@ -11,29 +11,30 @@ def validate_version_inventories(self, version_dirs):
     main_inventory = {}
     content_digests = {}
     
-    for i, version_dir in enumerate(version_dirs):
-        inventory_path = f"{version_dir}/inventory.json"
+    for version in version_dirs:
+        inventory_path = f"{version}/inventory.json"
         try:
             with open(inventory_path, 'r') as f:
                 inventory = json.load(f)
-                main_inventory.update(inventory)
+                main_inventory[version] = inventory
                 
-                # Verifica che tutte le versioni precedenti abbiano un inventario
-                if i > 0:
-                    previous_inventory_path = f"{version_dirs[i-1]}/inventory.json"
-                    if not os.path.exists(previous_inventory_path):
-                        raise ValueError(f"Missing inventory for version {version_dirs[i-1]}")
+                # Validate that all previous versions have inventories
+                if version != version_dirs[0]:
+                    previous_version = version_dirs[version_dirs.index(version) - 1]
+                    if previous_version not in main_inventory:
+                        raise ValueError(f"Missing inventory for previous version: {previous_version}")
                 
-                # Controlla i digest di contenuto
+                # Track content digests
                 for item in inventory.get('items', []):
                     content_digest = item.get('digest')
-                    if content_digest and content_digest not in content_digests:
-                        content_digests[content_digest] = version_dir
-                    elif content_digest:
-                        if content_digests[content_digest] != version_dir:
-                            print(f"Content digest {content_digest} differs between versions {content_digests[content_digest]} and {version_dir}")
-
+                    if content_digest:
+                        if content_digest not in content_digests:
+                            content_digests[content_digest] = []
+                        content_digests[content_digest].append(version)
+        
         except FileNotFoundError:
-            raise FileNotFoundError(f"Inventory file not found for version {version_dir}")
+            raise FileNotFoundError(f"Inventory file not found for version: {version}")
         except json.JSONDecodeError:
-            raise ValueError(f"Invalid JSON in inventory file for version {version_dir}")
+            raise ValueError(f"Invalid JSON in inventory file for version: {version}")
+    
+    return main_inventory, content_digests

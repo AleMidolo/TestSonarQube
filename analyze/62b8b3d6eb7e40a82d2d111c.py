@@ -13,11 +13,8 @@ def _normalizeargs(sequence, output=None):
     for item in sequence:
         if isinstance(item, tuple):
             output.extend(_normalizeargs(item))
-        elif isinstance(item, list):
-            output.extend(_normalizeargs(item))
-        elif isinstance(item, dict):
-            for key, value in item.items():
-                output.append((key, _normalizeargs(value)))
+        elif isinstance(item, (list, set)):
+            output.extend(_normalizeargs(list(item)))
         else:
             output.append(item)
 

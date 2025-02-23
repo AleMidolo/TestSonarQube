@@ -3,7 +3,7 @@ def get_versions():
     Ottieni le informazioni sulla versione o restituisci il valore predefinito se non è possibile ottenerle.
     """
     import platform
-    
+
     try:
         version_info = {
             "python_version": platform.python_version(),

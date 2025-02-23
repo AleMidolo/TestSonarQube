@@ -4,6 +4,10 @@ def pop_u16(self):
     """
     if len(self.data) < 2:
         raise ValueError("Non ci sono abbastanza byte per rimuovere.")
-    value = int.from_bytes(self.data[-2:], byteorder='big', signed=False)
+    
+    # Rimuovi gli ultimi due byte
+    last_two_bytes = self.data[-2:]
     self.data = self.data[:-2]
-    return value
+    
+    # Converti i byte in un intero senza segno a 16 bit in formato big-endian
+    return int.from_bytes(last_two_bytes, byteorder='big', signed=False)

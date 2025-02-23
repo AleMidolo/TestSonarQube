@@ -6,8 +6,10 @@ def is_fill_request_seq(seq):
     o contiene almeno un elemento di questo tipo,  
     e non è una sequenza di tipo Source.
     """
+    if isinstance(seq, Source):
+        return False
     if isinstance(seq, FillRequest):
         return True
     if isinstance(seq, (list, tuple)):
-        return any(isinstance(item, FillRequest) for item in seq) and not isinstance(seq, Source)
+        return any(isinstance(item, FillRequest) for item in seq)
     return False

@@ -22,4 +22,3 @@ def update_last_applied_manifest_list_from_resp(
             update_last_applied_manifest_list_from_resp(
                 last_applied_manifest[field], schema['children'], response.get(field, {})
             )
-    return last_applied_manifest
