@@ -17,7 +17,7 @@ def _fromutc(self, dt):
     # Calcular el nuevo objeto datetime en la zona horaria actual
     new_dt = utc_dt.astimezone(self)
 
-    # Determinar si el nuevo objeto datetime es ambiguo
+    # Determinar si el datetime es ambiguo
     if new_dt.dst() != timedelta(0):
         # Si hay un cambio de horario, verificar si es la primera ocurrencia
         if new_dt < self._fold:

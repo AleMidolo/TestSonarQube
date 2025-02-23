@@ -24,13 +24,11 @@ def find_roots(
     if roots is None:
         roots = set()
 
-    # Encuentra todos los nodos que tienen un padre
-    children = {s for s, p, o in graph.triples((None, prop, None))}
+    all_children = {s for s, p, o in graph.triples((None, prop, None))}
+    all_parents = {o for s, p, o in graph.triples((None, prop, None))}
 
-    # Encuentra todos los nodos que son padres
-    parents = {o for s, p, o in graph.triples((None, prop, None))}
-
-    # Las raíces son aquellos nodos que no tienen padres
-    roots = children - parents
+    for child in all_children:
+        if child not in all_parents:
+            roots.add(child)
 
     return roots

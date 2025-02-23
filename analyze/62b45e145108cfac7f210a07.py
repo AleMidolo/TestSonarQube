@@ -9,21 +9,15 @@ def validate(self, inventory, extract_spec_version=False):
     if extract_spec_version:
         if 'type' in inventory:
             spec_type = inventory['type']
-            if spec_type not in ['type1', 'type2', 'type3']:  # Example valid types
-                raise ValueError("Invalid type in inventory.")
-            # Additional logic based on spec_type can be added here
+            if spec_type not in ['valid_type_1', 'valid_type_2']:
+                raise ValueError("Invalid type value in inventory.")
+            # Additional logic to handle different types can be added here
         else:
-            raise KeyError("Missing 'type' in inventory.")
+            raise KeyError("Type key is missing in inventory.")
 
     # Perform other validation based on self.spec_version
-    if self.spec_version == 'v1':
-        # Validation logic for version 1
-        pass
-    elif self.spec_version == 'v2':
-        # Validation logic for version 2
-        pass
-    else:
-        raise ValueError("Unsupported spec_version.")
+    if self.spec_version not in ['1.0', '2.0']:
+        raise ValueError("Invalid spec version.")
     
     # Additional inventory validation logic can be added here
 

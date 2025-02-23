@@ -8,7 +8,7 @@ def parse_arguments(*arguments):
     
     # Aquí puedes agregar los argumentos que deseas analizar
     parser.add_argument('--example', type=str, help='Un ejemplo de argumento')
-    parser.add_argument('--count', type=int, default=1, help='Un contador de ejemplo')
+    parser.add_argument('--count', type=int, help='Un número entero de ejemplo')
     
     # Analiza los argumentos
     parsed_args = parser.parse_args(arguments)

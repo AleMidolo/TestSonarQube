@@ -4,17 +4,17 @@ def make_parsers():
     """
     class HighLevelParser:
         def parse(self, data):
-            # Lógica para analizar datos a un nivel alto
+            # Implementación del análisis de nivel superior
             return f"HighLevelParser: {data}"
 
     class SubParserA:
         def parse(self, data):
-            # Lógica para analizar datos en SubParserA
+            # Implementación del análisis para SubParserA
             return f"SubParserA: {data}"
 
     class SubParserB:
         def parse(self, data):
-            # Lógica para analizar datos en SubParserB
+            # Implementación del análisis para SubParserB
             return f"SubParserB: {data}"
 
     high_level_parser = HighLevelParser()

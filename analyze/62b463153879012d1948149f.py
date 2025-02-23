@@ -21,7 +21,7 @@ def _eval_file(prefix, file_path):
     # Initialize the result dictionary
     result = {}
 
-    # Get the file extension
+    # Extract the file extension
     _, file_extension = os.path.splitext(file_path)
 
     # Determine the type of file based on its extension
@@ -34,6 +34,6 @@ def _eval_file(prefix, file_path):
 
     # Update the result dictionary
     result['type'] = file_type
-    result['path'] = os.path.join(prefix, file_path)
+    result['path'] = file_path
 
     return result

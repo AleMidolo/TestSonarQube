@@ -19,10 +19,10 @@ def _update_context(self, context):
     if 'error' not in context:
         context['error'] = {}
     
-    # Supongamos que tenemos una lista de errores y sus índices
-    error_indices = self.get_error_indices()  # Método hipotético para obtener índices de errores
-    for i, error in enumerate(error_indices):
-        error_name = f"x_{i + 1}"  # Nombres de errores "x", "y", "z", etc.
-        context['error'][error_name] = {'index': error['index']}
+    # Supongamos que tenemos un atributo 'errors' que es una lista de errores
+    for index, error in enumerate(self.errors):
+        error_name = f"x_{index + 1}"  # Asumiendo que los errores se nombran x_1, x_2, etc.
+        context['error'][error_name] = {'index': index}
     
-    # No eliminamos valores existentes en context.value ni en subcontextos
+    # Aquí se pueden agregar más propiedades del grafo al contexto si es necesario
+    # Por ejemplo, context['value'] podría ser actualizado con propiedades del grafo

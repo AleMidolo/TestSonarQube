@@ -7,14 +7,12 @@ def cachedmethod(cache, key=hashkey, lock=None):
         def wrapper(self, *args, **kwargs):
             # Generar la clave de caché
             cache_key = key(self, *args, **kwargs)
-            # Intentar obtener el resultado de la caché
-            with lock:
-                if cache_key in cache:
-                    return cache[cache_key]
-            # Llamar al método original
-            result = func(self, *args, **kwargs)
-            # Almacenar el resultado en la caché
-            with lock:
+            # Comprobar si el resultado está en la caché
+            if cache_key in cache:
+                return cache[cache_key]
+            # Si no está en la caché, ejecutar el método
+            with (lock or dummy_lock):
+                result = func(self, *args, **kwargs)
                 cache[cache_key] = result
             return result
         return wrapper

@@ -4,23 +4,11 @@ def identify_request(request: RequestType):
 
     Primero intente con un mensaje público. Luego con un mensaje privado. Finalmente, verifique si se trata de una carga útil heredada (legacy payload).
     """
-    if is_public_message(request):
+    if request.is_public_message():
         return "Public Message"
-    elif is_private_message(request):
+    elif request.is_private_message():
         return "Private Message"
-    elif is_legacy_payload(request):
+    elif request.is_legacy_payload():
         return "Legacy Payload"
     else:
         return "Unknown Request"
-
-def is_public_message(request):
-    # Implementación para verificar si es un mensaje público
-    return hasattr(request, 'public') and request.public
-
-def is_private_message(request):
-    # Implementación para verificar si es un mensaje privado
-    return hasattr(request, 'private') and request.private
-
-def is_legacy_payload(request):
-    # Implementación para verificar si es una carga útil heredada
-    return hasattr(request, 'legacy') and request.legacy

@@ -15,16 +15,11 @@ def split(s, platform='this'):
         platform = 1 if sys_platform.system() != 'Windows' else 0
 
     if platform == 1:  # POSIX
-        pattern = r'(?:"([^"]*)"|\'([^\']*)|(\S+)|\s+)'
+        pattern = r'(?:"([^"]*)"|\'([^\']*)|(\S+))'
     elif platform == 0:  # Windows
-        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+)|\s+)'
+        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+)?)'
     else:
         raise ValueError("Unsupported platform value")
 
-    tokens = []
-    for match in re.finditer(pattern, s):
-        token = match.group(1) or match.group(2) or match.group(3)
-        if token is not None:
-            tokens.append(token)
-
-    return tokens
+    matches = re.findall(pattern, s)
+    return [m[0] or m[1] or m[2] for m in matches]

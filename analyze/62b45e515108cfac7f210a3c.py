@@ -2,13 +2,14 @@ def initialize(self):
     """
     Crear e inicializar una nueva raíz de almacenamiento OCFL.
     """
-    # Implementación de la creación e inicialización de la raíz de almacenamiento OCFL
-    self.root = self.create_root_directory()
+    # Código para crear e inicializar la raíz de almacenamiento OCFL
+    self.root = self.create_ocfl_root()
     self.setup_initial_structure()
     self.configure_storage_settings()
-    
-def create_root_directory(self):
-    # Lógica para crear el directorio raíz
+    return self.root
+
+def create_ocfl_root(self):
+    # Lógica para crear la raíz OCFL
     pass
 
 def setup_initial_structure(self):

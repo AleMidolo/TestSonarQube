@@ -10,7 +10,7 @@ def _resolve_string(matcher):
     
     value = os.getenv(name, default_value)
     
-    if value is None:
+    if value is None and default_value is None:
         raise ValueError(f"La variable de entorno '{name}' no está definida y no se proporcionó un valor predeterminado.")
     
     return value

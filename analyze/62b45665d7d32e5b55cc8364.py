@@ -8,16 +8,16 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
     """
     import argparse
 
-    parsed_results = {}
-    remaining_arguments = unparsed_arguments[:]
+    results = {}
+    remaining_args = unparsed_arguments[:]
     
     for name, parser in subparsers.items():
         try:
             # Parse the arguments for the current subparser
-            parsed_args, remaining_arguments = parser.parse_known_args(remaining_arguments)
-            parsed_results[name] = parsed_args
+            parsed_args, remaining_args = parser.parse_known_args(remaining_args)
+            results[name] = parsed_args
         except SystemExit:
             # Handle the case where parsing fails
             continue
 
-    return parsed_results, remaining_arguments
+    return results, remaining_args
