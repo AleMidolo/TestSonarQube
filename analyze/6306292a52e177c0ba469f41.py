@@ -6,6 +6,6 @@ def test_tag(tag: str) -> bool:
         return False
     if len(tag) > 30 or len(tag) < 1:
         return False
-    if not tag.isalnum() and not all(c in ['-', '_'] for c in tag):
+    if not tag.isalnum() and not all(char in ['-', '_'] for char in tag):
         return False
     return True

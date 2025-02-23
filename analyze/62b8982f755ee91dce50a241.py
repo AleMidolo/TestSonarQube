@@ -1,5 +1,3 @@
-from dateutil.relativedelta import relativedelta
-
 def normalized(self):
     """
     यह फ़ंक्शन इस ऑब्जेक्ट का एक ऐसा संस्करण लौटाता है, जिसमें सभी सापेक्ष गुण (relative attributes) पूरी तरह से पूर्णांक मानों (integer values) में दर्शाए गए हों।

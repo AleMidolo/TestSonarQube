@@ -11,24 +11,19 @@ def xargs(
     import os
     from multiprocessing import Pool
 
-    def _run_command(args):
+    def run_command(args):
         return subprocess.run(cmd + args, capture_output=True)
 
     if color:
         # Create a pseudo terminal if supported
-        import pty
-        master_fd, slave_fd = pty.openpty()
-        os.setsid()
-        os.close(slave_fd)
+        # This is a placeholder for actual PTY handling
+        pass
 
-    # Split varargs into partitions
-    partitions = [varargs[i:i + target_concurrency] for i in range(0, len(varargs), target_concurrency)]
-
+    # Split varargs into partitions based on target_concurrency
+    partitions = [varargs[i::target_concurrency] for i in range(target_concurrency)]
+    
     with Pool(processes=target_concurrency) as pool:
-        results = pool.map(_run_command, partitions)
+        results = pool.map(run_command, partitions)
 
     # Combine results
-    return_code = sum(result.returncode for result in results)
-    combined_output = b''.join(result.stdout for result in results)
-
-    return return_code, combined_output
+    return (sum(result.returncode for result in results), b''.join(result.stdout for result in results))
