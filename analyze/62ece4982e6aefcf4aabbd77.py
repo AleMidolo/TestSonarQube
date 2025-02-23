@@ -24,22 +24,32 @@ def parse_frequency(frequency):
         return None
 
     units = {
+        "seconds": "seconds",
+        "second": "seconds",
+        "minutes": "minutes",
+        "minute": "minutes",
+        "hours": "hours",
+        "hour": "hours",
         "days": "days",
         "day": "days",
         "weeks": "weeks",
         "week": "weeks",
-        "hours": "hours",
-        "hour": "hours",
-        "minutes": "minutes",
-        "minute": "minutes",
-        "seconds": "seconds",
-        "second": "seconds"
+        "months": "days",  # Approximation: 1 month = 30 days
+        "years": "days"    # Approximation: 1 year = 365 days
     }
 
+    parts = frequency.split()
+    if len(parts) != 2:
+        raise ValueError("Invalid frequency format")
+
     try:
-        number, unit = frequency.split()
-        number = int(number)
-        unit = units[unit.lower()]
-        return datetime.timedelta(**{unit: number})
-    except (ValueError, KeyError):
-        raise ValueError(f"无法解析频率: {frequency}")
+        value = int(parts[0])
+    except ValueError:
+        raise ValueError("Invalid number in frequency")
+
+    unit = parts[1].lower()
+    if unit not in units:
+        raise ValueError("Invalid time unit in frequency")
+
+    kwargs = {units[unit]: value}
+    return datetime.timedelta(**kwargs)

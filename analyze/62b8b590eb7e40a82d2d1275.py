@@ -16,24 +16,14 @@ def _legacy_mergeOrderings(orderings):
     """
     seen = set()
     result = []
-    index_map = {}
 
-    for ordering in orderings:
+    def add_ordering(ordering):
         for item in ordering:
             if item not in seen:
                 seen.add(item)
                 result.append(item)
-                index_map[item] = len(result) - 1
 
     for ordering in orderings:
-        for item in ordering:
-            if item in index_map:
-                index = index_map[item]
-                suffix = ordering[ordering.index(item):]
-                for suffix_item in suffix:
-                    if suffix_item not in seen:
-                        seen.add(suffix_item)
-                        result.append(suffix_item)
-                        index_map[suffix_item] = len(result) - 1
+        add_ordering(ordering)
 
     return result

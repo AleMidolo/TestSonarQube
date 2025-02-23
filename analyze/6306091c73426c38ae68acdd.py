@@ -9,8 +9,7 @@ def validate_from_file(cls, yaml_file=None):
     import yaml
     from pathlib import Path
 
-    required_fields = ['field1', 'field2', 'field3']  # 示例必需字段
-
+    required_fields = ['field1', 'field2', 'field3']  # 假设这些是必需字段
     if yaml_file is None:
         raise ValueError("YAML file path must be provided.")
 

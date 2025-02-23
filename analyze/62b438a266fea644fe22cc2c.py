@@ -4,7 +4,7 @@ def make_parsers():
     """
     创建一个顶级解析器及其子解析器，并将它们作为元组返回。
     """
-    top_parser = argparse.ArgumentParser(prog='TopParser')
+    top_parser = argparse.ArgumentParser(prog='Top Level Parser')
     subparsers = top_parser.add_subparsers(dest='command')
 
     # 创建子解析器

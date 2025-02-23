@@ -8,6 +8,6 @@ def popitem(self):
     # Assuming self.data is a dictionary-like structure with usage tracking
     least_used_key = min(self.usage, key=self.usage.get)
     value = self.data.pop(least_used_key)
-    del self.usage[least_used_key]
+    self.usage.pop(least_used_key)
     
     return least_used_key, value

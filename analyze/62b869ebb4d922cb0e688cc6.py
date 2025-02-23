@@ -16,8 +16,7 @@ def update_last_applied_manifest_list_from_resp(last_applied_manifest, observer_
 
         # Recursively update if the field is a list or dict
         if isinstance(last_applied_manifest[field], list) and isinstance(response, list):
-            for item in response:
-                update_last_applied_manifest_list_from_resp(last_applied_manifest[field], schema.get('items', []), item)
+            update_last_applied_manifest_list_from_resp(last_applied_manifest[field], schema.get('items', []), response)
         elif isinstance(last_applied_manifest[field], dict) and isinstance(response, dict):
             update_last_applied_manifest_dict_from_resp(last_applied_manifest[field], schema.get('properties', {}), response)
 
