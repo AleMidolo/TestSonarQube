@@ -6,9 +6,9 @@ def get_parser_option_specs(self, command_name):
     :return: the list of all command options
     """
     command_options = {
-        'main': ['--help', '--version'],
-        'virsh': ['--connect', '--list'],
-        'ospd': ['--start', '--stop']
+        'main': ['--help', '--version', '--verbose'],
+        'virsh': ['--connect', '--list', '--start', '--shutdown'],
+        'ospd': ['--config', '--debug', '--status'],
     }
     
     return command_options.get(command_name, [])

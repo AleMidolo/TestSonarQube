@@ -15,6 +15,4 @@ def select_filenames_by_prefix(prefix, files):
     list
         files paths which basename files matches to prefix
     """
-    from os.path import basename
-    
-    return [file for file in files if basename(file).startswith(prefix)]
+    return [file for file in files if file.startswith(prefix)]

@@ -10,11 +10,11 @@ def deep_merge_nodes(nodes):
         else:
             existing_value = merged[key_value]
             if isinstance(existing_value, MappingNode) and isinstance(value, MappingNode):
-                # Merge the MappingNode values
+                # Merge the MappingNodes
                 for sub_key, sub_value in value.value:
                     existing_value.value.append((sub_key, sub_value))
             else:
-                # If they are not both MappingNodes, the last one wins
+                # If they are not both MappingNodes, take the last one
                 merged[key_value] = value
 
     result = []

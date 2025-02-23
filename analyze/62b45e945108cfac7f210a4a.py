@@ -15,28 +15,16 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
         is_valid = True  # Placeholder for actual validation logic
 
         if validate_objects:
-            # Perform object validation
-            if not self.validate_object(obj):
-                is_valid = False
-                if show_warnings:
-                    print(f"Warning: Object {obj} is invalid.")
+            # Perform object validation logic here
+            pass  # Replace with actual validation code
 
         if check_digests:
-            # Perform digest check
-            if not self.check_digest(obj):
-                is_valid = False
-                if show_warnings:
-                    print(f"Warning: Digest for object {obj} is invalid.")
+            # Perform digest checking logic here
+            pass  # Replace with actual digest checking code
 
         if is_valid:
             good_objects += 1
+        elif show_warnings:
+            print(f"Warning: Object {obj} is not valid.")
 
     return num_objects, good_objects
-
-def validate_object(self, obj):
-    # Placeholder for actual object validation logic
-    return True
-
-def check_digest(self, obj):
-    # Placeholder for actual digest checking logic
-    return True

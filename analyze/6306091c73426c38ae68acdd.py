@@ -7,17 +7,14 @@ def validate_from_file(cls, yaml_file=None):
     :return: Dictionary with data loaded from a YAML file
     """
     import yaml
-    from pathlib import Path
+    import os
 
     required_fields = ['field1', 'field2', 'field3']  # Example required fields
-    if yaml_file is None:
-        raise ValueError("yaml_file must be provided")
 
-    file_path = Path(yaml_file)
-    if not file_path.is_file():
-        raise FileNotFoundError(f"The file {yaml_file} does not exist")
+    if yaml_file is None or not os.path.isfile(yaml_file):
+        raise FileNotFoundError("The specified YAML file does not exist.")
 
-    with open(file_path, 'r') as file:
+    with open(yaml_file, 'r') as file:
         data = yaml.safe_load(file)
 
     missing_fields = [field for field in required_fields if field not in data]

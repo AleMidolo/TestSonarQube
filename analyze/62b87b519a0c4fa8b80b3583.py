@@ -22,13 +22,6 @@ def scale(self, other=None):
         raise LenaValueError("Cannot rescale with unknown or zero scale.")
 
     # Assuming self.coordinates is a list of coordinates
-    last_coordinate_index = -1
+    last_coordinate_index = len(self.coordinates) - 1
     self.coordinates[last_coordinate_index] *= other / self.scale_value
-    self.scale_value = other
-
-    # Rescale errors if they exist
-    if hasattr(self, 'errors'):
-        for error in self.errors:
-            error[last_coordinate_index] *= other / self.scale_value
-
-    return self.scale_value
+    self.scale_value = other  # Update the scale to the new value
