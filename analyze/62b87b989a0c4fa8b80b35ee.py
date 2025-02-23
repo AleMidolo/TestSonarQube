@@ -6,4 +6,4 @@ def reset(self):
     - बिन्स को *initial_value* या *make_bins()* (प्रारंभिक सेटअप के आधार पर) के साथ पुनः प्रारंभ किया गया है।  
     """
     self.data = {}
-    self.bins = self.initial_value if hasattr(self, 'initial_value') else self.make_bins()
+    self.bins = self.make_bins() if hasattr(self, 'make_bins') else self.initial_value

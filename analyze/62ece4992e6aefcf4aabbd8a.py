@@ -11,14 +11,23 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     """
     configurations = {}
     log_records = []
-
+    
     for filename in config_filenames:
         try:
             with open(filename, 'r') as file:
-                config_data = json.load(file)
+                config = json.load(file)
+                
                 if resolve_env:
-                    config_data = {k: os.path.expandvars(v) for k, v in config_data.items()}
-                configurations[filename] = config_data
+                    for key, value in config.items():
+                        if isinstance(value, str) and value.startswith('$'):
+                            env_var = value[1:]
+                            config[key] = os.getenv(env_var, value)
+                
+                if overrides:
+                    config.update(overrides)
+                
+                configurations[filename] = config
+                
         except Exception as e:
             log_record = logging.LogRecord(
                 name='config_loader',
@@ -30,5 +39,5 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 exc_info=True
             )
             log_records.append(log_record)
-
+    
     return configurations, log_records

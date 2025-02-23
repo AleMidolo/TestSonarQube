@@ -7,10 +7,10 @@ def identify_request(request: RequestType):
     अंत में यह जांचें कि क्या यह एक पुराना (legacy) payload है।
     """
     if request.is_public_message():
-        return "Public Message"
+        return "यह एक सार्वजनिक संदेश है।"
     elif request.is_private_message():
-        return "Private Message"
+        return "यह एक निजी संदेश है।"
     elif request.is_legacy_payload():
-        return "Legacy Payload"
+        return "यह एक पुराना payload है।"
     else:
-        return "Unknown Request"
+        return "यह कोई मान्य Diaspora अनुरोध नहीं है।"

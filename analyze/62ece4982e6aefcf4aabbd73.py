@@ -17,8 +17,8 @@ def split(s, platform='this'):
         platform = 1 if platform.system() != 'Windows' else 0
 
     if platform == 1:  # POSIX
-        pattern = r'(?<!\\)"([^"\\]*(?:\\.[^"\\]*)*)"(?!\\)|(?<!\\)' + r"'([^'\\]*(?:\\.[^'\\]*)*)'(?!\\)|(?<!\\)\S+"
+        pattern = r'(?<!\\)"([^"]*(?:\\.[^"]*)*)"(?!\\)|(?<!\\)\'([^\']*(?:\\.[^\']*)*)\'(?!\\)|(?<!\\)(\S+)'
     else:  # Windows
-        pattern = r'(?<!\\)"([^"\\]*(?:\\.[^"\\]*)*)"(?!\\)|(?<!\\)' + r"'([^'\\]*(?:\\.[^'\\]*)*)'(?!\\)|(?<!\\)\S+"
+        pattern = r'(?<!\\)"([^"]*(?:\\.[^"]*)*)"(?!\\)|(?<!\\)(\S+)'
 
-    return re.findall(pattern, s)
+    return [match[0] or match[1] or match[2] for match in re.findall(pattern, s)]

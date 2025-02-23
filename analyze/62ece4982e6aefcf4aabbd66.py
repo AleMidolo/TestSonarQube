@@ -11,5 +11,5 @@ def was_processed(processed, path_name, verbose):
         return True
     else:
         if verbose:
-            print(f"'{path_name}' has not been processed yet.")
+            print(f"'{path_name}' was not processed.")
         return False

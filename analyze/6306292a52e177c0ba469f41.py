@@ -2,10 +2,10 @@ def test_tag(tag: str) -> bool:
     """
     किसी शब्द का परीक्षण करें कि क्या उसे टैग के रूप में स्वीकार किया जा सकता है।
     """
-    if not tag:
+    if not tag or not isinstance(tag, str):
         return False
-    if not isinstance(tag, str):
+    if len(tag) > 20 or len(tag) < 1:
         return False
-    if any(char in tag for char in [' ', '#', '@', '!', '$', '%', '^', '&', '*', '(', ')']):
+    if not tag.isalnum() and not all(c in ['-', '_'] for c in tag):
         return False
     return True
