@@ -10,22 +10,17 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     good_objects = 0
 
     # Implement the validation logic here
-    # For example, iterate through the storage hierarchy and validate each object
+    # This is a placeholder for the actual validation process
+    # You would typically iterate over the storage hierarchy and validate each object
+
+    # Example pseudo-logic:
     for obj in self.storage_hierarchy:
         num_objects += 1
         is_valid = True  # Replace with actual validation logic
 
-        if validate_objects:
-            # Perform object validation
-            is_valid = self.validate_object(obj)
-
-        if check_digests:
-            # Perform digest check
-            is_valid = is_valid and self.check_digest(obj)
-
-        if is_valid:
+        if validate_objects and is_valid:
             good_objects += 1
-        elif show_warnings:
+        elif show_warnings and not is_valid:
             print(f"Warning: Object {obj} is not valid.")
 
     return num_objects, good_objects
