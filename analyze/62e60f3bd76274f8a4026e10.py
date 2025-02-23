@@ -4,7 +4,7 @@ def dehydrate_timedelta(value):
     """
     Deidratatore per valori di tipo `timedelta`.
 
-    :param value: 
+    :param value:  
     :type value: timedelta  
     :return: 
     """

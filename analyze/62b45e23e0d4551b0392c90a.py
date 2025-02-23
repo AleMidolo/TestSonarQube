@@ -15,25 +15,37 @@ def validate_version_inventories(self, version_dirs):
         # Simulate loading the inventory for the current version
         current_inventory = self.load_inventory(version_dir)
         
-        # Check if the current version has an inventory
-        if not current_inventory:
-            raise ValueError(f"Missing inventory for version {i + 1}")
+        # Check if the current inventory is valid
+        if not self.is_valid_inventory(current_inventory):
+            raise ValueError(f"Invalid inventory for version {version_dir}")
         
-        # Validate that all previous versions have inventories
-        for j in range(i + 1):
-            if j not in main_inventory:
-                raise ValueError(f"Missing inventory for version {j + 1}")
+        # Update the main inventory with the current version's inventory
+        main_inventory.update(current_inventory)
         
         # Track content digests
         for item, digest in current_inventory.items():
-            if item in main_inventory:
-                if main_inventory[item] != digest:
-                    content_digests[item] = digest
-            main_inventory[item] = digest
+            if item in content_digests:
+                if content_digests[item] != digest:
+                    print(f"Content digest mismatch for {item} in version {version_dir}")
+            else:
+                content_digests[item] = digest
+        
+        # Ensure all previous versions have been accounted for
+        if i > 0:
+            previous_inventory = self.load_inventory(version_dirs[i - 1])
+            if not self.is_inventory_subset(previous_inventory, current_inventory):
+                raise ValueError(f"Version {version_dirs[i - 1]} is not a subset of {version_dir}")
     
-    return main_inventory, content_digests
+    return main_inventory
 
 def load_inventory(self, version_dir):
     # Placeholder for loading inventory logic
-    # This should return a dictionary of item: digest pairs
-    return {}
+    pass
+
+def is_valid_inventory(self, inventory):
+    # Placeholder for inventory validation logic
+    return True
+
+def is_inventory_subset(self, previous_inventory, current_inventory):
+    # Placeholder for subset checking logic
+    return all(item in current_inventory for item in previous_inventory)

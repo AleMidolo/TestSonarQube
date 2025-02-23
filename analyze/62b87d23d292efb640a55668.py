@@ -7,7 +7,10 @@ def get_config():
             self.version = "1.0.0"
             self.author = "Author Name"
             self.license = "MIT"
-            self.description = "This is a sample configuration for Versioneer."
+            self.description = "This is a sample configuration object."
 
     config = VersioneerConfig()
+    # Populating the config object with additional data if needed
+    # config.some_property = "Some Value"
+    
     return config

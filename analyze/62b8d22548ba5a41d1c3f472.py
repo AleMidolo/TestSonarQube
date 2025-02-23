@@ -4,17 +4,21 @@ def cachedmethod(cache, key=hashkey, lock=None):
     """
     def decorator(func):
         def wrapper(self, *args, **kwargs):
-            # Generate the cache key based on the provided key function
+            # Generate the cache key
             cache_key = key(self, *args, **kwargs)
             # Acquire lock if provided
             if lock:
                 with lock:
-                    if cache_key not in cache:
-                        cache[cache_key] = func(self, *args, **kwargs)
-                    return cache[cache_key]
+                    if cache_key in cache:
+                        return cache[cache_key]
+                    result = func(self, *args, **kwargs)
+                    cache[cache_key] = result
+                    return result
             else:
-                if cache_key not in cache:
-                    cache[cache_key] = func(self, *args, **kwargs)
-                return cache[cache_key]
+                if cache_key in cache:
+                    return cache[cache_key]
+                result = func(self, *args, **kwargs)
+                cache[cache_key] = result
+                return result
         return wrapper
     return decorator
