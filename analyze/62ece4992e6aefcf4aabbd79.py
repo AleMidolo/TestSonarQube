@@ -10,9 +10,9 @@ def make_find_paths(find_paths):
     """
     transformed_paths = []
     for path in find_paths:
-        if ':' in path:  # Assuming patterns with ':' are already in the correct format
+        if ':' in path:  # Check if it's a pattern
             transformed_paths.append(path)
-        else:
+        else:  # Transform fragmented path to glob pattern
             transformed_path = f'sh:**/*{path}*/**'
             transformed_paths.append(transformed_path)
     return transformed_paths

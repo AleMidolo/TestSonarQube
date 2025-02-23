@@ -23,8 +23,8 @@ def format(
         formatted_sql = sql
 
     if isinstance(params, dict):
-        out_params = {key: f'OUT_{value}' for key, value in params.items()}
+        out_params = {k: v for k, v in params.items()}
     else:
-        out_params = [f'OUT_{value}' for value in params]
+        out_params = list(params)
 
     return formatted_sql, out_params

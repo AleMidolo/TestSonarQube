@@ -13,13 +13,13 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
     for option in options_spec:
         if 'required_when' in option:
             condition = option['required_when']
-            if self._check_condition(condition, command_name, args):
+            if self._check_condition(condition, args):
                 required_args.append(option['name'])
     
     return required_args
 
-def _check_condition(self, condition, command_name, args):
+def _check_condition(self, condition, args):
     # Implementa la logica per verificare se la condizione è soddisfatta
     # Questa è una funzione di esempio e dovrebbe essere implementata
-    # in base alla logica specifica del tuo comando.
-    return True  # Placeholder per la logica di condizione
+    # in base alla logica specifica delle condizioni.
+    return True  # Placeholder per la logica di verifica della condizione

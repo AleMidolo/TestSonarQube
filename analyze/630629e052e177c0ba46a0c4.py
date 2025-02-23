@@ -9,10 +9,10 @@ def parse_diaspora_webfinger(document: str) -> Dict:
     [https://diaspora.github.io/diaspora_federation/discovery/webfinger.html](https://diaspora.github.io/diaspora_federation/discovery/webfinger.html)
     """
     try:
-        # Try to parse as JSON
+        # Try to parse the document as JSON
         return json.loads(document)
     except json.JSONDecodeError:
-        # If JSON parsing fails, try to parse as XRD
+        # If JSON parsing fails, try to parse as XRD (XML)
         root = ET.fromstring(document)
         result = {}
         for child in root:

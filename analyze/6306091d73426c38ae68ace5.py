@@ -3,14 +3,10 @@ def _include_groups(self, parser_dict):
     Risolve la direttiva "include dict" nei file di specifica
     """
     if 'include' in parser_dict:
-        include_files = parser_dict['include']
-        for include_file in include_files:
-            with open(include_file, 'r') as f:
-                included_dict = self._parse_file(f)
-                parser_dict.update(included_dict)
+        include_dict = parser_dict['include']
+        for key, value in include_dict.items():
+            if isinstance(value, dict):
+                self._include_groups(value)
+            else:
+                parser_dict[key] = value
     return parser_dict
-
-def _parse_file(self, file):
-    # Dummy implementation for parsing a file into a dictionary
-    # This should be replaced with actual parsing logic
-    return {}  # Replace with actual parsing logic

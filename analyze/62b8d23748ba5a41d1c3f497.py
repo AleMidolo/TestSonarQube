@@ -6,10 +6,10 @@ def popitem(self):
         raise KeyError("popitem(): dictionary is empty")
     
     # Trova la chiave con il valore di accesso minimo
-    least_frequent_key = min(self.frequency, key=self.frequency.get)
+    min_key = min(self.access_count, key=self.access_count.get)
     
     # Rimuove la chiave dalla struttura dati
-    value = self.data.pop(least_frequent_key)
-    del self.frequency[least_frequent_key]
+    value = self.data.pop(min_key)
+    del self.access_count[min_key]
     
-    return least_frequent_key, value
+    return (min_key, value)
