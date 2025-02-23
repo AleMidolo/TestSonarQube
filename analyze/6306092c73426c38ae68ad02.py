@@ -13,6 +13,6 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
 
     for arg in deprecated_args.keys():
         if arg in cli_args:
-            print(f"Warning: '{arg}' is deprecated. {deprecated_args[arg]}")
+            print(f"Warning: Argument '{arg}' is deprecated. {deprecated_args[arg]}")
         if arg in answer_file_args:
-            print(f"Warning: '{arg}' is deprecated. {deprecated_args[arg]}")
+            print(f"Warning: Argument '{arg}' is deprecated. {deprecated_args[arg]}")

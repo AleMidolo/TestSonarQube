@@ -13,22 +13,21 @@ def build_app_logger(name='app', logfile='app.log', debug=True):
     Returns:
         Devuelve un objeto de registrador (logger) instanciado.
     """
-    # Crear el directorio para el archivo de log si no existe
-    os.makedirs(os.path.dirname(logfile), exist_ok=True)
-
-    # Configurar el logger
+    # Crear un logger
     logger = logging.getLogger(name)
+    
+    # Establecer el nivel de logging
     logger.setLevel(logging.DEBUG if debug else logging.INFO)
-
+    
     # Crear un manejador de archivo
     file_handler = logging.FileHandler(logfile)
     file_handler.setLevel(logging.DEBUG if debug else logging.INFO)
-
+    
     # Crear un formateador y asignarlo al manejador
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     file_handler.setFormatter(formatter)
-
+    
     # Agregar el manejador al logger
     logger.addHandler(file_handler)
-
+    
     return logger

@@ -21,10 +21,10 @@ def _eval_file(prefix, file_path):
     # Initialize the result dictionary
     result = {}
 
-    # Extract the file extension
+    # Get the file extension
     _, file_extension = os.path.splitext(file_path)
 
-    # Determine the type of file based on the extension
+    # Determine the type of file based on its extension
     if file_extension in ['.jpg', '.png', '.gif']:
         file_type = 'asset'
     elif file_extension in ['.mp4', '.mov', '.avi']:

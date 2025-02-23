@@ -8,19 +8,15 @@ def validate_fixity(self, fixity, manifest_files):
     if not isinstance(fixity, dict):
         raise ValueError("El bloque de fijación debe ser un diccionario.")
 
-    # Verificar que contenga las claves necesarias
-    required_keys = ['file', 'checksum']
-    for key in required_keys:
-        if key not in fixity:
-            raise ValueError(f"Falta la clave '{key}' en el bloque de fijación.")
+    # Verificar que cada archivo en el bloque de fijación esté en el manifiesto
+    manifest_set = set(manifest_files)
+    for file in fixity.keys():
+        if file not in manifest_set:
+            raise ValueError(f"El archivo '{file}' no está en el manifiesto.")
 
-    # Verificar que el archivo referenciado esté en el manifiesto
-    referenced_file = fixity['file']
-    if referenced_file not in manifest_files:
-        raise ValueError(f"El archivo '{referenced_file}' no está en el manifiesto.")
-
-    # Verificar que el checksum sea una cadena
-    if not isinstance(fixity['checksum'], str):
-        raise ValueError("El checksum debe ser una cadena.")
-
+    # Verificar que la estructura del bloque de fijación sea correcta
+    for file, checksum in fixity.items():
+        if not isinstance(checksum, str):
+            raise ValueError(f"El checksum para el archivo '{file}' debe ser una cadena.")
+    
     return True

@@ -13,9 +13,10 @@ def protocol_handlers(cls, protocol_version=None):
 
     # Suponiendo que hay un diccionario de manejadores de protocolo
     handlers = {
-        (3, 5): "HandlerFor3_5",
-        (4, 0): "HandlerFor4_0",
-        (4, 1): "HandlerFor4_1",
+        (3, 5): "HandlerFor35",
+        (4, 0): "HandlerFor40",
+        (4, 1): "HandlerFor41",
+        # Agregar más versiones y sus manejadores según sea necesario
     }
 
     if protocol_version is not None:

@@ -33,16 +33,25 @@ def verifyObject(iface, candidate, tentative=False):
             continue
         
         candidate_method = getattr(candidate, method_name)
+        if not callable(candidate_method):
+            errors.append(f"{method_name} in {candidate} is not callable")
+            continue
+        
         iface_signature = signature(method)
         candidate_signature = signature(candidate_method)
 
         if len(iface_signature.parameters) != len(candidate_signature.parameters):
-            errors.append(f"{method_name} has incorrect number of parameters in {candidate}")
+            errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
             continue
 
-        for param in iface_signature.parameters.values():
-            if param.default is Parameter.empty and param.name not in candidate_signature.parameters:
-                errors.append(f"{method_name} is missing required parameter {param.name} in {candidate}")
+        for param_name, param in iface_signature.parameters.items():
+            if param_name not in candidate_signature.parameters:
+                errors.append(f"{param_name} is missing in {method_name} of {candidate}")
+                continue
+            
+            candidate_param = candidate_signature.parameters[param_name]
+            if param.annotation != Parameter.empty and candidate_param.annotation == Parameter.empty:
+                errors.append(f"{param_name} in {method_name} of {candidate} is missing type annotation")
 
     required_attributes = iface.names()
     for attr_name in required_attributes:
@@ -50,6 +59,8 @@ def verifyObject(iface, candidate, tentative=False):
             errors.append(f"{candidate} is missing attribute {attr_name}")
 
     if errors:
+        if len(errors) == 1:
+            raise Invalid(errors[0])
         raise Invalid(errors)
 
     return True

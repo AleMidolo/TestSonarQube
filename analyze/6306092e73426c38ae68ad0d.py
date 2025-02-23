@@ -14,6 +14,6 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
             self.specs = specs
 
         def __repr__(self):
-            return f"<ComplexArgumentType name={self.name}, specs={self.specs}>"
+            return f"ComplexArgumentType(name={self.name}, specs={self.specs})"
 
     return ComplexArgumentType(type_name, spec_option)
