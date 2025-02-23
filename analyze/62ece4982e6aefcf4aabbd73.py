@@ -17,7 +17,7 @@ def split(s, platform='this'):
     if platform == 1:  # POSIX
         pattern = r'(?:"([^"]*)"|\'([^\']*)|(\S+))'
     elif platform == 0:  # Windows
-        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+)?)'
+        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+))'
     else:
         raise ValueError("Unsupported platform value")
 

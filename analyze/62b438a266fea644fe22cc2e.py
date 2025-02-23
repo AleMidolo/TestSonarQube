@@ -1,4 +1,5 @@
 import argparse
+import sys
 
 def parse_arguments(*unparsed_arguments):
     """
@@ -7,7 +8,7 @@ def parse_arguments(*unparsed_arguments):
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='subparser_name')
 
-    # Aquí se pueden agregar subcomandos y sus argumentos
+    # Aquí se pueden agregar subcomandos
     # Ejemplo de un subcomando
     subparser_a = subparsers.add_parser('comando_a')
     subparser_a.add_argument('--opcion_a', type=int, help='Opción para comando_a')
@@ -18,5 +19,5 @@ def parse_arguments(*unparsed_arguments):
     # Analizar los argumentos
     args = parser.parse_args(unparsed_arguments)
 
-    # Devolver un diccionario que mapea el nombre del subparser a su Namespace
+    # Devolver un diccionario que mapea el nombre del subparser a la instancia de Namespace
     return {args.subparser_name: args}

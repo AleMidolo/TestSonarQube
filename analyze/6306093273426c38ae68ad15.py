@@ -12,7 +12,7 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     import subprocess
     import json
 
-    # Convertir el diccionario de variables a formato JSON
+    # Convertir el diccionario de variables a un formato JSON
     extra_vars = json.dumps(vars_dict)
 
     # Construir el comando de Ansible

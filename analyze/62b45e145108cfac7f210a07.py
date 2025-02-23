@@ -20,14 +20,17 @@ def validate(self, inventory, extract_spec_version=False):
         # Perform validation for version 1
         if 'items' not in inventory:
             raise KeyError("Items key is missing in inventory for version 1.")
+        # Further checks can be added here
     elif self.spec_version == 'v2':
         # Perform validation for version 2
         if 'products' not in inventory:
             raise KeyError("Products key is missing in inventory for version 2.")
+        # Further checks can be added here
     elif self.spec_version == 'v3':
         # Perform validation for version 3
         if 'assets' not in inventory:
             raise KeyError("Assets key is missing in inventory for version 3.")
+        # Further checks can be added here
     else:
         raise ValueError("Unsupported spec_version provided.")
     
