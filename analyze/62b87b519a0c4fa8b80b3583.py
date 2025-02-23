@@ -1,32 +1,32 @@
 def scale(self, other=None):
     """
-    获取或设置图表的比例。
+    ग्राफ़ का स्केल प्राप्त करें या सेट करें।
 
-    如果参数 *other* 为 ``None``，则返回此图表的比例。
+    यदि *other* ``None`` है, तो इस ग्राफ़ का स्केल लौटाएं।
 
-    如果提供了一个数值类型的 *other*，则将图表重新缩放到该值。
-    如果图表的比例未知或为零，对其重新缩放将会引发:exc: `~.LenaValueError` 异常。
+    यदि *other* एक संख्यात्मक मान है, तो ग्राफ़ को उस मान पर पुनः स्केल करें।
+    यदि ग्राफ़ का स्केल अज्ञात है या शून्य है,
+    तो पुनः स्केल करने पर :exc:`~.LenaValueError` उत्पन्न होगा।
 
-    为了获得有意义的结果，将使用图表的字段。
-    仅最后一个坐标会被重新缩放。
-    例如，如果图表具有 *x* 和 *y* 坐标，则 *y* 会被重新缩放；对于三维图表，*z* 会被重新缩放。
-    所有的误差值也会与其对应的坐标一起重新缩放。
+    सार्थक परिणाम प्राप्त करने के लिए, ग्राफ़ के फ़ील्ड्स का उपयोग किया जाता है।
+    केवल अंतिम निर्देशांक (coordinate) को पुनः स्केल किया जाता है।
+    उदाहरण के लिए, यदि ग्राफ़ में *x* और *y* निर्देशांक हैं,
+    तो *y* को पुनः स्केल किया जाएगा, और यदि ग्राफ़ 3-आयामी (3-dimensional) है,
+    तो *z* को पुनः स्केल किया जाएगा।
+    सभी त्रुटियों (errors) को उनके निर्देशांक के साथ पुनः स्केल किया जाता है।
     """
     if other is None:
-        return self.current_scale  # 假设有一个属性 current_scale 存储当前比例
+        return self.scale_value  # Assuming scale_value is an attribute of the class
 
     if not isinstance(other, (int, float)):
-        raise ValueError("参数 *other* 必须是数值类型")
+        raise ValueError("The scale value must be a numeric type.")
 
-    if self.current_scale is None or self.current_scale == 0:
-        raise LenaValueError("图表的比例未知或为零，无法重新缩放")
+    if self.scale_value is None or self.scale_value == 0:
+        raise LenaValueError("Cannot rescale when the scale is unknown or zero.")
 
-    # 假设有一个方法来获取最后一个坐标的值
-    last_coordinate = self.get_last_coordinate()
-    new_scale = other / self.current_scale
+    # Assuming self.coordinates is a list of coordinates
+    for i in range(len(self.coordinates)):
+        if i == len(self.coordinates) - 1:  # Only scale the last coordinate
+            self.coordinates[i] *= other
 
-    # 假设有一个方法来设置新的比例和更新坐标
-    self.set_scale(new_scale)
-    self.update_coordinates(last_coordinate * new_scale)
-
-    return self.current_scale
+    return self.coordinates

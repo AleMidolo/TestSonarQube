@@ -1,25 +1,32 @@
 def validate(self, inventory, extract_spec_version=False):
     """
-    验证给定的库存（inventory）。如果 `extract_spec_version` 为 True，则会根据 `type` 值来确定规范版本。如果没有 `type` 值或其无效，则其他测试将基于 `self.spec_version` 中给定的版本。
-    验证给定的库存。
+    दिए गए इन्वेंटरी को सत्यापित करें।
 
-    如果 `extract_spec_version` 为真，则会根据 `type` 值来确定规范版本。
-    如果没有 `type` 值或其无效，则其他测试将基于 `self.spec_version` 中给定的版本。
+    यदि `extract_spec_version` का मान `True` है, तो यह `type` मान को देखकर 
+    स्पेसिफिकेशन वर्जन निर्धारित करेगा। यदि `type` मान मौजूद नहीं है या यह 
+    मान्य नहीं है, तो अन्य परीक्षण `self.spec_version` में दिए गए वर्जन के 
+    आधार पर किए जाएंगे।
     """
     if extract_spec_version:
-        spec_version = inventory.get('type', None)
-        if not spec_version or spec_version not in self.valid_types:
+        if 'type' in inventory:
+            spec_version = inventory['type']
+            # Validate spec_version against known types
+            if spec_version not in self.valid_types:
+                raise ValueError(f"Invalid type: {spec_version}")
+        else:
             spec_version = self.spec_version
     else:
         spec_version = self.spec_version
 
-    # Perform validation based on the determined spec_version
+    # Perform additional validation based on spec_version
     if spec_version == 'v1':
-        return self.validate_v1(inventory)
+        # Perform v1 specific validation
+        self.validate_v1(inventory)
     elif spec_version == 'v2':
-        return self.validate_v2(inventory)
+        # Perform v2 specific validation
+        self.validate_v2(inventory)
     else:
-        raise ValueError("Invalid spec version: {}".format(spec_version))
+        raise ValueError(f"Unknown spec version: {spec_version}")
 
 def validate_v1(self, inventory):
     # Implementation for v1 validation

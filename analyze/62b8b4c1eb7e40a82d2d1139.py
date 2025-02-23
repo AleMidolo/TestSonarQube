@@ -1,6 +1,6 @@
 def verifyClass(iface, candidate, tentative=False):
     """
-    验证 *candidate* 是否可能正确地提供 *iface*。
+    यह फ़ंक्शन सत्यापित करता है कि *candidate* सही तरीके से *iface* प्रदान कर सकता है या नहीं।
     """
     if tentative:
         return issubclass(candidate, iface) or iface in candidate.__bases__

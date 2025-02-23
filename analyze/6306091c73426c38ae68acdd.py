@@ -1,24 +1,18 @@
+import yaml
+
+class IRValidatorException(Exception):
+    pass
+
 def validate_from_file(cls, yaml_file=None):
     """
-    加载并验证一个 YAML 文件是否包含所有必需字段
+    एक YAML फ़ाइल को लोड और सत्यापित करता है कि उसमें सभी आवश्यक फ़ील्ड्स मौजूद हैं।
 
-    :param yaml_file: YAML 文件的路径
-    :raise IRValidatorException: 当文件中缺少必需数据时抛出异常
-    :return: 从 YAML 文件加载的数据字典
+    :param yaml_file: YAML फ़ाइल का पथ
+    :raise IRValidatorException: जब फ़ाइल में अनिवार्य डेटा गायब हो
+    :return: YAML फ़ाइल से लोड किए गए डेटा के साथ एक डिक्शनरी
     """
-    import yaml
-    from pathlib import Path
-
-    required_fields = ['field1', 'field2', 'field3']  # 示例必需字段
-
-    if yaml_file is None:
-        raise ValueError("YAML file path must be provided.")
-
-    yaml_path = Path(yaml_file)
-    if not yaml_path.is_file():
-        raise FileNotFoundError(f"The file {yaml_file} does not exist.")
-
-    with open(yaml_file, 'r', encoding='utf-8') as file:
+    required_fields = cls.get_required_fields()  # Assuming this method exists in the class
+    with open(yaml_file, 'r') as file:
         data = yaml.safe_load(file)
 
     missing_fields = [field for field in required_fields if field not in data]

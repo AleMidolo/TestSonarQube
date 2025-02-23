@@ -1,12 +1,14 @@
-def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra_vars=None, ansible_args=None):
+def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
+                     extra_vars=None, ansible_args=None):
     """
-    封装 'ansible-playbook' 命令行接口。
-    :param ir_workspace: 一个 Infrared Workspace 对象，表示当前活动的工作区
-    :param ir_plugin: 当前插件的一个 InfraredPlugin 对象
-    :param playbook_path: 要调用的 playbook 文件路径
-    :param verbose: Ansible 的详细级别
-    :param extra_vars: dict。作为额外变量 (extra-vars) 传递给 Ansible
-    :param ansible_args: ansible-playbook 参数的字典，直接传递给 Ansible
+    'ansible-playbook' CLI को रैप करता है।
+
+    :param ir_workspace: एक Infrared Workspace ऑब्जेक्ट जो सक्रिय वर्कस्पेस को दर्शाता है।
+    :param ir_plugin: वर्तमान प्लगइन का एक InfraredPlugin ऑब्जेक्ट।
+    :param playbook_path: वह प्लेबुक जिसे निष्पादित करना है।
+    :param verbose: Ansible की वर्बोसिटी स्तर।
+    :param extra_vars: dict। इसे Ansible को अतिरिक्त वेरिएबल्स (extra-vars) के रूप में पास किया जाता है।
+    :param ansible_args: ansible-playbook के तर्कों का एक dict, जिसे सीधे Ansible तक पहुँचाने के लिए उपयोग किया जाता है।
     """
     import subprocess
     import json
@@ -14,11 +16,11 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
     command = ['ansible-playbook', playbook_path]
 
     if verbose is not None:
-        command.append(f'-v' * verbose)
+        command += ['-v'] * verbose
 
     if extra_vars:
-        extra_vars_str = ' '.join(f'--extra-vars="{key}={value}"' for key, value in extra_vars.items())
-        command.append(extra_vars_str)
+        extra_vars_str = ' '.join(f"{key}={value}" for key, value in extra_vars.items())
+        command += ['--extra-vars', extra_vars_str]
 
     if ansible_args:
         for key, value in ansible_args.items():
@@ -26,9 +28,9 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
             if value is not None:
                 command.append(str(value))
 
-    result = subprocess.run(' '.join(command), shell=True, capture_output=True, text=True)
+    result = subprocess.run(command, cwd=ir_workspace.path, capture_output=True, text=True)
 
     if result.returncode != 0:
-        raise Exception(f"Ansible playbook failed: {result.stderr}")
+        raise RuntimeError(f"Ansible playbook failed: {result.stderr}")
 
     return json.loads(result.stdout)

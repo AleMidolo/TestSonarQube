@@ -1,26 +1,21 @@
 def size_to_bytes(size: str) -> int:
     """
-    将人类可读的文件大小转换为字节。
+    मानव-पठनीय फ़ाइल आकार को बाइट्स में परिवर्तित करें।
 
-    参数:
-          size: str，一个表示人类可读的文件大小的字符串 (例如: '500K')
-    返回值:
-          int: 文件大小的字节数
+    परिणामी मान एक अनुमान है क्योंकि इनपुट मान अधिकांश मामलों में राउंड किया गया होता है।
 
-    结果值是一个近似值，因为输入值在大多数情况下是四舍五入的。
+    तर्क (Args):
+        आकार (size): एक स्ट्रिंग जो मानव-पठनीय फ़ाइल आकार का प्रतिनिधित्व करती है (उदा: '500K')
 
-    参数:
-          size: 一个表示人类可读文件大小的字符串 (例如: '500K')
+    रिटर्न (Returns):
+        फ़ाइल आकार का दशमलव (decimal) प्रतिनिधित्व
 
-    返回值:
-          文件大小的十进制表示
+    उदाहरण (Examples)::
 
-        示例::
-
-            >>> size_to_bytes("500")
-            500
-            >>> size_to_bytes("1K")
-            1000
+        >>> size_to_bytes("500")
+        500
+        >>> size_to_bytes("1K")
+        1000
     """
     size = size.strip().upper()
     multipliers = {
@@ -37,10 +32,6 @@ def size_to_bytes(size: str) -> int:
     
     for suffix, multiplier in multipliers.items():
         if size.endswith(suffix):
-            number_part = size[:-1]
-            if number_part.isdigit():
-                return int(number_part) * multiplier
-            else:
-                return int(float(number_part) * multiplier)
+            return int(float(size[:-1]) * multiplier)
     
     raise ValueError("Invalid size format")

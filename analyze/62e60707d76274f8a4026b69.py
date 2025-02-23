@@ -1,17 +1,21 @@
 def point_type(name, fields, srid_map):
     """
-    动态创建一个 Point 子类。
+    डायनामिक रूप से एक पॉइंट सबक्लास बनाएं।
     """
-    from types import new_class
+    # Create a new class dynamically
+    class Point:
+        def __init__(self, **kwargs):
+            for field in fields:
+                setattr(self, field, kwargs.get(field, None))
 
-    def init(self, **kwargs):
-        for field in fields:
-            setattr(self, field, kwargs.get(field))
+        def __repr__(self):
+            return f"{name}(" + ", ".join(f"{field}={getattr(self, field)}" for field in fields) + ")"
 
-    attrs = {'__init__': init}
-    point_class = new_class(name, (object,), attrs)
+    # Add a method to get the SRID
+    def get_srid(self):
+        return srid_map.get(name, None)
 
-    for srid, field in srid_map.items():
-        setattr(point_class, f'srid_{srid}', field)
+    Point.get_srid = get_srid
+    Point.__name__ = name
 
-    return point_class
+    return Point

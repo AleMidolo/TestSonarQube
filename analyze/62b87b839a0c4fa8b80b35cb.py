@@ -1,10 +1,10 @@
 def _get_err_indices(self, coord_name):
     """
-    查找与 `coord_name` 对应的所有错误索引。
-    获取与某个坐标对应的错误索引。
+    एक समन्वय (coordinate) से संबंधित त्रुटि सूचकांक (error indices) प्राप्त करें।
     """
-    err_indices = []
-    for index, coord in enumerate(self.coordinates):
-        if coord == coord_name and self.errors[index]:
-            err_indices.append(index)
-    return err_indices
+    # मान लें कि self.errors एक डिक्शनरी है जिसमें समन्वय नाम कुंजी के रूप में हैं
+    # और त्रुटि सूचकांक मान के रूप में हैं।
+    if coord_name in self.errors:
+        return self.errors[coord_name]
+    else:
+        return []

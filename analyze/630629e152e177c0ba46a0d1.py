@@ -3,11 +3,11 @@ import requests
 
 def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
     """
-    尝试检索一个符合RFC7033标准的WebFinger文档。如果失败，不会抛出异常。
+    एक RFC7033 वेबफिंगर दस्तावेज़ प्राप्त करने का प्रयास करें। 
+    यदि यह विफल होता है, तो कोई अपवाद उत्पन्न नहीं करता।
     """
     try:
-        url = f"https://webfinger.example.com/whois/{handle}"
-        response = requests.get(url)
+        response = requests.get(f"https://webfinger.example.com/well-known/webfinger?resource=acct:{handle}")
         if response.status_code == 200:
             return response.text
     except requests.RequestException:

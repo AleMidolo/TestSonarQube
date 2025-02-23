@@ -1,10 +1,9 @@
 def render(pieces, style):
     """
-    将输入的组件和样式渲染为对应的样式。
-    将给定的组件渲染为要求的样式。
+    दिए गए संस्करण टुकड़ों को निर्दिष्ट शैली में प्रस्तुत करें।
     """
-    rendered_output = []
+    styled_pieces = []
     for piece in pieces:
-        rendered_piece = f"<div class='{style}'>{piece}</div>"
-        rendered_output.append(rendered_piece)
-    return ''.join(rendered_output)
+        styled_piece = f"{style}: {piece}"
+        styled_pieces.append(styled_piece)
+    return "\n".join(styled_pieces)

@@ -1,15 +1,15 @@
 def validate_hierarchy(self, validate_objects=True, check_digests=True, show_warnings=False):
     """
-    验证存储根层次结构。
+    स्टोरेज रूट हाइरार्की को मान्य करें।
 
-    返回:
-          num_objects (int): 检查的对象数量。
-          good_objects (int): 检查后被认为有效的对象数量。
+    रिटर्न करता है:
+        num_objects - जांचे गए ऑब्जेक्ट्स की संख्या
+        good_objects - जांचे गए ऑब्जेक्ट्स की संख्या जो मान्य पाए गए
     """
     num_objects = 0
     good_objects = 0
 
-    # 假设我们有一个方法来获取所有对象
+    # Assuming we have a method to get all objects in the hierarchy
     objects = self.get_all_objects()
 
     for obj in objects:
@@ -21,10 +21,10 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
             if not is_valid and show_warnings:
                 print(f"Warning: Object {obj} is invalid.")
 
-        if check_digests:
-            is_valid = is_valid and self.check_digest(obj)
+        if check_digests and is_valid:
+            is_valid = self.check_object_digest(obj)
             if not is_valid and show_warnings:
-                print(f"Warning: Digest for object {obj} is invalid.")
+                print(f"Warning: Object {obj} has an invalid digest.")
 
         if is_valid:
             good_objects += 1

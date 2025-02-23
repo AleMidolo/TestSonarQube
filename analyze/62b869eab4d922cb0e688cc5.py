@@ -1,22 +1,22 @@
-def update_last_applied_manifest_dict_from_resp(last_applied_manifest, observer_schema, response):
+def update_last_applied_manifest_dict_from_resp(
+    last_applied_manifest, observer_schema, response
+):
     """
-    与函数 :func:``update_last_applied_manifest_list_from_resp`` 一起，该函数被递归调用，用于从部分 Kubernetes 响应中更新部分 ``last_applied_manifest``。
+    :func:``update_last_applied_manifest_list_from_resp`` के साथ मिलकर, यह फ़ंक्शन आंशिक ``last_applied_manifest`` को आंशिक Kubernetes प्रतिक्रिया से अपडेट करने के लिए पुनरावृत्त रूप से कॉल किया जाता है।
 
-    参数:
-      last_applied_manifest (list): 正在更新的部分 ``last_applied_manifest``。
-      observer_schema (list): 部分 ``observer_schema``。
-      response (list): 来自 Kubernetes API 的部分响应。
+    आर्ग्युमेंट्स (Args):
+        last_applied_manifest (dict): आंशिक ``last_applied_manifest`` जिसे अपडेट किया जा रहा है।
+        observer_schema (dict): आंशिक ``observer_schema``।
+        response (dict): Kubernetes API से प्राप्त आंशिक प्रतिक्रिया।
 
-    异常:
-      KeyError: 如果在 Kubernetes 响应中未找到观察字段，则抛出此异常。
+    त्रुटि (Raises):
+        KeyError: यदि देखे गए फ़ील्ड Kubernetes प्रतिक्रिया में मौजूद नहीं हैं।
 
-    此函数会遍历所有观察到的字段，如果它们尚未在 `last_applied_manifest` 中初始化，则会为其初始化值。
+    यह फ़ंक्शन सभी देखे गए फ़ील्ड्स के माध्यम से जाता है और यदि वे पहले से ``last_applied_manifest`` में मौजूद नहीं हैं, तो उनके मान को इनिशियलाइज़ करता है।
     """
-    for field in observer_schema:
-        if field not in last_applied_manifest:
-            if field not in response:
-                raise KeyError(f"Field '{field}' not found in response.")
-            last_applied_manifest[field] = response[field]
-        elif isinstance(last_applied_manifest[field], dict) and isinstance(response[field], dict):
-            update_last_applied_manifest_dict_from_resp(last_applied_manifest[field], observer_schema[field], response[field])
+    for key in observer_schema:
+        if key not in last_applied_manifest:
+            if key not in response:
+                raise KeyError(f"Key '{key}' not found in response.")
+            last_applied_manifest[key] = response[key]
     return last_applied_manifest

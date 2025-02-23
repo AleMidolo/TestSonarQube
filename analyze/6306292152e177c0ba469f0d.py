@@ -1,7 +1,5 @@
 def identify_request(request: RequestType) -> bool:
     """
-    检查通过 JSON 加载的请求体是否包含事件。如果包含，则返回真。否则，返回假。
-
-    尝试识别这是否是一个 Matrix 请求。
+    यह फ़ंक्शन यह पहचानने की कोशिश करता है कि क्या यह एक मैट्रिक्स (Matrix) अनुरोध है।
     """
-    return 'event' in request
+    return isinstance(request, MatrixRequestType)

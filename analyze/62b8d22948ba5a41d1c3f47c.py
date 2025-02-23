@@ -1,6 +1,5 @@
 def get(self, key, default=None):
     """
-    如果类中存在指定的键（key），则返回与该键对应的值；否则，返回默认值
-    如果键 `k` 存在于字典 `D` 中,则`D.get(k[, d]) -> D[k]`；否则返回默认值 `None`。
+    D.get(k[, d]) -> D[k] यदि k D में है, तो D[k] लौटाया जाएगा, अन्यथा d। d का डिफ़ॉल्ट मान None है।
     """
-    return self.data.get(key, default)
+    return self.data[key] if key in self.data else default

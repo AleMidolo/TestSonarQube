@@ -2,14 +2,12 @@ import argparse
 
 def parse_arguments(*arguments):
     """
-    根据调用此脚本时提供的命令行参数，解析这些参数并将其作为一个 `ArgumentParser` 实例返回。
+    इस फ़ंक्शन का उद्देश्य दिए गए कमांड-लाइन आर्ग्युमेंट्स को पार्स करना है और उन्हें एक 
+    ArgumentParser इंस्टेंस के रूप में लौटाना है।
     """
     parser = argparse.ArgumentParser()
     
-    # 这里可以添加需要解析的参数
-    # 例如：parser.add_argument('--example', help='这是一个示例参数')
+    for arg in arguments:
+        parser.add_argument(arg)
     
-    # 解析传入的参数
-    parsed_args = parser.parse_args(arguments)
-    
-    return parsed_args
+    return parser.parse_args()

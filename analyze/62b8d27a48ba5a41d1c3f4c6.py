@@ -1,19 +1,18 @@
 def cached(cache, key=hashkey, lock=None):
     """
-    返回一个装饰器函数，将结果保存到缓存中
-    一个用于包装一个函数，通过一个支持记忆功能的可调用对象将结果保存到缓存中的装饰器。
+    यह एक डेकोरेटर है जो किसी फ़ंक्शन को एक मेमोराइज़िंग कॉल करने योग्य (memoizing callable) के साथ रैप करता है, जो परिणामों को कैश में सहेजता है।
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            # 生成缓存键
+            # Generate the cache key
             cache_key = key(*args, **kwargs)
-            # 尝试从缓存中获取结果
+            # Check if the result is in the cache
             if cache_key in cache:
                 return cache[cache_key]
-            # 如果没有缓存结果，调用原始函数
-            result = func(*args, **kwargs)
-            # 将结果存入缓存
-            cache[cache_key] = result
+            # If not, call the function and store the result in the cache
+            with (lock if lock else dummy_lock):
+                result = func(*args, **kwargs)
+                cache[cache_key] = result
             return result
         return wrapper
     return decorator
