@@ -7,7 +7,7 @@ def integral(bins, edges):
     在 :class:`.histogram` 的描述中定义了它们的格式。
     """
     if len(bins) != len(edges) - 1:
-        raise ValueError("The length of bins must be one less than the length of edges.")
+        raise ValueError("Length of bins must be one less than length of edges.")
     
     area = 0.0
     for i in range(len(bins)):

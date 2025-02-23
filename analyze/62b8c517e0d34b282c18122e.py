@@ -21,10 +21,9 @@ def extostr(cls, e, max_level=30, max_path_level=5):
         formatted_tb = []
         for frame in tb[:max_level]:
             formatted_tb.append(f"File \"{frame.filename}\", line {frame.lineno}, in {frame.name}")
-            formatted_tb.append(f"  {frame.line.strip()}")
         return "\n".join(formatted_tb)
 
     exception_message = str(e)
     formatted_traceback = format_exception(e, max_level, max_path_level)
     
-    return f"{type(e).__name__}: {exception_message}\n{formatted_traceback}"
+    return f"{exception_message}\nTraceback (most recent call last):\n{formatted_traceback}"

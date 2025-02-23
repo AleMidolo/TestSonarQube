@@ -5,7 +5,7 @@ def get_parser_option_specs(self, command_name):
     :param command_name: 命令名称（如 main、virsh、ospd 等）
     :return: 所有命令选项的列表
     """
-    # 假设我们有一个字典来存储命令及其选项
+    # 假设我们有一个字典存储命令及其选项
     command_options = {
         'main': ['--help', '--version', '--verbose'],
         'virsh': ['--connect', '--list', '--start'],

@@ -32,7 +32,8 @@ def unit_of_work(metadata=None, timeout=None):
     def decorator(func):
         def wrapper(*args, **kwargs):
             # 这里可以添加事务处理逻辑
-            # 例如，使用 metadata 和 timeout 来控制事务
-            pass  # 实际的事务逻辑应在此处实现
+            # 例如，使用 Neo4j 的驱动程序来开始事务
+            # 并应用 metadata 和 timeout
+            pass  # 具体实现需要根据实际情况添加
         return wrapper
     return decorator

@@ -12,21 +12,16 @@ def _fromutc(self, dt):
     if dt.tzinfo is None:
         raise ValueError("dt must be a timezone-aware datetime object")
 
-    # 获取当前时区的UTC偏移量
-    utc_offset = self.utcoffset(dt)
-
-    # 将输入的日期时间转换为UTC
-    utc_dt = dt - utc_offset
+    # 将输入的日期时间转换为 UTC 时间
+    utc_dt = dt.astimezone(self.utc)
 
     # 计算在新时区的日期时间
-    new_dt = utc_dt + self.utcoffset(utc_dt)
+    new_dt = utc_dt.astimezone(self)
 
     # 检查是否存在歧义
     if new_dt.dst() != timedelta(0):
-        # 处理“折叠”状态
-        if new_dt < dt:
-            return new_dt  # 返回第一个按时间顺序出现的实例
-        else:
-            raise ValueError("Ambiguous datetime")
+        # 如果存在歧义，判断是否处于“折叠”状态
+        if new_dt < self.fold_start:
+            raise ValueError("Ambiguous datetime in the new timezone")
 
     return new_dt

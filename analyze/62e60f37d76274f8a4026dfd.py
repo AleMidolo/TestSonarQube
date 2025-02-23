@@ -12,6 +12,4 @@ def dehydrate_time(value):
 
     # Assuming Time has a method to get ticks
     ticks = value.ticks()  
-    structure = Structure(ticks=ticks)
-    
-    return structure
+    return Structure(ticks=ticks)

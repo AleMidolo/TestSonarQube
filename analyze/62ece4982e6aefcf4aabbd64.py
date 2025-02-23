@@ -9,5 +9,4 @@ def strip_root(path, root):
     """
     if not path.startswith(root):
         raise ValueError("路径不以根目录开头")
-    
-    return path[len(root):].lstrip('/')
+    return path[len(root):]

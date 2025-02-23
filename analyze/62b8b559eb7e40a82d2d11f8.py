@@ -9,10 +9,9 @@ def minimalBases(classes):
     no_subclass_classes = set(all_classes)
 
     # 遍历所有类，找出有子类的类
-    for cls in classes:
-        # 如果 cls 是其他类的子类，则从没有子类的类中移除
-        for other_cls in classes:
-            if cls != other_cls and issubclass(other_cls, cls):
+    for cls in all_classes:
+        for potential_subclass in all_classes:
+            if cls != potential_subclass and issubclass(potential_subclass, cls):
                 no_subclass_classes.discard(cls)
                 break
 

@@ -32,8 +32,15 @@ def size_to_bytes(size: str) -> int:
         'E': 1000**6,
     }
     
+    if size.isdigit():
+        return int(size)
+    
     for suffix, multiplier in multipliers.items():
         if size.endswith(suffix):
-            return int(float(size[:-1]) * multiplier)
+            number_part = size[:-1]
+            if number_part.isdigit():
+                return int(number_part) * multiplier
+            else:
+                return int(float(number_part) * multiplier)
     
-    return int(size)
+    raise ValueError("Invalid size format")

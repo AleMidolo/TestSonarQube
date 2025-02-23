@@ -10,12 +10,12 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     :document_path: 如果提供了自定义的 NodeInfo 文档路径，则使用该路径（可选）
     :返回值: 字典
     """
-    nodeinfo = {
+    nodeinfo_document = {
         "version": "2.0",
         "url": url,
     }
     
     if document_path:
-        nodeinfo["document_path"] = document_path
+        nodeinfo_document["document_path"] = document_path
     
-    return nodeinfo
+    return nodeinfo_document
