@@ -3,6 +3,11 @@ import json
 import xml.etree.ElementTree as ET
 
 def parse_diaspora_webfinger(document: str) -> Dict:
+    """
+    Parse Diaspora webfinger which is either in JSON format (new) or XRD (old).
+
+    https://diaspora.github.io/diaspora_federation/discovery/webfinger.html
+    """
     try:
         # Try to parse as JSON
         return json.loads(document)

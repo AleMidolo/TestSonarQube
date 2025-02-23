@@ -11,5 +11,4 @@ def _dictsum(dicts):
     for d in dicts:
         for key, value in d.items():
             result[key] += value
-            
     return dict(result)

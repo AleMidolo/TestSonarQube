@@ -21,7 +21,7 @@ def update_last_applied_manifest_dict_from_resp(
     for key, value in observer_schema.items():
         if key not in last_applied_manifest:
             if key not in response:
-                raise KeyError(f"Observed field '{key}' is not present in the response")
+                raise KeyError(f"Observed field '{key}' is not present in the response.")
             last_applied_manifest[key] = response[key]
         if isinstance(value, dict):
             update_last_applied_manifest_dict_from_resp(

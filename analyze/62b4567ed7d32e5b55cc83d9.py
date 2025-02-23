@@ -10,15 +10,16 @@ def deep_merge_nodes(nodes):
         else:
             existing_value = merged[key_value]
             if isinstance(existing_value, MappingNode) and isinstance(value, MappingNode):
-                # Merge the MappingNodes
+                # Deep merge the MappingNodes
                 for sub_key, sub_value in value.value:
                     existing_value.value.append((sub_key, sub_value))
+                # Remove duplicates in the merged MappingNode
+                existing_mapping = {k.value: v for k, v in existing_value.value}
+                merged[key_value] = MappingNode(tag='tag:yaml.org,2002:map', value=[
+                    (ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in existing_mapping.items()
+                ])
             else:
-                # If they are not both MappingNodes, take the last one
+                # If the existing value is not a MappingNode, overwrite it
                 merged[key_value] = value
 
-    result = []
-    for key, value in merged.items():
-        result.append((ScalarNode(tag='tag:yaml.org,2002:str', value=key), value))
-
-    return result
+    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged.items()]

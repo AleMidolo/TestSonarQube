@@ -1,5 +1,5 @@
-from collections import defaultdict
-from functools import wraps
+from collections import defaultdict, OrderedDict
+import functools
 
 def lfu_cache(maxsize=128, typed=False):
     """
@@ -7,24 +7,29 @@ def lfu_cache(maxsize=128, typed=False):
     up to `maxsize` results based on a Least Frequently Used (LFU)
     algorithm.
     """
-    cache = {}
-    usage_count = defaultdict(int)
-
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        key = args if not typed else (args, frozenset(kwargs.items()))
-        if key in cache:
-            usage_count[key] += 1
-            return cache[key]
+    def decorator(func):
+        cache = {}
+        frequency = defaultdict(int)
+        order = OrderedDict()
         
-        result = func(*args, **kwargs)
-        if len(cache) >= maxsize:
-            lfu_key = min(usage_count, key=usage_count.get)
-            del cache[lfu_key]
-            del usage_count[lfu_key]
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            key = (args, frozenset(kwargs.items())) if typed else args
+            if key in cache:
+                frequency[key] += 1
+                order.move_to_end(key)
+                return cache[key]
+            result = func(*args, **kwargs)
+            if len(cache) >= maxsize:
+                lfu_key = min(order, key=lambda k: (frequency[k], order[k]))
+                del cache[lfu_key]
+                del frequency[lfu_key]
+                del order[lfu_key]
+            cache[key] = result
+            frequency[key] = 1
+            order[key] = None
+            return result
         
-        cache[key] = result
-        usage_count[key] += 1
-        return result
-
-    return wrapper
+        return wrapper
+    
+    return decorator
