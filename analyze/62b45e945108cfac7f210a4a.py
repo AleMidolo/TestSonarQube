@@ -9,7 +9,7 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     num_objects = 0
     good_objects = 0
 
-    # 假设我们有一个方法来获取所有对象
+    # 假设有一个方法可以获取所有对象
     objects = self.get_all_objects()
 
     for obj in objects:

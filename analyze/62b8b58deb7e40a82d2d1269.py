@@ -10,5 +10,4 @@ def directlyProvidedBy(object):
         implements = getattr(object, "__implements__", None)
         if implements is not None and isinstance(implements, tuple) and len(implements) > 1:
             return implements[1]  # 返回去除基类后的声明
-        return None
     return provides
