@@ -23,5 +23,5 @@ def scale(self, other=None):
 
     # Assuming self.coordinates is a list of coordinates
     last_coordinate_index = len(self.coordinates) - 1
-    self.coordinates[last_coordinate_index] *= other / self.scale_value
-    self.scale_value = other  # Update the scale to the new value
+    self.coordinates[last_coordinate_index] *= other
+    self.scale_value = other  # Update the scale value

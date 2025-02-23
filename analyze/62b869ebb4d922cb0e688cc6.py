@@ -29,5 +29,5 @@ def update_last_applied_manifest_list_from_resp(
                     update_last_applied_manifest_list_from_resp(item, nested_schema, nested_response)
             else:
                 update_last_applied_manifest_list_from_resp(last_applied_manifest[field], nested_schema, nested_response)
-
+    
     return last_applied_manifest

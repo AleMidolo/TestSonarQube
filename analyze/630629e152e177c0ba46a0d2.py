@@ -8,15 +8,15 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     :returns: dict
     """
     # Construct the webfinger URL
-    webfinger_url = f"https://{handle}/.well-known/webfinger?resource=acct:{handle}"
+    webfinger_url = f"https://{handle.split('@')[1]}/.well-known/webfinger?resource=acct:{handle}"
     
     # Send a GET request to the webfinger URL
     response = requests.get(webfinger_url)
     
-    # Check if the response was successful
+    # Check if the request was successful
     if response.status_code == 200:
         # Parse the JSON response
         return response.json()
     else:
-        # Handle errors (e.g., return an empty dict or raise an exception)
-        return {}
+        # Handle errors (e.g., user not found, server error)
+        response.raise_for_status()

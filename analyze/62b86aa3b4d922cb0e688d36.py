@@ -6,7 +6,7 @@ class ValidationError(Exception):
 
 def _validate_labels(labels):
     key_regex = r'^[a-zA-Z_][a-zA-Z0-9_]*$'
-    value_regex = r'^[a-zA-Z0-9_]+$'
+    value_regex = r'^[a-zA-Z0-9_ ]+$'
     errors = []
 
     for key, value in labels.items():

@@ -14,10 +14,9 @@ def deep_merge_nodes(nodes):
                 for sub_key, sub_value in value.value:
                     existing_value.value[sub_key] = sub_value
             else:
-                # If they are not both MappingNodes, the last one wins
+                # If they are not both MappingNodes, take the last one
                 merged[key_value] = value
 
-    # Convert merged dictionary back to the required format
     result = []
     for key, value in merged.items():
         result.append((ScalarNode(tag='tag:yaml.org,2002:str', value=key), value))
