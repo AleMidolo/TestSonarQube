@@ -13,7 +13,7 @@ def from_ticks(cls, ticks, tz=None):
         (0 <= ticks < 86400000000000)
     """
     if not (0 <= ticks < 86400000000000):
-        raise ValueError("Il valore di ticks deve essere compreso tra 0 e 86400000000000.")
+        raise ValueError("Ticks must be between 0 and 86400000000000.")
     
     seconds = ticks // 1_000_000_000
     nanoseconds = ticks % 1_000_000_000

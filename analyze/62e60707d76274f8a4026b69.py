@@ -11,7 +11,7 @@ def point_type(name, fields, srid_map):
             self.srid = srid_map.get(self.__class__.__name__, None)
 
         def __repr__(self):
-            return f"{name}({', '.join(map(str, self.coords))})"
+            return f"{name}({', '.join(map(str, self.coords))}, srid={self.srid})"
 
     DynamicPoint.__name__ = name
     return DynamicPoint

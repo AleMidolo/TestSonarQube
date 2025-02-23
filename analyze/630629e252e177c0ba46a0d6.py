@@ -9,12 +9,12 @@ def retrieve_diaspora_host_meta(host):
     from lxml import etree
 
     # Costruire l'URL del documento host-meta
-    url = f"https://{host}/host-meta"
+    host_meta_url = f"https://{host}/host-meta"
 
-    # Effettuare la richiesta GET
-    response = requests.get(url)
+    # Effettuare la richiesta GET per recuperare il documento
+    response = requests.get(host_meta_url)
 
-    # Verificare se la richiesta ha avuto successo
+    # Controllare se la richiesta è andata a buon fine
     if response.status_code == 200:
         # Analizzare il contenuto XML
         xrd = etree.fromstring(response.content)

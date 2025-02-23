@@ -8,7 +8,7 @@ def check_digests_present_and_used(self, manifest_files, digests_used):
     for manifest in manifest_files:
         with open(manifest, 'r') as file:
             data = file.read()
-            # Assuming the digest is a line in the manifest file
+            # Assuming the manifest contains digests in a specific format
             required_digests.update(data.splitlines())
     
     # Check if all required digests are present in the used digests

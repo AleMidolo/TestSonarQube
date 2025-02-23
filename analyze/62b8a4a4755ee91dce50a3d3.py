@@ -9,17 +9,17 @@ def fromutc(self, dt):
     """
     if dt.tzinfo is None:
         raise ValueError("dt must be timezone-aware")
-
+    
     # Convert the datetime to UTC
     utc_dt = dt.astimezone(self.utc)
-
+    
     # Calculate the new datetime in the target timezone
     new_dt = utc_dt.astimezone(self)
-
+    
     # Check for ambiguity and folding
     if new_dt.dst() == timedelta(0) and new_dt.utcoffset() != timedelta(0):
         # This datetime is ambiguous
         if new_dt.fold == 0:
             new_dt = new_dt.replace(fold=1)  # Set to the second occurrence
-
+    
     return new_dt
