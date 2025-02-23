@@ -16,11 +16,12 @@ def get_nested_custom_and_control_args(self, args):
 
     for arg in args:
         if isinstance(arg, dict):
-            if 'control' in arg:
-                control_args.update(arg)
-            else:
-                nested_args.update(arg)
-        else:
-            nested_args[arg] = None
+            for key, value in arg.items():
+                if key.startswith('control_'):
+                    control_args[key] = value
+                elif key.startswith('nested_'):
+                    nested_args[key] = value
+                else:
+                    nested_args[key] = value  # Treat as custom if not prefixed
 
     return control_args, nested_args

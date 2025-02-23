@@ -17,4 +17,5 @@ def select_filenames_by_prefix(prefix, files):
     list  
         उन फ़ाइल पथों की सूची, जिनके बेसनाम (basename) फ़ाइलें दिए गए प्रीफ़िक्स से मेल खाती हैं।  
     """
-    return [file for file in files if file.split('/')[-1].startswith(prefix)]
+    import os
+    return [file for file in files if os.path.basename(file).startswith(prefix)]

@@ -10,24 +10,15 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     2. किसी भी पार्स त्रुटियों को शामिल करने वाले `logging.LogRecord` इंस्टेंस का अनुक्रम।
     """
     configurations = {}
-    errors = []
-    
+    log_records = []
+
     for filename in config_filenames:
         try:
             with open(filename, 'r') as file:
                 config = json.load(file)
-                
                 if resolve_env:
-                    for key, value in config.items():
-                        if isinstance(value, str) and value.startswith('$'):
-                            env_var = value[1:]
-                            config[key] = os.getenv(env_var, value)
-                
-                if overrides:
-                    config.update(overrides)
-                
+                    config = {k: os.path.expandvars(v) for k, v in config.items()}
                 configurations[filename] = config
-                
         except Exception as e:
             log_record = logging.LogRecord(
                 name='config_loader',
@@ -38,6 +29,6 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 args=None,
                 exc_info=True
             )
-            errors.append(log_record)
-    
-    return configurations, errors
+            log_records.append(log_record)
+
+    return configurations, log_records

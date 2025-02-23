@@ -12,12 +12,12 @@ def addignored(ignored):
     result = subprocess.run(['git', 'ls-files'], stdout=subprocess.PIPE, text=True)
     all_files = result.stdout.splitlines()
 
-    # Step 2: Convert to list (already in list form)
+    # Step 2: Convert to list (already a list from splitlines)
     
     # Step 3: Filter the list for ignored files
     ignored_files = [file for file in all_files if file in ignored]
 
-    # Step 4: Join the ignored file names into a single string separated by commas
+    # Step 4: Join the ignored files into a single string separated by commas
     ignored_files_string = ','.join(ignored_files)
 
     # Step 5: Return the final result

@@ -19,12 +19,12 @@ def scale(self, other=None, recompute=False):
     तो :exc:`.LenaValueError` त्रुटि उत्पन्न की जाएगी।
     """
     if other is None:
-        if not hasattr(self, '_scale_computed') or recompute:
-            self._compute_scale()
+        if not hasattr(self, '_scale') or recompute:
+            self._scale = self._compute_scale()
         return self._scale
-    elif isinstance(other, float):
-        if self._scale == 0:
-            raise LenaValueError("Cannot rescale a histogram with zero scale.")
-        self._rescale(other)
-    else:
-        raise ValueError("The 'other' parameter must be a float or None.")
+
+    if self._scale == 0:
+        raise LenaValueError("Cannot rescale a histogram with zero scale.")
+
+    self._scale = other
+    self._rescale_histogram(other)

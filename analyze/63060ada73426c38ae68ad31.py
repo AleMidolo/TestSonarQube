@@ -15,4 +15,3 @@ def _convert_non_cli_args(self, parser_name, values_dict):
             elif value.lower() in ['true', 'false']:
                 values_dict[key] = value.lower() == 'true'
             # Add more conversion rules as needed
-    return values_dict
