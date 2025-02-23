@@ -10,28 +10,15 @@ def validate(self, inventory, extract_spec_version=False):
     if extract_spec_version:
         if 'type' in inventory:
             spec_version = inventory['type']
-            # Validate spec_version against known types
-            if spec_version not in self.valid_types:
-                raise ValueError(f"Invalid type: {spec_version}")
         else:
             spec_version = self.spec_version
     else:
         spec_version = self.spec_version
 
-    # Perform additional validation based on spec_version
-    if spec_version == 'v1':
-        # Perform v1 specific validation
-        self.validate_v1(inventory)
-    elif spec_version == 'v2':
-        # Perform v2 specific validation
-        self.validate_v2(inventory)
-    else:
-        raise ValueError(f"Unknown spec version: {spec_version}")
+    # Perform validation based on the determined spec_version
+    # (Assuming some validation logic here)
+    if spec_version not in ['v1', 'v2', 'v3']:
+        raise ValueError("Invalid specification version")
 
-def validate_v1(self, inventory):
-    # Implementation for v1 validation
-    pass
-
-def validate_v2(self, inventory):
-    # Implementation for v2 validation
-    pass
+    # Additional validation logic can be added here
+    return True

@@ -6,5 +6,7 @@ def _dump_string(obj, dumper=None):
         return obj
     elif isinstance(obj, bytes):
         return obj.decode('utf-8')
+    elif isinstance(obj, unicode):  # For Python 2 compatibility
+        return obj.encode('utf-8')
     else:
-        raise TypeError("Expected a string or bytes, got {}".format(type(obj)))
+        raise TypeError("Expected a string or bytes, got: {}".format(type(obj)))

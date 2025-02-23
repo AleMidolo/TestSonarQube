@@ -1,4 +1,6 @@
 import os
+import shutil
+import tarfile
 import zipfile
 from pathlib import Path
 from typing import Optional, Union
@@ -17,15 +19,24 @@ def prepare_repository_from_archive(
     # Convert tmp_path to Path object
     tmp_path = Path(tmp_path)
     
-    # Create temporary directory if it doesn't exist
+    # Create temporary directory
     tmp_path.mkdir(parents=True, exist_ok=True)
     
-    # Define the extraction path
-    extraction_path = tmp_path / (filename if filename else Path(archive_path).stem)
+    # Determine the file extension
+    file_extension = os.path.splitext(archive_path)[1].lower()
     
-    # Unzip the archive
-    with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-        zip_ref.extractall(extraction_path)
+    # Uncompress the archive based on its type
+    if file_extension == '.zip':
+        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
+            zip_ref.extractall(tmp_path)
+    elif file_extension in ['.tar', '.tar.gz', '.tgz']:
+        with tarfile.open(archive_path, 'r:*') as tar_ref:
+            tar_ref.extractall(tmp_path)
+    else:
+        raise ValueError("Unsupported archive format: {}".format(file_extension))
     
-    # Return the file repository URL
-    return str(extraction_path)
+    # Return the path to the extracted repository
+    if filename:
+        return str(tmp_path / filename)
+    else:
+        return str(tmp_path)

@@ -12,21 +12,27 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     """
     import traceback
 
-    def format_exception(exc, level, path_level):
-        if level > max_level:
-            return f"{exc.__class__.__name__}: {str(exc)}\n[...]\n"
-        
-        tb = traceback.extract_tb(exc.__traceback__)
-        formatted_tb = []
-        for frame in tb:
-            if path_level > max_path_level:
-                break
-            formatted_tb.append(f"File \"{frame.filename}\", line {frame.lineno}, in {frame.name}")
-            path_level += 1
-        
-        return ''.join(formatted_tb)
+    # Get the exception type and message
+    exc_type = type(e).__name__
+    exc_message = str(e)
 
-    exception_message = f"{e.__class__.__name__}: {str(e)}\n"
-    formatted_traceback = format_exception(e, 0, 0)
+    # Format the exception message
+    formatted_message = f"{exc_type}: {exc_message}"
+
+    # Get the traceback
+    tb = traceback.extract_tb(e.__traceback__)
     
-    return exception_message + formatted_traceback
+    # Limit the traceback to max_level
+    tb = tb[:max_level]
+
+    # Format the traceback
+    formatted_tb = []
+    for frame in tb:
+        filename, lineno, funcname, code = frame
+        # Limit the path length
+        if len(filename.split('/')) > max_path_level:
+            filename = '.../' + '/'.join(filename.split('/')[-max_path_level:])
+        formatted_tb.append(f"  File \"{filename}\", line {lineno}, in {funcname}\n    {code}")
+
+    # Combine the formatted message and traceback
+    return formatted_message + "\n" + "\n".join(formatted_tb)

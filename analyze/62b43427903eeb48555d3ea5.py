@@ -19,7 +19,7 @@ def format(
 
     -       कन्वर्ट किए गए "out-style" पैरामीटर्स का सेट (:class:`dict` या :class:`list`)।
     """
-    # Implementation of the function
+    # Implementation of the function goes here
     if isinstance(params, dict):
         # Named parameters
         for key, value in params.items():

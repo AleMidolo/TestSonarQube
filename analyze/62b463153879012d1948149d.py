@@ -1,4 +1,7 @@
-def _explore_folder(folder):  
+import os
+import xml.etree.ElementTree as ET
+
+def _explore_folder(folder):
     """
     फ़ोल्डर से पैकेज का डेटा प्राप्त करें।  
 
@@ -11,21 +14,14 @@ def _explore_folder(folder):
     रिटर्न्स  
     dict
     """
-    import os
-    import xml.etree.ElementTree as ET
-    from collections import defaultdict
-
-    package_data = defaultdict(list)
-
+    package_data = {}
+    
     for filename in os.listdir(folder):
         if filename.endswith('.xml'):
             base_name = os.path.splitext(filename)[0]
             file_path = os.path.join(folder, filename)
-            try:
-                tree = ET.parse(file_path)
-                root = tree.getroot()
-                package_data[base_name].append(root)
-            except ET.ParseError as e:
-                print(f"Error parsing {file_path}: {e}")
-
-    return dict(package_data)
+            tree = ET.parse(file_path)
+            root = tree.getroot()
+            package_data[base_name] = root
+    
+    return package_data

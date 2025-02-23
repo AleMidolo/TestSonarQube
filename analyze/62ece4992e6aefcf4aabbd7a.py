@@ -1,4 +1,5 @@
 import os
+import platform
 
 def is_gitbash():
     """
@@ -6,4 +7,4 @@ def is_gitbash():
 
     :return: यदि Gitbash है तो True
     """
-    return os.environ.get('TERM', '').startswith('bash') and os.path.basename(os.environ.get('SHELL', '')) == 'bash'
+    return platform.system() == "Windows" and "git-bash" in os.environ.get("TERM", "")
