@@ -61,17 +61,4 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         sul tuo sistema.
     """
     from dateutil import parser
-    from datetime import datetime
-
-    # Check if timestr is a string
-    if not isinstance(timestr, str):
-        raise TypeError("Input must be a string")
-
-    # Use the default datetime if provided
-    if default is not None and not isinstance(default, datetime):
-        raise TypeError("Default must be a datetime object or None")
-
-    # Parse the datetime string
-    dt = parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
-
-    return dt
+    return parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)

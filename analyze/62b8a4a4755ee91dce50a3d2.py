@@ -15,11 +15,8 @@ def _fromutc(self, dt):
 
     # Check if the datetime is ambiguous
     if self.is_ambiguous(utc_dt):
-        # Handle the ambiguity (e.g., by checking if it's in the fold)
-        if self.is_fold(utc_dt):
-            return utc_dt
-        else:
-            raise ValueError("Ambiguous datetime in fold state")
+        # Handle the ambiguity (e.g., return the first occurrence)
+        return self.handle_ambiguity(utc_dt)
 
     # Return the datetime in the new timezone
     return utc_dt.astimezone(self)

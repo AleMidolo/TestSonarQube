@@ -5,7 +5,7 @@ def strip_root(percorso, radice):
     if not isinstance(percorso, str) or not isinstance(radice, str):
         raise ValueError("Entrambi i parametri devono essere stringhe.")
     
-    if not percorso.startswith(radice):
-        raise ValueError("Il percorso non inizia con la radice fornita.")
-    
-    return percorso[len(radice):]
+    if percorso.startswith(radice):
+        return percorso[len(radice):]
+    else:
+        raise ValueError("Il percorso non inizia con la radice specificata.")

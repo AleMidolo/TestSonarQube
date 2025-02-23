@@ -13,4 +13,4 @@ def get_versions():
         }
         return version_info
     except Exception:
-        return {"error": "Unable to retrieve version information"}
+        return {"error": "Impossibile ottenere le informazioni sulla versione."}

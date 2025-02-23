@@ -8,17 +8,16 @@ def validate(self, path):
         raise FileNotFoundError(f"Il percorso specificato non esiste: {path}")
 
     # Logica di validazione dell'oggetto OCFL
-    # Questo è un esempio di come potrebbe essere implementata la validazione
-    # In un caso reale, dovresti implementare la logica specifica per OCFL
-
-    # Controlla se il percorso è una directory
+    # Questo è un esempio di come potrebbe apparire la logica di validazione
     if not os.path.isdir(path):
         raise ValueError(f"Il percorso specificato non è una directory: {path}")
 
-    # Esempio di validazione: controlla la presenza di un file specifico
-    required_file = os.path.join(path, 'manifest.json')
-    if not os.path.isfile(required_file):
-        raise ValueError(f"File mancante: {required_file}")
+    # Esegui controlli specifici per OCFL
+    # Ad esempio, controlla la presenza di file richiesti
+    required_files = ['manifest.json', 'version.txt']
+    for file in required_files:
+        if not os.path.isfile(os.path.join(path, file)):
+            raise ValueError(f"File mancante richiesto per la validazione: {file}")
 
     # Se tutte le validazioni passano
     return True
