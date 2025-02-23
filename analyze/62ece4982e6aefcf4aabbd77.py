@@ -1,38 +1,48 @@
 import datetime
-import re
 
 def parse_frequency(frequency):
     """
-    एक संख्या और समय की इकाई के साथ एक आवृत्ति स्ट्रिंग दी गई है, एक संगत
-    datetime.timedelta इंस्टेंस लौटाएँ या यदि आवृत्ति None या "हमेशा" है, तो None लौटाएँ।
+    Dado un string de frecuencia con un número y una unidad de tiempo, devuelve una instancia correspondiente de 'datetime.timedelta' o 'None' si la frecuencia es 'None' o "always".
 
-    उदाहरण के लिए, "3 सप्ताह" दिया गया है, datetime.timedelta(weeks=3) लौटाएँ
+    Por ejemplo, dado "3 weeks", devuelve datetime.timedelta(weeks=3).
 
-    यदि दी गई आवृत्ति को पार्स नहीं किया जा सकता है, तो ValueError उठाएँ।
+    Lanza ValueError si la frecuencia proporcionada no puede ser analizada
     """
-    if frequency is None or frequency.lower() == "हमेशा":
+    if frequency is None or frequency.lower() == "always":
         return None
 
-    match = re.match(r'(\d+)\s*(\w+)', frequency)
-    if not match:
-        raise ValueError("Invalid frequency format")
+    units = {
+        'seconds': 'seconds',
+        'second': 'seconds',
+        's': 'seconds',
+        'minutes': 'minutes',
+        'minute': 'minutes',
+        'm': 'minutes',
+        'hours': 'hours',
+        'hour': 'hours',
+        'h': 'hours',
+        'days': 'days',
+        'day': 'days',
+        'weeks': 'weeks',
+        'week': 'weeks',
+        'w': 'weeks',
+        'months': 'days',  # Approximation: 1 month = 30 days
+        'month': 'days',    # Approximation: 1 month = 30 days
+        'years': 'days',    # Approximation: 1 year = 365 days
+        'year': 'days'      # Approximation: 1 year = 365 days
+    }
 
-    value, unit = match.groups()
-    value = int(value)
+    parts = frequency.split()
+    if len(parts) != 2:
+        raise ValueError("Frequency must be in the format '<number> <unit>'")
 
-    if unit in ['सेकंड', 'सेकंड', 'second', 'seconds']:
-        return datetime.timedelta(seconds=value)
-    elif unit in ['मिनट', 'मिनट', 'minute', 'minutes']:
-        return datetime.timedelta(minutes=value)
-    elif unit in ['घंटा', 'घंटे', 'hour', 'hours']:
-        return datetime.timedelta(hours=value)
-    elif unit in ['दिन', 'दिन', 'day', 'days']:
-        return datetime.timedelta(days=value)
-    elif unit in ['सप्ताह', 'सप्ताह', 'week', 'weeks']:
-        return datetime.timedelta(weeks=value)
-    elif unit in ['महीना', 'महीने', 'month', 'months']:
-        return datetime.timedelta(days=value * 30)  # Approximation
-    elif unit in ['साल', 'साल', 'year', 'years']:
-        return datetime.timedelta(days=value * 365)  # Approximation
-    else:
-        raise ValueError("Unknown time unit")
+    try:
+        value = int(parts[0])
+    except ValueError:
+        raise ValueError("The first part of the frequency must be an integer")
+
+    unit = parts[1].lower()
+    if unit not in units:
+        raise ValueError(f"Unknown time unit: {unit}")
+
+    return datetime.timedelta(**{units[unit]: value})

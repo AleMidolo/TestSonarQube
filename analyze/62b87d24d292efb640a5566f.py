@@ -1,9 +1,15 @@
 def render(pieces, style):
     """
-    दिए गए संस्करण टुकड़ों को निर्दिष्ट शैली में प्रस्तुत करें।
+    Renderiza las piezas de versión dadas en el estilo solicitado.
     """
-    styled_pieces = []
+    rendered_output = []
     for piece in pieces:
-        styled_piece = f"{style}: {piece}"
-        styled_pieces.append(styled_piece)
-    return "\n".join(styled_pieces)
+        if style == 'bold':
+            rendered_output.append(f"**{piece}**")
+        elif style == 'italic':
+            rendered_output.append(f"*{piece}*")
+        elif style == 'underline':
+            rendered_output.append(f"__{piece}__")
+        else:
+            rendered_output.append(piece)
+    return '\n'.join(rendered_output)

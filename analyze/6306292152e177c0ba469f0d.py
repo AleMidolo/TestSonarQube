@@ -1,5 +1,7 @@
 def identify_request(request: RequestType) -> bool:
     """
-    यह फ़ंक्शन यह पहचानने की कोशिश करता है कि क्या यह एक मैट्रिक्स (Matrix) अनुरोध है।
+    Intente identificar si esta es una solicitud de Matrix.
     """
-    return isinstance(request, MatrixRequestType)
+    # Suponiendo que una solicitud de Matrix tiene un atributo específico
+    # que la distingue, como 'is_matrix' o un tipo de contenido específico.
+    return hasattr(request, 'is_matrix') and request.is_matrix

@@ -1,36 +1,50 @@
-from collections import defaultdict, OrderedDict
-import functools
+from collections import defaultdict
+from functools import wraps
+
+class LFUCache:
+    def __init__(self, maxsize):
+        self.maxsize = maxsize
+        self.cache = {}
+        self.freq = defaultdict(int)
+        self.min_freq = 0
+        self.freq_map = defaultdict(set)
+
+    def get(self, key):
+        if key not in self.cache:
+            return None
+        self.freq[key] += 1
+        self.freq_map[self.freq[key]].add(key)
+        self.freq_map[self.freq[key] - 1].remove(key)
+        if not self.freq_map[self.min_freq]:
+            self.min_freq += 1
+        return self.cache[key]
+
+    def put(self, key, value):
+        if key in self.cache:
+            self.cache[key] = value
+            self.get(key)  # Update frequency
+            return
+        if len(self.cache) >= self.maxsize:
+            lfu_key = self.freq_map[self.min_freq].pop()
+            del self.cache[lfu_key]
+            self.freq.pop(lfu_key)
+        self.cache[key] = value
+        self.freq[key] = 1
+        self.freq_map[1].add(key)
+        self.min_freq = 1
 
 def lfu_cache(maxsize=128, typed=False):
-    """ 
-    एक डेकोरेटर जो एक फ़ंक्शन को एक मेमोराइज़िंग कॉल करने योग्य (memoizing callable) के साथ रैप करता है,
-    जो `maxsize` तक के परिणामों को Least Frequently Used (LFU) एल्गोरिदम के आधार पर सहेजता है।
-    """
     def decorator(func):
-        cache = {}
-        frequency = defaultdict(int)
-        order = OrderedDict()
+        cache = LFUCache(maxsize)
 
-        @functools.wraps(func)
+        @wraps(func)
         def wrapper(*args, **kwargs):
-            key = (args, frozenset(kwargs.items())) if typed else args
-            if key in cache:
-                frequency[key] += 1
-                order.move_to_end(key)
-                return cache[key]
+            key = args if not typed else (tuple(args), frozenset(kwargs.items()))
+            if key in cache.cache:
+                return cache.get(key)
             result = func(*args, **kwargs)
-            cache[key] = result
-            frequency[key] += 1
-            order[key] = frequency[key]
-
-            if len(cache) > maxsize:
-                lfu_key = min(order, key=order.get)
-                del cache[lfu_key]
-                del frequency[lfu_key]
-                del order[lfu_key]
-
+            cache.put(key, result)
             return result
 
         return wrapper
-
     return decorator

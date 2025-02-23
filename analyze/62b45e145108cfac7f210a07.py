@@ -1,27 +1,24 @@
 def validate(self, inventory, extract_spec_version=False):
     """
-    दिए गए इन्वेंटरी को सत्यापित करें।
+    Validar un inventario dado.
 
-    यदि `extract_spec_version` का मान `True` है, तो यह `type` मान को देखकर 
-    स्पेसिफिकेशन वर्जन निर्धारित करेगा। यदि `type` मान मौजूद नहीं है या यह 
-    मान्य नहीं है, तो अन्य परीक्षण `self.spec_version` में दिए गए वर्जन के 
-    आधार पर किए जाएंगे।
+    Si `extract_spec_version` es True, entonces se verificará el valor de `type` para determinar
+    la versión de la especificación. En el caso de que no exista un valor para `type` o no sea
+    válido, se realizarán otras pruebas basadas en la versión proporcionada en `self.spec_version`.
     """
     if extract_spec_version:
         if 'type' in inventory:
-            spec_version = inventory['type']
-            # Validate spec_version here
+            spec_type = inventory['type']
+            if spec_type not in ['valid_type_1', 'valid_type_2']:
+                raise ValueError("Invalid type value in inventory.")
+            # Additional logic to handle valid types can be added here
         else:
-            spec_version = self.spec_version
-    else:
-        spec_version = self.spec_version
+            raise KeyError("Missing 'type' key in inventory.")
 
-    # Perform other validation checks based on spec_version
-    # Example validation logic
-    if spec_version not in ['v1', 'v2', 'v3']:
-        raise ValueError("Invalid specification version")
+    # Perform other validation based on self.spec_version
+    if self.spec_version not in ['1.0', '2.0']:
+        raise ValueError("Invalid spec_version.")
+    
+    # Additional validation logic can be added here
 
-    # Additional inventory validation logic goes here
-    # ...
-
-    return True  # or return appropriate validation result
+    return True  # Return True if validation passes

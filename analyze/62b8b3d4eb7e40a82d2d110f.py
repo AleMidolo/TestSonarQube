@@ -3,11 +3,12 @@ import sys
 
 def _should_attempt_c_optimizations():
     """
-    यदि हमें C अनुकूलन का प्रयास करना चाहिए, तो एक सत्य मान लौटाएं।  
+    Devuelve un valor verdadero si deberíamos intentar usar las optimizaciones en C.
 
-    यह इस बात को ध्यान में रखता है कि क्या हम PyPy पर हैं और `_use_c_impl` में परिभाषित ``PURE_PYTHON`` पर्यावरण चर का मान क्या है।
+    Esto tiene en cuenta si estamos utilizando PyPy y el valor de la variable de entorno  
+    ``PURE_PYTHON``, tal como se define en `_use_c_impl`.
     """
-    is_pypy = sys.platform.startswith('pypy')
-    pure_python_env = os.getenv('_use_c_impl', 'False') == 'PURE_PYTHON'
+    is_pypy = 'pypy' in sys.version.lower()
+    pure_python = os.getenv('PURE_PYTHON', '0') == '1'
     
-    return is_pypy and not pure_python_env
+    return not (is_pypy or pure_python)

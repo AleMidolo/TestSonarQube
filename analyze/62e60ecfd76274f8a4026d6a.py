@@ -1,26 +1,21 @@
 def protocol_handlers(cls, protocol_version=None):
     """
-    यह फ़ंक्शन उपलब्ध बोल्ट प्रोटोकॉल हैंडलर्स की एक डिक्शनरी लौटाता है, जो संस्करण ट्यूपल (version tuple) द्वारा कुंजीबद्ध (keyed) होती है। यदि एक विशिष्ट प्रोटोकॉल संस्करण प्रदान किया गया है, तो डिक्शनरी में या तो शून्य (zero) या एक (one) आइटम होगा, यह इस बात पर निर्भर करता है कि वह संस्करण समर्थित (supported) है या नहीं। यदि कोई प्रोटोकॉल संस्करण प्रदान नहीं किया गया है, तो सभी उपलब्ध संस्करण लौटाए जाएंगे।
+    Devuelve un diccionario de los manejadores disponibles del protocolo Bolt, indexados por una tupla de versión. Si se proporciona una versión de protocolo explícita, el diccionario contendrá cero o un elemento, dependiendo de si esa versión es soportada. Si no se proporciona ninguna versión de protocolo, se devolverán todas las versiones disponibles.
 
-    पैरामीटर (Parameters):
-    - `protocol_version`: एक ट्यूपल जो किसी विशिष्ट प्रोटोकॉल संस्करण (जैसे (3, 5)) को पहचानता है, या `None`।
-
-    वापसी मान (Return):
-    - एक डिक्शनरी जो संस्करण ट्यूपल को हैंडलर क्लास से मैप करती है, और सभी प्रासंगिक (relevant) और समर्थित (supported) प्रोटोकॉल संस्करणों के लिए होती है।
-
-    त्रुटि (Exception):
-    - `TypeError`: यदि प्रोटोकॉल संस्करण ट्यूपल के रूप में पास नहीं किया गया है।
+    :param protocol_version: tupla que identifica una versión específica del protocolo 
+        (por ejemplo, (3, 5)) o None
+    :return: diccionario que mapea una tupla de versión a la clase del manejador para 
+        todas las versiones relevantes y compatibles del protocolo
+    :raise TypeError: si la versión del protocolo no se pasa como una tupla
     """
     if protocol_version is not None and not isinstance(protocol_version, tuple):
-        raise TypeError("प्रोटोकॉल संस्करण ट्यूपल के रूप में पास नहीं किया गया है।")
+        raise TypeError("La versión del protocolo debe ser una tupla")
 
-    # उपलब्ध प्रोटोकॉल हैंडलर्स की डिक्शनरी
+    # Suponiendo que hay un diccionario de manejadores de protocolo
     handlers = {
-        (1, 0): "Handler for version 1.0",
-        (2, 0): "Handler for version 2.0",
-        (3, 0): "Handler for version 3.0",
-        (3, 5): "Handler for version 3.5",
-        (4, 0): "Handler for version 4.0",
+        (3, 5): "HandlerFor3_5",
+        (4, 0): "HandlerFor4_0",
+        # Agregar más versiones y sus manejadores aquí
     }
 
     if protocol_version is not None:

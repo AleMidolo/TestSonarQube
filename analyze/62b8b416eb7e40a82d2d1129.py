@@ -1,8 +1,9 @@
-def names(self, all=False): # pylint:disable=redefined-builtin
+def names(self, all=False):  # pylint:disable=redefined-builtin
     """
-    इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम लौटाएं।
+    Devuelve los nombres de los atributos definidos por la interfaz.
     if not all:
-    इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम लौटाएं।
+
+    Devuelve los nombres de los atributos definidos por la interfaz.
     """
     if all:
         return [attr for attr in dir(self) if not attr.startswith('_')]

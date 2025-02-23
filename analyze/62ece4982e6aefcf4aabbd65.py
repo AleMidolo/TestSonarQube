@@ -1,5 +1,5 @@
 def parser_flags(parser):
     """
-    एक argparse.ArgumentParser उदाहरण के लिए, इसके आर्गुमेंट फ्लैग्स को एक स्पेस से अलग किए गए स्ट्रिंग के रूप में लौटाएं।
+    Dado una instancia de 'argparse.ArgumentParser', devuelve sus banderas de argumentos en una cadena separada por espacios.
     """
-    return ' '.join(flag for action in parser._actions for flag in action.option_strings)
+    return ' '.join([action.option_strings[0] for action in parser._actions if action.option_strings])

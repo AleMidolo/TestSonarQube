@@ -1,31 +1,33 @@
 def to_csv(self, separator=",", header=None):
     """
-    .. deprecated:: 0.5 Lena 0.5 में to_csv का उपयोग नहीं किया जाता है।
-          Iterables को तालिकाओं (tables) में परिवर्तित किया जाता है।
+    .. deprecated:: 0.5 en Lena 0.5 to_csv ya no se utiliza.
+          Los iterables se convierten en tablas.
 
-    ग्राफ़ के बिंदुओं (points) को CSV में परिवर्तित करें।
+    Convierte los puntos del gráfico a formato CSV.
 
-    *separator* मानों को अलग करता है, डिफ़ॉल्ट रूप से यह कॉमा (comma) है।
+    *separator* delimita los valores, el valor predeterminado es una coma.
 
-    *header*, यदि ``None`` नहीं है, तो यह आउटपुट की पहली स्ट्रिंग होगी
-    (नई पंक्ति स्वचालित रूप से जोड़ी जाती है)।
+    *header*, si no es ``None``, es la primera línea de la salida
+    (se agrega automáticamente un salto de línea).
 
-    चूंकि एक ग्राफ़ बहुआयामी (multidimensional) हो सकता है,
-    प्रत्येक बिंदु के लिए पहले उसके निर्देशांक (coordinate) को स्ट्रिंग में परिवर्तित किया जाता है
-    (*separator* द्वारा अलग किया गया), और फिर उसके मान (value) के प्रत्येक भाग को।
+    Dado que un gráfico puede ser multidimensional,
+    para cada punto, primero su coordenada se convierte en una cadena
+    (separada por *separator*), y luego cada parte de su valor.
 
-    :class:`Graph` को CSV में परिवर्तित करने के लिए, Lena अनुक्रम (sequence) के अंदर
-    :class:`lena.output.ToCSV` का उपयोग करें।
+    Para convertir un :class:`Graph` a formato CSV dentro de una secuencia de Lena,
+    utiliza :class:`lena.output.ToCSV`.
     """
-    # Assuming self.points is a list of tuples representing the graph points
-    output = []
-    
+    import csv
+    from io import StringIO
+
+    output = StringIO()
+    writer = csv.writer(output, delimiter=separator)
+
     if header is not None:
-        output.append(header)
-    
-    for point in self.points:
-        # Convert the point coordinates to string and join with the separator
-        point_str = separator.join(map(str, point))
-        output.append(point_str)
-    
-    return "\n".join(output)
+        writer.writerow(header)
+
+    for point in self.points:  # Assuming self.points is a list of points
+        row = [str(coord) for coord in point]  # Convert coordinates to string
+        writer.writerow(row)
+
+    return output.getvalue()

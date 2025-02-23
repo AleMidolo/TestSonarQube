@@ -1,31 +1,29 @@
 def _explore_folder(folder):  
     """
-    फ़ोल्डर से पैकेज का डेटा प्राप्त करें।  
+    Obtiene los datos de los paquetes desde la carpeta.  
 
-    फ़ाइलों को उनके XML बेसनाम के आधार पर समूहित करता है और डेटा को डिक्शनरी (dict) प्रारूप में लौटाता है।  
+    Agrupa los archivos por el nombre base de su archivo XML y devuelve los datos en formato de diccionario.  
 
-    पैरामीटर  
-    folder : str
-        पैकेज का फ़ोल्डर।  
+    Parámetros  
+    ----------  
+    folder : str  
+        Carpeta del paquete  
 
-    रिटर्न्स  
-    dict
+    Retorna  
+    -------  
+    dict  
     """
     import os
     import xml.etree.ElementTree as ET
-    from collections import defaultdict
 
-    package_data = defaultdict(list)
-
+    data = {}
+    
     for filename in os.listdir(folder):
         if filename.endswith('.xml'):
             base_name = os.path.splitext(filename)[0]
             file_path = os.path.join(folder, filename)
-            try:
-                tree = ET.parse(file_path)
-                root = tree.getroot()
-                package_data[base_name].append(root)
-            except ET.ParseError:
-                print(f"Error parsing {file_path}")
-
-    return dict(package_data)
+            tree = ET.parse(file_path)
+            root = tree.getroot()
+            data[base_name] = {child.tag: child.text for child in root}
+    
+    return data
