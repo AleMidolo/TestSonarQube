@@ -26,11 +26,11 @@ def _legacy_mergeOrderings(orderings):
     for ordering in orderings:
         for i in range(len(ordering)):
             all_items.add(ordering[i])
-            if i < len(ordering) - 1:
-                graph[ordering[i]].append(ordering[i + 1])
-                in_degree[ordering[i + 1]] += 1
-                if ordering[i] not in in_degree:
-                    in_degree[ordering[i]] = 0
+            if i > 0:
+                graph[ordering[i - 1]].append(ordering[i])
+                in_degree[ordering[i]] += 1
+            if ordering[i] not in in_degree:
+                in_degree[ordering[i]] = 0
 
     # Topological sort using Kahn's algorithm
     queue = deque([item for item in all_items if in_degree[item] == 0])

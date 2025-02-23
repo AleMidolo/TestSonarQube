@@ -4,14 +4,15 @@ def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
     if not all:
     """
     # Assuming there is a predefined list of attributes
-    attributes = {
-        'attribute1': 'Description of attribute 1',
-        'attribute2': 'Description of attribute 2',
-        'attribute3': 'Description of attribute 3',
-    }
+    attributes = [
+        {"name": "attribute1", "description": "Description of attribute 1"},
+        {"name": "attribute2", "description": "Description of attribute 2"},
+        {"name": "attribute3", "description": "Description of attribute 3"},
+    ]
     
-    if all:
-        return attributes
-    else:
+    if not all:
         # Return only the names of the attributes
-        return list(attributes.keys())
+        return [attr["name"] for attr in attributes]
+    
+    # Return names and descriptions of all attributes
+    return [(attr["name"], attr["description"]) for attr in attributes]

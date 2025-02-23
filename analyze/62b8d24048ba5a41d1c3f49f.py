@@ -15,18 +15,32 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
 
         @wraps(func)
         def wrapper(*args, **kwargs):
-            key = args if not typed else (type(arg) for arg in args)
+            if typed:
+                key = (args, frozenset(kwargs.items()))
+            else:
+                key = (tuple(args), frozenset(kwargs.items()))
+
+            current_time = timer()
             if key in cache:
-                if timer() - timestamps[key] < ttl:
+                if current_time - timestamps[key] < ttl:
+                    # Move to end to show that it was recently used
+                    cache.move_to_end(key)
                     return cache[key]
                 else:
+                    # Remove expired item
                     del cache[key]
                     del timestamps[key]
+
+            # Call the function and cache the result
             result = func(*args, **kwargs)
             cache[key] = result
-            timestamps[key] = timer()
+            timestamps[key] = current_time
+
+            # Maintain the cache size
             if len(cache) > maxsize:
                 cache.popitem(last=False)
+                timestamps.popitem(last=False)
+
             return result
 
         return wrapper

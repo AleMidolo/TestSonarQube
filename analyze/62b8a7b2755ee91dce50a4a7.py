@@ -1,5 +1,3 @@
-from datetime import datetime
-
 def default_tzinfo(dt, tzinfo):
     """
     केवल उन naive datetime पर ``tzinfo`` पैरामीटर सेट करता है।
