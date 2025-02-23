@@ -8,12 +8,17 @@ def addignored(ignored):
     4. उन फ़ाइल नामों को एक स्ट्रिंग में बदलें, जिसमें प्रत्येक नाम अल्पविराम (comma) से अलग हो।  
     5. अंतिम परिणाम को फ़ंक्शन से लौटाएं।
     """
-    # Get all files in the repository
+    # Step 1: Get all file names using git command
     result = subprocess.run(['git', 'ls-files'], stdout=subprocess.PIPE, text=True)
     all_files = result.stdout.splitlines()
 
-    # Filter files that are ignored
+    # Step 2: Convert to list (already in list form)
+    
+    # Step 3: Filter the list for ignored files
     ignored_files = [file for file in all_files if file in ignored]
 
-    # Join the ignored files into a comma-separated string
-    return ','.join(ignored_files)
+    # Step 4: Join the ignored file names into a single string separated by commas
+    ignored_files_string = ','.join(ignored_files)
+
+    # Step 5: Return the final result
+    return ignored_files_string

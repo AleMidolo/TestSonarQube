@@ -11,38 +11,13 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     रिटर्न (Returns):  
     - dict: एक स्वरूपित डिक्शनरी
     """
-    import json
-
     nodeinfo = {
         "version": "2.0",
-        "software": {
-            "name": "YourSoftwareName",
-            "version": "1.0.0"
-        },
-        "protocols": [
-            "activitypub",
-            "activitystreams",
-            "webfinger"
-        ],
-        "services": {
-            "outbound": [
-                {
-                    "name": "Service Name",
-                    "url": "https://service.example.com"
-                }
-            ],
-            "inbound": [
-                {
-                    "name": "Another Service",
-                    "url": "https://another.service.example.com"
-                }
-            ]
-        },
-        "metadata": {
-            "nodeinfo": {
-                "url": f"{url}/{document_path}" if document_path else f"{url}/.well-known/nodeinfo"
+        "links": [
+            {
+                "rel": "self",
+                "href": f"{url}/{document_path or '.well-known/nodeinfo'}"
             }
-        }
+        ]
     }
-
     return nodeinfo

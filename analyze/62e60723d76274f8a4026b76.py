@@ -20,9 +20,9 @@ def from_ticks(cls, ticks, tz=None):
     # Calculate the time from ticks
     time_delta = timedelta(microseconds=ticks / 1000)
     midnight = datetime.combine(datetime.today(), datetime.min.time())
-    time = midnight + time_delta
+    result_time = midnight + time_delta
     
     if tz is not None:
-        time = time.astimezone(tz)
+        result_time = result_time.astimezone(tz)
     
-    return time
+    return result_time

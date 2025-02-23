@@ -12,15 +12,14 @@ def protocol_handlers(cls, protocol_version=None):
     - `TypeError`: यदि प्रोटोकॉल संस्करण ट्यूपल के रूप में पास नहीं किया गया है।
     """
     if protocol_version is not None and not isinstance(protocol_version, tuple):
-        raise TypeError("प्रोटोकॉल संस्करण ट्यूपल के रूप में पास नहीं किया गया है।")
+        raise TypeError("प्रोटोकॉल संस्करण ट्यूपल के रूप में पास किया जाना चाहिए।")
 
-    # उपलब्ध प्रोटोकॉल हैंडलर्स की डिक्शनरी
+    # उदाहरण के लिए, उपलब्ध प्रोटोकॉल हैंडलर्स
     available_handlers = {
         (1, 0): "HandlerV1",
         (2, 0): "HandlerV2",
         (3, 0): "HandlerV3",
         (3, 5): "HandlerV3_5",
-        (4, 0): "HandlerV4",
     }
 
     if protocol_version is not None:

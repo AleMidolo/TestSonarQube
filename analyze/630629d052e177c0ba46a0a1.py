@@ -19,7 +19,7 @@ def verify_relayable_signature(public_key, doc, signature):
     root = etree.fromstring(doc)
 
     # Extract the signed data from the XML
-    signed_data = etree.tostring(root, method='c14n')
+    signed_data = etree.tostring(root, method='xml', exclusive=True)
 
     # Verify the signature
     try:

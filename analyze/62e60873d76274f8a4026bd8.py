@@ -16,8 +16,9 @@ def protocol_handlers(cls, protocol_version=None):
         raise TypeError("प्रोटोकॉल संस्करण ट्यूपल में पास नहीं किया गया है")
 
     handlers = {
-        (3, 5): cls.handler_3_5,
-        (4, 0): cls.handler_4_0,
+        (3, 0): cls.handler_v3_0,
+        (3, 5): cls.handler_v3_5,
+        (4, 0): cls.handler_v4_0,
         # अन्य संस्करण हैंडलर्स यहाँ जोड़ें
     }
 
