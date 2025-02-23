@@ -12,7 +12,11 @@ def deep_merge_nodes(nodes):
             if isinstance(existing_value, MappingNode) and isinstance(value_node, MappingNode):
                 for sub_key_node, sub_value_node in value_node.value:
                     sub_key = sub_key_node.value
-                    existing_value.value[sub_key] = sub_value_node
+                    merged_value = existing_value.value.get(sub_key)
+                    if merged_value is None:
+                        existing_value.value[sub_key] = sub_value_node
+                    else:
+                        existing_value.value[sub_key] = sub_value_node
             else:
                 merged[key] = value_node
 

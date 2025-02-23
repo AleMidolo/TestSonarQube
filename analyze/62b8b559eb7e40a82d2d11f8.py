@@ -4,20 +4,13 @@ def minimalBases(classes):
     """
     from collections import defaultdict
 
-    def find_parent(class_name):
-        if class_name not in parent:
-            return class_name
-        if parent[class_name] != class_name:
-            parent[class_name] = find_parent(parent[class_name])
-        return parent[class_name]
+    def is_subclass(sub, super):
+        return issubclass(sub, super)
 
-    parent = {}
+    minimal_classes = []
     for cls in classes:
-        for base in cls.__bases__:
-            parent[base.__name__] = cls.__name__
+        if not any(is_subclass(cls, min_cls) for min_cls in minimal_classes):
+            minimal_classes = [min_cls for min_cls in minimal_classes if not is_subclass(min_cls, cls)]
+            minimal_classes.append(cls)
 
-    minimal_classes = set()
-    for cls in classes:
-        minimal_classes.add(find_parent(cls.__name__))
-
-    return sorted(minimal_classes)
+    return minimal_classes

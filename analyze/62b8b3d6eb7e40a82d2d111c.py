@@ -8,8 +8,6 @@ def _normalizeargs(sequence, output=None):
     """
     if isinstance(sequence, tuple):
         return [seq for seq in sequence]
-    elif isinstance(sequence, list):
-        return sequence
     elif hasattr(sequence, '__iter__'):
         return list(sequence)
     else:

@@ -8,7 +8,7 @@ def _resolve_string(matcher):
     name = matcher.get('name')
     default_value = matcher.get('default')
 
-    value = os.environ.get(name)
+    value = os.getenv(name)
 
     if value is None:
         if default_value is not None:

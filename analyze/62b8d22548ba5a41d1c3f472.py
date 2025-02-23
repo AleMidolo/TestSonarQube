@@ -15,15 +15,13 @@ def cachedmethod(cache, key=hashkey, lock=None):
                     # Check again in case another thread has computed the value
                     if cache_key in cache:
                         return cache[cache_key]
-                    # Compute the value
+                    # Call the function and cache the result
                     result = func(*args, **kwargs)
-                    # Store the result in cache
                     cache[cache_key] = result
                     return result
             else:
-                # Compute the value
+                # Call the function and cache the result
                 result = func(*args, **kwargs)
-                # Store the result in cache
                 cache[cache_key] = result
                 return result
         return wrapper

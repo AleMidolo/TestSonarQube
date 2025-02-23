@@ -19,8 +19,7 @@ def get_logical_path_map(inventory, version):
     for item in inventory:
         if item['version'] > version:
             logical_path = item['logical_path']
-            content_files = set(item['content_files'])
             if logical_path in logical_path_map:
-                logical_path_map[logical_path] = logical_path_map[logical_path].union(content_files)
+                logical_path_map[logical_path].update(item['content_files'])
     
     return logical_path_map

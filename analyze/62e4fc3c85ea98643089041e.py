@@ -4,11 +4,13 @@ def _inline_r_setup(code: str) -> str:
     लेकिन केवल R शुरू होने के बाद R विकल्पों के माध्यम से कॉन्फ़िगर किया जा सकता है।
     इन्हें यहां सेट किया गया है।
     """
-    import os
-
-    # Set R options
-    os.environ['R_OPTIONS'] = 'some_option_value'  # Example option
-    os.environ['R_ENV'] = 'some_env_value'  # Example environment variable
-
-    # Return the modified code or any relevant information
-    return f"R setup completed with code: {code}"
+    # R विकल्पों को सेट करने के लिए आवश्यक कोड
+    r_options = {
+        "stringsAsFactors": "FALSE",
+        "max.print": "1000",
+        "warn": "1"
+    }
+    
+    setup_code = "\n".join(f"options({key} = {value})" for key, value in r_options.items())
+    
+    return f"{setup_code}\n{code}"

@@ -13,6 +13,6 @@ def validate_key(key):
     त्रुटि (Raises):
         ValidationError: यदि दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।
     """
-    pattern = r'^[a-zA-Z0-9]{8,}$'  # Example pattern: at least 8 alphanumeric characters
+    pattern = r'^[A-Za-z0-9]{8,}$'  # Example pattern: at least 8 alphanumeric characters
     if not re.match(pattern, key):
         raise ValidationError("दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।")
