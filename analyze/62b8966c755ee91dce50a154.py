@@ -62,11 +62,13 @@ def isoparse(self, dt_str):
     # Regex patterns for parsing
     date_pattern = r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?'
     week_pattern = r'(\d{4})-W(\d{2})(?:-?(\d{1}))?'
-    time_pattern = r'T(\d{1,2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?)?'
-    tz_pattern = r'([+-]\d{2}:\d{2}|Z|[+-]\d{4}|[+-]\d{2})?'
+    time_pattern = r'(\d{2})(?::(\d{2})(?::(\d{2})(?:\.(\d+))?)?)?'
+    tz_pattern = r'Z|([+-]\d{2}):?(\d{2})?|([+-]\d{2})(\d{2})?|([+-]\d{2})'
 
-    # Full regex for ISO-8601
-    iso_pattern = re.compile(f'^{date_pattern}(?:-W{week_pattern}|{time_pattern})?{tz_pattern}?$')
+    # Combine patterns
+    iso_pattern = re.compile(
+        rf'^{date_pattern}(?:T{time_pattern})?({tz_pattern})?$'
+    )
 
     match = iso_pattern.match(dt_str)
     if not match:
@@ -77,16 +79,19 @@ def isoparse(self, dt_str):
     month = int(match.group(2) or 1)
     day = int(match.group(3) or 1)
 
-    # Handle week-based dates
-    if match.group(4):
-        week = int(match.group(4))
-        day_of_week = int(match.group(5) or 0)
-        # Calculate the first day of the year
-        first_day_of_year = datetime(year, 1, 1)
-        # Calculate the first Monday of the year
-        first_monday = first_day_of_year + timedelta(days=(7 - first_day_of_year.isoweekday()) % 7)
-        # Calculate the date
-        date = first_monday + timedelta(weeks=week - 1, days=day_of_week)
+    # Handle week date if applicable
+    if match.group(2) is None and match.group(3) is None:
+        week = match.group(4)
+        week_day = match.group(5)
+        if week:
+            week = int(week)
+            week_day = int(week_day or 1)
+            # Calculate the date from ISO week date
+            first_day_of_year = datetime(year, 1, 4)
+            first_week_start = first_day_of_year - timedelta(days=first_day_of_year.isocalendar()[2] - 1)
+            date = first_week_start + timedelta(weeks=week - 1, days=week_day - 1)
+        else:
+            date = datetime(year, month, day)
     else:
         date = datetime(year, month, day)
 
@@ -97,28 +102,28 @@ def isoparse(self, dt_str):
     microsecond = int(match.group(9) or 0)
 
     # Handle special case for midnight
-    if hour == 24 and minute == 0 and second == 0:
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
-    else:
-        date = date.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
+    if hour == 24 and (minute != 0 or second != 0 or microsecond != 0):
+        raise ValueError("Invalid time: hour cannot be 24 with non-zero minutes or seconds")
+
+    # Create datetime object
+    dt = date.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
 
     # Handle timezone
-    tz_str = match.group(10)
-    if tz_str == 'Z':
-        tzinfo = tz.tzutc()
-    elif tz_str:
-        if len(tz_str) == 5:  # ±HH:MM
-            offset_hours = int(tz_str[:3])
-            offset_minutes = int(tz_str[4:]) if tz_str[3] == ':' else 0
-            tzinfo = tz.tzoffset(None, offset_hours * 3600 + offset_minutes * 60)
-        elif len(tz_str) == 3:  # ±HH
-            offset_hours = int(tz_str[:3])
-            tzinfo = tz.tzoffset(None, offset_hours * 3600)
-        else:  # ±HHMM
-            offset_hours = int(tz_str[:3])
-            offset_minutes = int(tz_str[3:]) if len(tz_str) > 3 else 0
-            tzinfo = tz.tzoffset(None, offset_hours * 3600 + offset_minutes * 60)
-    else:
-        tzinfo = None
+    tzinfo = None
+    if match.group(10):
+        if match.group(10) == 'Z':
+            tzinfo = tz.tzutc()
+        else:
+            if match.group(11):
+                offset_hours = int(match.group(11))
+                offset_minutes = int(match.group(12))
+            else:
+                offset_hours = int(match.group(13))
+                offset_minutes = 0
 
-    return date.replace(tzinfo=tzinfo)
+            tzinfo = tz.tzoffset(None, offset_hours * 3600 + offset_minutes * 60)
+
+    if tzinfo:
+        dt = dt.replace(tzinfo=tzinfo)
+
+    return dt

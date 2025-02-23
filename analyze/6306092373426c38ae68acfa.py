@@ -3,13 +3,13 @@ def get_spec_defaults(self):
     Resolver los valores de los argumentos desde la especificación y otras fuentes.
     """
     defaults = {}
-    # Aquí se pueden agregar las lógicas para resolver los valores de los argumentos
-    # desde la especificación y otras fuentes.
+    # Aquí se pueden agregar las especificaciones y otras fuentes de valores
+    # Por ejemplo, se puede obtener valores de un archivo de configuración, 
+    # variables de entorno, o valores predeterminados definidos en la clase.
     
-    # Ejemplo de cómo se podrían obtener valores por defecto
-    spec = self.get_specification()  # Método hipotético para obtener la especificación
-    for arg in spec.get('arguments', []):
-        defaults[arg['name']] = arg.get('default', None)
+    # Ejemplo de cómo se podrían establecer algunos valores predeterminados
+    defaults['arg1'] = self.spec.get('arg1', 'default_value1')
+    defaults['arg2'] = self.spec.get('arg2', 'default_value2')
     
-    # Se pueden agregar más fuentes de valores por defecto si es necesario
+    # Agregar lógica adicional según sea necesario
     return defaults

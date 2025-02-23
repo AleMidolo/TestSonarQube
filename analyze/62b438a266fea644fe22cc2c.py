@@ -8,11 +8,13 @@ def make_parsers():
     top_parser = argparse.ArgumentParser(description='Analizador de nivel superior')
     
     # Subanalizador 1
-    sub_parser1 = top_parser.add_subparsers(dest='subcommand1')
-    parser_a = sub_parser1.add_parser('comando_a', help='Descripción del comando A')
-    
-    # Subanalizador 2
-    sub_parser2 = top_parser.add_subparsers(dest='subcommand2')
-    parser_b = sub_parser2.add_parser('comando_b', help='Descripción del comando B')
+    subparser1 = top_parser.add_subparsers(dest='subcommand1')
+    parser1 = subparser1.add_parser('sub1', help='Subanalizador 1')
+    parser1.add_argument('--option1', type=str, help='Opción para subanalizador 1')
 
-    return top_parser, parser_a, parser_b
+    # Subanalizador 2
+    subparser2 = top_parser.add_subparsers(dest='subcommand2')
+    parser2 = subparser2.add_parser('sub2', help='Subanalizador 2')
+    parser2.add_argument('--option2', type=int, help='Opción para subanalizador 2')
+
+    return top_parser, parser1, parser2

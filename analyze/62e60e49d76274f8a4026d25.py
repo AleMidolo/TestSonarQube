@@ -15,6 +15,6 @@ def unit_of_work(metadata=None, timeout=None):
             # Ejecutar la función de transacción
             result = func(*args, **kwargs)
             return result
-        
+
         return wrapper
     return decorator

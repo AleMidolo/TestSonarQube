@@ -26,12 +26,16 @@ def format(
     if isinstance(params, dict):
         # Convertir parámetros de estilo "in" a estilo "out" para un diccionario
         out_params = {key: params[key] for key in params}
-        formatted_sql = sql  # Aquí se debería implementar la lógica de formateo
+        formatted_sql = sql
+        for key in out_params:
+            formatted_sql = formatted_sql.replace(f":{key}", f"${key}")
     elif isinstance(params, (list, tuple)):
         # Convertir parámetros de estilo "in" a estilo "out" para una secuencia
         out_params = list(params)
-        formatted_sql = sql  # Aquí se debería implementar la lógica de formateo
+        formatted_sql = sql
+        for index in range(len(out_params)):
+            formatted_sql = formatted_sql.replace(f"?{index}", f"${index + 1}")
     else:
-        raise TypeError("params debe ser un diccionario o una secuencia")
+        raise ValueError("params must be a dictionary or a sequence")
 
     return formatted_sql, out_params
