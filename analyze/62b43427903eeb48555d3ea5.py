@@ -27,12 +27,14 @@ def format(
     if isinstance(params, dict):
         # Named parameters
         for key, value in params.items():
-            sql = sql.replace(f":{key}", str(value))
-        return sql, params
+            sql = sql.replace(f":{key}", "?")
+        out_params = list(params.values())
     elif isinstance(params, (list, tuple)):
         # Ordinal parameters
-        for index, value in enumerate(params):
-            sql = sql.replace(f"?{index + 1}", str(value))
-        return sql, list(params)
+        out_params = list(params)
+        for index in range(len(out_params)):
+            sql = sql.replace(f"${index + 1}", "?")
     else:
-        raise TypeError("params must be a dictionary or a sequence")
+        raise TypeError("params must be a dict or a sequence")
+
+    return sql, out_params

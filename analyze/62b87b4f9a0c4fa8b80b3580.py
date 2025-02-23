@@ -13,6 +13,4 @@ def integral(bins, edges):
     widths = edges[1:] - edges[:-1]
     
     # Compute the integral as the sum of the area of each bin
-    integral_value = sum(bins * widths)
-    
-    return integral_value
+    return sum(bins * widths)

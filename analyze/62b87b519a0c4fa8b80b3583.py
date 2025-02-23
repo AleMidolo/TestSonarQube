@@ -19,9 +19,10 @@ def scale(self, other=None):
         return self.scale_value  # Assuming self.scale_value holds the current scale
 
     if self.scale_value is None or self.scale_value == 0:
-        raise LenaValueError("Cannot rescale a graph with unknown or zero scale.")
+        raise LenaValueError("Cannot rescale with unknown or zero scale.")
 
-    # Assuming self.coordinates is a list of coordinates where the last one is the one to rescale
+    # Assuming self.coordinates is a list of coordinates
+    # and we want to rescale the last coordinate
     last_coordinate_index = -1
     self.coordinates[last_coordinate_index] *= other / self.scale_value
     self.scale_value = other  # Update the scale to the new value

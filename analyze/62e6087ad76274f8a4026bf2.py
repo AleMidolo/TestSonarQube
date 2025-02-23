@@ -21,7 +21,7 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
     if hydration_hooks is None:
         hydration_hooks = {}
 
-    # Create the DISCARD message
+    # Create a discard message
     message = {
         'type': 'DISCARD',
         'n': n,

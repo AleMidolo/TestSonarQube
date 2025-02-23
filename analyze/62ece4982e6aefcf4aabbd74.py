@@ -31,6 +31,6 @@ def prepare_repository_from_archive(
         with tarfile.open(archive_path, 'r:*') as tar_ref:
             tar_ref.extractall(extract_path)
     else:
-        raise ValueError("Unsupported archive format")
+        raise ValueError("Unsupported archive format. Please use .zip or .tar/.tar.gz/.tgz")
 
     return str(extract_path.resolve())

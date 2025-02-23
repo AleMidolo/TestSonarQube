@@ -37,7 +37,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     if not tentative and not providedBy(candidate, iface):
         errors.append(f"{candidate} does not provide {iface}")
 
-    required_methods = iface.names()
+    required_methods = iface.names()  # Assuming iface has a method to get required methods
     for method_name in required_methods:
         if not hasattr(candidate, method_name):
             errors.append(f"{candidate} is missing method {method_name}")
@@ -49,24 +49,25 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             continue
         
         # Check method signature
-        iface_method = iface[method_name]
-        iface_sig = signature(iface_method)
-        candidate_sig = signature(method)
-
-        if len(iface_sig.parameters) != len(candidate_sig.parameters):
+        expected_signature = signature(iface[method_name])  # Assuming iface has a way to get method signatures
+        actual_signature = signature(method)
+        
+        if len(expected_signature.parameters) != len(actual_signature.parameters):
             errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
             continue
-
-        for param in iface_sig.parameters.values():
-            if param.default is Parameter.empty and param.name not in candidate_sig.parameters:
+        
+        for param in expected_signature.parameters.values():
+            if param.default is Parameter.empty and param.name not in actual_signature.parameters:
                 errors.append(f"{method_name} in {candidate} is missing required parameter {param.name}")
 
-    required_attributes = iface.attributes()
+    required_attributes = iface.attributes()  # Assuming iface has a method to get required attributes
     for attr_name in required_attributes:
         if not hasattr(candidate, attr_name):
             errors.append(f"{candidate} is missing attribute {attr_name}")
 
     if errors:
+        if len(errors) == 1:
+            raise Invalid(errors[0])
         raise Invalid(errors)
 
     return True
