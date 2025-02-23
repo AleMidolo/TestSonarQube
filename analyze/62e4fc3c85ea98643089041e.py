@@ -11,6 +11,6 @@ def _inline_r_setup(code: str) -> str:
     ro.r('options(max.print = 1000)')  # Set max print output
 
     # Execute the provided R code
-    result = ro.r(code)
+    ro.r(code)
 
-    return str(result)
+    return "R setup complete and code executed."

@@ -30,5 +30,5 @@ def validate(self, inventory, extract_spec_version=False):
     else:
         raise ValueError("Invalid specification version")
 
-    # Additional validation logic can be added here
+    # Additional inventory validation logic can be added here
     return True

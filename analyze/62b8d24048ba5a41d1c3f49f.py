@@ -1,6 +1,6 @@
 import time
+import functools
 from collections import OrderedDict
-from functools import wraps
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     """
@@ -11,24 +11,29 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     def decorator(func):
         cache = OrderedDict()
         
-        @wraps(func)
+        @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            key = args if not typed else (type(arg).__name__ for arg in args)
+            key = args if not typed else (args, frozenset(kwargs.items()))
             current_time = timer()
+            
+            # Clean up expired items
             if key in cache:
                 value, timestamp = cache[key]
                 if current_time - timestamp < ttl:
-                    cache.move_to_end(key)  # Mark as recently used
+                    cache.move_to_end(key)
                     return value
                 else:
-                    del cache[key]  # Remove expired item
+                    del cache[key]
             
             # Call the function and cache the result
-            value = func(*args, **kwargs)
-            cache[key] = (value, current_time)
+            result = func(*args, **kwargs)
+            cache[key] = (result, current_time)
+            
+            # Maintain the cache size
             if len(cache) > maxsize:
-                cache.popitem(last=False)  # Remove the oldest item
-            return value
+                cache.popitem(last=False)
+            
+            return result
         
         return wrapper
     

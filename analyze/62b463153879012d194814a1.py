@@ -16,3 +16,4 @@ def add_rendition(self, lang, file_path):
         self.renditions = {}
     
     self.renditions[lang] = file_path
+    self.renditions['original'] = self.original_file_path  # Assuming original_file_path is defined in the class
