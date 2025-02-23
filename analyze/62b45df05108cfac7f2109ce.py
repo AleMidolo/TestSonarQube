@@ -4,22 +4,20 @@ def validate(self, path):
 
     Devuelve True si es válido (se permiten advertencias), False en caso contrario.
     """
+    # Implementación de la validación del objeto OCFL
     try:
-        # Simulación de validación del objeto OCFL
-        if not os.path.exists(path):
-            return False
+        # Aquí se realizarían las comprobaciones necesarias para validar el objeto OCFL
+        # Por ejemplo, verificar la existencia de archivos, estructura, etc.
         
-        # Aquí se realizarían las validaciones necesarias
-        # Por ejemplo, verificar la estructura de directorios, archivos, etc.
+        # Supongamos que tenemos una función `check_ocfl_structure` que valida la estructura
+        is_valid = self.check_ocfl_structure(path)
         
-        # Si se encuentran advertencias, se pueden registrar pero aún así devolver True
-        warnings = []
+        # Si se permiten advertencias, podríamos registrar advertencias aquí
+        if not is_valid:
+            self.log_warnings(path)
         
-        # Supongamos que se encontraron algunas advertencias
-        if len(warnings) > 0:
-            print("Advertencias encontradas:", warnings)
-        
-        return True  # Si todas las validaciones son correctas
+        return is_valid
     except Exception as e:
-        print("Error durante la validación:", e)
+        # Manejo de excepciones, se puede registrar el error si es necesario
+        print(f"Error al validar OCFL: {e}")
         return False

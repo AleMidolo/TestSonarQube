@@ -17,17 +17,25 @@ def absorb(self, args):
         if isinstance(expr, tuple) and len(expr) == 3:
             a, op, b = expr
             if op == '&':
-                if (a == b) or (b == ('|', a)):
+                if b == ('|', a, _):
                     result.append(a)
-                elif (a == ('~', b)) or (b == ('~', a)):
-                    result.append(('&', a, b))
+                elif b == ('&', a, _):
+                    result.append(a)
+                elif b == ('|', ('~', a), _):
+                    result.append(('&', a, b[2]))
+                elif b == ('&', ('~', a), _):
+                    result.append(('|', a, b[2]))
                 else:
                     result.append(expr)
             elif op == '|':
-                if (a == b) or (b == ('&', a)):
+                if b == ('&', a, _):
                     result.append(a)
-                elif (a == ('~', b)) or (b == ('~', a)):
-                    result.append(('|', a, b))
+                elif b == ('|', a, _):
+                    result.append(a)
+                elif b == ('&', ('~', a), _):
+                    result.append(('|', a, b[2]))
+                elif b == ('|', ('~', a), _):
+                    result.append(('&', a, b[2]))
                 else:
                     result.append(expr)
         else:

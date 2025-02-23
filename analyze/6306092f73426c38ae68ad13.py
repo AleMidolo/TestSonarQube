@@ -15,11 +15,11 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
     command = ['ansible-playbook', playbook_path]
 
     if verbose:
-        command.append('-v' * verbose)
+        command.append(f'-v' * verbose)
 
     if extra_vars:
-        extra_vars_str = ' '.join(f"{key}={value}" for key, value in extra_vars.items())
-        command.append(f'--extra-vars={extra_vars_str}')
+        extra_vars_str = ' '.join([f'--extra-vars="{k}={v}"' for k, v in extra_vars.items()])
+        command.append(extra_vars_str)
 
     if ansible_args:
         for key, value in ansible_args.items():
@@ -28,7 +28,7 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
                 command.append(str(value))
 
     try:
-        result = subprocess.run(command, check=True, capture_output=True, text=True)
+        result = subprocess.run(command, check=True, text=True, capture_output=True)
         return result.stdout
     except subprocess.CalledProcessError as e:
-        return f"Error executing playbook: {e.stderr}"
+        return f"Ansible playbook execution failed: {e.stderr}"

@@ -4,30 +4,22 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         make_value = lambda bin_: bin_.content
 
     coordinates = []
-    for bin_ in hist.bins:
+    for bin_ in hist:
         if get_coordinate == "left":
             x = bin_.left
         elif get_coordinate == "right":
             x = bin_.right
         elif get_coordinate == "middle":
-            x = bin_.center
+            x = bin_.middle
         else:
-            raise ValueError("Invalid value for get_coordinate. Choose 'left', 'right', or 'middle'.")
+            raise ValueError("get_coordinate must be 'left', 'right', or 'middle'.")
 
         value = make_value(bin_)
-        if isinstance(value, tuple):
-            coordinates.append((x, *value))
-        else:
-            coordinates.append((x, value))
+        coordinates.append((x, *value))
 
     if scale is True:
-        # Assuming hist has a scale method
-        scale_factor = hist.scale()
-    else:
-        scale_factor = 1
+        # Implement scaling logic if needed
+        pass
 
-    scaled_coordinates = [(x * scale_factor, y * scale_factor) for x, y in coordinates]
-
-    graph = {field_names[i]: [coord[i] for coord in scaled_coordinates] for i in range(len(field_names))}
-    
+    graph = {field_names[i]: [coord[i] for coord in coordinates] for i in range(len(field_names))}
     return graph

@@ -25,7 +25,6 @@ def parse_frequency(frequency):
         'day': 'days',
         'weeks': 'weeks',
         'week': 'weeks',
-        'w': 'weeks',
         'months': 'days',  # Approximation: 1 month = 30 days
         'month': 'days',    # Approximation: 1 month = 30 days
         'years': 'days',    # Approximation: 1 year = 365 days
@@ -34,15 +33,15 @@ def parse_frequency(frequency):
 
     parts = frequency.split()
     if len(parts) != 2:
-        raise ValueError("Frequency must be in the format '<number> <unit>'")
+        raise ValueError(f"Cannot parse frequency: {frequency}")
 
     try:
         value = int(parts[0])
     except ValueError:
-        raise ValueError("The value must be an integer")
+        raise ValueError(f"Cannot parse frequency: {frequency}")
 
     unit = parts[1].lower()
     if unit not in units:
-        raise ValueError(f"Unknown time unit: {unit}")
+        raise ValueError(f"Cannot parse frequency: {frequency}")
 
     return datetime.timedelta(**{units[unit]: value})

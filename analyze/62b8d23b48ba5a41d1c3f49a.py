@@ -12,12 +12,12 @@ def mru_cache(maxsize=128, typed=False):
         def wrapper(*args, **kwargs):
             key = args if not typed else (args, frozenset(kwargs.items()))
             if key in cache:
-                cache.move_to_end(key)
+                cache.move_to_end(key)  # Move the accessed item to the end
                 return cache[key]
             result = func(*args, **kwargs)
             cache[key] = result
             if len(cache) > maxsize:
-                cache.popitem(last=False)
+                cache.popitem(last=False)  # Remove the least recently used item
             return result
 
         return wrapper
