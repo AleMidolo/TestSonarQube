@@ -10,7 +10,7 @@ class LFUCache:
 
     def get(self, key):
         if key not in self.cache:
-            return None
+            return -1
         value, freq = self.cache[key]
         del self.freq[freq][key]
         if not self.freq[freq]:
@@ -26,7 +26,7 @@ class LFUCache:
             return
         if key in self.cache:
             self.cache[key] = (value, self.cache[key][1])
-            self.get(key)  # Update frequency
+            self.get(key)
             return
         if len(self.cache) >= self.maxsize:
             evict_key, _ = self.freq[self.min_freq].popitem(last=False)
@@ -42,13 +42,15 @@ def lfu_cache(maxsize=128, typed=False):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             if typed:
-                key = (tuple(args), frozenset(kwargs.items()))
-            else:
                 key = (args, frozenset(kwargs.items()))
-            result = cache.get(key)
-            if result is None:
-                result = func(*args, **kwargs)
-                cache.put(key, result)
+            else:
+                key = (tuple(map(str, args)), frozenset((str(k), v) for k, v in kwargs.items()))
+            if key in cache.cache:
+                return cache.get(key)
+            result = func(*args, **kwargs)
+            cache.put(key, result)
             return result
+
         return wrapper
+
     return decorator

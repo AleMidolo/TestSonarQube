@@ -10,5 +10,4 @@ def add_asset(self, basename, file_path):
         self.assets = {}
     
     file_extension = file_path.split('.')[-1]
-    asset_key = f"{basename}.{file_extension}"
-    self.assets[asset_key] = file_path
+    self.assets[f"{basename}.{file_extension}"] = file_path

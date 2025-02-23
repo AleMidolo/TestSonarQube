@@ -12,7 +12,6 @@ def protocol_handlers(cls, protocol_version=None):
     # Simulación de controladores de protocolo disponibles
     available_handlers = {
         (3, 0): "HandlerV3_0",
-        (3, 1): "HandlerV3_1",
         (3, 5): "HandlerV3_5",
         (4, 0): "HandlerV4_0",
     }

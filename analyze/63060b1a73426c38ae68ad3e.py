@@ -8,7 +8,7 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     import os
     import json
 
-    def flatten_dict(d, parent_key='', sep='.'):
+    def flatten_dict(d, parent_key='', sep='_'):
         items = {}
         for k, v in d.items():
             new_key = f"{parent_key}{sep}{k}" if parent_key else k
