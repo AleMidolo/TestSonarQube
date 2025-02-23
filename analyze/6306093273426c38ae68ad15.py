@@ -11,7 +11,7 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     import subprocess
     import json
 
-    # Prepare the command
+    # Prepare the command to run the Ansible playbook
     command = ['ansible-playbook'] + cli_args
     if vars_dict:
         extra_vars = json.dumps(vars_dict)

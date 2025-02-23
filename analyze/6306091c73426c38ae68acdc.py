@@ -8,7 +8,7 @@ def validate_from_content(cls, spec_content=None):
     """
     import yaml
 
-    required_fields = ['field1', 'field2', 'field3']  # अनिवार्य फ़ील्ड्स की सूची
+    required_fields = ['field1', 'field2', 'field3']  # आवश्यक फ़ील्ड्स की सूची
     if spec_content is None:
         raise IRValidatorException("Spec content is required.")
 
