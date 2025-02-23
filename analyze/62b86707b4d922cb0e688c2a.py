@@ -5,10 +5,10 @@ def on(self, hook):
     该装饰器函数用于向注册表中添加一个新的处理器。
 
     参数：
-      hook (HookType): 要为其注册处理器的 Hook 属性。
+        hook (HookType): 要为其注册处理器的 Hook 属性。
 
     返回值：
-      callable: 用于为指定的 hook 注册监听器的装饰器。
+        callable: 用于为指定的 hook 注册监听器的装饰器。
     """
     def decorator(func):
         if hook not in self._registry:

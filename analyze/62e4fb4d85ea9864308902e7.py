@@ -20,21 +20,19 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     # 检查命令是否是完整路径
     if os.path.isfile(command):
         return cmd
-
+    
     # 尝试查找命令的完整路径
-    if sys.platform == "win32":
-        # 在 Windows 上，使用 PATHEXT 来查找可执行文件
-        pathext = os.environ.get('PATHEXT', '').split(';')
-        for ext in pathext:
-            full_command = f"{command}{ext}"
-            if os.path.isfile(full_command):
-                return (full_command,) + cmd[1:]
-
-    # 在其他平台上，使用 which 命令查找可执行文件
+    if os.name == 'nt':
+        # Windows 系统
+        path_env = os.environ.get('PATH', '').split(os.pathsep)
+        for path in path_env:
+            full_path = os.path.join(path, command + '.exe')
+            if os.path.isfile(full_path):
+                return (full_path,) + cmd[1:]
     else:
-        from shutil import which
-        full_command = which(command)
-        if full_command:
-            return (full_command,) + cmd[1:]
+        # 非 Windows 系统
+        full_path = os.path.join(os.getcwd(), command)
+        if os.path.isfile(full_path):
+            return (full_path,) + cmd[1:]
 
     return cmd

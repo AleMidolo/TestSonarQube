@@ -14,7 +14,7 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
 
     >>> from dateutil.parser import parse
     >>> from dateutil.tz import gettz
-    >>> tzinfos = {"BRST": tzoffset("BRST", -7200)}
+    >>> tzinfos = {"BRST": tzoffset(u'BRST', -7200)}
     >>> parse("2012-01-19 17:21:00 BRST", tzinfos=tzinfos)
     datetime.datetime(2012, 1, 19, 17, 21, tzinfo=tzoffset(u'BRST', -7200))
     >>> parse("2012-01-19 17:21:00 CST", tzinfos=tzinfos)
@@ -31,3 +31,4 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     :raises OverflowError: 当解析的日期超出系统上最大的有效 C 整数时抛出。
     """
     # Implementation goes here
+    pass

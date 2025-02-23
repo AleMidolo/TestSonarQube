@@ -21,4 +21,5 @@ def validate(self, inventory, extract_spec_version=False):
 
 def is_valid_inventory(self, inventory, spec_version):
     # Placeholder for actual validation logic
-    return True  # Assume the inventory is valid for the sake of this example
+    # This should check the inventory against the rules defined for the spec_version
+    return True  # Assuming validation passes for the sake of example

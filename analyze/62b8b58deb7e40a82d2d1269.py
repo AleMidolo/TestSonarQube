@@ -7,9 +7,12 @@ def directlyProvidedBy(object):
     """
     provides = getattr(object, "__provides__", None)
     if provides is None:
-        implements = getattr(object, "__implements__", None)
-        if implements is not None and len(implements) > 0:
-            # Assuming the first item is the base class we want to exclude
-            return implements[1] if len(implements) > 1 else None
         return None
+    
+    # 如果有 implements 规范，去除基类提供的声明
+    if hasattr(object, "__implements__"):
+        implements = object.__implements__
+        if implements and len(implements) > 1:
+            return provides
+    
     return provides

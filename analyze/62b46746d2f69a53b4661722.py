@@ -26,15 +26,13 @@ def absorb(self, args):
                     new_expressions.append(a)
                 elif (a == ('~', b)):
                     new_expressions.append(('&', a, b))
-                else:
-                    new_expressions.append(expr)
             elif op == '|':
                 if (a == b) or (b == ('&', a)):
                     new_expressions.append(a)
+                elif (a == ('&', b)):
+                    new_expressions.append(a)
                 elif (a == ('~', b)):
                     new_expressions.append(('|', a, b))
-                else:
-                    new_expressions.append(expr)
         else:
             new_expressions.append(expr)
     return new_expressions
