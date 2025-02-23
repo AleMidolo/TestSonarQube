@@ -25,13 +25,13 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     response = self._create_response_object(handlers)
     transaction_message = {
         "mode": mode or "WRITE",
-        "bookmarks": list(bookmarks) if bookmarks else [],
-        "metadata": metadata or {},
+        "bookmarks": bookmarks,
+        "metadata": metadata,
         "timeout": timeout,
         "db": db,
         "imp_user": imp_user,
-        "dehydration_hooks": dehydration_hooks or {},
-        "hydration_hooks": hydration_hooks or {}
+        "dehydration_hooks": dehydration_hooks,
+        "hydration_hooks": hydration_hooks
     }
     
     self._queue_message('BEGIN', transaction_message)

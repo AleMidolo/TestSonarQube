@@ -34,8 +34,8 @@ def format(
         out_params = list(params)
         formatted_sql = sql
         for index in range(len(out_params)):
-            formatted_sql = formatted_sql.replace(f"${index + 1}", f":{index + 1}")
+            formatted_sql = formatted_sql.replace(f"?{index}", f"${index + 1}")
     else:
-        raise TypeError("params must be a dict or a sequence")
+        raise ValueError("params must be a dictionary or a sequence")
 
     return formatted_sql, out_params

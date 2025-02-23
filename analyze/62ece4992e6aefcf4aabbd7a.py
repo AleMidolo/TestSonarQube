@@ -1,5 +1,5 @@
 import os
-import platform
+import sys
 
 def is_gitbash():
     """
@@ -7,4 +7,4 @@ def is_gitbash():
 
     :return: True si es gitbash
     """
-    return platform.system() == "Windows" and "git" in os.environ.get("TERM", "")
+    return os.name == 'nt' and 'git' in sys.executable.lower()

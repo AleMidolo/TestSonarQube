@@ -7,7 +7,6 @@ def parse_arguments(*arguments):
     parser = argparse.ArgumentParser()
     
     # Aquí puedes agregar los argumentos que deseas analizar
-    # Ejemplo:
     parser.add_argument('--example', type=str, help='Un ejemplo de argumento')
     
     # Analiza los argumentos
