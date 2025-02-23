@@ -9,10 +9,13 @@ def get_logical_path_map(inventory, version):
     """
     logical_path_map = {}
     
-    for state in inventory.get('states', []):
-        if state.get('version') == version:
-            logical_path = state.get('logical_path')
-            content_files = set(state.get('content_files', []))
+    for state in inventory.get(version, []):
+        logical_path = state['logical_path']
+        content_files = set(state.get('content_files', []))
+        
+        if logical_path not in logical_path_map:
             logical_path_map[logical_path] = content_files
-            
+        else:
+            logical_path_map[logical_path].update(content_files)
+    
     return logical_path_map

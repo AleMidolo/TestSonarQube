@@ -6,7 +6,7 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
 
     调用给定的命令。
     """
-    command = [commands] + list(args)
+    command = [commands] + args
     if verbose:
         print(f"Running command: {' '.join(command)}")
     

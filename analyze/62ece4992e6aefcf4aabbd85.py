@@ -7,12 +7,12 @@ def find_roots(
     假设三元组的形式为 `(child, prop, parent)`，例如 `RDFS.subClassOf` 或 `SKOS.broader` 的方向。
 
     参数：
-      graph: 图类对象
-      prop: URIRef 类对象
-      roots: 可选参数，类型为集合（set）
+        graph: 图类对象
+        prop: URIRef 类对象
+        roots: 可选参数，类型为集合（set）
 
     返回值：
-      roots: 包含节点的集合
+        roots: 包含节点的集合
     """
     if roots is None:
         roots = set()
