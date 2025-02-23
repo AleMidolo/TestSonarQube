@@ -1,131 +1,127 @@
 def isoparse(self, dt_str):
     """
-    Parse an ISO-8601 datetime string into a :class:`datetime.datetime`.
+    将 ISO-8601 格式的日期时间字符串解析为 :class:`datetime.datetime`。
 
-    An ISO-8601 datetime string consists of a date portion, followed
-    optionally by a time portion - the date and time portions are separated
-    by a single character separator, which is ``T`` in the official
-    standard. Incomplete date formats (such as ``YYYY-MM``) may *not* be
-    combined with a time portion.
+    一个 ISO-8601 日期时间字符串由日期部分组成，后面可选跟随一个时间部分——日期和时间部分之间由单个字符分隔，在官方标准中该字符为 ``T``。不完整的日期格式（例如 ``YYYY-MM``）*不能*与时间部分组合使用。
 
-    Supported date formats are:
+    支持的日期格式包括：
 
-    Common:
+    常见：
 
     - ``YYYY``
-    - ``YYYY-MM`` or ``YYYYMM``
-    - ``YYYY-MM-DD`` or ``YYYYMMDD``
+    - ``YYYY-MM`` 或 ``YYYYMM``
+    - ``YYYY-MM-DD`` 或 ``YYYYMMDD``
 
-    Uncommon:
+    不常见：
 
-    - ``YYYY-Www`` or ``YYYYWww`` - ISO week (day defaults to 0)
-    - ``YYYY-Www-D`` or ``YYYYWwwD`` - ISO week and day
+    - ``YYYY-Www`` 或 ``YYYYWww`` - ISO 周（天数默认为 0）
+    - ``YYYY-Www-D`` 或 ``YYYYWwwD`` - ISO 周和天数
 
-    The ISO week and day numbering follows the same logic as
-    :func:`datetime.date.isocalendar`.
+    ISO 周和天数的编号逻辑与 :func:`datetime.date.isocalendar` 相同。
 
-    Supported time formats are:
+    支持的时间格式包括：
 
     - ``hh``
-    - ``hh:mm`` or ``hhmm``
-    - ``hh:mm:ss`` or ``hhmmss``
-    - ``hh:mm:ss.ssssss`` (Up to 6 sub-second digits)
+    - ``hh:mm`` 或 ``hhmm``
+    - ``hh:mm:ss`` 或 ``hhmmss``
+    - ``hh:mm:ss.ssssss``（最多可包含 6 位子秒数字）
 
-    Midnight is a special case for `hh`, as the standard supports both
-    00:00 and 24:00 as a representation. The decimal separator can be
-    either a dot or a comma.
-
+    对于 `hh`，午夜是一个特殊情况，因为标准同时支持用 00:00 和 24:00 表示午夜。小数点分隔符可以是点（``.``）或逗号（``,``）。
 
     .. caution::
 
-        Support for fractional components other than seconds is part of the
-        ISO-8601 standard, but is not currently implemented in this parser.
+      虽然 ISO-8601 标准支持秒以外的其他小数组件，但当前的解析器尚未实现此功能。
 
-    Supported time zone offset formats are:
+    支持的时区偏移格式包括：
 
-    - `Z` (UTC)
-    - `±HH:MM`
-    - `±HHMM`
-    - `±HH`
+    - ``Z``（UTC）
+    - ``±HH:MM``
+    - ``±HHMM``
+    - ``±HH``
 
-    Offsets will be represented as :class:`dateutil.tz.tzoffset` objects,
-    with the exception of UTC, which will be represented as
-    :class:`dateutil.tz.tzutc`. Time zone offsets equivalent to UTC (such
-    as `+00:00`) will also be represented as :class:`dateutil.tz.tzutc`.
+    偏移量将表示为 :class:`dateutil.tz.tzoffset` 对象，UTC 除外，UTC 会表示为 :class:`dateutil.tz.tzutc`。与 UTC 等效的时区偏移（例如 ``+00:00``）也将表示为 :class:`dateutil.tz.tzutc`。
 
     :param dt_str:
-        A string or stream containing only an ISO-8601 datetime string
+      仅包含一个 ISO-8601 日期时间字符串的字符串或流。
 
     :return:
-        Returns a :class:`datetime.datetime` representing the string.
-        Unspecified components default to their lowest value.
+      返回一个 :class:`datetime.datetime` 对象，表示该字符串。未指定的组件默认为其最小值。
 
     .. warning::
 
-        As of version 2.7.0, the strictness of the parser should not be
-        considered a stable part of the contract. Any valid ISO-8601 string
-        that parses correctly with the default settings will continue to
-        parse correctly in future versions, but invalid strings that
-        currently fail (e.g. ``2017-01-01T00:00+00:00:00``) are not
-        guaranteed to continue failing in future versions if they encode
-        a valid date.
+      从 2.7.0 版本开始，解析器的严格性不应被视为稳定的契约部分。任何符合 ISO-8601 且在默认设置下能正确解析的字符串，在将来的版本中都能继续正确解析，但当前无法解析的无效字符串（如 ``2017-01-01T00:00+00:00:00``）若在编码上是有效日期，则不保证将来版本会继续无法解析。
 
     .. versionadded:: 2.7.0
     """
-    from datetime import datetime
+    from datetime import datetime, timedelta
     import re
     from dateutil import tz
 
-    # Define regex patterns for parsing
-    date_pattern = r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?'
-    week_pattern = r'(\d{4})-W(\d{2})(?:-?(\d{1}))?'
-    time_pattern = r'T(\d{1,2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?)?'
-    tz_pattern = r'([+-]\d{2}:\d{2}|Z|[+-]\d{4}|[+-]\d{2})?'
+    # Regular expressions for parsing
+    iso_date_regex = re.compile(r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?')
+    iso_week_regex = re.compile(r'(\d{4})-W(\d{2})(?:-?(\d{1}))?')
+    iso_time_regex = re.compile(r'(\d{2})(?::(\d{2})(?::(\d{2})(?:\.(\d+))?)?)?')
+    iso_tz_regex = re.compile(r'Z|([+-]\d{2}):?(\d{2})?|([+-]\d{2})(\d{2})?|([+-]\d{2})')
 
-    # Combine patterns
-    full_pattern = rf'^{date_pattern}(?:-W{week_pattern})?({time_pattern})?({tz_pattern})?$'
-    match = re.match(full_pattern, dt_str)
+    # Parse the date and time
+    def parse_date(date_str):
+        match = iso_date_regex.match(date_str)
+        if match:
+            year = int(match.group(1))
+            month = int(match.group(2) or 1)
+            day = int(match.group(3) or 1)
+            return datetime(year, month, day)
+        match = iso_week_regex.match(date_str)
+        if match:
+            year = int(match.group(1))
+            week = int(match.group(2))
+            day = int(match.group(3) or 1)
+            return datetime.fromisocalendar(year, week, day)
+        raise ValueError("Invalid date format")
 
-    if not match:
-        raise ValueError("Invalid ISO-8601 datetime string")
+    def parse_time(time_str):
+        match = iso_time_regex.match(time_str)
+        if match:
+            hour = int(match.group(1))
+            minute = int(match.group(2) or 0)
+            second = int(match.group(3) or 0)
+            microsecond = int(match.group(4) or 0)
+            return hour, minute, second, microsecond
+        raise ValueError("Invalid time format")
 
-    # Extract date components
-    year, month, day = match.group(1), match.group(2), match.group(3)
-    if month is None:
-        month = 1
-    if day is None:
-        day = 1
+    def parse_tz(tz_str):
+        if tz_str == 'Z':
+            return tz.tzutc()
+        match = iso_tz_regex.match(tz_str)
+        if match:
+            if match.group(1):
+                offset_hours = int(match.group(1))
+                offset_minutes = int(match.group(2) or 0)
+                return tz.tzoffset(None, timedelta(hours=offset_hours, minutes=offset_minutes))
+            if match.group(3):
+                offset_hours = int(match.group(3))
+                return tz.tzoffset(None, timedelta(hours=offset_hours))
+        return None
 
-    # Extract time components
-    hour, minute, second, microsecond = match.group(4), match.group(5), match.group(6), match.group(7)
-    if hour is None:
-        hour = 0
-    if minute is None:
-        minute = 0
-    if second is None:
-        second = 0
-    if microsecond is None:
-        microsecond = 0
+    # Split date and time
+    if 'T' in dt_str:
+        date_str, time_str = dt_str.split('T', 1)
+    else:
+        date_str, time_str = dt_str, ''
 
-    # Handle time zone
-    tzinfo = None
-    tz_str = match.group(8)
-    if tz_str == 'Z':
-        tzinfo = tz.tzutc()
-    elif tz_str:
-        if len(tz_str) == 5:  # ±HH:MM
-            sign = 1 if tz_str[0] == '+' else -1
-            hours, minutes = map(int, tz_str[1:].split(':'))
-            tzinfo = tz.tzoffset(None, sign * (hours * 3600 + minutes * 60))
-        elif len(tz_str) == 3:  # ±HH
-            sign = 1 if tz_str[0] == '+' else -1
-            hours = int(tz_str[1:])
-            tzinfo = tz.tzoffset(None, sign * hours * 3600)
-        else:  # ±HHMM
-            sign = 1 if tz_str[0] == '+' else -1
-            hours = int(tz_str[1:3])
-            minutes = int(tz_str[3:5])
-            tzinfo = tz.tzoffset(None, sign * (hours * 3600 + minutes * 60))
+    # Parse date
+    dt = parse_date(date_str)
 
-    # Create datetime object
-    return datetime(int(year), int(month), int(day), int(hour), int(minute), int(second), int(microsecond), tzinfo)
+    # Parse time if present
+    if time_str:
+        hour, minute, second, microsecond = parse_time(time_str)
+        dt = dt.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
+
+    # Parse timezone if present
+    tz_str = time_str.split()[-1] if time_str else ''
+    if tz_str:
+        tzinfo = parse_tz(tz_str)
+        if tzinfo:
+            dt = dt.replace(tzinfo=tzinfo)
+
+    return dt

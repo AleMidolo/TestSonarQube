@@ -1,10 +1,10 @@
 def popitem(self):
     """
-    Remove and return the `(key, value)` pair least recently used.
+    移除并返回最久未使用的键值对。
     """
-    if not self.cache:
-        raise KeyError("popitem(): cache is empty")
+    if not self.data:
+        raise KeyError("popitem(): dictionary is empty")
     
-    # Remove the first item from the ordered dictionary
-    key, value = self.cache.popitem(last=False)
-    return key, value
+    oldest_key = next(iter(self.data))
+    value = self.data.pop(oldest_key)
+    return oldest_key, value

@@ -1,29 +1,20 @@
 def scale(self, other=None, recompute=False):
     """
-    Compute or set scale (integral of the histogram).
+    计算或设置直方图的比例（积分值）。
 
-    If *other* is ``None``, return scale of this histogram.
-    If its scale was not computed before,
-    it is computed and stored for subsequent use
-    (unless explicitly asked to *recompute*).
-    Note that after changing (filling) the histogram
-    one must explicitly recompute the scale
-    if it was computed before.
+    如果参数 *other* 为 ``None``，则返回当前直方图的比例。
+    如果之前未计算过比例值，则会计算并存储该值以供后续使用（除非明确要求重新计算）。
+    请注意，在对直方图进行更改（填充数据）后，如果之前已计算过比例值，则需要显式地重新计算比例。
 
-    If a float *other* is provided, rescale self to *other*.
+    如果提供了一个浮点数 *other*，则将当前直方图的比例调整为 *other*。
 
-    Histograms with scale equal to zero can't be rescaled.
-    :exc:`.LenaValueError` is raised if one tries to do that.
+    无法对比例为零的直方图进行重新调整。如果尝试这样做，将会引发 :exc:`.LenaValueError` 异常。
     """
     if other is None:
-        if not hasattr(self, '_scale_computed') or recompute:
-            self._scale = sum(self.histogram)  # Assuming self.histogram holds the histogram data
-            self._scale_computed = True
+        if not hasattr(self, '_scale') or recompute:
+            self._scale = self._compute_scale()
         return self._scale
-
-    if self._scale == 0:
-        raise LenaValueError("Cannot rescale a histogram with scale equal to zero.")
-
-    scale_factor = other / self._scale
-    self.histogram = [value * scale_factor for value in self.histogram]
-    self._scale = other
+    else:
+        if self._scale == 0:
+            raise LenaValueError("无法对比例为零的直方图进行重新调整。")
+        self._scale = other

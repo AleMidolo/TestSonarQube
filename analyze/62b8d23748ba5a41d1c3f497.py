@@ -1,19 +1,13 @@
 def popitem(self):
     """
-    Remove and return the `(key, value)` pair least frequently used.
+    移除并返回最少使用的键值对。
     """
-    if not self.freq_map:
+    if not self.data:
         raise KeyError("popitem(): dictionary is empty")
     
-    # Find the least frequently used key
-    least_freq = min(self.freq_map.values())
-    least_freq_keys = [key for key, freq in self.freq_map.items() if freq == least_freq]
+    # Assuming self.data is a dictionary-like structure with usage tracking
+    least_used_key = min(self.usage, key=self.usage.get)
+    value = self.data.pop(least_used_key)
+    del self.usage[least_used_key]
     
-    # If there are multiple keys with the same frequency, we can choose one
-    key_to_remove = least_freq_keys[0]
-    
-    # Remove the key from both the frequency map and the main storage
-    value = self.storage.pop(key_to_remove)
-    del self.freq_map[key_to_remove]
-    
-    return key_to_remove, value
+    return least_used_key, value

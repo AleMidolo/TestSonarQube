@@ -5,14 +5,14 @@ class ValidationError(Exception):
 
 def validate_value(value):
     """
-    Validate the given value against the corresponding regular expression.
+    根据对应的正则表达式验证给定的值。
 
-    Args:
-        value: the string to validate
+    参数:
+        value: 要验证的字符串
 
-    Raises:
-        ValidationError: if the given value is not conform to the regular expression.
+    异常:
+        ValidationError: 如果给定的值不符合正则表达式，将抛出此异常。
     """
-    pattern = r'^[a-zA-Z0-9_]+$'  # Example regex pattern, adjust as needed
+    pattern = r'^[a-zA-Z0-9]+$'  # 示例正则表达式，允许字母和数字
     if not re.match(pattern, value):
-        raise ValidationError(f"Value '{value}' does not conform to the required format.")
+        raise ValidationError(f"Value '{value}' does not match the required pattern.")

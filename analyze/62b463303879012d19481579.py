@@ -1,17 +1,17 @@
 def _extract_number_and_supplment_from_issue_element(issue):
     """
-    Extract the possible values of number and suppl from the contents of issue.
+    从 issue 的内容中返回 number 和 sup 的可能值。
+    从 issue 的内容中提取 number 和 suppl 的可能值。
     """
-    number = None
-    suppl = None
-    
-    # Assuming issue is a string that may contain the number and suppl
-    if isinstance(issue, str):
-        parts = issue.split()
-        for part in parts:
-            if part.isdigit():
-                number = part
-            elif part.lower().startswith('suppl'):
-                suppl = part
-    
+    import re
+
+    number_pattern = r'(?<=#)\d+'
+    suppl_pattern = r'\b(?:sup|supplement)\s*[\d]*\b'
+
+    number_matches = re.findall(number_pattern, issue)
+    suppl_matches = re.findall(suppl_pattern, issue, re.IGNORECASE)
+
+    number = number_matches[0] if number_matches else None
+    suppl = suppl_matches[0] if suppl_matches else None
+
     return number, suppl

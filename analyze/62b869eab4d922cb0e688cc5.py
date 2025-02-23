@@ -1,29 +1,21 @@
-def update_last_applied_manifest_dict_from_resp(
-    last_applied_manifest, observer_schema, response
-):
+def update_last_applied_manifest_dict_from_resp(last_applied_manifest, observer_schema, response):
     """
-    Together with :func:``update_last_applied_manifest_list_from_resp``, this
-    function is called recursively to update a partial ``last_applied_manifest``
-    from a partial Kubernetes response
+    与函数 :func:``update_last_applied_manifest_list_from_resp`` 一起，该函数被递归调用，用于从部分 Kubernetes 响应中更新部分 ``last_applied_manifest``。
 
-    Args:
-        last_applied_manifest (dict): partial ``last_applied_manifest`` being
-            updated
-        observer_schema (dict): partial ``observer_schema``
-        response (dict): partial response from the Kubernetes API.
+    参数:
+      last_applied_manifest (list): 正在更新的部分 ``last_applied_manifest``。
+      observer_schema (list): 部分 ``observer_schema``。
+      response (list): 来自 Kubernetes API 的部分响应。
 
-    Raises:
-        KeyError: If the observed field is not present in the Kubernetes response
+    异常:
+      KeyError: 如果在 Kubernetes 响应中未找到观察字段，则抛出此异常。
 
-    This function go through all observed fields, and initialized their value in
-    last_applied_manifest if they are not yet present
+    此函数会遍历所有观察到的字段，如果它们尚未在 `last_applied_manifest` 中初始化，则会为其初始化值。
     """
-    for key, value in observer_schema.items():
-        if key not in last_applied_manifest:
-            if key not in response:
-                raise KeyError(f"Observed field '{key}' is not present in the response")
-            last_applied_manifest[key] = response[key]
-        if isinstance(value, dict):
-            update_last_applied_manifest_dict_from_resp(
-                last_applied_manifest[key], value, response[key]
-            )
+    for field in observer_schema:
+        if field not in last_applied_manifest:
+            if field not in response:
+                raise KeyError(f"Field '{field}' not found in response.")
+            last_applied_manifest[field] = response[field]
+        elif isinstance(last_applied_manifest[field], dict) and isinstance(response[field], dict):
+            update_last_applied_manifest_dict_from_resp(last_applied_manifest[field], observer_schema[field], response[field])

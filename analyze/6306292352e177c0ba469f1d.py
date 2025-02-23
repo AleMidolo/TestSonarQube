@@ -3,14 +3,20 @@ import re
 
 def find_tags(text: str, replacer: callable = None) -> Tuple[Set, str]:
     """
-    Find tags in text.
+    在文本中查找标签。
 
-    Tries to ignore tags inside code blocks.
+    尽量忽略代码块中的标签。
 
-    Optionally, if passed a "replacer", will also replace the tag word with the result
-    of the replacer function called with the tag word.
+    可选地，如果传入了一个 “replacer”，则会使用调用该 replacer 函数（参数为标签单词）的返回值来替换该标签单词。
 
-    Returns a set of tags and the original or replaced text.
+    返回一个包含标签的集合以及原始文本或替换后的文本。
     """
-    # Regex to find code blocks
-    code_block_pattern = r'
+    # 正则表达式匹配标签，忽略代码块
+    pattern = r'(?<!`)(#\w+)(?!`)'
+    tags = set(re.findall(pattern, text))
+    
+    if replacer:
+        for tag in tags:
+            text = text.replace(tag, replacer(tag))
+    
+    return tags, text

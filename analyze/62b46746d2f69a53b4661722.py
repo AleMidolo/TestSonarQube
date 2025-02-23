@@ -1,36 +1,40 @@
 def absorb(self, args):
     """
-    Given an `args` sequence of expressions, return a new list of expression
-    applying absorption and negative absorption.
+    对于给定的表达式序列 `args`，返回一个应用吸收律的新表达式列表。
 
-    See https://en.wikipedia.org/wiki/Absorption_law
+    对于给定的表达式序列 `args`，返回一个应用吸收律和负吸收律的新表达式列表。
 
-    Absorption::
+    参考：https://en.wikipedia.org/wiki/Absorption_law
 
-        A & (A | B) = A, A | (A & B) = A
+    吸收律（Absorption）::
 
-    Negative absorption::
+      A & (A | B) = A, A | (A & B) = A
 
-        A & (~A | B) = A & B, A | (~A & B) = A | B
+    负吸收律（Negative Absorption）::
+
+      A & (~A | B) = A & B, A | (~A & B) = A | B
     """
-    result = []
+    new_expressions = []
     for expr in args:
+        # Apply Absorption Law
         if isinstance(expr, tuple) and len(expr) == 3:
             a, op, b = expr
             if op == '&':
                 if (a == b) or (b == ('|', a)):
-                    result.append(a)
-                elif (a == ('~', b)) or (b == ('|', ('~', a))):
-                    result.append(('&', a, b))
+                    new_expressions.append(a)
+                elif (a == ('|', b)):
+                    new_expressions.append(a)
+                elif (a == ('~', b)):
+                    new_expressions.append(('&', a, b))
                 else:
-                    result.append(expr)
+                    new_expressions.append(expr)
             elif op == '|':
                 if (a == b) or (b == ('&', a)):
-                    result.append(a)
-                elif (a == ('~', b)) or (b == ('&', ('~', a))):
-                    result.append(('|', a, b))
+                    new_expressions.append(a)
+                elif (a == ('~', b)):
+                    new_expressions.append(('|', a, b))
                 else:
-                    result.append(expr)
+                    new_expressions.append(expr)
         else:
-            result.append(expr)
-    return result
+            new_expressions.append(expr)
+    return new_expressions

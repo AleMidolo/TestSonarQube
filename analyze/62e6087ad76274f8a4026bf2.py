@@ -1,19 +1,12 @@
-def discard(self, n=-1, qid=-1, dehydration_hooks=None,
-            hydration_hooks=None, **handlers):
+def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **handlers):
     """
-    Appends a DISCARD message to the output queue.
+    将一个DISCARD消息添加到输出队列。
 
-    :param n: number of records to discard, default = -1 (ALL)
-    :param qid: query ID to discard for, default = -1 (last query)
-    :param dehydration_hooks:
-        Hooks to dehydrate types (dict from type (class) to dehydration
-        function). Dehydration functions receive the value and returns an
-        object of type understood by packstream.
-    :param hydration_hooks:
-        Hooks to hydrate types (mapping from type (class) to
-        dehydration function). Dehydration functions receive the value of
-        type understood by packstream and are free to return anything.
-    :param handlers: handler functions passed into the returned Response object
+    :param n: 要丢弃的记录数量，默认值为 -1（全部丢弃）
+    :param qid: 要丢弃的查询ID，默认值为 -1（最后一个查询）
+    :param dehydration_hooks: 用于处理类型dehydration的钩子（字典，键为类型（类），值为dehydration函数）。dehydration函数接收一个值，并返回一个 PackStream 可识别的对象。
+    :param hydration_hooks: 用于处理类型hydration的钩子（映射，键为类型（类），值为hydration函数）。hydration函数接收一个 PackStream 可识别的值，并可以返回任意对象。
+    :param handlers: 传递给返回的Response对象的处理函数
     """
     # Implementation of the discard method
     if dehydration_hooks is None:
@@ -22,8 +15,7 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         hydration_hooks = {}
 
     # Create a discard message
-    message = {
-        'type': 'DISCARD',
+    discard_message = {
         'n': n,
         'qid': qid,
         'dehydration_hooks': dehydration_hooks,
@@ -31,5 +23,5 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         'handlers': handlers
     }
 
-    # Append the message to the output queue
-    self.output_queue.append(message)
+    # Add the discard message to the output queue
+    self.output_queue.append(discard_message)

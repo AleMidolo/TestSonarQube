@@ -1,6 +1,8 @@
 def status_str(self, prefix=''):
     """
-    Return string of validator status, with optional prefix.
+    通过访问排序后的 `self.messages` 列表，返回一个字符串。每次访问时，将前缀（prefix）和排序后的 `self.messages` 列表中的元素添加到结果中。
+    返回验证器状态的字符串，并可选择性地添加前缀。
     """
-    status = "Validator is active" if self.is_active else "Validator is inactive"
-    return f"{prefix}{status}"
+    sorted_messages = sorted(self.messages)
+    result = [f"{prefix}{message}" for message in sorted_messages]
+    return '\n'.join(result)

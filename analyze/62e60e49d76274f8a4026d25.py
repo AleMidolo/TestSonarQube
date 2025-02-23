@@ -1,43 +1,49 @@
 def unit_of_work(metadata=None, timeout=None):
     """
-    This function is a decorator for transaction functions that allows extra control over how the transaction is carried out.
+    此函数是一个用于事务函数的装饰器，允许对事务的执行方式进行额外的控制。
 
-    For example, a timeout may be applied::
+    例如，可以应用超时设置：
 
-        from neo4j import unit_of_work
+    from neo4j import unit_of_work
 
-        @unit_of_work(timeout=100)
-        def count_people_tx(tx):
-            result = tx.run("MATCH (a:Person) RETURN count(a) AS persons")
-            record = result.single()
-            return record["persons"]
+    @unit_of_work(timeout=100)
+    def count_people_tx(tx):
+        result = tx.run("MATCH (a:Person) RETURN count(a) AS persons")
+        record = result.single()
+        return record["persons"]
 
-    :param metadata:
-        a dictionary with metadata.
-        Specified metadata will be attached to the executing transaction and visible in the output of ``dbms.listQueries`` and ``dbms.listTransactions`` procedures.
-        It will also get logged to the ``query.log``.
-        This functionality makes it easier to tag transactions and is equivalent to ``dbms.setTXMetaData`` procedure, see https://neo4j.com/docs/operations-manual/current/reference/procedures/ for procedure reference.
-    :type metadata: dict
+    :param metadata:  
+    一个包含元数据的字典。  
+    指定的元数据将被附加到正在执行的事务中，并在 ``dbms.listQueries`` 和 ``dbms.listTransactions`` 过程的输出中可见。  
+    这还会被记录到 ``query.log`` 中。  
+    该功能使得标记事务变得更加容易，相当于 ``dbms.setTXMetaData`` 过程，参考过程文档请见：https://neo4j.com/docs/operations-manual/current/reference/procedures/。  
+    :type metadata: dict  
 
-    :param timeout:
-        the transaction timeout in seconds.
-        Transactions that execute longer than the configured timeout will be terminated by the database.
-        This functionality allows to limit query/transaction execution time.
-        Specified timeout overrides the default timeout configured in the database using ``dbms.transaction.timeout`` setting.
-        Value should not represent a negative duration.
-        A zero duration will make the transaction execute indefinitely.
-        None will use the default timeout configured in the database.
-    :type timeout: float or :const:`None`
+    :param timeout:  
+    事务的超时时间（以秒为单位）。  
+    执行时间超过配置的超时时间的事务将被数据库终止。  
+    此功能允许限制查询/事务的执行时间。  
+    指定的超时将覆盖数据库中通过 ``dbms.transaction.timeout`` 设置配置的默认超时。  
+    值不应为负的持续时间。  
+    持续时间为零将使事务无限期执行。  
+    如果为 None，则使用数据库中配置的默认超时。  
+    :type timeout: float 或 :const:`None`  
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            # Here you would typically start a transaction and apply the metadata and timeout
-            # This is a placeholder for the actual transaction handling logic
-            print(f"Starting transaction with metadata: {metadata} and timeout: {timeout}")
-            # Call the original function
-            result = func(*args, **kwargs)
-            # Here you would typically commit the transaction
-            print("Transaction completed.")
+            # 这里可以添加事务处理逻辑
+            # 例如，使用 Neo4j 的驱动程序来管理事务
+            from neo4j import GraphDatabase
+
+            driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "password"))
+
+            with driver.session() as session:
+                if timeout is not None:
+                    session.run("CALL dbms.setTransactionTimeout($timeout)", timeout=timeout)
+                if metadata is not None:
+                    session.run("CALL dbms.setTXMetaData($metadata)", metadata=metadata)
+
+                result = session.write_transaction(func, *args, **kwargs)
             return result
         return wrapper
     return decorator

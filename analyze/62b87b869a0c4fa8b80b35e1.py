@@ -1,26 +1,54 @@
-def hist_to_graph(hist, make_value=None, get_coordinate="left",
-                  field_names=("x", "y"), scale=None):
+def hist_to_graph(hist, make_value=None, get_coordinate="left", field_names=("x", "y"), scale=None):
+    """
+    将一个 :class:`.histogram` 转换为一个 :class:`.graph`。
+
+    *make_value* 是一个函数，用于设置图形点的值。
+    默认情况下，它是直方图的 bin 内容。
+    *make_value* 接受一个单一值（bin 内容），不需要上下文。
+
+    此选项可以用于创建图形的误差条。
+    例如，要从一个包含名为 *mean*、*mean_error* 字段和上下文的 bin 的直方图中创建带误差的图形，可以使用以下代码：
+    >>> make_value = lambda bin_: (bin_.mean, bin_.mean_error)
+
+    *get_coordinate* 定义了从直方图 bin 创建的图表点的坐标位置，可选值包括 "left"（默认）、"right" 和 "middle"。
+
+    *field_names* 设置图形的字段名称。字段名称的数量必须与结果的维度相同。对于上述的 *make_value*，字段名称可以是 *("x", "y_mean", "y_mean_error")*。
+
+    *scale* 设置图形的比例（默认情况下未知）。
+    如果设置为真，则使用直方图的比例。
+
+    *hist* 必须仅包含数值型 bin（没有上下文），或者 *make_value* 在创建数值型图形时必须移除上下文。
+
+    返回生成的图形。
+    """
+    # Implementation of the function
     if make_value is None:
-        make_value = lambda bin_: bin_
+        make_value = lambda bin_: bin_.content
 
-    if get_coordinate not in ["left", "right", "middle"]:
-        raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
-
-    graph_data = []
-    bin_width = hist.bin_width
-    for i, bin_ in enumerate(hist.bins):
-        value = make_value(bin_)
+    coordinates = []
+    for bin_ in hist.bins:
         if get_coordinate == "left":
-            x = hist.bin_edges[i]
+            x = bin_.left
         elif get_coordinate == "right":
-            x = hist.bin_edges[i + 1]
-        else:  # get_coordinate == "middle"
-            x = (hist.bin_edges[i] + hist.bin_edges[i + 1]) / 2
+            x = bin_.right
+        elif get_coordinate == "middle":
+            x = bin_.center
+        else:
+            raise ValueError("Invalid value for get_coordinate")
 
-        graph_data.append((x,) + value)
+        values = make_value(bin_)
+        if isinstance(values, tuple):
+            coordinates.append((x, *values))
+        else:
+            coordinates.append((x, values))
 
-    if scale is True:
-        # Apply histogram scale to graph data if needed
-        pass  # Implement scaling logic if necessary
+    if scale:
+        # Apply scaling logic if needed
+        pass
 
-    return Graph(data=graph_data, field_names=field_names)
+    graph = create_graph(coordinates, field_names)
+    return graph
+
+def create_graph(coordinates, field_names):
+    # Placeholder for graph creation logic
+    return {"coordinates": coordinates, "field_names": field_names}

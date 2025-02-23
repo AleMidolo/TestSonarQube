@@ -1,31 +1,29 @@
+import xml.etree.ElementTree as ET
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import serialization
+
 def verify_relayable_signature(public_key, doc, signature):
     """
-    Verify the signed XML elements to have confidence that the claimed
-    author did actually generate this message.
+    验证已签名的XML元素，以确保声明的作者确实生成了此消息。
     """
-    from lxml import etree
-    from xmlsec import SignatureContext, verify, KeyData, Key
-
-    # Load the XML document
-    xml_doc = etree.fromstring(doc)
-
-    # Create a signature context
-    ctx = SignatureContext()
-
     # Load the public key
-    key = Key.from_string(public_key, KeyData.KeyFormat.PEM)
-    ctx.key = key
+    public_key = serialization.load_pem_public_key(public_key)
 
-    # Find the signature node in the XML
-    signature_node = xml_doc.find('.//{http://www.w3.org/2000/09/xmldsig#}Signature')
+    # Parse the XML document
+    root = ET.fromstring(doc)
 
-    if signature_node is None:
-        raise ValueError("Signature node not found in the document.")
+    # Extract the signed data (assuming it's in a specific element)
+    signed_data = root.find('.//SignedData').text
 
     # Verify the signature
     try:
-        verify(signature_node, ctx)
+        public_key.verify(
+            signature,
+            signed_data.encode(),
+            padding.PKCS1v15(),
+            hashes.SHA256()
+        )
         return True
     except Exception as e:
-        print(f"Signature verification failed: {e}")
         return False

@@ -1,35 +1,30 @@
 def validate_version_inventories(self, version_dirs):
     """
-    Each version SHOULD have an inventory up to that point.
+    每个版本**应当**包含截至该版本的完整清单。  
 
-    Also keep a record of any content digests different from those in the root inventory
-    so that we can also check them when validating the content.
+    同时，记录所有与根清单不同的内容摘要，以便在验证内容时能够检查这些差异。  
 
-    version_dirs is an array of version directory names and is assumed to be in
-    version sequence (1, 2, 3...).
+    `version_dirs` 是一个包含版本目录名称的数组，并假定按照版本顺序排列（1, 2, 3...）。
     """
-    root_inventory = self.load_inventory('root_inventory.json')
-    content_digests = {}
+    # 假设根清单在第一个版本目录中
+    root_inventory = self.load_inventory(version_dirs[0])
+    discrepancies = {}
 
-    for version in version_dirs:
-        inventory_path = f"{version}/inventory.json"
-        version_inventory = self.load_inventory(inventory_path)
+    for version in version_dirs[1:]:
+        current_inventory = self.load_inventory(version)
+        if not self.is_complete_inventory(current_inventory, root_inventory):
+            discrepancies[version] = self.get_inventory_diff(current_inventory, root_inventory)
 
-        # Validate that the version inventory matches the expected structure
-        if not self.validate_inventory_structure(version_inventory):
-            raise ValueError(f"Invalid inventory structure in {inventory_path}")
+    return discrepancies
 
-        # Check for content digests that differ from the root inventory
-        for item, digest in version_inventory.items():
-            if item in root_inventory and root_inventory[item] != digest:
-                content_digests[item] = digest
-
-    return content_digests
-
-def load_inventory(self, path):
-    # Placeholder for loading inventory from a JSON file
+def load_inventory(self, version_dir):
+    # 这里实现加载版本目录中的清单
     pass
 
-def validate_inventory_structure(self, inventory):
-    # Placeholder for validating the structure of the inventory
+def is_complete_inventory(self, current_inventory, root_inventory):
+    # 这里实现检查当前清单是否完整
+    pass
+
+def get_inventory_diff(self, current_inventory, root_inventory):
+    # 这里实现获取与根清单的差异
     pass

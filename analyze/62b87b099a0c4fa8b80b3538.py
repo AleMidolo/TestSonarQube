@@ -1,5 +1,7 @@
 def is_fill_request_el(obj):
     """
-    Object contains executable methods 'fill' and 'request'.
+    检查 obj 类是否具有 fill 和 request 属性。
+    对象包含可执行的方法 'fill' 和 'request'。
     """
-    return callable(getattr(obj, 'fill', None)) and callable(getattr(obj, 'request', None))
+    return hasattr(obj, 'fill') and callable(getattr(obj, 'fill')) and \
+           hasattr(obj, 'request') and callable(getattr(obj, 'request'))
