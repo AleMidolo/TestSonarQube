@@ -7,10 +7,16 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     :arg handle: Handle remoto da recuperare  
     :returns: dict
     """
-    url = f"https://{handle}/.well-known/webfinger?resource=acct:{handle}"
-    response = requests.get(url)
+    # Construct the webfinger URL
+    webfinger_url = f"https://{handle}/.well-known/webfinger?resource=acct:{handle}"
     
+    # Send a GET request to the webfinger URL
+    response = requests.get(webfinger_url)
+    
+    # Check if the response is successful
     if response.status_code == 200:
+        # Parse the JSON response
         return response.json()
     else:
+        # Handle errors (e.g., 404, 500)
         response.raise_for_status()

@@ -6,15 +6,16 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
         # Normalize the command for Windows
         normalized_cmd = []
         for part in cmd:
-            # Replace backslashes with forward slashes
-            part = part.replace('\\', '/')
-            # Handle shebangs
-            if part.startswith('#!'):
-                # Ensure the shebang is correctly formatted
+            if part.startswith("#!"):
+                # Handle shebangs
                 shebang = part.splitlines()[0]
                 normalized_cmd.append(shebang)
                 normalized_cmd.append(part[len(shebang):].lstrip())
             else:
                 normalized_cmd.append(part)
+
+        # Convert to a tuple and return
         return tuple(normalized_cmd)
-    return cmd
+    else:
+        # On non-Windows platforms, return the command as is
+        return cmd

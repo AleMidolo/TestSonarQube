@@ -17,15 +17,18 @@ def to_csv(self, separator=",", header=None):
     Per convertire un :class:`Graph` in formato CSV all'interno di una sequenza Lena,  
     utilizzare :class:`lena.output.ToCSV`.
     """
-    # Assuming self.points is a list of tuples representing the graph points
+    # Assuming self.points is a list of points in the graph
     output = []
     
     if header is not None:
         output.append(header)
     
     for point in self.points:
-        # Convert each point to a string with the specified separator
-        point_str = separator.join(map(str, point))
-        output.append(point_str)
+        # Convert point coordinates to string and join with separator
+        point_str = separator.join(map(str, point.coordinates))
+        # Convert point values to string and join with separator
+        values_str = separator.join(map(str, point.values))
+        # Combine coordinates and values
+        output.append(f"{point_str}{separator}{values_str}")
     
     return "\n".join(output)

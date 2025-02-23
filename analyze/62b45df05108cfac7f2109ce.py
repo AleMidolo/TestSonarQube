@@ -8,11 +8,14 @@ def validate(self, path):
         raise FileNotFoundError(f"Il percorso specificato non esiste: {path}")
 
     # Logica di validazione dell'oggetto OCFL
-    # Questo è un esempio e dovrebbe essere sostituito con la logica reale
-    is_valid = True  # Supponiamo che la validazione sia andata a buon fine
+    # Questo è un esempio di come potrebbe essere implementata la validazione
+    # In un caso reale, dovresti implementare la logica specifica per OCFL
 
-    # Esegui la validazione
-    if is_valid:
-        return "Validazione completata con successo."
+    # Controlla se il percorso è una directory
+    if os.path.isdir(path):
+        # Esegui la validazione per le directory OCFL
+        # (aggiungi qui la logica di validazione)
+        return True  # Restituisci True se la validazione ha successo
     else:
-        return "Validazione fallita."
+        # Se non è una directory, restituisci False
+        return False
