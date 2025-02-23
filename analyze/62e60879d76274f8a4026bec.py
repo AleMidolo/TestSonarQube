@@ -1,26 +1,22 @@
 def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
           db=None, imp_user=None, dehydration_hooks=None,
           hydration_hooks=None, **handlers):
-    # Initialize the transaction parameters
-    transaction_params = {
+    # Create the message to be sent
+    message = {
+        'action': 'BEGIN',
         'mode': mode or 'WRITE',
-        'bookmarks': bookmarks or [],
-        'metadata': metadata or {},
+        'bookmarks': bookmarks,
+        'metadata': metadata,
         'timeout': timeout,
         'db': db,
         'imp_user': imp_user,
-        'dehydration_hooks': dehydration_hooks or {},
-        'hydration_hooks': hydration_hooks or {}
-    }
-    
-    # Create the 'BEGIN' message
-    begin_message = {
-        'action': 'BEGIN',
-        'params': transaction_params
+        'dehydration_hooks': dehydration_hooks,
+        'hydration_hooks': hydration_hooks,
+        'handlers': handlers
     }
     
     # Add the message to the output queue
-    self.output_queue.append(begin_message)
+    self.output_queue.append(message)
     
     # Return a response object
-    return Response(begin_message, **handlers)
+    return Response(message)

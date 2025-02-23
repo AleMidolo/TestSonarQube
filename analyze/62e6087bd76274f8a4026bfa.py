@@ -5,11 +5,11 @@ def pop_u16(self):
     if len(self.data) < 2:
         raise ValueError("Not enough data to pop 16 bits.")
     
-    # Extraer los últimos dos bytes
+    # Get the last two bytes
     last_two_bytes = self.data[-2:]
     
-    # Eliminar los últimos dos bytes de self.data
+    # Remove the last two bytes from self.data
     self.data = self.data[:-2]
     
-    # Convertir los bytes a un entero sin signo de 16 bits en formato big-endian
+    # Convert the bytes to an unsigned 16-bit integer in big-endian format
     return int.from_bytes(last_two_bytes, byteorder='big', signed=False)

@@ -23,6 +23,6 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
 
     # Procesar la salida
     if result.returncode != 0:
-        raise RuntimeError(f"Ansible playbook failed: {result.stderr}")
+        raise Exception(f"Ansible playbook failed: {result.stderr}")
 
     return result.stdout

@@ -11,7 +11,7 @@ def addignored(ignored):
     ignored_files = result.stdout.strip().split('\n')
     
     # Ordenar la lista de archivos ignorados
-    ignored_files = sorted(set(ignored_files))
+    ignored_files = sorted(set(file.split(':')[1].strip() for file in ignored_files if file))
     
     # Unir los nombres de archivo en una cadena separada por comas
     return ', '.join(ignored_files)

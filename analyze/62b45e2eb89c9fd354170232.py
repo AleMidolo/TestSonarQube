@@ -12,6 +12,6 @@ def next_version(version):
         else:
             parts[i] = '0'
     else:
-        parts.append('1')
+        parts.insert(0, '1')
     
     return '.'.join(parts)

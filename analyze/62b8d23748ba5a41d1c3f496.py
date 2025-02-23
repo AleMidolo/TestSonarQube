@@ -15,7 +15,7 @@ class LFUCache:
         self.freq[key] += 1
         self.freq_map[self.freq[key]].add(key)
         self.freq_map[self.freq[key] - 1].remove(key)
-        if not self.freq_map[self.freq[key] - 1] and self.min_freq == self.freq[key] - 1:
+        if not self.freq_map[self.min_freq]:
             self.min_freq += 1
         return self.cache[key]
 
@@ -30,8 +30,8 @@ class LFUCache:
             self.freq.pop(lfu_key)
         self.cache[key] = value
         self.freq[key] = 1
-        self.freq_map[1].add(key)
         self.min_freq = 1
+        self.freq_map[1].add(key)
 
 def lfu_cache(maxsize=128, typed=False):
     def decorator(func):
@@ -42,7 +42,7 @@ def lfu_cache(maxsize=128, typed=False):
             if typed:
                 key = (args, frozenset(kwargs.items()))
             else:
-                key = args
+                key = (tuple(args), frozenset(kwargs.items()))
             result = cache.get(key)
             if result is None:
                 result = func(*args, **kwargs)
@@ -50,4 +50,5 @@ def lfu_cache(maxsize=128, typed=False):
             return result
 
         return wrapper
+
     return decorator

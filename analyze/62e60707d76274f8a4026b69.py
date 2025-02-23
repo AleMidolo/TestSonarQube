@@ -8,10 +8,13 @@ def point_type(name, fields, srid_map):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.fields = fields
-            self.srid = srid_map.get(self.srid, None)
+            self.srid = srid_map.get(name, None)
 
-        def __repr__(self):
-            return f"{name}({self.x}, {self.y}, srid={self.srid})"
+        def get_fields(self):
+            return self.fields
+
+        def get_srid(self):
+            return self.srid
 
     DynamicPoint.__name__ = name
     return DynamicPoint

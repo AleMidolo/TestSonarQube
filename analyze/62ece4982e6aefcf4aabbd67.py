@@ -12,6 +12,6 @@ def vertex3tuple(vertices):
     for i in range(n):
         left = vertices[i - 1]  # punto a la izquierda
         center = vertices[i]     # vértice actual
-        right = vertices[(i + 1) % n]  # punto a la derecha, usando módulo para el ciclo
+        right = vertices[(i + 1) % n]  # punto a la derecha
         result.append((left, center, right))
     return result
