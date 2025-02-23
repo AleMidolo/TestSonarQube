@@ -1,18 +1,18 @@
 def process_text_links(text):
     """
-    Elabora i collegamenti nel testo, aggiungendo alcuni attributi e trasformando i collegamenti testuali in link cliccabili.
+    Process links in text, adding some attributes and linkifying textual links.
     """
     import re
 
-    # Funzione per sostituire i collegamenti testuali con link cliccabili
-    def replace_links(match):
+    # Function to convert plain text URLs into HTML links
+    def linkify(match):
         url = match.group(0)
         return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
 
-    # Regex per trovare i collegamenti nel testo
-    url_pattern = r'(https?://[^\s]+)'
+    # Regular expression to find URLs in the text
+    url_pattern = r'(https?://[^\s]+|www\.[^\s]+)'
     
-    # Sostituzione dei collegamenti testuali con link cliccabili
-    processed_text = re.sub(url_pattern, replace_links, text)
-    
+    # Replace URLs in the text with linkified versions
+    processed_text = re.sub(url_pattern, linkify, text)
+
     return processed_text

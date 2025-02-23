@@ -1,9 +1,9 @@
 import subprocess
 import os
 
-def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=False, env=None):
+def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Esegui il comando specificato.
+    Call the given command(s).
     """
     if cwd is None:
         cwd = os.getcwd()
@@ -11,12 +11,19 @@ def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=Fal
     if env is None:
         env = os.environ.copy()
     
-    command = [comandi] + argomenti
-    stderr = subprocess.DEVNULL if nascondi_stderr else None
+    if isinstance(commands, str):
+        commands = [commands]
     
-    if verbose:
-        print(f"Esecuzione comando: {' '.join(command)} in {cwd}")
+    results = []
     
-    result = subprocess.run(command, cwd=cwd, env=env, stderr=stderr)
+    for command in commands:
+        full_command = [command] + args
+        if verbose:
+            print(f"Running command: {' '.join(full_command)} in {cwd}")
+        
+        stderr = subprocess.DEVNULL if hide_stderr else None
+        
+        result = subprocess.run(full_command, cwd=cwd, env=env, stderr=stderr)
+        results.append(result)
     
-    return result.returncode
+    return results

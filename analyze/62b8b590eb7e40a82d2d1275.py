@@ -1,10 +1,12 @@
 def _legacy_mergeOrderings(orderings):
     """
-    Unisci più ordinamenti in modo che l'ordine all'interno di ciascun ordinamento venga preservato.
+    Merge multiple orderings so that within-ordering order is preserved
 
-    Gli ordinamenti sono vincolati in modo tale che, se un oggetto appare in due o più ordinamenti, il suffisso che inizia con l'oggetto deve essere presente in entrambi gli ordinamenti.
+    Orderings are constrained in such a way that if an object appears
+    in two or more orderings, then the suffix that begins with the
+    object must be in both orderings.
 
-    Ad esempio:
+    For example:
 
     >>> _mergeOrderings([
     ... ['x', 'y', 'z'],
@@ -16,27 +18,28 @@ def _legacy_mergeOrderings(orderings):
     """
     from collections import defaultdict, deque
 
-    # Create a graph to represent the orderings
-    graph = defaultdict(list)
+    # Create a graph and a count of incoming edges
+    graph = defaultdict(set)
     in_degree = defaultdict(int)
+    orderings_set = set()
 
-    # Build the graph and in-degree count
     for ordering in orderings:
         for i in range(len(ordering)):
+            orderings_set.add(ordering[i])
             if i > 0:
-                graph[ordering[i - 1]].append(ordering[i])
-                in_degree[ordering[i]] += 1
-            if ordering[i] not in in_degree:
-                in_degree[ordering[i]] = 0
+                if ordering[i] not in graph[ordering[i - 1]]:
+                    graph[ordering[i - 1]].add(ordering[i])
+                    in_degree[ordering[i]] += 1
 
-    # Topological sort using Kahn's algorithm
-    queue = deque([node for node in in_degree if in_degree[node] == 0])
+    # Initialize the queue with nodes that have no incoming edges
+    queue = deque([item for item in orderings_set if in_degree[item] == 0])
     merged_order = []
 
     while queue:
-        node = queue.popleft()
-        merged_order.append(node)
-        for neighbor in graph[node]:
+        current = queue.popleft()
+        merged_order.append(current)
+
+        for neighbor in graph[current]:
             in_degree[neighbor] -= 1
             if in_degree[neighbor] == 0:
                 queue.append(neighbor)

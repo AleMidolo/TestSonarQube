@@ -1,5 +1,8 @@
 def identify_request(request: RequestType) -> bool:
     """
-    Prova a identificare se si tratta di una richiesta Matrix.
+    Try to identify whether this is a Matrix request
     """
-    return isinstance(request, MatrixRequestType)
+    # Assuming Matrix requests have a specific structure or identifier
+    if isinstance(request, dict) and 'matrix' in request:
+        return True
+    return False

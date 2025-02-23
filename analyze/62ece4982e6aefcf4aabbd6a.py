@@ -1,5 +1,5 @@
-def replace_dots(value, arg):  
+def replace_dots(value, arg):
     """
-    Sostituisce tutti i valori di '.' con arg nella stringa fornita
+    Replaces all values of '.' to arg from the given string
     """
     return value.replace('.', arg)

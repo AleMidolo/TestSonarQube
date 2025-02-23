@@ -1,12 +1,13 @@
 def _get_err_indices(self, coord_name):
     """
-    Ottieni gli indici di errore corrispondenti a una coordinata.
+    Get error indices corresponding to a coordinate.
     """
-    # Assuming we have a dictionary of coordinates with their error indices
-    error_indices = {
-        'x': [0, 1, 2],
-        'y': [3, 4],
-        'z': [5, 6, 7, 8]
-    }
+    if coord_name not in self.data:
+        raise ValueError(f"Coordinate '{coord_name}' not found in data.")
     
-    return error_indices.get(coord_name, [])
+    error_indices = []
+    for index, value in enumerate(self.data[coord_name]):
+        if self.is_error(value):
+            error_indices.append(index)
+    
+    return error_indices

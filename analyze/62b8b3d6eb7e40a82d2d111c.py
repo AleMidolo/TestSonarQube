@@ -1,11 +1,11 @@
 def _normalizeargs(sequence, output=None):
     """
-    Normalizza gli argomenti della dichiarazione
+    Normalize declaration arguments
 
-    Gli argomenti di normalizzazione possono contenere Dichiarazioni, tuple o singole
-    interfacce.
+    Normalization arguments might contain Declarions, tuples, or single
+    interfaces.
 
-    Qualsiasi cosa diversa da interfacce individuali o specifiche di implementazione verrà espansa.
+    Anything but individial interfaces or implements specs will be expanded.
     """
     if output is None:
         output = []
@@ -13,8 +13,10 @@ def _normalizeargs(sequence, output=None):
     for item in sequence:
         if isinstance(item, tuple):
             output.extend(_normalizeargs(item))
-        elif isinstance(item, (list, set)):
-            output.extend(_normalizeargs(list(item)))
+        elif isinstance(item, list):
+            output.extend(_normalizeargs(item))
+        elif isinstance(item, dict):
+            output.extend(_normalizeargs(item.values()))
         else:
             output.append(item)
 

@@ -1,24 +1,36 @@
 def validate(self, inventory, extract_spec_version=False):
     """
-    Convalida un inventario specificato.
+    Validate a given inventory.
 
-    Se `extract_spec_version` è impostato su `True`, verrà esaminato il valore del tipo (`type`) 
-    per determinare la versione della specifica. Nel caso in cui non sia presente un valore per 
-    il tipo o questo non sia valido, verranno eseguiti altri test basati sulla versione specificata 
-    in `self.spec_version`.
+    If extract_spec_version is True then will look at the type value to determine
+    the specification version. In the case that there is no type value or it isn't
+    valid, then other tests will be based on the version given in self.spec_version.
     """
     if extract_spec_version:
-        if 'type' in inventory and inventory['type'] in self.valid_types:
-            spec_version = inventory['type']
+        type_value = inventory.get('type')
+        if type_value:
+            # Logic to determine specification version based on type_value
+            if type_value in self.valid_types:
+                self.spec_version = self.type_to_version[type_value]
+            else:
+                raise ValueError("Invalid type value for specification version.")
         else:
-            spec_version = self.spec_version
-    else:
-        spec_version = self.spec_version
+            self.spec_version = self.default_spec_version
 
-    # Esegui la convalida dell'inventario in base alla spec_version
-    if spec_version == '1.0':
-        return self.validate_v1(inventory)
-    elif spec_version == '2.0':
-        return self.validate_v2(inventory)
+    # Perform validation based on self.spec_version
+    if self.spec_version == '1.0':
+        # Validation logic for version 1.0
+        pass
+    elif self.spec_version == '2.0':
+        # Validation logic for version 2.0
+        pass
     else:
-        raise ValueError("Versione della specifica non valida.")
+        raise ValueError("Unsupported specification version.")
+    
+    # Additional validation checks
+    if not isinstance(inventory, dict):
+        raise TypeError("Inventory must be a dictionary.")
+    
+    # Further validation logic can be added here
+
+    return True  # Return True if validation passes

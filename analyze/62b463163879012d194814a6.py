@@ -2,10 +2,10 @@ import zipfile
 
 def files_list_from_zipfile(zip_path):
     """
-    Restituisce i file presenti in `zip_path`.
-    
-    Esempio:
-    
+    Return the files in `zip_path`
+
+    Example:
+
     [
         '2318-0889-tinf-33-0421/2318-0889-tinf-33-e200069.pdf',
         '2318-0889-tinf-33-0421/2318-0889-tinf-33-e200069.xml',
