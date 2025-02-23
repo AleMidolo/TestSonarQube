@@ -12,4 +12,14 @@ def dehydrate_timedelta(value):
         raise ValueError("Input must be a timedelta object.")
     
     total_seconds = int(value.total_seconds())
-    return total_seconds
+    days = total_seconds // 86400
+    hours = (total_seconds % 86400) // 3600
+    minutes = (total_seconds % 3600) // 60
+    seconds = total_seconds % 60
+    
+    return {
+        'days': days,
+        'hours': hours,
+        'minutes': minutes,
+        'seconds': seconds
+    }

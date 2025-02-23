@@ -9,12 +9,14 @@ def data(self, *keys):
     result = {}
     for key in keys:
         if isinstance(key, int):
-            if key < 0 or key >= len(self):
-                raise IndexError("Indice fuori dai limiti")
-            result[self.get_key(key)] = self.get_value(key)
+            if key < 0 or key >= len(self.record):
+                raise IndexError("Index out of bounds")
+            result[self.field_names[key]] = self.record[key]
         else:
-            result[key] = self.get_value_by_key(key) if self.has_key(key) else None
+            result[key] = self.record.get(key, None)
+    
     if not keys:
-        for i in range(len(self)):
-            result[self.get_key(i)] = self.get_value(i)
+        for i, value in enumerate(self.record):
+            result[self.field_names[i]] = value
+            
     return result

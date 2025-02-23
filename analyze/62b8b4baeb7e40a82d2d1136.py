@@ -19,34 +19,34 @@ def _verify(iface, candidate, tentative=False, vtype=None):
         Se più metodi o attributi sono invalidi, tutti questi errori vengono raccolti e riportati. In precedenza, veniva segnalato solo il primo errore. Come caso speciale, se è presente un solo errore, questo viene sollevato singolarmente, come avveniva prima.
     """
     from zope.interface import providedBy, Invalid
-    from inspect import signature, isfunction
+    from inspect import signature, Parameter
 
     errors = []
 
     if not tentative and not providedBy(candidate).provides(iface):
         errors.append(f"{candidate} does not provide {iface}")
 
-    required_methods = iface.names()
-    for method_name in required_methods:
-        if not hasattr(candidate, method_name):
-            errors.append(f"{candidate} is missing method {method_name}")
+    required_methods = iface.__providedBy__.methods()
+    for method in required_methods:
+        if not hasattr(candidate, method):
+            errors.append(f"{candidate} is missing method {method}")
             continue
         
-        method = getattr(candidate, method_name)
-        if not isfunction(method):
-            errors.append(f"{method_name} in {candidate} is not a function")
+        method_signature = signature(getattr(candidate, method))
+        iface_signature = signature(getattr(iface, method))
+        
+        if len(method_signature.parameters) != len(iface_signature.parameters):
+            errors.append(f"{method} in {candidate} has incorrect number of parameters")
             continue
         
-        # Check method signature
-        expected_signature = signature(iface[method_name])
-        actual_signature = signature(method)
-        if len(expected_signature.parameters) != len(actual_signature.parameters):
-            errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
-    
-    required_attributes = iface.attributes()
-    for attr_name in required_attributes:
-        if not hasattr(candidate, attr_name):
-            errors.append(f"{candidate} is missing attribute {attr_name}")
+        for param in iface_signature.parameters.values():
+            if param.default is Parameter.empty and param.name not in method_signature.parameters:
+                errors.append(f"{method} in {candidate} is missing required parameter {param.name}")
+
+    required_attributes = iface.__providedBy__.attributes()
+    for attr in required_attributes:
+        if not hasattr(candidate, attr):
+            errors.append(f"{candidate} is missing attribute {attr}")
 
     if errors:
         if len(errors) == 1:
