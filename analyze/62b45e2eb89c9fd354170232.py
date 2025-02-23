@@ -10,10 +10,19 @@ def next_version(version):
     # Convert the last part to an integer and increment it
     last_part = int(parts[-1]) + 1
     
-    # Replace the last part with the incremented value
-    parts[-1] = str(last_part)
+    # Check if we need to carry over to the next part
+    if last_part >= 10:
+        parts[-1] = str(last_part % 10)
+        for i in range(len(parts) - 2, -1, -1):
+            if last_part // 10 > 0:
+                parts[i] = str(int(parts[i]) + 1)
+                last_part //= 10
+            else:
+                break
+        if last_part // 10 > 0:
+            parts.insert(0, str(last_part // 10))
+    else:
+        parts[-1] = str(last_part)
     
     # Join the parts back together
-    next_version = '.'.join(parts)
-    
-    return next_version
+    return '.'.join(parts)

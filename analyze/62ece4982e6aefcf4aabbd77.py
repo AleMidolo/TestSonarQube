@@ -1,5 +1,5 @@
+import datetime
 import re
-from datetime import timedelta
 
 def parse_frequency(frequency):
     """
@@ -20,19 +20,19 @@ def parse_frequency(frequency):
     value, unit = match.groups()
     value = int(value)
 
-    if unit in ['सेकंड', 'सेकंड', 'second', 'seconds']:
-        return timedelta(seconds=value)
-    elif unit in ['मिनट', 'मिनट', 'minute', 'minutes']:
-        return timedelta(minutes=value)
-    elif unit in ['घंटा', 'घंटे', 'hour', 'hours']:
-        return timedelta(hours=value)
-    elif unit in ['दिन', 'दिन', 'day', 'days']:
-        return timedelta(days=value)
-    elif unit in ['सप्ताह', 'सप्ताह', 'week', 'weeks']:
-        return timedelta(weeks=value)
-    elif unit in ['महीना', 'महीने', 'month', 'months']:
-        return timedelta(days=value * 30)  # Approximation
-    elif unit in ['साल', 'साल', 'year', 'years']:
-        return timedelta(days=value * 365)  # Approximation
+    if unit in ['सेकंड', 'सेकंड', 's']:
+        return datetime.timedelta(seconds=value)
+    elif unit in ['मिनट', 'मिनट', 'm']:
+        return datetime.timedelta(minutes=value)
+    elif unit in ['घंटा', 'घंटे', 'h']:
+        return datetime.timedelta(hours=value)
+    elif unit in ['दिन', 'दिन', 'd']:
+        return datetime.timedelta(days=value)
+    elif unit in ['सप्ताह', 'सप्ताह', 'w']:
+        return datetime.timedelta(weeks=value)
+    elif unit in ['महीना', 'महीने', 'mo']:
+        return datetime.timedelta(days=value * 30)  # Approximation
+    elif unit in ['साल', 'साल', 'y']:
+        return datetime.timedelta(days=value * 365)  # Approximation
     else:
         raise ValueError("Unknown time unit")

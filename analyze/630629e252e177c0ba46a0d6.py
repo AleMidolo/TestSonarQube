@@ -1,3 +1,6 @@
+import requests
+from lxml import etree
+
 def retrieve_diaspora_host_meta(host):
     """
     एक रिमोट डायस्पोरा होस्ट-मेटा डॉक्यूमेंट प्राप्त करें।
@@ -5,19 +8,11 @@ def retrieve_diaspora_host_meta(host):
     :arg host: वह होस्ट जिससे डेटा प्राप्त करना है
     :returns: ``XRD`` इंस्टेंस
     """
-    import requests
-    from lxml import etree
-
-    # Construct the URL for the host's meta document
-    url = f"https://{host}/.well-known/host-meta"
-
-    # Send a GET request to the host
+    url = f"https://{host}/.well-known/webfinger?resource=acct:example@{host}"
     response = requests.get(url)
-
-    # Check if the request was successful
+    
     if response.status_code == 200:
-        # Parse the response content as XML
-        xrd_content = etree.fromstring(response.content)
-        return xrd_content
+        xrd_data = response.text
+        return etree.fromstring(xrd_data)
     else:
-        raise Exception(f"Failed to retrieve host meta from {host}, status code: {response.status_code}")
+        response.raise_for_status()

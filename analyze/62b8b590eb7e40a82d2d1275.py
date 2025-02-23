@@ -29,8 +29,8 @@ def _legacy_mergeOrderings(orderings):
             if i < len(ordering) - 1:
                 graph[ordering[i]].append(ordering[i + 1])
                 in_degree[ordering[i + 1]] += 1
-            if ordering[i] not in in_degree:
-                in_degree[ordering[i]] = 0
+                if ordering[i] not in in_degree:
+                    in_degree[ordering[i]] = 0
 
     # Topological sort using Kahn's algorithm
     queue = deque([item for item in all_items if in_degree[item] == 0])

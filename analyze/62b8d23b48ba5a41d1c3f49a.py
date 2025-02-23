@@ -22,6 +22,7 @@ def mru_cache(maxsize=128, typed=False):
                 cache.popitem(last=False)
             return result
 
+        wrapper.cache_clear = cache.clear
         return wrapper
 
     return decorator
