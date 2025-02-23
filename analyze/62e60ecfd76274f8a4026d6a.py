@@ -12,15 +12,14 @@ def protocol_handlers(cls, protocol_version=None):
         raise TypeError("La versione del protocollo deve essere passata come una tupla")
 
     # Simulazione di un dizionario di gestori del protocollo
-    handlers = {
+    protocol_handlers_dict = {
         (3, 0): "HandlerV3_0",
         (3, 1): "HandlerV3_1",
-        (3, 2): "HandlerV3_2",
         (3, 5): "HandlerV3_5",
         (4, 0): "HandlerV4_0",
     }
 
     if protocol_version is not None:
-        return {protocol_version: handlers.get(protocol_version)} if protocol_version in handlers else {}
+        return {protocol_version: protocol_handlers_dict.get(protocol_version)} if protocol_version in protocol_handlers_dict else {}
 
-    return handlers
+    return protocol_handlers_dict

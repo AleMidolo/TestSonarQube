@@ -5,16 +5,14 @@ def aggiungi_ignorati(ignorati):
     import subprocess
 
     # Esegui il comando git per ottenere i file ignorati
-    result = subprocess.run(['git', 'check-ignore', '-n', '*'], stdout=subprocess.PIPE, text=True)
+    result = subprocess.run(['git', 'check-ignore', '-v', '*'], stdout=subprocess.PIPE, text=True)
     
-    # Trasforma l'output in una lista di file
-    file_list = result.stdout.strip().split('\n')
-    
-    # Filtra i file ignorati
-    ignored_files = [line.split(':')[1].strip() for line in file_list if line]
-    
+    # Estrai i nomi dei file dalla output
+    file_lines = result.stdout.strip().split('\n')
+    ignored_files = [line.split(': ')[-1] for line in file_lines if line]
+
     # Ordina i file ignorati
     ignored_files.sort()
-    
+
     # Restituisci i file come una stringa separata da virgole
     return ', '.join(ignored_files)

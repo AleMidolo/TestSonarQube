@@ -23,30 +23,35 @@ def _verify(iface, candidate, tentative=False, vtype=None):
 
     errors = []
 
-    if not tentative and not providedBy(candidate).isOrExtends(iface):
+    if not tentative and not providedBy(candidate).provides(iface):
         errors.append(f"{candidate} does not provide {iface}")
 
-    required_methods = iface.names().keys()
-    for method in required_methods:
-        if not hasattr(candidate, method):
-            errors.append(f"{candidate} is missing method {method}")
+    required_methods = iface.__providedBy__.methods
+    for method_name in required_methods:
+        if not hasattr(candidate, method_name):
+            errors.append(f"{candidate} is missing method {method_name}")
             continue
         
-        method_signature = signature(getattr(candidate, method))
-        iface_method_signature = signature(iface.names()[method][1])
-        
-        if len(method_signature.parameters) != len(iface_method_signature.parameters):
-            errors.append(f"{method} in {candidate} has incorrect number of parameters")
+        method = getattr(candidate, method_name)
+        if not callable(method):
+            errors.append(f"{method_name} in {candidate} is not callable")
             continue
         
-        for param in iface_method_signature.parameters:
-            if param.name not in method_signature.parameters:
-                errors.append(f"{method} in {candidate} is missing parameter {param.name}")
-    
-    required_attributes = [attr for attr in iface.names() if isinstance(iface.names()[attr], Attribute)]
-    for attr in required_attributes:
-        if not hasattr(candidate, attr):
-            errors.append(f"{candidate} is missing attribute {attr}")
+        # Check method signature
+        sig = signature(method)
+        expected_sig = signature(getattr(iface, method_name))
+        if len(sig.parameters) != len(expected_sig.parameters):
+            errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
+            continue
+        
+        for param in expected_sig.parameters:
+            if param.default is Parameter.empty and param.name not in sig.parameters:
+                errors.append(f"{method_name} in {candidate} is missing required parameter {param.name}")
+
+    required_attributes = iface.__providedBy__.attributes
+    for attr_name in required_attributes:
+        if not hasattr(candidate, attr_name):
+            errors.append(f"{candidate} is missing attribute {attr_name}")
 
     if errors:
         if len(errors) == 1:

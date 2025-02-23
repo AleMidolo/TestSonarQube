@@ -7,18 +7,16 @@ def validate_fixity(self, fixity, manifest_files):
     if not isinstance(fixity, dict):
         raise ValueError("Fixity must be a dictionary.")
 
-    required_keys = {'algorithm', 'hashes'}
-    if not required_keys.issubset(fixity.keys()):
-        raise ValueError(f"Fixity block must contain the keys: {required_keys}")
+    if 'files' not in fixity:
+        raise ValueError("Fixity block must contain 'files' key.")
 
-    if not isinstance(fixity['hashes'], dict):
-        raise ValueError("Hashes must be a dictionary.")
+    fixity_files = fixity['files']
+    
+    if not isinstance(fixity_files, list):
+        raise ValueError("Fixity 'files' must be a list.")
 
-    for file, hash_value in fixity['hashes'].items():
+    for file in fixity_files:
         if file not in manifest_files:
-            raise ValueError(f"File '{file}' referenced in fixity is not in the manifest.")
-        
-        if not isinstance(hash_value, str):
-            raise ValueError(f"Hash value for file '{file}' must be a string.")
-
+            raise ValueError(f"File '{file}' in fixity is not referenced in the manifest.")
+    
     return True
