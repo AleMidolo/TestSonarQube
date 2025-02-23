@@ -11,25 +11,24 @@ def formatmany(
     else:
         raise ValueError("Invalid parameter style. Must be a mapping or a sequence of sequences.")
 
-    # Prepare the output parameters and formatted SQL
-    out_params = []
+    # Prepare the formatted SQL and converted parameters
     formatted_sql = sql
+    converted_params = []
 
-    # Iterate through each set of parameters
     for params in many_params:
         if param_style == 'named':
             if not isinstance(params, dict):
                 raise ValueError("Expected a mapping for named parameter style.")
-            # Replace named parameters in SQL with their corresponding values
+            # Replace named parameters in SQL with placeholders
             for key, value in params.items():
                 formatted_sql = formatted_sql.replace(f":{key}", str(value))
-            out_params.append(params)
-        else:  # ordinal
+            converted_params.append(params)
+        elif param_style == 'ordinal':
             if not isinstance(params, (list, tuple)):
                 raise ValueError("Expected a sequence for ordinal parameter style.")
-            # Replace ordinal parameters in SQL with their corresponding values
+            # Replace ordinal parameters in SQL with placeholders
             for index, value in enumerate(params):
-                formatted_sql = formatted_sql.replace(f"?{index + 1}", str(value))
-            out_params.append(list(params))
+                formatted_sql = formatted_sql.replace(f"?", str(value), 1)
+            converted_params.append(params)
 
-    return formatted_sql, out_params
+    return formatted_sql, converted_params

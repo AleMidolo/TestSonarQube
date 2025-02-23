@@ -17,13 +17,15 @@ def _fromutc(self, dt):
     # Get the UTC offset for the given datetime
     utc_offset = dt.utcoffset()
     
-    # Check if the datetime is ambiguous
-    if dt.fold == 0:
-        # This is the first occurrence of the ambiguous datetime
-        new_dt = dt - utc_offset
-    else:
-        # This is the second occurrence of the ambiguous datetime
-        new_dt = dt + utc_offset
+    # Convert the datetime to UTC
+    utc_dt = dt - utc_offset
+    
+    # Now convert the UTC datetime to the new timezone
+    new_dt = utc_dt.astimezone(self)
 
-    # Return the new timezone-aware datetime
-    return new_dt.replace(tzinfo=self)
+    # Check for ambiguity in the new timezone
+    if new_dt.dst() != timedelta(0) and new_dt.fold == 0:
+        # If the datetime is ambiguous, we need to determine the correct fold
+        new_dt = new_dt.replace(fold=1)
+
+    return new_dt

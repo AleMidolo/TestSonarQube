@@ -7,8 +7,8 @@ def get_parser_option_specs(self, command_name):
     """
     command_options = {
         'main': ['--help', '--version', '--verbose'],
-        'virsh': ['--connect', '--list', '--start', '--shutdown'],
-        'ospd': ['--config', '--debug', '--status'],
+        'virsh': ['--connect', '--list', '--start'],
+        'ospd': ['--config', '--debug', '--status']
     }
     
     return command_options.get(command_name, [])

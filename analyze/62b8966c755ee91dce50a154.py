@@ -83,7 +83,7 @@ def isoparse(self, dt_str):
     tz_pattern = r'([+-]\d{2}:\d{2}|Z|[+-]\d{4}|[+-]\d{2})?'
 
     # Combine patterns
-    iso_pattern = re.compile(f'^{date_pattern}(?:{week_pattern})?{time_pattern}?{tz_pattern}$')
+    iso_pattern = re.compile(f'^{date_pattern}(?:-W{week_pattern})?({time_pattern})?({tz_pattern})?$')
 
     match = iso_pattern.match(dt_str)
     if not match:
@@ -91,48 +91,47 @@ def isoparse(self, dt_str):
 
     # Extract date components
     year, month, day = match.group(1), match.group(2), match.group(3)
-    week, iso_day = match.group(5), match.group(6)
-
-    if week:
-        # Handle ISO week date
-        year, week, iso_day = int(year), int(week), int(iso_day or 1)
-        first_day_of_year = datetime(year, 1, 1)
-        first_weekday = first_day_of_year.isoweekday()
-        days_to_first_week = (7 - first_weekday) % 7
-        first_week_start = first_day_of_year + timedelta(days=days_to_first_week)
-        date = first_week_start + timedelta(weeks=week - 1, days=iso_day - 1)
-    else:
-        # Handle calendar date
-        year, month, day = int(year), int(month or 1), int(day or 1)
-        date = datetime(year, month, day)
-
-    # Extract time components
+    week, week_day = match.group(5), match.group(6)
     hour, minute, second, microsecond = match.group(7), match.group(8), match.group(9), match.group(10)
-    hour = int(hour or 0)
-    minute = int(minute or 0)
-    second = int(second or 0)
-    microsecond = int(microsecond.ljust(6, '0')) if microsecond else 0
+    tz_info = match.group(11)
 
-    # Handle midnight case
-    if hour == 24 and minute == 0 and second == 0:
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+    # Handle date
+    if week:
+        year, week = int(year), int(week)
+        if week_day:
+            week_day = int(week_day)
+            dt = datetime.fromisocalendar(year, week, week_day)
+        else:
+            dt = datetime.fromisocalendar(year, week, 1)
     else:
-        date = date.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
+        year = int(year)
+        month = int(month) if month else 1
+        day = int(day) if day else 1
+        dt = datetime(year, month, day)
 
-    # Extract timezone
-    tz_offset = match.group(11)
-    if tz_offset == 'Z':
-        tzinfo = tz.tzutc()
-    elif tz_offset:
-        sign = 1 if tz_offset[0] == '+' else -1
-        hours = int(tz_offset[1:3])
-        minutes = int(tz_offset[3:5]) if len(tz_offset) > 3 else 0
-        tzinfo = tz.tzoffset(None, sign * (hours * 3600 + minutes * 60))
-    else:
-        tzinfo = None
+    # Handle time
+    if hour:
+        hour = int(hour)
+        minute = int(minute) if minute else 0
+        second = int(second) if second else 0
+        microsecond = int(microsecond.ljust(6, '0')) if microsecond else 0
+        dt = dt.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
 
-    # Set timezone info
-    if tzinfo:
-        date = date.replace(tzinfo=tzinfo)
+    # Handle timezone
+    if tz_info == 'Z':
+        dt = dt.replace(tzinfo=tz.tzutc())
+    elif tz_info:
+        sign = 1 if tz_info[0] == '+' else -1
+        if len(tz_info) == 5:  # ±HH:MM
+            hours, minutes = map(int, tz_info[1:].split(':'))
+            offset = timedelta(hours=hours * sign, minutes=minutes * sign)
+        elif len(tz_info) == 3:  # ±HH
+            hours = int(tz_info[1:])
+            offset = timedelta(hours=hours * sign)
+        else:  # ±HHMM
+            hours = int(tz_info[1:3])
+            minutes = int(tz_info[3:5])
+            offset = timedelta(hours=hours * sign, minutes=minutes * sign)
+        dt = dt.replace(tzinfo=tz.tzoffset(None, offset.total_seconds()))
 
-    return date
+    return dt

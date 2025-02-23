@@ -10,10 +10,10 @@ def popitem(self):
     least_freq_keys = [key for key, freq in self.freq_map.items() if freq == least_freq]
     
     # If there are multiple keys with the same frequency, we can choose any
-    least_freq_key = least_freq_keys[0]
+    key_to_remove = least_freq_keys[0]
     
     # Remove the key from the frequency map and the main dictionary
-    value = self.data.pop(least_freq_key)
-    del self.freq_map[least_freq_key]
+    value = self.data.pop(key_to_remove)
+    del self.freq_map[key_to_remove]
     
-    return least_freq_key, value
+    return key_to_remove, value

@@ -14,14 +14,14 @@ def get_nested_custom_and_control_args(self, args):
     """
     control_args = {}
     nested_args = {}
-    
+    custom_args = {}
+
     for key, value in args.items():
         if key.startswith('control_'):
             control_args[key] = value
         elif key.startswith('nested_'):
             nested_args[key] = value
-        else:
-            # Assuming custom args are those that don't fit the above categories
-            nested_args[key] = value
+        elif key.startswith('custom_'):
+            custom_args[key] = value
 
-    return control_args, nested_args
+    return control_args, {**nested_args, **custom_args}
