@@ -14,7 +14,7 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     parsed_url = urlparse(image_href)
     
     if not parsed_url.scheme or not parsed_url.netloc:
-        raise ValueError("Invalid image_href format")
+        raise ValueError("Invalid image_href provided.")
     
     image_id = parsed_url.path.lstrip('/')
     netloc = parsed_url.netloc

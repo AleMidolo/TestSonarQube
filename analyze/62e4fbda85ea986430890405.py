@@ -22,11 +22,8 @@ def xargs(
         return subprocess.run(cmd + args, capture_output=True)
 
     if color:
-        # Create a pseudo terminal if color is enabled
-        import pty
-        master_fd, slave_fd = pty.openpty()
-        os.close(slave_fd)
-        os.dup2(master_fd, 1)  # Redirect stdout to the master fd
+        # Create a pseudo-terminal if needed (this is a placeholder)
+        pass
 
     # Split varargs into chunks based on target_concurrency
     chunk_size = (len(varargs) + target_concurrency - 1) // target_concurrency
@@ -36,7 +33,7 @@ def xargs(
         results = pool.map(run_command, chunks)
 
     # Combine results
-    return_code = sum(result.returncode for result in results)
+    return_code = max(result.returncode for result in results)
     combined_output = b''.join(result.stdout for result in results)
 
     return return_code, combined_output

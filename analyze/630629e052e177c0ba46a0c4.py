@@ -1,5 +1,5 @@
-import json
 from typing import Dict
+import json
 import xml.etree.ElementTree as ET
 
 def parse_diaspora_webfinger(document: str) -> Dict:
@@ -21,7 +21,7 @@ def parse_diaspora_webfinger(document: str) -> Dict:
         pass
 
     try:
-        # Try to parse as XML (XRD format)
+        # Try to parse as XRD (XML)
         root = ET.fromstring(document)
         for link in root.findall('{http://docs.oasis-open.org/ns/xri/xrd-1.0}Link'):
             rel = link.get('rel')

@@ -7,4 +7,11 @@ def _should_attempt_c_optimizations():
     这会考虑我们是否运行在 PyPy 上，以及 `_use_c_impl` 中定义的 ``PURE_PYTHON`` 环境变量的值。
     """
     import os
-    return not (os.getenv('PURE_PYTHON') or 'pypy' in sys.version.lower())
+    import sys
+
+    # Check if running on PyPy
+    if 'pypy' in sys.version.lower():
+        return False
+
+    # Check the environment variable for PURE_PYTHON
+    return os.getenv('_use_c_impl', '0') != '1'

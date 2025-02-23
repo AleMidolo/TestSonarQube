@@ -14,12 +14,12 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     返回值：
       返回提取压缩包的目录路径。
     """
-    # 确保目标路径存在
+    # 创建目标路径目录
     destination_path.mkdir(parents=True, exist_ok=True)
     
     # 下载 .tar.gz 文件
     response = requests.get(url)
-    tar_file_path = destination_path / 'repo_archive.tar.gz'
+    tar_file_path = destination_path / "repo.tar.gz"
     
     with open(tar_file_path, 'wb') as f:
         f.write(response.content)

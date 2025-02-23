@@ -28,9 +28,9 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
 
     # Prepare the command to run
     command = [sys.executable, '-c', f'import pickle; import {func.__module__}; '
-                                      f'func = {func_name}; '
-                                      f'args = pickle.loads({args}); '
-                                      f'func(*args)']
+                                       f'func = {func_name}; '
+                                       f'args = pickle.loads({args}); '
+                                       f'func(*args)']
 
     # Set up the environment
     env = os.environ.copy()
