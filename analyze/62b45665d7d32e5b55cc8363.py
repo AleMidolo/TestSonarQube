@@ -12,7 +12,7 @@ def make_parsers():
     # 创建子解析器
     subparsers = top_parser.add_subparsers(dest='command', required=True)
     
-    # 添加子解析器
+    # 添加子解析器示例
     sub_parser_a = subparsers.add_parser('command_a', help='Help for command A')
     sub_parser_a.add_argument('--option_a', type=str, help='Option for command A')
     

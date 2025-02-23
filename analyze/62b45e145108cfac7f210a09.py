@@ -10,4 +10,4 @@ def check_digests_present_and_used(self, manifest_files, digests_used):
     if missing_digests:
         return self.error(f"Missing digests: {', '.join(missing_digests)}")
     
-    return None
+    return True

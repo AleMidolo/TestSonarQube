@@ -12,6 +12,6 @@ def get_pattern(pattern, strip=True):
 
     此方法将给定的字符串转换为正则表达式模式。
     """
-    if strip and isinstance(pattern, str):
+    if isinstance(pattern, str) and strip:
         pattern = pattern.strip()
     return re.compile(pattern)

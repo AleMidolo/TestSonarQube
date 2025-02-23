@@ -1,4 +1,5 @@
 import os
+import xml.etree.ElementTree as ET
 from collections import defaultdict
 
 def _explore_folder(folder):
@@ -25,9 +26,6 @@ def _explore_folder(folder):
                 xml_filename = os.path.splitext(file)[0]
                 grouped_files[xml_filename].append(file)
         return dict(grouped_files)
-
-    if not os.path.isdir(folder):
-        raise ValueError(f"The provided folder path '{folder}' is not a valid directory.")
 
     files = os.listdir(folder)
     return _group_files_by_xml_filename(files)

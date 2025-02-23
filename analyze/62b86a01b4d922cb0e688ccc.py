@@ -23,9 +23,9 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
         elif isinstance(value, list):
             observer_schema[key] = [generate_default_observer_schema_dict(item, first_level=False) if isinstance(item, dict) else None for item in value]
         else:
-            if first_level and key in ['apiVersion', 'kind', 'metadata']:
-                observer_schema[key] = value
+            if first_level and key == 'metadata':
+                observer_schema[key] = value  # Copy metadata as is for first level
             else:
-                observer_schema[key] = None
+                observer_schema[key] = None  # Replace non-dict and non-list values with None
 
     return observer_schema

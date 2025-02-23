@@ -7,8 +7,9 @@ def register_vcs_handler(vcs, method): # 装饰器
     """
     创建一个装饰器，用于将方法标记为某个版本控制系统（VCS）的处理器。
     """
-    # 在这里可以添加逻辑来注册处理器
-    f.vcs = vcs
-    f.method = method
+    # 将处理器信息存储在函数的属性中
+    if not hasattr(f, 'vcs_handlers'):
+        f.vcs_handlers = {}
+    f.vcs_handlers[vcs] = method
     return f
   return decorate

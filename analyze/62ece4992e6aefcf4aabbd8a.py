@@ -5,13 +5,13 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
 
     logger = logging.getLogger(__name__)
     error_records = []
-    config_dict = {}
+    configurations = {}
 
     for filename in config_filenames:
         try:
-            if not os.path.isfile(filename):
-                raise FileNotFoundError(f"Configuration file {filename} not found.")
-            
+            if not os.access(filename, os.R_OK):
+                raise PermissionError(f"Permission denied: {filename}")
+
             with open(filename, 'r') as file:
                 config = json.load(file)
 
@@ -24,10 +24,10 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                         env_var = value[1:]
                         config[key] = os.getenv(env_var, value)
 
-            config_dict[filename] = config
+            configurations[filename] = config
 
-        except Exception as e:
-            log_record = logger.error(f"Error loading configuration file {filename}: {e}")
+        except (FileNotFoundError, json.JSONDecodeError, PermissionError) as e:
+            log_record = logger.error(f"Error loading configuration from {filename}: {e}")
             error_records.append(log_record)
 
-    return config_dict, error_records
+    return configurations, error_records

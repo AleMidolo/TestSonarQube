@@ -6,22 +6,16 @@ def fromutc(self, dt):
 
     :param dt: 一个带有时区信息的 :class:`datetime.datetime` 对象。
     """
-    # 检查输入的日期时间对象是否带有时区信息
     if dt.tzinfo is None:
         raise ValueError("dt must be a timezone-aware datetime object")
 
-    # 将输入的日期时间转换为 UTC
+    # Convert the datetime to UTC
     utc_dt = dt.astimezone(self.utc)
 
-    # 计算在新时区的日期时间
-    new_dt = utc_dt.astimezone(self)
+    # Check for ambiguity and folded state
+    if dt.dst() is not None and dt.dst() != timedelta(0):
+        # This datetime is ambiguous
+        raise ValueError("Ambiguous datetime")
 
-    # 检查是否存在歧义
-    if new_dt.dst() != timedelta(0):
-        # 处理歧义情况
-        if new_dt < self._fold_start:
-            return new_dt.replace(tzinfo=self, fold=0)
-        else:
-            return new_dt.replace(tzinfo=self, fold=1)
-    
-    return new_dt.replace(tzinfo=self)
+    # Return the datetime in the new timezone
+    return utc_dt.astimezone(self)
