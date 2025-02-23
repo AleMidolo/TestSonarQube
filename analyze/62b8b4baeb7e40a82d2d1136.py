@@ -23,28 +23,35 @@ def _verify(iface, candidate, tentative=False, vtype=None):
 
     errors = []
 
-    if not tentative and not providedBy(candidate).provides(iface):
+    if not tentative and not providedBy(candidate).isOrExtends(iface):
         errors.append(f"{candidate} does not provide {iface}")
 
-    required_methods = iface.__required_methods__
+    required_methods = iface.__providedBy__.methods()
     for method in required_methods:
         if not hasattr(candidate, method):
-            errors.append(f"{candidate} is missing required method {method}")
-        else:
-            method_signature = signature(getattr(candidate, method))
-            iface_signature = signature(getattr(iface, method))
-            if method_signature != iface_signature:
-                errors.append(f"{method} in {candidate} has incorrect signature")
+            errors.append(f"{candidate} is missing method {method}")
+            continue
+        
+        # Check method signature
+        candidate_method = getattr(candidate, method)
+        if not callable(candidate_method):
+            errors.append(f"{method} in {candidate} is not callable")
+            continue
+        
+        iface_signature = signature(getattr(iface, method))
+        candidate_signature = signature(candidate_method)
+        
+        if len(candidate_signature.parameters) < len(iface_signature.parameters):
+            errors.append(f"{method} in {candidate} has incorrect signature")
 
-    required_attributes = iface.__required_attributes__
+    required_attributes = iface.__providedBy__.attributes()
     for attr in required_attributes:
         if not hasattr(candidate, attr):
-            errors.append(f"{candidate} is missing required attribute {attr}")
+            errors.append(f"{candidate} is missing attribute {attr}")
 
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
-        else:
-            raise Invalid(errors)
+        raise Invalid(errors)
 
     return True
