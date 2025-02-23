@@ -10,6 +10,7 @@ def validate_from_file(cls, yaml_file=None):
     from pathlib import Path
 
     required_fields = cls.get_required_fields()  # Assuming this method exists in the class
+
     if yaml_file is None:
         raise ValueError("Il percorso del file YAML non può essere None.")
 

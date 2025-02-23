@@ -9,10 +9,10 @@ def aggiungi_ignorati(ignorati):
     
     # Estrai i nomi dei file dalla output
     file_lines = result.stdout.strip().split('\n')
-    file_names = [line.split(': ')[-1] for line in file_lines if line]
+    ignored_files = [line.split(': ')[-1] for line in file_lines if line]
 
     # Ordina i file ignorati
-    file_names.sort()
+    ignored_files.sort()
 
     # Restituisci i file come una stringa separata da virgole
-    return ', '.join(file_names)
+    return ', '.join(ignored_files)

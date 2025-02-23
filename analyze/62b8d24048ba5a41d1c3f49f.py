@@ -3,7 +3,7 @@ from collections import OrderedDict
 from functools import wraps
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
-    """
+    """ 
     Decorator per racchiudere una funzione con un oggetto callable di memorizzazione (memoization) 
     che salva fino a `maxsize` risultati basandosi su un algoritmo Least Recently Used (LRU) 
     con un valore di time-to-live (TTL) per ogni elemento.
