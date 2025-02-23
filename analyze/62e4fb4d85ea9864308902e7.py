@@ -14,16 +14,16 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     if not cmd:
         return cmd
 
-    # Get the first command which is expected to be the executable
-    exe = cmd[0]
-
+    # Get the executable name
+    exe_name = cmd[0]
+    
     # Check if the executable is already a full path
-    if os.path.isabs(exe):
+    if os.path.isabs(exe_name):
         return cmd
 
-    # Try to find the executable in the system PATH
+    # Try to find the executable in the PATH
     for path in os.environ["PATH"].split(os.pathsep):
-        full_path = os.path.join(path, exe)
+        full_path = os.path.join(path, exe_name)
         if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
             return (full_path,) + cmd[1:]
 

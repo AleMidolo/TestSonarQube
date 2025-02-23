@@ -19,4 +19,3 @@ def update_last_applied_manifest_dict_from_resp(last_applied_manifest, observer_
             last_applied_manifest[field] = response[field]
         elif isinstance(last_applied_manifest[field], dict) and isinstance(response[field], dict):
             update_last_applied_manifest_dict_from_resp(last_applied_manifest[field], observer_schema[field], response[field])
-    return last_applied_manifest

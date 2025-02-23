@@ -14,20 +14,20 @@ def format(
 
     返回一个包含以下内容的元组（`tuple`）：
 
-      - 格式化后的 SQL 查询（类型：`str` 或 `bytes`）。
+        - 格式化后的 SQL 查询（类型：`str` 或 `bytes`）。
 
-      - 转换后的 out-style 参数集合（类型：`dict` 或 `list`）。
+        - 转换后的 out-style 参数集合（类型：`dict` 或 `list`）。
     """
-    # Assuming self._converter.convert is defined and works as expected
+    # Assuming self._converter.convert is a method that converts the SQL and parameters
+    converted_sql = self._converter.convert(sql)
+    
     if isinstance(params, dict):
-        # Named parameters
-        out_params = {key: self._converter.convert(value) for key, value in params.items()}
-        formatted_sql = sql.format(**out_params)
+        # Handle named parameters
+        out_params = {key: params[key] for key in params}
     elif isinstance(params, (list, tuple)):
-        # Positional parameters
-        out_params = [self._converter.convert(value) for value in params]
-        formatted_sql = sql.format(*out_params)
+        # Handle positional parameters
+        out_params = list(params)
     else:
-        raise TypeError("params must be a dictionary or a sequence")
+        raise TypeError("params must be a Mapping or Sequence")
 
-    return formatted_sql, out_params
+    return converted_sql, out_params

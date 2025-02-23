@@ -9,14 +9,14 @@ def protocol_handlers(cls, protocol_version=None):
     if protocol_version is not None and not isinstance(protocol_version, tuple):
         raise TypeError("协议版本必须是一个元组")
 
-    # 假设我们有一个字典，存储所有可用的协议处理程序
-    available_handlers = {
+    # 假设我们有一个字典，存储所有支持的协议版本和对应的处理程序类
+    supported_protocols = {
         (3, 5): 'HandlerFor3_5',
         (4, 0): 'HandlerFor4_0',
-        # 其他版本和处理程序
+        (4, 1): 'HandlerFor4_1',
     }
 
     if protocol_version is not None:
-        return {protocol_version: available_handlers.get(protocol_version)}
-    
-    return available_handlers
+        return {protocol_version: supported_protocols.get(protocol_version)} if protocol_version in supported_protocols else {}
+
+    return supported_protocols

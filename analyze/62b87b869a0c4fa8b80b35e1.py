@@ -21,22 +21,26 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left", field_names=("x"
 
     返回生成的图形。
     """
+    # Implementation of the function
     if make_value is None:
         make_value = lambda bin_: bin_.content
 
     coordinates = []
     for bin_ in hist.bins:
         if get_coordinate == "left":
-            coordinate = bin_.left
+            x = bin_.left
         elif get_coordinate == "right":
-            coordinate = bin_.right
+            x = bin_.right
         elif get_coordinate == "middle":
-            coordinate = bin_.center
+            x = bin_.center
         else:
-            raise ValueError("Invalid value for get_coordinate. Choose from 'left', 'right', or 'middle'.")
+            raise ValueError("Invalid value for get_coordinate")
 
-        value = make_value(bin_)
-        coordinates.append((coordinate, *value))
+        values = make_value(bin_)
+        if isinstance(values, tuple):
+            coordinates.append((x, *values))
+        else:
+            coordinates.append((x, values))
 
     if scale:
         # Apply scaling logic if needed

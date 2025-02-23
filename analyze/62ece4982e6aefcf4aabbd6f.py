@@ -28,5 +28,5 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     with tarfile.open(tar_file_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
     
-    # 返回提取后的目录路径
+    # 返回提取的目录路径
     return destination_path
