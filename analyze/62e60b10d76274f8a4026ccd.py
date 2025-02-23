@@ -11,17 +11,17 @@ def data(self, *keys):
     :return: dictionary of values, keyed by field name
     :raises: :exc:`IndexError` if an out-of-bounds index is specified
     """
-    if not keys:
-        return {key: getattr(self, key, None) for key in self.__dict__}
-
     result = {}
-    for key in keys:
-        if isinstance(key, int):
-            if key < 0 or key >= len(self.__dict__):
-                raise IndexError("Index out of bounds")
-            key_name = list(self.__dict__.keys())[key]
-            result[key_name] = self.__dict__.get(key_name, None)
-        else:
-            result[key] = getattr(self, key, None)
-
+    if not keys:
+        # If no keys are provided, return all items
+        for key in self.record.keys():
+            result[key] = self.record.get(key, None)
+    else:
+        for key in keys:
+            if isinstance(key, int):
+                if key < 0 or key >= len(self.record):
+                    raise IndexError("Index out of bounds")
+                result[self.record[key]] = self.record.get(self.record[key], None)
+            else:
+                result[key] = self.record.get(key, None)
     return result

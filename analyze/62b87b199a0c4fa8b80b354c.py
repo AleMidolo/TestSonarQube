@@ -7,4 +7,4 @@ def _get_seq_with_type(seq, bufsize=None):
     if isinstance(seq, (list, tuple, set, str)):
         return seq, type(seq)
     else:
-        return [seq], type([seq])
+        return list(seq), list

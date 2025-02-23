@@ -12,8 +12,8 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
 
     for filename in config_filenames:
         try:
-            with open(filename, 'r') as file:
-                config = json.load(file)
+            with open(filename, 'r') as f:
+                config = json.load(f)
 
             if resolve_env:
                 config = {k: os.path.expandvars(v) for k, v in config.items()}

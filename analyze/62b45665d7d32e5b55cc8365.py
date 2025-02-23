@@ -8,16 +8,24 @@ def parse_arguments(*unparsed_arguments):
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='subparser_name')
 
-    # Example subparser for 'command1'
-    command1_parser = subparsers.add_parser('command1')
-    command1_parser.add_argument('--option1', type=str, help='Option for command1')
+    # Example subparser for 'foo'
+    foo_parser = subparsers.add_parser('foo')
+    foo_parser.add_argument('--bar', type=int, help='An integer for bar')
 
-    # Example subparser for 'command2'
-    command2_parser = subparsers.add_parser('command2')
-    command2_parser.add_argument('--option2', type=int, help='Option for command2')
+    # Example subparser for 'baz'
+    baz_parser = subparsers.add_parser('baz')
+    baz_parser.add_argument('--qux', type=str, help='A string for qux')
 
     # Parse the arguments
     args = parser.parse_args(unparsed_arguments)
 
-    # Return the parsed arguments as a dictionary
-    return {args.subparser_name if args.subparser_name else "global": args}
+    # Create a dictionary to hold the results
+    result = {}
+    
+    # If no subparser was used, return global arguments
+    if args.subparser_name is None:
+        result['global'] = args
+    else:
+        result[args.subparser_name] = args
+
+    return result

@@ -6,4 +6,5 @@ def fill(self, coord, weight=1):
     """
     if not self.is_within_bounds(coord):
         return
+    
     self.histogram[coord] += weight

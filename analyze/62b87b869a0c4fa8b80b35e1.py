@@ -10,17 +10,17 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     bin_width = hist.bin_width
     for i, bin_ in enumerate(hist.bins):
         if get_coordinate == "left":
-            x = bin_.left
+            x = hist.bin_edges[i]
         elif get_coordinate == "right":
-            x = bin_.right
+            x = hist.bin_edges[i + 1]
         else:  # get_coordinate == "middle"
-            x = bin_.center
+            x = (hist.bin_edges[i] + hist.bin_edges[i + 1]) / 2
 
-        y_values = make_value(bin_)
-        if isinstance(y_values, tuple):
-            graph_data.append((x, *y_values))
+        y = make_value(bin_)
+        if isinstance(y, tuple):
+            graph_data.append((x, *y))
         else:
-            graph_data.append((x, y_values))
+            graph_data.append((x, y))
 
     if scale is True:
         # Apply histogram scale to the graph if needed

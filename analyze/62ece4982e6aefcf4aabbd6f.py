@@ -17,17 +17,17 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     """
     # Ensure the destination path exists
     destination_path.mkdir(parents=True, exist_ok=True)
-    
+
     # Download the .tar.gz file
     response = requests.get(url)
     tar_file_path = destination_path / 'archive.tar.gz'
     
     with open(tar_file_path, 'wb') as f:
         f.write(response.content)
-    
+
     # Extract the .tar.gz file
     with tarfile.open(tar_file_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
-    
+
     # Return the path where the archive has been extracted
     return destination_path

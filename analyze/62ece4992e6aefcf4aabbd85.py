@@ -16,6 +16,5 @@ def find_roots(
     all_children = {child for child, _, _ in graph.triples((None, prop, None))}
     all_parents = {parent for _, _, parent in graph.triples((None, prop, None))}
 
-    roots = all_parents - all_children
-
+    roots = all_children - all_parents
     return roots
