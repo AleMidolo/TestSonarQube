@@ -13,10 +13,10 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     # Send a GET request to the webfinger URL
     response = requests.get(webfinger_url)
     
-    # Check if the request was successful
+    # Check if the response was successful
     if response.status_code == 200:
         # Parse the JSON response
         return response.json()
     else:
-        # Handle errors (e.g., return an empty dict or raise an exception)
-        return {}
+        # Handle errors (e.g., 404, 500)
+        response.raise_for_status()

@@ -3,12 +3,11 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     import json
     import os
 
-    configurations = {}
-    log_records = []
-    logger = logging.getLogger(__name__)
-
     if overrides is None:
         overrides = {}
+
+    configurations = {}
+    log_records = []
 
     for filename in config_filenames:
         try:
@@ -16,21 +15,42 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 config = json.load(file)
 
             if resolve_env:
-                config = {k: os.path.expandvars(v) for k, v in config.items()}
+                for key, value in config.items():
+                    if isinstance(value, str) and value.startswith('$'):
+                        env_var = value[1:]
+                        config[key] = os.getenv(env_var, value)
 
-            # Apply overrides
-            config.update(overrides)
-
-            configurations[filename] = config
+            configurations[filename] = {**config, **overrides}
 
         except json.JSONDecodeError as e:
-            log_record = logger.error(f"Error parsing {filename}: {e}")
-            log_records.append(log_record)
-        except FileNotFoundError as e:
-            log_record = logger.error(f"File not found: {filename}: {e}")
-            log_records.append(log_record)
+            log_records.append(logging.LogRecord(
+                name='config_loader',
+                level=logging.ERROR,
+                pathname=filename,
+                lineno=0,
+                msg=f"Error parsing {filename}: {str(e)}",
+                args=None,
+                exc_info=None
+            ))
+        except FileNotFoundError:
+            log_records.append(logging.LogRecord(
+                name='config_loader',
+                level=logging.ERROR,
+                pathname=filename,
+                lineno=0,
+                msg=f"File not found: {filename}",
+                args=None,
+                exc_info=None
+            ))
         except Exception as e:
-            log_record = logger.error(f"Unexpected error with {filename}: {e}")
-            log_records.append(log_record)
+            log_records.append(logging.LogRecord(
+                name='config_loader',
+                level=logging.ERROR,
+                pathname=filename,
+                lineno=0,
+                msg=f"Unexpected error with {filename}: {str(e)}",
+                args=None,
+                exc_info=None
+            ))
 
     return configurations, log_records

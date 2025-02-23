@@ -9,7 +9,6 @@ def determineMetaclass(bases, explicit_mc=None):
     if not metaclasses:
         return type
 
-    # Find the most derived metaclass
     metaclass = metaclasses[0]
     for mc in metaclasses[1:]:
         if not issubclass(mc, metaclass):

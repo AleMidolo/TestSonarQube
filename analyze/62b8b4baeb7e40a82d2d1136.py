@@ -30,7 +30,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
         alone, like before.
     """
     from zope.interface import providedBy, Invalid
-    from inspect import signature, Signature
+    from inspect import signature, Parameter
 
     errors = []
 
@@ -44,11 +44,21 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             continue
         
         method = getattr(candidate, method_name)
+        if not callable(method):
+            errors.append(f"{method_name} in {candidate} is not callable")
+            continue
+        
+        # Check method signature
         expected_signature = signature(getattr(iface, method_name))
         actual_signature = signature(method)
-
-        if expected_signature != actual_signature:
-            errors.append(f"Method {method_name} in {candidate} has incorrect signature")
+        
+        if len(expected_signature.parameters) != len(actual_signature.parameters):
+            errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
+            continue
+        
+        for param in expected_signature.parameters.values():
+            if param.default is Parameter.empty and param.name not in actual_signature.parameters:
+                errors.append(f"{method_name} in {candidate} is missing required parameter {param.name}")
 
     required_attributes = iface.attributes()  # Assuming iface has a method to get required attributes
     for attr_name in required_attributes:
@@ -58,7 +68,6 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
-        else:
-            raise Invalid(errors)
+        raise Invalid(errors)
 
     return True

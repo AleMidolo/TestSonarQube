@@ -4,6 +4,6 @@ def validate_length_args(self, args):
 
     :param args: The received arguments.
     """
-    for key, value in args.items():
-        if isinstance(value, str) and len(value) > self.max_length:
-            raise ValueError(f"The length of '{key}' exceeds the maximum allowed length of {self.max_length}.")
+    for arg in args:
+        if len(arg) > self.max_length:
+            raise ValueError(f"Argument '{arg}' exceeds maximum length of {self.max_length}.")
