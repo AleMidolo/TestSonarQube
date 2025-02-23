@@ -16,7 +16,8 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
         if verbose:
             print(f"Running command: {' '.join(full_command)}")
         
-        with open(os.devnull, 'w') if hide_stderr else None as stderr:
+        with open(os.devnull, 'w') as devnull:
+            stderr = subprocess.DEVNULL if hide_stderr else None
             result = subprocess.run(full_command, cwd=cwd, env=env, stderr=stderr)
         
         if result.returncode != 0:

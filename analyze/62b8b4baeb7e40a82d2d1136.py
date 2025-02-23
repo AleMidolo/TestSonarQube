@@ -67,8 +67,6 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             errors.append(f"{candidate} is missing attribute {attr_name}")
 
     if errors:
-        if len(errors) == 1:
-            raise Invalid(errors[0])
         raise Invalid(errors)
 
     return True

@@ -1,5 +1,5 @@
-from collections import defaultdict
-from functools import wraps
+from collections import defaultdict, OrderedDict
+import functools
 
 def lfu_cache(maxsize=128, typed=False):
     """
@@ -9,26 +9,27 @@ def lfu_cache(maxsize=128, typed=False):
     """
     def decorator(func):
         cache = {}
-        frequencies = defaultdict(int)
-        order = []
-
-        @wraps(func)
+        frequency = defaultdict(int)
+        order = OrderedDict()
+        
+        @functools.wraps(func)
         def wrapper(*args, **kwargs):
             key = (args, frozenset(kwargs.items())) if typed else args
             if key in cache:
-                frequencies[key] += 1
+                frequency[key] += 1
+                order.move_to_end(key)
                 return cache[key]
             result = func(*args, **kwargs)
             if len(cache) >= maxsize:
-                lfu_key = min(order, key=lambda k: frequencies[k])
-                del cache[lfu_key]
-                del frequencies[lfu_key]
-                order.remove(lfu_key)
+                lfu_key = min(order, key=lambda k: frequency[k])
+                cache.pop(lfu_key)
+                frequency.pop(lfu_key)
+                order.pop(lfu_key)
             cache[key] = result
-            frequencies[key] += 1
-            order.append(key)
+            frequency[key] = 1
+            order[key] = None
             return result
-
+        
         return wrapper
-
+    
     return decorator

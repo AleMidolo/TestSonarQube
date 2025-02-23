@@ -11,9 +11,8 @@ def merge_extra_vars(vars_dict, extra_vars=None):
     for var in extra_vars:
         if isinstance(var, dict):
             vars_dict.update(var)
-        elif isinstance(var, str):
-            key_value = var.split('=', 1)
-            if len(key_value) == 2:
-                vars_dict[key_value[0]] = key_value[1]
-    
+        else:
+            key, value = var.split('=', 1)
+            vars_dict[key] = value
+            
     return vars_dict

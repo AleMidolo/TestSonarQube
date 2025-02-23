@@ -17,14 +17,15 @@ def _group_files_by_xml_filename(source, xmls, files):
         key: name of the XML files
         value: Package
     """
-    grouped_files = {}
-    
+    from collections import defaultdict
+    import os
+
+    grouped_files = defaultdict(list)
+
     for xml in xmls:
-        basename = xml.rsplit('.', 1)[0]  # Get the basename without extension
-        grouped_files[basename] = []
-
+        xml_basename = os.path.splitext(os.path.basename(xml))[0]
         for file in files:
-            if file.startswith(basename):
-                grouped_files[basename].append(file)
+            if xml_basename in file:
+                grouped_files[xml_basename].append(file)
 
-    return grouped_files
+    return dict(grouped_files)
