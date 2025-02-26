@@ -29,37 +29,29 @@ def verifyObject(iface, candidate, tentative=False):
     required_methods = iface.names()
     for method_name in required_methods:
         if not hasattr(candidate, method_name):
-            errors.append(f"{method_name} is not defined in {candidate}")
+            errors.append(f"{candidate} is missing method {method_name}")
             continue
         
         method = getattr(candidate, method_name)
         if not callable(method):
-            errors.append(f"{method_name} is not callable in {candidate}")
+            errors.append(f"{method_name} in {candidate} is not callable")
             continue
         
         # Check method signature
         iface_method = iface[method_name]
-        iface_sig = signature(iface_method)
-        candidate_sig = signature(method)
+        try:
+            sig_iface = signature(iface_method)
+            sig_candidate = signature(method)
+            if len(sig_candidate.parameters) < len(sig_iface.parameters):
+                errors.append(f"{method_name} in {candidate} has insufficient parameters")
+            # Additional checks can be added here for parameter types if needed
+        except ValueError:
+            errors.append(f"Could not get signature for {method_name} in {candidate}")
 
-        # Check if candidate's method has at least the same parameters as iface's method
-        if len(candidate_sig.parameters) < len(iface_sig.parameters):
-            errors.append(f"{method_name} has insufficient parameters in {candidate}")
-
-        # Check for parameter names and types if needed
-        for param in iface_sig.parameters.values():
-            if param.name not in candidate_sig.parameters:
-                errors.append(f"{param.name} is missing in {method_name} of {candidate}")
-            else:
-                candidate_param = candidate_sig.parameters[param.name]
-                if param.annotation is not Parameter.empty and candidate_param.annotation is Parameter.empty:
-                    errors.append(f"{param.name} in {method_name} of {candidate} is missing type annotation")
-
-    # Check for required attributes
     required_attributes = iface.names()
     for attr_name in required_attributes:
         if not hasattr(candidate, attr_name):
-            errors.append(f"{attr_name} is not defined in {candidate}")
+            errors.append(f"{candidate} is missing attribute {attr_name}")
 
     if errors:
         if len(errors) == 1:

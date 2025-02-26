@@ -15,11 +15,15 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     import traceback
 
     def format_exception(exc, level, path_level):
-        if level > max_level or path_level > max_path_level:
-            return f"{type(exc).__name__}: {exc}\n"
-        
-        tb_lines = traceback.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__)
-        formatted_tb = ''.join(tb_lines)
-        return formatted_tb
+        if level <= 0 or path_level <= 0:
+            return "..."  # Limit reached
+        tb = traceback.extract_tb(exc.__traceback__)
+        formatted_tb = []
+        for frame in tb[:max_level]:
+            formatted_tb.append(f"File \"{frame.filename}\", line {frame.lineno}, in {frame.name}")
+        return "\n".join(formatted_tb)
 
-    return format_exception(e, 0, 0)
+    exception_message = str(e)
+    formatted_traceback = format_exception(e, max_level, max_path_level)
+    
+    return f"{type(e).__name__}: {exception_message}\nTraceback (most recent call last):\n{formatted_traceback}"

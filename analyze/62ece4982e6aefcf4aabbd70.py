@@ -1,5 +1,3 @@
-import platform
-
 def os_is_mac():
     """
     检查操作系统是否为 macOS
@@ -8,4 +6,5 @@ def os_is_mac():
     :return: 如果是 macOS 则返回真
     :rtype: bool
     """
+    import platform
     return platform.system() == "Darwin"

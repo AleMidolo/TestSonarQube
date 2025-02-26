@@ -14,11 +14,11 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
 
     >>> from dateutil.parser import parse
     >>> from dateutil.tz import gettz
-    >>> tzinfos = {"BRST": tzoffset("BRST", -7200)}
+    >>> tzinfos = {"BRST": gettz("Brazil/East")}
     >>> parse("2012-01-19 17:21:00 BRST", tzinfos=tzinfos)
-    datetime.datetime(2012, 1, 19, 17, 21, tzinfo=tzoffset(u'BRST', -7200))
+    datetime.datetime(2012, 1, 19, 17, 21, tzinfo=tzinfos["BRST"])
     >>> parse("2012-01-19 17:21:00 CST", tzinfos=tzinfos)
-    datetime.datetime(2012, 1, 19, 17, 21, tzinfo=tzfile('/usr/share/zoneinfo/America/Chicago'))
+    datetime.datetime(2012, 1, 19, 17, 21, tzinfo=gettz("America/Chicago"))
 
     如果设置了 ``ignoretz`` ，此参数将被忽略。
 
@@ -31,3 +31,4 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     :raises OverflowError: 当解析的日期超出系统上最大的有效 C 整数时抛出。
     """
     # Implementation goes here
+    pass

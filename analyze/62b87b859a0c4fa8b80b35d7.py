@@ -26,9 +26,8 @@ def to_csv(self, separator=", ", header=None):
     for point in self.points:
         # Convert point coordinates to string and join with separator
         point_str = separator.join(map(str, point.coordinates))
-        # Convert point values to string and join with separator
+        # Assuming point.values is a list of values associated with the point
         values_str = separator.join(map(str, point.values))
-        # Combine point string and values string
         csv_lines.append(f"{point_str}{separator}{values_str}\n")
     
     return ''.join(csv_lines)

@@ -4,5 +4,5 @@ def test_tag(tag: str) -> bool:
 
     测试一个单词是否可以被接受为标签。
     """
-    LEGAL_TAG_CHARS = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-")
-    return all(char in LEGAL_TAG_CHARS for char in tag)
+    LEGAL_TAG_CHARS = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-")  # 示例合法字符
+    return all(char not in tag for char in LEGAL_TAG_CHARS)

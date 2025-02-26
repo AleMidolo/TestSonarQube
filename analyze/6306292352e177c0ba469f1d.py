@@ -13,10 +13,18 @@ def find_tags(text: str, replacer: callable = None) -> Tuple[Set, str]:
     """
     # 正则表达式匹配标签，忽略代码块
     tag_pattern = r'(?<!`)(#\w+)(?!`)'
-    tags = set(re.findall(tag_pattern, text))
+    code_block_pattern = r'`.*?`'
     
+    # 找到所有代码块并替换为占位符
+    code_blocks = re.findall(code_block_pattern, text)
+    text_without_code = re.sub(code_block_pattern, '', text)
+    
+    # 查找标签
+    tags = set(re.findall(tag_pattern, text_without_code))
+    
+    # 替换标签
     if replacer:
         for tag in tags:
-            text = text.replace(tag, replacer(tag))
+            text_without_code = text_without_code.replace(tag, replacer(tag))
     
-    return tags, text
+    return tags, text_without_code
