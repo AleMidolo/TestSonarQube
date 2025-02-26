@@ -29,4 +29,5 @@ def scale(self, other=None):
         if i == len(self.coordinates) - 1:  # Only scale the last coordinate
             self.coordinates[i] *= other
 
-    return self.coordinates
+    # Update the scale value
+    self.scale_value = other

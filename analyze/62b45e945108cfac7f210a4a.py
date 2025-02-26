@@ -24,7 +24,7 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
         if check_digests and is_valid:
             is_valid = self.check_object_digest(obj)
             if not is_valid and show_warnings:
-                print(f"Warning: Object {obj} has an invalid digest.")
+                print(f"Warning: Digest for object {obj} is invalid.")
 
         if is_valid:
             good_objects += 1

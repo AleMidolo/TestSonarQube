@@ -10,9 +10,8 @@ def cached(cache, key=hashkey, lock=None):
             if cache_key in cache:
                 return cache[cache_key]
             # If not, call the function and store the result in the cache
-            with (lock if lock else dummy_lock):
-                result = func(*args, **kwargs)
-                cache[cache_key] = result
+            result = func(*args, **kwargs)
+            cache[cache_key] = result
             return result
         return wrapper
     return decorator

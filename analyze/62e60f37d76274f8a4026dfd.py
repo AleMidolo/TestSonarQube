@@ -2,9 +2,9 @@ def dehydrate_time(value):
     """
     `time` मानों के लिए डिहाइड्रेटर।  
 
-    :param value: 
+    :param value:  
     :type value: Time  
-    :return: 
+    :return:  
     """
     if value is None:
         return None

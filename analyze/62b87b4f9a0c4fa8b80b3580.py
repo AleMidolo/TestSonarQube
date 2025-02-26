@@ -7,7 +7,10 @@ def integral(bins, edges):
     """
     import numpy as np
 
-    # Calculate the integral of the histogram
-    integral_values = np.cumsum(bins) * np.diff(edges, prepend=edges[0])
-    
+    # Calculate the width of each bin
+    bin_widths = np.diff(edges)
+
+    # Calculate the integral (cumulative sum) of the bins multiplied by the bin widths
+    integral_values = np.cumsum(bins * bin_widths)
+
     return integral_values

@@ -22,11 +22,15 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
                 else:
                     del cache[key]
                     del timestamps[key]
+
             result = func(*args, **kwargs)
             cache[key] = result
             timestamps[key] = timer()
+
             if len(cache) > maxsize:
                 cache.popitem(last=False)
+                timestamps.popitem(last=False)
+
             return result
 
         return wrapper

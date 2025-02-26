@@ -9,7 +9,7 @@ def get_spec_defaults(self):
             if 'default' in arg:
                 defaults[arg['name']] = arg['default']
     
-    # Assuming 'self.sources' contains other sources to extract defaults
+    # Assuming 'self.sources' contains other sources for defaults
     if hasattr(self, 'sources'):
         for source in self.sources:
             for arg in source.get('args', []):

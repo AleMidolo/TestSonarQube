@@ -11,15 +11,17 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     import subprocess
     import json
 
-    # Prepare the command
+    # Prepare the command to run the Ansible playbook
     command = ['ansible-playbook'] + cli_args
     if vars_dict:
         extra_vars = json.dumps(vars_dict)
         command += ['--extra-vars', extra_vars]
 
     # Set the working directory to the Infrared workspace
-    workspace_path = ir_workspace.path
-    result = subprocess.run(command, cwd=workspace_path, capture_output=True, text=True)
+    working_directory = ir_workspace.path
+
+    # Run the command
+    result = subprocess.run(command, cwd=working_directory, capture_output=True, text=True)
 
     # Check for errors
     if result.returncode != 0:
