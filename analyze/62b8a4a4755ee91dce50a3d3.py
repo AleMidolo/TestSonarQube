@@ -9,17 +9,19 @@ def fromutc(self, dt):
     """
     if dt.tzinfo is None:
         raise ValueError("dt must be timezone-aware")
-    
+
     # Convert the datetime to UTC
     utc_dt = dt.astimezone(self.utc)
-    
+
     # Calculate the new datetime in the target timezone
     new_dt = utc_dt.astimezone(self)
-    
+
     # Check for ambiguity
     if new_dt.dst() != timedelta(0):
         # Handle the case of ambiguous times
-        if new_dt < self.start:
-            raise ValueError("Ambiguous datetime")
-    
+        if new_dt < self.dst_start:
+            return new_dt - self.dst_offset
+        else:
+            return new_dt + self.dst_offset
+
     return new_dt

@@ -11,9 +11,8 @@ def cachedmethod(cache, key=hashkey, lock=None):
             if cache_key in cache:
                 return cache[cache_key]
             # Si no está en la caché, ejecutar el método
-            with lock:
+            with (lock or dummy_lock):
                 result = func(self, *args, **kwargs)
-                # Almacenar el resultado en la caché
                 cache[cache_key] = result
             return result
         return wrapper

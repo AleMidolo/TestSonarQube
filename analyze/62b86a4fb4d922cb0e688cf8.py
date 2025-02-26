@@ -15,4 +15,4 @@ def validate_value(value):
     """
     pattern = r'^[a-zA-Z0-9_]+$'  # Ejemplo de expresión regular
     if not re.match(pattern, value):
-        raise ValidationError(f"El valor '{value}' no cumple con la expresión regular.")
+        raise ValidationError(f"El valor '{value}' no es válido.")

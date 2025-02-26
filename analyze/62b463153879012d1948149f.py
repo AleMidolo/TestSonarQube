@@ -18,13 +18,13 @@ def _eval_file(prefix, file_path):
     """
     import os
 
-    # Initialize the packages dictionary
-    packages = {}
+    # Initialize the result dictionary
+    result = {}
 
-    # Get the file extension
+    # Extract the file extension
     _, file_extension = os.path.splitext(file_path)
 
-    # Determine the type of file based on the extension
+    # Determine the type of file based on its extension
     if file_extension in ['.jpg', '.png', '.gif']:
         file_type = 'asset'
     elif file_extension in ['.mp4', '.mov', '.avi']:
@@ -32,10 +32,8 @@ def _eval_file(prefix, file_path):
     else:
         file_type = 'unknown'
 
-    # Update the packages dictionary
-    packages[prefix] = {
-        'type': file_type,
-        'path': file_path
-    }
+    # Update the result dictionary
+    result['type'] = file_type
+    result['path'] = file_path
 
-    return packages
+    return result

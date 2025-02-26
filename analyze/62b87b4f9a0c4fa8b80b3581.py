@@ -20,8 +20,7 @@ def scale(self, other=None, recompute=False):
             self.scale_value = sum(self.histogram)  # Assuming self.histogram is a list of counts
         return self.scale_value
     else:
-        if self.scale_value == 0:
+        if hasattr(self, 'scale_value') and self.scale_value == 0:
             raise LenaValueError("Cannot rescale a histogram with a scale of zero.")
-        scaling_factor = other / self.scale_value
-        self.histogram = [count * scaling_factor for count in self.histogram]
+        self.histogram = [count * (other / self.scale_value) for count in self.histogram]
         self.scale_value = other

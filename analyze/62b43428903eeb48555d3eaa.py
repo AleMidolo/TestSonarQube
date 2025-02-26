@@ -9,9 +9,11 @@ def formatmany(
         formatted_sql = sql
         out_params = []
         for params in many_params:
-            out_param = {f":{key}": value for key, value in params.items()}
+            out_param = {}
+            for key, value in params.items():
+                out_param[key] = value
+                formatted_sql = formatted_sql.replace(f":{key}", "%s")
             out_params.append(out_param)
-            formatted_sql = formatted_sql.replace("?", ", ".join(out_param.keys()), 1)
     else:
         # Convert to ordinal parameters
         formatted_sql = sql
@@ -19,6 +21,7 @@ def formatmany(
         for params in many_params:
             out_param = list(params)
             out_params.append(out_param)
-            formatted_sql = formatted_sql.replace("?", "?", len(out_param))
-    
+            for index in range(len(params)):
+                formatted_sql = formatted_sql.replace(f"${index + 1}", "%s")
+
     return formatted_sql, out_params

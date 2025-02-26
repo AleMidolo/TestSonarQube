@@ -81,17 +81,18 @@ def isoparse(self, dt_str):
     if day is None:
         day = 1
 
-    # Handle week-based dates
+    # Handle week date
     if match.group(4):
-        week, day_of_week = match.group(5), match.group(6)
-        if day_of_week is None:
-            day_of_week = 0
-        date = datetime.strptime(f'{year}-W{week}-{day_of_week}', "%Y-W%W-%w").date()
+        week, week_day = match.group(4), match.group(5)
+        if week_day is None:
+            week_day = 0
+        date = datetime.strptime(f'{year}-W{week}', "%Y-W%W")
+        date += timedelta(days=int(week_day))
     else:
         date = datetime(int(year), int(month), int(day))
 
     # Extract time components
-    hour, minute, second, microsecond = match.group(7), match.group(8), match.group(9), match.group(10)
+    hour, minute, second, microsecond = match.group(6), match.group(7), match.group(8), match.group(9)
     if hour is None:
         hour = 0
     if minute is None:
@@ -103,18 +104,21 @@ def isoparse(self, dt_str):
     else:
         microsecond = int(microsecond.ljust(6, '0')[:6])  # Ensure microsecond is 6 digits
 
-    # Create datetime object
-    dt = datetime(date.year, date.month, date.day, int(hour), int(minute), int(second), microsecond)
+    date = date.replace(hour=int(hour), minute=int(minute), second=int(second), microsecond=microsecond)
 
     # Handle timezone
-    tz_info = match.group(11)
-    if tz_info == 'Z':
-        dt = dt.replace(tzinfo=tz.tzutc())
-    elif tz_info:
-        if ':' in tz_info:
-            offset = tz.tzoffset(None, int(tz_info[:3]) * 3600 + int(tz_info[4:]) * 60)
+    tzinfo = None
+    if match.group(10):
+        tz_str = match.group(10)
+        if tz_str == 'Z':
+            tzinfo = tz.tzutc()
         else:
-            offset = tz.tzoffset(None, int(tz_info) * 3600)
-        dt = dt.replace(tzinfo=offset)
+            if match.group(11):
+                tzinfo = tz.tzoffset(None, int(match.group(11)) * 3600 + int(match.group(12)) * 60)
+            else:
+                tzinfo = tz.tzoffset(None, int(match.group(13)) * 3600 + int(match.group(14)) * 60)
 
-    return dt
+    if tzinfo:
+        date = date.replace(tzinfo=tzinfo)
+
+    return date

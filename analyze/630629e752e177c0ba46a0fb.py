@@ -16,7 +16,7 @@ def send_document(url, data, timeout=10, method="post", *args, **kwargs):
         if method.lower() == "post":
             response = requests.post(url, data=data, timeout=timeout, *args, **kwargs)
         else:
-            raise ValueError("Método no soportado: {}".format(method))
+            response = requests.request(method, url, data=data, timeout=timeout, *args, **kwargs)
 
         return response.status_code, None
     except Exception as e:
