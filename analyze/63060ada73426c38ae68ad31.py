@@ -8,8 +8,11 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param values_dict: तर्कों के साथ डिक्शनरी।
     """
     for key, value in values_dict.items():
-        if value.isdigit():
-            values_dict[key] = int(value)
-        elif value.lower() in ['true', 'false']:
-            values_dict[key] = value.lower() == 'true'
-        # Add more type conversions as needed
+        if isinstance(value, str):
+            # Example conversion logic
+            if value.isdigit():
+                values_dict[key] = int(value)
+            elif value.lower() in ['true', 'false']:
+                values_dict[key] = value.lower() == 'true'
+            # Add more conversion rules as needed
+    return values_dict

@@ -13,29 +13,26 @@ def parse_frequency(frequency):
     if frequency is None or frequency.lower() == "हमेशा":
         return None
 
-    time_units = {
-        'सेकंड': 'seconds',
-        'मिनट': 'minutes',
-        'घंटा': 'hours',
-        'दिन': 'days',
-        'सप्ताह': 'weeks',
-        'महीना': 'months',
-        'साल': 'years'
-    }
-
-    match = re.match(r'(\d+)\s*([^\s]+)', frequency)
+    match = re.match(r'(\d+)\s*(\w+)', frequency)
     if not match:
         raise ValueError("Invalid frequency format")
 
     value, unit = match.groups()
     value = int(value)
 
-    if unit not in time_units:
-        raise ValueError("Invalid time unit")
-
-    if unit == 'महीना':
+    if unit in ['सेकंड', 'सेकंड', 'second', 'seconds']:
+        return timedelta(seconds=value)
+    elif unit in ['मिनट', 'मिनट', 'minute', 'minutes']:
+        return timedelta(minutes=value)
+    elif unit in ['घंटा', 'घंटे', 'hour', 'hours']:
+        return timedelta(hours=value)
+    elif unit in ['दिन', 'दिन', 'day', 'days']:
+        return timedelta(days=value)
+    elif unit in ['सप्ताह', 'सप्ताह', 'week', 'weeks']:
+        return timedelta(weeks=value)
+    elif unit in ['महीना', 'महीने', 'month', 'months']:
         return timedelta(days=value * 30)  # Approximation
-    elif unit == 'साल':
+    elif unit in ['साल', 'साल', 'year', 'years']:
         return timedelta(days=value * 365)  # Approximation
-
-    return timedelta(**{time_units[unit]: value})
+    else:
+        raise ValueError("Unknown time unit")

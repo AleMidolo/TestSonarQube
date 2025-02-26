@@ -5,9 +5,9 @@ def extend_cli(self, root_subparsers):
     :param subparser: वह सबपार्सर ऑब्जेक्ट जिसे विस्तारित करना है।
     """
     # उदाहरण के लिए, एक नया सबपार्सर जोड़ें
-    parser = root_subparsers.add_parser('example', help='यह एक उदाहरण है')
+    parser = root_subparsers.add_parser('example', help='यह एक उदाहरण है।')
     
     # विकल्प जोड़ें
-    parser.add_argument('--option', type=str, help='एक वैकल्पिक तर्क')
+    parser.add_argument('--option', type=str, help='एक वैकल्पिक तर्क।')
     
     # अन्य आवश्यकताएँ और लॉजिक यहाँ जोड़ें

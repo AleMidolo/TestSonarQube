@@ -19,14 +19,16 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
         command.append(f'-v' * verbose)
 
     if extra_vars:
-        for key, value in extra_vars.items():
-            command.append(f'--extra-vars={key}={value}')
+        extra_vars_str = ' '.join(f'--extra-vars="{key}={value}"' for key, value in extra_vars.items())
+        command.append(extra_vars_str)
 
     if ansible_args:
         for key, value in ansible_args.items():
-            command.append(f'--{key}={value}')
+            command.append(f'--{key}')
+            if value is not None:
+                command.append(str(value))
 
-    result = subprocess.run(command, cwd=ir_workspace.path, capture_output=True, text=True)
+    result = subprocess.run(command, capture_output=True, text=True, cwd=ir_workspace.path)
 
     if result.returncode != 0:
         raise RuntimeError(f"Ansible playbook failed: {result.stderr}")

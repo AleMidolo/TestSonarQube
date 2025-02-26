@@ -11,13 +11,15 @@ def xargs(
     import os
     from multiprocessing import Pool
 
+    def _get_platform_max_length():
+        return 4096  # Example value, adjust as necessary
+
     def run_command(args):
         return subprocess.run(cmd + args, capture_output=True)
 
     if color:
         # Create a pseudo terminal if supported
-        # This is a placeholder for actual implementation
-        pass
+        pass  # Implementation for PTY would go here
 
     # Split varargs into partitions based on target_concurrency
     partitions = [varargs[i::target_concurrency] for i in range(target_concurrency)]

@@ -16,18 +16,18 @@ def validate_version_inventories(self, version_dirs):
         try:
             with open(inventory_path, 'r') as file:
                 inventory = json.load(file)
-                current_digests = set(item['digest'] for item in inventory.get('items', []))
+                current_digest = inventory.get('digest')
                 
-                # Check if the current version has a valid inventory
-                if version in inventory_digests:
-                    previous_digests = inventory_digests[version - 1]
-                    if not current_digests.issubset(previous_digests):
-                        discrepancies.append((version, current_digests - previous_digests))
-                inventory_digests[version] = current_digests
+                # Check if the current digest is in the root inventory
+                if current_digest not in inventory_digests.values():
+                    discrepancies.append(current_digest)
+                
+                # Record the digest for this version
+                inventory_digests[version] = current_digest
 
         except FileNotFoundError:
             raise Exception(f"Inventory file not found for version: {version}")
         except json.JSONDecodeError:
-            raise Exception(f"Invalid JSON in inventory file for version: {version}")
+            raise Exception(f"Error decoding JSON for version: {version}")
 
     return discrepancies

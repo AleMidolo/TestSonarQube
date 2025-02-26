@@ -4,17 +4,30 @@ def minimalBases(classes):
     """
     from collections import defaultdict
 
-    def find_parent(class_name):
-        for base in classes[class_name]:
-            if base in minimal_classes:
-                return minimal_classes[base]
-            parent = find_parent(base)
-            if parent:
-                return parent
-        return class_name
+    def is_subclass(sub, super):
+        return issubclass(sub, super)
 
-    minimal_classes = {}
+    # Create a graph of subclasses
+    graph = defaultdict(set)
     for cls in classes:
-        minimal_classes[cls] = find_parent(cls)
+        for other_cls in classes:
+            if cls != other_cls and is_subclass(cls, other_cls):
+                graph[other_cls].add(cls)
 
-    return list(dict.fromkeys(minimal_classes.values()))
+    # Perform a topological sort to find the minimal bases
+    visited = set()
+    result = []
+
+    def dfs(cls):
+        if cls in visited:
+            return
+        visited.add(cls)
+        for neighbor in graph[cls]:
+            dfs(neighbor)
+        result.append(cls)
+
+    for cls in classes:
+        dfs(cls)
+
+    # Reverse the result to get the ordered minimum equivalent
+    return result[::-1]

@@ -9,17 +9,20 @@ def cachedmethod(cache, key=hashkey, lock=None):
             # Check if the result is in the cache
             if cache_key in cache:
                 return cache[cache_key]
-            # If not, call the function and store the result in the cache
-            with (lock if lock else dummy_lock):
+            # Acquire lock if provided
+            if lock:
+                with lock:
+                    # Check again in case another thread has already computed the value
+                    if cache_key in cache:
+                        return cache[cache_key]
+                    # Call the function and cache the result
+                    result = func(*args, **kwargs)
+                    cache[cache_key] = result
+                    return result
+            else:
+                # Call the function and cache the result
                 result = func(*args, **kwargs)
                 cache[cache_key] = result
-            return result
+                return result
         return wrapper
     return decorator
-
-# Dummy lock for cases where no lock is provided
-class dummy_lock:
-    def __enter__(self):
-        pass
-    def __exit__(self, exc_type, exc_value, traceback):
-        pass
