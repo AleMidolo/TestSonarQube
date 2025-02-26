@@ -11,10 +11,13 @@ def find_tags(text: str, replacer: callable = None) -> Tuple[Set, str]:
 
     返回一个包含标签的集合以及原始文本或替换后的文本。
     """
-    # 正则表达式匹配标签，忽略代码块
-    pattern = r'(?<!`)(#\w+)(?!`)'
-    tags = set(re.findall(pattern, text))
+    # 正则表达式匹配标签，假设标签以#开头
+    tag_pattern = r'(?<!`)(#\w+)(?!`)'
     
+    # 查找所有标签
+    tags = set(re.findall(tag_pattern, text))
+    
+    # 替换标签
     if replacer:
         for tag in tags:
             text = text.replace(tag, replacer(tag))

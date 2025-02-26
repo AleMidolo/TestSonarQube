@@ -10,15 +10,15 @@ def data(self, *keys):
     record = self.transform()  # 假设 transform 方法返回一个字典
     result = {}
 
-    if not keys:
+    if not keys:  # 如果没有提供键，则返回所有值
         return record
 
     for key in keys:
-        if isinstance(key, int):
+        if isinstance(key, int):  # 如果是索引
             if key < 0 or key >= len(record):
                 raise IndexError("索引超出范围")
-            result[key] = list(record.values())[key]
-        else:
-            result[key] = record.get(key, None)
+            result[list(record.keys())[key]] = record[list(record.keys())[key]]
+        else:  # 如果是键
+            result[key] = record.get(key, None)  # 如果键不存在，则返回 None
 
     return result

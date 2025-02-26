@@ -10,7 +10,7 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
     :param spec_option: 选项的具体规范
     :return: 复杂类型实例
     """
-    complex_action = self.COMPLEX_TYPES.get(type_name)
+    complex_action = COMPLEX_TYPES.get(type_name)
     if complex_action is None:
         raise ValueError(f"Unknown complex type: {type_name}")
 

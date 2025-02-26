@@ -4,8 +4,8 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     import json
 
     logger = logging.getLogger(__name__)
-    config_map = {}
     error_records = []
+    configurations = {}
 
     for filename in config_filenames:
         try:
@@ -24,10 +24,10 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                         env_var = value[1:]
                         config[key] = os.getenv(env_var, value)
 
-            config_map[filename] = config
+            configurations[filename] = config
 
         except Exception as e:
             log_record = logger.error(f"Error loading configuration from {filename}: {e}", exc_info=True)
             error_records.append(log_record)
 
-    return config_map, error_records
+    return configurations, error_records

@@ -17,6 +17,6 @@ def protocol_handlers(cls, protocol_version=None):
     }
 
     if protocol_version is not None:
-        return {protocol_version: available_handlers.get(protocol_version)} if protocol_version in available_handlers else {}
+        return {protocol_version: available_handlers.get(protocol_version)}
 
     return available_handlers

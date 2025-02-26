@@ -12,4 +12,6 @@ def validate_length_args(self, args):
     for key, value in args.items():
         if isinstance(value, str) and len(value) > max_length:
             raise ValueError(f"参数 '{key}' 的长度超过了最大限制 {max_length}。")
+        elif isinstance(value, list) and len(value) > max_length:
+            raise ValueError(f"参数 '{key}' 的列表长度超过了最大限制 {max_length}。")
     return True

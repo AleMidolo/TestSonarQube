@@ -22,11 +22,11 @@ def lfu_cache(maxsize=128, typed=False):
             result = func(*args, **kwargs)
             if len(cache) >= maxsize:
                 lfu_key = min(order, key=lambda k: (freq[k], order[k]))
-                del cache[lfu_key]
-                del freq[lfu_key]
-                del order[lfu_key]
+                cache.pop(lfu_key)
+                freq.pop(lfu_key)
+                order.pop(lfu_key)
             cache[key] = result
-            freq[key] += 1
+            freq[key] = 1
             order[key] = None
             return result
         

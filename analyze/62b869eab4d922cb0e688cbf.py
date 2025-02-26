@@ -17,7 +17,7 @@ def generate_default_observer_schema(app):
                     'namespace': resource['metadata'].get('namespace', 'default')
                 },
                 'spec': {
-                    # Add default spec fields based on resource kind
+                    # Add default spec fields as necessary
                 }
             }
     

@@ -38,17 +38,14 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             continue
         
         if vtype is not None:
-            # Check method signature against vtype if provided
-            try:
-                sig = signature(method)
-                if len(sig.parameters) != len(vtype):
-                    errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
-                else:
-                    for param_name, param_type in zip(sig.parameters.keys(), vtype):
-                        if param_type is not None and param_name not in sig.parameters:
-                            errors.append(f"{method_name} is missing parameter {param_name}")
-            except Exception as e:
-                errors.append(f"Error checking signature of {method_name}: {str(e)}")
+            sig = signature(method)
+            if len(sig.parameters) != len(vtype):
+                errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
+                continue
+            
+            for param_name, param_type in zip(sig.parameters.keys(), vtype):
+                if sig.parameters[param_name].annotation != param_type:
+                    errors.append(f"{method_name} in {candidate} has incorrect parameter type for {param_name}")
 
     required_attributes = iface.names()
     for attr_name in required_attributes:
