@@ -1,6 +1,7 @@
 def status_str(self, prefix=''):
     """
-    Devuelve una cadena con el estado del validador, con un prefijo opcional.
+    Restituisce una stringa che rappresenta lo stato del validatore, con un prefisso opzionale.
     """
-    status = "Estado del validador: Activo"  # Ejemplo de estado
-    return f"{prefix}{status}"
+    # Assuming self has attributes that represent the state of the validator
+    state_info = f"Validator State: {self.state}, Errors: {self.errors}, Warnings: {self.warnings}"
+    return f"{prefix}{state_info}"

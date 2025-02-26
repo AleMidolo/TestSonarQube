@@ -1,21 +1,23 @@
 def protocol_handlers(cls, protocol_version=None):
     """
-    Devuelve un diccionario de los manejadores disponibles del protocolo Bolt, indexados por una tupla de versión. Si se proporciona una versión de protocolo explícita, el diccionario contendrá cero o un elemento, dependiendo de si esa versión es soportada. Si no se proporciona ninguna versión de protocolo, se devolverán todas las versiones disponibles.
+    Restituisce un dizionario dei gestori del protocollo Bolt disponibili, indicizzati da una tupla che rappresenta la versione. Se viene fornita una versione di protocollo esplicita, il dizionario conterrà zero o un elemento, a seconda che quella versione sia supportata o meno. Se non viene fornita alcuna versione di protocollo, verranno restituite tutte le versioni disponibili.
 
-    :param protocol_version: tupla que identifica una versión específica del protocolo 
-        (por ejemplo, (3, 5)) o None
-    :return: diccionario que mapea una tupla de versión a la clase del manejador para 
-        todas las versiones relevantes y compatibles del protocolo
-    :raise TypeError: si la versión del protocolo no se pasa como una tupla
+    :param protocol_version: tupla che identifica una specifica versione del protocollo
+        (ad esempio, (3, 5)) oppure None
+    :return: dizionario che associa tuple di versione alla classe del gestore per tutte
+        le versioni del protocollo rilevanti e supportate
+    :raise TypeError: se la versione del protocollo non è passata come una tupla
     """
     if protocol_version is not None and not isinstance(protocol_version, tuple):
-        raise TypeError("La versión del protocolo debe ser una tupla")
+        raise TypeError("La versione del protocollo deve essere passata come una tupla")
 
-    # Suponiendo que hay un diccionario de manejadores de protocolo
+    # Simulazione di un dizionario di gestori del protocollo
     handlers = {
-        (3, 5): "HandlerFor3_5",
-        (4, 0): "HandlerFor4_0",
-        # Agregar más versiones y sus manejadores aquí
+        (3, 0): "HandlerV3_0",
+        (3, 1): "HandlerV3_1",
+        (3, 2): "HandlerV3_2",
+        (3, 5): "HandlerV3_5",
+        (4, 0): "HandlerV4_0",
     }
 
     if protocol_version is not None:

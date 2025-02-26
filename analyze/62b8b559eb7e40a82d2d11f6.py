@@ -1,6 +1,6 @@
 def determineMetaclass(bases, explicit_mc=None):
     """
-    Determina la metaclase a partir de una o más clases base y un __metaclass__ explícito opcional.
+    Determina la metaclasse a partire da una o più basi e da un'eventuale __metaclass__ esplicita.
     """
     if explicit_mc is not None:
         return explicit_mc
@@ -9,9 +9,10 @@ def determineMetaclass(bases, explicit_mc=None):
     if not metaclasses:
         return type
 
-    metaclass = metaclasses[0]
+    # Find the common metaclass
+    common_metaclass = metaclasses[0]
     for mc in metaclasses[1:]:
-        if not issubclass(mc, metaclass):
-            metaclass = type('CombinedMeta', (metaclass, mc), {})
+        if not issubclass(mc, common_metaclass):
+            common_metaclass = type('Meta', (common_metaclass, mc), {})
     
-    return metaclass
+    return common_metaclass

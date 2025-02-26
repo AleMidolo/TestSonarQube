@@ -1,15 +1,26 @@
 def get_spec_defaults(self):  
     """
-    Resolver los valores de los argumentos desde la especificación y otras fuentes.
+    Risolvere i valori degli argomenti dal file di specifica e da altre fonti.
     """
     defaults = {}
-    # Aquí se pueden agregar las especificaciones y otras fuentes de valores
-    # Por ejemplo, se puede obtener valores de un archivo de configuración
-    # o de variables de entorno.
+    # Supponiamo di avere un file di specifica in formato JSON
+    try:
+        with open('spec_file.json', 'r') as file:
+            spec_data = json.load(file)
+            for key, value in spec_data.items():
+                defaults[key] = value
+    except FileNotFoundError:
+        print("Il file di specifica non è stato trovato.")
+    except json.JSONDecodeError:
+        print("Errore nella decodifica del file JSON.")
     
-    # Ejemplo de valores por defecto
-    defaults['arg1'] = 'default_value1'
-    defaults['arg2'] = 'default_value2'
+    # Aggiungere altre fonti di valori predefiniti se necessario
+    # Esempio: valori predefiniti hardcoded
+    additional_defaults = {
+        'timeout': 30,
+        'retries': 3
+    }
     
-    # Se pueden agregar más lógica para resolver los valores
+    defaults.update(additional_defaults)
+    
     return defaults

@@ -1,10 +1,9 @@
-import platform
-
 def os_is_mac():
     """
-    Verifica si el sistema operativo es macOS
+    Verifica se il sistema operativo è macOS
 
-    :return: True si es macOS
+    :return: True se il sistema operativo è macOS
     :rtype: bool
     """
+    import platform
     return platform.system() == "Darwin"

@@ -5,16 +5,14 @@ class ValidationError(Exception):
 
 def validate_key(key):
     """
-    Validar la clave proporcionada contra la expresión regular correspondiente.
+    Valida la chiave fornita rispetto alla corrispondente espressione regolare.
 
-    Argumentos:
-            key: la cadena de texto a validar.
+    Argomenti:
+        key: la stringa da validare
 
-    Excepciones:
-            ValidationError: si la clave proporcionada no cumple con la expresión regular.
+    Eccezioni:
+        ValidationError: se la chiave fornita non è conforme all'espressione regolare.
     """
-    # Definir la expresión regular para la clave
-    pattern = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'  # Al menos 8 caracteres, al menos una letra y un número
-
+    pattern = r'^[A-Za-z0-9]{8,20}$'  # Example pattern: alphanumeric, 8 to 20 characters
     if not re.match(pattern, key):
-        raise ValidationError("La clave proporcionada no cumple con los requisitos.")
+        raise ValidationError("La chiave fornita non è conforme all'espressione regolare.")

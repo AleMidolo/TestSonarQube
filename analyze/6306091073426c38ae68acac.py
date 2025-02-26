@@ -1,19 +1,21 @@
 def dict_insert(dic, val, key, *keys):
     """
-    Inserta un valor en una llave anidada dentro de un diccionario.
+    Inserisce un valore in una chiave annidata all'interno di un dizionario.
 
-    Para insertar un valor en una llave anidada, se deben proporcionar todas las llaves previas como argumentos del método.
+    Per inserire un valore in una chiave annidata, è necessario fornire tutte le chiavi antenate
+    come argomenti del metodo.
 
-    Ejemplo:
-      dict_insert({}, 'val', 'key1.key2'.split('.'))
+    Esempio:
+      dict_insert({}, 'val', *'key1.key2'.split('.'))
 
-    :param dic: un objeto diccionario donde se insertará el valor de la llave anidada.
-    :param val: un valor que se insertará en el diccionario dado.
-    :param key: la primera llave en una cadena de llaves que almacenará el valor.
-    :param keys: subllaves en la cadena de llaves.
+    :param dic: un oggetto dizionario in cui inserire il valore della chiave annidata
+    :param val: un valore da inserire nel dizionario fornito
+    :param key: la prima chiave nella catena di chiavi che conterrà il valore
+    :param keys: sottochiavi nella catena di chiavi
     """
-    for k in (key,) + keys:
-        if k not in dic:
-            dic[k] = {}
-        dic = dic[k]
-    dic[keys[-1]] = val
+    current = dic
+    for k in (key, *keys[:-1]):
+        if k not in current:
+            current[k] = {}
+        current = current[k]
+    current[keys[-1]] = val

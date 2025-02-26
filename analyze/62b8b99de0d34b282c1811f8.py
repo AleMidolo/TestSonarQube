@@ -1,6 +1,6 @@
-def _reset_logging(cls):
+def _reset_logging(cls):  
     """
-    Restablecer
+    Reimposta
     """
     import logging
     for handler in logging.root.handlers[:]:

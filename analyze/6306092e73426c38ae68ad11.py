@@ -1,9 +1,9 @@
 def merge_extra_vars(vars_dict, extra_vars=None):
     """
-    Extiende ``vars_dict`` con ``extra-vars``
+    Estende ``vars_dict`` con ``extra-vars``
 
-    :param vars_dict: Diccionario en el que se fusionarán las extra-vars  
-    :param extra_vars: Lista de extra-vars
+    :param vars_dict: Dizionario in cui unire le extra-vars
+    :param extra_vars: Lista di extra-vars
     """
     if extra_vars is None:
         return vars_dict
@@ -12,6 +12,6 @@ def merge_extra_vars(vars_dict, extra_vars=None):
         if isinstance(var, dict):
             vars_dict.update(var)
         else:
-            raise ValueError("Cada elemento en extra_vars debe ser un diccionario.")
+            raise ValueError("Each extra var must be a dictionary.")
     
     return vars_dict

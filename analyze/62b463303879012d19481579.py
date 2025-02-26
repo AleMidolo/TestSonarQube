@@ -1,17 +1,14 @@
 def _extract_number_and_supplment_from_issue_element(issue):
     """
-    Extrae los posibles valores de 'number' y 'suppl' a partir del contenido de 'issue'.
+    Estrai i possibili valori di numero e supplemento dai issue.
     """
     number = None
-    suppl = None
+    supplement = None
     
-    # Assuming 'issue' is a string that may contain 'number' and 'suppl' values
-    if isinstance(issue, str):
-        parts = issue.split()
-        for part in parts:
-            if part.startswith('number='):
-                number = part.split('=')[1]
-            elif part.startswith('suppl='):
-                suppl = part.split('=')[1]
+    if 'number' in issue:
+        number = issue['number']
     
-    return number, suppl
+    if 'supplement' in issue:
+        supplement = issue['supplement']
+    
+    return number, supplement

@@ -1,17 +1,13 @@
 def next_version(version):
     """
-    El identificador de la siguiente versión debe seguir el patrón existente.
+    Prossimo identificatore di versione seguendo il modello esistente.
 
-    Debe manejar tanto versiones con prefijo de ceros como versiones sin prefijo de ceros.
+    Deve gestire sia versioni con prefisso zero che versioni senza prefisso zero.
     """
     parts = version.split('.')
-    for i in range(len(parts) - 1, -1, -1):
-        if parts[i].isdigit():
+    for i in reversed(range(len(parts))):
+        if parts[i] != '9':
             parts[i] = str(int(parts[i]) + 1)
-            break
-        else:
-            parts[i] = '0'
-    else:
-        parts.append('1')
-    
-    return '.'.join(parts)
+            return '.'.join(parts[:i + 1]) + '.' + '.'.join(parts[i + 1:])
+        parts[i] = '0'
+    return '1.' + '.'.join(parts)

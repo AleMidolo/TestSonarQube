@@ -1,6 +1,7 @@
 def lru_cache(maxsize=128, typed=False):
-    """Decorador para envolver una función con un objeto invocable que memoriza
-    hasta `maxsize` resultados basados en un algoritmo de Menor Recientemente Usado (LRU, por sus siglas en inglés).
+    """
+    Decorator per racchiudere una funzione con un oggetto callable che memorizza
+    fino a `maxsize` risultati basandosi su un algoritmo Least Recently Used (LRU).
     """
     from collections import OrderedDict
     from functools import wraps

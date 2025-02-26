@@ -1,4 +1,6 @@
 import os
+import shutil
+import tarfile
 import zipfile
 from pathlib import Path
 from typing import Optional, Union
@@ -9,23 +11,26 @@ def prepare_repository_from_archive(
     tmp_path: Union[Path, str] = "/tmp",
 ) -> str:
     """
-    Dado un `archive_path` existente, descomprímelo.  
-    Devuelve una URL del repositorio de archivos que puede ser utilizada como URL de origen.
+    Dato un `archive_path` esistente, decomprimilo.  
+    Restituisce un URL del repository del file che può essere utilizzato come URL di origine.
 
-    Este método no maneja el caso en el que el archivo comprimido proporcionado no exista.
+    Questo metodo non gestisce il caso in cui l'archivio passato non esista.
     """
-    # Convert tmp_path to Path object
     tmp_path = Path(tmp_path)
-    
-    # Create temporary directory if it doesn't exist
     tmp_path.mkdir(parents=True, exist_ok=True)
-    
-    # Define the extraction path
-    extraction_path = tmp_path / Path(archive_path).stem
-    
-    # Unzip the archive
-    with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-        zip_ref.extractall(extraction_path)
-    
-    # Return the URL of the repository
-    return f"file://{extraction_path.resolve()}"
+
+    if archive_path.endswith('.zip'):
+        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
+            zip_ref.extractall(tmp_path)
+    elif archive_path.endswith(('.tar', '.tar.gz', '.tgz')):
+        with tarfile.open(archive_path, 'r:*') as tar_ref:
+            tar_ref.extractall(tmp_path)
+    else:
+        raise ValueError("Unsupported archive format")
+
+    if filename:
+        extracted_path = tmp_path / filename
+    else:
+        extracted_path = next(tmp_path.iterdir())
+
+    return str(extracted_path.resolve())
