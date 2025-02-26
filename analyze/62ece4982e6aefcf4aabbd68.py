@@ -5,18 +5,18 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
         raise ValueError("Number must be non-negative")
     
     base = len(alphabet)
-    result = []
+    if base < 2:
+        raise ValueError("Alphabet must contain at least two characters")
     
     if number == 0:
-        result.append(alphabet[0])
-    
-    while number > 0:
-        number, remainder = divmod(number, base)
-        result.append(alphabet[remainder])
-    
-    result.reverse()
+        result = alphabet[0]
+    else:
+        result = ""
+        while number > 0:
+            result = alphabet[number % base] + result
+            number //= base
     
     if padding is not None:
-        result = ([''] * (padding - len(result))) + result
+        result = result.zfill(padding)
     
-    return ''.join(result)
+    return result

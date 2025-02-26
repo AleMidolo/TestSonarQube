@@ -1,17 +1,19 @@
 def _resolve_string(matcher):
     """
-    给定一个包含一个名称和一个可选的默认值（位于其分组字典中）的匹配器，从环境中获取值。
-    如果环境中未定义该变量且未提供默认值，则会引发错误。
-
-    给定一个包含一个名称和一个可选的默认值的匹配器，从环境中获取值。
-    如果环境中未定义该变量且未提供默认值，则会引发错误。
+    पर्यावरण से मान प्राप्त करें, जिसमें एक मैचर होता है जो एक नाम और वैकल्पिक डिफ़ॉल्ट मान को शामिल करता है।  
+    यदि पर्यावरण में चर परिभाषित नहीं है और कोई डिफ़ॉल्ट मान प्रदान नहीं किया गया है, तो एक त्रुटि उत्पन्न की जाती है।
     """
-    name = matcher.group('name')
-    default_value = matcher.group('default', None)
+    import os
 
-    value = os.getenv(name, default_value)
-    
+    name = matcher.get('name')
+    default_value = matcher.get('default')
+
+    value = os.getenv(name)
+
     if value is None:
-        raise ValueError(f"Environment variable '{name}' is not defined and no default value provided.")
+        if default_value is not None:
+            return default_value
+        else:
+            raise ValueError(f"Environment variable '{name}' is not defined and no default value provided.")
     
     return value

@@ -4,29 +4,30 @@ from pathlib import Path
 
 def get_repo_archive(url: str, destination_path: Path) -> Path:
     """
-    给定一个 URL 和目标路径，下载并提取包含每个软件包的 'desc' 文件的 .tar.gz 压缩包。
-    每个 .tar.gz 压缩包对应一个 Arch Linux 仓库（如 'core'、'extra'、'community'）。
+    दिए गए URL और गंतव्य पथ के आधार पर, `.tar.gz` संग्रह को प्राप्त करें और निकालें,
+    जिसमें प्रत्येक पैकेज के लिए 'desc' फ़ाइल होती है।
+    प्रत्येक `.tar.gz` संग्रह एक Arch Linux रिपॉजिटरी ('core', 'extra', 'community') से संबंधित होता है।
 
-    参数：
-      url：要下载的 .tar.gz 压缩包的 URL。
-      destination_path：在磁盘上提取压缩包的目标路径。
+    तर्क (Args):
+        url: `.tar.gz` संग्रह को डाउनलोड करने का URL।
+        destination_path: वह पथ (डिस्क पर) जहाँ संग्रह को निकाला जाएगा।
 
-    返回值：
-      返回提取压缩包的目录路径。
+    वापसी मान (Returns):
+        वह डायरेक्टरी पथ (Path) जहाँ संग्रह को निकाला गया है।
     """
-    # 创建目标路径目录
+    # Create the destination path if it doesn't exist
     destination_path.mkdir(parents=True, exist_ok=True)
-    
-    # 下载 .tar.gz 文件
+
+    # Download the tar.gz file
     response = requests.get(url)
-    tar_file_path = destination_path / 'repo.tar.gz'
+    tar_file_path = destination_path / 'archive.tar.gz'
     
     with open(tar_file_path, 'wb') as f:
         f.write(response.content)
-    
-    # 解压 .tar.gz 文件
+
+    # Extract the tar.gz file
     with tarfile.open(tar_file_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
-    
-    # 返回提取后的目录路径
+
+    # Return the path where the archive was extracted
     return destination_path

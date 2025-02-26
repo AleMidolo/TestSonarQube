@@ -1,33 +1,31 @@
-def to_csv(self, separator=", ", header=None):
+def to_csv(self, separator=",", header=None):
     """
-    .. 已废弃:: 0.5 在 Lena 0.5 中，`to_csv` 不再使用。
-        可迭代对象将被转换为表格。
+    .. deprecated:: 0.5 Lena 0.5 में to_csv का उपयोग नहीं किया जाता है।
+          Iterables को तालिकाओं (tables) में परिवर्तित किया जाता है।
 
-    将图的点转换为 CSV 格式。
+    ग्राफ़ के बिंदुओं (points) को CSV में परिवर्तित करें।
 
-    *separator* 用于分隔值，默认是逗号。
+    *separator* मानों को अलग करता है, डिफ़ॉल्ट रूप से यह कॉमा (comma) है।
 
-    *header* 如果不为 ``None``，将作为输出的第一行字符串
-    （会自动添加换行符）。
+    *header*, यदि ``None`` नहीं है, तो यह आउटपुट की पहली स्ट्रिंग होगी
+    (नई पंक्ति स्वचालित रूप से जोड़ी जाती है)।
 
-    由于图可以是多维的，
-    对于每个点，首先将其坐标转换为字符串
-    （用 *separator* 分隔），然后再处理其值的每个部分。
+    चूंकि एक ग्राफ़ बहुआयामी (multidimensional) हो सकता है,
+    प्रत्येक बिंदु के लिए पहले उसके निर्देशांक (coordinate) को स्ट्रिंग में परिवर्तित किया जाता है
+    (*separator* द्वारा अलग किया गया), और फिर उसके मान (value) के प्रत्येक भाग को।
 
-    要在 Lena 序列中将 :class:`Graph` 转换为 CSV，
-    请使用 :class:`lena.output.ToCSV`。
+    :class:`Graph` को CSV में परिवर्तित करने के लिए, Lena अनुक्रम (sequence) के अंदर
+    :class:`lena.output.ToCSV` का उपयोग करें।
     """
-    # Assuming self.points is a list of points in the graph
-    csv_lines = []
+    # Assuming self.points is a list of tuples representing the graph points
+    output = []
     
     if header is not None:
-        csv_lines.append(header + "\n")
+        output.append(header)
     
     for point in self.points:
-        # Convert point coordinates to string and join with separator
-        point_str = separator.join(map(str, point.coordinates))
-        # Assuming point.values is a list of values associated with the point
-        values_str = separator.join(map(str, point.values))
-        csv_lines.append(f"{point_str}{separator}{values_str}\n")
+        # Convert the point coordinates to string and join with the separator
+        point_str = separator.join(map(str, point))
+        output.append(point_str)
     
-    return ''.join(csv_lines)
+    return "\n".join(output)

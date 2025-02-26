@@ -1,27 +1,21 @@
 def _fromutc(self, dt):
     """
-    给定一个特定时区的日期时间，计算在新时区的日期时间。
+    यह वह स्थिति है जब हमें *पक्का* पता होता है कि हमारे पास एक अस्पष्टता रहित (unambiguous) डेटटाइम ऑब्जेक्ट है। इस मौके का उपयोग करते हुए, हम यह निर्धारित करते हैं कि क्या यह डेटटाइम अस्पष्ट (ambiguous) है और "फोल्ड" स्थिति में है (उदाहरण के लिए, यदि यह अस्पष्ट डेटटाइम का पहला कालानुक्रमिक (chronological) उदाहरण है)।
 
-    给定一个带有时区信息的日期时间对象，计算在新时区的带有时区信息的日期时间。
-
-    由于这是我们*明确知道*日期时间对象没有歧义的唯一时刻，我们利用这个机会来判断该日期时间是否存在歧义，并且是否处于“折叠”状态（例如，如果这是歧义日期时间的第一个按时间顺序出现的实例）。
-
-    :param dt: 一个带有时区信息的 :class:`datetime.datetime` 对象。
+    पैरामीटर:
+    - `dt`:  
+      एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
     """
-    # 检查输入的日期时间对象是否带有时区信息
     if dt.tzinfo is None:
-        raise ValueError("dt must be a timezone-aware datetime object")
-
-    # 将输入的日期时间转换为 UTC 时间
-    utc_dt = dt.astimezone(self.utc)
-
-    # 计算在新时区的日期时间
-    new_dt = utc_dt.astimezone(self)
-
-    # 检查是否存在歧义
-    if new_dt.dst() != timedelta(0):
-        # 如果存在歧义，判断是否处于“折叠”状态
-        if new_dt < self.fold_start:
-            raise ValueError("Ambiguous datetime in the new timezone")
-
-    return new_dt
+        raise ValueError("dt must be timezone-aware")
+    
+    # Check if the datetime is ambiguous
+    if dt.dst() is not None and dt.dst() != timedelta(0):
+        # If the datetime has a non-zero DST offset, it is ambiguous
+        raise ValueError("Ambiguous datetime")
+    
+    # Determine if the datetime is in the fold
+    if dt < self.utcoffset() + self.dst():
+        return dt - self.utcoffset()
+    else:
+        return dt - self.utcoffset() - self.dst()

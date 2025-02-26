@@ -1,38 +1,58 @@
 def absorb(self, args):
     """
-    对于给定的表达式序列 `args`，返回一个应用吸收律的新表达式列表。
+    `args` अभिव्यक्तियों के अनुक्रम को दिया गया है, एक नई सूची लौटाएं जिसमें अवशोषण और नकारात्मक अवशोषण लागू किया गया हो।
 
-    对于给定的表达式序列 `args`，返回一个应用吸收律和负吸收律的新表达式列表。
+    अधिक जानकारी के लिए देखें: [https://en.wikipedia.org/wiki/Absorption_law](https://en.wikipedia.org/wiki/Absorption_law)
 
-    参考：https://en.wikipedia.org/wiki/Absorption_law
+    **अवशोषण (Absorption):**
 
-    吸收律（Absorption）::
+    A & (A | B) = A, A | (A & B) = A
 
-      A & (A | B) = A, A | (A & B) = A
+    **नकारात्मक अवशोषण (Negative Absorption):**
 
-    负吸收律（Negative Absorption）::
-
-      A & (~A | B) = A & B, A | (~A & B) = A | B
+    A & (~A | B) = A & B, A | (~A & B) = A | B
     """
-    new_args = []
+    result = []
     for expr in args:
-        # Apply Absorption Law
-        if isinstance(expr, tuple) and len(expr) == 3:
-            op1, operator, op2 = expr
-            if operator == '&':
-                if op1 == op2 or (op1 == '|' and op2 == 'B'):
-                    new_args.append(op1)
-                elif op1 == '~' + op2:
-                    new_args.append((op1, '&', 'B'))
-                else:
-                    new_args.append(expr)
-            elif operator == '|':
-                if op1 == op2 or (op1 == '&' and op2 == 'B'):
-                    new_args.append(op1)
-                elif op1 == '~' + op2:
-                    new_args.append((op1, '|', 'B'))
-                else:
-                    new_args.append(expr)
-        else:
-            new_args.append(expr)
-    return new_args
+        # Apply absorption laws
+        if '&' in expr and '|' in expr:
+            # Check for A & (A | B)
+            if expr.count('&') == 1 and expr.count('|') == 1:
+                parts = expr.split('&')
+                A = parts[0].strip()
+                B = parts[1].strip().split('|')
+                if A in B[0]:
+                    result.append(A)
+                    continue
+            # Check for A | (A & B)
+            if expr.count('|') == 1 and expr.count('&') == 1:
+                parts = expr.split('|')
+                A = parts[0].strip()
+                B = parts[1].strip().split('&')
+                if A in B[0]:
+                    result.append(A)
+                    continue
+        
+        # Apply negative absorption laws
+        if '&' in expr and '~' in expr:
+            # Check for A & (~A | B)
+            if expr.count('&') == 1 and expr.count('|') == 1:
+                parts = expr.split('&')
+                A = parts[0].strip()
+                B = parts[1].strip().split('|')
+                if '~' + A in B[0]:
+                    result.append(A + ' & ' + B[1].strip())
+                    continue
+            # Check for A | (~A & B)
+            if expr.count('|') == 1 and expr.count('&') == 1:
+                parts = expr.split('|')
+                A = parts[0].strip()
+                B = parts[1].strip().split('&')
+                if '~' + A in B[0]:
+                    result.append(A + ' | ' + B[1].strip())
+                    continue
+        
+        # If no absorption applied, keep the original expression
+        result.append(expr)
+    
+    return result

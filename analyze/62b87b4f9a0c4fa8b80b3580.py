@@ -1,17 +1,13 @@
 def integral(bins, edges):
     """
-    计算整体图形的面积
-    计算积分（直方图的缩放比例）。
+    histogram के लिए इंटीग्रल (स्केल) की गणना करें।
 
-    *`bins`* 包含数值，*`edges`* 构成积分的网格。  
-    在 :class:`.histogram` 的描述中定义了它们的格式。
+    *bins* में मान (values) होते हैं, और *edges* इंटीग्रेशन के लिए जाल (mesh) बनाते हैं।  
+    इनका प्रारूप (format) :class:`.histogram` विवरण में परिभाषित है।
     """
-    if len(bins) != len(edges) - 1:
-        raise ValueError("Length of bins must be one less than length of edges.")
+    import numpy as np
+
+    # Calculate the integral of the histogram
+    integral_values = np.cumsum(bins) * np.diff(edges, prepend=edges[0])
     
-    area = 0.0
-    for i in range(len(bins)):
-        width = edges[i + 1] - edges[i]
-        area += bins[i] * width
-    
-    return area
+    return integral_values

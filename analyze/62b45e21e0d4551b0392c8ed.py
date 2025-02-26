@@ -1,34 +1,27 @@
 def find_path_type(path):
     """
-    返回一个字符串，指示给定路径的类型。
+    दिए गए पथ पर मौजूद वस्तु के प्रकार को इंगित करने वाला एक स्ट्रिंग लौटाता है।
 
-    返回值：
-      'root' - 看起来像是一个 OCFL 存储根目录
-      'object' - 看起来像是一个 OCFL 对象
-      'file' - 一个文件，可能是一个清单文件
-      其他字符串解释错误描述
+    लौटाए जाने वाले मान:
+        'root' - ऐसा लगता है कि यह OCFL स्टोरेज रूट है
+        'object' - ऐसा लगता है कि यह OCFL ऑब्जेक्ट है
+        'file' - यह एक फ़ाइल है, जो शायद एक इन्वेंटरी हो सकती है
+        अन्य स्ट्रिंग - त्रुटि विवरण को समझाती है
 
-    仅通过查看 "0=*" Namaste 文件来确定目录类型。
+    यह केवल "0=*" नमस्ते फ़ाइलों को देखकर निर्देशिका के प्रकार का निर्धारण करता है।
     """
     import os
 
     if not os.path.exists(path):
-        return "路径不存在"
+        return "Path does not exist"
 
-    namaste_file = os.path.join(path, "0=*")
+    if os.path.isdir(path):
+        if any(file.startswith("0=") for file in os.listdir(path)):
+            return 'root'
+        else:
+            return 'object'
     
-    if os.path.isdir(path) and os.path.isfile(namaste_file):
-        with open(namaste_file, 'r') as file:
-            content = file.read().strip()
-            if content == "OCFL Root":
-                return 'root'
-            elif content.startswith("OCFL Object"):
-                return 'object'
-            elif content.startswith("Manifest File"):
-                return 'file'
-            else:
-                return "未知类型"
-    elif os.path.isfile(path):
+    if os.path.isfile(path):
         return 'file'
-    else:
-        return "路径类型不明确"
+    
+    return "Unknown type"

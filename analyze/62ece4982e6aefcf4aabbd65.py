@@ -1,11 +1,5 @@
 def parser_flags(parser):
     """
-    给定一个 `argparse.ArgumentParser` 实例，返回其参数标志（argument flags）组成的以空格分隔的字符串。
-
-    参数：
-      script：`argparse.ArgumentParser` 实例
-
-    返回值：
-      参数标志组成的以空格分隔的字符串
+    एक argparse.ArgumentParser उदाहरण के लिए, इसके आर्गुमेंट फ्लैग्स को एक स्पेस से अलग किए गए स्ट्रिंग के रूप में लौटाएं।
     """
-    return ' '.join([flag for action in parser._actions for flag in action.option_strings])
+    return ' '.join(parser._actions[0].option_strings for action in parser._actions if action.option_strings)

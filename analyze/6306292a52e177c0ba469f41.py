@@ -1,8 +1,11 @@
 def test_tag(tag: str) -> bool:
     """
-    检查 `LEGAL_TAG_CHARS` 中的每个字符是否属于标签。如果有任何字符属于标签，则返回假。否则，返回真。
-
-    测试一个单词是否可以被接受为标签。
+    किसी शब्द का परीक्षण करें कि क्या उसे टैग के रूप में स्वीकार किया जा सकता है।
     """
-    LEGAL_TAG_CHARS = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-")  # 示例合法字符
-    return all(char in LEGAL_TAG_CHARS for char in tag)
+    if not tag or not isinstance(tag, str):
+        return False
+    if len(tag) > 30 or len(tag) < 1:
+        return False
+    if not tag.isalnum() and not all(char in ['-', '_'] for char in tag):
+        return False
+    return True

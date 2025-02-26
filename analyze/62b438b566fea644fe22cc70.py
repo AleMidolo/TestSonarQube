@@ -1,14 +1,36 @@
 def bash_completion():
     """
-    通过检查 borgmatic 的命令行参数解析器生成 borgmatic 命令。
-
-    返回一个用于 borgmatic 命令的 bash 补全脚本。通过检查 borgmatic 的命令行参数解析器生成此脚本。
+    बॉर्गमैटिक कमांड के लिए बाश कम्प्लीशन स्क्रिप्ट लौटाएं।  
+    यह स्क्रिप्ट बॉर्गमैटिक के कमांड-लाइन आर्ग्युमेंट पार्सर्स का निरीक्षण करके उत्पन्न की जाती है।
     """
-    import subprocess
+    import argparse
+    import sys
 
-    # Generate the bash completion script using borgmatic's command line interface
-    try:
-        completion_script = subprocess.check_output(['borgmatic', 'completion', 'bash'], text=True)
-        return completion_script
-    except subprocess.CalledProcessError as e:
-        return f"Error generating completion script: {e}"
+    # Define the main parser
+    parser = argparse.ArgumentParser(prog='borgmatic')
+    
+    # Add subparsers for different commands
+    subparsers = parser.add_subparsers(dest='command')
+
+    # Example command: init
+    init_parser = subparsers.add_parser('init', help='Initialize a new configuration')
+    
+    # Example command: config
+    config_parser = subparsers.add_parser('config', help='Manage configuration')
+    
+    # Example command: run
+    run_parser = subparsers.add_parser('run', help='Run the backup')
+
+    # Generate the completion script
+    if len(sys.argv) > 1 and sys.argv[1] == 'completion':
+        command = sys.argv[2] if len(sys.argv) > 2 else ''
+        if command == 'init':
+            print('init')
+        elif command == 'config':
+            print('config')
+        elif command == 'run':
+            print('run')
+        else:
+            print('init config run')
+    else:
+        parser.print_help()

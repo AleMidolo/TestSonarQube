@@ -5,14 +5,14 @@ class ValidationError(Exception):
 
 def validate_value(value):
     """
-    根据对应的正则表达式验证给定的值。
+    दिए गए मान को संबंधित नियमित अभिव्यक्ति (Regular Expression) के अनुसार सत्यापित करें।
 
-    参数:
-        value: 要验证的字符串
+    आर्ग्युमेंट्स (Args):
+        value: सत्यापन के लिए स्ट्रिंग
 
-    异常:
-        ValidationError: 如果给定的值不符合正则表达式，将抛出此异常。
+    त्रुटि (Raises):
+        ValidationError: यदि दिया गया मान नियमित अभिव्यक्ति के अनुरूप नहीं है।
     """
-    pattern = r'^[a-zA-Z0-9]+$'  # 示例正则表达式，允许字母和数字
+    pattern = r'^[a-zA-Z0-9]+$'  # उदाहरण के लिए, केवल अल्फ़ान्यूमेरिक मानों की अनुमति
     if not re.match(pattern, value):
-        raise ValidationError(f"Value '{value}' does not match the required pattern.")
+        raise ValidationError(f"'{value}' मान नियमित अभिव्यक्ति के अनुरूप नहीं है।")

@@ -1,21 +1,21 @@
 def validate_from_content(cls, spec_content=None):
     """
-    验证规范（YAML）内容是否包含所有必需字段。
+    यह फ़ंक्शन सत्यापित करता है कि spec (YAML) सामग्री में सभी आवश्यक फ़ील्ड्स मौजूद हैं।
 
-    :param spec_content: 规范文件的内容
-    :raise IRValidatorException: 当规范文件中缺少必需数据时抛出异常
-    :return: 从规范（YAML）文件加载的数据字典
+    :param spec_content: spec फ़ाइल की सामग्री
+    :raise IRValidatorException: जब spec फ़ाइल में अनिवार्य डेटा गायब हो
+    :return: एक डिक्शनरी जिसमें spec (YAML) फ़ाइल से लोड किया गया डेटा होता है
     """
     import yaml
 
-    required_fields = ['field1', 'field2', 'field3']  # 示例必需字段
+    required_fields = ['field1', 'field2', 'field3']  # आवश्यक फ़ील्ड्स की सूची
     if spec_content is None:
-        raise ValueError("spec_content cannot be None")
+        raise IRValidatorException("Spec content is required.")
 
     try:
         data = yaml.safe_load(spec_content)
     except yaml.YAMLError as e:
-        raise ValueError(f"YAML parsing error: {e}")
+        raise IRValidatorException(f"YAML parsing error: {e}")
 
     missing_fields = [field for field in required_fields if field not in data]
     if missing_fields:

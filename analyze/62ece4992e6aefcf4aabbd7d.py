@@ -1,43 +1,28 @@
-import subprocess
-import os
-import sys
-import pickle
-
 def subprocess_run_helper(func, *args, timeout, extra_env=None):
     """
-    在子进程中运行一个函数
+    एक सब-प्रोसेस में एक फ़ंक्शन चलाएँ।
 
-    参数：
-      `func`: function，需要运行的函数。该函数必须位于可导入的模块中。
-      `*args`: str。任何额外的命令行参数，这些参数将作为 subprocess.run 的第一个参数传递。
-      `extra_env`: dict[str, str]。为子进程设置的额外环境变量。
-    返回值：
-      `CompletedProcess` 实例。
-
-    在子进程中运行一个函数。
-
-    参数
-    ----------
-     `func`: function，需要运行的函数。该函数必须位于可导入的模块中。
-      `*args`: str。任何额外的命令行参数，这些参数将作为 subprocess.run 的第一个参数传递。
-      `extra_env`: dict[str, str]。为子进程设置的额外环境变量。
+    पैरामीटर (Parameters)
+    ---------------------
+    func : function
+        वह फ़ंक्शन जिसे चलाना है। यह किसी ऐसे मॉड्यूल में होना चाहिए जिसे आयात (import) किया जा सके।
+    *args : str
+        कोई भी अतिरिक्त कमांड लाइन तर्क जो ``subprocess.run`` के पहले तर्क में पास किए जाने हैं।
+    extra_env : dict[str, str]
+        सब-प्रोसेस के लिए सेट किए जाने वाले कोई भी अतिरिक्त पर्यावरण वेरिएबल।
     """
-    # Serialize the function and its arguments
-    func_name = func.__module__ + '.' + func.__qualname__
-    args = pickle.dumps(args)
+    import subprocess
+    import os
 
-    # Prepare the command to run
-    command = [sys.executable, '-c', f'import pickle; import {func.__module__}; '
-                                      f'func = {func_name}; '
-                                      f'args = pickle.loads({args}); '
-                                      f'func(*args)']
-
-    # Set up the environment
+    # Prepare the environment
     env = os.environ.copy()
     if extra_env:
         env.update(extra_env)
 
+    # Prepare the command to run
+    command = [func] + list(args)
+
     # Run the subprocess
-    result = subprocess.run(command, env=env, timeout=timeout, capture_output=True)
+    result = subprocess.run(command, env=env, timeout=timeout)
 
     return result

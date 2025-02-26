@@ -1,6 +1,8 @@
 def status_str(self, prefix=''):
     """
-    返回带有 `self.log.status_str` 的字符串表示形式，可选添加前缀。
-    返回验证日志的字符串表示形式，可选添加前缀。
+    सत्यापन लॉग (validation log) का स्ट्रिंग प्रतिनिधित्व लौटाएं, वैकल्पिक प्रीफिक्स के साथ।
     """
-    return f"{prefix}{self.log.status_str()}"
+    log_representation = f"{prefix}Validation Log:\n"
+    for entry in self.validation_log:
+        log_representation += f"{prefix} - {entry}\n"
+    return log_representation.strip()

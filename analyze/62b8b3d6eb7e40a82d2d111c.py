@@ -1,22 +1,16 @@
 def _normalizeargs(sequence, output=None):
     """
-    规范化声明参数
+    घोषणा तर्कों को सामान्यीकृत करें
 
+    सामान्यीकरण तर्कों में घोषणाएँ, ट्यूपल, या एकल इंटरफेस हो सकते हैं।
 
-    规范化的参数可能包含声明、元组或单个接口。
-
-
-    除了单个接口或实现规范之外的任何内容都将被展开。
+    व्यक्तिगत इंटरफेस या लागू विनिर्देशों को छोड़कर अन्य सभी का विस्तार किया जाएगा।
     """
     if isinstance(sequence, (list, tuple)):
-        normalized = []
-        for item in sequence:
-            if isinstance(item, (list, tuple)):
-                normalized.extend(_normalizeargs(item))
-            else:
-                normalized.append(item)
-        return normalized
+        return [(_normalizeargs(item, output) if isinstance(item, (list, tuple)) else item) for item in sequence]
     elif isinstance(sequence, dict):
-        return {key: _normalizeargs(value) for key, value in sequence.items()}
+        return {key: _normalizeargs(value, output) for key, value in sequence.items()}
+    elif hasattr(sequence, '__iter__'):
+        return list(sequence)
     else:
-        return [sequence] if output is None else output
+        return sequence

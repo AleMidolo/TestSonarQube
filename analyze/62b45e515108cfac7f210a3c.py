@@ -1,16 +1,9 @@
 def initialize(self):
     """
-    创建并初始化一个新的 OCFL 存储根目录。
+    एक नया OCFL स्टोरेज रूट बनाएँ और प्रारंभ करें।
     """
-    import os
-
-    # Define the root directory for OCFL storage
-    root_directory = "ocfl_storage_root"
-
-    # Check if the directory already exists
-    if not os.path.exists(root_directory):
-        # Create the directory
-        os.makedirs(root_directory)
-        print(f"OCFL storage root directory '{root_directory}' has been created.")
-    else:
-        print(f"OCFL storage root directory '{root_directory}' already exists.")
+    # OCFL स्टोरेज रूट बनाने की प्रक्रिया
+    self.storage_root = self.create_storage_root()
+    self.setup_initial_structure()
+    self.initialize_metadata()
+    print("OCFL स्टोरेज रूट सफलतापूर्वक बनाया और प्रारंभ किया।")

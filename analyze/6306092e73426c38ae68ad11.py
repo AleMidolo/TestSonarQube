@@ -1,9 +1,9 @@
 def merge_extra_vars(vars_dict, extra_vars=None):
     """
-    使用 ``extra-vars`` 扩展 ``vars_dict``。
+    ``vars_dict`` को ``extra-vars`` के साथ मर्ज (जोड़ना) करें।
 
-    :param vars_dict: 要合并 extra-vars 的字典
-    :param extra_vars: extra-vars的列表
+    :param vars_dict: वह डिक्शनरी जिसमें extra-vars को मर्ज करना है
+    :param extra_vars: extra-vars की सूची (लिस्ट)
     """
     if extra_vars is None:
         return vars_dict
@@ -12,6 +12,6 @@ def merge_extra_vars(vars_dict, extra_vars=None):
         if isinstance(var, dict):
             vars_dict.update(var)
         else:
-            raise ValueError("extra_vars should be a list of dictionaries.")
+            raise ValueError("Each item in extra_vars must be a dictionary.")
     
     return vars_dict

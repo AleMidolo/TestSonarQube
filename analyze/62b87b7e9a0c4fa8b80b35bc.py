@@ -1,21 +1,6 @@
 def _update_context(self, context):
     """
-    更新 *context*，使其包含此图的属性。
+    इस फ़ंक्शन का उपयोग *context* को इस ग्राफ़ की विशेषताओं के साथ अपडेट करने के लिए किया जाता है।
 
-    *context.error* 会附加错误的索引。
-    例如，对于一个具有字段 "E, t, error_E_low" 的图，其子上下文可能为：
-    {"error": {"x_low": {"index": 2}}}
-    请注意，错误名称被称为 "x"、"y" 和 "z"（这对应于前三个坐标，如果它们存在的话），这使得绘图更加简化。
-    现有的值不会从 *context.value* 及其子上下文中移除。
-
-    此方法在图的“销毁”过程中被调用（例如，在 :class:`.ToCSV` 中）。
-    这里的“销毁”是指在流程中将图转换为另一种结构（如文本）。
-    在此过程中，图对象实际上并未被真正销毁。
-    """
-    # 假设 self 有属性 error_indices 和 coordinates
-    if not hasattr(context, 'error'):
-        context.error = {}
-
-    for i, coord in enumerate(self.coordinates):
-        if coord in self.error_indices:
-            context.error[f"{coord}_low"] = {"index": i}
+    - *context.error* में त्रुटियों (errors) के इंडेक्स जोड़े जाते हैं।  
+    उदाहरण के लिए, यदि ग्राफ़ में "E, t, error_E_low" नामक फ़ील्ड्स हैं, तो एक उप-संदर्भ (subcontext) इस प्रकार हो सकता है:

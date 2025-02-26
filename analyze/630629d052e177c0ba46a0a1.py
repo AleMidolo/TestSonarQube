@@ -1,21 +1,25 @@
-import xml.etree.ElementTree as ET
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding
-from cryptography.hazmat.primitives import serialization
-from cryptography.exceptions import InvalidSignature
-
 def verify_relayable_signature(public_key, doc, signature):
     """
-    验证已签名的XML元素，以确保声明的作者确实生成了此消息。
+    हस्ताक्षरित XML तत्वों को सत्यापित करें ताकि यह सुनिश्चित किया जा सके 
+    कि दावा किया गया लेखक ने वास्तव में यह संदेश उत्पन्न किया है।
     """
+    from lxml import etree
+    from cryptography.hazmat.primitives import hashes
+    from cryptography.hazmat.primitives.asymmetric import padding
+    from cryptography.hazmat.backends import default_backend
+    from cryptography.hazmat.primitives import serialization
+
     # Load the public key
-    public_key = serialization.load_pem_public_key(public_key)
+    public_key = serialization.load_pem_public_key(
+        public_key.encode(),
+        backend=default_backend()
+    )
 
     # Parse the XML document
-    root = ET.fromstring(doc)
+    root = etree.fromstring(doc)
 
-    # Extract the signed data (assuming it's in a specific element)
-    signed_data = ET.tostring(root, encoding='utf-8', method='xml')
+    # Extract the signed data from the XML
+    signed_data = etree.tostring(root, method='xml', pretty_print=True)
 
     # Verify the signature
     try:
@@ -26,5 +30,5 @@ def verify_relayable_signature(public_key, doc, signature):
             hashes.SHA256()
         )
         return True
-    except InvalidSignature:
+    except Exception as e:
         return False

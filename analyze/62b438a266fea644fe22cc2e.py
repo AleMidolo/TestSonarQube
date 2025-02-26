@@ -2,8 +2,7 @@ import argparse
 
 def parse_arguments(*unparsed_arguments):
     """
-    给定调用此脚本时提供的命令行参数，解析这些参数并返回一个字典。
-    该字典将子解析器名称（或 "global"）映射到一个 argparse.Namespace 实例。
+    इस स्क्रिप्ट को जिन कमांड-लाइन आर्ग्युमेंट्स के साथ चलाया गया है, उन आर्ग्युमेंट्स को पार्स (parse) करें और उन्हें एक डिक्शनरी (dict) के रूप में लौटाएं। यह डिक्शनरी सबपार्सर (subparser) के नाम (या "global") को `argparse.Namespace` इंस्टेंस से मैप करती है।
     """
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='subparser_name')
@@ -18,5 +17,5 @@ def parse_arguments(*unparsed_arguments):
     # Parse the arguments
     args = parser.parse_args(unparsed_arguments)
 
-    # Return a dictionary mapping subparser names to their respective Namespace
-    return {args.subparser_name if args.subparser_name else 'global': args}
+    # Convert Namespace to dict
+    return {args.subparser_name: args}

@@ -1,7 +1,19 @@
 def get_spec_defaults(self):
     """
-    使用 `self._get_defaults()` 从规范和其他来源解析参数的值。
-
-    从规范和其他来源解析参数的值。
+    स्पेक और अन्य स्रोतों से तर्कों के डिफ़ॉल्ट मान प्राप्त करें।
     """
-    return self._get_defaults()
+    defaults = {}
+    # Assuming 'self.spec' contains the specifications from which to extract defaults
+    if hasattr(self, 'spec'):
+        for arg in self.spec.get('args', []):
+            if 'default' in arg:
+                defaults[arg['name']] = arg['default']
+    
+    # Assuming 'self.sources' contains other sources to extract defaults
+    if hasattr(self, 'sources'):
+        for source in self.sources:
+            for arg in source.get('args', []):
+                if 'default' in arg and arg['name'] not in defaults:
+                    defaults[arg['name']] = arg['default']
+    
+    return defaults

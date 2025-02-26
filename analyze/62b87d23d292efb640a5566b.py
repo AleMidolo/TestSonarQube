@@ -3,7 +3,7 @@ import os
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    执行指定的命令。
+    दिए गए कमांड(s) को चलाएं।
     """
     if cwd is None:
         cwd = os.getcwd()
@@ -11,12 +11,12 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     if env is None:
         env = os.environ.copy()
     
-    command = [commands] + args
+    command_list = [commands] + args
+    if verbose:
+        print(f"Running command: {' '.join(command_list)} in {cwd}")
+    
     stderr = subprocess.DEVNULL if hide_stderr else None
     
-    if verbose:
-        print(f"Running command: {' '.join(command)} in {cwd}")
-    
-    result = subprocess.run(command, cwd=cwd, env=env, stderr=stderr)
+    result = subprocess.run(command_list, cwd=cwd, env=env, stderr=stderr)
     
     return result.returncode
