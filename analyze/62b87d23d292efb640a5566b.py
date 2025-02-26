@@ -5,25 +5,30 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     """
     Call the given command(s).
     """
-    if cwd is None:
-        cwd = os.getcwd()
-    
-    if env is None:
-        env = os.environ.copy()
-    
     if isinstance(commands, str):
         commands = [commands]
     
     results = []
-    
     for command in commands:
         full_command = [command] + args
         if verbose:
-            print(f"Running command: {' '.join(full_command)} in {cwd}")
+            print(f"Running command: {' '.join(full_command)}")
         
-        stderr = subprocess.DEVNULL if hide_stderr else None
+        process = subprocess.Popen(
+            full_command,
+            cwd=cwd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE if not hide_stderr else subprocess.DEVNULL,
+            env=env
+        )
         
-        result = subprocess.run(full_command, cwd=cwd, env=env, stderr=stderr)
+        stdout, stderr = process.communicate()
+        result = {
+            'command': command,
+            'returncode': process.returncode,
+            'stdout': stdout.decode('utf-8'),
+            'stderr': stderr.decode('utf-8') if not hide_stderr else None
+        }
         results.append(result)
     
     return results

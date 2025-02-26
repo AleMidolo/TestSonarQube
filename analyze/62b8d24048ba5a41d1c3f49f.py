@@ -26,14 +26,14 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
                     del cache[key]
             
             # Call the function and cache the result
-            result = func(*args, **kwargs)
-            cache[key] = (result, current_time)
+            value = func(*args, **kwargs)
+            cache[key] = (value, current_time)
             
             # Maintain the cache size
             if len(cache) > maxsize:
                 cache.popitem(last=False)
                 
-            return result
+            return value
         
         return wrapper
     

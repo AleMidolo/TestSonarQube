@@ -21,9 +21,8 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
     if hydration_hooks is None:
         hydration_hooks = {}
 
-    # Create the DISCARD message
-    message = {
-        'type': 'DISCARD',
+    # Create a discard message
+    discard_message = {
         'n': n,
         'qid': qid,
         'dehydration_hooks': dehydration_hooks,
@@ -32,4 +31,4 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
     }
 
     # Append the message to the output queue
-    self.output_queue.append(message)
+    self.output_queue.append(discard_message)

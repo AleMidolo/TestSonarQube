@@ -5,7 +5,7 @@ def get_versions():
     import pkg_resources
 
     try:
-        versions = {pkg.project_name: pkg.version for pkg in pkg_resources.working_set}
+        versions = {pkg.key: pkg.version for pkg in pkg_resources.working_set}
         return versions
     except Exception:
         return {"default": "unknown"}

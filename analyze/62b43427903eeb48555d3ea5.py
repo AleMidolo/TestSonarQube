@@ -23,16 +23,19 @@ def format(
     -       The set of converted out-style parameters (:class:`dict` or
             :class:`list`).
     """
-    # Determine if the SQL parameters are named or ordinal
+    # Determine if the parameters are in a mapping or sequence
     if isinstance(params, dict):
         # Named parameters
+        out_params = {}
         for key, value in params.items():
-            sql = sql.replace(f":{key}", str(value))
-        return sql, params
+            out_params[key] = value
+            sql = sql.replace(f":{key}", "?")
     elif isinstance(params, (list, tuple)):
         # Ordinal parameters
-        for index, value in enumerate(params):
-            sql = sql.replace(f"?{index + 1}", str(value))
-        return sql, list(params)
+        out_params = list(params)
+        for index in range(len(params)):
+            sql = sql.replace(f"${index + 1}", "?")
     else:
-        raise TypeError("params must be a dictionary or a sequence")
+        raise TypeError("params must be a dict or a sequence")
+
+    return sql, out_params

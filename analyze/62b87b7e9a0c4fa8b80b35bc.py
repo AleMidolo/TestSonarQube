@@ -16,29 +16,19 @@ def _update_context(self, context):
     to another structure (like text) in the flow.
     The graph object is not really destroyed in this process.
     """
-    # Assuming self.graph_data contains the properties of the graph
+    # Assuming self has properties that need to be added to context
     if not hasattr(context, 'error'):
         context.error = {}
     
-    # Example of how to append error indices
-    for index, error in enumerate(self.graph_data.get('errors', [])):
-        if error:
-            context.error[f"x_{index}"] = {"index": index}
-    
-    # Assuming context.value is a dictionary that holds the graph's values
+    # Example of how to append errors
+    for error_name, error_indices in self.errors.items():
+        if error_name in ['x', 'y', 'z']:
+            context.error[error_name] = context.error.get(error_name, {})
+            context.error[error_name]['index'] = context.error[error_name].get('index', []) + error_indices
+
+    # Assuming self has a value property that needs to be merged into context
     if not hasattr(context, 'value'):
         context.value = {}
     
-    # Update context.value with graph properties
-    for key, value in self.graph_data.items():
-        if key not in context.value:
-            context.value[key] = value
-        else:
-            # If the key already exists, we can choose to merge or append
-            if isinstance(context.value[key], list) and isinstance(value, list):
-                context.value[key].extend(value)
-            elif isinstance(context.value[key], dict) and isinstance(value, dict):
-                context.value[key].update(value)
-            else:
-                # If types are different, we can choose to keep the existing value
-                pass
+    for key, value in self.value.items():
+        context.value[key] = value  # Merge values without removing existing ones

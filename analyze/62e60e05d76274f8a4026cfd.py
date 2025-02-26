@@ -9,4 +9,4 @@ def index(self, key):
     try:
         return self.items.index(key)
     except ValueError:
-        return -1  # Return -1 if the key is not found
+        return -1

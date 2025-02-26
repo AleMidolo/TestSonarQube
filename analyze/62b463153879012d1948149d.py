@@ -15,7 +15,7 @@ def _explore_folder(folder):
     -------
     dict
     """
-    package_data = {}
+    data = {}
     
     for filename in os.listdir(folder):
         if filename.endswith('.xml'):
@@ -23,6 +23,6 @@ def _explore_folder(folder):
             file_path = os.path.join(folder, filename)
             tree = ET.parse(file_path)
             root = tree.getroot()
-            package_data[basename] = {child.tag: child.text for child in root}
+            data[basename] = {child.tag: child.text for child in root}
     
-    return package_data
+    return data
