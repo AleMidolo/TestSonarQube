@@ -29,15 +29,16 @@ def _legacy_mergeOrderings(orderings):
             if i > 0:
                 graph[ordering[i - 1]].append(ordering[i])
                 in_degree[ordering[i]] += 1
+                if ordering[i] not in in_degree:
+                    in_degree[ordering[i]] = 0
 
-    # Initialize the queue with items that have no incoming edges
+    # Topological sort using Kahn's algorithm
     queue = deque([item for item in all_items if in_degree[item] == 0])
     merged_order = []
 
     while queue:
         current = queue.popleft()
         merged_order.append(current)
-
         for neighbor in graph[current]:
             in_degree[neighbor] -= 1
             if in_degree[neighbor] == 0:

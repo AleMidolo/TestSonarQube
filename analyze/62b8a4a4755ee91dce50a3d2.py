@@ -12,9 +12,10 @@ def _fromutc(self, dt):
     # Check if the datetime is ambiguous
     if dt.dst() is not None and dt.dst() != timedelta(0):
         # If the datetime has a non-zero DST offset, it is ambiguous
-        if dt < self._fold:
-            return dt - self.utcoffset()
-        else:
-            return dt - self.utcoffset() + self.dst()
+        raise ValueError("Ambiguous datetime")
+    
+    # Determine if the datetime is in the fold
+    if dt < self._fold_start:
+        return dt.replace(tzinfo=self)
     else:
-        return dt - self.utcoffset()
+        return dt.replace(tzinfo=self, fold=1)

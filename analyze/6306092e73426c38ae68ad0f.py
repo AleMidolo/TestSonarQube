@@ -13,7 +13,7 @@ def get_nested_custom_and_control_args(self, args):
     """
     control_args = {}
     nested_args = {}
-
+    
     for arg in args:
         if isinstance(arg, dict):
             if 'control' in arg:
@@ -21,6 +21,7 @@ def get_nested_custom_and_control_args(self, args):
             else:
                 nested_args.update(arg)
         else:
+            # Assuming non-dict args are custom arguments
             nested_args[arg] = None
 
     return control_args, nested_args

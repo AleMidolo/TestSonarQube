@@ -36,7 +36,6 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     coordinates = []
     values = []
-    errors = []
 
     for bin_ in hist.bins:
         if get_coordinate == "left":
@@ -48,25 +47,20 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         else:
             raise ValueError("Invalid value for get_coordinate")
 
-        value_tuple = make_value(bin_)
+        value = make_value(bin_)
         coordinates.append(coordinate)
-        values.append(value_tuple[0])
-        if len(value_tuple) > 1:
-            errors.append(value_tuple[1])
-        else:
-            errors.append(0)
+        values.append(value)
 
     if scale is True:
-        scale_factor = hist.scale
-    else:
-        scale_factor = 1
+        # Apply scaling logic if needed
+        pass
 
     graph = {
-        field_names[0]: np.array(coordinates) * scale_factor,
-        field_names[1]: np.array(values) * scale_factor,
+        field_names[0]: np.array(coordinates),
+        field_names[1]: np.array([v[0] for v in values]),
     }
 
-    if len(errors) > 0:
-        graph[field_names[2]] = np.array(errors) * scale_factor
+    if len(field_names) > 2:
+        graph[field_names[2]] = np.array([v[1] for v in values])
 
     return graph

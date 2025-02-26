@@ -13,8 +13,8 @@ def append_text_to_file(file_name, text_buffer, encoding, overwrite=False):
     :return: लिखे गए बाइट्स की संख्या या त्रुटि होने पर 0 से कम।  
     :rtype int  
     """
+    mode = 'wb' if overwrite else 'ab'
     try:
-        mode = 'wb' if overwrite else 'ab'
         with open(file_name, mode) as file:
             byte_data = text_buffer.encode(encoding)
             bytes_written = file.write(byte_data)
