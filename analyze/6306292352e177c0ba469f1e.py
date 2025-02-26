@@ -10,9 +10,9 @@ def process_text_links(text):
         return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
 
     # Regular expression to find URLs in the text
-    url_pattern = r'(https?://[^\s]+|www\.[^\s]+)'
-    
-    # Replace URLs in the text with linkified versions
+    url_pattern = r'(https?://[^\s]+)'
+
+    # Replace plain text URLs with linkified HTML links
     processed_text = re.sub(url_pattern, linkify, text)
 
     return processed_text

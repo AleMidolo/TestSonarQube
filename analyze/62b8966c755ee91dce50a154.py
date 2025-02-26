@@ -83,55 +83,57 @@ def isoparse(self, dt_str):
     tz_pattern = r'([+-]\d{2}:\d{2}|Z|[+-]\d{4}|[+-]\d{2})?'
 
     # Combine patterns
-    iso_pattern = re.compile(f'^{date_pattern}(?:-W{week_pattern})?({time_pattern})?({tz_pattern})?$')
+    full_pattern = rf'^{date_pattern}(?:-W{week_pattern})?({time_pattern})?({tz_pattern})?$'
+    match = re.match(full_pattern, dt_str)
 
-    match = iso_pattern.match(dt_str)
     if not match:
         raise ValueError(f"Invalid ISO-8601 string: {dt_str}")
 
     # Extract date components
     year, month, day = match.group(1), match.group(2), match.group(3)
-    week, week_day = match.group(5), match.group(6)
-    hour, minute, second, microsecond = match.group(7), match.group(8), match.group(9), match.group(10)
-    tz_info = match.group(11)
+    if month is None:
+        month = 1
+    if day is None:
+        day = 1
 
-    # Handle date
-    if week:
-        year, week = int(year), int(week)
-        if week_day:
-            week_day = int(week_day)
-            dt = datetime.fromisocalendar(year, week, week_day)
-        else:
-            dt = datetime.fromisocalendar(year, week, 1)
+    # Handle week date if present
+    week_year, week, week_day = match.group(4), match.group(5), match.group(6)
+    if week_year and week:
+        week_year = int(week_year)
+        week = int(week)
+        week_day = int(week_day) if week_day else 1
+        date = datetime.strptime(f'{week_year}-W{week}-{week_day}', "%Y-W%W-%w")
     else:
-        year = int(year)
-        month = int(month) if month else 1
-        day = int(day) if day else 1
-        dt = datetime(year, month, day)
+        date = datetime(int(year), int(month), int(day))
 
-    # Handle time
-    if hour:
-        hour = int(hour)
-        minute = int(minute) if minute else 0
-        second = int(second) if second else 0
-        microsecond = int(microsecond.ljust(6, '0')) if microsecond else 0
-        dt = dt.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
+    # Extract time components
+    hour, minute, second, microsecond = match.group(7), match.group(8), match.group(9), match.group(10)
+    if hour is None:
+        hour = 0
+    if minute is None:
+        minute = 0
+    if second is None:
+        second = 0
+    if microsecond is None:
+        microsecond = 0
+    else:
+        microsecond = int(microsecond.ljust(6, '0'))  # Pad to 6 digits
+
+    # Create datetime object
+    date = date.replace(hour=int(hour), minute=int(minute), second=int(second), microsecond=microsecond)
 
     # Handle timezone
-    if tz_info == 'Z':
-        dt = dt.replace(tzinfo=tz.tzutc())
-    elif tz_info:
-        sign = 1 if tz_info[0] == '+' else -1
-        if len(tz_info) == 5:  # ±HH:MM
-            hours, minutes = map(int, tz_info[1:].split(':'))
-            offset = timedelta(hours=hours * sign, minutes=minutes * sign)
-        elif len(tz_info) == 3:  # ±HH
-            hours = int(tz_info[1:])
-            offset = timedelta(hours=hours * sign)
-        else:  # ±HHMM
-            hours = int(tz_info[1:3])
-            minutes = int(tz_info[3:5])
-            offset = timedelta(hours=hours * sign, minutes=minutes * sign)
-        dt = dt.replace(tzinfo=tz.tzoffset(None, offset.total_seconds()))
+    tz_offset = match.group(11)
+    if tz_offset == 'Z':
+        date = date.replace(tzinfo=tz.tzutc())
+    elif tz_offset:
+        sign = 1 if tz_offset[0] == '+' else -1
+        if ':' in tz_offset:
+            hours, minutes = map(int, tz_offset[1:].split(':'))
+        else:
+            hours = int(tz_offset[1:3])
+            minutes = 0
+        offset = timedelta(hours=sign * hours, minutes=sign * minutes)
+        date = date.replace(tzinfo=tz.tzoffset(None, offset.total_seconds()))
 
-    return dt
+    return date

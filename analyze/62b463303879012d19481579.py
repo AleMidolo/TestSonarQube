@@ -5,6 +5,7 @@ def _extract_number_and_supplment_from_issue_element(issue):
     number = None
     suppl = None
     
+    # Assuming issue is a string that may contain number and suppl information
     if isinstance(issue, str):
         parts = issue.split()
         for part in parts:
