@@ -12,7 +12,7 @@ def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=Fal
     stderr_option = subprocess.DEVNULL if nascondi_stderr else None
     
     if verbose:
-        print(f"Running command: {' '.join(full_command)} in {cwd}")
+        print(f"Esecuzione comando: {' '.join(full_command)} in {cwd}")
     
     result = subprocess.run(full_command, cwd=cwd, env=env, stderr=stderr_option)
     

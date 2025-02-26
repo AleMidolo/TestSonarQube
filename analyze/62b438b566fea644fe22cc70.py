@@ -7,21 +7,30 @@ def bash_completion():
     # Get the list of commands and options from borgmatic
     try:
         output = subprocess.check_output(['borgmatic', '--help'], universal_newlines=True)
-    except subprocess.CalledProcessError as e:
-        return f"Error while fetching borgmatic help: {e}"
+    except subprocess.CalledProcessError:
+        return ""
 
     # Parse the output to extract commands and options
     commands = []
     options = []
     lines = output.splitlines()
+    command_section = False
+    option_section = False
 
     for line in lines:
-        if line.startswith('  '):  # Indentation indicates options
-            options.append(line.strip())
-        elif line and not line.startswith('Usage:'):  # Non-empty and not usage line
-            commands.append(line.split()[0])  # First word is the command
+        if line.startswith('Commands:'):
+            command_section = True
+            continue
+        elif line.startswith('Options:'):
+            command_section = False
+            option_section = True
+            continue
+        elif command_section and line.strip():
+            commands.append(line.split()[0])  # Get the command name
+        elif option_section and line.strip():
+            options.append(line.split()[0])  # Get the option name
 
-    # Generate bash completion script
+    # Generate the bash completion script
     completion_script = """
 # Bash completion for borgmatic
 _borgmatic_complete() {
@@ -29,18 +38,23 @@ _borgmatic_complete() {
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    
-    commands=({commands})
-    options=({options})
+    commands=({0})
+    options=({1})
 
-    if [[ ${cur} == -* ]]; then
-        COMPREPLY=( $(compgen -W "${options[*]}" -- ${cur}) )
-    else
-        COMPREPLY=( $(compgen -W "${commands[*]}" -- ${cur}) )
+    if [[ ${COMP_CWORD} -eq 1 ]]; then
+        COMPREPLY=( $(compgen -W "${commands[*]}" -- "$cur") )
+        return 0
     fi
+
+    if [[ ${COMP_WORDS[1]} == "help" ]]; then
+        COMPREPLY=( $(compgen -W "${options[*]}" -- "$cur") )
+        return 0
+    fi
+
+    COMPREPLY=( $(compgen -W "${options[*]}" -- "$cur") )
 }
 
 complete -F _borgmatic_complete borgmatic
-""".format(commands=' '.join(commands), options=' '.join(options))
+""".format(' '.join(commands), ' '.join(options))
 
     return completion_script
