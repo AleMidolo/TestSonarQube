@@ -35,7 +35,5 @@ def size_to_bytes(size: str) -> int:
             number_part = size[:-1]
             if number_part.isdigit():
                 return int(number_part) * multiplier
-            else:
-                raise ValueError(f"Invalid size format: {size}")
     
     raise ValueError(f"Invalid size format: {size}")

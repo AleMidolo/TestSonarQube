@@ -13,8 +13,8 @@ def append_text_to_file(file_name, text_buffer, encoding, overwrite=False):
     :return: Il numero di byte scritti o un valore inferiore a 0 in caso di errore.  
     :rtype int  
     """
-    mode = 'w' if overwrite else 'a'
     try:
+        mode = 'w' if overwrite else 'a'
         with open(file_name, mode, encoding=encoding) as file:
             bytes_written = file.write(text_buffer)
             return bytes_written

@@ -3,10 +3,12 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     import sys
 
     if sys.platform == "win32":
+        # Normalize the command for Windows
         normalized_cmd = []
         for part in cmd:
-            if part.startswith("#!") and len(part) > 2:
-                # Handle shebangs
+            # Handle shebangs
+            if part.startswith("#!"):
+                # Normalize shebang path
                 shebang_path = part[2:].strip()
                 if os.path.isabs(shebang_path):
                     normalized_cmd.append(part)
