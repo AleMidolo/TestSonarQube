@@ -15,22 +15,18 @@ def split(s, platform='this'):
         platform = 1 if sys.platform in ['linux', 'darwin'] else 0
 
     if platform == 1:  # POSIX
-        pattern = r'''(?x)            # verbose regex
-            (?:                     # non-capturing group for the whole pattern
-                "([^"\\]*(?:\\.[^"\\]*)*)"  # double-quoted string
-                | '([^'\\]*(?:\\.[^'\\]*)*)'  # single-quoted string
-                | ([^\s"']+)       # unquoted string
-            )
+        pattern = r'''
+            (?:"([^"]*)"|'([^']*)'|([^"\s]+))
         '''
-    elif platform == 0:  # Windows/CMD
-        pattern = r'''(?x)            # verbose regex
-            (?:                     # non-capturing group for the whole pattern
-                "([^"\\]*(?:\\.[^"\\]*)*)"  # double-quoted string
-                | ([^"\s]+)        # unquoted string
-            )
+    elif platform == 0:  # Windows
+        pattern = r'''
+            (?:"([^"]*)"|'([^']*)'|([^"\s]+))
         '''
     else:
         raise ValueError("Unsupported platform value")
 
-    matches = re.findall(pattern, s)
-    return [m[0] or m[1] or m[2] for m in matches]
+    tokens = []
+    for match in re.finditer(pattern, s, re.VERBOSE):
+        tokens.append(match.group(1) or match.group(2) or match.group(3))
+
+    return tokens

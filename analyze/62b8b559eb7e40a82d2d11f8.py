@@ -9,18 +9,18 @@ def minimalBases(classes):
         for base in cls.__bases__:
             class_graph[base].add(cls)
 
-    def find_minimal_bases(cls, visited):
+    def dfs(cls, visited):
         if cls in visited:
             return set()
         visited.add(cls)
-        minimal_bases = {cls}
+        result = {cls}
         for base in cls.__bases__:
-            minimal_bases.update(find_minimal_bases(base, visited))
-        return minimal_bases
+            result.update(dfs(base, visited))
+        return result
 
     minimal_classes = set()
     visited = set()
     for cls in classes:
-        minimal_classes.update(find_minimal_bases(cls, visited))
+        minimal_classes.update(dfs(cls, visited))
 
     return sorted(minimal_classes, key=lambda x: x.__name__)

@@ -9,8 +9,8 @@ def initialize(self):
     os.makedirs(os.path.join(self.storage_root, 'objects'), exist_ok=True)
     os.makedirs(os.path.join(self.storage_root, 'metadata'), exist_ok=True)
     
-    # Create a versioning file or any other initialization files as needed
+    # Create a versioning file or any other necessary initialization files
     with open(os.path.join(self.storage_root, 'version.txt'), 'w') as version_file:
-        version_file.write('OCFL Version 1.0\n')
+        version_file.write('1.0\n')  # Example versioning
     
     # Additional initialization logic can be added here
