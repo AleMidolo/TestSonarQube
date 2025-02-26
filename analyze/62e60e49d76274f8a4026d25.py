@@ -32,10 +32,8 @@ def unit_of_work(metadata=None, timeout=None):
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            # Here you would implement the logic to handle the transaction
-            # and apply the metadata and timeout as needed.
-            # This is a placeholder for the actual transaction handling logic.
-            print(f"Executing transaction with metadata: {metadata} and timeout: {timeout}")
-            return func(*args, **kwargs)
+            # यहाँ ट्रांज़ेक्शन प्रबंधन की लॉजिक को लागू करें
+            # मेटाडेटा और टाइमआउट का उपयोग करें
+            pass  # वास्तविक कार्यान्वयन यहाँ होगा
         return wrapper
     return decorator

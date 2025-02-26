@@ -15,10 +15,10 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     for filename in config_filenames:
         try:
             with open(filename, 'r') as file:
-                config = json.load(file)
+                config_data = json.load(file)
                 if resolve_env:
-                    config = {k: os.path.expandvars(v) for k, v in config.items()}
-                configurations[filename] = config
+                    config_data = {key: os.getenv(value, value) for key, value in config_data.items()}
+                configurations[filename] = config_data
         except Exception as e:
             log_record = logging.LogRecord(
                 name='config_loader',

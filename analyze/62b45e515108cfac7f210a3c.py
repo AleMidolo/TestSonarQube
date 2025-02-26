@@ -6,4 +6,4 @@ def initialize(self):
     self.storage_root = self.create_storage_root()
     self.setup_initial_structure()
     self.initialize_metadata()
-    print("OCFL स्टोरेज रूट सफलतापूर्वक बनाया और प्रारंभ किया।")
+    print("OCFL स्टोरेज रूट सफलतापूर्वक बनाया गया और प्रारंभ किया गया।")

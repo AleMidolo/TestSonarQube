@@ -7,7 +7,7 @@ def process_text_links(text):
     # Regex pattern to find URLs
     url_pattern = r'(https?://[^\s]+)'
     
-    # Function to replace URLs with HTML hyperlinks
+    # Function to replace found URLs with HTML hyperlinks
     def replace_with_hyperlink(match):
         url = match.group(0)
         return f'<a href="{url}" target="_blank">{url}</a>'

@@ -34,6 +34,5 @@ def _eval_file(prefix, file_path):
     # Update the result dictionary
     result['file_type'] = file_type
     result['file_path'] = os.path.join(file_folder, file_path)
-    result['prefix'] = prefix
 
     return result

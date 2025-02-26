@@ -2,8 +2,8 @@ def add_asset(self, basename, file_path):
     """
     Adds an asset to the internal storage with the given basename and file path.
     
-    The function expects a dictionary format where the key is the asset name 
-    and the value is the corresponding file path.
+    The function expects a basename and a file path, and it will store the asset
+    in a dictionary format where the key is the basename and the value is the file path.
     
     Example:
     {

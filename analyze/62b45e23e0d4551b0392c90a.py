@@ -22,14 +22,15 @@ def validate_version_inventories(self, version_dirs):
                     raise ValueError(f"Invalid inventory in {inventory_path}")
 
                 # Record the digests from the root inventory
-                if version == version_dirs[0]:  # Assuming the first version is the root
-                    inventory_digests.update(inventory.get('digests', []))
-                else:
-                    # Check for discrepancies
-                    current_digests = set(inventory.get('digests', []))
-                    different_digests = current_digests - inventory_digests
-                    if different_digests:
-                        discrepancies[version] = different_digests
+                root_inventory_digests = self.get_root_inventory_digests()
+                current_digests = set(item['digest'] for item in inventory.get('items', []))
+
+                # Check for discrepancies
+                different_digests = current_digests - root_inventory_digests
+                if different_digests:
+                    discrepancies[version] = different_digests
+
+                inventory_digests.update(current_digests)
 
         except FileNotFoundError:
             raise FileNotFoundError(f"Inventory file not found: {inventory_path}")

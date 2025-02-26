@@ -21,10 +21,12 @@ def _group_files_by_xml_filename(source, xmls, files):
     grouped_files = {}
     
     for xml in xmls:
-        base_name = xml.split('.')[0]  # Get the base name of the XML file
+        base_name = xml.split('.')[0]  # XML फ़ाइल का बेस नाम प्राप्त करें
         grouped_files[base_name] = []
 
-        for file in files:
+    for file in files:
+        for xml in xmls:
+            base_name = xml.split('.')[0]
             if file.startswith(base_name):
                 grouped_files[base_name].append(file)
 

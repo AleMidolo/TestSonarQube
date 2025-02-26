@@ -7,14 +7,20 @@ def minimalBases(classes):
     def is_subclass(sub, super):
         return issubclass(sub, super)
 
-    # Create a list to hold the minimal bases
-    minimal_classes = []
+    # Create a dictionary to hold the base classes
+    base_classes = defaultdict(set)
 
-    # Sort classes by their depth in the inheritance hierarchy
-    classes.sort(key=lambda cls: cls.__mro__)
-
+    # Populate the base_classes dictionary
     for cls in classes:
-        if not any(is_subclass(cls, min_cls) for min_cls in minimal_classes):
-            minimal_classes.append(cls)
+        for base in cls.__bases__:
+            base_classes[base].add(cls)
 
-    return minimal_classes
+    # Create a list to hold the minimal bases
+    minimal_bases = []
+
+    # Check for minimal bases
+    for cls in classes:
+        if all(not is_subclass(other, cls) for other in minimal_bases):
+            minimal_bases.append(cls)
+
+    return minimal_bases
