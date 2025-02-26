@@ -6,10 +6,9 @@ def popitem(self):
         raise KeyError("popitem(): dictionary is empty")
     
     # Trova la chiave meno recentemente utilizzata
-    lru_key = next(iter(self.data))
-    lru_value = self.data[lru_key]
+    least_recently_used_key = next(iter(self.data))
     
-    # Rimuove la coppia dal dizionario
-    del self.data[lru_key]
+    # Rimuove la coppia chiave-valore
+    value = self.data.pop(least_recently_used_key)
     
-    return lru_key, lru_value
+    return least_recently_used_key, value
