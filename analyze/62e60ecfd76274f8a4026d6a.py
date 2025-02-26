@@ -9,14 +9,13 @@ def protocol_handlers(cls, protocol_version=None):
     :raise TypeError: si la versión del protocolo no se pasa como una tupla
     """
     if protocol_version is not None and not isinstance(protocol_version, tuple):
-        raise TypeError("La versión del protocolo debe ser una tupla")
+        raise TypeError("La versión del protocolo debe ser una tupla.")
 
     # Suponiendo que hay un diccionario de manejadores de protocolo
     handlers = {
-        (3, 5): "HandlerFor3_5",
-        (4, 0): "HandlerFor4_0",
-        (4, 1): "HandlerFor4_1",
-        # Agregar más versiones y sus manejadores según sea necesario
+        (3, 5): "HandlerClassFor3_5",
+        (4, 0): "HandlerClassFor4_0",
+        # Agregar más versiones y sus manejadores aquí
     }
 
     if protocol_version is not None:

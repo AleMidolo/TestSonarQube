@@ -20,14 +20,14 @@ def absorb(self, args):
                 if (a == b) or (b == ('|', a)):
                     result.append(a)
                 elif (a == ('~', b)) or (b == ('~', a)):
-                    result.append((a, '&', b))
+                    result.append(('&', a, b))
                 else:
                     result.append(expr)
             elif op == '|':
                 if (a == b) or (b == ('&', a)):
                     result.append(a)
                 elif (a == ('~', b)) or (b == ('~', a)):
-                    result.append((a, '|', b))
+                    result.append(('|', a, b))
                 else:
                     result.append(expr)
         else:
