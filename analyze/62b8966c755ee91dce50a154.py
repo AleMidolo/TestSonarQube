@@ -62,86 +62,56 @@ def isoparse(self, dt_str):
 
     .. versionadded:: 2.7.0
     """
-    from datetime import datetime, timedelta, timezone
+    from datetime import datetime, timedelta
     import re
+    from dateutil import tz
 
     # Define regex patterns for parsing
     date_pattern = r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?(?:W(\d{2})(?:-?(\d))?)?'
-    time_pattern = r'(\d{2})(?::(\d{2})(?::(\d{2})(?:\.(\d+))?)?)?'
-    offset_pattern = r'Z|([+-]\d{2}):?(\d{2})?|([+-]\d{2})(\d{2})?|([+-]\d{2})'
+    time_pattern = r'T(\d{1,2})(?::(\d{2})(?::(\d{2})(?:\.(\d+))?)?)?'
+    offset_pattern = r'([+-]\d{2}):?(\d{2})?|Z'
 
-    # Split date and time
-    if 'T' in dt_str:
-        date_str, time_str = dt_str.split('T', 1)
-    else:
-        date_str, time_str = dt_str, ''
+    # Split the input string into date and time components
+    match = re.match(date_pattern, dt_str)
+    if not match:
+        raise ValueError("Invalid ISO-8601 date format")
 
-    # Parse date
-    date_match = re.match(date_pattern, date_str)
-    if not date_match:
-        raise ValueError("Invalid date format")
-
-    year, month, day, week, weekday = date_match.groups()
-    year = int(year)
-    if month is not None:
-        month = int(month)
-    if day is not None:
-        day = int(day)
-    if week is not None:
+    year, month, day, week, weekday = match.groups()
+    if week:
+        # Handle ISO week date
         week = int(week)
-    if weekday is not None:
-        weekday = int(weekday)
-
-    if week is not None:
-        # ISO week date
-        if weekday is None:
-            weekday = 1  # Default to Monday
-        date = datetime.fromisocalendar(year, week, weekday)
+        weekday = int(weekday) if weekday else 1
+        date = datetime.strptime(f'{year}-W{week}-{weekday}', "%Y-W%W-%w").date()
     else:
-        # Regular date
-        if month is None:
-            month = 1  # Default to January
-        if day is None:
-            day = 1  # Default to the first day of the month
-        date = datetime(year, month, day)
+        # Handle normal date
+        month = int(month) if month else 1
+        day = int(day) if day else 1
+        date = datetime(year=int(year), month=month, day=day).date()
 
-    # Parse time
-    time_match = re.match(time_pattern, time_str)
+    # Handle time component if present
+    time_match = re.search(time_pattern, dt_str)
     if time_match:
         hour, minute, second, microsecond = time_match.groups()
-        hour = int(hour) if hour else 0
+        hour = int(hour)
         minute = int(minute) if minute else 0
         second = int(second) if second else 0
         microsecond = int(microsecond.ljust(6, '0')) if microsecond else 0
     else:
         hour, minute, second, microsecond = 0, 0, 0, 0
 
-    # Handle midnight case
-    if hour == 24:
-        hour = 0
-        date += timedelta(days=1)
+    # Create datetime object
+    dt = datetime.combine(date, datetime.min.time()).replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
 
-    # Combine date and time
-    dt = date.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
-
-    # Parse offset
+    # Handle timezone offset if present
     offset_match = re.search(offset_pattern, dt_str)
     if offset_match:
-        if offset_match.group(0) == 'Z':
-            tzinfo = timezone.utc
+        offset = offset_match.groups()
+        if offset[0] == 'Z':
+            tzinfo = tz.tzutc()
         else:
-            sign = offset_match.group(1) or offset_match.group(3) or offset_match.group(5)
-            if sign:
-                sign = 1 if sign[0] == '+' else -1
-                hours = int(offset_match.group(2) or offset_match.group(4) or offset_match.group(6))
-                minutes = int(offset_match.group(2) or 0)
-                tzinfo = timezone(timedelta(hours=sign * hours, minutes=sign * minutes))
-            else:
-                tzinfo = None
-    else:
-        tzinfo = None
-
-    if tzinfo:
+            sign, hours, minutes = offset
+            total_offset = int(hours) * 3600 + (int(minutes) if minutes else 0) * 60
+            tzinfo = tz.tzoffset(None, total_offset)
         dt = dt.replace(tzinfo=tzinfo)
 
     return dt

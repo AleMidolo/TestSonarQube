@@ -13,7 +13,7 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     """
     import json
 
-    nodeinfo_document = {
+    nodeinfo = {
         "version": "2.0",
         "software": {
             "name": "YourSoftwareName",
@@ -39,20 +39,10 @@ def get_nodeinfo_well_known_document(url, document_path=None):
             ]
         },
         "metadata": {
-            "description": "A brief description of the node.",
-            "icon": {
-                "type": "image/png",
-                "url": f"{url}/path/to/icon.png"
+            "nodeinfo": {
+                "url": f"{url}/{document_path}" if document_path else f"{url}/.well-known/nodeinfo"
             }
         }
     }
 
-    if document_path:
-        nodeinfo_url = f"{url}/{document_path}"
-    else:
-        nodeinfo_url = f"{url}/.well-known/nodeinfo"
-
-    return {
-        "nodeinfo": nodeinfo_url,
-        "data": nodeinfo_document
-    }
+    return nodeinfo

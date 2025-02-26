@@ -17,7 +17,7 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     exc_message = str(e)
 
     # Format the exception message
-    formatted_message = f"{exc_type}: {exc_message}"
+    formatted_message = f"{exc_type}: {exc_message}\n"
 
     # Get the traceback
     tb = traceback.extract_tb(e.__traceback__)
@@ -26,13 +26,13 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     tb = tb[:max_level]
 
     # Format the traceback
-    formatted_tb = []
     for frame in tb:
         filename, lineno, funcname, code = frame
-        # Limit the path to max_path_level
-        path_parts = filename.split('/')
-        limited_path = '/'.join(path_parts[-max_path_level:]) if len(path_parts) > max_path_level else filename
-        formatted_tb.append(f"File \"{limited_path}\", line {lineno}, in {funcname}\n    {code}")
+        formatted_message += f"  File \"{filename}\", line {lineno}, in {funcname}\n"
+        formatted_message += f"    {code}\n"
 
-    # Combine the formatted message and traceback
-    return formatted_message + "\n" + "\n".join(formatted_tb)
+    # Limit the number of paths shown
+    if len(tb) > max_path_level:
+        formatted_message += f"  ... (truncated to {max_path_level} frames)\n"
+
+    return formatted_message

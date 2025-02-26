@@ -14,4 +14,4 @@ def vertex3tuple(vertices):
     # A    B    C    D  -> वर्टेक्स का क्रम
     """
     n = len(vertices)
-    return [(vertices[(i-1) % n], vertices[i], vertices[(i+1) % n]) for i in range(n)]
+    return [vertices[(i-1) % n] + vertices[i] + vertices[(i+1) % n] for i in range(n)]

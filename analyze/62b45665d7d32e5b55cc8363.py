@@ -8,14 +8,14 @@ def make_parsers():
     top_parser = argparse.ArgumentParser(description='Top-level parser')
     
     # सबपार्सर बनाना
-    subparsers = top_parser.add_subparsers(dest='command', help='Sub-command help')
+    subparsers = top_parser.add_subparsers(dest='command', required=True)
 
     # एक सबपार्सर जोड़ना
-    sub_parser_a = subparsers.add_parser('command_a', help='Command A help')
-    sub_parser_a.add_argument('--option', type=str, help='Option for command A')
+    subparser_a = subparsers.add_parser('command_a', help='Help for command_a')
+    subparser_a.add_argument('--option_a', type=str, help='Option for command_a')
 
     # एक और सबपार्सर जोड़ना
-    sub_parser_b = subparsers.add_parser('command_b', help='Command B help')
-    sub_parser_b.add_argument('--flag', action='store_true', help='Flag for command B')
+    subparser_b = subparsers.add_parser('command_b', help='Help for command_b')
+    subparser_b.add_argument('--option_b', type=int, help='Option for command_b')
 
     return top_parser, subparsers
