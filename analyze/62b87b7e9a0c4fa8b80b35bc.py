@@ -13,11 +13,8 @@ def _update_context(self, context):
     在此过程中，图对象实际上并未被真正销毁。
     """
     # 假设 self 有属性 error_indices 和 coordinates
-    if not hasattr(context, 'error'):
-        context.error = {}
-    
     for i, coord in enumerate(self.coordinates):
-        if coord in self.error_indices:
-            context.error[f"{coord}_low"] = {"index": i}
+        if coord in context.error:
+            context.error[coord] = {"index": self.error_indices[i]}
     
     # 这里可以添加更多的逻辑来更新 context 的其他部分
