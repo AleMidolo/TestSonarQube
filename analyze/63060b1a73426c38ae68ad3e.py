@@ -21,8 +21,8 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     plugin_spec_path = os.path.join(plugin_dir, 'plugin_spec.json')
     
     if not os.path.exists(plugin_spec_path):
-        raise FileNotFoundError(f"Plugin specification file not found at {plugin_spec_path}")
-
+        raise FileNotFoundError(f"Il file {plugin_spec_path} non esiste.")
+    
     with open(plugin_spec_path, 'r') as f:
         plugin_spec = json.load(f)
 

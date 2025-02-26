@@ -10,4 +10,4 @@ def pop_u16(self):
     self.data = self.data[:-2]
     
     # Converti i byte in un intero senza segno a 16 bit in formato big-endian
-    return int.from_bytes(last_two_bytes, byteorder='big', signed=False)
+    return (last_two_bytes[0] << 8) | last_two_bytes[1]

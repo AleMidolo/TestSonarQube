@@ -18,12 +18,21 @@ def scale(self, other=None):
     if other is None:
         return self.scale_value  # Assuming scale_value is an attribute of the class
 
-    if not isinstance(other, (int, float)):
-        raise ValueError("Il valore di 'other' deve essere un numero.")
+    if not isinstance(other, (int, float)) or other <= 0:
+        raise LenaValueError("La scala deve essere un valore numerico positivo.")
 
-    if self.scale_value is None or self.scale_value == 0:
-        raise LenaValueError("La scala è sconosciuta o pari a zero.")
+    # Assuming the graph has attributes for coordinates and errors
+    if hasattr(self, 'coordinates') and len(self.coordinates) > 0:
+        last_coordinate = self.coordinates[-1]
+        # Scale the last coordinate
+        scaled_coordinate = last_coordinate * other
+        self.coordinates[-1] = scaled_coordinate
 
-    # Assuming we have a method to resize the graph
-    self.resize_graph(other)
-    return other
+        # Scale associated errors if they exist
+        if hasattr(self, 'errors'):
+            for i in range(len(self.errors)):
+                self.errors[i] *= other
+
+        self.scale_value = other  # Update the scale value
+    else:
+        raise LenaValueError("La scala del grafico è sconosciuta o pari a zero.")

@@ -34,27 +34,26 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         make_value = lambda bin_: bin_
 
     coordinates = []
-    values = []
-
     for bin_ in hist:
         if get_coordinate == "left":
-            coordinate = bin_.left
+            x = bin_.left
         elif get_coordinate == "right":
-            coordinate = bin_.right
+            x = bin_.right
         elif get_coordinate == "middle":
-            coordinate = bin_.center
+            x = bin_.center
         else:
             raise ValueError("Invalid value for get_coordinate")
 
-        value = make_value(bin_)
-        coordinates.append(coordinate)
-        values.append(value)
+        values = make_value(bin_)
+        coordinates.append((x, *values))
 
     if scale is True:
         # Implement scaling logic based on histogram if needed
         pass
 
-    graph = {field_names[i]: values[i] for i in range(len(field_names))}
-    graph['coordinates'] = coordinates
+    graph = {field: [] for field in field_names}
+    for coord in coordinates:
+        for i, value in enumerate(coord):
+            graph[field_names[i]].append(value)
 
     return graph
