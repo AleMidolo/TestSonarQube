@@ -26,21 +26,27 @@ def parse_frequency(frequency):
     # Map the unit to the corresponding timedelta argument
     unit_mapping = {
         'second': 'seconds',
-        'second': 'seconds',
+        'seconds': 'seconds',
         'minute': 'minutes',
+        'minutes': 'minutes',
         'hour': 'hours',
+        'hours': 'hours',
         'day': 'days',
+        'days': 'days',
         'week': 'weeks',
+        'weeks': 'weeks',
         'month': 'days',  # Approximation: 1 month = 30 days
-        'year': 'days'    # Approximation: 1 year = 365 days
+        'months': 'days',  # Approximation: 1 month = 30 days
+        'year': 'days',    # Approximation: 1 year = 365 days
+        'years': 'days'    # Approximation: 1 year = 365 days
     }
     
     if unit.lower() in unit_mapping:
-        if unit.lower() in ['month', 'year']:
-            if unit.lower() == 'month':
-                return datetime.timedelta(days=value * 30)
-            else:
-                return datetime.timedelta(days=value * 365)
-        return datetime.timedelta(**{unit_mapping[unit.lower()]: value})
+        if unit.lower() in ['month', 'months']:
+            return datetime.timedelta(days=value * 30)  # Approximation
+        elif unit.lower() in ['year', 'years']:
+            return datetime.timedelta(days=value * 365)  # Approximation
+        else:
+            return datetime.timedelta(**{unit_mapping[unit.lower()]: value})
     
     raise ValueError(f"Cannot parse frequency: {frequency}")

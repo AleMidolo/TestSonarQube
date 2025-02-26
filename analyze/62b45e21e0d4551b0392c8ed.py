@@ -16,15 +16,19 @@ def find_path_type(path):
         return "Path does not exist"
 
     if os.path.isdir(path):
-        namaste_files = [f for f in os.listdir(path) if f.startswith("0=")]
-        if any(f.endswith('.json') for f in namaste_files):
+        # Check for OCFL Storage Root
+        if any(file.startswith("0=") for file in os.listdir(path)):
             return 'root'
-        elif any(f.endswith('.txt') for f in namaste_files):
-            return 'object'
-        else:
-            return 'unknown directory type'
-    
+        
+        # Check for OCFL Object
+        for item in os.listdir(path):
+            item_path = os.path.join(path, item)
+            if os.path.isdir(item_path) and any(file.startswith("0=") for file in os.listdir(item_path)):
+                return 'object'
+        
+        return "Directory does not contain valid OCFL structure"
+
     elif os.path.isfile(path):
         return 'file'
     
-    return 'other: not a valid path type'
+    return "Unknown path type"

@@ -24,4 +24,4 @@ def get_nested_custom_and_control_args(self, args):
         elif key.startswith('custom_'):
             custom_args[key] = value
 
-    return control_args, {**nested_args, **custom_args}
+    return control_args, nested_args

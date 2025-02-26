@@ -8,25 +8,23 @@ def lfu_cache(maxsize=128, typed=False):
     algorithm.
     """
     cache = {}
-    frequency = defaultdict(int)
-    order = []
+    usage_count = defaultdict(int)
 
     @wraps(func)
     def wrapper(*args, **kwargs):
         key = args if not typed else (args, frozenset(kwargs.items()))
         if key in cache:
-            frequency[key] += 1
+            usage_count[key] += 1
             return cache[key]
         
         result = func(*args, **kwargs)
         if len(cache) >= maxsize:
-            lfu_key = min(order, key=lambda k: frequency[k])
+            lfu_key = min(usage_count, key=usage_count.get)
             del cache[lfu_key]
-            order.remove(lfu_key)
+            del usage_count[lfu_key]
         
         cache[key] = result
-        frequency[key] += 1
-        order.append(key)
+        usage_count[key] += 1
         return result
 
     return wrapper

@@ -15,9 +15,9 @@ def _normalizeargs(sequence, output=None):
             output.extend(_normalizeargs(item))
         elif isinstance(item, list):
             output.extend(_normalizeargs(item))
-        elif isinstance(item, dict):
-            output.extend(_normalizeargs(item.values()))
-        else:
+        elif isinstance(item, str) or isinstance(item, int):
             output.append(item)
+        else:
+            output.append(str(item))
 
     return output

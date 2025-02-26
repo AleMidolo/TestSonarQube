@@ -6,6 +6,6 @@ def is_ipv4(target):
     """
     pattern = r'^(\d{1,3}\.){3}\d{1,3}$'
     if re.match(pattern, target):
-        octets = target.split('.')
-        return all(0 <= int(octet) <= 255 for octet in octets)
+        parts = target.split('.')
+        return all(0 <= int(part) <= 255 for part in parts)
     return False

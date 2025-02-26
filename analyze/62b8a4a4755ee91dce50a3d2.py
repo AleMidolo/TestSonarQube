@@ -12,25 +12,22 @@ def _fromutc(self, dt):
         A timezone-aware :class:`datetime.datetime` object.
     """
     if dt.tzinfo is None:
-        raise ValueError("dt must be a timezone-aware datetime")
+        raise ValueError("dt must be timezone-aware")
 
     # Get the UTC offset for the given datetime
     utc_offset = dt.utcoffset()
     
-    # Convert the datetime to UTC
-    utc_dt = dt - utc_offset
-    
-    # Now convert the UTC datetime to the new timezone
-    new_dt = utc_dt.astimezone(self)
-
-    # Check for ambiguity in the new timezone
-    if new_dt.dst() != timedelta(0):
-        # If the new datetime has a non-zero DST offset, it may be ambiguous
-        if new_dt.fold == 0:
-            # If it's the first occurrence, we return it as is
-            return new_dt
+    # Check if the datetime is ambiguous (in a fold)
+    if dt.dst() is not None and dt.dst() != timedelta(0):
+        # If there is a daylight saving time transition, check the fold
+        if dt.fold == 0:
+            # This is the first occurrence of the ambiguous datetime
+            new_dt = dt - utc_offset
         else:
-            # If it's the second occurrence, we need to adjust
-            return new_dt - new_dt.dst()
-    
-    return new_dt
+            # This is the second occurrence of the ambiguous datetime
+            new_dt = dt - utc_offset + self.dst(dt)
+    else:
+        # If there is no ambiguity, just convert to the new timezone
+        new_dt = dt - utc_offset + self.utcoffset(dt)
+
+    return new_dt.replace(tzinfo=self)
