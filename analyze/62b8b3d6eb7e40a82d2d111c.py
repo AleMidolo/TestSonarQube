@@ -16,6 +16,6 @@ def _normalizeargs(sequence, output=None):
         else:
             if output is not None:
                 output.append(item)
-            normalized.append(item)  # Expand the item if it's not a valid interface
+            normalized.append(item)  # Expand anything else
 
     return normalized

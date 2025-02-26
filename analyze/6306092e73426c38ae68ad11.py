@@ -8,10 +8,10 @@ def merge_extra_vars(vars_dict, extra_vars=None):
     if extra_vars is None:
         return vars_dict
     
-    for var in extra_vars:
-        if isinstance(var, dict):
-            vars_dict.update(var)
+    for extra_var in extra_vars:
+        if isinstance(extra_var, dict):
+            vars_dict.update(extra_var)
         else:
-            raise ValueError("Cada elemento en extra_vars debe ser un diccionario.")
+            raise ValueError("Cada extra-var debe ser un diccionario.")
     
     return vars_dict

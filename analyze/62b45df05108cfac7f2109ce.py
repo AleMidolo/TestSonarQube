@@ -9,11 +9,11 @@ def validate(self, path):
         if not os.path.exists(path):
             return False
         
-        # Aquí se realizarían las validaciones necesarias
-        # Por ejemplo, verificar la estructura de directorios, archivos, etc.
+        # Aquí se realizarían las validaciones específicas del objeto OCFL
+        # Por ejemplo, verificar la estructura de directorios, archivos requeridos, etc.
         
         # Si todas las validaciones pasan, se devuelve True
         return True
     except Exception as e:
-        # En caso de error, se puede registrar el error o manejarlo
+        # En caso de error, se puede registrar el error o manejarlo según sea necesario
         return False

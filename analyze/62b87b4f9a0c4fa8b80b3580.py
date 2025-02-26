@@ -9,10 +9,9 @@ def integral(bins, edges):
     if len(bins) != len(edges) - 1:
         raise ValueError("Length of bins must be one less than length of edges.")
     
-    # Calculate the width of each bin
-    widths = edges[1:] - edges[:-1]
-    
-    # Calculate the integral as the sum of the area of each bin
-    integral_value = sum(bins * widths)
+    integral_value = 0.0
+    for i in range(len(bins)):
+        width = edges[i + 1] - edges[i]
+        integral_value += bins[i] * width
     
     return integral_value

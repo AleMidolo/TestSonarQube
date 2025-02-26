@@ -14,18 +14,18 @@ def remove_ending_os_sep(input_list):
     Excepciones:
         TypeError
     """
+    import os
+
     if not isinstance(input_list, list):
         raise TypeError("input_list debe ser una lista de cadenas")
-    
-    import os
-    
-    path_sep = os.path.sep
+
     processed_list = []
-    
     for item in input_list:
-        if isinstance(item, str) and len(item) > 1 and item.endswith(path_sep):
+        if not isinstance(item, str):
+            raise TypeError("Todos los elementos de input_list deben ser cadenas")
+        if len(item) > 1 and item[-1] == os.sep:
             processed_list.append(item[:-1])
         else:
             processed_list.append(item)
-    
+
     return processed_list
