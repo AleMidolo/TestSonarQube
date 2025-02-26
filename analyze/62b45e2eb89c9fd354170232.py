@@ -8,20 +8,7 @@ def next_version(version):
     parts = version.split('.')
     
     # Convert the last part to an integer and increment it
-    last_part = int(parts[-1]) + 1
+    parts[-1] = str(int(parts[-1]) + 1)
     
-    # Check if we need to carry over
-    if last_part == 10:
-        last_part = 0
-        # Increment the second last part
-        if len(parts) > 1:
-            second_last_part = int(parts[-2]) + 1
-            parts[-2] = str(second_last_part)
-        else:
-            parts.insert(0, '1')  # If there's no second last part, we add a new major version
-    
-    # Update the last part
-    parts[-1] = str(last_part)
-    
-    # Join the parts back together
+    # Join the parts back together to form the new version
     return '.'.join(parts)

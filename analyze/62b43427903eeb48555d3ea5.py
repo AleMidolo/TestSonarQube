@@ -31,4 +31,4 @@ def format(
             sql = sql.replace(f"${index + 1}", str(value))
         return sql, list(params)
     else:
-        raise TypeError("params must be a dict or a sequence")
+        raise TypeError("params must be a dictionary or a sequence")

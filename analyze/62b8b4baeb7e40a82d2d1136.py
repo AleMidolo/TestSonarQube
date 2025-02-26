@@ -31,7 +31,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
 
     errors = []
 
-    if not tentative and not providedBy(candidate)(iface):
+    if not tentative and not providedBy(candidate, iface):
         errors.append(f"{candidate} does not provide {iface}")
 
     required_methods = getattr(iface, '__required_methods__', [])

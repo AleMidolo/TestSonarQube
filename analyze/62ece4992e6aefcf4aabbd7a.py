@@ -6,4 +6,4 @@ def is_gitbash():
 
     :return: यदि Gitbash है तो True
     """
-    return os.environ.get('TERM', '').lower() == 'xterm' and 'git' in os.environ.get('SHELL', '')
+    return os.environ.get('TERM', '').startswith('xterm') and 'git' in os.environ.get('SHELL', '')
