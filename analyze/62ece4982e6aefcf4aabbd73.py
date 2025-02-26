@@ -13,11 +13,14 @@ def split(s, platform='this'):
       - (altri valori riservati).
     """
     if platform == 'this':
-        platform = 1 if sys.platform.startswith(('linux', 'darwin')) else 0
+        platform = 1 if sys.platform.startswith('linux') or sys.platform == 'darwin' else 0
 
     if platform == 1:  # POSIX
-        pattern = r'(?<!\\)"([^"]*(?:\\.[^"]*)*)"(?!\\)|(?<!\\)\'([^\']*(?:\\.[^\']*)*)\'(?!\\)|(?<!\\)(\S+)'
-    else:  # Windows/CMD
-        pattern = r'(?<!\\)"([^"]*(?:\\.[^"]*)*)"(?!\\)|(?<!\\)(\S+)'
+        pattern = r'(?:"([^"]*)"|\'([^\']*)|(\S+))'
+    elif platform == 0:  # Windows
+        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+))'
+    else:
+        raise ValueError("Unsupported platform value")
 
-    return [match.group(0) for match in re.finditer(pattern, s)]
+    matches = re.findall(pattern, s)
+    return [m[0] or m[1] or m[2] for m in matches]

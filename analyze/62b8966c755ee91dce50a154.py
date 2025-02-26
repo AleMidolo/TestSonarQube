@@ -78,20 +78,20 @@ def isoparse(self, dt_str):
         r'(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})',  # YYYY-MM-DD
         r'(?P<year>\d{4})-(?P<week>\d{2})-?(?P<day>\d)?',  # YYYY-Www or YYYY-Www-D
         r'(?P<year>\d{4})-(?P<month>\d{2})',                # YYYY-MM
-        r'(?P<year>\d{4})',                                 # YYYY
+        r'(?P<year>\d{4})'                                 # YYYY
     ]
-
+    
     time_patterns = [
         r'(?P<hour>\d{1,2}):(?P<minute>\d{2}):?(?P<second>\d{2})?\.?(?P<microsecond>\d{1,6})?',  # hh:mm:ss.ssssss
         r'(?P<hour>\d{1,2}):(?P<minute>\d{2})',  # hh:mm
         r'(?P<hour>\d{1,2})',                     # hh
     ]
-
+    
     tz_patterns = [
         r'Z',  # UTC
         r'(?P<sign>[+-])(?P<hour>\d{2}):?(?P<minute>\d{2})?',  # ±HH:MM
         r'(?P<sign>[+-])(?P<hour>\d{2})(?P<minute>\d{2})?',    # ±HHMM
-        r'(?P<sign>[+-])(?P<hour>\d{2})',                        # ±HH
+        r'(?P<sign>[+-])(?P<hour>\d{2})'                        # ±HH
     ]
 
     # Combine patterns
@@ -101,49 +101,39 @@ def isoparse(self, dt_str):
 
     match = re.match(full_pattern, dt_str)
     if not match:
-        raise ValueError("Invalid ISO-8601 date string")
+        raise ValueError("Invalid ISO-8601 string")
 
-    # Extract date components
-    date_components = match.groupdict()
-    year = int(date_components['year'])
-    month = int(date_components.get('month', 1))
-    day = int(date_components.get('day', 1))
+    date_parts = match.group('date')
+    time_parts = match.group('time')
+    tz_part = match.group('tz')
 
-    # Handle week-based dates
-    if date_components.get('week'):
-        week = int(date_components['week'])
-        day = int(date_components.get('day', 1)) or 1
-        # Calculate the first day of the year
-        first_day_of_year = datetime(year, 1, 1)
-        # Calculate the first Monday of the year
-        first_monday = first_day_of_year + timedelta(days=(7 - first_day_of_year.isoweekday()) % 7)
-        # Calculate the date
-        date = first_monday + timedelta(weeks=week - 1, days=day - 1)
+    # Parse date
+    if '-' in date_parts:
+        year, month, day = map(int, date_parts.split('-'))
     else:
-        date = datetime(year, month, day)
+        year = int(date_parts)
+        month = day = 1  # Default values
 
-    # Extract time components
-    if date_components.get('time'):
-        time_components = date_components['time'].split(':')
-        hour = int(time_components[0])
-        minute = int(time_components[1]) if len(time_components) > 1 else 0
-        second = int(time_components[2]) if len(time_components) > 2 else 0
-        microsecond = int(time_components[3]) if len(time_components) > 3 else 0
-        time = date.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
+    # Parse time
+    if time_parts:
+        hour = int(time_parts[0:2])
+        minute = int(time_parts[3:5]) if len(time_parts) > 2 else 0
+        second = int(time_parts[6:8]) if len(time_parts) > 5 else 0
+        microsecond = int(time_parts[9:]) if len(time_parts) > 8 else 0
     else:
-        time = date
+        hour = minute = second = microsecond = 0
 
-    # Handle timezone
-    tz_info = None
-    if date_components.get('tz'):
-        tz_str = date_components['tz']
-        if tz_str == 'Z':
-            tz_info = tz.tzutc()
-        else:
-            sign = 1 if tz_str[0] == '+' else -1
-            hour = int(tz_str[1:3])
-            minute = int(tz_str[3:5]) if len(tz_str) > 3 else 0
-            tz_info = tz.tzoffset(None, sign * (hour * 3600 + minute * 60))
+    # Parse timezone
+    if tz_part == 'Z':
+        tzinfo = tz.tzutc()
+    elif tz_part:
+        sign = 1 if tz_part[0] == '+' else -1
+        tz_hour = int(tz_part[1:3])
+        tz_minute = int(tz_part[4:6]) if len(tz_part) > 3 else 0
+        tzinfo = tz.tzoffset(None, sign * (tz_hour * 3600 + tz_minute * 60))
+    else:
+        tzinfo = None
 
-    # Return the final datetime object
-    return time.replace(tzinfo=tz_info)
+    # Create datetime object
+    dt = datetime(year, month, day, hour, minute, second, microsecond, tzinfo)
+    return dt

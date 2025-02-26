@@ -15,6 +15,7 @@ def protocol_handlers(cls, protocol_version=None):
     protocol_handlers_dict = {
         (3, 0): "HandlerV3_0",
         (3, 1): "HandlerV3_1",
+        (3, 2): "HandlerV3_2",
         (3, 5): "HandlerV3_5",
         (4, 0): "HandlerV4_0",
     }
