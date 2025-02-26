@@ -35,8 +35,9 @@ def prepare_repository_from_archive(
     else:
         raise ValueError("Unsupported archive format: {}".format(file_extension))
     
-    # Return the path to the extracted repository
+    # If a filename is provided, return the path to that file
     if filename:
         return str(tmp_path / filename)
-    else:
-        return str(tmp_path)
+    
+    # Otherwise, return the path to the extracted directory
+    return str(tmp_path)

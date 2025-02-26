@@ -18,5 +18,5 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         की वैल्यू प्राप्त करता है और कुछ भी लौटाने के लिए स्वतंत्र है।
     :param handlers: हैंडलर फ़ंक्शन जो लौटाए गए Response ऑब्जेक्ट में पास किए जाते हैं।
     """
-    # Implementation goes here
+    # Implementation of the discard function
     pass

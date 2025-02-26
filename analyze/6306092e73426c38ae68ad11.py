@@ -11,5 +11,7 @@ def merge_extra_vars(vars_dict, extra_vars=None):
     for var in extra_vars:
         if isinstance(var, dict):
             vars_dict.update(var)
+        else:
+            raise ValueError("Each item in extra_vars must be a dictionary.")
     
     return vars_dict

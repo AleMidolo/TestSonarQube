@@ -5,23 +5,20 @@ class ValidationError(Exception):
         self.messages = messages
 
 def _validate_labels(labels):
-    regex_key = r'^[a-zA-Z_][a-zA-Z0-9_]*$'
-    regex_value = r'^[a-zA-Z0-9]+$'
     errors = []
+    key_regex = r'^[a-zA-Z_][a-zA-Z0-9_]*$'  # Example regex for keys
+    value_regex = r'^[a-zA-Z0-9]+$'  # Example regex for values
 
     for key, value in labels.items():
-        if not isinstance(key, str) or not re.match(regex_key, key):
-            errors.append({key: f"Label key '{key}' does not match the regex [{regex_key}]"})
+        if not isinstance(key, str) or not re.match(key_regex, key):
+            errors.append({key: f"Label key '{key}' does not match the regex [{key_regex}]"})
         
-        if isinstance(value, str):
-            if not re.match(regex_value, value):
-                errors.append({value: 'expected string or bytes-like object'})
-        elif isinstance(value, list):
+        if isinstance(value, list):
             for item in value:
-                if not isinstance(item, str) or not re.match(regex_value, item):
+                if not isinstance(item, str) or not re.match(value_regex, item):
                     errors.append({str(value): 'expected string or bytes-like object'})
-        else:
-            errors.append({str(key): 'expected string or bytes-like object'})
+        elif not isinstance(value, str) or not re.match(value_regex, value):
+            errors.append({str(value): 'expected string or bytes-like object'})
 
     if errors:
         raise ValidationError(errors)

@@ -6,6 +6,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     :वापसी: डिक्शनरी (dict)
     """
     import requests
+    import json
 
     # Construct the webfinger URL
     webfinger_url = f"https://{handle}/.well-known/webfinger?resource=acct:{handle}"
@@ -16,7 +17,8 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     # Check if the request was successful
     if response.status_code == 200:
         # Parse the JSON response
-        return response.json()
+        webfinger_data = response.json()
+        return webfinger_data
     else:
         # Handle errors (e.g., user not found, server error)
         return {"error": "Unable to retrieve webfinger document", "status_code": response.status_code}

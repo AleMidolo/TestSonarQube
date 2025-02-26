@@ -33,23 +33,21 @@ def verifyObject(iface, candidate, tentative=False):
     if not tentative and not providedBy(candidate, iface):
         errors.append(f"{candidate} does not provide {iface}")
 
-    required_methods = iface.names()
+    required_methods = iface.names()  # Assuming iface has a method to get required methods
     for method_name in required_methods:
         if not hasattr(candidate, method_name):
-            errors.append(f"{candidate} is missing method {method_name}")
+            errors.append(f"{candidate} is missing required method {method_name}")
             continue
         
         method = getattr(candidate, method_name)
-        expected_signature = iface.method(method_name).signature
-        actual_signature = signature(method)
+        expected_signature = iface.method_signature(method_name)  # Assuming iface has a way to get method signature
+        if signature(method) != expected_signature:
+            errors.append(f"{method_name} signature does not match expected signature")
 
-        if expected_signature != actual_signature:
-            errors.append(f"Method {method_name} signature does not match: expected {expected_signature}, got {actual_signature}")
-
-    required_attributes = iface.attributes()
+    required_attributes = iface.attributes()  # Assuming iface has a method to get required attributes
     for attr_name in required_attributes:
         if not hasattr(candidate, attr_name):
-            errors.append(f"{candidate} is missing attribute {attr_name}")
+            errors.append(f"{candidate} is missing required attribute {attr_name}")
 
     if errors:
         if len(errors) == 1:

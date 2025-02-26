@@ -25,6 +25,6 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     """
     # Implementation of the function goes here
     # This is a placeholder for the actual logic
-    response = self._create_response(mode, bookmarks, metadata, timeout, db, imp_user, dehydration_hooks, hydration_hooks, **handlers)
-    self.output_queue.append(response)
+    response = self._create_response_object()
+    # Add logic to handle the parameters and create the BEGIN message
     return response

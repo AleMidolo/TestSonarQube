@@ -13,6 +13,6 @@ def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
     if not all:
         # Return only the names of the attributes
         return [attr["name"] for attr in attributes]
-    else:
-        # Return both names and descriptions
-        return [(attr["name"], attr["description"]) for attr in attributes]
+    
+    # Return both names and descriptions
+    return [(attr["name"], attr["description"]) for attr in attributes]

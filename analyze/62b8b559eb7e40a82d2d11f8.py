@@ -4,21 +4,20 @@ def minimalBases(classes):
     """
     from collections import defaultdict
 
-    def find_parent(cls):
-        if cls not in parent_map:
-            return cls
-        root = find_parent(parent_map[cls])
-        parent_map[cls] = root
-        return root
+    def find_parent(class_name):
+        if class_name not in parent:
+            return class_name
+        if parent[class_name] != class_name:
+            parent[class_name] = find_parent(parent[class_name])
+        return parent[class_name]
 
-    parent_map = {}
+    parent = {}
     for cls in classes:
         for base in cls.__bases__:
-            parent_map[base] = cls
+            parent[base.__name__] = cls.__name__
 
-    unique_bases = set()
+    minimal_classes = set()
     for cls in classes:
-        root = find_parent(cls)
-        unique_bases.add(root)
+        minimal_classes.add(find_parent(cls.__name__))
 
-    return sorted(unique_bases, key=lambda x: x.__name__)
+    return sorted(minimal_classes)

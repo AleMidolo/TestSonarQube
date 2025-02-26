@@ -10,7 +10,7 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     """
     flat_dict = {}
 
-    for root, dirs, files in os.walk(plugin_dir):
+    for root, _, files in os.walk(plugin_dir):
         for file in files:
             if file.endswith('.json'):
                 file_path = os.path.join(root, file)
