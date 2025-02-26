@@ -14,13 +14,12 @@ def update_last_applied_manifest_list_from_resp(
     Questa funzione attraversa tutti i campi osservati e inizializza il loro valore 
     in ``last_applied_manifest`` se non sono ancora presenti.
     """
-    for field in observer_schema:
+    for schema in observer_schema:
+        field = schema.get('field')
         if field not in last_applied_manifest:
             last_applied_manifest[field] = response.get(field, None)
-        elif isinstance(last_applied_manifest[field], list) and isinstance(response.get(field), list):
-            last_applied_manifest[field].extend(response[field])
-        elif isinstance(last_applied_manifest[field], dict) and isinstance(response.get(field), dict):
+        if isinstance(schema.get('children'), list):
             update_last_applied_manifest_list_from_resp(
-                last_applied_manifest[field], observer_schema[field], response[field]
+                last_applied_manifest[field], schema['children'], response.get(field, {})
             )
     return last_applied_manifest

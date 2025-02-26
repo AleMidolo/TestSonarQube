@@ -12,7 +12,7 @@ def find_roots(graph, rdflib.RDFS.subClassOf):
         subclasses.add(child)
 
     for child in subclasses:
-        if child not in subclasses:
+        if (child, rdflib.RDFS.subClassOf, None) not in graph:
             roots.add(child)
 
     return roots

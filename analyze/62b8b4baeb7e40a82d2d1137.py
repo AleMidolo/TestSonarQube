@@ -23,7 +23,7 @@ def verifyObject(iface, candidate, tentative=False):
 
     errors = []
 
-    if not tentative and not providedBy(candidate).provides(iface):
+    if not tentative and not providedBy(candidate).isOrExtends(iface):
         errors.append(f"{candidate} does not provide {iface}")
 
     required_methods = iface.names().keys()

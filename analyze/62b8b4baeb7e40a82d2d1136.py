@@ -23,41 +23,34 @@ def _verify(iface, candidate, tentative=False, vtype=None):
 
     errors = []
 
-    if not tentative and not providedBy(candidate).provides(iface):
+    if not tentative and not providedBy(candidate).isOrExtends(iface):
         errors.append(f"{candidate} does not provide {iface}")
 
-    required_methods = iface.__providedBy__.methods()
-    for method_name in required_methods:
-        if not hasattr(candidate, method_name):
-            errors.append(f"{candidate} is missing method {method_name}")
+    required_methods = iface.names().keys()
+    for method in required_methods:
+        if not hasattr(candidate, method):
+            errors.append(f"{candidate} is missing method {method}")
             continue
         
-        method = getattr(candidate, method_name)
-        if not callable(method):
-            errors.append(f"{method_name} in {candidate} is not callable")
+        method_signature = signature(getattr(candidate, method))
+        iface_method_signature = signature(iface.names()[method][1])
+        
+        if len(method_signature.parameters) != len(iface_method_signature.parameters):
+            errors.append(f"{method} in {candidate} has incorrect number of parameters")
             continue
         
-        # Check method signature
-        expected_signature = signature(getattr(iface, method_name))
-        actual_signature = signature(method)
-        
-        if len(expected_signature.parameters) != len(actual_signature.parameters):
-            errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
-            continue
-        
-        for param in expected_signature.parameters:
-            if param not in actual_signature.parameters:
-                errors.append(f"{method_name} in {candidate} is missing parameter {param}")
+        for param in iface_method_signature.parameters:
+            if param.name not in method_signature.parameters:
+                errors.append(f"{method} in {candidate} is missing parameter {param.name}")
     
-    required_attributes = iface.__providedBy__.attributes()
-    for attr_name in required_attributes:
-        if not hasattr(candidate, attr_name):
-            errors.append(f"{candidate} is missing attribute {attr_name}")
+    required_attributes = [attr for attr in iface.names() if isinstance(iface.names()[attr], Attribute)]
+    for attr in required_attributes:
+        if not hasattr(candidate, attr):
+            errors.append(f"{candidate} is missing attribute {attr}")
 
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
-        else:
-            raise Invalid(errors)
+        raise Invalid(errors)
 
     return True

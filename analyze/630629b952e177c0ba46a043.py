@@ -13,15 +13,22 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     nodeinfo_document = {
         "version": "2.0",
         "services": {
-            "outbound": {
-                "webfinger": {
-                    "href": f"{url}/.well-known/webfinger?resource={{uri}}"
-                },
-                "nodeinfo": {
-                    "href": f"{url}/{document_path or 'nodeinfo'}"
-                }
-            }
+            "outbound": [],
+            "inbound": []
+        },
+        "metadata": {
+            "name": "Example Node",
+            "description": "An example NodeInfo document",
+            "url": url
         }
     }
 
-    return nodeinfo_document
+    if document_path:
+        nodeinfo_url = f"{url}/{document_path}"
+    else:
+        nodeinfo_url = f"{url}/.well-known/nodeinfo"
+
+    return {
+        "nodeinfo_url": nodeinfo_url,
+        "document": nodeinfo_document
+    }
