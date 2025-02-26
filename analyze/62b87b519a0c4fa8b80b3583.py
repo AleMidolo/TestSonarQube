@@ -24,7 +24,7 @@ def scale(self, other=None):
     if self.current_scale is None or self.current_scale == 0:
         raise LenaValueError("La escala es desconocida o igual a cero.")
 
-    # Suponiendo que self.coordinates es una lista de coordenadas
-    # y que la última coordenada es la que se debe reajustar
-    self.coordinates[-1] *= other / self.current_scale
-    self.current_scale = other  # Actualiza la escala actual
+    # Reajustar la escala a 'other'
+    self.current_scale = other
+    # Aquí se puede incluir la lógica para reajustar las coordenadas
+    self.adjust_coordinates()

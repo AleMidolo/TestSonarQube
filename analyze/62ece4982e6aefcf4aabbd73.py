@@ -17,9 +17,13 @@ def split(s, platform='this'):
     if platform == 1:  # POSIX
         pattern = r'(?:"([^"]*)"|\'([^\']*)|(\S+))'
     elif platform == 0:  # Windows
-        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+)?)'
+        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+))'
     else:
         raise ValueError("Unsupported platform value")
 
     matches = re.findall(pattern, s)
-    return [m[0] or m[1] or m[2] for m in matches]
+    result = []
+    for match in matches:
+        result.append(next(filter(None, match)))  # Get the first non-empty group
+
+    return result

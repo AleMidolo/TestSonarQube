@@ -14,8 +14,10 @@ def _normalizeargs(sequence, output=None):
         elif isinstance(item, str) or hasattr(item, '__interface__'):
             normalized.append(item)
         else:
-            if output is not None:
-                output.append(item)
-            normalized.append(item.__class__)
+            # Expand the item if it's not a valid interface or declaration
+            normalized.append(str(item))
+    
+    if output is not None:
+        output.extend(normalized)
     
     return normalized

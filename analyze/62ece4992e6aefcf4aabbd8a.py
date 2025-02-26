@@ -1,5 +1,5 @@
-import logging
 import json
+import logging
 import os
 
 def load_configurations(config_filenames, overrides=None, resolve_env=True):
@@ -11,27 +11,24 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     configuración analizada correspondiente, y una secuencia de instancias de `logging.LogRecord` que 
     contienen cualquier error de análisis.
     """
+    if overrides is None:
+        overrides = {}
+
     configurations = {}
     log_records = []
-    
+    logger = logging.getLogger(__name__)
+
     for filename in config_filenames:
         try:
+            if resolve_env:
+                filename = os.path.expandvars(filename)
             with open(filename, 'r') as file:
                 config = json.load(file)
-                if overrides:
-                    config.update(overrides)
+                # Apply overrides
+                config.update(overrides)
                 configurations[filename] = config
         except (IOError, json.JSONDecodeError) as e:
-            log_record = logging.LogRecord(
-                name='config_loader',
-                level=logging.ERROR,
-                pathname=filename,
-                lineno=0,
-                msg=str(e),
-                args=None,
-                exc_info=None
-            )
+            log_record = logger.error(f"Error loading configuration from {filename}: {e}")
             log_records.append(log_record)
-            logging.error(f"Error loading configuration from {filename}: {e}")
-    
+
     return configurations, log_records

@@ -13,7 +13,7 @@ def validate_key(key):
     Excepciones:
             ValidationError: si la clave proporcionada no cumple con la expresión regular.
     """
-    # Definir la expresión regular para la validación de la clave
+    # Definir la expresión regular para la clave
     pattern = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'  # Al menos 8 caracteres, al menos una letra y un número
 
     if not re.match(pattern, key):

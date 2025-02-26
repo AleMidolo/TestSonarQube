@@ -9,7 +9,7 @@ def validate_from_content(cls, spec_content=None):
     """
     import yaml
 
-    required_fields = ['field1', 'field2', 'field3']  # Example required fields
+    required_fields = ['field1', 'field2', 'field3']  # Replace with actual required fields
     if spec_content is None:
         raise IRValidatorException("El contenido del archivo spec no puede ser None.")
 

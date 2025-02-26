@@ -12,7 +12,8 @@ def retrieve_diaspora_host_meta(host):
     response = requests.get(url)
     
     if response.status_code == 200:
-        xrd = etree.fromstring(response.content)
+        xrd_content = response.content
+        xrd = etree.fromstring(xrd_content)
         return xrd
     else:
         response.raise_for_status()

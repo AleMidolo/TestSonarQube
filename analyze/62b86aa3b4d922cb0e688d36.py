@@ -14,10 +14,7 @@ def _validate_labels(labels):
             errors.append({key: f"La clave de la etiqueta '{key}' no coincide con la expresión regular [...]"})
         
         if not isinstance(value, str) or not re.match(value_regex, value):
-            if isinstance(value, list):
-                errors.append({str(value): 'se esperaba un objeto de tipo cadena o bytes'})
-            else:
-                errors.append({str(value): 'se esperaba un objeto de tipo cadena o bytes'})
+            errors.append({str(value): 'se esperaba un objeto de tipo cadena o bytes'})
 
     if errors:
         raise ValidationError(errors)

@@ -7,6 +7,6 @@ def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
     """
     attributes = self.get_attributes()  # Assuming there's a method to get attributes
     if not all:
-        attributes = {name: desc for name, desc in attributes.items() if self.is_defined(name)}
+        attributes = {k: v for k, v in attributes.items() if v['is_defined']}
     
-    return attributes
+    return {k: v['description'] for k, v in attributes.items()}
