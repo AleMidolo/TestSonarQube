@@ -26,6 +26,9 @@ def xargs(
         master_fd, slave_fd = pty.openpty()
         os.set_blocking(master_fd, False)
         os.set_blocking(slave_fd, False)
+        pty_enabled = True
+    else:
+        pty_enabled = False
 
     # Split varargs into chunks based on target_concurrency
     chunk_size = max(1, len(varargs) // target_concurrency)
@@ -36,9 +39,9 @@ def xargs(
 
     # Combine results
     return_code = sum(result.returncode for result in results)
-    output = b''.join(result.stdout for result in results)
+    combined_output = b''.join(result.stdout for result in results)
 
-    if color:
+    if pty_enabled:
         os.close(slave_fd)
 
-    return return_code, output
+    return return_code, combined_output

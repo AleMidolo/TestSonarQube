@@ -28,7 +28,7 @@ def build_app_logger(name='app', logfile='app.log', debug=True):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     file_handler.setFormatter(formatter)
 
-    # Agregar el manejador al logger
+    # Añadir el manejador al logger
     logger.addHandler(file_handler)
 
     return logger

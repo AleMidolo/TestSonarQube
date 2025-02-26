@@ -7,5 +7,4 @@ def register_vcs_handler(vcs, method):  # decorador
             register_vcs_handler.handlers = {}
         register_vcs_handler.handlers[(vcs, method)] = f
         return f
-
     return decorate

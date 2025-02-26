@@ -5,13 +5,10 @@ def next_version(version):
     Debe manejar tanto versiones con prefijo de ceros como versiones sin prefijo de ceros.
     """
     parts = version.split('.')
-    for i in range(len(parts) - 1, -1, -1):
+    for i in reversed(range(len(parts))):
         if parts[i].isdigit():
             parts[i] = str(int(parts[i]) + 1)
+            for j in range(i + 1, len(parts)):
+                parts[j] = '0'
             break
-        else:
-            parts[i] = '0'
-    else:
-        parts.append('1')
-    
     return '.'.join(parts)

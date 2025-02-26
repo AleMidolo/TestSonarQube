@@ -4,15 +4,15 @@ def process_text_links(text):
     """
     import re
 
-    # Expresión regular para encontrar enlaces
-    url_pattern = r'(https?://[^\s]+)'
-    
-    # Función para reemplazar el enlace encontrado por un hipervínculo
+    # Función para reemplazar enlaces de texto por hipervínculos
     def replace_link(match):
-        url = match.group(0)
+        url = match.group(1)
         return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
-    
-    # Reemplazar todos los enlaces en el texto
-    processed_text = re.sub(url_pattern, replace_link, text)
-    
+
+    # Expresión regular para encontrar enlaces
+    link_pattern = r'(https?://[^\s]+)'
+
+    # Reemplazar enlaces en el texto
+    processed_text = re.sub(link_pattern, replace_link, text)
+
     return processed_text

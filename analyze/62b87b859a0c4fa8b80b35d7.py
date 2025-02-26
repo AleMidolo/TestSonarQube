@@ -27,7 +27,7 @@ def to_csv(self, separator=",", header=None):
         writer.writerow(header)
 
     for point in self.points:  # Assuming self.points is a list of points
-        row = [str(coord) for coord in point]  # Convert coordinates to string
+        row = [str(coord) for coord in point]  # Convert coordinates to strings
         writer.writerow(row)
 
     return output.getvalue()

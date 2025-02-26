@@ -10,7 +10,7 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     if not overwrite and os.path.exists(config_filename):
         raise FileExistsError(f"El archivo {config_filename} ya existe y overwrite es False.")
     
-    # Crear el directorio contenedor si no existe
+    # Crear directorios contenedores si no existen
     os.makedirs(os.path.dirname(config_filename), exist_ok=True)
     
     # Escribir el archivo de configuración
