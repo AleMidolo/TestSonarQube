@@ -12,7 +12,7 @@ def cached(cache, key=hashkey, lock=None):
             # Acquire lock if provided
             if lock:
                 with lock:
-                    # Check again in case another thread has computed it
+                    # Check again in case another thread has added the result
                     if cache_key in cache:
                         return cache[cache_key]
                     # Call the function and cache the result

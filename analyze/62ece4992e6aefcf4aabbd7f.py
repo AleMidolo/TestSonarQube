@@ -18,4 +18,4 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     netloc = parsed_url.netloc
     use_ssl = parsed_url.scheme == 'https'
     
-    return (image_id, netloc, use_ssl)
+    return image_id, netloc, use_ssl

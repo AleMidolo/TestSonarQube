@@ -27,7 +27,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
         एक विशेष मामले में, यदि केवल एक त्रुटि मौजूद है, तो इसे पहले की तरह अकेले उठाया जाता है।
     """
     from zope.interface import providedBy, Invalid
-    from inspect import signature, Signature
+    from inspect import signature
 
     errors = []
 
@@ -39,8 +39,11 @@ def _verify(iface, candidate, tentative=False, vtype=None):
         if not hasattr(candidate, method):
             errors.append(f"{candidate} is missing required method {method}")
         else:
+            # Check method signature
             method_signature = signature(getattr(candidate, method))
-            # Here you would compare method_signature with expected signature
+            iface_signature = signature(getattr(iface, method))
+            if method_signature != iface_signature:
+                errors.append(f"{method} signature does not match")
 
     required_attributes = getattr(iface, '__required_attributes__', [])
     for attr in required_attributes:

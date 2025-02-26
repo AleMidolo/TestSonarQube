@@ -17,31 +17,34 @@ def _legacy_mergeOrderings(orderings):
     """
     from collections import defaultdict, deque
 
-    # Create a graph to represent the orderings
-    graph = defaultdict(list)
+    # Create a graph to hold the dependencies
+    graph = defaultdict(set)
     in_degree = defaultdict(int)
     all_items = set()
 
-    # Build the graph and in-degree count
+    # Build the graph
     for ordering in orderings:
         for i in range(len(ordering)):
             all_items.add(ordering[i])
-            if i < len(ordering) - 1:
-                graph[ordering[i]].append(ordering[i + 1])
-                in_degree[ordering[i + 1]] += 1
-                if ordering[i] not in in_degree:
-                    in_degree[ordering[i]] = 0
+            if i > 0:
+                if ordering[i] not in graph[ordering[i - 1]]:
+                    graph[ordering[i - 1]].add(ordering[i])
+                    in_degree[ordering[i]] += 1
 
-    # Topological sort using Kahn's algorithm
+    # Initialize the queue with items that have no incoming edges
     queue = deque([item for item in all_items if in_degree[item] == 0])
-    merged_order = []
+    result = []
 
     while queue:
         current = queue.popleft()
-        merged_order.append(current)
+        result.append(current)
         for neighbor in graph[current]:
             in_degree[neighbor] -= 1
             if in_degree[neighbor] == 0:
                 queue.append(neighbor)
 
-    return merged_order
+    # Check if we have included all items
+    if len(result) != len(all_items):
+        raise ValueError("There is a cycle in the input orderings or not all items are connected.")
+
+    return result

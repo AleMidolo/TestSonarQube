@@ -39,8 +39,8 @@ def verifyObject(iface, candidate, tentative=False):
             errors.append(f"{candidate} is missing required method {method}")
         else:
             method_signature = signature(getattr(candidate, method))
-            iface_method_signature = signature(getattr(iface, method))
-            if method_signature != iface_method_signature:
+            iface_signature = signature(getattr(iface, method))
+            if method_signature != iface_signature:
                 errors.append(f"Method {method} signature does not match")
 
     required_attributes = iface.requiredAttributes()

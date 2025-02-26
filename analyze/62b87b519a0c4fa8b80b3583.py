@@ -17,15 +17,17 @@ def scale(self, other=None):
     """
     if other is None:
         return self.scale_value  # Assuming scale_value is an attribute of the class
-    elif isinstance(other, (int, float)):
-        if self.scale_value is None or self.scale_value == 0:
-            raise LenaValueError("Scale is unknown or zero.")
-        
-        # Assuming self.coordinates is a list of coordinates
-        for i in range(len(self.coordinates)):
+
+    if not isinstance(other, (int, float)):
+        raise ValueError("The scale value must be a numeric type.")
+
+    if self.scale_value is None or self.scale_value == 0:
+        raise LenaValueError("Cannot rescale when the scale is unknown or zero.")
+
+    # Assuming self.coordinates is a list of coordinates
+    for i in range(len(self.coordinates)):
+        if i == len(self.coordinates) - 1:  # Only scale the last coordinate
             self.coordinates[i] *= other
-        
-        # Update the scale value
-        self.scale_value *= other
-    else:
-        raise ValueError("The 'other' parameter must be a numeric value or None.")
+
+    # Update the scale value
+    self.scale_value = other

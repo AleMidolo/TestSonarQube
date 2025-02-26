@@ -12,5 +12,7 @@ def find_tags(text: str, replacer: callable = None) -> Tuple[Set, str]:
 
     एक सेट के रूप में टैग्स और मूल या बदला हुआ टेक्स्ट लौटाता है।
     """
-    # Regex to find tags, ignoring code blocks
+    # Regular expression to find tags
+    tag_pattern = r'<(\w+)>'
+    # Regular expression to find code blocks
     code_block_pattern = r'

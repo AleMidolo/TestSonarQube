@@ -34,28 +34,35 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     if make_value is None:
         make_value = lambda bin_: bin_.content
 
-    if get_coordinate == "left":
-        coordinates = hist.bin_edges[:-1]
-    elif get_coordinate == "right":
-        coordinates = hist.bin_edges[1:]
-    elif get_coordinate == "middle":
-        coordinates = (hist.bin_edges[:-1] + hist.bin_edges[1:]) / 2
-    else:
-        raise ValueError("Invalid value for get_coordinate. Must be 'left', 'right', or 'middle'.")
+    coordinates = []
+    values = []
+    errors = []
 
-    values = np.array([make_value(bin) for bin in hist.bins])
-    
+    for bin_ in hist.bins:
+        if get_coordinate == "left":
+            coordinate = bin_.left
+        elif get_coordinate == "right":
+            coordinate = bin_.right
+        elif get_coordinate == "middle":
+            coordinate = bin_.center
+        else:
+            raise ValueError("Invalid value for get_coordinate")
+
+        value_tuple = make_value(bin_)
+        coordinates.append(coordinate)
+        values.append(value_tuple[0])
+        if len(value_tuple) > 1:
+            errors.append(value_tuple[1])
+        else:
+            errors.append(0)
+
     if scale is True:
         scale_factor = hist.scale
     else:
         scale_factor = 1
 
-    graph = {
-        field_names[0]: coordinates,
-        field_names[1]: values * scale_factor
-    }
+    coordinates = np.array(coordinates) * scale_factor
+    values = np.array(values) * scale_factor
+    errors = np.array(errors) * scale_factor
 
-    if len(field_names) > 2:
-        graph[field_names[2]] = np.array([bin.error for bin in hist.bins]) * scale_factor
-
-    return graph
+    return {field_names[0]: coordinates, field_names[1]: values, field_names[2]: errors}
