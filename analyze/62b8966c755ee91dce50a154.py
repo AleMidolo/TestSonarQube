@@ -81,12 +81,12 @@ def isoparse(self, dt_str):
     if day is None:
         day = 1
 
-    # Handle week date
+    # Handle week-based dates
     if match.group(4):
-        week, week_day = match.group(5), match.group(6)
-        if week_day is None:
-            week_day = 0
-        date = datetime.strptime(f'{year}-W{week}-{week_day}', "%Y-W%W-%w").date()
+        week, day_of_week = match.group(5), match.group(6)
+        if day_of_week is None:
+            day_of_week = 0
+        date = datetime.strptime(f'{year}-W{week}-{day_of_week}', "%Y-W%W-%w").date()
     else:
         date = datetime(int(year), int(month), int(day))
 
@@ -100,9 +100,11 @@ def isoparse(self, dt_str):
         second = 0
     if microsecond is None:
         microsecond = 0
+    else:
+        microsecond = int(microsecond.ljust(6, '0')[:6])  # Ensure microsecond is 6 digits
 
     # Create datetime object
-    dt = datetime(date.year, date.month, date.day, int(hour), int(minute), int(second), int(microsecond))
+    dt = datetime(date.year, date.month, date.day, int(hour), int(minute), int(second), microsecond)
 
     # Handle timezone
     tz_info = match.group(11)

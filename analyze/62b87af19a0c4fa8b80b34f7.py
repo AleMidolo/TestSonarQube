@@ -19,15 +19,15 @@ def difference(d1, d2, level=-1):
         result = {}
         for key, value in d1.items():
             if key not in d2:
-                result[key] = copy.deepcopy(value)
+                result[key] = copy.deepcopy(value) if isinstance(value, MutableMapping) else value
             else:
                 if isinstance(value, MutableMapping) and isinstance(d2[key], MutableMapping):
-                    sub_diff = recursive_difference(value, d2[key], level - 1 if level > 0 else -1)
-                    if sub_diff:
-                        result[key] = sub_diff
+                    nested_diff = recursive_difference(value, d2[key], level - 1 if level > 0 else -1)
+                    if nested_diff:
+                        result[key] = nested_diff
                 elif value != d2[key]:
                     result[key] = copy.deepcopy(value)
-        
+
         return result
 
     return recursive_difference(d1, d2, level)

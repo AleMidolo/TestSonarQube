@@ -7,17 +7,19 @@ def fromutc(self, dt):
     :param dt:
         Un objeto :class:`datetime.datetime` con conocimiento de zona horaria.
     """
-    # Verificar que el objeto datetime tiene información de zona horaria
     if dt.tzinfo is None:
-        raise ValueError("El objeto datetime debe tener información de zona horaria.")
-
-    # Convertir el datetime a la nueva zona horaria
-    new_dt = dt.astimezone(self)
-
-    # Determinar si el datetime es ambiguo
+        raise ValueError("dt must be timezone-aware")
+    
+    # Convert the datetime to UTC
+    utc_dt = dt.astimezone(self.utc)
+    
+    # Calculate the new datetime in the target timezone
+    new_dt = utc_dt.astimezone(self)
+    
+    # Check for ambiguity
     if new_dt.dst() != timedelta(0):
-        # Si hay un cambio de horario, verificar si es la primera ocurrencia
-        if new_dt < self.utcoffset(new_dt):
-            raise ValueError("El datetime es ambiguo y no se puede determinar su estado.")
-
+        # Handle the case of ambiguous times
+        if new_dt < self.start:
+            raise ValueError("Ambiguous datetime")
+    
     return new_dt

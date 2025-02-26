@@ -12,4 +12,7 @@ def normalized(self):
     """
     total_days = int(self.days) + int(self.hours // 24)
     total_hours = int(self.hours % 24)
-    return relativedelta(days=total_days, hours=total_hours)
+    total_minutes = int(self.minutes)
+    total_seconds = int(self.seconds)
+
+    return relativedelta(days=total_days, hours=total_hours, minutes=total_minutes, seconds=total_seconds)

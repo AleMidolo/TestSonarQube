@@ -12,7 +12,7 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     """
     import traceback
 
-    # Limitar el nivel de la pila de llamadas
+    # Limitar la profundidad de la pila de llamadas
     tb = traceback.extract_tb(e.__traceback__)
     tb = tb[:max_level]
 
@@ -26,7 +26,7 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     # Obtener el mensaje de la excepción
     exception_message = str(e)
 
-    # Combinar la traza y el mensaje de la excepción
+    # Combinar la traza formateada con el mensaje de la excepción
     result = f"{exception_message}\nTraceback (most recent call last):\n" + "\n".join(formatted_trace)
     
     return result

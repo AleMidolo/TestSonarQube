@@ -10,12 +10,13 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
     remaining_arguments = unparsed_arguments[:]
     
     for name, parser in subparsers.items():
+        # Try to parse the arguments for the current subparser
         try:
-            # Parse the arguments for the current subparser
+            # Parse known arguments and keep the remaining ones
             parsed_args, remaining_arguments = parser.parse_known_args(remaining_arguments)
             parsed_results[name] = parsed_args
         except SystemExit:
-            # Handle the case where parsing fails
+            # If parsing fails, we can choose to ignore or handle it
             continue
 
     return parsed_results, remaining_arguments
