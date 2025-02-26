@@ -29,7 +29,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     
     # Example of creating a response object (this would depend on your actual implementation)
     response = Response()  # Assuming Response is a defined class
-    # Add logic to handle the parameters and append the BEGIN message
-    # to the output queue here.
+    # Logic to handle the parameters and append the BEGIN message
+    # ...
     
     return response

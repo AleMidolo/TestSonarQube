@@ -10,7 +10,7 @@ def validate(self, path):
         if is_valid:
             return True
         else:
-            # Log warnings if necessary
+            # Log warnings if needed
             self.log_warnings(path)
             return False
     except Exception as e:

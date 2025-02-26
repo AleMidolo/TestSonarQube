@@ -11,12 +11,13 @@ def _normalizeargs(sequence, output=None):
         output = []
 
     for item in sequence:
-        if isinstance(item, (tuple, list)):
+        if isinstance(item, tuple):
             output.extend(_normalizeargs(item))
-        elif isinstance(item, str) and item not in output:
+        elif isinstance(item, list):
+            output.extend(_normalizeargs(item))
+        elif isinstance(item, str) or isinstance(item, int):
             output.append(item)
-        # Assuming Declarions is a class or type we need to handle
-        elif isinstance(item, Declarion) and item not in output:
+        else:
             output.append(item)
-    
+
     return output

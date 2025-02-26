@@ -12,27 +12,22 @@ def validate_version_inventories(self, version_dirs):
     content_digests = {}
 
     for version in version_dirs:
-        inventory_path = f"{version}/inventory.json"
-        version_inventory = self.load_inventory(inventory_path)
-
-        # Validate that the version inventory is up to date
-        if not self.is_inventory_up_to_date(version_inventory, root_inventory):
-            raise ValueError(f"Inventory for version {version} is not up to date.")
+        version_inventory = self.load_inventory(f'{version}/inventory.json')
+        
+        # Validate that the version inventory contains all required items
+        for item in root_inventory:
+            if item not in version_inventory:
+                raise ValueError(f'Missing item {item} in version {version} inventory.')
 
         # Check for content digests that differ from the root inventory
-        for content_id, digest in version_inventory['content_digests'].items():
-            if content_id in root_inventory['content_digests']:
-                if root_inventory['content_digests'][content_id] != digest:
-                    content_digests[content_id] = digest
+        for item, digest in version_inventory.items():
+            if item in root_inventory and root_inventory[item] != digest:
+                content_digests[item] = digest
 
     return content_digests
 
-def load_inventory(self, path):
-    # Placeholder for loading inventory from a JSON file
+def load_inventory(self, filename):
+    # This is a placeholder for the actual implementation of loading an inventory
     import json
-    with open(path, 'r') as file:
+    with open(filename, 'r') as file:
         return json.load(file)
-
-def is_inventory_up_to_date(self, version_inventory, root_inventory):
-    # Placeholder for checking if the version inventory is up to date
-    return version_inventory['version'] <= root_inventory['version']

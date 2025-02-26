@@ -21,6 +21,7 @@ def minimalBases(classes):
     minimal_classes = set()
     visited = set()
     for cls in classes:
-        minimal_classes.update(dfs(cls, visited))
+        if cls not in visited:
+            minimal_classes.update(dfs(cls, visited))
 
     return sorted(minimal_classes, key=lambda x: x.__name__)
