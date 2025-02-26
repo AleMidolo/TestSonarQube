@@ -1,6 +1,3 @@
-import os
-import sys
-
 def _should_attempt_c_optimizations():
     """
     Devuelve un valor verdadero si deberíamos intentar usar las optimizaciones en C.
@@ -8,7 +5,14 @@ def _should_attempt_c_optimizations():
     Esto tiene en cuenta si estamos utilizando PyPy y el valor de la variable de entorno  
     ``PURE_PYTHON``, tal como se define en `_use_c_impl`.
     """
-    is_pypy = 'pypy' in sys.version.lower()
-    pure_python_env = os.getenv('PURE_PYTHON')
+    import os
+    import sys
 
-    return not is_pypy and (pure_python_env is None or pure_python_env.lower() != '1')
+    # Check if we are using PyPy
+    is_pypy = 'pypy' in sys.version.lower()
+
+    # Check the environment variable PURE_PYTHON
+    pure_python = os.getenv('PURE_PYTHON', '0') == '1'
+
+    # Return True if we are not using PyPy and PURE_PYTHON is not set
+    return not is_pypy and not pure_python

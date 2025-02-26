@@ -9,10 +9,18 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     num_objects = 0
     good_objects = 0
 
-    # Simulación de la validación de objetos
+    # Simulated validation process
     for obj in self.storage_root:
         num_objects += 1
-        is_valid = self.validate_object(obj, validate_objects, check_digests)
+        is_valid = True  # Placeholder for actual validation logic
+
+        if validate_objects:
+            # Placeholder for object validation logic
+            is_valid = self.validate_object(obj)
+
+        if check_digests:
+            # Placeholder for digest checking logic
+            is_valid = is_valid and self.check_digest(obj)
 
         if is_valid:
             good_objects += 1
@@ -21,11 +29,10 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
 
     return num_objects, good_objects
 
-def validate_object(self, obj, validate_objects, check_digests):
-    # Lógica para validar un objeto
-    # Este es un ejemplo simplificado
-    if validate_objects and obj.is_valid():
-        return True
-    if check_digests and obj.check_digest():
-        return True
-    return False
+def validate_object(self, obj):
+    # Placeholder for actual object validation logic
+    return True
+
+def check_digest(self, obj):
+    # Placeholder for actual digest checking logic
+    return True

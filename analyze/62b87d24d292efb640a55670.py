@@ -7,4 +7,4 @@ def get_versions():
         version_info = pkg_resources.get_distribution("your_package_name").version
         return version_info
     except Exception:
-        return "Versión no disponible"
+        return "0.0.0"  # Valor predeterminado si no se puede obtener la versión

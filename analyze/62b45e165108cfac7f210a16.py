@@ -9,12 +9,12 @@ def validate_as_prior_version(self, prior):
     if not isinstance(prior, InventoryValidator):
         raise ValueError("El objeto 'prior' debe ser una instancia de InventoryValidator.")
     
-    # Aquí se asume que hay algún método o atributo que permite comparar versiones
+    # Aquí se pueden agregar más validaciones específicas según la lógica del inventario
     if self.version <= prior.version:
         raise ValueError("La versión previa no es válida; debe ser anterior a la versión actual.")
     
-    # Comparar otros atributos relevantes para validar la versión previa
+    # Comparar otros atributos relevantes del inventario
     if self.items != prior.items:
-        raise ValueError("Los elementos del inventario no coinciden con la versión previa.")
+        raise ValueError("Los elementos del inventario actual y previo no coinciden.")
     
     return True

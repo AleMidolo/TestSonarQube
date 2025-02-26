@@ -18,7 +18,7 @@ def deep_merge_nodes(nodes):
                 # If there's a conflict with non-MappingNode, take the last one
                 merged[key] = value_node
 
-    # Convert merged dictionary back to the required list of tuples
+    # Convert merged dictionary back to the required format
     result = []
     for key, value in merged.items():
         result.append((ScalarNode(tag='tag:yaml.org,2002:str', value=key), value))
