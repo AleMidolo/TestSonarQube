@@ -6,7 +6,7 @@ def tzname_in_python2(namefunc):
     """
     def wrapper(*args, **kwargs):
         result = namefunc(*args, **kwargs)
-        if isinstance(result, str):
-            return result  # Already a byte string in Python 2
-        return result.encode('utf-8')  # Convert Unicode to byte string
+        if isinstance(result, unicode):  # Check if the result is a Unicode string
+            return result.encode('utf-8')  # Convert to byte string
+        return result  # Return as is if not Unicode
     return wrapper

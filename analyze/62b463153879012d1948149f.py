@@ -25,23 +25,22 @@ def _eval_file(prefix, file_path):
     """
     import os
 
-    # Extract file extension
-    _, file_extension = os.path.splitext(file_path)
-    file_extension = file_extension.lower()
-
+    # Extract the file name and extension
+    file_name, file_extension = os.path.splitext(os.path.basename(file_path))
+    
     # Check if the file matches the prefix
-    if not file_path.startswith(prefix) or file_extension == '.xml':
+    if not file_name.startswith(prefix):
         return None
-
-    # Prepare the component_id
-    component_id = os.path.basename(file_path)
-
-    # Create the result dictionary based on file type
-    if file_extension == '.pdf':
-        return {'component_id': component_id, 'file_path': file_path}
+    
+    # Check the file type
+    if file_extension.lower() == '.xml':
+        return None
+    elif file_extension.lower() == '.pdf':
+        return {'component_id': file_name, 'file_path': file_path}
     else:
         return {
-            'component_id': component_id,
+            'component_id': file_name,
             'file_path': file_path,
-            'ftype': file_extension,
+            'ftype': file_extension.lower(),
+            'file_path': file_path
         }

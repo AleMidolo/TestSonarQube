@@ -17,22 +17,18 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     # 获取命令的第一个元素
     command = cmd[0]
     
-    # 检查命令是否是完整路径
-    if os.path.isfile(command):
+    # 检查命令是否是可执行文件
+    if os.path.isfile(command) or os.path.isfile(command + '.exe'):
         return cmd
-    
+
     # 尝试查找命令的完整路径
     if os.name == 'nt':
         # Windows 系统
         path_env = os.environ.get('PATH', '').split(os.pathsep)
         for path in path_env:
-            full_path = os.path.join(path, command + '.exe')
-            if os.path.isfile(full_path):
+            full_path = os.path.join(path, command)
+            if os.path.isfile(full_path) or os.path.isfile(full_path + '.exe'):
                 return (full_path,) + cmd[1:]
-    else:
-        # 非 Windows 系统
-        full_path = os.path.join(os.getcwd(), command)
-        if os.path.isfile(full_path):
-            return (full_path,) + cmd[1:]
 
+    # 如果没有找到，返回原始命令
     return cmd

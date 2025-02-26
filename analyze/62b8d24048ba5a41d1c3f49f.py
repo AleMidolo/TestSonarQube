@@ -10,34 +10,29 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     """
     def decorator(func):
         cache = OrderedDict()
-        cache_times = {}
+        timestamps = {}
 
         @wraps(func)
         def wrapper(*args, **kwargs):
             key = args if not typed else (args, frozenset(kwargs.items()))
             current_time = timer()
-
-            # 清理过期的缓存项
+            
+            # 清理过期的缓存
             if key in cache:
-                if current_time - cache_times[key] < ttl:
-                    # 更新缓存项的顺序
-                    cache.move_to_end(key)
+                if current_time - timestamps[key] < ttl:
                     return cache[key]
                 else:
-                    # 删除过期的缓存项
                     del cache[key]
-                    del cache_times[key]
+                    del timestamps[key]
 
-            # 调用原始函数并缓存结果
+            # 如果缓存已满，移除最旧的缓存项
+            if len(cache) >= maxsize:
+                cache.popitem(last=False)
+
+            # 计算结果并缓存
             result = func(*args, **kwargs)
             cache[key] = result
-            cache_times[key] = current_time
-
-            # 如果缓存超出最大大小，删除最旧的缓存项
-            if len(cache) > maxsize:
-                cache.popitem(last=False)
-                del cache_times[next(iter(cache))]
-
+            timestamps[key] = current_time
             return result
 
         return wrapper

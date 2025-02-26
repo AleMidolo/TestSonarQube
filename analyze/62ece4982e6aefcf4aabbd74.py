@@ -21,20 +21,24 @@ def prepare_repository_from_archive(
     """
     # Ensure tmp_path is a Path object
     tmp_path = Path(tmp_path)
+    
+    # Create temporary directory if it doesn't exist
     tmp_path.mkdir(parents=True, exist_ok=True)
-
-    # Determine the extraction path
+    
+    # Define the extraction path
     extraction_path = tmp_path / Path(archive_path).stem
+    
+    # Create extraction directory
     extraction_path.mkdir(exist_ok=True)
-
+    
     # Extract the archive
     with zipfile.ZipFile(archive_path, 'r') as zip_ref:
         zip_ref.extractall(extraction_path)
-
-    # If a filename is provided, return the URL for that specific file
+    
+    # If a filename is provided, return the URL to that file
     if filename:
         file_path = extraction_path / filename
         return f"file://{file_path.resolve()}"
     
-    # Otherwise, return the URL for the extraction directory
+    # Otherwise, return the URL to the extraction directory
     return f"file://{extraction_path.resolve()}"

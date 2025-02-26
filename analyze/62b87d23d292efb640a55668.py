@@ -14,6 +14,11 @@ def get_config():
     
     config = VersioneerConfig()
     # 设置其他属性
-    config.additional_property = "Some value"
+    config.version = "1.0.0"
+    config.author = "John Doe"
+    config.email = "john.doe@example.com"
+    config.license = "Apache-2.0"
+    config.description = "An example of a versioneer config"
+    config.url = "https://example.com/project"
     
     return config

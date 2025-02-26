@@ -14,25 +14,25 @@ def absorb(self, args):
 
       A & (~A | B) = A & B, A | (~A & B) = A | B
     """
-    new_expressions = []
+    new_args = []
     for expr in args:
         # Apply Absorption Law
         if isinstance(expr, tuple) and len(expr) == 3:
-            a, op, b = expr
-            if op == '&':
-                if (a == b) or (b == ('|', a)):
-                    new_expressions.append(a)
-                elif (a == ('|', b)):
-                    new_expressions.append(a)
-                elif (a == ('~', b)):
-                    new_expressions.append(('&', a, b))
-            elif op == '|':
-                if (a == b) or (b == ('&', a)):
-                    new_expressions.append(a)
-                elif (a == ('&', b)):
-                    new_expressions.append(a)
-                elif (a == ('~', b)):
-                    new_expressions.append(('|', a, b))
+            op1, operator, op2 = expr
+            if operator == '&':
+                if op1 == op2 or (op1 == '|' and op2 == 'B'):
+                    new_args.append(op1)
+                elif op1 == '~' + op2:
+                    new_args.append((op1, '&', 'B'))
+                else:
+                    new_args.append(expr)
+            elif operator == '|':
+                if op1 == op2 or (op1 == '&' and op2 == 'B'):
+                    new_args.append(op1)
+                elif op1 == '~' + op2:
+                    new_args.append((op1, '|', 'B'))
+                else:
+                    new_args.append(expr)
         else:
-            new_expressions.append(expr)
-    return new_expressions
+            new_args.append(expr)
+    return new_args

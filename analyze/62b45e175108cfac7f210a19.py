@@ -5,18 +5,16 @@ def validate_fixity(self, fixity, manifest_files):
     if not isinstance(fixity, dict):
         return self.error("Fixity must be a dictionary.")
 
-    required_keys = ['file', 'checksum', 'algorithm']
+    required_keys = ['checksum', 'algorithm', 'files']
     for key in required_keys:
         if key not in fixity:
             return self.error(f"Missing required key: {key}")
 
-    if fixity['file'] not in manifest_files:
-        return self.error(f"File {fixity['file']} not found in manifest files.")
+    if not isinstance(fixity['files'], list):
+        return self.error("Files must be a list.")
 
-    if not isinstance(fixity['checksum'], str) or not fixity['checksum']:
-        return self.error("Checksum must be a non-empty string.")
-
-    if fixity['algorithm'] not in ['md5', 'sha1', 'sha256']:
-        return self.error("Invalid algorithm. Must be one of: md5, sha1, sha256.")
+    for file in fixity['files']:
+        if file not in manifest_files:
+            return self.error(f"File {file} is not in the manifest.")
 
     return True

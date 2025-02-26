@@ -10,7 +10,7 @@ def addignored(ignored):
                             text=True)
     
     # 将结果转换为列表并去除空白字符
-    ignored_files = result.stdout.strip().splitlines()
+    ignored_files = result.stdout.strip().split('\n')
     
     # 排序文件列表
     ignored_files.sort()

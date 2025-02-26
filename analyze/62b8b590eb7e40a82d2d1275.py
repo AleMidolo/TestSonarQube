@@ -14,34 +14,16 @@ def _legacy_mergeOrderings(orderings):
     ... ])
     ['x', 'y', 'q', 1, 3, 5, 'z']
     """
-    from collections import defaultdict, deque
-
-    # Create a graph to track dependencies
-    graph = defaultdict(list)
-    in_degree = defaultdict(int)
     seen = set()
-
-    # Build the graph
-    for ordering in orderings:
-        for i in range(len(ordering)):
-            if ordering[i] not in seen:
-                seen.add(ordering[i])
-                if i > 0:
-                    graph[ordering[i - 1]].append(ordering[i])
-                    in_degree[ordering[i]] += 1
-                if ordering[i] not in in_degree:
-                    in_degree[ordering[i]] = 0
-
-    # Topological sort using Kahn's algorithm
-    queue = deque([item for item in in_degree if in_degree[item] == 0])
     result = []
 
-    while queue:
-        current = queue.popleft()
-        result.append(current)
-        for neighbor in graph[current]:
-            in_degree[neighbor] -= 1
-            if in_degree[neighbor] == 0:
-                queue.append(neighbor)
+    def add_ordering(ordering):
+        for item in ordering:
+            if item not in seen:
+                seen.add(item)
+                result.append(item)
+
+    for ordering in orderings:
+        add_ordering(ordering)
 
     return result
