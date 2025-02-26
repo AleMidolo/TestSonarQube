@@ -3,23 +3,35 @@ def formatmany(
                 sql: AnyStr,
                 many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
         ) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
-    # Convert the SQL query to use "out" style parameters
-    out_params = []
-    param_count = 0
+    # Determine the parameter style based on the input
+    if isinstance(many_params, dict):
+        param_style = 'named'
+    else:
+        param_style = 'ordinal'
 
-    # Determine the parameter style
-    for params in many_params:
-        if isinstance(params, dict):
-            out_param = {key: f'${param_count + i + 1}' for i, (key, value) in enumerate(params.items())}
-            out_params.append(out_param)
-        elif isinstance(params, (list, tuple)):
-            out_param = [f'${param_count + i + 1}' for i in range(len(params))]
-            out_params.append(out_param)
-        param_count += len(params)
-
-    # Replace the parameters in the SQL query
+    # Prepare the formatted SQL and the list of converted parameters
     formatted_sql = sql
-    for i in range(param_count):
-        formatted_sql = formatted_sql.replace(f'${i + 1}', f'${i + 1}')
+    converted_params = []
 
-    return formatted_sql, out_params
+    for params in many_params:
+        if param_style == 'named':
+            # Convert named parameters
+            for key, value in params.items():
+                formatted_sql = formatted_sql.replace(f":{key}", self._format_value(value))
+            converted_params.append(params)
+        else:
+            # Convert ordinal parameters
+            for index, value in enumerate(params):
+                formatted_sql = formatted_sql.replace(f"?", self._format_value(value), 1)
+            converted_params.append(params)
+
+    return formatted_sql, converted_params
+
+def _format_value(self, value: Any) -> str:
+    # This method should handle the conversion of the value to a string
+    if isinstance(value, str):
+        return f"'{value}'"
+    elif value is None:
+        return 'NULL'
+    else:
+        return str(value)

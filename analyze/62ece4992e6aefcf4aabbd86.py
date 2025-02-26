@@ -1,12 +1,13 @@
 def _dump_string(obj, dumper=None):
     """
-    Serializza in una stringa Unicode (Python 2) o in una stringa (Python 3).
+    Dump to a py2-unicode or py3-string
     """
+    if dumper is None:
+        dumper = str  # Default to str if no dumper is provided
+
     if isinstance(obj, str):
-        return obj
+        return dumper(obj)
     elif isinstance(obj, bytes):
-        return obj.decode('utf-8')
-    elif isinstance(obj, unicode):  # For Python 2 compatibility
-        return obj.encode('utf-8')
+        return dumper(obj.decode('utf-8', errors='replace'))
     else:
-        raise TypeError("Object must be a string or bytes")
+        return dumper(str(obj))

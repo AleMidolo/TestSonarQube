@@ -3,13 +3,14 @@ import re
 
 def find_tags(text: str, replacer: callable = None) -> Tuple[Set, str]:
     """
-    Trova i tag nel testo.
+    Find tags in text.
 
-    Cerca di ignorare i tag all'interno dei blocchi di codice.
+    Tries to ignore tags inside code blocks.
 
-    Facoltativamente, se viene passato un "replacer", sostituirà anche la parola del tag con il risultato della funzione "replacer" chiamata con la parola del tag.
+    Optionally, if passed a "replacer", will also replace the tag word with the result
+    of the replacer function called with the tag word.
 
-    Restituisce un set di tag e il testo originale o modificato.
+    Returns a set of tags and the original or replaced text.
     """
-    # Regex per trovare i blocchi di codice
+    # Regex to find code blocks
     code_block_pattern = r'

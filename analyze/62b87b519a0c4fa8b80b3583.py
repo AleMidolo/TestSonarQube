@@ -1,39 +1,34 @@
 def scale(self, other=None):
     """
-    Ottieni o imposta la scala del grafico.
+    Get or set the scale of the graph.
 
-    Se *other* è ``None``, restituisce la scala di questo grafico.
+    If *other* is ``None``, return the scale of this graph.
 
-    Se viene fornito un valore numerico per *other*, il grafico viene ridimensionato a quel valore.
-    Se il grafico ha una scala sconosciuta o pari a zero, 
-    il tentativo di ridimensionarlo genererà un'eccezione :exc:`~.LenaValueError`.
+    If a numeric *other* is provided, rescale to that value.
+    If the graph has unknown or zero scale,
+    rescaling that will raise :exc:`~.LenaValueError`.
 
-    Per ottenere risultati significativi, vengono utilizzati i campi del grafico.
-    Solo l'ultima coordinata viene ridimensionata.
-    Ad esempio, se il grafico ha coordinate *x* e *y*, 
-    verrà ridimensionata *y*, mentre per un grafico tridimensionale 
-    verrà ridimensionata *z*.
-    Tutti gli errori associati vengono ridimensionati insieme alla loro coordinata.
+    To get meaningful results, graph's fields are used.
+    Only the last coordinate is rescaled.
+    For example, if the graph has *x* and *y* coordinates,
+    then *y* will be rescaled, and for a 3-dimensional graph
+    *z* will be rescaled.
+    All errors are rescaled together with their coordinate.
     """
     if other is None:
-        return self.current_scale  # Restituisce la scala attuale del grafico
+        return self.scale_value  # Assuming self.scale_value holds the current scale
 
-    if not isinstance(other, (int, float)) or other <= 0:
-        raise LenaValueError("La scala deve essere un valore numerico positivo.")
+    if self.scale_value is None or self.scale_value == 0:
+        raise LenaValueError("Cannot rescale with unknown or zero scale.")
 
-    # Supponiamo che self.coordinates contenga le coordinate del grafico
-    if hasattr(self, 'coordinates'):
-        last_coordinate = self.coordinates[-1]  # Ottieni l'ultima coordinata
-        scale_factor = other / last_coordinate if last_coordinate != 0 else None
-        
-        if scale_factor is None:
-            raise LenaValueError("Impossibile ridimensionare con una scala sconosciuta o zero.")
+    # Assuming self.coordinates is a list of coordinates
+    last_coordinate_index = -1
+    self.coordinates[last_coordinate_index] *= other / self.scale_value
+    self.scale_value = other
 
-        # Ridimensiona l'ultima coordinata e gli errori associati
-        self.coordinates[-1] *= scale_factor
-        for error in self.errors:  # Supponendo che self.errors contenga errori associati
-            error.scale(scale_factor)  # Ridimensiona ogni errore
+    # Rescale errors if they exist
+    if hasattr(self, 'errors'):
+        for error in self.errors:
+            error[last_coordinate_index] *= other / self.scale_value
 
-        self.current_scale = other  # Aggiorna la scala attuale
-    else:
-        raise LenaValueError("Il grafico non ha coordinate valide.")
+    return self.scale_value

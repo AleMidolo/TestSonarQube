@@ -3,10 +3,10 @@ from re import Pattern
 
 def _create_in_regex(self) -> Pattern:
     """
-    Crea l'espressione regolare per il parametro in-style.
+    Create the in-style parameter regular expression.
 
-    Restituisce l'espressione regolare per il parametro in-style (:class:`re.Pattern`).
+    Returns the in-style parameter regular expression (:class:`re.Pattern`).
     """
-    # Example regex pattern for in-style parameter
-    pattern = r'\b(?:in|not in)\s+\w+\b'
+    # Example regex pattern for in-style parameters, adjust as needed
+    pattern = r'\b(?:in|not in)\s*\(\s*([^()]*?)\s*\)'
     return re.compile(pattern)

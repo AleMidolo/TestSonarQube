@@ -2,16 +2,16 @@ import datetime
 
 def parse_frequency(frequency):
     """
-    Dato un valore di frequenza sotto forma di stringa contenente un numero e un'unità di tempo,
-    restituisci un'istanza corrispondente di datetime.timedelta o None se la frequenza è None o "always".
+    Given a frequency string with a number and a unit of time, return a corresponding
+    datetime.timedelta instance or None if the frequency is None or "always".
 
-    Ad esempio, dato "3 weeks", restituisci datetime.timedelta(weeks=3).
+    For instance, given "3 weeks", return datetime.timedelta(weeks=3)
 
-    Genera un'eccezione ValueError se la frequenza fornita non può essere analizzata.
+    Raise ValueError if the given frequency cannot be parsed.
     """
     if frequency is None or frequency.lower() == "always":
         return None
-
+    
     units = {
         'seconds': 'seconds',
         'second': 'seconds',
@@ -24,22 +24,22 @@ def parse_frequency(frequency):
         'weeks': 'weeks',
         'week': 'weeks',
         'months': 'days',  # Approximation: 1 month = 30 days
-        'month': 'days',
-        'years': 'days',   # Approximation: 1 year = 365 days
-        'year': 'days'
+        'month': 'days',    # Approximation: 1 month = 30 days
+        'years': 'days',    # Approximation: 1 year = 365 days
+        'year': 'days'      # Approximation: 1 year = 365 days
     }
-
+    
     parts = frequency.split()
     if len(parts) != 2:
-        raise ValueError("Frequency must be in the format '<number> <unit>'")
-
+        raise ValueError(f"Cannot parse frequency: {frequency}")
+    
     try:
         value = int(parts[0])
     except ValueError:
-        raise ValueError("The first part of the frequency must be an integer")
-
+        raise ValueError(f"Cannot parse frequency: {frequency}")
+    
     unit = parts[1].lower()
     if unit not in units:
-        raise ValueError(f"Unknown time unit: {unit}")
-
+        raise ValueError(f"Cannot parse frequency: {frequency}")
+    
     return datetime.timedelta(**{units[unit]: value})

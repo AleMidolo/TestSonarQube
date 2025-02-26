@@ -17,6 +17,6 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
             number //= base
     
     if padding is not None:
-        result = result.zfill(padding)
+        result = result.rjust(padding, alphabet[0])
     
     return result

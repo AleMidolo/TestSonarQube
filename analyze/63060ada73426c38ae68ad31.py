@@ -1,11 +1,11 @@
 def _convert_non_cli_args(self, parser_name, values_dict):
     """
-    Converte gli argomenti nei tipi corretti modificando il parametro values_dict.
+    Casts arguments to correct types by modifying values_dict param.
 
-    Per impostazione predefinita, tutti i valori sono stringhe.
+    By default all the values are strings.
 
-    :param parser_name: Il nome del comando, ad esempio main, virsh, ospd, ecc.
-    :param values_dict: Il dizionario con gli argomenti
+    :param parser_name: The command name, e.g. main, virsh, ospd, etc
+    :param values_dict: The dict of with arguments
     """
     for key, value in values_dict.items():
         if value.isdigit():
@@ -15,6 +15,5 @@ def _convert_non_cli_args(self, parser_name, values_dict):
                 # Attempt to convert to float if it's not an integer
                 values_dict[key] = float(value)
             except ValueError:
-                # Keep it as a string if it can't be converted
-                values_dict[key] = value
-    return values_dict
+                # Leave as string if it cannot be converted
+                pass

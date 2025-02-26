@@ -1,16 +1,19 @@
 def _include_groups(self, parser_dict):
     """
-    Risolve la direttiva "include dict" nei file di specifica
+    Resolves the include dict directive in the spec files.
     """
-    if 'include' in parser_dict:
-        include_files = parser_dict['include']
-        for include_file in include_files:
-            with open(include_file, 'r') as f:
-                included_dict = self._parse_file(f)
-                parser_dict.update(included_dict)
-    return parser_dict
+    if not isinstance(parser_dict, dict):
+        raise ValueError("parser_dict must be a dictionary")
 
-def _parse_file(self, file):
-    # Dummy implementation for parsing a file into a dictionary
-    # This should be replaced with actual parsing logic
-    return {}  # Replace with actual parsing logic
+    included_groups = {}
+    for key, value in parser_dict.items():
+        if isinstance(value, dict) and 'include' in value:
+            include_key = value['include']
+            if include_key in parser_dict:
+                included_groups[key] = parser_dict[include_key]
+            else:
+                raise KeyError(f"Included key '{include_key}' not found in parser_dict")
+        else:
+            included_groups[key] = value
+
+    return included_groups

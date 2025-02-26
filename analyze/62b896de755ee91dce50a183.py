@@ -1,29 +1,29 @@
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
-    Analizza la stringa di data/ora in un oggetto :class:`datetime.datetime`.
+    Parse the date/time string into a :class:`datetime.datetime` object.
 
     :param timestr:
-        Qualsiasi stringa di data/ora che utilizza i formati supportati.
+        Any date/time string using the supported formats.
 
     :param default:
-        L'oggetto datetime predefinito. Se questo è un oggetto datetime e non
-        ``None``, gli elementi specificati in ``timestr`` sostituiscono gli elementi
-        nell'oggetto predefinito.
+        The default datetime object, if this is a datetime object and not
+        ``None``, elements specified in ``timestr`` replace elements in the
+        default object.
 
     :param ignoretz:
-        Se impostato su ``True``, i fusi orari nelle stringhe analizzate vengono ignorati
-        e viene restituito un oggetto :class:`datetime.datetime` senza fuso orario.
+        If set ``True``, time zones in parsed strings are ignored and a
+        naive :class:`datetime.datetime` object is returned.
 
     :param tzinfos:
-        Nomi/alias di fusi orari aggiuntivi che possono essere presenti nella stringa.
-        Questo argomento mappa i nomi dei fusi orari (e opzionalmente gli offset da
-        quei fusi orari) ai fusi orari. Questo parametro può essere un dizionario con
-        alias di fusi orari che mappano i nomi dei fusi orari ai fusi orari o una
-        funzione che accetta due parametri (``tzname`` e ``tzoffset``) e restituisce
-        un fuso orario.
+        Additional time zone names / aliases which may be present in the
+        string. This argument maps time zone names (and optionally offsets
+        from those time zones) to time zones. This parameter can be a
+        dictionary with timezone aliases mapping time zone names to time
+        zones or a function taking two parameters (``tzname`` and
+        ``tzoffset``) and returning a time zone.
 
-        I fusi orari a cui vengono mappati i nomi possono essere un offset intero
-        rispetto all'UTC in secondi o un oggetto :class:`tzinfo`.
+        The timezones to which the names are mapped can be an integer
+        offset from UTC in seconds or a :class:`tzinfo` object.
 
         .. doctest::
            :options: +NORMALIZE_WHITESPACE
@@ -37,28 +37,28 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
             datetime.datetime(2012, 1, 19, 17, 21,
                               tzinfo=tzfile('/usr/share/zoneinfo/America/Chicago'))
 
-        Questo parametro viene ignorato se ``ignoretz`` è impostato.
+        This parameter is ignored if ``ignoretz`` is set.
 
     :param \*\*kwargs:
-        Argomenti keyword passati a ``_parse()``.
+        Keyword arguments as passed to ``_parse()``.
 
     :return:
-        Restituisce un oggetto :class:`datetime.datetime` o, se l'opzione
-        ``fuzzy_with_tokens`` è impostata su ``True``, restituisce una tupla, il cui
-        primo elemento è un oggetto :class:`datetime.datetime` e il secondo è una
-        tupla contenente i token fuzzy.
+        Returns a :class:`datetime.datetime` object or, if the
+        ``fuzzy_with_tokens`` option is ``True``, returns a tuple, the
+        first element being a :class:`datetime.datetime` object, the second
+        a tuple containing the fuzzy tokens.
 
     :raises ParserError:
-        Sollevato per formati di stringa non validi o sconosciuti, se il
-        :class:`tzinfo` fornito non è in un formato valido o se verrebbe creata
-        una data non valida.
+        Raised for invalid or unknown string format, if the provided
+        :class:`tzinfo` is not in a valid format, or if an invalid date
+        would be created.
 
     :raises TypeError:
-        Sollevato per input non stringa o flusso di caratteri.
+        Raised for non-string or character stream input.
 
     :raises OverflowError:
-        Sollevato se la data analizzata supera il più grande intero C valido
-        sul tuo sistema.
+        Raised if the parsed date exceeds the largest valid C integer on
+        your system.
     """
     from dateutil import parser
     return parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)

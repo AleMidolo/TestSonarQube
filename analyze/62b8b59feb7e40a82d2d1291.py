@@ -1,11 +1,11 @@
 def _getTargetClass(self):
     """
-    Definire questo metodo per restituire l'implementazione in uso, 
-    senza il suffisso 'Py' o 'Fallback'.
+    Define this to return the implementation in use,
+    without the 'Py' or 'Fallback' suffix.
     """
-    implementation = type(self).__name__
-    if implementation.endswith('Py'):
-        return implementation[:-2]
-    elif implementation.endswith('Fallback'):
-        return implementation[:-8]
-    return implementation
+    implementation_name = type(self).__module__.split('.')[0]
+    if implementation_name.endswith('Py'):
+        return implementation_name[:-2]
+    elif implementation_name.endswith('Fallback'):
+        return implementation_name[:-8]
+    return implementation_name

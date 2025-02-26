@@ -1,22 +1,27 @@
-def create_complex_argument_type(self, subcommand, type_name, option_name,
-                                 spec_option):
+def create_complex_argumet_type(self, subcommand, type_name, option_name,
+                                    spec_option):
     """
-    Crea il tipo di argomento complesso.
+    Build the complex argument type
 
-    :param subcommand: il nome del comando
-    :param type_name: il nome del tipo complesso
-    :param option_name: il nome dell'opzione
-    :param spec_option: le specifiche dell'opzione
-    :return: l'istanza del tipo complesso
+    :param subcommand: the command name
+    :param type_name: the complex type name
+    :param option_name: the option name
+    :param spec_option: option's specifications
+    :return: the complex type instance
     """
-    class ComplexArgumentType:
-        def __init__(self, subcommand, type_name, option_name, spec_option):
-            self.subcommand = subcommand
-            self.type_name = type_name
-            self.option_name = option_name
-            self.spec_option = spec_option
+    # Assuming we have a registry of complex types
+    complex_type_registry = {
+        'type1': ComplexType1,
+        'type2': ComplexType2,
+        # Add more complex types as needed
+    }
 
-        def __repr__(self):
-            return f"ComplexArgumentType(subcommand={self.subcommand}, type_name={self.type_name}, option_name={self.option_name}, spec_option={self.spec_option})"
+    if type_name not in complex_type_registry:
+        raise ValueError(f"Unknown type name: {type_name}")
 
-    return ComplexArgumentType(subcommand, type_name, option_name, spec_option)
+    complex_type_class = complex_type_registry[type_name]
+    complex_type_instance = complex_type_class(option_name, spec_option)
+
+    # Additional logic can be added here based on subcommand if needed
+
+    return complex_type_instance

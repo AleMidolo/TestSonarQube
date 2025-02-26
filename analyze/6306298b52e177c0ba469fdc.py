@@ -1,7 +1,10 @@
 def xml_children_as_dict(node):
     """
-    Trasforma i figli del nodo <xml> in un dizionario, con chiavi basate sul nome del tag.
+    Turn the children of node <xml> into a dict, keyed by tag name.
 
-    Questa è una conversione superficiale - i nodi figli non vengono elaborati ricorsivamente.
+    This is only a shallow conversation - child nodes are not recursively processed.
     """
-    return {child.tag: child for child in node}
+    children_dict = {}
+    for child in node:
+        children_dict[child.tag] = child
+    return children_dict

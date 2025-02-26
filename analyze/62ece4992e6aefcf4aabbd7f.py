@@ -2,10 +2,10 @@ from urllib.parse import urlparse
 
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
-    Analizza un href di un'immagine in parti composite.
+    Parse an image href into composite parts.
 
-    :param image_href: href di un'immagine
-    :returns: una tupla nella forma (image_id, netloc, use_ssl)
+    :param image_href: href of an image
+    :returns: a tuple of the form (image_id, netloc, use_ssl)
     :raises ValueError:
     """
     parsed_url = urlparse(image_href)

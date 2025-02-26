@@ -1,9 +1,14 @@
-import re
-
 def get_pattern(pattern, strip=True):
     """
-    Questo metodo converte la stringa fornita in un oggetto pattern regex
+    This method converts the given string to regex pattern
     """
+    import re
+    
     if strip:
         pattern = pattern.strip()
-    return re.compile(pattern)
+    
+    # Escape special characters in the pattern
+    escaped_pattern = re.escape(pattern)
+    
+    # Return the regex pattern
+    return escaped_pattern

@@ -1,6 +1,5 @@
 def workspace_manager(cls):
     """
-    Ottiene il gestore dello spazio di lavoro.
+    Gets the workspace manager.
     """
-    # Assuming cls has a method or attribute to get the workspace manager
-    return cls.get_workspace_manager() if hasattr(cls, 'get_workspace_manager') else None
+    return cls.workspace_manager if hasattr(cls, 'workspace_manager') else None

@@ -1,18 +1,20 @@
-def find_roots(graph, rdflib.RDFS.subClassOf):
+def find_roots(
+    graph: "Graph", prop: "URIRef", roots: Optional[Set["Node"]] = None
+) -> Set["Node"]:
     """
-    restituirà un insieme contenente tutte le radici della gerarchia delle sottoclassi.
+    Find the roots in some sort of transitive hierarchy.
 
-    Presuppone triple nella forma (figlio, prop, genitore), ovvero la direzione di
-    `RDFS.subClassOf` o `SKOS.broader`.
+    find_roots(graph, rdflib.RDFS.subClassOf)
+    will return a set of all roots of the sub-class hierarchy
+
+    Assumes triple of the form (child, prop, parent), i.e. the direction of
+    RDFS.subClassOf or SKOS.broader
     """
-    roots = set()
-    subclasses = set()
+    if roots is None:
+        roots = set()
 
-    for child, _, parent in graph.triples((None, rdflib.RDFS.subClassOf, None)):
-        subclasses.add(child)
+    all_children = {child for child, _, _ in graph.triples((None, prop, None))}
+    all_parents = {parent for _, _, parent in graph.triples((None, prop, None))}
 
-    for child in subclasses:
-        if (child, rdflib.RDFS.subClassOf, None) not in graph:
-            roots.add(child)
-
+    roots = all_children - all_parents
     return roots

@@ -1,58 +1,33 @@
+from collections import defaultdict
+from functools import wraps
+
 def lfu_cache(maxsize=128, typed=False):
     """
-    Decorator per racchiudere una funzione con un oggetto callable di memoizzazione
-    che salva fino a `maxsize` risultati basandosi su un algoritmo Least Frequently Used (LFU).
+    Decorator to wrap a function with a memoizing callable that saves
+    up to `maxsize` results based on a Least Frequently Used (LFU)
+    algorithm.
     """
-    from collections import defaultdict, OrderedDict
-    import functools
+    cache = {}
+    frequency = defaultdict(int)
+    order = []
 
-    class LFUCache:
-        def __init__(self, maxsize):
-            self.maxsize = maxsize
-            self.cache = {}
-            self.freq = defaultdict(OrderedDict)
-            self.min_freq = 0
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        key = args if not typed else (args, frozenset(kwargs.items()))
+        if key in cache:
+            frequency[key] += 1
+            return cache[key]
+        
+        result = func(*args, **kwargs)
+        if len(cache) >= maxsize:
+            lfu_key = min(order, key=lambda k: frequency[k])
+            del cache[lfu_key]
+            del frequency[lfu_key]
+            order.remove(lfu_key)
+        
+        cache[key] = result
+        frequency[key] += 1
+        order.append(key)
+        return result
 
-        def get(self, key):
-            if key not in self.cache:
-                return -1
-            value, freq = self.cache[key]
-            del self.freq[freq][key]
-            if not self.freq[freq]:
-                del self.freq[freq]
-                if self.min_freq == freq:
-                    self.min_freq += 1
-            self.freq[freq + 1][key] = value
-            self.cache[key] = (value, freq + 1)
-            return value
-
-        def put(self, key, value):
-            if key in self.cache:
-                self.cache[key] = (value, self.cache[key][1])
-                self.get(key)  # Update frequency
-                return
-            if len(self.cache) >= self.maxsize:
-                evict_key, _ = self.freq[self.min_freq].popitem(last=False)
-                del self.cache[evict_key]
-            self.cache[key] = (value, 1)
-            self.freq[1][key] = value
-            self.min_freq = 1
-
-    def decorator(func):
-        cache = LFUCache(maxsize)
-
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            if typed:
-                key = (args, frozenset(kwargs.items()))
-            else:
-                key = args
-            result = cache.get(key)
-            if result == -1:
-                result = func(*args, **kwargs)
-                cache.put(key, result)
-            return result
-
-        return wrapper
-
-    return decorator
+    return wrapper

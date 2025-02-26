@@ -1,35 +1,29 @@
 def extostr(cls, e, max_level=30, max_path_level=5):
     """
-    Formatta un'eccezione.  
-    :param e: Qualsiasi istanza di eccezione.  
-    :type e: Exception  
-    :param max_level: Livello massimo dello stack delle chiamate (predefinito 30)  
-    :type max_level: int  
-    :param max_path_level: Livello massimo del percorso (predefinito 5)  
-    :type max_path_level: int  
-    :return: La stringa leggibile dell'eccezione  
-    :rtype: str  
+    Format an exception.
+    :param e: Any exception instance.
+    :type e: Exception
+    :param max_level: Maximum call stack level (default 30)
+    :type max_level: int
+    :param max_path_level: Maximum path level (default 5)
+    :type max_path_level: int
+    :return: The exception readable string
+    :rtype: str
     """
     import traceback
 
-    # Get the exception type and message
-    exc_type = type(e).__name__
-    exc_message = str(e)
+    def format_exception(exc, level, path_level):
+        if level > max_level or path_level > max_path_level:
+            return f"{exc.__class__.__name__}: {str(exc)}"
+        
+        tb = traceback.extract_tb(exc.__traceback__)
+        formatted_tb = []
+        for frame in tb:
+            formatted_tb.append(f"File \"{frame.filename}\", line {frame.lineno}, in {frame.name}")
+        
+        return "\n".join(formatted_tb)
 
-    # Get the traceback information
-    tb = traceback.extract_tb(e.__traceback__)
-    tb_info = tb[:max_level]
-
-    # Format the traceback information
-    formatted_tb = []
-    for frame in tb_info:
-        filename, lineno, funcname, code = frame
-        formatted_tb.append(f'File "{filename}", line {lineno}, in {funcname}\n    {code}')
-
-    # Limit the number of paths shown
-    if len(formatted_tb) > max_path_level:
-        formatted_tb = formatted_tb[:max_path_level] + [f"... and {len(tb_info) - max_path_level} more lines"]
-
-    # Combine everything into a single string
-    result = f"{exc_type}: {exc_message}\n" + "\n".join(formatted_tb)
-    return result
+    exception_message = f"{cls.__name__}: {str(e)}"
+    formatted_traceback = format_exception(e, 0, 0)
+    
+    return f"{exception_message}\nTraceback (most recent call last):\n{formatted_traceback}"

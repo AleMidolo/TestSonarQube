@@ -3,7 +3,7 @@ import os
 
 def build_app_logger(name='app', logfile='app.log', debug=True):
     """
-    Logger per applicazioni di uso generale. Utile principalmente per il debugging.
+    General purpose application logger. Useful mainly for debugging
     """
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG if debug else logging.INFO)

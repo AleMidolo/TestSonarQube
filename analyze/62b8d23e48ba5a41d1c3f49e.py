@@ -1,9 +1,8 @@
-import random
-
 def popitem(self):
     """
-    Rimuovi e restituisci una coppia `(chiave, valore)` casuale.
+    Remove and return a random `(key, value)` pair.
     """
+    import random
     if not self:
         raise KeyError("popitem(): dictionary is empty")
     key = random.choice(list(self.keys()))

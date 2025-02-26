@@ -2,15 +2,21 @@ import requests
 
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    Recupera e analizza un documento webfinger remoto di Diaspora.
+    Retrieve a and parse a remote Diaspora webfinger document.
 
-    :arg handle: Handle remoto da recuperare  
+    :arg handle: Remote handle to retrieve
     :returns: dict
     """
-    url = f"https://{handle}/.well-known/webfinger?resource=acct:{handle}"
-    response = requests.get(url)
+    # Construct the webfinger URL
+    webfinger_url = f"https://{handle.split('@')[1]}/.well-known/webfinger?resource=acct:{handle}"
     
+    # Make the request to the webfinger URL
+    response = requests.get(webfinger_url)
+    
+    # Check if the request was successful
     if response.status_code == 200:
+        # Parse the JSON response
         return response.json()
     else:
+        # Handle errors (e.g., user not found, server error)
         response.raise_for_status()

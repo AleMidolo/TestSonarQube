@@ -2,14 +2,14 @@ from datetime import timedelta
 
 def dehydrate_timedelta(value):
     """
-    Deidratatore per valori di tipo `timedelta`.
+    Dehydrator for `timedelta` values.
 
-    :param value: 
-    :type value: timedelta  
-    :return: 
+    :param value: A timedelta object to be dehydrated.
+    :type value: timedelta
+    :return: A dictionary representation of the timedelta.
     """
     if not isinstance(value, timedelta):
-        raise ValueError("Input must be a timedelta object.")
+        raise ValueError("The value must be a timedelta object.")
     
     total_seconds = int(value.total_seconds())
     days = total_seconds // 86400

@@ -1,26 +1,44 @@
 def _update_context(self, context):
     """
-    Aggiorna il *context* con le proprietà di questo grafo.
+    Update *context* with the properties of this graph.
 
-    *context.error* viene aggiornato aggiungendo gli indici degli errori.
-    Esempio di subcontext per un grafo con i campi "E,t,error_E_low":
-    `{"error": {"x_low": {"index": 2}}}`.
-    Nota che i nomi degli errori sono chiamati "x", "y" e "z"
-    (questo corrisponde alle prime tre coordinate, se presenti),
-    il che consente di semplificare la rappresentazione grafica.
-    I valori esistenti non vengono rimossi
-    da *context.value* e dai suoi subcontesti.
+    *context.error* is appended with indices of errors.
+    Example subcontext for a graph with fields "E,t,error_E_low":
+    {"error": {"x_low": {"index": 2}}}.
+    Note that error names are called "x", "y" and "z"
+    (this corresponds to first three coordinates,
+    if they are present), which allows to simplify plotting.
+    Existing values are not removed
+    from *context.value* and its subcontexts.
 
-    Viene chiamato durante la "distruzione" del grafo (ad esempio,
-    nella classe :class:`.ToCSV`). Per "distruzione" si intende la conversione
-    in un'altra struttura (come il testo) nel flusso di lavoro.
-    L'oggetto grafo non viene realmente distrutto in questo processo.
+    Called on "destruction" of the graph (for example,
+    in :class:`.ToCSV`). By destruction we mean conversion
+    to another structure (like text) in the flow.
+    The graph object is not really destroyed in this process.
     """
-    # Supponiamo che self.errors contenga gli errori del grafo
-    for i, error in enumerate(self.errors):
-        error_key = f"x" if i == 0 else f"y" if i == 1 else f"z"
-        context['error'][f"{error_key}_low"] = {'index': error.index}
+    # Assuming self.graph_data contains the properties of the graph
+    if not hasattr(context, 'error'):
+        context.error = {}
     
-    # Non rimuoviamo i valori esistenti in context.value
-    # Aggiungiamo eventuali altre proprietà del grafo a context
-    context.update(self.properties)
+    # Example of how to append error indices
+    for index, error in enumerate(self.graph_data.get('errors', [])):
+        if error:
+            context.error[f"x_{index}"] = {"index": index}
+    
+    # Assuming context.value is a dictionary that holds the graph's values
+    if not hasattr(context, 'value'):
+        context.value = {}
+    
+    # Update context.value with graph properties
+    for key, value in self.graph_data.items():
+        if key not in context.value:
+            context.value[key] = value
+        else:
+            # If the key already exists, we can choose to merge or append
+            if isinstance(context.value[key], list) and isinstance(value, list):
+                context.value[key].extend(value)
+            elif isinstance(context.value[key], dict) and isinstance(value, dict):
+                context.value[key].update(value)
+            else:
+                # If types are different, we can choose to keep the existing value
+                pass

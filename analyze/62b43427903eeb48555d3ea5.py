@@ -1,32 +1,38 @@
-from typing import AnyStr, Union, Dict, Sequence, Tuple
-
 def format(
                 self,
                 sql: AnyStr,
                 params: Union[Dict[Union[str, int], Any], Sequence[Any]],
         ) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
     """
-    Converte la query SQL per utilizzare i parametri in stile "out" invece dei parametri in stile "in".
+    Convert the SQL query to use the out-style parameters instead of
+    the in-style parameters.
 
-    **sql** (:class:`str` o :class:`bytes`) è la query SQL.
+    *sql* (:class:`str` or :class:`bytes`) is the SQL query.
 
-    Restituisce una :class:`tuple` contenente:
+    *params* (:class:`~collections.abc.Mapping` or :class:`~collections.abc.Sequence`)
+    contains the set of in-style parameters. It maps each parameter
+    (:class:`str` or :class:`int`) to value. If :attr:`.SQLParams.in_style`
+    is a named parameter style. then *params* must be a :class:`~collections.abc.Mapping`.
+    If :attr:`.SQLParams.in_style` is an ordinal parameter style, then
+    *params* must be a :class:`~collections.abc.Sequence`.
 
-    - La query SQL formattata (:class:`str` o :class:`bytes`).
+    Returns a :class:`tuple` containing:
 
-    - L'insieme dei parametri convertiti in stile "out" (:class:`dict` o :class:`list`).
+    -       The formatted SQL query (:class:`str` or :class:`bytes`).
+
+    -       The set of converted out-style parameters (:class:`dict` or
+            :class:`list`).
     """
-    if isinstance(sql, bytes):
-        sql_str = sql.decode('utf-8')
-    else:
-        sql_str = sql
-
+    # Determine if the SQL parameters are named or ordinal
     if isinstance(params, dict):
-        out_params = {key: f'OUT_{value}' for key, value in params.items()}
-    elif isinstance(params, list):
-        out_params = [f'OUT_{value}' for value in params]
+        # Named parameters
+        for key, value in params.items():
+            sql = sql.replace(f":{key}", str(value))
+        return sql, params
+    elif isinstance(params, (list, tuple)):
+        # Ordinal parameters
+        for index, value in enumerate(params):
+            sql = sql.replace(f"?{index + 1}", str(value))
+        return sql, list(params)
     else:
-        out_params = params
-
-    formatted_sql = sql_str.replace("?", "%s")  # Example of converting placeholders
-    return formatted_sql, out_params
+        raise TypeError("params must be a dictionary or a sequence")
