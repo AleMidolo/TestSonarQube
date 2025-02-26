@@ -12,21 +12,20 @@ def validate_version_inventories(self, version_dirs):
 
     for i in range(1, len(version_dirs)):
         current_inventory = self.load_inventory(version_dirs[i])
-        # 检查当前版本是否包含根清单的所有内容
-        missing_items = set(root_inventory) - set(current_inventory)
-        
-        if missing_items:
-            discrepancies[version_dirs[i]] = {
-                'missing_items': list(missing_items),
-                'summary': self.generate_summary(current_inventory)
-            }
+        # 检查当前版本是否包含截至该版本的完整清单
+        if not self.is_complete_inventory(current_inventory, root_inventory):
+            discrepancies[version_dirs[i]] = self.get_discrepancies(current_inventory, root_inventory)
 
     return discrepancies
 
 def load_inventory(self, version_dir):
-    # 这里应该实现加载版本目录中的清单的逻辑
+    # 这里实现加载版本清单的逻辑
     pass
 
-def generate_summary(self, inventory):
-    # 这里应该实现生成清单摘要的逻辑
+def is_complete_inventory(self, current_inventory, root_inventory):
+    # 这里实现检查当前清单是否完整的逻辑
+    pass
+
+def get_discrepancies(self, current_inventory, root_inventory):
+    # 这里实现获取与根清单不同内容的逻辑
     pass

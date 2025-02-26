@@ -1,5 +1,4 @@
 import os
-import xml.etree.ElementTree as ET
 from collections import defaultdict
 
 def _explore_folder(folder):
@@ -19,13 +18,17 @@ def _explore_folder(folder):
     -------
     dict
     """
-    def _group_files_by_xml_filename(files):
-        grouped_files = defaultdict(list)
-        for file in files:
-            if file.endswith('.xml'):
-                xml_filename = os.path.splitext(file)[0]
-                grouped_files[xml_filename].append(file)
-        return dict(grouped_files)
-
-    files = os.listdir(folder)
-    return _group_files_by_xml_filename(files)
+    file_groups = defaultdict(list)
+    
+    for filename in os.listdir(folder):
+        if filename.endswith('.xml'):
+            xml_filename = filename
+            # Assuming the XML filename is used to group related files
+            base_name = os.path.splitext(xml_filename)[0]
+            file_groups[base_name].append(os.path.join(folder, filename))
+        else:
+            # Group other files based on their related XML file
+            base_name = os.path.splitext(filename)[0]
+            file_groups[base_name].append(os.path.join(folder, filename))
+    
+    return dict(file_groups)

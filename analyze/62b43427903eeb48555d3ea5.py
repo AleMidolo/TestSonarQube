@@ -18,16 +18,16 @@ def format(
 
         - 转换后的 out-style 参数集合（类型：`dict` 或 `list`）。
     """
-    # Assuming self._converter.convert is a method that converts the SQL and parameters
-    converted_sql = self._converter.convert(sql)
-    
+    # Assuming self._converter.convert is defined and works as expected
     if isinstance(params, dict):
-        # Handle named parameters
-        out_params = {key: params[key] for key in params}
+        # Named parameters
+        out_params = {key: self._converter.convert(value) for key, value in params.items()}
+        formatted_sql = sql.format(**out_params)
     elif isinstance(params, (list, tuple)):
-        # Handle positional parameters
-        out_params = list(params)
+        # Positional parameters
+        out_params = [self._converter.convert(value) for value in params]
+        formatted_sql = sql.format(*out_params)
     else:
-        raise TypeError("params must be a Mapping or Sequence")
+        raise TypeError("params must be a dictionary or a sequence")
 
-    return converted_sql, out_params
+    return formatted_sql, out_params

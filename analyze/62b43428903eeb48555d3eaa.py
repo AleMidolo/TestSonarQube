@@ -22,14 +22,9 @@ def formatmany(
     """
     out_params = []
     for params in many_params:
-        if isinstance(params, dict):
-            out_param = self._converter.convert_many(params)
-        elif isinstance(params, (list, tuple)):
-            out_param = self._converter.convert_many(*params)
-        else:
-            raise TypeError("params must be a dict or a sequence")
-        
-        out_params.append(out_param)
-
-    formatted_sql = self._converter.convert_sql(sql)
+        converted_params = self._converter.convert_many(params)
+        out_params.append(converted_params)
+    
+    formatted_sql = self._converter.format_sql(sql, out_params)
+    
     return formatted_sql, out_params

@@ -57,11 +57,36 @@ def isoparse(self, dt_str):
     import re
     from dateutil import tz
 
-    # Regular expressions for parsing
-    iso_date_regex = re.compile(r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?')
-    iso_week_regex = re.compile(r'(\d{4})-W(\d{2})(?:-(\d{1}))?')
-    iso_time_regex = re.compile(r'(\d{2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?)?')
-    iso_tz_regex = re.compile(r'Z|([+-]\d{2}):?(\d{2})?|([+-]\d{2})(\d{2})?|([+-]\d{2})')
+    # Define regex patterns for parsing
+    date_patterns = [
+        r'(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})',  # YYYY-MM-DD
+        r'(?P<year>\d{4})-(?P<week>\d{2})-W(?P<weekday>\d)',  # YYYY-Www-D
+        r'(?P<year>\d{4})-(?P<week>\d{2})',  # YYYY-Www
+        r'(?P<year>\d{4})',  # YYYY
+        r'(?P<year>\d{4})(?P<month>\d{2})(?P<day>\d{2})',  # YYYYMMDD
+        r'(?P<year>\d{4})(?P<week>\d{2})W(?P<weekday>\d)',  # YYYYWwwD
+        r'(?P<year>\d{4})(?P<week>\d{2})'  # YYYYWww
+    ]
+
+    time_patterns = [
+        r'(?P<hour>\d{1,2}):(?P<minute>\d{2}):(?P<second>\d{2})(\.(?P<subsecond>\d{1,6}))?',  # hh:mm:ss.ssssss
+        r'(?P<hour>\d{1,2}):(?P<minute>\d{2})(\.(?P<subsecond>\d{1,6}))?',  # hh:mm.ssssss
+        r'(?P<hour>\d{1,2})(?P<minute>\d{2})(?P<second>\d{2})(\.(?P<subsecond>\d{1,6}))?',  # hhmmss.ssssss
+        r'(?P<hour>\d{1,2})(?P<minute>\d{2})(\.(?P<subsecond>\d{1,6}))?',  # hhmm.ssssss
+        r'(?P<hour>\d{1,2})'  # hh
+    ]
+
+    tz_patterns = [
+        r'Z',  # UTC
+        r'(?P<sign>[+-])(?P<hour>\d{2}):(?P<minute>\d{2})',  # ±HH:MM
+        r'(?P<sign>[+-])(?P<hour>\d{2})(?P<minute>\d{2})',  # ±HHMM
+        r'(?P<sign>[+-])(?P<hour>\d{2})'  # ±HH
+    ]
+
+    # Combine patterns
+    date_regex = re.compile('|'.join(date_patterns))
+    time_regex = re.compile('|'.join(time_patterns))
+    tz_regex = re.compile('|'.join(tz_patterns))
 
     # Split date and time
     if 'T' in dt_str:
@@ -70,50 +95,54 @@ def isoparse(self, dt_str):
         date_str, time_str = dt_str, ''
 
     # Parse date
-    match = iso_date_regex.match(date_str)
-    if match:
-        year = int(match.group(1))
-        month = int(match.group(2)) if match.group(2) else 1
-        day = int(match.group(3)) if match.group(3) else 1
-    else:
-        match = iso_week_regex.match(date_str)
-        if match:
-            year = int(match.group(1))
-            week = int(match.group(2))
-            day = int(match.group(3)) if match.group(3) else 1
+    date_match = date_regex.fullmatch(date_str)
+    if not date_match:
+        raise ValueError(f"Invalid date format: {date_str}")
+
+    year = int(date_match.group('year'))
+    month = int(date_match.group('month') or 1)
+    day = int(date_match.group('day') or 1)
+
+    # Handle ISO week date
+    if date_match.group('week'):
+        week = int(date_match.group('week'))
+        weekday = int(date_match.group('weekday') or 0)
+        if weekday:
             # Calculate the date from ISO week
             first_day_of_year = datetime(year, 1, 1)
-            first_weekday = first_day_of_year.weekday()
-            days_to_first_week = (7 - first_weekday) % 7
-            first_week_start = first_day_of_year + timedelta(days=days_to_first_week)
-            date = first_week_start + timedelta(weeks=week - 1, days=day - 1)
-            return date
+            first_weekday = first_day_of_year.isocalendar()[2]
+            days_to_first_week = (7 - first_weekday + 1) % 7
+            date = first_day_of_year + timedelta(days=days_to_first_week + (week - 1) * 7 + (weekday - 1))
+        else:
+            date = datetime(year, 1, 1) + timedelta(weeks=week - 1)
+    else:
+        date = datetime(year, month, day)
 
     # Parse time
-    match = iso_time_regex.match(time_str)
-    if match:
-        hour = int(match.group(1))
-        minute = int(match.group(2)) if match.group(2) else 0
-        second = int(match.group(3)) if match.group(3) else 0
-        microsecond = int(match.group(4).ljust(6, '0')) if match.group(4) else 0
+    time_match = time_regex.fullmatch(time_str)
+    if time_match:
+        hour = int(time_match.group('hour') or 0)
+        minute = int(time_match.group('minute') or 0)
+        second = int(time_match.group('second') or 0)
+        subsecond = int(time_match.group('subsecond') or 0) if time_match.group('subsecond') else 0
+        time = datetime(year, month, day, hour, minute, second, subsecond)
     else:
-        hour, minute, second, microsecond = 0, 0, 0, 0
+        time = date
 
     # Parse timezone
-    tzinfo = None
-    match = iso_tz_regex.search(dt_str)
-    if match:
-        if match.group(0) == 'Z':
+    tz_match = tz_regex.fullmatch(dt_str.split('T')[-1]) if 'T' in dt_str else None
+    if tz_match:
+        if tz_match.group(0) == 'Z':
             tzinfo = tz.tzutc()
         else:
-            if match.group(1):
-                offset_hours = int(match.group(1))
-                offset_minutes = int(match.group(2)) if match.group(2) else 0
-                tzinfo = tz.tzoffset(None, offset_hours * 3600 + offset_minutes * 60)
-            elif match.group(3):
-                offset_hours = int(match.group(3))
-                tzinfo = tz.tzoffset(None, offset_hours * 3600)
+            sign = 1 if tz_match.group('sign') == '+' else -1
+            tz_hour = int(tz_match.group('hour'))
+            tz_minute = int(tz_match.group('minute') or 0)
+            tzinfo = tz.tzoffset(None, sign * (tz_hour * 3600 + tz_minute * 60))
+    else:
+        tzinfo = None
 
-    # Create datetime object
-    dt = datetime(year, month, day, hour, minute, second, microsecond, tzinfo=tzinfo)
-    return dt
+    # Combine date and time
+    if tzinfo:
+        return time.replace(tzinfo=tzinfo)
+    return time
