@@ -25,7 +25,7 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
         if is_valid:
             good_objects += 1
         elif show_warnings:
-            print(f"Warning: Object {obj} is invalid.")
+            print(f"Warning: Object {obj} is not valid.")
 
     return num_objects, good_objects
 

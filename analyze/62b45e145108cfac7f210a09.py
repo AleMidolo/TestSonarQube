@@ -4,7 +4,7 @@ def check_digests_present_and_used(self, manifest_files, digests_used):
     """
     required_digests = set()
     
-    # Recopilar todos los resúmenes necesarios de los archivos de manifiesto
+    # Recolectar todos los resúmenes necesarios de los archivos de manifiesto
     for manifest in manifest_files:
         with open(manifest, 'r') as file:
             for line in file:

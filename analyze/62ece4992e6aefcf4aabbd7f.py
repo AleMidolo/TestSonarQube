@@ -1,4 +1,5 @@
 from urllib.parse import urlparse
+from typing import Tuple
 
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
@@ -20,10 +21,10 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
     parsed_url = urlparse(image_href)
     
-    if not all([parsed_url.scheme, parsed_url.netloc, parsed_url.path]):
+    if not parsed_url.scheme or not parsed_url.netloc:
         raise ValueError("El enlace proporcionado no es válido.")
     
-    image_id = parsed_url.path.split('/')[-1]  # Asumiendo que el ID de la imagen es el último segmento del path
+    image_id = parsed_url.path.strip('/')
     netloc = parsed_url.netloc
     use_ssl = parsed_url.scheme == 'https'
     

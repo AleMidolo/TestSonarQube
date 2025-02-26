@@ -13,15 +13,16 @@ def find_path_type(path):
     import os
 
     if not os.path.exists(path):
-        return "La ruta no existe"
+        return "La ruta no existe."
 
     if os.path.isdir(path):
-        if any(file.startswith("0=") for file in os.listdir(path)):
-            return 'root'
-        else:
-            return 'object'
+        # Check for "0=*" files in the directory
+        for item in os.listdir(path):
+            if item.startswith("0="):
+                if item == "0=inventory":
+                    return "file"
+                else:
+                    return "object"
+        return "root"
     
-    if os.path.isfile(path):
-        return 'file'
-    
-    return "Tipo de elemento desconocido"
+    return "La ruta no es un directorio."

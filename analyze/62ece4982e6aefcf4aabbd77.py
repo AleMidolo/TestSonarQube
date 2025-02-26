@@ -26,9 +26,9 @@ def parse_frequency(frequency):
         'weeks': 'weeks',
         'week': 'weeks',
         'months': 'days',  # Approximation: 1 month = 30 days
-        'month': 'days',
-        'years': 'days',   # Approximation: 1 year = 365 days
-        'year': 'days'
+        'month': 'days',    # Approximation: 1 month = 30 days
+        'years': 'days',    # Approximation: 1 year = 365 days
+        'year': 'days'      # Approximation: 1 year = 365 days
     }
 
     parts = frequency.split()

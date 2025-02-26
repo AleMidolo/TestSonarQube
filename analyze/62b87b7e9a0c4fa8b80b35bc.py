@@ -16,12 +16,13 @@ def _update_context(self, context):
     El objeto grafo no se destruye realmente en este proceso.
     """
     # Implementación del método
-    if 'error' not in context:
-        context['error'] = {}
+    if not hasattr(context, 'error'):
+        context.error = {}
     
-    # Supongamos que self.errors es un diccionario que contiene los errores
+    # Supongamos que 'self.errors' es un diccionario que contiene los errores
     for i, error in enumerate(self.errors):
-        error_name = f"x_{i+1}"  # Asumiendo que los errores se nombran x_1, x_2, ...
-        context['error'][error_name] = {'index': error.index}  # Suponiendo que error tiene un atributo index
-
-    # No se eliminan valores existentes en context.value ni en subcontextos
+        error_name = ['x', 'y', 'z'][i] if i < 3 else f'error_{i}'
+        context.error[error_name] = {'index': error.index}
+    
+    # No eliminamos valores existentes en context.value
+    # Se pueden agregar más propiedades del grafo a context si es necesario
