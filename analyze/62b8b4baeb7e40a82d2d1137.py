@@ -19,33 +19,39 @@ def verifyObject(iface, candidate, tentative=False):
         Si múltiples métodos o atributos son inválidos, todos esos errores se recopilan y se informan. Anteriormente, solo se informaba el primer error. Como caso especial, si solo hay un error presente, este se lanza de forma individual, como antes.
     """
     from zope.interface import providedBy, Invalid
-    from inspect import signature, Parameter
+    from inspect import signature, isfunction
+    import inspect
 
     errors = []
 
     if not tentative and not providedBy(candidate).isOrExtends(iface):
         errors.append(f"{candidate} does not provide {iface}")
 
-    required_methods = iface.names()
-    for method_name, _ in required_methods:
-        if not hasattr(candidate, method_name):
-            errors.append(f"{candidate} is missing method {method_name}")
+    required_methods = iface.names(unicode=True)
+    for method_name in required_methods:
+        if method_name not in candidate.__dict__:
+            errors.append(f"{method_name} is missing in {candidate}")
             continue
         
-        method = getattr(candidate, method_name)
+        method = candidate.__dict__[method_name]
+        if not isfunction(method):
+            errors.append(f"{method_name} is not a function in {candidate}")
+            continue
+        
         iface_method = iface.lookupMethod(method_name)
-        
-        if not callable(method):
-            errors.append(f"{method_name} in {candidate} is not callable")
+        if iface_method is None:
+            errors.append(f"{method_name} is not defined in the interface {iface}")
             continue
         
-        if signature(method) != signature(iface_method):
-            errors.append(f"{method_name} in {candidate} has incorrect signature")
+        iface_signature = signature(iface_method)
+        method_signature = signature(method)
+        if iface_signature != method_signature:
+            errors.append(f"{method_name} has incorrect signature in {candidate}")
 
-    required_attributes = iface.names()
-    for attr_name, _ in required_attributes:
-        if not hasattr(candidate, attr_name):
-            errors.append(f"{candidate} is missing attribute {attr_name}")
+    required_attributes = [attr for attr in iface.names() if not callable(getattr(iface, attr))]
+    for attr in required_attributes:
+        if not hasattr(candidate, attr):
+            errors.append(f"{attr} is missing in {candidate}")
 
     if errors:
         if len(errors) == 1:

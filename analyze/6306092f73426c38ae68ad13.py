@@ -30,8 +30,8 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
     # Execute the command
     result = subprocess.run(' '.join(command), shell=True, capture_output=True, text=True)
 
-    # Handle the output
+    # Check for errors
     if result.returncode != 0:
-        print(f"Error executing playbook: {result.stderr}")
-    else:
-        print(f"Playbook executed successfully: {result.stdout}")
+        raise RuntimeError(f"Ansible playbook failed: {result.stderr}")
+
+    return result.stdout

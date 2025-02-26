@@ -9,12 +9,12 @@ def make_parsers():
 
     class SubParserA:
         def parse(self, data):
-            # Implementación del análisis para SubParserA
+            # Implementación del análisis de SubParserA
             return f"SubParserA: {data}"
 
     class SubParserB:
         def parse(self, data):
-            # Implementación del análisis para SubParserB
+            # Implementación del análisis de SubParserB
             return f"SubParserB: {data}"
 
     high_level_parser = HighLevelParser()

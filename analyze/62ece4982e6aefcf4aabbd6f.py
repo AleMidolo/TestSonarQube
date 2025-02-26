@@ -16,14 +16,18 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     """
     # Descargar el archivo .tar.gz
     response = requests.get(url)
-    tar_gz_path = destination_path / 'repo_archive.tar.gz'
-    
-    with open(tar_gz_path, 'wb') as f:
+    response.raise_for_status()  # Lanza un error si la descarga falla
+
+    # Guardar el archivo temporalmente
+    temp_file = destination_path.with_suffix('.tar.gz')
+    with open(temp_file, 'wb') as f:
         f.write(response.content)
-    
+
     # Extraer el archivo .tar.gz
-    with tarfile.open(tar_gz_path, 'r:gz') as tar:
+    with tarfile.open(temp_file, 'r:gz') as tar:
         tar.extractall(path=destination_path)
-    
-    # Retornar el directorio donde se ha extraído el archivo
+
+    # Eliminar el archivo .tar.gz temporal
+    temp_file.unlink()
+
     return destination_path
