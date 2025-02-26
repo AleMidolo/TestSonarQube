@@ -6,19 +6,20 @@ def cachedmethod(cache, key=hashkey, lock=None):
         def wrapper(self, *args, **kwargs):
             # Generate the cache key
             cache_key = key(self, *args, **kwargs)
-            # Acquire lock if provided
-            if lock:
-                with lock:
-                    if cache_key in cache:
-                        return cache[cache_key]
-                    result = func(self, *args, **kwargs)
-                    cache[cache_key] = result
-                    return result
-            else:
-                if cache_key in cache:
-                    return cache[cache_key]
+            # Check if the result is already in the cache
+            if cache_key in cache:
+                return cache[cache_key]
+            # If not, call the function and store the result in the cache
+            with (lock if lock else dummy_lock):
                 result = func(self, *args, **kwargs)
                 cache[cache_key] = result
-                return result
+            return result
         return wrapper
     return decorator
+
+# Dummy lock for cases where no lock is provided
+class dummy_lock:
+    def __enter__(self):
+        pass
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass

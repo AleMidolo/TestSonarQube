@@ -15,13 +15,10 @@ def parse_frequency(frequency):
     units = {
         'seconds': 'seconds',
         'second': 'seconds',
-        's': 'seconds',
         'minutes': 'minutes',
         'minute': 'minutes',
-        'm': 'minutes',
         'hours': 'hours',
         'hour': 'hours',
-        'h': 'hours',
         'days': 'days',
         'day': 'days',
         'weeks': 'weeks',

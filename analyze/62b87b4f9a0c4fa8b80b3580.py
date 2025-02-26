@@ -6,4 +6,4 @@ def integral(bins, edges):
     per l'integrazione.  
     Il loro formato è definito nella descrizione della classe :class:`.histogram`.
     """
-    return sum((edges[i+1] - edges[i]) * bins[i] for i in range(len(bins)))
+    return sum((edges[i + 1] - edges[i]) * bins[i] for i in range(len(bins)))
