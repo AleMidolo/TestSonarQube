@@ -16,9 +16,15 @@ def generate_default_observer_schema(app):
                 'apiVersion': resource.get('apiVersion'),
                 'metadata': {
                     'name': resource['metadata'].get('name'),
-                    'namespace': resource['metadata'].get('namespace'),
+                    'namespace': resource['metadata'].get('namespace')
                 },
-                'spec': resource.get('spec', {})
+                'spec': {}
             }
-    
+            # Add default observation fields based on resource type
+            if resource_type == 'Pod':
+                default_schema[resource_type]['spec']['containers'] = []
+            elif resource_type == 'Service':
+                default_schema[resource_type]['spec']['ports'] = []
+            # Add more resource types as needed
+
     return default_schema

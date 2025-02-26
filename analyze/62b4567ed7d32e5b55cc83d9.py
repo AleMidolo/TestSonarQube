@@ -59,10 +59,9 @@ def deep_merge_nodes(nodes):
     Lo scopo di una fusione profonda come questa è supportare, ad esempio, la fusione di un file di configurazione borgmatic in un altro per il riutilizzo, in modo che una sezione di configurazione ("retention", ecc.) non sostituisca completamente la sezione corrispondente in un file unito.
     """
     merged = {}
-    
+
     for key_node, value_node in nodes:
         key = key_node.value
-        
         if key not in merged:
             merged[key] = value_node
         else:

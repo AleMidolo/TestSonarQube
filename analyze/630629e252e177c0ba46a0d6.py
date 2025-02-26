@@ -11,13 +11,16 @@ def retrieve_diaspora_host_meta(host):
     # Costruire l'URL del documento host-meta
     url = f"https://{host}/host-meta"
 
-    # Effettuare la richiesta GET
-    response = requests.get(url)
+    try:
+        # Effettuare la richiesta GET
+        response = requests.get(url)
+        response.raise_for_status()  # Solleva un'eccezione per risposte di errore
 
-    # Verificare se la richiesta ha avuto successo
-    if response.status_code == 200:
         # Analizzare il contenuto XML
         xrd = etree.fromstring(response.content)
-        return xrd
-    else:
-        response.raise_for_status()
+
+        return xrd  # Restituisce l'istanza di XRD
+
+    except requests.RequestException as e:
+        print(f"Errore durante il recupero del documento host-meta: {e}")
+        return None

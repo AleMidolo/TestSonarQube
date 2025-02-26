@@ -12,16 +12,12 @@ def get_nodeinfo_well_known_document(url, document_path=None):
 
     nodeinfo_document = {
         "version": "2.0",
-        "services": {
-            "outbound": {
-                "webfinger": {
-                    "href": f"{url}/.well-known/webfinger?resource={{uri}}"
-                },
-                "nodeinfo": {
-                    "href": f"{url}/{document_path or 'nodeinfo'}"
-                }
+        "links": [
+            {
+                "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
+                "href": f"{url}/{document_path or '.well-known/nodeinfo'}"
             }
-        }
+        ]
     }
 
     return nodeinfo_document

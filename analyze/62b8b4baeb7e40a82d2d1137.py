@@ -34,7 +34,7 @@ def verifyObject(iface, candidate, tentative=False):
         
         # Check method signature
         method_signature = signature(getattr(candidate, method))
-        iface_method_signature = signature(getattr(iface, method))
+        iface_method_signature = signature(iface.names()[method][1])
         
         if len(method_signature.parameters) != len(iface_method_signature.parameters):
             errors.append(f"{method} in {candidate} has incorrect number of parameters")

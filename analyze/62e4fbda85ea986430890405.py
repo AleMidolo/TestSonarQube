@@ -26,7 +26,7 @@ def xargs(
     chunk_size = (len(varargs) + target_concurrency - 1) // target_concurrency
     chunks = [varargs[i:i + chunk_size] for i in range(0, len(varargs), chunk_size)]
 
-    with Pool(processes=target_concurrency) as pool:
+    with Pool(target_concurrency) as pool:
         results = pool.map(run_command, chunks)
 
     # Combine return codes and output
