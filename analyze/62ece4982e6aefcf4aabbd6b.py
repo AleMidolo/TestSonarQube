@@ -4,8 +4,8 @@ def subclasses(cls):
     """
     all_subclasses = set()
 
-    def find_subclasses(c):
-        for subclass in c.__subclasses__():
+    def find_subclasses(class_type):
+        for subclass in class_type.__subclasses__():
             all_subclasses.add(subclass)
             find_subclasses(subclass)
 

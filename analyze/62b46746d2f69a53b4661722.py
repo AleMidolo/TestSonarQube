@@ -14,27 +14,27 @@ def absorb(self, args):
 
       A & (~A | B) = A & B, A | (~A & B) = A | B
     """
-    new_expressions = []
+    new_args = []
     for expr in args:
         # Apply Absorption Law
         if isinstance(expr, tuple) and len(expr) == 3:
             a, op, b = expr
             if op == '&':
                 if (a == b) or (b == ('|', a)):
-                    new_expressions.append(a)
+                    new_args.append(a)
                 elif (a == ('|', b)):
-                    new_expressions.append(a)
+                    new_args.append(a)
                 elif (a == ('~', b)):
-                    new_expressions.append(('&', a, b))
+                    new_args.append(('&', a, b))
                 else:
-                    new_expressions.append(expr)
+                    new_args.append(expr)
             elif op == '|':
                 if (a == b) or (b == ('&', a)):
-                    new_expressions.append(a)
+                    new_args.append(a)
                 elif (a == ('~', b)):
-                    new_expressions.append(('|', a, b))
+                    new_args.append(('|', a, b))
                 else:
-                    new_expressions.append(expr)
+                    new_args.append(expr)
         else:
-            new_expressions.append(expr)
-    return new_expressions
+            new_args.append(expr)
+    return new_args

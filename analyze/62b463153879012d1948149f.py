@@ -38,10 +38,14 @@ def _eval_file(prefix, file_path):
 
     # Create the result dictionary based on file type
     if file_extension == '.pdf':
-        return {'component_id': component_id, 'file_path': file_path}
+        return {
+            'component_id': component_id,
+            'file_path': file_path
+        }
     else:
         return {
             'component_id': component_id,
             'file_path': file_path,
             'ftype': file_extension,
+            'file_path': file_path
         }

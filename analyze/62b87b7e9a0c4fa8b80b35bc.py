@@ -12,11 +12,11 @@ def _update_context(self, context):
     这里的“销毁”是指在流程中将图转换为另一种结构（如文本）。
     在此过程中，图对象实际上并未被真正销毁。
     """
-    # 假设 self.attributes 是图的属性字典
-    for attr, value in self.attributes.items():
-        context[attr] = value
-
-    # 假设 self.errors 是图的错误字典
-    if hasattr(self, 'errors'):
-        for error_key, error_value in self.errors.items():
-            context['error'][error_key] = error_value
+    # 假设 self 有一个属性 error_fields 包含错误字段
+    error_fields = ['x', 'y', 'z']
+    for i, field in enumerate(error_fields):
+        if hasattr(self, f'error_{field}'):
+            context['error'][f'{field}_low'] = {'index': i}
+    
+    # 这里可以添加更多的逻辑来更新 context
+    # 例如，添加其他图的属性到 context

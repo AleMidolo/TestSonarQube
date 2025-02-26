@@ -12,8 +12,8 @@ def _resolve_string(matcher):
     default_value = matcher.group('default', None)
 
     value = os.getenv(name, default_value)
-    
+
     if value is None:
         raise ValueError(f"Environment variable '{name}' is not defined and no default value provided.")
-    
+
     return value

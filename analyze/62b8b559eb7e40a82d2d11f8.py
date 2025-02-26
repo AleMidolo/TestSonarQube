@@ -6,14 +6,15 @@ def minimalBases(classes):
     # 创建一个集合来存储所有类
     all_classes = set(classes)
     # 创建一个集合来存储没有子类的类
-    no_subclass_classes = set(all_classes)
+    minimal_classes = set()
 
-    # 遍历所有类，检查是否有子类
-    for cls in all_classes:
-        for potential_subclass in all_classes:
-            if cls != potential_subclass and issubclass(potential_subclass, cls):
-                no_subclass_classes.discard(cls)
-                break
+    # 遍历每个类
+    for cls in classes:
+        # 检查是否有子类
+        has_subclass = any(cls in subclass for subclass in classes if subclass != cls)
+        # 如果没有子类，则添加到最小类集合中
+        if not has_subclass:
+            minimal_classes.add(cls)
 
-    # 返回没有子类的类的有序列表
-    return sorted(no_subclass_classes)
+    # 返回有序的最小等价集合
+    return sorted(minimal_classes)

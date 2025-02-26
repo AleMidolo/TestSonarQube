@@ -23,7 +23,8 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
     if ansible_args:
         for key, value in ansible_args.items():
             command.append(f'--{key}')
-            command.append(str(value))
+            if value is not None:
+                command.append(str(value))
 
     result = subprocess.run(command, cwd=ir_workspace.path, capture_output=True, text=True)
 
