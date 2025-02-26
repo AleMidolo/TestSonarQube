@@ -33,6 +33,6 @@ def unit_of_work(metadata=None, timeout=None):
         def wrapper(*args, **kwargs):
             # 这里可以添加事务处理逻辑
             # 例如，连接到数据库，开始事务，设置超时和元数据等
-            pass  # 具体实现逻辑
+            pass  # 具体实现需要根据数据库驱动来完成
         return wrapper
     return decorator
