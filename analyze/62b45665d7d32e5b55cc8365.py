@@ -16,7 +16,7 @@ def parse_arguments(*unparsed_arguments):
     subparser_b.add_argument('--opcion_b', type=str, help='Opción para comando_b')
 
     # Analizar los argumentos
-    args = parser.parse_args(unparsed_arguments)
+    namespace = parser.parse_args(unparsed_arguments)
 
     # Devolver un diccionario que mapea el nombre del subparser a la instancia de Namespace
-    return {args.subparser_name: args}
+    return {namespace.subparser_name: namespace}

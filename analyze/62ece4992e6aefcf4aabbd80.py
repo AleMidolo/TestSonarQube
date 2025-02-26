@@ -20,14 +20,13 @@ def remove_ending_os_sep(input_list):
     import os
     os_sep = os.sep
     processed_list = []
-    
+
     for item in input_list:
-        if isinstance(item, str) and len(item) > 0:
-            if item.endswith(os_sep):
-                processed_list.append(item[:-1])
-            else:
-                processed_list.append(item)
+        if not isinstance(item, str):
+            raise TypeError("Todos los elementos de input_list deben ser cadenas")
+        if len(item) > 1 and item.endswith(os_sep):
+            processed_list.append(item[:-1])
         else:
             processed_list.append(item)
-    
+
     return processed_list
