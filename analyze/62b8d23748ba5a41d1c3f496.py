@@ -27,26 +27,33 @@ class LFUCache:
             self.get(key)  # Update frequency
             return
         if len(self.cache) >= self.maxsize:
-            evict_key, _ = self.freq[self.min_freq].popitem(last=False)
-            del self.cache[evict_key]
+            lfu_key, _ = self.freq[self.min_freq].popitem(last=False)
+            del self.cache[lfu_key]
         self.cache[key] = (value, 1)
         self.freq[1][key] = value
         self.min_freq = 1
 
 def lfu_cache(maxsize=128, typed=False):
-    cache = LFUCache(maxsize)
-
+    """
+    一个用于将函数包装为一个带有记忆功能的可调用对象的装饰器，
+    该对象基于最少使用频率（LFU，Least Frequently Used）算法，
+    保存最多 `maxsize` 个结果。
+    """
     def decorator(func):
+        lfu_cache_instance = LFUCache(maxsize)
+
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             if typed:
                 key = (tuple(args), frozenset(kwargs.items()))
             else:
                 key = tuple(args) + tuple(sorted(kwargs.items()))
-            result = cache.get(key)
+            result = lfu_cache_instance.get(key)
             if result == -1:
                 result = func(*args, **kwargs)
-                cache.put(key, result)
+                lfu_cache_instance.put(key, result)
             return result
+
         return wrapper
+
     return decorator

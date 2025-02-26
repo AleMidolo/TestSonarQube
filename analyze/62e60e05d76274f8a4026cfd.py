@@ -10,4 +10,4 @@ def index(self, key):
     try:
         return self.items.index(key)
     except ValueError:
-        return -1  # 返回-1表示未找到该键
+        return -1

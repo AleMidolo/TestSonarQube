@@ -15,7 +15,7 @@ def validate(self, inventory, extract_spec_version=False):
 
     # Perform validation based on the determined spec_version
     if not self.is_valid_inventory(inventory, spec_version):
-        raise ValueError("Invalid inventory based on the specified version.")
+        raise ValueError("Invalid inventory based on the spec version.")
 
     return True
 

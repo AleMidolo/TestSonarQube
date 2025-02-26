@@ -41,6 +41,6 @@ def size_to_bytes(size: str) -> int:
             try:
                 return int(float(number_part) * multiplier)
             except ValueError:
-                raise ValueError(f"Invalid size format: {size}")
+                raise ValueError("Invalid size format")
     
-    raise ValueError(f"Invalid size format: {size}")
+    raise ValueError("Invalid size format")

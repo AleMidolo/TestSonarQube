@@ -11,13 +11,14 @@ def generate_default_observer_schema(app):
         if 'observer' not in resource:
             default_schema[resource['kind']] = {
                 'apiVersion': resource['apiVersion'],
-                'kind': resource['kind'],
                 'metadata': {
                     'name': resource['metadata']['name'],
                     'namespace': resource['metadata'].get('namespace', 'default')
                 },
                 'spec': {
-                    # Add default spec fields based on resource kind
+                    'replicas': resource.get('spec', {}).get('replicas', 1),
+                    'selector': resource.get('spec', {}).get('selector', {}),
+                    'template': resource.get('spec', {}).get('template', {})
                 }
             }
     

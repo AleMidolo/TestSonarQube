@@ -6,7 +6,10 @@ def popitem(self):
         raise KeyError("popitem(): cache is empty")
     
     # Find the least recently used item
-    lru_key = min(self.cache, key=self.cache.get)
-    lru_value = self.cache.pop(lru_key)
+    least_used_key = min(self.usage_count, key=self.usage_count.get)
     
-    return lru_key, lru_value
+    # Remove the item from the cache and usage count
+    value = self.cache.pop(least_used_key)
+    del self.usage_count[least_used_key]
+    
+    return least_used_key, value

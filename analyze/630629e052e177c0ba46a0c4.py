@@ -1,5 +1,5 @@
-from typing import Dict
 import json
+from typing import Dict
 import xml.etree.ElementTree as ET
 
 def parse_diaspora_webfinger(document: str) -> Dict:
@@ -13,7 +13,7 @@ def parse_diaspora_webfinger(document: str) -> Dict:
     try:
         # Try to parse as JSON
         data = json.loads(document)
-        if 'links' in data:
+        if isinstance(data, dict) and 'links' in data:
             for link in data['links']:
                 if 'rel' in link and link['rel'] == 'http://webfinger.net/rel/hcard':
                     return {'hcard_url': link['href']}
@@ -21,7 +21,7 @@ def parse_diaspora_webfinger(document: str) -> Dict:
         pass
 
     try:
-        # Try to parse as XML (XRD format)
+        # Try to parse as XRD (XML)
         root = ET.fromstring(document)
         for link in root.findall('{http://docs.oasis-open.org/ns/xri/xrd-1.0}Link'):
             rel = link.get('rel')

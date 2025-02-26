@@ -6,12 +6,12 @@ def validate_as_prior_version(self, prior):
     """
     if not isinstance(prior, InventoryValidator):
         return self.error("The prior version must be an instance of InventoryValidator.")
-
-    # Assuming both self and prior have a method to get their inventory data
+    
+    # Assuming self and prior have a method to get their inventory data
     if self.inventory_data == prior.inventory_data:
         return self.error("The prior version cannot be the same as the current version.")
-
+    
     # Additional checks can be added here to validate the prior version
     # For example, checking timestamps, version numbers, etc.
-
+    
     return True  # If all checks pass, return True indicating valid prior version
