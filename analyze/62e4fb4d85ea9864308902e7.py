@@ -22,7 +22,7 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
         return cmd
 
     # Try to find the executable in the system PATH
-    for path in os.environ.get('PATH', '').split(os.pathsep):
+    for path in os.environ["PATH"].split(os.pathsep):
         full_path = os.path.join(path, exe)
         if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
             return (full_path,) + cmd[1:]

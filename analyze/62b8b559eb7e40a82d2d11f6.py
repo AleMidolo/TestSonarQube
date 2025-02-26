@@ -14,6 +14,5 @@ def determineMetaclass(bases, explicit_mc=None):
     for mc in metaclasses[1:]:
         if not issubclass(mc, metaclass):
             raise TypeError("基类的元类不一致")
-        metaclass = mc
-
+    
     return metaclass

@@ -6,13 +6,12 @@ def cachedmethod(cache, key=hashkey, lock=None):
     def decorator(func):
         def wrapper(*args, **kwargs):
             # 生成缓存键
-            cache_key = key(*args, **kwargs)
+            cache_key = key(args, kwargs)
             # 检查缓存
             if cache_key in cache:
                 return cache[cache_key]
-            # 调用原始方法
+            # 获取结果并存入缓存
             result = func(*args, **kwargs)
-            # 存储结果到缓存
             cache[cache_key] = result
             return result
         return wrapper

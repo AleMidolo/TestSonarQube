@@ -6,4 +6,4 @@ def names(self, all=False): # pylint:disable=redefined-builtin
     if all:
         return [attr for attr in dir(self) if not attr.startswith('__')]
     else:
-        return [attr for attr in self.__dict__.keys()]
+        return [attr for attr in self.__class__.__dict__ if not attr.startswith('__')]
