@@ -1,7 +1,6 @@
 import zipfile
 import os
 from collections import defaultdict
-import xml.etree.ElementTree as ET
 
 def _explore_zipfile(zip_path):
     """
@@ -17,14 +16,12 @@ def _explore_zipfile(zip_path):
     -------
     dict
     """
-    data_dict = defaultdict(list)
-
+    data = defaultdict(list)
+    
     with zipfile.ZipFile(zip_path, 'r') as zip_file:
         for file_info in zip_file.infolist():
             if file_info.filename.endswith('.xml'):
                 basename = os.path.basename(file_info.filename)
-                with zip_file.open(file_info.filename) as file:
-                    xml_content = file.read()
-                    data_dict[basename].append(xml_content)
-
-    return dict(data_dict)
+                data[basename].append(zip_file.read(file_info.filename))
+    
+    return dict(data)

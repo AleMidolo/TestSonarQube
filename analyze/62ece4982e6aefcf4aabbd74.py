@@ -19,18 +19,18 @@ def prepare_repository_from_archive(
     tmp_path = Path(tmp_path)
     tmp_path.mkdir(parents=True, exist_ok=True)
 
-    if filename is None:
-        filename = os.path.splitext(os.path.basename(archive_path))[0]
-
-    extract_path = tmp_path / filename
-
     if archive_path.endswith('.zip'):
         with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-            zip_ref.extractall(extract_path)
+            zip_ref.extractall(tmp_path)
     elif archive_path.endswith(('.tar', '.tar.gz', '.tgz')):
         with tarfile.open(archive_path, 'r:*') as tar_ref:
-            tar_ref.extractall(extract_path)
+            tar_ref.extractall(tmp_path)
     else:
-        raise ValueError("Unsupported archive format. Please use .zip or .tar/.tar.gz/.tgz")
+        raise ValueError("Unsupported archive format")
 
-    return str(extract_path.resolve())
+    if filename:
+        extracted_path = tmp_path / filename
+    else:
+        extracted_path = next(tmp_path.iterdir())
+
+    return f'file://{extracted_path.resolve()}'

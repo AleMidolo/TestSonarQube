@@ -8,7 +8,7 @@ def _should_attempt_c_optimizations():
     import os
     import sys
 
-    # Check if we are running on PyPy
+    # Check if we are on PyPy
     is_pypy = 'pypy' in sys.version.lower()
 
     # Check the PURE_PYTHON environment variable

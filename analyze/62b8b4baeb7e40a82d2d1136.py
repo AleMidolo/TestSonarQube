@@ -32,53 +32,38 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     from zope.interface import providedBy, Invalid
     from inspect import signature, Parameter
 
-    if not tentative and not providedBy(candidate, iface):
-        raise Invalid(f"{candidate} does not provide {iface}")
+    errors = []
 
-    required_methods = iface.names()
-    missing_methods = []
-    invalid_signatures = []
-    
+    if not tentative and not providedBy(candidate, iface):
+        errors.append(f"{candidate} does not provide {iface}")
+
+    required_methods = iface.names()  # Assuming iface has a method to get required methods
     for method_name in required_methods:
         if not hasattr(candidate, method_name):
-            missing_methods.append(method_name)
+            errors.append(f"{candidate} is missing method {method_name}")
             continue
         
         method = getattr(candidate, method_name)
         if not callable(method):
-            invalid_signatures.append(method_name)
+            errors.append(f"{method_name} in {candidate} is not callable")
             continue
         
         # Check method signature
-        iface_signature = signature(getattr(iface, method_name))
-        candidate_signature = signature(method)
+        expected_signature = signature(iface[method_name])  # Assuming iface can provide method signatures
+        actual_signature = signature(method)
         
-        if len(iface_signature.parameters) != len(candidate_signature.parameters):
-            invalid_signatures.append(method_name)
-            continue
-        
-        for param in iface_signature.parameters.values():
-            if param.default is Parameter.empty and param.name not in candidate_signature.parameters:
-                invalid_signatures.append(method_name)
-                break
+        if expected_signature != actual_signature:
+            errors.append(f"Signature mismatch for {method_name} in {candidate}")
 
-    if missing_methods or invalid_signatures:
-        errors = []
-        if missing_methods:
-            errors.append(f"Missing methods: {', '.join(missing_methods)}")
-        if invalid_signatures:
-            errors.append(f"Invalid signatures: {', '.join(invalid_signatures)}")
-        
+    required_attributes = iface.attributes()  # Assuming iface has a method to get required attributes
+    for attr_name in required_attributes:
+        if not hasattr(candidate, attr_name):
+            errors.append(f"{candidate} is missing attribute {attr_name}")
+
+    if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
         else:
-            raise Invalid("Multiple errors: " + "; ".join(errors))
-
-    # Check for required attributes
-    required_attributes = getattr(iface, 'attributes', [])
-    missing_attributes = [attr for attr in required_attributes if not hasattr(candidate, attr)]
-    
-    if missing_attributes:
-        raise Invalid(f"Missing attributes: {', '.join(missing_attributes)}")
+            raise Invalid(errors)
 
     return True

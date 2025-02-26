@@ -14,14 +14,13 @@ def extostr(cls, e, max_level=30, max_path_level=5):
 
     def format_exception(exc, level, path_level):
         if level > max_level:
-            return f"{exc.__class__.__name__}: {exc} (truncated)"
+            return f"{exc.__class__.__name__}: {str(exc)}\n[...]\n"
         
-        tb_lines = traceback.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__)
-        formatted_tb = ''.join(tb_lines)
-
-        if path_level > max_path_level:
-            return f"{exc.__class__.__name__}: {exc} (path truncated)"
+        tb = traceback.extract_tb(exc.__traceback__)
+        formatted_tb = []
+        for frame in tb[:max_path_level]:
+            formatted_tb.append(f"File \"{frame.filename}\", line {frame.lineno}, in {frame.name}")
         
-        return formatted_tb
+        return f"{exc.__class__.__name__}: {str(exc)}\n" + "\n".join(formatted_tb) + "\n"
 
     return format_exception(e, 0, 0)

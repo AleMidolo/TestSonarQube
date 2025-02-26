@@ -12,7 +12,7 @@ def fromutc(self, dt):
         A timezone-aware :class:`datetime.datetime` object.
     """
     if dt.tzinfo is None:
-        raise ValueError("dt must be a timezone-aware datetime")
+        raise ValueError("dt must be timezone-aware")
 
     # Convert the datetime to UTC
     utc_dt = dt.astimezone(self.utc)
@@ -20,12 +20,15 @@ def fromutc(self, dt):
     # Now convert the UTC datetime to the new timezone
     new_tz_dt = utc_dt.astimezone(self)
 
-    # Check for ambiguity in the new timezone
+    # Check for ambiguity
     if new_tz_dt.dst() != timedelta(0):
         # If the new timezone has a daylight saving time transition
-        # we need to check if the datetime is in the "fold" state
-        if new_tz_dt < self.fold_start:
-            return new_tz_dt.replace(fold=0)  # First occurrence
+        # we need to check if the datetime is in the fold
+        if dt.fold == 0:
+            # If it's the first occurrence, we return it as is
+            return new_tz_dt
         else:
-            return new_tz_dt.replace(fold=1)  # Second occurrence
+            # If it's the second occurrence, we need to adjust
+            return new_tz_dt - new_tz_dt.dst()
+
     return new_tz_dt
