@@ -21,20 +21,19 @@ def _eval_file(prefix, file_path):
     # Initialize the result dictionary
     result = {}
 
-    # Extract the file name and extension
-    file_name, file_extension = os.path.splitext(os.path.basename(file_path))
+    # Extract the file extension
+    _, file_extension = os.path.splitext(file_path)
 
-    # Determine the type of file based on its extension
-    if file_extension in ['.xml', '.json']:
-        file_type = 'asset'
-    elif file_extension in ['.jpg', '.png', '.gif']:
-        file_type = 'rendition'
+    # Determine the type of file based on the extension
+    if file_extension in ['.jpg', '.png', '.gif']:
+        result['type'] = 'asset'
+    elif file_extension in ['.mp4', '.mov', '.avi']:
+        result['type'] = 'rendition'
     else:
-        file_type = 'unknown'
+        result['type'] = 'unknown'
 
-    # Update the result dictionary
+    # Update the result with the prefix and file path
     result['prefix'] = prefix
-    result['file_type'] = file_type
     result['file_path'] = file_path
 
     return result

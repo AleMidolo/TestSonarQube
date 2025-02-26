@@ -1,5 +1,4 @@
 import datetime
-import re
 
 def parse_frequency(frequency):
     """
@@ -12,41 +11,35 @@ def parse_frequency(frequency):
     """
     if frequency is None or frequency.lower() == "always":
         return None
-    
-    # Define a regex pattern to match the frequency string
-    pattern = r'(\d+)\s*(seconds?|minutes?|hours?|days?|weeks?|months?|years?)'
-    match = re.match(pattern, frequency, re.IGNORECASE)
-    
-    if not match:
-        raise ValueError(f"Cannot parse frequency: {frequency}")
-    
-    value, unit = match.groups()
-    value = int(value)
-    
-    # Map the unit to the corresponding timedelta argument
-    unit_mapping = {
-        'second': 'seconds',
+
+    units = {
         'seconds': 'seconds',
-        'minute': 'minutes',
+        'second': 'seconds',
         'minutes': 'minutes',
-        'hour': 'hours',
+        'minute': 'minutes',
         'hours': 'hours',
-        'day': 'days',
+        'hour': 'hours',
         'days': 'days',
-        'week': 'weeks',
+        'day': 'days',
         'weeks': 'weeks',
-        'month': 'days',  # Approximation: 1 month = 30 days
+        'week': 'weeks',
         'months': 'days',  # Approximation: 1 month = 30 days
-        'year': 'days',    # Approximation: 1 year = 365 days
-        'years': 'days'    # Approximation: 1 year = 365 days
+        'month': 'days',    # Approximation: 1 month = 30 days
+        'years': 'days',    # Approximation: 1 year = 365 days
+        'year': 'days'      # Approximation: 1 year = 365 days
     }
-    
-    if unit.lower() in unit_mapping:
-        if unit.lower() in ['month', 'months']:
-            return datetime.timedelta(days=value * 30)  # Approximation
-        elif unit.lower() in ['year', 'years']:
-            return datetime.timedelta(days=value * 365)  # Approximation
-        else:
-            return datetime.timedelta(**{unit_mapping[unit.lower()]: value})
-    
-    raise ValueError(f"Cannot parse frequency: {frequency}")
+
+    parts = frequency.split()
+    if len(parts) != 2:
+        raise ValueError(f"Cannot parse frequency: {frequency}")
+
+    try:
+        value = int(parts[0])
+    except ValueError:
+        raise ValueError(f"Cannot parse frequency value: {parts[0]}")
+
+    unit = parts[1].lower()
+    if unit not in units:
+        raise ValueError(f"Cannot parse frequency unit: {unit}")
+
+    return datetime.timedelta(**{units[unit]: value})

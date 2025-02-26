@@ -1,5 +1,5 @@
-from collections import defaultdict, OrderedDict
-import functools
+from collections import defaultdict
+from functools import wraps
 
 def lfu_cache(maxsize=128, typed=False):
     """
@@ -7,29 +7,27 @@ def lfu_cache(maxsize=128, typed=False):
     up to `maxsize` results based on a Least Frequently Used (LFU)
     algorithm.
     """
-    def decorator(func):
-        cache = {}
-        frequency = defaultdict(int)
-        order = OrderedDict()
-        
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            key = args if not typed else (args, frozenset(kwargs.items()))
-            if key in cache:
-                frequency[key] += 1
-                order.move_to_end(key)
-                return cache[key]
-            result = func(*args, **kwargs)
-            cache[key] = result
+    cache = {}
+    frequency = defaultdict(int)
+    order = []
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        key = args if not typed else (args, frozenset(kwargs.items()))
+        if key in cache:
             frequency[key] += 1
-            order[key] = frequency[key]
-            if len(cache) > maxsize:
-                lfu_key = min(order, key=order.get)
-                del cache[lfu_key]
-                del frequency[lfu_key]
-                del order[lfu_key]
-            return result
+            return cache[key]
         
-        return wrapper
-    
-    return decorator
+        result = func(*args, **kwargs)
+        if len(cache) >= maxsize:
+            lfu_key = min(order, key=lambda k: frequency[k])
+            del cache[lfu_key]
+            del frequency[lfu_key]
+            order.remove(lfu_key)
+        
+        cache[key] = result
+        frequency[key] += 1
+        order.append(key)
+        return result
+
+    return wrapper

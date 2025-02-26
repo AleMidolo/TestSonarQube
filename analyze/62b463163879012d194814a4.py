@@ -1,7 +1,3 @@
-import zipfile
-import os
-from collections import defaultdict
-
 def _explore_zipfile(zip_path):
     """
     Get packages' data from zip_path
@@ -16,6 +12,10 @@ def _explore_zipfile(zip_path):
     -------
     dict
     """
+    import zipfile
+    from collections import defaultdict
+    import os
+
     data = defaultdict(list)
 
     with zipfile.ZipFile(zip_path, 'r') as zip_file:

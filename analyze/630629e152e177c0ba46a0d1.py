@@ -1,5 +1,5 @@
-import requests
 from typing import Optional
+import requests
 
 def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
     """

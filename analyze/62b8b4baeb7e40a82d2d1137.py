@@ -44,16 +44,13 @@ def verifyObject(iface, candidate, tentative=False):
             continue
         
         method = getattr(candidate, method_name)
-        expected_signature = signature(getattr(iface, method_name))
-        actual_signature = signature(method)
-
-        if len(expected_signature.parameters) != len(actual_signature.parameters):
-            errors.append(f"{method_name} has incorrect number of parameters in {candidate}")
+        if not callable(method):
+            errors.append(f"{method_name} in {candidate} is not callable")
             continue
-
-        for param in expected_signature.parameters.values():
-            if param.default is Parameter.empty and param.name not in actual_signature.parameters:
-                errors.append(f"{method_name} is missing required parameter {param.name} in {candidate}")
+        
+        iface_method = iface[method_name]
+        if signature(method) != signature(iface_method):
+            errors.append(f"{method_name} in {candidate} has incorrect signature")
 
     required_attributes = iface.attributes()
     for attr_name in required_attributes:
@@ -63,6 +60,7 @@ def verifyObject(iface, candidate, tentative=False):
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
-        raise Invalid(errors)
+        else:
+            raise Invalid(errors)
 
     return True
