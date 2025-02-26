@@ -17,8 +17,8 @@ def update_last_applied_manifest_list_from_resp(
     for schema in observer_schema:
         field = schema.get('field')
         if field not in last_applied_manifest:
-            for resp in response:
-                if field in resp:
-                    last_applied_manifest[field] = resp[field]
-                    break
-    return last_applied_manifest
+            last_applied_manifest[field] = response.get(field, None)
+        if isinstance(schema.get('children'), list):
+            update_last_applied_manifest_list_from_resp(
+                last_applied_manifest[field], schema['children'], response.get(field, {})
+            )

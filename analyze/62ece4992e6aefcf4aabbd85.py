@@ -7,13 +7,11 @@ def find_roots(graph, rdflib.RDFS.subClassOf):
     """
     from rdflib import Graph, RDFS
 
-    subclasses = set()
-    parents = set()
+    # Trova tutti i soggetti che hanno una relazione di sottoclasse
+    subclasses = set(graph.subjects(predicate=rdflib.RDFS.subClassOf))
 
-    for s, p, o in graph:
-        if p == rdflib.RDFS.subClassOf:
-            subclasses.add(s)
-            parents.add(o)
+    # Trova tutti i soggetti che non sono figli di nessun altro
+    all_classes = set(graph.subjects())
+    roots = all_classes - subclasses
 
-    roots = subclasses - parents
     return roots
