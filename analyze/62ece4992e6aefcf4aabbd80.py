@@ -21,4 +21,12 @@ def remove_ending_os_sep(input_list):
         raise TypeError("input_list must be a list of strings")
     
     os_sep = os.path.sep
-    return [s[:-1] if len(s) > 1 and s.endswith(os_sep) else s for s in input_list]
+    processed_list = []
+    
+    for item in input_list:
+        if isinstance(item, str) and len(item) > 1 and item.endswith(os_sep):
+            processed_list.append(item[:-1])
+        else:
+            processed_list.append(item)
+    
+    return processed_list

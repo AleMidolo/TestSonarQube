@@ -14,7 +14,7 @@ def lfu_cache(maxsize=128, typed=False):
         
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            key = (args, frozenset(kwargs.items())) if typed else args
+            key = args if not typed else (args, frozenset(kwargs.items()))
             if key in cache:
                 frequency[key] += 1
                 order.move_to_end(key)

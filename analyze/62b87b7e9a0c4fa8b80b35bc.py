@@ -16,20 +16,23 @@ def _update_context(self, context):
     to another structure (like text) in the flow.
     The graph object is not really destroyed in this process.
     """
-    # Assuming self has properties that need to be added to context
-    if not hasattr(context, 'error'):
-        context.error = {}
-    
-    # Example of how to append errors
-    for error_name, error_indices in self.errors.items():
-        if error_name in ['x', 'y', 'z']:
-            context.error[error_name] = context.error.get(error_name, {})
-            context.error[error_name]['index'] = error_indices
+    # Assuming self.graph_data contains the properties of the graph
+    if hasattr(self, 'graph_data'):
+        for key, value in self.graph_data.items():
+            if key not in context.value:
+                context.value[key] = value
+            else:
+                # If the key already exists, we can append or update as needed
+                context.value[key].update(value)
 
-    # Assuming self has a value property that needs to be added to context
-    if not hasattr(context, 'value'):
-        context.value = {}
-    
-    # Update context.value with properties from self
-    for key, value in self.properties.items():
-        context.value[key] = value
+    # Handle errors
+    if hasattr(self, 'errors'):
+        for error in self.errors:
+            error_name = error.get('name')
+            error_index = error.get('index')
+            if error_name in ['x', 'y', 'z']:
+                if 'error' not in context:
+                    context.error = {}
+                if error_name not in context.error:
+                    context.error[error_name] = {}
+                context.error[error_name]['index'] = error_index

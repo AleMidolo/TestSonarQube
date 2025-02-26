@@ -24,7 +24,7 @@ def mru_cache(maxsize=128, typed=False):
             cache[key] = result
             order.append(key)
             return result
-
+        
         return wrapped
-
+    
     return wrapper

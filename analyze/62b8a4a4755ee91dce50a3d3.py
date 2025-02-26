@@ -12,7 +12,7 @@ def fromutc(self, dt):
         A timezone-aware :class:`datetime.datetime` object.
     """
     if dt.tzinfo is None:
-        raise ValueError("dt must be a timezone-aware datetime")
+        raise ValueError("dt must be timezone-aware")
 
     # Convert the datetime to UTC
     utc_dt = dt.astimezone(self.utc)

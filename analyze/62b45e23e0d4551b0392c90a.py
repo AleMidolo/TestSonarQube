@@ -12,12 +12,12 @@ def validate_version_inventories(self, version_dirs):
     content_digests = {}
 
     for version in version_dirs:
-        version_inventory = self.load_inventory(f'{version}/inventory.json')
-        
-        # Validate that the version inventory contains all required items
-        for item in root_inventory:
-            if item not in version_inventory:
-                raise ValueError(f'Missing item {item} in version {version} inventory.')
+        inventory_path = f"{version}/inventory.json"
+        version_inventory = self.load_inventory(inventory_path)
+
+        # Validate that the version inventory matches the expected structure
+        if not self.validate_inventory_structure(version_inventory):
+            raise ValueError(f"Invalid inventory structure in {inventory_path}")
 
         # Check for content digests that differ from the root inventory
         for item, digest in version_inventory.items():
@@ -26,8 +26,10 @@ def validate_version_inventories(self, version_dirs):
 
     return content_digests
 
-def load_inventory(self, filename):
-    # This is a placeholder for the actual implementation of loading an inventory
-    import json
-    with open(filename, 'r') as file:
-        return json.load(file)
+def load_inventory(self, path):
+    # Placeholder for loading inventory from a JSON file
+    pass
+
+def validate_inventory_structure(self, inventory):
+    # Placeholder for validating the structure of the inventory
+    pass

@@ -12,19 +12,13 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     """
     import traceback
 
-    def format_exception(exc, level, path_level):
-        if level > max_level or path_level > max_path_level:
-            return f"{exc.__class__.__name__}: {str(exc)}\n"
+    def format_traceback(tb, level):
+        if level > max_level or tb is None:
+            return ""
+        return format_traceback(tb.tb_next, level + 1) + f"File \"{tb.tb_frame.f_code.co_filename}\", line {tb.tb_lineno}, in {tb.tb_frame.f_code.co_name}\n"
 
-        tb = traceback.extract_tb(exc.__traceback__)
-        formatted_tb = []
-        for frame in tb:
-            formatted_tb.append(f"File \"{frame.filename}\", line {frame.lineno}, in {frame.name}")
-            formatted_tb.append(f"  {frame.line.strip()}")
-        
-        return ''.join(formatted_tb)
+    exception_message = f"{type(e).__name__}: {str(e)}\n"
+    tb = e.__traceback__
+    formatted_traceback = format_traceback(tb, 0)
 
-    exception_message = f"{e.__class__.__name__}: {str(e)}\n"
-    stack_trace = format_exception(e, 0, 0)
-    
-    return exception_message + stack_trace
+    return exception_message + formatted_traceback

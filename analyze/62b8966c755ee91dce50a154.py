@@ -96,21 +96,8 @@ def isoparse(self, dt_str):
     if day is None:
         day = 1
 
-    # Extract week components if present
-    week_year, week_number, week_day = match.group(4), match.group(5), match.group(6)
-    if week_year and week_number:
-        week_year = int(week_year)
-        week_number = int(week_number)
-        if week_day is None:
-            week_day = 0
-        else:
-            week_day = int(week_day)
-        date_obj = datetime.fromisocalendar(week_year, week_number, week_day)
-    else:
-        date_obj = datetime(int(year), int(month), int(day))
-
     # Extract time components
-    hour, minute, second, microsecond = match.group(7), match.group(8), match.group(9), match.group(10)
+    hour, minute, second, microsecond = match.group(4), match.group(5), match.group(6), match.group(7)
     if hour is None:
         hour = 0
     if minute is None:
@@ -119,32 +106,26 @@ def isoparse(self, dt_str):
         second = 0
     if microsecond is None:
         microsecond = 0
-    else:
-        microsecond = int(microsecond.ljust(6, '0'))  # Pad to 6 digits
+
+    # Handle time zone
+    tzinfo = None
+    tz_str = match.group(8)
+    if tz_str == 'Z':
+        tzinfo = tz.tzutc()
+    elif tz_str:
+        if len(tz_str) == 5:  # ±HH:MM
+            sign = 1 if tz_str[0] == '+' else -1
+            hours, minutes = map(int, tz_str[1:].split(':'))
+            tzinfo = tz.tzoffset(None, sign * (hours * 3600 + minutes * 60))
+        elif len(tz_str) == 3:  # ±HH
+            sign = 1 if tz_str[0] == '+' else -1
+            hours = int(tz_str[1:])
+            tzinfo = tz.tzoffset(None, sign * hours * 3600)
+        else:  # ±HHMM
+            sign = 1 if tz_str[0] == '+' else -1
+            hours = int(tz_str[1:3])
+            minutes = int(tz_str[3:5])
+            tzinfo = tz.tzoffset(None, sign * (hours * 3600 + minutes * 60))
 
     # Create datetime object
-    date_obj = date_obj.replace(hour=int(hour), minute=int(minute), second=int(second), microsecond=microsecond)
-
-    # Extract timezone
-    tz_offset = match.group(11)
-    if tz_offset == 'Z':
-        date_obj = date_obj.replace(tzinfo=tz.tzutc())
-    elif tz_offset:
-        if len(tz_offset) == 5:  # ±HH:MM
-            sign = 1 if tz_offset[0] == '+' else -1
-            hours, minutes = map(int, tz_offset[1:].split(':'))
-            offset = sign * (hours * 3600 + minutes * 60)
-            date_obj = date_obj.replace(tzinfo=tz.tzoffset(None, offset))
-        elif len(tz_offset) == 3:  # ±HH
-            sign = 1 if tz_offset[0] == '+' else -1
-            hours = int(tz_offset[1:])
-            offset = sign * (hours * 3600)
-            date_obj = date_obj.replace(tzinfo=tz.tzoffset(None, offset))
-        elif len(tz_offset) == 5:  # ±HHMM
-            sign = 1 if tz_offset[0] == '+' else -1
-            hours = int(tz_offset[1:3])
-            minutes = int(tz_offset[3:5])
-            offset = sign * (hours * 3600 + minutes * 60)
-            date_obj = date_obj.replace(tzinfo=tz.tzoffset(None, offset))
-
-    return date_obj
+    return datetime(int(year), int(month), int(day), int(hour), int(minute), int(second), int(microsecond), tzinfo)
