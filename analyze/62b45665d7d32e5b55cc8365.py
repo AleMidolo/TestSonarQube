@@ -17,5 +17,5 @@ def parse_arguments(*unparsed_arguments):
     # Parse the arguments
     args = parser.parse_args(unparsed_arguments)
 
-    # Return the parsed arguments as a dictionary
+    # Return as a dictionary mapping subparser name to Namespace
     return {args.subparser_name: args}

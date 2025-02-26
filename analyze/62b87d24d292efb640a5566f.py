@@ -2,14 +2,11 @@ def render(pieces, style):
     """
     Renderizzare i pezzi forniti nella versione richiesta dello stile.
     """
-    rendered_output = []
-    for piece in pieces:
-        if style == 'bold':
-            rendered_output.append(f"**{piece}**")
-        elif style == 'italic':
-            rendered_output.append(f"*{piece}*")
-        elif style == 'underline':
-            rendered_output.append(f"__{piece}__")
-        else:
-            rendered_output.append(piece)
-    return '\n'.join(rendered_output)
+    if style == "bold":
+        return [f"**{piece}**" for piece in pieces]
+    elif style == "italic":
+        return [f"*{piece}*" for piece in pieces]
+    elif style == "underline":
+        return [f"__{piece}__" for piece in pieces]
+    else:
+        return pieces

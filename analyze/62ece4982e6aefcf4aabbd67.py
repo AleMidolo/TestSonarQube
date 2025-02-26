@@ -11,8 +11,8 @@ def vertex3tuple(vertices):
     n = len(vertices)
     result = []
     for i in range(n):
-        point1 = vertices[i - 1]  # punto a sinistra
-        point2 = vertices[i]      # vertice corrente
-        point3 = vertices[(i + 1) % n]  # punto a destra
+        point1 = vertices[i - 1]  # Previous vertex
+        point2 = vertices[i]      # Current vertex
+        point3 = vertices[(i + 1) % n]  # Next vertex (wrap around)
         result.append((point1, point2, point3))
     return result
