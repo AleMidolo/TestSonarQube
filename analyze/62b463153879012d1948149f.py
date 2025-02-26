@@ -33,19 +33,15 @@ def _eval_file(prefix, file_path):
     if not file_path.startswith(prefix) or file_extension == '.xml':
         return None
 
-    # Prepare the component_id
-    component_id = os.path.basename(file_path)
+    # Prepare the result dictionary
+    result = {
+        'component_id': prefix,
+        'file_path': file_path
+    }
 
-    # Create the result dictionary based on file type
+    # Check the file type
     if file_extension == '.pdf':
-        return {
-            'component_id': component_id,
-            'file_path': file_path
-        }
+        return result
     else:
-        return {
-            'component_id': component_id,
-            'file_path': file_path,
-            'ftype': file_extension,
-            'file_path': file_path
-        }
+        result['ftype'] = file_extension
+        return result

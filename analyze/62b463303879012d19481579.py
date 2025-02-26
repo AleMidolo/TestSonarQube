@@ -6,7 +6,7 @@ def _extract_number_and_supplment_from_issue_element(issue):
     import re
 
     number_pattern = r'(?<=#)\d+'
-    suppl_pattern = r'\b(?:sup|supp|supplement)\s*[:=]?\s*(\w+)\b'
+    suppl_pattern = r'\b(?:sup|supplement)\s*[:=]?\s*(\w+)\b'
 
     number_match = re.search(number_pattern, issue)
     suppl_match = re.search(suppl_pattern, issue, re.IGNORECASE)

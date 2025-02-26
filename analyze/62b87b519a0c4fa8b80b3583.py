@@ -13,21 +13,26 @@ def scale(self, other=None):
     所有的误差值也会与其对应的坐标一起重新缩放。
     """
     if other is None:
-        return self.scale_value  # 假设 self.scale_value 存储当前比例
+        return self.current_scale  # 假设有一个属性 current_scale 存储当前比例
 
     if not isinstance(other, (int, float)):
         raise TypeError("参数 *other* 必须是数值类型")
 
-    if self.scale_value is None or self.scale_value == 0:
+    if self.current_scale is None or self.current_scale == 0:
         raise LenaValueError("图表的比例未知或为零，无法重新缩放")
 
-    # 假设 self.data 存储图表的数据，self.errors 存储误差值
-    last_coordinate_index = -1  # 假设最后一个坐标的索引
-    scale_factor = other / self.scale_value
+    # 假设有一个方法来获取最后一个坐标
+    last_coordinate = self.get_last_coordinate()  
+    new_scale = other / self.current_scale
 
     # 重新缩放最后一个坐标
-    self.data[last_coordinate_index] *= scale_factor
-    self.errors[last_coordinate_index] *= scale_factor
+    last_coordinate *= new_scale
 
-    # 更新比例
-    self.scale_value = other
+    # 假设有一个方法来设置新的坐标
+    self.set_last_coordinate(last_coordinate)
+
+    # 重新缩放误差值
+    self.scale_errors(new_scale)
+
+    # 更新当前比例
+    self.current_scale = other

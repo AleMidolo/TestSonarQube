@@ -11,8 +11,10 @@ def identify_request(request: RequestType):
         return True
     
     # 检查 XML 数据
-    if 'xml' in request and request['xml'].get('tag') == 'Magic_ENV_TAG':
-        return True
+    if 'xml' in request:
+        xml_data = request['xml']
+        if xml_data.tag == 'Magic_ENV_TAG':
+            return True
     
     # 检查是否为公共消息
     if 'public_message' in request:

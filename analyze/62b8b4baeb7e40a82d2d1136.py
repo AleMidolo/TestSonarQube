@@ -27,33 +27,26 @@ def _verify(iface, candidate, tentative=False, vtype=None):
         errors.append(f"{candidate} does not provide {iface}")
 
     required_methods = iface.names()
-    for method_name in required_methods:
-        if not hasattr(candidate, method_name):
-            errors.append(f"{candidate} is missing method {method_name}")
+    for method in required_methods:
+        if not hasattr(candidate, method):
+            errors.append(f"{candidate} is missing method {method}")
             continue
         
-        method = getattr(candidate, method_name)
-        if not callable(method):
-            errors.append(f"{method_name} in {candidate} is not callable")
+        method_signature = signature(getattr(candidate, method))
+        iface_signature = signature(getattr(iface, method))
+        
+        if len(method_signature.parameters) != len(iface_signature.parameters):
+            errors.append(f"{method} in {candidate} has incorrect number of parameters")
             continue
         
-        # Check method signature if vtype is provided
-        if vtype is not None:
-            try:
-                sig = signature(method)
-                if len(sig.parameters) != len(vtype):
-                    errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
-                else:
-                    for param_name, param_type in zip(sig.parameters.keys(), vtype):
-                        if sig.parameters[param_name].annotation != param_type:
-                            errors.append(f"{method_name} parameter {param_name} has incorrect type")
-            except Exception as e:
-                errors.append(f"Could not inspect {method_name} in {candidate}: {str(e)}")
+        for param in iface_signature.parameters.values():
+            if param.default is Parameter.empty and param.name not in method_signature.parameters:
+                errors.append(f"{method} in {candidate} is missing required parameter {param.name}")
 
     required_attributes = iface.names()
-    for attr_name in required_attributes:
-        if not hasattr(candidate, attr_name):
-            errors.append(f"{candidate} is missing attribute {attr_name}")
+    for attr in required_attributes:
+        if not hasattr(candidate, attr):
+            errors.append(f"{candidate} is missing attribute {attr}")
 
     if errors:
         if len(errors) == 1:

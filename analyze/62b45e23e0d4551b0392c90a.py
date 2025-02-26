@@ -6,24 +6,27 @@ def validate_version_inventories(self, version_dirs):
 
     `version_dirs` 是一个包含版本目录名称的数组，并假定按照版本顺序排列（1, 2, 3...）。
     """
-    inventory_summaries = {}
+    # 假设根清单在第一个版本目录中
     root_inventory = self.load_inventory(version_dirs[0])
-    
-    for version in version_dirs:
-        current_inventory = self.load_inventory(version)
-        if not self.is_complete_inventory(current_inventory, root_inventory):
-            inventory_summaries[version] = self.get_inventory_diff(current_inventory, root_inventory)
-    
-    return inventory_summaries
+    discrepancies = {}
 
-def load_inventory(self, version):
-    # 假设这是一个加载版本清单的辅助函数
+    for i in range(1, len(version_dirs)):
+        current_inventory = self.load_inventory(version_dirs[i])
+        # 检查当前版本是否包含根清单的所有内容
+        missing_items = set(root_inventory) - set(current_inventory)
+        
+        if missing_items:
+            discrepancies[version_dirs[i]] = {
+                'missing_items': list(missing_items),
+                'summary': self.generate_summary(current_inventory)
+            }
+
+    return discrepancies
+
+def load_inventory(self, version_dir):
+    # 这里应该实现加载版本目录中的清单的逻辑
     pass
 
-def is_complete_inventory(self, current_inventory, root_inventory):
-    # 假设这是一个检查当前清单是否完整的辅助函数
-    pass
-
-def get_inventory_diff(self, current_inventory, root_inventory):
-    # 假设这是一个获取清单差异的辅助函数
+def generate_summary(self, inventory):
+    # 这里应该实现生成清单摘要的逻辑
     pass

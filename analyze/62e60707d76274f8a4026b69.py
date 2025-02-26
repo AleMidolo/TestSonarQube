@@ -2,16 +2,12 @@ def point_type(name, fields, srid_map):
     """
     动态创建一个 Point 子类。
     """
-    from types import new_class
+    from collections import namedtuple
 
-    def init(self, **kwargs):
-        for field in fields:
-            setattr(self, field, kwargs.get(field))
+    # Create a namedtuple for the Point
+    Point = namedtuple(name, fields)
 
-    attrs = {'__init__': init}
-    point_class = new_class(name, (object,), attrs)
+    # Add SRID mapping
+    Point.srid_map = srid_map
 
-    for srid, field in srid_map.items():
-        setattr(point_class, f'srid_{srid}', field)
-
-    return point_class
+    return Point

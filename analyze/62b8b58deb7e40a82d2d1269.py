@@ -7,7 +7,10 @@ def directlyProvidedBy(object):
     """
     provides = getattr(object, "__provides__", None)
     if provides is None:
+        # 如果没有提供的接口，检查是否有 implements 规范
         implements = getattr(object, "__implements__", None)
-        if implements is not None and isinstance(implements, tuple) and len(implements) > 1:
-            return implements[1]  # 返回去除基类后的声明
+        if implements is not None:
+            # 假设只有一个基类，去除它
+            return implements[1:]  # 返回去除基类后的接口
+        return None
     return provides

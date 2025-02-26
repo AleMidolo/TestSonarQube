@@ -58,10 +58,10 @@ def isoparse(self, dt_str):
     from dateutil import tz
 
     # Regular expressions for parsing
-    date_regex = re.compile(r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?')
-    week_regex = re.compile(r'(\d{4})-W(\d{2})(?:-(\d{1}))?')
-    time_regex = re.compile(r'(\d{1,2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?)?')
-    tz_regex = re.compile(r'Z|([+-]\d{2}):?(\d{2})?|([+-]\d{2})(\d{2})?|([+-]\d{2})')
+    iso_date_regex = re.compile(r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?')
+    iso_week_regex = re.compile(r'(\d{4})-W(\d{2})(?:-(\d{1}))?')
+    iso_time_regex = re.compile(r'(\d{2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?)?')
+    iso_tz_regex = re.compile(r'Z|([+-]\d{2}):?(\d{2})?|([+-]\d{2})(\d{2})?|([+-]\d{2})')
 
     # Split date and time
     if 'T' in dt_str:
@@ -70,45 +70,45 @@ def isoparse(self, dt_str):
         date_str, time_str = dt_str, ''
 
     # Parse date
-    match = date_regex.match(date_str)
+    match = iso_date_regex.match(date_str)
     if match:
         year = int(match.group(1))
-        month = int(match.group(2) or 1)
-        day = int(match.group(3) or 1)
+        month = int(match.group(2)) if match.group(2) else 1
+        day = int(match.group(3)) if match.group(3) else 1
     else:
-        match = week_regex.match(date_str)
+        match = iso_week_regex.match(date_str)
         if match:
             year = int(match.group(1))
             week = int(match.group(2))
-            day = int(match.group(3) or 1)
-            # Calculate the first day of the week
+            day = int(match.group(3)) if match.group(3) else 1
+            # Calculate the date from ISO week
             first_day_of_year = datetime(year, 1, 1)
             first_weekday = first_day_of_year.weekday()
-            days_to_first_monday = (7 - first_weekday) % 7
-            first_monday = first_day_of_year + timedelta(days=days_to_first_monday)
-            date = first_monday + timedelta(weeks=week - 1, days=day - 1)
-            return date.replace(tzinfo=tz.tzutc())
+            days_to_first_week = (7 - first_weekday) % 7
+            first_week_start = first_day_of_year + timedelta(days=days_to_first_week)
+            date = first_week_start + timedelta(weeks=week - 1, days=day - 1)
+            return date
 
     # Parse time
-    match = time_regex.match(time_str)
+    match = iso_time_regex.match(time_str)
     if match:
         hour = int(match.group(1))
-        minute = int(match.group(2) or 0)
-        second = int(match.group(3) or 0)
-        microsecond = int(match.group(4) or 0)
+        minute = int(match.group(2)) if match.group(2) else 0
+        second = int(match.group(3)) if match.group(3) else 0
+        microsecond = int(match.group(4).ljust(6, '0')) if match.group(4) else 0
     else:
         hour, minute, second, microsecond = 0, 0, 0, 0
 
     # Parse timezone
     tzinfo = None
-    match = tz_regex.search(dt_str)
+    match = iso_tz_regex.search(dt_str)
     if match:
         if match.group(0) == 'Z':
             tzinfo = tz.tzutc()
         else:
             if match.group(1):
                 offset_hours = int(match.group(1))
-                offset_minutes = int(match.group(2) or 0)
+                offset_minutes = int(match.group(2)) if match.group(2) else 0
                 tzinfo = tz.tzoffset(None, offset_hours * 3600 + offset_minutes * 60)
             elif match.group(3):
                 offset_hours = int(match.group(3))
