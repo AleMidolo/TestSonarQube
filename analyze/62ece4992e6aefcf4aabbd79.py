@@ -1,18 +1,20 @@
 def make_find_paths(find_paths):
     """
-    Dati una sequenza di percorsi frammentati o pattern passati tramite `--find`, trasforma tutti i percorsi frammentati in pattern glob. Lascia invariati i pattern già esistenti.
+    Given a sequence of path fragments or patterns as passed to `--find`, transform all path
+    fragments into glob patterns. Pass through existing patterns untouched.
 
-    Ad esempio, dato `find_paths` come:
+    For example, given find_paths of:
+
       ['foo.txt', 'pp:root/somedir']
 
-    ... trasforma in:
+    ... transform that into:
+
       ['sh:**/*foo.txt*/**', 'pp:root/somedir']
     """
     transformed_paths = []
     for path in find_paths:
-        if ':' in path:  # Check if it's a pattern
+        if ':' in path:  # Check if it's an existing pattern
             transformed_paths.append(path)
-        else:  # Transform fragmented path to glob pattern
-            transformed_path = f'sh:**/*{path}*/**'
-            transformed_paths.append(transformed_path)
+        else:  # Transform path fragment into glob pattern
+            transformed_paths.append(f'sh:**/*{path}*/**')
     return transformed_paths

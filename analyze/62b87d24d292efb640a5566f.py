@@ -1,12 +1,12 @@
 def render(pieces, style):
     """
-    Renderizzare i pezzi forniti nella versione richiesta dello stile.
+    Render the given version pieces into the requested style.
     """
-    if style == "bold":
-        return [f"**{piece}**" for piece in pieces]
-    elif style == "italic":
-        return [f"*{piece}*" for piece in pieces]
-    elif style == "underline":
-        return [f"__{piece}__" for piece in pieces]
+    if style == 'html':
+        return ''.join(f'<div>{piece}</div>' for piece in pieces)
+    elif style == 'markdown':
+        return '\n'.join(f'* {piece}' for piece in pieces)
+    elif style == 'plain':
+        return '\n'.join(pieces)
     else:
-        return pieces
+        raise ValueError("Unsupported style. Please use 'html', 'markdown', or 'plain'.")

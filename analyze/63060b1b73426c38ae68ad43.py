@@ -1,14 +1,15 @@
 def extend_cli(self, root_subparsers):
     """
-    Aggiunge le opzioni CLI specifiche al punto di ingresso principale.
+    Adds the spec cli options to the main entry point.
 
-    :param subparser: l'oggetto subparser da estendere.
+    :param subparser: the subparser object to extend.
     """
-    # Esempio di aggiunta di un comando al subparser
-    parser = root_subparsers.add_parser('comando', help='Descrizione del comando')
-    parser.add_argument('--opzione', type=str, help='Descrizione dell\'opzione')
-    parser.set_defaults(func=self.some_function)
+    # Example implementation: Adding a command to the subparser
+    parser = root_subparsers.add_parser('spec', help='Spec command options')
+    parser.add_argument('--option1', type=str, help='Description for option1')
+    parser.add_argument('--option2', type=int, help='Description for option2')
+    parser.set_defaults(func=self.spec_command)
 
-def some_function(self, args):
-    # Implementazione della funzione da chiamare quando il comando viene eseguito
-    print(f"Eseguito il comando con opzione: {args.opzione}")
+def spec_command(self, args):
+    # Example implementation of the command functionality
+    print(f"Option1: {args.option1}, Option2: {args.option2}")

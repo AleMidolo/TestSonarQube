@@ -1,24 +1,30 @@
 def scale(self, other=None, recompute=False):
     """
-    Calcola o imposta la scala (integrale dell'istogramma).
+    Compute or set scale (integral of the histogram).
 
-    Se *other* è ``None``, restituisce la scala di questo istogramma.  
-    Se la scala non è stata calcolata in precedenza, viene calcolata e memorizzata per un utilizzo successivo (a meno che non venga esplicitamente richiesto di *ricalcolare*).  
-    Nota che, dopo aver modificato (riempito) l'istogramma, è necessario ricalcolare esplicitamente la scala se era stata calcolata in precedenza.
+    If *other* is ``None``, return scale of this histogram.
+    If its scale was not computed before,
+    it is computed and stored for subsequent use
+    (unless explicitly asked to *recompute*).
+    Note that after changing (filling) the histogram
+    one must explicitly recompute the scale
+    if it was computed before.
 
-    Se viene fornito un valore float in *other*, l'oggetto corrente (*self*) viene riscalato al valore di *other*.
+    If a float *other* is provided, rescale self to *other*.
 
-    Gli istogrammi con scala pari a zero non possono essere riscalati.  
-    Viene sollevata un'eccezione :exc:`.LenaValueError` se si tenta di farlo.
+    Histograms with scale equal to zero can't be rescaled.
+    :exc:`.LenaValueError` is raised if one tries to do that.
     """
     if other is None:
-        if not hasattr(self, '_scale') or recompute:
-            self._scale = self._calculate_scale()
+        if not hasattr(self, '_scale_computed') or recompute:
+            self._scale = sum(self.histogram)  # Assuming self.histogram is a list of counts
+            self._scale_computed = True
         return self._scale
 
-    if isinstance(other, float):
-        if self._scale == 0:
-            raise LenaValueError("Cannot rescale histogram with zero scale.")
-        self._rescale(other)
-    else:
-        raise TypeError("Expected a float value for 'other'.")
+    if self._scale == 0:
+        raise LenaValueError("Cannot rescale a histogram with scale equal to zero.")
+
+    # Rescale the histogram
+    scale_factor = other / self._scale
+    self.histogram = [count * scale_factor for count in self.histogram]
+    self._scale = other

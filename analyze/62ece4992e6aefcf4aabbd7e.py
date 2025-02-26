@@ -2,8 +2,8 @@ import os
 
 def _resolve_string(matcher):
     """
-    Ottieni il valore dall'ambiente dato un matcher che contiene un nome e un valore predefinito opzionale.  
-    Se la variabile non è definita nell'ambiente e non viene fornito alcun valore predefinito, viene generato un errore.
+    Get the value from environment given a matcher containing a name and an optional default value.
+    If the variable is not defined in environment and no default value is provided, an Error is raised.
     """
     name, default_value = matcher.get('name'), matcher.get('default')
     

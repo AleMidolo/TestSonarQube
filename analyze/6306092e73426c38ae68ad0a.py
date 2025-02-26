@@ -1,10 +1,9 @@
-def validate_choices_args(self, args):  
+def validate_choices_args(self, args):
     """
-    Verifica se il valore degli argomenti di scelta è una delle opzioni disponibili.  
+    Check if value of choice arguments is one of the available choices.
 
-    :param args: Gli argomenti ricevuti.  
+    :param args: The received arguments.
     """
-    available_choices = self.get_available_choices()  # Assuming this method exists
     for arg in args:
-        if arg not in available_choices:
-            raise ValueError(f"'{arg}' non è una scelta valida. Scelte disponibili: {available_choices}")
+        if arg not in self.available_choices:
+            raise ValueError(f"Invalid choice: {arg}. Available choices are: {self.available_choices}")

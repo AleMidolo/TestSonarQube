@@ -1,29 +1,40 @@
+import os
+import json
+
 def get_plugin_spec_flatten_dict(plugin_dir):
     """
-    Crea un dizionario non annidato a partire dalle specifiche del plugin.
+    Creates a flat dict from the plugin spec
 
-    :param plugin_dir: Un percorso alla directory del plugin  
-    :return: Un dizionario piatto che contiene le proprietà del plugin
+    :param plugin_dir: A path to the plugin's dir
+    :return: A flatten dictionary contains the plugin's properties
     """
-    import os
-    import json
+    flatten_dict = {}
 
-    def flatten_dict(d, parent_key='', sep='_'):
-        items = []
-        for k, v in d.items():
-            new_key = f"{parent_key}{sep}{k}" if parent_key else k
-            if isinstance(v, dict):
-                items.extend(flatten_dict(v, new_key, sep=sep).items())
-            else:
-                items.append((new_key, v))
-        return dict(items)
+    for root, _, files in os.walk(plugin_dir):
+        for file in files:
+            if file.endswith('.json'):
+                file_path = os.path.join(root, file)
+                with open(file_path, 'r') as f:
+                    try:
+                        data = json.load(f)
+                        flatten_dict.update(flatten_json(data))
+                    except json.JSONDecodeError:
+                        continue
 
-    plugin_spec_path = os.path.join(plugin_dir, 'plugin_spec.json')
-    
-    if not os.path.exists(plugin_spec_path):
-        raise FileNotFoundError(f"Plugin specification file not found at {plugin_spec_path}")
+    return flatten_dict
 
-    with open(plugin_spec_path, 'r') as f:
-        plugin_spec = json.load(f)
+def flatten_json(y):
+    out = {}
 
-    return flatten_dict(plugin_spec)
+    def flatten(x, name=''):
+        if type(x) is dict:
+            for a in x:
+                flatten(x[a], name + a + '_')
+        elif type(x) is list:
+            for i, a in enumerate(x):
+                flatten(a, name + str(i) + '_')
+        else:
+            out[name[:-1]] = x
+
+    flatten(y)
+    return out

@@ -1,16 +1,16 @@
 def size_to_bytes(size: str) -> int:
     """
-    Convertire una dimensione di file leggibile dall'uomo in byte.
+    Convert human readable file size to bytes.
 
-    Il valore risultante è un'approssimazione poiché il valore di input è nella maggior parte dei casi arrotondato.
+    Resulting value is an approximation as input value is in most case rounded.
 
     Args:
-        size: Una stringa che rappresenta una dimensione di file leggibile dall'uomo (es: '500K')
+        size: A string representing a human readable file size (eg: '500K')
 
     Returns:
-        Una rappresentazione decimale della dimensione del file
+        A decimal representation of file size
 
-        Esempi::
+        Examples::
 
             >>> size_to_bytes("500")
             500
@@ -19,21 +19,18 @@ def size_to_bytes(size: str) -> int:
     """
     size = size.strip().upper()
     multipliers = {
+        'B': 1,
         'K': 1000,
-        'M': 1000**2,
-        'G': 1000**3,
-        'T': 1000**4,
-        'P': 1000**5,
-        'E': 1000**6,
+        'M': 1000000,
+        'G': 1000000000,
+        'T': 1000000000000,
     }
     
-    if size.isdigit():
-        return int(size)
+    if size[-1] in multipliers:
+        number = float(size[:-1])
+        unit = size[-1]
+    else:
+        number = float(size)
+        unit = 'B'
     
-    for suffix, multiplier in multipliers.items():
-        if size.endswith(suffix):
-            number_part = size[:-1]
-            if number_part.isdigit():
-                return int(number_part) * multiplier
-    
-    raise ValueError(f"Invalid size format: {size}")
+    return int(number * multipliers[unit])

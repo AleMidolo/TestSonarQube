@@ -3,33 +3,28 @@ import os
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Esegui il/i comando/i fornito/i.
+    Call the given command(s).
     """
-    if cwd is None:
-        cwd = os.getcwd()
-    
-    if env is None:
-        env = os.environ.copy()
-    
     if isinstance(commands, str):
         commands = [commands]
     
-    results = []
-    
+    output = []
     for command in commands:
         full_command = [command] + args
         if verbose:
-            print(f"Running command: {' '.join(full_command)} in {cwd}")
+            print(f"Running command: {' '.join(full_command)}")
         
-        stderr = subprocess.DEVNULL if hide_stderr else None
+        result = subprocess.run(
+            full_command,
+            cwd=cwd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE if not hide_stderr else subprocess.DEVNULL,
+            env=env
+        )
         
-        result = subprocess.run(full_command, cwd=cwd, env=env, stderr=stderr, text=True, capture_output=True)
+        output.append(result.stdout.decode('utf-8'))
         
-        results.append({
-            'command': command,
-            'returncode': result.returncode,
-            'stdout': result.stdout,
-            'stderr': result.stderr
-        })
+        if result.returncode != 0:
+            raise subprocess.CalledProcessError(result.returncode, full_command, output=result.stderr.decode('utf-8'))
     
-    return results
+    return output

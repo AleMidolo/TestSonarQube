@@ -3,7 +3,7 @@ import requests
 
 def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
     """
-    Prova a recuperare un documento webfinger conforme a RFC7033. Non genera eccezioni in caso di fallimento.
+    Try to retrieve an RFC7033 webfinger document. Does not raise if it fails.
     """
     try:
         url = f"https://webfinger.example.com/.well-known/webfinger?resource=acct:{handle}"

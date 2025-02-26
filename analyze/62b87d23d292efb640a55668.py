@@ -1,13 +1,14 @@
 def get_config():
     """
-    Crea, popola e restituisci l'oggetto VersioneerConfig()
+    Create, populate and return the VersioneerConfig() object.
     """
     class VersioneerConfig:
         def __init__(self):
             self.version = "1.0.0"
-            self.author = "Author Name"
+            self.description = "Versioneer configuration object"
+            self.author = "Your Name"
             self.license = "MIT"
-            self.description = "This is a sample configuration object."
 
     config = VersioneerConfig()
+    # Populate the config object with additional settings if needed
     return config

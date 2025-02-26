@@ -1,7 +1,9 @@
 def check_sender_and_entity_handle_match(sender_handle, entity_handle):
     """
-    Assicurati che i valori di `sender_handle` e `entity_handle` corrispondano.
+    Ensure that sender and entity handles match.
 
-    Fondamentalmente, abbiamo già verificato che il mittente sia chi dichiara di essere al momento della ricezione del payload. Tuttavia, il mittente potrebbe cercare di impostare un altro autore all'interno del payload stesso, poiché 'Diaspora' include il mittente sia negli header del payload che nell'oggetto. Dobbiamo garantire che siano identici.
+    Basically we've already verified the sender is who they say when receiving the payload. However, the sender might
+    be trying to set another author in the payload itself, since Diaspora has the sender in both the payload headers
+    AND the object. We must ensure they're the same.
     """
     return sender_handle == entity_handle

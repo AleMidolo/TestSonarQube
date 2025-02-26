@@ -1,6 +1,6 @@
-def ansible_config_manager(cls):  
+def ansible_config_manager(cls):
     """
-    Ottiene il gestore di configurazione Ansible.
+    Gets the ansible config manager.
     """
-    from ansible.config.manager import ConfigManager
-    return ConfigManager(cls)
+    # Assuming we have a method to retrieve the ansible config manager
+    return cls.get_ansible_config_manager()

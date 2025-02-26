@@ -1,21 +1,23 @@
 def parse_arguments(*unparsed_arguments):
     """
-    Dato un insieme di argomenti della riga di comando con cui è stato invocato questo script, analizza gli argomenti e restituiscili come un dizionario che mappa il nome del sotto-parser (o "global") a un'istanza di argparse.Namespace.
+    Given command-line arguments with which this script was invoked, parse the arguments and return
+    them as a dict mapping from subparser name (or "global") to an argparse.Namespace instance.
     """
     import argparse
 
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='subparser_name')
 
-    # Esempio di sotto-parser
-    parser_a = subparsers.add_parser('command_a')
-    parser_a.add_argument('--option_a', type=str, help='Option for command_a')
+    # Example subparser for 'command1'
+    command1_parser = subparsers.add_parser('command1')
+    command1_parser.add_argument('--option1', type=str, help='Option for command1')
 
-    parser_b = subparsers.add_parser('command_b')
-    parser_b.add_argument('--option_b', type=int, help='Option for command_b')
+    # Example subparser for 'command2'
+    command2_parser = subparsers.add_parser('command2')
+    command2_parser.add_argument('--option2', type=int, help='Option for command2')
 
-    # Analizza gli argomenti
+    # Parse the arguments
     args = parser.parse_args(unparsed_arguments)
 
-    # Restituisce un dizionario con il nome del sotto-parser e l'istanza di Namespace
-    return {args.subparser_name: args}
+    # Return the parsed arguments as a dictionary
+    return {args.subparser_name if args.subparser_name else "global": args}

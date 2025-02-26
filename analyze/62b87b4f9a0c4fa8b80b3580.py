@@ -1,9 +1,18 @@
 def integral(bins, edges):
     """
-    Calcola l'integrale (scala per un istogramma).
+    Compute integral (scale for a histogram).
 
-    *i bins* contengono i valori, mentre *gli edges* formano la griglia  
-    per l'integrazione.  
-    Il loro formato è definito nella descrizione della classe :class:`.histogram`.
+    *bins* contain values, and *edges* form the mesh
+    for the integration.
+    Their format is defined in :class:`.histogram` description.
     """
-    return sum((edges[i + 1] - edges[i]) * bins[i] for i in range(len(bins)))
+    if len(bins) != len(edges) - 1:
+        raise ValueError("Length of bins must be one less than length of edges.")
+    
+    # Calculate the width of each bin
+    widths = edges[1:] - edges[:-1]
+    
+    # Compute the integral as the sum of the area of each bin
+    integral_value = sum(bins * widths)
+    
+    return integral_value

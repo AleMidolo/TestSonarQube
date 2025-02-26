@@ -1,29 +1,36 @@
+import subprocess
+import os
+import sys
+import multiprocessing
+
 def subprocess_run_helper(func, *args, timeout, extra_env=None):
     """
-    Esegui una funzione in un sottoprocesso.
+    Run a function in a sub-process.
 
-    Parametri
+    Parameters
     ----------
     func : function
-        La funzione da eseguire. Deve trovarsi in un modulo importabile.
+        The function to be run.  It must be in a module that is importable.
     *args : str
-        Eventuali argomenti aggiuntivi da riga di comando da passare
-        come primo argomento a ``subprocess.run``.
+        Any additional command line arguments to be passed in
+        the first argument to ``subprocess.run``.
     extra_env : dict[str, str]
-        Eventuali variabili d'ambiente aggiuntive da impostare per il sottoprocesso.
+        Any additional environment variables to be set for the subprocess.
     """
-    import subprocess
-    import os
+    def target():
+        if extra_env:
+            os.environ.update(extra_env)
+        # Call the function with the provided arguments
+        return func(*args)
 
-    # Creare un dizionario per l'ambiente, partendo da quello corrente
-    env = os.environ.copy()
-    if extra_env is not None:
-        env.update(extra_env)
+    # Create a process
+    process = multiprocessing.Process(target=target)
+    process.start()
+    process.join(timeout)
 
-    # Costruire il comando da eseguire
-    command = [func.__module__ + '.' + func.__name__] + list(args)
+    if process.is_alive():
+        process.terminate()
+        process.join()
+        raise TimeoutError("The function call timed out.")
 
-    # Eseguire il comando nel sottoprocesso
-    result = subprocess.run(command, env=env, timeout=timeout)
-
-    return result
+    return process.exitcode

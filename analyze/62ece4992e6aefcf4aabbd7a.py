@@ -1,10 +1,8 @@
-import os
-import platform
-
 def is_gitbash():
     """
-    Restituisce True se viene eseguito in un terminale gitbash di Windows
+    returns True if you run in a Windows gitbash
 
-    :return: True se è gitbash
+    :return: True if gitbash
     """
-    return platform.system() == "Windows" and "gitbash" in os.environ.get("TERM", "").lower()
+    import os
+    return 'GIT_BASH' in os.environ.get('TERM', '')
