@@ -1,22 +1,17 @@
 def _should_attempt_c_optimizations():
     """
-    Return a true value if we should attempt to use the C optimizations.
+    如果我们使用 C 优化，则返回一个真值。
 
-    This takes into account whether we're on PyPy and the value of the
-    ``PURE_PYTHON`` environment variable, as defined in `_use_c_impl`.
+    如果我们应该尝试使用 C 优化，则返回一个真值。
+
+    这会考虑我们是否运行在 PyPy 上，以及 `_use_c_impl` 中定义的 ``PURE_PYTHON`` 环境变量的值。
     """
     import os
     import sys
 
-    # Check if we are running on PyPy
-    is_pypy = 'pypy' in sys.version.lower()
+    # Check if running on PyPy
+    if 'pypy' in sys.version.lower():
+        return False
 
-    # Check the PURE_PYTHON environment variable
-    pure_python = os.getenv('PURE_PYTHON')
-
-    # If we are on PyPy and PURE_PYTHON is not set, we can use C optimizations
-    if is_pypy and pure_python is None:
-        return True
-
-    # Otherwise, we should not attempt C optimizations
-    return False
+    # Check the environment variable for PURE_PYTHON
+    return os.getenv('_use_c_impl', '0') != '1'

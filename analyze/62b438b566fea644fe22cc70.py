@@ -1,26 +1,14 @@
 def bash_completion():
     """
-    Return a bash completion script for the borgmatic command. Produce this by introspecting
-    borgmatic's command-line argument parsers.
+    通过检查 borgmatic 的命令行参数解析器生成 borgmatic 命令。
+
+    返回一个用于 borgmatic 命令的 bash 补全脚本。通过检查 borgmatic 的命令行参数解析器生成此脚本。
     """
-    import borgmatic
-    import argparse
-    import sys
+    import subprocess
 
-    # Create a parser for the borgmatic command
-    parser = borgmatic.create_parser()
-
-    # Generate the completion script
-    def complete_borgmatic_command(text, state):
-        options = [cmd for cmd in parser._subparsers.choices.keys() if cmd.startswith(text)]
-        return options[state] if state < len(options) else None
-
-    # Register the completion function
-    if sys.stdin.isatty():
-        print("# Bash completion for borgmatic")
-        print("complete -F complete_borgmatic_command borgmatic")
-    else:
-        # If not in a terminal, just return the command
-        return complete_borgmatic_command
-
-    return None
+    # Generate the bash completion script using borgmatic's command line interface
+    try:
+        completion_script = subprocess.check_output(['borgmatic', 'completion', 'bash'], text=True)
+        return completion_script
+    except subprocess.CalledProcessError as e:
+        return f"Error generating completion script: {e}"

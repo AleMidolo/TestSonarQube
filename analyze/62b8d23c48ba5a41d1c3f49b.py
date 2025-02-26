@@ -1,9 +1,9 @@
 def popitem(self):
     """
-    Remove and return the `(key, value)` pair most recently used.
+    移除并返回最近使用的键值对。
     """
     if not self.data:
         raise KeyError("popitem(): dictionary is empty")
-    key = next(reversed(self.data))
+    key = self.order.pop()  # Assuming self.order keeps track of the order of keys
     value = self.data.pop(key)
     return key, value

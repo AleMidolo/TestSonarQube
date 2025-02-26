@@ -1,8 +1,9 @@
 def next_version(version):
     """
-    Next version identifier following existing pattern.
+    根据现有模式生成下一个版本标识符
 
-    Must deal with both zero-prefixed and non-zero prefixed versions.
+    遵循现有格式的下一个版本标识符
+    必须能够处理以零开头和非零开头的两种情况。
     """
     parts = version.split('.')
     for i in reversed(range(len(parts))):

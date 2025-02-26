@@ -1,64 +1,34 @@
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
-    Parse the date/time string into a :class:`datetime.datetime` object.
+    解析日期/时间字符串为 :class:`datetime.datetime` 对象。
 
-    :param timestr:
-        Any date/time string using the supported formats.
+    :param timestr: 使用支持的格式的任意日期/时间字符串。
+    :param default: 默认的 datetime 对象。如果这是一个 datetime 对象且不为 ``None``，则 ``timestr`` 中指定的元素将替换默认对象中的对应元素。
+    :param ignoretz: 如果设置为真，则忽略解析字符串中的时区信息，并返回一个无时区的:class: `datetime.datetime` 对象。
+    :param tzinfos: 字符串中可能存在的额外时区名称/别名。此参数将时区名称（以及可选的时区偏移）映射到具体的时区。该参数可以是一个字典，将时区别名映射到时区，或者是一个接受两个参数（``tzname`` 和 ``tzoffset``）并返回时区的函数。
 
-    :param default:
-        The default datetime object, if this is a datetime object and not
-        ``None``, elements specified in ``timestr`` replace elements in the
-        default object.
+    被映射到的时区可以是从 UTC 开始的秒数偏移量，或者是一个:class: `tzinfo` 对象。
 
-    :param ignoretz:
-        If set ``True``, time zones in parsed strings are ignored and a
-        naive :class:`datetime.datetime` object is returned.
+    .. doctest
+    :options: +NORMALIZE_WHITESPACE
 
-    :param tzinfos:
-        Additional time zone names / aliases which may be present in the
-        string. This argument maps time zone names (and optionally offsets
-        from those time zones) to time zones. This parameter can be a
-        dictionary with timezone aliases mapping time zone names to time
-        zones or a function taking two parameters (``tzname`` and
-        ``tzoffset``) and returning a time zone.
+    >>> from dateutil.parser import parse
+    >>> from dateutil.tz import gettz
+    >>> tzinfos = {"BRST": tzoffset(u'BRST', -7200)}
+    >>> parse("2012-01-19 17:21:00 BRST", tzinfos=tzinfos)
+    datetime.datetime(2012, 1, 19, 17, 21, tzinfo=tzoffset(u'BRST', -7200))
+    >>> parse("2012-01-19 17:21:00 CST", tzinfos=tzinfos)
+    datetime.datetime(2012, 1, 19, 17, 21, tzinfo=tzfile('/usr/share/zoneinfo/America/Chicago'))
 
-        The timezones to which the names are mapped can be an integer
-        offset from UTC in seconds or a :class:`tzinfo` object.
-
-        .. doctest::
-           :options: +NORMALIZE_WHITESPACE
-
-            >>> from dateutil.parser import parse
-            >>> from dateutil.tz import gettz
-            >>> tzinfos = {"BRST": -7200, "CST": gettz("America/Chicago")}
-            >>> parse("2012-01-19 17:21:00 BRST", tzinfos=tzinfos)
-            datetime.datetime(2012, 1, 19, 17, 21, tzinfo=tzoffset(u'BRST', -7200))
-            >>> parse("2012-01-19 17:21:00 CST", tzinfos=tzinfos)
-            datetime.datetime(2012, 1, 19, 17, 21,
-                              tzinfo=tzfile('/usr/share/zoneinfo/America/Chicago'))
-
-        This parameter is ignored if ``ignoretz`` is set.
+    如果设置了 ``ignoretz`` ，此参数将被忽略。
 
     :param \*\*kwargs:
-        Keyword arguments as passed to ``_parse()``.
+      传递给 ``_parse()`` 的关键字参数。
 
-    :return:
-        Returns a :class:`datetime.datetime` object or, if the
-        ``fuzzy_with_tokens`` option is ``True``, returns a tuple, the
-        first element being a :class:`datetime.datetime` object, the second
-        a tuple containing the fuzzy tokens.
-
-    :raises ParserError:
-        Raised for invalid or unknown string format, if the provided
-        :class:`tzinfo` is not in a valid format, or if an invalid date
-        would be created.
-
-    :raises TypeError:
-        Raised for non-string or character stream input.
-
-    :raises OverflowError:
-        Raised if the parsed date exceeds the largest valid C integer on
-        your system.
+    :return: 返回一个:class: `datetime.datetime` 对象。如果 ``fuzzy_with_tokens`` 选项为真，则返回一个元组，元组的第一个元素是 一个:class: `datetime.datetime` 对象，第二个元素是包含模糊标记的元组。
+    :raises ParserError: 当字符串格式无效或未知、提供的 :class: `tzinfo` 格式错误，或将创建无效日期时抛出。
+    :raises TypeError: 当输入为非字符串或字符流时抛出。
+    :raises OverflowError: 当解析的日期超出系统上最大的有效 C 整数时抛出。
     """
-    from dateutil import parser
-    return parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+    # Implementation goes here
+    pass

@@ -1,12 +1,13 @@
 def index(self, key):
     """
-    Return the index of the given item.
+    以整数形式返回键。
+    返回给定项的索引。
 
-    :param key: a key
-    :return: index
+    :param key: 一个键
+    :return: 索引
     :rtype: int
     """
     try:
         return self.items.index(key)
     except ValueError:
-        return -1
+        return -1  # 返回-1表示未找到该键

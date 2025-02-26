@@ -1,12 +1,14 @@
 def validate_min_max_args(self, args):
     """
-    Check if value of arguments is between minimum and maximum values.
+    检查给定参数的值是否在最小值和最大值之间
 
-    :param args: The received arguments.
+    检查参数的值是否在最小值和最大值之间
+    :param args: 接收到的参数。
     """
-    min_value = self.min_value  # Assuming min_value is defined in the class
-    max_value = self.max_value  # Assuming max_value is defined in the class
+    min_value = self.min_value  # 假设类中有最小值属性
+    max_value = self.max_value  # 假设类中有最大值属性
 
     for arg in args:
         if not (min_value <= arg <= max_value):
-            raise ValueError(f"Argument {arg} is not between {min_value} and {max_value}.")
+            raise ValueError(f"参数 {arg} 超出范围 ({min_value}, {max_value})")
+    return True

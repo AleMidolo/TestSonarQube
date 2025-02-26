@@ -1,31 +1,30 @@
 def validate(self, inventory, extract_spec_version=False):
     """
-    Validate a given inventory.
+    验证给定的库存（inventory）。如果 `extract_spec_version` 为 True，则会根据 `type` 值来确定规范版本。如果没有 `type` 值或其无效，则其他测试将基于 `self.spec_version` 中给定的版本。
+    验证给定的库存。
 
-    If extract_spec_version is True then will look at the type value to determine
-    the specification version. In the case that there is no type value or it isn't
-    valid, then other tests will be based on the version given in self.spec_version.
+    如果 `extract_spec_version` 为真，则会根据 `type` 值来确定规范版本。
+    如果没有 `type` 值或其无效，则其他测试将基于 `self.spec_version` 中给定的版本。
     """
     if extract_spec_version:
-        type_value = inventory.get('type')
-        if type_value:
-            # Logic to determine specification version based on type_value
-            if type_value in self.valid_types:
-                spec_version = self.spec_versions[type_value]
-            else:
-                raise ValueError("Invalid type value for specification version.")
-        else:
+        spec_version = inventory.get('type', None)
+        if not spec_version or spec_version not in self.valid_types:
             spec_version = self.spec_version
     else:
         spec_version = self.spec_version
 
-    # Perform validation checks based on spec_version
-    if not self.is_valid_inventory(inventory, spec_version):
-        raise ValueError("Invalid inventory based on the specification version.")
+    # Perform validation based on the determined spec_version
+    if spec_version == 'v1':
+        return self.validate_v1(inventory)
+    elif spec_version == 'v2':
+        return self.validate_v2(inventory)
+    else:
+        raise ValueError("Invalid spec version: {}".format(spec_version))
 
-    return True
+def validate_v1(self, inventory):
+    # Implement validation logic for version 1
+    pass
 
-def is_valid_inventory(self, inventory, spec_version):
-    # Placeholder for actual validation logic
-    # This should contain the logic to validate the inventory against the spec_version
-    return True
+def validate_v2(self, inventory):
+    # Implement validation logic for version 2
+    pass

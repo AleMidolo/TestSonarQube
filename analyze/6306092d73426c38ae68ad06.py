@@ -1,9 +1,12 @@
 def get_silent_args(self, args):
     """
-    list of silenced argument
+    被静默的参数列表
 
-    :param args: The received arguments.
-    :return: list, silenced argument names
+    :param args: 接收到的参数。
+    :return: list，被静默的参数名称列表。
     """
-    silenced_args = [arg for arg in args if arg.startswith('_')]
-    return silenced_args
+    silent_args = []
+    for arg in args:
+        if isinstance(arg, str) and arg.startswith('_'):
+            silent_args.append(arg)
+    return silent_args

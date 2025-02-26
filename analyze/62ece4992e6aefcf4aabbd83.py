@@ -1,33 +1,17 @@
 import subprocess
-import os
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Call the given command(s).
+    提供了一组命令。使用子进程运行给定的命令及其参数。返回运行结果（标准输出和返回码）。
+
+    调用给定的命令。
     """
-    if isinstance(commands, str):
-        commands = [commands]
+    command = [commands] + list(args)
+    if verbose:
+        print(f"Running command: {' '.join(command)}")
     
-    results = []
-    for command in commands:
-        full_command = [command] + args
-        if verbose:
-            print(f"Running command: {' '.join(full_command)}")
-        
-        process = subprocess.Popen(
-            full_command,
-            cwd=cwd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE if not hide_stderr else subprocess.DEVNULL,
-            env=env
-        )
-        
-        stdout, stderr = process.communicate()
-        results.append({
-            'command': command,
-            'returncode': process.returncode,
-            'stdout': stdout.decode('utf-8'),
-            'stderr': stderr.decode('utf-8') if not hide_stderr else None
-        })
+    stderr = subprocess.STDOUT if hide_stderr else subprocess.PIPE
     
-    return results
+    result = subprocess.run(command, cwd=cwd, env=env, stdout=subprocess.PIPE, stderr=stderr, text=True)
+    
+    return result.stdout, result.returncode

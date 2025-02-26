@@ -1,12 +1,9 @@
 def render(pieces, style):
     """
-    Render the given version pieces into the requested style.
+    将输入的组件和样式渲染为对应的样式。
+    将给定的组件渲染为要求的样式。
     """
-    if style == "html":
-        return "<div>" + "".join(f"<p>{piece}</p>" for piece in pieces) + "</div>"
-    elif style == "markdown":
-        return "\n".join(f"* {piece}" for piece in pieces)
-    elif style == "plain":
-        return "\n".join(pieces)
-    else:
-        raise ValueError("Unsupported style: " + style)
+    rendered_output = []
+    for piece in pieces:
+        rendered_output.append(f"<div class='{style}'>{piece}</div>")
+    return ''.join(rendered_output)
