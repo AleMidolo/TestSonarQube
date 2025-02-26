@@ -24,10 +24,10 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     temp_file_path = destination_path / "archive.tar.gz"
 
     # Scrivi il contenuto scaricato in un file temporaneo
-    with open(temp_file_path, 'wb') as f:
-        f.write(response.content)
+    with open(temp_file_path, 'wb') as temp_file:
+        temp_file.write(response.content)
 
-    # Estrai l'archivio
+    # Estrai l'archivio .tar.gz
     with tarfile.open(temp_file_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
 

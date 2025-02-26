@@ -3,20 +3,24 @@ def get_spec_defaults(self):
     Risolvere i valori degli argomenti dal file di specifica e da altre fonti.
     """
     defaults = {}
+    # Supponiamo di avere un file di specifica in formato JSON
+    try:
+        with open('spec_file.json', 'r') as file:
+            spec_data = json.load(file)
+            for key, value in spec_data.items():
+                defaults[key] = value
+    except FileNotFoundError:
+        print("Il file di specifica non è stato trovato.")
+    except json.JSONDecodeError:
+        print("Errore nella decodifica del file JSON.")
     
-    # Supponiamo che ci sia un metodo per caricare i valori dal file di specifica
-    spec_values = self.load_spec_file()
+    # Aggiungere altre fonti di valori predefiniti se necessario
+    # Esempio: valori predefiniti hardcoded
+    additional_defaults = {
+        'timeout': 30,
+        'retries': 3
+    }
     
-    # Aggiungi i valori dal file di specifica ai defaults
-    for key, value in spec_values.items():
-        defaults[key] = value
-    
-    # Supponiamo che ci siano altre fonti da cui ottenere valori di default
-    other_sources = self.get_other_sources()
-    
-    # Aggiungi i valori da altre fonti ai defaults
-    for key, value in other_sources.items():
-        if key not in defaults:  # Non sovrascrivere i valori esistenti
-            defaults[key] = value
+    defaults.update(additional_defaults)
     
     return defaults

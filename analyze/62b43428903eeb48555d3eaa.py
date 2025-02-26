@@ -11,7 +11,7 @@ def formatmany(
     if isinstance(many_params, dict):
         for params in many_params:
             if isinstance(params, dict):
-                out_params.append({key: params[key] for key in params})
+                out_params.append({k: v for k, v in params.items()})
                 param_count += len(params)
             elif isinstance(params, (list, tuple)):
                 out_params.append(list(params))
@@ -19,13 +19,15 @@ def formatmany(
     else:
         for params in many_params:
             if isinstance(params, dict):
-                out_params.append({key: params[key] for key in params})
+                out_params.append({k: v for k, v in params.items()})
                 param_count += len(params)
             elif isinstance(params, (list, tuple)):
                 out_params.append(list(params))
                 param_count += len(params)
 
-    # Replace "in" style parameters in the SQL with "out" style
-    formatted_sql = sql.replace("?", "%s")  # Example replacement, adjust as needed
+    # Replace the parameters in the SQL query
+    formatted_sql = sql
+    for i in range(param_count):
+        formatted_sql = formatted_sql.replace(f'${i + 1}', f'${param_count + i + 1}')
 
     return formatted_sql, out_params

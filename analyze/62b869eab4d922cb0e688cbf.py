@@ -20,13 +20,11 @@ def generate_default_observer_schema(app):
                 },
                 'spec': {}
             }
-        
-        # Add default observation fields based on resource type
-        if resource_type == 'Pod':
-            default_schema[resource_type]['spec']['containers'] = []
-        elif resource_type == 'Service':
-            default_schema[resource_type]['spec']['ports'] = []
-        elif resource_type == 'Deployment':
-            default_schema[resource_type]['spec']['replicas'] = 1
-        
+            # Add default observation fields based on resource type
+            if resource_type == 'Pod':
+                default_schema[resource_type]['spec']['status'] = 'Pending'
+            elif resource_type == 'Service':
+                default_schema[resource_type]['spec']['type'] = 'ClusterIP'
+            # Add more resource types and their default fields as needed
+
     return default_schema

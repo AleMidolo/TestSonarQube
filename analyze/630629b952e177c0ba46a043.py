@@ -24,11 +24,11 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     }
 
     if document_path:
-        nodeinfo_url = f"{url}/{document_path}"
+        full_url = f"{url}/{document_path}"
     else:
-        nodeinfo_url = f"{url}/.well-known/nodeinfo"
+        full_url = f"{url}/.well-known/nodeinfo"
 
     return {
-        "nodeinfo_url": nodeinfo_url,
-        "document": nodeinfo_document
+        "url": full_url,
+        "nodeinfo": nodeinfo_document
     }

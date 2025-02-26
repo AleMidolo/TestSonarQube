@@ -15,22 +15,18 @@ def parse_frequency(frequency):
     units = {
         'seconds': 'seconds',
         'second': 'seconds',
-        's': 'seconds',
         'minutes': 'minutes',
         'minute': 'minutes',
-        'm': 'minutes',
         'hours': 'hours',
         'hour': 'hours',
-        'h': 'hours',
         'days': 'days',
         'day': 'days',
-        'w': 'weeks',
         'weeks': 'weeks',
         'week': 'weeks',
-        'months': 'months',
-        'month': 'months',
-        'years': 'years',
-        'year': 'years'
+        'months': 'days',  # Approximation: 1 month = 30 days
+        'month': 'days',    # Approximation: 1 month = 30 days
+        'years': 'days',    # Approximation: 1 year = 365 days
+        'year': 'days'      # Approximation: 1 year = 365 days
     }
 
     parts = frequency.split()

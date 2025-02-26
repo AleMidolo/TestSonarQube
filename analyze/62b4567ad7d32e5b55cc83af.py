@@ -10,4 +10,7 @@ def parse_arguments(*arguments):
     # Aggiungi qui gli argomenti che desideri analizzare
     # Esempio: parser.add_argument('--example', help='Esempio di argomento')
 
-    return parser.parse_args(arguments)
+    # Analizza gli argomenti forniti
+    parsed_args = parser.parse_args(arguments)
+    
+    return parsed_args
