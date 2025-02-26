@@ -16,43 +16,35 @@ def absorb(self, args):
     for expr in args:
         # Apply absorption laws
         if '&' in expr and '|' in expr:
-            # Check for A & (A | B)
-            if expr.count('&') == 1 and expr.count('|') == 1:
-                parts = expr.split('&')
-                A = parts[0].strip()
-                B = parts[1].strip().split('|')
-                if A in B[0]:
-                    result.append(A)
+            # Check for absorption patterns
+            if '|' in expr and expr.count('&') == 1:
+                a, b = expr.split('&')
+                if f'({a.strip()} | {b.strip()})' in expr or f'({b.strip()} | {a.strip()})' in expr:
+                    result.append(a.strip())
                     continue
-            # Check for A | (A & B)
-            if expr.count('|') == 1 and expr.count('&') == 1:
-                parts = expr.split('|')
-                A = parts[0].strip()
-                B = parts[1].strip().split('&')
-                if A in B[0]:
-                    result.append(A)
+            if '|' in expr and expr.count('|') == 1:
+                a, b = expr.split('|')
+                if f'({a.strip()} & {b.strip()})' in expr or f'({b.strip()} & {a.strip()})' in expr:
+                    result.append(a.strip())
                     continue
         
         # Apply negative absorption laws
-        if '&' in expr and '~' in expr:
-            # Check for A & (~A | B)
-            if expr.count('&') == 1 and expr.count('|') == 1:
-                parts = expr.split('&')
-                A = parts[0].strip()
-                B = parts[1].strip().split('|')
-                if '~' + A in B[0]:
-                    result.append(A + ' & ' + B[1].strip())
+        if '&' in expr:
+            a, rest = expr.split('&', 1)
+            if '~' in rest:
+                neg_a = rest.split('|')[0]
+                if neg_a.strip() == f'~{a.strip()}':
+                    result.append(f'{a.strip()} & {rest.split("|")[1].strip()}')
                     continue
-            # Check for A | (~A & B)
-            if expr.count('|') == 1 and expr.count('&') == 1:
-                parts = expr.split('|')
-                A = parts[0].strip()
-                B = parts[1].strip().split('&')
-                if '~' + A in B[0]:
-                    result.append(A + ' | ' + B[1].strip())
+        if '|' in expr:
+            a, rest = expr.split('|', 1)
+            if '~' in rest:
+                neg_a = rest.split('&')[0]
+                if neg_a.strip() == f'~{a.strip()}':
+                    result.append(f'{a.strip()} | {rest.split("&")[1].strip()}')
                     continue
         
-        # If no absorption applied, keep the original expression
+        # If no absorption or negative absorption applied, keep the original expression
         result.append(expr)
     
     return result

@@ -5,7 +5,7 @@ def pop_u16(self):
     if len(self.data) < 2:
         raise ValueError("Not enough data to pop 16 bits.")
     
-    # Extract the last two bytes
+    # Get the last two bytes
     last_two_bytes = self.data[-2:]
     
     # Remove the last two bytes from self.data

@@ -2,15 +2,17 @@ def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
     """
 इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम और विवरण लौटाएं।
     if not all:
-    
-इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम और विवरण लौटाएं।
     """
-    attributes = {
-        'attribute1': 'Description of attribute 1',
-        'attribute2': 'Description of attribute 2',
-        'attribute3': 'Description of attribute 3',
-    }
+    # Assuming there is a predefined list of attributes
+    attributes = [
+        {"name": "attribute1", "description": "Description of attribute 1"},
+        {"name": "attribute2", "description": "Description of attribute 2"},
+        {"name": "attribute3", "description": "Description of attribute 3"},
+    ]
     
     if not all:
-        return {key: attributes[key] for key in list(attributes)[:2]}  # Return only first two attributes
-    return attributes
+        # Return only the names of the attributes
+        return [attr["name"] for attr in attributes]
+    else:
+        # Return both names and descriptions
+        return [(attr["name"], attr["description"]) for attr in attributes]

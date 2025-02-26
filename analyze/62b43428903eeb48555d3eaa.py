@@ -13,20 +13,11 @@ def formatmany(
             # If params is a dictionary, convert to out-style
             out_params.append(params)
             for key, value in params.items():
-                formatted_sql = formatted_sql.replace(f":{key}", self._format_value(value))
+                formatted_sql = formatted_sql.replace(f":{key}", repr(value))
         elif isinstance(params, (list, tuple)):
             # If params is a list or tuple, convert to out-style
             out_params.append(params)
             for index, value in enumerate(params):
-                formatted_sql = formatted_sql.replace(f"${index + 1}", self._format_value(value))
+                formatted_sql = formatted_sql.replace(f"${index + 1}", repr(value))
 
     return formatted_sql, out_params
-
-def _format_value(self, value: Any) -> str:
-    # Convert the value to a string representation for SQL
-    if isinstance(value, str):
-        return f"'{value}'"
-    elif value is None:
-        return "NULL"
-    else:
-        return str(value)
