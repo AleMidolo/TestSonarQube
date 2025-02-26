@@ -5,6 +5,5 @@ def popitem(self):
     if not self.data:
         raise KeyError("popitem(): dictionary is empty")
     key = next(iter(self.data))
-    value = self.data[key]
-    del self.data[key]
+    value = self.data.pop(key)
     return key, value

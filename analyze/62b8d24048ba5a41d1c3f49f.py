@@ -15,7 +15,7 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
 
         @wraps(func)
         def wrapper(*args, **kwargs):
-            key = args if not typed else (type(arg).__name__ for arg in args)
+            key = args if not typed else (type(arg) for arg in args)
             if key in cache:
                 if timer() - timestamps[key] < ttl:
                     return cache[key]

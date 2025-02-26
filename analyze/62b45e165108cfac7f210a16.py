@@ -8,10 +8,6 @@ def validate_as_prior_version(self, prior):
     if not isinstance(prior, InventoryValidator):
         return False
     
-    # उदाहरण के लिए, हम यह मान सकते हैं कि एक पूर्व संस्करण मान्य है यदि उसके पास एक विशेष विशेषता है
-    if self.version <= prior.version:
-        return False
-    
-    # अन्य आवश्यक जाँचें यहाँ जोड़ी जा सकती हैं
-    
-    return True
+    # उदाहरण के लिए, हम यह मान सकते हैं कि यदि prior का संस्करण संख्या 
+    # वर्तमान संस्करण संख्या से कम है, तो यह एक मान्य पूर्व संस्करण है
+    return self.version > prior.version

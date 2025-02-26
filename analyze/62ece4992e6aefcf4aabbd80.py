@@ -1,3 +1,5 @@
+import os
+
 def remove_ending_os_sep(input_list):
     """
     विवरण:
@@ -14,19 +16,14 @@ def remove_ending_os_sep(input_list):
     त्रुटि (Raises):
     - `TypeError`: यदि इनपुट सूची का प्रकार सही नहीं है।  
     """
-    import os
-
     if not isinstance(input_list, list):
         raise TypeError("Input must be a list.")
-
+    
     processed_list = []
     for item in input_list:
         if isinstance(item, str) and len(item) > 0:
-            if item[-1] == os.sep:
-                processed_list.append(item[:-1])
-            else:
-                processed_list.append(item)
-        else:
-            processed_list.append(item)
-
+            if item.endswith(os.sep):
+                item = item[:-1]
+        processed_list.append(item)
+    
     return processed_list

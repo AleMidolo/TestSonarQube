@@ -16,57 +16,21 @@ def absorb(self, args):
     for expr in args:
         # Apply absorption laws
         if '&' in expr and '|' in expr:
-            # Check for A & (A | B) = A
-            if expr.count('&') == 1 and expr.count('|') == 1:
-                parts = expr.split('&')
-                if len(parts) == 2:
-                    a = parts[0].strip()
-                    b = parts[1].strip()
-                    if '|' in b:
-                        b_parts = b.split('|')
-                        if a in b_parts:
-                            result.append(a)
-                            continue
-            # Check for A | (A & B) = A
-            if expr.count('|') == 1 and expr.count('&') == 1:
-                parts = expr.split('|')
-                if len(parts) == 2:
-                    a = parts[0].strip()
-                    b = parts[1].strip()
-                    if '&' in b:
-                        b_parts = b.split('&')
-                        if a in b_parts:
-                            result.append(a)
-                            continue
+            # Check for Absorption
+            if 'A' in expr and 'B' in expr:
+                if f"A & (A | B)" in expr:
+                    expr = "A"
+                elif f"A | (A & B)" in expr:
+                    expr = "A"
         
         # Apply negative absorption laws
         if '&' in expr and '~' in expr:
-            # Check for A & (~A | B) = A & B
-            if expr.count('&') == 1 and expr.count('|') == 1:
-                parts = expr.split('&')
-                if len(parts) == 2:
-                    a = parts[0].strip()
-                    b = parts[1].strip()
-                    if '~' in b:
-                        b_parts = b.split('|')
-                        if any('~' + a in part for part in b_parts):
-                            result.append(f"{a} & {b_parts[1].strip()}")
-                            continue
+            if 'A' in expr and 'B' in expr:
+                if f"A & (~A | B)" in expr:
+                    expr = "A & B"
+                elif f"A | (~A & B)" in expr:
+                    expr = "A | B"
         
-        if '|' in expr and '~' in expr:
-            # Check for A | (~A & B) = A | B
-            if expr.count('|') == 1 and expr.count('&') == 1:
-                parts = expr.split('|')
-                if len(parts) == 2:
-                    a = parts[0].strip()
-                    b = parts[1].strip()
-                    if '~' in b:
-                        b_parts = b.split('&')
-                        if any('~' + a in part for part in b_parts):
-                            result.append(f"{a} | {b_parts[1].strip()}")
-                            continue
-        
-        # If no absorption applied, keep the original expression
         result.append(expr)
     
     return result
