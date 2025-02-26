@@ -50,14 +50,11 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     from dateutil import parser
     from datetime import datetime
 
-    # Validate input
-    if not isinstance(timestr, str):
-        raise TypeError("timestr must be a string or character stream")
+    # Validar el tipo de entrada
+    if not isinstance(timestr, (str, bytes)):
+        raise TypeError("timestr debe ser una cadena o flujo de caracteres")
 
-    # Parse the date string
-    try:
-        dt = parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
-    except (ValueError, OverflowError) as e:
-        raise ParserError(f"Error parsing date string: {e}")
+    # Usar el método de análisis de dateutil
+    dt = parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
 
     return dt

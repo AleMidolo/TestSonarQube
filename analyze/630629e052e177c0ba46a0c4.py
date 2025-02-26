@@ -12,7 +12,7 @@ def parse_diaspora_webfinger(document: str) -> Dict:
         # Try to parse the document as JSON
         return json.loads(document)
     except json.JSONDecodeError:
-        # If JSON parsing fails, try to parse as XRD (XML)
+        # If JSON parsing fails, try to parse it as XML (XRD)
         root = ET.fromstring(document)
         result = {}
         for child in root:

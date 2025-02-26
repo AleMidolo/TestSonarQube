@@ -15,15 +15,15 @@ def _update_context(self, context):
     a otra estructura (como texto) en el flujo.  
     El objeto grafo no se destruye realmente en este proceso.
     """
-    # Supongamos que self tiene un atributo 'errors' que es una lista de errores
-    # y que context es un diccionario que puede contener un subdiccionario 'error'.
-    
+    # Implementación del método
     if 'error' not in context:
         context['error'] = {}
     
+    # Supongamos que self.errors es un diccionario que contiene los errores
     for i, error in enumerate(self.errors):
-        error_name = f"x_{i + 1}"  # Asumiendo que los errores se nombran x_1, x_2, ...
-        context['error'][error_name] = {'index': i}
-    
-    # Aquí se pueden agregar más propiedades del grafo al contexto si es necesario
-    # context['value'] = self.some_value  # Ejemplo de cómo agregar más información
+        if error not in context['error']:
+            context['error'][error] = {}
+        context['error'][error]['index'] = i
+
+    # No eliminamos valores existentes en context.value
+    # Se pueden agregar más propiedades del grafo a context si es necesario

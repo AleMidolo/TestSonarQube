@@ -15,9 +15,11 @@ def _fromutc(self, dt):
     new_dt = dt.astimezone(self)
 
     # Determinar si el datetime es ambiguo
-    if new_dt.dst() != timedelta(0):
-        # Si hay un cambio de horario, verificar si es la primera ocurrencia
-        if new_dt < self.utcoffset() + new_dt.dst():
-            return new_dt - new_dt.dst()
-    
-    return new_dt
+    if new_dt.dst() == timedelta(0) and new_dt.utcoffset() is not None:
+        # Si no hay diferencia de horario, no es ambiguo
+        return new_dt
+    else:
+        # Manejar el caso de datetime ambiguo
+        # Aquí se puede implementar la lógica para determinar si es la primera ocurrencia
+        # del datetime ambiguo, dependiendo de la implementación específica
+        raise ValueError("El datetime es ambiguo y no se puede determinar su estado")

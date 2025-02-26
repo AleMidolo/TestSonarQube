@@ -9,16 +9,14 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     if not cmd:
         return cmd
 
-    # Normalize the command by fixing shebangs and paths
     normalized_cmd = []
     for part in cmd:
         if part.startswith('#!'):
-            # Normalize shebangs
-            shebang = part.split()
-            if len(shebang) > 1:
-                normalized_cmd.append(shebang[0] + ' ' + shebang[1].replace('/', '\\'))
-            else:
-                normalized_cmd.append(part)
+            # Normalize shebang line
+            shebang_parts = part.split()
+            if len(shebang_parts) > 1:
+                shebang_parts[1] = shebang_parts[1].replace('/', '\\')
+            normalized_cmd.append(' '.join(shebang_parts))
         else:
             normalized_cmd.append(part.replace('/', '\\'))
 

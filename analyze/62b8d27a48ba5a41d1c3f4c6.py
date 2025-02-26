@@ -8,12 +8,13 @@ def cached(cache, key=hashkey, lock=None):
             # Generar la clave de caché
             cache_key = key(*args, **kwargs)
             # Intentar obtener el resultado de la caché
-            if cache_key in cache:
-                return cache[cache_key]
-            # Si no está en caché, llamar a la función
+            with (lock or dummy_lock):
+                if cache_key in cache:
+                    return cache[cache_key]
+            # Llamar a la función y almacenar el resultado en la caché
             result = func(*args, **kwargs)
-            # Guardar el resultado en la caché
-            cache[cache_key] = result
+            with (lock or dummy_lock):
+                cache[cache_key] = result
             return result
         return wrapper
     return decorator

@@ -18,5 +18,5 @@ def parse_arguments(*unparsed_arguments):
     # Analizar los argumentos
     args = parser.parse_args(unparsed_arguments)
 
-    # Devolver un diccionario que mapea el nombre del subparser a su Namespace
+    # Devolver un diccionario que mapea el nombre del subparser a la instancia de Namespace
     return {args.subparser_name: args}
