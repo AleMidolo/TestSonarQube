@@ -10,4 +10,4 @@ def extend_cli(self, root_subparsers):
     # विकल्प जोड़ें
     parser.add_argument('--option', type=str, help='एक वैकल्पिक तर्क')
     
-    # अन्य आवश्यकताएँ और लॉजिक यहाँ जोड़ें
+    # अन्य आवश्यकताएँ या लॉजिक यहाँ जोड़ें

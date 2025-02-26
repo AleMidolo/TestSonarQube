@@ -8,6 +8,6 @@ def get_option_spec(self, command_name):
     if command_name == "example_command":
         option_spec = {
             "option1": "विवरण 1",
-            "option2": "विवरण 2"
+            "option2": "विवरण 2",
         }
     return option_spec

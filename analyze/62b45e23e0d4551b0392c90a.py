@@ -7,7 +7,7 @@ def validate_version_inventories(self, version_dirs):
 
     version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
     """
-    inventory_digests = set()
+    inventory_digests = {}
     discrepancies = {}
 
     for version in version_dirs:
@@ -16,25 +16,19 @@ def validate_version_inventories(self, version_dirs):
         try:
             with open(inventory_path, 'r') as file:
                 inventory = json.load(file)
-                
-                # Validate the inventory for the current version
-                if not self.validate_inventory(inventory):
-                    raise ValueError(f"Invalid inventory in {inventory_path}")
-
-                # Record the digests from the root inventory
-                root_inventory_digests = self.get_root_inventory_digests()
                 current_digests = set(item['digest'] for item in inventory.get('items', []))
-
-                # Check for discrepancies
-                different_digests = current_digests - root_inventory_digests
-                if different_digests:
-                    discrepancies[version] = different_digests
-
-                inventory_digests.update(current_digests)
+                
+                # Check if the current version has a valid inventory
+                if version in inventory_digests:
+                    previous_digests = inventory_digests[version - 1]
+                    if not current_digests.issubset(previous_digests):
+                        discrepancies[version] = current_digests - previous_digests
+                
+                inventory_digests[version] = current_digests
 
         except FileNotFoundError:
-            raise FileNotFoundError(f"Inventory file not found: {inventory_path}")
+            raise Exception(f"Inventory file not found for version: {version}")
         except json.JSONDecodeError:
-            raise ValueError(f"Error decoding JSON from {inventory_path}")
+            raise Exception(f"Invalid JSON in inventory file for version: {version}")
 
     return discrepancies

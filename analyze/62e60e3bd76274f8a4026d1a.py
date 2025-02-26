@@ -10,6 +10,6 @@ def from_raw_values(cls, values):
     """
     bookmarks = []
     for value in values:
-        # Assuming each value is a bookmark string, we can append it to the list
-        bookmarks.append(value)
+        if isinstance(value, str):
+            bookmarks.append(value)
     return cls(bookmarks)

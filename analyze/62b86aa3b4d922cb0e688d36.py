@@ -5,8 +5,8 @@ class ValidationError(Exception):
         self.messages = messages
 
 def _validate_labels(labels):
-    regex_key = r'^[a-zA-Z_][a-zA-Z0-9_]*$'  # Example regex for valid keys
-    regex_value = r'^[a-zA-Z0-9]+$'  # Example regex for valid values
+    regex_key = r'^[a-zA-Z_][a-zA-Z0-9_]*$'  # Example regex for keys
+    regex_value = r'^[a-zA-Z0-9]+$'  # Example regex for values
     errors = []
 
     for key, value in labels.items():

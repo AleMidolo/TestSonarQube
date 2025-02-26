@@ -10,7 +10,7 @@ def _normalizeargs(sequence, output=None):
         return [(_normalizeargs(item, output) if isinstance(item, (list, tuple)) else item) for item in sequence]
     elif isinstance(sequence, dict):
         return {key: _normalizeargs(value, output) for key, value in sequence.items()}
-    elif hasattr(sequence, '__iter__'):
-        return list(sequence)
+    elif hasattr(sequence, '__iter__') and not isinstance(sequence, str):
+        return list(map(lambda x: _normalizeargs(x, output), sequence))
     else:
         return sequence

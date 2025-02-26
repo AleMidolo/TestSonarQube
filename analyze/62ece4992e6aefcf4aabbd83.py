@@ -5,16 +5,18 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     """
     दिए गए कमांड(s) को कॉल करें।
     """
-    if isinstance(commands, str):
-        commands = [commands]
+    if cwd is None:
+        cwd = os.getcwd()
     
-    full_command = [cmd.format(*args) for cmd in commands]
+    if env is None:
+        env = os.environ.copy()
     
+    command_list = [commands] + args
     if verbose:
-        print("Running command:", ' '.join(full_command))
+        print(f"Running command: {' '.join(command_list)} in {cwd}")
     
     stderr = subprocess.DEVNULL if hide_stderr else None
     
-    result = subprocess.run(full_command, cwd=cwd, env=env, stderr=stderr)
+    result = subprocess.run(command_list, cwd=cwd, env=env, stderr=stderr)
     
     return result.returncode
