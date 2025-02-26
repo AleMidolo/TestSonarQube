@@ -6,19 +6,20 @@ def bash_completion():
     import argparse
     import sys
 
-    # Define the command-line arguments for borgmatic
+    # Define the main parser
     parser = argparse.ArgumentParser(prog='borgmatic')
-    parser.add_argument('command', choices=['init', 'config', 'check', 'run', 'list', 'info', 'help'])
+    
+    # Add commands and options
+    parser.add_argument('command', choices=['init', 'config', 'run', 'list', 'check', 'prune'], help='Command to execute')
     parser.add_argument('--config', help='Path to the configuration file')
     parser.add_argument('--verbosity', choices=['0', '1', '2', '3'], help='Set the verbosity level')
-    parser.add_argument('--dry-run', action='store_true', help='Perform a dry run without making changes')
-
-    # Generate the completion script
-    if sys.argv[1] == 'completion':
-        commands = [command for command in parser.choices['command']]
-        print('\n'.join(commands))
+    
+    # Generate completion script
+    if len(sys.argv) > 1 and sys.argv[1] == 'completion':
+        commands = ['init', 'config', 'run', 'list', 'check', 'prune']
+        print(' '.join(commands))
         return
 
-    # If not generating completion, parse the arguments normally
+    # Parse the arguments
     args = parser.parse_args()
     return args

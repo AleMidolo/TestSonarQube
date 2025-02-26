@@ -19,6 +19,7 @@ def format(
 
     -       कन्वर्ट किए गए "out-style" पैरामीटर्स का सेट (:class:`dict` या :class:`list`)।
     """
+    # Implementation of the function
     if isinstance(params, dict):
         # Named parameters
         for key, value in params.items():
@@ -27,7 +28,7 @@ def format(
     elif isinstance(params, (list, tuple)):
         # Positional parameters
         for index, value in enumerate(params):
-            sql = sql.replace(f"?{index}", str(value))
+            sql = sql.replace(f"${index + 1}", str(value))
         return sql, list(params)
     else:
         raise TypeError("params must be a dictionary or a sequence")

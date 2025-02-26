@@ -1,4 +1,5 @@
 import os
+import yaml
 
 def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=False):
     """
@@ -11,11 +12,11 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     
     # Check if the file exists and overwrite is False
     if not overwrite and os.path.exists(config_filename):
-        raise FileExistsError(f"The file {config_filename} already exists and overwrite is set to False.")
+        raise FileExistsError(f"{config_filename} already exists and overwrite is set to False.")
     
-    # Write the rendered configuration to the file
+    # Write the rendered config to the file
     with open(config_filename, 'w') as config_file:
-        config_file.write(rendered_config)
+        yaml.dump(rendered_config, config_file)
     
     # Set the file permissions
     os.chmod(config_filename, mode)

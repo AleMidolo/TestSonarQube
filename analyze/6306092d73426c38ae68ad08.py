@@ -8,11 +8,9 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
     :return: list, उन तर्क नामों की सूची जिन पर ``required_when`` शर्त लागू होती है।
     """
     required_args = []
-    
     for option in options_spec:
         if 'required_when' in option:
             condition = option['required_when']
             if condition(args):
                 required_args.append(option['name'])
-    
     return required_args

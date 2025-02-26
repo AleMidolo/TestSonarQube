@@ -18,4 +18,4 @@ def parse_arguments(*unparsed_arguments):
     args = parser.parse_args(unparsed_arguments)
 
     # Convert Namespace to dict
-    return {args.subparser_name: vars(args)}
+    return vars(args)
