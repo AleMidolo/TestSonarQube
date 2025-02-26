@@ -12,4 +12,4 @@ def _c_optimizations_available():
         import c_optimizations  # Assuming the module is named c_optimizations
         return c_optimizations
     except ImportError:
-        return False
+        raise ImportError("C optimization module is required but not available.")

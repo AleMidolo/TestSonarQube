@@ -7,7 +7,11 @@ def parse_arguments(*arguments):
     """
     parser = argparse.ArgumentParser()
     
-    for arg in arguments:
-        parser.add_argument(arg)
+    # Example of adding arguments; modify as needed
+    parser.add_argument('--option1', type=str, help='Description for option1')
+    parser.add_argument('--option2', type=int, help='Description for option2')
     
-    return parser.parse_args(arguments)
+    # Parse the provided arguments
+    parsed_args = parser.parse_args(arguments)
+    
+    return parsed_args

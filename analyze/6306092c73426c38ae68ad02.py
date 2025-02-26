@@ -10,6 +10,6 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
     if deprecated_args:
         print("Deprecated arguments found:")
         for arg in deprecated_args:
-            print(f"- {arg}")
+            print(f" - {arg}")
     else:
         print("No deprecated arguments found.")

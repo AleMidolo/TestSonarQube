@@ -1,5 +1,5 @@
 import re
-import sys
+import platform as sys_platform
 
 def split(s, platform='this'):
     """
@@ -12,16 +12,16 @@ def split(s, platform='this'):
               (other values reserved)
     """
     if platform == 'this':
-        platform = 1 if sys.platform in ['linux', 'darwin'] else 0
+        platform = 1 if sys_platform.system() != 'Windows' else 0
 
     if platform == 1:  # POSIX
-        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+))'
+        regex = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+))'
     elif platform == 0:  # Windows
-        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+)|(\S+)'
+        regex = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+)|(\S+))'
     else:
         raise ValueError("Unsupported platform value")
 
-    matches = re.findall(pattern, s)
+    matches = re.findall(regex, s)
     result = []
     for match in matches:
         result.append(next(filter(None, match)))  # Get the first non-empty group

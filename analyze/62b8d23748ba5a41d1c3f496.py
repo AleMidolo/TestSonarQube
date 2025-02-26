@@ -14,20 +14,20 @@ def lfu_cache(maxsize=128, typed=False):
         
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            key = (args, frozenset(kwargs.items())) if typed else args
+            key = args if not typed else (args, frozenset(kwargs.items()))
             if key in cache:
                 frequency[key] += 1
                 order.move_to_end(key)
                 return cache[key]
             result = func(*args, **kwargs)
-            if len(cache) >= maxsize:
-                lfu_key = min(order, key=lambda k: frequency[k])
-                cache.pop(lfu_key)
-                frequency.pop(lfu_key)
-                order.pop(lfu_key)
             cache[key] = result
-            frequency[key] = 1
-            order[key] = None
+            frequency[key] += 1
+            order[key] = frequency[key]
+            if len(cache) > maxsize:
+                lfu_key = min(order, key=order.get)
+                del cache[lfu_key]
+                del frequency[lfu_key]
+                del order[lfu_key]
             return result
         
         return wrapper
