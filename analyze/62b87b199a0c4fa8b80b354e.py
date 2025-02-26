@@ -7,9 +7,8 @@ def is_fill_request_seq(seq):
     - 它是一个 FillRequest 元素，或者包含至少一个 FillRequest 元素；
     - 它不是一个 Source 序列。
     """
+    if isinstance(seq, FillRequest):
+        return True
     if isinstance(seq, Source):
         return False
-    
-    contains_fill_request = any(isinstance(item, FillRequest) for item in seq)
-    
-    return contains_fill_request or isinstance(seq, FillRequest)
+    return any(isinstance(item, FillRequest) for item in seq)

@@ -5,13 +5,18 @@ def _extract_number_and_supplment_from_issue_element(issue):
     """
     import re
 
-    number_pattern = r'(?<=#)\d+'
-    suppl_pattern = r'\b(?:sup|supplement)\s*[:=]?\s*(\w+)\b'
+    # Initialize variables to hold the extracted values
+    number = None
+    suppl = None
 
-    number_match = re.search(number_pattern, issue)
-    suppl_match = re.search(suppl_pattern, issue, re.IGNORECASE)
+    # Use regex to find the number and suppl in the issue content
+    number_match = re.search(r'number\s*:\s*(\d+)', issue, re.IGNORECASE)
+    suppl_match = re.search(r'suppl\s*:\s*([^\s,]+)', issue, re.IGNORECASE)
 
-    number = number_match.group(0) if number_match else None
-    suppl = suppl_match.group(1) if suppl_match else None
+    if number_match:
+        number = number_match.group(1)
+    
+    if suppl_match:
+        suppl = suppl_match.group(1)
 
     return number, suppl

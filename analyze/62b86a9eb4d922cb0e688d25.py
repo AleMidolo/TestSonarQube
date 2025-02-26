@@ -9,6 +9,5 @@ def _get_resource_name_regex():
         (re.Pattern)：编译后的正则表达式，用于验证资源名称。
     """
     # 定义资源名称的正则表达式
-    resource_name_pattern = r'^[a-zA-Z0-9-_]+$'
-    # 编译并返回正则表达式
-    return re.compile(resource_name_pattern)
+    pattern = r'^[a-zA-Z0-9-_]+$'  # 允许字母、数字、连字符和下划线
+    return re.compile(pattern)

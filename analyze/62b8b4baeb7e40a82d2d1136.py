@@ -45,7 +45,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             
             for param_name, param_type in zip(sig.parameters.keys(), vtype[method_name]):
                 if sig.parameters[param_name].annotation != param_type:
-                    errors.append(f"{method_name} parameter {param_name} has incorrect type")
+                    errors.append(f"{method_name} parameter {param_name} has incorrect type annotation")
 
     required_attributes = iface.attributes()
     for attr_name in required_attributes:
@@ -55,7 +55,6 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
-        else:
-            raise Invalid(errors)
+        raise Invalid(errors)
 
     return True

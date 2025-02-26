@@ -7,7 +7,7 @@ def index(self, key):
     :return: 索引
     :rtype: int
     """
-    if key in self:
-        return list(self).index(key)
-    else:
-        raise ValueError("Key not found in the collection.")
+    try:
+        return self.items.index(key)
+    except ValueError:
+        return -1  # 返回-1表示未找到该键

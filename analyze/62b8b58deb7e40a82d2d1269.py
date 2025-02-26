@@ -8,7 +8,8 @@ def directlyProvidedBy(object):
     provides = getattr(object, "__provides__", None)
     if provides is None:
         implements = getattr(object, "__implements__", None)
-        if implements is not None and isinstance(implements, tuple) and len(implements) > 0:
-            # Assuming the first item is the base class
-            return implements[1:]  # Exclude the base class
+        if implements is not None and len(implements) > 0:
+            # Assuming the first item is the base class we want to exclude
+            return implements[1] if len(implements) > 1 else None
+        return None
     return provides

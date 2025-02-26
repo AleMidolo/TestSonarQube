@@ -9,4 +9,4 @@ def is_gitbash():
     :return: 如果是 gitbash 则返回真
     """
     import os
-    return 'GIT_BASH' in os.environ.get('TERM', '')
+    return 'MINGW' in os.environ.get('TERM', '') or 'MSYS' in os.environ.get('TERM', '')

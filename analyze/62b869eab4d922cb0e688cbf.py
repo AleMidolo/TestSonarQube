@@ -5,22 +5,18 @@ def generate_default_observer_schema(app):
     参数：
         app (krake.data.kubernetes.Application): 需要为其生成默认观察者模式的应用程序。
     """
-    default_schema = {}
-    
     for resource in app.spec.manifest:
-        if 'observer' not in resource:
-            default_schema[resource['kind']] = {
-                'apiVersion': resource['apiVersion'],
-                'metadata': {
-                    'name': resource['metadata']['name'],
-                    'namespace': resource['metadata'].get('namespace', 'default')
-                },
-                'spec': {
-                    'replicas': resource.get('spec', {}).get('replicas', 1),
-                    'selector': resource.get('spec', {}).get('selector', {}),
-                    'template': resource.get('spec', {}).get('template', {})
-                }
-            }
-            resource['observer'] = default_schema[resource['kind']]
-    
+        if not hasattr(resource, 'observer_schema'):
+            resource.observer_schema = create_default_observer_schema(resource)
     return app
+
+def create_default_observer_schema(resource):
+    # 这里可以根据资源类型生成默认的观察者模式
+    return {
+        "type": resource.kind,
+        "version": resource.apiVersion,
+        "metadata": {
+            "name": resource.metadata.name,
+            "namespace": resource.metadata.namespace
+        }
+    }

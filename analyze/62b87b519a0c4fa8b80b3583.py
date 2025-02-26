@@ -25,9 +25,9 @@ def scale(self, other=None):
     last_coordinate_index = -1  # 假设最后一个坐标的索引
     scale_factor = other / self.scale_value
 
-    # 重新缩放数据
+    # 重新缩放数据和误差值
     self.data[last_coordinate_index] *= scale_factor
-    # 重新缩放误差值
     self.errors[last_coordinate_index] *= scale_factor
 
-    self.scale_value = other  # 更新比例
+    # 更新比例
+    self.scale_value = other

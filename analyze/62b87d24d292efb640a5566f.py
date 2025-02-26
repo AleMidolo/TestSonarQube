@@ -5,5 +5,6 @@ def render(pieces, style):
     """
     rendered_output = []
     for piece in pieces:
-        rendered_output.append(f"<div class='{style}'>{piece}</div>")
+        rendered_piece = f"<div class='{style}'>{piece}</div>"
+        rendered_output.append(rendered_piece)
     return ''.join(rendered_output)
