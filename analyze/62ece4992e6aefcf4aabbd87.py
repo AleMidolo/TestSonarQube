@@ -3,16 +3,24 @@ import os
 
 def build_app_logger(name='app', logfile='app.log', debug=True):
     """
-    General purpose application logger. Useful mainly for debugging
+    通用应用程序日志记录器。主要用于调试。
+
+    参数:
+      name: 日志记录器的名称
+      logfile: 需要保存的日志文件
+      debug: 是否需要调试
+
+    返回值:
+      返回一个实例化的日志记录器对象
     """
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG if debug else logging.INFO)
 
     # Create a file handler
     if not os.path.exists(os.path.dirname(logfile)):
-        os.makedirs(os.path.dirname(logfile), exist_ok=True)
+        os.makedirs(os.path.dirname(logfile))
     file_handler = logging.FileHandler(logfile)
-    file_handler.setLevel(logging.DEBUG)
+    file_handler.setLevel(logging.DEBUG if debug else logging.INFO)
 
     # Create a console handler
     console_handler = logging.StreamHandler()

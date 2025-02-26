@@ -1,29 +1,24 @@
 def protocol_handlers(cls, protocol_version=None):
     """
-    Return a dictionary of available Bolt protocol handlers,
-    keyed by version tuple. If an explicit protocol version is
-    provided, the dictionary will contain either zero or one items,
-    depending on whether that version is supported. If no protocol
-    version is provided, all available versions will be returned.
+    根据 `protocol_version` 的值，返回不同形式的 Bolt 协议处理程序。
+    返回一个包含可用 Bolt 协议处理程序的字典，字典的键是版本元组。如果提供了明确的协议版本，该字典将包含零个或一个条目，具体取决于该版本是否受支持。如果未提供协议版本，将返回所有可用的版本。
 
-    :param protocol_version: tuple identifying a specific protocol
-        version (e.g. (3, 5)) or None
-    :return: dictionary of version tuple to handler class for all
-        relevant and supported protocol versions
-    :raise TypeError: if protocol version is not passed in a tuple
+    :param protocol_version: 标识特定协议版本的元组（例如 (3, 5)）或 None
+    :return: 一个字典，键为版本元组，值为对应的处理程序类，包含所有相关且受支持的协议版本
+    :raise TypeError: 当传入的协议版本不是元组类型时
     """
     if protocol_version is not None and not isinstance(protocol_version, tuple):
-        raise TypeError("protocol_version must be a tuple")
+        raise TypeError("协议版本必须是一个元组类型")
 
-    handlers = {
-        (3, 0): 'HandlerFor3_0',
-        (3, 1): 'HandlerFor3_1',
-        (3, 2): 'HandlerFor3_2',
-        (3, 5): 'HandlerFor3_5',
-        # Add more protocol versions and their handlers as needed
+    # 假设有一个字典，包含所有支持的协议版本和对应的处理程序类
+    available_protocols = {
+        (3, 0): 'BoltProtocolV3_0Handler',
+        (3, 1): 'BoltProtocolV3_1Handler',
+        (3, 5): 'BoltProtocolV3_5Handler',
+        # 添加更多的协议版本和处理程序类
     }
 
     if protocol_version is not None:
-        return {protocol_version: handlers.get(protocol_version)} if protocol_version in handlers else {}
+        return {protocol_version: available_protocols.get(protocol_version)} if protocol_version in available_protocols else {}
 
-    return handlers
+    return available_protocols

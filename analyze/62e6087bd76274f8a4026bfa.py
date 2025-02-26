@@ -1,14 +1,14 @@
 def pop_u16(self):
     """
-    Remove the last two bytes of data, returning them as a big-endian
-    16-bit unsigned integer.
+    在 `self.data` 中移除最后两个元素并返回
+    移除数据中的最后两个字节，并将它们以大端序的16位无符号整数返回。
     """
     if len(self.data) < 2:
-        raise ValueError("Not enough data to pop 16 bits.")
+        raise IndexError("Not enough data to pop two bytes.")
     
-    # Pop the last two bytes
-    last_two_bytes = self.data[-2:]
-    self.data = self.data[:-2]
+    # 移除最后两个字节
+    byte1 = self.data.pop()
+    byte2 = self.data.pop()
     
-    # Convert to big-endian 16-bit unsigned integer
-    return (last_two_bytes[0] << 8) | last_two_bytes[1]
+    # 将字节转换为大端序的16位无符号整数
+    return (byte2 << 8) | byte1

@@ -1,18 +1,11 @@
 def list_of_file_names(settings_dirs, spec_option):
     """
-    Create a new IniType complex type
+    通过 `cli.ListOfFileNames()` 创建并返回一个新的 `IniType` 复合类型。
+    创建一个新的 `IniType` 复合类型。
     """
-    class IniType:
-        def __init__(self, directory, option):
-            self.directory = directory
-            self.option = option
+    from cli import ListOfFileNames  # Assuming cli is a module that needs to be imported
 
-        def __repr__(self):
-            return f"IniType(directory={self.directory}, option={self.option})"
-
-    ini_types = []
-    for directory in settings_dirs:
-        ini_type = IniType(directory, spec_option)
-        ini_types.append(ini_type)
-
-    return ini_types
+    # Create a new IniType composite type using the ListOfFileNames function
+    ini_type_instance = ListOfFileNames(settings_dirs, spec_option)
+    
+    return ini_type_instance

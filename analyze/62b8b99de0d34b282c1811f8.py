@@ -1,6 +1,6 @@
 def _reset_logging(cls):
     """
-    Reset the logging configuration to its default state.
+    重置日志系统
     """
     import logging
     for handler in logging.root.handlers[:]:

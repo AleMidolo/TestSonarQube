@@ -1,28 +1,37 @@
 def scale(self, other=None):
     """
-    Get or set the scale of the graph.
+    获取或设置图表的比例。
 
-    If *other* is ``None``, return the scale of this graph.
+    如果参数 *other* 为 ``None``，则返回此图表的比例。
 
-    If a numeric *other* is provided, rescale to that value.
-    If the graph has unknown or zero scale,
-    rescaling that will raise :exc:`~.LenaValueError`.
+    如果提供了一个数值类型的 *other*，则将图表重新缩放到该值。
+    如果图表的比例未知或为零，对其重新缩放将会引发:exc: `~.LenaValueError` 异常。
 
-    To get meaningful results, graph's fields are used.
-    Only the last coordinate is rescaled.
-    For example, if the graph has *x* and *y* coordinates,
-    then *y* will be rescaled, and for a 3-dimensional graph
-    *z* will be rescaled.
-    All errors are rescaled together with their coordinate.
+    为了获得有意义的结果，将使用图表的字段。
+    仅最后一个坐标会被重新缩放。
+    例如，如果图表具有 *x* 和 *y* 坐标，则 *y* 会被重新缩放；对于三维图表，*z* 会被重新缩放。
+    所有的误差值也会与其对应的坐标一起重新缩放。
     """
     if other is None:
-        return self.scale_value  # Assuming self.scale_value holds the current scale
+        return self.current_scale  # 假设有一个属性 current_scale 存储当前比例
 
-    if self.scale_value is None or self.scale_value == 0:
-        raise LenaValueError("Cannot rescale with unknown or zero scale.")
+    if not isinstance(other, (int, float)):
+        raise ValueError("参数 *other* 必须是数值类型")
 
-    # Assuming self.coordinates is a list of coordinates
-    # and we want to rescale the last coordinate
-    last_coordinate_index = -1
-    self.coordinates[last_coordinate_index] *= other / self.scale_value
-    self.scale_value = other  # Update the scale to the new value
+    if self.current_scale is None or self.current_scale == 0:
+        raise LenaValueError("图表的比例未知或为零，无法重新缩放")
+
+    # 假设有一个方法来获取最后一个坐标
+    last_coordinate = self.get_last_coordinate()  
+    new_scale = other / self.current_scale
+
+    # 重新缩放最后一个坐标
+    last_coordinate *= new_scale
+
+    # 假设有一个方法来设置新的坐标
+    self.set_last_coordinate(last_coordinate)
+
+    # 重新缩放误差值
+    self.error_values = [error * new_scale for error in self.error_values]
+
+    self.current_scale = other  # 更新当前比例

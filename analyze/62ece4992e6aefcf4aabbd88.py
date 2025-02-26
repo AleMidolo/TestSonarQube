@@ -2,13 +2,23 @@ import numpy as np
 
 def make_array(shape, dtype=np.dtype("float32")):
     """
-    Function to create an array with shape and dtype.
+    返回一个具有指定形状和类型的全零数组。
 
-    Parameters
-    ----------
-    shape : tuple
-        shape of the array to create
-    dtype : `numpy.dtype`
-        data-type of the array to create
+    参数：
+      shape : 元组  
+        要创建的数组的形状  
+      dtype : `numpy.dtype`  
+        要创建的数组的数据类型  
+
+    返回值：数组
+
+    该函数创建一个具有指定形状和数据类型的数组。
+
+      参数
+      ----------
+      shape : 元组
+          要创建的数组的形状
+      dtype : `numpy.dtype`
+          要创建的数组的数据类型
     """
-    return np.empty(shape, dtype=dtype)
+    return np.zeros(shape, dtype=dtype)

@@ -1,7 +1,12 @@
 def amend_bzparams(self, params, bug_ids):
     """
-    Amend the Bugzilla params
+    修改 Bugzilla 参数
     """
     for bug_id in bug_ids:
-        params[f'bug_id_{bug_id}'] = bug_id
+        if bug_id in params:
+            params[bug_id] = self.modify_param(params[bug_id])
     return params
+
+def modify_param(self, param):
+    # 这里可以添加修改参数的具体逻辑
+    return param  # 示例：返回未修改的参数

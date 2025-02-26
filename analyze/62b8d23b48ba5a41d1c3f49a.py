@@ -1,30 +1,27 @@
+from collections import OrderedDict
 from functools import wraps
 
 def mru_cache(maxsize=128, typed=False):
-    """Decorator to wrap a function with a memoizing callable that saves
-    up to `maxsize` results based on a Most Recently Used (MRU)
-    algorithm."""
-    
-    cache = {}
-    order = []
+    """
+    一个用于将函数包装为一个带有记忆功能的可调用对象的装饰器，
+    该对象基于最近最少使用（MRU，Most Recently Used）算法，
+    保存最多 `maxsize` 个结果。
+    """
+    def decorator(func):
+        cache = OrderedDict()
 
-    @wraps(func)
-    def wrapper(func):
         @wraps(func)
-        def wrapped(*args, **kwargs):
-            key = (args, frozenset(kwargs.items())) if typed else args
+        def wrapper(*args, **kwargs):
+            key = args if not typed else (args, frozenset(kwargs.items()))
             if key in cache:
-                order.remove(key)
-                order.append(key)
+                cache.move_to_end(key)
                 return cache[key]
             result = func(*args, **kwargs)
-            if len(cache) >= maxsize:
-                oldest = order.pop(0)
-                del cache[oldest]
             cache[key] = result
-            order.append(key)
+            if len(cache) > maxsize:
+                cache.popitem(last=False)
             return result
-        
-        return wrapped
-    
-    return wrapper
+
+        return wrapper
+
+    return decorator

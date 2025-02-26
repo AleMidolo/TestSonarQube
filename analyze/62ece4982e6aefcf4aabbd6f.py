@@ -4,30 +4,29 @@ from pathlib import Path
 
 def get_repo_archive(url: str, destination_path: Path) -> Path:
     """
-    Given an url and a destination path, retrieve and extract .tar.gz archive
-    which contains 'desc' file for each package.
-    Each .tar.gz archive corresponds to an Arch Linux repo ('core', 'extra', 'community').
+    给定一个 URL 和目标路径，下载并提取包含每个软件包的 'desc' 文件的 .tar.gz 压缩包。
+    每个 .tar.gz 压缩包对应一个 Arch Linux 仓库（如 'core'、'extra'、'community'）。
 
-    Args:
-        url: url of the .tar.gz archive to download
-        destination_path: the path on disk where to extract archive
+    参数：
+      url：要下载的 .tar.gz 压缩包的 URL。
+      destination_path：在磁盘上提取压缩包的目标路径。
 
-    Returns:
-        a directory Path where the archive has been extracted to.
+    返回值：
+      返回提取压缩包的目录路径。
     """
-    # Ensure the destination path exists
+    # 创建目标路径目录
     destination_path.mkdir(parents=True, exist_ok=True)
-
-    # Download the .tar.gz file
+    
+    # 下载 .tar.gz 文件
     response = requests.get(url)
-    tar_file_path = destination_path / 'archive.tar.gz'
+    tar_file_path = destination_path / 'repo.tar.gz'
     
     with open(tar_file_path, 'wb') as f:
         f.write(response.content)
-
-    # Extract the .tar.gz file
+    
+    # 提取 .tar.gz 文件
     with tarfile.open(tar_file_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
-
-    # Return the path where the archive has been extracted
+    
+    # 返回提取后的目录路径
     return destination_path

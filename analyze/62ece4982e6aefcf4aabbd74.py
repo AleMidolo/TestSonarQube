@@ -1,6 +1,4 @@
 import os
-import shutil
-import tarfile
 import zipfile
 from pathlib import Path
 from typing import Optional, Union
@@ -11,26 +9,31 @@ def prepare_repository_from_archive(
     tmp_path: Union[Path, str] = "/tmp",
 ) -> str:
     """
-    Given an existing archive_path, uncompress it.
-    Returns a file repo url which can be used as origin url.
+    给定一个已存在的 `archive_path`，解压该文件。
+    返回一个可以用作源 URL 的文件仓库 URL。
 
-    This does not deal with the case where the archive passed along does not exist.
+    此函数不处理传入的归档文件不存在的情况。
+
+    @param archive_path : 归档文件路径  
+    @param filename: 文件名  
+    @param tmp_path: 临时文件路径  
+    @return 仓库 URL
     """
+    # Ensure tmp_path is a Path object
     tmp_path = Path(tmp_path)
     tmp_path.mkdir(parents=True, exist_ok=True)
 
-    if filename is None:
-        filename = os.path.basename(archive_path).rsplit('.', 1)[0]
+    # Determine the extraction path
+    extraction_path = tmp_path / Path(archive_path).stem
+    extraction_path.mkdir(exist_ok=True)
 
-    extract_path = tmp_path / filename
+    # Extract the archive
+    with zipfile.ZipFile(archive_path, 'r') as zip_ref:
+        zip_ref.extractall(extraction_path)
 
-    if archive_path.endswith('.zip'):
-        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-            zip_ref.extractall(extract_path)
-    elif archive_path.endswith(('.tar', '.tar.gz', '.tgz')):
-        with tarfile.open(archive_path, 'r:*') as tar_ref:
-            tar_ref.extractall(extract_path)
-    else:
-        raise ValueError("Unsupported archive format. Please use .zip or .tar/.tar.gz/.tgz")
+    # If a filename is provided, return the path to that file
+    if filename:
+        return str(extraction_path / filename)
 
-    return str(extract_path.resolve())
+    # Otherwise, return the path to the extraction directory
+    return str(extraction_path)

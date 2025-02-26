@@ -1,28 +1,24 @@
-def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
-                     extra_vars=None, ansible_args=None):
+def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra_vars=None, ansible_args=None):
     """
-    Wraps the 'ansible-playbook' CLI.
-
-    :param ir_workspace: An Infrared Workspace object represents the active
-    workspace
-    :param ir_plugin: An InfraredPlugin object of the current plugin
-    :param playbook_path: the playbook to invoke
-    :param verbose: Ansible verbosity level
-    :param extra_vars: dict. Passed to Ansible as extra-vars
-    :param ansible_args: dict of ansible-playbook arguments to plumb down
-        directly to Ansible.
+    封装 'ansible-playbook' 命令行接口。
+    :param ir_workspace: 一个 Infrared Workspace 对象，表示当前活动的工作区
+    :param ir_plugin: 当前插件的一个 InfraredPlugin 对象
+    :param playbook_path: 要调用的 playbook 文件路径
+    :param verbose: Ansible 的详细级别
+    :param extra_vars: dict。作为额外变量 (extra-vars) 传递给 Ansible
+    :param ansible_args: ansible-playbook 参数的字典，直接传递给 Ansible
     """
     import subprocess
     import json
 
     command = ['ansible-playbook', playbook_path]
 
-    if verbose:
+    if verbose is not None:
         command.append(f'-v' * verbose)
 
     if extra_vars:
-        extra_vars_str = ' '.join(f'--extra-vars="{k}={v}"' for k, v in extra_vars.items())
-        command.append(extra_vars_str)
+        extra_vars_str = ' '.join([f"{key}={value}" for key, value in extra_vars.items()])
+        command.append(f'--extra-vars={extra_vars_str}')
 
     if ansible_args:
         for key, value in ansible_args.items():
@@ -30,7 +26,7 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
             if value is not None:
                 command.append(str(value))
 
-    result = subprocess.run(command, capture_output=True, text=True)
+    result = subprocess.run(command, cwd=ir_workspace.path, capture_output=True, text=True)
 
     if result.returncode != 0:
         raise RuntimeError(f"Ansible playbook failed: {result.stderr}")

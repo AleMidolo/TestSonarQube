@@ -1,24 +1,31 @@
+import os
+import sys
+
 def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     """
-    Fixes for the following issues on windows
-    - https://bugs.python.org/issue8557
-    - windows does not parse shebangs
+    补全 exe 的完整路径并以其原始形式返回
 
-    This function also makes deep-path shebangs work just fine
+    修复以下在 Windows 上的问题：  
+    - https://bugs.python.org/issue8557  
+    - Windows 无法解析 shebang  
+
+    此函数还可以使深路径的 shebang 正常工作。
     """
-    import os
-    import sys
+    if not cmd:
+        return cmd
 
-    if sys.platform == "win32":
-        # Normalize the command for Windows
-        normalized_cmd = []
-        for part in cmd:
-            if part.startswith("#!"):
-                # Handle shebangs
-                shebang = part[2:]
-                normalized_cmd.append(shebang)
-            else:
-                # Normalize paths
-                normalized_cmd.append(os.path.normpath(part))
-        return tuple(normalized_cmd)
+    # Get the first command which is expected to be the executable
+    exe = cmd[0]
+    
+    # Check if the executable is already a full path
+    if os.path.isabs(exe):
+        return cmd
+
+    # Try to find the executable in the system PATH
+    for path in os.environ["PATH"].split(os.pathsep):
+        full_path = os.path.join(path, exe)
+        if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
+            return (full_path,) + cmd[1:]
+
+    # If not found, return the original command
     return cmd

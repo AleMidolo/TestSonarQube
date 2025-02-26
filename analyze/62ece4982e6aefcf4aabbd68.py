@@ -6,17 +6,17 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
     
     base = len(alphabet)
     if base < 2:
-        raise ValueError("Alphabet must have at least two characters")
+        raise ValueError("Alphabet must contain at least two characters")
     
-    if number == 0:
-        result = alphabet[0]
-    else:
-        result = ""
-        while number > 0:
-            result = alphabet[number % base] + result
-            number //= base
+    result = []
+    while number > 0:
+        result.append(alphabet[number % base])
+        number //= base
+    
+    result.reverse()
+    result_str = ''.join(result)
     
     if padding is not None:
-        result = result.rjust(padding, alphabet[0])
+        result_str = result_str.zfill(padding)
     
-    return result
+    return result_str
