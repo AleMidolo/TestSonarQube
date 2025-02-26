@@ -17,19 +17,27 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
             key = args if not typed else (args, frozenset(kwargs.items()))
             current_time = timer()
 
-            # Clean up expired cache entries
+            # 清理过期的缓存项
             if key in cache:
                 if current_time - cache_times[key] < ttl:
+                    # 更新缓存项的顺序
+                    cache.move_to_end(key)
                     return cache[key]
+                else:
+                    # 删除过期的缓存项
+                    del cache[key]
+                    del cache_times[key]
 
-            # If the cache is full, remove the oldest item
-            if len(cache) >= maxsize:
-                cache.popitem(last=False)
-
-            # Call the function and cache the result
+            # 调用原始函数并缓存结果
             result = func(*args, **kwargs)
             cache[key] = result
             cache_times[key] = current_time
+
+            # 如果缓存超出最大大小，删除最旧的缓存项
+            if len(cache) > maxsize:
+                cache.popitem(last=False)
+                del cache_times[next(iter(cache))]
+
             return result
 
         return wrapper

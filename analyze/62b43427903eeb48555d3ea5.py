@@ -20,11 +20,11 @@ def format(
     """
     # Assuming self._converter.convert is defined and works as expected
     if isinstance(params, dict):
-        # Named parameters
+        # Handle named parameters
         out_params = {key: self._converter.convert(value) for key, value in params.items()}
         formatted_sql = sql.format(**out_params)
     elif isinstance(params, (list, tuple)):
-        # Positional parameters
+        # Handle positional parameters
         out_params = [self._converter.convert(value) for value in params]
         formatted_sql = sql.format(*out_params)
     else:

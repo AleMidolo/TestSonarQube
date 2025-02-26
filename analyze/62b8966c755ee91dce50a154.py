@@ -59,60 +59,68 @@ def isoparse(self, dt_str):
 
     # Regular expressions for parsing
     iso_date_regex = re.compile(r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?')
-    iso_week_regex = re.compile(r'(\d{4})-W(\d{2})(?:-(\d))?')
-    iso_time_regex = re.compile(r'(\d{2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?)?')
+    iso_week_regex = re.compile(r'(\d{4})-W(\d{2})(?:-(\d{1}))?')
+    iso_time_regex = re.compile(r'(\d{1,2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?)?')
     iso_tz_regex = re.compile(r'Z|([+-]\d{2}):?(\d{2})?|([+-]\d{2})(\d{2})?|([+-]\d{2})')
 
-    # Parse the date and time
-    date_part, time_part = dt_str.split('T') if 'T' in dt_str else (dt_str, None)
-    date_match = iso_date_regex.match(date_part) or iso_week_regex.match(date_part)
-    
-    if not date_match:
-        raise ValueError("Invalid ISO-8601 date format")
-
-    year = int(date_match.group(1))
-    month = int(date_match.group(2) or 1)
-    day = int(date_match.group(3) or 1)
-
-    if date_match.lastindex == 3:  # ISO week date
-        week = int(date_match.group(2))
-        day = int(date_match.group(3) or 0)
-        # Calculate the date from ISO week
-        first_day_of_year = datetime(year, 1, 1)
-        first_weekday = first_day_of_year.isoweekday()
-        days_to_first_week = (7 - first_weekday + 1) % 7
-        first_week_start = first_day_of_year + timedelta(days=days_to_first_week)
-        date = first_week_start + timedelta(weeks=week - 1, days=day)
+    # Split date and time
+    if 'T' in dt_str:
+        date_str, time_str = dt_str.split('T', 1)
     else:
-        date = datetime(year, month, day)
+        date_str, time_str = dt_str, ''
 
-    if time_part:
-        time_match = iso_time_regex.match(time_part)
-        if not time_match:
-            raise ValueError("Invalid ISO-8601 time format")
-
-        hour = int(time_match.group(1))
-        minute = int(time_match.group(2) or 0)
-        second = int(time_match.group(3) or 0)
-        microsecond = int(time_match.group(4) or 0)
-
-        # Handle special case for midnight
-        if hour == 24 and (minute != 0 or second != 0 or microsecond != 0):
-            raise ValueError("Invalid time: 24:00 must be followed by 00:00:00")
-
-        time = datetime(year, month, day, hour, minute, second, microsecond)
+    # Parse date
+    match = iso_date_regex.match(date_str)
+    if match:
+        year = int(match.group(1))
+        month = int(match.group(2) or 1)
+        day = int(match.group(3) or 1)
     else:
-        time = datetime(year, month, day)
+        match = iso_week_regex.match(date_str)
+        if match:
+            year = int(match.group(1))
+            week = int(match.group(2))
+            day = int(match.group(3) or 1)
+            # Calculate the date from ISO week
+            first_day_of_year = datetime(year, 1, 1)
+            first_weekday = first_day_of_year.weekday()
+            days_to_first_week = (7 - first_weekday) % 7
+            first_week_start = first_day_of_year + timedelta(days=days_to_first_week)
+            date = first_week_start + timedelta(weeks=week - 1, days=day - 1)
+            return date.replace(tzinfo=tz.tzutc())  # Default to UTC for week-based dates
+        else:
+            raise ValueError("Invalid date format")
+
+    # Parse time
+    match = iso_time_regex.match(time_str)
+    if match:
+        hour = int(match.group(1))
+        minute = int(match.group(2) or 0)
+        second = int(match.group(3) or 0)
+        microsecond = int(match.group(4) or 0)
+    else:
+        hour = minute = second = microsecond = 0
+
+    # Handle midnight special case
+    if hour == 24:
+        hour = 0
+        day += 1
 
     # Parse timezone
-    tz_match = iso_tz_regex.search(dt_str)
-    if tz_match:
-        if tz_match.group(0) == 'Z':
-            time = time.replace(tzinfo=tz.tzutc())
+    tzinfo = None
+    match = iso_tz_regex.search(dt_str)
+    if match:
+        if match.group(0) == 'Z':
+            tzinfo = tz.tzutc()
         else:
-            offset_hours = int(tz_match.group(1) or tz_match.group(5) or 0)
-            offset_minutes = int(tz_match.group(2) or 0)
-            offset = timedelta(hours=offset_hours, minutes=offset_minutes)
-            time = time.replace(tzinfo=tz.tzoffset(None, offset.total_seconds()))
+            if match.group(1):
+                offset_hours = int(match.group(1))
+                offset_minutes = int(match.group(2) or 0)
+                tzinfo = tz.tzoffset(None, offset_hours * 3600 + offset_minutes * 60)
+            elif match.group(3):
+                offset_hours = int(match.group(3))
+                tzinfo = tz.tzoffset(None, offset_hours * 3600)
 
-    return time
+    # Create datetime object
+    dt = datetime(year, month, day, hour, minute, second, microsecond, tzinfo=tzinfo)
+    return dt

@@ -21,4 +21,4 @@ def hydrate_time(nanoseconds, tz=None):
         dt = timezone.localize(dt)
 
     # Return the formatted time string
-    return dt.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]  # Format to include milliseconds
+    return dt.strftime('%Y-%m-%d %H:%M:%S.%f')

@@ -19,14 +19,14 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     
     # 下载 .tar.gz 文件
     response = requests.get(url)
-    tar_file_path = destination_path / 'repo_archive.tar.gz'
+    tar_file_path = destination_path / 'archive.tar.gz'
     
     with open(tar_file_path, 'wb') as f:
         f.write(response.content)
     
-    # 解压 .tar.gz 文件
+    # 提取 .tar.gz 文件
     with tarfile.open(tar_file_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
     
-    # 返回提取的目录路径
+    # 返回提取后的目录路径
     return destination_path

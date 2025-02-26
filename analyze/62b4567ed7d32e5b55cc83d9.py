@@ -75,12 +75,12 @@ def deep_merge_nodes(nodes):
 def deep_merge(dict1, dict2):
     """Helper function to merge two MappingNode instances."""
     for key, value in dict2.value:
-        if key.value in dict1.value:
-            existing_value = dict1.value[key.value]
+        if key in dict1.value:
+            existing_value = dict1.value[key]
             if isinstance(existing_value, MappingNode) and isinstance(value, MappingNode):
                 deep_merge(existing_value, value)
             else:
-                dict1.value[key.value] = value
+                dict1.value[key] = value
         else:
-            dict1.value[key.value] = value
+            dict1.value[key] = value
     return dict1
