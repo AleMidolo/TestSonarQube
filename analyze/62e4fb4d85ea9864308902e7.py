@@ -6,21 +6,21 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
 
     This function also makes deep-path shebangs work just fine
     """
-    if not cmd:
+    import os
+    import sys
+
+    if sys.platform == "win32":
+        # Normalize the command for Windows
+        normalized_cmd = []
+        for part in cmd:
+            # Convert to a path that Windows can understand
+            if part.startswith("#!"):
+                # Handle shebangs
+                shebang_path = part[2:].strip()
+                normalized_cmd.append(os.path.normpath(shebang_path))
+            else:
+                normalized_cmd.append(os.path.normpath(part))
+        return tuple(normalized_cmd)
+    else:
+        # On non-Windows systems, return the command as is
         return cmd
-
-    # Normalize the command by handling shebangs and paths
-    normalized_cmd = list(cmd)
-
-    # Check if the first element is a shebang
-    if normalized_cmd[0].startswith('#!'):
-        # Remove the shebang for processing
-        shebang = normalized_cmd.pop(0)
-        # Normalize the path if necessary
-        normalized_cmd[0] = normalized_cmd[0].replace('\\', '/')
-
-    # Re-add the shebang if needed
-    if shebang:
-        normalized_cmd.insert(0, shebang)
-
-    return tuple(normalized_cmd)

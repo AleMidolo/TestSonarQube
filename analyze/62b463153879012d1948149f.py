@@ -21,13 +21,17 @@ def _eval_file(prefix, file_path):
     # Initialize the result dictionary
     result = {}
 
-    # Extract the file extension
+    # Check if the file exists
+    if not os.path.isfile(file_path):
+        result['error'] = 'File does not exist'
+        return result
+
+    # Determine the file type based on its extension
     _, file_extension = os.path.splitext(file_path)
 
-    # Determine the type of file based on the extension
-    if file_extension in ['.jpg', '.png', '.gif']:
+    if file_extension in ['.xml', '.json']:
         result['type'] = 'asset'
-    elif file_extension in ['.mp4', '.mov', '.avi']:
+    elif file_extension in ['.jpg', '.png', '.gif']:
         result['type'] = 'rendition'
     else:
         result['type'] = 'unknown'

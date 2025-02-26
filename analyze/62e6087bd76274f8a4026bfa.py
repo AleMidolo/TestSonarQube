@@ -10,5 +10,5 @@ def pop_u16(self):
     last_two_bytes = self.data[-2:]
     self.data = self.data[:-2]
     
-    # Convert to big-endian 16-bit unsigned integer
+    # Convert to big-endian unsigned integer
     return (last_two_bytes[0] << 8) | last_two_bytes[1]

@@ -6,6 +6,7 @@ def get_config():
         def __init__(self):
             self.version = "1.0.0"
             self.author = "Your Name"
+            self.email = "your.email@example.com"
             self.license = "MIT"
             self.description = "A sample project using Versioneer"
     

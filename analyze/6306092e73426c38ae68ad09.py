@@ -6,4 +6,4 @@ def validate_length_args(self, args):
     """
     for key, value in args.items():
         if isinstance(value, str) and len(value) > self.max_length:
-            raise ValueError(f"The length of '{key}' exceeds the maximum allowed length of {self.max_length}.")
+            raise ValueError(f"The length of '{key}' exceeds the maximum length of {self.max_length}.")

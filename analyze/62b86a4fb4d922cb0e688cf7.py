@@ -13,6 +13,6 @@ def validate_key(key):
     Raises:
         ValidationError: if the given key is not conform to the regular expression.
     """
-    pattern = r'^[A-Za-z0-9]{8,}$'  # Example pattern: at least 8 alphanumeric characters
+    pattern = r'^[a-zA-Z0-9_-]{1,20}$'  # Example regex pattern
     if not re.match(pattern, key):
         raise ValidationError(f"Invalid key: {key}")

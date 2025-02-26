@@ -6,5 +6,5 @@ def set_cut_chars(self, before: bytes, after: bytes) -> None:
         before: Split file before these delimiters.
         after: Split file after these delimiters.
     """
-    self.before_delimiter = before
-    self.after_delimiter = after
+    self.before_cut_chars = before
+    self.after_cut_chars = after

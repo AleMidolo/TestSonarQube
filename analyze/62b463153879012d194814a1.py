@@ -4,7 +4,7 @@ def add_rendition(self, lang, file_path):
 
     Args:
         lang (str): The language code for the rendition (e.g., 'en').
-        file_path (str): The file path of the rendition to be added.
+        file_path (str): The file path of the rendition.
 
     Example:
         {
@@ -16,4 +16,4 @@ def add_rendition(self, lang, file_path):
         self.renditions = {}
     
     self.renditions[lang] = file_path
-    self.renditions['original'] = self.renditions.get('original', file_path)
+    self.renditions['original'] = self.original_file_path  # Assuming original_file_path is defined in the class

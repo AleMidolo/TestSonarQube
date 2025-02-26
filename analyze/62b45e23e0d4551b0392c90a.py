@@ -8,30 +8,31 @@ def validate_version_inventories(self, version_dirs):
     version_dirs is an array of version directory names and is assumed to be in
     version sequence (1, 2, 3...).
     """
-    root_inventory = self.load_root_inventory()
+    root_inventory = self.load_inventory('root_inventory.json')
     content_digests = {}
 
     for version in version_dirs:
-        inventory = self.load_inventory(version)
-        
-        if not self.validate_inventory(inventory, root_inventory):
-            raise ValueError(f"Invalid inventory for version {version}")
+        inventory_path = f"{version}/inventory.json"
+        version_inventory = self.load_inventory(inventory_path)
+
+        # Validate that the version inventory is up to date
+        if not self.is_inventory_up_to_date(version_inventory, root_inventory):
+            raise ValueError(f"Inventory for version {version} is not up to date.")
 
         # Check for content digests that differ from the root inventory
-        for item, digest in inventory.items():
-            if item in root_inventory and root_inventory[item] != digest:
-                content_digests[item] = digest
+        for content_id, digest in version_inventory['content_digests'].items():
+            if content_id in root_inventory['content_digests']:
+                if root_inventory['content_digests'][content_id] != digest:
+                    content_digests[content_id] = digest
 
     return content_digests
 
-def load_root_inventory(self):
-    # Placeholder for loading the root inventory
-    pass
+def load_inventory(self, path):
+    # Placeholder for loading inventory from a JSON file
+    import json
+    with open(path, 'r') as file:
+        return json.load(file)
 
-def load_inventory(self, version):
-    # Placeholder for loading the inventory for a specific version
-    pass
-
-def validate_inventory(self, inventory, root_inventory):
-    # Placeholder for validating the inventory against the root inventory
-    pass
+def is_inventory_up_to_date(self, version_inventory, root_inventory):
+    # Placeholder for checking if the version inventory is up to date
+    return version_inventory['version'] <= root_inventory['version']
