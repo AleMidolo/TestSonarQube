@@ -10,7 +10,9 @@ def find_roots(graph, rdflib.RDFS.subClassOf):
 
     for child, _, parent in graph.triples((None, rdflib.RDFS.subClassOf, None)):
         subclasses.add(child)
-        if parent not in subclasses:
-            roots.add(parent)
 
-    return roots - subclasses
+    for child in subclasses:
+        if child not in subclasses:
+            roots.add(child)
+
+    return roots
