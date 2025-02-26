@@ -10,7 +10,7 @@ def get_logical_path_map(inventory, version):
     logical_path_map = {}
     
     for item in inventory:
-        if item['version'] == version:
+        if item['version'] <= version:
             logical_path = item['logical_path']
             content_file = item['content_file']
             

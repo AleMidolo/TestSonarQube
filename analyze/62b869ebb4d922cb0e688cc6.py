@@ -15,7 +15,9 @@ def update_last_applied_manifest_list_from_resp(
     This function go through all observed fields, and initialized their value in
     last_applied_manifest if they are not yet present
     """
-    for field in observer_schema:
+    for schema in observer_schema:
+        field = schema.get('field')
         if field not in last_applied_manifest:
             last_applied_manifest[field] = response.get(field, None)
+    
     return last_applied_manifest

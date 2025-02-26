@@ -6,13 +6,13 @@ def addignored(ignored):
     """
     try:
         # Get the list of ignored files using git
-        result = subprocess.run(['git', 'check-ignore', '-n', '*'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.run(['git', 'check-ignore', '-n', '*'], capture_output=True, text=True, check=True)
         ignored_files = result.stdout.strip().split('\n')
         
         # Sort the list of ignored files
-        ignored_files = sorted(set(ignored_files))
+        ignored_files.sort()
         
-        # Join the list into a single string separated by commas
+        # Join the sorted list into a single string separated by commas
         return ', '.join(ignored_files)
-    except Exception as e:
-        return str(e)
+    except subprocess.CalledProcessError:
+        return ''

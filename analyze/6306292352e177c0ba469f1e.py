@@ -12,7 +12,7 @@ def process_text_links(text):
     # Regular expression to find URLs in the text
     url_pattern = r'(https?://[^\s]+|www\.[^\s]+)'
     
-    # Replace plain text URLs with HTML links
+    # Replace URLs in the text with linkified versions
     processed_text = re.sub(url_pattern, linkify, text)
 
     return processed_text

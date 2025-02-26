@@ -1,5 +1,4 @@
 import os
-import yaml
 
 def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=False):
     """
@@ -16,7 +15,7 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     
     # Write the rendered config to the file
     with open(config_filename, 'w') as config_file:
-        yaml.dump(rendered_config, config_file)
+        config_file.write(rendered_config)
     
     # Set the file permissions
     os.chmod(config_filename, mode)

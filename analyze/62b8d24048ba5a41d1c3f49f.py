@@ -32,7 +32,7 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
             # Maintain the cache size
             if len(cache) > maxsize:
                 cache.popitem(last=False)
-            
+                
             return result
         
         return wrapper

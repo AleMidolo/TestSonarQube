@@ -5,7 +5,7 @@ def identify_request(request: RequestType) -> bool:
     # Assuming a Matrix request has a specific structure or key identifiers
     matrix_identifiers = ['matrix', 'm.', 'matrix.org']
     
-    # Check if any of the identifiers are in the request
+    # Check if the request contains any of the matrix identifiers
     for identifier in matrix_identifiers:
         if identifier in request.url or identifier in request.headers.get('User-Agent', ''):
             return True
