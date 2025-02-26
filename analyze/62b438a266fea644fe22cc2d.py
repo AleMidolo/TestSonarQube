@@ -7,8 +7,8 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
     import argparse
 
     results = {}
-    remaining_args = unparsed_arguments[:]
-    
+    remaining_args = unparsed_arguments
+
     for name, parser in subparsers.items():
         try:
             # Try to parse the arguments for the current subparser

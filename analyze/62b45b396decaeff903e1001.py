@@ -8,5 +8,5 @@ def amend_bzparams(self, params, bug_ids):
     return params
 
 def modify_param(self, param):
-    # Example modification logic
-    return param + "_modified"
+    # 这里可以添加修改参数的具体逻辑
+    return param  # 示例：返回未修改的参数

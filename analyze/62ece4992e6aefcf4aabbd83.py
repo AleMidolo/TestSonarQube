@@ -8,9 +8,10 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     """
     command = [commands] + args
     if verbose:
-        print(f"Running command: {' '.join(command)} in {cwd}")
-
-    stderr = subprocess.DEVNULL if hide_stderr else None
-    result = subprocess.run(command, cwd=cwd, env=env, stdout=subprocess.PIPE, stderr=stderr, text=True)
-
+        print(f"Running command: {' '.join(command)}")
+    
+    stderr = subprocess.STDOUT if hide_stderr else subprocess.PIPE
+    
+    result = subprocess.run(command, cwd=cwd, stdout=subprocess.PIPE, stderr=stderr, env=env, text=True)
+    
     return result.stdout, result.returncode

@@ -1,7 +1,3 @@
-import os
-import xml.etree.ElementTree as ET
-from collections import defaultdict
-
 def _explore_folder(folder):
     """
     通过使用 _group_files_by_xml_filename 将给定组中的文件进行分组。
@@ -19,6 +15,9 @@ def _explore_folder(folder):
     -------
     dict
     """
+    import os
+    from collections import defaultdict
+
     def _group_files_by_xml_filename(files):
         grouped_files = defaultdict(list)
         for file in files:

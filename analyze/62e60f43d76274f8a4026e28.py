@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta, timezone
+
 def hydrate_time(nanoseconds, tz=None):
     """
     将纳秒转换为固定格式的时间。
@@ -7,21 +9,14 @@ def hydrate_time(nanoseconds, tz=None):
     :param tz: 时区信息，默认为 None
     :return: 格式化的时间字符串
     """
-    import datetime
-    import pytz
-
-    # 将纳秒转换为秒
+    # Convert nanoseconds to seconds
     seconds = nanoseconds / 1_000_000_000
-    # 创建 UTC 时间
-    utc_time = datetime.datetime.utcfromtimestamp(seconds)
-
-    if tz:
-        # 如果提供了时区，转换为该时区的时间
-        local_tz = pytz.timezone(tz)
-        local_time = utc_time.replace(tzinfo=pytz.utc).astimezone(local_tz)
-    else:
-        # 如果没有提供时区，使用 UTC 时间
-        local_time = utc_time
-
-    # 返回格式化的时间字符串
-    return local_time.strftime('%Y-%m-%d %H:%M:%S %Z')
+    # Create a datetime object from the epoch
+    dt = datetime(1970, 1, 1, tzinfo=timezone.utc) + timedelta(seconds=seconds)
+    
+    # If a timezone is provided, localize the datetime
+    if tz is not None:
+        dt = dt.astimezone(tz)
+    
+    # Return the formatted time string
+    return dt.strftime('%Y-%m-%d %H:%M:%S.%f')

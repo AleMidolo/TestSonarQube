@@ -5,7 +5,7 @@ def list_of_file_names(settings_dirs, spec_option):
     """
     from cli import ListOfFileNames  # Assuming cli is a module that needs to be imported
 
-    # Create a new IniType composite type using ListOfFileNames
+    # Create a new IniType composite type using the ListOfFileNames function
     ini_type_instance = ListOfFileNames(settings_dirs, spec_option)
     
     return ini_type_instance

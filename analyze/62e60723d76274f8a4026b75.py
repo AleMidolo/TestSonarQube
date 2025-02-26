@@ -21,4 +21,4 @@ def round_half_to_even(n):
     :param n:
     :return:
     """
-    return round(n)
+    return round(n) if n % 1 != 0 else int(n)

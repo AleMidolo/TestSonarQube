@@ -22,10 +22,9 @@ def is_local(host):
     except socket.error:
         pass
 
-    # 获取 host 的 IP 地址
     try:
+        # 获取 host 的 IP 地址
         host_ip = socket.gethostbyname(host)
+        return host_ip in local_hosts
     except socket.error:
         return False
-
-    return host_ip in local_hosts

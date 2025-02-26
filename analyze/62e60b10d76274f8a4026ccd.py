@@ -17,7 +17,7 @@ def data(self, *keys):
         if isinstance(key, int):
             if key < 0 or key >= len(record):
                 raise IndexError("索引超出范围")
-            result[key] = list(record.values())[key]
+            result[key] = record[key]
         else:
             result[key] = record.get(key, None)
 
