@@ -14,8 +14,8 @@ def get_logical_path_map(inventory, version):
         content_files = set(state.get('content_files', []))
         
         if logical_path not in logical_path_map:
-            logical_path_map[logical_path] = content_files
-        else:
-            logical_path_map[logical_path].update(content_files)
+            logical_path_map[logical_path] = set()
+        
+        logical_path_map[logical_path].update(content_files)
     
     return logical_path_map

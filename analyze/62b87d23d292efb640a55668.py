@@ -13,4 +13,7 @@ def get_config():
             self.url = "https://example.com"
     
     config = VersioneerConfig()
+    # 设置其他属性
+    config.additional_property = "Some value"
+    
     return config

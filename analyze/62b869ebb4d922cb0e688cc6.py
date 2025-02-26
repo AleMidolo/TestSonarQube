@@ -9,21 +9,15 @@ def update_last_applied_manifest_list_from_resp(last_applied_manifest, observer_
 
     此函数会遍历所有观察到的字段，如果它们尚未在 `last_applied_manifest` 中初始化，则会为其初始化值。
     """
-    for schema_item in observer_schema:
-        field_name = schema_item.get('name')
-        if field_name not in last_applied_manifest:
-            last_applied_manifest[field_name] = None  # Initialize with None or appropriate default
+    for schema in observer_schema:
+        field = schema.get('field')
+        if field not in last_applied_manifest:
+            last_applied_manifest[field] = None  # Initialize with None or appropriate default
 
-        # If the schema item has children, we need to recurse
-        if 'children' in schema_item:
-            if field_name not in last_applied_manifest:
-                last_applied_manifest[field_name] = {}
-            update_last_applied_manifest_list_from_resp(last_applied_manifest[field_name], schema_item['children'], response)
-
-    # Update the last_applied_manifest with values from response
-    for item in response:
-        for key, value in item.items():
-            if key in last_applied_manifest:
-                last_applied_manifest[key] = value
+        # If the field is a list, we need to update it recursively
+        if isinstance(last_applied_manifest[field], list) and isinstance(response, list):
+            for item in response:
+                if item not in last_applied_manifest[field]:
+                    last_applied_manifest[field].append(item)
 
     return last_applied_manifest

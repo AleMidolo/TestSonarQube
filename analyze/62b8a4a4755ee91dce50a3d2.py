@@ -23,9 +23,9 @@ def _fromutc(self, dt):
 
     # 检查是否存在歧义
     if new_dt.dst() != timedelta(0):
-        # 处理歧义情况
+        # 处理“折叠”状态
         if new_dt < dt:
-            return new_dt  # 返回第一个出现的实例
+            return new_dt  # 返回第一个按时间顺序出现的实例
         else:
             raise ValueError("Ambiguous datetime")
 

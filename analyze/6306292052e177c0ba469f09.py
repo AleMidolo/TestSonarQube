@@ -7,23 +7,14 @@ def identify_request(request: RequestType):
     首先尝试检查是否为公共消息，然后检查是否为私有消息。最后检查这是否是旧式（Legacy）负载。
     """
     # 假设 request 是一个字典，包含 JSON 和 XML 数据
-    if 'event' in request:
-        return True
-    
-    # 检查 XML 数据
-    if 'xml' in request and request['xml'].tag == 'Magic_ENV_TAG':
-        return True
-    
-    # 检查是否为公共消息
-    if 'public_message' in request:
-        return True
-    
-    # 检查是否为私有消息
-    if 'private_message' in request:
-        return True
-    
-    # 检查是否为旧式负载
-    if 'legacy_payload' in request:
-        return True
-    
+    if 'json' in request:
+        json_data = request['json']
+        if 'event' in json_data:
+            return True
+
+    if 'xml' in request:
+        xml_data = request['xml']
+        if xml_data.tag == 'Magic_ENV_TAG':
+            return True
+
     return False

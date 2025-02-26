@@ -17,18 +17,17 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
         command.append(f'-v' * verbose)
 
     if extra_vars:
-        extra_vars_str = ' '.join(f'{key}={value}' for key, value in extra_vars.items())
-        command.append(f'--extra-vars="{extra_vars_str}"')
+        command.append('--extra-vars')
+        command.append(json.dumps(extra_vars))
 
     if ansible_args:
         for key, value in ansible_args.items():
             command.append(f'--{key}')
-            if value is not None:
-                command.append(str(value))
+            command.append(str(value))
 
     result = subprocess.run(command, cwd=ir_workspace.path, capture_output=True, text=True)
 
     if result.returncode != 0:
         raise RuntimeError(f"Ansible playbook failed: {result.stderr}")
 
-    return json.loads(result.stdout)
+    return result.stdout

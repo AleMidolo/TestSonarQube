@@ -4,6 +4,6 @@ def popitem(self):
     """
     if not self.data:
         raise KeyError("popitem(): dictionary is empty")
-    key = self.order.pop()  # Get the last key from the order list
-    value = self.data.pop(key)  # Remove the key from the data dictionary
-    return key, value  # Return the key-value pair
+    key = self.order.pop()  # Assuming self.order keeps track of the insertion order
+    value = self.data.pop(key)
+    return key, value

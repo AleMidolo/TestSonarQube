@@ -1,8 +1,8 @@
 import xml.etree.ElementTree as ET
-import hashlib
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import serialization
+from cryptography.exceptions import InvalidSignature
 
 def verify_relayable_signature(public_key, doc, signature):
     """
@@ -11,17 +11,20 @@ def verify_relayable_signature(public_key, doc, signature):
     # Load the public key
     public_key = serialization.load_pem_public_key(public_key)
 
-    # Create a hash of the document
-    doc_hash = hashlib.sha256(ET.tostring(doc)).digest()
+    # Parse the XML document
+    root = ET.fromstring(doc)
+
+    # Extract the signed data (assuming it's in a specific element)
+    signed_data = ET.tostring(root, encoding='utf-8', method='xml')
 
     # Verify the signature
     try:
         public_key.verify(
             signature,
-            doc_hash,
+            signed_data,
             padding.PKCS1v15(),
             hashes.SHA256()
         )
         return True
-    except Exception as e:
+    except InvalidSignature:
         return False

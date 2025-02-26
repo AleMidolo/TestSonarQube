@@ -12,9 +12,10 @@ def protocol_handlers(cls, protocol_version=None):
 
     # 假设我们有一个字典，存储所有支持的协议版本和对应的处理程序类
     available_protocols = {
-        (3, 5): "BoltHandler35",
-        (4, 0): "BoltHandler40",
-        (4, 1): "BoltHandler41",
+        (3, 0): 'BoltProtocol3_0Handler',
+        (3, 1): 'BoltProtocol3_1Handler',
+        (3, 5): 'BoltProtocol3_5Handler',
+        # 其他版本...
     }
 
     if protocol_version is not None:
