@@ -1,8 +1,8 @@
 def _reset_logging(cls):
     """
-    Reset the logging configuration to its default state.
+    Reset the logging configuration for the class.
+    This method will clear any existing logging handlers and reset the logging level to the default.
     """
-    import logging
-    for handler in logging.root.handlers[:]:
-        logging.root.removeHandler(handler)
-    logging.basicConfig(level=logging.NOTSET)
+    for handler in cls.logger.handlers[:]:
+        cls.logger.removeHandler(handler)
+    cls.logger.setLevel(cls.default_logging_level)

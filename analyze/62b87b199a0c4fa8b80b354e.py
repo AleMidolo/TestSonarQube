@@ -10,6 +10,6 @@ def is_fill_request_seq(seq):
         return False
     
     is_fill_request = any(isinstance(item, FillRequest) for item in seq)
-    is_source_sequence = isinstance(seq, Source)
+    is_source_sequence = isinstance(seq, SourceSequence)
 
     return is_fill_request and not is_source_sequence

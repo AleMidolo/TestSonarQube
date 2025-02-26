@@ -24,4 +24,4 @@ def find_path_type(path):
     elif os.path.isfile(path):
         return 'file'
     else:
-        return "Unknown path type"
+        return "Unknown type"

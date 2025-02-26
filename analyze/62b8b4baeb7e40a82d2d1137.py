@@ -30,14 +30,14 @@ def verifyObject(iface, candidate, tentative=False):
         alone, like before.
     """
     from zope.interface import providedBy, Invalid
-    from inspect import signature, Parameter
+    from inspect import signature, Signature
 
     errors = []
 
     if not tentative and not providedBy(candidate, iface):
         errors.append(f"{candidate} does not provide {iface}")
 
-    required_methods = iface.names()  # Assuming iface has a method to get required methods
+    required_methods = iface.names()  # Assuming iface has a method to list required methods
     for method_name in required_methods:
         if not hasattr(candidate, method_name):
             errors.append(f"{candidate} is missing method {method_name}")
@@ -48,9 +48,9 @@ def verifyObject(iface, candidate, tentative=False):
         actual_signature = signature(method)
 
         if expected_signature != actual_signature:
-            errors.append(f"Method {method_name} has incorrect signature in {candidate}")
+            errors.append(f"Method {method_name} in {candidate} has incorrect signature")
 
-    required_attributes = iface.attributes()  # Assuming iface has a method to get required attributes
+    required_attributes = iface.attributes()  # Assuming iface has a method to list required attributes
     for attr_name in required_attributes:
         if not hasattr(candidate, attr_name):
             errors.append(f"{candidate} is missing attribute {attr_name}")

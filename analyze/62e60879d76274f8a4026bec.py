@@ -23,8 +23,21 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     :param handlers: handler functions passed into the returned Response object
     :return: Response object
     """
-    # Implementation of the method
-    # This is a placeholder for the actual logic to append a BEGIN message
-    response = self._create_response(mode, bookmarks, metadata, timeout, db, imp_user, dehydration_hooks, hydration_hooks, **handlers)
-    self.output_queue.append(response)
-    return response
+    # Construct the BEGIN message
+    message = {
+        "mode": mode or "WRITE",
+        "bookmarks": list(bookmarks) if bookmarks else [],
+        "metadata": metadata or {},
+        "timeout": timeout,
+        "db": db,
+        "imp_user": imp_user,
+        "dehydration_hooks": dehydration_hooks or {},
+        "hydration_hooks": hydration_hooks or {},
+        "handlers": handlers
+    }
+    
+    # Append the message to the output queue (assuming an output queue exists)
+    self.output_queue.append(message)
+    
+    # Return a Response object (assuming a Response class exists)
+    return Response(message)

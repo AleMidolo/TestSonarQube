@@ -19,5 +19,13 @@ def parse_arguments(*unparsed_arguments):
     # Parse the arguments
     args = parser.parse_args(unparsed_arguments)
 
-    # Return the parsed arguments as a dictionary
-    return {args.subparser_name if args.subparser_name else "global": args}
+    # Create a dictionary to hold the results
+    result = {}
+    
+    # Store the parsed arguments in the result dictionary
+    if args.subparser_name:
+        result[args.subparser_name] = args
+    else:
+        result['global'] = args
+
+    return result

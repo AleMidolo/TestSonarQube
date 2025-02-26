@@ -19,7 +19,7 @@ def add_asset(self, basename, file_path):
         asset_key = f"{basename}{ext}"
         asset_dict[asset_key] = file_path
     
-    # Assuming there's an internal storage dictionary to hold the assets
+    # Assuming there's a storage attribute in the class to hold the assets
     if not hasattr(self, 'assets'):
         self.assets = {}
     

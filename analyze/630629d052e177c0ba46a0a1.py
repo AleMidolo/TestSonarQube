@@ -4,7 +4,7 @@ def verify_relayable_signature(public_key, doc, signature):
     author did actually generate this message.
     """
     from lxml import etree
-    from xmlsec import SignatureContext, verify, KeyData, KeyInfo
+    from xmlsec import SignatureContext, verify, KeyData, Signature
 
     # Load the XML document
     xml_doc = etree.fromstring(doc)
@@ -13,22 +13,19 @@ def verify_relayable_signature(public_key, doc, signature):
     ctx = SignatureContext()
 
     # Load the public key
-    key = KeyData()
-    key.load(public_key, KeyInfo.X509)
-
-    # Attach the key to the context
-    ctx.key = key
+    key_data = KeyData()
+    key_data.load(public_key, xmlsec.KeyDataFormatPem)
+    ctx.key = key_data
 
     # Find the signature in the document
-    signature_node = xml_doc.find('.//{http://www.w3.org/2000/09/xmldsig#}Signature')
-
+    signature_node = xml_doc.find('.//Signature')
     if signature_node is None:
-        raise ValueError("Signature not found in the document.")
+        raise ValueError("No signature found in the document.")
 
     # Verify the signature
     try:
-        verify(signature_node, ctx)
+        verify(ctx, signature_node)
         return True
     except Exception as e:
-        print(f"Verification failed: {e}")
+        print(f"Signature verification failed: {e}")
         return False

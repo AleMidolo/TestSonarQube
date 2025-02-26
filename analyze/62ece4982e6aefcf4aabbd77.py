@@ -12,43 +12,29 @@ def parse_frequency(frequency):
     """
     if frequency is None or frequency.lower() == "always":
         return None
-    
-    # Define regex pattern for matching frequency strings
-    pattern = r'(\d+)\s*(seconds?|minutes?|hours?|days?|weeks?|months?|years?)'
-    match = re.match(pattern, frequency, re.IGNORECASE)
-    
+
+    match = re.match(r'(\d+)\s*(seconds?|minutes?|hours?|days?|weeks?|months?|years?)', frequency, re.IGNORECASE)
     if not match:
         raise ValueError(f"Cannot parse frequency: {frequency}")
-    
+
     value, unit = match.groups()
     value = int(value)
-    
-    # Map units to timedelta arguments
-    unit_mapping = {
-        'second': 'seconds',
-        'seconds': 'seconds',
-        'minute': 'minutes',
-        'minutes': 'minutes',
-        'hour': 'hours',
-        'hours': 'hours',
-        'day': 'days',
-        'days': 'days',
-        'week': 'weeks',
-        'weeks': 'weeks',
-        'month': 'days',  # Approximation, as timedelta does not support months
-        'months': 'days',  # Approximation
-        'year': 'days',    # Approximation, as timedelta does not support years
-        'years': 'days'    # Approximation
-    }
-    
-    if unit.lower() in unit_mapping:
-        if unit.lower() in ['month', 'months']:
-            # Assuming 30 days for a month
-            return datetime.timedelta(days=value * 30)
-        elif unit.lower() in ['year', 'years']:
-            # Assuming 365 days for a year
-            return datetime.timedelta(days=value * 365)
-        else:
-            return datetime.timedelta(**{unit_mapping[unit.lower()]: value})
-    
+
+    if unit.lower().startswith('second'):
+        return datetime.timedelta(seconds=value)
+    elif unit.lower().startswith('minute'):
+        return datetime.timedelta(minutes=value)
+    elif unit.lower().startswith('hour'):
+        return datetime.timedelta(hours=value)
+    elif unit.lower().startswith('day'):
+        return datetime.timedelta(days=value)
+    elif unit.lower().startswith('week'):
+        return datetime.timedelta(weeks=value)
+    elif unit.lower().startswith('month'):
+        # Approximate a month as 30 days
+        return datetime.timedelta(days=value * 30)
+    elif unit.lower().startswith('year'):
+        # Approximate a year as 365 days
+        return datetime.timedelta(days=value * 365)
+
     raise ValueError(f"Cannot parse frequency: {frequency}")

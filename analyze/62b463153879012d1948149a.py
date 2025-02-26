@@ -20,11 +20,11 @@ def _group_files_by_xml_filename(source, xmls, files):
     grouped_files = {}
     
     for xml in xmls:
-        basename = xml.split('.')[0]  # Get the basename of the XML file
+        basename = xml.rsplit('.', 1)[0]  # Get the basename without extension
         grouped_files[basename] = []
 
         for file in files:
-            if file.startswith(basename):  # Check if the file starts with the XML basename
+            if file.startswith(basename):
                 grouped_files[basename].append(file)
 
     return grouped_files

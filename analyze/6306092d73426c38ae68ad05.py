@@ -2,19 +2,18 @@ def get_option_spec(self, command_name, argument_name):
     """
     Gets the specification for the specified option name.
     """
-    # Assuming there's a dictionary that holds the command specifications
+    # Assuming there's a dictionary that holds command specifications
     command_specs = {
-        'command1': {'option1': 'spec1', 'option2': 'spec2'},
-        'command2': {'option1': 'spec3', 'option3': 'spec4'},
+        'command1': {'option1': {'type': 'string', 'required': True}},
+        'command2': {'option2': {'type': 'int', 'required': False}},
     }
     
     # Retrieve the command specification
     command_spec = command_specs.get(command_name)
     
-    if command_spec is None:
-        return None  # Command not found
+    if command_spec:
+        # Retrieve the option specification
+        option_spec = command_spec.get(argument_name)
+        return option_spec
     
-    # Retrieve the option specification
-    option_spec = command_spec.get(argument_name)
-    
-    return option_spec  # Return the option specification or None if not found
+    return None

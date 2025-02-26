@@ -19,7 +19,15 @@ def update_last_applied_manifest_list_from_resp(
         field = schema.get('field')
         if field not in last_applied_manifest:
             last_applied_manifest[field] = response.get(field, None)
-        if 'children' in schema:
-            update_last_applied_manifest_list_from_resp(
-                last_applied_manifest[field], schema['children'], response.get(field, {})
-            )
+        
+        # If the schema has nested fields, we need to handle them recursively
+        if 'nested' in schema:
+            nested_schema = schema['nested']
+            nested_response = response.get(field, {})
+            if isinstance(last_applied_manifest[field], list):
+                for item in last_applied_manifest[field]:
+                    update_last_applied_manifest_list_from_resp(item, nested_schema, nested_response)
+            else:
+                update_last_applied_manifest_list_from_resp(last_applied_manifest[field], nested_schema, nested_response)
+    
+    return last_applied_manifest
