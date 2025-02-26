@@ -1,6 +1,5 @@
 def fix_namespace_prefix_w(content):
     """
-    将内容中的 "w:st=" 替换为 "w-st="。
-    将默认的文本 'w:st="' 转换为 'w-st="'。
+    ऐसा कोड लिखें जो उस टेक्स्ट को परिवर्तित करे जो डिफ़ॉल्ट रूप से 'w:st="' है, उसे 'w-st="' में बदल दे।
     """
-    return content.replace('w:st=', 'w-st=').replace('w:st="', 'w-st="')
+    return content.replace('w:st="', 'w-st="')

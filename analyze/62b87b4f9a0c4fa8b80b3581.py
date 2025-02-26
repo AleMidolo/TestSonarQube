@@ -1,20 +1,30 @@
 def scale(self, other=None, recompute=False):
     """
-    计算或设置直方图的比例（积分值）。
+    histogram का स्केल (इंटीग्रल) गणना करें या सेट करें।
 
-    如果参数 *other* 为 ``None``，则返回当前直方图的比例。
-    如果之前未计算过比例值，则会计算并存储该值以供后续使用（除非明确要求重新计算）。
-    请注意，在对直方图进行更改（填充数据）后，如果之前已计算过比例值，则需要显式地重新计算比例。
+    यदि *other* ``None`` है, तो इस हिस्टोग्राम का स्केल लौटाएं।  
+    यदि इसका स्केल पहले गणना नहीं किया गया है,  
+    तो इसे गणना करके संग्रहीत किया जाएगा ताकि बाद में उपयोग किया जा सके  
+    (जब तक कि *recompute* को स्पष्ट रूप से न कहा जाए)।  
+    ध्यान दें कि यदि हिस्टोग्राम को बदला (फिल किया) गया है,  
+    तो यदि स्केल पहले से गणना किया गया था,  
+    तो इसे स्पष्ट रूप से फिर से गणना करना आवश्यक है।  
 
-    如果提供了一个浮点数 *other*，则将当前直方图的比例调整为 *other*。
+    यदि एक फ्लोट *other* प्रदान किया गया है,  
+    तो self को *other* के अनुसार पुनः स्केल करें।  
 
-    无法对比例为零的直方图进行重新调整。如果尝试这样做，将会引发 :exc:`.LenaValueError` 异常。
+    ऐसे हिस्टोग्राम जिनका स्केल शून्य है,  
+    उन्हें पुनः स्केल नहीं किया जा सकता।  
+    यदि ऐसा करने का प्रयास किया जाता है,  
+    तो :exc:`.LenaValueError` त्रुटि उत्पन्न की जाएगी।
     """
     if other is None:
         if not hasattr(self, '_scale') or recompute:
             self._scale = self._compute_scale()
         return self._scale
-    else:
-        if self._scale == 0:
-            raise LenaValueError("无法对比例为零的直方图进行重新调整。")
-        self._scale = other
+
+    if self._scale == 0:
+        raise LenaValueError("Cannot rescale a histogram with zero scale.")
+
+    self._scale = other
+    self._rescale_histogram(other)

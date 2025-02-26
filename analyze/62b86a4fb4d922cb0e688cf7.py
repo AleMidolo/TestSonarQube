@@ -5,14 +5,14 @@ class ValidationError(Exception):
 
 def validate_key(key):
     """
-    根据对应的正则表达式验证给定的键。
+    दिए गए कुंजी (key) को संबंधित नियमित अभिव्यक्ति (regular expression) के खिलाफ सत्यापित करें।
 
-    参数:
-        key: 要验证的字符串
+    आर्ग्युमेंट्स (Args):
+        key: सत्यापन के लिए स्ट्रिंग (string)
 
-    异常:
-        ValidationError: 如果给定的键不符合正则表达式，则抛出此异常。
+    त्रुटि (Raises):
+        ValidationError: यदि दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।
     """
-    pattern = r'^[a-zA-Z0-9_]+$'  # 示例正则表达式，允许字母、数字和下划线
+    pattern = r'^[A-Za-z0-9]{8,}$'  # Example pattern: at least 8 alphanumeric characters
     if not re.match(pattern, key):
-        raise ValidationError(f"Invalid key: {key}")
+        raise ValidationError("दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।")

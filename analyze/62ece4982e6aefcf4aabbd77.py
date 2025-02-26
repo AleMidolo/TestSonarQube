@@ -1,56 +1,38 @@
 import datetime
+import re
 
 def parse_frequency(frequency):
     """
-    给定一个包含数字和时间单位的频率字符串，返回一个对应的 `datetime.timedelta` 实例。
+    एक संख्या और समय की इकाई के साथ एक आवृत्ति स्ट्रिंग दी गई है, एक संगत
+    datetime.timedelta इंस्टेंस लौटाएँ या यदि आवृत्ति None या "हमेशा" है, तो None लौटाएँ।
 
-    如果频率为 `None` 或 `"always"`，则返回 `None`。
+    उदाहरण के लिए, "3 सप्ताह" दिया गया है, datetime.timedelta(weeks=3) लौटाएँ
 
-    如果给定的频率无法解析，则抛出 `ValueError` 异常。
-
-    例如，给定 `"3 timeunit"`，返回 `datetime.timedelta(timeunit=3)`。
-
-    @param frequency : 一个频率字符串，格式为 `"数字 时间单位"`
-
-    @return str, 对应的 `datetime.timedelta` 实例或 `None`
-
-    给定一个包含数字和时间单位的频率字符串，返回一个对应的 `datetime.timedelta` 实例，在频率为 `None` 或 `"always"` 时返回 `None`。
-
-    例如，给定 `"3 weeks"`，返回 `datetime.timedelta(weeks=3)`。
-
-    如果给定的频率无法解析，则抛出 `ValueError` 异常。
+    यदि दी गई आवृत्ति को पार्स नहीं किया जा सकता है, तो ValueError उठाएँ।
     """
-    if frequency is None or frequency.lower() == "always":
+    if frequency is None or frequency.lower() == "हमेशा":
         return None
 
-    time_units = {
-        "seconds": "seconds",
-        "second": "seconds",
-        "minutes": "minutes",
-        "minute": "minutes",
-        "hours": "hours",
-        "hour": "hours",
-        "days": "days",
-        "day": "days",
-        "weeks": "weeks",
-        "week": "weeks",
-        "months": "days",  # Approximation, as timedelta does not support months
-        "months": "days",  # Approximation, as timedelta does not support months
-        "years": "days"    # Approximation, as timedelta does not support years
-    }
-
-    parts = frequency.split()
-    if len(parts) != 2:
+    match = re.match(r'(\d+)\s*(\w+)', frequency)
+    if not match:
         raise ValueError("Invalid frequency format")
 
-    try:
-        value = int(parts[0])
-    except ValueError:
-        raise ValueError("Invalid number in frequency")
+    value, unit = match.groups()
+    value = int(value)
 
-    unit = parts[1].lower()
-    if unit not in time_units:
-        raise ValueError("Invalid time unit in frequency")
-
-    kwargs = {time_units[unit]: value}
-    return datetime.timedelta(**kwargs)
+    if unit in ['सेकंड', 'सेकंड', 's']:
+        return datetime.timedelta(seconds=value)
+    elif unit in ['मिनट', 'मिनट', 'm']:
+        return datetime.timedelta(minutes=value)
+    elif unit in ['घंटा', 'घंटे', 'h']:
+        return datetime.timedelta(hours=value)
+    elif unit in ['दिन', 'दिन', 'd']:
+        return datetime.timedelta(days=value)
+    elif unit in ['सप्ताह', 'सप्ताह', 'w']:
+        return datetime.timedelta(weeks=value)
+    elif unit in ['महीना', 'महीने', 'mo']:
+        return datetime.timedelta(days=value * 30)  # Approximation
+    elif unit in ['साल', 'साल', 'y']:
+        return datetime.timedelta(days=value * 365)  # Approximation
+    else:
+        raise ValueError("Unknown time unit")

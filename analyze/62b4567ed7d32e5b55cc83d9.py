@@ -1,77 +1,27 @@
 def deep_merge_nodes(nodes):
-    """
-    合并任何与重复键对应的节点值并返回结果。如果存在具有非 `MappingNode` 值的冲突键，则保留最后一个值。
-
-    给定一个嵌套的 borgmatic 配置数据结构，其形式为一个元组列表：
-    (
-          ruamel.yaml.nodes.ScalarNode as a key,
-          ruamel.yaml.nodes.MappingNode or other Node as a value,
-    ),
-
-    对任何与重复键对应的节点值进行深度合并，并返回合并后的结果。如果存在具有非 `MappingNode` 值（例如整数或字符串）的冲突键，则以最后一个值为准。
-
-    例如，给定以下节点值：
-    [
-          (
-              ScalarNode(tag='tag:yaml.org,2002:str', value='retention'),
-              MappingNode(tag='tag:yaml.org,2002:map', value=[
-                  (
-                      ScalarNode(tag='tag:yaml.org,2002:str', value='keep_hourly'),
-                      ScalarNode(tag='tag:yaml.org,2002:int', value='24')
-                  ),
-                  (
-                      ScalarNode(tag='tag:yaml.org,2002:str', value='keep_daily'),
-                      ScalarNode(tag='tag:yaml.org,2002:int', value='7')
-                  ),
-              ]),
-          ),
-          (
-              ScalarNode(tag='tag:yaml.org,2002:str', value='retention'),
-              MappingNode(tag='tag:yaml.org,2002:map', value=[
-                  (
-                      ScalarNode(tag='tag:yaml.org,2002:str', value='keep_daily'),
-                      ScalarNode(tag='tag:yaml.org,2002:int', value='5')
-                  ),
-              ]),
-          ),
-    ]
-
-    返回的结果将为：
-
-    [
-          (
-              ScalarNode(tag='tag:yaml.org,2002:str', value='retention'),
-              MappingNode(tag='tag:yaml.org,2002:map', value=[
-                  (
-                      ScalarNode(tag='tag:yaml.org,2002:str', value='keep_hourly'),
-                      ScalarNode(tag='tag:yaml.org,2002:int', value='24')
-                  ),
-                  (
-                      ScalarNode(tag='tag:yaml.org,2002:str', value='keep_daily'),
-                      ScalarNode(tag='tag:yaml.org,2002:int', value='5')
-                  ),
-              ]),
-          ),
-    ]
-
-    进行这样的深度合并的目的是支持例如将一个 borgmatic 配置文件合并到另一个文件中以便重用。通过这种方式，配置部分（如 "retention" 等）不会完全替换合并文件中对应的部分，而是进行合并。
-    """
     from ruamel.yaml.nodes import ScalarNode, MappingNode
 
     merged = {}
 
-    for key, value in nodes:
-        key_value = key.value
-        if key_value not in merged:
-            merged[key_value] = value
+    for key_node, value_node in nodes:
+        key = key_node.value
+        if key not in merged:
+            merged[key] = value_node
         else:
-            existing_value = merged[key_value]
-            if isinstance(existing_value, MappingNode) and isinstance(value, MappingNode):
-                # Deep merge the MappingNodes
-                for sub_key, sub_value in value.value:
-                    existing_value.value.append((sub_key, sub_value))
+            existing_value = merged[key]
+            if isinstance(existing_value, MappingNode) and isinstance(value_node, MappingNode):
+                for sub_key_node, sub_value_node in value_node.value:
+                    sub_key = sub_key_node.value
+                    merged_value = existing_value.value.get(sub_key)
+                    if merged_value is not None:
+                        existing_value.value[sub_key] = sub_value_node
+                    else:
+                        existing_value.value[sub_key] = sub_value_node
             else:
-                # If there's a conflict with non-MappingNode, keep the last one
-                merged[key_value] = value
+                merged[key] = value_node
 
-    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged.items()]
+    result = []
+    for key, value in merged.items():
+        result.append((ScalarNode(tag='tag:yaml.org,2002:str', value=key), value))
+
+    return result

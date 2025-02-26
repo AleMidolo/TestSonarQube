@@ -1,34 +1,33 @@
 def _group_files_by_xml_filename(source, xmls, files):
     """
-    将文件按 XML 文件名分组并以字典格式返回数据。
+    XML फ़ाइलों के बेस नाम के आधार पर फ़ाइलों को समूहित करें
 
-    按 XML 文件的文件名分组文件
+    यह फ़ंक्शन XML फ़ाइलों के बेस नाम के आधार पर फ़ाइलों को समूहित करता है और डेटा को डिक्शनरी प्रारूप में लौटाता है।
 
-    将文件按其 XML 文件的文件名分组，并以字典格式返回数据。
-
-    参数
+    पैरामीटर्स (Parameters)
     ----------
-    xml_filename: str  
-        XML 文件名  
-    files: list  
-        文件夹或压缩文件中的文件列表  
+    xml_filename : `str`  
+        XML फ़ाइलों के नाम।  
 
-    返回值
+    files : `list`  
+        फ़ोल्डर या ज़िप फ़ाइल में मौजूद फ़ाइलों की सूची।  
+
+    रिटर्न्स (Returns)
     -------
-    dict
-        键：XML 文件的名称  
-        值：Package  
+    dict  
+        - key: XML फ़ाइलों के नाम।  
+        - value: पैकेज (Package)।  
     """
     grouped_files = {}
     
     for xml in xmls:
-        xml_filename = xml.split('/')[-1]  # Assuming the XML filename is the last part of the path
-        grouped_files[xml_filename] = []
+        base_name = xml.split('.')[0]  # Extract base name from XML filename
+        grouped_files[base_name] = []
 
-        for file in files:
-            if file.endswith('.xml') and file == xml:
-                continue  # Skip the XML file itself
-            if xml_filename in file:
-                grouped_files[xml_filename].append(file)
+    for file in files:
+        base_name = file.split('.')[0]  # Extract base name from file
+        for xml in xmls:
+            if base_name in xml:
+                grouped_files[xml.split('.')[0]].append(file)
 
     return grouped_files

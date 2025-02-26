@@ -1,9 +1,11 @@
 def names(self, all=False): # pylint:disable=redefined-builtin
     """
-    返回当前类的属性名称。
-    如果all为假，则返回接口定义的属性名称。
+    इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम लौटाएं।
+        if not all:
+    
+    इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम लौटाएं।
     """
     if all:
-        return [attr for attr in dir(self) if not attr.startswith('__')]
+        return [attr for attr in dir(self) if not attr.startswith('_')]
     else:
-        return [attr for attr in self.__class__.__dict__ if not attr.startswith('__')]
+        return [attr for attr in dir(self) if not attr.startswith('_') and not callable(getattr(self, attr))]

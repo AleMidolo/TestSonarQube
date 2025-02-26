@@ -1,33 +1,20 @@
-from typing import Dict
 import json
+from typing import Dict
 import xml.etree.ElementTree as ET
 
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
-    通过读取 JSON 格式的文档获取 Webfinger，Webfinger 中的 `hcard_url` 值是文档中 `links` 的 `href` 值。
+    डायस्पोरा वेबफिंगर को पार्स करें, जो या तो JSON प्रारूप (नया) में होता है या XRD (पुराना) में।  
 
-    解析 Diaspora 的 Webfinger，该 Webfinger 可以是 JSON 格式（新格式）或 XRD 格式（旧格式）。
-
-    https://diaspora.github.io/diaspora_federation/discovery/webfinger.html
+    [डायस्पोरा वेबफिंगर के बारे में अधिक जानकारी के लिए यहां क्लिक करें।](https://diaspora.github.io/diaspora_federation/discovery/webfinger.html)
     """
     try:
-        # Try to parse as JSON
-        data = json.loads(document)
-        if 'links' in data:
-            for link in data['links']:
-                if 'rel' in link and link['rel'] == 'http://webfinger.net/rel/hcard':
-                    return {'hcard_url': link['href']}
+        # Try to parse the document as JSON
+        return json.loads(document)
     except json.JSONDecodeError:
-        pass
-
-    try:
-        # Try to parse as XML (XRD format)
+        # If JSON parsing fails, try to parse as XRD (XML)
         root = ET.fromstring(document)
-        for link in root.findall('{http://docs.oasis-open.org/ns/xri/xrd-1.0}Link'):
-            rel = link.get('rel')
-            if rel == 'http://webfinger.net/rel/hcard':
-                return {'hcard_url': link.get('href')}
-    except ET.ParseError:
-        pass
-
-    return {}
+        result = {}
+        for child in root:
+            result[child.tag] = child.text
+        return result

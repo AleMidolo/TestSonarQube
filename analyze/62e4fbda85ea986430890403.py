@@ -1,13 +1,11 @@
-import random
 from typing import Sequence
-
-FIXED_RANDOM_SEED = 42
+import random
 
 def _shuffled(seq: Sequence[str]) -> list[str]:
     """
-    使用给定的固定随机种子（FIXED_RANDOM_SEED）对给定的序列进行洗牌
+    निर्धारित (Deterministically) तरीके से शफल करें
     """
-    random.seed(FIXED_RANDOM_SEED)
+    random.seed(0)  # Set a seed for reproducibility
     shuffled_seq = list(seq)
     random.shuffle(shuffled_seq)
     return shuffled_seq

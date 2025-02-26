@@ -1,18 +1,16 @@
 def on(self, hook):
     """
-    返回一个装饰器函数，用于向类中的注册表中的 "hook" 添加一个新的处理器。
+    रजिस्ट्री में एक नया हैंडलर जोड़ने के लिए डेकोरेटर फ़ंक्शन।
 
-    该装饰器函数用于向注册表中添加一个新的处理器。
+    पैरामीटर (Args):
+    - hook (HookType): वह हुक विशेषता जिसके लिए हैंडलर को पंजीकृत (register) करना है।
 
-    参数：
-        hook (HookType): 要为其注册处理器的 Hook 属性。
-
-    返回值：
-        callable: 用于为指定的 hook 注册监听器的装饰器。
+    रिटर्न (Returns):
+    - callable: निर्दिष्ट हुक के लिए श्रोताओं (listeners) को पंजीकृत करने के लिए डेकोरेटर।
     """
-    def decorator(func):
-        if hook not in self._registry:
-            self._registry[hook] = []
-        self._registry[hook].append(func)
-        return func
+    def decorator(handler):
+        if hook not in self.registry:
+            self.registry[hook] = []
+        self.registry[hook].append(handler)
+        return handler
     return decorator

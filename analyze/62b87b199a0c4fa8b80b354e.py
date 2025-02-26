@@ -1,16 +1,14 @@
 def is_fill_request_seq(seq):
     """
-    检查 seq 是否可以转换为 FillRequestSeq，并返回布尔值。
-    测试 *seq* 是否可以转换为 FillRequestSeq。
+    जाँच करें कि *seq* को FillRequestSeq में बदला जा सकता है।  
 
-    仅当以下条件时返回真：
-    - 它是一个 FillRequest 元素，或者包含至少一个 FillRequest 元素；
-    - 它不是一个 Source 序列。
+    यह True तभी लौटाएगा जब:  
+    - यह एक FillRequest तत्व हो,  
+    - या इसमें कम से कम एक FillRequest तत्व हो,  
+    - और यह Source अनुक्रम (Source sequence) न हो।
     """
-    if isinstance(seq, FillRequest):
-        return True
-    if any(isinstance(item, FillRequest) for item in seq):
-        return True
-    if isinstance(seq, Source):
-        return False
-    return False
+    # Assuming FillRequest is a specific type or class
+    is_fill_request = any(isinstance(item, FillRequest) for item in seq)
+    is_source_sequence = isinstance(seq, SourceSequence)
+
+    return is_fill_request and not is_source_sequence

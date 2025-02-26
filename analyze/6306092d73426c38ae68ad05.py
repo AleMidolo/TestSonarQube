@@ -1,7 +1,13 @@
-def get_option_spec(self, command_name, argument_name):
+def get_option_spec(self, command_name):
     """
-    获取指定选项名称的规范。通过 `self.get_parser_option_specs()` 获取给定 `command_name` 的选项。
-    获取指定选项名称的规范。
+    दिए गए विकल्प नाम के लिए विनिर्देश प्राप्त करता है।
     """
-    option_specs = self.get_parser_option_specs(command_name)
-    return option_specs.get(argument_name, None)
+    # यहाँ पर विकल्प विनिर्देश प्राप्त करने की लॉजिक लिखें
+    option_spec = {}  # एक डिक्शनरी में विकल्प विनिर्देश संग्रहीत करें
+    # उदाहरण के लिए, हम मान लेते हैं कि हम कुछ पूर्वनिर्धारित विकल्पों को वापस कर रहे हैं
+    if command_name == "example_command":
+        option_spec = {
+            "option1": "विवरण 1",
+            "option2": "विवरण 2",
+        }
+    return option_spec

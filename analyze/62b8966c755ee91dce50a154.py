@@ -1,129 +1,165 @@
 def isoparse(self, dt_str):
     """
-    将 ISO-8601 格式的日期时间字符串解析为 :class:`datetime.datetime`。
+    एक ISO-8601 दिनांक और समय स्ट्रिंग को :class:`datetime.datetime` में पार्स करें।
 
-    一个 ISO-8601 日期时间字符串由日期部分组成，后面可选跟随一个时间部分——日期和时间部分之间由单个字符分隔，在官方标准中该字符为 ``T``。不完整的日期格式（例如 ``YYYY-MM``）*不能*与时间部分组合使用。
+    एक ISO-8601 दिनांक और समय स्ट्रिंग में एक दिनांक भाग होता है, जिसके बाद वैकल्पिक रूप से 
+    समय भाग हो सकता है। दिनांक और समय भाग एक एकल कैरेक्टर सेपरेटर द्वारा अलग किए जाते हैं, 
+    जो आधिकारिक मानक में ``T`` होता है। अधूरे दिनांक प्रारूप (जैसे ``YYYY-MM``) को समय भाग 
+    के साथ *संयोजित नहीं* किया जा सकता।
 
-    支持的日期格式包括：
+    समर्थित दिनांक प्रारूप:
 
-    常见：
-
+    सामान्य:
     - ``YYYY``
-    - ``YYYY-MM`` 或 ``YYYYMM``
-    - ``YYYY-MM-DD`` 或 ``YYYYMMDD``
+    - ``YYYY-MM`` या ``YYYYMM``
+    - ``YYYY-MM-DD`` या ``YYYYMMDD``
 
-    不常见：
+    असामान्य:
+    - ``YYYY-Www`` या ``YYYYWww`` - ISO सप्ताह (दिन डिफ़ॉल्ट रूप से 0 होता है)
+    - ``YYYY-Www-D`` या ``YYYYWwwD`` - ISO सप्ताह और दिन
 
-    - ``YYYY-Www`` 或 ``YYYYWww`` - ISO 周（天数默认为 0）
-    - ``YYYY-Www-D`` 或 ``YYYYWwwD`` - ISO 周和天数
+    ISO सप्ताह और दिन की संख्या :func:`datetime.date.isocalendar` के समान तर्क का पालन करती है।
 
-    ISO 周和天数的编号逻辑与 :func:`datetime.date.isocalendar` 相同。
-
-    支持的时间格式包括：
-
+    समर्थित समय प्रारूप:
     - ``hh``
-    - ``hh:mm`` 或 ``hhmm``
-    - ``hh:mm:ss`` 或 ``hhmmss``
-    - ``hh:mm:ss.ssssss``（最多可包含 6 位子秒数字）
+    - ``hh:mm`` या ``hhmm``
+    - ``hh:mm:ss`` या ``hhmmss``
+    - ``hh:mm:ss.ssssss`` (6 उप-सेकंड अंकों तक)
 
-    对于 `hh`，午夜是一个特殊情况，因为标准同时支持用 00:00 和 24:00 表示午夜。小数点分隔符可以是点（``.``）或逗号（``,``）。
+    मध्यरात्रि (`hh`) के लिए एक विशेष मामला है, क्योंकि मानक 00:00 और 24:00 दोनों को 
+    प्रतिनिधित्व के रूप में समर्थन करता है। दशमलव सेपरेटर एक डॉट या कॉमा हो सकता है।
 
-    .. caution::
+    .. चेतावनी::
 
-      虽然 ISO-8601 标准支持秒以外的其他小数组件，但当前的解析器尚未实现此功能。
+        सेकंड के अलावा अन्य भिन्नात्मक घटकों के लिए समर्थन ISO-8601 मानक का हिस्सा है, 
+        लेकिन वर्तमान में इस पार्सर में लागू नहीं किया गया है।
 
-    支持的时区偏移格式包括：
+    समर्थित समय क्षेत्र ऑफसेट प्रारूप:
+    - `Z` (UTC)
+    - `±HH:MM`
+    - `±HHMM`
+    - `±HH`
 
-    - ``Z``（UTC）
-    - ``±HH:MM``
-    - ``±HHMM``
-    - ``±HH``
-
-    偏移量将表示为 :class:`dateutil.tz.tzoffset` 对象，UTC 除外，UTC 会表示为 :class:`dateutil.tz.tzutc`。与 UTC 等效的时区偏移（例如 ``+00:00``）也将表示为 :class:`dateutil.tz.tzutc`。
+    ऑफसेट को :class:`dateutil.tz.tzoffset` ऑब्जेक्ट्स के रूप में दर्शाया जाएगा, 
+    सिवाय UTC के, जिसे :class:`dateutil.tz.tzutc` के रूप में दर्शाया जाएगा। UTC के 
+    समकक्ष समय क्षेत्र ऑफसेट (जैसे `+00:00`) को भी :class:`dateutil.tz.tzutc` के रूप में 
+    दर्शाया जाएगा।
 
     :param dt_str:
-      仅包含一个 ISO-8601 日期时间字符串的字符串或流。
+        एक स्ट्रिंग या स्ट्रीम जिसमें केवल एक ISO-8601 दिनांक और समय स्ट्रिंग हो।
 
     :return:
-      返回一个 :class:`datetime.datetime` 对象，表示该字符串。未指定的组件默认为其最小值。
+        एक :class:`datetime.datetime` लौटाता है जो स्ट्रिंग का प्रतिनिधित्व करता है। 
+        निर्दिष्ट नहीं किए गए घटक उनके न्यूनतम मान पर डिफ़ॉल्ट होते हैं।
 
-    .. warning::
+    .. चेतावनी::
 
-      从 2.7.0 版本开始，解析器的严格性不应被视为稳定的契约部分。任何符合 ISO-8601 且在默认设置下能正确解析的字符串，在将来的版本中都能继续正确解析，但当前无法解析的无效字符串（如 ``2017-01-01T00:00+00:00:00``）若在编码上是有效日期，则不保证将来版本会继续无法解析。
+        संस्करण 2.7.0 से, पार्सर की सख्ती को अनुबंध का स्थिर हिस्सा नहीं माना जाना चाहिए। 
+        कोई भी मान्य ISO-8601 स्ट्रिंग जो डिफ़ॉल्ट सेटिंग्स के साथ सही ढंग से पार्स होती है, 
+        भविष्य के संस्करणों में सही ढंग से पार्स होती रहेगी, लेकिन अमान्य स्ट्रिंग्स जो 
+        वर्तमान में विफल होती हैं (जैसे ``2017-01-01T00:00+00:00:00``) भविष्य के संस्करणों 
+        में विफल होने की गारंटी नहीं है यदि वे एक मान्य दिनांक को एन्कोड करती हैं।
 
     .. versionadded:: 2.7.0
     """
-    from datetime import datetime, timedelta
+    from datetime import datetime, timedelta, timezone
     import re
-    from dateutil import tz
 
-    # Regular expressions for parsing
-    iso_date_regex = re.compile(r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?')
-    iso_week_regex = re.compile(r'(\d{4})-W(\d{2})(?:-(\d))?')
-    time_regex = re.compile(r'(\d{1,2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?)?')
-    tz_regex = re.compile(r'Z|([+-]\d{2}):?(\d{2})?|([+-]\d{2})(\d{2})?|([+-]\d{2})')
+    # Define regex patterns for parsing
+    date_patterns = [
+        r'(\d{4})-(\d{2})-(\d{2})',  # YYYY-MM-DD
+        r'(\d{4})-(\d{2})',          # YYYY-MM
+        r'(\d{4})',                   # YYYY
+        r'(\d{4})W(\d{2})',           # YYYY-Www
+        r'(\d{4})W(\d{2})(\d{1})'     # YYYY-Www-D
+    ]
+    
+    time_patterns = [
+        r'(\d{2}):(\d{2}):(\d{2})(\.\d+)?',  # hh:mm:ss[.sss...]
+        r'(\d{2}):(\d{2})(\.\d+)?',          # hh:mm[.sss...]
+        r'(\d{2})(\.\d+)?',                   # hh[.sss...]
+    ]
+    
+    offset_patterns = [
+        r'Z',                               # UTC
+        r'([+-]\d{2}):?(\d{2})?',           # ±HH:MM
+        r'([+-]\d{2})(\d{2})?',              # ±HHMM
+        r'([+-]\d{2})'                       # ±HH
+    ]
+    
+    # Combine patterns
+    full_pattern = r'^\s*(' + '|'.join(date_patterns) + r')' + \
+                   r'(T(' + '|'.join(time_patterns) + r'))?' + \
+                   r'(\s*(' + '|'.join(offset_patterns) + r'))?\s*$'
+    
+    match = re.match(full_pattern, dt_str)
+    if not match:
+        raise ValueError("Invalid ISO-8601 date string")
+    
+    # Extract date components
+    date_parts = match.groups()[:6]
+    year, month, day = None, None, None
+    
+    if date_parts[0]:  # YYYY-MM-DD
+        year, month, day = int(date_parts[0]), int(date_parts[1]), int(date_parts[2])
+    elif date_parts[3]:  # YYYY-Www-D
+        year, week, day = int(date_parts[3]), int(date_parts[4]), int(date_parts[5])
+        # Calculate the date from ISO week
+        jan1 = datetime(year, 1, 1)
+        first_monday = jan1 + timedelta(days=(7 - jan1.weekday()) % 7)
+        date = first_monday + timedelta(weeks=week - 1, days=day - 1)
+        year, month, day = date.year, date.month, date.day
+    elif date_parts[3]:  # YYYY-Www
+        year, week = int(date_parts[3]), int(date_parts[4])
+        # Calculate the date from ISO week
+        jan1 = datetime(year, 1, 1)
+        first_monday = jan1 + timedelta(days=(7 - jan1.weekday()) % 7)
+        date = first_monday + timedelta(weeks=week - 1)
+        year, month, day = date.year, date.month, date.day
+    elif date_parts[0]:  # YYYY-MM
+        year, month = int(date_parts[0]), int(date_parts[1])
+        day = 1  # Default to the first day of the month
+    elif date_parts[0]:  # YYYY
+        year = int(date_parts[0])
+        month, day = 1, 1  # Default to the first day of the first month
 
-    # Split date and time
-    if 'T' in dt_str:
-        date_str, time_str = dt_str.split('T', 1)
-    else:
-        date_str, time_str = dt_str, ''
-
-    # Parse date
-    match = iso_date_regex.match(date_str)
-    if match:
-        year = int(match.group(1))
-        month = int(match.group(2) or 1)
-        day = int(match.group(3) or 1)
-    else:
-        match = iso_week_regex.match(date_str)
-        if match:
-            year = int(match.group(1))
-            week = int(match.group(2))
-            day = int(match.group(3) or 1)
-            # Calculate the date from ISO week
-            first_day_of_year = datetime(year, 1, 1)
-            first_weekday = first_day_of_year.weekday()
-            days_to_first_monday = (7 - first_weekday) % 7
-            first_monday = first_day_of_year + timedelta(days=days_to_first_monday)
-            date = first_monday + timedelta(weeks=week - 1, days=day - 1)
-            return date.replace(tzinfo=tz.tzutc())
-        else:
-            raise ValueError("Invalid date format")
-
-    # Parse time
-    match = time_regex.match(time_str)
-    if match:
-        hour = int(match.group(1))
-        minute = int(match.group(2) or 0)
-        second = int(match.group(3) or 0)
-        microsecond = int(match.group(4) or 0)
-    else:
-        hour = minute = second = microsecond = 0
+    # Extract time components
+    time_parts = match.groups()[6:10]
+    hour, minute, second, microsecond = 0, 0, 0, 0
+    
+    if time_parts[0]:  # hh:mm:ss[.sss...]
+        hour, minute, second = int(time_parts[0]), int(time_parts[1]), int(time_parts[2])
+        if time_parts[3]:
+            microsecond = int(float(time_parts[3]) * 1_000_000)
+    elif time_parts[0]:  # hh:mm[.sss...]
+        hour, minute = int(time_parts[0]), int(time_parts[1])
+        if time_parts[2]:
+            microsecond = int(float(time_parts[2]) * 1_000_000)
+    elif time_parts[0]:  # hh[.sss...]
+        hour = int(time_parts[0])
+        if time_parts[1]:
+            microsecond = int(float(time_parts[1]) * 1_000_000)
 
     # Handle midnight case
     if hour == 24:
         hour = 0
+        day += 1  # Increment day
 
+    # Extract offset
+    offset_parts = match.groups()[10:14]
+    tzinfo = None
+    
+    if offset_parts[0] == 'Z':
+        tzinfo = timezone.utc
+    elif offset_parts[1]:
+        sign = 1 if offset_parts[1][0] == '+' else -1
+        hours = int(offset_parts[1][1:3])
+        minutes = int(offset_parts[1][3:5]) if len(offset_parts[1]) > 3 else 0
+        tzinfo = timezone(timedelta(hours=sign * hours, minutes=sign * minutes))
+    elif offset_parts[2]:
+        sign = 1 if offset_parts[2][0] == '+' else -1
+        hours = int(offset_parts[2][1:3])
+        tzinfo = timezone(timedelta(hours=sign * hours))
+    
     # Create datetime object
-    dt = datetime(year, month, day, hour, minute, second, microsecond)
-
-    # Parse timezone
-    tz_match = tz_regex.search(dt_str)
-    if tz_match:
-        if tz_match.group(0) == 'Z':
-            dt = dt.replace(tzinfo=tz.tzutc())
-        else:
-            if tz_match.group(1):
-                offset_hours = int(tz_match.group(1))
-                offset_minutes = int(tz_match.group(2) or 0)
-            elif tz_match.group(3):
-                offset_hours = int(tz_match.group(3))
-                offset_minutes = 0
-            else:
-                offset_hours = int(tz_match.group(5))
-                offset_minutes = 0
-            offset = timedelta(hours=offset_hours, minutes=offset_minutes)
-            dt = dt.replace(tzinfo=tz.tzoffset(None, offset.total_seconds()))
-
-    return dt
+    return datetime(year, month, day, hour, minute, second, microsecond, tzinfo)

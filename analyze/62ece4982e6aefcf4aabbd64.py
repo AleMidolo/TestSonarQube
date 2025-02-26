@@ -1,12 +1,7 @@
 def strip_root(path, root):
     """
-    从路径中移除根目录。如果失败，则抛出异常。
-
-    返回值:
-        一个不包含根目录的路径
-
-    从路径中移除根目录。失败时抛出异常。
+    पथ से रूट को हटाएं, और यदि यह विफल होता है, तो अपवाद फेंकें।
     """
     if not path.startswith(root):
-        raise ValueError("路径不以根目录开头")
+        raise ValueError("Path does not start with the specified root.")
     return path[len(root):]

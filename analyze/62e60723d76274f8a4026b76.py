@@ -1,21 +1,25 @@
 def from_ticks(cls, ticks, tz=None):
     """
-    根据时间戳（自午夜以来的纳秒数）创建一个时间对象。
+    टिक से समय बनाएं (आधी रात के बाद से नैनोसेकंड)।
 
-    :param ticks: 自午夜以来的纳秒数
+    :param ticks: आधी रात के बाद से नैनोसेकंड
     :type ticks: int
-    :param tz: 可选的时区信息
+    :param tz: वैकल्पिक टाइमज़ोन
     :type tz: datetime.tzinfo
+
     :rtype: Time
-    :raises ValueError: 如果时间戳超出范围(0 <= ticks < 86400000000000)
+
+    :raises ValueError: यदि ticks सीमा से बाहर है
+        (0 <= ticks < 86400000000000)
     """
     if not (0 <= ticks < 86400000000000):
-        raise ValueError("时间戳超出范围(0 <= ticks < 86400000000000)")
+        raise ValueError("Ticks must be in the range 0 to 86400000000000.")
     
-    seconds = ticks // 1_000_000_000
-    nanoseconds = ticks % 1_000_000_000
-    hours, remainder = divmod(seconds, 3600)
-    minutes, seconds = divmod(remainder, 60)
+    from datetime import datetime, timedelta
     
-    time_obj = cls(hour=hours, minute=minutes, second=seconds, microsecond=nanoseconds // 1000, tzinfo=tz)
-    return time_obj
+    # Calculate the time from ticks
+    midnight = datetime(1, 1, 1, 0, 0, 0, 0, tzinfo=tz)
+    time_delta = timedelta(microseconds=ticks / 1000)
+    result_time = midnight + time_delta
+    
+    return result_time.time()

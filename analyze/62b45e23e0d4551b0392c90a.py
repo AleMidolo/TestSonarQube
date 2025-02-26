@@ -1,30 +1,40 @@
 def validate_version_inventories(self, version_dirs):
     """
-    每个版本**应当**包含截至该版本的完整清单。  
+    प्रत्येक संस्करण के पास उस बिंदु तक एक इन्वेंटरी होनी चाहिए।
 
-    同时，记录所有与根清单不同的内容摘要，以便在验证内容时能够检查这些差异。  
+    साथ ही, किसी भी सामग्री डाइजेस्ट का रिकॉर्ड रखें जो रूट इन्वेंटरी में मौजूद डाइजेस्ट से अलग हो,
+    ताकि सामग्री को सत्यापित करते समय हम उन्हें भी जांच सकें।
 
-    `version_dirs` 是一个包含版本目录名称的数组，并假定按照版本顺序排列（1, 2, 3...）。
+    version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
     """
-    # 假设根清单是第一个版本的内容
-    root_inventory = self.load_inventory(version_dirs[0])
+    inventory_digests = set()
     discrepancies = {}
 
-    for version in version_dirs[1:]:
-        current_inventory = self.load_inventory(version)
-        if not self.is_complete_inventory(current_inventory, root_inventory):
-            discrepancies[version] = self.get_differences(current_inventory, root_inventory)
+    for version in version_dirs:
+        inventory_path = f"{version}/inventory.json"
+        
+        try:
+            with open(inventory_path, 'r') as file:
+                inventory = json.load(file)
+                
+                # Validate the inventory for the current version
+                if not self.validate_inventory(inventory):
+                    raise ValueError(f"Invalid inventory in version {version}")
+
+                # Record the digests from the current inventory
+                current_digests = set(item['digest'] for item in inventory.get('items', []))
+                
+                # Check for discrepancies with the root inventory
+                new_digests = current_digests - inventory_digests
+                if new_digests:
+                    discrepancies[version] = new_digests
+                
+                # Update the recorded digests
+                inventory_digests.update(current_digests)
+
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Inventory file not found for version {version}")
+        except json.JSONDecodeError:
+            raise ValueError(f"Error decoding JSON for inventory in version {version}")
 
     return discrepancies
-
-def load_inventory(self, version_dir):
-    # 这里应该实现加载版本清单的逻辑
-    pass
-
-def is_complete_inventory(self, current_inventory, root_inventory):
-    # 这里应该实现检查当前清单是否完整的逻辑
-    pass
-
-def get_differences(self, current_inventory, root_inventory):
-    # 这里应该实现获取差异的逻辑
-    pass
