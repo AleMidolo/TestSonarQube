@@ -14,8 +14,8 @@ def dict_insert(dic, val, key, *keys):
     :param keys: sottochiavi nella catena di chiavi
     """
     current = dic
-    for k in keys:
+    for k in (key,) + keys:
         if k not in current:
             current[k] = {}
         current = current[k]
-    current[key] = val
+    current = val

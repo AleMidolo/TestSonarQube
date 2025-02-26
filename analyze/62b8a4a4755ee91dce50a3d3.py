@@ -18,10 +18,8 @@ def fromutc(self, dt):
 
     # Check for ambiguity and folding
     if new_dt.dst() == timedelta(0) and new_dt.utcoffset() != timedelta(0):
-        # If the datetime is ambiguous, we need to determine if it's in fold
-        if new_dt < self.fold_start:
-            new_dt = new_dt.replace(fold=0)
-        else:
-            new_dt = new_dt.replace(fold=1)
+        # This datetime is ambiguous
+        if new_dt.fold == 0:
+            new_dt = new_dt.replace(fold=1)  # Set to the second occurrence
 
     return new_dt

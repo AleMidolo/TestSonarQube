@@ -16,15 +16,20 @@ def format(
 
     - L'insieme dei parametri convertiti in stile "out" (:class:`dict` o :class:`list`).
     """
-    # Example implementation (this should be replaced with actual logic)
     if isinstance(sql, bytes):
-        formatted_sql = sql.decode('utf-8')
+        sql_str = sql.decode('utf-8')
     else:
-        formatted_sql = sql
+        sql_str = sql
 
     if isinstance(params, dict):
         out_params = {key: f'OUT_{value}' for key, value in params.items()}
-    else:
+    elif isinstance(params, list):
         out_params = [f'OUT_{value}' for value in params]
+    else:
+        raise TypeError("params must be a dict or a list")
 
+    formatted_sql = sql_str.replace("?", "%s")  # Example of converting to a different placeholder style
+
+    if isinstance(sql, bytes):
+        return formatted_sql.encode('utf-8'), out_params
     return formatted_sql, out_params
