@@ -7,7 +7,7 @@ def _c_optimizations_available():
     Esto no indica si deben ser utilizadas o no.
     """
     try:
-        import c_optimizations  # Intentar importar el módulo de optimización en C
-        return c_optimizations  # Retornar el módulo si está disponible
+        import c_optimizations  # Suponiendo que el módulo se llama c_optimizations
+        return c_optimizations
     except ImportError:
-        return False  # Retornar falso si el módulo no está disponible
+        return False

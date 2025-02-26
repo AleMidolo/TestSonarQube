@@ -75,52 +75,44 @@ def isoparse(self, dt_str):
         raise ValueError(f"Invalid ISO-8601 date string: {dt_str}")
 
     # Extract date components
-    year = int(match.group(1))
-    month = int(match.group(2) or 1)
-    day = int(match.group(3) or 1)
+    year, month, day = match.group(1), match.group(2), match.group(3)
+    if month is None:
+        month = 1
+    if day is None:
+        day = 1
 
-    # Handle week date if applicable
-    if match.group(2) is None and match.group(3) is None:
-        week = match.group(4)
-        if week:
-            week_number = int(match.group(5))
-            day = int(match.group(6) or 1)
-            # Calculate the date from the week number
-            first_day_of_year = datetime(year, 1, 1)
-            first_week_start = first_day_of_year + timedelta(days=(7 - first_day_of_year.isoweekday()))
-            date = first_week_start + timedelta(weeks=week_number - 1, days=day - 1)
-        else:
-            date = datetime(year, month, day)
+    # Handle week date
+    if match.group(4):
+        week, week_day = match.group(5), match.group(6)
+        if week_day is None:
+            week_day = 0
+        date = datetime.strptime(f'{year}-W{week}-{week_day}', "%Y-W%W-%w").date()
     else:
-        date = datetime(year, month, day)
+        date = datetime(int(year), int(month), int(day))
 
     # Extract time components
-    hour = int(match.group(7) or 0)
-    minute = int(match.group(8) or 0)
-    second = int(match.group(9) or 0)
-    microsecond = int(match.group(10) or 0)
+    hour, minute, second, microsecond = match.group(7), match.group(8), match.group(9), match.group(10)
+    if hour is None:
+        hour = 0
+    if minute is None:
+        minute = 0
+    if second is None:
+        second = 0
+    if microsecond is None:
+        microsecond = 0
 
-    # Handle special case for midnight
-    if hour == 24 and minute == 0 and second == 0:
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
-    else:
-        date = date.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
+    # Create datetime object
+    dt = datetime(date.year, date.month, date.day, int(hour), int(minute), int(second), int(microsecond))
 
     # Handle timezone
-    tzinfo = None
-    if match.group(11):
-        if match.group(11) == 'Z':
-            tzinfo = tz.tzutc()
+    tz_info = match.group(11)
+    if tz_info == 'Z':
+        dt = dt.replace(tzinfo=tz.tzutc())
+    elif tz_info:
+        if ':' in tz_info:
+            offset = tz.tzoffset(None, int(tz_info[:3]) * 3600 + int(tz_info[4:]) * 60)
         else:
-            if match.group(12):
-                offset_hours = int(match.group(12))
-                offset_minutes = int(match.group(13) or 0)
-                tzinfo = tz.tzoffset(None, offset_hours * 3600 + offset_minutes * 60)
-            else:
-                offset_hours = int(match.group(14))
-                tzinfo = tz.tzoffset(None, offset_hours * 3600)
+            offset = tz.tzoffset(None, int(tz_info) * 3600)
+        dt = dt.replace(tzinfo=offset)
 
-    if tzinfo:
-        date = date.replace(tzinfo=tzinfo)
-
-    return date
+    return dt

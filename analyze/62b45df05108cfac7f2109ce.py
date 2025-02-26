@@ -7,7 +7,7 @@ def validate(self, path):
     # Implementación de la validación del objeto OCFL
     try:
         # Aquí se realizarían las comprobaciones necesarias para validar el objeto OCFL
-        # Por ejemplo, verificar la existencia de archivos, estructura, etc.
+        # Por ejemplo, verificar la existencia de archivos, estructura de directorios, etc.
         
         # Supongamos que tenemos una función `check_structure` que valida la estructura
         if not self.check_structure(path):
@@ -20,7 +20,7 @@ def validate(self, path):
         # Si todas las comprobaciones son exitosas, se devuelve True
         return True
     except Exception as e:
-        # Manejo de excepciones, se puede registrar el error o advertencias
+        # Manejo de excepciones, se puede registrar el error o manejarlo de otra forma
         print(f"Error durante la validación: {e}")
         return False
 
