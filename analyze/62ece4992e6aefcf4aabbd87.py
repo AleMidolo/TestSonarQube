@@ -18,7 +18,7 @@ def build_app_logger(name='app', logfile='app.log', debug=True):
 
     # Create a file handler
     if not os.path.exists(os.path.dirname(logfile)):
-        os.makedirs(os.path.dirname(logfile), exist_ok=True)
+        os.makedirs(os.path.dirname(logfile))
     file_handler = logging.FileHandler(logfile)
     file_handler.setLevel(logging.DEBUG if debug else logging.INFO)
 

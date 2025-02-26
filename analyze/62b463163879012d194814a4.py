@@ -23,6 +23,7 @@ def _explore_zipfile(zip_path):
             if file_info.filename.endswith('.xml'):
                 base_name = os.path.splitext(os.path.basename(file_info.filename))[0]
                 with zip_file.open(file_info.filename) as file:
-                    data_dict[base_name].append(file.read())
+                    data = file.read()
+                    data_dict[base_name].append(data)
 
     return dict(data_dict)

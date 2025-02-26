@@ -21,7 +21,7 @@ def _update_context(self, context):
     
     # Supongamos que tenemos un atributo 'errors' que contiene los errores del grafo
     for i, error in enumerate(self.errors):
-        error_name = f"x_{i + 1}"  # Asumiendo que los errores se nombran x_1, x_2, ...
+        error_name = f"x_{i + 1}"  # Asumiendo que los errores se nombran como x_1, x_2, etc.
         context['error'][error_name] = {'index': error.index}  # Suponiendo que cada error tiene un índice
     
     # No eliminamos valores existentes en context.value ni en subcontextos

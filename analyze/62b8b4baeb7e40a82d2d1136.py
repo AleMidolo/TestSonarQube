@@ -34,7 +34,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
 
     errors = []
 
-    if not tentative and not providedBy(candidate, iface):
+    if not tentative and not providedBy(candidate)(iface):
         errors.append(f"{candidate} does not provide {iface}")
 
     required_methods = iface.names()
@@ -49,14 +49,11 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             continue
         
         # Check method signature
-        iface_method = iface.lookupMethod(method_name)
-        if iface_method is not None:
-            iface_signature = signature(iface_method)
-            candidate_signature = signature(method)
-            if iface_signature != candidate_signature:
-                errors.append(f"Signature mismatch for {method_name} in {candidate}")
+        expected_signature = signature(getattr(iface, method_name))
+        actual_signature = signature(method)
+        if expected_signature != actual_signature:
+            errors.append(f"Signature mismatch for {method_name} in {candidate}")
 
-    # Check for required attributes
     required_attributes = iface.attributes()
     for attr_name in required_attributes:
         if not hasattr(candidate, attr_name):

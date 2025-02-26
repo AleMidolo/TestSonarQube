@@ -22,5 +22,4 @@ def scale(self, other=None, recompute=False):
     else:
         if hasattr(self, 'scale_value') and self.scale_value == 0:
             raise LenaValueError("Cannot rescale a histogram with a scale of zero.")
-        self.histogram = [count * (other / self.scale_value) for count in self.histogram]
-        self.scale_value = other
+        self.scale_value = other * (self.scale_value / self.scale_value)  # Rescale logic

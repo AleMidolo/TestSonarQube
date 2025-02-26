@@ -14,14 +14,14 @@ def prepare_repository_from_archive(
 
     Este método no maneja el caso en el que el archivo comprimido proporcionado no exista.
     """
-    # Convert tmp_path to Path object if it's a string
+    # Convert tmp_path to Path object
     tmp_path = Path(tmp_path)
     
-    # Create the temporary directory if it doesn't exist
+    # Create temporary directory if it doesn't exist
     tmp_path.mkdir(parents=True, exist_ok=True)
     
     # Define the extraction path
-    extraction_path = tmp_path / (filename if filename else Path(archive_path).stem)
+    extraction_path = tmp_path / Path(archive_path).stem
     
     # Unzip the archive
     with zipfile.ZipFile(archive_path, 'r') as zip_ref:
