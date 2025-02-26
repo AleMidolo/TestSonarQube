@@ -23,34 +23,23 @@ def parse_frequency(frequency):
     if frequency is None or frequency.lower() == "always":
         return None
 
-    time_units = {
-        "seconds": "seconds",
-        "second": "seconds",
-        "minutes": "minutes",
-        "minute": "minutes",
-        "hours": "hours",
-        "hour": "hours",
+    units = {
         "days": "days",
         "day": "days",
         "weeks": "weeks",
         "week": "weeks",
-        "months": "days",  # Approximation, as timedelta does not support months
-        "months": "days",  # Approximation, as timedelta does not support months
-        "years": "days"    # Approximation, as timedelta does not support years
+        "hours": "hours",
+        "hour": "hours",
+        "minutes": "minutes",
+        "minute": "minutes",
+        "seconds": "seconds",
+        "second": "seconds"
     }
 
-    parts = frequency.split()
-    if len(parts) != 2:
-        raise ValueError("Invalid frequency format")
-
     try:
-        value = int(parts[0])
-    except ValueError:
-        raise ValueError("Invalid number in frequency")
-
-    unit = parts[1].lower()
-    if unit not in time_units:
-        raise ValueError("Invalid time unit in frequency")
-
-    kwargs = {time_units[unit]: value}
-    return datetime.timedelta(**kwargs)
+        number, unit = frequency.split()
+        number = int(number)
+        unit = units[unit.lower()]
+        return datetime.timedelta(**{unit: number})
+    except (ValueError, KeyError):
+        raise ValueError(f"无法解析频率: {frequency}")

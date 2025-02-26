@@ -7,12 +7,12 @@ def cached(cache, key=hashkey, lock=None):
         def wrapper(*args, **kwargs):
             # 生成缓存键
             cache_key = key(*args, **kwargs)
-            # 尝试从缓存中获取结果
+            # 检查缓存
             if cache_key in cache:
                 return cache[cache_key]
-            # 如果缓存中没有，调用原函数
+            # 如果没有缓存，调用原始函数
             result = func(*args, **kwargs)
-            # 将结果存入缓存
+            # 保存结果到缓存
             cache[cache_key] = result
             return result
         return wrapper

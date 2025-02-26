@@ -18,7 +18,7 @@ def get_nested_custom_and_control_args(self, args):
         elif key.startswith('nested_'):
             nested_args[key] = value
         else:
-            # Assuming custom args are those that don't fit the above categories
+            # Assuming custom args are those that do not fit the above categories
             nested_args[key] = value
 
     return control_args, nested_args

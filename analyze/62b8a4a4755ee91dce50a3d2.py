@@ -18,14 +18,15 @@ def _fromutc(self, dt):
     # 将输入的日期时间转换为UTC
     utc_dt = dt - utc_offset
 
-    # 将UTC时间转换为新时区的时间
-    new_tz_dt = utc_dt.astimezone(self)
+    # 计算在新时区的日期时间
+    new_dt = utc_dt + self.utcoffset(utc_dt)
 
     # 检查是否存在歧义
-    if new_tz_dt.dst() != timedelta(0):
+    if new_dt.dst() != timedelta(0):
         # 处理歧义情况
-        ambiguous = new_tz_dt.replace(tzinfo=None) in self._ambiguous_times
-        if ambiguous:
-            raise ValueError("Ambiguous datetime in the new timezone")
+        if new_dt < dt:
+            return new_dt  # 返回第一个出现的实例
+        else:
+            raise ValueError("Ambiguous datetime")
 
-    return new_tz_dt
+    return new_dt

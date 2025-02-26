@@ -21,12 +21,12 @@ def _group_files_by_xml_filename(source, xmls, files):
     """
     grouped_files = {}
     
-    for xml in xmls:
-        xml_filename = xml.split('/')[-1]  # Assuming xmls are paths, get the filename
-        grouped_files[xml_filename] = []
-
-        for file in files:
-            if file.endswith('.xml') and file.startswith(xml_filename[:-4]):  # Match based on XML filename
-                grouped_files[xml_filename].append(file)
-
+    for file in files:
+        for xml in xmls:
+            if file.endswith(xml):
+                xml_name = xml.split('.')[0]  # Assuming the XML filename is the base name without extension
+                if xml_name not in grouped_files:
+                    grouped_files[xml_name] = []
+                grouped_files[xml_name].append(file)
+    
     return grouped_files

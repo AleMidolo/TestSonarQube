@@ -16,6 +16,6 @@ def dehydrate_timedelta(value):
     :return: 
     """
     if not isinstance(value, timedelta):
-        raise ValueError("value must be an instance of timedelta")
+        raise ValueError("The value must be an instance of timedelta.")
     
     return Structure(days=value.days, seconds=value.seconds, microseconds=value.microseconds)

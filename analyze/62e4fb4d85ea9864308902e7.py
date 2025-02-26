@@ -15,32 +15,26 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
         return cmd
 
     # 获取命令的第一个元素
-    executable = cmd[0]
-
-    # 检查是否是完整路径
-    if os.path.isfile(executable):
+    command = cmd[0]
+    
+    # 检查命令是否是完整路径
+    if os.path.isfile(command):
         return cmd
 
-    # 尝试查找可执行文件
+    # 尝试查找命令的完整路径
     if sys.platform == "win32":
-        # 在 Windows 上，使用 PATHEXT 环境变量来查找可执行文件
+        # 在 Windows 上，使用 PATHEXT 来查找可执行文件
         pathext = os.environ.get('PATHEXT', '').split(';')
         for ext in pathext:
-            full_path = f"{executable}{ext}"
-            if os.path.isfile(full_path):
-                return (full_path,) + cmd[1:]
+            full_command = f"{command}{ext}"
+            if os.path.isfile(full_command):
+                return (full_command,) + cmd[1:]
 
-        # 如果没有找到，尝试在 PATH 中查找
-        for path in os.environ.get('PATH', '').split(os.pathsep):
-            full_path = os.path.join(path, executable)
-            if os.path.isfile(full_path):
-                return (full_path,) + cmd[1:]
-
+    # 在其他平台上，使用 which 命令查找可执行文件
     else:
-        # 在非 Windows 系统上，使用 which 命令查找可执行文件
-        import shutil
-        full_path = shutil.which(executable)
-        if full_path:
-            return (full_path,) + cmd[1:]
+        from shutil import which
+        full_command = which(command)
+        if full_command:
+            return (full_command,) + cmd[1:]
 
     return cmd

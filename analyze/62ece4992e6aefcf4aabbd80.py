@@ -14,13 +14,13 @@ def remove_ending_os_sep(input_list):
     函数会检测每个字符的长度是否大于 1，并且最后一个字符是否为路径分隔符。如果是，则移除路径分隔符。
 
     参数：
-      `input_list`: 字符串列表
+        `input_list`: 字符串列表
 
     返回值：
-      处理后的字符串列表
+        处理后的字符串列表
 
     异常：
-      `TypeError`
+        `TypeError`
     """
     import os
 

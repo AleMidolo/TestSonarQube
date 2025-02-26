@@ -8,5 +8,5 @@ def tzname_in_python2(namefunc):
         result = namefunc(*args, **kwargs)
         if isinstance(result, unicode):  # Check if the result is a Unicode string
             return result.encode('utf-8')  # Convert to byte string
-        return result  # Return as is if not Unicode
+        return result  # Return as is if it's not a Unicode string
     return wrapper

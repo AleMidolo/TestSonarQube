@@ -8,4 +8,4 @@ def extend_cli(self, root_subparsers):
     parser = root_subparsers.add_parser('example', help='示例子命令')
     parser.add_argument('--option', type=str, help='示例选项')
     
-    # 其他选项可以在这里添加
+    # 其他选项和参数可以在这里添加

@@ -11,5 +11,3 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
         print("已弃用的参数:")
         for arg in deprecated_args:
             print(f"- {arg}")
-    else:
-        print("没有已弃用的参数。")
