@@ -4,39 +4,34 @@ def format(
                 params: Union[Dict[Union[str, int], Any], Sequence[Any]],
         ) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
     """
-    SQL क्वेरी को "in-style" पैरामीटर्स के बजाय "out-style" पैरामीटर्स का उपयोग करने के लिए कन्वर्ट करें।
+    Convierte la consulta SQL para usar parámetros de estilo "out" en lugar de parámetros de estilo "in".
 
-    *sql* (:class:`str` या :class:`bytes`) SQL क्वेरी है।
+    *sql* (:class:`str` o :class:`bytes`) es la consulta SQL.
 
-    *params* (:class:`~collections.abc.Mapping` या :class:`~collections.abc.Sequence`)  
-    "in-style" पैरामीटर्स का सेट है। यह प्रत्येक पैरामीटर (:class:`str` या :class:`int`) को उसके मान से मैप करता है।  
-    यदि :attr:`.SQLParams.in_style` एक नामित पैरामीटर शैली है, तो *params* को :class:`~collections.abc.Mapping` होना चाहिए।  
-    यदि :attr:`.SQLParams.in_style` एक क्रमबद्ध पैरामीटर शैली है, तो *params* को :class:`~collections.abc.Sequence` होना चाहिए।
+    *params* (:class:`~collections.abc.Mapping` o :class:`~collections.abc.Sequence`)  
+    contiene el conjunto de parámetros de estilo "in". Mapea cada parámetro  
+    (:class:`str` o :class:`int`) a un valor. Si :attr:`.SQLParams.in_style`  
+    es un estilo de parámetro con nombre, entonces *params* debe ser un :class:`~collections.abc.Mapping`.  
+    Si :attr:`.SQLParams.in_style` es un estilo de parámetro ordinal, entonces  
+    *params* debe ser un :class:`~collections.abc.Sequence`.
 
-    यह एक :class:`tuple` लौटाता है जिसमें शामिल हैं:
+    Devuelve una :class:`tuple` que contiene:
 
-    -       फॉर्मेट की गई SQL क्वेरी (:class:`str` या :class:`bytes`)।
+    - La consulta SQL formateada (:class:`str` o :class:`bytes`).
 
-    -       कन्वर्ट किए गए "out-style" पैरामीटर्स का सेट (:class:`dict` या :class:`list`)।
+    - El conjunto de parámetros convertidos de estilo "out" (:class:`dict` o  
+      :class:`list`).
     """
+    # Implementación del método
     if isinstance(params, dict):
-        # Named parameters
-        for key, value in params.items():
-            sql = sql.replace(f":{key}", self._format_value(value))
-        return sql, list(params.values())
+        # Convertir parámetros de estilo "in" a estilo "out" para un diccionario
+        out_params = {key: params[key] for key in params}
+        formatted_sql = sql  # Aquí se debería implementar la lógica de formateo
     elif isinstance(params, (list, tuple)):
-        # Positional parameters
-        for index, value in enumerate(params):
-            sql = sql.replace(f"?{index}", self._format_value(value))
-        return sql, params
+        # Convertir parámetros de estilo "in" a estilo "out" para una secuencia
+        out_params = list(params)
+        formatted_sql = sql  # Aquí se debería implementar la lógica de formateo
     else:
-        raise ValueError("params must be a dictionary or a sequence")
+        raise TypeError("params debe ser un diccionario o una secuencia")
 
-def _format_value(self, value: Any) -> str:
-    # Convert the value to a string representation for SQL
-    if isinstance(value, str):
-        return f"'{value}'"
-    elif value is None:
-        return "NULL"
-    else:
-        return str(value)
+    return formatted_sql, out_params

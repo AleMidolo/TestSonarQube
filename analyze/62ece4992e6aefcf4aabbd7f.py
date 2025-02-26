@@ -1,21 +1,30 @@
 from urllib.parse import urlparse
-from typing import Tuple
 
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
-    छवि के हाइपरलिंक (href) को उसके घटक भागों में विभाजित करें।
+    Analizar un enlace (href) de una imagen en partes compuestas.
 
-    :param image_href: छवि का हाइपरलिंक (href)
-    :returns: एक ट्यूपल (tuple) के रूप में परिणाम, जिसमें (image_id, netloc, use_ssl) शामिल हैं
-    :raises ValueError: यदि हाइपरलिंक अमान्य है
+    :param image_href: href de una imagen
+    :returns: una tupla con el formato (image_id, netloc, use_ssl)
+    :raises ValueError: 
+
+    Explicación de los parámetros y retorno:
+    - `image_href`: href de una imagen.
+    - Retorno: una tupla con el formato `(image_id, netloc, use_ssl)`, donde:
+      - `image_id`: Identificador unico de la imagen.
+      - `netloc`: Localizacion de la red (dominio o dirección base del enlace).
+      - `use_ssl`: Un valor booleano que indica si se utiliza SSL (https).
+
+    Excepcion:
+    - `ValueError`: Se lanza si el enlace no es valido o no puede ser analizado correctamente.
     """
     parsed_url = urlparse(image_href)
     
-    if not all([parsed_url.scheme, parsed_url.netloc]):
-        raise ValueError("अमान्य हाइपरलिंक")
-
-    image_id = parsed_url.path.lstrip('/')
+    if not all([parsed_url.scheme, parsed_url.netloc, parsed_url.path]):
+        raise ValueError("El enlace proporcionado no es válido.")
+    
+    image_id = parsed_url.path.split('/')[-1]  # Suponiendo que el ID de la imagen es el último segmento del path
     netloc = parsed_url.netloc
     use_ssl = parsed_url.scheme == 'https'
     
-    return (image_id, netloc, use_ssl)
+    return image_id, netloc, use_ssl

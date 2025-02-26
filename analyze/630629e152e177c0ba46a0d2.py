@@ -2,10 +2,10 @@ import requests
 
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    डायस्पोरा वेबफिंगर डॉक्यूमेंट को प्राप्त करें और पार्स करें।
+    Recupera y analiza un documento "webfinger" remoto de Diaspora.
 
-    :पैरामीटर हैंडल: प्राप्त करने के लिए रिमोट हैंडल  
-    :वापसी: डिक्शनरी (dict)
+    :arg handle: Identificador remoto a recuperar
+    :returns: dict
     """
     url = f"https://{handle}/.well-known/webfinger?resource=acct:{handle}"
     response = requests.get(url)
@@ -13,4 +13,4 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     if response.status_code == 200:
         return response.json()
     else:
-        return {}
+        response.raise_for_status()

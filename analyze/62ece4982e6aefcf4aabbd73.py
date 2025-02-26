@@ -1,24 +1,27 @@
 import re
-import platform
+import sys
 
 def split(s, platform='this'):
     """
-    यह `shlex.split()` का मल्टी-प्लेटफ़ॉर्म संस्करण है, जिसका उपयोग कमांड-लाइन विभाजन के लिए किया जाता है।  
-    इसे `subprocess` के साथ उपयोग किया जा सकता है, जैसे `argv` इंजेक्शन आदि के लिए।  
-    यह तेज़ REGEX का उपयोग करता है।  
+    Variante multiplataforma de `shlex.split()` para dividir cadenas de línea de comandos.  
+    Diseñado para su uso con `subprocess`, inyección de argumentos (`argv`), etc. Utiliza expresiones regulares rápidas.
 
-    प्लेटफ़ॉर्म विकल्प:
-    - `'this'`: वर्तमान प्लेटफ़ॉर्म से स्वतः-पहचान  
-    - `1`: POSIX शैली  
-    - `0`: Windows/CMD शैली  
-    - (अन्य मान भविष्य के लिए आरक्षित हैं)
+    platform:  'this'= detección automática de la plataforma actual;  
+      1= POSIX;  
+      0=Windows/CMD  
+      (otros valores están reservados).
     """
     if platform == 'this':
-        platform = 1 if platform.system() != 'Windows' else 0
+        platform = 1 if sys.platform in ['linux', 'darwin'] else 0
 
     if platform == 1:  # POSIX
-        pattern = r'(?<!\\)"([^"]*(?:\\.[^"]*)*)"(?!\\)|(?<!\\)' + r"'([^']*(?:\\.[^']*)*)'(?!\\)|[^\s\"']+"
-    else:  # Windows
-        pattern = r'(?<!\\)"([^"]*(?:\\.[^"]*)*)"(?!\\)|[^\s"']+|"(?:[^"]|\\")*"'
+        pattern = r'(?:"([^"]*)"|\'([^\']*)|(\S+))'
+    else:  # Windows/CMD
+        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+)?)'
 
-    return re.findall(pattern, s)
+    matches = re.findall(pattern, s)
+    result = []
+    for match in matches:
+        result.append(next(filter(None, match)))  # Get the first non-empty match
+
+    return result

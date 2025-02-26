@@ -1,28 +1,29 @@
 def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     """
-    Ansible CLI को vars_dict के साथ चलाता है।
+    Ejecuta el CLI de Ansible con un diccionario de variables.
 
-    :param vars_dict: dict, इसे Ansible extra-vars के रूप में पास किया जाएगा
-    :param cli_args: कमांड लाइन आर्ग्युमेंट्स की सूची
-    :param ir_workspace: एक Infrared Workspace ऑब्जेक्ट जो सक्रिय वर्कस्पेस को दर्शाता है
-    :param ir_plugin: वर्तमान प्लगइन का एक InfraredPlugin ऑब्जेक्ट
-    :return: ansible के परिणाम
+    :param vars_dict: dict, Será pasado como extra-vars de Ansible.
+    :param cli_args: la lista de argumentos de línea de comandos.
+    :param ir_workspace: Un objeto Infrared Workspace que representa el 
+    espacio de trabajo activo.
+    :param ir_plugin: Un objeto InfraredPlugin del plugin actual.
+    :return: resultados de Ansible.
     """
     import subprocess
     import json
 
-    # Prepare the command to run the Ansible playbook
-    command = ['ansible-playbook'] + cli_args
-    if vars_dict:
-        extra_vars = json.dumps(vars_dict)
-        command += ['--extra-vars', extra_vars]
+    # Convertir el diccionario de variables a un formato JSON
+    extra_vars = json.dumps(vars_dict)
 
-    # Set the working directory to the Infrared workspace
-    workspace_path = ir_workspace.path
-    result = subprocess.run(command, cwd=workspace_path, capture_output=True, text=True)
+    # Construir el comando de Ansible
+    command = ['ansible-playbook'] + cli_args + ['--extra-vars', extra_vars]
 
-    # Check for errors
+    # Ejecutar el comando y capturar la salida
+    result = subprocess.run(command, capture_output=True, text=True)
+
+    # Manejar errores en la ejecución
     if result.returncode != 0:
-        raise RuntimeError(f"Ansible playbook failed: {result.stderr}")
+        raise RuntimeError(f"Ansible playbook execution failed: {result.stderr}")
 
+    # Retornar los resultados de Ansible
     return result.stdout

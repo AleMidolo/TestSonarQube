@@ -1,6 +1,6 @@
 def determineMetaclass(bases, explicit_mc=None):
     """
-    1 या अधिक बेस क्लास और वैकल्पिक स्पष्ट __metaclass__ से मेटाक्लास निर्धारित करें।
+    Determina la metaclase a partir de una o más clases base y un __metaclass__ explícito opcional.
     """
     if explicit_mc is not None:
         return explicit_mc
@@ -12,6 +12,6 @@ def determineMetaclass(bases, explicit_mc=None):
     metaclass = metaclasses[0]
     for mc in metaclasses[1:]:
         if not issubclass(mc, metaclass):
-            raise TypeError("Inconsistent metaclass for bases: {}".format(bases))
+            metaclass = type('CombinedMeta', (metaclass, mc), {})
     
     return metaclass

@@ -1,16 +1,15 @@
 def _inline_r_setup(code: str) -> str:
     """
-    R के कुछ व्यवहारों को env वेरिएबल्स के माध्यम से कॉन्फ़िगर नहीं किया जा सकता है,
-    लेकिन केवल R शुरू होने के बाद R विकल्पों के माध्यम से कॉन्फ़िगर किया जा सकता है।
-    इन्हें यहां सेट किया गया है।
+    Algunos comportamientos de R no pueden configurarse mediante variables de entorno, sino que solo pueden configurarse a través de opciones de R una vez que R ha iniciado. Estas se configuran aquí.
     """
-    # R विकल्पों को सेट करने के लिए आवश्यक कोड
-    r_options = {
-        "stringsAsFactors": "FALSE",
-        "max.print": "1000",
-        "warn": "1"
-    }
-    
-    setup_code = "\n".join(f"options({key} = {value})" for key, value in r_options.items())
-    
-    return f"{setup_code}\n{code}"
+    import rpy2.robjects as ro
+
+    # Configurar opciones de R
+    ro.r('options(stringsAsFactors = FALSE)')
+    ro.r('options(scipen = 999)')  # Evitar notación científica
+    ro.r('options(max.print = 1000)')  # Limitar la cantidad de impresión
+
+    # Ejecutar el código R proporcionado
+    ro.r(code)
+
+    return "Configuración de R completada y código ejecutado."

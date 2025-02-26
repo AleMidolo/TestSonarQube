@@ -1,6 +1,6 @@
-def popitem(self):  
+def popitem(self):
     """
-    सबसे हाल ही में उपयोग किए गए `(कुंजी, मान)` जोड़े को हटाएं और वापस करें।
+    Eliminar y devolver el par (clave, valor) más recientemente utilizado.
     """
     if not self.data:
         raise KeyError("popitem(): dictionary is empty")

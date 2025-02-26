@@ -1,15 +1,22 @@
 def list_of_file_names(settings_dirs, spec_option):
     """
-    एक नया IniType कॉम्प्लेक्स टाइप बनाएं
+    # Crear un nuevo tipo complejo IniType
+
+    Crea un nuevo tipo complejo "IniType".
     """
-    import os
-    
-    file_names = []
-    
-    for directory in settings_dirs:
-        if os.path.exists(directory):
-            for file in os.listdir(directory):
-                if spec_option in file:
-                    file_names.append(file)
-    
-    return file_names
+    class IniType:
+        def __init__(self, settings_dirs, spec_option):
+            self.settings_dirs = settings_dirs
+            self.spec_option = spec_option
+
+        def get_file_names(self):
+            file_names = []
+            for directory in self.settings_dirs:
+                try:
+                    files = os.listdir(directory)
+                    file_names.extend(files)
+                except FileNotFoundError:
+                    continue
+            return file_names
+
+    return IniType(settings_dirs, spec_option)

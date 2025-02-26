@@ -1,53 +1,65 @@
 def _verify(iface, candidate, tentative=False, vtype=None):
     """
-    *iface* को सही ढंग से प्रदान करने के लिए *candidate* की पुष्टि करें।
+    Verifica que *candidate* pueda proporcionar correctamente *iface*.
 
-    इसमें निम्नलिखित शामिल हैं:
+    Esto implica:
 
-    - यह सुनिश्चित करना कि उम्मीदवार यह दावा करता है कि वह इंटरफ़ेस प्रदान करता है, 
-      ``iface.providedBy`` का उपयोग करके (जब तक *tentative* `True` नहीं है, 
-      इस स्थिति में इस चरण को छोड़ दिया जाता है)। इसका मतलब है कि उम्मीदवार की कक्षा 
-      यह घोषित करती है कि वह इंटरफ़ेस को `implements <zope.interface.implementer>` करती है, 
-      या उम्मीदवार स्वयं यह घोषित करता है कि वह इंटरफ़ेस को 
-      `provides <zope.interface.provider>` करता है।
+    - Asegurarse de que el candidato afirme que proporciona la
+      interfaz utilizando ``iface.providedBy`` (a menos que *tentative* sea `True`,
+      en cuyo caso este paso se omite). Esto significa que la clase del candidato
+      declara que `implementa <zope.interface.implementer>` la interfaz,
+      o que el propio candidato declara que `proporciona <zope.interface.provider>`
+      la interfaz.
 
-    - यह सुनिश्चित करना कि उम्मीदवार सभी आवश्यक विधियों (methods) को परिभाषित करता है।
+    - Asegurarse de que el candidato defina todos los métodos necesarios.
 
-    - यह सुनिश्चित करना कि विधियों के पास सही हस्ताक्षर (signature) हैं 
-      (जहां तक संभव हो)।
+    - Asegurarse de que los métodos tengan la firma correcta (en la
+      medida de lo posible).
 
-    - यह सुनिश्चित करना कि उम्मीदवार सभी आवश्यक गुणों (attributes) को परिभाषित करता है।
+    - Asegurarse de que el candidato defina todos los atributos necesarios.
 
-    :return bool: यदि सभी जांचें सफल होती हैं, तो एक सत्य मान (true value) लौटाता है।
-    :raises zope.interface.Invalid: यदि उपरोक्त में से कोई भी शर्त पूरी नहीं होती है।
+    :return bool: Devuelve un valor verdadero si todo lo que se pudo
+       verificar pasó.
+    :raises zope.interface.Invalid: Si alguna de las condiciones anteriores
+       no se cumple.
 
     .. versionchanged:: 5.0
-        यदि कई विधियां या गुण अमान्य हैं, तो सभी त्रुटियों को एकत्रित और रिपोर्ट किया जाता है। 
-        पहले, केवल पहली त्रुटि की रिपोर्ट की जाती थी। 
-        एक विशेष मामले में, यदि केवल एक त्रुटि मौजूद है, तो इसे पहले की तरह अकेले उठाया जाता है।
+        Si múltiples métodos o atributos son inválidos, todos esos errores
+        se recopilan y se informan. Anteriormente, solo se informaba el primer error.
+        Como caso especial, si solo hay un error presente, se lanza
+        de forma individual, como antes.
     """
     from zope.interface import providedBy, Invalid
-    from inspect import signature
+    from inspect import signature, isfunction
 
     errors = []
 
+    # Check if candidate provides the interface
     if not tentative and not providedBy(candidate, iface):
         errors.append(f"{candidate} does not provide {iface}")
 
-    required_methods = iface.requiredMethods()
-    for method in required_methods:
-        if not hasattr(candidate, method):
-            errors.append(f"{candidate} is missing required method {method}")
-        else:
-            method_signature = signature(getattr(candidate, method))
-            iface_signature = signature(getattr(iface, method))
-            if method_signature != iface_signature:
-                errors.append(f"{method} in {candidate} has incorrect signature")
+    # Check required methods
+    required_methods = iface.names()
+    for method_name, _ in required_methods:
+        if not hasattr(candidate, method_name):
+            errors.append(f"{candidate} is missing method {method_name}")
+            continue
+        
+        method = getattr(candidate, method_name)
+        if not isfunction(method):
+            errors.append(f"{method_name} in {candidate} is not a function")
+            continue
+        
+        # Check method signature
+        iface_method = iface.lookup(method_name)
+        if signature(method) != signature(iface_method):
+            errors.append(f"Signature of {method_name} in {candidate} does not match")
 
-    required_attributes = iface.requiredAttributes()
-    for attr in required_attributes:
-        if not hasattr(candidate, attr):
-            errors.append(f"{candidate} is missing required attribute {attr}")
+    # Check required attributes
+    required_attributes = iface.attributes()
+    for attr_name in required_attributes:
+        if not hasattr(candidate, attr_name):
+            errors.append(f"{candidate} is missing attribute {attr_name}")
 
     if errors:
         if len(errors) == 1:

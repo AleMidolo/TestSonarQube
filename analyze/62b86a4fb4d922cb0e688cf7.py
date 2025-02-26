@@ -5,14 +5,16 @@ class ValidationError(Exception):
 
 def validate_key(key):
     """
-    दिए गए कुंजी (key) को संबंधित नियमित अभिव्यक्ति (regular expression) के खिलाफ सत्यापित करें।
+    Validar la clave proporcionada contra la expresión regular correspondiente.
 
-    आर्ग्युमेंट्स (Args):
-        key: सत्यापन के लिए स्ट्रिंग (string)
+    Argumentos:
+            key: la cadena de texto a validar.
 
-    त्रुटि (Raises):
-        ValidationError: यदि दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।
+    Excepciones:
+            ValidationError: si la clave proporcionada no cumple con la expresión regular.
     """
-    pattern = r'^[A-Za-z0-9]{8,}$'  # Example pattern: at least 8 alphanumeric characters
+    # Definir la expresión regular para la validación de la clave
+    pattern = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'  # Al menos 8 caracteres, al menos una letra y un número
+
     if not re.match(pattern, key):
-        raise ValidationError("दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।")
+        raise ValidationError("La clave proporcionada no cumple con los requisitos.")

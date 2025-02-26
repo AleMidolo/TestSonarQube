@@ -1,33 +1,29 @@
 def generate_default_observer_schema_dict(manifest_dict, first_level=False):
     """
-    यह फ़ंक्शन :func:``generate_default_observer_schema_list`` के साथ मिलकर पुनरावृत्त रूप से (recursively) कॉल किया जाता है ताकि किसी Kubernetes संसाधन (resource) के एक भाग से डिफ़ॉल्ट ``observer_schema`` का हिस्सा उत्पन्न किया जा सके, जिसे क्रमशः ``manifest_dict`` या ``manifest_list`` द्वारा परिभाषित किया गया है।
+    Junto con la función :func:`generate_default_observer_schema_list`, esta función se llama de manera recursiva para generar parte de un ``observer_schema`` predeterminado a partir de una parte de un recurso de Kubernetes, definido respectivamente por ``manifest_dict`` o ``manifest_list``.
 
-    आर्ग्युमेंट्स (Args):
-    - manifest_dict (dict): आंशिक Kubernetes संसाधन (Partial Kubernetes resources)।
-    - first_level (bool, optional): यदि True है, तो यह इंगित करता है कि डिक्शनरी Kubernetes संसाधन के पूरे observer schema का प्रतिनिधित्व करती है।
+    Argumentos:
+    **manifest_dict (dict):** Recursos parciales de Kubernetes.
+    **first_level (bool, opcional):** Si es True, indica que el diccionario representa el esquema completo del observador (observer schema) de un recurso de Kubernetes.
 
-    रिटर्न्स (Returns):
-    - dict: उत्पन्न आंशिक observer_schema (Generated partial observer_schema)।
+    Retorna:
+    **dict:** Esquema parcial generado (`observer_schema`).
 
-    यह फ़ंक्शन ``manifest_dict`` से एक नई डिक्शनरी बनाता है और सभी non-list और non-dict मानों को ``None`` से बदल देता है।
+    Esta función crea un nuevo diccionario a partir de ``manifest_dict`` y reemplaza todos los valores que no sean listas (`list`) ni diccionarios (`dict`) por ``None``.
 
-    यदि यह ``first_level`` डिक्शनरी है (यानी किसी संसाधन के लिए पूरा ``observer_schema``), तो पहचानने वाले फ़ील्ड्स (identifying fields) के मान ``manifest`` फ़ाइल से कॉपी किए जाते हैं।
+    En el caso de un diccionario de ``first_level`` (es decir, un ``observer_schema`` completo para un recurso), los valores de los campos identificadores se copian del archivo de manifiesto.
     """
     observer_schema = {}
     
     for key, value in manifest_dict.items():
         if isinstance(value, dict):
-            observer_schema[key] = generate_default_observer_schema_dict(value, first_level=False)
+            observer_schema[key] = generate_default_observer_schema_dict(value, first_level)
         elif isinstance(value, list):
-            observer_schema[key] = [generate_default_observer_schema_dict(item, first_level=False) if isinstance(item, dict) else None for item in value]
+            observer_schema[key] = [generate_default_observer_schema_dict(item, first_level) if isinstance(item, dict) else None for item in value]
         else:
-            observer_schema[key] = None
-
-    if first_level:
-        # Assuming 'name' and 'namespace' are identifying fields
-        if 'name' in manifest_dict:
-            observer_schema['name'] = manifest_dict['name']
-        if 'namespace' in manifest_dict:
-            observer_schema['namespace'] = manifest_dict['namespace']
+            if first_level and key in ['kind', 'apiVersion', 'metadata']:
+                observer_schema[key] = value
+            else:
+                observer_schema[key] = None
 
     return observer_schema

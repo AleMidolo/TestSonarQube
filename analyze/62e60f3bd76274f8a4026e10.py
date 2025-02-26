@@ -2,14 +2,14 @@ from datetime import timedelta
 
 def dehydrate_timedelta(value):
     """
-    `timedelta` मानों के लिए डिहाइड्रेटर।  
+    Deshidratador para valores de `timedelta`.
 
-    :param value:  
+    :param value: 
     :type value: timedelta  
-    :return:  
+    :return: 
     """
     if not isinstance(value, timedelta):
-        raise ValueError("Input must be a timedelta object.")
+        raise ValueError("El valor debe ser una instancia de timedelta.")
     
     total_seconds = int(value.total_seconds())
     days = total_seconds // 86400

@@ -1,39 +1,33 @@
 def validate_version_inventories(self, version_dirs):
     """
-    प्रत्येक संस्करण के पास उस बिंदु तक एक इन्वेंटरी होनी चाहिए।
+    Cada versión DEBE tener un inventario hasta ese punto.
 
-    साथ ही, किसी भी सामग्री डाइजेस्ट का रिकॉर्ड रखें जो रूट इन्वेंटरी में मौजूद डाइजेस्ट से अलग हो,
-    ताकि सामग्री को सत्यापित करते समय हम उन्हें भी जांच सकें।
+    También se debe mantener un registro de cualquier resumen de contenido (digest) 
+    que sea diferente de los que están en el inventario raíz, 
+    para que también podamos verificarlos al validar el contenido.
 
-    version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
+    'version_dirs' es un arreglo de nombres de directorios de versiones 
+    y se asume que están en secuencia de versiones (1, 2, 3...).
     """
-    inventory_digests = {}
-    discrepancies = []
+    root_inventory = self.load_inventory(version_dirs[0])
+    mismatched_digests = {}
 
     for version in version_dirs:
-        inventory_path = f"{version}/inventory.json"
+        current_inventory = self.load_inventory(version)
         
-        try:
-            with open(inventory_path, 'r') as file:
-                inventory = json.load(file)
-                
-                # Validate the inventory for the current version
-                if not self.validate_inventory(inventory):
-                    raise ValueError(f"Invalid inventory in {version}")
+        if not self.validate_inventory(current_inventory, root_inventory):
+            raise ValueError(f"Invalid inventory for version: {version}")
+        
+        for item, digest in current_inventory.items():
+            if item in root_inventory and root_inventory[item] != digest:
+                mismatched_digests[item] = digest
 
-                # Record the digests
-                current_digests = set(item['digest'] for item in inventory.get('items', []))
-                root_digests = set(inventory_digests.get('root', []))
+    return mismatched_digests
 
-                # Check for discrepancies
-                discrepancies.extend(current_digests - root_digests)
+def load_inventory(self, version):
+    # Simulated method to load inventory for a given version
+    pass
 
-                # Update the inventory digests
-                inventory_digests[version] = current_digests
-
-        except FileNotFoundError:
-            raise FileNotFoundError(f"Inventory file not found for version: {version}")
-        except json.JSONDecodeError:
-            raise ValueError(f"Error decoding JSON for inventory in version: {version}")
-
-    return discrepancies
+def validate_inventory(self, current_inventory, root_inventory):
+    # Simulated method to validate the current inventory against the root inventory
+    pass

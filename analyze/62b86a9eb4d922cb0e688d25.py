@@ -2,10 +2,12 @@ import re
 
 def _get_resource_name_regex():
     """
-    क्रैके संसाधनों के नाम को मान्य करने के लिए उपयोग किए जाने वाले नियमित अभिव्यक्तियों का निर्माण करें या उन्हें लौटाएँ।
+    Construye o devuelve las expresiones regulares que se utilizan para validar  
+    el nombre de los recursos de Krake.
 
-    रिटर्न करता है:
-    - (re.Pattern): संकलित नियमित अभिव्यक्तियां, जो संसाधन नाम को मान्य करने के लिए उपयोग की जाती हैं।
+    Retorna:  
+        (re.Pattern): las expresiones regulares compiladas, para validar  
+        el nombre del recurso.
     """
-    pattern = r'^[a-zA-Z0-9-_]+$'  # Example pattern for resource names
-    return re.compile(pattern)
+    resource_name_pattern = r'^[a-zA-Z0-9-_]+$'
+    return re.compile(resource_name_pattern)
