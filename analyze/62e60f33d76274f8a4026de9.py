@@ -12,6 +12,5 @@ def dehydrate_point(value):
     
     return {
         'x': value.x,
-        'y': value.y,
-        'z': value.z if hasattr(value, 'z') else None
+        'y': value.y
     }

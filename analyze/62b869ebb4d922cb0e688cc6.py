@@ -14,8 +14,11 @@ def update_last_applied_manifest_list_from_resp(last_applied_manifest, observer_
         if field not in last_applied_manifest:
             last_applied_manifest[field] = None  # Initialize with None or appropriate default
 
-        # If the field is a list, we need to update it based on the response
-        if isinstance(last_applied_manifest[field], list):
-            last_applied_manifest[field] = response.get(field, [])
+        # Recursively update if the field is a list or dict
+        if isinstance(last_applied_manifest[field], list) and isinstance(response, list):
+            for item in response:
+                update_last_applied_manifest_list_from_resp(last_applied_manifest[field], schema.get('items', []), item)
+        elif isinstance(last_applied_manifest[field], dict) and isinstance(response, dict):
+            update_last_applied_manifest_dict_from_resp(last_applied_manifest[field], schema.get('properties', {}), response)
 
     return last_applied_manifest

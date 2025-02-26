@@ -12,10 +12,9 @@ def fromutc(self, dt):
     # Convert the datetime to UTC
     utc_dt = dt.astimezone(self.utc)
 
-    # Check for ambiguity and folded state
-    if dt.dst() is not None and dt.dst() != timedelta(0):
-        # This datetime is ambiguous
-        raise ValueError("Ambiguous datetime")
+    # Check for ambiguity and whether it is in a "fold" state
+    if self.is_ambiguous(utc_dt):
+        raise ValueError("The datetime is ambiguous in the new timezone")
 
     # Return the datetime in the new timezone
     return utc_dt.astimezone(self)

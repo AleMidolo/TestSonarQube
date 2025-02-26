@@ -19,12 +19,16 @@ def find_path_type(path):
     
     if os.path.isdir(path) and os.path.isfile(namaste_file):
         with open(namaste_file, 'r') as file:
-            content = file.read()
-            if "OCFL Root" in content:
-                return 'root'
-            elif "OCFL Object" in content:
-                return 'object'
-            elif "Manifest" in content:
-                return 'file'
-    
-    return "未知类型"
+            content = file.read().strip()
+            if content == "OCFL Root":
+                return "root"
+            elif content.startswith("OCFL Object"):
+                return "object"
+            elif content.startswith("Manifest File"):
+                return "file"
+            else:
+                return "未知类型"
+    elif os.path.isfile(path):
+        return "file"
+    else:
+        return "未知类型"

@@ -19,10 +19,9 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         webfinger_data = response.json()
         
         return webfinger_data
-    
     except requests.RequestException as e:
         print(f"Error retrieving WebFinger document: {e}")
         return {}
     except ValueError as e:
-        print(f"Error parsing WebFinger document: {e}")
+        print(f"Error parsing JSON response: {e}")
         return {}
