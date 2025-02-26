@@ -7,13 +7,13 @@ def parse_arguments(*unparsed_arguments):
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='subparser_name')
 
-    # Aquí se pueden agregar subcomandos y sus argumentos
+    # Aquí se pueden agregar subcomandos
     # Ejemplo de un subcomando
     subparser_a = subparsers.add_parser('comando_a')
-    subparser_a.add_argument('--opcion_a', type=int, help='Opción para comando_a')
+    subparser_a.add_argument('--opcion_a', type=str, help='Opción para comando_a')
 
     subparser_b = subparsers.add_parser('comando_b')
-    subparser_b.add_argument('--opcion_b', type=str, help='Opción para comando_b')
+    subparser_b.add_argument('--opcion_b', type=int, help='Opción para comando_b')
 
     # Analizar los argumentos
     args = parser.parse_args(unparsed_arguments)

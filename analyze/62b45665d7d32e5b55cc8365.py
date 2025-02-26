@@ -1,9 +1,9 @@
+import argparse
+
 def parse_arguments(*unparsed_arguments):
     """
     Dado un conjunto de argumentos de línea de comandos con los que se invocó este script, analiza los argumentos y los devuelve como un diccionario que mapea desde el nombre del subparser (o "global") a una instancia de `argparse.Namespace`.
     """
-    import argparse
-
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='subparser_name')
 

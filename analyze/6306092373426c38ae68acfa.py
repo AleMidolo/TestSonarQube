@@ -4,12 +4,14 @@ def get_spec_defaults(self):
     """
     defaults = {}
     # Aquí se pueden agregar las especificaciones y otras fuentes de valores
-    # Por ejemplo, se puede obtener valores de un archivo de configuración, 
-    # variables de entorno, o valores predeterminados definidos en la clase.
-    
-    # Ejemplo de cómo se podrían establecer algunos valores predeterminados
-    defaults['arg1'] = self.spec.get('arg1', 'default_value1')
-    defaults['arg2'] = self.spec.get('arg2', 'default_value2')
-    
-    # Agregar lógica adicional según sea necesario para resolver otros valores
+    # Por ejemplo, se puede cargar desde un archivo de configuración o establecer valores predeterminados
+    # Supongamos que tenemos un diccionario de especificaciones
+    specifications = self.get_specifications()  # Método hipotético para obtener especificaciones
+
+    for key, value in specifications.items():
+        if value is not None:
+            defaults[key] = value
+        else:
+            defaults[key] = self.get_default_value(key)  # Método hipotético para obtener un valor predeterminado
+
     return defaults

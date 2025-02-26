@@ -23,7 +23,7 @@ def was_processed(processed, path_name, verbose):
 
     if absolute_path in processed:
         if verbose:
-            print(f"Advertencia: {absolute_path} ya ha sido procesado.")
+            print(f"El archivo o directorio '{absolute_path}' ya ha sido procesado.")
         return True
     else:
         processed.add(absolute_path)

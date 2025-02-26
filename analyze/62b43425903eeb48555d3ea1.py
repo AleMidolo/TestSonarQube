@@ -7,6 +7,6 @@ def _create_in_regex(self) -> Pattern:
 
         Devuelve la expresión regular para el parámetro "in-style" (:class:`re.Pattern`).
     """
-    # Definición de la expresión regular para "in-style"
-    regex_pattern = r'in-style\(\s*([^,]+)\s*,\s*([^,]+)\s*\)'
-    return re.compile(regex_pattern)
+    # Define the regex pattern for "in-style"
+    pattern = r'in-style:\s*([a-zA-Z0-9_-]+)'
+    return re.compile(pattern)

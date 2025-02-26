@@ -15,25 +15,28 @@ def xargs(
     """
     import subprocess
     from multiprocessing import Pool
+    import os
 
     def run_command(args):
         return subprocess.run(cmd + args, capture_output=True)
+
+    if color:
+        # Create a pseudo-terminal if supported
+        import pty
+        master_fd, slave_fd = pty.openpty()
+        os.close(slave_fd)
+        os.dup2(master_fd, 1)  # Redirect stdout to the master
+        os.dup2(master_fd, 2)  # Redirect stderr to the master
 
     # Split varargs into chunks based on target_concurrency
     chunk_size = max(1, len(varargs) // target_concurrency)
     chunks = [varargs[i:i + chunk_size] for i in range(0, len(varargs), chunk_size)]
 
-    if color:
-        # Create a pseudo-terminal if supported
-        import pty
-        master, slave = pty.openpty()
-        # Use the slave fd for the subprocess
-        process = Pool(target_concurrency)
-        results = process.map(run_command, chunks)
-        process.close()
-        process.join()
-    else:
-        results = [run_command(chunk) for chunk in chunks]
+    with Pool(processes=target_concurrency) as pool:
+        results = pool.map(run_command, chunks)
 
-    # Combine results
-    return sum(result.returncode for result in results), b''.join(result.stdout for result in results)
+    # Combine return codes and output
+    return_code = sum(result.returncode for result in results)
+    combined_output = b''.join(result.stdout for result in results)
+
+    return return_code, combined_output

@@ -21,7 +21,7 @@ def prepare_repository_from_archive(
     tmp_path.mkdir(parents=True, exist_ok=True)
     
     # Define the extraction path
-    extraction_path = tmp_path / Path(archive_path).stem
+    extraction_path = tmp_path / (filename if filename else Path(archive_path).stem)
     
     # Unzip the archive
     with zipfile.ZipFile(archive_path, 'r') as zip_ref:
