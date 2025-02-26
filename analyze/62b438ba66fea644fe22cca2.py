@@ -17,6 +17,7 @@ def deep_merge_nodes(nodes):
                 # If they are not both MappingNodes, the last one wins
                 merged[key_value] = value
 
+    # Convert merged dictionary back to the required format
     result = []
     for key, value in merged.items():
         result.append((ScalarNode(tag='tag:yaml.org,2002:str', value=key), value))

@@ -10,7 +10,7 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     if not overwrite and os.path.exists(config_filename):
         raise FileExistsError(f"{config_filename} already exists and overwrite is set to False.")
     
-    # Create any containing directories
+    # Create any containing directories if they do not exist
     os.makedirs(os.path.dirname(config_filename), exist_ok=True)
     
     # Write the rendered config to the file

@@ -22,7 +22,7 @@ def fromutc(self, dt):
 
     # Check for ambiguity in the new timezone
     if new_tz_dt.dst() != timedelta(0):
-        # If the new timezone has a daylight saving time transition,
+        # If the new timezone has a daylight saving time transition
         # we need to check if the datetime is in the "fold" state
         if new_tz_dt < self.fold_start:
             return new_tz_dt.replace(fold=0)  # First occurrence

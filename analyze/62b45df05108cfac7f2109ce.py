@@ -6,7 +6,7 @@ def validate(self, path):
     """
     try:
         # Assuming we have a function to check the validity of the OCFL object
-        is_valid = self.check_ocfl_validity(path)
+        is_valid = self.check_ocfl_object(path)
         if is_valid:
             return True
         else:

@@ -11,5 +11,5 @@ def extend_cli(self, root_subparsers):
     parser.set_defaults(func=self.spec_command)
 
 def spec_command(self, args):
-    # Example implementation of the command functionality
+    # Example command implementation
     print(f"Option1: {args.option1}, Option2: {args.option2}")

@@ -15,7 +15,7 @@ def validate(self, inventory, extract_spec_version=False):
             else:
                 raise ValueError("Invalid type value for specification version.")
         else:
-            self.spec_version = self.default_spec_version
+            self.spec_version = self.default_version
 
     # Perform validation based on self.spec_version
     if self.spec_version == '1.0':
@@ -27,10 +27,7 @@ def validate(self, inventory, extract_spec_version=False):
     else:
         raise ValueError("Unsupported specification version.")
     
-    # Additional validation checks
-    if not isinstance(inventory, dict):
-        raise TypeError("Inventory must be a dictionary.")
+    # Additional validation logic
+    # ...
     
-    # Further validation logic can be added here
-
-    return True  # Return True if validation passes
+    return True  # or return validation results
