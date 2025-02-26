@@ -1,13 +1,24 @@
-def get_option_spec(self, command_name):
+def get_option_spec(self, command_name, argument_name):
     """
-    दिए गए विकल्प नाम के लिए विनिर्देश प्राप्त करता है।
+    Obtiene la especificación para el nombre de opción especificado.
     """
-    # यहाँ पर विकल्प विनिर्देश प्राप्त करने की लॉजिक लिखें
-    option_spec = {}  # एक डिक्शनरी में विकल्प विनिर्देश संग्रहीत करें
-    # उदाहरण के लिए, हम मान लेते हैं कि हम कुछ पूर्वनिर्धारित विकल्पों को वापस कर रहे हैं
-    if command_name == "example_command":
-        option_spec = {
-            "option1": "Description for option 1",
-            "option2": "Description for option 2",
+    # Aquí se asume que hay un diccionario que contiene las especificaciones de las opciones
+    option_specs = {
+        'command1': {
+            'arg1': {'type': 'string', 'required': True},
+            'arg2': {'type': 'int', 'required': False}
+        },
+        'command2': {
+            'arg1': {'type': 'bool', 'required': True},
+            'arg2': {'type': 'string', 'required': True}
         }
-    return option_spec
+    }
+    
+    # Verificar si el comando existe
+    if command_name in option_specs:
+        # Verificar si el argumento existe para el comando
+        if argument_name in option_specs[command_name]:
+            return option_specs[command_name][argument_name]
+    
+    # Si no se encuentra la especificación, devolver None o lanzar una excepción
+    return None

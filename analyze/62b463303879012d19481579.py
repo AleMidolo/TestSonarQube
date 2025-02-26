@@ -1,19 +1,17 @@
 def _extract_number_and_supplment_from_issue_element(issue):
     """
-    समस्या (issue) की सामग्री से number और suppl के संभावित मानों को निकालें।
+    Extrae los posibles valores de 'number' y 'suppl' a partir del contenido de 'issue'.
     """
-    import re
-
-    # Regular expressions to find number and supplement
-    number_pattern = r'\b\d+\b'
-    suppl_pattern = r'\b[A-Za-z]+\b'
-
-    # Extracting number
-    number_match = re.search(number_pattern, issue)
-    number = number_match.group(0) if number_match else None
-
-    # Extracting supplement
-    suppl_matches = re.findall(suppl_pattern, issue)
-    suppl = suppl_matches[1] if len(suppl_matches) > 1 else None  # Assuming the second match is the supplement
-
+    number = None
+    suppl = None
+    
+    # Assuming 'issue' is a string that may contain 'number' and 'suppl' values
+    if isinstance(issue, str):
+        parts = issue.split()
+        for part in parts:
+            if part.startswith('number'):
+                number = part.split('=')[1] if '=' in part else part[6:]
+            elif part.startswith('suppl'):
+                suppl = part.split('=')[1] if '=' in part else part[5:]
+    
     return number, suppl

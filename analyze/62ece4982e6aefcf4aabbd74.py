@@ -1,6 +1,4 @@
 import os
-import shutil
-import tarfile
 import zipfile
 from pathlib import Path
 from typing import Optional, Union
@@ -11,30 +9,23 @@ def prepare_repository_from_archive(
     tmp_path: Union[Path, str] = "/tmp",
 ) -> str:
     """
-    मौजूदा `archive_path` को अनकंप्रेस करें।  
-    यह एक फ़ाइल रिपॉजिटरी URL लौटाता है जिसे ओरिजिन URL के रूप में उपयोग किया जा सकता है।  
+    Dado un `archive_path` existente, descomprímelo.  
+    Devuelve una URL del repositorio de archivos que puede ser utilizada como URL de origen.
 
-    यह उस स्थिति को संभालने का काम नहीं करता है जहां दिया गया आर्काइव मौजूद नहीं है।
+    Este método no maneja el caso en el que el archivo comprimido proporcionado no exista.
     """
     # Convert tmp_path to Path object
     tmp_path = Path(tmp_path)
     
-    # Create temporary directory
+    # Create temporary directory if it doesn't exist
     tmp_path.mkdir(parents=True, exist_ok=True)
     
-    # Determine the archive type and extract
-    if archive_path.endswith('.zip'):
-        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-            zip_ref.extractall(tmp_path)
-    elif archive_path.endswith(('.tar', '.tar.gz', '.tgz')):
-        with tarfile.open(archive_path, 'r:*') as tar_ref:
-            tar_ref.extractall(tmp_path)
-    else:
-        raise ValueError("Unsupported archive format")
+    # Define the extraction path
+    extraction_path = tmp_path / Path(archive_path).stem
     
-    # If a filename is provided, return the path to that file
-    if filename:
-        return str(tmp_path / filename)
+    # Unzip the archive
+    with zipfile.ZipFile(archive_path, 'r') as zip_ref:
+        zip_ref.extractall(extraction_path)
     
-    # Otherwise, return the path to the extracted directory
-    return str(tmp_path)
+    # Return the URL of the repository
+    return f"file://{extraction_path.resolve()}"

@@ -1,34 +1,29 @@
-def verify_relayable_signature(public_key, doc, signature):
+def verificar_firma_reenviable(clave_publica, documento, firma):
     """
-    हस्ताक्षरित XML तत्वों को सत्यापित करें ताकि यह सुनिश्चित किया जा सके 
-    कि दावा किया गया लेखक ने वास्तव में यह संदेश उत्पन्न किया है।
+    Verifica los elementos XML firmados para tener confianza de que el autor declarado realmente generó este mensaje.
     """
     from lxml import etree
-    from cryptography.hazmat.primitives import hashes
-    from cryptography.hazmat.primitives.asymmetric import padding
-    from cryptography.hazmat.backends import default_backend
-    from cryptography.hazmat.primitives import serialization
+    from xmlsec import SignatureContext, Key, constants
 
-    # Load the public key
-    public_key = serialization.load_pem_public_key(
-        public_key.encode(),
-        backend=default_backend()
-    )
+    # Cargar el documento XML
+    doc = etree.fromstring(documento)
 
-    # Parse the XML document
-    root = etree.fromstring(doc)
+    # Crear un contexto de firma
+    ctx = SignatureContext()
 
-    # Extract the signed data
-    signed_data = etree.tostring(root, method='xml', exclusive=True)
+    # Cargar la clave pública
+    key = Key.from_string(clave_publica, constants.KeyDataFormatPem, constants.KeyTypePublic)
+    ctx.key = key
 
-    # Verify the signature
+    # Buscar la firma en el documento
+    signature_node = doc.find('.//{http://www.w3.org/2000/09/xmldsig#}Signature')
+
+    if signature_node is None:
+        raise ValueError("No se encontró la firma en el documento.")
+
+    # Verificar la firma
     try:
-        public_key.verify(
-            signature,
-            signed_data,
-            padding.PKCS1v15(),
-            hashes.SHA256()
-        )
+        ctx.verify(signature_node)
         return True
     except Exception as e:
         return False

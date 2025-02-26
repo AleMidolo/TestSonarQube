@@ -1,32 +1,12 @@
 def bash_completion():
     """
-    बॉर्गमैटिक कमांड के लिए बाश कम्प्लीशन स्क्रिप्ट लौटाएं।  
-    यह स्क्रिप्ट बॉर्गमैटिक के कमांड-लाइन आर्ग्युमेंट पार्सर्स का निरीक्षण करके उत्पन्न की जाती है।
+    Devuelve un script de autocompletado para bash para el comando de borgmatic. Esto se genera mediante la introspección de los analizadores de argumentos de línea de comandos de borgmatic.
     """
-    import argparse
-    import sys
+    import subprocess
 
-    # Create the parser
-    parser = argparse.ArgumentParser(prog='borgmatic')
-
-    # Add subcommands
-    subparsers = parser.add_subparsers(dest='command')
-
-    # Example subcommand: init
-    init_parser = subparsers.add_parser('init', help='Initialize a new configuration')
-    
-    # Example subcommand: config
-    config_parser = subparsers.add_parser('config', help='Manage configuration')
-    config_parser.add_argument('--list', action='store_true', help='List configurations')
-    config_parser.add_argument('--edit', help='Edit a specific configuration')
-
-    # Example subcommand: run
-    run_parser = subparsers.add_parser('run', help='Run the backup')
-
-    # Generate the completion script
-    if len(sys.argv) > 1 and sys.argv[1] == 'completion':
-        print('complete -o default -o nospace -F _borgmatic_completion borgmatic')
-        return
-
-    # Print the help message for the parser
-    parser.print_help()
+    # Generar el script de autocompletado utilizando borgmatic
+    try:
+        completion_script = subprocess.check_output(['borgmatic', 'completion', 'bash'], text=True)
+        return completion_script
+    except subprocess.CalledProcessError as e:
+        return f"Error al generar el script de autocompletado: {e}"

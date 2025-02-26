@@ -1,9 +1,9 @@
 def tzname_in_python2(namefunc):
     """
-    Python 2 में यूनिकोड आउटपुट को बाइटस्ट्रिंग्स में बदलें।
+    Cambiar la salida de unicode a cadenas de bytes en Python 2
 
-    tzname() API ने Python 3 में बदलाव किया। पहले यह बाइट्स लौटाता था, 
-    लेकिन इसे यूनिकोड स्ट्रिंग्स में बदल दिया गया।
+    La API tzname() cambió en Python 3. Solía devolver bytes, pero fue modificada
+    para devolver cadenas unicode.
     """
     def wrapper(*args, **kwargs):
         return namefunc(*args, **kwargs).encode('utf-8')

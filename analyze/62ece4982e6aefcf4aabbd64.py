@@ -1,7 +1,7 @@
 def strip_root(path, root):
     """
-    पथ से रूट को हटाएं, और यदि यह विफल होता है, तो अपवाद फेंकें।
+    Eliminar la raíz de la ruta, lanzar una excepción en caso de fallo.
     """
     if not path.startswith(root):
-        raise ValueError("Path does not start with the specified root.")
+        raise ValueError("La ruta no comienza con la raíz proporcionada.")
     return path[len(root):]

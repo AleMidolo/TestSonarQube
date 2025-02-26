@@ -2,9 +2,9 @@ import zipfile
 
 def files_list_from_zipfile(zip_path):
     """
-    `zip_path` में फ़ाइलें लौटाएँ
+    Devuelve los archivos en `zip_path`.
 
-    उदाहरण:
+    Ejemplo:
 
     [
         '2318-0889-tinf-33-0421/2318-0889-tinf-33-e200069.pdf',

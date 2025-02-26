@@ -1,31 +1,30 @@
 def remove_ending_os_sep(input_list):
     """
-    विवरण:
-    एक स्ट्रिंग सूची पर पुनरावृत्ति करें और अंतिम OS विभाजक वर्णों को हटा दें।  
-    प्रत्येक स्ट्रिंग की जांच की जाती है कि उसकी लंबाई एक से अधिक है और क्या उसका अंतिम वर्ण पथनाम विभाजक है।  
-    यदि ऐसा है, तो पथनाम विभाजक वर्ण को हटा दिया जाता है।  
+    Itera sobre una lista de cadenas y elimina los caracteres separadores de ruta del sistema operativo al final.
 
-    तर्क (Arguments):
-    - `input_list`: स्ट्रिंग्स की सूची।  
+    Cada cadena se verifica para determinar si su longitud es mayor que uno y si el último
+    carácter es el separador de ruta. Si es así, se elimina el carácter separador de ruta.
 
-    रिटर्न (Returns):
-    - प्रोसेस की गई स्ट्रिंग्स की सूची।  
+    Argumentos:
+        input_list: lista de cadenas
 
-    त्रुटि (Raises):
-    - `TypeError`: यदि इनपुट सूची का प्रकार सही नहीं है।  
+    Devuelve:
+        Lista procesada de cadenas
+
+    Excepciones:
+        TypeError
     """
     import os
 
     if not isinstance(input_list, list):
-        raise TypeError("Input must be a list.")
+        raise TypeError("input_list debe ser una lista de cadenas")
 
     processed_list = []
     for item in input_list:
-        if isinstance(item, str) and len(item) > 0:
-            if item[-1] == os.sep:
-                processed_list.append(item[:-1])
-            else:
-                processed_list.append(item)
+        if not isinstance(item, str):
+            raise TypeError("Todos los elementos de input_list deben ser cadenas")
+        if len(item) > 1 and item[-1] == os.sep:
+            processed_list.append(item[:-1])
         else:
             processed_list.append(item)
 

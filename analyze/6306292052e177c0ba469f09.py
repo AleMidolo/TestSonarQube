@@ -1,10 +1,8 @@
 def identify_request(request: RequestType):
     """
-    यह फ़ंक्शन यह पहचानने की कोशिश करता है कि यह एक Diaspora अनुरोध है या नहीं।
+    Intente identificar si esta es una solicitud de Diaspora.
 
-    सबसे पहले सार्वजनिक संदेश (public message) की जांच करें। 
-    फिर निजी संदेश (private message) की जांच करें। 
-    अंत में यह जांचें कि क्या यह एक पुराना (legacy) payload है।
+    Primero intente con un mensaje público. Luego con un mensaje privado. Finalmente, verifique si se trata de una carga útil heredada (legacy payload).
     """
     if request.is_public_message():
         return "Public Message"

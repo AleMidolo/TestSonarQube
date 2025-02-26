@@ -1,9 +1,9 @@
 def initialize(self):
     """
-    एक नया OCFL स्टोरेज रूट बनाएँ और प्रारंभ करें।
+    Crear e inicializar una nueva raíz de almacenamiento OCFL.
     """
-    # OCFL स्टोरेज रूट बनाने की प्रक्रिया
+    # Implementación de la creación e inicialización de la raíz de almacenamiento OCFL
     self.storage_root = self.create_storage_root()
-    self.setup_initial_structure()
     self.initialize_metadata()
-    print("OCFL स्टोरेज रूट सफलतापूर्वक बनाया और प्रारंभ किया।")
+    self.setup_directory_structure()
+    self.validate_storage_root()

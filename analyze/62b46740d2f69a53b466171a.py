@@ -1,8 +1,14 @@
 def pretty(self, indent=0, debug=False):
     """
-    स्वयं का एक सुंदर स्वरूपित प्रतिनिधित्व लौटाएँ।
+    Devuelve una representación formateada de manera legible de 'self'.
     """
-    representation = " " * indent + f"<{self.__class__.__name__}>\n"
+    indent_str = ' ' * indent
+    representation = f"{indent_str}Class: {self.__class__.__name__}\n"
+    
+    for attr, value in self.__dict__.items():
+        representation += f"{indent_str}  {attr}: {value}\n"
+    
     if debug:
-        representation += " " * (indent + 2) + f"Debug Info: {self.__dict__}\n"
+        representation += f"{indent_str}  Debug Info: {self.__dict__}\n"
+    
     return representation

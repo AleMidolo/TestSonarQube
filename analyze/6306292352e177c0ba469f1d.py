@@ -1,16 +1,15 @@
 from typing import Tuple, Set
 import re
 
-def find_tags(text: str, replacer: callable = None) -> Tuple[Set, str]:
+def find_tags(texto: str, reemplazador: callable = None) -> Tuple[Set, str]:
     """
-    टेक्स्ट में टैग्स खोजें।
+    Encuentra etiquetas en el texto.
 
-    कोड ब्लॉक्स के अंदर मौजूद टैग्स को अनदेखा करने की कोशिश करता है।
+    Intenta ignorar las etiquetas dentro de bloques de código.
 
-    वैकल्पिक रूप से, यदि "replacer" पास किया गया है, तो यह टैग शब्द को 
-    replacer फ़ंक्शन द्वारा लौटाए गए परिणाम से बदल देगा, जिसे टैग शब्द के साथ कॉल किया गया है।
+    Opcionalmente, si se pasa un "replacer", también reemplazará la palabra de la etiqueta con el resultado de la función "replacer" llamada con la palabra de la etiqueta.
 
-    एक सेट के रूप में टैग्स और मूल या बदला हुआ टेक्स्ट लौटाता है।
+    Devuelve un conjunto de etiquetas y el texto original o reemplazado.
     """
-    # Regex to find tags, ignoring code blocks
+    # Expresión regular para encontrar bloques de código
     code_block_pattern = r'

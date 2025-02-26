@@ -1,13 +1,13 @@
 def paging(response, max_results):
-    """
-    WAPI प्रतिक्रिया को पेज दर पेज लौटाता है।
+    """ 
+    Devuelve la respuesta de WAPI página por página.
 
-    आर्ग्युमेंट्स:
-        response (list): WAPI प्रतिक्रिया।
-        max_results (int): एक पेज में लौटाए जाने वाले ऑब्जेक्ट्स की अधिकतम संख्या।
-    
-    रिटर्न्स:
-        Generator object: WAPI प्रतिक्रिया को पेज दर पेज विभाजित करके लौटाता है।
+    Argumentos:
+        response (list): Respuesta de WAPI.
+        max_results (int): Número máximo de objetos que se devolverán en una página.
+
+    Retorna:
+        Objeto generador con la respuesta de WAPI dividida página por página.
     """
     for i in range(0, len(response), max_results):
         yield response[i:i + max_results]

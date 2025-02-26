@@ -1,32 +1,30 @@
 def scale(self, other=None):
     """
-    ग्राफ़ का स्केल प्राप्त करें या सेट करें।
+    Obtiene o establece la escala del gráfico.
 
-    यदि *other* ``None`` है, तो इस ग्राफ़ का स्केल लौटाएं।
+    Si *other* es ``None``, devuelve la escala de este gráfico.
 
-    यदि *other* एक संख्यात्मक मान है, तो ग्राफ़ को उस मान पर पुनः स्केल करें।
-    यदि ग्राफ़ का स्केल अज्ञात है या शून्य है,
-    तो पुनः स्केल करने पर :exc:`~.LenaValueError` उत्पन्न होगा।
+    Si se proporciona un valor numérico en *other*, se reajusta la escala a ese valor.  
+    Si el gráfico tiene una escala desconocida o igual a cero,  
+    intentar reajustar la escala generará una excepción :exc:`~.LenaValueError`.
 
-    सार्थक परिणाम प्राप्त करने के लिए, ग्राफ़ के फ़ील्ड्स का उपयोग किया जाता है।
-    केवल अंतिम निर्देशांक (coordinate) को पुनः स्केल किया जाता है।
-    उदाहरण के लिए, यदि ग्राफ़ में *x* और *y* निर्देशांक हैं,
-    तो *y* को पुनः स्केल किया जाएगा, और यदि ग्राफ़ 3-आयामी (3-dimensional) है,
-    तो *z* को पुनः स्केल किया जाएगा।
-    सभी त्रुटियों (errors) को उनके निर्देशांक के साथ पुनः स्केल किया जाता है।
+    Para obtener resultados significativos, se utilizan los campos del gráfico.  
+    Solo se reajusta la última coordenada.  
+    Por ejemplo, si el gráfico tiene coordenadas *x* e *y*,  
+    entonces se reajustará *y*, y para un gráfico tridimensional  
+    se reajustará *z*.  
+    Todos los errores se reajustan junto con su coordenada.
     """
     if other is None:
-        return self.scale_value  # Assuming scale_value is an attribute of the class
+        return self.current_scale  # Devuelve la escala actual del gráfico
 
     if not isinstance(other, (int, float)):
-        raise ValueError("The scale value must be a numeric type.")
+        raise ValueError("El valor de 'other' debe ser un número.")
 
-    if self.scale_value is None or self.scale_value == 0:
-        raise LenaValueError("Cannot rescale when the scale is unknown or zero.")
+    if self.current_scale is None or self.current_scale == 0:
+        raise LenaValueError("La escala es desconocida o igual a cero.")
 
-    # Assuming self.coordinates is a list of coordinates
-    for i in range(len(self.coordinates)):
-        if i == len(self.coordinates) - 1:  # Only scale the last coordinate
-            self.coordinates[i] *= other
-
-    self.scale_value = other  # Update the scale value
+    # Suponiendo que el gráfico tiene un atributo 'coordinates' que es una lista
+    # y que la última coordenada es la que se debe reajustar.
+    self.coordinates[-1] *= other  # Reajusta la última coordenada
+    self.current_scale *= other  # Reajusta la escala actual

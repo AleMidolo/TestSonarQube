@@ -1,21 +1,23 @@
 def _fromutc(self, dt):
     """
-    यह वह स्थिति है जब हमें *पक्का* पता होता है कि हमारे पास एक अस्पष्टता रहित (unambiguous) डेटटाइम ऑब्जेक्ट है। इस मौके का उपयोग करते हुए, हम यह निर्धारित करते हैं कि क्या यह डेटटाइम अस्पष्ट (ambiguous) है और "फोल्ड" स्थिति में है (उदाहरण के लिए, यदि यह अस्पष्ट डेटटाइम का पहला कालानुक्रमिक (chronological) उदाहरण है)।
+    Dado un objeto 'datetime' consciente de la zona horaria en una zona horaria específica, calcula un objeto 'datetime' consciente de la zona horaria en una nueva zona horaria.
 
-    पैरामीटर:
-    - `dt`:  
-      एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
+    Dado que esta es la única ocasión en la que *sabemos* que tenemos un objeto 'datetime' no ambiguo, aprovechamos esta oportunidad para determinar si el 'datetime' es ambiguo y está en un estado de "pliegue" (por ejemplo, si es la primera ocurrencia, cronológicamente, del 'datetime' ambiguo).
+
+    :param dt:  
+        Un objeto :class:`datetime.datetime` consciente de la zona horaria.
     """
+    # Verificar que el objeto dt es consciente de la zona horaria
     if dt.tzinfo is None:
-        raise ValueError("dt must be timezone-aware")
+        raise ValueError("El objeto datetime debe ser consciente de la zona horaria")
+
+    # Convertir el datetime a la nueva zona horaria
+    new_dt = dt.astimezone(self)
+
+    # Determinar si el datetime es ambiguo
+    if new_dt.dst() != timedelta(0):
+        # Si hay un cambio de horario, verificar si es la primera ocurrencia
+        if new_dt < self.utcoffset() + new_dt.dst():
+            return new_dt - new_dt.dst()
     
-    # Check if the datetime is ambiguous
-    if dt.dst() is not None and dt.dst() != timedelta(0):
-        # If the datetime has a non-zero DST offset, it is ambiguous
-        raise ValueError("Ambiguous datetime")
-    
-    # Determine if the datetime is in the 'fold' state
-    if dt < self._fold_start:
-        return dt.replace(tzinfo=self)
-    else:
-        return dt.replace(tzinfo=self, fold=1)
+    return new_dt

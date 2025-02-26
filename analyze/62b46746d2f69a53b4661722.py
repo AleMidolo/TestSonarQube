@@ -1,72 +1,45 @@
 def absorb(self, args):
     """
-    `args` अभिव्यक्तियों के अनुक्रम को दिया गया है, एक नई सूची लौटाएं जिसमें अवशोषण और नकारात्मक अवशोषण लागू किया गया हो।
+    Dada una secuencia `args` de expresiones, devuelve una nueva lista de expresiones aplicando absorción y absorción negativa.
 
-    अधिक जानकारी के लिए देखें: [https://en.wikipedia.org/wiki/Absorption_law](https://en.wikipedia.org/wiki/Absorption_law)
+    Consulta https://es.wikipedia.org/wiki/Leyes_de_absorci%C3%B3n
 
-    **अवशोषण (Absorption):**
+    Absorción::
 
-    A & (A | B) = A, A | (A & B) = A
+        A & (A | B) = A, A | (A & B) = A
 
-    **नकारात्मक अवशोषण (Negative Absorption):**
+    Absorción negativa::
 
-    A & (~A | B) = A & B, A | (~A & B) = A | B
+        A & (~A | B) = A & B, A | (~A & B) = A | B
     """
     result = []
     for expr in args:
-        # Apply absorption laws
-        if '&' in expr and '|' in expr:
-            # Check for A & (A | B) = A
-            if expr.count('&') == 1 and expr.count('|') == 1:
-                parts = expr.split('&')
-                if len(parts) == 2:
-                    a = parts[0].strip()
-                    b = parts[1].strip()
-                    if '|' in b:
-                        b_parts = b.split('|')
-                        if a in b_parts:
-                            result.append(a)
-                            continue
-            # Check for A | (A & B) = A
-            if expr.count('|') == 1 and expr.count('&') == 1:
-                parts = expr.split('|')
-                if len(parts) == 2:
-                    a = parts[0].strip()
-                    b = parts[1].strip()
-                    if '&' in b:
-                        b_parts = b.split('&')
-                        if a in b_parts:
-                            result.append(a)
-                            continue
-        
-        # Apply negative absorption laws
-        if '&' in expr and '~' in expr:
-            # Check for A & (~A | B) = A & B
-            if expr.count('&') == 1 and expr.count('|') == 1:
-                parts = expr.split('&')
-                if len(parts) == 2:
-                    a = parts[0].strip()
-                    b = parts[1].strip()
-                    if '~' in b:
-                        b_parts = b.split('|')
-                        if any('~' + a in part for part in b_parts):
-                            result.append(f"{a} & {b_parts[1].strip()}")
-                            continue
-        
-        if '|' in expr and '~' in expr:
-            # Check for A | (~A & B) = A | B
-            if expr.count('|') == 1 and expr.count('&') == 1:
-                parts = expr.split('|')
-                if len(parts) == 2:
-                    a = parts[0].strip()
-                    b = parts[1].strip()
-                    if '~' in b:
-                        b_parts = b.split('&')
-                        if any('~' + a in part for part in b_parts):
-                            result.append(f"{a} | {b_parts[1].strip()}")
-                            continue
-        
-        # If no absorption applied, keep the original expression
-        result.append(expr)
-    
+        if isinstance(expr, tuple) and len(expr) == 3:
+            a, op, b = expr
+            if op == '&':
+                if (a == b) or (b == ('~', a)):
+                    result.append(a)
+                elif isinstance(b, tuple) and b[0] == '|':
+                    if a == b[1]:
+                        result.append(a)
+                    elif b[1] == ('~', a):
+                        result.append((a, '&', b[2]))
+                    else:
+                        result.append(expr)
+                else:
+                    result.append(expr)
+            elif op == '|':
+                if (a == b) or (b == ('~', a)):
+                    result.append(a)
+                elif isinstance(b, tuple) and b[0] == '&':
+                    if a == b[1]:
+                        result.append(a)
+                    elif b[1] == ('~', a):
+                        result.append((a, '|', b[2]))
+                    else:
+                        result.append(expr)
+                else:
+                    result.append(expr)
+        else:
+            result.append(expr)
     return result

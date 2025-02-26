@@ -1,16 +1,12 @@
-def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
+def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
     """
-इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम और विवरण लौटाएं।
+    Devuelve los nombres y descripciones de los atributos definidos por la interfaz.
     if not all:
-    
-इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम और विवरण लौटाएं।
+
+    Devuelve los nombres y descripciones de los atributos definidos por la interfaz.
     """
-    attributes = {
-        'attribute1': 'Description of attribute 1',
-        'attribute2': 'Description of attribute 2',
-        'attribute3': 'Description of attribute 3',
-    }
-    
+    attributes = self.get_attributes()  # Assuming there's a method to get attributes
     if not all:
-        return {key: attributes[key] for key in list(attributes)[:2]}  # Return only first two attributes
-    return attributes
+        attributes = [attr for attr in attributes if attr.is_defined()]
+    
+    return {attr.name: attr.description for attr in attributes}

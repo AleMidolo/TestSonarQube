@@ -1,10 +1,10 @@
 def _get_seq_with_type(seq, bufsize=None):
     """
-    (sequence, type) जोड़ी लौटाता है।
-    Sequence *seq* से प्राप्त किया जाता है
-    (या *seq* ही होता है, यदि वह sequence प्रकार का है)।
+    Devuelve un par (secuencia, tipo).
+    La secuencia se deriva de *seq*
+    (o es *seq*, si este es de un tipo de secuencia).
     """
-    if isinstance(seq, (list, tuple, str)):
+    if isinstance(seq, (list, tuple, set, str)):
         return seq, type(seq)
     else:
-        return list(seq), type(seq)
+        return (seq,), type(seq)

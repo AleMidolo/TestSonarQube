@@ -1,25 +1,23 @@
 def fromutc(self, dt):
     """
-    दिए गए टाइमज़ोन में एक टाइमज़ोन-अवेयर डेटटाइम को लेते हुए,
-    एक नए टाइमज़ोन में टाइमज़ोन-अवेयर डेटटाइम की गणना करता है।
+    Dado un objeto "datetime" que contiene información de la zona horaria al que pertenece, calcula un objeto "datetime" para una zona horaria diferente, que contenga información de la nueva zona horaria al que pertenece.
 
-    चूंकि यह वह समय है जब हमें *पक्का* पता है कि हमारे पास एक 
-    अस्पष्टता रहित डेटटाइम ऑब्जेक्ट है, हम इस अवसर का उपयोग यह 
-    निर्धारित करने के लिए करते हैं कि क्या डेटटाइम अस्पष्ट है और 
-    "फोल्ड" स्थिति में है (उदाहरण के लिए, यदि यह अस्पष्ट डेटटाइम 
-    का पहला घटना है, कालानुक्रमिक रूप से)।
+    Dado que esta es la única ocasión en la que *sabemos* que tenemos un objeto datetime no ambiguo, aprovechamos esta oportunidad para determinar si el datetime es ambiguo y está en un estado de "pliegue" (por ejemplo, si es la primera ocurrencia, cronológicamente, del datetime ambiguo).
 
     :param dt:
-        एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
+        Un objeto :class:`datetime.datetime` con conocimiento de zona horaria.
     """
-    # Assuming self is a timezone object
+    # Verificar que el objeto datetime tiene información de zona horaria
     if dt.tzinfo is None:
-        raise ValueError("dt must be timezone-aware")
-    
-    # Convert the datetime to UTC
-    utc_dt = dt.astimezone(self.utc)
-    
-    # Calculate the new timezone-aware datetime
-    new_dt = utc_dt.astimezone(self)
-    
+        raise ValueError("El objeto datetime debe tener información de zona horaria.")
+
+    # Convertir el datetime a la nueva zona horaria
+    new_dt = dt.astimezone(self)
+
+    # Determinar si el datetime es ambiguo
+    if new_dt.dst() != timedelta(0):
+        # Si hay un cambio de horario, verificar si es la primera ocurrencia
+        if new_dt < self.utcoffset() + new_dt.dst():
+            raise ValueError("El datetime es ambiguo y no se puede determinar su estado.")
+
     return new_dt

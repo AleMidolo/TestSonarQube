@@ -1,15 +1,21 @@
 def check_digests_present_and_used(self, manifest_files, digests_used):
     """
-    मैनिफेस्ट में सभी आवश्यक डाइजेस्ट्स की जांच करें कि वे मौजूद हैं और उपयोग हो रहे हैं।
+    Verifique que todos los resúmenes necesarios en el manifiesto estén presentes y se utilicen.
     """
-    missing_digests = []
-    used_digests = set(digests_used)
-
+    required_digests = set()
+    
+    # Recolectar todos los resúmenes necesarios de los archivos de manifiesto
     for manifest in manifest_files:
-        for digest in manifest.get('digests', []):
-            if digest in used_digests:
-                used_digests.remove(digest)
-
-    missing_digests = list(used_digests)
-
-    return missing_digests
+        with open(manifest, 'r') as file:
+            for line in file:
+                digest = line.strip()
+                if digest:
+                    required_digests.add(digest)
+    
+    # Verificar que todos los resúmenes necesarios se utilicen
+    missing_digests = required_digests - set(digests_used)
+    
+    if missing_digests:
+        raise ValueError(f"Faltan los siguientes resúmenes: {missing_digests}")
+    
+    return True

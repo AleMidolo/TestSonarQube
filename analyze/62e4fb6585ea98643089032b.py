@@ -1,5 +1,5 @@
 def parse_version(s: str) -> tuple[int, ...]:
     """
-    साधारण (poor man's) वर्शन तुलना।
+    comparación de versiones rudimentaria
     """
     return tuple(map(int, s.split('.')))
