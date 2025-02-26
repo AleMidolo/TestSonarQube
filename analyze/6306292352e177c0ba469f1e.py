@@ -4,15 +4,15 @@ def process_text_links(text):
     """
     import re
 
-    # Function to convert plain text URLs into HTML links
-    def linkify(match):
+    # Function to add attributes to a link
+    def add_attributes(match):
         url = match.group(0)
         return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
 
     # Regular expression to find URLs in the text
     url_pattern = r'(https?://[^\s]+)'
-
-    # Replace plain text URLs with linkified HTML links
-    processed_text = re.sub(url_pattern, linkify, text)
+    
+    # Replace URLs in the text with linkified versions
+    processed_text = re.sub(url_pattern, add_attributes, text)
 
     return processed_text

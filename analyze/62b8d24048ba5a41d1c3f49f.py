@@ -1,6 +1,6 @@
 import time
-import functools
 from collections import OrderedDict
+from functools import wraps
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     """
@@ -11,7 +11,7 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     def decorator(func):
         cache = OrderedDict()
         
-        @functools.wraps(func)
+        @wraps(func)
         def wrapper(*args, **kwargs):
             key = args if not typed else (args, frozenset(kwargs.items()))
             current_time = timer()

@@ -37,25 +37,31 @@ def verifyObject(iface, candidate, tentative=False):
     if not tentative and not providedBy(candidate, iface):
         errors.append(f"{candidate} does not provide {iface}")
 
-    required_methods = iface.names()  # Assuming iface has a method to get required methods
+    required_methods = iface.names()
     for method_name in required_methods:
         if not hasattr(candidate, method_name):
             errors.append(f"{candidate} is missing method {method_name}")
             continue
         
         method = getattr(candidate, method_name)
-        expected_signature = signature(getattr(iface, method_name))
-        actual_signature = signature(method)
+        if not callable(method):
+            errors.append(f"{method_name} in {candidate} is not callable")
+            continue
+        
+        # Check method signature
+        iface_method = iface[method_name]
+        iface_sig = signature(iface_method)
+        candidate_sig = signature(method)
 
-        if len(expected_signature.parameters) != len(actual_signature.parameters):
-            errors.append(f"{method_name} has incorrect number of parameters in {candidate}")
+        if len(iface_sig.parameters) != len(candidate_sig.parameters):
+            errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
             continue
 
-        for param in expected_signature.parameters.values():
-            if param.default is Parameter.empty and param.name not in actual_signature.parameters:
-                errors.append(f"{method_name} is missing required parameter {param.name} in {candidate}")
+        for param in iface_sig.parameters.values():
+            if param.default is Parameter.empty and param.name not in candidate_sig.parameters:
+                errors.append(f"{method_name} in {candidate} is missing required parameter {param.name}")
 
-    required_attributes = iface.attributes()  # Assuming iface has a method to get required attributes
+    required_attributes = iface.attributes()
     for attr_name in required_attributes:
         if not hasattr(candidate, attr_name):
             errors.append(f"{candidate} is missing attribute {attr_name}")
@@ -63,7 +69,6 @@ def verifyObject(iface, candidate, tentative=False):
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
-        else:
-            raise Invalid(errors)
+        raise Invalid(errors)
 
     return True

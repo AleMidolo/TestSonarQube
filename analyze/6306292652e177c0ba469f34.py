@@ -7,6 +7,7 @@ def fetch_content_type(url: str) -> Optional[str]:
     """
     try:
         response = requests.head(url)
+        response.raise_for_status()
         return response.headers.get('Content-Type')
     except requests.RequestException:
         return None

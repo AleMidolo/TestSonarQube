@@ -2,17 +2,17 @@ def list_of_file_names(settings_dirs, spec_option):
     """
     Create a new IniType complex type
     """
-    import os
-
     class IniType:
-        def __init__(self, name, path):
-            self.name = name
-            self.path = path
+        def __init__(self, directory, option):
+            self.directory = directory
+            self.option = option
 
-    ini_files = []
+        def __repr__(self):
+            return f"IniType(directory={self.directory}, option={self.option})"
+
+    ini_types = []
     for directory in settings_dirs:
-        for file in os.listdir(directory):
-            if file.endswith('.ini') and (spec_option in file):
-                ini_files.append(IniType(file, os.path.join(directory, file)))
+        ini_type = IniType(directory, spec_option)
+        ini_types.append(ini_type)
 
-    return ini_files
+    return ini_types

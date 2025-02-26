@@ -9,7 +9,7 @@ def dehydrate_timedelta(value):
     :return: A dictionary representation of the timedelta.
     """
     if not isinstance(value, timedelta):
-        raise ValueError("Input must be a timedelta object.")
+        raise ValueError("The value must be a timedelta object.")
     
     total_seconds = int(value.total_seconds())
     days = total_seconds // 86400
