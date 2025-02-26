@@ -29,36 +29,28 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     परिणामी ग्राफ़ लौटाएं।
     """
+    import numpy as np
+
     if make_value is None:
-        make_value = lambda bin_: bin_.content
+        make_value = lambda bin_: bin_
 
-    coordinates = []
-    values = []
+    bin_edges = hist['bin_edges']
+    bin_contents = hist['bin_contents']
 
-    for bin_ in hist.bins:
-        if get_coordinate == "left":
-            coordinate = bin_.left
-        elif get_coordinate == "right":
-            coordinate = bin_.right
-        elif get_coordinate == "middle":
-            coordinate = bin_.center
-        else:
-            raise ValueError("Invalid value for get_coordinate")
+    if get_coordinate == "left":
+        coordinates = bin_edges[:-1]
+    elif get_coordinate == "right":
+        coordinates = bin_edges[1:]
+    elif get_coordinate == "middle":
+        coordinates = (bin_edges[:-1] + bin_edges[1:]) / 2
+    else:
+        raise ValueError("Invalid value for get_coordinate. Must be 'left', 'right', or 'middle'.")
 
-        value = make_value(bin_)
-        coordinates.append(coordinate)
-        values.append(value)
-
+    values = np.array([make_value(content) for content in bin_contents])
+    
     if scale is True:
-        # Implement scaling logic if needed
-        pass
+        scale_factor = hist.get('scale_factor', 1)
+        values = values * scale_factor
 
-    graph = {
-        field_names[0]: coordinates,
-        field_names[1]: [v[0] for v in values],
-    }
-
-    if len(field_names) > 2:
-        graph[field_names[2]] = [v[1] for v in values]
-
+    graph = {field_names[i]: values[:, i] for i in range(len(field_names))}
     return graph

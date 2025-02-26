@@ -17,6 +17,7 @@ def protocol_handlers(cls, protocol_version=None):
 
     handlers = {
         (3, 0): 'HandlerFor3_0',
+        (3, 1): 'HandlerFor3_1',
         (3, 5): 'HandlerFor3_5',
         (4, 0): 'HandlerFor4_0',
     }

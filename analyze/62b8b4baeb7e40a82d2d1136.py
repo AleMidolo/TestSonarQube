@@ -34,17 +34,17 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     if not tentative and not providedBy(candidate).isImplementedBy(iface):
         errors.append(f"{candidate} does not provide {iface}")
 
-    required_methods = getattr(iface, '__required_methods__', [])
+    required_methods = iface.requiredMethods()
     for method in required_methods:
         if not hasattr(candidate, method):
             errors.append(f"{candidate} is missing required method {method}")
         else:
             method_signature = signature(getattr(candidate, method))
-            iface_method_signature = signature(getattr(iface, method))
-            if method_signature != iface_method_signature:
+            iface_signature = signature(getattr(iface, method))
+            if method_signature != iface_signature:
                 errors.append(f"{method} in {candidate} has incorrect signature")
 
-    required_attributes = getattr(iface, '__required_attributes__', [])
+    required_attributes = iface.requiredAttributes()
     for attr in required_attributes:
         if not hasattr(candidate, attr):
             errors.append(f"{candidate} is missing required attribute {attr}")

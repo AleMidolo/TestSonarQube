@@ -41,17 +41,17 @@ def verifyObject(iface, candidate, tentative=False):
         
         method = getattr(candidate, method_name)
         iface_method = iface[method_name]
-
+        
         if not callable(method):
             errors.append(f"{method_name} in {candidate} is not callable")
             continue
-
+        
         if not isinstance(signature(method), Signature):
-            errors.append(f"{method_name} in {candidate} does not have a valid signature")
+            errors.append(f"{method_name} in {candidate} has an invalid signature")
             continue
-
+        
         if signature(method) != signature(iface_method):
-            errors.append(f"Signature mismatch for {method_name} in {candidate}")
+            errors.append(f"{method_name} in {candidate} has an incorrect signature")
 
     required_attributes = iface.names()
     for attr_name in required_attributes:

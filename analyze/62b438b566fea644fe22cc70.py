@@ -6,20 +6,19 @@ def bash_completion():
     import argparse
     import sys
 
-    # Define the main parser
+    # Create the parser
     parser = argparse.ArgumentParser(prog='borgmatic')
-    
+
     # Add commands and options
     parser.add_argument('command', choices=['init', 'config', 'run', 'list', 'check', 'prune'], help='Command to execute')
     parser.add_argument('--config', help='Path to the configuration file')
     parser.add_argument('--verbosity', choices=['0', '1', '2', '3'], help='Set the verbosity level')
-    
+
     # Generate completion script
     if len(sys.argv) > 1 and sys.argv[1] == 'completion':
         commands = ['init', 'config', 'run', 'list', 'check', 'prune']
         print(' '.join(commands))
         return
 
-    # Parse the arguments
-    args = parser.parse_args()
-    return args
+    # Print help if no command is provided
+    parser.print_help()

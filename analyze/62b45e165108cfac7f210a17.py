@@ -13,16 +13,11 @@ def get_logical_path_map(inventory, version):
         if item['version'] == version:
             logical_path = item['logical_path']
             content_files = set(item['content_files'])
-            if logical_path in logical_path_map:
-                logical_path_map[logical_path].update(content_files)
-            else:
-                logical_path_map[logical_path] = content_files
-
-    # Check for duplicates in later versions
-    for item in inventory:
-        if item['version'] > version:
-            logical_path = item['logical_path']
-            if logical_path in logical_path_map:
-                logical_path_map[logical_path].update(item['content_files'])
-
+            logical_path_map[logical_path] = content_files
+            
+            # Check for duplicates in later versions
+            for later_item in inventory:
+                if later_item['version'] > version and later_item['logical_path'] == logical_path:
+                    content_files.update(later_item['content_files'])
+    
     return logical_path_map

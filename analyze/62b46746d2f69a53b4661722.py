@@ -40,7 +40,7 @@ def absorb(self, args):
         if '&' in expr:
             if '~' in expr:
                 # Check for A & (~A | B) = A & B
-                if expr.count('&') == 1 and expr.count('|') == 1:
+                if expr.count('~') == 1:
                     parts = expr.split('&')
                     if len(parts) == 2:
                         a = parts[0].strip()
@@ -52,7 +52,7 @@ def absorb(self, args):
         if '|' in expr:
             if '~' in expr:
                 # Check for A | (~A & B) = A | B
-                if expr.count('&') == 1 and expr.count('|') == 1:
+                if expr.count('~') == 1:
                     parts = expr.split('|')
                     if len(parts) == 2:
                         a = parts[0].strip()

@@ -5,7 +5,6 @@ def deep_merge_nodes(nodes):
     
     for key_node, value_node in nodes:
         key = key_node.value
-        
         if isinstance(value_node, MappingNode):
             if key not in merged:
                 merged[key] = {}
@@ -17,12 +16,9 @@ def deep_merge_nodes(nodes):
 
     result = []
     for key, value in merged.items():
-        if isinstance(value, dict):
-            mapping_node = MappingNode(tag='tag:yaml.org,2002:map', value=[
-                (ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in value.items()
-            ])
-            result.append((ScalarNode(tag='tag:yaml.org,2002:str', value=key), mapping_node))
-        else:
-            result.append((ScalarNode(tag='tag:yaml.org,2002:str', value=key), value))
+        mapping_node = MappingNode(tag='tag:yaml.org,2002:map', value=[
+            (ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in value.items()
+        ])
+        result.append((ScalarNode(tag='tag:yaml.org,2002:str', value=key), mapping_node))
 
     return result
