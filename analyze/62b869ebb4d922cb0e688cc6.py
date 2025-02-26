@@ -16,8 +16,8 @@ def update_last_applied_manifest_list_from_resp(
     ``last_applied_manifest`` si aún no están presentes.
     """
     for schema_item in observer_schema:
-        field_name = schema_item.get('name')
-        if field_name not in last_applied_manifest:
-            last_applied_manifest[field_name] = response.get(field_name, None)
+        field = schema_item.get('field')
+        if field not in last_applied_manifest:
+            last_applied_manifest[field] = response.get(field, None)
     
     return last_applied_manifest

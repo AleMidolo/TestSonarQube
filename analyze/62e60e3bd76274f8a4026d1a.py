@@ -11,5 +11,5 @@ def from_raw_values(cls, values):
     for value in values:
         # Suponiendo que cada valor es una cadena que representa un marcador
         # Aquí se puede agregar lógica para procesar cada valor según sea necesario
-        bookmarks.append(value.strip())  # Ejemplo de procesamiento simple
+        bookmarks.append(value.strip())  # Eliminar espacios en blanco
     return cls(bookmarks)

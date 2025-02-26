@@ -5,6 +5,7 @@ def deep_merge_nodes(nodes):
 
     for key_node, value_node in nodes:
         key = key_node.value
+
         if key not in merged:
             merged[key] = value_node
         else:

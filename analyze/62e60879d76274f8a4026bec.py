@@ -33,6 +33,5 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         "dehydration_hooks": dehydration_hooks,
         "hydration_hooks": hydration_hooks
     }
-    
     self._queue_message('BEGIN', transaction_message)
     return response

@@ -5,16 +5,14 @@ def make_parsers():
     import argparse
 
     # Analizador de nivel superior
-    top_parser = argparse.ArgumentParser(description='Analizador de nivel superior')
+    main_parser = argparse.ArgumentParser(description='Analizador principal')
     
     # Subanalizador 1
-    subparser1 = top_parser.add_subparsers(dest='subcommand1')
-    parser1 = subparser1.add_parser('sub1', help='Subanalizador 1')
-    parser1.add_argument('--option1', type=str, help='Opción para subanalizador 1')
-
+    subparser1 = main_parser.add_subparsers(dest='command1')
+    parser1 = subparser1.add_parser('subcommand1', help='Ayuda para subcomando 1')
+    
     # Subanalizador 2
-    subparser2 = top_parser.add_subparsers(dest='subcommand2')
-    parser2 = subparser2.add_parser('sub2', help='Subanalizador 2')
-    parser2.add_argument('--option2', type=int, help='Opción para subanalizador 2')
+    subparser2 = main_parser.add_subparsers(dest='command2')
+    parser2 = subparser2.add_parser('subcommand2', help='Ayuda para subcomando 2')
 
-    return top_parser, parser1, parser2
+    return main_parser, parser1, parser2

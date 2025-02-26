@@ -17,10 +17,3 @@ def cachedmethod(cache, key=hashkey, lock=None):
             return result
         return wrapper
     return decorator
-
-# Dummy lock for cases where no lock is provided
-class dummy_lock:
-    def __enter__(self):
-        pass
-    def __exit__(self, *args):
-        pass
