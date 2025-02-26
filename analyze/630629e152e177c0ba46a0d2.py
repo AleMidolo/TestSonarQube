@@ -18,5 +18,5 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         # Parse the JSON response
         return response.json()
     else:
-        # Handle errors (e.g., 404, 500)
-        response.raise_for_status()
+        # Handle errors (e.g., return an empty dict or raise an exception)
+        return {}
