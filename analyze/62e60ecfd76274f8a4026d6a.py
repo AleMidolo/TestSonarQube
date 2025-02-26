@@ -14,7 +14,7 @@ def protocol_handlers(cls, protocol_version=None):
     if protocol_version is not None and not isinstance(protocol_version, tuple):
         raise TypeError("प्रोटोकॉल संस्करण ट्यूपल के रूप में पास किया जाना चाहिए।")
 
-    # उदाहरण के लिए, उपलब्ध प्रोटोकॉल हैंडलर्स
+    # उदाहरण के लिए, उपलब्ध हैंडलर्स को परिभाषित करें
     available_handlers = {
         (1, 0): "HandlerV1",
         (2, 0): "HandlerV2",

@@ -11,7 +11,7 @@ def _validate_labels(labels):
 
     for key, value in labels.items():
         if not isinstance(key, str) or not re.match(regex_key, key):
-            errors.append({key: f"Label key '{key}' does not match the regex [{regex_key}]"})
+            errors.append({key: f"Label key '{key}' does not match the regex [...]"})
         
         if isinstance(value, list):
             for item in value:

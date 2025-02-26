@@ -7,4 +7,3 @@ def validate_choices_args(self, args):
     available_choices = self.get_available_choices()  # Assuming this method exists
     if args not in available_choices:
         raise ValueError(f"Invalid choice: {args}. Available choices are: {available_choices}")
-    return True

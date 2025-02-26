@@ -14,5 +14,4 @@ def find_tags(text: str, replacer: callable = None) -> Tuple[Set, str]:
     """
     # Regular expression to find tags
     tag_pattern = r'<(\w+)>'
-    # Regular expression to find code blocks
     code_block_pattern = r'

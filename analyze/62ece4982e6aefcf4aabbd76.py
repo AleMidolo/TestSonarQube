@@ -7,4 +7,6 @@ def match(filename):
     - यदि फ़ाइल प्रकार समर्थित नहीं है, तो `False` लौटाएगा। यदि समर्थित है, तो `True` लौटाएगा।
     """
     supported_extensions = ['.txt', '.csv', '.json', '.xml']
-    return any(filename.endswith(ext) for ext in supported_extensions)
+    file_extension = filename.split('.')[-1] if '.' in filename else ''
+    
+    return file_extension in supported_extensions
