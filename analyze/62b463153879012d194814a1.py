@@ -1,10 +1,10 @@
 def add_rendition(self, lang, file_path):
     """
-    Adds a rendition of a file in a specified language.
+    Adds a rendition of the original file in the specified language.
 
     Args:
         lang (str): The language code for the rendition (e.g., 'en').
-        file_path (str): The path to the rendition file.
+        file_path (str): The file path of the rendition to be added.
 
     Example:
         {

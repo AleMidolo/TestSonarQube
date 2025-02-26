@@ -13,8 +13,7 @@ def make_find_paths(find_paths):
     transformed_paths = []
     for path in find_paths:
         if not path.startswith('pp:'):
-            transformed_path = f'sh:**/*{path}*/**'
-            transformed_paths.append(transformed_path)
+            transformed_paths.append(f'sh:**/*{path}*/**')
         else:
             transformed_paths.append(path)
     return transformed_paths

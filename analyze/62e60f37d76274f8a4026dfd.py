@@ -4,7 +4,7 @@ def dehydrate_time(value):
 
     :param value: A time object to be dehydrated.
     :type value: time  
-    :return: A string representation of the time object in 'HH:MM:SS' format.
+    :return: A string representation of the time in 'HH:MM:SS' format.
     """
     if value is None:
         return None

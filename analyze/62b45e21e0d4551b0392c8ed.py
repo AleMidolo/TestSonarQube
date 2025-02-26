@@ -20,7 +20,8 @@ def find_path_type(path):
             return 'root'
         else:
             return 'object'
-    elif os.path.isfile(path):
+    
+    if os.path.isfile(path):
         return 'file'
-    else:
-        return "Tipo de elemento desconocido."
+    
+    return "Tipo de elemento desconocido."
