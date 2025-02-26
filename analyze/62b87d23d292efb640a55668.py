@@ -1,19 +1,30 @@
+class VersioneerConfig:
+    def __init__(self):
+        self.version = None
+        self.author = None
+        self.license = None
+        self.description = None
+
+    def set_version(self, version):
+        self.version = version
+
+    def set_author(self, author):
+        self.author = author
+
+    def set_license(self, license):
+        self.license = license
+
+    def set_description(self, description):
+        self.description = description
+
 def get_config():
     """
     返回一个新的 `VersioneerConfig()` 对象，并设置其各种属性。
     创建、填充并返回 `VersioneerConfig()` 对象。
     """
-    class VersioneerConfig:
-        def __init__(self):
-            self.version = "0.1.0"
-            self.author = "Your Name"
-            self.email = "your.email@example.com"
-            self.license = "MIT"
-            self.description = "A sample project"
-            self.url = "https://example.com"
-    
     config = VersioneerConfig()
-    # 设置其他属性
-    config.additional_property = "Some value"
-    
+    config.set_version("1.0.0")
+    config.set_author("Your Name")
+    config.set_license("MIT")
+    config.set_description("This is a sample project.")
     return config

@@ -13,4 +13,4 @@ def _inline_r_setup(code: str) -> str:
     # Execute the provided R code
     ro.r(code)
 
-    return "R setup completed and code executed."
+    return "R setup complete and code executed."

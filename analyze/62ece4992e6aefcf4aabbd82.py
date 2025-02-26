@@ -14,4 +14,4 @@ def get_pattern(pattern, strip=True):
     """
     if strip and isinstance(pattern, str):
         pattern = pattern.strip()
-    return re.compile(pattern) if isinstance(pattern, str) else pattern
+    return re.compile(pattern)

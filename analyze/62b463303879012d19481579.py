@@ -8,10 +8,10 @@ def _extract_number_and_supplment_from_issue_element(issue):
     number_pattern = r'(?<=#)\d+'
     suppl_pattern = r'\b(?:sup|supplement)\s*[:\-]?\s*(\w+)\b'
 
-    number_match = re.search(number_pattern, issue)
-    suppl_match = re.search(suppl_pattern, issue, re.IGNORECASE)
+    number_matches = re.findall(number_pattern, issue)
+    suppl_matches = re.findall(suppl_pattern, issue, re.IGNORECASE)
 
-    number = number_match.group(0) if number_match else None
-    suppl = suppl_match.group(1) if suppl_match else None
+    number = number_matches[0] if number_matches else None
+    suppl = suppl_matches[0] if suppl_matches else None
 
     return number, suppl

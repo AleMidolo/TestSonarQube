@@ -34,7 +34,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left", field_names=("x"
             coordinate = bin_.center
         else:
             raise ValueError("Invalid value for get_coordinate. Must be 'left', 'right', or 'middle'.")
-        
+
         value = make_value(bin_)
         coordinates.append((coordinate, *value))
 
@@ -42,9 +42,9 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left", field_names=("x"
         # Apply scaling logic if needed
         pass
 
-    graph = {
-        field_names[i]: [coord[i] for coord in coordinates]
-        for i in range(len(field_names))
-    }
-
+    graph = create_graph(coordinates, field_names)
     return graph
+
+def create_graph(coordinates, field_names):
+    # Placeholder for graph creation logic
+    return {"coordinates": coordinates, "field_names": field_names}
