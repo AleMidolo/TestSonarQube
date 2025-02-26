@@ -7,10 +7,11 @@ def find_roots(
     if roots is None:
         roots = set()
 
-    all_children = {s for s, p, o in graph.triples((None, prop, None))}
-    all_parents = {o for s, p, o in graph.triples((None, prop, None))}
+    # Collect all nodes that have children
+    children = {s for s, p, o in graph.triples((None, prop, None))}
 
-    # Roots are those nodes that are not children of any other node
-    roots = all_parents - all_children
+    # Collect all nodes that are not children of any node
+    all_nodes = {s for s, p, o in graph.triples((None, None, None))}
+    roots = all_nodes - children
 
     return roots

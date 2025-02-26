@@ -10,7 +10,7 @@ def get_option_spec(self, command_name, argument_name):
         },
         'command2': {
             'arg1': {'type': 'bool', 'required': True},
-            'arg2': {'type': 'float', 'required': False}
+            'arg2': {'type': 'string', 'required': False}
         }
     }
     

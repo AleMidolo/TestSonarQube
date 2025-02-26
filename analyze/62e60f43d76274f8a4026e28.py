@@ -6,14 +6,15 @@ def hydrate_time(nanoseconds, tz=None):
     :param tz:  
     :return: Time
     """
-    from datetime import datetime, timezone, timedelta
-
-    if tz is None:
-        tz = timezone.utc
+    from datetime import datetime, timedelta, timezone
 
     # Convert nanoseconds to seconds
     seconds = nanoseconds / 1_000_000_000
-    # Create a datetime object in the specified timezone
-    time = datetime.fromtimestamp(seconds, tz)
-    
-    return time
+    # Create a UTC datetime object
+    utc_time = datetime(1970, 1, 1, tzinfo=timezone.utc) + timedelta(seconds=seconds)
+
+    if tz is not None:
+        # Convert to the specified timezone
+        local_time = utc_time.astimezone(tz)
+        return local_time
+    return utc_time

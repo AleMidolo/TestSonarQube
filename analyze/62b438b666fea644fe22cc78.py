@@ -6,10 +6,10 @@ def parse_arguments(*arguments):
     """
     parser = argparse.ArgumentParser()
     
-    # Aquí se pueden agregar argumentos esperados
+    # Aquí puedes agregar los argumentos que deseas analizar
     parser.add_argument('--example', type=str, help='Un ejemplo de argumento')
     
-    # Analiza los argumentos proporcionados
+    # Analiza los argumentos
     parsed_args = parser.parse_args(arguments)
     
     return parsed_args

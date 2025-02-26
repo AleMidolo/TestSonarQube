@@ -5,11 +5,13 @@ def popitem(self):
     if not self.data:
         raise KeyError("popitem(): dictionary is empty")
     
-    # Find the key with the minimum usage
-    min_key = min(self.usage, key=self.usage.get)
+    # Find the key with the least frequency
+    least_used_key = min(self.data, key=lambda k: self.frequency[k])
     
-    # Remove the key from usage and data
-    value = self.data.pop(min_key)
-    del self.usage[min_key]
+    # Get the value associated with that key
+    value = self.data.pop(least_used_key)
     
-    return (min_key, value)
+    # Remove the key from the frequency tracker
+    del self.frequency[least_used_key]
+    
+    return least_used_key, value

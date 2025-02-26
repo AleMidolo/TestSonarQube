@@ -8,5 +8,5 @@ def bash_completion():
     try:
         completion_script = subprocess.check_output(['borgmatic', 'completion', 'bash'], text=True)
         return completion_script
-    except subprocess.CalledProcessError as e:
+    except Exception as e:
         return f"Error al generar el script de autocompletado: {e}"

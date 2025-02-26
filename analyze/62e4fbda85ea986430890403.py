@@ -1,4 +1,3 @@
-from typing import Sequence
 import random
 
 def _shuffled(seq: Sequence[str]) -> list[str]:

@@ -4,7 +4,7 @@ def validate_fixity(self, fixity, manifest_files):
 
     Verificar la estructura del bloque de fijación y asegurarse de que solo se referencien los archivos listados en el manifiesto.
     """
-    # Verificar que el fixity sea un diccionario
+    # Verificar que el bloque de fijación sea un diccionario
     if not isinstance(fixity, dict):
         raise ValueError("El bloque de fijación debe ser un diccionario.")
 

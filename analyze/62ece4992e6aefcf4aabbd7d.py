@@ -15,7 +15,7 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     extra_env : dict[str, str]
         Cualquier variable de entorno adicional que se establecerá para el subproceso.
     """
-    # Asegurarse de que la función está en un módulo importable
+    # Asegurarse de que el módulo de la función sea importable
     module_name = func.__module__
     function_name = func.__name__
 

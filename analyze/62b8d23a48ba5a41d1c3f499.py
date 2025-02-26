@@ -12,4 +12,4 @@ def popitem(self):
     # Remove the item from the dictionary
     del self.data[lru_key]
     
-    return lru_key, lru_value
+    return (lru_key, lru_value)
