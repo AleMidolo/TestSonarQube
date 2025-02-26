@@ -5,13 +5,15 @@ def formatmany(
         ) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
     # Determine the parameter style based on the input
     if isinstance(many_params, dict):
+        # Named parameter style
         param_style = 'named'
     elif isinstance(many_params, list) and all(isinstance(param, (list, tuple)) for param in many_params):
+        # Ordinal parameter style
         param_style = 'ordinal'
     else:
         raise ValueError("Invalid parameter style. Must be a mapping or a sequence of sequences.")
 
-    # Prepare the formatted SQL and the converted parameters
+    # Prepare the formatted SQL and the list of converted parameters
     formatted_sql = sql
     converted_params = []
 
@@ -19,18 +21,20 @@ def formatmany(
         if param_style == 'named':
             if not isinstance(params, dict):
                 raise ValueError("Expected a mapping for named parameter style.")
-            # Replace named parameters in the SQL with placeholders
-            for key, value in params.items():
-                placeholder = f":{key}"
-                formatted_sql = formatted_sql.replace(placeholder, str(value))
-            converted_params.append(params)
-        elif param_style == 'ordinal':
+            # Convert named parameters to out-style
+            converted_param = {f":{key}": value for key, value in params.items()}
+            converted_params.append(converted_param)
+            # Replace named parameters in SQL
+            for key in params.keys():
+                formatted_sql = formatted_sql.replace(f":{key}", f"%({key})s")
+        else:
             if not isinstance(params, (list, tuple)):
                 raise ValueError("Expected a sequence for ordinal parameter style.")
-            # Replace ordinal parameters in the SQL with placeholders
-            for index, value in enumerate(params):
-                placeholder = f"${index + 1}"
-                formatted_sql = formatted_sql.replace(placeholder, str(value))
-            converted_params.append(list(params))
+            # Convert ordinal parameters to out-style
+            converted_param = list(params)
+            converted_params.append(converted_param)
+            # Replace ordinal parameters in SQL
+            for index in range(len(params)):
+                formatted_sql = formatted_sql.replace(f"?", f"%s", 1)
 
     return formatted_sql, converted_params

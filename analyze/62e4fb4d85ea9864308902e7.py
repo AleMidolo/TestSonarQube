@@ -13,14 +13,16 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
         # Normalize the command for Windows
         normalized_cmd = []
         for part in cmd:
-            # Convert to a path that Windows can understand
             if part.startswith("#!"):
                 # Handle shebangs
-                shebang_path = part[2:].strip()
-                normalized_cmd.append(os.path.normpath(shebang_path))
+                shebang = part[2:]
+                if os.path.isfile(shebang):
+                    normalized_cmd.append(shebang)
+                else:
+                    # If the shebang is not a valid file, keep it as is
+                    normalized_cmd.append(part)
             else:
-                normalized_cmd.append(os.path.normpath(part))
+                # Normalize paths for Windows
+                normalized_cmd.append(part.replace('/', '\\'))
         return tuple(normalized_cmd)
-    else:
-        # On non-Windows systems, return the command as is
-        return cmd
+    return cmd

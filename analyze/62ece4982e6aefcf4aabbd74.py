@@ -28,12 +28,9 @@ def prepare_repository_from_archive(
     else:
         raise ValueError("Unsupported archive format")
 
-    if filename is None:
-        extracted_files = list(tmp_path.glob('*'))
-        if extracted_files:
-            filename = extracted_files[0].name
-        else:
-            raise ValueError("No files extracted from the archive")
+    if filename:
+        extracted_path = tmp_path / filename
+    else:
+        extracted_path = next(tmp_path.iterdir())  # Get the first extracted directory
 
-    repo_path = tmp_path / filename
-    return f'file://{repo_path.resolve()}'
+    return f'file://{extracted_path.resolve()}'
