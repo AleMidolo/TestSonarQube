@@ -24,7 +24,6 @@ def scale(self, other=None):
     if self.current_scale is None or self.current_scale == 0:
         raise LenaValueError("La escala es desconocida o igual a cero.")
 
-    # Suponiendo que el gráfico tiene un atributo 'coordinates' que es una lista
-    # y que la última coordenada es la que se debe reajustar.
-    self.coordinates[-1] *= other  # Reajusta la última coordenada
-    self.current_scale *= other  # Reajusta la escala actual
+    # Suponiendo que la escala se almacena en un atributo llamado 'scale'
+    self.scale[-1] = other  # Reajusta la última coordenada de la escala
+    self.adjust_errors()  # Reajusta todos los errores junto con su coordenada

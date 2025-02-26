@@ -10,17 +10,16 @@ def validate_version_inventories(self, version_dirs):
     y se asume que están en secuencia de versiones (1, 2, 3...).
     """
     root_inventory = self.load_inventory(version_dirs[0])
-    mismatched_digests = {}
+    mismatched_digests = []
 
     for version in version_dirs:
         current_inventory = self.load_inventory(version)
         
         if not self.validate_inventory(current_inventory, root_inventory):
-            raise ValueError(f"Invalid inventory for version: {version}")
+            mismatched_digests.append(version)
         
-        for item, digest in current_inventory.items():
-            if item in root_inventory and root_inventory[item] != digest:
-                mismatched_digests[item] = digest
+        if not self.check_version_inventory(current_inventory):
+            raise ValueError(f"Inventory missing for version: {version}")
 
     return mismatched_digests
 
@@ -29,5 +28,9 @@ def load_inventory(self, version):
     pass
 
 def validate_inventory(self, current_inventory, root_inventory):
-    # Simulated method to validate the current inventory against the root inventory
+    # Simulated method to validate current inventory against root inventory
+    pass
+
+def check_version_inventory(self, current_inventory):
+    # Simulated method to check if the version inventory is complete
     pass

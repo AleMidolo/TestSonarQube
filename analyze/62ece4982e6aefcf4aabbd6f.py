@@ -14,6 +14,9 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     Retorno:
         un objeto Path que representa el directorio donde se ha extraído el archivo.
     """
+    # Crear el directorio de destino si no existe
+    destination_path.mkdir(parents=True, exist_ok=True)
+    
     # Descargar el archivo .tar.gz
     response = requests.get(url)
     tar_gz_path = destination_path / 'repo_archive.tar.gz'
@@ -25,5 +28,7 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     with tarfile.open(tar_gz_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
     
-    # Retornar el directorio donde se ha extraído el archivo
+    # Eliminar el archivo .tar.gz después de la extracción
+    tar_gz_path.unlink()
+    
     return destination_path

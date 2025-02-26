@@ -25,4 +25,5 @@ def _update_context(self, context):
         error_name = f"x_{i + 1}"  # Asumiendo que los errores se nombran x_1, x_2, ...
         context['error'][error_name] = {'index': i}
     
-    # No se eliminan valores existentes en context.value ni en sus subcontextos
+    # Aquí se pueden agregar más propiedades del grafo al contexto si es necesario
+    # context['value'] = self.some_value  # Ejemplo de cómo agregar más información

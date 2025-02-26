@@ -13,12 +13,13 @@ def from_ticks(cls, ticks, tz=None):
         (0 <= ticks < 86400000000000)
     """
     if not (0 <= ticks < 86400000000000):
-        raise ValueError("Ticks must be between 0 and 86400000000000.")
+        raise ValueError("Ticks must be between 0 and 86400000000000")
     
     seconds = ticks // 1_000_000_000
     nanoseconds = ticks % 1_000_000_000
-    hours, remainder = divmod(seconds, 3600)
-    minutes, seconds = divmod(remainder, 60)
+    hours = seconds // 3600
+    minutes = (seconds % 3600) // 60
+    seconds = seconds % 60
     
-    time_obj = cls(hours, minutes, seconds, nanoseconds, tz)
+    time_obj = cls(hour=hours, minute=minutes, second=seconds, microsecond=nanoseconds // 1000, tzinfo=tz)
     return time_obj

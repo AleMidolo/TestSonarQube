@@ -4,9 +4,9 @@ def dehydrate_timedelta(value):
     """
     Deshidratador para valores de `timedelta`.
 
-    :param value: 
+    :param value:  
     :type value: timedelta  
-    :return: 
+    :return:  
     """
     if not isinstance(value, timedelta):
         raise ValueError("El valor debe ser una instancia de timedelta.")

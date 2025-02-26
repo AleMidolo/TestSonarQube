@@ -1,6 +1,6 @@
-import os
-import zipfile
 from pathlib import Path
+import zipfile
+import os
 from typing import Optional, Union
 
 def prepare_repository_from_archive(
@@ -27,5 +27,5 @@ def prepare_repository_from_archive(
     with zipfile.ZipFile(archive_path, 'r') as zip_ref:
         zip_ref.extractall(extraction_path)
     
-    # Return the URL of the repository
+    # Return the URL of the extracted repository
     return f"file://{extraction_path.resolve()}"

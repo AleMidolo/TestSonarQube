@@ -12,16 +12,18 @@ def split(s, platform='this'):
       (otros valores están reservados).
     """
     if platform == 'this':
-        platform = 1 if sys.platform in ['linux', 'darwin'] else 0
+        platform = 1 if sys.platform.startswith(('linux', 'darwin')) else 0
 
     if platform == 1:  # POSIX
         pattern = r'(?:"([^"]*)"|\'([^\']*)|(\S+))'
-    else:  # Windows/CMD
-        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+)?)'
+    elif platform == 0:  # Windows
+        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+))'
+    else:
+        raise ValueError("Unsupported platform value")
 
     matches = re.findall(pattern, s)
     result = []
     for match in matches:
-        result.append(next(filter(None, match)))  # Get the first non-empty match
+        result.append(next(filter(None, match)))  # Get the first non-empty group
 
     return result

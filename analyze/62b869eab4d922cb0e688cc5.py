@@ -24,7 +24,6 @@ def update_last_applied_manifest_dict_from_resp(
                 raise KeyError(f"El campo observado '{key}' no está presente en la respuesta de Kubernetes.")
             last_applied_manifest[key] = response[key]
         if isinstance(value, dict):
-            last_applied_manifest[key] = update_last_applied_manifest_dict_from_resp(
-                last_applied_manifest.get(key, {}), value, response.get(key, {})
+            update_last_applied_manifest_dict_from_resp(
+                last_applied_manifest[key], value, response[key]
             )
-    return last_applied_manifest
