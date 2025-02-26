@@ -10,10 +10,4 @@ def make_find_paths(find_paths):
 
     ['sh:**/*foo.txt*/**', 'pp:root/somedir']
     """
-    result = []
-    for path in find_paths:
-        if not path.startswith('pp:'):
-            result.append(f'sh:**/*{path}*/**')
-        else:
-            result.append(path)
-    return result
+    return ['sh:**/*' + path_fragment + '*/**' if not path_fragment.startswith(('pp:', 'sh:')) else path_fragment for path_fragment in find_paths]

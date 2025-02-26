@@ -16,14 +16,10 @@ def validate(self, inventory, extract_spec_version=False):
         spec_version = self.spec_version
 
     # Perform validation based on the determined spec_version
-    if spec_version == 'v1':
-        # Validation logic for version 1
-        pass  # Replace with actual validation logic
-    elif spec_version == 'v2':
-        # Validation logic for version 2
-        pass  # Replace with actual validation logic
-    else:
-        raise ValueError("Invalid specification version")
-    
-    # Additional validation checks can be added here
-    return True  # Return True if validation passes
+    if spec_version not in self.valid_versions:
+        raise ValueError(f"Invalid specification version: {spec_version}")
+
+    # Additional validation logic can be added here
+    # ...
+
+    return True

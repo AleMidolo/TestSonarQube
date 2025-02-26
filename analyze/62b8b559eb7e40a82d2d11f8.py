@@ -7,27 +7,14 @@ def minimalBases(classes):
     def is_subclass(sub, super):
         return issubclass(sub, super)
 
-    # Create a graph of subclasses
-    graph = defaultdict(set)
-    for cls in classes:
-        for other_cls in classes:
-            if cls != other_cls and is_subclass(cls, other_cls):
-                graph[other_cls].add(cls)
+    # Create a list to hold the minimal bases
+    minimal_classes = []
 
-    # Perform a topological sort to find the minimal bases
-    visited = set()
-    result = []
-
-    def dfs(cls):
-        if cls in visited:
-            return
-        visited.add(cls)
-        for neighbor in graph[cls]:
-            dfs(neighbor)
-        result.append(cls)
+    # Sort classes by their depth in the inheritance hierarchy
+    classes.sort(key=lambda cls: cls.__mro__)
 
     for cls in classes:
-        dfs(cls)
+        if not any(is_subclass(cls, min_cls) for min_cls in minimal_classes):
+            minimal_classes.append(cls)
 
-    # Reverse the result to get the ordered minimum equivalent
-    return result[::-1]
+    return minimal_classes

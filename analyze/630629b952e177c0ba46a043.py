@@ -11,8 +11,12 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     रिटर्न (Returns):  
     - dict: एक स्वरूपित डिक्शनरी
     """
-    nodeinfo = {
+    nodeinfo_document = {
         "version": "2.0",
+        "services": {
+            "outbound": [],
+            "inbound": []
+        },
         "links": [
             {
                 "rel": "self",
@@ -20,4 +24,5 @@ def get_nodeinfo_well_known_document(url, document_path=None):
             }
         ]
     }
-    return nodeinfo
+    
+    return nodeinfo_document

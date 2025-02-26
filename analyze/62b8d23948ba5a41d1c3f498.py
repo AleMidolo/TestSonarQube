@@ -22,6 +22,8 @@ def lru_cache(maxsize=128, typed=False):
                 cache.popitem(last=False)
             return result
 
+        wrapper.cache_clear = cache.clear
+        wrapper.cache_info = lambda: (len(cache), maxsize)
         return wrapper
 
     return decorator

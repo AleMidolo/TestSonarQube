@@ -7,8 +7,8 @@ def validate_version_inventories(self, version_dirs):
 
     version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
     """
-    inventory_digests = {}
-    discrepancies = []
+    inventory_digests = set()
+    discrepancies = {}
 
     for version in version_dirs:
         inventory_path = f"{version}/inventory.json"
@@ -16,18 +16,24 @@ def validate_version_inventories(self, version_dirs):
         try:
             with open(inventory_path, 'r') as file:
                 inventory = json.load(file)
-                current_digest = inventory.get('digest')
                 
-                # Check if the current digest is in the root inventory
-                if current_digest not in inventory_digests.values():
-                    discrepancies.append(current_digest)
-                
-                # Record the digest for this version
-                inventory_digests[version] = current_digest
+                # Validate the inventory for the current version
+                if not self.validate_inventory(inventory):
+                    raise ValueError(f"Invalid inventory in {inventory_path}")
+
+                # Record the digests from the root inventory
+                if version == version_dirs[0]:  # Assuming the first version is the root
+                    inventory_digests.update(inventory.get('digests', []))
+                else:
+                    # Check for discrepancies
+                    current_digests = set(inventory.get('digests', []))
+                    different_digests = current_digests - inventory_digests
+                    if different_digests:
+                        discrepancies[version] = different_digests
 
         except FileNotFoundError:
-            raise Exception(f"Inventory file not found for version: {version}")
+            raise FileNotFoundError(f"Inventory file not found: {inventory_path}")
         except json.JSONDecodeError:
-            raise Exception(f"Error decoding JSON for version: {version}")
+            raise ValueError(f"Error decoding JSON from {inventory_path}")
 
     return discrepancies
