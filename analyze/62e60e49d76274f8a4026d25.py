@@ -32,18 +32,7 @@ def unit_of_work(metadata=None, timeout=None):
     def decorator(func):
         def wrapper(*args, **kwargs):
             # 这里可以添加事务处理逻辑
-            # 例如，使用 Neo4j 的驱动程序来管理事务
-            from neo4j import GraphDatabase
-
-            driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "password"))
-
-            with driver.session() as session:
-                if timeout is not None:
-                    session.run("CALL dbms.setTransactionTimeout($timeout)", timeout=timeout)
-                if metadata is not None:
-                    session.run("CALL dbms.setTXMetaData($metadata)", metadata=metadata)
-
-                result = session.write_transaction(func, *args, **kwargs)
-            return result
+            # 例如，连接到数据库，开始事务，设置超时和元数据等
+            pass  # 具体实现逻辑
         return wrapper
     return decorator

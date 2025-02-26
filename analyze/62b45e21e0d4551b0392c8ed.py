@@ -26,9 +26,5 @@ def find_path_type(path):
                 return 'object'
             elif "Manifest" in content:
                 return 'file'
-            else:
-                return "未知类型"
-    elif os.path.isfile(path):
-        return 'file'
-    else:
-        return "路径类型不明"
+    
+    return "未知类型"

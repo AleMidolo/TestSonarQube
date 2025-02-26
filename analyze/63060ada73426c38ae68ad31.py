@@ -12,8 +12,9 @@ def _convert_non_cli_args(self, parser_name, values_dict):
             values_dict[key] = int(value)
         else:
             try:
-                # Attempt to convert to float if it's not an integer
+                # 尝试将字符串转换为浮点数
                 values_dict[key] = float(value)
             except ValueError:
-                # Keep it as a string if it can't be converted
-                values_dict[key] = value
+                # 如果转换失败，保持原始字符串
+                pass
+    return values_dict

@@ -8,15 +8,13 @@ def _normalizeargs(sequence, output=None):
 
     除了单个接口或实现规范之外的任何内容都将被展开。
     """
-    if isinstance(sequence, (list, tuple)):
-        normalized = []
-        for item in sequence:
-            if isinstance(item, (list, tuple)):
-                normalized.extend(_normalizeargs(item))
-            else:
-                normalized.append(item)
-        return normalized
-    elif isinstance(sequence, dict):
-        return {key: _normalizeargs(value) for key, value in sequence.items()}
-    else:
-        return [sequence] if output is None else output
+    if output is None:
+        output = []
+
+    for item in sequence:
+        if isinstance(item, (tuple, list)):
+            output.extend(_normalizeargs(item))
+        else:
+            output.append(item)
+
+    return output

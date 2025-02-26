@@ -7,8 +7,8 @@ def from_raw_values(cls, values):
     :param values: ASCII 字符串值（原始书签）
     :type values: Iterable[str]
     """
-    bookmarks = []
+    bookmarks = cls()  # Assuming cls is a class that can be instantiated
     for value in values:
         if isinstance(value, str):
-            bookmarks.append(value)
-    return cls(bookmarks)
+            bookmarks.add(value)  # Assuming there is an add method to add bookmarks
+    return bookmarks
