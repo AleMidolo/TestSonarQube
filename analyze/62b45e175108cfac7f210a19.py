@@ -11,13 +11,13 @@ def validate_fixity(self, fixity, manifest_files):
     # Check if all files in fixity are in manifest_files
     for file in fixity.keys():
         if file not in manifest_files:
-            raise ValueError(f"File {file} in fixity is not listed in manifest files.")
+            raise ValueError(f"File '{file}' in fixity is not listed in manifest files.")
 
     # Check the structure of the fixity block
     for file, checksum in fixity.items():
         if not isinstance(checksum, str):
-            raise ValueError(f"Checksum for file {file} must be a string.")
+            raise ValueError(f"Checksum for file '{file}' must be a string.")
         if len(checksum) == 0:
-            raise ValueError(f"Checksum for file {file} cannot be empty.")
+            raise ValueError(f"Checksum for file '{file}' cannot be empty.")
 
     return True

@@ -9,7 +9,7 @@ def list_of_file_names(settings_dirs, spec_option):
     for directory in settings_dirs:
         if os.path.exists(directory):
             for file in os.listdir(directory):
-                if file.endswith(spec_option):
+                if spec_option in file:
                     file_names.append(file)
     
     return file_names

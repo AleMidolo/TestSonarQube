@@ -4,18 +4,19 @@ def add_asset(self, basename, file_path):
     
     The function will create entries for different file formats based on the basename.
     
-    Args:
-        basename (str): The base name of the asset without the extension.
-        file_path (str): The path to the asset file.
-    
-    Returns:
-        dict: A dictionary mapping file names to their respective paths.
+    Example:
+    {
+        "artigo02-gf03.tiff": "/path/artigo02-gf03.tiff",
+        "artigo02-gf03.jpg": "/path/artigo02-gf03.jpg",
+        "artigo02-gf03.png": "/path/artigo02-gf03.png"
+    }
     """
-    extensions = ['tiff', 'jpg', 'png']
-    asset_dict = {}
+    formats = ['tiff', 'jpg', 'png']
+    assets = {}
     
-    for ext in extensions:
-        asset_name = f"{basename}.{ext}"
-        asset_dict[asset_name] = file_path
+    for fmt in formats:
+        asset_name = f"{basename}.{fmt}"
+        assets[asset_name] = file_path
     
-    return asset_dict
+    # Assuming there's a dictionary or similar structure to store the assets
+    self.assets.update(assets)

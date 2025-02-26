@@ -18,8 +18,12 @@ def from_ticks(cls, ticks, tz=None):
     from datetime import datetime, timedelta
 
     # Calculate the time from ticks
-    midnight = datetime(1, 1, 1, 0, 0, 0, 0, tzinfo=tz)
+    midnight = datetime(1, 1, 1)  # Arbitrary date
     time_delta = timedelta(microseconds=ticks / 1000)
-    result_time = midnight + time_delta
+    time = midnight + time_delta
 
-    return result_time.time()
+    if tz is not None:
+        import pytz
+        time = tz.localize(time)
+
+    return time

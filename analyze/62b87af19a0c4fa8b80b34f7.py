@@ -1,18 +1,17 @@
 def difference(d1, d2, level=-1):
-    def recursive_diff(d1, d2, level):
-        if level == 0:
-            return {}
-        diff = {}
-        for key in d1:
-            if key not in d2:
-                diff[key] = d1[key]
+    def recursive_difference(dict1, dict2, current_level):
+        result = {}
+        for key in dict1:
+            if key not in dict2:
+                result[key] = dict1[key]
             else:
-                if isinstance(d1[key], dict) and isinstance(d2[key], dict):
-                    nested_diff = recursive_diff(d1[key], d2[key], level - 1)
-                    if nested_diff:
-                        diff[key] = nested_diff
-                elif d1[key] != d2[key]:
-                    diff[key] = d1[key]
-        return diff
+                if isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
+                    if current_level != 0:
+                        nested_diff = recursive_difference(dict1[key], dict2[key], current_level - 1)
+                        if nested_diff:
+                            result[key] = nested_diff
+                elif dict1[key] != dict2[key]:
+                    result[key] = dict1[key]
+        return result
 
-    return recursive_diff(d1, d2, level)
+    return recursive_difference(d1, d2, level)

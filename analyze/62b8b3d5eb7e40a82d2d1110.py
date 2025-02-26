@@ -8,7 +8,7 @@ def _c_optimizations_available():
     """
     try:
         import some_c_optimization_module  # Replace with actual module name
-        return some_c_optimization_module
+        return True
     except ImportError:
         raise ImportError("C optimizations are required but not available.")
     return False

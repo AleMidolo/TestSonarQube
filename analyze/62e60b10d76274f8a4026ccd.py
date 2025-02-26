@@ -14,9 +14,9 @@ def data(self, *keys):
     result = {}
     for key in keys:
         if isinstance(key, int):
-            if key < 0 or key >= len(self.record):
+            if key < 0 or key >= len(self.values):
                 raise IndexError("Index out of range")
-            result[key] = self.record[key]
+            result[key] = self.values[key]
         else:
-            result[key] = self.record.get(key, None)
+            result[key] = getattr(self, key, None)
     return result

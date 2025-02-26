@@ -8,7 +8,7 @@ def validate_version_inventories(self, version_dirs):
     version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
     """
     inventory_digests = {}
-    discrepancies = {}
+    discrepancies = []
 
     for version in version_dirs:
         inventory_path = f"{version}/inventory.json"
@@ -16,19 +16,24 @@ def validate_version_inventories(self, version_dirs):
         try:
             with open(inventory_path, 'r') as file:
                 inventory = json.load(file)
+                
+                # Validate the inventory for the current version
+                if not self.validate_inventory(inventory):
+                    raise ValueError(f"Invalid inventory in {version}")
+
+                # Record the digests
                 current_digests = set(item['digest'] for item in inventory.get('items', []))
-                
-                # Check if the current version has a valid inventory
-                if version in inventory_digests:
-                    previous_digests = inventory_digests[version - 1]
-                    if not current_digests.issubset(previous_digests):
-                        discrepancies[version] = current_digests - previous_digests
-                
+                root_digests = set(inventory_digests.get('root', []))
+
+                # Check for discrepancies
+                discrepancies.extend(current_digests - root_digests)
+
+                # Update the inventory digests
                 inventory_digests[version] = current_digests
 
         except FileNotFoundError:
-            raise Exception(f"Inventory file not found for version: {version}")
+            raise FileNotFoundError(f"Inventory file not found for version: {version}")
         except json.JSONDecodeError:
-            raise Exception(f"Invalid JSON in inventory file for version: {version}")
+            raise ValueError(f"Error decoding JSON for inventory in version: {version}")
 
     return discrepancies
