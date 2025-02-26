@@ -26,7 +26,6 @@ def _explore_zipfile(zip_path):
                 basename = os.path.basename(file_info.filename)
                 with zip_file.open(file_info.filename) as file:
                     xml_content = file.read()
-                    root = ET.fromstring(xml_content)
-                    data_dict[basename].append(root)
+                    data_dict[basename].append(xml_content)
 
     return dict(data_dict)

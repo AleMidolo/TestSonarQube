@@ -17,6 +17,6 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
             normalized_cmd.append(part)
         else:
             # Normalize the path for Windows
-            normalized_cmd.append(part.replace('\\', '/'))
+            normalized_cmd.append(part.replace('/', '\\'))
 
     return tuple(normalized_cmd)

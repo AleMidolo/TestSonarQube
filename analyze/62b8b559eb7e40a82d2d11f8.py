@@ -5,16 +5,19 @@ def minimalBases(classes):
     from collections import defaultdict
 
     def find_parent(class_name):
-        for base in classes[class_name]:
-            if base in minimal_classes:
-                return minimal_classes[base]
-            parent = find_parent(base)
-            if parent:
-                return parent
-        return class_name
+        if class_name not in parent:
+            return class_name
+        root = find_parent(parent[class_name])
+        parent[class_name] = root
+        return root
 
-    minimal_classes = {}
+    parent = {}
     for cls in classes:
-        minimal_classes[cls] = find_parent(cls)
+        for base in cls[1:]:
+            root_cls = find_parent(cls[0])
+            root_base = find_parent(base)
+            if root_cls != root_base:
+                parent[root_base] = root_cls
 
-    return list(dict.fromkeys(minimal_classes.values()))
+    unique_bases = set(find_parent(cls[0]) for cls in classes)
+    return sorted(unique_bases)

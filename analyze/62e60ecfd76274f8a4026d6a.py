@@ -16,10 +16,11 @@ def protocol_handlers(cls, protocol_version=None):
 
     # उपलब्ध प्रोटोकॉल हैंडलर्स की डिक्शनरी
     handlers = {
-        (1, 0): "HandlerV1",
-        (2, 0): "HandlerV2",
-        (3, 0): "HandlerV3",
-        (3, 5): "HandlerV3_5",
+        (1, 0): "Handler for version 1.0",
+        (2, 0): "Handler for version 2.0",
+        (3, 0): "Handler for version 3.0",
+        (3, 5): "Handler for version 3.5",
+        (4, 0): "Handler for version 4.0",
     }
 
     if protocol_version is not None:

@@ -1,6 +1,6 @@
 def scale(self, other=None, recompute=False):
     """
-    histogram का स्केल (इंटीग्रल) गणना करें या सेट करें।
+    Histogram का स्केल (इंटीग्रल) गणना करें या सेट करें।
 
     यदि *other* ``None`` है, तो इस हिस्टोग्राम का स्केल लौटाएं।  
     यदि इसका स्केल पहले गणना नहीं किया गया है,  
@@ -19,11 +19,11 @@ def scale(self, other=None, recompute=False):
     तो :exc:`.LenaValueError` त्रुटि उत्पन्न की जाएगी।
     """
     if other is None:
-        if not hasattr(self, '_scale') or recompute:
-            self._scale = self._compute_scale()
+        if not hasattr(self, '_scale_computed') or recompute:
+            self._compute_scale()
         return self._scale
-
-    if self._scale == 0:
-        raise LenaValueError("Cannot rescale a histogram with zero scale.")
-
-    self._scale = other * self._scale
+    else:
+        if self._scale == 0:
+            raise LenaValueError("Cannot rescale a histogram with zero scale.")
+        self._scale = other
+        self._update_histogram()

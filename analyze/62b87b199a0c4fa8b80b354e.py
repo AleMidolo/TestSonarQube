@@ -7,10 +7,19 @@ def is_fill_request_seq(seq):
     - या इसमें कम से कम एक FillRequest तत्व हो,  
     - और यह Source अनुक्रम (Source sequence) न हो।
     """
-    if not seq:
-        return False
+    # Check if seq is a FillRequest element
+    if isinstance(seq, FillRequest):
+        return True
     
-    is_fill_request = any(isinstance(item, FillRequest) for item in seq)
-    is_source_sequence = isinstance(seq, SourceSequence)
+    # Check if seq contains at least one FillRequest element
+    if any(isinstance(item, FillRequest) for item in seq):
+        # Check if seq is not a Source sequence
+        if not is_source_sequence(seq):
+            return True
+    
+    return False
 
-    return is_fill_request and not is_source_sequence
+def is_source_sequence(seq):
+    # Placeholder function to determine if seq is a Source sequence
+    # This should contain the actual logic to identify a Source sequence
+    return False

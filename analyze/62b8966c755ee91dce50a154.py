@@ -62,59 +62,74 @@ def isoparse(self, dt_str):
 
     .. versionadded:: 2.7.0
     """
-    from datetime import datetime, timedelta, timezone
+    from datetime import datetime, timedelta
     import re
+    from dateutil import tz
 
-    # Define regex patterns for parsing
-    date_pattern = r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?(?:W(\d{2})(?:-?(\d))?)?'
-    time_pattern = r'T(\d{1,2})(?::(\d{2})(?::(\d{2})(?:\.(\d+))?)?)?'
-    offset_pattern = r'([+-]\d{2}):?(\d{2})?|Z'
+    # Regular expressions for parsing
+    date_regex = re.compile(r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?')
+    week_regex = re.compile(r'(\d{4})-W(\d{2})(?:-?(\d))?')
+    time_regex = re.compile(r'(\d{1,2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?)?')
+    offset_regex = re.compile(r'Z|([+-]\d{2}):?(\d{2})?|([+-]\d{2})(\d{2})?|([+-]\d{2})')
 
-    # Combine patterns
-    full_pattern = re.compile(f'^{date_pattern}(?:{time_pattern})?(?:{offset_pattern})?$')
-
-    match = full_pattern.match(dt_str)
-    if not match:
-        raise ValueError(f"Invalid ISO-8601 date string: {dt_str}")
-
-    # Extract date components
-    year = int(match.group(1))
-    month = int(match.group(2) or 1)
-    day = int(match.group(3) or 1)
-    week = match.group(4)
-    week_day = match.group(5)
-
-    if week:
-        # ISO week date
-        week = int(week)
-        week_day = int(week_day or 1)
-        # Calculate the date from ISO week
-        jan4 = datetime(year, 1, 4)
-        first_week_start = jan4 - timedelta(days=jan4.isocalendar()[2] - 1)
-        date = first_week_start + timedelta(weeks=week - 1, days=week_day - 1)
+    # Split date and time
+    if 'T' in dt_str:
+        date_str, time_str = dt_str.split('T', 1)
     else:
-        # Regular date
-        date = datetime(year, month, day)
+        date_str, time_str = dt_str, ''
 
-    # Extract time components
-    hour = int(match.group(6) or 0)
-    minute = int(match.group(7) or 0)
-    second = int(match.group(8) or 0)
-    microsecond = int(match.group(9) or 0)
+    # Parse date
+    match = date_regex.match(date_str)
+    if match:
+        year = int(match.group(1))
+        month = int(match.group(2) or 1)
+        day = int(match.group(3) or 1)
+    else:
+        match = week_regex.match(date_str)
+        if match:
+            year = int(match.group(1))
+            week = int(match.group(2))
+            day = int(match.group(3) or 1)
+            # Calculate the first day of the week
+            first_day_of_year = datetime(year, 1, 1)
+            first_weekday = first_day_of_year.weekday()
+            days_to_first_monday = (7 - first_weekday) % 7
+            first_monday = first_day_of_year + timedelta(days=days_to_first_monday)
+            date = first_monday + timedelta(weeks=week - 1, days=day - 1)
+            return date
+        else:
+            raise ValueError("Invalid date format")
+
+    # Parse time
+    match = time_regex.match(time_str)
+    if match:
+        hour = int(match.group(1))
+        minute = int(match.group(2) or 0)
+        second = int(match.group(3) or 0)
+        microsecond = int(match.group(4) or 0)
+    else:
+        hour, minute, second, microsecond = 0, 0, 0, 0
+
+    # Handle midnight case
+    if hour == 24:
+        hour = 0
+        day += 1
+
+    # Parse offset
+    offset = None
+    if 'Z' in time_str:
+        offset = tz.tzutc()
+    else:
+        offset_match = offset_regex.search(time_str)
+        if offset_match:
+            if offset_match.group(1):  # ±HH:MM or Z
+                sign = 1 if offset_match.group(1)[0] == '+' else -1
+                hours = int(offset_match.group(2) or offset_match.group(3))
+                minutes = int(offset_match.group(4) or 0)
+                offset = tz.tzoffset(None, sign * (hours * 3600 + minutes * 60))
+            else:
+                raise ValueError("Invalid offset format")
 
     # Create datetime object
-    dt = date.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
-
-    # Extract timezone offset
-    offset = match.group(10)
-    if offset:
-        if offset == 'Z':
-            tz = timezone.utc
-        else:
-            sign = 1 if offset[0] == '+' else -1
-            hours_offset = int(offset[1:3])
-            minutes_offset = int(offset[3:5]) if len(offset) > 3 else 0
-            tz = timezone(timedelta(hours=sign * hours_offset, minutes=sign * minutes_offset))
-        dt = dt.replace(tzinfo=tz)
-
+    dt = datetime(year, month, day, hour, minute, second, microsecond, tzinfo=offset)
     return dt

@@ -21,7 +21,7 @@ def _group_files_by_xml_filename(source, xmls, files):
     grouped_files = {}
     
     for xml in xmls:
-        base_name = xml.split('.')[0]  # Assuming the base name is the part before the first dot
+        base_name = xml.split('.')[0]  # Extract base name from XML filename
         grouped_files[base_name] = []
 
     for file in files:

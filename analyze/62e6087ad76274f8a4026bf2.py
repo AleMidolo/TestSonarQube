@@ -19,14 +19,4 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
     :param handlers: हैंडलर फ़ंक्शन जो लौटाए गए Response ऑब्जेक्ट में पास किए जाते हैं।
     """
     # Implementation of the discard function
-    # This is a placeholder for the actual logic
-    output_queue = []  # Assuming we have an output queue
-    discard_message = {
-        'n': n,
-        'qid': qid,
-        'dehydration_hooks': dehydration_hooks,
-        'hydration_hooks': hydration_hooks,
-        'handlers': handlers
-    }
-    output_queue.append(discard_message)
-    return output_queue
+    pass
