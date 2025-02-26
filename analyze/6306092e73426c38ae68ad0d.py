@@ -1,19 +1,22 @@
-def create_complex_argument_type(self, subcommand, type_name, option_name, spec_option):
+def create_complex_argument_type(self, subcommand, type_name, option_name,
+                                 spec_option):
     """
-    Construye el tipo de argumento complejo.
+    Crea il tipo di argomento complesso.
 
-    :param subcommand: el nombre del comando
-    :param type_name: el nombre del tipo complejo
-    :param option_name: el nombre de la opción
-    :param spec_option: las especificaciones de la opción
-    :return: la instancia del tipo complejo
+    :param subcommand: il nome del comando
+    :param type_name: il nome del tipo complesso
+    :param option_name: il nome dell'opzione
+    :param spec_option: le specifiche dell'opzione
+    :return: l'istanza del tipo complesso
     """
     class ComplexArgumentType:
-        def __init__(self, name, specs):
-            self.name = name
-            self.specs = specs
+        def __init__(self, subcommand, type_name, option_name, spec_option):
+            self.subcommand = subcommand
+            self.type_name = type_name
+            self.option_name = option_name
+            self.spec_option = spec_option
 
         def __repr__(self):
-            return f"ComplexArgumentType(name={self.name}, specs={self.specs})"
+            return f"ComplexArgumentType(subcommand={self.subcommand}, type_name={self.type_name}, option_name={self.option_name}, spec_option={self.spec_option})"
 
-    return ComplexArgumentType(type_name, spec_option)
+    return ComplexArgumentType(subcommand, type_name, option_name, spec_option)

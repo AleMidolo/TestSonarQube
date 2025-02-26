@@ -1,29 +1,28 @@
 def discard(self, n=-1, qid=-1, dehydration_hooks=None,
             hydration_hooks=None, **handlers):
     """
-    Añade un mensaje 'DISCARD' a la cola de salida.
+    Aggiunge un messaggio DISCARD alla coda di output.
 
-    :param n: número de registros a descartar, por defecto = -1 (TODOS)
-    :param qid: ID de consulta para descartar, por defecto = -1 (última consulta)
+    :param n: numero di record da scartare, valore predefinito = -1 (TUTTI)
+    :param qid: ID della query per cui scartare, valore predefinito = -1 (ultima query)
     :param dehydration_hooks:
-        Ganchos para deshidratar tipos (diccionario de tipo (clase) a función
-        de deshidratación). Las funciones de deshidratación reciben el valor y devuelven un objeto de un tipo entendido por 'packstream'.
+        Hook per disidratare i tipi (dizionario da tipo (classe) a funzione di disidratazione).
+        Le funzioni di disidratazione ricevono il valore e restituiscono un oggetto di tipo
+        comprensibile da packstream.
     :param hydration_hooks:
-        Ganchos para hidratar tipos (mapeo de tipo (clase) a función de
-        hidratación). Las funciones de hidratación reciben el valor de un tipo
-        entendido por 'packstream' y son libres de devolver cualquier cosa.
-    :param handlers: funciones manejadoras pasadas al objeto 'Response' devuelto
+        Hook per idratare i tipi (mappatura da tipo (classe) a funzione di idratazione).
+        Le funzioni di idratazione ricevono il valore di un tipo comprensibile da packstream
+        e possono restituire qualsiasi cosa.
+    :param handlers: funzioni gestore passate all'oggetto Response restituito
     """
-    # Implementación del método
+    # Implementazione del metodo discard
     if dehydration_hooks is None:
         dehydration_hooks = {}
     if hydration_hooks is None:
         hydration_hooks = {}
 
-    # Aquí se añadiría la lógica para manejar el mensaje 'DISCARD'
-    # y utilizar los ganchos de deshidratación e hidratación según sea necesario.
-    
-    # Ejemplo de lógica (esto es solo un esqueleto y debe ser adaptado a la lógica real):
+    # Logica per aggiungere un messaggio DISCARD alla coda di output
+    # Questo è un esempio e dovrebbe essere adattato alla logica specifica dell'applicazione
     message = {
         'type': 'DISCARD',
         'n': n,
@@ -33,5 +32,5 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         'handlers': handlers
     }
     
-    # Suponiendo que hay una cola de salida a la que se añade el mensaje
+    # Aggiungere il messaggio alla coda di output
     self.output_queue.append(message)

@@ -1,25 +1,25 @@
 def fromutc(self, dt):
     """
-    Dado un objeto "datetime" que contiene información de la zona horaria al que pertenece, calcula un objeto "datetime" para una zona horaria diferente, que contenga información de la nueva zona horaria al que pertenece.
+    Dato un oggetto datetime con consapevolezza del fuso orario (timezone-aware) in un determinato fuso orario, calcola un oggetto datetime con consapevolezza del fuso orario in un nuovo fuso orario.
 
-    Dado que esta es la única ocasión en la que *sabemos* que tenemos un objeto datetime no ambiguo, aprovechamos esta oportunidad para determinar si el datetime es ambiguo y está en un estado de "pliegue" (por ejemplo, si es la primera ocurrencia, cronológicamente, del datetime ambiguo).
+    Poiché questa è l'unica occasione in cui *sappiamo* di avere un oggetto datetime non ambiguo, cogliamo l'opportunità per determinare se il datetime è ambiguo e si trova in uno stato di "fold" (ad esempio, se è la prima occorrenza, in ordine cronologico, del datetime ambiguo).
 
-    :param dt:
-        Un objeto :class:`datetime.datetime` con conocimiento de zona horaria.
+    :param dt:  
+        Un oggetto :class:`datetime.datetime` con consapevolezza del fuso orario (timezone-aware).
     """
-    # Verificar que el objeto datetime tiene información de zona horaria
     if dt.tzinfo is None:
-        raise ValueError("El objeto datetime debe tener información de zona horaria.")
+        raise ValueError("dt must be timezone-aware")
 
-    # Convertir el datetime a la zona horaria local
-    local_dt = dt.astimezone(self)
+    # Convert the datetime to UTC
+    utc_dt = dt.astimezone(self.utc)
 
-    # Determinar si el datetime es ambiguo
-    if local_dt.dst() != timedelta(0):
-        # Si hay un desplazamiento horario, verificar si es la primera ocurrencia
-        if dt < self.utcoffset(dt):
-            return local_dt
+    # Check if the datetime is ambiguous
+    if self._is_ambiguous(utc_dt):
+        # Handle the ambiguity (e.g., by checking if it's in the fold)
+        if self._is_in_fold(utc_dt):
+            return utc_dt.replace(fold=1)
         else:
-            raise ValueError("El datetime es ambiguo y no se puede determinar su estado.")
-
-    return local_dt
+            return utc_dt.replace(fold=0)
+    
+    # Return the converted datetime in the new timezone
+    return utc_dt.astimezone(self)

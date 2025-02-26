@@ -1,11 +1,11 @@
 def test_tag(tag: str) -> bool:
     """
-    Prueba una palabra para determinar si puede ser aceptada como una etiqueta.
+    Verifica se una parola può essere accettata come tag.
     """
     if not tag:
         return False
     if len(tag) > 30:
         return False
-    if not tag.isalnum() and '_' not in tag:
+    if any(char in tag for char in [' ', '#', '@', '!', '$', '%', '^', '&', '*', '(', ')']):
         return False
     return True

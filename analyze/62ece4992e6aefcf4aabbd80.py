@@ -1,28 +1,30 @@
 def remove_ending_os_sep(input_list):
     """
-    Itera sobre una lista de cadenas y elimina los caracteres separadores de ruta del sistema operativo al final.
+    Itera su un elenco di stringhe e rimuovi i caratteri separatori di sistema operativi (os) finali.
 
-    Cada cadena se verifica para determinar si su longitud es mayor que uno y si el último
-    carácter es el separador de ruta. Si es así, se elimina el carácter separador de ruta.
+    Ogni stringa viene verificata per controllare se la sua lunghezza è maggiore di uno e se l'ultimo
+    carattere è il separatore di percorso. In tal caso, il carattere separatore di percorso
+    viene rimosso.
 
-    Argumentos:
-        input_list: lista de cadenas
+    Argomenti:
+        input_list: elenco di stringhe
 
-    Devuelve:
-        Lista procesada de cadenas
+    Restituisce:
+        Elenco elaborato di stringhe
 
-    Excepciones:
+    Eccezioni:
         TypeError
     """
-    if not isinstance(input_list, list):
-        raise TypeError("input_list debe ser una lista de cadenas")
-    
     import os
-    os_sep = os.sep
-    processed_list = []
 
+    if not isinstance(input_list, list):
+        raise TypeError("input_list deve essere un elenco di stringhe")
+
+    processed_list = []
     for item in input_list:
-        if isinstance(item, str) and len(item) > 1 and item.endswith(os_sep):
+        if not isinstance(item, str):
+            raise TypeError("Tutti gli elementi in input_list devono essere stringhe")
+        if len(item) > 1 and item[-1] == os.sep:
             processed_list.append(item[:-1])
         else:
             processed_list.append(item)

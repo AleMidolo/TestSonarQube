@@ -1,18 +1,18 @@
 def _eval_file(prefix, file_path):
     """
-    Identifica el tipo de archivo del paquete: `asset` o `rendition`.
+    Identifica il tipo di file del pacchetto: `asset` o `rendition`.
 
-    Identifica el tipo de archivo del paquete y actualiza `packages` con el tipo y
-    la ruta del archivo en análisis.
+    Identifica il tipo di file del pacchetto e aggiorna `packages` con il tipo e
+    il percorso del file in analisi.
 
-    Parámetros
+    Parametri
     ----------
     prefix : str
-        nombre del archivo XML sin extensión
+        Nome del file XML senza estensione.
     file_path : str
-        nombre del archivo
+        Nome del file.
 
-    Retorna
+    Restituisce
     -------
     dict
     """
@@ -23,7 +23,7 @@ def _eval_file(prefix, file_path):
 
     # Determine the file type based on the file extension
     _, file_extension = os.path.splitext(file_path)
-
+    
     if file_extension in ['.jpg', '.png', '.gif']:
         file_type = 'asset'
     elif file_extension in ['.pdf', '.docx', '.pptx']:
@@ -33,6 +33,6 @@ def _eval_file(prefix, file_path):
 
     # Update the result dictionary
     result['type'] = file_type
-    result['path'] = os.path.join(prefix, file_path)
+    result['path'] = file_path
 
     return result

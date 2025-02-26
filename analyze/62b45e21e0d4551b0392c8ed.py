@@ -1,27 +1,28 @@
 def find_path_type(path):
     """
-    Devuelve una cadena que indica el tipo de elemento en la ruta proporcionada.
+    Restituisce una stringa che indica il tipo di elemento presente nel percorso specificato.
 
-    Valores de retorno:
-        'root' - parece ser una Raíz de Almacenamiento OCFL
-        'object' - parece ser un Objeto OCFL
-        'file' - un archivo, podría ser un inventario
-        otra cadena explica la descripción del error
+    Valori restituiti:
+        'root' - sembra essere una Radice di Archiviazione OCFL (OCFL Storage Root)
+        'object' - sembra essere un Oggetto OCFL (OCFL Object)
+        'file' - un file, potrebbe essere un inventario
+        altra stringa - descrive un errore o una spiegazione del problema
 
-    Solo examina los archivos "0=*" Namaste para determinar el tipo de directorio.
+    Si basa esclusivamente sui file "0=*" Namaste per determinare il tipo di directory.
     """
     import os
 
     if not os.path.exists(path):
-        return "La ruta no existe"
+        return "Il percorso specificato non esiste."
 
     if os.path.isdir(path):
         if any(file.startswith("0=") for file in os.listdir(path)):
+            if "inventory" in os.listdir(path):
+                return 'object'
             return 'root'
-        else:
-            return 'object'
-    
+        return 'altra stringa: nessun file "0=*" trovato.'
+
     if os.path.isfile(path):
         return 'file'
-    
-    return "Tipo de elemento desconocido"
+
+    return 'altra stringa: tipo di elemento sconosciuto.'

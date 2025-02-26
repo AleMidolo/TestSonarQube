@@ -1,24 +1,30 @@
 def validate(self, inventory, extract_spec_version=False):
     """
-    Validar un inventario dado.
+    Convalida un inventario specificato.
 
-    Si `extract_spec_version` es True, entonces se verificará el valor de `type` para determinar
-    la versión de la especificación. En el caso de que no exista un valor para `type` o no sea
-    válido, se realizarán otras pruebas basadas en la versión proporcionada en `self.spec_version`.
+    Se `extract_spec_version` è impostato su `True`, verrà esaminato il valore del tipo (`type`) 
+    per determinare la versione della specifica. Nel caso in cui non sia presente un valore per 
+    il tipo o questo non sia valido, verranno eseguiti altri test basati sulla versione specificata 
+    in `self.spec_version`.
     """
     if extract_spec_version:
-        if 'type' in inventory:
-            spec_type = inventory['type']
-            if spec_type not in ['valid_type_1', 'valid_type_2']:
-                raise ValueError("Invalid type value in inventory.")
-            # Additional logic to handle valid types can be added here
+        if 'type' in inventory and inventory['type'] in self.valid_types:
+            self.spec_version = inventory['type']
         else:
-            raise KeyError("Missing 'type' key in inventory.")
+            self.spec_version = self.default_spec_version
 
-    # Perform other validation based on self.spec_version
-    if self.spec_version not in ['1.0', '2.0']:
-        raise ValueError("Invalid spec_version.")
+    # Esegui la convalida dell'inventario in base alla versione della specifica
+    if self.spec_version == '1.0':
+        return self.validate_v1(inventory)
+    elif self.spec_version == '2.0':
+        return self.validate_v2(inventory)
+    else:
+        raise ValueError("Versione della specifica non valida.")
     
-    # Additional inventory validation logic can be added here
+def validate_v1(self, inventory):
+    # Logica di convalida per la versione 1.0
+    pass
 
-    return True  # Return True if validation passes
+def validate_v2(self, inventory):
+    # Logica di convalida per la versione 2.0
+    pass
