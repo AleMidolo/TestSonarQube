@@ -8,15 +8,14 @@ def validate_as_prior_version(self, prior):
     """
     if not isinstance(prior, InventoryValidator):
         raise ValueError("The prior must be an instance of InventoryValidator.")
-
-    # Check if the versions are compatible
+    
+    # Assuming both inventories have a method to get their version
     if self.version <= prior.version:
         return False
-
-    # Check if the inventory items match the prior version
-    if self.items != prior.items:
-        return False
-
-    # Additional checks can be added here as needed
-
+    
+    # Check if the current inventory has all the items that were in the prior version
+    for item in prior.items:
+        if item not in self.items:
+            return False
+    
     return True

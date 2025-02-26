@@ -7,4 +7,6 @@ def _create_in_regex(self) -> Pattern:
 
     Returns the in-style parameter regular expression (:class:`re.Pattern`).
     """
-    return re.compile(r'\b(?:in|not in)\s*\(\s*([^()]*)(?:\s*,\s*([^()]*))*\s*\)')
+    # Example regex pattern for in-style parameters (e.g., "value1,value2,value3")
+    pattern = r'^(?:\s*[^,\s]+(?:\s*,\s*[^,\s]+)*)?$'
+    return re.compile(pattern)

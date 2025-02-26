@@ -15,14 +15,15 @@ def validate_version_inventories(self, version_dirs):
         inventory_path = f"{version}/inventory.json"
         version_inventory = self.load_inventory(inventory_path)
 
-        # Validate that the version inventory matches the expected structure
-        if not self.validate_inventory_structure(version_inventory):
-            raise ValueError(f"Invalid inventory structure in {inventory_path}")
+        # Validate that the version inventory is up to date
+        if not self.is_inventory_up_to_date(version_inventory, root_inventory):
+            raise ValueError(f"Inventory for version {version} is not up to date.")
 
         # Check for content digests that differ from the root inventory
-        for item, digest in version_inventory.items():
-            if item in root_inventory and root_inventory[item] != digest:
-                content_digests[item] = digest
+        for content_id, digest in version_inventory['content_digests'].items():
+            if content_id in root_inventory['content_digests']:
+                if root_inventory['content_digests'][content_id] != digest:
+                    content_digests[content_id] = digest
 
     return content_digests
 
@@ -32,6 +33,6 @@ def load_inventory(self, path):
     with open(path, 'r') as file:
         return json.load(file)
 
-def validate_inventory_structure(self, inventory):
-    # Placeholder for validating the structure of the inventory
-    return isinstance(inventory, dict) and all(isinstance(k, str) and isinstance(v, str) for k, v in inventory.items())
+def is_inventory_up_to_date(self, version_inventory, root_inventory):
+    # Placeholder for checking if the version inventory is up to date
+    return version_inventory['version'] <= root_inventory['version']

@@ -18,7 +18,7 @@ def remove_ending_os_sep(input_list):
         TypeError
     """
     if not isinstance(input_list, list):
-        raise TypeError("input_list must be a list of strings")
+        raise TypeError("Input must be a list of strings.")
     
     os_sep = os.path.sep
     return [s[:-1] if len(s) > 1 and s.endswith(os_sep) else s for s in input_list]

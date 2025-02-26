@@ -19,16 +19,9 @@ def find_path_type(path):
         # Check for OCFL Storage Root
         if any(file.startswith("0=") for file in os.listdir(path)):
             return 'root'
-        
-        # Check for OCFL Object
-        for item in os.listdir(path):
-            item_path = os.path.join(path, item)
-            if os.path.isdir(item_path) and any(file.startswith("0=") for file in os.listdir(item_path)):
-                return 'object'
-        
-        return "Directory does not contain valid OCFL structure"
-
+        else:
+            return 'object'
     elif os.path.isfile(path):
         return 'file'
-    
-    return "Unknown path type"
+    else:
+        return "Unknown path type"

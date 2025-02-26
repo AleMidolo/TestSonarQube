@@ -25,12 +25,6 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     """
     # Implementation of the method
     # This is a placeholder for the actual logic to append a BEGIN message
-    # to the output queue and return a Response object.
-    
-    # Example of creating a response object (assuming Response is defined elsewhere)
-    response = Response()
-    
-    # Logic to handle the parameters and append the BEGIN message
-    # to the output queue would go here.
-    
+    response = self._create_response(mode, bookmarks, metadata, timeout, db, imp_user, dehydration_hooks, hydration_hooks, **handlers)
+    self.output_queue.append(response)
     return response

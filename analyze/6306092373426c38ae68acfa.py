@@ -9,12 +9,8 @@ def get_spec_defaults(self):
             if isinstance(value, dict) and 'default' in value:
                 defaults[key] = value['default']
             elif isinstance(value, list) and value:
-                defaults[key] = value[0]  # Taking the first value as default
+                defaults[key] = value[0]  # Taking the first element as default
             else:
-                defaults[key] = value  # Fallback to the value itself if no default is specified
-
-    # Additional sources can be checked here, e.g., environment variables, config files, etc.
-    # Example: if 'ENV_VAR' in os.environ:
-    #              defaults['some_key'] = os.environ['ENV_VAR']
-
+                defaults[key] = value  # Fallback to the value itself
+    # Additional sources can be added here
     return defaults
