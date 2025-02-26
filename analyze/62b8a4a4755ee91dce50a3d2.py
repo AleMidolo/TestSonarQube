@@ -17,18 +17,13 @@ def _fromutc(self, dt):
     # Get the UTC offset for the given datetime
     utc_offset = dt.utcoffset()
     
-    # Check if the datetime is ambiguous (in a fold)
-    if dt.dst() is not None and dt.dst() != timedelta(0):
-        # If there is a daylight saving time transition, check the fold
-        if dt.fold == 0:
-            # This is the first occurrence of the ambiguous datetime
-            new_dt = dt - utc_offset
-        else:
-            # This is the second occurrence of the ambiguous datetime
-            new_dt = dt - utc_offset + dt.dst()
-    else:
-        # If there is no ambiguity, just convert to UTC
+    # Check if the datetime is ambiguous
+    if dt.fold == 0:
+        # This is the first occurrence of the ambiguous datetime
         new_dt = dt - utc_offset
+    else:
+        # This is the second occurrence of the ambiguous datetime
+        new_dt = dt + utc_offset
 
     # Return the new timezone-aware datetime
     return new_dt.replace(tzinfo=self)

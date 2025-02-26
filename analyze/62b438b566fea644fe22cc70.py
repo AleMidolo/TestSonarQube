@@ -10,5 +10,5 @@ def bash_completion():
         # Generate the completion script using borgmatic's built-in completion feature
         completion_script = subprocess.check_output(['borgmatic', 'completion', 'bash'], text=True)
         return completion_script
-    except Exception as e:
+    except subprocess.CalledProcessError as e:
         return f"Error generating completion script: {e}"

@@ -21,15 +21,20 @@ def _update_context(self, context):
         context.error = {}
     
     # Example of how to append errors
-    for error_name, error_indices in self.errors.items():
-        if error_name in ['x', 'y', 'z']:
-            context.error[error_name] = context.error.get(error_name, {})
-            context.error[error_name]['index'] = context.error[error_name].get('index', []) + error_indices
+    if hasattr(self, 'errors'):
+        for error in self.errors:
+            error_name = error.get('name', 'unknown')
+            index = error.get('index', None)
+            if index is not None:
+                if error_name not in context.error:
+                    context.error[error_name] = {}
+                context.error[error_name]['index'] = index
 
-    # Assuming self has a value property that needs to be added to context
+    # Assuming self has properties that need to be added to context.value
     if not hasattr(context, 'value'):
         context.value = {}
     
-    # Update context.value with properties from self
-    for key, value in self.properties.items():
-        context.value[key] = value
+    # Example of how to add values from the graph to context
+    if hasattr(self, 'properties'):
+        for key, value in self.properties.items():
+            context.value[key] = value

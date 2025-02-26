@@ -10,7 +10,4 @@ def check_digests_present_and_used(self, manifest_files, digests_used):
             if digest not in used_digests:
                 missing_digests.append(digest)
 
-    return {
-        'missing_digests': missing_digests,
-        'all_digests_present': len(missing_digests) == 0
-    }
+    return missing_digests

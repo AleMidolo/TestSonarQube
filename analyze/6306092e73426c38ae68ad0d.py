@@ -14,16 +14,13 @@ def create_complex_argumet_type(self, subcommand, type_name, option_name, spec_o
         'type2': ComplexType2,
         # Add more complex types as needed
     }
-    
+
     if type_name not in complex_type_registry:
         raise ValueError(f"Unknown type name: {type_name}")
 
     complex_type_class = complex_type_registry[type_name]
-    
-    # Create an instance of the complex type with the provided specifications
     complex_type_instance = complex_type_class(option_name, spec_option)
-    
-    # You might want to register this instance with the subcommand
-    self.register_complex_type(subcommand, complex_type_instance)
-    
+
+    # Additional logic can be added here based on subcommand if needed
+
     return complex_type_instance
