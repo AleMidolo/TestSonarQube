@@ -15,7 +15,7 @@ def generate_default_observer_schema(app):
                 "apiVersion": resource.get('apiVersion'),
                 "metadata": {
                     "name": resource.get('metadata', {}).get('name'),
-                    "namespace": resource.get('metadata', {}).get('namespace')
+                    "namespace": resource.get('metadata', {}).get('namespace'),
                 },
                 "spec": resource.get('spec', {})
             }

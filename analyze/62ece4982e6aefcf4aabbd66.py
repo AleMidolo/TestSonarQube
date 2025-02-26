@@ -16,12 +16,10 @@ def was_processed(processed, path_name, verbose):
     Returns:
         True if it's already in the set. False if not.
     """
-    absolute_path = os.path.abspath(path_name)
-    
-    if absolute_path in processed:
+    if path_name in processed:
         if verbose:
-            print(f"Warning: '{absolute_path}' has already been processed.")
+            print(f"Warning: '{path_name}' has already been processed.")
         return True
     else:
-        processed.add(absolute_path)
+        processed.add(path_name)
         return False

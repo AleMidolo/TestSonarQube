@@ -7,9 +7,9 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
 
     graph_data = []
-    bin_width = hist.bin_edges[1] - hist.bin_edges[0]
-
-    for i, bin_content in enumerate(hist.bins):
+    bin_width = hist.bin_width
+    for i, bin_ in enumerate(hist.bins):
+        value = make_value(bin_)
         if get_coordinate == "left":
             x = hist.bin_edges[i]
         elif get_coordinate == "right":
@@ -17,14 +17,10 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         else:  # get_coordinate == "middle"
             x = (hist.bin_edges[i] + hist.bin_edges[i + 1]) / 2
 
-        y_values = make_value(bin_content)
-        if isinstance(y_values, tuple):
-            graph_data.append((x, *y_values))
-        else:
-            graph_data.append((x, y_values))
+        graph_data.append((x,) + value)
 
     if scale is True:
         # Apply histogram scale to graph data if needed
-        pass  # Implement scaling logic if required
+        pass  # Implement scaling logic if necessary
 
-    return graph_data
+    return Graph(data=graph_data, field_names=field_names)

@@ -18,5 +18,5 @@ def _should_attempt_c_optimizations():
     if is_pypy and pure_python is None:
         return True
 
-    # Otherwise, do not attempt C optimizations
+    # Otherwise, we should not attempt C optimizations
     return False

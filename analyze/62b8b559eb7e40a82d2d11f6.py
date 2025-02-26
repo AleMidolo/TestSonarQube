@@ -9,12 +9,9 @@ def determineMetaclass(bases, explicit_mc=None):
     if not metaclasses:
         return type
 
-    # Find the most specific metaclass
     metaclass = metaclasses[0]
     for mc in metaclasses[1:]:
         if not issubclass(mc, metaclass):
-            if not issubclass(metaclass, mc):
-                raise TypeError("Inconsistent metaclass for bases: {} and {}".format(metaclass, mc))
-            metaclass = mc
-
+            metaclass = type('CombinedMeta', (metaclass, mc), {})
+    
     return metaclass

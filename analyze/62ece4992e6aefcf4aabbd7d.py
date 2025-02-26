@@ -1,5 +1,6 @@
 import subprocess
 import os
+import sys
 import multiprocessing
 
 def subprocess_run_helper(func, *args, timeout, extra_env=None):
@@ -16,16 +17,14 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     extra_env : dict[str, str]
         Any additional environment variables to be set for the subprocess.
     """
-    def target(queue, *args):
-        # Set the extra environment variables
+    def target():
         if extra_env:
             os.environ.update(extra_env)
-        # Run the function and capture the output
-        result = func(*args)
-        queue.put(result)
+        # Call the function with the provided arguments
+        return func(*args)
 
-    queue = multiprocessing.Queue()
-    process = multiprocessing.Process(target=target, args=(queue, *args))
+    # Create a process
+    process = multiprocessing.Process(target=target)
     process.start()
     process.join(timeout)
 
@@ -34,4 +33,4 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
         process.join()
         raise TimeoutError("The function call timed out.")
 
-    return queue.get()
+    return process.exitcode

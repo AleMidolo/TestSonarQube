@@ -10,10 +10,10 @@ def create_complex_argumet_type(self, subcommand, type_name, option_name,
     :return: the complex type instance
     """
     # Example implementation, adjust as necessary for your use case
-    complex_type = {
+    complex_type_instance = {
         'subcommand': subcommand,
         'type_name': type_name,
         'option_name': option_name,
         'spec_option': spec_option
     }
-    return complex_type
+    return complex_type_instance
