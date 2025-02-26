@@ -12,8 +12,9 @@ def _convert_non_cli_args(self, parser_name, values_dict):
             values_dict[key] = int(value)
         else:
             try:
-                # Attempt to convert to float if it's not an integer
+                # Attempt to convert to float if possible
                 values_dict[key] = float(value)
             except ValueError:
-                # Keep it as a string if conversion fails
+                # Keep as string if conversion fails
                 values_dict[key] = value
+    return values_dict

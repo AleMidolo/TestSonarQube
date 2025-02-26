@@ -10,9 +10,9 @@ def determineMetaclass(bases, explicit_mc=None):
         return type
 
     # Find the common metaclass
-    common_metaclass = metaclasses[0]
+    metaclass = metaclasses[0]
     for mc in metaclasses[1:]:
-        if not issubclass(mc, common_metaclass):
-            common_metaclass = type('Meta', (common_metaclass, mc), {})
+        if not issubclass(mc, metaclass):
+            metaclass = type('Meta', (metaclass, mc), {})
     
-    return common_metaclass
+    return metaclass
