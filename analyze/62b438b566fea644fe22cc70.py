@@ -9,28 +9,23 @@ def bash_completion():
     # Define the main parser
     parser = argparse.ArgumentParser(prog='borgmatic')
     
-    # Add subparsers for different commands
-    subparsers = parser.add_subparsers(dest='command')
-
-    # Example command: init
-    init_parser = subparsers.add_parser('init', help='Initialize a new configuration')
+    # Add commands and options
+    parser.add_argument('command', choices=['init', 'config', 'run', 'list', 'check'], help='Command to execute')
+    parser.add_argument('--config', help='Path to the configuration file')
+    parser.add_argument('--verbosity', choices=['0', '1', '2', '3'], help='Set the verbosity level')
     
-    # Example command: config
-    config_parser = subparsers.add_parser('config', help='Manage configuration')
-    
-    # Example command: run
-    run_parser = subparsers.add_parser('run', help='Run the backup')
-
-    # Generate the completion script
+    # Generate completion script
     if len(sys.argv) > 1 and sys.argv[1] == 'completion':
-        command = sys.argv[2] if len(sys.argv) > 2 else ''
-        if command == 'init':
-            print('init')
-        elif command == 'config':
-            print('config')
-        elif command == 'run':
-            print('run')
-        else:
-            print('init config run')
-    else:
-        print("Usage: borgmatic completion <command>")
+        commands = ['init', 'config', 'run', 'list', 'check']
+        options = ['--config', '--verbosity']
+        
+        # Print commands for completion
+        print('\n'.join(commands))
+        
+        # Print options for completion
+        print('\n'.join(options))
+        
+        return
+
+    # If no command is provided, show help
+    parser.print_help()

@@ -2,10 +2,10 @@ def dehydrate_time(value):
     """
     `time` मानों के लिए डिहाइड्रेटर।  
 
-    :param value: 
+    :param value:  
     :type value: Time  
-    :return: 
+    :return:  
     """
     if value is None:
         return None
-    return value.isoformat() if hasattr(value, 'isoformat') else str(value)
+    return value.isoformat()  # Assuming value is a datetime.time object

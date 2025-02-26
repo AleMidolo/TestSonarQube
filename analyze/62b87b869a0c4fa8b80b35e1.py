@@ -55,6 +55,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         # Apply scaling logic if needed
         pass
 
+    # Create the graph object
     graph = {
         field_names[0]: np.array(coordinates),
         field_names[1]: np.array([v[0] for v in values]),

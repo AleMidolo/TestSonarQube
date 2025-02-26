@@ -18,11 +18,10 @@ def from_ticks(cls, ticks, tz=None):
     from datetime import datetime, timedelta
 
     # Calculate the time from ticks
-    time_delta = timedelta(microseconds=ticks / 1000)
     midnight = datetime.combine(datetime.today(), datetime.min.time())
-    result_time = midnight + time_delta
+    time = midnight + timedelta(microseconds=ticks / 1000)
 
     if tz is not None:
-        result_time = result_time.astimezone(tz)
+        time = time.astimezone(tz)
 
-    return result_time
+    return cls(time)

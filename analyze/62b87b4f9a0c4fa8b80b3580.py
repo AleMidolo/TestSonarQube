@@ -10,7 +10,7 @@ def integral(bins, edges):
     # Calculate the width of each bin
     bin_widths = np.diff(edges)
 
-    # Calculate the integral by summing the product of bins and bin widths
+    # Calculate the integral (cumulative sum) of the bins multiplied by the bin widths
     integral_values = np.cumsum(bins * bin_widths)
 
     return integral_values

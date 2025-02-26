@@ -4,18 +4,18 @@ def make_parsers():
     """
     import argparse
 
-    # मुख्य पार्सर बनाएँ
+    # मुख्य पार्सर बनाना
     main_parser = argparse.ArgumentParser(description='मुख्य पार्सर')
     
-    # उप-पार्सर बनाएँ
-    subparsers = main_parser.add_subparsers(dest='command', help='उप-पार्सर मदद')
+    # उप-पार्सर बनाना
+    subparsers = main_parser.add_subparsers(dest='command', help='उप-पार्सर के लिए मदद')
 
-    # एक उप-पार्सर जोड़ें
-    sub_parser1 = subparsers.add_parser('command1', help='कमांड 1 मदद')
-    sub_parser1.add_argument('--option1', type=str, help='विकल्प 1')
+    # एक उप-पार्सर जोड़ना
+    sub_parser_a = subparsers.add_parser('command_a', help='कमांड A के लिए मदद')
+    sub_parser_a.add_argument('--option', type=str, help='कमांड A के लिए विकल्प')
 
-    # दूसरे उप-पार्सर जोड़ें
-    sub_parser2 = subparsers.add_parser('command2', help='कमांड 2 मदद')
-    sub_parser2.add_argument('--option2', type=int, help='विकल्प 2')
+    # एक और उप-पार्सर जोड़ना
+    sub_parser_b = subparsers.add_parser('command_b', help='कमांड B के लिए मदद')
+    sub_parser_b.add_argument('--flag', action='store_true', help='कमांड B के लिए फ्लैग')
 
     return main_parser, subparsers
