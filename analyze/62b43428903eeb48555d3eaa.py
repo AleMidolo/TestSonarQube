@@ -25,7 +25,9 @@ def formatmany(
                 out_params.append(list(params))
                 param_count += len(params)
 
-    # Format the SQL query to replace "in" style with "out" style
-    formatted_sql = sql.replace("IN (", "OUT (").replace("?", "%s")  # Example replacement logic
+    # Replace the parameters in the SQL query
+    formatted_sql = sql
+    for i in range(param_count):
+        formatted_sql = formatted_sql.replace(f'${i + 1}', f':param{i + 1}')
 
     return formatted_sql, out_params

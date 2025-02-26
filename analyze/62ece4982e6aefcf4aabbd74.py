@@ -16,21 +16,32 @@ def prepare_repository_from_archive(
 
     Questo metodo non gestisce il caso in cui l'archivio passato non esista.
     """
+    # Convert tmp_path to Path object
     tmp_path = Path(tmp_path)
+    
+    # Create temporary directory
     tmp_path.mkdir(parents=True, exist_ok=True)
-
-    if archive_path.endswith('.zip'):
+    
+    # Determine the file extension
+    file_extension = os.path.splitext(archive_path)[1].lower()
+    
+    # Extract the archive based on its type
+    if file_extension == '.zip':
         with zipfile.ZipFile(archive_path, 'r') as zip_ref:
             zip_ref.extractall(tmp_path)
-    elif archive_path.endswith(('.tar', '.tar.gz', '.tgz')):
+    elif file_extension in ['.tar', '.tar.gz', '.tgz']:
         with tarfile.open(archive_path, 'r:*') as tar_ref:
             tar_ref.extractall(tmp_path)
     else:
-        raise ValueError("Unsupported archive format")
-
+        raise ValueError("Unsupported archive format: {}".format(file_extension))
+    
+    # If a filename is provided, return its URL
     if filename:
-        extracted_path = tmp_path / filename
-    else:
-        extracted_path = next(tmp_path.iterdir())
-
-    return str(extracted_path.resolve())
+        extracted_file_path = tmp_path / filename
+        if extracted_file_path.exists():
+            return f"file://{extracted_file_path.resolve()}"
+        else:
+            raise FileNotFoundError(f"{filename} not found in the extracted files.")
+    
+    # If no filename is provided, return the URL of the tmp_path
+    return f"file://{tmp_path.resolve()}"

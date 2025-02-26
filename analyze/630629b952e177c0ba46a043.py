@@ -19,7 +19,8 @@ def get_nodeinfo_well_known_document(url, document_path=None):
         "metadata": {
             "name": "Example Node",
             "description": "An example NodeInfo document",
-            "url": url
+            "url": url,
+            "version": "1.0"
         }
     }
 
