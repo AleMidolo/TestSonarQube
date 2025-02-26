@@ -1,5 +1,4 @@
 from urllib.parse import urlparse
-from typing import Tuple
 
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """

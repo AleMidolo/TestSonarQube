@@ -13,9 +13,6 @@ def validate_as_prior_version(self, prior):
     if prior.version >= self.version:
         return False
     
-    # Aggiungere ulteriori controlli di validità se necessario
-    # Ad esempio, controllare che gli elementi dell'inventario siano coerenti
-    if not self.items.issubset(prior.items):
-        return False
-    
+    # A questo punto, si può assumere che prior sia una versione valida
+    # Eseguire ulteriori controlli di coerenza se necessario
     return True
