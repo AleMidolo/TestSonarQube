@@ -1,27 +1,31 @@
 def _update_context(self, context):
     """
-    Actualiza *context* con las propiedades de este grafo.
+    Aggiorna il *context* con le proprietà di questo grafo.
 
-    *context.error* se amplía con los índices de los errores.  
-    Ejemplo de subcontexto para un grafo con los campos "E,t,error_E_low":  
-    `{"error": {"x_low": {"index": 2}}}`.  
-    Ten en cuenta que los nombres de los errores se denominan "x", "y" y "z"  
-    (esto corresponde a las primeras tres coordenadas, si están presentes),  
-    lo que permite simplificar la representación gráfica.  
-    Los valores existentes no se eliminan de *context.value* ni de sus subcontextos.
+    *context.error* viene aggiornato aggiungendo gli indici degli errori.
+    Esempio di subcontext per un grafo con i campi "E,t,error_E_low":
+    `{"error": {"x_low": {"index": 2}}}`.
+    Nota che i nomi degli errori sono chiamati "x", "y" e "z"
+    (questo corrisponde alle prime tre coordinate, se presenti),
+    il che consente di semplificare la rappresentazione grafica.
+    I valori esistenti non vengono rimossi
+    da *context.value* e dai suoi subcontesti.
 
-    Se llama durante la "destrucción" del grafo (por ejemplo,  
-    en :class:`.ToCSV`). Por destrucción nos referimos a la conversión  
-    a otra estructura (como texto) en el flujo.  
-    El objeto grafo no se destruye realmente en este proceso.
+    Viene chiamato durante la "distruzione" del grafo (ad esempio,
+    nella classe :class:`.ToCSV`). Per "distruzione" si intende la conversione
+    in un'altra struttura (come il testo) nel flusso di lavoro.
+    L'oggetto grafo non viene realmente distrutto in questo processo.
     """
-    # Implementación del método
+    # Assuming self.graph contains the graph properties and errors
     if 'error' not in context:
         context['error'] = {}
+
+    for error_name, error_info in self.graph.errors.items():
+        if error_name in ['x', 'y', 'z']:
+            context['error'][f"{error_name}_low"] = {'index': error_info['index']}
     
-    # Supongamos que self.errors es un diccionario que contiene los errores
-    for i, error in enumerate(self.errors):
-        error_name = ['x', 'y', 'z'][i] if i < 3 else f'error_{i}'
-        context['error'][error_name] = {'index': error.index}
+    # Preserving existing values in context.value and its subcontexts
+    if 'value' not in context:
+        context['value'] = {}
     
-    # No eliminamos valores existentes en context.value ni en subcontextos
+    # Additional logic to update context.value can be added here

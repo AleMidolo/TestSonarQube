@@ -1,7 +1,10 @@
 def _dump_string(obj, dumper=None):
     """
-    Volcar a una cadena en formato py2-unicode o py3-string
+    Serializza in una stringa Unicode (Python 2) o in una stringa (Python 3).
     """
-    if dumper is None:
-        dumper = str  # Default to str for Python 3
-    return dumper(obj)
+    if isinstance(obj, str):
+        return obj
+    elif isinstance(obj, bytes):
+        return obj.decode('utf-8')
+    else:
+        raise TypeError("Expected a string or bytes, got {}".format(type(obj)))

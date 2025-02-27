@@ -1,6 +1,6 @@
-def popitem(self):
+def popitem(self):  
     """
-    Encontrar, eliminar y devolver un par (clave, valor) aleatorio mediante __choice en la clase 
+    Rimuovi e restituisci una coppia `(chiave, valore)` casuale.
     """
     import random
     if not self:

@@ -1,17 +1,17 @@
 from typing import Optional, Set
-from rdflib import Graph, URIRef
 
 def find_roots(
-    graph: Graph, prop: URIRef, roots: Optional[Set["Node"]] = None
+    graph: "Graph", prop: "URIRef", roots: Optional[Set["Node"]] = None
 ) -> Set["Node"]:
     if roots is None:
         roots = set()
 
-    # Collect all nodes that have children
-    children = {s for s, p, o in graph.triples((None, prop, None))}
+    all_nodes = {s for s, p, o in graph}  # Get all subjects in the graph
+    child_nodes = {o for s, p, o in graph if p == prop}  # Get all child nodes
 
-    # Collect all nodes that are not children of any node
-    all_nodes = {s for s, p, o in graph.triples((None, None, None))}
-    roots = all_nodes - children
+    # Find root nodes (nodes that are not children of any node)
+    for node in all_nodes:
+        if node not in child_nodes:
+            roots.add(node)
 
     return roots

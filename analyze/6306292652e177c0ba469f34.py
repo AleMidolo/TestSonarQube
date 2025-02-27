@@ -3,7 +3,7 @@ from typing import Optional
 
 def fetch_content_type(url: str) -> Optional[str]:
     """
-    Obtén el encabezado HEAD de la URL remota para determinar el tipo de contenido.
+    Recupera l'intestazione HEAD dell'URL remoto per determinare il tipo di contenuto.
     """
     try:
         response = requests.head(url)

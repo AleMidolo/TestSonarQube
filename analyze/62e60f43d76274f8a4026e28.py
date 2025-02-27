@@ -1,6 +1,6 @@
 def hydrate_time(nanoseconds, tz=None):
     """
-    Hidratador para valores de `Time` y `LocalTime`.
+    Idratatore per valori di `Time` e `LocalTime`.
 
     :param nanoseconds:  
     :param tz:  

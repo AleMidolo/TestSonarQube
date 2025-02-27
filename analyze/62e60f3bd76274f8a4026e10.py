@@ -2,18 +2,18 @@ from datetime import timedelta
 
 def dehydrate_timedelta(value):
     """
-    Deshidratador para valores de `timedelta`.
+    Deidratatore per valori di tipo `timedelta`.
 
     :param value: 
     :type value: timedelta  
     :return: 
     """
     if not isinstance(value, timedelta):
-        raise ValueError("El valor debe ser una instancia de timedelta.")
+        raise ValueError("Input must be a timedelta object.")
     
     total_seconds = int(value.total_seconds())
-    days = total_seconds // (24 * 3600)
-    hours = (total_seconds % (24 * 3600)) // 3600
+    days = total_seconds // 86400
+    hours = (total_seconds % 86400) // 3600
     minutes = (total_seconds % 3600) // 60
     seconds = total_seconds % 60
     

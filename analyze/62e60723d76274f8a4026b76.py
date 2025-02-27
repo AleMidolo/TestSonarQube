@@ -1,24 +1,24 @@
 def from_ticks(cls, ticks, tz=None):
     """
-    Crear una hora a partir de ticks (nanosegundos desde la medianoche).
+    Crea un'istanza di tempo a partire dai ticks (nanosecondi trascorsi dalla mezzanotte).
 
-    :param ticks: nanosegundos desde la medianoche
+    :param ticks: nanosecondi trascorsi dalla mezzanotte
     :type ticks: int
-    :param tz: zona horaria opcional
+    :param tz: fuso orario opzionale
     :type tz: datetime.tzinfo
 
     :rtype: Time
 
-    :raises ValueError: si los ticks están fuera de los límites
+    :raises ValueError: se il valore di ticks è fuori dai limiti
         (0 <= ticks < 86400000000000)
     """
     if not (0 <= ticks < 86400000000000):
-        raise ValueError("Los ticks deben estar en el rango de 0 a 86400000000000.")
+        raise ValueError("Ticks must be between 0 and 86400000000000.")
     
     seconds = ticks // 1_000_000_000
     nanoseconds = ticks % 1_000_000_000
     hours, remainder = divmod(seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
-
-    time_obj = cls(hours, minutes, seconds, nanoseconds, tz)
-    return time_obj
+    
+    time_instance = cls(hours, minutes, seconds, nanoseconds, tz)
+    return time_instance

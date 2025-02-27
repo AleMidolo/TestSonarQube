@@ -1,12 +1,5 @@
-def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
-    """
-    Devuelve los nombres y descripciones de los atributos definidos por la interfaz.
+def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
+    """Restituisce i nomi e le descrizioni degli attributi definiti dall'interfaccia."""
     if not all:
-
-    Devuelve los nombres y descripciones de los atributos definidos por la interfaz.
-    """
-    attributes = self.get_attributes()  # Assuming there's a method to get attributes
-    if not all:
-        attributes = {k: v for k, v in attributes.items() if v['is_defined']}
-    
-    return {k: v['description'] for k, v in attributes.items()}
+        return {attr: desc for attr, desc in self.interface_attributes.items() if not desc.hidden}
+    return {attr: desc for attr, desc in self.interface_attributes.items()}

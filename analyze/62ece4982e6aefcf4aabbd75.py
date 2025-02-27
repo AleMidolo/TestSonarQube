@@ -1,17 +1,17 @@
 def addignored(ignored):
     """
-    Usa el comando de git para obtener los nombres de los archivos, conviértelos en una lista, ordena la lista para incluir solo los archivos ignorados, y devuelve esos archivos como una única cadena con cada nombre de archivo separado por una coma.
+    Utilizza il comando git per ottenere i nomi dei file, trasformali in una lista, ordina la lista per includere solo i file ignorati, restituisci quei file come una singola stringa con ogni nome di file separato da una virgola.
     """
     import subprocess
 
-    # Obtener la lista de archivos ignorados usando git
+    # Esegui il comando git per ottenere i file ignorati
     result = subprocess.run(['git', 'check-ignore', '-n', '*'], stdout=subprocess.PIPE, text=True)
     
-    # Dividir la salida en líneas y filtrar los nombres de archivo
+    # Estrai i nomi dei file dalla risposta
     ignored_files = result.stdout.strip().split('\n')
     
-    # Ordenar la lista de archivos ignorados
-    ignored_files = sorted(set(ignored_files))
+    # Ordina i file ignorati
+    ignored_files = sorted(set(file.split(':')[1].strip() for file in ignored_files if file))
     
-    # Unir los nombres de archivo en una cadena separada por comas
+    # Restituisci i file come una stringa separata da virgole
     return ', '.join(ignored_files)

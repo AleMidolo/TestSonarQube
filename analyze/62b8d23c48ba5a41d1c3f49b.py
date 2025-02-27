@@ -1,8 +1,10 @@
-def popitem(self):
+def popitem(self):  
     """
-    Eliminar y devolver el par (clave, valor) más recientemente utilizado.
+    Rimuove e restituisce la coppia `(chiave, valore)` utilizzata più di recente.
     """
     if not self.data:
         raise KeyError("popitem(): dictionary is empty")
-    key, value = self.data.popitem()
+    
+    # Assuming self.data is an OrderedDict or similar structure
+    key, value = self.data.popitem(last=True)
     return key, value

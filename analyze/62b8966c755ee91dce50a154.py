@@ -1,114 +1,146 @@
 def isoparse(self, dt_str):
     """
-    Parse una cadena de fecha y hora en formato ISO-8601 a un objeto :class:`datetime.datetime`.
+    Analizza una stringa datetime in formato ISO-8601 in un oggetto :class:`datetime.datetime`.
 
-    Una cadena de fecha y hora en formato ISO-8601 consiste en una parte de fecha, seguida opcionalmente por una parte de hora. Las partes de fecha y hora están separadas por un único carácter separador, que es ``T`` según el estándar oficial. Los formatos de fecha incompletos (como ``YYYY-MM``) *no* pueden combinarse con una parte de hora.
+    Una stringa datetime in formato ISO-8601 consiste in una parte relativa alla data, seguita
+    opzionalmente da una parte relativa all'ora. Le due parti sono separate da un singolo carattere
+    separatore, che è ``T`` nello standard ufficiale. I formati di data incompleti (come ``YYYY-MM``)
+    *non* possono essere combinati con una parte relativa all'ora.
 
-    Los formatos de fecha admitidos son:
+    I formati di data supportati sono:
 
-    Comunes:
+    Comuni:
 
     - ``YYYY``
     - ``YYYY-MM`` o ``YYYYMM``
     - ``YYYY-MM-DD`` o ``YYYYMMDD``
 
-    Poco comunes:
+    Non comuni:
 
-    - ``YYYY-Www`` o ``YYYYWww`` - Semana ISO (el día por defecto es 0)
-    - ``YYYY-Www-D`` o ``YYYYWwwD`` - Semana y día ISO
+    - ``YYYY-Www`` o ``YYYYWww`` - Settimana ISO (il giorno predefinito è 0)
+    - ``YYYY-Www-D`` o ``YYYYWwwD`` - Settimana ISO e giorno
 
-    La numeración de semanas y días ISO sigue la misma lógica que
+    La numerazione delle settimane e dei giorni ISO segue la stessa logica di
     :func:`datetime.date.isocalendar`.
 
-    Los formatos de hora admitidos son:
+    I formati di ora supportati sono:
 
     - ``hh``
     - ``hh:mm`` o ``hhmm``
     - ``hh:mm:ss`` o ``hhmmss``
-    - ``hh:mm:ss.ssssss`` (Hasta 6 dígitos para subsegundos)
+    - ``hh:mm:ss.ssssss`` (fino a 6 cifre per i sotto-secondi)
 
-    La medianoche es un caso especial para `hh`, ya que el estándar admite tanto 00:00 como 24:00 como representación. El separador decimal puede ser un punto o una coma.
+    La mezzanotte è un caso speciale per `hh`, poiché lo standard supporta sia
+    00:00 che 24:00 come rappresentazione. Il separatore decimale può essere
+    sia un punto che una virgola.
 
-    .. precaución::
+    .. attenzione::
 
-        El soporte para componentes fraccionarios distintos de los segundos es parte del estándar ISO-8601, pero actualmente no está implementado en este analizador.
+        Il supporto per componenti frazionari diversi dai secondi fa parte dello
+        standard ISO-8601, ma non è attualmente implementato in questo parser.
 
-    Los formatos de zona horaria admitidos son:
+    I formati di offset del fuso orario supportati sono:
 
     - `Z` (UTC)
     - `±HH:MM`
     - `±HHMM`
     - `±HH`
 
-    Los desplazamientos se representarán como objetos :class:`dateutil.tz.tzoffset`, con la excepción de UTC, que se representará como :class:`dateutil.tz.tzutc`. Los desplazamientos de zona horaria equivalentes a UTC (como `+00:00`) también se representarán como :class:`dateutil.tz.tzutc`.
+    Gli offset saranno rappresentati come oggetti :class:`dateutil.tz.tzoffset`,
+    con l'eccezione di UTC, che sarà rappresentato come :class:`dateutil.tz.tzutc`.
+    Gli offset del fuso orario equivalenti a UTC (come `+00:00`) saranno anch'essi
+    rappresentati come :class:`dateutil.tz.tzutc`.
 
     :param dt_str:
-        Una cadena o flujo que contiene únicamente una cadena de fecha y hora en formato ISO-8601.
+        Una stringa o un flusso contenente solo una stringa datetime in formato ISO-8601.
 
     :return:
-        Devuelve un objeto :class:`datetime.datetime` que representa la cadena.
-        Los componentes no especificados se inicializan con su valor más bajo.
+        Restituisce un oggetto :class:`datetime.datetime` che rappresenta la stringa.
+        I componenti non specificati assumono il loro valore minimo.
 
-    .. advertencia::
+    .. avvertenza::
 
-        A partir de la versión 2.7.0, la rigurosidad del analizador no debe considerarse una parte estable del contrato. Cualquier cadena válida en formato ISO-8601 que se analice correctamente con la configuración predeterminada continuará analizándose correctamente en versiones futuras, pero las cadenas no válidas que actualmente fallan (por ejemplo, ``2017-01-01T00:00+00:00:00``) no están garantizadas para seguir fallando en versiones futuras si codifican una fecha válida.
+        A partire dalla versione 2.7.0, la rigidità del parser non deve essere considerata
+        una parte stabile del contratto. Qualsiasi stringa ISO-8601 valida che viene analizzata
+        correttamente con le impostazioni predefinite continuerà a essere analizzata correttamente
+        nelle versioni future, ma le stringhe non valide che attualmente falliscono (ad esempio
+        ``2017-01-01T00:00+00:00:00``) non sono garantite di continuare a fallire nelle versioni
+        future se codificano una data valida.
 
-    .. versión añadida:: 2.7.0
+    .. versioneaggiunta:: 2.7.0
     """
     from datetime import datetime, timedelta
     import re
     from dateutil import tz
 
     # Regex patterns for parsing
-    date_pattern = r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?'
-    week_pattern = r'(\d{4})-W(\d{2})(?:-?(\d{1}))?'
-    time_pattern = r'(\d{2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?)?'
-    tz_pattern = r'Z|([+-]\d{2}):?(\d{2})?|([+-]\d{2})(\d{2})?|([+-]\d{2})'
-
+    date_patterns = [
+        r'(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})',  # YYYY-MM-DD
+        r'(?P<year>\d{4})-(?P<week>\d{2})-?(?P<day>\d)?',  # YYYY-Www or YYYY-Www-D
+        r'(?P<year>\d{4})-(?P<month>\d{2})',                # YYYY-MM
+        r'(?P<year>\d{4})'                                  # YYYY
+    ]
+    
+    time_patterns = [
+        r'(?P<hour>\d{1,2}):(?P<minute>\d{2}):?(?P<second>\d{2})?\.?(?P<microsecond>\d{1,6})?',  # hh:mm:ss.ssssss
+        r'(?P<hour>\d{1,2}):(?P<minute>\d{2})?',  # hh:mm
+        r'(?P<hour>\d{1,2})'                       # hh
+    ]
+    
+    tz_patterns = [
+        r'Z',  # UTC
+        r'(?P<sign>[+-])(?P<hour>\d{2}):?(?P<minute>\d{2})?',  # ±HH:MM
+        r'(?P<sign>[+-])(?P<hour>\d{2})(?P<minute>\d{2})?',    # ±HHMM
+        r'(?P<sign>[+-])(?P<hour>\d{2})'                        # ±HH
+    ]
+    
     # Combine patterns
-    iso_pattern = re.compile(
-        rf'^{date_pattern}(?:T{time_pattern})?(?:{tz_pattern})?$'
-    )
-
-    match = iso_pattern.match(dt_str)
+    full_pattern = r'^\s*(' + '|'.join(date_patterns) + r')' + r'(T(' + '|'.join(time_patterns) + r'))?(' + '|'.join(tz_patterns) + r')?\s*$'
+    
+    match = re.match(full_pattern, dt_str)
     if not match:
-        raise ValueError(f"Invalid ISO-8601 date string: {dt_str}")
-
+        raise ValueError("Invalid ISO-8601 format")
+    
     # Extract date components
-    year = int(match.group(1))
-    month = int(match.group(2) or 1)
-    day = int(match.group(3) or 1)
-
-    # Handle week-based dates
-    if match.group(2) is None and match.group(3) is None:
-        week = int(match.group(4) or 1)
-        day_of_week = int(match.group(5) or 0)
-        date = datetime.fromisocalendar(year, week, day_of_week)
-    else:
-        date = datetime(year, month, day)
-
-    # Extract time components
-    hour = int(match.group(6) or 0)
-    minute = int(match.group(7) or 0)
-    second = int(match.group(8) or 0)
-    microsecond = int(match.group(9) or 0)
-
-    # Set time
-    date = date.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
-
-    # Handle timezone
-    tzinfo = None
-    if match.group(10):
-        if match.group(10) == 'Z':
-            tzinfo = tz.tzutc()
+    date_match = match.group(1)
+    year = int(date_match.group('year'))
+    
+    if date_match.group('month'):
+        month = int(date_match.group('month'))
+        if date_match.group('day'):
+            day = int(date_match.group('day'))
         else:
-            sign = match.group(11)
-            if match.group(12):
-                tzinfo = tz.tzoffset(None, int(sign + match.group(11)) * 3600 + int(match.group(12)) * 60)
-            else:
-                tzinfo = tz.tzoffset(None, int(sign + match.group(13)) * 3600)
-
-    if tzinfo:
-        date = date.replace(tzinfo=tzinfo)
-
-    return date
+            day = 1
+    else:
+        month = 1
+        day = 1
+    
+    # Extract time components
+    time_match = match.group(3)
+    if time_match:
+        hour = int(time_match.group('hour'))
+        minute = int(time_match.group('minute') or 0)
+        second = int(time_match.group('second') or 0)
+        microsecond = int(time_match.group('microsecond') or 0)
+    else:
+        hour = 0
+        minute = 0
+        second = 0
+        microsecond = 0
+    
+    # Handle timezone
+    tz_match = match.group(4)
+    if tz_match == 'Z':
+        tzinfo = tz.tzutc()
+    elif tz_match:
+        sign = 1 if tz_match.group('sign') == '+' else -1
+        tz_hour = int(tz_match.group('hour'))
+        tz_minute = int(tz_match.group('minute') or 0)
+        tzinfo = tz.tzoffset(None, sign * (tz_hour * 3600 + tz_minute * 60))
+    else:
+        tzinfo = None
+    
+    # Create datetime object
+    dt = datetime(year, month, day, hour, minute, second, microsecond, tzinfo)
+    
+    return dt

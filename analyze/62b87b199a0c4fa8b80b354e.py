@@ -1,13 +1,15 @@
 def is_fill_request_seq(seq):
     """
-    Compruebe si *seq* puede convertirse en un FillRequestSeq.
+    Verifica se *seq* può essere convertito in un oggetto di tipo FillRequestSeq.
 
-    Devuelve `True` solo si es un elemento de tipo FillRequest  
-    o contiene al menos uno de ellos,  
-    y no es una secuencia de tipo Source.
+    Restituisce `True` solo se *seq* è un elemento di tipo FillRequest  
+    o contiene almeno un elemento di questo tipo,  
+    e non è una sequenza di tipo Source.
     """
-    if isinstance(seq, FillRequest):
-        return True
     if isinstance(seq, Source):
         return False
-    return any(isinstance(item, FillRequest) for item in seq)
+    if isinstance(seq, FillRequest):
+        return True
+    if isinstance(seq, (list, tuple)):
+        return any(isinstance(item, FillRequest) for item in seq)
+    return False

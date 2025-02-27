@@ -1,22 +1,28 @@
 def protocol_handlers(cls, protocol_version=None):
     """
-    Devuelve un diccionario de los controladores de protocolo Bolt disponibles, indexados por una tupla de versión. Si se proporciona una versión de protocolo explícita, el diccionario contendrá cero o un elemento, dependiendo de si esa versión es compatible. Si no se proporciona ninguna versión de protocolo, se devolverán todas las versiones disponibles.
+    Restituisce un dizionario dei gestori di protocollo Bolt disponibili,
+    indicizzati per tuple di versione. Se viene fornita una versione di protocollo
+    esplicita, il dizionario conterrà zero o un elemento, a seconda che quella
+    versione sia supportata o meno. Se non viene fornita alcuna versione di protocollo,
+    verranno restituite tutte le versioni disponibili.
 
-    :param protocol_version: tupla que identifica una versión específica del protocolo (por ejemplo, (3, 5)) o None
-    :return: diccionario que mapea tuplas de versión a clases de controladores para todas las versiones relevantes y compatibles del protocolo
-    :raise TypeError: si la versión del protocolo no se pasa como una tupla
+    :param protocol_version: tupla che identifica una specifica versione
+        del protocollo (ad esempio, (3, 5)) oppure None
+    :return: dizionario che associa una tupla di versione alla classe del gestore
+        per tutte le versioni di protocollo rilevanti e supportate
+    :raise TypeError: se la versione del protocollo non è passata come una tupla
     """
     if protocol_version is not None and not isinstance(protocol_version, tuple):
-        raise TypeError("La versión del protocolo debe ser una tupla")
+        raise TypeError("La versione del protocollo deve essere una tupla.")
 
-    # Simulación de controladores de protocolo disponibles
-    available_handlers = {
-        (3, 0): "HandlerV3_0",
-        (3, 5): "HandlerV3_5",
-        (4, 0): "HandlerV4_0",
+    # Simulazione di un dizionario di gestori di protocollo
+    protocol_handlers_dict = {
+        (3, 5): "Handler35",
+        (4, 0): "Handler40",
+        (4, 1): "Handler41",
     }
 
     if protocol_version is not None:
-        return {protocol_version: available_handlers.get(protocol_version)} if protocol_version in available_handlers else {}
+        return {protocol_version: protocol_handlers_dict.get(protocol_version)} if protocol_version in protocol_handlers_dict else {}
 
-    return available_handlers
+    return protocol_handlers_dict

@@ -1,41 +1,30 @@
+from typing import AnyStr, Union, Dict, Sequence, Tuple
+
 def format(
                 self,
                 sql: AnyStr,
                 params: Union[Dict[Union[str, int], Any], Sequence[Any]],
         ) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
     """
-    Convierte la consulta SQL para usar parámetros de estilo "out" en lugar de parámetros de estilo "in".
+    Converte la query SQL per utilizzare i parametri in stile "out" invece dei parametri in stile "in".
 
-    *sql* (:class:`str` o :class:`bytes`) es la consulta SQL.
+    **sql** (:class:`str` o :class:`bytes`) è la query SQL.
 
-    *params* (:class:`~collections.abc.Mapping` o :class:`~collections.abc.Sequence`)  
-    contiene el conjunto de parámetros de estilo "in". Mapea cada parámetro  
-    (:class:`str` o :class:`int`) a un valor. Si :attr:`.SQLParams.in_style`  
-    es un estilo de parámetro con nombre, entonces *params* debe ser un :class:`~collections.abc.Mapping`.  
-    Si :attr:`.SQLParams.in_style` es un estilo de parámetro ordinal, entonces  
-    *params* debe ser un :class:`~collections.abc.Sequence`.
+    Restituisce una :class:`tuple` contenente:
 
-    Devuelve una :class:`tuple` que contiene:
+    - La query SQL formattata (:class:`str` o :class:`bytes`).
 
-    - La consulta SQL formateada (:class:`str` o :class:`bytes`).
-
-    - El conjunto de parámetros convertidos de estilo "out" (:class:`dict` o  
-      :class:`list`).
+    - L'insieme dei parametri convertiti in stile "out" (:class:`dict` o :class:`list`).
     """
-    # Implementación del método
-    if isinstance(params, dict):
-        # Convertir parámetros de estilo "in" a estilo "out" para un diccionario
-        out_params = {key: params[key] for key in params}
-        formatted_sql = sql
-        for key in out_params:
-            formatted_sql = formatted_sql.replace(f":{key}", f"${key}")
-    elif isinstance(params, (list, tuple)):
-        # Convertir parámetros de estilo "in" a estilo "out" para una secuencia
-        out_params = list(params)
-        formatted_sql = sql
-        for index in range(len(out_params)):
-            formatted_sql = formatted_sql.replace(f"?{index}", f"${index + 1}")
+    # Example implementation (this should be replaced with actual logic)
+    if isinstance(sql, bytes):
+        formatted_sql = sql.decode('utf-8')
     else:
-        raise TypeError("params must be a dict or a sequence")
+        formatted_sql = sql
+
+    if isinstance(params, dict):
+        out_params = {key: f'OUT_{value}' for key, value in params.items()}
+    else:
+        out_params = [f'OUT_{value}' for value in params]
 
     return formatted_sql, out_params

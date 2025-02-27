@@ -1,15 +1,13 @@
 def popitem(self):
     """
-    Elimina y devuelve el par (clave, valor) menos recientemente utilizado.
+    Rimuove e restituisce la coppia `(chiave, valore)` meno recentemente utilizzata.
     """
     if not self.data:
         raise KeyError("popitem(): dictionary is empty")
     
-    # Find the least recently used item
+    # Trova la chiave meno recentemente utilizzata
     lru_key = next(iter(self.data))
-    lru_value = self.data[lru_key]
     
-    # Remove the item from the dictionary
-    del self.data[lru_key]
-    
-    return (lru_key, lru_value)
+    # Rimuove la chiave dal dizionario e restituisce la coppia
+    value = self.data.pop(lru_key)
+    return lru_key, value

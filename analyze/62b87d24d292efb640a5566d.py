@@ -1,5 +1,5 @@
-def plus_or_dot(pieces):
-    """ 
-    Devuelve un "+" si no tenemos uno ya, de lo contrario, devuelve un "."
+def plus_or_dot(pezzi):
     """
-    return "+" if "+" not in pieces else "."
+    Restituisci un ""+"" se non è già presente, altrimenti restituisci un "".""
+    """
+    return "+" if "+" not in pezzi else "."

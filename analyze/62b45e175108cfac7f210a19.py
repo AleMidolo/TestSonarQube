@@ -1,26 +1,25 @@
 def validate_fixity(self, fixity, manifest_files):
     """
-    Validar el bloque de fijación en el inventario.
+    Convalida l'attributo fixty block nell'inventario.
 
-    Verificar la estructura del bloque de fijación y asegurarse de que solo se referencien los archivos listados en el manifiesto.
+    Controlla la struttura del blocco di fissità e assicurati che siano referenziati solo i file elencati nel manifesto.
     """
-    # Verificar que el bloque de fijación sea un diccionario
     if not isinstance(fixity, dict):
-        raise ValueError("El bloque de fijación debe ser un diccionario.")
+        raise ValueError("Fixity must be a dictionary.")
 
-    # Verificar que contenga las claves necesarias
-    required_keys = ['file', 'checksum']
-    for key in required_keys:
-        if key not in fixity:
-            raise ValueError(f"Falta la clave '{key}' en el bloque de fijación.")
+    required_keys = {'algorithm', 'checksums'}
+    if not required_keys.issubset(fixity.keys()):
+        raise ValueError(f"Fixity block must contain the keys: {required_keys}")
 
-    # Verificar que el archivo referenciado esté en el manifiesto
-    referenced_file = fixity['file']
-    if referenced_file not in manifest_files:
-        raise ValueError(f"El archivo '{referenced_file}' no está en el manifiesto.")
+    if not isinstance(fixity['checksums'], list):
+        raise ValueError("Checksums must be a list.")
 
-    # Verificar que el checksum sea una cadena
-    if not isinstance(fixity['checksum'], str):
-        raise ValueError("El checksum debe ser una cadena.")
-
+    for checksum in fixity['checksums']:
+        if not isinstance(checksum, dict):
+            raise ValueError("Each checksum must be a dictionary.")
+        if 'file' not in checksum or 'value' not in checksum:
+            raise ValueError("Each checksum must contain 'file' and 'value' keys.")
+        if checksum['file'] not in manifest_files:
+            raise ValueError(f"File {checksum['file']} referenced in fixity is not in the manifest.")
+    
     return True
