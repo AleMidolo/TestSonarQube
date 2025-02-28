@@ -1,3 +1,7 @@
+from datetime import datetime
+from dateutil import parser
+from dateutil.tz import gettz
+
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
     Analizza la stringa di data/ora in un oggetto :class:`datetime.datetime`.
@@ -22,23 +26,6 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         funzione che accetta due parametri (``tzname`` e ``tzoffset``) e restituisce
         un fuso orario.
 
-        I fusi orari a cui vengono mappati i nomi possono essere un offset intero
-        rispetto all'UTC in secondi o un oggetto :class:`tzinfo`.
-
-        .. doctest::
-           :options: +NORMALIZE_WHITESPACE
-
-            >>> from dateutil.parser import parse
-            >>> from dateutil.tz import gettz
-            >>> tzinfos = {"BRST": -7200, "CST": gettz("America/Chicago")}
-            >>> parse("2012-01-19 17:21:00 BRST", tzinfos=tzinfos)
-            datetime.datetime(2012, 1, 19, 17, 21, tzinfo=tzoffset(u'BRST', -7200))
-            >>> parse("2012-01-19 17:21:00 CST", tzinfos=tzinfos)
-            datetime.datetime(2012, 1, 19, 17, 21,
-                              tzinfo=tzfile('/usr/share/zoneinfo/America/Chicago'))
-
-        Questo parametro viene ignorato se ``ignoretz`` è impostato.
-
     :param \*\*kwargs:
         Argomenti keyword passati a ``_parse()``.
 
@@ -60,5 +47,20 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         Sollevato se la data analizzata supera il più grande intero C valido
         sul tuo sistema.
     """
-    from dateutil import parser
-    return parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+    if not isinstance(timestr, str):
+        raise TypeError("Input must be a string.")
+
+    if default is not None and not isinstance(default, datetime):
+        raise TypeError("Default must be a datetime object or None.")
+
+    if ignoretz:
+        tzinfos = None
+
+    try:
+        parsed_datetime = parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+    except parser.ParserError as e:
+        raise parser.ParserError(f"Invalid or unknown string format: {e}")
+    except OverflowError as e:
+        raise OverflowError(f"Parsed date exceeds the largest valid C integer on your system: {e}")
+
+    return parsed_datetime

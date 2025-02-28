@@ -1,3 +1,5 @@
+import os
+
 def remove_ending_os_sep(input_list):
     """
     Itera su un elenco di stringhe e rimuovi i caratteri separatori di sistema operativi (os) finali.
@@ -15,18 +17,17 @@ def remove_ending_os_sep(input_list):
     Eccezioni:
         TypeError
     """
-    import os
-
     if not isinstance(input_list, list):
-        raise TypeError("input_list deve essere un elenco di stringhe")
-
+        raise TypeError("L'argomento deve essere una lista di stringhe.")
+    
     processed_list = []
     for item in input_list:
         if not isinstance(item, str):
-            raise TypeError("Tutti gli elementi in input_list devono essere stringhe")
+            raise TypeError("Tutti gli elementi della lista devono essere stringhe.")
+        
         if len(item) > 1 and item[-1] == os.sep:
             processed_list.append(item[:-1])
         else:
             processed_list.append(item)
-
+    
     return processed_list

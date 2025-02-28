@@ -7,16 +7,26 @@ def generate_default_observer_schema(app):
         app (krake.data.kubernetes.Application): L'applicazione per la quale generare uno
             schema di osservazione predefinito.
     """
-    default_schema = {}
+    default_schema = {
+        "apiVersion": "v1",
+        "kind": "ObserverSchema",
+        "metadata": {
+            "name": "default-observer-schema",
+            "namespace": app.metadata.namespace
+        },
+        "spec": {
+            "rules": [
+                {
+                    "apiGroups": ["*"],
+                    "resources": ["*"],
+                    "verbs": ["get", "list", "watch"]
+                }
+            ]
+        }
+    }
+
     for resource in app.spec.manifest:
-        resource_type = resource.get('kind')
-        if resource_type not in default_schema:
-            default_schema[resource_type] = {
-                'apiVersion': resource.get('apiVersion'),
-                'metadata': {
-                    'name': resource.get('metadata', {}).get('name'),
-                    'namespace': resource.get('metadata', {}).get('namespace'),
-                },
-                'spec': resource.get('spec', {})
-            }
-    return default_schema
+        if not hasattr(resource, 'observer_schema'):
+            resource.observer_schema = default_schema
+
+    return app

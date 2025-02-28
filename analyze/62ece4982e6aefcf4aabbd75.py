@@ -1,17 +1,18 @@
-def addignored(ignored):
+import subprocess
+
+def aggiungi_ignorati(ignorati):
     """
     Utilizza il comando git per ottenere i nomi dei file, trasformali in una lista, ordina la lista per includere solo i file ignorati, restituisci quei file come una singola stringa con ogni nome di file separato da una virgola.
     """
-    import subprocess
-
-    # Esegui il comando git per ottenere i file ignorati
-    result = subprocess.run(['git', 'check-ignore', '-n', '*'], stdout=subprocess.PIPE, text=True)
+    # Ottieni la lista dei file ignorati da git
+    result = subprocess.run(['git', 'ls-files', '--others', '--ignored', '--exclude-standard'], stdout=subprocess.PIPE)
+    ignored_files = result.stdout.decode('utf-8').splitlines()
     
-    # Estrai i nomi dei file dalla risposta
-    ignored_files = result.stdout.strip().split('\n')
+    # Filtra i file ignorati in base alla lista fornita
+    filtered_files = [file for file in ignored_files if file in ignorati]
     
-    # Ordina i file ignorati
-    ignored_files = sorted(set(file.split(':')[1].strip() for file in ignored_files if file))
+    # Ordina la lista dei file ignorati
+    filtered_files.sort()
     
-    # Restituisci i file come una stringa separata da virgole
-    return ', '.join(ignored_files)
+    # Restituisci i file come una singola stringa separata da virgole
+    return ', '.join(filtered_files)

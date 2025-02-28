@@ -1,11 +1,12 @@
 def strip_root(percorso, radice):
     """
     Rimuovi la radice dal percorso, genera un'eccezione in caso di errore.
-    """
-    if not isinstance(percorso, str) or not isinstance(radice, str):
-        raise ValueError("Entrambi i parametri devono essere stringhe.")
     
-    if percorso.startswith(radice):
-        return percorso[len(radice):]
-    else:
-        raise ValueError("Il percorso non inizia con la radice specificata.")
+    :param percorso: Il percorso completo da cui rimuovere la radice.
+    :param radice: La radice da rimuovere dal percorso.
+    :return: Il percorso senza la radice.
+    :raises ValueError: Se la radice non è un prefisso del percorso.
+    """
+    if not percorso.startswith(radice):
+        raise ValueError("La radice non è un prefisso del percorso.")
+    return percorso[len(radice):]

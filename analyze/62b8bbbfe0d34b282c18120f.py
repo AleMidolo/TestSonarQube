@@ -11,6 +11,8 @@ def file_to_textbuffer(file_name, encoding):
     """
     try:
         with open(file_name, 'r', encoding=encoding) as file:
-            return file.read()
+            text_buffer = file.read()
+        return text_buffer
     except Exception as e:
+        print(f"Errore durante la lettura del file: {e}")
         return None

@@ -1,4 +1,5 @@
-import datetime
+import re
+from datetime import timedelta
 
 def parse_frequency(frequency):
     """
@@ -11,35 +12,29 @@ def parse_frequency(frequency):
     """
     if frequency is None or frequency.lower() == "always":
         return None
-
-    units = {
-        'seconds': 'seconds',
-        'second': 'seconds',
-        'minutes': 'minutes',
-        'minute': 'minutes',
-        'hours': 'hours',
-        'hour': 'hours',
-        'days': 'days',
-        'day': 'days',
-        'weeks': 'weeks',
-        'week': 'weeks',
-        'months': 'days',  # Approximation: 1 month = 30 days
-        'month': 'days',    # Approximation: 1 month = 30 days
-        'years': 'days',    # Approximation: 1 year = 365 days
-        'year': 'days'      # Approximation: 1 year = 365 days
-    }
-
-    parts = frequency.split()
-    if len(parts) != 2:
-        raise ValueError("Frequency must be in the format '<number> <unit>'")
-
-    try:
-        value = int(parts[0])
-    except ValueError:
-        raise ValueError("The first part of the frequency must be an integer")
-
-    unit = parts[1].lower()
-    if unit not in units:
-        raise ValueError(f"Unknown time unit: {unit}")
-
-    return datetime.timedelta(**{units[unit]: value})
+    
+    pattern = re.compile(r'^(\d+)\s*(second|minute|hour|day|week|month|year)s?$', re.IGNORECASE)
+    match = pattern.match(frequency.strip())
+    
+    if not match:
+        raise ValueError(f"Invalid frequency format: {frequency}")
+    
+    value = int(match.group(1))
+    unit = match.group(2).lower()
+    
+    if unit == "second":
+        return timedelta(seconds=value)
+    elif unit == "minute":
+        return timedelta(minutes=value)
+    elif unit == "hour":
+        return timedelta(hours=value)
+    elif unit == "day":
+        return timedelta(days=value)
+    elif unit == "week":
+        return timedelta(weeks=value)
+    elif unit == "month":
+        return timedelta(days=30 * value)  # Approximate month as 30 days
+    elif unit == "year":
+        return timedelta(days=365 * value)  # Approximate year as 365 days
+    else:
+        raise ValueError(f"Unsupported time unit: {unit}")

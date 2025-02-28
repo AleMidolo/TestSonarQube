@@ -6,16 +6,6 @@ def default_tzinfo(dt, tzinfo):
 
     Questo è utile, ad esempio, quando si lavora con un oggetto datetime che può avere un fuso orario implicito o esplicito, come nel caso del parsing di una stringa che rappresenta un fuso orario.
 
-    .. doctest::
-
-        >>> from dateutil.tz import tzoffset
-        >>> from dateutil.parser import parse
-        >>> dflt_tz = tzoffset("EST", -18000)
-        >>> print(default_tzinfo(parse('2014-01-01 12:30 UTC'), dflt_tz))
-        2014-01-01 12:30:00+00:00
-        >>> print(default_tzinfo(parse('2014-01-01 12:30'), dflt_tz))
-        2014-01-01 12:30:00-05:00
-
     :param dt:
         Il datetime su cui sostituire il fuso orario.
 

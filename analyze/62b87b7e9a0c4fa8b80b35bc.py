@@ -16,16 +16,19 @@ def _update_context(self, context):
     in un'altra struttura (come il testo) nel flusso di lavoro.
     L'oggetto grafo non viene realmente distrutto in questo processo.
     """
-    # Assuming self.graph contains the graph properties and errors
-    if 'error' not in context:
-        context['error'] = {}
+    if not hasattr(context, 'error'):
+        context.error = {}
 
-    for error_name, error_info in self.graph.errors.items():
-        if error_name in ['x', 'y', 'z']:
-            context['error'][f"{error_name}_low"] = {'index': error_info['index']}
-    
-    # Preserving existing values in context.value and its subcontexts
-    if 'value' not in context:
-        context['value'] = {}
-    
-    # Additional logic to update context.value can be added here
+    # Assuming self has a property `error_indices` that contains the error indices
+    # and a property `coordinates` that contains the coordinate names (e.g., ["x", "y", "z"])
+    if hasattr(self, 'error_indices') and hasattr(self, 'coordinates'):
+        for i, error_index in enumerate(self.error_indices):
+            if i < len(self.coordinates):
+                coord_name = self.coordinates[i]
+                context.error[f"{coord_name}_low"] = {"index": error_index}
+
+    # Ensure existing values in context.value are not removed
+    if not hasattr(context, 'value'):
+        context.value = {}
+
+    return context

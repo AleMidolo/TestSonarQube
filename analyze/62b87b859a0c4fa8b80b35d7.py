@@ -1,34 +1,30 @@
 def to_csv(self, separator=",", header=None):
     """
-    .. deprecated:: 0.5 in Lena 0.5 to_csv non è più utilizzato.  
-          Gli iterabili vengono convertiti in tabelle.
+    Converts the points of the graph into CSV format.
 
-    Converte i punti del grafico in formato CSV.
+    Args:
+        separator (str): Delimiter for values, default is a comma.
+        header (str, optional): If not None, this string is the first line of the output 
+                                (a newline is automatically added).
 
-    *separator* delimita i valori, il valore predefinito è la virgola.
-
-    *header*, se non è ``None``, è la prima stringa dell'output  
-    (una nuova riga viene aggiunta automaticamente).
-
-    Poiché un grafico può essere multidimensionale,  
-    per ogni punto, prima le sue coordinate vengono convertite in stringa  
-    (separate da *separator*), poi ogni parte del suo valore.
-
-    Per convertire un :class:`Graph` in formato CSV all'interno di una sequenza Lena,  
-    utilizzare :class:`lena.output.ToCSV`.
+    Returns:
+        str: The CSV representation of the graph.
     """
-    import csv
-    from io import StringIO
-
-    output = StringIO()
-    writer = csv.writer(output, delimiter=separator)
-
+    csv_lines = []
+    
+    # Add header if provided
     if header is not None:
-        writer.writerow([header])
-
-    for point in self.points:  # Assuming self.points is a list of points
-        row = [str(coord) for coord in point.coordinates]  # Convert coordinates to string
-        row.extend([str(value) for value in point.values])  # Convert values to string
-        writer.writerow(row)
-
-    return output.getvalue()
+        csv_lines.append(header)
+    
+    # Convert each point to CSV format
+    for point in self.points:
+        # Convert coordinates to string
+        coords_str = separator.join(map(str, point.coordinates))
+        # Convert value parts to string
+        value_str = separator.join(map(str, point.value))
+        # Combine coordinates and value
+        csv_line = f"{coords_str}{separator}{value_str}"
+        csv_lines.append(csv_line)
+    
+    # Join all lines with newline characters
+    return "\n".join(csv_lines)

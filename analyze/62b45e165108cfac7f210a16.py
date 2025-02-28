@@ -7,12 +7,14 @@ def validate_as_prior_version(self, prior):
     verificati per coerenza interna.
     """
     if not isinstance(prior, InventoryValidator):
-        raise ValueError("L'oggetto 'prior' deve essere un'istanza di InventoryValidator.")
+        raise TypeError("prior must be an instance of InventoryValidator")
     
-    # Controlla se la versione di prior è effettivamente precedente a quella corrente
-    if prior.version >= self.version:
-        return False
+    # Add logic to compare self and prior to ensure prior is a valid previous version
+    # For example, check if prior's timestamp is earlier than self's timestamp
+    if prior.timestamp >= self.timestamp:
+        raise ValueError("prior must be an earlier version than the current inventory")
     
-    # A questo punto, si presume che le versioni siano coerenti
-    # Aggiungere ulteriori controlli di coerenza tra self e prior se necessario
+    # Additional validation logic can be added here based on specific requirements
+    # For example, checking if certain fields in prior are consistent with self
+    
     return True

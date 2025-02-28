@@ -16,30 +16,37 @@ def _legacy_mergeOrderings(orderings):
     """
     from collections import defaultdict, deque
 
-    # Create a graph and in-degree count
-    graph = defaultdict(list)
+    # Build a graph and in-degree count
+    graph = defaultdict(set)
     in_degree = defaultdict(int)
-    orderings_set = set()
+    all_nodes = set()
 
-    # Build the graph
     for ordering in orderings:
-        for i in range(len(ordering)):
-            orderings_set.add(ordering[i])
-            if i > 0:
-                graph[ordering[i - 1]].append(ordering[i])
-                in_degree[ordering[i]] += 1
+        for i in range(len(ordering) - 1):
+            u, v = ordering[i], ordering[i + 1]
+            if v not in graph[u]:
+                graph[u].add(v)
+                in_degree[v] += 1
+            all_nodes.add(u)
+            all_nodes.add(v)
+        if ordering:
+            all_nodes.add(ordering[-1])
 
-    # Initialize the queue with nodes that have no incoming edges
-    queue = deque([item for item in orderings_set if in_degree[item] == 0])
+    # Initialize queue with nodes having zero in-degree
+    queue = deque([node for node in all_nodes if in_degree[node] == 0])
+
+    # Perform topological sort
     result = []
-
-    # Perform a topological sort
     while queue:
-        current = queue.popleft()
-        result.append(current)
-        for neighbor in graph[current]:
-            in_degree[neighbor] -= 1
-            if in_degree[neighbor] == 0:
-                queue.append(neighbor)
+        u = queue.popleft()
+        result.append(u)
+        for v in graph[u]:
+            in_degree[v] -= 1
+            if in_degree[v] == 0:
+                queue.append(v)
+
+    # Check for cycles (if any node still has in-degree > 0)
+    if len(result) != len(all_nodes):
+        raise ValueError("Input orderings contain a cycle or are inconsistent.")
 
     return result

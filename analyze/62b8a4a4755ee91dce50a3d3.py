@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 def fromutc(self, dt):
     """
     Dato un oggetto datetime con consapevolezza del fuso orario (timezone-aware) in un determinato fuso orario, calcola un oggetto datetime con consapevolezza del fuso orario in un nuovo fuso orario.
@@ -8,18 +10,20 @@ def fromutc(self, dt):
         Un oggetto :class:`datetime.datetime` con consapevolezza del fuso orario (timezone-aware).
     """
     if dt.tzinfo is None:
-        raise ValueError("dt must be timezone-aware")
-
-    # Convert the datetime to UTC
-    utc_dt = dt.astimezone(self.utc)
-
-    # Check if the datetime is ambiguous
-    if self._is_ambiguous(utc_dt):
-        # Handle the ambiguity (e.g., by checking if it's in the fold)
-        if self._is_in_fold(utc_dt):
-            return utc_dt.replace(fold=1)
-        else:
-            return utc_dt.replace(fold=0)
+        raise ValueError("fromutc() requires a timezone-aware datetime object")
     
-    # Return the converted datetime in the new timezone
-    return utc_dt.astimezone(self)
+    # Convert the datetime to UTC
+    dt_utc = dt.astimezone(self.utc)
+    
+    # Calculate the offset from UTC for the new timezone
+    offset = self.utcoffset(dt_utc)
+    
+    # Apply the offset to get the new datetime
+    new_dt = dt_utc + offset
+    
+    # Check if the new datetime is ambiguous (e.g., during a DST transition)
+    if self.is_ambiguous(new_dt):
+        # If ambiguous, set the fold attribute to 1 (second occurrence)
+        new_dt = new_dt.replace(fold=1)
+    
+    return new_dt

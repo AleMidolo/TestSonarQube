@@ -1,6 +1,7 @@
-import json
 import logging
 import os
+import json
+import yaml
 
 def load_configurations(config_filenames, overrides=None, resolve_env=True):
     """
@@ -9,22 +10,47 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     - un dizionario che associa il nome del file di configurazione alla corrispondente configurazione analizzata,
     - una sequenza di istanze di `logging.LogRecord` contenenti eventuali errori di analisi.
     """
+    configurations = {}
+    errors = []
+
     if overrides is None:
         overrides = {}
 
-    configurations = {}
-    log_records = []
-    logger = logging.getLogger(__name__)
-
     for filename in config_filenames:
         try:
-            with open(filename, 'r') as f:
-                config = json.load(f)
-                if resolve_env:
-                    config = {k: os.path.expandvars(v) for k, v in config.items()}
-                configurations[filename] = {**config, **overrides}
-        except Exception as e:
-            log_record = logger.error(f"Error loading configuration from {filename}: {e}")
-            log_records.append(log_record)
+            with open(filename, 'r') as file:
+                if filename.endswith('.json'):
+                    config = json.load(file)
+                elif filename.endswith('.yaml') or filename.endswith('.yml'):
+                    config = yaml.safe_load(file)
+                else:
+                    raise ValueError(f"Unsupported file format: {filename}")
 
-    return configurations, log_records
+                # Apply overrides
+                for key, value in overrides.items():
+                    if key in config:
+                        config[key] = value
+
+                # Resolve environment variables if required
+                if resolve_env:
+                    for key, value in config.items():
+                        if isinstance(value, str) and value.startswith('$'):
+                            env_var = value[1:]
+                            config[key] = os.getenv(env_var, value)
+
+                configurations[filename] = config
+
+        except Exception as e:
+            error_msg = f"Error loading configuration from {filename}: {str(e)}"
+            logging.error(error_msg)
+            errors.append(logging.LogRecord(
+                name=__name__,
+                level=logging.ERROR,
+                pathname=filename,
+                lineno=0,
+                msg=error_msg,
+                args=None,
+                exc_info=None
+            ))
+
+    return configurations, errors

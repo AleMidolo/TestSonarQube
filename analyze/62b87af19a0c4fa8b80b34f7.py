@@ -1,19 +1,28 @@
+import copy
+
 def difference(d1, d2, level=-1):
-    import copy
+    """
+    Restituisce un dizionario con gli elementi di *d1* che non sono contenuti in *d2*.
 
-    def recursive_difference(d1, d2, current_level):
-        result = {}
-        for key in d1:
-            if key not in d2:
-                result[key] = copy.deepcopy(d1[key])
-            else:
-                if isinstance(d1[key], dict) and isinstance(d2[key], dict):
-                    if level == -1 or current_level < level:
-                        nested_diff = recursive_difference(d1[key], d2[key], current_level + 1)
-                        if nested_diff:
-                            result[key] = nested_diff
-                elif d1[key] != d2[key]:
-                    result[key] = copy.deepcopy(d1[key])
-        return result
+    Il parametro *level* definisce la profondità massima della ricorsione. Per una ricorsione infinita, impostare *level* a -1. Per livello 1, se una chiave è presente sia in *d1* che in *d2* ma ha valori diversi, viene inclusa nella differenza. Consulta la funzione :func:`intersection` per ulteriori dettagli.
 
-    return recursive_difference(d1, d2, 0)
+    *d1* e *d2* rimangono invariati. Tuttavia, *d1* o alcuni dei suoi sottodizionari potrebbero essere restituiti direttamente. Effettua una copia profonda (deep copy) del risultato quando appropriato.
+
+    .. versione aggiunta:: 0.5
+       Aggiunto il parametro *level*.
+    """
+    if level == 0:
+        return {}
+    
+    diff = {}
+    for key in d1:
+        if key not in d2:
+            diff[key] = copy.deepcopy(d1[key])
+        elif isinstance(d1[key], dict) and isinstance(d2[key], dict) and (level == -1 or level > 1):
+            sub_diff = difference(d1[key], d2[key], level - 1 if level != -1 else -1)
+            if sub_diff:
+                diff[key] = sub_diff
+        elif d1[key] != d2[key]:
+            diff[key] = copy.deepcopy(d1[key])
+    
+    return diff

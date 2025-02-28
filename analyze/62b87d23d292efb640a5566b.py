@@ -1,19 +1,35 @@
 import subprocess
-import os
 
 def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=False, env=None):
     """
     Esegui il comando specificato.
+
+    :param comandi: Lista di comandi da eseguire.
+    :param argomenti: Lista di argomenti da passare ai comandi.
+    :param cwd: Directory di lavoro corrente (opzionale).
+    :param verbose: Se True, stampa il comando eseguito (opzionale).
+    :param nascondi_stderr: Se True, nasconde l'output di stderr (opzionale).
+    :param env: Dizionario delle variabili d'ambiente (opzionale).
+    :return: Il risultato dell'esecuzione del comando.
     """
-    if cwd is None:
-        cwd = os.getcwd()
-    
-    full_command = [comandi] + argomenti
-    stderr_option = subprocess.DEVNULL if nascondi_stderr else None
+    command = comandi + argomenti
+    stderr = subprocess.DEVNULL if nascondi_stderr else subprocess.PIPE
     
     if verbose:
-        print(f"Esecuzione comando: {' '.join(full_command)} in {cwd}")
+        print(f"Esecuzione comando: {' '.join(command)}")
     
-    result = subprocess.run(full_command, cwd=cwd, env=env, stderr=stderr_option)
+    result = subprocess.run(
+        command,
+        cwd=cwd,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=stderr,
+        text=True
+    )
     
-    return result.returncode
+    if verbose:
+        print(f"Output: {result.stdout}")
+        if result.stderr:
+            print(f"Errore: {result.stderr}")
+    
+    return result

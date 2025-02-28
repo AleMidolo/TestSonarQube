@@ -10,25 +10,24 @@ def size_to_bytes(size: str) -> int:
     Returns:
         Una rappresentazione decimale della dimensione del file
 
-        Esempi::
+    Esempi::
 
-            >>> size_to_bytes("500")
-            500
-            >>> size_to_bytes("1K")
-            1000
+        >>> size_to_bytes("500")
+        500
+        >>> size_to_bytes("1K")
+        1000
     """
     size = size.strip().upper()
-    multipliers = {
-        'K': 1000,
-        'M': 1000**2,
-        'G': 1000**3,
-        'T': 1000**4,
-        'P': 1000**5,
-        'E': 1000**6,
-    }
-    
-    if size[-1] in multipliers:
-        number = float(size[:-1])
-        return int(number * multipliers[size[-1]])
+    if size[-1] in ['K', 'M', 'G', 'T']:
+        num = float(size[:-1])
+        unit = size[-1]
+        if unit == 'K':
+            return int(num * 1000)
+        elif unit == 'M':
+            return int(num * 1000 ** 2)
+        elif unit == 'G':
+            return int(num * 1000 ** 3)
+        elif unit == 'T':
+            return int(num * 1000 ** 4)
     else:
         return int(size)

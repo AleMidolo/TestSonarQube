@@ -7,6 +7,6 @@ def values(self, *keys):
     :rtype: list
     """
     if not keys:
-        return list(self.record.values())
-    
-    return [self.record[key] for key in keys if key in self.record]
+        return list(self.__dict__.values())
+    else:
+        return [self.__dict__.get(key) for key in keys]

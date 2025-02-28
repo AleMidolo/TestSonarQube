@@ -1,14 +1,18 @@
 def add_asset(self, basename, file_path):
     """
-    {
-        ""artigo02-gf03.tiff"": ""/path/artigo02-gf03.tiff"",
-        ""artigo02-gf03.jpg"": ""/path/artigo02-gf03.jpg"",
-        ""artigo02-gf03.png"": ""/path/artigo02-gf03.png""
-    }
+    Adds an asset to the internal dictionary with the given basename and file path.
+    
+    Args:
+        basename (str): The base name of the asset (e.g., "artigo02-gf03").
+        file_path (str): The full path to the asset file.
+    
+    Returns:
+        None
     """
     if not hasattr(self, 'assets'):
         self.assets = {}
     
-    file_extension = file_path.split('.')[-1]
-    asset_key = f"{basename}.{file_extension}"
-    self.assets[asset_key] = file_path
+    # Generate keys for different file formats
+    self.assets[f"{basename}.tiff"] = file_path.replace(".tiff", ".tiff")
+    self.assets[f"{basename}.jpg"] = file_path.replace(".tiff", ".jpg")
+    self.assets[f"{basename}.png"] = file_path.replace(".tiff", ".png")

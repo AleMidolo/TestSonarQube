@@ -1,27 +1,32 @@
 import subprocess
-import os
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
     Esegui il/i comando/i fornito/i.
-    """
-    if cwd is None:
-        cwd = os.getcwd()
     
-    if env is None:
-        env = os.environ
-
-    if isinstance(commands, str):
-        commands = [commands]
-
-    results = []
-    for command in commands:
-        full_command = [command] + args
-        if verbose:
-            print(f"Running command: {' '.join(full_command)} in {cwd}")
-        
-        stderr = subprocess.DEVNULL if hide_stderr else None
-        result = subprocess.run(full_command, cwd=cwd, env=env, stderr=stderr)
-        results.append(result)
-
-    return results
+    :param commands: Lista di comandi da eseguire.
+    :param args: Lista di argomenti da passare ai comandi.
+    :param cwd: Directory di lavoro corrente (opzionale).
+    :param verbose: Se True, stampa l'output del comando (opzionale).
+    :param hide_stderr: Se True, nasconde l'output di errore (opzionale).
+    :param env: Dizionario di variabili d'ambiente (opzionale).
+    :return: Tupla contenente l'output del comando e il codice di uscita.
+    """
+    command = commands + args
+    stderr = subprocess.PIPE if hide_stderr else None
+    
+    process = subprocess.Popen(
+        command,
+        cwd=cwd,
+        stdout=subprocess.PIPE,
+        stderr=stderr,
+        env=env,
+        text=True
+    )
+    
+    stdout, stderr = process.communicate()
+    
+    if verbose:
+        print(stdout)
+    
+    return stdout, process.returncode

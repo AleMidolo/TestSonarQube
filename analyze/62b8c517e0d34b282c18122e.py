@@ -1,27 +1,41 @@
 def extostr(cls, e, max_level=30, max_path_level=5):
+    """
+    Formatta un'eccezione.
+    :param e: Qualsiasi istanza di eccezione.
+    :type e: Exception
+    :param max_level: Livello massimo dello stack delle chiamate (predefinito 30)
+    :type max_level: int
+    :param max_path_level: Livello massimo del percorso (predefinito 5)
+    :type max_path_level: int
+    :return: La stringa leggibile dell'eccezione
+    :rtype: str
+    """
     import traceback
-
-    # Get the exception type and message
-    exc_type = type(e).__name__
-    exc_message = str(e)
-
-    # Format the exception header
-    result = f"{exc_type}: {exc_message}\n"
-
-    # Get the traceback
-    tb = traceback.extract_tb(e.__traceback__)
     
-    # Limit the traceback to max_level
-    tb = tb[:max_level]
-
-    # Format the traceback
-    for frame in tb:
-        filename, lineno, funcname, text = frame
-        result += f"  File \"{filename}\", line {lineno}, in {funcname}\n"
-        result += f"    {text}\n"
-
-    # If the traceback is longer than max_path_level, truncate it
-    if len(tb) > max_path_level:
-        result += f"  ... (truncated to {max_path_level} frames)\n"
-
+    # Estrai lo stack trace
+    stack_trace = traceback.format_exc()
+    
+    # Limita il numero di livelli dello stack
+    stack_lines = stack_trace.splitlines()
+    if len(stack_lines) > max_level:
+        stack_lines = stack_lines[:max_level]
+        stack_lines.append("... (stack trace truncated)")
+    
+    # Limita il numero di livelli del percorso
+    path_lines = []
+    for line in stack_lines:
+        if "File" in line and "line" in line:
+            parts = line.split(",")
+            if len(parts) > max_path_level:
+                parts = parts[:max_path_level]
+                parts.append("... (path truncated)")
+            line = ",".join(parts)
+        path_lines.append(line)
+    
+    # Unisci le linee in una singola stringa
+    formatted_trace = "\n".join(path_lines)
+    
+    # Aggiungi il messaggio dell'eccezione
+    result = f"{str(e)}\n{formatted_trace}"
+    
     return result

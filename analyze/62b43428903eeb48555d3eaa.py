@@ -1,31 +1,21 @@
 def formatmany(
-                self,
-                sql: AnyStr,
-                many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
-        ) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
-    # Convert the SQL query to use "out" style parameters
-    out_params = []
-    param_count = 0
+        self,
+        sql: AnyStr,
+        many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
+) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
+    formatted_sql = sql
+    formatted_params = []
 
-    # Determine the parameter style
-    if isinstance(many_params, dict):
-        for params in many_params:
-            if isinstance(params, dict):
-                out_params.append({k: v for k, v in params.items()})
-                param_count += len(params)
-            elif isinstance(params, (list, tuple)):
-                out_params.append(list(params))
-                param_count += len(params)
-    else:
-        for params in many_params:
-            if isinstance(params, dict):
-                out_params.append({k: v for k, v in params.items()})
-                param_count += len(params)
-            elif isinstance(params, (list, tuple)):
-                out_params.append(list(params))
-                param_count += len(params)
+    for params in many_params:
+        if isinstance(params, dict):
+            # Convert named parameters to out style
+            out_params = {f"out_{key}": value for key, value in params.items()}
+            formatted_params.append(out_params)
+        elif isinstance(params, (list, tuple)):
+            # Convert ordinal parameters to out style
+            out_params = [f"out_{i}" for i in range(len(params))]
+            formatted_params.append(out_params)
+        else:
+            raise TypeError("params must be a Mapping or Sequence")
 
-    # Format the SQL query to replace "in" style with "out" style
-    formatted_sql = sql.replace("IN (", "OUT (").replace("?", "%s")  # Example replacement logic
-
-    return formatted_sql, out_params
+    return formatted_sql, formatted_params

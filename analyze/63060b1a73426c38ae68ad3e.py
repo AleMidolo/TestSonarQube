@@ -8,24 +8,32 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     :param plugin_dir: Un percorso alla directory del plugin  
     :return: Un dizionario piatto che contiene le proprietà del plugin
     """
-    flatten_dict = {}
-
-    # Assuming there is a 'spec.json' file in the plugin directory
-    spec_file_path = os.path.join(plugin_dir, 'spec.json')
+    flat_dict = {}
     
-    if os.path.exists(spec_file_path):
-        with open(spec_file_path, 'r') as spec_file:
-            spec_data = json.load(spec_file)
-            flatten_dict = flatten(spec_data)
+    # Check if the directory exists
+    if not os.path.isdir(plugin_dir):
+        raise FileNotFoundError(f"The directory {plugin_dir} does not exist.")
     
-    return flatten_dict
-
-def flatten(d, parent_key='', sep='_'):
-    items = []
-    for k, v in d.items():
-        new_key = f"{parent_key}{sep}{k}" if parent_key else k
-        if isinstance(v, dict):
-            items.extend(flatten(v, new_key, sep=sep).items())
-        else:
-            items.append((new_key, v))
-    return dict(items)
+    # Look for a spec file (e.g., plugin_spec.json) in the plugin directory
+    spec_file = os.path.join(plugin_dir, "plugin_spec.json")
+    if not os.path.isfile(spec_file):
+        raise FileNotFoundError(f"No plugin specification file found in {plugin_dir}.")
+    
+    # Load the JSON file
+    with open(spec_file, 'r') as file:
+        spec_data = json.load(file)
+    
+    # Flatten the dictionary
+    def flatten_dict(d, parent_key='', sep='.'):
+        items = []
+        for k, v in d.items():
+            new_key = f"{parent_key}{sep}{k}" if parent_key else k
+            if isinstance(v, dict):
+                items.extend(flatten_dict(v, new_key, sep=sep).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
+    
+    flat_dict = flatten_dict(spec_data)
+    
+    return flat_dict

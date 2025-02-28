@@ -1,3 +1,6 @@
+from zope.interface import providedBy, Interface, Invalid
+from zope.interface.verify import verifyObject as zope_verify_object
+
 def verifyObject(iface, candidate, tentative=False):
     """
     Verifica che il *candidate* possa fornire correttamente l'*iface*.
@@ -18,39 +21,13 @@ def verifyObject(iface, candidate, tentative=False):
     .. versionchanged:: 5.0  
         Se più metodi o attributi sono invalidi, tutti questi errori vengono raccolti e riportati. In precedenza, veniva segnalato solo il primo errore. Come caso speciale, se è presente un solo errore, viene sollevato singolarmente, come in passato.
     """
-    from zope.interface import providedBy, Invalid
-    from inspect import signature, Parameter
+    if not tentative:
+        if not iface.providedBy(candidate):
+            raise Invalid(f"The candidate does not provide the interface {iface}.")
 
-    errors = []
-
-    if not tentative and not providedBy(candidate).isOrExtends(iface):
-        errors.append(f"{candidate} does not provide {iface}")
-
-    required_methods = iface.names().keys()
-    for method in required_methods:
-        if not hasattr(candidate, method):
-            errors.append(f"{candidate} is missing method {method}")
-            continue
-        
-        method_signature = signature(getattr(candidate, method))
-        iface_signature = signature(iface.names()[method][1])
-        
-        if len(method_signature.parameters) != len(iface_signature.parameters):
-            errors.append(f"{method} in {candidate} has incorrect number of parameters")
-            continue
-        
-        for param in iface_signature.parameters:
-            if param.name not in method_signature.parameters:
-                errors.append(f"{method} in {candidate} is missing parameter {param.name}")
-    
-    required_attributes = iface.names().keys()  # Assuming attributes are also defined in iface
-    for attr in required_attributes:
-        if not hasattr(candidate, attr):
-            errors.append(f"{candidate} is missing attribute {attr}")
-
-    if errors:
-        if len(errors) == 1:
-            raise Invalid(errors[0])
-        raise Invalid(errors)
+    try:
+        zope_verify_object(iface, candidate)
+    except Invalid as e:
+        raise Invalid(f"Verification failed: {e}")
 
     return True

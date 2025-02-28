@@ -1,3 +1,5 @@
+import os
+
 def select_filenames_by_prefix(prefix, files):
     """
     Ottieni i file che appartengono a un pacchetto di documenti.
@@ -17,4 +19,9 @@ def select_filenames_by_prefix(prefix, files):
     list  
         Percorsi dei file i cui nomi base corrispondono al prefisso specificato.  
     """
-    return [file for file in files if file.startswith(prefix)]
+    selected_files = []
+    for file_path in files:
+        file_name = os.path.basename(file_path)
+        if file_name.startswith(prefix):
+            selected_files.append(file_path)
+    return selected_files

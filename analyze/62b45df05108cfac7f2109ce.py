@@ -3,15 +3,30 @@ def validate(self, path):
     Valida l'oggetto OCFL nel percorso specificato o nella radice di pyfs.
     """
     import os
+    from fs import open_fs
 
-    if not os.path.exists(path):
-        raise FileNotFoundError(f"Il percorso specificato non esiste: {path}")
+    # Open the filesystem at the given path
+    fs = open_fs(path)
 
-    # Logica di validazione dell'oggetto OCFL
-    # Questo è un esempio e dovrebbe essere sostituito con la logica reale
-    is_valid = True  # Supponiamo che la validazione sia andata a buon fine
+    # Check if the required OCFL structure exists
+    if not fs.exists('0=ocfl_object_1.0'):
+        return False
 
-    if is_valid:
-        return "Validazione completata con successo."
-    else:
-        return "Validazione fallita."
+    # Validate the inventory file
+    if not fs.exists('inventory.json'):
+        return False
+
+    # Validate the manifest in the inventory
+    inventory_path = fs.getsyspath('inventory.json')
+    with open(inventory_path, 'r') as f:
+        import json
+        inventory = json.load(f)
+        if 'manifest' not in inventory:
+            return False
+
+    # Validate the content directory
+    if not fs.exists('content'):
+        return False
+
+    # If all checks pass, the object is valid
+    return True

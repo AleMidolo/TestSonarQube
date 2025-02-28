@@ -1,9 +1,11 @@
-from typing import Sequence
 import random
 
 def _shuffled(seq: Sequence[str]) -> list[str]:
     """Mescolamento deterministico"""
-    shuffled_seq = list(seq)
-    random.seed(0)  # Set a seed for deterministic behavior
-    random.shuffle(shuffled_seq)
-    return shuffled_seq
+    # Create a copy of the sequence to avoid modifying the original
+    seq_copy = list(seq)
+    # Use a fixed seed for deterministic shuffling
+    random.seed(42)
+    # Shuffle the sequence
+    random.shuffle(seq_copy)
+    return seq_copy

@@ -1,3 +1,5 @@
+import os
+
 def find_path_type(path):
     """
     Restituisce una stringa che indica il tipo di elemento presente nel percorso specificato.
@@ -10,19 +12,26 @@ def find_path_type(path):
 
     Si basa esclusivamente sui file "0=*" Namaste per determinare il tipo di directory.
     """
-    import os
-
     if not os.path.exists(path):
         return "Il percorso specificato non esiste."
-
-    if os.path.isdir(path):
-        if any(file.startswith("0=") for file in os.listdir(path)):
-            if "inventory" in os.listdir(path):
-                return 'object'
-            return 'root'
-        return 'altra stringa: nessun file "0=*" trovato.'
-
+    
     if os.path.isfile(path):
-        return 'file'
-
-    return 'altra stringa: tipo di elemento sconosciuto.'
+        return "file"
+    
+    if os.path.isdir(path):
+        namaste_files = [f for f in os.listdir(path) if f.startswith("0=")]
+        if not namaste_files:
+            return "La directory non contiene file Namaste."
+        
+        namaste_file = namaste_files[0]
+        with open(os.path.join(path, namaste_file), 'r') as f:
+            content = f.read().strip()
+        
+        if content == "ocfl_1.0":
+            return "root"
+        elif content.startswith("ocfl_object_"):
+            return "object"
+        else:
+            return f"Contenuto del file Namaste non riconosciuto: {content}"
+    
+    return "Tipo di percorso non riconosciuto."

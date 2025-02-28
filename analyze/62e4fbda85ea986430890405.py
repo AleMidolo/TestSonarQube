@@ -1,3 +1,8 @@
+import subprocess
+import sys
+import os
+from typing import Sequence, Any, Tuple
+
 def xargs(
         cmd: tuple[str, ...],
         varargs: Sequence[str],
@@ -7,30 +12,41 @@ def xargs(
         _max_length: int = _get_platform_max_length(),
         **kwargs: Any,
 ) -> tuple[int, bytes]:
-    import subprocess
-    import os
-    from multiprocessing import Pool
+    """
+    Un'implementazione semplificata di xargs.
 
-    def run_command(args):
-        return subprocess.run(cmd + args, capture_output=True)
-
-    if color:
-        # Create a pseudo-terminal if supported
+    - **color**: Crea un pty se si è su una piattaforma che lo supporta.
+    - **target_concurrency**: Numero target di partizioni da eseguire in parallelo.
+    """
+    if color and sys.platform != "win32":
         import pty
-        master_fd, slave_fd = pty.openpty()
-        os.close(slave_fd)
-        os.dup2(master_fd, 1)  # Redirect stdout to the master
-        os.dup2(master_fd, 2)  # Redirect stderr to the master
+        master, slave = pty.openpty()
+        kwargs['stdout'] = slave
+        kwargs['stderr'] = slave
 
-    # Split varargs into chunks for concurrency
-    chunk_size = (len(varargs) + target_concurrency - 1) // target_concurrency
-    chunks = [varargs[i:i + chunk_size] for i in range(0, len(varargs), chunk_size)]
+    processes = []
+    for i in range(0, len(varargs), target_concurrency):
+        chunk = varargs[i:i + target_concurrency]
+        process = subprocess.Popen(
+            cmd + tuple(chunk),
+            **kwargs
+        )
+        processes.append(process)
 
-    with Pool(target_concurrency) as pool:
-        results = pool.map(run_command, chunks)
+    for process in processes:
+        process.wait()
 
-    # Combine return codes and output
-    return_code = sum(result.returncode for result in results)
-    output = b''.join(result.stdout for result in results)
+    if color and sys.platform != "win32":
+        os.close(slave)
+        output = os.read(master, _max_length)
+        os.close(master)
+    else:
+        output = b""
 
-    return return_code, output
+    return (0, output)
+
+def _get_platform_max_length() -> int:
+    if sys.platform == "win32":
+        return 8192
+    else:
+        return 65536

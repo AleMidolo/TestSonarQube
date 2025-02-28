@@ -8,12 +8,15 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param values_dict: Il dizionario con gli argomenti
     """
     for key, value in values_dict.items():
-        if value.isdigit():
-            values_dict[key] = int(value)
-        else:
-            try:
-                # Attempt to convert to float if it's not an integer
+        if isinstance(value, str):
+            if value.lower() == 'true':
+                values_dict[key] = True
+            elif value.lower() == 'false':
+                values_dict[key] = False
+            elif value.isdigit():
+                values_dict[key] = int(value)
+            elif value.replace('.', '', 1).isdigit():
                 values_dict[key] = float(value)
-            except ValueError:
-                # Keep it as a string if conversion fails
-                values_dict[key] = value
+            elif value.lower() == 'none':
+                values_dict[key] = None
+    return values_dict

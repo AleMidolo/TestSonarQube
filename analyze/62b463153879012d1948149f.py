@@ -10,29 +10,33 @@ def _eval_file(prefix, file_path):
     prefix : str
         Nome del file XML senza estensione.
     file_path : str
-        Nome del file.
+        Percorso completo del file.
 
     Restituisce
     -------
     dict
+        Un dizionario contenente il tipo di file e il percorso del file.
     """
     import os
 
-    # Initialize the result dictionary
-    result = {}
+    # Estrai il nome del file e la cartella dal percorso completo
+    filename = os.path.basename(file_path)
+    file_folder = os.path.dirname(file_path)
 
-    # Determine the file type based on the file extension
-    _, file_extension = os.path.splitext(file_path)
-    
-    if file_extension in ['.jpg', '.png', '.gif']:
-        file_type = 'asset'
-    elif file_extension in ['.pdf', '.docx', '.pptx']:
-        file_type = 'rendition'
+    # Determina il tipo di file in base al prefisso
+    if prefix.startswith("asset"):
+        file_type = "asset"
+    elif prefix.startswith("rendition"):
+        file_type = "rendition"
     else:
-        file_type = 'unknown'
+        file_type = "unknown"
 
-    # Update the result dictionary
-    result['type'] = file_type
-    result['path'] = file_path
+    # Crea il dizionario di ritorno
+    result = {
+        "type": file_type,
+        "file_path": file_path,
+        "filename": filename,
+        "file_folder": file_folder
+    }
 
     return result

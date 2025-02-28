@@ -17,9 +17,5 @@ def match_file_by_prefix(prefix, file_path):
         `True` - il file appartiene al pacchetto
     """
     import os
-    
-    # Estrae il nome del file dal percorso
     file_name = os.path.basename(file_path)
-    
-    # Controlla se il nome del file inizia con il prefisso specificato
     return file_name.startswith(prefix)

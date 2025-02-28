@@ -23,7 +23,7 @@ def regex_dict(item):
     """
     regex_dict = {}
     for key, value in item.items():
-        # Converti la chiave in regex
-        regex_key = re.escape(key).replace(r'\*', '.*').replace(r'\?', '.')
+        # Convert the wildcard pattern to a regex pattern
+        regex_key = re.escape(key).replace(r'\*', '.*')
         regex_dict[regex_key] = value
     return regex_dict

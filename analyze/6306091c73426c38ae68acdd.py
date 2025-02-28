@@ -1,3 +1,8 @@
+import yaml
+
+class IRValidatorException(Exception):
+    pass
+
 def validate_from_file(cls, yaml_file=None):
     """
     Carica e valida che un file YAML contenga tutti i campi richiesti.
@@ -6,23 +11,19 @@ def validate_from_file(cls, yaml_file=None):
     :raise IRValidatorException: quando mancano dati obbligatori nel file
     :return: Dizionario con i dati caricati da un file YAML
     """
-    import yaml
-    from pathlib import Path
-
-    required_fields = cls.get_required_fields()  # Assuming this method exists in the class
-
     if yaml_file is None:
-        raise ValueError("Il percorso del file YAML non può essere None.")
+        raise IRValidatorException("No YAML file provided.")
 
-    yaml_path = Path(yaml_file)
-    if not yaml_path.is_file():
-        raise FileNotFoundError(f"Il file {yaml_file} non esiste.")
+    try:
+        with open(yaml_file, 'r') as file:
+            data = yaml.safe_load(file)
+    except Exception as e:
+        raise IRValidatorException(f"Error loading YAML file: {e}")
 
-    with open(yaml_path, 'r') as file:
-        data = yaml.safe_load(file)
-
+    required_fields = ['field1', 'field2', 'field3']  # Example required fields
     missing_fields = [field for field in required_fields if field not in data]
+
     if missing_fields:
-        raise IRValidatorException(f"Mancano i seguenti campi obbligatori: {', '.join(missing_fields)}")
+        raise IRValidatorException(f"Missing required fields: {missing_fields}")
 
     return data

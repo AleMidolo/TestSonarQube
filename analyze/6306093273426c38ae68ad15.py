@@ -10,20 +10,15 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     :return: risultati di Ansible
     """
     import subprocess
-    import json
 
-    # Prepare the command
-    command = ['ansible-playbook'] + cli_args
-    if vars_dict:
-        extra_vars = json.dumps(vars_dict)
-        command += ['--extra-vars', extra_vars]
+    # Convert the vars_dict to a string format suitable for extra-vars
+    extra_vars = " ".join([f"{key}={value}" for key, value in vars_dict.items()])
+
+    # Construct the full command
+    command = ["ansible-playbook"] + cli_args + ["--extra-vars", extra_vars]
 
     # Execute the command
     result = subprocess.run(command, capture_output=True, text=True)
 
-    # Check for errors
-    if result.returncode != 0:
-        raise RuntimeError(f"Ansible playbook execution failed: {result.stderr}")
-
-    # Return the results
-    return result.stdout
+    # Return the result
+    return result

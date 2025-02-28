@@ -1,22 +1,13 @@
 def _fromutc(self, dt):
-    """
-    Dato un oggetto timezone-aware  in un determinato fuso orario, calcola un oggetto datetime con consapevolezza del fuso orario in un nuovo fuso orario.
-
-    Poiché questa è l'unica occasione in cui sappiamo di avere un oggetto datetime non ambiguo, cogliamo questa opportunità per determinare se il datetime è ambiguo e si trova in uno stato di "fold" (ad esempio, se è la prima occorrenza, in ordine cronologico, del datetime ambiguo).
-
-    :param dt:  
-        Un oggetto :class:`datetime.datetime` con consapevolezza del fuso orario.
-    """
-    if dt.tzinfo is None:
-        raise ValueError("dt must be timezone-aware")
-
-    # Convert the datetime to UTC
-    utc_dt = dt.astimezone(self.utc)
-
-    # Check if the datetime is ambiguous
-    if self.is_ambiguous(utc_dt):
-        # Handle the ambiguity (e.g., return the first occurrence)
-        return self.handle_ambiguity(utc_dt)
-
-    # Return the datetime in the new timezone
-    return utc_dt.astimezone(self)
+    if dt.tzinfo is not self:
+        raise ValueError("dt.tzinfo is not self")
+    
+    # Convert the datetime to the new timezone
+    new_dt = dt.astimezone(self)
+    
+    # Check if the datetime is ambiguous in the new timezone
+    if self._is_ambiguous(new_dt):
+        # If ambiguous, set the fold attribute accordingly
+        new_dt = new_dt.replace(fold=1 if new_dt.fold else 0)
+    
+    return new_dt

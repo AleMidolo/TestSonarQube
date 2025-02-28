@@ -1,5 +1,5 @@
-import requests
 import tarfile
+import requests
 from pathlib import Path
 
 def get_repo_archive(url: str, destination_path: Path) -> Path:
@@ -13,23 +13,24 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     Returns:
         un oggetto Path che rappresenta la directory dove l'archivio è stato estratto.
     """
-    # Scarica l'archivio
-    response = requests.get(url)
-    response.raise_for_status()  # Verifica che la richiesta sia andata a buon fine
-
-    # Crea la directory di destinazione se non esiste
+    # Ensure the destination directory exists
     destination_path.mkdir(parents=True, exist_ok=True)
-
-    # Percorso del file temporaneo
-    tar_file_path = destination_path / "archive.tar.gz"
-
-    # Scrivi il contenuto scaricato in un file
-    with open(tar_file_path, 'wb') as f:
-        f.write(response.content)
-
-    # Estrai l'archivio
-    with tarfile.open(tar_file_path, 'r:gz') as tar:
+    
+    # Download the archive
+    response = requests.get(url, stream=True)
+    response.raise_for_status()
+    
+    # Save the archive to a temporary file
+    temp_archive_path = destination_path / "temp_archive.tar.gz"
+    with open(temp_archive_path, 'wb') as f:
+        for chunk in response.iter_content(chunk_size=8192):
+            f.write(chunk)
+    
+    # Extract the archive
+    with tarfile.open(temp_archive_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
-
-    # Ritorna il percorso della directory estratta
+    
+    # Remove the temporary archive file
+    temp_archive_path.unlink()
+    
     return destination_path

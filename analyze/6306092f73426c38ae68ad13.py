@@ -12,26 +12,29 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
         direttamente ad Ansible.
     """
     import subprocess
-    import json
 
+    # Costruisci il comando base
     command = ['ansible-playbook', playbook_path]
 
+    # Aggiungi il livello di verbosità se specificato
     if verbose:
-        command.append(f'-v' * verbose)
+        command.extend(['-' + 'v' * verbose])
 
+    # Aggiungi extra_vars se specificato
     if extra_vars:
-        extra_vars_str = ' '.join(f'--extra-vars="{key}={value}"' for key, value in extra_vars.items())
-        command.append(extra_vars_str)
+        extra_vars_str = ' '.join([f"{k}={v}" for k, v in extra_vars.items()])
+        command.extend(['--extra-vars', extra_vars_str])
 
+    # Aggiungi ansible_args se specificato
     if ansible_args:
         for key, value in ansible_args.items():
-            command.append(f'--{key}')
-            if value is not None:
-                command.append(str(value))
+            command.extend([f"--{key}", str(value)])
 
+    # Esegui il comando
     result = subprocess.run(command, capture_output=True, text=True)
 
+    # Gestisci l'output
     if result.returncode != 0:
-        raise RuntimeError(f"Ansible playbook failed: {result.stderr}")
-
-    return json.loads(result.stdout)
+        print(f"Errore durante l'esecuzione del playbook: {result.stderr}")
+    else:
+        print(f"Playbook eseguito con successo: {result.stdout}")

@@ -1,7 +1,7 @@
-from typing import Tuple, Set
 import re
+from typing import Set, Tuple, Callable
 
-def find_tags(text: str, replacer: callable = None) -> Tuple[Set, str]:
+def find_tags(text: str, replacer: Callable = None) -> Tuple[Set[str], str]:
     """
     Trova i tag nel testo.
 
@@ -11,5 +11,7 @@ def find_tags(text: str, replacer: callable = None) -> Tuple[Set, str]:
 
     Restituisce un set di tag e il testo originale o modificato.
     """
-    # Regex per trovare i blocchi di codice
-    code_block_pattern = r'
+    # Regex per trovare i tag (parole che iniziano con '#')
+    tag_pattern = re.compile(r'#\w+')
+    
+    # Regex per trovare blocchi di codice (tra

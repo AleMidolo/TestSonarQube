@@ -13,11 +13,11 @@ def split(s, platform='this'):
       - (altri valori riservati).
     """
     if platform == 'this':
-        platform = 1 if sys.platform.startswith('linux') or sys.platform == 'darwin' else 0
-
+        platform = 1 if sys.platform != 'win32' else 0
+    
     if platform == 1:  # POSIX
-        pattern = r'(?<!\\)"([^"]*(?:\\.[^"]*)*)"(?!\\)|(?<!\\)\'([^\']*(?:\\.[^\']*)*)\'(?!\\)|(?<!\\)(\S+)'
-    else:  # Windows
-        pattern = r'(?<!\\)"([^"]*(?:\\.[^"]*)*)"(?!\\)|(?<!\\)(\S+)'
-
-    return [match.group(0) for match in re.finditer(pattern, s)]
+        regex = re.compile(r'''((?:[^\s"']|"[^"]*"|'[^']*')+)''')
+    else:  # Windows/CMD
+        regex = re.compile(r'''((?:[^\s"]|"[^"]*")+)''')
+    
+    return regex.findall(s)
