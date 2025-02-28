@@ -3,10 +3,13 @@ from typing import Optional
 
 def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
     """
-    Prova a recuperare un documento webfinger conforme a RFC7033. Non genera eccezioni in caso di fallimento.
+    Intenta recuperar un documento webfinger conforme a RFC7033. 
+    No genera una excepción si falla.
     """
     try:
-        # Split the handle into username and domain
+        # Parse the handle to extract the domain
+        if '@' not in handle:
+            return None
         username, domain = handle.split('@')
         
         # Construct the WebFinger URL
@@ -14,11 +17,10 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         
         # Make the GET request
         response = requests.get(url, headers={"Accept": "application/jrd+json"})
+        response.raise_for_status()
         
-        # Check if the request was successful
-        if response.status_code == 200:
-            return response.text
-        else:
-            return None
-    except Exception:
+        # Return the response content if successful
+        return response.text
+    except (requests.RequestException, ValueError):
+        # Return None if any error occurs
         return None

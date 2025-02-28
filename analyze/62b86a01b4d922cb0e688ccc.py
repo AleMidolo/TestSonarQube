@@ -1,13 +1,17 @@
 def generate_default_observer_schema_dict(manifest_dict, first_level=False):
     """
-    Generates a default observer schema dictionary based on the provided manifest dictionary.
+    Junto con la función :func:`generate_default_observer_schema_list`, esta función se llama de manera recursiva para generar parte de un ``observer_schema`` predeterminado a partir de una parte de un recurso de Kubernetes, definido respectivamente por ``manifest_dict`` o ``manifest_list``.
 
-    Args:
-        manifest_dict (dict): Partial Kubernetes resources.
-        first_level (bool, optional): If True, indicates that the dictionary represents the entire observer_schema of a Kubernetes resource.
+    Argumentos:
+    **manifest_dict (dict):** Recursos parciales de Kubernetes.
+    **first_level (bool, opcional):** Si es True, indica que el diccionario representa el esquema completo del observador (observer schema) de un recurso de Kubernetes.
 
-    Returns:
-        dict: The generated partial observer_schema.
+    Retorna:
+    **dict:** Esquema parcial generado (`observer_schema`).
+
+    Esta función crea un nuevo diccionario a partir de ``manifest_dict`` y reemplaza todos los valores que no sean listas (`list`) ni diccionarios (`dict`) por ``None``.
+
+    En el caso de un diccionario de ``first_level`` (es decir, un ``observer_schema`` completo para un recurso), los valores de los campos identificadores se copian del archivo de manifiesto.
     """
     observer_schema = {}
     
@@ -26,13 +30,15 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
 
 def generate_default_observer_schema_list(manifest_list):
     """
-    Generates a default observer schema list based on the provided manifest list.
+    Junto con la función :func:`generate_default_observer_schema_dict`, esta función se llama de manera recursiva para generar parte de un ``observer_schema`` predeterminado a partir de una parte de un recurso de Kubernetes, definido respectivamente por ``manifest_dict`` o ``manifest_list``.
 
-    Args:
-        manifest_list (list): Partial Kubernetes resources in list format.
+    Argumentos:
+    **manifest_list (list):** Recursos parciales de Kubernetes.
 
-    Returns:
-        list: The generated partial observer_schema.
+    Retorna:
+    **list:** Esquema parcial generado (`observer_schema`).
+
+    Esta función crea una nueva lista a partir de ``manifest_list`` y reemplaza todos los valores que no sean listas (`list`) ni diccionarios (`dict`) por ``None``.
     """
     observer_schema = []
     

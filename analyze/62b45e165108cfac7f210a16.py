@@ -1,20 +1,21 @@
 def validate_as_prior_version(self, prior):
     """
-    Verifica che "prior" sia una versione precedente valida dell'oggetto inventario corrente.
+    Verifique que `prior` sea una versión previa válida del objeto de inventario actual.
 
-    La variabile di input "prior" deve essere un oggetto di tipo InventoryValidator
-    e si presume che sia l'inventario corrente (self) sia l'inventario "prior" siano stati
-    verificati per coerenza interna.
+    La variable de entrada `prior` también se espera que sea un objeto de tipo `InventoryValidator`,
+    y se asume que tanto el inventario actual (`self`) como el inventario previo (`prior`) han sido
+    verificados para garantizar su consistencia interna.
     """
-    if not isinstance(prior, InventoryValidator):
-        raise TypeError("prior must be an instance of InventoryValidator")
+    if not isinstance(prior, type(self)):
+        return False
     
-    # Add logic to compare self and prior to ensure prior is a valid previous version
-    # For example, check if prior's timestamp is earlier than self's timestamp
-    if prior.timestamp >= self.timestamp:
-        raise ValueError("prior must be an earlier version than the current inventory")
+    # Aquí puedes agregar lógica adicional para comparar los inventarios
+    # Por ejemplo, verificar si el inventario actual es una versión posterior válida del inventario previo
+    # Esto podría incluir comparar fechas, versiones, o cualquier otro atributo relevante
     
-    # Additional validation logic can be added here based on specific requirements
-    # For example, checking if certain fields in prior are consistent with self
+    # Ejemplo básico: asumimos que el inventario actual es válido si tiene una fecha posterior
+    if hasattr(self, 'date') and hasattr(prior, 'date'):
+        return self.date > prior.date
     
+    # Si no hay atributos de fecha, simplemente devolvemos True
     return True

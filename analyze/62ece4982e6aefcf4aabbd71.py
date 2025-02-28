@@ -2,28 +2,27 @@ import re
 
 def regex_dict(item):
     """
-    Converti le chiavi *.cpp in chiavi regex.
+    Convertir claves `*.cpp` a claves de expresiones regulares.
 
-    Dato un dizionario in cui le chiavi sono tutti nomi di file con caratteri jolly, converti solo le chiavi in regex equivalenti e lascia intatti i valori.
+    Dado un diccionario donde las claves son nombres de archivo con comodines, convierte únicamente las claves en expresiones regulares equivalentes y deja los valores intactos.
 
-    Esempio:
-
+    Ejemplo
     rules = {
-        '*.cpp':
-            {'a': 'arf', 'b': 'bark', 'c': 'coo'},
-        '*.h':
-            {'h': 'help'}
+        '*.cpp': {'a': 'arf', 'b': 'bark', 'c': 'coo'},
+        '*.h': {'h': 'help'}
     }
+
     regex_keys = regex_dict(rules)
 
-    Argomenti:
-        item: dizionario da convertire
-    Ritorna:
-        dizionario con le chiavi convertite in regex.
+        Argumentos:
+            item (dict): Diccionario a convertir.
+
+        Retorno:
+            dict: Diccionario con claves convertidas a expresiones regulares.
     """
     regex_dict = {}
     for key, value in item.items():
-        # Convert the wildcard pattern to a regex pattern
-        regex_key = re.escape(key).replace(r'\*', '.*')
+        # Convertir el comodín * a .* en la expresión regular
+        regex_key = re.escape(key).replace('\\*', '.*')
         regex_dict[regex_key] = value
     return regex_dict

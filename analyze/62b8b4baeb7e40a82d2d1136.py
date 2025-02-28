@@ -1,42 +1,68 @@
 from zope.interface import Invalid, providedBy
-from zope.interface.verify import verifyObject, verifyClass
+from inspect import signature
 
 def _verify(iface, candidate, tentative=False, vtype=None):
     """
-    Verifica che il *candidate* possa fornire correttamente l'*iface*.
+    Verifica que *candidate* pueda proporcionar correctamente *iface*.
 
-    Questo processo include:
+    Esto implica:
 
-    - Assicurarsi che il candidato dichiari di fornire l'interfaccia utilizzando ``iface.providedBy`` (a meno che *tentative* sia `True`, in quel caso questo passaggio viene saltato). Questo significa che la classe del candidato dichiara di `implementare l'interfaccia <zope.interface.implementer>`, oppure che il candidato stesso dichiara di `fornire l'interfaccia <zope.interface.provider>`.
+    - Asegurarse de que el candidato afirme que proporciona la
+      interfaz utilizando ``iface.providedBy`` (a menos que *tentative* sea `True`,
+      en cuyo caso este paso se omite). Esto significa que la clase del candidato
+      declara que `implementa <zope.interface.implementer>` la interfaz,
+      o que el propio candidato declara que `proporciona <zope.interface.provider>`
+      la interfaz.
 
-    - Assicurarsi che il candidato definisca tutti i metodi necessari.
+    - Asegurarse de que el candidato defina todos los métodos necesarios.
 
-    - Assicurarsi che i metodi abbiano la firma corretta (per quanto possibile).
+    - Asegurarse de que los métodos tengan la firma correcta (en la
+      medida de lo posible).
 
-    - Assicurarsi che il candidato definisca tutti gli attributi necessari.
+    - Asegurarse de que el candidato defina todos los atributos necesarios.
 
-    :return bool: Restituisce un valore vero se tutto ciò che poteva essere verificato è stato superato.
-    :raises zope.interface.Invalid: Se una qualsiasi delle condizioni precedenti non è soddisfatta.
+    :return bool: Devuelve un valor verdadero si todo lo que se pudo
+       verificar pasó.
+    :raises zope.interface.Invalid: Si alguna de las condiciones anteriores
+       no se cumple.
 
-    .. versionchanged:: 5.0  
-        Se più metodi o attributi sono invalidi, tutti questi errori vengono raccolti e riportati. In precedenza, veniva segnalato solo il primo errore. Come caso speciale, se è presente un solo errore, questo viene sollevato singolarmente, come avveniva prima.
+    .. versionchanged:: 5.0
+        Si múltiples métodos o atributos son inválidos, todos esos errores
+        se recopilan y se informan. Anteriormente, solo se informaba el primer error.
+        Como caso especial, si solo hay un error presente, se lanza
+        de forma individual, como antes.
     """
     errors = []
 
-    # Verifica che il candidato dichiari di fornire l'interfaccia
+    # Verificar si el candidato proporciona la interfaz
     if not tentative and not iface.providedBy(candidate):
-        errors.append(f"{candidate} non dichiara di fornire l'interfaccia {iface}")
+        errors.append(f"{candidate} no proporciona la interfaz {iface}")
 
-    # Verifica i metodi e gli attributi
-    try:
-        if vtype == 'class':
-            verifyClass(iface, candidate)
+    # Verificar métodos requeridos
+    required_methods = iface.namesAndDescriptions(all=True)
+    for name, desc in required_methods:
+        if not hasattr(candidate, name):
+            errors.append(f"El método requerido '{name}' no está definido en {candidate}")
         else:
-            verifyObject(iface, candidate)
-    except Invalid as e:
-        errors.append(str(e))
+            # Verificar la firma del método
+            candidate_method = getattr(candidate, name)
+            if callable(candidate_method):
+                try:
+                    sig = signature(candidate_method)
+                    expected_sig = signature(desc.getSignature())
+                    if sig != expected_sig:
+                        errors.append(f"La firma del método '{name}' no coincide: esperado {expected_sig}, obtenido {sig}")
+                except ValueError:
+                    # Si no se puede obtener la firma, se omite la verificación
+                    pass
 
-    # Gestione degli errori
+    # Verificar atributos requeridos
+    required_attrs = iface.namesAndDescriptions(all=True)
+    for name, desc in required_attrs:
+        if not hasattr(candidate, name):
+            errors.append(f"El atributo requerido '{name}' no está definido en {candidate}")
+
+    # Manejar errores
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])

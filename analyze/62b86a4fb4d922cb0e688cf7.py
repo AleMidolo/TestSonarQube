@@ -2,23 +2,22 @@ import re
 
 def validate_key(key):
     """
-    Valida la chiave fornita rispetto alla corrispondente espressione regolare.
+    Validar la clave proporcionada contra la expresión regular correspondiente.
 
-    Argomenti:
-        key: la stringa da validare
+    Argumentos:
+        key: la cadena de texto a validar.
 
-    Eccezioni:
-        ValidationError: se la chiave fornita non è conforme all'espressione regolare.
+    Excepciones:
+        ValidationError: si la clave proporcionada no cumple con la expresión regular.
     """
-    # Definisci l'espressione regolare per la validazione della chiave
-    # Esempio: la chiave deve essere composta da lettere minuscole e numeri, lunghezza 8-16 caratteri
-    pattern = re.compile(r'^[a-z0-9]{8,16}$')
+    # Expresión regular para validar la clave
+    regex = r'^[A-Za-z0-9]{8,16}$'  # Ejemplo: clave alfanumérica de 8 a 16 caracteres
     
-    if not pattern.match(key):
-        raise ValidationError("La chiave fornita non è conforme all'espressione regolare.")
+    if not re.match(regex, key):
+        raise ValidationError("La clave no cumple con el formato requerido.")
     
     return True
 
 class ValidationError(Exception):
-    """Eccezione sollevata quando la validazione fallisce."""
+    """Excepción personalizada para errores de validación."""
     pass

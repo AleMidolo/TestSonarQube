@@ -1,17 +1,16 @@
 def render(pieces, style):
     """
-    Renderizzare i pezzi forniti nella versione richiesta dello stile.
-
-    :param pieces: Lista di pezzi da renderizzare.
-    :param style: Stile di renderizzazione richiesto.
-    :return: Stringa rappresentante i pezzi renderizzati.
+    Renderiza las piezas de versión dadas en el estilo solicitado.
+    
+    :param pieces: Diccionario con las piezas de la versión.
+    :param style: Estilo de renderizado (por ejemplo, 'full', 'short', etc.).
+    :return: Versión renderizada como cadena de texto.
     """
-    if style == "plain":
-        return "\n".join(pieces)
-    elif style == "html":
-        return "<ul>\n" + "\n".join(f"<li>{piece}</li>" for piece in pieces) + "\n</ul>"
-    elif style == "json":
-        import json
-        return json.dumps(pieces)
+    if style == 'full':
+        return f"{pieces['major']}.{pieces['minor']}.{pieces['patch']}"
+    elif style == 'short':
+        return f"{pieces['major']}.{pieces['minor']}"
+    elif style == 'patch':
+        return f"{pieces['patch']}"
     else:
-        raise ValueError(f"Stile non supportato: {style}")
+        raise ValueError(f"Estilo '{style}' no soportado.")

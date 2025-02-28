@@ -2,10 +2,6 @@ from datetime import datetime
 
 def format_dt(dt):
     """
-    Formatta un oggetto datetime nel modo in cui i nodi D* si aspettano.
+    Formatea un objeto `datetime` en el formato que los nodos D* esperan.
     """
-    if not isinstance(dt, datetime):
-        raise ValueError("Input must be a datetime object")
-    
-    # Formato atteso dai nodi D*
-    return dt.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return dt.strftime('%Y-%m-%dT%H:%M:%S')

@@ -1,25 +1,17 @@
-from functools import wraps
-
 def unit_of_work(metadata=None, timeout=None):
     """
-    Decorator for transaction functions that allows additional control over how the transaction is executed.
+    Esta función es un decorador para funciones de transacción que permite un control adicional sobre cómo se lleva a cabo la transacción.
 
-    :param metadata: A dictionary with metadata. The specified metadata will be associated with the executing transaction and visible in the output of `dbms.listQueries` and `dbms.listTransactions` procedures. It will also be logged in the `query.log` file.
+    :param metadata: Un diccionario con metadatos.
     :type metadata: dict
-
-    :param timeout: The transaction timeout in seconds. Transactions that run longer than the configured timeout will be terminated by the database. This feature allows limiting the execution time of queries/transactions. The specified timeout overrides the default timeout configured in the database using the `dbms.transaction.timeout` setting. The value must not represent a negative duration. A duration of zero will allow the transaction to run indefinitely. A value of `None` will use the default timeout configured in the database.
-    :type timeout: float or None
+    :param timeout: El tiempo de espera de la transacción en segundos.
+    :type timeout: float o None
     """
     def decorator(func):
-        @wraps(func)
         def wrapper(*args, **kwargs):
-            # Here you would typically integrate with a transaction management system
-            # For example, in Neo4j, you might use the session or transaction context
-            # This is a simplified example
-            if metadata is not None:
-                kwargs['metadata'] = metadata
-            if timeout is not None:
-                kwargs['timeout'] = timeout
+            # Aquí se podría agregar la lógica para manejar los metadatos y el timeout
+            # Por ejemplo, pasarlos a la transacción o configurar el entorno de la transacción
+            # En este ejemplo, simplemente llamamos a la función original
             return func(*args, **kwargs)
         return wrapper
     return decorator

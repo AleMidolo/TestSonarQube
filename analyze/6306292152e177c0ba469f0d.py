@@ -1,16 +1,13 @@
-from typing import Union
+from typing import TypeVar
+
+RequestType = TypeVar('RequestType')
 
 def identify_request(request: RequestType) -> bool:
     """
-    Prova a identificare se si tratta di una richiesta Matrix.
-    
-    Args:
-        request (RequestType): La richiesta da identificare.
-    
-    Returns:
-        bool: True se la richiesta è di tipo Matrix, False altrimenti.
+    Intente identificar si esta es una solicitud de Matrix.
     """
-    # Assuming RequestType has a 'type' attribute or similar to identify Matrix requests
-    if hasattr(request, 'type'):
-        return request.type == 'Matrix'
+    # Assuming RequestType has a method or attribute that can be checked
+    # For example, if the request has a 'type' attribute that is 'matrix'
+    if hasattr(request, 'type') and getattr(request, 'type') == 'matrix':
+        return True
     return False

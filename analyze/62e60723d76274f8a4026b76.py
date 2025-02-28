@@ -1,36 +1,34 @@
-from datetime import time, timedelta
+import datetime
 
 class Time:
     def __init__(self, hour, minute, second, microsecond, tzinfo=None):
-        self._time = time(hour, minute, second, microsecond, tzinfo)
+        self.hour = hour
+        self.minute = minute
+        self.second = second
+        self.microsecond = microsecond
+        self.tzinfo = tzinfo
 
     @classmethod
     def from_ticks(cls, ticks, tz=None):
         """
-        Crea un'istanza di tempo a partire dai ticks (nanosecondi trascorsi dalla mezzanotte).
+        Crear una hora a partir de ticks (nanosegundos desde la medianoche).
 
-        :param ticks: nanosecondi trascorsi dalla mezzanotte
+        :param ticks: nanosegundos desde la medianoche
         :type ticks: int
-        :param tz: fuso orario opzionale
+        :param tz: zona horaria opcional
         :type tz: datetime.tzinfo
 
         :rtype: Time
 
-        :raises ValueError: se il valore di ticks è fuori dai limiti
+        :raises ValueError: si los ticks están fuera de los límites
             (0 <= ticks < 86400000000000)
         """
         if not (0 <= ticks < 86400000000000):
-            raise ValueError("ticks must be in the range 0 <= ticks < 86400000000000")
+            raise ValueError("Ticks must be between 0 and 86400000000000")
         
-        # Convert ticks to microseconds
-        microseconds = ticks // 1000
-        
-        # Calculate hours, minutes, seconds, and microseconds
-        hours = microseconds // 3600000000
-        microseconds %= 3600000000
-        minutes = microseconds // 60000000
-        microseconds %= 60000000
-        seconds = microseconds // 1000000
-        microseconds %= 1000000
+        seconds, nanoseconds = divmod(ticks, 1_000_000_000)
+        minutes, seconds = divmod(seconds, 60)
+        hours, minutes = divmod(minutes, 60)
+        microseconds = nanoseconds // 1000
         
         return cls(hours, minutes, seconds, microseconds, tz)

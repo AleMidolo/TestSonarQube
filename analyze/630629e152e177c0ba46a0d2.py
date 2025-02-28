@@ -1,23 +1,27 @@
 import requests
 from urllib.parse import urlparse
+import json
 
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    Recupera e analizza un documento webfinger remoto di Diaspora.
+    Recupera y analiza un documento "webfinger" remoto de Diaspora.
 
-    :arg handle: Handle remoto da recuperare  
+    :arg handle: Identificador remoto a recuperar
     :returns: dict
     """
-    # Split the handle into username and domain
+    # Parse the handle to extract the username and domain
+    if '@' not in handle:
+        raise ValueError("Invalid handle format. Expected format: user@domain")
+    
     username, domain = handle.split('@')
     
     # Construct the webfinger URL
-    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
+    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{username}@{domain}"
     
     try:
         # Make the GET request to retrieve the webfinger document
         response = requests.get(webfinger_url)
-        response.raise_for_status()  # Raise an exception for HTTP errors
+        response.raise_for_status()
         
         # Parse the JSON response
         webfinger_data = response.json()
@@ -25,6 +29,6 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         return webfinger_data
     
     except requests.exceptions.RequestException as e:
-        # Handle any errors that occur during the request
-        print(f"Error retrieving webfinger document: {e}")
-        return {}
+        raise Exception(f"Failed to retrieve webfinger document: {e}")
+    except json.JSONDecodeError as e:
+        raise Exception(f"Failed to parse webfinger document: {e}")

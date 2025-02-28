@@ -1,5 +1,5 @@
 def is_valid(self, identifier):
     """
-    Restituisce True se l'identificatore è valido, sempre True in questa implementazione di base.
+    Devuelve True si el identificador es válido. En esta implementación base, siempre devuelve True.
     """
     return True

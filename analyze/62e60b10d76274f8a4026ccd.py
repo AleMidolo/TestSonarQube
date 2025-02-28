@@ -1,26 +1,25 @@
 def data(self, *keys):
     """
-    Restituisce le chiavi e i valori di questo record come un dizionario, includendo opzionalmente solo determinati valori in base all'indice o alla chiave. 
-    Le chiavi fornite negli elementi che non sono presenti nel record verranno inserite con un valore di :const:`None`; 
-    gli indici forniti che sono fuori dai limiti genereranno un'eccezione :exc:`IndexError`.
+    Devuelve las claves y valores de este registro como un diccionario, opcionalmente incluyendo solo ciertos valores por índice o clave. Las claves proporcionadas en los elementos que no están en el registro se insertarán con un valor de :const:`None`; los índices proporcionados que están fuera de los límites generarán una excepción :exc:`IndexError`.
 
-    :param keys: indici o chiavi degli elementi da includere; se non ne vengono forniti, verranno inclusi tutti i valori  
-    :return: dizionario dei valori, indicizzati per nome del campo  
-    :raises: :exc:`IndexError` se viene specificato un indice fuori dai limiti  
+    :param keys: índices o claves de los elementos a incluir; si no se proporciona ninguno, se incluirán todos los valores.
+    :return: diccionario de valores, indexado por el nombre del campo.  
+    :raises: :exc:`IndexError` si se especifica un índice fuera de los límites.  
     """
-    result = {}
+    # Asumimos que self._fields contiene las claves y self._values los valores correspondientes
     if not keys:
-        # Se non vengono fornite chiavi, restituisci tutti i valori
-        for key in self.__dict__:
-            result[key] = self.__dict__[key]
-    else:
-        for key in keys:
-            if isinstance(key, int):
-                # Se la chiave è un indice, verifica che sia valido
-                if key < 0 or key >= len(self.__dict__):
-                    raise IndexError("Indice fuori dai limiti")
-                # Converti l'indice in una chiave
-                key = list(self.__dict__.keys())[key]
-            # Aggiungi la chiave al risultato, anche se non esiste
-            result[key] = self.__dict__.get(key, None)
+        return dict(zip(self._fields, self._values))
+    
+    result = {}
+    for key in keys:
+        if isinstance(key, int):
+            if key < 0 or key >= len(self._values):
+                raise IndexError("Índice fuera de los límites")
+            result[self._fields[key]] = self._values[key]
+        else:
+            if key in self._fields:
+                index = self._fields.index(key)
+                result[key] = self._values[index]
+            else:
+                result[key] = None
     return result

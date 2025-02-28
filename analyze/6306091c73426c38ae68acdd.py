@@ -1,29 +1,33 @@
 import yaml
 
-class IRValidatorException(Exception):
-    pass
-
 def validate_from_file(cls, yaml_file=None):
     """
-    Carica e valida che un file YAML contenga tutti i campi richiesti.
+    Carga y valida que un archivo YAML contenga todos los campos requeridos.
 
-    :param yaml_file: Percorso del file YAML
-    :raise IRValidatorException: quando mancano dati obbligatori nel file
-    :return: Dizionario con i dati caricati da un file YAML
+    :param yaml_file: Ruta al archivo YAML
+    :raise IRValidatorException: cuando faltan datos obligatorios en el archivo
+    :return: Diccionario con los datos cargados desde un archivo YAML
     """
     if yaml_file is None:
-        raise IRValidatorException("No YAML file provided.")
-
+        raise ValueError("El archivo YAML no puede ser None.")
+    
     try:
         with open(yaml_file, 'r') as file:
             data = yaml.safe_load(file)
-    except Exception as e:
-        raise IRValidatorException(f"Error loading YAML file: {e}")
-
-    required_fields = ['field1', 'field2', 'field3']  # Example required fields
-    missing_fields = [field for field in required_fields if field not in data]
-
-    if missing_fields:
-        raise IRValidatorException(f"Missing required fields: {missing_fields}")
-
+    except FileNotFoundError:
+        raise FileNotFoundError(f"El archivo {yaml_file} no fue encontrado.")
+    except yaml.YAMLError as e:
+        raise ValueError(f"Error al cargar el archivo YAML: {e}")
+    
+    # Aquí puedes agregar la lógica de validación de campos obligatorios
+    # Por ejemplo, si los campos obligatorios son 'name' y 'age':
+    required_fields = ['name', 'age']
+    for field in required_fields:
+        if field not in data:
+            raise IRValidatorException(f"Falta el campo obligatorio: {field}")
+    
     return data
+
+class IRValidatorException(Exception):
+    """Excepción personalizada para errores de validación."""
+    pass

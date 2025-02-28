@@ -2,8 +2,8 @@ import re
 
 def _create_in_regex(self) -> Pattern:
     """
-    Crea l'espressione regolare per il parametro in-style.
+    Crea la expresión regular del parámetro "in-style".
 
-    Restituisce l'espressione regolare per il parametro in-style (:class:`re.Pattern`).
+    Devuelve la expresión regular para el parámetro "in-style" (:class:`re.Pattern`).
     """
-    return re.compile(r':\w+')
+    return re.compile(r'in-style')

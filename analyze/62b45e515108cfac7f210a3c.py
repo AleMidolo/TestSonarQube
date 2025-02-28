@@ -1,21 +1,39 @@
 def initialize(self):
     """
-    Crea e inizializza una nuova radice di archiviazione OCFL.
+    Crear e inicializar una nueva raíz de almacenamiento OCFL.
     """
     import os
+    import json
 
-    # Crea la directory radice OCFL
+    # Crear la estructura de directorios básica
     os.makedirs("ocfl_root", exist_ok=True)
+    os.makedirs("ocfl_root/0=ocfl_object_1", exist_ok=True)
+    os.makedirs("ocfl_root/0=ocfl_object_1/v1", exist_ok=True)
+    os.makedirs("ocfl_root/0=ocfl_object_1/v1/content", exist_ok=True)
 
-    # Crea il file di dichiarazione OCFL
-    with open(os.path.join("ocfl_root", "0=ocfl_object_1.0"), "w") as f:
-        f.write("ocfl_1.0\n")
+    # Crear el archivo de inventario
+    inventory = {
+        "id": "urn:uuid:12345678-1234-5678-1234-567812345678",
+        "type": "Object",
+        "digestAlgorithm": "sha512",
+        "head": "v1",
+        "versions": {
+            "v1": {
+                "created": "2023-10-01T00:00:00Z",
+                "state": {
+                    "content": {}
+                }
+            }
+        }
+    }
 
-    # Crea la directory per gli oggetti OCFL
-    os.makedirs(os.path.join("ocfl_root", "objects"), exist_ok=True)
+    with open("ocfl_root/0=ocfl_object_1/v1/inventory.json", "w") as f:
+        json.dump(inventory, f, indent=4)
 
-    # Crea il file di inventario
-    with open(os.path.join("ocfl_root", "inventory.json"), "w") as f:
-        f.write('{"head": "v1", "versions": {}}')
+    # Crear el archivo de inventario con firma
+    with open("ocfl_root/0=ocfl_object_1/v1/inventory.json.sha512", "w") as f:
+        f.write("sha512_hash_of_inventory_json")
 
-    print("Radice OCFL inizializzata con successo.")
+    # Crear el archivo de declaración OCFL
+    with open("ocfl_root/0=ocfl_object_1/ocfl_object.txt", "w") as f:
+        f.write("ocfl_object_1\n")

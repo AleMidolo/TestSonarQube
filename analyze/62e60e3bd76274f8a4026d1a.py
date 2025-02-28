@@ -1,11 +1,12 @@
 def from_raw_values(cls, values):
     """
-    Crea un oggetto Bookmarks da una lista di valori stringa grezzi dei segnalibri.
+    Crear un objeto "Bookmarks" a partir de una lista de valores de marcadores en formato de cadena sin procesar.
 
-    Non dovresti aver bisogno di utilizzare questo metodo a meno che tu non voglia
-    deserializzare i segnalibri.
+    No deberías necesitar usar este método a menos que desees deserializar marcadores.
 
-    :param values: Valori stringa ASCII (segnalibri grezzi)
+    :param values: Valores de cadenas ASCII (marcadores sin procesar)
     :type values: Iterable[str]
     """
-    return cls(values)
+    # Assuming the Bookmarks class has a constructor that takes a list of processed values
+    processed_values = [value.strip() for value in values]  # Example processing step
+    return cls(processed_values)

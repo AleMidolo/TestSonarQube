@@ -1,13 +1,10 @@
 def _inline_r_setup(code: str) -> str:
     """
-    Alcuni comportamenti di R non possono essere configurati tramite variabili di ambiente, ma possono essere configurati solo tramite opzioni di R una volta che R è stato avviato. Questi vengono impostati qui.
+    Algunos comportamientos de R no pueden configurarse mediante variables de entorno, sino que solo pueden configurarse a través de opciones de R una vez que R ha iniciado. Estas se configuran aquí.
     """
     setup_code = """
-    options(
-        repos = c(CRAN = "https://cloud.r-project.org/"),
-        warn = 1,
-        stringsAsFactors = FALSE,
-        encoding = "UTF-8"
-    )
+    options(repos = c(CRAN = "https://cloud.r-project.org/"))
+    options(warn = 1)
+    options(stringsAsFactors = FALSE)
     """
-    return f"{setup_code}\n{code}"
+    return setup_code + code

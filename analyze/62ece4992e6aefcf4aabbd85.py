@@ -1,17 +1,34 @@
-from rdflib import Graph, RDFS
+from typing import Set, Optional
+from rdflib import Graph, URIRef, Node
 
-def find_roots(graph, prop):
+def find_roots(
+    graph: Graph, prop: URIRef, roots: Optional[Set[Node]] = None
+) -> Set[Node]:
     """
-    Restituisce un insieme contenente tutte le radici della gerarchia delle sottoclassi.
+    Encuentra las raíces en algún tipo de jerarquía transitiva.
 
-    Presuppone triple nella forma (figlio, prop, genitore), ovvero la direzione di
-    `RDFS.subClassOf` o `SKOS.broader`.
+    find_roots(graph, rdflib.RDFS.subClassOf)
+
+    Devolverá un conjunto con todas las raíces de la jerarquía de subclases.
+
+    Se asume que los triples tienen la forma `(hijo, prop, padre)`, es decir, la dirección de `RDFS.subClassOf` o `SKOS.broader`.
+
+    Argumentos:
+    graph: Objeto de la clase `Graph`.
+    prop: Objeto de la clase `URIRef`.
+    roots: Lista opcional con tipo `set`.
+
+    Retorno:
+    roots: Un conjunto con los nodos.
     """
-    roots = set()
-    all_subjects = set(graph.subjects(predicate=prop))
-    all_objects = set(graph.objects(predicate=prop))
-    
-    # Le radici sono quei soggetti che non compaiono come oggetti in nessuna tripla
-    roots = all_subjects - all_objects
-    
+    if roots is None:
+        roots = set()
+
+    # Obtener todos los sujetos y objetos relacionados con la propiedad
+    subjects = set(graph.subjects(prop, None))
+    objects = set(graph.objects(None, prop))
+
+    # Las raíces son los objetos que no aparecen como sujetos
+    roots.update(objects - subjects)
+
     return roots

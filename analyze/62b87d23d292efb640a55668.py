@@ -1,16 +1,16 @@
 def get_config():
     """
-    Crea, popola e restituisci l'oggetto VersioneerConfig()
+    Crea, completa y devuelve el objeto VersioneerConfig().
     """
-    from versioneer import VersioneerConfig
-
+    class VersioneerConfig:
+        def __init__(self):
+            self.version = "0.1.0"
+            self.description = "Default configuration for Versioneer"
+            self.author = "Unknown"
+            self.license = "MIT"
+        
+        def __repr__(self):
+            return f"VersioneerConfig(version={self.version}, description={self.description}, author={self.author}, license={self.license})"
+    
     config = VersioneerConfig()
-    # Popola l'oggetto config con i valori necessari
-    config.VCS = "git"
-    config.style = "pep440"
-    config.versionfile_source = "my_package/_version.py"
-    config.versionfile_build = "my_package/_version.py"
-    config.tag_prefix = "v"
-    config.parentdir_prefix = "my_package-"
-
     return config

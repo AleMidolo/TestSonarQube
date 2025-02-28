@@ -2,31 +2,23 @@ import argparse
 
 def parse_arguments(*unparsed_arguments):
     """
-    Dato un insieme di argomenti della riga di comando con cui è stato invocato questo script, analizza gli argomenti e restituiscili come un dizionario che mappa il nome del sotto-parser (o "global") a un'istanza di argparse.Namespace.
+    Dado los argumentos de línea de comandos con los que se invocó este script, analiza los argumentos y devuélvelos como un diccionario que mapea desde el nombre del subparser (o "global") a una instancia de `argparse.Namespace`.
     """
-    # Create the main parser
-    main_parser = argparse.ArgumentParser(description="Main parser")
-    main_parser.add_argument('--global-arg', type=str, help='Global argument')
+    parser = argparse.ArgumentParser(description="Parse command line arguments.")
+    subparsers = parser.add_subparsers(dest="subparser_name", help="Sub-command help")
 
-    # Create subparsers
-    subparsers = main_parser.add_subparsers(dest='subparser_name', help='Sub-commands')
-
-    # Subparser for command 'command1'
-    parser_command1 = subparsers.add_parser('command1', help='Command 1 help')
-    parser_command1.add_argument('--arg1', type=str, help='Argument 1 for command1')
-
-    # Subparser for command 'command2'
-    parser_command2 = subparsers.add_parser('command2', help='Command 2 help')
-    parser_command2.add_argument('--arg2', type=int, help='Argument 2 for command2')
+    # Example subparser
+    subparser_example = subparsers.add_parser("example", help="Example subparser")
+    subparser_example.add_argument("--example_arg", type=str, help="Example argument")
 
     # Parse the arguments
-    parsed_args = main_parser.parse_args(unparsed_arguments)
+    parsed_args = parser.parse_args(unparsed_arguments)
 
-    # Organize the parsed arguments into a dictionary
-    result = {}
-    if hasattr(parsed_args, 'subparser_name'):
-        result[parsed_args.subparser_name] = parsed_args
+    # Create a dictionary to map subparser names to their parsed arguments
+    args_dict = {}
+    if parsed_args.subparser_name:
+        args_dict[parsed_args.subparser_name] = parsed_args
     else:
-        result['global'] = parsed_args
+        args_dict["global"] = parsed_args
 
-    return result
+    return args_dict

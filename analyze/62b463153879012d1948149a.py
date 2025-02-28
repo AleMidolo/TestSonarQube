@@ -1,28 +1,31 @@
 def _group_files_by_xml_filename(source, xmls, files):
     """
-    Raggruppa i file per il nome base degli XML
+    Agrupa archivos por el nombre base de su archivo XML.
 
-    Raggruppa i file in base al nome base degli XML e restituisce i dati in formato dizionario.
+    Agrupa los archivos según el nombre base de su archivo XML y devuelve los datos en formato dict.
 
-    Parametri
+    Parámetros
     ----------
-    source : str
-        Percorso della cartella o dell'archivio zip.
-    xmls : list
-        Lista dei nomi dei file XML.
-    files : list
-        Lista dei file presenti nella cartella o nell'archivio zip.
+    *xml_filename* : str  
+        Nombres de los archivos XML.  
 
-    Ritorna
+    *files* : list  
+        Lista de archivos en la carpeta o archivo comprimido (zip).  
+
+    Retorna
     -------
-    dict
-        - chiave: nome dei file XML.
-        - valore: lista di file associati al nome XML.
+    *dict*
+        *key*: Nombre de los archivos XML.  
+        *name*: Paquete.  
     """
     grouped_files = {}
     
     for xml in xmls:
-        xml_base = xml.split('.')[0]  # Estrae il nome base senza estensione
-        grouped_files[xml] = [file for file in files if xml_base in file]
+        xml_base = xml.split('.')[0]  # Obtener el nombre base del archivo XML
+        grouped_files[xml_base] = []
+        
+        for file in files:
+            if file.startswith(xml_base):
+                grouped_files[xml_base].append(file)
     
     return grouped_files

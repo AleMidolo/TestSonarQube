@@ -1,40 +1,35 @@
-import subprocess
-
 def bash_completion():
     """
-    Restituisci uno script bash di completamento per il comando "borgmatic". Genera questo script analizzando i parser degli argomenti della riga di comando di "borgmatic".
+    Devuelve un script de autocompletado para bash para el comando de borgmatic. Esto se genera mediante la introspección de los analizadores de argumentos de línea de comandos de borgmatic.
     """
-    # Ottieni l'output di 'borgmatic --help' per analizzare i comandi disponibili
+    import subprocess
+
+    # Obtener la salida de borgmatic --help
     result = subprocess.run(['borgmatic', '--help'], capture_output=True, text=True)
     help_output = result.stdout
 
-    # Estrai i comandi disponibili dall'output di help
-    commands = []
+    # Extraer las opciones y comandos de la salida de ayuda
+    options = []
     for line in help_output.splitlines():
         if line.strip().startswith('-'):
-            command = line.split()[0]
-            commands.append(command)
+            options.append(line.split()[0])
 
-    # Genera lo script di completamento bash
-    bash_script = """
-_borgmatic_completion() {
-    local cur prev commands
+    # Generar el script de autocompletado para bash
+    bash_script = f"""
+_borgmatic_completion() {{
+    local cur prev opts
     COMPREPLY=()
-    cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-1]}"
-    commands="{}"
+    cur="${{COMP_WORDS[COMP_CWORD]}}"
+    prev="${{COMP_WORDS[COMP_CWORD-1]}}"
+    opts="{' '.join(options)}"
 
-    if [[ ${cur} == -* ]]; then
-        COMPREPLY=( $(compgen -W "${commands}" -- ${cur}) )
+    if [[ "${{cur}}" == -* ]]; then
+        COMPREPLY=( $(compgen -W "${{opts}}" -- "${{cur}}") )
         return 0
     fi
-}
+}}
 
 complete -F _borgmatic_completion borgmatic
-""".format(" ".join(commands))
+"""
 
     return bash_script
-
-# Esempio di utilizzo
-if __name__ == "__main__":
-    print(bash_completion())
