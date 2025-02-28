@@ -1,27 +1,36 @@
 def initialize(self):
     """
-    创建并初始化一个新的 OCFL 存储根目录。
+    एक नया OCFL स्टोरेज रूट बनाएँ और प्रारंभ करें।
     """
     import os
+    import json
 
-    # 创建根目录
-    if not os.path.exists(self.root_path):
-        os.makedirs(self.root_path)
+    # OCFL storage root directory structure
+    ocfl_structure = {
+        "0=ocfl_object_1.0": "",
+        "inventory.json": "",
+        "inventory.json.sha512": "",
+        "v1": {
+            "content": "",
+            "inventory.json": "",
+            "inventory.json.sha512": ""
+        }
+    }
 
-    # 创建必要的子目录和文件
-    required_dirs = ['objects', 'extensions']
-    for dir_name in required_dirs:
-        dir_path = os.path.join(self.root_path, dir_name)
-        if not os.path.exists(dir_path):
-            os.makedirs(dir_path)
+    # Create the OCFL storage root directory
+    if not os.path.exists("ocfl_root"):
+        os.makedirs("ocfl_root")
 
-    # 创建 namaste 文件
-    namaste_file_path = os.path.join(self.root_path, '0=ocfl_object_1.0')
-    with open(namaste_file_path, 'w') as namaste_file:
-        namaste_file.write('ocfl_object_1.0\n')
+    # Create the necessary files and directories
+    for path, content in ocfl_structure.items():
+        full_path = os.path.join("ocfl_root", path)
+        if isinstance(content, dict):
+            os.makedirs(full_path)
+        else:
+            with open(full_path, 'w') as f:
+                f.write(content)
 
-    # 创建 inventory 文件
-    inventory_file_path = os.path.join(self.root_path, 'inventory.json')
+    # Create the inventory.json file with basic metadata
     inventory = {
         "id": "urn:uuid:12345678-1234-5678-1234-567812345678",
         "type": "Object",
@@ -34,11 +43,16 @@ def initialize(self):
             }
         }
     }
-    import json
-    with open(inventory_file_path, 'w') as inventory_file:
-        json.dump(inventory, inventory_file, indent=2)
 
-    # 创建 version 目录
-    version_dir_path = os.path.join(self.root_path, 'v1')
-    if not os.path.exists(version_dir_path):
-        os.makedirs(version_dir_path)
+    inventory_path = os.path.join("ocfl_root", "v1", "inventory.json")
+    with open(inventory_path, 'w') as f:
+        json.dump(inventory, f, indent=4)
+
+    # Create the inventory.json.sha512 file
+    import hashlib
+    with open(inventory_path, 'rb') as f:
+        sha512_hash = hashlib.sha512(f.read()).hexdigest()
+
+    sha512_path = os.path.join("ocfl_root", "v1", "inventory.json.sha512")
+    with open(sha512_path, 'w') as f:
+        f.write(sha512_hash)

@@ -1,8 +1,9 @@
 def tzname_in_python2(namefunc):
     """
-    在 Python 2 中将 Unicode 输出转换为字节字符串
+    Python 2 में यूनिकोड आउटपुट को बाइटस्ट्रिंग्स में बदलें।
 
-    在 Python 3 中，tzname() API 发生了变化。它曾经返回字节字符串，但在 Python 3 中被更改为返回 Unicode 字符串。
+    tzname() API ने Python 3 में बदलाव किया। पहले यह बाइट्स लौटाता था, 
+    लेकिन इसे यूनिकोड स्ट्रिंग्स में बदल दिया गया।
     """
     def wrapper(*args, **kwargs):
         result = namefunc(*args, **kwargs)

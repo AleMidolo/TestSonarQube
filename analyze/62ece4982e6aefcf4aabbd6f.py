@@ -1,38 +1,40 @@
 import requests
 import tarfile
 from pathlib import Path
+import os
 
 def get_repo_archive(url: str, destination_path: Path) -> Path:
     """
-    给定一个 URL 和目标路径，下载并提取包含每个软件包的 'desc' 文件的 .tar.gz 压缩包。
-    每个 .tar.gz 压缩包对应一个 Arch Linux 仓库（如 'core'、'extra'、'community'）。
+    दिए गए URL और गंतव्य पथ के आधार पर, `.tar.gz` संग्रह को प्राप्त करें और निकालें,
+    जिसमें प्रत्येक पैकेज के लिए 'desc' फ़ाइल होती है।
+    प्रत्येक `.tar.gz` संग्रह एक Arch Linux रिपॉजिटरी ('core', 'extra', 'community') से संबंधित होता है।
 
-    参数：
-      url：要下载的 .tar.gz 压缩包的 URL。
-      destination_path：在磁盘上提取压缩包的目标路径。
+    तर्क (Args):
+        url: `.tar.gz` संग्रह को डाउनलोड करने का URL।
+        destination_path: वह पथ (डिस्क पर) जहाँ संग्रह को निकाला जाएगा।
 
-    返回值：
-      返回提取压缩包的目录路径。
+    वापसी मान (Returns):
+        वह डायरेक्टरी पथ (Path) जहाँ संग्रह को निकाला गया है।
     """
-    # 确保目标路径存在
+    # Ensure the destination directory exists
     destination_path.mkdir(parents=True, exist_ok=True)
-    
-    # 下载压缩包
+
+    # Download the .tar.gz file
     response = requests.get(url, stream=True)
     response.raise_for_status()
-    
-    # 保存压缩包到临时文件
-    temp_tar_path = destination_path / "temp_archive.tar.gz"
-    with open(temp_tar_path, 'wb') as f:
+
+    # Save the downloaded file temporarily
+    temp_file = destination_path / "temp_archive.tar.gz"
+    with open(temp_file, 'wb') as f:
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)
-    
-    # 提取压缩包
-    with tarfile.open(temp_tar_path, 'r:gz') as tar:
+
+    # Extract the .tar.gz file
+    with tarfile.open(temp_file, 'r:gz') as tar:
         tar.extractall(path=destination_path)
-    
-    # 删除临时压缩包
-    temp_tar_path.unlink()
-    
-    # 返回提取后的目录路径
+
+    # Remove the temporary .tar.gz file
+    os.remove(temp_file)
+
+    # Return the directory where the archive was extracted
     return destination_path

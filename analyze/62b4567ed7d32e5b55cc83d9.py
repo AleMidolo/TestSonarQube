@@ -1,15 +1,6 @@
+from ruamel.yaml.nodes import ScalarNode, MappingNode
+
 def deep_merge_nodes(nodes):
-    """
-    合并任何与重复键对应的节点值并返回结果。如果存在具有非 `MappingNode` 值的冲突键，则保留最后一个值。
-
-    给定一个嵌套的 borgmatic 配置数据结构，其形式为一个元组列表：
-    (
-        ruamel.yaml.nodes.ScalarNode as a key,
-        ruamel.yaml.nodes.MappingNode or other Node as a value,
-    ),
-
-    对任何与重复键对应的节点值进行深度合并，并返回合并后的结果。如果存在具有非 `MappingNode` 值（例如整数或字符串）的冲突键，则以最后一个值为准。
-    """
     merged_nodes = {}
     
     for key_node, value_node in nodes:
@@ -19,16 +10,21 @@ def deep_merge_nodes(nodes):
             existing_value_node = merged_nodes[key]
             
             if isinstance(existing_value_node, MappingNode) and isinstance(value_node, MappingNode):
-                # 深度合并 MappingNode
-                merged_value = deep_merge_nodes(existing_value_node.value + value_node.value)
-                merged_nodes[key] = MappingNode(tag=existing_value_node.tag, value=merged_value)
+                # Merge the MappingNodes
+                existing_mapping = dict(existing_value_node.value)
+                new_mapping = dict(value_node.value)
+                
+                for new_key_node, new_value_node in new_mapping.items():
+                    existing_mapping[new_key_node] = new_value_node
+                
+                merged_nodes[key] = MappingNode(
+                    tag=existing_value_node.tag,
+                    value=list(existing_mapping.items()),
+                )
             else:
-                # 非 MappingNode 冲突，保留最后一个值
+                # If not both MappingNodes, overwrite with the new value
                 merged_nodes[key] = value_node
         else:
             merged_nodes[key] = value_node
     
-    # 将合并后的节点转换回元组列表形式
-    result = [(ScalarNode(tag='tag:yaml.org,2002:str', value=key), value_node) for key, value_node in merged_nodes.items()]
-    
-    return result
+    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=key), value_node) for key, value_node in merged_nodes.items()]

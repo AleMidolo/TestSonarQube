@@ -1,14 +1,13 @@
 def validate_min_max_args(self, args):
     """
-    检查给定参数的值是否在最小值和最大值之间
+    जांचें कि आर्ग्युमेंट्स का मान न्यूनतम और अधिकतम मानों के बीच है या नहीं।
 
-    检查参数的值是否在最小值和最大值之间
-    :param args: 接收到的参数。
+    :param args: प्राप्त किए गए आर्ग्युमेंट्स।
     """
-    if not hasattr(self, 'min_value') or not hasattr(self, 'max_value'):
-        raise ValueError("min_value and max_value must be defined in the class.")
+    min_value = 0  # यहां न्यूनतम मान सेट करें
+    max_value = 100  # यहां अधिकतम मान सेट करें
     
     for arg in args:
-        if not (self.min_value <= arg <= self.max_value):
+        if not (min_value <= arg <= max_value):
             return False
     return True

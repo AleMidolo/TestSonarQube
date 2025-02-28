@@ -1,29 +1,25 @@
 import re
+import shlex
 import sys
 
 def split(s, platform='this'):
     """
-    在给定的平台下拆分输入字符串，返回拆分结果。  
-    如果 `platform` 等于 `'this'`，则自动检测当前平台。  
-    如果 `platform` 等于 `1`，使用 POSIX 风格。  
-    如果 `platform` 等于 `0`，使用 Windows/CMD 风格。  
-    参数：
-      s：输入的字符串。  
-      platform：  
-        `'this'`：根据当前平台自动检测；`1`：使用 POSIX 风格；`0`：使用 Windows/CMD 风格。  
-    返回值：
-      一个拆分后的字符串列表。
+    यह `shlex.split()` का मल्टी-प्लेटफ़ॉर्म संस्करण है, जिसका उपयोग कमांड-लाइन विभाजन के लिए किया जाता है।  
+    इसे `subprocess` के साथ उपयोग किया जा सकता है, जैसे `argv` इंजेक्शन आदि के लिए।  
+    यह तेज़ REGEX का उपयोग करता है।  
+
+    प्लेटफ़ॉर्म विकल्प:
+    - `'this'`: वर्तमान प्लेटफ़ॉर्म से स्वतः-पहचान  
+    - `1`: POSIX शैली  
+    - `0`: Windows/CMD शैली  
+    - (अन्य मान भविष्य के लिए आरक्षित हैं)
     """
     if platform == 'this':
         platform = 1 if sys.platform != 'win32' else 0
     
     if platform == 1:
-        # POSIX style
-        pattern = re.compile(r"""((?:[^\s"']|"[^"]*"|'[^']*')+)""")
+        return shlex.split(s, posix=True)
     elif platform == 0:
-        # Windows/CMD style
-        pattern = re.compile(r"""((?:[^\s"]|"[^"]*")+)""")
+        return shlex.split(s, posix=False)
     else:
-        raise ValueError("Invalid platform value. Use 'this', 1 (POSIX), or 0 (Windows/CMD).")
-    
-    return pattern.findall(s)
+        raise ValueError("Invalid platform option. Use 'this', 1 (POSIX), or 0 (Windows).")

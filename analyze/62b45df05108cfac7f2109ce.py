@@ -1,35 +1,61 @@
-def validate(self, path):
-    """
-    如果路径或 pyfs 根目录中的 OCFL 对象有效，则返回真，否则返回假。
-    验证路径或 pyfs 根目录中的 OCFL 对象。
+import os
+import re
 
-    如果对象有效（允许警告），则返回真，否则返回假。
-    """
-    import os
-    from fs import open_fs
+class OCFLValidator:
+    def validate(self, path):
+        """
+        पथ या pyfs रूट पर OCFL ऑब्जेक्ट को मान्य करें।
 
-    # 检查路径是否存在
-    if not os.path.exists(path):
-        return False
-
-    # 打开文件系统
-    fs = open_fs(path)
-
-    # 检查是否存在 OCFL 对象的基本结构
-    required_files = ['inventory.json', 'inventory.json.sha512']
-    for file in required_files:
-        if not fs.exists(file):
+        यदि मान्य है (चेतावनियाँ स्वीकार्य हैं), तो True लौटाता है, अन्यथा False।
+        """
+        if not os.path.exists(path):
             return False
-
-    # 检查 inventory.json 文件是否有效
-    try:
-        inventory = fs.readtext('inventory.json')
-        import json
-        inventory_data = json.loads(inventory)
-        if 'id' not in inventory_data or 'type' not in inventory_data or inventory_data['type'] != 'Object':
+        
+        # Check for the presence of required OCFL files and directories
+        required_files = ['inventory.json', 'inventory.json.sha512']
+        required_dirs = ['v1']
+        
+        for file in required_files:
+            if not os.path.isfile(os.path.join(path, file)):
+                return False
+        
+        for dir in required_dirs:
+            if not os.path.isdir(os.path.join(path, dir)):
+                return False
+        
+        # Validate the inventory.json file
+        inventory_path = os.path.join(path, 'inventory.json')
+        if not self._validate_inventory(inventory_path):
             return False
-    except:
-        return False
-
-    # 如果所有检查都通过，则返回 True
-    return True
+        
+        return True
+    
+    def _validate_inventory(self, inventory_path):
+        """
+        Validate the inventory.json file.
+        """
+        try:
+            with open(inventory_path, 'r') as f:
+                inventory = json.load(f)
+                
+            # Check for required fields in inventory.json
+            required_fields = ['id', 'type', 'digestAlgorithm', 'head', 'manifest', 'versions']
+            for field in required_fields:
+                if field not in inventory:
+                    return False
+                
+            # Validate the digestAlgorithm
+            if inventory['digestAlgorithm'] != 'sha512':
+                return False
+                
+            # Validate the manifest
+            if not isinstance(inventory['manifest'], dict):
+                return False
+                
+            # Validate the versions
+            if not isinstance(inventory['versions'], dict):
+                return False
+                
+            return True
+        except Exception as e:
+            return False

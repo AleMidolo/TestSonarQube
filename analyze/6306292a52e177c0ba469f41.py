@@ -1,12 +1,19 @@
 def test_tag(tag: str) -> bool:
     """
-    检查 `LEGAL_TAG_CHARS` 中的每个字符是否属于标签。如果有任何字符属于标签，则返回假。否则，返回真。
-
-    测试一个单词是否可以被接受为标签。
+    किसी शब्द का परीक्षण करें कि क्या उसे टैग के रूप में स्वीकार किया जा सकता है।
     """
-    LEGAL_TAG_CHARS = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_")
+    # टैग के लिए मान्यता की शर्तें:
+    # 1. टैग खाली नहीं होना चाहिए।
+    # 2. टैग में केवल अक्षर, संख्याएं, और अंडरस्कोर (_) हो सकते हैं।
+    # 3. टैग की लंबाई 1 से 50 वर्णों के बीच होनी चाहिए।
     
-    for char in tag:
-        if char not in LEGAL_TAG_CHARS:
-            return False
+    if not tag:
+        return False
+    
+    if not tag.isalnum() and not all(c == '_' for c in tag if not c.isalnum()):
+        return False
+    
+    if len(tag) < 1 or len(tag) > 50:
+        return False
+    
     return True

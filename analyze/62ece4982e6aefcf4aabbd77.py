@@ -1,29 +1,28 @@
+import re
 from datetime import timedelta
 
 def parse_frequency(frequency):
-    if frequency is None or frequency.lower() == "always":
+    if frequency is None or frequency.lower() == "हमेशा":
         return None
     
-    try:
-        parts = frequency.strip().split()
-        if len(parts) != 2:
-            raise ValueError("Invalid frequency format. Expected format: 'number timeunit'")
-        
-        num = int(parts[0])
-        unit = parts[1].lower()
-        
-        if unit in ['days', 'day']:
-            return timedelta(days=num)
-        elif unit in ['weeks', 'week']:
-            return timedelta(weeks=num)
-        elif unit in ['hours', 'hour']:
-            return timedelta(hours=num)
-        elif unit in ['minutes', 'minute']:
-            return timedelta(minutes=num)
-        elif unit in ['seconds', 'second']:
-            return timedelta(seconds=num)
-        else:
-            raise ValueError(f"Unsupported time unit: {unit}")
+    pattern = re.compile(r'(\d+)\s*(सप्ताह|दिन|घंटे|मिनट|सेकंड)')
+    match = pattern.match(frequency)
     
-    except ValueError as e:
-        raise ValueError(f"Failed to parse frequency: {frequency}. Error: {e}")
+    if not match:
+        raise ValueError("Invalid frequency format")
+    
+    value = int(match.group(1))
+    unit = match.group(2)
+    
+    if unit == "सप्ताह":
+        return timedelta(weeks=value)
+    elif unit == "दिन":
+        return timedelta(days=value)
+    elif unit == "घंटे":
+        return timedelta(hours=value)
+    elif unit == "मिनट":
+        return timedelta(minutes=value)
+    elif unit == "सेकंड":
+        return timedelta(seconds=value)
+    else:
+        raise ValueError("Unsupported time unit")

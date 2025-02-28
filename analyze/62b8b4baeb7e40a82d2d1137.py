@@ -1,53 +1,39 @@
-from zope.interface import Invalid, providedBy
+from zope.interface import providedBy, verify
+from zope.interface.exceptions import Invalid
 
 def verifyObject(iface, candidate, tentative=False):
     """
-    验证 *candidate* 是否能够正确地提供 *iface*。
+    *iface* को सही ढंग से प्रदान करने के लिए *candidate* की पुष्टि करें।
 
-    这个过程包括以下步骤：
+    इसमें निम्नलिखित शामिल हैं:
 
-    - 确保候选对象声明其提供了接口，通过调用 ``iface.providedBy`` （如果 *tentative* 为真，则跳过此步骤）。这意味着候选对象的类必须声明 `implements <zope.interface.implementer>` 该接口，或者候选对象自身声明 `provides <zope.interface.provider>` 该接口。
+    - यह सुनिश्चित करना कि candidate यह दावा करता है कि वह इंटरफ़ेस प्रदान करता है, 
+      ``iface.providedBy`` का उपयोग करके (जब तक *tentative* `True` न हो, 
+      इस स्थिति में इस चरण को छोड़ दिया जाता है)। इसका मतलब है कि candidate की क्लास 
+      यह घोषित करती है कि वह इंटरफ़ेस को `implements <zope.interface.implementer>` करती है, 
+      या candidate स्वयं यह घोषित करता है कि वह इंटरफ़ेस को 
+      `provides <zope.interface.provider>` करता है।
 
-    - 确保候选对象定义了所有必要的方法。
+    - यह सुनिश्चित करना कि candidate सभी आवश्यक methods को परिभाषित करता है।
 
-    - 确保这些方法具有正确的签名（在可能的范围内进行检查）。
+    - यह सुनिश्चित करना कि methods का signature सही है (जहां तक संभव हो)।
 
-    - 确保候选对象定义了所有必要的属性。
+    - यह सुनिश्चित करना कि candidate सभी आवश्यक attributes को परिभाषित करता है।
 
-    :return bool: 如果所有可以检查的条件都通过，则返回真。
-    :raises zope.interface.Invalid: 如果上述任何条件不满足
+    :return bool: यदि सभी जांचें सफल होती हैं, तो एक सत्य मान लौटाता है।
+    :raises zope.interface.Invalid: यदि उपरोक्त में से कोई भी शर्त पूरी नहीं होती है।
 
     .. versionchanged:: 5.0
-        如果有多个方法或属性无效，将收集并报告所有这些错误。之前的行为是仅报告第一个错误。作为一个特殊情况，如果只有一个错误，则像之前一样单独抛出该错误。
+        यदि कई methods या attributes अमान्य हैं, तो सभी त्रुटियों को एकत्रित और रिपोर्ट किया जाता है। 
+        पहले, केवल पहली त्रुटि रिपोर्ट की जाती थी। एक विशेष मामले में, यदि केवल एक त्रुटि मौजूद है, 
+        तो इसे पहले की तरह अकेले उठाया जाता है।
     """
-    errors = []
+    if not tentative and not iface.providedBy(candidate):
+        raise Invalid(f"{candidate} does not provide {iface}")
 
-    # Step 1: Verify that the candidate declares it provides the interface
-    if not tentative:
-        if not iface.providedBy(candidate):
-            errors.append(f"{candidate} does not provide {iface}")
-
-    # Step 2: Verify that the candidate defines all required methods
-    required_methods = iface.names()
-    for method_name in required_methods:
-        if not hasattr(candidate, method_name):
-            errors.append(f"{candidate} is missing required method: {method_name}")
-
-    # Step 3: Verify that the methods have the correct signatures (if possible)
-    # This step is more complex and may require additional logic to check method signatures.
-    # For simplicity, we assume that the method exists and skip detailed signature checking.
-
-    # Step 4: Verify that the candidate defines all required attributes
-    required_attrs = iface.names(all=True) - iface.names()
-    for attr_name in required_attrs:
-        if not hasattr(candidate, attr_name):
-            errors.append(f"{candidate} is missing required attribute: {attr_name}")
-
-    # Handle errors
-    if errors:
-        if len(errors) == 1:
-            raise Invalid(errors[0])
-        else:
-            raise Invalid("; ".join(errors))
+    try:
+        verify.verifyObject(iface, candidate)
+    except Invalid as e:
+        raise Invalid(f"Verification failed: {e}")
 
     return True

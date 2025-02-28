@@ -1,10 +1,10 @@
 def validate_length_args(self, args):
     """
-    检查给定参数的值是否不超过指定的长度。
-
-    :param args: 接收到的参数。
+    दिए गए तर्कों की लंबाई की जाँच करें
+    :param args: प्राप्त तर्क।  
     """
-    max_length = 100  # 假设最大长度为100
-    for arg in args:
-        if len(str(arg)) > max_length:
-            raise ValueError(f"参数 {arg} 的长度超过了最大允许长度 {max_length}")
+    if not args:
+        raise ValueError("कोई तर्क प्रदान नहीं किया गया है।")
+    if len(args) < 1:
+        raise ValueError("तर्कों की लंबाई कम से कम 1 होनी चाहिए।")
+    return True

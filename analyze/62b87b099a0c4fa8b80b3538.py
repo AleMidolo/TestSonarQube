@@ -1,6 +1,5 @@
 def is_fill_request_el(obj):
     """
-    检查 obj 类是否具有 fill 和 request 属性。
-    对象包含可执行的方法 'fill' 和 'request'。
+    `Object` में निष्पादन योग्य मेथड्स `fill` और `request` मौजूद हैं।
     """
-    return all(callable(getattr(obj, method, None)) for method in ['fill', 'request'])
+    return callable(getattr(obj, 'fill', None)) and callable(getattr(obj, 'request', None))

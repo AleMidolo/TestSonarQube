@@ -1,28 +1,28 @@
 import os
-import yaml
+import json
 
 def get_plugin_spec_flatten_dict(plugin_dir):
     """
-    使用 YAML 来读取 `plugin_dir` 中的各种信息，并以字典形式将其返回。
-    从插件规范创建一个扁平化的字典
+    प्लगइन स्पेसिफिकेशन से एक फ्लैट डिक्शनरी बनाता है।
 
-    :param plugin_dir: 插件目录的路径
-    :return: 一个包含插件属性的扁平化字典
+    :param plugin_dir: प्लगइन की डायरेक्टरी का पथ
+    :return: एक फ्लैट डिक्शनरी जो प्लगइन की प्रॉपर्टीज़ को समाहित करती है
     """
-    spec_file = os.path.join(plugin_dir, 'plugin_spec.yaml')
-    if not os.path.exists(spec_file):
-        raise FileNotFoundError(f"Plugin spec file not found in {plugin_dir}")
-
-    with open(spec_file, 'r') as file:
-        spec_data = yaml.safe_load(file)
-
-    # Flatten the dictionary
-    flattened_dict = {}
-    for key, value in spec_data.items():
-        if isinstance(value, dict):
-            for sub_key, sub_value in value.items():
-                flattened_dict[f"{key}.{sub_key}"] = sub_value
-        else:
-            flattened_dict[key] = value
-
-    return flattened_dict
+    plugin_spec_path = os.path.join(plugin_dir, 'plugin_spec.json')
+    if not os.path.exists(plugin_spec_path):
+        raise FileNotFoundError(f"Plugin specification file not found at {plugin_spec_path}")
+    
+    with open(plugin_spec_path, 'r') as file:
+        plugin_spec = json.load(file)
+    
+    def flatten_dict(d, parent_key='', sep='.'):
+        items = []
+        for k, v in d.items():
+            new_key = f"{parent_key}{sep}{k}" if parent_key else k
+            if isinstance(v, dict):
+                items.extend(flatten_dict(v, new_key, sep=sep).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
+    
+    return flatten_dict(plugin_spec)

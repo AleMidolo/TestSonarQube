@@ -2,36 +2,26 @@ import subprocess
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    执行指定的命令。
-
-    :param commands: 要执行的命令列表。
-    :param args: 命令的参数列表。
-    :param cwd: 执行命令的工作目录，默认为None。
-    :param verbose: 是否打印命令执行信息，默认为False。
-    :param hide_stderr: 是否隐藏标准错误输出，默认为False。
-    :param env: 环境变量字典，默认为None。
-    :return: 命令执行的返回码。
+    दिए गए कमांड(s) को चलाएं।
     """
-    full_command = commands + args
+    command_list = commands if isinstance(commands, list) else [commands]
+    command_list.extend(args)
+    
     stderr = subprocess.DEVNULL if hide_stderr else None
     
     if verbose:
-        print(f"Running command: {' '.join(full_command)}")
+        print(f"Running command: {' '.join(command_list)}")
     
-    process = subprocess.Popen(
-        full_command,
+    result = subprocess.run(
+        command_list,
         cwd=cwd,
         env=env,
         stdout=subprocess.PIPE,
-        stderr=stderr
+        stderr=stderr,
+        text=True
     )
     
-    stdout, stderr = process.communicate()
-    
     if verbose:
-        if stdout:
-            print(stdout.decode())
-        if stderr and not hide_stderr:
-            print(stderr.decode())
+        print(f"Command output: {result.stdout}")
     
-    return process.returncode
+    return result

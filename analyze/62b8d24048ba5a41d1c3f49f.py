@@ -1,11 +1,12 @@
 import time
-from functools import lru_cache, wraps
+from functools import wraps, lru_cache
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     """
-    一个用于将函数包装为一个带有缓存功能的可调用对象的装饰器。
-    该缓存基于最近最少使用（LRU）算法，最多保存 `maxsize` 个结果，
-    并为每个缓存项设置一个生存时间（TTL，单位为秒）。
+    एक डेकोरेटर जो एक फ़ंक्शन को एक मेमोराइज़िंग कॉलेबल के साथ रैप करता है,
+    जो `maxsize` तक के परिणामों को सेव करता है। यह एक Least Recently Used (LRU)
+    एल्गोरिदम पर आधारित होता है और प्रत्येक आइटम के लिए एक समय-सीमा (Time-To-Live, TTL) 
+    मान लागू करता है।
     """
     def decorator(func):
         @lru_cache(maxsize=maxsize, typed=typed)

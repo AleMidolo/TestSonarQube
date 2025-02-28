@@ -1,13 +1,17 @@
 def values(self, *keys):
     """
-    以列表的形式返回通过 `self.index` 过滤的键。
-    返回记录的值，可以选择性地通过索引或键进行过滤，仅包含特定的值。
+    रिकॉर्ड के मान (values) लौटाता है, और वैकल्पिक रूप से केवल कुछ विशिष्ट मानों को शामिल करने के लिए इंडेक्स या कुंजी द्वारा फ़िल्टर करता है।
 
-    :param keys: 要包含的项目的索引或键；如果未提供任何参数，则包含所有值
-    :return: 值的列表
-    :rtype: list
+    पैरामीटर (Parameters): 
+    - keys: उन आइटम्स के इंडेक्स या कुंजियाँ (keys) जिन्हें शामिल करना है; यदि कोई कुंजी प्रदान नहीं की जाती है, तो सभी मान (values) शामिल किए जाएंगे।  
+
+    वापसी (Return):
+    - मानों (values) की सूची।  
+
+    वापसी प्रकार (Return Type):
+    - सूची (list)
     """
     if not keys:
-        return list(self.index.values())
+        return list(self.__dict__.values())
     else:
-        return [self.index[key] for key in keys if key in self.index]
+        return [self.__dict__[key] for key in keys if key in self.__dict__]

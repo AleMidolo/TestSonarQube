@@ -1,62 +1,36 @@
-import os
-import mimetypes
-
 def _eval_file(prefix, file_path):
     """
-    识别给定文件的类型。如果文件与给定的前缀不匹配，或者文件类型是 XML，则返回 `None`。  
-    如果文件类型是 "pdf"，返回一个包含键 `component_id` 和 `file_path` 的字典。  
-    如果文件类型不是 "pdf"，返回一个包含键 `component_id`、`file_path`、`ftype` 和 `file_path` 的字典。
+    पैकेज के फ़ाइल प्रकार की पहचान करें: `asset` या `rendition`।
 
-    识别包中的文件类型：`asset` 或 `rendition`。
+    पैकेज के फ़ाइल प्रकार की पहचान करें और `packages` को फ़ाइल के प्रकार और पते के साथ अपडेट करें जो विश्लेषण में है।
 
-    识别包中的文件类型，并使用文件的类型和路径更新 `packages`。
-
-    参数
+    पैरामीटर्स
     ----------
-    prefix: `str`  
-      XML 文件的名称（不带扩展名）。
+    prefix : str
+        XML फ़ाइल का नाम बिना एक्सटेंशन के
+    file_path : str
+        फ़ाइल का पूरा पथ
 
-    filename: `str`  
-      文件名。
-
-    file_folder: `str`  
-      文件所在的文件夹。
-
-    返回值
-    ----------
-    dict  
+    रिटर्न्स
+    -------
+    dict
+        फ़ाइल प्रकार और पते के साथ एक डिक्शनरी
     """
-    # 获取文件名和扩展名
-    file_name = os.path.basename(file_path)
-    file_ext = os.path.splitext(file_name)[1].lower()
+    import os
 
-    # 如果文件扩展名是 .xml，返回 None
-    if file_ext == '.xml':
-        return None
-
-    # 获取文件类型
-    mime_type, _ = mimetypes.guess_type(file_path)
-    if mime_type is None:
-        return None
-
-    # 如果文件类型是 PDF
-    if mime_type == 'application/pdf':
-        return {
-            'component_id': prefix,
-            'file_path': file_path
-        }
+    # फ़ाइल प्रकार की पहचान करें
+    if prefix.startswith("asset"):
+        file_type = "asset"
+    elif prefix.startswith("rendition"):
+        file_type = "rendition"
     else:
-        # 识别文件类型是 asset 还是 rendition
-        if 'asset' in file_name.lower():
-            ftype = 'asset'
-        elif 'rendition' in file_name.lower():
-            ftype = 'rendition'
-        else:
-            ftype = 'unknown'
+        file_type = "unknown"
 
-        return {
-            'component_id': prefix,
-            'file_path': file_path,
-            'ftype': ftype,
-            'mime_type': mime_type
-        }
+    # फ़ाइल का पूरा पथ
+    full_path = os.path.abspath(file_path)
+
+    # रिटर्न डिक्शनरी
+    return {
+        "file_type": file_type,
+        "file_path": full_path
+    }

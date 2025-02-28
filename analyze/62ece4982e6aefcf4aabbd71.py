@@ -2,27 +2,29 @@ import re
 
 def regex_dict(item):
     """
-    将 *.cpp 键转换为正则表达式键
+    *.cpp कुंजियों को regex कुंजियों में बदलें
 
-    给定一个字典，其中的键是带有通配符的文件名，仅将这些键转换为等效的正则表达式，同时保持值不变。
+    एक dict दिया गया है जिसमें सभी कुंजियाँ वाइल्डकार्ड के साथ फ़ाइल नाम हैं,
+    केवल कुंजियों को उनके समकक्ष regex में बदलें और मानों को वैसा ही छोड़ दें।
 
-    参数：
-      item：需要转换的字典
-    返回值：
-      一个键已转换为正则表达式的字典
+    उदाहरण:
 
-    示例：
-    rules = {
-      '*.cpp':
-          {'a': 'arf', 'b': 'bark', 'c': 'coo'},
-      '*.h':
-          {'h': 'help'}
+    नियम (rules) = {
+        '*.cpp':
+            {'a': 'arf', 'b': 'bark', 'c': 'coo'},
+        '*.h':
+           {'h': 'help'}
     }
     regex_keys = regex_dict(rules)
+
+    आर्ग्युमेंट्स:
+        item: वह dict जिसे बदलना है
+    रिटर्न करता है:
+        एक dict जिसमें कुंजियाँ regex में परिवर्तित होती हैं
     """
-    regex_dict = {}
+    regex_item = {}
     for key, value in item.items():
-        # 将通配符 * 替换为正则表达式 .*
-        regex_key = re.escape(key).replace(r'\*', '.*')
-        regex_dict[regex_key] = value
-    return regex_dict
+        # Replace '*' with '.*' to match any sequence of characters
+        regex_key = re.escape(key).replace('\\*', '.*')
+        regex_item[regex_key] = value
+    return regex_item

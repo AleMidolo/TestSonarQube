@@ -1,20 +1,33 @@
 def fromutc(self, dt):
     """
-    给定一个在给定时区中带有时区信息的日期时间对象，计算在新时区的带有时区信息的日期时间。
+    दिए गए टाइमज़ोन में एक टाइमज़ोन-अवेयर डेटटाइम को लेते हुए,
+    एक नए टाइमज़ोन में टाइमज़ोन-अवेयर डेटटाइम की गणना करता है।
 
-    由于这是我们*明确知道*日期时间对象没有歧义的唯一时刻，我们利用这个机会来判断该日期时间是否存在歧义，并且是否处于“折叠”状态（例如，如果这是歧义日期时间的第一个按时间顺序出现的实例）。
+    चूंकि यह वह समय है जब हमें *पक्का* पता है कि हमारे पास एक 
+    अस्पष्टता रहित डेटटाइम ऑब्जेक्ट है, हम इस अवसर का उपयोग यह 
+    निर्धारित करने के लिए करते हैं कि क्या डेटटाइम अस्पष्ट है और 
+    "फोल्ड" स्थिति में है (उदाहरण के लिए, यदि यह अस्पष्ट डेटटाइम 
+    का पहला घटना है, कालानुक्रमिक रूप से)।
 
-    :param dt: 一个带有时区信息的 :class:`datetime.datetime` 对象。
+    :param dt:
+        एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
     """
     if dt.tzinfo is None:
         raise ValueError("fromutc() requires a timezone-aware datetime")
     
-    # Convert the datetime to the local timezone
-    local_dt = dt.astimezone(self)
+    # Convert the datetime to the target timezone
+    offset = dt.tzinfo.utcoffset(dt)
+    if offset is None:
+        raise ValueError("utcoffset() returned None")
     
-    # Check if the local datetime is ambiguous
-    if self.is_ambiguous(local_dt):
-        # If ambiguous, return the first occurrence
-        return local_dt.replace(fold=0)
-    else:
-        return local_dt
+    # Calculate the new datetime in the target timezone
+    new_dt = dt + offset
+    
+    # Check if the new datetime is ambiguous
+    if new_dt.tzinfo is not None:
+        is_ambiguous = new_dt.tzinfo._is_ambiguous(new_dt)
+        if is_ambiguous:
+            # Handle the ambiguous case (e.g., by choosing the first occurrence)
+            new_dt = new_dt.tzinfo._resolve_ambiguous_time(new_dt, is_first=True)
+    
+    return new_dt

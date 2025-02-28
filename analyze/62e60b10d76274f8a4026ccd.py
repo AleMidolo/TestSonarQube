@@ -1,23 +1,30 @@
 def data(self, *keys):
     """
-    返回由 `RecordExporter` 类的 `transform` 方法处理的键。
-    将此记录的键和值以字典形式返回，并可选择按索引或键筛选特定值。对于提供的键，如果记录中不存在，则会以 None 作为默认值插入；如果提供的索引超出范围，则会触发 IndexError。
+    यह मेथड इस रिकॉर्ड की कुंजियों और मानों (keys and values) को एक डिक्शनरी (dictionary) के रूप में लौटाता है। आप वैकल्पिक रूप से केवल कुछ विशेष मानों को इंडेक्स (index) या कुंजी (key) के आधार पर शामिल कर सकते हैं। जो कुंजियाँ प्रदान की गई हैं लेकिन रिकॉर्ड में मौजूद नहीं हैं, उन्हें :const:`None` मान के साथ सम्मिलित किया जाएगा। यदि कोई इंडेक्स सीमा से बाहर है, तो :exc:`IndexError` उत्पन्न होगा।
 
-    :param keys: 要包含的条目的索引或键；如果未提供，将包含所有值
-    :return: 一个以字段名称为键的值字典
-    :raises: :exc: 如果指定了超出范围的索引，则会抛出`IndexError` 
+    पैरामीटर (Parameters): 
+    - keys: उन आइटम्स के इंडेक्स या कुंजियाँ जिन्हें शामिल करना है; यदि कोई कुंजी प्रदान नहीं की गई है, तो सभी मान शामिल किए जाएंगे।  
+
+    वापसी मान (Return): 
+    -मानों का शब्दकोश, फ़ील्ड नाम द्वारा कुंजीबद्ध
+
+    अपवाद (Raises): 
+    - :exc:`IndexError` यदि कोई सीमा से बाहर का इंडेक्स निर्दिष्ट किया गया है।
     """
-    # Assuming self._data is a dictionary or list that holds the record data
+    # Assuming self.record is a dictionary-like object that holds the data
     if not keys:
-        return self._data.copy() if isinstance(self._data, dict) else dict(enumerate(self._data))
+        return self.record.copy()
     
     result = {}
     for key in keys:
         if isinstance(key, int):
-            if key < 0 or key >= len(self._data):
+            # Handle index-based access
+            if key < 0 or key >= len(self.record):
                 raise IndexError("Index out of range")
-            result[key] = self._data[key]
+            # Assuming self.record is a list or similar structure for index-based access
+            result[key] = self.record[key]
         else:
-            result[key] = self._data.get(key, None)
+            # Handle key-based access
+            result[key] = self.record.get(key, None)
     
     return result

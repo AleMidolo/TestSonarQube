@@ -1,17 +1,13 @@
 def dehydrate_point(value):
     """
-    结构类是根据值的长度生成的。
-    用于处理 Point 数据的转换器
+    पॉइंट डेटा के लिए डिहाइड्रेटर।
 
-    :param value: Point 对象
+    :param value: पॉइंट ऑब्जेक्ट
     :type value: Point
-    :return: 转换后的数据结构
-    :rtype: dict
+    :return: पॉइंट ऑब्जेक्ट के निर्देशांक (x, y) का टपल
+    :rtype: tuple
     """
-    if not hasattr(value, 'x') or not hasattr(value, 'y'):
-        raise ValueError("Invalid Point object. Must have 'x' and 'y' attributes.")
-    
-    return {
-        'x': value.x,
-        'y': value.y
-    }
+    if hasattr(value, 'x') and hasattr(value, 'y'):
+        return (value.x, value.y)
+    else:
+        raise ValueError("Invalid Point object provided. Expected attributes 'x' and 'y'.")

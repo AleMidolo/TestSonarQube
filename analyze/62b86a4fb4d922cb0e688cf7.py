@@ -2,16 +2,18 @@ import re
 
 def validate_key(key):
     """
-    根据对应的正则表达式验证给定的键。
+    दिए गए कुंजी (key) को संबंधित नियमित अभिव्यक्ति (regular expression) के खिलाफ सत्यापित करें।
 
-    参数:
-        key: 要验证的字符串
+    आर्ग्युमेंट्स (Args):
+        key: सत्यापन के लिए स्ट्रिंग (string)
 
-    异常:
-        ValidationError: 如果给定的键不符合正则表达式，则抛出此异常。
+    त्रुटि (Raises):
+        ValidationError: यदि दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।
     """
-    # 定义正则表达式，假设键只能包含字母、数字和下划线，且长度为1到50
-    pattern = r'^[a-zA-Z0-9_]{1,50}$'
+    # Define the regular expression pattern for the key
+    pattern = r'^[A-Za-z0-9_]+$'  # Example pattern: alphanumeric and underscore
     
     if not re.match(pattern, key):
-        raise ValidationError(f"Invalid key: {key} does not match the required pattern.")
+        raise ValueError("ValidationError: दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।")
+    
+    return True

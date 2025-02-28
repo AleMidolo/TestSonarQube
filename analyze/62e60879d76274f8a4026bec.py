@@ -1,22 +1,30 @@
-def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None, imp_user=None, dehydration_hooks=None, hydration_hooks=None, **handlers):
+def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
+          db=None, imp_user=None, dehydration_hooks=None,
+          hydration_hooks=None, **handlers):
     """
-    Begin a new transaction with the specified parameters.
+    आउटपुट कतार (output queue) में एक BEGIN संदेश जोड़ता है।
 
-    :param mode: The access mode for the transaction - "READ" or "WRITE" (default).
-    :param bookmarks: An iterable of bookmark values after which the transaction should start.
-    :param metadata: A dictionary of custom metadata to attach to the transaction.
-    :param timeout: The timeout for the transaction execution in seconds.
-    :param db: The name of the database to start the transaction on. Requires Bolt 4.0+.
-    :param imp_user: The user to impersonate. Requires Bolt 4.4+.
-    :param dehydration_hooks: A dictionary where keys are types (classes) and values are dehydration functions.
-                              Dehydration functions take a value and return a PackStream-recognizable object.
-    :param hydration_hooks: A mapping where keys are types (classes) and values are hydration functions.
-                            Hydration functions take a PackStream-recognizable value and can return any object.
-    :param handlers: Additional handlers to pass to the returned Response object.
-    :return: A Response object.
+    :param mode: रूटिंग के लिए एक्सेस मोड - "READ" या "WRITE" (डिफ़ॉल्ट)
+    :param bookmarks: बुकमार्क मानों का iterable, जिनके बाद यह ट्रांजेक्शन शुरू होना चाहिए
+    :param metadata: ट्रांजेक्शन से जोड़ने के लिए कस्टम मेटाडेटा डिक्शनरी
+    :param timeout: ट्रांजेक्शन निष्पादन के लिए समय सीमा (सेकंड में)
+    :param db: उस डेटाबेस का नाम जिसके खिलाफ ट्रांजेक्शन शुरू करना है
+        इसके लिए Bolt 4.0+ की आवश्यकता है।
+    :param imp_user: वह उपयोगकर्ता जिसे प्रतिरूपित (impersonate) करना है
+        इसके लिए Bolt 4.4+ की आवश्यकता है।
+    :param dehydration_hooks:
+        प्रकारों को डीहाइड्रेट (dehydrate) करने के लिए हुक्स (dict, जिसमें type (class) से dehydration
+        फ़ंक्शन तक मैपिंग हो)। डीहाइड्रेशन फ़ंक्शन मान (value) प्राप्त करता है और 
+        packstream द्वारा समझे जाने वाले प्रकार के ऑब्जेक्ट को लौटाता है।
+    :param hydration_hooks:
+        प्रकारों को हाइड्रेट (hydrate) करने के लिए हुक्स (type (class) से 
+        हाइड्रेशन फ़ंक्शन तक की मैपिंग)। हाइड्रेशन फ़ंक्शन packstream द्वारा समझे जाने वाले 
+        प्रकार के मान को प्राप्त करता है और कुछ भी लौटाने के लिए स्वतंत्र है।
+    :param handlers: हैंडलर फ़ंक्शन, जो लौटाए गए Response ऑब्जेक्ट में पास किए जाते हैं
+    :return: Response ऑब्जेक्ट
     """
-    # Initialize the transaction with the given parameters
-    transaction = {
+    # Create the BEGIN message
+    begin_message = {
         "mode": mode,
         "bookmarks": bookmarks,
         "metadata": metadata,
@@ -28,5 +36,8 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None,
         **handlers
     }
     
-    # Return a Response object with the transaction details
-    return Response(transaction)
+    # Add the BEGIN message to the output queue
+    self.output_queue.append(begin_message)
+    
+    # Return a Response object
+    return Response(begin_message)
