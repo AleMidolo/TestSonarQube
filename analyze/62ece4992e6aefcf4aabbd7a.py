@@ -2,8 +2,12 @@ import os
 
 def is_gitbash():
     """
-    returns True if you run in a Windows gitbash
+    检查当前程序是否在 Windows 的 gitbash 终端中运行
 
-    :return: True if gitbash
+    返回值:
+        布尔值，如果是 gitbash 则返回真，否则返回假
+
+    如果在 Windows 的 gitbash 中运行，则返回真
+    :return: 如果是 gitbash 则返回真
     """
-    return 'GIT_BASH' in os.environ.get('TERM_PROGRAM', '') or 'MINGW' in os.environ.get('SHELL', '')
+    return os.environ.get('TERM_PROGRAM') == 'mintty' and os.name == 'nt'

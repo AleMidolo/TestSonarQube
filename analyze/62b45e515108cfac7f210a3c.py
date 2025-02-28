@@ -1,34 +1,44 @@
 def initialize(self):
     """
-    Create and initialize a new OCFL storage root.
+    创建并初始化一个新的 OCFL 存储根目录。
     """
     import os
 
-    # Create the OCFL storage root directory
-    os.makedirs(self.root_path, exist_ok=True)
+    # 创建根目录
+    if not os.path.exists(self.root_path):
+        os.makedirs(self.root_path)
 
-    # Create the OCFL version file
-    with open(os.path.join(self.root_path, "0=ocfl_1.0"), "w") as f:
-        f.write("ocfl_1.0\n")
+    # 创建必要的子目录和文件
+    required_dirs = ['objects', 'extensions']
+    for dir_name in required_dirs:
+        dir_path = os.path.join(self.root_path, dir_name)
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
 
-    # Create the OCFL inventory file
-    with open(os.path.join(self.root_path, "inventory.json"), "w") as f:
-        f.write("""{
-    "id": "urn:uuid:12345678-1234-5678-1234-567812345678",
-    "type": "Object",
-    "digestAlgorithm": "sha512",
-    "head": "v1",
-    "versions": {
-        "v1": {
-            "created": "2023-10-01T00:00:00Z",
-            "state": {},
-            "message": "Initial version"
+    # 创建 namaste 文件
+    namaste_file_path = os.path.join(self.root_path, '0=ocfl_object_1.0')
+    with open(namaste_file_path, 'w') as namaste_file:
+        namaste_file.write('ocfl_object_1.0\n')
+
+    # 创建 inventory 文件
+    inventory_file_path = os.path.join(self.root_path, 'inventory.json')
+    inventory = {
+        "id": "urn:uuid:12345678-1234-5678-1234-567812345678",
+        "type": "Object",
+        "digestAlgorithm": "sha512",
+        "head": "v1",
+        "versions": {
+            "v1": {
+                "created": "2023-10-01T00:00:00Z",
+                "state": {}
+            }
         }
     }
-}""")
+    import json
+    with open(inventory_file_path, 'w') as inventory_file:
+        json.dump(inventory, inventory_file, indent=2)
 
-    # Create the OCFL object directory
-    os.makedirs(os.path.join(self.root_path, "objects"), exist_ok=True)
-
-    # Create the OCFL extensions directory
-    os.makedirs(os.path.join(self.root_path, "extensions"), exist_ok=True)
+    # 创建 version 目录
+    version_dir_path = os.path.join(self.root_path, 'v1')
+    if not os.path.exists(version_dir_path):
+        os.makedirs(version_dir_path)

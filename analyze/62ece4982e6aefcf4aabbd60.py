@@ -1,37 +1,35 @@
 def size_to_bytes(size: str) -> int:
     """
-    Convert human readable file size to bytes.
+    将人类可读的文件大小转换为字节。
 
-    Resulting value is an approximation as input value is in most case rounded.
+    参数:
+        size: str，一个表示人类可读的文件大小的字符串 (例如: '500K')
+    返回值:
+        int: 文件大小的字节数
 
-    Args:
-        size: A string representing a human readable file size (eg: '500K')
+    结果值是一个近似值，因为输入值在大多数情况下是四舍五入的。
 
-    Returns:
-        A decimal representation of file size
+    参数:
+        size: 一个表示人类可读文件大小的字符串 (例如: '500K')
 
-    Examples::
+    返回值:
+        文件大小的十进制表示
+
+    示例::
+
         >>> size_to_bytes("500")
         500
         >>> size_to_bytes("1K")
         1000
     """
     size = size.strip().upper()
-    if size[-1] not in ['K', 'M', 'G', 'T', 'P']:
-        return int(size)
-    
-    unit = size[-1]
-    num = float(size[:-1])
-    
-    if unit == 'K':
-        return int(num * 10**3)
-    elif unit == 'M':
-        return int(num * 10**6)
-    elif unit == 'G':
-        return int(num * 10**9)
-    elif unit == 'T':
-        return int(num * 10**12)
-    elif unit == 'P':
-        return int(num * 10**15)
+    if size[-1] == 'K':
+        return int(size[:-1]) * 1000
+    elif size[-1] == 'M':
+        return int(size[:-1]) * 1000 * 1000
+    elif size[-1] == 'G':
+        return int(size[:-1]) * 1000 * 1000 * 1000
+    elif size[-1] == 'T':
+        return int(size[:-1]) * 1000 * 1000 * 1000 * 1000
     else:
-        raise ValueError(f"Invalid size unit: {unit}")
+        return int(size)

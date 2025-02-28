@@ -3,9 +3,9 @@ from collections import OrderedDict
 
 def mru_cache(maxsize=128, typed=False):
     """
-    Decorator to wrap a function with a memoizing callable that saves
-    up to `maxsize` results based on a Most Recently Used (MRU)
-    algorithm.
+    一个用于将函数包装为一个带有记忆功能的可调用对象的装饰器，
+    该对象基于最近最少使用（MRU，Most Recently Used）算法，
+    保存最多 `maxsize` 个结果。
     """
     def decorator(func):
         cache = OrderedDict()

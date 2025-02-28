@@ -1,14 +1,12 @@
 def add_rendition(self, lang, file_path):
     """
-    Adds a new rendition of the document in the specified language.
+    将类中由 `filepath()` 调用的文件路径分配给类中 `_renditions` 的 "lang"。
 
-    Args:
-        lang (str): The language code for the rendition (e.g., 'en' for English).
-        file_path (str): The file path to the rendition document.
-
-    Returns:
-        None
+    {
+        "original": "artigo02.pdf",
+        "en": "artigo02-en.pdf",
+    }
     """
-    if not hasattr(self, 'renditions'):
-        self.renditions = {}
-    self.renditions[lang] = file_path
+    if not hasattr(self, '_renditions'):
+        self._renditions = {}
+    self._renditions[lang] = file_path

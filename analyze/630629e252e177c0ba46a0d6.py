@@ -3,10 +3,10 @@ from lxml import etree
 
 def retrieve_diaspora_host_meta(host):
     """
-    Retrieve a remote Diaspora host-meta document.
+    检索远程 Diaspora 的 host-meta 文档。
 
-    :arg host: Host to retrieve from
-    :returns: ``XRD`` instance
+    :arg host: 要检索的主机
+    :returns: ``XRD`` 实例
     """
     url = f"https://{host}/.well-known/host-meta"
     response = requests.get(url)
@@ -15,11 +15,5 @@ def retrieve_diaspora_host_meta(host):
     # Parse the XML response
     xml_root = etree.fromstring(response.content)
     
-    # Assuming XRD is a class that can be initialized with the XML root
-    return XRD(xml_root)
-
-# Example XRD class (you would need to define this based on your needs)
-class XRD:
-    def __init__(self, xml_root):
-        self.xml_root = xml_root
-        # Add more parsing logic here as needed
+    # Return the parsed XRD instance
+    return xml_root

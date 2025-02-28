@@ -1,40 +1,54 @@
 def validate(self, inventory, extract_spec_version=False):
     """
-    Validate a given inventory.
+    验证给定的库存（inventory）。如果 `extract_spec_version` 为 True，则会根据 `type` 值来确定规范版本。如果没有 `type` 值或其无效，则其他测试将基于 `self.spec_version` 中给定的版本。
+    验证给定的库存。
 
-    If extract_spec_version is True then will look at the type value to determine
-    the specification version. In the case that there is no type value or it isn't
-    valid, then other tests will be based on the version given in self.spec_version.
+    如果 `extract_spec_version` 为真，则会根据 `type` 值来确定规范版本。
+    如果没有 `type` 值或其无效，则其他测试将基于 `self.spec_version` 中给定的版本。
     """
     if extract_spec_version:
         if 'type' in inventory:
-            type_value = inventory['type']
-            # Assuming type_value contains the version information
-            if isinstance(type_value, str) and type_value.startswith("spec_v"):
-                spec_version = type_value.split("_")[-1]
-                try:
-                    spec_version = float(spec_version)
-                    self.spec_version = spec_version
-                except ValueError:
-                    # If the version cannot be extracted, use the default
-                    pass
+            spec_version = self.determine_spec_version(inventory['type'])
+            if spec_version is None:
+                spec_version = self.spec_version
         else:
-            # If no type value, use the default spec_version
-            pass
-    
-    # Perform validation based on self.spec_version
-    # Example validation logic (this is a placeholder)
-    if self.spec_version == 1.0:
-        # Validate for version 1.0
-        if 'items' not in inventory:
-            raise ValueError("Inventory must contain 'items' for version 1.0")
-    elif self.spec_version == 2.0:
-        # Validate for version 2.0
-        if 'products' not in inventory:
-            raise ValueError("Inventory must contain 'products' for version 2.0")
+            spec_version = self.spec_version
     else:
-        # Default validation logic
-        if 'items' not in inventory and 'products' not in inventory:
-            raise ValueError("Inventory must contain either 'items' or 'products'")
-    
+        spec_version = self.spec_version
+
+    # Perform validation based on the determined spec_version
+    if spec_version == "1.0":
+        return self.validate_v1(inventory)
+    elif spec_version == "2.0":
+        return self.validate_v2(inventory)
+    else:
+        raise ValueError(f"Unsupported spec version: {spec_version}")
+
+def determine_spec_version(self, type_value):
+    """
+    根据 `type` 值确定规范版本。
+    """
+    if type_value == "type_v1":
+        return "1.0"
+    elif type_value == "type_v2":
+        return "2.0"
+    else:
+        return None
+
+def validate_v1(self, inventory):
+    """
+    根据规范版本 1.0 验证库存。
+    """
+    # Placeholder for actual validation logic
+    if 'items' not in inventory:
+        return False
+    return True
+
+def validate_v2(self, inventory):
+    """
+    根据规范版本 2.0 验证库存。
+    """
+    # Placeholder for actual validation logic
+    if 'products' not in inventory:
+        return False
     return True

@@ -1,9 +1,7 @@
 def get_spec_defaults(self):
     """
-    Resolve arguments' values from spec and other sources.
+    使用 `self._get_defaults()` 从规范和其他来源解析参数的值。
+
+    从规范和其他来源解析参数的值。
     """
-    defaults = {}
-    for arg in self.spec.get('arguments', []):
-        if 'default' in arg:
-            defaults[arg['name']] = arg['default']
-    return defaults
+    return self._get_defaults()

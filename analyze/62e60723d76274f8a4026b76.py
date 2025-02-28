@@ -1,37 +1,28 @@
 from datetime import time, timedelta
 
-class Time:
-    @classmethod
-    def from_ticks(cls, ticks, tz=None):
-        """
-        Create a time from ticks (nanoseconds since midnight).
+def from_ticks(cls, ticks, tz=None):
+    """
+    根据时间戳（自午夜以来的纳秒数）创建一个时间对象。
 
-        :param ticks: nanoseconds since midnight
-        :type ticks: int
-        :param tz: optional timezone
-        :type tz: datetime.tzinfo
-
-        :rtype: Time
-
-        :raises ValueError: if ticks is out of bounds
-            (0 <= ticks < 86400000000000)
-        """
-        if not (0 <= ticks < 86400000000000):
-            raise ValueError("ticks must be between 0 and 86400000000000")
-        
-        nanoseconds_per_second = 1_000_000_000
-        nanoseconds_per_minute = 60 * nanoseconds_per_second
-        nanoseconds_per_hour = 60 * nanoseconds_per_minute
-        
-        hours = ticks // nanoseconds_per_hour
-        ticks %= nanoseconds_per_hour
-        
-        minutes = ticks // nanoseconds_per_minute
-        ticks %= nanoseconds_per_minute
-        
-        seconds = ticks // nanoseconds_per_second
-        ticks %= nanoseconds_per_second
-        
-        microseconds = ticks // 1000
-        
-        return time(hour=hours, minute=minutes, second=seconds, microsecond=microseconds, tzinfo=tz)
+    :param ticks: 自午夜以来的纳秒数
+    :type ticks: int
+    :param tz: 可选的时区信息
+    :type tz: datetime.tzinfo
+    :rtype: Time
+    :raises ValueError: 如果时间戳超出范围(0 <= ticks < 86400000000000)
+    """
+    if not (0 <= ticks < 86400000000000):
+        raise ValueError("时间戳超出范围(0 <= ticks < 86400000000000)")
+    
+    # 将纳秒转换为秒和微秒
+    seconds, nanoseconds = divmod(ticks, 1_000_000_000)
+    microseconds = nanoseconds // 1_000
+    
+    # 将秒转换为小时、分钟和秒
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    
+    # 创建时间对象
+    time_obj = time(hour=hours, minute=minutes, second=seconds, microsecond=microseconds, tzinfo=tz)
+    
+    return time_obj

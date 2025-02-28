@@ -1,20 +1,21 @@
-import os
-
 def select_filenames_by_prefix(prefix, files):
     """
-    Get files which belongs to a document package.
+    对于文件列表中的每个文件，返回所有与给定前缀匹配的文件。
 
-    Retorna os arquivos da lista `files` cujos nomes iniciam com `prefix`
+    获取属于文档包的文件。
 
-    Parameters
+    返回 `files` 列表中文件名以 `prefix` 开头的文件。
+
+    参数
     ----------
-    prefix : str
-        Filename prefix
-    files : str list
-        Files paths
-    Returns
+    prefix: str  
+        文件名前缀  
+    files: list[str]  
+        文件路径列表  
+
+    返回值
     -------
     list
-        files paths which basename files matches to prefix
+        文件路径列表，其中的文件名与前缀 `prefix` 匹配。
     """
-    return [file for file in files if os.path.basename(file).startswith(prefix)]
+    return [file for file in files if file.startswith(prefix)]

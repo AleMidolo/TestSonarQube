@@ -1,11 +1,23 @@
 def extend_cli(self, root_subparsers):
     """
-    Adds the spec cli options to the main entry point.
+    将规范 CLI 选项添加到主入口点。
 
-    :param root_subparsers: the subparser object to extend.
+    :param root_subparsers: 要扩展的子解析器对象。
     """
-    spec_parser = root_subparsers.add_parser('spec', help='Manage spec configurations')
-    spec_parser.add_argument('--list', action='store_true', help='List all available specs')
-    spec_parser.add_argument('--add', type=str, help='Add a new spec')
-    spec_parser.add_argument('--remove', type=str, help='Remove an existing spec')
-    spec_parser.add_argument('--update', type=str, help='Update an existing spec')
+    # 添加一个子命令 '规范'
+    parser = root_subparsers.add_parser('规范', help='规范相关操作')
+    
+    # 添加子命令 '规范' 的子命令
+    subparsers = parser.add_subparsers(dest='规范操作', help='规范操作')
+
+    # 添加子命令 '添加'
+    add_parser = subparsers.add_parser('添加', help='添加规范')
+    add_parser.add_argument('名称', type=str, help='规范名称')
+    add_parser.add_argument('描述', type=str, help='规范描述')
+
+    # 添加子命令 '删除'
+    delete_parser = subparsers.add_parser('删除', help='删除规范')
+    delete_parser.add_argument('名称', type=str, help='规范名称')
+
+    # 添加子命令 '列表'
+    list_parser = subparsers.add_parser('列表', help='列出所有规范')

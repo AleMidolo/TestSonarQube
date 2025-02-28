@@ -1,24 +1,18 @@
 def get_parser_option_specs(self, command_name):
     """
-    Gets all the options for the specified command
+    获取指定命令的所有选项
 
-    :param command_name: the command name (main, virsh, ospd, etc...)
-    :return: the list of all command options
+    :param command_name: 命令名称（如 main、virsh、ospd 等）
+    :return: 所有命令选项的列表
     """
-    if command_name == "main":
-        return [
-            {"name": "--help", "action": "store_true", "help": "show this help message and exit"},
-            {"name": "--version", "action": "store_true", "help": "show program's version number and exit"},
-        ]
-    elif command_name == "virsh":
-        return [
-            {"name": "--connect", "type": str, "help": "connect to hypervisor"},
-            {"name": "--list", "action": "store_true", "help": "list domains"},
-        ]
-    elif command_name == "ospd":
-        return [
-            {"name": "--config", "type": str, "help": "path to configuration file"},
-            {"name": "--log-level", "type": str, "help": "set log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)"},
-        ]
-    else:
-        return []
+    # 假设 self.parser 是一个 argparse.ArgumentParser 对象
+    if not hasattr(self, 'parser'):
+        raise AttributeError("Parser not initialized")
+    
+    # 获取所有选项
+    options = []
+    for action in self.parser._actions:
+        if isinstance(action, argparse._StoreAction) or isinstance(action, argparse._StoreTrueAction):
+            options.append(action.dest)
+    
+    return options

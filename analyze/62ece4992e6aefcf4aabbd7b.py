@@ -3,9 +3,14 @@ import yaml
 
 def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=False):
     """
-    Given a target config filename and rendered config YAML, write it out to file. Create any
-    containing directories as needed. But if the file already exists and overwrite is False,
-    abort before writing anything.
+    给定一个渲染后的配置 YAML，将其写入目标文件。
+    如果文件已存在且 `overwrite` 参数为假，则在写入任何内容之前中止操作。
+    如果文件不存在，则创建它。
+    否则，将内容写入文件。
+
+    返回值：`None`
+
+    给定一个目标配置文件名和渲染的配置 YAML，将其写入文件。必要时创建包含的目录。但如果文件已存在且 `overwrite` 参数为假，则在写入任何内容之前中止操作。
     """
     if os.path.exists(config_filename) and not overwrite:
         return

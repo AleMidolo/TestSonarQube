@@ -1,11 +1,16 @@
 def validate_choices_args(self, args):
     """
-    Check if value of choice arguments is one of the available choices.
+    检查给定参数的值是否是可用选项之一。
 
-    :param args: The received arguments.
+    :param args: 接收到的参数。
     """
-    for arg_name, arg_value in args.items():
-        if hasattr(self, arg_name):
-            choices = getattr(self, arg_name)
-            if arg_value not in choices:
-                raise ValueError(f"Invalid value for {arg_name}. Expected one of {choices}, got {arg_value}.")
+    if not hasattr(self, 'choices'):
+        raise AttributeError("The 'choices' attribute is not defined.")
+    
+    if not isinstance(self.choices, (list, tuple, set)):
+        raise TypeError("The 'choices' attribute must be a list, tuple, or set.")
+    
+    if args not in self.choices:
+        raise ValueError(f"The argument '{args}' is not a valid choice. Valid choices are: {self.choices}")
+    
+    return True
