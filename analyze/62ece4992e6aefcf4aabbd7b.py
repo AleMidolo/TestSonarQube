@@ -3,8 +3,9 @@ import yaml
 
 def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=False):
     """
-    Dado un nombre de archivo de configuración de destino y un archivo YAML de configuración renderizado, escríbelo en el archivo.
-    Crea cualquier directorio contenedor según sea necesario. Pero si el archivo ya existe y `overwrite` es `False`, aborta antes de escribir cualquier cosa.
+    Given a target config filename and rendered config YAML, write it out to file. Create any
+    containing directories as needed. But if the file already exists and overwrite is False,
+    abort before writing anything.
     """
     if os.path.exists(config_filename) and not overwrite:
         return

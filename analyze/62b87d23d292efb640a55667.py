@@ -1,15 +1,16 @@
-def register_vcs_handler(vcs, method):  # decorador
-    """Crear un decorador para marcar un método como el manejador de un VCS.
+def register_vcs_handler(vcs, method):  # decorator
+    """Create decorator to mark a method as the handler of a VCS.
 
     Args:
-        vcs (str): El nombre del sistema de control de versiones (VCS).
-        method (str): El nombre del método que se usará como manejador.
+        vcs: The version control system to handle.
+        method: The method to be used as the handler.
 
     Returns:
-        function: El decorador que marca el método como manejador del VCS.
+        A decorator function that marks the method as the handler for the specified VCS.
     """
     def decorate(f):
-        f.vcs = vcs
-        f.method = method
+        if not hasattr(f, '_vcs_handlers'):
+            f._vcs_handlers = {}
+        f._vcs_handlers[vcs] = method
         return f
     return decorate

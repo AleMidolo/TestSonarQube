@@ -1,66 +1,62 @@
 import logging
-import os
+import json
 import yaml
+import os
 
 def load_configurations(config_filenames, overrides=None, resolve_env=True):
     """
-    Dada una secuencia de nombres de archivo de configuración, carga y valida cada archivo de configuración. 
-    Si el archivo de configuración no puede ser leído debido a permisos insuficientes o errores al analizar 
-    el archivo de configuración, se registrará el error en el log. De lo contrario, devuelve los resultados 
-    como una tupla que contiene: un diccionario que asocia el nombre del archivo de configuración con su 
-    configuración analizada correspondiente, y una secuencia de instancias de `logging.LogRecord` que 
-    contienen cualquier error de análisis.
+    Given a sequence of configuration filenames, load and validate each configuration file. Return
+    the results as a tuple of: dict of configuration filename to corresponding parsed configuration,
+    and sequence of logging.LogRecord instances containing any parse errors.
     """
-    configurations = {}
-    log_records = []
-
+    configs = {}
+    errors = []
+    
+    if overrides is None:
+        overrides = {}
+    
     for filename in config_filenames:
         try:
             with open(filename, 'r') as file:
-                config = yaml.safe_load(file)
+                if filename.endswith('.json'):
+                    config = json.load(file)
+                elif filename.endswith('.yaml') or filename.endswith('.yml'):
+                    config = yaml.safe_load(file)
+                else:
+                    errors.append(logging.LogRecord(
+                        name=__name__,
+                        level=logging.ERROR,
+                        pathname=filename,
+                        lineno=0,
+                        msg=f"Unsupported file format: {filename}",
+                        args=None,
+                        exc_info=None
+                    ))
+                    continue
                 
+                # Apply overrides
+                for key, value in overrides.items():
+                    if key in config:
+                        config[key] = value
+                
+                # Resolve environment variables if needed
                 if resolve_env:
                     for key, value in config.items():
-                        if isinstance(value, str) and value.startswith('${') and value.endswith('}'):
-                            env_var = value[2:-1]
+                        if isinstance(value, str) and value.startswith('$'):
+                            env_var = value[1:]
                             config[key] = os.getenv(env_var, value)
                 
-                if overrides:
-                    config.update(overrides)
+                configs[filename] = config
                 
-                configurations[filename] = config
-        except PermissionError:
-            logging.error(f"Permiso denegado para leer el archivo de configuración: {filename}")
-            log_records.append(logging.LogRecord(
-                name=__name__,
-                level=logging.ERROR,
-                pathname=filename,
-                lineno=0,
-                msg=f"Permiso denegado para leer el archivo de configuración: {filename}",
-                args=None,
-                exc_info=None
-            ))
-        except yaml.YAMLError as e:
-            logging.error(f"Error al analizar el archivo de configuración {filename}: {e}")
-            log_records.append(logging.LogRecord(
-                name=__name__,
-                level=logging.ERROR,
-                pathname=filename,
-                lineno=0,
-                msg=f"Error al analizar el archivo de configuración {filename}: {e}",
-                args=None,
-                exc_info=None
-            ))
         except Exception as e:
-            logging.error(f"Error inesperado al procesar el archivo de configuración {filename}: {e}")
-            log_records.append(logging.LogRecord(
+            errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=f"Error inesperado al procesar el archivo de configuración {filename}: {e}",
+                msg=f"Error loading configuration file {filename}: {str(e)}",
                 args=None,
                 exc_info=None
             ))
-
-    return configurations, log_records
+    
+    return configs, errors

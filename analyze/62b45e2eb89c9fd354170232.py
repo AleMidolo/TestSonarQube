@@ -1,25 +1,22 @@
 def next_version(version):
     """
-    El identificador de la siguiente versión debe seguir el patrón existente.
+    Next version identifier following existing pattern.
 
-    Debe manejar tanto versiones con prefijo de ceros como versiones sin prefijo de ceros.
+    Must deal with both zero-prefixed and non-zero prefixed versions.
     """
     # Split the version into parts
     parts = version.split('.')
     
-    # Convert each part to an integer
-    parts = [int(part) for part in parts]
-    
     # Increment the last part
-    parts[-1] += 1
+    last_part = int(parts[-1]) + 1
     
-    # Handle carry-over
-    for i in range(len(parts) - 1, 0, -1):
-        if parts[i] > 9:
-            parts[i] = 0
-            parts[i - 1] += 1
+    # Handle zero-prefixed versions
+    if parts[-1].startswith('0'):
+        # Preserve the zero-prefix length
+        zero_prefix_length = len(parts[-1]) - len(str(int(parts[-1])))
+        parts[-1] = '0' * zero_prefix_length + str(last_part)
+    else:
+        parts[-1] = str(last_part)
     
-    # Convert back to string with leading zeros if necessary
-    next_version_str = '.'.join(f"{part:0{len(str(part))}}" for part in parts)
-    
-    return next_version_str
+    # Join the parts back together
+    return '.'.join(parts)

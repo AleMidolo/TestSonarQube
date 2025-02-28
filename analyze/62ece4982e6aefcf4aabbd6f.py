@@ -1,37 +1,40 @@
-import tarfile
 import requests
+import tarfile
 from pathlib import Path
+import shutil
 
 def get_repo_archive(url: str, destination_path: Path) -> Path:
     """
-    Dado un URL y una ruta de destino, recuperar y extraer un archivo .tar.gz que contiene el archivo 'desc' para cada paquete.
-    Cada archivo .tar.gz corresponde a un repositorio de Arch Linux ('core', 'extra', 'community').
+    Given an url and a destination path, retrieve and extract .tar.gz archive
+    which contains 'desc' file for each package.
+    Each .tar.gz archive corresponds to an Arch Linux repo ('core', 'extra', 'community').
 
-    Argumentos:
-        url: URL del archivo .tar.gz a descargar.
-        destination_path: la ruta en el disco donde se extraerá el archivo.
+    Args:
+        url: url of the .tar.gz archive to download
+        destination_path: the path on disk where to extract archive
 
-    Retorno:
-        un objeto Path que representa el directorio donde se ha extraído el archivo.
+    Returns:
+        a directory Path where the archive has been extracted to.
     """
-    # Crear el directorio de destino si no existe
+    # Ensure the destination path exists
     destination_path.mkdir(parents=True, exist_ok=True)
     
-    # Descargar el archivo .tar.gz
+    # Download the archive
     response = requests.get(url, stream=True)
-    response.raise_for_status()
+    if response.status_code != 200:
+        raise Exception(f"Failed to download archive from {url}")
     
-    # Guardar el archivo temporalmente
-    temp_tar_path = destination_path / "temp_repo.tar.gz"
-    with open(temp_tar_path, 'wb') as f:
+    # Save the archive to a temporary file
+    temp_archive_path = destination_path / "temp_archive.tar.gz"
+    with open(temp_archive_path, 'wb') as f:
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)
     
-    # Extraer el archivo .tar.gz
-    with tarfile.open(temp_tar_path, 'r:gz') as tar:
+    # Extract the archive
+    with tarfile.open(temp_archive_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
     
-    # Eliminar el archivo temporal
-    temp_tar_path.unlink()
+    # Remove the temporary archive file
+    temp_archive_path.unlink()
     
     return destination_path

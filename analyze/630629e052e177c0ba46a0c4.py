@@ -1,23 +1,27 @@
 import json
-from xml.etree import ElementTree
 from typing import Dict
+from xml.etree import ElementTree as ET
 
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
-    Analiza el webfinger de Diaspora, que puede estar en formato JSON (nuevo) o en formato XRD (antiguo).
+    Parse Diaspora webfinger which is either in JSON format (new) or XRD (old).
 
-    [https://diaspora.github.io/diaspora_federation/discovery/webfinger.html](https://diaspora.github.io/diaspora_federation/discovery/webfinger.html)
+    Args:
+        document (str): The webfinger document in either JSON or XRD format.
+
+    Returns:
+        Dict: A dictionary containing the parsed data.
     """
     try:
-        # Intentar parsear como JSON
+        # Try to parse as JSON (new format)
         data = json.loads(document)
         return data
     except json.JSONDecodeError:
-        # Si falla, intentar parsear como XML/XRD
+        # If JSON parsing fails, try to parse as XRD (old format)
         try:
-            root = ElementTree.fromstring(document)
-            namespaces = {'xrd': 'http://docs.oasis-open.org/ns/xri/xrd-1.0'}
-            links = root.findall('xrd:Link', namespaces)
+            root = ET.fromstring(document)
+            namespace = {'XRD': 'http://docs.oasis-open.org/ns/xri/xrd-1.0'}
+            links = root.findall('XRD:Link', namespace)
             result = {}
             for link in links:
                 rel = link.get('rel')
@@ -25,6 +29,6 @@ def parse_diaspora_webfinger(document: str) -> Dict:
                 if rel and href:
                     result[rel] = href
             return result
-        except ElementTree.ParseError:
-            # Si ambos fallan, devolver un diccionario vacío
+        except ET.ParseError:
+            # If both JSON and XML parsing fail, return an empty dict
             return {}

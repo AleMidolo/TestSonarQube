@@ -1,15 +1,15 @@
 def minimalBases(classes):
     """
-    Reduce una lista de clases base a su equivalente mínimo ordenado.
+    Reduce a list of base classes to its ordered minimum equivalent.
+    
+    Args:
+        classes (list): A list of base classes.
+    
+    Returns:
+        list: A list of base classes that is the minimal equivalent of the input list.
     """
-    # Eliminar duplicados y ordenar
-    unique_classes = list(set(classes))
-    unique_classes.sort(key=lambda x: x.__name__)
-    
-    # Eliminar clases que son subclases de otras en la lista
-    minimal_classes = []
-    for cls in unique_classes:
-        if not any(issubclass(cls, other) for other in unique_classes if cls is not other):
-            minimal_classes.append(cls)
-    
-    return minimal_classes
+    minimal = []
+    for cls in classes:
+        if not any(issubclass(cls, base) for base in minimal):
+            minimal.append(cls)
+    return minimal

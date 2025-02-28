@@ -1,37 +1,38 @@
 import subprocess
 
-def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra_vars=None, ansible_args=None):
+def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
+                     extra_vars=None, ansible_args=None):
     """
-    Envuelve la interfaz de línea de comandos (CLI) de 'ansible-playbook'.
+    Wraps the 'ansible-playbook' CLI.
 
-    :param ir_workspace: Un objeto Infrared Workspace que representa el espacio de trabajo activo.
-    :param ir_plugin: Un objeto InfraredPlugin del plugin actual.
-    :param playbook_path: La ruta del playbook que se va a ejecutar.
-    :param verbose: Nivel de verbosidad de Ansible.
-    :param extra_vars: dict. Se pasa a Ansible como extra-vars.
-    :param ansible_args: dict de argumentos de ansible-playbook que se pasan directamente a Ansible.
+    :param ir_workspace: An Infrared Workspace object represents the active
+    workspace
+    :param ir_plugin: An InfraredPlugin object of the current plugin
+    :param playbook_path: the playbook to invoke
+    :param verbose: Ansible verbosity level
+    :param extra_vars: dict. Passed to Ansible as extra-vars
+    :param ansible_args: dict of ansible-playbook arguments to plumb down
+        directly to Ansible.
     """
-    # Construir el comando base
-    command = ["ansible-playbook", playbook_path]
+    # Base command
+    command = ['ansible-playbook', playbook_path]
 
-    # Añadir verbosidad si se especifica
+    # Add verbosity if specified
     if verbose:
-        command.append(f"-{verbose}")
+        command.extend(['-' + 'v' * verbose])
 
-    # Añadir extra_vars si se especifica
+    # Add extra-vars if specified
     if extra_vars:
-        extra_vars_str = " ".join([f"{k}={v}" for k, v in extra_vars.items()])
-        command.extend(["--extra-vars", extra_vars_str])
+        extra_vars_str = ' '.join([f"{k}={v}" for k, v in extra_vars.items()])
+        command.extend(['--extra-vars', extra_vars_str])
 
-    # Añadir argumentos adicionales de Ansible si se especifica
+    # Add additional ansible arguments if specified
     if ansible_args:
-        for key, value in ansible_args.items():
-            command.append(f"--{key}")
-            if value:
-                command.append(str(value))
+        for arg, value in ansible_args.items():
+            command.extend([f"--{arg}", str(value)])
 
-    # Ejecutar el comando
+    # Execute the command
     result = subprocess.run(command, capture_output=True, text=True)
 
-    # Devolver el resultado de la ejecución
+    # Return the result
     return result

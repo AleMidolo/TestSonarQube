@@ -1,42 +1,38 @@
 def _eval_file(prefix, file_path):
     """
-    Identifica el tipo de archivo del paquete: `asset` o `rendition`.
+    Identifica o tipo de arquivo do pacote: `asset` ou `rendition`.
 
-    Identifica el tipo de archivo del paquete y actualiza `packages` con el tipo y
-    la ruta del archivo en análisis.
+    Identifica o tipo de arquivo do pacote e atualiza `packages` com o tipo e
+    o endereço do arquivo em análise.
 
-    Parámetros
+    Parameters
     ----------
     prefix : str
-        nombre del archivo XML sin extensión
+        nome do arquivo XML sem extensão
     file_path : str
-        ruta completa del archivo
+        caminho completo do arquivo
 
-    Retorna
+    Returns
     -------
     dict
-        Un diccionario con el tipo de archivo y la ruta del archivo.
+        Um dicionário contendo o tipo de arquivo e o caminho do arquivo.
     """
     import os
 
-    # Extraer el nombre del archivo y la carpeta
-    filename = os.path.basename(file_path)
-    file_folder = os.path.dirname(file_path)
+    # Extrai o nome do arquivo e a extensão
+    file_name = os.path.basename(file_path)
+    file_extension = os.path.splitext(file_name)[1].lower()
 
-    # Determinar el tipo de archivo basado en el prefijo
-    if prefix.startswith("asset"):
-        file_type = "asset"
-    elif prefix.startswith("rendition"):
-        file_type = "rendition"
+    # Determina o tipo de arquivo com base na extensão
+    if file_extension in ['.jpg', '.png', '.gif', '.bmp', '.tiff']:
+        file_type = 'asset'
+    elif file_extension in ['.mp4', '.mov', '.avi', '.mkv']:
+        file_type = 'rendition'
     else:
-        file_type = "unknown"
+        file_type = 'unknown'
 
-    # Crear el diccionario de retorno
-    result = {
-        "type": file_type,
-        "path": file_path,
-        "filename": filename,
-        "folder": file_folder
+    # Retorna um dicionário com o tipo de arquivo e o caminho do arquivo
+    return {
+        'type': file_type,
+        'path': file_path
     }
-
-    return result

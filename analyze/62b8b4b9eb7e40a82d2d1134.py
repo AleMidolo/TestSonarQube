@@ -1,15 +1,16 @@
-def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
-    """
-    Devuelve los nombres y descripciones de los atributos definidos por la interfaz.
+def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
+    """Return attribute names and descriptions defined by interface.
     
     Args:
-        all (bool): Si es True, devuelve todos los atributos. Si es False, devuelve solo los atributos definidos por la interfaz.
+        all (bool): If True, return all attributes including private ones. 
+                   If False, return only public attributes.
     
     Returns:
-        dict: Un diccionario donde las claves son los nombres de los atributos y los valores son las descripciones.
+        dict: A dictionary where keys are attribute names and values are their descriptions.
     """
     attributes = {}
     for name, value in self.__dict__.items():
-        if all or not name.startswith('_'):
-            attributes[name] = value.__doc__ if value.__doc__ else "No description available."
+        if not all and name.startswith('_'):
+            continue
+        attributes[name] = value.__doc__ if value.__doc__ else "No description available."
     return attributes

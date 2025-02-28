@@ -1,34 +1,43 @@
 import requests
-from urllib.parse import urlparse
-import json
+from xml.etree import ElementTree
 
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    Recupera y analiza un documento "webfinger" remoto de Diaspora.
+    Retrieve a and parse a remote Diaspora webfinger document.
 
-    :arg handle: Identificador remoto a recuperar
+    :arg handle: Remote handle to retrieve
     :returns: dict
     """
-    # Parse the handle to extract the username and domain
-    if '@' not in handle:
-        raise ValueError("Invalid handle format. Expected format: user@domain")
-    
+    # Split the handle into username and domain
     username, domain = handle.split('@')
     
     # Construct the webfinger URL
-    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{username}@{domain}"
+    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
     
     try:
-        # Make the GET request to retrieve the webfinger document
+        # Send a GET request to the webfinger URL
         response = requests.get(webfinger_url)
         response.raise_for_status()
         
-        # Parse the JSON response
-        webfinger_data = response.json()
+        # Parse the XML response
+        root = ElementTree.fromstring(response.content)
         
-        return webfinger_data
+        # Extract relevant information
+        result = {}
+        for link in root.findall('{http://webfinger.net/rel/profile-page}link'):
+            result['profile_page'] = link.get('href')
+        
+        for link in root.findall('{http://webfinger.net/rel/avatar}link'):
+            result['avatar'] = link.get('href')
+        
+        for link in root.findall('{http://webfinger.net/rel/hcard}link'):
+            result['hcard'] = link.get('href')
+        
+        return result
     
     except requests.exceptions.RequestException as e:
-        raise Exception(f"Failed to retrieve webfinger document: {e}")
-    except json.JSONDecodeError as e:
-        raise Exception(f"Failed to parse webfinger document: {e}")
+        print(f"Error retrieving webfinger document: {e}")
+        return {}
+    except ElementTree.ParseError as e:
+        print(f"Error parsing webfinger document: {e}")
+        return {}

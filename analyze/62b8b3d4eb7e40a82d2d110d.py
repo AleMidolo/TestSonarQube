@@ -1,8 +1,8 @@
 def _c_optimizations_required():
     """
-    Devuelve un valor verdadero si se requieren las optimizaciones en C.
+    Return a true value if the C optimizations are required.
 
-    Esto utiliza la variable ``PURE_PYTHON`` como se documenta en `_use_c_impl`.
+    This uses the ``PURE_PYTHON`` variable as documented in `_use_c_impl`.
     """
     import os
     return not os.environ.get('PURE_PYTHON', '').lower() in ('1', 'true', 'yes')

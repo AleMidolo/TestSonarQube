@@ -1,12 +1,7 @@
 import subprocess
 import sys
 import os
-from typing import Sequence, Any
-
-def _get_platform_max_length() -> int:
-    # This function should return the platform-specific maximum command length.
-    # For simplicity, we'll return a default value.
-    return 32768
+from typing import Sequence, Any, Tuple
 
 def xargs(
         cmd: tuple[str, ...],
@@ -18,37 +13,39 @@ def xargs(
         **kwargs: Any,
 ) -> tuple[int, bytes]:
     """
-    Una implementación simplificada de xargs.
+    A simplified implementation of xargs.
 
-    - color: Crea un pty si está en una plataforma que lo soporte.
-    - target_concurrency: Número objetivo de particiones para ejecutar de forma concurrente.
+    color: Make a pty if on a platform that supports it
+    target_concurrency: Target number of partitions to run concurrently
     """
     if color and sys.platform != "win32":
         import pty
         master, slave = pty.openpty()
         kwargs['stdout'] = slave
         kwargs['stderr'] = slave
+        kwargs['stdin'] = subprocess.PIPE
 
-    # Split varargs into chunks based on target_concurrency
-    chunk_size = len(varargs) // target_concurrency
-    chunks = [varargs[i:i + chunk_size] for i in range(0, len(varargs), chunk_size)]
-
-    results = []
-    for chunk in chunks:
+    processes = []
+    for i in range(0, len(varargs), target_concurrency):
+        chunk = varargs[i:i + target_concurrency]
         full_cmd = list(cmd) + list(chunk)
-        try:
-            process = subprocess.Popen(full_cmd, **kwargs)
-            stdout, stderr = process.communicate()
-            results.append((process.returncode, stdout))
-        except subprocess.CalledProcessError as e:
-            results.append((e.returncode, e.output))
+        process = subprocess.Popen(full_cmd, **kwargs)
+        processes.append(process)
 
-    # Combine results
-    final_returncode = 0
-    final_output = b""
-    for returncode, output in results:
-        if returncode != 0:
-            final_returncode = returncode
-        final_output += output
+    for process in processes:
+        process.wait()
 
-    return final_returncode, final_output
+    if color and sys.platform != "win32":
+        os.close(slave)
+        output = os.read(master, _max_length)
+        os.close(master)
+    else:
+        output = b""
+
+    return (0, output)
+
+def _get_platform_max_length() -> int:
+    if sys.platform == "win32":
+        return 8192
+    else:
+        return 65536

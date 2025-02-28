@@ -1,24 +1,16 @@
 def verifyClass(iface, candidate, tentative=False):
     """
-    Verifica que el *candidate* pueda proporcionar correctamente *iface*.
-    
-    Args:
-        iface: La interfaz que se espera que el candidato proporcione.
-        candidate: El objeto candidato que se está verificando.
-        tentative: Si es True, permite que el candidato no implemente todos los métodos de la interfaz.
-    
-    Returns:
-        bool: True si el candidato cumple con la interfaz, False en caso contrario.
+    Verify that the *candidate* might correctly provide *iface*.
     """
-    if not hasattr(candidate, '__class__'):
+    if not isinstance(candidate, type):
         return False
     
-    iface_methods = set(dir(iface))
-    candidate_methods = set(dir(candidate))
-    
     if tentative:
-        # Verifica que el candidato implemente al menos un método de la interfaz
-        return len(iface_methods.intersection(candidate_methods)) > 0
+        # Check if the candidate has all the methods of the interface
+        for method in dir(iface):
+            if callable(getattr(iface, method)) and not hasattr(candidate, method):
+                return False
+        return True
     else:
-        # Verifica que el candidato implemente todos los métodos de la interfaz
-        return iface_methods.issubset(candidate_methods)
+        # Check if the candidate is a subclass of the interface
+        return issubclass(candidate, iface)

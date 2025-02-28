@@ -2,15 +2,15 @@ from datetime import timedelta
 
 def dehydrate_timedelta(value):
     """
-    Deshidratador para valores de `timedelta`.
+    Dehydrator for `timedelta` values.
 
-    :param value: Un objeto `timedelta` que se desea deshidratar.
+    :param value: The timedelta object to be dehydrated.
     :type value: timedelta
-    :return: Un diccionario con las claves 'days', 'seconds', y 'microseconds'.
+    :return: A dictionary representation of the timedelta.
     :rtype: dict
     """
     if not isinstance(value, timedelta):
-        raise TypeError("El valor debe ser un objeto timedelta.")
+        raise TypeError("Expected a timedelta object.")
     
     return {
         'days': value.days,

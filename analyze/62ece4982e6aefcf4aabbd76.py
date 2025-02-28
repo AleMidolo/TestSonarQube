@@ -1,17 +1,11 @@
 def match(filename):
     """
-    Verificar si el nombre de archivo es un tipo que este módulo soporta
+    Check if the filename is a type that this module supports
 
-    Argumentos:
-        filename: Nombre de archivo a verificar
-    Retorna:
-        'False' si no es compatible, 'True' si es soportado
+    Args:
+        filename: Filename to match
+    Returns:
+        False if not a match, True if supported
     """
-    # Lista de extensiones soportadas
     supported_extensions = ['.txt', '.csv', '.json', '.xml']
-    
-    # Verificar si el archivo tiene una extensión soportada
-    for ext in supported_extensions:
-        if filename.endswith(ext):
-            return True
-    return False
+    return any(filename.endswith(ext) for ext in supported_extensions)

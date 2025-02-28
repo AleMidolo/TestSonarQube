@@ -1,16 +1,19 @@
 def _get_conditionally_required_args(self, command_name, options_spec, args):
     """
-    Lista los argumentos con la condición ``required_when`` que coincide.
+    List arguments with ``required_when`` condition matched.
 
-    :param command_name: el nombre del comando.
-    :param options_spec: la lista de opciones de especificación del comando.
-    :param args: los argumentos de entrada recibidos.
-    :return: list, lista de nombres de argumentos que coinciden con la condición ``required_when``.
+    :param command_name: the command name.
+    :param options_spec:  the list of command spec options.
+    :param args: the received input arguments
+    :return: list, list of argument names with matched ``required_when``
+        condition
     """
     required_args = []
+    
     for option in options_spec:
-        if hasattr(option, 'required_when'):
-            condition = option.required_when
+        if 'required_when' in option:
+            condition = option['required_when']
             if condition(command_name, args):
-                required_args.append(option.name)
+                required_args.append(option['name'])
+    
     return required_args

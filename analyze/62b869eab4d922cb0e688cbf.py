@@ -1,28 +1,37 @@
 def generate_default_observer_schema(app):
     """
-    Generar el esquema de observador predeterminado para cada recurso de Kubernetes presente en  
-    ``spec.manifest`` para el cual no se haya especificado un esquema de observador personalizado.
+    Generate the default observer schema for each Kubernetes resource present in
+    ``spec.manifest`` for which a custom observer schema hasn't been specified.
 
-    Argumentos:
-    app(krake.data.kubernetes.Application): La aplicación para la cual se generará un esquema de observador predeterminado.
+    Args:
+        app (krake.data.kubernetes.Application): The application for which to generate a
+            default observer schema
     """
     default_schema = {
         "type": "object",
         "properties": {
-            "apiVersion": {"type": "string"},
-            "kind": {"type": "string"},
-            "metadata": {
+            "status": {
                 "type": "object",
                 "properties": {
-                    "name": {"type": "string"},
-                    "namespace": {"type": "string"}
+                    "conditions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "type": {"type": "string"},
+                                "status": {"type": "string"},
+                                "lastTransitionTime": {"type": "string"},
+                                "reason": {"type": "string"},
+                                "message": {"type": "string"}
+                            },
+                            "required": ["type", "status"]
+                        }
+                    }
                 },
-                "required": ["name"]
-            },
-            "spec": {"type": "object"},
-            "status": {"type": "object"}
+                "required": ["conditions"]
+            }
         },
-        "required": ["apiVersion", "kind", "metadata"]
+        "required": ["status"]
     }
 
     for resource in app.spec.manifest:

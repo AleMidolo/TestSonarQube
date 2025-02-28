@@ -1,12 +1,12 @@
 def get_silent_args(self, args):
     """
-    Lista de argumentos silenciados.
+    list of silenced argument
 
-    :param args: Los argumentos recibidos.
-    :return: lista, nombres de los argumentos silenciados.
+    :param args: The received arguments.
+    :return: list, silenced argument names
     """
-    silent_args = []
+    silenced_args = []
     for arg in args:
-        if arg.startswith('--silent-'):
-            silent_args.append(arg[len('--silent-'):])
-    return silent_args
+        if arg.startswith('_'):
+            silenced_args.append(arg)
+    return silenced_args

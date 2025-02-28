@@ -1,25 +1,23 @@
+import subprocess
+
 def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     """
-    Ejecuta el CLI de Ansible con un diccionario de variables.
+    Runs ansible cli with vars dict
 
-    :param vars_dict: dict, Será pasado como extra-vars de Ansible.
-    :param cli_args: la lista de argumentos de línea de comandos.
-    :param ir_workspace: Un objeto Infrared Workspace que representa el 
-    espacio de trabajo activo.
-    :param ir_plugin: Un objeto InfraredPlugin del plugin actual.
-    :return: resultados de Ansible.
+    :param vars_dict: dict, Will be passed as Ansible extra-vars
+    :param cli_args: the list of command line arguments
+    :param ir_workspace: An Infrared Workspace object represents the active workspace
+    :param ir_plugin: An InfraredPlugin object of the current plugin
+    :return: ansible results
     """
-    import subprocess
-    import json
-
-    # Convertir el diccionario de variables a formato JSON
-    extra_vars = json.dumps(vars_dict)
-
-    # Construir el comando de Ansible
-    command = ["ansible-playbook"] + cli_args + ["--extra-vars", extra_vars]
-
-    # Ejecutar el comando
+    # Convert vars_dict to a string format suitable for ansible extra-vars
+    extra_vars = " ".join([f"{key}={value}" for key, value in vars_dict.items()])
+    
+    # Construct the full command
+    command = ["ansible-playbook"] + cli_args + ["-e", extra_vars]
+    
+    # Execute the command
     result = subprocess.run(command, capture_output=True, text=True)
-
-    # Retornar los resultados
+    
+    # Return the result
     return result

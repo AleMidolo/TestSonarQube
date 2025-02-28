@@ -1,16 +1,17 @@
 def get_config():
     """
-    Crea, completa y devuelve el objeto VersioneerConfig().
+    Create, populate and return the VersioneerConfig() object.
     """
     class VersioneerConfig:
         def __init__(self):
             self.version = "0.1.0"
-            self.description = "Default configuration for Versioneer"
-            self.author = "Unknown"
-            self.license = "MIT"
-        
-        def __repr__(self):
-            return f"VersioneerConfig(version={self.version}, description={self.description}, author={self.author}, license={self.license})"
-    
+            self.tag_prefix = "v"
+            self.parentdir_prefix = "project-"
+            self.vcs = "git"
+            self.style = "pep440"
+            self.long_version = "0.1.0+0.g1234567"
+            self.short_version = "0.1.0"
+            self.error = None
+
     config = VersioneerConfig()
     return config

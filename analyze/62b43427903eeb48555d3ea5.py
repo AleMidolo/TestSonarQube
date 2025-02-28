@@ -4,28 +4,43 @@ def format(
         params: Union[Dict[Union[str, int], Any], Sequence[Any]],
 ) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
     """
-    Convierte la consulta SQL para usar parámetros de estilo "out" en lugar de parámetros de estilo "in".
+    Convert the SQL query to use the out-style parameters instead of
+    the in-style parameters.
 
-    Args:
-        sql: La consulta SQL como str o bytes.
-        params: Los parámetros de estilo "in" como un diccionario o una secuencia.
+    *sql* (:class:`str` or :class:`bytes`) is the SQL query.
 
-    Returns:
-        Una tupla que contiene la consulta SQL formateada y los parámetros convertidos de estilo "out".
+    *params* (:class:`~collections.abc.Mapping` or :class:`~collections.abc.Sequence`)
+    contains the set of in-style parameters. It maps each parameter
+    (:class:`str` or :class:`int`) to value. If :attr:`.SQLParams.in_style`
+    is a named parameter style. then *params* must be a :class:`~collections.abc.Mapping`.
+    If :attr:`.SQLParams.in_style` is an ordinal parameter style, then
+    *params* must be a :class:`~collections.abc.Sequence`.
+
+    Returns a :class:`tuple` containing:
+
+    -       The formatted SQL query (:class:`str` or :class:`bytes`).
+
+    -       The set of converted out-style parameters (:class:`dict` or
+            :class:`list`).
     """
     if isinstance(params, dict):
-        # Convertir parámetros de estilo "in" con nombre a estilo "out"
-        out_params = {f"out_{key}": value for key, value in params.items()}
+        # Named parameter style
+        out_params = {}
+        for key, value in params.items():
+            out_params[f":{key}" if isinstance(key, str) else f":{key}"] = value
         formatted_sql = sql
         for key, value in params.items():
-            formatted_sql = formatted_sql.replace(f":{key}", f":out_{key}")
+            placeholder = f":{key}" if isinstance(key, str) else f":{key}"
+            formatted_sql = formatted_sql.replace(f"%({key})s", placeholder)
+        return formatted_sql, out_params
     elif isinstance(params, (list, tuple)):
-        # Convertir parámetros de estilo "in" ordinales a estilo "out"
-        out_params = [f"out_{i}" for i in range(len(params))]
+        # Ordinal parameter style
+        out_params = []
         formatted_sql = sql
-        for i in range(len(params)):
-            formatted_sql = formatted_sql.replace(f"?", f":out_{i}", 1)
+        for i, value in enumerate(params):
+            placeholder = f":{i}"
+            formatted_sql = formatted_sql.replace("%s", placeholder, 1)
+            out_params.append(value)
+        return formatted_sql, out_params
     else:
-        raise TypeError("params debe ser un diccionario o una secuencia")
-
-    return formatted_sql, out_params
+        raise TypeError("params must be a Mapping or Sequence")

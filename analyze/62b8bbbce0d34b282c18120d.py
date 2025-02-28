@@ -2,12 +2,10 @@ import os
 
 def is_file_exist(file_name):
     """
-    Verifica si el nombre del archivo existe.  
-    :param file_name: Nombre del archivo.  
-    :type file_name: str  
-    :return: Devuelve `True` (existe) o `False` (no existe o el nombre del archivo no es válido).  
-    :rtype: bool  
+    Check if file name exist.
+    :param file_name: File name.
+    :type file_name: str
+    :return: Return true (exist), false (do not exist, or invalid file name)
+    :rtype bool
     """
-    if not isinstance(file_name, str) or not file_name:
-        return False
     return os.path.isfile(file_name)

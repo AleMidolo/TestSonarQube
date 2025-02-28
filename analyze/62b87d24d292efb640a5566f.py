@@ -1,16 +1,14 @@
 def render(pieces, style):
     """
-    Renderiza las piezas de versión dadas en el estilo solicitado.
-    
-    :param pieces: Diccionario con las piezas de la versión.
-    :param style: Estilo de renderizado (por ejemplo, 'full', 'short', etc.).
-    :return: Versión renderizada como cadena de texto.
+    Render the given version pieces into the requested style.
     """
-    if style == 'full':
+    if style == "full":
         return f"{pieces['major']}.{pieces['minor']}.{pieces['patch']}"
-    elif style == 'short':
+    elif style == "major":
+        return f"{pieces['major']}"
+    elif style == "minor":
         return f"{pieces['major']}.{pieces['minor']}"
-    elif style == 'patch':
-        return f"{pieces['patch']}"
+    elif style == "patch":
+        return f"{pieces['major']}.{pieces['minor']}.{pieces['patch']}"
     else:
-        raise ValueError(f"Estilo '{style}' no soportado.")
+        raise ValueError(f"Unknown style: {style}")

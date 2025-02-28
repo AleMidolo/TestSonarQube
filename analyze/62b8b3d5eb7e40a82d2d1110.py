@@ -1,10 +1,12 @@
 def _c_optimizations_available():
     """
-    Devuelve el módulo de optimización en C, si está disponible, de lo contrario, un valor falso.
+    Return the C optimization module, if available, otherwise
+    a false value.
 
-    Si las optimizaciones son requeridas pero no están disponibles, esto genera una excepción `ImportError`.
+    If the optimizations are required but not available, this
+    raises the ImportError.
 
-    Esto no indica si deben ser utilizadas o no.
+    This does not say whether they should be used or not.
     """
     try:
         import _c_optimizations

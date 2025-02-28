@@ -1,35 +1,37 @@
+import argparse
+import sys
+
 def bash_completion():
     """
-    Devuelve un script de autocompletado para bash para el comando de borgmatic. Esto se genera mediante la introspección de los analizadores de argumentos de línea de comandos de borgmatic.
+    Return a bash completion script for the borgmatic command. Produce this by introspecting
+    borgmatic's command-line argument parsers.
     """
-    import subprocess
+    parser = argparse.ArgumentParser(description='Borgmatic command-line tool.')
+    parser.add_argument('--version', action='store_true', help='Show the version and exit.')
+    parser.add_argument('--config', help='Path to the configuration file.')
+    parser.add_argument('--verbosity', type=int, choices=[0, 1, 2], help='Set verbosity level (0, 1, or 2).')
+    parser.add_argument('--list', action='store_true', help='List all available commands.')
+    parser.add_argument('--help', action='store_true', help='Show this help message and exit.')
 
-    # Obtener la salida de borgmatic --help
-    result = subprocess.run(['borgmatic', '--help'], capture_output=True, text=True)
-    help_output = result.stdout
+    # Generate bash completion script
+    script = """
+    _borgmatic_completion() {
+        local cur prev opts
+        COMPREPLY=()
+        cur="${COMP_WORDS[COMP_CWORD]}"
+        prev="${COMP_WORDS[COMP_CWORD-1]}"
+        opts="--version --config --verbosity --list --help"
 
-    # Extraer las opciones y comandos de la salida de ayuda
-    options = []
-    for line in help_output.splitlines():
-        if line.strip().startswith('-'):
-            options.append(line.split()[0])
+        if [[ ${cur} == -* ]]; then
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+        fi
+    }
 
-    # Generar el script de autocompletado para bash
-    bash_script = f"""
-_borgmatic_completion() {{
-    local cur prev opts
-    COMPREPLY=()
-    cur="${{COMP_WORDS[COMP_CWORD]}}"
-    prev="${{COMP_WORDS[COMP_CWORD-1]}}"
-    opts="{' '.join(options)}"
+    complete -F _borgmatic_completion borgmatic
+    """
 
-    if [[ "${{cur}}" == -* ]]; then
-        COMPREPLY=( $(compgen -W "${{opts}}" -- "${{cur}}") )
-        return 0
-    fi
-}}
+    return script
 
-complete -F _borgmatic_completion borgmatic
-"""
-
-    return bash_script
+# Example usage:
+# print(bash_completion())

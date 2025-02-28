@@ -2,19 +2,22 @@ import subprocess
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Llama al/los comando(s) dado(s).
+    Call the given command(s).
 
-    :param commands: Lista de comandos a ejecutar.
-    :param args: Lista de argumentos para los comandos.
-    :param cwd: Directorio de trabajo actual (opcional).
-    :param verbose: Si es True, imprime la salida del comando (opcional).
-    :param hide_stderr: Si es True, oculta la salida de error (opcional).
-    :param env: Diccionario de variables de entorno (opcional).
-    :return: Tupla con el código de salida y la salida del comando.
+    :param commands: List of commands to execute.
+    :param args: List of arguments to pass to the commands.
+    :param cwd: Current working directory for the command execution.
+    :param verbose: If True, print the command and its output.
+    :param hide_stderr: If True, suppress stderr output.
+    :param env: Environment variables to use for the command execution.
+    :return: The return code of the command execution.
     """
     full_command = commands + args
-    stderr = subprocess.PIPE if hide_stderr else None
-    
+    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
+
+    if verbose:
+        print(f"Running command: {' '.join(full_command)}")
+
     process = subprocess.Popen(
         full_command,
         cwd=cwd,
@@ -23,10 +26,13 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
         env=env,
         text=True
     )
-    
+
     stdout, stderr = process.communicate()
-    
+
     if verbose:
-        print(stdout)
-    
-    return process.returncode, stdout
+        if stdout:
+            print(f"stdout:\n{stdout}")
+        if stderr and not hide_stderr:
+            print(f"stderr:\n{stderr}")
+
+    return process.returncode

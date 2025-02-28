@@ -2,34 +2,37 @@ import subprocess
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Llama al/los comando(s) dado(s).
+    Call the given command(s).
 
-    :param commands: Lista de comandos a ejecutar.
-    :param args: Lista de argumentos para los comandos.
-    :param cwd: Directorio de trabajo actual (opcional).
-    :param verbose: Si es True, muestra la salida del comando (opcional).
-    :param hide_stderr: Si es True, oculta los errores estándar (opcional).
-    :param env: Diccionario de variables de entorno (opcional).
-    :return: El resultado de la ejecución del comando.
+    :param commands: List of commands to execute.
+    :param args: List of arguments to pass to the commands.
+    :param cwd: Current working directory for the command (default is None).
+    :param verbose: If True, print the command and its output (default is False).
+    :param hide_stderr: If True, suppress stderr output (default is False).
+    :param env: Environment variables to pass to the command (default is None).
+    :return: The return code of the command.
     """
-    command = commands + args
-    stderr = subprocess.PIPE if hide_stderr else None
+    full_command = commands + args
+    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
+    
+    if verbose:
+        print(f"Running command: {' '.join(full_command)}")
+    
     process = subprocess.Popen(
-        command,
+        full_command,
         cwd=cwd,
         stdout=subprocess.PIPE,
         stderr=stderr,
         env=env,
         text=True
     )
+    
     stdout, stderr = process.communicate()
     
     if verbose:
-        print(stdout)
+        if stdout:
+            print(f"stdout:\n{stdout}")
+        if stderr and not hide_stderr:
+            print(f"stderr:\n{stderr}")
     
-    if process.returncode != 0:
-        if not hide_stderr and stderr:
-            print(stderr)
-        raise subprocess.CalledProcessError(process.returncode, command)
-    
-    return stdout
+    return process.returncode

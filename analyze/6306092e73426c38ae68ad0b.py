@@ -1,14 +1,12 @@
 def validate_min_max_args(self, args):
     """
-    Verifica si el valor de los argumentos está entre los valores mínimo y máximo.
+    Check if value of arguments is between minimum and maximum values.
 
-    :param args: Los argumentos recibidos.
+    :param args: The received arguments.
     """
-    min_value = 0  # Define el valor mínimo
-    max_value = 100  # Define el valor máximo
+    min_value = 0  # Example minimum value, adjust as needed
+    max_value = 100  # Example maximum value, adjust as needed
     
     for arg in args:
         if not (min_value <= arg <= max_value):
-            raise ValueError(f"El valor {arg} no está entre {min_value} y {max_value}.")
-    
-    return True
+            raise ValueError(f"Argument {arg} is not between {min_value} and {max_value}")

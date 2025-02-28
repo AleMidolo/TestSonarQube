@@ -1,24 +1,31 @@
 def _fromutc(self, dt):
     """
-    Dado un objeto 'datetime' consciente de la zona horaria en una zona horaria específica, calcula un objeto 'datetime' consciente de la zona horaria en una nueva zona horaria.
+    Given a timezone-aware datetime in a given timezone, calculates a
+    timezone-aware datetime in a new timezone.
 
-    Dado que esta es la única ocasión en la que *sabemos* que tenemos un objeto 'datetime' no ambiguo, aprovechamos esta oportunidad para determinar si el 'datetime' es ambiguo y está en un estado de "pliegue" (por ejemplo, si es la primera ocurrencia, cronológicamente, del 'datetime' ambiguo).
+    Since this is the one time that we *know* we have an unambiguous
+    datetime object, we take this opportunity to determine whether the
+    datetime is ambiguous and in a "fold" state (e.g. if it's the first
+    occurrence, chronologically, of the ambiguous datetime).
 
-    :param dt:  
-        Un objeto :class:`datetime.datetime` consciente de la zona horaria.
+    :param dt:
+        A timezone-aware :class:`datetime.datetime` object.
     """
-    if dt.tzinfo is not self:
-        raise ValueError("El objeto datetime no está en la zona horaria correcta.")
-    
-    # Convertir el datetime a UTC
+    if dt.tzinfo is None:
+        raise ValueError("The input datetime must be timezone-aware.")
+
+    # Convert the datetime to UTC
     utc_dt = dt.astimezone(self.utc)
-    
-    # Convertir el datetime UTC a la nueva zona horaria
-    new_dt = utc_dt.astimezone(self)
-    
-    # Verificar si el datetime es ambiguo en la nueva zona horaria
-    if self.is_ambiguous(new_dt):
-        # Si es ambiguo, ajustar al primer ocurrencia
-        new_dt = self.resolve_ambiguity(new_dt, first=True)
-    
-    return new_dt
+
+    # Convert the UTC datetime to the target timezone
+    local_dt = utc_dt.astimezone(self)
+
+    # Check if the datetime is ambiguous in the target timezone
+    if self._is_ambiguous(local_dt):
+        # If the original datetime was in a fold, keep it in the fold
+        if dt.fold:
+            local_dt = local_dt.replace(fold=1)
+        else:
+            local_dt = local_dt.replace(fold=0)
+
+    return local_dt

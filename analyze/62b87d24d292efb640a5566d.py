@@ -1,8 +1,8 @@
 def plus_or_dot(pieces):
     """
-    Devuelve un "+" si no tenemos uno ya, de lo contrario, devuelve un "."
+    Return a + if we don't already have one, else return a .
     """
-    if '+' not in pieces:
-        return '+'
-    else:
+    if '+' in pieces:
         return '.'
+    else:
+        return '+'

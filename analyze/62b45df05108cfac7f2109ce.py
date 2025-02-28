@@ -1,44 +1,32 @@
 def validate(self, path):
     """
-    Valida el objeto OCFL en la ruta o en la raíz de pyfs.
+    Validate OCFL object at path or pyfs root.
 
-    Devuelve True si es válido (se permiten advertencias), False en caso contrario.
+    Returns True if valid (warnings permitted), False otherwise.
     """
     import os
-    import json
+    from fs import open_fs
 
-    # Verificar si la ruta existe
+    # Check if the path exists
     if not os.path.exists(path):
         return False
 
-    # Verificar si es un directorio
-    if not os.path.isdir(path):
-        return False
+    # Open the filesystem at the given path
+    fs = open_fs(path)
 
-    # Verificar la existencia del archivo 'inventory.json'
-    inventory_path = os.path.join(path, 'inventory.json')
-    if not os.path.isfile(inventory_path):
-        return False
+    # Check for the presence of required OCFL files and directories
+    required_files = ['inventory.json', 'inventory.json.sha512']
+    required_dirs = ['extensions', 'objects']
 
-    # Intentar cargar el archivo 'inventory.json'
-    try:
-        with open(inventory_path, 'r') as f:
-            inventory = json.load(f)
-    except json.JSONDecodeError:
-        return False
+    for file in required_files:
+        if not fs.exists(file):
+            return False
 
-    # Verificar la estructura básica del inventario
-    required_keys = {'id', 'type', 'digestAlgorithm', 'head', 'manifest', 'versions'}
-    if not required_keys.issubset(inventory.keys()):
-        return False
+    for dir in required_dirs:
+        if not fs.isdir(dir):
+            return False
 
-    # Verificar que el algoritmo de digestión sea válido
-    if inventory['digestAlgorithm'] not in ['sha256', 'sha512']:
-        return False
+    # Additional validation logic can be added here
+    # For example, checking the structure of the inventory.json file
 
-    # Verificar que hay al menos una versión
-    if not inventory['versions']:
-        return False
-
-    # Si todas las verificaciones pasan, devolver True
     return True

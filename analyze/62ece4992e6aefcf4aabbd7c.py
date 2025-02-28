@@ -1,15 +1,11 @@
-def oneline(script, separator=" && "):
+def oneline(script, seperator=" && "):
     """
-    Convierte un script en un comando de una sola linea.  
-    Esto es util para ejecutar un único comando SSH y pasar un script en una sola linea.
+    Converts a script to one line command.
+    This is useful to run a single ssh command and pass a one line script.
 
-    :param script: Lista de comandos o cadena con saltos de línea.
-    :param separator: Separador entre comandos (por defecto " && ").
-    :return: Cadena con los comandos unidos en una sola línea.
+    :param script: The script to be converted to a one-line command.
+    :param seperator: The separator used to join the lines of the script. Default is " && ".
+    :return: A single-line command string.
     """
-    if isinstance(script, list):
-        return separator.join(script)
-    elif isinstance(script, str):
-        return separator.join(script.strip().splitlines())
-    else:
-        raise TypeError("El parámetro 'script' debe ser una lista o una cadena.")
+    lines = script.strip().splitlines()
+    return seperator.join(line.strip() for line in lines if line.strip())

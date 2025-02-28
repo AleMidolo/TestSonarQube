@@ -1,21 +1,21 @@
+import argparse
+
 def make_parsers():
     """
-    Crea un analizador de nivel superior y sus subanalizadores, y devuélvalos como una tupla.
+    Build a top-level parser and its subparsers and return them as a tuple.
     """
-    import argparse
-
-    # Crear el analizador de nivel superior
-    parser = argparse.ArgumentParser(description="Analizador de nivel superior")
-
-    # Crear subanalizadores
-    subparsers = parser.add_subparsers(dest="command", help="Subcomandos disponibles")
-
-    # Subanalizador 1
-    parser_sub1 = subparsers.add_parser("sub1", help="Subcomando 1")
-    parser_sub1.add_argument("arg1", type=str, help="Argumento 1 para subcomando 1")
-
-    # Subanalizador 2
-    parser_sub2 = subparsers.add_parser("sub2", help="Subcomando 2")
-    parser_sub2.add_argument("arg2", type=int, help="Argumento 2 para subcomando 2")
-
+    # Create the top-level parser
+    parser = argparse.ArgumentParser(description="Top-level parser")
+    
+    # Create subparsers for the top-level parser
+    subparsers = parser.add_subparsers(dest="command", help="Sub-command help")
+    
+    # Example subparser 1
+    parser_a = subparsers.add_parser('command_a', help='Command A help')
+    parser_a.add_argument('--arg1', type=int, help='Argument 1 for command A')
+    
+    # Example subparser 2
+    parser_b = subparsers.add_parser('command_b', help='Command B help')
+    parser_b.add_argument('--arg2', type=str, help='Argument 2 for command B')
+    
     return parser, subparsers

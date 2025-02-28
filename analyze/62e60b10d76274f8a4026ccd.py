@@ -1,25 +1,39 @@
 def data(self, *keys):
     """
-    Devuelve las claves y valores de este registro como un diccionario, opcionalmente incluyendo solo ciertos valores por índice o clave. Las claves proporcionadas en los elementos que no están en el registro se insertarán con un valor de :const:`None`; los índices proporcionados que están fuera de los límites generarán una excepción :exc:`IndexError`.
+    Return the keys and values of this record as a dictionary,
+    optionally including only certain values by index or key. Keys
+    provided in the items that are not in the record will be
+    inserted with a value of :const:`None`; indexes provided
+    that are out of bounds will trigger an :exc:`IndexError`.
 
-    :param keys: índices o claves de los elementos a incluir; si no se proporciona ninguno, se incluirán todos los valores.
-    :return: diccionario de valores, indexado por el nombre del campo.  
-    :raises: :exc:`IndexError` si se especifica un índice fuera de los límites.  
+    :param keys: indexes or keys of the items to include; if none
+                  are provided, all values will be included
+    :return: dictionary of values, keyed by field name
+    :raises: :exc:`IndexError` if an out-of-bounds index is specified
     """
-    # Asumimos que self._fields contiene las claves y self._values los valores correspondientes
-    if not keys:
-        return dict(zip(self._fields, self._values))
+    # Assuming self._fields contains the field names and self._values contains the values
+    if not hasattr(self, '_fields') or not hasattr(self, '_values'):
+        raise AttributeError("Record does not have '_fields' or '_values' attributes.")
     
     result = {}
-    for key in keys:
-        if isinstance(key, int):
-            if key < 0 or key >= len(self._values):
-                raise IndexError("Índice fuera de los límites")
-            result[self._fields[key]] = self._values[key]
-        else:
-            if key in self._fields:
-                index = self._fields.index(key)
-                result[key] = self._values[index]
+    if not keys:
+        # If no keys are provided, include all fields
+        for field, value in zip(self._fields, self._values):
+            result[field] = value
+    else:
+        for key in keys:
+            if isinstance(key, int):
+                # Handle index-based access
+                if key < 0 or key >= len(self._fields):
+                    raise IndexError(f"Index {key} is out of bounds.")
+                field = self._fields[key]
+                result[field] = self._values[key]
             else:
-                result[key] = None
+                # Handle key-based access
+                if key in self._fields:
+                    index = self._fields.index(key)
+                    result[key] = self._values[index]
+                else:
+                    # Insert None for keys not in the record
+                    result[key] = None
     return result

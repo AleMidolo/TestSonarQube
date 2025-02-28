@@ -1,34 +1,36 @@
 def hist_to_graph(hist, make_value=None, get_coordinate="left",
                   field_names=("x", "y"), scale=None):
     """
-    Convierte un :class:`.histogram` en un :class:`.graph`.
+    Convert a :class:`.histogram` to a :class:`.graph`.
 
-    *make_value* es una función para establecer el valor de un punto en el gráfico.
-    Por defecto, este valor es el contenido del bin.
-    *make_value* acepta un único valor (el contenido del bin) sin contexto.
+    *make_value* is a function to set the value of a graph's point.
+    By default it is bin content.
+    *make_value* accepts a single value (bin content) without context.
 
-    Esta opción puede ser utilizada para crear barras de error en el gráfico.
-    Por ejemplo, para crear un gráfico con errores a partir de un histograma
-    donde los bins contienen una tupla nombrada con los campos *mean*, *mean_error* y un contexto,
-    se podría usar:
+    This option could be used to create graph's error bars.
+    For example, to create a graph with errors
+    from a histogram where bins contain
+    a named tuple with fields *mean*, *mean_error* and a context
+    one could use
 
     >>> make_value = lambda bin_: (bin_.mean, bin_.mean_error)
 
-    *get_coordinate* define cuál será la coordenada de un punto en el gráfico
-    creado a partir de un bin del histograma. Puede ser "left" (por defecto), "right" o "middle".
+    *get_coordinate* defines what the coordinate
+    of a graph point created from a histogram bin will be.
+    It can be "left" (default), "right" and "middle".
 
-    *field_names* establece los nombres de los campos del gráfico. Su número
-    debe coincidir con la dimensión del resultado.
-    Para un *make_value* como el anterior, los nombres serían
+    *field_names* set field names of the graph. Their number
+    must be the same as the dimension of the result.
+    For a *make_value* above they would be
     *("x", "y_mean", "y_mean_error")*.
 
-    *scale* define la escala del gráfico (desconocida por defecto).
-    Si es ``True``, utiliza la escala del histograma.
+    *scale* becomes the graph's scale (unknown by default).
+    If it is ``True``, it uses the histogram scale.
 
-    *hist* debe contener únicamente bins numéricos (sin contexto)
-    o *make_value* debe eliminar el contexto al crear un gráfico numérico.
+    *hist* must contain only numeric bins (without context)
+    or *make_value* must remove context when creating a numeric graph.
 
-    Devuelve el gráfico resultante.
+    Return the resulting graph.
     """
     if make_value is None:
         make_value = lambda bin_: bin_
@@ -36,7 +38,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     if scale is True:
         scale = hist.scale
 
-    graph = []
+    graph_points = []
     for bin_ in hist.bins:
         if get_coordinate == "left":
             x = bin_.left
@@ -45,14 +47,13 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         elif get_coordinate == "middle":
             x = (bin_.left + bin_.right) / 2
         else:
-            raise ValueError("get_coordinate debe ser 'left', 'right' o 'middle'")
+            raise ValueError("Invalid get_coordinate value. Must be 'left', 'right', or 'middle'.")
 
         value = make_value(bin_.content)
         if isinstance(value, tuple):
-            point = (x,) + value
+            graph_point = (x,) + value
         else:
-            point = (x, value)
+            graph_point = (x, value)
+        graph_points.append(graph_point)
 
-        graph.append(point)
-
-    return graph
+    return Graph(graph_points, field_names=field_names, scale=scale)

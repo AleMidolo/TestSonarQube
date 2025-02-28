@@ -1,23 +1,28 @@
 def fromutc(self, dt):
     """
-    Dado un objeto "datetime" que contiene información de la zona horaria al que pertenece, calcula un objeto "datetime" para una zona horaria diferente, que contenga información de la nueva zona horaria al que pertenece.
+    Given a timezone-aware datetime in a given timezone, calculates a
+    timezone-aware datetime in a new timezone.
 
-    Dado que esta es la única ocasión en la que *sabemos* que tenemos un objeto datetime no ambiguo, aprovechamos esta oportunidad para determinar si el datetime es ambiguo y está en un estado de "pliegue" (por ejemplo, si es la primera ocurrencia, cronológicamente, del datetime ambiguo).
+    Since this is the one time that we *know* we have an unambiguous
+    datetime object, we take this opportunity to determine whether the
+    datetime is ambiguous and in a "fold" state (e.g. if it's the first
+    occurrence, chronologically, of the ambiguous datetime).
 
     :param dt:
-        Un objeto :class:`datetime.datetime` con conocimiento de zona horaria.
+        A timezone-aware :class:`datetime.datetime` object.
     """
     if dt.tzinfo is None:
         raise ValueError("fromutc() requires a timezone-aware datetime")
-    
-    # Convertir el datetime a UTC
-    dt_utc = dt.astimezone(self)
-    
-    # Verificar si el datetime es ambiguo
-    if self._is_ambiguous(dt_utc):
-        # Si es ambiguo, determinar si está en el "pliegue"
-        if self._fold(dt_utc):
-            # Si está en el pliegue, ajustar el datetime
-            dt_utc = dt_utc.replace(fold=1)
-    
-    return dt_utc
+
+    # Convert the datetime to UTC
+    dt_utc = dt.astimezone(self.utc)
+
+    # Convert the UTC datetime to the new timezone
+    dt_new = dt_utc.astimezone(self)
+
+    # Check if the datetime is ambiguous in the new timezone
+    if dt_new.fold:
+        # If it's ambiguous, adjust the datetime to the first occurrence
+        dt_new = dt_new.replace(fold=0)
+
+    return dt_new

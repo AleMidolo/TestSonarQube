@@ -1,24 +1,27 @@
 def protocol_handlers(cls, protocol_version=None):
     """
-    Devuelve un diccionario de los manejadores disponibles del protocolo Bolt, indexados por una tupla de versión. Si se proporciona una versión de protocolo explícita, el diccionario contendrá cero o un elemento, dependiendo de si esa versión es soportada. Si no se proporciona ninguna versión de protocolo, se devolverán todas las versiones disponibles.
+    Return a dictionary of available Bolt protocol handlers,
+    keyed by version tuple. If an explicit protocol version is
+    provided, the dictionary will contain either zero or one items,
+    depending on whether that version is supported. If no protocol
+    version is provided, all available versions will be returned.
 
-    :param protocol_version: tupla que identifica una versión específica del protocolo 
-        (por ejemplo, (3, 5)) o None
-    :return: diccionario que mapea una tupla de versión a la clase del manejador para 
-        todas las versiones relevantes y compatibles del protocolo
-    :raise TypeError: si la versión del protocolo no se pasa como una tupla
+    :param protocol_version: tuple identifying a specific protocol
+        version (e.g. (3, 5)) or None
+    :return: dictionary of version tuple to handler class for all
+        relevant and supported protocol versions
+    :raise TypeError: if protocol version is not passed in a tuple
     """
-    # Supongamos que tenemos un diccionario de manejadores disponibles
+    # Example implementation assuming some predefined handlers
     available_handlers = {
         (3, 5): "HandlerForV3_5",
         (4, 0): "HandlerForV4_0",
         (4, 1): "HandlerForV4_1",
-        # Agrega más versiones y manejadores según sea necesario
     }
 
     if protocol_version is not None:
         if not isinstance(protocol_version, tuple):
-            raise TypeError("La versión del protocolo debe ser una tupla.")
+            raise TypeError("Protocol version must be a tuple.")
         if protocol_version in available_handlers:
             return {protocol_version: available_handlers[protocol_version]}
         else:

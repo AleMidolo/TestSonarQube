@@ -1,39 +1,32 @@
 def discard(self, n=-1, qid=-1, dehydration_hooks=None,
             hydration_hooks=None, **handlers):
     """
-    Añade un mensaje 'DISCARD' a la cola de salida.
+    Appends a DISCARD message to the output queue.
 
-    :param n: número de registros a descartar, por defecto = -1 (TODOS)
-    :param qid: ID de consulta para descartar, por defecto = -1 (última consulta)
+    :param n: number of records to discard, default = -1 (ALL)
+    :param qid: query ID to discard for, default = -1 (last query)
     :param dehydration_hooks:
-        Ganchos para deshidratar tipos (diccionario de tipo (clase) a función
-        de deshidratación). Las funciones de deshidratación reciben el valor y devuelven un objeto de un tipo entendido por 'packstream'.
+        Hooks to dehydrate types (dict from type (class) to dehydration
+        function). Dehydration functions receive the value and returns an
+        object of type understood by packstream.
     :param hydration_hooks:
-        Ganchos para hidratar tipos (mapeo de tipo (clase) a función de
-     hidratación). Las funciones de hidratación reciben el valor de un tipo
-        entendido por 'packstream' y son libres de devolver cualquier cosa.
-    :param handlers: funciones manejadoras pasadas al objeto 'Response' devuelto
+        Hooks to hydrate types (mapping from type (class) to
+        dehydration function). Dehydration functions receive the value of
+        type understood by packstream and are free to return anything.
+    :param handlers: handler functions passed into the returned Response object
     """
-    # Crear el mensaje DISCARD
+    # Create the DISCARD message
     discard_message = {
         "type": "DISCARD",
         "n": n,
-        "qid": qid
+        "qid": qid,
+        "dehydration_hooks": dehydration_hooks,
+        "hydration_hooks": hydration_hooks,
+        **handlers
     }
-
-    # Aplicar los ganchos de deshidratación si están presentes
-    if dehydration_hooks:
-        discard_message["dehydration_hooks"] = dehydration_hooks
-
-    # Aplicar los ganchos de hidratación si están presentes
-    if hydration_hooks:
-        discard_message["hydration_hooks"] = hydration_hooks
-
-    # Añadir los manejadores adicionales
-    discard_message.update(handlers)
-
-    # Añadir el mensaje a la cola de salida
+    
+    # Append the DISCARD message to the output queue
     self.output_queue.append(discard_message)
-
-    # Devolver el objeto Response con los manejadores
+    
+    # Return a Response object with the provided handlers
     return Response(handlers=handlers)

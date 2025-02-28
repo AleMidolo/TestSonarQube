@@ -1,25 +1,32 @@
 def difference(d1, d2, level=-1):
     """
-    Devuelve un diccionario con los elementos de *d1* que no están contenidos en *d2*.
+    Return a dictionary with items from *d1* not contained in *d2*.
 
-    El parámetro *level* establece la profundidad máxima de recursión. Para recursión infinita, configúralo en -1. Para un nivel 1, si una clave está presente tanto en *d1* como en *d2* pero tiene valores diferentes, se incluye en la diferencia. Consulta :func:`intersection` para más detalles.
+    *level* sets the maximum depth of recursion. For infinite recursion,
+    set that to -1. For level 1,
+    if a key is present both in *d1* and *d2* but has different values,
+    it is included into the difference.
+    See :func:`intersection` for more details.
 
-    *d1* y *d2* permanecen sin cambios. Sin embargo, *d1* o algunos de sus subdiccionarios pueden ser devueltos directamente. Realiza una copia profunda del resultado cuando sea apropiado.
+    *d1* and *d2* remain unchanged. However, *d1* or some of its
+    subdictionaries may be returned directly.
+    Make a deep copy of the result when appropriate.
 
-    .. versionadded:: 0.5  
-       Agrega el argumento de palabra clave *level*.
+    .. versionadded:: 0.5
+       add keyword argument *level*.
     """
     if level == 0:
-        return {k: v for k, v in d1.items() if k not in d2 or d2[k] != v}
-    
+        return {}
+
     diff = {}
-    for k, v in d1.items():
-        if k not in d2:
-            diff[k] = v
-        elif isinstance(v, dict) and isinstance(d2[k], dict) and level != 1:
-            sub_diff = difference(v, d2[k], level - 1 if level != -1 else -1)
+    for key, value in d1.items():
+        if key not in d2:
+            diff[key] = value
+        elif isinstance(value, dict) and isinstance(d2[key], dict) and level != 1:
+            sub_diff = difference(value, d2[key], level - 1 if level != -1 else -1)
             if sub_diff:
-                diff[k] = sub_diff
-        elif v != d2[k]:
-            diff[k] = v
+                diff[key] = sub_diff
+        elif value != d2[key]:
+            diff[key] = value
+
     return diff

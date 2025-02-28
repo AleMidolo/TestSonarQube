@@ -2,19 +2,23 @@ import argparse
 
 def parse_arguments(*unparsed_arguments):
     """
-    Dado los argumentos de línea de comandos con los que se invocó este script, analiza los argumentos y devuélvelos como un diccionario que mapea desde el nombre del subparser (o "global") a una instancia de `argparse.Namespace`.
+    Given command-line arguments with which this script was invoked, parse the arguments and return
+    them as a dict mapping from subparser name (or "global") to an argparse.Namespace instance.
     """
-    parser = argparse.ArgumentParser(description="Parse command line arguments.")
+    parser = argparse.ArgumentParser(description="Parse command-line arguments.")
     subparsers = parser.add_subparsers(dest="subparser_name", help="Sub-command help")
 
-    # Example subparser
-    subparser_example = subparsers.add_parser("example", help="Example subparser")
+    # Example subparser for a command
+    subparser_example = subparsers.add_parser("example", help="Example subcommand")
     subparser_example.add_argument("--example_arg", type=str, help="Example argument")
+
+    # Global arguments
+    parser.add_argument("--global_arg", type=str, help="Global argument")
 
     # Parse the arguments
     parsed_args = parser.parse_args(unparsed_arguments)
 
-    # Create a dictionary to map subparser names to their parsed arguments
+    # Organize parsed arguments into a dictionary
     args_dict = {}
     if parsed_args.subparser_name:
         args_dict[parsed_args.subparser_name] = parsed_args

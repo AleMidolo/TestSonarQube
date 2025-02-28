@@ -1,15 +1,18 @@
 def merge_extra_vars(vars_dict, extra_vars=None):
     """
-    Extiende ``vars_dict`` con ``extra-vars``
+    Extend ``vars_dict`` with ``extra-vars``
 
-    :param vars_dict: Diccionario en el que se fusionarán las extra-vars  
-    :param extra_vars: Lista de extra-vars
+    :param vars_dict: Dictionary to merge extra-vars into
+    :param extra_vars: List of extra-vars
     """
     if extra_vars is None:
-        return vars_dict
+        extra_vars = []
     
     for var in extra_vars:
-        key, value = var.split('=', 1)
-        vars_dict[key] = value
+        if '=' in var:
+            key, value = var.split('=', 1)
+            vars_dict[key] = value
+        else:
+            vars_dict[var] = None
     
     return vars_dict

@@ -3,26 +3,38 @@ import json
 
 def get_plugin_spec_flatten_dict(plugin_dir):
     """
-    Crea un diccionario plano a partir de la especificación del plugin.
+    Creates a flat dict from the plugin spec
 
-    :param plugin_dir: Una ruta al directorio del plugin  
-    :return: Un diccionario plano que contiene las propiedades del plugin
+    :param plugin_dir: A path to the plugin's dir
+    :return: A flatten dictionary contains the plugin's properties
     """
-    plugin_spec_path = os.path.join(plugin_dir, 'plugin_spec.json')
-    if not os.path.exists(plugin_spec_path):
-        raise FileNotFoundError(f"El archivo 'plugin_spec.json' no se encuentra en el directorio {plugin_dir}")
-
-    with open(plugin_spec_path, 'r') as file:
+    flatten_dict = {}
+    
+    # Check if the directory exists
+    if not os.path.exists(plugin_dir):
+        return flatten_dict
+    
+    # Look for a plugin spec file (e.g., plugin.json)
+    spec_file = os.path.join(plugin_dir, "plugin.json")
+    
+    if not os.path.isfile(spec_file):
+        return flatten_dict
+    
+    # Load the plugin spec file
+    with open(spec_file, 'r') as file:
         plugin_spec = json.load(file)
-
-    def flatten_dict(d, parent_key='', sep='.'):
+    
+    # Flatten the dictionary
+    def flatten(d, parent_key='', sep='.'):
         items = []
         for k, v in d.items():
             new_key = f"{parent_key}{sep}{k}" if parent_key else k
             if isinstance(v, dict):
-                items.extend(flatten_dict(v, new_key, sep=sep).items())
+                items.extend(flatten(v, new_key, sep=sep).items())
             else:
                 items.append((new_key, v))
         return dict(items)
-
-    return flatten_dict(plugin_spec)
+    
+    flatten_dict = flatten(plugin_spec)
+    
+    return flatten_dict

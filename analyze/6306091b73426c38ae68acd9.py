@@ -1,5 +1,5 @@
 def workspace_manager(cls):
     """
-    Obtiene el gestor de espacios de trabajo.
+    Gets the workspace manager.
     """
     return cls._workspace_manager

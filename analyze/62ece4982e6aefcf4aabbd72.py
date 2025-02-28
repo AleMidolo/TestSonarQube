@@ -1,5 +1,9 @@
 def unquote(name):
     """
-    Eliminar comillas del nombre dado.
+    Remove quote from the given name.
     """
-    return name.strip('"\'')
+    if name.startswith('"') and name.endswith('"'):
+        return name[1:-1]
+    elif name.startswith("'") and name.endswith("'"):
+        return name[1:-1]
+    return name

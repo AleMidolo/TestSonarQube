@@ -1,13 +1,13 @@
 def integral(bins, edges):
     """
-    Calcular la integral (escala para un histograma).
+    Compute integral (scale for a histogram).
 
-    *bins* contiene los valores, y *edges* forman la malla  
-    para la integración.  
-    Su formato está definido en la descripción de la clase :class:`.histogram`.
+    *bins* contain values, and *edges* form the mesh
+    for the integration.
+    Their format is defined in :class:`.histogram` description.
     """
     integral_value = 0.0
     for i in range(len(bins)):
-        bin_width = edges[i + 1] - edges[i]
+        bin_width = edges[i+1] - edges[i]
         integral_value += bins[i] * bin_width
     return integral_value

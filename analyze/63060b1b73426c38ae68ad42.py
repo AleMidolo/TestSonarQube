@@ -2,7 +2,7 @@ import os
 
 def inject_config(self):
     """
-    Establece la variable de entorno para la ruta de configuración si no está definida.
+    Set the environment variable for config path, if it is undefined.
     """
-    if 'CONFIG_PATH' not in os.environ:
-        os.environ['CONFIG_PATH'] = '/ruta/por/defecto/config.yaml'
+    if 'ANSIBLE_CONFIG' not in os.environ:
+        os.environ['ANSIBLE_CONFIG'] = self.ansible_config_path

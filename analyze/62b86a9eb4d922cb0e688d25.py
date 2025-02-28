@@ -2,16 +2,13 @@ import re
 
 def _get_resource_name_regex():
     """
-    Construye o devuelve las expresiones regulares que se utilizan para validar  
-    el nombre de los recursos de Krake.
+    Build or return the regular expressions that are used to validate
+    the name of the Krake resources.
 
-    Retorna:  
-        (re.Pattern): las expresiones regulares compiladas, para validar  
-        el nombre del recurso.
+    Returns:
+        (re.Pattern): the compiled regular expressions, to validate
+        the resource name.
     """
-    # Define la expresión regular para validar nombres de recursos
-    # Ejemplo: permite letras, números, guiones y guiones bajos, con una longitud mínima de 1
-    resource_name_pattern = r'^[a-zA-Z0-9_-]+$'
-    
-    # Compila la expresión regular
-    return re.compile(resource_name_pattern)
+    # Example regex pattern for resource names: alphanumeric, underscores, and hyphens, 1-63 chars
+    pattern = r'^[a-zA-Z0-9_-]{1,63}$'
+    return re.compile(pattern)

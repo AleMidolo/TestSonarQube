@@ -1,43 +1,69 @@
 from datetime import datetime
-from dateutil import parser
+from dateutil.parser import parse as dateutil_parse
 from dateutil.tz import gettz
+from dateutil.parser import ParserError
 
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
-    Convierte la cadena de fecha/hora en un objeto de la clase :class:`datetime.datetime`.
+    Parse the date/time string into a :class:`datetime.datetime` object.
 
     :param timestr:
-        Cualquier fecha/hora en formato string que utilice los formatos compatibles.
+        Any date/time string using the supported formats.
 
     :param default:
-        El objeto datetime predeterminado. Si este es un objeto datetime y no es
-        ``None``, los elementos especificados en ``timestr`` reemplazan los elementos en el objeto predeterminado.
+        The default datetime object, if this is a datetime object and not
+        ``None``, elements specified in ``timestr`` replace elements in the
+        default object.
 
     :param ignoretz:
-        Si se establece en ``True``, se ignoran las zonas horarias en las cadenas analizadas y se devuelve un objeto :class:`datetime.datetime` sin información de zona horaria (naive).
+        If set ``True``, time zones in parsed strings are ignored and a
+        naive :class:`datetime.datetime` object is returned.
 
     :param tzinfos:
-        Nombres/alias de zonas horarias adicionales que pueden estar presentes en la cadena. Este argumento mapea nombres de zonas horarias (y opcionalmente desplazamientos de esas zonas horarias) a zonas horarias. Este parámetro puede ser un diccionario con alias de zonas horarias que mapean nombres de zonas horarias a zonas horarias, o una función que tome dos parámetros (``tzname`` y ``tzoffset``) y devuelva una zona horaria.
+        Additional time zone names / aliases which may be present in the
+        string. This argument maps time zone names (and optionally offsets
+        from those time zones) to time zones. This parameter can be a
+        dictionary with timezone aliases mapping time zone names to time
+        zones or a function taking two parameters (``tzname`` and
+        ``tzoffset``) and returning a time zone.
 
-        Las zonas horarias a las que se mapean los nombres pueden ser un desplazamiento entero desde UTC en segundos o un objeto :class:`tzinfo`.
+        The timezones to which the names are mapped can be an integer
+        offset from UTC in seconds or a :class:`tzinfo` object.
 
     :param \*\*kwargs:
-        Argumentos de palabras clave que se pasan a ``_parse()``.
+        Keyword arguments as passed to ``_parse()``.
 
     :return:
-        Devuelve un objeto :class:`datetime.datetime` o, si la opción
-        ``fuzzy_with_tokens`` está establecida en ``True``, devuelve una tupla, donde el primer elemento es un objeto :class:`datetime.datetime` y el segundo es una tupla que contiene los tokens ambiguos.
+        Returns a :class:`datetime.datetime` object or, if the
+        ``fuzzy_with_tokens`` option is ``True``, returns a tuple, the
+        first element being a :class:`datetime.datetime` object, the second
+        a tuple containing the fuzzy tokens.
 
     :raises ParserError:
-        Se lanza para formatos de cadena no válidos o desconocidos, si el :class:`tzinfo` proporcionado no tiene un formato válido, o si se crearía una fecha no válida.
+        Raised for invalid or unknown string format, if the provided
+        :class:`tzinfo` is not in a valid format, or if an invalid date
+        would be created.
 
     :raises TypeError:
-        Se lanza para entradas que no sean cadenas o flujos de caracteres.
+        Raised for non-string or character stream input.
 
     :raises OverflowError:
-        Se lanza si la fecha analizada excede el entero C más grande válido en tu sistema.
+        Raised if the parsed date exceeds the largest valid C integer on
+        your system.
     """
-    if ignoretz:
-        tzinfos = None
+    try:
+        if default is not None and not isinstance(default, datetime):
+            raise TypeError("default must be a datetime object or None")
 
-    return parser.parse(timestr, default=default, tzinfos=tzinfos, **kwargs)
+        if ignoretz:
+            tzinfos = None
+
+        parsed_datetime = dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+        return parsed_datetime
+
+    except ParserError as e:
+        raise ParserError(f"Failed to parse date string: {e}")
+    except TypeError as e:
+        raise TypeError(f"Invalid input type: {e}")
+    except OverflowError as e:
+        raise OverflowError(f"Date exceeds maximum limit: {e}")

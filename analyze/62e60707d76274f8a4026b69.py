@@ -1,17 +1,24 @@
 def point_type(name, fields, srid_map):
     """
-    Crear dinámicamente una subclase de 'Point'.
+    Dynamically create a Point subclass.
+
+    Args:
+        name (str): The name of the new Point subclass.
+        fields (dict): A dictionary of field names and their types.
+        srid_map (dict): A dictionary mapping SRID values to coordinate systems.
+
+    Returns:
+        type: A new Point subclass with the specified fields and SRID mapping.
     """
-    class DynamicPoint(Point):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            for field in fields:
-                setattr(self, field, kwargs.get(field))
-            self.srid = srid_map.get(name, 4326)  # Default SRID is 4326 (WGS84)
+    class Point:
+        def __init__(self, **kwargs):
+            for field, field_type in fields.items():
+                setattr(self, field, kwargs.get(field, field_type()))
+            self.srid_map = srid_map
 
         def __repr__(self):
             fields_str = ', '.join(f"{field}={getattr(self, field)}" for field in fields)
-            return f"{name}({fields_str}, srid={self.srid})"
+            return f"{name}({fields_str})"
 
-    DynamicPoint.__name__ = name
-    return DynamicPoint
+    Point.__name__ = name
+    return Point

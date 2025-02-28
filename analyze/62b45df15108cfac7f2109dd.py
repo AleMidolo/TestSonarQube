@@ -1,5 +1,8 @@
 def status_str(self, prefix=''):
     """
-    Devuelve la representación en forma de cadena del registro de validación, con un prefijo opcional.
+    Return string representation of validation log, with optional prefix.
     """
-    return f"{prefix}Status: {self.status}"
+    log_str = ""
+    for entry in self.validation_log:
+        log_str += f"{prefix}{entry}\n"
+    return log_str.strip()

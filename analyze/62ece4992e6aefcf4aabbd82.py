@@ -2,11 +2,14 @@ import re
 
 def get_pattern(pattern, strip=True):
     """
-    Este método convierte la cadena proporcionada en un objeto de patrón regex.
+    This method converts the given string to regex pattern.
     
-    :param pattern: La cadena que se convertirá en un patrón regex.
-    :param strip: Si es True, elimina los espacios en blanco al principio y al final de la cadena.
-    :return: Un objeto de patrón regex compilado.
+    Args:
+        pattern (str): The string to be converted to a regex pattern.
+        strip (bool): If True, strips leading and trailing whitespace from the pattern.
+    
+    Returns:
+        re.Pattern: The compiled regex pattern.
     """
     if strip:
         pattern = pattern.strip()

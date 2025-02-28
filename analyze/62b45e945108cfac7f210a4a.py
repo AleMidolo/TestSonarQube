@@ -1,31 +1,38 @@
 def validate_hierarchy(self, validate_objects=True, check_digests=True, show_warnings=False):
     """
-    Validar la jerarquía de la raíz de almacenamiento.
+    Validate storage root hierarchy.
 
-    Retorna:
-        num_objects - número de objetos verificados
-        good_objects - número de objetos verificados que se encontraron válidos
+    Args:
+        validate_objects (bool): Whether to validate individual objects.
+        check_digests (bool): Whether to check object digests.
+        show_warnings (bool): Whether to show warnings during validation.
+
+    Returns:
+        tuple: A tuple containing:
+            - num_objects (int): Number of objects checked.
+            - good_objects (int): Number of objects checked that were found to be valid.
     """
     num_objects = 0
     good_objects = 0
-    
-    # Simulación de la validación de objetos
-    if validate_objects:
-        # Aquí se simula la verificación de objetos
-        # En una implementación real, se recorrería la jerarquía y se validarían los objetos
-        num_objects = 100  # Ejemplo: 100 objetos verificados
-        good_objects = 95   # Ejemplo: 95 objetos válidos
-    
-    # Simulación de la verificación de digests
-    if check_digests:
-        # Aquí se simula la verificación de digests
-        # En una implementación real, se compararían los digests de los objetos
-        pass
-    
-    # Simulación de la emisión de advertencias
-    if show_warnings:
-        # Aquí se simula la emisión de advertencias
-        # En una implementación real, se emitirían advertencias si se encuentran problemas
-        pass
-    
+
+    # Placeholder logic for validating the hierarchy
+    # This would typically involve traversing the storage hierarchy,
+    # validating objects, and checking digests if required.
+
+    # Example logic:
+    for obj in self._get_all_objects():  # Assuming a method to get all objects
+        num_objects += 1
+        is_valid = True
+
+        if validate_objects:
+            is_valid = self._validate_object(obj)  # Assuming a method to validate an object
+
+        if check_digests and is_valid:
+            is_valid = self._check_digest(obj)  # Assuming a method to check the digest
+
+        if is_valid:
+            good_objects += 1
+        elif show_warnings:
+            print(f"Warning: Object {obj} is invalid.")
+
     return num_objects, good_objects

@@ -1,19 +1,24 @@
 def get_versions():
     """
-    Obtén la información de la versión o devuelve el valor predeterminado si no es posible obtenerla.
+    Get version information or return default if unable to do so.
     """
-    import sys
-    import platform
-
     try:
-        version_info = {
-            "python_version": sys.version,
+        import sys
+        import platform
+        import importlib.metadata
+
+        versions = {
+            "python": sys.version,
             "platform": platform.platform(),
-            "system": platform.system(),
-            "release": platform.release(),
-            "machine": platform.machine(),
-            "processor": platform.processor(),
+            "packages": {}
         }
-        return version_info
+
+        # Example: Get version of a package (e.g., 'requests')
+        try:
+            versions["packages"]["requests"] = importlib.metadata.version("requests")
+        except importlib.metadata.PackageNotFoundError:
+            versions["packages"]["requests"] = "Not installed"
+
+        return versions
     except Exception as e:
-        return {"error": str(e), "default_version": "1.0.0"}
+        return {"error": str(e), "default": "Unable to retrieve version information"}

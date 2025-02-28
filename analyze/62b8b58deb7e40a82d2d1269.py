@@ -1,15 +1,15 @@
 def directlyProvidedBy(object):  # pylint:disable=redefined-builtin
-    """
-    Devuelve las interfaces proporcionadas directamente por el objeto dado.
+    """Return the interfaces directly provided by the given object
 
-    El valor devuelto es un `~zope.interface.interfaces.IDeclaration`.
+    The value returned is an `~zope.interface.interfaces.IDeclaration`.
     """
-    proporciona = getattr(object, "__provides__", None)
+    provides = getattr(object, "__provides__", None)
     if (
-        proporciona is None  # sin especificación
-        # Podríamos haber obtenido la especificación de implementación, como una
-        # optimización. Si es así, es como tener solo una base, que
-        # eliminamos para excluir declaraciones proporcionadas por la clase:
+            provides is None  # no spec
+            # We might have gotten the implements spec, as an
+            # optimization. If so, it's like having only one base, that we
+            # lop off to exclude class-supplied declarations:
+            or getattr(provides, "__class__", None) is None
     ):
         return None
-    return proporciona
+    return provides

@@ -8,11 +8,11 @@ def formatmany(
 
     for params in many_params:
         if isinstance(params, dict):
-            # Convert dict to list of values in order of keys
-            formatted_params.append(list(params.values()))
+            # Handle named parameters
+            formatted_params.append({k: v for k, v in params.items()})
         elif isinstance(params, (list, tuple)):
-            # If it's already a sequence, just append it
-            formatted_params.append(params)
+            # Handle ordinal parameters
+            formatted_params.append([v for v in params])
         else:
             raise TypeError("params must be a Mapping or Sequence")
 

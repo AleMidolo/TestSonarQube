@@ -1,10 +1,9 @@
 def popitem(self):
     """
-    Eliminar y devolver el par `(clave, valor)` que fue insertado primero.
+    Remove and return the `(key, value)` pair first inserted.
     """
     if not self:
-        raise KeyError("El diccionario está vacío")
+        raise KeyError("dictionary is empty")
     key = next(iter(self))
-    value = self[key]
-    del self[key]
-    return key, value
+    value = self.pop(key)
+    return (key, value)

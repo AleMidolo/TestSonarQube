@@ -1,20 +1,25 @@
 def validate_fixity(self, fixity, manifest_files):
     """
-    Validar el bloque de fijación en el inventario.
+    Validate fixity block in inventory.
 
-    Verificar la estructura del bloque de fijación y asegurarse de que solo se referencien los archivos listados en el manifiesto.
+    Check the structure of the fixity block and makes sure that only files
+    listed in the manifest are referenced.
+
+    Args:
+        fixity (dict): The fixity block to validate.
+        manifest_files (list): List of files in the manifest.
+
+    Returns:
+        bool: True if the fixity block is valid, False otherwise.
     """
     if not isinstance(fixity, dict):
-        raise ValueError("El bloque de fijación debe ser un diccionario.")
-    
-    if not isinstance(manifest_files, list):
-        raise ValueError("El manifiesto de archivos debe ser una lista.")
+        return False
     
     for file_name, checksum in fixity.items():
         if file_name not in manifest_files:
-            raise ValueError(f"El archivo '{file_name}' no está listado en el manifiesto.")
+            return False
         
-        if not isinstance(checksum, str):
-            raise ValueError(f"El checksum para el archivo '{file_name}' debe ser una cadena de texto.")
+        if not isinstance(checksum, str) or not checksum:
+            return False
     
     return True

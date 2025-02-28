@@ -1,5 +1,5 @@
 def _c_optimizations_ignored():
     """
-    Es lo opuesto a `_c_optimizations_required`.
+    The opposite of `_c_optimizations_required`.
     """
-    pass
+    return not _c_optimizations_required()

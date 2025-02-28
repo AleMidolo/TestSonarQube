@@ -2,17 +2,21 @@ import subprocess
 
 def addignored(ignored):
     """
-    Usa el comando de git para obtener los nombres de los archivos, conviértelos en una lista, ordena la lista para incluir solo los archivos ignorados, y devuelve esos archivos como una única cadena con cada nombre de archivo separado por una coma.
+    Use the git command to obtain the file names, turn it into a list, sort the list for only ignored files, 
+    return those files as a single string with each filename separated by a comma.
     """
-    # Obtener la lista de archivos ignorados usando git ls-files --ignored --exclude-standard
-    result = subprocess.run(['git', 'ls-files', '--ignored', '--exclude-standard'], stdout=subprocess.PIPE, text=True)
+    # Get the list of ignored files from git
+    result = subprocess.run(['git', 'ls-files', '--others', '--ignored', '--exclude-standard'], 
+                            stdout=subprocess.PIPE, text=True)
+    
+    # Split the output into a list of filenames
     ignored_files = result.stdout.splitlines()
     
-    # Filtrar los archivos ignorados que coincidan con el patrón proporcionado
-    filtered_files = [file for file in ignored_files if ignored in file]
+    # Filter the list to only include files that are in the ignored list
+    filtered_files = [file for file in ignored_files if file in ignored]
     
-    # Ordenar la lista de archivos ignorados
+    # Sort the list of ignored files
     filtered_files.sort()
     
-    # Devolver los archivos como una cadena separada por comas
+    # Join the filenames into a single string separated by commas
     return ', '.join(filtered_files)

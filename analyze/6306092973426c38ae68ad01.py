@@ -1,6 +1,6 @@
 def get_deprecated_args(self):
     """
-    Devolviendo un diccionario con opciones que deprecian a otras.
+    Returning dict with options which deprecate others.
     """
     deprecated_args = {
         'old_option1': 'new_option1',

@@ -1,7 +1,16 @@
 def check_sender_and_entity_handle_match(sender_handle, entity_handle):
     """
-    Asegúrate de que los identificadores del remitente y de la entidad coincidan.
+    Ensure that sender and entity handles match.
 
-    Básicamente, ya hemos verificado que el remitente es quien dice ser al recibir la carga útil (payload). Sin embargo, el remitente podría estar intentando establecer otro autor en la propia carga útil, ya que Diaspora incluye al remitente tanto en los encabezados de la carga útil como en el objeto. Debemos asegurarnos de que sean iguales.
+    Basically we've already verified the sender is who they say when receiving the payload. However, the sender might
+    be trying to set another author in the payload itself, since Diaspora has the sender in both the payload headers
+    AND the object. We must ensure they're the same.
+
+    Args:
+        sender_handle (str): The handle of the sender.
+        entity_handle (str): The handle of the entity in the payload.
+
+    Returns:
+        bool: True if the handles match, False otherwise.
     """
     return sender_handle == entity_handle

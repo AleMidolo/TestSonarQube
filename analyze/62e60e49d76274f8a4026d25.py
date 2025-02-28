@@ -1,17 +1,48 @@
+from functools import wraps
+
 def unit_of_work(metadata=None, timeout=None):
     """
-    Esta función es un decorador para funciones de transacción que permite un control adicional sobre cómo se lleva a cabo la transacción.
+    This function is a decorator for transaction functions that allows extra control over how the transaction is carried out.
 
-    :param metadata: Un diccionario con metadatos.
+    For example, a timeout may be applied::
+
+        from neo4j import unit_of_work
+
+        @unit_of_work(timeout=100)
+        def count_people_tx(tx):
+            result = tx.run("MATCH (a:Person) RETURN count(a) AS persons")
+            record = result.single()
+            return record["persons"]
+
+    :param metadata:
+        a dictionary with metadata.
+        Specified metadata will be attached to the executing transaction and visible in the output of ``dbms.listQueries`` and ``dbms.listTransactions`` procedures.
+        It will also get logged to the ``query.log``.
+        This functionality makes it easier to tag transactions and is equivalent to ``dbms.setTXMetaData`` procedure, see https://neo4j.com/docs/operations-manual/current/reference/procedures/ for procedure reference.
     :type metadata: dict
-    :param timeout: El tiempo de espera de la transacción en segundos.
-    :type timeout: float o None
+
+    :param timeout:
+        the transaction timeout in seconds.
+        Transactions that execute longer than the configured timeout will be terminated by the database.
+        This functionality allows to limit query/transaction execution time.
+        Specified timeout overrides the default timeout configured in the database using ``dbms.transaction.timeout`` setting.
+        Value should not represent a negative duration.
+        A zero duration will make the transaction execute indefinitely.
+        None will use the default timeout configured in the database.
+    :type timeout: float or :const:`None`
     """
     def decorator(func):
-        def wrapper(*args, **kwargs):
-            # Aquí se podría agregar la lógica para manejar los metadatos y el timeout
-            # Por ejemplo, pasarlos a la transacción o configurar el entorno de la transacción
-            # En este ejemplo, simplemente llamamos a la función original
-            return func(*args, **kwargs)
+        @wraps(func)
+        def wrapper(tx, *args, **kwargs):
+            # Apply metadata if provided
+            if metadata is not None:
+                tx.run("CALL dbms.setTXMetaData($metadata)", metadata=metadata)
+            
+            # Apply timeout if provided
+            if timeout is not None:
+                tx.run("CALL dbms.setTransactionTimeout($timeout)", timeout=timeout)
+            
+            # Execute the original function
+            return func(tx, *args, **kwargs)
         return wrapper
     return decorator

@@ -1,31 +1,43 @@
 def extostr(cls, e, max_level=30, max_path_level=5):
     """
-    Formatear una excepción.
-    :param e: Cualquier instancia de excepción.
+    Format an exception.
+    :param e: Any exception instance.
     :type e: Exception
-    :param max_level: Nivel máximo de la pila de llamadas (por defecto 30).
+    :param max_level: Maximum call stack level (default 30)
     :type max_level: int
-    :param max_path_level: Nivel máximo de la ruta (por defecto 5).
+    :param max_path_level: Maximum path level (default 5)
     :type max_path_level: int
-    :return: La cadena legible de la excepción.
-    :rtype: str
+    :return The exception readable string
+    :rtype str
     """
     import traceback
-    
-    # Obtener la traza de la excepción
-    tb_list = traceback.format_exception(type(e), e, e.__traceback__)
-    
-    # Limitar el número de niveles de la pila de llamadas
-    if len(tb_list) > max_level:
-        tb_list = tb_list[:max_level]
-    
-    # Limitar el número de niveles de la ruta
-    for i in range(len(tb_list)):
-        parts = tb_list[i].split('\n')
-        if len(parts) > max_path_level * 2:
-            parts = parts[:max_path_level * 2]
-            parts.append('...')
-        tb_list[i] = '\n'.join(parts)
-    
-    # Unir la traza en una sola cadena
-    return ''.join(tb_list)
+    import sys
+
+    # Get the exception type and message
+    exc_type = type(e).__name__
+    exc_msg = str(e)
+
+    # Get the traceback
+    tb = traceback.format_exception(type(e), e, e.__traceback__)
+
+    # Limit the traceback to max_level
+    if len(tb) > max_level:
+        tb = tb[:max_level]
+        tb.append(f"... (truncated to {max_level} levels)")
+
+    # Limit the path levels in the traceback
+    for i in range(len(tb)):
+        parts = tb[i].split('\n')
+        if len(parts) > 1:
+            path_parts = parts[1].split(', ')
+            if len(path_parts) > max_path_level:
+                path_parts = path_parts[:max_path_level]
+                path_parts.append(f"... (truncated to {max_path_level} levels)")
+                parts[1] = ', '.join(path_parts)
+                tb[i] = '\n'.join(parts)
+
+    # Combine the exception type, message, and traceback
+    result = f"{exc_type}: {exc_msg}\n"
+    result += ''.join(tb)
+
+    return result

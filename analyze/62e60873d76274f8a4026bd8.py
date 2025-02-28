@@ -1,24 +1,30 @@
 def protocol_handlers(cls, protocol_version=None):
     """
-    Devuelve un diccionario de los controladores de protocolo Bolt disponibles, indexados por una tupla de versión. Si se proporciona una versión de protocolo explícita, el diccionario contendrá cero o un elemento, dependiendo de si esa versión es compatible. Si no se proporciona ninguna versión de protocolo, se devolverán todas las versiones disponibles.
+    Return a dictionary of available Bolt protocol handlers,
+    keyed by version tuple. If an explicit protocol version is
+    provided, the dictionary will contain either zero or one items,
+    depending on whether that version is supported. If no protocol
+    version is provided, all available versions will be returned.
 
-    :param protocol_version: tupla que identifica una versión específica del protocolo (por ejemplo, (3, 5)) o None
-    :return: diccionario que mapea tuplas de versión a clases de controladores para todas las versiones relevantes y compatibles del protocolo
-    :raise TypeError: si la versión del protocolo no se pasa como una tupla
+    :param protocol_version: tuple identifying a specific protocol
+        version (e.g. (3, 5)) or None
+    :return: dictionary of version tuple to handler class for all
+        relevant and supported protocol versions
+    :raise TypeError: if protocol version is not passed in a tuple
     """
-    # Supongamos que tenemos un diccionario de controladores disponibles
+    # Example implementation assuming some predefined handlers
     available_handlers = {
-        (3, 5): cls.HandlerV3_5,
-        (4, 0): cls.HandlerV4_0,
-        (4, 1): cls.HandlerV4_1,
-        # Agrega más versiones y controladores según sea necesario
+        (3, 5): "BoltV3_5Handler",
+        (4, 0): "BoltV4_0Handler",
+        (4, 1): "BoltV4_1Handler",
     }
 
     if protocol_version is not None:
         if not isinstance(protocol_version, tuple):
-            raise TypeError("La versión del protocolo debe ser una tupla.")
-        # Filtra el diccionario para incluir solo la versión especificada
-        return {protocol_version: available_handlers.get(protocol_version)}
+            raise TypeError("Protocol version must be a tuple.")
+        if protocol_version in available_handlers:
+            return {protocol_version: available_handlers[protocol_version]}
+        else:
+            return {}
     else:
-        # Devuelve todos los controladores disponibles
         return available_handlers

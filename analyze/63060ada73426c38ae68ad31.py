@@ -1,11 +1,11 @@
 def _convert_non_cli_args(self, parser_name, values_dict):
     """
-    Convierte los argumentos a los tipos correctos modificando el parámetro values_dict.
+    Casts arguments to correct types by modifying values_dict param.
 
-    Por defecto, todos los valores son cadenas de texto (strings).
+    By default all the values are strings.
 
-    :param parser_name: El nombre del comando, por ejemplo: main, virsh, ospd, etc.
-    :param values_dict: El diccionario con los argumentos.
+    :param parser_name: The command name, e.g. main, virsh, ospd, etc
+    :param values_dict: The dict of with arguments
     """
     for key, value in values_dict.items():
         if isinstance(value, str):
@@ -19,4 +19,3 @@ def _convert_non_cli_args(self, parser_name, values_dict):
                 values_dict[key] = float(value)
             elif value.lower() == 'none':
                 values_dict[key] = None
-    return values_dict

@@ -1,9 +1,8 @@
 import re
 
-def es_ipv4(objetivo):
+def is_ipv4(target):
     """
-    Probar si es una dirección IPv4 o no
+    Test if IPv4 address or not
     """
-    # Expresión regular para validar una dirección IPv4
     ipv4_pattern = re.compile(r'^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])$')
-    return bool(ipv4_pattern.match(objetivo))
+    return bool(ipv4_pattern.match(target))

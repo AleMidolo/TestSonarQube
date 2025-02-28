@@ -1,15 +1,14 @@
 def names(self, all=False):  # pylint:disable=redefined-builtin
-    """
-    Devuelve los nombres de los atributos definidos por la interfaz.
+    """Return the attribute names defined by the interface.
     
     Args:
-        all (bool): Si es True, devuelve todos los nombres de atributos. 
-                    Si es False, devuelve solo los nombres de atributos definidos por la interfaz.
+        all (bool): If True, return all attribute names, including private ones.
+                   If False, return only public attribute names.
     
     Returns:
-        list: Una lista de nombres de atributos.
+        list: A list of attribute names.
     """
     if all:
-        return [attr for attr in dir(self) if not callable(getattr(self, attr)) and not attr.startswith("__")]
+        return [name for name in dir(self) if not name.startswith('__')]
     else:
-        return [attr for attr in dir(self) if not callable(getattr(self, attr)) and not attr.startswith("__") and not attr.startswith("_")]
+        return [name for name in dir(self) if not name.startswith('_')]

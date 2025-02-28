@@ -1,23 +1,20 @@
-from typing import List, Dict, Any
-
-def list_of_file_names(settings_dirs: List[str], spec_option: str) -> List[str]:
+def list_of_file_names(settings_dirs, spec_option):
     """
-    Crea un nuevo tipo complejo "IniType".
+    Create a new IniType complex type.
 
     Args:
-        settings_dirs (List[str]): Lista de directorios donde buscar archivos de configuración.
-        spec_option (str): Opción específica para filtrar los archivos.
+        settings_dirs (list): List of directories to search for files.
+        spec_option (str): Specification option to filter files.
 
     Returns:
-        List[str]: Lista de nombres de archivos que cumplen con la opción específica.
+        list: List of file names that match the specification.
     """
     import os
+
     file_names = []
-    
     for directory in settings_dirs:
         if os.path.isdir(directory):
-            for file in os.listdir(directory):
-                if spec_option in file:
-                    file_names.append(file)
-    
+            for file_name in os.listdir(directory):
+                if spec_option in file_name:
+                    file_names.append(file_name)
     return file_names
