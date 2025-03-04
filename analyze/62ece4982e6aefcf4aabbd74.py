@@ -25,7 +25,7 @@ def prepare_repository_from_archive(
     # Determine the file extension
     file_extension = os.path.splitext(archive_path)[1].lower()
     
-    # Extract the archive based on its type
+    # Extract the archive
     if file_extension == '.zip':
         with zipfile.ZipFile(archive_path, 'r') as zip_ref:
             zip_ref.extractall(tmp_path)
@@ -33,15 +33,12 @@ def prepare_repository_from_archive(
         with tarfile.open(archive_path, 'r:*') as tar_ref:
             tar_ref.extractall(tmp_path)
     else:
-        raise ValueError("Unsupported archive format: {}".format(file_extension))
+        raise ValueError("Unsupported archive format")
     
-    # If a filename is provided, return its URL
+    # Construct the URL for the extracted repository
     if filename:
-        extracted_file_path = tmp_path / filename
-        if extracted_file_path.exists():
-            return f"file://{extracted_file_path.resolve()}"
-        else:
-            raise FileNotFoundError(f"{filename} not found in the extracted files.")
+        repo_path = tmp_path / filename
+    else:
+        repo_path = tmp_path / Path(archive_path).stem
     
-    # If no filename is provided, return the URL of the tmp_path
-    return f"file://{tmp_path.resolve()}"
+    return str(repo_path.resolve())

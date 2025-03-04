@@ -10,3 +10,4 @@ def _replace_register(flow_params, register_number, register_value):
     """
     if register_value in flow_params:
         flow_params[register_value] = register_number
+    return flow_params
