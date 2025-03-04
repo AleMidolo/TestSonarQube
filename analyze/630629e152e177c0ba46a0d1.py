@@ -5,14 +5,13 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
     """
     import requests
     from urllib.parse import urlparse
-    from typing import Optional
-
+    
     try:
         # Extract domain from handle
         if '@' not in handle:
             return None
             
-        _, domain = handle.split('@', 1)
+        _, domain = handle.split('@')
         
         # Construct webfinger URL
         webfinger_url = f"https://{domain}/.well-known/webfinger"

@@ -37,7 +37,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         "type": "BEGIN",
         "parameters": parameters
     }
-
+    
     # Add hooks if provided
     if dehydration_hooks:
         message["dehydration_hooks"] = dehydration_hooks
@@ -45,7 +45,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         message["hydration_hooks"] = hydration_hooks
 
     # Add message to output queue
-    self._append(message, **handlers)
+    self._append(message)
 
-    # Return Response object
-    return Response(self, **handlers)
+    # Create and return Response object with handlers
+    return Response(handlers)

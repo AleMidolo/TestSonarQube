@@ -30,11 +30,10 @@ def formatmany(
             out_param = {}
             for key, value in params.items():
                 if isinstance(key, int):
-                    # Handle numeric keys
-                    out_key = str(key)
+                    # Convert int keys to string
+                    out_param[str(key)] = value
                 else:
-                    out_key = key
-                out_param[out_key] = value
+                    out_param[key] = value
             out_params.append(out_param)
             
         else:
@@ -45,22 +44,25 @@ def formatmany(
             # Convert to list and append
             out_params.append(list(params))
             
-    # Convert SQL placeholders if needed
+    # Convert parameter style in SQL if needed
     if isinstance(sql, str):
         # Handle string SQL
         if is_named:
-            # Convert named parameters style if needed
-            # This is a simplified example - actual implementation would depend on 
-            # specific input/output parameter styles
-            pass
+            # Convert named parameters from :name to %(name)s style
+            sql = self._convert_named_params(sql)
         else:
-            # Convert ordinal parameters style if needed
-            pass
+            # Convert ordinal parameters from ? to %s style 
+            sql = sql.replace('?', '%s')
     else:
         # Handle bytes SQL
-        sql = sql.decode('utf-8')
-        # Apply same conversions as string case
-        # Convert back to bytes
-        sql = sql.encode('utf-8')
-        
+        if is_named:
+            sql = self._convert_named_params(sql.decode()).encode()
+        else:
+            sql = sql.replace(b'?', b'%s')
+            
     return sql, out_params
+
+def _convert_named_params(self, sql: str) -> str:
+    """Helper method to convert :name style parameters to %(name)s style"""
+    import re
+    return re.sub(r':([a-zA-Z_][a-zA-Z0-9_]*)', r'%(\1)s', sql)

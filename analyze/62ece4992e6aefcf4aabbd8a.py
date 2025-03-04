@@ -44,7 +44,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
             )
             log_records.append(record)
             logger.error(f"Error loading config file {filename}: {str(e)}")
-
+            
     return configs, log_records
 
 def _resolve_env_vars(config):

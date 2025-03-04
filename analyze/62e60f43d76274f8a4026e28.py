@@ -16,16 +16,12 @@ def hydrate_time(nanoseconds, tz=None):
     seconds = total_seconds % 60
     nanos = nanoseconds % 1_000_000_000
 
-    # Create time components
-    time_components = {
-        'hour': int(hours % 24),
-        'minute': int(minutes),
-        'second': int(seconds),
-        'nanosecond': int(nanos)
-    }
+    # Format time components
+    if tz is None:
+        # Return UTC time
+        time_str = f"{hours:02d}:{minutes:02d}:{seconds:02d}.{nanos:09d}"
+    else:
+        # Return local time with timezone
+        time_str = f"{hours:02d}:{minutes:02d}:{seconds:02d}.{nanos:09d} {tz}"
 
-    # If timezone is provided, include it in output
-    if tz is not None:
-        time_components['timezone'] = tz
-
-    return time_components
+    return time_str

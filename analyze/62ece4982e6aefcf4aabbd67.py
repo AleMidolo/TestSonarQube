@@ -16,7 +16,10 @@ def vertex3tuple(vertices):
         # Get next vertex (wrap around to start if at end) 
         next = vertices[(i+1) % n]
         
-        # Add tuple of (prev, curr, next) vertices
-        tuples.append((prev, curr, next))
+        # Create 3-tuple with previous, current and next vertex
+        triple = prev + curr + next
+        
+        # Add to list
+        tuples.append(triple)
         
     return tuples

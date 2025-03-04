@@ -39,13 +39,22 @@ def mru_cache(maxsize=128, typed=False):
             return {
                 'maxsize': maxsize,
                 'currsize': len(cache),
-                'hits': sum(1 for _ in cache.values()),
-                'misses': wrapper.calls - len(cache)
+                'hits': sum(1 for _ in cache),
+                'typed': typed
             }
-        
-        wrapper.cache = cache
         wrapper.cache_info = cache_info
-        wrapper.calls = 0
+
+        # Add cache clear method
+        def cache_clear():
+            cache.clear()
+        wrapper.cache_clear = cache_clear
 
         return wrapper
+
+    # Handle direct decoration with no arguments
+    if callable(maxsize):
+        func = maxsize
+        maxsize = 128
+        return decorator(func)
+    
     return decorator

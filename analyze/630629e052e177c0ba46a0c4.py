@@ -1,10 +1,11 @@
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
-    Parse Diaspora webfinger which is either in JSON format (new) or XRD (old).
+    डायस्पोरा वेबफिंगर को पार्स करें, जो या तो JSON प्रारूप (नया) में होता है या XRD (पुराना) में।
     """
     import json
-    from xml.etree import ElementTree as ET
-    
+    import xml.etree.ElementTree as ET
+    from typing import Dict
+
     # Try parsing as JSON first
     try:
         data = json.loads(document)
@@ -23,42 +24,31 @@ def parse_diaspora_webfinger(document: str) -> Dict:
             })
             
         return result
-        
+
     except json.JSONDecodeError:
         # If JSON parsing fails, try XRD format
         try:
-            # Add XML namespace
-            ns = {'xrd': 'http://docs.oasis-open.org/ns/xri/xrd-1.0'}
-            
+            # Remove XML namespace to simplify parsing
+            document = document.replace('xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0"', '')
             root = ET.fromstring(document)
+            
             result = {
-                'subject': '',
-                'aliases': [],
+                'subject': root.findtext('Subject', ''),
+                'aliases': [alias.text for alias in root.findall('Alias')],
                 'links': []
             }
             
-            # Get subject
-            subject = root.find('xrd:Subject', ns)
-            if subject is not None:
-                result['subject'] = subject.text
-                
-            # Get aliases
-            for alias in root.findall('xrd:Alias', ns):
-                if alias.text:
-                    result['aliases'].append(alias.text)
-                    
-            # Get links
-            for link in root.findall('xrd:Link', ns):
-                link_data = {
+            # Parse links
+            for link in root.findall('Link'):
+                result['links'].append({
                     'rel': link.get('rel', ''),
                     'type': link.get('type', ''),
                     'href': link.get('href', '')
-                }
-                result['links'].append(link_data)
+                })
                 
             return result
-            
+
         except ET.ParseError:
-            raise ValueError("Invalid webfinger document format")
-            
+            raise ValueError("Invalid document format - must be either JSON or XRD")
+
     return {}

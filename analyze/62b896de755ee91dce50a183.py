@@ -5,10 +5,10 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         raise TypeError("Parser must be given a string or character stream, not %r" % timestr)
         
     # Default datetime object to use for missing values
-    default_datetime = datetime.datetime.now() if default is None else default
+    default_datetime = default or datetime.datetime.now()
     
     try:
-        # Parse the string using _parse() internal method
+        # Parse the string using internal _parse method
         res, tokens = self._parse(timestr, **kwargs)
         
         if res is None:

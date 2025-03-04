@@ -7,7 +7,7 @@ def identify_request(request: RequestType) -> bool:
         return False
         
     # Check if request has matrix-related attributes/properties
-    matrix_keywords = ['matrix', 'मैट्रिक्स', 'array', 'grid', 'table']
+    matrix_keywords = ['matrix', 'matrices', 'array', 'grid', 'table']
     
     # Convert request to string and check for matrix keywords
     request_str = str(request).lower()
@@ -15,11 +15,13 @@ def identify_request(request: RequestType) -> bool:
         if keyword in request_str:
             return True
             
-    # Check request type/structure if it has matrix-like properties
+    # Check if request has matrix-like structure
     try:
-        # Check if request is 2D array-like
-        if hasattr(request, '__getitem__') and hasattr(request[0], '__getitem__'):
-            return True
+        # Check if request is iterable and has nested structure
+        if hasattr(request, '__iter__'):
+            first_elem = next(iter(request))
+            if hasattr(first_elem, '__iter__'):
+                return True
     except:
         pass
         

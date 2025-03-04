@@ -4,7 +4,7 @@ def files_list(path):
     """
     import os
     
-    # Get list of files in directory
+    # Get list of all files in the directory
     files = []
     for file in os.listdir(path):
         if os.path.isfile(os.path.join(path, file)):

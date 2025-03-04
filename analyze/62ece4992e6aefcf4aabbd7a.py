@@ -11,12 +11,13 @@ def is_gitbash():
     if sys.platform != 'win32':
         return False
         
-    # Check for MINGW in environment variables which indicates Git Bash
+    # Check for MINGW in environment variables which indicates GitBash
     if 'MINGW' in os.environ.get('MSYSTEM', ''):
         return True
         
-    # Check for Git Bash specific environment variables
-    if os.environ.get('TERM') == 'xterm' and os.environ.get('SHELL', '').endswith('bash.exe'):
+    # Check for common GitBash paths in PATH variable
+    path = os.environ.get('PATH', '').lower()
+    if 'git\\mingw' in path or 'git\\usr\\bin' in path:
         return True
         
     return False

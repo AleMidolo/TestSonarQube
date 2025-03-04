@@ -52,4 +52,10 @@ def lru_cache(maxsize=128, typed=False):
         
         return wrapper
         
+    # Handle no arguments case
+    if callable(maxsize):
+        func = maxsize
+        maxsize = 128
+        return decorator(func)
+        
     return decorator

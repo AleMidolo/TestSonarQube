@@ -9,9 +9,9 @@ def _get_err_indices(self, coord_name):
     coord_data = getattr(self, coord_name)
     
     # Check each value in coordinate data
-    for i, val in enumerate(coord_data):
+    for i, value in enumerate(coord_data):
         # Add index to err_indices if value is invalid
-        if val is None or not isinstance(val, (int, float)) or pd.isna(val):
+        if value is None or pd.isna(value):
             err_indices.append(i)
             
     return err_indices

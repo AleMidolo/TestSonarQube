@@ -4,42 +4,50 @@ def extend_cli(self, root_subparsers):
 
     :param subparser: वह सबपार्सर ऑब्जेक्ट जिसे विस्तारित करना है।
     """
-    # Create spec subparser
+    # Add spec subcommand parser
     spec_parser = root_subparsers.add_parser(
         'spec',
         help='Manage project specifications'
     )
 
-    # Add subcommands to spec parser
+    # Create subparser for spec commands
     spec_subparsers = spec_parser.add_subparsers(
-        title='Commands',
+        title='spec commands',
         dest='spec_command'
     )
 
     # Add init command
     init_parser = spec_subparsers.add_parser(
         'init',
-        help='Initialize a new specification'
+        help='Initialize a new spec file'
     )
     init_parser.add_argument(
-        '--name',
-        help='Name of the specification',
-        required=True
+        '--template',
+        help='Template file to use for initialization'
     )
 
     # Add validate command  
     validate_parser = spec_subparsers.add_parser(
         'validate',
-        help='Validate an existing specification'
+        help='Validate spec file'
     )
     validate_parser.add_argument(
-        '--path',
-        help='Path to specification file',
-        required=True
+        'spec_file',
+        help='Path to spec file to validate'
     )
 
-    # Add list command
-    list_parser = spec_subparsers.add_parser(
-        'list',
-        help='List all specifications'
+    # Add export command
+    export_parser = spec_subparsers.add_parser(
+        'export',
+        help='Export spec to different format'
+    )
+    export_parser.add_argument(
+        'spec_file',
+        help='Path to spec file to export'
+    )
+    export_parser.add_argument(
+        '--format',
+        choices=['json', 'yaml', 'toml'],
+        default='json',
+        help='Output format'
     )

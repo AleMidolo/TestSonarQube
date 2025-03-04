@@ -18,8 +18,8 @@ def prepare_repository_from_archive(
     # Extract archive to temp directory
     if archive_path.endswith('.zip'):
         shutil.unpack_archive(archive_path, temp_dir, 'zip')
-    elif archive_path.endswith(('.tar.gz', '.tgz')):
-        shutil.unpack_archive(archive_path, temp_dir, 'gztar') 
+    elif archive_path.endswith('.tar.gz') or archive_path.endswith('.tgz'):
+        shutil.unpack_archive(archive_path, temp_dir, 'gztar')
     elif archive_path.endswith('.tar'):
         shutil.unpack_archive(archive_path, temp_dir, 'tar')
     else:
