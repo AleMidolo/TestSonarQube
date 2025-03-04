@@ -26,7 +26,7 @@ def validate_fixity(self, fixity, manifest_files):
             return self.error("Each message-digest entry must be a dictionary")
             
         if "file" not in digest or "hash" not in digest:
-            return self.error("Each message-digest entry must have 'file' and 'hash' fields")
+            return self.error("Each message-digest entry must contain 'file' and 'hash' fields")
             
         if not isinstance(digest["file"], str) or not isinstance(digest["hash"], str):
             return self.error("Digest file and hash values must be strings")

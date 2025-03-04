@@ -17,7 +17,7 @@ def process_text_links(text):
         # 添加rel="noopener noreferrer"增加安全性
         return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
     
-    # 使用re.sub替换所有匹配的URL
+    # 使用re.sub替换所有匹配的URL为HTML链接
     processed_text = re.sub(url_pattern, replace_url, text)
     
     return processed_text

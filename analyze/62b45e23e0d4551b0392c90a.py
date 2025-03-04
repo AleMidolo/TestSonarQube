@@ -14,11 +14,12 @@ def validate_version_inventories(self, version_dirs):
     
     # 遍历每个版本目录
     for version in version_dirs:
+        # 获取该版本的清单
         version_inventory = self.get_version_inventory(version)
         
         # 检查是否包含完整清单
         if not version_inventory:
-            raise ValueError(f"Version {version} missing complete inventory")
+            raise ValueError(f"Version {version} does not contain a complete inventory")
             
         # 与根清单比较,记录差异
         diffs = {}
@@ -39,6 +40,8 @@ def validate_version_inventories(self, version_dirs):
                     'old_checksum': root_inventory[file_path]
                 }
                 
-        version_diffs[version] = diffs
-        
+        # 存储该版本的差异
+        if diffs:
+            version_diffs[version] = diffs
+            
     return version_diffs

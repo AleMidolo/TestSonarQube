@@ -4,8 +4,8 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
 
     构建复杂参数类型
 
-    :param subcommand: 命令名称 
-    :param type_name: 复杂类型名称
+    :param subcommand: 命令名称
+    :param type_name: 复杂类型名称 
     :param option_name: 选项名称
     :param spec_option: 选项的具体规范
     :return: 复杂类型实例
@@ -16,8 +16,7 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
     complex_type_func = self.COMPLEX_TYPES[type_name]
     complex_args = (self.vars, self.defaults, self.plugin_path)
     
-    try:
-        complex_action = complex_type_func(complex_args, subcommand, spec_option)
-        return complex_action
-    except Exception as e:
-        raise ValueError(f"Failed to create complex type {type_name} for option {option_name}: {str(e)}")
+    def complex_action(value):
+        return complex_type_func(complex_args, subcommand, spec_option)(value)
+        
+    return complex_action

@@ -17,7 +17,7 @@ def retrieve_diaspora_host_meta(host):
         response.raise_for_status()
         
         # 解析 XRD 文档
-        xrd = XRD.parse_xml(response.content)
+        xrd = XRD.parse_xrd(response.text)
         return xrd
         
     except requests.exceptions.RequestException as e:
@@ -27,11 +27,11 @@ def retrieve_diaspora_host_meta(host):
             response = requests.get(host_meta_url)
             response.raise_for_status()
             
-            xrd = XRD.parse_xml(response.content)
+            xrd = XRD.parse_xrd(response.text)
             return xrd
             
         except requests.exceptions.RequestException as e:
             raise Exception(f"Failed to retrieve host-meta from {host}: {str(e)}")
-            
+    
     except Exception as e:
         raise Exception(f"Failed to parse host-meta from {host}: {str(e)}")

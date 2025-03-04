@@ -17,11 +17,14 @@ def is_gitbash():
         
     # 检查环境变量中是否包含MINGW或MSYS
     env_keys = os.environ.keys()
-    git_env = any('MINGW' in key or 'MSYS' in key for key in env_keys)
-    
-    # 检查终端类型
-    term = os.environ.get('TERM', '')
-    is_term = 'xterm' in term.lower()
-    
-    # 如果同时满足环境变量和终端类型条件,则认为是在gitbash中
-    return git_env and is_term
+    for key in ['MINGW_PREFIX', 'MSYSTEM']:
+        if key in env_keys:
+            return True
+            
+    # 检查终端程序名称
+    if sys.stdout.isatty():
+        term = os.environ.get('TERM')
+        if term and ('mingw' in term.lower() or 'msys' in term.lower()):
+            return True
+            
+    return False

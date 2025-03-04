@@ -14,38 +14,34 @@ def validate(self, path):
         required_files = [
             '0=ocfl_object_1.0',  # OCFL版本声明
             'inventory.json',      # 清单文件
-            'inventory.json.sha512' # 清单校验和
+            'content'              # 内容目录
         ]
         
         for file in required_files:
             if not os.path.exists(os.path.join(path, file)):
                 return False
                 
-        # 读取并验证清单文件
+        # 验证inventory.json格式
         with open(os.path.join(path, 'inventory.json')) as f:
-            inventory = json.load(f)
-            
-        # 验证清单格式
-        required_fields = ['id', 'type', 'digestAlgorithm', 'head', 'versions']
-        for field in required_fields:
-            if field not in inventory:
+            try:
+                inventory = json.load(f)
+                # 检查必需的inventory字段
+                required_fields = ['id', 'type', 'digestAlgorithm', 'versions']
+                for field in required_fields:
+                    if field not in inventory:
+                        return False
+            except json.JSONDecodeError:
                 return False
                 
+        # 验证内容目录结构
+        content_dir = os.path.join(path, 'content')
+        if not os.path.isdir(content_dir):
+            return False
+            
         # 验证版本目录
-        versions = inventory['versions']
-        for version in versions:
-            version_path = os.path.join(path, 'v' + str(version))
-            if not os.path.isdir(version_path):
-                return False
-                
-        # 验证清单校验和
-        with open(os.path.join(path, 'inventory.json.sha512')) as f:
-            stored_checksum = f.read().strip()
-            
-        with open(os.path.join(path, 'inventory.json'), 'rb') as f:
-            calculated_checksum = hashlib.sha512(f.read()).hexdigest()
-            
-        if stored_checksum != calculated_checksum:
+        version_dirs = [d for d in os.listdir(content_dir) 
+                       if os.path.isdir(os.path.join(content_dir, d))]
+        if not version_dirs:
             return False
             
         return True

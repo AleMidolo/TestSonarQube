@@ -47,6 +47,7 @@ def xargs(
                 pid, fd = pty.fork()
                 if pid == 0:  # Child process
                     os.execvp(full_cmd[0], full_cmd)
+                    os._exit(1)
                 else:  # Parent process
                     chunk_output = b''
                     while True:

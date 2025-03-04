@@ -13,6 +13,6 @@ def dehydrate_time(value):
         return None
         
     if not hasattr(value, 'ticks'):
-        raise ValueError("Input value must be a Time object with 'ticks' attribute")
+        raise ValueError("Input value must be a Time object with ticks attribute")
         
     return Structure(ticks=value.ticks)

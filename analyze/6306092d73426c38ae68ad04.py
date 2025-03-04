@@ -10,8 +10,8 @@ def get_parser_option_specs(self, command_name):
     if not parser:
         return []
     
-    # 存储所有选项
-    options = []
+    # 存储所有选项的列表
+    option_specs = []
     
     # 遍历解析器中的所有选项
     for action in parser._actions:
@@ -33,15 +33,14 @@ def get_parser_option_specs(self, command_name):
         # 构建选项规格
         option_spec = {
             'names': option_names,
-            'dest': action.dest,
-            'help': action.help,
+            'help': action.help or '',
             'required': action.required,
             'default': action.default,
-            'type': str(action.type.__name__) if action.type else None,
+            'type': action.type.__name__ if action.type else 'str',
             'choices': action.choices,
-            'action': action.type
+            'dest': action.dest
         }
         
-        options.append(option_spec)
+        option_specs.append(option_spec)
         
-    return options
+    return option_specs

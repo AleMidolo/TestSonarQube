@@ -17,13 +17,11 @@ def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
                 
     # 如果all为False,只获取接口定义的属性
     else:
-        # 获取接口定义的属性
-        if hasattr(self.__class__, '__provides__'):
-            interface = self.__class__.__provides__
-            for name in interface:
-                if hasattr(self, name):
-                    attr = getattr(self, name)
+        # 获取类实现的接口
+        for interface in self.__class__.__bases__:
+            for name, attr in interface.__dict__.items():
+                if not name.startswith('_'):
                     desc = attr.__doc__ if hasattr(attr, '__doc__') else ''
                     attributes[name] = desc
-    
+                    
     return attributes

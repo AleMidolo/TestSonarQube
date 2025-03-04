@@ -14,48 +14,58 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
         # 存储缓存项的过期时间
         timestamps = {}
 
+        def make_key(args, kwds):
+            # 生成缓存键
+            key = args
+            if kwds:
+                key += tuple(sorted(kwds.items()))
+            if typed:
+                key += tuple(type(arg) for arg in args)
+                if kwds:
+                    key += tuple(type(v) for v in kwds.values())
+            return hash(key)
+
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # 根据typed参数决定是否区分参数类型
-            key = tuple([type(arg) if typed else arg for arg in args] +
-                       sorted(kwargs.items()))
-            
+            key = make_key(args, kwargs)
             current_time = timer()
-            
-            # 检查缓存项是否存在且未过期
+
+            # 检查是否在缓存中且未过期
             if key in cache:
                 if current_time - timestamps[key] < ttl:
-                    # 将最近访问的项移到末尾
+                    # 将最近使用的项移到末尾
                     cache.move_to_end(key)
                     return cache[key]
                 else:
-                    # 删除过期的缓存项
+                    # 删除过期项
                     del cache[key]
                     del timestamps[key]
-            
-            # 计算新的结果
+
+            # 计算新值
             result = func(*args, **kwargs)
-            
+
             # 如果缓存已满，删除最早的项
             if maxsize > 0:
                 while len(cache) >= maxsize:
                     oldest = next(iter(cache))
                     del cache[oldest]
                     del timestamps[oldest]
-                
-                # 添加新的缓存项
-                cache[key] = result
-                timestamps[key] = current_time
-                cache.move_to_end(key)
-            
+
+            # 添加新项到缓存
+            cache[key] = result
+            timestamps[key] = current_time
+            cache.move_to_end(key)
+
             return result
-            
-        # 添加缓存清理方法
-        def clear_cache():
-            cache.clear()
-            timestamps.clear()
-            
-        wrapper.clear_cache = clear_cache
+
+        # 添加缓存统计和清理方法
+        wrapper.cache_info = lambda: {
+            'maxsize': maxsize,
+            'currsize': len(cache),
+            'ttl': ttl
+        }
+        wrapper.cache_clear = lambda: (cache.clear(), timestamps.clear())
+
         return wrapper
-        
+
     return decorator

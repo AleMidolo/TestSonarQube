@@ -22,6 +22,6 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
         with tarfile.open(temp_file.name, 'r:gz') as tar:
             for member in tar.getmembers():
                 if member.name.endswith('desc'):
-                    tar.extract(member, path=destination_path)
+                    tar.extract(member, destination_path)
     
     return destination_path

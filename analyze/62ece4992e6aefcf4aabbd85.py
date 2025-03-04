@@ -5,18 +5,18 @@ def find_roots(
     if roots is None:
         roots = set()
     
-    # 获取所有作为主语(subject)的节点
+    # 获取所有作为主语的节点(子节点)
     subjects = set(graph.subjects(prop))
     
-    # 获取所有作为宾语(object)的节点 
+    # 获取所有作为宾语的节点(父节点) 
     objects = set(graph.objects(None, prop))
     
-    # 根节点是那些作为宾语但不作为主语的节点
-    # 如果subjects为空,则所有objects都是根节点
-    if not subjects:
-        roots.update(objects)
-    else:
-        # 找出在objects中但不在subjects中的节点,它们就是根节点
-        roots.update(objects - subjects)
+    # 根节点是那些作为宾语出现但不作为主语出现的节点
+    # 即没有父节点的节点
+    roots.update(objects - subjects)
+    
+    # 如果没有找到根节点，则所有主语节点都是根节点
+    if not roots and subjects:
+        roots.update(subjects)
         
     return roots

@@ -13,17 +13,14 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     if '@' not in handle:
         raise ValueError("Invalid handle format")
 
-    username, domain = handle.split('@', 1)
+    username, domain = handle.split('@')
     
     # 构建 WebFinger URL
-    webfinger_url = f"https://{domain}/.well-known/webfinger"
-    params = {
-        'resource': f'acct:{handle}'
-    }
-
+    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
+    
     try:
         # 发送请求获取 WebFinger 文档
-        response = requests.get(webfinger_url, params=params)
+        response = requests.get(webfinger_url)
         response.raise_for_status()
         
         # 解析 JSON 响应
@@ -31,22 +28,24 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         
         # 提取相关信息到字典
         result = {
-            'handle': handle,
             'username': username,
             'domain': domain,
+            'subject': data.get('subject', ''),
+            'aliases': data.get('aliases', []),
             'links': {}
         }
         
-        # 解析链接
-        if 'links' in data:
-            for link in data['links']:
-                rel = link.get('rel', '')
-                href = link.get('href', '')
-                if rel and href:
-                    result['links'][rel] = href
-                    
+        # 解析 links 数组
+        for link in data.get('links', []):
+            rel = link.get('rel', '')
+            if rel:
+                result['links'][rel] = {
+                    'href': link.get('href', ''),
+                    'type': link.get('type', '')
+                }
+                
         return result
-
+        
     except requests.exceptions.RequestException as e:
         raise ConnectionError(f"Failed to retrieve WebFinger document: {str(e)}")
     except json.JSONDecodeError:

@@ -27,11 +27,12 @@ def _legacy_mergeOrderings(orderings):
             # 获取当前元素在所有列表中的位置
             positions = element_positions[element]
             
-            # 检查当前元素前面的所有元素是否都已经处理过
+            # 检查当前元素之前的所有元素是否都已经处理
             for ordering_idx, pos in enumerate(positions):
+                current_ordering = orderings[ordering_idx]
                 # 检查当前位置之前的元素
                 for prev_pos in range(pos):
-                    prev_element = orderings[ordering_idx][prev_pos]
+                    prev_element = current_ordering[prev_pos]
                     if prev_element not in seen:
                         can_add = False
                         break

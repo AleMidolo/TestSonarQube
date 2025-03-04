@@ -23,7 +23,7 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
             try:
                 if eval(condition, {}, context):
                     required_args.append(option['name'])
-            except Exception:
+            except:
                 # If evaluation fails, skip this condition
                 continue
                 
@@ -32,7 +32,7 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
             try:
                 if condition(args):
                     required_args.append(option['name'])
-            except Exception:
+            except:
                 # If evaluation fails, skip this condition
                 continue
                 
