@@ -16,13 +16,12 @@ def determineMetaclass(bases, explicit_mc=None):
                 if issubclass(mc, metaclass):
                     metaclass = mc
                 elif not issubclass(metaclass, mc):
-                    # Incompatible metaclasses
                     raise TypeError("Incompatible metaclasses")
         else:
-            # No bases, use type as default metaclass
+            # No bases and no explicit metaclass, use type
             metaclass = type
             
-    # If explicit metaclass was provided, ensure it's compatible with base metaclasses
+    # If explicit metaclass was given, ensure it's compatible with base metaclasses
     else:
         for base in bases:
             if not issubclass(metaclass, type(base)):

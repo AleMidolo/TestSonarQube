@@ -4,7 +4,7 @@ def point_type(name, fields, srid_map):
     """
     from shapely.geometry import Point
     
-    # Create class dictionary
+    # Create new class dictionary
     class_dict = {}
     
     # Add fields as class attributes

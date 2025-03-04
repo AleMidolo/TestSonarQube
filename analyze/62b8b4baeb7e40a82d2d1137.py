@@ -25,16 +25,19 @@ def verifyObject(iface, candidate, tentative=False):
 
             # Verifica la firma del metodo
             try:
-                desc.validateSignature(attr)
-            except Invalid as e:
-                errors['invalid_signature'].append((name, str(e)))
+                from inspect import signature
+                impl_sig = signature(attr)
+                desc_sig = signature(desc)
+                
+                if impl_sig != desc_sig:
+                    errors['wrong_signature'].append((name, str(desc_sig), str(impl_sig)))
+            except ValueError:
+                # Non è possibile ottenere la firma
+                pass
 
-    # Verifica attributi
-    for name, desc in iface.namesAndDescriptions(0):
-        if not isinstance(desc, Method):
-            try:
-                getattr(candidate, name)
-            except AttributeError:
+        else:
+            # Verifica attributi
+            if not hasattr(candidate, name):
                 errors['missing_attributes'].append(name)
 
     # Gestione errori
@@ -43,22 +46,22 @@ def verifyObject(iface, candidate, tentative=False):
 
     # Crea messaggi di errore
     error_messages = []
+    
     if errors['missing_methods']:
         error_messages.append(f"Metodi mancanti: {', '.join(errors['missing_methods'])}")
+    
     if errors['not_callable']:
         error_messages.append(f"Attributi non chiamabili: {', '.join(errors['not_callable'])}")
-    if errors['invalid_signature']:
-        sig_errors = [f"{name}: {err}" for name, err in errors['invalid_signature']]
-        error_messages.append(f"Firme non valide: {', '.join(sig_errors)}")
+    
+    if errors['wrong_signature']:
+        for name, expected, got in errors['wrong_signature']:
+            error_messages.append(f"Firma errata per {name}: atteso {expected}, trovato {got}")
+    
     if errors['missing_attributes']:
         error_messages.append(f"Attributi mancanti: {', '.join(errors['missing_attributes'])}")
 
-    # Se c'è un solo tipo di errore, solleva l'eccezione appropriata
+    # Solleva eccezione
     if len(error_messages) == 1:
-        if errors['missing_methods'] or errors['missing_attributes']:
-            raise BrokenImplementation(iface, error_messages[0])
-        if errors['not_callable'] or errors['invalid_signature']:
-            raise BrokenMethodImplementation(iface, error_messages[0])
-
-    # Altrimenti, solleva un'eccezione con tutti gli errori
-    raise Invalid("\n".join(error_messages))
+        raise BrokenImplementation(iface, error_messages[0])
+    else:
+        raise Invalid("\n".join(error_messages))

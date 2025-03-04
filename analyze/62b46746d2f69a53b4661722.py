@@ -33,7 +33,7 @@ def absorb(self, args):
                               if arg != Not(result[i].args[0])]
                     result[j] = And(result[i].args[0], *new_args)
                     changed = True
-                
+                    
                 # Assorbimento negativo A | (~A & B) = A | B
                 if (isinstance(result[i], Or) and
                     isinstance(result[j], And) and

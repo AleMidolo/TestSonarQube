@@ -21,10 +21,10 @@ def scale(self, other=None, recompute=False):
         
     # Se viene fornito un valore per riscalare
     else:
-        # Calcola la scala corrente se non è stata calcolata
+        # Calcola la scala corrente
         current_scale = self.scale()
         
-        # Controlla se la scala corrente è zero
+        # Controlla se la scala è zero
         if current_scale == 0:
             raise LenaValueError("Cannot rescale histogram with zero scale")
             
@@ -35,4 +35,4 @@ def scale(self, other=None, recompute=False):
         self._contents = [c * scale_factor for c in self._contents]
         
         # Aggiorna la scala memorizzata
-        self._scale = float(other)
+        self._scale = other

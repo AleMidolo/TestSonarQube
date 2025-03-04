@@ -11,18 +11,14 @@ def fromutc(self, dt):
     # Calcola il nuovo datetime aggiungendo l'offset UTC
     dt = dt + utc_offset
     
-    # Verifica se il datetime è ambiguo (cade in un periodo di transizione DST)
+    # Gestione del fold per datetime ambigui
     dst_offset = self.dst(dt)
     if dst_offset is None:
         return dt
         
-    # Se c'è un offset DST, determina se siamo nel "fold"
-    # Confronta con il datetime un'ora prima
-    earlier = dt - dst_offset
-    if self.dst(earlier) is not None:
-        # Se il datetime precedente ha un offset DST diverso,
-        # siamo nel periodo di transizione
-        fold = self.dst(earlier) != dst_offset
-        return dt.replace(fold=fold)
-        
-    return dt
+    # Se c'è una transizione DST, determina se siamo nel fold
+    standard_offset = self.utcoffset(dt) - dst_offset
+    transition_fold = (standard_offset.total_seconds() > 0)
+    
+    # Imposta il fold appropriato
+    return dt.replace(fold=transition_fold)

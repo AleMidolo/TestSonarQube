@@ -21,7 +21,7 @@ def lfu_cache(maxsize=128, typed=False):
                 key = (*args, *sorted(kwargs.items()))
                 
             try:
-                # Se il risultato è già in cache, aggiorna la frequenza e restituisci
+                # Se il risultato è già in cache, incrementa la frequenza e restituiscilo
                 result = cache[key]
                 freq[key] += 1
                 return result
@@ -36,9 +36,9 @@ def lfu_cache(maxsize=128, typed=False):
                     # Trova tutte le chiavi con frequenza minima
                     min_keys = [k for k, v in freq.items() if v == min_freq]
                     # Rimuovi la chiave più vecchia tra quelle con frequenza minima
-                    del_key = min_keys[0]
-                    del cache[del_key]
-                    del freq[del_key]
+                    lfu_key = min_keys[0]
+                    del cache[lfu_key]
+                    del freq[lfu_key]
                 
                 # Aggiungi il nuovo risultato alla cache
                 cache[key] = result

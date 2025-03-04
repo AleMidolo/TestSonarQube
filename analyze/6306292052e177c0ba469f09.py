@@ -6,24 +6,24 @@ def identify_request(request: RequestType):
     """
     # Check if it's a public message
     try:
-        if request.get('xml') is not None:
-            return 'public'
+        if request.get('entity_type') == 'Post' and request.get('public'):
+            return 'public_message'
     except:
         pass
 
     # Check if it's a private message
     try:
-        if request.get('encrypted_magic_envelope') is not None:
-            return 'private' 
+        if request.get('entity_type') == 'Message' and not request.get('public'):
+            return 'private_message'
     except:
         pass
 
     # Check if it's a legacy payload
     try:
-        if request.get('legacy_xml_format') is not None:
-            return 'legacy'
+        if 'XML' in request.get('format', '').upper() or request.get('legacy'):
+            return 'legacy_payload'
     except:
         pass
 
-    # If none of the above, return unknown
-    return 'unknown'
+    # If none of the above, return None
+    return None

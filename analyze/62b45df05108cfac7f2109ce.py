@@ -26,19 +26,16 @@ def validate(self, path):
         if field not in inventory:
             raise ValueError(f"Campo {field} mancante nell'inventory")
 
-    # Verifica che l'algoritmo di digest sia supportato
-    if inventory["digestAlgorithm"] not in ["sha256", "sha512"]:
-        raise ValueError(f"Algoritmo digest {inventory['digestAlgorithm']} non supportato")
+    # Verifica che l'algoritmo di digest sia valido
+    valid_algorithms = ["sha256", "sha512", "sha1"]
+    if inventory["digestAlgorithm"] not in valid_algorithms:
+        raise ValueError(f"Algoritmo digest non valido: {inventory['digestAlgorithm']}")
 
-    # Verifica la presenza delle versioni
-    versions_path = self.fs.join_path(path, "versions")
-    if not self.fs.exists(versions_path):
-        raise ValueError(f"Directory versions mancante in {path}")
-
-    # Verifica che ogni versione dichiarata nell'inventory esista
+    # Verifica la presenza delle directory delle versioni
     for version in inventory["versions"]:
-        version_path = self.fs.join_path(versions_path, version)
+        version_path = self.fs.join_path(path, f"v{version}")
         if not self.fs.exists(version_path):
-            raise ValueError(f"Versione {version} mancante in {path}")
+            raise ValueError(f"Directory versione {version} mancante")
 
+    # Se arriviamo qui, la validazione è passata
     return True

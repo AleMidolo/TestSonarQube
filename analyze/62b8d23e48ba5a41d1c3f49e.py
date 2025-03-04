@@ -2,18 +2,18 @@ def popitem(self):
     """
     Rimuovi e restituisci una coppia `(chiave, valore)` casuale.
     """
-    if not self:
+    if not self:  # se il dizionario è vuoto
         raise KeyError('Dictionary is empty')
         
-    # Get a random key from the dictionary
+    # scegli una chiave casuale
     import random
     key = random.choice(list(self.keys()))
     
-    # Get the value for that key
+    # ottieni il valore associato
     value = self[key]
     
-    # Remove the key-value pair
+    # rimuovi la coppia chiave-valore
     del self[key]
     
-    # Return the random key-value pair as a tuple
+    # restituisci la tupla con chiave e valore
     return (key, value)

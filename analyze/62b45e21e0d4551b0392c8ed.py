@@ -26,10 +26,9 @@ def find_path_type(path):
         return "Error reading Namaste file"
         
     # Check content to determine type
-    if "ocfl_" in namaste_content.lower():
-        if "root" in namaste_content.lower():
-            return "root"
-        elif "object" in namaste_content.lower():
-            return "object"
-            
+    if "ocfl_object" in namaste_content.lower():
+        return "object"
+    elif "ocfl_" in namaste_content.lower():
+        return "root"
+        
     return f"Unknown Namaste content: {namaste_content}"

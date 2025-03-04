@@ -39,8 +39,3 @@ def _validate_labels(labels):
     # Raise ValidationError if any errors found
     if errors:
         raise ValidationError(errors)
-        
-class ValidationError(Exception):
-    def __init__(self, messages):
-        self.messages = messages
-        super().__init__(str(messages))
