@@ -19,7 +19,7 @@ def format(
       - 转换后的 out-style 参数集合（类型：`dict` 或 `list`）。
     """
     # 检查参数类型是否匹配样式
-    if self.in_style.is_named():
+    if self.in_style.is_named:
         if not isinstance(params, Mapping):
             raise TypeError("Named parameter style requires a mapping for params")
     else:
@@ -28,100 +28,53 @@ def format(
 
     # 初始化输出参数集合
     out_params: Union[Dict[Union[str, int], Any], List[Any]]
-    out_params = {} if self.out_style.is_named() else []
+    out_params = {} if self.out_style.is_named else []
     
     # 初始化参数计数器和SQL构建器
     param_count = 0
     formatted_sql = sql
     
-    if isinstance(sql, str):
-        # 处理字符串类型的SQL
-        if self.in_style.is_named():
-            # 处理命名参数
-            for param_name in params:
-                param_value = params[param_name]
-                # 转换参数值
-                converted_value = self._converter.convert(param_value)
-                if self.out_style.is_named():
-                    # 生成新的参数名
-                    new_param_name = f"p{param_count}"
-                    out_params[new_param_name] = converted_value
-                    # 替换SQL中的参数占位符
-                    formatted_sql = formatted_sql.replace(
-                        f"{self.in_style.prefix}{param_name}{self.in_style.suffix}",
-                        f"{self.out_style.prefix}{new_param_name}{self.out_style.suffix}"
-                    )
-                else:
-                    out_params.append(converted_value)
-                    # 替换SQL中的参数占位符
-                    formatted_sql = formatted_sql.replace(
-                        f"{self.in_style.prefix}{param_name}{self.in_style.suffix}",
-                        self.out_style.placeholder
-                    )
-                param_count += 1
-        else:
-            # 处理位置参数
-            for param_value in params:
-                # 转换参数值
-                converted_value = self._converter.convert(param_value)
-                if self.out_style.is_named():
-                    # 生成新的参数名
-                    new_param_name = f"p{param_count}"
-                    out_params[new_param_name] = converted_value
-                    # 替换SQL中的参数占位符
-                    formatted_sql = formatted_sql.replace(
-                        self.in_style.placeholder,
-                        f"{self.out_style.prefix}{new_param_name}{self.out_style.suffix}",
-                        1
-                    )
-                else:
-                    out_params.append(converted_value)
-                    # 替换SQL中的参数占位符
-                    formatted_sql = formatted_sql.replace(
-                        self.in_style.placeholder,
-                        self.out_style.placeholder,
-                        1
-                    )
-                param_count += 1
+    if self.in_style.is_named:
+        # 处理命名参数
+        for param_name, value in params.items():
+            # 生成输出参数名
+            out_name = self.out_style.format_param(param_count) if self.out_style.is_named else param_count
+            
+            # 转换参数值
+            converted_value = self._converter.convert(value)
+            
+            # 替换SQL中的参数占位符
+            formatted_sql = formatted_sql.replace(
+                self.in_style.format_param(param_name),
+                self.out_style.format_param(out_name)
+            )
+            
+            # 存储转换后的参数
+            if self.out_style.is_named:
+                out_params[out_name] = converted_value
+            else:
+                out_params.append(converted_value)
+                
+            param_count += 1
     else:
-        # 处理bytes类型的SQL
-        # 将相同的逻辑应用于bytes，但使用bytes方法
-        if self.in_style.is_named():
-            for param_name in params:
-                param_value = params[param_name]
-                converted_value = self._converter.convert(param_value)
-                if self.out_style.is_named():
-                    new_param_name = f"p{param_count}".encode()
-                    out_params[new_param_name] = converted_value
-                    formatted_sql = formatted_sql.replace(
-                        f"{self.in_style.prefix}{param_name}{self.in_style.suffix}".encode(),
-                        f"{self.out_style.prefix}{new_param_name.decode()}{self.out_style.suffix}".encode()
-                    )
-                else:
-                    out_params.append(converted_value)
-                    formatted_sql = formatted_sql.replace(
-                        f"{self.in_style.prefix}{param_name}{self.in_style.suffix}".encode(),
-                        self.out_style.placeholder.encode()
-                    )
-                param_count += 1
-        else:
-            for param_value in params:
-                converted_value = self._converter.convert(param_value)
-                if self.out_style.is_named():
-                    new_param_name = f"p{param_count}".encode()
-                    out_params[new_param_name] = converted_value
-                    formatted_sql = formatted_sql.replace(
-                        self.in_style.placeholder.encode(),
-                        f"{self.out_style.prefix}{new_param_name.decode()}{self.out_style.suffix}".encode(),
-                        1
-                    )
-                else:
-                    out_params.append(converted_value)
-                    formatted_sql = formatted_sql.replace(
-                        self.in_style.placeholder.encode(),
-                        self.out_style.placeholder.encode(),
-                        1
-                    )
-                param_count += 1
-
+        # 处理序号参数
+        for i, value in enumerate(params):
+            # 生成输出参数名
+            out_name = self.out_style.format_param(i) if self.out_style.is_named else i
+            
+            # 转换参数值
+            converted_value = self._converter.convert(value)
+            
+            # 替换SQL中的参数占位符
+            formatted_sql = formatted_sql.replace(
+                self.in_style.format_param(i),
+                self.out_style.format_param(out_name)
+            )
+            
+            # 存储转换后的参数
+            if self.out_style.is_named:
+                out_params[out_name] = converted_value
+            else:
+                out_params.append(converted_value)
+    
     return formatted_sql, out_params

@@ -9,9 +9,8 @@ def check_sender_and_entity_handle_match(sender_handle, entity_handle):
     if not sender_handle or not entity_handle:
         return False
         
-    # 将两个句柄转换为小写进行比较
-    sender = str(sender_handle).lower().strip()
-    entity = str(entity_handle).lower().strip()
+    # 将两个句柄转换为小写进行比较,避免大小写不一致的问题
+    sender_handle = str(sender_handle).lower().strip()
+    entity_handle = str(entity_handle).lower().strip()
     
-    # 检查两个句柄是否完全匹配
-    return sender == entity
+    return sender_handle == entity_handle

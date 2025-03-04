@@ -18,9 +18,11 @@ def _include_groups(self, parser_dict):
         if isinstance(group, dict):
             result.update(group)
         elif isinstance(group, str):
-            # 假设从某处加载group定义
-            group_dict = self._load_group(group)
-            result.update(group_dict)
+            # 假设group是一个文件路径或组名,需要从其他地方加载
+            included_dict = self._load_group(group)
+            result.update(included_dict)
             
+    # 合并include的内容和原始内容
     result.update(parser_dict)
+    
     return result

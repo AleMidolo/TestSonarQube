@@ -12,25 +12,31 @@ def verifyClass(iface, candidate, tentative=False):
     missing = required - implemented
     
     if tentative:
-        # 如果是暂定验证,只要有任何一个属性匹配即可
-        return bool(required & implemented)
+        # 如果是暂定验证,只要有部分实现即可
+        return len(implemented & required) > 0
     else:
-        # 严格验证模式下,所有必需属性都必须实现
+        # 严格验证模式下,必须完全实现所有接口
         if missing:
             return False
             
-        # 进一步验证属性类型是否匹配
-        for attr in required:
-            iface_attr = getattr(iface, attr)
-            cand_attr = getattr(candidate, attr)
+        # 验证方法签名是否匹配
+        for name in required:
+            if not hasattr(iface, name):
+                continue
+                
+            iface_attr = getattr(iface, name)
+            cand_attr = getattr(candidate, name)
             
-            # 检查属性是否为可调用对象(方法)
+            # 检查是否为可调用对象(方法)
             if callable(iface_attr):
                 if not callable(cand_attr):
                     return False
                     
-            # 检查属性类型是否匹配
-            elif type(iface_attr) != type(cand_attr):
-                return False
-                
+                # 检查方法参数是否匹配
+                try:
+                    if iface_attr.__code__.co_argcount != cand_attr.__code__.co_argcount:
+                        return False
+                except AttributeError:
+                    pass
+                    
         return True

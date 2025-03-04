@@ -15,10 +15,8 @@ def validate_length_args(self, args):
             # 获取该参数允许的最大长度
             max_length = self.get_max_length(arg_name)
             
-            # 如果设置了最大长度限制
-            if max_length is not None:
-                # 检查参数值长度是否超过限制
-                if len(arg_value) > max_length:
-                    raise ValueError(f"Parameter '{arg_name}' exceeds maximum length of {max_length}")
-                    
+            # 如果设置了最大长度限制且参数值超过限制
+            if max_length and len(arg_value) > max_length:
+                raise ValueError(f"Parameter '{arg_name}' exceeds maximum length of {max_length}")
+                
     return True

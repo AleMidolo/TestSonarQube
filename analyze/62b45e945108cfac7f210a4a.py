@@ -20,13 +20,15 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
                 
             # 检查摘要
             if check_digests:
-                if obj.verify_digest():
-                    good_objects += 1
-                elif show_warnings:
-                    print(f"Warning: Invalid digest for object {obj.id}")
-            else:
-                good_objects += 1
+                stored_digest = obj.get_digest()
+                calculated_digest = obj.calculate_digest()
+                if stored_digest != calculated_digest:
+                    if show_warnings:
+                        print(f"Warning: Digest mismatch for object {obj.id}")
+                    continue
                     
+            good_objects += 1
+            
         except Exception as e:
             if show_warnings:
                 print(f"Warning: Failed to validate object {obj.id}: {str(e)}")

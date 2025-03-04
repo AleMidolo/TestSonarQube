@@ -32,8 +32,12 @@ _borgmatic()
             COMPREPLY=( $(compgen -W "0 1 2 3" -- ${cur}) )
             return 0
             ;;
+        --log-file)
+            COMPREPLY=( $(compgen -f -- ${cur}) )
+            return 0
+            ;;
         *)
-            # 如果是以-开头的当前单词，提供选项补全
+            # 如果当前输入以破折号开头，提供选项补全
             if [[ ${cur} == -* ]] ; then
                 COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
                 return 0
@@ -41,7 +45,7 @@ _borgmatic()
             ;;
     esac
     
-    # 默认补全命令
+    # 默认补全为主要命令
     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
     return 0
 }

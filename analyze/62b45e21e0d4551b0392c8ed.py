@@ -28,7 +28,7 @@ def find_path_type(path):
         if not namaste_files:
             return "No Namaste files found"
             
-        # 读取第一个找到的 0=* 文件内容
+        # 读取第一个找到的 0= 文件内容
         try:
             with open(namaste_files[0], 'r') as f:
                 content = f.read().strip()

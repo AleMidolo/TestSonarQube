@@ -1,5 +1,5 @@
 def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None, imp_user=None, dehydration_hooks=None, hydration_hooks=None, **handlers):
-    # Set default mode to "WRITE" if not specified
+    # Set default mode to WRITE if not specified
     if mode is None:
         mode = "WRITE"
     elif mode not in ("READ", "WRITE"):
@@ -20,32 +20,28 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None,
     if timeout is not None:
         parameters["timeout"] = timeout
         
-    # Add database name if provided
+    # Add database name if provided (Bolt 4.0+)
     if db is not None:
         parameters["db"] = db
         
-    # Add impersonated user if provided
+    # Add impersonated user if provided (Bolt 4.4+)
     if imp_user is not None:
         parameters["imp_user"] = imp_user
 
-    # Create transaction configuration
-    tx_config = {
+    # Create transaction context with hooks
+    tx_context = {
         "mode": mode,
         "parameters": parameters
     }
-
-    # Set up dehydration hooks
+    
     if dehydration_hooks:
-        self._dehydration_hooks = dehydration_hooks
-    
-    # Set up hydration hooks
+        tx_context["dehydration_hooks"] = dehydration_hooks
     if hydration_hooks:
-        self._hydration_hooks = hydration_hooks
+        tx_context["hydration_hooks"] = hydration_hooks
 
-    # Create and return Response object with transaction configuration and handlers
-    response = Response(tx_config, **handlers)
-    
-    # Initialize transaction state
-    response._tx_state = "ACTIVE"
-    
+    # Create and return Response object with handlers
+    response = Response(tx_context)
+    for key, handler in handlers.items():
+        response.add_handler(key, handler)
+        
     return response

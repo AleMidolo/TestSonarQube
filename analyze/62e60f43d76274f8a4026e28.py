@@ -15,18 +15,18 @@ def hydrate_time(nanoseconds, tz=None):
     # 创建datetime对象
     dt = datetime.fromtimestamp(seconds)
     
-    # 处理时区
+    # 如果指定了时区
     if tz is not None:
         if isinstance(tz, str):
-            # 如果tz是字符串,假设是UTC偏移量格式如'+08:00'
-            offset = int(tz[1:3]) * 3600 + int(tz[4:6]) * 60
+            # 如果tz是字符串,创建timezone对象
+            offset = int(tz[1:3]) * 3600 + int(tz[3:5]) * 60
             if tz[0] == '-':
                 offset = -offset
             tz = timezone(timedelta(seconds=offset))
         dt = dt.astimezone(tz)
     
-    # 格式化输出,包含纳秒精度
+    # 格式化输出,包含纳秒
     microseconds = int((nanoseconds % 1e9) / 1e3)
-    time_str = dt.strftime('%H:%M:%S.{:06d}'.format(microseconds))
+    time_str = dt.strftime('%H:%M:%S.') + f'{microseconds:06d}'
     
     return time_str

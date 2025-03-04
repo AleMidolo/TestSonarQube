@@ -50,5 +50,3 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         raise ConnectionError(f"Failed to retrieve WebFinger document: {str(e)}")
     except json.JSONDecodeError:
         raise ValueError("Invalid WebFinger document format")
-    except Exception as e:
-        raise Exception(f"Error processing WebFinger document: {str(e)}")

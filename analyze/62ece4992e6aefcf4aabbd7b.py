@@ -12,19 +12,22 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     import os
     import pathlib
 
-    # 获取文件路径
-    config_path = pathlib.Path(config_filename)
+    # 获取目标文件的目录路径
+    config_dir = os.path.dirname(config_filename)
     
-    # 如果文件已存在且不允许覆盖，则直接返回
-    if config_path.exists() and not overwrite:
-        return
+    # 如果目录不存在则创建
+    if config_dir:
+        pathlib.Path(config_dir).mkdir(parents=True, exist_ok=True)
         
-    # 创建父目录(如果不存在)
-    config_path.parent.mkdir(parents=True, exist_ok=True)
-    
+    # 检查文件是否已存在
+    if os.path.exists(config_filename) and not overwrite:
+        return None
+        
     # 写入配置文件
-    with open(config_path, 'w') as f:
+    with open(config_filename, 'w') as f:
         f.write(rendered_config)
-    
+        
     # 设置文件权限
-    os.chmod(config_path, mode)
+    os.chmod(config_filename, mode)
+    
+    return None

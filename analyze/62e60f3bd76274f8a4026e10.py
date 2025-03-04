@@ -17,11 +17,13 @@ def dehydrate_timedelta(value):
     hours = seconds // 3600
     minutes = (seconds % 3600) // 60
     seconds = seconds % 60
-
-    return {
+    
+    result = {
         'days': days,
         'hours': hours,
         'minutes': minutes,
         'seconds': seconds,
         'microseconds': microseconds
     }
+    
+    return result
