@@ -6,15 +6,18 @@ def parse_arguments(*arguments):
     
     parser = argparse.ArgumentParser(description='Script para procesar argumentos de línea de comandos')
     
-    # Agregar argumentos posicionales y opcionales
-    parser.add_argument('--input', '-i', help='Archivo de entrada', required=False)
-    parser.add_argument('--output', '-o', help='Archivo de salida', required=False)
-    parser.add_argument('--verbose', '-v', action='store_true', help='Modo verboso')
+    # Si no se pasan argumentos, usar sys.argv[1:]
+    if not arguments:
+        import sys
+        arguments = sys.argv[1:]
     
-    # Si se pasan argumentos, usarlos. Si no, usar sys.argv[1:]
-    if arguments:
-        args = parser.parse_args(arguments)
-    else:
-        args = parser.parse_args()
-        
+    # Agregar argumentos esperados
+    parser.add_argument('-i', '--input', help='Archivo de entrada', required=False)
+    parser.add_argument('-o', '--output', help='Archivo de salida', required=False)
+    parser.add_argument('-v', '--verbose', help='Mostrar información detallada', action='store_true')
+    parser.add_argument('--version', action='version', version='%(prog)s 1.0')
+    
+    # Parsear los argumentos
+    args = parser.parse_args(arguments)
+    
     return args

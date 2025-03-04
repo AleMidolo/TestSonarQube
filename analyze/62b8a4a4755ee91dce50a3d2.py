@@ -22,17 +22,19 @@ def _fromutc(self, dt):
     
     # Calcular el datetime local
     local_dt = dt + (local_offset - utc_offset)
-
+    
     # Verificar si el datetime es ambiguo (está en un "pliegue")
-    fold = 0
-    transition_times = self._get_transition_times()
-    if transition_times:
-        # Si el datetime está en un período de transición
-        for t_start, t_end in transition_times:
-            if t_start <= utc_ts <= t_end:
-                # Verificar si es la primera ocurrencia
-                fold = 1 if local_dt.timestamp() > utc_ts else 0
-                break
-
-    # Crear nuevo datetime con el fold calculado
-    return local_dt.replace(fold=fold)
+    timestamps = []
+    
+    # Probar offsets antes y después
+    for offset in [local_offset, local_offset + timedelta(hours=1)]:
+        local_ts = (local_dt - offset).timestamp()
+        timestamps.append(local_ts)
+    
+    # Si los timestamps son diferentes, el datetime es ambiguo
+    is_fold = len(set(timestamps)) > 1
+    
+    # Establecer el atributo fold
+    local_dt = local_dt.replace(fold=int(is_fold))
+    
+    return local_dt

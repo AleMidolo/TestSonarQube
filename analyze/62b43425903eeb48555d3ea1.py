@@ -4,6 +4,4 @@ def _create_in_regex(self) -> Pattern:
 
     Devuelve la expresión regular para el parámetro "in-style" (:class:`re.Pattern`).
     """
-    import re
-    pattern = r'in-style\s*=\s*["\']([^"\']+)["\']'
-    return re.compile(pattern)
+    return re.compile(r'in-style\s*=\s*["\']([^"\']+)["\']')

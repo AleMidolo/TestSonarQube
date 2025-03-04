@@ -34,12 +34,8 @@ def _extract_number_and_supplment_from_issue_element(issue):
                 
             return number, suppl
     
-    # If no supplement found, treat as regular issue number
-    try:
-        number = issue.strip('.:() ')
-        if number.isdigit():
-            return number, None
-    except:
-        pass
-        
-    return None, None
+    # If no supplement found, treat entire string as issue number
+    # Remove any punctuation/whitespace
+    number = issue.strip('.:() ')
+    
+    return number, suppl

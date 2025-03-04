@@ -22,7 +22,7 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
         # Obtener el netloc
         netloc = parsed_url.netloc
         if not netloc:
-            raise ValueError("URL sin dominio válido")
+            raise ValueError("Dominio no válido en la URL")
             
         # Determinar si usa SSL
         use_ssl = parsed_url.scheme == 'https'
@@ -30,7 +30,7 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
         # Obtener el ID de la imagen del path
         path_parts = parsed_url.path.strip('/').split('/')
         if not path_parts[-1]:
-            raise ValueError("URL sin ID de imagen válido")
+            raise ValueError("ID de imagen no encontrado en la URL")
         image_id = path_parts[-1]
         
         return (image_id, netloc, use_ssl)

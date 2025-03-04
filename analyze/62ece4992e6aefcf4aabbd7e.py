@@ -15,5 +15,5 @@ def _resolve_string(matcher):
     if default is not None:
         return default
         
-    # Raise error if no value or default found
+    # Raise error if no value found and no default
     raise ValueError(f"Environment variable '{name}' not found and no default value provided")

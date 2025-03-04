@@ -5,11 +5,11 @@ def formatmany(
 ) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
     
     # Convert each params set to out style
-    out_params = []
+    out_params_list = []
     for params in many_params:
         # Format single params set
-        _, converted_params = self.format(sql, params)
-        out_params.append(converted_params)
+        _, out_params = self.format(sql, params)
+        out_params_list.append(out_params)
         
     # Format SQL once using first params set
     try:
@@ -17,6 +17,6 @@ def formatmany(
     except StopIteration:
         first_params = {}
         
-    formatted_sql, _ = self.format(sql, first_params)
+    out_sql, _ = self.format(sql, first_params)
     
-    return formatted_sql, out_params
+    return out_sql, out_params_list

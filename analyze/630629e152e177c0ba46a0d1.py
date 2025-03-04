@@ -24,10 +24,11 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         # Realizar petición HTTP
         response = requests.get(webfinger_url, params=params, timeout=10)
         
+        # Verificar respuesta exitosa
         if response.status_code == 200:
             return response.text
-        else:
-            return None
             
-    except Exception:
-        return None
+    except (requests.RequestException, ValueError):
+        pass
+        
+    return None

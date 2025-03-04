@@ -23,7 +23,7 @@ def validate_from_file(cls, yaml_file=None):
         missing_fields = [field for field in required_fields if field not in data]
         
         if missing_fields:
-            raise IRValidatorException(f"Faltan los siguientes campos requeridos: {', '.join(missing_fields)}")
+            raise IRValidatorException(f"Faltan los siguientes campos obligatorios: {', '.join(missing_fields)}")
             
         return data
         

@@ -15,6 +15,8 @@ def _normalizeargs(sequence, output=None):
     for item in sequence:
         if isinstance(item, (list, tuple)):
             _normalizeargs(item, output)
+        elif hasattr(item, '__iter__') and not isinstance(item, (str, bytes)):
+            _normalizeargs(item, output)
         else:
             output.append(item)
             

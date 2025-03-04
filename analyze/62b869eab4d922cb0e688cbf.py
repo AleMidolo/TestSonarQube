@@ -8,43 +8,55 @@ def generate_default_observer_schema(app):
     # Iterate through resources in manifest
     for resource in app.spec.manifest:
         # Skip if resource already has custom observer schema
-        if resource.get('observer_schema'):
+        if resource.get('metadata', {}).get('name') in getattr(app.spec, 'observer_schema', {}):
             continue
             
-        # Get resource kind and API version
+        # Get resource kind and name
         kind = resource.get('kind')
-        api_version = resource.get('apiVersion')
+        name = resource.get('metadata', {}).get('name')
         
-        if not kind or not api_version:
+        if not kind or not name:
             continue
             
-        # Generate default schema for this resource type
+        # Generate default schema for this resource
         resource_schema = {
-            'type': 'object',
-            'properties': {
-                'status': {
-                    'type': 'object',
-                    'properties': {
-                        'phase': {'type': 'string'},
-                        'conditions': {
-                            'type': 'array',
-                            'items': {
-                                'type': 'object',
-                                'properties': {
-                                    'type': {'type': 'string'},
-                                    'status': {'type': 'string'},
-                                    'reason': {'type': 'string'},
-                                    'message': {'type': 'string'}
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            'conditions': [{
+                'type': 'Ready',
+                'status': 'True'
+            }],
+            'metrics': {}
         }
         
-        # Add schema to default_schema dict with resource type as key
-        resource_key = f"{api_version}/{kind}"
-        default_schema[resource_key] = resource_schema
+        # Add schema for common resource types
+        if kind.lower() in ['deployment', 'statefulset', 'daemonset']:
+            resource_schema['metrics'].update({
+                'replicas': {
+                    'path': '.status.replicas',
+                    'type': 'integer'
+                },
+                'ready_replicas': {
+                    'path': '.status.readyReplicas', 
+                    'type': 'integer'
+                }
+            })
+            
+        elif kind.lower() == 'service':
+            resource_schema['metrics'].update({
+                'cluster_ip': {
+                    'path': '.spec.clusterIP',
+                    'type': 'string'
+                }
+            })
+            
+        elif kind.lower() == 'pod':
+            resource_schema['metrics'].update({
+                'phase': {
+                    'path': '.status.phase',
+                    'type': 'string'
+                }
+            })
+            
+        # Add schema to default_schema dict
+        default_schema[name] = resource_schema
 
     return default_schema

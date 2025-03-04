@@ -19,7 +19,7 @@ def retrieve_diaspora_host_meta(host):
             response = requests.get(url, timeout=10)
             if response.status_code == 200:
                 # Parse the XRD document from the response content
-                xrd = XRD.parse_xrd(response.text)
+                xrd = XRD.parse_xrd(response.content)
                 return xrd
         except (requests.RequestException, ValueError):
             continue

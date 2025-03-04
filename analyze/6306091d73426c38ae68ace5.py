@@ -15,7 +15,7 @@ def _include_groups(self, parser_dict):
                         included_content = self._parse_yaml(f)
                         result[key] = included_content
                 except FileNotFoundError:
-                    raise FileNotFoundError(f"Include file not found: {include_file}")
+                    raise Exception(f"Include file not found: {include_file}")
             else:
                 result[key] = self._include_groups(value)
         else:

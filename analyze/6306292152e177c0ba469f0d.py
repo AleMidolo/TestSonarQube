@@ -8,18 +8,11 @@ def identify_request(request: RequestType) -> bool:
         
     # Verificar si tiene los campos típicos de una solicitud Matrix
     matrix_indicators = [
-        'matrix_id',
-        'room_id', 
-        'event_type',
-        'sender',
-        'content'
+        hasattr(request, 'event_type'),
+        hasattr(request, 'room_id'), 
+        hasattr(request, 'sender'),
+        hasattr(request, 'content')
     ]
     
-    # Verificar si al menos tiene algunos de los campos indicadores
-    matches = 0
-    for indicator in matrix_indicators:
-        if hasattr(request, indicator):
-            matches += 1
-            
-    # Si tiene al menos 3 de los campos indicadores, consideramos que es una solicitud Matrix
-    return matches >= 3
+    # Si tiene al menos 3 de los 4 indicadores, consideramos que es una solicitud Matrix
+    return sum(matrix_indicators) >= 3

@@ -31,17 +31,18 @@ def lfu_cache(maxsize=128, typed=False):
                 
             # Si el caché está lleno, eliminar el elemento menos frecuente
             if len(cache) >= maxsize:
+                # Encontrar la frecuencia mínima
                 min_freq = min(frequency.values())
                 # Obtener elementos con frecuencia mínima
                 min_freq_keys = [k for k, v in frequency.items() if v == min_freq]
-                # Si hay varios con misma frecuencia, eliminar el menos usado
+                # Si hay varios, eliminar el menos usado recientemente
                 lru_key = min(min_freq_keys, key=lambda k: last_used[k])
                 
                 del cache[lru_key]
                 del frequency[lru_key]
                 del last_used[lru_key]
                 
-            # Calcular nuevo valor y almacenar en caché
+            # Calcular nuevo valor y almacenarlo
             result = func(*args, **kwargs)
             cache[key] = result
             frequency[key] = 1
@@ -49,7 +50,7 @@ def lfu_cache(maxsize=128, typed=False):
             
             return result
             
-        # Agregar métodos para acceder al estado del caché
+        # Agregar métodos para acceder a la información del caché
         wrapper.cache_info = lambda: {
             'hits': sum(frequency.values()) - len(frequency),
             'misses': len(frequency),

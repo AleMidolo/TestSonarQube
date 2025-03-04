@@ -10,6 +10,7 @@ def validate_version_inventories(self, version_dirs):
     y se asume que están en secuencia de versiones (1, 2, 3...).
     """
     digests_to_verify = set()
+    root_inventory = None
     
     # Validar que exista un inventario para cada versión
     for version_dir in version_dirs:
@@ -18,30 +19,30 @@ def validate_version_inventories(self, version_dirs):
         if not os.path.exists(inventory_path):
             raise ValueError(f"No se encontró inventario para la versión {version_dir}")
             
-        # Leer el inventario de la versión actual
+        # Leer el inventario actual
         with open(inventory_path) as f:
-            version_inventory = f.readlines()
+            current_inventory = f.read()
             
-        # Obtener los digests del inventario actual
-        version_digests = set()
-        for line in version_inventory:
-            if line.strip():
-                digest = line.split()[0]
-                version_digests.add(digest)
-                
-        # Comparar con el inventario raíz y agregar digests diferentes
-        root_inventory_path = "inventory.txt"
-        if os.path.exists(root_inventory_path):
-            with open(root_inventory_path) as f:
-                root_inventory = f.readlines()
-                
-            root_digests = set()
-            for line in root_inventory:
-                if line.strip():
-                    digest = line.split()[0] 
-                    root_digests.add(digest)
-                    
-            # Agregar digests que son diferentes al inventario raíz
-            digests_to_verify.update(version_digests - root_digests)
+        # Guardar el inventario raíz (primera versión)
+        if root_inventory is None:
+            root_inventory = current_inventory
+            
+        # Comparar digests con el inventario raíz
+        current_digests = self._extract_digests(current_inventory)
+        root_digests = self._extract_digests(root_inventory)
+        
+        # Agregar digests diferentes al conjunto a verificar
+        for digest in current_digests:
+            if digest not in root_digests:
+                digests_to_verify.add(digest)
                 
     return digests_to_verify
+
+def _extract_digests(self, inventory):
+    """Helper method para extraer los digests de un inventario"""
+    digests = set()
+    for line in inventory.splitlines():
+        if line.strip():
+            digest = line.split()[0]  # Asume formato "digest filename"
+            digests.add(digest)
+    return digests

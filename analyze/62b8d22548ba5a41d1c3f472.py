@@ -5,22 +5,23 @@ def cachedmethod(cache, key=hashkey, lock=None):
     """
     def decorator(method):
         def wrapper(self, *args, **kwargs):
-            # Obtener la caché específica de la instancia/clase
-            cache_attr = cache(self)
+            # Obtener la caché para esta instancia
+            cache_dict = cache(self)
             
-            if cache_attr is None:  # Si no hay caché, ejecutar método sin cachear
+            if cache_dict is None:
+                # Si no hay caché, ejecutar el método directamente
                 return method(self, *args, **kwargs)
                 
-            # Generar clave única para los argumentos
+            # Generar la clave para los argumentos
             k = key(args, kwargs)
             
             try:
-                # Intentar obtener resultado de caché
+                # Intentar obtener el resultado de la caché
                 if lock is not None:
                     with lock:
-                        return cache_attr[k]
+                        return cache_dict[k]
                 else:
-                    return cache_attr[k]
+                    return cache_dict[k]
                     
             except KeyError:
                 # Si no está en caché, calcular y guardar
@@ -28,9 +29,9 @@ def cachedmethod(cache, key=hashkey, lock=None):
                 
                 if lock is not None:
                     with lock:
-                        cache_attr[k] = result
+                        cache_dict[k] = result
                 else:
-                    cache_attr[k] = result
+                    cache_dict[k] = result
                     
                 return result
                 
