@@ -15,15 +15,15 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     import subprocess
     import os
 
-    # Creare un dizionario per l'ambiente, partendo da quello corrente
+    # Prepare the environment
     env = os.environ.copy()
     if extra_env:
         env.update(extra_env)
 
-    # Costruire il comando da eseguire
+    # Prepare the command
     command = [func.__module__ + '.' + func.__name__] + list(args)
 
-    # Eseguire il comando nel sottoprocesso
+    # Run the subprocess
     result = subprocess.run(command, env=env, timeout=timeout)
 
     return result

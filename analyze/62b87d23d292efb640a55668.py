@@ -10,7 +10,4 @@ def get_config():
             self.description = "This is a sample configuration object."
 
     config = VersioneerConfig()
-    # Populating the config object with additional data if needed
-    # config.some_property = "Some Value"
-    
     return config

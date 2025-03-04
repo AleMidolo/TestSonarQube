@@ -75,12 +75,12 @@ def isoparse(self, dt_str):
 
     # Regex patterns for parsing
     date_pattern = r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?'
-    week_pattern = r'(\d{4})-W(\d{2})(?:-?(\d{1}))?'
+    week_pattern = r'(\d{4})-W(\d{2})(?:-?(\d))?'
     time_pattern = r'T(\d{1,2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?)?'
     offset_pattern = r'([+-]\d{2}):?(\d{2})?|Z'
 
     # Combine patterns
-    iso_pattern = re.compile(f'^{date_pattern}(?:-W{week_pattern})?(?:{time_pattern})?({offset_pattern})?$')
+    iso_pattern = re.compile(f'^{date_pattern}(?:{week_pattern}|{time_pattern}(?:{offset_pattern})?)?$')
 
     match = iso_pattern.match(dt_str)
     if not match:
@@ -92,24 +92,22 @@ def isoparse(self, dt_str):
     hour, minute, second, microsecond = match.group(7), match.group(8), match.group(9), match.group(10)
     offset = match.group(11)
 
-    # Handle date
+    # Handle date parsing
     if week:
         # ISO week date
         year, week = int(year), int(week)
-        day = int(week_day) if week_day else 1
+        day = int(week_day) if week_day else 0
         date = datetime.fromisocalendar(year, week, day)
     else:
         # Regular date
-        year = int(year)
-        month = int(month) if month else 1
-        day = int(day) if day else 1
+        year, month, day = int(year), int(month or 1), int(day or 1)
         date = datetime(year, month, day)
 
-    # Handle time
+    # Handle time parsing
     if hour:
         hour = int(hour)
-        minute = int(minute) if minute else 0
-        second = int(second) if second else 0
+        minute = int(minute or 0)
+        second = int(second or 0)
         microsecond = int(microsecond.ljust(6, '0')) if microsecond else 0
         date = date.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
 

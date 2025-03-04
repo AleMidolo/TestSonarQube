@@ -12,24 +12,22 @@ def absorb(self, args):
 
         A & (~A | B) = A & B, A | (~A & B) = A | B
     """
-    new_expressions = []
-    for expr in args:
-        if isinstance(expr, tuple) and len(expr) == 2:
-            a, b = expr
-            if isinstance(a, str) and isinstance(b, str):
-                # Apply absorption laws
-                if a == f"({a} | {b})":
-                    new_expressions.append(a)
-                elif a == f"({a} & {b})":
-                    new_expressions.append(a)
-                elif a == f"({a} & (~{a} | {b}))":
-                    new_expressions.append(f"({a} & {b})")
-                elif a == f"({a} | (~{a} & {b}))":
-                    new_expressions.append(f"({a} | {b})")
-                else:
-                    new_expressions.append(expr)
-            else:
-                new_expressions.append(expr)
-        else:
-            new_expressions.append(expr)
-    return new_expressions
+    def absorb_expression(expr):
+        # Implement absorption laws
+        if isinstance(expr, And):
+            if isinstance(expr.args[0], Or):
+                return expr.args[0].args[0]  # A & (A | B) = A
+            elif isinstance(expr.args[1], Or):
+                return expr.args[1].args[0]  # A & (A | B) = A
+            elif isinstance(expr.args[0], Not) and isinstance(expr.args[1], Or):
+                return And(expr.args[0].args[0], expr.args[1].args[1])  # A & (~A | B) = A & B
+        elif isinstance(expr, Or):
+            if isinstance(expr.args[0], And):
+                return expr.args[0].args[0]  # A | (A & B) = A
+            elif isinstance(expr.args[1], And):
+                return expr.args[1].args[0]  # A | (A & B) = A
+            elif isinstance(expr.args[0], Not) and isinstance(expr.args[1], And):
+                return Or(expr.args[0].args[0], expr.args[1].args[1])  # A | (~A & B) = A | B
+        return expr
+
+    return [absorb_expression(expr) for expr in args]

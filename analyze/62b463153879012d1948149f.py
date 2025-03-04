@@ -9,10 +9,8 @@ def _eval_file(prefix, file_path):
     ----------
     prefix : str
         Nome del file XML senza estensione.
-    filename : str
+    file_path : str
         Nome del file.
-    file_folder : str
-        Cartella del file.
 
     Restituisce
     -------
@@ -23,14 +21,12 @@ def _eval_file(prefix, file_path):
     # Initialize the result dictionary
     result = {}
 
-    # Extract the file name and extension
-    file_name = os.path.basename(file_path)
-    file_extension = os.path.splitext(file_name)[1].lower()
-
-    # Determine the type of file
-    if file_extension in ['.xml', '.json']:
+    # Determine the file type based on the file extension
+    _, file_extension = os.path.splitext(file_path)
+    
+    if file_extension in ['.jpg', '.png', '.gif']:
         file_type = 'asset'
-    elif file_extension in ['.jpg', '.png', '.pdf']:
+    elif file_extension in ['.pdf', '.docx', '.pptx']:
         file_type = 'rendition'
     else:
         file_type = 'unknown'
