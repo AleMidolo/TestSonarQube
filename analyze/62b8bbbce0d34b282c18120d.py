@@ -7,7 +7,6 @@ def is_file_exist(file_name):
     :rtype bool
     """
     import os
-    
     try:
         return os.path.exists(file_name)
     except:

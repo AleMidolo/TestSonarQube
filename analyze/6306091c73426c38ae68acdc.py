@@ -15,20 +15,21 @@ def validate_from_content(cls, spec_content=None):
         yaml_content = yaml.safe_load(spec_content)
         
         if not isinstance(yaml_content, dict):
-            raise IRValidatorException("Spec content must be a YAML dictionary")
+            raise IRValidatorException("Spec content must be a dictionary")
             
         # Check for required fields
         required_fields = ['name', 'version', 'description']
-        missing_fields = [field for field in required_fields if field not in yaml_content]
+        missing_fields = []
         
+        for field in required_fields:
+            if field not in yaml_content:
+                missing_fields.append(field)
+                
         if missing_fields:
             raise IRValidatorException(
-                f"Missing mandatory fields in spec file: {', '.join(missing_fields)}"
+                f"Missing mandatory fields in spec: {', '.join(missing_fields)}"
             )
             
-        # Additional validation can be added here
-        # For example, checking field types, value ranges, etc.
-        
         return yaml_content
         
     except yaml.YAMLError as e:

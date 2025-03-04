@@ -4,10 +4,10 @@ def files_list(path):
     """
     import os
     
-    # Get list of all files and directories in path
-    files = os.listdir(path)
-    
-    # Filter to only include files (not directories)
-    files = [f for f in files if os.path.isfile(os.path.join(path, f))]
-    
+    # Get list of all files in directory
+    files = []
+    for file in os.listdir(path):
+        if os.path.isfile(os.path.join(path, file)):
+            files.append(file)
+            
     return files

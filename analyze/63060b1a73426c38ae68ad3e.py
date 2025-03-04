@@ -27,8 +27,10 @@ def get_plugin_spec_flatten_dict(plugin_dir):
                     items.append((new_key, v))
             return dict(items)
             
-        flattened_dict = flatten_dict(spec_data)
-        
+        # Flatten the nested dictionary
+        if spec_data and isinstance(spec_data, dict):
+            flattened_dict = flatten_dict(spec_data)
+            
     except Exception as e:
         # Return empty dict if any error occurs
         pass

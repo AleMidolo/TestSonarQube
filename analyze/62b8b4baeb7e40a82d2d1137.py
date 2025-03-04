@@ -3,7 +3,7 @@ def verifyObject(iface, candidate, tentative=False):
     from zope.interface.interface import Method
     
     errors = []
-    
+
     # Check if candidate claims to provide interface
     if not tentative and not iface.providedBy(candidate):
         errors.append(DoesNotImplement(iface))
@@ -21,23 +21,29 @@ def verifyObject(iface, candidate, tentative=False):
             if not callable(attr):
                 errors.append(BrokenMethodImplementation(name, "Not callable"))
                 continue
-                
-            # Check method signature
+            
+            # Check method signature using inspect
+            import inspect
             try:
-                desc.getSignatureInfo()
-            except ValueError as e:
-                errors.append(BrokenMethodImplementation(name, str(e)))
+                impl_sig = inspect.signature(attr)
+                iface_sig = desc.getSignatureInfo()
+                
+                # Compare required arguments
+                impl_params = [p for p in impl_sig.parameters.values() 
+                             if p.default == inspect.Parameter.empty and 
+                             p.kind not in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD)]
+                
+                if len(impl_params) < len(iface_sig.get('required', [])):
+                    errors.append(BrokenMethodImplementation(name, "Incorrect number of required arguments"))
+                    
+            except ValueError:
+                # Can't get signature, skip detailed checking
+                pass
 
-    # If no errors, return True
-    if not errors:
-        return True
-        
-    # If only one error, raise it directly
-    if len(errors) == 1:
-        raise errors[0]
-        
-    # If multiple errors, raise Invalid with all errors
+    # If we have errors, raise them
     if errors:
+        if len(errors) == 1:
+            raise errors[0]
         raise Invalid(errors)
 
     return True

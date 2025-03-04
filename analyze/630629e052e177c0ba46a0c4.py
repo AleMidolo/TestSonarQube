@@ -18,24 +18,21 @@ def parse_diaspora_webfinger(document: str) -> Dict:
         
         # Parse links
         for link in data.get('links', []):
-            link_data = {
-                'rel': link.get('rel', ''),
-                'href': link.get('href', ''),
-                'type': link.get('type', '')
-            }
-            result['links'].append(link_data)
-            
+            if 'rel' in link and 'href' in link:
+                result['links'].append({
+                    'rel': link['rel'],
+                    'href': link['href'],
+                    'type': link.get('type', '')
+                })
         return result
         
-    # If JSON fails, try parsing as XRD (old format)  
     except json.JSONDecodeError:
+        # Try parsing as XRD (old format) 
         try:
-            # Parse XML
-            root = ElementTree.fromstring(document)
-            
-            # Define XML namespace
+            # Add XML namespace
             ns = {'xrd': 'http://docs.oasis-open.org/ns/xri/xrd-1.0'}
             
+            root = ElementTree.fromstring(document)
             result = {
                 'subject': '',
                 'aliases': [],
@@ -65,5 +62,3 @@ def parse_diaspora_webfinger(document: str) -> Dict:
             
         except ElementTree.ParseError:
             raise ValueError("Document is neither valid JSON nor valid XML")
-            
-    return {}

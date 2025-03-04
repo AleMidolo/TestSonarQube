@@ -8,10 +8,15 @@ def amend_bzparams(self, params, bug_ids):
     else:
         bug_ids = [str(bug_id) for bug_id in bug_ids]
 
-    # Add bug IDs to params
-    if len(bug_ids) == 1:
-        params['id'] = bug_ids[0]
-    else:
+    # Add bug IDs to params if not already present
+    if 'ids' not in params:
         params['ids'] = bug_ids
+    elif isinstance(params['ids'], (list, tuple)):
+        params['ids'].extend(bug_ids)
+    else:
+        params['ids'] = [params['ids']] + bug_ids
+
+    # Remove any duplicates while preserving order
+    params['ids'] = list(dict.fromkeys(params['ids']))
 
     return params

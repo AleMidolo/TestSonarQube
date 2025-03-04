@@ -13,8 +13,8 @@ def identify_request(request: RequestType):
         return 'private'
         
     # Check for legacy payload
-    if hasattr(request, 'legacy_payload'):
+    if hasattr(request, 'legacy_payload') and request.legacy_payload:
         return 'legacy'
         
-    # If none of the above, return None
+    # If none of the above, return None to indicate unidentified request
     return None

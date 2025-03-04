@@ -7,7 +7,7 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     import os
     import pathlib
 
-    # Get the directory path and create if it doesn't exist
+    # Get directory path and create if doesn't exist
     directory = os.path.dirname(config_filename)
     if directory:
         pathlib.Path(directory).mkdir(parents=True, exist_ok=True)
@@ -20,5 +20,5 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     with open(config_filename, 'w') as f:
         os.chmod(config_filename, mode)
         f.write(rendered_config)
-
+    
     return True

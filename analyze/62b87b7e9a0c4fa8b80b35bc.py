@@ -24,7 +24,7 @@ def _update_context(self, context):
             # Map the base field to x/y/z if possible
             error_name = error_name_map.get(base_field, base_field)
             
-            # Create the error subcontext structure
+            # Create the error subcontext
             error_key = f"{error_name}_{bound}"
             if error_key not in context.error:
                 context.error[error_key] = {}

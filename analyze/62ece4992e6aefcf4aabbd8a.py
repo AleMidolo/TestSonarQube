@@ -21,7 +21,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 # Resolve environment variables if requested
                 if resolve_env:
                     config = _resolve_env_vars(config)
-                    
+                
                 # Apply any overrides
                 if overrides:
                     config = _apply_overrides(config, overrides)
@@ -34,12 +34,12 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=f"Error loading config file {filename}: {str(e)}",
+                msg=str(e),
                 args=(),
                 exc_info=None
             )
             errors.append(error)
-            logger.error(error.msg)
+            logger.error(f"Error loading config file {filename}: {str(e)}")
             
     return configs, errors
 

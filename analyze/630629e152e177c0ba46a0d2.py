@@ -23,10 +23,10 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         response = requests.get(webfinger_url)
         response.raise_for_status()
         
-        # Parse the JSON response
+        # Parse the response
         data = response.json()
         
-        # Extract relevant information
+        # Extract relevant information into a dict
         result = {
             'handle': handle,
             'host': host,
@@ -34,7 +34,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
             'links': {}
         }
         
-        # Process links
+        # Parse links
         for link in data.get('links', []):
             rel = link.get('rel', '')
             if rel:
@@ -43,6 +43,12 @@ def retrieve_and_parse_diaspora_webfinger(handle):
                     'type': link.get('type', '')
                 }
                 
+        # Add additional properties if they exist
+        if 'aliases' in data:
+            result['aliases'] = data['aliases']
+        if 'subject' in data:
+            result['subject'] = data['subject']
+            
         return result
         
     except requests.exceptions.RequestException as e:

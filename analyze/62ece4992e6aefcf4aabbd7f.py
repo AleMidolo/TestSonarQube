@@ -2,7 +2,7 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
     Parse an image href into composite parts.
 
-    :param image_href: href of an image 
+    :param image_href: href of an image
     :returns: a tuple of the form (image_id, netloc, use_ssl)
     :raises ValueError:
     """
@@ -22,14 +22,13 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     if not netloc:
         raise ValueError(f"No hostname found in href: {image_href}")
         
-    # Determine if using SSL
+    # Determine if using SSL based on scheme
     use_ssl = parsed.scheme == 'https'
     
     # Get image ID from path
-    path_parts = parsed.path.split('/')
-    image_id = path_parts[-1] if path_parts else ''
-    
-    if not image_id:
+    path_parts = parsed.path.strip('/').split('/')
+    if not path_parts or not path_parts[-1]:
         raise ValueError(f"No image ID found in href: {image_href}")
-        
+    image_id = path_parts[-1]
+    
     return (image_id, netloc, use_ssl)

@@ -33,9 +33,8 @@ def _fromutc(self, dt):
         # We're in a DST transition period
         utc = (dt - utc_offset).replace(tzinfo=None)
         earlier = self._normalize(utc + self._dst_base_offset())
-        later = earlier + dst_offset
-        
-        if later > dt:
+        later = self._normalize(utc + self._dst_base_offset() + dst_offset)
+        if later <= dt:
             fold = 1
 
     return dt.replace(fold=fold)

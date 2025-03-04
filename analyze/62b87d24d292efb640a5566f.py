@@ -26,7 +26,7 @@ def render(pieces, style):
             if pieces[3] != 'final':
                 version += f'-{pieces[3]}.{pieces[4]}'
         if len(pieces) > 5 and pieces[5] > 0:
-            version += f'+dev.{pieces[5]}'
+            version += f'+{pieces[5]}'
         return version
         
     else:
