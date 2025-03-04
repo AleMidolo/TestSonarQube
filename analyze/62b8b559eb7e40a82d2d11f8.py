@@ -1,14 +1,28 @@
 def minimalBases(classes):
     """
-    以列表格式返回所有没有子类的类。
-    将基类列表简化为其有序的最小等价集合。
+    आधार कक्षाओं (base classes) की सूची को उसके क्रमबद्ध न्यूनतम समकक्ष (ordered minimum equivalent) में घटाएं।
     """
-    # 创建一个集合来存储所有类的子类
-    subclasses = set()
-    for c in classes:
-        for base in classes:
-            if issubclass(c, base) and c != base:
-                subclasses.add(base)
-    
-    # 返回不在子类集合中的类的列表
-    return [c for c in classes if c not in subclasses]
+    if not classes:
+        return []
+        
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_classes = []
+    for cls in classes:
+        if cls not in seen:
+            seen.add(cls)
+            unique_classes.append(cls)
+            
+    # Remove redundant base classes
+    minimal = []
+    for i, cls in enumerate(unique_classes):
+        is_redundant = False
+        for j in range(i + 1, len(unique_classes)):
+            # Check if cls is a base class of any later class
+            if issubclass(unique_classes[j], cls):
+                is_redundant = True
+                break
+        if not is_redundant:
+            minimal.append(cls)
+            
+    return minimal

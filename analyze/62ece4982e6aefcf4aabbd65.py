@@ -1,10 +1,18 @@
 def parser_flags(parser):
+    """
+    एक argparse.ArgumentParser उदाहरण के लिए, इसके आर्गुमेंट फ्लैग्स को एक स्पेस से अलग किए गए स्ट्रिंग के रूप में लौटाएं।
+    """
     flags = []
     for action in parser._actions:
         # Skip help action
         if action.dest == 'help':
             continue
+            
         # Get all option strings (flags) for this action
-        flags.extend(action.option_strings)
-    # Join flags with spaces and return
+        for opt in action.option_strings:
+            # Only include flags that start with '-'
+            if opt.startswith('-'):
+                flags.append(opt)
+                
+    # Return flags joined by spaces
     return ' '.join(sorted(flags))

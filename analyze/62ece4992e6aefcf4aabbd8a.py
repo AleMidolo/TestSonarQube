@@ -1,55 +1,54 @@
 def load_configurations(config_filenames, overrides=None, resolve_env=True):
     """
-    根据一系列配置文件名，加载并验证每个配置文件。如果由于权限不足或解析配置文件出错导致无法读取配置文件，将记录错误日志。否则，将结果以一个元组的形式返回，包含一个将配置文件名映射到相应的解析后的配置的字典和一个包含所有解析错误的 `logging.LogRecord` 实例序列。
-    根据一系列配置文件名，加载并验证每个配置文件。将结果以一个元组的形式返回，包含一个将配置文件名映射到相应的解析后的配置的字典和一个包含所有解析错误的 `logging.LogRecord` 实例序列。
+    कॉनफिगरेशन फाइलों के अनुक्रम को दिया गया है, प्रत्येक कॉनफिगरेशन फाइल को लोड और सत्यापित करें।
+    परिणाम को निम्नलिखित के रूप में ट्यूपल में लौटाएं:
+    1. कॉनफिगरेशन फाइल नाम और उसके संबंधित पार्स किए गए कॉनफिगरेशन का डिक्शनरी।
+    2. किसी भी पार्स त्रुटियों को शामिल करने वाले `logging.LogRecord` इंस्टेंस का अनुक्रम।
     """
     import yaml
     import os
     import logging
-    from pathlib import Path
+    from collections import OrderedDict
 
     # Initialize return values
-    configs = {}
-    error_logs = []
+    configs = OrderedDict()
+    log_records = []
     logger = logging.getLogger(__name__)
 
     # Process each config file
     for filename in config_filenames:
         try:
-            path = Path(filename)
-            
-            # Check if file exists
-            if not path.exists():
-                raise FileNotFoundError(f"Configuration file not found: {filename}")
-                
-            # Read and parse YAML file
-            with open(path, 'r') as f:
+            with open(filename, 'r') as f:
                 config = yaml.safe_load(f)
                 
-            # Resolve environment variables if requested
-            if resolve_env:
-                config = _resolve_env_vars(config)
+                # Resolve environment variables if requested
+                if resolve_env:
+                    config = _resolve_env_vars(config)
                 
-            # Apply overrides if provided
-            if overrides:
-                config = _apply_overrides(config, overrides)
+                # Apply any overrides
+                if overrides:
+                    config = _apply_overrides(config, overrides)
+                    
+                configs[filename] = config
                 
-            configs[filename] = config
-                
-        except (PermissionError, yaml.YAMLError) as e:
-            error_record = logging.LogRecord(
-                name=__name__,
-                level=logging.ERROR,
-                pathname=filename,
-                lineno=0,
-                msg=f"Error loading configuration file {filename}: {str(e)}",
-                args=(),
-                exc_info=None
-            )
-            error_logs.append(error_record)
-            logger.error(f"Failed to load configuration from {filename}", exc_info=True)
+        except (yaml.YAMLError, IOError) as e:
+            # Create log record for error
+            record = logger.makeLogRecord({
+                'msg': f"Error loading config file {filename}: {str(e)}",
+                'levelno': logging.ERROR,
+                'levelname': 'ERROR',
+                'pathname': __file__,
+                'filename': os.path.basename(__file__),
+                'module': __name__,
+                'exc_info': None,
+                'exc_text': None,
+                'args': (),
+                'funcName': 'load_configurations'
+            })
+            log_records.append(record)
+            configs[filename] = None
 
-    return configs, error_logs
+    return configs, log_records
 
 def _resolve_env_vars(config):
     """Helper function to resolve environment variables in config"""
@@ -63,14 +62,12 @@ def _resolve_env_vars(config):
     return config
 
 def _apply_overrides(config, overrides):
-    """Helper function to apply configuration overrides"""
-    if not isinstance(config, dict):
-        return config
-        
-    result = config.copy()
-    for key, value in overrides.items():
-        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
-            result[key] = _apply_overrides(result[key], value)
-        else:
-            result[key] = value
-    return result
+    """Helper function to apply override values to config"""
+    if isinstance(config, dict):
+        config = config.copy()
+        for k, v in overrides.items():
+            if k in config and isinstance(config[k], dict) and isinstance(v, dict):
+                config[k] = _apply_overrides(config[k], v)
+            else:
+                config[k] = v
+    return config

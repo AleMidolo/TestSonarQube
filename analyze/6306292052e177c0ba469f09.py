@@ -1,21 +1,15 @@
 def identify_request(request: RequestType):
-    # Try to load as JSON first
-    try:
-        json_data = json.loads(request.body)
-        # Check if it contains events
-        if 'events' in json_data:
-            return True
-    except (json.JSONDecodeError, AttributeError):
-        pass
-
-    # Try to parse as XML if JSON fails
-    try:
-        xml_root = ET.fromstring(request.body)
-        # Check if root tag is Magic_ENV_TAG
-        if xml_root.tag == 'Magic_ENV_TAG':
-            return True
-    except (ET.ParseError, AttributeError):
-        pass
-
-    # If neither condition is met, return False
-    return False
+    # Check for public message first
+    if hasattr(request, 'public') and request.public:
+        return 'public'
+    
+    # Then check for private message
+    if hasattr(request, 'private') and request.private:
+        return 'private'
+        
+    # Finally check if it's a legacy payload
+    if hasattr(request, 'legacy') and request.legacy:
+        return 'legacy'
+        
+    # If none of the above, return None
+    return None

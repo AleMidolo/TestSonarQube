@@ -1,22 +1,12 @@
 def make_array(shape, dtype=np.dtype("float32")):
     """
-    返回一个具有指定形状和类型的全零数组。
+    यह फ़ंक्शन एक ऐरे बनाता है जिसमें दिए गए आकार (shape) और डेटा प्रकार (dtype) का उपयोग किया जाता है।
 
-    参数：
-      shape : 元组  
-        要创建的数组的形状  
-      dtype : `numpy.dtype`  
-        要创建的数组的数据类型  
+    पैरामीटर (Parameters):
+    - shape : ट्यूपल  
+      बनाने वाले ऐरे का आकार (shape)।
 
-    返回值：数组
-
-    该函数创建一个具有指定形状和数据类型的数组。
-
-      参数
-      ----------
-      shape : 元组
-          要创建的数组的形状
-      dtype : `numpy.dtype`
-          要创建的数组的数据类型
+    - dtype : `numpy.dtype`  
+      बनाने वाले ऐरे का डेटा प्रकार (data-type)।
     """
     return np.zeros(shape, dtype=dtype)

@@ -1,55 +1,77 @@
 def normalized(self):
-    """
-    将所有时间单位标准化为整数。
+    # Initialize variables to store total values
+    total_microseconds = 0
+    total_seconds = 0
+    total_minutes = 0
+    total_hours = 0
+    total_days = 0
+    total_months = 0
+    total_years = 0
 
-    返回一个完全使用整数值表示相对属性的对象版本。
+    # Convert fractional values to whole numbers in smaller units
+    if hasattr(self, 'microseconds'):
+        total_microseconds = int(self.microseconds)
+    if hasattr(self, 'seconds'):
+        total_seconds = int(self.seconds)
+        frac_seconds = self.seconds - total_seconds
+        total_microseconds += int(frac_seconds * 1000000)
+    if hasattr(self, 'minutes'):
+        total_minutes = int(self.minutes)
+        frac_minutes = self.minutes - total_minutes
+        total_seconds += int(frac_minutes * 60)
+    if hasattr(self, 'hours'):
+        total_hours = int(self.hours)
+        frac_hours = self.hours - total_hours
+        total_minutes += int(frac_hours * 60)
+    if hasattr(self, 'days'):
+        total_days = int(self.days)
+        frac_days = self.days - total_days
+        total_hours += int(frac_days * 24)
+    if hasattr(self, 'months'):
+        total_months = int(self.months)
+        frac_months = self.months - total_months
+        total_days += int(frac_months * 30)  # Approximate
+    if hasattr(self, 'years'):
+        total_years = int(self.years)
+        frac_years = self.years - total_years
+        total_months += int(frac_years * 12)
 
-    >>> relativedelta(days=1.5, hours=2).normalized()
-    relativedelta(days=+1, hours=+14)
+    # Normalize smaller units into larger ones
+    # Microseconds to seconds
+    extra_seconds = total_microseconds // 1000000
+    total_microseconds = total_microseconds % 1000000
+    total_seconds += extra_seconds
 
-    :return:
-        返回一个 :class:`dateutil.relativedelta.relativedelta` 对象。
-    """
-    # 创建一个新的relativedelta对象来存储结果
-    result = relativedelta()
-    
-    # 处理年和月,直接复制
-    result.years = self.years
-    result.months = self.months
-    
-    # 将天数转换为小时
-    total_hours = self.hours + (self.days * 24)
-    
-    # 将小时转换为分钟
-    total_minutes = self.minutes + (total_hours * 60)
-    
-    # 将分钟转换为秒
-    total_seconds = self.seconds + (total_minutes * 60)
-    
-    # 将秒转换为微秒
-    total_microseconds = self.microseconds + (total_seconds * 1000000)
-    
-    # 从微秒开始,逐级向上计算并取整
-    result.microseconds = total_microseconds % 1000000
-    remaining_seconds = total_microseconds // 1000000
-    
-    result.seconds = remaining_seconds % 60
-    remaining_minutes = remaining_seconds // 60
-    
-    result.minutes = remaining_minutes % 60
-    remaining_hours = remaining_minutes // 60
-    
-    result.hours = remaining_hours % 24
-    result.days = remaining_hours // 24
-    
-    # 复制其他属性
-    result.year = self.year
-    result.month = self.month
-    result.day = self.day
-    result.weekday = self.weekday
-    result.hour = self.hour
-    result.minute = self.minute
-    result.second = self.second
-    result.microsecond = self.microsecond
-    
-    return result
+    # Seconds to minutes
+    extra_minutes = total_seconds // 60
+    total_seconds = total_seconds % 60
+    total_minutes += extra_minutes
+
+    # Minutes to hours
+    extra_hours = total_minutes // 60
+    total_minutes = total_minutes % 60
+    total_hours += extra_hours
+
+    # Hours to days
+    extra_days = total_hours // 24
+    total_hours = total_hours % 24
+    total_days += extra_days
+
+    # Days to months (approximate)
+    extra_months = total_days // 30
+    total_days = total_days % 30
+    total_months += extra_months
+
+    # Months to years
+    extra_years = total_months // 12
+    total_months = total_months % 12
+    total_years += extra_years
+
+    # Return new relativedelta object with normalized values
+    return type(self)(years=total_years,
+                     months=total_months,
+                     days=total_days,
+                     hours=total_hours,
+                     minutes=total_minutes,
+                     seconds=total_seconds,
+                     microseconds=total_microseconds)

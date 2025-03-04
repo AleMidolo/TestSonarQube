@@ -1,46 +1,49 @@
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    执行指定的命令。
+    दिए गए कमांड(s) को चलाएं।
     """
     import subprocess
     import sys
     
-    # 构建完整命令
     if isinstance(commands, str):
         commands = [commands]
-    cmd = commands + args if args else commands
-    
-    # 设置stderr重定向
-    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
-    
-    # 执行命令
-    try:
-        process = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=stderr,
-            cwd=cwd,
-            env=env,
-            universal_newlines=True
-        )
         
-        # 获取输出
-        stdout, stderr = process.communicate()
-        
-        # 打印详细信息
-        if verbose:
-            if stdout:
-                print(stdout)
-            if stderr and not hide_stderr:
-                print(stderr, file=sys.stderr)
+    for cmd in commands:
+        cmd_list = [cmd]
+        if args:
+            if isinstance(args, str):
+                cmd_list.append(args)
+            else:
+                cmd_list.extend(args)
                 
-        # 检查返回码
-        if process.returncode != 0:
-            raise subprocess.CalledProcessError(process.returncode, cmd)
-            
-        return stdout.strip() if stdout else ""
-        
-    except (OSError, subprocess.CalledProcessError) as e:
         if verbose:
-            print(f"Command failed: {e}", file=sys.stderr)
-        raise
+            print('Running:', ' '.join(cmd_list))
+            
+        try:
+            stderr = subprocess.DEVNULL if hide_stderr else None
+            process = subprocess.Popen(
+                cmd_list,
+                stdout=subprocess.PIPE,
+                stderr=stderr,
+                cwd=cwd,
+                env=env,
+                universal_newlines=True
+            )
+            
+            output, error = process.communicate()
+            
+            if process.returncode != 0:
+                print(f"Error executing command: {' '.join(cmd_list)}")
+                if error and not hide_stderr:
+                    print(f"Error output: {error}")
+                sys.exit(process.returncode)
+                
+            if verbose and output:
+                print(output)
+                
+            return output.strip() if output else None
+            
+        except Exception as e:
+            print(f"Exception occurred while executing command: {' '.join(cmd_list)}")
+            print(f"Error: {str(e)}")
+            sys.exit(1)

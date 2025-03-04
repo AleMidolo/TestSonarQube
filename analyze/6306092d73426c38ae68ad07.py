@@ -1,14 +1,12 @@
 def validate_requires_args(self, args):
     """
-    检查是否提供了所有必需的参数。
+    जांचें कि क्या सभी आवश्यक तर्क प्रदान किए गए हैं।
     """
     if not args:
-        raise ValueError("No arguments provided")
+        raise ValueError("Required arguments are missing")
         
-    required_args = getattr(self, 'required_args', [])
-    
-    for arg in required_args:
-        if arg not in args:
-            raise ValueError(f"Missing required argument: {arg}")
+    for arg in args:
+        if arg is None:
+            raise ValueError(f"Required argument {arg} is missing")
             
     return True

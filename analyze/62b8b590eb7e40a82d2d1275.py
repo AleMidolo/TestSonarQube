@@ -1,47 +1,57 @@
 def _legacy_mergeOrderings(orderings):
-    # 创建一个字典来存储每个元素在各个列表中的位置
-    element_positions = {}
+    # Create a dictionary to store item positions
+    item_positions = {}
     
-    # 遍历所有排序列表
+    # Create a dictionary to store items that must come before others
+    dependencies = {}
+    
+    # Process each ordering list
     for ordering in orderings:
-        for pos, element in enumerate(ordering):
-            if element not in element_positions:
-                element_positions[element] = []
-            element_positions[element].append(pos)
+        # Track position of each item in this ordering
+        for i, item in enumerate(ordering):
+            if item not in item_positions:
+                item_positions[item] = []
+            item_positions[item].append(i)
             
-    # 创建结果列表
+            # Add dependencies - each item must come after previous items
+            if i > 0:
+                prev = ordering[i-1]
+                if prev not in dependencies:
+                    dependencies[prev] = set()
+                dependencies[prev].add(item)
+                
+    # Get all unique items
+    all_items = set()
+    for ordering in orderings:
+        all_items.update(ordering)
+        
+    # Build result list
     result = []
-    # 记录已处理的元素
-    seen = set()
+    used = set()
     
-    # 遍历所有排序列表
-    for ordering in orderings:
-        # 遍历当前列表中的每个元素
-        for element in ordering:
-            # 如果元素已经在结果中,跳过
-            if element in seen:
-                continue
-                
-            # 检查是否可以添加当前元素
-            can_add = True
-            # 获取当前元素在所有列表中的位置
-            positions = element_positions[element]
-            
-            # 检查当前元素之前的所有元素是否都已经处理
-            for ordering_idx, pos in enumerate(positions):
-                current_ordering = orderings[ordering_idx]
-                # 检查当前位置之前的元素
-                for prev_pos in range(pos):
-                    prev_element = current_ordering[prev_pos]
-                    if prev_element not in seen:
-                        can_add = False
+    while len(result) < len(all_items):
+        # Find items with no remaining dependencies
+        available = set()
+        for item in all_items:
+            if item not in used:
+                has_deps = False
+                for deps in dependencies.values():
+                    if item in deps:
+                        has_deps = True
                         break
-                if not can_add:
-                    break
+                if not has_deps:
+                    available.add(item)
                     
-            # 如果可以添加当前元素
-            if can_add:
-                result.append(element)
-                seen.add(element)
-                
+        if not available:
+            raise ValueError("Circular dependency detected")
+            
+        # Add the first available item
+        item = next(iter(available))
+        result.append(item)
+        used.add(item)
+        
+        # Remove this item from dependencies
+        if item in dependencies:
+            del dependencies[item]
+            
     return result

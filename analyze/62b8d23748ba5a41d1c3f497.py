@@ -1,20 +1,18 @@
 def popitem(self):
     """
-    移除并返回最少使用的键值对。
+    सबसे कम बार उपयोग किए गए `(key, value)` जोड़े को हटाएं और वापस करें।
     """
     if not self:
         raise KeyError('Dictionary is empty')
         
-    # 获取最少使用的节点
-    node = self.head.next
+    # Find key with minimum usage count
+    min_key = min(self.usage_count, key=self.usage_count.get)
     
-    # 从双向链表中删除该节点
-    node.prev.next = node.next 
-    node.next.prev = node.prev
+    # Get value for min_key
+    value = self[min_key]
     
-    # 从哈希表中删除该键值对
-    key = node.key
-    del self.cache[key]
+    # Remove key-value pair
+    del self[min_key]
+    del self.usage_count[min_key]
     
-    # 返回键值对
-    return (key, node.value)
+    return (min_key, value)

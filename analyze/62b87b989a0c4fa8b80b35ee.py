@@ -1,17 +1,13 @@
 def reset(self):
     """
-    当前上下文被重置为一个空字典，类的直方图桶（bins）将使用 *initial_value* 或 *make_bins()* 重新初始化。
-    重置直方图。
+    हिस्टोग्राम को रीसेट करें।  
 
-    当前上下文被重置为一个空字典。
-    直方图桶（bins）将根据初始化方式，使用 *initial_value* 或 *make_bins()* 重新初始化。
+    - वर्तमान संदर्भ को एक खाली डिक्शनरी में रीसेट कर दिया गया है।  
+    - बिन्स को *initial_value* या *make_bins()* (प्रारंभिक सेटअप के आधार पर) के साथ पुनः प्रारंभ किया गया है।  
     """
-    # 重置上下文为空字典
-    self.context = {}
+    self.current = {}
     
-    # 如果有初始值，使用初始值重置bins
     if hasattr(self, 'initial_value'):
-        self.bins = self.initial_value
-    # 否则使用make_bins()重新生成bins
+        self.bins = self.initial_value.copy()
     else:
         self.bins = self.make_bins()

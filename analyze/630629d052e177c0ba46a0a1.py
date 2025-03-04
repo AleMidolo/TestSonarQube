@@ -1,9 +1,10 @@
 def verify_relayable_signature(public_key, doc, signature):
     """
-    验证已签名的XML元素，以确保声明的作者确实生成了此消息。
+    हस्ताक्षरित XML तत्वों को सत्यापित करें ताकि यह सुनिश्चित किया जा सके 
+    कि दावा किया गया लेखक ने वास्तव में यह संदेश उत्पन्न किया है।
     """
     try:
-        # Import required crypto libraries
+        # Import required cryptography libraries
         from cryptography.hazmat.primitives import hashes
         from cryptography.hazmat.primitives.asymmetric import padding
         from cryptography.hazmat.primitives.serialization import load_pem_public_key
@@ -11,22 +12,23 @@ def verify_relayable_signature(public_key, doc, signature):
         
         # Convert doc to bytes if it's not already
         if isinstance(doc, str):
-            doc = doc.encode('utf-8')
+            message = doc.encode('utf-8')
+        else:
+            message = doc
             
         # Load the public key if it's in PEM format
         if isinstance(public_key, str):
             public_key = load_pem_public_key(public_key.encode())
             
-        # Convert signature from base64 if needed
-        import base64
+        # Convert signature to bytes if needed
         if isinstance(signature, str):
-            signature = base64.b64decode(signature)
+            signature = bytes.fromhex(signature)
             
         # Verify the signature
         try:
             public_key.verify(
                 signature,
-                doc,
+                message,
                 padding.PSS(
                     mgf=padding.MGF1(hashes.SHA256()),
                     salt_length=padding.PSS.MAX_LENGTH

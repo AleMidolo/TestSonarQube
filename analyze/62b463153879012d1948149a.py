@@ -1,44 +1,39 @@
 def _group_files_by_xml_filename(source, xmls, files):
     """
-    将文件按 XML 文件名分组并以字典格式返回数据。
+    XML फ़ाइलों के बेस नाम के आधार पर फ़ाइलों को समूहित करें
 
-    按 XML 文件的文件名分组文件
+    यह फ़ंक्शन XML फ़ाइलों के बेस नाम के आधार पर फ़ाइलों को समूहित करता है और डेटा को डिक्शनरी प्रारूप में लौटाता है।
 
-    将文件按其 XML 文件的文件名分组，并以字典格式返回数据。
-
-    参数
+    पैरामीटर्स (Parameters)
     ----------
-    xml_filename: str  
-        XML 文件名  
-    files: list  
-        文件夹或压缩文件中的文件列表  
+    xml_filename : `str`  
+        XML फ़ाइलों के नाम।  
 
-    返回值
+    files : `list`  
+        फ़ोल्डर या ज़िप फ़ाइल में मौजूद फ़ाइलों की सूची।  
+
+    रिटर्न्स (Returns)
     -------
-    dict
-        键：XML 文件的名称  
-        值：Package  
+    dict  
+        - key: XML फ़ाइलों के नाम।  
+        - value: पैकेज (Package)।  
     """
-    result = {}
+    grouped_files = {}
     
-    # 遍历所有XML文件
+    # Group files by XML base name
     for xml in xmls:
-        # 获取XML文件名(不含扩展名)
-        xml_name = xml.rsplit('.', 1)[0]
+        xml_base = xml.rsplit('.', 1)[0]  # Remove extension
         
-        # 找到与该XML文件名相关的所有文件
-        related_files = []
-        for file in files:
-            # 如果文件名以XML文件名开头，则认为是相关文件
-            if file.startswith(xml_name):
-                related_files.append(file)
-                
-        # 将相关文件组成Package添加到结果字典中
-        if related_files:
-            result[xml_name] = {
-                'source': source,
-                'xml': xml,
-                'files': related_files
-            }
-            
-    return result
+        # Find all files that start with the XML base name
+        matching_files = [f for f in files if f.startswith(xml_base)]
+        
+        # Create package with source and matching files
+        package = {
+            'source': source,
+            'files': matching_files
+        }
+        
+        # Add to grouped dictionary
+        grouped_files[xml] = package
+        
+    return grouped_files

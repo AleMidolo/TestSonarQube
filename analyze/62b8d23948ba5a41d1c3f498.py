@@ -1,42 +1,61 @@
 def lru_cache(maxsize=128, typed=False):
-    """
-    一个用于将函数包装为一个带有记忆功能的可调用对象的装饰器，
-    该对象基于最近最少使用（LRU）算法保存，最多 `maxsize` 个结果。
-    """
     def decorator(func):
-        # 使用字典存储缓存结果
+        # Create cache dictionary and order list
         cache = {}
-        # 使用列表记录访问顺序
-        access_order = []
+        order = []
         
         def wrapper(*args, **kwargs):
-            # 如果考虑类型,将参数转为字符串作为key
+            # Create cache key based on args and kwargs
+            key = str(args) + str(kwargs)
             if typed:
-                key = str((args, kwargs, tuple(type(arg) for arg in args)))
-            else:
-                key = str((args, kwargs))
+                key += str([type(arg) for arg in args])
+                key += str([type(val) for val in kwargs.values()])
                 
-            # 缓存命中
+            # Return cached result if exists
             if key in cache:
-                # 更新访问顺序
-                access_order.remove(key)
-                access_order.append(key)
+                # Move key to end of order list since it was just used
+                order.remove(key)
+                order.append(key)
                 return cache[key]
                 
-            # 缓存未命中
+            # Calculate new result
             result = func(*args, **kwargs)
             
-            # 如果缓存已满,删除最久未使用的项
-            if len(cache) >= maxsize:
-                oldest_key = access_order.pop(0)
+            # Add to cache
+            cache[key] = result
+            order.append(key)
+            
+            # Remove oldest item if cache is full
+            if len(cache) > maxsize:
+                oldest_key = order.pop(0)
                 del cache[oldest_key]
                 
-            # 添加新结果到缓存
-            cache[key] = result
-            access_order.append(key)
-            
             return result
             
+        # Add cache info method
+        def cache_info():
+            return {
+                'hits': len(order),
+                'misses': func.__code__.co_firstlineno,
+                'maxsize': maxsize,
+                'currsize': len(cache)
+            }
+            
+        wrapper.cache_info = cache_info
+        
+        # Add cache clear method
+        def cache_clear():
+            cache.clear()
+            order.clear()
+            
+        wrapper.cache_clear = cache_clear
+        
         return wrapper
+        
+    # Handle no-argument case
+    if callable(maxsize):
+        func = maxsize
+        maxsize = 128
+        return decorator(func)
         
     return decorator

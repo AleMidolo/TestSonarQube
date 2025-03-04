@@ -1,15 +1,17 @@
 def pretty(self, indent=0, debug=False):
     """
-    返回对象自身的美观格式化表示。
+    स्वयं का एक सुंदर स्वरूपित प्रतिनिधित्व लौटाएँ।
     """
-    # 处理对象值的表示形式
-    obj = f"'{self.obj}'" if isinstance(self.obj, str) else repr(self.obj)
+    # Create indentation string
+    indent_str = " " * indent
     
-    # 如果开启debug模式，添加额外的调试信息
-    debug_details = f"id={id(self)}, " if debug else ""
-    
-    # 构建缩进的格式化字符串
-    indentation = " " * indent
-    
-    # 返回格式化后的字符串
-    return indentation + f"{self.__class__.__name__}({debug_details}{obj})"
+    # Get the string representation of the object
+    if debug:
+        # Include more detailed debug information
+        result = f"{indent_str}{self.__class__.__name__}:\n"
+        for attr, value in self.__dict__.items():
+            result += f"{indent_str}  {attr}: {value}\n"
+        return result.rstrip()
+    else:
+        # Basic pretty formatting
+        return f"{indent_str}{str(self)}"

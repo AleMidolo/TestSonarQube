@@ -1,17 +1,16 @@
 def file_to_textbuffer(file_name, encoding):
     """
-    将文件加载到文本缓冲区（UTF-8），在读取时使用指定的编码。
-    注意：此操作会将整个文件加载到内存中。
-
-    :param file_name: 文件名。
+    एक फाइल को टेक्स्ट बफर (UTF-8) में लोड करें, पढ़ने के दौरान निर्दिष्ट एन्कोडिंग का उपयोग करें।
+    सावधानी: यह पूरी फाइल को मेमोरी में पढ़ेगा।
+    :param file_name: फाइल का नाम।
     :type file_name: str 
-    :param encoding: 要使用的编码。
+    :param encoding: उपयोग करने के लिए एन्कोडिंग।
     :type encoding: str
-    :return: 文本缓冲区，若发生错误则返回 None。
+    :return: एक टेक्स्ट बफर या त्रुटि की स्थिति में None।
     :rtype: str
     """
     try:
         with open(file_name, 'r', encoding=encoding) as f:
             return f.read()
-    except Exception:
+    except (IOError, UnicodeDecodeError):
         return None

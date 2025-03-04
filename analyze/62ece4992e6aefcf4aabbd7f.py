@@ -1,32 +1,36 @@
-from urllib.parse import urlparse
-from typing import Tuple
-
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
-    将图像的 href 解析为多个组成部分，导入 urllib。
-    
-    :param image_href: 图像的 href
-    :returns: 一个元组，格式为 (image_id, netloc, use_ssl)
-    :raises ValueError:
+    छवि के हाइपरलिंक (href) को उसके घटक भागों में विभाजित करें।
+
+    :param image_href: छवि का हाइपरलिंक (href)
+    :returns: एक ट्यूपल (tuple) के रूप में परिणाम, जिसमें (image_id, netloc, use_ssl) शामिल हैं
+    :raises ValueError: यदि हाइपरलिंक अमान्य है
     """
-    if not image_href:
-        raise ValueError("Empty image href")
+    from urllib.parse import urlparse
+
+    try:
+        # Parse the URL
+        parsed = urlparse(image_href)
         
-    # Parse the URL
-    parsed = urlparse(image_href)
-    
-    # Get netloc
-    netloc = parsed.netloc
-    if not netloc:
-        raise ValueError("Invalid image href - no netloc found")
+        # Check if scheme is valid (http or https)
+        if parsed.scheme not in ('http', 'https'):
+            raise ValueError("Invalid URL scheme")
+            
+        # Get netloc (domain)
+        netloc = parsed.netloc
+        if not netloc:
+            raise ValueError("Missing domain in URL")
+            
+        # Get image ID from path
+        path_parts = parsed.path.strip('/').split('/')
+        if not path_parts or not path_parts[-1]:
+            raise ValueError("Invalid image path")
+        image_id = path_parts[-1]
         
-    # Check if using SSL
-    use_ssl = parsed.scheme == 'https'
-    
-    # Get image ID from path
-    path_parts = parsed.path.split('/')
-    if not path_parts or len(path_parts) < 2:
-        raise ValueError("Invalid image href - no image ID found")
-    image_id = path_parts[-1]
-    
-    return (image_id, netloc, use_ssl)
+        # Determine if SSL is used
+        use_ssl = parsed.scheme == 'https'
+        
+        return (image_id, netloc, use_ssl)
+        
+    except Exception as e:
+        raise ValueError(f"Invalid image URL: {str(e)}")

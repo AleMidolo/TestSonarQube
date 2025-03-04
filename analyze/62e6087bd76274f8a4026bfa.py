@@ -1,12 +1,17 @@
 def pop_u16(self):
     """
-    在 `self.data` 中移除最后两个元素并返回
-    移除数据中的最后两个字节，并将它们以大端序的16位无符号整数返回。
+    self.data के अंतिम दो बाइट्स को हटाएं और उन्हें एक बिग-एंडियन 16-बिट अनसाइनड इंटीजर के रूप में वापस करें।
     """
-    # 从末尾取出两个字节
-    b1 = self.data.pop()
-    b2 = self.data.pop()
+    if len(self.data) < 2:
+        raise ValueError("Not enough bytes to pop u16")
+        
+    # Get last 2 bytes
+    bytes_data = self.data[-2:]
     
-    # 按大端序组合成16位无符号整数
-    # b2为高字节,b1为低字节
-    return (b2 << 8) | b1
+    # Remove last 2 bytes from self.data
+    self.data = self.data[:-2]
+    
+    # Convert bytes to big-endian 16-bit unsigned int
+    value = int.from_bytes(bytes_data, byteorder='big', signed=False)
+    
+    return value

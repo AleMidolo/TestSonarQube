@@ -1,45 +1,42 @@
 def split(s, platform='this'):
     import re
     import sys
-
-    # Determine platform if auto-detect
+    
+    # Determine platform
     if platform == 'this':
-        platform = 1 if sys.platform != 'win32' else 0
-
+        platform = 0 if sys.platform.startswith('win') else 1
+    
     if platform == 1:  # POSIX style
         # Match either:
         # - Quoted string with escaped quotes allowed
         # - Unquoted string with no whitespace
         pattern = r'''(?:[^\s'"]*(?:'[^']*'|"[^"]*")[^\s'"]*)+|[^\s'"]+'''
-        tokens = re.findall(pattern, s)
         
-        # Remove surrounding quotes and unescape internal quotes
+        # Split and clean up quotes
+        parts = re.findall(pattern, s)
         result = []
-        for token in tokens:
-            if token.startswith('"') and token.endswith('"'):
-                token = token[1:-1].replace('\\"', '"')
-            elif token.startswith("'") and token.endswith("'"):
-                token = token[1:-1].replace("\\'", "'")
-            result.append(token)
-        return result
-
-    elif platform == 0:  # Windows/CMD style
-        # Windows command line parsing rules:
-        # - Quotes only needed if spaces in argument
-        # - Backslash only escapes quote if immediately before it
-        # - Quotes can appear in middle of argument
-        pattern = r'''(?:"[^"]*"|[^\s"])+'''
-        tokens = re.findall(pattern, s)
+        for part in parts:
+            # Remove outer quotes if present
+            if (part.startswith('"') and part.endswith('"')) or \
+               (part.startswith("'") and part.endswith("'")):
+                part = part[1:-1]
+            # Unescape inner quotes
+            part = part.replace('\\"', '"').replace("\\'", "'")
+            result.append(part)
+            
+    else:  # Windows/CMD style
+        # Match either:
+        # - Quoted string (no escaped quotes in Windows)
+        # - Unquoted string with no whitespace
+        pattern = r'"[^"]*"|[^\s"]+'
         
+        # Split and clean up quotes
+        parts = re.findall(pattern, s)
         result = []
-        for token in tokens:
-            if token.startswith('"') and token.endswith('"'):
-                # Remove surrounding quotes
-                token = token[1:-1]
-            # Handle escaped quotes
-            token = re.sub(r'\\(?=")', '', token)
-            result.append(token)
-        return result
-
-    else:
-        raise ValueError("Invalid platform value")
+        for part in parts:
+            # Remove outer quotes if present
+            if part.startswith('"') and part.endswith('"'):
+                part = part[1:-1]
+            result.append(part)
+            
+    return result

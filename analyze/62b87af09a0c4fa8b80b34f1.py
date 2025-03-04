@@ -1,24 +1,15 @@
 def fill(self, coord, weight=1):
     """
-    根据给定的 *weight* 在 *coord* 处填充直方图。
-    
-    超出直方图边界的坐标将被忽略。
+    *coord* पर दिए गए *weight* के साथ हिस्टोग्राम को भरें।
+
+    यदि *coord* हिस्टोग्राम की सीमाओं के बाहर है, तो उसे अनदेखा कर दिया जाएगा।
     """
-    # 检查坐标是否为序列类型
-    if not hasattr(coord, '__iter__'):
-        raise TypeError("coord must be a sequence")
+    # Check if coordinate is within histogram bounds
+    if not self._in_range(coord):
+        return
         
-    # 检查坐标维度是否与直方图维度匹配
-    if len(coord) != self.ndim:
-        raise ValueError(f"coord must have {self.ndim} dimensions")
-        
-    # 检查坐标是否在直方图边界内
-    for i, x in enumerate(coord):
-        if x < 0 or x >= self.shape[i]:
-            return  # 忽略超出边界的坐标
-            
-    # 将坐标转换为整数索引
-    idx = tuple(int(x) for x in coord)
+    # Get bin index for the coordinate
+    bin_idx = self._get_bin_index(coord)
     
-    # 在指定位置增加权重
-    self.data[idx] += weight
+    # Add weight to the bin
+    self._bins[bin_idx] += weight

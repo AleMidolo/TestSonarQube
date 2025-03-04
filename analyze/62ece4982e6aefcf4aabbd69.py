@@ -1,19 +1,19 @@
 def _replace_register(flow_params, register_number, register_value):
     """
-    将 `flow_params[register_number]` 的值替换为 `flow_params[register_value]`，并删除 `flow_params[register_value]`。
-    
-    将流中的值替换为指定的寄存器编号。
+    दिए गए रजिस्टर नंबर में फ्लो से मान को बदलें  
 
-    在字典中，用 register_number 指定的寄存器号替换 register_value 键的值。
+    डिक्शनरी में 'register_value' कुंजी को 'register_number' द्वारा दिए गए रजिस्टर नंबर से बदल दिया जाएगा  
 
-    :flow_params: 包含已定义流的字典
-    :register_number: 用于存储值的寄存器编号
-    :register_value: 将被寄存器编号替换的键
+    पैरामीटर विवरण:
+    - flow_params: एक डिक्शनरी जिसमें परिभाषित फ्लो शामिल हैं  
+    - register_number: वह रजिस्टर नंबर जिसमें मान संग्रहीत किया जाएगा  
+    - register_value: वह कुंजी जिसे रजिस्टर नंबर द्वारा बदल दिया जाएगा
     """
-    # 将register_value对应的值赋给register_number
-    flow_params[register_number] = flow_params[register_value]
-    
-    # 删除register_value键值对
-    del flow_params[register_value]
-    
+    # रजिस्टर मान को खोजें
+    if register_value in flow_params:
+        value = flow_params[register_value]
+        # पुरानी कुंजी को हटाएं
+        del flow_params[register_value]
+        # नई कुंजी के साथ मान जोड़ें
+        flow_params[f'R{register_number}'] = value
     return flow_params

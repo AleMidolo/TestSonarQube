@@ -1,24 +1,29 @@
-def to_csv(self, separator=", ", header=None):
-    # Start with header if provided
+def to_csv(self, separator=",", header=None):
+    """Convert graph points to CSV format."""
     result = []
+    
+    # Add header if provided
     if header is not None:
-        result.append(header + "\n")
-    
-    # Process each point in the graph
-    for point in self.points:
-        # Convert coordinates to strings and join with separator
-        coords = separator.join(str(coord) for coord in point.coords)
+        result.append(header)
         
-        # Convert values to strings and join with separator
-        if hasattr(point, 'values') and point.values:
-            values = separator.join(str(val) for val in point.values)
-            # Combine coordinates and values
-            line = coords + separator + values
-        else:
-            line = coords
+    # Convert each point to CSV format
+    for point in self:
+        # Convert coordinates to string, separated by separator
+        coord_str = separator.join(str(x) for x in point.coords)
+        
+        # Convert values to string, separated by separator 
+        if hasattr(point, 'values'):
+            if isinstance(point.values, (list, tuple)):
+                val_str = separator.join(str(x) for x in point.values)
+            else:
+                val_str = str(point.values)
             
-        # Add newline and append to result
-        result.append(line + "\n")
-    
-    # Join all lines and return
-    return "".join(result)
+            # Combine coordinates and values
+            point_str = coord_str + separator + val_str
+        else:
+            point_str = coord_str
+            
+        result.append(point_str)
+        
+    # Join all lines with newlines
+    return "\n".join(result)

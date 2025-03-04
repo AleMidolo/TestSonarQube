@@ -1,6 +1,9 @@
 def round_half_to_even(n):
     """
-    将浮点数进行四舍五入到最接近的偶数
+    Rounds a number according to round-half-to-even rules.
+    For numbers exactly halfway between two integers, rounds to the nearest even number.
+    For all other numbers, rounds to the nearest integer.
+    
     >>> round_half_to_even(3)
     3
     >>> round_half_to_even(3.2) 
@@ -13,24 +16,25 @@ def round_half_to_even(n):
     4
     >>> round_half_to_even(4.2)
     4
-    >>> round_half_to_even(4.5) 
+    >>> round_half_to_even(4.5)
     4
     >>> round_half_to_even(4.7)
     5
-
-    :param n: float or int number
-    :return: rounded integer
-    """
-    # Get decimal part
-    decimal = n - int(n)
     
-    # If decimal part is exactly 0.5
+    :param n: Number to round
+    :return: Rounded number according to round-half-to-even rules
+    """
+    # Get the decimal part
+    decimal = abs(n - int(n))
+    
+    # If exactly 0.5
     if decimal == 0.5:
         # Round to nearest even number
-        if int(n) % 2 == 0:
-            return int(n)
+        floor = int(n)
+        if floor % 2 == 0:
+            return floor
         else:
-            return int(n) + 1
+            return floor + 1
     # Otherwise use regular rounding
     else:
         return round(n)

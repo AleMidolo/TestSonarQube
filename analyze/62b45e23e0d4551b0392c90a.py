@@ -1,46 +1,32 @@
 def validate_version_inventories(self, version_dirs):
     """
-    每个版本**应当**包含截至该版本的完整清单。  
+    प्रत्येक संस्करण के पास उस बिंदु तक एक इन्वेंटरी होनी चाहिए।
 
-    同时，记录所有与根清单不同的内容摘要，以便在验证内容时能够检查这些差异。  
+    साथ ही, किसी भी सामग्री डाइजेस्ट का रिकॉर्ड रखें जो रूट इन्वेंटरी में मौजूद डाइजेस्ट से अलग हो,
+    ताकि सामग्री को सत्यापित करते समय हम उन्हें भी जांच सकें।
 
-    `version_dirs` 是一个包含版本目录名称的数组，并假定按照版本顺序排列（1, 2, 3...）。
+    version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
     """
-    # 存储每个版本的清单差异
-    version_diffs = {}
+    # Track all unique content digests seen
+    all_digests = set()
     
-    # 获取根目录清单
+    # Get root inventory digests
     root_inventory = self.get_root_inventory()
+    root_digests = set(root_inventory.get_all_digests())
     
-    # 遍历每个版本目录
+    # Validate each version has inventory
     for version in version_dirs:
-        version_inventory = self.get_version_inventory(version)
+        inventory_path = os.path.join(version, 'inventory.json')
+        if not os.path.exists(inventory_path):
+            raise ValidationError(f"Missing inventory file for version {version}")
+            
+        # Load inventory and get digests
+        with open(inventory_path) as f:
+            inventory = json.load(f)
+            version_digests = set(inventory.get_all_digests())
+            
+        # Add any new digests not in root inventory
+        diff_digests = version_digests - root_digests
+        all_digests.update(diff_digests)
         
-        # 检查是否包含完整清单
-        if not version_inventory:
-            raise ValueError(f"Version {version} missing complete inventory")
-            
-        # 计算与根清单的差异
-        diffs = {}
-        for file_path, checksum in version_inventory.items():
-            if file_path not in root_inventory:
-                diffs[file_path] = {'status': 'added', 'checksum': checksum}
-            elif root_inventory[file_path] != checksum:
-                diffs[file_path] = {
-                    'status': 'modified',
-                    'old_checksum': root_inventory[file_path],
-                    'new_checksum': checksum
-                }
-                
-        for file_path in root_inventory:
-            if file_path not in version_inventory:
-                diffs[file_path] = {
-                    'status': 'deleted',
-                    'old_checksum': root_inventory[file_path]
-                }
-                
-        # 存储该版本的差异
-        if diffs:
-            version_diffs[version] = diffs
-            
-    return version_diffs
+    return all_digests

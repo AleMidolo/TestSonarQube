@@ -1,34 +1,59 @@
 def get_nested_custom_and_control_args(self, args):
     """
-    将输入参数分为控制，嵌套和自定义参数。
+    इनपुट आर्ग्युमेंट्स को नेस्टेड और कस्टम में विभाजित करें।
 
-    控制参数：用于控制中间表示的行为。这些参数不会被写入到规范yml文件中。  
-    嵌套参数：用于Ansible playbooks，并会被写入到规范yml文件中。  
-    自定义参数：自定义的Ansible变量，用于替代常规的嵌套参数使用。
+    कंट्रोल आर्ग्युमेंट्स: IR (Intermediate Representation) व्यवहार को नियंत्रित करते हैं। 
+        ये आर्ग्युमेंट्स spec.yml फाइल में नहीं डाले जाएंगे।
+    नेस्टेड आर्ग्युमेंट्स: Ansible प्लेबुक्स द्वारा उपयोग किए जाते हैं और 
+        spec.yml फाइल में डाले जाएंगे।
+    कस्टम आर्ग्युमेंट्स: सामान्य नेस्टेड उपयोग के बजाय कस्टम Ansible वेरिएबल्स का उपयोग करने के लिए।
 
-    :param args: 收集到的参数列表。
-    :return: (dict, dict): 扁平化的字典（control_args, nested_args）
+    :param args: एकत्रित आर्ग्युमेंट्स की सूची।
+    :return: (dict, dict): फ्लैट डिक्शनरीज़ (control_args, nested_args)
     """
     control_args = {}
     nested_args = {}
     custom_args = {}
 
-    # 遍历所有参数
-    for arg_name, arg_value in args.items():
-        # 控制参数以_开头
-        if arg_name.startswith('_'):
-            control_args[arg_name] = arg_value
-            
-        # 自定义参数以custom_开头    
-        elif arg_name.startswith('custom_'):
-            custom_name = arg_name[7:] # 去掉custom_前缀
-            custom_args[custom_name] = arg_value
-            
-        # 其他都是嵌套参数
+    # Control arguments that should not be included in spec.yml
+    control_arg_list = ['debug', 'verbose', 'dry_run', 'no_color']
+    
+    # Process each argument
+    for arg in args:
+        key = arg.split('=')[0].strip('--')  # Remove -- prefix
+        value = arg.split('=')[1] if '=' in arg else True
+        
+        # Convert string values to appropriate types
+        if isinstance(value, str):
+            if value.lower() == 'true':
+                value = True
+            elif value.lower() == 'false':
+                value = False
+            elif value.isdigit():
+                value = int(value)
+            elif value.replace('.','',1).isdigit():
+                value = float(value)
+                
+        # Categorize arguments
+        if key in control_arg_list:
+            control_args[key] = value
+        elif key.startswith('custom_'):
+            custom_args[key] = value
         else:
-            nested_args[arg_name] = arg_value
-
-    # 将自定义参数合并到嵌套参数中
-    nested_args.update(custom_args)
-
+            # Handle nested arguments with dot notation
+            if '.' in key:
+                parts = key.split('.')
+                current = nested_args
+                for part in parts[:-1]:
+                    if part not in current:
+                        current[part] = {}
+                    current = current[part]
+                current[parts[-1]] = value
+            else:
+                nested_args[key] = value
+                
+    # Merge custom args into nested args
+    if custom_args:
+        nested_args['custom'] = custom_args
+        
     return control_args, nested_args

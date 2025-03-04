@@ -1,11 +1,10 @@
 def plugins_manager(cls):
     """
-    通过 `cls._get_service()` 中的 `ServiceName.PLUGINS_MANAGER` 获取插件管理器。
-    获取插件管理器。
+    प्लगइन मैनेजर प्राप्त करता है।
     """
-    from enum import Enum
-    
-    class ServiceName(Enum):
-        PLUGINS_MANAGER = "plugins_manager"
-    
-    return cls._get_service(ServiceName.PLUGINS_MANAGER)
+    if not hasattr(cls, '_plugins_manager'):
+        from yapsy.PluginManager import PluginManager
+        cls._plugins_manager = PluginManager()
+        cls._plugins_manager.setPluginPlaces(['plugins'])
+        cls._plugins_manager.collectPlugins()
+    return cls._plugins_manager

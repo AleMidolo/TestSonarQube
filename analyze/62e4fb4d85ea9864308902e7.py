@@ -1,30 +1,32 @@
 def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
-    import os
-    import sys
-    import shutil
-    
+    # Handle empty command
     if not cmd:
         return cmd
         
-    # Get first argument (executable)
-    exe = cmd[0]
+    # Get first argument (command/script path)
+    first = cmd[0]
     
-    # Handle shebang on Windows
-    if sys.platform == 'win32' and os.path.exists(exe):
-        with open(exe, 'rb') as f:
-            # Check if file starts with shebang
-            if f.read(2) == b'#!':
-                shebang = f.readline().decode().strip()
-                interpreter = shebang.split()[0]
-                
-                # Get full path of interpreter
-                interpreter_path = shutil.which(os.path.basename(interpreter))
-                if interpreter_path:
-                    return (interpreter_path, exe) + cmd[1:]
-    
-    # Get full path of executable
-    exe_path = shutil.which(exe)
-    if exe_path:
-        return (exe_path,) + cmd[1:]
+    # Skip if not a Python script
+    if not first.endswith('.py'):
+        return cmd
         
-    return cmd
+    # Read first line to check for shebang
+    try:
+        with open(first, 'rb') as f:
+            first_line = f.readline().decode('utf-8').strip()
+    except (IOError, UnicodeDecodeError):
+        return cmd
+        
+    # Check if first line is a shebang
+    if not first_line.startswith('#!'):
+        return cmd
+        
+    # Extract interpreter path from shebang
+    interp = first_line[2:].strip().split()[0]
+    
+    # Handle deep paths with spaces
+    if ' ' in interp:
+        interp = f'"{interp}"'
+        
+    # Return normalized command with interpreter
+    return (interp,) + cmd

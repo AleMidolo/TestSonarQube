@@ -1,42 +1,45 @@
 def verifyClass(iface, candidate, tentative=False):
     """
-    验证 *candidate* 是否可能正确地提供 *iface*。
+    यह फ़ंक्शन सत्यापित करता है कि *candidate* सही तरीके से *iface* प्रदान कर सकता है या नहीं।
     """
-    # 获取接口定义的所有属性
-    required = set(dir(iface))
+    # Check if candidate is a class
+    if not isinstance(candidate, type):
+        raise TypeError("Candidate must be a class")
+        
+    # Get all attributes defined in the interface
+    iface_attrs = dir(iface)
     
-    # 获取候选类的所有属性
-    implemented = set(dir(candidate))
-    
-    # 检查所有必需的接口属性是否都已实现
-    missing = required - implemented
-    
-    if tentative:
-        # 如果是暂定验证,只要有部分实现即可
-        return len(implemented & required) > 0
-    else:
-        # 严格验证模式下,必须完全实现所有接口
-        if missing:
-            return False
+    # Check each attribute in interface
+    for attr in iface_attrs:
+        # Skip private/special attributes
+        if attr.startswith('_'):
+            continue
             
-        # 验证方法签名是否匹配
-        for name in required:
-            if not hasattr(iface, name):
-                continue
-                
-            iface_attr = getattr(iface, name)
-            cand_attr = getattr(candidate, name)
+        # Get interface attribute
+        iface_attr = getattr(iface, attr)
+        
+        # Check if attribute exists in candidate
+        if not hasattr(candidate, attr):
+            if tentative:
+                return False
+            raise AttributeError(f"'{attr}' not found in {candidate.__name__}")
             
-            # 检查是否为可调用对象(方法)
-            if callable(iface_attr):
-                if not callable(cand_attr):
+        # Get candidate attribute
+        cand_attr = getattr(candidate, attr)
+        
+        # Check if attribute is callable (method)
+        if callable(iface_attr):
+            if not callable(cand_attr):
+                if tentative:
                     return False
-                    
-                # 检查方法参数是否匹配
-                try:
-                    if iface_attr.__code__.co_argcount != cand_attr.__code__.co_argcount:
+                raise TypeError(f"'{attr}' must be callable in {candidate.__name__}")
+                
+            # Check method signature matches
+            if hasattr(iface_attr, '__code__'):
+                if (iface_attr.__code__.co_argcount != 
+                    cand_attr.__code__.co_argcount):
+                    if tentative:
                         return False
-                except AttributeError:
-                    pass
+                    raise TypeError(f"'{attr}' has wrong number of arguments")
                     
-        return True
+    return True

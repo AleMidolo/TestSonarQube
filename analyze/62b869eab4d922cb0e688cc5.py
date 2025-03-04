@@ -1,32 +1,42 @@
-def update_last_applied_manifest_dict_from_resp(last_applied_manifest, observer_schema, response):
+def update_last_applied_manifest_dict_from_resp(
+    last_applied_manifest, observer_schema, response
+):
     # Iterate through all fields in observer schema
-    for field_name, field_schema in observer_schema.items():
-        # If field not initialized in last_applied_manifest, initialize it
-        if field_name not in last_applied_manifest:
-            last_applied_manifest[field_name] = {}
+    for field, value in observer_schema.items():
+        # Skip if field doesn't exist in response
+        if field not in response:
+            continue
+            
+        # Initialize field in last_applied_manifest if it doesn't exist
+        if field not in last_applied_manifest:
+            if isinstance(response[field], dict):
+                last_applied_manifest[field] = {}
+            elif isinstance(response[field], list):
+                last_applied_manifest[field] = []
+            else:
+                last_applied_manifest[field] = response[field]
+                continue
 
-        # If field not in response, raise KeyError
-        if field_name not in response:
-            raise KeyError(f"Field {field_name} not found in Kubernetes response")
-
-        # If field schema is a dict, recursively update nested fields
-        if isinstance(field_schema, dict):
+        # Recursively update nested dictionaries
+        if isinstance(value, dict) and isinstance(response[field], dict):
             update_last_applied_manifest_dict_from_resp(
-                last_applied_manifest[field_name],
-                field_schema,
-                response[field_name]
+                last_applied_manifest[field], value, response[field]
             )
-        # If field schema is a list, update list fields
-        elif isinstance(field_schema, list):
-            if not isinstance(last_applied_manifest[field_name], list):
-                last_applied_manifest[field_name] = []
-            update_last_applied_manifest_list_from_resp(
-                last_applied_manifest[field_name],
-                field_schema[0] if field_schema else {},
-                response[field_name]
-            )
-        # For primitive fields, directly copy value from response
+        # Update lists
+        elif isinstance(value, list) and isinstance(response[field], list):
+            if len(value) > 0 and isinstance(value[0], dict):
+                # Handle list of dictionaries
+                if len(last_applied_manifest[field]) < len(response[field]):
+                    last_applied_manifest[field].extend(
+                        [{}] * (len(response[field]) - len(last_applied_manifest[field]))
+                    )
+                for i in range(len(response[field])):
+                    update_last_applied_manifest_dict_from_resp(
+                        last_applied_manifest[field][i], value[0], response[field][i]
+                    )
+            else:
+                # Handle simple lists
+                last_applied_manifest[field] = response[field]
         else:
-            last_applied_manifest[field_name] = response[field_name]
-
-    return last_applied_manifest
+            # Update simple values
+            last_applied_manifest[field] = response[field]

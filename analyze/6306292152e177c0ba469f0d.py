@@ -1,29 +1,28 @@
 def identify_request(request: RequestType) -> bool:
     """
-    检查通过 JSON 加载的请求体是否包含事件。如果包含，则返回真。否则，返回假。
-
-    尝试识别这是否是一个 Matrix 请求。
+    यह फ़ंक्शन यह पहचानने की कोशिश करता है कि क्या यह एक मैट्रिक्स (Matrix) अनुरोध है।
     """
-    # Check if request is a dict
-    if not isinstance(request, dict):
+    # Check if request is None
+    if request is None:
         return False
         
-    # Check if request contains events
-    if 'events' not in request:
-        return False
-        
-    # Check if events is a list
-    if not isinstance(request['events'], list):
-        return False
-        
-    # Check if there are any events
-    if len(request['events']) == 0:
-        return False
-        
-    # Check if each event is a dict
-    for event in request['events']:
-        if not isinstance(event, dict):
-            return False
+    # Check if request has matrix-related attributes/properties
+    matrix_keywords = ['matrix', 'matrices', 'array', 'grid', 'table']
+    
+    # Convert request to string and check for matrix keywords
+    request_str = str(request).lower()
+    for keyword in matrix_keywords:
+        if keyword in request_str:
+            return True
             
-    # If all checks pass, this appears to be a valid Matrix request
-    return True
+    # Check if request has matrix-like structure
+    try:
+        # Check if request is iterable and has nested structure
+        if hasattr(request, '__iter__'):
+            first_elem = next(iter(request))
+            if hasattr(first_elem, '__iter__'):
+                return True
+    except:
+        pass
+        
+    return False

@@ -1,21 +1,18 @@
 def string_to_int(string: str, alphabet: List[str]) -> int:
     """
-    将一个数字使用给定的字母表转换为字符串。
-    :param string: 一个由字母表中的字母组成的字符串
-    :param alphabet: 字母表
-    :return: int，使用给定转换规则得到的字符串对应的数字
+    एक स्ट्रिंग को एक संख्या में बदलने का कार्य करता है, दिए गए वर्णमाला का उपयोग करके।
 
-    假定输入的最高有效位在最前面。
+    इनपुट यह मानता है कि सबसे महत्वपूर्ण अंक (most significant digit) पहले है।
     """
     base = len(alphabet)
     result = 0
     
-    # 创建字母到数字的映射
-    char_to_num = {char: i for i, char in enumerate(alphabet)}
+    # Create a mapping of characters to their values
+    char_to_val = {char: i for i, char in enumerate(alphabet)}
     
-    # 从左到右遍历字符串的每个字符
+    # Process each character from left to right
     for char in string:
-        # 将结果乘以进制数(base)并加上当前字符对应的数值
-        result = result * base + char_to_num[char]
+        # Multiply current result by base and add new digit
+        result = result * base + char_to_val[char]
         
     return result

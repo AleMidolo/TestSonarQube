@@ -1,22 +1,15 @@
 def render(pieces, style):
     """
-    将输入的组件和样式渲染为对应的样式。
-    将给定的组件渲染为要求的样式。
+    दिए गए संस्करण टुकड़ों को निर्दिष्ट शैली में प्रस्तुत करें।
     """
-    rendered = []
-    
-    # 遍历所有组件
-    for piece in pieces:
-        # 根据样式类型进行渲染
-        if style == "bold":
-            rendered.append(f"**{piece}**")
-        elif style == "italic":
-            rendered.append(f"*{piece}*")
-        elif style == "underline":
-            rendered.append(f"_{piece}_")
-        else:
-            # 默认不添加样式
-            rendered.append(piece)
-            
-    # 将渲染后的组件连接起来
-    return "".join(rendered)
+    if not pieces:
+        return ""
+        
+    if style == "plain":
+        return "".join(pieces)
+    elif style == "html":
+        return "<div>" + "".join(pieces) + "</div>"
+    elif style == "markdown":
+        return "_" + "".join(pieces) + "_"
+    else:
+        return "".join(pieces)

@@ -1,22 +1,19 @@
 def process_text_links(text):
-    """
-    处理文本中的链接，添加一些属性并将文本链接转换为可点击的超链接。
-    """
     import re
     
-    # 匹配URL的正则表达式模式
+    # Regular expression pattern to find URLs in text
     url_pattern = r'(https?://[^\s<>"]+|www\.[^\s<>"]+)'
     
-    def replace_url(match):
+    # Function to replace URLs with HTML links
+    def replace_with_link(match):
         url = match.group(0)
-        # 如果URL不以http开头,添加http://
+        # Add https:// if URL starts with www.
         if url.startswith('www.'):
-            url = 'http://' + url
-            
-        # 构建带属性的HTML链接标签
+            url = 'https://' + url
+        # Create HTML link with target="_blank" to open in new tab
         return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
     
-    # 使用正则表达式替换所有匹配的URL
-    processed_text = re.sub(url_pattern, replace_url, text)
+    # Replace all URLs in text with HTML links
+    processed_text = re.sub(url_pattern, replace_with_link, text)
     
     return processed_text

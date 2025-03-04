@@ -1,53 +1,48 @@
 def extend_cli(self, root_subparsers):
     """
-    将规范 CLI 选项添加到主入口点。
+    मुख्य एंट्री पॉइंट में स्पेक CLI विकल्प जोड़ता है।
 
-    :param subparser: 要扩展的子解析器对象。
+    :param subparser: वह सबपार्सर ऑब्जेक्ट जिसे विस्तारित करना है।
     """
-    # 创建一个新的子解析器
-    parser = root_subparsers.add_parser(
-        'standards',
-        help='Standards and specifications related commands'
+    # Create spec subparser
+    spec_parser = root_subparsers.add_parser(
+        'spec',
+        help='Manage project specifications'
+    )
+    
+    # Create subparsers for spec command
+    spec_subparsers = spec_parser.add_subparsers(
+        title='spec commands',
+        dest='spec_command'
     )
 
-    # 添加子命令解析器
-    subparsers = parser.add_subparsers(
-        title='Standards commands',
-        dest='standards_command'
+    # Add init command
+    init_parser = spec_subparsers.add_parser(
+        'init',
+        help='Initialize a new spec file'
+    )
+    init_parser.add_argument(
+        '--template',
+        help='Template to use for spec file',
+        default='default'
     )
 
-    # 添加列表命令
-    list_parser = subparsers.add_parser(
-        'list',
-        help='List available standards'
-    )
-    list_parser.add_argument(
-        '--format',
-        choices=['text', 'json'],
-        default='text',
-        help='Output format'
-    )
-
-    # 添加验证命令
-    validate_parser = subparsers.add_parser(
+    # Add validate command  
+    validate_parser = spec_subparsers.add_parser(
         'validate',
-        help='Validate against standards'
+        help='Validate spec file'
     )
     validate_parser.add_argument(
-        'standard',
-        help='Standard to validate against'
-    )
-    validate_parser.add_argument(
-        'file',
-        help='File to validate'
+        'spec_file',
+        help='Path to spec file to validate'
     )
 
-    # 添加信息命令
-    info_parser = subparsers.add_parser(
-        'info',
-        help='Show detailed information about a standard'
+    # Add update command
+    update_parser = spec_subparsers.add_parser(
+        'update',
+        help='Update spec file'
     )
-    info_parser.add_argument(
-        'standard',
-        help='Standard to show information about'
+    update_parser.add_argument(
+        'spec_file',
+        help='Path to spec file to update'
     )

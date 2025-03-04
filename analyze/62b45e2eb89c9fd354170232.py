@@ -1,31 +1,36 @@
 def next_version(version):
-    # Split version string by dots
+    # Split version into parts by dot
     parts = version.split('.')
     
-    # Convert to integers while preserving leading zeros
-    lengths = [len(p) for p in parts]
-    nums = [int(p) for p in parts]
+    # Convert parts to integers
+    nums = [int(x) for x in parts]
     
     # Start from rightmost digit
     i = len(nums) - 1
+    
     while i >= 0:
-        # If current number is 9, set to 0 and continue carrying
+        # If current digit is 9, set to 0 and continue to next digit
         if nums[i] == 9:
             nums[i] = 0
             i -= 1
         else:
-            # Otherwise increment and break
+            # Otherwise increment current digit and break
             nums[i] += 1
             break
             
-    # If we carried through all digits, add a 1 at the start
+    # If we ran out of digits to increment, add a 1 at the start
     if i < 0:
-        nums = [1] + nums
-        lengths = [1] + lengths
+        nums.insert(0, 1)
         
-    # Convert back to strings with original zero padding
+    # Convert back to strings preserving original zero padding
     result = []
-    for num, length in zip(nums, lengths):
-        result.append(str(num).zfill(length))
-        
+    for i in range(len(nums)):
+        # Get original part to check if it had zero padding
+        orig = parts[i] if i < len(parts) else ''
+        if orig.startswith('0') and len(orig) > 1:
+            # Preserve zero padding
+            result.append(str(nums[i]).zfill(len(orig)))
+        else:
+            result.append(str(nums[i]))
+            
     return '.'.join(result)

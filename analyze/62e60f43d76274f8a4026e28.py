@@ -1,32 +1,28 @@
 def hydrate_time(nanoseconds, tz=None):
     """
-    将纳秒转换为固定格式的时间。
-    用于处理 `Time` 和 `LocalTime` 值的转换器。
+    `Time` और `LocalTime` मानों के लिए हाइड्रेटर।  
 
-    :param nanoseconds: 纳秒时间戳
-    :param tz: 时区信息,默认为None
-    :return: 格式化的时间字符串
+    पैरामीटर (Parameters):
+    -nanoseconds: 
+    - tz: 
+
+    वापसी मान:
+    - समय 
     """
-    from datetime import datetime, timezone, timedelta
+    # Convert nanoseconds to hours, minutes, seconds, nanoseconds
+    total_seconds = nanoseconds // 1_000_000_000
+    remaining_nanos = nanoseconds % 1_000_000_000
     
-    # 将纳秒转换为秒
-    seconds = nanoseconds / 1e9
-    
-    # 创建datetime对象
-    dt = datetime.fromtimestamp(seconds)
-    
-    # 如果指定了时区
-    if tz is not None:
-        if isinstance(tz, str):
-            # 如果tz是字符串,创建timezone对象
-            offset = int(tz[1:3]) * 3600 + int(tz[3:5]) * 60
-            if tz[0] == '-':
-                offset = -offset
-            tz = timezone(timedelta(seconds=offset))
-        dt = dt.astimezone(tz)
-    
-    # 格式化输出,包含纳秒
-    microseconds = int((nanoseconds % 1e9) / 1e3)
-    time_str = dt.strftime('%H:%M:%S.') + f'{microseconds:06d}'
-    
+    hours = total_seconds // 3600
+    minutes = (total_seconds % 3600) // 60
+    seconds = total_seconds % 60
+
+    # Format time components
+    if tz is None:
+        # Return time without timezone
+        time_str = f"{hours:02d}:{minutes:02d}:{seconds:02d}.{remaining_nanos:09d}"
+    else:
+        # Return time with timezone
+        time_str = f"{hours:02d}:{minutes:02d}:{seconds:02d}.{remaining_nanos:09d} {tz}"
+
     return time_str

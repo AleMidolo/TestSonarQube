@@ -1,52 +1,60 @@
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    检索并解析远程 Diaspora WebFinger 文档。
+    डायस्पोरा वेबफिंगर डॉक्यूमेंट को प्राप्त करें और पार्स करें।
 
-    :arg handle: 要检索的远程句柄 
-    :returns: 字典
+    :पैरामीटर हैंडल: प्राप्त करने के लिए रिमोट हैंडल  
+    :वापसी: डिक्शनरी (dict)
     """
     import requests
     import json
     from urllib.parse import urlparse
 
-    # 验证句柄格式
+    # Handle validation
     if '@' not in handle:
-        raise ValueError("Invalid handle format")
+        raise ValueError("Invalid handle format - must contain @")
 
-    username, domain = handle.split('@')
+    # Split handle into user and domain
+    username, domain = handle.split('@', 1)
     
-    # 构建 WebFinger URL
+    # Construct webfinger URL
     webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
-    
+
     try:
-        # 发送请求获取 WebFinger 文档
+        # Make HTTP request
         response = requests.get(webfinger_url)
         response.raise_for_status()
         
-        # 解析 JSON 响应
+        # Parse JSON response
         data = response.json()
         
-        # 提取相关信息到字典
+        # Extract relevant information
         result = {
-            'username': username,
+            'handle': handle,
             'domain': domain,
-            'subject': data.get('subject', ''),
-            'aliases': data.get('aliases', []),
+            'username': username,
             'links': {}
         }
         
-        # 解析链接
-        for link in data.get('links', []):
-            rel = link.get('rel', '')
-            if rel:
-                result['links'][rel] = {
-                    'href': link.get('href', ''),
-                    'type': link.get('type', '')
-                }
-                
+        # Parse links
+        if 'links' in data:
+            for link in data['links']:
+                if 'rel' in link:
+                    result['links'][link['rel']] = {
+                        'href': link.get('href', ''),
+                        'type': link.get('type', '')
+                    }
+                    
+        # Add additional properties if present
+        if 'subject' in data:
+            result['subject'] = data['subject']
+        if 'aliases' in data:
+            result['aliases'] = data['aliases']
+            
         return result
-        
+
     except requests.exceptions.RequestException as e:
-        raise ConnectionError(f"Failed to retrieve WebFinger document: {str(e)}")
+        raise ConnectionError(f"Failed to retrieve webfinger document: {str(e)}")
     except json.JSONDecodeError:
-        raise ValueError("Invalid WebFinger document format")
+        raise ValueError("Invalid webfinger document format")
+    except Exception as e:
+        raise Exception(f"Error processing webfinger document: {str(e)}")

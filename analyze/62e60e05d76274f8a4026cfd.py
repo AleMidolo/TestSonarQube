@@ -1,13 +1,12 @@
 def index(self, key):
-    """
-    以整数形式返回键。
-    返回给定项的索引。
+    """    
+    दिए गए आइटम का इंडेक्स (स्थान) लौटाता है।
 
-    :param key: 一个键
-    :return: 索引
+    :param key: एक कुंजी 
+    :return: इंडेक्स 
     :rtype: int
     """
-    try:
-        return self.keys().index(key)
-    except ValueError:
-        raise KeyError(f"Key {key} not found")
+    for i in range(len(self)):
+        if self[i] == key:
+            return i
+    raise ValueError(f"{key} is not in list")

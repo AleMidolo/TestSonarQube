@@ -1,55 +1,41 @@
 def bash_completion():
-    """
-    通过检查 borgmatic 的命令行参数解析器生成 borgmatic 命令。
-
-    返回一个用于 borgmatic 命令的 bash 补全脚本。通过检查 borgmatic 的命令行参数解析器生成此脚本。
-    """
-    completion_script = '''
+    return '''
+# Borgmatic bash completion script
 _borgmatic()
 {
-    local cur prev opts
-    COMPREPLY=()
-    cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local cur prev words cword
+    _init_completion || return
+
+    # List of all available commands
+    local commands="init create prune check config list info mount umount extract export-tar restore"
     
-    # 主要命令选项
-    opts="init create prune check list info export-tar extract mount umount config validate"
-    
-    # 通用选项
-    common_opts="--config --verbosity --syslog-verbosity --log-file --monitoring-verbosity --help"
-    
-    # 根据前一个单词提供不同的补全
-    case "${prev}" in
-        borgmatic)
-            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-            return 0
+    # Handle command completion
+    if [ $cword -eq 1 ]; then
+        COMPREPLY=( $(compgen -W "$commands" -- "$cur") )
+        return 0
+    fi
+
+    # Handle options based on command
+    case ${words[1]} in
+        create)
+            COMPREPLY=( $(compgen -W "--help --config --verbosity --list --stats --progress --dry-run" -- "$cur") )
             ;;
-        --config)
-            COMPREPLY=( $(compgen -f -- ${cur}) )
-            return 0
+        prune)
+            COMPREPLY=( $(compgen -W "--help --config --verbosity --list --stats --dry-run" -- "$cur") )
             ;;
-        --verbosity|--syslog-verbosity|--monitoring-verbosity)
-            COMPREPLY=( $(compgen -W "0 1 2 3" -- ${cur}) )
-            return 0
+        check)
+            COMPREPLY=( $(compgen -W "--help --config --verbosity --repository --archives --prefix" -- "$cur") )
             ;;
-        --log-file)
-            COMPREPLY=( $(compgen -f -- ${cur}) )
-            return 0
+        mount)
+            COMPREPLY=( $(compgen -W "--help --config --verbosity --archive --mount-point --foreground" -- "$cur") )
             ;;
         *)
-            # 如果当前输入以破折号开头，提供选项补全
-            if [[ ${cur} == -* ]] ; then
-                COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
-                return 0
-            fi
+            COMPREPLY=( $(compgen -W "--help --config --verbosity" -- "$cur") )
             ;;
     esac
-    
-    # 默认补全为主要命令
-    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+
     return 0
 }
 
 complete -F _borgmatic borgmatic
 '''
-    return completion_script

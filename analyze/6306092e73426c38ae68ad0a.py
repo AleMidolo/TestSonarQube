@@ -1,15 +1,11 @@
 def validate_choices_args(self, args):
     """
-    检查给定参数的值是否是可用选项之一。
+    चॉइस आर्ग्युमेंट्स का मान उपलब्ध विकल्पों में से एक है या नहीं, इसकी जांच करें।
 
-    :param args: 接收到的参数。
-
-    检查选择参数的值是否是可用选项之一。
-    :param args: 接收到的参数。
+    :param args: प्राप्त किए गए आर्ग्युमेंट्स।
     """
     for arg_name, arg_value in args.items():
         if hasattr(self, 'choices') and arg_name in self.choices:
             valid_choices = self.choices[arg_name]
             if arg_value not in valid_choices:
-                raise ValueError(f"Invalid value '{arg_value}' for argument '{arg_name}'. "
-                               f"Valid choices are: {valid_choices}")
+                raise ValueError(f"Argument '{arg_name}' must be one of {valid_choices}, got '{arg_value}'")

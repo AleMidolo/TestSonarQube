@@ -1,16 +1,21 @@
 def test_tag(tag: str) -> bool:
     """
-    检查 `LEGAL_TAG_CHARS` 中的每个字符是否属于标签。如果有任何字符属于标签，则返回假。否则，返回真。
-
-    测试一个单词是否可以被接受为标签。
+    किसी शब्द का परीक्षण करें कि क्या उसे टैग के रूप में स्वीकार किया जा सकता है।
     """
-    LEGAL_TAG_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    
-    # 检查tag中的每个字符
-    for char in tag:
-        # 如果字符不在合法字符集中,返回False
-        if char not in LEGAL_TAG_CHARS:
-            return False
-            
-    # 所有字符都合法,返回True
+    # Check if tag is empty
+    if not tag:
+        return False
+        
+    # Check if tag contains only valid characters (alphanumeric and underscore)
+    if not all(c.isalnum() or c == '_' for c in tag):
+        return False
+        
+    # Check if tag starts with a letter
+    if not tag[0].isalpha():
+        return False
+        
+    # Check if tag is between 2 and 30 characters
+    if len(tag) < 2 or len(tag) > 30:
+        return False
+        
     return True

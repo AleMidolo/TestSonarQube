@@ -1,23 +1,25 @@
 def make_parsers():
     """
-    构建一个解析器及其子解析器，并将它们作为一个元组返回。
-
-    构建一个顶级解析器及其子解析器，并将它们作为一个元组返回。
+    एक शीर्ष-स्तरीय (top-level) पार्सर और उसके सबपार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
     """
     import argparse
-    
-    # 创建顶级解析器
-    parser = argparse.ArgumentParser(description='命令行工具')
-    subparsers = parser.add_subparsers(dest='command', help='可用命令')
 
-    # 创建子解析器
-    parser_a = subparsers.add_parser('a', help='命令 a')
-    parser_a.add_argument('--foo', type=str, help='foo 参数')
-    
-    parser_b = subparsers.add_parser('b', help='命令 b') 
-    parser_b.add_argument('--bar', type=int, help='bar 参数')
-    
-    parser_c = subparsers.add_parser('c', help='命令 c')
-    parser_c.add_argument('--baz', type=float, help='baz 参数')
+    # Create top level parser
+    parser = argparse.ArgumentParser(description='Main command line tool')
+    subparsers = parser.add_subparsers(dest='command', help='Available commands')
 
-    return parser, subparsers
+    # Create parser for 'add' command
+    add_parser = subparsers.add_parser('add', help='Add a new item')
+    add_parser.add_argument('name', help='Name of the item')
+    add_parser.add_argument('--value', '-v', help='Value of the item')
+
+    # Create parser for 'list' command  
+    list_parser = subparsers.add_parser('list', help='List all items')
+    list_parser.add_argument('--sort', '-s', choices=['name', 'value'], 
+                            help='Sort output by field')
+
+    # Create parser for 'delete' command
+    delete_parser = subparsers.add_parser('delete', help='Delete an item')
+    delete_parser.add_argument('name', help='Name of item to delete')
+
+    return (parser, add_parser, list_parser, delete_parser)

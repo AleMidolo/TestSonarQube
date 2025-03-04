@@ -1,15 +1,12 @@
 def integral(bins, edges):
     """
-    计算整体图形的面积
-    计算积分（直方图的缩放比例）。
+    हिस्टोग्राम के लिए इंटीग्रल (स्केल) की गणना करें।
 
-    *`bins`* 包含数值，*`edges`* 构成积分的网格。  
-    在 :class:`.histogram` 的描述中定义了它们的格式。
+    *bins* में मान (values) होते हैं, और *edges* इंटीग्रेशन के लिए जाल (mesh) बनाते हैं।  
+    इनका प्रारूप (format) :class:`.histogram` विवरण में परिभाषित है।
     """
     total = 0.0
     for i in range(len(bins)):
-        # 计算每个bin的宽度
-        width = edges[i + 1] - edges[i]
-        # 计算每个矩形的面积并累加
-        total += bins[i] * width
+        bin_width = edges[i+1] - edges[i]
+        total += bins[i] * bin_width
     return total

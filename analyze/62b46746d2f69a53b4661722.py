@@ -1,54 +1,55 @@
 def absorb(self, args):
-    # 初始化结果列表
-    result = list(args)
-    changed = True
+    # Create copy of input list to avoid modifying original
+    result = args.copy()
     
-    # 持续应用吸收律直到没有变化
+    # Keep track if any changes were made in a pass
+    changed = True
     while changed:
         changed = False
-        n = len(result)
         
-        # 遍历所有表达式对
-        for i in range(n):
-            for j in range(n):
+        # Check each pair of expressions
+        for i in range(len(result)):
+            for j in range(len(result)):
                 if i == j:
                     continue
                     
-                # 获取两个表达式
+                # Get expressions to compare
                 expr1 = result[i]
                 expr2 = result[j]
                 
-                # 检查吸收律 A & (A | B) = A
-                if (isinstance(expr1, And) and 
-                    isinstance(expr2, Or) and
-                    expr1 in expr2.args):
-                    result[j] = expr1
-                    changed = True
-                    
-                # 检查吸收律 A | (A & B) = A  
-                elif (isinstance(expr1, Or) and
-                      isinstance(expr2, And) and 
-                      expr1 in expr2.args):
-                    result[j] = expr1
-                    changed = True
-                    
-                # 检查负吸收律 A & (~A | B) = A & B
-                elif (isinstance(expr1, And) and
-                      isinstance(expr2, Or) and
-                      Not(expr1) in expr2.args):
-                    new_args = [arg for arg in expr2.args if arg != Not(expr1)]
-                    result[j] = And(expr1, *new_args)
-                    changed = True
-                    
-                # 检查负吸收律 A | (~A & B) = A | B
-                elif (isinstance(expr1, Or) and
-                      isinstance(expr2, And) and
-                      Not(expr1) in expr2.args):
-                    new_args = [arg for arg in expr2.args if arg != Not(expr1)]
-                    result[j] = Or(expr1, *new_args)
-                    changed = True
-                    
-        # 移除重复项
+                # Check absorption cases
+                # A & (A | B) = A
+                if isinstance(expr1, str) and isinstance(expr2, tuple):
+                    if expr2[1] == '|' and expr1 in expr2[0]:
+                        if expr1 not in result:
+                            result.append(expr1)
+                            changed = True
+                
+                # A | (A & B) = A            
+                if isinstance(expr1, str) and isinstance(expr2, tuple):
+                    if expr2[1] == '&' and expr1 in expr2[0]:
+                        if expr1 not in result:
+                            result.append(expr1)
+                            changed = True
+                            
+                # Negative absorption
+                # A & (~A | B) = A & B
+                if isinstance(expr1, str) and isinstance(expr2, tuple):
+                    if expr2[1] == '|' and f'~{expr1}' in expr2[0]:
+                        new_expr = (expr1, '&', expr2[0][1])
+                        if new_expr not in result:
+                            result.append(new_expr)
+                            changed = True
+                
+                # A | (~A & B) = A | B
+                if isinstance(expr1, str) and isinstance(expr2, tuple):
+                    if expr2[1] == '&' and f'~{expr1}' in expr2[0]:
+                        new_expr = (expr1, '|', expr2[0][1]) 
+                        if new_expr not in result:
+                            result.append(new_expr)
+                            changed = True
+                            
+        # Remove redundant expressions
         result = list(set(result))
-                    
+                        
     return result

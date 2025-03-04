@@ -1,6 +1,8 @@
 def workspace_manager(cls):
     """
-    通过 `cls._get_service(ServiceName.WORKSPACE_MANAGER)` 获取工作区管理器
-    获取工作区管理器。
+    वर्कस्पेस मैनेजर प्राप्त करता है।
     """
-    return cls._get_service(ServiceName.WORKSPACE_MANAGER)
+    if not hasattr(cls, '_workspace_manager'):
+        from workspace_manager import WorkspaceManager
+        cls._workspace_manager = WorkspaceManager()
+    return cls._workspace_manager

@@ -1,22 +1,14 @@
 def validate_length_args(self, args):
     """
-    检查给定参数的值是否不超过指定的长度。
-
-    :param args: 接收到的参数。
-
-    检查参数的值是否不超过指定的长度。
-
-    :param args: 接收到的参数。
+    दिए गए तर्कों की लंबाई की जाँच करें
+    :param args: प्राप्त तर्क।  
     """
-    # 遍历所有参数
-    for arg_name, arg_value in args.items():
-        # 如果参数值是字符串类型
-        if isinstance(arg_value, str):
-            # 获取该参数允许的最大长度
-            max_length = self.get_max_length(arg_name)
+    if len(args) == 0:
+        raise ValueError("No arguments provided")
+    
+    for arg in args:
+        if not isinstance(arg, (str, list, tuple, dict)):
+            continue
             
-            # 如果设置了最大长度限制且参数值超过限制
-            if max_length and len(arg_value) > max_length:
-                raise ValueError(f"Parameter '{arg_name}' exceeds maximum length of {max_length}")
-                
-    return True
+        if len(arg) == 0:
+            raise ValueError(f"Empty argument provided: {arg}")

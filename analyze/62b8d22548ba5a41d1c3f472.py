@@ -1,42 +1,30 @@
 def cachedmethod(cache, key=hashkey, lock=None):
     """
-    返回一个装饰器函数，可以调用缓存中的结果。
-    该装饰器用于包装类方法或实例方法，使其成为一个具备记忆功能的可调用对象，并将结果存储在缓存中。
+    यह डेकोरेटर एक क्लास या इंस्टेंस मेथड को एक मेमोराइज़िंग कॉल करने योग्य फ़ंक्शन के साथ रैप करता है, जो परिणामों को कैश में सहेजता है।
     """
     def decorator(method):
         def wrapper(self, *args, **kwargs):
-            # 生成缓存键
+            # Get cache instance - either from instance or class
+            c = cache(self) if callable(cache) else cache
+            
+            if c is None:
+                return method(self, *args, **kwargs)
+                
+            # Generate cache key
             k = key(self, *args, **kwargs)
             
-            # 如果指定了锁,则获取锁
-            if lock is not None:
-                lock.acquire()
-                
             try:
-                # 尝试从缓存中获取结果
-                try:
-                    return cache[k]
-                except KeyError:
-                    pass
-                
-                # 如果缓存中没有,则调用原方法计算结果
+                # Try to get cached result
+                with lock or nullcontext():
+                    result = c[k]
+                return result
+            except KeyError:
+                # Calculate and cache result if not found
                 result = method(self, *args, **kwargs)
-                
-                # 将结果存入缓存
-                try:
-                    cache[k] = result
-                except TypeError:
-                    pass
-                
+                with lock or nullcontext():
+                    c[k] = result
                 return result
                 
-            finally:
-                # 如果获取了锁,则释放锁
-                if lock is not None:
-                    lock.release()
-                    
-        # 保留原方法的文档字符串
-        wrapper.__doc__ = method.__doc__
         return wrapper
         
     return decorator

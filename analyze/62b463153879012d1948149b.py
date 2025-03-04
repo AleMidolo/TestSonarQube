@@ -1,29 +1,22 @@
 def match_file_by_prefix(prefix, file_path):
     """
-    根据给定的文件路径，如果文件路径的文件名以指定的前缀加上"-"或指定的前缀加上"."开头，则返回真。
+    पहचानें कि क्या `file_path` किसी दिए गए `prefix` द्वारा दस्तावेज़ पैकेज से संबंधित है
 
-    确定文件路径是否属于指定前缀的文档包
+    एक पैकेज से संबंधित दस्तावेज़ों के लिए `True` लौटाएँ।
 
-    如果文件属于文档包，则返回真。
-
-    参数
+    पैरामीटर
     ----------
-    prefix: str  
-      文件名的前缀
-    file_path: str
-      文件路径
-
-    返回值
+    prefix : str
+        फ़ाइलनाम उपसर्ग
+    file_path : str
+        फ़ाइल पथ
+    रिटर्न
     -------
     bool
-      True - 文件属于指定的文档包
+        सत्य - फ़ाइल पैकेज से संबंधित है
     """
-    import os
+    # Get just the filename from the full path
+    filename = file_path.split('/')[-1]
     
-    # 获取文件名
-    filename = os.path.basename(file_path)
-    
-    # 检查文件名是否以prefix-或prefix.开头
-    if filename.startswith(prefix + "-") or filename.startswith(prefix + "."):
-        return True
-    return False
+    # Check if filename starts with the given prefix
+    return filename.startswith(prefix)

@@ -1,84 +1,88 @@
 def isoparse(self, dt_str):
-    from datetime import datetime, timedelta
+    from datetime import datetime, timedelta, date
     from dateutil.tz import tzutc, tzoffset
     import re
 
-    # 基本正则表达式模式
-    date_pattern = r"""
-        (?P<year>\d{4})
-        (?:
-            (?:-?(?P<month>\d{2}))
-            (?:-?(?P<day>\d{2}))?
-            |
-            -?W(?P<week>\d{2})
-            (?:-?(?P<weekday>\d))?
-        )?
-    """
+    # Regular expressions for parsing
+    DATE_PATTERNS = {
+        'basic': r'(?P<year>\d{4})(?P<month>\d{2})(?P<day>\d{2})',
+        'extended': r'(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})',
+        'year_only': r'(?P<year>\d{4})',
+        'year_month_basic': r'(?P<year>\d{4})(?P<month>\d{2})',
+        'year_month_extended': r'(?P<year>\d{4})-(?P<month>\d{2})',
+        'week_basic': r'(?P<year>\d{4})W(?P<week>\d{2})(?P<day>\d)?',
+        'week_extended': r'(?P<year>\d{4})-W(?P<week>\d{2})(?:-(?P<day>\d))?'
+    }
 
-    time_pattern = r"""
-        (?:T|[\s])?
-        (?P<hour>[0-2]\d)
-        (?::?(?P<minute>\d{2}))?
-        (?::?(?P<second>\d{2}))?
-        (?:[.,](?P<microsecond>\d{1,6}))?
-    """
+    TIME_PATTERN = r'(?P<hour>[0-2]\d)(?::?(?P<minute>\d{2})(?::?(?P<second>\d{2})(?:[.,](?P<microsecond>\d{1,6}))?)?)?' 
+    TIMEZONE_PATTERN = r'(?P<tzoffset>Z|[+-]\d{2}(?::?\d{2})?)?$'
 
-    tz_pattern = r"""
-        (?P<tz_sign>[+-])? 
-        (?P<tz_hour>\d{2}):?
-        (?P<tz_minute>\d{2})?
-        |Z
-    """
+    dt_str = dt_str.strip()
 
-    full_pattern = f"^{date_pattern}(?:{time_pattern})?(?:{tz_pattern})?$"
-    
-    match = re.match(full_pattern, dt_str.strip(), re.VERBOSE)
-    if not match:
-        raise ValueError(f"Invalid ISO format: {dt_str}")
-    
-    parts = match.groupdict()
+    # Split date and time parts
+    parts = re.split('[T ]', dt_str, maxsplit=1)
+    date_str = parts[0]
+    time_str = parts[1] if len(parts) > 1 else ''
 
-    # 处理日期部分
-    year = int(parts['year'])
-    month = int(parts.get('month', 1) or 1)
-    day = int(parts.get('day', 1) or 1)
+    # Parse date
+    date_match = None
+    for pattern in DATE_PATTERNS.values():
+        match = re.match(pattern + '$', date_str)
+        if match:
+            date_match = match
+            break
 
-    # 处理ISO周格式
-    if parts.get('week'):
-        week = int(parts['week'])
-        weekday = int(parts.get('weekday', 1) or 1)
-        jan1 = datetime(year, 1, 1)
-        week_offset = timedelta(weeks=week-1, days=weekday-1)
-        base_date = jan1 + week_offset
-        year, month, day = base_date.year, base_date.month, base_date.day
+    if not date_match:
+        raise ValueError("Invalid ISO format date")
 
-    # 处理时间部分
-    hour = int(parts.get('hour', 0) or 0)
-    if hour == 24:  # 处理24:00特殊情况
-        hour = 0
-        day += 1
-    minute = int(parts.get('minute', 0) or 0)
-    second = int(parts.get('second', 0) or 0)
-    
-    # 处理微秒
-    microsecond = 0
-    if parts.get('microsecond'):
-        microsecond = int(parts['microsecond'].ljust(6, '0')[:6])
+    date_parts = date_match.groupdict()
 
-    # 处理时区
+    # Handle week format
+    if 'week' in date_parts:
+        year = int(date_parts['year'])
+        week = int(date_parts['week'])
+        day = int(date_parts.get('day', '1'))
+        date_obj = datetime.strptime(f"{year}-{week}-{day}", "%Y-%W-%w").date()
+        year, month, day = date_obj.year, date_obj.month, date_obj.day
+    else:
+        year = int(date_parts['year'])
+        month = int(date_parts.get('month', '1'))
+        day = int(date_parts.get('day', '1'))
+
+    # Initialize time components
+    hour = minute = second = microsecond = 0
     tz = None
-    if parts.get('tz_sign') or 'Z' in dt_str:
-        if 'Z' in dt_str:
-            tz = tzutc()
-        else:
-            tz_hour = int(parts['tz_hour'])
-            tz_minute = int(parts.get('tz_minute', 0) or 0)
-            offset = tz_hour * 60 + tz_minute
-            if parts['tz_sign'] == '-':
-                offset = -offset
-            if offset == 0:
+
+    # Parse time if present
+    if time_str:
+        time_match = re.match(TIME_PATTERN + TIMEZONE_PATTERN, time_str)
+        if not time_match:
+            raise ValueError("Invalid ISO format time")
+        
+        time_parts = time_match.groupdict()
+        
+        hour = int(time_parts.get('hour', '0'))
+        if hour == 24:  # Special case for midnight
+            hour = 0
+            
+        minute = int(time_parts.get('minute', '0'))
+        second = int(time_parts.get('second', '0'))
+        
+        if time_parts.get('microsecond'):
+            microsecond = int(time_parts['microsecond'].ljust(6, '0'))
+
+        # Parse timezone
+        tzoffset = time_parts.get('tzoffset')
+        if tzoffset:
+            if tzoffset == 'Z':
                 tz = tzutc()
             else:
-                tz = tzoffset(None, offset * 60)
+                match = re.match(r'([+-])(\d{2})(?::?(\d{2}))?', tzoffset)
+                if match:
+                    sign, hours, minutes = match.groups()
+                    offset = int(hours) * 60 + (int(minutes) if minutes else 0)
+                    if sign == '-':
+                        offset = -offset
+                    tz = tzoffset('', offset * 60)
 
-    return datetime(year, month, day, hour, minute, second, microsecond, tzinfo=tz)
+    return datetime(year, month, day, hour, minute, second, microsecond, tz)

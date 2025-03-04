@@ -1,10 +1,10 @@
 def _normalizeargs(sequence, output=None):
     """
-    规范化声明参数
+    घोषणा तर्कों को सामान्यीकृत करें
 
-    规范化的参数可能包含声明、元组或单个接口。
+    सामान्यीकरण तर्कों में घोषणाएँ, ट्यूपल, या एकल इंटरफेस हो सकते हैं।
 
-    除了单个接口或实现规范之外的任何内容都将被展开。
+    व्यक्तिगत इंटरफेस या लागू विनिर्देशों को छोड़कर अन्य सभी का विस्तार किया जाएगा।
     """
     if output is None:
         output = []
@@ -13,7 +13,6 @@ def _normalizeargs(sequence, output=None):
         for item in sequence:
             _normalizeargs(item, output)
     else:
-        if sequence not in output:
-            output.append(sequence)
-            
+        output.append(sequence)
+        
     return output

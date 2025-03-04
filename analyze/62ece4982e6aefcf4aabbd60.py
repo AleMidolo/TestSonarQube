@@ -1,12 +1,4 @@
 def size_to_bytes(size: str) -> int:
-    """
-    将人类可读的文件大小转换为字节。
-
-    参数:
-        size: str，一个表示人类可读的文件大小的字符串 (例如: '500K')
-    返回值:
-        int: 文件大小的字节数
-    """
     units = {
         'K': 1000,
         'M': 1000000,
@@ -14,32 +6,27 @@ def size_to_bytes(size: str) -> int:
         'T': 1000000000000,
         'P': 1000000000000000,
         'E': 1000000000000000000,
-        'KB': 1024,
-        'MB': 1048576,
-        'GB': 1073741824,
-        'TB': 1099511627776,
-        'PB': 1125899906842624,
-        'EB': 1152921504606846976
+        'Ki': 1024,
+        'Mi': 1048576,
+        'Gi': 1073741824,
+        'Ti': 1099511627776,
+        'Pi': 1125899906842624,
+        'Ei': 1152921504606846976
     }
 
-    size = size.strip().upper()
+    size = size.strip()
     
-    # 如果只有数字,直接返回整数值
+    # If just a number is provided with no units
     if size.isdigit():
         return int(size)
         
-    # 提取数字和单位
-    number = ''
-    unit = ''
-    for char in size:
-        if char.isdigit() or char == '.':
-            number += char
-        else:
-            unit += char
-            
-    # 如果没有找到有效单位,返回原始数字
-    if not unit or unit not in units:
-        return int(float(number))
-        
-    # 计算字节数
-    return int(float(number) * units[unit])
+    # Extract the numeric part and unit
+    for unit in sorted(units.keys(), key=len, reverse=True):
+        if size.endswith(unit):
+            try:
+                number = float(size[:-len(unit)])
+                return int(number * units[unit])
+            except ValueError:
+                raise ValueError(f"Invalid size format: {size}")
+                
+    raise ValueError(f"Invalid size format: {size}")

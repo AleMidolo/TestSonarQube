@@ -1,33 +1,37 @@
 def validate_fixity(self, fixity, manifest_files):
     """
-    验证库存（inventory）中的校验（fixity）块。检查校验块的结构，并保证仅引用了清单中列出的文件。在类中返回`error()`。
+    इन्वेंटरी में फिक्सिटी ब्लॉक को सत्यापित करें।
+    फिक्सिटी ब्लॉक की संरचना की जांच करें और सुनिश्चित करें कि केवल वे फाइलें
+    जो मैनिफेस्ट में सूचीबद्ध हैं, वही संदर्भित की गई हैं।
     """
+    # Check if fixity block is a dictionary
     if not isinstance(fixity, dict):
-        return self.error("Fixity block must be a dictionary")
+        return False
         
-    # Check required fields
-    required_fields = ["message-digest-algorithm", "message-digest", "message-digest-files"]
-    for field in required_fields:
-        if field not in fixity:
-            return self.error(f"Missing required field '{field}' in fixity block")
+    # Check if all required keys exist in fixity block
+    required_keys = ['message_digest_algorithm', 'message_digests']
+    if not all(key in fixity for key in required_keys):
+        return False
+        
+    # Check if message_digests is a list
+    if not isinstance(fixity['message_digests'], list):
+        return False
+        
+    # Check each message digest entry
+    for digest in fixity['message_digests']:
+        # Verify digest structure
+        if not isinstance(digest, dict):
+            return False
             
-    # Validate algorithm
-    if not isinstance(fixity["message-digest-algorithm"], str):
-        return self.error("message-digest-algorithm must be a string")
-        
-    # Validate digest
-    if not isinstance(fixity["message-digest"], str):
-        return self.error("message-digest must be a string")
-        
-    # Validate files list
-    if not isinstance(fixity["message-digest-files"], list):
-        return self.error("message-digest-files must be a list")
-        
-    # Check that all referenced files exist in manifest
-    for file in fixity["message-digest-files"]:
-        if not isinstance(file, str):
-            return self.error("All entries in message-digest-files must be strings")
-        if file not in manifest_files:
-            return self.error(f"File '{file}' referenced in fixity but not found in manifest")
+        if 'file_path' not in digest or 'hash' not in digest:
+            return False
             
-    return None
+        # Verify file exists in manifest
+        if digest['file_path'] not in manifest_files:
+            return False
+            
+        # Verify hash is a string
+        if not isinstance(digest['hash'], str):
+            return False
+            
+    return True

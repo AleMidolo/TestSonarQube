@@ -1,45 +1,46 @@
 def _validate_labels(labels):
-    """
-    检查给定标签中的键和值是否通过 `validate_key()` 和 `validate_value()` 验证。
-    检查给定标签中的键和值是否符合其对应的正则表达式。
+    import re
+    from typing import Dict, Any, List
 
-    参数:
-        labels (dict): 需要验证的不同标签。
+    # Regular expressions for validation
+    KEY_REGEX = r'^[a-zA-Z][a-zA-Z0-9_-]*$'
+    VALUE_REGEX = r'^[a-zA-Z0-9_-]+$'
 
-    异常:
-        ValidationError: 如果任何键或值不符合其对应的正则表达式，将抛出此异常。
-    """
-    errors = []
-    
-    if not isinstance(labels, dict):
-        raise ValidationError("Labels must be a dictionary")
-        
+    errors: List[Dict[str, str]] = []
+
+    # Validate each key-value pair
     for key, value in labels.items():
-        # Validate key
-        try:
-            if not isinstance(key, (str, bytes)):
-                errors.append({str(key): 'expected string or bytes-like object'})
-                continue
-                
-            # Validate key format using regex
-            if not validate_key(key):
-                errors.append({key: f"Label key '{key}' does not match the regex [...]"})
-                
-        except Exception as e:
-            errors.append({str(key): str(e)})
-            
-        # Validate value
-        try:
-            if not isinstance(value, (str, bytes)):
-                errors.append({str(value): 'expected string or bytes-like object'})
-                continue
-                
-            # Validate value format using regex    
-            if not validate_value(value):
-                errors.append({value: f"Label value '{value}' does not match the regex [...]"})
-                
-        except Exception as e:
-            errors.append({str(value): str(e)})
-            
+        # Validate key type
+        if not isinstance(key, str):
+            errors.append({
+                str(key): 'expected string or bytes-like object'
+            })
+            continue
+
+        # Validate key format
+        if not re.match(KEY_REGEX, key):
+            errors.append({
+                key: f"Label key '{key}' does not match the regex {KEY_REGEX}"
+            })
+
+        # Validate value type
+        if not isinstance(value, str):
+            errors.append({
+                str(value): 'expected string or bytes-like object'
+            })
+            continue
+
+        # Validate value format
+        if not re.match(VALUE_REGEX, value):
+            errors.append({
+                value: f"Label value '{value}' does not match the regex {VALUE_REGEX}"
+            })
+
+    # Raise ValidationError if any errors found
     if errors:
-        raise ValidationError(messages=errors)
+        raise ValidationError(errors)
+
+class ValidationError(Exception):
+    def __init__(self, messages):
+        self.messages = messages
+        super().__init__(str(messages))

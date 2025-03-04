@@ -1,6 +1,6 @@
 def ansible_config_manager(cls):
     """
-    通过 `cls._get_service()` 中的 `ServiceName.ANSIBLE_CONFIG_MANAGER` 获取 Ansible 配置管理器。
-    获取 Ansible 配置管理器。
+    ansible कॉन्फ़िगरेशन मैनेजर प्राप्त करता है।
     """
-    return cls._get_service(ServiceName.ANSIBLE_CONFIG_MANAGER)
+    from ansible.config.manager import ConfigManager
+    return ConfigManager()

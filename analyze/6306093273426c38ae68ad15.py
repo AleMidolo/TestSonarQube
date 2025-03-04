@@ -1,53 +1,62 @@
 def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     """
-    使用 `vars` 字典运行 Ansible CLI。
+    Ansible CLI को vars_dict के साथ चलाता है।
 
-    :param vars_dict: dict, 将作为 Ansible 的 extra-vars 传递
-    :param cli_args: list, 命令行参数列表 
-    :param ir_workspace: 一个表示当前活动的工作区的Infrared Workspace 对象
-    :param ir_plugin: 一个表示当前插件的InfraredPlugin 对象
-    :return: ansible 的结果
+    :param vars_dict: dict, इसे Ansible extra-vars के रूप में पास किया जाएगा 
+    :param cli_args: कमांड लाइन आर्ग्युमेंट्स की सूची
+    :param ir_workspace: एक Infrared Workspace ऑब्जेक्ट जो सक्रिय वर्कस्पेस को दर्शाता है
+    :param ir_plugin: वर्तमान प्लगइन का एक InfraredPlugin ऑब्जेक्ट
+    :return: ansible के परिणाम
     """
     import os
     import json
     import subprocess
-    from tempfile import NamedTemporaryFile
-    
-    # 创建临时文件存储extra vars
-    with NamedTemporaryFile(mode='w', suffix='.json', delete=False) as vars_file:
-        json.dump(vars_dict, vars_file)
-        vars_file_path = vars_file.name
+    from ansible.cli import CLI
+    from ansible.parsing.dataloader import DataLoader
+    from ansible.inventory.manager import InventoryManager
+    from ansible.vars.manager import VariableManager
+    from ansible.playbook.play import Play
+    from ansible.executor.playbook_executor import PlaybookExecutor
 
+    # Ansible के लिए आवश्यक डायरेक्टरी पथ सेट करें
+    playbook_dir = os.path.join(ir_plugin.path, 'playbooks')
+    inventory_file = os.path.join(ir_workspace.path, 'hosts')
+
+    # एक्स्ट्रा वेरिएबल्स को JSON फाइल में सेव करें
+    extra_vars_file = os.path.join(ir_workspace.path, 'extra_vars.json')
+    with open(extra_vars_file, 'w') as f:
+        json.dump(vars_dict, f)
+
+    # Ansible CLI कमांड तैयार करें
+    ansible_cmd = ['ansible-playbook']
+    ansible_cmd.extend(cli_args)
+    ansible_cmd.extend([
+        '-i', inventory_file,
+        '--extra-vars', f'@{extra_vars_file}'
+    ])
+
+    # Ansible प्लेबुक एग्जीक्यूटर सेटअप
+    loader = DataLoader()
+    inventory = InventoryManager(loader=loader, sources=inventory_file)
+    variable_manager = VariableManager(loader=loader, inventory=inventory)
+
+    # प्लेबुक एग्जीक्यूटर को कॉन्फ़िगर करें
+    playbook_executor = PlaybookExecutor(
+        playbooks=cli_args,
+        inventory=inventory,
+        variable_manager=variable_manager,
+        loader=loader,
+        passwords={}
+    )
+
+    # प्लेबुक चलाएं और परिणाम रिटर्न करें
     try:
-        # 构建ansible-playbook命令
-        cmd = ['ansible-playbook']
-        
-        # 添加命令行参数
-        cmd.extend(cli_args)
-        
-        # 添加extra vars文件
-        cmd.extend(['-e', '@' + vars_file_path])
-        
-        # 如果workspace有inventory文件,添加inventory参数
-        if hasattr(ir_workspace, 'inventory') and ir_workspace.inventory:
-            cmd.extend(['-i', ir_workspace.inventory])
-            
-        # 如果plugin有playbook路径,添加playbook参数    
-        if hasattr(ir_plugin, 'playbook_path') and ir_plugin.playbook_path:
-            cmd.append(ir_plugin.playbook_path)
-            
-        # 运行ansible-playbook命令
-        result = subprocess.run(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True,
-            check=True
-        )
-        
+        result = playbook_executor.run()
         return result
-        
+    except Exception as e:
+        print(f"Ansible प्लेबुक एग्जीक्यूशन में त्रुटि: {str(e)}")
+        return 1
     finally:
-        # 清理临时文件
-        if os.path.exists(vars_file_path):
-            os.unlink(vars_file_path)
+        # क्लीनअप - एक्स्ट्रा वेरिएबल्स फाइल हटाएं
+        if os.path.exists(extra_vars_file):
+            os.remove(extra_vars_file)

@@ -1,3 +1,9 @@
+import os
+import pty
+import subprocess
+import sys
+from typing import Any, Sequence
+
 def xargs(
         cmd: tuple[str, ...],
         varargs: Sequence[str],
@@ -7,14 +13,16 @@ def xargs(
         _max_length: int = _get_platform_max_length(),
         **kwargs: Any,
 ) -> tuple[int, bytes]:
+    
     if not varargs:
+        # No arguments to process
         return 0, b''
-
-    # Calculate chunks based on max command line length
+    
+    # Build command arguments in chunks that fit within max length
     chunks = []
     current_chunk = []
     current_length = sum(len(arg) + 1 for arg in cmd)  # +1 for spaces
-
+    
     for arg in varargs:
         arg_length = len(arg) + 1  # +1 for space
         if current_length + arg_length > _max_length:
@@ -25,60 +33,57 @@ def xargs(
         else:
             current_chunk.append(arg)
             current_length += arg_length
-
+            
     if current_chunk:
         chunks.append(current_chunk)
 
-    # Distribute chunks into target_concurrency partitions
-    partitions = [[] for _ in range(target_concurrency)]
-    for i, chunk in enumerate(chunks):
-        partitions[i % target_concurrency].append(chunk)
-
-    # Run commands in parallel
-    output = b''
-    max_returncode = 0
+    # Process chunks with specified concurrency
+    all_output = b''
+    max_retcode = 0
     
-    def run_partition(partition):
-        nonlocal output, max_returncode
-        for chunk in partition:
-            full_cmd = list(cmd) + chunk
-            if color:
-                import pty
-                pid, fd = pty.fork()
-                if pid == 0:  # Child process
-                    os.execvp(full_cmd[0], full_cmd)
-                else:  # Parent process
-                    chunk_output = b''
-                    while True:
-                        try:
-                            chunk_output += os.read(fd, 1024)
-                        except OSError:
-                            break
-                    _, status = os.waitpid(pid, 0)
-                    max_returncode = max(max_returncode, status >> 8)
-                    output += chunk_output
-            else:
-                import subprocess
-                process = subprocess.run(
-                    full_cmd,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
+    for i in range(0, len(chunks), target_concurrency):
+        batch = chunks[i:i + target_concurrency]
+        processes = []
+        
+        for chunk in batch:
+            if color and sys.platform != 'win32' and hasattr(pty, 'openpty'):
+                # Create a pseudo-terminal for colored output
+                master, slave = pty.openpty()
+                process = subprocess.Popen(
+                    (*cmd, *chunk),
+                    stdout=slave,
+                    stderr=slave,
                     **kwargs
                 )
-                max_returncode = max(max_returncode, process.returncode)
-                output += process.stdout
+                os.close(slave)
+                processes.append((process, master))
+            else:
+                process = subprocess.Popen(
+                    (*cmd, *chunk),
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    **kwargs
+                )
+                processes.append((process, None))
 
-    # Create and start threads for each partition
-    import threading
-    threads = []
-    for partition in partitions:
-        if partition:  # Only create threads for non-empty partitions
-            thread = threading.Thread(target=run_partition, args=(partition,))
-            threads.append(thread)
-            thread.start()
+        # Wait for all processes in batch and collect output
+        for process, master in processes:
+            if master is not None:
+                # Read from pseudo-terminal
+                output = b''
+                try:
+                    while True:
+                        output += os.read(master, 1024)
+                except OSError:
+                    pass
+                os.close(master)
+            else:
+                # Read from pipes
+                stdout, stderr = process.communicate()
+                output = stdout + stderr
+                
+            retcode = process.wait()
+            max_retcode = max(max_retcode, retcode)
+            all_output += output
 
-    # Wait for all threads to complete
-    for thread in threads:
-        thread.join()
-
-    return max_returncode, output
+    return max_retcode, all_output

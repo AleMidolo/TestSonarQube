@@ -1,25 +1,22 @@
 def make_parsers():
     """
-    创建一个顶级解析器及其子解析器，并将它们作为元组返回。
+    शीर्ष-स्तरीय पार्सर और इसके उप-पार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
     """
     import argparse
     
-    # 创建顶级解析器
-    parser = argparse.ArgumentParser(description='命令行工具')
-    subparsers = parser.add_subparsers(dest='command', help='可用命令')
-    
-    # 创建子解析器
-    # add 子命令
-    add_parser = subparsers.add_parser('add', help='添加操作')
-    add_parser.add_argument('x', type=int, help='第一个数')
-    add_parser.add_argument('y', type=int, help='第二个数')
-    
-    # delete 子命令
-    delete_parser = subparsers.add_parser('delete', help='删除操作')
-    delete_parser.add_argument('name', help='要删除的名称')
-    
-    # list 子命令
-    list_parser = subparsers.add_parser('list', help='列表操作')
-    list_parser.add_argument('--all', action='store_true', help='显示所有内容')
-    
-    return parser, subparsers
+    # Create main parser
+    parser = argparse.ArgumentParser(description='Main command line parser')
+    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+
+    # Create parser for 'add' command
+    add_parser = subparsers.add_parser('add', help='Add items')
+    add_parser.add_argument('items', nargs='+', help='Items to add')
+
+    # Create parser for 'remove' command  
+    remove_parser = subparsers.add_parser('remove', help='Remove items')
+    remove_parser.add_argument('items', nargs='+', help='Items to remove')
+
+    # Create parser for 'list' command
+    list_parser = subparsers.add_parser('list', help='List all items')
+
+    return (parser, add_parser, remove_parser, list_parser)

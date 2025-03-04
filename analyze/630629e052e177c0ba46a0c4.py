@@ -1,24 +1,30 @@
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
-    通过读取 JSON 格式的文档获取 Webfinger，Webfinger 中的 `hcard_url` 值是文档中 `links` 的 `href` 值。
-
-    解析 Diaspora 的 Webfinger，该 Webfinger 可以是 JSON 格式（新格式）或 XRD 格式（旧格式）。
-
-    https://diaspora.github.io/diaspora_federation/discovery/webfinger.html
+    डायस्पोरा वेबफिंगर को पार्स करें, जो या तो JSON प्रारूप (नया) में होता है या XRD (पुराना) में।
     """
     import json
-    from typing import Dict
     import xml.etree.ElementTree as ET
+    from typing import Dict
 
     # Try parsing as JSON first
     try:
         data = json.loads(document)
+        result = {
+            'subject': data.get('subject', ''),
+            'aliases': data.get('aliases', []),
+            'links': []
+        }
         
-        # Look for hcard_url in links
+        # Parse links
         for link in data.get('links', []):
-            if link.get('rel') == 'http://microformats.org/profile/hcard':
-                return {'hcard_url': link.get('href')}
-                
+            result['links'].append({
+                'rel': link.get('rel', ''),
+                'type': link.get('type', ''),
+                'href': link.get('href', '')
+            })
+            
+        return result
+        
     except json.JSONDecodeError:
         # If JSON parsing fails, try XRD format
         try:
@@ -26,14 +32,23 @@ def parse_diaspora_webfinger(document: str) -> Dict:
             document = document.replace('xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0"', '')
             root = ET.fromstring(document)
             
-            # Find Link element with hcard rel
-            for link in root.findall('.//Link'):
-                rel = link.get('rel')
-                if rel == 'http://microformats.org/profile/hcard':
-                    return {'hcard_url': link.get('href')}
-                    
+            result = {
+                'subject': root.findtext('Subject', ''),
+                'aliases': [alias.text for alias in root.findall('Alias')],
+                'links': []
+            }
+            
+            # Parse links
+            for link in root.findall('Link'):
+                result['links'].append({
+                    'rel': link.get('rel', ''),
+                    'type': link.get('type', ''),
+                    'href': link.get('href', '')
+                })
+                
+            return result
+            
         except ET.ParseError:
-            pass
+            raise ValueError("Invalid document format - must be JSON or XRD XML")
 
-    # Return empty dict if no hcard_url found
-    return {'hcard_url': None}
+    return {}
