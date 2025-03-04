@@ -25,5 +25,4 @@ def popitem(self):
     if not lru_list:
         del self.freq_list[min_freq]
         
-    # Devolver el par (clave, valor)
     return (lru_key, lru_value)

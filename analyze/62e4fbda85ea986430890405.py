@@ -65,28 +65,20 @@ def xargs(
             )
             return process.returncode, process.stdout + process.stderr
 
+    # Dividir argumentos en chunks
     chunks = _chunk_args(varargs, _max_length)
     
-    if target_concurrency > 1:
-        with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
-            results = list(executor.map(_run_chunk, chunks))
-        
-        # Combine results, prioritizing non-zero return codes
-        final_code = 0
-        final_output = b''
-        for code, output in results:
-            if code != 0:
-                final_code = code
-            final_output += output
-        return final_code, final_output
+    # Ejecutar chunks en paralelo
+    with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
+        results = list(executor.map(_run_chunk, chunks))
     
-    else:
-        # Sequential execution
-        final_code = 0
-        final_output = b''
-        for chunk in chunks:
-            code, output = _run_chunk(chunk)
-            if code != 0:
-                final_code = code
-            final_output += output
-        return final_code, final_output
+    # Combinar resultados
+    final_code = 0
+    final_output = b''
+    
+    for code, output in results:
+        if code != 0:
+            final_code = code
+        final_output += output
+        
+    return final_code, final_output

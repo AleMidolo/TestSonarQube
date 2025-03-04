@@ -8,15 +8,15 @@ def generate_default_observer_schema(app):
     """
     default_schema = {}
     
-    # Si no hay manifiesto, retornar esquema vacío
-    if not app.spec.manifest:
+    # Si no hay manifest o está vacío, retornar esquema vacío
+    if not hasattr(app.spec, 'manifest') or not app.spec.manifest:
         return default_schema
         
-    # Iterar sobre cada recurso en el manifiesto
+    # Iterar sobre cada recurso en el manifest
     for resource in app.spec.manifest:
         # Obtener el tipo y nombre del recurso
-        kind = resource.get('kind')
-        name = resource.get('metadata', {}).get('name')
+        kind = resource.get('kind', '')
+        name = resource.get('metadata', {}).get('name', '')
         
         # Si el recurso ya tiene un esquema personalizado, omitirlo
         if hasattr(app.spec, 'observer') and app.spec.observer.get(f"{kind.lower()}/{name}"):
@@ -33,7 +33,7 @@ def generate_default_observer_schema(app):
             }
         }
         
-        # Agregar al esquema general usando la convención kind/name
+        # Agregar el esquema al diccionario usando la clave kind/name
         default_schema[f"{kind.lower()}/{name}"] = resource_schema
         
     return default_schema

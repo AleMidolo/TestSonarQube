@@ -2,7 +2,7 @@ def parse_arguments(*unparsed_arguments):
     import argparse
     
     # Create main parser
-    parser = argparse.ArgumentParser(description='Command line argument parser')
+    parser = argparse.ArgumentParser(description='Process command line arguments')
     
     # Add global arguments that apply to all subcommands
     parser.add_argument('--verbose', '-v', action='store_true', help='Increase output verbosity')

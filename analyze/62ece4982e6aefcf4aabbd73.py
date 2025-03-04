@@ -15,20 +15,26 @@ def split(s, platform='this'):
         # Custom parsing for Windows CMD style
         pattern = r'''(
             [^\s"']+ |           # Match unquoted words
-            "[^"]*" |            # Match double-quoted strings
-            '[^']*'              # Match single-quoted strings
+            "([^"\\]*(?:\\.[^"\\]*)*)" |  # Match double-quoted strings
+            '([^'\\]*(?:\\.[^'\\]*)*)'    # Match single-quoted strings
         )'''
         
         # Find all matches using regex
-        tokens = re.findall(pattern, s, re.VERBOSE)
-        
-        # Clean up quotes
+        matches = re.finditer(pattern, s, re.VERBOSE)
         result = []
-        for token in tokens:
+        
+        for match in matches:
+            # Get the matched text
+            token = match.group(0)
+            
             # Remove surrounding quotes if present
             if (token.startswith('"') and token.endswith('"')) or \
                (token.startswith("'") and token.endswith("'")):
                 token = token[1:-1]
+            
+            # Handle escaped characters
+            token = token.replace('\\"', '"').replace("\\'", "'")
+            
             result.append(token)
             
         return result

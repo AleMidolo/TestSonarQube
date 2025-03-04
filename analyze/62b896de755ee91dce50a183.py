@@ -22,31 +22,34 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     if not isinstance(timestr, str):
         raise TypeError("Parser must be given a string or character stream, not a %s" % 
                       type(timestr).__name__)
-            
-    # Preprocesar la cadena de entrada
+    
+    # Preprocesar la cadena
     timestr = timestr.strip()
     
     try:
-        # Parsear la cadena usando el método interno _parse
+        # Parsear usando _parse() interno
         res, tokens = self._parse(timestr, **kwargs)
         
         if res is None:
             raise ParserError("Unknown string format: %s" % timestr)
             
-        # Si hay un default, combinar con el resultado
+        # Aplicar el default si existe
         if default is not None:
-            res = self._combine_with_default(res, default)
+            res = self._apply_defaults(res, default)
             
         # Manejar zonas horarias
         if not ignoretz:
-            res = self._add_timezone(res, tzinfos)
+            res = self._add_tzinfo(res, tzinfos)
+        elif res.tzinfo is not None:
+            res = res.replace(tzinfo=None)
             
-        # Devolver resultado según fuzzy_with_tokens
+        # Retornar resultado
         if kwargs.get('fuzzy_with_tokens', False):
             return res, tuple(tokens)
-        return res
-        
-    except ValueError as e:
+        else:
+            return res
+            
+    except (ValueError, OverflowError) as e:
         raise ParserError(str(e))
-    except OverflowError:
-        raise OverflowError("Date exceeds the maximum value supported on this system")
+    except Exception as e:
+        raise ParserError("Unknown string format: %s" % timestr)

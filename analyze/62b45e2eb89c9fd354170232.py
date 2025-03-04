@@ -1,34 +1,27 @@
 def next_version(version):
-    # Split version into parts by dots
+    # Split version string into parts
     parts = version.split('.')
     
-    # Convert parts to integers and increment last number
-    nums = [int(x) for x in parts]
+    # Convert parts to integers and store original lengths
+    orig_lengths = [len(p) for p in parts]
+    nums = [int(p) for p in parts]
     
-    # Start from rightmost digit
-    i = len(nums) - 1
-    while i >= 0:
-        # Increment current digit
+    # Start from rightmost digit and increment
+    for i in range(len(nums)-1, -1, -1):
         nums[i] += 1
-        
-        # If no overflow, we're done
         if nums[i] < 10:
             break
-            
-        # Handle overflow
         nums[i] = 0
-        i -= 1
+        # Continue loop to increment next digit
         
-        # If we overflow past leftmost digit, add new digit
-        if i < 0:
-            nums.insert(0, 1)
-            
-    # Convert back to strings preserving leading zeros
+    # If we overflowed the leftmost digit, add a new digit
+    if nums[0] == 0:
+        nums.insert(0, 1)
+        orig_lengths.insert(0, 1)
+        
+    # Convert back to strings with original zero padding
     result = []
-    for i, num in enumerate(nums):
-        # Get original length of this part
-        orig_len = len(parts[i]) if i < len(parts) else 1
-        # Format with leading zeros if needed
-        result.append(str(num).zfill(orig_len))
+    for num, length in zip(nums, orig_lengths):
+        result.append(str(num).zfill(length))
         
     return '.'.join(result)

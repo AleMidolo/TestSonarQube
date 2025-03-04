@@ -15,7 +15,7 @@ def values(self, *keys):
         if isinstance(key, int):
             # Si la key es un índice numérico
             if 0 <= key < len(self._data):
-                # Obtener el valor en esa posición
+                # Obtener el valor por índice
                 result.append(list(self._data.values())[key])
         else:
             # Si la key es una clave del diccionario

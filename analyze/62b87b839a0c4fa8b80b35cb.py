@@ -9,4 +9,4 @@ def _get_err_indices(self, coord_name):
     elif coord_name == 'z':
         return [2, 5, 8]
     else:
-        raise ValueError(f"Invalid coordinate name: {coord_name}. Must be 'x', 'y' or 'z'")
+        raise ValueError(f"Invalid coordinate name: {coord_name}")

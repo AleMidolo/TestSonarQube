@@ -36,6 +36,8 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
         )
         return result
     except subprocess.TimeoutExpired as e:
-        raise TimeoutError(f"La función {func_name} excedió el tiempo límite de {timeout} segundos")
+        raise TimeoutError(f"La función {func_name} excedió el tiempo límite de {timeout} segundos") from e
     except subprocess.CalledProcessError as e:
-        raise RuntimeError(f"Error al ejecutar {func_name}: {e.stderr}")
+        raise RuntimeError(f"Error al ejecutar {func_name}: {e.stderr}") from e
+    except Exception as e:
+        raise RuntimeError(f"Error inesperado al ejecutar {func_name}: {str(e)}") from e

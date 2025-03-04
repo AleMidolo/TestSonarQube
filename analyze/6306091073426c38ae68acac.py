@@ -1,16 +1,12 @@
 def dict_insert(dic, val, key, *keys):
-    if not keys:
+    if not keys:  # If there are no more nested keys
         dic[key] = val
         return dic
     
+    # Create nested dictionary if it doesn't exist
     if key not in dic:
         dic[key] = {}
-        
-    current = dic[key]
-    for k in keys[:-1]:
-        if k not in current:
-            current[k] = {}
-        current = current[k]
     
-    current[keys[-1]] = val
+    # Recursively insert into nested dictionaries
+    dict_insert(dic[key], val, keys[0], *keys[1:])
     return dic
