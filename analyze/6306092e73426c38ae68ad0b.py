@@ -17,6 +17,6 @@ def validate_min_max_args(self, args):
                     raise ValueError(f"Parameter {arg_name} must be a number")
                     
             if arg_value < min_val:
-                raise ValueError(f"Parameter {arg_name} must be greater than or equal to {min_val}")
+                raise ValueError(f"Parameter {arg_name} cannot be less than {min_val}")
             if arg_value > max_val:
-                raise ValueError(f"Parameter {arg_name} must be less than or equal to {max_val}")
+                raise ValueError(f"Parameter {arg_name} cannot be greater than {max_val}")

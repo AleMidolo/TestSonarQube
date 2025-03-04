@@ -8,9 +8,9 @@ def get_deprecated_args(self):
     # 遍历所有选项规格
     for spec in self.spec_helper.iterate_option_specs():
         # 检查选项是否有弃用其他选项的设置
-        if hasattr(spec, 'deprecates') and spec.deprecates:
-            # 将弃用的选项添加到字典中
-            for deprecated_arg in spec.deprecates:
-                deprecated_args[deprecated_arg] = spec.name
+        if hasattr(spec, 'deprecated_options') and spec.deprecated_options:
+            # 将弃用选项添加到字典中
+            for deprecated_opt in spec.deprecated_options:
+                deprecated_args[deprecated_opt] = spec.name
                 
     return deprecated_args

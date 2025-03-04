@@ -14,20 +14,20 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
 
     # 获取目标文件的目录路径
     config_dir = os.path.dirname(config_filename)
-
+    
     # 如果目录不存在则创建
     if config_dir:
         pathlib.Path(config_dir).mkdir(parents=True, exist_ok=True)
-
+        
     # 检查文件是否已存在
     if os.path.exists(config_filename) and not overwrite:
         return None
-
+        
     # 写入配置文件
     with open(config_filename, 'w', encoding='utf-8') as f:
         f.write(rendered_config)
-
+        
     # 设置文件权限
     os.chmod(config_filename, mode)
-
+    
     return None

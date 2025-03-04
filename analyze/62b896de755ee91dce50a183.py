@@ -8,40 +8,54 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     if default is not None and not isinstance(default, datetime.datetime):
         raise TypeError("Default must be a datetime.datetime object")
         
-    res = self._parse(timestr, **kwargs)
+    res = None
     
-    if res is None:
-        raise ParserError("Unknown string format: %s" % timestr)
-        
-    # Extract datetime components
-    year = res.year if res.year is not None else default.year if default else None
-    month = res.month if res.month is not None else default.month if default else None  
-    day = res.day if res.day is not None else default.day if default else None
-    hour = res.hour if res.hour is not None else default.hour if default else 0
-    minute = res.minute if res.minute is not None else default.minute if default else 0
-    second = res.second if res.second is not None else default.second if default else 0
-    microsecond = res.microsecond if res.microsecond is not None else default.microsecond if default else 0
-    
-    if None in (year, month, day):
-        raise ParserError("Required date fields not found")
-        
-    # Handle timezone
-    tzinfo = None
-    if not ignoretz:
-        if res.tzname:
-            if tzinfos:
-                if callable(tzinfos):
-                    tzinfo = tzinfos(res.tzname, res.tzoffset)
-                else:
-                    if res.tzname in tzinfos:
-                        tzinfo = tzinfos[res.tzname]
-                if tzinfo is not None and not isinstance(tzinfo, datetime.tzinfo):
-                    tzinfo = datetime.timezone(datetime.timedelta(seconds=tzinfo))
-            elif res.tzoffset is not None:
-                tzinfo = datetime.timezone(datetime.timedelta(seconds=res.tzoffset))
-                
     try:
-        return datetime.datetime(year, month, day, hour, minute, second,
-                               microsecond, tzinfo=tzinfo)
-    except (ValueError, OverflowError) as e:
+        # Parse the string using _parse() internal method
+        res, tokens = self._parse(timestr, **kwargs)
+        
+        if res is None:
+            raise ParserError("Unknown string format: %s" % timestr)
+            
+        # If default is provided, replace any unspecified items
+        if default is not None:
+            repl = {}
+            for attr in ["year", "month", "day", "hour", "minute", "second", "microsecond"]:
+                if getattr(res, attr) is None:
+                    repl[attr] = getattr(default, attr)
+            res = res.replace(**repl)
+            
+        # Handle timezone
+        if not ignoretz:
+            if res.tzinfo is None and tzinfos is not None:
+                # Try to get timezone from tzinfos
+                tz = None
+                if isinstance(tzinfos, collections.Callable):
+                    try:
+                        tz = tzinfos(res.tzname, res.tzoffset)
+                    except:
+                        pass
+                elif res.tzname in tzinfos:
+                    tz = tzinfos[res.tzname]
+                    
+                # Convert tz to proper timezone object if needed
+                if isinstance(tz, (int, float)):
+                    tz = datetime.timezone(datetime.timedelta(seconds=tz))
+                    
+                if tz is not None:
+                    res = res.replace(tzinfo=tz)
+                    
+        elif ignoretz:
+            # Remove timezone if ignoretz is True
+            res = res.replace(tzinfo=None)
+            
+        # Return results based on fuzzy_with_tokens setting
+        if kwargs.get('fuzzy_with_tokens', False):
+            return res, tokens
+        else:
+            return res
+            
+    except ValueError as e:
         raise ParserError(str(e))
+    except OverflowError as e:
+        raise OverflowError(str(e))

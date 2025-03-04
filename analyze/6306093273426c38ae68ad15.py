@@ -12,7 +12,7 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     import json
     import subprocess
     from tempfile import NamedTemporaryFile
-
+    
     # 创建临时文件存储extra vars
     with NamedTemporaryFile(mode='w', suffix='.json', delete=False) as vars_file:
         json.dump(vars_dict, vars_file)
@@ -35,8 +35,8 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
         # 如果plugin有playbook路径,添加playbook参数    
         if hasattr(ir_plugin, 'playbook_path') and ir_plugin.playbook_path:
             cmd.append(ir_plugin.playbook_path)
-
-        # 执行ansible-playbook命令
+            
+        # 运行ansible-playbook命令
         result = subprocess.run(
             cmd,
             stdout=subprocess.PIPE,
@@ -46,10 +46,6 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
         )
         
         return result
-
-    except subprocess.CalledProcessError as e:
-        # 处理ansible执行错误
-        raise Exception(f"Ansible playbook execution failed: {e.stderr}")
         
     finally:
         # 清理临时文件

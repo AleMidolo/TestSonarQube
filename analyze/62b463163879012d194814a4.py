@@ -30,15 +30,16 @@ def _explore_zipfile(zip_path):
             # 获取文件的基本名称（不包含扩展名）
             base_name = file_name.rsplit('.', 1)[0]
             
-            # 如果文件名以.xml结尾，作为键
+            # 如果文件名以.xml结尾，将其作为键
             if file_name.endswith('.xml'):
-                key = base_name
-                grouped_files[key].append(file_name)
+                xml_key = base_name
+                grouped_files[xml_key].append(file_name)
             else:
                 # 查找对应的XML文件名
-                xml_name = base_name + '.xml'
-                if xml_name in file_list:
-                    grouped_files[base_name].append(file_name)
+                for xml_key in grouped_files.keys():
+                    if base_name.startswith(xml_key):
+                        grouped_files[xml_key].append(file_name)
+                        break
     
-    # 转换defaultdict为普通dict并返回
+    # 将defaultdict转换为普通字典并返回
     return dict(grouped_files)

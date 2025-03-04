@@ -47,8 +47,8 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 exc_info=None
             )
             error_logs.append(error_record)
-            logger.error(f"Failed to load configuration from {filename}: {str(e)}")
-            
+            logger.error(f"Failed to load configuration from {filename}", exc_info=True)
+
     return configs, error_logs
 
 def _resolve_env_vars(config):
@@ -63,14 +63,13 @@ def _resolve_env_vars(config):
     return config
 
 def _apply_overrides(config, overrides):
-    """Helper function to apply override values to config"""
-    if not isinstance(config, dict):
-        return config
-        
-    result = config.copy()
-    for key, value in overrides.items():
-        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
-            result[key] = _apply_overrides(result[key], value)
-        else:
-            result[key] = value
-    return result
+    """Helper function to apply configuration overrides"""
+    if isinstance(config, dict):
+        result = config.copy()
+        for k, v in overrides.items():
+            if k in result and isinstance(result[k], dict) and isinstance(v, dict):
+                result[k] = _apply_overrides(result[k], v)
+            else:
+                result[k] = v
+        return result
+    return config

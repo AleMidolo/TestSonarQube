@@ -11,7 +11,7 @@ def _convert_non_cli_args(self, parser_name, values_dict):
         return
 
     # 获取该解析器的参数定义
-    parser = self.parsers.get(parser_name)
+    parser = self._parsers.get(parser_name)
     if not parser:
         return
 

@@ -31,29 +31,23 @@ def validate(self, path):
             if field not in inventory:
                 return False
                 
+        # 验证版本目录存在
+        for version in inventory['versions']:
+            version_path = os.path.join(path, 'v' + str(version))
+            if not os.path.exists(version_path):
+                return False
+                
         # 验证清单校验和
         with open(os.path.join(path, 'inventory.json.sha512')) as f:
             stored_checksum = f.read().strip()
             
-        calculated_checksum = self._calculate_sha512(os.path.join(path, 'inventory.json'))
+        with open(os.path.join(path, 'inventory.json'), 'rb') as f:
+            calculated_checksum = hashlib.sha512(f.read()).hexdigest()
+            
         if stored_checksum != calculated_checksum:
             return False
             
-        # 验证版本目录
-        for version in inventory['versions']:
-            version_path = os.path.join(path, 'v' + str(version))
-            if not os.path.isdir(version_path):
-                return False
-                
         return True
         
     except Exception:
         return False
-        
-def _calculate_sha512(self, file_path):
-    """计算文件的SHA-512校验和"""
-    sha512 = hashlib.sha512()
-    with open(file_path, 'rb') as f:
-        for chunk in iter(lambda: f.read(4096), b''):
-            sha512.update(chunk)
-    return sha512.hexdigest()

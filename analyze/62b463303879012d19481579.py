@@ -19,21 +19,17 @@ def _extract_number_and_supplment_from_issue_element(issue):
         # Extract supplement value
         suppl_parts = issue_text.lower().split('suppl')
         if len(suppl_parts) > 1:
-            # Get supplement number after 'suppl'
             suppl = suppl_parts[1].strip()
             # Remove any non-numeric characters
             suppl = ''.join(c for c in suppl if c.isdigit())
             if suppl:
                 suppl = int(suppl)
-            
-        # Get number before 'suppl' if it exists
+        # Extract number value if present before suppl
         number_part = suppl_parts[0].strip()
         if number_part:
-            # Remove any non-numeric characters
             number = ''.join(c for c in number_part if c.isdigit())
             if number:
                 number = int(number)
-                
     else:
         # If no supplement, extract just the number
         number = ''.join(c for c in issue_text if c.isdigit())

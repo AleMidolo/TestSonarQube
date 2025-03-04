@@ -8,15 +8,25 @@ def validate_length_args(self, args):
 
     :param args: 接收到的参数。
     """
+    # 定义最大长度限制
+    MAX_LENGTH = 255
+
     # 遍历所有参数
     for key, value in args.items():
-        # 如果参数值是字符串类型
+        # 如果值是字符串类型
         if isinstance(value, str):
-            # 获取该参数允许的最大长度
-            max_length = self.get_max_length(key)
+            # 检查长度是否超过限制
+            if len(value) > MAX_LENGTH:
+                raise ValueError(f"Parameter '{key}' exceeds maximum length of {MAX_LENGTH} characters")
             
-            # 如果设置了最大长度限制且参数值超过限制
-            if max_length and len(value) > max_length:
-                raise ValueError(f"Parameter '{key}' exceeds maximum length of {max_length}")
-                
+        # 如果值是列表、元组或集合类型
+        elif isinstance(value, (list, tuple, set)):
+            if len(value) > MAX_LENGTH:
+                raise ValueError(f"Parameter '{key}' exceeds maximum length of {MAX_LENGTH} items")
+            
+        # 如果值是字典类型
+        elif isinstance(value, dict):
+            if len(value) > MAX_LENGTH:
+                raise ValueError(f"Parameter '{key}' exceeds maximum length of {MAX_LENGTH} key-value pairs")
+
     return True

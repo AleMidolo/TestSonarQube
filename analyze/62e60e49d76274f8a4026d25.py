@@ -18,14 +18,18 @@ def unit_of_work(metadata=None, timeout=None):
             if timeout is not None:
                 tx_settings["timeout"] = timeout
                 
-            # 调用原始函数,传入事务设置
-            def wrapped_f(tx):
-                if tx_settings:
-                    for key, value in tx_settings.items():
-                        setattr(tx, key, value)
-                return f(tx)
+            # 执行事务函数
+            def run_tx(tx):
+                # 如果有元数据,设置到事务中
+                if metadata:
+                    tx.set_metadata(metadata)
+                # 如果有超时设置,应用到事务中    
+                if timeout is not None:
+                    tx.set_timeout(timeout)
+                # 执行原始事务函数    
+                return f(tx, *args, **kwargs)
                 
-            return wrapped_f
+            return run_tx
             
         return wrapper
     return decorator

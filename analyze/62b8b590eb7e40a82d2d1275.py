@@ -2,12 +2,12 @@ def _legacy_mergeOrderings(orderings):
     # 创建一个字典来存储每个元素在各个列表中的位置
     element_positions = {}
     
-    # 遍历所有排序列表
+    # 遍历所有排序列表,记录每个元素出现的位置
     for ordering in orderings:
-        for pos, element in enumerate(ordering):
+        for i, element in enumerate(ordering):
             if element not in element_positions:
                 element_positions[element] = []
-            element_positions[element].append(pos)
+            element_positions[element].append(i)
             
     # 创建结果列表
     result = []
@@ -28,11 +28,11 @@ def _legacy_mergeOrderings(orderings):
             positions = element_positions[element]
             
             # 检查当前元素前面的所有元素是否都已经处理过
-            for ordering_idx, pos in enumerate(positions):
+            for i, pos in enumerate(positions):
+                ordering_i = orderings[i]
                 # 检查当前位置之前的元素
-                for prev_pos in range(pos):
-                    prev_element = orderings[ordering_idx][prev_pos]
-                    if prev_element not in seen:
+                for j in range(pos):
+                    if ordering_i[j] not in seen:
                         can_add = False
                         break
                 if not can_add:

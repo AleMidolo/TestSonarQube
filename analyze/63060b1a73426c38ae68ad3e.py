@@ -36,9 +36,9 @@ def get_plugin_spec_flatten_dict(plugin_dir):
                 items.append((new_key, v))
                 
         return dict(items)
-    
+        
     # 扁平化字典
     if isinstance(spec, dict):
         result = flatten_dict(spec)
-    
+        
     return result

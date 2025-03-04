@@ -6,37 +6,28 @@ def cachedmethod(cache, key=hashkey, lock=None):
     def decorator(method):
         def wrapper(self, *args, **kwargs):
             # 生成缓存键
-            k = key(self, *args, **kwargs)
+            cache_key = key(self, *args, **kwargs)
             
-            # 如果指定了锁,则获取锁
+            # 如果指定了锁,则加锁访问缓存
             if lock is not None:
-                lock.acquire()
+                with lock:
+                    if cache_key in cache:
+                        return cache[cache_key]
+                    result = method(self, *args, **kwargs)
+                    cache[cache_key] = result
+                    return result
+            
+            # 无锁访问缓存
+            if cache_key in cache:
+                return cache[cache_key]
                 
-            try:
-                # 尝试从缓存中获取结果
-                try:
-                    return cache[k]
-                except KeyError:
-                    pass
-                
-                # 如果缓存中没有,则调用原方法计算结果
-                result = method(self, *args, **kwargs)
-                
-                # 将结果存入缓存
-                try:
-                    cache[k] = result
-                except TypeError:
-                    pass
-                
-                return result
-                
-            finally:
-                # 如果获取了锁,则释放锁
-                if lock is not None:
-                    lock.release()
-                    
-        # 保留原方法的文档字符串
+            result = method(self, *args, **kwargs)
+            cache[cache_key] = result
+            return result
+            
+        # 保留原方法的元数据
         wrapper.__doc__ = method.__doc__
-        return wrapper
+        wrapper.__name__ = method.__name__
         
+        return wrapper
     return decorator

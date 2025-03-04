@@ -19,9 +19,10 @@ def from_raw_values(cls, values):
         try:
             # 尝试解析书签字符串
             bookmark = cls._parse_raw_value(value)
-            bookmarks.append(bookmark)
-        except ValueError:
-            # 如果解析失败则跳过该行
+            if bookmark:
+                bookmarks.append(bookmark)
+        except:
+            # 解析失败则跳过该行
             continue
             
     # 返回新的 Bookmarks 对象

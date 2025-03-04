@@ -19,10 +19,10 @@ def regex_dict(item):
         # 转换通配符为正则表达式
         # 将 * 替换为 .*
         # 将 . 替换为 \.
-        # 在开头和结尾添加 ^ 和 $
+        # 在开头加 ^ 和结尾加 $ 以确保完全匹配
         regex_key = '^' + re.escape(key).replace('\\*', '.*') + '$'
         
-        # 将转换后的正则表达式键和原值添加到结果字典
+        # 将转换后的正则表达式键和原值存入新字典
         result[regex_key] = value
         
     return result

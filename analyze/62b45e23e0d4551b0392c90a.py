@@ -39,8 +39,6 @@ def validate_version_inventories(self, version_dirs):
                     'old_checksum': root_inventory[file_path]
                 }
                 
-        # 存储该版本的差异
-        if diffs:
-            version_diffs[version] = diffs
-            
+        version_diffs[version] = diffs
+        
     return version_diffs

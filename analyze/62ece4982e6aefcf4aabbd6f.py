@@ -18,10 +18,10 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
             temp_file.write(chunk)
         temp_file.flush()
         
-        # Extract only 'desc' files from the archive to destination path
+        # Extract the archive
         with tarfile.open(temp_file.name, 'r:gz') as tar:
-            for member in tar.getmembers():
-                if member.name.endswith('desc'):
-                    tar.extract(member, destination_path)
+            # Only extract 'desc' files
+            members = [m for m in tar.getmembers() if m.name.endswith('/desc')]
+            tar.extractall(path=destination_path, members=members)
     
     return destination_path

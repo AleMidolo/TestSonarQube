@@ -28,11 +28,12 @@ def parse_diaspora_webfinger(document: str) -> Dict:
             
             # Find Link element with hcard rel
             for link in root.findall('.//Link'):
-                if link.get('rel') == 'http://microformats.org/profile/hcard':
+                rel = link.get('rel')
+                if rel == 'http://microformats.org/profile/hcard':
                     return {'hcard_url': link.get('href')}
                     
         except ET.ParseError:
             pass
-            
+
     # Return empty dict if no hcard_url found
     return {'hcard_url': None}
