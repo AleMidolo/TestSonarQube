@@ -8,9 +8,9 @@ def regex_dict(item):
     for key, value in item.items():
         # Convert wildcard pattern to regex pattern
         # Escape dots, replace * with .* 
-        regex_key = key.replace('.', '\.').replace('*', '.*')
+        regex_key = key.replace('.', '\\.').replace('*', '.*')
         
-        # Add to transformed dict with regex key and original value
+        # Add regex key and original value to new dict
         transformed[regex_key] = value
         
     return transformed

@@ -11,59 +11,47 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     import os
     import json
     import subprocess
-    from ansible.cli import CLI
-    from ansible.parsing.dataloader import DataLoader
-    from ansible.inventory.manager import InventoryManager
-    from ansible.vars.manager import VariableManager
-    from ansible.playbook.play import Play
-    from ansible.executor.playbook_executor import PlaybookExecutor
-    
-    # Ansible के लिए आवश्यक डायरेक्टरी पथ सेट करें
-    playbook_path = os.path.join(ir_plugin.path, 'playbooks')
-    inventory_path = os.path.join(ir_workspace.path, 'hosts')
-    
-    # एक्स्ट्रा वेरिएबल्स को JSON फाइल में लिखें
-    extra_vars_file = os.path.join(ir_workspace.path, 'extra_vars.json')
-    with open(extra_vars_file, 'w') as f:
-        json.dump(vars_dict, f)
+    from tempfile import NamedTemporaryFile
 
-    # Ansible CLI कमांड तैयार करें
-    ansible_cmd = ['ansible-playbook']
-    ansible_cmd.extend(cli_args)
-    ansible_cmd.extend([
-        '-i', inventory_path,
-        '--extra-vars', f'@{extra_vars_file}',
-        os.path.join(playbook_path, 'main.yml')
-    ])
+    # Create temporary file for vars
+    with NamedTemporaryFile(mode='w', suffix='.json', delete=False) as vars_file:
+        json.dump(vars_dict, vars_file)
+        vars_file_path = vars_file.name
 
     try:
-        # Ansible प्लेबुक को एक्जीक्यूट करें
-        process = subprocess.Popen(
-            ansible_cmd,
+        # Build ansible-playbook command
+        cmd = ['ansible-playbook']
+        
+        # Add any CLI arguments
+        cmd.extend(cli_args)
+        
+        # Add vars file as extra vars
+        cmd.extend(['-e', f'@{vars_file_path}'])
+        
+        # Add workspace inventory if exists
+        if ir_workspace and hasattr(ir_workspace, 'inventory'):
+            cmd.extend(['-i', ir_workspace.inventory])
+            
+        # Add plugin playbook path if exists  
+        if ir_plugin and hasattr(ir_plugin, 'playbook_path'):
+            cmd.append(ir_plugin.playbook_path)
+
+        # Run ansible-playbook command
+        result = subprocess.run(
+            cmd,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            universal_newlines=True
+            universal_newlines=True,
+            check=True
         )
         
-        stdout, stderr = process.communicate()
-        return_code = process.returncode
-
-        result = {
-            'rc': return_code,
-            'stdout': stdout,
-            'stderr': stderr
-        }
-
-        # एक्स्ट्रा वेरिएबल्स फाइल को हटा दें
-        os.remove(extra_vars_file)
-
-        if return_code != 0:
-            raise Exception(f"Ansible execution failed: {stderr}")
-
         return result
 
-    except Exception as e:
-        # क्लीनअप
-        if os.path.exists(extra_vars_file):
-            os.remove(extra_vars_file)
-        raise Exception(f"Error running ansible playbook: {str(e)}")
+    except subprocess.CalledProcessError as e:
+        # Handle ansible errors
+        raise Exception(f"Ansible playbook failed: {e.stderr}")
+        
+    finally:
+        # Cleanup temp vars file
+        if os.path.exists(vars_file_path):
+            os.unlink(vars_file_path)

@@ -22,7 +22,7 @@ def deep_merge_nodes(nodes):
             # Create dict of existing key-value pairs
             existing_dict = {k.value: (k,v) for k,v in existing_value_node.value}
             
-            # Update with new values
+            # Update with new values, overwriting duplicates
             for k, v in value_node.value:
                 existing_dict[k.value] = (k,v)
                 
@@ -37,4 +37,5 @@ def deep_merge_nodes(nodes):
         else:
             merged[key] = (key_node, value_node)
             
+    # Return merged nodes as list of tuples
     return list(merged.values())

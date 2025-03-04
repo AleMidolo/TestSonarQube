@@ -29,7 +29,7 @@ def generate_default_observer_schema(app):
             }
         elif kind == 'Pod':
             default_schema[resource['metadata']['name']] = {
-                'ready': "$.status.phase in ['Running', 'Succeeded']"
+                'ready': "$.status.phase == 'Running'"
             }
         elif kind == 'Service':
             default_schema[resource['metadata']['name']] = {

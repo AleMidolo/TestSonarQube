@@ -4,14 +4,15 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
     यदि यह विफल होता है, तो कोई अपवाद उत्पन्न नहीं करता।
     """
     import requests
-    from urllib.parse import urlparse
-    
+    from urllib.parse import urlparse, quote
+    from typing import Optional
+
     try:
-        # Extract domain from handle
+        # Split handle into user and domain
         if '@' not in handle:
             return None
             
-        _, domain = handle.split('@', 1)
+        user, domain = handle.split('@')
         
         # Construct webfinger URL
         webfinger_url = f"https://{domain}/.well-known/webfinger"

@@ -17,7 +17,7 @@ def point_type(name, fields, srid_map):
         
     # Add the SRID mapping
     if srid_map:
-        attrs['srid'] = srid_map
+        attrs['_srid'] = srid_map
         
     # Create the new Point subclass
     return type(name, (Point,), attrs)

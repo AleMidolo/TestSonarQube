@@ -27,18 +27,23 @@ def deep_merge_nodes(nodes):
                 existing_dict[k] = v
                 
             # Convert back to list of tuples
-            merged_value = [(k_node, v) for k_node, v in value_node.value 
+            merged_value = [(k_node, existing_dict[k_node.value]) 
+                          for k_node, _ in existing_value_node.value 
                           if k_node.value in existing_dict]
             
+            # Add any new keys
+            for k_node, v_node in value_node.value:
+                if k_node.value not in [k.value for k,_ in merged_value]:
+                    merged_value.append((k_node, v_node))
+                    
             # Create new mapping node with merged values    
-            merged_node = type(value_node)(
-                tag=value_node.tag,
+            merged_mapping = type(value_node)(
+                tag='tag:yaml.org,2002:map',
                 value=merged_value
             )
+            merged[key] = (key_node, merged_mapping)
             
-            merged[key] = (key_node, merged_node)
-            
-        # For non-mapping nodes, newer value overwrites
+        # For non-mapping nodes, just take the latest value
         else:
             merged[key] = (key_node, value_node)
             

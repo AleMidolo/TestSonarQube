@@ -4,13 +4,17 @@ def get_deprecated_args(self):
     """
     deprecated_args = {
         'generator': 'site',
-        'followRedirects': 'follow_redirects',
-        'returndict': 'return_dict', 
-        'encodeTitle': 'encode_title',
-        'notitle': 'no_title',
-        'noredirect': 'no_redirect',
-        'throttle': None,
-        'sysop': None,
-        'async': None,
+        'defaultsort': 'defaultsort',
+        'nocategories': 'categories',
+        'notalkid': 'talkid',
+        'nocontentmodel': 'contentmodel', 
+        'nosharedupload': 'sharedupload',
+        'nocontentmodel': 'contentmodel',
+        'noimages': 'images',
+        'nolinks': 'links',
+        'nolanguagelinks': 'langlinks',
+        'notemplates': 'templates',
+        'noexternallinks': 'externallinks',
+        'nocategories': 'categories'
     }
     return deprecated_args

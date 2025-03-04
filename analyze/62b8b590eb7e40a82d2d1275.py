@@ -39,7 +39,7 @@ def _legacy_mergeOrderings(orderings):
     # Add items until we've used them all
     while len(result) < len(all_items):
         # Find items that can be added
-        available = [item for item in all_items if item not in added and can_add(item)]
+        available = [item for item in all_items - added if can_add(item)]
         
         if not available:
             raise ValueError("Circular dependency detected")

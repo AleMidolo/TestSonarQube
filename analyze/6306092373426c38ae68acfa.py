@@ -6,18 +6,18 @@ def get_spec_defaults(self):
     
     # Get defaults from spec if available
     if hasattr(self, 'spec') and self.spec:
-        for param in self.spec.parameters.values():
-            if param.default != param.empty:
+        for param in self.spec.parameters:
+            if param.default is not None:
                 defaults[param.name] = param.default
                 
     # Get defaults from other sources like config files
     if hasattr(self, 'config'):
         defaults.update(self.config.get('defaults', {}))
         
-    # Get defaults from instance attributes
-    for attr in dir(self):
-        if attr.startswith('default_'):
-            param_name = attr[8:] # Remove 'default_' prefix
-            defaults[param_name] = getattr(self, attr)
+    # Get defaults from environment variables
+    for key, value in os.environ.items():
+        if key.startswith(self.env_prefix):
+            param_name = key[len(self.env_prefix):].lower()
+            defaults[param_name] = value
             
     return defaults

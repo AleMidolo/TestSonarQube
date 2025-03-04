@@ -5,7 +5,7 @@ def vertex3tuple(vertices):
     # Get length of vertices
     n = len(vertices)
     
-    # Iterate through each vertex
+    # Generate 3-tuples for each vertex
     for i in range(n):
         # Get previous vertex (wrap around to end if at start)
         prev = vertices[(i-1) % n]
@@ -17,6 +17,6 @@ def vertex3tuple(vertices):
         next = vertices[(i+1) % n]
         
         # Add tuple of (prev, curr, next) vertices
-        tuples.append((prev, curr, next))
+        tuples.append(prev + curr + next)
         
     return tuples
