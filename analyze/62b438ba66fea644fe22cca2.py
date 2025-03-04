@@ -18,29 +18,29 @@ def deep_merge_nodes(nodes):
             hasattr(existing_value_node, 'tag') and 'map' in existing_value_node.tag):
             
             # Convert mapping node values to dict for easier lookup
-            existing_dict = {k.value: (k,v) for k,v in existing_value_node.value}
-            new_dict = {k.value: (k,v) for k,v in value_node.value}
+            existing_map = {k.value: (k,v) for k,v in existing_value_node.value}
+            new_map = {k.value: (k,v) for k,v in value_node.value}
             
-            # Merge the mapping values
-            for new_key, new_pair in new_dict.items():
-                if new_key not in existing_dict:
-                    existing_dict[new_key] = new_pair
+            # Merge the maps
+            for new_key, new_pair in new_map.items():
+                if new_key not in existing_map:
+                    existing_map[new_key] = new_pair
                 else:
                     # Recursively merge if both are mapping nodes
                     if ('map' in new_pair[1].tag and 
-                        'map' in existing_dict[new_key][1].tag):
+                        'map' in existing_map[new_key][1].tag):
                         merged_value = deep_merge_nodes([
-                            (existing_dict[new_key][0], existing_dict[new_key][1]),
+                            (existing_map[new_key][0], existing_map[new_key][1]),
                             (new_pair[0], new_pair[1])
                         ])
-                        existing_dict[new_key] = merged_value[0]
+                        existing_map[new_key] = merged_value[0]
                     else:
                         # For non-mapping nodes, take the newer value
-                        existing_dict[new_key] = new_pair
+                        existing_map[new_key] = new_pair
                         
             # Convert back to list of tuples
             merged_value = [(k_node, v_node) for _, (k_node, v_node) 
-                          in existing_dict.items()]
+                          in existing_map.items()]
             
             # Create new mapping node with merged values
             merged[key] = (

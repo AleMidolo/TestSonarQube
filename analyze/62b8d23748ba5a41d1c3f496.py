@@ -7,7 +7,7 @@ def lfu_cache(maxsize=128, typed=False):
         # Diccionarios para almacenar el caché y contadores
         cache = {}
         frequency = defaultdict(int)
-        last_access = {}
+        last_used = {}
         
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -26,7 +26,7 @@ def lfu_cache(maxsize=128, typed=False):
             # Verificar si está en caché
             if key in cache:
                 frequency[key] += 1
-                last_access[key] = time.time()
+                last_used[key] = time.time()
                 return cache[key]
                 
             # Si el caché está lleno, eliminar el elemento menos frecuente
@@ -35,29 +35,29 @@ def lfu_cache(maxsize=128, typed=False):
                 min_freq = min(frequency.values())
                 # Obtener elementos con frecuencia mínima
                 min_freq_keys = [k for k, v in frequency.items() if v == min_freq]
-                # Si hay varios con la misma frecuencia, eliminar el menos usado recientemente
-                lru_key = min(min_freq_keys, key=lambda k: last_access[k])
+                # Si hay varios, eliminar el menos usado recientemente
+                lru_key = min(min_freq_keys, key=lambda k: last_used[k])
                 
                 del cache[lru_key]
                 del frequency[lru_key]
-                del last_access[lru_key]
+                del last_used[lru_key]
                 
             # Calcular nuevo valor y almacenarlo
             result = func(*args, **kwargs)
             cache[key] = result
             frequency[key] = 1
-            last_access[key] = time.time()
+            last_used[key] = time.time()
             
             return result
             
-        # Agregar atributos para acceder al caché
+        # Agregar métodos para acceder a la información del caché
         wrapper.cache_info = lambda: {
             'hits': sum(frequency.values()) - len(frequency),
             'misses': len(frequency),
             'maxsize': maxsize,
             'currsize': len(cache)
         }
-        wrapper.cache_clear = lambda: (cache.clear(), frequency.clear(), last_access.clear())
+        wrapper.cache_clear = lambda: (cache.clear(), frequency.clear(), last_used.clear())
         
         return wrapper
     return decorator

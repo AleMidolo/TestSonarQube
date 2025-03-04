@@ -13,19 +13,19 @@ def unit_of_work(metadata=None, timeout=None):
                 if not isinstance(metadata, dict):
                     raise TypeError("Metadata must be a dictionary")
                 
-            # Store transaction parameters
-            tx_params = {}
-            if metadata is not None:
-                tx_params['metadata'] = metadata
-            if timeout is not None:
-                tx_params['timeout'] = timeout
-                
-            # Execute decorated function with transaction parameters
-            def run_tx(tx):
+            # Store original function attributes
+            wrapper.__name__ = f.__name__
+            wrapper.__doc__ = f.__doc__
+            
+            # Add transaction metadata
+            def wrapped_tx(tx, *args, **kwargs):
+                if metadata:
+                    tx.set_metadata(metadata)
+                if timeout is not None:
+                    tx.set_timeout(timeout)
                 return f(tx, *args, **kwargs)
                 
-            # Return transaction function with parameters
-            return run_tx
+            return wrapped_tx
             
         return wrapper
     return decorator

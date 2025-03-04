@@ -13,12 +13,12 @@ def values(self, *keys):
     result = []
     for key in keys:
         if isinstance(key, int):
-            # Si la key es un índice numérico
+            # Si es un índice numérico
             if 0 <= key < len(self._data):
-                # Obtener el valor en esa posición
+                # Obtener el valor en la posición key
                 result.append(list(self._data.values())[key])
         else:
-            # Si la key es una clave del diccionario
+            # Si es una clave
             if key in self._data:
                 result.append(self._data[key])
                 

@@ -14,7 +14,7 @@ def validate_value(value):
     # - Al menos una letra mayúscula
     # - Al menos una letra minúscula 
     # - Al menos un número
-    # - Al menos un carácter especial
+    # - Al menos un caracter especial
     # - Longitud mínima de 8 caracteres
     pattern = r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
 

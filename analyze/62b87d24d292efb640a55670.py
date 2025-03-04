@@ -11,11 +11,10 @@ def get_versions():
             'python': sys.version.split()[0],
             'platform': platform.platform(),
             'packages': {
-                pkg.key: pkg.version 
+                pkg.key: pkg.version
                 for pkg in pkg_resources.working_set
             }
         }
-        
         return versions
         
     except Exception:

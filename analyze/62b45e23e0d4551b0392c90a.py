@@ -16,33 +16,31 @@ def validate_version_inventories(self, version_dirs):
         inventory_path = os.path.join(version_dir, "inventory.txt")
         
         if not os.path.exists(inventory_path):
-            raise ValueError(f"No se encontró inventario para la versión {version_dir}")
+            raise ValidationError(f"No se encontró inventario para la versión {version_dir}")
             
         # Leer el inventario de la versión actual
         with open(inventory_path) as f:
             version_inventory = f.readlines()
             
-        # Obtener los digests del inventario actual
+        # Extraer los digests del inventario
         version_digests = set()
         for line in version_inventory:
             if line.strip():
                 digest = line.split()[0]
                 version_digests.add(digest)
                 
-        # Comparar con el inventario raíz y agregar digests diferentes
+        # Comparar con el inventario raíz
         root_inventory_path = "inventory.txt"
-        if os.path.exists(root_inventory_path):
-            with open(root_inventory_path) as f:
-                root_inventory = f.readlines()
+        with open(root_inventory_path) as f:
+            root_inventory = f.readlines()
+            
+        root_digests = set()
+        for line in root_inventory:
+            if line.strip():
+                digest = line.split()[0]
+                root_digests.add(digest)
                 
-            root_digests = set()
-            for line in root_inventory:
-                if line.strip():
-                    digest = line.split()[0] 
-                    root_digests.add(digest)
-                    
-            # Agregar digests que son diferentes al inventario raíz
-            different_digests = version_digests - root_digests
-            digests_to_verify.update(different_digests)
-                
+        # Agregar digests diferentes al conjunto a verificar
+        digests_to_verify.update(version_digests - root_digests)
+        
     return digests_to_verify

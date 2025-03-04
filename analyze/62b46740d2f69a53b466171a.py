@@ -15,13 +15,13 @@ def pretty(self, indent=0, debug=False):
     if hasattr(self, '__iter__') and not isinstance(self, (str, bytes)):
         # Para diccionarios
         if isinstance(self, dict):
-            items = [f"{indent_str}  {k}: {v.pretty(indent+1, debug) if hasattr(v, 'pretty') else v}" 
+            items = [f"{indent_str}  {k}: {v.pretty(indent+1) if hasattr(v, 'pretty') else v}" 
                     for k, v in self.items()]
             result += "{\n" + ",\n".join(items) + f"\n{indent_str}}}"
-        
+            
         # Para listas, tuplas, sets
         else:
-            items = [f"{indent_str}  {item.pretty(indent+1, debug) if hasattr(item, 'pretty') else item}" 
+            items = [f"{indent_str}  {item.pretty(indent+1) if hasattr(item, 'pretty') else item}" 
                     for item in self]
             result += "[\n" + ",\n".join(items) + f"\n{indent_str}]"
     

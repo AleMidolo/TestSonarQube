@@ -19,26 +19,21 @@ def generate_default_observer_schema(app):
         name = resource.get('metadata', {}).get('name')
         
         # Si el recurso ya tiene un esquema personalizado, omitirlo
-        if app.spec.observer and kind in app.spec.observer:
+        if hasattr(app.spec, 'observer') and app.spec.observer.get(f"{kind.lower()}/{name}"):
             continue
             
         # Generar esquema predeterminado para este recurso
-        if kind and name:
-            resource_schema = {
-                'kind': kind,
-                'name': name,
-                'namespace': resource.get('metadata', {}).get('namespace'),
-                'conditions': [
-                    {
-                        'type': 'Available',
-                        'status': 'True'
-                    }
-                ]
+        resource_schema = {
+            'conditions': [{
+                'type': 'Available',
+                'status': 'True'
+            }],
+            'state': {
+                'phase': 'Running'
             }
-            
-            # Agregar el esquema al diccionario principal
-            if kind not in default_schema:
-                default_schema[kind] = []
-            default_schema[kind].append(resource_schema)
-    
+        }
+        
+        # Agregar al esquema general usando la convención kind/name
+        default_schema[f"{kind.lower()}/{name}"] = resource_schema
+        
     return default_schema

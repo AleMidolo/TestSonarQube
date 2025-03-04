@@ -26,18 +26,16 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         else:
             points.append((x, y))
 
-    # Validate field names match point dimensions
-    point_dim = len(points[0])
-    if len(field_names) != point_dim:
-        raise ValueError(f"Number of field names ({len(field_names)}) must match point dimension ({point_dim})")
+    # Determine dimensions based on points
+    dimensions = len(points[0])
+    
+    # Validate field_names matches dimensions
+    if len(field_names) != dimensions:
+        raise ValueError(f"Number of field names ({len(field_names)}) must match dimensions ({dimensions})")
 
     # Create graph with appropriate scale
-    from .graph import Graph
-    graph = Graph(points, field_names=field_names)
-    
     if scale is True:
-        graph.scale = hist.scale
-    elif scale is not None:
-        graph.scale = scale
-
-    return graph
+        scale = hist.scale
+        
+    from .graph import Graph
+    return Graph(points, field_names=field_names, scale=scale)

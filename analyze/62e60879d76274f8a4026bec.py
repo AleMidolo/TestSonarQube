@@ -30,21 +30,14 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         
     # Configurar los hooks de serialización si se proporcionan
     if dehydration_hooks:
-        self.dehydration_hooks.update(dehydration_hooks)
+        self._dehydration_hooks.update(dehydration_hooks)
         
     if hydration_hooks:
-        self.hydration_hooks.update(hydration_hooks)
+        self._hydration_hooks.update(hydration_hooks)
     
     # Crear y enviar el mensaje BEGIN
-    message = {
-        "type": "BEGIN",
-        "extras": extras
-    }
+    message = ("BEGIN", extras)
+    self._append(message, Response(**handlers))
     
-    # Crear objeto Response con los handlers proporcionados
-    response = Response(**handlers)
-    
-    # Añadir el mensaje a la cola de salida
-    self._append(message, response)
-    
-    return response
+    # Devolver el objeto Response
+    return self._get_last()
