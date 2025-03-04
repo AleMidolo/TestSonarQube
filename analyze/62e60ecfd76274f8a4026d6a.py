@@ -7,7 +7,8 @@ def protocol_handlers(cls, protocol_version=None):
         (4, 2): BoltProtocolV4_2,
         (4, 3): BoltProtocolV4_3,
         (4, 4): BoltProtocolV4_4,
-        (5, 0): BoltProtocolV5
+        (5, 0): BoltProtocolV5,
+        (5, 1): BoltProtocolV5_1
     }
 
     # 如果未指定协议版本,返回所有可用的处理程序
@@ -18,7 +19,7 @@ def protocol_handlers(cls, protocol_version=None):
     if not isinstance(protocol_version, tuple):
         raise TypeError("Protocol version must be a tuple, got %r" % protocol_version)
 
-    # 如果指定了协议版本,只返回该版本的处理程序(如果存在)
+    # 如果指定了具体版本,只返回该版本的处理程序(如果存在)
     if protocol_version in available_handlers:
         return {protocol_version: available_handlers[protocol_version]}
     

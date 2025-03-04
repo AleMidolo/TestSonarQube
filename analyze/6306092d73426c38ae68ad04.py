@@ -9,13 +9,13 @@ def get_parser_option_specs(self, command_name):
     parser = self.parsers.get(command_name)
     if not parser:
         return []
-        
+    
     # 存储所有选项
     options = []
     
     # 遍历解析器中的所有选项
     for action in parser._actions:
-        # 跳过help选项
+        # 跳过帮助选项
         if action.dest == 'help':
             continue
             

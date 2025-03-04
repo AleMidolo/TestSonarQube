@@ -31,10 +31,11 @@ def validate(self, path):
             if field not in inventory:
                 return False
                 
-        # 验证版本目录存在
-        for version in inventory['versions']:
+        # 验证版本目录
+        versions = inventory['versions']
+        for version in versions:
             version_path = os.path.join(path, 'v' + str(version))
-            if not os.path.exists(version_path):
+            if not os.path.isdir(version_path):
                 return False
                 
         # 验证清单校验和

@@ -1,5 +1,5 @@
 def absorb(self, args):
-    # 初始化结果列表
+    # 创建结果列表
     result = list(args)
     changed = True
     
@@ -19,36 +19,38 @@ def absorb(self, args):
                 expr2 = result[j]
                 
                 # 检查吸收律 A & (A | B) = A
-                if (isinstance(expr1, And) and 
-                    isinstance(expr2, Or) and
-                    expr1 in expr2.args):
-                    result[j] = expr1
+                if (expr1.is_and() and expr2.is_or() and 
+                    any(t1 == t2 for t1 in expr1.terms for t2 in expr2.terms)):
+                    result[i] = expr1
+                    result[j] = None
                     changed = True
-                    
+                
                 # 检查吸收律 A | (A & B) = A  
-                elif (isinstance(expr1, Or) and
-                      isinstance(expr2, And) and 
-                      expr1 in expr2.args):
-                    result[j] = expr1
+                elif (expr1.is_or() and expr2.is_and() and
+                      any(t1 == t2 for t1 in expr1.terms for t2 in expr2.terms)):
+                    result[i] = expr1
+                    result[j] = None
                     changed = True
                     
                 # 检查负吸收律 A & (~A | B) = A & B
-                elif (isinstance(expr1, And) and
-                      isinstance(expr2, Or) and
-                      Not(expr1) in expr2.args):
-                    new_args = [arg for arg in expr2.args if arg != Not(expr1)]
-                    result[j] = And(expr1, *new_args)
+                elif (expr1.is_and() and expr2.is_or() and
+                      any(t1.is_not() and t1.term == t2 
+                          for t1 in expr2.terms for t2 in expr1.terms)):
+                    new_terms = [t for t in expr2.terms if not any(
+                        t.is_not() and t.term == t2 for t2 in expr1.terms)]
+                    result[j] = self.make_and(expr1.terms + new_terms)
                     changed = True
                     
                 # 检查负吸收律 A | (~A & B) = A | B
-                elif (isinstance(expr1, Or) and
-                      isinstance(expr2, And) and
-                      Not(expr1) in expr2.args):
-                    new_args = [arg for arg in expr2.args if arg != Not(expr1)]
-                    result[j] = Or(expr1, *new_args)
+                elif (expr1.is_or() and expr2.is_and() and
+                      any(t1.is_not() and t1.term == t2
+                          for t1 in expr2.terms for t2 in expr1.terms)):
+                    new_terms = [t for t in expr2.terms if not any(
+                        t.is_not() and t.term == t2 for t2 in expr1.terms)]
+                    result[j] = self.make_or(expr1.terms + new_terms)
                     changed = True
                     
-        # 移除重复项
-        result = list(set(result))
-                    
+        # 移除None值并去重
+        result = list(set(x for x in result if x is not None))
+        
     return result

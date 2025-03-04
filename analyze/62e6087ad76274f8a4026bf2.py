@@ -8,7 +8,7 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **
     :param hydration_hooks: 用于处理类型hydration的钩子（映射，键为类型（类），值为hydration函数）。hydration函数接收一个 PackStream 可识别的值，并可以返回任意对象。
     :param handlers: 传递给返回的Response对象的处理函数
     """
-    # 创建消息参数字典
+    # 创建DISCARD消息参数字典
     message_params = {
         "n": n,
         "qid": qid
@@ -16,23 +16,24 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **
 
     # 创建消息结构
     message = {
-        "signature": 0x2F,  # DISCARD message signature
+        "signature": 0x2F,  # DISCARD消息的签名
         "fields": message_params
     }
-    
-    # 应用dehydration钩子
-    if dehydration_hooks:
-        for type_, hook in dehydration_hooks.items():
-            if isinstance(message_params, type_):
-                message_params = hook(message_params)
-    
-    # 将消息添加到输出队列
-    self._append(message)
-    
+
+    # 设置钩子
+    if dehydration_hooks is None:
+        dehydration_hooks = {}
+    if hydration_hooks is None:
+        hydration_hooks = {}
+
     # 创建响应对象
     response = Response(
-        hydration_hooks=hydration_hooks,
-        **handlers
+        handlers=handlers,
+        dehydration_hooks=dehydration_hooks,
+        hydration_hooks=hydration_hooks
     )
-    
+
+    # 将消息和响应添加到输出队列
+    self._append(message, response)
+
     return response

@@ -12,16 +12,12 @@ def directlyProvidedBy(object):
         return _empty
         
     # 如果对象有__provides__属性
-    if isinstance(provides, Provides):
-        # 如果是Provides类型,直接返回
-        return provides
-
-    # 获取对象的类
-    cls = getattr(object, "__class__", None)
-    
-    if cls is not None and getattr(cls, "__provides__", None) == provides:
-        # 如果对象的类有__provides__属性,且与对象的__provides__相同
-        # 说明这是从类继承来的接口声明,应该返回空
+    if isinstance(object, type):
+        # 如果对象是类,返回空声明
         return _empty
         
+    # 返回对象的provides声明
     return provides
+
+# 定义空声明常量
+_empty = Declaration()

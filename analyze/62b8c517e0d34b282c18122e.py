@@ -18,8 +18,8 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     # 获取异常的堆栈跟踪信息
     tb = traceback.extract_tb(e.__traceback__)
     
-    # 格式化异常信息
-    error_msg = f"{e.__class__.__name__}: {str(e)}\n"
+    # 格式化异常类型和消息
+    error_msg = f"{e.__class__.__name__}: {str(e)}\n\n"
     
     # 添加堆栈跟踪信息
     for i, frame in enumerate(tb):

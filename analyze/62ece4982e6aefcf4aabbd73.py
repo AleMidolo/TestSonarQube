@@ -16,20 +16,25 @@ def split(s, platform='this'):
         # Match either:
         # - Quoted string with escaped quotes allowed
         # - Unquoted string with no whitespace
-        pattern = r'''(?:"[^"]*"|'[^']*'|\S+)'''
+        pattern = r'''"[^"]*"|'[^']*'|\S+'''
 
     # Find all matches
     tokens = re.findall(pattern, s)
 
-    # Remove surrounding quotes and unescape internal quotes
+    # Post-process tokens
     result = []
     for token in tokens:
+        # Remove surrounding quotes if present
         if (token.startswith('"') and token.endswith('"')) or \
            (token.startswith("'") and token.endswith("'")):
-            # Remove surrounding quotes
             token = token[1:-1]
-            # Unescape internal quotes
+            
+        # Handle escaped quotes
+        if platform == 1:  # POSIX
             token = token.replace('\\"', '"').replace("\\'", "'")
+        else:  # Windows
+            token = token.replace('""', '"')
+            
         result.append(token)
 
     return result

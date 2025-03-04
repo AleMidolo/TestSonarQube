@@ -9,29 +9,34 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None,
     parameters = {}
     
     # Add optional parameters if provided
-    if bookmarks:
+    if bookmarks is not None:
         parameters["bookmarks"] = list(bookmarks)
-    if metadata:
+    if metadata is not None:
         parameters["metadata"] = metadata
     if timeout is not None:
         parameters["timeout"] = timeout
-    if db:
+    if db is not None:
         parameters["db"] = db
-    if imp_user:
+    if imp_user is not None:
         parameters["imp_user"] = imp_user
         
     # Set up hooks
-    hooks = {}
-    if dehydration_hooks:
-        hooks["dehydration"] = dehydration_hooks
-    if hydration_hooks:
-        hooks["hydration"] = hydration_hooks
+    if dehydration_hooks is None:
+        dehydration_hooks = {}
+    if hydration_hooks is None:
+        hydration_hooks = {}
         
-    # Create and return Response object with parameters and handlers
-    from neo4j import Response  # Assuming neo4j Response class exists
-    return Response(
-        mode=mode,
-        parameters=parameters,
-        hooks=hooks,
-        **handlers
-    )
+    # Create transaction context
+    tx_context = {
+        "mode": mode,
+        "parameters": parameters,
+        "dehydration_hooks": dehydration_hooks,
+        "hydration_hooks": hydration_hooks
+    }
+    
+    # Create and return Response object with handlers
+    response = Response(tx_context)
+    for key, handler in handlers.items():
+        response.add_handler(key, handler)
+        
+    return response

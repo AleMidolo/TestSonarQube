@@ -22,10 +22,10 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
             
             current_time = timer()
             
-            # 检查缓存是否存在且未过期
+            # 检查缓存项是否存在且未过期
             if key in cache:
                 if current_time - timestamps[key] < ttl:
-                    # 将最近使用的项移到末尾
+                    # 将最近访问的项移到末尾
                     cache.move_to_end(key)
                     return cache[key]
                 else:
@@ -49,13 +49,13 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
                 cache.move_to_end(key)
             
             return result
-        
-        # 添加清除缓存的方法
+            
+        # 添加缓存清理方法
         def clear_cache():
             cache.clear()
             timestamps.clear()
-        
+            
         wrapper.clear_cache = clear_cache
         return wrapper
-    
+        
     return decorator

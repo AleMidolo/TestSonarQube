@@ -21,19 +21,23 @@ def _validate_labels(labels):
                 errors.append({str(key): 'expected string or bytes-like object'})
                 continue
                 
+            # Validate key format using regex
             if not validate_key(key):
                 errors.append({key: f"Label key '{key}' does not match the regex [...]"})
+                
         except Exception as e:
             errors.append({str(key): str(e)})
             
-        # Validate value  
+        # Validate value
         try:
             if not isinstance(value, (str, bytes)):
                 errors.append({str(value): 'expected string or bytes-like object'})
                 continue
                 
+            # Validate value format using regex    
             if not validate_value(value):
                 errors.append({value: f"Label value '{value}' does not match the regex [...]"})
+                
         except Exception as e:
             errors.append({str(value): str(e)})
             

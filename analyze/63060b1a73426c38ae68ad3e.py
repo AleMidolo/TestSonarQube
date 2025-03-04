@@ -34,11 +34,10 @@ def get_plugin_spec_flatten_dict(plugin_dir):
                 items.extend(flatten_dict(v, new_key, sep=sep).items())
             else:
                 items.append((new_key, v))
-                
         return dict(items)
-        
+    
     # 扁平化字典
     if isinstance(spec, dict):
         result = flatten_dict(spec)
-        
+    
     return result

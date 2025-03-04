@@ -20,22 +20,18 @@ def verifyObject(iface, candidate, tentative=False):
             except AttributeError:
                 errors.append(BrokenImplementation(iface, name))
                 continue
-                
+
             # Check if it's callable
             if not callable(attr):
                 errors.append(BrokenMethodImplementation(name, "Not a method"))
                 continue
-                
-            # Check method signature if possible
+
+            # Check method signature
             try:
-                if hasattr(desc, 'getSignatureInfo'):
-                    expected = desc.getSignatureInfo()
-                    actual = Method(attr).getSignatureInfo()
-                    if expected != actual:
-                        errors.append(BrokenMethodImplementation(name, "Incorrect signature"))
-            except ValueError:
-                pass  # Can't check signature
-    
+                verifyClass(iface, attr.__class__)
+            except Invalid as e:
+                errors.append(BrokenMethodImplementation(name, str(e)))
+                
     # Step 4: Check attributes
     for name, desc in iface.namesAndDescriptions(1):
         if not isinstance(desc, Method):
@@ -43,11 +39,11 @@ def verifyObject(iface, candidate, tentative=False):
                 getattr(candidate, name)
             except AttributeError:
                 errors.append(BrokenImplementation(iface, name))
-    
-    # Handle errors
+
+    # Raise collected errors
     if len(errors) == 1:
         raise errors[0]
     elif errors:
         raise Invalid(errors)
-        
+
     return True

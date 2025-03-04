@@ -45,12 +45,6 @@ def retrieve_and_parse_diaspora_webfinger(handle):
                 if rel and href:
                     result['links'][rel] = href
                     
-        # 添加其他可能的字段
-        if 'subject' in data:
-            result['subject'] = data['subject']
-        if 'aliases' in data:
-            result['aliases'] = data['aliases']
-            
         return result
 
     except requests.exceptions.RequestException as e:

@@ -16,5 +16,5 @@ def _get_seq_with_type(seq, bufsize=None):
             # 如果指定了bufsize,只获取指定长度
             return list(itertools.islice(seq, bufsize)), list
             
-    # 如果不是序列类型也不是可迭代对象,包装成列表
-    return [seq], list
+    # 如果不是序列类型或迭代器,抛出异常
+    raise TypeError(f"'{type(seq).__name__}' object is not a sequence or iterator")

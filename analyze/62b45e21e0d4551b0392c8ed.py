@@ -4,10 +4,10 @@ def find_path_type(path):
 
     返回值：
       'root' - 看起来像是一个 OCFL 存储根目录
-      'object' - 看起来像是一个 OCFL 对象
+      'object' - 看起来像是一个 OCFL 对象 
       'file' - 一个文件，可能是一个清单文件
       其他字符串解释错误描述
-    
+
     仅通过查看 "0=*" Namaste 文件来确定目录类型。
     """
     import os
@@ -35,10 +35,10 @@ def find_path_type(path):
                 
             # 检查内容判断类型
             if "ocfl_" in content.lower():
-                if "object" in content.lower():
-                    return "object"
-                elif "root" in content.lower():
+                if "root" in content.lower():
                     return "root"
+                elif "object" in content.lower():
+                    return "object"
                     
             return f"Unknown Namaste content: {content}"
             

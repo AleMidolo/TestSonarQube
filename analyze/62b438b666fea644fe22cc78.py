@@ -13,7 +13,7 @@ def parse_arguments(*arguments):
     parser.add_argument('--version', action='version', version='%(prog)s 1.0')
     
     # Parse arguments
-    if len(arguments) > 0:
+    if arguments:
         args = parser.parse_args(arguments)
     else:
         args = parser.parse_args()

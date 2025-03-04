@@ -16,7 +16,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             try:
                 attr = getattr(candidate, name)
             except AttributeError:
-                errors.append(f"The {name} attribute was not provided")
+                errors.append(f"The {name} method was not provided")
                 continue
                 
             # Check if it's callable
@@ -30,7 +30,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
                 try:
                     verifyObject(desc, attr)
                 except Invalid as e:
-                    errors.append(str(e))
+                    errors.append(f"Method {name} has wrong signature: {str(e)}")
     
     # Step 4: Check attributes
     for name, desc in iface.namesAndDescriptions(1):
@@ -44,6 +44,6 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
-        raise Invalid(errors)
+        raise Invalid('\n'.join(errors))
         
     return True
