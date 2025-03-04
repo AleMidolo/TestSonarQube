@@ -13,33 +13,38 @@ def validate(self, inventory, extract_spec_version=False):
     if extract_spec_version:
         try:
             inventory_type = inventory.get('type', '')
-            if 'bom-1.0' in inventory_type:
-                self.spec_version = '1.0'
-            elif 'bom-1.1' in inventory_type:
-                self.spec_version = '1.1'
-            elif 'bom-1.2' in inventory_type:
-                self.spec_version = '1.2'
-            elif 'bom-1.3' in inventory_type:
-                self.spec_version = '1.3'
+            if 'CycloneDX' in inventory_type:
+                version_match = re.search(r'(\d+\.\d+)', inventory_type)
+                if version_match:
+                    self.spec_version = version_match.group(1)
         except (AttributeError, TypeError):
             pass
 
-    required_fields = ['bomFormat', 'specVersion', 'version']
+    required_fields = ['bomFormat', 'specVersion', 'version', 'components']
+    
     for field in required_fields:
         if field not in inventory:
             raise ValueError(f"Campo obbligatorio mancante: {field}")
-
-    if inventory['specVersion'] != self.spec_version:
-        raise ValueError(f"Versione della specifica non valida. Attesa: {self.spec_version}, Trovata: {inventory['specVersion']}")
-
-    if 'components' in inventory:
-        if not isinstance(inventory['components'], list):
-            raise ValueError("Il campo 'components' deve essere una lista")
+            
+    if inventory['bomFormat'] != 'CycloneDX':
+        raise ValueError("Il formato BOM deve essere 'CycloneDX'")
         
-        for component in inventory['components']:
-            if not isinstance(component, dict):
-                raise ValueError("Ogni componente deve essere un dizionario")
-            if 'name' not in component:
-                raise ValueError("Ogni componente deve avere un campo 'name'")
-
+    if not isinstance(inventory['components'], list):
+        raise ValueError("Il campo 'components' deve essere una lista")
+        
+    try:
+        version = float(inventory['specVersion'])
+        if version < 1.0:
+            raise ValueError("La versione della specifica deve essere >= 1.0")
+    except ValueError:
+        raise ValueError("Versione della specifica non valida")
+        
+    # Validazione dei componenti
+    for component in inventory['components']:
+        if not isinstance(component, dict):
+            raise ValueError("Ogni componente deve essere un dizionario")
+            
+        if 'type' not in component or 'name' not in component:
+            raise ValueError("I componenti devono avere almeno i campi 'type' e 'name'")
+            
     return True

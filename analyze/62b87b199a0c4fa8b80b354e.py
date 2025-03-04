@@ -3,20 +3,24 @@ def is_fill_request_seq(seq):
     from typing import Union
     
     # Check if seq is a FillRequest object
-    if isinstance(seq, FillRequest):
-        return True
+    try:
+        if isinstance(seq, FillRequest):
+            return True
+    except NameError:
+        pass
         
     # Check if seq is a Source sequence
-    if isinstance(seq, Source):
-        return False
+    try:
+        if isinstance(seq, Source):
+            return False
+    except NameError:
+        pass
         
-    # Check if seq is a sequence
-    if not isinstance(seq, Sequence):
-        return False
-        
-    # Check if seq contains at least one FillRequest
-    for item in seq:
-        if isinstance(item, FillRequest):
-            return True
+    # Check if seq is a sequence containing at least one FillRequest
+    if isinstance(seq, Sequence):
+        try:
+            return any(isinstance(item, FillRequest) for item in seq)
+        except NameError:
+            return False
             
     return False

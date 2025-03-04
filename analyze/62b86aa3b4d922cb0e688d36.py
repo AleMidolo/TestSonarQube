@@ -35,12 +35,7 @@ def _validate_labels(labels):
             errors.append({
                 value: f"Label value '{value}' does not match the regex {value_pattern}"
             })
-    
-    # If any errors occurred, raise ValidationError
+            
+    # Raise ValidationError if any errors found
     if errors:
         raise ValidationError(errors)
-        
-class ValidationError(Exception):
-    def __init__(self, messages):
-        self.messages = messages
-        super().__init__(str(messages))

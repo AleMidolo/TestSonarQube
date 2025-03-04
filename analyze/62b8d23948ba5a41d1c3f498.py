@@ -38,14 +38,21 @@ def lru_cache(maxsize=128, typed=False):
             
             return result
             
+        # Aggiungi attributi utili al wrapper
+        wrapper.cache_info = lambda: {
+            'maxsize': maxsize,
+            'currsize': len(cache),
+            'hits': sum(1 for k in order if k in cache),
+            'misses': sum(1 for k in order if k not in cache)
+        }
+        wrapper.cache_clear = lambda: cache.clear() and order.clear()
+        
         return wrapper
     
-    # Se maxsize è None, non applicare la cache
-    if maxsize is None:
-        return lambda func: func
-        
-    # Se maxsize <= 0, disabilita la cache
-    if maxsize <= 0:
-        return lambda func: func
-        
+    # Se viene chiamato direttamente con una funzione
+    if callable(maxsize):
+        func = maxsize
+        maxsize = 128
+        return decorator(func)
+    
     return decorator

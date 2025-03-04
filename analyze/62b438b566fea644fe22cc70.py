@@ -8,11 +8,11 @@ _borgmatic()
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     
     # Main borgmatic commands
-    opts="init create prune list info check extract export-tar mount umount rcreate rinfo rlist rdelete config validate"
+    opts="init create prune list info check extract mount umount rcreate rlist rinfo rdelete config validate"
 
     # Common options
     common_opts="--config --verbosity --syslog-verbosity --json --help --version"
-
+    
     case "${prev}" in
         borgmatic)
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
@@ -30,13 +30,36 @@ _borgmatic()
             ;;
     esac
 
+    # Handle options
     if [[ ${cur} == -* ]] ; then
-        COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
+        case "${COMP_WORDS[1]}" in
+            create)
+                COMPREPLY=( $(compgen -W "${common_opts} --progress --stats --list --dry-run" -- ${cur}) )
+                ;;
+            prune)
+                COMPREPLY=( $(compgen -W "${common_opts} --list --dry-run" -- ${cur}) )
+                ;;
+            list|info)
+                COMPREPLY=( $(compgen -W "${common_opts} --archive --json" -- ${cur}) )
+                ;;
+            check)
+                COMPREPLY=( $(compgen -W "${common_opts} --progress --repair --only-checks" -- ${cur}) )
+                ;;
+            extract)
+                COMPREPLY=( $(compgen -W "${common_opts} --archive --path --destination --progress --strip-components" -- ${cur}) )
+                ;;
+            mount)
+                COMPREPLY=( $(compgen -W "${common_opts} --archive --path --mount-point --foreground" -- ${cur}) )
+                ;;
+            *)
+                COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
+                ;;
+        esac
         return 0
     fi
 
-    # Complete with commands if no other matches
-    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    # Complete files/directories if no other matches
+    COMPREPLY=( $(compgen -f -- ${cur}) )
     return 0
 }
 

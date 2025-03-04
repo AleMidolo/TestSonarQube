@@ -16,10 +16,10 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
             
             # Evaluate the condition based on the args
             if isinstance(condition, str):
-                # Simple condition checking if another arg exists
+                # Simple condition checking if another arg is present
                 if condition in args and option['name'] not in args:
                     conditionally_required.append(option['name'])
-                    
+            
             elif callable(condition):
                 # Complex condition using a function
                 if condition(args) and option['name'] not in args:

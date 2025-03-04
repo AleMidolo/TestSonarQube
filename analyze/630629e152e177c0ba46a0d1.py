@@ -7,21 +7,27 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
     from typing import Optional
 
     try:
-        # Split handle into user and domain
+        # Verifica che l'handle sia nel formato corretto (user@domain)
         if '@' not in handle:
             return None
             
-        user, domain = handle.split('@', 1)
+        username, domain = handle.split('@')
         
-        # Construct webfinger URL according to RFC7033
+        # Costruisci l'URL del documento webfinger
         webfinger_url = f"https://{domain}/.well-known/webfinger"
         params = {
-            'resource': f'acct:{quote(user)}@{domain}'
+            'resource': f'acct:{quote(handle)}'
         }
         
-        # Make request with 5 second timeout
-        response = requests.get(webfinger_url, params=params, timeout=5)
+        # Effettua la richiesta HTTP
+        response = requests.get(
+            webfinger_url,
+            params=params,
+            headers={'Accept': 'application/jrd+json'},
+            timeout=10
+        )
         
+        # Verifica il codice di stato
         if response.status_code == 200:
             return response.text
             

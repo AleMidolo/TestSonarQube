@@ -20,15 +20,16 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         
     message = {
         "type": "DISCARD",
-        "n": n,
-        "qid": qid
+        "qid": qid,
+        "n": n
     }
     
-    self._append_message(message)
-    
-    return Response(
-        self,
-        dehydration_hooks or {},
-        hydration_hooks or {},
+    response = Response(
+        connection=self,
+        dehydration_hooks=dehydration_hooks or {},
+        hydration_hooks=hydration_hooks or {},
         **handlers
     )
+    
+    self._append(message, response)
+    return response

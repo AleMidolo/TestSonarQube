@@ -4,7 +4,7 @@ def generate_default_observer_schema(app):
     if hasattr(app, 'spec') and hasattr(app.spec, 'manifest'):
         for resource in app.spec.manifest:
             # Skip if resource already has a custom observer schema
-            if resource.get('metadata', {}).get('name') in app.spec.get('observer_schema', {}):
+            if resource.get('name') in getattr(app.spec, 'observer_schema', {}):
                 continue
                 
             # Generate default schema for this resource
@@ -17,9 +17,8 @@ def generate_default_observer_schema(app):
                 }
             }
             
-            # Add schema to default_schema dictionary using resource name as key
-            resource_name = resource.get('metadata', {}).get('name')
-            if resource_name:
-                default_schema[resource_name] = resource_schema
-                
+            # Add schema to default_schema dict using resource name as key
+            if resource.get('metadata', {}).get('name'):
+                default_schema[resource['metadata']['name']] = resource_schema
+    
     return default_schema

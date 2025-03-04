@@ -17,14 +17,20 @@ def parse_frequency(frequency):
     units_map = {
         'second': 'seconds',
         'seconds': 'seconds',
+        'sec': 'seconds',
+        'secs': 'seconds',
         'minute': 'minutes', 
         'minutes': 'minutes',
+        'min': 'minutes',
+        'mins': 'minutes',
         'hour': 'hours',
         'hours': 'hours',
+        'hr': 'hours',
+        'hrs': 'hours',
         'day': 'days',
         'days': 'days',
         'week': 'weeks',
-        'weeks': 'weeks'
+        'weeks': 'weeks',
     }
 
     if unit not in units_map:

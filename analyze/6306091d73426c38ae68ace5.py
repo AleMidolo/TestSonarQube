@@ -15,14 +15,14 @@ def _include_groups(self, parser_dict):
                     with open(include_path, 'r') as f:
                         included_dict = json.load(f)
                     result[key] = self._include_groups(included_dict)
-                except (IOError, json.JSONDecodeError) as e:
-                    print(f"Error including file {include_path}: {str(e)}")
+                except (IOError, json.JSONDecodeError):
+                    # If include fails, keep original value
                     result[key] = value
             else:
                 # Recursively process nested dictionaries
                 result[key] = self._include_groups(value)
         else:
-            # Copy non-dictionary values as-is
+            # Keep non-dictionary values as is
             result[key] = value
             
     return result

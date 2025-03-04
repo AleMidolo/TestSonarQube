@@ -15,9 +15,4 @@ def is_gitbash():
     if 'MINGW' in os.environ.get('MSYSTEM', ''):
         return True
         
-    # Check for common GitBash paths in PATH
-    path = os.environ.get('PATH', '').lower()
-    if 'git\\mingw' in path or 'git\\usr\\bin' in path:
-        return True
-        
     return False

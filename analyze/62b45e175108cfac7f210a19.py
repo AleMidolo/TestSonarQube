@@ -17,15 +17,15 @@ def validate_fixity(self, fixity, manifest_files):
     if not isinstance(fixity['messageDigestAlgorithm'], str):
         raise ValueError("messageDigestAlgorithm must be a string")
         
-    # Validate files block
+    # Validate files section
     files = fixity.get('files', {})
     if not isinstance(files, dict):
-        raise ValueError("files block must be a dictionary")
+        raise ValueError("files section must be a dictionary")
         
-    # Check that all files referenced exist in manifest
+    # Check that all referenced files exist in manifest
     for filename in files:
         if filename not in manifest_files:
-            raise ValueError(f"File '{filename}' in fixity block not found in manifest")
+            raise ValueError(f"File '{filename}' referenced in fixity but not found in manifest")
             
     # Validate each file entry
     for filename, entry in files.items():

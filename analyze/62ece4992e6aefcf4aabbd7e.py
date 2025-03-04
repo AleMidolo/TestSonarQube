@@ -7,10 +7,10 @@ def _resolve_string(matcher):
     
     # Extract variable name and default value from matcher
     var_name = matcher.group(1) if matcher.group(1) else matcher.group(0)
-    default_value = matcher.group(2) if matcher.groups() > 1 and matcher.group(2) else None
+    default_value = matcher.group(2) if len(matcher.groups()) > 1 else None
     
     # Try to get value from environment
-    value = os.getenv(var_name)
+    value = os.environ.get(var_name)
     
     # If value not found in environment
     if value is None:
@@ -18,6 +18,6 @@ def _resolve_string(matcher):
         if default_value is not None:
             return default_value
         # Otherwise raise error
-        raise ValueError(f"Environment variable '{var_name}' not found and no default value provided")
+        raise KeyError(f"Environment variable '{var_name}' not found and no default value provided")
         
     return value

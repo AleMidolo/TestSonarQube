@@ -17,58 +17,47 @@ def verifyObject(iface, candidate, tentative=False):
                 errors['missing'].append(name)
                 continue
 
-            # Check if it's a method
+            # Verify methods
             if isinstance(desc, Method):
-                # Verify method signature
+                # Check if callable
                 if not callable(attr):
                     errors['not_callable'].append(name)
                     continue
 
-                # Get method specs
-                required = desc.getSignatureInfo()['required']
-                optional = desc.getSignatureInfo()['optional']
-                varargs = desc.getSignatureInfo()['varargs']
-                kwargs = desc.getSignatureInfo()['kwargs']
-
-                # Get actual method specs
-                import inspect
-                sig = inspect.signature(attr)
-                actual_params = list(sig.parameters.values())
+                # Check method signature
+                try:
+                    from inspect import signature
+                    method_sig = signature(attr)
+                    iface_sig = signature(desc)
+                    
+                    if method_sig != iface_sig:
+                        errors['wrong_signature'].append(name)
                 
-                # Check required params (excluding self)
-                if len(actual_params) < len(required):
-                    errors['wrong_signature'].append(name)
+                except ValueError:
+                    # Can't get signature, skip check
+                    pass
 
         except Exception as e:
-            errors['verification_error'].append((name, str(e)))
+            errors['error'].append((name, str(e)))
 
     # Handle errors
-    if errors:
-        if sum(len(errs) for errs in errors.values()) == 1:
-            # Single error case
-            for err_type, err_list in errors.items():
-                if err_list:
-                    if err_type == 'missing':
-                        raise BrokenImplementation(iface, err_list[0])
-                    elif err_type == 'not_callable':
-                        raise BrokenMethodImplementation(iface, err_list[0])
-                    elif err_type == 'wrong_signature':
-                        raise BrokenMethodImplementation(iface, err_list[0])
-                    else:
-                        raise Invalid(f"Error verifying {err_list[0][0]}: {err_list[0][1]}")
-        
-        # Multiple errors case
-        error_msg = []
-        for err_type, err_list in errors.items():
-            if err_type == 'missing':
-                error_msg.extend(f"Missing attribute: {name}" for name in err_list)
-            elif err_type == 'not_callable':
-                error_msg.extend(f"Attribute not callable: {name}" for name in err_list)
-            elif err_type == 'wrong_signature':
-                error_msg.extend(f"Wrong method signature: {name}" for name in err_list)
-            else:
-                error_msg.extend(f"Error verifying {name}: {err}" for name, err in err_list)
-        
-        raise Invalid("\n".join(error_msg))
+    if not errors:
+        return True
 
-    return True
+    # Collect all error messages
+    error_msgs = []
+    if errors['missing']:
+        error_msgs.append(f"Missing attributes: {', '.join(errors['missing'])}")
+    if errors['not_callable']:
+        error_msgs.append(f"Attributes that should be methods: {', '.join(errors['not_callable'])}")
+    if errors['wrong_signature']:
+        error_msgs.append(f"Methods with wrong signatures: {', '.join(errors['wrong_signature'])}")
+    if errors['error']:
+        error_msgs.extend(f"Error checking {name}: {msg}" for name, msg in errors['error'])
+
+    # If single error, raise directly
+    if len(error_msgs) == 1:
+        raise BrokenImplementation(iface, error_msgs[0])
+
+    # Multiple errors
+    raise Invalid("\n".join(error_msgs))

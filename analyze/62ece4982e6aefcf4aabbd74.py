@@ -23,10 +23,8 @@ def prepare_repository_from_archive(
     elif zipfile.is_zipfile(archive_path):
         with zipfile.ZipFile(archive_path) as zip_file:
             zip_file.extractall(path=temp_dir)
-    else:
-        raise ValueError("Unsupported archive format")
-
-    # Convert temp directory path to file URL
+            
+    # Convert temp directory path to file URL format
     repo_url = Path(temp_dir).as_uri()
     
     return repo_url

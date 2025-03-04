@@ -4,25 +4,23 @@ def _update_context(self, context):
     
     # Find error fields in the graph
     for field in self.fields:
-        # Check if field has error components
-        if field.startswith('error_'):
-            # Extract base field name and error type
-            base_field, error_type = field.split('error_')[1].split('_')
+        # Check for error fields (those ending in _low or _high)
+        if field.endswith('_low') or field.endswith('_high'):
+            # Get base field name without _low/_high
+            base_field = field[:-4]
+            # Get error direction (low/high)
+            direction = field[-3:]
             
-            # Map the base field to x,y,z coordinate name
-            if base_field in coord_map:
-                coord_name = coord_map[base_field]
+            # Map the field to x,y,z coordinate if possible
+            coord = coord_map.get(base_field, base_field)
+            
+            # Initialize error dict if needed
+            if not hasattr(context, 'error'):
+                context.error = {}
                 
-                # Initialize error dict if needed
-                if 'error' not in context:
-                    context['error'] = {}
-                    
-                # Add error index to context
-                error_key = f"{coord_name}_{error_type}"
-                if error_key not in context['error']:
-                    context['error'][error_key] = {}
-                    
-                # Store the field index
-                context['error'][error_key]['index'] = self.fields.index(field)
-                
+            # Add error index to context
+            if coord not in context.error:
+                context.error[coord] = {}
+            context.error[coord][direction] = {'index': self.fields.index(field)}
+            
     return context
