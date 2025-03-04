@@ -33,7 +33,7 @@ def _explore_folder(folder):
             # If XML file, use as key
             if ext.lower() == '.xml':
                 file_groups[base_name]['xml'] = file_path
-            # Group other files by extension under same base name
+            # Group other files with same basename
             else:
                 if 'other' not in file_groups[base_name]:
                     file_groups[base_name]['other'] = []

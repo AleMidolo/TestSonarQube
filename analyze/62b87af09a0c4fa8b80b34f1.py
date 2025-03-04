@@ -16,19 +16,16 @@ def fill(self, coord, weight=1):
     # Find the bin indices for each dimension
     indices = []
     for dim, x in enumerate(coord):
-        # Find the bin index using binary search
+        # Find rightmost edge that is <= x using binary search
         edges = self.edges[dim]
-        left = 0
-        right = len(edges) - 1
-        
+        left, right = 0, len(edges)
         while left < right:
             mid = (left + right) // 2
-            if x < edges[mid]:
-                right = mid
-            else:
+            if edges[mid] <= x:
                 left = mid + 1
-                
+            else:
+                right = mid
         indices.append(left - 1)
-    
+        
     # Add weight to the bin
     self.values[tuple(indices)] += weight

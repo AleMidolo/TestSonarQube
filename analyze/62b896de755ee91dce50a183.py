@@ -24,44 +24,48 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         # Parse the string using internal _parse method
         res, tokens = self._parse(timestr, **kwargs)
 
-        # If no tokens found and fuzzy parsing not enabled, raise error
-        if not tokens and not kwargs.get('fuzzy', False):
-            raise ParserError("String does not contain a date.")
+        # If no tokens were found, raise error
+        if res is None:
+            raise ParserError("String does not contain a date")
 
-        # Build datetime object
-        if res.year is None:
-            res.year = default.year if default else datetime.now().year
-        if res.month is None:
-            res.month = default.month if default else 1
-        if res.day is None:
-            res.day = default.day if default else 1
+        # Apply timezone handling
+        if res.tzinfo is not None and ignoretz:
+            res = res.replace(tzinfo=None)
+        elif res.tzinfo is None and tzinfos is not None and not ignoretz:
+            # Try to apply timezone from tzinfos
+            if isinstance(tzinfos, dict):
+                if res.tzname() in tzinfos:
+                    tzinfo = tzinfos[res.tzname()]
+                    if isinstance(tzinfo, int):
+                        tzinfo = tzoffset(res.tzname(), tzinfo)
+                    res = res.replace(tzinfo=tzinfo)
+            elif callable(tzinfos):
+                res = res.replace(tzinfo=tzinfos(res.tzname(), res.utcoffset()))
 
-        # Create aware or naive datetime based on ignoretz
-        if res.tzname and not ignoretz:
-            if tzinfos is not None:
-                # Handle tzinfos dictionary or callable
-                if isinstance(tzinfos, dict):
-                    tz = tzinfos.get(res.tzname)
-                else:
-                    tz = tzinfos(res.tzname, res.tzoffset)
-                if tz is None:
-                    raise ParserError(f"Unknown timezone name: {res.tzname}")
-            elif res.tzoffset:
-                tz = datetime.timezone(datetime.timedelta(seconds=res.tzoffset))
-            else:
-                tz = None
-        else:
-            tz = None
+        # Apply defaults if provided
+        if default is not None:
+            if not isinstance(default, datetime.datetime):
+                raise TypeError("Default must be a datetime.datetime object")
+            
+            # Replace any None values with defaults
+            current = res.timetuple()
+            default = default.timetuple()
+            
+            res = res.replace(
+                year=current.tm_year or default.tm_year,
+                month=current.tm_mon or default.tm_mon,
+                day=current.tm_mday or default.tm_mday,
+                hour=current.tm_hour or default.tm_hour,
+                minute=current.tm_min or default.tm_min,
+                second=current.tm_sec or default.tm_sec,
+                microsecond=res.microsecond or default.microsecond
+            )
 
-        dt = datetime.datetime(
-            year=res.year, month=res.month, day=res.day,
-            hour=res.hour or 0, minute=res.minute or 0, second=res.second or 0,
-            microsecond=res.microsecond or 0, tzinfo=tz
-        )
-
+        # Return results based on fuzzy_with_tokens setting
         if kwargs.get('fuzzy_with_tokens', False):
-            return dt, tokens
-        return dt
+            return res, tokens
+        else:
+            return res
 
-    except (ValueError, OverflowError) as e:
-        raise ParserError(f"Unknown string format: {timestr}") from e
+    except (TypeError, ValueError, OverflowError) as e:
+        raise ParserError(str(e))

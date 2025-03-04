@@ -9,20 +9,17 @@ def validate_as_prior_version(self, prior):
     # Check that prior is an InventoryValidator object
     if not isinstance(prior, type(self)):
         raise TypeError("Prior must be an InventoryValidator object")
-
+        
     # Check that prior timestamp is before current timestamp
     if prior.timestamp >= self.timestamp:
         raise ValueError("Prior inventory must have earlier timestamp")
-
+        
     # Check that all items in prior exist in current inventory
-    for item_id in prior.inventory:
+    # with same or greater quantities
+    for item_id, prior_qty in prior.inventory.items():
         if item_id not in self.inventory:
             raise ValueError(f"Item {item_id} from prior inventory missing in current")
-
-    # Check that quantities only increase
-    for item_id, prior_qty in prior.inventory.items():
-        current_qty = self.inventory[item_id]
-        if current_qty < prior_qty:
-            raise ValueError(f"Quantity decreased for item {item_id}")
-
+        if self.inventory[item_id] < prior_qty:
+            raise ValueError(f"Item {item_id} has lower quantity than prior version")
+            
     return True

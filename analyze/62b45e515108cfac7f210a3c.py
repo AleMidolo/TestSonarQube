@@ -7,7 +7,7 @@ def initialize(self):
     
     # Create OCFL storage root marker file
     namaste_file = os.path.join(self.storage_root, "0=ocfl_1.0")
-    with open(namaste_file, "w") as f:
+    with open(namaste_file, 'w') as f:
         f.write("ocfl_1.0")
         
     # Create storage root inventory
@@ -23,7 +23,7 @@ def initialize(self):
     
     # Write inventory file
     inventory_path = os.path.join(self.storage_root, "inventory.json")
-    with open(inventory_path, "w") as f:
+    with open(inventory_path, 'w') as f:
         json.dump(inventory, f, indent=2)
         
     # Create content directory

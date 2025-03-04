@@ -14,34 +14,39 @@ _borgmatic()
     # List of all borgmatic commands
     opts="init create prune check list info export-tar extract mount umount rcreate rlist rinfo rdelete config validate generate-key"
     
-    # List of options that take config file paths
-    config_opts="-c --config --borgmatic-source-directory"
+    # List of options that take values
+    value_opts="-c --config --repository --archive --destination --json --monitoring-verbosity --verbosity"
     
-    # Handle completion for different cases
+    # Handle option completion
+    if [[ ${cur} == -* ]]; then
+        COMPREPLY=( $(compgen -W "--help --version --borgmatic-source-directory --verbosity \
+            --json --monitoring-verbosity -c --config --repository --archive \
+            --destination --dry-run --progress --stats --list --files --prefix" -- ${cur}) )
+        return 0
+    fi
+    
+    # Handle command completion
+    if [[ ${COMP_CWORD} -eq 1 ]]; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+    
+    # Handle value completion for specific options
     case "${prev}" in
-        borgmatic)
-            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-            return 0
-            ;;
         -c|--config)
-            COMPREPLY=( $(compgen -f -X '!*.yaml' -- ${cur}) )
+            COMPREPLY=( $(compgen -f -- ${cur}) )
             return 0
             ;;
-        --borgmatic-source-directory)
-            COMPREPLY=( $(compgen -d -- ${cur}) )
+        --repository|--archive|--destination)
+            COMPREPLY=( $(compgen -f -- ${cur}) )
             return 0
             ;;
-        *)
-            # If current word starts with -, complete with options
-            if [[ ${cur} == -* ]] ; then
-                COMPREPLY=( $(compgen -W "${config_opts}" -- ${cur}) )
-                return 0
-            fi
+        --verbosity|--monitoring-verbosity)
+            COMPREPLY=( $(compgen -W "0 1 2" -- ${cur}) )
+            return 0
             ;;
     esac
     
-    # Default to completing files
-    COMPREPLY=( $(compgen -f -- ${cur}) )
     return 0
 }
 

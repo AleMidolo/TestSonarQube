@@ -21,7 +21,7 @@ def verifyClass(iface, candidate, tentative=False):
             else:
                 raise AttributeError(f"'{attr}' not found in candidate class")
                 
-        # Get interface and candidate attributes
+        # Get the interface and candidate attributes
         iface_attr = getattr(iface, attr)
         candidate_attr = getattr(candidate, attr)
         
@@ -30,10 +30,11 @@ def verifyClass(iface, candidate, tentative=False):
             if not callable(candidate_attr):
                 raise TypeError(f"'{attr}' must be callable")
                 
-            # Check method signature matches
+            # Check method signature compatibility
             iface_sig = str(iface_attr.__code__.co_varnames)
             candidate_sig = str(candidate_attr.__code__.co_varnames)
+            
             if not tentative and iface_sig != candidate_sig:
                 raise TypeError(f"Method signature mismatch for '{attr}'")
-                
+    
     return True

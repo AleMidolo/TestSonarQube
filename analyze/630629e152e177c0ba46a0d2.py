@@ -23,10 +23,10 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         response = requests.get(webfinger_url)
         response.raise_for_status()
         
-        # Parse the JSON response
+        # Parse the response
         data = response.json()
         
-        # Extract relevant information
+        # Initialize result dictionary
         result = {
             'handle': handle,
             'host': host,
@@ -37,25 +37,22 @@ def retrieve_and_parse_diaspora_webfinger(handle):
             'pubkey': None
         }
         
-        # Parse links
+        # Extract relevant links and properties
         for link in data.get('links', []):
             rel = link.get('rel', '')
-            href = link.get('href', '')
             
             if rel == 'http://microformats.org/profile/hcard':
-                result['profile_url'] = href
+                result['profile_url'] = link.get('href')
             elif rel == 'http://schemas.google.com/g/2010#updates-from':
-                result['atom_url'] = href
+                result['atom_url'] = link.get('href')
             elif rel == 'salmon':
-                result['salmon_url'] = href
+                result['salmon_url'] = link.get('href')
                 
-        # Get public key if available
+        # Extract additional properties
         for prop in data.get('properties', {}).items():
-            if prop[0] == 'http://joindiaspora.com/guid':
+            if 'guid' in prop[0]:
                 result['guid'] = prop[1]
-            elif prop[0] == 'http://joindiaspora.com/seed_location':
-                result['pod'] = prop[1]
-            elif prop[0] == 'http://joindiaspora.com/public_key':
+            elif 'pubkey' in prop[0]:
                 result['pubkey'] = prop[1]
                 
         return result

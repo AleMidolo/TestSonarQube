@@ -11,8 +11,7 @@ def _get_seq_with_type(seq, bufsize=None):
     # Convert to list if not a sequence
     if hasattr(seq, '__iter__'):
         # Convert iterator to list
-        seq_list = list(seq)
-        return seq_list, list
-    
-    # If not iterable, wrap in list
-    return [seq], list
+        return list(seq), list
+    else:
+        # Wrap single item in list
+        return [seq], list

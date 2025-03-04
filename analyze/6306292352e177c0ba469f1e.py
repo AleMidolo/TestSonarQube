@@ -7,25 +7,31 @@ def process_text_links(text):
     # Regular expression for finding URLs
     url_pattern = r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
     
-    # Regular expression for finding HTML links
-    html_link_pattern = r'<a[^>]*>.*?</a>'
+    # Find existing <a> tags
+    a_tag_pattern = r'<a[^>]*>.*?</a>'
     
-    # First process existing HTML links
-    def add_attributes(match):
-        link = match.group(0)
-        if 'target=' not in link:
-            link = link.replace('<a ', '<a target="_blank" rel="noopener noreferrer" ')
-        return link
+    # Split text to preserve existing <a> tags
+    parts = re.split(a_tag_pattern, text)
+    links = re.findall(a_tag_pattern, text)
     
-    text = re.sub(html_link_pattern, add_attributes, text)
+    result = []
+    for i, part in enumerate(parts):
+        # Process plain text parts
+        processed_part = re.sub(
+            url_pattern,
+            lambda m: f'<a href="{m.group(0)}" target="_blank" rel="noopener noreferrer">{m.group(0)}</a>',
+            part
+        )
+        result.append(processed_part)
+        
+        # Add back preserved <a> tags
+        if i < len(links):
+            # Add target and rel attributes to existing links if they don't have them
+            link = links[i]
+            if 'target=' not in link:
+                link = link.replace('<a ', '<a target="_blank" ')
+            if 'rel=' not in link:
+                link = link.replace('<a ', '<a rel="noopener noreferrer" ')
+            result.append(link)
     
-    # Then convert plain URLs to HTML links
-    def linkify(match):
-        url = match.group(0)
-        if not url.startswith(('http://', 'https://')):
-            url = 'http://' + url
-        return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{match.group(0)}</a>'
-    
-    text = re.sub(url_pattern, linkify, text)
-    
-    return text
+    return ''.join(result)

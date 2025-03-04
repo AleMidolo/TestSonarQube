@@ -19,36 +19,44 @@ def validate(self, inventory, extract_spec_version=False):
             pass
 
     # Validate required fields
-    required_fields = ['name', 'items']
+    required_fields = ['id', 'type', 'items']
     for field in required_fields:
         if field not in inventory:
             raise ValueError(f"Missing required field: {field}")
 
-    # Validate name is string
-    if not isinstance(inventory['name'], str):
-        raise ValueError("Inventory name must be a string")
+    # Validate ID
+    if not isinstance(inventory['id'], str):
+        raise ValueError("ID must be a string")
 
-    # Validate items is list
+    # Validate type
+    if not isinstance(inventory['type'], str):
+        raise ValueError("Type must be a string")
+    if not inventory['type'].startswith('inventory/'):
+        raise ValueError("Type must start with 'inventory/'")
+
+    # Validate items
     if not isinstance(inventory['items'], list):
         raise ValueError("Items must be a list")
 
-    # Validate each item
+    # Validate each item in items
     for item in inventory['items']:
         if not isinstance(item, dict):
             raise ValueError("Each item must be a dictionary")
         
         # Check required item fields
-        required_item_fields = ['id', 'quantity']
+        required_item_fields = ['id', 'count']
         for field in required_item_fields:
             if field not in item:
                 raise ValueError(f"Item missing required field: {field}")
-
-        # Validate item field types
+        
+        # Validate item ID
         if not isinstance(item['id'], str):
-            raise ValueError("Item id must be a string")
-        if not isinstance(item['quantity'], (int, float)):
-            raise ValueError("Item quantity must be a number")
-        if item['quantity'] < 0:
-            raise ValueError("Item quantity cannot be negative")
+            raise ValueError("Item ID must be a string")
+            
+        # Validate item count
+        if not isinstance(item['count'], (int, float)):
+            raise ValueError("Item count must be a number")
+        if item['count'] < 0:
+            raise ValueError("Item count cannot be negative")
 
     return True

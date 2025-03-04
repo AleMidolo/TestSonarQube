@@ -10,8 +10,8 @@ def check_sender_and_entity_handle_match(sender_handle, entity_handle):
         return False
         
     # Normalize handles by converting to lowercase and stripping whitespace
-    sender = str(sender_handle).lower().strip()
-    entity = str(entity_handle).lower().strip()
+    sender = sender_handle.lower().strip()
+    entity = entity_handle.lower().strip()
     
-    # Compare normalized handles
+    # Check if handles match exactly
     return sender == entity
