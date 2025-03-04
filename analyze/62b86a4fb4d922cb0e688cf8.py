@@ -10,23 +10,21 @@ def validate_value(value):
     """
     import re
 
-    # Expresión regular para validar que el valor solo contenga letras, números y espacios
-    pattern = r'^[a-zA-Z0-9\s]+$'
+    # Expresión regular que valida:
+    # - Al menos una letra mayúscula
+    # - Al menos una letra minúscula 
+    # - Al menos un número
+    # - Al menos un caracter especial
+    # - Longitud mínima de 8 caracteres
+    pattern = r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
 
-    # Validar que el valor no esté vacío
-    if not value:
-        raise ValidationError("El valor no puede estar vacío")
-
-    # Validar que el valor sea una cadena de texto
     if not isinstance(value, str):
         raise ValidationError("El valor debe ser una cadena de texto")
 
-    # Validar que el valor cumpla con la expresión regular
     if not re.match(pattern, value):
-        raise ValidationError("El valor solo puede contener letras, números y espacios")
+        raise ValidationError("El valor no cumple con el formato requerido")
 
     return True
 
 class ValidationError(Exception):
-    """Excepción personalizada para errores de validación"""
     pass

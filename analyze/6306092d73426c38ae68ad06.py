@@ -8,9 +8,9 @@ def get_silent_args(self, args):
     silent_args = []
     
     for arg in args:
-        if arg.startswith('-s') or arg.startswith('--silent'):
+        if str(arg).startswith('-s') or str(arg).startswith('--silent'):
             # Remove the -s/--silent prefix to get the argument name
-            arg_name = arg.split('=')[0].replace('-s', '').replace('--silent', '').strip('-')
+            arg_name = str(arg).replace('-s', '').replace('--silent', '').strip('-')
             if arg_name:
                 silent_args.append(arg_name)
                 

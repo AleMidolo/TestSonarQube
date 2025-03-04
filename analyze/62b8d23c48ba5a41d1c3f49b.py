@@ -11,7 +11,7 @@ def popitem(self):
     # Obtener el valor asociado
     value = self.cache[key]
     
-    # Eliminar la clave del cache y del orden
+    # Eliminar la entrada del cache y del orden
     del self.cache[key]
     self.order.remove(key)
     

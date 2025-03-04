@@ -11,42 +11,36 @@ def verifyObject(iface, candidate, tentative=False):
 
     # Get all attributes defined by the interface
     for name, desc in iface.namesAndDescriptions(1):
-        # Skip if attribute doesn't exist
-        if not hasattr(candidate, name):
-            errors.append(Invalid(f"The object is missing attribute '{name}' from interface {iface.__name__}"))
+        # Check if attribute exists
+        try:
+            attr = getattr(candidate, name)
+        except AttributeError:
+            errors.append(Invalid(f"The object is missing attribute '{name}' required by {iface.__name__}"))
             continue
 
-        attr = getattr(candidate, name)
-        
         # If it's a method, verify the signature
         if isinstance(desc, Method):
-            # Get method object
-            if not callable(attr):
-                errors.append(Invalid(f"'{name}' is not callable but interface {iface.__name__} defines it as a method"))
-                continue
-
-            # Verify method signature
+            # Get method signature
             try:
-                from inspect import signature
-                method_sig = signature(attr)
-                interface_sig = signature(desc)
+                import inspect
+                method_sig = inspect.signature(attr)
+                iface_sig = inspect.signature(desc.interface[name])
                 
-                # Compare parameters
-                if str(method_sig) != str(interface_sig):
+                # Compare signatures
+                if str(method_sig) != str(iface_sig):
                     errors.append(Invalid(
-                        f"Method '{name}' signature {method_sig} does not match interface signature {interface_sig}"
+                        f"Method '{name}' has wrong signature. "
+                        f"Expected {str(iface_sig)}, got {str(method_sig)}"
                     ))
-            except ValueError:
+            except (ValueError, TypeError):
                 # Can't get signature, skip verification
                 pass
 
-    # If we have errors, raise them
-    if errors:
-        if len(errors) == 1:
-            raise errors[0]
-        raise Invalid(
-            f"The object failed to implement interface {iface.__name__}: " + 
-            "; ".join(str(e) for e in errors)
-        )
-
+    # If there are multiple errors, raise them all together
+    if len(errors) > 1:
+        raise Invalid(errors)
+    # If there's exactly one error, raise it directly
+    elif len(errors) == 1:
+        raise errors[0]
+    
     return True

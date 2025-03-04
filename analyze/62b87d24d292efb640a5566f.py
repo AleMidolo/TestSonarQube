@@ -9,8 +9,8 @@ def render(pieces, style):
             rendered.append(piece.replace(".", "•"))
         elif style == "arrows":
             rendered.append(piece.replace("<", "←").replace(">", "→"))
-        elif style == "stars": 
-            rendered.append(piece.replace("*", "★"))
+        elif style == "unicode":
+            rendered.append(piece.replace("-", "─").replace("|", "│"))
         else:
             rendered.append(piece)
             

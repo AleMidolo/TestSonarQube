@@ -33,7 +33,7 @@ def parse_diaspora_webfinger(document: str) -> Dict:
         return result
         
     except json.JSONDecodeError:
-        # If JSON fails, try parsing as XRD
+        # If JSON parsing fails, try XRD format
         try:
             # Remove XML namespace to simplify parsing
             document = document.replace('xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0"', '')

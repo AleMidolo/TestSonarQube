@@ -27,7 +27,7 @@ def prepare_repository_from_archive(
         with zipfile.ZipFile(archive_path, 'r') as zip_ref:
             zip_ref.extractall(temp_dir)
             
-    # Convert temp_dir to file URL format
-    repo_url = f"file://{temp_dir}"
+    # Convert temp directory path to file URL format
+    repo_url = Path(temp_dir).as_uri()
     
     return repo_url

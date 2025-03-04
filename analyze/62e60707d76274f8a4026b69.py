@@ -2,19 +2,26 @@ def point_type(name, fields, srid_map):
     """
     Crear dinámicamente una subclase de 'Point'.
     """
-    class DynamicPoint(Point):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            for field in fields:
-                setattr(self, field, None)
-                
-        def __str__(self):
-            field_str = ', '.join(f'{field}={getattr(self, field)}' for field in fields)
-            return f"{name}({field_str}, srid={self.srid})"
+    from django.contrib.gis.db import models
+    
+    class Meta:
+        abstract = True
+    
+    attrs = {
+        '__module__': 'django.contrib.gis.db.models',
+        'Meta': Meta,
+    }
+    
+    # Add fields to attrs dictionary
+    for field_name, field_type in fields.items():
+        if isinstance(field_type, tuple):
+            field_class, field_args = field_type
+            attrs[field_name] = field_class(*field_args)
+        else:
+            attrs[field_name] = field_type()
             
-        @property
-        def srid(self):
-            return srid_map.get(self.__class__.__name__, 4326)
-            
-    DynamicPoint.__name__ = name
-    return DynamicPoint
+    # Add geometry field with SRID mapping
+    attrs['geom'] = models.PointField(srid=srid_map.get(name, 4326))
+    
+    # Create and return new Point subclass
+    return type(name, (models.Model,), attrs)

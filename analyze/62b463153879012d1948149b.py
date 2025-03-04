@@ -21,5 +21,5 @@ def match_file_by_prefix(prefix, file_path):
     import os
     filename = os.path.basename(file_path)
     
-    # Check if filename starts with the given prefix
+    # Check if filename starts with the prefix
     return filename.startswith(prefix)
