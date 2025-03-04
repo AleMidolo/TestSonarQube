@@ -26,7 +26,7 @@ def from_ticks(cls, ticks, tz=None):
     
     # Create Time object using the calculated components
     return cls(hour=int(hours), 
-              minute=int(minutes),
+              minute=int(minutes), 
               second=int(seconds),
-              microsecond=int(microseconds),
+              microsecond=int(microseconds), 
               tzinfo=tz)

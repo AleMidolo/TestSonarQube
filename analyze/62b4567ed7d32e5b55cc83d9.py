@@ -10,29 +10,33 @@ def deep_merge_nodes(nodes):
             result[key] = (key_node, value_node)
             continue
             
-        # If key exists, need to merge values
+        # If key exists, merge the values
         existing_value = result[key][1]
         
         # If both nodes are mapping nodes, merge them recursively
         if (isinstance(existing_value, type(value_node)) and 
-            hasattr(existing_value, 'value') and 
-            hasattr(value_node, 'value')):
+            hasattr(existing_value, 'tag') and
+            existing_value.tag == 'tag:yaml.org,2002:map' and
+            value_node.tag == 'tag:yaml.org,2002:map'):
             
-            # Create dict of existing key-value pairs
-            existing_dict = {k.value: (k,v) for k,v in existing_value.value}
+            # Convert mapping node values to dict for easier merging
+            existing_dict = {k.value: v for k,v in existing_value.value}
+            new_dict = {k.value: v for k,v in value_node.value}
             
-            # Merge in new key-value pairs
-            for k, v in value_node.value:
-                existing_dict[k.value] = (k,v)
+            # Merge the dictionaries
+            for k, v in new_dict.items():
+                existing_dict[k] = v
                 
-            # Create new MappingNode with merged values
-            merged_value = type(value_node)(
-                tag=value_node.tag,
-                value=list(existing_dict.values())
-            )
-            result[key] = (key_node, merged_value)
+            # Convert back to list of tuples format
+            merged_value = [(k_node, v) for k_node, v in value_node.value 
+                          if k_node.value in existing_dict]
             
-        # If not both mapping nodes, take the latest value
+            result[key] = (key_node, type(value_node)(
+                tag=value_node.tag,
+                value=merged_value
+            ))
+            
+        # For non-mapping nodes, take the latest value
         else:
             result[key] = (key_node, value_node)
             

@@ -14,16 +14,18 @@ def initialize(self):
     # Crear archivo ocfl_layout.json
     layout = {
         "extension": "0000",
-        "description": "OCFL Storage Root",
-        "type": "https://ocfl.io/1.0/spec/#root",
-        "digestAlgorithm": "sha512"
+        "description": "Standard OCFL Storage Root",
+        "layout": {
+            "type": "flat",
+            "digest-algorithm": "sha512"
+        }
     }
     
     layout_path = os.path.join(self.root_path, "ocfl_layout.json")
     with open(layout_path, 'w') as f:
         json.dump(layout, f, indent=2)
 
-    # Crear directorio objects/ 
-    objects_dir = os.path.join(self.root_path, "objects")
-    if not os.path.exists(objects_dir):
-        os.makedirs(objects_dir)
+    # Crear directorio objects
+    objects_path = os.path.join(self.root_path, "objects")
+    if not os.path.exists(objects_path):
+        os.makedirs(objects_path)

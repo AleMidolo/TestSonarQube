@@ -16,7 +16,7 @@ def vertex3tuple(vertices):
         prev = vertices[(i - 1) % n]
         # Vértice actual
         curr = vertices[i]
-        # Siguiente vértice (usando módulo para el primer vértice)
+        # Siguiente vértice (usando módulo para volver al inicio)
         next = vertices[(i + 1) % n]
         
         # Agrega la tupla de 3 vértices consecutivos

@@ -16,24 +16,24 @@ def _explore_folder(folder):
     import os
     from collections import defaultdict
     
-    # Diccionario para almacenar los archivos agrupados por nombre base
-    files_by_base = defaultdict(dict)
+    # Diccionario para almacenar los archivos agrupados
+    files_dict = defaultdict(dict)
     
     # Recorrer todos los archivos en la carpeta
     for filename in os.listdir(folder):
         filepath = os.path.join(folder, filename)
         
-        # Solo procesar archivos, no directorios
+        # Solo procesar archivos, no carpetas
         if os.path.isfile(filepath):
-            # Obtener extensión y nombre base
-            base, ext = os.path.splitext(filename)
+            # Obtener nombre base y extensión
+            basename, ext = os.path.splitext(filename)
             
-            # Remover el guión y número al final del nombre base si existe
-            # Ejemplo: "archivo-1.xml" -> "archivo"
-            base = base.rsplit('-', 1)[0]
-            
-            # Guardar la ruta del archivo en el diccionario
-            # usando la extensión como clave
-            files_by_base[base][ext.lower()] = filepath
-            
-    return dict(files_by_base)
+            # Si es XML, usar como clave base
+            if ext.lower() == '.xml':
+                files_dict[basename]['xml'] = filepath
+            # Si es PDF, agregar a la entrada correspondiente
+            elif ext.lower() == '.pdf':
+                files_dict[basename]['pdf'] = filepath
+    
+    # Convertir defaultdict a dict normal
+    return dict(files_dict)

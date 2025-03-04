@@ -11,26 +11,23 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     
     # Recorrer recursivamente la jerarquía
     for root, dirs, files in self.walk():
-        for file in files:
-            num_objects += 1
-            
-            try:
-                # Validar objeto si está habilitado
-                if validate_objects:
-                    obj = self.get_object(file)
-                    
-                    # Verificar digests si está habilitado
-                    if check_digests:
-                        if obj.verify_digest():
-                            good_objects += 1
-                        elif show_warnings:
-                            print(f"Warning: Invalid digest for {file}")
-                    else:
-                        good_objects += 1
-                        
-            except Exception as e:
-                if show_warnings:
-                    print(f"Warning: Error validating {file}: {str(e)}")
-                continue
+        
+        # Validar cada objeto encontrado
+        if validate_objects:
+            for obj in files:
+                num_objects += 1
                 
+                try:
+                    # Verificar integridad del objeto
+                    if check_digests:
+                        if self.verify_object_digest(obj):
+                            good_objects += 1
+                    else:
+                        if self.verify_object(obj):
+                            good_objects += 1
+                            
+                except Exception as e:
+                    if show_warnings:
+                        print(f"Warning: Error validating object {obj}: {str(e)}")
+                        
     return num_objects, good_objects

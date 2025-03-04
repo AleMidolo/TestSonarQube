@@ -14,7 +14,7 @@ def parse_arguments(*unparsed_arguments):
     parsed_args = {}
     
     # If no arguments provided, show help and exit
-    if not unparsed_arguments:
+    if len(unparsed_arguments) == 0:
         parser.print_help()
         return {}
         

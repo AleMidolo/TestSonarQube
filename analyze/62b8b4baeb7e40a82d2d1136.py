@@ -8,7 +8,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     # Check if candidate claims to provide interface
     if not tentative and not iface.providedBy(candidate):
         errors['general'].append(
-            f"Class {candidate} does not implement interface {iface.__name__}"
+            f"Class {candidate.__class__.__name__} does not implement interface {iface.__name__}"
         )
 
     # Check methods and attributes
@@ -17,7 +17,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             # Check if method exists
             if not hasattr(candidate, name):
                 errors['methods'].append(
-                    f"Method '{name}' not provided by {candidate}"
+                    f"Method '{name}' not provided by {candidate.__class__.__name__}"
                 )
                 continue
 
@@ -28,41 +28,36 @@ def _verify(iface, candidate, tentative=False, vtype=None):
                 )
                 continue
 
-            # Check method signature if possible
+            # Check method signature
             try:
-                import inspect
-                impl_sig = inspect.signature(method)
-                iface_sig = inspect.signature(desc)
-                
+                from inspect import signature
+                impl_sig = signature(method)
+                iface_sig = signature(desc)
+
                 if impl_sig.parameters != iface_sig.parameters:
                     errors['signatures'].append(
                         f"Method '{name}' has incorrect signature: {impl_sig} != {iface_sig}"
                     )
-            except (ValueError, TypeError):
-                pass  # Skip signature checking if not possible
+            except ValueError:
+                # Can't get signature, skip verification
+                pass
 
         else:
-            # Check if attribute exists
+            # Check attributes
             if not hasattr(candidate, name):
                 errors['attributes'].append(
-                    f"Attribute '{name}' not provided by {candidate}"
+                    f"Attribute '{name}' not provided by {candidate.__class__.__name__}"
                 )
 
-    # If no errors, return True
-    if not any(errors.values()):
-        return True
-
-    # Collect all error messages
-    all_errors = []
-    for category, messages in errors.items():
-        all_errors.extend(messages)
-
-    # If only one error, raise it directly
-    if len(all_errors) == 1:
-        raise Invalid(all_errors[0])
-
-    # Otherwise raise all errors together
-    if all_errors:
-        raise Invalid('\n'.join(all_errors))
+    # If there are any errors, raise Invalid
+    if errors:
+        all_errors = []
+        for category, category_errors in errors.items():
+            all_errors.extend(category_errors)
+            
+        if len(all_errors) == 1:
+            raise Invalid(all_errors[0])
+        else:
+            raise Invalid("\n".join(all_errors))
 
     return True

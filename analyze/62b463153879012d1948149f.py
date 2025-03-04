@@ -25,7 +25,7 @@ def _eval_file(prefix, file_path):
     
     # Check if file is an asset or rendition
     if filename.startswith(prefix):
-        if '_rendition' in filename.lower():
+        if '_rendition' in filename:
             result['type'] = 'rendition'
         else:
             result['type'] = 'asset'

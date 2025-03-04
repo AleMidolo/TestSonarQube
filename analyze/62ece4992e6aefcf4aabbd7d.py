@@ -8,24 +8,20 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     module_name = func.__module__
     func_name = func.__name__
 
+    # Construir el comando Python para ejecutar la función
+    cmd = [sys.executable, '-c',
+           f'import {module_name}; {module_name}.{func_name}()']
+    
+    # Agregar argumentos adicionales
+    cmd.extend(args)
+
     # Preparar el entorno
     env = os.environ.copy()
     if extra_env:
         env.update(extra_env)
 
-    # Construir el comando Python para ejecutar la función
-    cmd = [
-        sys.executable,
-        '-c',
-        f'import {module_name}; {module_name}.{func_name}()'
-    ]
-
-    # Agregar argumentos adicionales
-    if args:
-        cmd.extend(args)
-
+    # Ejecutar el subproceso
     try:
-        # Ejecutar el subproceso
         result = subprocess.run(
             cmd,
             env=env,
@@ -36,8 +32,9 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
         )
         return result
     except subprocess.TimeoutExpired as e:
-        raise TimeoutError(f"La función {func_name} excedió el tiempo límite de {timeout} segundos") from e
+        print(f"El proceso excedió el tiempo límite de {timeout} segundos")
+        raise e
     except subprocess.CalledProcessError as e:
-        raise RuntimeError(f"Error al ejecutar {func_name}: {e.stderr}") from e
-    except Exception as e:
-        raise RuntimeError(f"Error inesperado al ejecutar {func_name}: {str(e)}") from e
+        print(f"El proceso falló con código de salida {e.returncode}")
+        print(f"Salida de error: {e.stderr}")
+        raise e

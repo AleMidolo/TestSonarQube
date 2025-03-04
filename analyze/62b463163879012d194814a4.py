@@ -26,17 +26,14 @@ def _explore_zipfile(zip_path):
             # Obtener el nombre base del archivo (sin extensión)
             base_name = os.path.splitext(os.path.basename(filename))[0]
             
-            # Si el archivo termina en .xml
+            # Si el archivo es XML, usarlo como clave para agrupar
             if filename.lower().endswith('.xml'):
-                # Usar el nombre base como clave
                 key = base_name
-            else:
-                # Para otros archivos, buscar el nombre base del XML relacionado
-                # Asumiendo que los archivos relacionados comparten el mismo nombre base
-                key = base_name.split('_')[0]  # Eliminar sufijos después del guión bajo
-            
-            # Agregar el nombre del archivo a la lista correspondiente
-            grouped_files[key].append(filename)
+                # Agregar todos los archivos que comparten el mismo nombre base
+                for related_file in zip_ref.namelist():
+                    related_base = os.path.splitext(os.path.basename(related_file))[0]
+                    if related_base == base_name:
+                        grouped_files[key].append(related_file)
     
     # Convertir defaultdict a dict regular
     return dict(grouped_files)

@@ -24,14 +24,13 @@ def find_path_type(path):
             content = f.read().strip()
             
         # Check content for OCFL root
-        if "ocfl_" in content.lower():
+        if content.startswith("ocfl_"):
             return "root"
-            
         # Check content for OCFL object
-        elif content.startswith("ocfl_object"):
+        elif content.startswith("ocfl_object_"):
             return "object"
             
+        return f"Error: Unknown Namaste content: {content}"
+        
     except Exception as e:
         return f"Error reading Namaste file: {str(e)}"
-        
-    return "Error: Unknown OCFL type"

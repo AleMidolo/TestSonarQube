@@ -2,30 +2,34 @@ def hydrate_time(nanoseconds, tz=None):
     """
     Hidratador para valores de `Time` y `LocalTime`.
 
-    :param nanoseconds: Nanoseconds since midnight
+    :param nanoseconds: Number of nanoseconds since midnight
     :param tz: Optional timezone 
     :return: Time
     """
     from datetime import time, timezone, timedelta
     
     # Calculate hours, minutes, seconds and microseconds from nanoseconds
-    total_seconds = nanoseconds // 1_000_000_000
-    hours = int(total_seconds // 3600)
-    minutes = int((total_seconds % 3600) // 60)
-    seconds = int(total_seconds % 60)
-    microseconds = int((nanoseconds % 1_000_000_000) // 1000)
+    total_microseconds = nanoseconds // 1000
+    hours = total_microseconds // (3600 * 1000000)
+    remaining = total_microseconds % (3600 * 1000000)
+    minutes = remaining // (60 * 1000000)
+    remaining = remaining % (60 * 1000000)
+    seconds = remaining // 1000000
+    microseconds = remaining % 1000000
 
-    # If timezone is provided, create timezone object
+    # Create time object
     if tz is not None:
+        # If timezone provided, create timezone object
         if isinstance(tz, str):
             offset = int(tz)
             tz = timezone(timedelta(hours=offset))
-    
-    # Create and return time object
-    return time(
-        hour=hours,
-        minute=minutes,
-        second=seconds,
-        microsecond=microseconds,
-        tzinfo=tz
-    )
+        return time(hour=int(hours), 
+                   minute=int(minutes),
+                   second=int(seconds),
+                   microsecond=int(microseconds),
+                   tzinfo=tz)
+    else:
+        return time(hour=int(hours),
+                   minute=int(minutes), 
+                   second=int(seconds),
+                   microsecond=int(microseconds))

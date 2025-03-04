@@ -22,14 +22,14 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
     if not type_class:
         raise ValueError(f"Tipo complejo desconocido: {type_name}")
 
-    # Crear instancia del tipo con las especificaciones
     try:
+        # Crear instancia del tipo complejo con los parámetros
         type_instance = type_class(
             subcommand=subcommand,
             option_name=option_name,
-            **spec_option
+            spec=spec_option
         )
+        return type_instance
+        
     except Exception as e:
         raise ValueError(f"Error al crear tipo complejo {type_name}: {str(e)}")
-
-    return type_instance

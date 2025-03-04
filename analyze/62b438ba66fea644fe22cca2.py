@@ -21,36 +21,20 @@ def deep_merge_nodes(nodes):
             existing_dict = {k.value: (k,v) for k,v in existing_value_node.value}
             new_dict = {k.value: (k,v) for k,v in value_node.value}
             
-            # Merge the dicts
-            for new_key, new_pair in new_dict.items():
+            # Merge the mapping values
+            for new_key, new_value in new_dict.items():
                 if new_key not in existing_dict:
-                    existing_dict[new_key] = new_pair
-                else:
-                    # Recursively merge if both are mapping nodes
-                    if ('map' in new_pair[1].tag and 
-                        'map' in existing_dict[new_key][1].tag):
-                        merged_value = deep_merge_nodes([
-                            (existing_dict[new_key][0], existing_dict[new_key][1]),
-                            (new_pair[0], new_pair[1])
-                        ])
-                        existing_dict[new_key] = merged_value[0]
-                    else:
-                        # For non-mapping nodes, take the newer value
-                        existing_dict[new_key] = new_pair
-                        
+                    existing_dict[new_key] = new_value
+            
             # Convert back to list of tuples
-            merged_value = [(k_node, v_node) for _, (k_node, v_node) 
-                          in existing_dict.items()]
+            merged_value = list(existing_dict.values())
             
             # Create new mapping node with merged values
-            merged[key] = (
-                key_node,
-                type(value_node)(tag=value_node.tag, value=merged_value)
-            )
+            merged[key] = (key_node, type(value_node)(tag=value_node.tag, value=merged_value))
             
         else:
-            # For non-mapping nodes, just take the newer value
-            merged[key] = (key_node, value_node)
+            # For non-mapping nodes, just keep the existing value
+            merged[key] = merged[key]
             
     # Convert merged dict back to list of tuples
-    return [(k_node, v_node) for _, (k_node, v_node) in merged.items()]
+    return list(merged.values())

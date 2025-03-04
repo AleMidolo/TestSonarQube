@@ -31,8 +31,6 @@ def absorb(self, args):
                         result[j] = expr1
                         modified = True
                         
-                    # Check negative absorption cases
-                    
                     # A & (~A | B) = A & B
                     elif (isinstance(expr1, str) and isinstance(expr2, tuple) and
                           len(expr2) == 3 and expr2[1] == '|' and

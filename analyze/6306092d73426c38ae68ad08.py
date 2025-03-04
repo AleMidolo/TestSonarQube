@@ -11,38 +11,28 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
     
     for option in options_spec:
         if 'required_when' in option:
-            required_condition = option['required_when']
+            required_when = option['required_when']
             
-            # Evaluar la condición required_when
-            condition_met = False
+            # Check if required_when is a string (single condition) or list (multiple conditions)
+            conditions = [required_when] if isinstance(required_when, str) else required_when
             
-            if isinstance(required_condition, dict):
-                # Si es un diccionario, verificar que los valores coincidan
-                for key, value in required_condition.items():
-                    if key in args and args[key] == value:
-                        condition_met = True
-                    else:
-                        condition_met = False
-                        break
-                        
-            elif callable(required_condition):
-                # Si es una función, evaluarla con los argumentos
-                try:
-                    condition_met = required_condition(args)
-                except Exception:
-                    condition_met = False
-                    
-            elif isinstance(required_condition, str):
-                # Si es un string, evaluar como expresión Python
-                try:
-                    # Crear un contexto con los argumentos
-                    eval_context = args.copy()
-                    condition_met = eval(required_condition, {"__builtins__": {}}, eval_context)
-                except Exception:
-                    condition_met = False
-            
-            # Si la condición se cumple, agregar el argumento a la lista
-            if condition_met:
-                conditionally_required.append(option['name'])
+            for condition in conditions:
+                # Split condition into argument name and expected value
+                arg_name, expected_value = condition.split('=')
+                arg_name = arg_name.strip()
+                expected_value = expected_value.strip()
                 
+                # Convert expected_value to proper type if needed
+                if expected_value.lower() == 'true':
+                    expected_value = True
+                elif expected_value.lower() == 'false':
+                    expected_value = False
+                elif expected_value.isdigit():
+                    expected_value = int(expected_value)
+                
+                # Check if the condition matches
+                if arg_name in args and args[arg_name] == expected_value:
+                    conditionally_required.append(option['name'])
+                    break  # Break inner loop if any condition matches
+                    
     return conditionally_required

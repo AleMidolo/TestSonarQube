@@ -13,7 +13,9 @@ def fetch_content_type(url: str) -> Optional[str]:
         content_type = response.headers.get('content-type')
         
         # Si existe content-type, retornarlo. Si no, retornar None
-        return content_type if content_type else None
+        if content_type:
+            return content_type.split(';')[0].strip()
+        return None
         
     except requests.RequestException:
         # En caso de error en la solicitud, retornar None

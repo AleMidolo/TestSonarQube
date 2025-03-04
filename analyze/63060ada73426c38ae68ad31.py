@@ -12,28 +12,33 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     
     # Iterar sobre los argumentos en values_dict
     for arg_name, value in values_dict.items():
-        # Obtener el tipo definido en la configuración
-        arg_type = parser_config.get(arg_name, {}).get('type', str)
+        # Obtener la configuración del argumento específico
+        arg_config = parser_config.get(arg_name, {})
         
-        # Ignorar si el valor es None
-        if value is None:
+        # Si el valor es None o vacío, continuar
+        if value is None or value == '':
             continue
             
+        # Obtener el tipo del argumento de la configuración
+        arg_type = arg_config.get('type', str)
+        
         try:
             # Convertir listas
-            if isinstance(value, list):
-                values_dict[arg_name] = [arg_type(v) for v in value]
-            # Convertir valores individuales
+            if isinstance(value, str) and ',' in value:
+                value = [item.strip() for item in value.split(',')]
+                if arg_type != list:
+                    value = [arg_type(item) for item in value]
+            # Convertir booleanos
+            elif arg_type == bool:
+                if isinstance(value, str):
+                    value = value.lower() in ('true', 't', 'yes', 'y', '1')
+            # Convertir otros tipos
             else:
-                # Manejar booleanos especialmente
-                if arg_type == bool:
-                    if isinstance(value, str):
-                        values_dict[arg_name] = value.lower() in ('true', 't', 'yes', 'y', '1')
-                    else:
-                        values_dict[arg_name] = bool(value)
-                else:
-                    values_dict[arg_name] = arg_type(value)
-                    
+                value = arg_type(value)
+                
+            # Actualizar el valor en el diccionario
+            values_dict[arg_name] = value
+            
         except (ValueError, TypeError):
-            # Si falla la conversión, dejar el valor original
+            # Si hay error en la conversión, dejar el valor original
             continue
