@@ -6,28 +6,30 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     :returns: a tuple of the form (image_id, netloc, use_ssl)
     :raises ValueError:
     """
+    from urllib.parse import urlparse
+    
     if not image_href:
         raise ValueError("Image href cannot be empty")
         
     # Try to parse the URL
     try:
-        parsed = urllib.parse.urlparse(image_href)
+        parsed = urlparse(image_href)
     except Exception:
-        raise ValueError(f"Invalid URL format: {image_href}")
-
+        raise ValueError(f"Invalid image href: {image_href}")
+        
     # Get the netloc (hostname)
     netloc = parsed.netloc
     if not netloc:
-        raise ValueError(f"No hostname found in URL: {image_href}")
-
-    # Determine if SSL should be used
+        raise ValueError(f"No hostname found in href: {image_href}")
+        
+    # Determine if using SSL
     use_ssl = parsed.scheme == 'https'
-
-    # Extract image ID from path
+    
+    # Get image ID from path
     path_parts = parsed.path.split('/')
     image_id = path_parts[-1] if path_parts else ''
     
     if not image_id:
-        raise ValueError(f"No image ID found in URL: {image_href}")
-
+        raise ValueError(f"No image ID found in href: {image_href}")
+        
     return (image_id, netloc, use_ssl)

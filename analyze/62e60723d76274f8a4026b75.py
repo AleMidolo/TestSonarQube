@@ -14,9 +14,9 @@ def round_half_to_even(n):
     # If decimal is exactly 0.5
     if decimal == 0.5:
         # Round to nearest even number
-        if int(n) % 2 == 0:  # If integer part is even
+        if int(n) % 2 == 0:
             return int(n)
-        else:  # If integer part is odd
+        else:
             return int(n) + 1
     
     # For all other cases, round normally

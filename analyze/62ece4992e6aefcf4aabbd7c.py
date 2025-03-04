@@ -6,7 +6,7 @@ def oneline(script, seperator=" && "):
     :param script: String containing multiline script
     :return: String with commands joined by separator
     """
-    # Split script into lines and remove empty lines
+    # Split script into lines and filter out empty lines
     lines = [line.strip() for line in script.split('\n') if line.strip()]
     
     # Join lines with separator

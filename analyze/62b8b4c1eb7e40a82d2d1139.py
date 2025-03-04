@@ -5,10 +5,10 @@ def verifyClass(iface, candidate, tentative=False):
     # Get all attributes defined in the interface
     iface_attrs = dir(iface)
     
-    # Get all attributes defined in the candidate class
+    # Get all attributes defined in the candidate
     candidate_attrs = dir(candidate)
     
-    # Check if all interface attributes exist in candidate
+    # Check each attribute required by the interface
     for attr in iface_attrs:
         # Skip private/special attributes
         if attr.startswith('_'):
@@ -21,7 +21,7 @@ def verifyClass(iface, candidate, tentative=False):
             else:
                 raise AttributeError(f"'{attr}' not found in candidate class")
                 
-        # Get interface and candidate attributes
+        # Get the interface and candidate attributes
         iface_attr = getattr(iface, attr)
         candidate_attr = getattr(candidate, attr)
         

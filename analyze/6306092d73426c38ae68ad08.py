@@ -24,23 +24,24 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
                 
         # Check if required_when is a dict with conditions
         elif isinstance(required_when, dict):
-            matches_all = True
+            conditions_met = True
             
             for key, value in required_when.items():
                 if key not in args or args[key] != value:
-                    matches_all = False
+                    conditions_met = False
                     break
                     
-            if matches_all:
+            if conditions_met:
                 required_args.append(option['name'])
                 
         # Check if required_when is a string expression
         elif isinstance(required_when, str):
             try:
+                # Evaluate the expression with args as context
                 if eval(required_when, {'args': args}):
                     required_args.append(option['name'])
             except:
-                # Skip invalid expressions
+                # Skip if expression evaluation fails
                 continue
                 
     return required_args

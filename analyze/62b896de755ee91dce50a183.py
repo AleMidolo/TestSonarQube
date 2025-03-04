@@ -28,37 +28,46 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         if res is None:
             raise ParserError("String does not contain a date.")
 
-        # Handle timezone information
-        if tzinfos is not None and not ignoretz:
-            tz = None
-            if isinstance(tzinfos, dict):
-                if res.tzname in tzinfos:
-                    tz = tzinfos[res.tzname]
-            elif callable(tzinfos):
-                tz = tzinfos(res.tzname, res.tzoffset)
+        # Build datetime object
+        if default is None:
+            default = datetime.datetime.now().replace(
+                hour=0, minute=0, second=0, microsecond=0)
+
+        # Replace any elements specified in res
+        repl = {}
+        for attr in ("year", "month", "day", "hour", 
+                    "minute", "second", "microsecond"):
+            if getattr(res, attr) is not None:
+                repl[attr] = getattr(res, attr)
+
+        ret = default.replace(**repl)
+
+        # Handle timezone
+        if not ignoretz:
+            if res.tzname:
+                if tzinfos is None:
+                    raise ParserError("tzinfos parameter required for %s" % 
+                                    res.tzname)
+                
+                if isinstance(tzinfos, dict):
+                    tz = tzinfos.get(res.tzname)
+                else:
+                    tz = tzinfos(res.tzname, res.tzoffset)
+                
+                if tz is None:
+                    raise ParserError("Unknown timezone for %s" % res.tzname)
+                
+                ret = ret.replace(tzinfo=tz)
             
-            if isinstance(tz, int):
-                tz = tzoffset(res.tzname, tz)
-            
-            res = res.replace(tzinfo=tz)
+            elif res.tzoffset is not None:
+                ret = ret.replace(tzinfo=datetime.timezone(
+                    datetime.timedelta(seconds=res.tzoffset)))
 
-        # Handle default values
-        if default is not None:
-            for attr in ["year", "month", "day", "hour", 
-                        "minute", "second", "microsecond"]:
-                value = getattr(res, attr, None)
-                if value is None:
-                    setattr(res, attr, getattr(default, attr))
-
-        # Remove timezone if ignoretz is True
-        if ignoretz:
-            res = res.replace(tzinfo=None)
-
-        # Return results based on fuzzy_with_tokens setting
+        # Return results
         if kwargs.get('fuzzy_with_tokens', False):
-            return res, tokens
+            return ret, tokens
         else:
-            return res
+            return ret
 
     except (TypeError, ValueError, OverflowError) as e:
         raise ParserError(str(e))
