@@ -8,7 +8,7 @@ def validate_from_content(cls, spec_content=None):
     :return: Dizionario con i dati caricati da un file spec (YAML)
     """
     if spec_content is None:
-        raise IRValidatorException("Spec content cannot be empty")
+        raise IRValidatorException("Spec content cannot be None")
         
     required_fields = ['name', 'version', 'description']
     

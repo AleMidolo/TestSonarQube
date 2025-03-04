@@ -21,5 +21,4 @@ def base_config(user, etcd_host="localhost", etcd_port=2379):
             "username": user
         }
     }
-    
     return config

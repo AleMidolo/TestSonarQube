@@ -1,6 +1,6 @@
 def vertex3tuple(vertices):
     # Create list to store 3-vertex tuples
-    result = []
+    vertex_tuples = []
     
     # Get number of vertices
     n = len(vertices)
@@ -15,6 +15,6 @@ def vertex3tuple(vertices):
         next = vertices[(i+1) % n]
         
         # Add tuple of (previous, current, next) vertices
-        result.append((prev, curr, next))
+        vertex_tuples.append((prev, curr, next))
         
-    return result
+    return vertex_tuples

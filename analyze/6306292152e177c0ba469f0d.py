@@ -11,9 +11,9 @@ def identify_request(request: RequestType) -> bool:
     
     # Look for common Matrix protocol identifiers in headers
     matrix_headers = [
-        'Authorization',  # Matrix uses bearer tokens
-        'X-Matrix',      # Custom Matrix header
-        'Matrix-'        # Matrix protocol prefix
+        'Authorization',  # Matrix uses Bearer tokens
+        'X-Matrix',
+        'Matrix-',
     ]
     
     for header in matrix_headers:
@@ -22,9 +22,14 @@ def identify_request(request: RequestType) -> bool:
             
     # Check URL path if available
     path = request.path if hasattr(request, 'path') else ''
-    matrix_paths = ['/_matrix/', '/_synapse/']
+    matrix_paths = [
+        '/_matrix/',
+        '/matrix/',
+        '/.well-known/matrix/'
+    ]
     
-    if any(p in path for p in matrix_paths):
-        return True
-        
+    for mp in matrix_paths:
+        if path.startswith(mp):
+            return True
+            
     return False

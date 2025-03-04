@@ -20,16 +20,12 @@ def _explore_folder(folder):
     files_by_base = defaultdict(list)
     
     # Esplora tutti i file nella cartella
-    for filename in os.listdir(folder):
-        if filename.endswith('.xml'):
+    for file in os.listdir(folder):
+        if file.endswith('.xml'):
             # Ottieni il nome base rimuovendo l'estensione
-            base_name = os.path.splitext(filename)[0]
-            
-            # Aggiungi il percorso completo del file alla lista corrispondente
-            full_path = os.path.join(folder, filename)
-            files_by_base[base_name].append(full_path)
+            base_name = os.path.splitext(file)[0]
+            # Aggiungi il percorso completo del file alla lista del nome base
+            files_by_base[base_name].append(os.path.join(folder, file))
             
     # Converti defaultdict in dict normale
-    result = dict(files_by_base)
-    
-    return result
+    return dict(files_by_base)

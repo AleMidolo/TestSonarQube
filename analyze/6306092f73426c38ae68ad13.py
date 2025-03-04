@@ -40,18 +40,9 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
     # Esegui il comando ansible-playbook
     import subprocess
     try:
-        process = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True
-        )
-        stdout, stderr = process.communicate()
-        
-        if process.returncode != 0:
-            raise Exception(f"Ansible playbook execution failed: {stderr}")
-            
-        return stdout
-        
-    except Exception as e:
-        raise Exception(f"Failed to execute ansible-playbook: {str(e)}")
+        result = subprocess.run(cmd, check=True, text=True, 
+                              stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE)
+        return result
+    except subprocess.CalledProcessError as e:
+        raise Exception(f"Errore nell'esecuzione di ansible-playbook: {e.stderr}")

@@ -39,6 +39,5 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
         raise e
     except subprocess.CalledProcessError as e:
         print(f"Process failed with return code {e.returncode}")
-        print(f"stdout: {e.stdout}")
-        print(f"stderr: {e.stderr}")
+        print(f"Error output: {e.stderr}")
         raise e

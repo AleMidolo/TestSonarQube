@@ -5,7 +5,7 @@ def parse_arguments(*arguments):
     """
     import argparse
     
-    parser = argparse.ArgumentParser(description='Process command line arguments')
+    parser = argparse.ArgumentParser(description='Parse command line arguments')
     
     # Add arguments to parser
     parser.add_argument('--input', '-i', type=str, help='Input file path')

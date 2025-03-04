@@ -17,7 +17,7 @@ def lru_cache(maxsize=128, typed=False):
                 key += str([type(arg) for arg in args])
                 key += str({k: type(v) for k, v in kwargs.items()})
             
-            # Se il risultato è già in cache, aggiorna l'ordine e restituiscilo
+            # Se il risultato è già in cache
             if key in cache:
                 # Aggiorna l'ordine di utilizzo
                 order.remove(key)
@@ -38,21 +38,14 @@ def lru_cache(maxsize=128, typed=False):
             
             return result
             
-        # Aggiungi attributi utili al wrapper
-        wrapper.cache_info = lambda: {
-            'maxsize': maxsize,
-            'currsize': len(cache),
-            'hits': sum(1 for k in order if k in cache),
-            'misses': sum(1 for k in order if k not in cache)
-        }
-        wrapper.cache_clear = lambda: cache.clear() and order.clear()
-        
         return wrapper
     
-    # Se viene chiamato direttamente con una funzione
-    if callable(maxsize):
-        func = maxsize
-        maxsize = 128
-        return decorator(func)
-    
+    # Se maxsize è None, non applicare la cache
+    if maxsize is None:
+        return lambda func: func
+        
+    # Se maxsize <= 0, disabilita la cache
+    if maxsize <= 0:
+        return lambda func: func
+        
     return decorator

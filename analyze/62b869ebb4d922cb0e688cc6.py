@@ -1,7 +1,7 @@
 def update_last_applied_manifest_list_from_resp(
     last_applied_manifest, observer_schema, response
 ):
-    # Handle empty cases
+    # Handle empty inputs
     if not observer_schema or not response:
         return last_applied_manifest
 
@@ -13,21 +13,27 @@ def update_last_applied_manifest_list_from_resp(
     while len(last_applied_manifest) < len(response):
         last_applied_manifest.append({})
 
-    # Update each element in the list
-    for i, (schema_item, resp_item) in enumerate(zip(observer_schema, response)):
-        if isinstance(schema_item, dict):
-            # If schema item is a dict, recursively update the dict
+    # Iterate through response items
+    for i, resp_item in enumerate(response):
+        if i >= len(observer_schema):
+            break
+
+        # Get corresponding schema
+        schema = observer_schema[i]
+
+        # Handle dict schema recursively
+        if isinstance(schema, dict):
             from .utils import update_last_applied_manifest_dict_from_resp
             last_applied_manifest[i] = update_last_applied_manifest_dict_from_resp(
-                last_applied_manifest[i], schema_item, resp_item
+                last_applied_manifest[i], schema, resp_item
             )
-        elif isinstance(schema_item, list):
-            # If schema item is a list, recursively update the list
+        # Handle list schema recursively  
+        elif isinstance(schema, list):
             last_applied_manifest[i] = update_last_applied_manifest_list_from_resp(
-                last_applied_manifest[i], schema_item, resp_item
+                last_applied_manifest[i], schema, resp_item
             )
+        # Handle primitive values
         else:
-            # For primitive types, directly update the value
             last_applied_manifest[i] = resp_item
 
     return last_applied_manifest

@@ -18,27 +18,37 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     from ansible.vars.manager import VariableManager
 
     # Create temporary file for extra vars
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as vars_file:
-        json.dump(vars_dict, vars_file)
-        extra_vars_file = vars_file.name
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as tmp:
+        json.dump(vars_dict, tmp)
+        extra_vars_file = tmp.name
 
     try:
-        # Build ansible command
+        # Construct Ansible CLI command
         ansible_args = ['ansible-playbook']
         ansible_args.extend(cli_args)
-        ansible_args.extend(['--extra-vars', '@' + extra_vars_file])
+        ansible_args.extend(['--extra-vars', f'@{extra_vars_file}'])
 
-        # Set up inventory
+        if ir_workspace:
+            # Add inventory file if workspace has one
+            inventory_file = os.path.join(ir_workspace.path, 'hosts')
+            if os.path.exists(inventory_file):
+                ansible_args.extend(['-i', inventory_file])
+
+        if ir_plugin:
+            # Add plugin specific playbook directory
+            playbook_dir = os.path.join(ir_plugin.path, 'playbooks')
+            if os.path.exists(playbook_dir):
+                ansible_args.append(playbook_dir)
+
+        # Initialize Ansible components
         loader = DataLoader()
-        inventory = InventoryManager(loader=loader, sources=ir_workspace.inventory)
+        inventory = InventoryManager(loader=loader)
         variable_manager = VariableManager(loader=loader, inventory=inventory)
 
-        # Initialize PlaybookCLI
-        pbcli = PlaybookCLI(ansible_args)
-        pbcli.parse()
-
         # Run playbook
-        return pbcli.run()
+        playbook = PlaybookCLI(ansible_args)
+        playbook.parse()
+        return playbook.run()
 
     finally:
         # Cleanup temporary file

@@ -4,7 +4,7 @@ def get_deprecated_args(self):
     """
     deprecated_args = {
         'family': 'font-family',
-        'size': 'font-size', 
+        'size': 'font-size',
         'weight': 'font-weight',
         'color': 'font-color',
         'align': 'text-align',
@@ -14,6 +14,8 @@ def get_deprecated_args(self):
         'bbox': 'bounding-box',
         'rotation': 'text-rotation',
         'x': 'position-x',
-        'y': 'position-y'
+        'y': 'position-y',
+        'ha': 'horizontal-alignment',
+        'va': 'vertical-alignment'
     }
     return deprecated_args

@@ -32,7 +32,7 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
                     if arg_name not in args or args[arg_name] != expected_value:
                         all_conditions_met = False
                         break
-                        
+                
                 if all_conditions_met and option['name'] not in args:
                     conditionally_required.append(option['name'])
     

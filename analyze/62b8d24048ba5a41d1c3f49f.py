@@ -42,7 +42,8 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
         # Add cache clear method
         def clear_cache():
             cache.clear()
+            
         wrapper.clear_cache = clear_cache
-        
         return wrapper
+        
     return decorator

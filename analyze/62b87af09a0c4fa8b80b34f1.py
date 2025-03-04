@@ -2,25 +2,25 @@ def fill(self, coord, weight=1):
     """
     Riempie l'istogramma alla posizione *coord* con il peso specificato *weight*.
     """
-    # Verifica che coord sia una tupla/lista di coordinate valide
-    if not isinstance(coord, (tuple, list)):
-        raise TypeError("Le coordinate devono essere specificate come tupla o lista")
+    # Verifica che coord sia una tupla di coordinate valide
+    if not isinstance(coord, tuple):
+        raise TypeError("Le coordinate devono essere specificate come tupla")
         
-    # Verifica che la dimensione delle coordinate corrisponda alla dimensionalità dell'istogramma
+    # Verifica che le dimensioni delle coordinate corrispondano a quelle dell'istogramma
     if len(coord) != len(self.bins):
-        raise ValueError(f"Numero di coordinate ({len(coord)}) non corrisponde alla dimensionalità dell'istogramma ({len(self.bins)})")
+        raise ValueError("Il numero di coordinate non corrisponde alle dimensioni dell'istogramma")
     
-    # Verifica che le coordinate siano all'interno dei limiti dell'istogramma
+    # Verifica che le coordinate siano all'interno dei limiti
     for i, x in enumerate(coord):
-        if x < self.bins[i][0] or x >= self.bins[i][-1]:
-            raise ValueError(f"Coordinata {x} fuori dai limiti dell'asse {i}")
-    
-    # Trova gli indici dei bin corrispondenti alle coordinate
-    indices = []
-    for i, x in enumerate(coord):
-        # Trova l'indice del bin usando ricerca binaria
-        idx = next(j for j in range(len(self.bins[i])-1) if self.bins[i][j] <= x < self.bins[i][j+1])
-        indices.append(idx)
+        if x < 0 or x >= len(self.bins[i]):
+            raise ValueError(f"Coordinata {i} fuori dai limiti dell'istogramma")
+            
+    # Converte le coordinate in un indice lineare per accedere all'array dei contenuti
+    idx = 0
+    stride = 1
+    for i in range(len(coord)-1, -1, -1):
+        idx += coord[i] * stride
+        stride *= len(self.bins[i])
         
-    # Incrementa il contenuto del bin con il peso specificato
-    self.contents[tuple(indices)] += weight
+    # Aggiunge il peso alla bin corrispondente
+    self.contents[idx] += weight

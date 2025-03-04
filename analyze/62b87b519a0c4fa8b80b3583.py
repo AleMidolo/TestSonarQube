@@ -11,7 +11,7 @@ def scale(self, other=None):
     # Get the last coordinate field
     fields = self.fields()
     if not fields:
-        raise LenaValueError("No fields available for scaling")
+        raise LenaValueError("No fields found for scaling")
         
     last_coord = fields[-1]
     
