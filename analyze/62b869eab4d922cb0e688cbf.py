@@ -16,7 +16,7 @@ def generate_default_observer_schema(app):
         # Get resource kind from manifest
         kind = manifest.get('kind')
         
-        # Skip if kind not found
+        # Skip if kind is not present
         if not kind:
             continue
             

@@ -10,7 +10,7 @@ def integral(bins, edges):
     
     # Ensure bins and edges have compatible lengths
     if len(bins) != len(edges) - 1:
-        raise ValueError("Length of bins must be one less than length of edges")
+        raise ValueError("Length of bins must be equal to length of edges minus 1")
         
     # Iterate through bins and calculate area for each bin
     for i in range(len(bins)):

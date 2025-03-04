@@ -19,20 +19,19 @@ def validate_from_file(cls, yaml_file=None):
         if not isinstance(yaml_data, dict):
             raise IRValidatorException("YAML file must contain a dictionary/mapping")
             
-        # Validate required fields
+        # Validate required fields exist
         required_fields = ['name', 'description', 'version']
         missing_fields = [field for field in required_fields if field not in yaml_data]
         
         if missing_fields:
-            raise IRValidatorException(f"Missing mandatory fields in YAML: {', '.join(missing_fields)}")
+            raise IRValidatorException(f"Missing required fields in YAML: {', '.join(missing_fields)}")
             
         return yaml_data
         
     except yaml.YAMLError as e:
         raise IRValidatorException(f"Error parsing YAML file: {str(e)}")
     except Exception as e:
-        raise IRValidatorException(f"Unexpected error validating YAML file: {str(e)}")
+        raise IRValidatorException(f"Error validating YAML file: {str(e)}")
 
 class IRValidatorException(Exception):
-    """Custom exception for YAML validation errors"""
     pass

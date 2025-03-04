@@ -22,12 +22,12 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         extra["db"] = db
     if imp_user:
         extra["imp_user"] = imp_user
-    
-    # Set hooks if provided
+        
+    # Add hooks if provided
     if dehydration_hooks:
-        self._dehydration_hooks = dehydration_hooks
+        extra["dehydration_hooks"] = dehydration_hooks
     if hydration_hooks:
-        self._hydration_hooks = hydration_hooks
+        extra["hydration_hooks"] = hydration_hooks
 
     # Create BEGIN message
     message = {
@@ -36,8 +36,6 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     if extra:
         message.update(extra)
 
-    # Append BEGIN message to output queue
-    self._append(b"\x11", message)
-
-    # Return Response object with handlers
-    return Response(self, **handlers)
+    # Add message to output queue and create Response
+    self._append(("BEGIN", message))
+    return Response(self._connection, **handlers)

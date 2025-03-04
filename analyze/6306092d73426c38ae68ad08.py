@@ -11,37 +11,26 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
     required_args = []
     
     for option in options_spec:
-        # Skip if no required_when condition
+        # Skip if option doesn't have required_when condition
         if 'required_when' not in option:
             continue
             
-        required_when = option['required_when']
+        condition = option['required_when']
         
-        # Check if required_when is a callable
-        if callable(required_when):
-            if required_when(args):
-                required_args.append(option['name'])
-                
-        # Check if required_when is a dict with conditions
-        elif isinstance(required_when, dict):
-            conditions_met = True
+        # Evaluate the required_when condition
+        try:
+            # Create context with args for condition evaluation
+            context = {k: v for k, v in args.items()}
             
-            for key, value in required_when.items():
-                if key not in args or args[key] != value:
-                    conditions_met = False
-                    break
-                    
-            if conditions_met:
+            # If condition evaluates to True, add argument name to required list
+            if eval(condition, {"__builtins__": {}}, context):
                 required_args.append(option['name'])
                 
-        # Check if required_when is a string expression
-        elif isinstance(required_when, str):
-            try:
-                # Evaluate the expression with args as context
-                if eval(required_when, {'args': args}):
-                    required_args.append(option['name'])
-            except:
-                # Skip if expression evaluation fails
-                continue
-                
+        except Exception as e:
+            # Log error if condition evaluation fails
+            self.logger.error(
+                f"Failed to evaluate required_when condition '{condition}' "
+                f"for argument '{option.get('name')}' in command '{command_name}': {str(e)}"
+            )
+            
     return required_args

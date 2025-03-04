@@ -35,16 +35,14 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
             if process.returncode != 0:
                 if error and not hide_stderr:
                     print(f"Error: {error}", file=sys.stderr)
-                raise subprocess.CalledProcessError(process.returncode, cmd_list)
+                return False
                 
-            if verbose and output:
+            if output and verbose:
                 print(output)
                 
-            return output.strip() if output else ""
-            
-        except FileNotFoundError:
-            print(f"Command not found: {cmd}", file=sys.stderr)
-            raise
         except Exception as e:
-            print(f"Error executing command: {e}", file=sys.stderr)
-            raise
+            if verbose:
+                print(f"Failed to execute command: {e}", file=sys.stderr)
+            return False
+            
+    return True

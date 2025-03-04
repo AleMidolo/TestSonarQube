@@ -19,52 +19,38 @@ def _legacy_mergeOrderings(orderings):
     if not orderings:
         return []
         
-    # Create a mapping of element -> list of indices where it appears
-    element_positions = {}
+    # Create a mapping of elements to their next elements in each ordering
+    next_elements = {}
     for ordering in orderings:
-        for i, element in enumerate(ordering):
-            if element not in element_positions:
-                element_positions[element] = []
-            element_positions[element].append((ordering, i))
-            
-    result = []
-    used = set()
+        for i in range(len(ordering)-1):
+            curr = ordering[i]
+            next_elem = ordering[i+1]
+            if curr not in next_elements:
+                next_elements[curr] = next_elem
+            elif next_elements[curr] != next_elem:
+                raise ValueError("Inconsistent orderings")
+
+    # Find all elements that are not successors of any other element
+    all_elements = set()
+    successor_elements = set()
+    for ordering in orderings:
+        all_elements.update(ordering)
+        if len(ordering) > 1:
+            successor_elements.update(ordering[1:])
     
-    while True:
-        # Find elements that can be added (those that appear first in their lists)
-        candidates = set()
-        for ordering in orderings:
-            if ordering:
-                element = ordering[0]
-                if element not in used:
-                    candidates.add(element)
-                    
-        if not candidates:
-            break
-            
-        # For each candidate, verify it can be added
-        valid_candidates = set()
-        for candidate in candidates:
-            # Check if candidate appears later in any other list
-            valid = True
-            positions = element_positions[candidate]
-            for ordering, pos in positions:
-                if pos > 0 and ordering[pos-1] not in used:
-                    valid = False
-                    break
-            if valid:
-                valid_candidates.add(candidate)
+    start_elements = all_elements - successor_elements
+
+    # Build the merged ordering
+    result = []
+    current = list(start_elements)
+    seen = set()
+    
+    while current:
+        elem = current.pop(0)
+        if elem not in seen:
+            result.append(elem)
+            seen.add(elem)
+            if elem in next_elements:
+                current.append(next_elements[elem])
                 
-        if not valid_candidates:
-            break
-            
-        # Add the valid candidates to result
-        for candidate in valid_candidates:
-            result.append(candidate)
-            used.add(candidate)
-            # Remove the candidate from all orderings
-            for ordering in orderings:
-                if ordering and ordering[0] == candidate:
-                    ordering.pop(0)
-                    
     return result

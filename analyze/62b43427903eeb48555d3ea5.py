@@ -34,7 +34,7 @@ def format(
     else:
         params_dict = params
 
-    # Create output params container
+    # Initialize output params
     out_params = {} if self.out_style.is_named else []
     param_counter = 0
     
@@ -42,32 +42,30 @@ def format(
     result = ''
     i = 0
     while i < len(sql):
+        # Look for parameter markers
         if sql[i:i+len(self.in_style.prefix)] == self.in_style.prefix:
-            # Found parameter marker
-            i += len(self.in_style.prefix)
             param_name = ''
+            i += len(self.in_style.prefix)
             
             # Extract parameter name/number
             while i < len(sql) and (sql[i].isalnum() or sql[i] == '_'):
                 param_name += sql[i]
                 i += 1
                 
-            if self.in_style.suffix:
-                i += len(self.in_style.suffix)
+            if param_name:
+                # Get parameter value
+                param_value = params_dict[param_name]
                 
-            # Get parameter value
-            param_value = params_dict[param_name]
-            
-            # Add to output params
-            if self.out_style.is_named:
-                new_name = f"p{param_counter}"
-                out_params[new_name] = param_value
-                result += f"{self.out_style.prefix}{new_name}{self.out_style.suffix}"
-            else:
-                out_params.append(param_value)
-                result += self.out_style.prefix
-                
-            param_counter += 1
+                # Add to output parameters
+                if self.out_style.is_named:
+                    out_param_name = f"p{param_counter}"
+                    out_params[out_param_name] = param_value
+                    result += self.out_style.prefix + out_param_name
+                else:
+                    out_params.append(param_value)
+                    result += self.out_style.prefix
+                    
+                param_counter += 1
         else:
             result += sql[i]
             i += 1

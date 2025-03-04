@@ -9,12 +9,12 @@ def validate(self, path):
         if not os.path.exists(path):
             return False
             
-        # Verify OCFL structure
-        if not self._verify_ocfl_structure(path):
+        # Verify OCFL object structure
+        if not self._verify_structure(path):
             return False
             
         # Check for required files
-        required_files = ['0=ocfl_object_1.0', 'inventory.json', 'inventory.json.sha512']
+        required_files = ['0=ocfl_object_1.0', 'inventory.json', 'inventory.json.sha512'] 
         for file in required_files:
             if not os.path.isfile(os.path.join(path, file)):
                 return False
@@ -28,21 +28,17 @@ def validate(self, path):
                 
         # Check inventory required fields
         required_fields = ['id', 'type', 'digestAlgorithm', 'versions']
-        for field in required_fields:
-            if field not in inventory:
-                return False
-                
+        if not all(field in inventory for field in required_fields):
+            return False
+            
         # Verify checksums
         if not self._verify_checksums(path, inventory):
             return False
             
         # Verify version sequence
-        versions = sorted(inventory['versions'].keys())
-        for i, v in enumerate(versions, 1):
-            if f'v{i}' != v:
-                return False
-                
-        # If all checks pass, return True
+        if not self._verify_versions(inventory['versions']):
+            return False
+            
         return True
         
     except Exception:

@@ -10,24 +10,20 @@ def normalized(self):
     microseconds = int((seconds_remainder - seconds) * 1000000 + self.microseconds)
 
     # Handle microseconds overflow
-    if microseconds >= 1000000:
-        seconds += microseconds // 1000000
-        microseconds = microseconds % 1000000
-    
+    seconds += microseconds // 1000000
+    microseconds = microseconds % 1000000
+
     # Handle seconds overflow
-    if seconds >= 60:
-        minutes += seconds // 60
-        seconds = seconds % 60
+    minutes += seconds // 60
+    seconds = seconds % 60
 
     # Handle minutes overflow
-    if minutes >= 60:
-        hours += minutes // 60
-        minutes = minutes % 60
+    hours += minutes // 60
+    minutes = minutes % 60
 
     # Handle hours overflow
-    if hours >= 24:
-        days += hours // 24
-        hours = hours % 24
+    days += hours // 24
+    hours = hours % 24
 
     return self.__class__(
         years=self.years,

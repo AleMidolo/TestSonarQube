@@ -11,6 +11,5 @@ def popitem(self):
     
     # Remove the key-value pair
     del self[key]
-    self._order.pop()
     
     return key, value

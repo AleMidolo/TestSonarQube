@@ -14,11 +14,12 @@ def validate_as_prior_version(self, prior):
     if prior.timestamp >= self.timestamp:
         raise ValueError("Prior inventory must have earlier timestamp")
         
-    # Check that all items in prior exist in current with same or greater quantity
-    for item_id, prior_quantity in prior.inventory.items():
+    # Check that all items in prior exist in current inventory
+    # with same or greater quantities
+    for item_id, prior_qty in prior.inventory.items():
         if item_id not in self.inventory:
             raise ValueError(f"Item {item_id} from prior inventory missing in current")
-        if self.inventory[item_id] < prior_quantity:
-            raise ValueError(f"Item {item_id} has decreased quantity from prior version")
+        if self.inventory[item_id] < prior_qty:
+            raise ValueError(f"Item {item_id} has lower quantity than prior version")
             
     return True

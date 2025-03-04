@@ -13,5 +13,4 @@ def get_pattern(pattern, strip=True):
     for char in special_chars:
         pattern = pattern.replace(char, '\\' + char)
         
-    # Return the escaped pattern string
     return pattern

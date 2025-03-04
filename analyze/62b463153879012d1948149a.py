@@ -19,15 +19,15 @@ def _group_files_by_xml_filename(source, xmls, files):
     """
     grouped_files = {}
     
-    # Iterate through XML files
+    # Iterate through each XML file
     for xml in xmls:
-        # Get base filename without extension
+        # Get the base filename without extension
         xml_base = xml.rsplit('.', 1)[0]
         
-        # Find all files that start with the XML base name
+        # Find all files that start with the XML base filename
         matching_files = [f for f in files if f.startswith(xml_base)]
         
-        # Add to dictionary with XML name as key and matching files as value
+        # Add to dictionary with XML filename as key and matching files as value
         grouped_files[xml] = matching_files
         
     return grouped_files

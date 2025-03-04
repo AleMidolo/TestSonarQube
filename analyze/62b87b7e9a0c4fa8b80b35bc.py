@@ -7,37 +7,27 @@ def _update_context(self, context):
     }
     
     # Get all field names from the graph
-    fields = self.get_fields()
+    field_names = [f for f in self.fields]
     
     # Initialize error context if not present
     if not hasattr(context, 'error'):
         context.error = {}
         
     # Look for error fields (those containing "error" in name)
-    for field in fields:
-        if 'error' not in field:
-            continue
+    for field in field_names:
+        if 'error' in field.lower():
+            # Parse the error field name to get base field and bound
+            parts = field.split('_')
+            base_field = parts[1]  # E from error_E_low
+            bound = parts[-1]      # low from error_E_low
             
-        # Parse error field name to get base field and error type
-        parts = field.split('_')
-        base_field = parts[0]
-        error_type = '_'.join(parts[2:]) # e.g. 'low', 'high'
-        
-        # Map base field to x/y/z if possible
-        if base_field in error_name_map:
-            error_name = error_name_map[base_field]
-        else:
-            error_name = base_field
+            # Map the base field to x/y/z if possible
+            error_name = error_name_map.get(base_field, base_field)
             
-        # Get index of this field
-        field_index = fields.index(field)
-        
-        # Create nested error context structure
-        if error_name not in context.error:
-            context.error[error_name] = {}
-            
-        # Add error index to context
-        error_key = f"{error_type}"
-        context.error[error_name][error_key] = {"index": field_index}
-        
-    return context
+            # Create the error subcontext structure
+            error_key = f"{error_name}_{bound}"
+            if error_key not in context.error:
+                context.error[error_key] = {}
+                
+            # Store the index of this error field
+            context.error[error_key]['index'] = field_names.index(field)

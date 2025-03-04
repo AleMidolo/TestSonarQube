@@ -5,9 +5,9 @@ def initialize(self):
     # Create root directory if it doesn't exist
     os.makedirs(self.storage_root, exist_ok=True)
     
-    # Create namaste file identifying this as OCFL storage root
-    namaste_path = os.path.join(self.storage_root, "0=ocfl_1.0")
-    with open(namaste_path, 'w') as f:
+    # Create OCFL storage root marker file (0=ocfl_1.0)
+    namaste_file = os.path.join(self.storage_root, "0=ocfl_1.0")
+    with open(namaste_file, 'w') as f:
         f.write("ocfl_1.0")
         
     # Create ocfl_layout.json file
@@ -20,8 +20,8 @@ def initialize(self):
         }
     }
     
-    layout_path = os.path.join(self.storage_root, "ocfl_layout.json")
-    with open(layout_path, 'w') as f:
+    layout_file = os.path.join(self.storage_root, "ocfl_layout.json")
+    with open(layout_file, 'w') as f:
         json.dump(layout, f, indent=2)
         
     # Create extensions directory
