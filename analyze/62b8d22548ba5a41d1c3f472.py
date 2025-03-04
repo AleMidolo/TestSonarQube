@@ -32,8 +32,6 @@ def cachedmethod(cache, key=hashkey, lock=None):
                     
                 return result
                 
-        wrapper.__doc__ = method.__doc__
-        wrapper.__name__ = method.__name__
         return wrapper
         
     return decorator

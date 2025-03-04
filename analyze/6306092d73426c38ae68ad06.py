@@ -11,7 +11,13 @@ def get_silent_args(self, args):
     if isinstance(args, dict):
         # Look for arguments that have None or empty values
         for arg_name, arg_value in args.items():
-            if arg_value is None or (isinstance(arg_value, (str, list, dict)) and not arg_value):
+            if arg_value is None or arg_value == '':
                 silent_args.append(arg_name)
+                
+    # If args is a list/tuple, check each element
+    elif isinstance(args, (list, tuple)):
+        for i, arg in enumerate(args):
+            if arg is None or arg == '':
+                silent_args.append(i)
                 
     return silent_args

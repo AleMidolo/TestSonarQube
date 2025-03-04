@@ -22,7 +22,7 @@ def identify_request(request: RequestType) -> bool:
         try:
             body = request.get_json()
             # Check for common Matrix request fields
-            if any(key in body for key in ['room_id', 'event_id', 'user_id', 'device_id']):
+            if any(key in body for key in ['user_id', 'room_id', 'event_id', 'device_id']):
                 return True
         except:
             pass

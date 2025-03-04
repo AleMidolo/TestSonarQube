@@ -16,21 +16,19 @@ def get_plugin_spec_flatten_dict(plugin_dir):
         with open(spec_file, 'r') as f:
             spec_data = yaml.safe_load(f)
             
-        def flatten_dict(d, parent_key=''):
+        def flatten(data, parent_key=''):
             items = []
-            for k, v in d.items():
-                new_key = f"{parent_key}.{k}" if parent_key else k
+            for key, value in data.items():
+                new_key = f"{parent_key}.{key}" if parent_key else key
                 
-                if isinstance(v, dict):
-                    items.extend(flatten_dict(v, new_key).items())
+                if isinstance(value, dict):
+                    items.extend(flatten(value, new_key).items())
                 else:
-                    items.append((new_key, v))
+                    items.append((new_key, value))
             return dict(items)
             
-        # Flatten the nested dictionary
-        if spec_data and isinstance(spec_data, dict):
-            flattened_dict = flatten_dict(spec_data)
-            
+        flattened_dict = flatten(spec_data)
+        
     except Exception as e:
         # Return empty dict if any error occurs
         pass

@@ -7,7 +7,7 @@ def make_find_paths(find_paths):
             transformed_paths.append(path)
         else:
             # Transform regular path fragment into glob pattern
-            # Add **/* prefix and */** suffix to match files anywhere in directory tree
+            # Wrap with **/* and */** to match anywhere in path
             transformed = f'sh:**/*{path}*/**'
             transformed_paths.append(transformed)
             

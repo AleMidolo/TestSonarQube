@@ -7,12 +7,9 @@ def popitem(self):
         
     # Get the most recently used key from the end of the order list
     key = self._order[-1]
-    
-    # Get the value for that key
     value = self[key]
     
-    # Remove the key from both the main dict and order list
+    # Remove the key-value pair
     del self[key]
-    self._order.pop()
     
     return key, value

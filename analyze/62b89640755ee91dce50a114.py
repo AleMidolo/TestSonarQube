@@ -10,4 +10,5 @@ def tzname_in_python2(namefunc):
         if name is not None and isinstance(name, str):
             name = name.encode()
         return name
+        
     return adjust_encoding

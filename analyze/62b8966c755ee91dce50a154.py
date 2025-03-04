@@ -4,94 +4,73 @@ def isoparse(self, dt_str):
     from dateutil.tz import tzutc, tzoffset
 
     # Regular expressions for parsing
-    date_regex = r'(?P<year>\d{4})(?:-?(?P<month>\d{2})(?:-?(?P<day>\d{2})|)|)|(?P<isoyear>\d{4})-?W(?P<isoweek>\d{2})(?:-?(?P<isoday>\d{1})|)'
-    time_regex = r'(?P<hour>[0-2]\d)(?::?(?P<minute>\d{2})(?::?(?P<second>\d{2})(?:[.,](?P<microsecond>\d{1,6})\d*)?)?)?'
-    tz_regex = r'(?P<tzutc>Z)|(?P<tzhour>[+-]\d{2})(?::?(?P<tzminute>\d{2})?)?'
+    date_regex = r'(?P<year>\d{4})(?:-?(?P<month>\d{2})(?:-?(?P<day>\d{2})|)|)'
+    week_regex = r'(?P<year>\d{4})-?W(?P<week>\d{2})(?:-?(?P<weekday>\d)|)'
+    time_regex = r'(?P<hour>[0-2]\d)(?::?(?P<minute>\d{2})(?::?(?P<second>\d{2})(?:[.,](?P<microsecond>\d{1,6}))?)?)?' 
+    tz_regex = r'(?P<tzname>Z|(?P<tzsign>[+-])(?P<tzhour>\d{2})(?::?(?P<tzminute>\d{2})?)?)?$'
 
     dt_str = str(dt_str).strip()
     
     # Split datetime string into date and time parts
     if 'T' in dt_str:
-        date_str, time_str = dt_str.split('T', 1)
+        date_str, time_str = dt_str.split('T')
     else:
         date_str = dt_str
         time_str = ''
 
     # Parse date
     date_match = re.match(date_regex, date_str)
-    if not date_match:
-        raise ValueError("Invalid ISO-8601 date format")
+    week_match = re.match(week_regex, date_str) if not date_match else None
     
-    date_parts = date_match.groupdict()
-    
-    if date_parts['year']:
-        year = int(date_parts['year'])
-        month = int(date_parts['month'] or 1)
-        day = int(date_parts['day'] or 1)
+    if date_match:
+        date_dict = date_match.groupdict()
+        year = int(date_dict['year'])
+        month = int(date_dict['month']) if date_dict['month'] else 1
+        day = int(date_dict['day']) if date_dict['day'] else 1
         date = datetime.date(year, month, day)
+    elif week_match:
+        date_dict = week_match.groupdict()
+        year = int(date_dict['year'])
+        week = int(date_dict['week'])
+        weekday = int(date_dict['weekday']) if date_dict['weekday'] else 1
+        date = datetime.datetime.strptime(f"{year}-W{week}-{weekday}", "%Y-W%W-%w").date()
     else:
-        # Handle ISO week dates
-        year = int(date_parts['isoyear'])
-        week = int(date_parts['isoweek'])
-        day = int(date_parts['isoday'] or 1)
-        date = datetime.datetime.strptime(f"{year}-W{week}-{day}", "%Y-W%W-%w").date()
+        raise ValueError("Invalid ISO format")
 
-    # If no time portion, return datetime at midnight
     if not time_str:
         return datetime.datetime(date.year, date.month, date.day)
 
-    # Split time and timezone
-    time_parts = time_str.split('Z', 1)
-    has_z = len(time_parts) > 1
-    time_str = time_parts[0]
-
-    if not has_z:
-        time_parts = re.split('[+-]', time_str, 1)
-        time_str = time_parts[0]
-
     # Parse time
-    time_match = re.match(time_regex, time_str)
+    time_match = re.match(time_regex + tz_regex, time_str)
     if not time_match:
-        raise ValueError("Invalid ISO-8601 time format")
+        raise ValueError("Invalid time format")
+
+    time_dict = time_match.groupdict()
     
-    time_parts = time_match.groupdict()
-    
-    hour = int(time_parts['hour'])
+    hour = int(time_dict['hour'])
     if hour == 24:
         hour = 0
-    minute = int(time_parts['minute'] or 0)
-    second = int(time_parts['second'] or 0)
+    minute = int(time_dict['minute']) if time_dict['minute'] else 0
+    second = int(time_dict['second']) if time_dict['second'] else 0
     
-    microsecond = time_parts['microsecond']
-    if microsecond:
-        microsecond = int(microsecond.ljust(6, '0'))
-    else:
-        microsecond = 0
-
-    dt = datetime.datetime(date.year, date.month, date.day,
-                         hour, minute, second, microsecond)
+    microsecond = 0
+    if time_dict['microsecond']:
+        microsecond = int(time_dict['microsecond'].ljust(6, '0'))
 
     # Parse timezone
-    if has_z:
-        return dt.replace(tzinfo=tzutc())
-    
-    if len(time_parts) > 1:
-        tz_str = time_str[len(time_parts[0]):]
-        tz_match = re.match(tz_regex, tz_str)
-        if tz_match:
-            tz_parts = tz_match.groupdict()
-            if tz_parts['tzutc']:
-                return dt.replace(tzinfo=tzutc())
-            
-            tz_hour = int(tz_parts['tzhour'])
-            tz_minute = int(tz_parts['tzminute'] or 0)
-            
-            offset = tz_hour * 60 + (tz_minute if tz_hour >= 0 else -tz_minute)
-            
-            # If offset is 0, return UTC
+    tz = None
+    if time_dict['tzname']:
+        if time_dict['tzname'] == 'Z':
+            tz = tzutc()
+        else:
+            tzsign = 1 if time_dict['tzsign'] == '+' else -1
+            tzhour = int(time_dict['tzhour'])
+            tzminute = int(time_dict['tzminute']) if time_dict['tzminute'] else 0
+            offset = tzsign * (tzhour * 60 + tzminute) * 60
             if offset == 0:
-                return dt.replace(tzinfo=tzutc())
-            
-            return dt.replace(tzinfo=tzoffset(None, offset * 60))
+                tz = tzutc()
+            else:
+                tz = tzoffset(None, offset)
 
-    return dt
+    return datetime.datetime(date.year, date.month, date.day,
+                           hour, minute, second, microsecond, tz)

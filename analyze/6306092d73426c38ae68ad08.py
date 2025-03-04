@@ -15,23 +15,32 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
         if 'required_when' not in option:
             continue
             
-        condition = option['required_when']
+        required_when = option['required_when']
         
-        # Evaluate the required_when condition
-        try:
-            # Create context with args for eval
-            context = {k: v for k, v in args.items()}
-            is_required = eval(condition, {"__builtins__": {}}, context)
-            
-            if is_required:
+        # Check if required_when is a callable
+        if callable(required_when):
+            if required_when(args):
                 required_args.append(option['name'])
                 
-        except Exception as e:
-            # Log error and continue if condition evaluation fails
-            self.logger.error(
-                f"Error evaluating required_when condition for {command_name} "
-                f"argument {option['name']}: {str(e)}"
-            )
-            continue
+        # Check if required_when is a dict with conditions
+        elif isinstance(required_when, dict):
+            conditions_met = True
             
+            for key, value in required_when.items():
+                if key not in args or args[key] != value:
+                    conditions_met = False
+                    break
+                    
+            if conditions_met:
+                required_args.append(option['name'])
+                
+        # Check if required_when is a string expression
+        elif isinstance(required_when, str):
+            try:
+                if eval(required_when, {'args': args}):
+                    required_args.append(option['name'])
+            except:
+                # Log warning that expression evaluation failed
+                pass
+                
     return required_args

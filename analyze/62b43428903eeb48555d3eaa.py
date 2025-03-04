@@ -26,15 +26,21 @@ def formatmany(
     -       A :class:`list` containing each set of converted out-style
             parameters (:class:`dict` or :class:`list`).
     """
-    # Convert each set of parameters to out-style format
-    out_params = []
+    # Convert each set of parameters
+    out_params_list = []
     for params in many_params:
-        # Format single set of parameters using format() method
-        _, converted_params = self.format(sql, params)
-        out_params.append(converted_params)
+        # Format single set of parameters
+        _, out_params = self.format(sql, params)
+        out_params_list.append(out_params)
 
-    # Format SQL query once using first set of parameters
-    # This assumes SQL query is same for all parameter sets
-    formatted_sql, _ = self.format(sql, next(iter(many_params)))
+    # Format SQL once using first set of parameters
+    try:
+        first_params = next(iter(many_params))
+    except StopIteration:
+        # No parameters provided, just format SQL
+        formatted_sql, _ = self.format(sql, {})
+    else:
+        # Format with first set of parameters
+        formatted_sql, _ = self.format(sql, first_params)
 
-    return formatted_sql, out_params
+    return formatted_sql, out_params_list

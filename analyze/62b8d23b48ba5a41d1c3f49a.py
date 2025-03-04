@@ -21,25 +21,29 @@ def mru_cache(maxsize=128, typed=False):
         def wrapper(*args, **kwargs):
             key = make_key(args, kwargs)
             
-            if key in cache:
-                # Move accessed item to front of order
+            try:
+                # Try to get from cache
+                result = cache[key]
+                # Update access order
                 order.remove(key)
                 order.append(key)
-                return cache[key]
+                return result
                 
-            result = func(*args, **kwargs)
-            
-            if len(cache) >= maxsize:
-                # Remove least recently used item
-                lru_key = order.pop(0)
-                del cache[lru_key]
+            except KeyError:
+                # Calculate result
+                result = func(*args, **kwargs)
                 
-            # Add new result to cache
-            cache[key] = result
-            order.append(key)
-            
-            return result
-            
+                # Add to cache
+                cache[key] = result
+                order.append(key)
+                
+                # Remove oldest if cache too large
+                if len(cache) > maxsize:
+                    oldest = order.pop(0)
+                    del cache[oldest]
+                    
+                return result
+                
         return wrapper
         
     return decorator

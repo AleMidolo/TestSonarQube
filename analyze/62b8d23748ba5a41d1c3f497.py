@@ -5,17 +5,21 @@ def popitem(self):
     if not self:
         raise KeyError("Dictionary is empty")
         
-    # Find the entry with minimum frequency
+    # Find the key with minimum frequency
     min_freq = min(self.freq.values())
+    min_key = None
     
-    # Get the first key with minimum frequency
-    lfu_key = next(key for key, freq in self.freq.items() if freq == min_freq)
+    # Find first key with minimum frequency
+    for key in self.freq:
+        if self.freq[key] == min_freq:
+            min_key = key
+            break
+            
+    # Get value for min_key
+    value = self[min_key]
     
-    # Get the value for this key
-    lfu_value = self[lfu_key]
+    # Remove key-value pair
+    del self[min_key]
+    del self.freq[min_key]
     
-    # Remove the key-value pair
-    del self[lfu_key]
-    del self.freq[lfu_key]
-    
-    return (lfu_key, lfu_value)
+    return (min_key, value)

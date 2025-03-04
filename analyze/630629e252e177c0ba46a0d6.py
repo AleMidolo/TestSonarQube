@@ -24,4 +24,5 @@ def retrieve_diaspora_host_meta(host):
         except requests.RequestException:
             continue
             
-    raise Exception(f"Could not retrieve host-meta from {host}")
+    # If we get here, both HTTPS and HTTP failed
+    raise ConnectionError(f"Could not retrieve host-meta from {host}")

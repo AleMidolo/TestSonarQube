@@ -15,7 +15,7 @@ def integral(bins, edges):
     # Iterate through bins and calculate area for each bin
     for i in range(len(bins)):
         # Width of the bin
-        width = edges[i + 1] - edges[i]
+        width = edges[i+1] - edges[i]
         # Area = height * width
         area = bins[i] * width
         total += area

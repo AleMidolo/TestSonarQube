@@ -34,12 +34,12 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=str(e),
+                msg=f"Error loading config file {filename}: {str(e)}",
                 args=(),
                 exc_info=None
             )
             errors.append(error)
-            logger.error(f"Error loading config file {filename}: {str(e)}")
+            logger.error(error.msg)
             
     return configs, errors
 
