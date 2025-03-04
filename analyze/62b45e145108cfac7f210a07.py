@@ -7,18 +7,39 @@ def validate(self, inventory, extract_spec_version=False):
     il tipo o questo non sia valido, verranno eseguiti altri test basati sulla versione specificata 
     in `self.spec_version`.
     """
-    if extract_spec_version:
-        if 'type' in inventory and inventory['type'] in self.valid_types:
-            spec_version = inventory['type']
-        else:
-            spec_version = self.spec_version
-    else:
-        spec_version = self.spec_version
+    if not isinstance(inventory, dict):
+        raise ValueError("L'inventario deve essere un dizionario")
 
-    # Esegui la convalida dell'inventario in base alla spec_version
-    if spec_version == '1.0':
-        return self.validate_v1(inventory)
-    elif spec_version == '2.0':
-        return self.validate_v2(inventory)
-    else:
-        raise ValueError("Versione della specifica non valida.")
+    if extract_spec_version:
+        try:
+            inventory_type = inventory.get('type', '')
+            if 'bom-1.0' in inventory_type:
+                self.spec_version = '1.0'
+            elif 'bom-1.1' in inventory_type:
+                self.spec_version = '1.1'
+            elif 'bom-1.2' in inventory_type:
+                self.spec_version = '1.2'
+            elif 'bom-1.3' in inventory_type:
+                self.spec_version = '1.3'
+        except (AttributeError, TypeError):
+            pass
+
+    required_fields = ['bomFormat', 'specVersion', 'version']
+    for field in required_fields:
+        if field not in inventory:
+            raise ValueError(f"Campo obbligatorio mancante: {field}")
+
+    if inventory['specVersion'] != self.spec_version:
+        raise ValueError(f"Versione della specifica non valida. Attesa: {self.spec_version}, Trovata: {inventory['specVersion']}")
+
+    if 'components' in inventory:
+        if not isinstance(inventory['components'], list):
+            raise ValueError("Il campo 'components' deve essere una lista")
+        
+        for component in inventory['components']:
+            if not isinstance(component, dict):
+                raise ValueError("Ogni componente deve essere un dizionario")
+            if 'name' not in component or 'version' not in component:
+                raise ValueError("I componenti devono avere i campi 'name' e 'version'")
+
+    return True

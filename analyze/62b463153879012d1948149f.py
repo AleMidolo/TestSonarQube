@@ -18,25 +18,17 @@ def _eval_file(prefix, file_path):
     -------
     dict
     """
-    import os
-
-    # Initialize the result dictionary
     result = {}
-
-    # Extract the file name and extension
-    file_name = os.path.basename(file_path)
-    file_extension = os.path.splitext(file_name)[1].lower()
-
-    # Determine the type of file based on its extension
-    if file_extension in ['.xml', '.json']:
-        file_type = 'asset'
-    elif file_extension in ['.jpg', '.png', '.pdf']:
-        file_type = 'rendition'
-    else:
-        file_type = 'unknown'
-
-    # Update the result dictionary
-    result['type'] = file_type
-    result['path'] = file_path
-
+    
+    # Extract filename from path
+    filename = file_path.split('/')[-1]
+    
+    # Check if file is an asset or rendition
+    if filename.startswith(prefix):
+        if '_rendition' in filename:
+            result['type'] = 'rendition'
+        else:
+            result['type'] = 'asset'
+        result['path'] = file_path
+        
     return result

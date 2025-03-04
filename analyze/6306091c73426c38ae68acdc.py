@@ -7,19 +7,34 @@ def validate_from_content(cls, spec_content=None):
     sono mancanti nel file spec
     :return: Dizionario con i dati caricati da un file spec (YAML)
     """
-    import yaml
-
-    required_fields = ['field1', 'field2', 'field3']  # Example required fields
     if spec_content is None:
-        raise IRValidatorException("Spec content cannot be None")
-
-    try:
-        data = yaml.safe_load(spec_content)
-    except yaml.YAMLError as e:
-        raise IRValidatorException(f"Error parsing YAML: {e}")
-
-    missing_fields = [field for field in required_fields if field not in data]
+        raise IRValidatorException("Spec content cannot be empty")
+        
+    required_fields = ['name', 'version', 'description']
+    
+    # Check if spec_content is a dictionary
+    if not isinstance(spec_content, dict):
+        raise IRValidatorException("Spec content must be a dictionary")
+    
+    # Validate required fields
+    missing_fields = []
+    for field in required_fields:
+        if field not in spec_content:
+            missing_fields.append(field)
+            
     if missing_fields:
-        raise IRValidatorException(f"Missing required fields: {', '.join(missing_fields)}")
-
-    return data
+        raise IRValidatorException(
+            f"Required fields missing in spec: {', '.join(missing_fields)}"
+        )
+            
+    # Validate field types
+    if not isinstance(spec_content.get('name'), str):
+        raise IRValidatorException("'name' field must be a string")
+        
+    if not isinstance(spec_content.get('version'), (str, int, float)):
+        raise IRValidatorException("'version' field must be a string, integer or float")
+        
+    if not isinstance(spec_content.get('description'), str):
+        raise IRValidatorException("'description' field must be a string")
+        
+    return spec_content

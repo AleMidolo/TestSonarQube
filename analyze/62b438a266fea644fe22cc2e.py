@@ -1,21 +1,37 @@
 def parse_arguments(*unparsed_arguments):
-    """
-    Dato un insieme di argomenti della riga di comando con cui è stato invocato questo script, analizza gli argomenti e restituiscili come un dizionario che mappa il nome del sotto-parser (o "global") a un'istanza di argparse.Namespace.
-    """
     import argparse
-
-    parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(dest='subparser_name')
-
-    # Esempio di sotto-parser
-    parser_a = subparsers.add_parser('command_a')
-    parser_a.add_argument('--option_a', type=str, help='Option for command_a')
-
-    parser_b = subparsers.add_parser('command_b')
-    parser_b.add_argument('--option_b', type=int, help='Option for command_b')
-
-    # Analizza gli argomenti
-    args = parser.parse_args(unparsed_arguments)
-
-    # Restituisce un dizionario con il nome del sotto-parser e l'istanza di Namespace
-    return {args.subparser_name: args}
+    
+    # Create main parser
+    parser = argparse.ArgumentParser(description='Command line argument parser')
+    subparsers = parser.add_subparsers(dest='command')
+    
+    # Add global arguments to main parser
+    parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose output')
+    parser.add_argument('--config', '-c', type=str, help='Path to config file')
+    
+    # Create subparser for 'run' command
+    run_parser = subparsers.add_parser('run', help='Run the application')
+    run_parser.add_argument('--input', '-i', required=True, help='Input file')
+    run_parser.add_argument('--output', '-o', required=True, help='Output file')
+    
+    # Create subparser for 'test' command  
+    test_parser = subparsers.add_parser('test', help='Run tests')
+    test_parser.add_argument('--test-dir', '-t', required=True, help='Test directory')
+    
+    # Parse arguments
+    if len(unparsed_arguments) == 0:
+        args = parser.parse_args()
+    else:
+        args = parser.parse_args(unparsed_arguments)
+        
+    # Create dictionary to store parsed arguments
+    parsed_args = {}
+    
+    if args.command is None:
+        # Store global arguments
+        parsed_args['global'] = args
+    else:
+        # Store command-specific arguments
+        parsed_args[args.command] = args
+        
+    return parsed_args

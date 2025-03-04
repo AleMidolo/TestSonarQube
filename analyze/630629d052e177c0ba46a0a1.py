@@ -2,29 +2,42 @@ def verify_relayable_signature(public_key, doc, signature):
     """
     Verifica gli elementi XML firmati per avere la certezza che l'autore dichiarato abbia effettivamente generato questo messaggio.
     """
-    from lxml import etree
-    from xmlsec import SignatureContext, verify, KeyData, Key
-
-    # Parse the XML document
-    root = etree.fromstring(doc)
-
-    # Create a signature context
-    ctx = SignatureContext()
-
-    # Load the public key
-    key = Key.from_string(public_key, KeyData.KeyFormat.PEM)
-    ctx.key = key
-
-    # Find the signature node in the XML
-    signature_node = root.find('.//{http://www.w3.org/2000/09/xmldsig#}Signature')
-
-    if signature_node is None:
-        raise ValueError("Signature element not found in the document.")
-
-    # Verify the signature
     try:
-        verify(signature_node, ctx)
-        return True
+        # Import required libraries
+        from cryptography.hazmat.primitives import hashes
+        from cryptography.hazmat.primitives.asymmetric import padding
+        from cryptography.hazmat.primitives.serialization import load_pem_public_key
+        from cryptography.exceptions import InvalidSignature
+        
+        # Convert doc to bytes if it's not already
+        if isinstance(doc, str):
+            doc = doc.encode('utf-8')
+            
+        # Load the public key if it's in PEM format
+        if isinstance(public_key, str):
+            public_key = load_pem_public_key(public_key.encode())
+            
+        # Convert signature from base64 if needed
+        import base64
+        if isinstance(signature, str):
+            signature = base64.b64decode(signature)
+            
+        # Verify the signature
+        try:
+            public_key.verify(
+                signature,
+                doc,
+                padding.PSS(
+                    mgf=padding.MGF1(hashes.SHA256()),
+                    salt_length=padding.PSS.MAX_LENGTH
+                ),
+                hashes.SHA256()
+            )
+            return True
+        except InvalidSignature:
+            return False
+            
     except Exception as e:
-        print(f"Signature verification failed: {e}")
+        # Log error if needed
+        print(f"Error verifying signature: {str(e)}")
         return False

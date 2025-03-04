@@ -2,27 +2,43 @@ def validate(self, path):
     """
     Valida l'oggetto OCFL nel percorso specificato o nella radice di pyfs.
     """
-    import os
+    # Verifica che il percorso esista
+    if not self.fs.exists(path):
+        raise ValueError(f"Il percorso {path} non esiste")
 
-    if not os.path.exists(path):
-        raise FileNotFoundError(f"Il percorso specificato non esiste: {path}")
+    # Verifica la presenza del file namaste 
+    namaste_path = self.fs.join_path(path, "0=ocfl_object_1.0")
+    if not self.fs.exists(namaste_path):
+        raise ValueError(f"File namaste mancante in {path}")
 
-    # Logica di validazione dell'oggetto OCFL
-    # Questo è un esempio di come potrebbe apparire la logica di validazione
-    # In un caso reale, dovresti implementare la logica specifica per OCFL
+    # Verifica la presenza dell'inventario
+    inventory_path = self.fs.join_path(path, "inventory.json")
+    if not self.fs.exists(inventory_path):
+        raise ValueError(f"File inventory.json mancante in {path}")
 
-    # Controlla se il percorso è una directory
-    if os.path.isdir(path):
-        # Esegui la validazione per le directory OCFL
-        # Ad esempio, controlla la presenza di file specifici
-        required_files = ['manifest.json', 'version.txt']
-        for file in required_files:
-            if not os.path.isfile(os.path.join(path, file)):
-                raise ValueError(f"File mancante: {file} in {path}")
+    # Carica e valida l'inventario
+    with self.fs.open(inventory_path) as f:
+        inventory = json.load(f)
 
-        # Aggiungi ulteriori controlli di validazione qui
+    # Verifica i campi obbligatori dell'inventario
+    required_fields = ["id", "type", "digestAlgorithm", "head", "versions"]
+    for field in required_fields:
+        if field not in inventory:
+            raise ValueError(f"Campo {field} mancante nell'inventario")
 
-    else:
-        raise ValueError(f"Il percorso specificato non è una directory: {path}")
+    # Verifica che l'algoritmo di digest sia valido
+    valid_algorithms = ["sha256", "sha512"]
+    if inventory["digestAlgorithm"] not in valid_algorithms:
+        raise ValueError(f"Algoritmo digest non valido: {inventory['digestAlgorithm']}")
 
-    return True  # Restituisce True se la validazione ha successo
+    # Verifica la presenza delle versioni
+    versions_path = self.fs.join_path(path, "v1")
+    if not self.fs.exists(versions_path):
+        raise ValueError("Directory delle versioni mancante")
+
+    # Verifica che head punti a una versione valida
+    head = inventory["head"]
+    if not self.fs.exists(self.fs.join_path(path, head)):
+        raise ValueError(f"La versione head {head} non esiste")
+
+    return True

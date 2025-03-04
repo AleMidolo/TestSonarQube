@@ -1,22 +1,31 @@
 def _fromutc(self, dt):
-    """
-    Dato un oggetto timezone-aware  in un determinato fuso orario, calcola un oggetto datetime con consapevolezza del fuso orario in un nuovo fuso orario.
+    """Convert aware datetime in UTC to this timezone."""
+    if dt.tzinfo is not self:
+        dt = dt.replace(tzinfo=self)
+    
+    utc_offset = self.utcoffset(dt)
+    if utc_offset is None:
+        return dt
 
-    Poiché questa è l'unica occasione in cui sappiamo di avere un oggetto datetime non ambiguo, cogliamo questa opportunità per determinare se il datetime è ambiguo e si trova in uno stato di "fold" (ad esempio, se è la prima occorrenza, in ordine cronologico, del datetime ambiguo).
-
-    :param dt:  
-        Un oggetto :class:`datetime.datetime` con consapevolezza del fuso orario.
-    """
-    if dt.tzinfo is None:
-        raise ValueError("dt must be timezone-aware")
-
-    # Convert the datetime to UTC
-    utc_dt = dt.astimezone(self.utc)
-
-    # Check if the datetime is ambiguous
-    if self.is_ambiguous(utc_dt):
-        # Handle the ambiguity (e.g., return the first occurrence)
-        return self.handle_ambiguity(utc_dt)
-
-    # Return the datetime in the new timezone
-    return utc_dt.astimezone(self)
+    # Convert to timestamp, add offset and convert back
+    ts = (dt.replace(tzinfo=None) - datetime.datetime(1970,1,1)).total_seconds()
+    ts += utc_offset.total_seconds()
+    
+    # Create local datetime
+    local_dt = datetime.datetime.fromtimestamp(ts, self)
+    
+    # Check if datetime is ambiguous (in DST transition)
+    fold = 0
+    if self.dst(local_dt) is not None:
+        # Get timestamps for both possible folds
+        local_dt0 = local_dt.replace(fold=0) 
+        local_dt1 = local_dt.replace(fold=1)
+        
+        ts0 = (local_dt0.replace(tzinfo=None) - datetime.datetime(1970,1,1)).total_seconds()
+        ts1 = (local_dt1.replace(tzinfo=None) - datetime.datetime(1970,1,1)).total_seconds()
+        
+        # If original timestamp is closer to second fold, use fold=1
+        if abs(ts - ts1) < abs(ts - ts0):
+            fold = 1
+            
+    return local_dt.replace(fold=fold)

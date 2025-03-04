@@ -1,45 +1,35 @@
-import datetime
-
 def parse_frequency(frequency):
-    """
-    Dato un valore di frequenza sotto forma di stringa contenente un numero e un'unità di tempo,
-    restituisci un'istanza corrispondente di datetime.timedelta o None se la frequenza è None o "always".
+    import datetime
+    import re
 
-    Ad esempio, dato "3 weeks", restituisci datetime.timedelta(weeks=3).
-
-    Genera un'eccezione ValueError se la frequenza fornita non può essere analizzata.
-    """
     if frequency is None or frequency.lower() == "always":
         return None
 
-    units = {
-        'seconds': 'seconds',
+    # Regular expression to match number and unit
+    match = re.match(r"(\d+)\s*(\w+)", frequency.strip())
+    if not match:
+        raise ValueError(f"Invalid frequency format: {frequency}")
+
+    value = int(match.group(1))
+    unit = match.group(2).lower()
+
+    # Map of units to timedelta arguments
+    units_map = {
         'second': 'seconds',
+        'seconds': 'seconds',
+        'minute': 'minutes', 
         'minutes': 'minutes',
-        'minute': 'minutes',
-        'hours': 'hours',
         'hour': 'hours',
-        'days': 'days',
+        'hours': 'hours',
         'day': 'days',
-        'weeks': 'weeks',
+        'days': 'days',
         'week': 'weeks',
-        'months': 'days',  # Approximation: 1 month = 30 days
-        'month': 'days',
-        'years': 'days',   # Approximation: 1 year = 365 days
-        'year': 'days'
+        'weeks': 'weeks'
     }
 
-    parts = frequency.split()
-    if len(parts) != 2:
-        raise ValueError("Frequency must be in the format '<number> <unit>'")
+    if unit not in units_map:
+        raise ValueError(f"Invalid time unit: {unit}")
 
-    try:
-        value = int(parts[0])
-    except ValueError:
-        raise ValueError("The first part of the frequency must be an integer")
-
-    unit = parts[1].lower()
-    if unit not in units:
-        raise ValueError(f"Unknown time unit: {unit}")
-
-    return datetime.timedelta(**{units[unit]: value})
+    # Create timedelta with the appropriate unit
+    kwargs = {units_map[unit]: value}
+    return datetime.timedelta(**kwargs)

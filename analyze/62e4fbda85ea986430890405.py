@@ -7,20 +7,80 @@ def xargs(
         _max_length: int = _get_platform_max_length(),
         **kwargs: Any,
 ) -> tuple[int, bytes]:
-    import subprocess
-    from multiprocessing import Pool
+    
+    if not varargs:
+        return _run_command(cmd, color=color, **kwargs)
+        
+    partitions = _partition_varargs(varargs, _max_length)
+    num_partitions = len(partitions)
+    
+    if target_concurrency == 1 or num_partitions == 1:
+        # Run sequentially
+        output = b''
+        retcode = 0
+        for partition in partitions:
+            curr_retcode, curr_output = _run_command(
+                (*cmd, *partition),
+                color=color,
+                **kwargs
+            )
+            output += curr_output
+            if curr_retcode != 0:
+                retcode = curr_retcode
+        return retcode, output
+        
+    else:
+        # Run in parallel
+        with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
+            futures = []
+            for partition in partitions:
+                future = executor.submit(
+                    _run_command,
+                    (*cmd, *partition),
+                    color=color,
+                    **kwargs
+                )
+                futures.append(future)
+                
+            output = b''
+            retcode = 0
+            for future in futures:
+                curr_retcode, curr_output = future.result()
+                output += curr_output
+                if curr_retcode != 0:
+                    retcode = curr_retcode
+                    
+            return retcode, output
 
-    def run_command(args):
-        return subprocess.run(cmd + args, capture_output=True)
+def _partition_varargs(varargs: Sequence[str], max_length: int) -> list[tuple[str, ...]]:
+    """Split varargs into partitions that don't exceed max command line length"""
+    partitions = []
+    current_partition = []
+    current_length = 0
+    
+    for arg in varargs:
+        arg_length = len(arg)
+        if current_length + arg_length + 1 > max_length:
+            if current_partition:
+                partitions.append(tuple(current_partition))
+            current_partition = [arg]
+            current_length = arg_length
+        else:
+            current_partition.append(arg)
+            current_length += arg_length + 1
+            
+    if current_partition:
+        partitions.append(tuple(current_partition))
+        
+    return partitions
 
-    # Chunk the varargs into smaller lists based on target_concurrency
-    chunks = [varargs[i:i + target_concurrency] for i in range(0, len(varargs), target_concurrency)]
-
-    with Pool(processes=target_concurrency) as pool:
-        results = pool.map(run_command, chunks)
-
-    # Combine the return codes and output
-    return_code = sum(result.returncode for result in results)
-    combined_output = b''.join(result.stdout for result in results)
-
-    return return_code, combined_output
+def _run_command(cmd: tuple[str, ...], *, color: bool = False, **kwargs: Any) -> tuple[int, bytes]:
+    """Run a single command and return (return_code, output)"""
+    if color and sys.platform != 'win32':
+        import pty
+        master_fd, slave_fd = pty.openpty()
+        kwargs.update({'stdout': slave_fd, 'stderr': slave_fd})
+        
+    proc = subprocess.Popen(cmd, **kwargs)
+    output, _ = proc.communicate()
+    return proc.returncode, output

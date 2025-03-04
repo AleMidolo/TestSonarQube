@@ -2,4 +2,8 @@ def unquote(name):
     """
     Rimuovi le virgolette dal nome fornito.
     """
-    return name.replace('"', '').replace("'", "")
+    if name.startswith('"') and name.endswith('"'):
+        return name[1:-1]
+    elif name.startswith("'") and name.endswith("'"):
+        return name[1:-1]
+    return name

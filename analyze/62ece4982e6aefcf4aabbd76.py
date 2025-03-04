@@ -7,5 +7,15 @@ def match(filename):
     Ritorna:
         False se non è una corrispondenza, True se è supportato
     """
-    supported_extensions = ['.txt', '.csv', '.json', '.xml']
-    return any(filename.endswith(ext) for ext in supported_extensions)
+    # Lista delle estensioni supportate
+    supported_extensions = ['.txt', '.doc', '.docx', '.pdf', '.rtf']
+    
+    # Converte il filename in minuscolo per un confronto case-insensitive
+    filename = filename.lower()
+    
+    # Verifica se il file termina con una delle estensioni supportate
+    for ext in supported_extensions:
+        if filename.endswith(ext):
+            return True
+            
+    return False

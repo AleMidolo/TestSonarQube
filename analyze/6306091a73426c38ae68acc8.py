@@ -2,17 +2,19 @@ def list_of_file_names(settings_dirs, spec_option):
     """
     Crea un nuovo tipo complesso IniType
     """
-    class IniType:
-        def __init__(self, settings_dirs, spec_option):
-            self.settings_dirs = settings_dirs
-            self.spec_option = spec_option
-            self.file_names = self._generate_file_names()
-
-        def _generate_file_names(self):
-            file_names = []
-            for directory in self.settings_dirs:
-                # Assuming spec_option is a file extension to filter
-                file_names.extend([f for f in os.listdir(directory) if f.endswith(self.spec_option)])
-            return file_names
-
-    return IniType(settings_dirs, spec_option)
+    file_names = []
+    
+    # Iterate through each directory path
+    for directory in settings_dirs:
+        # Check if directory exists and is a directory
+        if os.path.isdir(directory):
+            # Get list of files in directory
+            files = os.listdir(directory)
+            
+            # Filter files based on spec_option
+            for file in files:
+                if spec_option in file and file.endswith('.ini'):
+                    # Add full path to file_names list
+                    file_names.append(os.path.join(directory, file))
+                    
+    return file_names

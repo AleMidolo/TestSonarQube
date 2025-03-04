@@ -10,7 +10,12 @@ def from_raw_values(cls, values):
     """
     bookmarks = []
     for value in values:
-        # Assuming each value is a bookmark in the format "title:url"
-        title, url = value.split(':', 1)
-        bookmarks.append({'title': title.strip(), 'url': url.strip()})
+        try:
+            # Rimuove eventuali spazi bianchi e converte in stringa
+            bookmark = str(value).strip()
+            if bookmark:  # Verifica che non sia vuoto
+                bookmarks.append(bookmark)
+        except (ValueError, TypeError):
+            continue
+            
     return cls(bookmarks)

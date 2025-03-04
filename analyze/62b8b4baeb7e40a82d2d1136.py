@@ -1,56 +1,73 @@
 def _verify(iface, candidate, tentative=False, vtype=None):
-    """
-    Verifica che il *candidate* possa fornire correttamente l'*iface*.
+    from zope.interface.exceptions import Invalid
+    from zope.interface.interface import Method
+    from collections import defaultdict
 
-    Questo processo include:
+    errors = defaultdict(list)
 
-    - Assicurarsi che il candidato dichiari di fornire l'interfaccia utilizzando ``iface.providedBy`` (a meno che *tentative* sia `True`, in quel caso questo passaggio viene saltato). Questo significa che la classe del candidato dichiara di `implementare l'interfaccia <zope.interface.implementer>`, oppure che il candidato stesso dichiara di `fornire l'interfaccia <zope.interface.provider>`.
+    # Check if candidate claims to provide interface
+    if not tentative and not iface.providedBy(candidate):
+        errors['provide'].append(
+            f"{candidate!r} does not provide interface {iface!r}"
+        )
 
-    - Assicurarsi che il candidato definisca tutti i metodi necessari.
-
-    - Assicurarsi che i metodi abbiano la firma corretta (per quanto possibile).
-
-    - Assicurarsi che il candidato definisca tutti gli attributi necessari.
-
-    :return bool: Restituisce un valore vero se tutto ciò che poteva essere verificato è stato superato.
-    :raises zope.interface.Invalid: Se una qualsiasi delle condizioni precedenti non è soddisfatta.
-
-    .. versionchanged:: 5.0  
-        Se più metodi o attributi sono invalidi, tutti questi errori vengono raccolti e riportati. In precedenza, veniva segnalato solo il primo errore. Come caso speciale, se è presente un solo errore, questo viene sollevato singolarmente, come avveniva prima.
-    """
-    from zope.interface import providedBy, Invalid
-    from inspect import signature, Parameter
-
-    errors = []
-
-    if not tentative and not providedBy(candidate).provides(iface):
-        errors.append(f"{candidate} does not provide {iface}")
-
-    required_methods = iface.__providedBy__.methods()
-    for method in required_methods:
-        if not hasattr(candidate, method):
-            errors.append(f"{candidate} is missing method {method}")
+    # Check methods
+    for name, desc in iface.namesAndDescriptions(all=True):
+        if not isinstance(desc, Method):
+            # Skip non-method attributes for now
             continue
-        
-        method_signature = signature(getattr(candidate, method))
-        iface_signature = signature(getattr(iface, method))
-        
-        if len(method_signature.parameters) != len(iface_signature.parameters):
-            errors.append(f"{method} in {candidate} has incorrect number of parameters")
+            
+        # Check if method exists
+        try:
+            meth = getattr(candidate, name)
+        except AttributeError:
+            errors['methods'].append(
+                f"The {name!r} method was not provided"
+            )
             continue
-        
-        for param in iface_signature.parameters.values():
-            if param.default is Parameter.empty and param.name not in method_signature.parameters:
-                errors.append(f"{method} in {candidate} is missing required parameter {param.name}")
 
-    required_attributes = iface.__providedBy__.attributes()
-    for attr in required_attributes:
-        if not hasattr(candidate, attr):
-            errors.append(f"{candidate} is missing attribute {attr}")
+        # Verify method signature if possible
+        if hasattr(desc, 'getSignatureInfo'):
+            sig_info = desc.getSignatureInfo()
+            try:
+                candidate_sig = desc.getSignatureInfo(meth)
+                
+                # Compare signatures
+                if sig_info['positional'] != candidate_sig['positional'] or \
+                   sig_info['required'] != candidate_sig['required'] or \
+                   sig_info['optional'] != candidate_sig['optional'] or \
+                   sig_info['varargs'] != candidate_sig['varargs'] or \
+                   sig_info['kwargs'] != candidate_sig['kwargs']:
+                    errors['signatures'].append(
+                        f"The {name!r} method has incorrect signature"
+                    )
+            except (TypeError, ValueError):
+                errors['signatures'].append(
+                    f"Could not verify signature of {name!r} method"
+                )
 
+    # Check attributes
+    for name, desc in iface.namesAndDescriptions(all=True):
+        if isinstance(desc, Method):
+            continue
+            
+        if not hasattr(candidate, name):
+            errors['attributes'].append(
+                f"The {name!r} attribute was not provided" 
+            )
+
+    # If we have errors, raise them
     if errors:
-        if len(errors) == 1:
-            raise Invalid(errors[0])
-        raise Invalid(errors)
+        if sum(len(v) for v in errors.values()) == 1:
+            # Special case: single error
+            msg = next(err for errs in errors.values() for err in errs)
+            raise Invalid(msg)
+        
+        # Multiple errors
+        msgs = []
+        for category, errs in errors.items():
+            if errs:
+                msgs.extend(errs)
+        raise Invalid('\n'.join(msgs))
 
     return True

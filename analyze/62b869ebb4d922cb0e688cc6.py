@@ -1,24 +1,39 @@
 def update_last_applied_manifest_list_from_resp(
     last_applied_manifest, observer_schema, response
 ):
-    """
-    Insieme alla funzione :func:``update_last_applied_manifest_dict_from_resp``, 
-    questa funzione viene chiamata ricorsivamente per aggiornare un 
-    ``last_applied_manifest`` parziale a partire da una risposta parziale di Kubernetes.
+    # Handle empty cases
+    if not observer_schema or not response:
+        return last_applied_manifest
 
-    Argomenti:
-        last_applied_manifest (list): ``last_applied_manifest`` parziale in fase di aggiornamento.
-        observer_schema (list): ``observer_schema`` parziale.
-        response (list): risposta parziale dall'API di Kubernetes.
+    # Ensure last_applied_manifest is a list
+    if not isinstance(last_applied_manifest, list):
+        last_applied_manifest = []
 
-    Questa funzione attraversa tutti i campi osservati e inizializza il loro valore 
-    in ``last_applied_manifest`` se non sono ancora presenti.
-    """
-    for schema in observer_schema:
-        field = schema.get('field')
-        if field not in last_applied_manifest:
-            last_applied_manifest[field] = response.get(field, None)
-        if isinstance(schema.get('children'), list):
-            update_last_applied_manifest_list_from_resp(
-                last_applied_manifest[field], schema['children'], response.get(field, {})
+    # Extend last_applied_manifest if needed
+    while len(last_applied_manifest) < len(response):
+        last_applied_manifest.append({})
+
+    # Iterate through response items
+    for i, resp_item in enumerate(response):
+        if i >= len(observer_schema):
+            break
+
+        # Get corresponding schema for this item
+        schema = observer_schema[i]
+
+        # If schema is a dict, recursively update nested dict
+        if isinstance(schema, dict):
+            from .utils import update_last_applied_manifest_dict_from_resp
+            last_applied_manifest[i] = update_last_applied_manifest_dict_from_resp(
+                last_applied_manifest[i], schema, resp_item
             )
+        # If schema is a list, recursively update nested list 
+        elif isinstance(schema, list):
+            last_applied_manifest[i] = update_last_applied_manifest_list_from_resp(
+                last_applied_manifest[i], schema, resp_item
+            )
+        # Otherwise copy value directly
+        else:
+            last_applied_manifest[i] = resp_item
+
+    return last_applied_manifest

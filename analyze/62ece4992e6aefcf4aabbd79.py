@@ -1,18 +1,16 @@
 def make_find_paths(find_paths):
-    """
-    Dati una sequenza di percorsi frammentati o pattern passati tramite `--find`, trasforma tutti i percorsi frammentati in pattern glob. Lascia invariati i pattern già esistenti.
-
-    Ad esempio, dato `find_paths` come:
-      ['foo.txt', 'pp:root/somedir']
-
-    ... trasforma in:
-      ['sh:**/*foo.txt*/**', 'pp:root/somedir']
-    """
-    transformed_paths = []
+    result = []
     for path in find_paths:
-        if ':' in path:  # Check if it's a pattern
-            transformed_paths.append(path)
-        else:  # Transform fragmented path to glob pattern
-            transformed_path = f'sh:**/*{path}*/**'
-            transformed_paths.append(transformed_path)
-    return transformed_paths
+        # Skip if it's already a pattern (contains :)
+        if ':' in path:
+            result.append(path)
+            continue
+            
+        # Convert regular path to glob pattern
+        # Add ** before and after to match anywhere in path
+        # Add * before and after filename to match partial names
+        filename = path.split('/')[-1]
+        pattern = f"sh:**/*{filename}*/**"
+        result.append(pattern)
+        
+    return result

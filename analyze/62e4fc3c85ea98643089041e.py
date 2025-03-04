@@ -1,15 +1,10 @@
 def _inline_r_setup(code: str) -> str:
-    """
-    Alcuni comportamenti di R non possono essere configurati tramite variabili di ambiente, ma possono essere configurati solo tramite opzioni di R una volta che R è stato avviato. Questi vengono impostati qui.
-    """
-    import rpy2.robjects as ro
-
-    # Set R options
-    ro.r('options(stringsAsFactors = FALSE)')
-    ro.r('options(scipen = 999)')  # Disable scientific notation
-    ro.r('options(max.print = 1000)')  # Set maximum print size
-
-    # Execute the provided R code
-    ro.r(code)
-
-    return "R setup complete and code executed."
+    # Define R setup options that need to be prepended to the code
+    r_setup = """
+options(warn=-1)  # Suppress warnings
+options(width=10000)  # Prevent line wrapping
+options(encoding='UTF-8')  # Set UTF-8 encoding
+"""
+    
+    # Combine setup options with provided code
+    return r_setup + "\n" + code

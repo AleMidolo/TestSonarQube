@@ -1,21 +1,20 @@
 def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
-    import os
-    import sys
-
-    if sys.platform == "win32":
-        # Normalize the command for Windows
-        normalized_cmd = []
-        for part in cmd:
-            # Handle shebangs
-            if part.startswith("#!"):
-                # Normalize shebang path
-                shebang_path = part[2:].strip()
-                if os.path.isabs(shebang_path):
-                    normalized_cmd.append(part)
-                else:
-                    # Convert to absolute path
-                    normalized_cmd.append("#!" + os.path.abspath(shebang_path))
-            else:
-                normalized_cmd.append(part)
-        return tuple(normalized_cmd)
+    if not cmd:
+        return cmd
+        
+    # Se il primo elemento è un file con shebang
+    if cmd[0].endswith(('.py', '.sh')):
+        # Su Windows aggiungiamo python/bash come interprete
+        import sys
+        import os
+        
+        if sys.platform == 'win32':
+            ext = os.path.splitext(cmd[0])[1].lower()
+            
+            if ext == '.py':
+                return ('python',) + cmd
+            elif ext == '.sh':
+                # Per script bash su Windows
+                return ('bash',) + cmd
+                
     return cmd

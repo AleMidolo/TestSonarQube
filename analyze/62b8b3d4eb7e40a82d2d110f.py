@@ -6,13 +6,14 @@ def _should_attempt_c_optimizations():
     ``PURE_PYTHON``, come definito in `_use_c_impl`.
     """
     import os
-    import sys
+    import platform
 
-    # Controlla se stiamo usando PyPy
-    is_pypy = sys.platform.startswith('pypy')
+    # Check if running on PyPy
+    is_pypy = platform.python_implementation() == 'PyPy'
+    
+    # Check PURE_PYTHON environment variable
+    pure_python = os.environ.get('PURE_PYTHON', '').lower()
+    use_pure_python = pure_python in ('1', 'true', 'yes', 'on')
 
-    # Controlla il valore della variabile di ambiente PURE_PYTHON
-    pure_python = os.getenv('PURE_PYTHON', '0') == '1'
-
-    # Decidi se tentare ottimizzazioni in C
-    return is_pypy and not pure_python
+    # Return True only if not PyPy and not using pure Python
+    return not (is_pypy or use_pure_python)

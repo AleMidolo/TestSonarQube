@@ -1,29 +1,44 @@
 def subprocess_run_helper(func, *args, timeout, extra_env=None):
-    """
-    Esegui una funzione in un sottoprocesso.
-
-    Parametri
-    ----------
-    func : function
-        La funzione da eseguire. Deve trovarsi in un modulo importabile.
-    *args : str
-        Eventuali argomenti aggiuntivi da riga di comando da passare
-        come primo argomento a ``subprocess.run``.
-    extra_env : dict[str, str]
-        Eventuali variabili d'ambiente aggiuntive da impostare per il sottoprocesso.
-    """
     import subprocess
+    import sys
     import os
-
-    # Creare un dizionario per l'ambiente, partendo da quello corrente
+    
+    # Prepare environment variables
     env = os.environ.copy()
-    if extra_env is not None:
+    if extra_env:
         env.update(extra_env)
-
-    # Costruire il comando da eseguire
-    command = [func.__module__ + '.' + func.__name__] + list(args)
-
-    # Eseguire il comando nel sottoprocesso
-    result = subprocess.run(command, env=env, timeout=timeout)
-
-    return result
+        
+    # Get function module and name
+    module_name = func.__module__
+    func_name = func.__name__
+    
+    # Build Python command to execute function
+    cmd = [
+        sys.executable,
+        '-c',
+        f'import {module_name}; {module_name}.{func_name}()'
+    ]
+    
+    # Add any additional command line arguments
+    if args:
+        cmd.extend(args)
+        
+    # Run subprocess with timeout
+    try:
+        result = subprocess.run(
+            cmd,
+            env=env,
+            timeout=timeout,
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        return result
+    except subprocess.TimeoutExpired as e:
+        print(f"Process timed out after {timeout} seconds")
+        raise e
+    except subprocess.CalledProcessError as e:
+        print(f"Process failed with return code {e.returncode}")
+        print(f"stdout: {e.stdout}")
+        print(f"stderr: {e.stderr}")
+        raise e

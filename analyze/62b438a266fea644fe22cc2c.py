@@ -1,19 +1,25 @@
-import argparse
-
 def make_parsers():
     """
     Crea un parser di livello superiore e i suoi sottoparser, quindi restituiscili come una tupla.
     """
-    main_parser = argparse.ArgumentParser(description="Parser di livello superiore")
-    
-    subparsers = main_parser.add_subparsers(dest='command', required=True)
+    import argparse
 
-    # Esempio di sottoparser 1
-    parser_a = subparsers.add_parser('command_a', help='Esegui il comando A')
-    parser_a.add_argument('--option_a', type=str, help='Opzione per il comando A')
+    # Create main parser
+    parser = argparse.ArgumentParser(description='Command line tool')
+    subparsers = parser.add_subparsers(dest='command', help='Available commands')
 
-    # Esempio di sottoparser 2
-    parser_b = subparsers.add_parser('command_b', help='Esegui il comando B')
-    parser_b.add_argument('--option_b', type=int, help='Opzione per il comando B')
+    # Create "add" subparser
+    add_parser = subparsers.add_parser('add', help='Add a new item')
+    add_parser.add_argument('name', help='Name of the item')
+    add_parser.add_argument('--quantity', type=int, default=1, help='Quantity to add')
 
-    return main_parser, subparsers
+    # Create "list" subparser 
+    list_parser = subparsers.add_parser('list', help='List all items')
+    list_parser.add_argument('--sort', choices=['name', 'date'], default='name', 
+                            help='Sort items by name or date')
+
+    # Create "remove" subparser
+    remove_parser = subparsers.add_parser('remove', help='Remove an item')
+    remove_parser.add_argument('name', help='Name of item to remove')
+
+    return (parser, add_parser, list_parser, remove_parser)

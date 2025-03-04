@@ -1,26 +1,30 @@
 def _update_context(self, context):
-    """
-    Aggiorna il *context* con le proprietà di questo grafo.
-
-    *context.error* viene aggiornato aggiungendo gli indici degli errori.
-    Esempio di subcontext per un grafo con i campi "E,t,error_E_low":
-    `{"error": {"x_low": {"index": 2}}}`.
-    Nota che i nomi degli errori sono chiamati "x", "y" e "z"
-    (questo corrisponde alle prime tre coordinate, se presenti),
-    il che consente di semplificare la rappresentazione grafica.
-    I valori esistenti non vengono rimossi
-    da *context.value* e dai suoi subcontesti.
-
-    Viene chiamato durante la "distruzione" del grafo (ad esempio,
-    nella classe :class:`.ToCSV`). Per "distruzione" si intende la conversione
-    in un'altra struttura (come il testo) nel flusso di lavoro.
-    L'oggetto grafo non viene realmente distrutto in questo processo.
-    """
-    # Supponiamo che self.errors contenga gli errori del grafo
-    for i, error in enumerate(self.errors):
-        error_key = f"x" if i == 0 else f"y" if i == 1 else f"z"
-        context['error'][f"{error_key}_low"] = {'index': error.index}
+    # Dictionary to map field names to x,y,z coordinates
+    coord_map = {'E': 'x', 't': 'y', 'phi': 'z'}
     
-    # Non rimuoviamo i valori esistenti in context.value
-    # Aggiungiamo eventuali altre proprietà del grafo a context
-    context.update(self.properties)
+    # Look for error fields in the graph data
+    for field in self.fields:
+        # Check if field is an error field (contains 'error' and '_low' or '_high')
+        if 'error' in field and ('_low' in field or '_high' in field):
+            # Get base field name (remove error_/low/high parts)
+            base_field = field.replace('error_', '').replace('_low', '').replace('_high', '')
+            
+            # Get corresponding coordinate name (x,y,z)
+            coord = coord_map.get(base_field, base_field)
+            
+            # Determine if this is a low or high error
+            error_type = 'low' if '_low' in field else 'high'
+            
+            # Initialize error context if needed
+            if 'error' not in context:
+                context['error'] = {}
+            
+            # Get field index
+            field_idx = self.fields.index(field)
+            
+            # Update context with error index
+            if f'{coord}_{error_type}' not in context['error']:
+                context['error'][f'{coord}_{error_type}'] = {}
+            context['error'][f'{coord}_{error_type}']['index'] = field_idx
+            
+    return context

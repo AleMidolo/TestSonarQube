@@ -1,30 +1,35 @@
-import os
-
 def find_path_type(path):
-    """
-    Restituisce una stringa che indica il tipo di elemento presente nel percorso specificato.
-
-    Valori restituiti:
-        'root' - sembra essere una Radice di Archiviazione OCFL (OCFL Storage Root)
-        'object' - sembra essere un Oggetto OCFL (OCFL Object)
-        'file' - un file, potrebbe essere un inventario
-        altra stringa - descrive un errore o una spiegazione del problema
-
-    Si basa esclusivamente sui file "0=*" Namaste per determinare il tipo di directory.
-    """
+    import os
+    
+    # Check if path exists
     if not os.path.exists(path):
-        return "Il percorso specificato non esiste."
+        return "Path does not exist"
+        
+    # Check if it's a directory
+    if not os.path.isdir(path):
+        if os.path.isfile(path):
+            return "file"
+        return "Path is not a directory"
 
-    if os.path.isdir(path):
-        # Controlla se ci sono file che iniziano con "0="
-        for item in os.listdir(path):
-            if item.startswith("0="):
-                if "inventory" in item:
-                    return "file"
-                return "object"
-        return "root"
+    # Look for Namaste files starting with "0="
+    namaste_files = [f for f in os.listdir(path) if f.startswith("0=")]
     
-    if os.path.isfile(path):
-        return "file"
-    
-    return "Tipo di elemento sconosciuto."
+    if not namaste_files:
+        return "No Namaste files found"
+        
+    # Check content of first Namaste file found
+    namaste_content = ""
+    try:
+        with open(os.path.join(path, namaste_files[0]), 'r') as f:
+            namaste_content = f.read().strip()
+    except:
+        return "Error reading Namaste file"
+        
+    # Check content to determine type
+    if "ocfl_" in namaste_content.lower():
+        if "root" in namaste_content.lower():
+            return "root"
+        elif "object" in namaste_content.lower():
+            return "object"
+            
+    return f"Unknown Namaste content: {namaste_content}"

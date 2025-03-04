@@ -3,8 +3,21 @@ def get_deprecated_args(self):
     Restituzione di un dizionario con opzioni che deprecano altre.
     """
     deprecated_args = {
-        'old_option_1': 'new_option_1',
-        'old_option_2': 'new_option_2',
-        # Aggiungere altre opzioni deprecate qui
+        'family': 'font-family',
+        'size': 'font-size',
+        'weight': 'font-weight',
+        'color': 'font-color',
+        'align': 'text-align',
+        'style': 'font-style',
+        'variant': 'font-variant',
+        'stretch': 'font-stretch',
+        'location': 'path',
+        'filename': 'file',
+        'format': 'file-format',
+        'type': 'file-type',
+        'encoding': 'file-encoding',
+        'compress': 'compression',
+        'quality': 'image-quality',
+        'dpi': 'resolution'
     }
     return deprecated_args

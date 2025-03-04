@@ -1,81 +1,44 @@
-from ruamel.yaml.nodes import ScalarNode, MappingNode
-
 def deep_merge_nodes(nodes):
-    """
-    Dato una struttura configuratione di struttura data annidata di borgmatic sotto forma di una lista di tuple nel formato:
-
-        (
-            ruamel.yaml.nodes.ScalarNode come chiave,
-            ruamel.yaml.nodes.MappingNode o un altro tipo di Node come valore,
-        ),
-
-    ... esegui una fusione profonda (deep merge) dei valori dei nodi corrispondenti a chiavi duplicate e restituisci il risultato. Se ci sono chiavi in conflitto con valori non di tipo `MappingNode` (ad esempio, interi o stringhe), l'ultimo dei valori prevale.
-
-    Ad esempio, dati i seguenti valori dei nodi:
-
-        [
-            (
-                ScalarNode(tag='tag:yaml.org,2002:str', value='retention'),
-                MappingNode(tag='tag:yaml.org,2002:map', value=[
-                    (
-                        ScalarNode(tag='tag:yaml.org,2002:str', value='keep_hourly'),
-                        ScalarNode(tag='tag:yaml.org,2002:int', value='24')
-                    ),
-                    (
-                        ScalarNode(tag='tag:yaml.org,2002:str', value='keep_daily'),
-                        ScalarNode(tag='tag:yaml.org,2002:int', value='7')
-                    ),
-                ]),
-            ),
-            (
-                ScalarNode(tag='tag:yaml.org,2002:str', value='retention'),
-                MappingNode(tag='tag:yaml.org,2002:map', value=[
-                    (
-                        ScalarNode(tag='tag:yaml.org,2002:str', value='keep_daily'),
-                        ScalarNode(tag='tag:yaml.org,2002:int', value='5')
-                    ),
-                ]),
-            ),
-        ]
-
-    ... il risultato restituito sarebbe:
-
-        [
-            (
-                ScalarNode(tag='tag:yaml.org,2002:str', value='retention'),
-                MappingNode(tag='tag:yaml.org,2002:map', value=[
-                    (
-                        ScalarNode(tag='tag:yaml.org,2002:str', value='keep_hourly'),
-                        ScalarNode(tag='tag:yaml.org,2002:int', value='24')
-                    ),
-                    (
-                        ScalarNode(tag='tag:yaml.org,2002:str', value='keep_daily'),
-                        ScalarNode(tag='tag:yaml.org,2002:int', value='5')
-                    ),
-                ]),
-            ),
-        ]
-
-    Lo scopo di una fusione profonda come questa è supportare, ad esempio, la fusione di un file di configurazione borgmatic in un altro per il riutilizzo, in modo che una sezione di configurazione ("retention", ecc.) non sostituisca completamente la sezione corrispondente in un file unito.
-    """
     merged = {}
     
+    # Iterate through all nodes
     for key_node, value_node in nodes:
         key = key_node.value
+        
+        # If key doesn't exist yet, just add it
         if key not in merged:
-            merged[key] = value_node
+            merged[key] = (key_node, value_node)
+            continue
+            
+        # Get existing value node for this key
+        existing_value_node = merged[key][1]
+        
+        # If both nodes are mapping nodes, merge them recursively
+        if (isinstance(value_node, type(existing_value_node)) and 
+            hasattr(value_node, 'value') and 
+            hasattr(existing_value_node, 'value')):
+            
+            # Create dict of existing key/value pairs
+            existing_dict = {k.value: v for k,v in existing_value_node.value}
+            
+            # Update with new values
+            for k, v in value_node.value:
+                existing_dict[k.value] = v
+                
+            # Convert back to list of tuples
+            merged_value = [(k, existing_dict[k.value]) 
+                          for k in sorted(existing_dict.keys(), key=lambda x: x)]
+            
+            # Create new mapping node with merged values
+            merged_node = type(value_node)(
+                tag=value_node.tag,
+                value=merged_value
+            )
+            merged[key] = (key_node, merged_node)
+            
+        # For non-mapping nodes, latest value wins
         else:
-            if isinstance(merged[key], MappingNode) and isinstance(value_node, MappingNode):
-                # Deep merge the mapping nodes
-                for sub_key_node, sub_value_node in value_node.value:
-                    merged_value = merged[key].value
-                    merged_value_dict = {k.value: v for k, v in merged_value}
-                    merged_value_dict[sub_key_node.value] = sub_value_node
-                    merged[key] = MappingNode(tag='tag:yaml.org,2002:map', value=[
-                        (ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged_value_dict.items()
-                    ])
-            else:
-                # If there's a conflict with non-MappingNode, take the last one
-                merged[key] = value_node
-
-    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged.items()]
+            merged[key] = (key_node, value_node)
+            
+    # Convert merged dict back to list of tuples
+    return list(merged.values())

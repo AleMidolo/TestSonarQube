@@ -8,19 +8,32 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
     :return: list, lista dei nomi degli argomenti con la condizione
         ``required_when`` soddisfatta.
     """
-    required_args = []
+    conditionally_required = []
     
     for option in options_spec:
         if 'required_when' in option:
             condition = option['required_when']
-            if self._evaluate_condition(condition, args):
-                required_args.append(option['name'])
+            
+            # Evaluate the condition based on the args
+            if isinstance(condition, str):
+                # Simple condition checking if another arg is present
+                if condition in args and option['name'] not in args:
+                    conditionally_required.append(option['name'])
+            
+            elif callable(condition):
+                # Complex condition using a function
+                if condition(args) and option['name'] not in args:
+                    conditionally_required.append(option['name'])
+                    
+            elif isinstance(condition, dict):
+                # Dictionary condition checking arg values
+                all_conditions_met = True
+                for arg_name, expected_value in condition.items():
+                    if arg_name not in args or args[arg_name] != expected_value:
+                        all_conditions_met = False
+                        break
+                
+                if all_conditions_met and option['name'] not in args:
+                    conditionally_required.append(option['name'])
     
-    return required_args
-
-def _evaluate_condition(self, condition, args):
-    # Implementa la logica per valutare la condizione
-    # Restituisce True se la condizione è soddisfatta, altrimenti False
-    # Questo è un esempio di implementazione, la logica specifica dipenderà
-    # dai dettagli della condizione e degli argomenti.
-    return all(arg in args for arg in condition.get('args', []))
+    return conditionally_required

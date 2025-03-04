@@ -1,21 +1,15 @@
 def dict_insert(dic, val, key, *keys):
-    """
-    Inserisce un valore in una chiave annidata all'interno di un dizionario.
+    if not keys:
+        # Base case - no more nested keys, insert value directly
+        dic[key] = val
+        return
 
-    Per inserire un valore in una chiave annidata, è necessario fornire tutte le chiavi antenate
-    come argomenti del metodo.
+    # Create nested dictionary if it doesn't exist
+    if key not in dic:
+        dic[key] = {}
+    elif not isinstance(dic[key], dict):
+        # Convert existing value to dict if needed
+        dic[key] = {}
 
-    Esempio:
-      dict_insert({}, 'val', *'key1.key2'.split('.'))
-
-    :param dic: un oggetto dizionario in cui inserire il valore della chiave annidata
-    :param val: un valore da inserire nel dizionario fornito
-    :param key: la prima chiave nella catena di chiavi che conterrà il valore
-    :param keys: sottochiavi nella catena di chiavi
-    """
-    current = dic
-    for k in (key,) + keys:
-        if k not in current:
-            current[k] = {}
-        current = current[k]
-    current = val
+    # Recursively insert into nested dictionary
+    dict_insert(dic[key], val, keys[0], *keys[1:])

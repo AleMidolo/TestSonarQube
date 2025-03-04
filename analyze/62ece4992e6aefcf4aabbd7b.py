@@ -1,21 +1,24 @@
-import os
-import yaml
-
 def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=False):
     """
     Dato un nome di file di configurazione di destinazione e un file YAML di configurazione renderizzato, scrivilo nel file.  
     Crea eventuali directory contenitrici, se necessario. Tuttavia, se il file esiste già e `overwrite` è impostato su `False`, interrompi l'operazione prima di scrivere qualsiasi cosa.
     """
-    # Crea le directory contenitrici se non esistono
-    os.makedirs(os.path.dirname(config_filename), exist_ok=True)
+    import os
+    import pathlib
+
+    # Convert path to Path object
+    config_path = pathlib.Path(config_filename)
     
-    # Controlla se il file esiste già
-    if not overwrite and os.path.exists(config_filename):
-        raise FileExistsError(f"Il file {config_filename} esiste già e overwrite è impostato su False.")
+    # Check if file exists and overwrite is False
+    if config_path.exists() and not overwrite:
+        return
+        
+    # Create parent directories if they don't exist
+    config_path.parent.mkdir(parents=True, exist_ok=True)
     
-    # Scrivi il file di configurazione
-    with open(config_filename, 'w') as config_file:
-        yaml.dump(rendered_config, config_file)
+    # Write the configuration file with specified mode
+    with open(config_path, 'w') as f:
+        f.write(rendered_config)
     
-    # Imposta i permessi del file
-    os.chmod(config_filename, mode)
+    # Set file permissions
+    os.chmod(config_path, mode)

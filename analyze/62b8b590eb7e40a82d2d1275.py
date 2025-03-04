@@ -1,44 +1,27 @@
 def _legacy_mergeOrderings(orderings):
-    """
-    Unisci più ordinamenti in modo che l'ordine all'interno di ciascun ordinamento venga preservato.
-
-    Gli ordinamenti sono vincolati in modo tale che, se un oggetto appare in due o più ordinamenti, il suffisso che inizia con l'oggetto deve essere presente in entrambi gli ordinamenti.
-
-    Ad esempio:
-
-    >>> _mergeOrderings([
-    ... ['x', 'y', 'z'],
-    ... ['q', 'z'],
-    ... [1, 3, 5],
-    ... ['z']
-    ... ])
-    ['x', 'y', 'q', 1, 3, 5, 'z']
-    """
-    from collections import defaultdict, deque
-
-    # Create a graph to represent the orderings
-    graph = defaultdict(list)
-    in_degree = defaultdict(int)
-
-    # Build the graph and in-degree count
+    # Create a dictionary to store the position of each element in its ordering
+    position = {}
     for ordering in orderings:
-        for i in range(len(ordering)):
-            if i > 0:
-                graph[ordering[i - 1]].append(ordering[i])
-                in_degree[ordering[i]] += 1
-            if ordering[i] not in in_degree:
-                in_degree[ordering[i]] = 0
+        for i, element in enumerate(ordering):
+            if element in position:
+                # Check if suffixes match when element appears in multiple orderings
+                suffix1 = ordering[i:]
+                suffix2 = orderings[position[element][0]][position[element][1]:]
+                if suffix1 != suffix2:
+                    raise ValueError("Inconsistent orderings")
+            else:
+                position[element] = (orderings.index(ordering), i)
 
-    # Topological sort using Kahn's algorithm
-    queue = deque([node for node in in_degree if in_degree[node] == 0])
-    merged_order = []
-
-    while queue:
-        node = queue.popleft()
-        merged_order.append(node)
-        for neighbor in graph[node]:
-            in_degree[neighbor] -= 1
-            if in_degree[neighbor] == 0:
-                queue.append(neighbor)
-
-    return merged_order
+    # Create result list by merging orderings
+    result = []
+    used = set()
+    
+    # Process each ordering
+    for ordering in orderings:
+        # Add elements from this ordering that haven't been used yet
+        for element in ordering:
+            if element not in used:
+                result.append(element)
+                used.add(element)
+                
+    return result

@@ -1,59 +1,39 @@
 def hist_to_graph(hist, make_value=None, get_coordinate="left",
                   field_names=("x", "y"), scale=None):
-    """
-    Converti un :class:`.histogram` in un :class:`.graph`.
-
-    *make_value* è una funzione utilizzata per impostare il valore di un punto del grafico.
-    Per impostazione predefinita, il valore è il contenuto del bin.
-    *make_value* accetta un singolo valore (contenuto del bin) senza contesto.
-
-    Questa opzione può essere utilizzata per creare barre di errore nel grafico.
-    Ad esempio, per creare un grafico con errori a partire da un istogramma
-    dove i bin contengono una named tuple con i campi *mean*, *mean_error* e un contesto,
-    si potrebbe utilizzare:
-
-    >>> make_value = lambda bin_: (bin_.mean, bin_.mean_error)
-
-    *get_coordinate* definisce quale sarà la coordinata di un punto del grafico
-    creato a partire da un bin dell'istogramma. Può essere "left" (sinistra, predefinito),
-    "right" (destra) o "middle" (centro).
-
-    *field_names* imposta i nomi dei campi del grafico. Il loro numero deve essere
-    uguale alla dimensione del risultato. Per un *make_value* come quello sopra,
-    i nomi dei campi sarebbero *("x", "y_mean", "y_mean_error")*.
-
-    *scale* diventa la scala del grafico (sconosciuta per impostazione predefinita).
-    Se è ``True``, utilizza la scala dell'istogramma.
-
-    *hist* deve contenere solo bin numerici (senza contesto) oppure *make_value*
-    deve rimuovere il contesto quando crea un grafico numerico.
-
-    Restituisce il grafico risultante.
-    """
+    
+    # Default make_value function just returns bin content
     if make_value is None:
-        make_value = lambda bin_: bin_
-
-    coordinates = []
+        make_value = lambda x: x
+        
+    # Get coordinate mapping functions
+    coordinate_funcs = {
+        "left": lambda bin_: bin_.edges[0],
+        "right": lambda bin_: bin_.edges[1], 
+        "middle": lambda bin_: (bin_.edges[0] + bin_.edges[1])/2
+    }
+    
+    get_coord = coordinate_funcs[get_coordinate]
+    
+    # Create points list
+    points = []
     for bin_ in hist:
-        if get_coordinate == "left":
-            x = bin_.left
-        elif get_coordinate == "right":
-            x = bin_.right
-        elif get_coordinate == "middle":
-            x = bin_.center
+        x = get_coord(bin_)
+        y = make_value(bin_.value)
+        
+        # Handle single values vs tuples
+        if isinstance(y, tuple):
+            points.append((x,) + y)
         else:
-            raise ValueError("Invalid value for get_coordinate")
-
-        values = make_value(bin_)
-        coordinates.append((x, *values))
-
+            points.append((x, y))
+            
+    # Set scale if requested
     if scale is True:
-        # Implement scaling logic based on histogram if needed
-        pass
-
-    graph = {field: [] for field in field_names}
-    for coord in coordinates:
-        for field, value in zip(field_names, coord):
-            graph[field].append(value)
-
-    return graph
+        scale = hist.scale
+            
+    # Create field names based on number of values
+    if len(points[0]) != len(field_names):
+        raise ValueError("Number of field names must match number of values per point")
+        
+    # Import Graph class and create new graph
+    from .graph import Graph
+    return Graph(points, field_names=field_names, scale=scale)

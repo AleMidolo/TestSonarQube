@@ -12,7 +12,14 @@ def base_config(user, etcd_host="localhost", etcd_port=2379):
     """
     config = {
         "user": user,
-        "etcd_host": etcd_host,
-        "etcd_port": etcd_port
+        "database": {
+            "host": etcd_host,
+            "port": etcd_port
+        },
+        "auth": {
+            "type": "static",
+            "username": user
+        }
     }
+    
     return config

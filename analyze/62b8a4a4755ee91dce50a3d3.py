@@ -1,25 +1,27 @@
 def fromutc(self, dt):
-    """
-    Dato un oggetto datetime con consapevolezza del fuso orario (timezone-aware) in un determinato fuso orario, calcola un oggetto datetime con consapevolezza del fuso orario in un nuovo fuso orario.
-
-    Poiché questa è l'unica occasione in cui *sappiamo* di avere un oggetto datetime non ambiguo, cogliamo l'opportunità per determinare se il datetime è ambiguo e si trova in uno stato di "fold" (ad esempio, se è la prima occorrenza, in ordine cronologico, del datetime ambiguo).
-
-    :param dt:  
-        Un oggetto :class:`datetime.datetime` con consapevolezza del fuso orario (timezone-aware).
-    """
-    if dt.tzinfo is None:
-        raise ValueError("dt must be timezone-aware")
+    # Verifica che dt sia un datetime con timezone
+    if dt.tzinfo is not self:
+        dt = dt.replace(tzinfo=self)
     
-    # Convert the datetime to UTC
-    utc_dt = dt.astimezone(self.utc)
+    # Ottieni l'offset UTC per questo datetime
+    utc_offset = self.utcoffset(dt)
     
-    # Calculate the new datetime in the target timezone
-    new_dt = utc_dt.astimezone(self)
+    if utc_offset is None:
+        return dt
     
-    # Check for ambiguity and folding
-    if new_dt.dst() == timedelta(0) and new_dt.utcoffset() != timedelta(0):
-        # This datetime is ambiguous
-        if new_dt.fold == 0:
-            new_dt = new_dt.replace(fold=1)  # Set to the second occurrence
+    # Calcola il nuovo datetime aggiungendo l'offset UTC
+    dt = dt + utc_offset
     
-    return new_dt
+    # Gestione del fold per datetime ambigui
+    dst_offset = self.dst(dt)
+    if dst_offset is not None:
+        # Se c'è un cambio DST, verifica se il datetime è ambiguo
+        standard_offset = self.utcoffset(dt - dst_offset)
+        if standard_offset is not None:
+            # Se gli offset sono diversi, il datetime è ambiguo
+            if standard_offset != utc_offset:
+                # Imposta fold=1 se questo è il primo datetime nell'ambiguità
+                fold = 1 if standard_offset > utc_offset else 0
+                dt = dt.replace(fold=fold)
+    
+    return dt

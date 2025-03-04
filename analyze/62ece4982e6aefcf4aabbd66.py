@@ -16,13 +16,16 @@ def was_processed(processed, path_name, verbose):
         True se il percorso è già presente nel set. False altrimenti.
     """
     import os
-
-    absolute_path = os.path.abspath(path_name)
-
-    if absolute_path in processed:
+    
+    # Converti il percorso in percorso assoluto
+    abs_path = os.path.abspath(path_name)
+    
+    # Verifica se il percorso è già stato elaborato
+    if abs_path in processed:
         if verbose:
-            print(f"Il percorso '{absolute_path}' è già stato elaborato.")
+            print(f"Warning: {path_name} è già stato elaborato")
         return True
-    else:
-        processed.add(absolute_path)
-        return False
+    
+    # Aggiungi il percorso al set dei percorsi elaborati
+    processed.add(abs_path)
+    return False

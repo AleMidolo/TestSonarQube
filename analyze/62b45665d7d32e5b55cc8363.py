@@ -1,16 +1,31 @@
-import argparse
-
 def make_parsers():
     """Crea un parser di livello superiore e i suoi sottoparser e restituiscili come una tupla."""
-    main_parser = argparse.ArgumentParser(description="Parser di livello superiore")
-    
-    subparsers = main_parser.add_subparsers(dest='command', required=True)
+    import argparse
 
-    # Esempio di sottoparser
-    parser_a = subparsers.add_parser('comando_a', help='Esegui il comando A')
-    parser_a.add_argument('--opzione_a', type=int, help='Opzione per il comando A')
+    # Parser principale
+    parser = argparse.ArgumentParser(description='Tool di gestione file')
+    subparsers = parser.add_subparsers(dest='command', help='Comandi disponibili')
 
-    parser_b = subparsers.add_parser('comando_b', help='Esegui il comando B')
-    parser_b.add_argument('--opzione_b', type=str, help='Opzione per il comando B')
+    # Sottoparser per il comando 'list'
+    list_parser = subparsers.add_parser('list', help='Elenca i file in una directory')
+    list_parser.add_argument('directory', nargs='?', default='.', help='Directory da elencare')
+    list_parser.add_argument('-r', '--recursive', action='store_true', help='Elenca ricorsivamente')
 
-    return main_parser, subparsers
+    # Sottoparser per il comando 'copy'
+    copy_parser = subparsers.add_parser('copy', help='Copia file')
+    copy_parser.add_argument('source', help='File sorgente')
+    copy_parser.add_argument('destination', help='Destinazione')
+    copy_parser.add_argument('-f', '--force', action='store_true', help='Sovrascrive file esistenti')
+
+    # Sottoparser per il comando 'move'
+    move_parser = subparsers.add_parser('move', help='Sposta file')
+    move_parser.add_argument('source', help='File sorgente')
+    move_parser.add_argument('destination', help='Destinazione')
+    move_parser.add_argument('-f', '--force', action='store_true', help='Sovrascrive file esistenti')
+
+    # Sottoparser per il comando 'delete'
+    delete_parser = subparsers.add_parser('delete', help='Elimina file')
+    delete_parser.add_argument('files', nargs='+', help='File da eliminare')
+    delete_parser.add_argument('-r', '--recursive', action='store_true', help='Elimina ricorsivamente')
+
+    return parser, list_parser, copy_parser, move_parser, delete_parser

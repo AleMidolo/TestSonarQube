@@ -6,25 +6,35 @@ def _group_files_by_xml_filename(source, xmls, files):
 
     Parametri
     ----------
-        xml_filename : str  
+    xml_filename : str  
         Nomi dei file XML.  
-
+    
     files: list  
         Lista dei file presenti nella cartella o nell'archivio zip.  
+    
     Ritorna
     -------
     dict  
         - chiave: nome dei file XML.  
         - valore: Package.  
     """
-    grouped_files = {}
+    result = {}
     
+    # Iterate through XML files
     for xml in xmls:
-        base_name = xml.split('.')[0]  # Assuming the base name is the part before the first dot
-        grouped_files[base_name] = []
-
-        for file in files:
-            if file.startswith(base_name):
-                grouped_files[base_name].append(file)
-
-    return grouped_files
+        # Get base filename without extension
+        base_name = xml.rsplit('.', 1)[0]
+        
+        # Find all files that start with the XML base name
+        matching_files = [f for f in files if f.startswith(base_name)]
+        
+        # Create package with XML and matching files
+        package = {
+            'xml': xml,
+            'files': matching_files
+        }
+        
+        # Add to result dictionary
+        result[base_name] = package
+        
+    return result

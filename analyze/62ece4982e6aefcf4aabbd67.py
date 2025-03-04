@@ -1,18 +1,20 @@
 def vertex3tuple(vertices):
-    '''
-    Restituisce 3 punti per ogni vertice del poligono. Questo includerà il vertice e i 2 punti su entrambi i lati del vertice::
-
-    Esempio:  
-    Poligono con vertici ABCD  
-    Restituirà:  
-    DAB, ABC, BCD, CDA -> restituisce tuple di 3 elementi  
-    #A    B    C    D  -> dei vertici
-    '''
+    # Create list to store 3-vertex tuples
+    vertex_tuples = []
+    
+    # Get number of vertices
     n = len(vertices)
-    result = []
+    
+    # For each vertex index
     for i in range(n):
-        point1 = vertices[i - 1]  # Previous vertex
-        point2 = vertices[i]      # Current vertex
-        point3 = vertices[(i + 1) % n]  # Next vertex (wrap around)
-        result.append((point1, point2, point3))
-    return result
+        # Get previous vertex (wrap around to end if at start)
+        prev = vertices[(i-1) % n]
+        # Get current vertex
+        curr = vertices[i]
+        # Get next vertex (wrap around to start if at end) 
+        next = vertices[(i+1) % n]
+        
+        # Add tuple of (previous, current, next) vertices
+        vertex_tuples.append((prev, curr, next))
+        
+    return vertex_tuples

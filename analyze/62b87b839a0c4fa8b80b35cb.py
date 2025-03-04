@@ -2,11 +2,16 @@ def _get_err_indices(self, coord_name):
     """
     Ottieni gli indici di errore corrispondenti a una coordinata.
     """
-    # Assuming we have a dictionary of coordinates with their error indices
-    error_indices = {
-        'x': [0, 1, 2],
-        'y': [3, 4],
-        'z': [5, 6, 7, 8]
+    # Dizionario che mappa le coordinate agli indici di errore
+    err_index_map = {
+        'x': [0, 3, 4],  # errori relativi a x: ex, exy, exz
+        'y': [1, 3, 5],  # errori relativi a y: ey, exy, eyz  
+        'z': [2, 4, 5]   # errori relativi a z: ez, exz, eyz
     }
     
-    return error_indices.get(coord_name, [])
+    # Verifica che la coordinata sia valida
+    if coord_name not in err_index_map:
+        raise ValueError(f"Coordinata non valida: {coord_name}")
+        
+    # Restituisce gli indici di errore per la coordinata specificata
+    return err_index_map[coord_name]

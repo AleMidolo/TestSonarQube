@@ -4,14 +4,24 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
 
     Restituisce il risultato come una tupla composta da (un dizionario che associa il nome del sottoparser a uno spazio dei nomi analizzato degli argomenti, una lista di argomenti rimanenti non gestiti da alcun sottoparser).
     """
-    parsed_results = {}
-    remaining_arguments = unparsed_arguments[:]
+    parsed_args = {}
+    remaining_args = unparsed_arguments.copy()
     
-    for name, parser in subparsers.items():
+    # Iterate through each subparser
+    for subparser_name, subparser in subparsers.items():
         try:
-            parsed_args, remaining_arguments = parser.parse_known_args(remaining_arguments)
-            parsed_results[name] = parsed_args
-        except SystemExit:
-            continue  # Ignore errors from parsers that cannot parse the arguments
-
-    return parsed_results, remaining_arguments
+            # Try to parse arguments with current subparser
+            parsed, unknown = subparser.parse_known_args(remaining_args)
+            
+            # Store successfully parsed arguments
+            if parsed:
+                parsed_args[subparser_name] = parsed
+                
+            # Update remaining arguments to those that weren't parsed
+            remaining_args = unknown
+            
+        except Exception:
+            # If parsing fails, continue to next subparser
+            continue
+            
+    return parsed_args, remaining_args

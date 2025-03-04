@@ -1,32 +1,34 @@
-from typing import AnyStr, Union, Dict, Sequence, Tuple
-
 def format(
-                self,
-                sql: AnyStr,
-                params: Union[Dict[Union[str, int], Any], Sequence[Any]],
-        ) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
+    self,
+    sql: AnyStr,
+    params: Union[Dict[Union[str, int], Any], Sequence[Any]],
+) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
     """
     Converte la query SQL per utilizzare i parametri in stile "out" invece dei parametri in stile "in".
 
-    **sql** (:class:`str` o :class:`bytes`) è la query SQL.
+    Args:
+        sql (AnyStr): La query SQL.
+        params (Union[Dict[Union[str, int], Any], Sequence[Any]]): I parametri da convertire.
 
-    Restituisce una :class:`tuple` contenente:
-
-    - La query SQL formattata (:class:`str` o :class:`bytes`).
-
-    - L'insieme dei parametri convertiti in stile "out" (:class:`dict` o :class:`list`).
+    Returns:
+        Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]: Tupla contenente la query SQL formattata
+        e l'insieme dei parametri convertiti.
     """
-    if isinstance(sql, bytes):
-        sql_str = sql.decode('utf-8')
-    else:
-        sql_str = sql
+    # Se i parametri sono una sequenza
+    if isinstance(params, (list, tuple)):
+        # Converte ogni ? in %s
+        formatted_sql = sql.replace('?', '%s')
+        return formatted_sql, params
 
-    if isinstance(params, dict):
-        out_params = {key: f'OUT_{value}' for key, value in params.items()}
-    elif isinstance(params, list):
-        out_params = [f'OUT_{value}' for value in params]
-    else:
-        out_params = params
+    # Se i parametri sono un dizionario
+    elif isinstance(params, dict):
+        # Converte ogni :name o @name in %(name)s
+        formatted_sql = sql
+        for key in params.keys():
+            formatted_sql = formatted_sql.replace(f':{key}', f'%({key})s')
+            formatted_sql = formatted_sql.replace(f'@{key}', f'%({key})s')
+        return formatted_sql, params
 
-    formatted_sql = sql_str.replace("?", "%s")  # Example of converting placeholders
-    return formatted_sql, out_params
+    # Se i parametri non sono né sequenza né dizionario
+    else:
+        raise ValueError("I parametri devono essere una sequenza o un dizionario")

@@ -4,9 +4,9 @@ def tzname_in_python2(namefunc):
 
     L'API tzname() è cambiata in Python 3. In precedenza restituiva stringhe di byte, ma è stata modificata per restituire stringhe unicode.
     """
-    def wrapper(*args, **kwargs):
-        result = namefunc(*args, **kwargs)
-        if isinstance(result, unicode):
-            return result.encode('utf-8')
-        return result
-    return wrapper
+    def adjust_encoding(*args, **kwargs):
+        name = namefunc(*args, **kwargs)
+        if name is not None and isinstance(name, unicode):
+            name = name.encode()
+        return name
+    return adjust_encoding

@@ -3,56 +3,72 @@ def lfu_cache(maxsize=128, typed=False):
     Decorator per racchiudere una funzione con un oggetto callable di memoizzazione
     che salva fino a `maxsize` risultati basandosi su un algoritmo Least Frequently Used (LFU).
     """
-    from collections import defaultdict, OrderedDict
-    import functools
-
-    class LFUCache:
-        def __init__(self, maxsize):
-            self.maxsize = maxsize
-            self.cache = {}
-            self.freq = defaultdict(OrderedDict)
-            self.min_freq = 0
-
-        def get(self, key):
-            if key not in self.cache:
-                return -1
-            value, freq = self.cache[key]
-            del self.freq[freq][key]
-            if not self.freq[freq]:
-                del self.freq[freq]
-                if self.min_freq == freq:
-                    self.min_freq += 1
-            self.freq[freq + 1][key] = value
-            self.cache[key] = (value, freq + 1)
-            return value
-
-        def put(self, key, value):
-            if key in self.cache:
-                self.cache[key] = (value, self.cache[key][1])
-                self.get(key)  # Update frequency
-                return
-            if len(self.cache) >= self.maxsize:
-                evict_key, _ = self.freq[self.min_freq].popitem(last=False)
-                del self.cache[evict_key]
-            self.cache[key] = (value, 1)
-            self.freq[1][key] = value
-            self.min_freq = 1
-
+    from collections import defaultdict
+    from functools import wraps
+    
     def decorator(func):
-        cache = LFUCache(maxsize)
-
-        @functools.wraps(func)
+        # Cache per memorizzare i risultati
+        cache = {}
+        # Contatore delle frequenze di utilizzo
+        frequencies = defaultdict(int)
+        # Dizionario per tenere traccia dell'ordine di inserimento per ogni frequenza
+        freq_list = defaultdict(list)
+        
+        @wraps(func)
         def wrapper(*args, **kwargs):
+            # Crea la chiave della cache
             if typed:
-                key = (args, frozenset(kwargs.items()))
+                key = (*args, *[(k, type(v), v) for k, v in sorted(kwargs.items())])
             else:
-                key = args
-            result = cache.get(key)
-            if result == -1:
-                result = func(*args, **kwargs)
-                cache.put(key, result)
+                key = (*args, *sorted(kwargs.items()))
+                
+            try:
+                key = hash(key)
+            except TypeError:
+                # Se la chiave non è hashable, esegui la funzione senza cache
+                return func(*args, **kwargs)
+                
+            # Se il risultato è già in cache
+            if key in cache:
+                # Aggiorna le frequenze
+                old_freq = frequencies[key]
+                frequencies[key] += 1
+                new_freq = frequencies[key]
+                
+                # Aggiorna le liste di frequenza
+                freq_list[old_freq].remove(key)
+                if not freq_list[old_freq]:
+                    del freq_list[old_freq]
+                freq_list[new_freq].append(key)
+                
+                return cache[key]
+                
+            # Se la cache è piena, rimuovi l'elemento meno frequentemente usato
+            if maxsize > 0 and len(cache) >= maxsize:
+                # Trova la frequenza minima
+                min_freq = min(freq_list.keys())
+                # Rimuovi il primo elemento con quella frequenza (LRU tra quelli con stessa frequenza)
+                lfu_key = freq_list[min_freq].pop(0)
+                if not freq_list[min_freq]:
+                    del freq_list[min_freq]
+                del cache[lfu_key]
+                del frequencies[lfu_key]
+                
+            # Calcola il nuovo risultato
+            result = func(*args, **kwargs)
+            
+            # Memorizza il nuovo risultato
+            if maxsize != 0:
+                cache[key] = result
+                frequencies[key] = 1
+                freq_list[1].append(key)
+                
             return result
-
+            
+        # Aggiungi metodi per accedere alla cache
+        wrapper.cache_info = lambda: cache
+        wrapper.cache_clear = lambda: (cache.clear(), frequencies.clear(), freq_list.clear())
+        
         return wrapper
-
+        
     return decorator

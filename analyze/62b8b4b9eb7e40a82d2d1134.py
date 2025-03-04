@@ -1,5 +1,10 @@
 def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
     """Restituisce i nomi e le descrizioni degli attributi definiti dall'interfaccia."""
     if not all:
-        return {attr: desc for attr, desc in self.attributes.items() if not desc.hidden}
-    return {attr: desc for attr, desc in self.attributes.items()}
+        return [(name, attr.getDoc()) 
+                for name, attr in self.namesAndDescriptions(all=True)
+                if not name.startswith('_')]
+    
+    return [(name, attr.getDoc()) 
+            for name, attr in self.getDescriptors() 
+            if IElement.providedBy(attr)]

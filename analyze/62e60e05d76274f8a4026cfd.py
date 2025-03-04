@@ -6,7 +6,7 @@ def index(self, key):
     :return: indice  
     :rtype: int
     """
-    for idx, element in enumerate(self):
-        if element == key:
-            return idx
-    raise ValueError(f"{key} non trovato nella lista.")
+    for i in range(len(self)):
+        if self[i] == key:
+            return i
+    raise ValueError(f"{key} is not in list")

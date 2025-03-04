@@ -8,4 +8,5 @@ def dehydrate_time(value):
     """
     if value is None:
         return None
-    return value.isoformat()
+        
+    return value.strftime('%H:%M:%S')

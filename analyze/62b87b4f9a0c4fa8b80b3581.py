@@ -11,14 +11,30 @@ def scale(self, other=None, recompute=False):
     Gli istogrammi con scala pari a zero non possono essere riscalati.  
     Viene sollevata un'eccezione :exc:`.LenaValueError` se si tenta di farlo.
     """
+    # Se other è None, calcola e restituisce la scala
     if other is None:
-        if not hasattr(self, '_scale') or recompute:
-            self._scale = self._calculate_scale()
+        # Se la scala non è stata calcolata o viene richiesto il ricalcolo
+        if self._scale is None or recompute:
+            # Calcola l'integrale dell'istogramma sommando i contenuti dei bin
+            self._scale = sum(self._contents)
         return self._scale
-
-    if isinstance(other, float):
-        if self._scale == 0:
-            raise LenaValueError("Cannot rescale histogram with zero scale.")
-        self._rescale(other)
+        
+    # Se viene fornito un valore per riscalare
     else:
-        raise TypeError("Expected a float value for 'other'.")
+        # Calcola la scala corrente
+        current_scale = self.scale()
+        
+        # Controlla se la scala è zero
+        if current_scale == 0:
+            raise LenaValueError("Cannot rescale histogram with zero scale")
+            
+        # Calcola il fattore di scala
+        scale_factor = float(other) / current_scale
+        
+        # Riscala i contenuti e gli errori
+        self._contents = [x * scale_factor for x in self._contents]
+        if self._errors is not None:
+            self._errors = [x * scale_factor for x in self._errors]
+            
+        # Aggiorna la scala memorizzata
+        self._scale = float(other)

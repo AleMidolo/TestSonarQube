@@ -2,15 +2,31 @@ def _include_groups(self, parser_dict):
     """
     Risolve la direttiva "include dict" nei file di specifica
     """
-    if 'include' in parser_dict:
-        include_files = parser_dict['include']
-        for include_file in include_files:
-            with open(include_file, 'r') as f:
-                included_dict = self._parse_file(f)
-                parser_dict.update(included_dict)
-    return parser_dict
-
-def _parse_file(self, file):
-    # Dummy implementation for parsing a file into a dictionary
-    # This should be replaced with actual parsing logic
-    return {}  # Replace with actual parsing logic
+    if not parser_dict:
+        return {}
+        
+    result = {}
+    for key, value in parser_dict.items():
+        if isinstance(value, dict):
+            if 'include' in value:
+                # Get included dictionary name
+                include_name = value['include']
+                
+                # Look up included dictionary in self.groups
+                if include_name in self.groups:
+                    included_dict = self.groups[include_name]
+                    # Merge included dict with current dict
+                    merged = included_dict.copy()
+                    merged.update(value)
+                    # Remove the include directive
+                    del merged['include']
+                    result[key] = merged
+                else:
+                    raise KeyError(f"Referenced group '{include_name}' not found")
+            else:
+                # Recursively process nested dictionaries
+                result[key] = self._include_groups(value)
+        else:
+            result[key] = value
+            
+    return result
