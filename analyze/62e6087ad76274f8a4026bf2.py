@@ -19,22 +19,20 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **
         "signature": 0x2F,  # DISCARD message signature
         "fields": message_params
     }
-
-    # 设置钩子
-    if dehydration_hooks is None:
-        dehydration_hooks = {}
-    if hydration_hooks is None:
-        hydration_hooks = {}
-
+    
+    # 应用dehydration hooks（如果有）
+    if dehydration_hooks:
+        for type_, hook in dehydration_hooks.items():
+            if isinstance(message_params, type_):
+                message_params = hook(message_params)
+    
+    # 将消息添加到输出队列
+    self._append(message)
+    
     # 创建响应对象
     response = Response(
-        message=message,
-        dehydration_hooks=dehydration_hooks,
         hydration_hooks=hydration_hooks,
         **handlers
     )
-
-    # 将消息添加到输出队列
-    self._append(message, response)
-
+    
     return response

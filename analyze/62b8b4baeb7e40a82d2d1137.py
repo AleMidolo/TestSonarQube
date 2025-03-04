@@ -1,16 +1,14 @@
 def verifyObject(iface, candidate, tentative=False):
     from zope.interface.exceptions import Invalid, DoesNotImplement, BrokenImplementation, BrokenMethodImplementation
-    from zope.interface.verify import verifyClass
     from zope.interface.interface import Method
     
-    # Step 1: Check if candidate provides interface
+    errors = []
+
+    # Step 1: Check if candidate declares it provides the interface
     if not tentative:
         if not iface.providedBy(candidate):
-            raise DoesNotImplement(iface)
+            errors.append(DoesNotImplement(iface))
 
-    # Collect all errors
-    errors = []
-    
     # Step 2 & 3: Check methods
     for name, desc in iface.namesAndDescriptions(1):
         if isinstance(desc, Method):
@@ -26,12 +24,21 @@ def verifyObject(iface, candidate, tentative=False):
                 errors.append(BrokenMethodImplementation(name, "Not a method"))
                 continue
 
-            # Check method signature
+            # Check method signature if possible
             try:
-                verifyClass(iface, attr.__class__)
-            except Invalid as e:
-                errors.append(BrokenMethodImplementation(name, str(e)))
+                from inspect import signature
+                expected_sig = signature(desc)
+                actual_sig = signature(attr)
                 
+                if expected_sig != actual_sig:
+                    errors.append(BrokenMethodImplementation(
+                        name,
+                        f"Signature mismatch. Expected {expected_sig}, got {actual_sig}"
+                    ))
+            except ValueError:
+                # Can't get signature, skip this check
+                pass
+
     # Step 4: Check attributes
     for name, desc in iface.namesAndDescriptions(1):
         if not isinstance(desc, Method):
@@ -40,7 +47,7 @@ def verifyObject(iface, candidate, tentative=False):
             except AttributeError:
                 errors.append(BrokenImplementation(iface, name))
 
-    # Raise collected errors
+    # Handle errors
     if len(errors) == 1:
         raise errors[0]
     elif errors:

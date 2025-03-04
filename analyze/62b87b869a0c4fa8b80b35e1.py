@@ -22,25 +22,23 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left", field_names=("x"
         # Get y value(s) using make_value function
         y = make_value(bin_)
         
-        # Create point tuple
+        # Create point tuple with x and y values
         if isinstance(y, tuple):
-            point = (x,) + y
+            points.append((x,) + y)
         else:
-            point = (x, y)
-            
-        points.append(point)
+            points.append((x, y))
 
     # Validate field_names length matches point dimensions
     point_dim = len(points[0])
     if len(field_names) != point_dim:
         raise ValueError(f"Number of field names ({len(field_names)}) must match point dimensions ({point_dim})")
 
-    # Create graph with appropriate scale
-    from graph import Graph
-    graph = Graph(points, field_names=field_names)
-    
+    # Create graph with points and field names
+    from graph import Graph  # Assuming there's a Graph class
+    graph = Graph(points=points, field_names=field_names)
+
     # Set scale if requested
     if scale:
         graph.scale = hist.scale
-        
+
     return graph

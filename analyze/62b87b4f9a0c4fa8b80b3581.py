@@ -1,7 +1,7 @@
 def scale(self, other=None, recompute=False):
     # Return current scale if no other value provided
     if other is None:
-        # Recompute if requested or not computed before
+        # Recompute scale if requested or not computed before
         if recompute or not hasattr(self, '_scale'):
             self._scale = sum(self.values())
         return self._scale

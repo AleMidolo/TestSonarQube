@@ -16,7 +16,8 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
     complex_type_func = self.COMPLEX_TYPES[type_name]
     complex_args = (self.vars, self.defaults, self.plugin_path)
     
-    def complex_action(value):
-        return complex_type_func(complex_args, subcommand, spec_option)(value)
-        
-    return complex_action
+    try:
+        complex_action = complex_type_func(complex_args, subcommand, spec_option)
+        return complex_action
+    except Exception as e:
+        raise ValueError(f"Failed to create complex type {type_name} for option {option_name}: {str(e)}")

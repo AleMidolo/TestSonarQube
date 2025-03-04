@@ -23,12 +23,11 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
         @wraps(func)
         def wrapper(*args, **kwargs):
             key = make_key(args, kwargs)
-            now = timer()
             
             # 检查是否在缓存中且未过期
             if key in cache:
                 result, timestamp = cache[key]
-                if now - timestamp <= ttl:
+                if timer() - timestamp <= ttl:
                     # 将访问的项移到末尾(最近使用)
                     cache.move_to_end(key)
                     return result
@@ -39,13 +38,13 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
             # 计算新结果
             result = func(*args, **kwargs)
             
-            # 如果缓存已满，删除最早的项
-            if maxsize > 0:
-                while len(cache) >= maxsize:
-                    cache.popitem(last=False)
-                    
-            # 存储新结果
-            cache[key] = (result, now)
+            # 添加到缓存
+            cache[key] = (result, timer())
+            
+            # 如果超过最大大小，删除最早的项
+            if maxsize > 0 and len(cache) > maxsize:
+                cache.popitem(last=False)
+                
             return result
             
         # 添加缓存清理方法

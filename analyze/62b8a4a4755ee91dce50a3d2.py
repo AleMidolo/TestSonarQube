@@ -15,7 +15,7 @@ def _fromutc(self, dt):
     # 获取UTC偏移量
     utc_offset = self.utcoffset(dt)
     if utc_offset is None:
-        return dt
+        raise ValueError("fromutc() requires a non-None utcoffset()")
 
     # 计算本地时间
     local_dt = dt + utc_offset
@@ -23,18 +23,7 @@ def _fromutc(self, dt):
     # 获取dst偏移量
     dst_offset = self.dst(local_dt)
     if dst_offset is None:
-        return local_dt
+        raise ValueError("fromutc() requires a non-None dst()")
 
-    # 检查是否在DST转换期间
-    fold = 0
-    if dst_offset != self.dst(local_dt - dst_offset):
-        # 我们在DST转换期间
-        # 检查是否在重复时间段内
-        utc_transition = dt + utc_offset - dst_offset
-        local_transition = utc_transition + self.dst(utc_transition)
-        
-        if local_dt > local_transition:
-            fold = 1
-
-    # 返回最终结果，包含fold信息
-    return local_dt.replace(fold=fold)
+    # 调整最终时间
+    return local_dt + dst_offset

@@ -4,46 +4,44 @@ def extend_cli(self, root_subparsers):
 
     :param subparser: 要扩展的子解析器对象。
     """
-    # 创建规范子命令解析器
+    # 创建子命令解析器
     parser = root_subparsers.add_parser(
-        'standard',
-        help='Standard code formatting and linting options'
+        'standards',
+        help='Standards and specifications related commands'
     )
-
-    # 添加规范相关的命令行参数
-    parser.add_argument(
-        '--style',
-        choices=['pep8', 'google', 'numpy'],
-        default='pep8',
-        help='Code style to enforce'
+    
+    # 添加子命令
+    subparsers = parser.add_subparsers(
+        title='Standards commands',
+        dest='standards_command'
     )
-
-    parser.add_argument(
-        '--max-line-length',
-        type=int,
-        default=79,
-        help='Maximum allowed line length'
+    
+    # 添加列表命令
+    list_parser = subparsers.add_parser(
+        'list',
+        help='List available standards'
     )
-
-    parser.add_argument(
-        '--ignore',
-        nargs='+',
-        default=[],
-        help='List of error codes to ignore'
+    
+    # 添加查看命令
+    view_parser = subparsers.add_parser(
+        'view',
+        help='View details of a specific standard'
     )
-
-    parser.add_argument(
-        '--select',
-        nargs='+', 
-        default=[],
-        help='List of error codes to specifically check'
+    view_parser.add_argument(
+        'standard_id',
+        help='ID of the standard to view'
     )
-
-    parser.add_argument(
-        '--verbose',
-        action='store_true',
-        help='Increase output verbosity'
+    
+    # 添加验证命令
+    validate_parser = subparsers.add_parser(
+        'validate',
+        help='Validate against a standard'
     )
-
-    # 设置函数来处理该子命令
-    parser.set_defaults(func=self.handle_standard_command)
+    validate_parser.add_argument(
+        'standard_id',
+        help='ID of the standard to validate against'
+    )
+    validate_parser.add_argument(
+        'target',
+        help='Target to validate'
+    )

@@ -4,7 +4,7 @@ def strip_root(path, root):
 
     返回值:
       一个不包含根目录的路径
-
+    
     从路径中移除根目录。失败时抛出异常。
     """
     # 标准化路径格式
@@ -22,8 +22,8 @@ def strip_root(path, root):
     # 移除root
     stripped_path = path[len(root):]
     
-    # 如果结果为空,返回'.'表示当前目录
+    # 如果结果为空,抛出异常
     if not stripped_path:
-        return '.'
+        raise ValueError(f"Stripping root '{root}' from path '{path}' results in empty path")
         
     return stripped_path

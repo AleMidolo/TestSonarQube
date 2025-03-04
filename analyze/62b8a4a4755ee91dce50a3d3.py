@@ -21,14 +21,18 @@ def fromutc(self, dt):
     if dst_offset is None:
         return local_dt
 
-    # 检查是否存在歧义
-    fold = 0
-    if dst_offset != self.dst(local_dt - dst_offset):
-        # 存在歧义,需要检查是否是第一次出现
-        utc_transition = local_dt - utc_offset - dst_offset
-        local_transition = utc_transition + self.utcoffset(utc_transition)
-        
-        if local_dt.replace(tzinfo=None) > local_transition.replace(tzinfo=None):
-            fold = 1
+    # 检查是否存在歧义时间
+    utc_offset_alt = self.utcoffset(local_dt - dst_offset)
+    if utc_offset_alt is None:
+        return local_dt
 
-    return local_dt.replace(fold=fold)
+    if utc_offset != utc_offset_alt:
+        # 存在歧义时间
+        # 如果是向前跳转(spring forward)，返回第一个有效时间
+        if utc_offset < utc_offset_alt:
+            return local_dt + dst_offset
+        # 如果是向后跳转(fall back)，返回第一个出现的时间
+        else:
+            return local_dt
+
+    return local_dt

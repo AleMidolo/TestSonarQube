@@ -8,15 +8,17 @@ def find_tags(text: str, replacer: callable = None) -> Tuple[Set, str]:
 
     返回一个包含标签的集合以及原始文本或替换后的文本。
     """
-    # 初始化标签集合和结果文本
+    # 初始化标签集合
     tags = set()
+    
+    # 初始化结果文本
     result_text = text
     
     # 标记是否在代码块内
     in_code_block = False
-    lines = text.split('\n')
     
-    # 遍历每一行
+    # 按行处理文本
+    lines = text.split('\n')
     for i, line in enumerate(lines):
-        # 检查是否进入或离开代码块
-        if line.strip().startswith('
+        # 检查是否进入/离开代码块
+        if '

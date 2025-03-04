@@ -10,10 +10,10 @@ def formatmany(
     if not converted_params:
         return sql, []
         
-    # Get the first converted sql and params
+    # Get the converted sql from first conversion (all will be the same)
     converted_sql = converted_params[0][0]
     
     # Extract just the params from each conversion
-    params_list = [conv[1] for conv in converted_params]
+    out_params = [conversion[1] for conversion in converted_params]
     
-    return converted_sql, params_list
+    return converted_sql, out_params

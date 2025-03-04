@@ -4,19 +4,22 @@ def addignored(ignored):
     """
     import subprocess
     
-    # 运行git ls-files命令获取所有文件
-    result = subprocess.run(['git', 'ls-files', '--others', '--ignored', '--exclude-standard'], 
-                          capture_output=True, 
-                          text=True)
-    
-    # 将输出转换为列表并过滤空行
-    files = [f for f in result.stdout.split('\n') if f]
-    
-    # 筛选被忽略的文件
-    ignored_files = [f for f in files if f in ignored]
-    
-    # 对列表排序
+    # 运行git命令获取被忽略的文件列表
+    try:
+        result = subprocess.run(['git', 'status', '--ignored', '--porcelain'], 
+                              capture_output=True, 
+                              text=True)
+        output = result.stdout
+    except subprocess.CalledProcessError:
+        return ""
+        
+    # 将输出转换为列表并筛选被忽略的文件
+    ignored_files = []
+    for line in output.split('\n'):
+        if line.startswith('!!'):  # git status中被忽略的文件以!!开头
+            filename = line[3:].strip()  # 去掉!!和空格
+            ignored_files.append(filename)
+            
+    # 排序并合并为逗号分隔的字符串
     ignored_files.sort()
-    
-    # 用逗号连接文件名
     return ','.join(ignored_files)

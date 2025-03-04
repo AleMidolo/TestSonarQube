@@ -5,7 +5,7 @@ def dehydrate_point(value):
 
     :param value: 
     :type value: Point 
-    :return: 
+    :return:
     """
     if value is None:
         return None

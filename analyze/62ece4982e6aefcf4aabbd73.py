@@ -26,18 +26,17 @@ def split(s, platform='this'):
     elif platform == 0:  # Windows/CMD style
         # Windows command line parsing rules:
         # - Quotes only needed if spaces in argument
-        # - Backslash only escapes quote if immediately before it
-        # - Quotes can appear in middle of argument
-        pattern = r'''(?:"[^"]*"|[^\s"])+'''
+        # - Backslash is literal unless followed by quote
+        # - ^ is escape character
+        pattern = r'''(?:"[^"]*"|'[^']*'|\S+)'''
         tokens = re.findall(pattern, s)
         
         result = []
         for token in tokens:
             if token.startswith('"') and token.endswith('"'):
-                # Remove surrounding quotes
+                # Remove quotes and handle escaped characters
                 token = token[1:-1]
-            # Handle escaped quotes
-            token = re.sub(r'\\(?=")', '', token)
+                token = re.sub(r'\^(.)', r'\1', token)
             result.append(token)
         return result
 

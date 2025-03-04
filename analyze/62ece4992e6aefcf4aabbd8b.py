@@ -10,10 +10,11 @@ def force_string(obj):
     此函数在对象是字符串的情况下，返回对应的 UTF-8 编码的字节对象。
     """
     # 检查是否为numpy.bytes类型
-    if hasattr(obj, 'dtype') and obj.dtype.char == 'S':
+    if hasattr(obj, 'dtype') and obj.dtype.kind == 'S':
         return obj.decode('utf-8')
+    
     # 检查是否为bytes类型
-    elif isinstance(obj, bytes):
+    if isinstance(obj, bytes):
         return obj.decode('utf-8')
-    # 其他类型直接返回
+        
     return obj

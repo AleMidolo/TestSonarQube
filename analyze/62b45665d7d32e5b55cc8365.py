@@ -21,9 +21,9 @@ def parse_arguments(*unparsed_arguments):
     init_parser.add_argument('--force', '-f', action='store_true', help='强制初始化')
     
     # 添加 "run" 子命令
-    run_parser = subparsers.add_parser('run', help='运行程序')
-    run_parser.add_argument('--input', '-i', type=str, required=True, help='输入文件')
-    run_parser.add_argument('--output', '-o', type=str, help='输出文件')
+    run_parser = subparsers.add_parser('run', help='运行任务')
+    run_parser.add_argument('--input', '-i', required=True, help='输入文件')
+    run_parser.add_argument('--output', '-o', required=True, help='输出文件')
     
     # 解析参数
     if unparsed_arguments:
@@ -38,9 +38,11 @@ def parse_arguments(*unparsed_arguments):
     if args.command:
         # 创建一个新的 Namespace 对象，只包含子命令相关的参数
         sub_args = argparse.Namespace()
-        for key, value in vars(args).items():
-            if key != 'command':
-                setattr(sub_args, key, value)
+        if args.command == 'init':
+            sub_args.force = args.force
+        elif args.command == 'run':
+            sub_args.input = args.input
+            sub_args.output = args.output
         result[args.command] = sub_args
-    
+        
     return result

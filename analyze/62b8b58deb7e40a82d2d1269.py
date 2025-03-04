@@ -12,23 +12,9 @@ def directlyProvidedBy(object):
         return _empty
         
     # 如果对象有__provides__属性
-    if isinstance(provides, Provides):
-        # 如果provides是Provides类的实例,直接返回
-        return provides
-
-    # 获取对象的类
-    klass = getattr(object, "__class__", None)
-    
-    if klass is None:
-        # 如果对象没有__class__属性,返回provides
-        return provides
+    if isinstance(object, type):
+        # 如果对象是类,返回空声明
+        return _empty
         
-    # 获取类的implements规范
-    implements = getattr(klass, "__implemented__", None)
-    
-    if implements is not None:
-        # 如果类有implements规范
-        # 从provides中移除implements规范
-        provides = provides - implements
-        
+    # 返回对象的provides属性
     return provides
