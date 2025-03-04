@@ -10,6 +10,10 @@ def is_fill_request_seq(seq):
         except NameError:
             return False
             
+    # Check if seq is None
+    if seq is None:
+        return False
+        
     # Check if seq is a Source sequence
     try:
         if isinstance(seq, Source):
@@ -18,9 +22,8 @@ def is_fill_request_seq(seq):
         pass
         
     # Handle single item case
-    if not isinstance(seq, Sequence):
+    if not isinstance(seq, Sequence) or isinstance(seq, (str, bytes)):
         return is_fill_request(seq)
         
-    # Handle sequence case
-    # Check if any element is a FillRequest
+    # Check if sequence contains at least one FillRequest
     return any(is_fill_request(item) for item in seq)

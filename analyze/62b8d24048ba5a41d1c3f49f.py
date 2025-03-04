@@ -9,63 +9,50 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     并为每个缓存项设置一个生存时间（TTL，单位为秒）。
     """
     def decorator(func):
-        # 使用OrderedDict来实现LRU缓存
+        # 使用OrderedDict存储缓存,保持插入顺序
         cache = OrderedDict()
-        # 存储缓存项的过期时间
-        timestamps = {}
-
-        def make_key(args, kwds):
-            # 生成缓存键
-            key = args
-            if kwds:
-                key += tuple(sorted(kwds.items()))
+        
+        # 生成缓存键的函数
+        def make_key(args, kwargs):
+            key = (args, frozenset(kwargs.items()))
             if typed:
                 key += tuple(type(arg) for arg in args)
-                if kwds:
-                    key += tuple(type(v) for v in kwds.values())
+                key += tuple(type(val) for val in kwargs.values())
             return hash(key)
-
+        
         @wraps(func)
         def wrapper(*args, **kwargs):
             key = make_key(args, kwargs)
-            current_time = timer()
-
+            now = timer()
+            
             # 检查是否在缓存中且未过期
             if key in cache:
-                if current_time - timestamps[key] < ttl:
-                    # 将最近使用的项移到末尾
+                result, timestamp = cache[key]
+                if now - timestamp <= ttl:
+                    # 将访问的项移到末尾(最近使用)
                     cache.move_to_end(key)
-                    return cache[key]
+                    return result
                 else:
-                    # 删除过期项
+                    # 过期则删除
                     del cache[key]
-                    del timestamps[key]
-
-            # 计算新值
+            
+            # 计算新结果
             result = func(*args, **kwargs)
-
+            
             # 如果缓存已满，删除最早的项
             if maxsize > 0:
                 while len(cache) >= maxsize:
-                    oldest = next(iter(cache))
-                    del cache[oldest]
-                    del timestamps[oldest]
-
-            # 添加新项到缓存
-            cache[key] = result
-            timestamps[key] = current_time
-            cache.move_to_end(key)
-
+                    cache.popitem(last=False)
+                    
+            # 存储新结果
+            cache[key] = (result, now)
             return result
-
-        # 添加缓存统计和清理方法
-        wrapper.cache_info = lambda: {
-            'maxsize': maxsize,
-            'currsize': len(cache),
-            'ttl': ttl
-        }
-        wrapper.cache_clear = lambda: (cache.clear(), timestamps.clear())
-
+            
+        # 添加缓存清理方法
+        def clear_cache():
+            cache.clear()
+            
+        wrapper.clear_cache = clear_cache
         return wrapper
-
+        
     return decorator

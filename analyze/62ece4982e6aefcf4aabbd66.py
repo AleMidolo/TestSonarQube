@@ -20,7 +20,7 @@ def was_processed(processed, path_name, verbose):
     # 检查路径是否已在集合中
     if abs_path in processed:
         if verbose:
-            print(f"Warning: Path '{path_name}' has already been processed")
+            print(f"Warning: {path_name} has already been processed")
         return True
         
     # 将新路径添加到集合中

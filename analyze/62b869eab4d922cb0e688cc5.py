@@ -5,7 +5,7 @@ def update_last_applied_manifest_dict_from_resp(last_applied_manifest, observer_
         if field_name not in last_applied_manifest:
             last_applied_manifest[field_name] = {}
 
-        # If field not in response, raise KeyError
+        # If field is not in response, raise KeyError
         if field_name not in response:
             raise KeyError(f"Field {field_name} not found in Kubernetes response")
 
@@ -16,16 +16,7 @@ def update_last_applied_manifest_dict_from_resp(last_applied_manifest, observer_
                 field_schema,
                 response[field_name]
             )
-        # If field schema is a list, update list fields
-        elif isinstance(field_schema, list):
-            if not isinstance(last_applied_manifest[field_name], list):
-                last_applied_manifest[field_name] = []
-            update_last_applied_manifest_list_from_resp(
-                last_applied_manifest[field_name],
-                field_schema[0] if field_schema else {},
-                response[field_name]
-            )
-        # For primitive fields, directly copy value from response
+        # Otherwise update the field value directly
         else:
             last_applied_manifest[field_name] = response[field_name]
 

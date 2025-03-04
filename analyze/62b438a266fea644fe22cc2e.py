@@ -10,19 +10,18 @@ def parse_arguments(*unparsed_arguments):
     
     # 添加全局参数
     parser.add_argument('--verbose', '-v', action='store_true', help='启用详细输出')
-    parser.add_argument('--config', '-c', type=str, help='配置文件路径')
     
     # 创建子解析器
     subparsers = parser.add_subparsers(dest='command', help='可用的子命令')
     
     # 添加 "init" 子命令
     init_parser = subparsers.add_parser('init', help='初始化配置')
-    init_parser.add_argument('--force', '-f', action='store_true', help='强制初始化')
+    init_parser.add_argument('--config', type=str, help='配置文件路径')
     
     # 添加 "run" 子命令
-    run_parser = subparsers.add_parser('run', help='运行程序')
-    run_parser.add_argument('--input', '-i', type=str, required=True, help='输入文件路径')
-    run_parser.add_argument('--output', '-o', type=str, help='输出文件路径')
+    run_parser = subparsers.add_parser('run', help='运行任务')
+    run_parser.add_argument('--input', type=str, required=True, help='输入文件路径')
+    run_parser.add_argument('--output', type=str, help='输出文件路径')
     
     # 解析参数
     if len(unparsed_arguments) == 0:
@@ -31,15 +30,15 @@ def parse_arguments(*unparsed_arguments):
         args = parser.parse_args(unparsed_arguments)
     
     # 创建返回字典
-    result = {'global': args}
+    parsed_args = {}
     
-    # 如果指定了子命令，将其参数添加到字典中
-    if args.command:
-        # 创建一个新的 Namespace 对象，只包含子命令相关的参数
-        sub_args = argparse.Namespace()
-        for key, value in vars(args).items():
-            if key != 'command':
-                setattr(sub_args, key, value)
-        result[args.command] = sub_args
+    # 添加全局参数
+    parsed_args['global'] = argparse.Namespace(verbose=args.verbose)
     
-    return result
+    # 根据子命令添加特定参数
+    if args.command == 'init':
+        parsed_args['init'] = argparse.Namespace(config=args.config)
+    elif args.command == 'run':
+        parsed_args['run'] = argparse.Namespace(input=args.input, output=args.output)
+        
+    return parsed_args

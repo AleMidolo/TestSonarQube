@@ -35,10 +35,10 @@ def find_path_type(path):
                 
             # 检查内容判断类型
             if "ocfl_" in content.lower():
-                if "root" in content.lower():
-                    return "root"
-                elif "object" in content.lower():
+                if "object" in content.lower():
                     return "object"
+                elif "root" in content.lower():
+                    return "root"
                     
             return f"Unknown Namaste content: {content}"
             

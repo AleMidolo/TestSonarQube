@@ -10,7 +10,7 @@ def protocol_handlers(cls, protocol_version=None):
         (5, 0): BoltProtocolV5
     }
 
-    # 如果没有指定版本,返回所有可用的处理程序
+    # 如果未指定版本,返回所有可用的处理程序
     if protocol_version is None:
         return available_handlers
 

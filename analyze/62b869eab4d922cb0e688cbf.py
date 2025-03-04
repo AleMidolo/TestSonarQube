@@ -29,7 +29,7 @@ def generate_default_observer_schema(app):
                 ]
             }
             
-            # 为特定类型的资源添加额外的默认条件
+            # 为特定资源类型添加额外的默认条件
             if kind == 'Deployment':
                 default_schema['conditions'].append({
                     'type': 'Progressing',

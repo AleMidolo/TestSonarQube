@@ -12,7 +12,7 @@ def cached(cache, key=hashkey, lock=None):
                 result = cache[k]
                 return result
             except KeyError:
-                # 如果缓存中没有，则执行函数并缓存结果
+                # 如果缓存中没有，则执行函数
                 if lock:
                     with lock:
                         result = func(*args, **kwargs)

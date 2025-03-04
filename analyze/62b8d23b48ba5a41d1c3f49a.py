@@ -8,27 +8,28 @@ def mru_cache(maxsize=128, typed=False):
         
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # 如果typed=True,将参数类型也作为key的一部分
+            # 如果启用typed,将参数类型加入key
             if typed:
-                key = (tuple(args), tuple(sorted(kwargs.items())), 
+                key = (args, tuple(sorted(kwargs.items())), 
                       tuple(type(arg) for arg in args),
                       tuple(type(val) for val in kwargs.values()))
             else:
-                key = (tuple(args), tuple(sorted(kwargs.items())))
+                key = (args, tuple(sorted(kwargs.items())))
                 
-            # 如果key在缓存中,将其移到最后(最近使用)并返回值
+            # 如果key在缓存中
             if key in cache:
+                # 将该项移到OrderedDict末尾(最近使用)
                 cache.move_to_end(key)
                 return cache[key]
                 
             # 计算新的结果
             result = func(*args, **kwargs)
             
-            # 如果缓存已满,删除最早使用的项
+            # 如果缓存已满,删除最近最少使用的项(OrderedDict开头)
             if len(cache) >= maxsize:
                 cache.popitem(last=False)
                 
-            # 添加新结果到缓存
+            # 将新结果加入缓存
             cache[key] = result
             return result
             
@@ -38,4 +39,9 @@ def mru_cache(maxsize=128, typed=False):
         wrapper.clear_cache = clear_cache
         
         return wrapper
+    
+    # 支持直接装饰无参数调用
+    if callable(maxsize):
+        func, maxsize = maxsize, 128
+        return decorator(func)
     return decorator

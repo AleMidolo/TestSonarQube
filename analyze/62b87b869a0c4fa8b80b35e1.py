@@ -39,9 +39,8 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left", field_names=("x"
     from graph import Graph
     graph = Graph(points, field_names=field_names)
     
-    if scale is True:
+    # Set scale if requested
+    if scale:
         graph.scale = hist.scale
-    elif scale is not None:
-        graph.scale = scale
-
+        
     return graph

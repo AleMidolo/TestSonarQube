@@ -15,7 +15,8 @@ def initialize(self):
         "extension": "000",
         "description": "OCFL Storage Root",
         "layout": {
-            "type": "flat" 
+            "type": "flat",
+            "pattern": "^[a-f0-9]{2}/[a-f0-9]{2}/[a-f0-9]{2}/.*$"
         }
     }
     

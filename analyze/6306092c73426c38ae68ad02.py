@@ -12,7 +12,7 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
     deprecated_args = [
         ('old_param', 'new_param'),
         ('legacy_flag', 'modern_flag'),
-        ('deprecated_option', 'current_option')
+        # 可以添加更多已弃用的参数对
     ]
     
     # 检查每个已弃用的参数
@@ -28,5 +28,5 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
             # 从参数字典中删除旧参数
             if old_arg in cli_args:
                 del cli_args[old_arg]
-            if old_arg in answer_file_args:  
+            if old_arg in answer_file_args:
                 del answer_file_args[old_arg]
