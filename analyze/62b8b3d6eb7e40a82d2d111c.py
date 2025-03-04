@@ -1,24 +1,19 @@
 def _normalizeargs(sequence, output=None):
     """
-    Normalize declaration arguments
+    规范化声明参数
 
-    Normalization arguments might contain Declarions, tuples, or single
-    interfaces.
+    规范化的参数可能包含声明、元组或单个接口。
 
-    Anything but individial interfaces or implements specs will be expanded.
+    除了单个接口或实现规范之外的任何内容都将被展开。
     """
     if output is None:
         output = []
-        
-    for arg in sequence:
-        if isinstance(arg, (list, tuple)):
-            _normalizeargs(arg, output)
-        elif hasattr(arg, 'interfaces'):
-            # If arg is a Declaration, expand its interfaces
-            _normalizeargs(arg.interfaces, output)
-        else:
-            # Single interface or implements spec
-            if arg not in output:
-                output.append(arg)
-                
+    
+    if isinstance(sequence, (list, tuple)):
+        for item in sequence:
+            _normalizeargs(item, output)
+    else:
+        if sequence not in output:
+            output.append(sequence)
+            
     return output

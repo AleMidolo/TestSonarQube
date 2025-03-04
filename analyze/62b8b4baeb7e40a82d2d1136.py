@@ -1,59 +1,52 @@
 def _verify(iface, candidate, tentative=False, vtype=None):
-    from zope.interface.exceptions import Invalid
+    from zope.interface.exceptions import Invalid, DoesNotImplement
+    from zope.interface.verify import verifyObject
     from zope.interface.interface import Method
-    from collections import defaultdict
+    
+    errors = []
 
-    errors = defaultdict(list)
+    # Step 1: Check if candidate declares it provides the interface
+    if not tentative:
+        if not iface.providedBy(candidate):
+            errors.append(DoesNotImplement(iface))
 
-    # Check if candidate claims to provide interface
-    if not tentative and not iface.providedBy(candidate):
-        raise Invalid(f"{candidate!r} does not provide interface {iface!r}")
-
-    # Check methods and attributes
-    for name, desc in iface.namesAndDescriptions(all=True):
+    # Step 2 & 3: Check methods and their signatures
+    for name, desc in iface.namesAndDescriptions(1):
         if isinstance(desc, Method):
-            # Verify method exists
-            if not hasattr(candidate, name):
-                errors['missing_methods'].append(name)
-                continue
-
-            method = getattr(candidate, name)
-            if not callable(method):
-                errors['not_callable'].append(name)
-                continue
-
-            # Verify method signature
+            # Check if method exists
             try:
-                from inspect import signature
-                impl_sig = signature(method)
-                iface_sig = signature(desc)
-                
-                if impl_sig.parameters != iface_sig.parameters:
-                    errors['wrong_signature'].append(name)
-            except ValueError:
-                # Can't get signature, skip check
-                pass
+                attr = getattr(candidate, name)
+            except AttributeError:
+                errors.append(Invalid(f"The '{name}' attribute was not provided."))
+                continue
 
-        else:
-            # Verify attribute exists
-            if not hasattr(candidate, name):
-                errors['missing_attributes'].append(name)
+            # Verify it's callable
+            if not callable(attr):
+                errors.append(Invalid(f"The '{name}' attribute is not callable."))
+                continue
 
-    # Raise errors if any found
-    if errors:
-        messages = []
-        if errors['missing_methods']:
-            messages.append(f"Missing required methods: {', '.join(errors['missing_methods'])}")
-        if errors['not_callable']:
-            messages.append(f"Attributes that should be methods: {', '.join(errors['not_callable'])}")
-        if errors['wrong_signature']:
-            messages.append(f"Methods with wrong signatures: {', '.join(errors['wrong_signature'])}")
-        if errors['missing_attributes']:
-            messages.append(f"Missing required attributes: {', '.join(errors['missing_attributes'])}")
+            # Check method signature if possible
+            try:
+                if hasattr(desc, 'getSignatureInfo'):
+                    sig_info = desc.getSignatureInfo()
+                    method_sig = verifyObject(sig_info, attr)
+                    if not method_sig:
+                        errors.append(Invalid(f"The '{name}' method has incorrect signature."))
+            except Exception as e:
+                errors.append(Invalid(f"Error verifying signature of '{name}': {str(e)}"))
 
-        if len(messages) == 1:
-            raise Invalid(messages[0])
-        else:
-            raise Invalid('\n'.join(messages))
+    # Step 4: Check attributes
+    for name, desc in iface.namesAndDescriptions(1):
+        if not isinstance(desc, Method):
+            try:
+                getattr(candidate, name)
+            except AttributeError:
+                errors.append(Invalid(f"The '{name}' attribute was not provided."))
 
-    return True
+    # Handle errors
+    if len(errors) == 0:
+        return True
+    elif len(errors) == 1:
+        raise errors[0]
+    else:
+        raise Invalid(f"Multiple errors: {'; '.join(str(e) for e in errors)}")

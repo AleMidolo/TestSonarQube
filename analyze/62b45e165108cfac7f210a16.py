@@ -1,25 +1,29 @@
 def validate_as_prior_version(self, prior):
     """
-    Check that prior is a valid prior version of the current inventory object.
+    检查 `prior` 是否是当前库存（inventory）对象的有效先前版本。
 
-    The input variable prior is also expected to be an InventoryValidator object
-    and both self and prior inventories are assumed to have been checked for
-    internal consistency.
+    输入变量 `prior` 也应是一个 `InventoryValidator` 对象，并且假定 `self` 和 `prior` 的库存对象都已经过内部一致性检查。在类中返回 `error()`。
     """
-    # Check that prior is an InventoryValidator object
+    # 检查prior是否为InventoryValidator对象
     if not isinstance(prior, type(self)):
-        raise TypeError("Prior must be an InventoryValidator object")
-        
-    # Check that prior timestamp is before current timestamp
+        return self.error("Prior version must be an InventoryValidator object")
+
+    # 检查时间戳,确保prior是较早的版本
     if prior.timestamp >= self.timestamp:
-        raise ValueError("Prior inventory must have earlier timestamp")
+        return self.error("Prior version must have earlier timestamp")
+
+    # 检查库存变化的合理性
+    for item_id in set(self.inventory.keys()) | set(prior.inventory.keys()):
+        prior_qty = prior.inventory.get(item_id, 0)
+        current_qty = self.inventory.get(item_id, 0)
         
-    # Check that all items in prior exist in current inventory
-    # with same or greater quantities
-    for item_id, prior_qty in prior.inventory.items():
-        if item_id not in self.inventory:
-            raise ValueError(f"Item {item_id} from prior inventory missing in current")
-        if self.inventory[item_id] < prior_qty:
-            raise ValueError(f"Item {item_id} has lower quantity than prior version")
+        # 检查数量变化是否合理
+        if current_qty < 0:
+            return self.error(f"Invalid negative quantity for item {item_id}")
             
-    return True
+        # 检查数量变化是否过大
+        if abs(current_qty - prior_qty) > self.max_change_threshold:
+            return self.error(f"Unreasonable quantity change for item {item_id}")
+
+    # 所有检查都通过
+    return None

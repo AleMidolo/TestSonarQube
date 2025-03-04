@@ -1,36 +1,28 @@
 def data(self, *keys):
     """
-    Return the keys and values of this record as a dictionary,
-    optionally including only certain values by index or key. Keys
-    provided in the items that are not in the record will be
-    inserted with a value of :const:`None`; indexes provided
-    that are out of bounds will trigger an :exc:`IndexError`.
+    返回由 `RecordExporter` 类的 `transform` 方法处理的键。
+    将此记录的键和值以字典形式返回，并可选择按索引或键筛选特定值。对于提供的键，如果记录中不存在，则会以 None 作为默认值插入；如果提供的索引超出范围，则会触发 IndexError。
 
-    :param keys: indexes or keys of the items to include; if none
-                  are provided, all values will be included
-    :return: dictionary of values, keyed by field name
-    :raises: :exc:`IndexError` if an out-of-bounds index is specified
+    :param keys: 要包含的条目的索引或键；如果未提供，将包含所有值
+    :return: 一个以字段名称为键的值字典 
+    :raises: :exc: 如果指定了超出范围的索引，则会抛出`IndexError`
     """
-    if not keys:
-        # If no keys specified, return all items
-        return dict(zip(self._keys, self._values))
-    
     result = {}
+    
+    # 如果没有提供keys,返回所有数据
+    if not keys:
+        return self._data
+        
+    # 处理提供的keys
     for key in keys:
         if isinstance(key, int):
-            # Handle index access
-            if key < 0:
-                key = len(self._keys) + key
-            if key >= len(self._keys) or key < 0:
-                raise IndexError(f"Index {key} is out of bounds")
-            result[self._keys[key]] = self._values[key]
+            # 处理索引
+            if key < 0 or key >= len(self._data):
+                raise IndexError(f"Index {key} is out of range")
+            field_name = list(self._data.keys())[key]
+            result[field_name] = self._data[field_name]
         else:
-            # Handle key access
-            try:
-                index = self._keys.index(key)
-                result[key] = self._values[index]
-            except ValueError:
-                # Key not found, set value to None
-                result[key] = None
-                
+            # 处理键名
+            result[key] = self._data.get(key, None)
+            
     return result

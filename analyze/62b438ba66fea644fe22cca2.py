@@ -1,40 +1,48 @@
 def deep_merge_nodes(nodes):
+    # Create a dictionary to store merged nodes by key
     merged = {}
     
-    # Iterate through nodes in reverse order so last value wins for non-mapping collisions
-    for key_node, value_node in reversed(nodes):
+    # Iterate through all nodes
+    for key_node, value_node in nodes:
         key = key_node.value
         
+        # If key doesn't exist yet, just add it
         if key not in merged:
-            # First time seeing this key, just store the value
             merged[key] = (key_node, value_node)
             continue
             
-        # We've seen this key before - need to merge
+        # Get existing value node for this key
         existing_value_node = merged[key][1]
         
-        # If both nodes are mapping nodes, do a deep merge
-        if (hasattr(value_node, 'tag') and 'map' in value_node.tag and
-            hasattr(existing_value_node, 'tag') and 'map' in existing_value_node.tag):
+        # If both nodes are mapping nodes, merge them
+        if (isinstance(value_node, type(existing_value_node)) and 
+            hasattr(value_node, 'value') and 
+            hasattr(existing_value_node, 'value')):
             
-            # Convert the mapping node values to dict for easier lookup
-            existing_dict = {k.value: (k,v) for k,v in existing_value_node.value}
-            new_dict = {k.value: (k,v) for k,v in value_node.value}
+            # Convert inner nodes to dict for merging
+            existing_dict = {k.value: v for k,v in existing_value_node.value}
+            new_dict = {k.value: v for k,v in value_node.value}
             
-            # Merge the new mapping into existing
-            for new_key, new_val in new_dict.items():
-                if new_key not in existing_dict:
-                    existing_dict[new_key] = new_val
+            # Update existing dict with new values
+            existing_dict.update(new_dict)
             
             # Convert back to list of tuples
-            merged_value = list(existing_dict.values())
+            merged_value = [
+                (ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) 
+                for k,v in existing_dict.items()
+            ]
             
-            # Create new MappingNode with merged values
-            merged[key] = (key_node, type(value_node)(tag=value_node.tag, value=merged_value))
+            # Create new mapping node with merged values
+            merged_node = type(value_node)(
+                tag=value_node.tag,
+                value=merged_value
+            )
             
+            merged[key] = (key_node, merged_node)
+            
+        # If not both mapping nodes, take the latest value
         else:
-            # For non-mapping nodes, keep the most recent value
             merged[key] = (key_node, value_node)
             
-    # Convert merged dict back to list of tuples
+    # Return list of merged nodes
     return list(merged.values())

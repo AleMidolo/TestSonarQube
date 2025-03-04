@@ -1,15 +1,16 @@
 def popitem(self):
     """
-    Remove and return the `(key, value)` pair least recently used.
+    移除并返回最久未使用的键值对。
     """
     if not self:
         raise KeyError('Dictionary is empty')
         
-    # Get the first item from the internal dict since it will be the LRU item
-    key = next(iter(self))
+    # 获取最久未使用的键值对(链表头部)
+    key = self.head.next.key
     value = self[key]
     
-    # Remove the item from the dictionary
+    # 从字典和双向链表中删除该节点
+    self._remove(key)
     del self[key]
     
-    return (key, value)
+    return key, value

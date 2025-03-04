@@ -1,7 +1,6 @@
 def workspace_manager(cls):
     """
-    Gets the workspace manager.
+    通过 `cls._get_service(ServiceName.WORKSPACE_MANAGER)` 获取工作区管理器
+    获取工作区管理器。
     """
-    if not hasattr(cls, '_workspace_manager'):
-        cls._workspace_manager = WorkspaceManager()
-    return cls._workspace_manager
+    return cls._get_service(ServiceName.WORKSPACE_MANAGER)

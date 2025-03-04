@@ -1,37 +1,42 @@
 def cachedmethod(cache, key=hashkey, lock=None):
     """
-    Decorator to wrap a class or instance method with a memoizing
-    callable that saves results in a cache.
+    返回一个装饰器函数，可以调用缓存中的结果。
+    该装饰器用于包装类方法或实例方法，使其成为一个具备记忆功能的可调用对象，并将结果存储在缓存中。
     """
     def decorator(method):
         def wrapper(self, *args, **kwargs):
-            # Get cache instance
-            _cache = cache(self) if callable(cache) else cache
+            # 生成缓存键
+            k = key(self, *args, **kwargs)
             
-            # Generate cache key
-            k = key(method, args, kwargs)
-            
+            # 如果指定了锁,则获取锁
+            if lock is not None:
+                lock.acquire()
+                
             try:
-                # Try to get cached result
-                if lock is not None:
-                    with lock:
-                        return _cache[k]
-                return _cache[k]
+                # 尝试从缓存中获取结果
+                try:
+                    return cache[k]
+                except KeyError:
+                    pass
                 
-            except KeyError:
-                # Cache miss - call method and store result
-                v = method(self, *args, **kwargs)
+                # 如果缓存中没有,则调用原方法计算结果
+                result = method(self, *args, **kwargs)
                 
+                # 将结果存入缓存
+                try:
+                    cache[k] = result
+                except TypeError:
+                    pass
+                
+                return result
+                
+            finally:
+                # 如果获取了锁,则释放锁
                 if lock is not None:
-                    with lock:
-                        _cache[k] = v
-                else:
-                    _cache[k] = v
+                    lock.release()
                     
-                return v
-                
+        # 保留原方法的文档字符串
         wrapper.__doc__ = method.__doc__
-        wrapper.__name__ = method.__name__
         return wrapper
         
     return decorator

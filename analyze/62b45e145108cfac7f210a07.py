@@ -1,10 +1,10 @@
 def validate(self, inventory, extract_spec_version=False):
     """
-    Validate a given inventory.
+    验证给定的库存（inventory）。如果 `extract_spec_version` 为 True，则会根据 `type` 值来确定规范版本。如果没有 `type` 值或其无效，则其他测试将基于 `self.spec_version` 中给定的版本。
+    验证给定的库存。
 
-    If extract_spec_version is True then will look at the type value to determine
-    the specification version. In the case that there is no type value or it isn't
-    valid, then other tests will be based on the version given in self.spec_version.
+    如果 `extract_spec_version` 为真，则会根据 `type` 值来确定规范版本。
+    如果没有 `type` 值或其无效，则其他测试将基于 `self.spec_version` 中给定的版本。
     """
     if not isinstance(inventory, dict):
         raise ValueError("Inventory must be a dictionary")
@@ -12,39 +12,41 @@ def validate(self, inventory, extract_spec_version=False):
     # Extract spec version from type if requested
     if extract_spec_version:
         try:
-            inv_type = inventory.get('type', '')
-            if inv_type.startswith('inventory/'):
-                self.spec_version = inv_type.split('/')[1]
+            type_str = inventory.get('type', '')
+            if type_str.startswith('inventory:'):
+                version = type_str.split(':')[1]
+                self.spec_version = version
         except (AttributeError, IndexError):
             pass # Fall back to self.spec_version
 
     # Validate required fields
-    required_fields = ['id', 'type', 'items']
+    required_fields = ['type', 'items']
     for field in required_fields:
         if field not in inventory:
             raise ValueError(f"Missing required field: {field}")
 
-    # Validate ID
-    if not isinstance(inventory['id'], str):
-        raise ValueError("ID must be a string")
-
-    # Validate type
-    if not isinstance(inventory['type'], str):
-        raise ValueError("Type must be a string")
-    if not inventory['type'].startswith('inventory/'):
-        raise ValueError("Type must start with 'inventory/'")
+    # Validate type format
+    type_str = inventory['type']
+    if not isinstance(type_str, str) or not type_str.startswith('inventory:'):
+        raise ValueError("Invalid type format. Must start with 'inventory:'")
 
     # Validate items
-    if not isinstance(inventory['items'], list):
+    items = inventory['items']
+    if not isinstance(items, list):
         raise ValueError("Items must be a list")
 
     # Validate each item
-    for item in inventory['items']:
+    for item in items:
         if not isinstance(item, dict):
             raise ValueError("Each item must be a dictionary")
-        if 'id' not in item:
-            raise ValueError("Each item must have an ID")
-        if not isinstance(item['id'], str):
-            raise ValueError("Item ID must be a string")
+        
+        # Validate required item fields based on spec version
+        item_required_fields = ['id', 'name']
+        if self.spec_version >= '2.0':
+            item_required_fields.extend(['quantity', 'unit'])
+            
+        for field in item_required_fields:
+            if field not in item:
+                raise ValueError(f"Missing required field in item: {field}")
 
     return True

@@ -1,25 +1,18 @@
 def popitem(self):
     """
-    Remove and return the `(key, value)` pair least frequently used.
+    移除并返回最少使用的键值对。
     """
     if not self:
-        raise KeyError("Dictionary is empty")
+        raise KeyError('Dictionary is empty')
         
-    # Find key with minimum frequency count
-    min_freq = min(self.freq.values())
-    min_key = None
+    # 获取最少使用的节点
+    node = self.head.next
     
-    # Find first key with minimum frequency
-    for key in self.freq:
-        if self.freq[key] == min_freq:
-            min_key = key
-            break
-            
-    # Get value for min_key
-    value = self[min_key]
+    # 从双向链表中删除该节点
+    self._remove_node(node)
     
-    # Remove key-value pair
-    del self[min_key]
-    del self.freq[min_key]
+    # 从哈希表中删除该键值对
+    del self.cache[node.key]
     
-    return (min_key, value)
+    # 返回键值对
+    return node.key, node.value

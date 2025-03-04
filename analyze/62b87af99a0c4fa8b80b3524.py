@@ -1,5 +1,6 @@
 def is_run_el(obj):
     """
-    Object contains executable method 'run'.
+    检查 obj 类是否具有 run 方法。
+    对象包含可执行的方法 'run'。
     """
     return hasattr(obj, 'run') and callable(getattr(obj, 'run'))

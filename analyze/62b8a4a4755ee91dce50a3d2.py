@@ -1,42 +1,29 @@
 def _fromutc(self, dt):
     """
-    Given a timezone-aware datetime in a given timezone, calculates a
-    timezone-aware datetime in a new timezone.
+    给定一个特定时区的日期时间，计算在新时区的日期时间。
 
-    Since this is the one time that we *know* we have an unambiguous
-    datetime object, we take this opportunity to determine whether the
-    datetime is ambiguous and in a "fold" state (e.g. if it's the first
-    occurrence, chronologically, of the ambiguous datetime).
+    给定一个带有时区信息的日期时间对象，计算在新时区的带有时区信息的日期时间。
 
-    :param dt:
-        A timezone-aware :class:`datetime.datetime` object.
+    由于这是我们*明确知道*日期时间对象没有歧义的唯一时刻，我们利用这个机会来判断该日期时间是否存在歧义，并且是否处于"折叠"状态（例如，如果这是歧义日期时间的第一个按时间顺序出现的实例）。
+
+    :param dt: 一个带有时区信息的 :class:`datetime.datetime` 对象。
     """
-    # Check if input datetime is timezone aware and in UTC
+    # 检查输入参数是否有效
     if dt.tzinfo is not self:
-        dt = dt.replace(tzinfo=self)
+        raise ValueError("fromutc() requires a datetime with tzinfo is self")
 
+    # 获取UTC偏移量
     utc_offset = self.utcoffset(dt)
     if utc_offset is None:
         return dt
 
-    # Convert to local time by adding UTC offset
-    dt = dt + utc_offset
+    # 计算本地时间
+    local_dt = dt + utc_offset
 
-    # Check if datetime is ambiguous (in DST transition)
-    dst_offset = self.dst(dt)
+    # 获取dst偏移量
+    dst_offset = self.dst(local_dt)
     if dst_offset is None:
-        return dt
+        return local_dt
 
-    # Adjust for DST if needed
-    fold = 0
-    if self._isdst(dt - dst_offset) != self._isdst(dt):
-        # We're in a DST transition period
-        utc = dt - utc_offset
-        
-        # Check if we're in the fold
-        fold = (
-            self._isdst(dt - dst_offset) and
-            not self._isdst(dt)
-        )
-
-    return dt.replace(fold=fold)
+    # 计算最终时间(考虑夏令时)
+    return local_dt + dst_offset

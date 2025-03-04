@@ -1,22 +1,28 @@
 def from_raw_values(cls, values):
     """
-    Create a Bookmarks object from a list of raw bookmark string values.
+    从一组原始书签字符串值创建一个 Bookmarks 对象。
 
-    You should not need to use this method unless you want to deserialize
-    bookmarks.
+    除非您需要反序列化书签，否则不需要使用此方法。
 
-    :param values: ASCII string values (raw bookmarks)
+    :param values: ASCII 字符串值（原始书签）
     :type values: Iterable[str]
     """
-    # Since this is a class method, create a new instance of the class
-    bookmarks = cls()
-    
-    # Add each raw value to the bookmarks object
+    bookmarks = []
     for value in values:
-        # Strip any whitespace and validate the value is not empty
+        # 移除空白字符
         value = value.strip()
-        if value:
-            # Add the raw value to the bookmarks collection
-            bookmarks._bookmarks.add(value)
+        
+        # 跳过空行
+        if not value:
+            continue
             
-    return bookmarks
+        try:
+            # 尝试解析书签字符串
+            bookmark = cls._parse_raw_value(value)
+            bookmarks.append(bookmark)
+        except ValueError:
+            # 如果解析失败则跳过该行
+            continue
+            
+    # 返回新的 Bookmarks 对象
+    return cls(bookmarks)

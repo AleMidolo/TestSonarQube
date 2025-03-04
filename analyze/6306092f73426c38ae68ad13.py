@@ -1,66 +1,58 @@
-def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
-                     extra_vars=None, ansible_args=None):
+def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra_vars=None, ansible_args=None):
     """
-    Wraps the 'ansible-playbook' CLI.
-
-    :param ir_workspace: An Infrared Workspace object represents the active
-    workspace
-    :param ir_plugin: An InfraredPlugin object of the current plugin
-    :param playbook_path: the playbook to invoke
-    :param verbose: Ansible verbosity level
-    :param extra_vars: dict. Passed to Ansible as extra-vars
-    :param ansible_args: dict of ansible-playbook arguments to plumb down
-        directly to Ansible.
+    封装 'ansible-playbook' 命令行接口。
+    :param ir_workspace: 一个 Infrared Workspace 对象，表示当前活动的工作区
+    :param ir_plugin: 当前插件的一个 InfraredPlugin 对象 
+    :param playbook_path: 要调用的 playbook 文件路径
+    :param verbose: Ansible 的详细级别
+    :param extra_vars: dict。作为额外变量 (extra-vars) 传递给 Ansible
+    :param ansible_args: ansible-playbook 参数的字典，直接传递给 Ansible
     """
-    import subprocess
     import os
-
-    # Build base command
-    cmd = ['ansible-playbook', playbook_path]
-
-    # Add verbosity if specified
-    if verbose:
-        verbosity = '-' + ('v' * verbose)
-        cmd.append(verbosity)
-
-    # Add extra vars if provided
-    if extra_vars:
-        extra_vars_arg = '--extra-vars'
-        for key, value in extra_vars.items():
-            cmd.extend([extra_vars_arg, f"{key}={value}"])
-
-    # Add any additional ansible arguments
-    if ansible_args:
-        for arg, value in ansible_args.items():
-            if value is True:
-                cmd.append(f"--{arg}")
-            elif value:
-                cmd.extend([f"--{arg}", str(value)])
-
-    # Set environment variables from workspace if available
-    env = os.environ.copy()
-    if hasattr(ir_workspace, 'ansible_config'):
-        env['ANSIBLE_CONFIG'] = ir_workspace.ansible_config
+    import subprocess
     
+    # 构建基本命令
+    cmd = ['ansible-playbook', playbook_path]
+    
+    # 添加详细级别
+    if verbose:
+        if isinstance(verbose, bool):
+            cmd.append('-v')
+        elif isinstance(verbose, int):
+            cmd.append('-' + 'v' * verbose)
+            
+    # 添加额外变量
+    if extra_vars:
+        for key, value in extra_vars.items():
+            cmd.extend(['-e', f'{key}={value}'])
+            
+    # 添加inventory文件
     if hasattr(ir_workspace, 'inventory'):
         cmd.extend(['-i', ir_workspace.inventory])
-
-    # Execute ansible-playbook command
+        
+    # 添加其他ansible参数
+    if ansible_args:
+        for key, value in ansible_args.items():
+            if value is True:
+                cmd.append(f'--{key}')
+            elif value is not None:
+                cmd.append(f'--{key}={value}')
+                
+    # 设置环境变量
+    env = os.environ.copy()
+    if hasattr(ir_plugin, 'ansible_config'):
+        env['ANSIBLE_CONFIG'] = ir_plugin.ansible_config
+        
+    # 执行命令
     try:
-        process = subprocess.Popen(
+        result = subprocess.run(
             cmd,
             env=env,
+            check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True
         )
-        
-        stdout, stderr = process.communicate()
-        
-        if process.returncode != 0:
-            raise Exception(f"Ansible playbook execution failed:\n{stderr}")
-            
-        return stdout
-        
-    except Exception as e:
-        raise Exception(f"Failed to execute ansible-playbook: {str(e)}")
+        return result
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(f"Ansible playbook execution failed: {e.stderr}")

@@ -1,45 +1,49 @@
 def normalized(self):
-    # Convert all float values to integer values
-    days = int(self.days)
-    hours_remainder = (self.days - days) * 24 + self.hours
-    hours = int(hours_remainder)
-    minutes_remainder = (hours_remainder - hours) * 60 + self.minutes
-    minutes = int(minutes_remainder)
-    seconds_remainder = (minutes_remainder - minutes) * 60 + self.seconds
-    seconds = int(seconds_remainder)
-    microseconds = int((seconds_remainder - seconds) * 1000000 + self.microseconds)
+    """
+    将所有时间单位标准化为整数。
 
-    # Handle microseconds overflow
-    seconds += microseconds // 1000000
-    microseconds = microseconds % 1000000
+    返回一个完全使用整数值表示相对属性的对象版本。
 
-    # Handle seconds overflow
-    minutes += seconds // 60
-    seconds = seconds % 60
+    >>> relativedelta(days=1.5, hours=2).normalized()
+    relativedelta(days=+1, hours=+14)
 
-    # Handle minutes overflow
-    hours += minutes // 60
-    minutes = minutes % 60
-
-    # Handle hours overflow
-    days += hours // 24
-    hours = hours % 24
-
-    return self.__class__(
-        years=self.years,
-        months=self.months,
-        days=days,
-        hours=hours,
-        minutes=minutes,
-        seconds=seconds,
-        microseconds=microseconds,
-        leapdays=self.leapdays,
-        year=self.year,
-        month=self.month,
-        day=self.day,
-        weekday=self.weekday,
-        hour=self.hour,
-        minute=self.minute,
-        second=self.second,
-        microsecond=self.microsecond
+    :return:
+        返回一个 :class:`dateutil.relativedelta.relativedelta` 对象。
+    """
+    # 创建一个新的relativedelta对象来存储结果
+    result = relativedelta()
+    
+    # 处理年和月,直接复制整数部分
+    result.years = int(self.years)
+    result.months = int(self.months)
+    
+    # 计算总秒数
+    total_seconds = (
+        self.days * 86400 +  # 天转秒
+        self.hours * 3600 +  # 小时转秒
+        self.minutes * 60 +  # 分钟转秒
+        self.seconds         # 秒
     )
+    
+    # 从总秒数中提取各个时间单位
+    days, remainder = divmod(total_seconds, 86400)
+    hours, remainder = divmod(remainder, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    
+    # 设置标准化后的值
+    result.days = int(days)
+    result.hours = int(hours)
+    result.minutes = int(minutes)
+    result.seconds = int(seconds)
+    
+    # 复制其他属性
+    result.year = self.year
+    result.month = self.month
+    result.day = self.day
+    result.weekday = self.weekday
+    result.hour = self.hour
+    result.minute = self.minute
+    result.second = self.second
+    result.microsecond = self.microsecond
+    
+    return result

@@ -1,47 +1,46 @@
 def validate_version_inventories(self, version_dirs):
     """
-    Each version SHOULD have an inventory up to that point.
+    每个版本**应当**包含截至该版本的完整清单。  
 
-    Also keep a record of any content digests different from those in the root inventory
-    so that we can also check them when validating the content.
+    同时，记录所有与根清单不同的内容摘要，以便在验证内容时能够检查这些差异。  
 
-    version_dirs is an array of version directory names and is assumed to be in
-    version sequence (1, 2, 3...).
+    `version_dirs` 是一个包含版本目录名称的数组，并假定按照版本顺序排列（1, 2, 3...）。
     """
-    # Keep track of digests that differ from root inventory
-    different_digests = set()
+    # 存储每个版本的清单差异
+    version_diffs = {}
     
-    # Get root inventory for comparison
-    root_inventory = self.get_inventory()
-    if not root_inventory:
-        raise ValueError("No root inventory found")
-        
-    # Check each version directory
+    # 获取根目录清单
+    root_inventory = self.get_root_inventory()
+    
+    # 遍历每个版本目录
     for version in version_dirs:
-        version_inventory = self.get_inventory(version)
+        version_inventory = self.get_version_inventory(version)
         
+        # 检查是否包含完整清单
         if not version_inventory:
-            raise ValueError(f"Missing inventory for version {version}")
+            raise ValueError(f"Version {version} missing complete inventory")
             
-        # Compare digests with root inventory
-        for file_path, digest in version_inventory.items():
-            if file_path in root_inventory:
-                if digest != root_inventory[file_path]:
-                    different_digests.add((file_path, digest))
-            else:
-                # New file not in root inventory
-                different_digests.add((file_path, digest))
+        # 与根清单比较,记录差异
+        diffs = {}
+        for file_path, checksum in version_inventory.items():
+            if file_path not in root_inventory:
+                diffs[file_path] = {'status': 'added', 'checksum': checksum}
+            elif root_inventory[file_path] != checksum:
+                diffs[file_path] = {
+                    'status': 'modified',
+                    'old_checksum': root_inventory[file_path],
+                    'new_checksum': checksum
+                }
                 
-        # Validate that inventory contains all files up to this version
-        expected_files = set()
-        for v in version_dirs[:version_dirs.index(version) + 1]:
-            version_files = self.get_version_files(v)
-            expected_files.update(version_files)
+        for file_path in root_inventory:
+            if file_path not in version_inventory:
+                diffs[file_path] = {
+                    'status': 'deleted',
+                    'old_checksum': root_inventory[file_path]
+                }
+                
+        # 存储该版本的差异
+        if diffs:
+            version_diffs[version] = diffs
             
-        inventory_files = set(version_inventory.keys())
-        missing_files = expected_files - inventory_files
-        
-        if missing_files:
-            raise ValueError(f"Version {version} inventory missing files: {missing_files}")
-            
-    return different_digests
+    return version_diffs

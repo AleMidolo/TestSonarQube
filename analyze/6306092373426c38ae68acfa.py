@@ -1,24 +1,19 @@
 def get_spec_defaults(self):
     """
-    Resolve arguments' values from spec and other sources.
+    使用 `self._get_defaults()` 从规范和其他来源解析参数的值。
+
+    从规范和其他来源解析参数的值。
     """
-    defaults = {}
+    # 调用内部方法获取默认值
+    defaults = self._get_defaults()
     
-    if hasattr(self, 'spec') and self.spec:
-        # Get default values from spec
-        for param_name, param in self.spec.parameters.items():
-            if param.default is not param.empty:
-                defaults[param_name] = param.default
-                
-    # Get defaults from class/instance attributes if they exist
-    if hasattr(self, 'defaults'):
-        defaults.update(self.defaults)
+    # 如果规范中定义了默认值,则更新defaults
+    if hasattr(self, 'spec') and self.spec is not None:
+        spec_defaults = getattr(self.spec, 'defaults', {})
+        defaults.update(spec_defaults)
         
-    # Get defaults from environment variables if configured
-    if hasattr(self, 'env_defaults') and self.env_defaults:
-        import os
-        for env_var, param_name in self.env_defaults.items():
-            if env_var in os.environ:
-                defaults[param_name] = os.environ[env_var]
-                
+    # 如果有其他来源的默认值,继续更新
+    if hasattr(self, 'other_defaults') and self.other_defaults is not None:
+        defaults.update(self.other_defaults)
+        
     return defaults

@@ -1,22 +1,24 @@
 def list_of_file_names(settings_dirs, spec_option):
     """
-    Create a new IniType complex type
+    通过 `cli.ListOfFileNames()` 创建并返回一个新的 `IniType` 复合类型。
+    创建一个新的 `IniType` 复合类型。
     """
-    file_names = []
-    
-    # Handle single directory case
-    if isinstance(settings_dirs, str):
-        settings_dirs = [settings_dirs]
-        
-    # Iterate through all directories
-    for directory in settings_dirs:
-        # Handle different spec options
-        if spec_option == 'ini':
-            file_names.extend([f for f in os.listdir(directory) if f.endswith('.ini')])
-        elif spec_option == 'conf':
-            file_names.extend([f for f in os.listdir(directory) if f.endswith('.conf')])
-        elif spec_option == 'all':
-            file_names.extend([f for f in os.listdir(directory) if f.endswith(('.ini', '.conf'))])
+    class ListOfFileNames:
+        def __init__(self):
+            self.settings_dirs = settings_dirs
+            self.spec_option = spec_option
+            self.files = []
             
-    # Remove duplicates while preserving order
-    return list(dict.fromkeys(file_names))
+        def get_files(self):
+            """获取文件列表"""
+            import os
+            for directory in self.settings_dirs:
+                if os.path.exists(directory):
+                    for file in os.listdir(directory):
+                        if file.endswith(self.spec_option):
+                            full_path = os.path.join(directory, file)
+                            self.files.append(full_path)
+            return self.files
+            
+    file_names = ListOfFileNames()
+    return file_names.get_files()

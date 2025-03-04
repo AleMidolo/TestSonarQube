@@ -1,14 +1,15 @@
 def _inline_r_setup(code: str) -> str:
-    # Add R options to disable interactive features and warnings
+    """
+    一些 R 的行为无法通过环境变量进行配置，
+    只能在 R 启动后通过 R 的选项进行配置。这些选项在此处设置。
+    """
     setup_code = """
     options(warn=-1)  # Suppress warnings
-    options(show.error.messages=FALSE)  # Suppress error messages
-    options(error=function() NULL)  # Return NULL on error
-    options(device='png')  # Set default graphics device
-    options(width=80)  # Set output width
+    options(width=10000)  # Prevent line wrapping in output
+    options(encoding='UTF-8')  # Set encoding to UTF-8
     """
     
-    # Combine setup code with user code
+    # Combine setup code with input code
     full_code = setup_code + "\n" + code
     
     return full_code

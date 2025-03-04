@@ -1,35 +1,34 @@
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
-    Parse an image href into composite parts.
-
-    :param image_href: href of an image 
-    :returns: a tuple of the form (image_id, netloc, use_ssl)
+    将图像的 href 解析为多个组成部分，导入 urllib。
+    
+    :param image_href: 图像的 href
+    :returns: 一个元组，格式为 (image_id, netloc, use_ssl)
     :raises ValueError:
     """
     from urllib.parse import urlparse
-    
+
     if not image_href:
-        raise ValueError("Image href cannot be empty")
-        
-    # Try to parse the URL
-    try:
-        parsed = urlparse(image_href)
-    except Exception:
-        raise ValueError(f"Invalid image href: {image_href}")
-        
-    # Get the netloc (hostname)
+        raise ValueError("Empty image href")
+
+    # Parse the URL
+    parsed = urlparse(image_href)
+    
+    # Get netloc (domain)
     netloc = parsed.netloc
     if not netloc:
-        raise ValueError(f"No hostname found in href: {image_href}")
-        
+        raise ValueError("Invalid image href: missing domain")
+
     # Determine if using SSL
     use_ssl = parsed.scheme == 'https'
-    
-    # Get image ID from path
+
+    # Extract image ID from path
     path_parts = parsed.path.split('/')
-    image_id = path_parts[-1] if path_parts else ''
-    
-    if not image_id:
-        raise ValueError(f"No image ID found in href: {image_href}")
+    if not path_parts or len(path_parts) < 2:
+        raise ValueError("Invalid image href: missing image ID")
         
+    image_id = path_parts[-1]  # Get last part of path as image ID
+    if not image_id:
+        raise ValueError("Invalid image href: empty image ID")
+
     return (image_id, netloc, use_ssl)

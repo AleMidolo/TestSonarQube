@@ -1,40 +1,55 @@
 def extend_cli(self, root_subparsers):
     """
-    Adds the spec cli options to to the main entry point.
-    
-    :param subparser: the subparser object to extend.
+    将规范 CLI 选项添加到主入口点。
+
+    :param subparser: 要扩展的子解析器对象。
     """
-    # Create a subparser for spec commands
-    spec_parser = root_subparsers.add_parser(
-        'spec',
-        help='Commands for working with specs'
+    # 创建一个新的子命令解析器
+    parser = root_subparsers.add_parser(
+        'standards',
+        help='Standards and specifications related commands'
     )
-    
-    # Create subparsers for the spec parser
-    spec_subparsers = spec_parser.add_subparsers(dest='spec_command')
-    
-    # Add create command
-    create_parser = spec_subparsers.add_parser(
-        'create',
-        help='Create a new spec file'
+
+    # 创建子命令的子解析器
+    subparsers = parser.add_subparsers(
+        title='Standards commands',
+        dest='standards_command'
     )
-    create_parser.add_argument(
-        'name',
-        help='Name of the spec to create'
+
+    # 添加列出标准的命令
+    list_parser = subparsers.add_parser(
+        'list',
+        help='List available standards'
     )
-    
-    # Add validate command
-    validate_parser = spec_subparsers.add_parser(
-        'validate', 
-        help='Validate an existing spec file'
+    list_parser.add_argument(
+        '--format',
+        choices=['text', 'json'],
+        default='text',
+        help='Output format'
+    )
+
+    # 添加查看标准详情的命令
+    view_parser = subparsers.add_parser(
+        'view',
+        help='View standard details'
+    )
+    view_parser.add_argument(
+        'standard_id',
+        help='ID of the standard to view'
+    )
+
+    # 添加验证标准的命令
+    validate_parser = subparsers.add_parser(
+        'validate',
+        help='Validate against a standard'
     )
     validate_parser.add_argument(
-        'path',
-        help='Path to spec file to validate'
+        'standard_id',
+        help='ID of the standard to validate against'
     )
-    
-    # Add list command
-    list_parser = spec_subparsers.add_parser(
-        'list',
-        help='List available specs'
+    validate_parser.add_argument(
+        'input_file',
+        help='File to validate'
     )
+
+    return parser

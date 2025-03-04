@@ -1,28 +1,31 @@
 def is_fill_request_seq(seq):
-    """
-    Test whether *seq* can be converted to a FillRequestSeq.
-
-    True only if it is a FillRequest element
-    or contains at least one such,
-    and it is not a Source sequence.
-    """
-    # Import needed for type checking
-    from typing import Sequence
-    from collections.abc import Sequence as SequenceType
+    from collections.abc import Sequence
+    from typing import Union
     
+    # Helper function to check if an item is a FillRequest
+    def is_fill_request(item):
+        # Assuming FillRequest is a class/type that exists in the codebase
+        try:
+            return isinstance(item, FillRequest)
+        except NameError:
+            return False
+            
     # Check if seq is a Source sequence
-    if hasattr(seq, 'is_source') and seq.is_source:
-        return False
+    try:
+        if isinstance(seq, Source):
+            return False
+    except NameError:
+        pass
         
-    # Check if seq itself is a FillRequest
-    if hasattr(seq, 'is_fill_request') and seq.is_fill_request:
-        return True
+    # Handle single item case
+    if not isinstance(seq, Sequence):
+        return is_fill_request(seq)
         
-    # Check if seq is a sequence type
-    if isinstance(seq, SequenceType):
-        # Recursively check elements
-        for element in seq:
-            if is_fill_request_seq(element):
-                return True
-                
-    return False
+    # Handle sequence case
+    has_fill_request = False
+    for item in seq:
+        if is_fill_request(item):
+            has_fill_request = True
+            break
+            
+    return has_fill_request

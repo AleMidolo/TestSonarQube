@@ -1,28 +1,19 @@
 def _replace_register(flow_params, register_number, register_value):
     """
-    Replace value from flows to given register number
+    将 `flow_params[register_number]` 的值替换为 `flow_params[register_value]`，并删除 `flow_params[register_value]`。
+    
+    将流中的值替换为指定的寄存器编号。
 
-    'register_value' key in dictionary will be replaced by register number
-    given by 'register_number'
+    在字典中，用 register_number 指定的寄存器号替换 register_value 键的值。
 
-    :param flow_params: Dictionary containing defined flows
-    :param register_number: The number of register where value will be stored
-    :param register_value: Key to be replaced by register number
+    :flow_params: 包含已定义流的字典
+    :register_number: 用于存储值的寄存器编号
+    :register_value: 将被寄存器编号替换的键
     """
-    # Handle nested dictionaries recursively
-    if isinstance(flow_params, dict):
-        for key, value in flow_params.items():
-            if key == register_value:
-                flow_params[key] = register_number
-            elif isinstance(value, (dict, list)):
-                _replace_register(value, register_number, register_value)
-                
-    # Handle lists recursively
-    elif isinstance(flow_params, list):
-        for i, item in enumerate(flow_params):
-            if isinstance(item, (dict, list)):
-                _replace_register(item, register_number, register_value)
-            elif item == register_value:
-                flow_params[i] = register_number
-                
+    # 将register_value对应的值赋给register_number
+    flow_params[register_number] = flow_params[register_value]
+    
+    # 删除register_value键值对
+    del flow_params[register_value]
+    
     return flow_params

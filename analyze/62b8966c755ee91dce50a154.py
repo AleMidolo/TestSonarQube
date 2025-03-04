@@ -1,93 +1,86 @@
 def isoparse(self, dt_str):
-    import datetime
-    import re
+    from datetime import datetime, timedelta
     from dateutil.tz import tzutc, tzoffset
+    import re
 
-    # Regular expressions for parsing
-    date_regex = r'(?P<year>\d{4})(?:-?(?P<month>\d{2})(?:-?(?P<day>\d{2})|)|)|(?P<yearweek>\d{4})-?W(?P<week>\d{2})(?:-?(?P<weekday>\d)|)'
-    time_regex = r'(?P<hour>[0-2]\d)(?::?(?P<minute>\d{2})(?::?(?P<second>\d{2})(?:[.,](?P<microsecond>\d{1,6})\d*)?)?)?'
-    tz_regex = r'(?P<tzutc>Z)|(?P<tzhour>[+-]\d{2})(?::?(?P<tzminute>\d{2})?)?'
+    # 基本正则表达式模式
+    date_pattern = r"""
+        (?P<year>\d{4})
+        (?:
+            (?:-?(?P<month>\d{2}))
+            (?:-?(?P<day>\d{2}))?
+            |
+            -?W(?P<week>\d{2})
+            (?:-?(?P<weekday>\d))?
+        )?
+    """
 
-    dt_str = str(dt_str).strip()
+    time_pattern = r"""
+        (?:T|[\s])?
+        (?P<hour>[0-2]\d)
+        (?::?(?P<minute>\d{2}))?
+        (?::?(?P<second>\d{2}))?
+        (?:[.,](?P<microsecond>\d{1,6}))?
+    """
+
+    tz_pattern = r"""
+        (?P<tz_sign>[+-])
+        (?P<tz_hour>\d{2})
+        :?(?P<tz_minute>\d{2})?
+        |Z
+    """
+
+    full_pattern = f"^{date_pattern}(?:{time_pattern})?(?:{tz_pattern})?$"
     
-    # Split datetime string into date and time parts
-    if 'T' in dt_str:
-        date_str, time_str = dt_str.split('T', 1)
+    match = re.match(full_pattern, dt_str.strip(), re.VERBOSE)
+    if not match:
+        raise ValueError("Invalid ISO format")
+        
+    parts = match.groupdict()
+    
+    # 处理日期部分
+    year = int(parts['year'])
+    month = int(parts.get('month', 1) or 1)
+    
+    if parts.get('week'):
+        # ISO周日期处理
+        week = int(parts['week'])
+        weekday = int(parts.get('weekday', 1) or 1)
+        jan1 = datetime(year, 1, 1)
+        week_offset = timedelta(weeks=week-1, days=weekday-1)
+        base_date = jan1 + week_offset
+        month = base_date.month
+        day = base_date.day
     else:
-        date_str = dt_str
-        time_str = ''
-
-    # Parse date
-    date_match = re.match(date_regex, date_str)
-    if not date_match:
-        raise ValueError("Invalid ISO-8601 date format")
+        day = int(parts.get('day', 1) or 1)
     
-    date_parts = date_match.groupdict()
+    # 处理时间部分
+    hour = int(parts.get('hour', 0) or 0)
+    if hour == 24:  # 处理24:00特殊情况
+        hour = 0
+        day += 1
+        
+    minute = int(parts.get('minute', 0) or 0)
+    second = int(parts.get('second', 0) or 0)
     
-    if date_parts['year']:
-        year = int(date_parts['year'])
-        month = int(date_parts['month'] or 1)
-        day = int(date_parts['day'] or 1)
-        date = datetime.date(year, month, day)
-    else:
-        year = int(date_parts['yearweek'])
-        week = int(date_parts['week'])
-        weekday = int(date_parts['weekday'] or 0)
-        date = datetime.datetime.strptime(f"{year}-W{week}-{weekday}", "%Y-W%W-%w").date()
-
-    # Initialize time components
-    hour = minute = second = microsecond = 0
+    # 处理微秒
+    microsecond = 0
+    if parts.get('microsecond'):
+        microsecond = int(parts['microsecond'].ljust(6, '0')[:6])
+    
+    # 处理时区
     tz = None
-
-    # Parse time if present
-    if time_str:
-        # Split time and timezone
-        if '+' in time_str:
-            time_str, tz_str = time_str.split('+', 1)
-            tz_str = '+' + tz_str
-        elif '-' in time_str[1:]:  # Avoid splitting on negative hours
-            time_str, tz_str = time_str.rsplit('-', 1)
-            tz_str = '-' + tz_str
-        elif 'Z' in time_str:
-            time_str, tz_str = time_str.split('Z', 1)
-            tz_str = 'Z'
+    if parts.get('tz_sign'):
+        tz_hour = int(parts['tz_hour'])
+        tz_minute = int(parts.get('tz_minute', 0) or 0)
+        offset = tz_hour * 60 + tz_minute
+        if parts['tz_sign'] == '-':
+            offset = -offset
+        if offset == 0:
+            tz = tzutc()
         else:
-            tz_str = ''
-
-        # Parse time components
-        time_match = re.match(time_regex, time_str)
-        if not time_match:
-            raise ValueError("Invalid ISO-8601 time format")
+            tz = tzoffset(None, offset * 60)
+    elif 'Z' in dt_str:
+        tz = tzutc()
         
-        time_parts = time_match.groupdict()
-        
-        hour = int(time_parts['hour'])
-        if hour == 24:  # Special case for midnight
-            hour = 0
-        minute = int(time_parts['minute'] or 0)
-        second = int(time_parts['second'] or 0)
-        microsecond = int((time_parts['microsecond'] or '').ljust(6, '0')[:6])
-
-        # Parse timezone if present
-        if tz_str:
-            if tz_str == 'Z':
-                tz = tzutc()
-            else:
-                tz_match = re.match(tz_regex, tz_str)
-                if not tz_match:
-                    raise ValueError("Invalid ISO-8601 timezone format")
-                
-                tz_parts = tz_match.groupdict()
-                tz_hour = int(tz_parts['tzhour'])
-                tz_minute = int(tz_parts['tzminute'] or 0)
-                
-                # Convert to minutes offset
-                offset = tz_hour * 60 + (tz_minute if tz_hour >= 0 else -tz_minute)
-                
-                if offset == 0:
-                    tz = tzutc()
-                else:
-                    tz = tzoffset(None, offset * 60)
-
-    return datetime.datetime(date.year, date.month, date.day,
-                           hour, minute, second, microsecond, tz)
+    return datetime(year, month, day, hour, minute, second, microsecond, tzinfo=tz)

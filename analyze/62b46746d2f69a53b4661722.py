@@ -1,48 +1,56 @@
 def absorb(self, args):
-    result = []
-    for arg in args:
-        # Check if arg is an AND or OR operation
-        if isinstance(arg, (And, Or)):
-            # Get operator and operands
-            op = type(arg)
-            terms = arg.args
-            
-            # Check each term for absorption
-            absorbed = False
-            for term in terms:
-                # Check for regular absorption
-                if term in args:
-                    if (op is And and any(isinstance(t, Or) and term in t.args for t in terms)) or \
-                       (op is Or and any(isinstance(t, And) and term in t.args for t in terms)):
-                        result.append(term)
-                        absorbed = True
-                        break
+    # 创建结果列表
+    result = list(args)
+    changed = True
+    
+    # 持续应用吸收律直到没有变化
+    while changed:
+        changed = False
+        n = len(result)
+        
+        # 遍历所有表达式对
+        for i in range(n):
+            for j in range(n):
+                if i == j:
+                    continue
+                    
+                # 获取两个表达式
+                expr1 = result[i]
+                expr2 = result[j]
                 
-                # Check for negative absorption
-                if isinstance(term, Not):
-                    neg_term = term.args[0]
-                    if neg_term in args:
-                        if op is And:
-                            # A & (~A | B) = A & B
-                            for t in terms:
-                                if isinstance(t, Or) and neg_term in t.args:
-                                    new_terms = [x for x in t.args if x != neg_term]
-                                    result.append(And(neg_term, *new_terms))
-                                    absorbed = True
-                                    break
-                        else:
-                            # A | (~A & B) = A | B
-                            for t in terms:
-                                if isinstance(t, And) and neg_term in t.args:
-                                    new_terms = [x for x in t.args if x != neg_term]
-                                    result.append(Or(neg_term, *new_terms))
-                                    absorbed = True
-                                    break
-            
-            # If no absorption occurred, keep original term
-            if not absorbed:
-                result.append(arg)
-        else:
-            result.append(arg)
-            
+                # 检查吸收律 A & (A | B) = A
+                if (expr1.is_and() and expr2.is_or() and 
+                    any(t1 == t2 for t1 in expr1.terms for t2 in expr2.terms)):
+                    result[i] = expr1
+                    result[j] = None
+                    changed = True
+                
+                # 检查吸收律 A | (A & B) = A  
+                elif (expr1.is_or() and expr2.is_and() and
+                      any(t1 == t2 for t1 in expr1.terms for t2 in expr2.terms)):
+                    result[i] = expr1
+                    result[j] = None
+                    changed = True
+                    
+                # 检查负吸收律 A & (~A | B) = A & B
+                elif (expr1.is_and() and expr2.is_or() and
+                      any(t1.is_not() and t1.term == t2 
+                          for t1 in expr2.terms for t2 in expr1.terms)):
+                    new_terms = [t for t in expr2.terms if not any(
+                        t.is_not() and t.term == t2 for t2 in expr1.terms)]
+                    result[j] = self.make_and(expr1.terms + new_terms)
+                    changed = True
+                    
+                # 检查负吸收律 A | (~A & B) = A | B
+                elif (expr1.is_or() and expr2.is_and() and
+                      any(t1.is_not() and t1.term == t2
+                          for t1 in expr2.terms for t2 in expr1.terms)):
+                    new_terms = [t for t in expr2.terms if not any(
+                        t.is_not() and t.term == t2 for t2 in expr1.terms)]
+                    result[j] = self.make_or(expr1.terms + new_terms)
+                    changed = True
+                    
+        # 移除None值并去重
+        result = list(set(x for x in result if x is not None))
+        
     return result

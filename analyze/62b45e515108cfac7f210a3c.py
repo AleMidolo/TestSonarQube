@@ -1,29 +1,28 @@
 def initialize(self):
     """
-    Create and initialize a new OCFL storage root.
+    创建并初始化一个新的 OCFL 存储根目录。
     """
-    # Create root directory if it doesn't exist
-    os.makedirs(self.storage_root, exist_ok=True)
+    # 创建根目录
+    os.makedirs(self.root_path, exist_ok=True)
     
-    # Create OCFL storage root marker file (0=ocfl_1.0)
-    namaste_file = os.path.join(self.storage_root, "0=ocfl_1.0")
-    with open(namaste_file, 'w') as f:
+    # 创建 namaste 文件
+    namaste_path = os.path.join(self.root_path, "0=ocfl_1.0")
+    with open(namaste_path, "w") as f:
         f.write("ocfl_1.0")
         
-    # Create ocfl_layout.json file
+    # 创建 ocfl_layout.json 文件
     layout = {
         "extension": "000",
         "description": "OCFL Storage Root",
         "layout": {
-            "type": "flat",
-            "pattern": "{object-id}"
+            "type": "flat" 
         }
     }
     
-    layout_file = os.path.join(self.storage_root, "ocfl_layout.json")
-    with open(layout_file, 'w') as f:
+    layout_path = os.path.join(self.root_path, "ocfl_layout.json")
+    with open(layout_path, "w") as f:
         json.dump(layout, f, indent=2)
         
-    # Create extensions directory
-    extensions_dir = os.path.join(self.storage_root, "extensions")
-    os.makedirs(extensions_dir, exist_ok=True)
+    # 创建对象目录
+    objects_path = os.path.join(self.root_path, "objects")
+    os.makedirs(objects_path, exist_ok=True)

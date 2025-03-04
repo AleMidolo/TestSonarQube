@@ -1,37 +1,43 @@
 def extostr(cls, e, max_level=30, max_path_level=5):
     """
-    Format an exception.
-    :param e: Any exception instance.
+    将异常格式化为字符串
+    格式化异常信息。
+
+    :param e: 任意异常实例。
     :type e: Exception 
-    :param max_level: Maximum call stack level (default 30)
+    :param max_level: 最大调用堆栈层级（默认值为30）
     :type max_level: int
-    :param max_path_level: Maximum path level (default 5)
+    :param max_path_level: 最大路径层级（默认值为5）
     :type max_path_level: int
-    :return The exception readable string
-    :rtype str
+    :return: 可读的异常字符串
+    :rtype: str
     """
     import traceback
     import os
 
-    # Get the full traceback
-    tb_list = traceback.extract_tb(e.__traceback__)
+    # 获取异常的堆栈跟踪信息
+    tb = traceback.extract_tb(e.__traceback__)
     
-    # Format the exception message
-    exception_str = f"{type(e).__name__}: {str(e)}\n\n"
+    # 格式化异常类型和消息
+    error_msg = f"{e.__class__.__name__}: {str(e)}\n\n"
     
-    # Add stack trace info
-    for i, tb in enumerate(tb_list[:max_level]):
-        filename = tb.filename
-        
-        # Shorten path if needed
-        if max_path_level > 0:
-            path_parts = filename.split(os.sep)
-            if len(path_parts) > max_path_level:
-                filename = os.sep.join(['...'] + path_parts[-max_path_level:])
-        
-        # Add formatted stack trace line
-        exception_str += f"  File \"{filename}\", line {tb.lineno}, in {tb.name}\n"
-        if tb.line:
-            exception_str += f"    {tb.line}\n"
+    # 添加堆栈跟踪信息
+    for i, frame in enumerate(tb):
+        if i >= max_level:
+            break
             
-    return exception_str
+        filename = frame.filename
+        # 处理文件路径,只保留最后max_path_level层
+        path_parts = filename.split(os.sep)
+        if len(path_parts) > max_path_level:
+            filename = os.sep.join(path_parts[-max_path_level:])
+            
+        line = frame.lineno
+        func = frame.name
+        text = frame.line
+        
+        error_msg += f"  File \"{filename}\", line {line}, in {func}\n"
+        if text:
+            error_msg += f"    {text}\n"
+            
+    return error_msg

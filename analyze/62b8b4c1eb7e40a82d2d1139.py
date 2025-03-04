@@ -1,40 +1,48 @@
 def verifyClass(iface, candidate, tentative=False):
     """
-    Verify that the *candidate* might correctly provide *iface*.
+    验证 *candidate* 是否可能正确地提供 *iface*。
     """
-    # Get all attributes defined in the interface
-    iface_attrs = dir(iface)
+    # 获取接口定义的所有属性
+    required = set(dir(iface))
     
-    # Get all attributes defined in the candidate
-    candidate_attrs = dir(candidate)
+    # 获取候选类的所有属性
+    implemented = set(dir(candidate))
     
-    # Check each attribute required by the interface
-    for attr in iface_attrs:
-        # Skip private/special attributes
-        if attr.startswith('_'):
-            continue
+    # 检查所有必需的接口属性是否都已实现
+    missing = required - implemented
+    
+    if tentative:
+        # 如果是暂定验证,只要有任何一个属性匹配即可
+        return bool(required & implemented)
+    else:
+        # 严格验证模式下,所有必需属性都必须实现
+        if missing:
+            return False
             
-        # Check if attribute exists in candidate
-        if attr not in candidate_attrs:
-            if tentative:
+        # 验证方法签名是否匹配
+        for name in required:
+            if not hasattr(iface, name):
                 continue
-            else:
-                raise AttributeError(f"'{attr}' not found in candidate class")
                 
-        # Get the interface and candidate attributes
-        iface_attr = getattr(iface, attr)
-        candidate_attr = getattr(candidate, attr)
-        
-        # Check if attributes are callable (methods)
-        if callable(iface_attr):
-            if not callable(candidate_attr):
-                raise TypeError(f"'{attr}' must be callable")
+            iface_attr = getattr(iface, name)
+            cand_attr = getattr(candidate, name)
+            
+            # 检查属性类型是否一致
+            if type(iface_attr) != type(cand_attr):
+                return False
                 
-            # Check method signature matches
-            if not tentative:
-                iface_sig = str(iface_attr.__code__.co_varnames)
-                candidate_sig = str(candidate_attr.__code__.co_varnames)
-                if iface_sig != candidate_sig:
-                    raise TypeError(f"Method signature mismatch for '{attr}'")
-    
-    return True
+            # 如果是方法,检查参数列表是否匹配
+            if callable(iface_attr):
+                if not callable(cand_attr):
+                    return False
+                    
+                # 获取方法签名
+                from inspect import signature
+                iface_sig = signature(iface_attr)
+                cand_sig = signature(cand_attr)
+                
+                # 验证参数是否匹配
+                if str(iface_sig) != str(cand_sig):
+                    return False
+                    
+        return True

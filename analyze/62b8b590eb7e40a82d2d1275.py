@@ -1,56 +1,46 @@
 def _legacy_mergeOrderings(orderings):
-    """
-    Merge multiple orderings so that within-ordering order is preserved
-
-    Orderings are constrained in such a way that if an object appears
-    in two or more orderings, then the suffix that begins with the
-    object must be in both orderings.
-
-    For example:
-
-    >>> _mergeOrderings([
-    ... ['x', 'y', 'z'],
-    ... ['q', 'z'],
-    ... [1, 3, 5],
-    ... ['z']
-    ... ])
-    ['x', 'y', 'q', 1, 3, 5, 'z']
-    """
-    if not orderings:
-        return []
-        
-    # Create a mapping of elements to their next elements in each ordering
-    next_elements = {}
-    for ordering in orderings:
-        for i in range(len(ordering)-1):
-            curr = ordering[i]
-            next_elem = ordering[i+1]
-            if curr not in next_elements:
-                next_elements[curr] = next_elem
-            elif next_elements[curr] != next_elem:
-                raise ValueError("Inconsistent orderings")
-
-    # Find all elements that are not successors of any other element
-    all_elements = set()
-    successor_elements = set()
-    for ordering in orderings:
-        all_elements.update(ordering)
-        if len(ordering) > 1:
-            successor_elements.update(ordering[1:])
+    # 创建一个字典来存储每个元素在各个列表中的位置
+    element_positions = {}
     
-    start_elements = all_elements - successor_elements
-
-    # Build the merged ordering
+    # 遍历所有排序列表
+    for ordering in orderings:
+        for pos, element in enumerate(ordering):
+            if element not in element_positions:
+                element_positions[element] = []
+            element_positions[element].append(pos)
+            
+    # 创建结果列表
     result = []
-    current = list(start_elements)
+    # 记录已处理的元素
     seen = set()
     
-    while current:
-        elem = current.pop(0)
-        if elem not in seen:
-            result.append(elem)
-            seen.add(elem)
-            if elem in next_elements:
-                current.append(next_elements[elem])
+    # 遍历所有排序列表
+    for ordering in orderings:
+        # 遍历当前列表中的每个元素
+        for element in ordering:
+            # 如果元素已经在结果中,跳过
+            if element in seen:
+                continue
+                
+            # 检查是否可以添加当前元素
+            can_add = True
+            # 获取当前元素在所有列表中的位置
+            positions = element_positions[element]
+            
+            # 检查当前元素前面的所有元素是否都已经处理过
+            for ordering_idx, pos in enumerate(positions):
+                # 检查当前位置之前的元素
+                for prev_pos in range(pos):
+                    prev_element = orderings[ordering_idx][prev_pos]
+                    if prev_element not in seen:
+                        can_add = False
+                        break
+                if not can_add:
+                    break
+                    
+            # 如果可以添加当前元素
+            if can_add:
+                result.append(element)
+                seen.add(element)
                 
     return result

@@ -1,53 +1,55 @@
 def bash_completion():
     """
-    Return a bash completion script for the borgmatic command. Produce this by introspecting
-    borgmatic's command-line argument parsers.
+    通过检查 borgmatic 的命令行参数解析器生成 borgmatic 命令。
+
+    返回一个用于 borgmatic 命令的 bash 补全脚本。通过检查 borgmatic 的命令行参数解析器生成此脚本。
     """
-    return '''
+    completion_script = '''
 _borgmatic()
 {
-    local cur prev words cword
-    _init_completion || return
-
-    # List of all available borgmatic commands
-    local commands="init create prune check config validate generate-key list info export-tar extract mount umount"
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
     
-    # Handle command completion
-    if [ $cword -eq 1 ]; then
-        COMPREPLY=( $(compgen -W "$commands" -- "$cur") )
-        return 0
-    fi
-
-    # Handle options based on command
-    case ${words[1]} in
-        create)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --dry-run --monitoring-verbosity" -- "$cur") )
+    # 主要命令选项
+    opts="init create prune check list info export-tar extract mount umount config validate"
+    
+    # 通用选项
+    common_opts="--config --verbosity --syslog-verbosity --log-file --monitoring-verbosity --help"
+    
+    # 根据前一个单词提供不同的补全
+    case "${prev}" in
+        borgmatic)
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
             ;;
-        prune)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --dry-run --monitoring-verbosity" -- "$cur") )
+        --config)
+            COMPREPLY=( $(compgen -f -- ${cur}) )
+            return 0
             ;;
-        check)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --only --monitoring-verbosity" -- "$cur") )
+        --verbosity|--syslog-verbosity|--monitoring-verbosity)
+            COMPREPLY=( $(compgen -W "0 1 2 3" -- ${cur}) )
+            return 0
             ;;
-        list|info)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --archive" -- "$cur") )
-            ;;
-        mount)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --archive --mount-point" -- "$cur") )
+        --log-file)
+            COMPREPLY=( $(compgen -f -- ${cur}) )
+            return 0
             ;;
         *)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json" -- "$cur") )
+            # 如果当前输入以破折号开头，提供选项补全
+            if [[ ${cur} == -* ]] ; then
+                COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
+                return 0
+            fi
+            
+            # 否则提供命令补全
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
             ;;
     esac
-
-    # Handle file completion for --config option
-    if [[ $prev == "--config" ]]; then
-        _filedir yaml
-        return 0
-    fi
-
-    return 0
 }
 
 complete -F _borgmatic borgmatic
 '''
+    return completion_script

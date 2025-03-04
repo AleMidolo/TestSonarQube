@@ -1,39 +1,15 @@
 def pretty(self, indent=0, debug=False):
     """
-    Return a pretty formatted representation of self.
+    返回对象自身的美观格式化表示。
     """
-    # Create indentation string based on indent level
-    indent_str = " " * indent
+    # 处理对象值的表示形式
+    obj = f"'{self.obj}'" if isinstance(self.obj, str) else repr(self.obj)
     
-    # Start with class name
-    result = f"{indent_str}{self.__class__.__name__}("
+    # 如果开启debug模式，添加额外的调试信息
+    debug_details = f"id={id(self)}, " if debug else ""
     
-    # Get all attributes that don't start with underscore
-    attrs = [attr for attr in vars(self) if not attr.startswith('_')]
+    # 构建缩进的格式化字符串
+    indentation = " " * indent
     
-    # If in debug mode, include all attributes including private ones
-    if debug:
-        attrs = list(vars(self).keys())
-    
-    # Format each attribute
-    formatted_attrs = []
-    for attr in attrs:
-        value = getattr(self, attr)
-        # Handle nested objects that might have pretty() method
-        if hasattr(value, 'pretty'):
-            attr_str = value.pretty(indent + 2, debug)
-        else:
-            attr_str = repr(value)
-        formatted_attrs.append(f"{attr}={attr_str}")
-    
-    # Join all formatted attributes
-    if formatted_attrs:
-        result += "\n"
-        for attr in formatted_attrs[:-1]:
-            result += f"{indent_str}  {attr},\n"
-        result += f"{indent_str}  {formatted_attrs[-1]}\n"
-        result += f"{indent_str})"
-    else:
-        result += ")"
-        
-    return result
+    # 返回格式化后的字符串
+    return indentation + f"{self.__class__.__name__}({debug_details}{obj})"

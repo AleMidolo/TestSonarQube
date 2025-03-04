@@ -1,15 +1,15 @@
 def popitem(self):
     """
-    Remove and return the `(key, value)` pair most recently used.
+    移除并返回最近使用的键值对。
     """
     if not self:
         raise KeyError('Dictionary is empty')
         
-    # Get the most recently used key from the end of the order list
-    key = self._order[-1]
+    # 获取最近使用的键值对
+    key = next(reversed(self))
     value = self[key]
     
-    # Remove the key-value pair
+    # 从字典中删除该键值对
     del self[key]
     
     return key, value

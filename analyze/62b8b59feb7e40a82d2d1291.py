@@ -1,7 +1,6 @@
 def _getTargetClass(self):
     """
-    Define this to return the implementation in use,
-    without the 'Py' or 'Fallback' suffix.
+    定义此方法以返回当前使用的实现类，并去掉 'Py' 或 'Fallback' 后缀。
     """
     class_name = self.__class__.__name__
     if class_name.endswith('Py'):

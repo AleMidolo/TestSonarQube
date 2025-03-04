@@ -1,29 +1,22 @@
 def make_parsers():
     """
-    Build a top-level parser and its subparsers and return them as a tuple.
+    构建一个解析器及其子解析器，并将它们作为一个元组返回。
+
+    构建一个顶级解析器及其子解析器，并将它们作为一个元组返回。
     """
     import argparse
     
-    # Create top-level parser
-    parser = argparse.ArgumentParser(description='Command line tool')
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+    # 创建顶级解析器
+    parser = argparse.ArgumentParser(description='命令行工具')
+    subparsers = parser.add_subparsers(dest='command', help='可用命令')
     
-    # Create subparsers
-    run_parser = subparsers.add_parser('run', help='Run the program')
-    config_parser = subparsers.add_parser('config', help='Configure settings')
-    test_parser = subparsers.add_parser('test', help='Run tests')
+    # 创建子解析器
+    # 示例子命令1
+    parser_a = subparsers.add_parser('command-a', help='命令A的帮助信息')
+    parser_a.add_argument('--arg1', help='参数1的帮助信息')
     
-    # Add arguments to run parser
-    run_parser.add_argument('-i', '--input', help='Input file')
-    run_parser.add_argument('-o', '--output', help='Output file')
-    run_parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output')
-    
-    # Add arguments to config parser
-    config_parser.add_argument('--set', help='Set a configuration value')
-    config_parser.add_argument('--get', help='Get a configuration value')
-    
-    # Add arguments to test parser
-    test_parser.add_argument('-u', '--unit', action='store_true', help='Run unit tests')
-    test_parser.add_argument('-i', '--integration', action='store_true', help='Run integration tests')
+    # 示例子命令2 
+    parser_b = subparsers.add_parser('command-b', help='命令B的帮助信息')
+    parser_b.add_argument('--arg2', help='参数2的帮助信息')
     
     return parser, subparsers

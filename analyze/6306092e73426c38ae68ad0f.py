@@ -1,33 +1,34 @@
 def get_nested_custom_and_control_args(self, args):
     """
-    Split input arguments to control nested and custom.
+    将输入参数分为控制，嵌套和自定义参数。
 
-    Controls arguments: control the IR behavior. These arguments
-        will not be put into the spec yml file
-    Nested arguments: are used by the Ansible playbooks and will be put
-        into the spec yml file.
-    Custom arguments: Custom ansible variables to be used instead of the
-        normal nested usage.
+    控制参数：用于控制中间表示的行为。这些参数不会被写入到规范yml文件中。  
+    嵌套参数：用于Ansible playbooks，并会被写入到规范yml文件中。  
+    自定义参数：自定义的Ansible变量，用于替代常规的嵌套参数使用。
 
-    :param args: the collected list of args.
-    :return: (dict, dict): flat dicts (control_args, nested_args)
+    :param args: 收集到的参数列表。
+    :return: (dict, dict): 扁平化的字典（control_args, nested_args）
     """
-    # Initialize return dictionaries
     control_args = {}
     nested_args = {}
+    custom_args = {}
 
-    # Iterate through all arguments
+    # 遍历所有参数
     for arg_name, arg_value in args.items():
-        # Check if argument is a control argument (starts with '__')
-        if arg_name.startswith('__'):
+        # 控制参数以_开头
+        if arg_name.startswith('_'):
             control_args[arg_name] = arg_value
-        # Check if argument is a custom argument (contains ':')
-        elif ':' in arg_name:
-            # Split the custom argument name and add to nested args
-            custom_key = arg_name.replace(':', '.')
-            nested_args[custom_key] = arg_value
-        # Regular nested argument
+            
+        # 自定义参数以custom_开头    
+        elif arg_name.startswith('custom_'):
+            custom_name = arg_name[7:] # 去掉custom_前缀
+            custom_args[custom_name] = arg_value
+            
+        # 其他都是嵌套参数
         else:
             nested_args[arg_name] = arg_value
+
+    # 将自定义参数合并到嵌套参数中
+    nested_args.update(custom_args)
 
     return control_args, nested_args

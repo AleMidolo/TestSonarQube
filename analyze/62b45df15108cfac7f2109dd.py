@@ -1,22 +1,13 @@
 def status_str(self, prefix=''):
     """
-    Return string representation of validation log, with optional prefix.
+    返回带有 self.log.status_str 的字符串表示形式，可选添加前缀。
+    返回验证日志的字符串表示形式，可选添加前缀。
     """
-    output = []
-    for entry in self.log:
-        if entry.status == 'pass':
-            status = '���'
-        elif entry.status == 'fail': 
-            status = '���'
-        elif entry.status == 'warn':
-            status = '!'
-        else:
-            status = '?'
-            
-        msg = f"{prefix}{status} {entry.message}"
-        if entry.details:
-            msg += f" ({entry.details})"
-            
-        output.append(msg)
+    if hasattr(self, 'log') and hasattr(self.log, 'status_str'):
+        status = self.log.status_str
+    else:
+        status = ''
         
-    return '\n'.join(output)
+    if prefix:
+        return f"{prefix}{status}"
+    return status

@@ -1,36 +1,40 @@
 def _get_conditionally_required_args(self, command_name, options_spec, args):
     """
-    List arguments with ``required_when`` condition matched.
+    列出符合 ``required_when`` 条件的参数。
 
-    :param command_name: the command name.
-    :param options_spec:  the list of command spec options.
-    :param args: the received input arguments
-    :return: list, list of argument names with matched ``required_when``
-        condition
+    :param command_name: 命令名称。
+    :param options_spec: 命令选项规范的列表。
+    :param args: 接收到的输入参数。
+    :return: list，符合 ``required_when`` 条件的参数名称列表。
     """
     required_args = []
     
     for option in options_spec:
-        # Skip if option doesn't have required_when condition
+        # Skip if option has no required_when condition
         if 'required_when' not in option:
             continue
             
-        condition = option['required_when']
+        required_when = option['required_when']
         
-        # Evaluate the required_when condition
-        try:
-            # Create context with args for condition evaluation
-            context = {k: v for k, v in args.items()}
-            
-            # If condition evaluates to True, add argument name to required list
-            if eval(condition, {"__builtins__": {}}, context):
+        # If required_when is a string (argument name)
+        if isinstance(required_when, str):
+            if args.get(required_when):
                 required_args.append(option['name'])
                 
-        except Exception as e:
-            # Log error if condition evaluation fails
-            self.logger.error(
-                f"Failed to evaluate required_when condition '{condition}' "
-                f"for argument '{option.get('name')}' in command '{command_name}': {str(e)}"
-            )
+        # If required_when is a dict with conditions
+        elif isinstance(required_when, dict):
+            conditions_met = True
+            for key, value in required_when.items():
+                if args.get(key) != value:
+                    conditions_met = False
+                    break
             
+            if conditions_met:
+                required_args.append(option['name'])
+                
+        # If required_when is a callable
+        elif callable(required_when):
+            if required_when(args):
+                required_args.append(option['name'])
+                
     return required_args

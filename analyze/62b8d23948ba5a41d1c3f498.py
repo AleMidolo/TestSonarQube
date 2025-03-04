@@ -1,54 +1,57 @@
-from collections import OrderedDict
-from functools import wraps
-
 def lru_cache(maxsize=128, typed=False):
+    """
+    一个用于将函数包装为一个带有记忆功能的可调用对象的装饰器，
+    该对象基于最近最少使用（LRU）算法保存，最多 `maxsize` 个结果。
+    """
     def decorator(func):
-        # Create ordered dictionary to store cached results
-        cache = OrderedDict()
+        # 使用字典存储缓存结果
+        cache = {}
+        # 使用列表记录访问顺序
+        access_order = []
         
-        @wraps(func)
         def wrapper(*args, **kwargs):
-            # Create cache key based on args and kwargs
-            # Include types in key if typed=True
+            # 如果考虑类型,将参数转换为包含类型的key
             if typed:
-                key = (tuple(type(arg) for arg in args),
-                      tuple(args),
-                      tuple(sorted(kwargs.items())),
-                      tuple(type(v) for v in kwargs.values()))
+                key = tuple([(arg, type(arg)) for arg in args] + 
+                          sorted([(k, type(v), v) for k, v in kwargs.items()]))
             else:
-                key = (args, tuple(sorted(kwargs.items())))
-            
-            # Return cached result if it exists
+                key = tuple(list(args) + sorted(kwargs.items()))
+                
+            # 如果结果在缓存中
             if key in cache:
-                # Move to end to mark as most recently used
-                cache.move_to_end(key)
+                # 更新访问顺序
+                access_order.remove(key)
+                access_order.append(key)
                 return cache[key]
-            
-            # Calculate result
+                
+            # 计算新结果
             result = func(*args, **kwargs)
             
-            # Add to cache
-            cache[key] = result
-            
-            # Remove oldest item if cache is full
-            if maxsize and len(cache) > maxsize:
-                cache.popitem(last=False)
+            # 如果缓存已满,删除最久未使用的项
+            if len(cache) >= maxsize:
+                oldest_key = access_order.pop(0)
+                del cache[oldest_key]
                 
+            # 存储新结果
+            cache[key] = result
+            access_order.append(key)
+            
             return result
             
-        # Add cache info method
-        def cache_info():
-            hits = sum(1 for k in cache)
-            return {
-                'hits': hits,
-                'misses': wrapper.calls - hits,
-                'maxsize': maxsize,
-                'currsize': len(cache)
-            }
-            
-        wrapper.cache = cache
-        wrapper.cache_info = cache_info
-        wrapper.calls = 0
+        # 添加缓存统计信息
+        wrapper.cache_info = lambda: {
+            "hits": len(access_order),
+            "maxsize": maxsize,
+            "currsize": len(cache)
+        }
+        
+        # 清除缓存
+        wrapper.cache_clear = lambda: (cache.clear(), access_order.clear())
         
         return wrapper
+        
+    # 如果maxsize为None,则不使用缓存
+    if maxsize is None:
+        return lambda func: func
+        
     return decorator

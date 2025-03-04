@@ -1,49 +1,45 @@
 def parse_arguments(*unparsed_arguments):
     """
-    Given command-line arguments with which this script was invoked, parse the arguments and return
-    them as a dict mapping from subparser name (or "global") to an argparse.Namespace instance.
+    给定调用此脚本时提供的命令行参数，解析这些参数并返回一个字典。
+    该字典将子解析器名称（或 "global"）映射到一个 argparse.Namespace 实例。
     """
     import argparse
 
-    # Create main parser
-    parser = argparse.ArgumentParser(description='Command line argument parser')
+    # 创建主解析器
+    parser = argparse.ArgumentParser(description='命令行参数解析器')
     
-    # Add global arguments that apply to all subcommands
-    parser.add_argument('--verbose', action='store_true', help='Enable verbose output')
-    parser.add_argument('--config', type=str, help='Path to config file')
+    # 添加全局参数
+    parser.add_argument('--verbose', '-v', action='store_true', help='启用详细输出')
+    parser.add_argument('--config', '-c', type=str, help='配置文件路径')
     
-    # Create subparsers
+    # 创建子解析器
     subparsers = parser.add_subparsers(dest='command')
     
-    # Add subparser for different commands
-    run_parser = subparsers.add_parser('run')
-    run_parser.add_argument('--input', type=str, required=True, help='Input file path')
-    run_parser.add_argument('--output', type=str, required=True, help='Output file path')
+    # 添加 "init" 子命令
+    init_parser = subparsers.add_parser('init', help='初始化配置')
+    init_parser.add_argument('--force', '-f', action='store_true', help='强制初始化')
     
-    test_parser = subparsers.add_parser('test')
-    test_parser.add_argument('--test-file', type=str, required=True, help='Test file path')
+    # 添加 "run" 子命令
+    run_parser = subparsers.add_parser('run', help='运行程序')
+    run_parser.add_argument('--input', '-i', type=str, required=True, help='输入文件')
+    run_parser.add_argument('--output', '-o', type=str, help='输出文件')
     
-    # Parse arguments
-    args = parser.parse_args(unparsed_arguments if unparsed_arguments else None)
+    # 解析参数
+    if len(unparsed_arguments) == 0:
+        args = parser.parse_args()
+    else:
+        args = parser.parse_args(unparsed_arguments)
     
-    # Create dict to store parsed arguments
-    parsed_args = {}
+    # 创建返回字典
+    result = {'global': args}
     
-    # Store global arguments
-    parsed_args['global'] = argparse.Namespace(
-        verbose=args.verbose,
-        config=args.config
-    )
+    # 如果指定了子命令，将其参数添加到字典中
+    if args.command:
+        # 创建一个新的 Namespace 对象，只包含子命令的参数
+        sub_args = argparse.Namespace()
+        for key, value in vars(args).items():
+            if key != 'command':
+                setattr(sub_args, key, value)
+        result[args.command] = sub_args
     
-    # Store command-specific arguments
-    if args.command == 'run':
-        parsed_args['run'] = argparse.Namespace(
-            input=args.input,
-            output=args.output
-        )
-    elif args.command == 'test':
-        parsed_args['test'] = argparse.Namespace(
-            test_file=args.test_file
-        )
-        
-    return parsed_args
+    return result

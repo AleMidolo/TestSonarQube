@@ -1,52 +1,49 @@
 def verifyObject(iface, candidate, tentative=False):
-    from zope.interface.exceptions import Invalid, DoesNotImplement
+    from zope.interface.exceptions import Invalid, DoesNotImplement, BrokenImplementation, BrokenMethodImplementation
+    from zope.interface.verify import verifyClass
     from zope.interface.interface import Method
-    from collections import defaultdict
+    
+    # Step 1: Check if candidate provides interface
+    if not tentative:
+        if not iface.providedBy(candidate):
+            raise DoesNotImplement(iface)
 
-    errors = defaultdict(list)
-
-    # Check if candidate claims to provide interface
-    if not tentative and not iface.providedBy(candidate):
-        raise DoesNotImplement(iface)
-
-    # Check methods and attributes
+    # Collect all errors
+    errors = []
+    
+    # Step 2 & 3: Check methods
     for name, desc in iface.namesAndDescriptions(1):
-        try:
-            attr = getattr(candidate, name)
-        except AttributeError:
-            errors['missing_attributes'].append(
-                f"The '{name}' attribute was not provided.")
-            continue
-
         if isinstance(desc, Method):
-            # Verify it's callable
+            # Check if method exists
+            try:
+                attr = getattr(candidate, name)
+            except AttributeError:
+                errors.append(BrokenImplementation(iface, name))
+                continue
+
+            # Check if it's callable
             if not callable(attr):
-                errors['invalid_methods'].append(
-                    f"The '{name}' attribute is not callable.")
+                errors.append(BrokenMethodImplementation(name, "Not a method"))
                 continue
 
             # Check method signature
-            import inspect
-            expected = inspect.signature(desc)
             try:
-                actual = inspect.signature(attr)
-                if expected != actual:
-                    errors['invalid_signatures'].append(
-                        f"The '{name}' method has incorrect signature. "
-                        f"Expected {expected}, got {actual}")
-            except ValueError:
-                errors['invalid_signatures'].append(
-                    f"Could not inspect signature of '{name}' method.")
+                verifyClass(iface, attr.__class__)
+            except Invalid as e:
+                errors.append(BrokenMethodImplementation(name, str(e)))
+                
+    # Step 4: Check attributes
+    for name, desc in iface.namesAndDescriptions(1):
+        if not isinstance(desc, Method):
+            try:
+                getattr(candidate, name)
+            except AttributeError:
+                errors.append(BrokenImplementation(iface, name))
 
-    # If we have any errors, raise them
-    if errors:
-        all_errors = []
-        for error_type, messages in errors.items():
-            all_errors.extend(messages)
-            
-        if len(all_errors) == 1:
-            raise Invalid(all_errors[0])
-        elif len(all_errors) > 1:
-            raise Invalid("\n".join(all_errors))
+    # Raise collected errors
+    if len(errors) == 1:
+        raise errors[0]
+    elif errors:
+        raise Invalid(errors)
 
     return True

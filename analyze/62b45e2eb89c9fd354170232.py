@@ -1,28 +1,28 @@
 def next_version(version):
-    """
-    Next version identifier following existing pattern.
-    
-    Must deal with both zero-prefixed and non-zero prefixed versions.
-    """
-    # Split version string into parts
+    # Split version string by dots
     parts = version.split('.')
     
     # Convert to integers while preserving leading zeros
     lengths = [len(p) for p in parts]
     nums = [int(p) for p in parts]
     
-    # Start from rightmost digit and increment
-    for i in range(len(nums)-1, -1, -1):
-        nums[i] += 1
-        # If no carry needed, we're done
-        if nums[i] < 10 ** lengths[i]:
+    # Start from rightmost digit
+    i = len(nums) - 1
+    while i >= 0:
+        # If current number is 9, set to 0 and continue carrying
+        if nums[i] == 9:
+            nums[i] = 0
+            i -= 1
+        else:
+            # Otherwise increment and break
+            nums[i] += 1
             break
-        # Carry to next digit
-        nums[i] = 0
-        # If we're at leftmost digit, extend length
-        if i == 0:
-            lengths[i] += 1
             
+    # If we carried through all digits, add a 1 at start
+    if i < 0:
+        nums = [1] + nums
+        lengths = [1] + lengths
+        
     # Convert back to strings with original zero padding
     result = []
     for num, length in zip(nums, lengths):

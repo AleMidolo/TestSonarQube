@@ -1,28 +1,27 @@
 def values(self, *keys):
     """
-    Return the values of the record, optionally filtering to
-    include only certain values by index or key.
+    以列表的形式返回通过 `self.index` 过滤的键。
+    返回记录的值，可以选择性地通过索引或键进行过滤，仅包含特定的值。
 
-    :param keys: indexes or keys of the items to include; if none
-                 are provided, all values will be included
-    :return: list of values
+    :param keys: 要包含的项目的索引或键；如果未提供任何参数，则包含所有值
+    :return: 值的列表
     :rtype: list
     """
     if not keys:
-        # If no keys specified, return all values
-        return list(self._values)
+        # 如果没有提供键，返回所有值
+        return list(self.index.values())
     
     result = []
     for key in keys:
+        # 如果key是整数，按索引获取值
         if isinstance(key, int):
-            # If key is integer, treat as index
-            result.append(self._values[key])
-        else:
-            # Otherwise treat as dictionary key
             try:
-                index = self._fields.index(key)
-                result.append(self._values[index])
-            except ValueError:
-                raise KeyError(f"Field '{key}' not found")
+                result.append(list(self.index.values())[key])
+            except IndexError:
+                continue
+        # 否则按键获取值
+        else:
+            if key in self.index:
+                result.append(self.index[key])
     
     return result

@@ -1,6 +1,6 @@
 def _reset_logging(cls):
     """
-    Reset logging configuration to default state
+    重置日志系统
     """
     import logging
     
@@ -9,11 +9,7 @@ def _reset_logging(cls):
     for handler in root.handlers[:]:
         root.removeHandler(handler)
         
-    # Reset logger level to default
-    root.setLevel(logging.WARNING)
-    
-    # Add default stream handler
-    handler = logging.StreamHandler()
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    root.addHandler(handler)
+    # Reset logging configuration
+    logging.basicConfig(level=logging.INFO,
+                       format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                       datefmt='%Y-%m-%d %H:%M:%S')

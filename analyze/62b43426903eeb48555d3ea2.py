@@ -1,10 +1,7 @@
 def _create_converter(self) -> _converting._Converter:
     """
-    Create the parameter style converter.
+    创建参数样式转换器。
 
-    Returns the parameter style converter (:class:`._converting._Converter`).
+    返回参数样式转换器 (:class:`._converting._Converter`)。
     """
-    return _converting._Converter(
-        paramstyle=self.paramstyle,
-        named_style=self.named_style
-    )
+    return _converting._Converter()

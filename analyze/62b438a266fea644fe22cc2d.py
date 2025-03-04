@@ -1,26 +1,22 @@
 def parse_subparser_arguments(unparsed_arguments, subparsers):
     """
-    Given a sequence of arguments and a dict from subparser name to argparse.ArgumentParser
-    instance, give each requested action's subparser a shot at parsing all arguments. This allows
-    common arguments like "--repository" to be shared across multiple subparsers.
+    给定一个参数序列和一个从子解析器名称到 argparse.ArgumentParser 实例的字典，让每个请求的操作的子解析器尝试解析所有参数。这允许共享常见参数（例如 --repository）给多个子解析器。
 
-    Return the result as a tuple of (a dict mapping from subparser name to a parsed namespace of
-    arguments, a list of remaining arguments not claimed by any subparser).
+    将结果作为一个元组返回，其中包含一个将子解析器名称映射到其解析后的 argparse.Namespace 实例的字典和一个包含未被任何子解析器认领的剩余参数的列表。
     """
     parsed_args = {}
     remaining_args = list(unparsed_arguments)
     
-    # Try parsing with each subparser
+    # 遍历每个子解析器
     for name, subparser in subparsers.items():
         try:
-            # Parse known args, allowing unknown ones to remain
-            parsed, unknown = subparser.parse_known_args(remaining_args)
-            if parsed:
-                parsed_args[name] = parsed
-                # Update remaining args to only those that weren't parsed
-                remaining_args = unknown
+            # 尝试用当前子解析器解析所有参数
+            # parse_known_args() 返回一个包含已知参数的命名空间和未知参数列表的元组
+            namespace, unknown = subparser.parse_known_args(remaining_args)
+            parsed_args[name] = namespace
+            remaining_args = unknown
         except:
-            # If parsing fails, continue to next subparser
+            # 如果解析失败，继续尝试下一个子解析器
             continue
             
     return parsed_args, remaining_args
