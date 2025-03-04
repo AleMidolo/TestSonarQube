@@ -9,10 +9,15 @@ def validate_as_prior_version(self, prior):
     if not isinstance(prior, InventoryValidator):
         raise ValueError("L'oggetto 'prior' deve essere un'istanza di InventoryValidator.")
     
-    # Controlla se la versione di prior è effettivamente precedente a quella corrente
-    if prior.version >= self.version:
+    # Supponiamo che ci sia un metodo per ottenere la versione dell'inventario
+    current_version = self.get_version()
+    prior_version = prior.get_version()
+    
+    # Verifica se la versione 'prior' è effettivamente precedente a 'self'
+    if prior_version >= current_version:
         return False
     
-    # A questo punto, si può assumere che prior sia una versione valida
-    # Eseguire ulteriori controlli di coerenza se necessario
+    # Ulteriori controlli di coerenza possono essere aggiunti qui
+    # ...
+
     return True
