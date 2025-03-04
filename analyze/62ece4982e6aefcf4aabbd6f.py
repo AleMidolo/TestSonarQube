@@ -21,15 +21,17 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     destination_path.mkdir(parents=True, exist_ok=True)
 
     # Percorso del file temporaneo
-    tar_file_path = destination_path / "archive.tar.gz"
+    temp_file_path = destination_path / "archive.tar.gz"
 
-    # Scrivi il contenuto scaricato in un file
-    with open(tar_file_path, 'wb') as f:
+    # Scrivi il contenuto scaricato in un file temporaneo
+    with open(temp_file_path, 'wb') as f:
         f.write(response.content)
 
     # Estrai l'archivio
-    with tarfile.open(tar_file_path, 'r:gz') as tar:
+    with tarfile.open(temp_file_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
 
-    # Ritorna il percorso della directory estratta
+    # Rimuovi il file temporaneo
+    temp_file_path.unlink()
+
     return destination_path
