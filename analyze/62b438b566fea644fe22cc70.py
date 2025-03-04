@@ -8,11 +8,11 @@ _borgmatic()
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     
     # Main borgmatic commands
-    opts="init create prune list info check extract export-tar mount umount rcreate rinfo rlist rdelete config validate"
+    opts="init create prune list info check extract mount umount rcreate rlist rinfo rdelete config validate"
 
     # Common options
     common_opts="--config --verbosity --syslog-verbosity --json --help --version"
-
+    
     case "${prev}" in
         borgmatic)
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
@@ -27,16 +27,16 @@ _borgmatic()
             return 0
             ;;
         *)
+            # If we're typing an option
+            if [[ ${cur} == -* ]] ; then
+                COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
+                return 0
+            fi
             ;;
     esac
 
-    if [[ ${cur} == -* ]] ; then
-        COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
-        return 0
-    fi
-
-    # Complete with commands if no other matches
-    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    # Default to files/folders completion
+    COMPREPLY=( $(compgen -f -- ${cur}) )
     return 0
 }
 

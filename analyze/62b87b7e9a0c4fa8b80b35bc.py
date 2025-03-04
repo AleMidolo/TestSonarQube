@@ -1,24 +1,26 @@
 def _update_context(self, context):
-    # Dictionary to map field positions to x,y,z labels
-    coord_names = {0: 'x', 1: 'y', 2: 'z'}
+    # Dictionary to map field names to x,y,z coordinates
+    coord_map = {'E': 'x', 't': 'y', 'phi': 'z'}
     
-    # Initialize error context if it doesn't exist
-    if not hasattr(context, 'error'):
-        context.error = {}
-        
-    # Iterate through field names looking for error fields
-    for i, field in enumerate(self.fields):
-        # Check if field name contains 'error'
-        if 'error' in field.lower():
-            # Determine if it's a low or high error
-            error_type = 'low' if 'low' in field.lower() else 'high'
+    # Find error fields in the graph
+    for field in self.fields:
+        # Check for error fields (those ending in _low or _high)
+        if field.endswith('_low') or field.endswith('_high'):
+            # Get base field name without _low/_high
+            base_field = field[:-4]
+            # Get error direction (low/high)
+            direction = field[-3:]
             
-            # Get corresponding coordinate name (x,y,z) based on position
-            if i < 3:
-                coord = coord_names[i]
+            # Map the field to x,y,z coordinate if possible
+            coord = coord_map.get(base_field, base_field)
+            
+            # Initialize error dict if needed
+            if not hasattr(context, 'error'):
+                context.error = {}
                 
-                # Create error entry with index
-                error_key = f"{coord}_{error_type}"
-                context.error[error_key] = {"index": i}
-                
+            # Add error index to context
+            if coord not in context.error:
+                context.error[coord] = {}
+            context.error[coord][direction] = {'index': self.fields.index(field)}
+            
     return context

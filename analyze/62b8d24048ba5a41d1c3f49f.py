@@ -43,7 +43,7 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
             # Aggiunge il risultato alla cache
             cache[key] = (result, now)
             
-            # Mantiene la dimensione massima della cache
+            # Rimuove gli elementi più vecchi se la cache supera maxsize
             while len(cache) > maxsize:
                 cache.popitem(last=False)
                 

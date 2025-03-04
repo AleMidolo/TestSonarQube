@@ -11,5 +11,5 @@ def check_sender_and_entity_handle_match(sender_handle, entity_handle):
     normalized_sender = sender_handle.lower().strip()
     normalized_entity = entity_handle.lower().strip()
     
-    # Compare normalized handles
+    # Check if the normalized handles match exactly
     return normalized_sender == normalized_entity

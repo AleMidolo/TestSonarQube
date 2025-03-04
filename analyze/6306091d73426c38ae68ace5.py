@@ -15,14 +15,11 @@ def _include_groups(self, parser_dict):
                 # Look up included dictionary in self.groups
                 if include_name in self.groups:
                     included_dict = self.groups[include_name]
-                    
                     # Merge included dict with current dict
                     merged = included_dict.copy()
                     merged.update(value)
-                    
-                    # Remove include directive
+                    # Remove the include directive
                     del merged['include']
-                    
                     result[key] = merged
                 else:
                     raise KeyError(f"Referenced group '{include_name}' not found")

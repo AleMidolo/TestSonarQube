@@ -13,4 +13,4 @@ def parser_flags(parser):
             flags.append(opt)
     
     # Return flags joined by spaces
-    return ' '.join(sorted(flags))
+    return ' '.join(flags)

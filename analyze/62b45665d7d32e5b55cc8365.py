@@ -24,21 +24,14 @@ def parse_arguments(*unparsed_arguments):
     else:
         args = parser.parse_args(unparsed_arguments)
 
-    # Create result dictionary
-    result = {}
+    # Create dictionary to store parsed arguments
+    parsed_args = {}
     
-    # Add global arguments
-    result['global'] = argparse.Namespace(
-        verbose=args.verbose,
-        config=args.config
-    )
-
-    # Add command-specific arguments if a command was specified
+    # Store global arguments
+    parsed_args['global'] = args
+    
+    # Store command-specific arguments if a command was specified
     if args.command:
-        command_args = vars(args).copy()
-        del command_args['command']
-        del command_args['verbose']
-        del command_args['config']
-        result[args.command] = argparse.Namespace(**command_args)
-
-    return result
+        parsed_args[args.command] = args
+        
+    return parsed_args

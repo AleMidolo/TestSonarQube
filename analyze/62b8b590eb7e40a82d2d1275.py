@@ -4,24 +4,52 @@ def _legacy_mergeOrderings(orderings):
     for ordering in orderings:
         for i, element in enumerate(ordering):
             if element in position:
-                # Check if suffixes match when element appears in multiple orderings
-                suffix1 = ordering[i:]
-                suffix2 = orderings[position[element][0]][position[element][1]:]
-                if suffix1 != suffix2:
-                    raise ValueError("Inconsistent orderings")
+                # If element already seen, verify suffix constraint
+                old_pos = position[element]
+                old_ordering = None
+                for o in orderings:
+                    if element in o:
+                        if old_ordering is None:
+                            old_ordering = o[o.index(element):]
+                        else:
+                            new_ordering = o[o.index(element):]
+                            if old_ordering != new_ordering:
+                                raise ValueError("Inconsistent orderings")
             else:
-                position[element] = (orderings.index(ordering), i)
+                position[element] = i
 
-    # Create result list by merging orderings
-    result = []
-    used = set()
-    
-    # Process each ordering
+    # Create graph of dependencies
+    graph = {}
     for ordering in orderings:
-        # Add elements from this ordering that haven't been used yet
-        for element in ordering:
-            if element not in used:
-                result.append(element)
-                used.add(element)
-                
-    return result
+        for i in range(len(ordering)-1):
+            if ordering[i] not in graph:
+                graph[ordering[i]] = set()
+            graph[ordering[i]].add(ordering[i+1])
+
+    # Topological sort
+    result = []
+    visited = set()
+    temp_mark = set()
+
+    def visit(n):
+        if n in temp_mark:
+            raise ValueError("Circular dependency detected")
+        if n not in visited:
+            temp_mark.add(n)
+            if n in graph:
+                for m in graph[n]:
+                    visit(m)
+            temp_mark.remove(n)
+            visited.add(n)
+            result.insert(0, n)
+
+    # Visit all nodes
+    nodes = set()
+    for ordering in orderings:
+        nodes.update(ordering)
+    
+    for n in nodes:
+        if n not in visited:
+            visit(n)
+
+    return result[::-1]

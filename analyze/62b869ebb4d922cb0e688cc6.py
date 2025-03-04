@@ -1,11 +1,15 @@
 def update_last_applied_manifest_list_from_resp(
     last_applied_manifest, observer_schema, response
 ):
-    # Handle empty cases
+    # Handle empty inputs
     if not observer_schema or not response:
         return last_applied_manifest
 
-    # Ensure last_applied_manifest has enough elements
+    # Ensure last_applied_manifest is a list
+    if not isinstance(last_applied_manifest, list):
+        last_applied_manifest = []
+
+    # Extend last_applied_manifest if needed
     while len(last_applied_manifest) < len(response):
         last_applied_manifest.append({})
 
@@ -13,25 +17,30 @@ def update_last_applied_manifest_list_from_resp(
     for i, resp_item in enumerate(response):
         if i >= len(observer_schema):
             break
-            
-        schema_item = observer_schema[i]
-        
-        # Handle dict case recursively
-        if isinstance(resp_item, dict) and isinstance(schema_item, dict):
+
+        # Get corresponding schema
+        schema = observer_schema[i]
+
+        # If schema is a dict, recursively update nested dict
+        if isinstance(schema, dict):
+            if not isinstance(last_applied_manifest[i], dict):
+                last_applied_manifest[i] = {}
             from .utils import update_last_applied_manifest_dict_from_resp
-            last_applied_manifest[i] = update_last_applied_manifest_dict_from_resp(
-                last_applied_manifest[i], schema_item, resp_item
-            )
-            
-        # Handle list case recursively    
-        elif isinstance(resp_item, list) and isinstance(schema_item, list):
-            last_applied_manifest[i] = update_last_applied_manifest_list_from_resp(
-                last_applied_manifest[i] if isinstance(last_applied_manifest[i], list) else [],
-                schema_item,
+            update_last_applied_manifest_dict_from_resp(
+                last_applied_manifest[i], 
+                schema,
                 resp_item
             )
-            
-        # Handle primitive values
+        # If schema is a list, recursively update nested list  
+        elif isinstance(schema, list):
+            if not isinstance(last_applied_manifest[i], list):
+                last_applied_manifest[i] = []
+            update_last_applied_manifest_list_from_resp(
+                last_applied_manifest[i],
+                schema,
+                resp_item
+            )
+        # For primitive types, copy value directly
         else:
             last_applied_manifest[i] = resp_item
 

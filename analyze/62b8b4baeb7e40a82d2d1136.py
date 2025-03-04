@@ -8,7 +8,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     # Check if candidate claims to provide interface
     if not tentative and not iface.providedBy(candidate):
         errors['provide'].append(
-            f"Class {candidate} does not provide interface {iface.__name__}"
+            f"{candidate} does not provide interface {iface.__name__}"
         )
 
     # Check methods and attributes
@@ -17,53 +17,54 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             # Check if method exists
             if not hasattr(candidate, name):
                 errors['methods'].append(
-                    f"Method '{name}' not implemented"
+                    f"Method {name} not provided by {candidate}"
                 )
                 continue
 
             method = getattr(candidate, name)
             if not callable(method):
                 errors['methods'].append(
-                    f"Attribute '{name}' is not callable as required"
+                    f"{name} is not callable on {candidate}"
                 )
                 continue
 
-            # Check method signature
+            # Check method signature if possible
             try:
-                from inspect import signature
-                impl_sig = signature(method)
-                iface_sig = signature(desc)
+                import inspect
+                expected_sig = inspect.signature(desc)
+                actual_sig = inspect.signature(method)
                 
-                if impl_sig.parameters != iface_sig.parameters:
+                if expected_sig.parameters != actual_sig.parameters:
                     errors['signatures'].append(
-                        f"Method '{name}' has wrong signature: {impl_sig} != {iface_sig}"
+                        f"Method {name} has wrong signature: expected {expected_sig}, got {actual_sig}"
                     )
             except ValueError:
-                # Can't get signature, skip check
-                pass
+                pass  # Skip signature check if not possible
 
         else:
             # Check if attribute exists
             if not hasattr(candidate, name):
                 errors['attributes'].append(
-                    f"Attribute '{name}' not provided"
+                    f"Attribute {name} not provided by {candidate}"
                 )
 
     # If no errors, return True
     if not errors:
         return True
 
-    # Collect all error messages
-    all_errors = []
-    for category, messages in errors.items():
-        all_errors.extend(messages)
-
     # If single error, raise it directly
-    if len(all_errors) == 1:
-        raise Invalid(all_errors[0])
+    total_errors = sum(len(errs) for errs in errors.values())
+    if total_errors == 1:
+        for error_list in errors.values():
+            if error_list:
+                raise Invalid(error_list[0])
 
-    # Otherwise raise all errors together
-    if all_errors:
-        raise Invalid("\n".join(all_errors))
+    # Otherwise raise all errors
+    if errors:
+        error_msg = []
+        for category, msgs in errors.items():
+            if msgs:
+                error_msg.extend(msgs)
+        raise Invalid('\n'.join(error_msg))
 
     return True

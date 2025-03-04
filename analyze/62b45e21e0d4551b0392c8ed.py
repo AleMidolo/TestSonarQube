@@ -30,7 +30,7 @@ def find_path_type(path):
         return "root"
         
     # Check for OCFL Object
-    if "ocfl" in namaste_content.lower() and "object" in namaste_content.lower():
+    if "object" in namaste_content.lower():
         return "object"
         
     return f"Unknown Namaste content: {namaste_content}"
