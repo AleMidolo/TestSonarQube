@@ -28,5 +28,6 @@ def _update_context(self, context):
     if 'value' not in context:
         context['value'] = {}
     
-    # Additional logic to update context.value if necessary
-    # ...
+    # Update context with graph properties if needed
+    for key, value in self.graph.properties.items():
+        context['value'][key] = value

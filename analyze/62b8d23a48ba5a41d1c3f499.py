@@ -5,6 +5,11 @@ def popitem(self):
     if not self.data:
         raise KeyError("popitem(): dictionary is empty")
     
-    # Assuming self.data is an OrderedDict or similar structure
-    key, value = self.data.popitem(last=False)  # Remove the first item (least recently used)
-    return key, value
+    # Trova la chiave meno recentemente utilizzata
+    lru_key = next(iter(self.data))
+    lru_value = self.data[lru_key]
+    
+    # Rimuove la coppia dal dizionario
+    del self.data[lru_key]
+    
+    return lru_key, lru_value

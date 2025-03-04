@@ -15,7 +15,7 @@ def validate(self, inventory, extract_spec_version=False):
     else:
         spec_version = self.spec_version
 
-    # Esegui la convalida dell'inventario in base alla versione della specifica
+    # Esegui la convalida dell'inventario in base alla spec_version
     if spec_version == '1.0':
         return self.validate_v1(inventory)
     elif spec_version == '2.0':
