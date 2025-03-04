@@ -8,14 +8,16 @@ def cached(cache, key=hashkey, lock=None):
             k = key(*args, **kwargs)
             
             try:
-                # Try to get result from cache
                 result = cache[k]
             except KeyError:
-                # If not in cache, compute and store result
                 if lock is not None:
                     with lock:
-                        result = function(*args, **kwargs)
-                        cache[k] = result
+                        # Check again in case another thread stored the value
+                        try:
+                            result = cache[k]
+                        except KeyError:
+                            result = function(*args, **kwargs)
+                            cache[k] = result
                 else:
                     result = function(*args, **kwargs)
                     cache[k] = result

@@ -24,10 +24,10 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
     if ir_workspace and ir_workspace.inventory:
         cmd.extend(['-i', ir_workspace.inventory])
         
-    # Aggiungi le extra vars se specificate
+    # Gestisci le extra vars
     if extra_vars:
         for key, value in extra_vars.items():
-            cmd.extend(['-e', f'{key}={value}'])
+            cmd.extend(['--extra-vars', f'{key}={value}'])
             
     # Aggiungi gli argomenti ansible aggiuntivi
     if ansible_args:

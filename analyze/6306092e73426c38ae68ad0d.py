@@ -16,28 +16,23 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
         def __call__(self, value):
             try:
                 # Try to parse the value according to spec
-                if self.spec.get('type') == 'integer':
-                    return int(value)
-                elif self.spec.get('type') == 'float':
-                    return float(value)
-                elif self.spec.get('type') == 'boolean':
-                    return value.lower() in ('true', 't', 'yes', 'y', '1')
-                elif self.spec.get('type') == 'list':
-                    return value.split(',')
-                elif self.spec.get('type') == 'dict':
-                    pairs = value.split(',')
-                    return dict(pair.split(':') for pair in pairs)
-                else:
-                    # Default to string
-                    return str(value)
+                if 'choices' in self.spec:
+                    if value not in self.spec['choices']:
+                        raise ValueError(f"Value must be one of {self.spec['choices']}")
+                
+                if 'type' in self.spec:
+                    value = self.spec['type'](value)
                     
-            except (ValueError, TypeError) as e:
+                if 'validator' in self.spec:
+                    if not self.spec['validator'](value):
+                        raise ValueError(f"Value {value} failed validation")
+                        
+                return value
+                
+            except Exception as e:
                 raise argparse.ArgumentTypeError(
-                    f"Invalid value for {option_name} in {subcommand}: {str(e)}"
+                    f"Invalid value for {option_name}: {str(e)}"
                 )
-            
-        def __repr__(self):
-            return f'ComplexArgumentType({type_name})'
-            
-    # Return an instance of the custom type
+                
+    # Create instance with the provided specs
     return ComplexArgumentType(spec_option)

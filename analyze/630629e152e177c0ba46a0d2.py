@@ -52,4 +52,4 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     except requests.exceptions.RequestException as e:
         raise ConnectionError(f"Impossibile recuperare il webfinger: {str(e)}")
     except json.JSONDecodeError:
-        raise ValueError("Documento webfinger non è in formato JSON valido")
+        raise ValueError("Documento webfinger non è JSON valido")

@@ -7,11 +7,11 @@ def _fromutc(self, dt):
     if utc_offset is None:
         return dt
     
-    # Convert to timestamp, add offset and convert back
+    # Convert to timestamp, add offset and create new datetime
     ts = (dt.replace(tzinfo=None) - datetime.datetime(1970,1,1)).total_seconds()
     ts += utc_offset.total_seconds()
     
-    # Create local datetime
+    # Create local datetime from timestamp
     local_dt = datetime.datetime.fromtimestamp(ts, self)
     
     # Check if datetime is ambiguous (in DST transition)

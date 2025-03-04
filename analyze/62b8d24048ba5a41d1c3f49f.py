@@ -40,7 +40,7 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
             cache[key] = result
             expires[key] = now + ttl
             
-            # Rimuove gli elementi più vecchi se la cache supera maxsize
+            # Rimuove gli elementi più vecchi se si supera maxsize
             while len(cache) > maxsize:
                 cache.popitem(last=False)
                 expires.popitem(last=False)

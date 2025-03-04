@@ -3,73 +3,50 @@ def lfu_cache(maxsize=128, typed=False):
     Decorator per racchiudere una funzione con un oggetto callable di memoizzazione
     che salva fino a `maxsize` risultati basandosi su un algoritmo Least Frequently Used (LFU).
     """
-    from collections import defaultdict
-    from functools import wraps
-    
     def decorator(func):
-        # Cache per memorizzare i risultati
+        # Dictionary per memorizzare i risultati della cache
         cache = {}
-        # Contatore delle frequenze di utilizzo
-        frequencies = defaultdict(int)
-        # Dizionario per tenere traccia dell'ordine di inserimento per ogni frequenza
-        freq_list = defaultdict(list)
-        min_freq = 0
+        # Dictionary per tenere traccia della frequenza di utilizzo
+        freq = {}
+        # Counter per l'ordine di inserimento
+        counter = 0
         
-        @wraps(func)
         def wrapper(*args, **kwargs):
-            # Crea una chiave unica per gli argomenti
+            nonlocal counter
+            
+            # Crea una chiave per la cache basata sugli argomenti
             if typed:
                 key = (*args, *[(k, type(v), v) for k, v in sorted(kwargs.items())])
             else:
                 key = (*args, *sorted(kwargs.items()))
                 
             try:
-                key = hash(key)
-            except TypeError:
-                # Se la chiave non è hashable, esegui la funzione senza cache
-                return func(*args, **kwargs)
+                # Se il risultato è già in cache, aggiorna la frequenza e restituisci
+                result = cache[key]
+                freq[key] += 1
+                return result
+            except KeyError:
+                # Calcola il nuovo risultato
+                result = func(*args, **kwargs)
                 
-            # Se il risultato è già in cache
-            if key in cache:
-                # Aggiorna le frequenze
-                old_freq = frequencies[key]
-                frequencies[key] += 1
-                freq_list[old_freq].remove(key)
-                if not freq_list[old_freq] and old_freq == min_freq:
-                    min_freq += 1
-                freq_list[old_freq + 1].append(key)
-                return cache[key]
+                # Se la cache è piena, rimuovi l'elemento meno frequentemente usato
+                if len(cache) >= maxsize:
+                    # Trova la frequenza minima
+                    min_freq = min(freq.values())
+                    # Trova tutte le chiavi con frequenza minima
+                    min_keys = [k for k, v in freq.items() if v == min_freq]
+                    # Rimuovi la chiave più vecchia tra quelle con frequenza minima
+                    del_key = min_keys[0]
+                    del cache[del_key]
+                    del freq[del_key]
                 
-            # Se la cache è piena, rimuovi l'elemento meno frequentemente usato
-            if maxsize and len(cache) >= maxsize:
-                # Trova la chiave da rimuovere (LFU)
-                lfu_key = freq_list[min_freq].pop(0)
-                del cache[lfu_key]
-                del frequencies[lfu_key]
-                if not freq_list[min_freq]:
-                    del freq_list[min_freq]
-                    
-            # Calcola il nuovo risultato
-            result = func(*args, **kwargs)
-            
-            # Aggiungi il nuovo risultato alla cache
-            cache[key] = result
-            frequencies[key] = 1
-            freq_list[1].append(key)
-            min_freq = 1
-            
-            return result
-            
-        # Aggiungi attributi utili al wrapper
-        wrapper.cache_info = lambda: {
-            'hits': sum(frequencies.values()) - len(frequencies),
-            'misses': len(frequencies),
-            'maxsize': maxsize,
-            'currsize': len(cache)
-        }
-        wrapper.cache_clear = lambda: (cache.clear(), frequencies.clear(), 
-                                     freq_list.clear(), setattr(wrapper, 'min_freq', 0))
-        
+                # Aggiungi il nuovo risultato alla cache
+                cache[key] = result
+                freq[key] = 1
+                counter += 1
+                
+                return result
+                
         return wrapper
     
     return decorator

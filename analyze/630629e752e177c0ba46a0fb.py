@@ -5,10 +5,10 @@ def send_document(url, data, timeout=10, method="post", *args, **kwargs):
     error = None
     
     try:
-        # Seleziona il metodo HTTP appropriato
+        # Prepare request method
         request_method = getattr(requests, method.lower())
         
-        # Effettua la richiesta
+        # Send request
         response = request_method(
             url,
             data=data,
@@ -17,15 +17,17 @@ def send_document(url, data, timeout=10, method="post", *args, **kwargs):
             **kwargs
         )
         
-        # Salva il codice di stato
+        # Get status code
         status_code = response.status_code
         
-        # Forza l'errore se status code non è 2xx
+        # Raise for bad status codes
         response.raise_for_status()
             
     except requests.exceptions.RequestException as e:
         error = e
-        
+        if status_code is None and hasattr(e.response, 'status_code'):
+            status_code = e.response.status_code
+            
     except Exception as e:
         error = e
         

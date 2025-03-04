@@ -26,39 +26,37 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     # Inizializza il dizionario dei parametri extra
     extra = {}
     
-    # Aggiungi i bookmarks se specificati
+    # Gestisce i bookmarks se presenti
     if bookmarks:
         extra["bookmarks"] = list(bookmarks)
         
-    # Aggiungi i metadata se specificati
+    # Gestisce i metadata se presenti
     if metadata:
         extra["tx_metadata"] = metadata
         
-    # Aggiungi il timeout se specificato
+    # Gestisce il timeout se presente
     if timeout:
-        extra["tx_timeout"] = timeout
+        extra["tx_timeout"] = int(1000 * timeout)
         
-    # Aggiungi il database se specificato
+    # Gestisce il database se presente
     if db:
         extra["db"] = db
         
-    # Aggiungi l'utente da impersonare se specificato
+    # Gestisce l'impersonazione utente se presente
     if imp_user:
         extra["imp_user"] = imp_user
-
-    # Aggiungi la modalità se specificata, altrimenti usa "WRITE" come default
+        
+    # Gestisce la modalità di accesso
     if mode:
         extra["mode"] = mode
-    else:
-        extra["mode"] = "WRITE"
-
-    # Configura gli hook di serializzazione se specificati
+        
+    # Gestisce gli hook di disidratazione
     if dehydration_hooks:
-        self.dehydration_hooks.update(dehydration_hooks)
+        self._dehydration_hooks.update(dehydration_hooks)
+        
+    # Gestisce gli hook di idratazione  
     if hydration_hooks:
-        self.hydration_hooks.update(hydration_hooks)
-
-    # Crea e restituisce un nuovo oggetto Response con i parametri specificati
-    response = Response(self, **handlers)
-    self.append(BEGIN, extra, response=response)
-    return response
+        self._hydration_hooks.update(hydration_hooks)
+        
+    # Crea e restituisce la risposta con il messaggio BEGIN
+    return self._append(b"\x11", extra, response_handler=Response(**handlers))

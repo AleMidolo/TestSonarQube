@@ -7,7 +7,7 @@ def amend_bzparams(self, params, bug_ids):
     if isinstance(bug_ids, (int, str)):
         bug_ids = [str(bug_ids)]
     elif bug_ids:
-        bug_ids = [str(bid) for bid in bug_ids]
+        bug_ids = [str(bug_id) for bug_id in bug_ids]
         
     # Add bug IDs to parameters if provided
     if bug_ids:

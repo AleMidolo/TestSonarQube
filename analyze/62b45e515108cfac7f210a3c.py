@@ -19,24 +19,3 @@ def initialize(self):
     layout_path = os.path.join(self.root_path, "ocfl_layout.json") 
     with open(layout_path, "w") as f:
         json.dump(layout, f, indent=2)
-        
-    # Create storage root inventory
-    inventory = {
-        "id": "root",
-        "type": "https://ocfl.io/1.0/spec/#inventory",
-        "digestAlgorithm": "sha512",
-        "head": "v1",
-        "contentDirectory": "content",
-        "manifest": {},
-        "versions": {
-            "v1": {
-                "created": datetime.datetime.now().isoformat(),
-                "state": {},
-                "message": "Initial commit"
-            }
-        }
-    }
-    
-    inventory_path = os.path.join(self.root_path, "inventory.json")
-    with open(inventory_path, "w") as f:
-        json.dump(inventory, f, indent=2)

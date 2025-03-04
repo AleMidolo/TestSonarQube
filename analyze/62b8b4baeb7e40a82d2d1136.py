@@ -8,7 +8,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     # Check if candidate claims to provide interface
     if not tentative and not iface.providedBy(candidate):
         errors['provide'].append(
-            f"{candidate} does not provide interface {iface.__name__}"
+            f"Class {candidate} does not provide interface {iface.__name__}"
         )
 
     # Check methods and attributes
@@ -17,36 +17,36 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             # Check if method exists
             if not hasattr(candidate, name):
                 errors['methods'].append(
-                    f"Method {name} not provided by {candidate}"
+                    f"Method '{name}' not implemented"
                 )
                 continue
 
             method = getattr(candidate, name)
             if not callable(method):
                 errors['methods'].append(
-                    f"{name} is not callable on {candidate}"
+                    f"Attribute '{name}' is not callable"
                 )
                 continue
 
-            # Check method signature if possible
+            # Check method signature
             try:
-                import inspect
-                expected_sig = inspect.signature(desc)
-                actual_sig = inspect.signature(method)
+                from inspect import signature
+                impl_sig = signature(method)
+                iface_sig = signature(desc)
                 
-                if expected_sig.parameters != actual_sig.parameters:
+                if impl_sig.parameters != iface_sig.parameters:
                     errors['signatures'].append(
-                        f"Method {name} has wrong signature. "
-                        f"Expected {expected_sig}, got {actual_sig}"
+                        f"Method '{name}' has wrong signature: {impl_sig} != {iface_sig}"
                     )
             except ValueError:
-                pass  # Skip signature check if not possible
+                # Can't get signature, skip check
+                pass
 
         else:
             # Check if attribute exists
             if not hasattr(candidate, name):
                 errors['attributes'].append(
-                    f"Attribute {name} not provided by {candidate}"
+                    f"Attribute '{name}' not provided"
                 )
 
     # If no errors, return True

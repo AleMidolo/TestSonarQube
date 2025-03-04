@@ -21,6 +21,8 @@ def cachedmethod(cache, key=hashkey, lock=None):
                 
                 # Se non presente in cache, calcola il risultato
                 result = method(self, *args, **kwargs)
+                
+                # Salva il risultato in cache
                 cache[k] = result
                 return result
                 
