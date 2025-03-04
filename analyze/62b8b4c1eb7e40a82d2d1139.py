@@ -27,22 +27,16 @@ def verifyClass(iface, candidate, tentative=False):
             iface_attr = getattr(iface, name)
             cand_attr = getattr(candidate, name)
             
-            # 检查属性类型是否一致
-            if not isinstance(cand_attr, type(iface_attr)):
-                return False
-                
-            # 如果是方法,检查参数列表是否匹配
+            # 检查是否为可调用对象(方法)
             if callable(iface_attr):
                 if not callable(cand_attr):
                     return False
                     
-                # 获取方法签名
-                from inspect import signature
-                iface_sig = signature(iface_attr)
-                cand_sig = signature(cand_attr)
-                
-                # 验证参数是否匹配
-                if str(iface_sig) != str(cand_sig):
-                    return False
+                # 检查方法参数是否匹配
+                try:
+                    if iface_attr.__code__.co_argcount != cand_attr.__code__.co_argcount:
+                        return False
+                except AttributeError:
+                    pass
                     
         return True

@@ -19,18 +19,18 @@ def validate(self, inventory, extract_spec_version=False):
         except (AttributeError, IndexError):
             pass # Fall back to self.spec_version
 
-    # Validate required fields
+    # Basic validation
     required_fields = ['type', 'items']
     for field in required_fields:
         if field not in inventory:
             raise ValueError(f"Missing required field: {field}")
 
-    # Validate type format
+    # Validate type field format
     type_str = inventory['type']
     if not isinstance(type_str, str) or not type_str.startswith('inventory:'):
-        raise ValueError("Invalid type format. Must be 'inventory:<version>'")
+        raise ValueError("Invalid type format. Must start with 'inventory:'")
 
-    # Validate items is a list
+    # Validate items
     items = inventory['items']
     if not isinstance(items, list):
         raise ValueError("Items must be a list")
@@ -40,24 +40,23 @@ def validate(self, inventory, extract_spec_version=False):
         if not isinstance(item, dict):
             raise ValueError("Each item must be a dictionary")
         
-        # Validate required item fields based on spec version
-        if self.spec_version == '1.0':
-            required_item_fields = ['id', 'name', 'quantity']
-        else:  # Default to latest version requirements
-            required_item_fields = ['id', 'name', 'quantity', 'category']
+        # Check required item fields based on spec version
+        item_required_fields = ['id', 'name', 'quantity']
+        if self.spec_version >= '2.0':
+            item_required_fields.extend(['category', 'description'])
             
-        for field in required_item_fields:
+        for field in item_required_fields:
             if field not in item:
                 raise ValueError(f"Item missing required field: {field}")
 
         # Validate field types
-        if not isinstance(item['id'], str):
-            raise ValueError("Item id must be a string")
+        if not isinstance(item['id'], (str, int)):
+            raise ValueError("Item id must be string or integer")
         if not isinstance(item['name'], str):
-            raise ValueError("Item name must be a string") 
+            raise ValueError("Item name must be string")
         if not isinstance(item['quantity'], (int, float)):
-            raise ValueError("Item quantity must be a number")
-        if self.spec_version != '1.0' and not isinstance(item['category'], str):
-            raise ValueError("Item category must be a string")
+            raise ValueError("Item quantity must be numeric")
+        if item['quantity'] < 0:
+            raise ValueError("Item quantity cannot be negative")
 
     return True

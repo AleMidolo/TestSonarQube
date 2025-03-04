@@ -10,29 +10,40 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
     required_args = []
     
     for option in options_spec:
-        # 检查选项是否有required_when条件
-        if 'required_when' in option:
-            condition = option['required_when']
+        # Skip if option has no required_when condition
+        if 'required_when' not in option:
+            continue
             
-            # 如果条件是字符串,视为依赖其他参数
-            if isinstance(condition, str):
-                # 检查依赖的参数是否存在且有值
-                if condition in args and args[condition]:
+        condition = option['required_when']
+        
+        # If condition is a string, evaluate it as a Python expression
+        if isinstance(condition, str):
+            # Create a context with the current args
+            context = dict(args)
+            try:
+                if eval(condition, {}, context):
                     required_args.append(option['name'])
-                    
-            # 如果条件是函数,执行函数检查
-            elif callable(condition):
+            except:
+                # If evaluation fails, skip this condition
+                continue
+                
+        # If condition is a callable
+        elif callable(condition):
+            try:
                 if condition(args):
                     required_args.append(option['name'])
-                    
-            # 如果条件是字典,检查多个参数条件
-            elif isinstance(condition, dict):
-                matches = True
-                for key, value in condition.items():
-                    if key not in args or args[key] != value:
-                        matches = False
-                        break
-                if matches:
-                    required_args.append(option['name'])
-    
+            except:
+                # If evaluation fails, skip this condition
+                continue
+                
+        # If condition is a dict with key-value pairs
+        elif isinstance(condition, dict):
+            matches = True
+            for key, value in condition.items():
+                if args.get(key) != value:
+                    matches = False
+                    break
+            if matches:
+                required_args.append(option['name'])
+                
     return required_args

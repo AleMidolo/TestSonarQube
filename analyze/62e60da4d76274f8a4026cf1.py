@@ -15,13 +15,11 @@ def values(self, *keys):
     for key in keys:
         # 如果key是整数，按索引获取值
         if isinstance(key, int):
-            try:
-                result.append(list(self.index.values())[key])
-            except IndexError:
-                continue
+            values_list = list(self.index.values())
+            if 0 <= key < len(values_list):
+                result.append(values_list[key])
         # 否则按键获取值
-        else:
-            if key in self.index:
-                result.append(self.index[key])
-    
+        elif key in self.index:
+            result.append(self.index[key])
+            
     return result

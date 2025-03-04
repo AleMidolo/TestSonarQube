@@ -40,7 +40,7 @@ def mru_cache(maxsize=128, typed=False):
         
         return wrapper
     
-    # 支持直接装饰无参数调用
+    # 支持不带参数的装饰器写法
     if callable(maxsize):
         func, maxsize = maxsize, 128
         return decorator(func)

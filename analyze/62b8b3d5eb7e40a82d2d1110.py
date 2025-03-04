@@ -10,4 +10,8 @@ def _c_optimizations_available():
         import _speedups
         return _speedups
     except ImportError:
-        return False
+        try:
+            import cython_speedups
+            return cython_speedups
+        except ImportError:
+            return False

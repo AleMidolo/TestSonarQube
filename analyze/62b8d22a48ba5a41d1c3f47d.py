@@ -4,6 +4,6 @@ def pop(self, key, default=__marker):
         del self[key]
         return value
     except KeyError:
-        if default is not __marker:
-            return default
-        raise
+        if default is __marker:
+            raise
+        return default

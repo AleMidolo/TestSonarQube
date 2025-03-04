@@ -13,10 +13,10 @@ def fetch_content_type(url: str) -> Optional[str]:
     }
     
     try:
-        # 发送 HEAD 请求
+        # 发送HEAD请求
         response = requests.head(url, headers=headers, allow_redirects=True, timeout=10)
         
-        # 获取 Content-Type
+        # 获取Content-Type
         content_type = response.headers.get('Content-Type')
         
         # 如果存在分号,只返回分号前的内容类型

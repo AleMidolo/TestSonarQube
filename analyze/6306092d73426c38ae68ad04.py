@@ -15,7 +15,7 @@ def get_parser_option_specs(self, command_name):
     
     # 遍历解析器中的所有选项
     for action in parser._actions:
-        # 跳过帮助选项
+        # 跳过help选项
         if action.dest == 'help':
             continue
             
@@ -33,10 +33,13 @@ def get_parser_option_specs(self, command_name):
         # 构建选项规格
         option_spec = {
             'names': option_names,
+            'dest': action.dest,
+            'help': action.help,
             'required': action.required,
-            'help': action.help or '',
             'default': action.default,
-            'type': action.type.__name__ if action.type else 'str'
+            'type': str(action.type.__name__) if action.type else None,
+            'choices': action.choices,
+            'action': action.type
         }
         
         options.append(option_spec)

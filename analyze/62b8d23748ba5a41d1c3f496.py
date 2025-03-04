@@ -11,7 +11,7 @@ def lfu_cache(maxsize=128, typed=False):
         freq_list = defaultdict(set)
         # 当前最小频率
         min_freq = 0
-        
+
         @wraps(func)
         def wrapper(*args, **kwargs):
             # 根据typed参数决定是否区分参数类型
@@ -21,7 +21,7 @@ def lfu_cache(maxsize=128, typed=False):
                       *(type(v) for k, v in sorted(kwargs.items())))
             else:
                 key = (*args, *sorted(kwargs.items()))
-                
+            
             # 如果key在缓存中
             if key in cache:
                 # 更新使用频率
@@ -33,10 +33,7 @@ def lfu_cache(maxsize=128, typed=False):
                 freq_list[frequencies[key]].add(key)
                 return cache[key]
             
-            # 计算新结果
-            result = func(*args, **kwargs)
-            
-            # 如果缓存已满,删除使用频率最少的项
+            # 如果缓存已满，删除使用频率最低的项
             if len(cache) >= maxsize:
                 # 获取最小频率对应的任意一个key
                 lfu_key = next(iter(freq_list[min_freq]))
@@ -45,7 +42,8 @@ def lfu_cache(maxsize=128, typed=False):
                 freq_list[min_freq].remove(lfu_key)
                 del frequencies[lfu_key]
             
-            # 添加新结果到缓存
+            # 计算新结果并缓存
+            result = func(*args, **kwargs)
             cache[key] = result
             frequencies[key] = 1
             freq_list[1].add(key)

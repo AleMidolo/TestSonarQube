@@ -46,5 +46,5 @@ def update_last_applied_manifest_list_from_resp(last_applied_manifest, observer_
                         value
                     )
                 else:
-                    # Directly update primitive values
+                    # Update simple field
                     manifest_item[field] = value

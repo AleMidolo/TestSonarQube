@@ -24,6 +24,7 @@ def size_to_bytes(size: str) -> int:
 
     size = size.strip().upper()
     
+    # 如果只有数字,直接返回整数值
     if size.isdigit():
         return int(size)
         
@@ -36,16 +37,9 @@ def size_to_bytes(size: str) -> int:
         else:
             unit += char
             
-    if not number or not unit:
-        raise ValueError(f"Invalid size format: {size}")
-        
+    # 如果没有找到有效单位,返回原始数字
     if unit not in units:
-        raise ValueError(f"Invalid unit: {unit}")
+        return int(float(number))
         
-    # 转换为浮点数并乘以单位
-    try:
-        number = float(number)
-    except ValueError:
-        raise ValueError(f"Invalid number format: {number}")
-        
-    return int(number * units[unit])
+    # 计算字节数
+    return int(float(number) * units[unit])

@@ -23,5 +23,5 @@ def is_gitbash():
     term = os.environ.get('TERM', '')
     is_term = 'xterm' in term.lower()
     
-    # 如果同时满足环境变量和终端类型条件,则认为是在gitbash中
+    # 如果同时满足环境变量和终端类型条件，则认为是在gitbash中
     return git_env and is_term

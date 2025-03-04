@@ -6,33 +6,28 @@ def validate_fixity(self, fixity, manifest_files):
         return self.error("Fixity block must be a dictionary")
         
     # Check required fields
-    required_fields = ["message-digest-algorithm", "message-digest"]
+    required_fields = ["message-digest-algorithm", "message-digest", "message-digest-file"]
     for field in required_fields:
         if field not in fixity:
             return self.error(f"Missing required field '{field}' in fixity block")
             
-    # Validate algorithm field
+    # Validate algorithm
     if not isinstance(fixity["message-digest-algorithm"], str):
         return self.error("message-digest-algorithm must be a string")
         
-    # Validate digest field
-    digests = fixity["message-digest"]
-    if not isinstance(digests, list):
-        return self.error("message-digest must be a list")
+    # Validate digest
+    if not isinstance(fixity["message-digest"], str):
+        return self.error("message-digest must be a string")
         
-    # Check each digest entry
-    for digest in digests:
-        if not isinstance(digest, dict):
-            return self.error("Each message-digest entry must be a dictionary")
-            
-        if "file" not in digest or "hash" not in digest:
-            return self.error("Each message-digest entry must have 'file' and 'hash' fields")
-            
-        if not isinstance(digest["file"], str) or not isinstance(digest["hash"], str):
-            return self.error("Digest file and hash values must be strings")
-            
-        # Verify file exists in manifest
-        if digest["file"] not in manifest_files:
-            return self.error(f"Digest references non-existent file: {digest['file']}")
+    # Validate digest files
+    if not isinstance(fixity["message-digest-file"], list):
+        return self.error("message-digest-file must be a list")
+        
+    # Check that all referenced files exist in manifest
+    for digest_file in fixity["message-digest-file"]:
+        if not isinstance(digest_file, str):
+            return self.error("All message-digest-file entries must be strings")
+        if digest_file not in manifest_files:
+            return self.error(f"File '{digest_file}' referenced in fixity block not found in manifest")
             
     return None
