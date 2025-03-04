@@ -14,31 +14,31 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
         for file in files:
             num_objects += 1
             file_path = os.path.join(root, file)
-            
-            is_valid = True
-            
+
             # Validar objeto si está habilitado
             if validate_objects:
                 try:
-                    with open(file_path, 'rb') as f:
-                        content = f.read()
-                        
+                    # Verificar que el archivo existe
+                    if not os.path.exists(file_path):
+                        if show_warnings:
+                            print(f"Warning: File {file_path} does not exist")
+                        continue
+
                     # Verificar digest si está habilitado
                     if check_digests:
                         stored_digest = self._get_stored_digest(file_path)
-                        calculated_digest = hashlib.sha256(content).hexdigest()
+                        current_digest = self._calculate_digest(file_path)
                         
-                        if stored_digest != calculated_digest:
-                            is_valid = False
+                        if stored_digest != current_digest:
                             if show_warnings:
-                                print(f"Warning: Invalid digest for {file_path}")
-                                
+                                print(f"Warning: Digest mismatch for {file_path}")
+                            continue
+
+                    good_objects += 1
+
                 except Exception as e:
-                    is_valid = False
                     if show_warnings:
                         print(f"Warning: Error validating {file_path}: {str(e)}")
-            
-            if is_valid:
-                good_objects += 1
-                
+                    continue
+
     return num_objects, good_objects

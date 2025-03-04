@@ -17,7 +17,7 @@ def popitem(self):
     # Obtener el valor asociado
     lru_value = self.cache[lru_key].value
     
-    # Eliminar la clave del cache y de la lista de frecuencias
+    # Eliminar la clave del caché y de la lista de frecuencias
     del self.cache[lru_key]
     lru_list.remove(lru_key)
     
@@ -25,4 +25,5 @@ def popitem(self):
     if not lru_list:
         del self.freq_list[min_freq]
         
+    # Devolver el par (clave, valor)
     return (lru_key, lru_value)

@@ -36,7 +36,7 @@ def xargs(
     def _run_chunk(chunk: list[str]) -> tuple[int, bytes]:
         full_cmd = list(cmd) + chunk
         
-        if color and hasattr(pty, 'openpty'):
+        if color and hasattr(os, 'openpty'):
             master, slave = pty.openpty()
             process = subprocess.Popen(
                 full_cmd,
@@ -65,20 +65,27 @@ def xargs(
             )
             return process.returncode, process.stdout + process.stderr
 
-    # Dividir argumentos en chunks
     chunks = _chunk_args(varargs, _max_length)
     
-    # Ejecutar chunks en paralelo
-    with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
-        results = list(executor.map(_run_chunk, chunks))
+    if target_concurrency <= 1:
+        final_returncode = 0
+        final_output = b''
+        for chunk in chunks:
+            returncode, output = _run_chunk(chunk)
+            final_output += output
+            if returncode != 0:
+                final_returncode = returncode
+        return final_returncode, final_output
     
-    # Combinar resultados
-    final_code = 0
-    final_output = b''
-    
-    for code, output in results:
-        if code != 0:
-            final_code = code
-        final_output += output
-        
-    return final_code, final_output
+    else:
+        with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
+            results = list(executor.map(_run_chunk, chunks))
+            
+        final_returncode = 0
+        final_output = b''
+        for returncode, output in results:
+            final_output += output
+            if returncode != 0:
+                final_returncode = returncode
+                
+        return final_returncode, final_output

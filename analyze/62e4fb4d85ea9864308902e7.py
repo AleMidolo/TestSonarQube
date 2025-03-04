@@ -18,17 +18,16 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
         with open(cmd[0], 'rb') as f:
             first_line = f.readline().decode('utf-8').strip()
             
-        # Si tiene shebang, extraer el intérprete
+        # Verificar si hay shebang
         if first_line.startswith('#!'):
             interpreter = first_line[2:].strip().split()
             
-            # Si el intérprete es python, usar sys.executable
-            if 'python' in interpreter[-1].lower():
-                import sys
-                return (sys.executable,) + (cmd[0],) + cmd[1:]
+            # Si el shebang especifica python, usar el intérprete actual
+            if any('python' in part.lower() for part in interpreter):
+                return ('python', *cmd)
                 
-            # Si no es python, usar el intérprete del shebang
-            return tuple(interpreter + [cmd[0]] + list(cmd[1:]))
+            # Si hay otro intérprete, usarlo
+            return (*interpreter, *cmd)
             
     except (IOError, UnicodeDecodeError):
         pass

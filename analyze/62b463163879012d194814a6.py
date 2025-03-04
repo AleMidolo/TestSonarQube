@@ -6,7 +6,7 @@ def files_list_from_zipfile(zip_path):
         zip_path (str): Path to the zip file
         
     Returns:
-        list: List of files in the zip archive
+        list: List of file paths contained in the zip file
     """
     import zipfile
     
@@ -15,4 +15,4 @@ def files_list_from_zipfile(zip_path):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         files_list = zip_ref.namelist()
         
-    return sorted(files_list)
+    return files_list

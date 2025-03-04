@@ -30,7 +30,7 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **
                 message = hook(message)
                 
     # Añadir mensaje a la cola de salida
-    self._outbox.append(message)
+    self._outbound_messages.append(message)
     
     # Crear y devolver objeto Response con los handlers proporcionados
     response = Response(

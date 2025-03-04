@@ -30,7 +30,8 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
         # Obtener el ID de la imagen del path
         path_parts = parsed_url.path.strip('/').split('/')
         if not path_parts[-1]:
-            raise ValueError("URL sin ID de imagen válido")
+            raise ValueError("URL no contiene ID de imagen")
+            
         image_id = path_parts[-1]
         
         return (image_id, netloc, use_ssl)

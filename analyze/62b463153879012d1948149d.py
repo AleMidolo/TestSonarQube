@@ -16,8 +16,8 @@ def _explore_folder(folder):
     import os
     from collections import defaultdict
     
-    # Diccionario para almacenar los archivos agrupados
-    files_dict = defaultdict(list)
+    # Diccionario para almacenar los archivos agrupados por nombre base
+    files_by_base = defaultdict(dict)
     
     # Recorrer todos los archivos en la carpeta
     for filename in os.listdir(folder):
@@ -25,18 +25,13 @@ def _explore_folder(folder):
         
         # Solo procesar archivos, no directorios
         if os.path.isfile(filepath):
-            # Obtener el nombre base sin extensión
-            base_name = os.path.splitext(filename)[0]
+            # Obtener extensión y nombre base
+            base, ext = os.path.splitext(filename)
             
-            # Si termina en números, obtener la parte base
-            while base_name[-1].isdigit():
-                base_name = base_name[:-1]
+            # Remover el punto de la extensión
+            ext = ext[1:] if ext else ''
             
-            # Agregar el archivo completo a la lista del nombre base
-            files_dict[base_name].append({
-                'filename': filename,
-                'filepath': filepath
-            })
+            # Agrupar archivos por nombre base
+            files_by_base[base][ext] = filepath
             
-    # Convertir defaultdict a dict normal
-    return dict(files_dict)
+    return dict(files_by_base)
