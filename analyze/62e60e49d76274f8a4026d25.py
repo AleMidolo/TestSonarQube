@@ -8,7 +8,7 @@ def unit_of_work(metadata=None, timeout=None):
             # Call the original transaction function
             return f(*args, **kwargs)
             
-        # Copy metadata from original function
+        # Copy function metadata
         wrapper.__name__ = f.__name__
         wrapper.__doc__ = f.__doc__
         

@@ -8,44 +8,43 @@ def verifyObject(iface, candidate, tentative=False):
     # Check if candidate claims to provide interface
     if not tentative:
         if not iface.providedBy(candidate):
-            errors.append(DoesNotImplement(iface))
+            raise DoesNotImplement(iface)
 
-    # Check methods and attributes
+    # Verify all required methods
     for name, desc in iface.namesAndDescriptions(1):
-        try:
-            attr = getattr(candidate, name)
-        except AttributeError:
-            errors.append(BrokenImplementation(iface, name))
-            continue
-
-        # Verify methods
         if isinstance(desc, Method):
-            # Check if it's callable
-            if not callable(attr):
-                errors.append(BrokenMethodImplementation(name, "Not callable"))
+            # Check if method exists
+            try:
+                attr = getattr(candidate, name)
+            except AttributeError:
+                errors.append(BrokenImplementation(iface, name))
                 continue
 
-            # Verify method signature
+            # Verify method signature if possible
+            if not callable(attr):
+                errors.append(BrokenMethodImplementation(name, "Not a method"))
+                continue
+
             try:
-                from inspect import signature
-                method_sig = signature(attr)
-                interface_sig = signature(desc)
-                
-                # Compare parameters
-                if len(method_sig.parameters) != len(interface_sig.parameters):
-                    errors.append(BrokenMethodImplementation(name, "Incorrect number of arguments"))
-                    continue
-                
-                # Compare parameter names and kinds
-                for (p1_name, p1), (p2_name, p2) in zip(method_sig.parameters.items(), 
-                                                       interface_sig.parameters.items()):
-                    if p1.kind != p2.kind or p1_name != p2_name:
-                        errors.append(BrokenMethodImplementation(name, "Signature mismatch"))
-                        break
-                        
-            except ValueError:
-                # If we can't get the signature, we'll skip detailed verification
+                # Check method signature
+                if hasattr(desc, 'getSignatureInfo'):
+                    sig_info = desc.getSignatureInfo()
+                    method_sig = getattr(attr, '__signature__', None)
+                    
+                    if method_sig:
+                        # Compare signatures
+                        if (sig_info['positional'] != method_sig.parameters or 
+                            sig_info['required'] != len([p for p in method_sig.parameters.values() 
+                                                       if p.default == p.empty])):
+                            errors.append(BrokenMethodImplementation(name, "Incorrect signature"))
+            except Exception:
+                # If signature verification fails, continue with other checks
                 pass
+
+        else:
+            # Verify attributes
+            if not hasattr(candidate, name):
+                errors.append(BrokenImplementation(iface, name))
 
     # Handle errors
     if errors:

@@ -12,44 +12,34 @@ def lfu_cache(maxsize=128, typed=False):
         @wraps(func)
         def wrapper(*args, **kwargs):
             # Create cache key based on arguments
+            key = (*args, *(kwargs.items()))
             if typed:
-                key = (*args, *[(k, type(v), v) for k, v in kwargs.items()])
-            else:
-                key = (*args, *sorted(kwargs.items()))
-                
-            try:
-                key = hash(key)
-            except TypeError:
-                # If unhashable, don't cache
-                return func(*args, **kwargs)
-                
-            # Return from cache if exists
+                key += tuple(type(arg) for arg in args)
+                key += tuple(type(val) for val in kwargs.values())
+            
+            # Return cached result if exists
             if key in cache:
                 # Update frequency information
                 old_freq = freq_counter[key]
                 freq_counter[key] += 1
                 freq_lists[old_freq].remove(key)
-                freq_lists[freq_counter[key]].add(key)
-                
-                # Update minimum frequency if needed
-                if old_freq == min_freq and not freq_lists[old_freq]:
+                if not freq_lists[old_freq] and old_freq == min_freq:
                     min_freq += 1
-                    
+                freq_lists[old_freq + 1].add(key)
                 return cache[key]
-                
-            # Compute new value
+            
+            # Calculate new result
             result = func(*args, **kwargs)
             
             # If cache is full, remove least frequently used item
             if len(cache) >= maxsize:
-                # Get key to remove from min frequency list
+                # Get key to remove
                 lfu_key = next(iter(freq_lists[min_freq]))
-                
                 # Remove from all tracking structures
                 del cache[lfu_key]
                 freq_lists[min_freq].remove(lfu_key)
                 del freq_counter[lfu_key]
-                
+            
             # Add new result to cache
             cache[key] = result
             freq_counter[key] = 1
@@ -58,33 +48,15 @@ def lfu_cache(maxsize=128, typed=False):
             
             return result
             
-        # Add cache info method
-        def cache_info():
-            return {
-                'hits': sum(freq_counter.values()) - len(cache),
-                'misses': len(cache),
-                'maxsize': maxsize,
-                'currsize': len(cache)
-            }
-            
-        wrapper.cache_info = cache_info
-        
-        # Add cache clear method
-        def cache_clear():
+        # Add clear method to wrapper
+        def clear():
             cache.clear()
             freq_counter.clear()
             freq_lists.clear()
             nonlocal min_freq
             min_freq = 0
             
-        wrapper.cache_clear = cache_clear
-        
+        wrapper.clear = clear
         return wrapper
-        
-    # Handle no-argument decorator case
-    if callable(maxsize):
-        func = maxsize
-        maxsize = 128
-        return decorator(func)
         
     return decorator

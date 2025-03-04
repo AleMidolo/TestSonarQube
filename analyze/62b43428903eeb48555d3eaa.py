@@ -16,53 +16,42 @@ def formatmany(
     # Check if named parameters (dict) or ordinal parameters (sequence)
     is_named = isinstance(first_param, dict)
     
-    # Initialize output params list
-    out_params = []
-    
-    # Process each parameter set
-    for params in params_list:
-        if is_named:
-            # For named parameters
-            if not isinstance(params, dict):
-                raise TypeError("All parameters must be dictionaries for named style")
-                
-            # Convert parameter style if needed
-            if hasattr(self, 'in_style') and hasattr(self, 'out_style'):
-                converted_params = {}
-                for key, value in params.items():
-                    # Convert parameter name from in_style to out_style
-                    new_key = key
-                    if isinstance(key, str):
-                        if self.in_style == '%s':
-                            new_key = f"%({key})s"
-                        elif self.in_style == ':':
-                            new_key = f":{key}"
-                        elif self.in_style == '$':
-                            new_key = f"${key}"
-                    converted_params[new_key] = value
-                out_params.append(converted_params)
-            else:
-                out_params.append(params)
-                
+    # Convert SQL and params based on parameter style
+    if is_named:
+        # For named parameters
+        # Replace :param or %(param)s with ? or $n based on out_style
+        param_names = first_param.keys()
+        converted_sql = sql
+        
+        for name in param_names:
+            if isinstance(sql, str):
+                pattern = f":{name}|%\({name}\)s"
+                if self.out_style == '?':
+                    converted_sql = re.sub(pattern, '?', converted_sql)
+                else:
+                    # For $n style
+                    param_num = list(param_names).index(name) + 1
+                    converted_sql = re.sub(pattern, f'${param_num}', converted_sql)
+                    
+        # Convert parameters to list format if needed
+        if self.out_style == '?':
+            converted_params = [list(p.values()) for p in params_list]
         else:
-            # For ordinal parameters
-            if not isinstance(params, (list, tuple)):
-                raise TypeError("All parameters must be sequences for ordinal style")
-                
-            # Convert to list to ensure mutability
-            out_params.append(list(params))
+            converted_params = params_list
             
-    # Convert SQL if needed
-    if hasattr(self, 'in_style') and hasattr(self, 'out_style'):
-        if isinstance(sql, str):
-            # Replace parameter style markers
-            if self.in_style == '%s' and self.out_style == ':':
-                sql = sql.replace('%s', ':%s')
-            elif self.in_style == ':' and self.out_style == '%s':
-                sql = sql.replace(':', '%')
-            elif self.in_style == '$' and self.out_style == '%s':
-                # Replace $1, $2, etc with %s
-                import re
-                sql = re.sub(r'\$\d+', '%s', sql)
-                
-    return sql, out_params
+    else:
+        # For ordinal parameters
+        # Replace ? with $n if needed
+        if self.out_style == '?':
+            converted_sql = sql
+            converted_params = params_list
+        else:
+            # Convert ? to $1, $2 etc
+            param_count = len(first_param)
+            converted_sql = sql
+            if isinstance(sql, str):
+                for i in range(param_count):
+                    converted_sql = converted_sql.replace('?', f'${i+1}', 1)
+            converted_params = params_list
+            
+    return converted_sql, converted_params

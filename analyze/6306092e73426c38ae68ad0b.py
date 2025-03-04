@@ -10,4 +10,4 @@ def validate_min_max_args(self, args):
             max_val = getattr(self, f'max_{arg_name}')
             
             if not (min_val <= arg_value <= max_val):
-                raise ValueError(f"{arg_name} का मान {min_val} और {max_val} के बीच होना चाहिए")
+                raise ValueError(f'{arg_name} का मान {min_val} और {max_val} के बीच होना चाहिए')

@@ -14,7 +14,7 @@ def _should_attempt_c_optimizations():
     pure_python = os.environ.get('PURE_PYTHON', '').lower()
     use_pure_python = pure_python in ('1', 'true', 'yes', 'on')
 
-    # Return True if we should use C optimizations:
+    # Return True if we should attempt C optimizations:
     # - Not running on PyPy
-    # - PURE_PYTHON is not set to a truthy value
+    # - PURE_PYTHON environment variable is not set to a truthy value
     return not (is_pypy or use_pure_python)

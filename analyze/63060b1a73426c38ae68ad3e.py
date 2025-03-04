@@ -7,36 +7,28 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     """
     flattened_dict = {}
     
-    def flatten_dict(d, parent_key=''):
-        for key, value in d.items():
-            new_key = f"{parent_key}.{key}" if parent_key else key
-            
-            if isinstance(value, dict):
-                flatten_dict(value, new_key)
-            else:
-                flattened_dict[new_key] = value
-                
     try:
-        # Try to read plugin specification file
+        # Read and parse plugin specification file
         spec_file = os.path.join(plugin_dir, 'plugin.json')
-        if not os.path.exists(spec_file):
-            spec_file = os.path.join(plugin_dir, 'plugin.yaml')
+        with open(spec_file, 'r', encoding='utf-8') as f:
+            spec = json.load(f)
             
-        if os.path.exists(spec_file):
-            # Read the specification file
-            with open(spec_file, 'r', encoding='utf-8') as f:
-                if spec_file.endswith('.json'):
-                    import json
-                    spec = json.load(f)
+        def flatten(d, parent_key=''):
+            for key, value in d.items():
+                new_key = f"{parent_key}.{key}" if parent_key else key
+                
+                if isinstance(value, dict):
+                    flatten(value, new_key)
                 else:
-                    import yaml
-                    spec = yaml.safe_load(f)
+                    flattened_dict[new_key] = value
                     
-            # Flatten the dictionary
-            flatten_dict(spec)
-            
+        flatten(spec)
+        
+    except FileNotFoundError:
+        print(f"Plugin specification file not found in {plugin_dir}")
+    except json.JSONDecodeError:
+        print(f"Invalid JSON format in plugin specification file")
     except Exception as e:
-        print(f"Error reading plugin specification: {str(e)}")
-        return {}
+        print(f"Error processing plugin specification: {str(e)}")
         
     return flattened_dict

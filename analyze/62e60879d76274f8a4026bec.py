@@ -19,7 +19,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     # Add optional parameters if provided
     if bookmarks is not None:
         parameters["bookmarks"] = list(bookmarks)
-    
+        
     if metadata is not None:
         parameters["metadata"] = metadata
         

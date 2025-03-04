@@ -22,23 +22,22 @@ def absorb(self, args):
                 if (expr1.op == '&' and 
                     expr2.op == '|' and
                     expr1.left in [expr2.left, expr2.right]):
-                    result[j] = expr1
+                    result[i] = expr1.left
                     changed = True
                     
-                # A | (A & B) = A 
+                # A | (A & B) = A    
                 elif (expr1.op == '|' and
                       expr2.op == '&' and 
                       expr1.left in [expr2.left, expr2.right]):
-                    result[j] = expr1
+                    result[i] = expr1.left
                     changed = True
                     
-                # Check negative absorption
                 # A & (~A | B) = A & B
                 elif (expr1.op == '&' and
                       expr2.op == '|' and
                       expr2.left.op == '~' and
                       expr2.left.expr == expr1.left):
-                    result[j] = expr1 & expr2.right
+                    result[i] = Expression('&', expr1.left, expr2.right)
                     changed = True
                     
                 # A | (~A & B) = A | B
@@ -46,9 +45,7 @@ def absorb(self, args):
                       expr2.op == '&' and
                       expr2.left.op == '~' and
                       expr2.left.expr == expr1.left):
-                    result[j] = expr1 | expr2.right
+                    result[i] = Expression('|', expr1.left, expr2.right)
                     changed = True
                     
-    # Remove duplicates while preserving order
-    seen = set()
-    return [x for x in result if not (x in seen or seen.add(x))]
+    return result

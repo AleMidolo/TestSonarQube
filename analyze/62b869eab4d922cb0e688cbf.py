@@ -47,10 +47,5 @@ def generate_default_observer_schema(app):
             default_schema[resource['metadata']['name']] = {
                 'ready': 'true'
             }
-        else:
-            # Default catch-all schema
-            default_schema[resource['metadata']['name']] = {
-                'ready': 'true'
-            }
-
+            
     return default_schema
