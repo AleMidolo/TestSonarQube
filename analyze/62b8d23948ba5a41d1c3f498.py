@@ -44,4 +44,8 @@ def lru_cache(maxsize=128, typed=False):
     if maxsize is None:
         return lambda func: func
         
+    # Se maxsize <= 0, disabilita la cache
+    if maxsize <= 0:
+        return lambda func: func
+        
     return decorator

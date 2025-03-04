@@ -14,23 +14,28 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     import os
     
     # Get the full traceback
-    tb_list = traceback.extract_tb(e.__traceback__)
+    tb = traceback.extract_tb(e.__traceback__)
     
-    # Limit stack trace to max_level
-    if len(tb_list) > max_level:
-        tb_list = tb_list[-max_level:]
+    # Format the exception message
+    error_msg = f"{type(e).__name__}: {str(e)}\n"
+    
+    # Add stack trace info
+    for i, frame in enumerate(tb[:max_level]):
+        filename = frame.filename
         
-    formatted = []
-    formatted.append(f"{e.__class__.__name__}: {str(e)}\n")
-    
-    for filename, line, func, text in tb_list:
         # Shorten path if needed
-        path_parts = filename.split(os.sep)
-        if len(path_parts) > max_path_level:
-            filename = os.sep.join(['...'] + path_parts[-max_path_level:])
+        if max_path_level > 0:
+            path_parts = filename.split(os.sep)
+            if len(path_parts) > max_path_level:
+                filename = os.sep.join(['...'] + path_parts[-max_path_level:])
+                
+        # Add frame info
+        error_msg += f"  File \"{filename}\", line {frame.lineno}, in {frame.name}\n"
+        if frame.line:
+            error_msg += f"    {frame.line}\n"
             
-        formatted.append(f"  File \"{filename}\", line {line}, in {func}")
-        if text:
-            formatted.append(f"    {text}")
+        if i >= max_level - 1:
+            error_msg += "    ...\n"
+            break
             
-    return '\n'.join(formatted)
+    return error_msg

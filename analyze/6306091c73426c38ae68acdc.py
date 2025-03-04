@@ -12,35 +12,29 @@ def validate_from_content(cls, spec_content=None):
         
     required_fields = ['name', 'version', 'description']
     
-    try:
-        # Verify spec_content is a dictionary
-        if not isinstance(spec_content, dict):
-            raise IRValidatorException("Spec content must be a dictionary")
+    # Check if spec_content is a dictionary
+    if not isinstance(spec_content, dict):
+        raise IRValidatorException("Spec content must be a dictionary")
+    
+    # Validate required fields
+    missing_fields = []
+    for field in required_fields:
+        if field not in spec_content:
+            missing_fields.append(field)
             
-        # Check for required fields
-        missing_fields = []
-        for field in required_fields:
-            if field not in spec_content:
-                missing_fields.append(field)
-                
-        if missing_fields:
-            raise IRValidatorException(
-                f"Required fields missing in spec: {', '.join(missing_fields)}"
-            )
+    if missing_fields:
+        raise IRValidatorException(
+            f"Required fields missing in spec: {', '.join(missing_fields)}"
+        )
             
-        # Validate field types
-        if not isinstance(spec_content['name'], str):
-            raise IRValidatorException("'name' field must be a string")
-            
-        if not isinstance(spec_content['version'], (str, int, float)):
-            raise IRValidatorException("'version' field must be a string or number")
-            
-        if not isinstance(spec_content['description'], str):
-            raise IRValidatorException("'description' field must be a string")
-            
-        return spec_content
+    # Validate field types
+    if not isinstance(spec_content.get('name'), str):
+        raise IRValidatorException("'name' field must be a string")
         
-    except Exception as e:
-        if isinstance(e, IRValidatorException):
-            raise
-        raise IRValidatorException(f"Error validating spec content: {str(e)}")
+    if not isinstance(spec_content.get('version'), (str, int, float)):
+        raise IRValidatorException("'version' field must be a string, integer or float")
+        
+    if not isinstance(spec_content.get('description'), str):
+        raise IRValidatorException("'description' field must be a string")
+        
+    return spec_content

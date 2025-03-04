@@ -34,6 +34,6 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     if len(points[0]) != len(field_names):
         raise ValueError("Number of field names must match number of values per point")
         
-    # Import Graph class and create new graph
+    # Create and return graph
     from .graph import Graph
     return Graph(points, field_names=field_names, scale=scale)

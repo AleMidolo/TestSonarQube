@@ -6,14 +6,14 @@ def add_rendition(self, lang, file_path):
         file_path (str): Path to the rendition file
         
     Returns:
-        dict: Dictionary mapping language codes to file paths
+        dict: Updated renditions dictionary mapping language codes to file paths
     """
-    if not hasattr(self, '_renditions'):
-        self._renditions = {}
+    if not hasattr(self, 'renditions'):
+        self.renditions = {}
         
     if lang == 'original':
-        self._renditions['originale'] = file_path
+        self.renditions['originale'] = file_path
     else:
-        self._renditions[lang] = file_path
+        self.renditions[lang] = file_path
         
-    return self._renditions
+    return self.renditions

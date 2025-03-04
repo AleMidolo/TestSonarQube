@@ -19,7 +19,7 @@ def cachedmethod(cache, key=hashkey, lock=None):
                 except KeyError:
                     pass
                 
-                # Se non presente in cache, esegue il metodo
+                # Se non presente in cache, calcola il risultato
                 result = method(self, *args, **kwargs)
                 cache[k] = result
                 return result

@@ -13,32 +13,39 @@ def validate(self, inventory, extract_spec_version=False):
     if extract_spec_version:
         try:
             inventory_type = inventory.get('type', '')
-            if 'CycloneDX' in inventory_type:
-                version_match = re.search(r'(\d+\.\d+)', inventory_type)
-                if version_match:
-                    self.spec_version = version_match.group(1)
+            if 'bom-1.0' in inventory_type:
+                self.spec_version = '1.0'
+            elif 'bom-1.1' in inventory_type:
+                self.spec_version = '1.1'
+            elif 'bom-1.2' in inventory_type:
+                self.spec_version = '1.2'
+            elif 'bom-1.3' in inventory_type:
+                self.spec_version = '1.3'
+            elif 'bom-1.4' in inventory_type:
+                self.spec_version = '1.4'
         except (AttributeError, TypeError):
             pass
 
-    required_fields = ['bomFormat', 'specVersion', 'version', 'components']
-    
+    # Validazione campi obbligatori
+    required_fields = ['bomFormat', 'specVersion', 'version']
     for field in required_fields:
         if field not in inventory:
             raise ValueError(f"Campo obbligatorio mancante: {field}")
-            
-    if inventory['bomFormat'] != 'CycloneDX':
-        raise ValueError("Il formato BOM deve essere 'CycloneDX'")
-        
+
+    # Validazione specVersion
     if inventory['specVersion'] != self.spec_version:
         raise ValueError(f"Versione della specifica non valida. Attesa: {self.spec_version}")
-        
-    if not isinstance(inventory['components'], list):
-        raise ValueError("Il campo 'components' deve essere una lista")
-        
-    for component in inventory['components']:
-        if not isinstance(component, dict):
-            raise ValueError("Ogni componente deve essere un dizionario")
-        if 'type' not in component or 'name' not in component:
-            raise ValueError("I componenti devono avere almeno i campi 'type' e 'name'")
-            
+
+    # Validazione bomFormat
+    if inventory['bomFormat'] != 'CycloneDX':
+        raise ValueError("Il formato BOM deve essere 'CycloneDX'")
+
+    # Validazione version
+    try:
+        version = int(inventory['version'])
+        if version < 1:
+            raise ValueError("La versione deve essere un numero intero positivo")
+    except (ValueError, TypeError):
+        raise ValueError("La versione deve essere un numero intero positivo")
+
     return True

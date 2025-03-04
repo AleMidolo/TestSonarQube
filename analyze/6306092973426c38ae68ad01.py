@@ -4,14 +4,18 @@ def get_deprecated_args(self):
     """
     deprecated_args = {
         'family': 'font-family',
-        'size': 'font-size', 
+        'size': 'font-size',
         'weight': 'font-weight',
-        'color': 'text-color',
-        'background': 'background-color',
+        'color': 'font-color',
         'align': 'text-align',
         'style': 'font-style',
-        'decoration': 'text-decoration',
-        'spacing': 'letter-spacing',
-        'height': 'line-height'
+        'variant': 'font-variant',
+        'stretch': 'font-stretch',
+        'bbox': 'bounding-box',
+        'rotation': 'text-rotation',
+        'x': 'position-x',
+        'y': 'position-y',
+        'ha': 'horizontal-alignment',
+        'va': 'vertical-alignment'
     }
     return deprecated_args

@@ -1,7 +1,7 @@
 def make_array(shape, dtype=np.dtype("float32")):
     """
     Funzione per creare un array con una forma e un tipo di dato specificati.
-    
+
     Parametri
     ----------
     shape : tuple

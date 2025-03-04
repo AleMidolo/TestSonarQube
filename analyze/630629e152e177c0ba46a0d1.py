@@ -28,11 +28,10 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         )
         
         # Verifica il codice di stato
-        if response.status_code != 200:
-            return None
+        if response.status_code == 200:
+            return response.text
             
-        # Restituisci il contenuto del documento
-        return response.text
+    except (requests.RequestException, ValueError):
+        pass
         
-    except Exception:
-        return None
+    return None

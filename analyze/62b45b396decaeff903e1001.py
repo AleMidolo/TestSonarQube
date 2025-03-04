@@ -17,7 +17,7 @@ def amend_bzparams(self, params, bug_ids):
     if 'include_fields' in params and isinstance(params['include_fields'], str):
         params['include_fields'] = [params['include_fields']]
         
-    # Ensure exclude_fields is a list  
+    # Ensure exclude_fields is a list    
     if 'exclude_fields' in params and isinstance(params['exclude_fields'], str):
         params['exclude_fields'] = [params['exclude_fields']]
         

@@ -23,7 +23,7 @@ def determineMetaclass(bases, explicit_mc=None):
             
     # If we have an explicit metaclass, ensure it's compatible with base metaclasses
     elif bases:
-        # Check that explicit metaclass is compatible with all base metaclasses
+        # Check that explicit metaclass is compatible with base metaclasses
         for base in bases:
             if not issubclass(metaclass, type(base)):
                 raise TypeError("Explicit metaclass not compatible with base metaclasses")

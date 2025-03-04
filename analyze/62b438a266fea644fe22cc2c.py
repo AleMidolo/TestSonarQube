@@ -15,7 +15,8 @@ def make_parsers():
 
     # Create "list" subparser 
     list_parser = subparsers.add_parser('list', help='List all items')
-    list_parser.add_argument('--sort', choices=['name', 'date'], default='name', help='Sort order')
+    list_parser.add_argument('--sort', choices=['name', 'date'], default='name', 
+                            help='Sort items by name or date')
 
     # Create "remove" subparser
     remove_parser = subparsers.add_parser('remove', help='Remove an item')
