@@ -1,18 +1,16 @@
 def on(self, hook):
     """
-    रजिस्ट्री में एक नया हैंडलर जोड़ने के लिए डेकोरेटर फ़ंक्शन।
+    Funzione decorator per aggiungere un nuovo gestore al registro.
 
-    पैरामीटर (Args):
-    - hook (HookType): वह हुक विशेषता जिसके लिए हैंडलर को पंजीकृत (register) करना है।
+    Argomenti:
+    - `hook` (HookType): Attributo del hook per il quale registrare il gestore.
 
-    रिटर्न (Returns):
-    - callable: निर्दिष्ट हुक के लिए श्रोताओं (listeners) को पंजीकृत करने के लिए डेकोरेटर।
+    Restituisce:
+    - `callable`: Decorator per registrare i listener per il hook specificato.
     """
     def decorator(func):
-        if not hasattr(self, '_listeners'):
-            self._listeners = {}
-        if hook not in self._listeners:
-            self._listeners[hook] = []
-        self._listeners[hook].append(func)
+        if hook not in self._hooks:
+            self._hooks[hook] = []
+        self._hooks[hook].append(func)
         return func
     return decorator

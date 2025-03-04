@@ -2,20 +2,18 @@ import argparse
 
 def make_parsers():
     """
-    शीर्ष-स्तरीय पार्सर और इसके उप-पार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
+    Crea un parser di livello superiore e i suoi sottoparser, quindi restituiscili come una tupla.
     """
-    # शीर्ष-स्तरीय पार्सर बनाएं
-    parser = argparse.ArgumentParser(description="शीर्षक स्तर का पार्सर")
+    main_parser = argparse.ArgumentParser(description="Parser di livello superiore")
     
-    # उप-पार्सर बनाएं
-    subparsers = parser.add_subparsers(dest="command", help="उप-कमांड")
-    
-    # उप-पार्सर 1
-    parser_a = subparsers.add_parser('command_a', help='कमांड ए के लिए मदद')
-    parser_a.add_argument('--option_a', type=str, help='कमांड ए के लिए विकल्प')
-    
-    # उप-पार्सर 2
-    parser_b = subparsers.add_parser('command_b', help='कमांड बी के लिए मदद')
-    parser_b.add_argument('--option_b', type=int, help='कमांड बी के लिए विकल्प')
-    
-    return parser, subparsers
+    subparsers = main_parser.add_subparsers(dest='command', required=True)
+
+    # Sottoparser per il comando 'comando1'
+    parser1 = subparsers.add_parser('comando1', help='Descrizione del comando 1')
+    parser1.add_argument('--opzione1', type=int, help='Opzione per il comando 1')
+
+    # Sottoparser per il comando 'comando2'
+    parser2 = subparsers.add_parser('comando2', help='Descrizione del comando 2')
+    parser2.add_argument('--opzione2', type=str, help='Opzione per il comando 2')
+
+    return main_parser, subparsers

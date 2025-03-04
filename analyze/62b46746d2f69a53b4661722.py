@@ -1,54 +1,35 @@
 def absorb(self, args):
     """
-    `args` अभिव्यक्तियों के अनुक्रम को दिया गया है, एक नई सूची लौटाएं जिसमें अवशोषण और नकारात्मक अवशोषण लागू किया गया हो।
+    Dato un insieme `args` di espressioni, restituisce una nuova lista di espressioni applicando l'assorbimento e l'assorbimento negativo.
 
-    अधिक जानकारी के लिए देखें: [https://en.wikipedia.org/wiki/Absorption_law](https://en.wikipedia.org/wiki/Absorption_law)
+    Consulta https://en.wikipedia.org/wiki/Absorption_law
 
-    **अवशोषण (Absorption):**
+    Assorbimento::
 
-    A & (A | B) = A, A | (A & B) = A
+        A & (A | B) = A, A | (A & B) = A
 
-    **नकारात्मक अवशोषण (Negative Absorption):**
+    Assorbimento negativo::
 
-    A & (~A | B) = A & B, A | (~A & B) = A | B
+        A & (~A | B) = A & B, A | (~A & B) = A | B
     """
-    result = []
-    for expr in args:
-        if isinstance(expr, tuple):
-            if len(expr) == 3:
-                op, left, right = expr
-                if op == '&':
-                    if left == right:
-                        result.append(left)
-                    elif isinstance(right, tuple) and len(right) == 3 and right[0] == '|':
-                        if left == right[1]:
-                            result.append(left)
-                        elif left == right[2]:
-                            result.append(left)
-                        else:
-                            result.append(expr)
-                    elif isinstance(right, tuple) and len(right) == 3 and right[0] == '|' and right[1] == ('~', left):
-                        result.append(('&', left, right[2]))
-                    else:
-                        result.append(expr)
-                elif op == '|':
-                    if left == right:
-                        result.append(left)
-                    elif isinstance(right, tuple) and len(right) == 3 and right[0] == '&':
-                        if left == right[1]:
-                            result.append(left)
-                        elif left == right[2]:
-                            result.append(left)
-                        else:
-                            result.append(expr)
-                    elif isinstance(right, tuple) and len(right) == 3 and right[0] == '&' and right[1] == ('~', left):
-                        result.append(('|', left, right[2]))
-                    else:
-                        result.append(expr)
-                else:
-                    result.append(expr)
-            else:
-                result.append(expr)
-        else:
-            result.append(expr)
-    return result
+    def absorb_expression(expr):
+        # Implement absorption laws
+        if isinstance(expr, tuple) and len(expr) == 3:
+            op1, operator, op2 = expr
+            if operator == '&':
+                if op1 == op2:
+                    return op1
+                elif isinstance(op2, tuple) and op2[0] == op1 and op2[1] == '|':
+                    return op1
+                elif isinstance(op2, tuple) and op2[0] == '~' and op2[1] == op1:
+                    return (op1, '&', op2[2])
+            elif operator == '|':
+                if op1 == op2:
+                    return op1
+                elif isinstance(op2, tuple) and op2[0] == op1 and op2[1] == '&':
+                    return op1
+                elif isinstance(op2, tuple) and op2[0] == '~' and op2[1] == op1:
+                    return (op1, '|', op2[2])
+        return expr
+
+    return [absorb_expression(expr) for expr in args]

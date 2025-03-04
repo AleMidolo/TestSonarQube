@@ -1,29 +1,28 @@
-import yaml
-
 def validate_from_file(cls, yaml_file=None):
     """
-    एक YAML फ़ाइल को लोड और सत्यापित करता है कि उसमें सभी आवश्यक फ़ील्ड्स मौजूद हैं।
+    Carica e valida che un file YAML contenga tutti i campi richiesti.
 
-    :param yaml_file: YAML फ़ाइल का पथ
-    :raise IRValidatorException: जब फ़ाइल में अनिवार्य डेटा गायब हो
-    :return: YAML फ़ाइल से लोड किए गए डेटा के साथ एक डिक्शनरी
+    :param yaml_file: Percorso del file YAML
+    :raise IRValidatorException: quando mancano dati obbligatori nel file
+    :return: Dizionario con i dati caricati da un file YAML
     """
-    if yaml_file is None:
-        raise ValueError("YAML फ़ाइल का पथ प्रदान करना आवश्यक है।")
-    
-    try:
-        with open(yaml_file, 'r') as file:
-            data = yaml.safe_load(file)
-    except Exception as e:
-        raise IRValidatorException(f"YAML फ़ाइल लोड करने में त्रुटि: {e}")
-    
-    # यहां आप आवश्यक फ़ील्ड्स की जांच कर सकते हैं
-    required_fields = ['field1', 'field2', 'field3']  # उदाहरण के लिए आवश्यक फ़ील्ड्स
-    for field in required_fields:
-        if field not in data:
-            raise IRValidatorException(f"अनिवार्य फ़ील्ड '{field}' YAML फ़ाइल में गायब है।")
-    
-    return data
+    import yaml
+    from pathlib import Path
 
-class IRValidatorException(Exception):
-    pass
+    required_fields = cls.get_required_fields()  # Assuming this method exists in the class
+
+    if yaml_file is None:
+        raise ValueError("Il percorso del file YAML non può essere None.")
+
+    yaml_path = Path(yaml_file)
+    if not yaml_path.is_file():
+        raise FileNotFoundError(f"Il file {yaml_file} non esiste.")
+
+    with open(yaml_path, 'r') as file:
+        data = yaml.safe_load(file)
+
+    missing_fields = [field for field in required_fields if field not in data]
+    if missing_fields:
+        raise IRValidatorException(f"Mancano i seguenti campi obbligatori: {', '.join(missing_fields)}")
+
+    return data

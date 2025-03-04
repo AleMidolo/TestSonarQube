@@ -1,40 +1,35 @@
 import requests
 import tarfile
 from pathlib import Path
-import os
 
 def get_repo_archive(url: str, destination_path: Path) -> Path:
     """
-    दिए गए URL और गंतव्य पथ के आधार पर, `.tar.gz` संग्रह को प्राप्त करें और निकालें,
-    जिसमें प्रत्येक पैकेज के लिए 'desc' फ़ाइल होती है।
-    प्रत्येक `.tar.gz` संग्रह एक Arch Linux रिपॉजिटरी ('core', 'extra', 'community') से संबंधित होता है।
+    Dato un URL e un percorso di destinazione, recupera e decomprimi un archivio .tar.gz che contiene il file 'desc' per ogni pacchetto.  
+    Ogni archivio .tar.gz corrisponde a un repository di Arch Linux ('core', 'extra', 'community').
+    Args:
+        url: URL dell'archivio .tar.gz da scaricare
+        destination_path: il percorso sul disco dove estrarre l'archivio
 
-    तर्क (Args):
-        url: `.tar.gz` संग्रह को डाउनलोड करने का URL।
-        destination_path: वह पथ (डिस्क पर) जहाँ संग्रह को निकाला जाएगा।
-
-    वापसी मान (Returns):
-        वह डायरेक्टरी पथ (Path) जहाँ संग्रह को निकाला गया है।
+    Returns:
+        un oggetto Path che rappresenta la directory dove l'archivio è stato estratto.
     """
-    # Ensure the destination directory exists
+    # Scarica l'archivio
+    response = requests.get(url)
+    response.raise_for_status()  # Verifica che la richiesta sia andata a buon fine
+
+    # Crea la directory di destinazione se non esiste
     destination_path.mkdir(parents=True, exist_ok=True)
 
-    # Download the .tar.gz file
-    response = requests.get(url, stream=True)
-    response.raise_for_status()
+    # Percorso del file temporaneo
+    tar_file_path = destination_path / "archive.tar.gz"
 
-    # Save the downloaded file temporarily
-    temp_file = destination_path / "temp_archive.tar.gz"
-    with open(temp_file, 'wb') as f:
-        for chunk in response.iter_content(chunk_size=8192):
-            f.write(chunk)
+    # Scrivi il contenuto scaricato in un file
+    with open(tar_file_path, 'wb') as f:
+        f.write(response.content)
 
-    # Extract the .tar.gz file
-    with tarfile.open(temp_file, 'r:gz') as tar:
+    # Estrai l'archivio
+    with tarfile.open(tar_file_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
 
-    # Remove the temporary .tar.gz file
-    os.remove(temp_file)
-
-    # Return the directory where the archive was extracted
+    # Ritorna il percorso della directory estratta
     return destination_path

@@ -1,17 +1,16 @@
 def from_raw_values(cls, values):
     """
-    कच्चे बुकमार्क स्ट्रिंग मानों की सूची से एक Bookmarks ऑब्जेक्ट बनाएं।
+    Crea un oggetto Bookmarks da una lista di valori stringa grezzi dei segnalibri.
 
-    इस विधि का उपयोग करने की आवश्यकता नहीं होनी चाहिए जब तक कि आप 
-    बुकमार्क्स को डीसिरियलाइज़ (deserialize) करना न चाहें।
+    Non dovresti aver bisogno di utilizzare questo metodo a meno che tu non voglia
+    deserializzare i segnalibri.
 
-    :param values: ASCII स्ट्रिंग मान (कच्चे बुकमार्क्स)
+    :param values: Valori stringa ASCII (segnalibri grezzi)
     :type values: Iterable[str]
     """
-    # Assuming the Bookmarks class is defined elsewhere
-    bookmarks = cls()
+    bookmarks = []
     for value in values:
-        # Process each raw value and add it to the Bookmarks object
-        # This is a placeholder for the actual deserialization logic
-        bookmarks.add(value)
-    return bookmarks
+        # Assuming each value is a bookmark in the format "title:url"
+        title, url = value.split(':', 1)
+        bookmarks.append({'title': title.strip(), 'url': url.strip()})
+    return cls(bookmarks)

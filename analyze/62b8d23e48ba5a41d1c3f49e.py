@@ -1,10 +1,10 @@
-def popitem(self):
+def popitem(self):  
     """
-    एक यादृच्छिक `(कुंजी, मान)` जोड़ी को हटाएं और लौटाएं।
+    Rimuovi e restituisci una coppia `(chiave, valore)` casuale.
     """
+    import random
     if not self:
-        raise KeyError("dictionary is empty")
-    key = next(iter(self))
-    value = self[key]
-    del self[key]
-    return (key, value)
+        raise KeyError("popitem(): dictionary is empty")
+    key = random.choice(list(self.keys()))
+    value = self.pop(key)
+    return key, value

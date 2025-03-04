@@ -1,22 +1,18 @@
 def vertex3tuple(vertices):
-    """
-    प्रत्येक वर्टेक्स के लिए 3 पॉइंट्स लौटाएगा।  
-    यह वर्टेक्स और उसके दोनों ओर के 2 पॉइंट्स को शामिल करेगा।  
+    '''
+    Restituisce 3 punti per ogni vertice del poligono. Questo includerà il vertice e i 2 punti su entrambi i lati del vertice::
 
-    उदाहरण के लिए:  
-    यदि पॉलीगॉन के वर्टेक्स ABCD हैं, तो यह निम्नलिखित 3-ट्यूपल्स लौटाएगा:  
-    `DAB, ABC, BCD, CDA`  
-    वर्टेक्स का क्रम:
-
-    # A    B    C    D  -> वर्टेक्स का क्रम
-    """
+    Esempio:  
+    Poligono con vertici ABCD  
+    Restituirà:  
+    DAB, ABC, BCD, CDA -> restituisce tuple di 3 elementi  
+    #A    B    C    D  -> dei vertici
+    '''
     n = len(vertices)
     result = []
     for i in range(n):
-        # Get the current vertex and its two neighbors
-        current = vertices[i]
-        prev = vertices[(i - 1) % n]
-        next_ = vertices[(i + 1) % n]
-        # Create the 3-tuple and add it to the result
-        result.append((prev, current, next_))
+        left = vertices[i - 1]  # il vertice a sinistra
+        center = vertices[i]     # il vertice corrente
+        right = vertices[(i + 1) % n]  # il vertice a destra, con wrap-around
+        result.append((left, center, right))
     return result

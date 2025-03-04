@@ -1,32 +1,34 @@
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.backends import default_backend
-
 def verify_relayable_signature(public_key, doc, signature):
     """
-    हस्ताक्षरित XML तत्वों को सत्यापित करें ताकि यह सुनिश्चित किया जा सके 
-    कि दावा किया गया लेखक ने वास्तव में यह संदेश उत्पन्न किया है।
+    Verifica gli elementi XML firmati per avere la certezza che l'autore dichiarato abbia effettivamente generato questo messaggio.
     """
+    from lxml import etree
+    from cryptography.hazmat.primitives import hashes
+    from cryptography.hazmat.primitives.asymmetric import padding
+    from cryptography.hazmat.backends import default_backend
+    from cryptography.hazmat.primitives import serialization
+
+    # Load the public key
+    public_key = serialization.load_pem_public_key(
+        public_key.encode(),
+        backend=default_backend()
+    )
+
+    # Parse the XML document
+    root = etree.fromstring(doc)
+
+    # Extract the signed data and the signature
+    signed_data = root.find('.//SignedInfo').text
+    signature_value = root.find('.//SignatureValue').text
+
+    # Verify the signature
     try:
-        # Load the public key
-        pub_key = serialization.load_pem_public_key(
-            public_key.encode(),
-            backend=default_backend()
-        )
-        
-        # Verify the signature
-        pub_key.verify(
-            signature,
-            doc.encode(),
-            padding.PSS(
-                mgf=padding.MGF1(hashes.SHA256()),
-                salt_length=padding.PSS.MAX_LENGTH
-            ),
+        public_key.verify(
+            signature_value.encode(),
+            signed_data.encode(),
+            padding.PKCS1v15(),
             hashes.SHA256()
         )
         return True
     except Exception as e:
-        print(f"Signature verification failed: {e}")
         return False

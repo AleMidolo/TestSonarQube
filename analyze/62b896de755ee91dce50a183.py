@@ -1,55 +1,64 @@
-from dateutil.parser import parse as dateutil_parse
-from datetime import datetime
-from dateutil.tz import gettz
-
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
-    डेट/समय स्ट्रिंग को :class:`datetime.datetime` ऑब्जेक्ट में पार्स करें।
+    Analizza la stringa di data/ora in un oggetto :class:`datetime.datetime`.
 
     :param timestr:
-        कोई भी डेट/समय स्ट्रिंग जो समर्थित फॉर्मेट्स का उपयोग करती हो।
+        Qualsiasi stringa di data/ora che utilizza i formati supportati.
 
     :param default:
-        डिफ़ॉल्ट datetime ऑब्जेक्ट। यदि यह एक datetime ऑब्जेक्ट है और ``None`` नहीं है, 
-        तो ``timestr`` में निर्दिष्ट तत्व डिफ़ॉल्ट ऑब्जेक्ट के तत्वों को बदल देंगे।
+        L'oggetto datetime predefinito. Se questo è un oggetto datetime e non
+        ``None``, gli elementi specificati in ``timestr`` sostituiscono gli elementi
+        nell'oggetto predefinito.
 
     :param ignoretz:
-        यदि ``True`` सेट किया गया है, तो पार्स की गई स्ट्रिंग में टाइम ज़ोन को अनदेखा किया जाएगा 
-        और एक साधारण :class:`datetime.datetime` ऑब्जेक्ट लौटाया जाएगा।
+        Se impostato su ``True``, i fusi orari nelle stringhe analizzate vengono ignorati
+        e viene restituito un oggetto :class:`datetime.datetime` senza fuso orario.
 
     :param tzinfos:
-        अतिरिक्त टाइम ज़ोन नाम/उपनाम जो स्ट्रिंग में हो सकते हैं। यह आर्ग्युमेंट टाइम ज़ोन नामों 
-        (और वैकल्पिक रूप से उन टाइम ज़ोन से ऑफ़सेट्स) को टाइम ज़ोन से मैप करता है। 
-        यह पैरामीटर एक डिक्शनरी हो सकता है जिसमें टाइम ज़ोन उपनाम टाइम ज़ोन नामों को टाइम ज़ोन से 
-        मैप करते हैं या एक फ़ंक्शन हो सकता है जो दो पैरामीटर (``tzname`` और ``tzoffset``) लेता है 
-        और एक टाइम ज़ोन लौटाता है।
+        Nomi/alias di fusi orari aggiuntivi che possono essere presenti nella stringa.
+        Questo argomento mappa i nomi dei fusi orari (e opzionalmente gli offset da
+        quei fusi orari) ai fusi orari. Questo parametro può essere un dizionario con
+        alias di fusi orari che mappano i nomi dei fusi orari ai fusi orari o una
+        funzione che accetta due parametri (``tzname`` e ``tzoffset``) e restituisce
+        un fuso orario.
 
-        जिन टाइम ज़ोन को नामों से मैप किया गया है, वे UTC से सेकंड में एक पूर्णांक ऑफ़सेट 
-        या :class:`tzinfo` ऑब्जेक्ट हो सकते हैं।
+        I fusi orari a cui vengono mappati i nomi possono essere un offset intero
+        rispetto all'UTC in secondi o un oggetto :class:`tzinfo`.
+
+        .. doctest::
+           :options: +NORMALIZE_WHITESPACE
+
+            >>> from dateutil.parser import parse
+            >>> from dateutil.tz import gettz
+            >>> tzinfos = {"BRST": -7200, "CST": gettz("America/Chicago")}
+            >>> parse("2012-01-19 17:21:00 BRST", tzinfos=tzinfos)
+            datetime.datetime(2012, 1, 19, 17, 21, tzinfo=tzoffset(u'BRST', -7200))
+            >>> parse("2012-01-19 17:21:00 CST", tzinfos=tzinfos)
+            datetime.datetime(2012, 1, 19, 17, 21,
+                              tzinfo=tzfile('/usr/share/zoneinfo/America/Chicago'))
+
+        Questo parametro viene ignorato se ``ignoretz`` è impostato.
 
     :param \*\*kwargs:
-        ``_parse()`` को पास किए गए कीवर्ड आर्ग्युमेंट्स।
+        Argomenti keyword passati a ``_parse()``.
 
     :return:
-        एक :class:`datetime.datetime` ऑब्जेक्ट लौटाता है या, यदि ``fuzzy_with_tokens`` विकल्प ``True`` है, 
-        तो एक ट्यूपल लौटाता है, जिसमें पहला तत्व :class:`datetime.datetime` ऑब्जेक्ट होता है और दूसरा 
-        ट्यूपल होता है जिसमें अस्पष्ट टोकन होते हैं।
+        Restituisce un oggetto :class:`datetime.datetime` o, se l'opzione
+        ``fuzzy_with_tokens`` è impostata su ``True``, restituisce una tupla, il cui
+        primo elemento è un oggetto :class:`datetime.datetime` e il secondo è una
+        tupla contenente i token fuzzy.
 
     :raises ParserError:
-        अमान्य या अज्ञात स्ट्रिंग फॉर्मेट के लिए, यदि प्रदान किया गया :class:`tzinfo` वैध फॉर्मेट में नहीं है, 
-        या यदि एक अमान्य तिथि बनाई जाएगी, तो यह त्रुटि उठाई जाती है।
+        Sollevato per formati di stringa non validi o sconosciuti, se il
+        :class:`tzinfo` fornito non è in un formato valido o se verrebbe creata
+        una data non valida.
 
     :raises TypeError:
-        गैर-स्ट्रिंग या कैरेक्टर स्ट्रीम इनपुट के लिए यह त्रुटि उठाई जाती है।
+        Sollevato per input non stringa o flusso di caratteri.
 
     :raises OverflowError:
-        यदि पार्स की गई तिथि आपके सिस्टम पर सबसे बड़े वैध C पूर्णांक से अधिक हो जाती है, 
-        तो यह त्रुटि उठाई जाती है।
+        Sollevato se la data analizzata supera il più grande intero C valido
+        sul tuo sistema.
     """
-    if default is not None and not isinstance(default, datetime):
-        raise TypeError("default must be a datetime.datetime object or None")
-
-    if ignoretz:
-        tzinfos = None
-
-    return dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+    from dateutil import parser
+    return parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)

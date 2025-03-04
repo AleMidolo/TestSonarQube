@@ -1,30 +1,34 @@
 def size_to_bytes(size: str) -> int:
     """
-    मानव-पठनीय फ़ाइल आकार को बाइट्स में परिवर्तित करें।
+    Convertire una dimensione di file leggibile dall'uomo in byte.
 
-    परिणामी मान एक अनुमान है क्योंकि इनपुट मान अधिकांश मामलों में राउंड किया गया होता है।
+    Il valore risultante è un'approssimazione poiché il valore di input è nella maggior parte dei casi arrotondato.
 
-    तर्क (Args):
-        आकार (size): एक स्ट्रिंग जो मानव-पठनीय फ़ाइल आकार का प्रतिनिधित्व करती है (उदा: '500K')
+    Args:
+        size: Una stringa che rappresenta una dimensione di file leggibile dall'uomo (es: '500K')
 
-    रिटर्न (Returns):
-        फ़ाइल आकार का दशमलव (decimal) प्रतिनिधित्व
+    Returns:
+        Una rappresentazione decimale della dimensione del file
 
-    उदाहरण (Examples)::
+        Esempi::
 
-        >>> size_to_bytes("500")
-        500
-        >>> size_to_bytes("1K")
-        1000
+            >>> size_to_bytes("500")
+            500
+            >>> size_to_bytes("1K")
+            1000
     """
     size = size.strip().upper()
-    if size[-1] == 'K':
-        return int(size[:-1]) * 1000
-    elif size[-1] == 'M':
-        return int(size[:-1]) * 1000 * 1000
-    elif size[-1] == 'G':
-        return int(size[:-1]) * 1000 * 1000 * 1000
-    elif size[-1] == 'T':
-        return int(size[:-1]) * 1000 * 1000 * 1000 * 1000
+    multipliers = {
+        'K': 1000,
+        'M': 1000**2,
+        'G': 1000**3,
+        'T': 1000**4,
+        'P': 1000**5,
+        'E': 1000**6,
+    }
+    
+    if size[-1] in multipliers:
+        number = float(size[:-1])
+        return int(number * multipliers[size[-1]])
     else:
         return int(size)

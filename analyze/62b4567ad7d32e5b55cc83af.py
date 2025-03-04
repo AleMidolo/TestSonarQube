@@ -2,16 +2,15 @@ import argparse
 
 def parse_arguments(*arguments):
     """
-    इस फ़ंक्शन का उद्देश्य दिए गए कमांड-लाइन आर्ग्युमेंट्स को पार्स करना है और उन्हें एक 
-    ArgumentParser इंस्टेंस के रूप में लौटाना है।
+    Dati gli argomenti della riga di comando con cui è stato invocato questo script,
+    analizza gli argomenti e restituiscili come un'istanza di ArgumentParser.
     """
-    parser = argparse.ArgumentParser(description="Parse command-line arguments.")
+    parser = argparse.ArgumentParser()
     
-    # Add arguments to the parser
-    for arg in arguments:
-        parser.add_argument(arg)
+    # Aggiungi qui gli argomenti che desideri analizzare
+    # Esempio: parser.add_argument('--example', help='Esempio di argomento')
+
+    # Analizza gli argomenti forniti
+    parsed_args = parser.parse_args(arguments)
     
-    # Parse the arguments
-    args = parser.parse_args()
-    
-    return args
+    return parsed_args

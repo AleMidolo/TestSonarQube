@@ -1,20 +1,20 @@
 def dict_insert(dic, val, key, *keys):
     """
-    एक डिक्शनरी में नेस्टेड कुंजी का मान डालें।
+    Inserisce un valore in una chiave annidata all'interno di un dizionario.
 
-    नेस्टेड कुंजी के लिए मान डालने के लिए, सभी पूर्वज कुंजियों को 
-    इस मेथड के आर्ग्युमेंट्स के रूप में दिया जाना चाहिए।
+    Per inserire un valore in una chiave annidata, è necessario fornire tutte le chiavi antenate
+    come argomenti del metodo.
 
-    उदाहरण:
-      dict_insert({}, 'मान', 'कुंजी1.कुंजी2'.split('.'))
+    Esempio:
+      dict_insert({}, 'val', *'key1.key2'.split('.'))
 
-    :param dic: वह डिक्शनरी ऑब्जेक्ट जिसमें नेस्टेड कुंजी का मान डालना है।
-    :param val: वह मान जो दी गई डिक्शनरी में डालना है।
-    :param key: कुंजियों की श्रृंखला में पहली कुंजी जो मान को स्टोर करेगी।
-    :param keys: कुंजियों की श्रृंखला में उप-कुंजियां।
+    :param dic: un oggetto dizionario in cui inserire il valore della chiave annidata
+    :param val: un valore da inserire nel dizionario fornito
+    :param key: la prima chiave nella catena di chiavi che conterrà il valore
+    :param keys: sottochiavi nella catena di chiavi
     """
     current = dic
-    for k in keys[:-1]:
+    for k in (key, *keys[:-1]):
         if k not in current:
             current[k] = {}
         current = current[k]

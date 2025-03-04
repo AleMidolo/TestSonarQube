@@ -1,12 +1,12 @@
 def index(self, key):
     """
-    दिए गए आइटम का इंडेक्स (स्थान) लौटाता है।
+    Restituisce l'indice dell'elemento specificato.
 
-    :param key: एक कुंजी 
-    :return: इंडेक्स 
+    :param key: una chiave  
+    :return: indice  
     :rtype: int
     """
-    try:
-        return self._items.index(key)
-    except ValueError:
-        return -1
+    for idx, element in enumerate(self):
+        if element == key:
+            return idx
+    raise ValueError(f"Key {key} not found in the collection.")

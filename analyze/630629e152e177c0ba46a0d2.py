@@ -1,34 +1,22 @@
 import requests
-from lxml import etree
 
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    डायस्पोरा वेबफिंगर डॉक्यूमेंट को प्राप्त करें और पार्स करें।
+    Recupera e analizza un documento webfinger remoto di Diaspora.
 
-    :पैरामीटर हैंडल: प्राप्त करने के लिए रिमोट हैंडल  
-    :वापसी: डिक्शनरी (dict)
+    :arg handle: Handle remoto da recuperare  
+    :returns: dict
     """
-    # Construct the WebFinger URL
-    webfinger_url = f"https://{handle.split('@')[1]}/.well-known/webfinger?resource=acct:{handle}"
+    # Construct the webfinger URL
+    webfinger_url = f"https://{handle}/.well-known/webfinger?resource=acct:{handle}"
     
-    try:
-        # Send a GET request to the WebFinger URL
-        response = requests.get(webfinger_url)
+    # Send a GET request to the webfinger URL
+    response = requests.get(webfinger_url)
+    
+    # Check if the response is successful
+    if response.status_code == 200:
+        # Parse the JSON response
+        return response.json()
+    else:
+        # Handle errors (e.g., 404, 500)
         response.raise_for_status()
-        
-        # Parse the XML response
-        root = etree.fromstring(response.content)
-        
-        # Extract relevant information from the XML
-        result = {}
-        for link in root.findall("{http://webfinger.net/rel/profile-page}link"):
-            result[link.get("rel")] = link.get("href")
-        
-        return result
-    
-    except requests.exceptions.RequestException as e:
-        print(f"Error retrieving WebFinger document: {e}")
-        return {}
-    except etree.XMLSyntaxError as e:
-        print(f"Error parsing WebFinger document: {e}")
-        return {}

@@ -1,46 +1,30 @@
 def validate(self, inventory, extract_spec_version=False):
     """
-    दिए गए इन्वेंटरी को सत्यापित करें।
+    Convalida un inventario specificato.
 
-    यदि `extract_spec_version` का मान `True` है, तो यह `type` मान को देखकर 
-    स्पेसिफिकेशन वर्जन निर्धारित करेगा। यदि `type` मान मौजूद नहीं है या यह 
-    मान्य नहीं है, तो अन्य परीक्षण `self.spec_version` में दिए गए वर्जन के 
-    आधार पर किए जाएंगे।
+    Se `extract_spec_version` è impostato su `True`, verrà esaminato il valore del tipo (`type`) 
+    per determinare la versione della specifica. Nel caso in cui non sia presente un valore per 
+    il tipo o questo non sia valido, verranno eseguiti altri test basati sulla versione specificata 
+    in `self.spec_version`.
     """
     if extract_spec_version:
-        if 'type' in inventory:
-            spec_version = inventory['type']
-            if not self.is_valid_spec_version(spec_version):
-                spec_version = self.spec_version
+        if 'type' in inventory and inventory['type'] in self.valid_types:
+            self.spec_version = inventory['type']
         else:
-            spec_version = self.spec_version
-    else:
-        spec_version = self.spec_version
+            self.spec_version = self.default_spec_version
 
-    # Perform validation based on the determined spec_version
-    if spec_version == 'v1':
+    # Esegui la convalida dell'inventario in base alla versione della specifica
+    if self.spec_version == '1.0':
         return self.validate_v1(inventory)
-    elif spec_version == 'v2':
+    elif self.spec_version == '2.0':
         return self.validate_v2(inventory)
     else:
-        raise ValueError(f"Unsupported specification version: {spec_version}")
-
-def is_valid_spec_version(self, spec_version):
-    """
-    Check if the given specification version is valid.
-    """
-    return spec_version in ['v1', 'v2']
-
+        raise ValueError("Versione della specifica non valida.")
+    
 def validate_v1(self, inventory):
-    """
-    Validate inventory against v1 specification.
-    """
-    # Implementation for v1 validation
+    # Logica di convalida per la versione 1.0
     pass
 
 def validate_v2(self, inventory):
-    """
-    Validate inventory against v2 specification.
-    """
-    # Implementation for v2 validation
+    # Logica di convalida per la versione 2.0
     pass

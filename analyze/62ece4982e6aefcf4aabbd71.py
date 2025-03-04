@@ -2,29 +2,28 @@ import re
 
 def regex_dict(item):
     """
-    *.cpp कुंजियों को regex कुंजियों में बदलें
+    Converti le chiavi *.cpp in chiavi regex.
 
-    एक dict दिया गया है जिसमें सभी कुंजियाँ वाइल्डकार्ड के साथ फ़ाइल नाम हैं,
-    केवल कुंजियों को उनके समकक्ष regex में बदलें और मानों को वैसा ही छोड़ दें।
+    Dato un dizionario in cui le chiavi sono tutti nomi di file con caratteri jolly, converti solo le chiavi in regex equivalenti e lascia intatti i valori.
 
-    उदाहरण:
+    Esempio:
 
-    नियम (rules) = {
+    rules = {
         '*.cpp':
             {'a': 'arf', 'b': 'bark', 'c': 'coo'},
         '*.h':
-           {'h': 'help'}
+            {'h': 'help'}
     }
     regex_keys = regex_dict(rules)
 
-    आर्ग्युमेंट्स:
-        item: वह dict जिसे बदलना है
-    रिटर्न करता है:
-        एक dict जिसमें कुंजियाँ regex में परिवर्तित होती हैं
+    Argomenti:
+        item: dizionario da convertire
+    Ritorna:
+        dizionario con le chiavi convertite in regex.
     """
-    regex_item = {}
+    regex_dict = {}
     for key, value in item.items():
-        # Replace '*' with '.*' to match any sequence of characters
-        regex_key = re.escape(key).replace('\\*', '.*')
-        regex_item[regex_key] = value
-    return regex_item
+        # Converti la chiave in regex
+        regex_key = re.escape(key).replace(r'\*', '.*').replace(r'\?', '.')
+        regex_dict[regex_key] = value
+    return regex_dict

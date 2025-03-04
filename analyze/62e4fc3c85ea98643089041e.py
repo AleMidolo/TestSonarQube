@@ -1,12 +1,15 @@
 def _inline_r_setup(code: str) -> str:
     """
-    R के कुछ व्यवहारों को env वेरिएबल्स के माध्यम से कॉन्फ़िगर नहीं किया जा सकता है,
-    लेकिन केवल R शुरू होने के बाद R विकल्पों के माध्यम से कॉन्फ़िगर किया जा सकता है।
-    इन्हें यहां सेट किया गया है।
+    Alcuni comportamenti di R non possono essere configurati tramite variabili di ambiente, ma possono essere configurati solo tramite opzioni di R una volta che R è stato avviato. Questi vengono impostati qui.
     """
-    setup_code = """
-    options(repos = c(CRAN = "https://cloud.r-project.org"))
-    options(warn = 1)
-    options(stringsAsFactors = FALSE)
-    """
-    return setup_code + code
+    import rpy2.robjects as ro
+
+    # Set R options
+    ro.r('options(stringsAsFactors = FALSE)')
+    ro.r('options(scipen = 999)')  # Disable scientific notation
+    ro.r('options(max.print = 1000)')  # Set maximum print size
+
+    # Execute the provided R code
+    ro.r(code)
+
+    return "R setup complete and code executed."

@@ -1,8 +1,6 @@
 def workspace_manager(cls):
     """
-    वर्कस्पेस मैनेजर प्राप्त करता है।
+    Ottiene il gestore dello spazio di lavoro.
     """
-    # Assuming the workspace manager is a class method or a static method
-    # that returns an instance of the workspace manager.
-    # This is a placeholder implementation.
-    return cls._workspace_manager
+    # Assuming 'cls' is a class that has a method or attribute to get the workspace manager
+    return cls.get_workspace_manager() if hasattr(cls, 'get_workspace_manager') else None

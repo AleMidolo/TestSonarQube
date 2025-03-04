@@ -1,12 +1,17 @@
-def get_option_spec(self, command_name):
+def get_option_spec(self, command_name, argument_name):
     """
-    दिए गए विकल्प नाम के लिए विनिर्देश प्राप्त करता है।
-    
-    Args:
-        command_name (str): विकल्प का नाम जिसके लिए विनिर्देश प्राप्त करना है।
-    
-    Returns:
-        dict: विकल्प का विनिर्देश, यदि उपलब्ध हो। अन्यथा, None।
+    Ottiene la specifica per il nome dell'opzione specificato.
     """
-    # Assuming self.options is a dictionary where keys are command names and values are their specifications
-    return self.options.get(command_name, None)
+    # Assuming there's a dictionary that holds command options
+    command_options = {
+        'command1': {'arg1': 'spec1', 'arg2': 'spec2'},
+        'command2': {'arg1': 'spec3', 'arg2': 'spec4'},
+    }
+    
+    if command_name in command_options:
+        if argument_name in command_options[command_name]:
+            return command_options[command_name][argument_name]
+        else:
+            return f"Argument '{argument_name}' not found for command '{command_name}'."
+    else:
+        return f"Command '{command_name}' not found."

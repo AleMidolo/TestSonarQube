@@ -1,9 +1,10 @@
 import os
+import platform
 
 def is_gitbash():
     """
-    यदि आप Windows के Gitbash में प्रोग्राम चला रहे हैं तो True रिटर्न करता है।
+    Restituisce True se viene eseguito in un terminale gitbash di Windows
 
-    :return: यदि Gitbash है तो True
+    :return: True se è gitbash
     """
-    return 'GITBASH' in os.environ.get('TERM_PROGRAM', '').upper()
+    return platform.system() == "Windows" and "gitbash" in os.environ.get("TERM", "").lower()

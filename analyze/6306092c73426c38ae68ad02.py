@@ -1,14 +1,15 @@
 def validate_arg_deprecation(self, cli_args, answer_file_args):
     """
-    अप्रचलित तर्कों को मान्य करता है और उन्हें प्रिंट करता है।
+    Valida e stampa gli argomenti deprecati.
 
-    :param cli_args: CLI (कमांड लाइन इंटरफ़ेस) से प्राप्त तर्कों की डिक्शनरी
-    :param answer_file_args: फ़ाइलों से प्राप्त तर्कों की डिक्शनरी
+    :param cli_args: il dizionario degli argomenti dalla CLI
+    :param answer_file_args: il dizionario degli argomenti dai file
     """
-    deprecated_args = set(cli_args.keys()).intersection(answer_file_args.keys())
+    deprecated_args = set(cli_args.keys()).intersection(set(answer_file_args.keys()))
     
-    for arg in deprecated_args:
-        print(f"अप्रचलित तर्क: {arg}")
-        print(f"CLI से मान: {cli_args[arg]}")
-        print(f"फ़ाइल से मान: {answer_file_args[arg]}")
-        print("यह तर्क अप्रचलित है और भविष्य के संस्करणों में हटाया जा सकता है।\n")
+    if deprecated_args:
+        print("Attenzione: gli argomenti seguenti sono deprecati:")
+        for arg in deprecated_args:
+            print(f"- {arg}")
+    else:
+        print("Nessun argomento deprecato trovato.")

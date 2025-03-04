@@ -2,10 +2,10 @@ import zipfile
 
 def files_list_from_zipfile(zip_path):
     """
-    `zip_path` में फ़ाइलें लौटाएँ
-
-    उदाहरण:
-
+    Restituisce i file presenti in `zip_path`.
+    
+    Esempio:
+    
     [
         '2318-0889-tinf-33-0421/2318-0889-tinf-33-e200069.pdf',
         '2318-0889-tinf-33-0421/2318-0889-tinf-33-e200069.xml',
@@ -17,5 +17,5 @@ def files_list_from_zipfile(zip_path):
         '2318-0889-tinf-33-0421/2318-0889-tinf-33-e200071-gf04.tif',
     ]
     """
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        return zip_ref.namelist()
+    with zipfile.ZipFile(zip_path, 'r') as zip_file:
+        return zip_file.namelist()

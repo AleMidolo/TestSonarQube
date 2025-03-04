@@ -1,36 +1,33 @@
-import os
-import xml.etree.ElementTree as ET
-
-def _explore_folder(folder):
+def _explore_folder(folder):  
     """
-    फ़ोल्डर से पैकेज का डेटा प्राप्त करें।  
+    Ottiene i dati dei pacchetti dalla cartella  
 
-    फ़ाइलों को उनके XML बेसनाम के आधार पर समूहित करता है और डेटा को डिक्शनरी (dict) प्रारूप में लौटाता है।  
+    Raggruppa i file in base al loro nome base XML e restituisce i dati in formato dizionario.  
 
-    पैरामीटर  
-    folder : str
-        पैकेज का फ़ोल्डर।  
+    Parametri  
+    ----------  
+    folder : str  
+        Cartella del pacchetto  
 
-    रिटर्न्स  
-    dict
+    Restituisce  
+    -------  
+    dict  
     """
-    data_dict = {}
-    
-    for root, dirs, files in os.walk(folder):
-        for file in files:
-            if file.endswith('.xml'):
-                file_path = os.path.join(root, file)
-                base_name = os.path.splitext(file)[0]
-                
-                try:
-                    tree = ET.parse(file_path)
-                    root_element = tree.getroot()
-                    
-                    if base_name not in data_dict:
-                        data_dict[base_name] = []
-                    
-                    data_dict[base_name].append(root_element)
-                except ET.ParseError as e:
-                    print(f"Error parsing {file_path}: {e}")
-    
-    return data_dict
+    import os
+    import xml.etree.ElementTree as ET
+
+    package_data = {}
+
+    for filename in os.listdir(folder):
+        if filename.endswith('.xml'):
+            base_name = os.path.splitext(filename)[0]
+            file_path = os.path.join(folder, filename)
+
+            try:
+                tree = ET.parse(file_path)
+                root = tree.getroot()
+                package_data[base_name] = root
+            except ET.ParseError as e:
+                print(f"Error parsing {file_path}: {e}")
+
+    return package_data

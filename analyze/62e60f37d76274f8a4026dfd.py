@@ -1,14 +1,11 @@
-from datetime import time
-
 def dehydrate_time(value):
     """
-    `time` मानों के लिए डिहाइड्रेटर।  
+    Disidratatore per valori di tipo `time`.
 
-    :param value:  
-    :type value: Time  
-    :return:  
+    :param value: 
+    :type value: Time
+    :return:
     """
-    if not isinstance(value, time):
-        raise TypeError("Expected a datetime.time object")
-    
+    if value is None:
+        return None
     return value.isoformat()

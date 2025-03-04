@@ -1,68 +1,146 @@
-from datetime import datetime
-from dateutil import parser
-
 def isoparse(self, dt_str):
     """
-    एक ISO-8601 दिनांक और समय स्ट्रिंग को :class:`datetime.datetime` में पार्स करें।
+    Analizza una stringa datetime in formato ISO-8601 in un oggetto :class:`datetime.datetime`.
 
-    एक ISO-8601 दिनांक और समय स्ट्रिंग में एक दिनांक भाग होता है, जिसके बाद वैकल्पिक रूप से 
-    समय भाग हो सकता है। दिनांक और समय भाग एक एकल कैरेक्टर सेपरेटर द्वारा अलग किए जाते हैं, 
-    जो आधिकारिक मानक में ``T`` होता है। अधूरे दिनांक प्रारूप (जैसे ``YYYY-MM``) को समय भाग 
-    के साथ *संयोजित नहीं* किया जा सकता।
+    Una stringa datetime in formato ISO-8601 consiste in una parte relativa alla data, seguita
+    opzionalmente da una parte relativa all'ora. Le due parti sono separate da un singolo carattere
+    separatore, che è ``T`` nello standard ufficiale. I formati di data incompleti (come ``YYYY-MM``)
+    *non* possono essere combinati con una parte relativa all'ora.
 
-    समर्थित दिनांक प्रारूप:
+    I formati di data supportati sono:
 
-    सामान्य:
+    Comuni:
+
     - ``YYYY``
-    - ``YYYY-MM`` या ``YYYYMM``
-    - ``YYYY-MM-DD`` या ``YYYYMMDD``
+    - ``YYYY-MM`` o ``YYYYMM``
+    - ``YYYY-MM-DD`` o ``YYYYMMDD``
 
-    असामान्य:
-    - ``YYYY-Www`` या ``YYYYWww`` - ISO सप्ताह (दिन डिफ़ॉल्ट रूप से 0 होता है)
-    - ``YYYY-Www-D`` या ``YYYYWwwD`` - ISO सप्ताह और दिन
+    Non comuni:
 
-    ISO सप्ताह और दिन की संख्या :func:`datetime.date.isocalendar` के समान तर्क का पालन करती है।
+    - ``YYYY-Www`` o ``YYYYWww`` - Settimana ISO (il giorno predefinito è 0)
+    - ``YYYY-Www-D`` o ``YYYYWwwD`` - Settimana ISO e giorno
 
-    समर्थित समय प्रारूप:
+    La numerazione delle settimane e dei giorni ISO segue la stessa logica di
+    :func:`datetime.date.isocalendar`.
+
+    I formati di ora supportati sono:
+
     - ``hh``
-    - ``hh:mm`` या ``hhmm``
-    - ``hh:mm:ss`` या ``hhmmss``
-    - ``hh:mm:ss.ssssss`` (6 उप-सेकंड अंकों तक)
+    - ``hh:mm`` o ``hhmm``
+    - ``hh:mm:ss`` o ``hhmmss``
+    - ``hh:mm:ss.ssssss`` (fino a 6 cifre per i sotto-secondi)
 
-    मध्यरात्रि (`hh`) के लिए एक विशेष मामला है, क्योंकि मानक 00:00 और 24:00 दोनों को 
-    प्रतिनिधित्व के रूप में समर्थन करता है। दशमलव सेपरेटर एक डॉट या कॉमा हो सकता है।
+    La mezzanotte è un caso speciale per `hh`, poiché lo standard supporta sia
+    00:00 che 24:00 come rappresentazione. Il separatore decimale può essere
+    sia un punto che una virgola.
 
-    .. चेतावनी::
+    .. attenzione::
 
-        सेकंड के अलावा अन्य भिन्नात्मक घटकों के लिए समर्थन ISO-8601 मानक का हिस्सा है, 
-        लेकिन वर्तमान में इस पार्सर में लागू नहीं किया गया है।
+        Il supporto per componenti frazionari diversi dai secondi fa parte dello
+        standard ISO-8601, ma non è attualmente implementato in questo parser.
 
-    समर्थित समय क्षेत्र ऑफसेट प्रारूप:
+    I formati di offset del fuso orario supportati sono:
+
     - `Z` (UTC)
     - `±HH:MM`
     - `±HHMM`
     - `±HH`
 
-    ऑफसेट को :class:`dateutil.tz.tzoffset` ऑब्जेक्ट्स के रूप में दर्शाया जाएगा, 
-    सिवाय UTC के, जिसे :class:`dateutil.tz.tzutc` के रूप में दर्शाया जाएगा। UTC के 
-    समकक्ष समय क्षेत्र ऑफसेट (जैसे `+00:00`) को भी :class:`dateutil.tz.tzutc` के रूप में 
-    दर्शाया जाएगा।
+    Gli offset saranno rappresentati come oggetti :class:`dateutil.tz.tzoffset`,
+    con l'eccezione di UTC, che sarà rappresentato come :class:`dateutil.tz.tzutc`.
+    Gli offset del fuso orario equivalenti a UTC (come `+00:00`) saranno anch'essi
+    rappresentati come :class:`dateutil.tz.tzutc`.
 
     :param dt_str:
-        एक स्ट्रिंग या स्ट्रीम जिसमें केवल एक ISO-8601 दिनांक और समय स्ट्रिंग हो।
+        Una stringa o un flusso contenente solo una stringa datetime in formato ISO-8601.
 
     :return:
-        एक :class:`datetime.datetime` लौटाता है जो स्ट्रिंग का प्रतिनिधित्व करता है। 
-        निर्दिष्ट नहीं किए गए घटक उनके न्यूनतम मान पर डिफ़ॉल्ट होते हैं।
+        Restituisce un oggetto :class:`datetime.datetime` che rappresenta la stringa.
+        I componenti non specificati assumono il loro valore minimo.
 
-    .. चेतावनी::
+    .. avvertenza::
 
-        संस्करण 2.7.0 से, पार्सर की सख्ती को अनुबंध का स्थिर हिस्सा नहीं माना जाना चाहिए। 
-        कोई भी मान्य ISO-8601 स्ट्रिंग जो डिफ़ॉल्ट सेटिंग्स के साथ सही ढंग से पार्स होती है, 
-        भविष्य के संस्करणों में सही ढंग से पार्स होती रहेगी, लेकिन अमान्य स्ट्रिंग्स जो 
-        वर्तमान में विफल होती हैं (जैसे ``2017-01-01T00:00+00:00:00``) भविष्य के संस्करणों 
-        में विफल होने की गारंटी नहीं है यदि वे एक मान्य दिनांक को एन्कोड करती हैं।
+        A partire dalla versione 2.7.0, la rigidità del parser non deve essere considerata
+        una parte stabile del contratto. Qualsiasi stringa ISO-8601 valida che viene analizzata
+        correttamente con le impostazioni predefinite continuerà a essere analizzata correttamente
+        nelle versioni future, ma le stringhe non valide che attualmente falliscono (ad esempio
+        ``2017-01-01T00:00+00:00:00``) non sono garantite di continuare a fallire nelle versioni
+        future se codificano una data valida.
 
-    .. versionadded:: 2.7.0
+    .. versioneaggiunta:: 2.7.0
     """
-    return parser.isoparse(dt_str)
+    from datetime import datetime, timedelta
+    import re
+    from dateutil import tz
+
+    # Regex patterns for parsing
+    date_patterns = [
+        r'(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})',  # YYYY-MM-DD
+        r'(?P<year>\d{4})-(?P<week>\d{2})-?(?P<day>\d)?',  # YYYY-Www or YYYY-Www-D
+        r'(?P<year>\d{4})-(?P<month>\d{2})',                # YYYY-MM
+        r'(?P<year>\d{4})'                                  # YYYY
+    ]
+    
+    time_patterns = [
+        r'(?P<hour>\d{1,2}):(?P<minute>\d{2}):?(?P<second>\d{2})?\.?(?P<microsecond>\d{1,6})?',  # hh:mm:ss.ssssss
+        r'(?P<hour>\d{1,2}):(?P<minute>\d{2})?',  # hh:mm
+        r'(?P<hour>\d{1,2})'                       # hh
+    ]
+    
+    tz_patterns = [
+        r'Z',  # UTC
+        r'(?P<sign>[+-])(?P<hour>\d{2}):?(?P<minute>\d{2})?',  # ±HH:MM
+        r'(?P<sign>[+-])(?P<hour>\d{2})(?P<minute>\d{2})?',    # ±HHMM
+        r'(?P<sign>[+-])(?P<hour>\d{2})'                        # ±HH
+    ]
+    
+    # Combine patterns
+    full_pattern = r'^\s*(' + '|'.join(date_patterns) + r')' + r'(T(' + '|'.join(time_patterns) + r'))?(' + '|'.join(tz_patterns) + r')?\s*$'
+    
+    match = re.match(full_pattern, dt_str)
+    if not match:
+        raise ValueError("Invalid ISO-8601 format")
+    
+    # Extract date components
+    date_match = match.group(1)
+    year = int(date_match.group('year'))
+    
+    if date_match.group('month'):
+        month = int(date_match.group('month'))
+        if date_match.group('day'):
+            day = int(date_match.group('day'))
+        else:
+            day = 1
+    else:
+        month = 1
+        day = 1
+    
+    # Extract time components
+    time_match = match.group(3)
+    if time_match:
+        hour = int(time_match.group('hour'))
+        minute = int(time_match.group('minute') or 0)
+        second = int(time_match.group('second') or 0)
+        microsecond = int(time_match.group('microsecond') or 0)
+    else:
+        hour = 0
+        minute = 0
+        second = 0
+        microsecond = 0
+    
+    # Handle timezone
+    tz_match = match.group(4)
+    if tz_match == 'Z':
+        tzinfo = tz.tzutc()
+    elif tz_match:
+        sign = 1 if tz_match.group('sign') == '+' else -1
+        tz_hour = int(tz_match.group('hour'))
+        tz_minute = int(tz_match.group('minute') or 0)
+        tzinfo = tz.tzoffset(None, sign * (tz_hour * 3600 + tz_minute * 60))
+    else:
+        tzinfo = None
+    
+    # Create datetime object
+    dt = datetime(year, month, day, hour, minute, second, microsecond, tzinfo)
+    
+    return dt

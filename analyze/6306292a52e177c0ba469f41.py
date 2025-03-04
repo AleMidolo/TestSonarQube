@@ -1,19 +1,11 @@
 def test_tag(tag: str) -> bool:
     """
-    किसी शब्द का परीक्षण करें कि क्या उसे टैग के रूप में स्वीकार किया जा सकता है।
+    Verifica se una parola può essere accettata come tag.
     """
-    # टैग के लिए मान्यता की शर्तें:
-    # 1. टैग खाली नहीं होना चाहिए।
-    # 2. टैग में केवल अक्षर, संख्याएं, और अंडरस्कोर (_) हो सकते हैं।
-    # 3. टैग की लंबाई 1 से 50 वर्णों के बीच होनी चाहिए।
-    
     if not tag:
         return False
-    
-    if not tag.isalnum() and not all(c == '_' for c in tag if not c.isalnum()):
+    if len(tag) > 30:
         return False
-    
-    if len(tag) < 1 or len(tag) > 50:
+    if any(char in tag for char in [' ', '#', '@', '!', '$', '%', '^', '&', '*', '(', ')']):
         return False
-    
     return True

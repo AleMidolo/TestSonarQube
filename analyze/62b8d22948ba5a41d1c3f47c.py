@@ -1,8 +1,5 @@
 def get(self, key, default=None):
     """
-    D.get(k[, d]) -> D[k] यदि k D में है, तो D[k] लौटाया जाएगा, अन्यथा d। d का डिफ़ॉल्ट मान None है।
+    `D.get(k[, d]) -> D[k]` se `k` è presente in `D`, altrimenti `d`. Il valore predefinito di `d` è `None`.
     """
-    if key in self:
-        return self[key]
-    else:
-        return default
+    return self.data[key] if key in self.data else default

@@ -1,10 +1,11 @@
-def validate_length_args(self, args):
+def validate_length_args(self, args):  
     """
-    दिए गए तर्कों की लंबाई की जाँच करें
-    :param args: प्राप्त तर्क।  
+    Verifica se il valore degli argomenti non supera la lunghezza specificata.  
+
+    :param args: Gli argomenti ricevuti.  
     """
-    if not args:
-        raise ValueError("कोई तर्क प्रदान नहीं किया गया है।")
-    if len(args) < 1:
-        raise ValueError("तर्कों की लंबाई कम से कम 1 होनी चाहिए।")
+    max_length = 100  # Imposta la lunghezza massima consentita
+    for arg in args:
+        if len(arg) > max_length:
+            raise ValueError(f"L'argomento '{arg}' supera la lunghezza massima di {max_length}.")
     return True

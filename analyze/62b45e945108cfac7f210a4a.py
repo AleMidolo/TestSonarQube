@@ -1,27 +1,31 @@
 def validate_hierarchy(self, validate_objects=True, check_digests=True, show_warnings=False):
-    """
-    स्टोरेज रूट हाइरार्की को मान्य करें।
+    """"
+    Valida la gerarchia di archiviazione.
 
-    रिटर्न करता है:
-        num_objects - जांचे गए ऑब्जेक्ट्स की संख्या
-        good_objects - जांचे गए ऑब्जेक्ट्स की संख्या जो मान्य पाए गए
-    """
+    Restituisce:
+        num_objects - numero di oggetti verificati
+        good_objects - numero di oggetti verificati che sono risultati validi
+    """""
     num_objects = 0
     good_objects = 0
-    
-    # Placeholder logic for validating the hierarchy
-    # This should be replaced with actual implementation
-    if validate_objects:
-        # Simulate checking objects
-        num_objects = 100  # Example: 100 objects checked
-        good_objects = 95  # Example: 95 objects are valid
-    
-    if check_digests:
-        # Simulate checking digests
-        pass  # Add actual digest checking logic here
-    
-    if show_warnings:
-        # Simulate showing warnings
-        pass  # Add actual warning logic here
-    
+
+    # Implement the validation logic here
+    # For example, iterate through the storage hierarchy and validate each object
+    for obj in self.storage_hierarchy:
+        num_objects += 1
+        is_valid = True  # Replace with actual validation logic
+
+        if validate_objects:
+            # Perform object validation
+            is_valid = self.validate_object(obj)
+
+        if check_digests:
+            # Perform digest check
+            is_valid = is_valid and self.check_digest(obj)
+
+        if is_valid:
+            good_objects += 1
+        elif show_warnings:
+            print(f"Warning: Object {obj} is not valid.")
+
     return num_objects, good_objects

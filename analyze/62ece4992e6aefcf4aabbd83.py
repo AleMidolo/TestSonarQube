@@ -1,30 +1,27 @@
 import subprocess
+import os
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    दिए गए कमांड(s) को कॉल करें।
+    Esegui il/i comando/i fornito/i.
     """
-    command_list = commands if isinstance(commands, list) else [commands]
-    command_list.extend(args)
+    if cwd is None:
+        cwd = os.getcwd()
     
-    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
-    
-    process = subprocess.Popen(
-        command_list,
-        cwd=cwd,
-        stdout=subprocess.PIPE,
-        stderr=stderr,
-        env=env,
-        text=True
-    )
-    
-    stdout, stderr = process.communicate()
-    
-    if verbose:
-        print(f"Command: {' '.join(command_list)}")
-        if stdout:
-            print(f"Stdout: {stdout}")
-        if stderr and not hide_stderr:
-            print(f"Stderr: {stderr}")
-    
-    return process.returncode, stdout, stderr
+    if env is None:
+        env = os.environ
+
+    if isinstance(commands, str):
+        commands = [commands]
+
+    results = []
+    for command in commands:
+        full_command = [command] + args
+        if verbose:
+            print(f"Running command: {' '.join(full_command)} in {cwd}")
+        
+        stderr = subprocess.DEVNULL if hide_stderr else None
+        result = subprocess.run(full_command, cwd=cwd, env=env, stderr=stderr)
+        results.append(result)
+
+    return results

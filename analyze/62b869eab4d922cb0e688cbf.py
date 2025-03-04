@@ -1,40 +1,22 @@
 def generate_default_observer_schema(app):
     """
-    प्रत्येक Kubernetes संसाधन के लिए डिफ़ॉल्ट ऑब्ज़र्वर स्कीमा उत्पन्न करें जो ``spec.manifest`` में मौजूद है और जिसके लिए कोई कस्टम ऑब्ज़र्वर स्कीमा निर्दिष्ट नहीं किया गया है।
+    Genera lo schema di osservazione predefinito per ogni risorsa Kubernetes presente in
+    ``spec.manifest`` per la quale non è stato specificato uno schema di osservazione personalizzato.
 
-    आर्ग्युमेंट्स:
-        app (krake.data.kubernetes.Application): वह एप्लिकेशन जिसके लिए डिफ़ॉल्ट ऑब्ज़र्वर स्कीमा उत्पन्न करना है।
+    Argomenti:
+        app (krake.data.kubernetes.Application): L'applicazione per la quale generare uno
+            schema di osservazione predefinito.
     """
-    default_schema = {
-        "type": "object",
-        "properties": {
-            "status": {
-                "type": "object",
-                "properties": {
-                    "conditions": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "type": {"type": "string"},
-                                "status": {"type": "string"},
-                                "lastTransitionTime": {"type": "string"},
-                                "reason": {"type": "string"},
-                                "message": {"type": "string"}
-                            },
-                            "required": ["type", "status"]
-                        }
-                    }
-                },
-                "required": ["conditions"]
-            }
-        },
-        "required": ["status"]
-    }
-
-    # Iterate over all resources in the application's manifest
+    default_schema = {}
     for resource in app.spec.manifest:
-        if not hasattr(resource, 'observer_schema'):
-            resource.observer_schema = default_schema
-
-    return app
+        resource_type = resource.get('kind')
+        if resource_type not in default_schema:
+            default_schema[resource_type] = {
+                'apiVersion': resource.get('apiVersion'),
+                'metadata': {
+                    'name': resource.get('metadata', {}).get('name'),
+                    'namespace': resource.get('metadata', {}).get('namespace'),
+                },
+                'spec': resource.get('spec', {})
+            }
+    return default_schema

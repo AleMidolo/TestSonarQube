@@ -1,11 +1,9 @@
 def oneline(script, separator=" && "):
     """
-    एक स्क्रिप्ट को एक लाइन कमांड में बदलता है।
-    यह एकल SSH कमांड चलाने और एक लाइन स्क्रिप्ट पास करने के लिए उपयोगी है।
+    Converte uno script in un comando su una sola riga.  
+    Questo è utile per eseguire un singolo comando SSH e passare uno script su una sola riga.
 
-    :param script: str, स्क्रिप्ट जिसे एक लाइन में बदलना है।
-    :param separator: str, विभाजक जो कमांड्स के बीच उपयोग किया जाएगा। डिफ़ॉल्ट रूप से " && "।
-    :return: str, एक लाइन में परिवर्तित स्क्रिप्ट।
+    :param script: Il codice da convertire in un comando su una sola riga.
+    :return: Il comando su una sola riga.
     """
-    lines = script.strip().splitlines()
-    return separator.join(line.strip() for line in lines if line.strip())
+    return separator.join(line.strip() for line in script.strip().splitlines() if line.strip())

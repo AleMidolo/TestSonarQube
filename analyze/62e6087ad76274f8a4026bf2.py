@@ -1,32 +1,36 @@
 def discard(self, n=-1, qid=-1, dehydration_hooks=None,
             hydration_hooks=None, **handlers):
     """
-    आउटपुट कतार (output queue) में एक DISCARD संदेश जोड़ता है।
+    Aggiunge un messaggio DISCARD alla coda di output.
 
-    :param n: डिस्कार्ड करने के लिए रिकॉर्ड्स की संख्या, डिफ़ॉल्ट = -1 (सभी)
-    :param qid: उस क्वेरी ID के लिए डिस्कार्ड करना है, डिफ़ॉल्ट = -1 (अंतिम क्वेरी)
+    :param n: numero di record da scartare, valore predefinito = -1 (TUTTI)
+    :param qid: ID della query per cui scartare, valore predefinito = -1 (ultima query)
     :param dehydration_hooks:
-        प्रकारों को डीहाइड्रेट (dehydrate) करने के लिए हुक्स (hooks) 
-        (क्लास से डीहाइड्रेशन फ़ंक्शन तक का डिक्शनरी)। 
-        डीहाइड्रेशन फ़ंक्शन वैल्यू प्राप्त करता है और 
-        पैकस्ट्रीम (packstream) द्वारा समझे जाने वाले प्रकार की 
-        ऑब्जेक्ट को लौटाता है।
+        Hook per disidratare i tipi (dizionario da tipo (classe) a funzione di disidratazione).
+        Le funzioni di disidratazione ricevono il valore e restituiscono un oggetto di tipo
+        comprensibile da packstream.
     :param hydration_hooks:
-        प्रकारों को हाइड्रेट (hydrate) करने के लिए हुक्स 
-        (क्लास से हाइड्रेशन फ़ंक्शन तक का मैपिंग)। 
-        हाइड्रेशन फ़ंक्शन पैकस्ट्रीम द्वारा समझे जाने वाले प्रकार 
-        की वैल्यू प्राप्त करता है और कुछ भी लौटाने के लिए स्वतंत्र है।
-    :param handlers: हैंडलर फ़ंक्शन जो लौटाए गए Response ऑब्जेक्ट में पास किए जाते हैं।
+        Hook per idratare i tipi (mappatura da tipo (classe) a funzione di idratazione).
+        Le funzioni di idratazione ricevono il valore di un tipo comprensibile da packstream
+        e possono restituire qualsiasi cosa.
+    :param handlers: funzioni gestore passate all'oggetto Response restituito
     """
-    # Create the DISCARD message
-    discard_message = {
-        "type": "DISCARD",
-        "n": n,
-        "qid": qid,
-        "dehydration_hooks": dehydration_hooks,
-        "hydration_hooks": hydration_hooks,
-        **handlers
+    # Implementazione del metodo discard
+    if dehydration_hooks is None:
+        dehydration_hooks = {}
+    if hydration_hooks is None:
+        hydration_hooks = {}
+
+    # Logica per aggiungere un messaggio DISCARD alla coda di output
+    # Questo è un esempio e dovrebbe essere adattato alla logica specifica dell'applicazione
+    message = {
+        'type': 'DISCARD',
+        'n': n,
+        'qid': qid,
+        'dehydration_hooks': dehydration_hooks,
+        'hydration_hooks': hydration_hooks,
+        'handlers': handlers
     }
     
-    # Add the DISCARD message to the output queue
-    self.output_queue.append(discard_message)
+    # Aggiungere il messaggio alla coda di output
+    self.output_queue.append(message)

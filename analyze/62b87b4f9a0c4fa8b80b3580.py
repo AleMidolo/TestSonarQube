@@ -1,12 +1,17 @@
 def integral(bins, edges):
     """
-    हिस्टोग्राम के लिए इंटीग्रल (स्केल) की गणना करें।
+    Calcola l'integrale (scala per un istogramma).
 
-    *bins* में मान (values) होते हैं, और *edges* इंटीग्रेशन के लिए जाल (mesh) बनाते हैं।  
-    इनका प्रारूप (format) :class:`.histogram` विवरण में परिभाषित है।
+    *i bins* contengono i valori, mentre *gli edges* formano la griglia  
+    per l'integrazione.  
+    Il loro formato è definito nella descrizione della classe :class:`.histogram`.
     """
+    if len(bins) != len(edges) - 1:
+        raise ValueError("Length of bins must be one less than length of edges.")
+    
     integral_value = 0.0
     for i in range(len(bins)):
-        bin_width = edges[i+1] - edges[i]
-        integral_value += bins[i] * bin_width
+        width = edges[i + 1] - edges[i]
+        integral_value += bins[i] * width
+    
     return integral_value

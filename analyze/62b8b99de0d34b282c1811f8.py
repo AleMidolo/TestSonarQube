@@ -1,7 +1,8 @@
-def _reset_logging(cls):
+def _reset_logging(cls):  
     """
-    Reset logging configuration to default settings.
+    Reimposta
     """
     import logging
-    logging.root.handlers = []
-    logging.basicConfig(level=logging.WARNING)
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
+    logging.basicConfig(level=logging.NOTSET)

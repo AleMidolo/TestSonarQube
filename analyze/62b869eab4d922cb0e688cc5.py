@@ -2,27 +2,32 @@ def update_last_applied_manifest_dict_from_resp(
     last_applied_manifest, observer_schema, response
 ):
     """
-    Updates the partial `last_applied_manifest` with values from the partial Kubernetes response.
+    Insieme alla funzione :func:``update_last_applied_manifest_list_from_resp``, 
+    questa funzione viene chiamata ricorsivamente per aggiornare un 
+    ``last_applied_manifest`` parziale a partire da una risposta parziale di Kubernetes.
 
-    Args:
-        last_applied_manifest (dict): The partial `last_applied_manifest` being updated.
-        observer_schema (dict): The partial `observer_schema`.
-        response (dict): The partial response from the Kubernetes API.
+    Argomenti:
+        last_applied_manifest (dict): ``last_applied_manifest`` parziale in fase di aggiornamento
+        observer_schema (dict): ``observer_schema`` parziale
+        response (dict): risposta parziale dall'API di Kubernetes.
 
-    Raises:
-        KeyError: If the observed fields are not present in the Kubernetes response.
+    Eccezioni:
+        KeyError: Se il campo osservato non è presente nella risposta di Kubernetes.
 
-    This function iterates through all observed fields and initializes their values if they are not already present in `last_applied_manifest`.
+    Questa funzione analizza tutti i campi osservati e inizializza il loro valore 
+    in ``last_applied_manifest`` se non sono ancora presenti.
     """
     for key, value in observer_schema.items():
-        if key not in response:
-            raise KeyError(f"Key '{key}' not found in the Kubernetes response.")
-        
         if isinstance(value, dict):
+            # Recursive call for nested dictionaries
             if key not in last_applied_manifest:
                 last_applied_manifest[key] = {}
             update_last_applied_manifest_dict_from_resp(
-                last_applied_manifest[key], value, response[key]
+                last_applied_manifest[key], value, response.get(key, {})
             )
         else:
-            last_applied_manifest[key] = response[key]
+            # Check if the key is in the response and update last_applied_manifest
+            if key not in last_applied_manifest:
+                if key not in response:
+                    raise KeyError(f"Field '{key}' is not present in the Kubernetes response.")
+                last_applied_manifest[key] = response[key]

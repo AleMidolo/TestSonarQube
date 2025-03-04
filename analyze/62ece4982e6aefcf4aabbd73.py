@@ -1,25 +1,23 @@
 import re
-import shlex
 import sys
 
 def split(s, platform='this'):
     """
-    यह `shlex.split()` का मल्टी-प्लेटफ़ॉर्म संस्करण है, जिसका उपयोग कमांड-लाइन विभाजन के लिए किया जाता है।  
-    इसे `subprocess` के साथ उपयोग किया जा सकता है, जैसे `argv` इंजेक्शन आदि के लिए।  
-    यह तेज़ REGEX का उपयोग करता है।  
+    ### Variante multi-piattaforma di `shlex.split()` per la divisione di stringhe da riga di comando.  
+    Progettata per l'uso con `subprocess`, per l'iniezione di argomenti (`argv`) ecc. Utilizza espressioni regolari (REGEX) veloci.
 
-    प्लेटफ़ॉर्म विकल्प:
-    - `'this'`: वर्तमान प्लेटफ़ॉर्म से स्वतः-पहचान  
-    - `1`: POSIX शैली  
-    - `0`: Windows/CMD शैली  
-    - (अन्य मान भविष्य के लिए आरक्षित हैं)
+    - **platform**:  
+      - `'this'`: rilevamento automatico della piattaforma corrente.  
+      - `1`: stile POSIX.  
+      - `0`: stile Windows/CMD.  
+      - (altri valori riservati).
     """
     if platform == 'this':
-        platform = 1 if sys.platform != 'win32' else 0
-    
-    if platform == 1:
-        return shlex.split(s, posix=True)
-    elif platform == 0:
-        return shlex.split(s, posix=False)
-    else:
-        raise ValueError("Invalid platform option. Use 'this', 1 (POSIX), or 0 (Windows).")
+        platform = 1 if sys.platform.startswith('linux') or sys.platform == 'darwin' else 0
+
+    if platform == 1:  # POSIX
+        pattern = r'(?<!\\)"([^"]*(?:\\.[^"]*)*)"(?!\\)|(?<!\\)\'([^\']*(?:\\.[^\']*)*)\'(?!\\)|(?<!\\)(\S+)'
+    else:  # Windows
+        pattern = r'(?<!\\)"([^"]*(?:\\.[^"]*)*)"(?!\\)|(?<!\\)(\S+)'
+
+    return [match.group(0) for match in re.finditer(pattern, s)]

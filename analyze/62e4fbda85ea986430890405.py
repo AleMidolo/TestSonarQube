@@ -1,7 +1,3 @@
-import subprocess
-import sys
-from typing import Sequence, Any, Tuple
-
 def xargs(
         cmd: tuple[str, ...],
         varargs: Sequence[str],
@@ -11,43 +7,30 @@ def xargs(
         _max_length: int = _get_platform_max_length(),
         **kwargs: Any,
 ) -> tuple[int, bytes]:
-    """
-    Xargs का एक सरल कार्यान्वयन।
+    import subprocess
+    import os
+    from multiprocessing import Pool
 
-    - color: यदि प्लेटफ़ॉर्म इसे सपोर्ट करता है, तो एक PTY (Pseudo Terminal) बनाएं।
-    - target_concurrency: एक साथ चलने वाले विभाजनों (partitions) की लक्षित संख्या।
-    """
-    if color and sys.platform != "win32":
+    def run_command(args):
+        return subprocess.run(cmd + args, capture_output=True)
+
+    if color:
+        # Create a pseudo-terminal if supported
         import pty
-        import os
-
         master_fd, slave_fd = pty.openpty()
-        process = subprocess.Popen(
-            cmd + tuple(varargs),
-            stdout=slave_fd,
-            stderr=slave_fd,
-            close_fds=True,
-            **kwargs
-        )
         os.close(slave_fd)
-        output = b""
-        while True:
-            try:
-                data = os.read(master_fd, 1024)
-                if not data:
-                    break
-                output += data
-            except OSError:
-                break
-        os.close(master_fd)
-        return_code = process.wait()
-        return (return_code, output)
-    else:
-        process = subprocess.Popen(
-            cmd + tuple(varargs),
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            **kwargs
-        )
-        stdout, stderr = process.communicate()
-        return (process.returncode, stdout)
+        os.dup2(master_fd, 1)  # Redirect stdout to the master
+        os.dup2(master_fd, 2)  # Redirect stderr to the master
+
+    # Split varargs into chunks for concurrency
+    chunk_size = (len(varargs) + target_concurrency - 1) // target_concurrency
+    chunks = [varargs[i:i + chunk_size] for i in range(0, len(varargs), chunk_size)]
+
+    with Pool(target_concurrency) as pool:
+        results = pool.map(run_command, chunks)
+
+    # Combine return codes and output
+    return_code = sum(result.returncode for result in results)
+    output = b''.join(result.stdout for result in results)
+
+    return return_code, output

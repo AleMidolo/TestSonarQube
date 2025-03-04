@@ -1,37 +1,38 @@
-from functools import wraps
-
 def unit_of_work(metadata=None, timeout=None):
     """
-    यह फ़ंक्शन ट्रांज़ेक्शन फ़ंक्शन्स के लिए एक डेकोरेटर है, जो यह नियंत्रित करने की अतिरिक्त सुविधा प्रदान करता है कि ट्रांज़ेक्शन कैसे निष्पादित किया जाए।
+    Questa funzione è un decorator per funzioni di transazione che consente un controllo aggiuntivo su come viene eseguita la transazione.
 
-    :param metadata: 
-        मेटाडेटा के साथ एक डिक्शनरी।  
-        निर्दिष्ट मेटाडेटा निष्पादित ट्रांज़ेक्शन से जुड़ा होगा और ``dbms.listQueries`` और ``dbms.listTransactions`` प्रक्रियाओं के आउटपुट में दिखाई देगा।  
-        यह ``query.log`` में भी लॉग किया जाएगा।  
-        यह सुविधा ट्रांज़ेक्शन्स को टैग करना आसान बनाती है और ``dbms.setTXMetaData`` प्रक्रिया के समकक्ष है।  
-        प्रक्रिया संदर्भ के लिए देखें: [https://neo4j.com/docs/operations-manual/current/reference/procedures/](https://neo4j.com/docs/operations-manual/current/reference/procedures/)।  
-    :type metadata: `dict`
+    Ad esempio, è possibile applicare un timeout::
 
-    :param timeout: 
-        ट्रांज़ेक्शन का टाइमआउट (सेकंड में)।  
-        जो ट्रांज़ेक्शन्स निर्दिष्ट टाइमआउट से अधिक समय तक चलते हैं, उन्हें डेटाबेस द्वारा समाप्त कर दिया जाएगा।  
-        यह सुविधा क्वेरी/ट्रांज़ेक्शन निष्पादन समय को सीमित करने की अनुमति देती है।  
-        निर्दिष्ट टाइमआउट डेटाबेस में कॉन्फ़िगर किए गए डिफ़ॉल्ट टाइमआउट (``dbms.transaction.timeout`` सेटिंग) को ओवरराइड करता है।  
-        मान नकारात्मक अवधि का प्रतिनिधित्व नहीं करना चाहिए।  
-        शून्य अवधि (0) ट्रांज़ेक्शन को अनिश्चित काल तक चलने देगी।  
-        `None` का उपयोग डेटाबेस में कॉन्फ़िगर किए गए डिफ़ॉल्ट टाइमआउट का उपयोग करेगा।  
-    :type timeout: `float` या `:const:None`
+        from neo4j import unit_of_work
+
+        @unit_of_work(timeout=100)
+        def count_people_tx(tx):
+            result = tx.run("MATCH (a:Person) RETURN count(a) AS persons")
+            record = result.single()
+            return record["persons"]
+
+    :param metadata:  
+        un dizionario con metadati.  
+        I metadati specificati saranno associati alla transazione in esecuzione e visibili nell'output delle procedure ``dbms.listQueries`` e ``dbms.listTransactions``.  
+        Saranno inoltre registrati nel file ``query.log``.  
+        Questa funzionalità semplifica l'etichettatura delle transazioni ed è equivalente alla procedura ``dbms.setTXMetaData``. Per riferimento alla procedura, consultare https://neo4j.com/docs/operations-manual/current/reference/procedures/.  
+    :type metadata: dict  
+
+    :param timeout:  
+        il timeout della transazione in secondi.  
+        Le transazioni che vengono eseguite per un tempo superiore al timeout configurato saranno terminate dal database.  
+        Questa funzionalità consente di limitare il tempo di esecuzione delle query/transazioni.  
+        Il timeout specificato sovrascrive il timeout predefinito configurato nel database utilizzando l'impostazione ``dbms.transaction.timeout``.  
+        Il valore non deve rappresentare una durata negativa.  
+        Una durata pari a zero consentirà alla transazione di essere eseguita indefinitamente.  
+        Un valore ``None`` utilizzerà il timeout predefinito configurato nel database.  
+    :type timeout: float o :const:`None`  
     """
     def decorator(func):
-        @wraps(func)
         def wrapper(*args, **kwargs):
-            # यहां ट्रांज़ेक्शन के लिए मेटाडेटा और टाइमआउट को सेट करने का कोड होगा
-            # उदाहरण के लिए, यह कोड Neo4j ड्राइवर के साथ इंटरैक्ट कर सकता है
-            # लेकिन यहां हम केवल एक सरल उदाहरण दिखा रहे हैं
-            if metadata is not None:
-                kwargs['metadata'] = metadata
-            if timeout is not None:
-                kwargs['timeout'] = timeout
-            return func(*args, **kwargs)
+            # Implementazione della logica per gestire la transazione
+            # e applicare i metadati e il timeout
+            pass  # Sostituire con la logica effettiva
         return wrapper
     return decorator

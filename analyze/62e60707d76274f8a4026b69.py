@@ -1,26 +1,17 @@
 def point_type(name, fields, srid_map):
     """
-    डायनामिक रूप से एक पॉइंट सबक्लास बनाएं।
-
-    :param name: सबक्लास का नाम
-    :param fields: सबक्लास में शामिल करने के लिए फ़ील्ड्स
-    :param srid_map: SRID मैपिंग
-    :return: डायनामिक रूप से बनाई गई पॉइंट सबक्लास
+    Crea dinamicamente una sottoclasse di Point.
     """
-    from django.contrib.gis.db.models import PointField
-    from django.db import models
+    from shapely.geometry import Point
 
-    class Meta:
-        app_label = 'dynamic_models'
+    class DynamicPoint(Point):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields = fields
+            self.srid = srid_map.get(self.__class__.__name__, None)
 
-    attrs = {
-        '__module__': __name__,
-        'Meta': Meta,
-    }
+        def __repr__(self):
+            return f"{name}({', '.join(map(str, self.coords))})"
 
-    for field_name, field_type in fields.items():
-        attrs[field_name] = field_type
-
-    attrs['geom'] = PointField(srid=srid_map.get(name, 4326))
-
-    return type(name, (models.Model,), attrs)
+    DynamicPoint.__name__ = name
+    return DynamicPoint

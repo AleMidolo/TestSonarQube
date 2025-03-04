@@ -1,47 +1,22 @@
 def _fromutc(self, dt):
     """
-    यह वह स्थिति है जब हमें *पक्का* पता होता है कि हमारे पास एक अस्पष्टता रहित (unambiguous) डेटटाइम ऑब्जेक्ट है। इस मौके का उपयोग करते हुए, हम यह निर्धारित करते हैं कि क्या यह डेटटाइम अस्पष्ट (ambiguous) है और "फोल्ड" स्थिति में है (उदाहरण के लिए, यदि यह अस्पष्ट डेटटाइम का पहला कालानुक्रमिक (chronological) उदाहरण है)।
+    Dato un oggetto timezone-aware  in un determinato fuso orario, calcola un oggetto datetime con consapevolezza del fuso orario in un nuovo fuso orario.
 
-    पैरामीटर:
-    - `dt`:  
-      एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
-    """
-    if dt.tzinfo is not self:
-        raise ValueError("dt.tzinfo is not self")
-    
-    # Convert to local time
-    local_dt = dt.astimezone(self)
-    
-    # Check if the local time is ambiguous
-    if self._is_ambiguous(local_dt):
-        # If it's ambiguous, return the first occurrence
-        return self._fold_first(local_dt)
-    else:
-        return local_dt
+    Poiché questa è l'unica occasione in cui sappiamo di avere un oggetto datetime non ambiguo, cogliamo questa opportunità per determinare se il datetime è ambiguo e si trova in uno stato di "fold" (ad esempio, se è la prima occorrenza, in ordine cronologico, del datetime ambiguo).
 
-def _is_ambiguous(self, dt):
+    :param dt:  
+        Un oggetto :class:`datetime.datetime` con consapevolezza del fuso orario.
     """
-    Check if the given datetime is ambiguous in the current timezone.
-    
-    Parameters:
-    - `dt`: A timezone-aware datetime object.
-    
-    Returns:
-    - `bool`: True if the datetime is ambiguous, False otherwise.
-    """
-    # This is a placeholder implementation. The actual logic will depend on the timezone rules.
-    # For example, in a timezone that observes DST, a datetime might be ambiguous during the fall transition.
-    return False
+    if dt.tzinfo is None:
+        raise ValueError("dt must be timezone-aware")
 
-def _fold_first(self, dt):
-    """
-    Return the first occurrence of an ambiguous datetime.
-    
-    Parameters:
-    - `dt`: A timezone-aware datetime object that is ambiguous.
-    
-    Returns:
-    - `datetime`: The first occurrence of the ambiguous datetime.
-    """
-    # This is a placeholder implementation. The actual logic will depend on the timezone rules.
-    return dt
+    # Convert the datetime to UTC
+    utc_dt = dt.astimezone(self.utc)
+
+    # Check if the datetime is ambiguous
+    if self.is_ambiguous(utc_dt):
+        # Handle the ambiguity (e.g., return the first occurrence)
+        return self.handle_ambiguity(utc_dt)
+
+    # Return the datetime in the new timezone
+    return utc_dt.astimezone(self)

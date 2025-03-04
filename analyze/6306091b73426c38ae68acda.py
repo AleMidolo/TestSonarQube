@@ -1,5 +1,7 @@
-def plugins_manager(cls):
+def plugins_manager(cls):  
     """
-    प्लगइन मैनेजर प्राप्त करता है।
+    Ottiene il gestore dei plugin.
     """
-    return cls._plugins_manager
+    if not hasattr(cls, '_plugin_manager'):
+        cls._plugin_manager = {}
+    return cls._plugin_manager

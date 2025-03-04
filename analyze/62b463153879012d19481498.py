@@ -2,8 +2,11 @@ import os
 
 def files_list(path):
     """
-    `path` में फ़ाइलों को वापस करें।
+    Restituisce i file nel percorso `path`.
     """
-    if not os.path.exists(path):
+    try:
+        return [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+    except FileNotFoundError:
         return []
-    return [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+    except PermissionError:
+        return []

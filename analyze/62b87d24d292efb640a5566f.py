@@ -1,17 +1,15 @@
 def render(pieces, style):
     """
-    दिए गए संस्करण टुकड़ों को निर्दिष्ट शैली में प्रस्तुत करें।
-    
-    :param pieces: संस्करण टुकड़ों की सूची
-    :param style: प्रस्तुति शैली
-    :return: शैली के अनुसार प्रस्तुत संस्करण
+    Renderizzare i pezzi forniti nella versione richiesta dello stile.
     """
-    if style == "simple":
-        return "\n".join(pieces)
-    elif style == "detailed":
-        return "\n".join([f"- {piece}" for piece in pieces])
-    elif style == "json":
-        import json
-        return json.dumps(pieces, indent=4)
-    else:
-        raise ValueError("असमर्थित शैली")
+    rendered_output = []
+    for piece in pieces:
+        if style == "bold":
+            rendered_output.append(f"**{piece}**")
+        elif style == "italic":
+            rendered_output.append(f"*{piece}*")
+        elif style == "underline":
+            rendered_output.append(f"__{piece}__")
+        else:
+            rendered_output.append(piece)
+    return "\n".join(rendered_output)

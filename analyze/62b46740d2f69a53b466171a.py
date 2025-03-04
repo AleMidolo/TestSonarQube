@@ -1,15 +1,11 @@
 def pretty(self, indent=0, debug=False):
     """
-    स्वयं का एक सुंदर स्वरूपित प्रतिनिधित्व लौटाएँ।
+    Restituisce una rappresentazione formattata in modo leggibile di sé stesso.
+    
+    obj = f"'{self.obj}'" if isinstance(self.obj, str) else repr(self.obj)
+    debug_details = "debug=True, " if debug else ""
+    return (" " * indent) + f"{self.__class__.__name__}({debug_details}{obj})"
     """
-    indent_str = ' ' * indent
-    result = f"{indent_str}{self.__class__.__name__}(\n"
-    
-    for key, value in self.__dict__.items():
-        if debug:
-            result += f"{indent_str}  {key}: {repr(value)}\n"
-        else:
-            result += f"{indent_str}  {key}: {value}\n"
-    
-    result += f"{indent_str})"
-    return result
+    obj = f"'{self.obj}'" if isinstance(self.obj, str) else repr(self.obj)
+    debug_details = "debug=True, " if debug else ""
+    return (" " * indent) + f"{self.__class__.__name__}({debug_details}{obj})"

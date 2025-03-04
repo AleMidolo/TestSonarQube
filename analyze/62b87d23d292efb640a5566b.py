@@ -1,27 +1,19 @@
 import subprocess
+import os
 
-def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
+def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=False, env=None):
     """
-    दिए गए कमांड(s) को चलाएं।
+    Esegui il comando specificato.
     """
-    command_list = commands if isinstance(commands, list) else [commands]
-    command_list.extend(args)
+    if cwd is None:
+        cwd = os.getcwd()
     
-    stderr = subprocess.DEVNULL if hide_stderr else None
+    full_command = [comandi] + argomenti
+    stderr_option = subprocess.DEVNULL if nascondi_stderr else None
     
     if verbose:
-        print(f"Running command: {' '.join(command_list)}")
+        print(f"Esecuzione comando: {' '.join(full_command)} in {cwd}")
     
-    result = subprocess.run(
-        command_list,
-        cwd=cwd,
-        env=env,
-        stdout=subprocess.PIPE,
-        stderr=stderr,
-        text=True
-    )
+    result = subprocess.run(full_command, cwd=cwd, env=env, stderr=stderr_option)
     
-    if verbose:
-        print(f"Command output: {result.stdout}")
-    
-    return result
+    return result.returncode

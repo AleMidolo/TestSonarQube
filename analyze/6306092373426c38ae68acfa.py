@@ -1,15 +1,26 @@
-def get_spec_defaults(self):
+def get_spec_defaults(self):  
     """
-    स्पेक और अन्य स्रोतों से तर्कों के डिफ़ॉल्ट मान प्राप्त करें।
+    Risolvere i valori degli argomenti dal file di specifica e da altre fonti.
     """
     defaults = {}
-    # Assuming self.spec is a dictionary or object that contains the default values
-    if hasattr(self, 'spec'):
-        if isinstance(self.spec, dict):
-            defaults.update(self.spec)
-        else:
-            # If spec is an object, get its attributes
-            for key in dir(self.spec):
-                if not key.startswith('_'):
-                    defaults[key] = getattr(self.spec, key)
+    # Supponiamo di avere un file di specifica in formato JSON
+    try:
+        with open('spec_file.json', 'r') as file:
+            spec_data = json.load(file)
+            for key, value in spec_data.items():
+                defaults[key] = value
+    except FileNotFoundError:
+        print("Il file di specifica non è stato trovato.")
+    except json.JSONDecodeError:
+        print("Errore nella decodifica del file JSON.")
+    
+    # Aggiungere altre fonti di valori predefiniti se necessario
+    # Esempio: valori predefiniti hardcoded
+    additional_defaults = {
+        'timeout': 30,
+        'retries': 3
+    }
+    
+    defaults.update(additional_defaults)
+    
     return defaults

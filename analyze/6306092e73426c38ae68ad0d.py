@@ -1,18 +1,22 @@
-def create_complex_argumet_type(self, subcommand, type_name, option_name, spec_option):
+def create_complex_argument_type(self, subcommand, type_name, option_name,
+                                 spec_option):
     """
-    जटिल आर्गुमेंट प्रकार (complex argument type) बनाएं
+    Crea il tipo di argomento complesso.
 
-    :param subcommand: कमांड का नाम
-    :param type_name: जटिल प्रकार का नाम (complex type name)
-    :param option_name: विकल्प का नाम (option name)
-    :param spec_option: विकल्प की विशिष्टताएँ (option's specifications)
-    :return: जटिल प्रकार का उदाहरण (complex type instance)
+    :param subcommand: il nome del comando
+    :param type_name: il nome del tipo complesso
+    :param option_name: il nome dell'opzione
+    :param spec_option: le specifiche dell'opzione
+    :return: l'istanza del tipo complesso
     """
-    # Create a complex type instance based on the provided specifications
-    complex_type_instance = {
-        "subcommand": subcommand,
-        "type_name": type_name,
-        "option_name": option_name,
-        "spec_option": spec_option
-    }
-    return complex_type_instance
+    class ComplexArgumentType:
+        def __init__(self, subcommand, type_name, option_name, spec_option):
+            self.subcommand = subcommand
+            self.type_name = type_name
+            self.option_name = option_name
+            self.spec_option = spec_option
+
+        def __repr__(self):
+            return f"ComplexArgumentType(subcommand={self.subcommand}, type_name={self.type_name}, option_name={self.option_name}, spec_option={self.spec_option})"
+
+    return ComplexArgumentType(subcommand, type_name, option_name, spec_option)

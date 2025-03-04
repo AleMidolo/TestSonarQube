@@ -1,23 +1,31 @@
 def get_nested_custom_and_control_args(self, args):
     """
-    इनपुट आर्ग्युमेंट्स को नेस्टेड और कस्टम में विभाजित करें।
+    Suddivide gli argomenti di input in controlli nidificati e personalizzati.
 
-    कंट्रोल आर्ग्युमेंट्स: IR (Intermediate Representation) व्यवहार को नियंत्रित करते हैं। 
-        ये आर्ग्युमेंट्स spec.yml फाइल में नहीं डाले जाएंगे।
-    नेस्टेड आर्ग्युमेंट्स: Ansible प्लेबुक्स द्वारा उपयोग किए जाते हैं और 
-        spec.yml फाइल में डाले जाएंगे।
-    कस्टम आर्ग्युमेंट्स: सामान्य नेस्टेड उपयोग के बजाय कस्टम Ansible वेरिएबल्स का उपयोग करने के लिए।
+    Argomenti di controllo: controllano il comportamento dell'IR. Questi argomenti
+        non saranno inseriti nel file spec yml.
+    Argomenti nidificati: sono utilizzati dai playbook di Ansible e saranno inseriti
+        nel file spec yml.
+    Argomenti personalizzati: variabili Ansible personalizzate da utilizzare al posto
+        dell'uso normale degli argomenti nidificati.
 
-    :param args: एकत्रित आर्ग्युमेंट्स की सूची।
-    :return: (dict, dict): फ्लैट डिक्शनरीज़ (control_args, nested_args)
+    :param args: la lista raccolta di argomenti.
+    :return: (dict, dict): dizionari piatti (control_args, nested_args)
     """
     control_args = {}
     nested_args = {}
     
-    for key, value in args.items():
-        if key.startswith('_'):
-            control_args[key] = value
+    for arg in args:
+        if isinstance(arg, dict):
+            for key, value in arg.items():
+                if key.startswith('control_'):
+                    control_args[key] = value
+                elif key.startswith('nested_'):
+                    nested_args[key] = value
+                else:
+                    nested_args[key] = value  # Treat as custom if not prefixed
         else:
-            nested_args[key] = value
-    
+            # Handle non-dict args if necessary
+            pass
+
     return control_args, nested_args

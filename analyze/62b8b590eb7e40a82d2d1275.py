@@ -1,11 +1,10 @@
 def _legacy_mergeOrderings(orderings):
     """
-    कई क्रमबद्ध सूचियों को इस प्रकार संयोजित करें कि प्रत्येक सूची के भीतर का क्रम संरक्षित रहे।
+    Unisci più ordinamenti in modo che l'ordine all'interno di ciascun ordinamento venga preservato.
 
-    इन सूचियों पर यह प्रतिबंध है कि यदि कोई वस्तु दो या अधिक सूचियों में प्रकट होती है,
-    तो उस वस्तु से शुरू होने वाला उपसर्ग (suffix) सभी सूचियों में समान होना चाहिए।
+    Gli ordinamenti sono vincolati in modo tale che, se un oggetto appare in due o più ordinamenti, il suffisso che inizia con l'oggetto deve essere presente in entrambi gli ordinamenti.
 
-    उदाहरण के लिए:
+    Ad esempio:
 
     >>> _mergeOrderings([
     ... ['x', 'y', 'z'],
@@ -17,33 +16,30 @@ def _legacy_mergeOrderings(orderings):
     """
     from collections import defaultdict, deque
 
-    # Build a graph and in-degree count
-    graph = defaultdict(set)
+    # Create a graph and in-degree count
+    graph = defaultdict(list)
     in_degree = defaultdict(int)
-    all_nodes = set()
+    orderings_set = set()
 
+    # Build the graph
     for ordering in orderings:
-        for i in range(len(ordering) - 1):
-            u, v = ordering[i], ordering[i + 1]
-            if v not in graph[u]:
-                graph[u].add(v)
-                in_degree[v] += 1
-            all_nodes.add(u)
-            all_nodes.add(v)
-        if ordering:
-            all_nodes.add(ordering[-1])
+        for i in range(len(ordering)):
+            orderings_set.add(ordering[i])
+            if i > 0:
+                graph[ordering[i - 1]].append(ordering[i])
+                in_degree[ordering[i]] += 1
 
-    # Initialize queue with nodes having zero in-degree
-    queue = deque([node for node in all_nodes if in_degree[node] == 0])
-
-    # Perform topological sort
+    # Initialize the queue with nodes that have no incoming edges
+    queue = deque([item for item in orderings_set if in_degree[item] == 0])
     result = []
+
+    # Perform a topological sort
     while queue:
-        u = queue.popleft()
-        result.append(u)
-        for v in graph[u]:
-            in_degree[v] -= 1
-            if in_degree[v] == 0:
-                queue.append(v)
+        current = queue.popleft()
+        result.append(current)
+        for neighbor in graph[current]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
 
     return result

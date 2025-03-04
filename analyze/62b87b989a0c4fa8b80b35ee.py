@@ -1,12 +1,13 @@
 def reset(self):
     """
-    हिस्टोग्राम को रीसेट करें।  
+    Reimposta l'istogramma.
 
-    - वर्तमान संदर्भ को एक खाली डिक्शनरी में रीसेट कर दिया गया है।  
-    - बिन्स को *initial_value* या *make_bins()* (प्रारंभिक सेटअप के आधार पर) के साथ पुनः प्रारंभ किया गया है।  
+    Il contesto attuale viene reimpostato a un dizionario vuoto.
+    I bin vengono reinizializzati con il *valore_iniziale*
+    o con *make_bins()* (a seconda dell'inizializzazione).
     """
     self.context = {}
-    if hasattr(self, 'initial_value'):
-        self.bins = self.initial_value
+    if hasattr(self, 'valore_iniziale'):
+        self.bins = {key: self.valore_iniziale for key in self.bins.keys()}
     else:
         self.bins = self.make_bins()

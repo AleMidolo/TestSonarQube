@@ -1,10 +1,13 @@
 def popitem(self):
     """
-    सबसे हाल ही में उपयोग किए गए `(key, value)` जोड़े को हटाएं और वापस करें।
+    Rimuove e restituisce la coppia `(chiave, valore)` meno recentemente utilizzata.
     """
-    if not self:
+    if not self.data:
         raise KeyError("popitem(): dictionary is empty")
-    key = next(reversed(self))
-    value = self[key]
-    del self[key]
-    return key, value
+    
+    # Trova la chiave meno recentemente utilizzata
+    lru_key = next(iter(self.data))
+    
+    # Rimuove la chiave dal dizionario e restituisce la coppia
+    value = self.data.pop(lru_key)
+    return lru_key, value

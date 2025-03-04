@@ -1,23 +1,25 @@
 def validate_fixity(self, fixity, manifest_files):
     """
-    इन्वेंटरी में फिक्सिटी ब्लॉक को सत्यापित करें।
-    फिक्सिटी ब्लॉक की संरचना की जांच करें और सुनिश्चित करें कि केवल वे फाइलें
-    जो मैनिफेस्ट में सूचीबद्ध हैं, वही संदर्भित की गई हैं।
+    Convalida l'attributo fixty block nell'inventario.
+
+    Controlla la struttura del blocco di fissità e assicurati che siano referenziati solo i file elencati nel manifesto.
     """
     if not isinstance(fixity, dict):
-        raise ValueError("फिक्सिटी ब्लॉक एक डिक्शनरी होना चाहिए।")
-    
-    if not isinstance(manifest_files, list):
-        raise ValueError("मैनिफेस्ट फाइल्स एक लिस्ट होनी चाहिए।")
-    
-    # फिक्सिटी ब्लॉक में सभी फाइलें मैनिफेस्ट में होनी चाहिए
-    for file_name in fixity.keys():
-        if file_name not in manifest_files:
-            raise ValueError(f"फाइल '{file_name}' मैनिफेस्ट में सूचीबद्ध नहीं है।")
-    
-    # मैनिफेस्ट में सभी फाइलें फिक्सिटी ब्लॉक में होनी चाहिए
-    for file_name in manifest_files:
-        if file_name not in fixity:
-            raise ValueError(f"फाइल '{file_name}' फिक्सिटी ब्लॉक में सूचीबद्ध नहीं है।")
+        raise ValueError("Fixity must be a dictionary.")
+
+    required_keys = {'algorithm', 'checksums'}
+    if not required_keys.issubset(fixity.keys()):
+        raise ValueError(f"Fixity block must contain the keys: {required_keys}")
+
+    if not isinstance(fixity['checksums'], list):
+        raise ValueError("Checksums must be a list.")
+
+    for checksum in fixity['checksums']:
+        if not isinstance(checksum, dict):
+            raise ValueError("Each checksum must be a dictionary.")
+        if 'file' not in checksum or 'value' not in checksum:
+            raise ValueError("Each checksum must contain 'file' and 'value' keys.")
+        if checksum['file'] not in manifest_files:
+            raise ValueError(f"File {checksum['file']} referenced in fixity is not in the manifest.")
     
     return True

@@ -1,19 +1,23 @@
-import requests
-from lxml import etree
-
 def retrieve_diaspora_host_meta(host):
     """
-    एक रिमोट डायस्पोरा होस्ट-मेटा डॉक्यूमेंट प्राप्त करें।
+    Recupera un documento host-meta remoto di Diaspora.
 
-    :arg host: वह होस्ट जिससे डेटा प्राप्त करना है
-    :returns: ``XRD`` इंस्टेंस
+    :arg host: Host da cui recuperare
+    :returns: Istanza di ``XRD``
     """
-    url = f"https://{host}/.well-known/host-meta"
-    response = requests.get(url)
-    response.raise_for_status()
-    
-    # Parse the XML response
-    xml_content = response.content
-    xrd = etree.fromstring(xml_content)
-    
-    return xrd
+    import requests
+    from lxml import etree
+
+    # Costruire l'URL del documento host-meta
+    host_meta_url = f"https://{host}/host-meta"
+
+    # Effettuare la richiesta GET per recuperare il documento
+    response = requests.get(host_meta_url)
+
+    # Verificare se la richiesta ha avuto successo
+    if response.status_code == 200:
+        # Analizzare il documento XML
+        xrd = etree.fromstring(response.content)
+        return xrd
+    else:
+        response.raise_for_status()

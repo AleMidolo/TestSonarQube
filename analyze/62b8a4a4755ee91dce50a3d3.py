@@ -1,33 +1,25 @@
 def fromutc(self, dt):
     """
-    दिए गए टाइमज़ोन में एक टाइमज़ोन-अवेयर डेटटाइम को लेते हुए,
-    एक नए टाइमज़ोन में टाइमज़ोन-अवेयर डेटटाइम की गणना करता है।
+    Dato un oggetto datetime con consapevolezza del fuso orario (timezone-aware) in un determinato fuso orario, calcola un oggetto datetime con consapevolezza del fuso orario in un nuovo fuso orario.
 
-    चूंकि यह वह समय है जब हमें *पक्का* पता है कि हमारे पास एक 
-    अस्पष्टता रहित डेटटाइम ऑब्जेक्ट है, हम इस अवसर का उपयोग यह 
-    निर्धारित करने के लिए करते हैं कि क्या डेटटाइम अस्पष्ट है और 
-    "फोल्ड" स्थिति में है (उदाहरण के लिए, यदि यह अस्पष्ट डेटटाइम 
-    का पहला घटना है, कालानुक्रमिक रूप से)।
+    Poiché questa è l'unica occasione in cui *sappiamo* di avere un oggetto datetime non ambiguo, cogliamo l'opportunità per determinare se il datetime è ambiguo e si trova in uno stato di "fold" (ad esempio, se è la prima occorrenza, in ordine cronologico, del datetime ambiguo).
 
-    :param dt:
-        एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
+    :param dt:  
+        Un oggetto :class:`datetime.datetime` con consapevolezza del fuso orario (timezone-aware).
     """
     if dt.tzinfo is None:
-        raise ValueError("fromutc() requires a timezone-aware datetime")
+        raise ValueError("dt must be timezone-aware")
+
+    # Convert the datetime to UTC
+    utc_dt = dt.astimezone(self.utc)
+
+    # Check if the datetime is ambiguous
+    if self._is_ambiguous(utc_dt):
+        # Handle the ambiguity (e.g., by checking if it's in the fold)
+        if self._is_in_fold(utc_dt):
+            return utc_dt.replace(fold=1)
+        else:
+            return utc_dt.replace(fold=0)
     
-    # Convert the datetime to the target timezone
-    offset = dt.tzinfo.utcoffset(dt)
-    if offset is None:
-        raise ValueError("utcoffset() returned None")
-    
-    # Calculate the new datetime in the target timezone
-    new_dt = dt + offset
-    
-    # Check if the new datetime is ambiguous
-    if new_dt.tzinfo is not None:
-        is_ambiguous = new_dt.tzinfo._is_ambiguous(new_dt)
-        if is_ambiguous:
-            # Handle the ambiguous case (e.g., by choosing the first occurrence)
-            new_dt = new_dt.tzinfo._resolve_ambiguous_time(new_dt, is_first=True)
-    
-    return new_dt
+    # Return the converted datetime in the new timezone
+    return utc_dt.astimezone(self)

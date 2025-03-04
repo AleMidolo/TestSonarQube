@@ -1,48 +1,56 @@
-from functools import wraps
-from collections import defaultdict, OrderedDict
-
 def lfu_cache(maxsize=128, typed=False):
-    def decorator(func):
-        cache = {}
-        frequency = defaultdict(int)
-        frequency_list = defaultdict(OrderedDict)
-        min_freq = 0
+    """
+    Decorator per racchiudere una funzione con un oggetto callable di memoizzazione
+    che salva fino a `maxsize` risultati basandosi su un algoritmo Least Frequently Used (LFU).
+    """
+    from collections import defaultdict, OrderedDict
+    import functools
 
-        @wraps(func)
+    class LFUCache:
+        def __init__(self, maxsize):
+            self.maxsize = maxsize
+            self.cache = {}
+            self.freq = defaultdict(OrderedDict)
+            self.min_freq = 0
+
+        def get(self, key):
+            if key not in self.cache:
+                return -1
+            value, freq = self.cache[key]
+            del self.freq[freq][key]
+            if not self.freq[freq]:
+                del self.freq[freq]
+                if self.min_freq == freq:
+                    self.min_freq += 1
+            self.freq[freq + 1][key] = value
+            self.cache[key] = (value, freq + 1)
+            return value
+
+        def put(self, key, value):
+            if key in self.cache:
+                self.cache[key] = (value, self.cache[key][1])
+                self.get(key)  # Update frequency
+                return
+            if len(self.cache) >= self.maxsize:
+                evict_key, _ = self.freq[self.min_freq].popitem(last=False)
+                del self.cache[evict_key]
+            self.cache[key] = (value, 1)
+            self.freq[1][key] = value
+            self.min_freq = 1
+
+    def decorator(func):
+        cache = LFUCache(maxsize)
+
+        @functools.wraps(func)
         def wrapper(*args, **kwargs):
             if typed:
-                key = (args, tuple(sorted(kwargs.items())))
+                key = (args, frozenset(kwargs.items()))
             else:
-                key = args + tuple(sorted(kwargs.items()))
-
-            if key in cache:
-                # Increment frequency and update frequency list
-                freq = frequency[key]
-                frequency[key] += 1
-                del frequency_list[freq][key]
-                if not frequency_list[freq]:
-                    del frequency_list[freq]
-                    if freq == min_freq:
-                        min_freq += 1
-                frequency_list[freq + 1][key] = None
-                return cache[key]
-
-            # If cache is full, remove the least frequently used item
-            if len(cache) >= maxsize:
-                # Remove the least frequently used item
-                lfu_key = next(iter(frequency_list[min_freq]))
-                del cache[lfu_key]
-                del frequency[lfu_key]
-                del frequency_list[min_freq][lfu_key]
-                if not frequency_list[min_freq]:
-                    del frequency_list[min_freq]
-
-            # Add new item to cache
-            result = func(*args, **kwargs)
-            cache[key] = result
-            frequency[key] = 1
-            frequency_list[1][key] = None
-            min_freq = 1
+                key = args
+            result = cache.get(key)
+            if result == -1:
+                result = func(*args, **kwargs)
+                cache.put(key, result)
             return result
 
         return wrapper

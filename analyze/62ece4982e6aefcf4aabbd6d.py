@@ -2,12 +2,12 @@ from typing import List
 
 def string_to_int(string: str, alphabet: List[str]) -> int:
     """
-    एक स्ट्रिंग को एक संख्या में बदलने का कार्य करता है, दिए गए वर्णमाला का उपयोग करके।
+    Convertire una stringa in un numero, utilizzando l'alfabeto fornito.  
 
-    इनपुट यह मानता है कि सबसे महत्वपूर्ण अंक (most significant digit) पहले है।
+    Si assume che l'input abbia la cifra più significativa per prima.
     """
     base = len(alphabet)
-    num = 0
+    value = 0
     for char in string:
-        num = num * base + alphabet.index(char)
-    return num
+        value = value * base + alphabet.index(char)
+    return value

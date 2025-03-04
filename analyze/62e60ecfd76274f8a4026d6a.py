@@ -1,18 +1,26 @@
 def protocol_handlers(cls, protocol_version=None):
-    # Define the supported protocol handlers
-    supported_handlers = {
-        (3, 5): "HandlerForV3_5",
-        (4, 0): "HandlerForV4_0",
-        (4, 1): "HandlerForV4_1",
-        (4, 2): "HandlerForV4_2",
+    """
+    Restituisce un dizionario dei gestori del protocollo Bolt disponibili, indicizzati da una tupla che rappresenta la versione. Se viene fornita una versione di protocollo esplicita, il dizionario conterrà zero o un elemento, a seconda che quella versione sia supportata o meno. Se non viene fornita alcuna versione di protocollo, verranno restituite tutte le versioni disponibili.
+
+    :param protocol_version: tupla che identifica una specifica versione del protocollo
+        (ad esempio, (3, 5)) oppure None
+    :return: dizionario che associa tuple di versione alla classe del gestore per tutte
+        le versioni del protocollo rilevanti e supportate
+    :raise TypeError: se la versione del protocollo non è passata come una tupla
+    """
+    if protocol_version is not None and not isinstance(protocol_version, tuple):
+        raise TypeError("La versione del protocollo deve essere passata come una tupla")
+
+    # Simulazione di un dizionario di gestori del protocollo
+    handlers = {
+        (3, 0): "HandlerV3_0",
+        (3, 1): "HandlerV3_1",
+        (3, 2): "HandlerV3_2",
+        (3, 5): "HandlerV3_5",
+        (4, 0): "HandlerV4_0",
     }
 
     if protocol_version is not None:
-        if not isinstance(protocol_version, tuple):
-            raise TypeError("protocol_version must be a tuple")
-        if protocol_version in supported_handlers:
-            return {protocol_version: supported_handlers[protocol_version]}
-        else:
-            return {}
-    else:
-        return supported_handlers
+        return {protocol_version: handlers.get(protocol_version)} if protocol_version in handlers else {}
+
+    return handlers

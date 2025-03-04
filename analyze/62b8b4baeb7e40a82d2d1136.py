@@ -1,41 +1,50 @@
-from zope.interface import Invalid, providedBy
-from zope.interface.verify import verifyObject, verifyClass
-
 def _verify(iface, candidate, tentative=False, vtype=None):
     """
-    Verify that the candidate correctly provides the interface.
+    Verifica che il *candidate* possa fornire correttamente l'*iface*.
 
-    This includes:
-    - Ensuring the candidate claims to provide the interface using `iface.providedBy`
-      (unless tentative is True, in which case this step is skipped).
-    - Ensuring the candidate defines all required methods.
-    - Ensuring the methods have the correct signatures (as far as possible).
-    - Ensuring the candidate defines all required attributes.
+    Questo processo include:
 
-    :return bool: Returns a true value if all checks pass.
-    :raises zope.interface.Invalid: If any of the above conditions are not met.
+    - Assicurarsi che il candidato dichiari di fornire l'interfaccia utilizzando ``iface.providedBy`` (a meno che *tentative* sia `True`, in quel caso questo passaggio viene saltato). Questo significa che la classe del candidato dichiara di `implementare l'interfaccia <zope.interface.implementer>`, oppure che il candidato stesso dichiara di `fornire l'interfaccia <zope.interface.provider>`.
+
+    - Assicurarsi che il candidato definisca tutti i metodi necessari.
+
+    - Assicurarsi che i metodi abbiano la firma corretta (per quanto possibile).
+
+    - Assicurarsi che il candidato definisca tutti gli attributi necessari.
+
+    :return bool: Restituisce un valore vero se tutto ciò che poteva essere verificato è stato superato.
+    :raises zope.interface.Invalid: Se una qualsiasi delle condizioni precedenti non è soddisfatta.
+
+    .. versionchanged:: 5.0  
+        Se più metodi o attributi sono invalidi, tutti questi errori vengono raccolti e riportati. In precedenza, veniva segnalato solo il primo errore. Come caso speciale, se è presente un solo errore, questo viene sollevato singolarmente, come avveniva prima.
     """
+    from zope.interface import providedBy, Invalid
+    from inspect import signature
+
     errors = []
 
-    # Step 1: Verify that the candidate claims to provide the interface
-    if not tentative:
-        if not iface.providedBy(candidate):
-            errors.append(f"{candidate} does not claim to provide {iface}.")
+    if not tentative and not providedBy(candidate).provides(iface):
+        errors.append(f"{candidate} does not provide {iface}")
 
-    # Step 2: Verify that the candidate defines all required methods and attributes
-    try:
-        if vtype == 'class':
-            verifyClass(iface, candidate)
+    required_methods = iface.__required_methods__
+    for method in required_methods:
+        if not hasattr(candidate, method):
+            errors.append(f"{candidate} is missing required method {method}")
         else:
-            verifyObject(iface, candidate)
-    except Invalid as e:
-        errors.append(str(e))
+            method_signature = signature(getattr(candidate, method))
+            iface_signature = signature(getattr(iface, method))
+            if method_signature != iface_signature:
+                errors.append(f"{method} in {candidate} has incorrect signature")
 
-    # Step 3: If there are any errors, raise them
+    required_attributes = iface.__required_attributes__
+    for attr in required_attributes:
+        if not hasattr(candidate, attr):
+            errors.append(f"{candidate} is missing required attribute {attr}")
+
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
         else:
-            raise Invalid("\n".join(errors))
+            raise Invalid(errors)
 
     return True

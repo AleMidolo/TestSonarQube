@@ -1,13 +1,16 @@
 import logging
+import os
 
 def build_app_logger(name='app', logfile='app.log', debug=True):
     """
-    सामान्य उद्देश्य के लिए एप्लिकेशन लॉगर। मुख्य रूप से डिबगिंग के लिए उपयोगी।
+    Logger per applicazioni di uso generale. Utile principalmente per il debugging.
     """
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG if debug else logging.INFO)
 
     # Create a file handler
+    if not os.path.exists(os.path.dirname(logfile)):
+        os.makedirs(os.path.dirname(logfile))
     file_handler = logging.FileHandler(logfile)
     file_handler.setLevel(logging.DEBUG if debug else logging.INFO)
 

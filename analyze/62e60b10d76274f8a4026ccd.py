@@ -1,30 +1,22 @@
 def data(self, *keys):
     """
-    यह मेथड इस रिकॉर्ड की कुंजियों और मानों (keys and values) को एक डिक्शनरी (dictionary) के रूप में लौटाता है। आप वैकल्पिक रूप से केवल कुछ विशेष मानों को इंडेक्स (index) या कुंजी (key) के आधार पर शामिल कर सकते हैं। जो कुंजियाँ प्रदान की गई हैं लेकिन रिकॉर्ड में मौजूद नहीं हैं, उन्हें :const:`None` मान के साथ सम्मिलित किया जाएगा। यदि कोई इंडेक्स सीमा से बाहर है, तो :exc:`IndexError` उत्पन्न होगा।
+    Restituisce le chiavi e i valori di questo record come un dizionario, includendo opzionalmente solo determinati valori in base all'indice o alla chiave. Le chiavi fornite negli elementi che non sono presenti nel record verranno inserite con un valore di :const:`None`; gli indici forniti che sono fuori dai limiti genereranno un'eccezione :exc:`IndexError`.
 
-    पैरामीटर (Parameters): 
-    - keys: उन आइटम्स के इंडेक्स या कुंजियाँ जिन्हें शामिल करना है; यदि कोई कुंजी प्रदान नहीं की गई है, तो सभी मान शामिल किए जाएंगे।  
-
-    वापसी मान (Return): 
-    -मानों का शब्दकोश, फ़ील्ड नाम द्वारा कुंजीबद्ध
-
-    अपवाद (Raises): 
-    - :exc:`IndexError` यदि कोई सीमा से बाहर का इंडेक्स निर्दिष्ट किया गया है।
+    :param keys: indici o chiavi degli elementi da includere; se non ne vengono forniti, verranno inclusi tutti i valori  
+    :return: dizionario dei valori, indicizzati per nome del campo  
+    :raises: :exc:`IndexError` se viene specificato un indice fuori dai limiti  
     """
-    # Assuming self.record is a dictionary-like object that holds the data
-    if not keys:
-        return self.record.copy()
-    
     result = {}
     for key in keys:
         if isinstance(key, int):
-            # Handle index-based access
             if key < 0 or key >= len(self.record):
-                raise IndexError("Index out of range")
-            # Assuming self.record is a list or similar structure for index-based access
-            result[key] = self.record[key]
+                raise IndexError("Index out of bounds")
+            result[self.field_names[key]] = self.record[key]
         else:
-            # Handle key-based access
             result[key] = self.record.get(key, None)
     
+    if not keys:
+        for i, value in enumerate(self.record):
+            result[self.field_names[i]] = value
+            
     return result

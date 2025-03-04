@@ -2,9 +2,6 @@ from datetime import datetime
 
 def format_dt(dt):
     """
-    D* नोड्स जिस प्रकार की datetime अपेक्षा करते हैं, उस प्रारूप में datetime को प्रारूपित करें।
+    Formatta un oggetto datetime nel modo in cui i nodi D* si aspettano.
     """
-    if isinstance(dt, datetime):
-        return dt.strftime('%Y-%m-%dT%H:%M:%S')
-    else:
-        raise ValueError("Input must be a datetime object")
+    return dt.strftime('%Y-%m-%dT%H:%M:%S')

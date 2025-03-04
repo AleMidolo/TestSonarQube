@@ -1,20 +1,28 @@
 def bash_completion():
     """
-    बॉर्गमैटिक कमांड के लिए बाश कम्प्लीशन स्क्रिप्ट लौटाएं।  
-    यह स्क्रिप्ट बॉर्गमैटिक के कमांड-लाइन आर्ग्युमेंट पार्सर्स का निरीक्षण करके उत्पन्न की जाती है।
+    Restituisci uno script bash di completamento per il comando "borgmatic". Genera questo script analizzando i parser degli argomenti della riga di comando di "borgmatic".
     """
     completion_script = """
-_borgmatic_completion() {
-    local cur prev words cword
-    _init_completion || return
+    _borgmatic_completion() {
+        local cur prev words cword
+        _init_completion || return
 
-    if [[ ${cur} == -* ]]; then
-        COMPREPLY=($(compgen -W '--help --version --verbosity --config --list --create --prune --check --extract --info --init --stats --umask --lock-wait --override --json --dry-run --progress --remote-path --remote-ratelimit --remote-buffer --remote-ssh' -- ${cur}))
-    else
-        COMPREPLY=($(compgen -f -- ${cur}))
-    fi
-}
+        case "$prev" in
+            --config)
+                COMPREPLY=( $(compgen -f -- "$cur") )
+                return 0
+                ;;
+            --repository)
+                COMPREPLY=( $(compgen -f -- "$cur") )
+                return 0
+                ;;
+            *)
+                COMPREPLY=( $(compgen -W "init config run" -- "$cur") )
+                return 0
+                ;;
+        esac
+    }
 
-complete -F _borgmatic_completion borgmatic
-"""
+    complete -F _borgmatic_completion borgmatic
+    """
     return completion_script

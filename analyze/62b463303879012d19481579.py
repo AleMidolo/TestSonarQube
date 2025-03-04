@@ -1,24 +1,14 @@
 def _extract_number_and_supplment_from_issue_element(issue):
     """
-    समस्या (issue) की सामग्री से number और suppl के संभावित मानों को निकालें।
+    Estrai i possibili valori di numero e supplemento dai issue.
     """
     number = None
-    suppl = None
+    supplement = None
     
-    # Assuming 'issue' is a string or a dictionary-like object
-    if isinstance(issue, str):
-        # Example logic to extract number and suppl from a string
-        # This is a placeholder and should be replaced with actual logic
-        parts = issue.split()
-        for part in parts:
-            if part.isdigit():
-                number = int(part)
-            elif part.lower().startswith('suppl'):
-                suppl = part
+    if 'number' in issue:
+        number = issue['number']
     
-    elif isinstance(issue, dict):
-        # Example logic to extract number and suppl from a dictionary
-        number = issue.get('number')
-        suppl = issue.get('suppl')
+    if 'supplement' in issue:
+        supplement = issue['supplement']
     
-    return number, suppl
+    return number, supplement

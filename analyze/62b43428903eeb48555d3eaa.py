@@ -1,19 +1,31 @@
 def formatmany(
-        self,
-        sql: AnyStr,
-        many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
-) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
-    formatted_sql = sql
-    formatted_params = []
+                self,
+                sql: AnyStr,
+                many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
+        ) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
+    # Convert the SQL query to use "out" style parameters
+    out_params = []
+    param_count = 0
 
-    for params in many_params:
-        if isinstance(params, dict):
-            # Handle named parameters
-            formatted_params.append(params)
-        elif isinstance(params, (list, tuple)):
-            # Handle ordinal parameters
-            formatted_params.append(list(params))
-        else:
-            raise TypeError("Parameters must be either a dictionary or a sequence.")
+    # Determine the parameter style
+    if isinstance(many_params, dict):
+        for params in many_params:
+            if isinstance(params, dict):
+                out_params.append({k: v for k, v in params.items()})
+                param_count += len(params)
+            elif isinstance(params, (list, tuple)):
+                out_params.append(list(params))
+                param_count += len(params)
+    else:
+        for params in many_params:
+            if isinstance(params, dict):
+                out_params.append({k: v for k, v in params.items()})
+                param_count += len(params)
+            elif isinstance(params, (list, tuple)):
+                out_params.append(list(params))
+                param_count += len(params)
 
-    return formatted_sql, formatted_params
+    # Format the SQL query to replace "in" style with "out" style
+    formatted_sql = sql.replace("IN (", "OUT (").replace("?", "%s")  # Example replacement logic
+
+    return formatted_sql, out_params

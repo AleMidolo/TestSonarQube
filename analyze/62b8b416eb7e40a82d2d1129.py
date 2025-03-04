@@ -1,7 +1,5 @@
-def names(self, all=False):  # pylint:disable=redefined-builtin
-    """
-    इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम लौटाएं।
+def names(self, all=False): # pylint:disable=redefined-builtin
+    """Restituisce i nomi degli attributi definiti dall'interfaccia."""
     if not all:
-        return [name for name in dir(self) if not name.startswith('_')]
-    else:
-        return dir(self)
+        return [attr for attr in dir(self) if not attr.startswith('_')]
+    return dir(self)

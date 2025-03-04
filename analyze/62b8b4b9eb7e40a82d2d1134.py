@@ -1,7 +1,5 @@
-def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
-    """
-    इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम और विवरण लौटाएं।
+def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
+    """Restituisce i nomi e le descrizioni degli attributi definiti dall'interfaccia."""
     if not all:
-        return self._get_attributes()
-    else:
-        return self._get_all_attributes()
+        return {attr: desc for attr, desc in self.interface_attributes.items() if not desc.hidden}
+    return {attr: desc for attr, desc in self.interface_attributes.items()}
