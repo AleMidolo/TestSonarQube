@@ -76,100 +76,74 @@ def isoparse(self, dt_str):
     # Regex patterns for parsing
     date_patterns = [
         r'(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})',  # YYYY-MM-DD
-        r'(?P<year>\d{4})-(?P<week>\d{2})-W(?P<weekday>\d)',  # YYYY-Www-D
-        r'(?P<year>\d{4})-(?P<week>\d{2})',  # YYYY-Www
-        r'(?P<year>\d{4})',  # YYYY
-        r'(?P<year>\d{4})(?P<month>\d{2})',  # YYYYMM
-        r'(?P<year>\d{4})(?P<month>\d{2})(?P<day>\d{2})',  # YYYYMMDD
+        r'(?P<year>\d{4})-(?P<week>\d{2})-?(?P<day>\d)?',  # YYYY-Www or YYYY-Www-D
+        r'(?P<year>\d{4})-(?P<month>\d{2})',                # YYYY-MM
+        r'(?P<year>\d{4})',                                 # YYYY
     ]
 
     time_patterns = [
-        r'(?P<hour>\d{1,2}):(?P<minute>\d{2})(?::(?P<second>\d{2})(\.(?P<subsecond>\d{1,6}))?)?',  # hh:mm:ss.ssssss
-        r'(?P<hour>\d{1,2})(?P<minute>\d{2})(?::(?P<second>\d{2})(\.(?P<subsecond>\d{1,6}))?)?',  # hhmmss.ssssss
-        r'(?P<hour>\d{1,2})(?::(?P<minute>\d{2}))?',  # hh:mm
-        r'(?P<hour>\d{1,2})(?P<minute>\d{2})?',  # hhmm
+        r'(?P<hour>\d{1,2}):(?P<minute>\d{2}):?(?P<second>\d{2})?\.?(?P<microsecond>\d{1,6})?',  # hh:mm:ss.ssssss
+        r'(?P<hour>\d{1,2}):(?P<minute>\d{2})',  # hh:mm
+        r'(?P<hour>\d{1,2})',                     # hh
     ]
 
     tz_patterns = [
         r'Z',  # UTC
-        r'(?P<sign>[+-])(?P<hour>\d{2}):(?P<minute>\d{2})',  # ±HH:MM
-        r'(?P<sign>[+-])(?P<hour>\d{2})(?P<minute>\d{2})',  # ±HHMM
-        r'(?P<sign>[+-])(?P<hour>\d{2})',  # ±HH
+        r'(?P<sign>[+-])(?P<hour>\d{2}):?(?P<minute>\d{2})?',  # ±HH:MM
+        r'(?P<sign>[+-])(?P<hour>\d{2})(?P<minute>\d{2})?',    # ±HHMM
+        r'(?P<sign>[+-])(?P<hour>\d{2})',                        # ±HH
     ]
 
-    # Split date and time
-    if 'T' in dt_str:
-        date_str, time_str = dt_str.split('T', 1)
-    else:
-        date_str, time_str = dt_str, ''
+    # Combine patterns
+    full_pattern = r'^(?P<date>' + '|'.join(date_patterns) + r')' + \
+                   r'(T(?P<time>' + '|'.join(time_patterns) + r'))?' + \
+                   r'(?P<tz>' + '|'.join(tz_patterns) + r')?$'
 
-    # Parse date
-    date_match = None
-    for pattern in date_patterns:
-        date_match = re.fullmatch(pattern, date_str)
-        if date_match:
-            break
+    match = re.match(full_pattern, dt_str)
+    if not match:
+        raise ValueError("Invalid ISO-8601 date string")
 
-    if not date_match:
-        raise ValueError("Invalid date format")
+    # Extract date components
+    date_components = match.groupdict()
+    year = int(date_components['year'])
+    month = int(date_components.get('month', 1))
+    day = int(date_components.get('day', 1))
 
-    year = int(date_match.group('year'))
-    month = int(date_match.group('month') or 1)
-    day = int(date_match.group('day') or 1)
-
-    if date_match.group('week'):
-        week = int(date_match.group('week'))
-        weekday = int(date_match.group('weekday') or 0)
-        # Calculate the date from ISO week date
+    # Handle week-based dates
+    if date_components.get('week'):
+        week = int(date_components['week'])
+        day = int(date_components.get('day', 1)) or 1
+        # Calculate the first day of the year
         first_day_of_year = datetime(year, 1, 1)
-        first_weekday = first_day_of_year.isocalendar()[2]
-        days_to_first_week = (7 - first_weekday) % 7
-        first_week_start = first_day_of_year + timedelta(days=days_to_first_week)
-        date = first_week_start + timedelta(weeks=week - 1, days=weekday)
+        # Calculate the first Monday of the year
+        first_monday = first_day_of_year + timedelta(days=(7 - first_day_of_year.isoweekday()) % 7)
+        # Calculate the date
+        date = first_monday + timedelta(weeks=week - 1, days=day - 1)
     else:
         date = datetime(year, month, day)
 
-    # Parse time
-    time_match = None
-    for pattern in time_patterns:
-        time_match = re.fullmatch(pattern, time_str)
-        if time_match:
-            break
+    # Extract time components
+    if date_components.get('time'):
+        time_components = date_components['time'].split(':')
+        hour = int(time_components[0])
+        minute = int(time_components[1]) if len(time_components) > 1 else 0
+        second = int(time_components[2]) if len(time_components) > 2 else 0
+        microsecond = int(time_components[3]) if len(time_components) > 3 else 0
+        time = date.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
+    else:
+        time = date
 
-    hour = int(time_match.group('hour') or 0)
-    minute = int(time_match.group('minute') or 0)
-    second = int(time_match.group('second') or 0)
-    subsecond = int(time_match.group('subsecond') or 0)
+    # Handle timezone
+    tz_info = None
+    if date_components.get('tz'):
+        tz_str = date_components['tz']
+        if tz_str == 'Z':
+            tz_info = tz.tzutc()
+        else:
+            sign = 1 if tz_str[0] == '+' else -1
+            hour = int(tz_str[1:3])
+            minute = int(tz_str[3:5]) if len(tz_str) > 3 else 0
+            tz_info = tz.tzoffset(None, sign * (hour * 3600 + minute * 60))
 
-    # Handle midnight case
-    if hour == 24:
-        hour = 0
-        date += timedelta(days=1)
-
-    time = timedelta(hours=hour, minutes=minute, seconds=second, microseconds=subsecond * 1000)
-
-    # Combine date and time
-    dt = datetime.combine(date.date(), datetime.min.time()) + time
-
-    # Parse timezone
-    tzinfo = None
-    if time_str:
-        for pattern in tz_patterns:
-            tz_match = re.search(pattern, time_str)
-            if tz_match:
-                sign = tz_match.group('sign')
-                if sign:
-                    offset_hour = int(tz_match.group('hour'))
-                    offset_minute = int(tz_match.group('minute') or 0)
-                    total_offset = offset_hour * 3600 + offset_minute * 60
-                    if sign == '-':
-                        total_offset = -total_offset
-                    tzinfo = tz.tzoffset(None, total_offset)
-                else:
-                    tzinfo = tz.tzutc()
-                break
-
-    if tzinfo:
-        dt = dt.replace(tzinfo=tzinfo)
-
-    return dt
+    # Return the final datetime object
+    return time.replace(tzinfo=tz_info)

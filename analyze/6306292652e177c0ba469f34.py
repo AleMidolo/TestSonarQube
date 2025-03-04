@@ -1,5 +1,5 @@
-import requests
 from typing import Optional
+import requests
 
 def fetch_content_type(url: str) -> Optional[str]:
     """

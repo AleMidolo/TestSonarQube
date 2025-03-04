@@ -19,6 +19,6 @@ def from_ticks(cls, ticks, tz=None):
     nanoseconds = ticks % 1_000_000_000
     hours, remainder = divmod(seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
-
+    
     time_instance = cls(hours, minutes, seconds, nanoseconds, tz)
     return time_instance
