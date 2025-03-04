@@ -15,18 +15,17 @@ def xargs(
 ) -> tuple[int, bytes]:
     
     if not varargs:
-        # No arguments to process
         return 0, b''
-    
-    # Build command arguments in chunks that fit within max length
+        
+    # Split varargs into chunks that fit within max command length
     chunks = []
     current_chunk = []
-    current_length = sum(len(arg) + 1 for arg in cmd)  # +1 for spaces
+    current_length = sum(len(arg) + 1 for arg in cmd)
     
     for arg in varargs:
         arg_length = len(arg) + 1  # +1 for space
         if current_length + arg_length > _max_length:
-            if current_chunk:  # Only append non-empty chunks
+            if current_chunk:
                 chunks.append(current_chunk)
             current_chunk = [arg]
             current_length = sum(len(arg) + 1 for arg in cmd) + arg_length
@@ -37,53 +36,58 @@ def xargs(
     if current_chunk:
         chunks.append(current_chunk)
 
-    # Process chunks with specified concurrency
-    all_output = b''
+    # Run commands in parallel up to target_concurrency
+    processes = []
+    output = b''
     max_retcode = 0
     
     for i in range(0, len(chunks), target_concurrency):
         batch = chunks[i:i + target_concurrency]
-        processes = []
         
         for chunk in batch:
+            cmd_with_args = list(cmd) + chunk
+            
             if color and sys.platform != 'win32' and hasattr(pty, 'openpty'):
-                # Create a pseudo-terminal for colored output
+                # Use PTY for color output
                 master, slave = pty.openpty()
-                process = subprocess.Popen(
-                    (*cmd, *chunk),
+                p = subprocess.Popen(
+                    cmd_with_args,
                     stdout=slave,
                     stderr=slave,
                     **kwargs
                 )
                 os.close(slave)
-                processes.append((process, master))
+                processes.append((p, master))
             else:
-                process = subprocess.Popen(
-                    (*cmd, *chunk),
+                p = subprocess.Popen(
+                    cmd_with_args,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     **kwargs
                 )
-                processes.append((process, None))
-
-        # Wait for all processes in batch and collect output
-        for process, master in processes:
+                processes.append((p, None))
+                
+        # Wait for batch to complete
+        for p, master in processes:
             if master is not None:
-                # Read from pseudo-terminal
-                output = b''
+                # Read from PTY
                 try:
                     while True:
-                        output += os.read(master, 1024)
+                        chunk = os.read(master, 1024)
+                        if not chunk:
+                            break
+                        output += chunk
                 except OSError:
                     pass
                 os.close(master)
             else:
                 # Read from pipes
-                stdout, stderr = process.communicate()
-                output = stdout + stderr
+                stdout, stderr = p.communicate()
+                output += stdout + stderr
                 
-            retcode = process.wait()
+            retcode = p.wait()
             max_retcode = max(max_retcode, retcode)
-            all_output += output
+            
+        processes = []
 
-    return max_retcode, all_output
+    return max_retcode, output

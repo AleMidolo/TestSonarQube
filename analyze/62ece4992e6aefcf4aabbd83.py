@@ -8,29 +8,41 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     if isinstance(commands, str):
         commands = [commands]
         
+    if isinstance(args, str):
+        args = [args]
+        
     for cmd in commands:
         cmd_list = [cmd]
-        if args:
-            if isinstance(args, str):
-                cmd_list.append(args)
-            else:
-                cmd_list.extend(args)
-                
+        cmd_list.extend(args)
+        
+        stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
+        
         if verbose:
-            print(' '.join(cmd_list))
-            
-        stderr = subprocess.DEVNULL if hide_stderr else None
+            print(f"Running command: {' '.join(cmd_list)}")
             
         try:
-            subprocess.check_call(
+            process = subprocess.Popen(
                 cmd_list,
-                cwd=cwd,
+                stdout=subprocess.PIPE,
                 stderr=stderr,
-                env=env
+                cwd=cwd,
+                env=env,
+                universal_newlines=True
             )
-        except subprocess.CalledProcessError as e:
-            print(f"Command failed with return code {e.returncode}")
-            sys.exit(1)
-        except FileNotFoundError:
-            print(f"Command not found: {cmd}")
-            sys.exit(1)
+            
+            stdout, stderr = process.communicate()
+            
+            if process.returncode != 0:
+                if stderr and not hide_stderr:
+                    print(f"Error: {stderr}", file=sys.stderr)
+                return False
+                
+            if stdout and verbose:
+                print(stdout)
+                
+        except Exception as e:
+            if not hide_stderr:
+                print(f"Error executing command: {e}", file=sys.stderr)
+            return False
+            
+    return True

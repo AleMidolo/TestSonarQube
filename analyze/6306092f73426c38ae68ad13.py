@@ -30,7 +30,7 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
                 cmd.extend(['--extra-vars', f'{key}={value}'])
                 
     # Add inventory file from workspace if it exists
-    if hasattr(ir_workspace, 'inventory'):
+    if ir_workspace and hasattr(ir_workspace, 'inventory'):
         cmd.extend(['-i', ir_workspace.inventory])
         
     # Add any additional Ansible arguments

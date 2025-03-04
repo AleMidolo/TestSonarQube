@@ -9,32 +9,33 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     num_objects = 0
     good_objects = 0
     
-    # Recursively walk through all directories
+    # Walk through all files in hierarchy
     for root, dirs, files in self.walk():
-        for file in files:
+        for filename in files:
             num_objects += 1
-            
-            # Get full path
-            filepath = os.path.join(root, file)
+            filepath = os.path.join(root, filename)
             
             try:
+                # Validate file exists
+                if not os.path.exists(filepath):
+                    if show_warnings:
+                        print(f"Warning: File {filepath} does not exist")
+                    continue
+                    
                 # Validate object if requested
                 if validate_objects:
-                    obj = self.get_object(filepath)
-                    if obj is None:
-                        if show_warnings:
-                            print(f"Warning: Could not load object at {filepath}")
-                        continue
+                    with open(filepath, 'rb') as f:
+                        data = f.read()
                         
-                # Check digest if requested        
-                if check_digests:
-                    stored_digest = self.get_digest(filepath)
-                    computed_digest = self.compute_digest(filepath)
-                    
-                    if stored_digest != computed_digest:
-                        if show_warnings:
-                            print(f"Warning: Digest mismatch for {filepath}")
-                        continue
+                    # Check file digest if requested
+                    if check_digests:
+                        stored_digest = self.get_digest(filepath)
+                        computed_digest = hashlib.sha256(data).hexdigest()
+                        
+                        if stored_digest != computed_digest:
+                            if show_warnings:
+                                print(f"Warning: Digest mismatch for {filepath}")
+                            continue
                 
                 good_objects += 1
                 

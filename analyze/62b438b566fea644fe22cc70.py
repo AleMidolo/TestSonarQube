@@ -3,37 +3,37 @@ def bash_completion():
 # Borgmatic bash completion script
 _borgmatic()
 {
-    local cur prev words cword
-    _init_completion || return
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="init create prune check list info mount extract export-tar serve umount config validate"
 
-    # List of all available commands
-    local commands="init create prune check config list info mount umount extract export-tar restore"
-    
-    # Handle command completion
-    if [ $cword -eq 1 ]; then
-        COMPREPLY=( $(compgen -W "$commands" -- "$cur") )
-        return 0
-    fi
-
-    # Handle options based on command
-    case ${words[1]} in
-        create)
-            COMPREPLY=( $(compgen -W "--help --config --verbosity --list --stats --progress --dry-run" -- "$cur") )
+    # Handle options that take arguments
+    case "${prev}" in
+        --config|-c)
+            _filedir
+            return 0
             ;;
-        prune)
-            COMPREPLY=( $(compgen -W "--help --config --verbosity --list --stats --dry-run" -- "$cur") )
+        --repository)
+            _filedir
+            return 0
             ;;
-        check)
-            COMPREPLY=( $(compgen -W "--help --config --verbosity --repository --archives --prefix" -- "$cur") )
-            ;;
-        mount)
-            COMPREPLY=( $(compgen -W "--help --config --verbosity --archive --mount-point --foreground" -- "$cur") )
+        --archive)
+            return 0
             ;;
         *)
-            COMPREPLY=( $(compgen -W "--help --config --verbosity" -- "$cur") )
             ;;
     esac
 
+    # Handle general options
+    if [[ ${cur} == -* ]] ; then
+        COMPREPLY=( $(compgen -W "--help --verbosity --config --repository --archive" -- ${cur}) )
+        return 0
+    fi
+
+    # Complete borgmatic commands
+    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
     return 0
 }
 

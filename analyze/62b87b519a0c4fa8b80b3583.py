@@ -32,5 +32,3 @@ def scale(self, other=None):
             
     # Update the scale
     self._scale = other
-    
-    return self

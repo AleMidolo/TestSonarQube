@@ -8,7 +8,7 @@ def pop_u16(self):
     # Get last 2 bytes
     bytes_data = self.data[-2:]
     
-    # Remove last 2 bytes from self.data
+    # Remove last 2 bytes from data
     self.data = self.data[:-2]
     
     # Convert bytes to big-endian 16-bit unsigned int

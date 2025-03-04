@@ -4,13 +4,13 @@ def extend_cli(self, root_subparsers):
 
     :param subparser: वह सबपार्सर ऑब्जेक्ट जिसे विस्तारित करना है।
     """
-    # Create spec subparser
+    # Add spec subcommand parser
     spec_parser = root_subparsers.add_parser(
         'spec',
         help='Manage project specifications'
     )
-    
-    # Create subparsers for spec command
+
+    # Create subparser for spec commands
     spec_subparsers = spec_parser.add_subparsers(
         title='spec commands',
         dest='spec_command'
@@ -23,8 +23,7 @@ def extend_cli(self, root_subparsers):
     )
     init_parser.add_argument(
         '--template',
-        help='Template to use for spec file',
-        default='default'
+        help='Template file to use for initialization'
     )
 
     # Add validate command  
@@ -40,7 +39,7 @@ def extend_cli(self, root_subparsers):
     # Add update command
     update_parser = spec_subparsers.add_parser(
         'update',
-        help='Update spec file'
+        help='Update existing spec file'
     )
     update_parser.add_argument(
         'spec_file',

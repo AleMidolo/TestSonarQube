@@ -1,7 +1,7 @@
 def parse_arguments(*arguments):
     import argparse
     
-    # Create ArgumentParser instance
+    # Create argument parser instance
     parser = argparse.ArgumentParser(description='Command line argument parser')
     
     # Add arguments to parser

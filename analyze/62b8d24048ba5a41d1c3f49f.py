@@ -14,58 +14,49 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             # Create cache key based on args
-            key = _make_key(args, kwargs, typed)
-            
-            curr_time = timer()
+            key = args
+            if typed:
+                key += tuple(type(arg) for arg in args)
+            if kwargs:
+                key += tuple(sorted(kwargs.items()))
+                
+            # Get current time
+            now = timer()
             
             # Check if result in cache and not expired
             if key in cache:
                 result, timestamp = cache[key]
-                if curr_time - timestamp <= ttl:
+                if now - timestamp <= ttl:
                     # Move to end of LRU
                     lru.move_to_end(key)
                     return result
                 else:
-                    # Remove expired item
+                    # Remove expired entry
                     del cache[key]
                     del lru[key]
-            
-            # Calculate new result
+                    
+            # Call function and cache result
             result = func(*args, **kwargs)
             
-            # Add to cache
-            cache[key] = (result, curr_time)
-            lru[key] = None
-            
-            # Remove oldest if over maxsize
-            while len(cache) > maxsize:
+            # Remove oldest entry if cache full
+            if maxsize and len(cache) >= maxsize:
+                # Remove oldest from LRU and cache
                 oldest = next(iter(lru))
                 del cache[oldest]
                 del lru[oldest]
                 
+            # Add new result to cache with timestamp
+            cache[key] = (result, now)
+            lru[key] = None
+            
             return result
             
-        def _make_key(args, kwds, typed):
-            # Helper to create cache keys
-            key = args
-            if kwds:
-                key += tuple(sorted(kwds.items()))
-            if typed:
-                key += tuple(type(arg) for arg in args)
-                if kwds:
-                    key += tuple(type(val) for val in kwds.values())
-            return hash(key)
+        # Add clear method to wrapper
+        def clear():
+            cache.clear()
+            lru.clear()
             
-        # Add cache info method
-        wrapper.cache_info = lambda: {
-            'maxsize': maxsize,
-            'ttl': ttl,
-            'currsize': len(cache)
-        }
-        
-        # Add cache clear method  
-        wrapper.cache_clear = lambda: cache.clear() or lru.clear()
-        
+        wrapper.clear = clear
         return wrapper
         
     return decorator

@@ -15,41 +15,47 @@ def validate(self, inventory, extract_spec_version=False):
             type_value = inventory['type']
             if isinstance(type_value, str):
                 # Extract version from type value
-                if type_value.startswith('v'):
+                if type_value.startswith('inventory'):
                     try:
-                        version = float(type_value[1:])
+                        version = type_value.split('/')[1]
                         self.spec_version = version
-                    except ValueError:
-                        pass # Use default spec_version if conversion fails
-
-    # Validate required fields based on spec_version
-    required_fields = ['id', 'name']
-    if self.spec_version >= 2.0:
-        required_fields.extend(['description', 'category'])
-
+                    except IndexError:
+                        pass
+                        
+    # Validate required fields
+    required_fields = ['id', 'name', 'items']
     for field in required_fields:
         if field not in inventory:
             raise ValueError(f"Missing required field: {field}")
-        if not inventory[field]:  # Check for empty values
-            raise ValueError(f"Field '{field}' cannot be empty")
-
-    # Validate data types
-    if not isinstance(inventory['id'], (str, int)):
-        raise ValueError("'id' must be string or integer")
+            
+    # Validate id field
+    if not isinstance(inventory['id'], str):
+        raise ValueError("id must be a string")
+        
+    # Validate name field    
     if not isinstance(inventory['name'], str):
-        raise ValueError("'name' must be string")
-
-    if self.spec_version >= 2.0:
-        if not isinstance(inventory['description'], str):
-            raise ValueError("'description' must be string")
-        if not isinstance(inventory['category'], str):
-            raise ValueError("'category' must be string")
-
-    # Optional field validations
-    if 'quantity' in inventory:
-        if not isinstance(inventory['quantity'], (int, float)):
-            raise ValueError("'quantity' must be numeric")
-        if inventory['quantity'] < 0:
-            raise ValueError("'quantity' cannot be negative")
-
+        raise ValueError("name must be a string")
+        
+    # Validate items field
+    if not isinstance(inventory['items'], list):
+        raise ValueError("items must be a list")
+        
+    # Validate each item in items list
+    for item in inventory['items']:
+        if not isinstance(item, dict):
+            raise ValueError("Each item must be a dictionary")
+            
+        # Check required item fields
+        required_item_fields = ['id', 'quantity']
+        for field in required_item_fields:
+            if field not in item:
+                raise ValueError(f"Item missing required field: {field}")
+                
+        # Validate item field types
+        if not isinstance(item['id'], str):
+            raise ValueError("Item id must be a string")
+            
+        if not isinstance(item['quantity'], (int, float)):
+            raise ValueError("Item quantity must be a number")
+            
     return True

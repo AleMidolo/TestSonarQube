@@ -32,17 +32,16 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     if imp_user is not None:
         parameters["imp_user"] = imp_user
 
-    # Create message dict
+    # Create message with BEGIN command and parameters
     message = {
         "type": "BEGIN",
         "parameters": parameters
     }
 
     # Add hooks if provided
-    if dehydration_hooks is not None:
+    if dehydration_hooks:
         message["dehydration_hooks"] = dehydration_hooks
-        
-    if hydration_hooks is not None:
+    if hydration_hooks:
         message["hydration_hooks"] = hydration_hooks
 
     # Add message to output queue

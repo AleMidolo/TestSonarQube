@@ -33,19 +33,21 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     
     for line in tb_list:
         if 'File "' in line:
-            # Handle stack trace lines
-            if stack_level >= max_level:
+            # This is a file reference line
+            stack_level += 1
+            if stack_level > max_level:
                 continue
-            
+                
             # Format the file path
             start = line.find('File "') + 6
             end = line.find('"', start)
             file_path = line[start:end]
             formatted_path = format_path(file_path)
             line = line[:start] + formatted_path + line[end:]
-            stack_level += 1
             
         formatted_lines.append(line)
     
     # Join all lines and remove any extra whitespace
-    return ''.join(formatted_lines).strip()
+    result = ''.join(formatted_lines).strip()
+    
+    return result

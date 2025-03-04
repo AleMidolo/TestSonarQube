@@ -1,19 +1,24 @@
 def process_text_links(text):
     import re
     
-    # Regular expression pattern to find URLs in text
-    url_pattern = r'(https?://[^\s<>"]+|www\.[^\s<>"]+)'
+    # Regular expression to find URLs in text
+    url_pattern = r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
     
-    # Function to replace URLs with HTML links
-    def replace_with_link(match):
-        url = match.group(0)
-        # Add https:// if URL starts with www.
-        if url.startswith('www.'):
-            url = 'https://' + url
-        # Create HTML link with target="_blank" to open in new tab
-        return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
+    # Find all URLs in the text
+    urls = re.findall(url_pattern, text)
     
-    # Replace all URLs in text with HTML links
-    processed_text = re.sub(url_pattern, replace_with_link, text)
+    # Replace each URL with an HTML hyperlink
+    for url in urls:
+        # If URL doesn't start with http/https, add https://
+        if not url.startswith(('http://', 'https://')):
+            link_url = 'https://' + url
+        else:
+            link_url = url
+            
+        # Create HTML hyperlink
+        hyperlink = f'<a href="{link_url}" target="_blank" rel="noopener noreferrer">{url}</a>'
+        
+        # Replace URL with hyperlink in text
+        text = text.replace(url, hyperlink)
     
-    return processed_text
+    return text

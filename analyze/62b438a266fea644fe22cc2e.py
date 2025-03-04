@@ -23,14 +23,14 @@ def parse_arguments(*unparsed_arguments):
     # Parse arguments
     args = parser.parse_args(unparsed_arguments if unparsed_arguments else None)
     
-    # Create return dictionary
+    # Create dictionary to store parsed arguments
     parsed_args = {}
     
-    # Add global arguments
-    parsed_args['global'] = args
-    
-    # Add subparser arguments if a command was specified
-    if hasattr(args, 'command') and args.command:
+    if args.command:
+        # Store subparser arguments
         parsed_args[args.command] = args
+    else:
+        # Store global arguments
+        parsed_args['global'] = args
         
     return parsed_args
