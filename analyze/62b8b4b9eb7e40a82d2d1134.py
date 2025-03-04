@@ -7,4 +7,4 @@ def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
     
     return [(name, attr.getDoc()) 
             for name, attr in self.getDescriptors() 
-            if IElement.providedBy(attr)]
+            if hasattr(attr, 'getDoc')]

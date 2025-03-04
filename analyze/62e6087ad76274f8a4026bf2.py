@@ -20,8 +20,8 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         
     message = {
         "type": "DISCARD",
-        "qid": qid,
-        "n": n
+        "n": n,
+        "qid": qid
     }
     
     response = Response(

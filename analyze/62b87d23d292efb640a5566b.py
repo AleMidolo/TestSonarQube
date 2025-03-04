@@ -28,13 +28,18 @@ def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=Fal
             stdout=stdout,
             stderr=stderr,
             cwd=cwd,
-            env=env,
-            universal_newlines=True
+            env=env
         )
 
-        # Leggi l'output
+        # Ottieni l'output
         out, err = process.communicate()
-        
+
+        # Decodifica l'output
+        if out:
+            out = out.decode('utf-8')
+        if err:
+            err = err.decode('utf-8')
+
         # Stampa l'output se verbose è True
         if verbose:
             if out:
@@ -47,4 +52,4 @@ def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=Fal
     except Exception as e:
         if verbose:
             print(f"Errore nell'esecuzione del comando: {e}", file=sys.stderr)
-        return -1, "", str(e)
+        return -1, None, str(e)

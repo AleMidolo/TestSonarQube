@@ -12,9 +12,9 @@ def validate_version_inventories(self, version_dirs):
     
     # Validate each version has an inventory
     for version in version_dirs:
-        inventory_path = os.path.join(version, "inventory.txt")
+        inventory_path = os.path.join(version, 'inventory.txt')
         if not os.path.exists(inventory_path):
-            raise ValidationError(f"Missing inventory file for version {version}")
+            raise ValueError(f"Missing inventory file for version {version}")
             
         # Read inventory and collect content digests
         with open(inventory_path) as f:
@@ -22,30 +22,19 @@ def validate_version_inventories(self, version_dirs):
             
         for line in inventory:
             if line.strip():
-                try:
-                    filename, digest = line.strip().split()
-                    content_digests.add(digest)
-                except ValueError:
-                    raise ValidationError(f"Invalid inventory line in {version}: {line}")
-                    
-    # Compare with main inventory
-    main_inventory_path = "inventory.txt"
-    if os.path.exists(main_inventory_path):
-        with open(main_inventory_path) as f:
-            main_inventory = f.readlines()
+                # Assume inventory line format: filename digest
+                filename, digest = line.strip().split()
+                content_digests.add(digest)
+                
+        # Validate version number matches directory name
+        try:
+            version_num = int(version)
+            if version_num != version_dirs.index(version) + 1:
+                raise ValueError(f"Version {version} out of sequence")
+        except ValueError:
+            raise ValueError(f"Invalid version directory name: {version}")
             
-        main_digests = set()
-        for line in main_inventory:
-            if line.strip():
-                try:
-                    filename, digest = line.strip().split()
-                    main_digests.add(digest)
-                except ValueError:
-                    raise ValidationError(f"Invalid line in main inventory: {line}")
-                    
-        # Check for digests not in main inventory
-        diff_digests = content_digests - main_digests
-        if diff_digests:
-            self.extra_digests = diff_digests
-            
+    # Store unique content digests for later validation
+    self.content_digests = content_digests
+    
     return True

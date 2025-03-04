@@ -1,48 +1,70 @@
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
-    Analizza la stringa di data/ora in un oggetto :class:`datetime.datetime`.
+    Parse a datetime string into a datetime.datetime object.
     
     Args:
-        timestr: Qualsiasi stringa di data/ora che utilizza i formati supportati.
-        default: L'oggetto datetime predefinito. Se questo è un oggetto datetime e non None,
-                gli elementi specificati in timestr sostituiscono gli elementi nell'oggetto predefinito.
-        ignoretz: Se True, i fusi orari nelle stringhe analizzate vengono ignorati.
-        tzinfos: Dizionario o funzione per mappare nomi di fusi orari a oggetti tzinfo.
-        **kwargs: Argomenti keyword passati a _parse().
+        timestr: Any datetime string using supported formats
+        default: Default datetime object. If this is a datetime object and not None,
+                elements specified in timestr replace elements in the default object
+        ignoretz: If True, time zones in parsed strings are ignored and a naive 
+                 datetime.datetime object is returned
+        tzinfos: Additional timezone names/aliases that may be present in the string
+        **kwargs: Keyword args passed to _parse()
         
     Returns:
-        datetime.datetime o (datetime.datetime, tuple) se fuzzy_with_tokens=True
+        datetime.datetime object, or if fuzzy_with_tokens=True, returns tuple of
+        (datetime.datetime, tuple of fuzzy tokens)
         
     Raises:
-        ParserError: Per formati di stringa non validi o sconosciuti
-        TypeError: Per input non stringa
-        OverflowError: Se la data supera il massimo intero C
+        ParserError: For invalid/unknown string formats, invalid tzinfo, or invalid dates
+        TypeError: For non-string/character stream input
+        OverflowError: If parsed date exceeds system's largest C integer
     """
-    
     if not isinstance(timestr, str):
-        raise TypeError("Parser requires string or character stream, not %s" % 
-                      type(timestr).__name__)
+        raise TypeError("Parser must be given a string or character stream, not %r" % timestr)
         
-    # Rimuovi spazi bianchi iniziali e finali
-    timestr = timestr.strip()
-    
-    res = self._parse(timestr, **kwargs)
+    # Handle empty string case
+    if not timestr:
+        raise ParserError("String is empty")
+        
+    # Parse the string using internal _parse method
+    res, tokens = self._parse(timestr, **kwargs)
     
     if res is None:
         raise ParserError("Unknown string format: %s" % timestr)
         
-    if len(res) == 2:
-        res, tokens = res
-    else:
-        tokens = ()
-        
+    # If default is provided, replace any unspecified items
     if default is not None:
-        res = self._populate_defaut(res, default)
+        repl = {}
+        for attr in ["year", "month", "day", "hour", "minute", "second", "microsecond"]:
+            value = getattr(res, attr)
+            if value is None:
+                repl[attr] = getattr(default, attr)
+        res = res.replace(**repl)
         
+    # Handle timezone info
     if not ignoretz:
-        res = self._add_tzinfo(res, tzinfos)
-        
+        if tzinfos is not None:
+            # Apply custom timezone info
+            if isinstance(tzinfos, dict):
+                if res.tzname in tzinfos:
+                    tzinfo = tzinfos[res.tzname]
+                    if isinstance(tzinfo, int):
+                        tzinfo = tzoffset(res.tzname, tzinfo)
+                    res = res.replace(tzinfo=tzinfo)
+            else:
+                # tzinfos is a function
+                try:
+                    tzinfo = tzinfos(res.tzname, res.tzoffset)
+                    res = res.replace(tzinfo=tzinfo)
+                except Exception:
+                    pass
+    else:
+        # Strip timezone if ignoretz=True
+        res = res.replace(tzinfo=None)
+            
+    # Return results based on fuzzy_with_tokens setting
     if kwargs.get('fuzzy_with_tokens', False):
         return res, tokens
-        
-    return res
+    else:
+        return res

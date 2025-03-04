@@ -6,39 +6,35 @@ def validate(self, path):
     if not self.fs.exists(path):
         raise ValueError(f"Il percorso {path} non esiste")
 
-    # Verifica la presenza del file namaste 
-    namaste_path = self.fs.join_path(path, "0=ocfl_object_1.0")
+    # Verifica la presenza del file namaste 0=ocfl_object
+    namaste_path = self.fs.join_path(path, "0=ocfl_object") 
     if not self.fs.exists(namaste_path):
         raise ValueError(f"File namaste mancante in {path}")
 
-    # Verifica la presenza dell'inventario
+    # Verifica la presenza di inventory.json
     inventory_path = self.fs.join_path(path, "inventory.json")
     if not self.fs.exists(inventory_path):
         raise ValueError(f"File inventory.json mancante in {path}")
 
-    # Carica e valida l'inventario
+    # Carica e valida l'inventory
     with self.fs.open(inventory_path) as f:
         inventory = json.load(f)
 
-    # Verifica i campi obbligatori dell'inventario
+    # Verifica i campi obbligatori dell'inventory
     required_fields = ["id", "type", "digestAlgorithm", "head", "versions"]
     for field in required_fields:
         if field not in inventory:
-            raise ValueError(f"Campo {field} mancante nell'inventario")
+            raise ValueError(f"Campo {field} mancante nell'inventory")
 
-    # Verifica che l'algoritmo di digest sia valido
-    valid_algorithms = ["sha256", "sha512"]
-    if inventory["digestAlgorithm"] not in valid_algorithms:
-        raise ValueError(f"Algoritmo digest non valido: {inventory['digestAlgorithm']}")
+    # Verifica che il tipo sia corretto
+    if inventory["type"] != "https://ocfl.io/1.0/spec/#inventory":
+        raise ValueError("Tipo inventory non valido")
 
-    # Verifica la presenza delle versioni
-    versions_path = self.fs.join_path(path, "v1")
-    if not self.fs.exists(versions_path):
-        raise ValueError("Directory delle versioni mancante")
+    # Verifica la presenza delle directory delle versioni
+    for version in inventory["versions"]:
+        version_path = self.fs.join_path(path, version)
+        if not self.fs.exists(version_path):
+            raise ValueError(f"Directory versione {version} mancante")
 
-    # Verifica che head punti a una versione valida
-    head = inventory["head"]
-    if not self.fs.exists(self.fs.join_path(path, head)):
-        raise ValueError(f"La versione head {head} non esiste")
-
+    # Se arriviamo qui la validazione è passata
     return True

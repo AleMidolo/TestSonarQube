@@ -26,7 +26,7 @@ def get_spec_defaults(self):
         except (IOError, OSError):
             pass
             
-    # Add any other default sources
+    # Add any additional sources of defaults
     if hasattr(self, 'env_defaults'):
         spec_defaults.update(self.env_defaults)
         

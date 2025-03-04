@@ -9,11 +9,11 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     import json
     from urllib.parse import urlparse
 
-    # Verifica che l'handle sia valido
+    # Estrai il dominio dall'handle
     if '@' not in handle:
         raise ValueError("Handle non valido - deve contenere @")
-
-    username, domain = handle.split('@', 1)
+        
+    username, domain = handle.split('@')
     
     # Costruisci l'URL webfinger
     webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
@@ -23,34 +23,28 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         response = requests.get(webfinger_url, timeout=10)
         response.raise_for_status()
         
-        # Analizza la risposta JSON
+        # Analizza il JSON
         webfinger_data = response.json()
         
-        # Estrai le informazioni rilevanti
+        # Verifica che sia un documento webfinger valido
+        if 'subject' not in webfinger_data:
+            raise ValueError("Documento webfinger non valido")
+            
+        # Estrai i link e le proprietà rilevanti
         result = {
-            'handle': handle,
-            'username': username,
-            'domain': domain,
+            'subject': webfinger_data['subject'],
+            'aliases': webfinger_data.get('aliases', []),
             'links': {}
         }
         
-        # Analizza i link nel documento webfinger
-        if 'links' in webfinger_data:
-            for link in webfinger_data['links']:
-                rel = link.get('rel', '')
-                href = link.get('href', '')
-                type_ = link.get('type', '')
-                
-                result['links'][rel] = {
-                    'href': href,
-                    'type': type_
-                }
+        # Analizza i link
+        for link in webfinger_data.get('links', []):
+            if 'rel' in link and 'href' in link:
+                result['links'][link['rel']] = link['href']
                 
         return result
         
     except requests.exceptions.RequestException as e:
-        raise ConnectionError(f"Errore nel recupero del webfinger: {str(e)}")
+        raise ConnectionError(f"Impossibile recuperare il webfinger: {str(e)}")
     except json.JSONDecodeError:
         raise ValueError("Il documento webfinger non è in formato JSON valido")
-    except Exception as e:
-        raise Exception(f"Errore generico: {str(e)}")

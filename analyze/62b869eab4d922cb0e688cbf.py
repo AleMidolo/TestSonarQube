@@ -7,18 +7,19 @@ def generate_default_observer_schema(app):
             if resource.get('metadata', {}).get('name') in app.spec.get('observer_schema', {}):
                 continue
                 
-            # Generate default schema for each resource
+            # Generate default schema for this resource
+            resource_schema = {
+                'apiVersion': resource.get('apiVersion'),
+                'kind': resource.get('kind'),
+                'metadata': {
+                    'name': resource.get('metadata', {}).get('name'),
+                    'namespace': resource.get('metadata', {}).get('namespace')
+                }
+            }
+            
+            # Add schema to default_schema using resource name as key
             resource_name = resource.get('metadata', {}).get('name')
             if resource_name:
-                default_schema[resource_name] = {
-                    'ready': {
-                        'path': 'status.conditions[?(@.type=="Ready")].status',
-                        'value': 'True'
-                    },
-                    'available': {
-                        'path': 'status.conditions[?(@.type=="Available")].status',
-                        'value': 'True'
-                    }
-                }
-    
+                default_schema[resource_name] = resource_schema
+                
     return default_schema

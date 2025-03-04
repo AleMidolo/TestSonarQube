@@ -31,10 +31,8 @@ def scale(self, other=None, recompute=False):
         # Calcola il fattore di scala
         scale_factor = float(other) / current_scale
         
-        # Riscala i contenuti e gli errori
-        self._contents = [x * scale_factor for x in self._contents]
-        if self._errors is not None:
-            self._errors = [x * scale_factor for x in self._errors]
-            
+        # Riscala i contenuti dei bin
+        self._contents = [c * scale_factor for c in self._contents]
+        
         # Aggiorna la scala memorizzata
         self._scale = float(other)

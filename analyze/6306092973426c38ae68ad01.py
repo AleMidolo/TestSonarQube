@@ -11,13 +11,11 @@ def get_deprecated_args(self):
         'style': 'font-style',
         'variant': 'font-variant',
         'stretch': 'font-stretch',
-        'location': 'path',
-        'filename': 'file',
-        'format': 'file-format',
-        'type': 'file-type',
-        'encoding': 'file-encoding',
-        'compress': 'compression',
-        'quality': 'image-quality',
-        'dpi': 'resolution'
+        'bbox': 'bounding-box',
+        'rotation': 'text-rotation',
+        'x': 'position-x',
+        'y': 'position-y',
+        'ha': 'horizontal-alignment',
+        'va': 'vertical-alignment'
     }
     return deprecated_args

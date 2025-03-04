@@ -31,8 +31,9 @@ def protocol_handlers(cls, protocol_version=None):
             raise TypeError("La versione del protocollo deve essere specificata come tupla")
             
         # Se è stata specificata una versione, restituisce solo il gestore per quella versione
-        # se supportata, altrimenti un dizionario vuoto
-        return {protocol_version: handlers[protocol_version]} if protocol_version in handlers else {}
+        if protocol_version in handlers:
+            return {protocol_version: handlers[protocol_version]}
+        return {}
     
     # Se non è stata specificata una versione, restituisce tutti i gestori disponibili
     return handlers
