@@ -40,6 +40,6 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
     import subprocess
     try:
         result = subprocess.run(cmd, check=True, text=True, capture_output=True)
-        return result.stdout
+        return result
     except subprocess.CalledProcessError as e:
         raise Exception(f"Error ejecutando ansible-playbook: {e.stderr}")

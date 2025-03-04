@@ -25,7 +25,7 @@ def unit_of_work(metadata=None, timeout=None):
                     tx.set_timeout(timeout)
                 return f(tx, *args, **kwargs)
                 
-            return wrapped_tx
+            return wrapped_tx(*args, **kwargs)
             
         return wrapper
     return decorator

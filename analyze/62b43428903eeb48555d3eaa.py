@@ -7,12 +7,16 @@ def formatmany(
     # Convert each params set to out style
     out_params = []
     for params in many_params:
-        # Format SQL and convert params for first iteration only
-        if not out_params:
-            sql, _ = self.format(sql, params)
-            
-        # Convert params to out style without reformatting SQL
-        converted_params = self._convert_params(params)
+        # Format single params set
+        _, converted_params = self.format(sql, params)
         out_params.append(converted_params)
-            
-    return sql, out_params
+        
+    # Format SQL once using first params set
+    try:
+        first_params = next(iter(many_params))
+    except StopIteration:
+        first_params = {}
+        
+    formatted_sql, _ = self.format(sql, first_params)
+    
+    return formatted_sql, out_params

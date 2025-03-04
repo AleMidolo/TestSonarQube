@@ -20,26 +20,22 @@ def _extract_number_and_supplment_from_issue_element(issue):
             # Split on supplement indicator
             parts = issue.split(indicator)
             
-            # Get number before supplement
+            # Get number part
             if parts[0].strip():
                 number = parts[0].strip()
-                
-            # Get supplement number if exists
+            
+            # Get supplement part if it exists
             if len(parts) > 1 and parts[1].strip():
                 suppl = parts[1].strip()
-                # Remove any punctuation
+                # Remove any leading/trailing punctuation
                 suppl = suppl.strip('.:() ')
             else:
-                suppl = '1'  # Default supplement number
+                suppl = '1' # Default supplement number
                 
             return number, suppl
     
-    # If no supplement found, treat as regular issue number
-    try:
-        number = issue.strip('.:() ')
-        if number.isdigit():
-            return number, None
-    except:
-        pass
-        
-    return None, None
+    # If no supplement found, treat entire string as issue number
+    # Remove any punctuation/spaces
+    number = issue.strip('.:() ')
+    
+    return number, suppl

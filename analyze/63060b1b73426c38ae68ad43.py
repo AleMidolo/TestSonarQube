@@ -26,19 +26,14 @@ def extend_cli(self, root_subparsers):
         help='Path to specification file'
     )
 
-    # Add generate command  
-    generate_parser = spec_subparsers.add_parser(
-        'generate',
-        help='Generate code from specification'
+    # Add create command  
+    create_parser = spec_subparsers.add_parser(
+        'create',
+        help='Create a new specification file'
     )
-    generate_parser.add_argument(
-        'spec_file',
-        help='Path to specification file'
-    )
-    generate_parser.add_argument(
-        '-o', '--output',
-        help='Output directory for generated code',
-        default='.'
+    create_parser.add_argument(
+        'output',
+        help='Output path for new specification file'
     )
 
     # Add list command
@@ -46,3 +41,6 @@ def extend_cli(self, root_subparsers):
         'list',
         help='List available specifications'
     )
+
+    # Make spec_command required
+    spec_parser.set_defaults(spec_command='list')

@@ -5,17 +5,28 @@ def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
 
     Devuelve los nombres y descripciones de los atributos definidos por la interfaz.
     """
-    attrs = {}
+    result = {}
     for name, attr in self.namesAndDescriptions_impl(all):
-        attrs[name] = attr
-    return attrs
+        if isinstance(attr, str):
+            result[name] = attr
+        elif hasattr(attr, 'getDoc'):
+            result[name] = attr.getDoc()
+        else:
+            result[name] = ''
+    return result
 
-def namesAndDescriptions_impl(self, all=False):
-    """Helper method that implements the actual attribute gathering logic"""
-    for name, attr in self._attrs.items():
-        if all or not self._isReserved(name):
-            yield name, attr.getDoc()
-            
-def _isReserved(self, name):
-    """Check if an attribute name is reserved"""
-    return name.startswith('__') or name.startswith('_v_')
+def namesAndDescriptions_impl(self, all):
+    """Helper implementation method that gets names and descriptions"""
+    attrs = []
+    
+    # Get all attributes if all=True, otherwise just direct attributes
+    if all:
+        for base in self.__bases__:
+            if hasattr(base, 'namesAndDescriptions_impl'):
+                attrs.extend(base.namesAndDescriptions_impl(all))
+    
+    # Add direct interface attributes
+    for name in self._InterfaceClass__attrs:
+        attrs.append((name, self._InterfaceClass__attrs[name]))
+        
+    return attrs

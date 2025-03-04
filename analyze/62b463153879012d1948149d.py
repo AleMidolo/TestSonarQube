@@ -23,7 +23,7 @@ def _explore_folder(folder):
     for filename in os.listdir(folder):
         filepath = os.path.join(folder, filename)
         
-        # Solo procesar archivos, no directorios
+        # Solo procesar archivos, no carpetas
         if os.path.isfile(filepath):
             # Obtener nombre base y extensión
             basename, ext = os.path.splitext(filename)

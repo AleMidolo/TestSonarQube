@@ -19,7 +19,7 @@ def scale(self, other=None):
     
     if hasattr(self, 'errors') and self.errors is not None:
         for error in self.errors:
-            if error[last_coord] is not None:
+            if error is not None and last_coord < len(error):
                 error[last_coord] *= factor
                 
     # Update the scale

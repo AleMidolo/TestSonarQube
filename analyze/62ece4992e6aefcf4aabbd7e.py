@@ -1,19 +1,15 @@
 def _resolve_string(matcher):
-    # Extract name and default value from matcher
+    # Extraer nombre y valor predeterminado del matcher
     parts = matcher.group(1).split(':')
-    name = parts[0]
+    var_name = parts[0]
     default = parts[1] if len(parts) > 1 else None
-
-    # Get value from environment
-    value = os.environ.get(name)
     
-    # Return value if found
-    if value is not None:
-        return value
+    # Obtener valor del entorno
+    value = os.environ.get(var_name)
+    
+    # Si no hay valor y no hay default, error
+    if value is None and default is None:
+        raise ValueError(f"Environment variable '{var_name}' is not defined and no default value was provided")
         
-    # Return default if provided
-    if default is not None:
-        return default
-        
-    # Raise error if no value or default found
-    raise ValueError(f"Environment variable '{name}' not found and no default value provided")
+    # Retornar valor del entorno o default
+    return value if value is not None else default

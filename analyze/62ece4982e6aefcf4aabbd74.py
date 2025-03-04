@@ -20,14 +20,14 @@ def prepare_repository_from_archive(
     if archive_path.endswith(('.tar.gz', '.tgz')):
         with tarfile.open(archive_path, 'r:gz') as tar:
             tar.extractall(temp_dir)
+    elif archive_path.endswith('.tar'):
+        with tarfile.open(archive_path, 'r:') as tar:
+            tar.extractall(temp_dir)
     elif archive_path.endswith('.zip'):
         with zipfile.ZipFile(archive_path, 'r') as zip_ref:
             zip_ref.extractall(temp_dir)
-    elif archive_path.endswith('.tar'):
-        with tarfile.open(archive_path, 'r') as tar:
-            tar.extractall(temp_dir)
-    
-    # Convert temp directory path to file URL format
+            
+    # Convert temp_dir to file URL format
     repo_url = Path(temp_dir).as_uri()
     
     return repo_url

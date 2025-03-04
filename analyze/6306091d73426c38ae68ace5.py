@@ -8,16 +8,15 @@ def _include_groups(self, parser_dict):
     result = {}
     for key, value in parser_dict.items():
         if isinstance(value, dict):
-            if '_include' in value:
-                include_file = value['_include']
+            if '@include' in value:
+                include_file = value['@include']
                 try:
                     with open(include_file, 'r') as f:
-                        included_dict = yaml.safe_load(f)
-                    # Merge included dictionary with original values
-                    included_dict.update({k:v for k,v in value.items() if k != '_include'})
+                        included_dict = json.load(f)
                     result[key] = self._include_groups(included_dict)
-                except (IOError, yaml.YAMLError) as e:
-                    raise ValueError(f"Error including file {include_file}: {str(e)}")
+                except (IOError, json.JSONDecodeError) as e:
+                    print(f"Error including file {include_file}: {str(e)}")
+                    result[key] = value
             else:
                 result[key] = self._include_groups(value)
         else:

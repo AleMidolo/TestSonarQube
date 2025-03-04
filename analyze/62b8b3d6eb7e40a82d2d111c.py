@@ -8,17 +8,16 @@ def _normalizeargs(sequence, output=None):
     """
     if output is None:
         output = []
-    
-    # Handle different types of input sequences
+        
     if not sequence:
         return output
         
-    # Handle single items
+    # Handle single item
     if not hasattr(sequence, '__iter__') or isinstance(sequence, str):
         output.append(sequence)
         return output
         
-    # Recursively process sequences
+    # Recursively process sequence
     for item in sequence:
         if isinstance(item, (list, tuple)):
             _normalizeargs(item, output)

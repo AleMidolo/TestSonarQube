@@ -3,16 +3,16 @@ def lru_cache(maxsize=128, typed=False):
         from functools import wraps
         from collections import OrderedDict
         
-        # Cache que almacena los resultados
+        # Cache para almacenar resultados
         cache = OrderedDict()
         
         @wraps(func)
         def wrapper(*args, **kwargs):
             # Crear clave de cache
-            key = str(args) + str(kwargs)
             if typed:
-                key += str([type(arg) for arg in args])
-                key += str([type(val) for val in kwargs.values()])
+                key = (args, tuple(sorted(kwargs.items())), tuple(type(arg) for arg in args))
+            else:
+                key = (args, tuple(sorted(kwargs.items())))
                 
             # Verificar si el resultado está en cache
             if key in cache:
@@ -32,13 +32,17 @@ def lru_cache(maxsize=128, typed=False):
                 
             return result
             
-        # Agregar métodos para acceder a la cache
-        wrapper.cache_info = lambda: cache
-        wrapper.cache_clear = lambda: cache.clear()
+        # Agregar métodos de utilidad
+        wrapper.cache_info = lambda: {
+            'hits': sum(1 for _ in cache),
+            'maxsize': maxsize,
+            'currsize': len(cache)
+        }
+        wrapper.cache_clear = cache.clear
         
         return wrapper
         
-    # Si se usa como @lru_cache sin paréntesis
+    # Si se usa directamente como @lru_cache
     if callable(maxsize):
         func, maxsize = maxsize, 128
         return decorator(func)

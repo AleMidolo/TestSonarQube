@@ -1,39 +1,49 @@
 def generate_default_observer_schema(app):
-    """
-    Generar el esquema de observador predeterminado para cada recurso de Kubernetes presente en  
-    ``spec.manifest`` para el cual no se haya especificado un esquema de observador personalizado.
-
-    Argumentos:
-    app(krake.data.kubernetes.Application): La aplicación para la cual se generará un esquema de observador predeterminado.
-    """
     default_schema = {}
     
-    # Si no hay manifiesto, retornar esquema vacío
-    if not app.spec.manifest:
+    # Check if app has manifest spec
+    if not hasattr(app, 'spec') or not hasattr(app.spec, 'manifest'):
         return default_schema
-        
-    # Iterar sobre cada recurso en el manifiesto
+
+    # Iterate through each resource in manifest
     for resource in app.spec.manifest:
-        # Obtener el tipo y nombre del recurso
-        kind = resource.get('kind')
-        name = resource.get('metadata', {}).get('name')
-        
-        # Si el recurso ya tiene un esquema personalizado, omitirlo
-        if hasattr(app.spec, 'observer') and app.spec.observer.get(f"{kind.lower()}/{name}"):
+        # Skip if resource already has custom observer schema
+        if resource.get('observer_schema'):
             continue
             
-        # Generar esquema predeterminado para este recurso
-        resource_schema = {
-            'conditions': [{
-                'type': 'Available',
-                'status': 'True'
-            }],
-            'state': {
-                'phase': 'Running'
+        # Get resource kind and API version
+        kind = resource.get('kind', '')
+        api_version = resource.get('apiVersion', '')
+        
+        # Generate default schema based on resource kind
+        if kind.lower() in ['deployment', 'statefulset', 'daemonset']:
+            default_schema[f"{api_version}/{kind}"] = {
+                'ready': {
+                    'path': '.status.readyReplicas',
+                    'type': 'integer'
+                },
+                'total': {
+                    'path': '.status.replicas', 
+                    'type': 'integer'
+                }
             }
-        }
-        
-        # Agregar al esquema general usando la convención kind/name
-        default_schema[f"{kind.lower()}/{name}"] = resource_schema
-        
+        elif kind.lower() == 'pod':
+            default_schema[f"{api_version}/{kind}"] = {
+                'ready': {
+                    'path': '.status.containerStatuses[*].ready',
+                    'type': 'boolean'
+                },
+                'phase': {
+                    'path': '.status.phase',
+                    'type': 'string'
+                }
+            }
+        elif kind.lower() == 'service':
+            default_schema[f"{api_version}/{kind}"] = {
+                'ready': {
+                    'path': '.spec.clusterIP',
+                    'type': 'string'
+                }
+            }
+            
     return default_schema

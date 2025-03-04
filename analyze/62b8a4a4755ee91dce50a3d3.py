@@ -21,21 +21,20 @@ def fromutc(self, dt):
     local_offset = self.utcoffset(dt)
     
     # Calcular el nuevo datetime
-    local_dt = dt.fromtimestamp(utc_ts + local_offset.total_seconds())
+    local_dt = dt + (local_offset - utc_offset)
     
     # Verificar si el datetime es ambiguo (está en un "pliegue")
     fold = 0
-    transition_times = self._get_transition_times()
-    if transition_times:
-        # Buscar la transición más cercana
-        for trans_time, is_dst in transition_times:
-            if abs(trans_time - utc_ts) < 3600:  # dentro de 1 hora
-                prev_offset = self.utcoffset(dt.replace(fold=0))
-                next_offset = self.utcoffset(dt.replace(fold=1))
-                
-                if prev_offset != next_offset:
-                    # Es un datetime ambiguo
-                    fold = 1 if local_dt.timestamp() >= trans_time else 0
-                break
-    
-    return local_dt.replace(tzinfo=self, fold=fold)
+    if self._is_ambiguous(local_dt):
+        # Verificar si es la primera ocurrencia
+        earlier_offset = self.utcoffset(local_dt.replace(fold=0))
+        later_offset = self.utcoffset(local_dt.replace(fold=1))
+        
+        if earlier_offset > later_offset:
+            # Si estamos en la transición DST->STD
+            fold = utc_ts >= (local_dt.replace(fold=0) - earlier_offset).timestamp()
+        else:
+            # Si estamos en la transición STD->DST
+            fold = utc_ts >= (local_dt.replace(fold=1) - later_offset).timestamp()
+            
+    return local_dt.replace(fold=fold)

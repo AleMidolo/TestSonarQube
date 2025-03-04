@@ -18,20 +18,19 @@ def find_path_type(path):
     if not namaste_files:
         return "Error: No Namaste files found"
 
-    # Read first Namaste file content
+    # Read content of first Namaste file
     try:
         with open(namaste_files[0], 'r') as f:
             content = f.read().strip()
             
         # Check content for OCFL root
-        if content.startswith("ocfl_"):
-            return "root"
-            
+        if content.startswith('ocfl_'):
+            return 'root'
         # Check content for OCFL object
-        elif content.startswith("ocfl_object_"):
-            return "object"
+        elif content.startswith('ocfl'):
+            return 'object'
+        else:
+            return f"Error: Unrecognized Namaste content: {content}"
             
     except Exception as e:
         return f"Error reading Namaste file: {str(e)}"
-        
-    return "Error: Unknown Namaste file content"

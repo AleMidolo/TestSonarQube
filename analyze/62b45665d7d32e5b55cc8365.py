@@ -7,14 +7,14 @@ def parse_arguments(*unparsed_arguments):
     # Add global arguments that apply to all subcommands
     parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose output')
     
-    # Create subparsers object to handle subcommands
-    subparsers = parser.add_subparsers(dest='command')
+    # Create subparsers
+    subparsers = parser.add_subparsers(dest='command', help='Available commands')
     
     # Initialize dictionary to store parsed arguments
     parsed_args = {}
     
-    # If no arguments provided, show help and exit
-    if not unparsed_arguments:
+    # If no arguments provided, show help
+    if len(unparsed_arguments) == 0:
         parser.print_help()
         return {}
         

@@ -6,17 +6,17 @@ def fetch_content_type(url: str) -> Optional[str]:
     from typing import Optional
     
     try:
-        # Realizar solicitud HEAD para obtener solo los encabezados
+        # Realizar solicitud HEAD a la URL
         response = requests.head(url, allow_redirects=True)
         
-        # Obtener el content-type del encabezado
+        # Obtener el content-type del header
         content_type = response.headers.get('content-type')
         
-        # Si existe content-type, retornarlo. Si no, retornar None
+        # Retornar el content-type si existe
         if content_type:
             return content_type.split(';')[0].strip()
         return None
         
     except requests.RequestException:
-        # En caso de error en la solicitud, retornar None
+        # En caso de error retornar None
         return None

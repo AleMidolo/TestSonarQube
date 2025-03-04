@@ -3,7 +3,7 @@ def make_parsers():
     Crea un analizador de nivel superior y sus subanalizadores, y devuélvalos como una tupla.
     """
     import argparse
-
+    
     # Crear el parser principal
     parser = argparse.ArgumentParser(description='Sistema de gestión de tareas')
     subparsers = parser.add_subparsers(dest='command', help='Comandos disponibles')
@@ -22,10 +22,10 @@ def make_parsers():
     
     # Subparser para completar tarea
     complete_parser = subparsers.add_parser('complete', help='Marcar tarea como completada')
-    complete_parser.add_argument('task_id', type=int, help='ID de la tarea')
+    complete_parser.add_argument('task_id', type=int, help='ID de la tarea a completar')
 
     # Subparser para eliminar tarea
     delete_parser = subparsers.add_parser('delete', help='Eliminar una tarea')
-    delete_parser.add_argument('task_id', type=int, help='ID de la tarea')
+    delete_parser.add_argument('task_id', type=int, help='ID de la tarea a eliminar')
 
     return parser, subparsers
