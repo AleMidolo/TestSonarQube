@@ -11,11 +11,12 @@ def validate(self, path):
     # Questo è un esempio di come potrebbe essere implementata la validazione
     # In un caso reale, dovresti implementare la logica specifica per OCFL
 
-    # Controlla se il percorso è una directory
-    if os.path.isdir(path):
-        # Esegui la validazione per le directory OCFL
-        # (aggiungi qui la logica di validazione)
-        return True  # Restituisci True se la validazione ha successo
+    is_valid = True  # Supponiamo che la validazione sia andata a buon fine
+
+    # Esegui controlli specifici per OCFL
+    # ...
+
+    if is_valid:
+        print("L'oggetto OCFL è valido.")
     else:
-        # Se non è una directory, restituisci False
-        return False
+        print("L'oggetto OCFL non è valido.")

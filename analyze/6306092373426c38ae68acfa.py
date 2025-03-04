@@ -3,6 +3,7 @@ def get_spec_defaults(self):
     Risolvere i valori degli argomenti dal file di specifica e da altre fonti.
     """
     defaults = {}
+    
     # Supponiamo di avere un file di specifica in formato JSON
     try:
         with open('spec_file.json', 'r') as file:

@@ -16,14 +16,15 @@ def _update_context(self, context):
     in un'altra struttura (come il testo) nel flusso di lavoro.
     L'oggetto grafo non viene realmente distrutto in questo processo.
     """
-    # Assuming self.graph contains the graph properties
-    errors = {}
-    for i, error in enumerate(self.graph.get('errors', [])):
-        if i < 3:  # Only consider the first three errors
-            error_name = ['x', 'y', 'z'][i]  # Map index to error name
-            errors[f"{error_name}_low"] = {"index": error['index']}
-    
-    # Update context.error with the new errors
+    # Aggiornamento del contesto con gli errori
     if 'error' not in context:
         context['error'] = {}
-    context['error'].update(errors)
+
+    # Supponiamo che self.errors contenga gli errori del grafo
+    for i, error in enumerate(self.errors):
+        error_name = ['x', 'y', 'z'][i] if i < 3 else f'error_{i}'
+        context['error'][f'{error_name}_low'] = {'index': error.index}
+
+    # Non rimuoviamo i valori esistenti in context.value
+    # Logica per mantenere i valori esistenti in context.value
+    # (da implementare in base alla struttura di context.value)
