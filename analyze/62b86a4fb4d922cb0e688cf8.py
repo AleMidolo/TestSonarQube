@@ -32,7 +32,7 @@ def validate_value(value):
 
     # 尝试匹配所有模式
     valid = False
-    for pattern_name, pattern in patterns.items():
+    for pattern in patterns.values():
         if re.match(pattern, value):
             valid = True
             break

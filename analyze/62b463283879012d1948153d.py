@@ -6,14 +6,9 @@ def match_pubdate(node, pubdate_xpaths):
     """
     for xpath in pubdate_xpaths:
         try:
-            # Try to find matching element using xpath
-            match = node.xpath(xpath)
-            if match:
-                # Return first match if found
-                return match[0]
+            matches = node.xpath(xpath)
+            if matches:
+                return matches[0]
         except:
-            # Skip any xpath that causes errors
             continue
-    
-    # Return None if no matches found
     return None

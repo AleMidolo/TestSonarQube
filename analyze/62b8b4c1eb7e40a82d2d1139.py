@@ -19,24 +19,18 @@ def verifyClass(iface, candidate, tentative=False):
         if missing:
             return False
             
-        # 验证方法签名是否匹配
-        for name in required:
-            if not hasattr(iface, name):
-                continue
-                
-            iface_attr = getattr(iface, name)
-            cand_attr = getattr(candidate, name)
+        # 进一步验证属性类型是否匹配
+        for attr in required:
+            iface_attr = getattr(iface, attr)
+            cand_attr = getattr(candidate, attr)
             
-            # 检查是否为可调用对象(方法)
+            # 检查属性是否为可调用对象(方法)
             if callable(iface_attr):
                 if not callable(cand_attr):
                     return False
                     
-                # 检查方法参数是否匹配
-                try:
-                    if iface_attr.__code__.co_argcount != cand_attr.__code__.co_argcount:
-                        return False
-                except AttributeError:
-                    pass
-                    
+            # 检查属性类型是否匹配
+            elif type(iface_attr) != type(cand_attr):
+                return False
+                
         return True

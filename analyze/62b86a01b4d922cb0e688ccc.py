@@ -1,10 +1,11 @@
 def generate_default_observer_schema_dict(manifest_dict, first_level=False):
     result = {}
     
-    # Handle first level special fields that should be copied from manifest
+    # Handle first level special fields
     if first_level:
-        identity_fields = ['apiVersion', 'kind', 'metadata']
-        for field in identity_fields:
+        # Copy identifier fields from manifest
+        identifier_fields = ['apiVersion', 'kind', 'metadata']
+        for field in identifier_fields:
             if field in manifest_dict:
                 result[field] = manifest_dict[field]
     
@@ -14,7 +15,6 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
         if first_level and key in result:
             continue
             
-        # Handle different value types
         if isinstance(value, dict):
             # Recursively process nested dictionaries
             result[key] = generate_default_observer_schema_dict(value)
@@ -22,7 +22,7 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
             # Process lists using a helper function
             result[key] = generate_default_observer_schema_list(value)
         else:
-            # For all other types, set value to None
+            # Set non-dict and non-list values to None
             result[key] = None
             
     return result

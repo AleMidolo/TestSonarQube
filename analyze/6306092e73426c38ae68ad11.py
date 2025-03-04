@@ -19,18 +19,12 @@ def merge_extra_vars(vars_dict, extra_vars=None):
         key = key.strip()
         value = value.strip()
         
-        # Try to convert string value to Python type
+        # Try to convert string value to appropriate type
         try:
-            # Handle boolean values
-            if value.lower() == 'true':
-                value = True
-            elif value.lower() == 'false':
-                value = False
-            # Handle numeric values    
-            elif value.isdigit():
-                value = int(value)
-            elif value.replace('.','',1).isdigit():
-                value = float(value)
+            # Try to evaluate as literal Python expression
+            parsed_value = eval(value)
+            if isinstance(parsed_value, (int, float, bool, list, dict)):
+                value = parsed_value
         except:
             pass
             

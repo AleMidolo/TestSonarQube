@@ -9,12 +9,10 @@ def popitem(self):
     node = self.head.next
     
     # 从双向链表中删除该节点
-    node.prev.next = node.next 
-    node.next.prev = node.prev
+    self._remove_node(node)
     
     # 从哈希表中删除该键值对
-    key = node.key
-    del self.cache[key]
+    del self.cache[node.key]
     
     # 返回键值对
-    return (key, node.value)
+    return node.key, node.value

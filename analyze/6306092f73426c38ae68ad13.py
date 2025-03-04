@@ -21,27 +21,27 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
         elif isinstance(verbose, int):
             cmd.append('-' + 'v' * verbose)
             
-    # 添加inventory文件
-    if ir_workspace and hasattr(ir_workspace, 'inventory'):
-        cmd.extend(['-i', ir_workspace.inventory])
-        
     # 添加额外变量
     if extra_vars:
         for key, value in extra_vars.items():
-            cmd.extend(['--extra-vars', f'{key}={value}'])
+            cmd.extend(['-e', f'{key}={value}'])
             
+    # 添加inventory文件
+    if hasattr(ir_workspace, 'inventory'):
+        cmd.extend(['-i', ir_workspace.inventory])
+        
     # 添加其他ansible参数
     if ansible_args:
         for key, value in ansible_args.items():
             if value is True:
                 cmd.append(f'--{key}')
             elif value is not None:
-                cmd.extend([f'--{key}', str(value)])
+                cmd.append(f'--{key}={value}')
                 
     # 设置环境变量
     env = os.environ.copy()
-    if ir_plugin and hasattr(ir_plugin, 'vars'):
-        env.update(ir_plugin.vars)
+    if hasattr(ir_plugin, 'ansible_config'):
+        env['ANSIBLE_CONFIG'] = ir_plugin.ansible_config
         
     # 执行命令
     try:

@@ -19,27 +19,30 @@ def deep_merge_nodes(nodes):
             hasattr(value_node, 'value') and 
             hasattr(existing_value_node, 'value')):
             
-            # Create dict of existing key-value pairs
+            # Convert inner nodes to dict for merging
             existing_dict = {k.value: v for k,v in existing_value_node.value}
+            new_dict = {k.value: v for k,v in value_node.value}
             
-            # Update with new key-value pairs
-            for k, v in value_node.value:
-                existing_dict[k.value] = v
-                
+            # Update existing dict with new values
+            existing_dict.update(new_dict)
+            
             # Convert back to list of tuples
-            merged_value = [(k, existing_dict[k.value]) 
-                          for k in sorted(existing_dict.keys(), key=str)]
+            merged_value = [
+                (ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) 
+                for k,v in existing_dict.items()
+            ]
             
             # Create new mapping node with merged values
             merged_node = type(value_node)(
                 tag=value_node.tag,
                 value=merged_value
             )
+            
             merged[key] = (key_node, merged_node)
             
         # If not both mapping nodes, take the latest value
         else:
             merged[key] = (key_node, value_node)
-    
-    # Convert merged dict back to list of tuples
+            
+    # Return list of merged nodes
     return list(merged.values())

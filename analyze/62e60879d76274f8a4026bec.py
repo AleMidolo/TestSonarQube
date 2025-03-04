@@ -20,11 +20,11 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None,
     if timeout is not None:
         parameters["timeout"] = timeout
         
-    # Add database name if provided (Bolt 4.0+)
+    # Add database name if provided
     if db is not None:
         parameters["db"] = db
         
-    # Add impersonated user if provided (Bolt 4.4+)
+    # Add impersonated user if provided
     if imp_user is not None:
         parameters["imp_user"] = imp_user
 
@@ -42,15 +42,10 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None,
     if hydration_hooks:
         self._hydration_hooks = hydration_hooks
 
-    # Begin transaction and create Response object
-    try:
-        self._connection.begin(tx_config)
-        response = Response(self._connection, **handlers)
-        return response
-    except Exception as e:
-        # Clean up hooks if set
-        if dehydration_hooks:
-            self._dehydration_hooks = None
-        if hydration_hooks:
-            self._hydration_hooks = None
-        raise e
+    # Create and return Response object with transaction configuration and handlers
+    response = Response(tx_config, **handlers)
+    
+    # Initialize transaction state
+    response._tx_state = "ACTIVE"
+    
+    return response

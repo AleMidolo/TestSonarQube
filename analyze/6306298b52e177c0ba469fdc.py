@@ -9,13 +9,6 @@ def xml_children_as_dict(node):
         # 跳过注释等非元素节点
         if not hasattr(child, 'tag'):
             continue
-        # 使用标签名作为键
-        tag = child.tag
-        # 如果已存在同名标签,转换为列表
-        if tag in result:
-            if not isinstance(result[tag], list):
-                result[tag] = [result[tag]]
-            result[tag].append(child)
-        else:
-            result[tag] = child
+        # 使用标签名作为键,节点对象作为值
+        result[child.tag] = child
     return result

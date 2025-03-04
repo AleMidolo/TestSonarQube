@@ -19,44 +19,34 @@ def validate(self, inventory, extract_spec_version=False):
         except (AttributeError, IndexError):
             pass # Fall back to self.spec_version
 
-    # Basic validation
-    required_fields = ['type', 'items']
+    # Validate required fields
+    required_fields = ['id', 'type', 'items']
     for field in required_fields:
         if field not in inventory:
             raise ValueError(f"Missing required field: {field}")
 
-    # Validate type field format
+    # Validate type format
     type_str = inventory['type']
-    if not isinstance(type_str, str) or not type_str.startswith('inventory:'):
-        raise ValueError("Invalid type format. Must start with 'inventory:'")
+    if not type_str.startswith('inventory:'):
+        raise ValueError("Type must start with 'inventory:'")
 
-    # Validate items
-    items = inventory['items']
-    if not isinstance(items, list):
+    # Validate items is a list
+    if not isinstance(inventory['items'], list):
         raise ValueError("Items must be a list")
 
     # Validate each item
-    for item in items:
+    for item in inventory['items']:
         if not isinstance(item, dict):
             raise ValueError("Each item must be a dictionary")
         
-        # Check required item fields based on spec version
-        item_required_fields = ['id', 'name', 'quantity']
-        if self.spec_version >= '2.0':
-            item_required_fields.extend(['category', 'description'])
-            
-        for field in item_required_fields:
+        # Validate required item fields
+        required_item_fields = ['id', 'name', 'quantity']
+        for field in required_item_fields:
             if field not in item:
                 raise ValueError(f"Item missing required field: {field}")
 
-        # Validate field types
-        if not isinstance(item['id'], (str, int)):
-            raise ValueError("Item id must be string or integer")
-        if not isinstance(item['name'], str):
-            raise ValueError("Item name must be string")
-        if not isinstance(item['quantity'], (int, float)):
-            raise ValueError("Item quantity must be numeric")
-        if item['quantity'] < 0:
-            raise ValueError("Item quantity cannot be negative")
+        # Validate quantity is a positive number
+        if not isinstance(item['quantity'], (int, float)) or item['quantity'] < 0:
+            raise ValueError("Item quantity must be a positive number")
 
     return True

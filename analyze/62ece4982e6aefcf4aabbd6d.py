@@ -15,7 +15,7 @@ def string_to_int(string: str, alphabet: List[str]) -> int:
     
     # 从左到右遍历字符串的每个字符
     for char in string:
-        # 将结果乘以进制数,并加上当前字符对应的数值
+        # 将结果乘以进制数(base)并加上当前字符对应的数值
         result = result * base + char_to_num[char]
         
     return result

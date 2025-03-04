@@ -23,7 +23,7 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
             result.append(alphabet[number % base])
             number //= base
         
-        # 反转列表以得到正确的顺序（最高有效位优先）
+        # 反转列表以保持最高有效位优先
         result.reverse()
     
     # 如果指定了padding，进行填充

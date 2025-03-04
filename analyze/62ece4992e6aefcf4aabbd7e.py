@@ -17,7 +17,7 @@ def _resolve_string(matcher):
         # 如果提供了默认值，则使用默认值
         if default is not None:
             return default
-        # 如果没有默认值，则抛出错误
+        # 如果没有提供默认值，则抛出错误
         else:
             raise KeyError(f"Environment variable '{name}' not found and no default value provided")
             

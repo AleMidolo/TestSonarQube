@@ -13,28 +13,34 @@ def normalized(self):
     # 创建一个新的relativedelta对象来存储结果
     result = relativedelta()
     
-    # 处理年和月,直接复制整数部分
-    result.years = int(self.years)
-    result.months = int(self.months)
+    # 处理年和月,直接复制
+    result.years = self.years
+    result.months = self.months
     
-    # 计算总秒数
-    total_seconds = (
-        self.days * 86400 +  # 天转秒
-        self.hours * 3600 +  # 小时转秒
-        self.minutes * 60 +  # 分钟转秒
-        self.seconds         # 秒
-    )
+    # 将天数转换为小时
+    total_hours = self.hours + (self.days * 24)
     
-    # 从总秒数中提取各个时间单位
-    days, remainder = divmod(total_seconds, 86400)
-    hours, remainder = divmod(remainder, 3600)
-    minutes, seconds = divmod(remainder, 60)
+    # 将小时转换为分钟
+    total_minutes = self.minutes + (total_hours * 60)
     
-    # 设置标准化后的值
-    result.days = int(days)
-    result.hours = int(hours)
-    result.minutes = int(minutes)
-    result.seconds = int(seconds)
+    # 将分钟转换为秒
+    total_seconds = self.seconds + (total_minutes * 60)
+    
+    # 将秒转换为微秒
+    total_microseconds = self.microseconds + (total_seconds * 1000000)
+    
+    # 反向计算,将微秒规范化为更大的单位
+    result.microseconds = total_microseconds % 1000000
+    remaining_seconds = total_microseconds // 1000000
+    
+    result.seconds = remaining_seconds % 60
+    remaining_minutes = remaining_seconds // 60
+    
+    result.minutes = remaining_minutes % 60
+    remaining_hours = remaining_minutes // 60
+    
+    result.hours = remaining_hours % 24
+    result.days = remaining_hours // 24
     
     # 复制其他属性
     result.year = self.year

@@ -5,18 +5,18 @@ def split(s, platform='this'):
     # Determine platform if auto-detect
     if platform == 'this':
         platform = 1 if sys.platform != 'win32' else 0
-        
+
     if platform == 1:  # POSIX style
         # Match either:
         # - Quoted string with escaped quotes allowed
         # - Unquoted string with no whitespace
         pattern = r'''(?:[^\s'"]*(?:'[^']*'|"[^"]*")[^\s'"]*)+|[^\s'"]+'''
         
-    else:  # Windows/CMD style 
+    else:  # Windows/CMD style
         # Match either:
         # - Quoted string with escaped quotes allowed
         # - Unquoted string with no whitespace
-        pattern = r'''(?:"[^"]*"|'[^']*'|\S+)'''
+        pattern = r'''(?:"[^"]*"|'[^']*'|\S)+'''
 
     # Find all matches
     tokens = re.findall(pattern, s)

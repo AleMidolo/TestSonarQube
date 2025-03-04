@@ -21,7 +21,7 @@ def parse_arguments(*unparsed_arguments):
     # 添加 "run" 子命令
     run_parser = subparsers.add_parser('run', help='运行任务')
     run_parser.add_argument('--input', type=str, required=True, help='输入文件路径')
-    run_parser.add_argument('--output', type=str, help='输出文件路径')
+    run_parser.add_argument('--output', type=str, required=True, help='输出文件路径')
     
     # 解析参数
     if len(unparsed_arguments) == 0:

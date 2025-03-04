@@ -27,7 +27,7 @@ def _legacy_mergeOrderings(orderings):
             # 获取当前元素在所有列表中的位置
             positions = element_positions[element]
             
-            # 检查当前元素之前的所有元素是否都已经处理
+            # 检查当前元素之前的所有元素是否都已经被处理
             for ordering_idx, pos in enumerate(positions):
                 current_ordering = orderings[ordering_idx]
                 # 检查当前位置之前的元素
@@ -38,10 +38,10 @@ def _legacy_mergeOrderings(orderings):
                         break
                 if not can_add:
                     break
-                    
+            
             # 如果可以添加当前元素
             if can_add:
                 result.append(element)
                 seen.add(element)
-                
+    
     return result

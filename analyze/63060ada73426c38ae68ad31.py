@@ -15,7 +15,7 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     if not parser_args:
         return
 
-    # 遍历所有参数
+    # 遍历字典中的每个参数
     for arg_name, value in values_dict.items():
         # 跳过None值
         if value is None:
@@ -32,10 +32,10 @@ def _convert_non_cli_args(self, parser_name, values_dict):
             continue
 
         try:
-            # 根据类型转换值
+            # 根据定义的类型转换值
             if arg_type == bool:
                 if isinstance(value, str):
-                    values_dict[arg_name] = value.lower() in ('true', 't', 'yes', 'y', '1')
+                    values_dict[arg_name] = value.lower() in ('true', 'yes', '1', 'on')
             elif arg_type == int:
                 values_dict[arg_name] = int(value)
             elif arg_type == float:
@@ -44,5 +44,5 @@ def _convert_non_cli_args(self, parser_name, values_dict):
                 if isinstance(value, str):
                     values_dict[arg_name] = value.split(',')
         except (ValueError, TypeError):
-            # 转换失败时保持原值
+            # 如果转换失败，保持原值不变
             continue
