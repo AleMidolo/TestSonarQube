@@ -7,16 +7,16 @@ def data(self, *keys):
     :raises: :exc:`IndexError` se viene specificato un indice fuori dai limiti  
     """
     result = {}
-    for key in keys:
-        if isinstance(key, int):
-            if key < 0 or key >= len(self.record):
-                raise IndexError("Index out of bounds")
-            result[self.field_names[key]] = self.record[key]
-        else:
-            result[key] = self.record.get(key, None)
-    
     if not keys:
-        for i, value in enumerate(self.record):
-            result[self.field_names[i]] = value
-            
+        # Include all keys and values
+        for key in self.record:
+            result[key] = self.record[key]
+    else:
+        for key in keys:
+            if isinstance(key, int):
+                if key < 0 or key >= len(self.record):
+                    raise IndexError("Index out of bounds")
+                result[self.keys[key]] = self.record[self.keys[key]]
+            else:
+                result[key] = self.record.get(key, None)
     return result

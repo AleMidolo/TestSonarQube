@@ -17,7 +17,7 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
     command = ['ansible-playbook', playbook_path]
 
     if verbose:
-        command.append(f'-v' * verbose)
+        command.append(f'-v{"v" * (verbose - 1)}')  # Adjust verbosity level
 
     if extra_vars:
         extra_vars_str = ' '.join(f'--extra-vars="{key}={value}"' for key, value in extra_vars.items())
@@ -29,9 +29,8 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
             if value is not None:
                 command.append(str(value))
 
-    result = subprocess.run(command, capture_output=True, text=True)
-
-    if result.returncode != 0:
-        raise RuntimeError(f"Ansible playbook failed: {result.stderr}")
-
-    return json.loads(result.stdout)
+    try:
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        return f"Error: {e.stderr}"

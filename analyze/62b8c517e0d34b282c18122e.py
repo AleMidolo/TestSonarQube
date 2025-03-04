@@ -2,26 +2,26 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     import traceback
 
     # Get the exception type and message
-    exc_type = type(e).__name__
-    exc_message = str(e)
+    exception_type = type(e).__name__
+    exception_message = str(e)
 
-    # Format the exception header
-    result = f"{exc_type}: {exc_message}\n"
-
-    # Get the traceback
+    # Get the traceback information
     tb = traceback.extract_tb(e.__traceback__)
-    
+    tb_info = []
+
     # Limit the traceback to max_level
-    tb = tb[:max_level]
-
-    # Format the traceback
-    for frame in tb:
+    for frame in tb[:max_level]:
         filename, lineno, funcname, text = frame
-        result += f"  File \"{filename}\", line {lineno}, in {funcname}\n"
-        result += f"    {text}\n"
+        tb_info.append(f'File "{filename}", line {lineno}, in {funcname}\n    {text}')
 
-    # If the traceback is longer than max_path_level, truncate it
-    if len(tb) > max_path_level:
-        result += f"  ... (truncated to {max_path_level} frames)\n"
+    # Join the traceback information
+    tb_str = "\n".join(tb_info)
 
-    return result
+    # Format the final output
+    formatted_exception = f"{exception_type}: {exception_message}\nTraceback (most recent call last):\n{tb_str}"
+
+    # Limit the output to max_path_level if necessary
+    if len(tb_info) > max_path_level:
+        formatted_exception += f"\n... (truncated to {max_path_level} frames)"
+
+    return formatted_exception
