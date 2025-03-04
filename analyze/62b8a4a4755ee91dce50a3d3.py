@@ -13,15 +13,13 @@ def fromutc(self, dt):
     # Convert the datetime to UTC
     utc_dt = dt.astimezone(self.utc)
 
-    # Calculate the new datetime in the target timezone
-    new_dt = utc_dt.astimezone(self)
-
-    # Check for ambiguity and folding
-    if new_dt.dst() == timedelta(0) and new_dt.utcoffset() != timedelta(0):
-        # If the datetime is ambiguous, we need to determine if it's in a fold
-        if new_dt < self.fold_start:
-            new_dt = new_dt.replace(fold=0)
+    # Check if the datetime is ambiguous
+    if self._is_ambiguous(utc_dt):
+        # Handle the ambiguity (e.g., by checking if it's in the fold)
+        if self._is_in_fold(utc_dt):
+            return utc_dt.replace(fold=1)
         else:
-            new_dt = new_dt.replace(fold=1)
-
-    return new_dt
+            return utc_dt.replace(fold=0)
+    
+    # Return the converted datetime in the new timezone
+    return utc_dt.astimezone(self)

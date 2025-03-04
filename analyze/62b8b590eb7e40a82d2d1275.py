@@ -16,29 +16,30 @@ def _legacy_mergeOrderings(orderings):
     """
     from collections import defaultdict, deque
 
-    # Create a graph to represent the orderings
+    # Create a graph and in-degree count
     graph = defaultdict(list)
     in_degree = defaultdict(int)
+    orderings_set = set()
 
-    # Build the graph and in-degree count
+    # Build the graph
     for ordering in orderings:
         for i in range(len(ordering)):
+            orderings_set.add(ordering[i])
             if i > 0:
                 graph[ordering[i - 1]].append(ordering[i])
                 in_degree[ordering[i]] += 1
-            if ordering[i] not in in_degree:
-                in_degree[ordering[i]] = 0
 
-    # Topological sort using Kahn's algorithm
-    queue = deque([node for node in in_degree if in_degree[node] == 0])
-    merged_order = []
+    # Initialize the queue with nodes that have no incoming edges
+    queue = deque([item for item in orderings_set if in_degree[item] == 0])
+    result = []
 
+    # Perform a topological sort
     while queue:
-        node = queue.popleft()
-        merged_order.append(node)
-        for neighbor in graph[node]:
+        current = queue.popleft()
+        result.append(current)
+        for neighbor in graph[current]:
             in_degree[neighbor] -= 1
             if in_degree[neighbor] == 0:
                 queue.append(neighbor)
 
-    return merged_order
+    return result

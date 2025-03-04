@@ -20,15 +20,9 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
         try:
             with open(filename, 'r') as f:
                 config = json.load(f)
-
-            if resolve_env:
-                config = {k: os.path.expandvars(v) for k, v in config.items()}
-
-            # Apply overrides
-            config.update(overrides)
-
-            configurations[filename] = config
-
+                if resolve_env:
+                    config = {k: os.path.expandvars(v) for k, v in config.items()}
+                configurations[filename] = {**config, **overrides}
         except Exception as e:
             log_record = logger.error(f"Error loading configuration from {filename}: {e}")
             log_records.append(log_record)

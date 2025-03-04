@@ -8,25 +8,23 @@ def validate(self, inventory, extract_spec_version=False):
     in `self.spec_version`.
     """
     if extract_spec_version:
-        if 'type' in inventory:
-            spec_type = inventory['type']
-            if spec_type in self.valid_types:
-                return self.validate_by_type(spec_type, inventory)
-            else:
-                return self.handle_invalid_type(inventory)
+        if 'type' in inventory and inventory['type'] in self.valid_types:
+            self.spec_version = inventory['type']
         else:
-            return self.validate_by_spec_version(inventory)
+            self.spec_version = self.default_spec_version
+
+    # Esegui la convalida dell'inventario in base alla versione della specifica
+    if self.spec_version == '1.0':
+        return self.validate_v1(inventory)
+    elif self.spec_version == '2.0':
+        return self.validate_v2(inventory)
     else:
-        return self.validate_by_spec_version(inventory)
-
-def validate_by_type(self, spec_type, inventory):
-    # Implement validation logic based on the type
+        raise ValueError("Versione della specifica non valida.")
+    
+def validate_v1(self, inventory):
+    # Logica di convalida per la versione 1.0
     pass
 
-def handle_invalid_type(self, inventory):
-    # Implement logic to handle invalid type
-    pass
-
-def validate_by_spec_version(self, inventory):
-    # Implement validation logic based on the spec version
+def validate_v2(self, inventory):
+    # Logica di convalida per la versione 2.0
     pass

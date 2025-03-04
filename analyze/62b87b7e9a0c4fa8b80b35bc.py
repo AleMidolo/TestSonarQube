@@ -24,6 +24,8 @@ def _update_context(self, context):
         if error_name in ['x', 'y', 'z']:
             context['error'][f"{error_name}_low"] = {'index': error_info['index']}
     
-    # Retain existing values in context.value and its subcontexts
-    # This part of the code would depend on the structure of context.value
-    # and how it is intended to be preserved.
+    # Preserving existing values in context.value and its subcontexts
+    if 'value' not in context:
+        context['value'] = {}
+    
+    # Additional logic to update context.value can be added here

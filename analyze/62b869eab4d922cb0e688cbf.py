@@ -8,28 +8,15 @@ def generate_default_observer_schema(app):
             schema di osservazione predefinito.
     """
     default_schema = {}
-    
     for resource in app.spec.manifest:
         resource_type = resource.get('kind')
         if resource_type not in default_schema:
             default_schema[resource_type] = {
                 'apiVersion': resource.get('apiVersion'),
                 'metadata': {
-                    'name': resource['metadata'].get('name'),
-                    'namespace': resource['metadata'].get('namespace')
+                    'name': resource.get('metadata', {}).get('name'),
+                    'namespace': resource.get('metadata', {}).get('namespace'),
                 },
-                'spec': {}
+                'spec': resource.get('spec', {})
             }
-        
-        # Add default observation fields based on resource type
-        if resource_type == 'Pod':
-            default_schema[resource_type]['spec']['status'] = 'Running'
-        elif resource_type == 'Service':
-            default_schema[resource_type]['spec']['type'] = 'ClusterIP'
-        elif resource_type == 'Deployment':
-            default_schema[resource_type]['spec']['replicas'] = 1
-            default_schema[resource_type]['spec']['selector'] = {
-                'matchLabels': resource['spec'].get('selector', {})
-            }
-        
     return default_schema

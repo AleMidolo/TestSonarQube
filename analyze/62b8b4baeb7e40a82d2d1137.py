@@ -23,7 +23,7 @@ def verifyObject(iface, candidate, tentative=False):
 
     errors = []
 
-    if not tentative and not providedBy(candidate).provides(iface):
+    if not tentative and not providedBy(candidate).isOrExtends(iface):
         errors.append(f"{candidate} does not provide {iface}")
 
     required_methods = iface.names().keys()
@@ -39,10 +39,10 @@ def verifyObject(iface, candidate, tentative=False):
             errors.append(f"{method} in {candidate} has incorrect number of parameters")
             continue
         
-        for param in iface_signature.parameters.values():
-            if param.default is Parameter.empty and param.name not in method_signature.parameters:
-                errors.append(f"{method} in {candidate} is missing required parameter {param.name}")
-
+        for param in iface_signature.parameters:
+            if param.name not in method_signature.parameters:
+                errors.append(f"{method} in {candidate} is missing parameter {param.name}")
+    
     required_attributes = iface.names().keys()  # Assuming attributes are also defined in iface
     for attr in required_attributes:
         if not hasattr(candidate, attr):

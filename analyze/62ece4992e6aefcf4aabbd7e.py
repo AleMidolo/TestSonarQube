@@ -6,6 +6,7 @@ def _resolve_string(matcher):
     Se la variabile non è definita nell'ambiente e non viene fornito alcun valore predefinito, viene generato un errore.
     """
     name, default_value = matcher.get('name'), matcher.get('default')
+    
     value = os.getenv(name)
     
     if value is None:

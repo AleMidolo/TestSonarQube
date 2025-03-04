@@ -21,8 +21,8 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
     if hydration_hooks is None:
         hydration_hooks = {}
 
-    # Logica per gestire il messaggio DISCARD
-    # Aggiungi il messaggio alla coda di output
+    # Logica per aggiungere un messaggio DISCARD alla coda di output
+    # Questo è un esempio e dovrebbe essere adattato alla logica specifica dell'applicazione
     message = {
         'type': 'DISCARD',
         'n': n,
@@ -32,5 +32,5 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         'handlers': handlers
     }
     
-    # Supponiamo che self.output_queue sia la coda di output
+    # Aggiungere il messaggio alla coda di output
     self.output_queue.append(message)

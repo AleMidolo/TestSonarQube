@@ -11,29 +11,30 @@ def validate_version_inventories(self, version_dirs):
     main_inventory = {}
     content_digests = {}
     
-    for i, version_dir in enumerate(version_dirs):
-        # Simulate loading the inventory for the current version
-        current_inventory = self.load_inventory(version_dir)
+    for version in version_dirs:
+        inventory_path = f"{version}/inventory.json"
+        try:
+            with open(inventory_path, 'r') as f:
+                inventory = json.load(f)
+                main_inventory[version] = inventory
+                
+                # Validate that all previous versions have inventories
+                if version != version_dirs[0]:
+                    previous_version = version_dirs[version_dirs.index(version) - 1]
+                    if previous_version not in main_inventory:
+                        raise ValueError(f"Missing inventory for previous version: {previous_version}")
+                
+                # Track content digests
+                for item in inventory.get('items', []):
+                    content_digest = item.get('digest')
+                    if content_digest:
+                        if content_digest not in content_digests:
+                            content_digests[content_digest] = []
+                        content_digests[content_digest].append(version)
         
-        # Check if the current version has an inventory
-        if not current_inventory:
-            raise ValueError(f"Missing inventory for version {i + 1}")
-        
-        # Validate that all previous versions have inventories
-        for j in range(i + 1):
-            if j not in main_inventory:
-                raise ValueError(f"Missing inventory for version {j + 1}")
-        
-        # Track content digests
-        for item, digest in current_inventory.items():
-            if item in main_inventory:
-                if main_inventory[item] != digest:
-                    content_digests[item] = digest
-            main_inventory[item] = digest
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Inventory file not found for version: {version}")
+        except json.JSONDecodeError:
+            raise ValueError(f"Invalid JSON in inventory file for version: {version}")
     
     return main_inventory, content_digests
-
-def load_inventory(self, version_dir):
-    # Placeholder for loading inventory logic
-    # This should return a dictionary of item: digest pairs
-    return {}

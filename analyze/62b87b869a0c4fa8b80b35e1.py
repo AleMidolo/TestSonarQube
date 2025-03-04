@@ -51,7 +51,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         values.append(value)
 
     if scale is True:
-        # Implement scaling logic based on histogram if needed
+        # Implement scaling logic based on histogram
         pass
 
     graph = {field_names[i]: values[i] for i in range(len(field_names))}

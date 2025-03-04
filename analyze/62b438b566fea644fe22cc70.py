@@ -4,18 +4,23 @@ def bash_completion():
     """
     completion_script = """
     _borgmatic_completion() {
-        local cur prev opts
-        COMPREPLY=()
-        cur="${COMP_WORDS[COMP_CWORD]}"
-        prev="${COMP_WORDS[COMP_CWORD-1]}"
-        opts=$(borgmatic --help | awk '/^  / {print $1}' | tr '\n' ' ')
+        local cur prev words cword
+        _init_completion || return
 
-        if [[ ${cur} == -* ]]; then
-            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        else
-            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        fi
-        return 0
+        case "$prev" in
+            --config)
+                COMPREPLY=( $(compgen -f -- "$cur") )
+                return 0
+                ;;
+            --repository)
+                COMPREPLY=( $(compgen -f -- "$cur") )
+                return 0
+                ;;
+            *)
+                COMPREPLY=( $(compgen -W "init config run" -- "$cur") )
+                return 0
+                ;;
+        esac
     }
 
     complete -F _borgmatic_completion borgmatic

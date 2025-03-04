@@ -7,8 +7,8 @@ def directlyProvidedBy(object):  # pylint:disable=redefined-builtin
     if provides is None:  # nessuna specifica
         return None  # Nessuna interfaccia fornita
 
-    # Se abbiamo una specifica "implements", la escludiamo
-    if hasattr(object, "__implements__"):
-        return None  # Escludiamo dichiarazioni fornite dalla classe
+    # Se abbiamo una specifica "implements", la consideriamo
+    if isinstance(provides, list):
+        return provides  # Restituiamo la lista delle interfacce fornite
 
-    return provides  # Restituisce le interfacce fornite
+    return [provides]  # Restituiamo un elenco con un'unica interfaccia fornita

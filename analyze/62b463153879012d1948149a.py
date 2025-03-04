@@ -20,11 +20,12 @@ def _group_files_by_xml_filename(source, xmls, files):
     grouped_files = {}
     
     for xml in xmls:
-        base_name = xml.split('.')[0]  # Assuming the base name is the part before the first dot
+        base_name = xml.split('.')[0]  # Assuming the base name is before the first dot
         grouped_files[base_name] = []
 
-        for file in files:
-            if file.startswith(base_name):
-                grouped_files[base_name].append(file)
+    for file in files:
+        base_name = file.split('.')[0]  # Assuming the base name is before the first dot
+        if base_name in grouped_files:
+            grouped_files[base_name].append(file)
 
     return grouped_files

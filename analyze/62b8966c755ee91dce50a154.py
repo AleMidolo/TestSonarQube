@@ -83,8 +83,8 @@ def isoparse(self, dt_str):
     
     time_patterns = [
         r'(?P<hour>\d{1,2}):(?P<minute>\d{2}):?(?P<second>\d{2})?\.?(?P<microsecond>\d{1,6})?',  # hh:mm:ss.ssssss
-        r'(?P<hour>\d{1,2}):(?P<minute>\d{2})',  # hh:mm
-        r'(?P<hour>\d{1,2})',                     # hh
+        r'(?P<hour>\d{1,2}):(?P<minute>\d{2})?',  # hh:mm
+        r'(?P<hour>\d{1,2})'                       # hh
     ]
     
     tz_patterns = [
@@ -95,56 +95,52 @@ def isoparse(self, dt_str):
     ]
     
     # Combine patterns
-    full_pattern = r'^(?P<date>' + '|'.join(date_patterns) + r')' + \
-                   r'(T(?P<time>' + '|'.join(time_patterns) + r'))?' + \
-                   r'(?P<tz>' + '|'.join(tz_patterns) + r')?$'
+    full_pattern = r'^\s*(' + '|'.join(date_patterns) + r')' + r'(T(' + '|'.join(time_patterns) + r'))?(' + '|'.join(tz_patterns) + r')?\s*$'
     
     match = re.match(full_pattern, dt_str)
     if not match:
         raise ValueError("Invalid ISO-8601 format")
     
-    date_parts = match.group('date')
-    time_parts = match.group('time')
-    tz_part = match.group('tz')
+    # Extract date components
+    date_match = match.group(1)
+    year = int(date_match.group('year'))
     
-    # Parse date
-    if '-' in date_parts:
-        date_components = list(map(int, re.findall(r'\d+', date_parts)))
-        if len(date_components) == 3:
-            year, month, day = date_components
-            date_obj = datetime(year, month, day)
-        elif len(date_components) == 2:
-            year, week = date_components
-            date_obj = datetime.fromisocalendar(year, week, 1)  # Default to Monday
+    if date_match.group('month'):
+        month = int(date_match.group('month'))
+        if date_match.group('day'):
+            day = int(date_match.group('day'))
         else:
-            year = date_components[0]
-            date_obj = datetime(year, 1, 1)  # Default to January 1st
+            day = 1
     else:
-        year = int(date_parts)
-        date_obj = datetime(year, 1, 1)  # Default to January 1st
+        month = 1
+        day = 1
     
-    # Parse time
-    if time_parts:
-        time_components = list(map(int, re.findall(r'\d+', time_parts)))
-        if len(time_components) == 3:
-            hour, minute, second = time_components
-            date_obj = date_obj.replace(hour=hour, minute=minute, second=second)
-        elif len(time_components) == 2:
-            hour, minute = time_components
-            date_obj = date_obj.replace(hour=hour, minute=minute)
-        else:
-            hour = time_components[0]
-            date_obj = date_obj.replace(hour=hour)
+    # Extract time components
+    time_match = match.group(3)
+    if time_match:
+        hour = int(time_match.group('hour'))
+        minute = int(time_match.group('minute') or 0)
+        second = int(time_match.group('second') or 0)
+        microsecond = int(time_match.group('microsecond') or 0)
+    else:
+        hour = 0
+        minute = 0
+        second = 0
+        microsecond = 0
     
-    # Parse timezone
-    if tz_part:
-        if tz_part == 'Z':
-            tzinfo = tz.tzutc()
-        else:
-            sign = 1 if tz_part[0] == '+' else -1
-            hour = int(tz_part[1:3])
-            minute = int(tz_part[3:5]) if len(tz_part) > 3 else 0
-            tzinfo = tz.tzoffset(None, sign * (hour * 3600 + minute * 60))
-        date_obj = date_obj.replace(tzinfo=tzinfo)
+    # Handle timezone
+    tz_match = match.group(4)
+    if tz_match == 'Z':
+        tzinfo = tz.tzutc()
+    elif tz_match:
+        sign = 1 if tz_match.group('sign') == '+' else -1
+        tz_hour = int(tz_match.group('hour'))
+        tz_minute = int(tz_match.group('minute') or 0)
+        tzinfo = tz.tzoffset(None, sign * (tz_hour * 3600 + tz_minute * 60))
+    else:
+        tzinfo = None
     
-    return date_obj
+    # Create datetime object
+    dt = datetime(year, month, day, hour, minute, second, microsecond, tzinfo)
+    
+    return dt
