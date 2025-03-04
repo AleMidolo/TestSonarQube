@@ -39,6 +39,6 @@ def validate(self, inventory, extract_spec_version=False):
         if not isinstance(component, dict):
             raise ValueError("Ogni componente deve essere un dizionario")
         if 'type' not in component or 'name' not in component:
-            raise ValueError("I componenti devono avere i campi 'type' e 'name'")
+            raise ValueError("I componenti devono avere almeno i campi 'type' e 'name'")
             
     return True

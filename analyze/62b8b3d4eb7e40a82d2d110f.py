@@ -10,7 +10,7 @@ def _should_attempt_c_optimizations():
 
     # Check if running on PyPy
     is_pypy = platform.python_implementation() == 'PyPy'
-    
+
     # Check PURE_PYTHON environment variable
     pure_python = os.environ.get('PURE_PYTHON', '').lower()
     use_pure_python = pure_python in ('1', 'true', 'yes', 'on')

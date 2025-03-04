@@ -13,7 +13,7 @@ def difference(d1, d2, level=-1):
     
     # Per ogni chiave in d1
     for key in d1:
-        # Se la chiave non è in d2, aggiungi l'elemento al risultato
+        # Se la chiave non è in d2, aggiungi l'intero valore al risultato
         if key not in d2:
             result[key] = d1[key]
         # Se siamo al livello massimo di ricorsione e i valori sono diversi
@@ -21,11 +21,11 @@ def difference(d1, d2, level=-1):
             result[key] = d1[key]
         # Se non siamo al livello massimo e entrambi i valori sono dizionari
         elif level != 1 and isinstance(d1[key], dict) and isinstance(d2[key], dict):
-            # Ricorsione con livello decrementato (se non è -1)
-            next_level = level - 1 if level > 0 else -1
-            diff = difference(d1[key], d2[key], next_level)
-            if diff:  # Se c'è una differenza, aggiungila al risultato
-                result[key] = diff
+            # Calcola ricorsivamente la differenza dei sottodizionari
+            new_level = level - 1 if level > 1 else level
+            sub_diff = difference(d1[key], d2[key], new_level)
+            if sub_diff:  # Se c'è una differenza, aggiungila al risultato
+                result[key] = sub_diff
         # Se i valori sono diversi e non sono entrambi dizionari
         elif d1[key] != d2[key]:
             result[key] = d1[key]

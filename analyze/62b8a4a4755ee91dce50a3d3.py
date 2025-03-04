@@ -5,6 +5,7 @@ def fromutc(self, dt):
     
     # Ottieni l'offset UTC per questo datetime
     utc_offset = self.utcoffset(dt)
+    
     if utc_offset is None:
         return dt
     
@@ -17,8 +18,11 @@ def fromutc(self, dt):
         return dt
         
     # Se c'è una transizione DST, determina se siamo nel fold
-    standard_offset = self.utcoffset(dt) - dst_offset
-    transition_fold = (standard_offset.total_seconds() > 0)
+    std_offset = self.utcoffset(dt) - dst_offset
+    delta = std_offset - utc_offset
     
-    # Imposta il fold appropriato
-    return dt.replace(fold=transition_fold)
+    if delta:
+        # Se delta è positivo, siamo nel fold (prima occorrenza)
+        dt = dt.replace(fold=delta.total_seconds() > 0)
+        
+    return dt

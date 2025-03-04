@@ -15,7 +15,7 @@ def _get_seq_with_type(seq, bufsize=None):
     # Try to convert to sequence if it's an iterator/generator
     try:
         if bufsize is not None:
-            seq_list = list(itertools.islice(seq, bufsize))
+            seq_list = list(seq)[:bufsize]
         else:
             seq_list = list(seq)
         return seq_list, list

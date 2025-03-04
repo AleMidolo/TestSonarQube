@@ -23,11 +23,13 @@ def cachedmethod(cache, key=hashkey, lock=None):
             except KeyError:
                 # If not in cache, compute and store result
                 result = method(self, *args, **kwargs)
+                
                 if lock is not None:
                     with lock:
                         cache_instance[k] = result
                 else:
                     cache_instance[k] = result
+                    
                 return result
                 
         return wrapper

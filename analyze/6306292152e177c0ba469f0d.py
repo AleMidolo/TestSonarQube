@@ -13,26 +13,18 @@ def identify_request(request: RequestType) -> bool:
     matrix_headers = [
         'Authorization',  # Matrix uses bearer tokens
         'X-Matrix',      # Custom Matrix header
-        'Origin'         # Check for Matrix homeserver origin
+        'Matrix-'        # Matrix protocol prefix
     ]
     
     for header in matrix_headers:
-        if header in headers:
-            # If authorization header exists, check if it starts with 'Bearer'
-            if header == 'Authorization' and headers[header].startswith('Bearer'):
-                return True
-            # If X-Matrix header exists
-            elif header == 'X-Matrix':
-                return True
-            # If Origin contains matrix or synapse
-            elif header == 'Origin' and ('matrix' in headers[header].lower() or 
-                                       'synapse' in headers[header].lower()):
-                return True
-                
+        if any(h.startswith(header) for h in headers.keys()):
+            return True
+            
     # Check URL path if available
-    if hasattr(request, 'path'):
-        path = request.path.lower()
-        matrix_endpoints = ['/_matrix', '/matrix', '/synapse']
-        return any(endpoint in path for endpoint in matrix_endpoints)
+    path = request.path if hasattr(request, 'path') else ''
+    matrix_paths = ['/_matrix/', '/_synapse/']
+    
+    if any(p in path for p in matrix_paths):
+        return True
         
     return False
