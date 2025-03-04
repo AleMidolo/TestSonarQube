@@ -7,16 +7,19 @@ def _fromutc(self, dt):
     :param dt:  
         Un oggetto :class:`datetime.datetime` con consapevolezza del fuso orario.
     """
+    if dt.tzinfo is None:
+        raise ValueError("dt must be timezone-aware")
+
     # Convert the datetime to UTC
-    utc_dt = dt.astimezone(datetime.timezone.utc)
-    
-    # Calculate the new datetime in the local timezone
-    new_dt = utc_dt.astimezone(self)
-    
-    # Check for ambiguity and folding
-    if new_dt.dst() != datetime.timedelta(0):
-        # If the new datetime has a non-zero DST offset, it is ambiguous
-        if new_dt.fold == 0:
-            new_dt = new_dt.replace(fold=1)  # Set to the second occurrence if ambiguous
-    
-    return new_dt
+    utc_dt = dt.astimezone(self.utc)
+
+    # Check if the datetime is ambiguous
+    if self.is_ambiguous(utc_dt):
+        # Handle the ambiguity (e.g., by checking if it's in the fold)
+        if self.is_fold(utc_dt):
+            return utc_dt
+        else:
+            raise ValueError("Ambiguous datetime in fold state")
+
+    # Return the datetime in the new timezone
+    return utc_dt.astimezone(self)

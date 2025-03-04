@@ -5,7 +5,7 @@ def validate_version_inventories(self, version_dirs):
     presenti nell'inventario principale, in modo da poterli verificare
     anche durante la validazione del contenuto.
 
-    version_dirs è un array di nomi di directory di versione e si presume
+      version_dirs è un array di nomi di directory di versione e si presume
         che sia in sequenza di versione (1, 2, 3...).
     """
     main_inventory = {}
@@ -21,8 +21,7 @@ def validate_version_inventories(self, version_dirs):
         
         # Validate that all previous versions have inventories
         for j in range(i + 1):
-            previous_inventory = self.load_inventory(version_dirs[j])
-            if not previous_inventory:
+            if j not in main_inventory:
                 raise ValueError(f"Missing inventory for version {j + 1}")
         
         # Track content digests
@@ -30,12 +29,11 @@ def validate_version_inventories(self, version_dirs):
             if item in main_inventory:
                 if main_inventory[item] != digest:
                     content_digests[item] = digest
-            else:
-                main_inventory[item] = digest
+            main_inventory[item] = digest
     
     return main_inventory, content_digests
 
 def load_inventory(self, version_dir):
     # Placeholder for loading inventory logic
-    # This should return a dictionary of items and their digests
+    # This should return a dictionary of item: digest pairs
     return {}
