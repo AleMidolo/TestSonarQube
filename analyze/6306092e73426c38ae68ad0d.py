@@ -51,5 +51,4 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
     # Set the type name
     ComplexType.__name__ = type_name
     
-    # Create instance
-    return ComplexType()
+    return ComplexType

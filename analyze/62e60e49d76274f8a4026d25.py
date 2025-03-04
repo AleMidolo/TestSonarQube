@@ -6,7 +6,7 @@ def unit_of_work(metadata=None, timeout=None):
             wrapper.timeout = timeout
             return f(*args, **kwargs)
         
-        # Copy over function metadata
+        # Copy over function attributes
         wrapper.__name__ = f.__name__
         wrapper.__doc__ = f.__doc__
         

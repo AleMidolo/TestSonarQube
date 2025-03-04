@@ -12,9 +12,9 @@ def validate_version_inventories(self, version_dirs):
     
     # Validate each version has an inventory
     for version in version_dirs:
-        inventory_path = os.path.join(version, 'inventory.txt')
+        inventory_path = os.path.join(version, "inventory.txt")
         if not os.path.exists(inventory_path):
-            raise ValueError(f"Missing inventory file for version {version}")
+            raise ValidationError(f"Missing inventory file for version {version}")
             
         # Read inventory and collect content digests
         with open(inventory_path) as f:
@@ -30,9 +30,9 @@ def validate_version_inventories(self, version_dirs):
         try:
             version_num = int(version)
             if version_num != version_dirs.index(version) + 1:
-                raise ValueError(f"Version {version} out of sequence")
+                raise ValidationError(f"Version {version} out of sequence")
         except ValueError:
-            raise ValueError(f"Invalid version directory name: {version}")
+            raise ValidationError(f"Invalid version directory name: {version}")
             
     # Store unique content digests for later validation
     self.content_digests = content_digests

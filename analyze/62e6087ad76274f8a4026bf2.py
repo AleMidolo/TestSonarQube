@@ -24,12 +24,11 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         "qid": qid
     }
     
-    response = Response(
-        connection=self,
-        dehydration_hooks=dehydration_hooks or {},
-        hydration_hooks=hydration_hooks or {},
+    self._append_message(message)
+    
+    return Response(
+        self,
+        dehydration_hooks or {},
+        hydration_hooks or {},
         **handlers
     )
-    
-    self._append(message, response)
-    return response

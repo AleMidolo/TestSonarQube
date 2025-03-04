@@ -29,7 +29,7 @@ def get_parser_option_specs(self, command_name):
             'help': action.help,
             'required': action.required,
             'default': action.default,
-            'type': str(action.type) if action.type else None,
+            'type': str(action.type.__name__) if action.type else None,
             'choices': action.choices,
             'dest': action.dest
         }

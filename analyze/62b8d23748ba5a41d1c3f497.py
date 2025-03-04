@@ -16,10 +16,10 @@ def popitem(self):
             break
             
     # Get value before removing
-    value = self.cache[min_key]
+    min_value = self.cache[min_key]
     
     # Remove item from cache and frequency map
     del self.cache[min_key]
     del self.freq_map[min_key]
     
-    return (min_key, value)
+    return (min_key, min_value)

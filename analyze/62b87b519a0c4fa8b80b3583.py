@@ -11,12 +11,13 @@ def scale(self, other=None):
     # Get the last coordinate field
     fields = self.fields()
     if not fields:
-        raise LenaValueError("Graph has no coordinate fields to scale")
+        raise LenaValueError("No fields available for scaling")
         
     last_coord = fields[-1]
     
     # Scale the last coordinate and its errors
     scale_factor = other / self._scale
+    
     self._data[last_coord] *= scale_factor
     
     # Scale associated errors if present
@@ -25,4 +26,5 @@ def scale(self, other=None):
         self._data[err_field] *= scale_factor
         
     self._scale = other
+    
     return self

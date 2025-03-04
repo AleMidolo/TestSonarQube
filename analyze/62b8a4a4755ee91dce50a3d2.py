@@ -16,11 +16,14 @@ def _fromutc(self, dt):
     
     # Check if datetime is ambiguous (in DST transition)
     dst_before = self.dst(local_dt - datetime.timedelta(hours=1))
-    dst_after = self.dst(local_dt + datetime.timedelta(hours=1)) 
-    is_ambiguous = dst_before != dst_after
+    dst_after = self.dst(local_dt + datetime.timedelta(hours=1))
     
-    if is_ambiguous:
-        # Set fold=0 for first occurrence of ambiguous datetime
-        local_dt = local_dt.replace(fold=0)
+    if dst_before != dst_after:
+        # We're in a DST transition
+        fold = 0
+        if dst_before > dst_after:
+            # Transitioning out of DST
+            fold = 1
+        local_dt = local_dt.replace(fold=fold)
         
     return local_dt

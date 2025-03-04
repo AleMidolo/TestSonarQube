@@ -11,7 +11,7 @@ def validate(self, path):
     if not self.fs.exists(namaste_path):
         raise ValueError(f"File namaste mancante in {path}")
 
-    # Verifica la presenza di inventory.json
+    # Verifica la presenza del file inventory.json
     inventory_path = self.fs.join_path(path, "inventory.json")
     if not self.fs.exists(inventory_path):
         raise ValueError(f"File inventory.json mancante in {path}")
@@ -20,21 +20,31 @@ def validate(self, path):
     with self.fs.open(inventory_path) as f:
         inventory = json.load(f)
 
-    # Verifica i campi obbligatori dell'inventory
-    required_fields = ["id", "type", "digestAlgorithm", "head", "versions"]
-    for field in required_fields:
-        if field not in inventory:
-            raise ValueError(f"Campo {field} mancante nell'inventory")
+    # Verifica la versione OCFL
+    if "type" not in inventory or not inventory["type"].startswith("https://ocfl.io"):
+        raise ValueError("Versione OCFL non valida nell'inventory")
 
-    # Verifica che il tipo sia corretto
-    if inventory["type"] != "https://ocfl.io/1.0/spec/#inventory":
-        raise ValueError("Tipo inventory non valido")
+    # Verifica la presenza delle directory di versione
+    versions = [d for d in self.fs.listdir(path) if d.startswith("v")]
+    if not versions:
+        raise ValueError("Nessuna directory di versione trovata")
 
-    # Verifica la presenza delle directory delle versioni
-    for version in inventory["versions"]:
+    # Verifica che le versioni siano numerate correttamente
+    versions.sort()
+    for i, v in enumerate(versions, 1):
+        expected = f"v{i}"
+        if v != expected:
+            raise ValueError(f"Sequenza di versioni non valida: trovato {v}, atteso {expected}")
+
+    # Verifica la corrispondenza tra inventory e file system
+    for version in versions:
         version_path = self.fs.join_path(path, version)
-        if not self.fs.exists(version_path):
-            raise ValueError(f"Directory versione {version} mancante")
+        if not self.fs.isdir(version_path):
+            raise ValueError(f"Directory di versione {version} non valida")
 
-    # Se arriviamo qui la validazione è passata
+        # Verifica la presenza della directory content
+        content_path = self.fs.join_path(version_path, "content")
+        if not self.fs.exists(content_path):
+            raise ValueError(f"Directory content mancante in {version}")
+
     return True

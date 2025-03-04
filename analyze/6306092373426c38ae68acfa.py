@@ -4,14 +4,14 @@ def get_spec_defaults(self):
     """
     spec_defaults = {}
     
-    # Check if specification file exists
+    # Check if spec file exists
     if hasattr(self, 'spec_file') and self.spec_file:
         try:
-            # Read specification file
+            # Read spec file
             with open(self.spec_file, 'r') as f:
                 spec_data = f.read()
                 
-            # Parse specification data
+            # Parse spec file data
             for line in spec_data.splitlines():
                 line = line.strip()
                 if line and not line.startswith('#'):
@@ -24,9 +24,10 @@ def get_spec_defaults(self):
                         continue
                         
         except (IOError, OSError):
+            # Handle file read errors
             pass
             
-    # Add any additional sources of defaults
+    # Add any other sources of defaults
     if hasattr(self, 'env_defaults'):
         spec_defaults.update(self.env_defaults)
         
