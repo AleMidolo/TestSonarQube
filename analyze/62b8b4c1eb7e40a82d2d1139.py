@@ -5,10 +5,10 @@ def verifyClass(iface, candidate, tentative=False):
     # Get all attributes defined in the interface
     iface_attrs = dir(iface)
     
-    # Get all attributes defined in the candidate class
+    # Get all attributes defined in the candidate
     candidate_attrs = dir(candidate)
     
-    # Check each required interface attribute
+    # Check each attribute required by the interface
     for attr in iface_attrs:
         # Skip private/special attributes
         if attr.startswith('_'):
@@ -30,11 +30,11 @@ def verifyClass(iface, candidate, tentative=False):
             if not callable(candidate_attr):
                 raise TypeError(f"'{attr}' must be callable")
                 
-            # Check method signature compatibility
-            iface_sig = str(iface_attr.__code__.co_varnames)
-            candidate_sig = str(candidate_attr.__code__.co_varnames)
-            
-            if not tentative and iface_sig != candidate_sig:
-                raise TypeError(f"Method signature mismatch for '{attr}'")
+            # Check method signature matches
+            if not tentative:
+                iface_sig = str(iface_attr.__code__.co_varnames)
+                candidate_sig = str(candidate_attr.__code__.co_varnames)
+                if iface_sig != candidate_sig:
+                    raise TypeError(f"Method signature mismatch for '{attr}'")
     
     return True

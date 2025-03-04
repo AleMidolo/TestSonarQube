@@ -19,29 +19,21 @@ def verifyObject(iface, candidate, tentative=False):
         # If it's a method, verify the signature
         if isinstance(desc, Method):
             if not callable(attr):
-                errors.append(BrokenMethodImplementation(name, "Not callable"))
+                errors.append(BrokenMethodImplementation(name, desc, "Not callable"))
                 continue
             
-            # Check method signature
+            # Check method signature using inspect
+            import inspect
             try:
-                from inspect import signature
-                method_sig = signature(attr)
-                interface_sig = signature(desc)
+                method_sig = inspect.signature(attr)
+                iface_sig = inspect.signature(desc)
                 
-                if len(method_sig.parameters) != len(interface_sig.parameters):
-                    errors.append(BrokenMethodImplementation(name, "Incorrect number of arguments"))
-                    continue
-                    
-                # Check parameter names and kinds match
-                for (p1, param1), (p2, param2) in zip(method_sig.parameters.items(), 
-                                                     interface_sig.parameters.items()):
-                    if param1.kind != param2.kind:
-                        errors.append(BrokenMethodImplementation(name, 
-                            f"Parameter {p1} has wrong parameter kind"))
-                        break
-                        
+                # Compare parameters
+                if list(method_sig.parameters.keys()) != list(iface_sig.parameters.keys()):
+                    errors.append(BrokenMethodImplementation(name, desc, "Incorrect signature"))
             except ValueError:
-                errors.append(BrokenMethodImplementation(name, "Invalid method signature"))
+                # Can't get signature, skip detailed checking
+                pass
 
     # If we have errors, raise them
     if len(errors) == 1:

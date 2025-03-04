@@ -15,18 +15,20 @@ def parse_arguments(*unparsed_arguments):
     # Create subparsers
     subparsers = parser.add_subparsers(dest='command')
     
-    # Add subparser for 'run' command
-    run_parser = subparsers.add_parser('run', help='Run the application')
+    # Add subparser for different commands
+    run_parser = subparsers.add_parser('run')
     run_parser.add_argument('--input', type=str, required=True, help='Input file path')
     run_parser.add_argument('--output', type=str, required=True, help='Output file path')
     
-    # Add subparser for 'init' command  
-    init_parser = subparsers.add_parser('init', help='Initialize configuration')
-    init_parser.add_argument('--force', action='store_true', help='Force initialization')
+    test_parser = subparsers.add_parser('test') 
+    test_parser.add_argument('--test-file', type=str, required=True, help='Test file path')
     
     # Parse arguments
-    args = parser.parse_args(unparsed_arguments if unparsed_arguments else None)
-    
+    if len(unparsed_arguments) == 0:
+        args = parser.parse_args()
+    else:
+        args = parser.parse_args(unparsed_arguments)
+        
     # Create dict to store parsed arguments
     parsed_args = {}
     
@@ -36,11 +38,15 @@ def parse_arguments(*unparsed_arguments):
         config=args.config
     )
     
-    # Store command-specific arguments if a command was specified
-    if args.command:
-        command_args = vars(args).copy()
-        del command_args['verbose']
-        del command_args['config']
-        parsed_args[args.command] = argparse.Namespace(**command_args)
-    
+    # Store command-specific arguments
+    if args.command == 'run':
+        parsed_args['run'] = argparse.Namespace(
+            input=args.input,
+            output=args.output
+        )
+    elif args.command == 'test':
+        parsed_args['test'] = argparse.Namespace(
+            test_file=args.test_file
+        )
+        
     return parsed_args

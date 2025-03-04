@@ -11,14 +11,14 @@ def validate(self, inventory, extract_spec_version=False):
 
     # Extract spec version from type if requested
     if extract_spec_version:
-        inv_type = inventory.get('type', '')
-        if isinstance(inv_type, str) and inv_type.startswith('inventory/'):
-            try:
+        try:
+            inv_type = inventory.get('type', '')
+            if inv_type.startswith('inventory/'):
                 self.spec_version = inv_type.split('/')[1]
-            except IndexError:
-                pass
+        except (AttributeError, IndexError):
+            pass # Fall back to self.spec_version
 
-    # Required fields for all versions
+    # Validate required fields
     required_fields = ['id', 'type', 'items']
     for field in required_fields:
         if field not in inventory:
@@ -42,21 +42,9 @@ def validate(self, inventory, extract_spec_version=False):
     for item in inventory['items']:
         if not isinstance(item, dict):
             raise ValueError("Each item must be a dictionary")
-        
-        # Required item fields
-        required_item_fields = ['id', 'count']
-        for field in required_item_fields:
-            if field not in item:
-                raise ValueError(f"Item missing required field: {field}")
-        
-        # Validate item ID
+        if 'id' not in item:
+            raise ValueError("Each item must have an ID")
         if not isinstance(item['id'], str):
             raise ValueError("Item ID must be a string")
-            
-        # Validate item count
-        if not isinstance(item['count'], (int, float)):
-            raise ValueError("Item count must be a number")
-        if item['count'] < 0:
-            raise ValueError("Item count cannot be negative")
 
     return True

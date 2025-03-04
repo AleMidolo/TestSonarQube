@@ -20,12 +20,11 @@ def from_ticks(cls, ticks, tz=None):
     ns_per_microsecond = 1000
     
     total_seconds = ticks // ns_per_second
-    nanoseconds = ticks % ns_per_second
-    microseconds = nanoseconds // ns_per_microsecond
+    remaining_ns = ticks % ns_per_second
     
-    hours = total_seconds // 3600
-    remaining_seconds = total_seconds % 3600
-    minutes = remaining_seconds // 60
-    seconds = remaining_seconds % 60
+    hours = int(total_seconds // 3600)
+    minutes = int((total_seconds % 3600) // 60)
+    seconds = int(total_seconds % 60)
+    microseconds = int(remaining_ns // ns_per_microsecond)
     
-    return cls(hours, minutes, seconds, microseconds, tz)
+    return cls(hours, minutes, seconds, microseconds, tzinfo=tz)

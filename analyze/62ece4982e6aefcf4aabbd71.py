@@ -10,7 +10,7 @@ def regex_dict(item):
         # Escape special regex chars
         regex_pattern = re.escape(key)
         # Replace \* with .* to match any chars
-        regex_pattern = regex_pattern.replace(r'\*', '.*')
+        regex_pattern = regex_pattern.replace('\\*', '.*')
         # Add start and end anchors
         regex_pattern = f'^{regex_pattern}$'
         

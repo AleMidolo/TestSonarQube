@@ -13,7 +13,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     if '@' not in handle:
         raise ValueError("Handle must contain @")
     
-    user, host = handle.split('@', 1)
+    username, host = handle.split('@', 1)
     
     # Construct webfinger URL
     webfinger_url = f"https://{host}/.well-known/webfinger?resource=acct:{handle}"
@@ -23,44 +23,29 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         response = requests.get(webfinger_url)
         response.raise_for_status()
         
-        # Parse the JSON response
+        # Parse the response
         data = response.json()
         
-        # Extract relevant information
+        # Extract relevant information into a dict
         result = {
             'handle': handle,
             'host': host,
-            'guid': None,
-            'profile_url': None,
-            'atom_url': None,
-            'salmon_url': None,
-            'pubkey': None
+            'username': username,
+            'links': {}
         }
         
         # Parse links
         for link in data.get('links', []):
             rel = link.get('rel', '')
-            href = link.get('href', '')
-            
-            if rel == 'http://microformats.org/profile/hcard':
-                result['profile_url'] = href
-            elif rel == 'http://schemas.google.com/g/2010#updates-from':
-                result['atom_url'] = href
-            elif rel == 'salmon':
-                result['salmon_url'] = href
-                
-        # Get public key if available
-        for prop in data.get('properties', {}).items():
-            if prop[0] == 'http://joindiaspora.com/guid':
-                result['guid'] = prop[1]
-            elif prop[0] == 'http://joindiaspora.com/seed_location':
-                result['pod'] = prop[1]
-            elif prop[0] == 'http://joindiaspora.com/public_key':
-                result['pubkey'] = prop[1]
+            if rel:
+                result['links'][rel] = {
+                    'href': link.get('href'),
+                    'type': link.get('type')
+                }
                 
         return result
         
     except requests.exceptions.RequestException as e:
         raise ConnectionError(f"Failed to retrieve webfinger document: {str(e)}")
-    except ValueError as e:
+    except (ValueError, KeyError) as e:
         raise ValueError(f"Failed to parse webfinger document: {str(e)}")

@@ -21,7 +21,7 @@ def xargs(
         current_len = 0
         
         for arg in args:
-            arg_len = len(arg) + 1  # +1 for space
+            arg_len = len(arg) + 1  # Add 1 for space
             if current_len + arg_len > max_len and current_chunk:
                 chunks.append(tuple(current_chunk))
                 current_chunk = []
@@ -35,54 +35,52 @@ def xargs(
         return chunks
 
     def _run_chunk(chunk: tuple[str, ...]) -> tuple[int, bytes]:
-        full_cmd = (*cmd, *chunk)
+        full_cmd = cmd + chunk
         
         if color and sys.platform != 'win32':
             master, slave = pty.openpty()
-            try:
-                proc = subprocess.Popen(
-                    full_cmd,
-                    stdout=slave,
-                    stderr=slave,
-                    **kwargs
-                )
-                os.close(slave)
-                output = b''
-                while True:
-                    try:
-                        chunk = os.read(master, 1024)
-                        if not chunk:
-                            break
-                        output += chunk
-                    except OSError:
-                        break
-                return proc.wait(), output
-            finally:
-                os.close(master)
-        else:
             proc = subprocess.Popen(
                 full_cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                stdout=slave,
+                stderr=slave,
                 **kwargs
             )
-            stdout, stderr = proc.communicate()
-            return proc.returncode, stdout + stderr
+            os.close(slave)
+            
+            output = b''
+            while True:
+                try:
+                    data = os.read(master, 1024)
+                    if not data:
+                        break
+                    output += data
+                except OSError:
+                    break
+                    
+            os.close(master)
+            returncode = proc.wait()
+            
+        else:
+            proc = subprocess.run(
+                full_cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                **kwargs
+            )
+            output = proc.stdout
+            returncode = proc.returncode
+            
+        return returncode, output
 
+    # Split arguments into chunks that fit within max length
     chunks = _chunk_args(varargs, _max_length)
     
-    if target_concurrency == 1:
-        for chunk in chunks:
-            retcode, output = _run_chunk(chunk)
-            if retcode != 0:
-                return retcode, output
-        return 0, b''
-    
+    # Run chunks in parallel up to target_concurrency
     with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
-        futures = [executor.submit(_run_chunk, chunk) for chunk in chunks]
-        for future in futures:
-            retcode, output = future.result()
-            if retcode != 0:
-                return retcode, output
+        results = list(executor.map(_run_chunk, chunks))
     
-    return 0, b''
+    # Combine results
+    final_returncode = max((rc for rc, _ in results), default=0)
+    final_output = b''.join(out for _, out in results)
+    
+    return final_returncode, final_output

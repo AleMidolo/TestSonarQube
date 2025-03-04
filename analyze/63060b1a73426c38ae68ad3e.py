@@ -13,24 +13,25 @@ def get_plugin_spec_flatten_dict(plugin_dir):
         if not os.path.exists(spec_file):
             return flattened_dict
             
-        with open(spec_file, 'r') as f:
+        with open(spec_file) as f:
             spec_data = yaml.safe_load(f)
             
-        def flatten(data, parent_key=''):
+        def flatten_dict(d, parent_key=''):
             items = []
-            for key, value in data.items():
-                new_key = f"{parent_key}.{key}" if parent_key else key
+            for k, v in d.items():
+                new_key = f"{parent_key}.{k}" if parent_key else k
                 
-                if isinstance(value, dict):
-                    items.extend(flatten(value, new_key).items())
+                if isinstance(v, dict):
+                    items.extend(flatten_dict(v, new_key).items())
                 else:
-                    items.append((new_key, value))
+                    items.append((new_key, v))
             return dict(items)
             
-        flattened_dict = flatten(spec_data)
-        
-    except Exception as e:
-        # Return empty dict if any error occurs
+        # Flatten the nested dictionary
+        if isinstance(spec_data, dict):
+            flattened_dict = flatten_dict(spec_data)
+            
+    except (yaml.YAMLError, IOError):
         pass
         
     return flattened_dict

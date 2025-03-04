@@ -9,22 +9,16 @@ def identify_request(request: RequestType) -> bool:
             # Matrix access tokens are typically Bearer tokens
             return True
             
-    # Check for Matrix API endpoints
-    if request.path.startswith('/_matrix/'):
-        return True
-        
-    # Check for Matrix server name in host
-    if request.host and '.matrix.' in request.host:
-        return True
-        
+    # Check for Matrix API endpoints in request path
+    matrix_endpoints = ['/_matrix', '/_synapse']
+    for endpoint in matrix_endpoints:
+        if request.path.startswith(endpoint):
+            return True
+            
     # Check content type for Matrix-specific formats
-    if request.content_type == 'application/json':
-        try:
-            body = request.get_json()
-            # Check for common Matrix request fields
-            if any(key in body for key in ['user_id', 'room_id', 'event_id', 'device_id']):
-                return True
-        except:
-            pass
+    if 'Content-Type' in request.headers:
+        content_type = request.headers['Content-Type']
+        if 'application/json' in content_type and any(x in request.path for x in ['sync', 'events', 'rooms']):
+            return True
             
     return False

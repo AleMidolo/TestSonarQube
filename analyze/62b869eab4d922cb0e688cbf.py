@@ -11,8 +11,11 @@ def generate_default_observer_schema(app):
     if not app.spec.observer:
         app.spec.observer = {}
         
-    # Iterate through each resource in the manifest
-    for resource in app.spec.manifest:
+    # Get list of resources from manifest
+    resources = app.spec.manifest
+    
+    # For each resource in manifest
+    for resource in resources:
         # Get resource kind and API version
         kind = resource.get('kind')
         api_version = resource.get('apiVersion')
@@ -29,7 +32,7 @@ def generate_default_observer_schema(app):
             }]
         }
         
-        # Add specific defaults for common resource types
+        # Add special handling for common resource types
         if kind == 'Deployment':
             default_schema['conditions'].append({
                 'type': 'Progressing',
@@ -38,11 +41,11 @@ def generate_default_observer_schema(app):
         elif kind == 'StatefulSet':
             default_schema['conditions'].append({
                 'type': 'Ready',
-                'status': 'True' 
+                'status': 'True'  
             })
-        elif kind == 'DaemonSet':
+        elif kind == 'Pod':
             default_schema['conditions'].append({
-                'type': 'DaemonSetAvailable',
+                'type': 'Ready',
                 'status': 'True'
             })
             

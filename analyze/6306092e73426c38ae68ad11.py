@@ -8,17 +8,30 @@ def merge_extra_vars(vars_dict, extra_vars=None):
     if not extra_vars:
         return vars_dict
         
-    if isinstance(extra_vars, list):
-        for var in extra_vars:
-            if isinstance(var, dict):
-                vars_dict.update(var)
-            elif isinstance(var, str):
-                try:
-                    key, value = var.split('=', 1)
-                    vars_dict[key.strip()] = value.strip()
-                except ValueError:
-                    continue
-    elif isinstance(extra_vars, dict):
-        vars_dict.update(extra_vars)
+    for var in extra_vars:
+        if '=' not in var:
+            continue
+            
+        key, value = var.split('=', 1)
+        key = key.strip()
+        value = value.strip()
+        
+        # Try to convert value to appropriate type
+        try:
+            # Try to convert to int
+            value = int(value)
+        except ValueError:
+            try:
+                # Try to convert to float
+                value = float(value)
+            except ValueError:
+                # Handle boolean values
+                if value.lower() == 'true':
+                    value = True
+                elif value.lower() == 'false':
+                    value = False
+                # Otherwise keep as string
+                
+        vars_dict[key] = value
         
     return vars_dict

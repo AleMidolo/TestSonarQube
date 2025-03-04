@@ -10,14 +10,14 @@ def make_parsers():
     
     # Create subparsers for different commands
     # Add command
-    add_parser = subparsers.add_parser('add', help='Add something')
+    add_parser = subparsers.add_parser('add', help='Add a new item')
     add_parser.add_argument('item', help='Item to add')
     
     # Remove command  
-    remove_parser = subparsers.add_parser('remove', help='Remove something')
+    remove_parser = subparsers.add_parser('remove', help='Remove an item')
     remove_parser.add_argument('item', help='Item to remove')
     
     # List command
-    list_parser = subparsers.add_parser('list', help='List items')
+    list_parser = subparsers.add_parser('list', help='List all items')
     
     return parser, subparsers

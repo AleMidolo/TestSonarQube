@@ -8,13 +8,9 @@ def integral(bins, edges):
     """
     total = 0.0
     
-    # Ensure bins and edges have compatible lengths
-    if len(bins) != len(edges) - 1:
-        raise ValueError("Length of bins must be equal to length of edges minus 1")
-        
-    # Iterate through bins and calculate area for each bin
+    # Iterate through bins and edges to compute integral
     for i in range(len(bins)):
-        # Width of the bin
+        # Width of current bin
         width = edges[i+1] - edges[i]
         # Area = height * width
         area = bins[i] * width

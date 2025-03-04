@@ -31,29 +31,34 @@ def _legacy_mergeOrderings(orderings):
             successors[ordering[i]].add(ordering[i+1])
             
     # Create a set of elements with no predecessors
-    has_pred = set()
+    no_predecessors = set(all_elements)
     for succ_set in successors.values():
-        has_pred.update(succ_set)
-    no_pred = all_elements - has_pred
-    
-    # Build result list by repeatedly taking elements with no predecessors
+        no_predecessors.difference_update(succ_set)
+        
+    # Build the merged ordering
     result = []
-    while no_pred:
+    used = set()
+    
+    while no_predecessors:
         # Take any element with no predecessors
-        elem = no_pred.pop()
+        elem = no_predecessors.pop()
         result.append(elem)
+        used.add(elem)
         
-        # Remove this element from successor lists
-        succs = successors[elem]
-        del successors[elem]
-        
-        # Check if any elements now have no predecessors
-        for succ_set in successors.values():
-            if elem in succ_set:
-                succ_set.remove(elem)
-                
-        for e, succ_set in successors.items():
-            if not any(e in s for s in successors.values()):
-                no_pred.add(e)
-                
+        # Update no_predecessors set
+        # Check if any successor of elem now has no unused predecessors
+        if elem in successors:
+            for succ in successors[elem]:
+                if succ not in used:
+                    # Check if all predecessors of succ are used
+                    all_preds_used = True
+                    for ordering in orderings:
+                        if succ in ordering:
+                            idx = ordering.index(succ)
+                            if any(pred not in used for pred in ordering[:idx]):
+                                all_preds_used = False
+                                break
+                    if all_preds_used:
+                        no_predecessors.add(succ)
+    
     return result

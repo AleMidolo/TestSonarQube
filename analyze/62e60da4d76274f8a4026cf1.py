@@ -15,10 +15,10 @@ def values(self, *keys):
     result = []
     for key in keys:
         if isinstance(key, int):
-            # If key is integer index
+            # If key is integer, treat as index
             result.append(self._values[key])
         else:
-            # If key is string/field name
+            # Otherwise treat as dictionary key
             try:
                 index = self._fields.index(key)
                 result.append(self._values[index])

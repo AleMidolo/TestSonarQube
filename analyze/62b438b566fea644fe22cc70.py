@@ -6,46 +6,51 @@ def bash_completion():
     return '''
 _borgmatic()
 {
-    local cur prev words cword
-    _init_completion || return
-
-    # List of all available borgmatic commands
-    local commands="init create prune check config validate generate-key list info export-tar extract mount umount"
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    
+    # List of all borgmatic commands
+    opts="init create prune check list info export-tar extract mount umount rcreate rlist rinfo rdelete config validate generate-key"
+    
+    # List of options that take values
+    value_opts="-c --config --repository --archive --destination --json --monitoring-verbosity --verbosity"
+    
+    # Handle option completion
+    if [[ ${cur} == -* ]]; then
+        COMPREPLY=( $(compgen -W "--help --version --borgmatic-source-directory --verbosity \
+            --json --monitoring-verbosity -c --config --repository --archive \
+            --destination --dry-run --progress --stats --list --files --prefix" -- ${cur}) )
+        return 0
+    fi
     
     # Handle command completion
-    if [ $cword -eq 1 ]; then
-        COMPREPLY=( $(compgen -W "$commands" -- "$cur") )
+    if [[ ${COMP_CWORD} -eq 1 ]]; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
         return 0
     fi
-
-    # Handle options based on command
-    case ${words[1]} in
-        create)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --dry-run --monitoring-verbosity" -- "$cur") )
+    
+    # Handle value completion for specific options
+    case "${prev}" in
+        -c|--config)
+            COMPREPLY=( $(compgen -f -- ${cur}) )
+            return 0
             ;;
-        prune)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --dry-run --monitoring-verbosity" -- "$cur") )
+        --repository|--archive|--destination)
+            COMPREPLY=( $(compgen -f -- ${cur}) )
+            return 0
             ;;
-        check)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --only --monitoring-verbosity" -- "$cur") )
-            ;;
-        list|info)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --archive" -- "$cur") )
-            ;;
-        mount)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --archive --mount-point" -- "$cur") )
+        --verbosity|--monitoring-verbosity)
+            COMPREPLY=( $(compgen -W "0 1 2" -- ${cur}) )
+            return 0
             ;;
         *)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json" -- "$cur") )
             ;;
     esac
-
-    # Handle file completion for --config option
-    if [[ $prev == "--config" ]]; then
-        _filedir yaml
-        return 0
-    fi
-
+    
+    # Default to file completion
+    COMPREPLY=( $(compgen -f ${cur}) )
     return 0
 }
 

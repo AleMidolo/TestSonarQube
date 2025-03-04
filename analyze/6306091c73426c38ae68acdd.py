@@ -31,9 +31,3 @@ def validate_from_file(cls, yaml_file=None):
         raise IRValidatorException(f"Error parsing YAML file: {str(e)}")
     except IOError as e:
         raise IRValidatorException(f"Error reading YAML file: {str(e)}")
-    except Exception as e:
-        raise IRValidatorException(f"Unexpected error validating YAML file: {str(e)}")
-
-class IRValidatorException(Exception):
-    """Custom exception for YAML validation errors"""
-    pass

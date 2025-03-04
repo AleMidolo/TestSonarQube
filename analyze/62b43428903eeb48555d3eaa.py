@@ -33,14 +33,8 @@ def formatmany(
         _, out_params = self.format(sql, params)
         out_params_list.append(out_params)
 
-    # Format SQL once using first set of parameters
-    try:
-        first_params = next(iter(many_params))
-    except StopIteration:
-        # No parameters provided, just format SQL
-        formatted_sql, _ = self.format(sql, {})
-    else:
-        # Format with first set of parameters
-        formatted_sql, _ = self.format(sql, first_params)
-
+    # Format SQL query once with first set of parameters
+    # This ensures SQL is formatted consistently
+    formatted_sql, _ = self.format(sql, next(iter(many_params)))
+    
     return formatted_sql, out_params_list

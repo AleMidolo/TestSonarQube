@@ -34,13 +34,13 @@ def process_text_links(text):
     last_end = 0
     
     for match in re.finditer(html_link_pattern, text):
-        # Add text before the HTML link
+        # Add text before the link
         processed_text += re.sub(url_pattern, process_url, text[last_end:match.start()])
-        # Add the HTML link unchanged
+        # Add the link itself unchanged
         processed_text += match.group(0)
         last_end = match.end()
     
-    # Process remaining text after last HTML link
+    # Process remaining text after last link
     processed_text += re.sub(url_pattern, process_url, text[last_end:])
     
     return processed_text
