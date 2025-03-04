@@ -1,28 +1,32 @@
 def validate_value(value):
     """
-    दिए गए मान को संबंधित नियमित अभिव्यक्ति (Regular Expression) के अनुसार सत्यापित करें।
+    Validar el valor proporcionado contra la expresión regular correspondiente.
 
-    आर्ग्युमेंट्स (Args):
-        value: सत्यापन के लिए स्ट्रिंग
+    Argumentos:
+        value: la cadena de texto a validar
 
-    त्रुटि (Raises):
-        ValidationError: यदि दिया गया मान नियमित अभिव्यक्ति के अनुरूप नहीं है।
+    Excepciones:
+        ValidationError: si el valor proporcionado no cumple con la expresión regular.
     """
     import re
 
-    class ValidationError(Exception):
-        pass
+    # Expresión regular para validar que el valor solo contenga letras, números y espacios
+    pattern = r'^[a-zA-Z0-9\s]+$'
 
-    # Check if value is string
+    # Validar que el valor no esté vacío
+    if not value:
+        raise ValidationError("El valor no puede estar vacío")
+
+    # Validar que el valor sea una cadena de texto
     if not isinstance(value, str):
-        raise ValidationError("Input must be a string")
+        raise ValidationError("El valor debe ser una cadena de texto")
 
-    # Regular expression pattern for validation
-    # Allows alphanumeric characters and some special characters
-    pattern = r'^[a-zA-Z0-9_\-\.]+$'
-
-    # Validate the value against pattern
+    # Validar que el valor cumpla con la expresión regular
     if not re.match(pattern, value):
-        raise ValidationError("Invalid value format. Only alphanumeric characters, underscore, hyphen and dot are allowed.")
+        raise ValidationError("El valor solo puede contener letras, números y espacios")
 
     return True
+
+class ValidationError(Exception):
+    """Excepción personalizada para errores de validación"""
+    pass

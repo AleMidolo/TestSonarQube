@@ -1,23 +1,25 @@
 def get_spec_defaults(self):
     """
-    स्पेक और अन्य स्रोतों से तर्कों के डिफ़ॉल्ट मान प्राप्त करें।
+    Resolver los valores de los argumentos desde la especificación y otras fuentes.
     """
     defaults = {}
     
-    # Get defaults from spec if available
     if hasattr(self, 'spec') and self.spec:
-        for param in self.spec.parameters:
-            if param.default is not None:
-                defaults[param.name] = param.default
+        # Obtener valores por defecto de la especificación
+        for param_name, param in self.spec.parameters.items():
+            if hasattr(param, 'default'):
+                defaults[param_name] = param.default
                 
-    # Get defaults from other sources like config files
-    if hasattr(self, 'config'):
-        defaults.update(self.config.get('defaults', {}))
-        
-    # Get defaults from environment variables
-    for key, value in os.environ.items():
-        if key.startswith(self.env_prefix):
-            param_name = key[len(self.env_prefix):].lower()
-            defaults[param_name] = value
-            
+        # Obtener valores de la configuración global si existe
+        if hasattr(self, 'config') and self.config:
+            for key, value in self.config.items():
+                if key in self.spec.parameters:
+                    defaults[key] = value
+                    
+        # Obtener valores de variables de entorno
+        for param_name in self.spec.parameters:
+            env_value = os.environ.get(param_name.upper())
+            if env_value is not None:
+                defaults[param_name] = env_value
+                
     return defaults

@@ -1,6 +1,6 @@
 def dehydrate_point(value):
     """
-    पॉइंट डेटा के लिए डिहाइड्रेटर।
+    Deshidratador para datos de tipo `Point`.
 
     :param value:
     :type value: Point

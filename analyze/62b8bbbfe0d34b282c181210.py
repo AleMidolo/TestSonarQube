@@ -1,31 +1,29 @@
 def append_text_to_file(file_name, text_buffer, encoding, overwrite=False):
     """
-    दिए गए बाइनरी बफ़र को निर्दिष्ट फ़ाइल नाम में लिखें।  
-    आवश्यक होने पर फ़ाइल बनाएँ।  
-    :param file_name: फ़ाइल का नाम।  
+    Escribe en el archivo especificado el búfer de texto proporcionado.  
+    Crea el archivo si es necesario.  
+    :param file_name: Nombre del archivo.  
     :type file_name: str  
-    :param text_buffer: लिखने के लिए टेक्स्ट बफ़र।  
+    :param text_buffer: Búfer de texto a escribir.  
     :type text_buffer: str  
-    :param encoding: उपयोग करने के लिए एन्कोडिंग।  
+    :param encoding: La codificación a utilizar.  
     :type encoding: str  
-    :param overwrite: यदि सत्य है, तो फ़ाइल को ओवरराइट किया जाएगा।  
+    :param overwrite: Si es verdadero, el archivo será sobrescrito.  
     :type overwrite: bool  
-    :return: लिखे गए बाइट्स की संख्या या त्रुटि होने पर 0 से कम।  
+    :return: El número de bytes escritos o un valor menor que 0 si ocurre un error.  
     :rtype int  
     """
     try:
-        # Determine write mode based on overwrite parameter
+        # Determinar el modo de apertura según overwrite
         mode = 'w' if overwrite else 'a'
         
-        # Open file with specified encoding
-        with open(file_name, mode, encoding=encoding) as f:
-            # Write text buffer to file
-            bytes_written = f.write(text_buffer)
-            return bytes_written
+        # Abrir el archivo con la codificación especificada
+        with open(file_name, mode, encoding=encoding) as file:
+            # Escribir el buffer de texto
+            bytes_written = file.write(text_buffer)
             
-    except IOError:
+        return bytes_written
+        
+    except Exception as e:
+        # En caso de error retornar -1
         return -1
-    except UnicodeEncodeError:
-        return -2
-    except Exception:
-        return -3

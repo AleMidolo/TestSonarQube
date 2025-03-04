@@ -1,10 +1,9 @@
 def plugins_manager(cls):
     """
-    प्लगइन मैनेजर प्राप्त करता है।
+    Obtiene el gestor de plugins.
     """
     if not hasattr(cls, '_plugins_manager'):
-        from yapsy.PluginManager import PluginManager
-        cls._plugins_manager = PluginManager()
-        cls._plugins_manager.setPluginPlaces(['plugins'])
-        cls._plugins_manager.collectPlugins()
+        from pineboo.plugins.manager import PluginsManager
+        cls._plugins_manager = PluginsManager()
+    
     return cls._plugins_manager

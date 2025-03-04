@@ -1,7 +1,16 @@
-def get_option_spec(self, command_name):
+def get_option_spec(self, command_name, argument_name):
     """
-    दिए गए विकल्प नाम के लिए विनिर्देश प्राप्त करता है।
+    Obtiene la especificación para el nombre de opción especificado.
     """
-    if command_name in self.command_specs:
-        return self.command_specs[command_name].get('options', {})
-    return {}
+    # Verificar que el comando existe
+    if command_name not in self.commands:
+        raise ValueError(f"Command '{command_name}' not found")
+        
+    command = self.commands[command_name]
+    
+    # Buscar el argumento en las opciones del comando
+    if argument_name not in command.options:
+        raise ValueError(f"Option '{argument_name}' not found for command '{command_name}'")
+        
+    # Retornar la especificación de la opción
+    return command.options[argument_name]

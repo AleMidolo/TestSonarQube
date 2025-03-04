@@ -1,63 +1,54 @@
+from functools import wraps
+from collections import OrderedDict
+import time
+
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
-    """
-    एक डेकोरेटर जो एक फ़ंक्शन को एक मेमोराइज़िंग कॉलेबल के साथ रैप करता है,
-    जो `maxsize` तक के परिणामों को सेव करता है। यह एक Least Recently Used (LRU)
-    एल्गोरिदम पर आधारित होता है और प्रत्येक आइटम के लिए एक समय-सीमा (Time-To-Live, TTL) 
-    मान लागू करता है।
-    """
     def decorator(func):
-        # Create cache dict to store results and timestamps
-        cache = {}
-        # Create ordered dict to track LRU
-        cache_order = collections.OrderedDict()
+        # Cache para almacenar resultados con timestamps
+        cache = OrderedDict()
         
-        @functools.wraps(func)
+        @wraps(func)
         def wrapper(*args, **kwargs):
-            # Create cache key based on args
-            key = args
-            if typed:
-                key += tuple(type(arg) for arg in args)
+            # Crear clave para el cache
+            key = str(args)
             if kwargs:
-                key += tuple(sorted(kwargs.items()))
-                if typed:
-                    key += tuple(type(v) for v in kwargs.values())
+                key += str(sorted(kwargs.items()))
+            if typed:
+                key += str(tuple(type(arg) for arg in args))
+                if kwargs:
+                    key += str(tuple(type(v) for v in kwargs.values()))
+                    
+            # Obtener tiempo actual
+            current_time = timer()
             
-            # Get current time
-            now = timer()
-            
-            # Check if result in cache and not expired
+            # Verificar si la clave existe y no ha expirado
             if key in cache:
                 result, timestamp = cache[key]
-                if now - timestamp <= ttl:
-                    # Move key to end to mark as most recently used
-                    cache_order.move_to_end(key)
+                if current_time - timestamp <= ttl:
+                    # Mover el item al final (más recientemente usado)
+                    cache.move_to_end(key)
                     return result
                 else:
-                    # Remove expired entry
+                    # Eliminar entrada expirada
                     del cache[key]
-                    del cache_order[key]
             
-            # Call function to get new result
+            # Calcular nuevo resultado
             result = func(*args, **kwargs)
             
-            # Add to cache
-            cache[key] = (result, now)
-            cache_order[key] = None
+            # Agregar al cache
+            cache[key] = (result, current_time)
             
-            # Remove oldest entries if cache too large
+            # Mantener el tamaño máximo del cache
             while len(cache) > maxsize:
-                oldest_key = next(iter(cache_order))
-                del cache[oldest_key]
-                del cache_order[oldest_key]
+                cache.popitem(last=False)
                 
             return result
             
-        # Add cache clear method
-        def clear_cache():
-            cache.clear()
-            cache_order.clear()
-            
-        wrapper.clear_cache = clear_cache
-        return wrapper
+        # Agregar método para limpiar el cache
+        wrapper.cache_clear = lambda: cache.clear()
         
+        # Agregar método para obtener el tamaño del cache
+        wrapper.cache_info = lambda: len(cache)
+        
+        return wrapper
     return decorator

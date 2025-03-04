@@ -1,18 +1,22 @@
 def amend_bzparams(self, params, bug_ids):
     """
-    बगज़िला पैरामीटर्स को संशोधित करें
+    Modificar los parámetros de Bugzilla
     """
-    if not bug_ids:
-        return params
+    if not params:
+        params = {}
         
-    if isinstance(bug_ids, (str, int)):
-        bug_ids = [str(bug_ids)]
-    else:
-        bug_ids = [str(bug_id) for bug_id in bug_ids]
-        
-    if 'bug_id' in params:
-        params['bug_id'].extend(bug_ids)
-    else:
-        params['bug_id'] = bug_ids
+    if bug_ids:
+        if isinstance(bug_ids, (list, tuple)):
+            params['bug_id'] = bug_ids
+        else:
+            params['bug_id'] = [bug_ids]
+            
+    if 'include_fields' not in params:
+        params['include_fields'] = ['id', 'summary', 'status', 'resolution', 
+                                  'creator', 'assigned_to', 'creation_time',
+                                  'last_change_time', 'component', 'product']
+                                  
+    if 'exclude_fields' not in params:
+        params['exclude_fields'] = []
         
     return params

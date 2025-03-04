@@ -3,17 +3,15 @@ def addignored(ignored):
     import subprocess
     
     # Run git ls-files command to get all files
-    git_files = subprocess.run(['git', 'ls-files', '--ignored', '--exclude-standard'], 
-                             capture_output=True, text=True)
+    git_files = subprocess.check_output(['git', 'ls-files', '--others', '--ignored', '--exclude-standard']).decode('utf-8')
     
-    # Convert output to list, split on newlines and remove empty strings
-    ignored_files = [x for x in git_files.stdout.split('\n') if x]
+    # Split output into list and remove empty strings
+    files_list = [x for x in git_files.split('\n') if x]
     
-    # Filter list to only include files that match ignored pattern
-    if ignored:
-        ignored_files = [f for f in ignored_files if ignored in f]
-        
-    # Join filenames with commas
-    result = ','.join(ignored_files)
+    # Sort the list alphabetically
+    files_list.sort()
     
-    return result
+    # Join list elements with commas
+    ignored_files = ','.join(files_list)
+    
+    return ignored_files

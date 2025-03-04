@@ -1,27 +1,34 @@
 def initialize(self):
     """
-    एक नया OCFL स्टोरेज रूट बनाएँ और प्रारंभ करें।
+    Crear e inicializar una nueva raíz de almacenamiento OCFL.
     """
-    # Create root directory if it doesn't exist
-    if not os.path.exists(self.root):
-        os.makedirs(self.root)
-        
-    # Create namaste file
-    namaste_path = os.path.join(self.root, "0=ocfl_1.0")
+    # Crear el directorio raíz si no existe
+    if not os.path.exists(self.root_path):
+        os.makedirs(self.root_path)
+
+    # Crear archivo namaste 0=ocfl_1.0
+    namaste_path = os.path.join(self.root_path, "0=ocfl_1.0")
     with open(namaste_path, 'w') as f:
         f.write("ocfl_1.0")
-        
-    # Create storage root declaration file
-    storage_root_path = os.path.join(self.root, "ocfl_1.0.txt") 
-    with open(storage_root_path, 'w') as f:
-        f.write("This directory is an OCFL Storage Root")
-        
-    # Create extensions directory
-    extensions_dir = os.path.join(self.root, "extensions")
-    if not os.path.exists(extensions_dir):
-        os.makedirs(extensions_dir)
-        
-    # Create objects directory
-    objects_dir = os.path.join(self.root, "objects") 
+
+    # Crear archivo ocfl_layout.json
+    layout = {
+        "extension": "0000",
+        "description": "OCFL Storage Root",
+        "type": "https://ocfl.io/1.0/spec/#root",
+        "created": datetime.datetime.now().isoformat()
+    }
+
+    layout_path = os.path.join(self.root_path, "ocfl_layout.json")
+    with open(layout_path, 'w') as f:
+        json.dump(layout, f, indent=2)
+
+    # Crear directorio de objetos
+    objects_dir = os.path.join(self.root_path, "objects")
     if not os.path.exists(objects_dir):
         os.makedirs(objects_dir)
+
+    # Crear directorio de extensiones
+    extensions_dir = os.path.join(self.root_path, "extensions") 
+    if not os.path.exists(extensions_dir):
+        os.makedirs(extensions_dir)

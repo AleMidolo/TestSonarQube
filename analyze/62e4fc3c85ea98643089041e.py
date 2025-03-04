@@ -1,13 +1,12 @@
 def _inline_r_setup(code: str) -> str:
-    # Add R options setup code before the user's code
-    setup_code = """
-options(warn=-1)  # Suppress warnings
-options(width=120)  # Set output width
-options(scipen=999)  # Avoid scientific notation
-options(stringsAsFactors=FALSE)  # Don't convert strings to factors by default
-"""
+    # Define R setup commands
+    r_setup = """
+    options(warn=-1)  # Suppress warnings
+    options(width=1000)  # Increase output width
+    options(scipen=999)  # Prevent scientific notation
+    """
     
-    # Combine setup code with user code
-    full_code = setup_code + "\n" + code
+    # Combine setup with provided code
+    full_code = r_setup + "\n" + code
     
     return full_code

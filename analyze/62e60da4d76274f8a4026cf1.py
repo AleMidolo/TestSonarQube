@@ -1,21 +1,25 @@
 def values(self, *keys):
-    # If no keys provided, return all values
+    """
+    Devuelve los valores del registro, filtrando opcionalmente para incluir solo ciertos valores por índice o clave.
+
+    :param keys: índices o claves de los elementos a incluir; si no se proporcionan, se incluirán todos los valores  
+    :return: lista de valores  
+    :rtype: list
+    """
     if not keys:
+        # Si no se proporcionan keys, devolver todos los valores
         return list(self._data.values())
     
-    # If keys provided, return values for those keys only
     result = []
     for key in keys:
-        # Handle both index and key access
         if isinstance(key, int):
-            # Get value by index
-            try:
+            # Si es un índice numérico
+            if 0 <= key < len(self._data):
+                # Obtener el valor en la posición key
                 result.append(list(self._data.values())[key])
-            except IndexError:
-                continue
         else:
-            # Get value by key
+            # Si es una clave
             if key in self._data:
                 result.append(self._data[key])
-    
+                
     return result

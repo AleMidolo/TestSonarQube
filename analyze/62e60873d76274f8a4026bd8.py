@@ -1,15 +1,26 @@
 def protocol_handlers(cls, protocol_version=None):
-    # Check if protocol_version is a tuple when provided
-    if protocol_version is not None and not isinstance(protocol_version, tuple):
-        raise TypeError("Protocol version must be specified as a tuple")
+    # Diccionario de controladores de protocolo disponibles
+    handlers = {
+        (3, 0): BoltProtocolV3,
+        (4, 0): BoltProtocolV4,
+        (4, 1): BoltProtocolV4_1,
+        (4, 2): BoltProtocolV4_2,
+        (4, 3): BoltProtocolV4_3,
+        (4, 4): BoltProtocolV4_4,
+        (5, 0): BoltProtocolV5
+    }
 
-    # Get all handlers registered with the class
-    handlers = {version: handler for version, handler in cls.__dict__.items() 
-               if isinstance(version, tuple)}
+    # Si no se especifica versión, devolver todos los controladores
+    if protocol_version is None:
+        return handlers
 
-    # If specific version requested, return only that handler if it exists
-    if protocol_version is not None:
-        return {protocol_version: handlers.get(protocol_version)} if protocol_version in handlers else {}
+    # Validar que la versión sea una tupla
+    if not isinstance(protocol_version, tuple):
+        raise TypeError("La versión del protocolo debe ser una tupla")
 
-    # Otherwise return all handlers
-    return handlers
+    # Si se especifica versión, devolver solo el controlador para esa versión
+    if protocol_version in handlers:
+        return {protocol_version: handlers[protocol_version]}
+    
+    # Si la versión no existe, devolver diccionario vacío
+    return {}

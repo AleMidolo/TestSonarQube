@@ -1,11 +1,8 @@
 def _create_converter(self) -> _converting._Converter:
     """
-    पैरामीटर स्टाइल कन्वर्टर बनाएं।
+    Crear el convertidor de estilo de parámetros.
 
-    रिटर्न करता है पैरामीटर स्टाइल कन्वर्टर (:class:`._converting._Converter`)।
+    Devuelve el convertidor de estilo de parámetros (:class:`._converting._Converter`).
     """
-    return _converting._Converter(
-        style=self._style,
-        case=self._case,
-        separator=self._separator
-    )
+    from ._converting import _Converter
+    return _Converter()

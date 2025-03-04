@@ -1,26 +1,45 @@
 def _extract_number_and_supplment_from_issue_element(issue):
     """
-    समस्या (issue) की सामग्री से number और suppl के संभावित मानों को निकालें।
+    Extrae los posibles valores de 'number' y 'suppl' a partir del contenido de 'issue'.
     """
-    number = None
+    if not issue:
+        return None, None
+        
+    # Remove any whitespace
+    issue = issue.strip()
+    
+    # Check for supplement indicator
     suppl = None
+    number = None
     
-    if issue:
-        # Remove any whitespace
-        issue = issue.strip()
-        
-        # Split on spaces to separate number and supplement
-        parts = issue.split()
-        
-        if parts:
-            # First part is the number
-            number = parts[0]
+    # Common supplement indicators
+    suppl_indicators = ['Suppl', 'suppl', 'Supplement', 'supplement', 'S']
+    
+    for indicator in suppl_indicators:
+        if indicator in issue:
+            # Split on supplement indicator
+            parts = issue.split(indicator)
             
-            # Check for supplement in remaining parts
-            if len(parts) > 1:
-                suppl = ' '.join(parts[1:])
+            # Get number before supplement
+            if parts[0].strip():
+                number = parts[0].strip()
                 
-                # Remove parentheses if present
-                suppl = suppl.strip('()')
+            # Get supplement number if exists
+            if len(parts) > 1 and parts[1].strip():
+                suppl = parts[1].strip()
+                # Remove any leading/trailing punctuation
+                suppl = suppl.strip('.:() ')
+            else:
+                suppl = '1' # Default supplement number
+                
+            return number, suppl
     
-    return number, suppl
+    # If no supplement found, treat as regular issue number
+    try:
+        number = issue.strip('.:() ')
+        if number.isdigit():
+            return number, None
+    except:
+        pass
+        
+    return None, None

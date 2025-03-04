@@ -1,24 +1,27 @@
 def get_versions():
     """
-    संस्करण जानकारी प्राप्त करें या यदि ऐसा करने में असमर्थ हैं तो डिफ़ॉल्ट मान लौटाएं।
+    Obtén la información de la versión o devuelve el valor predeterminado si no es posible obtenerla.
     """
     try:
-        import sys
+        import pkg_resources
         import platform
-        import django
-        
+        import sys
+
         versions = {
             'python': sys.version.split()[0],
             'platform': platform.platform(),
-            'django': django.get_version()
+            'packages': {
+                pkg.key: pkg.version 
+                for pkg in pkg_resources.working_set
+            }
         }
         
         return versions
         
     except Exception:
-        # Return default values if unable to get version info
+        # Return default version info if unable to get actual versions
         return {
-            'python': '3.x',
+            'python': 'unknown',
             'platform': 'unknown',
-            'django': 'unknown'
+            'packages': {}
         }

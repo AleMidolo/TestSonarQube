@@ -1,47 +1,48 @@
 def extend_cli(self, root_subparsers):
     """
-    मुख्य एंट्री पॉइंट में स्पेक CLI विकल्प जोड़ता है।
+    Agrega las opciones de línea de comandos (CLI) de especificación al punto de entrada principal.
 
-    :param subparser: वह सबपार्सर ऑब्जेक्ट जिसे विस्तारित करना है।
+    :param subparser: el objeto subparser que se va a extender.
     """
-    # Add spec subcommand parser
+    # Create specification subparser
     spec_parser = root_subparsers.add_parser(
         'spec',
-        help='Manage project specifications'
+        help='Specification related commands'
     )
-
-    # Create subparser for spec commands
+    
+    # Create subparsers for spec commands
     spec_subparsers = spec_parser.add_subparsers(
-        title='spec commands',
+        title='Specification commands',
         dest='spec_command'
     )
 
-    # Add init command
-    init_parser = spec_subparsers.add_parser(
-        'init',
-        help='Initialize a new spec file'
-    )
-    init_parser.add_argument(
-        '--template',
-        help='Template file to use for initialization'
-    )
-
-    # Add validate command  
+    # Add validate command
     validate_parser = spec_subparsers.add_parser(
         'validate',
-        help='Validate spec file'
+        help='Validate a specification file'
     )
     validate_parser.add_argument(
         'spec_file',
-        help='Path to spec file to validate'
+        help='Path to specification file'
     )
 
-    # Add update command
-    update_parser = spec_subparsers.add_parser(
-        'update',
-        help='Update existing spec file'
+    # Add generate command  
+    generate_parser = spec_subparsers.add_parser(
+        'generate',
+        help='Generate code from specification'
     )
-    update_parser.add_argument(
+    generate_parser.add_argument(
         'spec_file',
-        help='Path to spec file to update'
+        help='Path to specification file'
+    )
+    generate_parser.add_argument(
+        '-o', '--output',
+        help='Output directory for generated code',
+        default='.'
+    )
+
+    # Add list command
+    list_parser = spec_subparsers.add_parser(
+        'list',
+        help='List available specifications'
     )

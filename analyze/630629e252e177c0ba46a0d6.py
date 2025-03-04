@@ -1,29 +1,28 @@
 def retrieve_diaspora_host_meta(host):
     """
-    एक रिमोट डायस्पोरा होस्ट-मेटा डॉक्यूमेंट प्राप्त करें।
+    Recupera un documento "host-meta" remoto de Diaspora.
 
-    :arg host: वह होस्ट जिससे डेटा प्राप्त करना है 
-    :returns: ``XRD`` इंस्टेंस
+    :arg host: Host del cual se recuperará el documento
+    :returns: Instancia de ``XRD``
     """
     import requests
     from xrd import XRD
     
-    # Try HTTPS first
-    try:
-        url = f"https://{host}/.well-known/host-meta"
-        response = requests.get(url)
-        if response.status_code == 200:
-            return XRD.parse_xrd(response.text)
-    except:
-        pass
-        
-    # Fall back to HTTP if HTTPS fails
-    try:
-        url = f"http://{host}/.well-known/host-meta"
-        response = requests.get(url)
-        if response.status_code == 200:
-            return XRD.parse_xrd(response.text)
-    except:
-        pass
-        
+    # URLs to try in order - first HTTPS then HTTP
+    urls = [
+        f"https://{host}/.well-known/host-meta",
+        f"http://{host}/.well-known/host-meta"
+    ]
+    
+    for url in urls:
+        try:
+            response = requests.get(url, timeout=10)
+            if response.status_code == 200:
+                # Parse the XRD document from the response content
+                xrd = XRD.parse_xrd(response.text)
+                return xrd
+        except (requests.RequestException, ValueError):
+            continue
+            
+    # If we get here, both URLs failed
     raise ConnectionError(f"Could not retrieve host-meta from {host}")

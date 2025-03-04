@@ -1,57 +1,51 @@
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    डायस्पोरा वेबफिंगर डॉक्यूमेंट को प्राप्त करें और पार्स करें।
+    Recupera y analiza un documento "webfinger" remoto de Diaspora.
 
-    :पैरामीटर हैंडल: प्राप्त करने के लिए रिमोट हैंडल  
-    :वापसी: डिक्शनरी (dict)
+    :arg handle: Identificador remoto a recuperar 
+    :returns: dict
     """
     import requests
     import json
     from urllib.parse import urlparse
 
-    # Handle validation
+    # Validar formato del handle
     if '@' not in handle:
-        raise ValueError("Invalid handle format - must contain @")
-
-    # Split handle into user and domain
-    username, domain = handle.split('@', 1)
+        raise ValueError("Handle debe tener formato usuario@dominio")
+        
+    # Separar usuario y dominio
+    username, domain = handle.split('@')
     
-    # Construct webfinger URL
-    webfinger_url = f"https://{domain}/.well-known/webfinger"
-    params = {
-        'resource': f'acct:{handle}'
-    }
-
+    # Construir URL webfinger
+    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
+    
     try:
-        # Make request to webfinger endpoint
-        response = requests.get(webfinger_url, params=params)
+        # Hacer petición HTTP
+        response = requests.get(webfinger_url, timeout=10)
         response.raise_for_status()
         
-        # Parse JSON response
+        # Parsear respuesta JSON
         data = response.json()
         
-        # Extract relevant information
+        # Validar formato de respuesta
+        if 'subject' not in data or not data.get('links'):
+            raise ValueError("Formato de respuesta webfinger inválido")
+            
+        # Construir diccionario de respuesta
         result = {
-            'handle': handle,
-            'domain': domain,
-            'username': username,
+            'subject': data['subject'],
+            'aliases': data.get('aliases', []),
             'links': {}
         }
         
-        # Parse links
-        if 'links' in data:
-            for link in data['links']:
-                if 'rel' in link:
-                    result['links'][link['rel']] = {
-                        'href': link.get('href', ''),
-                        'type': link.get('type', '')
-                    }
-                    
+        # Procesar links
+        for link in data['links']:
+            if 'rel' in link and 'href' in link:
+                result['links'][link['rel']] = link['href']
+                
         return result
-
+        
     except requests.exceptions.RequestException as e:
-        raise ConnectionError(f"Failed to retrieve webfinger document: {str(e)}")
+        raise ConnectionError(f"Error al recuperar webfinger: {str(e)}")
     except json.JSONDecodeError:
-        raise ValueError("Invalid webfinger document format")
-    except Exception as e:
-        raise Exception(f"Error processing webfinger document: {str(e)}")
+        raise ValueError("Respuesta webfinger no es JSON válido")

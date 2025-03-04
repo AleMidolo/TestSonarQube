@@ -1,12 +1,13 @@
 def _replace_url_args(url, url_args):
     """
-    किसी भी कस्टम स्ट्रिंग URL आइटम को `args` में दिए गए मानों से बदलें।
+    Reemplace cualquier elemento personalizado de la URL con los valores en `args`.
     """
     if not url_args:
         return url
         
     for key, value in url_args.items():
-        placeholder = '{' + key + '}'
-        url = url.replace(placeholder, str(value))
-        
+        if value is not None:
+            placeholder = '{' + key + '}'
+            url = url.replace(placeholder, str(value))
+            
     return url

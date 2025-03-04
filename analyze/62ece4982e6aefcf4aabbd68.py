@@ -1,26 +1,31 @@
 def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = None) -> str:
-    # Handle 0 case
+    # Manejo del caso especial cuando el número es 0
     if number == 0:
         result = alphabet[0]
         if padding:
             result = result.rjust(padding, alphabet[0])
         return result
         
-    # Convert number to string using given alphabet
+    # Convertir el número usando el alfabeto dado
     base = len(alphabet)
     result = ""
-    n = abs(number)
     
+    # Convertir el número a la base del alfabeto
+    n = abs(number)
     while n:
-        n, remainder = divmod(n, base)
-        result = alphabet[remainder] + result
+        result = alphabet[n % base] + result
+        n //= base
         
-    # Add negative sign if needed
+    # Agregar el signo negativo si es necesario
     if number < 0:
         result = '-' + result
         
-    # Add padding if specified
+    # Agregar padding si se especifica
     if padding:
-        result = result.rjust(padding, alphabet[0])
-        
+        if number < 0:
+            # Si es negativo, el padding va después del signo
+            result = '-' + result[1:].rjust(padding, alphabet[0])
+        else:
+            result = result.rjust(padding, alphabet[0])
+            
     return result

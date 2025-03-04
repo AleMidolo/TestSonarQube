@@ -1,45 +1,36 @@
 def validate_hierarchy(self, validate_objects=True, check_digests=True, show_warnings=False):
     """
-    स्टोरेज रूट हाइरार्की को मान्य करें।
+    Validar la jerarquía de la raíz de almacenamiento.
 
-    रिटर्न करता है:
-        num_objects - जांचे गए ऑब्जेक्ट्स की संख्या
-        good_objects - जांचे गए ऑब्जेक्ट्स की संख्या जो मान्य पाए गए
+    Retorna:
+        num_objects - número de objetos verificados
+        good_objects - número de objetos verificados que se encontraron válidos
     """
     num_objects = 0
     good_objects = 0
     
-    # Recursively walk through all directories
+    # Recorrer recursivamente la jerarquía
     for root, dirs, files in self.walk():
         for file in files:
             num_objects += 1
             
-            # Get full path
-            filepath = os.path.join(root, file)
-            
             try:
-                # Validate object if requested
+                # Validar objeto si está habilitado
                 if validate_objects:
-                    obj = self.get_object(filepath)
-                    if obj is None:
-                        if show_warnings:
-                            print(f"Warning: Invalid object at {filepath}")
-                        continue
+                    obj = self.get_object(file)
+                    
+                    # Verificar digests si está habilitado
+                    if check_digests:
+                        if obj.verify_digest():
+                            good_objects += 1
+                        elif show_warnings:
+                            print(f"Warning: Invalid digest for {file}")
+                    else:
+                        good_objects += 1
                         
-                # Check digest if requested        
-                if check_digests:
-                    stored_digest = self.get_digest(filepath)
-                    computed_digest = self.compute_digest(filepath)
-                    if stored_digest != computed_digest:
-                        if show_warnings:
-                            print(f"Warning: Digest mismatch for {filepath}")
-                        continue
-                
-                good_objects += 1
-                
             except Exception as e:
                 if show_warnings:
-                    print(f"Warning: Error validating {filepath}: {str(e)}")
+                    print(f"Warning: Error validating {file}: {str(e)}")
                 continue
                 
     return num_objects, good_objects

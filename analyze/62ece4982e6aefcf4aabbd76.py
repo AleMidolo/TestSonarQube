@@ -1,16 +1,19 @@
 def match(filename):
     """
-    तर्क (Args):
-    - `filename`: वह फ़ाइल नाम जिसे मिलाना है।
+    Verificar si el nombre de archivo es un tipo que este módulo soporta
 
-    रिटर्न (Returns):
-    - यदि फ़ाइल प्रकार समर्थित नहीं है, तो `False` लौटाएगा। यदि समर्थित है, तो `True` लौटाएगा।
+    Argumentos:
+        filename: Nombre de archivo a verificar
+    Retorna:
+        'False' si no es compatible, 'True' si es soportado
     """
-    # List of supported file extensions
-    supported_extensions = ['.txt', '.pdf', '.doc', '.docx', '.csv', '.xls', '.xlsx']
+    # Lista de extensiones soportadas
+    supported_extensions = ['.txt', '.doc', '.docx', '.pdf', '.rtf']
     
-    # Get the file extension from filename
-    file_extension = filename[filename.rfind('.'):].lower() if '.' in filename else ''
-    
-    # Check if extension is in supported list
-    return file_extension in supported_extensions
+    # Obtener la extensión del archivo en minúsculas
+    file_extension = filename.lower().split('.')[-1]
+    if not file_extension:
+        return False
+        
+    # Verificar si la extensión está en la lista de soportadas
+    return f'.{file_extension}' in supported_extensions

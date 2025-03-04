@@ -1,15 +1,20 @@
 def fill(self, coord, weight=1):
     """
-    *coord* पर दिए गए *weight* के साथ हिस्टोग्राम को भरें।
+    Llena el histograma en *coord* con el *weight* dado.
 
-    यदि *coord* हिस्टोग्राम की सीमाओं के बाहर है, तो उसे अनदेखा कर दिया जाएगा।
+    Las coordenadas fuera de los límites del histograma son ignoradas.
     """
-    # Check if coordinate is within histogram bounds
-    if not self._in_range(coord):
-        return
+    # Verificar que las coordenadas estén dentro de los límites
+    for i, c in enumerate(coord):
+        if c < 0 or c >= self.bins[i]:
+            return
+            
+    # Convertir coordenadas multidimensionales a índice lineal
+    index = 0
+    stride = 1
+    for i, c in enumerate(reversed(coord)):
+        index += c * stride
+        stride *= self.bins[len(self.bins)-i-1]
         
-    # Get bin index for the coordinate
-    bin_idx = self._get_bin_index(coord)
-    
-    # Add weight to the bin
-    self._bins[bin_idx] += weight
+    # Incrementar el bin correspondiente con el peso dado
+    self.data[index] += weight

@@ -1,27 +1,39 @@
 def hydrate_time(nanoseconds, tz=None):
     """
-    `Time` और `LocalTime` मानों के लिए हाइड्रेटर।  
+    Hidratador para valores de `Time` y `LocalTime`.
 
-    पैरामीटर (Parameters):
-    -nanoseconds: 
-    - tz: 
-
-    वापसी मान:
-    - समय 
+    :param nanoseconds: Number of nanoseconds since midnight
+    :param tz: Optional timezone 
+    :return: Time
     """
-    # Convert nanoseconds to hours, minutes, seconds
-    total_seconds = nanoseconds // 1_000_000_000
-    hours = total_seconds // 3600
-    minutes = (total_seconds % 3600) // 60
-    seconds = total_seconds % 60
-    nanos = nanoseconds % 1_000_000_000
+    from datetime import time, timezone, timedelta
+    
+    # Calculate hours, minutes, seconds and microseconds from nanoseconds
+    total_microseconds = nanoseconds // 1000
+    hours = total_microseconds // (3600 * 1000000)
+    remaining = total_microseconds % (3600 * 1000000)
+    minutes = remaining // (60 * 1000000)
+    remaining = remaining % (60 * 1000000)
+    seconds = remaining // 1000000
+    microseconds = remaining % 1000000
 
-    # Format time components
+    # Create time object
     if tz is None:
-        # Return UTC time
-        time_str = f"{hours:02d}:{minutes:02d}:{seconds:02d}.{nanos:09d}"
+        return time(hour=int(hours), 
+                   minute=int(minutes),
+                   second=int(seconds),
+                   microsecond=int(microseconds))
     else:
-        # Return local time with timezone
-        time_str = f"{hours:02d}:{minutes:02d}:{seconds:02d}.{nanos:09d} {tz}"
-
-    return time_str
+        # If timezone provided, create time with timezone
+        if isinstance(tz, str):
+            # Convert string timezone offset to timedelta
+            hours_offset = int(tz[1:3])
+            minutes_offset = int(tz[3:]) if len(tz) > 3 else 0
+            delta = timedelta(hours=hours_offset, minutes=minutes_offset)
+            tz = timezone(delta if tz[0] == '+' else -delta)
+            
+        return time(hour=int(hours),
+                   minute=int(minutes), 
+                   second=int(seconds),
+                   microsecond=int(microseconds),
+                   tzinfo=tz)

@@ -1,21 +1,36 @@
 def _get_conditionally_required_args(self, command_name, options_spec, args):
+    """
+    Lista los argumentos con la condición ``required_when`` que coincide.
+
+    :param command_name: el nombre del comando.
+    :param options_spec: la lista de opciones de especificación del comando.
+    :param args: los argumentos de entrada recibidos.
+    :return: list, lista de nombres de argumentos que coinciden con la condición ``required_when``.
+    """
     conditionally_required = []
     
     for option in options_spec:
-        # Check if option has required_when condition
         if 'required_when' in option:
-            required_when = option['required_when']
+            required_condition = option['required_when']
             
-            # Get the dependent argument and expected value
-            dependent_arg = required_when.get('arg')
-            expected_value = required_when.get('value')
-            
-            # Check if dependent argument exists in provided args
-            if dependent_arg in args:
-                actual_value = args[dependent_arg]
+            # Evaluar la condición required_when
+            if isinstance(required_condition, str):
+                # Si es una cadena, evaluar como expresión
+                try:
+                    condition_met = eval(required_condition, {'args': args})
+                except:
+                    condition_met = False
+            elif callable(required_condition):
+                # Si es una función, llamarla con los argumentos
+                try:
+                    condition_met = required_condition(args)
+                except:
+                    condition_met = False
+            else:
+                condition_met = bool(required_condition)
                 
-                # If actual value matches expected value, this option becomes required
-                if actual_value == expected_value:
-                    conditionally_required.append(option['name'])
-                    
+            # Si la condición se cumple, agregar el argumento a la lista
+            if condition_met:
+                conditionally_required.append(option['name'])
+                
     return conditionally_required

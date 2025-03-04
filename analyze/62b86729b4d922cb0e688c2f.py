@@ -1,22 +1,25 @@
 def base_config(user, etcd_host="localhost", etcd_port=2379):
     """
-    यह फ़ंक्शन कुछ सरल पैरामीटरों के साथ एक कॉन्फ़िगरेशन बनाता है, जिनके लिए डिफ़ॉल्ट मान सेट किया जा सकता है।  
+    Crea una configuración con algunos parámetros simples, los cuales tienen un valor predeterminado que puede ser configurado.
 
-    पैरामीटर (Args):
-    - user (str): स्थिर प्रमाणीकरण (static authentication) के लिए उपयोगकर्ता का नाम।  
-    - etcd_host (str): डेटाबेस के लिए होस्ट।  
-    - etcd_port (int): डेटाबेस के लिए पोर्ट। 
+    Argumentos:
+    user (str): el nombre del usuario para la autenticación estática.
+    etcd_host (str): el host para la base de datos.
+    etcd_port (int): el puerto para la base de datos.
 
-    रिटर्न (Returns):
-    - dict: बनाया गया कॉन्फ़िगरेशन।  
+    Retorna:
+    dict: la configuración creada.
     """
     config = {
-        "user": user,
+        "auth": {
+            "user": user,
+            "type": "static"
+        },
         "database": {
             "host": etcd_host,
-            "port": etcd_port
-        },
-        "version": "1.0"
+            "port": etcd_port,
+            "type": "etcd"
+        }
     }
     
     return config

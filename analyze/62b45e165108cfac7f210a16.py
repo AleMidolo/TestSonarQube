@@ -1,20 +1,23 @@
 def validate_as_prior_version(self, prior):
-    """
-    वर्तमान इन्वेंटरी ऑब्जेक्ट के लिए यह जांचें कि prior एक मान्य पूर्व संस्करण है।
+    # Verificar que prior sea una instancia de InventoryValidator
+    if not isinstance(prior, type(self)):
+        raise TypeError("El inventario previo debe ser del mismo tipo")
 
-    इनपुट वैरिएबल प्रायर को भी एक इन्वेंटरी वैलिडेटर ऑब्जेक्ट माना जाता है और माना जाता है कि स्व और प्रायर दोनों इन्वेंटरी को आंतरिक संगतता के लिए जाँच लिया गया है।
-    """
-    # Check that prior version timestamp is before current version
-    if prior.timestamp >= self.timestamp:
-        return False
-        
-    # Check that all items in prior version exist in current version
-    for item_id in prior.inventory:
-        if item_id not in self.inventory:
-            return False
-            
-        # Check that quantities only increase
-        if prior.inventory[item_id] > self.inventory[item_id]:
-            return False
-            
+    # Verificar que la fecha del prior sea anterior
+    if prior.date >= self.date:
+        raise ValueError("La fecha del inventario previo debe ser anterior")
+
+    # Verificar que los productos existentes en prior existan en self
+    # con cantidades mayores o iguales
+    for product_id, prior_qty in prior.quantities.items():
+        if product_id not in self.quantities:
+            raise ValueError(f"Producto {product_id} no existe en inventario actual")
+        if self.quantities[product_id] < prior_qty:
+            raise ValueError(f"Cantidad actual de {product_id} es menor que en versión previa")
+
+    # Verificar que los IDs de productos sean consistentes
+    if not set(prior.products.keys()).issubset(set(self.products.keys())):
+        raise ValueError("Los productos del inventario previo deben existir en el actual")
+
+    # Si pasa todas las validaciones, retornar True
     return True

@@ -1,12 +1,9 @@
 def _create_in_regex(self) -> Pattern:
     """
-    इन-स्टाइल पैरामीटर रेगुलर एक्सप्रेशन बनाएं।
+    Crea la expresión regular del parámetro "in-style".
 
-    रिटर्न करता है इन-स्टाइल पैरामीटर रेगुलर एक्सप्रेशन (:class:`re.Pattern`)।
+    Devuelve la expresión regular para el parámetro "in-style" (:class:`re.Pattern`).
     """
-    # Create regex pattern for matching IN style parameters
-    # Format: IN(param1, param2, ...)
-    pattern = r'IN\s*\((.*?)\)'
-    
-    # Compile and return the regex pattern
-    return re.compile(pattern, re.IGNORECASE)
+    import re
+    pattern = r'in-style\s*=\s*["\']([^"\']+)["\']'
+    return re.compile(pattern)

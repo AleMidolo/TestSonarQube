@@ -1,12 +1,12 @@
-def validate_requires_args(self, args):
+def validar_argumentos_requeridos(self, args):
     """
-    जांचें कि क्या सभी आवश्यक तर्क प्रदान किए गए हैं।
+    Verifica si se han proporcionado todos los argumentos requeridos.
     """
     if not args:
-        raise ValueError("Required arguments missing")
+        return False
         
     for arg in args:
-        if arg is None:
-            raise ValueError(f"Required argument {arg} is missing")
+        if arg is None or (isinstance(arg, str) and not arg.strip()):
+            return False
             
     return True

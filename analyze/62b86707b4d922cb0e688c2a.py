@@ -1,7 +1,7 @@
 def on(self, hook):
-    def decorator(handler):
-        if hook not in self._registry:
-            self._registry[hook] = []
-        self._registry[hook].append(handler)
-        return handler
+    def decorator(listener):
+        if hook not in self._listeners:
+            self._listeners[hook] = []
+        self._listeners[hook].append(listener)
+        return listener
     return decorator

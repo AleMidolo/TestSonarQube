@@ -1,15 +1,21 @@
 def popitem(self):
     """
-    सबसे हाल ही में उपयोग किए गए `(key, value)` जोड़े को हटाएं और वापस करें।
+    Elimina y devuelve el par (clave, valor) menos recientemente utilizado.
     """
-    if not self:
-        raise KeyError('Dictionary is empty')
+    if not self.cache:  # Si el cache está vacío
+        raise KeyError("Cache is empty")
         
-    # Get the most recently used key
-    key = next(reversed(self))
-    value = self[key]
+    # Obtener el nodo menos recientemente usado (el último de la lista)
+    lru_node = self.tail.prev
     
-    # Remove the key-value pair
-    del self[key]
+    # Obtener la clave y valor antes de eliminar
+    key = lru_node.key
+    value = lru_node.value
     
-    return (key, value)
+    # Eliminar el nodo de la lista doblemente enlazada
+    self._remove_node(lru_node)
+    
+    # Eliminar la entrada del diccionario
+    del self.cache[key]
+    
+    return key, value

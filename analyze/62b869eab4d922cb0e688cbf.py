@@ -11,41 +11,40 @@ def generate_default_observer_schema(app):
         if resource.get('observer_schema'):
             continue
             
-        # Get resource kind
-        kind = resource.get('kind', '')
+        # Get resource kind and API version
+        kind = resource.get('kind')
+        api_version = resource.get('apiVersion')
         
-        # Generate default schema based on resource kind
-        if kind == 'Deployment':
-            default_schema[resource['metadata']['name']] = {
-                'ready': '$.status.readyReplicas == $.spec.replicas'
-            }
-        elif kind == 'StatefulSet':
-            default_schema[resource['metadata']['name']] = {
-                'ready': '$.status.readyReplicas == $.spec.replicas'
-            }
-        elif kind == 'DaemonSet':
-            default_schema[resource['metadata']['name']] = {
-                'ready': '$.status.numberReady == $.status.desiredNumberScheduled'
-            }
-        elif kind == 'Pod':
-            default_schema[resource['metadata']['name']] = {
-                'ready': "$.status.phase in ['Running', 'Succeeded']"
-            }
-        elif kind == 'Service':
-            default_schema[resource['metadata']['name']] = {
-                'ready': 'true'
-            }
-        elif kind == 'PersistentVolumeClaim':
-            default_schema[resource['metadata']['name']] = {
-                'ready': "$.status.phase == 'Bound'"
-            }
-        elif kind == 'Job':
-            default_schema[resource['metadata']['name']] = {
-                'ready': "$.status.succeeded == 1"
-            }
-        elif kind == 'CronJob':
-            default_schema[resource['metadata']['name']] = {
-                'ready': 'true'
-            }
+        if not kind or not api_version:
+            continue
             
+        # Generate default schema for this resource type
+        resource_schema = {
+            'type': 'object',
+            'properties': {
+                'status': {
+                    'type': 'object',
+                    'properties': {
+                        'phase': {'type': 'string'},
+                        'conditions': {
+                            'type': 'array',
+                            'items': {
+                                'type': 'object',
+                                'properties': {
+                                    'type': {'type': 'string'},
+                                    'status': {'type': 'string'},
+                                    'reason': {'type': 'string'},
+                                    'message': {'type': 'string'}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        # Add schema to default_schema dict with resource type as key
+        resource_key = f"{api_version}/{kind}"
+        default_schema[resource_key] = resource_schema
+
     return default_schema

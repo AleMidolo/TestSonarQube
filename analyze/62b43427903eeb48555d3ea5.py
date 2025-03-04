@@ -4,44 +4,47 @@ def format(
     params: Union[Dict[Union[str, int], Any], Sequence[Any]],
 ) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
     
-    # Handle empty params case
-    if not params:
-        return sql, params
+    # Si sql es bytes, convertir a string para procesar
+    is_bytes = isinstance(sql, bytes)
+    if is_bytes:
+        sql = sql.decode()
         
-    # Convert named parameters style
+    # Inicializar variables
+    formatted_sql = sql
+    out_params = {} if isinstance(params, dict) else []
+    param_index = 0
+    
+    # Procesar parámetros nombrados
     if isinstance(params, dict):
-        new_params = {}
-        counter = 1
-        new_sql = sql
-        
-        # Replace each named parameter with positional parameter
-        for key, value in params.items():
-            param_name = f'${counter}'
-            if isinstance(sql, str):
-                new_sql = new_sql.replace(f':{key}', param_name)
-                new_sql = new_sql.replace(f'%({key})s', param_name)
-            else: # bytes
-                new_sql = new_sql.replace(f':{key}'.encode(), param_name.encode())
-                new_sql = new_sql.replace(f'%({key})s'.encode(), param_name.encode())
-            new_params[counter] = value
-            counter += 1
+        for param_name, value in params.items():
+            # Reemplazar parámetro de estilo "in" por estilo "out"
+            old_param = f":{param_name}" if self.in_style == "named" else f"${param_name}"
+            new_param = f"?" if self.out_style == "qmark" else f"%s"
+            formatted_sql = formatted_sql.replace(old_param, new_param)
             
-        return new_sql, new_params
-        
-    # Convert positional parameters style 
+            # Agregar parámetro al conjunto de salida
+            if self.out_style == "named":
+                out_params[f"p{param_index}"] = value
+            else:
+                out_params[param_index] = value
+            param_index += 1
+            
+    # Procesar parámetros ordinales        
     else:
-        new_params = {}
-        new_sql = sql
-        
-        # Replace each ? or %s with $n style parameter
-        for i, value in enumerate(params, 1):
-            param_name = f'${i}'
-            if isinstance(sql, str):
-                new_sql = new_sql.replace('?', param_name, 1)
-                new_sql = new_sql.replace('%s', param_name, 1)
-            else: # bytes
-                new_sql = new_sql.replace(b'?', param_name.encode(), 1)
-                new_sql = new_sql.replace(b'%s', param_name.encode(), 1)
-            new_params[i] = value
+        for i, value in enumerate(params):
+            # Reemplazar parámetro de estilo "in" por estilo "out"
+            old_param = f"${i+1}" if self.in_style == "numeric" else "?"
+            new_param = f"?" if self.out_style == "qmark" else f"%s"
+            formatted_sql = formatted_sql.replace(old_param, new_param)
             
-        return new_sql, new_params
+            # Agregar parámetro al conjunto de salida
+            if self.out_style == "named":
+                out_params[f"p{i}"] = value
+            else:
+                out_params.append(value)
+                
+    # Convertir sql de vuelta a bytes si era bytes originalmente
+    if is_bytes:
+        formatted_sql = formatted_sql.encode()
+        
+    return formatted_sql, out_params

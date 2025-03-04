@@ -1,26 +1,23 @@
 def protocol_handlers(cls, protocol_version=None):
-    # Dictionary to store all available protocol handlers
+    # Diccionario que mapea versiones de protocolo a sus manejadores
     handlers = {
-        (3, 0): BoltProtocolV3_0,
-        (4, 0): BoltProtocolV4_0,
-        (4, 1): BoltProtocolV4_1,
-        (4, 2): BoltProtocolV4_2,
-        (4, 3): BoltProtocolV4_3,
-        (4, 4): BoltProtocolV4_4,
-        (5, 0): BoltProtocolV5_0
+        (3, 0): BoltProtocolV3Handler,
+        (4, 0): BoltProtocolV4Handler,
+        (4, 1): BoltProtocolV41Handler,
+        (4, 2): BoltProtocolV42Handler,
+        (4, 3): BoltProtocolV43Handler,
+        (4, 4): BoltProtocolV44Handler,
+        (5, 0): BoltProtocolV5Handler
     }
 
-    # If no specific version requested, return all handlers
+    # Si no se especifica versión, devolver todos los manejadores
     if protocol_version is None:
         return handlers
 
-    # Validate protocol_version is a tuple
+    # Validar que la versión sea una tupla
     if not isinstance(protocol_version, tuple):
-        raise TypeError("Protocol version must be a tuple")
+        raise TypeError("La versión del protocolo debe ser una tupla")
 
-    # If specific version requested, return only that handler if supported
-    if protocol_version in handlers:
-        return {protocol_version: handlers[protocol_version]}
-    
-    # Return empty dict if requested version not supported
-    return {}
+    # Si se especifica versión, devolver solo el manejador para esa versión
+    # si existe, o un diccionario vacío si no existe
+    return {protocol_version: handlers[protocol_version]} if protocol_version in handlers else {}

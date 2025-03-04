@@ -1,18 +1,30 @@
 def popitem(self):
     """
-    सबसे कम बार उपयोग किए गए `(key, value)` जोड़े को हटाएं और वापस करें।
+    Elimina y devuelve el par (clave, valor) menos utilizado con mayor frecuencia.
     """
-    if not self:
-        raise KeyError('Dictionary is empty')
+    if not self.cache:  # Si el cache está vacío
+        raise KeyError("Cache is empty")
         
-    # Find key with minimum usage count
-    min_key = min(self.usage_count, key=self.usage_count.get)
+    # Encontrar la frecuencia mínima
+    min_freq = min(self.freq_list.keys())
     
-    # Get value for min_key
-    value = self[min_key]
+    # Obtener la lista de elementos con esa frecuencia
+    lru_items = self.freq_list[min_freq]
     
-    # Remove key-value pair
-    del self[min_key]
-    del self.usage_count[min_key]
+    # Obtener el elemento menos usado recientemente (el último de la lista)
+    key = lru_items.pop()
     
-    return (min_key, value)
+    # Si la lista queda vacía, eliminar la frecuencia
+    if not lru_items:
+        del self.freq_list[min_freq]
+        
+    # Obtener el valor asociado a la clave
+    value = self.cache[key]
+    
+    # Eliminar la clave del cache
+    del self.cache[key]
+    
+    # Eliminar la clave del mapeo de frecuencias
+    del self.key_freq[key]
+    
+    return key, value

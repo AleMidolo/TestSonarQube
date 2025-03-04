@@ -1,47 +1,45 @@
 def validate(self, path):
+    """
+    Valida el objeto OCFL en la ruta o en la raíz de pyfs.
+
+    Devuelve True si es válido (se permiten advertencias), False en caso contrario.
+    """
     try:
-        # Check if path exists
-        if not os.path.exists(path):
+        # Verificar que existe el directorio
+        if not self.fs.exists(path):
             return False
             
-        # Verify OCFL structure
-        # Check for required files/directories
-        required_files = [
-            'inventory.json',
-            '0=ocfl_object_1.0',
-            'v1'
-        ]
-        
-        for file in required_files:
-            if not os.path.exists(os.path.join(path, file)):
+        # Verificar archivo namaste 0=ocfl_object
+        namaste_path = f"{path}/0=ocfl_object"
+        if not self.fs.exists(namaste_path):
+            return False
+            
+        # Verificar archivo inventory.json
+        inventory_path = f"{path}/inventory.json"
+        if not self.fs.exists(inventory_path):
+            return False
+            
+        # Leer y validar el inventory.json
+        with self.fs.open(inventory_path) as f:
+            inventory = json.load(f)
+            
+        # Verificar campos requeridos del inventory
+        required_fields = ['id', 'type', 'digestAlgorithm', 'head', 'versions']
+        for field in required_fields:
+            if field not in inventory:
                 return False
                 
-        # Validate inventory.json
-        inventory_path = os.path.join(path, 'inventory.json')
-        with open(inventory_path) as f:
-            try:
-                inventory = json.load(f)
-                
-                # Check required inventory fields
-                required_fields = ['id', 'type', 'digestAlgorithm', 'versions']
-                for field in required_fields:
-                    if field not in inventory:
-                        return False
-                        
-                # Validate versions
-                if not inventory['versions']:
-                    return False
-                    
-                # Check version directories exist
-                for version in inventory['versions']:
-                    version_path = os.path.join(path, version)
-                    if not os.path.exists(version_path):
-                        return False
-                        
-            except json.JSONDecodeError:
+        # Verificar que el type sea "Object"
+        if inventory['type'] != 'Object':
+            return False
+            
+        # Verificar que existe el directorio de cada versión
+        for version in inventory['versions']:
+            version_path = f"{path}/v{version}"
+            if not self.fs.exists(version_path):
                 return False
                 
-        # If all checks pass
+        # Si pasa todas las validaciones
         return True
         
     except Exception:

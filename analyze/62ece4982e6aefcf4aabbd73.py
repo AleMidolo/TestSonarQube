@@ -1,54 +1,29 @@
 def split(s, platform='this'):
     import re
+    import os
     import sys
-    
-    # Determine platform
+
+    # Determinar plataforma
     if platform == 'this':
-        platform = 0 if sys.platform.startswith('win') else 1
+        platform = 1 if os.name == 'posix' else 0
     
-    if platform == 1:  # POSIX style
-        # Handle escaped quotes and spaces
-        s = s.replace('\\"', '\x00').replace("\\'", '\x01')
+    if platform == 1:  # POSIX
+        # Patrón para dividir argumentos estilo POSIX/bash
+        pattern = r'''((?:[^ "']\S*|"[^"]*"|'[^']*')+)'''
+    else:  # Windows/CMD
+        # Patrón para dividir argumentos estilo Windows CMD 
+        pattern = r'''((?:[^ "]\S*|"[^"]*")+)'''
+    
+    # Dividir la cadena usando el patrón apropiado
+    args = re.findall(pattern, s)
+    
+    # Procesar cada argumento
+    processed_args = []
+    for arg in args:
+        # Eliminar comillas externas si existen
+        if (arg.startswith('"') and arg.endswith('"')) or \
+           (arg.startswith("'") and arg.endswith("'")):
+            arg = arg[1:-1]
+        processed_args.append(arg)
         
-        # Split on spaces while preserving quoted strings
-        pattern = r'''(?:[^\s"'\\]|\\.|"(?:\\.|[^"])*"|'(?:\\.|[^'])*')+'''
-        tokens = re.findall(pattern, s)
-        
-        # Clean up tokens
-        result = []
-        for token in tokens:
-            # Remove enclosing quotes if present
-            if (token.startswith('"') and token.endswith('"')) or \
-               (token.startswith("'") and token.endswith("'")):
-                token = token[1:-1]
-            
-            # Restore escaped characters
-            token = token.replace('\x00', '"').replace('\x01', "'")
-            token = token.replace('\\\\', '\\').replace('\\"', '"').replace("\\'", "'")
-            result.append(token)
-            
-        return result
-        
-    elif platform == 0:  # Windows/CMD style
-        # Handle escaped quotes
-        s = s.replace('\\"', '\x00')
-        
-        # Split on spaces while preserving quoted strings
-        pattern = r'''(?:[^\s"]|"(?:\\.|[^"])*")+'''
-        tokens = re.findall(pattern, s)
-        
-        # Clean up tokens
-        result = []
-        for token in tokens:
-            # Remove enclosing quotes if present
-            if token.startswith('"') and token.endswith('"'):
-                token = token[1:-1]
-                
-            # Restore escaped characters    
-            token = token.replace('\x00', '"').replace('\\\\', '\\')
-            result.append(token)
-            
-        return result
-        
-    else:
-        raise ValueError("Invalid platform value")
+    return processed_args

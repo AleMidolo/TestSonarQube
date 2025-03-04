@@ -1,15 +1,13 @@
 def was_processed(processed, path_name, verbose):
-    """
-    यहाँ फ़ंक्शन का कार्यान्वयन होगा
-    """
-    try:
-        # Check if path_name exists in processed dictionary
-        if path_name in processed:
-            if verbose:
-                print(f"File {path_name} was already processed")
-            return True
-        return False
-    except Exception as e:
+    # Expandir el nombre de la ruta a una ruta absoluta
+    abs_path = os.path.abspath(path_name)
+    
+    # Verificar si la ruta ya está en el conjunto
+    if abs_path in processed:
         if verbose:
-            print(f"Error checking if {path_name} was processed: {str(e)}")
-        return False
+            print(f"Advertencia: {path_name} ya fue procesado anteriormente")
+        return True
+        
+    # Si no está en el conjunto, agregarlo
+    processed.add(abs_path)
+    return False

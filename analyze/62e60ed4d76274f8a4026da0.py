@@ -1,7 +1,7 @@
 def keys(self):
     """
-    रिकॉर्ड की कुंजियों (keys) को लौटाता है।  
+    Devuelve las claves del registro.
 
-    :return: कुंजी नामों (key names) की सूची (list)।
+    :return: lista de nombres de claves
     """
-    return list(self.__dict__.keys())
+    return list(self._data.keys())

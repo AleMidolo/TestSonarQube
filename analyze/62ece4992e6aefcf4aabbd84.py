@@ -1,33 +1,29 @@
-def is_ipv4(target):
+def es_ipv4(objetivo):
     """
-    IPv4 पते की जांच करें या नहीं।
+    Probar si es una dirección IPv4 o no
     """
-    # Check if target is string
-    if not isinstance(target, str):
-        return False
-        
-    # Split into octets
-    octets = target.split('.')
+    # Dividir la cadena por puntos
+    octetos = objetivo.split('.')
     
-    # IPv4 must have 4 octets
-    if len(octets) != 4:
+    # Una IPv4 debe tener exactamente 4 octetos
+    if len(octetos) != 4:
         return False
         
-    # Check each octet
-    for octet in octets:
-        # Check if octet is numeric
-        if not octet.isdigit():
+    # Verificar cada octeto
+    for octeto in octetos:
+        # Verificar que sea un número
+        if not octeto.isdigit():
             return False
             
-        # Convert to integer
-        num = int(octet)
+        # Convertir a entero
+        num = int(octeto)
         
-        # Check range 0-255
+        # Verificar rango válido (0-255)
         if num < 0 or num > 255:
             return False
             
-        # Leading zeros not allowed
-        if len(octet) > 1 and octet[0] == '0':
+        # Verificar que no tenga ceros a la izquierda
+        if len(octeto) > 1 and octeto[0] == '0':
             return False
             
     return True

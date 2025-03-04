@@ -4,27 +4,29 @@ def prepare_repository_from_archive(
     tmp_path: Union[PosixPath, str] = "/tmp",
 ) -> str:
     import os
-    import shutil
+    import tarfile
+    import zipfile
     import tempfile
     from pathlib import Path
-    
+
     # Create temporary directory
     temp_dir = tempfile.mkdtemp(dir=tmp_path)
     
-    # Get filename from archive path if not provided
+    # Get filename if not provided
     if filename is None:
         filename = os.path.basename(archive_path)
     
-    # Extract archive to temp directory
-    if archive_path.endswith('.zip'):
-        shutil.unpack_archive(archive_path, temp_dir, 'zip')
-    elif archive_path.endswith(('.tar.gz', '.tgz')):
-        shutil.unpack_archive(archive_path, temp_dir, 'gztar') 
+    # Handle different archive types
+    if archive_path.endswith(('.tar.gz', '.tgz')):
+        with tarfile.open(archive_path, 'r:gz') as tar:
+            tar.extractall(temp_dir)
+    elif archive_path.endswith('.zip'):
+        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
+            zip_ref.extractall(temp_dir)
     elif archive_path.endswith('.tar'):
-        shutil.unpack_archive(archive_path, temp_dir, 'tar')
-    else:
-        raise ValueError(f"Unsupported archive format: {archive_path}")
-
+        with tarfile.open(archive_path, 'r') as tar:
+            tar.extractall(temp_dir)
+    
     # Convert temp directory path to file URL format
     repo_url = Path(temp_dir).as_uri()
     

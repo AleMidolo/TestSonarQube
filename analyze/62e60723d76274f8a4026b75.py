@@ -6,7 +6,7 @@ def round_half_to_even(n):
     
     >>> round_half_to_even(3)
     3
-    >>> round_half_to_even(3.2) 
+    >>> round_half_to_even(3.2)
     3
     >>> round_half_to_even(3.5)
     4

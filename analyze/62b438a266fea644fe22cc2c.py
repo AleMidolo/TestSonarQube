@@ -1,22 +1,25 @@
 def make_parsers():
     """
-    शीर्ष-स्तरीय पार्सर और इसके उप-पार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
+    Crear un analizador de nivel superior y sus subanalizadores, y devolverlos como una tupla.
     """
     import argparse
-    
-    # Create main parser
-    parser = argparse.ArgumentParser(description='Main command line parser')
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
 
-    # Create parser for 'add' command
-    add_parser = subparsers.add_parser('add', help='Add items')
-    add_parser.add_argument('items', nargs='+', help='Items to add')
+    # Crear el analizador principal
+    parser = argparse.ArgumentParser(description='Analizador de comandos principal')
+    subparsers = parser.add_subparsers(dest='command', help='Comandos disponibles')
 
-    # Create parser for 'remove' command  
-    remove_parser = subparsers.add_parser('remove', help='Remove items')
-    remove_parser.add_argument('items', nargs='+', help='Items to remove')
+    # Crear subanalizador para el comando 'add'
+    add_parser = subparsers.add_parser('add', help='Agregar un elemento')
+    add_parser.add_argument('item', help='Elemento a agregar')
+    add_parser.add_argument('--quantity', type=int, default=1, help='Cantidad a agregar')
 
-    # Create parser for 'list' command
-    list_parser = subparsers.add_parser('list', help='List all items')
+    # Crear subanalizador para el comando 'remove' 
+    remove_parser = subparsers.add_parser('remove', help='Eliminar un elemento')
+    remove_parser.add_argument('item', help='Elemento a eliminar')
+    remove_parser.add_argument('--quantity', type=int, default=1, help='Cantidad a eliminar')
 
-    return (parser, add_parser, remove_parser, list_parser)
+    # Crear subanalizador para el comando 'list'
+    list_parser = subparsers.add_parser('list', help='Listar elementos')
+    list_parser.add_argument('--sort', action='store_true', help='Ordenar lista')
+
+    return parser, (add_parser, remove_parser, list_parser)

@@ -1,39 +1,30 @@
 def validate_from_content(cls, spec_content=None):
-    if not spec_content:
-        raise IRValidatorException("Spec content cannot be empty")
+    """
+    Valida que el contenido del archivo spec (YAML) tenga todos los campos requeridos.
+
+    :param spec_content: contenido del archivo spec
+    :raise IRValidatorException: cuando faltan datos obligatorios
+    en el archivo spec
+    :return: Diccionario con los datos cargados desde un archivo spec (YAML)
+    """
+    if spec_content is None:
+        raise IRValidatorException("El contenido del archivo spec no puede estar vacío")
+
+    required_fields = ['name', 'version', 'description', 'author']
+    
+    for field in required_fields:
+        if field not in spec_content:
+            raise IRValidatorException(f"Campo requerido '{field}' no encontrado en el archivo spec")
+            
+    # Validaciones adicionales específicas
+    if not isinstance(spec_content['version'], (int, float, str)):
+        raise IRValidatorException("El campo 'version' debe ser un número o string")
         
-    try:
-        # Load YAML content into dictionary
-        spec_dict = yaml.safe_load(spec_content)
+    if not isinstance(spec_content['description'], str):
+        raise IRValidatorException("El campo 'description' debe ser un string")
         
-        # Check if spec_dict is valid
-        if not isinstance(spec_dict, dict):
-            raise IRValidatorException("Invalid YAML format - must be a dictionary")
-            
-        # Check for required fields
-        required_fields = ['name', 'version', 'description']
-        missing_fields = []
+    if not isinstance(spec_content['author'], str):
+        raise IRValidatorException("El campo 'author' debe ser un string")
         
-        for field in required_fields:
-            if field not in spec_dict:
-                missing_fields.append(field)
-                
-        if missing_fields:
-            raise IRValidatorException(f"Missing required fields: {', '.join(missing_fields)}")
-            
-        # Validate field types
-        if not isinstance(spec_dict['name'], str):
-            raise IRValidatorException("'name' field must be a string")
-            
-        if not isinstance(spec_dict['version'], (str, int, float)):
-            raise IRValidatorException("'version' field must be a string or number")
-            
-        if not isinstance(spec_dict['description'], str):
-            raise IRValidatorException("'description' field must be a string")
-            
-        return spec_dict
-        
-    except yaml.YAMLError as e:
-        raise IRValidatorException(f"Invalid YAML format: {str(e)}")
-    except Exception as e:
-        raise IRValidatorException(f"Error validating spec content: {str(e)}")
+    # Si todas las validaciones pasan, retornar el contenido validado
+    return spec_content

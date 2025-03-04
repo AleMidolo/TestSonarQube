@@ -1,31 +1,21 @@
 def get_repo_archive(url: str, destination_path: Path) -> Path:
     import requests
     import tarfile
-    import tempfile
-    from pathlib import Path
+    import io
 
-    # Create temporary file to store downloaded archive
-    temp_file = tempfile.NamedTemporaryFile(delete=False)
+    # Create destination directory if it doesn't exist
+    destination_path.mkdir(parents=True, exist_ok=True)
     
-    try:
-        # Download the archive
-        response = requests.get(url, stream=True)
-        response.raise_for_status()
-        
-        # Write archive to temporary file
-        for chunk in response.iter_content(chunk_size=8192):
-            temp_file.write(chunk)
-        temp_file.close()
-        
-        # Create destination directory if it doesn't exist
-        destination_path.mkdir(parents=True, exist_ok=True)
-        
-        # Extract archive
-        with tarfile.open(temp_file.name, 'r:gz') as tar:
-            tar.extractall(path=destination_path)
-            
-        return destination_path
-        
-    finally:
-        # Clean up temporary file
-        Path(temp_file.name).unlink(missing_ok=True)
+    # Download the tar.gz file
+    response = requests.get(url)
+    response.raise_for_status()
+    
+    # Extract the tar.gz file
+    tar_bytes = io.BytesIO(response.content)
+    with tarfile.open(fileobj=tar_bytes, mode='r:gz') as tar:
+        # Extract only 'desc' files
+        for member in tar.getmembers():
+            if member.name.endswith('/desc'):
+                tar.extract(member, path=destination_path)
+    
+    return destination_path

@@ -1,91 +1,62 @@
 from collections import defaultdict
 from functools import wraps
+import time
 
 def lfu_cache(maxsize=128, typed=False):
     def decorator(func):
-        # Store cache and frequency information
+        # Diccionarios para almacenar el caché y contadores
         cache = {}
-        freq_counter = defaultdict(int)
-        freq_lists = defaultdict(set)
-        min_freq = 0
+        frequency = defaultdict(int)
+        last_used = {}
         
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # Create cache key based on arguments
+            # Crear clave para el caché
             if typed:
-                key = (*args, *[(k, type(v), v) for k, v in kwargs.items()])
+                key = (*args, *sorted(kwargs.items()), *[type(arg) for arg in args])
             else:
                 key = (*args, *sorted(kwargs.items()))
                 
             try:
                 key = hash(key)
             except TypeError:
-                # If unhashable, don't cache
+                # Si la clave no es hasheable, ejecutar sin caché
                 return func(*args, **kwargs)
                 
-            # Return from cache if exists
+            # Verificar si está en caché
             if key in cache:
-                # Update frequency
-                old_freq = freq_counter[key]
-                freq_counter[key] += 1
-                new_freq = freq_counter[key]
-                
-                # Update frequency lists
-                freq_lists[old_freq].remove(key)
-                if not freq_lists[old_freq] and old_freq == min_freq:
-                    min_freq = new_freq
-                freq_lists[new_freq].add(key)
-                
+                frequency[key] += 1
+                last_used[key] = time.time()
                 return cache[key]
                 
-            # Compute new value
-            result = func(*args, **kwargs)
-            
-            # If cache is full, remove least frequently used item
+            # Si el caché está lleno, eliminar el elemento menos frecuente
             if len(cache) >= maxsize:
-                # Get key to remove from min frequency list
-                lfu_key = next(iter(freq_lists[min_freq]))
+                min_freq = min(frequency.values())
+                # Obtener elementos con frecuencia mínima
+                min_freq_keys = [k for k, v in frequency.items() if v == min_freq]
+                # Si hay varios con misma frecuencia, eliminar el menos usado
+                lru_key = min(min_freq_keys, key=lambda k: last_used[k])
                 
-                # Remove from all tracking structures
-                del cache[lfu_key]
-                del freq_counter[lfu_key]
-                freq_lists[min_freq].remove(lfu_key)
+                del cache[lru_key]
+                del frequency[lru_key]
+                del last_used[lru_key]
                 
-            # Add new result to cache
+            # Calcular nuevo valor y almacenar en caché
+            result = func(*args, **kwargs)
             cache[key] = result
-            freq_counter[key] = 1
-            freq_lists[1].add(key)
-            min_freq = 1
+            frequency[key] = 1
+            last_used[key] = time.time()
             
             return result
             
-        # Add cache info method
-        def cache_info():
-            return {
-                'hits': sum(freq_counter.values()) - len(cache),
-                'misses': len(cache),
-                'maxsize': maxsize,
-                'currsize': len(cache)
-            }
-            
-        wrapper.cache_info = cache_info
-        
-        # Add cache clear method
-        def cache_clear():
-            cache.clear()
-            freq_counter.clear()
-            freq_lists.clear()
-            nonlocal min_freq
-            min_freq = 0
-            
-        wrapper.cache_clear = cache_clear
+        # Agregar métodos para acceder al estado del caché
+        wrapper.cache_info = lambda: {
+            'hits': sum(frequency.values()) - len(frequency),
+            'misses': len(frequency),
+            'maxsize': maxsize,
+            'currsize': len(cache)
+        }
+        wrapper.cache_clear = lambda: (cache.clear(), frequency.clear(), last_used.clear())
         
         return wrapper
-        
-    if callable(maxsize):
-        # Handle no-argument decorator case
-        func = maxsize
-        maxsize = 128
-        return decorator(func)
-        
     return decorator

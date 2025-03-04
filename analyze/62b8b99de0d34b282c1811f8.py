@@ -1,6 +1,6 @@
 def _reset_logging(cls):
     """
-    रीसेट
+    Restablecer
     """
     # Reset logging configuration to default state
     import logging

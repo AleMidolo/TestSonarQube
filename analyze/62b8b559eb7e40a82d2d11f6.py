@@ -1,31 +1,33 @@
 def determineMetaclass(bases, explicit_mc=None):
     """
-    1 या अधिक बेस क्लास और वैकल्पिक स्पष्ट __metaclass__ से मेटाक्लास निर्धारित करें।
+    Determina la metaclase a partir de una o más clases base y un __metaclass__ explícito opcional.
     """
-    metaclass = None
+    metaclasses = []
     
-    # Check explicit metaclass first if provided
+    # Agregar metaclase explícita si existe
     if explicit_mc is not None:
-        metaclass = explicit_mc
-        
-    # Look for metaclass in base classes
+        metaclasses.append(explicit_mc)
+    
+    # Obtener metaclases de las clases base
     for base in bases:
-        base_mc = type(base)
+        if hasattr(base, '__class__'):
+            metaclasses.append(type(base))
+    
+    if not metaclasses:
+        return type
         
-        if metaclass is None:
-            metaclass = base_mc
-        elif issubclass(base_mc, metaclass):
-            # If base metaclass is more specific, use it
-            metaclass = base_mc
-        elif issubclass(metaclass, base_mc):
-            # Current metaclass is more specific, keep it
+    # Si solo hay una metaclase, retornarla
+    if len(metaclasses) == 1:
+        return metaclasses[0]
+        
+    # Si hay múltiples metaclases, encontrar la más específica
+    candidate = metaclasses[0]
+    for mc in metaclasses[1:]:
+        if issubclass(candidate, mc):
             continue
+        if issubclass(mc, candidate):
+            candidate = mc
         else:
-            # Incompatible metaclasses
-            raise TypeError("Incompatible metaclasses found")
+            raise TypeError("Conflicting metaclasses:", candidate, mc)
             
-    # If no metaclass found, use type
-    if metaclass is None:
-        metaclass = type
-        
-    return metaclass
+    return candidate

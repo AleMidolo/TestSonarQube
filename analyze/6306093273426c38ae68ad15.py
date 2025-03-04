@@ -1,68 +1,55 @@
 def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     """
-    Ansible CLI को vars_dict के साथ चलाता है।
+    Ejecuta el CLI de Ansible con un diccionario de variables.
 
-    :param vars_dict: dict, इसे Ansible extra-vars के रूप में पास किया जाएगा 
-    :param cli_args: कमांड लाइन आर्ग्युमेंट्स की सूची
-    :param ir_workspace: एक Infrared Workspace ऑब्जेक्ट जो सक्रिय वर्कस्पेस को दर्शाता है
-    :param ir_plugin: वर्तमान प्लगइन का एक InfraredPlugin ऑब्जेक्ट
-    :return: ansible के परिणाम
+    :param vars_dict: dict, Será pasado como extra-vars de Ansible.
+    :param cli_args: la lista de argumentos de línea de comandos.
+    :param ir_workspace: Un objeto Infrared Workspace que representa el 
+    espacio de trabajo activo.
+    :param ir_plugin: Un objeto InfraredPlugin del plugin actual.
+    :return: resultados de Ansible.
     """
-    import os
-    import json
-    import subprocess
-    from ansible.cli import CLI
-    from ansible.parsing.dataloader import DataLoader
-    from ansible.inventory.manager import InventoryManager
-    from ansible.vars.manager import VariableManager
-    from ansible.playbook.play import Play
-    from ansible.executor.playbook_executor import PlaybookExecutor
+    # Configurar argumentos de Ansible
+    ansible_args = []
     
-    # Ansible के लिए आवश्यक डायरेक्टरी पथ सेट करें
-    playbook_path = os.path.join(ir_plugin.path, 'playbooks')
-    inventory_path = os.path.join(ir_workspace.path, 'hosts')
-    
-    # एक्स्ट्रा वेरिएबल्स को JSON फाइल में लिखें
-    extra_vars_file = os.path.join(ir_workspace.path, 'extra_vars.json')
-    with open(extra_vars_file, 'w') as f:
-        json.dump(vars_dict, f)
+    # Agregar playbook path
+    playbook_path = os.path.join(ir_plugin.path, 'main.yml')
+    ansible_args.append(playbook_path)
 
-    # Ansible CLI कमांड तैयार करें
-    ansible_cmd = ['ansible-playbook']
-    ansible_cmd.extend(cli_args)
-    ansible_cmd.extend([
-        '-i', inventory_path,
-        '--extra-vars', f'@{extra_vars_file}',
-        os.path.join(playbook_path, 'main.yml')
-    ])
+    # Agregar inventory si existe en workspace
+    if ir_workspace.inventory:
+        ansible_args.extend(['-i', ir_workspace.inventory])
+
+    # Agregar variables extra como JSON
+    if vars_dict:
+        extra_vars = json.dumps(vars_dict)
+        ansible_args.extend(['--extra-vars', extra_vars])
+
+    # Agregar argumentos CLI adicionales
+    if cli_args:
+        ansible_args.extend(cli_args)
 
     try:
-        # Ansible प्लेबुक को चलाएं
-        process = subprocess.Popen(
-            ansible_cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True
+        # Configurar entorno
+        os.environ['ANSIBLE_CONFIG'] = os.path.join(ir_plugin.path, 'ansible.cfg')
+        
+        # Ejecutar ansible-playbook
+        ansible = ansible_playbook.AnsiblePlaybook(
+            playbook=playbook_path,
+            inventory=ir_workspace.inventory,
+            extra_vars=vars_dict,
+            verbosity=1
         )
         
-        stdout, stderr = process.communicate()
-        return_code = process.returncode
-
-        result = {
-            'rc': return_code,
-            'stdout': stdout,
-            'stderr': stderr
-        }
-
-        if return_code != 0:
-            raise Exception(f"Ansible playbook execution failed: {stderr}")
-
-        return result
+        # Ejecutar y obtener resultados
+        results = ansible.run()
+        
+        return results
 
     except Exception as e:
-        raise Exception(f"Error running ansible playbook: {str(e)}")
+        raise Exception(f"Error ejecutando playbook: {str(e)}")
     
     finally:
-        # क्लीनअप - एक्स्ट्रा वेरिएबल्स फाइल को हटाएं
-        if os.path.exists(extra_vars_file):
-            os.remove(extra_vars_file)
+        # Limpiar variables de entorno
+        if 'ANSIBLE_CONFIG' in os.environ:
+            del os.environ['ANSIBLE_CONFIG']

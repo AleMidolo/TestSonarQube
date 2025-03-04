@@ -1,6 +1,6 @@
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    दिए गए कमांड(s) को कॉल करें।
+    Llama al/los comando(s) dado(s).
     """
     import subprocess
     import sys
@@ -22,15 +22,8 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
         stderr = subprocess.DEVNULL if hide_stderr else None
             
         try:
-            subprocess.check_call(
-                cmd_list,
-                cwd=cwd,
-                stderr=stderr,
-                env=env
-            )
+            subprocess.check_call(cmd_list, cwd=cwd, stderr=stderr, env=env)
         except subprocess.CalledProcessError as e:
-            print(f"Command failed with return code {e.returncode}")
-            sys.exit(1)
-        except FileNotFoundError:
-            print(f"Command not found: {cmd}")
-            sys.exit(1)
+            sys.exit(e.returncode)
+        except OSError as e:
+            sys.exit(e.errno)

@@ -1,41 +1,35 @@
 def validate_fixity(self, fixity, manifest_files):
     """
-    इन्वेंटरी में फिक्सिटी ब्लॉक को सत्यापित करें।
-    फिक्सिटी ब्लॉक की संरचना की जांच करें और सुनिश्चित करें कि केवल वे फाइलें
-    जो मैनिफेस्ट में सूचीबद्ध हैं, वही संदर्भित की गई हैं।
+    Validar el bloque de fijación en el inventario.
+
+    Verificar la estructura del bloque de fijación y asegurarse de que solo se referencien los archivos listados en el manifiesto.
     """
-    # Check if fixity block is a dictionary
     if not isinstance(fixity, dict):
-        return False
-        
-    # Check if all required keys exist in fixity block
-    required_keys = ['message_digest_algorithm', 'message_digests']
-    if not all(key in fixity for key in required_keys):
-        return False
-        
-    # Check if message_digests is a list
-    if not isinstance(fixity['message_digests'], list):
-        return False
-        
-    # Check each message digest entry
-    for digest in fixity['message_digests']:
-        # Verify digest structure
-        if not isinstance(digest, dict):
-            return False
-            
-        if 'file_path' not in digest or 'hash' not in digest:
-            return False
-            
-        # Check if referenced file exists in manifest
-        if digest['file_path'] not in manifest_files:
-            return False
-            
-        # Validate hash format based on algorithm
-        if fixity['message_digest_algorithm'].lower() == 'md5':
-            if not len(digest['hash']) == 32:
-                return False
-        elif fixity['message_digest_algorithm'].lower() == 'sha256':
-            if not len(digest['hash']) == 64:
-                return False
-                
+        raise ValueError("El bloque de fijación debe ser un diccionario")
+
+    # Verificar que tenga las claves requeridas
+    required_keys = ["message_digest_algorithm", "message_digest"]
+    for key in required_keys:
+        if key not in fixity:
+            raise ValueError(f"Falta la clave requerida '{key}' en el bloque de fijación")
+
+    # Verificar que el algoritmo sea válido
+    valid_algorithms = ["md5", "sha1", "sha256", "sha512"]
+    if fixity["message_digest_algorithm"].lower() not in valid_algorithms:
+        raise ValueError(f"Algoritmo de digest no válido. Debe ser uno de: {valid_algorithms}")
+
+    # Verificar que message_digest sea un diccionario
+    if not isinstance(fixity["message_digest"], dict):
+        raise ValueError("message_digest debe ser un diccionario")
+
+    # Verificar que solo se referencien archivos del manifiesto
+    for file_path in fixity["message_digest"]:
+        if file_path not in manifest_files:
+            raise ValueError(f"El archivo '{file_path}' en el bloque de fijación no está listado en el manifiesto")
+
+    # Verificar que los digests sean strings no vacíos
+    for file_path, digest in fixity["message_digest"].items():
+        if not isinstance(digest, str) or not digest:
+            raise ValueError(f"Digest inválido para el archivo '{file_path}'")
+
     return True

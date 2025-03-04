@@ -1,6 +1,6 @@
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    दिए गए कमांड(s) को चलाएं।
+    Llama al/los comando(s) dado(s).
     """
     import subprocess
     import sys
@@ -17,30 +17,13 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
                 cmd_list.extend(args)
                 
         if verbose:
-            print('Running:', ' '.join(cmd_list))
+            print(' '.join(cmd_list))
+            
+        stderr = subprocess.DEVNULL if hide_stderr else None
             
         try:
-            stderr = subprocess.DEVNULL if hide_stderr else None
-            process = subprocess.Popen(
-                cmd_list,
-                stdout=subprocess.PIPE,
-                stderr=stderr,
-                cwd=cwd,
-                env=env,
-                universal_newlines=True
-            )
-            
-            output = process.communicate()[0]
-            retcode = process.poll()
-            
-            if retcode:
-                raise subprocess.CalledProcessError(
-                    retcode, cmd_list, output=output
-                )
-                
-            return output.strip()
-            
-        except (OSError, subprocess.CalledProcessError) as e:
-            if verbose:
-                print('Error running command:', str(e))
-            raise
+            subprocess.check_call(cmd_list, cwd=cwd, stderr=stderr, env=env)
+        except subprocess.CalledProcessError as e:
+            sys.exit(e.returncode)
+        except OSError as e:
+            sys.exit(e.errno)

@@ -1,8 +1,10 @@
 def gaussian(x):
     """
-    गौसियन 0.1 के सिग्मा के साथ 0.2 के आसपास केन्द्रित है।
+    Calcular la Gaussiana centrada en u = 0.2 y sigma = 0.1.
     """
-    import math
-    mu = 0.2  # mean
-    sigma = 0.1  # standard deviation
-    return (1.0/(sigma*math.sqrt(2*math.pi))) * math.exp(-(x-mu)**2/(2*sigma**2))
+    import numpy as np
+    
+    u = 0.2  # media
+    sigma = 0.1  # desviación estándar
+    
+    return (1/(sigma * np.sqrt(2*np.pi))) * np.exp(-0.5 * ((x-u)/sigma)**2)

@@ -1,6 +1,6 @@
 def dehydrate_time(value):
     """
-    `time` मानों के लिए डिहाइड्रेटर।  
+    Deshidratador para valores de tipo `time`.
 
     :param value:  
     :type value: Time  
@@ -9,5 +9,4 @@ def dehydrate_time(value):
     if value is None:
         return None
         
-    # Format time as HH:MM:SS
     return value.strftime('%H:%M:%S')

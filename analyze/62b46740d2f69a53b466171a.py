@@ -1,29 +1,32 @@
 def pretty(self, indent=0, debug=False):
     """
-    स्वयं का एक सुंदर स्वरूपित प्रतिनिधित्व लौटाएँ।
+    Devuelve una representación formateada de manera legible de 'self'.
     """
-    # Create indentation string based on indent level
-    indent_str = " " * indent
+    # Crear el string de indentación basado en el nivel de indent
+    indent_str = "  " * indent
     
-    # Start with class name
-    result = f"{indent_str}{self.__class__.__name__}("
-    
-    # Get all attributes that don't start with underscore
-    attrs = [attr for attr in dir(self) if not attr.startswith('_')]
-    
-    # Build the string representation
-    attr_strings = []
-    for attr in attrs:
-        value = getattr(self, attr)
-        # If debug mode is on, include more details
-        if debug:
-            attr_strings.append(f"{attr}={repr(value)}")
+    # Si debug está activado, incluir información adicional
+    if debug:
+        result = f"{indent_str}{self.__class__.__name__}:\n"
+    else:
+        result = f"{indent_str}"
+
+    # Si el objeto es una colección (lista, diccionario, etc)
+    if hasattr(self, '__iter__') and not isinstance(self, (str, bytes)):
+        # Para diccionarios
+        if isinstance(self, dict):
+            items = [f"{indent_str}  {k}: {v.pretty(indent+1) if hasattr(v, 'pretty') else v}" 
+                    for k, v in self.items()]
+            result += "{\n" + ",\n".join(items) + f"\n{indent_str}}}"
+            
+        # Para listas, tuplas, sets
         else:
-            # For non-debug mode, use str() for cleaner output
-            attr_strings.append(f"{attr}={str(value)}")
+            items = [f"{indent_str}  {item.pretty(indent+1) if hasattr(item, 'pretty') else item}" 
+                    for item in self]
+            result += "[\n" + ",\n".join(items) + f"\n{indent_str}]"
     
-    # Join all attributes with commas
-    result += ", ".join(attr_strings)
-    result += ")"
-    
+    # Para objetos simples
+    else:
+        result += str(self)
+        
     return result

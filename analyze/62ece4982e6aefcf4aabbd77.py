@@ -1,44 +1,38 @@
 def parse_frequency(frequency):
-    import datetime
-    import re
+    from datetime import timedelta
     
-    if frequency is None or frequency.lower() == "हमेशा":
+    if frequency is None or frequency.lower() == "always":
         return None
         
-    # Match number and unit pattern
-    match = re.match(r"(\d+)\s*([^\d\s]+)", frequency)
-    if not match:
-        raise ValueError(f"Invalid frequency format: {frequency}")
+    try:
+        # Split into number and unit
+        parts = frequency.strip().split()
+        if len(parts) != 2:
+            raise ValueError(f"Invalid frequency format: {frequency}")
+            
+        number = float(parts[0])
+        unit = parts[1].lower()
         
-    number = int(match.group(1))
-    unit = match.group(2).strip().lower()
-    
-    # Map Hindi units to timedelta arguments
-    unit_mapping = {
-        'दिन': 'days',
-        'दिनों': 'days',
-        'सप्ताह': 'weeks', 
-        'हफ्ता': 'weeks',
-        'हफ्ते': 'weeks',
-        'महीना': 'days',
-        'महीने': 'days',
-        'साल': 'days',
-        'वर्ष': 'days',
-        'घंटा': 'hours',
-        'घंटे': 'hours',
-        'मिनट': 'minutes',
-        'सेकंड': 'seconds'
-    }
-    
-    if unit not in unit_mapping:
-        raise ValueError(f"Invalid time unit: {unit}")
+        # Map units to timedelta parameters
+        unit_mapping = {
+            'second': 'seconds',
+            'seconds': 'seconds',
+            'minute': 'minutes', 
+            'minutes': 'minutes',
+            'hour': 'hours',
+            'hours': 'hours',
+            'day': 'days',
+            'days': 'days',
+            'week': 'weeks',
+            'weeks': 'weeks'
+        }
         
-    # Handle special cases for months and years
-    if unit in ['महीना', 'महीने']:
-        return datetime.timedelta(days=number * 30)
-    elif unit in ['साल', 'वर्ष']:
-        return datetime.timedelta(days=number * 365)
-    
-    # Create timedelta with mapped unit
-    kwargs = {unit_mapping[unit]: number}
-    return datetime.timedelta(**kwargs)
+        if unit not in unit_mapping:
+            raise ValueError(f"Invalid time unit: {unit}")
+            
+        # Create timedelta with the appropriate parameter
+        kwargs = {unit_mapping[unit]: number}
+        return timedelta(**kwargs)
+        
+    except (ValueError, TypeError) as e:
+        raise ValueError(f"Could not parse frequency: {frequency}") from e

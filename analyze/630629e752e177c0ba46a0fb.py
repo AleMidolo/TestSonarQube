@@ -1,32 +1,36 @@
 def send_document(url, data, timeout=10, method="post", *args, **kwargs):
+    """
+    Método auxiliar para enviar un documento mediante POST.
+
+    Los parámetros adicionales ``*args`` y ``**kwargs`` se pasarán a ``requests.post``.
+
+    :arg url: URL completa a la que se enviará, incluyendo el protocolo  
+    :arg data: Diccionario (se codificará como formulario), bytes o un objeto similar a un archivo que se enviará en el cuerpo  
+    :arg timeout: Segundos a esperar por la respuesta (por defecto 10)  
+    :arg method: Método a utilizar, por defecto es POST  
+    :returns: Tupla que contiene el código de estado (int o None) y el error (instancia de la clase de excepción o None)  
+    """
     import requests
-    from requests.exceptions import RequestException
-
+    
     try:
-        # Convert method to lowercase
-        method = method.lower()
+        # Get the appropriate request method
+        request_method = getattr(requests, method.lower())
         
-        # Select HTTP method
-        if method == "post":
-            response = requests.post(url, data=data, timeout=timeout, *args, **kwargs)
-        elif method == "put":
-            response = requests.put(url, data=data, timeout=timeout, *args, **kwargs)
-        elif method == "patch":
-            response = requests.patch(url, data=data, timeout=timeout, *args, **kwargs)
-        else:
-            raise ValueError(f"Unsupported HTTP method: {method}")
-
-        # Force raise for bad status codes
-        response.raise_for_status()
+        # Make the request
+        response = request_method(
+            url,
+            data=data,
+            timeout=timeout,
+            *args,
+            **kwargs
+        )
         
+        # Return status code and None for error
         return response.status_code, None
-
-    except RequestException as e:
-        # Handle requests library exceptions
-        if hasattr(e.response, 'status_code'):
-            return e.response.status_code, e
-        return None, e
         
+    except requests.exceptions.RequestException as e:
+        # Return None for status code and the exception
+        return None, e
     except Exception as e:
-        # Handle any other exceptions
+        # Return None for status code and the exception for any other errors
         return None, e

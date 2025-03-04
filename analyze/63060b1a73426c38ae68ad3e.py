@@ -1,11 +1,11 @@
 def get_plugin_spec_flatten_dict(plugin_dir):
     """
-    प्लगइन स्पेसिफिकेशन से एक फ्लैट डिक्शनरी बनाता है।
+    Crea un diccionario plano a partir de la especificación del plugin.
 
-    :param plugin_dir: प्लगइन की डायरेक्टरी का पथ 
-    :return: एक फ्लैट डिक्शनरी जो प्लगइन की प्रॉपर्टीज़ को समाहित करती है
+    :param plugin_dir: Una ruta al directorio del plugin  
+    :return: Un diccionario plano que contiene las propiedades del plugin
     """
-    flattened_dict = {}
+    flattened = {}
     
     def flatten_dict(d, parent_key=''):
         for key, value in d.items():
@@ -14,23 +14,26 @@ def get_plugin_spec_flatten_dict(plugin_dir):
             if isinstance(value, dict):
                 flatten_dict(value, new_key)
             else:
-                flattened_dict[new_key] = value
+                flattened[new_key] = value
                 
     try:
-        # Try to read plugin specification file
-        spec_file = f"{plugin_dir}/plugin.json"
-        with open(spec_file, 'r') as f:
-            import json
-            plugin_spec = json.load(f)
+        # Intenta leer el archivo spec.json del directorio del plugin
+        import json
+        import os
+        
+        spec_path = os.path.join(plugin_dir, 'spec.json')
+        
+        if not os.path.exists(spec_path):
+            return {}
             
-        # Flatten the dictionary
-        flatten_dict(plugin_spec)
+        with open(spec_path, 'r') as f:
+            spec = json.load(f)
+            
+        # Aplana el diccionario recursivamente
+        flatten_dict(spec)
         
-    except FileNotFoundError:
-        print(f"Plugin specification file not found in {plugin_dir}")
-    except json.JSONDecodeError:
-        print(f"Invalid JSON format in plugin specification file")
+        return flattened
+        
     except Exception as e:
-        print(f"Error processing plugin specification: {str(e)}")
-        
-    return flattened_dict
+        print(f"Error al procesar la especificación del plugin: {str(e)}")
+        return {}

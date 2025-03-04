@@ -1,11 +1,17 @@
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
-    डायस्पोरा वेबफिंगर को पार्स करें, जो या तो JSON प्रारूप (नया) में होता है या XRD (पुराना) में।
+    Analiza el webfinger de Diaspora, que puede estar en formato JSON (nuevo) o en formato XRD (antiguo).
+    
+    Args:
+        document: String containing the webfinger document in JSON or XRD format
+        
+    Returns:
+        Dictionary with parsed webfinger data
     """
     import json
     import xml.etree.ElementTree as ET
     from typing import Dict
-
+    
     # Try parsing as JSON first
     try:
         data = json.loads(document)
@@ -17,36 +23,52 @@ def parse_diaspora_webfinger(document: str) -> Dict:
         
         # Parse links
         for link in data.get('links', []):
-            result['links'].append({
+            link_data = {
                 'rel': link.get('rel', ''),
-                'type': link.get('type', ''),
-                'href': link.get('href', '')
-            })
+                'href': link.get('href', ''),
+                'type': link.get('type', '')
+            }
+            result['links'].append(link_data)
             
         return result
         
     except json.JSONDecodeError:
-        # If JSON parsing fails, try XRD format
+        # If JSON fails, try parsing as XML/XRD
         try:
-            # Remove XML namespace to simplify parsing
-            document = document.replace('xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0"', '')
             root = ET.fromstring(document)
             
+            # Define XML namespaces
+            ns = {
+                'xrd': 'http://docs.oasis-open.org/ns/xri/xrd-1.0',
+                'hm': 'http://host-meta.net/xrd/1.0'
+            }
+            
             result = {
-                'subject': root.findtext('Subject', ''),
-                'aliases': [alias.text for alias in root.findall('Alias')],
+                'subject': '',
+                'aliases': [],
                 'links': []
             }
             
-            # Parse links
-            for link in root.findall('Link'):
-                result['links'].append({
+            # Get subject
+            subject = root.find('.//xrd:Subject', ns)
+            if subject is not None:
+                result['subject'] = subject.text
+                
+            # Get aliases
+            for alias in root.findall('.//xrd:Alias', ns):
+                if alias.text:
+                    result['aliases'].append(alias.text)
+                    
+            # Get links
+            for link in root.findall('.//xrd:Link', ns):
+                link_data = {
                     'rel': link.get('rel', ''),
-                    'type': link.get('type', ''),
-                    'href': link.get('href', '')
-                })
+                    'href': link.get('href', ''),
+                    'type': link.get('type', '')
+                }
+                result['links'].append(link_data)
                 
             return result
             
         except ET.ParseError:
-            raise ValueError("Invalid document format - must be JSON or XRD")
+            raise ValueError("Document is neither valid JSON nor valid XML/XRD format")

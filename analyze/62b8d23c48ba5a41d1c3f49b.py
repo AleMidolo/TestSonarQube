@@ -1,15 +1,19 @@
 def popitem(self):
     """
-    सबसे हाल ही में उपयोग किए गए `(कुंजी, मान)` जोड़े को हटाएं और वापस करें।
+    Eliminar y devolver el par (clave, valor) más recientemente utilizado.
     """
-    if not self:
-        raise KeyError('Dictionary is empty')
+    if not self.cache:  # Si el cache está vacío
+        raise KeyError("Cache is empty")
         
-    # Get the most recently used key from the internal ordered dict
-    key = next(reversed(self))
-    value = self[key]
+    # Obtener la clave más recientemente utilizada (última en el orden)
+    key = next(reversed(self.order))
     
-    # Remove the key-value pair
-    del self[key]
+    # Obtener el valor asociado
+    value = self.cache[key]
     
+    # Eliminar la clave del cache y del orden
+    del self.cache[key]
+    self.order.remove(key)
+    
+    # Devolver el par (clave, valor)
     return (key, value)

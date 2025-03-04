@@ -1,25 +1,31 @@
 def make_parsers():
     """
-    एक शीर्ष-स्तरीय (top-level) पार्सर और उसके सबपार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
+    Crea un analizador de nivel superior y sus subanalizadores, y devuélvalos como una tupla.
     """
     import argparse
 
-    # Create top level parser
-    parser = argparse.ArgumentParser(description='Main command line tool')
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+    # Crear el parser principal
+    parser = argparse.ArgumentParser(description='Sistema de gestión de tareas')
+    subparsers = parser.add_subparsers(dest='command', help='Comandos disponibles')
 
-    # Create parser for 'add' command
-    add_parser = subparsers.add_parser('add', help='Add a new item')
-    add_parser.add_argument('name', help='Name of the item')
-    add_parser.add_argument('--value', '-v', help='Value of the item')
+    # Subparser para agregar tarea
+    add_parser = subparsers.add_parser('add', help='Agregar una nueva tarea')
+    add_parser.add_argument('title', help='Título de la tarea')
+    add_parser.add_argument('-d', '--description', help='Descripción de la tarea')
+    add_parser.add_argument('-p', '--priority', type=int, choices=[1,2,3], 
+                           help='Prioridad de la tarea (1-3)')
 
-    # Create parser for 'list' command  
-    list_parser = subparsers.add_parser('list', help='List all items')
-    list_parser.add_argument('--sort', '-s', choices=['name', 'value'], 
-                            help='Sort output by field')
+    # Subparser para listar tareas
+    list_parser = subparsers.add_parser('list', help='Listar todas las tareas')
+    list_parser.add_argument('-s', '--status', choices=['pending', 'completed'],
+                            help='Filtrar por estado')
+    
+    # Subparser para completar tarea
+    complete_parser = subparsers.add_parser('complete', help='Marcar tarea como completada')
+    complete_parser.add_argument('task_id', type=int, help='ID de la tarea')
 
-    # Create parser for 'delete' command
-    delete_parser = subparsers.add_parser('delete', help='Delete an item')
-    delete_parser.add_argument('name', help='Name of item to delete')
+    # Subparser para eliminar tarea
+    delete_parser = subparsers.add_parser('delete', help='Eliminar una tarea')
+    delete_parser.add_argument('task_id', type=int, help='ID de la tarea')
 
-    return (parser, add_parser, list_parser, delete_parser)
+    return parser, subparsers

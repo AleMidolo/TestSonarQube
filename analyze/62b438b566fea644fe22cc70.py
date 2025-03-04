@@ -1,49 +1,39 @@
 def bash_completion():
+    """
+    Devuelve un script de autocompletado para bash para el comando de borgmatic. Esto se genera mediante la introspección de los analizadores de argumentos de línea de comandos de borgmatic.
+    """
     return '''
-# borgmatic bash completion script
 _borgmatic()
 {
-    local cur prev words cword
-    _init_completion || return
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="--config --help --version init create check extract list info mount umount prune"
 
-    # Complete subcommands
-    if [[ $cword -eq 1 ]]; then
-        COMPREPLY=( $( compgen -W "init create prune check list info mount extract export-tar serve config validate" -- "$cur" ) )
-        return 0
-    fi
-
-    # Complete options based on subcommand
-    case ${words[1]} in
-        create)
-            COMPREPLY=( $( compgen -W "--config --excludes --help --json --list --progress --stats" -- "$cur" ) )
-            ;;
-        prune) 
-            COMPREPLY=( $( compgen -W "--config --help --list --stats" -- "$cur" ) )
-            ;;
-        check)
-            COMPREPLY=( $( compgen -W "--config --help --json --progress --repair" -- "$cur" ) )
-            ;;
-        list|info)
-            COMPREPLY=( $( compgen -W "--config --help --json" -- "$cur" ) )
+    case "${prev}" in
+        --config)
+            _filedir
+            return 0
             ;;
         mount)
-            COMPREPLY=( $( compgen -W "--config --help --mount-point --archive" -- "$cur" ) )
+            _filedir -d
+            return 0
             ;;
         extract)
-            COMPREPLY=( $( compgen -W "--config --help --archive --path" -- "$cur" ) )
+            _filedir -d
+            return 0
             ;;
-        export-tar)
-            COMPREPLY=( $( compgen -W "--config --help --archive --tar" -- "$cur" ) )
-            ;;
-        serve)
-            COMPREPLY=( $( compgen -W "--config --help" -- "$cur" ) )
-            ;;
-        config|validate)
-            COMPREPLY=( $( compgen -W "--config --help" -- "$cur" ) )
+        *)
             ;;
     esac
 
-    return 0
+    if [[ ${cur} == -* ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+
+    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 }
 
 complete -F _borgmatic borgmatic

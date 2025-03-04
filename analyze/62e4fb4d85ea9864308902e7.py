@@ -1,32 +1,35 @@
 def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
-    # Handle empty command
+    """
+    Correcciones para los siguientes problemas en Windows:  
+    - https://bugs.python.org/issue8557  
+    - Windows no interpreta correctamente los 'shebangs'  
+    
+    Esta función también permite que los 'shebangs' con rutas profundas funcionen correctamente.
+    """
     if not cmd:
         return cmd
         
-    # Get first argument (command/script path)
-    first = cmd[0]
-    
-    # Skip if not a Python script
-    if not first.endswith('.py'):
+    # Si el primer elemento es un archivo Python, no necesita normalización
+    if cmd[0].endswith('.py'):
         return cmd
         
-    # Read first line to check for shebang
+    # Lee el primer archivo para buscar shebang
     try:
-        with open(first, 'rb') as f:
+        with open(cmd[0], 'rb') as f:
             first_line = f.readline().decode('utf-8').strip()
+            
+        # Si tiene shebang
+        if first_line.startswith('#!'):
+            interpreter = first_line[2:].strip().split()
+            
+            # Si el shebang especifica python, usar python del sistema
+            if 'python' in interpreter[-1].lower():
+                return ('python', *cmd)
+                
+            # Para otros shebangs, usar el intérprete especificado
+            return (*interpreter, *cmd)
+            
     except (IOError, UnicodeDecodeError):
-        return cmd
+        pass
         
-    # Check if first line is a shebang
-    if not first_line.startswith('#!'):
-        return cmd
-        
-    # Extract interpreter path from shebang
-    interp = first_line[2:].strip().split()[0]
-    
-    # Handle deep paths with spaces
-    if ' ' in interp:
-        interp = f'"{interp}"'
-        
-    # Return normalized command with interpreter
-    return (interp,) + cmd
+    return cmd

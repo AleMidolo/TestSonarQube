@@ -1,15 +1,15 @@
 def identify_request(request: RequestType):
-    # Check for public message first
-    if hasattr(request, 'public') and request.public:
+    # Try to identify if it's a public message
+    if hasattr(request, 'entity_type') and request.entity_type == 'status_message':
         return 'public'
-    
-    # Then check for private message
-    if hasattr(request, 'private') and request.private:
+        
+    # Try to identify if it's a private message
+    if hasattr(request, 'aes_key') or hasattr(request, 'encrypted_magic_envelope'):
         return 'private'
         
-    # Finally check if it's a legacy payload
-    if hasattr(request, 'legacy_payload'):
+    # Check if it's a legacy payload by looking for old format indicators
+    if hasattr(request, 'xml_payload') or hasattr(request, 'legacy_format'):
         return 'legacy'
         
-    # If none of the above, return None
-    return None
+    # If we can't identify the request type
+    return 'unknown'

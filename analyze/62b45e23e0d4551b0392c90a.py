@@ -1,32 +1,47 @@
 def validate_version_inventories(self, version_dirs):
     """
-    प्रत्येक संस्करण के पास उस बिंदु तक एक इन्वेंटरी होनी चाहिए।
+    Cada versión DEBE tener un inventario hasta ese punto.
 
-    साथ ही, किसी भी सामग्री डाइजेस्ट का रिकॉर्ड रखें जो रूट इन्वेंटरी में मौजूद डाइजेस्ट से अलग हो,
-    ताकि सामग्री को सत्यापित करते समय हम उन्हें भी जांच सकें।
+    También se debe mantener un registro de cualquier resumen de contenido (digest) 
+    que sea diferente de los que están en el inventorio raíz, 
+    para que también podamos verificarlos al validar el contenido.
 
-    version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
+    'version_dirs' es un arreglo de nombres de directorios de versiones 
+    y se asume que están en secuencia de versiones (1, 2, 3...).
     """
-    # Track all unique content digests seen
-    all_digests = set()
+    digests_to_verify = set()
     
-    # Get root inventory digests
-    root_inventory = self.get_root_inventory()
-    root_digests = set(root_inventory.get_all_digests())
-    
-    # Validate each version has inventory
-    for version in version_dirs:
-        inventory_path = os.path.join(version, 'inventory.json')
-        if not os.path.exists(inventory_path):
-            raise ValidationError(f"Missing inventory file for version {version}")
-            
-        # Load inventory and get digests
-        with open(inventory_path) as f:
-            inventory = json.load(f)
-            version_digests = set(inventory.get_all_digests())
-            
-        # Add any new digests not in root inventory
-        diff_digests = version_digests - root_digests
-        all_digests.update(diff_digests)
+    # Validar que exista un inventario para cada versión
+    for version_dir in version_dirs:
+        inventory_path = os.path.join(version_dir, "inventory.txt")
         
-    return all_digests
+        if not os.path.exists(inventory_path):
+            raise ValueError(f"No se encontró inventario para la versión {version_dir}")
+            
+        # Leer el inventario de la versión actual
+        with open(inventory_path) as f:
+            version_inventory = f.readlines()
+            
+        # Obtener los digests del inventario actual
+        version_digests = set()
+        for line in version_inventory:
+            if line.strip():
+                digest = line.split()[0]
+                version_digests.add(digest)
+                
+        # Comparar con el inventario raíz y agregar digests diferentes
+        root_inventory_path = "inventory.txt"
+        if os.path.exists(root_inventory_path):
+            with open(root_inventory_path) as f:
+                root_inventory = f.readlines()
+                
+            root_digests = set()
+            for line in root_inventory:
+                if line.strip():
+                    digest = line.split()[0] 
+                    root_digests.add(digest)
+                    
+            # Agregar digests que son diferentes al inventario raíz
+            digests_to_verify.update(version_digests - root_digests)
+                
+    return digests_to_verify
