@@ -1,28 +1,23 @@
 def _include_groups(self, parser_dict):
     """
-    Risolve la direttiva "include dict" nei file di specifica
+    Resolves the include dict directive in the spec files.
     """
-    if not parser_dict:
-        return {}
-        
-    result = {}
-    for key, value in parser_dict.items():
-        if isinstance(value, dict):
-            if 'include' in value:
-                # Handle include directive
-                include_path = value['include']
-                try:
-                    with open(include_path, 'r') as f:
-                        included_dict = json.load(f)
-                    result[key] = self._include_groups(included_dict)
-                except (IOError, json.JSONDecodeError) as e:
-                    print(f"Error including file {include_path}: {str(e)}")
-                    result[key] = value
-            else:
-                # Recursively process nested dictionaries
-                result[key] = self._include_groups(value)
-        else:
-            # Copy non-dictionary values as-is
-            result[key] = value
+    if not isinstance(parser_dict, dict):
+        return parser_dict
+
+    if 'include' in parser_dict:
+        included_groups = parser_dict.pop('include')
+        if not isinstance(included_groups, list):
+            included_groups = [included_groups]
             
-    return result
+        for group in included_groups:
+            if group in self.groups:
+                parser_dict.update(self.groups[group])
+            else:
+                raise ValueError(f"Group '{group}' referenced in include directive not found")
+                
+    for value in parser_dict.values():
+        if isinstance(value, dict):
+            self._include_groups(value)
+            
+    return parser_dict

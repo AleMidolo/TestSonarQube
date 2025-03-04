@@ -1,14 +1,13 @@
-def oneline(script, separator=" && "):
+def oneline(script, seperator=" && "):
     """
-    Converte uno script in un comando su una sola riga.  
-    Questo è utile per eseguire un singolo comando SSH e passare uno script su una sola riga.
+    converts a script to one line command.
+    THis is useful to run a single ssh command and pass a one line script.
 
     :param script: String containing multiline script
-    :param separator: String to use as command separator (default: " && ")
-    :return: Single line string with commands separated by separator
+    :return: String with commands joined by separator
     """
-    # Split script into lines and remove empty lines
+    # Split script into lines and filter out empty lines
     lines = [line.strip() for line in script.split('\n') if line.strip()]
     
     # Join lines with separator
-    return separator.join(lines)
+    return seperator.join(lines)

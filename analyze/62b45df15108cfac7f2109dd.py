@@ -1,10 +1,13 @@
 def status_str(self, prefix=''):
     """
-    Restituisce la rappresentazione in formato stringa del registro di validazione, con un prefisso opzionale.
+    Return string representation of validation log, with optional prefix.
     """
-    result = []
-    for error in self.errors:
-        result.append(f"{prefix}{error}")
-    for warning in self.warnings:
-        result.append(f"{prefix}{warning}")
-    return "\n".join(result) if result else f"{prefix}OK"
+    output = []
+    for entry in self.log:
+        if entry.get('status') == 'error':
+            output.append(f"{prefix}ERROR: {entry.get('message')}")
+        elif entry.get('status') == 'warning': 
+            output.append(f"{prefix}WARNING: {entry.get('message')}")
+        else:
+            output.append(f"{prefix}{entry.get('message')}")
+    return '\n'.join(output)

@@ -1,38 +1,52 @@
-def create_complex_argument_type(self, subcommand, type_name, option_name, spec_option):
+def create_complex_argumet_type(self, subcommand, type_name, option_name, spec_option):
     """
-    Crea il tipo di argomento complesso.
+    Build the complex argument type
 
-    :param subcommand: il nome del comando
-    :param type_name: il nome del tipo complesso
-    :param option_name: il nome dell'opzione
-    :param spec_option: le specifiche dell'opzione
-    :return: l'istanza del tipo complesso
+    :param subcommand: the command name
+    :param type_name: the complex type name 
+    :param option_name: the option name
+    :param spec_option: option's specifications
+    :return: the complex type instance
     """
-    # Create a custom argument type class
-    class ComplexArgumentType:
-        def __init__(self, spec):
-            self.spec = spec
+    # Create a new class dynamically with the type name
+    complex_type = type(type_name, (), {})
+    
+    # Add validation method
+    def validate(cls, value):
+        if not value:
+            raise ValueError(f"Value required for {option_name}")
             
-        def __call__(self, value):
-            try:
-                # Try to parse the value according to spec
-                if 'choices' in self.spec:
-                    if value not in self.spec['choices']:
-                        raise ValueError(f"Value must be one of {self.spec['choices']}")
+        # Handle different complex type validations based on spec_option
+        if 'allowed_values' in spec_option:
+            if value not in spec_option['allowed_values']:
+                raise ValueError(f"Value {value} not in allowed values for {option_name}")
                 
-                if 'type' in self.spec:
-                    value = self.spec['type'](value)
-                    
-                if 'validator' in self.spec:
-                    if not self.spec['validator'](value):
-                        raise ValueError(f"Value {value} failed validation")
-                        
-                return value
+        if 'pattern' in spec_option:
+            import re
+            if not re.match(spec_option['pattern'], value):
+                raise ValueError(f"Value {value} does not match pattern for {option_name}")
                 
-            except Exception as e:
-                raise argparse.ArgumentTypeError(
-                    f"Invalid value for {option_name}: {str(e)}"
-                )
+        if 'min_length' in spec_option:
+            if len(value) < spec_option['min_length']:
+                raise ValueError(f"Value {value} is shorter than minimum length for {option_name}")
                 
-    # Create instance with the provided specs
-    return ComplexArgumentType(spec_option)
+        if 'max_length' in spec_option:
+            if len(value) > spec_option['max_length']:
+                raise ValueError(f"Value {value} is longer than maximum length for {option_name}")
+        
+        return value
+        
+    # Add string representation method
+    def to_string(cls, value):
+        return str(value)
+        
+    # Add methods to the complex type class
+    setattr(complex_type, 'validate', classmethod(validate))
+    setattr(complex_type, 'to_string', classmethod(to_string))
+    
+    # Store metadata about the complex type
+    complex_type.subcommand = subcommand
+    complex_type.option_name = option_name
+    complex_type.specifications = spec_option
+    
+    return complex_type

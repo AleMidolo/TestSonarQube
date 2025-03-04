@@ -1,22 +1,31 @@
 def process_text_links(text):
     """
-    Elabora i collegamenti nel testo, aggiungendo alcuni attributi e trasformando i collegamenti testuali in link cliccabili.
+    Process links in text, adding some attributes and linkifying textual links.
     """
     import re
     
-    # Pattern per trovare URL nel testo
+    # Regular expression for finding URLs
     url_pattern = r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
     
-    # Funzione per sostituire gli URL con link HTML
-    def replace_with_link(match):
+    # Regular expression for finding HTML links
+    html_link_pattern = r'<a[^>]*>.*?</a>'
+    
+    # First process existing HTML links
+    def add_attributes(match):
+        link = match.group(0)
+        if 'target=' not in link:
+            link = link.replace('<a ', '<a target="_blank" rel="noopener noreferrer" ')
+        return link
+    
+    text = re.sub(html_link_pattern, add_attributes, text)
+    
+    # Then convert plain URLs to HTML links
+    def linkify(match):
         url = match.group(0)
-        # Se l'URL non inizia con http/https, aggiungi http://
         if not url.startswith(('http://', 'https://')):
             url = 'http://' + url
-        # Crea il link HTML con attributi target="_blank" e rel="noopener noreferrer"
         return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{match.group(0)}</a>'
     
-    # Sostituisci tutti gli URL trovati con i link HTML
-    processed_text = re.sub(url_pattern, replace_with_link, text)
+    text = re.sub(url_pattern, linkify, text)
     
-    return processed_text
+    return text

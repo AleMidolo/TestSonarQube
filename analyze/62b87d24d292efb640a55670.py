@@ -1,29 +1,24 @@
 def get_versions():
     """
-    Ottieni le informazioni sulla versione o restituisci il valore predefinito se non è possibile ottenerle.
+    Get version information or return default if unable to do so.
     """
     try:
-        import sys
+        import pkg_resources
         import platform
+        import sys
         
         versions = {
             'python': sys.version.split()[0],
             'platform': platform.platform(),
-            'machine': platform.machine(),
-            'processor': platform.processor(),
-            'system': platform.system(),
-            'release': platform.release()
+            'pkg_resources': pkg_resources.__version__
         }
         
         return versions
         
     except Exception:
-        # Return default values if version info cannot be obtained
+        # Return default version info if unable to get actual versions
         return {
             'python': 'unknown',
             'platform': 'unknown',
-            'machine': 'unknown', 
-            'processor': 'unknown',
-            'system': 'unknown',
-            'release': 'unknown'
+            'pkg_resources': 'unknown'
         }

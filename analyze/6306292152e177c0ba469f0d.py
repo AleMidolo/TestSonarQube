@@ -1,36 +1,24 @@
 def identify_request(request: RequestType) -> bool:
     """
-    Prova a identificare se si tratta di una richiesta Matrix.
+    Try to identify whether this is a Matrix request
     """
-    # Check if request is None
-    if request is None:
-        return False
-        
     # Check if request has Matrix-specific headers
-    headers = request.headers if hasattr(request, 'headers') else {}
-    
-    # Look for common Matrix protocol identifiers in headers
-    matrix_headers = [
-        'Authorization',  # Matrix uses bearer tokens
-        'X-Matrix',      # Custom Matrix header
-        'Origin'         # Check for Matrix homeserver origin
-    ]
-    
-    for header in matrix_headers:
-        if header in headers:
-            # If authorization header exists, check if it starts with 'Bearer'
-            if header == 'Authorization' and headers[header].startswith('Bearer'):
-                return True
-            # If X-Matrix header exists
-            elif header == 'X-Matrix':
-                return True
-            # If Origin matches Matrix homeserver pattern
-            elif header == 'Origin' and 'matrix' in headers[header].lower():
-                return True
-                
-    # Check URL path if available
-    if hasattr(request, 'path'):
-        matrix_paths = ['/_matrix', '/_synapse', '/_client']
-        return any(path in request.path for path in matrix_paths)
-        
+    if 'Authorization' in request.headers:
+        auth_header = request.headers['Authorization']
+        if auth_header.startswith('Bearer'):
+            # Matrix access tokens are typically Bearer tokens
+            return True
+            
+    # Check for Matrix API endpoints in request path
+    matrix_endpoints = ['/_matrix', '/_synapse']
+    for endpoint in matrix_endpoints:
+        if request.path.startswith(endpoint):
+            return True
+            
+    # Check content type for Matrix-specific formats
+    if 'Content-Type' in request.headers:
+        content_type = request.headers['Content-Type']
+        if 'application/json' in content_type and any(x in request.path for x in ['sync', 'events', 'rooms']):
+            return True
+            
     return False

@@ -1,41 +1,49 @@
 def validate(self, path):
     """
-    Valida l'oggetto OCFL nel percorso specificato o nella radice di pyfs.
+    Validate OCFL object at path or pyfs root.
+    
+    Returns True if valid (warnings permitted), False otherwise.
     """
-    # Verifica che il percorso esista
-    if not self.fs.exists(path):
-        raise ValueError(f"Il percorso {path} non esiste")
-
-    # Verifica la presenza del file namaste 
-    namaste_path = self.fs.join_path(path, "0=ocfl_object_1.0")
-    if not self.fs.exists(namaste_path):
-        raise ValueError(f"File namaste mancante in {path}")
-
-    # Verifica la presenza della directory inventory
-    inventory_path = self.fs.join_path(path, "inventory.json")
-    if not self.fs.exists(inventory_path):
-        raise ValueError(f"File inventory.json mancante in {path}")
-
-    # Carica e valida l'inventory
-    with self.fs.open(inventory_path) as f:
-        inventory = json.load(f)
-
-    # Verifica i campi obbligatori dell'inventory
-    required_fields = ["id", "type", "digestAlgorithm", "head", "versions"]
-    for field in required_fields:
-        if field not in inventory:
-            raise ValueError(f"Campo {field} mancante nell'inventory")
-
-    # Verifica che l'algoritmo di digest sia valido
-    valid_algorithms = ["sha256", "sha512", "sha1"]
-    if inventory["digestAlgorithm"] not in valid_algorithms:
-        raise ValueError(f"Algoritmo digest non valido: {inventory['digestAlgorithm']}")
-
-    # Verifica la presenza delle directory delle versioni
-    for version in inventory["versions"]:
-        version_path = self.fs.join_path(path, f"v{version}")
-        if not self.fs.exists(version_path):
-            raise ValueError(f"Directory versione {version} mancante")
-
-    # Se arriviamo qui, la validazione è passata
-    return True
+    try:
+        # Check if path exists
+        if not os.path.exists(path):
+            return False
+            
+        # Verify OCFL structure
+        if not self._verify_ocfl_structure(path):
+            return False
+            
+        # Check for required files
+        required_files = ['0=ocfl_object_1.0', 'inventory.json', 'inventory.json.sha512']
+        for file in required_files:
+            if not os.path.isfile(os.path.join(path, file)):
+                return False
+                
+        # Validate inventory
+        with open(os.path.join(path, 'inventory.json')) as f:
+            try:
+                inventory = json.load(f)
+            except json.JSONDecodeError:
+                return False
+                
+        # Check inventory required fields
+        required_fields = ['id', 'type', 'digestAlgorithm', 'versions']
+        for field in required_fields:
+            if field not in inventory:
+                return False
+                
+        # Verify checksums
+        if not self._verify_checksums(path, inventory):
+            return False
+            
+        # Verify version sequence
+        versions = sorted(inventory['versions'].keys())
+        for i, v in enumerate(versions, 1):
+            if f'v{i}' != v:
+                return False
+                
+        # All validation passed
+        return True
+        
+    except Exception:
+        return False

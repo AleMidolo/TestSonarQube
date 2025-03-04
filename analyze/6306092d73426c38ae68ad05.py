@@ -1,16 +1,16 @@
 def get_option_spec(self, command_name, argument_name):
     """
-    Ottiene la specifica per il nome dell'opzione specificato.
+    Gets the specification for the specified option name.
     """
-    # Verifica che il comando esista
-    if command_name not in self.commands:
-        raise ValueError(f"Command '{command_name}' not found")
+    # Get the command spec from the command registry
+    command_spec = self.commands.get(command_name)
+    if not command_spec:
+        return None
         
-    command = self.commands[command_name]
-    
-    # Cerca l'argomento nelle opzioni del comando
-    if argument_name not in command.options:
-        raise ValueError(f"Option '{argument_name}' not found for command '{command_name}'")
-        
-    # Restituisce la specifica dell'opzione
-    return command.options[argument_name]
+    # Look for the argument in the command's options
+    if 'options' in command_spec:
+        for option in command_spec['options']:
+            if option['name'] == argument_name:
+                return option
+                
+    return None

@@ -1,18 +1,20 @@
 def regex_dict(item):
     import re
     
-    # Create new dictionary to store converted keys
-    converted = {}
+    # Create new dict to store regex keys
+    regex_keys = {}
     
-    # Iterate through original dictionary
+    # Iterate through each key-value pair
     for key, value in item.items():
         # Convert wildcard pattern to regex pattern
-        # Escape dots, replace * with .* 
-        regex_key = key.replace('.', '\\.').replace('*', '.*')
-        # Add ^ and $ to match full string
-        regex_key = f'^{regex_key}$'
+        # Escape special regex chars
+        regex_pattern = re.escape(key)
+        # Replace \* with .* to match any chars
+        regex_pattern = regex_pattern.replace(r'\*', '.*')
+        # Add start and end anchors
+        regex_pattern = f'^{regex_pattern}$'
         
         # Add converted key and original value to new dict
-        converted[regex_key] = value
+        regex_keys[regex_pattern] = value
         
-    return converted
+    return regex_keys

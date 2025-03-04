@@ -1,23 +1,18 @@
 def is_gitbash():
     """
-    Restituisce True se viene eseguito in un terminale gitbash di Windows
+    returns True if you run in a Windows gitbash
 
-    :return: True se è gitbash
+    :return: True if gitbash
     """
     import os
-    import sys
+    import platform
     
     # Check if running on Windows
-    if sys.platform != 'win32':
+    if platform.system() != 'Windows':
         return False
         
-    # Check for MINGW in environment variables which indicates GitBash
+    # Check for MINGW in environment variables which indicates Git Bash
     if 'MINGW' in os.environ.get('MSYSTEM', ''):
-        return True
-        
-    # Check for common GitBash paths in PATH
-    path = os.environ.get('PATH', '').lower()
-    if 'git\\mingw' in path or 'git\\usr\\bin' in path:
         return True
         
     return False

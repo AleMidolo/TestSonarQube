@@ -1,4 +1,8 @@
 def bash_completion():
+    """
+    Return a bash completion script for the borgmatic command. Produce this by introspecting
+    borgmatic's command-line argument parsers.
+    """
     return '''
 _borgmatic()
 {
@@ -7,60 +11,38 @@ _borgmatic()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     
-    # Main borgmatic commands
-    opts="init create prune list info check extract export-tar mount umount rcreate rinfo rlist rdelete config validate"
-
-    # Common options
-    common_opts="-h --help -c --config --verbosity --syslog-verbosity"
-
+    # List of all borgmatic commands
+    opts="init create prune check list info export-tar extract mount umount rcreate rlist rinfo rdelete config validate generate-key"
+    
+    # List of options that take config file paths
+    config_opts="-c --config --borgmatic-source-directory"
+    
+    # Handle completion for different cases
     case "${prev}" in
         borgmatic)
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;
         -c|--config)
-            COMPREPLY=( $(compgen -f -- ${cur}) )
+            COMPREPLY=( $(compgen -f -X '!*.yaml' -- ${cur}) )
             return 0
             ;;
-        --verbosity|--syslog-verbosity)
-            COMPREPLY=( $(compgen -W "0 1 2 3" -- ${cur}) )
+        --borgmatic-source-directory)
+            COMPREPLY=( $(compgen -d -- ${cur}) )
             return 0
             ;;
         *)
+            # If current word starts with -, complete with options
+            if [[ ${cur} == -* ]] ; then
+                COMPREPLY=( $(compgen -W "${config_opts}" -- ${cur}) )
+                return 0
+            fi
             ;;
     esac
-
-    if [[ ${cur} == -* ]] ; then
-        COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
-        return 0
-    fi
-
-    # Command-specific options
-    case "${COMP_WORDS[1]}" in
-        create)
-            COMPREPLY=( $(compgen -W "--list --stats --json" -- ${cur}) )
-            ;;
-        prune)
-            COMPREPLY=( $(compgen -W "--list --stats --json" -- ${cur}) )
-            ;;
-        list)
-            COMPREPLY=( $(compgen -W "--archive --json --format" -- ${cur}) )
-            ;;
-        info)
-            COMPREPLY=( $(compgen -W "--archive --json" -- ${cur}) )
-            ;;
-        check)
-            COMPREPLY=( $(compgen -W "--archive --verify-data --json" -- ${cur}) )
-            ;;
-        extract)
-            COMPREPLY=( $(compgen -W "--archive --path --destination --json" -- ${cur}) )
-            ;;
-        mount)
-            COMPREPLY=( $(compgen -W "--archive --path --mount-point --json" -- ${cur}) )
-            ;;
-        *)
-            ;;
-    esac
+    
+    # Default to completing files
+    COMPREPLY=( $(compgen -f -- ${cur}) )
+    return 0
 }
 
 complete -F _borgmatic borgmatic

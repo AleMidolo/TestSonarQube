@@ -1,28 +1,24 @@
 def _normalizeargs(sequence, output=None):
     """
-    Normalizza gli argomenti della dichiarazione
+    Normalize declaration arguments
 
-    Gli argomenti di normalizzazione possono contenere Dichiarazioni, tuple o singole
-    interfacce.
+    Normalization arguments might contain Declarions, tuples, or single
+    interfaces.
 
-    Qualsiasi cosa diversa da interfacce individuali o specifiche di implementazione verrà espansa.
+    Anything but individial interfaces or implements specs will be expanded.
     """
     if output is None:
         output = []
         
-    if not sequence:
-        return output
-        
-    # Handle single item
-    if not isinstance(sequence, (list, tuple)):
-        output.append(sequence)
-        return output
-        
-    # Recursively process sequences
-    for item in sequence:
-        if isinstance(item, (list, tuple)):
-            _normalizeargs(item, output)
+    for arg in sequence:
+        if isinstance(arg, (list, tuple)):
+            _normalizeargs(arg, output)
+        elif hasattr(arg, 'interfaces'):
+            # Handle Declaration objects by expanding their interfaces
+            _normalizeargs(arg.interfaces, output)
         else:
-            output.append(item)
-            
+            # Individual interface or implements spec
+            if arg not in output:
+                output.append(arg)
+                
     return output

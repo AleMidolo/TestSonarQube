@@ -1,21 +1,17 @@
 def match(filename):
     """
-    Verifica se il nome file è di un tipo supportato da questo modulo
+    Check if the filename is a type that this module supports
 
-    Argomenti:
-        filename: Nome file da confrontare
-    Ritorna:
-        False se non è una corrispondenza, True se è supportato
+    Args:
+        filename: Filename to match
+    Returns:
+        False if not a match, True if supported
     """
-    # Lista delle estensioni supportate
-    supported_extensions = ['.txt', '.doc', '.docx', '.pdf', '.rtf']
+    # List of supported file extensions
+    supported_extensions = ['.txt', '.csv', '.json', '.xml', '.yaml', '.yml']
     
-    # Converte il filename in minuscolo per un confronto case-insensitive
-    filename = filename.lower()
+    # Get the file extension from the filename
+    file_extension = filename[filename.rfind('.'):].lower() if '.' in filename else ''
     
-    # Controlla se il file termina con una delle estensioni supportate
-    for ext in supported_extensions:
-        if filename.endswith(ext):
-            return True
-            
-    return False
+    # Check if extension is in supported list
+    return file_extension in supported_extensions

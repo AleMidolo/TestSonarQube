@@ -1,13 +1,12 @@
 def validate_requires_args(self, args):
     """
-    Verifica se sono stati forniti tutti gli argomenti richiesti.
+    Check if all the required arguments have been provided.
     """
-    if not args:
-        return False
+    if not hasattr(self, 'required_args'):
+        return True
         
-    required_args = [arg for arg in self.required_args if arg not in args]
-    
-    if required_args:
-        return False
-        
+    for required_arg in self.required_args:
+        if required_arg not in args:
+            return False
+            
     return True

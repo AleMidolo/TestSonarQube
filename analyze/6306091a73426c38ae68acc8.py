@@ -1,20 +1,31 @@
 def list_of_file_names(settings_dirs, spec_option):
     """
-    Crea un nuovo tipo complesso IniType
+    Create a new IniType complex type
     """
     file_names = []
     
-    # Iterate through each directory path
+    # Handle single directory case
+    if isinstance(settings_dirs, str):
+        settings_dirs = [settings_dirs]
+        
+    # Iterate through all directories
     for directory in settings_dirs:
-        # Check if directory exists and is a directory
-        if os.path.isdir(directory):
-            # Get list of files in directory
-            files = os.listdir(directory)
+        # Handle spec_option file extension
+        if spec_option.startswith('.'):
+            pattern = f'*{spec_option}'
+        else:
+            pattern = f'*.{spec_option}'
             
-            # Filter files based on spec_option
-            for file in files:
-                if spec_option in file and file.endswith('.ini'):
-                    # Add full path to file_names list
-                    file_names.append(os.path.join(directory, file))
-                    
-    return file_names
+        # Get list of matching files in directory
+        import glob
+        import os
+        
+        search_path = os.path.join(directory, pattern)
+        matching_files = glob.glob(search_path)
+        
+        # Add file names without extension to list
+        for file_path in matching_files:
+            file_name = os.path.splitext(os.path.basename(file_path))[0]
+            file_names.append(file_name)
+            
+    return sorted(list(set(file_names))) # Remove duplicates and sort

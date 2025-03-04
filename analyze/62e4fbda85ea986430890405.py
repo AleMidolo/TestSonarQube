@@ -1,3 +1,10 @@
+import os
+import pty
+import subprocess
+import sys
+from concurrent.futures import ThreadPoolExecutor
+from typing import Any, Sequence
+
 def xargs(
         cmd: tuple[str, ...],
         varargs: Sequence[str],
@@ -8,65 +15,67 @@ def xargs(
         **kwargs: Any,
 ) -> tuple[int, bytes]:
     
-    if not varargs:
-        return _run_command(cmd, color=color, **kwargs)
+    def _run_chunk(chunk: list[str]) -> tuple[int, bytes]:
+        full_cmd = list(cmd) + chunk
         
-    partitions = _partition_varargs(varargs, _max_length, target_concurrency)
-    
-    futures = []
-    with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
-        for partition in partitions:
-            full_cmd = cmd + tuple(partition)
-            future = executor.submit(_run_command, full_cmd, color=color, **kwargs)
-            futures.append(future)
+        if color and sys.platform != 'win32':
+            master, slave = pty.openpty()
+            proc = subprocess.Popen(
+                full_cmd,
+                stdout=slave,
+                stderr=slave,
+                **kwargs
+            )
+            os.close(slave)
             
-    output = b''
-    retcode = 0
-    
-    for future in futures:
-        try:
-            partition_retcode, partition_output = future.result()
-            output += partition_output
-            if partition_retcode != 0:
-                retcode = partition_retcode
-        except Exception as e:
-            retcode = 1
-            output += str(e).encode()
+            output = b''
+            while True:
+                try:
+                    chunk = os.read(master, 1024)
+                    if not chunk:
+                        break
+                    output += chunk
+                except OSError:
+                    break
+                    
+            os.close(master)
+            returncode = proc.wait()
             
-    return retcode, output
+        else:
+            proc = subprocess.run(
+                full_cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                **kwargs
+            )
+            output = proc.stdout
+            returncode = proc.returncode
+            
+        return returncode, output
 
-def _partition_varargs(varargs: Sequence[str], max_length: int, target_parts: int) -> list[list[str]]:
-    total_length = sum(len(arg) for arg in varargs) + len(varargs)
-    min_parts = (total_length + max_length - 1) // max_length
-    num_parts = max(min_parts, target_parts)
-    
-    partitions = [[] for _ in range(num_parts)]
-    current_lengths = [0] * num_parts
-    current_part = 0
+    # Split varargs into chunks that fit within max length
+    chunks: list[list[str]] = [[]]
+    current_length = 0
     
     for arg in varargs:
-        arg_len = len(arg) + 1
-        if current_lengths[current_part] + arg_len > max_length:
-            current_part = (current_part + 1) % num_parts
-            
-        partitions[current_part].append(arg)
-        current_lengths[current_part] += arg_len
-        
-    return [p for p in partitions if p]
+        arg_length = len(arg) + 1  # +1 for space
+        if current_length + arg_length > _max_length:
+            chunks.append([])
+            current_length = 0
+        chunks[-1].append(arg)
+        current_length += arg_length
 
-def _run_command(cmd: tuple[str, ...], *, color: bool = False, **kwargs: Any) -> tuple[int, bytes]:
-    if color and sys.platform != 'win32':
-        import pty
-        master_fd, slave_fd = pty.openpty()
-        kwargs['stdout'] = slave_fd
-        kwargs['stderr'] = slave_fd
-        
-    proc = subprocess.Popen(cmd, **kwargs)
-    output, _ = proc.communicate()
+    # Run chunks concurrently
+    with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
+        results = list(executor.map(_run_chunk, chunks))
+
+    # Combine results
+    final_returncode = 0
+    final_output = b''
     
-    if color and sys.platform != 'win32':
-        os.close(slave_fd)
-        output = os.read(master_fd, 1024*1024)
-        os.close(master_fd)
-        
-    return proc.returncode, output
+    for returncode, output in results:
+        if returncode != 0:
+            final_returncode = returncode
+        final_output += output
+
+    return final_returncode, final_output

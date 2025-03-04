@@ -1,32 +1,26 @@
 def validate_value(value):
     """
-    Convalida il valore fornito rispetto alla corrispondente espressione regolare.
+    Validate the given value against the corresponding regular expression.
 
-    Argomenti:
-        value: la stringa da convalidare
+    Args:
+        value: the string to validate
 
-    Eccezioni:
-        ValidationError: se il valore fornito non è conforme all'espressione regolare.
+    Raises:
+        ValidationError: if the given value is not conform to the regular expression.
     """
     import re
 
-    # Pattern per validare che la stringa contenga solo lettere, numeri e underscore
-    pattern = r'^[a-zA-Z0-9_]+$'
-    
-    # Verifica se il valore è una stringa
+    # Regular expression pattern for validation
+    pattern = r'^[A-Za-z0-9\s\-_]+$'
+
+    # Check if value is a string
     if not isinstance(value, str):
-        raise ValidationError("Il valore deve essere una stringa")
-        
-    # Verifica se la stringa è vuota
-    if not value:
-        raise ValidationError("Il valore non può essere vuoto")
-        
-    # Verifica se la stringa corrisponde al pattern
+        raise ValidationError("Value must be a string")
+
+    # Check if value matches pattern
     if not re.match(pattern, value):
-        raise ValidationError("Il valore contiene caratteri non validi")
-        
-    return True
+        raise ValidationError("Value contains invalid characters. Only alphanumeric characters, spaces, hyphens and underscores are allowed.")
 
 class ValidationError(Exception):
-    """Eccezione sollevata per errori di validazione"""
+    """Custom exception for validation errors"""
     pass

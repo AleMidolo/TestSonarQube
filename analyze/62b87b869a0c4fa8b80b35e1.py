@@ -1,48 +1,36 @@
 def hist_to_graph(hist, make_value=None, get_coordinate="left",
                   field_names=("x", "y"), scale=None):
-    # Default make_value function just returns bin content
+    # Default make_value function returns bin content
     if make_value is None:
         make_value = lambda x: x
         
-    # Validate get_coordinate parameter
-    valid_coords = ["left", "right", "middle"]
-    if get_coordinate not in valid_coords:
-        raise ValueError(f"get_coordinate must be one of {valid_coords}")
+    # Get coordinates based on get_coordinate parameter
+    if get_coordinate == "left":
+        coordinates = [bin.left for bin in hist.bins()]
+    elif get_coordinate == "right":
+        coordinates = [bin.right for bin in hist.bins()]
+    elif get_coordinate == "middle":
+        coordinates = [(bin.left + bin.right)/2 for bin in hist.bins()]
+    else:
+        raise ValueError("get_coordinate must be 'left', 'right' or 'middle'")
         
-    # Get coordinate based on specified position
-    def get_bin_coordinate(bin):
-        if get_coordinate == "left":
-            return bin.left_edge
-        elif get_coordinate == "right":
-            return bin.right_edge
-        else:  # middle
-            return (bin.left_edge + bin.right_edge) / 2
-            
+    # Get values using make_value function
+    values = [make_value(bin.content) for bin in hist.bins()]
+    
+    # Handle single values vs tuples
+    if not isinstance(values[0], tuple):
+        values = [(v,) for v in values]
+        
     # Create points list
     points = []
-    for bin in hist:
-        x = get_bin_coordinate(bin)
-        y = make_value(bin.value)
+    for coord, val in zip(coordinates, values):
+        point = (coord,) + val
+        points.append(point)
         
-        # Handle single values vs tuples from make_value
-        if isinstance(y, (tuple, list)):
-            points.append((x,) + tuple(y))
-        else:
-            points.append((x, y))
-            
-    # Validate field names match point dimensions
-    point_len = len(points[0]) if points else 0
-    if len(field_names) != point_len:
-        raise ValueError(f"Number of field names ({len(field_names)}) must match point dimensions ({point_len})")
-        
-    # Create graph with specified parameters
-    from graph import Graph  # Assuming Graph class exists
-    graph = Graph(points=points, field_names=field_names)
-    
-    # Set scale if specified
+    # Set scale
     if scale is True:
-        graph.scale = hist.scale
-    elif scale is not None:
-        graph.scale = scale
+        scale = hist.scale
         
-    return graph
+    # Create and return graph with given field names and points
+    from .graph import Graph
+    return Graph(field_names=field_names, points=points, scale=scale)

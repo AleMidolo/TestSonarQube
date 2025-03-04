@@ -1,19 +1,36 @@
 def data(self, *keys):
+    """
+    Return the keys and values of this record as a dictionary,
+    optionally including only certain values by index or key. Keys
+    provided in the items that are not in the record will be
+    inserted with a value of :const:`None`; indexes provided
+    that are out of bounds will trigger an :exc:`IndexError`.
+
+    :param keys: indexes or keys of the items to include; if none
+                  are provided, all values will be included
+    :return: dictionary of values, keyed by field name
+    :raises: :exc:`IndexError` if an out-of-bounds index is specified
+    """
     if not keys:
-        # If no keys specified, return all fields
-        return dict(zip(self.keys(), self.values()))
+        # If no keys specified, return all items
+        return dict(zip(self._keys, self._values))
     
     result = {}
     for key in keys:
         if isinstance(key, int):
-            # Handle numeric index
-            try:
-                field_name = self.keys()[key]
-                result[field_name] = self.values()[key]
-            except IndexError:
-                raise IndexError(f"Index {key} is out of bounds")
+            # Handle index access
+            if key < 0:
+                key = len(self._keys) + key
+            if key >= len(self._keys) or key < 0:
+                raise IndexError(f"Index {key} out of range")
+            result[self._keys[key]] = self._values[key]
         else:
-            # Handle field name
-            result[key] = self[key] if key in self else None
-            
+            # Handle key access
+            try:
+                index = self._keys.index(key)
+                result[key] = self._values[index]
+            except ValueError:
+                # Key not found, set value to None
+                result[key] = None
+                
     return result

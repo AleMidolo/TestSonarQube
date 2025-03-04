@@ -1,38 +1,39 @@
 def validate_from_file(cls, yaml_file=None):
     """
-    Carica e valida che un file YAML contenga tutti i campi richiesti.
+    Loads & validates that a YAML file has all required fields
 
-    :param yaml_file: Percorso del file YAML
-    :raise IRValidatorException: quando mancano dati obbligatori nel file 
-    :return: Dizionario con i dati caricati da un file YAML
+    :param yaml_file: Path to YAML file 
+    :raise IRValidatorException: when mandatory data is missing in file
+    :return: Dictionary with data loaded from a YAML file
     """
     try:
         import yaml
         
         if yaml_file is None:
-            raise IRValidatorException("File YAML non specificato")
+            raise IRValidatorException("No YAML file path provided")
             
         with open(yaml_file, 'r') as f:
-            data = yaml.safe_load(f)
+            yaml_data = yaml.safe_load(f)
             
-        if not isinstance(data, dict):
-            raise IRValidatorException("Il file YAML deve contenere un dizionario")
+        if not isinstance(yaml_data, dict):
+            raise IRValidatorException("YAML file must contain a dictionary/mapping")
             
-        required_fields = ['name', 'version', 'description']  # esempio di campi richiesti
-        
-        missing_fields = [field for field in required_fields if field not in data]
+        # Validate required fields
+        required_fields = ['name', 'version', 'description']  # Example required fields
+        missing_fields = [field for field in required_fields if field not in yaml_data]
         
         if missing_fields:
-            raise IRValidatorException(f"Campi obbligatori mancanti: {', '.join(missing_fields)}")
+            raise IRValidatorException(f"Missing mandatory fields in YAML: {', '.join(missing_fields)}")
             
-        return data
+        return yaml_data
         
     except yaml.YAMLError as e:
-        raise IRValidatorException(f"Errore nel parsing del file YAML: {str(e)}")
-    except FileNotFoundError:
-        raise IRValidatorException(f"File non trovato: {yaml_file}")
+        raise IRValidatorException(f"Error parsing YAML file: {str(e)}")
+    except IOError as e:
+        raise IRValidatorException(f"Error reading YAML file: {str(e)}")
     except Exception as e:
-        raise IRValidatorException(f"Errore durante la validazione: {str(e)}")
+        raise IRValidatorException(f"Unexpected error validating YAML file: {str(e)}")
 
 class IRValidatorException(Exception):
+    """Custom exception for YAML validation errors"""
     pass

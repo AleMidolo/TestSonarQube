@@ -1,30 +1,24 @@
 def determineMetaclass(bases, explicit_mc=None):
     """
-    Determina la metaclasse a partire da una o più basi e da un'eventuale __metaclass__ esplicita.
+    Determine metaclass from 1+ bases and optional explicit __metaclass__
     """
-    # If there's an explicit metaclass, start with that
+    # Start with explicit metaclass if provided
     metaclass = explicit_mc
     
-    # If no explicit metaclass, look through the bases
-    if metaclass is None:
-        if bases:
-            # Get metaclasses from all base classes
-            metaclasses = [type(base) for base in bases]
-            # Find most derived metaclass
-            metaclass = metaclasses[0]
-            for mc in metaclasses[1:]:
-                if issubclass(mc, metaclass):
-                    metaclass = mc
-                elif not issubclass(metaclass, mc):
-                    raise TypeError("Incompatible metaclasses")
-        else:
-            # No bases and no explicit metaclass, use type
-            metaclass = type
-            
-    # If explicit metaclass was given, ensure it's compatible with base metaclasses
-    else:
-        for base in bases:
-            if not issubclass(metaclass, type(base)):
-                raise TypeError("Explicit metaclass not compatible with base metaclasses")
-                
-    return metaclass
+    # If no explicit metaclass, get metaclass from first base
+    if metaclass is None and bases:
+        metaclass = type(bases[0])
+        
+    # Check remaining bases for metaclass conflicts
+    for base in bases[1:]:
+        base_mc = type(base)
+        if issubclass(metaclass, base_mc):
+            continue
+        if issubclass(base_mc, metaclass):
+            metaclass = base_mc
+            continue
+        # Incompatible metaclasses
+        raise TypeError("Incompatible metaclasses: %s and %s" % 
+                       (metaclass.__name__, base_mc.__name__))
+                       
+    return metaclass if metaclass is not None else type

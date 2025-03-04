@@ -1,30 +1,50 @@
 def extend_cli(self, root_subparsers):
     """
-    Aggiunge le opzioni CLI specifiche al punto di ingresso principale.
-
-    :param subparser: l'oggetto subparser da estendere.
+    Adds the spec cli options to to the main entry point.
+    
+    :param subparser: the subparser object to extend.
     """
-    parser = root_subparsers.add_parser(
-        'run',
-        help='Run the application'
+    # Create spec subparser
+    spec_parser = root_subparsers.add_parser(
+        'spec',
+        help='Commands for working with package specifications'
     )
     
-    parser.add_argument(
-        '-c', '--config',
-        help='Path to configuration file',
-        default='config.yaml'
+    # Create subparser for spec commands
+    spec_subparsers = spec_parser.add_subparsers(dest='spec_command')
+    
+    # Add create command
+    create_parser = spec_subparsers.add_parser(
+        'create', 
+        help='Create a new package specification'
+    )
+    create_parser.add_argument(
+        'name',
+        help='Name of the specification to create'
     )
     
-    parser.add_argument(
-        '-v', '--verbose',
-        help='Increase output verbosity',
-        action='store_true'
+    # Add list command
+    list_parser = spec_subparsers.add_parser(
+        'list',
+        help='List available specifications'
     )
     
-    parser.add_argument(
-        '--version',
-        action='version',
-        version='%(prog)s 1.0'
+    # Add edit command  
+    edit_parser = spec_subparsers.add_parser(
+        'edit',
+        help='Edit an existing specification'
+    )
+    edit_parser.add_argument(
+        'name',
+        help='Name of the specification to edit'
     )
     
-    parser.set_defaults(func=self.run)
+    # Add delete command
+    delete_parser = spec_subparsers.add_parser(
+        'delete',
+        help='Delete a specification'
+    )
+    delete_parser.add_argument(
+        'name',
+        help='Name of the specification to delete'
+    )

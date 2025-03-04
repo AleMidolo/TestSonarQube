@@ -1,29 +1,31 @@
 def cached(cache, key=hashkey, lock=None):
     """
-    Decorator per racchiudere una funzione con un callable di memoizzazione che salva
-    i risultati in una cache.
+    Decorator to wrap a function with a memoizing callable that saves
+    results in a cache.
     """
-    def decorator(function):
+    def decorator(func):
         def wrapper(*args, **kwargs):
             k = key(*args, **kwargs)
             
             try:
+                # Try to get result from cache
                 result = cache[k]
+                return result
             except KeyError:
+                # Key not found, need to compute result
                 if lock is not None:
                     with lock:
-                        # Check again in case another thread stored the value
-                        try:
-                            result = cache[k]
-                        except KeyError:
-                            result = function(*args, **kwargs)
-                            cache[k] = result
+                        # Check cache again in case another thread computed result
+                        if k in cache:
+                            return cache[k]
+                        result = func(*args, **kwargs)
+                        cache[k] = result
                 else:
-                    result = function(*args, **kwargs)
+                    # No lock needed, just compute and cache
+                    result = func(*args, **kwargs)
                     cache[k] = result
                     
-            return result
-            
+                return result
+                
         return wrapper
-        
     return decorator

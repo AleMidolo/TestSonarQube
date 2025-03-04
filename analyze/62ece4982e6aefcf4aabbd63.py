@@ -1,7 +1,7 @@
 def is_none_string(val: any) -> bool:
     """
-    Verifica se una stringa rappresenta un valore None.
+    Check if a string represents a None value.
     """
     if isinstance(val, str):
-        return val.lower() in ['none', 'null']
-    return False
+        return val.lower() in ('none', 'null', '')
+    return val is None

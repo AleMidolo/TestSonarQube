@@ -1,5 +1,5 @@
 def format_dt(dt):
     """
-    Formatta un oggetto datetime nel modo in cui i nodi D* si aspettano.
+    Format a datetime in the way that D* nodes expect.
     """
     return dt.strftime("%Y-%m-%d %H:%M:%S")

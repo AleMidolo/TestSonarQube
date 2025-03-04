@@ -1,18 +1,13 @@
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
-    Analizza il webfinger di Diaspora, che può essere in formato JSON (nuovo) o in formato XRD (vecchio).
+    Parse Diaspora webfinger which is either in JSON format (new) or XRD (old).
     
-    Args:
-        document: String containing the webfinger document in JSON or XRD format
-        
-    Returns:
-        Dictionary containing the parsed webfinger data
+    https://diaspora.github.io/diaspora_federation/discovery/webfinger.html
     """
     import json
-    import xml.etree.ElementTree as ET
-    from typing import Dict
+    from xml.etree import ElementTree
     
-    # Try parsing as JSON first
+    # Try parsing as JSON first (new format)
     try:
         data = json.loads(document)
         result = {
@@ -32,26 +27,33 @@ def parse_diaspora_webfinger(document: str) -> Dict:
             
         return result
         
+    # If JSON fails, try parsing as XRD (old format)  
     except json.JSONDecodeError:
-        # If JSON parsing fails, try XRD format
         try:
-            # Remove XML namespace to simplify parsing
-            document = document.replace('xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0"', '')
-            root = ET.fromstring(document)
+            # Parse XML
+            root = ElementTree.fromstring(document)
+            
+            # Define XML namespace
+            ns = {'xrd': 'http://docs.oasis-open.org/ns/xri/xrd-1.0'}
             
             result = {
-                'subject': root.findtext('Subject', ''),
+                'subject': '',
                 'aliases': [],
                 'links': []
             }
             
-            # Parse aliases
-            for alias in root.findall('Alias'):
+            # Get subject
+            subject = root.find('xrd:Subject', ns)
+            if subject is not None:
+                result['subject'] = subject.text
+                
+            # Get aliases
+            for alias in root.findall('xrd:Alias', ns):
                 if alias.text:
                     result['aliases'].append(alias.text)
                     
-            # Parse links
-            for link in root.findall('Link'):
+            # Get links
+            for link in root.findall('xrd:Link', ns):
                 link_data = {
                     'rel': link.get('rel', ''),
                     'href': link.get('href', ''),
@@ -61,5 +63,7 @@ def parse_diaspora_webfinger(document: str) -> Dict:
                 
             return result
             
-        except ET.ParseError:
-            raise ValueError("Invalid webfinger document format - neither JSON nor XRD")
+        except ElementTree.ParseError:
+            raise ValueError("Document is neither valid JSON nor valid XML")
+            
+    return {}

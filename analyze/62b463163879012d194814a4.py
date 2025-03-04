@@ -1,52 +1,42 @@
 def _explore_zipfile(zip_path):
     """
-    Ottiene i dati dei pacchetti dal percorso zip fornito.
-    
-    Raggruppa i file in base al nome base dei loro file XML e restituisce i dati in formato dizionario.
-    
-    Parametri
+    Get packages' data from zip_path
+
+    Groups files by their XML basename and returns data in dict format.
+
+    Parameters
     ----------
-    zip_path : str  
-        Percorso del file zip.
-    
-    Restituisce
+    zip_path : str
+        zip file path
+    Returns
     -------
     dict
     """
     import zipfile
-    import os
     from collections import defaultdict
+    import os
+
+    # Dictionary to store grouped files
+    grouped_files = defaultdict(dict)
     
-    # Dizionario per raggruppare i file per nome base
-    grouped_files = defaultdict(list)
-    
-    # Apre il file zip
+    # Open and read zip file
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        # Itera su tutti i file nel zip
-        for file_name in zip_ref.namelist():
-            # Ignora le directory
-            if file_name.endswith('/'):
-                continue
-                
-            # Ottiene il nome base del file (senza estensione)
+        # Get list of all files in zip
+        file_list = zip_ref.namelist()
+        
+        # Group files by their XML basename
+        for file_name in file_list:
+            # Get base name without extension
             base_name = os.path.splitext(os.path.basename(file_name))[0]
             
-            # Se il file è un XML, usa il suo nome come chiave
-            if file_name.endswith('.xml'):
-                base_name = base_name
-            else:
-                # Per altri file, cerca di trovare il nome base corrispondente
-                # rimuovendo eventuali suffissi comuni
-                for xml_base in grouped_files.keys():
-                    if base_name.startswith(xml_base):
-                        base_name = xml_base
-                        break
+            # Get file extension
+            extension = os.path.splitext(file_name)[1].lower()
             
-            # Aggiunge il file al gruppo appropriato
-            grouped_files[base_name].append({
-                'name': file_name,
-                'content': zip_ref.read(file_name)
-            })
-    
-    # Converte defaultdict in dict normale
+            # Read file content
+            with zip_ref.open(file_name) as f:
+                content = f.read()
+                
+            # Store content in grouped_files dictionary
+            grouped_files[base_name][extension] = content
+            
     return dict(grouped_files)

@@ -1,39 +1,47 @@
 def _get_conditionally_required_args(self, command_name, options_spec, args):
     """
-    Elenca gli argomenti con la condizione ``required_when`` soddisfatta.
+    List arguments with ``required_when`` condition matched.
 
-    :param command_name: il nome del comando.
-    :param options_spec: la lista delle opzioni specifiche del comando.
-    :param args: gli argomenti di input ricevuti.
-    :return: list, lista dei nomi degli argomenti con la condizione
-        ``required_when`` soddisfatta.
+    :param command_name: the command name.
+    :param options_spec:  the list of command spec options.
+    :param args: the received input arguments
+    :return: list, list of argument names with matched ``required_when``
+        condition
     """
-    conditionally_required = []
+    required_args = []
     
     for option in options_spec:
-        if 'required_when' in option:
-            condition = option['required_when']
+        # Skip if no required_when condition
+        if 'required_when' not in option:
+            continue
             
-            # Evaluate the condition based on the args
-            if isinstance(condition, str):
-                # Simple condition checking if another arg exists
-                if condition in args and option['name'] not in args:
-                    conditionally_required.append(option['name'])
+        required_when = option['required_when']
+        
+        # Check if required_when is a callable
+        if callable(required_when):
+            if required_when(args):
+                required_args.append(option['name'])
+                
+        # Check if required_when is a dict with conditions
+        elif isinstance(required_when, dict):
+            conditions_met = True
+            
+            for key, value in required_when.items():
+                if key not in args or args[key] != value:
+                    conditions_met = False
+                    break
                     
-            elif callable(condition):
-                # Complex condition using a function
-                if condition(args) and option['name'] not in args:
-                    conditionally_required.append(option['name'])
-                    
-            elif isinstance(condition, dict):
-                # Dictionary condition checking arg values
-                all_conditions_met = True
-                for arg_name, expected_value in condition.items():
-                    if arg_name not in args or args[arg_name] != expected_value:
-                        all_conditions_met = False
-                        break
-                        
-                if all_conditions_met and option['name'] not in args:
-                    conditionally_required.append(option['name'])
-    
-    return conditionally_required
+            if conditions_met:
+                required_args.append(option['name'])
+                
+        # Check if required_when is a string expression
+        elif isinstance(required_when, str):
+            try:
+                # Evaluate the expression with args as context
+                if eval(required_when, {'args': args}):
+                    required_args.append(option['name'])
+            except:
+                # Skip if expression evaluation fails
+                continue
+                
+    return required_args

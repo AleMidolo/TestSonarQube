@@ -1,16 +1,15 @@
 def popitem(self):
     """
-    Rimuove e restituisce la coppia `(chiave, valore)` meno recentemente utilizzata.
+    Remove and return the `(key, value)` pair least recently used.
     """
-    if not self._cache:  # if cache is empty
-        raise KeyError("Cache is empty")
+    if not self:
+        raise KeyError('Dictionary is empty')
         
-    # Get least recently used key (first key in ordered dict)
-    lru_key = next(iter(self._cache))
-    lru_value = self._cache[lru_key]
+    # Get the first item from the internal dict since it will be the LRU item
+    key = next(iter(self))
+    value = self[key]
     
-    # Remove the item from cache
-    del self._cache[lru_key]
+    # Remove the item from the dictionary
+    del self[key]
     
-    # Return key-value pair as tuple
-    return (lru_key, lru_value)
+    return (key, value)

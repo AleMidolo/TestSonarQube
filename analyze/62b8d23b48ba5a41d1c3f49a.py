@@ -1,42 +1,58 @@
 def mru_cache(maxsize=128, typed=False):
     """
-    Decorator per racchiudere una funzione con un oggetto richiamabile che memorizza
-    fino a `maxsize` risultati basandosi su un algoritmo di tipo Most Recently Used (MRU).
+    Decorator to wrap a function with a memoizing callable that saves
+    up to `maxsize` results based on a Most Recently Used (MRU)
+    algorithm.
     """
     def decorator(func):
-        # Dictionary per memorizzare i risultati della cache
+        # Store cache and order of keys
         cache = {}
-        # Lista per tenere traccia dell'ordine di utilizzo
-        order = []
+        key_order = []
         
-        def wrapper(*args, **kwargs):
-            # Crea una chiave per la cache basata sugli argomenti
+        def make_key(args, kwargs):
+            # Create cache key from arguments
+            key = (args, frozenset(kwargs.items()))
             if typed:
-                key = (*args, *kwargs.items(), *(type(arg) for arg in args))
-            else:
-                key = (*args, *kwargs.items())
-                
+                # Add types to key if typed=True
+                key += tuple(type(arg) for arg in args)
+                key += tuple(type(val) for val in kwargs.values())
+            return hash(key)
+            
+        def wrapper(*args, **kwargs):
+            key = make_key(args, kwargs)
+            
             try:
-                # Se il risultato è già in cache
+                # Try to get from cache
                 result = cache[key]
-                # Aggiorna l'ordine MRU
-                order.remove(key)
-                order.append(key)
+                # Move key to end (most recently used)
+                key_order.remove(key)
+                key_order.append(key)
                 return result
+                
             except KeyError:
-                # Calcola il nuovo risultato
+                # Calculate result
                 result = func(*args, **kwargs)
                 
-                # Se la cache è piena, rimuovi l'elemento usato meno recentemente
-                if len(cache) >= maxsize:
-                    # Rimuovi l'elemento più vecchio
-                    oldest = order.pop(0)
-                    del cache[oldest]
-                
-                # Aggiungi il nuovo risultato alla cache
+                # Add to cache
                 cache[key] = result
-                order.append(key)
+                key_order.append(key)
+                
+                # Remove oldest if cache too large
+                if len(cache) > maxsize:
+                    oldest_key = key_order.pop(0)
+                    del cache[oldest_key]
+                    
                 return result
                 
+        wrapper.cache_info = lambda: {
+            'maxsize': maxsize,
+            'currsize': len(cache),
+            'cache': cache,
+            'order': key_order
+        }
+        
+        wrapper.cache_clear = lambda: cache.clear() or key_order.clear()
+        
         return wrapper
+        
     return decorator

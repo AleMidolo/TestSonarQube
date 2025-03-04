@@ -1,15 +1,12 @@
 def _convert_non_cli_args(self, parser_name, values_dict):
     """
-    Converte gli argomenti nei tipi corretti modificando il parametro values_dict.
+    Casts arguments to correct types by modifying values_dict param.
 
-    Per impostazione predefinita, tutti i valori sono stringhe.
+    By default all the values are strings.
 
-    :param parser_name: Il nome del comando, ad esempio main, virsh, ospd, ecc.
-    :param values_dict: Il dizionario con gli argomenti
+    :param parser_name: The command name, e.g. main, virsh, ospd, etc
+    :param values_dict: The dict of with arguments
     """
-    if not values_dict:
-        return
-
     # Get parser configuration for this command
     parser_config = self.parsers.get(parser_name, {})
     
@@ -26,13 +23,21 @@ def _convert_non_cli_args(self, parser_name, values_dict):
             # Convert boolean strings
             if arg_type == bool:
                 if isinstance(value, str):
-                    values_dict[arg_name] = value.lower() in ('true', 't', 'yes', 'y', '1')
-            # Convert numbers
+                    value = value.lower()
+                    if value in ('true', 't', 'yes', 'y', '1'):
+                        values_dict[arg_name] = True
+                    elif value in ('false', 'f', 'no', 'n', '0'):
+                        values_dict[arg_name] = False
+            
+            # Convert numeric types
             elif arg_type in (int, float):
                 values_dict[arg_name] = arg_type(value)
+                
             # Convert lists
-            elif arg_type == list and isinstance(value, str):
-                values_dict[arg_name] = value.split(',')
+            elif arg_type == list:
+                if isinstance(value, str):
+                    values_dict[arg_name] = value.split(',')
+                    
         except (ValueError, TypeError):
             # Keep original value if conversion fails
             continue

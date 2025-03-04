@@ -1,14 +1,12 @@
 def make_array(shape, dtype=np.dtype("float32")):
     """
-    Funzione per creare un array con una forma e un tipo di dato specificati.
-    
-    Parametri
+    Function to create an array with shape and dtype.
+
+    Parameters
     ----------
     shape : tuple
-        forma dell'array da creare
+        shape of the array to create
     dtype : `numpy.dtype`
-        tipo di dato dell'array da creare
+        data-type of the array to create
     """
-    # Create and return a new numpy array filled with zeros
-    # with the specified shape and data type
     return np.zeros(shape=shape, dtype=dtype)

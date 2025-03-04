@@ -1,29 +1,29 @@
 def remove_ending_os_sep(input_list):
     """
-    Itera su un elenco di stringhe e rimuovi i caratteri separatori di sistema operativi (os) finali.
+    Iterate over a string list and remove trailing os seperator characters.
 
-    Ogni stringa viene verificata per controllare se la sua lunghezza è maggiore di uno e se l'ultimo
-    carattere è il separatore di percorso. In tal caso, il carattere separatore di percorso
-    viene rimosso.
+    Each string is tested if its length is greater than one and if the last
+    character is the pathname seperator. If so, the pathname seperator character
+    is removed.
 
-    Argomenti:
-        input_list: elenco di stringhe
+    Args:
+        input_list: list of strings
 
-    Restituisce:
-        Elenco elaborato di stringhe
+    Returns:
+        Processed list of strings
 
-    Eccezioni:
+    Raises:
         TypeError
     """
     import os
-    
+
     if not isinstance(input_list, list):
-        raise TypeError("L'input deve essere una lista")
-        
+        raise TypeError("Input must be a list")
+
     result = []
     for item in input_list:
         if not isinstance(item, str):
-            raise TypeError("Tutti gli elementi della lista devono essere stringhe")
+            raise TypeError("All list items must be strings")
             
         if len(item) > 1 and item.endswith(os.sep):
             result.append(item[:-1])

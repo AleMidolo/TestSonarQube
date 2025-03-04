@@ -1,12 +1,8 @@
 def _create_in_regex(self) -> Pattern:
     """
-    Crea l'espressione regolare per il parametro in-style.
+    Create the in-style parameter regular expression.
 
-    Restituisce l'espressione regolare per il parametro in-style (:class:`re.Pattern`).
+    Returns the in-style parameter regular expression (:class:`re.Pattern`).
     """
-    # Pattern for matching in-style parameter
-    # Matches: in="value" or in='value'
-    pattern = r'in\s*=\s*["\']([^"\']*)["\']'
-    
-    # Compile and return the regex pattern
-    return re.compile(pattern)
+    # Match parameters in the format {param_name}
+    return re.compile(r'{([^{}]+)}')

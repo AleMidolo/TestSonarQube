@@ -7,65 +7,56 @@ def _verify(iface, candidate, tentative=False, vtype=None):
 
     # Check if candidate claims to provide interface
     if not tentative and not iface.providedBy(candidate):
-        errors['provide'].append(
-            f"Class {candidate} does not provide interface {iface.__name__}"
+        errors['provided'].append(
+            f"{candidate!r} does not provide interface {iface!r}"
         )
 
     # Check methods and attributes
     for name, desc in iface.namesAndDescriptions(all=True):
         if isinstance(desc, Method):
-            # Check if method exists
+            # Verify method exists
             if not hasattr(candidate, name):
                 errors['methods'].append(
-                    f"Method '{name}' not implemented"
+                    f"Method {name!r} not implemented"
                 )
                 continue
 
             method = getattr(candidate, name)
             if not callable(method):
                 errors['methods'].append(
-                    f"Attribute '{name}' is not callable"
+                    f"Attribute {name!r} is not callable"
                 )
                 continue
 
-            # Check method signature
+            # Verify method signature
             try:
-                from inspect import signature
-                impl_sig = signature(method)
-                iface_sig = signature(desc)
-                
-                if impl_sig.parameters != iface_sig.parameters:
-                    errors['signatures'].append(
-                        f"Method '{name}' has wrong signature: {impl_sig} != {iface_sig}"
-                    )
-            except ValueError:
-                # Can't get signature, skip check
-                pass
-
+                desc.validateSignature(method)
+            except Invalid as e:
+                errors['signatures'].append(
+                    f"Method {name!r} has invalid signature: {str(e)}"
+                )
         else:
-            # Check if attribute exists
+            # Verify attribute exists
             if not hasattr(candidate, name):
                 errors['attributes'].append(
-                    f"Attribute '{name}' not provided"
+                    f"Attribute {name!r} not provided"
                 )
 
     # If no errors, return True
     if not errors:
         return True
 
-    # If single error, raise it directly
-    total_errors = sum(len(errs) for errs in errors.values())
-    if total_errors == 1:
-        for error_list in errors.values():
-            if error_list:
-                raise Invalid(error_list[0])
+    # Collect all errors
+    all_errors = []
+    for error_type, error_list in errors.items():
+        all_errors.extend(error_list)
 
-    # Multiple errors - raise all of them
-    if errors:
-        error_msg = []
-        for category, msgs in errors.items():
-            if msgs:
-                error_msg.extend(msgs)
-        raise Invalid("\n".join(error_msg))
+    # If only one error, raise it directly
+    if len(all_errors) == 1:
+        raise Invalid(all_errors[0])
+
+    # If multiple errors, raise them all together
+    if all_errors:
+        raise Invalid('\n'.join(all_errors))
 
     return True

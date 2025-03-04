@@ -1,12 +1,30 @@
 def select_filenames_by_prefix(prefix, files):
-    selected_files = []
+    """
+    Get files which belongs to a document package.
+
+    Retorna os arquivos da lista `files` cujos nomes iniciam com `prefix`
+
+    Parameters
+    ----------
+    prefix : str
+        Filename prefix
+    files : str list
+        Files paths
+    Returns
+    -------
+    list
+        files paths which basename files matches to prefix
+    """
+    import os
     
-    for file in files:
-        # Get just the filename without path
-        filename = file.split('/')[-1]
+    matching_files = []
+    
+    for file_path in files:
+        # Get the basename of the file
+        basename = os.path.basename(file_path)
         
-        # Check if filename starts with prefix
-        if filename.startswith(prefix):
-            selected_files.append(file)
+        # Check if basename starts with prefix
+        if basename.startswith(prefix):
+            matching_files.append(file_path)
             
-    return selected_files
+    return matching_files

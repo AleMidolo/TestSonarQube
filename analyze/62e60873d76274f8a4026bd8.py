@@ -1,39 +1,36 @@
 def protocol_handlers(cls, protocol_version=None):
     """
-    Restituisce un dizionario dei gestori di protocollo Bolt disponibili,
-    indicizzati per tuple di versione. Se viene fornita una versione di protocollo
-    esplicita, il dizionario conterrà zero o un elemento, a seconda che quella
-    versione sia supportata o meno. Se non viene fornita alcuna versione di protocollo,
-    verranno restituite tutte le versioni disponibili.
+    Return a dictionary of available Bolt protocol handlers,
+    keyed by version tuple. If an explicit protocol version is
+    provided, the dictionary will contain either zero or one items,
+    depending on whether that version is supported. If no protocol
+    version is provided, all available versions will be returned.
 
-    :param protocol_version: tupla che identifica una specifica versione
-        del protocollo (ad esempio, (3, 5)) oppure None
-    :return: dizionario che associa una tupla di versione alla classe del gestore
-        per tutte le versioni di protocollo rilevanti e supportate
-    :raise TypeError: se la versione del protocollo non è passata come una tupla
+    :param protocol_version: tuple identifying a specific protocol
+        version (e.g. (3, 5)) or None
+    :return: dictionary of version tuple to handler class for all
+        relevant and supported protocol versions
+    :raise TypeError: if protocol version is not passed in a tuple
     """
-    # Dizionario che mappa le versioni del protocollo ai relativi gestori
+    # Dictionary mapping protocol versions to their handler classes
     handlers = {
-        (1, 0): BoltProtocolV1Handler,
-        (2, 0): BoltProtocolV2Handler, 
-        (3, 0): BoltProtocolV3Handler,
-        (4, 0): BoltProtocolV4Handler,
-        (4, 1): BoltProtocolV4_1Handler,
-        (4, 2): BoltProtocolV4_2Handler,
-        (4, 3): BoltProtocolV4_3Handler,
-        (4, 4): BoltProtocolV4_4Handler,
-        (5, 0): BoltProtocolV5Handler
+        (3, 0): BoltProtocolV3,
+        (4, 0): BoltProtocolV4,
+        (4, 1): BoltProtocolV4_1,
+        (4, 2): BoltProtocolV4_2,
+        (4, 3): BoltProtocolV4_3,
+        (4, 4): BoltProtocolV4_4,
+        (5, 0): BoltProtocolV5,
+        (5, 1): BoltProtocolV5_1
     }
 
-    if protocol_version is not None:
-        # Verifica che la versione del protocollo sia una tupla
-        if not isinstance(protocol_version, tuple):
-            raise TypeError("La versione del protocollo deve essere specificata come tupla")
-            
-        # Se è stata specificata una versione, restituisce solo il gestore per quella versione
-        if protocol_version in handlers:
-            return {protocol_version: handlers[protocol_version]}
-        return {}
-    
-    # Se non è stata specificata una versione, restituisce tutti i gestori disponibili
-    return handlers
+    # If no specific version requested, return all handlers
+    if protocol_version is None:
+        return handlers
+
+    # Validate protocol_version is a tuple
+    if not isinstance(protocol_version, tuple):
+        raise TypeError("Protocol version must be specified as a tuple")
+
+    # If specific version requested, return only that handler if supported
+    return {protocol_version: handlers[protocol_version]} if protocol_version in handlers else {}

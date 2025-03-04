@@ -1,27 +1,24 @@
 def fromutc(self, dt):
-    # Verifica che dt sia un datetime con timezone
+    """
+    Given a timezone-aware datetime in a given timezone, calculates a
+    timezone-aware datetime in a new timezone.
+
+    Since this is the one time that we *know* we have an unambiguous
+    datetime object, we take this opportunity to determine whether the
+    datetime is ambiguous and in a "fold" state (e.g. if it's the first
+    occurrence, chronologically, of the ambiguous datetime).
+
+    :param dt:
+        A timezone-aware :class:`datetime.datetime` object.
+    """
     if dt.tzinfo is not self:
         dt = dt.replace(tzinfo=self)
-    
-    # Ottieni l'offset UTC per questo datetime
-    utc_offset = self.utcoffset(dt)
-    
-    if utc_offset is None:
-        return dt
-    
-    # Calcola il nuovo datetime aggiungendo l'offset UTC
-    dt = dt + utc_offset
-    
-    # Gestione del fold per datetime ambigui
-    dst_offset = self.dst(dt)
-    if dst_offset is not None:
-        # Se c'è un cambio DST, verifica se il datetime è ambiguo
-        standard_offset = self.utcoffset(dt - dst_offset)
-        if standard_offset is not None:
-            # Se gli offset sono diversi, il datetime è ambiguo
-            if standard_offset != utc_offset:
-                # Imposta fold=1 se questo è il primo datetime nell'ambiguità
-                fold = 1 if standard_offset > utc_offset else 0
-                dt = dt.replace(fold=fold)
-    
-    return dt
+
+    utc_offset = self._transition_info(dt.replace(fold=0))[0]
+    dt_out = dt + utc_offset
+
+    # Check if we're in a fold
+    if self._fold_status(dt_out):
+        return dt_out.replace(fold=1)
+    else:
+        return dt_out.replace(fold=0)

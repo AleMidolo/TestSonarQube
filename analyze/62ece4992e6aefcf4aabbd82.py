@@ -1,13 +1,16 @@
 def get_pattern(pattern, strip=True):
     """
-    Questo metodo converte la stringa fornita in un oggetto pattern regex
+    This method converts the given string to regex pattern
     """
-    import re
+    # Escape special regex characters
+    special_chars = ['\\', '^', '$', '.', '|', '?', '*', '+', '(', ')', '[', ']', '{', '}']
     
+    # If strip is True, remove leading/trailing whitespace
     if strip:
         pattern = pattern.strip()
         
-    try:
-        return re.compile(pattern)
-    except re.error:
-        return None
+    # Escape special characters by adding backslash
+    for char in special_chars:
+        pattern = pattern.replace(char, '\\' + char)
+        
+    return pattern

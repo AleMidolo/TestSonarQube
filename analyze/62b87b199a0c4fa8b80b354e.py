@@ -1,26 +1,32 @@
 def is_fill_request_seq(seq):
-    from collections.abc import Sequence
-    from typing import Union
-    
-    # Check if seq is a FillRequest object
-    try:
-        if isinstance(seq, FillRequest):
-            return True
-    except NameError:
-        pass
+    """
+    Test whether *seq* can be converted to a FillRequestSeq.
+
+    True only if it is a FillRequest element
+    or contains at least one such,
+    and it is not a Source sequence.
+    """
+    # Check if seq is None or empty
+    if not seq:
+        return False
         
-    # Check if seq is a Source sequence
-    try:
+    # Import needed for isinstance check
+    from typing import Sequence
+    from fill_request import FillRequest, Source
+    
+    # If seq is a single FillRequest and not a Source
+    if isinstance(seq, FillRequest) and not isinstance(seq, Source):
+        return True
+        
+    # If seq is a sequence, check if it contains at least one FillRequest
+    if isinstance(seq, Sequence):
+        # Return False if it's a Source sequence
         if isinstance(seq, Source):
             return False
-    except NameError:
-        pass
-        
-    # Check if seq is a sequence containing at least one FillRequest
-    if isinstance(seq, Sequence):
-        try:
-            return any(isinstance(item, FillRequest) for item in seq)
-        except NameError:
-            return False
             
+        # Check each element
+        for element in seq:
+            if isinstance(element, FillRequest):
+                return True
+                
     return False

@@ -1,37 +1,28 @@
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Esegui il/i comando/i fornito/i.
+    Call the given command(s).
     """
     import subprocess
-    import shlex
+    import sys
     
-    # Handle single command or list of commands
     if isinstance(commands, str):
         commands = [commands]
         
-    # Handle single arg or list of args
-    if isinstance(args, str):
-        args = [args]
-    elif args is None:
-        args = []
-        
-    results = []
-    
     for cmd in commands:
-        # Build full command with arguments
-        full_cmd = shlex.split(cmd) + args
-        
-        # Configure subprocess options
-        stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
-        
-        # Print command if verbose
+        cmd_list = [cmd]
+        if args:
+            if isinstance(args, str):
+                cmd_list.append(args)
+            else:
+                cmd_list.extend(args)
+                
         if verbose:
-            print(f"Executing: {' '.join(full_cmd)}")
+            print("Running command: " + " ".join(cmd_list))
             
         try:
-            # Run command
+            stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
             process = subprocess.Popen(
-                full_cmd,
+                cmd_list,
                 stdout=subprocess.PIPE,
                 stderr=stderr,
                 cwd=cwd,
@@ -39,34 +30,21 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
                 universal_newlines=True
             )
             
-            # Get output
-            stdout, stderr = process.communicate()
+            output, error = process.communicate()
             
-            # Store results
-            result = {
-                'command': cmd,
-                'returncode': process.returncode,
-                'stdout': stdout.strip() if stdout else '',
-                'stderr': stderr.strip() if stderr else ''
-            }
+            if process.returncode != 0:
+                if error and not hide_stderr:
+                    print(f"Error: {error}", file=sys.stderr)
+                raise subprocess.CalledProcessError(process.returncode, cmd_list)
+                
+            if verbose and output:
+                print(output)
+                
+            return output.strip() if output else ""
             
-            results.append(result)
-            
-            if verbose:
-                print(f"Return code: {result['returncode']}")
-                if stdout:
-                    print(f"Output:\n{result['stdout']}")
-                if stderr and not hide_stderr:
-                    print(f"Error:\n{result['stderr']}")
-                    
+        except FileNotFoundError:
+            print(f"Command not found: {cmd}", file=sys.stderr)
+            raise
         except Exception as e:
-            if verbose:
-                print(f"Error executing {cmd}: {str(e)}")
-            results.append({
-                'command': cmd,
-                'returncode': -1,
-                'stdout': '',
-                'stderr': str(e)
-            })
-            
-    return results[0] if len(results) == 1 else results
+            print(f"Error executing command: {e}", file=sys.stderr)
+            raise

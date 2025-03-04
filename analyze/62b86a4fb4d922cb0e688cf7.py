@@ -1,28 +1,27 @@
 def validate_key(key):
     """
-    Valida la chiave fornita rispetto alla corrispondente espressione regolare.
+    Validate the given key against the corresponding regular expression.
 
-    Argomenti:
-        key: la stringa da validare
+    Args:
+        key: the string to validate
 
-    Eccezioni:
-        ValidationError: se la chiave fornita non è conforme all'espressione regolare.
+    Raises:
+        ValidationError: if the given key is not conform to the regular expression.
     """
     import re
-
-    class ValidationError(Exception):
-        pass
-
-    # Pattern per validare la chiave:
-    # - Deve iniziare con una lettera
-    # - Può contenere lettere, numeri e underscore
-    # - Lunghezza minima 1 carattere
-    pattern = r'^[a-zA-Z][a-zA-Z0-9_]*$'
-
+    
+    # Regular expression pattern for valid keys
+    # Allows alphanumeric characters, underscores, hyphens
+    pattern = r'^[a-zA-Z0-9_-]+$'
+    
     if not isinstance(key, str):
-        raise ValidationError("La chiave deve essere una stringa")
+        raise ValidationError("Key must be a string")
+        
+    if not key:
+        raise ValidationError("Key cannot be empty")
         
     if not re.match(pattern, key):
-        raise ValidationError("La chiave non è valida. Deve iniziare con una lettera e può contenere solo lettere, numeri e underscore")
+        raise ValidationError("Key contains invalid characters. Only alphanumeric characters, underscores and hyphens are allowed.")
 
-    return True
+class ValidationError(Exception):
+    pass

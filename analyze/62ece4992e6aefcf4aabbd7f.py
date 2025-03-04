@@ -1,9 +1,9 @@
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
-    Analizza un href di un'immagine in parti composite.
+    Parse an image href into composite parts.
 
-    :param image_href: href di un'immagine 
-    :returns: una tupla nella forma (image_id, netloc, use_ssl)
+    :param image_href: href of an image 
+    :returns: a tuple of the form (image_id, netloc, use_ssl)
     :raises ValueError:
     """
     from urllib.parse import urlparse
@@ -11,25 +11,25 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     if not image_href:
         raise ValueError("Image href cannot be empty")
         
-    # Parse the URL
-    parsed = urlparse(image_href)
-    
-    # Check if scheme is valid
-    if parsed.scheme not in ['http', 'https']:
-        raise ValueError(f"Invalid URL scheme: {parsed.scheme}")
+    # Try to parse the URL
+    try:
+        parsed = urlparse(image_href)
+    except Exception:
+        raise ValueError(f"Invalid image href: {image_href}")
         
     # Get the netloc (hostname)
     netloc = parsed.netloc
     if not netloc:
-        raise ValueError("Invalid URL: missing hostname")
+        raise ValueError(f"No hostname found in href: {image_href}")
         
-    # Extract image ID from path
-    path_parts = parsed.path.strip('/').split('/')
-    if not path_parts or not path_parts[-1]:
-        raise ValueError("Invalid URL: missing image ID")
-    image_id = path_parts[-1]
-    
-    # Determine if SSL is used
+    # Determine if using SSL
     use_ssl = parsed.scheme == 'https'
     
+    # Get image ID from path
+    path_parts = parsed.path.split('/')
+    image_id = path_parts[-1] if path_parts else ''
+    
+    if not image_id:
+        raise ValueError(f"No image ID found in href: {image_href}")
+        
     return (image_id, netloc, use_ssl)

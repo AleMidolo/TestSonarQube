@@ -1,8 +1,7 @@
 def plugins_manager(cls):
     """
-    Ottiene il gestore dei plugin.
+    Gets the plugin manager.
     """
     if not hasattr(cls, '_plugins_manager'):
-        from plugins.manager import PluginsManager
-        cls._plugins_manager = PluginsManager()
+        cls._plugins_manager = PluginManager()
     return cls._plugins_manager

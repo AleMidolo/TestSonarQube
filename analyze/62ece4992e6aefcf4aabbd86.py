@@ -1,6 +1,6 @@
 def _dump_string(obj, dumper=None):
     """
-    Serializza in una stringa Unicode (Python 2) o in una stringa (Python 3).
+    Dump to a py2-unicode or py3-string
     """
     if isinstance(obj, str):
         return obj

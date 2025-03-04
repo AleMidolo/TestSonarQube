@@ -1,22 +1,23 @@
 def round_half_to_even(n):
-    # Handle integer case
+    """
+    Rounds a number according to round-half-to-even rules.
+    For numbers exactly halfway between two integers, rounds to the nearest even number.
+    For all other numbers, rounds to the nearest integer.
+    """
+    # If n is already an integer, return it
     if isinstance(n, int):
         return n
         
     # Get decimal part
     decimal = n - int(n)
     
-    # If decimal < 0.5, round down
-    if decimal < 0.5:
-        return int(n)
-    
-    # If decimal > 0.5, round up
-    elif decimal > 0.5:
-        return int(n) + 1
-        
-    # If decimal == 0.5, round to nearest even
-    else:
+    # If decimal is exactly 0.5
+    if decimal == 0.5:
+        # Round to nearest even number
         if int(n) % 2 == 0:
             return int(n)
         else:
             return int(n) + 1
+    
+    # For all other cases, round normally
+    return round(n)

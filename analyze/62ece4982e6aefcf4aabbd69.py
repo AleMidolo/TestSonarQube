@@ -1,18 +1,28 @@
 def _replace_register(flow_params, register_number, register_value):
     """
-    Sostituisci il valore dai flussi con il numero di registro specificato.
-    
-    La chiave `register_value` nel dizionario verrà sostituita dal numero di registro specificato da `register_number`.
-    
-    :param flow_params: Dizionario contenente i flussi definiti  
-    :param register_number: Il numero del registro in cui il valore verrà memorizzato  
-    :param register_value: Chiave da sostituire con il numero di registro  
+    Replace value from flows to given register number
+
+    'register_value' key in dictionary will be replaced by register number
+    given by 'register_number'
+
+    :param flow_params: Dictionary containing defined flows
+    :param register_number: The number of register where value will be stored
+    :param register_value: Key to be replaced by register number
     """
-    # Itera su tutti i flussi nel dizionario
-    for flow in flow_params.values():
-        # Se il flusso è un dizionario e contiene il valore da sostituire
-        if isinstance(flow, dict) and register_value in flow:
-            # Sostituisci il valore con il numero di registro
-            flow[register_value] = register_number
-            
+    # Handle nested dictionaries recursively
+    if isinstance(flow_params, dict):
+        for key, value in flow_params.items():
+            if key == register_value:
+                flow_params[key] = register_number
+            elif isinstance(value, (dict, list)):
+                _replace_register(value, register_number, register_value)
+                
+    # Handle lists recursively
+    elif isinstance(flow_params, list):
+        for i, item in enumerate(flow_params):
+            if isinstance(item, (dict, list)):
+                _replace_register(item, register_number, register_value)
+            elif item == register_value:
+                flow_params[i] = register_number
+                
     return flow_params

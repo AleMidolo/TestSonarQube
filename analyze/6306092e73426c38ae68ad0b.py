@@ -1,8 +1,8 @@
 def validate_min_max_args(self, args):
     """
-    Verifica se il valore degli argomenti è compreso tra i valori minimo e massimo.
-
-    :param args: Gli argomenti ricevuti.
+    Check if value of arguments is between minimum and maximum values.
+    
+    :param args: The received arguments.
     """
     for arg_name, arg_value in args.items():
         if hasattr(self, f'min_{arg_name}') and hasattr(self, f'max_{arg_name}'):
@@ -10,4 +10,7 @@ def validate_min_max_args(self, args):
             max_val = getattr(self, f'max_{arg_name}')
             
             if not min_val <= arg_value <= max_val:
-                raise ValueError(f"Il valore di {arg_name} deve essere compreso tra {min_val} e {max_val}")
+                raise ValueError(
+                    f"Value for {arg_name} must be between {min_val} and {max_val}. "
+                    f"Got {arg_value}"
+                )

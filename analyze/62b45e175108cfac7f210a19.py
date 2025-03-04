@@ -1,35 +1,31 @@
 def validate_fixity(self, fixity, manifest_files):
     """
-    Convalida l'attributo fixty block nell'inventario.
-    
-    Controlla la struttura del blocco di fissità e assicurati che siano referenziati solo i file elencati nel manifesto.
+    Validate fixity block in inventory.
+
+    Check the structure of the fixity block and makes sure that only files
+    listed in the manifest are referenced.
     """
     if not isinstance(fixity, dict):
         raise ValueError("Fixity block must be a dictionary")
         
-    # Check that all required fields are present
-    required_fields = ['messageDigestAlgorithm', 'files']
-    for field in required_fields:
-        if field not in fixity:
-            raise ValueError(f"Missing required field '{field}' in fixity block")
+    # Check each algorithm block
+    for algorithm, checksums in fixity.items():
+        if not isinstance(algorithm, str):
+            raise ValueError("Fixity algorithm must be a string")
             
-    # Validate message digest algorithm
-    if not isinstance(fixity['messageDigestAlgorithm'], str):
-        raise ValueError("messageDigestAlgorithm must be a string")
-        
-    # Validate files block
-    files = fixity.get('files', {})
-    if not isinstance(files, dict):
-        raise ValueError("files block must be a dictionary")
-        
-    # Check that all files referenced exist in manifest
-    for filename in files:
-        if filename not in manifest_files:
-            raise ValueError(f"File '{filename}' in fixity block not found in manifest")
+        if not isinstance(checksums, dict):
+            raise ValueError(f"Checksums for {algorithm} must be a dictionary")
             
-        # Validate checksum value
-        checksum = files[filename]
-        if not isinstance(checksum, str):
-            raise ValueError(f"Checksum for file '{filename}' must be a string")
-            
+        # Validate each file checksum
+        for filepath, checksum in checksums.items():
+            if not isinstance(filepath, str):
+                raise ValueError("File path must be a string")
+                
+            if not isinstance(checksum, str):
+                raise ValueError("Checksum must be a string")
+                
+            # Check that file exists in manifest
+            if filepath not in manifest_files:
+                raise ValueError(f"File {filepath} in fixity block not found in manifest")
+                
     return True

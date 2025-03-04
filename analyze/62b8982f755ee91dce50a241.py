@@ -1,37 +1,37 @@
 def normalized(self):
-    """
-    Restituisce una versione di questo oggetto rappresentata interamente utilizzando valori interi per gli attributi relativi.
-
-    >>> relativedelta(days=1.5, hours=2).normalized()
-    relativedelta(days=+1, hours=+14)
-
-    :return:
-        Restituisce un oggetto di tipo :class:`dateutil.relativedelta.relativedelta`.
-    """
-    # Convert fractional days to hours
+    # Convert all float values to integer values
     days = int(self.days)
-    hours = int((self.days - days) * 24 + self.hours)
-    
-    # Convert fractional hours to minutes
-    extra_hours = int(hours)
-    minutes = int((hours - extra_hours) * 60 + self.minutes)
-    
-    # Convert fractional minutes to seconds
-    extra_minutes = int(minutes) 
-    seconds = int((minutes - extra_minutes) * 60 + self.seconds)
-    
-    # Convert fractional seconds to microseconds
-    extra_seconds = int(seconds)
-    microseconds = int((seconds - extra_seconds) * 1000000 + self.microseconds)
+    hours_remainder = (self.days - days) * 24 + self.hours
+    hours = int(hours_remainder)
+    minutes_remainder = (hours_remainder - hours) * 60 + self.minutes
+    minutes = int(minutes_remainder)
+    seconds_remainder = (minutes_remainder - minutes) * 60 + self.seconds
+    seconds = int(seconds_remainder)
+    microseconds = int((seconds_remainder - seconds) * 1000000 + self.microseconds)
 
-    # Create new relativedelta with normalized values
-    return type(self)(
+    # Handle microseconds overflow
+    seconds += microseconds // 1000000
+    microseconds = microseconds % 1000000
+
+    # Handle seconds overflow
+    minutes += seconds // 60
+    seconds = seconds % 60
+
+    # Handle minutes overflow
+    hours += minutes // 60
+    minutes = minutes % 60
+
+    # Handle hours overflow
+    days += hours // 24
+    hours = hours % 24
+
+    return self.__class__(
         years=self.years,
         months=self.months,
         days=days,
-        hours=extra_hours,
-        minutes=extra_minutes,
-        seconds=extra_seconds,
+        hours=hours,
+        minutes=minutes,
+        seconds=seconds,
         microseconds=microseconds,
         leapdays=self.leapdays,
         year=self.year,

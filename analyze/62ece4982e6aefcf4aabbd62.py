@@ -1,6 +1,6 @@
 def _replace_url_args(url, url_args):
     """
-    Sostituisci eventuali elementi personalizzati della stringa URL con i valori presenti in `args`.
+    Replace any custom string URL items with values in args
     """
     if not url_args:
         return url

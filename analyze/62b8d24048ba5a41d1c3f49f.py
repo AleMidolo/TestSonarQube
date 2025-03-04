@@ -3,57 +3,61 @@ from collections import OrderedDict
 import time
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
+    """
+    Decorator to wrap a function with a memoizing callable that saves
+    up to `maxsize` results based on a Least Recently Used (LRU)
+    algorithm with a per-item time-to-live (TTL) value.
+    """
     def decorator(func):
-        # Cache che memorizza i risultati e i timestamp
+        # Create cache as OrderedDict to maintain LRU order
         cache = OrderedDict()
-        # Cache per i timestamp di scadenza
-        expires = OrderedDict()
-        
+        # Store timestamps for each key
+        timestamps = {}
+
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # Crea la chiave della cache
-            key = (*args, *(kwargs.items()))
+            # Create cache key based on args and kwargs
+            key = str(args)
+            if kwargs:
+                key += str(sorted(kwargs.items()))
             if typed:
-                key += tuple(type(arg) for arg in args)
-                key += tuple(type(val) for val in kwargs.values())
-            
-            # Verifica se la chiave è nella cache e non è scaduta
-            now = timer()
-            try:
-                result = cache[key]
-                if now < expires[key]:
-                    # Sposta l'elemento in fondo (LRU)
+                key += str(tuple(type(arg) for arg in args))
+                if kwargs:
+                    key += str(tuple(type(val) for val in kwargs.values()))
+
+            current_time = timer()
+
+            # Check if key exists and hasn't expired
+            if key in cache:
+                if current_time - timestamps[key] < ttl:
+                    # Move accessed item to end (most recently used)
                     cache.move_to_end(key)
-                    expires.move_to_end(key)
-                    return result
+                    return cache[key]
                 else:
-                    # Rimuove l'elemento scaduto
+                    # Remove expired item
                     del cache[key]
-                    del expires[key]
-            except KeyError:
-                pass
-            
-            # Calcola il nuovo risultato
+                    del timestamps[key]
+
+            # Compute new value
             result = func(*args, **kwargs)
-            
-            # Aggiunge il risultato alla cache
+
+            # Remove oldest item if cache is full
+            if maxsize > 0 and len(cache) >= maxsize:
+                oldest = next(iter(cache))
+                del cache[oldest]
+                del timestamps[oldest]
+
+            # Add new value to cache
             cache[key] = result
-            expires[key] = now + ttl
-            
-            # Rimuove gli elementi più vecchi se si supera maxsize
-            while len(cache) > maxsize:
-                cache.popitem(last=False)
-                expires.popitem(last=False)
-                
+            timestamps[key] = current_time
             return result
-            
-        # Aggiunge metodi per gestire la cache
-        wrapper.cache_info = lambda: {
-            'maxsize': maxsize,
-            'ttl': ttl,
-            'current_size': len(cache)
-        }
-        wrapper.cache_clear = lambda: (cache.clear(), expires.clear())
-        
+
+        # Add clear method to wrapper
+        def clear_cache():
+            cache.clear()
+            timestamps.clear()
+
+        wrapper.clear_cache = clear_cache
         return wrapper
+
     return decorator

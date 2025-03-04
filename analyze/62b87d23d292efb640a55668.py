@@ -1,17 +1,23 @@
 def get_config():
     """
-    Crea, popola e restituisci l'oggetto VersioneerConfig()
+    Create, populate and return the VersioneerConfig() object.
     """
-    from versioneer import VersioneerConfig
+    cfg = VersioneerConfig()
     
-    config = VersioneerConfig()
+    # Set default configuration values
+    cfg.VCS = "git"
+    cfg.style = "pep440"
+    cfg.tag_prefix = ""
+    cfg.parentdir_prefix = ""
+    cfg.versionfile_source = "src/_version.py"
+    cfg.verbose = False
+    cfg.update_files = True
+    cfg.git_describe_args = "tags"
+    cfg.lookupfile = ".versioneer-lookup"
+    cfg.versionfile_build = None
+    cfg.tag_regex = r"^v[0-9]+\.[0-9]+\.[0-9]+$"
+    cfg.parentdir_regex = r"^(?P<parent>.*?)-(?P<version>[^-]+)$"
+    cfg.git_get_keywords = {}
+    cfg.git_keywords = {}
     
-    # Populate config settings
-    config.VCS = "git"
-    config.style = "pep440"
-    config.tag_prefix = ""
-    config.parentdir_prefix = "myproject-"
-    config.versionfile_source = "myproject/_version.py"
-    config.verbose = False
-    
-    return config
+    return cfg

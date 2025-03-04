@@ -1,62 +1,41 @@
 def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
           db=None, imp_user=None, dehydration_hooks=None,
           hydration_hooks=None, **handlers):
-    """
-    Aggiunge un messaggio BEGIN alla coda di output.
-
-    :param mode: modalità di accesso per il routing - "READ" o "WRITE" (predefinito)
-    :param bookmarks: iterabile di valori di segnalibro dopo i quali questa transazione dovrebbe iniziare
-    :param metadata: dizionario di metadati personalizzati da allegare alla transazione
-    :param timeout: timeout per l'esecuzione della transazione (in secondi)
-    :param db: nome del database su cui avviare la transazione
-        Richiede Bolt 4.0+.
-    :param imp_user: l'utente da impersonare
-        Richiede Bolt 4.4+.
-    :param dehydration_hooks:
-        Hook per disidratare i tipi (dizionario da tipo (classe) a funzione di disidratazione).
-        Le funzioni di disidratazione ricevono il valore e restituiscono un oggetto di tipo
-        compreso da packstream.
-    :param hydration_hooks:
-        Hook per idratare i tipi (mappatura da tipo (classe) a funzione di idratazione).
-        Le funzioni di idratazione ricevono il valore di tipo compreso da packstream
-        e possono restituire qualsiasi cosa.
-    :param handlers: funzioni gestore passate all'oggetto Response restituito
-    :return: oggetto Response
-    """
-    # Inizializza il dizionario dei parametri extra
-    extra = {}
     
-    # Gestisce i bookmarks se presenti
+    # Set default mode to WRITE if not specified
+    if mode is None:
+        mode = "WRITE"
+    
+    # Validate mode
+    if mode not in ("READ", "WRITE"):
+        raise ValueError("Mode must be either 'READ' or 'WRITE'")
+
+    # Build extra parameters dict
+    extra = {}
     if bookmarks:
         extra["bookmarks"] = list(bookmarks)
-        
-    # Gestisce i metadata se presenti
     if metadata:
-        extra["tx_metadata"] = metadata
-        
-    # Gestisce il timeout se presente
-    if timeout:
-        extra["tx_timeout"] = int(1000 * timeout)
-        
-    # Gestisce il database se presente
+        extra["metadata"] = metadata
+    if timeout is not None:
+        extra["timeout"] = timeout
     if db:
         extra["db"] = db
-        
-    # Gestisce l'impersonazione utente se presente
     if imp_user:
         extra["imp_user"] = imp_user
-        
-    # Gestisce la modalità di accesso
-    if mode:
-        extra["mode"] = mode
-        
-    # Gestisce gli hook di disidratazione
+    
+    # Add hooks if provided
     if dehydration_hooks:
-        self._dehydration_hooks.update(dehydration_hooks)
-        
-    # Gestisce gli hook di idratazione  
+        extra["dehydration_hooks"] = dehydration_hooks
     if hydration_hooks:
-        self._hydration_hooks.update(hydration_hooks)
-        
-    # Crea e restituisce la risposta con il messaggio BEGIN
-    return self._append(b"\x11", extra, response_handler=Response(**handlers))
+        extra["hydration_hooks"] = hydration_hooks
+
+    # Create BEGIN message
+    message = {
+        "mode": mode
+    }
+    if extra:
+        message.update(extra)
+
+    # Add message to output queue and create Response
+    self._append(("BEGIN", message))
+    return Response(self._connection, **handlers)

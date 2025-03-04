@@ -1,10 +1,10 @@
 def dehydrate_point(value):
     """
-    Deidratatore per i dati di tipo `Point`.
+    Dehydrator for Point data.
     
     :param value: Point object to dehydrate
-    :type value: Point
-    :return: Dictionary containing x,y coordinates
+    :type value: Point 
+    :return: Dictionary containing point coordinates
     """
     if value is None:
         return None

@@ -1,20 +1,20 @@
 def identify_request(request: RequestType):
     """
-    Prova a identificare se si tratta di una richiesta Diaspora.
+    Try to identify whether this is a Diaspora request.
 
-    Prova prima con un messaggio pubblico. Poi con un messaggio privato. Infine, verifica se si tratta di un payload legacy.
+    Try first public message. Then private message. The check if this is a legacy payload.
     """
-    # Check if it's a public message
+    # First check if it's a public message
     if hasattr(request, 'public') and request.public:
         return 'public'
-        
-    # Check if it's a private message
+    
+    # Then check if it's a private message
     if hasattr(request, 'private') and request.private:
         return 'private'
         
-    # Check if it's a legacy payload
-    if hasattr(request, 'legacy_format'):
+    # Check for legacy payload indicators
+    if hasattr(request, 'xml_payload') or hasattr(request, 'legacy_format'):
         return 'legacy'
         
-    # If none of the above, return unknown
-    return 'unknown'
+    # If none of the above, return None to indicate unidentified
+    return None

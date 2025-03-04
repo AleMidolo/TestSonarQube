@@ -1,55 +1,66 @@
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    Recupera e analizza un documento webfinger remoto di Diaspora.
+    Retrieve a and parse a remote Diaspora webfinger document.
 
-    :arg handle: Handle remoto da recuperare  
+    :arg handle: Remote handle to retrieve
     :returns: dict
     """
     import requests
-    import json
+    import xml.etree.ElementTree as ET
     from urllib.parse import urlparse
 
-    # Estrai il dominio dall'handle
+    # Split handle into user and host
     if '@' not in handle:
-        raise ValueError("Handle non valido - deve contenere @")
-        
-    username, domain = handle.split('@')
+        raise ValueError("Handle must contain @")
     
-    # Costruisci l'URL webfinger
-    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
+    user, host = handle.split('@', 1)
+    
+    # Construct webfinger URL
+    webfinger_url = f"https://{host}/.well-known/webfinger?resource=acct:{handle}"
     
     try:
-        # Recupera il documento webfinger
-        response = requests.get(webfinger_url, timeout=10)
+        # Get the webfinger document
+        response = requests.get(webfinger_url)
         response.raise_for_status()
         
-        # Analizza il JSON
-        webfinger_data = response.json()
+        # Parse the JSON response
+        data = response.json()
         
-        # Verifica che sia un documento webfinger valido
-        if 'subject' not in webfinger_data:
-            raise ValueError("Documento webfinger non valido")
-            
-        # Estrai i link e le proprietà rilevanti
+        # Extract relevant information
         result = {
-            'subject': webfinger_data['subject'],
-            'aliases': webfinger_data.get('aliases', []),
-            'links': {},
-            'properties': {}
+            'handle': handle,
+            'host': host,
+            'guid': None,
+            'profile_url': None,
+            'atom_url': None,
+            'salmon_url': None,
+            'pubkey': None
         }
         
-        # Elabora i link
-        for link in webfinger_data.get('links', []):
-            if 'rel' in link and 'href' in link:
-                result['links'][link['rel']] = link['href']
-                
-        # Elabora le proprietà
-        for key, value in webfinger_data.get('properties', {}).items():
-            result['properties'][key] = value
+        # Parse links
+        for link in data.get('links', []):
+            rel = link.get('rel', '')
+            href = link.get('href', '')
             
+            if rel == 'http://microformats.org/profile/hcard':
+                result['profile_url'] = href
+            elif rel == 'http://schemas.google.com/g/2010#updates-from':
+                result['atom_url'] = href
+            elif rel == 'salmon':
+                result['salmon_url'] = href
+                
+        # Get public key if available
+        for prop in data.get('properties', {}).items():
+            if prop[0] == 'http://joindiaspora.com/guid':
+                result['guid'] = prop[1]
+            elif prop[0] == 'http://joindiaspora.com/seed_location':
+                result['pod'] = prop[1]
+            elif prop[0] == 'http://joindiaspora.com/public_key':
+                result['pubkey'] = prop[1]
+                
         return result
         
     except requests.exceptions.RequestException as e:
-        raise ConnectionError(f"Impossibile recuperare il webfinger: {str(e)}")
-    except json.JSONDecodeError:
-        raise ValueError("Documento webfinger non è JSON valido")
+        raise ConnectionError(f"Failed to retrieve webfinger document: {str(e)}")
+    except (ValueError, KeyError) as e:
+        raise ValueError(f"Failed to parse webfinger document: {str(e)}")

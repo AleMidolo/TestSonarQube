@@ -1,23 +1,39 @@
 def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
+    """
+    Fixes for the following issues on windows
+    - https://bugs.python.org/issue8557 
+    - windows does not parse shebangs
+
+    This function also makes deep-path shebangs work just fine
+    """
+    import os
+    import sys
+
     if not cmd:
         return cmd
         
-    # Se il primo elemento è un file con shebang
-    if cmd[0].endswith(('.py', '.sh')):
-        # Su Windows aggiungiamo python/bash come interprete
-        import sys
-        import os
+    # Only apply fixes on Windows
+    if os.name != 'nt':
+        return cmd
+
+    # Get first argument (the executable)
+    exe = cmd[0]
+    
+    # If it's a Python file, prepend the Python interpreter
+    if exe.endswith('.py'):
+        return (sys.executable, exe) + cmd[1:]
         
-        if sys.platform == 'win32':
-            ext = os.path.splitext(cmd[0])[1].lower()
+    # Check for shebang in first line
+    try:
+        with open(exe, 'rb') as f:
+            first_line = f.readline().decode('utf-8').strip()
             
-            if ext == '.py':
-                # Aggiungi python come interprete
-                return (sys.executable,) + cmd
-            elif ext == '.sh':
-                # Aggiungi bash come interprete
-                bash_path = 'C:\\Program Files\\Git\\bin\\bash.exe'
-                if os.path.exists(bash_path):
-                    return (bash_path,) + cmd
-                
+        if first_line.startswith('#!'):
+            interpreter = first_line[2:].strip().split()[0]
+            if interpreter.endswith('python'):
+                return (sys.executable, exe) + cmd[1:]
+            return (interpreter, exe) + cmd[1:]
+    except (IOError, UnicodeDecodeError):
+        pass
+        
     return cmd

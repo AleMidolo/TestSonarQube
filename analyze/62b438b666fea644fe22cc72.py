@@ -1,15 +1,9 @@
 def parser_flags(parser):
     """
-    Dato un'istanza di argparse.ArgumentParser, restituisce i flag degli argomenti
-    in una stringa separata da spazi.
+    Given an argparse.ArgumentParser instance, return its argument flags in a space-separated
+    string.
     """
     flags = []
     for action in parser._actions:
-        # Skip the help action
-        if action.dest == 'help':
-            continue
-        # Add all option strings (flags) for this argument
         flags.extend(action.option_strings)
-    
-    # Join all flags with spaces and return
-    return ' '.join(flags)
+    return ' '.join(sorted(flags))

@@ -1,32 +1,33 @@
 def render(pieces, style):
     """
-    Renderizzare i pezzi forniti nella versione richiesta dello stile.
+    Render the given version pieces into the requested style.
     """
-    rendered = []
-    
-    for piece in pieces:
-        if style == "unicode":
-            # Unicode chess piece symbols
-            symbols = {
-                "K": "♔", "Q": "♕", "R": "♖", "B": "♗", "N": "♘", "P": "♙",
-                "k": "♚", "q": "♛", "r": "♜", "b": "♝", "n": "♞", "p": "♟"
-            }
-            rendered.append(symbols.get(piece, piece))
-            
-        elif style == "ascii":
-            # ASCII representations
-            symbols = {
-                "K": "K", "Q": "Q", "R": "R", "B": "B", "N": "N", "P": "P",
-                "k": "k", "q": "q", "r": "r", "b": "b", "n": "n", "p": "p"
-            }
-            rendered.append(symbols.get(piece, piece))
-            
-        elif style == "algebraic":
-            # Algebraic notation
-            rendered.append(piece)
-            
-        else:
-            # Default to original piece representation
-            rendered.append(piece)
-            
-    return "".join(rendered)
+    if style == 'pep440':
+        # PEP 440 format: N.N[.N]+[{a|b|c|rc}N][.postN][.devN]
+        version = '.'.join(str(p) for p in pieces[:3])
+        if len(pieces) > 3:
+            if pieces[3] == 'alpha':
+                version += f'a{pieces[4]}'
+            elif pieces[3] == 'beta':
+                version += f'b{pieces[4]}'
+            elif pieces[3] == 'candidate':
+                version += f'rc{pieces[4]}'
+            elif pieces[3] == 'final':
+                if pieces[4] > 0:
+                    version += f'.post{pieces[4]}'
+        if len(pieces) > 5 and pieces[5] > 0:
+            version += f'.dev{pieces[5]}'
+        return version
+        
+    elif style == 'semver':
+        # Semantic versioning: MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]
+        version = '.'.join(str(p) for p in pieces[:3])
+        if len(pieces) > 3:
+            if pieces[3] != 'final':
+                version += f'-{pieces[3]}.{pieces[4]}'
+        if len(pieces) > 5 and pieces[5] > 0:
+            version += f'+{pieces[5]}'
+        return version
+        
+    else:
+        raise ValueError(f'Unknown version style: {style}')
