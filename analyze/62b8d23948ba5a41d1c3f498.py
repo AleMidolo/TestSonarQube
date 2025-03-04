@@ -13,7 +13,7 @@ def lru_cache(maxsize=128, typed=False):
                 
             # Return cached result if exists
             if key in cache:
-                # Move key to end of order list since it was used
+                # Move key to end of order list since it was just used
                 order.remove(key)
                 order.append(key)
                 return cache[key]

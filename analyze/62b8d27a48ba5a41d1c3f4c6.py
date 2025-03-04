@@ -7,20 +7,18 @@ def cached(cache, key=hashkey, lock=None):
             k = key(*args, **kwargs)
             
             try:
-                return cache[k]
+                # Try to get result from cache
+                result = cache[k]
+                return result
             except KeyError:
-                pass
-                
-            if lock is not None:
-                with lock:
-                    if k in cache:
-                        return cache[k]
+                # If not in cache, compute and store result
+                if lock:
+                    with lock:
+                        result = func(*args, **kwargs)
+                        cache[k] = result
+                else:
                     result = func(*args, **kwargs)
                     cache[k] = result
-                    return result
-            else:
-                result = func(*args, **kwargs)
-                cache[k] = result
                 return result
                 
         return wrapper

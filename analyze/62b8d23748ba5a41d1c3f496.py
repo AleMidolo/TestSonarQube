@@ -20,27 +20,31 @@ def lfu_cache(maxsize=128, typed=False):
             try:
                 key = hash(key)
             except TypeError:
-                # If unhashable, create string representation
-                key = str(key)
+                # If unhashable, don't cache
+                return func(*args, **kwargs)
                 
-            # Return cached result if exists
+            # Return from cache if exists
             if key in cache:
                 # Update frequency information
                 old_freq = freq_counter[key]
                 freq_counter[key] += 1
                 freq_lists[old_freq].remove(key)
-                if not freq_lists[old_freq] and old_freq == min_freq:
+                freq_lists[freq_counter[key]].add(key)
+                
+                # Update minimum frequency if needed
+                if old_freq == min_freq and not freq_lists[old_freq]:
                     min_freq += 1
-                freq_lists[old_freq + 1].add(key)
+                    
                 return cache[key]
                 
-            # Calculate new result
+            # Compute new value
             result = func(*args, **kwargs)
             
             # If cache is full, remove least frequently used item
             if len(cache) >= maxsize:
-                # Get key to remove
+                # Get key to remove from min frequency list
                 lfu_key = next(iter(freq_lists[min_freq]))
+                
                 # Remove from all tracking structures
                 del cache[lfu_key]
                 freq_lists[min_freq].remove(lfu_key)
@@ -76,4 +80,11 @@ def lfu_cache(maxsize=128, typed=False):
         wrapper.cache_clear = cache_clear
         
         return wrapper
+        
+    # Handle no-argument decorator case
+    if callable(maxsize):
+        func = maxsize
+        maxsize = 128
+        return decorator(func)
+        
     return decorator

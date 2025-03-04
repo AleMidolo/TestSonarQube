@@ -3,7 +3,7 @@ def make_parsers():
     शीर्ष-स्तरीय पार्सर और इसके उप-पार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
     """
     import argparse
-
+    
     # Create main parser
     parser = argparse.ArgumentParser(description='Main command line parser')
     subparsers = parser.add_subparsers(dest='command', help='Available commands')

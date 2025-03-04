@@ -5,9 +5,12 @@ def get_parser_option_specs(self, command_name):
     :param command_name: कमांड का नाम (जैसे main, virsh, ospd, आदि...)
     :return: सभी कमांड विकल्पों की सूची
     """
-    # Get the parser for the specified command
-    parser = self.get_parser(command_name)
+    # Get the parser object for the specified command
+    parser = self.parsers.get(command_name)
     
+    if not parser:
+        return []
+        
     # Initialize empty list to store options
     options = []
     
@@ -41,7 +44,6 @@ def get_parser_option_specs(self, command_name):
             'required': required
         }
         
-        # Add to options list
         options.append(option_spec)
         
     return options

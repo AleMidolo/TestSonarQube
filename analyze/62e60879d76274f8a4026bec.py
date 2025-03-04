@@ -38,7 +38,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         "parameters": parameters
     }
 
-    # Set hooks if provided
+    # Add hooks if provided
     if dehydration_hooks:
         message["dehydration_hooks"] = dehydration_hooks
     if hydration_hooks:

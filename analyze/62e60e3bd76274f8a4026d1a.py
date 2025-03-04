@@ -11,11 +11,11 @@ def from_raw_values(cls, values):
     bookmarks = []
     for value in values:
         try:
-            # Remove any whitespace and convert to string
-            bookmark = str(value).strip()
-            if bookmark:  # Only add non-empty bookmarks
+            # Remove any whitespace and validate string
+            bookmark = value.strip()
+            if bookmark:
                 bookmarks.append(bookmark)
-        except (ValueError, TypeError):
+        except (AttributeError, TypeError):
             # Skip invalid values
             continue
             

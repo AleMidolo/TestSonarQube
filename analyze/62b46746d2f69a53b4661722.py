@@ -19,37 +19,36 @@ def absorb(self, args):
                 
                 # Check absorption cases
                 # A & (A | B) = A
-                if isinstance(expr1, str) and isinstance(expr2, tuple):
-                    if expr2[1] == '|' and expr1 in expr2[0]:
-                        if expr1 not in result:
-                            result.append(expr1)
-                            changed = True
-                
-                # A | (A & B) = A            
-                if isinstance(expr1, str) and isinstance(expr2, tuple):
-                    if expr2[1] == '&' and expr1 in expr2[0]:
-                        if expr1 not in result:
-                            result.append(expr1)
-                            changed = True
-                            
-                # Negative absorption
+                if (expr1.op == '&' and 
+                    expr2.op == '|' and
+                    expr1.left in [expr2.left, expr2.right]):
+                    result[j] = expr1
+                    changed = True
+                    
+                # A | (A & B) = A 
+                elif (expr1.op == '|' and
+                      expr2.op == '&' and 
+                      expr1.left in [expr2.left, expr2.right]):
+                    result[j] = expr1
+                    changed = True
+                    
+                # Check negative absorption
                 # A & (~A | B) = A & B
-                if isinstance(expr1, str) and isinstance(expr2, tuple):
-                    if expr2[1] == '|' and f'~{expr1}' in expr2[0]:
-                        new_expr = (expr1, '&', expr2[0][1])
-                        if new_expr not in result:
-                            result.append(new_expr)
-                            changed = True
-                
+                elif (expr1.op == '&' and
+                      expr2.op == '|' and
+                      expr2.left.op == '~' and
+                      expr2.left.expr == expr1.left):
+                    result[j] = expr1 & expr2.right
+                    changed = True
+                    
                 # A | (~A & B) = A | B
-                if isinstance(expr1, str) and isinstance(expr2, tuple):
-                    if expr2[1] == '&' and f'~{expr1}' in expr2[0]:
-                        new_expr = (expr1, '|', expr2[0][1]) 
-                        if new_expr not in result:
-                            result.append(new_expr)
-                            changed = True
-                            
-        # Remove redundant expressions
-        result = list(set(result))
-                        
-    return result
+                elif (expr1.op == '|' and
+                      expr2.op == '&' and
+                      expr2.left.op == '~' and
+                      expr2.left.expr == expr1.left):
+                    result[j] = expr1 | expr2.right
+                    changed = True
+                    
+    # Remove duplicates while preserving order
+    seen = set()
+    return [x for x in result if not (x in seen or seen.add(x))]

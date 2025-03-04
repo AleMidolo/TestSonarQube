@@ -6,12 +6,16 @@ def get_deprecated_args(self):
         'generator': 'site',
         'maxlag': None,
         'useHtml': None,
-        'badtitle': None,
-        'notitle': None,
-        'sysop': None,
-        'step': None,
-        'max': 'total',
-        'sysop': None,
+        'nopreload': None,
+        'throttle': None,
+        'sysop': 'user',
         'async': None,
+        'safe_title': None,
+        'compress': None,
+        'max_retries': None,
+        'retry_wait': None,
+        'ssl': None,
+        'verify': None,
+        'protocol': 'scheme'
     }
     return deprecated_args

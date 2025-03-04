@@ -15,19 +15,21 @@ def xargs(
 ) -> tuple[int, bytes]:
     
     if not varargs:
+        # No arguments to process
         return 0, b''
-        
-    # Split varargs into chunks that fit within max length
+    
+    # Build command arguments in chunks that fit within max length
     chunks = []
     current_chunk = []
-    current_length = 0
+    current_length = sum(len(arg) + 1 for arg in cmd)  # +1 for spaces
     
     for arg in varargs:
         arg_length = len(arg) + 1  # +1 for space
         if current_length + arg_length > _max_length:
-            chunks.append(current_chunk)
+            if current_chunk:  # Only add non-empty chunks
+                chunks.append(current_chunk)
             current_chunk = [arg]
-            current_length = arg_length
+            current_length = sum(len(arg) + 1 for arg in cmd) + arg_length
         else:
             current_chunk.append(arg)
             current_length += arg_length
@@ -35,16 +37,17 @@ def xargs(
     if current_chunk:
         chunks.append(current_chunk)
 
-    # Run commands in parallel up to target_concurrency
-    processes = []
-    output = b''
+    # Process chunks with specified concurrency
+    all_output = b''
     max_retcode = 0
     
     for i in range(0, len(chunks), target_concurrency):
         batch = chunks[i:i + target_concurrency]
+        processes = []
         
         for chunk in batch:
-            if color and sys.platform != 'win32' and hasattr(os, 'openpty'):
+            if color and sys.platform != 'win32' and hasattr(pty, 'openpty'):
+                # Create a pseudo-terminal for colored output
                 master, slave = pty.openpty()
                 process = subprocess.Popen(
                     (*cmd, *chunk),
@@ -63,28 +66,24 @@ def xargs(
                 )
                 processes.append((process, None))
 
-        # Wait for all processes in batch to complete
+        # Wait for all processes in batch and collect output
         for process, master in processes:
             if master is not None:
-                # Read from PTY
-                while True:
-                    try:
-                        chunk_output = os.read(master, 1024)
-                        if not chunk_output:
-                            break
-                        output += chunk_output
-                    except OSError:
-                        break
+                # Read from pseudo-terminal
+                output = b''
+                try:
+                    while True:
+                        output += os.read(master, 1024)
+                except OSError:
+                    pass
                 os.close(master)
             else:
                 # Read from pipes
                 stdout, stderr = process.communicate()
-                output += stdout + stderr
+                output = stdout + stderr
                 
             retcode = process.wait()
-            if retcode > max_retcode:
-                max_retcode = retcode
-                
-        processes = []
+            max_retcode = max(max_retcode, retcode)
+            all_output += output
 
-    return max_retcode, output
+    return max_retcode, all_output
