@@ -8,8 +8,7 @@ def tzname_in_python2(namefunc):
     def adjust_encoding(*args, **kwargs):
         name = namefunc(*args, **kwargs)
         if name is not None:
-            if isinstance(name, str):
-                return name
-            else:
-                return name.encode('ascii')
+            name = name.encode('UTF-8')
+        return name
+        
     return adjust_encoding

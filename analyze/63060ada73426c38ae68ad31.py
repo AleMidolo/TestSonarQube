@@ -12,33 +12,37 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     
     # Iterar sobre los argumentos en values_dict
     for arg_name, value in values_dict.items():
-        # Obtener la configuración del argumento específico
-        arg_config = parser_config.get(arg_name, {})
+        # Obtener el tipo definido en la configuración
+        arg_type = parser_config.get(arg_name, {}).get('type', str)
         
-        # Si el valor es None o vacío, continuar
-        if value is None or value == '':
+        # Convertir valores booleanos
+        if arg_type == bool:
+            if isinstance(value, str):
+                values_dict[arg_name] = value.lower() in ('true', 't', 'yes', 'y', '1')
             continue
             
-        # Obtener el tipo del argumento de la configuración
-        arg_type = arg_config.get('type', str)
-        
-        try:
-            # Convertir listas
-            if isinstance(value, str) and ',' in value:
-                value = [item.strip() for item in value.split(',')]
-                if arg_type != list:
-                    value = [arg_type(item) for item in value]
-            # Convertir booleanos
-            elif arg_type == bool:
-                if isinstance(value, str):
-                    value = value.lower() in ('true', 't', 'yes', 'y', '1')
-            # Convertir otros tipos
-            else:
-                value = arg_type(value)
+        # Convertir valores numéricos
+        if arg_type in (int, float):
+            try:
+                values_dict[arg_name] = arg_type(value)
+            except (ValueError, TypeError):
+                # Si falla la conversión, mantener el valor original
+                continue
                 
-            # Actualizar el valor en el diccionario
-            values_dict[arg_name] = value
+        # Convertir listas
+        if arg_type == list and isinstance(value, str):
+            values_dict[arg_name] = value.split(',') if value else []
             
-        except (ValueError, TypeError):
-            # Si hay error en la conversión, dejar el valor original
-            continue
+        # Convertir diccionarios
+        if arg_type == dict and isinstance(value, str):
+            try:
+                import json
+                values_dict[arg_name] = json.loads(value)
+            except json.JSONDecodeError:
+                # Si falla la conversión JSON, intentar convertir formato key=value,key2=value2
+                try:
+                    dict_items = [item.split('=') for item in value.split(',')]
+                    values_dict[arg_name] = {k.strip(): v.strip() for k, v in dict_items}
+                except:
+                    # Si falla la conversión, mantener el valor original
+                    continue

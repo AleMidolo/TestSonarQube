@@ -6,16 +6,18 @@ def get_versions():
         import pkg_resources
         import platform
         import sys
-
+        
         versions = {
             'python': sys.version.split()[0],
             'platform': platform.platform(),
-            'packages': {
-                pkg.key: pkg.version 
-                for pkg in pkg_resources.working_set
-            }
+            'packages': {}
         }
         
+        # Get installed package versions
+        installed_packages = pkg_resources.working_set
+        for package in installed_packages:
+            versions['packages'][package.key] = package.version
+            
         return versions
         
     except Exception:

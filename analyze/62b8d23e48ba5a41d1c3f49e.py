@@ -5,8 +5,8 @@ def popitem(self):
     if not self:
         raise KeyError("Dictionary is empty")
         
-    from random import choice
-    key = choice(list(self.keys()))
+    import random
+    key = random.choice(list(self.keys()))
     value = self[key]
     del self[key]
     

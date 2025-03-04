@@ -1,60 +1,52 @@
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
-    """Parse string into datetime object."""
+    """
+    Convierte la cadena de fecha/hora en un objeto de la clase :class:`datetime.datetime`.
     
-    if default is not None and not isinstance(default, datetime.datetime):
-        raise TypeError("Default must be a datetime.datetime object")
+    Args:
+        timestr: Cualquier fecha/hora en formato string que utilice los formatos compatibles.
+        default: El objeto datetime predeterminado. Si este es un objeto datetime y no es None, 
+                los elementos especificados en timestr reemplazan los elementos en el objeto predeterminado.
+        ignoretz: Si True, ignora zonas horarias y devuelve datetime sin info de zona horaria.
+        tzinfos: Diccionario o función para mapear nombres de zonas horarias a objetos tzinfo.
+        **kwargs: Argumentos adicionales pasados a _parse().
         
-    # Handle non-string input
+    Returns:
+        datetime.datetime o tupla (datetime, tokens) si fuzzy_with_tokens=True
+        
+    Raises:
+        ParserError: Para formatos inválidos o desconocidos
+        TypeError: Para entradas que no sean strings
+        OverflowError: Si la fecha excede el máximo entero C
+    """
+    
     if not isinstance(timestr, str):
-        if hasattr(timestr, 'read'):
-            # Handle file-like objects
-            timestr = timestr.read()
-        else:
-            raise TypeError("Parser must be given a string or character stream")
+        raise TypeError("Parser must be given a string or character stream, not a %s" % 
+                      type(timestr).__name__)
             
-    # Remove leading/trailing whitespace
+    # Preprocesar la cadena de entrada
     timestr = timestr.strip()
     
     try:
-        # Parse the string using internal _parse method
+        # Parsear la cadena usando el método interno _parse
         res, tokens = self._parse(timestr, **kwargs)
         
         if res is None:
-            raise ParserError("String does not contain a date.")
+            raise ParserError("Unknown string format: %s" % timestr)
             
-        # If default is provided, replace any unspecified items
-        if default:
-            repl = {}
-            for attr in ["year", "month", "day", "hour", 
-                        "minute", "second", "microsecond"]:
-                if getattr(res, attr) is None:
-                    repl[attr] = getattr(default, attr)
-            res = res.replace(**repl)
+        # Si hay un default, combinar con el resultado
+        if default is not None:
+            res = self._combine_with_default(res, default)
             
-        # Handle timezone information
+        # Manejar zonas horarias
         if not ignoretz:
-            # Get timezone info if present
-            tz = res.tzinfo
+            res = self._add_timezone(res, tzinfos)
             
-            # Use tzinfos if provided
-            if tzinfos is not None and isinstance(tzinfos, dict):
-                if tz.tzname in tzinfos:
-                    newtz = tzinfos[tz.tzname]
-                    if isinstance(newtz, int):
-                        newtz = tzoffset(tz.tzname, newtz)
-                    res = res.replace(tzinfo=newtz)
-            elif callable(tzinfos):
-                res = res.replace(tzinfo=tzinfos(tz.tzname, tz.utcoffset()))
-        else:
-            # Remove timezone if ignoretz=True
-            res = res.replace(tzinfo=None)
-            
+        # Devolver resultado según fuzzy_with_tokens
         if kwargs.get('fuzzy_with_tokens', False):
-            return res, tokens
-        else:
-            return res
-            
-    except (TypeError, ValueError) as e:
+            return res, tuple(tokens)
+        return res
+        
+    except ValueError as e:
         raise ParserError(str(e))
-    except OverflowError as e:
-        raise OverflowError("Parsed date exceeds the largest valid C integer on your system")
+    except OverflowError:
+        raise OverflowError("Date exceeds the maximum value supported on this system")

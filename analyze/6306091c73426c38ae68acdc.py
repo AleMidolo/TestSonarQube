@@ -25,6 +25,6 @@ def validate_from_content(cls, spec_content=None):
         
     if not isinstance(spec_content['author'], str):
         raise IRValidatorException("El campo 'author' debe ser un string")
-        
+
     # Si todas las validaciones pasan, retornar el contenido validado
     return spec_content

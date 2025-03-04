@@ -5,7 +5,7 @@ def scale(self, other=None, recompute=False):
             return self._scale
             
         # Calculate scale as integral of histogram
-        self._scale = sum(self.values())
+        self._scale = sum(self.data)
         return self._scale
         
     else:
@@ -20,13 +20,10 @@ def scale(self, other=None, recompute=False):
         if current_scale == 0:
             raise ValueError("Cannot rescale histogram with zero scale")
             
-        # Calculate scale factor
-        factor = other / current_scale
+        # Calculate scale factor and apply to data
+        scale_factor = other / current_scale
+        self.data = [x * scale_factor for x in self.data]
         
-        # Rescale all values
-        for key in self:
-            self[key] *= factor
-            
         # Update stored scale
         self._scale = other
         

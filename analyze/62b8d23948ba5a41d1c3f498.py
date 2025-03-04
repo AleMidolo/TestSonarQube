@@ -32,14 +32,15 @@ def lru_cache(maxsize=128, typed=False):
                 
             return result
             
-        # Agregar métodos de utilidad
-        wrapper.cache_info = lambda: {
-            "hits": sum(1 for _ in cache),
-            "maxsize": maxsize,
-            "currsize": len(cache)
-        }
-        wrapper.cache_clear = cache.clear
+        # Agregar métodos auxiliares
+        wrapper.cache_info = lambda: f"CacheInfo(maxsize={maxsize}, currsize={len(cache)})"
+        wrapper.cache_clear = lambda: cache.clear()
         
         return wrapper
+        
+    # Si se usa como @lru_cache sin paréntesis
+    if callable(maxsize):
+        func, maxsize = maxsize, 128
+        return decorator(func)
         
     return decorator

@@ -11,28 +11,25 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
     
     for option in options_spec:
         if 'required_when' in option:
-            required_when = option['required_when']
+            required_condition = option['required_when']
             
-            # Check if required_when is a string (single condition) or list (multiple conditions)
-            conditions = [required_when] if isinstance(required_when, str) else required_when
-            
-            for condition in conditions:
-                # Split condition into argument name and expected value
-                arg_name, expected_value = condition.split('=')
-                arg_name = arg_name.strip()
-                expected_value = expected_value.strip()
-                
-                # Convert expected_value to proper type if needed
-                if expected_value.lower() == 'true':
-                    expected_value = True
-                elif expected_value.lower() == 'false':
-                    expected_value = False
-                elif expected_value.isdigit():
-                    expected_value = int(expected_value)
-                
-                # Check if the condition matches
-                if arg_name in args and args[arg_name] == expected_value:
+            # Evaluar la condición required_when
+            if isinstance(required_condition, str):
+                # Si es string, verificar si el argumento mencionado existe
+                if required_condition in args and args[required_condition]:
                     conditionally_required.append(option['name'])
-                    break  # Break inner loop if any condition matches
+            elif isinstance(required_condition, dict):
+                # Si es diccionario, evaluar la condición compleja
+                matches = True
+                for key, value in required_condition.items():
+                    if key not in args or args[key] != value:
+                        matches = False
+                        break
+                if matches:
+                    conditionally_required.append(option['name'])
+            elif callable(required_condition):
+                # Si es una función, evaluarla
+                if required_condition(args):
+                    conditionally_required.append(option['name'])
                     
     return conditionally_required

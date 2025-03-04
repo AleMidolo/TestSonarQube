@@ -13,13 +13,12 @@ def validate_as_prior_version(self, prior):
         if product_id not in self.quantities:
             raise ValueError(f"Producto {product_id} no existe en inventario actual")
         if self.quantities[product_id] < prior_qty:
-            raise ValueError(f"Cantidad de producto {product_id} es menor que en versión previa")
+            raise ValueError(f"Cantidad de {product_id} es menor que en versión previa")
 
-    # Verificar que los productos tengan los mismos atributos
-    for product_id in prior.products:
-        if product_id not in self.products:
-            raise ValueError(f"Producto {product_id} no existe en inventario actual")
-        if prior.products[product_id] != self.products[product_id]:
-            raise ValueError(f"Atributos del producto {product_id} han cambiado")
+    # Verificar que los precios sean consistentes
+    for product_id, prior_price in prior.prices.items():
+        if product_id in self.prices:
+            if self.prices[product_id] < prior_price:
+                raise ValueError(f"Precio de {product_id} es menor que en versión previa")
 
     return True
