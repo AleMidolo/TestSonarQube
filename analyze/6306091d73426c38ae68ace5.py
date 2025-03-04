@@ -12,11 +12,10 @@ def _include_groups(self, parser_dict):
                 include_file = value['@include']
                 try:
                     with open(include_file, 'r') as f:
-                        included_dict = json.load(f)
-                    result[key] = self._include_groups(included_dict)
-                except (IOError, json.JSONDecodeError) as e:
-                    print(f"Error including file {include_file}: {str(e)}")
-                    result[key] = value
+                        included_content = self._parse_yaml(f)
+                        result[key] = included_content
+                except FileNotFoundError:
+                    raise FileNotFoundError(f"Include file not found: {include_file}")
             else:
                 result[key] = self._include_groups(value)
         else:

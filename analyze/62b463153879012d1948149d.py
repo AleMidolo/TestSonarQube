@@ -23,15 +23,25 @@ def _explore_folder(folder):
     for filename in os.listdir(folder):
         filepath = os.path.join(folder, filename)
         
-        # Solo procesar archivos, no directorios
-        if os.path.isfile(filepath):
-            # Obtener extensión y nombre base
-            base, ext = os.path.splitext(filename)
+        # Ignorar directorios
+        if os.path.isdir(filepath):
+            continue
             
-            # Remover el punto de la extensión
-            ext = ext[1:] if ext else ''
+        # Obtener extensión y nombre base
+        name, ext = os.path.splitext(filename)
+        ext = ext.lower()
+        
+        # Remover sufijos comunes para obtener el nombre base
+        base_name = name
+        if name.endswith(('.signed', '.xml')):
+            base_name = name.rsplit('.', 1)[0]
             
-            # Agrupar archivos por nombre base
-            files_by_base[base][ext] = filepath
+        # Agrupar archivos por nombre base
+        if ext == '.xml':
+            files_by_base[base_name]['xml'] = filepath
+        elif ext in ('.pdf', '.jpg', '.png'):
+            files_by_base[base_name]['pdf'] = filepath
+        elif ext == '.p7m':
+            files_by_base[base_name]['p7m'] = filepath
             
     return dict(files_by_base)

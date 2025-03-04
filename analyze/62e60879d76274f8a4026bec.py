@@ -34,14 +34,17 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         
     if hydration_hooks:
         self.hydration_hooks.update(hydration_hooks)
-
+    
     # Crear y enviar el mensaje BEGIN
-    message = ("BEGIN", extras)
+    message = {
+        "type": "BEGIN",
+        "extras": extras
+    }
     
     # Crear objeto Response con los handlers proporcionados
-    response = Response(self, message, **handlers)
+    response = Response(**handlers)
     
-    # Agregar el mensaje a la cola de salida
-    self.append(message, response)
+    # Añadir el mensaje a la cola de salida
+    self._append(message, response)
     
     return response

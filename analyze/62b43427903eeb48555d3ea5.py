@@ -4,7 +4,7 @@ def format(
     params: Union[Dict[Union[str, int], Any], Sequence[Any]],
 ) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
     
-    # Si sql es bytes, convertir a string para procesar
+    # Si sql es bytes, convertir a str para procesar
     is_bytes = isinstance(sql, bytes)
     if is_bytes:
         sql = sql.decode()

@@ -19,10 +19,10 @@ def next_version(version):
         nums[i] = 0
         i -= 1
         
-    # If we overflowed past leftmost digit, add new digit
-    if i < 0:
-        nums.insert(0, 1)
-    
+        # If we overflow past leftmost digit, add new digit
+        if i < 0:
+            nums.insert(0, 1)
+            
     # Convert back to strings preserving leading zeros
     result = []
     for i, num in enumerate(nums):

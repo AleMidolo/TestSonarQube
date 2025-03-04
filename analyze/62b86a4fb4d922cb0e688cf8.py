@@ -10,7 +10,7 @@ def validate_value(value):
     """
     import re
 
-    # Expresión regular para validar:
+    # Expresión regular que valida:
     # - Al menos una letra mayúscula
     # - Al menos una letra minúscula 
     # - Al menos un número
@@ -22,10 +22,9 @@ def validate_value(value):
         raise ValidationError("El valor debe ser una cadena de texto")
 
     if not re.match(pattern, value):
-        raise ValidationError("El valor no cumple con los requisitos de validación")
+        raise ValidationError("El valor no cumple con el formato requerido")
 
     return True
 
 class ValidationError(Exception):
-    """Excepción personalizada para errores de validación"""
     pass

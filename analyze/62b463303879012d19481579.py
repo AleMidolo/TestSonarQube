@@ -27,15 +27,15 @@ def _extract_number_and_supplment_from_issue_element(issue):
             # Get supplement number if exists
             if len(parts) > 1 and parts[1].strip():
                 suppl = parts[1].strip()
-                # Remove any remaining punctuation
+                # Remove any leading/trailing punctuation
                 suppl = suppl.strip('.:() ')
             else:
-                suppl = '1'  # Default supplement number
+                suppl = '1' # Default supplement number
                 
             return number, suppl
     
     # If no supplement found, treat entire string as issue number
-    # Remove any punctuation/spaces
-    number = issue.strip('.:() ')
-    
+    if issue.strip():
+        number = issue.strip()
+        
     return number, suppl

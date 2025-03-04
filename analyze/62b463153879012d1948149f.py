@@ -20,12 +20,12 @@ def _eval_file(prefix, file_path):
     """
     result = {}
     
-    # Extract filename from path
+    # Get filename from path
     filename = file_path.split('/')[-1]
     
     # Check if file is an asset or rendition
     if filename.startswith(prefix):
-        if '_rendition' in filename.lower():
+        if '_rendition' in filename:
             result['type'] = 'rendition'
         else:
             result['type'] = 'asset'

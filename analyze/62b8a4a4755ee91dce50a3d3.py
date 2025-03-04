@@ -26,12 +26,13 @@ def fromutc(self, dt):
     # Verificar si el datetime es ambiguo (está en un "pliegue")
     fold = 0
     if self._is_ambiguous(local_dt):
-        # Verificar si es la primera ocurrencia
-        earlier_offset = self.utcoffset(local_dt.replace(fold=0))
-        later_offset = self.utcoffset(local_dt.replace(fold=1))
+        # Verificar si es la primera ocurrencia del datetime ambiguo
+        earlier_offset = self._get_earlier_offset(local_dt)
+        later_offset = self._get_later_offset(local_dt) 
         
         if earlier_offset > later_offset:
-            # Si estamos en la transición de DST a hora estándar
-            fold = utc_ts >= (local_dt.replace(fold=0) - earlier_offset).timestamp()
+            # Si estamos en la primera ocurrencia del datetime ambiguo
+            fold = 1
             
+    # Crear nuevo datetime con el fold calculado
     return local_dt.replace(fold=fold)

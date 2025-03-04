@@ -27,18 +27,18 @@ def _fromutc(self, dt):
     timestamps = []
     
     # Probar offsets antes y después
-    for offset in [local_offset - timedelta(hours=1), local_offset + timedelta(hours=1)]:
+    for offset in [local_offset - timedelta(hours=1), local_offset, local_offset + timedelta(hours=1)]:
         try:
             local_ts = (dt.replace(tzinfo=None) - offset).timestamp()
             timestamps.append(local_ts)
-        except (ValueError, OverflowError):
+        except:
             continue
             
-    # Si hay múltiples timestamps válidos, estamos en un pliegue
+    # Si hay múltiples timestamps posibles, estamos en un pliegue
     is_fold = len(set(timestamps)) > 1
     
-    # Establecer el atributo fold si es necesario
-    if hasattr(local_dt, 'fold'):
-        local_dt = local_dt.replace(fold=int(is_fold))
+    if is_fold:
+        # Marcar como primera ocurrencia si es el timestamp más temprano
+        local_dt = local_dt.replace(fold=utc_ts == min(timestamps))
         
     return local_dt

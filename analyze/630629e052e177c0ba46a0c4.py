@@ -35,18 +35,33 @@ def parse_diaspora_webfinger(document: str) -> Dict:
     except json.JSONDecodeError:
         # If JSON fails, try parsing as XRD
         try:
-            # Remove XML namespace to simplify parsing
-            document = document.replace('xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0"', '')
+            # Parse XML
             root = ET.fromstring(document)
             
+            # Define XML namespaces
+            ns = {
+                'xrd': 'http://docs.oasis-open.org/ns/xri/xrd-1.0',
+                'hm': 'http://host-meta.net/xrd/1.0'
+            }
+            
             result = {
-                'subject': root.find('Subject').text if root.find('Subject') is not None else '',
-                'aliases': [alias.text for alias in root.findall('Alias')],
+                'subject': '',
+                'aliases': [],
                 'links': []
             }
             
-            # Parse links
-            for link in root.findall('Link'):
+            # Get subject
+            subject = root.find('.//xrd:Subject', ns)
+            if subject is not None:
+                result['subject'] = subject.text
+                
+            # Get aliases
+            for alias in root.findall('.//xrd:Alias', ns):
+                if alias.text:
+                    result['aliases'].append(alias.text)
+                    
+            # Get links
+            for link in root.findall('.//xrd:Link', ns):
                 link_data = {
                     'rel': link.get('rel', ''),
                     'href': link.get('href', ''),
@@ -57,4 +72,6 @@ def parse_diaspora_webfinger(document: str) -> Dict:
             return result
             
         except ET.ParseError:
-            raise ValueError("Invalid webfinger document format - neither JSON nor XRD")
+            raise ValueError("Document is neither valid JSON nor valid XRD XML")
+            
+    return {}

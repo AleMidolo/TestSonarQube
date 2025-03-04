@@ -3,7 +3,7 @@ def _inline_r_setup(code: str) -> str:
     r_setup = """
     options(warn=-1)  # Suppress warnings
     options(width=1000)  # Increase output width
-    options(scipen=999)  # Avoid scientific notation
+    options(scipen=999)  # Prevent scientific notation
     """
     
     # Combine setup with provided code
