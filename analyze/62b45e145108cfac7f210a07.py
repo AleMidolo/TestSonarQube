@@ -30,7 +30,7 @@ def validate(self, inventory, extract_spec_version=False):
     for field in required_fields:
         if field not in inventory:
             raise ValueError(f"Missing required field: {field}")
-        if not inventory[field]:  # Check for empty values
+        if not inventory[field]:  # Check if value is empty
             raise ValueError(f"Field '{field}' cannot be empty")
 
     # Validate data types

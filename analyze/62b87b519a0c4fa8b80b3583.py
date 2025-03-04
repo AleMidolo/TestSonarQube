@@ -20,9 +20,10 @@ def scale(self, other=None):
     self._data[last_coord] *= scale_factor
     
     # Rescale any associated errors
-    error_field = f"{last_coord}_err"
-    if error_field in self._data:
-        self._data[error_field] *= scale_factor
-        
+    error_fields = [f for f in fields if f.startswith('error_')]
+    for error_field in error_fields:
+        if error_field.endswith(last_coord):
+            self._data[error_field] *= scale_factor
+            
     # Update the scale
     self._scale = other

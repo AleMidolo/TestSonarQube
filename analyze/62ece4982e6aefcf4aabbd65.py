@@ -14,5 +14,5 @@ def parser_flags(parser):
             if opt.startswith('-'):
                 flags.append(opt)
                 
-    # Return space-separated string of flags
+    # Return flags joined by spaces
     return ' '.join(sorted(flags))

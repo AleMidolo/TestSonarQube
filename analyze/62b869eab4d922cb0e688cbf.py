@@ -1,50 +1,50 @@
 def generate_default_observer_schema(app):
     default_schema = {}
     
-    # Iterate through each resource in the application manifest
+    # Check if app has manifest spec
+    if not hasattr(app, 'spec') or not hasattr(app.spec, 'manifest'):
+        return default_schema
+
+    # Iterate through resources in manifest
     for resource in app.spec.manifest:
-        # Skip if resource already has custom observer schema defined
+        # Skip if resource already has custom observer schema
         if resource.get('observer_schema'):
             continue
             
-        # Get resource kind and API version
+        # Get resource kind
         kind = resource.get('kind', '')
-        api_version = resource.get('apiVersion', '')
         
         # Generate default schema based on resource kind
-        if kind.lower() == 'deployment':
-            default_schema[f"{api_version}/{kind}"] = {
+        if kind == 'Deployment':
+            default_schema[resource['metadata']['name']] = {
                 'ready': '$.status.readyReplicas == $.spec.replicas'
             }
-            
-        elif kind.lower() == 'statefulset':
-            default_schema[f"{api_version}/{kind}"] = {
+        elif kind == 'StatefulSet':
+            default_schema[resource['metadata']['name']] = {
                 'ready': '$.status.readyReplicas == $.spec.replicas'
             }
-            
-        elif kind.lower() == 'daemonset':
-            default_schema[f"{api_version}/{kind}"] = {
+        elif kind == 'DaemonSet':
+            default_schema[resource['metadata']['name']] = {
                 'ready': '$.status.numberReady == $.status.desiredNumberScheduled'
             }
-            
-        elif kind.lower() == 'pod':
-            default_schema[f"{api_version}/{kind}"] = {
+        elif kind == 'Pod':
+            default_schema[resource['metadata']['name']] = {
                 'ready': "$.status.phase in ['Running', 'Succeeded']"
             }
-            
-        elif kind.lower() == 'service':
-            default_schema[f"{api_version}/{kind}"] = {
+        elif kind == 'Service':
+            default_schema[resource['metadata']['name']] = {
                 'ready': 'true'
             }
-            
-        elif kind.lower() == 'persistentvolumeclaim':
-            default_schema[f"{api_version}/{kind}"] = {
+        elif kind == 'PersistentVolumeClaim':
+            default_schema[resource['metadata']['name']] = {
                 'ready': "$.status.phase == 'Bound'"
             }
-            
-        else:
-            # Default schema for other resource types
-            default_schema[f"{api_version}/{kind}"] = {
+        elif kind == 'Job':
+            default_schema[resource['metadata']['name']] = {
+                'ready': "$.status.succeeded == 1"
+            }
+        elif kind == 'CronJob':
+            default_schema[resource['metadata']['name']] = {
                 'ready': 'true'
             }
             

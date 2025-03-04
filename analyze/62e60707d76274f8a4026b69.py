@@ -9,14 +9,12 @@ def point_type(name, fields, srid_map):
         '__module__': 'django.contrib.gis.db.models',
         '_meta': Meta(),
         'objects': None,
+        'srid_map': srid_map,
     }
     
-    # Add the fields to the class attributes
+    # Add the fields to the attributes
     for field in fields:
         attrs[field] = None
         
-    # Add the SRID mapping
-    attrs['srid_map'] = srid_map
-    
-    # Create the new class dynamically
+    # Create the new Point subclass
     return type(name, (object,), attrs)

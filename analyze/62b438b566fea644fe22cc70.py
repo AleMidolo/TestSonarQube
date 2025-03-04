@@ -1,36 +1,45 @@
 def bash_completion():
     return '''
-# Borgmatic bash completion script
+# borgmatic bash completion script
 _borgmatic()
 {
     local cur prev words cword
     _init_completion || return
 
-    # List of all available commands
-    local commands="init create prune check config list info mount umount extract export-tar restore"
-    
-    # Handle command completion
-    if [ $cword -eq 1 ]; then
-        COMPREPLY=( $(compgen -W "$commands" -- "$cur") )
+    # Complete subcommands
+    if [[ $cword -eq 1 ]]; then
+        COMPREPLY=( $( compgen -W "init create prune check list info mount extract export-tar serve config validate" -- "$cur" ) )
         return 0
     fi
 
-    # Handle options based on command
+    # Complete options based on subcommand
     case ${words[1]} in
         create)
-            COMPREPLY=( $(compgen -W "--help --config --verbosity --list --stats --progress --dry-run" -- "$cur") )
+            COMPREPLY=( $( compgen -W "--config --excludes --help --json --list --progress --stats" -- "$cur" ) )
             ;;
-        prune)
-            COMPREPLY=( $(compgen -W "--help --config --verbosity --list --stats --dry-run" -- "$cur") )
+        prune) 
+            COMPREPLY=( $( compgen -W "--config --help --list --stats" -- "$cur" ) )
             ;;
         check)
-            COMPREPLY=( $(compgen -W "--help --config --verbosity --repository --archives --prefix" -- "$cur") )
+            COMPREPLY=( $( compgen -W "--config --help --json --progress --repair" -- "$cur" ) )
+            ;;
+        list|info)
+            COMPREPLY=( $( compgen -W "--config --help --json" -- "$cur" ) )
             ;;
         mount)
-            COMPREPLY=( $(compgen -W "--help --config --verbosity --repository --archive --mount-point" -- "$cur") )
+            COMPREPLY=( $( compgen -W "--config --help --mount-point --archive" -- "$cur" ) )
             ;;
-        *)
-            COMPREPLY=( $(compgen -W "--help --config" -- "$cur") )
+        extract)
+            COMPREPLY=( $( compgen -W "--config --help --archive --path" -- "$cur" ) )
+            ;;
+        export-tar)
+            COMPREPLY=( $( compgen -W "--config --help --archive --tar" -- "$cur" ) )
+            ;;
+        serve)
+            COMPREPLY=( $( compgen -W "--config --help" -- "$cur" ) )
+            ;;
+        config|validate)
+            COMPREPLY=( $( compgen -W "--config --help" -- "$cur" ) )
             ;;
     esac
 

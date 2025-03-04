@@ -20,34 +20,24 @@ def _legacy_mergeOrderings(orderings):
                     dependencies[prev] = set()
                 dependencies[prev].add(item)
                 
-    # Get all unique items
-    all_items = set(item_positions.keys())
-    
-    # Initialize result list
+    # Create result list
     result = []
-    
-    # Keep track of items we've added
-    added = set()
+    used = set()
     
     # Helper function to check if an item can be added
     def can_add(item):
         if item in dependencies:
-            # Check that all items this depends on are already added
-            for dep in dependencies[item]:
-                if dep not in added:
-                    return False
+            # Check that all dependencies of this item are already used
+            return all(dep in used for dep in dependencies[item])
         return True
         
-    # Add items until we've used them all
-    while len(added) < len(all_items):
-        # Find items that can be added
-        available = [item for item in all_items if item not in added and can_add(item)]
-        
-        if not available:
-            raise ValueError("Circular dependency detected")
-            
-        # Add the first available item
-        result.append(available[0])
-        added.add(available[0])
-        
+    # Keep adding items until all are used
+    while len(used) < len(item_positions):
+        # Find next available item
+        for item in item_positions:
+            if item not in used and can_add(item):
+                result.append(item)
+                used.add(item)
+                break
+                
     return result

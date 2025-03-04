@@ -37,7 +37,7 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
                     del cache[key]
                     del cache_order[key]
             
-            # Call function to get result
+            # Call function to get new result
             result = func(*args, **kwargs)
             
             # Add to cache

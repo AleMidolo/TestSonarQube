@@ -6,18 +6,21 @@ def validate_from_content(cls, spec_content=None):
         # Load YAML content into dictionary
         spec_dict = yaml.safe_load(spec_content)
         
-        # Check if spec_dict is empty
-        if not spec_dict:
-            raise IRValidatorException("Empty spec content")
+        # Check if spec_dict is valid
+        if not isinstance(spec_dict, dict):
+            raise IRValidatorException("Invalid YAML format - must be a dictionary")
             
-        # List of required fields
+        # Check for required fields
         required_fields = ['name', 'version', 'description']
+        missing_fields = []
         
-        # Check if all required fields exist
         for field in required_fields:
             if field not in spec_dict:
-                raise IRValidatorException(f"Required field '{field}' missing in spec")
+                missing_fields.append(field)
                 
+        if missing_fields:
+            raise IRValidatorException(f"Missing required fields: {', '.join(missing_fields)}")
+            
         # Validate field types
         if not isinstance(spec_dict['name'], str):
             raise IRValidatorException("'name' field must be a string")
@@ -31,4 +34,6 @@ def validate_from_content(cls, spec_content=None):
         return spec_dict
         
     except yaml.YAMLError as e:
-        raise IRValidatorException(f"Invalid YAML content: {str(e)}")
+        raise IRValidatorException(f"Invalid YAML format: {str(e)}")
+    except Exception as e:
+        raise IRValidatorException(f"Error validating spec content: {str(e)}")

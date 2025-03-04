@@ -5,10 +5,16 @@ def get_deprecated_args(self):
     deprecated_args = {
         'generator': 'site',
         'maxlag': None,
-        'useHtml': None,
-        'nopreload': None,
+        'debuglevel': 'debug',
+        'compress': None,
+        'retry': None,
+        'host': 'url',
+        'encoding': None,
+        'max_retries': None,
+        'retry_wait': None,
+        'max_lag': None,
         'throttle': None,
-        'sysop': 'user',
-        'async': None,  # async is a reserved word in Python 3.7
+        'use_api': None,
+        'async': None,
     }
     return deprecated_args

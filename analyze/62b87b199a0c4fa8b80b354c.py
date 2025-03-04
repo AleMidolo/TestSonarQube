@@ -9,11 +9,11 @@ def _get_seq_with_type(seq, bufsize=None):
     elif isinstance(seq, str):
         return list(seq), list
     elif hasattr(seq, '__iter__'):
-        # Convert any other iterable to a list
+        # Convert iterator to list with optional buffer size
         if bufsize is not None:
             return list(itertools.islice(seq, bufsize)), list
         else:
             return list(seq), list
     else:
-        # If not iterable, wrap in a list
+        # If not a sequence, wrap in list
         return [seq], list

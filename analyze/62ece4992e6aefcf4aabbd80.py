@@ -16,17 +16,14 @@ def remove_ending_os_sep(input_list):
     """
     import os
     
-    # Check input type
     if not isinstance(input_list, list):
         raise TypeError("Input must be a list")
         
     result = []
     for item in input_list:
-        # Check if item is string
         if not isinstance(item, str):
             raise TypeError("All list items must be strings")
             
-        # Check if string length > 1 and ends with path separator
         if len(item) > 1 and item.endswith(os.sep):
             result.append(item[:-1])
         else:

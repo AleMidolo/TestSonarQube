@@ -9,27 +9,18 @@ def _extract_number_and_supplment_from_issue_element(issue):
         # Remove any whitespace
         issue = issue.strip()
         
-        # Check if issue contains supplement indicator
-        if 'suppl' in issue.lower():
-            parts = issue.lower().split('suppl')
-            if parts[0]:
-                number = parts[0].strip()
-            if len(parts) > 1 and parts[1]:
-                suppl = parts[1].strip()
-        else:
-            # If no supplement, treat entire string as number
-            number = issue
+        # Split on spaces to separate number and supplement
+        parts = issue.split()
+        
+        if parts:
+            # First part is the number
+            number = parts[0]
             
-        # Clean up number - remove any non-numeric characters
-        if number:
-            number = ''.join(c for c in number if c.isdigit())
-            if not number:
-                number = None
+            # Check for supplement in remaining parts
+            if len(parts) > 1:
+                suppl = ' '.join(parts[1:])
                 
-        # Clean up supplement - remove any non-alphanumeric characters
-        if suppl:
-            suppl = ''.join(c for c in suppl if c.isalnum())
-            if not suppl:
-                suppl = None
+                # Remove parentheses if present
+                suppl = suppl.strip('()')
     
     return number, suppl

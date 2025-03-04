@@ -2,16 +2,28 @@ def pretty(self, indent=0, debug=False):
     """
     स्वयं का एक सुंदर स्वरूपित प्रतिनिधित्व लौटाएँ।
     """
-    # Create indentation string
+    # Create indentation string based on indent level
     indent_str = " " * indent
     
-    # Get the string representation of the object
-    if debug:
-        # Include more detailed debug information
-        result = f"{indent_str}{self.__class__.__name__}:\n"
-        for attr, value in self.__dict__.items():
-            result += f"{indent_str}  {attr}: {value}\n"
-        return result.rstrip()
-    else:
-        # Basic pretty formatting
-        return f"{indent_str}{str(self)}"
+    # Start with class name
+    result = f"{indent_str}{self.__class__.__name__}("
+    
+    # Get all attributes that don't start with underscore
+    attrs = [attr for attr in dir(self) if not attr.startswith('_')]
+    
+    # Build the string representation
+    attr_strings = []
+    for attr in attrs:
+        value = getattr(self, attr)
+        # If debug mode is on, include more details
+        if debug:
+            attr_strings.append(f"{attr}={repr(value)}")
+        else:
+            # For non-debug mode, use str() for cleaner output
+            attr_strings.append(f"{attr}={str(value)}")
+    
+    # Join all attributes with commas
+    result += ", ".join(attr_strings)
+    result += ")"
+    
+    return result
