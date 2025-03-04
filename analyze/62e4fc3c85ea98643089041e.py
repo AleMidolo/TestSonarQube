@@ -7,7 +7,7 @@ def _inline_r_setup(code: str) -> str:
     # Set R options
     ro.r('options(stringsAsFactors = FALSE)')
     ro.r('options(scipen = 999)')  # Disable scientific notation
-    ro.r('options(max.print = 1000)')  # Set maximum number of printed items
+    ro.r('options(max.print = 1000)')  # Set maximum print size
 
     # Execute the provided R code
     ro.r(code)

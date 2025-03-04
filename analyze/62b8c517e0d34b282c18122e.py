@@ -24,11 +24,12 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     formatted_tb = []
     for frame in tb_info:
         filename, lineno, funcname, code = frame
-        if len(formatted_tb) < max_path_level:
-            formatted_tb.append(f'File "{filename}", line {lineno}, in {funcname}\n    {code}')
+        formatted_tb.append(f'File "{filename}", line {lineno}, in {funcname}\n    {code}')
 
-    # Combine the exception type, message, and formatted traceback
-    result = f"{exc_type}: {exc_message}\n"
-    result += "\n".join(formatted_tb)
+    # Limit the number of paths shown
+    if len(formatted_tb) > max_path_level:
+        formatted_tb = formatted_tb[:max_path_level] + [f"... and {len(tb_info) - max_path_level} more lines"]
 
+    # Combine everything into a single string
+    result = f"{exc_type}: {exc_message}\n" + "\n".join(formatted_tb)
     return result

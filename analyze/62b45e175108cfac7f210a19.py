@@ -8,16 +8,16 @@ def validate_fixity(self, fixity, manifest_files):
         raise ValueError("Fixity must be a dictionary.")
 
     required_keys = {'algorithm', 'checksums'}
-    if not all(key in fixity for key in required_keys):
+    if not required_keys.issubset(fixity.keys()):
         raise ValueError(f"Fixity block must contain the keys: {required_keys}")
 
-    if not isinstance(fixity['checksums'], list):
-        raise ValueError("Checksums must be a list.")
+    if not isinstance(fixity['checksums'], dict):
+        raise ValueError("Checksums must be a dictionary.")
 
-    for checksum in fixity['checksums']:
-        if not isinstance(checksum, dict):
-            raise ValueError("Each checksum must be a dictionary.")
-        if 'file' not in checksum or 'value' not in checksum:
-            raise ValueError("Each checksum must contain 'file' and 'value' keys.")
-        if checksum['file'] not in manifest_files:
-            raise ValueError(f"File {checksum['file']} referenced in fixity is not in the manifest.")
+    for file, checksum in fixity['checksums'].items():
+        if file not in manifest_files:
+            raise ValueError(f"File '{file}' referenced in fixity is not in the manifest.")
+        if not isinstance(checksum, str):
+            raise ValueError(f"Checksum for file '{file}' must be a string.")
+
+    return True

@@ -20,16 +20,18 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     # Crea la directory di destinazione se non esiste
     destination_path.mkdir(parents=True, exist_ok=True)
 
-    # Salva l'archivio .tar.gz temporaneamente
-    archive_path = destination_path / "archive.tar.gz"
-    with open(archive_path, 'wb') as f:
-        f.write(response.content)
+    # Percorso del file temporaneo
+    temp_file_path = destination_path / "archive.tar.gz"
 
-    # Decomprime l'archivio
-    with tarfile.open(archive_path, 'r:gz') as tar:
+    # Scrivi il contenuto scaricato in un file temporaneo
+    with open(temp_file_path, 'wb') as temp_file:
+        temp_file.write(response.content)
+
+    # Estrai l'archivio .tar.gz
+    with tarfile.open(temp_file_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
 
-    # Rimuove l'archivio scaricato
-    archive_path.unlink()
+    # Rimuovi il file temporaneo
+    temp_file_path.unlink()
 
     return destination_path

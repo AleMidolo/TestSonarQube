@@ -7,15 +7,15 @@ def parse_arguments(*unparsed_arguments):
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='subparser_name')
 
-    # Example of adding subparsers
-    subparser_a = subparsers.add_parser('sub_a')
-    subparser_a.add_argument('--option_a', type=str, help='Option for subparser A')
+    # Esempio di sotto-parser
+    parser_a = subparsers.add_parser('command_a')
+    parser_a.add_argument('--option_a', type=str, help='Option for command_a')
 
-    subparser_b = subparsers.add_parser('sub_b')
-    subparser_b.add_argument('--option_b', type=int, help='Option for subparser B')
+    parser_b = subparsers.add_parser('command_b')
+    parser_b.add_argument('--option_b', type=int, help='Option for command_b')
 
-    # Parse the arguments
+    # Analizza gli argomenti
     args = parser.parse_args(unparsed_arguments)
 
-    # Return as a dictionary mapping subparser name to Namespace
+    # Restituisce un dizionario con il nome del sotto-parser e l'istanza di Namespace
     return {args.subparser_name: args}

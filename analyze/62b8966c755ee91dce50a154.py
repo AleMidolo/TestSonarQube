@@ -93,47 +93,61 @@ def isoparse(self, dt_str):
         r'(?P<sign>[+-])(?P<hour>\d{2})(?P<minute>\d{2})?',    # ±HHMM
         r'(?P<sign>[+-])(?P<hour>\d{2})'                        # ±HH
     ]
-
+    
     # Combine patterns
     full_pattern = r'^(?P<date>' + '|'.join(date_patterns) + r')' + \
                    r'(T(?P<time>' + '|'.join(time_patterns) + r'))?' + \
                    r'(?P<tz>' + '|'.join(tz_patterns) + r')?$'
-
+    
     match = re.match(full_pattern, dt_str)
     if not match:
-        raise ValueError("Invalid ISO-8601 string")
-
+        raise ValueError("Invalid ISO-8601 format")
+    
     date_parts = match.group('date')
     time_parts = match.group('time')
     tz_part = match.group('tz')
-
+    
     # Parse date
     if '-' in date_parts:
-        year, month, day = map(int, date_parts.split('-'))
+        date_components = list(map(int, re.split(r'[-W]', date_parts)))
+        if len(date_components) == 3:  # YYYY-MM-DD
+            year, month, day = date_components
+        elif len(date_components) == 2:  # YYYY-MM
+            year, month = date_components
+            day = 1
+        elif len(date_components) == 1:  # YYYY
+            year = date_components[0]
+            month = day = 1
     else:
-        year = int(date_parts)
-        month = day = 1  # Default values
-
+        raise ValueError("Invalid date format")
+    
     # Parse time
     if time_parts:
-        hour = int(time_parts[0:2])
-        minute = int(time_parts[3:5]) if len(time_parts) > 2 else 0
-        second = int(time_parts[6:8]) if len(time_parts) > 5 else 0
-        microsecond = int(time_parts[9:]) if len(time_parts) > 8 else 0
+        time_components = re.split(r'[:.]', time_parts)
+        hour = int(time_components[0])
+        minute = int(time_components[1]) if len(time_components) > 1 else 0
+        second = int(time_components[2]) if len(time_components) > 2 else 0
+        microsecond = int(time_components[3]) if len(time_components) > 3 else 0
     else:
         hour = minute = second = microsecond = 0
-
-    # Parse timezone
-    if tz_part == 'Z':
-        tzinfo = tz.tzutc()
-    elif tz_part:
-        sign = 1 if tz_part[0] == '+' else -1
-        tz_hour = int(tz_part[1:3])
-        tz_minute = int(tz_part[4:6]) if len(tz_part) > 3 else 0
-        tzinfo = tz.tzoffset(None, sign * (tz_hour * 3600 + tz_minute * 60))
-    else:
-        tzinfo = None
-
+    
+    # Handle midnight case
+    if hour == 24:
+        hour = 0
+        day += 1
+    
     # Create datetime object
-    dt = datetime(year, month, day, hour, minute, second, microsecond, tzinfo)
+    dt = datetime(year, month, day, hour, minute, second, microsecond)
+    
+    # Parse timezone
+    if tz_part:
+        if tz_part == 'Z':
+            dt = dt.replace(tzinfo=tz.tzutc())
+        else:
+            sign = 1 if tz_part[0] == '+' else -1
+            tz_hour = int(tz_part[1:3])
+            tz_minute = int(tz_part[3:5]) if len(tz_part) > 3 else 0
+            offset = timedelta(hours=tz_hour * sign, minutes=tz_minute * sign)
+            dt = dt.replace(tzinfo=tz.tzoffset(None, offset.total_seconds()))
+    
     return dt
