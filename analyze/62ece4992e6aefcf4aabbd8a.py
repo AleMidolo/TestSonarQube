@@ -21,7 +21,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 # Resolve environment variables if requested
                 if resolve_env:
                     config = _resolve_env_vars(config)
-                
+                    
                 # Apply any overrides
                 if overrides:
                     config = _apply_overrides(config, overrides)

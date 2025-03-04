@@ -66,10 +66,12 @@ def format(
                     result += self.out_style.prefix
                     
                 param_counter += 1
+            else:
+                result += self.in_style.prefix
         else:
             result += sql[i]
             i += 1
-            
+
     # Convert back to bytes if input was bytes
     if is_bytes:
         result = result.encode('utf-8')

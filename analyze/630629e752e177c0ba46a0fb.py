@@ -29,7 +29,7 @@ def send_document(url, data, timeout=10, method="post", *args, **kwargs):
         return response.status_code, None
         
     except requests.exceptions.RequestException as e:
-        # Return None for status code and the exception
+        # Return None for status code and the exception for error
         return None, e
     except Exception as e:
         # Handle any other unexpected errors

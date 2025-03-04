@@ -9,25 +9,41 @@ def parse_arguments(*unparsed_arguments):
     parser = argparse.ArgumentParser(description='Command line argument parser')
     
     # Add global arguments that apply to all subcommands
-    parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose output')
+    parser.add_argument('--verbose', action='store_true', help='Enable verbose output')
+    parser.add_argument('--config', type=str, help='Path to config file')
     
-    # Create subparsers object to handle subcommands
+    # Create subparsers
     subparsers = parser.add_subparsers(dest='command')
     
-    # Initialize dict to store parsed arguments
+    # Add subparser for different commands
+    run_parser = subparsers.add_parser('run')
+    run_parser.add_argument('--input', type=str, required=True, help='Input file path')
+    run_parser.add_argument('--output', type=str, required=True, help='Output file path')
+    
+    test_parser = subparsers.add_parser('test')
+    test_parser.add_argument('--test-file', type=str, required=True, help='Test file path')
+    
+    # Parse arguments
+    args = parser.parse_args(unparsed_arguments if unparsed_arguments else None)
+    
+    # Create dict to store parsed arguments
     parsed_args = {}
     
-    # Parse the arguments
-    if unparsed_arguments:
-        args = parser.parse_args(unparsed_arguments)
-    else:
-        args = parser.parse_args()
-        
     # Store global arguments
-    parsed_args['global'] = args
+    parsed_args['global'] = argparse.Namespace(
+        verbose=args.verbose,
+        config=args.config
+    )
     
-    # If a subcommand was used, store its arguments separately
-    if args.command:
-        parsed_args[args.command] = args
+    # Store command-specific arguments
+    if args.command == 'run':
+        parsed_args['run'] = argparse.Namespace(
+            input=args.input,
+            output=args.output
+        )
+    elif args.command == 'test':
+        parsed_args['test'] = argparse.Namespace(
+            test_file=args.test_file
+        )
         
     return parsed_args

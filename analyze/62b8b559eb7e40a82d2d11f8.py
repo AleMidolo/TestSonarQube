@@ -19,7 +19,7 @@ def minimalBases(classes):
             # Remove existing class if new class is more specific
             elif issubclass(c, r):
                 result.remove(r)
-        
+                
         # Add class if it should be included
         if should_include:
             result.append(c)

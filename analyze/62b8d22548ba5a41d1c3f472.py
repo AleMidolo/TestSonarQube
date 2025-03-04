@@ -15,23 +15,23 @@ def cachedmethod(cache, key=hashkey, lock=None):
                 # Try to get cached result
                 if lock is not None:
                     with lock:
-                        result = _cache[k]
-                else:
-                    result = _cache[k]
-                return result
-            
+                        return _cache[k]
+                return _cache[k]
+                
             except KeyError:
                 # Cache miss - call method and store result
-                result = method(self, *args, **kwargs)
+                v = method(self, *args, **kwargs)
                 
                 if lock is not None:
                     with lock:
-                        _cache[k] = result
+                        _cache[k] = v
                 else:
-                    _cache[k] = result
+                    _cache[k] = v
                     
-                return result
+                return v
                 
+        wrapper.__doc__ = method.__doc__
+        wrapper.__name__ = method.__name__
         return wrapper
         
     return decorator

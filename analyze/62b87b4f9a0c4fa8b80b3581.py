@@ -17,7 +17,7 @@ def scale(self, other=None, recompute=False):
         # Get current scale
         current_scale = self.scale()
         
-        # Check for zero scale
+        # Check if current scale is zero
         if current_scale == 0:
             raise LenaValueError("Cannot rescale histogram with zero scale")
             

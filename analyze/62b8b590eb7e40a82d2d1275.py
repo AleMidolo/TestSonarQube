@@ -19,62 +19,46 @@ def _legacy_mergeOrderings(orderings):
     if not orderings:
         return []
         
-    # Create a mapping of element -> list of indices where it appears
-    element_positions = {}
+    # Create a set of all elements
+    all_elements = set()
     for ordering in orderings:
-        for i, element in enumerate(ordering):
-            if element not in element_positions:
-                element_positions[element] = []
-            element_positions[element].append((ordering, i))
+        all_elements.update(ordering)
+    
+    # Create a dictionary mapping each element to its successors in each ordering
+    successors = {elem: set() for elem in all_elements}
+    for ordering in orderings:
+        for i in range(len(ordering)-1):
+            successors[ordering[i]].add(ordering[i+1])
             
+    # Create a set of elements with no predecessors
+    has_pred = set()
+    for succ_set in successors.values():
+        has_pred.update(succ_set)
+    no_pred = all_elements - has_pred
+    
+    # Build the merged ordering
     result = []
     used = set()
     
-    while True:
-        # Find elements that can be added (those that appear first in their lists)
-        candidates = set()
-        for ordering in orderings:
-            if ordering:
-                element = ordering[0]
-                if element not in used:
-                    candidates.add(element)
-                    
-        if not candidates:
-            break
+    while no_pred:
+        # Take any element with no predecessors
+        curr = no_pred.pop()
+        if curr not in used:
+            result.append(curr)
+            used.add(curr)
             
-        # For each candidate, check if it appears later in other lists
-        valid_candidates = set()
-        for candidate in candidates:
-            valid = True
-            suffix = None
-            
-            for pos_list in element_positions[candidate]:
-                ordering, idx = pos_list
-                if idx > 0 and ordering[0] != candidate:
-                    valid = False
-                    break
+            # Update elements with no predecessors
+            succs = successors[curr]
+            for succ in succs:
+                # Check if all predecessors of succ are used
+                all_preds_used = True
+                for ordering in orderings:
+                    if succ in ordering:
+                        idx = ordering.index(succ)
+                        if idx > 0 and ordering[idx-1] not in used:
+                            all_preds_used = False
+                            break
+                if all_preds_used:
+                    no_pred.add(succ)
                     
-                current_suffix = ordering[idx:]
-                if suffix is None:
-                    suffix = current_suffix
-                elif suffix != current_suffix:
-                    valid = False
-                    break
-                    
-            if valid:
-                valid_candidates.add(candidate)
-                
-        if not valid_candidates:
-            break
-            
-        # Add a valid candidate to result and remove from orderings
-        element = valid_candidates.pop()
-        result.append(element)
-        used.add(element)
-        
-        # Remove the element from the front of any ordering that starts with it
-        for ordering in orderings:
-            if ordering and ordering[0] == element:
-                ordering.pop(0)
-                
     return result

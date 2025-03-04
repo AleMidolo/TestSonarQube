@@ -6,56 +6,34 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
 
     This function also makes deep-path shebangs work just fine
     """
-    import sys
     import os
+    import sys
 
-    if sys.platform != 'win32' or not cmd:
+    if not cmd:
+        return cmd
+        
+    # Only apply fixes on Windows
+    if os.name != 'nt':
         return cmd
 
     # Get first argument (the executable)
     exe = cmd[0]
     
-    # Return as-is if it's not a script file
-    if not os.path.isfile(exe) or exe.lower().endswith(('.exe', '.bat', '.com')):
-        return cmd
-
-    # Read first line to check for shebang
+    # If it's a Python file, prepend the Python interpreter
+    if exe.endswith('.py'):
+        return (sys.executable, exe) + cmd[1:]
+        
+    # Check for shebang in first line
     try:
         with open(exe, 'rb') as f:
             first_line = f.readline().decode('utf-8').strip()
+            
+        if first_line.startswith('#!'):
+            interpreter = first_line[2:].strip().split()[0]
+            if interpreter.endswith('python'):
+                return (sys.executable, exe) + cmd[1:]
+            return (interpreter, exe) + cmd[1:]
     except (IOError, UnicodeDecodeError):
-        return cmd
-
-    # Check if first line is a shebang
-    if not first_line.startswith('#!'):
-        return cmd
-
-    # Parse shebang line
-    shebang = first_line[2:].strip().split()
-    if not shebang:
-        return cmd
-
-    interpreter = shebang[0]
-    args = shebang[1:]
-
-    # Handle special cases like /usr/bin/env
-    if os.path.basename(interpreter) == 'env':
-        if args:
-            interpreter = args[0]
-            args = args[1:]
-        else:
-            return cmd
-
-    # Convert unix paths to windows paths if needed
-    if '/' in interpreter:
-        interpreter = interpreter.replace('/', '\\')
-
-    # Construct new command
-    new_cmd = (interpreter,)
-    if args:
-        new_cmd += tuple(args)
-    new_cmd += (exe,)
-    if len(cmd) > 1:
-        new_cmd += cmd[1:]
-
-    return new_cmd
+        pass
+        
+    return cmd

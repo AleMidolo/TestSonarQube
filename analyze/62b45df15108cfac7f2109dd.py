@@ -4,19 +4,12 @@ def status_str(self, prefix=''):
     """
     output = []
     for entry in self.log:
-        if entry.status == 'pass':
-            status = '���'
-        elif entry.status == 'fail': 
-            status = '���'
-        elif entry.status == 'warn':
-            status = '!'
+        if isinstance(entry, str):
+            output.append(prefix + entry)
         else:
-            status = '?'
-            
-        msg = f"{prefix}{status} {entry.message}"
-        if entry.details:
-            msg += f" ({entry.details})"
-            
-        output.append(msg)
-        
-    return '\n'.join(output)
+            status, msg = entry
+            if status:
+                output.append(prefix + "��� " + msg)
+            else:
+                output.append(prefix + "��� " + msg)
+    return "\n".join(output)

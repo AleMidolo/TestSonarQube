@@ -10,7 +10,7 @@ def isoparse(self, dt_str):
 
     dt_str = str(dt_str).strip()
     
-    # Split into date and time parts
+    # Split datetime string into date and time parts
     if 'T' in dt_str:
         date_str, time_str = dt_str.split('T', 1)
     else:
@@ -35,7 +35,7 @@ def isoparse(self, dt_str):
         weekday = int(date_parts['weekday'] or 0)
         date = datetime.datetime.strptime(f"{year}-W{week}-{weekday}", "%Y-W%W-%w").date()
 
-    # Default time values
+    # Initialize time components
     hour = minute = second = microsecond = 0
     tz = None
 
@@ -45,7 +45,7 @@ def isoparse(self, dt_str):
         if '+' in time_str:
             time_str, tz_str = time_str.split('+', 1)
             tz_str = '+' + tz_str
-        elif '-' in time_str[1:]:  # Checking after first char to handle negative offsets
+        elif '-' in time_str[1:]:  # Avoid splitting on negative hours
             time_str, tz_str = time_str.rsplit('-', 1)
             tz_str = '-' + tz_str
         elif 'Z' in time_str:
@@ -66,7 +66,7 @@ def isoparse(self, dt_str):
             hour = 0
         minute = int(time_parts['minute'] or 0)
         second = int(time_parts['second'] or 0)
-        microsecond = int((time_parts['microsecond'] or '').ljust(6, '0')[:6] or 0)
+        microsecond = int((time_parts['microsecond'] or '').ljust(6, '0')[:6])
 
         # Parse timezone
         if tz_str:
@@ -89,4 +89,5 @@ def isoparse(self, dt_str):
                 else:
                     tz = tzoffset(None, offset * 60)
 
-    return datetime.datetime(year, month, day, hour, minute, second, microsecond, tz)
+    return datetime.datetime(date.year, date.month, date.day,
+                           hour, minute, second, microsecond, tz)

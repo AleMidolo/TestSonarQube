@@ -12,7 +12,7 @@ def string_to_int(string: str, alphabet: List[str]) -> int:
     
     # Process each character from left to right
     for char in string:
-        # Multiply current result by base and add new digit value
+        # Multiply current result by base and add new digit
         result = result * base + char_to_val[char]
         
     return result

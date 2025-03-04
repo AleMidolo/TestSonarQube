@@ -14,14 +14,12 @@ _borgmatic()
     # List of all borgmatic commands
     opts="init create prune check list info export-tar extract mount umount rcreate rlist rinfo rdelete config validate generate-key"
     
-    # List of options that take values
-    value_opts="-c --config --repository --archive --destination --json --monitoring-verbosity --verbosity"
+    # List of options that take arguments
+    arg_opts="--config --repository --archive --encryption --ssh-command --remote-path --exclude --patterns --compression"
     
     # Handle option completion
     if [[ ${cur} == -* ]]; then
-        COMPREPLY=( $(compgen -W "--help --version --borgmatic-source-directory --verbosity \
-            --json --monitoring-verbosity -c --config --repository --archive \
-            --destination --dry-run --progress --stats --list --files --prefix" -- ${cur}) )
+        COMPREPLY=( $(compgen -W "--help --verbosity --list-archives --dry-run --stats ${arg_opts}" -- ${cur}) )
         return 0
     fi
     
@@ -31,19 +29,25 @@ _borgmatic()
         return 0
     fi
     
-    # Handle value completion for specific options
+    # Handle argument completion for specific options
     case "${prev}" in
-        -c|--config)
+        --config)
+            COMPREPLY=( $(compgen -f -X '!*.yaml' -- ${cur}) )
+            return 0
+            ;;
+        --repository)
             COMPREPLY=( $(compgen -f -- ${cur}) )
             return 0
             ;;
-        --repository|--archive|--destination)
-            COMPREPLY=( $(compgen -f -- ${cur}) )
+        --archive)
+            # Could potentially list actual archives here, but would need borg list output
             return 0
             ;;
-        --verbosity|--monitoring-verbosity)
-            COMPREPLY=( $(compgen -W "0 1 2" -- ${cur}) )
+        --encryption)
+            COMPREPLY=( $(compgen -W "none repokey keyfile repokey-blake2 keyfile-blake2" -- ${cur}) )
             return 0
+            ;;
+        *)
             ;;
     esac
     

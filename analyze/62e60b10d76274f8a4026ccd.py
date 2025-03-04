@@ -19,9 +19,7 @@ def data(self, *keys):
     for key in keys:
         if isinstance(key, int):
             # Handle index access
-            if key < 0:
-                key = len(self._keys) + key
-            if key >= len(self._keys) or key < 0:
+            if key < 0 or key >= len(self._keys):
                 raise IndexError(f"Index {key} is out of bounds")
             result[self._keys[key]] = self._values[key]
         else:

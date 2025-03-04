@@ -23,7 +23,7 @@ def validate_from_content(cls, spec_content=None):
         
         if missing_fields:
             raise IRValidatorException(
-                f"Missing mandatory fields in spec: {', '.join(missing_fields)}"
+                f"Missing mandatory fields in spec file: {', '.join(missing_fields)}"
             )
             
         # Additional validation can be added here

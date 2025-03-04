@@ -9,10 +9,7 @@ def unit_of_work(metadata=None, timeout=None):
         # Copy over function metadata
         wrapper.__name__ = f.__name__
         wrapper.__doc__ = f.__doc__
-        
-        # Add metadata and timeout as attributes that can be accessed
-        wrapper.metadata = metadata
-        wrapper.timeout = timeout
+        wrapper.__module__ = f.__module__
         
         return wrapper
         

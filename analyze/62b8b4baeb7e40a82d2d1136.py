@@ -31,30 +31,29 @@ def _verify(iface, candidate, tentative=False, vtype=None):
                 if impl_sig.parameters != iface_sig.parameters:
                     errors['wrong_signature'].append(name)
             except ValueError:
-                errors['signature_error'].append(name)
+                # Can't get signature, skip verification
+                pass
 
         else:
             # Verify attribute exists
             if not hasattr(candidate, name):
                 errors['missing_attributes'].append(name)
 
-    # Handle errors
-    if not errors:
-        return True
+    # Raise errors if any found
+    if errors:
+        messages = []
+        if errors['missing_methods']:
+            messages.append(f"Missing required methods: {', '.join(errors['missing_methods'])}")
+        if errors['not_callable']:
+            messages.append(f"Attributes that should be methods: {', '.join(errors['not_callable'])}")
+        if errors['wrong_signature']:
+            messages.append(f"Methods with wrong signatures: {', '.join(errors['wrong_signature'])}")
+        if errors['missing_attributes']:
+            messages.append(f"Missing required attributes: {', '.join(errors['missing_attributes'])}")
 
-    error_messages = []
-    if errors['missing_methods']:
-        error_messages.append(f"Missing required methods: {', '.join(errors['missing_methods'])}")
-    if errors['not_callable']:
-        error_messages.append(f"Attributes that should be methods: {', '.join(errors['not_callable'])}")
-    if errors['wrong_signature']:
-        error_messages.append(f"Methods with incorrect signatures: {', '.join(errors['wrong_signature'])}")
-    if errors['signature_error']:
-        error_messages.append(f"Methods with signature verification errors: {', '.join(errors['signature_error'])}")
-    if errors['missing_attributes']:
-        error_messages.append(f"Missing required attributes: {', '.join(errors['missing_attributes'])}")
+        if len(messages) == 1:
+            raise Invalid(messages[0])
+        else:
+            raise Invalid('\n'.join(messages))
 
-    if len(error_messages) == 1:
-        raise Invalid(error_messages[0])
-    else:
-        raise Invalid('\n'.join(error_messages))
+    return True

@@ -15,17 +15,14 @@ def prepare_repository_from_archive(
     # Get filename from archive_path if not provided
     if filename is None:
         filename = os.path.basename(archive_path)
-    
+
     # Handle different archive types
-    if archive_path.endswith(('.tar.gz', '.tgz')):
-        with tarfile.open(archive_path, 'r:gz') as tar:
-            tar.extractall(temp_dir)
-    elif archive_path.endswith('.zip'):
-        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-            zip_ref.extractall(temp_dir)
-    elif archive_path.endswith('.tar'):
-        with tarfile.open(archive_path, 'r:') as tar:
-            tar.extractall(temp_dir)
+    if tarfile.is_tarfile(archive_path):
+        with tarfile.open(archive_path) as tar:
+            tar.extractall(path=temp_dir)
+    elif zipfile.is_zipfile(archive_path):
+        with zipfile.ZipFile(archive_path) as zip_file:
+            zip_file.extractall(path=temp_dir)
     else:
         raise ValueError(f"Unsupported archive format: {archive_path}")
 

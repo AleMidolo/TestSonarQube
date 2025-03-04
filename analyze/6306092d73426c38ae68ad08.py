@@ -11,7 +11,7 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
     required_args = []
     
     for option in options_spec:
-        # Skip if no required_when condition
+        # Skip if option doesn't have required_when condition
         if 'required_when' not in option:
             continue
             
@@ -37,14 +37,10 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
         # Check if required_when is a string expression
         elif isinstance(required_when, str):
             try:
-                # Create context with args for eval
-                context = {'args': args}
-                if eval(required_when, {'__builtins__': {}}, context):
+                if eval(required_when, {'args': args}):
                     required_args.append(option['name'])
             except:
-                # Log warning about invalid expression
-                self._logger.warning(
-                    f"Invalid required_when expression for {command_name}: {required_when}"
-                )
+                # Skip if expression evaluation fails
+                continue
                 
     return required_args
