@@ -10,17 +10,13 @@ def list_of_file_names(settings_dirs, spec_option):
         
     # Iterate through all directories
     for directory in settings_dirs:
-        # Handle spec option cases
-        if spec_option.endswith('*'):
-            # Get all files matching pattern
-            base = spec_option[:-1]
-            for file in os.listdir(directory):
-                if file.startswith(base):
-                    file_names.append(os.path.join(directory, file))
-        else:
-            # Get specific file
-            file_path = os.path.join(directory, spec_option)
-            if os.path.exists(file_path):
-                file_names.append(file_path)
-                
-    return file_names
+        # Handle different spec options
+        if spec_option == 'ini':
+            file_names.extend([f for f in os.listdir(directory) if f.endswith('.ini')])
+        elif spec_option == 'conf':
+            file_names.extend([f for f in os.listdir(directory) if f.endswith('.conf')])
+        elif spec_option == 'all':
+            file_names.extend([f for f in os.listdir(directory) if f.endswith(('.ini', '.conf'))])
+            
+    # Remove duplicates while preserving order
+    return list(dict.fromkeys(file_names))

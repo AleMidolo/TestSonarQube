@@ -8,12 +8,12 @@ def integral(bins, edges):
     """
     total = 0.0
     
-    # Iterate through bins and edges to compute integral
+    # Iterate through bins and calculate area for each bin
     for i in range(len(bins)):
-        # Width of current bin
-        width = edges[i+1] - edges[i]
-        # Area = height * width
-        area = bins[i] * width
-        total += area
+        # Width of the bin is difference between edges
+        bin_width = edges[i + 1] - edges[i]
+        # Area is bin height * width
+        bin_area = bins[i] * bin_width
+        total += bin_area
         
     return total

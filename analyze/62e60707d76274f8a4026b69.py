@@ -37,24 +37,12 @@ def point_type(name, fields, srid_map):
             return NotImplemented
         return all(getattr(self, field) == getattr(other, field) for field in fields)
 
-    def transform(self, target_srid):
-        """Transform point coordinates to a different SRID."""
-        if target_srid not in srid_map:
-            raise ValueError(f"Unsupported SRID: {target_srid}")
-        
-        transform_func = srid_map[target_srid]
-        transformed_coords = transform_func(self)
-        
-        new_point = type(self)(**{
-            field: getattr(transformed_coords, field) if hasattr(transformed_coords, field) else getattr(self, field)
-            for field in fields
-        })
-        return new_point
+    def __hash__(self):
+        return hash(tuple(getattr(self, field) for field in fields))
 
     class_attrs['__init__'] = __init__
     class_attrs['__repr__'] = __repr__
     class_attrs['__eq__'] = __eq__
-    class_attrs['transform'] = transform
+    class_attrs['__hash__'] = __hash__
 
-    # Create and return the new class
-    return type(name, (), class_attrs)
+    return type(name, (object,), class_attrs)

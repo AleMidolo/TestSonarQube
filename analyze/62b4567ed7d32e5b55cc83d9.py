@@ -14,22 +14,36 @@ def deep_merge_nodes(nodes):
         existing_value_node = merged[key][1]
         
         # If both nodes are mapping nodes, do a deep merge
-        if (value_node.tag == 'tag:yaml.org,2002:map' and 
-            existing_value_node.tag == 'tag:yaml.org,2002:map'):
+        if (hasattr(value_node, 'tag') and 'map' in value_node.tag and
+            hasattr(existing_value_node, 'tag') and 'map' in existing_value_node.tag):
             
-            # Recursively merge the mapping node values
-            merged_value = deep_merge_nodes(value_node.value + existing_value_node.value)
+            # Convert the mapping node values to dict form for easier merging
+            existing_dict = {k.value: v for k,v in existing_value_node.value}
+            new_dict = {k.value: v for k,v in value_node.value}
+            
+            # Update existing dict with new values
+            existing_dict.update(new_dict)
+            
+            # Convert back to list of tuples format
+            merged_value = [
+                (k_node, v_node) 
+                for k_node, v_node in existing_value_node.value
+                if k_node.value not in new_dict
+            ]
+            merged_value.extend([
+                (k_node, v_node)
+                for k_node, v_node in value_node.value 
+            ])
             
             # Create new mapping node with merged values
-            merged[key] = (
-                key_node,
-                type(value_node)(
-                    tag='tag:yaml.org,2002:map',
-                    value=merged_value
-                )
+            merged_mapping = type(value_node)(
+                tag=value_node.tag,
+                value=merged_value
             )
+            merged[key] = (key_node, merged_mapping)
+            
         else:
-            # For non-mapping nodes, keep the most recent value
+            # For non-mapping nodes, just use the latest value
             merged[key] = (key_node, value_node)
             
     # Convert merged dict back to list of tuples

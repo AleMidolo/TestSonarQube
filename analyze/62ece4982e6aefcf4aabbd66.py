@@ -24,7 +24,7 @@ def was_processed(processed, path_name, verbose):
     # Check if path already processed
     if abs_path in processed:
         if verbose:
-            print(f"Already processed {abs_path}")
+            print(f"Already processed: {abs_path}")
         return True
         
     # Add path to processed set

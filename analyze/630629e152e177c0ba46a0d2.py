@@ -13,7 +13,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     if '@' not in handle:
         raise ValueError("Handle must contain @")
     
-    username, host = handle.split('@', 1)
+    user, host = handle.split('@', 1)
     
     # Construct webfinger URL
     webfinger_url = f"https://{host}/.well-known/webfinger?resource=acct:{handle}"
@@ -23,25 +23,36 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         response = requests.get(webfinger_url)
         response.raise_for_status()
         
-        # Parse the response
+        # Parse the JSON response
         data = response.json()
         
-        # Extract relevant information into a dict
         result = {
             'handle': handle,
             'host': host,
-            'username': username,
-            'links': {}
+            'guid': None,
+            'profile_url': None,
+            'atom_url': None,
+            'salmon_url': None,
+            'pubkey': None
         }
         
-        # Parse links
+        # Extract relevant links and properties
         for link in data.get('links', []):
             rel = link.get('rel', '')
-            if rel:
-                result['links'][rel] = {
-                    'href': link.get('href'),
-                    'type': link.get('type')
-                }
+            
+            if rel == 'http://microformats.org/profile/hcard':
+                result['profile_url'] = link.get('href')
+            elif rel == 'http://schemas.google.com/g/2010#updates-from':
+                result['atom_url'] = link.get('href') 
+            elif rel == 'salmon':
+                result['salmon_url'] = link.get('href')
+                
+        # Get additional properties
+        for prop in data.get('properties', {}).items():
+            if 'guid' in prop[0]:
+                result['guid'] = prop[1]
+            elif 'pubkey' in prop[0]:
+                result['pubkey'] = prop[1]
                 
         return result
         

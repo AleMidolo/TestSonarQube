@@ -12,5 +12,4 @@ def popitem(self):
     # Remove the item
     del self[first_key]
     
-    # Return key-value pair as tuple
     return (first_key, first_value)

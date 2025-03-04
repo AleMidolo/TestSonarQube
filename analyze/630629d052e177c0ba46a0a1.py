@@ -10,32 +10,29 @@ def verify_relayable_signature(public_key, doc, signature):
         from cryptography.hazmat.primitives.serialization import load_pem_public_key
         from cryptography.exceptions import InvalidSignature
 
+        # Convert doc to bytes if not already
+        if isinstance(doc, str):
+            doc = doc.encode('utf-8')
+
         # Load the public key if it's in PEM format
         if isinstance(public_key, str):
             public_key = load_pem_public_key(public_key.encode())
 
-        # Convert doc to bytes if it isn't already
-        if isinstance(doc, str):
-            doc = doc.encode()
-
-        # Convert signature to bytes if it isn't already  
-        if isinstance(signature, str):
-            signature = bytes.fromhex(signature)
-
         # Verify the signature
-        public_key.verify(
-            signature,
-            doc,
-            padding.PSS(
-                mgf=padding.MGF1(hashes.SHA256()),
-                salt_length=padding.PSS.MAX_LENGTH
-            ),
-            hashes.SHA256()
-        )
-        
-        return True
-
-    except InvalidSignature:
-        return False
+        try:
+            public_key.verify(
+                signature,
+                doc,
+                padding.PSS(
+                    mgf=padding.MGF1(hashes.SHA256()),
+                    salt_length=padding.PSS.MAX_LENGTH
+                ),
+                hashes.SHA256()
+            )
+            return True
+        except InvalidSignature:
+            return False
+            
     except Exception as e:
-        raise Exception(f"Error verifying signature: {str(e)}")
+        # Log error if needed
+        return False

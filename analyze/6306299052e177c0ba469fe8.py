@@ -9,9 +9,9 @@ def check_sender_and_entity_handle_match(sender_handle, entity_handle):
     if not sender_handle or not entity_handle:
         return False
         
-    # Strip whitespace and convert to lowercase for comparison
-    sender = sender_handle.strip().lower()
-    entity = entity_handle.strip().lower()
+    # Normalize handles by converting to lowercase and stripping whitespace
+    sender = str(sender_handle).lower().strip()
+    entity = str(entity_handle).lower().strip()
     
-    # Check if handles match exactly
+    # Compare normalized handles
     return sender == entity

@@ -15,7 +15,7 @@ def find_roots(graph: "Graph", prop: "URIRef", roots: Optional[Set["Node"]] = No
             if p == prop:
                 roots.add(o)
                 
-    # Get all objects that appear as subjects with prop
+    # Get all objects that appear as subjects in triples with prop
     children = set()
     for s, p, o in graph:
         if p == prop:

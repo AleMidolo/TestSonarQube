@@ -24,5 +24,5 @@ def render(pieces, style):
         return version
         
     else:
-        # Default to basic dot-separated format
+        # Default to basic dot notation
         return '.'.join(str(p) for p in pieces)

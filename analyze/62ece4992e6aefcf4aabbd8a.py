@@ -12,18 +12,17 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     errors = []
     logger = logging.getLogger(__name__)
 
-    # Process each config file
     for filename in config_filenames:
         try:
             with open(filename, 'r') as f:
                 config = yaml.safe_load(f)
                 
                 # Resolve environment variables if requested
-                if resolve_env:
+                if resolve_env and config:
                     config = _resolve_env_vars(config)
                 
                 # Apply any overrides
-                if overrides:
+                if overrides and config:
                     config = _apply_overrides(config, overrides)
                     
                 configs[filename] = config
@@ -34,12 +33,12 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=f"Error loading config file {filename}: {str(e)}",
+                msg=str(e),
                 args=(),
                 exc_info=None
             )
             errors.append(error)
-            logger.error(error.msg)
+            logger.error(f"Error loading config file {filename}: {str(e)}")
             
     return configs, errors
 
@@ -56,8 +55,7 @@ def _resolve_env_vars(config):
 
 def _apply_overrides(config, overrides):
     """Helper function to apply override values to config"""
-    if isinstance(config, dict):
-        config = config.copy()
+    if isinstance(config, dict) and isinstance(overrides, dict):
         for k, v in overrides.items():
             if k in config and isinstance(config[k], dict) and isinstance(v, dict):
                 config[k] = _apply_overrides(config[k], v)

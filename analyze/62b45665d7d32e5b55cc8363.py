@@ -4,20 +4,26 @@ def make_parsers():
     """
     import argparse
     
-    # Create the top-level parser
+    # Create top-level parser
     parser = argparse.ArgumentParser(description='Command line tool')
     subparsers = parser.add_subparsers(dest='command', help='Available commands')
     
-    # Create subparsers for different commands
-    # Add command
-    add_parser = subparsers.add_parser('add', help='Add a new item')
-    add_parser.add_argument('item', help='Item to add')
+    # Create subparsers
+    run_parser = subparsers.add_parser('run', help='Run the program')
+    config_parser = subparsers.add_parser('config', help='Configure settings')
+    test_parser = subparsers.add_parser('test', help='Run tests')
     
-    # Remove command  
-    remove_parser = subparsers.add_parser('remove', help='Remove an item')
-    remove_parser.add_argument('item', help='Item to remove')
+    # Add arguments to run parser
+    run_parser.add_argument('-i', '--input', help='Input file')
+    run_parser.add_argument('-o', '--output', help='Output file')
+    run_parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output')
     
-    # List command
-    list_parser = subparsers.add_parser('list', help='List all items')
+    # Add arguments to config parser
+    config_parser.add_argument('--set', help='Set a configuration value')
+    config_parser.add_argument('--get', help='Get a configuration value')
+    
+    # Add arguments to test parser
+    test_parser.add_argument('-u', '--unit', action='store_true', help='Run unit tests')
+    test_parser.add_argument('-i', '--integration', action='store_true', help='Run integration tests')
     
     return parser, subparsers

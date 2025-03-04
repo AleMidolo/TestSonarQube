@@ -9,7 +9,7 @@ def scale(self, other=None, recompute=False):
         return self._scale
         
     else:
-        # Validate input
+        # Validate other is a float
         if not isinstance(other, (int, float)):
             raise TypeError("Scale must be a number")
             

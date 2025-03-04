@@ -5,20 +5,23 @@ def _resolve_string(matcher):
     """
     import os
     
-    # Split matcher into name and default value if present
+    # Split matcher into name and default value (if provided)
     parts = matcher.split(':-')
-    name = parts[0].strip()
+    var_name = parts[0].strip()
     
-    # Get default value if provided
-    default = parts[1].strip() if len(parts) > 1 else None
+    # Get default value if provided, otherwise None
+    default_value = parts[1].strip() if len(parts) > 1 else None
     
     # Try to get value from environment
-    value = os.environ.get(name)
+    value = os.environ.get(var_name)
     
-    if value is None:
-        if default is not None:
-            return default
-        else:
-            raise ValueError(f"Environment variable '{name}' not found and no default value provided")
-            
-    return value
+    # Return value from environment if found
+    if value is not None:
+        return value
+        
+    # Return default if provided
+    if default_value is not None:
+        return default_value
+        
+    # Raise error if no value found and no default provided
+    raise ValueError(f"Environment variable '{var_name}' not found and no default value provided")

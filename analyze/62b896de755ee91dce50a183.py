@@ -28,11 +28,8 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         if res is None:
             raise ParserError("String does not contain a date.")
 
-        # Apply timezone handling
-        if res.tzinfo is not None and ignoretz:
-            res = res.replace(tzinfo=None)
-        elif res.tzinfo is None and tzinfos is not None and not ignoretz:
-            # Try to apply timezone from tzinfos
+        # Handle timezone information
+        if tzinfos is not None and not ignoretz:
             tz = None
             if isinstance(tzinfos, dict):
                 if res.tzname in tzinfos:
@@ -40,19 +37,22 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
             elif callable(tzinfos):
                 tz = tzinfos(res.tzname, res.tzoffset)
             
-            if tz is not None:
-                res = res.replace(tzinfo=tz)
-
-        # Apply defaults if provided
-        if default is not None:
-            # Replace any None values in res with values from default
-            default = default.replace(tzinfo=None) if ignoretz else default
+            if isinstance(tz, int):
+                tz = tzoffset(res.tzname, tz)
             
-            for attr in ["year", "month", "day", "hour", "minute", 
-                        "second", "microsecond"]:
-                value = getattr(res, attr)
+            res = res.replace(tzinfo=tz)
+
+        # Handle default values
+        if default is not None:
+            for attr in ["year", "month", "day", "hour", 
+                        "minute", "second", "microsecond"]:
+                value = getattr(res, attr, None)
                 if value is None:
                     setattr(res, attr, getattr(default, attr))
+
+        # Remove timezone if ignoretz is True
+        if ignoretz:
+            res = res.replace(tzinfo=None)
 
         # Return results based on fuzzy_with_tokens setting
         if kwargs.get('fuzzy_with_tokens', False):
@@ -62,3 +62,5 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
 
     except (ValueError, OverflowError) as e:
         raise ParserError(str(e))
+    except Exception as e:
+        raise ParserError(f"Unknown string format: {timestr}")

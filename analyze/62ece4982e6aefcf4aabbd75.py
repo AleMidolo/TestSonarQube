@@ -15,5 +15,5 @@ def addignored(ignored):
     # Sort the list
     ignored_files.sort()
     
-    # Join list elements with commas and return
+    # Join list elements with commas
     return ','.join(ignored_files)

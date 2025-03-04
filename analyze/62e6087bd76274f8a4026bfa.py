@@ -9,5 +9,5 @@ def pop_u16(self):
     # Remove last 2 bytes from data
     self.data = self.data[:-2]
     
-    # Convert bytes to unsigned 16-bit int using big-endian byte order
+    # Convert bytes to unsigned 16-bit int using big-endian
     return int.from_bytes(last_two, byteorder='big', signed=False)

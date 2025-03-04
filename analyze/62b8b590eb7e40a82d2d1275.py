@@ -46,19 +46,21 @@ def _legacy_mergeOrderings(orderings):
         used.add(elem)
         
         # Update no_predecessors set
-        # Check if any successor of elem now has no unused predecessors
-        if elem in successors:
-            for succ in successors[elem]:
-                if succ not in used:
-                    # Check if all predecessors of succ are used
-                    all_preds_used = True
-                    for ordering in orderings:
-                        if succ in ordering:
-                            idx = ordering.index(succ)
-                            if any(pred not in used for pred in ordering[:idx]):
-                                all_preds_used = False
+        # Check if any successor of elem now has all predecessors used
+        for ordering in orderings:
+            if elem in ordering:
+                idx = ordering.index(elem)
+                if idx + 1 < len(ordering):
+                    next_elem = ordering[idx + 1]
+                    # Check if all predecessors of next_elem are used
+                    all_pred_used = True
+                    for other_ordering in orderings:
+                        if next_elem in other_ordering:
+                            pred_idx = other_ordering.index(next_elem)
+                            if not all(pred in used for pred in other_ordering[:pred_idx]):
+                                all_pred_used = False
                                 break
-                    if all_preds_used:
-                        no_predecessors.add(succ)
-    
+                    if all_pred_used and next_elem not in used:
+                        no_predecessors.add(next_elem)
+                        
     return result

@@ -22,7 +22,7 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     if not netloc:
         raise ValueError(f"No hostname found in href: {image_href}")
         
-    # Determine if using SSL based on scheme
+    # Determine if using SSL
     use_ssl = parsed.scheme == 'https'
     
     # Get image ID from path
