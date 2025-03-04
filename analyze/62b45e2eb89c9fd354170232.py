@@ -24,10 +24,10 @@ def next_version(version):
     
     # Convert back to strings preserving original zero padding
     result = []
-    for i in range(len(nums)):
-        # Get original part length to preserve zero padding
-        orig_len = len(parts[i]) if i < len(parts) else 1
-        # Format number with required padding
+    for i in range(len(parts)):
+        # Get original length of this part
+        orig_len = len(parts[i])
+        # Zero pad the new number to match original length
         result.append(str(nums[i]).zfill(orig_len))
         
     return '.'.join(result)

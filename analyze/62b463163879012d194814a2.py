@@ -1,22 +1,15 @@
 def add_asset(self, basename, file_path):
-    """Adds an asset file path mapping to the assets dictionary.
+    """Adds an asset file path to the assets dictionary using the basename as key.
     
     Args:
-        basename (str): Base filename without extension
+        basename (str): Base filename to use as key
         file_path (str): Full file path to the asset
         
     Returns:
-        dict: Updated assets dictionary with new mapping
+        dict: Updated assets dictionary
     """
-    # Get file extension from path
-    extension = file_path.split('.')[-1].lower()
-    
-    # Create key with basename and extension
-    key = f"{basename}.{extension}"
-    
-    # Add to assets dictionary
     if not hasattr(self, 'assets'):
         self.assets = {}
-    self.assets[key] = file_path
-    
+        
+    self.assets[basename] = file_path
     return self.assets

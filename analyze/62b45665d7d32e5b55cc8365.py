@@ -27,10 +27,10 @@ def parse_arguments(*unparsed_arguments):
     parsed_args = {}
     
     if args.command:
-        # Store subparser arguments under command name
+        # Store command-specific arguments
         parsed_args[args.command] = args
     else:
-        # Store global arguments under 'global' key
+        # Store global arguments
         parsed_args['global'] = args
         
     return parsed_args

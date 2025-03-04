@@ -14,13 +14,11 @@ def size_to_bytes(size: str) -> int:
         'Ei': 1152921504606846976
     }
 
-    size = size.strip()
-    
-    # Handle case with no unit (just bytes)
+    # If size is just a number without units
     if size.isdigit():
         return int(size)
-        
-    # Extract numeric value and unit
+
+    # Extract the numeric part and unit
     for unit in sorted(units.keys(), key=len, reverse=True):
         if size.endswith(unit):
             try:
@@ -28,5 +26,5 @@ def size_to_bytes(size: str) -> int:
                 return int(number * units[unit])
             except ValueError:
                 raise ValueError(f"Invalid size format: {size}")
-                
+
     raise ValueError(f"Invalid size format: {size}")

@@ -1,10 +1,9 @@
 def hist_to_graph(hist, make_value=None, get_coordinate="left",
                   field_names=("x", "y"), scale=None):
-    
     # Default make_value function uses bin content
     if make_value is None:
         make_value = lambda x: x
-        
+
     # Get coordinates based on specified method
     def get_bin_coordinate(bin):
         if get_coordinate == "left":
@@ -15,8 +14,8 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
             return (bin.left + bin.right) / 2
         else:
             raise ValueError("get_coordinate must be 'left', 'right' or 'middle'")
-            
-    # Create points for the graph
+
+    # Create points list
     points = []
     for bin in hist:
         x = get_bin_coordinate(bin)
@@ -27,19 +26,23 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
             points.append((x,) + tuple(y))
         else:
             points.append((x, y))
-            
+
     # Create graph with appropriate dimensions
     from graph import Graph
-    dimensions = len(points[0])
+    sample_point = points[0]
+    dimensions = len(sample_point)
     
     # Verify field_names matches dimensions
     if len(field_names) != dimensions:
-        raise ValueError(f"Number of field names ({len(field_names)}) must match "
-                        f"number of dimensions ({dimensions})")
+        raise ValueError(f"Number of field names ({len(field_names)}) must match point dimensions ({dimensions})")
     
-    # Create graph with points and field names
-    graph = Graph(points, field_names=field_names)
+    # Create graph
+    graph = Graph(dimensions=dimensions, field_names=field_names)
     
+    # Add points to graph
+    for point in points:
+        graph.add_point(*point)
+        
     # Set scale if specified
     if scale is True:
         graph.scale = hist.scale

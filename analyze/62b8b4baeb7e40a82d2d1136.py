@@ -29,7 +29,6 @@ def _verify(iface, candidate, tentative=False, vtype=None):
                 verifyObject(desc, attr, name)
             except Invalid as e:
                 errors.append(str(e))
-        
         else:
             # Check required attributes
             try:
@@ -37,10 +36,13 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             except AttributeError:
                 errors.append(f"Attribute {name} not provided by {candidate}")
     
-    # If there are errors, raise them
-    if errors:
-        if len(errors) == 1:
-            raise Invalid(errors[0])
-        raise Invalid('\n'.join(errors))
+    # If no errors, return True
+    if not errors:
+        return True
         
-    return True
+    # If single error, raise it directly
+    if len(errors) == 1:
+        raise Invalid(errors[0])
+        
+    # Multiple errors - raise all together
+    raise Invalid('\n'.join(errors))

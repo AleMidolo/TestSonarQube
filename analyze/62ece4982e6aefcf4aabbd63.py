@@ -6,5 +6,5 @@ def is_none_string(val: any) -> bool:
         # Convert to lowercase and remove whitespace
         val = val.lower().strip()
         # Check if string represents None
-        return val in ['none', 'null', 'nil']
+        return val in ['none', 'null', 'nil', '']
     return False

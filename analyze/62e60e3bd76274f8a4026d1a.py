@@ -11,12 +11,12 @@ def from_raw_values(cls, values):
     bookmarks = []
     for value in values:
         try:
-            # Remove any whitespace and decode from ASCII
-            cleaned_value = value.strip().encode('ascii', 'ignore').decode('ascii')
-            if cleaned_value:  # Only add non-empty values
-                bookmarks.append(cleaned_value)
-        except (UnicodeError, AttributeError):
-            # Skip any values that can't be properly encoded/decoded
+            # Remove any whitespace and validate string
+            bookmark = value.strip()
+            if bookmark:
+                bookmarks.append(bookmark)
+        except (AttributeError, TypeError):
+            # Skip invalid values
             continue
             
     return cls(bookmarks)

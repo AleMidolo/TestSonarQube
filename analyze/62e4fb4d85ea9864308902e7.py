@@ -6,7 +6,7 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     # Get first argument (command/script path)
     first = cmd[0]
     
-    # Skip if not a Python script
+    # Skip processing if not a Python script
     if not first.endswith('.py'):
         return cmd
         

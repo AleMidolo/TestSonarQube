@@ -26,12 +26,16 @@ def validate_fixity(self, fixity, manifest_files):
         if 'file_path' not in digest or 'hash' not in digest:
             return False
             
-        # Verify file exists in manifest
+        # Check if referenced file exists in manifest
         if digest['file_path'] not in manifest_files:
             return False
             
-        # Verify hash is a string
-        if not isinstance(digest['hash'], str):
-            return False
-            
+        # Validate hash format based on algorithm
+        if fixity['message_digest_algorithm'].lower() == 'md5':
+            if not len(digest['hash']) == 32:
+                return False
+        elif fixity['message_digest_algorithm'].lower() == 'sha256':
+            if not len(digest['hash']) == 64:
+                return False
+                
     return True

@@ -11,12 +11,10 @@ def parse_arguments(*arguments):
         elif isinstance(arg, tuple):
             # Handle tuple arguments with name and help text
             if len(arg) == 2:
-                name, help_text = arg
-                parser.add_argument(name, help=help_text)
+                parser.add_argument(arg[0], help=arg[1])
             # Handle tuple arguments with name, type and help text
             elif len(arg) == 3:
-                name, arg_type, help_text = arg
-                parser.add_argument(name, type=arg_type, help=help_text)
+                parser.add_argument(arg[0], type=arg[1], help=arg[2])
                 
     # Parse arguments
     args = parser.parse_args()

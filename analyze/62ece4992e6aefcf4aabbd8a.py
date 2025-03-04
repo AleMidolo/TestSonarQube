@@ -28,23 +28,22 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 # Apply any overrides
                 if overrides:
                     config = _apply_overrides(config, overrides)
-                    
+                
                 configs[filename] = config
                 
         except (yaml.YAMLError, IOError) as e:
             # Create log record for error
-            record = logger.makeLogRecord({
-                'msg': f"Error loading config file {filename}: {str(e)}",
-                'levelno': logging.ERROR,
-                'levelname': 'ERROR',
-                'pathname': __file__,
-                'filename': os.path.basename(__file__),
-                'module': __name__,
-                'exc_info': None,
-                'exc_text': None
-            })
+            record = logging.LogRecord(
+                name=__name__,
+                level=logging.ERROR,
+                pathname=filename,
+                lineno=0,
+                msg=str(e),
+                args=(),
+                exc_info=None
+            )
             log_records.append(record)
-            configs[filename] = None
+            logger.error(f"Error loading config file {filename}: {str(e)}")
 
     return configs, log_records
 
@@ -54,8 +53,8 @@ def _resolve_env_vars(config):
         return {k: _resolve_env_vars(v) for k, v in config.items()}
     elif isinstance(config, list):
         return [_resolve_env_vars(v) for v in config]
-    elif isinstance(config, str) and config.startswith('${') and config.endswith('}'):
-        env_var = config[2:-1]
+    elif isinstance(config, str) and config.startswith('$'):
+        env_var = config[1:]
         return os.environ.get(env_var, config)
     return config
 

@@ -7,7 +7,7 @@ def _replace_register(flow_params, register_number, register_value):
     पैरामीटर विवरण:
     - flow_params: एक डिक्शनरी जिसमें परिभाषित फ्लो शामिल हैं  
     - register_number: वह रजिस्टर नंबर जिसमें मान संग्रहीत किया जाएगा  
-    - register_value: वह कुंजी जिसे रजिस्टर नंबर द्वारा बदल दिया जाएगा
+    - register_value: वह कुंजी जिसे रजिस्टर नंबर द्वारा बदल दिया जाएगा  
     """
     # रजिस्टर मान को खोजें
     if register_value in flow_params:
@@ -16,5 +16,4 @@ def _replace_register(flow_params, register_number, register_value):
         del flow_params[register_value]
         # नई कुंजी के साथ मान जोड़ें
         flow_params[f'R{register_number}'] = value
-    
     return flow_params

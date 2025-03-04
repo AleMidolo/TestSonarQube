@@ -15,36 +15,32 @@ def validate(self, inventory, extract_spec_version=False):
             type_value = inventory['type']
             if isinstance(type_value, str):
                 # Extract version from type value
-                if type_value.startswith('v'):
+                if type_value.startswith('STIX '):
                     try:
-                        version = float(type_value[1:])
+                        version = type_value.split(' ')[1]
                         self.spec_version = version
-                    except ValueError:
-                        pass # Use default spec_version if conversion fails
+                    except IndexError:
+                        pass
 
-    # Validate required fields based on spec_version
-    required_fields = ['id', 'name']
-    if self.spec_version >= 2.0:
-        required_fields.extend(['description', 'category'])
-
+    # Validate required fields
+    required_fields = ['objects']
     for field in required_fields:
         if field not in inventory:
             raise ValueError(f"Missing required field: {field}")
-        if not inventory[field]:  # Check for empty values
-            raise ValueError(f"Field '{field}' cannot be empty")
 
-    # Validate data types
-    if not isinstance(inventory['id'], (str, int)):
-        raise ValueError("'id' must be string or integer")
-    if not isinstance(inventory['name'], str):
-        raise ValueError("'name' must be string")
+    # Validate objects array
+    if not isinstance(inventory['objects'], list):
+        raise ValueError("'objects' must be a list")
 
-    if self.spec_version >= 2.0:
-        if not isinstance(inventory['description'], str):
-            raise ValueError("'description' must be string")
-        if not isinstance(inventory['category'], str):
-            raise ValueError("'category' must be string")
-
-    # Additional validation can be added based on specific requirements
+    # Validate each object in the inventory
+    for obj in inventory['objects']:
+        if not isinstance(obj, dict):
+            raise ValueError("Each object must be a dictionary")
+        
+        # Check required object fields based on spec version
+        required_obj_fields = ['id', 'type']
+        for field in required_obj_fields:
+            if field not in obj:
+                raise ValueError(f"Object missing required field: {field}")
 
     return True

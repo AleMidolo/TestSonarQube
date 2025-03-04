@@ -18,16 +18,11 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         की वैल्यू प्राप्त करता है और कुछ भी लौटाने के लिए स्वतंत्र है।
     :param handlers: हैंडलर फ़ंक्शन जो लौटाए गए Response ऑब्जेक्ट में पास किए जाते हैं।
     """
-    # Create message parameters
-    parameters = {
-        "n": n,
-        "qid": qid if qid >= 0 else self._last_qid
-    }
-    
-    # Create message with DISCARD type
+    # Create message with DISCARD command
     message = {
         "type": "DISCARD",
-        "parameters": parameters
+        "n": n,
+        "qid": qid
     }
     
     # Add hooks if provided
@@ -37,11 +32,10 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         message["hydration_hooks"] = hydration_hooks
         
     # Add any additional handlers
-    if handlers:
-        message["handlers"] = handlers
-        
+    message.update(handlers)
+    
     # Add message to output queue
     self._output_queue.append(message)
     
-    # Return self for method chaining
-    return self
+    # Return response object
+    return Response(message, self._output_queue)

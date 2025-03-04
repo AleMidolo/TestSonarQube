@@ -40,12 +40,12 @@ def mru_cache(maxsize=128, typed=False):
                 'maxsize': maxsize,
                 'currsize': len(cache),
                 'hits': sum(1 for _ in cache.values()),
-                'misses': wrapper.misses if hasattr(wrapper, 'misses') else 0
+                'misses': wrapper.calls - len(cache)
             }
-
-        wrapper.cache_info = cache_info
+        
         wrapper.cache = cache
-        wrapper.misses = 0
+        wrapper.cache_info = cache_info
+        wrapper.calls = 0
 
         return wrapper
     return decorator

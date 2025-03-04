@@ -4,9 +4,9 @@ def select_filenames_by_prefix(prefix, files):
     # Initialize empty list to store matching files
     matching_files = []
     
-    # Iterate through each file path
+    # Iterate through all files
     for file in files:
-        # Get the basename of the file
+        # Get basename of file
         basename = os.path.basename(file)
         
         # Check if basename starts with prefix

@@ -22,10 +22,10 @@ def update_last_applied_manifest_dict_from_resp(
             update_last_applied_manifest_dict_from_resp(
                 last_applied_manifest[field], value, response[field]
             )
-        # Handle lists
+        # Update lists
         elif isinstance(value, list) and isinstance(response[field], list):
             if len(value) > 0 and isinstance(value[0], dict):
-                # List contains dictionaries - handle recursively
+                # Handle list of dictionaries
                 if len(last_applied_manifest[field]) < len(response[field]):
                     last_applied_manifest[field].extend(
                         [{}] * (len(response[field]) - len(last_applied_manifest[field]))
@@ -35,8 +35,8 @@ def update_last_applied_manifest_dict_from_resp(
                         last_applied_manifest[field][i], value[0], response[field][i]
                     )
             else:
-                # List contains simple values - copy directly
+                # Handle simple lists
                 last_applied_manifest[field] = response[field]
-        # Handle simple values
         else:
+            # Update simple values
             last_applied_manifest[field] = response[field]

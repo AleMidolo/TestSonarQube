@@ -5,4 +5,6 @@ def gaussian(x):
     import math
     mu = 0.2  # mean
     sigma = 0.1  # standard deviation
-    return (1.0/(sigma*math.sqrt(2*math.pi))) * math.exp(-(x-mu)**2/(2*sigma**2))
+    
+    # Gaussian function formula
+    return (1.0/(sigma * math.sqrt(2*math.pi))) * math.exp(-(x-mu)**2 / (2*sigma**2))

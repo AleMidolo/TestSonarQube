@@ -4,42 +4,42 @@ def extend_cli(self, root_subparsers):
 
     :param subparser: वह सबपार्सर ऑब्जेक्ट जिसे विस्तारित करना है।
     """
-    # Add spec subcommand parser
+    # Create spec subparser
     spec_parser = root_subparsers.add_parser(
         'spec',
         help='Manage project specifications'
     )
 
-    # Create subparser for spec commands
+    # Add subcommands to spec parser
     spec_subparsers = spec_parser.add_subparsers(
-        title='spec commands',
+        title='Commands',
         dest='spec_command'
     )
 
     # Add init command
     init_parser = spec_subparsers.add_parser(
         'init',
-        help='Initialize a new spec file'
+        help='Initialize a new specification'
     )
     init_parser.add_argument(
-        '--template',
-        help='Template file to use for initialization'
+        '--name',
+        help='Name of the specification',
+        required=True
     )
 
     # Add validate command  
     validate_parser = spec_subparsers.add_parser(
         'validate',
-        help='Validate spec file'
+        help='Validate an existing specification'
     )
     validate_parser.add_argument(
-        'spec_file',
-        help='Path to spec file to validate'
+        '--path',
+        help='Path to specification file',
+        required=True
     )
 
-    # Add other common arguments
-    for p in [init_parser, validate_parser]:
-        p.add_argument(
-            '--verbose', '-v',
-            action='store_true',
-            help='Enable verbose output'
-        )
+    # Add list command
+    list_parser = spec_subparsers.add_parser(
+        'list',
+        help='List all specifications'
+    )

@@ -12,7 +12,7 @@ def find_roots(
     # Root nodes are subjects that are not objects of the property
     root_nodes = subjects - objects
     
-    # If roots set was provided, only include nodes from that set
+    # If roots set was provided, only keep nodes from that set
     if roots:
         root_nodes = root_nodes & roots
         
