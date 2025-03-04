@@ -4,8 +4,12 @@ def _create_converter(self) -> _converting._Converter:
 
     रिटर्न करता है पैरामीटर स्टाइल कन्वर्टर (:class:`._converting._Converter`)।
     """
-    return _converting._Converter(
-        style=self._style,
-        case=self._case,
-        separator=self._separator
-    )
+    # Create a new converter instance
+    converter = _converting._Converter()
+    
+    # Configure default conversion settings
+    converter.set_default_style('snake_case')
+    converter.enable_case_conversion(True)
+    converter.enable_special_char_handling(True)
+    
+    return converter

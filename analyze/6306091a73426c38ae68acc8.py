@@ -4,16 +4,15 @@ def list_of_file_names(settings_dirs, spec_option):
     """
     file_names = []
     
-    # Iterate through each directory path in settings_dirs
-    for dir_path in settings_dirs:
-        # Check if spec_option is a string
+    # Iterate through each directory in settings_dirs
+    for directory in settings_dirs:
+        # Check if spec_option is a string or list
         if isinstance(spec_option, str):
-            # Add file name with spec_option extension
-            file_names.append(f"{dir_path}/{spec_option}.ini")
-        # If spec_option is a list/tuple
-        elif isinstance(spec_option, (list, tuple)):
-            # Add file names for each option in spec_option
+            # Add single file name
+            file_names.append(f"{directory}/{spec_option}")
+        elif isinstance(spec_option, list):
+            # Add multiple file names
             for option in spec_option:
-                file_names.append(f"{dir_path}/{option}.ini")
+                file_names.append(f"{directory}/{option}")
                 
     return file_names

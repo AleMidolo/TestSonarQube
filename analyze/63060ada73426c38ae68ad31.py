@@ -8,36 +8,36 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param values_dict: तर्कों के साथ डिक्शनरी।
     """
     # Get parser configuration for this command
-    parser_config = self._get_parser_config(parser_name)
+    parser_dict = self.parser_dict.get(parser_name, {})
     
-    if not parser_config:
-        return
-        
-    # Iterate through arguments and convert types
-    for arg_name, arg_config in parser_config.items():
-        if arg_name in values_dict:
-            arg_type = arg_config.get('type')
+    # Iterate through all arguments in values_dict
+    for arg_name, value in values_dict.items():
+        # Skip if value is None
+        if value is None:
+            continue
             
-            # Convert value based on type
-            if arg_type == 'bool':
-                if isinstance(values_dict[arg_name], str):
-                    values_dict[arg_name] = values_dict[arg_name].lower() in ('true', 't', 'yes', 'y', '1')
-            elif arg_type == 'int':
-                try:
-                    values_dict[arg_name] = int(values_dict[arg_name])
-                except (ValueError, TypeError):
-                    pass
-            elif arg_type == 'float':
-                try:
-                    values_dict[arg_name] = float(values_dict[arg_name]) 
-                except (ValueError, TypeError):
-                    pass
-            elif arg_type == 'list':
-                if isinstance(values_dict[arg_name], str):
-                    values_dict[arg_name] = values_dict[arg_name].split(',')
-            elif arg_type == 'dict':
-                if isinstance(values_dict[arg_name], str):
-                    try:
-                        values_dict[arg_name] = eval(values_dict[arg_name])
-                    except:
-                        pass
+        # Get argument type from parser configuration
+        arg_type = parser_dict.get(arg_name, {}).get('type', str)
+        
+        try:
+            # Convert boolean strings
+            if arg_type == bool:
+                if isinstance(value, str):
+                    value = value.lower()
+                    if value in ('true', 't', 'yes', 'y', '1'):
+                        values_dict[arg_name] = True
+                    elif value in ('false', 'f', 'no', 'n', '0'):
+                        values_dict[arg_name] = False
+                    
+            # Convert numeric types        
+            elif arg_type in (int, float):
+                values_dict[arg_name] = arg_type(value)
+                
+            # Convert lists
+            elif arg_type == list:
+                if isinstance(value, str):
+                    values_dict[arg_name] = value.split(',')
+                    
+        except (ValueError, TypeError):
+            # Keep original value if conversion fails
+            continue

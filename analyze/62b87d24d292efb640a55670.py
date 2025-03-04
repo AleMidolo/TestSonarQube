@@ -16,7 +16,7 @@ def get_versions():
         return versions
         
     except Exception:
-        # Return default values if unable to get version info
+        # Return default values if unable to get actual versions
         return {
             'python': '3.x',
             'platform': 'unknown',

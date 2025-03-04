@@ -17,18 +17,17 @@ def xargs(
     if not varargs:
         return 0, b''
         
-    # Split varargs into chunks that fit within max command length
+    # Split varargs into chunks that fit within max length
     chunks = []
     current_chunk = []
-    current_length = sum(len(arg) + 1 for arg in cmd)
+    current_length = 0
     
     for arg in varargs:
         arg_length = len(arg) + 1  # +1 for space
         if current_length + arg_length > _max_length:
-            if current_chunk:
-                chunks.append(current_chunk)
+            chunks.append(current_chunk)
             current_chunk = [arg]
-            current_length = sum(len(arg) + 1 for arg in cmd) + arg_length
+            current_length = arg_length
         else:
             current_chunk.append(arg)
             current_length += arg_length
@@ -45,49 +44,47 @@ def xargs(
         batch = chunks[i:i + target_concurrency]
         
         for chunk in batch:
-            cmd_with_args = list(cmd) + chunk
-            
-            if color and sys.platform != 'win32' and hasattr(pty, 'openpty'):
-                # Use PTY for color output
+            if color and sys.platform != 'win32' and hasattr(os, 'openpty'):
                 master, slave = pty.openpty()
-                p = subprocess.Popen(
-                    cmd_with_args,
+                process = subprocess.Popen(
+                    (*cmd, *chunk),
                     stdout=slave,
                     stderr=slave,
                     **kwargs
                 )
                 os.close(slave)
-                processes.append((p, master))
+                processes.append((process, master))
             else:
-                p = subprocess.Popen(
-                    cmd_with_args,
+                process = subprocess.Popen(
+                    (*cmd, *chunk),
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     **kwargs
                 )
-                processes.append((p, None))
-                
-        # Wait for batch to complete
-        for p, master in processes:
+                processes.append((process, None))
+
+        # Wait for all processes in batch to complete
+        for process, master in processes:
             if master is not None:
                 # Read from PTY
-                try:
-                    while True:
-                        chunk = os.read(master, 1024)
-                        if not chunk:
+                while True:
+                    try:
+                        chunk_output = os.read(master, 1024)
+                        if not chunk_output:
                             break
-                        output += chunk
-                except OSError:
-                    pass
+                        output += chunk_output
+                    except OSError:
+                        break
                 os.close(master)
             else:
                 # Read from pipes
-                stdout, stderr = p.communicate()
+                stdout, stderr = process.communicate()
                 output += stdout + stderr
                 
-            retcode = p.wait()
-            max_retcode = max(max_retcode, retcode)
-            
+            retcode = process.wait()
+            if retcode > max_retcode:
+                max_retcode = retcode
+                
         processes = []
 
     return max_retcode, output

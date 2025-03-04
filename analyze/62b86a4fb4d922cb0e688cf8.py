@@ -23,7 +23,6 @@ def validate_value(value):
 
     # Validate the value against pattern
     if not re.match(pattern, value):
-        raise ValidationError("Invalid characters in input. Only alphanumeric characters, underscore, hyphen and dot are allowed.")
+        raise ValidationError("Invalid value format. Only alphanumeric characters, underscore, hyphen and dot are allowed.")
 
-    # Return validated value if all checks pass
-    return value
+    return True

@@ -10,9 +10,8 @@ def get_deprecated_args(self):
         'notitle': None,
         'sysop': None,
         'step': None,
+        'max': 'total',
+        'sysop': None,
         'async': None,
-        'followRedir': 'followRedirects',
-        'followRedirects': None,
-        'throttle': None,
     }
     return deprecated_args

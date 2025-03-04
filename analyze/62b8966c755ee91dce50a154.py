@@ -14,89 +14,77 @@ def isoparse(self, dt_str):
         'week_extended': r'(?P<year>\d{4})-W(?P<week>\d{2})(?:-(?P<weekday>\d))?'
     }
 
-    TIME_PATTERN = (
-        r'(?P<hour>[0-2]\d)(:?(?P<minute>[0-5]\d)(:?(?P<second>[0-5]\d)'
-        r'(?:[.,](?P<microsecond>\d{1,6})\d*)?)?)?'
-    )
+    TIME_PATTERN = r'(?P<hour>[0-2]\d)(?::?(?P<minute>[0-5]\d)(?::?(?P<second>[0-5]\d)(?:[.,](?P<microsecond>\d{1,6}))?)?)?' 
+    TZ_PATTERN = r'(?P<tzoffset>Z|[+-]\d{2}(?::?\d{2})?)?$'
 
-    TZ_PATTERN = r'(?P<tzoffset>Z|[+-]\d{2}:?\d{0,2})'
+    dt_str = dt_str.strip()
 
     # Split date and time parts
-    parts = dt_str.split('T' if 'T' in dt_str else ' ', 1)
+    parts = re.split('[T ]', dt_str, maxsplit=1)
     date_str = parts[0]
     time_str = parts[1] if len(parts) > 1 else ''
 
     # Parse date
-    date_dict = None
+    date_match = None
     for pattern in DATE_PATTERNS.values():
         match = re.match(pattern + '$', date_str)
         if match:
-            date_dict = match.groupdict()
+            date_match = match
             break
-    
-    if not date_dict:
+
+    if not date_match:
         raise ValueError("Invalid ISO format date")
 
-    # Convert date components
-    year = int(date_dict['year'])
-    
-    if 'month' in date_dict and date_dict['month']:
-        month = int(date_dict['month'])
-    else:
-        month = 1
+    date_parts = date_match.groupdict()
 
-    if 'week' in date_dict and date_dict['week']:
-        # Handle ISO week date format
-        week = int(date_dict['week'])
-        weekday = int(date_dict.get('weekday', '1'))
-        date_obj = datetime.strptime(f"{year}-W{week}-{weekday}", "%Y-W%W-%w").date()
-        day = date_obj.day
-    elif 'day' in date_dict and date_dict['day']:
-        day = int(date_dict['day'])
+    # Handle week format
+    if 'week' in date_parts:
+        year = int(date_parts['year'])
+        week = int(date_parts['week'])
+        weekday = int(date_parts.get('weekday', '1'))
+        dt = datetime.strptime(f"{year}-{week}-{weekday}", "%Y-%W-%w")
+        year, month, day = dt.year, dt.month, dt.day
     else:
-        day = 1
+        year = int(date_parts['year'])
+        month = int(date_parts.get('month', '1'))
+        day = int(date_parts.get('day', '1'))
 
-    # Parse time if present
+    # Initialize time components
     hour = minute = second = microsecond = 0
     tz = None
 
+    # Parse time if present
     if time_str:
-        time_parts = re.match(f"{TIME_PATTERN}({TZ_PATTERN})?$", time_str)
-        if not time_parts:
+        time_match = re.match(TIME_PATTERN + TZ_PATTERN, time_str)
+        if not time_match:
             raise ValueError("Invalid ISO format time")
         
-        time_dict = time_parts.groupdict()
+        time_parts = time_match.groupdict()
         
-        # Convert time components
-        hour = int(time_dict['hour'])
+        # Parse time components
+        hour = int(time_parts.get('hour', '0'))
         if hour == 24:  # Special case for midnight
             hour = 0
-            
-        if time_dict['minute']:
-            minute = int(time_dict['minute'])
+        minute = int(time_parts.get('minute', '0'))
+        second = int(time_parts.get('second', '0'))
         
-        if time_dict['second']:
-            second = int(time_dict['second'])
-            
-        if time_dict['microsecond']:
-            # Pad to 6 digits
-            microsecond = int(time_dict['microsecond'].ljust(6, '0'))
+        # Handle microseconds
+        if time_parts.get('microsecond'):
+            microsecond = int(time_parts['microsecond'].ljust(6, '0')[:6])
 
-        # Handle timezone
-        if time_dict.get('tzoffset'):
-            tz_str = time_dict['tzoffset']
-            if tz_str == 'Z':
+        # Parse timezone
+        tzoffset = time_parts.get('tzoffset')
+        if tzoffset:
+            if tzoffset == 'Z':
                 tz = tzutc()
             else:
                 # Parse timezone offset
-                match = re.match(r'([+-])(\d{2}):?(\d{2})?', tz_str)
-                if match:
-                    sign, hours, minutes = match.groups()
-                    offset = int(hours) * 3600
-                    if minutes:
-                        offset += int(minutes) * 60
-                    if sign == '-':
-                        offset = -offset
-                    tz = tzoffset(None, offset) if offset != 0 else tzutc()
+                tz_match = re.match(r'([+-])(\d{2})(?::?(\d{2}))?', tzoffset)
+                if tz_match:
+                    sign = 1 if tz_match.group(1) == '+' else -1
+                    tz_hour = int(tz_match.group(2))
+                    tz_minute = int(tz_match.group(3) or '0')
+                    offset = sign * (tz_hour * 60 + tz_minute) * 60
+                    tz = tzoffset(None, offset)
 
-    return datetime(year, month, day, hour, minute, second, microsecond, tzinfo=tz)
+    return datetime(year, month, day, hour, minute, second, microsecond, tz)

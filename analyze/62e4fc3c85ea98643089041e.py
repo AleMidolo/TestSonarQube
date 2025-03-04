@@ -7,7 +7,7 @@ def _inline_r_setup(code: str) -> str:
     options(digits.secs=3)  # Display milliseconds in times
     """
     
-    # Combine setup code with user code
+    # Combine setup code with input code
     full_code = setup_code + "\n" + code
     
     return full_code

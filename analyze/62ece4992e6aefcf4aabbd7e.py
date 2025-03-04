@@ -9,9 +9,6 @@ def _resolve_string(matcher):
     # यदि मान नहीं मिला और डिफ़ॉल्ट मान नहीं दिया गया
     if value is None and default is None:
         raise ValueError(f"Environment variable '{name}' not found and no default value provided")
-    
+
     # यदि मान नहीं मिला तो डिफ़ॉल्ट मान लौटाएं
-    if value is None:
-        return default
-        
-    return value
+    return value if value is not None else default

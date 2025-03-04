@@ -20,16 +20,16 @@ def deep_merge_nodes(nodes):
             hasattr(existing_value_node, 'value')):
             
             # Create dict of existing key-value pairs
-            existing_pairs = {k.value: (k,v) for k,v in existing_value_node.value}
+            existing_dict = {k.value: (k,v) for k,v in existing_value_node.value}
             
-            # Update with new key-value pairs
+            # Update with new values
             for k, v in value_node.value:
-                existing_pairs[k.value] = (k,v)
+                existing_dict[k.value] = (k,v)
                 
             # Create new merged mapping node
             merged_value = type(value_node)(
                 tag=value_node.tag,
-                value=list(existing_pairs.values())
+                value=list(existing_dict.values())
             )
             merged[key] = (key_node, merged_value)
             
@@ -37,5 +37,4 @@ def deep_merge_nodes(nodes):
         else:
             merged[key] = (key_node, value_node)
             
-    # Return merged nodes as list
     return list(merged.values())

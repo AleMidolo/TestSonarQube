@@ -18,7 +18,7 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     config_path.parent.mkdir(parents=True, exist_ok=True)
     
     # Write configuration to file with specified mode
-    with open(config_path, 'w', encoding='utf-8') as f:
+    with open(config_path, 'w') as f:
         f.write(rendered_config)
     
     # Set file permissions

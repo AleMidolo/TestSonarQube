@@ -26,4 +26,4 @@ def retrieve_diaspora_host_meta(host):
     except:
         pass
         
-    raise ConnectionError(f"Could not retrieve host-meta from {host}")
+    raise Exception(f"Could not retrieve host-meta from {host}")

@@ -15,16 +15,13 @@ def identify_request(request: RequestType) -> bool:
         if keyword in request_str:
             return True
             
-    # Check request type/structure if it has matrix-like properties
+    # Check if request has matrix-like structure
     try:
-        # Check if request is 2D array-like
-        if hasattr(request, 'shape') and len(request.shape) == 2:
-            return True
-        # Check if request is nested list/array    
-        elif isinstance(request, (list, tuple)) and \
-             len(request) > 0 and \
-             isinstance(request[0], (list, tuple)):
-            return True
+        # Check if request is iterable and has nested structure
+        if hasattr(request, '__iter__'):
+            first_elem = next(iter(request))
+            if hasattr(first_elem, '__iter__'):
+                return True
     except:
         pass
         

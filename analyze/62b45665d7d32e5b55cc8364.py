@@ -20,12 +20,11 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
             namespace, unknown = subparser.parse_known_args(remaining_args)
             parsed_args[name] = namespace
             
-            # Update remaining args to only those that weren't parsed
-            if unknown != remaining_args:
-                remaining_args = unknown
-                
+            # Update remaining args to only those that weren't recognized
+            remaining_args = unknown
+            
         except Exception:
-            # If parsing fails, continue to next subparser
+            # If parsing fails, skip this subparser
             continue
             
     return parsed_args, remaining_args
