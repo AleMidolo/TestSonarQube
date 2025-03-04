@@ -6,19 +6,21 @@ def to_csv(self, separator=", ", header=None):
     
     # Process each point in the graph
     for point in self.points:
-        # Convert coordinates to strings and join with separator
-        coords = separator.join(str(x) for x in point.coordinates)
+        # Convert coordinates to strings
+        coord_strs = [str(coord) for coord in point.coordinates]
         
-        # Convert values to strings and join with separator
+        # Convert values to strings
         if hasattr(point, 'values'):
-            values = separator.join(str(v) for v in point.values)
-            # Combine coordinates and values
-            line = coords + separator + values
+            if isinstance(point.values, (list, tuple)):
+                value_strs = [str(val) for val in point.values]
+            else:
+                value_strs = [str(point.values)]
         else:
-            line = coords
+            value_strs = []
             
-        # Add newline and append to result
+        # Combine coordinates and values with separator
+        line = separator.join(coord_strs + value_strs)
         result.append(line + "\n")
-    
-    # Join all lines and return
+        
+    # Return the complete CSV string
     return "".join(result)

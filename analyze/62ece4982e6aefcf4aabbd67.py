@@ -12,16 +12,15 @@ def vertex3tuple(vertices):
     n = len(vertices)
     
     for i in range(n):
-        # Get previous vertex (wrap around to end if at start)
-        prev = vertices[i-1] if i > 0 else vertices[n-1]
+        # 获取前一个点的索引
+        prev_idx = (i - 1) % n
+        # 获取当前点的索引
+        curr_idx = i
+        # 获取后一个点的索引
+        next_idx = (i + 1) % n
         
-        # Current vertex
-        curr = vertices[i]
-        
-        # Get next vertex (wrap around to start if at end) 
-        next = vertices[(i+1) % n]
-        
-        # Add tuple of 3 consecutive vertices
-        result.append((prev, curr, next))
+        # 创建包含3个点的元组
+        triple = (vertices[prev_idx], vertices[curr_idx], vertices[next_idx])
+        result.append(triple)
         
     return result

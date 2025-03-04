@@ -8,18 +8,23 @@ def cached(cache, key=hashkey, lock=None):
             k = key(*args, **kwargs)
             
             try:
-                # 尝试从缓存中获取结果
-                result = cache[k]
-                return result
+                # 如果缓存中存在结果,直接返回
+                return cache[k]
             except KeyError:
-                # 如果缓存中没有，则执行函数并缓存结果
-                if lock:
-                    with lock:
-                        result = func(*args, **kwargs)
-                        cache[k] = result
-                else:
-                    result = func(*args, **kwargs)
-                    cache[k] = result
+                pass  # 继续执行
+                
+            if lock is not None:
+                with lock:
+                    # 双重检查,避免重复计算
+                    try:
+                        return cache[k]
+                    except KeyError:
+                        # 计算结果并缓存
+                        cache[k] = result = func(*args, **kwargs)
+                        return result
+            else:
+                # 无锁情况下直接计算并缓存
+                cache[k] = result = func(*args, **kwargs)
                 return result
                 
         return wrapper

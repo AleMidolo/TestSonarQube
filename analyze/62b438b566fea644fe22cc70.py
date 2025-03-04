@@ -32,18 +32,14 @@ _borgmatic()
             COMPREPLY=( $(compgen -W "0 1 2 3" -- ${cur}) )
             return 0
             ;;
-        --log-file)
-            COMPREPLY=( $(compgen -f -- ${cur}) )
-            return 0
-            ;;
         *)
-            # 如果当前输入以破折号开头，提供选项补全
+            # 如果是以破折号开头，则提供通用选项
             if [[ ${cur} == -* ]] ; then
                 COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
                 return 0
             fi
             
-            # 否则提供命令补全
+            # 否则提供主要命令
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;

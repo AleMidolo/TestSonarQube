@@ -18,21 +18,25 @@ def validate_value(value):
         'email': r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
         'phone': r'^\+?1?\d{9,15}$',
         'url': r'^(http|https):\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(\/\S*)?$',
-        'date': r'^\d{4}-\d{2}-\d{2}$',
-        'time': r'^([01]?[0-9]|2[0-3]):[0-5][0-9]$'
+        'date': r'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$',
+        'ipv4': r'^(\d{1,3}\.){3}\d{1,3}$'
     }
 
     # 检查值是否为字符串
     if not isinstance(value, str):
         raise ValidationError("输入值必须是字符串类型")
 
+    # 检查值是否为空
+    if not value.strip():
+        raise ValidationError("输入值不能为空")
+
     # 尝试匹配所有模式
     valid = False
-    for pattern in patterns.values():
+    for pattern_name, pattern in patterns.items():
         if re.match(pattern, value):
             valid = True
             break
-    
+
     if not valid:
         raise ValidationError(f"输入值 '{value}' 不符合任何有效格式")
 

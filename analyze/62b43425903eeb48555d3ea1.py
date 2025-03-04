@@ -8,13 +8,13 @@ def _create_in_regex(self) -> Pattern:
     # 匹配格式: {param_name in [val1,val2,...]}
     pattern = r"""
     \{              # 开始大括号
-    ([^{}:\s]+)     # 参数名 (不包含大括号、冒号和空白字符)
-    \s+in\s+        # in 关键字
+    ([^{}:\s]+)     # 参数名 - 捕获组1
+    \s+in\s+        # in关键字
     \[              # 开始方括号
-    ([^\]]+)        # 值列表 (除了右方括号外的任何字符)
+    ([^\]]+)        # 值列表 - 捕获组2
     \]              # 结束方括号
     \}              # 结束大括号
     """
     
-    # 编译正则表达式并返回
+    # 编译正则表达式并返回Pattern对象
     return re.compile(pattern, re.VERBOSE)

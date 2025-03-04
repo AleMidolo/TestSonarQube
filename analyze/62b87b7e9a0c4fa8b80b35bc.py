@@ -7,34 +7,31 @@ def _update_context(self, context):
         context.error = {}
         
     # Map coordinate names to x,y,z
-    coord_map = {0: 'x', 1: 'y', 2: 'z'}
+    coord_map = {0:'x', 1:'y', 2:'z'}
     
     # Look for error fields
     for field in fields:
         if 'error' in field.lower():
-            # Extract base field name and error type
+            # Extract base coordinate name and error type
             parts = field.split('_')
-            if len(parts) >= 3 and parts[-2] == 'error':
-                base_field = parts[0]
-                error_type = parts[-1]  # low/high
+            if len(parts) >= 3 and parts[-1] in ['low', 'high']:
+                base_coord = parts[-2]
+                error_type = parts[-1]
                 
-                # Find index of base field
+                # Find index of base coordinate in fields
                 try:
-                    base_idx = fields.index(base_field)
-                    coord_name = coord_map.get(base_idx)
-                    
-                    if coord_name:
+                    coord_idx = fields.index(base_coord)
+                    if coord_idx <= 2:  # Only handle first 3 coordinates
+                        coord_name = coord_map[coord_idx]
+                        
                         # Create error entry if not exists
                         if coord_name not in context.error:
                             context.error[coord_name] = {}
                             
-                        # Add error field index
+                        # Store error field index
                         error_key = f"{coord_name}_{error_type}"
-                        field_idx = fields.index(field)
-                        context.error[coord_name][error_type] = {"index": field_idx}
-                        
+                        context.error[coord_name][error_type] = {"index": fields.index(field)}
                 except ValueError:
-                    # Base field not found, skip
                     continue
-                    
+    
     return context

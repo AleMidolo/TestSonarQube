@@ -4,7 +4,7 @@ def is_fill_request_seq(seq):
     
     # Helper function to check if an item is a FillRequest
     def is_fill_request(item):
-        # Assuming FillRequest is a class/type that exists in the codebase
+        # Assuming FillRequest is a class/type that represents fill requests
         try:
             return isinstance(item, FillRequest)
         except NameError:
@@ -22,10 +22,5 @@ def is_fill_request_seq(seq):
         return is_fill_request(seq)
         
     # Handle sequence case
-    has_fill_request = False
-    for item in seq:
-        if is_fill_request(item):
-            has_fill_request = True
-            break
-            
-    return has_fill_request
+    # Return True if any element is a FillRequest
+    return any(is_fill_request(item) for item in seq)

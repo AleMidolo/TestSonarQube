@@ -4,52 +4,46 @@ def extend_cli(self, root_subparsers):
 
     :param subparser: 要扩展的子解析器对象。
     """
-    # 创建一个新的子命令解析器
+    # 创建规范子命令解析器
     parser = root_subparsers.add_parser(
-        'standards',
-        help='Standards and specifications related commands'
+        'standard',
+        help='Standard code formatting and linting options'
     )
 
-    # 创建子命令的子解析器
-    subparsers = parser.add_subparsers(
-        title='Standards commands',
-        dest='standards_command'
+    # 添加规范相关的命令行参数
+    parser.add_argument(
+        '--style',
+        choices=['pep8', 'google', 'numpy'],
+        default='pep8',
+        help='Code style to enforce'
     )
 
-    # 添加列出标准的命令
-    list_parser = subparsers.add_parser(
-        'list',
-        help='List available standards'
-    )
-    list_parser.add_argument(
-        '--format',
-        choices=['text', 'json'],
-        default='text',
-        help='Output format'
+    parser.add_argument(
+        '--max-line-length',
+        type=int,
+        default=79,
+        help='Maximum allowed line length'
     )
 
-    # 添加查看标准详情的命令
-    view_parser = subparsers.add_parser(
-        'view',
-        help='View standard details'
-    )
-    view_parser.add_argument(
-        'standard_id',
-        help='ID of the standard to view'
+    parser.add_argument(
+        '--ignore',
+        nargs='+',
+        default=[],
+        help='List of error codes to ignore'
     )
 
-    # 添加验证标准的命令
-    validate_parser = subparsers.add_parser(
-        'validate',
-        help='Validate against a standard'
-    )
-    validate_parser.add_argument(
-        'standard_id',
-        help='ID of the standard to validate against'
-    )
-    validate_parser.add_argument(
-        'input_file',
-        help='File to validate'
+    parser.add_argument(
+        '--select',
+        nargs='+', 
+        default=[],
+        help='List of error codes to specifically check'
     )
 
-    return parser
+    parser.add_argument(
+        '--verbose',
+        action='store_true',
+        help='Increase output verbosity'
+    )
+
+    # 设置函数来处理该子命令
+    parser.set_defaults(func=self.handle_standard_command)

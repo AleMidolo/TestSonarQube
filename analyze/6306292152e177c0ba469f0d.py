@@ -16,7 +16,7 @@ def identify_request(request: RequestType) -> bool:
     if not isinstance(request['events'], list):
         return False
         
-    # Check if there are any events
+    # Check if events list is not empty
     if len(request['events']) == 0:
         return False
         

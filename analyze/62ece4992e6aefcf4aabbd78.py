@@ -31,7 +31,7 @@ def is_local(host):
         local_ip = socket.gethostbyname(socket.gethostname())
         if host == local_ip:
             return True
-    except:
+    except socket.gaierror:
         pass
         
     # 获取本机所有IP地址
@@ -39,7 +39,7 @@ def is_local(host):
         local_ips = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2]]
         if host in local_ips:
             return True
-    except:
+    except socket.gaierror:
         pass
         
     return False

@@ -3,15 +3,17 @@ def formatmany(
         sql: AnyStr,
         many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
 ) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
-    
     # Convert each params in many_params using the converter
-    converted_params = []
-    for params in many_params:
-        converted = self._converter.convert_many(sql, params)
-        converted_params.append(converted[1])
+    converted_params = [self._converter.convert_many(sql, params) for params in many_params]
+    
+    # If no params, return original sql and empty list
+    if not converted_params:
+        return sql, []
         
-        # Use the SQL from first conversion since it will be the same for all
-        if len(converted_params) == 1:
-            converted_sql = converted[0]
-            
-    return converted_sql, converted_params
+    # Get the first converted sql and params
+    converted_sql = converted_params[0][0]
+    
+    # Extract just the params from each conversion
+    params_list = [conv[1] for conv in converted_params]
+    
+    return converted_sql, params_list
