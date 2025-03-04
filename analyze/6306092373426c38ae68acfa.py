@@ -20,7 +20,8 @@ def get_spec_defaults(self):
         if hasattr(self.spec, 'config_file') and os.path.exists(self.spec.config_file):
             with open(self.spec.config_file) as f:
                 config = json.load(f)
-                for param_name, value in config.items():
-                    defaults[param_name] = value
-                    
+                for param_name in self.spec.parameters:
+                    if param_name in config:
+                        defaults[param_name] = config[param_name]
+                        
     return defaults

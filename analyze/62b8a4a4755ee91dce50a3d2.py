@@ -27,15 +27,15 @@ def _fromutc(self, dt):
     if dst_offset is None:
         return dt
 
-    # Calculate fold by checking if we're in a DST transition
+    # Adjust for DST if needed
     fold = 0
-    if self.is_ambiguous(dt):
-        # Get the previous UTC offset
-        prev_dt = dt - dst_offset
-        prev_offset = self.utcoffset(prev_dt)
+    if self._isdst(dt - dst_offset) != self._isdst(dt):
+        # We're in a DST transition period
+        utc = (dt - utc_offset).replace(tzinfo=None)
+        earlier = self._normalize(utc + self._dst_base_offset())
+        later = earlier + dst_offset
         
-        if prev_offset is not None:
-            # If current offset is less than previous, we're in fold=1
-            fold = 1 if utc_offset < prev_offset else 0
+        if later > dt:
+            fold = 1
 
     return dt.replace(fold=fold)

@@ -1,7 +1,7 @@
 def _c_optimizations_required():
     import os
     
-    pure_python = os.environ.get('PURE_PYTHON', '').lower()
+    pure_python = os.environ.get('PURE_PYTHON', '0').lower()
     
-    # Return True if C optimizations are required (PURE_PYTHON is not set to true/1)
-    return not pure_python in ('true', '1')
+    # Return True if C optimizations are required (PURE_PYTHON is falsy)
+    return pure_python not in ('1', 'true', 'yes', 'on')

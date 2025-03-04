@@ -9,10 +9,9 @@ def validate_from_content(cls, spec_content=None):
     """
     if spec_content is None:
         raise IRValidatorException("No spec content provided")
-        
+
     try:
         # Try to load YAML content
-        import yaml
         yaml_content = yaml.safe_load(spec_content)
         
         if not isinstance(yaml_content, dict):

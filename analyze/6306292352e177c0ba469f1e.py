@@ -8,7 +8,7 @@ def process_text_links(text):
     url_pattern = r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
     
     # Regular expression for finding HTML links
-    html_link_pattern = r'<a[^>]*>.*?</a>'
+    html_link_pattern = r'<a[^>]*>(.*?)<\/a>'
     
     # First process existing HTML links
     def add_attributes(match):
@@ -26,7 +26,7 @@ def process_text_links(text):
             url = 'http://' + url
         return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{match.group(0)}</a>'
     
-    # Only process URLs that aren't already part of an HTML link
+    # Only linkify URLs that aren't already part of an HTML link
     parts = re.split(html_link_pattern, text)
     for i in range(0, len(parts), 2):
         parts[i] = re.sub(url_pattern, linkify, parts[i])

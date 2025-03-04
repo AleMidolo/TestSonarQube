@@ -23,14 +23,24 @@ def _convert_non_cli_args(self, parser_name, values_dict):
             # Convert boolean string values
             if arg_type == bool:
                 if isinstance(value, str):
-                    values_dict[arg_name] = value.lower() in ('true', 'yes', '1', 'on')
-            # Convert numeric types        
+                    values_dict[arg_name] = value.lower() in ('true', 't', 'yes', 'y', '1')
+            # Convert numeric types
             elif arg_type in (int, float):
                 values_dict[arg_name] = arg_type(value)
-            # Convert lists
-            elif arg_type == list and isinstance(value, str):
-                values_dict[arg_name] = value.split(',')
-                
-        except (ValueError, TypeError):
+            # Convert list types
+            elif arg_type == list:
+                if isinstance(value, str):
+                    values_dict[arg_name] = value.split(',')
+            # Convert dict types
+            elif arg_type == dict:
+                if isinstance(value, str):
+                    try:
+                        values_dict[arg_name] = eval(value)
+                    except:
+                        # If eval fails, try to parse as key=value pairs
+                        pairs = value.split(',')
+                        values_dict[arg_name] = dict(pair.split('=') for pair in pairs)
+                        
+        except (ValueError, TypeError, SyntaxError):
             # If conversion fails, keep original string value
             continue

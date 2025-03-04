@@ -26,6 +26,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         # Parse the JSON response
         data = response.json()
         
+        # Extract relevant information
         result = {
             'handle': handle,
             'host': host,
@@ -36,23 +37,24 @@ def retrieve_and_parse_diaspora_webfinger(handle):
             'pubkey': None
         }
         
-        # Extract relevant links and properties
+        # Parse links
         for link in data.get('links', []):
             rel = link.get('rel', '')
+            href = link.get('href', '')
             
             if rel == 'http://microformats.org/profile/hcard':
-                result['profile_url'] = link.get('href')
+                result['profile_url'] = href
             elif rel == 'http://schemas.google.com/g/2010#updates-from':
-                result['atom_url'] = link.get('href') 
+                result['atom_url'] = href
             elif rel == 'salmon':
-                result['salmon_url'] = link.get('href')
+                result['salmon_url'] = href
                 
         # Get additional properties
-        for prop in data.get('properties', {}).items():
-            if 'guid' in prop[0]:
-                result['guid'] = prop[1]
-            elif 'pubkey' in prop[0]:
-                result['pubkey'] = prop[1]
+        for prop in data.get('properties', {}):
+            if prop.endswith('#guid'):
+                result['guid'] = data['properties'][prop]
+            elif prop.endswith('#pubkey'):
+                result['pubkey'] = data['properties'][prop]
                 
         return result
         

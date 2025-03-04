@@ -12,7 +12,7 @@ def test_tag(tag: str) -> bool:
         return False
         
     # Check if tag starts or ends with hyphen
-    if tag[0] == '-' or tag[-1] == '-':
+    if tag.startswith('-') or tag.endswith('-'):
         return False
         
     # Check if tag has consecutive hyphens

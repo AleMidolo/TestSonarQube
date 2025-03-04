@@ -14,11 +14,8 @@ def _normalizeargs(sequence, output=None):
         if isinstance(arg, (list, tuple)):
             _normalizeargs(arg, output)
         elif hasattr(arg, 'interfaces'):
-            # If arg is a Declaration, expand its interfaces
             _normalizeargs(arg.interfaces, output)
         else:
-            # Individual interface or implements spec
-            if arg not in output:
-                output.append(arg)
-                
+            output.append(arg)
+            
     return output

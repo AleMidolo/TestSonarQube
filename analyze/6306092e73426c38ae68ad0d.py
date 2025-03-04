@@ -26,14 +26,12 @@ def create_complex_argumet_type(self, subcommand, type_name, option_name, spec_o
             if not re.match(spec_option['pattern'], value):
                 raise ValueError(f"Value {value} does not match pattern for {option_name}")
                 
-        if 'min_length' in spec_option:
-            if len(value) < spec_option['min_length']:
-                raise ValueError(f"Value {value} is shorter than minimum length for {option_name}")
-                
-        if 'max_length' in spec_option:
-            if len(value) > spec_option['max_length']:
-                raise ValueError(f"Value {value} is longer than maximum length for {option_name}")
-        
+        if 'min_length' in spec_option and len(value) < spec_option['min_length']:
+            raise ValueError(f"Value {value} is shorter than minimum length for {option_name}")
+            
+        if 'max_length' in spec_option and len(value) > spec_option['max_length']:
+            raise ValueError(f"Value {value} is longer than maximum length for {option_name}")
+            
         return value
         
     # Add string representation method

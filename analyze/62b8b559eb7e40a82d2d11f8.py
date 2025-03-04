@@ -16,13 +16,13 @@ def minimalBases(classes):
             if issubclass(r, c):
                 redundant = True
                 break
-            # Replace any classes that this class covers
+            # Replace any classes that are subclasses of c with c
             elif issubclass(c, r):
                 result[result.index(r)] = c
                 redundant = True
                 break
-                
-        # Add non-redundant classes
+        
+        # Add class if not redundant
         if not redundant:
             result.append(c)
             

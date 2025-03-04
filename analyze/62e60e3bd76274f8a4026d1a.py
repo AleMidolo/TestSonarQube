@@ -14,10 +14,9 @@ def from_raw_values(cls, values):
     # Add each raw value to the bookmarks object
     for value in values:
         # Strip any whitespace and validate the value is not empty
-        cleaned_value = value.strip()
-        if cleaned_value:
-            # Add the cleaned value to the bookmarks collection
-            # Assuming the class has an internal collection to store bookmarks
-            bookmarks._bookmarks.add(cleaned_value)
+        value = value.strip()
+        if value:
+            # Add the raw value to the bookmarks collection
+            bookmarks._bookmarks.add(value)
             
     return bookmarks

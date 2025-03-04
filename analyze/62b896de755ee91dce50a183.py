@@ -60,7 +60,5 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         else:
             return res
 
-    except (ValueError, OverflowError) as e:
+    except (TypeError, ValueError, OverflowError) as e:
         raise ParserError(str(e))
-    except Exception as e:
-        raise ParserError(f"Unknown string format: {timestr}")

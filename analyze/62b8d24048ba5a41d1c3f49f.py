@@ -9,55 +9,49 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     algorithm with a per-item time-to-live (TTL) value.
     """
     def decorator(func):
-        # Create cache as OrderedDict to maintain LRU order
+        # Create cache as ordered dictionary
         cache = OrderedDict()
-        # Store timestamps for each key
-        timestamps = {}
-
+        
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # Create cache key based on args and kwargs
+            # Create cache key based on args
             key = str(args)
-            if kwargs:
-                key += str(sorted(kwargs.items()))
             if typed:
                 key += str(tuple(type(arg) for arg in args))
-                if kwargs:
-                    key += str(tuple(type(val) for val in kwargs.values()))
-
-            current_time = timer()
-
-            # Check if key exists and hasn't expired
+            if kwargs:
+                key += str(sorted(kwargs.items()))
+                if typed:
+                    key += str(tuple(type(v) for v in kwargs.values()))
+                    
+            # Get current time
+            now = timer()
+            
+            # Check if key in cache and not expired
             if key in cache:
-                if current_time - timestamps[key] < ttl:
-                    # Move accessed item to end (most recently used)
+                result, timestamp = cache[key]
+                if now - timestamp <= ttl:
+                    # Move to end (most recently used)
                     cache.move_to_end(key)
-                    return cache[key]
+                    return result
                 else:
                     # Remove expired item
                     del cache[key]
-                    del timestamps[key]
-
-            # Compute new value
+                    
+            # Compute new result
             result = func(*args, **kwargs)
-
-            # Remove oldest item if cache is full
-            if maxsize > 0 and len(cache) >= maxsize:
-                oldest = next(iter(cache))
-                del cache[oldest]
-                del timestamps[oldest]
-
-            # Add new value to cache
-            cache[key] = result
-            timestamps[key] = current_time
+            
+            # Add to cache
+            cache[key] = (result, now)
+            
+            # Remove oldest items if cache too large
+            while len(cache) > maxsize:
+                cache.popitem(last=False)
+                
             return result
-
+            
         # Add cache clear method
-        def clear_cache():
-            cache.clear()
-            timestamps.clear()
-
-        wrapper.clear_cache = clear_cache
+        wrapper.cache_clear = cache.clear
+        
         return wrapper
-
+        
     return decorator

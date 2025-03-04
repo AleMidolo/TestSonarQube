@@ -17,22 +17,24 @@ def hydrate_time(nanoseconds, tz=None):
     seconds = int(total_seconds % 60)
     microseconds = int(remaining_nanos // 1000)
 
-    # Handle timezone if provided
+    # If timezone is provided, create timezone object
     if tz is not None:
-        # Convert timezone offset to timedelta
         if isinstance(tz, int):
             tz = timezone(timedelta(seconds=tz))
         elif isinstance(tz, str):
-            # Parse timezone string (assuming format like '+HH:MM' or '-HH:MM')
-            sign = 1 if tz[0] == '+' else -1
+            # Handle timezone string format like '+01:00'
             hours_offset = int(tz[1:3])
-            minutes_offset = int(tz[4:6]) if len(tz) > 4 else 0
-            tz = timezone(timedelta(hours=sign * hours_offset, 
-                                  minutes=sign * minutes_offset))
+            minutes_offset = int(tz[4:6])
+            total_seconds = hours_offset * 3600 + minutes_offset * 60
+            if tz[0] == '-':
+                total_seconds = -total_seconds
+            tz = timezone(timedelta(seconds=total_seconds))
 
     # Create and return time object
-    return time(hour=hours % 24, 
-               minute=minutes, 
-               second=seconds,
-               microsecond=microseconds,
-               tzinfo=tz)
+    return time(
+        hour=hours % 24,
+        minute=minutes,
+        second=seconds,
+        microsecond=microseconds,
+        tzinfo=tz
+    )

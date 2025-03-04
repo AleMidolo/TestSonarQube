@@ -5,8 +5,13 @@ def scale(self, other=None, recompute=False):
             return self._scale
             
         # Compute scale by integrating histogram
-        self._scale = sum(self.values())
-        return self._scale
+        scale = 0.0
+        for bin_content in self.values():
+            scale += bin_content
+            
+        # Store computed scale
+        self._scale = scale
+        return scale
         
     else:
         # Validate other is a float
@@ -20,10 +25,10 @@ def scale(self, other=None, recompute=False):
         if current_scale == 0:
             raise LenaValueError("Cannot rescale histogram with zero scale")
             
-        # Rescale histogram values
+        # Rescale histogram by multiplying all bins by ratio
         scale_factor = other / current_scale
-        for key in self:
-            self[key] *= scale_factor
+        for bin in self:
+            self[bin] *= scale_factor
             
         # Update stored scale
         self._scale = other

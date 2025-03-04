@@ -12,14 +12,17 @@ def next_version(version):
     nums = [int(p) for p in parts]
     
     # Start from rightmost digit and increment
-    i = len(nums) - 1
-    while i >= 0:
+    for i in range(len(nums)-1, -1, -1):
         nums[i] += 1
-        if nums[i] < 10 ** lengths[i]:  # No overflow
+        # If no carry needed, we're done
+        if nums[i] < 10 ** lengths[i]:
             break
+        # Carry to next digit
         nums[i] = 0
-        i -= 1
-        
+        # If we're at leftmost digit, extend length
+        if i == 0:
+            lengths[i] += 1
+            
     # Convert back to strings with original zero padding
     result = []
     for num, length in zip(nums, lengths):
