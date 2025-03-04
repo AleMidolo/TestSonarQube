@@ -14,11 +14,10 @@ def directlyProvidedBy(object): # pylint:disable=redefined-builtin
         # If no specification exists, return empty declaration
         return Provides(type(object))
         
-    # If it's a class, we need to remove class-level declarations
+    # If it's a class, remove class-level declarations
     if isinstance(object, type):
         implements = provides._implements
         if implements is not None:
-            # Remove class declarations to get only direct declarations
             provides = provides - implements
-            
+
     return provides

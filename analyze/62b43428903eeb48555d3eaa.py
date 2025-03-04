@@ -1,7 +1,7 @@
 def formatmany(
-    self,
-    sql: AnyStr,
-    many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
+        self,
+        sql: AnyStr,
+        many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
 ) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
     
     # Convert params to list for processing
@@ -16,53 +16,64 @@ def formatmany(
     # Check if named parameters (dict) or ordinal parameters (sequence)
     is_named = isinstance(first_param, dict)
     
-    # Initialize output params list
-    out_params = []
-    
-    # Process each parameter set
-    for params in params_list:
-        if is_named:
-            # For named parameters
-            if not isinstance(params, dict):
-                raise TypeError("All parameters must be dictionaries for named style")
+    # Convert SQL and params based on parameter style
+    if is_named:
+        # For named parameters
+        # Replace :param or %(param)s with ? or $n based on out_style
+        param_names = first_param.keys()
+        converted_sql = sql
+        
+        for i, name in enumerate(param_names, start=1):
+            if isinstance(sql, str):
+                converted_sql = converted_sql.replace(f":{name}", 
+                    "?" if self.out_style == "qmark" else f"${i}")
+                converted_sql = converted_sql.replace(f"%({name})s",
+                    "?" if self.out_style == "qmark" else f"${i}")
+            else:
+                # For bytes
+                name_bytes = str(name).encode()
+                converted_sql = converted_sql.replace(b":" + name_bytes,
+                    b"?" if self.out_style == "qmark" else str(f"${i}").encode())
+                converted_sql = converted_sql.replace(b"%" + name_bytes + b")s",
+                    b"?" if self.out_style == "qmark" else str(f"${i}").encode())
+                    
+        # Convert parameters to list format
+        converted_params = []
+        for param_dict in params_list:
+            ordered_params = [param_dict[name] for name in param_names]
+            if self.out_style == "qmark":
+                converted_params.append(ordered_params)
+            else:
+                converted_params.append(dict(enumerate(ordered_params, start=1)))
                 
-            # Convert parameter names to output style
-            out_param = {}
-            for key, value in params.items():
-                if isinstance(key, int):
-                    # Convert int keys to string
-                    out_param[str(key)] = value
-                else:
-                    out_param[key] = value
-            out_params.append(out_param)
-            
-        else:
-            # For ordinal parameters
-            if not isinstance(params, (list, tuple)):
-                raise TypeError("All parameters must be sequences for ordinal style")
-                
-            # Convert to list and append
-            out_params.append(list(params))
-            
-    # Convert parameter style in SQL if needed
-    if isinstance(sql, str):
-        # Handle string SQL
-        if is_named:
-            # Convert named parameters from :name to %(name)s style
-            sql = self._convert_named_params(sql)
-        else:
-            # Convert ordinal parameters from ? to %s style 
-            sql = sql.replace('?', '%s')
     else:
-        # Handle bytes SQL
-        if is_named:
-            sql = self._convert_named_params(sql.decode()).encode()
+        # For ordinal parameters
+        # Replace ? or $n with new style
+        converted_sql = sql
+        param_count = len(first_param)
+        
+        if isinstance(sql, str):
+            if self.out_style == "qmark":
+                converted_sql = converted_sql.replace("$", "?")
+            else:
+                for i in range(param_count, 0, -1):
+                    converted_sql = converted_sql.replace("?", f"${i}")
         else:
-            sql = sql.replace(b'?', b'%s')
+            # For bytes
+            if self.out_style == "qmark":
+                converted_sql = converted_sql.replace(b"$", b"?")
+            else:
+                for i in range(param_count, 0, -1):
+                    converted_sql = converted_sql.replace(b"?", str(f"${i}").encode())
+                    
+        # Convert parameters
+        if self.out_style == "qmark":
+            converted_params = list(params_list)  # Keep as list of sequences
+        else:
+            # Convert to numbered dict format
+            converted_params = [
+                dict(enumerate(param_seq, start=1)) 
+                for param_seq in params_list
+            ]
             
-    return sql, out_params
-
-def _convert_named_params(self, sql: str) -> str:
-    """Helper method to convert :name style parameters to %(name)s style"""
-    import re
-    return re.sub(r':([a-zA-Z_][a-zA-Z0-9_]*)', r'%(\1)s', sql)
+    return converted_sql, converted_params

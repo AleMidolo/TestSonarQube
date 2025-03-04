@@ -15,37 +15,43 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     
     # Add mode
     parameters["mode"] = mode
-
-    # Add optional parameters if provided
-    if bookmarks is not None:
-        parameters["bookmarks"] = list(bookmarks)
     
-    if metadata is not None:
+    # Add bookmarks if provided
+    if bookmarks:
+        parameters["bookmarks"] = list(bookmarks)
+        
+    # Add metadata if provided
+    if metadata:
         parameters["metadata"] = metadata
         
+    # Add timeout if provided
     if timeout is not None:
         parameters["timeout"] = timeout
         
+    # Add database if provided
     if db is not None:
         parameters["db"] = db
         
+    # Add impersonated user if provided
     if imp_user is not None:
         parameters["imp_user"] = imp_user
+        
+    # Add dehydration hooks if provided
+    if dehydration_hooks is not None:
+        parameters["dehydration_hooks"] = dehydration_hooks
+        
+    # Add hydration hooks if provided 
+    if hydration_hooks is not None:
+        parameters["hydration_hooks"] = hydration_hooks
 
-    # Create message with BEGIN command and parameters
+    # Create BEGIN message
     message = {
         "type": "BEGIN",
         "parameters": parameters
     }
     
-    # Add hooks if provided
-    if dehydration_hooks:
-        message["dehydration_hooks"] = dehydration_hooks
-    if hydration_hooks:
-        message["hydration_hooks"] = hydration_hooks
-
     # Add message to output queue
-    self._append(message)
-
-    # Create and return Response object with handlers
-    return Response(handlers)
+    self._append(message, **handlers)
+    
+    # Return Response object
+    return Response(self, **handlers)

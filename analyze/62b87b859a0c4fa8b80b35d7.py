@@ -26,4 +26,4 @@ def to_csv(self, separator=",", header=None):
         result.append(point_str)
         
     # Join all lines with newlines
-    return '\n'.join(result)
+    return "\n".join(result)

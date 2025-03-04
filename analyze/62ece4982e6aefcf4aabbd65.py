@@ -8,11 +8,11 @@ def parser_flags(parser):
         if action.dest == 'help':
             continue
             
-        # Get all option strings (flags) for this action
+        # Get all option strings (flags) for this argument
         for opt in action.option_strings:
             # Only include flags that start with '-'
             if opt.startswith('-'):
                 flags.append(opt)
                 
-    # Return flags joined by spaces
+    # Return space-separated string of flags
     return ' '.join(sorted(flags))

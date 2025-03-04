@@ -28,10 +28,10 @@ def is_local(host):
             parts = host.split('.')
             if len(parts) == 4:
                 for part in parts:
-                    if not (part.isdigit() and 0 <= int(part) <= 255):
+                    if not (0 <= int(part) <= 255):
                         return False
                 return True
-        except:
+        except ValueError:
             return False
             
     return False

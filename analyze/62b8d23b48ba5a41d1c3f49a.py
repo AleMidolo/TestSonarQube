@@ -39,7 +39,6 @@ def mru_cache(maxsize=128, typed=False):
             return {
                 'maxsize': maxsize,
                 'currsize': len(cache),
-                'hits': sum(1 for _ in cache),
                 'typed': typed
             }
         wrapper.cache_info = cache_info
@@ -56,5 +55,5 @@ def mru_cache(maxsize=128, typed=False):
         func = maxsize
         maxsize = 128
         return decorator(func)
-    
+
     return decorator

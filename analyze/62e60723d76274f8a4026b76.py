@@ -4,12 +4,22 @@ def from_ticks(cls, ticks, tz=None):
         
     # Convert nanoseconds to time components
     nanoseconds = ticks % 1000
-    microseconds = (ticks // 1000) % 1000
-    total_seconds = ticks // 1000000
+    ticks //= 1000
     
+    microseconds = ticks % 1000
+    ticks //= 1000
+    
+    milliseconds = ticks % 1000
+    ticks //= 1000
+    
+    total_seconds = ticks
     hours = total_seconds // 3600
-    minutes = (total_seconds % 3600) // 60
+    total_seconds %= 3600
+    minutes = total_seconds // 60
     seconds = total_seconds % 60
-    
-    # Create new Time object with calculated components
-    return cls(hours, minutes, seconds, microseconds, nanoseconds, tz)
+
+    # Create time object with calculated components
+    return cls(hours, minutes, seconds, 
+              microseconds=microseconds + milliseconds*1000,
+              nanoseconds=nanoseconds,
+              tzinfo=tz)

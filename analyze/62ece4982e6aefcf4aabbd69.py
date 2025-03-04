@@ -9,13 +9,12 @@ def _replace_register(flow_params, register_number, register_value):
     - register_number: वह रजिस्टर नंबर जिसमें मान संग्रहीत किया जाएगा  
     - register_value: वह कुंजी जिसे रजिस्टर नंबर द्वारा बदल दिया जाएगा  
     """
-    # Create a copy of the flow parameters dictionary
-    new_flow_params = flow_params.copy()
+    # रजिस्टर मान को खोजें
+    if register_value in flow_params:
+        value = flow_params[register_value]
+        # पुरानी कुंजी को हटाएं
+        del flow_params[register_value]
+        # नई कुंजी के साथ मान जोड़ें
+        flow_params[f'R{register_number}'] = value
     
-    # Replace the register_value key with the register number
-    if register_value in new_flow_params:
-        value = new_flow_params[register_value]
-        del new_flow_params[register_value]
-        new_flow_params[f'R{register_number}'] = value
-        
-    return new_flow_params
+    return flow_params

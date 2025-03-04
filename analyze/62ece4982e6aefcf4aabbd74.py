@@ -25,7 +25,5 @@ def prepare_repository_from_archive(
     else:
         raise ValueError(f"Unsupported archive format: {archive_path}")
 
-    # Convert temp directory path to file URL format
-    repo_url = Path(temp_dir).as_uri()
-    
-    return repo_url
+    # Return file:// URL pointing to extracted repository
+    return f"file://{temp_dir}"

@@ -1,11 +1,11 @@
 def vertex3tuple(vertices):
-    # Empty list to store 3-tuples
+    # Create list to store 3-tuples
     tuples = []
     
-    # Get length of vertices
+    # Get number of vertices
     n = len(vertices)
     
-    # Iterate through each vertex
+    # For each vertex
     for i in range(n):
         # Get previous vertex (wrap around to end if at start)
         prev = vertices[(i-1) % n]
@@ -16,10 +16,7 @@ def vertex3tuple(vertices):
         # Get next vertex (wrap around to start if at end) 
         next = vertices[(i+1) % n]
         
-        # Create 3-tuple with previous, current and next vertex
-        triple = prev + curr + next
-        
-        # Add to list
-        tuples.append(triple)
+        # Add tuple of (prev, curr, next)
+        tuples.append(prev + curr + next)
         
     return tuples

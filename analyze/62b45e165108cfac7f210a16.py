@@ -13,8 +13,8 @@ def validate_as_prior_version(self, prior):
         if item_id not in self.inventory:
             return False
             
-        # Check that quantities have not decreased
-        if self.inventory[item_id] < prior.inventory[item_id]:
+        # Check that quantities only increase
+        if prior.inventory[item_id] > self.inventory[item_id]:
             return False
             
     return True

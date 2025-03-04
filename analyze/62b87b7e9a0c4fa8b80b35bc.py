@@ -7,29 +7,28 @@ def _update_context(self, context):
         context.error = {}
 
     # Map coordinate names to x,y,z
-    coord_names = ['x', 'y', 'z']
+    coord_map = {0:'x', 1:'y', 2:'z'}
     
-    # Look for error fields and update context
+    # Look for error fields and add to context
     for field in field_names:
         # Check if field name contains 'error'
         if 'error' in field.lower():
-            # Extract base name before '_error'
-            base = field.split('_error')[0].lower()
+            # Extract coordinate name from error field
+            # e.g. error_E_low -> E
+            coord = field.split('_')[1]
             
             # Map to x,y,z if possible
-            for i, coord in enumerate(coord_names):
-                if base == coord:
-                    base = coord
-                    break
-                    
-            # Get index of this field
-            idx = field_names.index(field)
+            try:
+                coord_idx = field_names.index(coord)
+                if coord_idx < 3:  # Only map first 3 coordinates
+                    coord = coord_map[coord_idx]
+            except:
+                pass
+                
+            # Add error field index to context
+            error_name = f"{coord}_low" if "low" in field.lower() else f"{coord}_high"
+            if error_name not in context.error:
+                context.error[error_name] = {}
+            context.error[error_name]["index"] = field_names.index(field)
             
-            # Add to error context
-            if base not in context.error:
-                context.error[base] = {}
-            context.error[base]['index'] = idx
-
-    # Preserve existing values in context.value
-    if hasattr(context, 'value'):
-        pass
+    return context

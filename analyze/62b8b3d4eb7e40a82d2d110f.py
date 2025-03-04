@@ -16,5 +16,5 @@ def _should_attempt_c_optimizations():
 
     # Return True if we should use C optimizations:
     # - Not running on PyPy
-    # - PURE_PYTHON is not set to a "truthy" value
+    # - PURE_PYTHON environment variable is not set to a truthy value
     return not (is_pypy or use_pure_python)

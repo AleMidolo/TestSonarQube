@@ -19,33 +19,33 @@ def absorb(self, args):
                 
                 # Check absorption cases
                 # A & (A | B) = A
-                if (expr1.op == '&' and 
-                    expr2.op == '|' and
-                    expr1.left in [expr2.left, expr2.right]):
-                    result[i] = expr1.left
-                    changed = True
-                    
-                # A | (A & B) = A    
-                elif (expr1.op == '|' and
-                      expr2.op == '&' and 
-                      expr1.left in [expr2.left, expr2.right]):
-                    result[i] = expr1.left
-                    changed = True
-                    
+                if expr1.is_and() and expr2.is_or():
+                    if expr1 in expr2.args:
+                        result[j] = expr1
+                        changed = True
+                        
+                # A | (A & B) = A        
+                elif expr1.is_or() and expr2.is_and():
+                    if expr1 in expr2.args:
+                        result[j] = expr1
+                        changed = True
+                
+                # Check negative absorption cases
                 # A & (~A | B) = A & B
-                elif (expr1.op == '&' and
-                      expr2.op == '|' and
-                      expr2.left.op == '~' and
-                      expr2.left.expr == expr1.left):
-                    result[i] = Expression('&', expr1.left, expr2.right)
-                    changed = True
-                    
+                if expr1.is_and() and expr2.is_or():
+                    if expr1.negate() in expr2.args:
+                        new_expr = expr1 & expr2.args[1] 
+                        result[j] = new_expr
+                        changed = True
+                        
                 # A | (~A & B) = A | B
-                elif (expr1.op == '|' and
-                      expr2.op == '&' and
-                      expr2.left.op == '~' and
-                      expr2.left.expr == expr1.left):
-                    result[i] = Expression('|', expr1.left, expr2.right)
-                    changed = True
-                    
+                elif expr1.is_or() and expr2.is_and():
+                    if expr1.negate() in expr2.args:
+                        new_expr = expr1 | expr2.args[1]
+                        result[j] = new_expr
+                        changed = True
+                        
+        # Remove any duplicates
+        result = list(set(result))
+                        
     return result

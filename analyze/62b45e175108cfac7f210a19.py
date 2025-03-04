@@ -8,33 +8,34 @@ def validate_fixity(self, fixity, manifest_files):
     if not isinstance(fixity, dict):
         return False
         
-    # Check that all required keys exist
+    # Check if all required keys exist in fixity block
     required_keys = ['message_digest_algorithm', 'message_digests']
     if not all(key in fixity for key in required_keys):
         return False
         
-    # Check message digest algorithm is string
-    if not isinstance(fixity['message_digest_algorithm'], str):
-        return False
-        
-    # Check message digests is list
+    # Check if message_digests is a list
     if not isinstance(fixity['message_digests'], list):
         return False
         
-    # Get all filenames referenced in fixity block
-    fixity_files = set()
+    # Check each message digest entry
     for digest in fixity['message_digests']:
+        # Verify digest structure
         if not isinstance(digest, dict):
             return False
-        if 'filepath' not in digest or 'message_digest' not in digest:
+            
+        if 'file_path' not in digest or 'hash' not in digest:
             return False
-        fixity_files.add(digest['filepath'])
-        
-    # Convert manifest files to set for comparison
-    manifest_files = set(manifest_files)
-    
-    # Check that all files in fixity block are in manifest
-    if not fixity_files.issubset(manifest_files):
-        return False
-        
+            
+        # Check if referenced file exists in manifest
+        if digest['file_path'] not in manifest_files:
+            return False
+            
+        # Validate hash format based on algorithm
+        if fixity['message_digest_algorithm'].lower() == 'md5':
+            if not len(digest['hash']) == 32:
+                return False
+        elif fixity['message_digest_algorithm'].lower() == 'sha256':
+            if not len(digest['hash']) == 64:
+                return False
+                
     return True

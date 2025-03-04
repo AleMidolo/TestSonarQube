@@ -23,7 +23,7 @@ def extend_cli(self, root_subparsers):
     )
     init_parser.add_argument(
         '--template',
-        help='Template file to use for initialization'
+        help='Template to use for spec initialization'
     )
 
     # Add validate command  
@@ -36,18 +36,5 @@ def extend_cli(self, root_subparsers):
         help='Path to spec file to validate'
     )
 
-    # Add export command
-    export_parser = spec_subparsers.add_parser(
-        'export',
-        help='Export spec to different format'
-    )
-    export_parser.add_argument(
-        'spec_file',
-        help='Path to spec file to export'
-    )
-    export_parser.add_argument(
-        '--format',
-        choices=['json', 'yaml', 'toml'],
-        default='json',
-        help='Output format'
-    )
+    # Add other spec-related commands as needed
+    return spec_parser
