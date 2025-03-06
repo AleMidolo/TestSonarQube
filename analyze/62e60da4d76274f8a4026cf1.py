@@ -14,4 +14,4 @@ def values(self, *keys):
     if not keys:
         return list(self.__dict__.values())
     else:
-        return [self.__dict__[key] for key in keys if key in self.__dict__]
+        return [self.__dict__.get(key) for key in keys]

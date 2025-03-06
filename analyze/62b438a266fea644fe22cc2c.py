@@ -1,21 +1,21 @@
-import argparse
-
 def make_parsers():
     """
     शीर्ष-स्तरीय पार्सर और इसके उप-पार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
     """
+    import argparse
+
     # शीर्ष-स्तरीय पार्सर बनाएं
-    top_parser = argparse.ArgumentParser(description="शीर्ष-स्तरीय पार्सर")
-    
+    parser = argparse.ArgumentParser(description="शीर्ष-स्तरीय पार्सर")
+
     # उप-पार्सर बनाएं
-    subparsers = top_parser.add_subparsers(title="उप-पार्सर", dest="subcommand")
-    
-    # पहला उप-पार्सर
-    parser_a = subparsers.add_parser("command_a", help="कमांड ए के लिए मदद")
-    parser_a.add_argument("--option_a", help="कमांड ए के लिए विकल्प")
-    
-    # दूसरा उप-पार्सर
-    parser_b = subparsers.add_parser("command_b", help="कमांड बी के लिए मदद")
-    parser_b.add_argument("--option_b", help="कमांड बी के लिए विकल्प")
-    
-    return top_parser, subparsers
+    subparsers = parser.add_subparsers(dest="command", help="उप-पार्सर कमांड")
+
+    # उदाहरण उप-पार्सर 1
+    parser_a = subparsers.add_parser('command_a', help='कमांड A के लिए उप-पार्सर')
+    parser_a.add_argument('--option_a', type=int, help='कमांड A के लिए विकल्प')
+
+    # उदाहरण उप-पार्सर 2
+    parser_b = subparsers.add_parser('command_b', help='कमांड B के लिए उप-पार्सर')
+    parser_b.add_argument('--option_b', type=str, help='कमांड B के लिए विकल्प')
+
+    return parser, subparsers

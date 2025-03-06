@@ -15,28 +15,27 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     # Get the exception message
     exception_message = str(e)
     
-    # Get the traceback as a list of strings
-    tb_list = traceback.format_tb(e.__traceback__)
+    # Get the formatted traceback
+    tb_list = traceback.format_exception(type(e), e, e.__traceback__)
     
-    # Limit the traceback to max_level
+    # Limit the traceback levels
     if len(tb_list) > max_level:
         tb_list = tb_list[:max_level]
     
-    # Format the traceback
-    formatted_traceback = []
-    for i, tb_line in enumerate(tb_list):
-        if i < max_path_level:
-            formatted_traceback.append(tb_line.strip())
-        else:
-            # Truncate the path if it exceeds max_path_level
-            parts = tb_line.strip().split('\n')
-            if len(parts) > max_path_level:
-                parts = parts[:max_path_level] + ['...']
-            formatted_traceback.append('\n'.join(parts))
+    # Join the traceback into a single string
+    traceback_str = "".join(tb_list)
     
-    # Combine the exception message and formatted traceback
-    result = f"Exception: {exception_message}\n"
-    result += "Traceback (most recent call last):\n"
-    result += '\n'.join(formatted_traceback)
+    # Limit the path levels in the traceback
+    if max_path_level > 0:
+        lines = traceback_str.splitlines()
+        for i in range(len(lines)):
+            if "File" in lines[i]:
+                path_parts = lines[i].split(",")
+                if len(path_parts) > max_path_level:
+                    lines[i] = ",".join(path_parts[:max_path_level]) + "..."
+        traceback_str = "\n".join(lines)
+    
+    # Combine the exception message and traceback
+    result = f"{exception_message}\n{traceback_str}"
     
     return result

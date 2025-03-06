@@ -22,9 +22,10 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     
     if verbose:
         print(f"Command: {' '.join(command_list)}")
-        if stdout:
-            print(f"Stdout: {stdout}")
-        if stderr and not hide_stderr:
-            print(f"Stderr: {stderr}")
+        print(f"Working Directory: {cwd}")
+        print(f"Environment: {env}")
+        print(f"Output:\n{stdout}")
+        if stderr:
+            print(f"Errors:\n{stderr}")
     
     return process.returncode, stdout, stderr

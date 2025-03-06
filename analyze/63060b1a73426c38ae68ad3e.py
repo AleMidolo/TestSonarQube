@@ -12,8 +12,8 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     if not os.path.exists(spec_file):
         raise FileNotFoundError(f"Plugin specification file not found in {plugin_dir}")
     
-    with open(spec_file, 'r') as f:
-        spec_data = json.load(f)
+    with open(spec_file, 'r') as file:
+        spec_data = json.load(file)
     
     flat_dict = {}
     def flatten(d, parent_key='', sep='.'):

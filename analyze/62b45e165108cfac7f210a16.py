@@ -4,14 +4,14 @@ def validate_as_prior_version(self, prior):
 
     इनपुट वैरिएबल प्रायर को भी एक इन्वेंटरी वैलिडेटर ऑब्जेक्ट माना जाता है और माना जाता है कि स्व और प्रायर दोनों इन्वेंटरी को आंतरिक संगतता के लिए जाँच लिया गया है।
     """
-    if not isinstance(prior, type(self)):
+    # Check if prior is an instance of the same class
+    if not isinstance(prior, self.__class__):
         return False
     
     # Check if the prior version is indeed older than the current version
     if prior.version >= self.version:
         return False
     
-    # Additional checks can be added here based on specific business rules
-    # For example, checking if the prior version's data is a subset of the current version's data
+    # Additional checks can be added here based on specific requirements
     
     return True

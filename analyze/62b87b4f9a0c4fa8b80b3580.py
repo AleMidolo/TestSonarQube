@@ -6,7 +6,7 @@ def integral(bins, edges):
     इनका प्रारूप (format) :class:`.histogram` विवरण में परिभाषित है।
     """
     if len(bins) != len(edges) - 1:
-        raise ValueError("Length of bins must be one less than the length of edges.")
+        raise ValueError("bins और edges की लंबाई असंगत है। bins की लंबाई edges की लंबाई से एक कम होनी चाहिए।")
     
     integral_value = 0.0
     for i in range(len(bins)):

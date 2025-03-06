@@ -5,21 +5,27 @@ def initialize(self):
     import os
     import json
 
-    # Create the OCFL storage root directory
-    os.makedirs(self.root_path, exist_ok=True)
+    # OCFL रूट डायरेक्टरी बनाएँ
+    if not os.path.exists('ocfl_root'):
+        os.makedirs('ocfl_root')
 
-    # Create the OCFL version file
+    # OCFL संस्करण फ़ाइल बनाएँ
     ocfl_version = {
         "type": "https://ocfl.io/1.0/spec/#inventory",
         "digestAlgorithm": "sha512",
         "head": None,
-        "versions": {},
-        "manifest": {},
-        "contentDirectory": "content"
+        "versions": {}
     }
 
-    with open(os.path.join(self.root_path, "ocfl_1.0.json"), "w") as f:
+    with open(os.path.join('ocfl_root', 'ocfl_1.0.json'), 'w') as f:
         json.dump(ocfl_version, f, indent=4)
 
-    # Create the content directory
-    os.makedirs(os.path.join(self.root_path, "content"), exist_ok=True)
+    # OCFL नामस्थान फ़ाइल बनाएँ
+    with open(os.path.join('ocfl_root', '0=ocfl_1.0'), 'w') as f:
+        f.write("ocfl_1.0\n")
+
+    # OCFL रूट में एक नामस्थान फ़ाइल बनाएँ
+    with open(os.path.join('ocfl_root', '0=ocfl_object_1.0'), 'w') as f:
+        f.write("ocfl_object_1.0\n")
+
+    print("OCFL स्टोरेज रूट सफलतापूर्वक प्रारंभ किया गया।")

@@ -4,9 +4,9 @@ from typing import Dict, List, Union
 class ValidationError(Exception):
     def __init__(self, messages: List[Dict[str, str]]):
         self.messages = messages
-        super().__init__(f"Validation failed with {len(messages)} errors.")
+        super().__init__(f"Validation failed with errors: {messages}")
 
-def _validate_labels(labels: Dict[str, Union[str, List, bool]]) -> None:
+def _validate_labels(labels: Dict[Union[str, int, bool], Union[str, int, bool, List]]) -> None:
     """
     Validate the keys and values in the given labels against their respective regular expressions.
 
@@ -15,10 +15,10 @@ def _validate_labels(labels: Dict[str, Union[str, List, bool]]) -> None:
 
     Raises:
         ValidationError: If any key or value does not match its respective regular expression.
-                       The error contains a list of all errors encountered in the labels.
-                       Each element in the list is a dictionary with a key-value pair:
-                       - key: The label key or label value that caused the error, as a string.
-                       - value: The error message.
+            The error contains a list of all errors that occurred in the labels.
+            Each element in the list is a dictionary with a key-value pair:
+            - key: The label key or label value that caused the error, as a string.
+            - value: The error message.
     """
     errors = []
     
@@ -34,10 +34,17 @@ def _validate_labels(labels: Dict[str, Union[str, List, bool]]) -> None:
             errors.append({key: f"Label key '{key}' does not match the regex {key_pattern.pattern}"})
         
         # Validate value
-        if not isinstance(value, str):
-            errors.append({str(value): 'expected string or bytes-like object'})
-        elif not value_pattern.match(value):
-            errors.append({value: f"Label value '{value}' does not match the regex {value_pattern.pattern}"})
+        if isinstance(value, list):
+            for item in value:
+                if not isinstance(item, str):
+                    errors.append({str(item): 'expected string or bytes-like object'})
+                elif not value_pattern.match(item):
+                    errors.append({item: f"Label value '{item}' does not match the regex {value_pattern.pattern}"})
+        else:
+            if not isinstance(value, str):
+                errors.append({str(value): 'expected string or bytes-like object'})
+            elif not value_pattern.match(value):
+                errors.append({value: f"Label value '{value}' does not match the regex {value_pattern.pattern}"})
     
     if errors:
         raise ValidationError(errors)
