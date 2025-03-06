@@ -1,28 +1,29 @@
 def scale(self, other=None, recompute=False):
     """
-    Calcola o imposta la scala (integrale dell'istogramma).
+    Compute or set scale (integral of the histogram).
 
-    Se *other* è ``None``, restituisce la scala di questo istogramma.  
-    Se la scala non è stata calcolata in precedenza, viene calcolata e memorizzata per un utilizzo successivo (a meno che non venga esplicitamente richiesto di *ricalcolare*).  
-    Nota che, dopo aver modificato (riempito) l'istogramma, è necessario ricalcolare esplicitamente la scala se era stata calcolata in precedenza.
+    If *other* is ``None``, return scale of this histogram.
+    If its scale was not computed before,
+    it is computed and stored for subsequent use
+    (unless explicitly asked to *recompute*).
+    Note that after changing (filling) the histogram
+    one must explicitly recompute the scale
+    if it was computed before.
 
-    Se viene fornito un valore float in *other*, l'oggetto corrente (*self*) viene riscalato al valore di *other*.
+    If a float *other* is provided, rescale self to *other*.
 
-    Gli istogrammi con scala pari a zero non possono essere riscalati.  
-    Viene sollevata un'eccezione :exc:`.LenaValueError` se si tenta di farlo.
+    Histograms with scale equal to zero can't be rescaled.
+    :exc:`.LenaValueError` is raised if one tries to do that.
     """
     if not hasattr(self, '_scale') or recompute:
-        # Calcola la scala come l'integrale dell'istogramma
-        self._scale = sum(self.bins)
+        # Compute the scale as the integral of the histogram
+        self._scale = sum(self.bins) * self.bin_width
     
     if other is None:
         return self._scale
-    elif isinstance(other, float):
-        if self._scale == 0:
-            raise LenaValueError("Non è possibile riscalare un istogramma con scala pari a zero.")
-        # Riscala l'istogramma
-        scale_factor = other / self._scale
-        self.bins = [bin_value * scale_factor for bin_value in self.bins]
-        self._scale = other
     else:
-        raise TypeError("Il parametro 'other' deve essere None o un float.")
+        if self._scale == 0:
+            raise LenaValueError("Cannot rescale a histogram with scale equal to zero.")
+        scale_factor = other / self._scale
+        self.bins = [bin * scale_factor for bin in self.bins]
+        self._scale = other

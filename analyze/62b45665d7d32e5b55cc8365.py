@@ -2,25 +2,22 @@ import argparse
 
 def parse_arguments(*unparsed_arguments):
     """
-    Dati gli argomenti della riga di comando con cui è stato invocato questo script, analizza gli argomenti e restituiscili come un dizionario che mappa il nome del sotto-parser (o "global") a un'istanza di `argparse.Namespace`.
+    Given command-line arguments with which this script was invoked, parse the arguments and return
+    them as a dict mapping from subparser name (or "global") to an argparse.Namespace instance.
     """
-    # Create the main parser
-    main_parser = argparse.ArgumentParser(description="Main parser")
-    main_parser.add_argument('--global-arg', type=str, help='Global argument')
+    parser = argparse.ArgumentParser(description="Main parser")
+    subparsers = parser.add_subparsers(dest="subparser_name", help="Sub-command help")
 
-    # Create subparsers
-    subparsers = main_parser.add_subparsers(dest='subparser_name', help='Sub-commands')
-
-    # Subparser for command 'command1'
-    parser_command1 = subparsers.add_parser('command1', help='Command 1 help')
+    # Example subparser for 'command1'
+    parser_command1 = subparsers.add_parser('command1', help='Command1 help')
     parser_command1.add_argument('--arg1', type=str, help='Argument 1 for command1')
 
-    # Subparser for command 'command2'
-    parser_command2 = subparsers.add_parser('command2', help='Command 2 help')
+    # Example subparser for 'command2'
+    parser_command2 = subparsers.add_parser('command2', help='Command2 help')
     parser_command2.add_argument('--arg2', type=int, help='Argument 2 for command2')
 
     # Parse the arguments
-    parsed_args = main_parser.parse_args(unparsed_arguments)
+    parsed_args = parser.parse_args(unparsed_arguments)
 
     # Organize the parsed arguments into a dictionary
     result = {}

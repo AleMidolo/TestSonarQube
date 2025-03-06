@@ -1,8 +1,8 @@
 def get(self, key, default=None):
     """
-    `D.get(k[, d]) -> D[k]` se `k` è presente in `D`, altrimenti `d`. Il valore predefinito di `d` è `None`.
+    D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.
     """
-    if key in self:
+    try:
         return self[key]
-    else:
+    except KeyError:
         return default

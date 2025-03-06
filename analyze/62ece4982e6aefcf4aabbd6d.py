@@ -2,9 +2,9 @@ from typing import List
 
 def string_to_int(string: str, alphabet: List[str]) -> int:
     """
-    Convertire una stringa in un numero, utilizzando l'alfabeto fornito.
+    Convert a string to a number, using the given alphabet.
 
-    Si assume che l'input abbia la cifra più significativa per prima.
+    The input is assumed to have the most significant digit first.
     """
     base = len(alphabet)
     result = 0

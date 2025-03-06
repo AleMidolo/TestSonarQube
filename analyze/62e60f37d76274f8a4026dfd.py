@@ -1,15 +1,12 @@
-from datetime import time
-
 def dehydrate_time(value):
     """
-    Disidratatore per valori di tipo `time`.
+    Dehydrator for `time` values.
 
-    :param value: Il valore di tipo `time` da disidratare.
-    :type value: time
-    :return: Una rappresentazione stringa del tempo nel formato 'HH:MM:SS'.
+    :param value: The time value to dehydrate.
+    :type value: datetime.time
+    :return: A string representation of the time in 'HH:MM:SS' format.
     :rtype: str
     """
-    if not isinstance(value, time):
-        raise TypeError("Il valore deve essere di tipo `time`.")
-    
+    if value is None:
+        return None
     return value.strftime('%H:%M:%S')

@@ -1,21 +1,31 @@
 def _fromutc(self, dt):
     """
-    Dato un oggetto timezone-aware in un determinato fuso orario, calcola un oggetto datetime con consapevolezza del fuso orario in un nuovo fuso orario.
+    Given a timezone-aware datetime in a given timezone, calculates a
+    timezone-aware datetime in a new timezone.
 
-    Poiché questa è l'unica occasione in cui sappiamo di avere un oggetto datetime non ambiguo, cogliamo questa opportunità per determinare se il datetime è ambiguo e si trova in uno stato di "fold" (ad esempio, se è la prima occorrenza, in ordine cronologico, del datetime ambiguo).
+    Since this is the one time that we *know* we have an unambiguous
+    datetime object, we take this opportunity to determine whether the
+    datetime is ambiguous and in a "fold" state (e.g. if it's the first
+    occurrence, chronologically, of the ambiguous datetime).
 
-    :param dt:  
-        Un oggetto :class:`datetime.datetime` con consapevolezza del fuso orario.
+    :param dt:
+        A timezone-aware :class:`datetime.datetime` object.
     """
-    if dt.tzinfo is not self:
-        raise ValueError("dt deve avere lo stesso fuso orario di self")
-    
-    # Converti il datetime in UTC
-    dt = dt.astimezone(self)
-    
-    # Controlla se il datetime è ambiguo
-    if self._is_ambiguous(dt):
-        # Se è ambiguo, imposta fold=1 per indicare la seconda occorrenza
-        dt = dt.replace(fold=1)
-    
-    return dt
+    if dt.tzinfo is None:
+        raise ValueError("The input datetime must be timezone-aware.")
+
+    # Convert the datetime to UTC
+    utc_dt = dt.astimezone(self.utc)
+
+    # Convert the UTC datetime to the target timezone
+    local_dt = utc_dt.astimezone(self)
+
+    # Check if the datetime is ambiguous in the target timezone
+    if self._is_ambiguous(local_dt):
+        # If the original datetime was in a fold, keep it in the fold
+        if dt.fold:
+            local_dt = local_dt.replace(fold=1)
+        else:
+            local_dt = local_dt.replace(fold=0)
+
+    return local_dt

@@ -1,22 +1,48 @@
+from functools import wraps
+
 def unit_of_work(metadata=None, timeout=None):
     """
-    Decorator for transaction functions that allows additional control over how the transaction is executed.
+    This function is a decorator for transaction functions that allows extra control over how the transaction is carried out.
 
-    :param metadata: A dictionary with metadata. The specified metadata will be associated with the executing transaction and visible in the output of `dbms.listQueries` and `dbms.listTransactions`. It will also be logged in the `query.log` file.
+    For example, a timeout may be applied::
+
+        from neo4j import unit_of_work
+
+        @unit_of_work(timeout=100)
+        def count_people_tx(tx):
+            result = tx.run("MATCH (a:Person) RETURN count(a) AS persons")
+            record = result.single()
+            return record["persons"]
+
+    :param metadata:
+        a dictionary with metadata.
+        Specified metadata will be attached to the executing transaction and visible in the output of ``dbms.listQueries`` and ``dbms.listTransactions`` procedures.
+        It will also get logged to the ``query.log``.
+        This functionality makes it easier to tag transactions and is equivalent to ``dbms.setTXMetaData`` procedure, see https://neo4j.com/docs/operations-manual/current/reference/procedures/ for procedure reference.
     :type metadata: dict
 
-    :param timeout: The transaction timeout in seconds. Transactions that run longer than the configured timeout will be terminated by the database. This feature allows limiting the execution time of queries/transactions. The specified timeout overrides the default timeout configured in the database using the `dbms.transaction.timeout` setting. The value must not represent a negative duration. A duration of zero will allow the transaction to run indefinitely. A value of `None` will use the default timeout configured in the database.
-    :type timeout: float or None
+    :param timeout:
+        the transaction timeout in seconds.
+        Transactions that execute longer than the configured timeout will be terminated by the database.
+        This functionality allows to limit query/transaction execution time.
+        Specified timeout overrides the default timeout configured in the database using ``dbms.transaction.timeout`` setting.
+        Value should not represent a negative duration.
+        A zero duration will make the transaction execute indefinitely.
+        None will use the default timeout configured in the database.
+    :type timeout: float or :const:`None`
     """
     def decorator(func):
-        def wrapper(*args, **kwargs):
-            # Here you would typically add logic to handle the metadata and timeout
-            # For example, passing these parameters to the transaction manager
-            # This is a simplified example and does not include actual transaction management
+        @wraps(func)
+        def wrapper(tx, *args, **kwargs):
+            # Apply metadata if provided
             if metadata is not None:
-                kwargs['metadata'] = metadata
+                tx.run("CALL dbms.setTXMetaData($metadata)", metadata=metadata)
+            
+            # Apply timeout if provided
             if timeout is not None:
-                kwargs['timeout'] = timeout
-            return func(*args, **kwargs)
+                tx.run("CALL dbms.setTransactionTimeout($timeout)", timeout=timeout)
+            
+            # Execute the original function
+            return func(tx, *args, **kwargs)
         return wrapper
     return decorator

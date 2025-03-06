@@ -1,12 +1,21 @@
 def _include_groups(self, parser_dict):
     """
-    Risolve la direttiva "include dict" nei file di specifica
+    Resolves the include dict directive in the spec files.
     """
-    if 'include' in parser_dict:
-        for include_key in parser_dict['include']:
-            if include_key in parser_dict:
-                parser_dict[include_key].update(parser_dict['include'][include_key])
+    if 'include' not in parser_dict:
+        return parser_dict
+
+    include_dict = parser_dict['include']
+    for key, value in include_dict.items():
+        if key in parser_dict:
+            if isinstance(parser_dict[key], dict) and isinstance(value, dict):
+                parser_dict[key].update(value)
+            elif isinstance(parser_dict[key], list) and isinstance(value, list):
+                parser_dict[key].extend(value)
             else:
-                parser_dict[include_key] = parser_dict['include'][include_key]
-        del parser_dict['include']
+                parser_dict[key] = value
+        else:
+            parser_dict[key] = value
+
+    del parser_dict['include']
     return parser_dict

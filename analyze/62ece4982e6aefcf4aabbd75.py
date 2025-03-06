@@ -1,15 +1,22 @@
 import subprocess
 
-def aggiungi_ignorati(ignorati):
+def addignored(ignored):
     """
-    Utilizza il comando git per ottenere i nomi dei file, trasformali in una lista, ordina la lista per includere solo i file ignorati, restituisci quei file come una singola stringa con ogni nome di file separato da una virgola.
+    Use the git command to obtain the file names, turn it into a list, sort the list for only ignored files, 
+    return those files as a single string with each filename separated by a comma.
     """
-    # Ottieni la lista dei file ignorati da git
-    result = subprocess.run(['git', 'ls-files', '--others', '--ignored', '--exclude-standard'], stdout=subprocess.PIPE)
-    ignored_files = result.stdout.decode('utf-8').splitlines()
+    # Get the list of ignored files from git
+    result = subprocess.run(['git', 'ls-files', '--others', '--ignored', '--exclude-standard'], 
+                            stdout=subprocess.PIPE, text=True)
     
-    # Filtra i file ignorati in base alla lista fornita
-    filtered_files = [file for file in ignored_files if file in ignorati]
+    # Split the output into a list of filenames
+    ignored_files = result.stdout.splitlines()
     
-    # Restituisci i file come una stringa separata da virgole
+    # Filter the list to only include files that are in the ignored list
+    filtered_files = [file for file in ignored_files if file in ignored]
+    
+    # Sort the list of ignored files
+    filtered_files.sort()
+    
+    # Join the filenames into a single string separated by commas
     return ', '.join(filtered_files)

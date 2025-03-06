@@ -1,6 +1,6 @@
 def subclasses(cls):
     """
-    Restituisce tutte le sottoclassi di una classe, ricorsivamente.
+    Return all subclasses of a class, recursively
     """
     subclasses = cls.__subclasses__()
     for subclass in subclasses:

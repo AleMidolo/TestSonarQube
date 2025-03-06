@@ -1,24 +1,28 @@
-import tarfile
 import requests
+import tarfile
 from pathlib import Path
+import shutil
 
 def get_repo_archive(url: str, destination_path: Path) -> Path:
     """
-    Dato un URL e un percorso di destinazione, recupera e decomprimi un archivio .tar.gz che contiene il file 'desc' per ogni pacchetto.  
-    Ogni archivio .tar.gz corrisponde a un repository di Arch Linux ('core', 'extra', 'community').
+    Given an url and a destination path, retrieve and extract .tar.gz archive
+    which contains 'desc' file for each package.
+    Each .tar.gz archive corresponds to an Arch Linux repo ('core', 'extra', 'community').
+
     Args:
-        url: URL dell'archivio .tar.gz da scaricare
-        destination_path: il percorso sul disco dove estrarre l'archivio
+        url: url of the .tar.gz archive to download
+        destination_path: the path on disk where to extract archive
 
     Returns:
-        un oggetto Path che rappresenta la directory dove l'archivio è stato estratto.
+        a directory Path where the archive has been extracted to.
     """
-    # Ensure the destination directory exists
+    # Ensure the destination path exists
     destination_path.mkdir(parents=True, exist_ok=True)
     
     # Download the archive
     response = requests.get(url, stream=True)
-    response.raise_for_status()
+    if response.status_code != 200:
+        raise Exception(f"Failed to download archive from {url}")
     
     # Save the archive to a temporary file
     temp_archive_path = destination_path / "temp_archive.tar.gz"

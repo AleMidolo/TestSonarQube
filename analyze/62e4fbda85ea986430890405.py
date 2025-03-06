@@ -9,35 +9,43 @@ def xargs(
         *,
         color: bool = False,
         target_concurrency: int = 1,
-        _max_length: int = os.get_terminal_size().columns if sys.platform != "win32" else 80,
+        _max_length: int = _get_platform_max_length(),
         **kwargs: Any,
 ) -> tuple[int, bytes]:
     """
-    Un'implementazione semplificata di xargs.
+    A simplified implementation of xargs.
 
-    - **color**: Crea un pty se si è su una piattaforma che lo supporta.
-    - **target_concurrency**: Numero target di partizioni da eseguire in parallelo.
+    color: Make a pty if on a platform that supports it
+    target_concurrency: Target number of partitions to run concurrently
     """
     if color and sys.platform != "win32":
         import pty
         master, slave = pty.openpty()
         kwargs['stdout'] = slave
         kwargs['stderr'] = slave
+        kwargs['stdin'] = subprocess.PIPE
 
     processes = []
     for i in range(0, len(varargs), target_concurrency):
-        args = list(cmd) + list(varargs[i:i + target_concurrency])
-        process = subprocess.Popen(args, **kwargs)
+        chunk = varargs[i:i + target_concurrency]
+        full_cmd = list(cmd) + list(chunk)
+        process = subprocess.Popen(full_cmd, **kwargs)
         processes.append(process)
 
-    output = b""
     for process in processes:
         process.wait()
-        if color and sys.platform != "win32":
-            os.close(slave)
-            output += os.read(master, _max_length)
-            os.close(master)
-        else:
-            output += process.communicate()[0]
 
-    return (process.returncode, output)
+    if color and sys.platform != "win32":
+        os.close(slave)
+        output = os.read(master, _max_length)
+        os.close(master)
+    else:
+        output = b""
+
+    return (0, output)
+
+def _get_platform_max_length() -> int:
+    if sys.platform == "win32":
+        return 8192
+    else:
+        return 65536

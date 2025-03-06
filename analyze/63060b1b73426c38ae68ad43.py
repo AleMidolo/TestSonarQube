@@ -1,9 +1,11 @@
 def extend_cli(self, root_subparsers):
     """
-    Aggiunge le opzioni CLI specifiche al punto di ingresso principale.
+    Adds the spec cli options to the main entry point.
 
-    :param subparser: l'oggetto subparser da estendere.
+    :param root_subparsers: the subparser object to extend.
     """
-    # Example: Adding a new subcommand 'example' with an optional argument
-    example_parser = root_subparsers.add_parser('example', help='Example command')
-    example_parser.add_argument('--option', type=str, help='An example option')
+    spec_parser = root_subparsers.add_parser('spec', help='Manage spec configurations')
+    spec_parser.add_argument('--list', action='store_true', help='List all available specs')
+    spec_parser.add_argument('--add', type=str, help='Add a new spec')
+    spec_parser.add_argument('--remove', type=str, help='Remove an existing spec')
+    spec_parser.add_argument('--update', type=str, help='Update an existing spec')

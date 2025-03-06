@@ -2,28 +2,28 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
           db=None, imp_user=None, dehydration_hooks=None,
           hydration_hooks=None, **handlers):
     """
-    Aggiunge un messaggio BEGIN alla coda di output.
+    Appends a BEGIN message to the output queue.
 
-    :param mode: modalità di accesso per il routing - "READ" o "WRITE" (predefinito)
-    :param bookmarks: iterabile di valori di segnalibro dopo i quali questa transazione dovrebbe iniziare
-    :param metadata: dizionario di metadati personalizzati da allegare alla transazione
-    :param timeout: timeout per l'esecuzione della transazione (in secondi)
-    :param db: nome del database su cui avviare la transazione
-        Richiede Bolt 4.0+.
-    :param imp_user: l'utente da impersonare
-        Richiede Bolt 4.4+.
+    :param mode: access mode for routing - "READ" or "WRITE" (default)
+    :param bookmarks: iterable of bookmark values after which this transaction should begin
+    :param metadata: custom metadata dictionary to attach to the transaction
+    :param timeout: timeout for transaction execution (seconds)
+    :param db: name of the database against which to begin the transaction
+        Requires Bolt 4.0+.
+    :param imp_user: the user to impersonate
+        Requires Bolt 4.4+
     :param dehydration_hooks:
-        Hook per disidratare i tipi (dizionario da tipo (classe) a funzione di disidratazione).
-        Le funzioni di disidratazione ricevono il valore e restituiscono un oggetto di tipo
-        compreso da packstream.
+        Hooks to dehydrate types (dict from type (class) to dehydration
+        function). Dehydration functions receive the value and returns an
+        object of type understood by packstream.
     :param hydration_hooks:
-        Hook per idratare i tipi (mappatura da tipo (classe) a funzione di idratazione).
-        Le funzioni di idratazione ricevono il valore di tipo compreso da packstream
-        e possono restituire qualsiasi cosa.
-    :param handlers: funzioni gestore passate all'oggetto Response restituito
-    :return: oggetto Response
+        Hooks to hydrate types (mapping from type (class) to
+        dehydration function). Dehydration functions receive the value of
+        type understood by packstream and are free to return anything.
+    :param handlers: handler functions passed into the returned Response object
+    :return: Response object
     """
-    # Create the BEGIN message
+    # Construct the BEGIN message
     begin_message = {
         "mode": mode,
         "bookmarks": bookmarks,
@@ -36,8 +36,8 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         **handlers
     }
     
-    # Add the BEGIN message to the output queue
+    # Append the BEGIN message to the output queue
     self.output_queue.append(begin_message)
     
-    # Return a Response object
-    return Response(handlers)
+    # Return a Response object with the provided handlers
+    return Response(handlers=handlers)

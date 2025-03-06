@@ -2,11 +2,12 @@ import re
 
 def regex_dict(item):
     """
-    Converti le chiavi *.cpp in chiavi regex.
+    Convert *.cpp keys to regex keys
 
-    Dato un dizionario in cui le chiavi sono tutti nomi di file con caratteri jolly, converti solo le chiavi in regex equivalenti e lascia intatti i valori.
+    Given a dict where the keys are all filenames with wildcards, convert only
+    the keys into equivalent regexes and leave the values intact.
 
-    Esempio:
+    Example:
 
     rules = {
         '*.cpp':
@@ -16,14 +17,14 @@ def regex_dict(item):
     }
     regex_keys = regex_dict(rules)
 
-    Argomenti:
-        item: dizionario da convertire
-    Ritorna:
-        dizionario con le chiavi convertite in regex.
+    Args:
+        item: dict to convert
+    Returns:
+        dict with keys converted to regexes
     """
     regex_dict = {}
     for key, value in item.items():
         # Convert the wildcard pattern to a regex pattern
-        regex_key = re.escape(key).replace(r'\*', '.*')
-        regex_dict[regex_key] = value
+        regex_pattern = re.escape(key).replace(r'\*', '.*')
+        regex_dict[re.compile(regex_pattern)] = value
     return regex_dict

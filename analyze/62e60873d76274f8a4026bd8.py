@@ -1,30 +1,30 @@
 def protocol_handlers(cls, protocol_version=None):
     """
-    Restituisce un dizionario dei gestori di protocollo Bolt disponibili,
-    indicizzati per tuple di versione. Se viene fornita una versione di protocollo
-    esplicita, il dizionario conterrà zero o un elemento, a seconda che quella
-    versione sia supportata o meno. Se non viene fornita alcuna versione di protocollo,
-    verranno restituite tutte le versioni disponibili.
+    Return a dictionary of available Bolt protocol handlers,
+    keyed by version tuple. If an explicit protocol version is
+    provided, the dictionary will contain either zero or one items,
+    depending on whether that version is supported. If no protocol
+    version is provided, all available versions will be returned.
 
-    :param protocol_version: tupla che identifica una specifica versione
-        del protocollo (ad esempio, (3, 5)) oppure None
-    :return: dizionario che associa una tupla di versione alla classe del gestore
-        per tutte le versioni di protocollo rilevanti e supportate
-    :raise TypeError: se la versione del protocollo non è passata come una tupla
+    :param protocol_version: tuple identifying a specific protocol
+        version (e.g. (3, 5)) or None
+    :return: dictionary of version tuple to handler class for all
+        relevant and supported protocol versions
+    :raise TypeError: if protocol version is not passed in a tuple
     """
-    # Esempio di gestori di protocollo supportati
-    supported_handlers = {
-        (3, 5): cls.BoltV3_5Handler,
-        (4, 0): cls.BoltV4_0Handler,
-        (4, 1): cls.BoltV4_1Handler,
+    # Example implementation assuming some predefined handlers
+    available_handlers = {
+        (3, 5): "BoltV3_5Handler",
+        (4, 0): "BoltV4_0Handler",
+        (4, 1): "BoltV4_1Handler",
     }
 
     if protocol_version is not None:
         if not isinstance(protocol_version, tuple):
-            raise TypeError("La versione del protocollo deve essere una tupla.")
-        if protocol_version in supported_handlers:
-            return {protocol_version: supported_handlers[protocol_version]}
+            raise TypeError("Protocol version must be a tuple.")
+        if protocol_version in available_handlers:
+            return {protocol_version: available_handlers[protocol_version]}
         else:
             return {}
     else:
-        return supported_handlers
+        return available_handlers

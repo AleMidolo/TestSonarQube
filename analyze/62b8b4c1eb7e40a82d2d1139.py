@@ -1,16 +1,16 @@
 def verifyClass(iface, candidate, tentative=False):
     """
-    Verifica che il *candidate* possa fornire correttamente *iface*.
+    Verify that the *candidate* might correctly provide *iface*.
     """
-    if not all(hasattr(candidate, attr) for attr in dir(iface) if not attr.startswith('__')):
+    if not isinstance(candidate, type):
         return False
-    if not tentative:
-        for attr in dir(iface):
-            if not attr.startswith('__'):
-                iface_attr = getattr(iface, attr)
-                candidate_attr = getattr(candidate, attr)
-                if not callable(iface_attr) and iface_attr != candidate_attr:
-                    return False
-                if callable(iface_attr) and not callable(candidate_attr):
-                    return False
-    return True
+    
+    if tentative:
+        # Check if the candidate has all the methods of the interface
+        for method in dir(iface):
+            if callable(getattr(iface, method)) and not hasattr(candidate, method):
+                return False
+        return True
+    else:
+        # Check if the candidate is a subclass of the interface
+        return issubclass(candidate, iface)

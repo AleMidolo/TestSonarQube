@@ -1,21 +1,19 @@
 def check_digests_present_and_used(self, manifest_files, digests_used):
     """
-    Verifica che tutti i digest nel manifesto necessari siano presenti e utilizzati.
-    
-    :param manifest_files: Lista di file di manifesto che contengono i digest.
-    :param digests_used: Lista di digest che sono stati utilizzati.
-    :return: True se tutti i digest necessari sono presenti e utilizzati, False altrimenti.
+    Check all digests in manifest that are needed are present and used.
     """
-    # Estrai tutti i digest dai file di manifesto
-    manifest_digests = set()
-    for manifest_file in manifest_files:
-        with open(manifest_file, 'r') as file:
-            for line in file:
-                if line.strip():  # Ignora righe vuote
-                    manifest_digests.add(line.strip())
+    # Assuming manifest_files is a list of dictionaries with 'digest' keys
+    # and digests_used is a set of digests that are required
+    manifest_digests = {file['digest'] for file in manifest_files}
     
-    # Verifica che tutti i digest necessari siano presenti nei file di manifesto
-    if not manifest_digests.issuperset(digests_used):
-        return False
+    # Check if all required digests are present in the manifest
+    missing_digests = digests_used - manifest_digests
+    if missing_digests:
+        raise ValueError(f"Missing digests: {missing_digests}")
+    
+    # Check if all digests in the manifest are used
+    unused_digests = manifest_digests - digests_used
+    if unused_digests:
+        raise ValueError(f"Unused digests: {unused_digests}")
     
     return True

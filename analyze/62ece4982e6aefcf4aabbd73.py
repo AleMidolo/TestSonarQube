@@ -3,21 +3,26 @@ import sys
 
 def split(s, platform='this'):
     """
-    ### Variante multi-piattaforma di `shlex.split()` per la divisione di stringhe da riga di comando.  
-    Progettata per l'uso con `subprocess`, per l'iniezione di argomenti (`argv`) ecc. Utilizza espressioni regolari (REGEX) veloci.
+    Multi-platform variant of shlex.split() for command-line splitting.
+    For use with subprocess, for argv injection etc. Using fast REGEX.
 
-    - **platform**:  
-      - `'this'`: rilevamento automatico della piattaforma corrente.  
-      - `1`: stile POSIX.  
-      - `0`: stile Windows/CMD.  
-      - (altri valori riservati).
+    platform: 'this' = auto from current platform;
+              1 = POSIX;
+              0 = Windows/CMD
+              (other values reserved)
     """
     if platform == 'this':
         platform = 1 if sys.platform != 'win32' else 0
     
-    if platform == 1:  # POSIX style
-        regex = re.compile(r"""((?:[^\s"']|"[^"]*"|'[^']*')+)""")
-    else:  # Windows/CMD style
-        regex = re.compile(r"""((?:[^\s"]|"[^"]*")+)""")
+    if platform == 1:  # POSIX
+        regex = re.compile(r"""
+            (?:[^\s"']+|"[^"]*"|'[^']*')+
+        """, re.VERBOSE)
+    elif platform == 0:  # Windows/CMD
+        regex = re.compile(r"""
+            (?:[^\s"]+|"[^"]*")+
+        """, re.VERBOSE)
+    else:
+        raise ValueError("Invalid platform value. Use 'this', 1 (POSIX), or 0 (Windows/CMD).")
     
-    return regex.findall(s)
+    return [match.group(0) for match in regex.finditer(s)]

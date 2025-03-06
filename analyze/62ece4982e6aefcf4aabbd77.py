@@ -3,18 +3,18 @@ from datetime import timedelta
 
 def parse_frequency(frequency):
     """
-    Dato un valore di frequenza sotto forma di stringa contenente un numero e un'unità di tempo,
-    restituisci un'istanza corrispondente di datetime.timedelta o None se la frequenza è None o "always".
+    Given a frequency string with a number and a unit of time, return a corresponding
+    datetime.timedelta instance or None if the frequency is None or "always".
 
-    Ad esempio, dato "3 weeks", restituisci datetime.timedelta(weeks=3).
+    For instance, given "3 weeks", return datetime.timedelta(weeks=3)
 
-    Genera un'eccezione ValueError se la frequenza fornita non può essere analizzata.
+    Raise ValueError if the given frequency cannot be parsed.
     """
     if frequency is None or frequency.lower() == "always":
         return None
     
     pattern = re.compile(r'^(\d+)\s*(second|minute|hour|day|week|month|year)s?$', re.IGNORECASE)
-    match = pattern.match(frequency)
+    match = pattern.match(frequency.strip())
     
     if not match:
         raise ValueError(f"Invalid frequency format: {frequency}")
@@ -33,8 +33,8 @@ def parse_frequency(frequency):
     elif unit == "week":
         return timedelta(weeks=value)
     elif unit == "month":
-        return timedelta(days=value * 30)  # Approximate month as 30 days
+        return timedelta(days=value * 30)  # Approximation
     elif unit == "year":
-        return timedelta(days=value * 365)  # Approximate year as 365 days
+        return timedelta(days=value * 365)  # Approximation
     else:
         raise ValueError(f"Unsupported time unit: {unit}")

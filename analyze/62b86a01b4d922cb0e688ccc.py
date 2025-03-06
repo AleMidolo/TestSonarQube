@@ -1,14 +1,22 @@
 def generate_default_observer_schema_dict(manifest_dict, first_level=False):
     """
-    Generates a new dictionary based on the `manifest_dict` where all non-dict and non-list values are replaced with `None`.
-    If `first_level` is True, the function copies the identifying fields from the manifest.
+    Together with :func:``generate_default_observer_schema_list``, this function is
+    called recursively to generate part of a default ``observer_schema`` from part of a
+    Kubernetes resource, defined respectively by ``manifest_dict`` or ``manifest_list``.
 
     Args:
-        manifest_dict (dict): Partial Kubernetes resources.
-        first_level (bool, optional): If True, indicates that the dictionary represents the entire `observer_schema` of a Kubernetes resource.
+        manifest_dict (dict): Partial Kubernetes resources
+        first_level (bool, optional): If True, indicates that the dictionary represents
+            the whole observer schema of a Kubernetes resource
 
     Returns:
-        dict: The generated partial `observer_schema`.
+        dict: Generated partial observer_schema
+
+    This function creates a new dictionary from ``manifest_dict`` and replaces all
+    non-list and non-dict values by ``None``.
+
+    In case of ``first_level`` dictionary (i.e. complete ``observer_schema`` for a
+    resource), the values of the identifying fields are copied from the manifest file.
     """
     observer_schema = {}
     
@@ -27,13 +35,18 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
 
 def generate_default_observer_schema_list(manifest_list):
     """
-    Generates a new list based on the `manifest_list` where all non-dict and non-list values are replaced with `None`.
+    Together with :func:``generate_default_observer_schema_dict``, this function is
+    called recursively to generate part of a default ``observer_schema`` from part of a
+    Kubernetes resource, defined respectively by ``manifest_dict`` or ``manifest_list``.
 
     Args:
-        manifest_list (list): Partial Kubernetes resources in list format.
+        manifest_list (list): Partial Kubernetes resources
 
     Returns:
-        list: The generated partial `observer_schema`.
+        list: Generated partial observer_schema
+
+    This function creates a new list from ``manifest_list`` and replaces all
+    non-list and non-dict values by ``None``.
     """
     observer_schema = []
     

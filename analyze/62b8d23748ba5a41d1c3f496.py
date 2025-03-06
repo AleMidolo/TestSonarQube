@@ -5,7 +5,7 @@ def lfu_cache(maxsize=128, typed=False):
     def decorator(func):
         cache = {}
         frequency = defaultdict(int)
-        frequency_list = defaultdict(OrderedDict)
+        freq_map = defaultdict(OrderedDict)
         min_freq = 0
 
         @wraps(func)
@@ -16,28 +16,30 @@ def lfu_cache(maxsize=128, typed=False):
                 key = args + tuple(sorted(kwargs.items()))
 
             if key in cache:
-                # Increment frequency
+                # Increment frequency and update frequency map
                 freq = frequency[key]
                 frequency[key] += 1
-                del frequency_list[freq][key]
-                if not frequency_list[freq]:
-                    del frequency_list[freq]
+                del freq_map[freq][key]
+                if not freq_map[freq]:
+                    del freq_map[freq]
                     if freq == min_freq:
                         min_freq += 1
-                frequency_list[freq + 1][key] = None
+                freq_map[freq + 1][key] = None
                 return cache[key]
 
             result = func(*args, **kwargs)
 
             if len(cache) >= maxsize:
                 # Evict the least frequently used item
-                evict_key, _ = frequency_list[min_freq].popitem(last=False)
+                evict_key, _ = freq_map[min_freq].popitem(last=False)
+                if not freq_map[min_freq]:
+                    del freq_map[min_freq]
                 del cache[evict_key]
                 del frequency[evict_key]
 
             cache[key] = result
             frequency[key] = 1
-            frequency_list[1][key] = None
+            freq_map[1][key] = None
             min_freq = 1
 
             return result

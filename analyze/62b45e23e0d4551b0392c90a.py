@@ -1,42 +1,35 @@
 def validate_version_inventories(self, version_dirs):
     """
-    Ogni versione DOVREBBE avere un inventario fino a quel punto.
-    Inoltre, tieni traccia di eventuali digest di contenuto diversi da quelli
-    presenti nell'inventario principale, in modo da poterli verificare
-    anche durante la validazione del contenuto.
+    Each version SHOULD have an inventory up to that point.
 
-    version_dirs è un array di nomi di directory di versione e si presume
-    che sia in sequenza di versione (1, 2, 3...).
+    Also keep a record of any content digests different from those in the root inventory
+    so that we can also check them when validating the content.
+
+    version_dirs is an array of version directory names and is assumed to be in
+    version sequence (1, 2, 3...).
     """
-    for i, version_dir in enumerate(version_dirs):
-        # Check if the version directory exists
-        if not os.path.exists(version_dir):
-            raise FileNotFoundError(f"Version directory {version_dir} does not exist.")
+    root_inventory = self.get_root_inventory()
+    discrepancies = {}
+
+    for version_dir in version_dirs:
+        version_inventory = self.get_version_inventory(version_dir)
         
-        # Check if the inventory file exists in the version directory
-        inventory_file = os.path.join(version_dir, "inventory.txt")
-        if not os.path.exists(inventory_file):
-            raise FileNotFoundError(f"Inventory file not found in {version_dir}.")
+        if not version_inventory:
+            raise ValueError(f"Inventory missing for version: {version_dir}")
         
-        # Read the inventory file
-        with open(inventory_file, 'r') as file:
-            inventory_content = file.read().splitlines()
-        
-        # Validate the inventory content
-        for line in inventory_content:
-            if not line.strip():
-                continue  # Skip empty lines
-            # Example validation: check if the line contains a valid digest
-            if not line.startswith("digest:"):
-                raise ValueError(f"Invalid inventory line in {version_dir}: {line}")
-        
-        # Track any content digests that differ from the main inventory
-        if i > 0:
-            previous_inventory_file = os.path.join(version_dirs[i-1], "inventory.txt")
-            with open(previous_inventory_file, 'r') as file:
-                previous_inventory_content = file.read().splitlines()
-            
-            # Compare current inventory with previous inventory
-            if set(inventory_content) != set(previous_inventory_content):
-                # Log or handle differences
-                print(f"Differences found between {version_dirs[i-1]} and {version_dir}")
+        for content_id, digest in version_inventory.items():
+            if content_id in root_inventory:
+                if root_inventory[content_id] != digest:
+                    discrepancies[content_id] = {
+                        'root_digest': root_inventory[content_id],
+                        'version_digest': digest,
+                        'version': version_dir
+                    }
+            else:
+                discrepancies[content_id] = {
+                    'root_digest': None,
+                    'version_digest': digest,
+                    'version': version_dir
+                }
+    
+    return discrepancies

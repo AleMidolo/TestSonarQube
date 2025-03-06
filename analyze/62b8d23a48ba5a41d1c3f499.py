@@ -1,6 +1,6 @@
 def popitem(self):
     """
-    Rimuove e restituisce la coppia `(chiave, valore)` meno recentemente utilizzata.
+    Remove and return the `(key, value)` pair least recently used.
     """
     if not self:
         raise KeyError("popitem(): dictionary is empty")

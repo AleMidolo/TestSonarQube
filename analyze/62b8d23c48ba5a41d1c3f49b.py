@@ -1,10 +1,9 @@
 def popitem(self):
     """
-    Rimuove e restituisce la coppia `(chiave, valore)` utilizzata più di recente.
+    Remove and return the `(key, value)` pair most recently used.
     """
     if not self:
-        raise KeyError("dictionary is empty")
+        raise KeyError("popitem(): dictionary is empty")
     key = next(reversed(self))
-    value = self[key]
-    del self[key]
-    return key, value
+    value = self.pop(key)
+    return (key, value)

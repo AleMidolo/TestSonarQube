@@ -1,27 +1,24 @@
 def get_parser_option_specs(self, command_name):
     """
-    Ottiene tutte le opzioni per il comando specificato
+    Gets all the options for the specified command
 
-    :param command_name: il nome del comando (main, virsh, ospd, ecc...)
-    :return: la lista di tutte le opzioni del comando
+    :param command_name: the command name (main, virsh, ospd, etc...)
+    :return: the list of all command options
     """
-    if not hasattr(self, '_parser_options'):
-        self._parser_options = {}
-    
-    if command_name in self._parser_options:
-        return self._parser_options[command_name]
-    
-    # Simulate fetching options for the command
-    # This is a placeholder implementation
-    options = []
     if command_name == "main":
-        options = ["--help", "--version", "--verbose"]
+        return [
+            {"name": "--help", "action": "store_true", "help": "show this help message and exit"},
+            {"name": "--version", "action": "store_true", "help": "show program's version number and exit"},
+        ]
     elif command_name == "virsh":
-        options = ["--connect", "--list", "--details"]
+        return [
+            {"name": "--connect", "type": str, "help": "connect to hypervisor"},
+            {"name": "--list", "action": "store_true", "help": "list domains"},
+        ]
     elif command_name == "ospd":
-        options = ["--config", "--log-level", "--daemon"]
+        return [
+            {"name": "--config", "type": str, "help": "path to configuration file"},
+            {"name": "--log-level", "type": str, "help": "set log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)"},
+        ]
     else:
-        options = ["--option1", "--option2", "--option3"]
-    
-    self._parser_options[command_name] = options
-    return options
+        return []

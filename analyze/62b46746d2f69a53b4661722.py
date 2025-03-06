@@ -1,31 +1,47 @@
 def absorb(self, args):
     """
-    Dato un insieme `args` di espressioni, restituisce una nuova lista di espressioni applicando l'assorbimento e l'assorbimento negativo.
+    Given an `args` sequence of expressions, return a new list of expression
+    applying absorption and negative absorption.
 
-    Consulta https://en.wikipedia.org/wiki/Absorption_law
+    See https://en.wikipedia.org/wiki/Absorption_law
 
-    Assorbimento::
+    Absorption::
 
         A & (A | B) = A, A | (A & B) = A
 
-    Assorbimento negativo::
+    Negative absorption::
 
         A & (~A | B) = A & B, A | (~A & B) = A | B
     """
-    def apply_absorption(expr):
-        if isinstance(expr, tuple):
-            if expr[0] == '&':
-                A, B = expr[1], expr[2]
-                if isinstance(B, tuple) and B[0] == '|' and B[1] == A:
-                    return A  # A & (A | B) = A
-                if isinstance(B, tuple) and B[0] == '|' and isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
-                    return ('&', A, B[2])  # A & (~A | B) = A & B
-            elif expr[0] == '|':
-                A, B = expr[1], expr[2]
-                if isinstance(B, tuple) and B[0] == '&' and B[1] == A:
-                    return A  # A | (A & B) = A
-                if isinstance(B, tuple) and B[0] == '&' and isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
-                    return ('|', A, B[2])  # A | (~A & B) = A | B
-        return expr
+    if not args:
+        return []
 
-    return [apply_absorption(expr) for expr in args]
+    new_args = []
+    for expr in args:
+        if isinstance(expr, tuple):
+            if len(expr) == 3:
+                op, left, right = expr
+                if op == '&':
+                    if left == right:
+                        new_args.append(left)
+                    elif isinstance(right, tuple) and len(right) == 3:
+                        r_op, r_left, r_right = right
+                        if r_op == '|' and r_left == left:
+                            new_args.append(left)
+                        elif r_op == '|' and r_left == ('~', left):
+                            new_args.append((op, left, r_right))
+                elif op == '|':
+                    if left == right:
+                        new_args.append(left)
+                    elif isinstance(right, tuple) and len(right) == 3:
+                        r_op, r_left, r_right = right
+                        if r_op == '&' and r_left == left:
+                            new_args.append(left)
+                        elif r_op == '&' and r_left == ('~', left):
+                            new_args.append((op, left, r_right))
+            else:
+                new_args.append(expr)
+        else:
+            new_args.append(expr)
+    
+    return new_args

@@ -3,27 +3,28 @@ from collections import defaultdict
 
 def _explore_folder(folder):
     """
-    Ottiene i dati dei pacchetti dalla cartella
+    Get packages' data from folder
 
-    Raggruppa i file in base al loro nome base XML e restituisce i dati in formato dizionario.
+    Groups files by their XML basename and returns data in dict format.
 
-    Parametri
+    Parameters
     ----------
     folder : str
-        Cartella del pacchetto
-
-    Restituisce
+        Folder of the package
+    Returns
     -------
     dict
-        Dizionario con i file raggruppati per nome base XML.
+        A dictionary where keys are XML basenames and values are lists of file paths.
     """
+    if not os.path.isdir(folder):
+        raise ValueError(f"The provided path '{folder}' is not a valid directory.")
+
     file_groups = defaultdict(list)
-    
-    for root, dirs, files in os.walk(folder):
+
+    for root, _, files in os.walk(folder):
         for file in files:
             if file.endswith('.xml'):
-                base_name = os.path.splitext(file)[0]
-                file_path = os.path.join(root, file)
-                file_groups[base_name].append(file_path)
-    
+                basename = os.path.splitext(file)[0]
+                file_groups[basename].append(os.path.join(root, file))
+
     return dict(file_groups)

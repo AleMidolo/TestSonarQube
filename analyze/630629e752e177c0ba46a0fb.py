@@ -2,24 +2,24 @@ import requests
 
 def send_document(url, data, timeout=10, method="post", *args, **kwargs):
     """
-    Metodo di supporto per inviare un documento tramite POST.
+    Helper method to send a document via POST.
 
-    Gli ulteriori parametri ``*args`` e ``**kwargs`` saranno passati a ``requests.post``.
+    Additional ``*args`` and ``**kwargs`` will be passed on to ``requests.post``.
 
-    :arg url: URL completo a cui inviare, incluso il protocollo  
-    :arg data: Dizionario (sarà codificato come form), bytes o oggetto simile a un file da inviare nel corpo della richiesta  
-    :arg timeout: Secondi di attesa per la risposta (predefinito: 10)  
-    :arg method: Metodo da utilizzare, predefinito: post  
-    :returns: Tupla contenente il codice di stato (int o None) e l'errore (istanza della classe di eccezione o None)
+    :arg url: Full url to send to, including protocol
+    :arg data: Dictionary (will be form-encoded), bytes, or file-like object to send in the body
+    :arg timeout: Seconds to wait for response (defaults to 10)
+    :arg method: Method to use, defaults to post
+    :returns: Tuple of status code (int or None) and error (exception class instance or None)
     """
     try:
         if method.lower() == "post":
             response = requests.post(url, data=data, timeout=timeout, *args, **kwargs)
+        elif method.lower() == "put":
+            response = requests.put(url, data=data, timeout=timeout, *args, **kwargs)
         else:
-            raise ValueError("Unsupported HTTP method. Only 'post' is supported.")
+            raise ValueError(f"Unsupported method: {method}")
         
-        response.raise_for_status()
-        return (response.status_code, None)
-    
+        return response.status_code, None
     except requests.exceptions.RequestException as e:
-        return (None, e)
+        return None, e

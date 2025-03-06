@@ -1,10 +1,12 @@
 def _legacy_mergeOrderings(orderings):
     """
-    Unisci più ordinamenti in modo che l'ordine all'interno di ciascun ordinamento venga preservato.
+    Merge multiple orderings so that within-ordering order is preserved
 
-    Gli ordinamenti sono vincolati in modo tale che, se un oggetto appare in due o più ordinamenti, il suffisso che inizia con l'oggetto deve essere presente in entrambi gli ordinamenti.
+    Orderings are constrained in such a way that if an object appears
+    in two or more orderings, then the suffix that begins with the
+    object must be in both orderings.
 
-    Ad esempio:
+    For example:
 
     >>> _mergeOrderings([
     ... ['x', 'y', 'z'],
@@ -29,14 +31,12 @@ def _legacy_mergeOrderings(orderings):
                 in_degree[v] += 1
             all_nodes.add(u)
             all_nodes.add(v)
-        if ordering:
-            all_nodes.add(ordering[-1])
 
     # Initialize queue with nodes having zero in-degree
     queue = deque([node for node in all_nodes if in_degree[node] == 0])
+    result = []
 
     # Perform topological sort
-    result = []
     while queue:
         u = queue.popleft()
         result.append(u)

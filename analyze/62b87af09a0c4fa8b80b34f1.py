@@ -1,8 +1,8 @@
 def fill(self, coord, weight=1):
     """
-    Riempie l'istogramma alla posizione *coord* con il peso specificato *weight*.
+    Fill histogram at *coord* with the given *weight*.
+
+    Coordinates outside the histogram edges are ignored.
     """
-    if coord in self.histogram:
+    if self.is_within_bounds(coord):
         self.histogram[coord] += weight
-    else:
-        self.histogram[coord] = weight

@@ -1,26 +1,32 @@
 from typing import List, Optional
 
 def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = None) -> str:
-    '''
-    Converti un numero in una stringa utilizzando l'alfabeto fornito.
+    """
+    Convert a number to a string, using the given alphabet.
 
-    L'output avrà la cifra più significativa per prima.
-    '''
-    if number == 0:
-        return alphabet[0] if padding is None else alphabet[0] * padding
+    The output has the most significant digit first.
+    """
+    if number < 0:
+        raise ValueError("Number must be non-negative.")
     
     base = len(alphabet)
-    result = []
+    if base == 0:
+        raise ValueError("Alphabet must not be empty.")
     
+    result = []
     while number > 0:
         remainder = number % base
         result.append(alphabet[remainder])
         number = number // base
     
+    if not result:
+        result.append(alphabet[0])
+    
     result.reverse()
     
     if padding is not None:
-        while len(result) < padding:
-            result.insert(0, alphabet[0])
+        if padding < len(result):
+            raise ValueError("Padding must be greater than or equal to the length of the result.")
+        result = [alphabet[0]] * (padding - len(result)) + result
     
     return ''.join(result)

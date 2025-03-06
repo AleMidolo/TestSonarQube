@@ -1,11 +1,5 @@
-def correggi_prefisso_namespace_w(contenuto):
+def fix_namespace_prefix_w(content):
     """
-    Converte il testo che di default è 'w:st="' in 'w-st="'.
-    
-    Args:
-        contenuto (str): Il testo da correggere.
-    
-    Returns:
-        str: Il testo con il prefisso corretto.
+    Convert text that defaults to 'w:st="' to 'w-st="'
     """
-    return contenuto.replace('w:st="', 'w-st="')
+    return content.replace('w:st="', 'w-st="')

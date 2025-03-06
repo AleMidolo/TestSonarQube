@@ -1,33 +1,34 @@
-from datetime import datetime, time, timedelta
+from datetime import time, timedelta
 import pytz
 
 def hydrate_time(nanoseconds, tz=None):
     """
-    Idratatore per valori di `Time` e `LocalTime`.
+    Hydrator for `Time` and `LocalTime` values.
 
-    :param nanoseconds: Il tempo in nanosecondi.
-    :param tz: Il fuso orario (opzionale).
-    :return: Un oggetto `datetime.time` rappresentante il tempo.
+    :param nanoseconds: The time in nanoseconds.
+    :param tz: The timezone (optional).
+    :return: Time object.
     """
-    # Convert nanoseconds to seconds
-    seconds = nanoseconds / 1e9
+    # Convert nanoseconds to seconds and microseconds
+    seconds = nanoseconds // 1_000_000_000
+    microseconds = (nanoseconds % 1_000_000_000) // 1000
     
-    # Create a timedelta object from the seconds
-    delta = timedelta(seconds=seconds)
+    # Create a timedelta object to represent the time
+    delta = timedelta(seconds=seconds, microseconds=microseconds)
     
-    # Create a base datetime object (e.g., 1970-01-01)
-    base_datetime = datetime(1970, 1, 1)
+    # Extract hours, minutes, seconds, and microseconds from the timedelta
+    total_seconds = delta.total_seconds()
+    hours = int(total_seconds // 3600)
+    minutes = int((total_seconds % 3600) // 60)
+    seconds = int(total_seconds % 60)
+    microseconds = int((total_seconds - int(total_seconds)) * 1_000_000)
     
-    # Add the timedelta to the base datetime
-    result_datetime = base_datetime + delta
-    
-    # Extract the time part
-    result_time = result_datetime.time()
+    # Create a time object
+    time_obj = time(hour=hours, minute=minutes, second=seconds, microsecond=microseconds)
     
     # If a timezone is provided, localize the time
     if tz is not None:
         tz = pytz.timezone(tz)
-        result_datetime = tz.localize(result_datetime)
-        result_time = result_datetime.time()
+        time_obj = tz.localize(time_obj)
     
-    return result_time
+    return time_obj

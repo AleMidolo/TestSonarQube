@@ -1,13 +1,11 @@
 def validate_choices_args(self, args):
     """
-    Verifica se il valore degli argomenti di scelta è una delle opzioni disponibili.
+    Check if value of choice arguments is one of the available choices.
 
-    :param args: Gli argomenti ricevuti.
+    :param args: The received arguments.
     """
-    if not hasattr(self, 'choices'):
-        raise AttributeError("No 'choices' attribute defined for validation.")
-    
-    if args not in self.choices:
-        raise ValueError(f"Invalid argument: {args}. Expected one of {self.choices}.")
-    
-    return True
+    for arg_name, arg_value in args.items():
+        if hasattr(self, arg_name):
+            choices = getattr(self, arg_name)
+            if arg_value not in choices:
+                raise ValueError(f"Invalid value for {arg_name}. Expected one of {choices}, got {arg_value}.")

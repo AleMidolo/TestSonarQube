@@ -1,24 +1,39 @@
 def data(self, *keys):
     """
-    Restituisce le chiavi e i valori di questo record come un dizionario, includendo opzionalmente solo determinati valori in base all'indice o alla chiave. Le chiavi fornite negli elementi che non sono presenti nel record verranno inserite con un valore di :const:`None`; gli indici forniti che sono fuori dai limiti genereranno un'eccezione :exc:`IndexError`.
+    Return the keys and values of this record as a dictionary,
+    optionally including only certain values by index or key. Keys
+    provided in the items that are not in the record will be
+    inserted with a value of :const:`None`; indexes provided
+    that are out of bounds will trigger an :exc:`IndexError`.
 
-    :param keys: indici o chiavi degli elementi da includere; se non ne vengono forniti, verranno inclusi tutti i valori  
-    :return: dizionario dei valori, indicizzati per nome del campo  
-    :raises: :exc:`IndexError` se viene specificato un indice fuori dai limiti  
+    :param keys: indexes or keys of the items to include; if none
+                  are provided, all values will be included
+    :return: dictionary of values, keyed by field name
+    :raises: :exc:`IndexError` if an out-of-bounds index is specified
     """
+    # Assuming self._fields contains the field names and self._values contains the values
+    if not hasattr(self, '_fields') or not hasattr(self, '_values'):
+        raise AttributeError("Record does not have '_fields' or '_values' attributes.")
+    
     result = {}
     if not keys:
-        # Se non vengono fornite chiavi, restituisci tutti i valori
-        for key, value in self.__dict__.items():
-            result[key] = value
+        # If no keys are provided, include all fields
+        for field, value in zip(self._fields, self._values):
+            result[field] = value
     else:
         for key in keys:
             if isinstance(key, int):
-                # Se la chiave è un indice, verifica che sia valido
-                if key < 0 or key >= len(self.__dict__):
-                    raise IndexError("Indice fuori dai limiti")
-                # Converti l'indice in una chiave del dizionario
-                key = list(self.__dict__.keys())[key]
-            # Aggiungi la chiave e il valore al risultato
-            result[key] = self.__dict__.get(key, None)
+                # Handle index-based access
+                if key < 0 or key >= len(self._fields):
+                    raise IndexError(f"Index {key} is out of bounds.")
+                field = self._fields[key]
+                result[field] = self._values[key]
+            else:
+                # Handle key-based access
+                if key in self._fields:
+                    index = self._fields.index(key)
+                    result[key] = self._values[index]
+                else:
+                    # Insert None for keys not in the record
+                    result[key] = None
     return result

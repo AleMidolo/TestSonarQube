@@ -1,8 +1,9 @@
+import os
+
 def is_gitbash():
     """
-    Restituisce True se viene eseguito in un terminale gitbash di Windows
+    returns True if you run in a Windows gitbash
 
-    :return: True se è gitbash
+    :return: True if gitbash
     """
-    import os
-    return os.environ.get('TERM_PROGRAM') == 'mintty' and os.environ.get('SHELL') and 'bash' in os.environ.get('SHELL')
+    return 'GIT_BASH' in os.environ.get('TERM_PROGRAM', '') or 'MINGW' in os.environ.get('SHELL', '')

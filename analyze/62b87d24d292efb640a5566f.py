@@ -1,10 +1,14 @@
 def render(pieces, style):
     """
-    Renderizzare i pezzi forniti nella versione richiesta dello stile.
+    Render the given version pieces into the requested style.
     """
-    if style == "simple":
-        return "\n".join(pieces)
-    elif style == "fancy":
-        return "\n".join([f"✨ {piece} ✨" for piece in pieces])
+    if style == "full":
+        return f"{pieces['major']}.{pieces['minor']}.{pieces['patch']}"
+    elif style == "major":
+        return f"{pieces['major']}"
+    elif style == "minor":
+        return f"{pieces['major']}.{pieces['minor']}"
+    elif style == "patch":
+        return f"{pieces['major']}.{pieces['minor']}.{pieces['patch']}"
     else:
-        raise ValueError("Stile non supportato")
+        raise ValueError(f"Unknown style: {style}")

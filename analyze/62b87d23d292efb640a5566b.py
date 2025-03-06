@@ -1,22 +1,25 @@
 import subprocess
 
-def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=False, env=None):
+def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Esegui il comando specificato.
+    Call the given command(s).
+
+    :param commands: List of commands to execute.
+    :param args: List of arguments to pass to the commands.
+    :param cwd: Current working directory for the command (default is None).
+    :param verbose: If True, print the command and its output (default is False).
+    :param hide_stderr: If True, suppress stderr output (default is False).
+    :param env: Environment variables to pass to the command (default is None).
+    :return: The return code of the command.
+    """
+    full_command = commands + args
+    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
     
-    :param comandi: Lista di comandi da eseguire.
-    :param argomenti: Lista di argomenti da passare ai comandi.
-    :param cwd: Directory di lavoro corrente (opzionale).
-    :param verbose: Se True, stampa l'output del comando (opzionale).
-    :param nascondi_stderr: Se True, nasconde l'output di errore (opzionale).
-    :param env: Dizionario di variabili d'ambiente (opzionale).
-    :return: Tupla contenente (stdout, stderr, returncode).
-    """
-    command = comandi + argomenti
-    stderr = subprocess.PIPE if nascondi_stderr else None
+    if verbose:
+        print(f"Running command: {' '.join(full_command)}")
     
     process = subprocess.Popen(
-        command,
+        full_command,
         cwd=cwd,
         stdout=subprocess.PIPE,
         stderr=stderr,
@@ -27,6 +30,9 @@ def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=Fal
     stdout, stderr = process.communicate()
     
     if verbose:
-        print(stdout)
+        if stdout:
+            print(f"stdout:\n{stdout}")
+        if stderr and not hide_stderr:
+            print(f"stderr:\n{stderr}")
     
-    return stdout, stderr, process.returncode
+    return process.returncode
