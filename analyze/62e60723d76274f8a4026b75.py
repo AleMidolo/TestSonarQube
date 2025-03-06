@@ -1,7 +1,7 @@
 def round_half_to_even(n):
     """
     Rounds a number to the nearest integer, with ties (0.5) rounded to the nearest even integer.
-
+    
     >>> round_half_to_even(3)
     3
     >>> round_half_to_even(3.2)

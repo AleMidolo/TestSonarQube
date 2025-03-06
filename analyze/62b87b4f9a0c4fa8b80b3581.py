@@ -1,12 +1,30 @@
 def scale(self, other=None, recompute=False):
+    """
+    हिस्टोग्राम का स्केल (इंटीग्रल) गणना करें या सेट करें।
+
+    यदि *other* ``None`` है, तो इस हिस्टोग्राम का स्केल लौटाएं।  
+    यदि इसका स्केल पहले गणना नहीं किया गया है,  
+    तो इसे गणना करके संग्रहीत किया जाएगा ताकि बाद में उपयोग किया जा सके  
+    (जब तक कि *recompute* को स्पष्ट रूप से न कहा जाए)।  
+    ध्यान दें कि यदि हिस्टोग्राम को बदला (फिल किया) गया है,  
+    तो यदि स्केल पहले से गणना किया गया था,  
+    तो इसे स्पष्ट रूप से फिर से गणना करना आवश्यक है।  
+
+    यदि एक फ्लोट *other* प्रदान किया गया है,  
+    तो self को *other* के अनुसार पुनः स्केल करें।  
+
+    ऐसे हिस्टोग्राम जिनका स्केल शून्य है,  
+    उन्हें पुनः स्केल नहीं किया जा सकता।  
+    यदि ऐसा करने का प्रयास किया जाता है,  
+    तो :exc:`.LenaValueError` त्रुटि उत्पन्न की जाएगी।
+    """
+    if not hasattr(self, '_scale') or recompute:
+        # Calculate the scale (integral) of the histogram
+        self._scale = sum(self.bins)
+    
     if other is None:
-        if not hasattr(self, '_scale') or recompute:
-            # Calculate the scale (integral) of the histogram
-            self._scale = sum(self.bins)
         return self._scale
     else:
-        if not isinstance(other, (int, float)):
-            raise TypeError("Scale factor must be a float or integer.")
         if self._scale == 0:
             raise LenaValueError("Cannot rescale a histogram with zero scale.")
         # Rescale the histogram

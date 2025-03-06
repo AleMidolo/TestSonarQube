@@ -7,7 +7,9 @@ def tzname_in_python2(namefunc):
     """
     def wrapper(*args, **kwargs):
         result = namefunc(*args, **kwargs)
-        if isinstance(result, unicode):
+        if isinstance(result, str):
             return result.encode('utf-8')
+        elif isinstance(result, tuple):
+            return tuple(x.encode('utf-8') if isinstance(x, str) else x for x in result)
         return result
     return wrapper

@@ -2,15 +2,15 @@ from typing import List, Optional
 
 def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = None) -> str:
     """
-    Convert a number to a string using the given alphabet.
-    The most significant digit will be first in the output.
+    संख्या को वर्णमाला का उपयोग करके स्ट्रिंग में परिवर्तित करें।
+    आउटपुट में सबसे महत्वपूर्ण अंक पहले होगा।
     """
     if number < 0:
-        raise ValueError("Number must be non-negative.")
+        raise ValueError("Number must be non-negative")
     
     base = len(alphabet)
     if base == 0:
-        raise ValueError("Alphabet must not be empty.")
+        raise ValueError("Alphabet must not be empty")
     
     result = []
     while number > 0:

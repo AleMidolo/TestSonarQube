@@ -21,5 +21,5 @@ def validate_version_inventories(self, version_dirs):
             root_inventory = json.load(f)
         
         for content_id, digest in inventory.items():
-            if content_id in root_inventory and root_inventory[content_id] != digest:
+            if content_id in root_inventory and digest != root_inventory[content_id]:
                 print(f"Content digest mismatch for {content_id} in version {version_dir}")

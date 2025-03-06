@@ -5,7 +5,7 @@ def _inline_r_setup(code: str) -> str:
     इन्हें यहां सेट किया गया है।
     """
     setup_code = """
-    options(repos = c(CRAN = "https://cloud.r-project.org"))
+    options(repos = c(CRAN = "https://cloud.r-project.org/"))
     options(warn = 1)
     options(stringsAsFactors = FALSE)
     """

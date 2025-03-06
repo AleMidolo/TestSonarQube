@@ -1,37 +1,15 @@
-from functools import wraps
-
 def unit_of_work(metadata=None, timeout=None):
-    """
-    यह फ़ंक्शन ट्रांज़ेक्शन फ़ंक्शन्स के लिए एक डेकोरेटर है, जो यह नियंत्रित करने की अतिरिक्त सुविधा प्रदान करता है कि ट्रांज़ेक्शन कैसे निष्पादित किया जाए।
-
-    :param metadata: 
-        मेटाडेटा के साथ एक डिक्शनरी।  
-        निर्दिष्ट मेटाडेटा निष्पादित ट्रांज़ेक्शन से जुड़ा होगा और ``dbms.listQueries`` और ``dbms.listTransactions`` प्रक्रियाओं के आउटपुट में दिखाई देगा।  
-        यह ``query.log`` में भी लॉग किया जाएगा।  
-        यह सुविधा ट्रांज़ेक्शन्स को टैग करना आसान बनाती है और ``dbms.setTXMetaData`` प्रक्रिया के समकक्ष है।  
-        प्रक्रिया संदर्भ के लिए देखें: [https://neo4j.com/docs/operations-manual/current/reference/procedures/](https://neo4j.com/docs/operations-manual/current/reference/procedures/)।  
-    :type metadata: `dict`
-
-    :param timeout: 
-        ट्रांज़ेक्शन का टाइमआउट (सेकंड में)।  
-        जो ट्रांज़ेक्शन्स निर्दिष्ट टाइमआउट से अधिक समय तक चलते हैं, उन्हें डेटाबेस द्वारा समाप्त कर दिया जाएगा।  
-        यह सुविधा क्वेरी/ट्रांज़ेक्शन निष्पादन समय को सीमित करने की अनुमति देती है।  
-        निर्दिष्ट टाइमआउट डेटाबेस में कॉन्फ़िगर किए गए डिफ़ॉल्ट टाइमआउट (``dbms.transaction.timeout`` सेटिंग) को ओवरराइड करता है।  
-        मान नकारात्मक अवधि का प्रतिनिधित्व नहीं करना चाहिए।  
-        शून्य अवधि (0) ट्रांज़ेक्शन को अनिश्चित काल तक चलने देगी।  
-        `None` का उपयोग डेटाबेस में कॉन्फ़िगर किए गए डिफ़ॉल्ट टाइमआउट का उपयोग करेगा।  
-    :type timeout: `float` या `:const:None`
-    """
     def decorator(func):
-        @wraps(func)
         def wrapper(*args, **kwargs):
-            # यहां ट्रांज़ेक्शन के लिए मेटाडेटा और टाइमआउट को सेट करने का कोड होगा
-            # उदाहरण के लिए, यह कोड Neo4j ड्राइवर के साथ इंटरैक्ट कर सकता है
-            # लेकिन यहां हम केवल एक सरल उदाहरण दिखा रहे हैं
+            # Here you would typically add logic to handle the transaction
+            # with the specified metadata and timeout.
+            # For example, you might wrap the function call in a transaction
+            # context that applies these settings.
+            # This is a simplified example and does not include actual transaction handling.
             if metadata is not None:
-                kwargs['metadata'] = metadata
+                print(f"Applying metadata: {metadata}")
             if timeout is not None:
-                kwargs['timeout'] = timeout
+                print(f"Setting timeout: {timeout} seconds")
             return func(*args, **kwargs)
         return wrapper
     return decorator

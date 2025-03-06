@@ -1,5 +1,5 @@
 import logging
-import json
+import yaml
 import os
 
 def load_configurations(config_filenames, overrides=None, resolve_env=True):
@@ -15,37 +15,37 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     for filename in config_filenames:
         try:
             with open(filename, 'r') as file:
-                config_data = json.load(file)
+                config = yaml.safe_load(file)
                 
                 if resolve_env:
-                    for key, value in config_data.items():
-                        if isinstance(value, str) and value.startswith('$'):
-                            env_var = value[1:]
-                            config_data[key] = os.getenv(env_var, value)
+                    for key, value in config.items():
+                        if isinstance(value, str) and value.startswith('${') and value.endswith('}'):
+                            env_var = value[2:-1]
+                            config[key] = os.getenv(env_var, value)
                 
                 if overrides:
-                    config_data.update(overrides)
+                    config.update(overrides)
                 
-                configurations[filename] = config_data
-        except json.JSONDecodeError as e:
-            error_msg = f"JSON पार्स त्रुटि: {filename} - {str(e)}"
+                configurations[filename] = config
+        except yaml.YAMLError as e:
+            error_msg = f"YAML parsing error in file {filename}: {e}"
             logging.error(error_msg)
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
-                pathname=__file__,
-                lineno=e.lineno,
+                pathname=filename,
+                lineno=0,
                 msg=error_msg,
                 args=None,
                 exc_info=None
             ))
         except Exception as e:
-            error_msg = f"त्रुटि: {filename} - {str(e)}"
+            error_msg = f"Error loading configuration from file {filename}: {e}"
             logging.error(error_msg)
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
-                pathname=__file__,
+                pathname=filename,
                 lineno=0,
                 msg=error_msg,
                 args=None,

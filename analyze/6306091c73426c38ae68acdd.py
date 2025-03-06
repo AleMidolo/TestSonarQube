@@ -15,15 +15,11 @@ def validate_from_file(cls, yaml_file=None):
         with open(yaml_file, 'r') as file:
             data = yaml.safe_load(file)
     except Exception as e:
-        raise IRValidatorException(f"YAML फ़ाइल लोड करने में त्रुटि: {e}")
+        raise cls.IRValidatorException(f"फ़ाइल लोड करने में त्रुटि: {e}")
     
-    # यहां आप आवश्यक फ़ील्ड्स की जांच कर सकते हैं
-    required_fields = ['field1', 'field2', 'field3']  # उदाहरण के लिए आवश्यक फ़ील्ड्स
+    required_fields = ['field1', 'field2', 'field3']  # आवश्यक फ़ील्ड्स की सूची
     for field in required_fields:
         if field not in data:
-            raise IRValidatorException(f"अनिवार्य फ़ील्ड '{field}' YAML फ़ाइल में गायब है।")
+            raise cls.IRValidatorException(f"अनिवार्य फ़ील्ड '{field}' गायब है।")
     
     return data
-
-class IRValidatorException(Exception):
-    pass

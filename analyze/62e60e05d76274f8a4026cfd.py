@@ -6,7 +6,7 @@ def index(self, key):
     :return: इंडेक्स 
     :rtype: int
     """
-    try:
-        return self._items.index(key)
-    except ValueError:
-        return -1
+    if key in self:
+        return list(self).index(key)
+    else:
+        raise ValueError(f"{key} not found in the collection.")

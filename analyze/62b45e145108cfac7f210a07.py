@@ -18,29 +18,46 @@ def validate(self, inventory, extract_spec_version=False):
         spec_version = self.spec_version
 
     # Perform validation based on the determined spec_version
+    return self.perform_validation(inventory, spec_version)
+
+def is_valid_spec_version(self, spec_version):
+    """
+    Check if the given spec_version is valid.
+    """
+    # Placeholder for actual validation logic
+    return spec_version in ['v1', 'v2', 'v3']
+
+def perform_validation(self, inventory, spec_version):
+    """
+    Perform the actual validation based on the spec_version.
+    """
+    # Placeholder for actual validation logic
     if spec_version == 'v1':
         return self.validate_v1(inventory)
     elif spec_version == 'v2':
         return self.validate_v2(inventory)
+    elif spec_version == 'v3':
+        return self.validate_v3(inventory)
     else:
-        raise ValueError(f"Unsupported specification version: {spec_version}")
-
-def is_valid_spec_version(self, spec_version):
-    """
-    Check if the given specification version is valid.
-    """
-    return spec_version in ['v1', 'v2']
+        raise ValueError(f"Unsupported spec_version: {spec_version}")
 
 def validate_v1(self, inventory):
     """
-    Validate inventory against v1 specification.
+    Validate inventory for spec_version v1.
     """
-    # Implementation for v1 validation
-    pass
+    # Placeholder for v1 validation logic
+    return True
 
 def validate_v2(self, inventory):
     """
-    Validate inventory against v2 specification.
+    Validate inventory for spec_version v2.
     """
-    # Implementation for v2 validation
-    pass
+    # Placeholder for v2 validation logic
+    return True
+
+def validate_v3(self, inventory):
+    """
+    Validate inventory for spec_version v3.
+    """
+    # Placeholder for v3 validation logic
+    return True

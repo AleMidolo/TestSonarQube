@@ -19,7 +19,7 @@ def scale(self, other=None):
         return self._scale
     elif isinstance(other, (int, float)):
         if self._scale is None or self._scale == 0:
-            raise ValueError("Cannot rescale graph with unknown or zero scale.")
+            raise LenaValueError("Cannot rescale graph with unknown or zero scale.")
         # Rescale the last coordinate
         if hasattr(self, 'z'):
             self.z *= other / self._scale
@@ -28,9 +28,12 @@ def scale(self, other=None):
         elif hasattr(self, 'x'):
             self.x *= other / self._scale
         # Rescale errors if they exist
-        if hasattr(self, 'errors'):
-            for i in range(len(self.errors)):
-                self.errors[i] *= other / self._scale
+        if hasattr(self, 'error_z'):
+            self.error_z *= other / self._scale
+        if hasattr(self, 'error_y'):
+            self.error_y *= other / self._scale
+        if hasattr(self, 'error_x'):
+            self.error_x *= other / self._scale
         self._scale = other
     else:
-        raise TypeError("Expected a numeric value or None for scaling.")
+        raise TypeError("Scale must be a numeric value or None.")

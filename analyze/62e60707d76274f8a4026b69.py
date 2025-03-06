@@ -7,20 +7,15 @@ def point_type(name, fields, srid_map):
     :param srid_map: SRID मैपिंग
     :return: डायनामिक रूप से बनाई गई पॉइंट सबक्लास
     """
-    from django.contrib.gis.db.models import PointField
-    from django.db import models
+    from collections import namedtuple
 
-    class Meta:
-        app_label = 'dynamic_models'
+    # SRID मैपिंग को फ़ील्ड्स में जोड़ें
+    fields_with_srid = fields + ('srid',)
 
-    attrs = {
-        '__module__': __name__,
-        'Meta': Meta,
-    }
+    # नामित टपल (namedtuple) बनाएं
+    PointSubclass = namedtuple(name, fields_with_srid)
 
-    for field_name, field_type in fields.items():
-        attrs[field_name] = field_type
+    # SRID मैपिंग को सबक्लास में जोड़ें
+    PointSubclass.srid_map = srid_map
 
-    attrs['geom'] = PointField(srid=srid_map.get(name, 4326))
-
-    return type(name, (models.Model,), attrs)
+    return PointSubclass
