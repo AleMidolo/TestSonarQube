@@ -10,54 +10,32 @@ def validate(self, inventory, extract_spec_version=False):
     if extract_spec_version:
         if 'type' in inventory:
             spec_version = inventory['type']
-            if not self.is_valid_spec_version(spec_version):
+            if not self._is_valid_spec_version(spec_version):
                 spec_version = self.spec_version
         else:
             spec_version = self.spec_version
     else:
         spec_version = self.spec_version
 
-    # Perform validation based on the determined spec_version
-    return self.perform_validation(inventory, spec_version)
+    return self._validate_inventory(inventory, spec_version)
 
-def is_valid_spec_version(self, spec_version):
+def _is_valid_spec_version(self, spec_version):
     """
     Check if the given spec_version is valid.
     """
     # Placeholder for actual validation logic
     return spec_version in ['v1', 'v2', 'v3']
 
-def perform_validation(self, inventory, spec_version):
+def _validate_inventory(self, inventory, spec_version):
     """
-    Perform the actual validation based on the spec_version.
+    Validate the inventory based on the given spec_version.
     """
     # Placeholder for actual validation logic
     if spec_version == 'v1':
-        return self.validate_v1(inventory)
+        return 'type' in inventory and 'items' in inventory
     elif spec_version == 'v2':
-        return self.validate_v2(inventory)
+        return 'type' in inventory and 'items' in inventory and 'metadata' in inventory
     elif spec_version == 'v3':
-        return self.validate_v3(inventory)
+        return 'type' in inventory and 'items' in inventory and 'metadata' in inventory and 'tags' in inventory
     else:
-        raise ValueError(f"Unsupported spec_version: {spec_version}")
-
-def validate_v1(self, inventory):
-    """
-    Validate inventory for spec_version v1.
-    """
-    # Placeholder for v1 validation logic
-    return True
-
-def validate_v2(self, inventory):
-    """
-    Validate inventory for spec_version v2.
-    """
-    # Placeholder for v2 validation logic
-    return True
-
-def validate_v3(self, inventory):
-    """
-    Validate inventory for spec_version v3.
-    """
-    # Placeholder for v3 validation logic
-    return True
+        return False

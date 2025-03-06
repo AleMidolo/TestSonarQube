@@ -5,29 +5,23 @@ def validate(self, path):
     यदि मान्य है (चेतावनियाँ स्वीकार्य हैं), तो True लौटाता है, अन्यथा False।
     """
     # Placeholder implementation for OCFL validation
-    # This is a basic example and should be replaced with actual OCFL validation logic
+    # This should be replaced with actual OCFL validation logic
     try:
-        # Check if the path exists
+        # Example: Check if the path exists and is a directory
         if not os.path.exists(path):
             return False
+        if not os.path.isdir(path):
+            return False
         
-        # Check for required OCFL structure
-        # Example: Check for 'inventory.json' and 'version' directories
-        required_files = ['inventory.json']
-        required_dirs = ['versions']
-        
+        # Example: Check for required OCFL files and directories
+        required_files = ['inventory.json', 'inventory.json.sha512']
         for file in required_files:
-            if not os.path.isfile(os.path.join(path, file)):
-                return False
-        
-        for dir in required_dirs:
-            if not os.path.isdir(os.path.join(path, dir)):
+            if not os.path.exists(os.path.join(path, file)):
                 return False
         
         # If all checks pass, return True
         return True
-    
     except Exception as e:
-        # Log the exception if needed
+        # Log the exception or handle it as needed
         print(f"Validation error: {e}")
         return False

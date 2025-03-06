@@ -4,8 +4,14 @@ def validate_choices_args(self, args):
 
     :param args: प्राप्त किए गए आर्ग्युमेंट्स।
     """
-    valid_choices = ["option1", "option2", "option3"]  # उपलब्ध विकल्पों की सूची
+    if not hasattr(self, 'choices'):
+        raise AttributeError("'choices' attribute is not defined in the class.")
+    
+    if not isinstance(self.choices, (list, tuple)):
+        raise TypeError("'choices' should be a list or tuple.")
+    
     for arg in args:
-        if arg not in valid_choices:
-            return False
+        if arg not in self.choices:
+            raise ValueError(f"Invalid choice: {arg}. Valid choices are: {self.choices}")
+    
     return True

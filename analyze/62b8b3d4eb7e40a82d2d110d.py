@@ -4,5 +4,5 @@ def _c_optimizations_required():
 
     यह `_use_c_impl` में दस्तावेज़ित `PURE_PYTHON` वेरिएबल का उपयोग करता है।
     """
-    from ._use_c_impl import PURE_PYTHON
+    from _use_c_impl import PURE_PYTHON
     return not PURE_PYTHON

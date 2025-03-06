@@ -11,31 +11,38 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     :rtype: str  
     """
     import traceback
-    
-    # Get the exception message
-    exception_message = str(e)
-    
-    # Get the formatted traceback
-    tb_list = traceback.format_exception(type(e), e, e.__traceback__)
-    
-    # Limit the traceback levels
+    import sys
+
+    # Get the exception type and message
+    exc_type = type(e).__name__
+    exc_msg = str(e)
+
+    # Get the traceback
+    tb = e.__traceback__
+    tb_list = traceback.extract_tb(tb)
+
+    # Limit the traceback to max_level
     if len(tb_list) > max_level:
-        tb_list = tb_list[:max_level]
-        tb_list.append("... (truncated due to max_level)\n")
-    
-    # Limit the path levels in each traceback line
-    for i in range(len(tb_list)):
-        parts = tb_list[i].split("\n")
-        if len(parts) > 1:
-            path_parts = parts[0].split("/")
-            if len(path_parts) > max_path_level:
-                parts[0] = "/".join(path_parts[-max_path_level:])
-                tb_list[i] = "\n".join(parts)
-    
-    # Combine the traceback into a single string
-    formatted_traceback = "".join(tb_list)
-    
-    # Combine the exception message and traceback
-    result = f"Exception: {exception_message}\n{formatted_traceback}"
-    
-    return result
+        tb_list = tb_list[-max_level:]
+
+    # Format the traceback
+    formatted_tb = []
+    for frame in tb_list:
+        filename = frame.filename
+        lineno = frame.lineno
+        funcname = frame.name
+        line = frame.line
+
+        # Limit the path level
+        if max_path_level > 0:
+            parts = filename.split('/')
+            if len(parts) > max_path_level:
+                filename = '/'.join(parts[-max_path_level:])
+
+        formatted_tb.append(f"File \"{filename}\", line {lineno}, in {funcname}\n  {line}")
+
+    # Combine the exception type, message, and traceback
+    formatted_exception = f"{exc_type}: {exc_msg}\n"
+    formatted_exception += "\n".join(formatted_tb)
+
+    return formatted_exception

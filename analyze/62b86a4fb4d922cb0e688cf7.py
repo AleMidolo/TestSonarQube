@@ -11,7 +11,7 @@ def validate_key(key):
         ValidationError: यदि दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।
     """
     # Define the regular expression pattern for the key
-    pattern = r'^[A-Za-z0-9_]+$'  # Example pattern: alphanumeric and underscores
+    pattern = r'^[A-Za-z0-9_]+$'  # Example pattern: alphanumeric and underscore
     
     if not re.match(pattern, key):
         raise ValueError("ValidationError: दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।")

@@ -2,4 +2,5 @@ def workspace_manager(cls):
     """
     वर्कस्पेस मैनेजर प्राप्त करता है।
     """
-    return cls.workspace_manager
+    # Assuming cls has a method or attribute to get the workspace manager
+    return cls.get_workspace_manager()

@@ -9,9 +9,8 @@ def from_raw_values(cls, values):
     :type values: Iterable[str]
     """
     # Assuming the Bookmarks class is defined elsewhere
+    # and has a method to add bookmarks from raw values.
     bookmarks = cls()
     for value in values:
-        # Process each raw value and add it to the Bookmarks object
-        # This is a placeholder for the actual deserialization logic
-        bookmarks.add(value)
+        bookmarks.add_bookmark(value)
     return bookmarks
