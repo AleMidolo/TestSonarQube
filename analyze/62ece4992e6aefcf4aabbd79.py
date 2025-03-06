@@ -2,22 +2,22 @@ import re
 
 def make_find_paths(find_paths):
     """
-    `--find` के लिए पास किए गए पथ खंडों (path fragments) या पैटर्न के अनुक्रम को लें और सभी पथ खंडों को ग्लोब पैटर्न में बदलें। मौजूदा पैटर्न को बिना बदले पास करें।
+    Dada una secuencia de fragmentos de rutas o patrones proporcionados a través de `--find`, transforma todos los fragmentos de rutas en patrones glob. Deja los patrones existentes sin modificar.
 
-    उदाहरण के लिए, यदि `find_paths` है:
+    Por ejemplo, dado un `find_paths` de:
 
-    ['foo.txt', 'pp:root/somedir']
+      ['foo.txt', 'pp:root/somedir']
 
-    ... तो इसे इस प्रकार बदलें:
+    ... se transforma en:
 
-    ['sh:**/*foo.txt*/**', 'pp:root/somedir']
+      ['sh:**/*foo.txt*/**', 'pp:root/somedir']
     """
-    result = []
+    transformed_paths = []
     for path in find_paths:
-        if path.startswith('pp:'):
-            result.append(path)
+        if re.match(r'^[a-zA-Z]+:', path):
+            # Si el path ya tiene un prefijo (como 'pp:'), lo dejamos sin modificar
+            transformed_paths.append(path)
         else:
-            # Convert the path fragment to a glob pattern
-            glob_pattern = f'sh:**/*{path}*/**'
-            result.append(glob_pattern)
-    return result
+            # Si no tiene prefijo, lo transformamos en un patrón glob
+            transformed_paths.append(f'sh:**/*{path}*/**')
+    return transformed_paths

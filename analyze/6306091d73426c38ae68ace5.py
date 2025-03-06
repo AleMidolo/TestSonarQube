@@ -1,11 +1,11 @@
 def _include_groups(self, parser_dict):
     """
-    स्पेक फाइलों में 'include dict' निर्देश को हल करता है।
+    Resuelve la directiva de inclusión del diccionario en los archivos de especificación.
     """
     if 'include' in parser_dict:
         for group_name in parser_dict['include']:
             if group_name in self.groups:
-                parser_dict.update(self.groups[group_name])
-            else:
-                raise ValueError(f"Group '{group_name}' not found in groups definition.")
+                for key, value in self.groups[group_name].items():
+                    if key not in parser_dict:
+                        parser_dict[key] = value
     return parser_dict

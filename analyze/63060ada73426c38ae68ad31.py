@@ -1,34 +1,22 @@
 def _convert_non_cli_args(self, parser_name, values_dict):
     """
-    तर्कों को सही प्रकारों में परिवर्तित करता है और values_dict पैरामीटर को संशोधित करता है।
+    Convierte los argumentos a los tipos correctos modificando el parámetro values_dict.
 
-    डिफ़ॉल्ट रूप से, सभी मान स्ट्रिंग्स के रूप में होते हैं।
+    Por defecto, todos los valores son cadenas de texto (strings).
 
-    :param parser_name: कमांड का नाम, जैसे main, virsh, ospd, आदि।
-    :param values_dict: तर्कों के साथ डिक्शनरी।
+    :param parser_name: El nombre del comando, por ejemplo: main, virsh, ospd, etc.
+    :param values_dict: El diccionario con los argumentos.
     """
-    if parser_name == "main":
-        for key, value in values_dict.items():
-            if key == "port":
+    for key, value in values_dict.items():
+        if isinstance(value, str):
+            if value.lower() == 'true':
+                values_dict[key] = True
+            elif value.lower() == 'false':
+                values_dict[key] = False
+            elif value.isdigit():
                 values_dict[key] = int(value)
-            elif key == "verbose":
-                values_dict[key] = bool(value)
-            elif key == "timeout":
+            elif value.replace('.', '', 1).isdigit():
                 values_dict[key] = float(value)
-    elif parser_name == "virsh":
-        for key, value in values_dict.items():
-            if key == "memory":
-                values_dict[key] = int(value)
-            elif key == "cpu":
-                values_dict[key] = int(value)
-            elif key == "active":
-                values_dict[key] = value.lower() == "true"
-    elif parser_name == "ospd":
-        for key, value in values_dict.items():
-            if key == "threads":
-                values_dict[key] = int(value)
-            elif key == "debug":
-                values_dict[key] = value.lower() == "true"
-            elif key == "interval":
-                values_dict[key] = float(value)
+            elif value.lower() == 'none':
+                values_dict[key] = None
     return values_dict

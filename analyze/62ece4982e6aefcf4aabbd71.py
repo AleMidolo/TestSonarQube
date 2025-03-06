@@ -2,29 +2,27 @@ import re
 
 def regex_dict(item):
     """
-    *.cpp कुंजियों को regex कुंजियों में बदलें
+    Convertir claves `*.cpp` a claves de expresiones regulares.
 
-    एक dict दिया गया है जिसमें सभी कुंजियाँ वाइल्डकार्ड के साथ फ़ाइल नाम हैं,
-    केवल कुंजियों को उनके समकक्ष regex में बदलें और मानों को वैसा ही छोड़ दें।
+    Dado un diccionario donde las claves son nombres de archivo con comodines, convierte únicamente las claves en expresiones regulares equivalentes y deja los valores intactos.
 
-    उदाहरण:
-
-    नियम (rules) = {
-        '*.cpp':
-            {'a': 'arf', 'b': 'bark', 'c': 'coo'},
-        '*.h':
-           {'h': 'help'}
+    Ejemplo
+    rules = {
+        '*.cpp': {'a': 'arf', 'b': 'bark', 'c': 'coo'},
+        '*.h': {'h': 'help'}
     }
+
     regex_keys = regex_dict(rules)
 
-    आर्ग्युमेंट्स:
-        item: वह dict जिसे बदलना है
-    रिटर्न करता है:
-        एक dict जिसमें कुंजियाँ regex में परिवर्तित होती हैं
+        Argumentos:
+            item (dict): Diccionario a convertir.
+
+        Retorno:
+            dict: Diccionario con claves convertidas a expresiones regulares.
     """
     regex_dict = {}
     for key, value in item.items():
-        # Replace '*' with '.*' to match any sequence of characters
+        # Convertir el comodín * a .* en la expresión regular
         regex_key = re.escape(key).replace('\\*', '.*')
         regex_dict[regex_key] = value
     return regex_dict

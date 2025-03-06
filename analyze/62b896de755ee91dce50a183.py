@@ -1,55 +1,43 @@
-from dateutil.parser import parse as dateutil_parse
 from datetime import datetime
+from dateutil import parser
 from dateutil.tz import gettz
 
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
-    डेट/समय स्ट्रिंग को :class:`datetime.datetime` ऑब्जेक्ट में पार्स करें।
+    Convierte la cadena de fecha/hora en un objeto de la clase :class:`datetime.datetime`.
 
     :param timestr:
-        कोई भी डेट/समय स्ट्रिंग जो समर्थित फॉर्मेट्स का उपयोग करती हो।
+        Cualquier fecha/hora en formato string que utilice los formatos compatibles.
 
     :param default:
-        डिफ़ॉल्ट datetime ऑब्जेक्ट। यदि यह एक datetime ऑब्जेक्ट है और ``None`` नहीं है, 
-        तो ``timestr`` में निर्दिष्ट तत्व डिफ़ॉल्ट ऑब्जेक्ट के तत्वों को बदल देंगे।
+        El objeto datetime predeterminado. Si este es un objeto datetime y no es
+        ``None``, los elementos especificados en ``timestr`` reemplazan los elementos en el objeto predeterminado.
 
     :param ignoretz:
-        यदि ``True`` सेट किया गया है, तो पार्स की गई स्ट्रिंग में टाइम ज़ोन को अनदेखा किया जाएगा 
-        और एक साधारण :class:`datetime.datetime` ऑब्जेक्ट लौटाया जाएगा।
+        Si se establece en ``True``, se ignoran las zonas horarias en las cadenas analizadas y se devuelve un objeto :class:`datetime.datetime` sin información de zona horaria (naive).
 
     :param tzinfos:
-        अतिरिक्त टाइम ज़ोन नाम/उपनाम जो स्ट्रिंग में हो सकते हैं। यह आर्ग्युमेंट टाइम ज़ोन नामों 
-        (और वैकल्पिक रूप से उन टाइम ज़ोन से ऑफ़सेट्स) को टाइम ज़ोन से मैप करता है। 
-        यह पैरामीटर एक डिक्शनरी हो सकता है जिसमें टाइम ज़ोन उपनाम टाइम ज़ोन नामों को टाइम ज़ोन से 
-        मैप करते हैं या एक फ़ंक्शन हो सकता है जो दो पैरामीटर (``tzname`` और ``tzoffset``) लेता है 
-        और एक टाइम ज़ोन लौटाता है।
+        Nombres/alias de zonas horarias adicionales que pueden estar presentes en la cadena. Este argumento mapea nombres de zonas horarias (y opcionalmente desplazamientos de esas zonas horarias) a zonas horarias. Este parámetro puede ser un diccionario con alias de zonas horarias que mapean nombres de zonas horarias a zonas horarias, o una función que tome dos parámetros (``tzname`` y ``tzoffset``) y devuelva una zona horaria.
 
-        जिन टाइम ज़ोन को नामों से मैप किया गया है, वे UTC से सेकंड में एक पूर्णांक ऑफ़सेट 
-        या :class:`tzinfo` ऑब्जेक्ट हो सकते हैं।
+        Las zonas horarias a las que se mapean los nombres pueden ser un desplazamiento entero desde UTC en segundos o un objeto :class:`tzinfo`.
 
     :param \*\*kwargs:
-        ``_parse()`` को पास किए गए कीवर्ड आर्ग्युमेंट्स।
+        Argumentos de palabras clave que se pasan a ``_parse()``.
 
     :return:
-        एक :class:`datetime.datetime` ऑब्जेक्ट लौटाता है या, यदि ``fuzzy_with_tokens`` विकल्प ``True`` है, 
-        तो एक ट्यूपल लौटाता है, जिसमें पहला तत्व :class:`datetime.datetime` ऑब्जेक्ट होता है और दूसरा 
-        ट्यूपल होता है जिसमें अस्पष्ट टोकन होते हैं।
+        Devuelve un objeto :class:`datetime.datetime` o, si la opción
+        ``fuzzy_with_tokens`` está establecida en ``True``, devuelve una tupla, donde el primer elemento es un objeto :class:`datetime.datetime` y el segundo es una tupla que contiene los tokens ambiguos.
 
     :raises ParserError:
-        अमान्य या अज्ञात स्ट्रिंग फॉर्मेट के लिए, यदि प्रदान किया गया :class:`tzinfo` वैध फॉर्मेट में नहीं है, 
-        या यदि एक अमान्य तिथि बनाई जाएगी, तो यह त्रुटि उठाई जाती है।
+        Se lanza para formatos de cadena no válidos o desconocidos, si el :class:`tzinfo` proporcionado no tiene un formato válido, o si se crearía una fecha no válida.
 
     :raises TypeError:
-        गैर-स्ट्रिंग या कैरेक्टर स्ट्रीम इनपुट के लिए यह त्रुटि उठाई जाती है।
+        Se lanza para entradas que no sean cadenas o flujos de caracteres.
 
     :raises OverflowError:
-        यदि पार्स की गई तिथि आपके सिस्टम पर सबसे बड़े वैध C पूर्णांक से अधिक हो जाती है, 
-        तो यह त्रुटि उठाई जाती है।
+        Se lanza si la fecha analizada excede el entero C más grande válido en tu sistema.
     """
-    if default is not None and not isinstance(default, datetime):
-        raise TypeError("default must be a datetime.datetime object or None")
-
     if ignoretz:
         tzinfos = None
 
-    return dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+    return parser.parse(timestr, default=default, tzinfos=tzinfos, **kwargs)

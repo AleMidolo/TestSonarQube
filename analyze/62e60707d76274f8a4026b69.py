@@ -1,25 +1,17 @@
 def point_type(name, fields, srid_map):
     """
-    डायनामिक रूप से एक पॉइंट सबक्लास बनाएं।
-
-    :param name: सबक्लास का नाम
-    :param fields: सबक्लास में शामिल फ़ील्ड्स
-    :param srid_map: SRID मैपिंग
-    :return: डायनामिक रूप से बनाई गई पॉइंट सबक्लास
+    Crear dinámicamente una subclase de 'Point'.
     """
-    from sqlalchemy import Column, Integer, Float
-    from sqlalchemy.ext.declarative import declarative_base
+    class DynamicPoint(Point):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            for field in fields:
+                setattr(self, field, kwargs.get(field))
+            self.srid = srid_map.get(name, 4326)  # Default SRID is 4326 (WGS84)
 
-    Base = declarative_base()
+        def __repr__(self):
+            fields_str = ', '.join(f"{field}={getattr(self, field)}" for field in fields)
+            return f"{name}({fields_str}, srid={self.srid})"
 
-    attrs = {
-        '__tablename__': name.lower(),
-        'id': Column(Integer, primary_key=True)
-    }
-
-    for field in fields:
-        attrs[field] = Column(Float)
-
-    attrs['srid'] = Column(Integer, default=srid_map.get(name, 4326))
-
-    return type(name, (Base,), attrs)
+    DynamicPoint.__name__ = name
+    return DynamicPoint

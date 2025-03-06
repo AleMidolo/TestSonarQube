@@ -2,26 +2,28 @@ import requests
 
 def send_document(url, data, timeout=10, method="post", *args, **kwargs):
     """
-    यह एक सहायक मेथड है जो POST के माध्यम से एक दस्तावेज़ (डॉक्यूमेंट) भेजने के लिए उपयोग किया जाता है।
+    Método auxiliar para enviar un documento mediante POST.
 
-    अतिरिक्त ``*args`` और ``**kwargs`` को ``requests.post`` में पास किया जाएगा।
+    Los parámetros adicionales ``*args`` y ``**kwargs`` se pasarán a ``requests.post``.
 
-    पैरामीटर (Arguments):
-    - url: वह पूर्ण URL (प्रोटोकॉल सहित) जहां डेटा भेजा जाना है।
-    - data: एक डिक्शनरी (जो फॉर्म-एन्कोडेड होगी), बाइट्स, या फाइल-जैसे ऑब्जेक्ट जिसे बॉडी में भेजा जाएगा।
-    - timeout: प्रतिक्रिया (response) के लिए प्रतीक्षा करने का समय, सेकंड में (डिफ़ॉल्ट रूप से 10 सेकंड)।
-    - method: उपयोग की जाने वाली HTTP विधि, डिफ़ॉल्ट रूप से "post"।
-
-    रिटर्न (Returns):
-    - status code: एक ट्यूपल जिसमें HTTP स्थिति कोड (int या None) होता है।
-    - error: एक अपवाद (exception) क्लास का उदाहरण या None।
+    :arg url: URL completa a la que se enviará, incluyendo el protocolo  
+    :arg data: Diccionario (se codificará como formulario), bytes o un objeto similar a un archivo que se enviará en el cuerpo  
+    :arg timeout: Segundos a esperar por la respuesta (por defecto 10)  
+    :arg method: Método a utilizar, por defecto es POST  
+    :returns: Tupla que contiene el código de estado (int o None) y el error (instancia de la clase de excepción o None)  
     """
     try:
         if method.lower() == "post":
             response = requests.post(url, data=data, timeout=timeout, *args, **kwargs)
+        elif method.lower() == "put":
+            response = requests.put(url, data=data, timeout=timeout, *args, **kwargs)
+        elif method.lower() == "patch":
+            response = requests.patch(url, data=data, timeout=timeout, *args, **kwargs)
         else:
-            raise ValueError("Unsupported HTTP method. Only 'post' is supported.")
+            raise ValueError(f"Método HTTP no soportado: {method}")
         
-        return response.status_code, None
-    except Exception as e:
-        return None, e
+        response.raise_for_status()
+        return (response.status_code, None)
+    
+    except requests.exceptions.RequestException as e:
+        return (None, e)

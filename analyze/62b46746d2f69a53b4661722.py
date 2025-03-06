@@ -1,40 +1,43 @@
 def absorb(self, args):
     """
-    `args` अभिव्यक्तियों के अनुक्रम को दिया गया है, एक नई सूची लौटाएं जिसमें अवशोषण और नकारात्मक अवशोषण लागू किया गया हो।
+    Dada una secuencia `args` de expresiones, devuelve una nueva lista de expresiones aplicando absorción y absorción negativa.
 
-    अधिक जानकारी के लिए देखें: [https://en.wikipedia.org/wiki/Absorption_law](https://en.wikipedia.org/wiki/Absorption_law)
+    Consulta https://es.wikipedia.org/wiki/Leyes_de_absorci%C3%B3n
 
-    **अवशोषण (Absorption):**
+    Absorción::
 
-    A & (A | B) = A, A | (A & B) = A
+        A & (A | B) = A, A | (A & B) = A
 
-    **नकारात्मक अवशोषण (Negative Absorption):**
+    Absorción negativa::
 
-    A & (~A | B) = A & B, A | (~A & B) = A | B
+        A & (~A | B) = A & B, A | (~A & B) = A | B
     """
-    result = []
-    for expr in args:
+    def apply_absorption(expr):
         if isinstance(expr, tuple):
-            if len(expr) == 3:
-                op, left, right = expr
-                if op == '&':
-                    if left == right:
-                        result.append(left)
-                    elif isinstance(right, tuple) and len(right) == 3:
-                        if right[0] == '|' and right[1] == left:
-                            result.append(left)
-                        elif right[0] == '|' and right[1] == ('~', left):
-                            result.append(('&', left, right[2]))
-                elif op == '|':
-                    if left == right:
-                        result.append(left)
-                    elif isinstance(right, tuple) and len(right) == 3:
-                        if right[0] == '&' and right[1] == left:
-                            result.append(left)
-                        elif right[0] == '&' and right[1] == ('~', left):
-                            result.append(('|', left, right[2]))
-            else:
-                result.append(expr)
-        else:
-            result.append(expr)
-    return result
+            if expr[0] == '&':
+                A, B = expr[1], expr[2]
+                if isinstance(B, tuple) and B[0] == '|':
+                    if B[1] == A:
+                        return A
+                    elif B[2] == A:
+                        return A
+                elif isinstance(B, tuple) and B[0] == '&':
+                    if B[1] == ('~', A):
+                        return ('&', A, B[2])
+                    elif B[2] == ('~', A):
+                        return ('&', A, B[1])
+            elif expr[0] == '|':
+                A, B = expr[1], expr[2]
+                if isinstance(B, tuple) and B[0] == '&':
+                    if B[1] == A:
+                        return A
+                    elif B[2] == A:
+                        return A
+                elif isinstance(B, tuple) and B[0] == '|':
+                    if B[1] == ('~', A):
+                        return ('|', A, B[2])
+                    elif B[2] == ('~', A):
+                        return ('|', A, B[1])
+        return expr
+
+    return [apply_absorption(arg) for arg in args]

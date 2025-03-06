@@ -2,30 +2,34 @@ import subprocess
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    दिए गए कमांड(s) को चलाएं।
+    Llama al/los comando(s) dado(s).
+
+    :param commands: Lista de comandos a ejecutar.
+    :param args: Lista de argumentos para los comandos.
+    :param cwd: Directorio de trabajo actual (opcional).
+    :param verbose: Si es True, muestra la salida del comando (opcional).
+    :param hide_stderr: Si es True, oculta los errores estándar (opcional).
+    :param env: Diccionario de variables de entorno (opcional).
+    :return: El resultado de la ejecución del comando.
     """
-    command_list = commands if isinstance(commands, list) else [commands]
-    command_list.extend(args)
-    
-    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
-    
+    command = commands + args
+    stderr = subprocess.PIPE if hide_stderr else None
     process = subprocess.Popen(
-        command_list,
+        command,
         cwd=cwd,
         stdout=subprocess.PIPE,
         stderr=stderr,
         env=env,
         text=True
     )
-    
     stdout, stderr = process.communicate()
     
     if verbose:
-        print(f"Command: {' '.join(command_list)}")
-        print(f"Working Directory: {cwd}")
-        print(f"Environment: {env}")
-        print(f"Output:\n{stdout}")
-        if stderr:
-            print(f"Errors:\n{stderr}")
+        print(stdout)
     
-    return process.returncode, stdout, stderr
+    if process.returncode != 0:
+        if not hide_stderr and stderr:
+            print(stderr)
+        raise subprocess.CalledProcessError(process.returncode, command)
+    
+    return stdout

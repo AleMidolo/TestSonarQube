@@ -1,28 +1,30 @@
 import json
-from xml.etree import ElementTree as ET
+from xml.etree import ElementTree
 from typing import Dict
 
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
-    डायस्पोरा वेबफिंगर को पार्स करें, जो या तो JSON प्रारूप (नया) में होता है या XRD (पुराना) में।  
+    Analiza el webfinger de Diaspora, que puede estar en formato JSON (nuevo) o en formato XRD (antiguo).
 
-    [डायस्पोरा वेबफिंगर के बारे में अधिक जानकारी के लिए यहां क्लिक करें।](https://diaspora.github.io/diaspora_federation/discovery/webfinger.html)
+    [https://diaspora.github.io/diaspora_federation/discovery/webfinger.html](https://diaspora.github.io/diaspora_federation/discovery/webfinger.html)
     """
     try:
-        # Try to parse as JSON (new format)
+        # Intentar parsear como JSON
         data = json.loads(document)
         return data
     except json.JSONDecodeError:
-        # If JSON parsing fails, try to parse as XML (XRD format)
+        # Si falla, intentar parsear como XML/XRD
         try:
-            root = ET.fromstring(document)
+            root = ElementTree.fromstring(document)
+            namespaces = {'xrd': 'http://docs.oasis-open.org/ns/xri/xrd-1.0'}
+            links = root.findall('xrd:Link', namespaces)
             result = {}
-            for link in root.findall('{http://docs.oasis-open.org/ns/xri/xrd-1.0}Link'):
+            for link in links:
                 rel = link.get('rel')
                 href = link.get('href')
                 if rel and href:
                     result[rel] = href
             return result
-        except ET.ParseError:
-            # If both JSON and XML parsing fail, return an empty dict
+        except ElementTree.ParseError:
+            # Si ambos fallan, devolver un diccionario vacío
             return {}

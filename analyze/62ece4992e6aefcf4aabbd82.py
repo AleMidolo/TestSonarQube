@@ -2,11 +2,11 @@ import re
 
 def get_pattern(pattern, strip=True):
     """
-    यह मेथड दी गई स्ट्रिंग को रेगुलर एक्सप्रेशन (Regex) पैटर्न में बदलता है।
+    Este método convierte la cadena proporcionada en un objeto de patrón regex.
     
-    :param pattern: स्ट्रिंग जिसे रेगुलर एक्सप्रेशन पैटर्न में बदलना है।
-    :param strip: यदि True है, तो स्ट्रिंग के शुरू और अंत के सफेद स्थान हटा दिए जाएंगे।
-    :return: रेगुलर एक्सप्रेशन पैटर्न।
+    :param pattern: La cadena que se convertirá en un patrón regex.
+    :param strip: Si es True, elimina los espacios en blanco al principio y al final de la cadena.
+    :return: Un objeto de patrón regex compilado.
     """
     if strip:
         pattern = pattern.strip()

@@ -1,27 +1,31 @@
 def validate_hierarchy(self, validate_objects=True, check_digests=True, show_warnings=False):
     """
-    स्टोरेज रूट हाइरार्की को मान्य करें।
+    Validar la jerarquía de la raíz de almacenamiento.
 
-    रिटर्न करता है:
-        num_objects - जांचे गए ऑब्जेक्ट्स की संख्या
-        good_objects - जांचे गए ऑब्जेक्ट्स की संख्या जो मान्य पाए गए
+    Retorna:
+        num_objects - número de objetos verificados
+        good_objects - número de objetos verificados que se encontraron válidos
     """
     num_objects = 0
     good_objects = 0
     
-    # Placeholder logic for validating the hierarchy
-    # This should be replaced with actual implementation
+    # Simulación de la validación de objetos
     if validate_objects:
-        # Simulate checking objects
-        num_objects = 100  # Example: 100 objects checked
-        good_objects = 95  # Example: 95 objects are valid
+        # Aquí se simula la verificación de objetos
+        # En una implementación real, se recorrería la jerarquía y se validarían los objetos
+        num_objects = 100  # Ejemplo: 100 objetos verificados
+        good_objects = 95   # Ejemplo: 95 objetos válidos
     
+    # Simulación de la verificación de digests
     if check_digests:
-        # Simulate checking digests
-        pass  # Add actual digest checking logic here
+        # Aquí se simula la verificación de digests
+        # En una implementación real, se compararían los digests de los objetos
+        pass
     
+    # Simulación de la emisión de advertencias
     if show_warnings:
-        # Simulate showing warnings
-        print("Warning: Some objects may not be valid.")
+        # Aquí se simula la emisión de advertencias
+        # En una implementación real, se emitirían advertencias si se encuentran problemas
+        pass
     
     return num_objects, good_objects

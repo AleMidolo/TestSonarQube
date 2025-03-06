@@ -2,7 +2,7 @@ import random
 
 def _shuffled(seq: Sequence[str]) -> list[str]:
     """
-    निर्धारित (Deterministically) तरीके से शफल करें
+    Barajar de manera determinista
     """
     # Use a fixed seed for deterministic shuffling
     random.seed(42)

@@ -1,24 +1,22 @@
-from typing import Union
+from enum import Enum
 
-def identify_request(request: RequestType) -> bool:
-    """
-    यह फ़ंक्शन यह पहचानने की कोशिश करता है कि यह एक Diaspora अनुरोध है या नहीं।
+class RequestType(Enum):
+    PUBLIC_MESSAGE = 1
+    PRIVATE_MESSAGE = 2
+    LEGACY_PAYLOAD = 3
+    UNKNOWN = 4
 
-    सबसे पहले सार्वजनिक संदेश (public message) की जांच करें। 
-    फिर निजी संदेश (private message) की जांच करें। 
-    अंत में यह जांचें कि क्या यह एक पुराना (legacy) payload है।
+def identify_request(request: RequestType) -> str:
     """
-    # Check for public message
-    if hasattr(request, 'public_message') and request.public_message:
-        return True
-    
-    # Check for private message
-    if hasattr(request, 'private_message') and request.private_message:
-        return True
-    
-    # Check for legacy payload
-    if hasattr(request, 'legacy_payload') and request.legacy_payload:
-        return True
-    
-    # If none of the above, it's not a Diaspora request
-    return False
+    Intente identificar si esta es una solicitud de Diaspora.
+
+    Primero intente con un mensaje público. Luego con un mensaje privado. Finalmente, verifique si se trata de una carga útil heredada (legacy payload).
+    """
+    if request == RequestType.PUBLIC_MESSAGE:
+        return "Esta es una solicitud de Diaspora: Mensaje público."
+    elif request == RequestType.PRIVATE_MESSAGE:
+        return "Esta es una solicitud de Diaspora: Mensaje privado."
+    elif request == RequestType.LEGACY_PAYLOAD:
+        return "Esta es una solicitud de Diaspora: Carga útil heredada."
+    else:
+        return "No se pudo identificar la solicitud como una de Diaspora."

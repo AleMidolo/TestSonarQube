@@ -2,14 +2,18 @@ from datetime import timedelta
 
 def dehydrate_timedelta(value):
     """
-    `timedelta` मानों के लिए डिहाइड्रेटर।  
+    Deshidratador para valores de `timedelta`.
 
-    :param value:  
-    :type value: timedelta  
-    :return:  
+    :param value: Un objeto `timedelta` que se desea deshidratar.
+    :type value: timedelta
+    :return: Un diccionario con las claves 'days', 'seconds', y 'microseconds'.
+    :rtype: dict
     """
     if not isinstance(value, timedelta):
-        raise TypeError("Expected a timedelta object")
+        raise TypeError("El valor debe ser un objeto timedelta.")
     
-    # Convert timedelta to total seconds (float)
-    return value.total_seconds()
+    return {
+        'days': value.days,
+        'seconds': value.seconds,
+        'microseconds': value.microseconds
+    }

@@ -1,13 +1,14 @@
 def validate_min_max_args(self, args):
     """
-    जांचें कि आर्ग्युमेंट्स का मान न्यूनतम और अधिकतम मानों के बीच है या नहीं।
+    Verifica si el valor de los argumentos está entre los valores mínimo y máximo.
 
-    :param args: प्राप्त किए गए आर्ग्युमेंट्स।
+    :param args: Los argumentos recibidos.
     """
-    min_value = 0  # न्यूनतम मान
-    max_value = 100  # अधिकतम मान
+    min_value = 0  # Define el valor mínimo
+    max_value = 100  # Define el valor máximo
     
     for arg in args:
         if not (min_value <= arg <= max_value):
-            return False
+            raise ValueError(f"El valor {arg} no está entre {min_value} y {max_value}.")
+    
     return True

@@ -2,26 +2,30 @@ import argparse
 
 def parse_arguments(*unparsed_arguments):
     """
-    इस स्क्रिप्ट को जिन कमांड-लाइन आर्ग्युमेंट्स के साथ चलाया गया है, उन आर्ग्युमेंट्स को पार्स करें और उन्हें एक डिक्ट (dict) के रूप में लौटाएं। यह डिक्ट सबपार्सर के नाम (या "global") को `argparse.Namespace` इंस्टेंस के साथ मैप करता है।
+    Dado un conjunto de argumentos de línea de comandos con los que se invocó este script, analiza los argumentos y los devuelve como un diccionario que mapea desde el nombre del subparser (o "global") a una instancia de `argparse.Namespace`.
     """
-    parser = argparse.ArgumentParser(description="Parse command-line arguments.")
+    parser = argparse.ArgumentParser(description="Parse command line arguments.")
     subparsers = parser.add_subparsers(dest="subparser_name", help="Sub-command help")
-    
-    # Add subparsers or global arguments here as needed
-    # Example:
-    # subparser1 = subparsers.add_parser('sub1', help='sub1 help')
-    # subparser1.add_argument('--foo', type=int, help='foo help')
-    
+
+    # Global arguments
+    parser.add_argument('--global-arg', type=str, help="A global argument.")
+
+    # Subparser 1
+    parser_sub1 = subparsers.add_parser('sub1', help="Subparser 1 help")
+    parser_sub1.add_argument('--sub1-arg', type=str, help="Subparser 1 argument.")
+
+    # Subparser 2
+    parser_sub2 = subparsers.add_parser('sub2', help="Subparser 2 help")
+    parser_sub2.add_argument('--sub2-arg', type=int, help="Subparser 2 argument.")
+
     # Parse the arguments
     args = parser.parse_args(unparsed_arguments)
-    
-    # Convert the Namespace to a dictionary
-    args_dict = vars(args)
-    
-    # If no subparser was used, map to 'global'
-    if args.subparser_name is None:
-        args_dict = {'global': args_dict}
+
+    # Organize the parsed arguments into a dictionary
+    parsed_args = {}
+    if hasattr(args, 'subparser_name'):
+        parsed_args[args.subparser_name] = args
     else:
-        args_dict = {args.subparser_name: args_dict}
-    
-    return args_dict
+        parsed_args['global'] = args
+
+    return parsed_args

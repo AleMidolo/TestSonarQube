@@ -2,18 +2,22 @@ import re
 
 def validate_value(value):
     """
-    दिए गए मान को संबंधित नियमित अभिव्यक्ति (Regular Expression) के अनुसार सत्यापित करें।
+    Validar el valor proporcionado contra la expresión regular correspondiente.
 
-    आर्ग्युमेंट्स (Args):
-        value: सत्यापन के लिए स्ट्रिंग
+    Argumentos:
+        value: la cadena de texto a validar
 
-    त्रुटि (Raises):
-        ValidationError: यदि दिया गया मान नियमित अभिव्यक्ति के अनुरूप नहीं है।
+    Excepciones:
+        ValidationError: si el valor proporcionado no cumple con la expresión regular.
     """
-    # Example regex pattern: Only alphanumeric characters are allowed
-    pattern = r'^[a-zA-Z0-9]+$'
+    # Expresión regular para validar que el valor sea alfanumérico
+    regex = r'^[a-zA-Z0-9]+$'
     
-    if not re.match(pattern, value):
-        raise ValueError("ValidationError: दिया गया मान नियमित अभिव्यक्ति के अनुरूप नहीं है।")
+    if not re.match(regex, value):
+        raise ValidationError("El valor proporcionado no cumple con la expresión regular.")
     
     return True
+
+class ValidationError(Exception):
+    """Excepción personalizada para errores de validación."""
+    pass

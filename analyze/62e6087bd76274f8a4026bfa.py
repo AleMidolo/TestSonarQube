@@ -1,14 +1,15 @@
 def pop_u16(self):
     """
-    self.data के अंतिम दो बाइट्स को हटाएं और उन्हें एक बिग-एंडियन 16-बिट अनसाइनड इंटीजर के रूप में वापस करें।
+    Elimina los últimos dos bytes de `self.data`, devolviéndolos como un entero sin signo de 16 bits en formato big-endian.
     """
     if len(self.data) < 2:
-        raise ValueError("Not enough bytes in data to pop a 16-bit integer.")
+        raise ValueError("No hay suficientes bytes en self.data para extraer un entero de 16 bits.")
     
-    # Extract the last two bytes
-    u16_bytes = self.data[-2:]
-    # Remove the last two bytes from self.data
+    # Extraer los últimos dos bytes
+    byte1, byte2 = self.data[-2], self.data[-1]
+    
+    # Eliminar los últimos dos bytes de self.data
     self.data = self.data[:-2]
     
-    # Convert the bytes to a big-endian unsigned 16-bit integer
-    return int.from_bytes(u16_bytes, byteorder='big')
+    # Convertir a un entero de 16 bits en formato big-endian
+    return (byte1 << 8) | byte2

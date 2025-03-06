@@ -1,35 +1,35 @@
 def scale(self, other=None):
     """
-    ग्राफ़ का स्केल प्राप्त करें या सेट करें।
+    Obtiene o establece la escala del gráfico.
 
-    यदि *other* ``None`` है, तो इस ग्राफ़ का स्केल लौटाएं।
+    Si *other* es ``None``, devuelve la escala de este gráfico.
 
-    यदि *other* एक संख्यात्मक मान है, तो ग्राफ़ को उस मान पर पुनः स्केल करें।
-    यदि ग्राफ़ का स्केल अज्ञात है या शून्य है,
-    तो पुनः स्केल करने पर :exc:`~.LenaValueError` उत्पन्न होगा।
+    Si se proporciona un valor numérico en *other*, se reajusta la escala a ese valor.  
+    Si el gráfico tiene una escala desconocida o igual a cero,  
+    intentar reajustar la escala generará una excepción :exc:`~.LenaValueError`.
 
-    सार्थक परिणाम प्राप्त करने के लिए, ग्राफ़ के फ़ील्ड्स का उपयोग किया जाता है।
-    केवल अंतिम निर्देशांक (coordinate) को पुनः स्केल किया जाता है।
-    उदाहरण के लिए, यदि ग्राफ़ में *x* और *y* निर्देशांक हैं,
-    तो *y* को पुनः स्केल किया जाएगा, और यदि ग्राफ़ 3-आयामी (3-dimensional) है,
-    तो *z* को पुनः स्केल किया जाएगा।
-    सभी त्रुटियों (errors) को उनके निर्देशांक के साथ पुनः स्केल किया जाता है।
+    Para obtener resultados significativos, se utilizan los campos del gráfico.  
+    Solo se reajusta la última coordenada.  
+    Por ejemplo, si el gráfico tiene coordenadas *x* e *y*,  
+    entonces se reajustará *y*, y para un gráfico tridimensional  
+    se reajustará *z*.  
+    Todos los errores se reajustan junto con su coordenada.
     """
     if other is None:
         return self._scale
     elif isinstance(other, (int, float)):
-        if self._scale is None or self._scale == 0:
-            raise ValueError("Cannot rescale graph with unknown or zero scale.")
-        # Rescale the last coordinate
-        if hasattr(self, 'y'):
-            self.y = self.y * (other / self._scale)
-        elif hasattr(self, 'z'):
-            self.z = self.z * (other / self._scale)
-        # Rescale errors if they exist
-        if hasattr(self, 'y_err'):
-            self.y_err = self.y_err * (other / self._scale)
-        if hasattr(self, 'z_err'):
-            self.z_err = self.z_err * (other / self._scale)
+        if self._scale == 0 or self._scale is None:
+            raise LenaValueError("No se puede reajustar la escala de un gráfico con escala desconocida o igual a cero.")
         self._scale = other
+        # Reajustar la última coordenada
+        if hasattr(self, 'y'):
+            self.y *= other
+        elif hasattr(self, 'z'):
+            self.z *= other
+        # Reajustar errores si existen
+        if hasattr(self, 'y_err'):
+            self.y_err *= other
+        elif hasattr(self, 'z_err'):
+            self.z_err *= other
     else:
-        raise TypeError("Scale must be a numeric value or None.")
+        raise TypeError("El valor de escala debe ser un número o None.")

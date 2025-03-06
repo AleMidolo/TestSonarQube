@@ -2,12 +2,6 @@ import time
 from functools import lru_cache, wraps
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
-    """
-    एक डेकोरेटर जो एक फ़ंक्शन को एक मेमोराइज़िंग कॉलेबल के साथ रैप करता है,
-    जो `maxsize` तक के परिणामों को सेव करता है। यह एक Least Recently Used (LRU)
-    एल्गोरिदम पर आधारित होता है और प्रत्येक आइटम के लिए एक समय-सीमा (Time-To-Live, TTL) 
-    मान लागू करता है।
-    """
     def decorator(func):
         @lru_cache(maxsize=maxsize, typed=typed)
         def cached_func(*args, **kwargs):
@@ -17,14 +11,17 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
         def wrapper(*args, **kwargs):
             key = (args, frozenset(kwargs.items())) if typed else (args, tuple(kwargs.items()))
             current_time = timer()
-            if key in wrapper._cache:
-                value, timestamp = wrapper._cache[key]
-                if current_time - timestamp < ttl:
-                    return value
+            if key in wrapper._cache_info:
+                last_access_time, result = wrapper._cache_info[key]
+                if current_time - last_access_time < ttl:
+                    wrapper._cache_info[key] = (current_time, result)
+                    return result
+                else:
+                    del wrapper._cache_info[key]
             result = cached_func(*args, **kwargs)
-            wrapper._cache[key] = (result, current_time)
+            wrapper._cache_info[key] = (current_time, result)
             return result
 
-        wrapper._cache = {}
+        wrapper._cache_info = {}
         return wrapper
     return decorator

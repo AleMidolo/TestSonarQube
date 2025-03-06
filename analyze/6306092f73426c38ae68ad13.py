@@ -2,31 +2,36 @@ import subprocess
 
 def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra_vars=None, ansible_args=None):
     """
-    'ansible-playbook' CLI को रैप करता है।
+    Envuelve la interfaz de línea de comandos (CLI) de 'ansible-playbook'.
 
-    :param ir_workspace: एक Infrared Workspace ऑब्जेक्ट जो सक्रिय वर्कस्पेस को दर्शाता है।
-    :param ir_plugin: वर्तमान प्लगइन का एक InfraredPlugin ऑब्जेक्ट।
-    :param playbook_path: वह प्लेबुक जिसे निष्पादित करना है।
-    :param verbose: Ansible की वर्बोसिटी स्तर।
-    :param extra_vars: dict। इसे Ansible को अतिरिक्त वेरिएबल्स (extra-vars) के रूप में पास किया जाता है।
-    :param ansible_args: ansible-playbook के तर्कों का एक dict, जिसे सीधे Ansible तक पहुँचाने के लिए उपयोग किया जाता है।
+    :param ir_workspace: Un objeto Infrared Workspace que representa el espacio de trabajo activo.
+    :param ir_plugin: Un objeto InfraredPlugin del plugin actual.
+    :param playbook_path: La ruta del playbook que se va a ejecutar.
+    :param verbose: Nivel de verbosidad de Ansible.
+    :param extra_vars: dict. Se pasa a Ansible como extra-vars.
+    :param ansible_args: dict de argumentos de ansible-playbook que se pasan directamente a Ansible.
     """
-    command = ['ansible-playbook', playbook_path]
+    # Construir el comando base
+    command = ["ansible-playbook", playbook_path]
 
+    # Añadir verbosidad si se especifica
     if verbose:
-        command.append(f'-{"v" * verbose}')
+        command.append(f"-{verbose}")
 
+    # Añadir extra_vars si se especifica
     if extra_vars:
-        extra_vars_str = ' '.join([f'{k}={v}' for k, v in extra_vars.items()])
-        command.extend(['--extra-vars', extra_vars_str])
+        extra_vars_str = " ".join([f"{k}={v}" for k, v in extra_vars.items()])
+        command.extend(["--extra-vars", extra_vars_str])
 
+    # Añadir argumentos adicionales de Ansible si se especifica
     if ansible_args:
         for key, value in ansible_args.items():
-            command.extend([f'--{key}', str(value)])
+            command.append(f"--{key}")
+            if value:
+                command.append(str(value))
 
-    try:
-        result = subprocess.run(command, check=True, capture_output=True, text=True)
-        return result.stdout
-    except subprocess.CalledProcessError as e:
-        print(f"Error executing ansible-playbook: {e.stderr}")
-        raise
+    # Ejecutar el comando
+    result = subprocess.run(command, capture_output=True, text=True)
+
+    # Devolver el resultado de la ejecución
+    return result

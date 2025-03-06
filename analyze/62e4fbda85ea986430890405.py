@@ -1,6 +1,12 @@
 import subprocess
 import sys
-from typing import Sequence, Any, Tuple
+import os
+from typing import Sequence, Any
+
+def _get_platform_max_length() -> int:
+    # This function should return the platform-specific maximum command length.
+    # For simplicity, we'll return a default value.
+    return 32768
 
 def xargs(
         cmd: tuple[str, ...],
@@ -12,48 +18,37 @@ def xargs(
         **kwargs: Any,
 ) -> tuple[int, bytes]:
     """
-    Xargs का एक सरल कार्यान्वयन।
+    Una implementación simplificada de xargs.
 
-    - color: यदि प्लेटफ़ॉर्म इसे सपोर्ट करता है, तो एक PTY (Pseudo Terminal) बनाएं।
-    - target_concurrency: एक साथ चलने वाले विभाजनों (partitions) की लक्षित संख्या।
+    - color: Crea un pty si está en una plataforma que lo soporte.
+    - target_concurrency: Número objetivo de particiones para ejecutar de forma concurrente.
     """
-    try:
-        if color and sys.platform != "win32":
-            # Use a PTY for color support on Unix-like systems
-            import pty
-            master_fd, slave_fd = pty.openpty()
-            process = subprocess.Popen(
-                cmd + tuple(varargs),
-                stdout=slave_fd,
-                stderr=slave_fd,
-                close_fds=True,
-                **kwargs
-            )
-            os.close(slave_fd)
-            output = b""
-            while True:
-                try:
-                    data = os.read(master_fd, 1024)
-                    if not data:
-                        break
-                    output += data
-                except OSError:
-                    break
-            os.close(master_fd)
-            return_code = process.wait()
-        else:
-            # Regular subprocess call
-            process = subprocess.Popen(
-                cmd + tuple(varargs),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                **kwargs
-            )
-            output, _ = process.communicate()
-            return_code = process.returncode
+    if color and sys.platform != "win32":
+        import pty
+        master, slave = pty.openpty()
+        kwargs['stdout'] = slave
+        kwargs['stderr'] = slave
 
-        return return_code, output
+    # Split varargs into chunks based on target_concurrency
+    chunk_size = len(varargs) // target_concurrency
+    chunks = [varargs[i:i + chunk_size] for i in range(0, len(varargs), chunk_size)]
 
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        return 1, b""
+    results = []
+    for chunk in chunks:
+        full_cmd = list(cmd) + list(chunk)
+        try:
+            process = subprocess.Popen(full_cmd, **kwargs)
+            stdout, stderr = process.communicate()
+            results.append((process.returncode, stdout))
+        except subprocess.CalledProcessError as e:
+            results.append((e.returncode, e.output))
+
+    # Combine results
+    final_returncode = 0
+    final_output = b""
+    for returncode, output in results:
+        if returncode != 0:
+            final_returncode = returncode
+        final_output += output
+
+    return final_returncode, final_output

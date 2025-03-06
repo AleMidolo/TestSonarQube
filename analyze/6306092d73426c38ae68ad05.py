@@ -1,9 +1,10 @@
-def get_option_spec(self, command_name):
+def get_option_spec(self, command_name, argument_name):
     """
-    दिए गए विकल्प नाम के लिए विनिर्देश प्राप्त करता है।
+    Obtiene la especificación para el nombre de opción especificado.
     """
-    # Assuming the specifications are stored in a dictionary called `option_specs`
-    if hasattr(self, 'option_specs') and command_name in self.option_specs:
-        return self.option_specs[command_name]
-    else:
-        return None
+    # Assuming self.options is a dictionary where keys are command names and values are dictionaries
+    # of argument specifications.
+    if command_name in self.options:
+        if argument_name in self.options[command_name]:
+            return self.options[command_name][argument_name]
+    return None

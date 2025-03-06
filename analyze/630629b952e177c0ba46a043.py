@@ -1,27 +1,30 @@
-import json
-import requests
-
 def get_nodeinfo_well_known_document(url, document_path=None):
     """
-    NodeInfo .well-known दस्तावेज़ उत्पन्न करें।  
+    Genera un documento .well-known de NodeInfo.
 
-    स्पेसिफिकेशन देखें: [http://nodeinfo.diaspora.software](http://nodeinfo.diaspora.software)  
+    Consulta la especificación: [http://nodeinfo.diaspora.software](http://nodeinfo.diaspora.software)
 
-    पैरामीटर (Arguments): 
-    - url: पूरा बेस URL प्रोटोकॉल के साथ, जैसे `https://example.com`  
-    - document_path: कस्टम NodeInfo दस्तावेज़ पथ, यदि प्रदान किया गया हो (वैकल्पिक)  
+    :arg url: La URL base completa con protocolo, por ejemplo, `https://example.com`.
+    :arg document_path: Ruta personalizada para el documento NodeInfo si se proporciona (opcional).
 
-    रिटर्न (Returns):  
-    - dict: एक स्वरूपित डिक्शनरी
+    :returns:
+    Un diccionario (`dict`).
     """
-    if document_path is None:
-        document_path = "/.well-known/nodeinfo"
-    
-    full_url = f"{url.rstrip('/')}{document_path}"
-    
-    try:
-        response = requests.get(full_url)
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        return {"error": str(e)}
+    if document_path:
+        nodeinfo_url = f"{url}/{document_path.lstrip('/')}"
+    else:
+        nodeinfo_url = f"{url}/.well-known/nodeinfo"
+
+    well_known_document = {
+        "links": [
+            {
+                "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
+                "href": f"{nodeinfo_url}/2.0"
+            },
+            {
+                "rel": "http://nodeinfo.diaspora.software/ns/schema/2.1",
+                "href": f"{nodeinfo_url}/2.1"
+            }
+        ]
+    }
+    return well_known_document

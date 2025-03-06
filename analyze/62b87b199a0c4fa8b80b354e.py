@@ -1,23 +1,16 @@
 def is_fill_request_seq(seq):
     """
-    जाँच करें कि *seq* को FillRequestSeq में बदला जा सकता है।  
+    Compruebe si *seq* puede convertirse en un FillRequestSeq.
 
-    यह True तभी लौटाएगा जब:  
-    - यह एक FillRequest तत्व हो,  
-    - या इसमें कम से कम एक FillRequest तत्व हो,  
-    - और यह Source अनुक्रम (Source sequence) न हो।
+    Devuelve `True` solo si es un elemento de tipo FillRequest  
+    o contiene al menos uno de ellos,  
+    y no es una secuencia de tipo Source.
     """
-    # Assuming FillRequest is a class or type that represents a FillRequest element
-    # Assuming Source sequence is a type or class that represents a Source sequence
-    
-    # Check if seq is a single FillRequest element
+    # Assuming FillRequest and Source are classes or types defined elsewhere
+    from typing import Sequence
+
     if isinstance(seq, FillRequest):
         return True
-    
-    # Check if seq is a sequence and contains at least one FillRequest element
-    if isinstance(seq, (list, tuple)) and any(isinstance(item, FillRequest) for item in seq):
-        # Check if seq is not a Source sequence
-        if not isinstance(seq, SourceSequence):
-            return True
-    
+    elif isinstance(seq, Sequence) and not isinstance(seq, Source):
+        return any(isinstance(item, FillRequest) for item in seq)
     return False

@@ -2,32 +2,31 @@ import subprocess
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    दिए गए कमांड(s) को कॉल करें।
-    
-    :param commands: कमांड(s) की सूची
-    :param args: कमांड के लिए आर्ग्युमेंट्स
-    :param cwd: कमांड को रन करने के लिए वर्किंग डायरेक्टरी
-    :param verbose: यदि True, तो कमांड का आउटपुट प्रिंट करें
-    :param hide_stderr: यदि True, तो स्टडरर को छुपाएं
-    :param env: एनवायरनमेंट वेरिएबल्स
-    :return: सबप्रोसेस का रिजल्ट
+    Llama al/los comando(s) dado(s).
+
+    :param commands: Lista de comandos a ejecutar.
+    :param args: Lista de argumentos para los comandos.
+    :param cwd: Directorio de trabajo actual (opcional).
+    :param verbose: Si es True, imprime la salida del comando (opcional).
+    :param hide_stderr: Si es True, oculta la salida de error (opcional).
+    :param env: Diccionario de variables de entorno (opcional).
+    :return: Tupla con el código de salida y la salida del comando.
     """
     full_command = commands + args
-    stderr = subprocess.DEVNULL if hide_stderr else None
+    stderr = subprocess.PIPE if hide_stderr else None
     
-    if verbose:
-        print(f"Running command: {' '.join(full_command)}")
-    
-    result = subprocess.run(
+    process = subprocess.Popen(
         full_command,
         cwd=cwd,
-        env=env,
         stdout=subprocess.PIPE,
         stderr=stderr,
+        env=env,
         text=True
     )
     
-    if verbose and result.stdout:
-        print(result.stdout)
+    stdout, stderr = process.communicate()
     
-    return result
+    if verbose:
+        print(stdout)
+    
+    return process.returncode, stdout

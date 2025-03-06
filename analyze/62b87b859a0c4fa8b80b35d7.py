@@ -1,29 +1,37 @@
 def to_csv(self, separator=",", header=None):
     """
-    Convert the graph's points to CSV format.
+    Convierte los puntos del gráfico a formato CSV.
 
-    Args:
-        separator (str): The character used to separate values, default is comma.
-        header (str, optional): If not None, this string will be the first line of the output.
+    *separator* delimita los valores, el valor predeterminado es una coma.
 
-    Returns:
-        str: The CSV representation of the graph's points.
+    *header*, si no es ``None``, es la primera línea de la salida
+    (se agrega automáticamente un salto de línea).
+
+    Dado que un gráfico puede ser multidimensional,
+    para cada punto, primero su coordenada se convierte en una cadena
+    (separada por *separator*), y luego cada parte de su valor.
+
+    Para convertir un :class:`Graph` a formato CSV dentro de una secuencia de Lena,
+    utiliza :class:`lena.output.ToCSV`.
     """
-    csv_lines = []
+    import warnings
+    warnings.warn(
+        "to_csv is deprecated since Lena 0.5. Use lena.output.ToCSV instead.",
+        DeprecationWarning,
+        stacklevel=2
+    )
     
-    # Add header if provided
+    csv_lines = []
     if header is not None:
         csv_lines.append(header)
     
-    # Iterate over each point in the graph
     for point in self.points:
         # Convert coordinates to string separated by the separator
-        coords_str = separator.join(map(str, point.coordinates))
+        coord_str = separator.join(map(str, point.coordinates))
         # Convert values to string separated by the separator
-        values_str = separator.join(map(str, point.values))
-        # Combine coordinates and values into a single CSV line
-        csv_line = f"{coords_str}{separator}{values_str}"
+        value_str = separator.join(map(str, point.values))
+        # Combine coordinates and values
+        csv_line = f"{coord_str}{separator}{value_str}"
         csv_lines.append(csv_line)
     
-    # Join all lines with newline characters
     return "\n".join(csv_lines)

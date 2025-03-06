@@ -10,21 +10,27 @@ def deep_merge_nodes(nodes):
             existing_value_node = merged_nodes[key]
             
             if isinstance(existing_value_node, MappingNode) and isinstance(value_node, MappingNode):
-                # Deep merge the MappingNodes
-                existing_mapping = dict(existing_value_node.value)
-                new_mapping = dict(value_node.value)
+                # Merge the MappingNodes deeply
+                existing_value = existing_value_node.value
+                new_value = value_node.value
                 
-                for new_key_node, new_value_node in new_mapping.items():
-                    existing_mapping[new_key_node] = new_value_node
+                # Create a dictionary to hold the merged values
+                merged_value = {}
+                for k_node, v_node in existing_value:
+                    merged_value[k_node.value] = v_node
                 
-                merged_nodes[key] = MappingNode(
-                    tag=existing_value_node.tag,
-                    value=list(existing_mapping.items()),
-                )
+                for k_node, v_node in new_value:
+                    merged_value[k_node.value] = v_node
+                
+                # Convert the merged dictionary back to a list of tuples
+                merged_value_list = [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged_value.items()]
+                merged_nodes[key] = MappingNode(tag='tag:yaml.org,2002:map', value=merged_value_list)
             else:
-                # If either is not a MappingNode, overwrite with the new value
+                # If either value is not a MappingNode, the last value prevails
                 merged_nodes[key] = value_node
         else:
             merged_nodes[key] = value_node
     
-    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=key), value_node) for key, value_node in merged_nodes.items()]
+    # Convert the merged dictionary back to a list of tuples
+    result = [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged_nodes.items()]
+    return result

@@ -1,23 +1,12 @@
 def amend_bzparams(self, params, bug_ids):
     """
-    बगज़िला पैरामीटर्स को संशोधित करें
+    Modificar los parámetros de Bugzilla
     """
-    # Assuming params is a dictionary and bug_ids is a list of bug IDs
+    # Assuming params is a dictionary of parameters to be updated
+    # and bug_ids is a list of bug IDs to apply the changes to
     for bug_id in bug_ids:
-        # Modify the params for each bug_id
-        # Example: Adding a comment to each bug
-        params['comment'] = f"Updated parameters for bug {bug_id}"
-        # You can add more modifications as needed
-        # Example: Updating the status of the bug
-        params['status'] = 'RESOLVED'
-        # Example: Setting the resolution
-        params['resolution'] = 'FIXED'
-        # You can also add other fields as required
-        # Example: Setting the priority
-        params['priority'] = 'P1'
-        
-        # Here you would typically make an API call to update the bug in Bugzilla
-        # For example:
-        # self.bzapi.update_bugs(bug_id, params)
-        
-    return params
+        # Here you would typically make an API call to Bugzilla to update the parameters
+        # For example, using the `requests` library:
+        # response = requests.put(f"https://bugzilla.example.com/rest/bug/{bug_id}", json=params)
+        # response.raise_for_status()
+        pass  # Placeholder for actual implementation

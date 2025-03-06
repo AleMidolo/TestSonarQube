@@ -1,23 +1,23 @@
 def get_nested_custom_and_control_args(self, args):
     """
-    इनपुट आर्ग्युमेंट्स को नेस्टेड और कस्टम में विभाजित करें।
+    Divide los argumentos de entrada en controlados, anidados y personalizados.
 
-    कंट्रोल आर्ग्युमेंट्स: IR (Intermediate Representation) व्यवहार को नियंत्रित करते हैं। 
-        ये आर्ग्युमेंट्स spec.yml फाइल में नहीं डाले जाएंगे।
-    नेस्टेड आर्ग्युमेंट्स: Ansible प्लेबुक्स द्वारा उपयोग किए जाते हैं और 
-        spec.yml फाइल में डाले जाएंगे।
-    कस्टम आर्ग्युमेंट्स: सामान्य नेस्टेड उपयोग के बजाय कस्टम Ansible वेरिएबल्स का उपयोग करने के लिए।
+    Argumentos de control: controlan el comportamiento de IR. Estos argumentos no se incluirán en el archivo spec yml.
+    Argumentos anidados: son utilizados por los playbooks de Ansible y se incluirán en el archivo spec yml.
+    Argumentos personalizados: Variables personalizadas de Ansible que se usarán en lugar del uso normal de argumentos anidados.
 
-    :param args: एकत्रित आर्ग्युमेंट्स की सूची।
-    :return: (dict, dict): फ्लैट डिक्शनरीज़ (control_args, nested_args)
+    :param args: la lista recopilada de argumentos.
+    :return: (dict, dict): diccionarios planos (control_args, nested_args)
     """
     control_args = {}
     nested_args = {}
     
     for key, value in args.items():
-        if key.startswith('_'):
+        if key.startswith('control_'):
             control_args[key] = value
-        else:
+        elif key.startswith('nested_'):
+            nested_args[key] = value
+        elif key.startswith('custom_'):
             nested_args[key] = value
     
     return control_args, nested_args

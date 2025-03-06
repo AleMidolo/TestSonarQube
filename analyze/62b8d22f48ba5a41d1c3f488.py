@@ -1,10 +1,10 @@
 def popitem(self):
     """
-    पहले डाली गई `(key, value)` जोड़ी को हटाएं और लौटाएं।
+    Eliminar y devolver el par `(clave, valor)` que fue insertado primero.
     """
     if not self:
-        raise KeyError("dictionary is empty")
+        raise KeyError("El diccionario está vacío")
     key = next(iter(self))
     value = self[key]
     del self[key]
-    return (key, value)
+    return key, value

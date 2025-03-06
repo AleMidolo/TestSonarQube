@@ -1,16 +1,18 @@
 import logging
-import yaml
 import os
+import yaml
 
 def load_configurations(config_filenames, overrides=None, resolve_env=True):
     """
-    कॉनफिगरेशन फाइलों के अनुक्रम को दिया गया है, प्रत्येक कॉनफिगरेशन फाइल को लोड और सत्यापित करें। 
-    परिणाम को निम्नलिखित के रूप में ट्यूपल में लौटाएं:
-    1. कॉनफिगरेशन फाइल नाम और उसके संबंधित पार्स किए गए कॉनफिगरेशन का डिक्शनरी।
-    2. किसी भी पार्स त्रुटियों को शामिल करने वाले `logging.LogRecord` इंस्टेंस का अनुक्रम।
+    Dada una secuencia de nombres de archivo de configuración, carga y valida cada archivo de configuración. 
+    Si el archivo de configuración no puede ser leído debido a permisos insuficientes o errores al analizar 
+    el archivo de configuración, se registrará el error en el log. De lo contrario, devuelve los resultados 
+    como una tupla que contiene: un diccionario que asocia el nombre del archivo de configuración con su 
+    configuración analizada correspondiente, y una secuencia de instancias de `logging.LogRecord` que 
+    contienen cualquier error de análisis.
     """
     configurations = {}
-    errors = []
+    log_records = []
 
     for filename in config_filenames:
         try:
@@ -27,29 +29,38 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                     config.update(overrides)
                 
                 configurations[filename] = config
-        except yaml.YAMLError as e:
-            error_msg = f"Error parsing configuration file {filename}: {e}"
-            logging.error(error_msg)
-            errors.append(logging.LogRecord(
+        except PermissionError:
+            logging.error(f"Permiso denegado para leer el archivo de configuración: {filename}")
+            log_records.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=error_msg,
+                msg=f"Permiso denegado para leer el archivo de configuración: {filename}",
+                args=None,
+                exc_info=None
+            ))
+        except yaml.YAMLError as e:
+            logging.error(f"Error al analizar el archivo de configuración {filename}: {e}")
+            log_records.append(logging.LogRecord(
+                name=__name__,
+                level=logging.ERROR,
+                pathname=filename,
+                lineno=0,
+                msg=f"Error al analizar el archivo de configuración {filename}: {e}",
                 args=None,
                 exc_info=None
             ))
         except Exception as e:
-            error_msg = f"Unexpected error loading configuration file {filename}: {e}"
-            logging.error(error_msg)
-            errors.append(logging.LogRecord(
+            logging.error(f"Error inesperado al procesar el archivo de configuración {filename}: {e}")
+            log_records.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=error_msg,
+                msg=f"Error inesperado al procesar el archivo de configuración {filename}: {e}",
                 args=None,
                 exc_info=None
             ))
 
-    return configurations, errors
+    return configurations, log_records

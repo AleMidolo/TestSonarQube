@@ -1,12 +1,11 @@
 def validate_length_args(self, args):
     """
-    दिए गए तर्कों की लंबाई की जाँच करें
-    :param args: प्राप्त तर्क।  
+    Verifica si el valor de los argumentos no supera la longitud especificada.
+
+    :param args: Los argumentos recibidos.
     """
-    if not isinstance(args, (list, tuple)):
-        raise TypeError("args must be a list or tuple")
-    
-    if len(args) == 0:
-        raise ValueError("args must not be empty")
-    
+    max_length = 100  # Ejemplo de longitud máxima permitida
+    for arg in args:
+        if len(str(arg)) > max_length:
+            raise ValueError(f"El argumento {arg} supera la longitud máxima permitida de {max_length} caracteres.")
     return True

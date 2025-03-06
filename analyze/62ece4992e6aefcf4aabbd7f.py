@@ -3,19 +3,21 @@ from typing import Tuple
 
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
-    छवि के हाइपरलिंक (href) को उसके घटक भागों में विभाजित करें।
+    Analizar un enlace (href) de una imagen en partes compuestas.
 
-    :param image_href: छवि का हाइपरलिंक (href)
-    :returns: एक ट्यूपल (tuple) के रूप में परिणाम, जिसमें (image_id, netloc, use_ssl) शामिल हैं
-    :raises ValueError: यदि हाइपरलिंक अमान्य है
+    :param image_href: href de una imagen
+    :returns: una tupla con el formato (image_id, netloc, use_ssl)
+    :raises ValueError: Si el enlace no es válido o no puede ser analizado correctamente.
     """
-    parsed_url = urlparse(image_href)
-    
-    if not parsed_url.netloc or not parsed_url.path:
-        raise ValueError("Invalid image href")
-    
-    image_id = parsed_url.path.strip('/')
-    netloc = parsed_url.netloc
-    use_ssl = parsed_url.scheme == 'https'
-    
-    return image_id, netloc, use_ssl
+    try:
+        parsed_url = urlparse(image_href)
+        if not parsed_url.netloc or not parsed_url.path:
+            raise ValueError("El enlace no es válido o no puede ser analizado correctamente.")
+        
+        image_id = parsed_url.path.strip('/')
+        netloc = parsed_url.netloc
+        use_ssl = parsed_url.scheme == 'https'
+        
+        return image_id, netloc, use_ssl
+    except Exception as e:
+        raise ValueError(f"Error al analizar el enlace: {e}") from e

@@ -1,12 +1,12 @@
 def merge_extra_vars(vars_dict, extra_vars=None):
     """
-    ``vars_dict`` को ``extra-vars`` के साथ मर्ज (जोड़ना) करें।
+    Extiende ``vars_dict`` con ``extra-vars``
 
-    :param vars_dict: वह डिक्शनरी जिसमें extra-vars को मर्ज करना है
-    :param extra_vars: extra-vars की सूची (लिस्ट)
+    :param vars_dict: Diccionario en el que se fusionarán las extra-vars  
+    :param extra_vars: Lista de extra-vars
     """
     if extra_vars is None:
-        extra_vars = []
+        return vars_dict
     
     for var in extra_vars:
         key, value = var.split('=', 1)

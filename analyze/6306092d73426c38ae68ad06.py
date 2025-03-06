@@ -1,12 +1,12 @@
 def get_silent_args(self, args):
     """
-    मौन (साइलेंट) तर्कों की सूची प्राप्त करें।
+    Lista de argumentos silenciados.
 
-    :param args: प्राप्त तर्क (arguments)।
-    :return: list, मौन (साइलेंट) तर्कों के नाम।
+    :param args: Los argumentos recibidos.
+    :return: lista, nombres de los argumentos silenciados.
     """
     silent_args = []
     for arg in args:
-        if arg.startswith('--'):
-            silent_args.append(arg[2:])
+        if arg.startswith('--silent-'):
+            silent_args.append(arg[len('--silent-'):])
     return silent_args

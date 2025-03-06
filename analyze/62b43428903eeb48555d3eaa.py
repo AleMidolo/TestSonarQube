@@ -8,12 +8,12 @@ def formatmany(
 
     for params in many_params:
         if isinstance(params, dict):
-            # Handle named parameters
-            formatted_params.append({k: v for k, v in params.items()})
+            # Convert dict to list of values in order of keys
+            formatted_params.append(list(params.values()))
         elif isinstance(params, (list, tuple)):
-            # Handle ordinal parameters
-            formatted_params.append([v for v in params])
+            # If it's already a sequence, just append it
+            formatted_params.append(params)
         else:
-            raise TypeError("Unsupported parameter type. Expected dict, list, or tuple.")
+            raise TypeError("params must be a Mapping or Sequence")
 
     return formatted_sql, formatted_params

@@ -4,30 +4,35 @@ import os
 
 def subprocess_run_helper(func, *args, timeout, extra_env=None):
     """
-    एक सब-प्रोसेस में एक फ़ंक्शन चलाएँ।
+    Ejecutar una función en un subproceso.
 
-    पैरामीटर (Parameters)
-    ---------------------
-    func : function
-        वह फ़ंक्शन जिसे चलाना है। यह किसी ऐसे मॉड्यूल में होना चाहिए जिसे आयात (import) किया जा सके।
+    Parametros
+    ----------
+    func : funcion
+        La función que se ejecutará. Debe estar en un módulo que sea importable.
     *args : str
-        कोई भी अतिरिक्त कमांड लाइन तर्क जो ``subprocess.run`` के पहले तर्क में पास किए जाने हैं।
+        Cualquier argumento adicional de línea de comandos que se pasará como primer argumento a ``subprocess.run``.
     extra_env : dict[str, str]
-        सब-प्रोसेस के लिए सेट किए जाने वाले कोई भी अतिरिक्त पर्यावरण वेरिएबल।
+        Cualquier variable de entorno adicional que se establecerá para el subproceso.
     """
-    # Get the module and function name
+    # Obtener el nombre del módulo y la función
     module_name = func.__module__
     func_name = func.__name__
 
-    # Prepare the command to run the function in a subprocess
-    command = [sys.executable, '-c', f'from {module_name} import {func_name}; {func_name}(*{args})']
+    # Crear el comando para ejecutar la función
+    command = [sys.executable, '-c', f'from {module_name} import {func_name}; {func_name}()']
 
-    # Prepare the environment
+    # Agregar argumentos adicionales si los hay
+    if args:
+        command.extend(args)
+
+    # Combinar el entorno actual con el entorno adicional si se proporciona
     env = os.environ.copy()
     if extra_env:
         env.update(extra_env)
 
-    # Run the subprocess
-    result = subprocess.run(command, env=env, timeout=timeout, check=True)
+    # Ejecutar el subproceso
+    result = subprocess.run(command, env=env, timeout=timeout, capture_output=True, text=True)
 
+    # Devolver el resultado del subproceso
     return result
