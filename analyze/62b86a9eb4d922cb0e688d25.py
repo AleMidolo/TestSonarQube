@@ -9,9 +9,7 @@ def _get_resource_name_regex():
         (re.Pattern): las expresiones regulares compiladas, para validar  
         el nombre del recurso.
     """
-    # Define la expresión regular para validar nombres de recursos
-    # Ejemplo: permite letras, números, guiones y guiones bajos, con una longitud mínima de 1
-    resource_name_pattern = r'^[a-zA-Z0-9_-]+$'
-    
-    # Compila la expresión regular
-    return re.compile(resource_name_pattern)
+    # Expresión regular que permite letras minúsculas, números, guiones y puntos.
+    # El nombre debe comenzar con una letra minúscula y terminar con una letra minúscula o número.
+    resource_name_pattern = re.compile(r'^[a-z][a-z0-9-.]*[a-z0-9]$')
+    return resource_name_pattern

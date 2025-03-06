@@ -4,18 +4,18 @@ def cachedmethod(cache, key=hashkey, lock=None):
     que guarda los resultados en una caché.
     """
     def decorator(method):
-        def wrapper(self, *args, **kwargs):
-            cache_key = key(self, *args, **kwargs)
+        def wrapper(*args, **kwargs):
+            cache_key = key(*args, **kwargs)
             if cache_key in cache:
                 return cache[cache_key]
             if lock:
                 with lock:
                     if cache_key in cache:
                         return cache[cache_key]
-                    result = method(self, *args, **kwargs)
+                    result = method(*args, **kwargs)
                     cache[cache_key] = result
             else:
-                result = method(self, *args, **kwargs)
+                result = method(*args, **kwargs)
                 cache[cache_key] = result
             return result
         return wrapper

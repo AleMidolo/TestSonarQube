@@ -5,7 +5,7 @@ def validate_choices_args(self, args):
     :param args: Los argumentos recibidos.
     """
     if not hasattr(self, 'choices'):
-        raise AttributeError("No 'choices' attribute defined in the class.")
+        raise AttributeError("No 'choices' attribute found in the class.")
     
     if not isinstance(self.choices, (list, tuple)):
         raise TypeError("'choices' must be a list or tuple.")

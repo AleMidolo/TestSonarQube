@@ -5,8 +5,8 @@ def popitem(self):
     if not self:
         raise KeyError("popitem(): dictionary is empty")
     
-    # Encontrar la clave con el menor valor (menos utilizado)
-    min_key = min(self, key=self.get)
+    # Encontrar la clave con el menor valor de frecuencia
+    min_key = min(self.keys(), key=lambda k: self[k])
     
     # Eliminar y devolver el par (clave, valor)
     value = self.pop(min_key)

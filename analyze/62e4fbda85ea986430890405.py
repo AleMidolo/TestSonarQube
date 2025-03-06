@@ -1,12 +1,7 @@
 import subprocess
 import sys
 import os
-from typing import Sequence, Any
-
-def _get_platform_max_length() -> int:
-    # This function should return the platform-specific maximum command length.
-    # For simplicity, we'll return a default value.
-    return 32768
+from typing import Sequence, Any, Tuple
 
 def xargs(
         cmd: tuple[str, ...],
@@ -30,7 +25,7 @@ def xargs(
         kwargs['stderr'] = slave
 
     # Split varargs into chunks based on target_concurrency
-    chunk_size = len(varargs) // target_concurrency
+    chunk_size = max(1, len(varargs) // target_concurrency)
     chunks = [varargs[i:i + chunk_size] for i in range(0, len(varargs), chunk_size)]
 
     results = []
@@ -44,11 +39,7 @@ def xargs(
             results.append((e.returncode, e.output))
 
     # Combine results
-    final_returncode = 0
-    final_output = b""
-    for returncode, output in results:
-        if returncode != 0:
-            final_returncode = returncode
-        final_output += output
+    final_returncode = max(rc for rc, _ in results)
+    final_output = b''.join(output for _, output in results)
 
-    return final_returncode, final_output
+    return (final_returncode, final_output)

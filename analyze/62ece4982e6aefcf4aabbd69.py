@@ -8,7 +8,6 @@ def _replace_register(flow_params, register_number, register_value):
     :param register_number: El número del registro donde se almacenará el valor  
     :param register_value: Clave que será reemplazada por el número de registro  
     """
-    if flow_params and isinstance(flow_params, dict):
-        if register_value in flow_params:
-            flow_params[register_value] = register_number
+    if 'register_value' in flow_params:
+        flow_params['register_value'] = register_number
     return flow_params

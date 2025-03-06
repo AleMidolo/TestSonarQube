@@ -32,13 +32,13 @@ def validate(self, path):
     if not required_keys.issubset(inventory.keys()):
         return False
 
-    # Verificar que el algoritmo de digestión sea válido
-    if inventory['digestAlgorithm'] not in ['sha256', 'sha512']:
+    # Verificar el algoritmo de digestión
+    if inventory['digestAlgorithm'] != 'sha512':
         return False
 
-    # Verificar que hay al menos una versión
+    # Verificar la existencia de versiones
     if not inventory['versions']:
         return False
 
-    # Si todas las verificaciones pasan, devolver True
+    # Si todas las verificaciones pasan, el objeto es válido
     return True

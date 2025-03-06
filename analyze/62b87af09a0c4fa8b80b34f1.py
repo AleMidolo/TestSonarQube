@@ -4,5 +4,5 @@ def fill(self, coord, weight=1):
 
     Las coordenadas fuera de los límites del histograma son ignoradas.
     """
-    if self.is_within_bounds(coord):
+    if 0 <= coord < len(self.histogram):
         self.histogram[coord] += weight

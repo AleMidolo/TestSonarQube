@@ -10,6 +10,6 @@ def _get_seq_with_type(seq, bufsize=None):
         if bufsize is None:
             bufsize = 1024
         if hasattr(seq, 'read'):
-            return seq.read(bufsize), type(seq)
+            return seq.read(bufsize), type(seq.read(bufsize))
         else:
-            return list(seq), list
+            return list(seq), type(list(seq))

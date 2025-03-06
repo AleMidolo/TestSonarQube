@@ -33,3 +33,19 @@ def update_last_applied_manifest_dict_from_resp(
         else:
             if key not in last_applied_manifest:
                 last_applied_manifest[key] = response[key]
+
+def update_last_applied_manifest_list_from_resp(
+    last_applied_manifest, observer_schema, response
+):
+    """
+    Función auxiliar para manejar la actualización de listas en el last_applied_manifest.
+    """
+    for i, item in enumerate(response):
+        if i >= len(last_applied_manifest):
+            last_applied_manifest.append({})
+        if isinstance(observer_schema[0], dict):
+            update_last_applied_manifest_dict_from_resp(last_applied_manifest[i], observer_schema[0], item)
+        elif isinstance(observer_schema[0], list):
+            update_last_applied_manifest_list_from_resp(last_applied_manifest[i], observer_schema[0], item)
+        else:
+            last_applied_manifest[i] = item
