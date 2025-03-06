@@ -13,8 +13,8 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
     
     for subparser_name, subparser in subparsers.items():
         try:
-            args, remaining = subparser.parse_known_args(remaining_args)
-            parsed_args[subparser_name] = args
+            namespace, remaining = subparser.parse_known_args(remaining_args)
+            parsed_args[subparser_name] = namespace
             remaining_args = remaining
         except argparse.ArgumentError:
             continue

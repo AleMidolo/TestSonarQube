@@ -24,13 +24,13 @@ def find_roots(
     if roots is None:
         roots = set()
 
-    # Obtener todos los sujetos que son hijos en la jerarquía
-    children = set(graph.subjects(predicate=prop))
+    # Obtener todos los nodos que son sujetos en triples con la propiedad dada
+    subjects = set(graph.subjects(predicate=prop))
 
-    # Obtener todos los objetos que son padres en la jerarquía
-    parents = set(graph.objects(predicate=prop))
+    # Obtener todos los nodos que son objetos en triples con la propiedad dada
+    objects = set(graph.objects(predicate=prop))
 
-    # Las raíces son los padres que no son hijos
-    roots.update(parents - children)
+    # Las raíces son los nodos que son sujetos pero no objetos
+    roots.update(subjects - objects)
 
     return roots

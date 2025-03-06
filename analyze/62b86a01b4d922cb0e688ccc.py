@@ -13,8 +13,10 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
 
     En el caso de un diccionario de ``first_level`` (es decir, un ``observer_schema`` completo para un recurso), los valores de los campos identificadores se copian del archivo de manifiesto.
     """
+    if not isinstance(manifest_dict, dict):
+        return None
+
     observer_schema = {}
-    
     for key, value in manifest_dict.items():
         if isinstance(value, dict):
             observer_schema[key] = generate_default_observer_schema_dict(value)
@@ -25,7 +27,7 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
                 observer_schema[key] = value
             else:
                 observer_schema[key] = None
-    
+
     return observer_schema
 
 def generate_default_observer_schema_list(manifest_list):
@@ -40,8 +42,10 @@ def generate_default_observer_schema_list(manifest_list):
 
     Esta función crea una nueva lista a partir de ``manifest_list`` y reemplaza todos los valores que no sean listas (`list`) ni diccionarios (`dict`) por ``None``.
     """
+    if not isinstance(manifest_list, list):
+        return None
+
     observer_schema = []
-    
     for item in manifest_list:
         if isinstance(item, dict):
             observer_schema.append(generate_default_observer_schema_dict(item))
@@ -49,5 +53,5 @@ def generate_default_observer_schema_list(manifest_list):
             observer_schema.append(generate_default_observer_schema_list(item))
         else:
             observer_schema.append(None)
-    
+
     return observer_schema

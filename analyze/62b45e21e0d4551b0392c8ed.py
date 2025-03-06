@@ -31,4 +31,4 @@ def find_path_type(path):
             elif content == "ocfl_1.0":
                 return "root"
     
-    return "No se pudo determinar el tipo de la ruta."
+    return "No se pudo determinar el tipo de la ruta basado en los archivos Namaste."

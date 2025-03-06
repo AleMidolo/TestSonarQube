@@ -4,5 +4,5 @@ def _c_optimizations_required():
 
     Esto utiliza la variable ``PURE_PYTHON`` como se documenta en `_use_c_impl`.
     """
-    from ._use_c_impl import PURE_PYTHON
-    return not PURE_PYTHON
+    import os
+    return not os.getenv('PURE_PYTHON', '').lower() in ('1', 'true', 'yes')

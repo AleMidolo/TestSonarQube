@@ -24,5 +24,5 @@ def _update_context(self, context):
             error_name = ['x', 'y', 'z'][i] if i < 3 else f'error_{i}'
             context.error[f'{error_name}_low'] = {'index': error_index}
 
-    # No se eliminan los valores existentes en context.value
+    # No se eliminan los valores existentes en context.value o sus subcontextos
     return context

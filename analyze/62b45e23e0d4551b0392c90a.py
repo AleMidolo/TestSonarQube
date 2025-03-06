@@ -9,41 +9,37 @@ def validate_version_inventories(self, version_dirs):
     'version_dirs' es un arreglo de nombres de directorios de versiones 
     y se asume que están en secuencia de versiones (1, 2, 3...).
     """
-    import os
-    from collections import defaultdict
-
-    # Diccionario para almacenar los resúmenes de contenido por versión
-    version_digests = defaultdict(dict)
-
-    # Asumimos que el inventario raíz está en el directorio base
-    root_inventory = self._load_inventory("root")
-
+    if not version_dirs:
+        raise ValueError("No version directories provided.")
+    
+    # Assuming the root inventory is in the first version directory
+    root_inventory = self._load_inventory(version_dirs[0])
+    if not root_inventory:
+        raise ValueError("Root inventory is missing or empty.")
+    
+    # Track digests that differ from the root inventory
+    differing_digests = {}
+    
     for version_dir in version_dirs:
-        # Construir la ruta al inventario de la versión
-        inventory_path = os.path.join(version_dir, "inventory.json")
+        current_inventory = self._load_inventory(version_dir)
+        if not current_inventory:
+            raise ValueError(f"Inventory missing in version directory: {version_dir}")
         
-        # Verificar si el inventario existe
-        if not os.path.exists(inventory_path):
-            raise FileNotFoundError(f"El inventario para la versión {version_dir} no existe.")
-
-        # Cargar el inventario de la versión
-        version_inventory = self._load_inventory(inventory_path)
-
-        # Comparar los resúmenes de contenido con el inventario raíz
-        for item, digest in version_inventory.items():
+        # Compare digests with the root inventory
+        for item, digest in current_inventory.items():
             if item in root_inventory:
                 if digest != root_inventory[item]:
-                    version_digests[version_dir][item] = digest
+                    differing_digests[item] = digest
             else:
-                version_digests[version_dir][item] = digest
+                differing_digests[item] = digest
+    
+    return differing_digests
 
-    return version_digests
-
-def _load_inventory(self, path):
+def _load_inventory(self, version_dir):
     """
-    Carga un inventario desde un archivo JSON.
+    Helper method to load the inventory from a version directory.
+    This is a placeholder and should be implemented based on the actual inventory format.
     """
-    import json
-
-    with open(path, 'r') as f:
-        return json.load(f)
+    # Placeholder implementation
+    # In a real scenario, this would load the inventory from the directory
+    return {}

@@ -1,5 +1,6 @@
 import requests
 from urllib.parse import urlparse
+from lxml import etree
 
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
@@ -8,10 +9,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     :arg handle: Identificador remoto a recuperar
     :returns: dict
     """
-    # Parse the handle to extract the domain and username
-    if '@' not in handle:
-        raise ValueError("Invalid handle format. Expected format: user@domain")
-    
+    # Parse the handle to extract the username and domain
     username, domain = handle.split('@')
     
     # Construct the webfinger URL
@@ -22,10 +20,19 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         response = requests.get(webfinger_url)
         response.raise_for_status()
         
-        # Parse the JSON response
-        webfinger_data = response.json()
+        # Parse the XML response
+        root = etree.fromstring(response.content)
         
-        return webfinger_data
+        # Extract relevant information from the XML
+        result = {}
+        for link in root.findall('{http://webfinger.net/rel/profile-page}link'):
+            result[link.get('rel')] = link.get('href')
+        
+        return result
     
     except requests.exceptions.RequestException as e:
-        raise Exception(f"Failed to retrieve webfinger document: {e}")
+        print(f"Error retrieving webfinger document: {e}")
+        return {}
+    except etree.XMLSyntaxError as e:
+        print(f"Error parsing webfinger document: {e}")
+        return {}

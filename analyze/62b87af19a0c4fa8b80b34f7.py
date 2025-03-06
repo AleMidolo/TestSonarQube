@@ -10,20 +10,16 @@ def difference(d1, d2, level=-1):
        Agrega el argumento de palabra clave *level*.
     """
     if level == 0:
-        return {}
+        return {k: v for k, v in d1.items() if k not in d2 or d2[k] != v}
     
     diff = {}
-    for key, value in d1.items():
-        if key not in d2:
-            diff[key] = value
-        elif isinstance(value, dict) and isinstance(d2[key], dict):
-            if level != -1:
-                sub_diff = difference(value, d2[key], level - 1)
-            else:
-                sub_diff = difference(value, d2[key], level)
+    for k, v in d1.items():
+        if k not in d2:
+            diff[k] = v
+        elif isinstance(v, dict) and isinstance(d2[k], dict) and level != 0:
+            sub_diff = difference(v, d2[k], level - 1 if level > 0 else -1)
             if sub_diff:
-                diff[key] = sub_diff
-        elif value != d2[key]:
-            diff[key] = value
-    
+                diff[k] = sub_diff
+        elif v != d2[k]:
+            diff[k] = v
     return diff
