@@ -18,5 +18,15 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     return {
         "url": url,
         "document_path": document_path,
-        "well_known_url": well_known_url
+        "well_known_url": well_known_url,
+        "links": [
+            {
+                "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
+                "href": f"{well_known_url}/2.0"
+            },
+            {
+                "rel": "http://nodeinfo.diaspora.software/ns/schema/2.1",
+                "href": f"{well_known_url}/2.1"
+            }
+        ]
     }

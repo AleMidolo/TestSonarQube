@@ -8,6 +8,6 @@ def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
         if not name.startswith('__'):
             if not all and not hasattr(value, '__isinterface__'):
                 continue
-            description = value.__doc__ if value.__doc__ else "No description available."
+            description = value.__doc__ if value.__doc__ else "No description available"
             attributes[name] = description
     return attributes

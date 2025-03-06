@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-import pytz
+from pytz import timezone, utc
 
 def _fromutc(self, dt):
     """
@@ -15,18 +15,17 @@ def _fromutc(self, dt):
         raise ValueError("The input datetime must be timezone-aware.")
     
     # Convert the datetime to UTC
-    utc_dt = dt.astimezone(pytz.UTC)
+    dt_utc = dt.astimezone(utc)
     
     # Get the target timezone (assuming self is the target timezone)
-    target_tz = self
+    target_tz = timezone(str(self))
     
     # Convert the UTC datetime to the target timezone
-    target_dt = utc_dt.astimezone(target_tz)
+    dt_target = dt_utc.astimezone(target_tz)
     
     # Check if the datetime is ambiguous in the target timezone
-    is_ambiguous = target_tz.is_ambiguous(target_dt)
+    if target_tz.is_ambiguous(dt_target):
+        # If ambiguous, choose the first occurrence
+        dt_target = target_tz.normalize(dt_target)
     
-    # Check if the datetime is in a fold (i.e., the second occurrence of an ambiguous time)
-    is_fold = target_dt.fold
-    
-    return target_dt
+    return dt_target

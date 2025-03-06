@@ -11,41 +11,40 @@ def normalized(self):
       返回一个 :class:`dateutil.relativedelta.relativedelta` 对象。
     """
     from dateutil.relativedelta import relativedelta
+    import math
 
-    # 将小数部分转换为整数
+    # 将天数的浮点数部分转换为小时
     days = int(self.days)
-    hours = int(self.hours)
-    minutes = int(self.minutes)
-    seconds = int(self.seconds)
-    microseconds = int(self.microseconds)
+    hours = self.hours + (self.days - days) * 24
 
-    # 处理小数部分
-    extra_hours = int((self.days - days) * 24)
-    extra_minutes = int((self.hours - hours) * 60)
-    extra_seconds = int((self.minutes - minutes) * 60)
-    extra_microseconds = int((self.seconds - seconds) * 1e6)
+    # 将小时的浮点数部分转换为分钟
+    hours = int(hours)
+    minutes = self.minutes + (hours - int(hours)) * 60
 
-    # 累加额外的时间
-    hours += extra_hours
-    minutes += extra_minutes
-    seconds += extra_seconds
-    microseconds += extra_microseconds
+    # 将分钟的浮点数部分转换为秒
+    minutes = int(minutes)
+    seconds = self.seconds + (minutes - int(minutes)) * 60
 
-    # 处理进位
-    if microseconds >= 1e6:
-        seconds += microseconds // 1e6
-        microseconds = microseconds % 1e6
+    # 将秒的浮点数部分转换为微秒
+    seconds = int(seconds)
+    microseconds = self.microseconds + (seconds - int(seconds)) * 1e6
 
-    if seconds >= 60:
-        minutes += seconds // 60
-        seconds = seconds % 60
-
-    if minutes >= 60:
-        hours += minutes // 60
-        minutes = minutes % 60
-
-    if hours >= 24:
-        days += hours // 24
-        hours = hours % 24
-
-    return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds, microseconds=microseconds)
+    # 返回标准化后的 relativedelta 对象
+    return relativedelta(
+        years=self.years,
+        months=self.months,
+        days=days,
+        hours=hours,
+        minutes=minutes,
+        seconds=seconds,
+        microseconds=int(microseconds),
+        leapdays=self.leapdays,
+        year=self.year,
+        month=self.month,
+        day=self.day,
+        weekday=self.weekday,
+        hour=self.hour,
+        minute=self.minute,
+        second=self.second,
+        microsecond=int(self.microsecond)
+    )

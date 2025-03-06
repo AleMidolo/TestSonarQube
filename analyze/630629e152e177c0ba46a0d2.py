@@ -19,26 +19,16 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         # 解析 XML 文档
         root = etree.fromstring(response.content)
         
-        # 提取所需信息
-        result = {
-            "subject": root.find(".//{http://webfinger.net/rel/profile-page}subject").text,
-            "aliases": [alias.text for alias in root.findall(".//{http://webfinger.net/rel/profile-page}alias")],
-            "links": []
-        }
-        
-        for link in root.findall(".//{http://webfinger.net/rel/profile-page}link"):
-            link_info = {
-                "rel": link.get("rel"),
-                "type": link.get("type"),
-                "href": link.get("href")
-            }
-            result["links"].append(link_info)
+        # 提取所需信息并构建字典
+        result = {}
+        for link in root.findall("{http://webfinger.net/rel/profile-page}link"):
+            result[link.get("rel")] = link.get("href")
         
         return result
     
     except requests.exceptions.RequestException as e:
-        print(f"请求失败: {e}")
+        print(f"Error retrieving WebFinger document: {e}")
         return {}
     except etree.XMLSyntaxError as e:
-        print(f"XML 解析失败: {e}")
+        print(f"Error parsing WebFinger document: {e}")
         return {}

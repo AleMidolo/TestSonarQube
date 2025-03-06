@@ -18,13 +18,12 @@ def difference(d1, d2, level=-1):
         for key in d1:
             if key not in d2:
                 diff_dict[key] = d1[key]
-            else:
-                if isinstance(d1[key], dict) and isinstance(d2[key], dict):
-                    nested_diff = _diff(d1[key], d2[key], current_level - 1 if current_level != -1 else -1)
-                    if nested_diff:
-                        diff_dict[key] = nested_diff
-                elif d1[key] != d2[key]:
-                    diff_dict[key] = d1[key]
+            elif isinstance(d1[key], dict) and isinstance(d2[key], dict):
+                nested_diff = _diff(d1[key], d2[key], current_level - 1 if current_level != -1 else -1)
+                if nested_diff:
+                    diff_dict[key] = nested_diff
+            elif d1[key] != d2[key]:
+                diff_dict[key] = d1[key]
         return diff_dict
 
     return _diff(d1, d2, level)

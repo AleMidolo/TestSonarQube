@@ -1,5 +1,3 @@
-import subprocess
-
 def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     """
     使用 `vars` 字典运行 Ansible CLI。
@@ -10,14 +8,17 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     :param ir_plugin: 一个表示当前插件的InfraredPlugin 对象
     :return: ansible 的结果
     """
-    # 将 vars_dict 转换为 Ansible 的 extra-vars 格式
-    extra_vars = " ".join([f"{key}={value}" for key, value in vars_dict.items()])
-    
-    # 构建完整的 Ansible 命令
-    command = ["ansible-playbook"] + cli_args + ["-e", extra_vars]
-    
-    # 运行 Ansible 命令并捕获输出
-    result = subprocess.run(command, capture_output=True, text=True)
-    
+    import subprocess
+    import json
+
+    # 将 vars_dict 转换为 JSON 字符串，以便传递给 Ansible
+    extra_vars = json.dumps(vars_dict)
+
+    # 构建 Ansible 命令
+    ansible_command = ["ansible-playbook"] + cli_args + ["-e", extra_vars]
+
+    # 使用 subprocess 运行 Ansible 命令
+    result = subprocess.run(ansible_command, capture_output=True, text=True)
+
     # 返回 Ansible 的结果
     return result

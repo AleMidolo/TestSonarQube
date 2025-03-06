@@ -7,9 +7,12 @@ def _replace_url_args(url, url_args):
 
     将任何自定义字符串 URL 项目替换为 `args` 中的值。
     """
-    if url_args:
-        for key, value in url_args.items():
-            placeholder = f'{{{key}}}'
-            if placeholder in url:
-                url = url.replace(placeholder, str(value), 1)
+    if not url_args:
+        return url
+    
+    for key, value in url_args.items():
+        placeholder = f'{{{key}}}'
+        if placeholder in url:
+            url = url.replace(placeholder, str(value), 1)
+    
     return url

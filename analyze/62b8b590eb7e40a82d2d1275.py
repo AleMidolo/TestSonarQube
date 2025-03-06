@@ -34,15 +34,15 @@ def _legacy_mergeOrderings(orderings):
 
     # 初始化队列
     queue = deque([node for node in all_nodes if in_degree[node] == 0])
-    result = []
 
     # 拓扑排序
+    result = []
     while queue:
-        u = queue.popleft()
-        result.append(u)
-        for v in graph[u]:
-            in_degree[v] -= 1
-            if in_degree[v] == 0:
-                queue.append(v)
+        node = queue.popleft()
+        result.append(node)
+        for neighbor in graph[node]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
 
     return result

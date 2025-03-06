@@ -18,17 +18,14 @@ def deep_merge_nodes(nodes):
         if key in merged_nodes:
             existing_value_node = merged_nodes[key]
             
-            if isinstance(existing_value_node, MappingNode) and isinstance(value_node, MappingNode):
-                # 深度合并 MappingNode
+            if isinstance(existing_value_node, type(value_node)) and isinstance(existing_value_node, type(value_node)):
+                # Both are MappingNodes, perform deep merge
                 merged_value = deep_merge_nodes(existing_value_node.value + value_node.value)
-                merged_nodes[key] = MappingNode(tag=existing_value_node.tag, value=merged_value)
+                merged_nodes[key] = type(value_node)(value_node.tag, merged_value)
             else:
-                # 非 MappingNode 冲突，保留最后一个值
+                # One or both are not MappingNodes, take the last value
                 merged_nodes[key] = value_node
         else:
             merged_nodes[key] = value_node
     
-    # 将合并后的节点转换回元组列表形式
-    result = [(ScalarNode(tag='tag:yaml.org,2002:str', value=key), value_node) for key, value_node in merged_nodes.items()]
-    
-    return result
+    return [(type(key_node)(key_node.tag, key), value) for key, value in merged_nodes.items()]

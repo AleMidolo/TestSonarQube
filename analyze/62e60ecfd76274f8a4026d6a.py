@@ -8,19 +8,19 @@ def protocol_handlers(cls, protocol_version=None):
     :raise TypeError: 当传入的协议版本不是元组类型时
     """
     # 假设这是所有支持的协议版本及其对应的处理程序
-    supported_versions = {
-        (3, 5): "BoltProtocolHandlerV3_5",
-        (4, 0): "BoltProtocolHandlerV4_0",
-        (4, 1): "BoltProtocolHandlerV4_1",
-        (4, 2): "BoltProtocolHandlerV4_2",
+    supported_handlers = {
+        (3, 5): cls.BoltV3_5Handler,
+        (4, 0): cls.BoltV4_0Handler,
+        (4, 1): cls.BoltV4_1Handler,
+        (4, 2): cls.BoltV4_2Handler,
     }
 
     if protocol_version is not None:
         if not isinstance(protocol_version, tuple):
             raise TypeError("protocol_version must be a tuple or None")
-        if protocol_version in supported_versions:
-            return {protocol_version: supported_versions[protocol_version]}
+        if protocol_version in supported_handlers:
+            return {protocol_version: supported_handlers[protocol_version]}
         else:
             return {}
     else:
-        return supported_versions
+        return supported_handlers

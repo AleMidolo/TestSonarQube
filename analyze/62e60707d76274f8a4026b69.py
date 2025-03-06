@@ -11,19 +11,17 @@ def point_type(name, fields, srid_map):
         def __init__(self, **kwargs):
             for field, value in kwargs.items():
                 setattr(self, field, value)
+            self.srid_map = srid_map
 
         def __repr__(self):
-            fields_str = ', '.join(f"{field}={getattr(self, field)}" for field in self.__dict__)
+            fields_str = ', '.join(f"{field}={getattr(self, field)}" for field in self.__dict__ if field != 'srid_map')
             return f"{name}({fields_str})"
 
-        def to_wkt(self):
-            coords = []
-            for field in fields:
-                if field in srid_map:
-                    coords.append(f"{getattr(self, field)} {srid_map[field]}")
-                else:
-                    coords.append(str(getattr(self, field)))
-            return f"POINT({', '.join(coords)})"
+        def get_srid(self, field):
+            return self.srid_map.get(field, None)
 
     Point.__name__ = name
+    for field, field_type in fields.items():
+        setattr(Point, field, field_type)
+
     return Point

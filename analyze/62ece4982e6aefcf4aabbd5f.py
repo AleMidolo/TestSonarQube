@@ -2,7 +2,7 @@ def paging(response, max_results):
     """
     根据 max_results 指定的长度返回每个响应。
 
-    以分页方式返回 WAPI 响应数据。
+    以分页方式返回 WAPI 响应。
 
     参数：
       response (list): WAPI 响应数据。

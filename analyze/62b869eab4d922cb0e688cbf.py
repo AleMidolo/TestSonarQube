@@ -24,13 +24,11 @@ def generate_default_observer_schema(app):
                                         "lastTransitionTime": {"type": "string"},
                                         "reason": {"type": "string"},
                                         "message": {"type": "string"}
-                                    },
-                                    "required": ["type", "status"]
+                                    }
                                 }
                             }
                         }
                     }
-                },
-                "required": ["status"]
+                }
             }
     return app
