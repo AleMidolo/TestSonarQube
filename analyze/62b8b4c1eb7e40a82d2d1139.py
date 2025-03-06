@@ -1,22 +1,16 @@
 def verifyClass(iface, candidate, tentative=False):
     """
     Verifica che il *candidate* possa fornire correttamente *iface*.
-    
-    :param iface: L'interfaccia da verificare.
-    :param candidate: La classe o oggetto candidato da verificare.
-    :param tentative: Se True, verifica solo i metodi senza sollevare eccezioni.
-    :return: True se il candidato soddisfa l'interfaccia, altrimenti False.
     """
-    if not hasattr(iface, '__abstractmethods__'):
-        raise TypeError(f"{iface} non è un'interfaccia valida.")
-    
-    abstract_methods = iface.__abstractmethods__
-    
-    for method in abstract_methods:
-        if not hasattr(candidate, method):
-            if tentative:
-                return False
-            else:
-                raise TypeError(f"Il candidato non implementa il metodo richiesto: {method}")
-    
+    if not all(hasattr(candidate, attr) for attr in dir(iface) if not attr.startswith('__')):
+        return False
+    if not tentative:
+        for attr in dir(iface):
+            if not attr.startswith('__'):
+                iface_attr = getattr(iface, attr)
+                candidate_attr = getattr(candidate, attr)
+                if not callable(iface_attr) and iface_attr != candidate_attr:
+                    return False
+                if callable(iface_attr) and not callable(candidate_attr):
+                    return False
     return True

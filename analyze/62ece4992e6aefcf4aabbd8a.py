@@ -1,9 +1,8 @@
 import logging
 import os
 import yaml
-from typing import Dict, List, Tuple, Optional, Sequence
 
-def load_configurations(config_filenames: List[str], overrides: Optional[Dict] = None, resolve_env: bool = True) -> Tuple[Dict[str, Dict], Sequence[logging.LogRecord]]:
+def load_configurations(config_filenames, overrides=None, resolve_env=True):
     """
     Dato un elenco di nomi di file di configurazione, carica e valida ciascun file di configurazione.
     Restituisci i risultati come una tupla composta da:
@@ -13,27 +12,30 @@ def load_configurations(config_filenames: List[str], overrides: Optional[Dict] =
     configurations = {}
     errors = []
 
-    for config_filename in config_filenames:
+    for filename in config_filenames:
         try:
-            with open(config_filename, 'r') as file:
-                config_data = yaml.safe_load(file)
+            with open(filename, 'r') as file:
+                config = yaml.safe_load(file)
                 
                 if resolve_env:
-                    for key, value in config_data.items():
+                    for key, value in config.items():
                         if isinstance(value, str) and value.startswith('${') and value.endswith('}'):
                             env_var = value[2:-1]
-                            config_data[key] = os.getenv(env_var, value)
+                            config[key] = os.getenv(env_var, value)
                 
                 if overrides:
-                    config_data.update(overrides)
+                    for key, value in overrides.items():
+                        if key in config:
+                            config[key] = value
                 
-                configurations[config_filename] = config_data
+                configurations[filename] = config
         except Exception as e:
-            error_message = f"Error loading configuration from {config_filename}: {str(e)}"
+            error_message = f"Error loading configuration from {filename}: {str(e)}"
+            logging.error(error_message)
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
-                pathname=__file__,
+                pathname=filename,
                 lineno=0,
                 msg=error_message,
                 args=None,

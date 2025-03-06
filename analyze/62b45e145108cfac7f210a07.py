@@ -10,14 +10,28 @@ def validate(self, inventory, extract_spec_version=False):
     if extract_spec_version:
         if 'type' in inventory:
             spec_type = inventory['type']
-            if spec_type in self.spec_version:
+            if spec_type in self.supported_spec_versions:
                 self.spec_version = spec_type
             else:
-                # Esegui altri test basati sulla versione specificata in self.spec_version
-                pass
+                # Esegui altri test basati su self.spec_version
+                self._run_additional_tests()
         else:
-            # Esegui altri test basati sulla versione specificata in self.spec_version
-            pass
+            # Esegui altri test basati su self.spec_version
+            self._run_additional_tests()
     else:
-        # Esegui la convalida basata sulla versione specificata in self.spec_version
-        pass
+        # Esegui la convalida standard basata su self.spec_version
+        self._run_standard_validation()
+
+def _run_additional_tests(self):
+    """
+    Esegue test aggiuntivi basati sulla versione specificata in self.spec_version.
+    """
+    # Implementazione dei test aggiuntivi
+    pass
+
+def _run_standard_validation(self):
+    """
+    Esegue la convalida standard basata sulla versione specificata in self.spec_version.
+    """
+    # Implementazione della convalida standard
+    pass

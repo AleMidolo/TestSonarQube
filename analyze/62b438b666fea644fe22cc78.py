@@ -6,7 +6,7 @@ def parse_arguments(*arguments):
     analizza gli argomenti e restituiscili come un'istanza di ArgumentParser.
     """
     parser = argparse.ArgumentParser(description="Parse command line arguments.")
-    # Add your argument parsing logic here
+    # Add arguments to the parser as needed
     # Example: parser.add_argument('--example', type=str, help='An example argument')
     
     # Parse the arguments

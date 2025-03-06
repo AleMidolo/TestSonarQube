@@ -14,7 +14,7 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     
     # Scrivi il contenuto renderizzato nel file
     with open(config_filename, 'w') as config_file:
-        yaml.dump(rendered_config, config_file, default_flow_style=False)
+        yaml.dump(rendered_config, config_file)
     
     # Imposta i permessi del file
     os.chmod(config_filename, mode)

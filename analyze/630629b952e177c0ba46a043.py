@@ -14,7 +14,7 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     if document_path is None:
         document_path = "/.well-known/nodeinfo"
     
-    full_url = urljoin(url, document_path)
+    well_known_url = urljoin(url, document_path)
     
     # Simulazione di un documento NodeInfo ben noto
     nodeinfo_document = {

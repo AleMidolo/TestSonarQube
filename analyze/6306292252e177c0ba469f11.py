@@ -7,5 +7,5 @@ def format_dt(dt):
     if not isinstance(dt, datetime):
         raise TypeError("L'oggetto fornito non è un'istanza di datetime")
     
-    # Formato atteso dai nodi D*: YYYY-MM-DDTHH:MM:SS
-    return dt.strftime('%Y-%m-%dT%H:%M:%S')
+    # Formato atteso dai nodi D*
+    return dt.strftime("%Y-%m-%dT%H:%M:%S.%fZ")

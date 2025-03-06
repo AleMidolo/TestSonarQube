@@ -16,15 +16,15 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     
     # Look for a spec file (e.g., plugin_spec.json) in the plugin directory
     spec_file = os.path.join(plugin_dir, "plugin_spec.json")
-    if not os.path.isfile(spec_file):
+    if not os.path.exists(spec_file):
         raise FileNotFoundError(f"No plugin specification file found in {plugin_dir}.")
     
-    # Load the JSON file
-    with open(spec_file, 'r') as file:
-        spec_data = json.load(file)
+    # Load the spec file
+    with open(spec_file, 'r') as f:
+        spec_data = json.load(f)
     
     # Flatten the dictionary
-    def flatten_dict(d, parent_key='', sep='.'):
+    def flatten_dict(d, parent_key='', sep='_'):
         items = []
         for k, v in d.items():
             new_key = f"{parent_key}{sep}{k}" if parent_key else k

@@ -1,5 +1,6 @@
 import requests
 from urllib.parse import urlparse
+import json
 
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
@@ -8,14 +9,14 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     :arg handle: Handle remoto da recuperare  
     :returns: dict
     """
-    # Parse the handle to extract the username and domain
+    # Split the handle into username and domain
     username, domain = handle.split('@')
     
-    # Construct the webfinger URL
+    # Construct the WebFinger URL
     webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
     
     try:
-        # Make the GET request to retrieve the webfinger document
+        # Make the GET request to retrieve the WebFinger document
         response = requests.get(webfinger_url)
         response.raise_for_status()  # Raise an exception for HTTP errors
         
@@ -26,5 +27,5 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     
     except requests.exceptions.RequestException as e:
         # Handle any errors that occur during the request
-        print(f"Error retrieving webfinger document: {e}")
+        print(f"Error retrieving WebFinger document: {e}")
         return {}

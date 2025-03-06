@@ -6,7 +6,7 @@ def hydrate_time(nanoseconds, tz=None):
     Idratatore per valori di `Time` e `LocalTime`.
 
     :param nanoseconds: Il tempo in nanosecondi.
-    :param tz: Il fuso orario (timezone) opzionale.
+    :param tz: Il fuso orario (opzionale).
     :return: Un oggetto `datetime.time` rappresentante il tempo.
     """
     # Convert nanoseconds to seconds

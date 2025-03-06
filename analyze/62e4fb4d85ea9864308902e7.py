@@ -1,37 +1,30 @@
-import os
-import sys
-
 def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     """
-    Corrections for the following issues on Windows:
-    - https://bugs.python.org/issue8557
-    - Windows does not correctly interpret shebangs
+    Normalizes the command tuple to handle issues with shebangs and paths on Windows.
 
-    This function also allows proper functioning of shebangs with deep paths.
+    Args:
+        cmd: A tuple of strings representing the command and its arguments.
+
+    Returns:
+        A tuple of strings with the normalized command and arguments.
     """
     if not cmd:
         return cmd
 
-    # Extract the first part of the command (the executable)
-    executable = cmd[0]
+    # Handle shebang issues on Windows
+    first_arg = cmd[0]
+    if first_arg.startswith('#!'):
+        # Extract the interpreter path from the shebang
+        interpreter_path = first_arg[2:].strip()
+        # Replace the shebang with the interpreter path
+        cmd = (interpreter_path,) + cmd[1:]
 
-    # If the executable is a shebang, we need to handle it differently
-    if executable.startswith('#!'):
-        # Split the shebang line into parts
-        shebang_parts = executable.split()
-        if len(shebang_parts) < 2:
-            return cmd  # Not a valid shebang, return the original command
+    # Normalize paths to handle deep paths correctly
+    normalized_cmd = []
+    for arg in cmd:
+        if '\\' in arg:
+            # Replace backslashes with forward slashes
+            arg = arg.replace('\\', '/')
+        normalized_cmd.append(arg)
 
-        # The interpreter is the second part of the shebang
-        interpreter = shebang_parts[1]
-
-        # If the interpreter is a path, we need to normalize it
-        if os.path.isabs(interpreter):
-            interpreter = os.path.normpath(interpreter)
-
-        # Construct the new command with the interpreter and the rest of the arguments
-        new_cmd = (interpreter,) + cmd[1:]
-        return new_cmd
-
-    # If the executable is not a shebang, just return the original command
-    return cmd
+    return tuple(normalized_cmd)
