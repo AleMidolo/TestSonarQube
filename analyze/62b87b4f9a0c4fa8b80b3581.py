@@ -17,7 +17,7 @@ def scale(self, other=None, recompute=False):
     """
     if not hasattr(self, '_scale') or recompute:
         # Compute the scale as the integral of the histogram
-        self._scale = sum(self.bins) * self.bin_width
+        self._scale = sum(bin_content for bin_content in self.bins)
     
     if other is None:
         return self._scale
@@ -25,5 +25,5 @@ def scale(self, other=None, recompute=False):
         if self._scale == 0:
             raise LenaValueError("Cannot rescale a histogram with scale equal to zero.")
         scale_factor = other / self._scale
-        self.bins = [bin * scale_factor for bin in self.bins]
+        self.bins = [bin_content * scale_factor for bin_content in self.bins]
         self._scale = other

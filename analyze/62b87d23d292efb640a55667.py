@@ -6,11 +6,10 @@ def register_vcs_handler(vcs, method):  # decorator
         method: The method to be used as the handler.
 
     Returns:
-        A decorator function that marks the method as the handler for the specified VCS.
+        A decorator function that marks the method as the handler for the VCS.
     """
     def decorate(f):
-        if not hasattr(f, '_vcs_handlers'):
-            f._vcs_handlers = {}
-        f._vcs_handlers[vcs] = method
+        f.vcs = vcs
+        f.method = method
         return f
     return decorate

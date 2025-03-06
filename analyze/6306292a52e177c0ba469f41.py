@@ -11,7 +11,7 @@ def test_tag(tag: str) -> bool:
         tag (str): The word to be tested as a tag.
     
     Returns:
-        bool: True if the word is a valid tag, False otherwise.
+        bool: True if the tag is valid, False otherwise.
     """
     if not tag:
         return False

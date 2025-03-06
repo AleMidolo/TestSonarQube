@@ -16,22 +16,14 @@ def size_to_bytes(size: str) -> int:
         >>> size_to_bytes("1K")
         1000
     """
-    size = size.strip().upper()
-    if size[-1] not in ['K', 'M', 'G', 'T', 'P']:
-        return int(size)
-    
-    unit = size[-1]
-    num = float(size[:-1])
-    
-    if unit == 'K':
-        return int(num * 10**3)
-    elif unit == 'M':
-        return int(num * 10**6)
-    elif unit == 'G':
-        return int(num * 10**9)
-    elif unit == 'T':
-        return int(num * 10**12)
-    elif unit == 'P':
-        return int(num * 10**15)
+    size = size.upper()
+    if size[-1] == 'K':
+        return int(size[:-1]) * 1000
+    elif size[-1] == 'M':
+        return int(size[:-1]) * 1000 * 1000
+    elif size[-1] == 'G':
+        return int(size[:-1]) * 1000 * 1000 * 1000
+    elif size[-1] == 'T':
+        return int(size[:-1]) * 1000 * 1000 * 1000 * 1000
     else:
-        raise ValueError(f"Invalid size unit: {unit}")
+        return int(size)

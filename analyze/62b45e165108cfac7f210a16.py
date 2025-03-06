@@ -9,14 +9,18 @@ def validate_as_prior_version(self, prior):
     if not isinstance(prior, type(self)):
         return False
     
-    # Check if the prior version is indeed older than the current version
-    if prior.version >= self.version:
+    # Check if the prior version has fewer or equal items
+    if len(prior.items) > len(self.items):
         return False
     
-    # Additional checks can be added here to validate the content of the prior version
-    # For example, ensuring that the prior version's items are a subset of the current version's items
+    # Check if all items in the prior version exist in the current version
     for item in prior.items:
         if item not in self.items:
+            return False
+    
+    # Check if the quantities in the prior version are less than or equal to the current version
+    for item, quantity in prior.items.items():
+        if self.items.get(item, 0) < quantity:
             return False
     
     return True

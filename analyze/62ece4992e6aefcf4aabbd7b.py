@@ -12,7 +12,7 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     
     os.makedirs(os.path.dirname(config_filename), exist_ok=True)
     
-    with open(config_filename, 'w') as config_file:
-        yaml.dump(rendered_config, config_file, default_flow_style=False)
+    with open(config_filename, 'w') as f:
+        yaml.dump(rendered_config, f)
     
     os.chmod(config_filename, mode)

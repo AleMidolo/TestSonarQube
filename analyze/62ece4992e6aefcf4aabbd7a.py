@@ -6,4 +6,4 @@ def is_gitbash():
 
     :return: True if gitbash
     """
-    return 'GIT_BASH' in os.environ.get('TERM_PROGRAM', '') or 'MINGW' in os.environ.get('SHELL', '')
+    return os.environ.get('TERM_PROGRAM') == 'mintty' and os.name == 'nt'

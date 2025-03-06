@@ -31,6 +31,8 @@ def _legacy_mergeOrderings(orderings):
                 in_degree[v] += 1
             all_nodes.add(u)
             all_nodes.add(v)
+        if ordering:
+            all_nodes.add(ordering[-1])
 
     # Initialize queue with nodes having zero in-degree
     queue = deque([node for node in all_nodes if in_degree[node] == 0])
