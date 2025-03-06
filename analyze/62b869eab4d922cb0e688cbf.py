@@ -1,43 +1,36 @@
 def generate_default_observer_schema(app):
     """
-    Generate the default observer schema for each Kubernetes resource present in
-    ``spec.manifest`` for which a custom observer schema hasn't been specified.
+    为 ``spec.manifest`` 中的每个 Kubernetes 资源生成默认的观察者模式（observer schema），前提是尚未为其指定自定义的观察者模式。
 
-    Args:
-        app (krake.data.kubernetes.Application): The application for which to generate a
-            default observer schema
+    参数：
+      app (krake.data.kubernetes.Application): 需要为其生成默认观察者模式的应用程序。
     """
-    default_schema = {
-        "apiVersion": "v1",
-        "kind": "ObserverSchema",
-        "metadata": {
-            "name": "default-observer-schema",
-            "namespace": app.metadata.namespace
-        },
-        "spec": {
-            "resources": []
-        }
-    }
-
     for resource in app.spec.manifest:
-        resource_schema = {
-            "group": resource.get("group", ""),
-            "version": resource.get("version", "v1"),
-            "kind": resource.get("kind", ""),
-            "namespace": resource.get("metadata", {}).get("namespace", ""),
-            "name": resource.get("metadata", {}).get("name", ""),
-            "observer": {
-                "type": "status",
-                "status": {
-                    "conditions": [
-                        {
-                            "type": "Ready",
-                            "status": "True"
+        if not hasattr(resource, 'observer_schema'):
+            # 生成默认的观察者模式
+            resource.observer_schema = {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "object",
+                        "properties": {
+                            "conditions": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {"type": "string"},
+                                        "status": {"type": "string"},
+                                        "lastTransitionTime": {"type": "string"},
+                                        "reason": {"type": "string"},
+                                        "message": {"type": "string"}
+                                    },
+                                    "required": ["type", "status"]
+                                }
+                            }
                         }
-                    ]
-                }
+                    }
+                },
+                "required": ["status"]
             }
-        }
-        default_schema["spec"]["resources"].append(resource_schema)
-
-    return default_schema
+    return app

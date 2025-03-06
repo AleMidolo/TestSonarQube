@@ -1,13 +1,7 @@
 def get_spec_defaults(self):
     """
-    Resolve arguments' values from spec and other sources.
+    使用 `self._get_defaults()` 从规范和其他来源解析参数的值。
+
+    从规范和其他来源解析参数的值。
     """
-    # Assuming self.spec is a dictionary or similar structure that holds the default values
-    defaults = {}
-    if hasattr(self, 'spec'):
-        for key, value in self.spec.items():
-            if isinstance(value, dict) and 'default' in value:
-                defaults[key] = value['default']
-            else:
-                defaults[key] = value
-    return defaults
+    return self._get_defaults()

@@ -1,38 +1,62 @@
 import os
+import mimetypes
 
 def _eval_file(prefix, file_path):
     """
-    Identifica o tipo de arquivo do pacote: `asset` ou `rendition`.
+    识别给定文件的类型。如果文件与给定的前缀不匹配，或者文件类型是 XML，则返回 `None`。  
+    如果文件类型是 "pdf"，返回一个包含键 `component_id` 和 `file_path` 的字典。  
+    如果文件类型不是 "pdf"，返回一个包含键 `component_id`、`file_path`、`ftype` 和 `file_path` 的字典。
 
-    Identifica o tipo de arquivo do pacote e atualiza `packages` com o tipo e
-    o endereço do arquivo em análise.
+    识别包中的文件类型：`asset` 或 `rendition`。
 
-    Parameters
+    识别包中的文件类型，并使用文件的类型和路径更新 `packages`。
+
+    参数
     ----------
-    prefix : str
-        nome do arquivo XML sem extensão
-    file_path : str
-        caminho completo do arquivo
+    prefix: `str`  
+      XML 文件的名称（不带扩展名）。
 
-    Returns
-    -------
-    dict
-        Um dicionário contendo o tipo de arquivo e o caminho do arquivo.
+    filename: `str`  
+      文件名。
+
+    file_folder: `str`  
+      文件所在的文件夹。
+
+    返回值
+    ----------
+    dict  
     """
+    # 获取文件名和扩展名
     file_name = os.path.basename(file_path)
-    file_folder = os.path.dirname(file_path)
-    
-    if prefix in file_name:
-        if "asset" in file_name.lower():
-            file_type = "asset"
-        elif "rendition" in file_name.lower():
-            file_type = "rendition"
-        else:
-            file_type = "unknown"
+    file_ext = os.path.splitext(file_name)[1].lower()
+
+    # 如果文件扩展名是 .xml，返回 None
+    if file_ext == '.xml':
+        return None
+
+    # 获取文件类型
+    mime_type, _ = mimetypes.guess_type(file_path)
+    if mime_type is None:
+        return None
+
+    # 如果文件类型是 PDF
+    if mime_type == 'application/pdf':
+        return {
+            'component_id': prefix,
+            'file_path': file_path
+        }
     else:
-        file_type = "unknown"
-    
-    return {
-        "type": file_type,
-        "path": file_path
-    }
+        # 识别文件类型是 asset 还是 rendition
+        if 'asset' in file_name.lower():
+            ftype = 'asset'
+        elif 'rendition' in file_name.lower():
+            ftype = 'rendition'
+        else:
+            ftype = 'unknown'
+
+        return {
+            'component_id': prefix,
+            'file_path': file_path,
+            'ftype': ftype,
+            'mime_type': mime_type
+        }

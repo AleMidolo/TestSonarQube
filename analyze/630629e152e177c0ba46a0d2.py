@@ -1,40 +1,44 @@
 import requests
-from xml.etree import ElementTree
+from lxml import etree
 
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    Retrieve a and parse a remote Diaspora webfinger document.
+    检索并解析远程 Diaspora WebFinger 文档。
 
-    :arg handle: Remote handle to retrieve
-    :returns: dict
+    :arg handle: 要检索的远程句柄
+    :returns: 字典
     """
-    # Split the handle into username and domain
-    username, domain = handle.split('@')
-    
-    # Construct the webfinger URL
-    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
+    # 构造 WebFinger URL
+    webfinger_url = f"https://{handle.split('@')[1]}/.well-known/webfinger?resource=acct:{handle}"
     
     try:
-        # Send a GET request to the webfinger URL
+        # 发送 GET 请求获取 WebFinger 文档
         response = requests.get(webfinger_url)
         response.raise_for_status()
         
-        # Parse the XML response
-        root = ElementTree.fromstring(response.content)
+        # 解析 XML 文档
+        root = etree.fromstring(response.content)
         
-        # Extract relevant information from the XML
-        result = {}
-        for link in root.findall('{http://webfinger.net/rel/profile-page}link'):
-            result['profile_page'] = link.get('href')
+        # 提取所需信息
+        result = {
+            "subject": root.find(".//{http://webfinger.net/rel/profile-page}subject").text,
+            "aliases": [alias.text for alias in root.findall(".//{http://webfinger.net/rel/profile-page}alias")],
+            "links": []
+        }
         
-        for link in root.findall('{http://webfinger.net/rel/avatar}link'):
-            result['avatar'] = link.get('href')
-        
-        for link in root.findall('{http://webfinger.net/rel/hcard}link'):
-            result['hcard'] = link.get('href')
+        for link in root.findall(".//{http://webfinger.net/rel/profile-page}link"):
+            link_info = {
+                "rel": link.get("rel"),
+                "type": link.get("type"),
+                "href": link.get("href")
+            }
+            result["links"].append(link_info)
         
         return result
     
     except requests.exceptions.RequestException as e:
-        print(f"Error retrieving webfinger document: {e}")
+        print(f"请求失败: {e}")
+        return {}
+    except etree.XMLSyntaxError as e:
+        print(f"XML 解析失败: {e}")
         return {}

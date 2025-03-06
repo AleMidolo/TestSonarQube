@@ -1,33 +1,30 @@
 def difference(d1, d2, level=-1):
     """
-    Return a dictionary with items from *d1* not contained in *d2*.
+    返回一个字典，其中包含 *d1* 中不在 *d2* 中的项。
 
-    *level* sets the maximum depth of recursion. For infinite recursion,
-    set that to -1. For level 1,
-    if a key is present both in *d1* and *d2* but has different values,
-    it is included into the difference.
-    See :func:`intersection` for more details.
+    参数 *level* 用于设置递归的最大深度。对于无限递归，则将其设置为-1。如果设置为 1，当某个键同时存在于 *d1* 和 *d2* 中但其值不同，则该键值对会包含在差异结果中。
+    有关更多详细信息，请参阅 :func:`intersection`。
 
-    *d1* and *d2* remain unchanged. However, *d1* or some of its
-    subdictionaries may be returned directly.
-    Make a deep copy of the result when appropriate.
+    *d1* 和 *d2* 本身不会被修改。然而，*d1* 或其某些子字典可能会直接作为返回值。如果需要，请对结果进行深拷贝。
 
-    .. versionadded:: 0.5
-       add keyword argument *level*.
+    .. 版本新增:: 0.5  
+      添加了关键字参数 *level*。
     """
-    if level == 0:
-        return {}
+    def _diff(d1, d2, current_level):
+        if current_level == 0:
+            return {}
+        
+        diff_dict = {}
+        for key in d1:
+            if key not in d2:
+                diff_dict[key] = d1[key]
+            else:
+                if isinstance(d1[key], dict) and isinstance(d2[key], dict):
+                    nested_diff = _diff(d1[key], d2[key], current_level - 1 if current_level != -1 else -1)
+                    if nested_diff:
+                        diff_dict[key] = nested_diff
+                elif d1[key] != d2[key]:
+                    diff_dict[key] = d1[key]
+        return diff_dict
 
-    diff = {}
-    for key in d1:
-        if key not in d2:
-            diff[key] = d1[key]
-        elif isinstance(d1[key], dict) and isinstance(d2[key], dict):
-            if level != 1:
-                sub_diff = difference(d1[key], d2[key], level - 1 if level != -1 else -1)
-                if sub_diff:
-                    diff[key] = sub_diff
-        elif d1[key] != d2[key]:
-            diff[key] = d1[key]
-
-    return diff
+    return _diff(d1, d2, level)

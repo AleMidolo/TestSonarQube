@@ -4,51 +4,29 @@ def format(
         params: Union[Dict[Union[str, int], Any], Sequence[Any]],
 ) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
     """
-    Convert the SQL query to use the out-style parameters instead of
-    the in-style parameters.
+    将 SQL 使用 `self._converter.convert` 方法进行转换
 
-    *sql* (:class:`str` or :class:`bytes`) is the SQL query.
+    将 SQL 查询从 in-style 参数转换为 out-style 参数。
 
-    *params* (:class:`~collections.abc.Mapping` or :class:`~collections.abc.Sequence`)
-    contains the set of in-style parameters. It maps each parameter
-    (:class:`str` or :class:`int`) to value. If :attr:`.SQLParams.in_style`
-    is a named parameter style. then *params* must be a :class:`~collections.abc.Mapping`.
-    If :attr:`.SQLParams.in_style` is an ordinal parameter style, then
-    *params* must be a :class:`~collections.abc.Sequence`.
+    *sql*（类型：`str` 或 `bytes`）是 SQL 查询语句。
 
-    Returns a :class:`tuple` containing:
+    *params*（类型：`~collections.abc.Mapping` 或 `~collections.abc.Sequence`）包含一组 in-style 参数。它将每个参数（类型：`str` 或 `int`）映射到对应的值。如果 `SQLParams.in_style` 是命名参数样式，那么 *params* 必须是一个 `~collections.abc.Mapping` 类型。如果 `SQLParams.in_style` 是序号参数样式，那么 **params** 必须是一个 `~collections.abc.Sequence` 类型。
 
-    -       The formatted SQL query (:class:`str` or :class:`bytes`).
+    返回一个包含以下内容的元组（`tuple`）：
 
-    -       The set of converted out-style parameters (:class:`dict` or
-            :class:`list`).
+      - 格式化后的 SQL 查询（类型：`str` 或 `bytes`）。
+
+      - 转换后的 out-style 参数集合（类型：`dict` 或 `list`）。
     """
+    # Convert the SQL query using the converter
+    formatted_sql = self._converter.convert(sql)
+    
+    # Convert the parameters to out-style
     if isinstance(params, dict):
-        # Named parameter style
-        out_params = {}
-        for key, value in params.items():
-            out_params[f":{key}"] = value
-        formatted_sql = sql
-        for key, value in params.items():
-            if isinstance(sql, bytes):
-                placeholder = f"%({key})s".encode()
-                replacement = f":{key}".encode()
-            else:
-                placeholder = f"%({key})s"
-                replacement = f":{key}"
-            formatted_sql = formatted_sql.replace(placeholder, replacement)
+        # If params is a dictionary, convert it to out-style dictionary
+        out_params = {k: self._converter.convert_param(v) for k, v in params.items()}
     else:
-        # Ordinal parameter style
-        out_params = []
-        formatted_sql = sql
-        for i, value in enumerate(params):
-            out_params.append(value)
-            if isinstance(sql, bytes):
-                placeholder = f"%s".encode()
-                replacement = f":{i + 1}".encode()
-            else:
-                placeholder = f"%s"
-                replacement = f":{i + 1}"
-            formatted_sql = formatted_sql.replace(placeholder, replacement, 1)
+        # If params is a sequence, convert it to out-style list
+        out_params = [self._converter.convert_param(v) for v in params]
     
     return formatted_sql, out_params

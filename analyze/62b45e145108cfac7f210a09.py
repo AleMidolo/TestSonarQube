@@ -1,24 +1,13 @@
 def check_digests_present_and_used(self, manifest_files, digests_used):
     """
-    Check all digests in manifest that are needed are present and used.
+    检查清单（manifest）中所有需要的摘要（digest）是否存在并被使用。在类中返回 `error()`。
     """
-    # Create a set of all digests present in the manifest files
-    digests_present = set()
     for manifest_file in manifest_files:
-        with open(manifest_file, 'r') as file:
-            for line in file:
-                if line.strip():  # Skip empty lines
-                    digest = line.strip().split()[0]  # Assuming the digest is the first element
-                    digests_present.add(digest)
+        if not manifest_file.get('digest'):
+            return self.error(f"Digest missing in manifest file: {manifest_file}")
     
-    # Check if all digests used are present in the manifest
     for digest in digests_used:
-        if digest not in digests_present:
-            return False
+        if not any(manifest_file.get('digest') == digest for manifest_file in manifest_files):
+            return self.error(f"Digest not found in any manifest file: {digest}")
     
-    # Check if all digests present are used
-    for digest in digests_present:
-        if digest not in digests_used:
-            return False
-    
-    return True
+    return None

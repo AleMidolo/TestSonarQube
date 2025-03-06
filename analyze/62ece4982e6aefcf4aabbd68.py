@@ -2,31 +2,34 @@ from typing import List, Optional
 
 def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = None) -> str:
     """
-    Convert a number to a string, using the given alphabet.
+    将一个数字使用给定的字母表转换为字符串。
 
-    The output has the most significant digit first.
+    数字表示一个短的 UUID。
+
+    输出的字符串以最高有效位（Most Significant Digit）优先。
+
+    @param number: 整型值  
+    @param alphabet: 包含字母的列表  
+    @param padding: 可选参数，整型值，用于指定填充长度  
+    @return: 与整型值对应的字符串值
     """
-    if number < 0:
-        raise ValueError("Number must be non-negative.")
-    
     base = len(alphabet)
-    if base == 0:
-        raise ValueError("Alphabet must not be empty.")
-    
-    if number == 0:
-        return alphabet[0] if padding is None else alphabet[0].rjust(padding, alphabet[0])
-    
     result = []
+    
     while number > 0:
         remainder = number % base
         result.append(alphabet[remainder])
         number = number // base
     
+    # Reverse to get the most significant digit first
     result.reverse()
     
-    output = ''.join(result)
+    # Convert list to string
+    result_str = ''.join(result)
     
+    # Apply padding if specified
     if padding is not None:
-        output = output.rjust(padding, alphabet[0])
+        if len(result_str) < padding:
+            result_str = alphabet[0] * (padding - len(result_str)) + result_str
     
-    return output
+    return result_str

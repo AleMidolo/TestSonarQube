@@ -1,9 +1,9 @@
 def merge_extra_vars(vars_dict, extra_vars=None):
     """
-    Extend ``vars_dict`` with ``extra-vars``
+    使用 ``extra-vars`` 扩展 ``vars_dict``。
 
-    :param vars_dict: Dictionary to merge extra-vars into
-    :param extra_vars: List of extra-vars
+    :param vars_dict: 要合并 extra-vars 的字典
+    :param extra_vars: extra-vars的列表
     """
     if extra_vars is None:
         return vars_dict
@@ -13,6 +13,6 @@ def merge_extra_vars(vars_dict, extra_vars=None):
             key, value = var.split('=', 1)
             vars_dict[key] = value
         else:
-            vars_dict[var] = None
+            vars_dict[var] = True
     
     return vars_dict

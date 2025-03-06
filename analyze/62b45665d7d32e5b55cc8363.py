@@ -2,20 +2,22 @@ import argparse
 
 def make_parsers():
     """
-    Build a top-level parser and its subparsers and return them as a tuple.
+    构建一个解析器及其子解析器，并将它们作为一个元组返回。
+
+    构建一个顶级解析器及其子解析器，并将它们作为一个元组返回。
     """
-    # Create the top-level parser
-    parser = argparse.ArgumentParser(description="Top-level parser")
-    
-    # Create subparsers for the top-level parser
-    subparsers = parser.add_subparsers(dest="command", help="Sub-command help")
-    
-    # Example subparser 1
-    parser_a = subparsers.add_parser('command_a', help='Command A help')
-    parser_a.add_argument('--arg1', type=int, help='Argument 1 for command A')
-    
-    # Example subparser 2
-    parser_b = subparsers.add_parser('command_b', help='Command B help')
-    parser_b.add_argument('--arg2', type=str, help='Argument 2 for command B')
-    
+    # 创建顶级解析器
+    parser = argparse.ArgumentParser(description="顶级解析器")
+
+    # 创建子解析器
+    subparsers = parser.add_subparsers(title="子命令", dest="subcommand")
+
+    # 添加第一个子解析器
+    parser_a = subparsers.add_parser('command_a', help='执行命令A')
+    parser_a.add_argument('--option_a', type=int, help='选项A')
+
+    # 添加第二个子解析器
+    parser_b = subparsers.add_parser('command_b', help='执行命令B')
+    parser_b.add_argument('--option_b', type=str, help='选项B')
+
     return parser, subparsers

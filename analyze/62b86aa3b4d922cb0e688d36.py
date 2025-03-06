@@ -1,69 +1,38 @@
 import re
-from typing import Dict, List, Union
 
 class ValidationError(Exception):
-    def __init__(self, messages: List[Dict[str, str]]):
+    def __init__(self, messages):
         self.messages = messages
-        super().__init__(str(messages))
+        super().__init__(f"Validation failed with errors: {messages}")
 
-def _validate_labels(labels: Dict[Union[str, bool], Union[str, List[str], bool]]):
-    """
-    Check that keys and values in the given labels match against their corresponding
-    regular expressions.
+def validate_key(key):
+    # Example regex for key validation
+    key_regex = r'^[a-zA-Z_][a-zA-Z0-9_]*$'
+    if not isinstance(key, str):
+        return False, 'expected string or bytes-like object'
+    if not re.match(key_regex, key):
+        return False, f"Label key '{key}' does not match the regex {key_regex}"
+    return True, None
 
-    Args:
-        labels (dict): the different labels to validate.
+def validate_value(value):
+    # Example regex for value validation
+    value_regex = r'^[a-zA-Z0-9_]*$'
+    if not isinstance(value, str):
+        return False, 'expected string or bytes-like object'
+    if not re.match(value_regex, value):
+        return False, f"Label value '{value}' does not match the regex {value_regex}"
+    return True, None
 
-    Raises:
-        ValidationError: if any of the keys and labels does not match their respective
-            regular expression. The error contains as message the list of all errors
-            which occurred in the labels. Each element of the list is a dictionary with
-            one key-value pair:
-            - key: the label key or label value for which an error occurred as string.
-            - value: the error message.
-
-            .. code:: python
-
-                # Example:
-                labels = {
-                    "key1": "valid",
-                    "key2": ["invalid"],
-                    "$$": "invalid",
-                    True: True,
-                }
-                try:
-                    _validate_labels(labels)
-                except ValidationError as err:
-                    assert err.messages == [
-                        {"['invalid']": 'expected string or bytes-like object'},
-                        {'$$': "Label key '$$' does not match the regex [...]"},
-                        {'True': 'expected string or bytes-like object'},
-                        {'True': 'expected string or bytes-like object'},
-                    ]
-    """
-    key_regex = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')
-    value_regex = re.compile(r'^[a-zA-Z0-9_]*$')
+def _validate_labels(labels):
     errors = []
-
     for key, value in labels.items():
-        # Validate key
-        if not isinstance(key, str):
-            errors.append({str(key): 'expected string or bytes-like object'})
-        elif not key_regex.match(key):
-            errors.append({key: f"Label key '{key}' does not match the regex {key_regex.pattern}"})
-
-        # Validate value
-        if isinstance(value, list):
-            for item in value:
-                if not isinstance(item, str):
-                    errors.append({str(item): 'expected string or bytes-like object'})
-                elif not value_regex.match(item):
-                    errors.append({item: f"Label value '{item}' does not match the regex {value_regex.pattern}"})
-        else:
-            if not isinstance(value, str):
-                errors.append({str(value): 'expected string or bytes-like object'})
-            elif not value_regex.match(value):
-                errors.append({value: f"Label value '{value}' does not match the regex {value_regex.pattern}"})
-
+        key_valid, key_error = validate_key(key)
+        if not key_valid:
+            errors.append({str(key): key_error})
+        
+        value_valid, value_error = validate_value(value)
+        if not value_valid:
+            errors.append({str(value): value_error})
+    
     if errors:
         raise ValidationError(errors)

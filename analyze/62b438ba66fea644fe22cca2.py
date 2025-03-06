@@ -1,26 +1,21 @@
 def deep_merge_nodes(nodes):
-    from ruamel.yaml.nodes import MappingNode, ScalarNode
-
-    merged_nodes = {}
-
+    merged = {}
+    
     for key_node, value_node in nodes:
         key = key_node.value
-        if key in merged_nodes:
-            existing_value_node = merged_nodes[key]
+        
+        if key in merged:
+            existing_value_node = merged[key]
+            
             if isinstance(existing_value_node, MappingNode) and isinstance(value_node, MappingNode):
-                # Deep merge the MappingNodes
-                existing_value = existing_value_node.value
-                new_value = value_node.value
-                merged_value = deep_merge_nodes(existing_value + new_value)
-                merged_nodes[key] = MappingNode(
-                    tag=existing_value_node.tag,
-                    value=merged_value,
-                )
+                # Recursively merge the MappingNodes
+                merged_value = deep_merge_nodes(existing_value_node.value + value_node.value)
+                merged[key] = MappingNode(tag=existing_value_node.tag, value=merged_value)
             else:
-                # Non-MappingNode values: last one wins
-                merged_nodes[key] = value_node
+                # If either value is not a MappingNode, keep the last value
+                merged[key] = value_node
         else:
-            merged_nodes[key] = value_node
-
+            merged[key] = value_node
+    
     # Convert the merged dictionary back to a list of tuples
-    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=key), value_node) for key, value_node in merged_nodes.items()]
+    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=key), value_node) for key, value_node in merged.items()]

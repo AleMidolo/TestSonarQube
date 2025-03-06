@@ -1,31 +1,22 @@
-import json
-
 def get_nodeinfo_well_known_document(url, document_path=None):
     """
-    Generate a NodeInfo .well-known document.
+    返回一个格式化的字典，其中包括如 `url` 和 `document_path` 等信息。
 
-    See spec: http://nodeinfo.diaspora.software
+    生成一个 NodeInfo 的 `.well-known` 文档。
 
-    :arg url: The full base url with protocol, ie https://example.com
-    :arg document_path: Custom NodeInfo document path if supplied (optional)
-    :returns: dict
+    参考规范: http://nodeinfo.diaspora.software
+
+    :arg url: 完整的基础 URL，包含协议，例如 `https://example.com`
+    :document_path: 如果提供了自定义的 NodeInfo 文档路径，则使用该路径（可选）
+    :返回值: 字典
     """
     if document_path is None:
         document_path = "/.well-known/nodeinfo"
     
-    nodeinfo_url = f"{url.rstrip('/')}{document_path}"
+    well_known_url = f"{url.rstrip('/')}{document_path}"
     
-    well_known_document = {
-        "links": [
-            {
-                "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
-                "href": f"{nodeinfo_url}/2.0"
-            },
-            {
-                "rel": "http://nodeinfo.diaspora.software/ns/schema/2.1",
-                "href": f"{nodeinfo_url}/2.1"
-            }
-        ]
+    return {
+        "url": url,
+        "document_path": document_path,
+        "well_known_url": well_known_url
     }
-    
-    return well_known_document

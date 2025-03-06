@@ -1,7 +1,6 @@
 def round_half_to_even(n):
     """
-    Rounds a number to the nearest integer, with ties (0.5) rounded to the nearest even integer.
-
+    将浮点数进行四舍五入到最接近的偶数
     >>> round_half_to_even(3)
     3
     >>> round_half_to_even(3.2)
@@ -19,8 +18,8 @@ def round_half_to_even(n):
     >>> round_half_to_even(4.7)
     5
 
-    :param n: The number to round.
-    :return: The rounded integer.
+    :param n: 浮点数
+    :return: 四舍五入到最接近的偶数
     """
     if n % 1 == 0.5:
         if int(n) % 2 == 0:
