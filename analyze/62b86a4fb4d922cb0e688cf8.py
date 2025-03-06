@@ -20,5 +20,5 @@ def validate_value(value):
     return True
 
 class ValidationError(Exception):
-    """Eccezione sollevata quando la convalida fallisce."""
+    """Eccezione sollevata quando il valore non è conforme all'espressione regolare."""
     pass

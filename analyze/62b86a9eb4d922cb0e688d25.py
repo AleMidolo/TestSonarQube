@@ -10,6 +10,4 @@ def _get_resource_name_regex():
     # Definisci il pattern per convalidare il nome della risorsa
     # Esempio: solo lettere minuscole, numeri e trattini, lunghezza tra 1 e 63 caratteri
     pattern = r'^[a-z0-9-]{1,63}$'
-    
-    # Compila e restituisci l'espressione regolare
     return re.compile(pattern)

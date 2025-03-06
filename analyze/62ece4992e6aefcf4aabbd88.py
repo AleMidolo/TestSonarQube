@@ -10,5 +10,10 @@ def make_array(shape, dtype=np.dtype("float32")):
         forma dell'array da creare
     dtype : `numpy.dtype`
         tipo di dato dell'array da creare
+
+    Restituisce
+    -------
+    numpy.ndarray
+        array con la forma e il tipo di dato specificati
     """
     return np.zeros(shape, dtype=dtype)

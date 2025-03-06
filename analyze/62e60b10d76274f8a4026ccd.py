@@ -21,6 +21,6 @@ def data(self, *keys):
                     raise IndexError("Indice fuori dai limiti")
                 # Converti l'indice in una chiave effettiva
                 key = list(self.__dict__.keys())[key]
-            # Aggiungi la chiave al risultato, anche se non esiste (valore None)
+            # Aggiungi la chiave al risultato, anche se non esiste nel record
             result[key] = self.__dict__.get(key, None)
     return result

@@ -2,9 +2,8 @@ import logging
 import os
 import json
 import yaml
-from typing import Dict, List, Tuple, Optional, Union
 
-def load_configurations(config_filenames: List[str], overrides: Optional[Dict] = None, resolve_env: bool = True) -> Tuple[Dict[str, Dict], List[logging.LogRecord]]:
+def load_configurations(config_filenames, overrides=None, resolve_env=True):
     """
     Dato un elenco di nomi di file di configurazione, carica e valida ciascun file di configurazione.
     Restituisci i risultati come una tupla composta da:
@@ -13,6 +12,9 @@ def load_configurations(config_filenames: List[str], overrides: Optional[Dict] =
     """
     configurations = {}
     errors = []
+
+    if overrides is None:
+        overrides = {}
 
     for config_filename in config_filenames:
         try:
@@ -33,11 +35,31 @@ def load_configurations(config_filenames: List[str], overrides: Optional[Dict] =
                     ))
                     continue
 
-                if resolve_env:
-                    config = _resolve_env_vars(config)
+                # Apply overrides
+                for key, value in overrides.items():
+                    keys = key.split('.')
+                    current = config
+                    for k in keys[:-1]:
+                        if k in current:
+                            current = current[k]
+                        else:
+                            current[k] = {}
+                            current = current[k]
+                    current[keys[-1]] = value
 
-                if overrides:
-                    config.update(overrides)
+                # Resolve environment variables if required
+                if resolve_env:
+                    def resolve_env_vars(obj):
+                        if isinstance(obj, dict):
+                            return {k: resolve_env_vars(v) for k, v in obj.items()}
+                        elif isinstance(obj, list):
+                            return [resolve_env_vars(v) for v in obj]
+                        elif isinstance(obj, str) and obj.startswith('${') and obj.endswith('}'):
+                            env_var = obj[2:-1]
+                            return os.getenv(env_var, obj)
+                        return obj
+
+                    config = resolve_env_vars(config)
 
                 configurations[config_filename] = config
 
@@ -53,17 +75,3 @@ def load_configurations(config_filenames: List[str], overrides: Optional[Dict] =
             ))
 
     return configurations, errors
-
-def _resolve_env_vars(config: Union[Dict, List, str]) -> Union[Dict, List, str]:
-    """
-    Resolve environment variables in the configuration.
-    """
-    if isinstance(config, dict):
-        return {key: _resolve_env_vars(value) for key, value in config.items()}
-    elif isinstance(config, list):
-        return [_resolve_env_vars(item) for item in config]
-    elif isinstance(config, str) and config.startswith('${') and config.endswith('}'):
-        env_var = config[2:-1]
-        return os.getenv(env_var, config)
-    else:
-        return config

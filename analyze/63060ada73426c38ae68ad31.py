@@ -30,7 +30,7 @@ def _convert_non_cli_args(self, parser_name, values_dict):
             
             # Try to convert to list if the value is a comma-separated string
             if ',' in value:
-                values_dict[key] = value.split(',')
+                values_dict[key] = [item.strip() for item in value.split(',')]
                 continue
             
             # Try to convert to dict if the value is a JSON-like string

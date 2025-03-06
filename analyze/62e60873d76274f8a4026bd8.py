@@ -12,19 +12,20 @@ def protocol_handlers(cls, protocol_version=None):
         per tutte le versioni di protocollo rilevanti e supportate
     :raise TypeError: se la versione del protocollo non è passata come una tupla
     """
-    # Dizionario di esempio che mappa le versioni del protocollo ai gestori
-    available_handlers = {
-        (3, 5): cls.HandlerV3_5,
-        (4, 0): cls.HandlerV4_0,
-        (4, 1): cls.HandlerV4_1,
+    # Dizionario delle versioni supportate e dei loro gestori
+    supported_versions = {
+        (3, 5): cls.BoltHandlerV3_5,
+        (4, 0): cls.BoltHandlerV4_0,
+        (4, 1): cls.BoltHandlerV4_1,
+        # Aggiungi altre versioni supportate qui
     }
 
     if protocol_version is not None:
         if not isinstance(protocol_version, tuple):
             raise TypeError("La versione del protocollo deve essere una tupla.")
-        if protocol_version in available_handlers:
-            return {protocol_version: available_handlers[protocol_version]}
+        if protocol_version in supported_versions:
+            return {protocol_version: supported_versions[protocol_version]}
         else:
             return {}
     else:
-        return available_handlers
+        return supported_versions

@@ -8,10 +8,12 @@ def _resolve_string(matcher):
     if not isinstance(matcher, str):
         raise ValueError("Il matcher deve essere una stringa.")
     
-    parts = matcher.split(":")
+    # Dividi il matcher in nome e valore predefinito
+    parts = matcher.split(':', 1)
     var_name = parts[0].strip()
     default_value = parts[1].strip() if len(parts) > 1 else None
     
+    # Ottieni il valore dall'ambiente
     value = os.getenv(var_name, default_value)
     
     if value is None:

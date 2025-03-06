@@ -7,7 +7,7 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     :param commands: Lista di comandi da eseguire.
     :param args: Lista di argomenti da passare ai comandi.
     :param cwd: Directory di lavoro corrente (opzionale).
-    :param verbose: Se True, stampa i comandi eseguiti (opzionale).
+    :param verbose: Se True, stampa il comando eseguito (opzionale).
     :param hide_stderr: Se True, nasconde l'output di stderr (opzionale).
     :param env: Dizionario di variabili d'ambiente (opzionale).
     :return: Il codice di ritorno del comando eseguito.

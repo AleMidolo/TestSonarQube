@@ -20,7 +20,7 @@ def validate_from_file(cls, yaml_file=None):
     except FileNotFoundError:
         raise IRValidatorException(f"File YAML non trovato: {yaml_file}")
     except yaml.YAMLError as e:
-        raise IRValidatorException(f"Errore nel parsing del file YAML: {e}")
+        raise IRValidatorException(f"Errore durante il parsing del file YAML: {e}")
     
     # Esempio di validazione: verifica che il campo 'required_field' sia presente
     required_fields = ['required_field']
