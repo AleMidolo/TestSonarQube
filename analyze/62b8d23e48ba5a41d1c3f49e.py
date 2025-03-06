@@ -10,4 +10,4 @@ def popitem(self):
     
     key = random.choice(list(self.keys()))
     value = self.pop(key)
-    return (key, value)
+    return key, value

@@ -20,7 +20,7 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
 
     # 将渲染的配置写入文件
     with open(config_filename, 'w') as f:
-        yaml.safe_dump(rendered_config, f, default_flow_style=False)
+        yaml.dump(rendered_config, f)
 
     # 设置文件权限
     os.chmod(config_filename, mode)

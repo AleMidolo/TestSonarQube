@@ -2,7 +2,8 @@ from datetime import datetime, timezone
 
 def ensure_timezone(dt):
     """
-    确保给定的 datetime 对象有时区信息。如果没有时区信息，则默认使用 UTC 时区。
+    确保给定的 datetime 对象具有时区信息。
+    如果 dt 没有时区信息，则将其设置为 UTC 时区。
     """
     if dt.tzinfo is None:
         return dt.replace(tzinfo=timezone.utc)

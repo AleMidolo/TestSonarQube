@@ -13,7 +13,7 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
     # 假设 COMPLEX_TYPES 是一个字典，存储了复杂类型名称与对应函数的映射
     COMPLEX_TYPES = {
         'type1': lambda vars, defaults, plugin_path, subcommand, spec_option: complex_action(vars, defaults, plugin_path, subcommand, spec_option),
-        'type2': lambda vars, defaults, plugin_path, subcommand, spec_option: another_complex_action(vars, defaults, plugin_path, subcommand, spec_option),
+        'type2': lambda vars, defaults, plugin_path, subcommand, spec_option: complex_action(vars, defaults, plugin_path, subcommand, spec_option),
         # 可以根据需要添加更多类型
     }
     

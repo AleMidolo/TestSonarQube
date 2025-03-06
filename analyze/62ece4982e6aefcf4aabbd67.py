@@ -15,8 +15,8 @@ def vertex3tuple(vertices):
     `DAB, ABC, BCD, CDA` -> 返回3个点的元组。
     # A    B    C    D  -> 顶点
     """
-    result = []
     n = len(vertices)
+    result = []
     for i in range(n):
         # 获取当前顶点及其两侧的顶点
         prev_index = (i - 1) % n

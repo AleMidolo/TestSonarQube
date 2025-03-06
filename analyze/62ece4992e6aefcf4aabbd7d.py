@@ -37,5 +37,4 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
 
     # 运行子进程
     result = subprocess.run(cmd, env=env, timeout=timeout, capture_output=True, text=True)
-
     return result

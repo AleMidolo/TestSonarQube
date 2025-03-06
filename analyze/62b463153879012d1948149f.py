@@ -25,19 +25,15 @@ def _eval_file(prefix, file_path):
     """
     # 获取文件名和扩展名
     file_name = os.path.basename(file_path)
-    file_ext = os.path.splitext(file_name)[1].lower()
-
-    # 如果文件扩展名是 .xml，返回 None
-    if file_ext == '.xml':
+    file_prefix, file_ext = os.path.splitext(file_name)
+    
+    # 如果文件前缀与给定的前缀不匹配，或者文件类型是 XML，则返回 None
+    if file_prefix != prefix or file_ext.lower() == '.xml':
         return None
-
-    # 检查文件名是否以给定的前缀开头
-    if not file_name.startswith(prefix):
-        return None
-
+    
     # 获取文件的 MIME 类型
     mime_type, _ = mimetypes.guess_type(file_path)
-
+    
     # 如果文件类型是 PDF
     if mime_type == 'application/pdf':
         return {
@@ -46,13 +42,11 @@ def _eval_file(prefix, file_path):
         }
     else:
         # 识别文件类型是 asset 还是 rendition
-        if 'asset' in file_name.lower():
-            ftype = 'asset'
-        else:
-            ftype = 'rendition'
-
+        ftype = 'asset' if 'asset' in file_path.lower() else 'rendition'
+        
         return {
             'component_id': prefix,
             'file_path': file_path,
-            'ftype': ftype
+            'ftype': ftype,
+            'mime_type': mime_type
         }

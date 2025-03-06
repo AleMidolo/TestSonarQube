@@ -17,7 +17,3 @@ def validate_key(key):
         raise ValidationError("Invalid key format. Key must contain only letters, numbers, and underscores, and be between 1 and 50 characters long.")
     
     return True
-
-class ValidationError(Exception):
-    """自定义异常类，用于表示验证失败的情况。"""
-    pass

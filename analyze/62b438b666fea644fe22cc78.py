@@ -6,10 +6,10 @@ def parse_arguments(*arguments):
     """
     parser = argparse.ArgumentParser(description="Parse command line arguments.")
     
-    # 假设我们解析一个简单的参数，例如 --input 和 --output
-    parser.add_argument('--input', type=str, help='Input file path')
-    parser.add_argument('--output', type=str, help='Output file path')
+    # 添加一个示例参数
+    parser.add_argument('--example', type=str, help="An example argument.")
     
-    # 将传入的参数解析并返回
+    # 解析传入的参数
     args = parser.parse_args(arguments)
+    
     return args

@@ -7,7 +7,7 @@ def _c_optimizations_available():
     此函数并不决定是否应该使用这些优化模块。
     """
     try:
-        import _c_optimized_module  # 假设 C 优化模块名为 _c_optimized_module
-        return _c_optimized_module
+        import _c_optimizations
+        return _c_optimizations
     except ImportError:
         return False
