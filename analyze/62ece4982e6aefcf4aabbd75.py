@@ -2,17 +2,19 @@ import subprocess
 
 def addignored(ignored):
     """
-    Use the git command to obtain the file names, turn it into a list, sort the list for only ignored files, return those files as a single string with each filename separated by a comma.
+    Use the git command to obtain the file names, turn it into a list, sort the list for only ignored files, 
+    return those files as a single string with each filename separated by a comma.
     """
-    # Get the list of ignored files from git
-    result = subprocess.run(['git', 'ls-files', '--others', '--ignored', '--exclude-standard'], stdout=subprocess.PIPE)
-    ignored_files = result.stdout.decode('utf-8').splitlines()
+    # Get the list of all files in the repository
+    result = subprocess.run(['git', 'ls-files', '--others', '--ignored', '--exclude-standard'], 
+                            stdout=subprocess.PIPE, text=True)
+    files = result.stdout.splitlines()
     
-    # Filter the list to only include files that are in the ignored list
-    filtered_files = [file for file in ignored_files if file in ignored]
+    # Filter the files that are in the ignored list
+    ignored_files = [file for file in files if file in ignored]
     
-    # Sort the list of ignored files
-    filtered_files.sort()
+    # Sort the ignored files
+    ignored_files.sort()
     
-    # Return the sorted list as a comma-separated string
-    return ','.join(filtered_files)
+    # Return the sorted ignored files as a comma-separated string
+    return ', '.join(ignored_files)

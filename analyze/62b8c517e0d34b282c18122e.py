@@ -14,26 +14,30 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     import sys
 
     # Get the exception traceback
-    exc_type, exc_value, exc_traceback = sys.exc_info()
-    
-    # Format the exception traceback
-    formatted_traceback = traceback.format_exception(exc_type, exc_value, exc_traceback, limit=max_level)
-    
-    # Join the formatted traceback into a single string
-    traceback_str = "".join(formatted_traceback)
-    
-    # Split the traceback string into lines
-    traceback_lines = traceback_str.splitlines()
-    
-    # Limit the number of path levels in each line
-    limited_traceback_lines = []
-    for line in traceback_lines:
-        parts = line.split("\\")
-        if len(parts) > max_path_level:
-            line = "\\".join(parts[-max_path_level:])
-        limited_traceback_lines.append(line)
-    
-    # Join the limited traceback lines into a single string
-    limited_traceback_str = "\n".join(limited_traceback_lines)
-    
-    return limited_traceback_str
+    tb = sys.exc_info()[2]
+    if tb is None:
+        tb = e.__traceback__
+
+    # Limit the traceback depth
+    if max_level is not None:
+        tb = traceback.extract_tb(tb, limit=max_level)
+
+    # Format the exception
+    exception_lines = traceback.format_exception(type(e), e, tb)
+
+    # Limit the path depth in the traceback
+    if max_path_level is not None:
+        for i in range(len(exception_lines)):
+            parts = exception_lines[i].split('\n')
+            for j in range(len(parts)):
+                if 'File "' in parts[j]:
+                    path_parts = parts[j].split(', ')
+                    if len(path_parts) > 1:
+                        path = path_parts[0].split('"')[1]
+                        path_segments = path.split('/')
+                        if len(path_segments) > max_path_level:
+                            shortened_path = '/'.join(path_segments[-max_path_level:])
+                            parts[j] = parts[j].replace(path, '.../' + shortened_path)
+            exception_lines[i] = '\n'.join(parts)
+
+    return ''.join(exception_lines)

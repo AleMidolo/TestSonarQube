@@ -13,21 +13,28 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     :return: The return code of the command.
     """
     full_command = commands + args
-    stderr = subprocess.DEVNULL if hide_stderr else None
+    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
     
     if verbose:
         print(f"Running command: {' '.join(full_command)}")
     
-    result = subprocess.run(
+    process = subprocess.Popen(
         full_command,
         cwd=cwd,
-        env=env,
-        stdout=subprocess.PIPE if verbose else None,
+        stdout=subprocess.PIPE,
         stderr=stderr,
+        env=env,
         text=True
     )
     
-    if verbose and result.stdout:
-        print(result.stdout)
+    stdout, stderr = process.communicate()
     
-    return result.returncode
+    if verbose:
+        if stdout:
+            print("stdout:")
+            print(stdout)
+        if stderr and not hide_stderr:
+            print("stderr:")
+            print(stderr)
+    
+    return process.returncode

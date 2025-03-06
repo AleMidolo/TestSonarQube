@@ -11,7 +11,7 @@ def _normalizeargs(sequence, output=None):
         output = []
     
     for item in sequence:
-        if isinstance(item, (tuple, list)):
+        if isinstance(item, (list, tuple)):
             _normalizeargs(item, output)
         else:
             output.append(item)

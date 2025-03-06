@@ -10,8 +10,4 @@ def format_dt(dt):
     Returns:
         str: The formatted datetime string.
     """
-    if not isinstance(dt, datetime):
-        raise ValueError("Input must be a datetime object.")
-    
-    # Format the datetime in the expected way for D* nodes
     return dt.strftime("%Y-%m-%dT%H:%M:%S.%fZ")

@@ -36,9 +36,9 @@ def _legacy_mergeOrderings(orderings):
 
     # Initialize queue with nodes having zero in-degree
     queue = deque([node for node in all_nodes if in_degree[node] == 0])
-    result = []
 
     # Perform topological sort
+    result = []
     while queue:
         u = queue.popleft()
         result.append(u)
