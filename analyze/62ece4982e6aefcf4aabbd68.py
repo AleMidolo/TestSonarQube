@@ -21,7 +21,7 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
         result.append(alphabet[remainder])
         number = number // base
     
-    # Reverse to get the most significant digit first
+    # Reverse the result to get the most significant digit first
     result.reverse()
     
     # Convert list to string

@@ -7,6 +7,8 @@ def addignored(ignored):
     # 使用 git ls-files 命令获取所有文件
     result = subprocess.run(['git', 'ls-files', '--others', '--ignored', '--exclude-standard'], 
                             stdout=subprocess.PIPE, text=True)
+    
+    # 将输出转换为文件列表
     files = result.stdout.splitlines()
     
     # 筛选被忽略的文件
@@ -15,5 +17,5 @@ def addignored(ignored):
     # 对列表进行排序
     ignored_files.sort()
     
-    # 将文件名用逗号分隔并返回
+    # 将文件列表转换为逗号分隔的字符串
     return ', '.join(ignored_files)

@@ -10,18 +10,18 @@ def validate_version_inventories(self, version_dirs):
     differences = {}  # 用于存储每个版本与根清单的差异
 
     for version_dir in version_dirs:
-        # 假设每个版本目录下有一个名为 'inventory.txt' 的文件，包含该版本的清单
+        # 假设每个版本目录中有一个名为 'inventory.txt' 的文件，包含该版本的清单
         with open(f"{version_dir}/inventory.txt", 'r') as file:
-            current_inventory = set(file.read().splitlines())
+            version_inventory = set(file.read().splitlines())
         
         # 检查当前版本的清单是否包含根清单的所有内容
-        if not root_inventory.issubset(current_inventory):
-            raise ValueError(f"Version {version_dir} does not contain the full inventory up to this version.")
+        if not root_inventory.issubset(version_inventory):
+            raise ValueError(f"版本 {version_dir} 的清单不完整，缺少根清单中的某些内容。")
         
         # 记录与根清单的差异
-        differences[version_dir] = current_inventory - root_inventory
+        differences[version_dir] = version_inventory - root_inventory
         
         # 更新根清单为当前版本的清单
-        root_inventory = current_inventory
+        root_inventory = version_inventory
 
     return differences

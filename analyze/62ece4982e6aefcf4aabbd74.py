@@ -23,9 +23,10 @@ def prepare_repository_from_archive(
     @return 仓库 URL
     """
     # Convert tmp_path to Path object if it's a string
-    tmp_path = Path(tmp_path) if isinstance(tmp_path, str) else tmp_path
+    if isinstance(tmp_path, str):
+        tmp_path = Path(tmp_path)
     
-    # Create a temporary directory within tmp_path
+    # Create a temporary directory within the specified tmp_path
     with tempfile.TemporaryDirectory(dir=tmp_path) as temp_dir:
         temp_dir_path = Path(temp_dir)
         
@@ -36,21 +37,18 @@ def prepare_repository_from_archive(
         elif archive_path.endswith('.tar.gz') or archive_path.endswith('.tgz'):
             with TarFile.open(archive_path, 'r:gz') as tar_ref:
                 tar_ref.extractall(temp_dir_path)
-        elif archive_path.endswith('.tar.bz2') or archive_path.endswith('.tbz2'):
-            with TarFile.open(archive_path, 'r:bz2') as tar_ref:
-                tar_ref.extractall(temp_dir_path)
         elif archive_path.endswith('.tar'):
             with TarFile.open(archive_path, 'r:') as tar_ref:
                 tar_ref.extractall(temp_dir_path)
         else:
-            raise ValueError(f"Unsupported archive format: {archive_path}")
+            raise ValueError("Unsupported archive format")
         
         # If filename is provided, move it to the root of the temp directory
         if filename:
             file_path = temp_dir_path / filename
             if not file_path.exists():
-                raise FileNotFoundError(f"File {filename} not found in the archive.")
-            shutil.move(str(file_path), str(temp_dir_path))
+                raise FileNotFoundError(f"File {filename} not found in the archive")
+            shutil.move(str(file_path), str(temp_dir_path / os.path.basename(filename)))
         
-        # Return the path to the extracted directory as a string
+        # Return the path to the extracted directory as the repository URL
         return str(temp_dir_path)

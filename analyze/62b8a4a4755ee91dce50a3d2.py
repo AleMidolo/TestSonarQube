@@ -1,6 +1,3 @@
-from datetime import datetime, timedelta
-from pytz import timezone, utc
-
 def _fromutc(self, dt):
     """
     给定一个特定时区的日期时间，计算在新时区的日期时间。
@@ -14,18 +11,12 @@ def _fromutc(self, dt):
     if dt.tzinfo is None:
         raise ValueError("The input datetime must be timezone-aware.")
     
-    # Convert the datetime to UTC
-    dt_utc = dt.astimezone(utc)
+    # Convert the datetime to the new timezone
+    new_dt = dt.astimezone(self)
     
-    # Get the target timezone (assuming self is the target timezone)
-    target_tz = timezone(str(self))
+    # Check if the new datetime is ambiguous
+    if self.is_ambiguous(new_dt):
+        # If ambiguous, return the first occurrence
+        new_dt = self.resolve_ambiguity(new_dt, is_dst=False)
     
-    # Convert the UTC datetime to the target timezone
-    dt_target = dt_utc.astimezone(target_tz)
-    
-    # Check if the datetime is ambiguous in the target timezone
-    if target_tz.is_ambiguous(dt_target):
-        # If ambiguous, choose the first occurrence
-        dt_target = target_tz.normalize(dt_target)
-    
-    return dt_target
+    return new_dt

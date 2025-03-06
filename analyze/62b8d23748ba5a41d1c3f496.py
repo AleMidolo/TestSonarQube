@@ -12,10 +12,10 @@ def lfu_cache(maxsize=128, typed=False):
             if typed:
                 key = (args, tuple(sorted(kwargs.items())))
             else:
-                key = (args, frozenset(kwargs.items()))
+                key = args + tuple(sorted(kwargs.items()))
 
             if key in cache:
-                # Increment the frequency of the key
+                # Update frequency
                 freq_val = cache[key][1]
                 del freq[freq_val][key]
                 if not freq[freq_val]:
@@ -25,22 +25,19 @@ def lfu_cache(maxsize=128, typed=False):
                 freq[freq_val + 1][key] = None
                 cache[key][1] += 1
                 return cache[key][0]
-
-            # If the cache is full, remove the least frequently used item
-            if len(cache) >= maxsize:
-                # Remove the least frequently used item
-                lfu_key = next(iter(freq[min_freq]))
-                del cache[lfu_key]
-                del freq[min_freq][lfu_key]
-                if not freq[min_freq]:
-                    del freq[min_freq]
-
-            # Add the new item to the cache
-            result = func(*args, **kwargs)
-            cache[key] = [result, 1]
-            freq[1][key] = None
-            min_freq = 1
-            return result
+            else:
+                result = func(*args, **kwargs)
+                if len(cache) >= maxsize:
+                    # Remove the least frequently used item
+                    lfu_key = next(iter(freq[min_freq]))
+                    del cache[lfu_key]
+                    del freq[min_freq][lfu_key]
+                    if not freq[min_freq]:
+                        del freq[min_freq]
+                cache[key] = [result, 1]
+                freq[1][key] = None
+                min_freq = 1
+                return result
 
         return wrapper
 
