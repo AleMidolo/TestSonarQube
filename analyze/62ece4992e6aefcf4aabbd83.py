@@ -5,23 +5,28 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     दिए गए कमांड(s) को कॉल करें।
     """
     command_list = commands if isinstance(commands, list) else [commands]
-    command_list.extend(args)
+    full_command = command_list + args
     
-    stderr = subprocess.DEVNULL if hide_stderr else None
+    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
     
     if verbose:
-        print(f"Running command: {' '.join(command_list)}")
+        print(f"Running command: {' '.join(full_command)}")
     
-    result = subprocess.run(
-        command_list,
+    process = subprocess.Popen(
+        full_command,
         cwd=cwd,
-        env=env,
         stdout=subprocess.PIPE,
         stderr=stderr,
+        env=env,
         text=True
     )
     
-    if verbose:
-        print(f"Command output: {result.stdout}")
+    stdout, stderr = process.communicate()
     
-    return result
+    if verbose:
+        if stdout:
+            print(f"stdout:\n{stdout}")
+        if stderr and not hide_stderr:
+            print(f"stderr:\n{stderr}")
+    
+    return process.returncode, stdout, stderr

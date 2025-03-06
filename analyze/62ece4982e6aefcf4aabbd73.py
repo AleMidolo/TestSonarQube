@@ -18,10 +18,8 @@ def split(s, platform='this'):
         platform = 1 if sys.platform != 'win32' else 0
     
     if platform == 1:
-        # POSIX style splitting
         return shlex.split(s, posix=True)
     elif platform == 0:
-        # Windows/CMD style splitting
-        return re.findall(r'(?:[^\s"]+|"[^"]*")+', s)
+        return shlex.split(s, posix=False)
     else:
         raise ValueError("Invalid platform option. Use 'this', 1 (POSIX), or 0 (Windows/CMD).")

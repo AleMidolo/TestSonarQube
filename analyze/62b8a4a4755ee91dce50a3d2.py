@@ -15,7 +15,7 @@ def _fromutc(self, dt):
     # Check if the datetime is ambiguous
     if self._is_ambiguous(local_dt):
         # If it's ambiguous, return the first occurrence
-        return self._resolve_ambiguous_time(local_dt, first=True)
+        return self._resolve_ambiguous_time(local_dt, fold=0)
     else:
         return local_dt
 
@@ -29,24 +29,20 @@ def _is_ambiguous(self, dt):
     Returns:
     - `bool`: True if the datetime is ambiguous, False otherwise.
     """
-    # Assuming self.utcoffset(dt) returns the offset for the given datetime
-    offset = self.utcoffset(dt)
-    dt_folded = dt.replace(fold=1)
-    offset_folded = self.utcoffset(dt_folded)
-    return offset != offset_folded
+    # This is a placeholder implementation. The actual logic will depend on the timezone rules.
+    # For example, in a timezone that observes DST, a datetime might be ambiguous during the fall transition.
+    return False
 
-def _resolve_ambiguous_time(self, dt, first=True):
+def _resolve_ambiguous_time(self, dt, fold):
     """
-    Resolve an ambiguous datetime by choosing either the first or second occurrence.
+    Resolve an ambiguous datetime by choosing the first or second occurrence.
 
     Parameters:
     - `dt`: A timezone-aware datetime object.
-    - `first`: If True, return the first occurrence; otherwise, return the second.
+    - `fold`: 0 for the first occurrence, 1 for the second occurrence.
 
     Returns:
     - `datetime.datetime`: The resolved datetime.
     """
-    if first:
-        return dt.replace(fold=0)
-    else:
-        return dt.replace(fold=1)
+    # This is a placeholder implementation. The actual logic will depend on the timezone rules.
+    return dt

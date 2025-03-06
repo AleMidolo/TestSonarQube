@@ -4,7 +4,7 @@ def dehydrate_point(value):
 
     :param value: पॉइंट ऑब्जेक्ट
     :type value: Point  
-    :return: पॉइंट ऑब्जेक्ट के निर्देशांक (x, y)
+    :return: पॉइंट ऑब्जेक्ट के निर्देशांक (x, y) का टपल
     :rtype: tuple
     """
     return (value.x, value.y)

@@ -1,4 +1,4 @@
-from datetime import datetime, time, timedelta
+import datetime
 
 def from_ticks(cls, ticks, tz=None):
     """
@@ -9,19 +9,24 @@ def from_ticks(cls, ticks, tz=None):
     :param tz: वैकल्पिक टाइमज़ोन
     :type tz: datetime.tzinfo
 
-    :rtype: Time
+    :rtype: datetime.time
 
     :raises ValueError: यदि ticks सीमा से बाहर है
         (0 <= ticks < 86400000000000)
     """
     if not (0 <= ticks < 86400000000000):
-        raise ValueError("ticks must be in the range 0 <= ticks < 86400000000000")
+        raise ValueError("ticks must be in the range [0, 86400000000000)")
     
     nanoseconds_per_second = 1_000_000_000
-    seconds = ticks // nanoseconds_per_second
+    seconds_per_day = 86400
+    
+    total_seconds = ticks // nanoseconds_per_second
     nanoseconds = ticks % nanoseconds_per_second
     
-    midnight = datetime(1970, 1, 1, 0, 0, 0, tzinfo=tz)
-    time_obj = midnight + timedelta(seconds=seconds, microseconds=nanoseconds // 1000)
+    hours = total_seconds // 3600
+    minutes = (total_seconds % 3600) // 60
+    seconds = total_seconds % 60
     
-    return time_obj.time()
+    time_obj = datetime.time(hour=hours, minute=minutes, second=seconds, microsecond=nanoseconds // 1000, tzinfo=tz)
+    
+    return time_obj

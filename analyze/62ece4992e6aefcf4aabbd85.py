@@ -8,13 +8,13 @@ def find_roots(graph: Graph, prop: URIRef, roots: Optional[Set[Node]] = None) ->
     if roots is None:
         roots = set()
     
-    # Get all nodes that are subjects in the graph with the given property
+    # Collect all nodes that are subjects in the graph with the given property
     subjects = set(graph.subjects(prop, None))
     
-    # Iterate through each subject to find roots
-    for subject in subjects:
-        # If the subject is not an object in any triple with the given property, it's a root
-        if not any(graph.triples((None, prop, subject))):
-            roots.add(subject)
+    # Collect all nodes that are objects in the graph with the given property
+    objects = set(graph.objects(None, prop))
+    
+    # Roots are subjects that are not objects
+    roots.update(subjects - objects)
     
     return roots

@@ -3,31 +3,26 @@ def point_type(name, fields, srid_map):
     डायनामिक रूप से एक पॉइंट सबक्लास बनाएं।
 
     :param name: सबक्लास का नाम
-    :param fields: सबक्लास में शामिल करने के लिए फ़ील्ड्स
+    :param fields: फील्ड्स की सूची
     :param srid_map: SRID मैपिंग
     :return: डायनामिक रूप से बनाई गई पॉइंट सबक्लास
     """
     from sqlalchemy import Column, Integer, Float
     from sqlalchemy.ext.declarative import declarative_base
+    from geoalchemy2 import Geometry
 
     Base = declarative_base()
 
-    class Point(Base):
-        __tablename__ = name.lower()
-        id = Column(Integer, primary_key=True)
-        x = Column(Float)
-        y = Column(Float)
+    attrs = {
+        '__tablename__': name.lower(),
+        'id': Column(Integer, primary_key=True)
+    }
 
-        def __init__(self, x, y):
-            self.x = x
-            self.y = y
+    for field in fields:
+        if field == 'geometry':
+            attrs[field] = Column(Geometry(geometry_type='POINT', srid=srid_map.get(field, 4326)))
+        else:
+            attrs[field] = Column(Float)
 
-        def __repr__(self):
-            return f"<Point(x={self.x}, y={self.y})>"
-
-    for field_name, field_type in fields.items():
-        setattr(Point, field_name, Column(field_type))
-
-    Point.srid_map = srid_map
-
-    return Point
+    PointSubclass = type(name, (Base,), attrs)
+    return PointSubclass

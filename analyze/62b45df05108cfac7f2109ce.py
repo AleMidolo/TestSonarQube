@@ -13,7 +13,7 @@ def validate(self, path):
         if not os.path.isdir(path):
             return False
         
-        # Example: Check for required OCFL files and directories
+        # Example: Check for required OCFL files/directories
         required_files = ['inventory.json', 'inventory.json.sha512']
         for file in required_files:
             if not os.path.exists(os.path.join(path, file)):
@@ -22,6 +22,6 @@ def validate(self, path):
         # If all checks pass, return True
         return True
     except Exception as e:
-        # Log the exception or handle it as needed
+        # Log the exception if needed
         print(f"Validation error: {e}")
         return False

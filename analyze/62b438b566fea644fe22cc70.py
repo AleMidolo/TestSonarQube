@@ -9,9 +9,9 @@ _borgmatic_completion() {
     _init_completion || return
 
     if [[ ${cur} == -* ]]; then
-        COMPREPLY=($(compgen -W '--help --version --verbosity --config --list --create --prune --check --extract --info --init --upgrade --version' -- ${cur}))
+        COMPREPLY=($(compgen -W '-h --help -v --version -c --config -d --debug -q --quiet -n --dry-run -e --encryption -r --repository -a --archive -p --passphrase -l --list -i --info -x --extract -m --mount -b --borg -s --stats -t --test -u --upload -y --yes' -- ${cur}))
     else
-        COMPREPLY=($(compgen -f -- ${cur}))
+        COMPREPLY=($(compgen -W 'init create prune check list info extract mount borg stats test upload' -- ${cur}))
     fi
 }
 

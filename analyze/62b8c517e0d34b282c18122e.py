@@ -11,38 +11,32 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     :rtype: str  
     """
     import traceback
-    import sys
-
-    # Get the exception type and message
-    exc_type = type(e).__name__
-    exc_msg = str(e)
-
-    # Get the traceback
-    tb = e.__traceback__
-    tb_list = traceback.extract_tb(tb)
-
+    
+    # Get the exception message
+    exception_message = str(e)
+    
+    # Get the traceback as a list of strings
+    tb_list = traceback.format_tb(e.__traceback__)
+    
     # Limit the traceback to max_level
     if len(tb_list) > max_level:
-        tb_list = tb_list[-max_level:]
-
+        tb_list = tb_list[:max_level]
+    
     # Format the traceback
-    formatted_tb = []
-    for frame in tb_list:
-        filename = frame.filename
-        lineno = frame.lineno
-        funcname = frame.name
-        line = frame.line
-
-        # Limit the path level
-        if max_path_level > 0:
-            parts = filename.split('/')
+    formatted_traceback = []
+    for i, tb_line in enumerate(tb_list):
+        if i < max_path_level:
+            formatted_traceback.append(tb_line.strip())
+        else:
+            # Truncate the path if it exceeds max_path_level
+            parts = tb_line.strip().split('\n')
             if len(parts) > max_path_level:
-                filename = '/'.join(parts[-max_path_level:])
-
-        formatted_tb.append(f"File \"{filename}\", line {lineno}, in {funcname}\n  {line}")
-
-    # Combine the exception type, message, and traceback
-    formatted_exception = f"{exc_type}: {exc_msg}\n"
-    formatted_exception += "\n".join(formatted_tb)
-
-    return formatted_exception
+                parts = parts[:max_path_level] + ['...']
+            formatted_traceback.append('\n'.join(parts))
+    
+    # Combine the exception message and formatted traceback
+    result = f"Exception: {exception_message}\n"
+    result += "Traceback (most recent call last):\n"
+    result += '\n'.join(formatted_traceback)
+    
+    return result

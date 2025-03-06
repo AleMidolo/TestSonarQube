@@ -1,5 +1,8 @@
 import yaml
 
+class IRValidatorException(Exception):
+    pass
+
 def validate_from_content(cls, spec_content=None):
     """
     यह फ़ंक्शन सत्यापित करता है कि spec (YAML) सामग्री में सभी आवश्यक फ़ील्ड्स मौजूद हैं।
@@ -9,20 +12,16 @@ def validate_from_content(cls, spec_content=None):
     :return: एक डिक्शनरी जिसमें spec (YAML) फ़ाइल से लोड किया गया डेटा होता है
     """
     if spec_content is None:
-        raise ValueError("Spec content cannot be None.")
+        raise IRValidatorException("Spec content is missing.")
     
     try:
         spec_data = yaml.safe_load(spec_content)
     except yaml.YAMLError as e:
         raise IRValidatorException(f"Invalid YAML content: {e}")
     
-    required_fields = ['field1', 'field2', 'field3']  # Replace with actual required fields
-    
+    required_fields = ['name', 'version', 'description']
     for field in required_fields:
         if field not in spec_data:
-            raise IRValidatorException(f"Missing required field: {field}")
+            raise IRValidatorException(f"Required field '{field}' is missing in the spec content.")
     
     return spec_data
-
-class IRValidatorException(Exception):
-    pass

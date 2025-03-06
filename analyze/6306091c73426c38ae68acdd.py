@@ -17,8 +17,8 @@ def validate_from_file(cls, yaml_file=None):
     except Exception as e:
         raise IRValidatorException(f"YAML फ़ाइल लोड करने में त्रुटि: {e}")
     
-    # यहां आप आवश्यक फ़ील्ड्स की जांच कर सकते हैं
-    required_fields = ['field1', 'field2', 'field3']  # उदाहरण के लिए आवश्यक फ़ील्ड्स
+    # यहां आप अनिवार्य फ़ील्ड्स की जांच कर सकते हैं
+    required_fields = ['field1', 'field2', 'field3']  # उदाहरण के लिए
     for field in required_fields:
         if field not in data:
             raise IRValidatorException(f"अनिवार्य फ़ील्ड '{field}' YAML फ़ाइल में गायब है।")

@@ -20,6 +20,7 @@ def validate_version_inventories(self, version_dirs):
         with open(root_inventory_path, 'r') as f:
             root_inventory = json.load(f)
         
-        for content_id, digest in inventory.items():
-            if content_id in root_inventory and digest != root_inventory[content_id]:
-                print(f"Content digest mismatch for {content_id} in version {version_dir}")
+        for content_id, digest in inventory.get("contents", {}).items():
+            if content_id in root_inventory.get("contents", {}):
+                if digest != root_inventory["contents"][content_id]:
+                    print(f"Content digest mismatch for {content_id} in version {version_dir}")
