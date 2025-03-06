@@ -1,22 +1,24 @@
 def _extract_number_and_supplment_from_issue_element(issue):
     """
-    从 issue 的内容中返回 number 和 sup 的可能值。
-    从 issue 的内容中提取 number 和 suppl 的可能值。
+    समस्या (issue) की सामग्री से number और suppl के संभावित मानों को निकालें।
     """
     number = None
     suppl = None
     
-    # 假设 issue 是一个字符串，包含数字和可能的补充信息
-    # 例如: "123 Suppl 2" 或 "456"
-    parts = issue.split()
+    # Assuming 'issue' is a string or a dictionary-like object
+    if isinstance(issue, str):
+        # Example logic to extract number and suppl from a string
+        # This is a placeholder and should be replaced with actual logic
+        parts = issue.split()
+        for part in parts:
+            if part.isdigit():
+                number = int(part)
+            elif part.lower().startswith('suppl'):
+                suppl = part
     
-    if parts:
-        # 提取 number
-        if parts[0].isdigit():
-            number = int(parts[0])
-        
-        # 提取 suppl
-        if len(parts) > 1 and parts[1].lower() == "suppl" and len(parts) > 2 and parts[2].isdigit():
-            suppl = int(parts[2])
+    elif isinstance(issue, dict):
+        # Example logic to extract number and suppl from a dictionary
+        number = issue.get('number')
+        suppl = issue.get('suppl')
     
     return number, suppl

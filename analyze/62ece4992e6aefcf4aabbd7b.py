@@ -3,24 +3,19 @@ import yaml
 
 def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=False):
     """
-    给定一个渲染后的配置 YAML，将其写入目标文件。
-    如果文件已存在且 `overwrite` 参数为假，则在写入任何内容之前中止操作。
-    如果文件不存在，则创建它。
-    否则，将内容写入文件。
-
-    返回值：`None`
-
-    给定一个目标配置文件名和渲染的配置 YAML，将其写入文件。必要时创建包含的目录。但如果文件已存在且 `overwrite` 参数为假，则在写入任何内容之前中止操作。
+    एक लक्षित कॉन्फ़िग फ़ाइल नाम और रेंडर किया गया YAML कॉन्फ़िग दिए जाने पर, इसे फ़ाइल में लिखें। 
+    आवश्यकतानुसार किसी भी समाहित डायरेक्टरी को बनाएं। 
+    लेकिन यदि फ़ाइल पहले से मौजूद है और `overwrite` False है, तो कुछ भी लिखने से पहले प्रक्रिया को रोक दें।
     """
     if os.path.exists(config_filename) and not overwrite:
-        return
+        raise FileExistsError(f"File {config_filename} already exists and overwrite is set to False.")
     
-    # 创建包含的目录（如果不存在）
+    # Create the directory if it doesn't exist
     os.makedirs(os.path.dirname(config_filename), exist_ok=True)
     
-    # 将渲染的配置写入文件
+    # Write the rendered config to the file
     with open(config_filename, 'w') as f:
-        yaml.dump(rendered_config, f, default_flow_style=False)
+        yaml.dump(rendered_config, f)
     
-    # 设置文件权限
+    # Set the file permissions
     os.chmod(config_filename, mode)

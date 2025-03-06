@@ -2,29 +2,21 @@ from datetime import datetime
 
 def default_tzinfo(dt, tzinfo):
     """
-    仅对没有时区信息的日期时间对象设置 ``tzinfo`` 参数。
+    केवल उन naive datetime पर ``tzinfo`` पैरामीटर सेट करता है।
 
-    这在某些情况下非常有用，例如当你需要处理一个可能包含隐式或显式时区信息的日期时间对象时（例如解析一个时区字符串）。
-
-    .. doctest::
-
-      >>> from dateutil.tz import tzoffset
-      >>> from dateutil.parser import parse
-      >>> from dateutil.utils import default_tzinfo
-      >>> dflt_tz = tzoffset("EST", -18000)
-      >>> print(default_tzinfo(parse('2014-01-01 12:30 UTC'), dflt_tz))
-      2014-01-01 12:30:00+00:00
-      >>> print(default_tzinfo(parse('2014-01-01 12:30'), dflt_tz))
-      2014-01-01 12:30:00-05:00
+    यह उपयोगी है, उदाहरण के लिए, जब आपको एक datetime प्रदान किया जाता है 
+    जिसमें या तो एक implicit या explicit time zone हो सकता है, जैसे कि 
+    जब आप एक time zone string को पार्स कर रहे हों।
 
     :param dt:
-      需要替换时区信息的日期时间对象。
+        वह datetime जिस पर time zone को बदलना है।
 
     :param tzinfo:
-      ``dt`` 没有时区信息时为其分配的 :py:class:`datetime.tzinfo` 子类实例。
+        :py:class:`datetime.tzinfo` सबक्लास का उदाहरण, जिसे ``dt`` पर 
+        असाइन किया जाएगा यदि (और केवल यदि) यह naive है।
 
     :return:
-      返回一个包含时区信息的 :py:class:`datetime.datetime` 对象。
+        एक aware :py:class:`datetime.datetime` लौटाता है।
     """
     if dt.tzinfo is None:
         return dt.replace(tzinfo=tzinfo)

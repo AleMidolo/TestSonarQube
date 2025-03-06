@@ -1,11 +1,14 @@
 def validate_arg_deprecation(self, cli_args, answer_file_args):
     """
-    验证并打印已弃用的参数。
+    अप्रचलित तर्कों को मान्य करता है और उन्हें प्रिंट करता है।
 
-    :param cli_args: 来自命令行的参数字典
-    :param answer_file_args: 来自文件的参数字典
+    :param cli_args: CLI (कमांड लाइन इंटरफ़ेस) से प्राप्त तर्कों की डिक्शनरी
+    :param answer_file_args: फ़ाइलों से प्राप्त तर्कों की डिक्शनरी
     """
     deprecated_args = set(cli_args.keys()).intersection(answer_file_args.keys())
     
     for arg in deprecated_args:
-        print(f"警告: 参数 '{arg}' 已被弃用。请更新您的配置文件或命令行参数。")
+        print(f"अप्रचलित तर्क: {arg}")
+        print(f"CLI से मान: {cli_args[arg]}")
+        print(f"फ़ाइल से मान: {answer_file_args[arg]}")
+        print("यह तर्क अप्रचलित है और भविष्य के संस्करणों में हटाया जा सकता है।\n")

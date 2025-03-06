@@ -3,16 +3,25 @@ from typing import Set, Tuple, Callable
 
 def find_tags(text: str, replacer: Callable = None) -> Tuple[Set, str]:
     """
-    在文本中查找标签。
+    टेक्स्ट में टैग्स खोजें।
 
-    尽量忽略代码块中的标签。
+    कोड ब्लॉक्स के अंदर मौजूद टैग्स को अनदेखा करने की कोशिश करता है।
 
-    可选地，如果传入了一个 “replacer”，则会使用调用该 replacer 函数（参数为标签单词）的返回值来替换该标签单词。
+    वैकल्पिक रूप से, यदि "replacer" पास किया गया है, तो यह टैग शब्द को 
+    replacer फ़ंक्शन द्वारा लौटाए गए परिणाम से बदल देगा, जिसे टैग शब्द के साथ कॉल किया गया है।
 
-    返回一个包含标签的集合以及原始文本或替换后的文本。
+    एक सेट के रूप में टैग्स और मूल या बदला हुआ टेक्स्ट लौटाता है।
     """
-    # 正则表达式匹配标签，假设标签以#开头，且不包含空格
-    tag_pattern = re.compile(r'(?<!\S)#\w+')
+    # Regex to find tags (assuming tags are words starting with '@')
+    tag_pattern = re.compile(r'(?<!`)(@\w+)(?!`)')
     
-    # 忽略代码块中的标签
-    code_block_pattern = re.compile(r'
+    # Find all tags in the text
+    tags = set(tag_pattern.findall(text))
+    
+    # Replace tags if a replacer function is provided
+    if replacer:
+        def replace_tag(match):
+            return replacer(match.group(1))
+        text = tag_pattern.sub(replace_tag, text)
+    
+    return tags, text

@@ -1,14 +1,20 @@
 def get_versions():
     """
-    获取版本信息。如果无法获取版本信息，则返回默认值。
-    获取版本信息或在无法获取时返回默认值
+    संस्करण जानकारी प्राप्त करें या यदि ऐसा करने में असमर्थ हैं तो डिफ़ॉल्ट मान लौटाएं।
     """
     try:
-        # 假设我们有一个获取版本信息的函数或方法
-        # 这里我们模拟一个获取版本信息的操作
-        version = "1.0.0"  # 假设这是获取到的版本信息
-        return version
-    except Exception as e:
-        # 如果获取版本信息失败，返回默认值
-        default_version = "0.0.0"
-        return default_version
+        import pkg_resources
+        versions = {}
+        for package in ['numpy', 'pandas', 'scipy', 'matplotlib']:
+            try:
+                versions[package] = pkg_resources.get_distribution(package).version
+            except pkg_resources.DistributionNotFound:
+                versions[package] = 'Not Installed'
+        return versions
+    except ImportError:
+        return {
+            'numpy': '1.21.0',
+            'pandas': '1.3.0',
+            'scipy': '1.7.0',
+            'matplotlib': '3.4.0'
+        }

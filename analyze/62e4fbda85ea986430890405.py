@@ -1,8 +1,6 @@
 import subprocess
 import sys
-import os
-import shlex
-from typing import Sequence, Any
+from typing import Sequence, Any, Tuple
 
 def xargs(
         cmd: tuple[str, ...],
@@ -14,57 +12,42 @@ def xargs(
         **kwargs: Any,
 ) -> tuple[int, bytes]:
     """
-    在 Linux 中简化实现 Xargs
-    一个简化版的 xargs 实现。
+    Xargs का एक सरल कार्यान्वयन।
 
-    color: 如果运行在支持的操作系统平台上，创建一个伪终端（pty）。
-    target_concurrency: 目标并发分区的数量。
+    - color: यदि प्लेटफ़ॉर्म इसे सपोर्ट करता है, तो एक PTY (Pseudo Terminal) बनाएं।
+    - target_concurrency: एक साथ चलने वाले विभाजनों (partitions) की लक्षित संख्या।
     """
-    if color and sys.platform != "linux":
-        raise NotImplementedError("Color mode is only supported on Linux.")
+    if color and sys.platform != "win32":
+        import pty
+        import os
 
-    # Split varargs into chunks based on target_concurrency
-    chunk_size = (len(varargs) + target_concurrency - 1) // target_concurrency
-    chunks = [varargs[i:i + chunk_size] for i in range(0, len(varargs), chunk_size)]
-
-    results = []
-    for chunk in chunks:
-        full_cmd = list(cmd) + list(chunk)
-        if color:
-            # Use a pseudo-terminal for color support
-            import pty
-            master, slave = pty.openpty()
-            process = subprocess.Popen(full_cmd, stdout=slave, stderr=slave, **kwargs)
-            os.close(slave)
-            output = b""
-            while True:
-                try:
-                    data = os.read(master, 1024)
-                    if not data:
-                        break
-                    output += data
-                except OSError:
+        master_fd, slave_fd = pty.openpty()
+        process = subprocess.Popen(
+            cmd + tuple(varargs),
+            stdout=slave_fd,
+            stderr=slave_fd,
+            close_fds=True,
+            **kwargs
+        )
+        os.close(slave_fd)
+        output = b""
+        while True:
+            try:
+                data = os.read(master_fd, 1024)
+                if not data:
                     break
-            return_code = process.wait()
-            os.close(master)
-        else:
-            process = subprocess.Popen(full_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs)
-            output, _ = process.communicate()
-            return_code = process.returncode
-
-        results.append((return_code, output))
-
-    # Aggregate results
-    final_return_code = max(rc for rc, _ in results)
-    final_output = b"".join(output for _, output in results)
-
-    return (final_return_code, final_output)
-
-def _get_platform_max_length() -> int:
-    """Get the maximum command length allowed by the platform."""
-    if sys.platform == "linux":
-        return 131072  # Typical ARG_MAX on Linux
-    elif sys.platform == "darwin":
-        return 262144  # Typical ARG_MAX on macOS
+                output += data
+            except OSError:
+                break
+        os.close(master_fd)
+        return_code = process.wait()
+        return (return_code, output)
     else:
-        return 32768  # Default fallback
+        process = subprocess.Popen(
+            cmd + tuple(varargs),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            **kwargs
+        )
+        stdout, stderr = process.communicate()
+        return (process.returncode, stdout)

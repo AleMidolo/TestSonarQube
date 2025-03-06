@@ -1,18 +1,16 @@
 def get_parser_option_specs(self, command_name):
     """
-    获取指定命令的所有选项
+    निर्दिष्ट कमांड के लिए सभी विकल्प प्राप्त करता है।
 
-    :param command_name: 命令名称（如 main、virsh、ospd 等）
-    :return: 所有命令选项的列表
+    :param command_name: कमांड का नाम (जैसे main, virsh, ospd, आदि...)
+    :return: सभी कमांड विकल्पों की सूची
     """
-    # 假设 self.parser 是一个 argparse.ArgumentParser 对象
-    if not hasattr(self, 'parser'):
-        raise AttributeError("Parser not initialized")
-    
-    # 获取所有选项
-    options = []
-    for action in self.parser._actions:
-        if isinstance(action, argparse._StoreAction) or isinstance(action, argparse._StoreTrueAction):
-            options.append(action.dest)
-    
-    return options
+    # Assuming self.parser is an instance of argparse.ArgumentParser or similar
+    if hasattr(self, 'parser') and hasattr(self.parser, '_actions'):
+        options = []
+        for action in self.parser._actions:
+            if action.dest != 'help':  # Exclude the help option
+                options.append(action.option_strings)
+        return options
+    else:
+        return []

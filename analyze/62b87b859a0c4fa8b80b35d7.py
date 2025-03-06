@@ -1,34 +1,37 @@
-def to_csv(self, separator=", ", header=None):
+def to_csv(self, separator=",", header=None):
     """
-    .. deprecated:: 0.5
-        In Lena 0.5, `to_csv` is no longer used.
-        Iterables will be converted to tables.
+    .. deprecated:: 0.5 Lena 0.5 में to_csv का उपयोग नहीं किया जाता है।
+          Iterables को तालिकाओं (tables) में परिवर्तित किया जाता है।
 
-    Convert the points of the graph to CSV format.
+    ग्राफ़ के बिंदुओं (points) को CSV में परिवर्तित करें।
 
-    *separator* is used to separate values, default is a comma.
+    *separator* मानों को अलग करता है, डिफ़ॉल्ट रूप से यह कॉमा (comma) है।
 
-    *header* if not ``None``, will be the first line of the output
-    (a newline will be automatically added).
+    *header*, यदि ``None`` नहीं है, तो यह आउटपुट की पहली स्ट्रिंग होगी
+    (नई पंक्ति स्वचालित रूप से जोड़ी जाती है)।
 
-    Since the graph can be multidimensional,
-    for each point, first convert its coordinates to a string
-    (separated by *separator*), and then process each part of its value.
+    चूंकि एक ग्राफ़ बहुआयामी (multidimensional) हो सकता है,
+    प्रत्येक बिंदु के लिए पहले उसके निर्देशांक (coordinate) को स्ट्रिंग में परिवर्तित किया जाता है
+    (*separator* द्वारा अलग किया गया), और फिर उसके मान (value) के प्रत्येक भाग को।
 
-    To convert :class:`Graph` to CSV in a Lena sequence,
-    use :class:`lena.output.ToCSV`.
+    :class:`Graph` को CSV में परिवर्तित करने के लिए, Lena अनुक्रम (sequence) के अंदर
+    :class:`lena.output.ToCSV` का उपयोग करें।
     """
+    csv_lines = []
+    
+    # Add header if provided
     if header is not None:
-        output = [header + "\n"]
-    else:
-        output = []
-
+        csv_lines.append(header)
+    
+    # Iterate over the points in the graph
     for point in self.points:
-        # Convert coordinates to string
+        # Convert coordinates to string separated by the separator
         coords_str = separator.join(map(str, point.coordinates))
-        # Convert values to string
+        # Convert values to string separated by the separator
         values_str = separator.join(map(str, point.values))
-        # Combine coordinates and values
-        output.append(f"{coords_str}{separator}{values_str}\n")
-
-    return "".join(output)
+        # Combine coordinates and values into a single CSV line
+        csv_line = f"{coords_str}{separator}{values_str}"
+        csv_lines.append(csv_line)
+    
+    # Join all lines with newline characters
+    return "\n".join(csv_lines)

@@ -1,50 +1,43 @@
+from dateutil.relativedelta import relativedelta
+
 def normalized(self):
     """
-    将所有时间单位标准化为整数。
+    यह फ़ंक्शन इस ऑब्जेक्ट का एक ऐसा संस्करण लौटाता है, जिसमें सभी सापेक्ष गुण (relative attributes) पूरी तरह से पूर्णांक मानों (integer values) में दर्शाए गए हों।
 
-    返回一个完全使用整数值表示相对属性的对象版本。
+    उदाहरण:
 
     >>> relativedelta(days=1.5, hours=2).normalized()
     relativedelta(days=+1, hours=+14)
 
-    :return:
-      返回一个 :class:`dateutil.relativedelta.relativedelta` 对象。
+    :वापसी मान (Return):
+    यह एक `dateutil.relativedelta.relativedelta` क्लास का ऑब्जेक्ट लौटाता है।
     """
-    from dateutil.relativedelta import relativedelta
-    import math
-
-    # 将天数的浮点部分转换为小时
+    # Convert all relative attributes to integer values
     days = int(self.days)
-    hours = self.hours + (self.days - days) * 24
-
-    # 将小时的浮点部分转换为分钟
-    hours = int(hours)
-    minutes = self.minutes + (hours - int(hours)) * 60
-
-    # 将分钟的浮点部分转换为秒
-    minutes = int(minutes)
-    seconds = self.seconds + (minutes - int(minutes)) * 60
-
-    # 将秒的浮点部分转换为微秒
-    seconds = int(seconds)
-    microseconds = self.microseconds + (seconds - int(seconds)) * 1e6
-
-    # 返回标准化后的 relativedelta 对象
-    return relativedelta(
-        years=self.years,
-        months=self.months,
-        days=days,
-        hours=hours,
-        minutes=minutes,
-        seconds=seconds,
-        microseconds=int(microseconds),
-        leapdays=self.leapdays,
-        year=self.year,
-        month=self.month,
-        day=self.day,
-        weekday=self.weekday,
-        hour=self.hour,
-        minute=self.minute,
-        second=self.second,
-        microsecond=int(self.microsecond)
-    )
+    hours = int(self.hours)
+    minutes = int(self.minutes)
+    seconds = int(self.seconds)
+    microseconds = int(self.microseconds)
+    
+    # Calculate the remaining hours, minutes, seconds, and microseconds
+    remaining_hours = int((self.days - days) * 24)
+    remaining_minutes = int((self.hours - hours) * 60)
+    remaining_seconds = int((self.minutes - minutes) * 60)
+    remaining_microseconds = int((self.seconds - seconds) * 1e6)
+    
+    # Add the remaining values to the respective attributes
+    hours += remaining_hours
+    minutes += remaining_minutes
+    seconds += remaining_seconds
+    microseconds += remaining_microseconds
+    
+    # Normalize the values
+    minutes += seconds // 60
+    seconds = seconds % 60
+    hours += minutes // 60
+    minutes = minutes % 60
+    days += hours // 24
+    hours = hours % 24
+    
+    # Return the normalized relativedelta object
+    return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds, microseconds=microseconds)

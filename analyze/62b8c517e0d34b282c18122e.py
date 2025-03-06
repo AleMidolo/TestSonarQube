@@ -1,39 +1,37 @@
 def extostr(cls, e, max_level=30, max_path_level=5):
     """
-    将异常格式化为字符串
-    格式化异常信息。
-
-    :param e: 任意异常实例。
-    :type e: Exception
-    :param max_level: 最大调用堆栈层级（默认值为30）
-    :type max_level: int
-    :param max_path_level: 最大路径层级（默认值为5）
-    :type max_path_level: int
-    :return: 可读的异常字符串
-    :rtype: str
+    अपवाद को स्वरूपित करें।  
+    :param e: कोई भी अपवाद उदाहरण।  
+    :type e: Exception  
+    :param max_level: अधिकतम कॉल स्टैक स्तर (डिफ़ॉल्ट 30)।  
+    :type max_level: int  
+    :param max_path_level: अधिकतम पथ स्तर (डिफ़ॉल्ट 5)।  
+    :type max_path_level: int  
+    :return: अपवाद को पढ़ने योग्य स्ट्रिंग।  
+    :rtype: str  
     """
     import traceback
-    import os
-
-    # 获取异常的堆栈信息
-    stack = traceback.extract_tb(e.__traceback__)
-    stack_str = []
-
-    # 限制堆栈层级
-    stack = stack[:max_level]
-
-    for frame in stack:
-        # 限制路径层级
-        path = frame.filename.split(os.sep)
-        if len(path) > max_path_level:
-            path = path[-max_path_level:]
-        path = os.sep.join(path)
-
-        # 格式化堆栈信息
-        stack_str.append(f"File \"{path}\", line {frame.lineno}, in {frame.name}\n  {frame.line}")
-
-    # 格式化异常信息
-    exception_str = f"{type(e).__name__}: {str(e)}\n"
-    exception_str += "\n".join(stack_str)
-
-    return exception_str
+    
+    # Get the exception type and message
+    exception_type = type(e).__name__
+    exception_message = str(e)
+    
+    # Get the traceback
+    tb_list = traceback.format_tb(e.__traceback__)
+    
+    # Limit the traceback levels
+    if len(tb_list) > max_level:
+        tb_list = tb_list[:max_level]
+    
+    # Format the traceback
+    formatted_traceback = []
+    for level, tb in enumerate(tb_list):
+        if level >= max_path_level:
+            break
+        formatted_traceback.append(f"Level {level + 1}:\n{tb}")
+    
+    # Combine the exception type, message, and traceback
+    formatted_exception = f"{exception_type}: {exception_message}\n"
+    formatted_exception += "\n".join(formatted_traceback)
+    
+    return formatted_exception

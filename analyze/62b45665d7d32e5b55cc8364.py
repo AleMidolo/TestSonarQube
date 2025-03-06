@@ -1,22 +1,35 @@
 def parse_subparser_arguments(unparsed_arguments, subparsers):
     """
-    给定一个参数序列和一个从子解析器名称到 argparse.ArgumentParser 实例的字典，让每个请求的操作的子解析器尝试解析所有参数。这允许共享常见参数（例如 --repository）给多个子解析器。
+    दिए गए तर्कों (arguments) की एक श्रृंखला और एक डिक्शनरी जो सबपार्सर (subparser) के नाम को 
+    argparse.ArgumentParser इंस्टेंस से मैप करती है, के आधार पर, प्रत्येक अनुरोधित क्रिया के 
+    सबपार्सर को सभी तर्कों को पार्स (parse) करने का मौका दें। 
 
-    将结果作为一个元组返回，其中包含一个将子解析器名称映射到其解析后的 argparse.Namespace 实例的字典和一个包含未被任何子解析器认领的剩余参数的列表。
+    यह प्रक्रिया सामान्य तर्कों जैसे "--repository" को कई सबपार्सरों के बीच साझा करने की अनुमति देती है।
+
+    परिणाम को एक ट्यूपल (tuple) के रूप में लौटाएं, जिसमें शामिल हैं:
+    1. एक डिक्शनरी जो सबपार्सर के नाम को पार्स किए गए तर्कों के नेमस्पेस (namespace) से मैप करती है।
+    2. उन तर्कों की सूची जो किसी भी सबपार्सर द्वारा दावा नहीं किए गए हैं।
     """
-    parsed_results = {}
-    remaining_args = list(unparsed_arguments)
-    
-    for subparser_name, parser in subparsers.items():
-        try:
-            # Try to parse the arguments with the current subparser
-            parsed_args, remaining = parser.parse_known_args(unparsed_arguments)
-            if parsed_args:
-                parsed_results[subparser_name] = parsed_args
-                # Update remaining_args to exclude the ones parsed by this subparser
-                remaining_args = remaining
-        except SystemExit:
-            # If parsing fails, continue to the next subparser
-            continue
-    
-    return parsed_results, remaining_args
+    import argparse
+
+    # Initialize the main parser
+    main_parser = argparse.ArgumentParser()
+    subparsers_dict = {}
+
+    # Add subparsers to the main parser
+    for name, parser in subparsers.items():
+        subparser = main_parser.add_subparsers().add_parser(name)
+        subparsers_dict[name] = subparser
+
+    # Parse the arguments using the main parser
+    parsed_args, remaining_args = main_parser.parse_known_args(unparsed_arguments)
+
+    # Create a dictionary to store the parsed arguments for each subparser
+    parsed_subparser_args = {}
+
+    # Iterate through the subparsers and parse the arguments
+    for name, subparser in subparsers_dict.items():
+        subparser_args, remaining_args = subparser.parse_known_args(remaining_args)
+        parsed_subparser_args[name] = subparser_args
+
+    return parsed_subparser_args, remaining_args

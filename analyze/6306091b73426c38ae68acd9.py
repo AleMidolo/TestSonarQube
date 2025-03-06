@@ -1,6 +1,8 @@
 def workspace_manager(cls):
     """
-    通过 `cls._get_service(ServiceName.WORKSPACE_MANAGER)` 获取工作区管理器
-    获取工作区管理器。
+    वर्कस्पेस मैनेजर प्राप्त करता है।
     """
-    return cls._get_service(ServiceName.WORKSPACE_MANAGER)
+    # Assuming the workspace manager is a class method or a static method
+    # that returns an instance of the workspace manager.
+    # This is a placeholder implementation.
+    return cls._workspace_manager

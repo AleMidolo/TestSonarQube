@@ -1,31 +1,32 @@
 import zipfile
-from collections import defaultdict
+import os
+from xml.etree import ElementTree as ET
 
 def _explore_zipfile(zip_path):
     """
-    通过 `_group_files_by_xml_filename` 对给定的 zip 路径进行分组。
+    ज़िप पथ से पैकेजों का डेटा प्राप्त करता है।  
 
-    从`zip_path`获取包数据。
+    फ़ाइलों को उनके XML बेसनाम (basename) के आधार पर समूहित करता है और डेटा को डिक्शनरी (dict) प्रारूप में लौटाता है।  
 
-    根据文件的XML文件名对其进行分组，并用字典格式返回数据。
-
-    参数
+    पैरामीटर (Parameters)
     ----------
-    zip_path : `str`
-        zip文件路径
+    zip_path : str  
+        ज़िप फ़ाइल का पथ।  
 
-    Returns
+    रिटर्न्स (Returns)
     -------
     dict
-        以XML文件名为键，文件内容为值的字典
+        XML फ़ाइलों के डेटा को समूहित करके एक डिक्शनरी में लौटाता है।
     """
-    grouped_files = defaultdict(list)
+    data_dict = {}
     
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         for file_name in zip_ref.namelist():
             if file_name.endswith('.xml'):
-                with zip_ref.open(file_name) as file:
-                    content = file.read()
-                    grouped_files[file_name].append(content)
+                base_name = os.path.basename(file_name)
+                with zip_ref.open(file_name) as xml_file:
+                    tree = ET.parse(xml_file)
+                    root = tree.getroot()
+                    data_dict[base_name] = root
     
-    return dict(grouped_files)
+    return data_dict

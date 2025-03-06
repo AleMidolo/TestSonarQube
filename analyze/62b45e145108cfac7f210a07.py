@@ -1,15 +1,16 @@
 def validate(self, inventory, extract_spec_version=False):
     """
-    验证给定的库存（inventory）。如果 `extract_spec_version` 为 True，则会根据 `type` 值来确定规范版本。如果没有 `type` 值或其无效，则其他测试将基于 `self.spec_version` 中给定的版本。
-    验证给定的库存。
+    दिए गए इन्वेंटरी को सत्यापित करें।
 
-    如果 `extract_spec_version` 为真，则会根据 `type` 值来确定规范版本。
-    如果没有 `type` 值或其无效，则其他测试将基于 `self.spec_version` 中给定的版本。
+    यदि `extract_spec_version` का मान `True` है, तो यह `type` मान को देखकर 
+    स्पेसिफिकेशन वर्जन निर्धारित करेगा। यदि `type` मान मौजूद नहीं है या यह 
+    मान्य नहीं है, तो अन्य परीक्षण `self.spec_version` में दिए गए वर्जन के 
+    आधार पर किए जाएंगे।
     """
     if extract_spec_version:
         if 'type' in inventory:
-            spec_version = self.determine_spec_version(inventory['type'])
-            if spec_version is None:
+            spec_version = inventory['type']
+            if not self.is_valid_spec_version(spec_version):
                 spec_version = self.spec_version
         else:
             spec_version = self.spec_version
@@ -17,30 +18,29 @@ def validate(self, inventory, extract_spec_version=False):
         spec_version = self.spec_version
 
     # Perform validation based on the determined spec_version
-    self.validate_inventory(inventory, spec_version)
-
-def determine_spec_version(self, type_value):
-    """
-    根据 `type` 值确定规范版本。
-    """
-    # Placeholder logic to determine spec version based on type
-    if type_value == 'type_a':
-        return '1.0'
-    elif type_value == 'type_b':
-        return '2.0'
+    if spec_version == 'v1':
+        return self.validate_v1(inventory)
+    elif spec_version == 'v2':
+        return self.validate_v2(inventory)
     else:
-        return None
+        raise ValueError(f"Unsupported specification version: {spec_version}")
 
-def validate_inventory(self, inventory, spec_version):
+def is_valid_spec_version(self, spec_version):
     """
-    根据给定的规范版本验证库存。
+    Check if the given specification version is valid.
     """
-    # Placeholder logic for inventory validation
-    if spec_version == '1.0':
-        # Validation logic for version 1.0
-        pass
-    elif spec_version == '2.0':
-        # Validation logic for version 2.0
-        pass
-    else:
-        raise ValueError(f"Unsupported spec version: {spec_version}")
+    return spec_version in ['v1', 'v2']
+
+def validate_v1(self, inventory):
+    """
+    Validate inventory against v1 specification.
+    """
+    # Implementation for v1 validation
+    pass
+
+def validate_v2(self, inventory):
+    """
+    Validate inventory against v2 specification.
+    """
+    # Implementation for v2 validation
+    pass

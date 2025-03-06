@@ -1,10 +1,10 @@
 def _get_seq_with_type(seq, bufsize=None):
     """
-    返回一个 (sequence, type) 对。
-    sequence 是从 *seq* 派生的
-    （或者是 *seq* 本身，如果它是一个序列类型）。
+    (sequence, type) जोड़ी लौटाता है।
+    Sequence *seq* से प्राप्त किया जाता है
+    (या *seq* ही होता है, यदि वह sequence प्रकार का है)।
     """
-    if isinstance(seq, (list, tuple, str, bytes, bytearray)):
+    if isinstance(seq, (list, tuple, str, bytes)):
         return seq, type(seq)
     else:
-        return list(seq), list
+        return list(seq), type(seq)

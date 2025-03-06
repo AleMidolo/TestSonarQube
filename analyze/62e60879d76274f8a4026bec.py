@@ -1,24 +1,30 @@
-def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None, imp_user=None, dehydration_hooks=None, hydration_hooks=None, **handlers):
+def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
+          db=None, imp_user=None, dehydration_hooks=None,
+          hydration_hooks=None, **handlers):
     """
-    :param mode: 路由的访问模式 - "READ" 或 "WRITE"（默认值）
-    :param bookmarks: 该事务应从这些书签（bookmark）值之后开始执行的可迭代对象
-    :param metadata: 附加到事务的自定义元数据字典
-    :param timeout: 事务执行的超时时间（以秒为单位）
-    :param db: 要开始事务的数据库名称
-    需要 Bolt 4.0+。
-    :param imp_user: 要模拟的用户
-    需要 Bolt 4.4+。
-    :param dehydration_hooks: 用于处理类型dehydration的钩子（字典，键为类型（类），值为dehydration函数）。dehydration函数接收一个值，并返回一个 PackStream 可识别的对象。
-    :param hydration_hooks: 用于处理类型hydration的钩子（映射，键为类型（类），值为hydration函数）。hydration函数接收一个 PackStream 可识别的值，并可以返回任意对象。
-    :param handlers: 传递给返回的Response对象的处理函数
-    :return: Response 对象
+    आउटपुट कतार (output queue) में एक BEGIN संदेश जोड़ता है।
+
+    :param mode: रूटिंग के लिए एक्सेस मोड - "READ" या "WRITE" (डिफ़ॉल्ट)
+    :param bookmarks: बुकमार्क मानों का iterable, जिनके बाद यह ट्रांजेक्शन शुरू होना चाहिए
+    :param metadata: ट्रांजेक्शन से जोड़ने के लिए कस्टम मेटाडेटा डिक्शनरी
+    :param timeout: ट्रांजेक्शन निष्पादन के लिए समय सीमा (सेकंड में)
+    :param db: उस डेटाबेस का नाम जिसके खिलाफ ट्रांजेक्शन शुरू करना है
+        इसके लिए Bolt 4.0+ की आवश्यकता है।
+    :param imp_user: वह उपयोगकर्ता जिसे प्रतिरूपित (impersonate) करना है
+        इसके लिए Bolt 4.4+ की आवश्यकता है।
+    :param dehydration_hooks:
+        प्रकारों को डीहाइड्रेट (dehydrate) करने के लिए हुक्स (dict, जिसमें type (class) से dehydration
+        फ़ंक्शन तक मैपिंग हो)। डीहाइड्रेशन फ़ंक्शन मान (value) प्राप्त करता है और 
+        packstream द्वारा समझे जाने वाले प्रकार के ऑब्जेक्ट को लौटाता है।
+    :param hydration_hooks:
+        प्रकारों को हाइड्रेट (hydrate) करने के लिए हुक्स (type (class) से 
+        हाइड्रेशन फ़ंक्शन तक की मैपिंग)। हाइड्रेशन फ़ंक्शन packstream द्वारा समझे जाने वाले 
+        प्रकार के मान को प्राप्त करता है और कुछ भी लौटाने के लिए स्वतंत्र है।
+    :param handlers: हैंडलर फ़ंक्शन, जो लौटाए गए Response ऑब्जेक्ट में पास किए जाते हैं
+    :return: Response ऑब्जेक्ट
     """
-    # 设置默认模式为 "WRITE"
-    if mode is None:
-        mode = "WRITE"
-    
-    # 初始化事务配置
-    config = {
+    # Create the BEGIN message
+    begin_message = {
         "mode": mode,
         "bookmarks": bookmarks,
         "metadata": metadata,
@@ -27,11 +33,11 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None,
         "imp_user": imp_user,
         "dehydration_hooks": dehydration_hooks,
         "hydration_hooks": hydration_hooks,
+        **handlers
     }
     
-    # 过滤掉None值
-    config = {k: v for k, v in config.items() if v is not None}
+    # Add the BEGIN message to the output queue
+    self.output_queue.append(begin_message)
     
-    # 创建并返回Response对象
-    response = Response(config, **handlers)
-    return response
+    # Return a Response object
+    return Response(begin_message)

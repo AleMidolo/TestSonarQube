@@ -1,27 +1,22 @@
 def vertex3tuple(vertices):
     """
-    获取多边形每个顶点的3个点。  
-    这将包括顶点本身以及顶点两侧的两个点。  
-    如果下标超出范围，则将索引值视为0。  
-    参数：
-      vertices：需要转换的顶点列表。
-    返回值：
-      返回一个列表，其中每个元素是由顶点表示的元组。
+    प्रत्येक वर्टेक्स के लिए 3 पॉइंट्स लौटाएगा।  
+    यह वर्टेक्स और उसके दोनों ओर के 2 पॉइंट्स को शामिल करेगा।  
 
-    对于多边形的每个顶点，返回3个点。这包括顶点本身以及顶点两侧的两个点。
+    उदाहरण के लिए:  
+    यदि पॉलीगॉन के वर्टेक्स ABCD हैं, तो यह निम्नलिखित 3-ट्यूपल्स लौटाएगा:  
+    `DAB, ABC, BCD, CDA`  
+    वर्टेक्स का क्रम:
 
-    假设多边形的顶点为 `A, B, C, D`，  
-    函数将返回以下结果：  
-    `DAB, ABC, BCD, CDA` -> 返回3个点的元组。
-    # A    B    C    D  -> 顶点
+    # A    B    C    D  -> वर्टेक्स का क्रम
     """
-    result = []
     n = len(vertices)
+    result = []
     for i in range(n):
-        # 获取当前顶点及其两侧的顶点
-        prev_index = (i - 1) % n
-        next_index = (i + 1) % n
-        # 组成三元组
-        triplet = (vertices[prev_index], vertices[i], vertices[next_index])
-        result.append(triplet)
+        # Get the current vertex and its two neighbors
+        current = vertices[i]
+        prev = vertices[(i - 1) % n]
+        next_ = vertices[(i + 1) % n]
+        # Create the 3-tuple and add it to the result
+        result.append((prev, current, next_))
     return result

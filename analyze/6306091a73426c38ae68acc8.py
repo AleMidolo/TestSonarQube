@@ -1,7 +1,12 @@
 def list_of_file_names(settings_dirs, spec_option):
     """
-    通过 `cli.ListOfFileNames()` 创建并返回一个新的 `IniType` 复合类型。
-    创建一个新的 `IniType` 复合类型。
+    एक नया IniType कॉम्प्लेक्स टाइप बनाएं
     """
-    from cli import ListOfFileNames
-    return ListOfFileNames(settings_dirs, spec_option)
+    import os
+    file_names = []
+    for directory in settings_dirs:
+        if os.path.isdir(directory):
+            for file in os.listdir(directory):
+                if file.endswith(spec_option):
+                    file_names.append(os.path.join(directory, file))
+    return file_names

@@ -1,21 +1,26 @@
 def point_type(name, fields, srid_map):
     """
-    动态创建一个 Point 子类。
+    डायनामिक रूप से एक पॉइंट सबक्लास बनाएं।
 
-    :param name: 类的名称
-    :param fields: 类的字段，通常是一个字典，键是字段名，值是字段类型
-    :param srid_map: SRID 映射，通常是一个字典，键是字段名，值是 SRID
-    :return: 动态创建的 Point 子类
+    :param name: सबक्लास का नाम
+    :param fields: सबक्लास में शामिल करने के लिए फ़ील्ड्स
+    :param srid_map: SRID मैपिंग
+    :return: डायनामिक रूप से बनाई गई पॉइंट सबक्लास
     """
-    class Point:
-        def __init__(self, **kwargs):
-            for field, value in kwargs.items():
-                setattr(self, field, value)
-            self.srid = srid_map.get(name, None)
+    from django.contrib.gis.db.models import PointField
+    from django.db import models
 
-        def __repr__(self):
-            fields_str = ', '.join(f"{field}={getattr(self, field)}" for field in fields)
-            return f"{name}({fields_str}, srid={self.srid})"
+    class Meta:
+        app_label = 'dynamic_models'
 
-    Point.__name__ = name
-    return Point
+    attrs = {
+        '__module__': __name__,
+        'Meta': Meta,
+    }
+
+    for field_name, field_type in fields.items():
+        attrs[field_name] = field_type
+
+    attrs['geom'] = PointField(srid=srid_map.get(name, 4326))
+
+    return type(name, (models.Model,), attrs)

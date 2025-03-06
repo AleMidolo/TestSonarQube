@@ -1,48 +1,36 @@
 import os
+import xml.etree.ElementTree as ET
 
 def _explore_folder(folder):
     """
-    通过使用 _group_files_by_xml_filename 将给定组中的文件进行分组。
+    फ़ोल्डर से पैकेज का डेटा प्राप्त करें।  
 
-    从文件夹中获取包的数据
+    फ़ाइलों को उनके XML बेसनाम के आधार पर समूहित करता है और डेटा को डिक्शनरी (dict) प्रारूप में लौटाता है।  
 
-    根据 XML 文件的文件名对文件进行分组，并以字典格式返回数据。
+    पैरामीटर  
+    folder : str
+        पैकेज का फ़ोल्डर।  
 
-    参数
-    ----------
-    folder: `str`  
-        包所在的文件夹
-
-    返回值
-    -------
+    रिटर्न्स  
     dict
     """
-    def _group_files_by_xml_filename(files):
-        """
-        根据 XML 文件的文件名对文件进行分组。
-
-        参数
-        ----------
-        files: `list`  
-            文件列表
-
-        返回值
-        -------
-        dict
-        """
-        grouped_files = {}
+    data_dict = {}
+    
+    for root, dirs, files in os.walk(folder):
         for file in files:
             if file.endswith('.xml'):
+                file_path = os.path.join(root, file)
                 base_name = os.path.splitext(file)[0]
-                grouped_files[base_name] = []
-        for file in files:
-            base_name = os.path.splitext(file)[0]
-            if base_name in grouped_files:
-                grouped_files[base_name].append(file)
-        return grouped_files
-
-    if not os.path.isdir(folder):
-        raise ValueError(f"The provided path '{folder}' is not a valid directory.")
-
-    files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
-    return _group_files_by_xml_filename(files)
+                
+                try:
+                    tree = ET.parse(file_path)
+                    root_element = tree.getroot()
+                    
+                    if base_name not in data_dict:
+                        data_dict[base_name] = []
+                    
+                    data_dict[base_name].append(root_element)
+                except ET.ParseError as e:
+                    print(f"Error parsing {file_path}: {e}")
+    
+    return data_dict

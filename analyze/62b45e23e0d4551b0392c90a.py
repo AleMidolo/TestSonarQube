@@ -1,33 +1,25 @@
 def validate_version_inventories(self, version_dirs):
     """
-    每个版本**应当**包含截至该版本的完整清单。  
+    प्रत्येक संस्करण के पास उस बिंदु तक एक इन्वेंटरी होनी चाहिए।
 
-    同时，记录所有与根清单不同的内容摘要，以便在验证内容时能够检查这些差异。  
+    साथ ही, किसी भी सामग्री डाइजेस्ट का रिकॉर्ड रखें जो रूट इन्वेंटरी में मौजूद डाइजेस्ट से अलग हो,
+    ताकि सामग्री को सत्यापित करते समय हम उन्हें भी जांच सकें।
 
-    `version_dirs` 是一个包含版本目录名称的数组，并假定按照版本顺序排列（1, 2, 3...)。
+    version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
     """
-    root_inventory = set()  # 根清单
-    differences = {}  # 记录每个版本与根清单的差异
-
     for version_dir in version_dirs:
-        # 假设每个版本目录下有一个名为 'inventory.txt' 的文件
-        with open(f"{version_dir}/inventory.txt", 'r') as file:
-            current_inventory = set(file.read().splitlines())
+        inventory_path = os.path.join(version_dir, "inventory.json")
+        if not os.path.exists(inventory_path):
+            raise FileNotFoundError(f"Inventory not found for version: {version_dir}")
         
-        # 如果是第一个版本，将其作为根清单
-        if not root_inventory:
-            root_inventory = current_inventory
-            differences[version_dir] = "Initial version, no differences."
-            continue
+        with open(inventory_path, 'r') as f:
+            inventory = json.load(f)
         
-        # 计算当前版本与根清单的差异
-        diff = current_inventory - root_inventory
-        if diff:
-            differences[version_dir] = f"Added items: {diff}"
-        else:
-            differences[version_dir] = "No differences from root inventory."
+        # Check for discrepancies in content digests
+        root_inventory_path = os.path.join(version_dirs[0], "inventory.json")
+        with open(root_inventory_path, 'r') as f:
+            root_inventory = json.load(f)
         
-        # 更新根清单为当前版本的清单
-        root_inventory = current_inventory
-    
-    return differences
+        for content_id, digest in inventory.items():
+            if content_id in root_inventory and root_inventory[content_id] != digest:
+                print(f"Content digest mismatch for {content_id} in version {version_dir}")

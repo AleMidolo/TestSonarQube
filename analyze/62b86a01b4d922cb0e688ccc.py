@@ -1,51 +1,34 @@
 def generate_default_observer_schema_dict(manifest_dict, first_level=False):
     """
-    根据 `manifest_dict` 文件中的值类型（例如字典和列表），生成新字典中不同键对应的值。然后返回新的字典。
+    यह फ़ंक्शन :func:``generate_default_observer_schema_list`` के साथ मिलकर पुनरावृत्त रूप से (recursively) कॉल किया जाता है ताकि किसी Kubernetes संसाधन (resource) के एक भाग से डिफ़ॉल्ट ``observer_schema`` का हिस्सा उत्पन्न किया जा सके, जिसे क्रमशः ``manifest_dict`` या ``manifest_list`` द्वारा परिभाषित किया गया है।
 
-    与函数 :func:``generate_default_observer_schema_list`` 一起，该函数被递归调用，用于从部分 Kubernetes 资源中生成默认的 `observer_schema` 的一部分，这些资源分别由 `manifest_dict` 或 `manifest_list` 定义。
+    आर्ग्युमेंट्स (Args):
+    - manifest_dict (dict): आंशिक Kubernetes संसाधन (Partial Kubernetes resources)।
+    - first_level (bool, optional): यदि True है, तो यह इंगित करता है कि डिक्शनरी Kubernetes संसाधन के पूरे observer schema का प्रतिनिधित्व करती है।
 
-    参数:
-      manifest_dict (dict): 部分 Kubernetes 资源。
-      first_level (bool, 可选): 如果为真，表示该字典代表 Kubernetes 资源的完整 `observer_schema`。
+    रिटर्न्स (Returns):
+    - dict: उत्पन्न आंशिक observer_schema (Generated partial observer_schema)।
 
-    返回值:
-      dict: 生成的部分 `observer_schema`。
+    यह फ़ंक्शन ``manifest_dict`` से एक नई डिक्शनरी बनाता है और सभी non-list और non-dict मानों को ``None`` से बदल देता है।
 
-    该函数从 `manifest_dict` 创建一个新字典，并将所有非列表和非字典的值替换为 `None`。
-
-    如果是 `first_level` 字典（比如资源的完整 `observer_schema`），则标识字段的值会从 manifest 文件中复制。
+    यदि यह ``first_level`` डिक्शनरी है (यानी किसी संसाधन के लिए पूरा ``observer_schema``), तो पहचानने वाले फ़ील्ड्स (identifying fields) के मान ``manifest`` फ़ाइल से कॉपी किए जाते हैं।
     """
-    schema_dict = {}
+    observer_schema = {}
+    
     for key, value in manifest_dict.items():
         if isinstance(value, dict):
-            schema_dict[key] = generate_default_observer_schema_dict(value)
+            observer_schema[key] = generate_default_observer_schema_dict(value)
         elif isinstance(value, list):
-            schema_dict[key] = generate_default_observer_schema_list(value)
+            observer_schema[key] = []
+            for item in value:
+                if isinstance(item, dict):
+                    observer_schema[key].append(generate_default_observer_schema_dict(item))
+                else:
+                    observer_schema[key].append(None)
         else:
             if first_level and key in ['apiVersion', 'kind', 'metadata']:
-                schema_dict[key] = value
+                observer_schema[key] = value
             else:
-                schema_dict[key] = None
-    return schema_dict
-
-def generate_default_observer_schema_list(manifest_list):
-    """
-    根据 `manifest_list` 文件中的值类型（例如字典和列表），生成新列表中不同元素对应的值。然后返回新的列表。
-
-    参数:
-      manifest_list (list): 部分 Kubernetes 资源。
-
-    返回值:
-      list: 生成的部分 `observer_schema`。
-
-    该函数从 `manifest_list` 创建一个新列表，并将所有非列表和非字典的值替换为 `None`。
-    """
-    schema_list = []
-    for item in manifest_list:
-        if isinstance(item, dict):
-            schema_list.append(generate_default_observer_schema_dict(item))
-        elif isinstance(item, list):
-            schema_list.append(generate_default_observer_schema_list(item))
-        else:
-            schema_list.append(None)
-    return schema_list
+                observer_schema[key] = None
+    
+    return observer_schema

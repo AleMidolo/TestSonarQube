@@ -1,34 +1,21 @@
 def _convert_non_cli_args(self, parser_name, values_dict):
     """
-    通过修改 values_dict 参数将参数转换为正确的类型。
+    तर्कों को सही प्रकारों में परिवर्तित करता है और values_dict पैरामीटर को संशोधित करता है।
 
-    默认情况下，所有的值都是字符串。
+    डिफ़ॉल्ट रूप से, सभी मान स्ट्रिंग्स के रूप में होते हैं।
 
-    :param parser_name: 命令名称，例如 main、virsh、ospd 等
-    :param values_dict: 包含参数的字典
+    :param parser_name: कमांड का नाम, जैसे main, virsh, ospd, आदि।
+    :param values_dict: तर्कों के साथ डिक्शनरी।
     """
-    if parser_name == 'main':
-        if 'port' in values_dict:
-            values_dict['port'] = int(values_dict['port'])
-        if 'timeout' in values_dict:
-            values_dict['timeout'] = float(values_dict['timeout'])
-        if 'verbose' in values_dict:
-            values_dict['verbose'] = values_dict['verbose'].lower() == 'true'
-    
-    elif parser_name == 'virsh':
-        if 'memory' in values_dict:
-            values_dict['memory'] = int(values_dict['memory'])
-        if 'cpu' in values_dict:
-            values_dict['cpu'] = int(values_dict['cpu'])
-        if 'autostart' in values_dict:
-            values_dict['autostart'] = values_dict['autostart'].lower() == 'true'
-    
-    elif parser_name == 'ospd':
-        if 'interval' in values_dict:
-            values_dict['interval'] = float(values_dict['interval'])
-        if 'retries' in values_dict:
-            values_dict['retries'] = int(values_dict['retries'])
-        if 'debug' in values_dict:
-            values_dict['debug'] = values_dict['debug'].lower() == 'true'
-    
-    # 可以根据需要添加更多的 parser_name 和对应的转换逻辑
+    for key, value in values_dict.items():
+        if isinstance(value, str):
+            if value.lower() == 'true':
+                values_dict[key] = True
+            elif value.lower() == 'false':
+                values_dict[key] = False
+            elif value.isdigit():
+                values_dict[key] = int(value)
+            elif value.replace('.', '', 1).isdigit():
+                values_dict[key] = float(value)
+            elif value.lower() == 'none':
+                values_dict[key] = None

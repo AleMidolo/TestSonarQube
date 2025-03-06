@@ -1,11 +1,8 @@
 def setdefault(self, key, default=None):
     """
-    如果类中存在指定的键（key），则返回该键对应的值。否则，将该键的值设置为默认值
-    `D.setdefault(k[, d]) -> D.get(k, d)`  
-    如果键 `k` 不在字典 `D` 中，则将 `D[k]` 设置为 `d`（默认值）。
+    D.setdefault(k[, d]) -> D.get(k, d)
+    साथ ही, यदि `k` (कुंजी) `D` (डिक्शनरी) में मौजूद नहीं है, तो `D[k] = d` सेट कर दिया जाता है।
     """
-    if key in self:
-        return self[key]
-    else:
+    if key not in self:
         self[key] = default
-        return default
+    return self.get(key, default)
