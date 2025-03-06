@@ -22,13 +22,14 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     if default is not None and not isinstance(default, datetime):
         raise TypeError("Default must be a datetime object or None.")
     
-    if tzinfos is not None and not (isinstance(tzinfos, dict) or callable(tzinfos)):
+    if tzinfos is not None and not (isinstance(tzinfos, dict) and not callable(tzinfos):
         raise TypeError("tzinfos must be a dictionary or a callable.")
     
     try:
-        parsed = parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
-        return parsed
+        dt = parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
     except parser.ParserError as e:
         raise parser.ParserError(f"Invalid or unknown string format: {e}")
     except OverflowError as e:
         raise OverflowError(f"Parsed date exceeds the largest valid C integer on the system: {e}")
+    
+    return dt

@@ -1,5 +1,3 @@
-import os
-
 def was_processed(processed, path_name, verbose):
     """
     检查文件或目录是否已被处理。
@@ -14,10 +12,11 @@ def was_processed(processed, path_name, verbose):
     返回值：
       如果路径已在集合中，则返回真。否则返回假。
     """
+    import os
     abs_path = os.path.abspath(path_name)
     if abs_path in processed:
         if verbose:
-            print(f"路径 {abs_path} 已被处理过。")
+            print(f"Path {abs_path} has already been processed.")
         return True
     else:
         processed.add(abs_path)

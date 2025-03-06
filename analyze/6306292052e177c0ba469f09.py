@@ -1,9 +1,5 @@
-from typing import Dict, Any
 import json
 import xml.etree.ElementTree as ET
-
-RequestType = Dict[str, Any]
-Magic_ENV_TAG = "Magic_ENV_TAG"
 
 def identify_request(request: RequestType) -> bool:
     """
@@ -13,21 +9,21 @@ def identify_request(request: RequestType) -> bool:
 
     首先尝试检查是否为公共消息，然后检查是否为私有消息。最后检查这是否是旧式（Legacy）负载。
     """
-    # 检查是否为 JSON 格式并包含事件
     try:
-        if isinstance(request, dict) and 'event' in request:
+        # 尝试解析为 JSON
+        data = json.loads(request.body)
+        if 'event' in data:
             return True
-    except:
+    except json.JSONDecodeError:
         pass
 
-    # 检查是否为 XML 格式并包含 Magic_ENV_TAG
     try:
-        if isinstance(request, str):
-            root = ET.fromstring(request)
-            if root.tag == Magic_ENV_TAG:
-                return True
-    except:
+        # 尝试解析为 XML
+        root = ET.fromstring(request.body)
+        if root.tag == 'Magic_ENV_TAG':
+            return True
+    except ET.ParseError:
         pass
 
-    # 如果上述条件均不满足，则返回假
+    # 如果以上条件都不满足，返回 False
     return False

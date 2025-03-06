@@ -18,6 +18,6 @@ def get_nested_custom_and_control_args(self, args):
         elif key.startswith('nested_'):
             nested_args[key] = value
         else:
-            nested_args[key] = value
+            nested_args[key] = value  # 自定义参数也归为嵌套参数
     
     return control_args, nested_args

@@ -19,5 +19,4 @@ def parse_diaspora_webfinger(document: str) -> Dict:
         return {}
     except json.JSONDecodeError:
         # Handle XRD format if necessary
-        # For simplicity, this example only handles JSON format
         return {}

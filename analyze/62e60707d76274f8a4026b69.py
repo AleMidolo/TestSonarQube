@@ -2,19 +2,16 @@ def point_type(name, fields, srid_map):
     """
     动态创建一个 Point 子类。
 
-    Args:
-        name (str): 新类的名称。
-        fields (dict): 类的字段及其类型。
-        srid_map (dict): SRID 映射，用于指定不同坐标系的 SRID 值。
-
-    Returns:
-        type: 动态创建的 Point 子类。
+    :param name: 类的名称
+    :param fields: 类的字段，通常是一个字典，键是字段名，值是字段类型
+    :param srid_map: SRID 映射，通常是一个字典，键是字段名，值是 SRID
+    :return: 动态创建的 Point 子类
     """
     class Point:
         def __init__(self, **kwargs):
-            for field, field_type in fields.items():
-                setattr(self, field, kwargs.get(field, None))
-            self.srid = srid_map.get(kwargs.get('srid', None), None)
+            for field, value in kwargs.items():
+                setattr(self, field, value)
+            self.srid = srid_map.get(name, None)
 
         def __repr__(self):
             fields_str = ', '.join(f"{field}={getattr(self, field)}" for field in fields)

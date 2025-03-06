@@ -1,5 +1,6 @@
 import re
 import sys
+import shlex
 
 def split(s, platform='this'):
     """
@@ -13,17 +14,23 @@ def split(s, platform='this'):
         `'this'`：根据当前平台自动检测；`1`：使用 POSIX 风格；`0`：使用 Windows/CMD 风格。  
     返回值：
       一个拆分后的字符串列表。
+    这是一个用于多平台的 `shlex.split()` 变体，用于命令行字符串的拆分。  
+    适用于 `subprocess` 模块，用于 `argv` 参数注入等场景。  
+    该方法使用快速的正则表达式（REGEX）实现。
+
+    platform：
+      `'this'`：根据当前平台自动检测；  
+      `1`：POSIX 风格；  
+     `0`：Windows/CMD 风格；  
+      （其他值保留）。  
     """
     if platform == 'this':
         platform = 1 if sys.platform != 'win32' else 0
     
     if platform == 1:
-        # POSIX style
-        pattern = re.compile(r"""((?:[^\s"']|"[^"]*"|'[^']*')+)""")
+        return shlex.split(s, posix=True)
     elif platform == 0:
-        # Windows/CMD style
-        pattern = re.compile(r"""((?:[^\s"]|"[^"]*")+)""")
+        return shlex.split(s, posix=False)
     else:
-        raise ValueError("Invalid platform value. Use 'this', 1 (POSIX), or 0 (Windows/CMD).")
-    
-    return pattern.findall(s)
+        # 对于其他值，保留原样处理
+        return re.findall(r'(?:[^\s"]+|"[^"]*")+', s)

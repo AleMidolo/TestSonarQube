@@ -9,16 +9,21 @@ def fromutc(self, dt):
     if dt.tzinfo is not self:
         raise ValueError("fromutc: dt.tzinfo is not self")
     
-    # Convert dt to UTC
-    dt = dt.replace(tzinfo=None)
-    dt = dt - self.utcoffset(dt)
+    # Convert the datetime to naive (without timezone)
+    naive_dt = dt.replace(tzinfo=None)
     
-    # Convert to local time
-    dt = dt + self.utcoffset(dt)
+    # Get the offset from UTC
+    offset = self.utcoffset(naive_dt)
     
-    # Check for ambiguity
-    if self.is_ambiguous(dt):
-        # If ambiguous, return the first occurrence
-        dt = self._fold_first(dt)
+    # Apply the offset to get the local time
+    local_dt = naive_dt + offset
     
-    return dt.replace(tzinfo=self)
+    # Check if the local time is ambiguous
+    if self.is_ambiguous(local_dt):
+        # If ambiguous, check if it's in the fold
+        if self.is_folded(local_dt):
+            # If folded, adjust the time accordingly
+            local_dt = local_dt.replace(fold=1)
+    
+    # Attach the timezone info to the local datetime
+    return local_dt.replace(tzinfo=self)

@@ -32,4 +32,4 @@ def scale(self, other=None):
                 self.x_err *= other / self._scale
         self._scale = other
     else:
-        raise TypeError("Scale must be a numeric value or None.")
+        raise TypeError("Invalid type for scaling factor.")

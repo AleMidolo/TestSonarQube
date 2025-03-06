@@ -9,8 +9,8 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     :param cwd: 执行命令的工作目录。如果为None，则使用当前工作目录。
     :param verbose: 是否打印命令执行的详细信息。
     :param hide_stderr: 是否隐藏标准错误输出。
-    :param env: 环境变量字典。如果为None，则使用当前环境变量。
-    :return: 命令的返回码。
+    :param env: 环境变量字典。如果为None，则使用当前环境。
+    :return: 命令执行的返回码。
     """
     full_command = commands + args
     stderr = subprocess.DEVNULL if hide_stderr else None
@@ -19,24 +19,19 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
         print(f"Running command: {' '.join(full_command)}")
         if cwd:
             print(f"Working directory: {cwd}")
+        if env:
+            print(f"Environment: {env}")
     
-    process = subprocess.Popen(
+    result = subprocess.run(
         full_command,
         cwd=cwd,
         env=env,
-        stdout=subprocess.PIPE,
         stderr=stderr,
+        stdout=subprocess.PIPE if verbose else subprocess.DEVNULL,
         text=True
     )
     
-    stdout, stderr = process.communicate()
-    
     if verbose:
-        if stdout:
-            print("Standard Output:")
-            print(stdout)
-        if stderr and not hide_stderr:
-            print("Standard Error:")
-            print(stderr)
+        print(f"Command output:\n{result.stdout}")
     
-    return process.returncode
+    return result.returncode

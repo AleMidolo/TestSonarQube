@@ -5,5 +5,4 @@ def _reset_logging(cls):
     import logging
     logging.shutdown()
     logging.root.handlers = []
-    logging.root.setLevel(logging.NOTSET)
-    logging.basicConfig(level=logging.NOTSET)
+    logging.basicConfig()

@@ -13,6 +13,10 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None,
     :param handlers: 传递给返回的Response对象的处理函数
     :return: Response 对象
     """
+    # 设置默认模式为 "WRITE"
+    if mode is None:
+        mode = "WRITE"
+    
     # 初始化事务配置
     config = {
         "mode": mode,
@@ -28,8 +32,6 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None,
     # 过滤掉None值
     config = {k: v for k, v in config.items() if v is not None}
     
-    # 合并handlers
-    config.update(handlers)
-    
     # 创建并返回Response对象
-    return Response(config)
+    response = Response(config, **handlers)
+    return response

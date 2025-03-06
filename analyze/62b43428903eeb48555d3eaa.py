@@ -2,7 +2,7 @@ def formatmany(
         self,
         sql: AnyStr,
         many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
-) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
+) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]:
     """
     将 SQL 使用 `self._converter.convert_many` 转换
 
@@ -22,10 +22,10 @@ def formatmany(
     """
     formatted_sql = sql
     formatted_params = []
-    
+
     for params in many_params:
         converted_sql, converted_params = self._converter.convert_many(sql, params)
         formatted_sql = converted_sql
         formatted_params.append(converted_params)
-    
+
     return formatted_sql, formatted_params

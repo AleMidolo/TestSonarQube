@@ -1,7 +1,7 @@
 import logging
 import os
 import json
-from typing import Dict, List, Tuple, Optional, Union
+from typing import Dict, List, Tuple, Optional
 
 def load_configurations(config_filenames: List[str], overrides: Optional[Dict] = None, resolve_env: bool = True) -> Tuple[Dict[str, Dict], List[logging.LogRecord]]:
     """
@@ -9,28 +9,30 @@ def load_configurations(config_filenames: List[str], overrides: Optional[Dict] =
     """
     configs = {}
     errors = []
-    logger = logging.getLogger(__name__)
-
+    
     for filename in config_filenames:
         try:
             with open(filename, 'r') as file:
                 config = json.load(file)
                 
+                # Apply overrides if provided
+                if overrides:
+                    for key, value in overrides.items():
+                        if key in config:
+                            config[key] = value
+                
+                # Resolve environment variables if enabled
                 if resolve_env:
                     for key, value in config.items():
                         if isinstance(value, str) and value.startswith('$'):
                             env_var = value[1:]
                             config[key] = os.getenv(env_var, value)
                 
-                if overrides:
-                    for key, value in overrides.items():
-                        if key in config:
-                            config[key] = value
-                
                 configs[filename] = config
+                
         except PermissionError:
             error_msg = f"Permission denied when trying to read {filename}"
-            logger.error(error_msg)
+            logging.error(error_msg)
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
@@ -42,7 +44,7 @@ def load_configurations(config_filenames: List[str], overrides: Optional[Dict] =
             ))
         except json.JSONDecodeError:
             error_msg = f"Failed to parse JSON in {filename}"
-            logger.error(error_msg)
+            logging.error(error_msg)
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
@@ -54,7 +56,7 @@ def load_configurations(config_filenames: List[str], overrides: Optional[Dict] =
             ))
         except Exception as e:
             error_msg = f"Unexpected error while processing {filename}: {str(e)}"
-            logger.error(error_msg)
+            logging.error(error_msg)
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
@@ -64,5 +66,5 @@ def load_configurations(config_filenames: List[str], overrides: Optional[Dict] =
                 args=None,
                 exc_info=None
             ))
-
+    
     return configs, errors

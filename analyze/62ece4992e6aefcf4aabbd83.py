@@ -8,10 +8,6 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     """
     command = commands + args
     stderr = subprocess.PIPE if hide_stderr else None
-    
-    if verbose:
-        print(f"Running command: {' '.join(command)}")
-    
     process = subprocess.Popen(
         command,
         cwd=cwd,
@@ -20,10 +16,15 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
         env=env,
         text=True
     )
-    
     stdout, stderr = process.communicate()
+    return_code = process.returncode
     
-    if verbose and stderr:
-        print(f"Error output: {stderr}")
+    if verbose:
+        print(f"Command: {' '.join(command)}")
+        print(f"Return Code: {return_code}")
+        if stdout:
+            print(f"Standard Output:\n{stdout}")
+        if stderr and not hide_stderr:
+            print(f"Standard Error:\n{stderr}")
     
-    return stdout, process.returncode
+    return stdout, return_code
