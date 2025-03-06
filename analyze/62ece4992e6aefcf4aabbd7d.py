@@ -4,40 +4,23 @@ import os
 import pickle
 
 def subprocess_run_helper(func, *args, timeout, extra_env=None):
-    """
-    Run a function in a sub-process.
-
-    Parameters
-    ----------
-    func : function
-        The function to be run.  It must be in a module that is importable.
-    *args : str
-        Any additional command line arguments to be passed in
-        the first argument to ``subprocess.run``.
-    extra_env : dict[str, str]
-        Any additional environment variables to be set for the subprocess.
-    """
     # Serialize the function and its arguments
     func_data = pickle.dumps((func, args))
     
-    # Create a new environment dictionary
+    # Create a new environment for the subprocess
     env = os.environ.copy()
     if extra_env is not None:
         env.update(extra_env)
     
-    # Run the function in a subprocess
+    # Run the subprocess
     result = subprocess.run(
         [sys.executable, "-c", 
-         f"import pickle, sys; func, args = pickle.loads(sys.stdin.buffer.read()); func(*args)"],
-        input=func_data,
+         f"import pickle; func, args = pickle.loads({func_data}); func(*args)"],
         env=env,
         timeout=timeout,
         capture_output=True,
         text=True
     )
     
-    # Check if the subprocess completed successfully
-    if result.returncode != 0:
-        raise RuntimeError(f"Subprocess failed with return code {result.returncode}: {result.stderr}")
-    
-    return result.stdout
+    # Return the result
+    return result

@@ -5,7 +5,7 @@ def parse_arguments(*unparsed_arguments):
     Given command-line arguments with which this script was invoked, parse the arguments and return
     them as a dict mapping from subparser name (or "global") to an argparse.Namespace instance.
     """
-    parser = argparse.ArgumentParser(description="Main parser")
+    parser = argparse.ArgumentParser(description="Parse command-line arguments.")
     subparsers = parser.add_subparsers(dest="subparser_name", help="Sub-command help")
 
     # Example subparser for 'command1'
