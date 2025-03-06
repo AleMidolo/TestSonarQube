@@ -39,7 +39,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
         if not iface.providedBy(candidate):
             errors.append(f"{candidate} does not claim to provide {iface}")
 
-    # Step 2: Verify the object or class against the interface
+    # Step 2: Verify that the candidate defines all necessary methods and attributes
     try:
         if vtype == 'class':
             verifyClass(iface, candidate)

@@ -1,6 +1,6 @@
 import json
-from typing import Dict
 from xml.etree import ElementTree as ET
+from typing import Dict
 
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
@@ -16,9 +16,9 @@ def parse_diaspora_webfinger(document: str) -> Dict:
         # If JSON parsing fails, try to parse as XML (XRD)
         try:
             root = ET.fromstring(document)
-            namespaces = {'XRD': 'http://docs.oasis-open.org/ns/xri/xrd-1.0'}
+            namespaces = {'xrd': 'http://docs.oasis-open.org/ns/xri/xrd-1.0'}
             result = {}
-            for link in root.findall('XRD:Link', namespaces):
+            for link in root.findall('xrd:Link', namespaces):
                 rel = link.get('rel')
                 href = link.get('href')
                 if rel and href:

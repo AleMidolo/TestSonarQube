@@ -6,7 +6,7 @@ def minimalBases(classes):
         classes (list): A list of base classes.
     
     Returns:
-        list: A list of base classes reduced to its ordered minimum equivalent.
+        list: A list of base classes that is the minimal equivalent of the input list.
     """
     if not classes:
         return []

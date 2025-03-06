@@ -24,10 +24,11 @@ def data(self, *keys):
         for key in keys:
             if isinstance(key, int):
                 # Handle index-based access
-                if key < 0 or key >= len(self._values):
+                if key < 0 or key >= len(self._fields):
                     raise IndexError(f"Index {key} is out of bounds.")
                 field = self._fields[key]
-                result[field] = self._values[key]
+                value = self._values[key]
+                result[field] = value
             else:
                 # Handle key-based access
                 if key in self._fields:

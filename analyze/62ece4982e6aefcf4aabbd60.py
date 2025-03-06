@@ -10,12 +10,12 @@ def size_to_bytes(size: str) -> int:
     Returns:
         A decimal representation of file size
 
-    Examples::
+        Examples::
 
-        >>> size_to_bytes("500")
-        500
-        >>> size_to_bytes("1K")
-        1000
+            >>> size_to_bytes("500")
+            500
+            >>> size_to_bytes("1K")
+            1000
     """
     size = size.strip().upper()
     if size[-1] == 'K':

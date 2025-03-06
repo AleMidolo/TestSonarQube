@@ -4,7 +4,13 @@ def dehydrate_point(value):
 
     :param value: The Point object to dehydrate.
     :type value: Point
-    :return: A tuple representing the dehydrated Point (x, y).
-    :rtype: tuple
+    :return: A dictionary representation of the Point object.
+    :rtype: dict
     """
-    return (value.x, value.y)
+    if not hasattr(value, 'x') or not hasattr(value, 'y'):
+        raise ValueError("The provided value does not have 'x' and 'y' attributes.")
+    
+    return {
+        'x': value.x,
+        'y': value.y
+    }

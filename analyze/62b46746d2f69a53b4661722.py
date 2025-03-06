@@ -16,25 +16,29 @@ def absorb(self, args):
     def apply_absorption(expr):
         if isinstance(expr, tuple):
             if expr[0] == '&':
-                a, b = expr[1], expr[2]
-                if isinstance(b, tuple) and b[0] == '|':
-                    if a == b[1]:
-                        return a
-                    elif a == ('~', b[1]):
-                        return ('&', a, b[2])
-                elif isinstance(b, tuple) and b[0] == '&':
-                    if a == b[1]:
-                        return a
+                left, right = expr[1], expr[2]
+                if isinstance(right, tuple) and right[0] == '|':
+                    if left == right[1]:
+                        return left
+                    elif left == ('~', right[1]):
+                        return ('&', left, right[2])
+                elif isinstance(left, tuple) and left[0] == '|':
+                    if right == left[1]:
+                        return right
+                    elif right == ('~', left[1]):
+                        return ('&', right, left[2])
             elif expr[0] == '|':
-                a, b = expr[1], expr[2]
-                if isinstance(b, tuple) and b[0] == '&':
-                    if a == b[1]:
-                        return a
-                    elif a == ('~', b[1]):
-                        return ('|', a, b[2])
-                elif isinstance(b, tuple) and b[0] == '|':
-                    if a == b[1]:
-                        return a
+                left, right = expr[1], expr[2]
+                if isinstance(right, tuple) and right[0] == '&':
+                    if left == right[1]:
+                        return left
+                    elif left == ('~', right[1]):
+                        return ('|', left, right[2])
+                elif isinstance(left, tuple) and left[0] == '&':
+                    if right == left[1]:
+                        return right
+                    elif right == ('~', left[1]):
+                        return ('|', right, left[2])
         return expr
 
     return [apply_absorption(arg) for arg in args]

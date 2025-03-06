@@ -19,15 +19,15 @@ def difference(d1, d2, level=-1):
         return {}
 
     diff = {}
-    for key, value in d1.items():
+    for key in d1:
         if key not in d2:
-            diff[key] = value
-        elif isinstance(value, dict) and isinstance(d2[key], dict):
+            diff[key] = d1[key]
+        elif isinstance(d1[key], dict) and isinstance(d2[key], dict):
             if level != 1:
-                sub_diff = difference(value, d2[key], level - 1 if level != -1 else -1)
+                sub_diff = difference(d1[key], d2[key], level - 1 if level != -1 else -1)
                 if sub_diff:
                     diff[key] = sub_diff
-        elif value != d2[key]:
-            diff[key] = value
+        elif d1[key] != d2[key]:
+            diff[key] = d1[key]
 
     return diff

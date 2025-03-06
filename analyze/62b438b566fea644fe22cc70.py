@@ -6,30 +6,35 @@ def bash_completion():
     Return a bash completion script for the borgmatic command. Produce this by introspecting
     borgmatic's command-line argument parsers.
     """
-    parser = argparse.ArgumentParser(description='borgmatic command-line interface')
-    parser.add_argument('--version', action='store_true', help='Show the version and exit.')
-    parser.add_argument('--config', help='Path to the configuration file.')
-    parser.add_argument('--verbosity', type=int, choices=[0, 1, 2], help='Set verbosity level (0, 1, or 2).')
-    parser.add_argument('--list', action='store_true', help='List all available commands.')
-    parser.add_argument('--help', action='store_true', help='Show this help message and exit.')
+    parser = argparse.ArgumentParser(description='Generate bash completion script for borgmatic.')
+    parser.add_argument('--command', help='The command to generate completion for', default='borgmatic')
+    parser.add_argument('--output', help='Output file for the completion script', default='/etc/bash_completion.d/borgmatic')
 
-    # Generate bash completion script
-    script = """
-_borgmatic_completion() {
-    local cur prev words cword
-    _init_completion || return
+    args = parser.parse_args()
 
-    if [[ ${cur} == -* ]]; then
-        COMPREPLY=($(compgen -W "$(_parse_help $1)" -- ${cur}))
+    completion_script = f"""
+# bash completion for {args.command}
+_{args.command}() {{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${{COMP_WORDS[COMP_CWORD]}}"
+    prev="${{COMP_WORDS[COMP_CWORD-1]}}"
+    opts="$( {args.command} --help | grep -oP '^\\s+\\K[^\\s]+' )"
+
+    if [[ ${{cur}} == -* ]]; then
+        COMPREPLY=( $(compgen -W "${{opts}}" -- ${{cur}}) )
     else
-        COMPREPLY=($(compgen -f -- ${cur}))
+        COMPREPLY=( $(compgen -f ${{cur}}) )
     fi
-}
+}}
 
-complete -F _borgmatic_completion borgmatic
+complete -F _{args.command} {args.command}
 """
 
-    return script
+    with open(args.output, 'w') as f:
+        f.write(completion_script)
 
-# Example usage:
-# print(bash_completion())
+    print(f"Bash completion script for {args.command} has been written to {args.output}")
+
+if __name__ == "__main__":
+    bash_completion()

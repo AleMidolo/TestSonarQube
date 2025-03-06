@@ -9,15 +9,9 @@ def get_option_spec(self, command_name, argument_name):
     Returns:
         dict: The specification for the specified option name.
     """
-    if not hasattr(self, '_command_specs'):
-        return None
-    
-    command_spec = self._command_specs.get(command_name)
-    if not command_spec:
-        return None
-    
-    for option_spec in command_spec.get('options', []):
-        if option_spec.get('name') == argument_name:
-            return option_spec
-    
+    # Assuming self.options is a dictionary where keys are command names
+    # and values are dictionaries of argument specifications
+    if command_name in self.options:
+        if argument_name in self.options[command_name]:
+            return self.options[command_name][argument_name]
     return None

@@ -3,7 +3,7 @@ def names(self, all=False):  # pylint:disable=redefined-builtin
     
     Args:
         all (bool): If True, return all attribute names, including private ones.
-                     If False, return only public attribute names.
+                   If False, return only public attribute names.
     
     Returns:
         list: A list of attribute names.
