@@ -31,6 +31,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     Devuelve el gráfico resultante.
     """
     import numpy as np
+    from collections import namedtuple
 
     if make_value is None:
         make_value = lambda bin_: bin_
@@ -53,13 +54,15 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     values = [make_value(bin_) for bin_ in bins]
 
     if isinstance(values[0], (tuple, list, np.ndarray)):
-        data = np.column_stack([x_coords] + [np.array([v[i] for v in values]) for i in range(len(values[0]))])
+        num_fields = len(values[0])
+        if len(field_names) != num_fields + 1:
+            raise ValueError("El número de field_names debe coincidir con la dimensión del resultado de make_value más 1")
+        Graph = namedtuple('Graph', field_names)
+        graph_data = [Graph(x, *value) for x, value in zip(x_coords, values)]
     else:
-        data = np.column_stack([x_coords, values])
+        if len(field_names) != 2:
+            raise ValueError("El número de field_names debe ser 2 para valores escalares")
+        Graph = namedtuple('Graph', field_names)
+        graph_data = [Graph(x, value) for x, value in zip(x_coords, values)]
 
-    graph = type('Graph', (), {})()
-    graph.data = data
-    graph.field_names = field_names
-    graph.scale = scale
-
-    return graph
+    return graph_data

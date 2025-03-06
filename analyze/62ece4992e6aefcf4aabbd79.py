@@ -18,6 +18,6 @@ def make_find_paths(find_paths):
             # Si el path ya tiene un prefijo (como 'pp:'), lo dejamos sin modificar
             transformed_paths.append(path)
         else:
-            # Transformamos el fragmento de ruta en un patrón glob
+            # Si no tiene prefijo, lo transformamos en un patrón glob
             transformed_paths.append(f'sh:**/*{path}*/**')
     return transformed_paths

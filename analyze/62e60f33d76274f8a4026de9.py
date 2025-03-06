@@ -2,8 +2,8 @@ def dehydrate_point(value):
     """
     Deshidratador para datos de tipo `Point`.
 
-    :param value: 
+    :param value: Un objeto de tipo `Point`.
     :type value: Point
-    :return: Diccionario con las coordenadas x e y del punto.
+    :return: Una tupla con las coordenadas (x, y) del punto.
     """
-    return {'x': value.x, 'y': value.y}
+    return (value.x, value.y)
