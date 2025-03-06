@@ -1,16 +1,12 @@
 def render(pieces, style):
     """
     Renderiza las piezas de versión dadas en el estilo solicitado.
-    
-    :param pieces: Lista de piezas de versión.
-    :param style: Estilo de renderizado.
-    :return: Versión renderizada como cadena.
     """
     if style == "full":
-        return ".".join(map(str, pieces))
+        return f"{pieces['major']}.{pieces['minor']}.{pieces['patch']}"
     elif style == "short":
-        return ".".join(map(str, pieces[:2]))
-    elif style == "compact":
-        return "".join(map(str, pieces))
+        return f"{pieces['major']}.{pieces['minor']}"
+    elif style == "patch":
+        return f"{pieces['patch']}"
     else:
         raise ValueError(f"Estilo no soportado: {style}")

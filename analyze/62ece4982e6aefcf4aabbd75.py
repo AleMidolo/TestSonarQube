@@ -14,5 +14,5 @@ def addignored(ignored):
     # Ordenar la lista de archivos ignorados
     filtered_files.sort()
     
-    # Devolver los archivos como una cadena separada por comas
+    # Convertir la lista en una cadena separada por comas
     return ', '.join(filtered_files)

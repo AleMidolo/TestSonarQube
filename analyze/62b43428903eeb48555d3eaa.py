@@ -23,14 +23,14 @@ def formatmany(
 
     for params in many_params:
         if isinstance(params, dict):
-            # Convertir parámetros nombrados
+            # Convertir parámetros nombrados de estilo "in" a estilo "out"
             out_params = {k: f":{k}" for k in params.keys()}
+            formatted_params.append(out_params)
         elif isinstance(params, (list, tuple)):
-            # Convertir parámetros ordinales
+            # Convertir parámetros ordinales de estilo "in" a estilo "out"
             out_params = [f":{i}" for i in range(len(params))]
+            formatted_params.append(out_params)
         else:
             raise TypeError("Los parámetros deben ser un diccionario o una secuencia.")
-
-        formatted_params.append(out_params)
 
     return formatted_sql, formatted_params

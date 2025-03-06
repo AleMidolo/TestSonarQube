@@ -20,8 +20,8 @@ def _convert_non_cli_args(self, parser_name, values_dict):
             values_dict["memory"] = int(values_dict["memory"])
         if "cpu" in values_dict:
             values_dict["cpu"] = int(values_dict["cpu"])
-        if "active" in values_dict:
-            values_dict["active"] = values_dict["active"].lower() == "true"
+        if "autostart" in values_dict:
+            values_dict["autostart"] = values_dict["autostart"].lower() == "true"
     
     elif parser_name == "ospd":
         if "threads" in values_dict:
@@ -29,6 +29,6 @@ def _convert_non_cli_args(self, parser_name, values_dict):
         if "debug" in values_dict:
             values_dict["debug"] = values_dict["debug"].lower() == "true"
     
-    # Puedes agregar más conversiones para otros comandos aquí.
+    # Add more parser-specific conversions as needed
     
     return values_dict

@@ -1,6 +1,9 @@
 def protocol_handlers(cls, protocol_version=None):
     """
-    Devuelve un diccionario de los manejadores disponibles del protocolo Bolt, indexados por una tupla de versión. Si se proporciona una versión de protocolo explícita, el diccionario contendrá cero o un elemento, dependiendo de si esa versión es soportada. Si no se proporciona ninguna versión de protocolo, se devolverán todas las versiones disponibles.
+    Devuelve un diccionario de los manejadores disponibles del protocolo Bolt, indexados por una tupla de versión. 
+    Si se proporciona una versión de protocolo explícita, el diccionario contendrá cero o un elemento, dependiendo 
+    de si esa versión es soportada. Si no se proporciona ninguna versión de protocolo, se devolverán todas las 
+    versiones disponibles.
 
     :param protocol_version: tupla que identifica una versión específica del protocolo 
         (por ejemplo, (3, 5)) o None

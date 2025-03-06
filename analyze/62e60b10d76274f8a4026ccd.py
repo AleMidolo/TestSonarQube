@@ -6,8 +6,7 @@ def data(self, *keys):
     :return: diccionario de valores, indexado por el nombre del campo.  
     :raises: :exc:`IndexError` si se especifica un índice fuera de los límites.  
     """
-    # Asumimos que self._fields contiene las claves y self._values contiene los valores
-    # Esto es un ejemplo, ajusta según la implementación real de tu clase
+    # Asumimos que self._fields contiene las claves y self._values los valores correspondientes
     if not keys:
         return dict(zip(self._fields, self._values))
     

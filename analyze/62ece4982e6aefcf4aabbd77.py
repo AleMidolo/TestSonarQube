@@ -12,7 +12,7 @@ def parse_frequency(frequency):
     if frequency is None or frequency.lower() == "always":
         return None
     
-    pattern = re.compile(r'^(\d+)\s*(seconds?|minutes?|hours?|days?|weeks?)$', re.IGNORECASE)
+    pattern = re.compile(r'^(\d+)\s*(second|minute|hour|day|week|month|year)s?$', re.IGNORECASE)
     match = pattern.match(frequency.strip())
     
     if not match:
@@ -21,15 +21,19 @@ def parse_frequency(frequency):
     value = int(match.group(1))
     unit = match.group(2).lower()
     
-    if unit.startswith('second'):
+    if unit == "second":
         return timedelta(seconds=value)
-    elif unit.startswith('minute'):
+    elif unit == "minute":
         return timedelta(minutes=value)
-    elif unit.startswith('hour'):
+    elif unit == "hour":
         return timedelta(hours=value)
-    elif unit.startswith('day'):
+    elif unit == "day":
         return timedelta(days=value)
-    elif unit.startswith('week'):
+    elif unit == "week":
         return timedelta(weeks=value)
+    elif unit == "month":
+        return timedelta(days=value * 30)  # Aproximación de 30 días por mes
+    elif unit == "year":
+        return timedelta(days=value * 365)  # Aproximación de 365 días por año
     else:
-        raise ValueError(f"Unidad de tiempo no reconocida: {unit}")
+        raise ValueError(f"Unidad de tiempo no válida: {unit}")

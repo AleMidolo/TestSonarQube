@@ -10,12 +10,12 @@ def make_parsers():
     # Crear subanalizadores
     subparsers = parser.add_subparsers(dest="command", help="Subcomandos disponibles")
 
-    # Subanalizador para el comando 'foo'
-    parser_foo = subparsers.add_parser('foo', help='Comando foo')
-    parser_foo.add_argument('--bar', type=int, help='Argumento bar para foo')
+    # Subanalizador 1
+    parser_sub1 = subparsers.add_parser('sub1', help='Ayuda para el subcomando 1')
+    parser_sub1.add_argument('arg1', type=str, help='Argumento 1 para subcomando 1')
 
-    # Subanalizador para el comando 'baz'
-    parser_baz = subparsers.add_parser('baz', help='Comando baz')
-    parser_baz.add_argument('--qux', type=str, help='Argumento qux para baz')
+    # Subanalizador 2
+    parser_sub2 = subparsers.add_parser('sub2', help='Ayuda para el subcomando 2')
+    parser_sub2.add_argument('arg2', type=int, help='Argumento 2 para subcomando 2')
 
     return parser, subparsers

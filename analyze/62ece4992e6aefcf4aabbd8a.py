@@ -4,7 +4,11 @@ import yaml
 
 def load_configurations(config_filenames, overrides=None, resolve_env=True):
     """
-    Dada una secuencia de nombres de archivo de configuración, carga y valida cada archivo de configuración. Si el archivo de configuración no puede ser leído debido a permisos insuficientes o errores al analizar el archivo de configuración, se registrará el error en el log. De lo contrario, devuelve los resultados como una tupla que contiene: un diccionario que asocia el nombre del archivo de configuración con su configuración analizada correspondiente, y una secuencia de instancias de `logging.LogRecord` que contienen cualquier error de análisis.
+    Dada una secuencia de nombres de archivo de configuración, carga y valida cada archivo de configuración.
+    Si el archivo de configuración no puede ser leído debido a permisos insuficientes o errores al analizar el archivo de configuración,
+    se registrará el error en el log. De lo contrario, devuelve los resultados como una tupla que contiene: un diccionario que asocia
+    el nombre del archivo de configuración con su configuración analizada correspondiente, y una secuencia de instancias de
+    `logging.LogRecord` que contienen cualquier error de análisis.
     """
     configs = {}
     log_records = []
@@ -21,36 +25,36 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 if overrides:
                     config.update(overrides)
                 configs[filename] = config
-        except PermissionError:
-            logging.error(f"Permiso denegado para leer el archivo de configuración: {filename}")
+        except PermissionError as e:
+            logging.error(f"Permission denied when trying to read {filename}: {e}")
             log_records.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=f"Permiso denegado para leer el archivo de configuración: {filename}",
+                msg=f"Permission denied when trying to read {filename}: {e}",
                 args=None,
                 exc_info=None
             ))
         except yaml.YAMLError as e:
-            logging.error(f"Error al analizar el archivo de configuración {filename}: {e}")
+            logging.error(f"Error parsing YAML in {filename}: {e}")
             log_records.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=f"Error al analizar el archivo de configuración {filename}: {e}",
+                msg=f"Error parsing YAML in {filename}: {e}",
                 args=None,
                 exc_info=None
             ))
         except Exception as e:
-            logging.error(f"Error inesperado al procesar el archivo de configuración {filename}: {e}")
+            logging.error(f"Unexpected error reading {filename}: {e}")
             log_records.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=f"Error inesperado al procesar el archivo de configuración {filename}: {e}",
+                msg=f"Unexpected error reading {filename}: {e}",
                 args=None,
                 exc_info=None
             ))

@@ -25,8 +25,9 @@ def generate_default_observer_schema(app):
         "required": ["apiVersion", "kind", "metadata"]
     }
 
+    if not hasattr(app, 'spec') or not hasattr(app.spec, 'manifest'):
+        return
+
     for resource in app.spec.manifest:
         if not hasattr(resource, 'observer_schema'):
             resource.observer_schema = default_schema
-
-    return app

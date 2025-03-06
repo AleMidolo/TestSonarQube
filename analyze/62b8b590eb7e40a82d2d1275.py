@@ -29,13 +29,11 @@ def _legacy_mergeOrderings(orderings):
                 in_degree[v] += 1
             all_nodes.add(u)
             all_nodes.add(v)
-        if ordering:
-            all_nodes.add(ordering[-1])
 
     # Inicializar la cola con nodos que no tienen dependencias
     queue = deque([node for node in all_nodes if in_degree[node] == 0])
 
-    # Realizar el ordenamiento topológico
+    # Orden topológico
     result = []
     while queue:
         u = queue.popleft()
@@ -44,9 +42,5 @@ def _legacy_mergeOrderings(orderings):
             in_degree[v] -= 1
             if in_degree[v] == 0:
                 queue.append(v)
-
-    # Verificar si hay un ciclo (lo cual no debería ocurrir según las restricciones)
-    if len(result) != len(all_nodes):
-        raise ValueError("Existe un ciclo en las dependencias, lo cual no está permitido.")
 
     return result

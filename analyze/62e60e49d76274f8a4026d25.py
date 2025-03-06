@@ -14,11 +14,7 @@ def unit_of_work(metadata=None, timeout=None):
         def wrapper(*args, **kwargs):
             # Aquí se puede agregar lógica adicional para manejar metadata y timeout
             # Por ejemplo, se podría pasar metadata y timeout a la transacción
-            # en el contexto de Neo4j.
-            if metadata is not None:
-                kwargs['metadata'] = metadata
-            if timeout is not None:
-                kwargs['timeout'] = timeout
+            # En este ejemplo, simplemente se ejecuta la función original
             return func(*args, **kwargs)
         return wrapper
     return decorator
