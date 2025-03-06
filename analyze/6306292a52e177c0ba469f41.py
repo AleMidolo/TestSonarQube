@@ -4,9 +4,8 @@ def test_tag(tag: str) -> bool:
     
     Un tag è considerato valido se:
     - Non è vuoto.
-    - Contiene solo caratteri alfanumerici e trattini bassi (_).
-    - Non inizia o finisce con un trattino basso.
-    - Non contiene spazi.
+    - Contiene solo caratteri alfanumerici o underscore (_).
+    - Non inizia con un numero.
     
     :param tag: La stringa da verificare.
     :return: True se il tag è valido, False altrimenti.
@@ -14,13 +13,12 @@ def test_tag(tag: str) -> bool:
     if not tag:
         return False
     
-    # Controlla che il tag non inizi o finisca con un trattino basso
-    if tag.startswith('_') or tag.endswith('_'):
+    # Verifica che il tag contenga solo caratteri alfanumerici o underscore
+    if not tag.replace("_", "").isalnum():
         return False
     
-    # Controlla che il tag contenga solo caratteri alfanumerici e trattini bassi
-    for char in tag:
-        if not (char.isalnum() or char == '_'):
-            return False
+    # Verifica che il tag non inizi con un numero
+    if tag[0].isdigit():
+        return False
     
     return True

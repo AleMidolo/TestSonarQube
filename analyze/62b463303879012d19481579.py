@@ -12,21 +12,11 @@ def _extract_number_and_supplment_from_issue_element(issue):
     issue = issue.strip()
     
     # Cerca un numero seguito da un supplemento (es. "123A")
-    if issue and issue[-1].isalpha():
-        number = issue[:-1]
+    if issue[-1].isalpha():
+        number = int(issue[:-1])
         supplement = issue[-1]
-        try:
-            number = int(number)
-            return number, supplement
-        except ValueError:
-            pass
-    
-    # Se non c'è un supplemento, prova a convertire l'intera stringa in un numero
-    try:
+    else:
         number = int(issue)
-        return number, None
-    except ValueError:
-        pass
+        supplement = None
     
-    # Se non è possibile estrarre un numero, restituisci None per entrambi i valori
-    return None, None
+    return number, supplement

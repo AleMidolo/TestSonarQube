@@ -8,33 +8,33 @@ def bash_completion():
     result = subprocess.run(['borgmatic', '--help'], capture_output=True, text=True)
     help_output = result.stdout
 
-    # Estrai i comandi disponibili dall'output di help
+    # Estrai i comandi e le opzioni dall'output
     commands = []
+    options = []
     for line in help_output.splitlines():
         if line.strip().startswith('-'):
-            command = line.split()[0]
-            commands.append(command)
+            options.append(line.split()[0])
+        elif line.strip() and not line.strip().startswith('Usage:'):
+            commands.append(line.split()[0])
 
     # Genera lo script di completamento bash
-    bash_script = """
-_borgmatic_completion() {
-    local cur prev commands
+    bash_script = f"""
+_borgmatic_completion() {{
+    local cur prev opts
     COMPREPLY=()
-    cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-1]}"
-    commands="{}"
+    cur="${{COMP_WORDS[COMP_CWORD]}}"
+    prev="${{COMP_WORDS[COMP_CWORD-1]}}"
+    opts="{' '.join(commands + options)}"
 
-    if [[ ${cur} == -* ]]; then
-        COMPREPLY=( $(compgen -W "${commands}" -- ${cur}) )
+    if [[ "${{cur}}" == -* ]]; then
+        COMPREPLY=( $(compgen -W "${{opts}}" -- "${{cur}}") )
         return 0
     fi
-}
+}}
 
 complete -F _borgmatic_completion borgmatic
-""".format(" ".join(commands))
-
+"""
     return bash_script
 
 # Esempio di utilizzo
-if __name__ == "__main__":
-    print(bash_completion())
+print(bash_completion())

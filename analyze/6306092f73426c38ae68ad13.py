@@ -1,5 +1,6 @@
-def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
-                     extra_vars=None, ansible_args=None):
+import subprocess
+
+def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra_vars=None, ansible_args=None):
     """
     Avvolge il comando 'ansible-playbook' della CLI.
 
@@ -11,30 +12,25 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
     :param ansible_args: dizionario di argomenti per ansible-playbook da inoltrare
         direttamente ad Ansible.
     """
-    import subprocess
-
-    # Costruisci il comando base
+    # Base command
     command = ['ansible-playbook', playbook_path]
 
-    # Aggiungi il livello di verbosità se specificato
+    # Add verbose level if specified
     if verbose:
         command.extend(['-' + 'v' * verbose])
 
-    # Aggiungi extra_vars se specificato
+    # Add extra-vars if specified
     if extra_vars:
         extra_vars_str = ' '.join([f"{k}={v}" for k, v in extra_vars.items()])
         command.extend(['--extra-vars', extra_vars_str])
 
-    # Aggiungi ansible_args se specificato
+    # Add additional ansible arguments if specified
     if ansible_args:
-        for key, value in ansible_args.items():
-            command.extend([f"--{key}", str(value)])
+        for arg, value in ansible_args.items():
+            command.extend([f"--{arg}", str(value)])
 
-    # Esegui il comando
+    # Execute the command
     result = subprocess.run(command, capture_output=True, text=True)
 
-    # Gestisci l'output
-    if result.returncode != 0:
-        print(f"Errore durante l'esecuzione del playbook: {result.stderr}")
-    else:
-        print(f"Playbook eseguito con successo: {result.stdout}")
+    # Return the result
+    return result

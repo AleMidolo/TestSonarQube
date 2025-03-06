@@ -35,10 +35,9 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         "hydration_hooks": hydration_hooks,
         **handlers
     }
-    
+
     # Add the BEGIN message to the output queue
     self.output_queue.append(("BEGIN", begin_message))
-    
-    # Create and return a Response object
-    response = Response(handlers)
-    return response
+
+    # Return a Response object
+    return Response(handlers=handlers)

@@ -7,9 +7,14 @@ def parse_arguments(*arguments):
     """
     parser = argparse.ArgumentParser(description="Parse command line arguments.")
     
-    # Example of adding arguments (customize as needed)
-    parser.add_argument('-f', '--file', type=str, help="Path to the input file")
-    parser.add_argument('-v', '--verbose', action='store_true', help="Enable verbose output")
+    # Example: Adding a positional argument
+    parser.add_argument('input', type=str, help="Input file or directory")
+    
+    # Example: Adding an optional argument
+    parser.add_argument('-o', '--output', type=str, help="Output file or directory", default="output.txt")
+    
+    # Example: Adding a flag
+    parser.add_argument('-v', '--verbose', action='store_true', help="Increase output verbosity")
     
     # Parse the arguments
     args = parser.parse_args(arguments)

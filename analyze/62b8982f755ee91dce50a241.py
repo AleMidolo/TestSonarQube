@@ -16,5 +16,21 @@ def normalized(self):
     hours = total_hours % 24
 
     # Create a new relativedelta object with integer values
-    return relativedelta(days=days, hours=hours, minutes=self.minutes, seconds=self.seconds,
-                         microseconds=self.microseconds, years=self.years, months=self.months)
+    return relativedelta(
+        years=self.years,
+        months=self.months,
+        days=days,
+        hours=hours,
+        minutes=self.minutes,
+        seconds=self.seconds,
+        microseconds=self.microseconds,
+        leapdays=self.leapdays,
+        year=self.year,
+        month=self.month,
+        day=self.day,
+        weekday=self.weekday,
+        hour=self.hour,
+        minute=self.minute,
+        second=self.second,
+        microsecond=self.microsecond
+    )

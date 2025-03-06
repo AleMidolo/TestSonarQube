@@ -6,16 +6,23 @@ def is_fill_request_seq(seq):
     o contiene almeno un elemento di questo tipo,  
     e non è una sequenza di tipo Source.
     """
-    from collections.abc import Sequence
-    from typing import Type
+    # Assuming FillRequest and Source are defined somewhere
+    from typing import Sequence, Any
 
-    # Supponiamo che FillRequest e Source siano classi definite altrove
-    FillRequest = Type('FillRequest')  # Placeholder per la classe FillRequest
-    Source = Type('Source')  # Placeholder per la classe Source
+    def is_fill_request(item: Any) -> bool:
+        # Placeholder for the actual check
+        return isinstance(item, FillRequest)
 
-    if isinstance(seq, FillRequest):
-        return True
-    elif isinstance(seq, Sequence) and not isinstance(seq, Source):
-        return any(isinstance(item, FillRequest) for item in seq)
+    def is_source(item: Any) -> bool:
+        # Placeholder for the actual check
+        return isinstance(item, Source)
+
+    if isinstance(seq, Sequence):
+        # Check if any element in the sequence is a FillRequest
+        has_fill_request = any(is_fill_request(item) for item in seq)
+        # Check if the sequence is not a Source sequence
+        is_not_source_seq = not all(is_source(item) for item in seq)
+        return has_fill_request and is_not_source_seq
     else:
-        return False
+        # If it's not a sequence, check if it's a FillRequest
+        return is_fill_request(seq) and not is_source(seq)

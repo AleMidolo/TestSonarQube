@@ -6,7 +6,7 @@ class ValidationError(Exception):
         self.messages = messages
         super().__init__(str(messages))
 
-def _validate_labels(labels: Dict[str, Union[str, List[str]]]) -> None:
+def _validate_labels(labels: Dict[str, Union[str, List, bool]]) -> None:
     """
     Verifica che le chiavi e i valori nelle etichette fornite corrispondano alle rispettive espressioni regolari.
 
@@ -19,7 +19,7 @@ def _validate_labels(labels: Dict[str, Union[str, List[str]]]) -> None:
       - **value**: il messaggio di errore.
     """
     key_regex = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')
-    value_regex = re.compile(r'^[a-zA-Z0-9_\-\.]+$')
+    value_regex = re.compile(r'^[a-zA-Z0-9_]+$')
     errors = []
 
     for key, value in labels.items():
