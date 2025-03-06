@@ -9,8 +9,13 @@ def validate_as_prior_version(self, prior):
     if not isinstance(prior, InventoryValidator):
         raise TypeError("prior must be an instance of InventoryValidator")
     
-    # Assuming InventoryValidator has a method `is_prior_version` that checks if it's a valid prior version
-    if not prior.is_prior_version(self):
-        raise ValueError("prior is not a valid prior version of the current inventory")
+    # Add logic to validate if 'prior' is indeed a prior version of 'self'
+    # This could involve comparing timestamps, version numbers, or other relevant attributes
+    # For example:
+    if not hasattr(prior, 'version') or not hasattr(self, 'version'):
+        raise AttributeError("Both self and prior must have a 'version' attribute")
+    
+    if prior.version >= self.version:
+        raise ValueError("prior must be a version earlier than self")
     
     return True

@@ -18,4 +18,5 @@ def dict_insert(dic, val, key, *keys):
         if k not in current:
             current[k] = {}
         current = current[k]
-    current[keys[-1]] = val
+    current[keys[-1] if keys else key] = val
+    return dic

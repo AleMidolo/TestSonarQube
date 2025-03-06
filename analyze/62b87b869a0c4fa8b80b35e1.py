@@ -3,15 +3,15 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     """
     Convert a histogram to a graph.
 
-    Parameters:
-    - hist: The histogram to convert.
-    - make_value: Function to set the value of a graph point. Defaults to bin content.
-    - get_coordinate: Determines the coordinate of a graph point. Can be "left", "right", or "middle".
-    - field_names: Names of the graph fields. Must match the result dimension.
-    - scale: The scale of the graph. If True, uses the histogram's scale.
+    Args:
+        hist: The histogram to convert.
+        make_value: A function to set the value of a graph point. Defaults to the bin content.
+        get_coordinate: Defines the coordinate of a graph point. Can be "left", "right", or "middle".
+        field_names: Names of the graph fields. Must match the result dimension.
+        scale: The scale of the graph. If True, uses the histogram's scale.
 
     Returns:
-    - The resulting graph.
+        The resulting graph.
     """
     import numpy as np
 
@@ -25,7 +25,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     bin_edges = hist.bin_edges
     bin_contents = hist.bin_contents
 
-    # Determine the x-coordinates based on get_coordinate
+    # Calculate coordinates based on get_coordinate
     if get_coordinate == "left":
         x_coords = bin_edges[:-1]
     elif get_coordinate == "right":
@@ -47,15 +47,12 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     # Create the graph
     graph = []
     for x, y in zip(x_coords, y_values):
-        point = {"x": x}
-        for i, field in enumerate(field_names[1:]):
-            point[field] = y[i]
+        point = (x,) + tuple(y)
         graph.append(point)
 
     # Set the scale if provided
     if scale is True:
         scale = hist.scale
-    elif scale is None:
-        scale = "unknown"
 
-    return graph, scale
+    # Return the graph as a structured array or similar
+    return np.array(graph, dtype=[(name, 'float64') for name in field_names])

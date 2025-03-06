@@ -13,22 +13,20 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     import traceback
     
     # Ottieni la traccia dello stack
-    stack_trace = traceback.format_exc()
+    stack_trace = traceback.format_exc(limit=max_level)
     
-    # Limita il numero di livelli dello stack
-    stack_lines = stack_trace.splitlines()
-    if len(stack_lines) > max_level:
-        stack_lines = stack_lines[:max_level]
-        stack_lines.append("... (stack trace truncated)")
-    
-    # Limita il numero di livelli del percorso
-    formatted_trace = "\n".join(stack_lines)
-    if len(formatted_trace.splitlines()) > max_path_level:
-        formatted_trace = "\n".join(formatted_trace.splitlines()[:max_path_level])
-        formatted_trace += "\n... (path truncated)"
+    # Limita il percorso del file se necessario
+    if max_path_level > 0:
+        lines = stack_trace.splitlines()
+        for i in range(len(lines)):
+            if "File" in lines[i]:
+                path_parts = lines[i].split(",")[0].split("File ")[1].strip().split("/")
+                if len(path_parts) > max_path_level:
+                    lines[i] = lines[i].replace("/".join(path_parts), "/".join(path_parts[-max_path_level:]))
+        stack_trace = "\n".join(lines)
     
     # Aggiungi il messaggio dell'eccezione
-    exception_message = str(e)
-    formatted_trace = f"{exception_message}\n{formatted_trace}"
+    exception_message = f"Exception: {str(e)}\n"
+    full_message = exception_message + stack_trace
     
-    return formatted_trace
+    return full_message

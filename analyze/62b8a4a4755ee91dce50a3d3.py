@@ -21,8 +21,9 @@ def fromutc(self, dt):
     # Apply the offset to get the new datetime
     new_dt = utc_dt + offset
     
-    # Check if the new datetime is in a fold state
+    # Check if the new datetime is ambiguous
     if self.is_ambiguous(new_dt):
-        new_dt = new_dt.replace(fold=1)
+        # If ambiguous, set the fold attribute accordingly
+        new_dt = new_dt.replace(fold=1 if new_dt.fold else 0)
     
     return new_dt

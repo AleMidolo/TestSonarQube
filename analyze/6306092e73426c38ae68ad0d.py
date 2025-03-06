@@ -8,7 +8,8 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
     :param spec_option: le specifiche dell'opzione
     :return: l'istanza del tipo complesso
     """
-    # Assuming the complex type is a class that can be instantiated with the given parameters
+    # Assuming the complex type is a class that takes the subcommand, type_name, option_name, and spec_option
+    # as arguments to its constructor.
     class ComplexType:
         def __init__(self, subcommand, type_name, option_name, spec_option):
             self.subcommand = subcommand

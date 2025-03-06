@@ -16,13 +16,21 @@ def parse_diaspora_webfinger(document: str) -> Dict:
         # If JSON parsing fails, try to parse as XML (old format)
         try:
             root = ET.fromstring(document)
-            result = {}
-            for link in root.findall('{http://docs.oasis-open.org/ns/xri/xrd-1.0}Link'):
-                rel = link.get('rel')
-                href = link.get('href')
-                if rel and href:
-                    result[rel] = href
+            namespace = {'XRD': 'http://docs.oasis-open.org/ns/xri/xrd-1.0'}
+            links = root.findall('XRD:Link', namespace)
+            result = {
+                'subject': root.find('XRD:Subject', namespace).text,
+                'aliases': [alias.text for alias in root.findall('XRD:Alias', namespace)],
+                'links': []
+            }
+            for link in links:
+                link_data = {
+                    'rel': link.attrib.get('rel'),
+                    'type': link.attrib.get('type'),
+                    'href': link.attrib.get('href'),
+                    'template': link.attrib.get('template')
+                }
+                result['links'].append(link_data)
             return result
         except ET.ParseError:
-            # If both JSON and XML parsing fail, return an empty dict
-            return {}
+            raise ValueError("Invalid document format. Expected JSON or XRD XML.")

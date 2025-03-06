@@ -1,21 +1,24 @@
-import xml.etree.ElementTree as ET
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.backends import default_backend
 
 def verify_relayable_signature(public_key, doc, signature):
     """
     Verifica gli elementi XML firmati per avere la certezza che l'autore dichiarato abbia effettivamente generato questo messaggio.
     
-    :param public_key: Chiave pubblica in formato PEM.
-    :param doc: Documento XML come stringa.
-    :param signature: Firma digitale come bytes.
+    :param public_key: La chiave pubblica in formato PEM.
+    :param doc: Il documento XML come stringa.
+    :param signature: La firma del documento.
     :return: True se la firma è valida, False altrimenti.
     """
     try:
         # Carica la chiave pubblica
-        pub_key = serialization.load_pem_public_key(public_key.encode())
+        pub_key = serialization.load_pem_public_key(
+            public_key.encode(),
+            backend=default_backend()
+        )
         
         # Verifica la firma
         pub_key.verify(

@@ -1,6 +1,5 @@
 from zope.interface import providedBy, Interface, Invalid
 from zope.interface.verify import verifyObject as zope_verify_object
-from zope.interface.exceptions import DoesNotImplement, BrokenImplementation
 
 def verifyObject(iface, candidate, tentative=False):
     """
@@ -23,12 +22,12 @@ def verifyObject(iface, candidate, tentative=False):
         Se più metodi o attributi sono invalidi, tutti questi errori vengono raccolti e riportati. In precedenza, veniva segnalato solo il primo errore. Come caso speciale, se è presente un solo errore, viene sollevato singolarmente, come in passato.
     """
     if not tentative:
-        if not providedBy(candidate):
-            raise DoesNotImplement(iface)
+        if not iface.providedBy(candidate):
+            raise Invalid(f"The candidate does not provide the interface {iface}.")
 
     try:
         zope_verify_object(iface, candidate)
-    except BrokenImplementation as e:
-        raise Invalid(str(e))
+    except Invalid as e:
+        raise Invalid(f"Verification failed: {e}")
 
     return True

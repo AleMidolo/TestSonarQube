@@ -17,15 +17,15 @@ def absorb(self, args):
             if expr[0] == '&':
                 A, B = expr[1], expr[2]
                 if isinstance(B, tuple) and B[0] == '|' and B[1] == A:
-                    return A
-                if isinstance(B, tuple) and B[0] == '|' and isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
-                    return ('&', A, B[2])
+                    return A  # A & (A | B) = A
+                if isinstance(B, tuple) and B[0] == '|' and B[1] == ('~', A):
+                    return ('&', A, B[2])  # A & (~A | B) = A & B
             elif expr[0] == '|':
                 A, B = expr[1], expr[2]
                 if isinstance(B, tuple) and B[0] == '&' and B[1] == A:
-                    return A
-                if isinstance(B, tuple) and B[0] == '&' and isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
-                    return ('|', A, B[2])
+                    return A  # A | (A & B) = A
+                if isinstance(B, tuple) and B[0] == '&' and B[1] == ('~', A):
+                    return ('|', A, B[2])  # A | (~A & B) = A | B
         return expr
 
     return [apply_absorption(expr) for expr in args]
