@@ -1,17 +1,17 @@
 def render(pieces, style):
     """
-    Renderiza las piezas de versión dadas en el estilo solicitado.
+    Renderizzare i pezzi forniti nella versione richiesta dello stile.
+
+    :param pieces: Lista di pezzi da renderizzare.
+    :param style: Stile di renderizzazione richiesto.
+    :return: Stringa rappresentante i pezzi renderizzati.
     """
-    rendered = []
-    
-    for piece in pieces:
-        if style == "dots":
-            rendered.append(piece.replace(".", "•"))
-        elif style == "arrows":
-            rendered.append(piece.replace("<", "←").replace(">", "→"))
-        elif style == "unicode":
-            rendered.append(piece.replace("-", "─").replace("|", "│"))
-        else:
-            rendered.append(piece)
-            
-    return rendered
+    if style == "plain":
+        return "\n".join(pieces)
+    elif style == "html":
+        return "<ul>\n" + "\n".join(f"<li>{piece}</li>" for piece in pieces) + "\n</ul>"
+    elif style == "json":
+        import json
+        return json.dumps(pieces)
+    else:
+        raise ValueError(f"Stile non supportato: {style}")

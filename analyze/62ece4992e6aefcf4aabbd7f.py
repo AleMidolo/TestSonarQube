@@ -1,41 +1,23 @@
+from urllib.parse import urlparse
+from typing import Tuple
+
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
-    Analizar un enlace (href) de una imagen en partes compuestas.
+    Analizza un href di un'immagine in parti composite.
 
-    :param image_href: href de una imagen
-    :returns: una tupla con el formato (image_id, netloc, use_ssl)
-    :raises ValueError: Si el enlace no es valido o no puede ser analizado correctamente
+    :param image_href: href di un'immagine
+    :returns: una tupla nella forma (image_id, netloc, use_ssl)
+    :raises ValueError: se l'href non è valido
     """
-    from urllib.parse import urlparse
+    parsed_url = urlparse(image_href)
     
-    # Validar que el href no esté vacío
-    if not image_href:
-        raise ValueError("El href de la imagen no puede estar vacío")
-        
-    try:
-        # Parsear la URL
-        parsed_url = urlparse(image_href)
-        
-        # Validar que tenga un esquema y netloc
-        if not parsed_url.scheme or not parsed_url.netloc:
-            raise ValueError("URL inválida: debe contener esquema y dominio")
-            
-        # Obtener el netloc
-        netloc = parsed_url.netloc
-        
-        # Determinar si usa SSL
-        use_ssl = parsed_url.scheme.lower() == 'https'
-        
-        # Obtener el image_id del path
-        # Asumimos que el último segmento del path es el id
-        path_segments = parsed_url.path.split('/')
-        image_id = path_segments[-1]
-        
-        # Validar que se obtuvo un image_id
-        if not image_id:
-            raise ValueError("No se pudo extraer el ID de la imagen de la URL")
-            
-        return (image_id, netloc, use_ssl)
-        
-    except Exception as e:
-        raise ValueError(f"Error al analizar la URL de la imagen: {str(e)}")
+    if not parsed_url.netloc:
+        raise ValueError("Invalid image href: missing netloc")
+    
+    image_id = parsed_url.path.strip('/')
+    if not image_id:
+        raise ValueError("Invalid image href: missing image ID")
+    
+    use_ssl = parsed_url.scheme == 'https'
+    
+    return image_id, parsed_url.netloc, use_ssl

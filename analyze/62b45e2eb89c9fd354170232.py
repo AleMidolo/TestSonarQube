@@ -1,34 +1,24 @@
 def next_version(version):
-    # Split version into parts by dots
+    """
+    Prossimo identificatore di versione seguendo il modello esistente.
+
+    Deve gestire sia versioni con prefisso zero che versioni senza prefisso zero.
+    """
+    # Split the version into parts
     parts = version.split('.')
     
-    # Convert parts to integers and increment last number
-    nums = [int(x) for x in parts]
+    # Increment the last part
+    last_part = int(parts[-1]) + 1
     
-    # Start from rightmost digit
-    i = len(nums) - 1
-    while i >= 0:
-        # Increment current digit
-        nums[i] += 1
-        
-        # If no overflow, we're done
-        if nums[i] < 10:
-            break
-            
-        # Handle overflow
-        nums[i] = 0
-        i -= 1
-        
-        # Handle overflow in leftmost position
-        if i < 0:
-            nums.insert(0, 1)
-            
-    # Convert back to strings preserving leading zeros
-    result = []
-    for i, num in enumerate(nums):
-        # Get original length of this part
-        orig_len = len(parts[i]) if i < len(parts) else 1
-        # Format with leading zeros if needed
-        result.append(str(num).zfill(orig_len))
-        
-    return '.'.join(result)
+    # Handle the case where the last part overflows (e.g., 9 -> 10)
+    if last_part > 9:
+        parts[-1] = '0'
+        if len(parts) > 1:
+            parts[-2] = str(int(parts[-2]) + 1)
+        else:
+            parts.insert(0, '1')
+    else:
+        parts[-1] = str(last_part)
+    
+    # Reconstruct the version string
+    return '.'.join(parts)

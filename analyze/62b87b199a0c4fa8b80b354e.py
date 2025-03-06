@@ -1,23 +1,21 @@
 def is_fill_request_seq(seq):
-    from typing import Sequence
-    from fillrequest import FillRequest
-    from source import Source
+    """
+    Verifica se *seq* può essere convertito in un oggetto di tipo FillRequestSeq.
 
-    # Check if seq is a FillRequest directly
+    Restituisce `True` solo se *seq* è un elemento di tipo FillRequest  
+    o contiene almeno un elemento di questo tipo,  
+    e non è una sequenza di tipo Source.
+    """
+    from collections.abc import Sequence
+    from typing import Type
+
+    # Supponiamo che FillRequest e Source siano classi definite altrove
+    FillRequest = Type('FillRequest')  # Placeholder per la classe FillRequest
+    Source = Type('Source')  # Placeholder per la classe Source
+
     if isinstance(seq, FillRequest):
         return True
-        
-    # Check if seq is a Source sequence
-    if isinstance(seq, Source):
+    elif isinstance(seq, Sequence) and not isinstance(seq, Source):
+        return any(isinstance(item, FillRequest) for item in seq)
+    else:
         return False
-        
-    # Check if seq is a sequence
-    if not isinstance(seq, Sequence):
-        return False
-        
-    # Check if sequence contains at least one FillRequest
-    for item in seq:
-        if isinstance(item, FillRequest):
-            return True
-            
-    return False

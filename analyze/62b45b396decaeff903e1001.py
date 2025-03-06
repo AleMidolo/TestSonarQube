@@ -1,26 +1,16 @@
 def amend_bzparams(self, params, bug_ids):
     """
-    Modificar los parámetros de Bugzilla
+    Modifica i parametri di Bugzilla.
+
+    :param params: Dizionario contenente i parametri da modificare.
+    :param bug_ids: Lista di ID dei bug da aggiornare.
+    :return: True se l'operazione è riuscita, False altrimenti.
     """
-    if not params:
-        params = {}
-    
-    # Convert single bug_id to list if needed
-    if isinstance(bug_ids, (int, str)):
-        bug_ids = [str(bug_ids)]
-    elif bug_ids:
-        bug_ids = [str(bug_id) for bug_id in bug_ids]
-        
-    # Add bug IDs to parameters if provided
-    if bug_ids:
-        params['ids'] = bug_ids
-        
-    # Ensure include_fields is a list
-    if 'include_fields' in params and isinstance(params['include_fields'], str):
-        params['include_fields'] = [params['include_fields']]
-        
-    # Add default fields if not specified
-    if 'include_fields' not in params:
-        params['include_fields'] = ['id', 'summary', 'status']
-        
-    return params
+    try:
+        for bug_id in bug_ids:
+            # Supponiamo che self.bz sia un'istanza di un client Bugzilla
+            self.bz.update_bug(bug_id, params)
+        return True
+    except Exception as e:
+        print(f"Errore durante la modifica dei parametri: {e}")
+        return False

@@ -1,6 +1,11 @@
 def parse_version(s: str) -> tuple[int, ...]:
     """
-    comparación de versiones rudimentaria
+    Parses a version string into a tuple of integers for simplified version comparison.
+
+    Args:
+        s (str): The version string to parse.
+
+    Returns:
+        tuple[int, ...]: A tuple of integers representing the version.
     """
-    # Split version string by dots and convert each part to integer
-    return tuple(int(x) for x in s.split('.'))
+    return tuple(map(int, s.split('.')))

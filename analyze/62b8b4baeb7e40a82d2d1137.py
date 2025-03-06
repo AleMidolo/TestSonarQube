@@ -1,61 +1,33 @@
+from zope.interface import providedBy, Interface, Invalid
+from zope.interface.verify import verifyObject as zope_verify_object
+
 def verifyObject(iface, candidate, tentative=False):
-    from zope.interface.exceptions import Invalid, DoesNotImplement, BrokenImplementation, BrokenMethodImplementation
-    from zope.interface.interface import Method
-    
-    errors = []
+    """
+    Verifica che il *candidate* possa fornire correttamente l'*iface*.
 
-    # Verify interface is provided
-    if not tentative and not iface.providedBy(candidate):
-        errors.append(DoesNotImplement(iface))
+    Questo comporta:
 
-    # Verify methods and attributes
-    for name, desc in iface.namesAndDescriptions(1):
-        try:
-            attr = getattr(candidate, name, None)
-            if attr is None:
-                errors.append(BrokenImplementation(iface, name))
-                continue
+    - Assicurarsi che il candidato dichiari di fornire l'interfaccia utilizzando ``iface.providedBy`` (a meno che *tentative* sia `True`, nel qual caso questo passaggio viene saltato). Questo significa che la classe del candidato dichiara di `implementare <zope.interface.implementer>` l'interfaccia, oppure che il candidato stesso dichiara di `fornire <zope.interface.provider>` l'interfaccia.
 
-            # Verify methods
-            if isinstance(desc, Method):
-                # Check if it's callable
-                if not callable(attr):
-                    errors.append(BrokenMethodImplementation(name, "Not a method"))
-                    continue
-                
-                # Verify method signature
-                if hasattr(desc, 'getSignatureInfo'):
-                    sig_info = desc.getSignatureInfo()
-                    required = sig_info.get('required', 0)
-                    optional = sig_info.get('optional', 0)
-                    varargs = sig_info.get('varargs', None)
-                    kwargs = sig_info.get('kwargs', None)
-                    
-                    import inspect
-                    method_sig = inspect.signature(attr)
-                    params = list(method_sig.parameters.values())
-                    
-                    # Remove 'self' from instance methods
-                    if params and params[0].name == 'self':
-                        params = params[1:]
-                        
-                    actual_required = len([p for p in params if p.default == inspect.Parameter.empty and 
-                                        p.kind not in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD)])
-                    actual_optional = len([p for p in params if p.default != inspect.Parameter.empty])
-                    actual_varargs = any(p.kind == inspect.Parameter.VAR_POSITIONAL for p in params)
-                    actual_kwargs = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in params)
-                    
-                    if actual_required != required or actual_optional != optional or \
-                       bool(varargs) != actual_varargs or bool(kwargs) != actual_kwargs:
-                        errors.append(BrokenMethodImplementation(name, "Incorrect method signature"))
+    - Assicurarsi che il candidato definisca tutti i metodi necessari.
 
-        except Exception as e:
-            errors.append(BrokenImplementation(iface, name, str(e)))
+    - Assicurarsi che i metodi abbiano la firma corretta (per quanto possibile).
 
-    # Handle errors
-    if len(errors) == 1:
-        raise errors[0]
-    elif errors:
-        raise Invalid(errors)
+    - Assicurarsi che il candidato definisca tutti gli attributi necessari.
+
+    :return bool: Restituisce un valore vero se tutto ciò che poteva essere verificato è stato superato.
+    :raises zope.interface.Invalid: Se una qualsiasi delle condizioni precedenti non è soddisfatta.
+
+    .. versionchanged:: 5.0  
+        Se più metodi o attributi sono invalidi, tutti questi errori vengono raccolti e riportati. In precedenza, veniva segnalato solo il primo errore. Come caso speciale, se è presente un solo errore, viene sollevato singolarmente, come in passato.
+    """
+    if not tentative:
+        if not iface.providedBy(candidate):
+            raise Invalid(f"The candidate does not provide the interface {iface}.")
+
+    try:
+        zope_verify_object(iface, candidate)
+    except Invalid as e:
+        raise Invalid(f"Verification failed: {e}")
 
     return True

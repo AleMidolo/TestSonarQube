@@ -1,28 +1,25 @@
+from functools import wraps
+
 def cached(cache, key=hashkey, lock=None):
     """
-    Decorador para envolver una función con una llamada que memoriza y guarda  
-    los resultados en una caché.
+    Decorator per racchiudere una funzione con un callable di memoizzazione che salva  
+    i risultati in una cache.
     """
     def decorator(func):
+        @wraps(func)
         def wrapper(*args, **kwargs):
-            k = key(*args, **kwargs)
-            
-            try:
-                return cache[k]
-            except KeyError:
-                pass
-            
-            if lock is not None:
+            cache_key = key(*args, **kwargs)
+            if lock:
                 with lock:
-                    if k in cache:
-                        return cache[k]
+                    if cache_key in cache:
+                        return cache[cache_key]
                     result = func(*args, **kwargs)
-                    cache[k] = result
+                    cache[cache_key] = result
             else:
+                if cache_key in cache:
+                    return cache[cache_key]
                 result = func(*args, **kwargs)
-                cache[k] = result
-                
+                cache[cache_key] = result
             return result
-            
         return wrapper
     return decorator

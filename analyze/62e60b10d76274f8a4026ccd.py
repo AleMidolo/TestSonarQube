@@ -1,27 +1,26 @@
 def data(self, *keys):
-    # Si no se proporcionan claves, devolver todos los datos
-    if not keys:
-        return dict(zip(self._fields, self))
-    
-    # Crear diccionario con las claves solicitadas
+    """
+    Restituisce le chiavi e i valori di questo record come un dizionario, includendo opzionalmente solo determinati valori in base all'indice o alla chiave. 
+    Le chiavi fornite negli elementi che non sono presenti nel record verranno inserite con un valore di :const:`None`; 
+    gli indici forniti che sono fuori dai limiti genereranno un'eccezione :exc:`IndexError`.
+
+    :param keys: indici o chiavi degli elementi da includere; se non ne vengono forniti, verranno inclusi tutti i valori  
+    :return: dizionario dei valori, indicizzati per nome del campo  
+    :raises: :exc:`IndexError` se viene specificato un indice fuori dai limiti  
+    """
     result = {}
-    
-    for key in keys:
-        # Si la clave es un índice numérico
-        if isinstance(key, int):
-            # Verificar que el índice esté dentro de los límites
-            if key < 0 or key >= len(self):
-                raise IndexError(f"Index {key} out of range")
-            result[self._fields[key]] = self[key]
-            
-        # Si la clave es un string
-        else:
-            # Si la clave existe en los campos, obtener su valor
-            if key in self._fields:
-                idx = self._fields.index(key)
-                result[key] = self[idx]
-            # Si no existe, asignar None
-            else:
-                result[key] = None
-                
+    if not keys:
+        # Se non vengono fornite chiavi, restituisci tutti i valori
+        for key in self.__dict__:
+            result[key] = self.__dict__[key]
+    else:
+        for key in keys:
+            if isinstance(key, int):
+                # Se la chiave è un indice, verifica che sia valido
+                if key < 0 or key >= len(self.__dict__):
+                    raise IndexError("Indice fuori dai limiti")
+                # Converti l'indice in una chiave
+                key = list(self.__dict__.keys())[key]
+            # Aggiungi la chiave al risultato, anche se non esiste
+            result[key] = self.__dict__.get(key, None)
     return result

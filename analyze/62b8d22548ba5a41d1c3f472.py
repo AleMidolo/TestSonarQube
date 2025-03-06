@@ -1,40 +1,27 @@
 def cachedmethod(cache, key=hashkey, lock=None):
     """
-    Decorador para envolver un método de clase o de instancia con una función memoizadora
-    que guarda los resultados en una caché.
+    Decorator per racchiudere un metodo di classe o di istanza con una funzione memoizzante che salva i risultati in una cache.
+
+    :param cache: La cache in cui memorizzare i risultati.
+    :param key: Funzione per generare la chiave di cache. Default è hashkey.
+    :param lock: Lock opzionale per sincronizzare l'accesso alla cache.
+    :return: Il metodo decorato con la funzionalità di caching.
     """
     def decorator(method):
         def wrapper(self, *args, **kwargs):
-            # Obtener la caché para esta instancia
-            cache_dict = cache(self)
-            
-            if cache_dict is None:
-                # Si no hay caché, ejecutar el método directamente
-                return method(self, *args, **kwargs)
-                
-            # Generar la clave para los argumentos
-            k = key(args, kwargs)
-            
-            try:
-                # Intentar obtener el resultado de la caché
-                if lock is not None:
-                    with lock:
-                        return cache_dict[k]
-                else:
-                    return cache_dict[k]
-                    
-            except KeyError:
-                # Si no está en caché, calcular y guardar
+            cache_key = key(self, *args, **kwargs)
+            if lock:
+                with lock:
+                    if cache_key in cache:
+                        return cache[cache_key]
+                    result = method(self, *args, **kwargs)
+                    cache[cache_key] = result
+                    return result
+            else:
+                if cache_key in cache:
+                    return cache[cache_key]
                 result = method(self, *args, **kwargs)
-                
-                if lock is not None:
-                    with lock:
-                        cache_dict[k] = result
-                else:
-                    cache_dict[k] = result
-                    
+                cache[cache_key] = result
                 return result
-                
         return wrapper
-        
     return decorator

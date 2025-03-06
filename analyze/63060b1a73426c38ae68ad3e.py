@@ -1,39 +1,39 @@
+import os
+import json
+
 def get_plugin_spec_flatten_dict(plugin_dir):
     """
-    Crea un diccionario plano a partir de la especificación del plugin.
+    Crea un dizionario non annidato a partire dalle specifiche del plugin.
 
-    :param plugin_dir: Una ruta al directorio del plugin  
-    :return: Un diccionario plano que contiene las propiedades del plugin
+    :param plugin_dir: Un percorso alla directory del plugin  
+    :return: Un dizionario piatto che contiene le proprietà del plugin
     """
-    flattened = {}
+    flat_dict = {}
     
-    def flatten_dict(d, parent_key=''):
-        for key, value in d.items():
-            new_key = f"{parent_key}.{key}" if parent_key else key
-            
-            if isinstance(value, dict):
-                flatten_dict(value, new_key)
+    # Check if the directory exists
+    if not os.path.isdir(plugin_dir):
+        raise FileNotFoundError(f"The directory {plugin_dir} does not exist.")
+    
+    # Look for a spec file (e.g., plugin_spec.json) in the plugin directory
+    spec_file = os.path.join(plugin_dir, "plugin_spec.json")
+    if not os.path.isfile(spec_file):
+        raise FileNotFoundError(f"No plugin specification file found in {plugin_dir}.")
+    
+    # Load the JSON file
+    with open(spec_file, 'r') as file:
+        spec_data = json.load(file)
+    
+    # Flatten the dictionary
+    def flatten_dict(d, parent_key='', sep='.'):
+        items = []
+        for k, v in d.items():
+            new_key = f"{parent_key}{sep}{k}" if parent_key else k
+            if isinstance(v, dict):
+                items.extend(flatten_dict(v, new_key, sep=sep).items())
             else:
-                flattened[new_key] = value
-                
-    try:
-        # Intentar leer el archivo spec.json del directorio del plugin
-        import os
-        import json
-        
-        spec_path = os.path.join(plugin_dir, 'spec.json')
-        
-        if not os.path.exists(spec_path):
-            return {}
-            
-        with open(spec_path, 'r') as f:
-            spec = json.load(f)
-            
-        # Aplanar el diccionario recursivamente
-        flatten_dict(spec)
-        
-        return flattened
-        
-    except Exception as e:
-        print(f"Error al procesar la especificación del plugin: {str(e)}")
-        return {}
+                items.append((new_key, v))
+        return dict(items)
+    
+    flat_dict = flatten_dict(spec_data)
+    
+    return flat_dict

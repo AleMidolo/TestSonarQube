@@ -1,35 +1,23 @@
 def create_complex_argument_type(self, subcommand, type_name, option_name, spec_option):
     """
-    Construye el tipo de argumento complejo.
+    Crea il tipo di argomento complesso.
 
-    :param subcommand: el nombre del comando
-    :param type_name: el nombre del tipo complejo 
-    :param option_name: el nombre de la opción
-    :param spec_option: las especificaciones de la opción
-    :return: la instancia del tipo complejo
+    :param subcommand: il nome del comando
+    :param type_name: il nome del tipo complesso
+    :param option_name: il nome dell'opzione
+    :param spec_option: le specifiche dell'opzione
+    :return: l'istanza del tipo complesso
     """
-    # Mapeo de tipos complejos conocidos
-    type_mapping = {
-        'json': JsonType,
-        'key-value': KeyValueType,
-        'list': ListType,
-        'dict': DictType
-    }
+    # Assuming the complex type is a class that can be instantiated with the given parameters
+    class ComplexType:
+        def __init__(self, subcommand, type_name, option_name, spec_option):
+            self.subcommand = subcommand
+            self.type_name = type_name
+            self.option_name = option_name
+            self.spec_option = spec_option
 
-    # Obtener la clase del tipo complejo
-    type_class = type_mapping.get(type_name.lower())
-    
-    if not type_class:
-        raise ValueError(f"Tipo complejo desconocido: {type_name}")
+        def __repr__(self):
+            return f"ComplexType(subcommand={self.subcommand}, type_name={self.type_name}, option_name={self.option_name}, spec_option={self.spec_option})"
 
-    # Crear instancia del tipo con las especificaciones
-    try:
-        type_instance = type_class(
-            subcommand=subcommand,
-            option_name=option_name,
-            **spec_option
-        )
-    except Exception as e:
-        raise ValueError(f"Error al crear tipo complejo {type_name}: {str(e)}")
-
-    return type_instance
+    # Create and return an instance of the complex type
+    return ComplexType(subcommand, type_name, option_name, spec_option)

@@ -1,26 +1,19 @@
 def parse_subparser_arguments(unparsed_arguments, subparsers):
     """
-    Dada una secuencia de argumentos y un diccionario que mapea el nombre de un subparser a una instancia de `argparse.ArgumentParser`, permite que cada subparser solicitado intente analizar todos los argumentos. Esto permite que argumentos comunes como "--repository" sean compartidos entre múltiples subparsers.
+    Dato un insieme di argomenti e un dizionario che associa il nome di un sottoparser a un'istanza di `argparse.ArgumentParser`, consente a ciascun sottoparser richiesto di tentare di analizzare tutti gli argomenti. Questo permette di condividere argomenti comuni, come "--repository", tra più sottoparser.
 
-    Devuelve el resultado como una tupla que contiene: (un diccionario que mapea el nombre del subparser a un espacio de nombres (`namespace`) de argumentos analizados, una lista de argumentos restantes que no fueron reclamados por ningún subparser).
+    Restituisce il risultato come una tupla composta da (un dizionario che associa il nome del sottoparser a uno spazio dei nomi analizzato degli argomenti, una lista di argomenti rimanenti non gestiti da alcun sottoparser).
     """
     parsed_args = {}
     remaining_args = list(unparsed_arguments)
     
-    # Iterate through each subparser
-    for subparser_name, subparser in subparsers.items():
+    for subparser_name, parser in subparsers.items():
         try:
-            # Try to parse all remaining arguments with current subparser
-            namespace, leftover = subparser.parse_known_args(remaining_args)
-            
-            # Store successfully parsed arguments for this subparser
-            parsed_args[subparser_name] = namespace
-            
-            # Update remaining arguments to only those that weren't parsed
-            remaining_args = leftover
-            
-        except Exception:
-            # If parsing fails, continue to next subparser
+            args, remaining = parser.parse_known_args(remaining_args)
+            parsed_args[subparser_name] = args
+            remaining_args = remaining
+        except SystemExit:
+            # Ignore SystemExit exceptions raised by argparse when parsing fails
             continue
     
     return parsed_args, remaining_args

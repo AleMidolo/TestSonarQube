@@ -1,68 +1,46 @@
+from zope.interface import Invalid, providedBy
+from zope.interface.verify import verifyObject, verifyClass
+
 def _verify(iface, candidate, tentative=False, vtype=None):
-    from zope.interface.exceptions import Invalid
-    from zope.interface.interface import Method
-    from collections import defaultdict
+    """
+    Verifica che il *candidate* possa fornire correttamente l'*iface*.
 
-    errors = defaultdict(list)
+    Questo processo include:
 
-    # Check if candidate claims to provide interface
+    - Assicurarsi che il candidato dichiari di fornire l'interfaccia utilizzando ``iface.providedBy`` (a meno che *tentative* sia `True`, in quel caso questo passaggio viene saltato). Questo significa che la classe del candidato dichiara di `implementare l'interfaccia <zope.interface.implementer>`, oppure che il candidato stesso dichiara di `fornire l'interfaccia <zope.interface.provider>`.
+
+    - Assicurarsi che il candidato definisca tutti i metodi necessari.
+
+    - Assicurarsi che i metodi abbiano la firma corretta (per quanto possibile).
+
+    - Assicurarsi che il candidato definisca tutti gli attributi necessari.
+
+    :return bool: Restituisce un valore vero se tutto ciò che poteva essere verificato è stato superato.
+    :raises zope.interface.Invalid: Se una qualsiasi delle condizioni precedenti non è soddisfatta.
+
+    .. versionchanged:: 5.0  
+        Se più metodi o attributi sono invalidi, tutti questi errori vengono raccolti e riportati. In precedenza, veniva segnalato solo il primo errore. Come caso speciale, se è presente un solo errore, questo viene sollevato singolarmente, come avveniva prima.
+    """
+    errors = []
+
+    # Verifica che il candidato dichiari di fornire l'interfaccia
     if not tentative and not iface.providedBy(candidate):
-        errors['general'].append(
-            f"Class {candidate} does not implement interface {iface.__name__}"
-        )
+        errors.append(f"{candidate} non dichiara di fornire l'interfaccia {iface}")
 
-    # Check methods and attributes
-    for name, desc in iface.namesAndDescriptions(all=True):
-        if isinstance(desc, Method):
-            # Check if method exists
-            if not hasattr(candidate, name):
-                errors['methods'].append(
-                    f"Method '{name}' not provided by {candidate}"
-                )
-                continue
-
-            method = getattr(candidate, name)
-            if not callable(method):
-                errors['methods'].append(
-                    f"Attribute '{name}' is not callable as required"
-                )
-                continue
-
-            # Check method signature if possible
-            try:
-                import inspect
-                impl_sig = inspect.signature(method)
-                iface_sig = inspect.signature(desc)
-                
-                if impl_sig.parameters != iface_sig.parameters:
-                    errors['signatures'].append(
-                        f"Method '{name}' has incorrect signature: {impl_sig} != {iface_sig}"
-                    )
-            except (ValueError, TypeError):
-                pass  # Skip signature checking if not possible
-
+    # Verifica i metodi e gli attributi
+    try:
+        if vtype == 'class':
+            verifyClass(iface, candidate)
         else:
-            # Check if attribute exists
-            if not hasattr(candidate, name):
-                errors['attributes'].append(
-                    f"Attribute '{name}' not provided by {candidate}"
-                )
+            verifyObject(iface, candidate)
+    except Invalid as e:
+        errors.append(str(e))
 
-    # If no errors, return True
-    if not any(errors.values()):
-        return True
-
-    # Collect all error messages
-    all_errors = []
-    for category, messages in errors.items():
-        all_errors.extend(messages)
-
-    # If only one error, raise it directly
-    if len(all_errors) == 1:
-        raise Invalid(all_errors[0])
-
-    # Otherwise raise all errors together
-    if all_errors:
-        raise Invalid('\n'.join(all_errors))
+    # Gestione degli errori
+    if errors:
+        if len(errors) == 1:
+            raise Invalid(errors[0])
+        else:
+            raise Invalid("\n".join(errors))
 
     return True

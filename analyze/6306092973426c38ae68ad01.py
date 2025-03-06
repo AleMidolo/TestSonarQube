@@ -1,18 +1,10 @@
 def get_deprecated_args(self):
     """
-    Devolviendo un diccionario con opciones que deprecian a otras.
+    Restituzione di un dizionario con opzioni che deprecano altre.
     """
-    return {
-        'username': 'user',
-        'passwd': 'password',
-        'hostname': 'host',
-        'dbname': 'database',
-        'db': 'database',
-        'timeout': 'connect_timeout',
-        'sslmode': 'ssl_mode',
-        'sslcert': 'ssl_cert',
-        'sslkey': 'ssl_key',
-        'sslrootcert': 'ssl_ca',
-        'ssl': 'ssl_enable',
-        'client_encoding': 'encoding'
+    deprecated_args = {
+        'old_arg1': 'new_arg1',
+        'old_arg2': 'new_arg2',
+        'old_arg3': 'new_arg3'
     }
+    return deprecated_args

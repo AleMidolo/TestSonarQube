@@ -1,32 +1,27 @@
+import os
+
 def select_filenames_by_prefix(prefix, files):
     """
-    Obtén los archivos que pertenecen a un paquete de documentos.
+    Ottieni i file che appartengono a un pacchetto di documenti.
 
-    Retorna los archivos de la lista `files` cuyos nombres comienzan con `prefix`.
+    Restituisce i file della lista `files` i cui nomi iniziano con il prefisso `prefix`.
 
-    Parámetros
+    Parametri
     ----------
-    prefix : str  
-    Prefijo del nombre del archivo.  
+    prefix : `str`  
+        Prefisso del nome del file.  
 
-    files : lista de str  
-    Rutas de los archivos.  
+    files : `list` di `str`  
+        Percorsi dei file.  
 
-    Retorna
+    Ritorno
     -------
     list  
-    Lista de rutas de archivos cuyos nombres base coinciden con el prefijo `prefix`.
+        Percorsi dei file i cui nomi base corrispondono al prefisso specificato.  
     """
-    # Lista para almacenar los archivos que coinciden con el prefijo
-    matching_files = []
-    
-    # Iterar sobre cada archivo en la lista
-    for file in files:
-        # Obtener el nombre base del archivo (sin la ruta)
-        filename = file.split('/')[-1]
-        
-        # Verificar si el nombre del archivo comienza con el prefijo
-        if filename.startswith(prefix):
-            matching_files.append(file)
-            
-    return matching_files
+    selected_files = []
+    for file_path in files:
+        file_name = os.path.basename(file_path)
+        if file_name.startswith(prefix):
+            selected_files.append(file_path)
+    return selected_files

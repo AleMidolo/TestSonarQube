@@ -1,25 +1,19 @@
 def vertex3tuple(vertices):
     """
-    Devuelve 3 puntos para cada vértice del polígono. Esto incluirá el vértice y los 2 puntos a ambos lados del vértice.
+    Restituisce 3 punti per ogni vertice del poligono. Questo includerà il vertice e i 2 punti su entrambi i lati del vertice::
 
-    Args:
-        vertices: Lista de vértices del polígono
-
-    Returns:
-        Lista de tuplas, cada una con 3 vértices consecutivos
+    Esempio:  
+    Poligono con vertici ABCD  
+    Restituirà:  
+    DAB, ABC, BCD, CDA -> restituisce tuple di 3 elementi  
+    #A    B    C    D  -> dei vertici
     """
-    result = []
     n = len(vertices)
-    
+    result = []
     for i in range(n):
-        # Obtiene el vértice anterior (usando módulo para el último vértice)
+        # Get the previous, current, and next vertex
         prev = vertices[(i - 1) % n]
-        # Vértice actual
         curr = vertices[i]
-        # Siguiente vértice (usando módulo para el primer vértice)
-        next = vertices[(i + 1) % n]
-        
-        # Agrega la tupla de 3 vértices consecutivos
-        result.append((prev, curr, next))
-        
+        next_ = vertices[(i + 1) % n]
+        result.append((prev, curr, next_))
     return result

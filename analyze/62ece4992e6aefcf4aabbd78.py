@@ -1,9 +1,9 @@
 def is_local(host):
     """
-    Verifica si el host es el localhost.
+    Verifica se l'host è il localhost.
 
-    :param host: El nombre del host o la dirección IP.
-    :return: True si el host es el localhost, de lo contrario False.
+    :param host: Il nome host o l'indirizzo IP.  
+    :return: True se l'host è il localhost.
     """
-    localhost_names = ['localhost', '127.0.0.1', '::1', '0:0:0:0:0:0:0:1']
-    return host.lower() in localhost_names
+    local_hosts = {'localhost', '127.0.0.1', '::1'}
+    return host in local_hosts

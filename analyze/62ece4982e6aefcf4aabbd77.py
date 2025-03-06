@@ -1,38 +1,40 @@
+import re
+from datetime import timedelta
+
 def parse_frequency(frequency):
-    from datetime import timedelta
-    
+    """
+    Dato un valore di frequenza sotto forma di stringa contenente un numero e un'unità di tempo,
+    restituisci un'istanza corrispondente di datetime.timedelta o None se la frequenza è None o "always".
+
+    Ad esempio, dato "3 weeks", restituisci datetime.timedelta(weeks=3).
+
+    Genera un'eccezione ValueError se la frequenza fornita non può essere analizzata.
+    """
     if frequency is None or frequency.lower() == "always":
         return None
-        
-    try:
-        # Split into number and unit
-        parts = frequency.strip().split()
-        if len(parts) != 2:
-            raise ValueError(f"Invalid frequency format: {frequency}")
-            
-        number = float(parts[0])
-        unit = parts[1].lower()
-        
-        # Map units to timedelta parameters
-        unit_mapping = {
-            'second': 'seconds',
-            'seconds': 'seconds',
-            'minute': 'minutes', 
-            'minutes': 'minutes',
-            'hour': 'hours',
-            'hours': 'hours',
-            'day': 'days',
-            'days': 'days',
-            'week': 'weeks',
-            'weeks': 'weeks'
-        }
-        
-        if unit not in unit_mapping:
-            raise ValueError(f"Invalid time unit: {unit}")
-            
-        # Create timedelta with the appropriate parameter
-        kwargs = {unit_mapping[unit]: number}
-        return timedelta(**kwargs)
-        
-    except (ValueError, TypeError) as e:
-        raise ValueError(f"Could not parse frequency: {frequency}") from e
+    
+    pattern = re.compile(r'^(\d+)\s*(second|minute|hour|day|week|month|year)s?$', re.IGNORECASE)
+    match = pattern.match(frequency.strip())
+    
+    if not match:
+        raise ValueError(f"Invalid frequency format: {frequency}")
+    
+    value = int(match.group(1))
+    unit = match.group(2).lower()
+    
+    if unit == "second":
+        return timedelta(seconds=value)
+    elif unit == "minute":
+        return timedelta(minutes=value)
+    elif unit == "hour":
+        return timedelta(hours=value)
+    elif unit == "day":
+        return timedelta(days=value)
+    elif unit == "week":
+        return timedelta(weeks=value)
+    elif unit == "month":
+        return timedelta(days=30 * value)  # Approximate month as 30 days
+    elif unit == "year":
+        return timedelta(days=365 * value)  # Approximate year as 365 days
+    else:
+        raise ValueError(f"Unsupported time unit: {unit}")

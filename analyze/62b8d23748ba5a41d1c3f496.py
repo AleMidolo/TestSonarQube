@@ -1,63 +1,47 @@
-from collections import defaultdict
 from functools import wraps
-import time
+from collections import defaultdict, OrderedDict
 
 def lfu_cache(maxsize=128, typed=False):
     def decorator(func):
-        # Diccionarios para almacenar el caché y contadores
         cache = {}
         frequency = defaultdict(int)
-        last_used = {}
-        
+        frequency_list = defaultdict(OrderedDict)
+        min_freq = 0
+
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # Crear clave para el caché
             if typed:
-                key = (*args, *sorted(kwargs.items()), *[type(arg) for arg in args])
+                key = (args, tuple(sorted(kwargs.items())))
             else:
-                key = (*args, *sorted(kwargs.items()))
-                
-            try:
-                key = hash(key)
-            except TypeError:
-                # Si la clave no es hasheable, ejecutar sin caché
-                return func(*args, **kwargs)
-                
-            # Verificar si está en caché
+                key = args + tuple(sorted(kwargs.items()))
+
             if key in cache:
+                # Increment the frequency of the key
+                freq = frequency[key]
                 frequency[key] += 1
-                last_used[key] = time.time()
+                del frequency_list[freq][key]
+                if not frequency_list[freq]:
+                    del frequency_list[freq]
+                    if freq == min_freq:
+                        min_freq += 1
+                frequency_list[freq + 1][key] = None
                 return cache[key]
-                
-            # Si el caché está lleno, eliminar el elemento menos frecuente
-            if len(cache) >= maxsize:
-                # Encontrar la frecuencia mínima
-                min_freq = min(frequency.values())
-                # Obtener elementos con frecuencia mínima
-                min_freq_keys = [k for k, v in frequency.items() if v == min_freq]
-                # Si hay varios, eliminar el menos usado recientemente
-                lru_key = min(min_freq_keys, key=lambda k: last_used[k])
-                
-                del cache[lru_key]
-                del frequency[lru_key]
-                del last_used[lru_key]
-                
-            # Calcular nuevo valor y almacenarlo
+
             result = func(*args, **kwargs)
+
+            if len(cache) >= maxsize:
+                # Remove the least frequently used item
+                lfu_key, _ = frequency_list[min_freq].popitem(last=False)
+                del cache[lfu_key]
+                del frequency[lfu_key]
+
             cache[key] = result
             frequency[key] = 1
-            last_used[key] = time.time()
-            
+            frequency_list[1][key] = None
+            min_freq = 1
+
             return result
-            
-        # Agregar métodos para acceder a la información del caché
-        wrapper.cache_info = lambda: {
-            'hits': sum(frequency.values()) - len(frequency),
-            'misses': len(frequency),
-            'maxsize': maxsize,
-            'currsize': len(cache)
-        }
-        wrapper.cache_clear = lambda: (cache.clear(), frequency.clear(), last_used.clear())
-        
+
         return wrapper
+
     return decorator

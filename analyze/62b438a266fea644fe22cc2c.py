@@ -1,24 +1,21 @@
+import argparse
+
 def make_parsers():
     """
-    Crear un analizador de nivel superior y sus subanalizadores, y devolverlos como una tupla.
+    Crea un parser di livello superiore e i suoi sottoparser, quindi restituiscili come una tupla.
     """
-    import argparse
+    # Creazione del parser principale
+    main_parser = argparse.ArgumentParser(description="Parser principale")
 
-    # Crear el analizador principal
-    parser = argparse.ArgumentParser(description='Analizador de comandos principal')
-    subparsers = parser.add_subparsers(dest='command', help='Comandos disponibles')
+    # Creazione dei sottoparser
+    subparsers = main_parser.add_subparsers(title="comandi", dest="comando")
 
-    # Crear subanalizador para el comando 'add'
-    add_parser = subparsers.add_parser('add', help='Agregar un elemento')
-    add_parser.add_argument('item', help='Elemento a agregar')
-    add_parser.add_argument('--priority', type=int, default=1, help='Prioridad del elemento')
+    # Sottoparser per il comando 'comando1'
+    parser_comando1 = subparsers.add_parser('comando1', help="Descrizione del comando1")
+    parser_comando1.add_argument('arg1', type=int, help="Descrizione di arg1")
 
-    # Crear subanalizador para el comando 'list' 
-    list_parser = subparsers.add_parser('list', help='Listar elementos')
-    list_parser.add_argument('--sort', choices=['asc', 'desc'], help='Ordenar elementos')
+    # Sottoparser per il comando 'comando2'
+    parser_comando2 = subparsers.add_parser('comando2', help="Descrizione del comando2")
+    parser_comando2.add_argument('arg2', type=str, help="Descrizione di arg2")
 
-    # Crear subanalizador para el comando 'remove'
-    remove_parser = subparsers.add_parser('remove', help='Eliminar un elemento')
-    remove_parser.add_argument('id', type=int, help='ID del elemento a eliminar')
-
-    return parser, add_parser, list_parser, remove_parser
+    return main_parser, subparsers

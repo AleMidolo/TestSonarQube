@@ -1,20 +1,22 @@
-def identify_request(request: RequestType):
-    """
-    Intente identificar si esta es una solicitud de Diaspora.
+from enum import Enum
 
-    Primero intente con un mensaje público. Luego con un mensaje privado. Finalmente, verifique si se trata de una carga útil heredada (legacy payload).
+class RequestType(Enum):
+    PUBLIC_MESSAGE = 1
+    PRIVATE_MESSAGE = 2
+    LEGACY_PAYLOAD = 3
+    UNKNOWN = 4
+
+def identify_request(request: RequestType) -> str:
     """
-    # Check if it's a public message
-    if hasattr(request, 'public') and request.public:
-        return 'public'
-        
-    # Check if it's a private message
-    if hasattr(request, 'private') and request.private:
-        return 'private'
-        
-    # Check if it's a legacy payload
-    if hasattr(request, 'legacy') and request.legacy:
-        return 'legacy'
-        
-    # If none of the above, return None
-    return None
+    Prova a identificare se si tratta di una richiesta Diaspora.
+
+    Prova prima con un messaggio pubblico. Poi con un messaggio privato. Infine, verifica se si tratta di un payload legacy.
+    """
+    if request == RequestType.PUBLIC_MESSAGE:
+        return "Richiesta Diaspora: Messaggio Pubblico"
+    elif request == RequestType.PRIVATE_MESSAGE:
+        return "Richiesta Diaspora: Messaggio Privato"
+    elif request == RequestType.LEGACY_PAYLOAD:
+        return "Richiesta Diaspora: Payload Legacy"
+    else:
+        return "Tipo di richiesta sconosciuto"

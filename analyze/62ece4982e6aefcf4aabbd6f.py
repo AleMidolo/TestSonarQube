@@ -1,21 +1,36 @@
-def get_repo_archive(url: str, destination_path: Path) -> Path:
-    import requests
-    import tarfile
-    import io
+import tarfile
+import requests
+from pathlib import Path
 
-    # Create destination directory if it doesn't exist
+def get_repo_archive(url: str, destination_path: Path) -> Path:
+    """
+    Dato un URL e un percorso di destinazione, recupera e decomprimi un archivio .tar.gz che contiene il file 'desc' per ogni pacchetto.  
+    Ogni archivio .tar.gz corrisponde a un repository di Arch Linux ('core', 'extra', 'community').
+    Args:
+        url: URL dell'archivio .tar.gz da scaricare
+        destination_path: il percorso sul disco dove estrarre l'archivio
+
+    Returns:
+        un oggetto Path che rappresenta la directory dove l'archivio è stato estratto.
+    """
+    # Ensure the destination directory exists
     destination_path.mkdir(parents=True, exist_ok=True)
     
-    # Download the tar.gz file
-    response = requests.get(url)
+    # Download the archive
+    response = requests.get(url, stream=True)
     response.raise_for_status()
     
-    # Extract the tar.gz file
-    tar_bytes = io.BytesIO(response.content)
-    with tarfile.open(fileobj=tar_bytes, mode='r:gz') as tar:
-        # Extract only 'desc' files
-        for member in tar.getmembers():
-            if member.name.endswith('/desc'):
-                tar.extract(member, path=destination_path)
+    # Save the archive to a temporary file
+    temp_archive_path = destination_path / "temp_archive.tar.gz"
+    with open(temp_archive_path, 'wb') as f:
+        for chunk in response.iter_content(chunk_size=8192):
+            f.write(chunk)
+    
+    # Extract the archive
+    with tarfile.open(temp_archive_path, 'r:gz') as tar:
+        tar.extractall(path=destination_path)
+    
+    # Remove the temporary archive file
+    temp_archive_path.unlink()
     
     return destination_path

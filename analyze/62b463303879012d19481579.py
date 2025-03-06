@@ -1,41 +1,32 @@
 def _extract_number_and_supplment_from_issue_element(issue):
     """
-    Extrae los posibles valores de 'number' y 'suppl' a partir del contenido de 'issue'.
+    Estrai i possibili valori di numero e supplemento dai issue.
+
+    Args:
+        issue (str): La stringa contenente il numero e il supplemento.
+
+    Returns:
+        tuple: Una tupla contenente il numero (int) e il supplemento (str, se presente, altrimenti None).
     """
-    if not issue:
-        return None, None
-        
-    # Remove any whitespace
+    # Rimuovi eventuali spazi bianchi all'inizio e alla fine
     issue = issue.strip()
     
-    # Check for supplement indicator
-    suppl = None
-    number = None
+    # Cerca un numero seguito da un supplemento (es. "123A")
+    if issue and issue[-1].isalpha():
+        number = issue[:-1]
+        supplement = issue[-1]
+        try:
+            number = int(number)
+            return number, supplement
+        except ValueError:
+            pass
     
-    # Common supplement indicators
-    suppl_indicators = ['Suppl', 'suppl', 'Supplement', 'supplement', 'S']
+    # Se non c'è un supplemento, prova a convertire l'intera stringa in un numero
+    try:
+        number = int(issue)
+        return number, None
+    except ValueError:
+        pass
     
-    for indicator in suppl_indicators:
-        if indicator in issue:
-            # Split on supplement indicator
-            parts = issue.split(indicator)
-            
-            # Get number part
-            if parts[0].strip():
-                number = parts[0].strip()
-            
-            # Get supplement part if it exists
-            if len(parts) > 1 and parts[1].strip():
-                suppl = parts[1].strip()
-                # Remove any leading/trailing punctuation
-                suppl = suppl.strip('.:() ')
-            else:
-                suppl = '1' # Default supplement number
-                
-            return number, suppl
-    
-    # If no supplement found, treat entire string as issue number
-    # Remove any punctuation/spaces
-    number = issue.strip('.:() ')
-    
-    return number, suppl
+    # Se non è possibile estrarre un numero, restituisci None per entrambi i valori
+    return None, None

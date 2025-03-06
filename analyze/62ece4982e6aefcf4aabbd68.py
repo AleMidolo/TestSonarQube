@@ -1,27 +1,32 @@
+from typing import List, Optional
+
 def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = None) -> str:
-    # Caso especial para el 0
-    if number == 0:
-        result = alphabet[0]
-        if padding:
-            result = result.rjust(padding, alphabet[0])
-        return result
-        
-    # Convertir el número usando el alfabeto
-    base = len(alphabet)
-    result = ""
-    
-    # Convertir número a la base del alfabeto
-    n = abs(number)
-    while n:
-        result = alphabet[n % base] + result
-        n //= base
-        
-    # Agregar signo negativo si es necesario
+    '''
+    Converti un numero in una stringa utilizzando l'alfabeto fornito.
+
+    L'output avrà la cifra più significativa per prima.
+    '''
     if number < 0:
-        result = '-' + result
-        
-    # Agregar padding si se especificó
-    if padding:
-        result = result.rjust(padding, alphabet[0])
-        
-    return result
+        raise ValueError("Il numero deve essere non negativo.")
+    
+    base = len(alphabet)
+    if base == 0:
+        raise ValueError("L'alfabeto non può essere vuoto.")
+    
+    if number == 0:
+        return alphabet[0] if padding is None else alphabet[0].rjust(padding, alphabet[0])
+    
+    result = []
+    while number > 0:
+        remainder = number % base
+        result.append(alphabet[remainder])
+        number = number // base
+    
+    result.reverse()
+    
+    result_str = ''.join(result)
+    
+    if padding is not None:
+        result_str = result_str.rjust(padding, alphabet[0])
+    
+    return result_str

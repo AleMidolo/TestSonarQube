@@ -1,44 +1,46 @@
-def _validate_labels(labels):
-    import re
-    from typing import Dict, Any
-
-    # Expresión regular para validar claves de etiquetas
-    KEY_REGEX = r'^[a-zA-Z][a-zA-Z0-9_-]*$'
-    
-    # Lista para almacenar los errores encontrados
-    errors = []
-    
-    # Validar que labels sea un diccionario
-    if not isinstance(labels, dict):
-        raise ValidationError([{"labels": "se esperaba un diccionario"}])
-        
-    # Iterar sobre cada par clave-valor en las etiquetas
-    for key, value in labels.items():
-        
-        # Validar que la clave sea una cadena
-        if not isinstance(key, (str, bytes)):
-            errors.append({
-                str(key): 'se esperaba un objeto de tipo cadena o bytes'
-            })
-            continue
-            
-        # Validar que la clave coincida con la expresión regular
-        if not re.match(KEY_REGEX, str(key)):
-            errors.append({
-                str(key): f"La clave de la etiqueta '{key}' no coincide con la expresión regular {KEY_REGEX}"
-            })
-            
-        # Validar que el valor sea una cadena
-        if not isinstance(value, (str, bytes)):
-            errors.append({
-                str(value): 'se esperaba un objeto de tipo cadena o bytes'
-            })
-            
-    # Si se encontraron errores, lanzar la excepción
-    if errors:
-        raise ValidationError(errors)
+import re
+from typing import Dict, List, Union
 
 class ValidationError(Exception):
-    def __init__(self, messages):
+    def __init__(self, messages: List[Dict[str, str]]):
         self.messages = messages
         super().__init__(str(messages))
+
+def _validate_labels(labels: Dict[str, Union[str, List[str]]]) -> None:
+    """
+    Verifica che le chiavi e i valori nelle etichette fornite corrispondano alle rispettive espressioni regolari.
+
+    ### Argomenti:
+    - **labels (dict)**: il dizionario contenente le diverse etichette da validare.
+
+    ### Eccezioni:
+    - **ValidationError**: viene sollevata se una qualsiasi delle chiavi o dei valori delle etichette non corrisponde alla rispettiva espressione regolare. L'errore contiene come messaggio la lista di tutti gli errori che si sono verificati nelle etichette. Ogni elemento della lista è un dizionario con una coppia chiave-valore:
+      - **key**: la chiave dell'etichetta o il valore dell'etichetta per cui si è verificato un errore, come stringa.
+      - **value**: il messaggio di errore.
+    """
+    key_regex = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')
+    value_regex = re.compile(r'^[a-zA-Z0-9_\-\.]+$')
+    errors = []
+
+    for key, value in labels.items():
+        # Validate key
+        if not isinstance(key, str):
+            errors.append({str(key): 'expected string or bytes-like object'})
+        elif not key_regex.match(key):
+            errors.append({key: f"Label key '{key}' does not match the regex {key_regex.pattern}"})
+
+        # Validate value
+        if isinstance(value, list):
+            for item in value:
+                if not isinstance(item, str):
+                    errors.append({str(item): 'expected string or bytes-like object'})
+                elif not value_regex.match(item):
+                    errors.append({item: f"Label value '{item}' does not match the regex {value_regex.pattern}"})
+        else:
+            if not isinstance(value, str):
+                errors.append({str(value): 'expected string or bytes-like object'})
+            elif not value_regex.match(value):
+                errors.append({value: f"Label value '{value}' does not match the regex {value_regex.pattern}"})
+
+    if errors:
+        raise ValidationError(errors)

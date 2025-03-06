@@ -1,12 +1,10 @@
 def _get_err_indices(self, coord_name):
     """
-    Obtener los índices de error correspondientes a una coordenada.
+    Ottieni gli indici di errore corrispondenti a una coordinata.
     """
-    if coord_name == 'x':
-        return [0, 3, 6]
-    elif coord_name == 'y': 
-        return [1, 4, 7]
-    elif coord_name == 'z':
-        return [2, 5, 8]
+    # Assuming self.errors is a dictionary where keys are coordinate names
+    # and values are lists of error indices.
+    if coord_name in self.errors:
+        return self.errors[coord_name]
     else:
-        raise ValueError(f"Invalid coordinate name: {coord_name}. Must be 'x', 'y' or 'z'")
+        return []

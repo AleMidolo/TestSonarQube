@@ -1,17 +1,19 @@
+from datetime import timedelta
+
 def dehydrate_timedelta(value):
     """
-    Deshidratador para valores de `timedelta`.
+    Deidratatore per valori di tipo `timedelta`.
 
-    :param value:  
-    :type value: timedelta  
-    :return:  
+    :param value: Un oggetto di tipo `timedelta`.
+    :type value: timedelta
+    :return: Un dizionario contenente i giorni, secondi e microsecondi del `timedelta`.
+    :rtype: dict
     """
-    if value is None:
-        return None
-        
-    total_seconds = int(value.total_seconds())
-    hours = total_seconds // 3600
-    minutes = (total_seconds % 3600) // 60
-    seconds = total_seconds % 60
+    if not isinstance(value, timedelta):
+        raise TypeError("Il parametro 'value' deve essere di tipo 'timedelta'.")
     
-    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+    return {
+        'days': value.days,
+        'seconds': value.seconds,
+        'microseconds': value.microseconds
+    }

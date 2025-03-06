@@ -1,13 +1,13 @@
 def pop(self, key, default=__marker):
     """
-    D.pop(k[,d]) -> v, elimina la clave especificada y devuelve el valor correspondiente.
-    Si la clave no se encuentra, se devuelve `d` si se proporciona; de lo contrario, se genera una excepción KeyError.
+    D.pop(k[,d]) -> v, rimuove la chiave specificata e restituisce il valore corrispondente.  
+    Se la chiave non viene trovata, viene restituito `d` se fornito, altrimenti viene sollevata un'eccezione KeyError.
     """
-    try:
+    if key in self:
         value = self[key]
         del self[key]
         return value
-    except KeyError:
-        if default is __marker:
-            raise KeyError(key)
+    elif default is not __marker:
         return default
+    else:
+        raise KeyError(f"KeyError: {key}")

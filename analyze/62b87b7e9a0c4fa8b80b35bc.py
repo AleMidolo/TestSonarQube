@@ -1,27 +1,34 @@
 def _update_context(self, context):
-    # Inicializar diccionario de errores si no existe
+    """
+    Aggiorna il *context* con le proprietà di questo grafo.
+
+    *context.error* viene aggiornato aggiungendo gli indici degli errori.
+    Esempio di subcontext per un grafo con i campi "E,t,error_E_low":
+    `{"error": {"x_low": {"index": 2}}}`.
+    Nota che i nomi degli errori sono chiamati "x", "y" e "z"
+    (questo corrisponde alle prime tre coordinate, se presenti),
+    il che consente di semplificare la rappresentazione grafica.
+    I valori esistenti non vengono rimossi
+    da *context.value* e dai suoi subcontesti.
+
+    Viene chiamato durante la "distruzione" del grafo (ad esempio,
+    nella classe :class:`.ToCSV`). Per "distruzione" si intende la conversione
+    in un'altra struttura (come il testo) nel flusso di lavoro.
+    L'oggetto grafo non viene realmente distrutto in questo processo.
+    """
     if not hasattr(context, 'error'):
         context.error = {}
 
-    # Mapeo de nombres de campos a coordenadas x,y,z
-    coord_map = {'E': 'x', 'n': 'y', 't': 'z'}
-    
-    # Iterar sobre los campos del grafo
-    for field in self.fields:
-        # Buscar campos de error que terminen en _low o _high
-        if field.endswith('_low') or field.endswith('_high'):
-            # Obtener el nombre base del campo (sin _low/_high)
-            base = field.rsplit('_', 1)[0]
-            # Obtener el tipo de error (low/high)
-            error_type = field.rsplit('_', 1)[1]
-            
-            # Si el campo base está en el mapeo de coordenadas
-            if base in coord_map:
-                coord = coord_map[base]
-                # Crear subdiccionario si no existe
-                if coord not in context.error:
-                    context.error[coord] = {}
-                    
-                # Guardar el índice del campo de error
-                key = f"{coord}_{error_type}"
-                context.error[coord][error_type] = {"index": self.fields.index(field)}
+    # Assuming self has a property `error_indices` that contains the error indices
+    # and a property `coordinates` that contains the coordinate names (e.g., ["x", "y", "z"])
+    if hasattr(self, 'error_indices') and hasattr(self, 'coordinates'):
+        for i, error_index in enumerate(self.error_indices):
+            if i < len(self.coordinates):
+                coord_name = self.coordinates[i]
+                context.error[f"{coord_name}_low"] = {"index": error_index}
+
+    # Ensure existing values in context.value are not removed
+    if not hasattr(context, 'value'):
+        context.value = {}
+
+    return context

@@ -1,50 +1,8 @@
+from functools import lru_cache as _lru_cache
+
 def lru_cache(maxsize=128, typed=False):
-    def decorator(func):
-        from functools import wraps
-        from collections import OrderedDict
-        
-        # Cache para almacenar resultados
-        cache = OrderedDict()
-        
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            # Crear clave de cache
-            if typed:
-                key = (args, tuple(sorted(kwargs.items())), tuple(type(arg) for arg in args))
-            else:
-                key = (args, tuple(sorted(kwargs.items())))
-                
-            # Verificar si el resultado está en cache
-            if key in cache:
-                # Mover el item al final (más recientemente usado)
-                cache.move_to_end(key)
-                return cache[key]
-                
-            # Calcular resultado
-            result = func(*args, **kwargs)
-            
-            # Agregar a cache
-            cache[key] = result
-            
-            # Remover el elemento menos usado si se excede maxsize
-            if maxsize and len(cache) > maxsize:
-                cache.popitem(last=False)
-                
-            return result
-            
-        # Agregar métodos de utilidad
-        wrapper.cache_info = lambda: {
-            'hits': sum(1 for _ in cache),
-            'maxsize': maxsize,
-            'currsize': len(cache)
-        }
-        wrapper.cache_clear = cache.clear
-        
-        return wrapper
-        
-    # Si se usa directamente como @lru_cache
-    if callable(maxsize):
-        func, maxsize = maxsize, 128
-        return decorator(func)
-        
-    return decorator
+    """
+    Decorator per racchiudere una funzione con un oggetto callable che memorizza
+    fino a `maxsize` risultati basandosi su un algoritmo Least Recently Used (LRU).
+    """
+    return _lru_cache(maxsize=maxsize, typed=typed)

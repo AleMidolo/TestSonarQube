@@ -1,12 +1,12 @@
 def index(self, key):
     """
-    Devuelve el índice del elemento dado.
+    Restituisce l'indice dell'elemento specificato.
 
-    :param key: una clave  
-    :return: index  
+    :param key: una chiave  
+    :return: indice  
     :rtype: int
     """
-    for i in range(len(self)):
-        if self[i] == key:
+    for i, item in enumerate(self):
+        if item == key:
             return i
-    raise ValueError(f"{key} is not in list")
+    raise ValueError(f"{key} not found in the list")

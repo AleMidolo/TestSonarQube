@@ -1,10 +1,11 @@
+import random
+
 def _shuffled(seq: Sequence[str]) -> list[str]:
-    """
-    Barajar de manera determinista
-    """
-    result = list(seq)
-    n = len(result)
-    for i in range(n-1, 0, -1):
-        j = (i * 31) % (i + 1)  # Deterministic shuffle using fixed multiplier
-        result[i], result[j] = result[j], result[i]
-    return result
+    """Mescolamento deterministico"""
+    # Create a copy of the sequence to avoid modifying the original
+    seq_copy = list(seq)
+    # Use a fixed seed for deterministic shuffling
+    random.seed(42)
+    # Shuffle the sequence
+    random.shuffle(seq_copy)
+    return seq_copy

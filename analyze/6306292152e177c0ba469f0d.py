@@ -1,30 +1,16 @@
+from typing import Union
+
 def identify_request(request: RequestType) -> bool:
     """
-    Intente identificar si esta es una solicitud de Matrix.
+    Prova a identificare se si tratta di una richiesta Matrix.
+    
+    Args:
+        request (RequestType): La richiesta da identificare.
+    
+    Returns:
+        bool: True se la richiesta è di tipo Matrix, False altrimenti.
     """
-    # Verificar si el request es None
-    if request is None:
-        return False
-        
-    # Verificar si tiene los atributos típicos de una solicitud Matrix
-    try:
-        # Verificar si tiene el formato correcto de una solicitud Matrix
-        if hasattr(request, 'type') and hasattr(request, 'content'):
-            # Verificar si el tipo de solicitud es válido para Matrix
-            valid_types = ['m.room.message', 'm.room.member', 'm.room.create']
-            if request.type in valid_types:
-                return True
-                
-        # Verificar si tiene el token de acceso Matrix
-        if hasattr(request, 'access_token') and request.access_token:
-            return True
-            
-        # Verificar si tiene el ID de usuario Matrix
-        if hasattr(request, 'user_id') and request.user_id.startswith('@'):
-            return True
-            
-    except AttributeError:
-        return False
-        
-    # Si no cumple ninguna condición, no es una solicitud Matrix
+    # Assuming RequestType has a 'type' attribute or similar to identify Matrix requests
+    if hasattr(request, 'type'):
+        return request.type == 'Matrix'
     return False

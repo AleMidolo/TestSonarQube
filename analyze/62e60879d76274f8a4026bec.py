@@ -1,45 +1,44 @@
 def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
           db=None, imp_user=None, dehydration_hooks=None,
           hydration_hooks=None, **handlers):
+    """
+    Aggiunge un messaggio BEGIN alla coda di output.
+
+    :param mode: modalità di accesso per il routing - "READ" o "WRITE" (predefinito)
+    :param bookmarks: iterabile di valori di segnalibro dopo i quali questa transazione dovrebbe iniziare
+    :param metadata: dizionario di metadati personalizzati da allegare alla transazione
+    :param timeout: timeout per l'esecuzione della transazione (in secondi)
+    :param db: nome del database su cui avviare la transazione
+        Richiede Bolt 4.0+.
+    :param imp_user: l'utente da impersonare
+        Richiede Bolt 4.4+.
+    :param dehydration_hooks:
+        Hook per disidratare i tipi (dizionario da tipo (classe) a funzione di disidratazione).
+        Le funzioni di disidratazione ricevono il valore e restituiscono un oggetto di tipo
+        compreso da packstream.
+    :param hydration_hooks:
+        Hook per idratare i tipi (mappatura da tipo (classe) a funzione di idratazione).
+        Le funzioni di idratazione ricevono il valore di tipo compreso da packstream
+        e possono restituire qualsiasi cosa.
+    :param handlers: funzioni gestore passate all'oggetto Response restituito
+    :return: oggetto Response
+    """
+    # Create the BEGIN message
+    begin_message = {
+        "mode": mode,
+        "bookmarks": list(bookmarks) if bookmarks else None,
+        "metadata": metadata,
+        "timeout": timeout,
+        "db": db,
+        "imp_user": imp_user,
+        "dehydration_hooks": dehydration_hooks,
+        "hydration_hooks": hydration_hooks,
+        **handlers
+    }
     
-    # Validar el modo
-    valid_modes = ("READ", "WRITE")
-    if mode is not None and mode not in valid_modes:
-        raise ValueError(f"Mode must be one of {valid_modes}")
+    # Add the BEGIN message to the output queue
+    self.output_queue.append(("BEGIN", begin_message))
     
-    # Construir los extras para el mensaje BEGIN
-    extras = {}
-    
-    if mode is not None:
-        extras["mode"] = mode
-        
-    if bookmarks:
-        extras["bookmarks"] = list(bookmarks)
-        
-    if metadata:
-        extras["metadata"] = metadata
-        
-    if timeout is not None:
-        extras["timeout"] = timeout
-        
-    if db is not None:
-        extras["db"] = db
-        
-    if imp_user is not None:
-        extras["imp_user"] = imp_user
-        
-    # Configurar los hooks de serialización si se proporcionan
-    if dehydration_hooks:
-        self._dehydration_hooks.update(dehydration_hooks)
-        
-    if hydration_hooks:
-        self._hydration_hooks.update(hydration_hooks)
-    
-    # Crear y enviar el mensaje BEGIN
-    message = ("BEGIN", extras)
-    
-    # Crear y retornar el objeto Response con los handlers proporcionados
-    response = Response(self, message, **handlers)
-    self._append(message, response)
-    
+    # Create and return a Response object
+    response = Response(handlers)
     return response

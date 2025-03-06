@@ -1,25 +1,13 @@
 def get_spec_defaults(self):
     """
-    Resolver los valores de los argumentos desde la especificación y otras fuentes.
+    Risolvere i valori degli argomenti dal file di specifica e da altre fonti.
     """
+    # Assuming self.spec is a dictionary or similar structure that holds the specification
     defaults = {}
-    
-    if hasattr(self, 'spec') and self.spec:
-        # Obtener valores por defecto de la especificación
-        for param_name, param in self.spec.parameters.items():
-            if hasattr(param, 'default'):
-                defaults[param_name] = param.default
-                
-        # Obtener valores de la configuración global si existe
-        if hasattr(self, 'config') and self.config:
-            for key, value in self.config.items():
-                if key in self.spec.parameters:
-                    defaults[key] = value
-                    
-        # Obtener valores de variables de entorno
-        for param_name in self.spec.parameters:
-            env_value = os.environ.get(param_name.upper())
-            if env_value is not None:
-                defaults[param_name] = env_value
-                
+    if hasattr(self, 'spec'):
+        for key, value in self.spec.items():
+            if isinstance(value, dict) and 'default' in value:
+                defaults[key] = value['default']
+            else:
+                defaults[key] = value
     return defaults

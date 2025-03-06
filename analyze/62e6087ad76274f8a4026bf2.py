@@ -1,42 +1,31 @@
 def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **handlers):
     """
-    Añade un mensaje 'DISCARD' a la cola de salida.
+    Aggiunge un messaggio DISCARD alla coda di output.
 
-    :param n: número de registros a descartar, por defecto = -1 (TODOS)
-    :param qid: ID de consulta para descartar, por defecto = -1 (última consulta)
+    :param n: numero di record da scartare, valore predefinito = -1 (TUTTI)
+    :param qid: ID della query per cui scartare, valore predefinito = -1 (ultima query)
     :param dehydration_hooks:
-        Ganchos para deshidratar tipos (diccionario de tipo (clase) a función
-        de deshidratación). Las funciones de deshidratación reciben el valor y devuelven un objeto de un tipo entendido por 'packstream'.
+        Hook per disidratare i tipi (dizionario da tipo (classe) a funzione di disidratazione).
+        Le funzioni di disidratazione ricevono il valore e restituiscono un oggetto di tipo
+        comprensibile da packstream.
     :param hydration_hooks:
-        Ganchos para hidratar tipos (mapeo de tipo (clase) a función de
-     hidratación). Las funciones de hidratación reciben el valor de un tipo
-        entendido por 'packstream' y son libres de devolver cualquier cosa.
-    :param handlers: funciones manejadoras pasadas al objeto 'Response' devuelto
+        Hook per idratare i tipi (mappatura da tipo (classe) a funzione di idratazione).
+        Le funzioni di idratazione ricevono il valore di un tipo comprensibile da packstream
+        e possono restituire qualsiasi cosa.
+    :param handlers: funzioni gestore passate all'oggetto Response restituito
     """
-    if qid == -1:
-        qid = self._last_qid
-        
-    # Crear mensaje DISCARD
-    message = {
+    # Creazione del messaggio DISCARD
+    discard_message = {
         "type": "DISCARD",
         "n": n,
-        "qid": qid
+        "qid": qid,
+        "dehydration_hooks": dehydration_hooks if dehydration_hooks else {},
+        "hydration_hooks": hydration_hooks if hydration_hooks else {},
+        **handlers
     }
     
-    # Aplicar hooks de deshidratación si existen
-    if dehydration_hooks:
-        for type_, hook in dehydration_hooks.items():
-            if isinstance(message, type_):
-                message = hook(message)
-                
-    # Añadir mensaje a la cola de salida
-    self._outbox.append(message)
+    # Aggiunta del messaggio alla coda di output
+    self.output_queue.append(discard_message)
     
-    # Crear y devolver objeto Response con los handlers
-    response = Response(
-        connection=self,
-        hydration_hooks=hydration_hooks or {},
-        **handlers
-    )
-    
-    return response
+    # Restituzione dell'oggetto Response
+    return Response(handlers=handlers)

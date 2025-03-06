@@ -1,27 +1,32 @@
 def get_versions():
     """
-    Obtén la información de la versión o devuelve el valor predeterminado si no es posible obtenerla.
+    Ottieni le informazioni sulla versione o restituisci il valore predefinito se non è possibile ottenerle.
     """
-    try:
-        import pkg_resources
-        import platform
-        import sys
+    import sys
+    import platform
+    import subprocess
 
-        versions = {
-            'python': sys.version.split()[0],
-            'platform': platform.platform(),
-            'packages': {
-                pkg.key: pkg.version 
-                for pkg in pkg_resources.working_set
-            }
-        }
-        
-        return versions
-        
-    except Exception:
-        # Return default version info if unable to get actual versions
+    try:
+        # Ottieni la versione di Python
+        python_version = sys.version.split()[0]
+
+        # Ottieni la versione del sistema operativo
+        os_version = platform.platform()
+
+        # Ottieni la versione di pip (se disponibile)
+        try:
+            pip_version = subprocess.check_output([sys.executable, '-m', 'pip', '--version']).decode().split()[1]
+        except Exception:
+            pip_version = "N/A"
+
         return {
-            'python': 'unknown',
-            'platform': 'unknown',
-            'packages': {}
+            "python_version": python_version,
+            "os_version": os_version,
+            "pip_version": pip_version
+        }
+    except Exception:
+        return {
+            "python_version": "N/A",
+            "os_version": "N/A",
+            "pip_version": "N/A"
         }

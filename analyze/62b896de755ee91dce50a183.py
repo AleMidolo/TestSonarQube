@@ -1,51 +1,66 @@
+from datetime import datetime
+from dateutil import parser
+from dateutil.tz import gettz
+
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
-    Convierte la cadena de fecha/hora en un objeto de la clase :class:`datetime.datetime`.
-    
-    Args:
-        timestr: Cualquier fecha/hora en formato string que utilice los formatos compatibles.
-        default: El objeto datetime predeterminado. Si este es un objeto datetime y no es None, 
-                los elementos especificados en timestr reemplazan los elementos en el objeto predeterminado.
-        ignoretz: Si True, ignora zonas horarias y devuelve datetime sin info de zona horaria.
-        tzinfos: Diccionario o función para mapear nombres de zonas horarias a objetos tzinfo.
-        **kwargs: Argumentos adicionales pasados a _parse().
-        
-    Returns:
-        datetime.datetime o tupla (datetime, tokens) si fuzzy_with_tokens=True
-        
-    Raises:
-        ParserError: Para formatos inválidos o desconocidos
-        TypeError: Para entradas que no sean strings
-        OverflowError: Si la fecha excede el máximo entero C
+    Analizza la stringa di data/ora in un oggetto :class:`datetime.datetime`.
+
+    :param timestr:
+        Qualsiasi stringa di data/ora che utilizza i formati supportati.
+
+    :param default:
+        L'oggetto datetime predefinito. Se questo è un oggetto datetime e non
+        ``None``, gli elementi specificati in ``timestr`` sostituiscono gli elementi
+        nell'oggetto predefinito.
+
+    :param ignoretz:
+        Se impostato su ``True``, i fusi orari nelle stringhe analizzate vengono ignorati
+        e viene restituito un oggetto :class:`datetime.datetime` senza fuso orario.
+
+    :param tzinfos:
+        Nomi/alias di fusi orari aggiuntivi che possono essere presenti nella stringa.
+        Questo argomento mappa i nomi dei fusi orari (e opzionalmente gli offset da
+        quei fusi orari) ai fusi orari. Questo parametro può essere un dizionario con
+        alias di fusi orari che mappano i nomi dei fusi orari ai fusi orari o una
+        funzione che accetta due parametri (``tzname`` e ``tzoffset``) e restituisce
+        un fuso orario.
+
+    :param \*\*kwargs:
+        Argomenti keyword passati a ``_parse()``.
+
+    :return:
+        Restituisce un oggetto :class:`datetime.datetime` o, se l'opzione
+        ``fuzzy_with_tokens`` è impostata su ``True``, restituisce una tupla, il cui
+        primo elemento è un oggetto :class:`datetime.datetime` e il secondo è una
+        tupla contenente i token fuzzy.
+
+    :raises ParserError:
+        Sollevato per formati di stringa non validi o sconosciuti, se il
+        :class:`tzinfo` fornito non è in un formato valido o se verrebbe creata
+        una data non valida.
+
+    :raises TypeError:
+        Sollevato per input non stringa o flusso di caratteri.
+
+    :raises OverflowError:
+        Sollevato se la data analizzata supera il più grande intero C valido
+        sul tuo sistema.
     """
-    
     if not isinstance(timestr, str):
-        raise TypeError("Parser must be given a string or character stream, not %r" % type(timestr))
-        
-    # Preprocesar la cadena de entrada
-    timestr = timestr.strip()
-    
+        raise TypeError("Input must be a string.")
+
+    if default is not None and not isinstance(default, datetime):
+        raise TypeError("Default must be a datetime object or None.")
+
+    if ignoretz:
+        tzinfos = None
+
     try:
-        # Parsear la cadena usando el método interno _parse
-        res, tokens = self._parse(timestr, **kwargs)
-        
-        if res is None:
-            raise ParserError("Unknown string format: %s" % timestr)
-            
-        # Si hay un default, combinar con el resultado
-        if default is not None:
-            res = self._combine_with_default(res, default)
-            
-        # Manejar zonas horarias
-        if not ignoretz:
-            res = self._add_timezone(res, tzinfos)
-            
-        # Devolver resultado según fuzzy_with_tokens
-        if kwargs.get('fuzzy_with_tokens', False):
-            return res, tuple(tokens)
-        return res
-        
-    except ValueError as e:
-        raise ParserError(str(e))
-    except OverflowError:
-        raise OverflowError("Date exceeds the maximum value supported on this system")
+        parsed_datetime = parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+    except parser.ParserError as e:
+        raise parser.ParserError(f"Invalid or unknown string format: {e}")
+    except OverflowError as e:
+        raise OverflowError(f"Parsed date exceeds the largest valid C integer on your system: {e}")
+
+    return parsed_datetime

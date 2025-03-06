@@ -1,80 +1,56 @@
+import logging
+import os
+import json
+import yaml
+
 def load_configurations(config_filenames, overrides=None, resolve_env=True):
     """
-    Dada una secuencia de nombres de archivo de configuración, carga y valida cada archivo de configuración. Si el archivo de configuración no puede ser leído debido a permisos insuficientes o errores al analizar el archivo de configuración, se registrará el error en el log. De lo contrario, devuelve los resultados como una tupla que contiene: un diccionario que asocia el nombre del archivo de configuración con su configuración analizada correspondiente, y una secuencia de instancias de `logging.LogRecord` que contienen cualquier error de análisis.
+    Dato un elenco di nomi di file di configurazione, carica e valida ciascun file di configurazione.
+    Restituisci i risultati come una tupla composta da:
+    - un dizionario che associa il nome del file di configurazione alla corrispondente configurazione analizzata,
+    - una sequenza di istanze di `logging.LogRecord` contenenti eventuali errori di analisi.
     """
-    import logging
-    import os
-    import yaml
-    from pathlib import Path
+    configurations = {}
+    errors = []
 
-    # Initialize return values
-    configs = {}
-    error_logs = []
-    logger = logging.getLogger(__name__)
+    if overrides is None:
+        overrides = {}
 
-    # Process each config file
     for filename in config_filenames:
         try:
-            path = Path(filename)
-            
-            # Check if file exists and is readable
-            if not path.exists():
-                raise FileNotFoundError(f"Configuration file not found: {filename}")
-            
-            if not os.access(path, os.R_OK):
-                raise PermissionError(f"Insufficient permissions to read: {filename}")
+            with open(filename, 'r') as file:
+                if filename.endswith('.json'):
+                    config = json.load(file)
+                elif filename.endswith('.yaml') or filename.endswith('.yml'):
+                    config = yaml.safe_load(file)
+                else:
+                    raise ValueError(f"Unsupported file format: {filename}")
 
-            # Load and parse YAML file
-            with open(path, 'r') as f:
-                config = yaml.safe_load(f)
+                # Apply overrides
+                for key, value in overrides.items():
+                    if key in config:
+                        config[key] = value
 
-            # Apply environment variable resolution if requested
-            if resolve_env:
-                config = resolve_environment_variables(config)
+                # Resolve environment variables if required
+                if resolve_env:
+                    for key, value in config.items():
+                        if isinstance(value, str) and value.startswith('$'):
+                            env_var = value[1:]
+                            config[key] = os.getenv(env_var, value)
 
-            # Apply overrides if provided
-            if overrides:
-                config = apply_overrides(config, overrides)
+                configurations[filename] = config
 
-            configs[filename] = config
-
-        except (FileNotFoundError, PermissionError, yaml.YAMLError) as e:
-            error_record = logging.LogRecord(
+        except Exception as e:
+            error_msg = f"Error loading configuration from {filename}: {str(e)}"
+            logging.error(error_msg)
+            errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=str(e),
-                args=(),
+                msg=error_msg,
+                args=None,
                 exc_info=None
-            )
-            error_logs.append(error_record)
-            logger.error(f"Error loading configuration file {filename}: {str(e)}")
+            ))
 
-    return configs, error_logs
-
-def resolve_environment_variables(config):
-    """Helper function to resolve environment variables in config"""
-    import os
-    
-    if isinstance(config, dict):
-        return {k: resolve_environment_variables(v) for k, v in config.items()}
-    elif isinstance(config, list):
-        return [resolve_environment_variables(v) for v in config]
-    elif isinstance(config, str) and config.startswith('${') and config.endswith('}'):
-        env_var = config[2:-1]
-        return os.environ.get(env_var, config)
-    return config
-
-def apply_overrides(config, overrides):
-    """Helper function to apply override values to config"""
-    if not isinstance(config, dict):
-        return config
-        
-    result = config.copy()
-    for key, value in overrides.items():
-        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
-            result[key] = apply_overrides(result[key], value)
-        else:
-            result[key] = value
-    return result
+    return configurations, errors

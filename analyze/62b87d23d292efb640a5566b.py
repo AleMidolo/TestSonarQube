@@ -1,29 +1,35 @@
-def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
+import subprocess
+
+def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=False, env=None):
     """
-    Llama al/los comando(s) dado(s).
+    Esegui il comando specificato.
+
+    :param comandi: Lista di comandi da eseguire.
+    :param argomenti: Lista di argomenti da passare ai comandi.
+    :param cwd: Directory di lavoro corrente (opzionale).
+    :param verbose: Se True, stampa il comando eseguito (opzionale).
+    :param nascondi_stderr: Se True, nasconde l'output di stderr (opzionale).
+    :param env: Dizionario delle variabili d'ambiente (opzionale).
+    :return: Il risultato dell'esecuzione del comando.
     """
-    import subprocess
-    import sys
+    command = comandi + argomenti
+    stderr = subprocess.DEVNULL if nascondi_stderr else subprocess.PIPE
     
-    if isinstance(commands, str):
-        commands = [commands]
-        
-    for cmd in commands:
-        cmd_list = [cmd]
-        if args:
-            if isinstance(args, str):
-                cmd_list.append(args)
-            else:
-                cmd_list.extend(args)
-                
-        if verbose:
-            print(' '.join(cmd_list))
-            
-        stderr = subprocess.DEVNULL if hide_stderr else None
-            
-        try:
-            subprocess.check_call(cmd_list, cwd=cwd, stderr=stderr, env=env)
-        except subprocess.CalledProcessError as e:
-            sys.exit(e.returncode)
-        except OSError as e:
-            sys.exit(e.errno)
+    if verbose:
+        print(f"Esecuzione comando: {' '.join(command)}")
+    
+    result = subprocess.run(
+        command,
+        cwd=cwd,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=stderr,
+        text=True
+    )
+    
+    if verbose:
+        print(f"Output: {result.stdout}")
+        if result.stderr:
+            print(f"Errore: {result.stderr}")
+    
+    return result

@@ -1,28 +1,19 @@
+import requests
+from lxml import etree
+
 def retrieve_diaspora_host_meta(host):
     """
-    Recupera un documento "host-meta" remoto de Diaspora.
+    Recupera un documento host-meta remoto di Diaspora.
 
-    :arg host: Host del cual se recuperará el documento
-    :returns: Instancia de ``XRD``
+    :arg host: Host da cui recuperare
+    :returns: Istanza di ``XRD``
     """
-    import requests
-    from xrd import XRD
+    url = f"https://{host}/.well-known/host-meta"
+    response = requests.get(url)
+    response.raise_for_status()
     
-    # URLs to try in order
-    urls = [
-        f"https://{host}/.well-known/host-meta",
-        f"http://{host}/.well-known/host-meta"
-    ]
+    # Parse the XML response
+    xml_root = etree.fromstring(response.content)
     
-    for url in urls:
-        try:
-            response = requests.get(url)
-            if response.status_code == 200:
-                # Parse the XRD document from the response content
-                xrd = XRD.parse_xrd(response.content)
-                return xrd
-        except requests.exceptions.RequestException:
-            continue
-            
-    # If we get here, we couldn't retrieve the host-meta document
-    raise Exception(f"Could not retrieve host-meta document from {host}")
+    # Assuming XRD is a class that can be initialized with the XML root
+    return XRD(xml_root)

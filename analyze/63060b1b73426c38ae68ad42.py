@@ -1,9 +1,9 @@
+import os
+
 def inject_config(self):
     """
-    Establece la variable de entorno para la ruta de configuración si no está definida.
+    Imposta la variabile d'ambiente per il percorso del file di configurazione, se non è già definita.
     """
-    import os
-    
+    config_path = "/path/to/config/file"  # Sostituisci con il percorso effettivo del file di configurazione
     if 'CONFIG_PATH' not in os.environ:
-        default_config_path = os.path.join(os.path.dirname(__file__), 'config')
-        os.environ['CONFIG_PATH'] = default_config_path
+        os.environ['CONFIG_PATH'] = config_path

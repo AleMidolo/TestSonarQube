@@ -1,8 +1,7 @@
-import os
-import pty
 import subprocess
-from typing import Any, Sequence
-from concurrent.futures import ThreadPoolExecutor
+import sys
+import os
+from typing import Sequence, Any, Tuple
 
 def xargs(
         cmd: tuple[str, ...],
@@ -13,79 +12,41 @@ def xargs(
         _max_length: int = _get_platform_max_length(),
         **kwargs: Any,
 ) -> tuple[int, bytes]:
-    
-    def _chunk_args(args: Sequence[str], max_len: int) -> list[list[str]]:
-        chunks = []
-        current_chunk = []
-        current_len = 0
-        
-        for arg in args:
-            arg_len = len(arg) + 1  # +1 for space
-            if current_len + arg_len > max_len and current_chunk:
-                chunks.append(current_chunk)
-                current_chunk = []
-                current_len = 0
-            current_chunk.append(arg)
-            current_len += arg_len
-            
-        if current_chunk:
-            chunks.append(current_chunk)
-            
-        return chunks
+    """
+    Un'implementazione semplificata di xargs.
 
-    def _run_chunk(chunk: list[str]) -> tuple[int, bytes]:
-        full_cmd = list(cmd) + chunk
-        
-        if color and hasattr(os, 'openpty'):
-            master, slave = pty.openpty()
-            process = subprocess.Popen(
-                full_cmd,
-                stdout=slave,
-                stderr=slave,
-                **kwargs
-            )
-            os.close(slave)
-            output = b''
-            while True:
-                try:
-                    data = os.read(master, 1024)
-                    if not data:
-                        break
-                    output += data
-                except OSError:
-                    break
-            os.close(master)
-            return process.wait(), output
-        else:
-            process = subprocess.run(
-                full_cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                **kwargs
-            )
-            return process.returncode, process.stdout + process.stderr
+    - **color**: Crea un pty se si è su una piattaforma che lo supporta.
+    - **target_concurrency**: Numero target di partizioni da eseguire in parallelo.
+    """
+    if color and sys.platform != "win32":
+        import pty
+        master, slave = pty.openpty()
+        kwargs['stdout'] = slave
+        kwargs['stderr'] = slave
 
-    chunks = _chunk_args(varargs, _max_length)
-    
-    if target_concurrency <= 1:
-        final_returncode = 0
-        final_output = b''
-        for chunk in chunks:
-            returncode, output = _run_chunk(chunk)
-            final_output += output
-            if returncode != 0:
-                final_returncode = returncode
-        return final_returncode, final_output
-    
+    processes = []
+    for i in range(0, len(varargs), target_concurrency):
+        chunk = varargs[i:i + target_concurrency]
+        process = subprocess.Popen(
+            cmd + tuple(chunk),
+            **kwargs
+        )
+        processes.append(process)
+
+    for process in processes:
+        process.wait()
+
+    if color and sys.platform != "win32":
+        os.close(slave)
+        output = os.read(master, _max_length)
+        os.close(master)
     else:
-        with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
-            results = list(executor.map(_run_chunk, chunks))
-            
-        final_returncode = 0
-        final_output = b''
-        for returncode, output in results:
-            final_output += output
-            if returncode != 0:
-                final_returncode = returncode
-                
-        return final_returncode, final_output
+        output = b""
+
+    return (0, output)
+
+def _get_platform_max_length() -> int:
+    if sys.platform == "win32":
+        return 8192
+    else:
+        return 65536

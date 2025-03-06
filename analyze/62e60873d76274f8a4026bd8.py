@@ -1,26 +1,30 @@
 def protocol_handlers(cls, protocol_version=None):
-    # Diccionario de controladores de protocolo disponibles
-    handlers = {
-        (3, 0): BoltProtocolV3,
-        (4, 0): BoltProtocolV4,
-        (4, 1): BoltProtocolV4_1,
-        (4, 2): BoltProtocolV4_2,
-        (4, 3): BoltProtocolV4_3,
-        (4, 4): BoltProtocolV4_4,
-        (5, 0): BoltProtocolV5
+    """
+    Restituisce un dizionario dei gestori di protocollo Bolt disponibili,
+    indicizzati per tuple di versione. Se viene fornita una versione di protocollo
+    esplicita, il dizionario conterrà zero o un elemento, a seconda che quella
+    versione sia supportata o meno. Se non viene fornita alcuna versione di protocollo,
+    verranno restituite tutte le versioni disponibili.
+
+    :param protocol_version: tupla che identifica una specifica versione
+        del protocollo (ad esempio, (3, 5)) oppure None
+    :return: dizionario che associa una tupla di versione alla classe del gestore
+        per tutte le versioni di protocollo rilevanti e supportate
+    :raise TypeError: se la versione del protocollo non è passata come una tupla
+    """
+    # Dizionario di esempio che mappa le versioni del protocollo ai gestori
+    available_handlers = {
+        (3, 5): "HandlerForV3_5",
+        (4, 0): "HandlerForV4_0",
+        (4, 1): "HandlerForV4_1",
     }
 
-    # Si no se especifica versión, devolver todos los controladores
-    if protocol_version is None:
-        return handlers
-
-    # Validar que la versión sea una tupla
-    if not isinstance(protocol_version, tuple):
-        raise TypeError("La versión del protocolo debe ser una tupla")
-
-    # Si se especifica versión, devolver solo el controlador para esa versión si existe
-    if protocol_version in handlers:
-        return {protocol_version: handlers[protocol_version]}
-    
-    # Si la versión no existe, devolver diccionario vacío
-    return {}
+    if protocol_version is not None:
+        if not isinstance(protocol_version, tuple):
+            raise TypeError("La versione del protocollo deve essere una tupla.")
+        if protocol_version in available_handlers:
+            return {protocol_version: available_handlers[protocol_version]}
+        else:
+            return {}
+    else:
+        return available_handlers

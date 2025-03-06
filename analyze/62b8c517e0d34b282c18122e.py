@@ -1,37 +1,41 @@
 def extostr(cls, e, max_level=30, max_path_level=5):
     """
-    Formatear una excepción.  
-    :param e: Cualquier instancia de excepción.  
-    :type e: Exception  
-    :param max_level: Nivel máximo de la pila de llamadas (por defecto 30).  
-    :type max_level: int  
-    :param max_path_level: Nivel máximo de la ruta (por defecto 5).  
-    :type max_path_level: int  
-    :return: La cadena legible de la excepción.  
-    :rtype: str  
+    Formatta un'eccezione.
+    :param e: Qualsiasi istanza di eccezione.
+    :type e: Exception
+    :param max_level: Livello massimo dello stack delle chiamate (predefinito 30)
+    :type max_level: int
+    :param max_path_level: Livello massimo del percorso (predefinito 5)
+    :type max_path_level: int
+    :return: La stringa leggibile dell'eccezione
+    :rtype: str
     """
     import traceback
-    import os
     
-    # Obtener el traceback como lista de strings
-    tb_list = traceback.format_exception(type(e), e, e.__traceback__, limit=max_level)
+    # Estrai lo stack trace
+    stack_trace = traceback.format_exc()
     
-    # Procesar cada línea del traceback
-    processed_lines = []
-    for line in tb_list:
-        # Acortar rutas largas
-        if 'File "' in line:
-            parts = line.split('File "')
-            path = parts[1].split('"')[0]
-            path_parts = path.split(os.sep)
-            
-            if len(path_parts) > max_path_level:
-                shortened_path = os.sep.join(['...'] + path_parts[-max_path_level:])
-                line = parts[0] + 'File "' + shortened_path + '"' + '"'.join(parts[1].split('"')[1:])
-                
-        processed_lines.append(line)
+    # Limita il numero di livelli dello stack
+    stack_lines = stack_trace.splitlines()
+    if len(stack_lines) > max_level:
+        stack_lines = stack_lines[:max_level]
+        stack_lines.append("... (stack trace truncated)")
     
-    # Unir las líneas procesadas
-    formatted_exception = ''.join(processed_lines)
+    # Limita il numero di livelli del percorso
+    path_lines = []
+    for line in stack_lines:
+        if "File" in line and "line" in line:
+            parts = line.split(",")
+            if len(parts) > max_path_level:
+                parts = parts[:max_path_level]
+                parts.append("... (path truncated)")
+            line = ",".join(parts)
+        path_lines.append(line)
     
-    return formatted_exception.strip()
+    # Unisci le linee in una singola stringa
+    formatted_trace = "\n".join(path_lines)
+    
+    # Aggiungi il messaggio dell'eccezione
+    result = f"{str(e)}\n{formatted_trace}"
+    
+    return result

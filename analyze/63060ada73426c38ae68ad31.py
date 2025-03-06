@@ -1,39 +1,22 @@
 def _convert_non_cli_args(self, parser_name, values_dict):
     """
-    Convierte los argumentos a los tipos correctos modificando el parámetro values_dict.
+    Converte gli argomenti nei tipi corretti modificando il parametro values_dict.
 
-    Por defecto, todos los valores son cadenas de texto (strings).
+    Per impostazione predefinita, tutti i valori sono stringhe.
 
-    :param parser_name: El nombre del comando, por ejemplo: main, virsh, ospd, etc.
-    :param values_dict: El diccionario con los argumentos.
+    :param parser_name: Il nome del comando, ad esempio main, virsh, ospd, ecc.
+    :param values_dict: Il dizionario con gli argomenti
     """
-    # Obtener la configuración del parser
-    parser_config = self.config.get(parser_name, {})
-    
-    # Iterar sobre los argumentos en values_dict
-    for arg_name, value in values_dict.items():
-        # Obtener el tipo definido en la configuración
-        arg_type = parser_config.get(arg_name, {}).get('type', str)
-        
-        # Ignorar si el valor es None
-        if value is None:
-            continue
-            
-        try:
-            # Convertir listas
-            if isinstance(value, list):
-                values_dict[arg_name] = [arg_type(v) for v in value]
-            # Convertir valores individuales
-            else:
-                # Manejar booleanos especialmente
-                if arg_type == bool:
-                    if isinstance(value, str):
-                        values_dict[arg_name] = value.lower() in ('true', 't', 'yes', 'y', '1')
-                    else:
-                        values_dict[arg_name] = bool(value)
-                else:
-                    values_dict[arg_name] = arg_type(value)
-                    
-        except (ValueError, TypeError):
-            # Si falla la conversión, dejar el valor original
-            continue
+    for key, value in values_dict.items():
+        if isinstance(value, str):
+            if value.lower() == 'true':
+                values_dict[key] = True
+            elif value.lower() == 'false':
+                values_dict[key] = False
+            elif value.isdigit():
+                values_dict[key] = int(value)
+            elif value.replace('.', '', 1).isdigit():
+                values_dict[key] = float(value)
+            elif value.lower() == 'none':
+                values_dict[key] = None
+    return values_dict

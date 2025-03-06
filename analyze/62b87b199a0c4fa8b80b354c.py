@@ -1,19 +1,10 @@
 def _get_seq_with_type(seq, bufsize=None):
     """
-    Devuelve un par (secuencia, tipo).
-    La secuencia se deriva de *seq*
-    (o es *seq*, si este es de un tipo de secuencia).
+    Restituisce una coppia (sequenza, tipo).  
+    La sequenza è derivata da *seq*  
+    (oppure è *seq*, se quest'ultima è di un tipo sequenza).
     """
-    # Check if seq is already a sequence type
-    if isinstance(seq, (list, tuple, set, frozenset)):
+    if isinstance(seq, (str, bytes, bytearray, list, tuple)):
         return seq, type(seq)
-    
-    # Convert iterables to list
-    if hasattr(seq, '__iter__'):
-        # Use bufsize if provided, otherwise convert entire sequence
-        if bufsize is not None:
-            return list(itertools.islice(seq, bufsize)), list
+    else:
         return list(seq), list
-        
-    # If not iterable, wrap in list
-    return [seq], list

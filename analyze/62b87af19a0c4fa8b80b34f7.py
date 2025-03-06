@@ -1,29 +1,28 @@
+import copy
+
 def difference(d1, d2, level=-1):
     """
-    Devuelve un diccionario con los elementos de *d1* que no están contenidos en *d2*.
+    Restituisce un dizionario con gli elementi di *d1* che non sono contenuti in *d2*.
 
-    El parámetro *level* establece la profundidad máxima de recursión. Para recursión infinita, configúralo en -1. Para un nivel 1, si una clave está presente tanto en *d1* como en *d2* pero tiene valores diferentes, se incluye en la diferencia. Consulta :func:`intersection` para más detalles.
+    Il parametro *level* definisce la profondità massima della ricorsione. Per una ricorsione infinita, impostare *level* a -1. Per livello 1, se una chiave è presente sia in *d1* che in *d2* ma ha valori diversi, viene inclusa nella differenza. Consulta la funzione :func:`intersection` per ulteriori dettagli.
 
-    *d1* y *d2* permanecen sin cambios. Sin embargo, *d1* o algunos de sus subdiccionarios pueden ser devueltos directamente. Realiza una copia profunda del resultado cuando sea apropiado.
+    *d1* e *d2* rimangono invariati. Tuttavia, *d1* o alcuni dei suoi sottodizionari potrebbero essere restituiti direttamente. Effettua una copia profonda (deep copy) del risultato quando appropriato.
 
-    .. versionadded:: 0.5  
-       Agrega el argumento de palabra clave *level*.
+    .. versione aggiunta:: 0.5
+       Aggiunto il parametro *level*.
     """
-    result = {}
+    if level == 0:
+        return {}
     
-    # Iterate through all keys in d1
+    diff = {}
     for key in d1:
-        # If key not in d2, include the entire value from d1
         if key not in d2:
-            result[key] = d1[key]
-        # If we haven't reached max recursion level and both values are dicts
-        elif level != 0 and isinstance(d1[key], dict) and isinstance(d2[key], dict):
-            # Recursively get difference of nested dicts
-            nested_diff = difference(d1[key], d2[key], level - 1 if level > 0 else -1)
-            if nested_diff:
-                result[key] = nested_diff
-        # If values are different at this level
+            diff[key] = copy.deepcopy(d1[key])
+        elif isinstance(d1[key], dict) and isinstance(d2[key], dict) and (level == -1 or level > 1):
+            sub_diff = difference(d1[key], d2[key], level - 1 if level != -1 else -1)
+            if sub_diff:
+                diff[key] = sub_diff
         elif d1[key] != d2[key]:
-            result[key] = d1[key]
-            
-    return result
+            diff[key] = copy.deepcopy(d1[key])
+    
+    return diff

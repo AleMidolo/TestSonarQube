@@ -1,42 +1,30 @@
+import zipfile
+import os
+from collections import defaultdict
+
 def _explore_zipfile(zip_path):
     """
-    Obtiene los datos de los paquetes desde `zip_path`.
-    
-    Agrupa los archivos por el nombre base de su archivo XML y devuelve los datos en formato de diccionario.
-    
-    Parámetros
+    Ottiene i dati dei pacchetti dal percorso zip fornito.
+
+    Raggruppa i file in base al nome base dei loro file XML e restituisce i dati in formato dizionario.
+
+    Parametri
     ----------
-    zip_path: str  
-        Ruta del archivo zip.
-    Retorna
+    zip_path : str  
+        Percorso del file zip.
+
+    Restituisce
     -------
-    dict  
+    dict
+        Un dizionario che raggruppa i file in base al nome base dei loro file XML.
     """
-    import zipfile
-    import os
-    from collections import defaultdict
-    
-    # Diccionario para almacenar los archivos agrupados
     grouped_files = defaultdict(list)
     
-    # Abrir el archivo zip
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        # Iterar sobre todos los archivos en el zip
-        for filename in zip_ref.namelist():
-            # Obtener el nombre base del archivo (sin extensión)
-            base_name = os.path.splitext(os.path.basename(filename))[0]
-            
-            # Si el archivo termina en .xml
-            if filename.lower().endswith('.xml'):
-                # Usar el nombre base como clave
-                key = base_name
-            else:
-                # Para otros archivos, buscar el nombre base del XML relacionado
-                # Asumiendo que los archivos relacionados comparten el mismo nombre base
-                key = base_name.split('_')[0]  # Eliminar sufijos después del guión bajo
-            
-            # Agregar el nombre del archivo a la lista correspondiente
-            grouped_files[key].append(filename)
+        for file_name in zip_ref.namelist():
+            base_name = os.path.basename(file_name)
+            if base_name.endswith('.xml'):
+                base_name_without_ext = os.path.splitext(base_name)[0]
+                grouped_files[base_name_without_ext].append(file_name)
     
-    # Convertir defaultdict a dict regular
     return dict(grouped_files)
