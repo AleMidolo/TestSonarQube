@@ -1,29 +1,37 @@
+import os
+import sys
+
 def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     """
-    Normalizes the command tuple to handle issues with shebangs and paths on Windows.
+    Corrections for the following issues on Windows:
+    - https://bugs.python.org/issue8557
+    - Windows does not correctly interpret shebangs
 
-    Args:
-        cmd: A tuple of strings representing the command and its arguments.
-
-    Returns:
-        A tuple of strings with the normalized command and arguments.
+    This function also allows proper functioning of shebangs with deep paths.
     """
     if not cmd:
         return cmd
 
-    # Handle shebang issues on Windows
-    if cmd[0].startswith('#!'):
-        # Extract the interpreter path from the shebang
-        interpreter = cmd[0][2:].strip()
-        # Replace the shebang with the interpreter path
-        cmd = (interpreter,) + cmd[1:]
+    # Extract the first part of the command (the executable)
+    executable = cmd[0]
 
-    # Normalize paths to handle deep paths correctly
-    normalized_cmd = []
-    for part in cmd:
-        if '\\' in part or '/' in part:
-            # Normalize path separators
-            part = part.replace('\\', '/')
-        normalized_cmd.append(part)
+    # If the executable is a shebang, we need to handle it differently
+    if executable.startswith('#!'):
+        # Split the shebang line into parts
+        shebang_parts = executable.split()
+        if len(shebang_parts) < 2:
+            return cmd  # Not a valid shebang, return the original command
 
-    return tuple(normalized_cmd)
+        # The interpreter is the second part of the shebang
+        interpreter = shebang_parts[1]
+
+        # If the interpreter is a path, we need to normalize it
+        if os.path.isabs(interpreter):
+            interpreter = os.path.normpath(interpreter)
+
+        # Construct the new command with the interpreter and the rest of the arguments
+        new_cmd = (interpreter,) + cmd[1:]
+        return new_cmd
+
+    # If the executable is not a shebang, just return the original command
+    return cmd

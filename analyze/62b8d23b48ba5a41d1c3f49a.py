@@ -25,8 +25,8 @@ def mru_cache(maxsize=128, typed=False):
             cache[key] = result
 
             if len(cache) > maxsize:
-                # Remove the least recently used item
-                cache.popitem(last=False)
+                # Remove the most recently used item (last in the OrderedDict)
+                cache.popitem(last=True)
 
             return result
 

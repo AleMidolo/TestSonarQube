@@ -8,34 +8,32 @@ def generate_default_observer_schema(app):
             schema di osservazione predefinito.
     """
     default_schema = {
-        "type": "object",
-        "properties": {
-            "status": {
-                "type": "object",
-                "properties": {
-                    "conditions": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "type": {"type": "string"},
-                                "status": {"type": "string"},
-                                "lastTransitionTime": {"type": "string"},
-                                "reason": {"type": "string"},
-                                "message": {"type": "string"}
-                            },
-                            "required": ["type", "status"]
-                        }
-                    }
-                },
-                "required": ["conditions"]
-            }
+        "apiVersion": "v1",
+        "kind": "ObserverSchema",
+        "metadata": {
+            "name": "default-observer-schema",
+            "namespace": app.metadata.namespace
         },
-        "required": ["status"]
+        "spec": {
+            "rules": [
+                {
+                    "resource": {
+                        "apiVersion": "*",
+                        "kind": "*"
+                    },
+                    "observation": {
+                        "interval": "60s",
+                        "timeout": "30s",
+                        "successThreshold": 1,
+                        "failureThreshold": 3
+                    }
+                }
+            ]
+        }
     }
 
-    for resource in app.spec.manifest:
-        if not hasattr(resource, 'observer_schema'):
-            resource.observer_schema = default_schema
-
-    return app
+    # Aggiungi lo schema di osservazione predefinito all'applicazione
+    if not hasattr(app.spec, 'observerSchemas'):
+        app.spec.observerSchemas = []
+    
+    app.spec.observerSchemas.append(default_schema)

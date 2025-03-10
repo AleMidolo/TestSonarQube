@@ -6,7 +6,7 @@ def hydrate_time(nanoseconds, tz=None):
     Idratatore per valori di `Time` e `LocalTime`.
 
     :param nanoseconds: Il tempo in nanosecondi.
-    :param tz: Il fuso orario (opzionale).
+    :param tz: Il fuso orario (timezone) opzionale.
     :return: Un oggetto `datetime.time` rappresentante il tempo.
     """
     # Convert nanoseconds to seconds
@@ -15,17 +15,19 @@ def hydrate_time(nanoseconds, tz=None):
     # Create a timedelta object from the seconds
     delta = timedelta(seconds=seconds)
     
-    # Create a datetime object starting from epoch (1970-01-01)
-    epoch = datetime(1970, 1, 1)
-    dt = epoch + delta
+    # Create a base datetime object (e.g., 1970-01-01)
+    base_datetime = datetime(1970, 1, 1)
+    
+    # Add the timedelta to the base datetime
+    result_datetime = base_datetime + delta
     
     # Extract the time part
-    time_obj = dt.time()
+    result_time = result_datetime.time()
     
     # If a timezone is provided, localize the time
-    if tz:
-        tz_obj = pytz.timezone(tz)
-        dt = tz_obj.localize(dt)
-        time_obj = dt.time()
+    if tz is not None:
+        tz = pytz.timezone(tz)
+        result_datetime = tz.localize(result_datetime)
+        result_time = result_datetime.time()
     
-    return time_obj
+    return result_time

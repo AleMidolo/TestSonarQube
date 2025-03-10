@@ -10,7 +10,7 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         username, domain = handle.split('@')
         
         # Construct the WebFinger URL
-        url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
+        url = f"https://{domain}/.well-known/webfinger?resource=acct:{username}@{domain}"
         
         # Make the GET request
         response = requests.get(url, headers={"Accept": "application/jrd+json"})

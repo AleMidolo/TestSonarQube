@@ -4,9 +4,9 @@ def dehydrate_time(value):
     """
     Disidratatore per valori di tipo `time`.
 
-    :param value: Un oggetto di tipo `time`.
+    :param value: Un oggetto di tipo `time` da disidratare.
     :type value: time
-    :return: Una stringa rappresentante il tempo nel formato "HH:MM:SS".
+    :return: Una stringa rappresentante il tempo in formato HH:MM:SS.
     :rtype: str
     """
     if not isinstance(value, time):

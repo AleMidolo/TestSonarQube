@@ -10,14 +10,40 @@ def normalized(self):
     """
     from dateutil.relativedelta import relativedelta
 
-    # Convert fractional days to hours
-    total_hours = self.hours + (self.days % 1) * 24
+    # Convert all attributes to integers
     days = int(self.days)
-    hours = int(total_hours)
+    hours = int(self.hours)
+    minutes = int(self.minutes)
+    seconds = int(self.seconds)
+    microseconds = int(self.microseconds)
 
-    # Handle overflow from hours to days
-    if hours >= 24:
-        days += hours // 24
-        hours = hours % 24
+    # Handle fractional parts
+    fractional_days = self.days - days
+    fractional_hours = self.hours - hours
+    fractional_minutes = self.minutes - minutes
+    fractional_seconds = self.seconds - seconds
+    fractional_microseconds = self.microseconds - microseconds
 
-    return relativedelta(days=days, hours=hours)
+    # Convert fractional parts to lower units
+    hours += int(fractional_days * 24)
+    minutes += int(fractional_hours * 60)
+    seconds += int(fractional_minutes * 60)
+    microseconds += int(fractional_seconds * 1e6)
+
+    # Normalize the microseconds
+    seconds += microseconds // 1000000
+    microseconds = microseconds % 1000000
+
+    # Normalize the seconds
+    minutes += seconds // 60
+    seconds = seconds % 60
+
+    # Normalize the minutes
+    hours += minutes // 60
+    minutes = minutes % 60
+
+    # Normalize the hours
+    days += hours // 24
+    hours = hours % 24
+
+    return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds, microseconds=microseconds)

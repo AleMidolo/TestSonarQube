@@ -20,4 +20,4 @@ def split(s, platform='this'):
     else:  # Windows/CMD style
         regex = re.compile(r'''((?:[^\s"]|"[^"]*")+)''')
     
-    return [match.group(0) for match in regex.finditer(s)]
+    return regex.findall(s)

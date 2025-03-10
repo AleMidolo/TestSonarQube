@@ -12,8 +12,8 @@ def scale(self, other=None, recompute=False):
     Viene sollevata un'eccezione :exc:`.LenaValueError` se si tenta di farlo.
     """
     if not hasattr(self, '_scale') or recompute:
-        # Calcola la scala come integrale dell'istogramma
-        self._scale = sum(self.bins) * self.bin_width
+        # Calcola la scala come l'integrale dell'istogramma
+        self._scale = sum(self.bins)
     
     if other is None:
         return self._scale
@@ -21,7 +21,7 @@ def scale(self, other=None, recompute=False):
         if self._scale == 0:
             raise LenaValueError("Impossibile riscalare un istogramma con scala pari a zero.")
         scale_factor = other / self._scale
-        self.bins = [bin * scale_factor for bin in self.bins]
+        self.bins = [bin_value * scale_factor for bin_value in self.bins]
         self._scale = other
     else:
         raise TypeError("Il parametro 'other' deve essere None o un float.")

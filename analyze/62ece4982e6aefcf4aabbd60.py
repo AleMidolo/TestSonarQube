@@ -18,13 +18,16 @@ def size_to_bytes(size: str) -> int:
         1000
     """
     size = size.strip().upper()
-    if size[-1] == 'K':
-        return int(size[:-1]) * 1000
-    elif size[-1] == 'M':
-        return int(size[:-1]) * 1000 * 1000
-    elif size[-1] == 'G':
-        return int(size[:-1]) * 1000 * 1000 * 1000
-    elif size[-1] == 'T':
-        return int(size[:-1]) * 1000 * 1000 * 1000 * 1000
+    if size[-1] in ['K', 'M', 'G', 'T']:
+        num = float(size[:-1])
+        unit = size[-1]
+        if unit == 'K':
+            return int(num * 1000)
+        elif unit == 'M':
+            return int(num * 1000 ** 2)
+        elif unit == 'G':
+            return int(num * 1000 ** 3)
+        elif unit == 'T':
+            return int(num * 1000 ** 4)
     else:
         return int(size)
