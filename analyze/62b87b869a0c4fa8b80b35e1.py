@@ -32,28 +32,38 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     Return the resulting graph.
     """
+    from collections import namedtuple
+    import numpy as np
+
     if make_value is None:
         make_value = lambda bin_: bin_
 
     if scale is True:
         scale = hist.scale
 
-    graph_points = []
-    for bin_ in hist.bins:
-        if get_coordinate == "left":
-            x = bin_.left
-        elif get_coordinate == "right":
-            x = bin_.right
-        elif get_coordinate == "middle":
-            x = (bin_.left + bin_.right) / 2
-        else:
-            raise ValueError("Invalid get_coordinate value. Must be 'left', 'right', or 'middle'.")
+    # Determine the coordinate for each bin
+    if get_coordinate == "left":
+        coordinates = hist.bins.left
+    elif get_coordinate == "right":
+        coordinates = hist.bins.right
+    elif get_coordinate == "middle":
+        coordinates = (hist.bins.left + hist.bins.right) / 2
+    else:
+        raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
 
-        value = make_value(bin_.content)
-        if isinstance(value, tuple):
-            graph_point = (x,) + value
-        else:
-            graph_point = (x, value)
-        graph_points.append(graph_point)
+    # Apply make_value to each bin
+    values = [make_value(bin_) for bin_ in hist.bins]
 
-    return Graph(graph_points, field_names=field_names, scale=scale)
+    # Ensure values are in a consistent format (e.g., tuple)
+    if not isinstance(values[0], (tuple, list)):
+        values = [(value,) for value in values]
+
+    # Create the graph data structure
+    GraphPoint = namedtuple('GraphPoint', field_names)
+    graph_data = [GraphPoint(coord, *val) for coord, val in zip(coordinates, values)]
+
+    # Create the graph object
+    Graph = namedtuple('Graph', ['data', 'scale'])
+    graph = Graph(data=graph_data, scale=scale)
+
+    return graph

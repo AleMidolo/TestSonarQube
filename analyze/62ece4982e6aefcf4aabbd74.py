@@ -21,7 +21,7 @@ def prepare_repository_from_archive(
     if isinstance(tmp_path, str):
         tmp_path = Path(tmp_path)
     
-    # Create a temporary directory in the specified tmp_path
+    # Create a temporary directory within tmp_path
     temp_dir = tempfile.mkdtemp(dir=tmp_path)
     
     # Determine the filename if not provided
@@ -35,7 +35,7 @@ def prepare_repository_from_archive(
     elif archive_path.endswith('.tar.gz') or archive_path.endswith('.tgz'):
         with tarfile.open(archive_path, 'r:gz') as tar_ref:
             tar_ref.extractall(temp_dir)
-    elif archive_path.endswith('.tar.bz2') or archive_path.endswith('.tbz2'):
+    elif archive_path.endswith('.tar.bz2') or archive_path.endswith('.tbz'):
         with tarfile.open(archive_path, 'r:bz2') as tar_ref:
             tar_ref.extractall(temp_dir)
     elif archive_path.endswith('.tar'):

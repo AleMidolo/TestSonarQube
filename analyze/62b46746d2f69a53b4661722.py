@@ -13,35 +13,32 @@ def absorb(self, args):
 
         A & (~A | B) = A & B, A | (~A & B) = A | B
     """
-    if not args:
-        return []
-
-    new_args = []
-    for expr in args:
+    def apply_absorption(expr):
         if isinstance(expr, tuple):
-            if len(expr) == 3:
-                op, left, right = expr
-                if op == '&':
-                    if left == right:
-                        new_args.append(left)
-                    elif isinstance(right, tuple) and len(right) == 3:
-                        r_op, r_left, r_right = right
-                        if r_op == '|' and r_left == left:
-                            new_args.append(left)
-                        elif r_op == '|' and r_left == ('~', left):
-                            new_args.append((op, left, r_right))
-                elif op == '|':
-                    if left == right:
-                        new_args.append(left)
-                    elif isinstance(right, tuple) and len(right) == 3:
-                        r_op, r_left, r_right = right
-                        if r_op == '&' and r_left == left:
-                            new_args.append(left)
-                        elif r_op == '&' and r_left == ('~', left):
-                            new_args.append((op, left, r_right))
-            else:
-                new_args.append(expr)
-        else:
-            new_args.append(expr)
-    
-    return new_args
+            if expr[0] == '&':
+                left, right = expr[1], expr[2]
+                if isinstance(right, tuple) and right[0] == '|':
+                    if left == right[1]:
+                        return left
+                    elif left == ('~', right[1]):
+                        return ('&', left, right[2])
+                elif isinstance(left, tuple) and left[0] == '|':
+                    if right == left[1]:
+                        return right
+                    elif right == ('~', left[1]):
+                        return ('&', right, left[2])
+            elif expr[0] == '|':
+                left, right = expr[1], expr[2]
+                if isinstance(right, tuple) and right[0] == '&':
+                    if left == right[1]:
+                        return left
+                    elif left == ('~', right[1]):
+                        return ('|', left, right[2])
+                elif isinstance(left, tuple) and left[0] == '&':
+                    if right == left[1]:
+                        return right
+                    elif right == ('~', left[1]):
+                        return ('|', right, left[2])
+        return expr
+
+    return [apply_absorption(arg) for arg in args]

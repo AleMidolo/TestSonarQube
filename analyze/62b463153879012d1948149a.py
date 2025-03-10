@@ -19,7 +19,7 @@ def _group_files_by_xml_filename(source, xmls, files):
     -------
     dict
         key: name of the XML files
-        value: list of files associated with the XML file
+        value: List of files associated with the XML file
     """
     grouped_files = {}
     

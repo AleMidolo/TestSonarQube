@@ -22,9 +22,9 @@ def regex_dict(item):
     Returns:
         dict with keys converted to regexes
     """
-    regex_dict = {}
+    regex_item = {}
     for key, value in item.items():
         # Convert the wildcard pattern to a regex pattern
         regex_pattern = re.escape(key).replace(r'\*', '.*')
-        regex_dict[re.compile(regex_pattern)] = value
-    return regex_dict
+        regex_item[re.compile(regex_pattern)] = value
+    return regex_item

@@ -4,22 +4,19 @@ def validate_fixity(self, fixity, manifest_files):
 
     Check the structure of the fixity block and makes sure that only files
     listed in the manifest are referenced.
-
-    Args:
-        fixity (dict): The fixity block to validate.
-        manifest_files (list): List of files in the manifest.
-
-    Returns:
-        bool: True if the fixity block is valid, False otherwise.
     """
     if not isinstance(fixity, dict):
-        return False
+        raise ValueError("Fixity block must be a dictionary.")
     
-    for file_name, checksum in fixity.items():
+    for file_name, checksums in fixity.items():
         if file_name not in manifest_files:
-            return False
+            raise ValueError(f"File '{file_name}' in fixity block is not listed in the manifest.")
         
-        if not isinstance(checksum, str) or not checksum:
-            return False
+        if not isinstance(checksums, dict):
+            raise ValueError(f"Checksums for file '{file_name}' must be a dictionary.")
+        
+        for algorithm, checksum in checksums.items():
+            if not isinstance(algorithm, str) or not isinstance(checksum, str):
+                raise ValueError(f"Algorithm and checksum for file '{file_name}' must be strings.")
     
     return True

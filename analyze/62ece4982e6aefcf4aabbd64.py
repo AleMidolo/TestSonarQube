@@ -1,9 +1,9 @@
 def strip_root(path, root):
     """
-    Remove root from path, throw exception on failure.
+    Remove root from path. If fails, throw exception.
 
     Args:
-        path (str): The full path from which to remove the root.
+        path (str): The full path.
         root (str): The root part of the path to be removed.
 
     Returns:

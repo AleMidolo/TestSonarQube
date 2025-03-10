@@ -18,20 +18,20 @@ def update_last_applied_manifest_dict_from_resp(
     This function go through all observed fields, and initialized their value in
     last_applied_manifest if they are not yet present
     """
-    for field, schema in observer_schema.items():
-        if field not in response:
-            raise KeyError(f"Field '{field}' not found in the Kubernetes response.")
+    for key, schema in observer_schema.items():
+        if key not in response:
+            raise KeyError(f"Observed field '{key}' not present in the Kubernetes response")
         
-        if field not in last_applied_manifest:
+        if key not in last_applied_manifest:
             if isinstance(schema, dict):
-                last_applied_manifest[field] = {}
+                last_applied_manifest[key] = {}
                 update_last_applied_manifest_dict_from_resp(
-                    last_applied_manifest[field], schema, response[field]
+                    last_applied_manifest[key], schema, response[key]
                 )
             elif isinstance(schema, list):
-                last_applied_manifest[field] = []
+                last_applied_manifest[key] = []
                 update_last_applied_manifest_list_from_resp(
-                    last_applied_manifest[field], schema, response[field]
+                    last_applied_manifest[key], schema, response[key]
                 )
             else:
-                last_applied_manifest[field] = response[field]
+                last_applied_manifest[key] = response[key]

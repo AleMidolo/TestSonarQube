@@ -11,7 +11,7 @@ def data(self, *keys):
     :return: dictionary of values, keyed by field name
     :raises: :exc:`IndexError` if an out-of-bounds index is specified
     """
-    # Assuming self._fields contains the field names and self._values contains the values
+    # Assuming self._fields contains the field names and self._values contains the corresponding values
     if not hasattr(self, '_fields') or not hasattr(self, '_values'):
         raise AttributeError("Record does not have '_fields' or '_values' attributes.")
     

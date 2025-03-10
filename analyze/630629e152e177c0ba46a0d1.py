@@ -14,8 +14,8 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         response = requests.get(webfinger_url, timeout=5)
         response.raise_for_status()
         
-        # Return the content of the response
+        # Return the content of the response if successful
         return response.text
-    except (requests.RequestException, IndexError):
-        # Return None if any error occurs
+    except (requests.RequestException, ValueError):
+        # Return None if any error occurs (e.g., network error, invalid handle format)
         return None

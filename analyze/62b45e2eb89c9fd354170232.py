@@ -8,15 +8,21 @@ def next_version(version):
     parts = version.split('.')
     
     # Increment the last part
-    last_part = int(parts[-1]) + 1
-    
-    # Handle zero-prefixed versions
-    if parts[-1].startswith('0'):
-        # Preserve the zero-prefix length
-        zero_prefix_length = len(parts[-1]) - len(str(int(parts[-1])))
-        parts[-1] = '0' * zero_prefix_length + str(last_part)
+    last_part = parts[-1]
+    if last_part.isdigit():
+        parts[-1] = str(int(last_part) + 1)
     else:
-        parts[-1] = str(last_part)
+        # Handle non-numeric parts (e.g., 'a', 'b', etc.)
+        # Increment the last character
+        last_char = last_part[-1]
+        if last_char.isalpha():
+            if last_char == 'z':
+                parts[-1] = last_part[:-1] + 'a'
+            else:
+                parts[-1] = last_part[:-1] + chr(ord(last_char) + 1)
+        else:
+            # If the last character is not a letter, append 'a'
+            parts[-1] = last_part + 'a'
     
-    # Join the parts back together
+    # Reconstruct the version string
     return '.'.join(parts)

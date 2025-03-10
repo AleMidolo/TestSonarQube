@@ -13,31 +13,27 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     import traceback
     import sys
 
-    # Get the exception type and message
-    exc_type = type(e).__name__
-    exc_msg = str(e)
-
-    # Get the traceback
-    tb = traceback.format_exception(type(e), e, e.__traceback__)
-
-    # Limit the traceback to max_level
-    if len(tb) > max_level:
-        tb = tb[:max_level]
-        tb.append(f"... (truncated to {max_level} levels)")
-
-    # Limit the path levels in the traceback
-    for i in range(len(tb)):
-        parts = tb[i].split('\n')
-        if len(parts) > 1:
-            path_parts = parts[1].split(', ')
-            if len(path_parts) > max_path_level:
-                path_parts = path_parts[:max_path_level]
-                path_parts.append(f"... (truncated to {max_path_level} levels)")
-                parts[1] = ', '.join(path_parts)
-                tb[i] = '\n'.join(parts)
-
-    # Combine the exception type, message, and traceback
-    result = f"{exc_type}: {exc_msg}\n"
-    result += ''.join(tb)
-
-    return result
+    # Get the exception traceback
+    exc_type, exc_value, exc_traceback = sys.exc_info()
+    
+    # Format the exception traceback
+    formatted_traceback = traceback.format_exception(exc_type, exc_value, exc_traceback, limit=max_level)
+    
+    # Join the formatted traceback into a single string
+    traceback_str = "".join(formatted_traceback)
+    
+    # Split the traceback string into lines
+    traceback_lines = traceback_str.splitlines()
+    
+    # Limit the number of path levels in each line
+    limited_traceback_lines = []
+    for line in traceback_lines:
+        parts = line.split("\\")
+        if len(parts) > max_path_level:
+            line = "\\".join(parts[-max_path_level:])
+        limited_traceback_lines.append(line)
+    
+    # Join the limited traceback lines into a single string
+    limited_traceback_str = "\n".join(limited_traceback_lines)
+    
+    return limited_traceback_str

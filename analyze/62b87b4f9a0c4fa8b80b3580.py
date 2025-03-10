@@ -8,6 +8,6 @@ def integral(bins, edges):
     """
     integral_value = 0.0
     for i in range(len(bins)):
-        bin_width = edges[i+1] - edges[i]
+        bin_width = edges[i + 1] - edges[i]
         integral_value += bins[i] * bin_width
     return integral_value

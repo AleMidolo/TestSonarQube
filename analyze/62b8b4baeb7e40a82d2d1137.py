@@ -1,5 +1,5 @@
 from zope.interface import Invalid, providedBy
-from zope.interface.verify import verifyObject as zope_verifyObject
+from zope.interface.verify import verifyObject as zope_verify_object
 
 def verifyObject(iface, candidate, tentative=False):
     """
@@ -35,8 +35,8 @@ def verifyObject(iface, candidate, tentative=False):
     if not tentative:
         if not iface.providedBy(candidate):
             raise Invalid(f"The candidate does not provide the interface {iface}.")
-
+    
     try:
-        return zope_verifyObject(iface, candidate)
+        return zope_verify_object(iface, candidate)
     except Invalid as e:
-        raise Invalid(f"Verification failed: {e}")
+        raise Invalid(f"Verification failed: {e}") from e
