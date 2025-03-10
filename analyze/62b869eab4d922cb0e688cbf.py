@@ -9,25 +9,32 @@ def generate_default_observer_schema(app):
     default_schema = {
         "type": "object",
         "properties": {
-            "apiVersion": {"type": "string"},
-            "kind": {"type": "string"},
-            "metadata": {
+            "status": {
                 "type": "object",
                 "properties": {
-                    "name": {"type": "string"},
-                    "namespace": {"type": "string"}
+                    "conditions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "type": {"type": "string"},
+                                "status": {"type": "string"},
+                                "lastTransitionTime": {"type": "string"},
+                                "reason": {"type": "string"},
+                                "message": {"type": "string"}
+                            },
+                            "required": ["type", "status"]
+                        }
+                    }
                 },
-                "required": ["name"]
-            },
-            "spec": {"type": "object"},
-            "status": {"type": "object"}
+                "required": ["conditions"]
+            }
         },
-        "required": ["apiVersion", "kind", "metadata"]
+        "required": ["status"]
     }
-
-    if not hasattr(app, 'spec') or not hasattr(app.spec, 'manifest'):
-        return
 
     for resource in app.spec.manifest:
         if not hasattr(resource, 'observer_schema'):
             resource.observer_schema = default_schema
+
+    return app

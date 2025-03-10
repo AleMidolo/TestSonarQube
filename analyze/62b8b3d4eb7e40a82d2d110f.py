@@ -4,7 +4,7 @@ def _should_attempt_c_optimizations():
     """
     Devuelve un valor verdadero si deberíamos intentar usar las optimizaciones en C.
 
-    Esto tiene en cuenta si estamos utilizando PyPy y el valor de la variable de entorno  
+    Esto tiene en cuenta si estamos utilizando PyPy y el valor de la variable de entorno
     ``PURE_PYTHON``, tal como se define en `_use_c_impl`.
     """
     # Verificar si estamos en PyPy

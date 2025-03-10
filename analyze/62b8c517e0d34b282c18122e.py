@@ -18,15 +18,12 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     # Limitar el número de niveles de la pila de llamadas
     if len(tb_list) > max_level:
         tb_list = tb_list[:max_level]
-        tb_list.append("... (pila truncada)\n")
     
     # Limitar el número de niveles de la ruta
     for i in range(len(tb_list)):
         parts = tb_list[i].split('\n')
         if len(parts) > max_path_level:
-            parts = parts[:max_path_level]
-            parts.append("... (ruta truncada)\n")
-        tb_list[i] = '\n'.join(parts)
+            tb_list[i] = '\n'.join(parts[:max_path_level]) + '\n...'
     
     # Unir la traza en una sola cadena
     return ''.join(tb_list)

@@ -1,7 +1,7 @@
 def get_option_spec(self, command_name, argument_name):
     """
     Obtiene la especificación para el nombre de opción especificado.
-    
+
     :param command_name: Nombre del comando.
     :param argument_name: Nombre del argumento.
     :return: Especificación de la opción.

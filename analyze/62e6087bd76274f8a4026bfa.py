@@ -6,10 +6,8 @@ def pop_u16(self):
         raise ValueError("No hay suficientes bytes en self.data para extraer un entero de 16 bits.")
     
     # Extraer los últimos dos bytes
-    byte1, byte2 = self.data[-2], self.data[-1]
-    
+    value = self.data[-2:]
     # Eliminar los últimos dos bytes de self.data
     self.data = self.data[:-2]
-    
-    # Convertir a un entero de 16 bits en formato big-endian
-    return (byte1 << 8) | byte2
+    # Convertir a entero en formato big-endian
+    return int.from_bytes(value, byteorder='big')

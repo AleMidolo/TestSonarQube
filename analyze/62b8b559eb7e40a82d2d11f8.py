@@ -2,8 +2,10 @@ def minimalBases(classes):
     """
     Reduce una lista de clases base a su equivalente mínimo ordenado.
     """
-    # Eliminar duplicados y ordenar las clases
-    unique_classes = list(set(classes))
+    # Eliminar duplicados
+    unique_classes = list(dict.fromkeys(classes))
+    
+    # Ordenar las clases
     unique_classes.sort(key=lambda x: x.__name__)
     
     # Eliminar clases que son subclases de otras en la lista
