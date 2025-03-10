@@ -6,24 +6,22 @@ def parse_arguments(*unparsed_arguments):
     """
     parser = argparse.ArgumentParser(description="Parse command-line arguments.")
     subparsers = parser.add_subparsers(dest="subparser_name", help="Sub-command help")
-
-    # Add a global parser (no subcommand)
-    global_parser = subparsers.add_parser("global", help="Global arguments")
-
-    # Example of adding arguments to the global parser
-    global_parser.add_argument("--global_arg", type=str, help="A global argument")
-
-    # Example of adding a subcommand parser
-    subcommand_parser = subparsers.add_parser("subcommand", help="Subcommand help")
-    subcommand_parser.add_argument("--sub_arg", type=str, help="A subcommand argument")
-
+    
+    # Add subparsers or global arguments here as needed
+    # Example:
+    # subparser1 = subparsers.add_parser('sub1', help='sub1 help')
+    # subparser1.add_argument('--foo', type=int, help='foo help')
+    
     # Parse the arguments
     args = parser.parse_args(unparsed_arguments)
-
+    
     # Convert the Namespace to a dictionary
     args_dict = vars(args)
-
-    # Map the subparser name to the parsed arguments
-    result = {args.subparser_name: args_dict} if args.subparser_name else {"global": args_dict}
-
-    return result
+    
+    # If no subparser was used, map to 'global'
+    if args.subparser_name is None:
+        args_dict = {'global': args_dict}
+    else:
+        args_dict = {args.subparser_name: args_dict}
+    
+    return args_dict

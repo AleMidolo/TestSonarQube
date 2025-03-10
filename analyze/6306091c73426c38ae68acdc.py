@@ -19,9 +19,10 @@ def validate_from_content(cls, spec_content=None):
     except yaml.YAMLError as e:
         raise IRValidatorException(f"Invalid YAML content: {e}")
     
-    required_fields = ['name', 'version', 'description']
+    required_fields = ['field1', 'field2', 'field3']  # Replace with actual required fields
+    
     for field in required_fields:
         if field not in spec_data:
-            raise IRValidatorException(f"Required field '{field}' is missing in the spec content.")
+            raise IRValidatorException(f"Missing required field: {field}")
     
     return spec_data

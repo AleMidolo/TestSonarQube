@@ -5,16 +5,10 @@ def get_parser_option_specs(self, command_name):
     :param command_name: कमांड का नाम (जैसे main, virsh, ospd, आदि...)
     :return: सभी कमांड विकल्पों की सूची
     """
-    # यहां हम मानते हैं कि कमांड विकल्पों को एक डिक्शनरी में संग्रहीत किया गया है
-    # जहां कुंजी कमांड नाम है और मान विकल्पों की सूची है
-    command_options = {
-        "main": ["--help", "--version", "--verbose"],
-        "virsh": ["--connect", "--list", "--details"],
-        "ospd": ["--config", "--log-level", "--output"]
-    }
-    
-    # यदि कमांड नाम डिक्शनरी में मौजूद है, तो उसके विकल्प लौटाएं
-    if command_name in command_options:
-        return command_options[command_name]
+    # Assuming self.parser is an instance of argparse.ArgumentParser or similar
+    if hasattr(self, 'parser') and hasattr(self.parser, '_actions'):
+        # Filter actions that are related to the specified command
+        options = [action for action in self.parser._actions if command_name in action.option_strings]
+        return options
     else:
         return []

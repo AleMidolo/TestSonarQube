@@ -23,10 +23,10 @@ def _explore_zipfile(zip_path):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         for file_name in zip_ref.namelist():
             if file_name.endswith('.xml'):
-                basename = os.path.basename(file_name)
+                base_name = os.path.basename(file_name)
                 with zip_ref.open(file_name) as xml_file:
                     tree = ET.parse(xml_file)
                     root = tree.getroot()
-                    data_dict[basename] = root
+                    data_dict[base_name] = root
     
     return data_dict

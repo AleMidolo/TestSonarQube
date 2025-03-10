@@ -9,7 +9,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     :वापसी: डिक्शनरी (dict)
     """
     # Construct the WebFinger URL
-    webfinger_url = f"https://{handle.split('@')[2]}/.well-known/webfinger?resource=acct:{handle}"
+    webfinger_url = f"https://{handle.split('@')[1]}/.well-known/webfinger?resource=acct:{handle}"
     
     try:
         # Send a GET request to the WebFinger URL

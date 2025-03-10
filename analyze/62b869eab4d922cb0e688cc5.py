@@ -1,6 +1,4 @@
-def update_last_applied_manifest_dict_from_resp(
-    last_applied_manifest, observer_schema, response
-):
+def update_last_applied_manifest_dict_from_resp(last_applied_manifest, observer_schema, response):
     """
     Updates the partial `last_applied_manifest` from a partial Kubernetes response recursively.
 
@@ -21,9 +19,7 @@ def update_last_applied_manifest_dict_from_resp(
         if isinstance(value, dict):
             if key not in last_applied_manifest:
                 last_applied_manifest[key] = {}
-            update_last_applied_manifest_dict_from_resp(
-                last_applied_manifest[key], value, response[key]
-            )
+            update_last_applied_manifest_dict_from_resp(last_applied_manifest[key], value, response[key])
         else:
             if key not in last_applied_manifest:
                 last_applied_manifest[key] = response[key]

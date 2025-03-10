@@ -12,7 +12,8 @@ def add_asset(self, basename, file_path):
     if not hasattr(self, 'assets'):
         self.assets = {}
     
-    # Generate keys for different file formats
-    self.assets[f"{basename}.tiff"] = file_path
-    self.assets[f"{basename}.jpg"] = file_path
-    self.assets[f"{basename}.png"] = file_path
+    # Generate the asset keys based on the basename and supported extensions
+    extensions = ['.tiff', '.jpg', '.png']
+    for ext in extensions:
+        key = f"{basename}{ext}"
+        self.assets[key] = file_path

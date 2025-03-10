@@ -27,11 +27,13 @@ def _group_files_by_xml_filename(source, xmls, files):
     
     for xml in xmls:
         xml_basename = os.path.splitext(os.path.basename(xml))[0]
-        grouped_files[xml_basename] = []
+        package = []
         
         for file in files:
             file_basename = os.path.splitext(os.path.basename(file))[0]
             if file_basename == xml_basename:
-                grouped_files[xml_basename].append(file)
+                package.append(file)
+        
+        grouped_files[xml_basename] = package
     
     return grouped_files
