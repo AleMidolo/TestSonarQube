@@ -10,10 +10,10 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     :param ir_plugin: An InfraredPlugin object of the current plugin
     :return: ansible results
     """
-    # Convert vars_dict to a string format suitable for Ansible extra-vars
+    # Convert vars_dict to a string format suitable for ansible extra-vars
     extra_vars = " ".join([f"{key}={value}" for key, value in vars_dict.items()])
     
-    # Construct the full command to run Ansible
+    # Construct the full command
     command = ["ansible-playbook"] + cli_args + ["--extra-vars", extra_vars]
     
     # Execute the command

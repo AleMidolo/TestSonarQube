@@ -17,24 +17,12 @@ def find_roots(
         roots = set()
 
     # Get all nodes that appear as subjects in the graph with the given property
-    candidates = set(graph.subjects(predicate=prop))
+    subjects = set(graph.subjects(prop, None))
 
-    # If no candidates, return the current roots
-    if not candidates:
-        return roots
+    # Get all nodes that appear as objects in the graph with the given property
+    objects = set(graph.objects(None, prop))
 
-    # Find nodes that are not objects of any triple with the given property
-    new_roots = set()
-    for candidate in candidates:
-        if not any(triple for triple in graph.triples((None, prop, candidate))):
-            new_roots.add(candidate)
-
-    # Add new roots to the result set
-    roots.update(new_roots)
-
-    # Recursively find roots for the remaining candidates
-    remaining_candidates = candidates - new_roots
-    if remaining_candidates:
-        return find_roots(graph, prop, roots)
+    # Roots are subjects that are not objects
+    roots.update(subjects - objects)
 
     return roots

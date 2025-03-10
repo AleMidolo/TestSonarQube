@@ -4,6 +4,10 @@ def validate_min_max_args(self, args):
 
     :param args: The received arguments.
     """
+    min_value = 0  # Example minimum value, adjust as needed
+    max_value = 100  # Example maximum value, adjust as needed
+    
     for arg in args:
-        if not (self.min_value <= arg <= self.max_value):
-            raise ValueError(f"Argument {arg} is not between {self.min_value} and {self.max_value}")
+        if not (min_value <= arg <= max_value):
+            raise ValueError(f"Argument {arg} is not between {min_value} and {max_value}.")
+    return True

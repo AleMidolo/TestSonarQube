@@ -1,3 +1,5 @@
+import os
+
 def _eval_file(prefix, file_path):
     """
     Identifica o tipo de arquivo do pacote: `asset` ou `rendition`.
@@ -15,24 +17,23 @@ def _eval_file(prefix, file_path):
     Returns
     -------
     dict
-        Dicionário contendo o tipo de arquivo e o caminho do arquivo.
+        Um dicionário contendo o tipo de arquivo e o caminho do arquivo.
     """
-    import os
-
-    # Extrai o nome do arquivo e a extensão
-    filename = os.path.basename(file_path)
-    file_extension = os.path.splitext(filename)[1].lower()
-
-    # Determina o tipo de arquivo com base na extensão
-    if file_extension in ['.jpg', '.png', '.mp4', '.mov']:
-        file_type = 'asset'
-    elif file_extension in ['.xml', '.json']:
-        file_type = 'rendition'
+    file_name = os.path.basename(file_path)
+    file_folder = os.path.dirname(file_path)
+    
+    if prefix in file_name:
+        if "asset" in file_name.lower():
+            file_type = "asset"
+        elif "rendition" in file_name.lower():
+            file_type = "rendition"
+        else:
+            file_type = "unknown"
     else:
-        file_type = 'unknown'
-
-    # Retorna um dicionário com o tipo de arquivo e o caminho
+        file_type = "unknown"
+    
     return {
-        'type': file_type,
-        'path': file_path
+        "type": file_type,
+        "path": file_path,
+        "folder": file_folder
     }

@@ -11,13 +11,12 @@ def test_tag(tag: str) -> bool:
         tag (str): The word to be tested as a tag.
     
     Returns:
-        bool: True if the word is a valid tag, False otherwise.
+        bool: True if the tag is valid, False otherwise.
     """
-    import re
     if not tag:
         return False
     if len(tag) > 50:
         return False
-    if not re.match(r'^\w+$', tag):
+    if not tag.replace("_", "").isalnum():
         return False
     return True

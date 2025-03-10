@@ -2,5 +2,5 @@ def status_str(self, prefix=''):
     """
     Return string of validator status, with optional prefix.
     """
-    status = "Active"  # Example status, replace with actual logic
+    status = self.status  # Assuming self.status holds the validator's status
     return f"{prefix}{status}"

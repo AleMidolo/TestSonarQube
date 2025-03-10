@@ -5,10 +5,10 @@ def directlyProvidedBy(object):  # pylint:disable=redefined-builtin
     """
     provides = getattr(object, "__provides__", None)
     if (
-        provides is None  # no spec
-        # We might have gotten the implements spec, as an
-        # optimization. If so, it's like having only one base, that we
-        # lop off to exclude class-supplied declarations:
+            provides is None  # no spec
+            # We might have gotten the implements spec, as an
+            # optimization. If so, it's like having only one base, that we
+            # lop off to exclude class-supplied declarations:
     ):
         return None
     return provides
