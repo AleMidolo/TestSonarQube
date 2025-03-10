@@ -21,7 +21,7 @@ def hydrate_time(nanoseconds, tz=None):
     hours = int(total_seconds // 3600)
     minutes = int((total_seconds % 3600) // 60)
     seconds = int(total_seconds % 60)
-    microseconds = int((total_seconds - int(total_seconds)) * 1_000_000)
+    microseconds = delta.microseconds
     
     # Create a time object
     time_obj = time(hour=hours, minute=minutes, second=seconds, microsecond=microseconds)

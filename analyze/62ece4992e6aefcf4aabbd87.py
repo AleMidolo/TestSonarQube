@@ -6,7 +6,7 @@ def build_app_logger(name='app', logfile='app.log', debug=True):
 
     Args:
         name (str): Name of the logger. Defaults to 'app'.
-        logfile (str): Name of the log file. Defaults to 'app.log'.
+        logfile (str): File to which logs will be written. Defaults to 'app.log'.
         debug (bool): If True, sets the log level to DEBUG. Otherwise, sets it to INFO.
 
     Returns:

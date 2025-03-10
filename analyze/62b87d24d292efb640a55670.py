@@ -7,7 +7,7 @@ def get_versions():
         import platform
         import importlib.metadata
 
-        python_version = sys.version.split()[0]
+        python_version = sys.version
         os_info = platform.platform()
         try:
             package_version = importlib.metadata.version('your_package_name')

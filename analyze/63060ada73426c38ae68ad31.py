@@ -7,28 +7,16 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param parser_name: The command name, e.g. main, virsh, ospd, etc
     :param values_dict: The dict of with arguments
     """
-    if parser_name == "main":
-        for key, value in values_dict.items():
-            if value.isdigit():
+    for key, value in values_dict.items():
+        if isinstance(value, str):
+            if value.lower() == 'true':
+                values_dict[key] = True
+            elif value.lower() == 'false':
+                values_dict[key] = False
+            elif value.isdigit():
                 values_dict[key] = int(value)
             elif value.replace('.', '', 1).isdigit():
                 values_dict[key] = float(value)
-            elif value.lower() in ('true', 'false'):
-                values_dict[key] = value.lower() == 'true'
-    elif parser_name == "virsh":
-        for key, value in values_dict.items():
-            if key == "memory":
-                values_dict[key] = int(value)
-            elif key == "vcpu":
-                values_dict[key] = int(value)
-            elif key == "autostart":
-                values_dict[key] = value.lower() == 'true'
-    elif parser_name == "ospd":
-        for key, value in values_dict.items():
-            if key == "port":
-                values_dict[key] = int(value)
-            elif key == "timeout":
-                values_dict[key] = float(value)
-            elif key == "verbose":
-                values_dict[key] = value.lower() == 'true'
-    # Add more parser-specific conversions as needed
+            elif value.lower() == 'none':
+                values_dict[key] = None
+    return values_dict

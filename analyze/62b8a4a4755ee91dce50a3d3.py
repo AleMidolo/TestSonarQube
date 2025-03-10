@@ -12,14 +12,14 @@ def fromutc(self, dt):
         A timezone-aware :class:`datetime.datetime` object.
     """
     if dt.tzinfo is None:
-        raise ValueError("The datetime object must be timezone-aware.")
+        raise ValueError("fromutc() requires a timezone-aware datetime")
     
-    # Convert the datetime to the new timezone
-    new_dt = dt.astimezone(self)
+    # Convert the datetime to UTC
+    dt = dt.astimezone(self)
     
-    # Check if the datetime is ambiguous in the new timezone
-    if self.is_ambiguous(new_dt):
-        # If it's ambiguous, set the fold attribute based on the original datetime
-        new_dt = new_dt.replace(fold=dt.fold)
+    # Check if the datetime is in a fold state (ambiguous)
+    if dt.fold:
+        # Handle the ambiguous case (e.g., by choosing the first occurrence)
+        dt = dt.replace(fold=0)
     
-    return new_dt
+    return dt

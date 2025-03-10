@@ -6,21 +6,15 @@ def validate_as_prior_version(self, prior):
     and both self and prior inventories are assumed to have been checked for
     internal consistency.
     """
-    if not isinstance(prior, type(self)):
-        return False
+    # Check if prior is an instance of InventoryValidator
+    if not isinstance(prior, InventoryValidator):
+        raise TypeError("prior must be an instance of InventoryValidator")
     
-    # Check if the prior version has fewer or equal items
-    if len(prior.items) > len(self.items):
-        return False
+    # Check if the prior version is indeed prior to the current version
+    if prior.version >= self.version:
+        raise ValueError("prior version must be older than the current version")
     
-    # Check if all items in the prior version exist in the current version
-    for item in prior.items:
-        if item not in self.items:
-            return False
-    
-    # Check if the quantities in the prior version are less than or equal to the current version
-    for item, quantity in prior.items.items():
-        if self.items.get(item, 0) < quantity:
-            return False
+    # Additional checks can be added here depending on the specific requirements
+    # For example, checking if the prior inventory is a subset of the current inventory
     
     return True

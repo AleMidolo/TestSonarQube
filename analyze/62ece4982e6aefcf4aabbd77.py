@@ -19,22 +19,22 @@ def parse_frequency(frequency):
     if not match:
         raise ValueError(f"Invalid frequency format: {frequency}")
     
-    number = int(match.group(1))
+    value = int(match.group(1))
     unit = match.group(2).lower()
     
     if unit == "second":
-        return timedelta(seconds=number)
+        return timedelta(seconds=value)
     elif unit == "minute":
-        return timedelta(minutes=number)
+        return timedelta(minutes=value)
     elif unit == "hour":
-        return timedelta(hours=number)
+        return timedelta(hours=value)
     elif unit == "day":
-        return timedelta(days=number)
+        return timedelta(days=value)
     elif unit == "week":
-        return timedelta(weeks=number)
+        return timedelta(weeks=value)
     elif unit == "month":
-        return timedelta(days=number * 30)  # Approximation
+        return timedelta(days=value * 30)  # Approximation
     elif unit == "year":
-        return timedelta(days=number * 365)  # Approximation
+        return timedelta(days=value * 365)  # Approximation
     else:
         raise ValueError(f"Unsupported time unit: {unit}")

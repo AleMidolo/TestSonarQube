@@ -10,28 +10,30 @@ def verify_relayable_signature(public_key, doc, signature):
     from cryptography.hazmat.backends import default_backend
     from lxml import etree
 
+    # Parse the XML document
+    root = etree.fromstring(doc)
+
+    # Extract the signature element
+    signature_element = root.find(".//{http://www.w3.org/2000/09/xmldsig#}Signature")
+    if signature_element is None:
+        raise ValueError("No signature found in the document")
+
+    # Serialize the XML document excluding the signature element
+    for elem in signature_element.iter():
+        elem.getparent().remove(elem)
+    canonical_doc = etree.tostring(root, method="c14n")
+
     # Load the public key
     public_key = serialization.load_pem_public_key(
         public_key.encode(),
         backend=default_backend()
     )
 
-    # Parse the XML document
-    root = etree.fromstring(doc)
-
-    # Extract the signature element
-    signature_element = root.find(".//{http://www.w3.org/2000/09/xmldsig#}SignatureValue")
-    if signature_element is None:
-        raise ValueError("Signature element not found in the document.")
-
-    # Get the signed data
-    signed_data = etree.tostring(root, method="c14n", exclusive=True, with_comments=False)
-
     # Verify the signature
     try:
         public_key.verify(
             signature,
-            signed_data,
+            canonical_doc,
             padding.PKCS1v15(),
             hashes.SHA256()
         )
