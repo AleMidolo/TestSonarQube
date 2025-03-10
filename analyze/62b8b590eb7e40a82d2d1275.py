@@ -17,27 +17,10 @@ def _legacy_mergeOrderings(orderings):
     merged = []
     seen = set()
     
-    while True:
-        # Find the next element to add
-        next_element = None
-        for ordering in orderings:
-            for element in ordering:
-                if element not in seen:
-                    next_element = element
-                    break
-            if next_element is not None:
-                break
-        
-        if next_element is None:
-            break
-        
-        # Add the next element to the merged list
-        merged.append(next_element)
-        seen.add(next_element)
-        
-        # Remove the element from all orderings
-        for ordering in orderings:
-            if next_element in ordering:
-                ordering.remove(next_element)
+    for ordering in orderings:
+        for item in ordering:
+            if item not in seen:
+                merged.append(item)
+                seen.add(item)
     
     return merged

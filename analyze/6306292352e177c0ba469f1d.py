@@ -12,7 +12,17 @@ def find_tags(text: str, replacer: Callable = None) -> Tuple[Set, str]:
     返回一个包含标签的集合以及原始文本或替换后的文本。
     """
     # 正则表达式匹配标签，假设标签以#开头，且不包含空格
-    tag_pattern = re.compile(r'(?<!\S)#\w+')
+    tag_pattern = re.compile(r'(?<!`)#\w+')
     
-    # 忽略代码块中的标签
-    code_block_pattern = re.compile(r'
+    # 查找所有标签
+    tags = set(tag_pattern.findall(text))
+    
+    # 如果有replacer函数，则替换标签
+    if replacer:
+        def replace_tag(match):
+            return replacer(match.group(0))
+        modified_text = tag_pattern.sub(replace_tag, text)
+    else:
+        modified_text = text
+    
+    return tags, modified_text

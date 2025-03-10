@@ -18,27 +18,23 @@ def absorb(self, args):
     for expr in args:
         if isinstance(expr, tuple):
             if expr[0] == '&':
-                A, B = expr[1], expr[2]
-                if isinstance(B, tuple) and B[0] == '|':
-                    if B[1] == A:
-                        # A & (A | B) = A
-                        new_args.append(A)
-                    elif B[1] == ('~', A):
-                        # A & (~A | B) = A & B
-                        new_args.append(('&', A, B[2]))
+                a, b = expr[1], expr[2]
+                if isinstance(b, tuple) and b[0] == '|':
+                    if a == b[1]:
+                        new_args.append(a)
+                    elif a == ('~', b[1]):
+                        new_args.append(('&', a, b[2]))
                     else:
                         new_args.append(expr)
                 else:
                     new_args.append(expr)
             elif expr[0] == '|':
-                A, B = expr[1], expr[2]
-                if isinstance(B, tuple) and B[0] == '&':
-                    if B[1] == A:
-                        # A | (A & B) = A
-                        new_args.append(A)
-                    elif B[1] == ('~', A):
-                        # A | (~A & B) = A | B
-                        new_args.append(('|', A, B[2]))
+                a, b = expr[1], expr[2]
+                if isinstance(b, tuple) and b[0] == '&':
+                    if a == b[1]:
+                        new_args.append(a)
+                    elif a == ('~', b[1]):
+                        new_args.append(('|', a, b[2]))
                     else:
                         new_args.append(expr)
                 else:

@@ -26,23 +26,27 @@ def parse_frequency(frequency):
     try:
         parts = frequency.strip().split()
         if len(parts) != 2:
-            raise ValueError("Invalid frequency format")
+            raise ValueError("Invalid frequency format. Expected format: 'number timeunit'")
         
         num = int(parts[0])
-        unit = parts[1].lower()
+        timeunit = parts[1].lower()
         
-        if unit in ["days", "day", "d"]:
-            return timedelta(days=num)
-        elif unit in ["weeks", "week", "w"]:
+        if timeunit == "weeks":
             return timedelta(weeks=num)
-        elif unit in ["hours", "hour", "h"]:
+        elif timeunit == "days":
+            return timedelta(days=num)
+        elif timeunit == "hours":
             return timedelta(hours=num)
-        elif unit in ["minutes", "minute", "min", "m"]:
+        elif timeunit == "minutes":
             return timedelta(minutes=num)
-        elif unit in ["seconds", "second", "sec", "s"]:
+        elif timeunit == "seconds":
             return timedelta(seconds=num)
+        elif timeunit == "milliseconds":
+            return timedelta(milliseconds=num)
+        elif timeunit == "microseconds":
+            return timedelta(microseconds=num)
         else:
-            raise ValueError("Unsupported time unit")
+            raise ValueError(f"Unsupported time unit: {timeunit}")
     
-    except (ValueError, IndexError):
-        raise ValueError("Invalid frequency format")
+    except ValueError as e:
+        raise ValueError(f"Failed to parse frequency: {frequency}. Error: {e}")

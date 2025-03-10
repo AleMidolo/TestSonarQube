@@ -10,13 +10,10 @@ def _extract_number_and_supplment_from_issue_element(issue):
     # 例如: "123 Suppl 2" 或 "456"
     parts = issue.split()
     
-    if parts:
-        # 提取 number
-        if parts[0].isdigit():
-            number = int(parts[0])
-        
-        # 提取 suppl
-        if len(parts) > 1 and parts[1].lower() == "suppl" and len(parts) > 2 and parts[2].isdigit():
-            suppl = int(parts[2])
+    for part in parts:
+        if part.isdigit():
+            number = int(part)
+        elif part.lower().startswith('suppl'):
+            suppl = part.split()[-1]  # 提取补充信息
     
     return number, suppl

@@ -7,28 +7,17 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param parser_name: 命令名称，例如 main、virsh、ospd 等
     :param values_dict: 包含参数的字典
     """
-    if parser_name == 'main':
-        if 'port' in values_dict:
-            values_dict['port'] = int(values_dict['port'])
-        if 'timeout' in values_dict:
-            values_dict['timeout'] = float(values_dict['timeout'])
-        if 'verbose' in values_dict:
-            values_dict['verbose'] = values_dict['verbose'].lower() == 'true'
-    
-    elif parser_name == 'virsh':
-        if 'memory' in values_dict:
-            values_dict['memory'] = int(values_dict['memory'])
-        if 'cpu' in values_dict:
-            values_dict['cpu'] = int(values_dict['cpu'])
-        if 'autostart' in values_dict:
-            values_dict['autostart'] = values_dict['autostart'].lower() == 'true'
-    
-    elif parser_name == 'ospd':
-        if 'interval' in values_dict:
-            values_dict['interval'] = float(values_dict['interval'])
-        if 'retries' in values_dict:
-            values_dict['retries'] = int(values_dict['retries'])
-        if 'debug' in values_dict:
-            values_dict['debug'] = values_dict['debug'].lower() == 'true'
-    
-    # 可以根据需要添加更多的 parser_name 和对应的转换逻辑
+    for key, value in values_dict.items():
+        if isinstance(value, str):
+            # 尝试将字符串转换为整数
+            if value.isdigit():
+                values_dict[key] = int(value)
+            # 尝试将字符串转换为浮点数
+            elif value.replace('.', '', 1).isdigit():
+                values_dict[key] = float(value)
+            # 尝试将字符串转换为布尔值
+            elif value.lower() in ('true', 'false'):
+                values_dict[key] = value.lower() == 'true'
+            # 其他情况保持为字符串
+            else:
+                values_dict[key] = value

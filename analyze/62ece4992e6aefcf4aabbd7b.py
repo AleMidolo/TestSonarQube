@@ -18,7 +18,7 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     # 创建包含的目录（如果不存在）
     os.makedirs(os.path.dirname(config_filename), exist_ok=True)
     
-    # 将渲染的配置写入文件
+    # 将渲染后的配置写入文件
     with open(config_filename, 'w') as f:
         yaml.dump(rendered_config, f, default_flow_style=False)
     

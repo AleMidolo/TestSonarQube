@@ -7,7 +7,11 @@ def directlyProvidedBy(object):
     """
     provides = getattr(object, "__provides__", None)
     if provides is None:
-        # 如果没有直接提供接口，返回空声明
-        from zope.interface import declarations
-        return declarations.empty
+        # 如果没有指定规范，尝试获取 implements 规范
+        implements = getattr(object, "__implements__", None)
+        if implements is not None:
+            # 如果 implements 规范存在，去除基类提供的声明
+            from zope.interface import implementedBy
+            return implementedBy(object) - implementedBy(object.__class__)
+        return None
     return provides

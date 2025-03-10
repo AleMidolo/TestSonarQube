@@ -32,7 +32,9 @@ def deep_merge_nodes(nodes):
             merged_nodes[key] = value_node
     
     # 将合并后的节点转换回元组列表形式
-    return [
+    result = [
         (ruamel.yaml.nodes.ScalarNode(tag='tag:yaml.org,2002:str', value=key), value_node)
         for key, value_node in merged_nodes.items()
     ]
+    
+    return result

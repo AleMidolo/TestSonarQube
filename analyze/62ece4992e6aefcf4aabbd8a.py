@@ -55,7 +55,7 @@ def load_configurations(config_filenames: List[str], overrides: Optional[Dict] =
                 exc_info=None
             ))
         except Exception as e:
-            error_msg = f"Unexpected error while processing {filename}: {str(e)}"
+            error_msg = f"Unexpected error when loading {filename}: {str(e)}"
             logging.error(error_msg)
             errors.append(logging.LogRecord(
                 name=__name__,

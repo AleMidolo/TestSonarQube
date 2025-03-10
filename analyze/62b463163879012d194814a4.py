@@ -19,13 +19,14 @@ def _explore_zipfile(zip_path):
     dict
         以XML文件名为键，文件内容为值的字典
     """
-    grouped_files = defaultdict(list)
-    
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        for file_name in zip_ref.namelist():
+    def _group_files_by_xml_filename(zip_file):
+        grouped_files = defaultdict(list)
+        for file_name in zip_file.namelist():
             if file_name.endswith('.xml'):
-                with zip_ref.open(file_name) as file:
-                    content = file.read()
+                with zip_file.open(file_name) as f:
+                    content = f.read()
                     grouped_files[file_name].append(content)
-    
-    return dict(grouped_files)
+        return grouped_files
+
+    with zipfile.ZipFile(zip_path, 'r') as zip_file:
+        return _group_files_by_xml_filename(zip_file)

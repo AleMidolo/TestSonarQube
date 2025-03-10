@@ -11,25 +11,31 @@ def normalized(self):
       返回一个 :class:`dateutil.relativedelta.relativedelta` 对象。
     """
     from dateutil.relativedelta import relativedelta
-    import math
 
-    # 将天数的浮点部分转换为小时
+    # 将天数和小时数转换为整数
     days = int(self.days)
-    hours = self.hours + (self.days - days) * 24
+    hours = int(self.hours) + int((self.days - days) * 24)
+    minutes = int(self.minutes) + int((self.hours - int(self.hours)) * 60)
+    seconds = int(self.seconds) + int((self.minutes - int(self.minutes)) * 60)
+    microseconds = int(self.microseconds) + int((self.seconds - int(self.seconds)) * 1e6)
 
-    # 将小时的浮点部分转换为分钟
-    hours = int(hours)
-    minutes = self.minutes + (hours - int(hours)) * 60
+    # 处理可能的溢出
+    if microseconds >= 1e6:
+        seconds += microseconds // 1e6
+        microseconds = microseconds % 1e6
 
-    # 将分钟的浮点部分转换为秒
-    minutes = int(minutes)
-    seconds = self.seconds + (minutes - int(minutes)) * 60
+    if seconds >= 60:
+        minutes += seconds // 60
+        seconds = seconds % 60
 
-    # 将秒的浮点部分转换为微秒
-    seconds = int(seconds)
-    microseconds = self.microseconds + (seconds - int(seconds)) * 1e6
+    if minutes >= 60:
+        hours += minutes // 60
+        minutes = minutes % 60
 
-    # 返回标准化后的 relativedelta 对象
+    if hours >= 24:
+        days += hours // 24
+        hours = hours % 24
+
     return relativedelta(
         years=self.years,
         months=self.months,
@@ -37,7 +43,7 @@ def normalized(self):
         hours=hours,
         minutes=minutes,
         seconds=seconds,
-        microseconds=int(microseconds),
+        microseconds=microseconds,
         leapdays=self.leapdays,
         year=self.year,
         month=self.month,
@@ -46,5 +52,5 @@ def normalized(self):
         hour=self.hour,
         minute=self.minute,
         second=self.second,
-        microsecond=int(self.microsecond)
+        microsecond=self.microsecond
     )

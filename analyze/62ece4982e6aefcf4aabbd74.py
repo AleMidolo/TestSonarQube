@@ -32,14 +32,14 @@ def prepare_repository_from_archive(
             with TarFile.open(archive_path, 'r:') as tar_ref:
                 tar_ref.extractall(temp_dir_path)
         else:
-            raise ValueError("Unsupported archive format")
+            raise ValueError(f"Unsupported archive format: {archive_path}")
         
         # If filename is provided, move it to the root of the temp directory
         if filename:
-            file_path = temp_dir_path / filename
-            if not file_path.exists():
-                raise FileNotFoundError(f"File {filename} not found in the archive")
-            shutil.move(str(file_path), str(temp_dir_path))
+            extracted_file = temp_dir_path / filename
+            if not extracted_file.exists():
+                raise FileNotFoundError(f"File {filename} not found in the archive.")
+            shutil.move(str(extracted_file), str(temp_dir_path))
         
-        # Return the path to the temporary directory as the repository URL
+        # Return the path to the extracted directory as a string
         return str(temp_dir_path)

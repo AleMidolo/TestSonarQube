@@ -19,7 +19,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         # 解析 XML 文档
         root = etree.fromstring(response.content)
         
-        # 提取所需信息并构建字典
+        # 提取所需信息
         result = {}
         for link in root.findall("{http://webfinger.net/rel/profile-page}link"):
             result[link.get("rel")] = link.get("href")

@@ -7,44 +7,37 @@ def bash_completion():
     import argparse
     import subprocess
 
-    # 创建参数解析器
-    parser = argparse.ArgumentParser(description='Generate bash completion script for borgmatic.')
-    
-    # 获取 borgmatic 的命令行参数
-    try:
-        output = subprocess.check_output(['borgmatic', '--help'], stderr=subprocess.STDOUT, text=True)
-    except subprocess.CalledProcessError as e:
-        output = e.output
-
-    # 解析输出以提取命令和选项
-    lines = output.splitlines()
-    commands = []
-    options = []
-    for line in lines:
-        if line.strip().startswith('borgmatic'):
-            commands.append(line.strip().split()[1])
-        elif line.strip().startswith('-'):
-            options.append(line.strip().split()[0])
+    # 获取 borgmatic 的命令行参数解析器
+    parser = argparse.ArgumentParser(description='Borgmatic command line interface.')
+    # 添加 borgmatic 的常用参数
+    parser.add_argument('--config', help='Path to configuration file.')
+    parser.add_argument('--verbosity', type=int, help='Verbosity level.')
+    parser.add_argument('--list', action='store_true', help='List archives.')
+    parser.add_argument('--prune', action='store_true', help='Prune archives.')
+    parser.add_argument('--create', action='store_true', help='Create a new archive.')
+    parser.add_argument('--check', action='store_true', help='Check archives.')
+    parser.add_argument('--extract', action='store_true', help='Extract archives.')
+    parser.add_argument('--info', action='store_true', help='Show archive info.')
+    parser.add_argument('--mount', action='store_true', help='Mount archive.')
+    parser.add_argument('--umount', action='store_true', help='Unmount archive.')
+    parser.add_argument('--help', action='store_true', help='Show help message.')
 
     # 生成 bash 补全脚本
     bash_script = """
-# borgmatic bash completion
-_borgmatic_completion() {
-    local cur prev opts
-    COMPREPLY=()
-    cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="{}"
-    commands="{}"
+    #!/bin/bash
+    _borgmatic_completion() {
+        local cur prev opts
+        COMPREPLY=()
+        cur="${COMP_WORDS[COMP_CWORD]}"
+        prev="${COMP_WORDS[COMP_CWORD-1]}"
+        opts="--config --verbosity --list --prune --create --check --extract --info --mount --umount --help"
 
-    if [[ ${cur} == -* ]]; then
-        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-    else
-        COMPREPLY=( $(compgen -W "${commands}" -- ${cur}) )
-    fi
-    return 0
-}
-complete -F _borgmatic_completion borgmatic
-""".format(' '.join(options), ' '.join(commands))
+        if [[ ${cur} == -* ]]; then
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+        fi
+    }
+    complete -F _borgmatic_completion borgmatic
+    """
 
     return bash_script

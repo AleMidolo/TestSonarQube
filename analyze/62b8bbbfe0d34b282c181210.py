@@ -5,7 +5,7 @@ def append_text_to_file(file_name, text_buffer, encoding, overwrite=False):
     如果文件不存在，则创建文件。  
 
     :param file_name: 文件名。  
-    :type file_name: str
+    :type filename: str
     :param text_buffer: 要写入的文本缓冲。  
     :type text_buffer: str
     :param encoding: 使用的编码格式。  

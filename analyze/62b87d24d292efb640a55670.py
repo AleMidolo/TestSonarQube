@@ -9,6 +9,6 @@ def get_versions():
         version = "1.0.0"  # 假设这是获取到的版本信息
         return version
     except Exception as e:
-        # 如果获取版本信息失败，返回默认值
+        # 如果无法获取版本信息，返回默认值
         default_version = "0.0.0"
         return default_version

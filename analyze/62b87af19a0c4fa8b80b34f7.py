@@ -15,16 +15,15 @@ def difference(d1, d2, level=-1):
             return {}
         
         diff = {}
-        for key, value in d1.items():
+        for key in d1:
             if key not in d2:
-                diff[key] = value
-            elif isinstance(value, dict) and isinstance(d2[key], dict):
-                if level == -1 or current_level > 1:
-                    sub_diff = _difference(value, d2[key], current_level - 1)
-                    if sub_diff:
-                        diff[key] = sub_diff
-            elif value != d2[key]:
-                diff[key] = value
+                diff[key] = d1[key]
+            elif isinstance(d1[key], dict) and isinstance(d2[key], dict):
+                nested_diff = _difference(d1[key], d2[key], current_level - 1 if current_level != -1 else -1)
+                if nested_diff:
+                    diff[key] = nested_diff
+            elif d1[key] != d2[key]:
+                diff[key] = d1[key]
         return diff
 
-    return _difference(d1, d2, level if level != -1 else float('inf'))
+    return _difference(d1, d2, level)
