@@ -19,9 +19,9 @@ def validate_from_file(cls, yaml_file=None):
     except yaml.YAMLError as e:
         raise ValueError(f"Error al cargar el archivo YAML: {e}")
     
-    # Aquí puedes agregar la lógica de validación de campos obligatorios
-    # Por ejemplo:
-    required_fields = ['campo1', 'campo2', 'campo3']  # Ejemplo de campos obligatorios
+    # Aquí puedes agregar la lógica para validar los campos requeridos
+    # Por ejemplo, si tienes una lista de campos obligatorios:
+    required_fields = ['campo1', 'campo2', 'campo3']
     for field in required_fields:
         if field not in data:
             raise IRValidatorException(f"Falta el campo obligatorio: {field}")

@@ -21,7 +21,7 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
         elif isinstance(value, list):
             observer_schema[key] = generate_default_observer_schema_list(value)
         else:
-            if first_level and key in ["apiVersion", "kind", "metadata"]:
+            if first_level and key in ['apiVersion', 'kind', 'metadata']:
                 observer_schema[key] = value
             else:
                 observer_schema[key] = None

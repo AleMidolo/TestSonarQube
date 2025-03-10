@@ -23,6 +23,6 @@ def regex_dict(item):
     regex_dict = {}
     for key, value in item.items():
         # Convertir el comodín * a .* en la expresión regular
-        regex_key = re.escape(key).replace('\\*', '.*')
+        regex_key = re.escape(key).replace(r'\*', '.*')
         regex_dict[regex_key] = value
     return regex_dict

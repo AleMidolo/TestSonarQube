@@ -22,9 +22,9 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
     }
 
     # Añadir los ganchos de deshidratación e hidratación si están presentes
-    if dehydration_hooks:
+    if dehydration_hooks is not None:
         discard_message["dehydration_hooks"] = dehydration_hooks
-    if hydration_hooks:
+    if hydration_hooks is not None:
         discard_message["hydration_hooks"] = hydration_hooks
 
     # Añadir los manejadores adicionales

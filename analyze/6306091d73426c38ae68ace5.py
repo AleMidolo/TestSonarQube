@@ -5,7 +5,9 @@ def _include_groups(self, parser_dict):
     if 'include' in parser_dict:
         for include_path in parser_dict['include']:
             with open(include_path, 'r') as file:
-                included_dict = yaml.safe_load(file)
-                parser_dict.update(included_dict)
-        del parser_dict['include']
+                included_data = file.read()
+                # Aquí puedes procesar included_data según sea necesario
+                # Por ejemplo, podrías parsearlo y combinarlo con parser_dict
+                # Este es un ejemplo básico, ajusta según tus necesidades
+                parser_dict.update(eval(included_data))
     return parser_dict

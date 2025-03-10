@@ -1,9 +1,7 @@
 from typing import Set, Optional
 from rdflib import Graph, URIRef, Node
 
-def find_roots(
-    graph: Graph, prop: URIRef, roots: Optional[Set[Node]] = None
-) -> Set[Node]:
+def find_roots(graph: Graph, prop: URIRef, roots: Optional[Set[Node]] = None) -> Set[Node]:
     """
     Encuentra las raíces en algún tipo de jerarquía transitiva.
 
@@ -24,11 +22,13 @@ def find_roots(
     if roots is None:
         roots = set()
 
-    # Obtener todos los sujetos y objetos relacionados con la propiedad
-    subjects = set(graph.subjects(prop, None))
-    objects = set(graph.objects(None, prop))
+    # Obtener todos los nodos que son hijos en la jerarquía
+    children = set(graph.subjects(prop, None))
 
-    # Las raíces son los objetos que no aparecen como sujetos
-    roots.update(objects - subjects)
+    # Obtener todos los nodos que son padres en la jerarquía
+    parents = set(graph.objects(None, prop))
+
+    # Las raíces son los padres que no son hijos
+    roots.update(parents - children)
 
     return roots

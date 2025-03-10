@@ -1,19 +1,17 @@
+import sys
+
 def get_versions():
     """
     Obtén la información de la versión o devuelve el valor predeterminado si no es posible obtenerla.
     """
-    import sys
-    import platform
-
     try:
-        version_info = {
-            "python_version": sys.version,
-            "platform": platform.platform(),
-            "system": platform.system(),
-            "release": platform.release(),
-            "machine": platform.machine(),
-            "processor": platform.processor(),
+        # Intentar obtener la versión de Python
+        python_version = sys.version
+        return {
+            "python_version": python_version
         }
-        return version_info
     except Exception as e:
-        return {"error": str(e), "default": "No se pudo obtener la información de la versión."}
+        # Si ocurre un error, devolver un valor predeterminado
+        return {
+            "python_version": "Unknown"
+        }

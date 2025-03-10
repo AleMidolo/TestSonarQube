@@ -7,7 +7,7 @@ def validate(self, path):
     import os
     import json
 
-    # Verificar si la ruta existe
+    # Verificar si el path existe
     if not os.path.exists(path):
         return False
 
@@ -28,16 +28,23 @@ def validate(self, path):
         return False
 
     # Verificar la estructura básica del inventario
-    if 'id' not in inventory or 'type' not in inventory or 'digestAlgorithm' not in inventory:
+    required_keys = {'id', 'type', 'digestAlgorithm', 'head', 'manifest', 'versions'}
+    if not required_keys.issubset(inventory.keys()):
         return False
 
-    # Verificar que el tipo sea 'Object'
-    if inventory.get('type') != 'Object':
+    # Verificar que el 'digestAlgorithm' sea soportado
+    supported_algorithms = {'sha256', 'sha512'}
+    if inventory['digestAlgorithm'] not in supported_algorithms:
         return False
 
-    # Verificar que el algoritmo de digest sea soportado (por ejemplo, 'sha512')
-    if inventory.get('digestAlgorithm') != 'sha512':
+    # Verificar que 'head' apunte a una versión válida
+    if inventory['head'] not in inventory['versions']:
         return False
 
-    # Si todas las verificaciones pasan, devolver True
+    # Verificar que todas las versiones tengan un 'created' y 'state'
+    for version, details in inventory['versions'].items():
+        if 'created' not in details or 'state' not in details:
+            return False
+
+    # Si todas las verificaciones pasan, el objeto es válido
     return True

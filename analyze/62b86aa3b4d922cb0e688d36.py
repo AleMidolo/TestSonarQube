@@ -14,9 +14,7 @@ def _validate_labels(labels: Dict[str, Any]) -> None:
     *labels (dict)*: las diferentes etiquetas a validar.
 
     Excepciones:
-    *ValidationError*: si alguna de las claves o valores de las etiquetas no coincide con su respectiva expresión regular. El error contiene como mensaje una lista de todos los errores que ocurrieron en las etiquetas. Cada elemento de la lista es un diccionario con un par clave-valor:
-      - *key*: la clave de la etiqueta o el valor de la etiqueta para el cual ocurrió un error, como cadena de texto.
-      - *value*: el mensaje de error.
+    *ValidationError*: si alguna de las claves o valores de las etiquetas no coincide con su respectiva expresión regular.
     """
     errors = []
     key_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')

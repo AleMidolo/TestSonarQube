@@ -13,6 +13,7 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
         raise ValueError("El enlace de la imagen no puede estar vacío.")
     
     parsed_url = urlparse(image_href)
+    
     if not parsed_url.netloc:
         raise ValueError("El enlace de la imagen no contiene un dominio válido.")
     

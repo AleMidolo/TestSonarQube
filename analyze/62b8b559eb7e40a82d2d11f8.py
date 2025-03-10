@@ -8,10 +8,10 @@ def minimalBases(classes):
     # Ordenar las clases
     unique_classes.sort(key=lambda x: x.__name__)
     
-    # Eliminar clases que son subclases de otras en la lista
+    # Eliminar clases que ya están en la jerarquía de otras clases
     minimal_classes = []
     for cls in unique_classes:
-        if not any(issubclass(cls, other) for other in unique_classes if other is not cls):
+        if not any(issubclass(other, cls) for other in unique_classes if other != cls):
             minimal_classes.append(cls)
     
     return minimal_classes

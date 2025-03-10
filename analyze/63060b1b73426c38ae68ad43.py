@@ -4,7 +4,10 @@ def extend_cli(self, root_subparsers):
 
     :param root_subparsers: el objeto subparser que se va a extender.
     """
-    spec_parser = root_subparsers.add_parser('spec', help='Opciones de especificación')
+    # Crear un nuevo subparser para las opciones de especificación
+    spec_parser = root_subparsers.add_parser('spec', help='Opciones relacionadas con la especificación')
+    
+    # Agregar opciones al subparser
     spec_parser.add_argument('--input', type=str, required=True, help='Archivo de entrada para la especificación')
     spec_parser.add_argument('--output', type=str, required=True, help='Archivo de salida para la especificación')
-    spec_parser.add_argument('--verbose', action='store_true', help='Habilita el modo verboso')
+    spec_parser.add_argument('--verbose', action='store_true', help='Activar modo verboso')

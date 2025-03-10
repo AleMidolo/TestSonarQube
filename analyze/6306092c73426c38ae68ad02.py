@@ -6,6 +6,7 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
     :param answer_file_args: el diccionario de argumentos provenientes de archivos
     """
     deprecated_args = set(cli_args.keys()).intersection(answer_file_args.keys())
+    
     if deprecated_args:
         print("Advertencia: Los siguientes argumentos están obsoletos y no deberían usarse:")
         for arg in deprecated_args:

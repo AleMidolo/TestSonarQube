@@ -13,20 +13,20 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     import traceback
     
     # Obtener la traza de la excepción
-    tb = traceback.format_exception(type(e), e, e.__traceback__)
+    tb_list = traceback.format_exception(type(e), e, e.__traceback__)
     
     # Limitar el número de niveles de la pila de llamadas
-    if len(tb) > max_level:
-        tb = tb[:max_level]
-        tb.append(f"... (truncated to {max_level} levels)")
+    if len(tb_list) > max_level:
+        tb_list = tb_list[:max_level]
+        tb_list.append(f"... (truncated to {max_level} levels)")
     
     # Limitar el número de niveles de la ruta
-    for i in range(len(tb)):
-        parts = tb[i].split('\n')
+    for i in range(len(tb_list)):
+        parts = tb_list[i].split('\n')
         if len(parts) > max_path_level:
             parts = parts[:max_path_level]
             parts.append(f"... (truncated to {max_path_level} levels)")
-        tb[i] = '\n'.join(parts)
+        tb_list[i] = '\n'.join(parts)
     
     # Unir la traza en una sola cadena
-    return ''.join(tb)
+    return ''.join(tb_list)
