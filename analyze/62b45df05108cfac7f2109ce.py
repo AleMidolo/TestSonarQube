@@ -24,5 +24,6 @@ def validate(self, path):
             return False
 
     # Additional validation logic can be added here
-    # For now, assume the object is valid if the required files are present
+    # For example, checking the structure of the inventory.json file
+
     return True

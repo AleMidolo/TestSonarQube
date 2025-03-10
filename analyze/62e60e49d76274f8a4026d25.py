@@ -31,12 +31,18 @@ def unit_of_work(metadata=None, timeout=None):
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            # Attach metadata and timeout to the transaction if provided
-            tx = args[0]  # Assuming the first argument is the transaction object
+            # Extract the transaction object from the arguments
+            tx = args[0] if args else kwargs.get('tx')
+            
+            # Apply metadata if provided
             if metadata is not None:
                 tx.metadata = metadata
+            
+            # Apply timeout if provided
             if timeout is not None:
                 tx.timeout = timeout
+            
+            # Execute the function
             return func(*args, **kwargs)
         return wrapper
     return decorator

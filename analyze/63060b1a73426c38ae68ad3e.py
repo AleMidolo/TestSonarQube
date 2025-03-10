@@ -9,7 +9,7 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     :return: A flatten dictionary contains the plugin's properties
     """
     flatten_dict = {}
-    spec_file = os.path.join(plugin_dir, 'plugin_spec.json')
+    spec_file = os.path.join(plugin_dir, 'plugin.spec.json')
     
     if os.path.exists(spec_file):
         with open(spec_file, 'r') as f:

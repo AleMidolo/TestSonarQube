@@ -7,6 +7,9 @@ def generate_default_observer_schema(app):
         app (krake.data.kubernetes.Application): The application for which to generate a
             default observer schema
     """
+    if not app.spec.manifest:
+        return
+
     default_schema = {
         "type": "object",
         "properties": {
@@ -27,15 +30,12 @@ def generate_default_observer_schema(app):
                             "required": ["type", "status"]
                         }
                     }
-                },
-                "required": ["conditions"]
+                }
             }
         },
         "required": ["status"]
     }
 
     for resource in app.spec.manifest:
-        if not hasattr(resource, 'observer_schema'):
+        if not hasattr(resource, 'observer_schema') or not resource.observer_schema:
             resource.observer_schema = default_schema
-
-    return app

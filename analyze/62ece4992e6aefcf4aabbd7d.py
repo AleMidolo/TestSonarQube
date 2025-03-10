@@ -28,7 +28,7 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     # Run the subprocess
     result = subprocess.run(
         [sys.executable, "-c", 
-         "import pickle, sys; func, args = pickle.loads(sys.stdin.buffer.read()); func(*args)"],
+         f"import pickle, sys; func, args = pickle.loads(sys.stdin.buffer.read()); func(*args)"],
         input=func_data,
         env=env,
         timeout=timeout,

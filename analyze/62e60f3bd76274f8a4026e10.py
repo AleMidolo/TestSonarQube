@@ -10,7 +10,7 @@ def dehydrate_timedelta(value):
     :rtype: dict
     """
     if not isinstance(value, timedelta):
-        raise TypeError("Expected a timedelta object.")
+        raise TypeError("Expected a timedelta object")
     
     return {
         'days': value.days,

@@ -13,16 +13,13 @@ def fromutc(self, dt):
     """
     if dt.tzinfo is None:
         raise ValueError("fromutc() requires a timezone-aware datetime")
-    
-    # Convert the datetime to UTC
-    dt_utc = dt.astimezone(self.utc)
-    
-    # Convert the UTC datetime to the new timezone
-    dt_new = dt_utc.astimezone(self)
-    
-    # Check if the datetime is ambiguous in the new timezone
-    if self.is_ambiguous(dt_new):
-        # If it's ambiguous, set the fold attribute based on the original datetime
-        dt_new = dt_new.replace(fold=dt.fold)
-    
-    return dt_new
+
+    # Convert the datetime to the new timezone
+    new_dt = dt.astimezone(self)
+
+    # Check if the datetime is in a fold state (ambiguous)
+    if new_dt.fold:
+        # Handle the ambiguous case (e.g., by choosing the first occurrence)
+        new_dt = new_dt.replace(fold=0)
+
+    return new_dt

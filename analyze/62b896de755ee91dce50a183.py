@@ -27,6 +27,9 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         zones or a function taking two parameters (``tzname`` and
         ``tzoffset``) and returning a time zone.
 
+        The timezones to which the names are mapped can be an integer
+        offset from UTC in seconds or a :class:`tzinfo` object.
+
     :param \*\*kwargs:
         Keyword arguments as passed to ``_parse()``.
 
@@ -50,7 +53,7 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
     try:
         if not isinstance(timestr, str):
-            raise TypeError("Input must be a string.")
+            raise TypeError("Input must be a string or character stream.")
 
         if default is not None and not isinstance(default, datetime):
             raise TypeError("Default must be a datetime object or None.")

@@ -15,5 +15,5 @@ def retrieve_diaspora_host_meta(host):
     # Parse the XML response
     xml_root = etree.fromstring(response.content)
     
-    # Assuming XRD is a class that can be initialized with the XML root
-    return XRD(xml_root)
+    # Return the parsed XRD instance
+    return xml_root

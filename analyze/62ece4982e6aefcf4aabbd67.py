@@ -10,7 +10,7 @@ def vertex3tuple(vertices):
     for i in range(n):
         # Get the current vertex and its two adjacent vertices
         prev_vertex = vertices[(i - 1) % n]
-        curr_vertex = vertices[i]
+        current_vertex = vertices[i]
         next_vertex = vertices[(i + 1) % n]
-        result.append((prev_vertex, curr_vertex, next_vertex))
+        result.append((prev_vertex, current_vertex, next_vertex))
     return result

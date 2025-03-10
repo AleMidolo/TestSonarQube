@@ -23,7 +23,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     :param handlers: handler functions passed into the returned Response object
     :return: Response object
     """
-    # Prepare the BEGIN message
+    # Construct the BEGIN message
     begin_message = {
         "mode": mode,
         "bookmarks": bookmarks,

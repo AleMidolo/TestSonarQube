@@ -5,40 +5,31 @@ def initialize(self):
     import os
     import json
 
-    # Define the directory structure for the OCFL storage root
-    directories = [
-        "0=ocfl_1.1",
-        "extensions",
-        "logs",
-        "objects"
-    ]
+    # Define the required directories and files
+    root_dir = "ocfl_root"
+    ocfl_layout = "ocfl_layout.json"
+    namaste_file = "0=ocfl_1.0"
 
-    # Create the directories
-    for directory in directories:
-        os.makedirs(directory, exist_ok=True)
+    # Create the root directory if it doesn't exist
+    if not os.path.exists(root_dir):
+        os.makedirs(root_dir)
 
-    # Create the OCFL namaste file
-    with open("0=ocfl_1.1", "w") as f:
-        f.write("ocfl_1.1\n")
+    # Create the namaste file
+    with open(os.path.join(root_dir, namaste_file), 'w') as f:
+        f.write("ocfl_1.0")
 
-    # Create the OCFL inventory file
-    inventory = {
-        "id": "urn:uuid:12345678-1234-5678-1234-567812345678",
-        "type": "Object",
+    # Create the OCFL layout file
+    layout = {
+        "type": "https://ocfl.io/1.0/spec/#inventory",
         "digestAlgorithm": "sha512",
-        "head": "v1",
-        "versions": {
-            "v1": {
-                "created": "2023-10-01T00:00:00Z",
-                "state": {},
-                "message": "Initial version"
-            }
-        }
+        "contentDirectory": "content",
+        "versions": []
     }
 
-    with open("inventory.json", "w") as f:
-        json.dump(inventory, f, indent=4)
+    with open(os.path.join(root_dir, ocfl_layout), 'w') as f:
+        json.dump(layout, f, indent=4)
 
-    # Create the OCFL inventory signature file
-    with open("inventory.json.sha512", "w") as f:
-        f.write("sha512:...")  # Placeholder for actual hash
+    # Create the content directory
+    content_dir = os.path.join(root_dir, "content")
+    if not os.path.exists(content_dir):
+        os.makedirs(content_dir)

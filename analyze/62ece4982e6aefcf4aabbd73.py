@@ -25,4 +25,5 @@ def split(s, platform='this'):
     else:
         raise ValueError("Invalid platform value")
     
-    return regex.findall(s)
+    matches = regex.findall(s)
+    return [match.strip('"\'') for match in matches]

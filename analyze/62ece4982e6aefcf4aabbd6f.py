@@ -21,7 +21,8 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     
     # Download the archive
     response = requests.get(url, stream=True)
-    response.raise_for_status()
+    if response.status_code != 200:
+        raise Exception(f"Failed to download archive from {url}")
     
     # Save the archive to a temporary file
     temp_archive_path = destination_path / "temp_archive.tar.gz"

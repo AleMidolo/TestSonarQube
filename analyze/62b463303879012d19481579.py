@@ -13,14 +13,12 @@ def _extract_number_and_supplment_from_issue_element(issue):
     suppl = None
     
     # Split the issue string into parts based on common delimiters
-    parts = issue.replace('(', ' ').replace(')', ' ').replace(',', ' ').split()
+    parts = issue.replace('-', ' ').replace('(', ' ').replace(')', ' ').split()
     
     for part in parts:
         if part.isdigit():
             number = int(part)
-        elif part.lower().startswith('suppl'):
-            suppl = part.lower().replace('suppl', '').strip()
-            if suppl.isdigit():
-                suppl = int(suppl)
+        elif part.lower().startswith('s'):
+            suppl = part[1:] if part[1:].isdigit() else None
     
     return number, suppl

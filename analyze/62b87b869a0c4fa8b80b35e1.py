@@ -32,7 +32,6 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     Return the resulting graph.
     """
-    from collections import namedtuple
     import numpy as np
 
     if make_value is None:
@@ -52,14 +51,23 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
 
     # Apply make_value to each bin
-    values = [make_value(bin_) for bin_ in hist.bins]
+    values = [make_value(bin_) for bin_ in hist.bin_contents]
 
-    # Ensure the number of field names matches the dimension of the values
-    if len(field_names) != len(values[0]) + 1:
-        raise ValueError("Number of field names must match the dimension of the result")
+    # Ensure values are in a consistent format (e.g., tuples for error bars)
+    if isinstance(values[0], (tuple, list)):
+        values = np.array(values)
+    else:
+        values = np.array([(v,) for v in values])
+
+    # Combine coordinates and values into a structured array
+    dtype = [(field_names[0], float)] + [(field_names[i], float) for i in range(1, values.shape[1] + 1)]
+    graph_data = np.empty(len(coordinates), dtype=dtype)
+    graph_data[field_names[0]] = coordinates
+    for i in range(1, values.shape[1] + 1):
+        graph_data[field_names[i]] = values[:, i - 1]
 
     # Create the graph
-    Graph = namedtuple('Graph', field_names)
-    graph_points = [Graph(x=coord, **dict(zip(field_names[1:], val))) for coord, val in zip(coordinates, values)]
+    from graph import Graph
+    graph = Graph(graph_data, scale=scale)
 
-    return graph_points
+    return graph

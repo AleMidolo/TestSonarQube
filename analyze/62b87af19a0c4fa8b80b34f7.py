@@ -26,7 +26,7 @@ def difference(d1, d2, level=-1):
             sub_diff = difference(value, d2[key], level - 1 if level != -1 else -1)
             if sub_diff:
                 diff[key] = sub_diff
-        elif value != d2[key]:
+        elif d1[key] != d2[key]:
             diff[key] = value
 
     return diff

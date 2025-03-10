@@ -14,33 +14,26 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
     :param ansible_args: dict of ansible-playbook arguments to plumb down
         directly to Ansible.
     """
-    # Base command
-    command = ['ansible-playbook', playbook_path]
+    command = ["ansible-playbook", playbook_path]
 
-    # Add verbosity if specified
     if verbose:
-        command.extend(['-' + 'v' * verbose])
+        command.append(f"-{verbose}")
 
-    # Add extra_vars if specified
     if extra_vars:
-        extra_vars_str = ' '.join([f"{k}={v}" for k, v in extra_vars.items()])
-        command.extend(['--extra-vars', extra_vars_str])
+        extra_vars_str = " ".join([f"{k}={v}" for k, v in extra_vars.items()])
+        command.extend(["--extra-vars", extra_vars_str])
 
-    # Add ansible_args if specified
     if ansible_args:
-        for arg, value in ansible_args.items():
+        for key, value in ansible_args.items():
             if value is True:
-                command.append(f"--{arg}")
+                command.append(f"--{key}")
+            elif value is False:
+                continue
             else:
-                command.extend([f"--{arg}", str(value)])
+                command.extend([f"--{key}", str(value)])
 
-    # Execute the command
-    result = subprocess.run(command, capture_output=True, text=True)
-
-    # Print the output
-    if result.returncode == 0:
-        print(result.stdout)
-    else:
-        print(result.stderr)
-
-    return result.returncode
+    try:
+        subprocess.run(command, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Ansible playbook execution failed with error: {e}")
+        raise

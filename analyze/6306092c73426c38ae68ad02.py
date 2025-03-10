@@ -7,8 +7,8 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
     """
     deprecated_args = set(cli_args.keys()).intersection(answer_file_args.keys())
     if deprecated_args:
-        print("Deprecated arguments found in both CLI and answer file:")
+        print("Deprecated arguments found:")
         for arg in deprecated_args:
-            print(f"- {arg}")
+            print(f"  - {arg}")
     else:
         print("No deprecated arguments found.")
