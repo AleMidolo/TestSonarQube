@@ -4,25 +4,36 @@ def validate(self, path):
     """
     # Implementazione della validazione dell'oggetto OCFL
     # Questo è un esempio di implementazione, potrebbe essere necessario adattarlo
-    # in base alle specifiche dell'oggetto OCFL e del filesystem utilizzato.
-    
+    # in base alle specifiche OCFL e alla struttura del filesystem.
+
     import os
-    from fs import open_fs
-    
-    # Apri il filesystem
-    fs = open_fs(path)
-    
-    # Verifica la presenza dei file e delle directory necessari
-    required_files = ['inventory.json', 'manifest-sha512.txt']
+    from pathlib import Path
+
+    # Verifica se il percorso esiste
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Il percorso {path} non esiste.")
+
+    # Verifica se il percorso è una directory
+    if not os.path.isdir(path):
+        raise NotADirectoryError(f"Il percorso {path} non è una directory.")
+
+    # Verifica la presenza dei file e delle directory richiesti da OCFL
+    required_files = ["0=ocfl_object_1.0", "inventory.json", "inventory.json.sha512"]
     for file in required_files:
-        if not fs.exists(file):
-            raise FileNotFoundError(f"File richiesto non trovato: {file}")
-    
+        if not os.path.exists(os.path.join(path, file)):
+            raise ValueError(f"File richiesto {file} non trovato nel percorso {path}.")
+
     # Verifica la struttura delle directory
-    required_dirs = ['objects', 'versions']
-    for dir in required_dirs:
-        if not fs.isdir(dir):
-            raise NotADirectoryError(f"Directory richiesta non trovata: {dir}")
-    
-    # Se tutto è valido, restituisci True
+    for root, dirs, files in os.walk(path):
+        for dir_name in dirs:
+            if dir_name.startswith("v"):
+                # Verifica che le directory di versione siano numerate correttamente
+                try:
+                    version_number = int(dir_name[1:])
+                    if version_number < 1:
+                        raise ValueError(f"Numero di versione non valido nella directory {dir_name}.")
+                except ValueError:
+                    raise ValueError(f"Formato non valido per la directory di versione {dir_name}.")
+
+    # Se tutte le verifiche sono passate, l'oggetto OCFL è valido
     return True

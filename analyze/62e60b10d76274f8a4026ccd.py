@@ -1,8 +1,6 @@
 def data(self, *keys):
     """
-    Restituisce le chiavi e i valori di questo record come un dizionario, includendo opzionalmente solo determinati valori in base all'indice o alla chiave. 
-    Le chiavi fornite negli elementi che non sono presenti nel record verranno inserite con un valore di :const:`None`; 
-    gli indici forniti che sono fuori dai limiti genereranno un'eccezione :exc:`IndexError`.
+    Restituisce le chiavi e i valori di questo record come un dizionario, includendo opzionalmente solo determinati valori in base all'indice o alla chiave. Le chiavi fornite negli elementi che non sono presenti nel record verranno inserite con un valore di :const:`None`; gli indici forniti che sono fuori dai limiti genereranno un'eccezione :exc:`IndexError`.
 
     :param keys: indici o chiavi degli elementi da includere; se non ne vengono forniti, verranno inclusi tutti i valori  
     :return: dizionario dei valori, indicizzati per nome del campo  
@@ -21,6 +19,6 @@ def data(self, *keys):
                     raise IndexError("Indice fuori dai limiti")
                 # Converti l'indice in una chiave
                 key = list(self.__dict__.keys())[key]
-            # Aggiungi la chiave al risultato, anche se non esiste nel record
+            # Aggiungi la chiave al risultato, anche se non esiste
             result[key] = self.__dict__.get(key, None)
     return result

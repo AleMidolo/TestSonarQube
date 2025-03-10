@@ -4,6 +4,7 @@ def extend_cli(self, root_subparsers):
 
     :param subparser: l'oggetto subparser da estendere.
     """
-    # Example: Adding a new subcommand 'example' with an optional argument '--option'
+    # Example: Adding a new subcommand 'example' with its own arguments
     example_parser = root_subparsers.add_parser('example', help='Example command')
-    example_parser.add_argument('--option', type=str, help='An example option')
+    example_parser.add_argument('--option1', type=str, help='Example option 1')
+    example_parser.add_argument('--option2', type=int, help='Example option 2')

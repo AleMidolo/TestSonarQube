@@ -8,13 +8,15 @@ def _resolve_string(matcher):
     if not matcher:
         raise ValueError("Il matcher non può essere vuoto.")
     
-    parts = matcher.split(":", 1)
+    parts = matcher.split(':')
     var_name = parts[0].strip()
     default_value = parts[1].strip() if len(parts) > 1 else None
     
-    value = os.getenv(var_name, default_value)
+    value = os.getenv(var_name)
     
-    if value is None:
+    if value is not None:
+        return value
+    elif default_value is not None:
+        return default_value
+    else:
         raise ValueError(f"La variabile '{var_name}' non è definita nell'ambiente e non è stato fornito un valore predefinito.")
-    
-    return value

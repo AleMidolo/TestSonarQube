@@ -20,7 +20,7 @@ def _validate_labels(labels: Dict[str, Union[str, List[str]]]) -> None:
     """
     errors = []
     key_regex = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')
-    value_regex = re.compile(r'^[a-zA-Z0-9_]+$')
+    value_regex = re.compile(r'^[a-zA-Z0-9_]*$')
 
     for key, value in labels.items():
         # Validate key

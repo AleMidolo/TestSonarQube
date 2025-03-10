@@ -25,14 +25,18 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     path_lines = []
     for line in stack_lines:
         if "File" in line and "line" in line:
-            parts = line.split(",")
+            parts = line.split(", ")
             if len(parts) > max_path_level:
                 parts = parts[:max_path_level]
                 parts.append("... (path truncated)")
-            line = ",".join(parts)
+            line = ", ".join(parts)
         path_lines.append(line)
     
-    # Unisci le linee per formare la stringa finale
-    formatted_exception = "\n".join(path_lines)
+    # Unisci le linee in una stringa
+    formatted_trace = "\n".join(path_lines)
+    
+    # Aggiungi il messaggio dell'eccezione
+    exception_message = str(e)
+    formatted_exception = f"{exception_message}\n{formatted_trace}"
     
     return formatted_exception

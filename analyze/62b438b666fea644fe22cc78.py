@@ -6,9 +6,12 @@ def parse_arguments(*arguments):
     analizza gli argomenti e restituiscili come un'istanza di ArgumentParser.
     """
     parser = argparse.ArgumentParser(description="Parse command line arguments.")
-    # Add arguments to the parser as needed
-    # Example: parser.add_argument('--example', type=str, help='An example argument')
+    
+    # Example of adding arguments (customize as needed)
+    parser.add_argument('-f', '--file', type=str, help='Input file path')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose output')
     
     # Parse the arguments
     args = parser.parse_args(arguments)
+    
     return args

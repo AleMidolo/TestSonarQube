@@ -12,4 +12,6 @@ def minimalBases(classes):
             unique_classes.add(cls)
     
     # Convertiamo l'insieme in una lista ordinata
-    return sorted(unique_classes, key=lambda x: x.__name__)
+    minimal_classes = sorted(unique_classes, key=lambda x: x.__name__)
+    
+    return minimal_classes

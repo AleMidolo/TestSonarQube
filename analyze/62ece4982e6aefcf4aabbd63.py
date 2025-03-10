@@ -4,4 +4,4 @@ def is_none_string(val: any) -> bool:
     """
     if isinstance(val, str):
         return val.lower() in ['none', 'null', 'nil', '']
-    return val is None
+    return False

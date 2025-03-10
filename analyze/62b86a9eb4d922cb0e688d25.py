@@ -7,9 +7,11 @@ def _get_resource_name_regex():
     **Restituisce:**  
         `(re.Pattern)`: le espressioni regolari compilate, utilizzate per convalidare il nome della risorsa.
     """
-    # Definisci il pattern per il nome della risorsa
-    # Esempio: il nome deve iniziare con una lettera, seguito da lettere, numeri, trattini o underscore
-    pattern = r'^[a-zA-Z][a-zA-Z0-9_-]*$'
+    # Definisci il pattern per convalidare il nome della risorsa
+    # Esempio: solo lettere minuscole, numeri e trattini, lunghezza massima 63 caratteri
+    pattern = r'^[a-z0-9-]{1,63}$'
     
-    # Compila e restituisci il pattern
-    return re.compile(pattern)
+    # Compila il pattern in un oggetto regex
+    regex = re.compile(pattern)
+    
+    return regex

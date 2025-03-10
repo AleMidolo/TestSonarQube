@@ -8,4 +8,6 @@ def from_raw_values(cls, values):
     :param values: Valori stringa ASCII (segnalibri grezzi)
     :type values: Iterable[str]
     """
+    # Assuming cls is a class that can be instantiated with the raw values
+    # This is a placeholder implementation, adjust as needed
     return cls(values)

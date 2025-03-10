@@ -8,22 +8,33 @@ def validate_version_inventories(self, version_dirs):
     version_dirs è un array di nomi di directory di versione e si presume
     che sia in sequenza di versione (1, 2, 3...).
     """
-    inventory = {}
+    inventory = set()
     for version_dir in version_dirs:
-        # Load the inventory for the current version
-        current_inventory = self.load_inventory(version_dir)
+        # Assuming each version directory contains an 'inventory.txt' file
+        inventory_path = os.path.join(version_dir, 'inventory.txt')
+        if not os.path.exists(inventory_path):
+            raise FileNotFoundError(f"Inventory file not found in {version_dir}")
+        
+        with open(inventory_path, 'r') as file:
+            current_inventory = set(file.read().splitlines())
         
         # Check if the current inventory is a superset of the previous inventory
-        for key, value in inventory.items():
-            if key not in current_inventory or current_inventory[key] != value:
-                raise ValueError(f"Inventory mismatch in version {version_dir} for key {key}")
+        if not current_inventory.issuperset(inventory):
+            raise ValueError(f"Inventory in {version_dir} is not a superset of previous inventories")
         
-        # Update the inventory with the current version's inventory
+        # Update the main inventory with the current inventory
         inventory.update(current_inventory)
         
-        # Track any new content digests that are not in the main inventory
-        new_digests = set(current_inventory.keys()) - set(inventory.keys())
-        if new_digests:
-            print(f"New content digests found in version {version_dir}: {new_digests}")
+        # Track any content digests that are not in the main inventory
+        # Assuming content digests are stored in a 'content_digests.txt' file
+        content_digests_path = os.path.join(version_dir, 'content_digests.txt')
+        if os.path.exists(content_digests_path):
+            with open(content_digests_path, 'r') as file:
+                content_digests = set(file.read().splitlines())
+            
+            # Check if any content digest is not in the main inventory
+            missing_digests = content_digests - inventory
+            if missing_digests:
+                raise ValueError(f"Content digests {missing_digests} in {version_dir} are not in the main inventory")
     
-    return inventory
+    return True

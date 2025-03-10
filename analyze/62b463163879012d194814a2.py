@@ -11,5 +11,4 @@ def add_asset(self, basename, file_path):
     """
     if not hasattr(self, 'assets'):
         self.assets = {}
-    
     self.assets[basename] = file_path
