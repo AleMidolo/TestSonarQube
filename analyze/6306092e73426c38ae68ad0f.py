@@ -1,16 +1,16 @@
 def get_nested_custom_and_control_args(self, args):
     """
-    Suddivide gli argomenti di input in controlli nidificati e personalizzati.
+    Split input arguments to control nested and custom.
 
-    Argomenti di controllo: controllano il comportamento dell'IR. Questi argomenti
-        non saranno inseriti nel file spec yml.
-    Argomenti nidificati: sono utilizzati dai playbook di Ansible e saranno inseriti
-        nel file spec yml.
-    Argomenti personalizzati: variabili Ansible personalizzate da utilizzare al posto
-        dell'uso normale degli argomenti nidificati.
+    Controls arguments: control the IR behavior. These arguments
+        will not be put into the spec yml file
+    Nested arguments: are used by the Ansible playbooks and will be put
+        into the spec yml file.
+    Custom arguments: Custom ansible variables to be used instead of the
+        normal nested usage.
 
-    :param args: la lista raccolta di argomenti.
-    :return: (dict, dict): dizionari piatti (control_args, nested_args)
+    :param args: the collected list of args.
+    :return: (dict, dict): flat dicts (control_args, nested_args)
     """
     control_args = {}
     nested_args = {}
@@ -18,6 +18,8 @@ def get_nested_custom_and_control_args(self, args):
     for key, value in args.items():
         if key.startswith('control_'):
             control_args[key] = value
+        elif key.startswith('custom_'):
+            nested_args[key] = value
         else:
             nested_args[key] = value
     

@@ -3,30 +3,40 @@ from zope.interface.verify import verifyObject as zope_verifyObject
 
 def verifyObject(iface, candidate, tentative=False):
     """
-    Verifica che il *candidate* possa fornire correttamente l'*iface*.
+    Verify that *candidate* might correctly provide *iface*.
 
-    Questo comporta:
+    This involves:
 
-    - Assicurarsi che il candidato dichiari di fornire l'interfaccia utilizzando ``iface.providedBy`` (a meno che *tentative* sia `True`, nel qual caso questo passaggio viene saltato). Questo significa che la classe del candidato dichiara di `implementare <zope.interface.implementer>` l'interfaccia, oppure che il candidato stesso dichiara di `fornire <zope.interface.provider>` l'interfaccia.
+    - Making sure the candidate claims that it provides the
+      interface using ``iface.providedBy`` (unless *tentative* is `True`,
+      in which case this step is skipped). This means that the candidate's class
+      declares that it `implements <zope.interface.implementer>` the interface,
+      or the candidate itself declares that it `provides <zope.interface.provider>`
+      the interface
 
-    - Assicurarsi che il candidato definisca tutti i metodi necessari.
+    - Making sure the candidate defines all the necessary methods
 
-    - Assicurarsi che i metodi abbiano la firma corretta (per quanto possibile).
+    - Making sure the methods have the correct signature (to the
+      extent possible)
 
-    - Assicurarsi che il candidato definisca tutti gli attributi necessari.
+    - Making sure the candidate defines all the necessary attributes
 
-    :return bool: Restituisce un valore vero se tutto ciò che poteva essere verificato è stato superato.
-    :raises zope.interface.Invalid: Se una qualsiasi delle condizioni precedenti non è soddisfatta.
+    :return bool: Returns a true value if everything that could be
+       checked passed.
+    :raises zope.interface.Invalid: If any of the previous
+       conditions does not hold.
 
-    .. versionchanged:: 5.0  
-        Se più metodi o attributi sono invalidi, tutti questi errori vengono raccolti e riportati. In precedenza, veniva segnalato solo il primo errore. Come caso speciale, se è presente un solo errore, viene sollevato singolarmente, come in passato.
+    .. versionchanged:: 5.0
+        If multiple methods or attributes are invalid, all such errors
+        are collected and reported. Previously, only the first error was reported.
+        As a special case, if only one such error is present, it is raised
+        alone, like before.
     """
-    if not tentative and not iface.providedBy(candidate):
-        raise Invalid(f"The candidate does not provide the interface {iface}.")
+    if not tentative:
+        if not iface.providedBy(candidate):
+            raise Invalid(f"The candidate does not provide the interface {iface}.")
 
     try:
-        zope_verifyObject(iface, candidate)
+        return zope_verifyObject(iface, candidate)
     except Invalid as e:
         raise Invalid(f"Verification failed: {e}")
-
-    return True

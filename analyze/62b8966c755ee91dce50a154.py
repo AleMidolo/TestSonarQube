@@ -3,73 +3,75 @@ from dateutil import parser
 
 def isoparse(self, dt_str):
     """
-    Analizza una stringa datetime in formato ISO-8601 in un oggetto :class:`datetime.datetime`.
+    Parse an ISO-8601 datetime string into a :class:`datetime.datetime`.
 
-    Una stringa datetime in formato ISO-8601 consiste in una parte relativa alla data, seguita
-    opzionalmente da una parte relativa all'ora. Le due parti sono separate da un singolo carattere
-    separatore, che è ``T`` nello standard ufficiale. I formati di data incompleti (come ``YYYY-MM``)
-    *non* possono essere combinati con una parte relativa all'ora.
+    An ISO-8601 datetime string consists of a date portion, followed
+    optionally by a time portion - the date and time portions are separated
+    by a single character separator, which is ``T`` in the official
+    standard. Incomplete date formats (such as ``YYYY-MM``) may *not* be
+    combined with a time portion.
 
-    I formati di data supportati sono:
+    Supported date formats are:
 
-    Comuni:
+    Common:
 
     - ``YYYY``
-    - ``YYYY-MM`` o ``YYYYMM``
-    - ``YYYY-MM-DD`` o ``YYYYMMDD``
+    - ``YYYY-MM`` or ``YYYYMM``
+    - ``YYYY-MM-DD`` or ``YYYYMMDD``
 
-    Non comuni:
+    Uncommon:
 
-    - ``YYYY-Www`` o ``YYYYWww`` - Settimana ISO (il giorno predefinito è 0)
-    - ``YYYY-Www-D`` o ``YYYYWwwD`` - Settimana ISO e giorno
+    - ``YYYY-Www`` or ``YYYYWww`` - ISO week (day defaults to 0)
+    - ``YYYY-Www-D`` or ``YYYYWwwD`` - ISO week and day
 
-    La numerazione delle settimane e dei giorni ISO segue la stessa logica di
+    The ISO week and day numbering follows the same logic as
     :func:`datetime.date.isocalendar`.
 
-    I formati di ora supportati sono:
+    Supported time formats are:
 
     - ``hh``
-    - ``hh:mm`` o ``hhmm``
-    - ``hh:mm:ss`` o ``hhmmss``
-    - ``hh:mm:ss.ssssss`` (fino a 6 cifre per i sotto-secondi)
+    - ``hh:mm`` or ``hhmm``
+    - ``hh:mm:ss`` or ``hhmmss``
+    - ``hh:mm:ss.ssssss`` (Up to 6 sub-second digits)
 
-    La mezzanotte è un caso speciale per `hh`, poiché lo standard supporta sia
-    00:00 che 24:00 come rappresentazione. Il separatore decimale può essere
-    sia un punto che una virgola.
+    Midnight is a special case for `hh`, as the standard supports both
+    00:00 and 24:00 as a representation. The decimal separator can be
+    either a dot or a comma.
 
-    .. attenzione::
+    .. caution::
 
-        Il supporto per componenti frazionari diversi dai secondi fa parte dello
-        standard ISO-8601, ma non è attualmente implementato in questo parser.
+        Support for fractional components other than seconds is part of the
+        ISO-8601 standard, but is not currently implemented in this parser.
 
-    I formati di offset del fuso orario supportati sono:
+    Supported time zone offset formats are:
 
     - `Z` (UTC)
     - `±HH:MM`
     - `±HHMM`
     - `±HH`
 
-    Gli offset saranno rappresentati come oggetti :class:`dateutil.tz.tzoffset`,
-    con l'eccezione di UTC, che sarà rappresentato come :class:`dateutil.tz.tzutc`.
-    Gli offset del fuso orario equivalenti a UTC (come `+00:00`) saranno anch'essi
-    rappresentati come :class:`dateutil.tz.tzutc`.
+    Offsets will be represented as :class:`dateutil.tz.tzoffset` objects,
+    with the exception of UTC, which will be represented as
+    :class:`dateutil.tz.tzutc`. Time zone offsets equivalent to UTC (such
+    as `+00:00`) will also be represented as :class:`dateutil.tz.tzutc`.
 
     :param dt_str:
-        Una stringa o un flusso contenente solo una stringa datetime in formato ISO-8601.
+        A string or stream containing only an ISO-8601 datetime string
 
     :return:
-        Restituisce un oggetto :class:`datetime.datetime` che rappresenta la stringa.
-        I componenti non specificati assumono il loro valore minimo.
+        Returns a :class:`datetime.datetime` representing the string.
+        Unspecified components default to their lowest value.
 
-    .. avvertenza::
+    .. warning::
 
-        A partire dalla versione 2.7.0, la rigidità del parser non deve essere considerata
-        una parte stabile del contratto. Qualsiasi stringa ISO-8601 valida che viene analizzata
-        correttamente con le impostazioni predefinite continuerà a essere analizzata correttamente
-        nelle versioni future, ma le stringhe non valide che attualmente falliscono (ad esempio
-        ``2017-01-01T00:00+00:00:00``) non sono garantite di continuare a fallire nelle versioni
-        future se codificano una data valida.
+        As of version 2.7.0, the strictness of the parser should not be
+        considered a stable part of the contract. Any valid ISO-8601 string
+        that parses correctly with the default settings will continue to
+        parse correctly in future versions, but invalid strings that
+        currently fail (e.g. ``2017-01-01T00:00+00:00:00``) are not
+        guaranteed to continue failing in future versions if they encode
+        a valid date.
 
-    .. versioneaggiunta:: 2.7.0
+    .. versionadded:: 2.7.0
     """
     return parser.isoparse(dt_str)

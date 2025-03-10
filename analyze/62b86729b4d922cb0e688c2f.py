@@ -1,14 +1,15 @@
 def base_config(user, etcd_host="localhost", etcd_port=2379):
     """
-    Crea una configurazione con alcuni parametri semplici, che hanno un valore predefinito che può essere impostato.
+    Creates a configuration with some simple parameters, which have a default value
+    that can be set.
 
-    Argomenti:
-    user (str): il nome dell'utente per l'autenticazione statica.
-    etcd_host (str): l'host per il database.
-    etcd_port (int): la porta per il database.
+    Args:
+        user (str): the name of the user for the static authentication
+        etcd_host (str): the host for the database.
+        etcd_port (int): the port for the database.
 
-    Ritorna:
-    dict: la configurazione creata.
+    Returns:
+        dict: the created configuration.
     """
     config = {
         "user": user,

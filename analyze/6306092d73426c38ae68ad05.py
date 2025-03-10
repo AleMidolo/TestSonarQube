@@ -1,9 +1,20 @@
 def get_option_spec(self, command_name, argument_name):
     """
-    Ottiene la specifica per il nome dell'opzione specificato.
+    Gets the specification for the specified option name.
+
+    Args:
+        command_name (str): The name of the command.
+        argument_name (str): The name of the argument.
+
+    Returns:
+        dict: The specification for the specified option name.
     """
-    # Assuming self.options is a dictionary where keys are command names and values are dictionaries of argument specs
+    # Assuming self.options is a dictionary where keys are command names
+    # and values are dictionaries of argument specifications
     if command_name in self.options:
         if argument_name in self.options[command_name]:
             return self.options[command_name][argument_name]
-    return None
+        else:
+            raise ValueError(f"Argument '{argument_name}' not found in command '{command_name}'.")
+    else:
+        raise ValueError(f"Command '{command_name}' not found.")

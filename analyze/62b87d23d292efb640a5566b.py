@@ -1,35 +1,38 @@
 import subprocess
 
-def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=False, env=None):
+def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Esegui il comando specificato.
+    Call the given command(s).
 
-    :param comandi: Lista di comandi da eseguire.
-    :param argomenti: Lista di argomenti da passare ai comandi.
-    :param cwd: Directory di lavoro corrente (opzionale).
-    :param verbose: Se True, stampa il comando eseguito (opzionale).
-    :param nascondi_stderr: Se True, nasconde l'output di stderr (opzionale).
-    :param env: Dizionario di variabili d'ambiente (opzionale).
-    :return: Il risultato dell'esecuzione del comando.
+    :param commands: List of commands to execute.
+    :param args: List of arguments to pass to the commands.
+    :param cwd: Current working directory for the command (default is None).
+    :param verbose: If True, print the command and its output (default is False).
+    :param hide_stderr: If True, suppress stderr output (default is False).
+    :param env: Environment variables to pass to the command (default is None).
+    :return: The return code of the command.
     """
-    command = comandi + argomenti
-    stderr = subprocess.DEVNULL if nascondi_stderr else subprocess.PIPE
+    full_command = commands + args
+    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
     
     if verbose:
-        print(f"Esecuzione del comando: {' '.join(command)}")
+        print(f"Running command: {' '.join(full_command)}")
     
-    result = subprocess.run(
-        command,
+    process = subprocess.Popen(
+        full_command,
         cwd=cwd,
-        env=env,
         stdout=subprocess.PIPE,
         stderr=stderr,
+        env=env,
         text=True
     )
     
-    if verbose:
-        print(f"Output del comando: {result.stdout}")
-        if result.stderr:
-            print(f"Errore del comando: {result.stderr}")
+    stdout, stderr = process.communicate()
     
-    return result
+    if verbose:
+        if stdout:
+            print(f"stdout:\n{stdout}")
+        if stderr and not hide_stderr:
+            print(f"stderr:\n{stderr}")
+    
+    return process.returncode

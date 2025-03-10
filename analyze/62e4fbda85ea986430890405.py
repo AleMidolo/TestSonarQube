@@ -1,12 +1,7 @@
 import subprocess
 import sys
 import os
-from typing import Sequence, Any
-
-def _get_platform_max_length() -> int:
-    # This is a placeholder function to simulate getting the platform's max command length.
-    # On most Unix-like systems, you can get this value using `getconf ARG_MAX`.
-    return 131072  # Default value for many Unix-like systems
+from typing import Sequence, Any, Tuple
 
 def xargs(
         cmd: tuple[str, ...],
@@ -18,57 +13,39 @@ def xargs(
         **kwargs: Any,
 ) -> tuple[int, bytes]:
     """
-    Un'implementazione semplificata di xargs.
+    A simplified implementation of xargs.
 
-    - **color**: Crea un pty se si è su una piattaforma che lo supporta.
-    - **target_concurrency**: Numero target di partizioni da eseguire in parallelo.
+    color: Make a pty if on a platform that supports it
+    target_concurrency: Target number of partitions to run concurrently
     """
     if color and sys.platform != "win32":
         import pty
         master, slave = pty.openpty()
         kwargs['stdout'] = slave
         kwargs['stderr'] = slave
+        kwargs['stdin'] = subprocess.PIPE
 
-    # Split varargs into chunks based on _max_length
-    chunks = []
-    current_chunk = []
-    current_length = 0
-
-    for arg in varargs:
-        arg_length = len(arg) + 1  # +1 for the space
-        if current_length + arg_length > _max_length:
-            chunks.append(current_chunk)
-            current_chunk = []
-            current_length = 0
-        current_chunk.append(arg)
-        current_length += arg_length
-
-    if current_chunk:
-        chunks.append(current_chunk)
-
-    # Execute commands in parallel up to target_concurrency
     processes = []
-    for chunk in chunks:
-        full_cmd = list(cmd) + chunk
-        if color and sys.platform != "win32":
-            process = subprocess.Popen(full_cmd, **kwargs)
-        else:
-            process = subprocess.Popen(full_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs)
+    for i in range(0, len(varargs), target_concurrency):
+        chunk = varargs[i:i + target_concurrency]
+        full_cmd = list(cmd) + list(chunk)
+        process = subprocess.Popen(full_cmd, **kwargs)
         processes.append(process)
-        if len(processes) >= target_concurrency:
-            for p in processes:
-                p.wait()
-            processes = []
 
-    # Wait for any remaining processes
-    for p in processes:
-        p.wait()
+    for process in processes:
+        process.wait()
 
-    # Collect output
-    output = b""
-    for p in processes:
-        stdout, stderr = p.communicate()
-        output += stdout + stderr
+    if color and sys.platform != "win32":
+        os.close(slave)
+        output = os.read(master, _max_length)
+        os.close(master)
+    else:
+        output = b""
 
-    # Return the last process's return code and the combined output
-    return processes[-1].returncode if processes else 0, output
+    return (0, output)
+
+def _get_platform_max_length() -> int:
+    if sys.platform == "win32":
+        return 8192
+    else:
+        return 65536

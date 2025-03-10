@@ -3,24 +3,24 @@ from rdflib import Graph, URIRef, Node
 
 def find_roots(graph: Graph, prop: URIRef, roots: Optional[Set[Node]] = None) -> Set[Node]:
     """
-    Trova le radici in una sorta di gerarchia transitiva.
+    Find the roots in some sort of transitive hierarchy.
 
     find_roots(graph, rdflib.RDFS.subClassOf)
+    will return a set of all roots of the sub-class hierarchy
 
-    restituirà un insieme contenente tutte le radici della gerarchia delle sottoclassi.
-
-    Presuppone triple nella forma (figlio, prop, genitore), ovvero la direzione di
-    `RDFS.subClassOf` o `SKOS.broader`.
+    Assumes triple of the form (child, prop, parent), i.e. the direction of
+    RDFS.subClassOf or SKOS.broader
     """
     if roots is None:
         roots = set()
 
-    # Get all nodes that appear as subjects in the graph
-    all_nodes = set(graph.subjects())
+    # Get all nodes that appear as children in the graph
+    children = set(graph.subjects(prop, None))
 
-    # Iterate through all nodes to find those that are not objects of any triple with the given property
-    for node in all_nodes:
-        if not any(True for _ in graph.triples((None, prop, node))):
-            roots.add(node)
+    # Get all nodes that appear as parents in the graph
+    parents = set(graph.objects(None, prop))
+
+    # Roots are nodes that are parents but not children
+    roots.update(parents - children)
 
     return roots

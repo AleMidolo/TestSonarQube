@@ -2,13 +2,13 @@ import numpy as np
 
 def make_array(shape, dtype=np.dtype("float32")):
     """
-    Funzione per creare un array con una forma e un tipo di dato specificati.
+    Function to create an array with shape and dtype.
 
-    Parametri
+    Parameters
     ----------
     shape : tuple
-        forma dell'array da creare
+        shape of the array to create
     dtype : `numpy.dtype`
-        tipo di dato dell'array da creare
+        data-type of the array to create
     """
     return np.zeros(shape, dtype=dtype)

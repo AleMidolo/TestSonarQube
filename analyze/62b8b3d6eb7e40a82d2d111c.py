@@ -1,11 +1,11 @@
 def _normalizeargs(sequence, output=None):
     """
-    Normalizza gli argomenti della dichiarazione
+    Normalize declaration arguments
 
-    Gli argomenti di normalizzazione possono contenere Dichiarazioni, tuple o singole
-    interfacce.
+    Normalization arguments might contain Declarions, tuples, or single
+    interfaces.
 
-    Qualsiasi cosa diversa da interfacce individuali o specifiche di implementazione verrà espansa.
+    Anything but individual interfaces or implements specs will be expanded.
     """
     if output is None:
         output = []

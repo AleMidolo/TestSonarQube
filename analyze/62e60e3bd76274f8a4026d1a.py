@@ -1,13 +1,11 @@
 def from_raw_values(cls, values):
     """
-    Crea un oggetto Bookmarks da una lista di valori stringa grezzi dei segnalibri.
+    Create a Bookmarks object from a list of raw bookmark string values.
 
-    Non dovresti aver bisogno di utilizzare questo metodo a meno che tu non voglia
-    deserializzare i segnalibri.
+    You should not need to use this method unless you want to deserialize
+    bookmarks.
 
-    :param values: Valori stringa ASCII (segnalibri grezzi)
+    :param values: ASCII string values (raw bookmarks)
     :type values: Iterable[str]
     """
-    # Assuming cls is a class that can be instantiated with the raw values
-    # This is a placeholder implementation, adjust as needed
     return cls(values)

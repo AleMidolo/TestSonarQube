@@ -1,42 +1,38 @@
 def _eval_file(prefix, file_path):
     """
-    Identifica il tipo di file del pacchetto: `asset` o `rendition`.
+    Identifica o tipo de arquivo do pacote: `asset` ou `rendition`.
 
-    Identifica il tipo di file del pacchetto e aggiorna `packages` con il tipo e
-    il percorso del file in analisi.
+    Identifica o tipo de arquivo do pacote e atualiza `packages` com o tipo e
+    o endereço do arquivo em análise.
 
-    Parametri
+    Parameters
     ----------
     prefix : str
-        Nome del file XML senza estensione.
+        nome do arquivo XML sem extensão
     file_path : str
-        Percorso completo del file.
+        caminho completo do arquivo
 
-    Restituisce
+    Returns
     -------
     dict
-        Un dizionario contenente il tipo di file e il percorso del file.
+        Um dicionário contendo o tipo de arquivo e o caminho do arquivo.
     """
     import os
 
-    # Estrai il nome del file e la cartella dal percorso
-    filename = os.path.basename(file_path)
-    file_folder = os.path.dirname(file_path)
+    # Extrai o nome do arquivo e a extensão
+    file_name = os.path.basename(file_path)
+    file_extension = os.path.splitext(file_name)[1].lower()
 
-    # Determina il tipo di file in base al prefisso
-    if prefix.startswith("asset"):
-        file_type = "asset"
-    elif prefix.startswith("rendition"):
-        file_type = "rendition"
+    # Determina o tipo de arquivo com base na extensão
+    if file_extension in ['.jpg', '.png', '.gif', '.bmp', '.tiff']:
+        file_type = 'asset'
+    elif file_extension in ['.mp4', '.mov', '.avi', '.mkv']:
+        file_type = 'rendition'
     else:
-        file_type = "unknown"
+        file_type = 'unknown'
 
-    # Crea il dizionario da restituire
-    result = {
-        "type": file_type,
-        "file_path": file_path,
-        "filename": filename,
-        "file_folder": file_folder
+    # Retorna um dicionário com o tipo de arquivo e o caminho do arquivo
+    return {
+        'type': file_type,
+        'path': file_path
     }
-
-    return result

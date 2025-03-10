@@ -6,21 +6,25 @@ class ValidationError(Exception):
         self.messages = messages
         super().__init__(str(messages))
 
-def _validate_labels(labels: Dict[str, Union[str, List[str]]]) -> None:
+def _validate_labels(labels: Dict[Union[str, bool], Union[str, List, bool]]) -> None:
     """
-    Verifica che le chiavi e i valori nelle etichette fornite corrispondano alle rispettive espressioni regolari.
+    Check that keys and values in the given labels match against their corresponding
+    regular expressions.
 
-    ### Argomenti:
-    - **labels (dict)**: il dizionario contenente le diverse etichette da validare.
+    Args:
+        labels (dict): the different labels to validate.
 
-    ### Eccezioni:
-    - **ValidationError**: viene sollevata se una qualsiasi delle chiavi o dei valori delle etichette non corrisponde alla rispettiva espressione regolare. L'errore contiene come messaggio la lista di tutti gli errori che si sono verificati nelle etichette. Ogni elemento della lista è un dizionario con una coppia chiave-valore:
-      - **key**: la chiave dell'etichetta o il valore dell'etichetta per cui si è verificato un errore, come stringa.
-      - **value**: il messaggio di errore.
+    Raises:
+        ValidationError: if any of the keys and labels does not match their respective
+            regular expression. The error contains as message the list of all errors
+            which occurred in the labels. Each element of the list is a dictionary with
+            one key-value pair:
+            - key: the label key or label value for which an error occurred as string.
+            - value: the error message.
     """
     errors = []
-    key_regex = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')
-    value_regex = re.compile(r'^[a-zA-Z0-9_]*$')
+    key_regex = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')  # Example regex for keys
+    value_regex = re.compile(r'^[a-zA-Z0-9_]+$')  # Example regex for values
 
     for key, value in labels.items():
         # Validate key
@@ -36,11 +40,10 @@ def _validate_labels(labels: Dict[str, Union[str, List[str]]]) -> None:
                     errors.append({str(item): 'expected string or bytes-like object'})
                 elif not value_regex.match(item):
                     errors.append({item: f"Label value '{item}' does not match the regex {value_regex.pattern}"})
-        else:
-            if not isinstance(value, str):
-                errors.append({str(value): 'expected string or bytes-like object'})
-            elif not value_regex.match(value):
-                errors.append({value: f"Label value '{value}' does not match the regex {value_regex.pattern}"})
+        elif not isinstance(value, str):
+            errors.append({str(value): 'expected string or bytes-like object'})
+        elif not value_regex.match(value):
+            errors.append({value: f"Label value '{value}' does not match the regex {value_regex.pattern}"})
 
     if errors:
         raise ValidationError(errors)

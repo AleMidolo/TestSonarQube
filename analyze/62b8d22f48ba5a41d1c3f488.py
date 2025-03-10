@@ -1,9 +1,9 @@
 def popitem(self):
     """
-    Rimuove e restituisce la coppia `(chiave, valore)` inserita per prima.
+    Remove and return the `(key, value)` pair first inserted.
     """
     if not self:
-        raise KeyError("popitem(): dictionary is empty")
+        raise KeyError("dictionary is empty")
     key = next(iter(self))
     value = self.pop(key)
     return (key, value)

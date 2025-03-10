@@ -1,10 +1,10 @@
 def dehydrate_point(value):
     """
-    Deidratatore per i dati di tipo `Point`.
+    Dehydrator for Point data.
 
-    :param value: Un oggetto di tipo `Point`.
+    :param value: The Point object to dehydrate.
     :type value: Point
-    :return: Una rappresentazione serializzata del punto, tipicamente una tupla (x, y).
+    :return: A tuple representing the dehydrated Point (x, y).
     :rtype: tuple
     """
     return (value.x, value.y)

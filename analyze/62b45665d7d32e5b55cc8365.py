@@ -2,28 +2,28 @@ import argparse
 
 def parse_arguments(*unparsed_arguments):
     """
-    Dati gli argomenti della riga di comando con cui è stato invocato questo script, analizza gli argomenti e restituiscili come un dizionario che mappa il nome del sotto-parser (o "global") a un'istanza di `argparse.Namespace`.
+    Given command-line arguments with which this script was invoked, parse the arguments and return
+    them as a dict mapping from subparser name (or "global") to an argparse.Namespace instance.
     """
-    # Create the main parser
-    main_parser = argparse.ArgumentParser(description="Main parser")
-    subparsers = main_parser.add_subparsers(dest='subparser_name', help='sub-command help')
+    parser = argparse.ArgumentParser(description="Main parser")
+    subparsers = parser.add_subparsers(dest="subparser_name", help="Sub-command help")
 
-    # Example subparser 1
-    parser_a = subparsers.add_parser('command_a', help='command_a help')
-    parser_a.add_argument('--arg1', type=int, help='arg1 help')
+    # Example subparser for 'command1'
+    parser_command1 = subparsers.add_parser('command1', help='Command1 help')
+    parser_command1.add_argument('--arg1', type=str, help='Argument 1 for command1')
 
-    # Example subparser 2
-    parser_b = subparsers.add_parser('command_b', help='command_b help')
-    parser_b.add_argument('--arg2', type=str, help='arg2 help')
+    # Example subparser for 'command2'
+    parser_command2 = subparsers.add_parser('command2', help='Command2 help')
+    parser_command2.add_argument('--arg2', type=int, help='Argument 2 for command2')
 
     # Parse the arguments
-    args = main_parser.parse_args(unparsed_arguments)
+    parsed_args = parser.parse_args(unparsed_arguments)
 
     # Organize the parsed arguments into a dictionary
-    parsed_args = {}
-    if hasattr(args, 'subparser_name'):
-        parsed_args[args.subparser_name] = args
+    result = {}
+    if hasattr(parsed_args, 'subparser_name'):
+        result[parsed_args.subparser_name] = parsed_args
     else:
-        parsed_args['global'] = args
+        result['global'] = parsed_args
 
-    return parsed_args
+    return result

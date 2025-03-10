@@ -1,12 +1,12 @@
 def reset(self):
     """
-    Reimposta l'istogramma.
+    Reset the histogram.
 
-    Il contesto attuale viene reimpostato a un dizionario vuoto.
-    I bin vengono reinizializzati con il *valore_iniziale*
-    o con *make_bins()* (a seconda dell'inizializzazione).
+    Current context is reset to an empty dict.
+    Bins are reinitialized with the *initial_value*
+    or with *make_bins()* (depending on the initialization).
     """
-    self.context = {}
+    self.current_context = {}
     if hasattr(self, 'initial_value'):
         self.bins = [self.initial_value] * len(self.bins)
     else:

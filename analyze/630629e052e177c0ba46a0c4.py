@@ -1,23 +1,29 @@
 import json
-from xml.etree import ElementTree as ET
 from typing import Dict
+from xml.etree import ElementTree as ET
 
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
-    Analizza il webfinger di Diaspora, che può essere in formato JSON (nuovo) o in formato XRD (vecchio).
+    Parse Diaspora webfinger which is either in JSON format (new) or XRD (old).
 
-    [https://diaspora.github.io/diaspora_federation/discovery/webfinger.html](https://diaspora.github.io/diaspora_federation/discovery/webfinger.html)
+    Args:
+        document (str): The webfinger document in either JSON or XRD format.
+
+    Returns:
+        Dict: A dictionary containing the parsed data.
     """
     try:
         # Try to parse as JSON (new format)
         data = json.loads(document)
         return data
     except json.JSONDecodeError:
-        # If JSON parsing fails, try to parse as XML (old format)
+        # If JSON parsing fails, try to parse as XRD (old format)
         try:
             root = ET.fromstring(document)
+            namespace = {'XRD': 'http://docs.oasis-open.org/ns/xri/xrd-1.0'}
+            links = root.findall('XRD:Link', namespace)
             result = {}
-            for link in root.findall('{http://docs.oasis-open.org/ns/xri/xrd-1.0}Link'):
+            for link in links:
                 rel = link.get('rel')
                 href = link.get('href')
                 if rel and href:

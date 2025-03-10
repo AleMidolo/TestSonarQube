@@ -1,11 +1,11 @@
 def generate_default_observer_schema(app):
     """
-    Genera lo schema di osservazione predefinito per ogni risorsa Kubernetes presente in
-    ``spec.manifest`` per la quale non è stato specificato uno schema di osservazione personalizzato.
+    Generate the default observer schema for each Kubernetes resource present in
+    ``spec.manifest`` for which a custom observer schema hasn't been specified.
 
-    Argomenti:
-        app (krake.data.kubernetes.Application): L'applicazione per la quale generare uno
-            schema di osservazione predefinito.
+    Args:
+        app (krake.data.kubernetes.Application): The application for which to generate a
+            default observer schema
     """
     default_schema = {
         "type": "object",

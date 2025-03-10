@@ -1,12 +1,12 @@
-def create_complex_argument_type(self, subcommand, type_name, option_name, spec_option):
+def create_complex_argumet_type(self, subcommand, type_name, option_name, spec_option):
     """
-    Crea il tipo di argomento complesso.
+    Build the complex argument type
 
-    :param subcommand: il nome del comando
-    :param type_name: il nome del tipo complesso
-    :param option_name: il nome dell'opzione
-    :param spec_option: le specifiche dell'opzione
-    :return: l'istanza del tipo complesso
+    :param subcommand: the command name
+    :param type_name: the complex type name
+    :param option_name: the option name
+    :param spec_option: option's specifications
+    :return: the complex type instance
     """
     # Assuming the complex type is a dictionary with the given specifications
     complex_type = {

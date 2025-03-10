@@ -2,15 +2,13 @@ import argparse
 
 def parse_arguments(*arguments):
     """
-    Dati gli argomenti della riga di comando con cui è stato invocato questo script,
-    analizza gli argomenti e restituiscili come un'istanza di ArgumentParser.
+    Given command-line arguments with which this script was invoked, parse the arguments and return
+    them as an ArgumentParser instance.
     """
-    parser = argparse.ArgumentParser(description="Parse command line arguments.")
-    
-    # Add arguments to the parser
-    parser.add_argument('args', nargs='*', help="List of arguments passed to the script.")
+    parser = argparse.ArgumentParser(description="Parse command-line arguments.")
+    # Add your argument parsing logic here
+    # Example: parser.add_argument('--example', type=str, help='An example argument')
     
     # Parse the arguments
-    parsed_args = parser.parse_args(arguments)
-    
-    return parsed_args
+    args = parser.parse_args(arguments)
+    return args

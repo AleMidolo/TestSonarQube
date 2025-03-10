@@ -1,7 +1,7 @@
 def keys(self):
     """
-    Restituisce le chiavi del record.
+    Return the keys of the record.
 
-    :return: lista dei nomi delle chiavi
+    :return: list of key names
     """
     return list(self.__dict__.keys())

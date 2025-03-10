@@ -2,11 +2,21 @@ from datetime import datetime
 
 def default_tzinfo(dt, tzinfo):
     """
-    Imposta il parametro ``tzinfo`` solo sui datetime privi di informazioni sul fuso orario (naive).
+    Sets the ``tzinfo`` parameter on naive datetimes only
 
-    :param dt: Il datetime su cui sostituire il fuso orario.
-    :param tzinfo: L'istanza della sottoclasse :py:class:`datetime.tzinfo` da assegnare a ``dt`` se (e solo se) è privo di informazioni sul fuso orario (naive).
-    :return: Restituisce un oggetto :py:class:`datetime.datetime` con informazioni sul fuso orario (aware).
+    This is useful for example when you are provided a datetime that may have
+    either an implicit or explicit time zone, such as when parsing a time zone
+    string.
+
+    :param dt:
+        The datetime on which to replace the time zone
+
+    :param tzinfo:
+        The :py:class:`datetime.tzinfo` subclass instance to assign to
+        ``dt`` if (and only if) it is naive.
+
+    :return:
+        Returns an aware :py:class:`datetime.datetime`.
     """
     if dt.tzinfo is None:
         return dt.replace(tzinfo=tzinfo)

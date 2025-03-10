@@ -1,27 +1,22 @@
 def test_tag(tag: str) -> bool:
     """
-    Verifica se una parola può essere accettata come tag.
+    Test a word whether it could be accepted as a tag.
     
-    Un tag è considerato valido se:
-    - Non è vuoto.
-    - Contiene solo caratteri alfanumerici e trattini bassi (_).
-    - Non inizia con un numero.
-    - Ha una lunghezza massima di 50 caratteri.
+    A tag is considered valid if it meets the following criteria:
+    - It is not empty.
+    - It contains only alphanumeric characters or underscores.
+    - It is not longer than 50 characters.
     
-    :param tag: La stringa da verificare.
-    :return: True se il tag è valido, False altrimenti.
+    Args:
+        tag (str): The word to be tested as a tag.
+    
+    Returns:
+        bool: True if the word is a valid tag, False otherwise.
     """
     if not tag:
         return False
-    
     if len(tag) > 50:
         return False
-    
-    if tag[0].isdigit():
+    if not tag.replace("_", "").isalnum():
         return False
-    
-    for char in tag:
-        if not (char.isalnum() or char == '_'):
-            return False
-    
     return True

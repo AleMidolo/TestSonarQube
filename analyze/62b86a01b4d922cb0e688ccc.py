@@ -1,17 +1,22 @@
 def generate_default_observer_schema_dict(manifest_dict, first_level=False):
     """
-    Insieme alla funzione :func:`generate_default_observer_schema_list`, questa funzione viene chiamata ricorsivamente per generare una parte dello schema predefinito `observer_schema` a partire da una risorsa Kubernetes, definita rispettivamente da `manifest_dict` o `manifest_list`.
+    Together with :func:``generate_default_observer_schema_list``, this function is
+    called recursively to generate part of a default ``observer_schema`` from part of a
+    Kubernetes resource, defined respectively by ``manifest_dict`` or ``manifest_list``.
 
-    ### Argomenti:
-    - **manifest_dict (dict)**: Risorse Kubernetes parziali.
-    - **first_level (bool, opzionale)**: Se impostato su True, indica che il dizionario rappresenta l'intero schema `observer_schema` di una risorsa Kubernetes.
+    Args:
+        manifest_dict (dict): Partial Kubernetes resources
+        first_level (bool, optional): If True, indicates that the dictionary represents
+            the whole observer schema of a Kubernetes resource
 
-    ### Ritorna:
-    - **dict**: Lo schema parziale `observer_schema` generato.
+    Returns:
+        dict: Generated partial observer_schema
 
-    Questa funzione crea un nuovo dizionario a partire da `manifest_dict` e sostituisce tutti i valori che non sono liste o dizionari con `None`.
+    This function creates a new dictionary from ``manifest_dict`` and replaces all
+    non-list and non-dict values by ``None``.
 
-    Nel caso di un dizionario `first_level` (ovvero lo schema completo `observer_schema` per una risorsa), i valori dei campi identificativi vengono copiati dal file manifest.
+    In case of ``first_level`` dictionary (i.e. complete ``observer_schema`` for a
+    resource), the values of the identifying fields are copied from the manifest file.
     """
     observer_schema = {}
     
@@ -30,7 +35,18 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
 
 def generate_default_observer_schema_list(manifest_list):
     """
-    Funzione ausiliaria per gestire le liste all'interno del dizionario manifest.
+    Together with :func:``generate_default_observer_schema_dict``, this function is
+    called recursively to generate part of a default ``observer_schema`` from part of a
+    Kubernetes resource, defined respectively by ``manifest_dict`` or ``manifest_list``.
+
+    Args:
+        manifest_list (list): Partial Kubernetes resources
+
+    Returns:
+        list: Generated partial observer_schema
+
+    This function creates a new list from ``manifest_list`` and replaces all
+    non-list and non-dict values by ``None``.
     """
     observer_schema = []
     

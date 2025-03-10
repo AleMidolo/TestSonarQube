@@ -2,17 +2,18 @@ def update_last_applied_manifest_list_from_resp(
     last_applied_manifest, observer_schema, response
 ):
     """
-    Insieme alla funzione :func:``update_last_applied_manifest_dict_from_resp``, 
-    questa funzione viene chiamata ricorsivamente per aggiornare un 
-    ``last_applied_manifest`` parziale a partire da una risposta parziale di Kubernetes.
+    Together with :func:``update_last_applied_manifest_dict_from_resp``, this
+    function is called recursively to update a partial ``last_applied_manifest``
+    from a partial Kubernetes response
 
-    Argomenti:
-        last_applied_manifest (list): ``last_applied_manifest`` parziale in fase di aggiornamento.
-        observer_schema (list): ``observer_schema`` parziale.
-        response (list): risposta parziale dall'API di Kubernetes.
+    Args:
+        last_applied_manifest (list): partial ``last_applied_manifest`` being
+            updated
+        observer_schema (list): partial ``observer_schema``
+        response (list): partial response from the Kubernetes API.
 
-    Questa funzione attraversa tutti i campi osservati e inizializza il loro valore 
-    in ``last_applied_manifest`` se non sono ancora presenti.
+    This function go through all observed fields, and initialized their value in
+    last_applied_manifest if they are not yet present
     """
     for i, (schema_item, resp_item) in enumerate(zip(observer_schema, response)):
         if isinstance(schema_item, dict) and isinstance(resp_item, dict):

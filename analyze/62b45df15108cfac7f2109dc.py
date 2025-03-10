@@ -1,6 +1,6 @@
 def status_str(self, prefix=''):
     """
-    Restituisce una stringa che rappresenta lo stato del validatore, con un prefisso opzionale.
+    Return string of validator status, with optional prefix.
     """
-    status = "Stato del validatore"
+    status = "Valid" if self.is_valid() else "Invalid"
     return f"{prefix}{status}"

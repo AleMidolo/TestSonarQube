@@ -1,17 +1,17 @@
 def dict_insert(dic, val, key, *keys):
     """
-    Inserisce un valore in una chiave annidata all'interno di un dizionario.
+    Insert a value of a nested key into a dictionary.
 
-    Per inserire un valore in una chiave annidata, è necessario fornire tutte le chiavi antenate
-    come argomenti del metodo.
+    To insert a value for a nested key, all ancestor keys should be given as
+    method's arguments.
 
-    Esempio:
-      dict_insert({}, 'val', *'key1.key2'.split('.'))
+    Example:
+      dict_insert({}, 'val', 'key1.key2'.split('.'))
 
-    :param dic: un oggetto dizionario in cui inserire il valore della chiave annidata
-    :param val: un valore da inserire nel dizionario fornito
-    :param key: la prima chiave nella catena di chiavi che conterrà il valore
-    :param keys: sottochiavi nella catena di chiavi
+    :param dic: a dictionary object to insert the nested key value into
+    :param val: a value to insert to the given dictionary
+    :param key: first key in a chain of keys that will store the value
+    :param keys: sub keys in the keys chain
     """
     current = dic
     for k in keys[:-1]:

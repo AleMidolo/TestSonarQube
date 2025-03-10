@@ -1,7 +1,7 @@
 def parser_flags(parser):
     """
-    Dato un'istanza di argparse.ArgumentParser, restituisce le sue opzioni (flag) 
-    degli argomenti in una stringa separata da spazi.
+    Given an argparse.ArgumentParser instance, return its argument flags in a space-separated
+    string.
     """
     flags = []
     for action in parser._actions:

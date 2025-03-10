@@ -1,20 +1,28 @@
-def identify_request(request: RequestType):
-    """
-    Prova a identificare se si tratta di una richiesta Diaspora.
+from typing import Union
 
-    Prova prima con un messaggio pubblico. Poi con un messaggio privato. Infine, verifica se si tratta di un payload legacy.
+def identify_request(request: RequestType) -> Union[str, None]:
+    """
+    Try to identify whether this is a Diaspora request.
+
+    Try first public message. Then private message. Then check if this is a legacy payload.
+    
+    Args:
+        request (RequestType): The request to be identified.
+    
+    Returns:
+        Union[str, None]: Returns the type of request if identified, otherwise None.
     """
     # Check if it's a public message
     if hasattr(request, 'public_message') and request.public_message:
-        return "Public message"
+        return "public_message"
     
     # Check if it's a private message
     elif hasattr(request, 'private_message') and request.private_message:
-        return "Private message"
+        return "private_message"
     
     # Check if it's a legacy payload
     elif hasattr(request, 'legacy_payload') and request.legacy_payload:
-        return "Legacy payload"
+        return "legacy_payload"
     
-    # If none of the above, return unknown
-    return "Unknown request type"
+    # If none of the above, return None
+    return None

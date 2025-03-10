@@ -1,40 +1,35 @@
 def validate_version_inventories(self, version_dirs):
     """
-    Ogni versione DOVREBBE avere un inventario fino a quel punto.
-    Inoltre, tieni traccia di eventuali digest di contenuto diversi da quelli
-    presenti nell'inventario principale, in modo da poterli verificare
-    anche durante la validazione del contenuto.
+    Each version SHOULD have an inventory up to that point.
 
-    version_dirs è un array di nomi di directory di versione e si presume
-    che sia in sequenza di versione (1, 2, 3...).
+    Also keep a record of any content digests different from those in the root inventory
+    so that we can also check them when validating the content.
+
+    version_dirs is an array of version directory names and is assumed to be in
+    version sequence (1, 2, 3...).
     """
-    inventory = set()
+    root_inventory = self.get_root_inventory()
+    discrepancies = {}
+
     for version_dir in version_dirs:
-        # Assuming each version directory contains an 'inventory.txt' file
-        inventory_path = os.path.join(version_dir, 'inventory.txt')
-        if not os.path.exists(inventory_path):
-            raise FileNotFoundError(f"Inventory file not found in {version_dir}")
+        version_inventory = self.get_version_inventory(version_dir)
         
-        with open(inventory_path, 'r') as file:
-            current_inventory = set(file.read().splitlines())
+        if not version_inventory:
+            raise ValueError(f"Inventory missing for version: {version_dir}")
         
-        # Check if the current inventory is a superset of the previous inventory
-        if not current_inventory.issuperset(inventory):
-            raise ValueError(f"Inventory in {version_dir} is not a superset of previous inventories")
-        
-        # Update the main inventory with the current inventory
-        inventory.update(current_inventory)
-        
-        # Track any content digests that are not in the main inventory
-        # Assuming content digests are stored in a 'content_digests.txt' file
-        content_digests_path = os.path.join(version_dir, 'content_digests.txt')
-        if os.path.exists(content_digests_path):
-            with open(content_digests_path, 'r') as file:
-                content_digests = set(file.read().splitlines())
-            
-            # Check if any content digest is not in the main inventory
-            missing_digests = content_digests - inventory
-            if missing_digests:
-                raise ValueError(f"Content digests {missing_digests} in {version_dir} are not in the main inventory")
+        for content_id, digest in version_inventory.items():
+            if content_id in root_inventory:
+                if root_inventory[content_id] != digest:
+                    discrepancies[content_id] = {
+                        'root_digest': root_inventory[content_id],
+                        'version_digest': digest,
+                        'version': version_dir
+                    }
+            else:
+                discrepancies[content_id] = {
+                    'root_digest': None,
+                    'version_digest': digest,
+                    'version': version_dir
+                }
     
-    return True
+    return discrepancies

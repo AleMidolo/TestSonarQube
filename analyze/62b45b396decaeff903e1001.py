@@ -1,11 +1,14 @@
 def amend_bzparams(self, params, bug_ids):
     """
-    Modifica i parametri di Bugzilla.
-
-    :param params: Dizionario contenente i parametri da modificare.
-    :param bug_ids: Lista di ID dei bug da aggiornare.
-    :return: None
+    Amend the Bugzilla params
     """
-    for bug_id in bug_ids:
-        # Supponiamo che ci sia un metodo `update_bug` che aggiorna i parametri di un bug
-        self.update_bug(bug_id, params)
+    if not isinstance(params, dict):
+        raise ValueError("params must be a dictionary")
+    if not isinstance(bug_ids, (list, int)):
+        raise ValueError("bug_ids must be a list or an integer")
+    
+    if isinstance(bug_ids, int):
+        bug_ids = [bug_ids]
+    
+    params['id'] = bug_ids
+    return params

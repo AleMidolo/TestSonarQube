@@ -1,32 +1,25 @@
 def _extract_number_and_supplment_from_issue_element(issue):
     """
-    Estrai i possibili valori di numero e supplemento dai issue.
-
+    Extract the possible values of number and suppl from the contents of issue.
+    
     Args:
-        issue (str): La stringa che rappresenta il numero e il supplemento dell'issue.
-
+        issue (str): The issue string to extract number and suppl from.
+    
     Returns:
-        tuple: Una tupla contenente il numero (int) e il supplemento (str) estratti.
-               Se il supplemento non è presente, il secondo elemento della tupla sarà None.
+        tuple: A tuple containing the extracted number and suppl values.
+              If no number or suppl is found, returns (None, None).
     """
-    # Rimuovi eventuali spazi bianchi all'inizio e alla fine
-    issue = issue.strip()
+    number = None
+    suppl = None
     
-    # Cerca un numero all'inizio della stringa
-    number_part = ''
-    i = 0
-    while i < len(issue) and issue[i].isdigit():
-        number_part += issue[i]
-        i += 1
+    # Example logic to extract number and suppl
+    # This is a placeholder and should be replaced with actual logic
+    if issue:
+        parts = issue.split()
+        for part in parts:
+            if part.isdigit():
+                number = int(part)
+            elif part.lower().startswith('suppl'):
+                suppl = part
     
-    # Se non è stato trovato un numero, restituisci None per entrambi i valori
-    if not number_part:
-        return (None, None)
-    
-    # Converti il numero in intero
-    number = int(number_part)
-    
-    # Il resto della stringa è il supplemento
-    suppliment = issue[i:].strip() or None
-    
-    return (number, suppliment)
+    return number, suppl
