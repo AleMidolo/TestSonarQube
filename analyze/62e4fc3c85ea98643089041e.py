@@ -10,4 +10,4 @@ def _inline_r_setup(code: str) -> str:
         stringsAsFactors = FALSE
     )
     """
-    return code + setup_code
+    return setup_code + code

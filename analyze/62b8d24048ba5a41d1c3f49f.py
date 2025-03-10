@@ -14,16 +14,17 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
 
         @wraps(func)
         def wrapper(*args, **kwargs):
-            key = (args, frozenset(kwargs.items())) if typed else (args, frozenset(kwargs.items()))
-            if key in wrapper._cache:
-                value, timestamp = wrapper._cache[key]
-                if timer() - timestamp < ttl:
-                    return value
+            key = (args, frozenset(kwargs.items())) if typed else (args, tuple(kwargs.items()))
+            current_time = timer()
+            if key in wrapper._cache_info:
+                cached_time, result = wrapper._cache_info[key]
+                if current_time - cached_time < ttl:
+                    return result
             result = cached_func(*args, **kwargs)
-            wrapper._cache[key] = (result, timer())
+            wrapper._cache_info[key] = (current_time, result)
             return result
 
-        wrapper._cache = {}
+        wrapper._cache_info = {}
         return wrapper
 
     return decorator

@@ -14,11 +14,11 @@ def prepare_repository_from_archive(
     # Ensure tmp_path is a Path object
     tmp_path = Path(tmp_path)
     
-    # Create a temporary directory within tmp_path
+    # Create a temporary directory within the specified tmp_path
     with tempfile.TemporaryDirectory(dir=tmp_path) as temp_dir:
         temp_dir_path = Path(temp_dir)
         
-        # Determine the archive type and extract it
+        # Determine the archive type based on the file extension
         if archive_path.endswith('.zip'):
             with ZipFile(archive_path, 'r') as zip_ref:
                 zip_ref.extractall(temp_dir_path)
@@ -29,17 +29,17 @@ def prepare_repository_from_archive(
             with TarFile.open(archive_path, 'r:bz2') as tar_ref:
                 tar_ref.extractall(temp_dir_path)
         elif archive_path.endswith('.tar'):
-            with TarFile.open(archive_path, 'r:') as tar_ref:
+            with TarFile.open(archive_path, 'r') as tar_ref:
                 tar_ref.extractall(temp_dir_path)
         else:
-            raise ValueError(f"Unsupported archive format: {archive_path}")
+            raise ValueError("Unsupported archive format")
         
         # If filename is provided, move it to the root of the temp directory
         if filename:
-            extracted_file = temp_dir_path / filename
-            if not extracted_file.exists():
-                raise FileNotFoundError(f"File {filename} not found in the archive.")
-            shutil.move(str(extracted_file), str(temp_dir_path))
+            file_path = temp_dir_path / filename
+            if not file_path.exists():
+                raise FileNotFoundError(f"File {filename} not found in the archive")
+            shutil.move(str(file_path), str(temp_dir_path))
         
-        # Return the path to the extracted directory as a string
+        # Return the path to the temporary directory as the repository URL
         return str(temp_dir_path)

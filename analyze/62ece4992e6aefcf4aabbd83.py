@@ -7,27 +7,21 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     调用给定的命令。
     """
     command = commands + args
-    stderr = subprocess.PIPE if hide_stderr else None
+    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
+    process = subprocess.Popen(
+        command,
+        cwd=cwd,
+        stdout=subprocess.PIPE,
+        stderr=stderr,
+        env=env,
+        text=True
+    )
+    stdout, stderr = process.communicate()
     
-    try:
-        result = subprocess.run(
-            command,
-            cwd=cwd,
-            env=env,
-            stdout=subprocess.PIPE,
-            stderr=stderr,
-            text=True,
-            check=False
-        )
-        if verbose:
-            print(f"Command: {' '.join(command)}")
-            print(f"Return code: {result.returncode}")
-            print(f"Output: {result.stdout}")
-        
-        return result.stdout, result.returncode
-    except subprocess.CalledProcessError as e:
-        if verbose:
-            print(f"Command failed with return code {e.returncode}")
-            print(f"Output: {e.stdout}")
-            print(f"Error: {e.stderr}")
-        return e.stdout, e.returncode
+    if verbose:
+        print(f"Command: {' '.join(command)}")
+        print(f"Stdout: {stdout}")
+        if stderr:
+            print(f"Stderr: {stderr}")
+    
+    return stdout, process.returncode

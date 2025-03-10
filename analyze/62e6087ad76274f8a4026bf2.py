@@ -13,13 +13,13 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **
         "type": "DISCARD",
         "n": n,
         "qid": qid,
-        "dehydration_hooks": dehydration_hooks if dehydration_hooks else {},
-        "hydration_hooks": hydration_hooks if hydration_hooks else {},
-        "handlers": handlers
+        "dehydration_hooks": dehydration_hooks or {},
+        "hydration_hooks": hydration_hooks or {},
+        **handlers
     }
     
     # 将消息添加到输出队列
     self.output_queue.append(discard_message)
     
     # 返回一个Response对象
-    return Response(handlers=handlers)
+    return Response(handlers)

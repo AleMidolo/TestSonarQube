@@ -10,25 +10,26 @@ def deep_merge_nodes(nodes):
 
     对任何与重复键对应的节点值进行深度合并，并返回合并后的结果。如果存在具有非 `MappingNode` 值（例如整数或字符串）的冲突键，则以最后一个值为准。
     """
+    from ruamel.yaml.nodes import MappingNode, ScalarNode
+
     merged_nodes = {}
-    
+
     for key_node, value_node in nodes:
         key = key_node.value
-        
         if key in merged_nodes:
             existing_value_node = merged_nodes[key]
-            
             if isinstance(existing_value_node, MappingNode) and isinstance(value_node, MappingNode):
                 # 深度合并 MappingNode
-                merged_value = deep_merge_nodes(existing_value_node.value + value_node.value)
-                merged_nodes[key] = MappingNode(tag=existing_value_node.tag, value=merged_value)
+                existing_value = existing_value_node.value
+                new_value = value_node.value
+                merged_value = deep_merge_nodes(existing_value + new_value)
+                merged_nodes[key] = MappingNode(existing_value_node.tag, merged_value)
             else:
                 # 非 MappingNode 冲突，保留最后一个值
                 merged_nodes[key] = value_node
         else:
             merged_nodes[key] = value_node
-    
-    # 将合并后的节点转换回元组列表形式
+
+    # 将合并后的节点转换回列表形式
     result = [(ScalarNode(tag='tag:yaml.org,2002:str', value=key), value_node) for key, value_node in merged_nodes.items()]
-    
     return result

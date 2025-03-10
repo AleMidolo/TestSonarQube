@@ -1,45 +1,36 @@
+import xml.etree.ElementTree as ET
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+
 def verify_relayable_signature(public_key, doc, signature):
     """
     验证已签名的XML元素，以确保声明的作者确实生成了此消息。
 
     :param public_key: 公钥，用于验证签名
-    :param doc: 已签名的XML文档
+    :param doc: 要验证的XML文档
     :param signature: 签名
-    :return: 如果签名验证成功返回True，否则返回False
+    :return: True如果签名验证成功，否则False
     """
-    from cryptography.hazmat.primitives import hashes
-    from cryptography.hazmat.primitives.asymmetric import padding
-    from cryptography.hazmat.primitives import serialization
-    from cryptography.hazmat.backends import default_backend
-    from lxml import etree
-
-    # 加载公钥
-    public_key = serialization.load_pem_public_key(
-        public_key.encode(),
-        backend=default_backend()
-    )
-
-    # 解析XML文档
-    root = etree.fromstring(doc)
-
-    # 获取签名内容
-    signed_info = root.find(".//SignedInfo", namespaces=root.nsmap)
-    if signed_info is None:
-        return False
-
-    # 计算签名内容的哈希值
-    digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
-    digest.update(etree.tostring(signed_info))
-    hashed_data = digest.finalize()
-
-    # 验证签名
     try:
-        public_key.verify(
+        # 将XML文档转换为字符串
+        doc_str = ET.tostring(doc, encoding='unicode')
+        
+        # 将公钥从PEM格式加载
+        pub_key = serialization.load_pem_public_key(public_key.encode())
+        
+        # 验证签名
+        pub_key.verify(
             signature,
-            hashed_data,
-            padding.PKCS1v15(),
+            doc_str.encode(),
+            padding.PSS(
+                mgf=padding.MGF1(hashes.SHA256()),
+                salt_length=padding.PSS.MAX_LENGTH
+            ),
             hashes.SHA256()
         )
         return True
     except Exception as e:
+        print(f"Signature verification failed: {e}")
         return False

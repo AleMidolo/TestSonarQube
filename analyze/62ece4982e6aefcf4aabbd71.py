@@ -12,7 +12,7 @@ def regex_dict(item):
       一个键已转换为正则表达式的字典
 
     示例：
-    rules = {
+    ules = {
       '*.cpp':
           {'a': 'arf', 'b': 'bark', 'c': 'coo'},
       '*.h':

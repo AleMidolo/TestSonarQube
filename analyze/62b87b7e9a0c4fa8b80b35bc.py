@@ -15,13 +15,21 @@ def _update_context(self, context):
     if not hasattr(context, 'error'):
         context.error = {}
 
-    # 假设 self.fields 是图的字段列表
+    # 假设图对象有一个属性 `fields`，其中包含字段名
     for i, field in enumerate(self.fields):
         if field.startswith('error_'):
             # 提取错误类型，例如 "x_low" 从 "error_x_low"
             error_type = field[len('error_'):]
-            # 确定错误名称（x, y, z）
-            error_name = ['x', 'y', 'z'][i % 3]  # 循环使用 x, y, z
+            # 将错误类型映射到 "x", "y", "z"
+            if error_type.startswith('x'):
+                error_name = 'x'
+            elif error_type.startswith('y'):
+                error_name = 'y'
+            elif error_type.startswith('z'):
+                error_name = 'z'
+            else:
+                error_name = error_type
+
             # 更新 context.error
             if error_name not in context.error:
                 context.error[error_name] = {}

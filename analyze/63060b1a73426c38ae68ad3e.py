@@ -17,15 +17,13 @@ def get_plugin_spec_flatten_dict(plugin_dir):
             if file.endswith('.yaml') or file.endswith('.yml'):
                 file_path = os.path.join(root, file)
                 with open(file_path, 'r', encoding='utf-8') as f:
-                    yaml_data = yaml.safe_load(f)
-                    if yaml_data:
-                        # 将 YAML 数据扁平化并合并到主字典中
-                        for key, value in yaml_data.items():
+                    data = yaml.safe_load(f)
+                    if data:
+                        # 将 YAML 文件中的内容扁平化到字典中
+                        for key, value in data.items():
                             if key in flattened_dict:
                                 if isinstance(flattened_dict[key], list):
-                                    flattened_dict[key].extend(value if isinstance(value, list) else [value])
-                                elif isinstance(flattened_dict[key], dict):
-                                    flattened_dict[key].update(value if isinstance(value, dict) else {key: value})
+                                    flattened_dict[key].append(value)
                                 else:
                                     flattened_dict[key] = [flattened_dict[key], value]
                             else:

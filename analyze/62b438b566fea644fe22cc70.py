@@ -10,17 +10,14 @@ def bash_completion():
     # 获取 borgmatic 的命令行参数解析器
     parser = argparse.ArgumentParser(description='Borgmatic command line interface.')
     # 添加 borgmatic 的常用参数
-    parser.add_argument('--config', help='Path to configuration file.')
-    parser.add_argument('--verbosity', type=int, help='Verbosity level.')
-    parser.add_argument('--list', action='store_true', help='List archives.')
-    parser.add_argument('--prune', action='store_true', help='Prune archives.')
-    parser.add_argument('--create', action='store_true', help='Create a new archive.')
-    parser.add_argument('--check', action='store_true', help='Check archives.')
-    parser.add_argument('--extract', action='store_true', help='Extract archives.')
-    parser.add_argument('--info', action='store_true', help='Show archive info.')
-    parser.add_argument('--mount', action='store_true', help='Mount archive.')
-    parser.add_argument('--umount', action='store_true', help='Unmount archive.')
-    parser.add_argument('--help', action='store_true', help='Show help message.')
+    parser.add_argument('--init', action='store_true', help='Initialize a new borgmatic configuration.')
+    parser.add_argument('--prune', action='store_true', help='Prune old backups.')
+    parser.add_argument('--create', action='store_true', help='Create a new backup.')
+    parser.add_argument('--check', action='store_true', help='Check the integrity of backups.')
+    parser.add_argument('--list', action='store_true', help='List available backups.')
+    parser.add_argument('--extract', action='store_true', help='Extract files from a backup.')
+    parser.add_argument('--info', action='store_true', help='Show information about a backup.')
+    parser.add_argument('--config', type=str, help='Path to the borgmatic configuration file.')
 
     # 生成 bash 补全脚本
     bash_script = """
@@ -30,14 +27,12 @@ def bash_completion():
         COMPREPLY=()
         cur="${COMP_WORDS[COMP_CWORD]}"
         prev="${COMP_WORDS[COMP_CWORD-1]}"
-        opts="--config --verbosity --list --prune --create --check --extract --info --mount --umount --help"
-
-        if [[ ${cur} == -* ]]; then
+        opts="--init --prune --create --check --list --extract --info --config"
+        if [[ ${cur} == -* ]] ; then
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
         fi
     }
     complete -F _borgmatic_completion borgmatic
     """
-
     return bash_script

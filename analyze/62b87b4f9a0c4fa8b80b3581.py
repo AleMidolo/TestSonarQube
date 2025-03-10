@@ -12,6 +12,7 @@ def scale(self, other=None, recompute=False):
     """
     if other is None:
         if not hasattr(self, '_scale') or recompute:
+            # 计算比例值
             self._scale = self._compute_scale()
         return self._scale
     else:
@@ -19,11 +20,16 @@ def scale(self, other=None, recompute=False):
             raise TypeError("Scale must be a float or integer.")
         if self._scale == 0:
             raise LenaValueError("Cannot rescale a histogram with zero scale.")
+        # 调整比例
         self._scale = float(other)
+        return self._scale
 
 def _compute_scale(self):
     """
-    计算直方图的比例（积分值）。
+    计算直方图的比例值（积分值）。
     """
     # 假设 self._data 是直方图的数据
     return sum(self._data)
+
+class LenaValueError(Exception):
+    pass

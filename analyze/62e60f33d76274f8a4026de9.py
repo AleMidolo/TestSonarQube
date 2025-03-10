@@ -9,7 +9,7 @@ def dehydrate_point(value):
     :rtype: dict
     """
     if not hasattr(value, 'x') or not hasattr(value, 'y'):
-        raise ValueError("Invalid Point object. Must have 'x' and 'y' attributes.")
+        raise ValueError("Invalid Point object: missing 'x' or 'y' attribute")
     
     return {
         'x': value.x,

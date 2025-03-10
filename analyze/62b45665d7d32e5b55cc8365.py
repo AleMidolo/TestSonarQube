@@ -7,7 +7,7 @@ def parse_arguments(*unparsed_arguments):
     给定调用该脚本时使用的命令行参数，解析这些参数并返回一个字典，该字典将子解析器名称（或 "global"）映射到相应的 argparse.Namespace 实例。
     """
     parser = argparse.ArgumentParser(description="Global parser")
-    subparsers = parser.add_subparsers(dest="subparser_name", help="Sub-command help")
+    subparsers = parser.add_subparsers(dest='subparser_name', help='Sub-command help')
 
     # Example subparser
     parser_a = subparsers.add_parser('command_a', help='Command A help')
@@ -19,7 +19,7 @@ def parse_arguments(*unparsed_arguments):
     # Parse the arguments
     args = parser.parse_args(unparsed_arguments)
 
-    # Create a dictionary to map subparser names to their respective Namespace objects
+    # Create a dictionary to map subparser names to their respective Namespace instances
     result = {}
     if hasattr(args, 'subparser_name'):
         result[args.subparser_name] = args

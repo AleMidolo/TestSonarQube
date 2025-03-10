@@ -22,10 +22,13 @@ def _group_files_by_xml_filename(source, xmls, files):
         值：对应的文件列表
     """
     grouped_files = {}
+    
     for xml in xmls:
         xml_filename = xml.split('/')[-1]  # 获取 XML 文件名
         grouped_files[xml_filename] = []
+        
         for file in files:
             if xml_filename in file:
                 grouped_files[xml_filename].append(file)
+    
     return grouped_files

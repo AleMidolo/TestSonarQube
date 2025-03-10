@@ -11,6 +11,5 @@ def retrieve_diaspora_host_meta(host):
     url = f"https://{host}/.well-known/host-meta"
     response = requests.get(url)
     response.raise_for_status()
-    xml_content = response.content
-    xrd = etree.fromstring(xml_content)
+    xrd = etree.fromstring(response.content)
     return xrd

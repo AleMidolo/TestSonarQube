@@ -15,21 +15,21 @@ def scale(self, other=None):
     if other is None:
         return self._scale
     elif isinstance(other, (int, float)):
-        if self._scale is None or self._scale == 0:
+        if self._scale == 0 or self._scale is None:
             raise LenaValueError("Cannot rescale chart with unknown or zero scale.")
         # Rescale the last coordinate
         if hasattr(self, 'z'):
             self.z *= other / self._scale
-            if hasattr(self, 'z_error'):
-                self.z_error *= other / self._scale
+            if hasattr(self, 'z_err'):
+                self.z_err *= other / self._scale
         elif hasattr(self, 'y'):
             self.y *= other / self._scale
-            if hasattr(self, 'y_error'):
-                self.y_error *= other / self._scale
+            if hasattr(self, 'y_err'):
+                self.y_err *= other / self._scale
         elif hasattr(self, 'x'):
             self.x *= other / self._scale
-            if hasattr(self, 'x_error'):
-                self.x_error *= other / self._scale
+            if hasattr(self, 'x_err'):
+                self.x_err *= other / self._scale
         self._scale = other
     else:
-        raise TypeError("Expected a numeric value or None for scaling.")
+        raise TypeError("Scale must be a numeric value or None.")

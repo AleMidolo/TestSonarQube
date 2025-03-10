@@ -6,8 +6,8 @@ def protocol_handlers(cls, protocol_version=None):
     :return: 一个字典，键为版本元组，值为所有相关且受支持的协议版本的处理程序类
     :raise TypeError: 如果协议版本未以元组形式传入
     """
-    # 假设我们有一些支持的协议版本及其处理程序
-    supported_versions = {
+    # 假设我们有一些支持的协议版本及其对应的处理程序
+    supported_handlers = {
         (3, 5): "HandlerForV3_5",
         (4, 0): "HandlerForV4_0",
         (4, 1): "HandlerForV4_1",
@@ -16,9 +16,9 @@ def protocol_handlers(cls, protocol_version=None):
     if protocol_version is not None:
         if not isinstance(protocol_version, tuple):
             raise TypeError("协议版本必须以元组形式传入")
-        if protocol_version in supported_versions:
-            return {protocol_version: supported_versions[protocol_version]}
+        if protocol_version in supported_handlers:
+            return {protocol_version: supported_handlers[protocol_version]}
         else:
             return {}
     else:
-        return supported_versions
+        return supported_handlers

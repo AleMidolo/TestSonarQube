@@ -11,21 +11,21 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
     :param ansible_args: ansible-playbook 参数的字典，直接传递给 Ansible
     """
     command = ['ansible-playbook', playbook_path]
-
+    
     if verbose:
-        command.append(f'-{verbose}')
-
+        command.extend(['-' + 'v' * verbose])
+    
     if extra_vars:
-        extra_vars_str = ' '.join([f'{k}={v}' for k, v in extra_vars.items()])
+        extra_vars_str = ' '.join([f"{k}={v}" for k, v in extra_vars.items()])
         command.extend(['--extra-vars', extra_vars_str])
-
+    
     if ansible_args:
         for arg, value in ansible_args.items():
             if value is True:
-                command.append(f'--{arg}')
+                command.append(f"--{arg}")
             else:
-                command.extend([f'--{arg}', str(value)])
-
+                command.extend([f"--{arg}", str(value)])
+    
     try:
         result = subprocess.run(command, check=True, capture_output=True, text=True)
         print(result.stdout)

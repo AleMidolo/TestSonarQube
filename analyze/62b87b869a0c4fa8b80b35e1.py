@@ -21,39 +21,30 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left", field_names=("x"
 
     返回生成的图形。
     """
-    import numpy as np
-
     if make_value is None:
         make_value = lambda bin_: bin_
 
-    # Determine the coordinates based on the get_coordinate parameter
-    if get_coordinate == "left":
-        coordinates = hist.bin_edges[:-1]
-    elif get_coordinate == "right":
-        coordinates = hist.bin_edges[1:]
-    elif get_coordinate == "middle":
-        coordinates = (hist.bin_edges[:-1] + hist.bin_edges[1:]) / 2
-    else:
-        raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
+    if scale is None:
+        scale = hist.scale if hasattr(hist, 'scale') else None
 
-    # Apply make_value to each bin
-    values = [make_value(bin_) for bin_ in hist.bins]
+    graph = []
 
-    # Ensure the number of field names matches the dimensionality of the values
-    if len(field_names) != len(values[0]) + 1:
-        raise ValueError("Number of field names must match the dimensionality of the values")
-
-    # Create the graph
-    graph = {
-        field_names[0]: coordinates,
-        **{field_names[i+1]: [v[i] for v in values] for i in range(len(values[0]))}
-    }
-
-    # Apply scale if provided
-    if scale is not None:
-        if scale:
-            graph["scale"] = hist.scale
+    for bin_ in hist.bins:
+        if get_coordinate == "left":
+            x = bin_.left
+        elif get_coordinate == "right":
+            x = bin_.right
+        elif get_coordinate == "middle":
+            x = (bin_.left + bin_.right) / 2
         else:
-            graph["scale"] = None
+            raise ValueError("Invalid get_coordinate value. Must be 'left', 'right', or 'middle'.")
+
+        value = make_value(bin_)
+        if isinstance(value, (tuple, list)):
+            graph_point = (x,) + tuple(value)
+        else:
+            graph_point = (x, value)
+
+        graph.append(graph_point)
 
     return graph
