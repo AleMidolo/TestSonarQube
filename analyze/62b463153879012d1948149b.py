@@ -17,5 +17,5 @@ def match_file_by_prefix(prefix, file_path):
     bool
         True - file belongs to the package
     """
-    file_name = os.path.basename(file_path)
-    return file_name.startswith(prefix)
+    filename = os.path.basename(file_path)
+    return filename.startswith(prefix)

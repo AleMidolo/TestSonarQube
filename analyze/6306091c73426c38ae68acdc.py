@@ -1,8 +1,5 @@
 import yaml
 
-class IRValidatorException(Exception):
-    pass
-
 def validate_from_content(cls, spec_content=None):
     """
     Validates that spec (YAML) content has all required fields.
@@ -12,7 +9,7 @@ def validate_from_content(cls, spec_content=None):
     :return: Dictionary with data loaded from a spec (YAML) file
     """
     if spec_content is None:
-        raise IRValidatorException("Spec content cannot be None.")
+        raise ValueError("Spec content cannot be None.")
     
     try:
         spec_data = yaml.safe_load(spec_content)
@@ -26,3 +23,7 @@ def validate_from_content(cls, spec_content=None):
             raise IRValidatorException(f"Missing mandatory field: {field}")
     
     return spec_data
+
+class IRValidatorException(Exception):
+    """Custom exception for validation errors."""
+    pass

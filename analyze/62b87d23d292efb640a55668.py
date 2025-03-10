@@ -5,19 +5,17 @@ def get_config():
     class VersioneerConfig:
         def __init__(self):
             self.version = "0.1.0"
+            self.tag_prefix = "v"
+            self.parentdir_prefix = "project-"
             self.vcs = "git"
             self.style = "pep440"
-            self.tag_prefix = "v"
-            self.parentdir_prefix = ""
-            self.versionfile_source = "_version.py"
-            self.verbose = False
+            self.long_version = False
+            self.dirty = False
 
         def __repr__(self):
-            return (f"VersioneerConfig(version={self.version}, vcs={self.vcs}, "
-                    f"style={self.style}, tag_prefix={self.tag_prefix}, "
-                    f"parentdir_prefix={self.parentdir_prefix}, "
-                    f"versionfile_source={self.versionfile_source}, "
-                    f"verbose={self.verbose})")
+            return (f"VersioneerConfig(version={self.version}, tag_prefix={self.tag_prefix}, "
+                    f"parentdir_prefix={self.parentdir_prefix}, vcs={self.vcs}, style={self.style}, "
+                    f"long_version={self.long_version}, dirty={self.dirty})")
 
     config = VersioneerConfig()
     return config

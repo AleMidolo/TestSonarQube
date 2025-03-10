@@ -31,7 +31,7 @@ def _eval_file(prefix, file_path):
     else:
         file_type = 'unknown'
 
-    # Retorna um dicionário com o tipo de arquivo e o caminho
+    # Retorna um dicionário com o tipo de arquivo e o caminho do arquivo
     return {
         'type': file_type,
         'path': file_path

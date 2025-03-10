@@ -9,18 +9,17 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     :returns: dict
     """
     # Construct the webfinger URL
-    domain = handle.split('@')[-1]
-    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
+    webfinger_url = f"https://{handle.split('@')[1]}/.well-known/webfinger?resource=acct:{handle}"
     
     try:
-        # Send a GET request to retrieve the webfinger document
+        # Send a GET request to the webfinger URL
         response = requests.get(webfinger_url)
-        response.raise_for_status()
+        response.raise_for_status()  # Raise an exception for HTTP errors
         
         # Parse the XML response
         root = ET.fromstring(response.content)
         
-        # Extract relevant information
+        # Extract relevant information from the XML
         result = {}
         for link in root.findall('{http://webfinger.net/rel/profile-page}link'):
             result['profile_page'] = link.get('href')
@@ -35,7 +34,4 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     
     except requests.exceptions.RequestException as e:
         print(f"Error retrieving webfinger document: {e}")
-        return {}
-    except ET.ParseError as e:
-        print(f"Error parsing webfinger document: {e}")
         return {}

@@ -29,7 +29,5 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     
     if verbose:
         print(f"Command output: {result.stdout}")
-        if result.stderr:
-            print(f"Command error: {result.stderr}")
     
     return result.stdout

@@ -20,4 +20,5 @@ def default_tzinfo(dt, tzinfo):
     """
     if dt.tzinfo is None:
         return dt.replace(tzinfo=tzinfo)
-    return dt
+    else:
+        return dt

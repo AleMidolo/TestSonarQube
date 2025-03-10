@@ -13,22 +13,23 @@ def find_path_type(path):
     Looks only at "0=*" Namaste files to determine the directory type.
     """
     if not os.path.exists(path):
-        return f"Path does not exist: {path}"
+        return "Path does not exist"
     
     if os.path.isfile(path):
-        return 'file'
+        return "file"
     
     namaste_files = [f for f in os.listdir(path) if f.startswith('0=')]
     
     if not namaste_files:
-        return f"No Namaste file found in {path}"
+        return "No Namaste file found"
     
-    for namaste_file in namaste_files:
-        with open(os.path.join(path, namaste_file), 'r') as f:
-            content = f.read().strip()
-            if content == 'ocfl_object_1.0':
-                return 'object'
-            elif content == 'ocfl_1.0':
-                return 'root'
+    namaste_file = namaste_files[0]
+    with open(os.path.join(path, namaste_file), 'r') as f:
+        content = f.read().strip()
     
-    return f"Unknown Namaste content in {path}"
+    if content == "ocfl_1.0":
+        return "root"
+    elif content == "ocfl_object_1.0":
+        return "object"
+    else:
+        return f"Unknown Namaste content: {content}"

@@ -17,13 +17,14 @@ def scale(self, other=None, recompute=False):
     """
     if other is None:
         if not hasattr(self, '_scale') or recompute:
-            self._scale = self.integral()
+            self._scale = sum(bin.content for bin in self.bins)
         return self._scale
     else:
         if not hasattr(self, '_scale') or recompute:
-            self._scale = self.integral()
+            self._scale = sum(bin.content for bin in self.bins)
         if self._scale == 0:
             raise LenaValueError("Cannot rescale a histogram with scale equal to zero.")
         scale_factor = other / self._scale
+        for bin in self.bins:
+            bin.content *= scale_factor
         self._scale = other
-        self.rescale(scale_factor)

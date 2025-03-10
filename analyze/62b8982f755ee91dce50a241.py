@@ -10,43 +10,42 @@ def normalized(self):
         Returns a :class:`dateutil.relativedelta.relativedelta` object.
     """
     from dateutil.relativedelta import relativedelta
-    import math
 
-    # Extract all attributes
-    attrs = ['years', 'months', 'days', 'leapdays', 'hours', 'minutes', 'seconds', 'microseconds']
-    normalized_attrs = {}
+    # Convert all attributes to integers
+    days = int(self.days)
+    hours = int(self.hours)
+    minutes = int(self.minutes)
+    seconds = int(self.seconds)
+    microseconds = int(self.microseconds)
 
-    for attr in attrs:
-        value = getattr(self, attr, 0)
-        if isinstance(value, float):
-            # Convert to integer by rounding down
-            normalized_attrs[attr] = int(math.floor(value))
-        else:
-            normalized_attrs[attr] = value
+    # Handle fractional parts
+    fractional_days = self.days - days
+    fractional_hours = self.hours - hours
+    fractional_minutes = self.minutes - minutes
+    fractional_seconds = self.seconds - seconds
+    fractional_microseconds = self.microseconds - microseconds
 
-    # Handle fractional days
-    if 'days' in normalized_attrs and isinstance(self.days, float):
-        fractional_days = self.days - int(math.floor(self.days))
-        hours_from_days = fractional_days * 24
-        normalized_attrs['hours'] = normalized_attrs.get('hours', 0) + hours_from_days
+    # Convert fractional parts to lower units
+    hours += int(fractional_days * 24)
+    minutes += int(fractional_hours * 60)
+    seconds += int(fractional_minutes * 60)
+    microseconds += int(fractional_seconds * 1e6)
 
-    # Handle fractional hours
-    if 'hours' in normalized_attrs and isinstance(self.hours, float):
-        fractional_hours = self.hours - int(math.floor(self.hours))
-        minutes_from_hours = fractional_hours * 60
-        normalized_attrs['minutes'] = normalized_attrs.get('minutes', 0) + minutes_from_hours
+    # Handle overflow
+    if microseconds >= 1e6:
+        seconds += microseconds // 1e6
+        microseconds = microseconds % 1e6
 
-    # Handle fractional minutes
-    if 'minutes' in normalized_attrs and isinstance(self.minutes, float):
-        fractional_minutes = self.minutes - int(math.floor(self.minutes))
-        seconds_from_minutes = fractional_minutes * 60
-        normalized_attrs['seconds'] = normalized_attrs.get('seconds', 0) + seconds_from_minutes
+    if seconds >= 60:
+        minutes += seconds // 60
+        seconds = seconds % 60
 
-    # Handle fractional seconds
-    if 'seconds' in normalized_attrs and isinstance(self.seconds, float):
-        fractional_seconds = self.seconds - int(math.floor(self.seconds))
-        microseconds_from_seconds = fractional_seconds * 1e6
-        normalized_attrs['microseconds'] = normalized_attrs.get('microseconds', 0) + microseconds_from_seconds
+    if minutes >= 60:
+        hours += minutes // 60
+        minutes = minutes % 60
 
-    # Create and return the normalized relativedelta object
-    return relativedelta(**normalized_attrs)
+    if hours >= 24:
+        days += hours // 24
+        hours = hours % 24
+
+    return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds, microseconds=microseconds)

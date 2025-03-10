@@ -4,19 +4,19 @@ def verifyClass(iface, candidate, tentative=False):
     
     Args:
         iface: The interface to be implemented.
-        candidate: The class to be verified.
+        candidate: The class or object to be verified.
         tentative: If True, allows for partial implementation.
     
     Returns:
         bool: True if the candidate might correctly provide the interface, False otherwise.
     """
-    if not isinstance(candidate, type):
+    if not hasattr(candidate, '__mro__'):
         return False
     
-    iface_methods = set(dir(iface))
+    required_methods = set(dir(iface))
     candidate_methods = set(dir(candidate))
     
     if tentative:
-        return iface_methods.issubset(candidate_methods)
+        return required_methods.issubset(candidate_methods)
     else:
-        return iface_methods == candidate_methods
+        return required_methods == candidate_methods

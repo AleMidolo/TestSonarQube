@@ -8,28 +8,30 @@ def validate_version_inventories(self, version_dirs):
     version_dirs is an array of version directory names and is assumed to be in
     version sequence (1, 2, 3...).
     """
-    root_inventory = self.get_root_inventory()
-    discrepancies = {}
-
+    inventory_records = {}
     for version_dir in version_dirs:
-        version_inventory = self.get_version_inventory(version_dir)
+        inventory_path = os.path.join(version_dir, "inventory.json")
+        if not os.path.exists(inventory_path):
+            raise FileNotFoundError(f"Inventory file not found for version: {version_dir}")
         
-        if not version_inventory:
-            raise ValueError(f"Inventory missing for version {version_dir}")
+        with open(inventory_path, 'r') as f:
+            inventory = json.load(f)
         
-        for content_id, digest in version_inventory.items():
-            if content_id in root_inventory:
-                if root_inventory[content_id] != digest:
-                    discrepancies[content_id] = {
-                        'root_digest': root_inventory[content_id],
-                        'version_digest': digest,
-                        'version': version_dir
-                    }
-            else:
-                discrepancies[content_id] = {
-                    'root_digest': None,
-                    'version_digest': digest,
-                    'version': version_dir
-                }
+        # Compare with root inventory if exists
+        if version_dir == version_dirs[0]:
+            root_inventory = inventory
+        else:
+            for key, value in inventory.items():
+                if key in root_inventory and root_inventory[key] != value:
+                    inventory_records[key] = value
+        
+        # Validate that the inventory contains all previous versions' content
+        for prev_version in version_dirs[:version_dirs.index(version_dir)]:
+            prev_inventory_path = os.path.join(prev_version, "inventory.json")
+            with open(prev_inventory_path, 'r') as f:
+                prev_inventory = json.load(f)
+            for key, value in prev_inventory.items():
+                if key not in inventory:
+                    raise ValueError(f"Content {key} from version {prev_version} missing in version {version_dir}")
     
-    return discrepancies
+    return inventory_records

@@ -30,7 +30,8 @@ def generate_default_observer_schema(app):
                             "required": ["type", "status"]
                         }
                     }
-                }
+                },
+                "required": ["conditions"]
             }
         },
         "required": ["status"]

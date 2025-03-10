@@ -3,9 +3,10 @@ import random
 def _shuffled(seq: Sequence[str]) -> list[str]:
     """
     Deterministically shuffle the input sequence of strings.
-    The shuffle is deterministic because the random seed is fixed.
     """
-    random.seed(42)  # Fixed seed for deterministic shuffling
-    shuffled_seq = list(seq)  # Create a mutable copy of the sequence
-    random.shuffle(shuffled_seq)  # Shuffle the sequence in-place
-    return shuffled_seq
+    # Create a copy of the sequence to avoid modifying the original
+    seq_copy = list(seq)
+    # Use a fixed seed for deterministic shuffling
+    random.seed(42)
+    random.shuffle(seq_copy)
+    return seq_copy

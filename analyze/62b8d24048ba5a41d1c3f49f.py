@@ -1,30 +1,36 @@
 import time
-from functools import wraps, lru_cache
+from functools import wraps
+from collections import OrderedDict
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
-    """
-    Decorator to wrap a function with a memoizing callable that saves
-    up to `maxsize` results based on a Least Recently Used (LRU)
-    algorithm with a per-item time-to-live (TTL) value.
-    """
     def decorator(func):
-        cache = {}
-
+        cache = OrderedDict()
         @wraps(func)
-        def wrapped(*args, **kwargs):
-            key = args + tuple(sorted(kwargs.items())) if typed else args + tuple(sorted(kwargs.items()))
+        def wrapper(*args, **kwargs):
+            if typed:
+                key = (args, tuple((k, type(v)) for k, v in sorted(kwargs.items())))
+            else:
+                key = (args, tuple(sorted(kwargs.items())))
+            
             current_time = timer()
+            
             if key in cache:
                 result, timestamp = cache[key]
-                if current_time - timestamp < ttl:
+                if current_time - timestamp <= ttl:
+                    # Move the accessed item to the end to mark it as recently used
+                    cache.move_to_end(key)
                     return result
+                else:
+                    # Remove expired item
+                    del cache[key]
+            
             result = func(*args, **kwargs)
             cache[key] = (result, current_time)
+            
             if len(cache) > maxsize:
-                oldest_key = min(cache.keys(), key=lambda k: cache[k][1])
-                del cache[oldest_key]
+                # Remove the least recently used item
+                cache.popitem(last=False)
+            
             return result
-
-        return wrapped
-
+        return wrapper
     return decorator

@@ -5,5 +5,5 @@ def is_local(host):
     :param host: The hostname or ip
     :return: True if the host is the localhost
     """
-    local_hosts = {'localhost', '127.0.0.1', '::1', '0:0:0:0:0:0:0:1'}
+    local_hosts = {'localhost', '127.0.0.1', '::1'}
     return host in local_hosts

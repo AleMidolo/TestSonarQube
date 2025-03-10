@@ -1,5 +1,5 @@
 def hist_to_graph(hist, make_value=None, get_coordinate="left",
-                  field_names=("x", "y"), scale=None):
+                 field_names=("x", "y"), scale=None):
     """
     Convert a :class:`.histogram` to a :class:`.graph`.
 
@@ -32,7 +32,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     Return the resulting graph.
     """
-    import numpy as np
+    from collections import namedtuple
 
     if make_value is None:
         make_value = lambda bin_: bin_
@@ -40,34 +40,27 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     if scale is True:
         scale = hist.scale
 
-    # Determine the coordinate for each bin
-    if get_coordinate == "left":
-        coordinates = hist.bin_edges[:-1]
-    elif get_coordinate == "right":
-        coordinates = hist.bin_edges[1:]
-    elif get_coordinate == "middle":
-        coordinates = (hist.bin_edges[:-1] + hist.bin_edges[1:]) / 2
-    else:
-        raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
+    graph_points = []
+    for bin_ in hist.bins:
+        if get_coordinate == "left":
+            x = bin_.left_edge
+        elif get_coordinate == "right":
+            x = bin_.right_edge
+        elif get_coordinate == "middle":
+            x = (bin_.left_edge + bin_.right_edge) / 2
+        else:
+            raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
 
-    # Apply make_value to each bin
-    values = [make_value(bin_) for bin_ in hist.bin_contents]
+        value = make_value(bin_.content)
+        if isinstance(value, tuple):
+            graph_point = (x,) + value
+        else:
+            graph_point = (x, value)
 
-    # Ensure values are in a consistent format (e.g., tuples for error bars)
-    if isinstance(values[0], (tuple, list)):
-        values = np.array(values)
-    else:
-        values = np.array([(v,) for v in values])
+        graph_points.append(graph_point)
 
-    # Combine coordinates and values into a structured array
-    dtype = [(field_names[0], float)] + [(field_names[i], float) for i in range(1, values.shape[1] + 1)]
-    graph_data = np.empty(len(coordinates), dtype=dtype)
-    graph_data[field_names[0]] = coordinates
-    for i in range(1, values.shape[1] + 1):
-        graph_data[field_names[i]] = values[:, i - 1]
-
-    # Create the graph
-    from graph import Graph
-    graph = Graph(graph_data, scale=scale)
+    Graph = namedtuple('Graph', field_names)
+    graph = Graph(*zip(*graph_points))
+    graph.scale = scale
 
     return graph
