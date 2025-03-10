@@ -5,16 +5,12 @@ def _resolve_string(matcher):
     Obtener el valor del entorno dado un matcher que contiene un nombre y un valor predeterminado opcional.  
     Si la variable no está definida en el entorno y no se proporciona un valor predeterminado, se genera un Error.
     """
-    if not matcher:
-        raise ValueError("El matcher no puede estar vacío.")
+    name, default = matcher.groups()
+    value = os.getenv(name)
     
-    parts = matcher.split(':')
-    var_name = parts[0].strip()
-    default_value = None if len(parts) == 1 else parts[1].strip()
-    
-    value = os.getenv(var_name, default_value)
-    
-    if value is None:
-        raise ValueError(f"La variable de entorno '{var_name}' no está definida y no se proporcionó un valor predeterminado.")
-    
-    return value
+    if value is not None:
+        return value
+    elif default is not None:
+        return default
+    else:
+        raise ValueError(f"Environment variable '{name}' is not defined and no default value is provided.")

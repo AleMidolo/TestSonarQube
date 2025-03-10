@@ -9,9 +9,9 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     Parametros
     ----------
     func : funcion
-        La función que se ejecutará. Debe estar en un módulo que sea importable.
+        La función que se ejecutara. Debe estar en un modulo que sea importable.
     *args : str
-        Cualquier argumento adicional de línea de comandos que se pasará como primer argumento a ``subprocess.run``.
+        Cualquier argumento adicional de linea de comandos que se pasara como primer argumento a ``subprocess.run``.
     extra_env : dict[str, str]
         Cualquier variable de entorno adicional que se establecerá para el subproceso.
     """
@@ -22,11 +22,11 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     # Crear el comando para ejecutar la función
     command = [sys.executable, '-c', f'from {module_name} import {func_name}; {func_name}()']
 
-    # Agregar argumentos adicionales si los hay
+    # Agregar argumentos adicionales si existen
     if args:
         command.extend(args)
 
-    # Combinar el entorno actual con el entorno adicional si se proporciona
+    # Crear el entorno para el subproceso
     env = os.environ.copy()
     if extra_env:
         env.update(extra_env)
@@ -34,5 +34,4 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     # Ejecutar el subproceso
     result = subprocess.run(command, env=env, timeout=timeout, capture_output=True, text=True)
 
-    # Devolver el resultado del subproceso
     return result

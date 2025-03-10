@@ -9,17 +9,17 @@ def match_file_by_prefix(prefix, file_path):
     Parámetros
     ----------
     prefix : str  
-        Prefijo del nombre del archivo.  
+    Prefijo del nombre del archivo.  
 
     file_path : str  
-        Ruta del archivo.  
+    Ruta del archivo.  
 
     Retorna
     -------
     bool
-        `True` - el archivo pertenece al paquete.  
+    `True` - el archivo pertenece al paquete.  
     """
-    # Obtener el nombre del archivo desde la ruta
+    # Obtener el nombre del archivo sin la ruta
     file_name = os.path.basename(file_path)
     
     # Verificar si el nombre del archivo comienza con el prefijo
