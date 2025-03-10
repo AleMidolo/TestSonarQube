@@ -9,7 +9,7 @@ def list_of_file_names(settings_dirs: List[str], spec_option: str) -> List[str]:
         spec_option (str): Opción específica para filtrar los archivos.
 
     Returns:
-        List[str]: Lista de nombres de archivos que cumplen con la opción específica.
+        List[str]: Lista de nombres de archivos que coinciden con la opción especificada.
     """
     import os
     file_names = []

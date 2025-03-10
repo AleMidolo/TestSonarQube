@@ -7,11 +7,11 @@ def initialize(self):
 
     # Crear la estructura de directorios básica
     os.makedirs("ocfl_root", exist_ok=True)
-    os.makedirs("ocfl_root/0=ocfl_object_1", exist_ok=True)
-    os.makedirs("ocfl_root/0=ocfl_object_1/v1", exist_ok=True)
-    os.makedirs("ocfl_root/0=ocfl_object_1/v1/content", exist_ok=True)
+    os.makedirs("ocfl_root/0=ocfl_object_1.0", exist_ok=True)
+    os.makedirs("ocfl_root/extensions", exist_ok=True)
+    os.makedirs("ocfl_root/logs", exist_ok=True)
 
-    # Crear el archivo de inventario
+    # Crear el archivo de inventario básico
     inventory = {
         "id": "urn:uuid:12345678-1234-5678-1234-567812345678",
         "type": "Object",
@@ -27,13 +27,17 @@ def initialize(self):
         }
     }
 
-    with open("ocfl_root/0=ocfl_object_1/v1/inventory.json", "w") as f:
+    with open("ocfl_root/0=ocfl_object_1.0/inventory.json", "w") as f:
         json.dump(inventory, f, indent=4)
 
-    # Crear el archivo de inventario con firma
-    with open("ocfl_root/0=ocfl_object_1/v1/inventory.json.sha512", "w") as f:
-        f.write("sha512_hash_of_inventory_json")
+    # Crear el archivo de configuración básico
+    config = {
+        "ocflVersion": "1.0",
+        "digestAlgorithm": "sha512",
+        "extensions": []
+    }
 
-    # Crear el archivo de declaración OCFL
-    with open("ocfl_root/0=ocfl_object_1/ocfl_object.txt", "w") as f:
-        f.write("ocfl_object_1\n")
+    with open("ocfl_root/ocfl_config.json", "w") as f:
+        json.dump(config, f, indent=4)
+
+    print("Raíz de almacenamiento OCFL inicializada correctamente.")

@@ -1,6 +1,6 @@
 import json
-from xml.etree import ElementTree
 from typing import Dict
+from xml.etree import ElementTree as ET
 
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
@@ -13,18 +13,16 @@ def parse_diaspora_webfinger(document: str) -> Dict:
         data = json.loads(document)
         return data
     except json.JSONDecodeError:
-        # Si falla, intentar parsear como XML/XRD
+        # Si falla, intentar parsear como XML (XRD)
         try:
-            root = ElementTree.fromstring(document)
-            namespaces = {'xrd': 'http://docs.oasis-open.org/ns/xri/xrd-1.0'}
-            links = root.findall('xrd:Link', namespaces)
+            root = ET.fromstring(document)
             result = {}
-            for link in links:
+            for link in root.findall('{http://docs.oasis-open.org/ns/xri/xrd-1.0}Link'):
                 rel = link.get('rel')
                 href = link.get('href')
                 if rel and href:
                     result[rel] = href
             return result
-        except ElementTree.ParseError:
+        except ET.ParseError:
             # Si ambos fallan, devolver un diccionario vacío
             return {}

@@ -25,23 +25,11 @@ def scale(self, other=None, recompute=False):
         if self._scale == 0:
             raise LenaValueError("Cannot rescale a histogram with zero scale.")
         scale_factor = other / self._scale
-        self._rescale(scale_factor)
+        self._data = [value * scale_factor for value in self._data]
         self._scale = other
 
 def _compute_scale(self):
     """
-    Calcula la escala del histograma (integral del histograma).
+    Calcula la escala del histograma como la suma de todos los valores.
     """
-    return sum(self.bins)
-
-def _rescale(self, scale_factor):
-    """
-    Reescala los bins del histograma por el factor dado.
-    """
-    self.bins = [bin_value * scale_factor for bin_value in self.bins]
-
-class LenaValueError(Exception):
-    """
-    Excepción lanzada cuando se intenta reescalar un histograma con escala cero.
-    """
-    pass
+    return sum(self._data)

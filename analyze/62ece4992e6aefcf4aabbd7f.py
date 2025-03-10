@@ -20,4 +20,4 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
         
         return image_id, netloc, use_ssl
     except Exception as e:
-        raise ValueError(f"Error al analizar el enlace: {e}") from e
+        raise ValueError(f"Error al analizar el enlace: {e}")

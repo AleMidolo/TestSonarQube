@@ -37,7 +37,18 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     :raises OverflowError:
         Se lanza si la fecha analizada excede el entero C más grande válido en tu sistema.
     """
+    if default is not None and not isinstance(default, datetime):
+        raise TypeError("El argumento 'default' debe ser un objeto datetime o None")
+
     if ignoretz:
         tzinfos = None
 
-    return parser.parse(timestr, default=default, tzinfos=tzinfos, **kwargs)
+    try:
+        parsed_datetime = parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+        return parsed_datetime
+    except parser.ParserError as e:
+        raise parser.ParserError(f"Error al analizar la cadena de fecha/hora: {e}")
+    except TypeError as e:
+        raise TypeError(f"Tipo de entrada no válido: {e}")
+    except OverflowError as e:
+        raise OverflowError(f"La fecha analizada excede el límite de tiempo: {e}")

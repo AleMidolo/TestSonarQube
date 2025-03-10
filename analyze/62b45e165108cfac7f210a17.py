@@ -8,6 +8,7 @@ def get_logical_path_map(inventory, version):
     """
     logical_path_map = {}
     
+    # Iterar sobre el inventario para encontrar las rutas lógicas y los archivos de contenido
     for logical_path, versions_data in inventory.items():
         if version in versions_data:
             content_files = versions_data[version]

@@ -7,4 +7,6 @@ def dehydrate_point(value):
     :return: Diccionario con las coordenadas del punto.
     :rtype: dict
     """
+    if value is None:
+        return None
     return {'x': value.x, 'y': value.y}

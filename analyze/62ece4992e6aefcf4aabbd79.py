@@ -14,7 +14,7 @@ def make_find_paths(find_paths):
     """
     transformed_paths = []
     for path in find_paths:
-        if re.match(r'^[a-zA-Z]+:', path):
+        if re.match(r'^\w+:', path):
             # Si el path ya tiene un prefijo (como 'pp:'), lo dejamos sin modificar
             transformed_paths.append(path)
         else:

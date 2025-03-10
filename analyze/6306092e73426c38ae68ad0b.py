@@ -4,11 +4,10 @@ def validate_min_max_args(self, args):
 
     :param args: Los argumentos recibidos.
     """
-    min_value = 0  # Define el valor mínimo
-    max_value = 100  # Define el valor máximo
+    if not hasattr(self, 'min_value') or not hasattr(self, 'max_value'):
+        raise AttributeError("El objeto no tiene definidos los atributos 'min_value' y 'max_value'.")
     
     for arg in args:
-        if not (min_value <= arg <= max_value):
-            raise ValueError(f"El valor {arg} no está entre {min_value} y {max_value}.")
-    
+        if not (self.min_value <= arg <= self.max_value):
+            return False
     return True

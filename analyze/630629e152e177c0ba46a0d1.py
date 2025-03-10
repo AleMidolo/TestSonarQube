@@ -15,7 +15,7 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         # Construct the WebFinger URL
         url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
         
-        # Make the GET request
+        # Make the request
         response = requests.get(url, headers={"Accept": "application/jrd+json"})
         response.raise_for_status()
         

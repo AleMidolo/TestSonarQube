@@ -16,13 +16,23 @@ def normalized(self):
     minutes = int(self.minutes)
     seconds = int(self.seconds)
     microseconds = int(self.microseconds)
-    
-    # Calcular los valores normalizados
-    total_seconds = (self.days - days) * 86400 + (self.hours - hours) * 3600 + (self.minutes - minutes) * 60 + (self.seconds - seconds)
-    hours += int(total_seconds // 3600)
-    remaining_seconds = total_seconds % 3600
-    minutes += int(remaining_seconds // 60)
-    seconds += int(remaining_seconds % 60)
-    
-    # Crear y devolver el nuevo objeto relativedelta
-    return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds, microseconds=microseconds)
+    months = int(self.months)
+    years = int(self.years)
+
+    # Ajustar los valores para que estén en el rango correcto
+    # Por ejemplo, si hay fracciones de días, convertirlas a horas, etc.
+    extra_hours = int((self.days - days) * 24)
+    hours += extra_hours
+
+    extra_minutes = int((self.hours - int(self.hours)) * 60
+    minutes += extra_minutes
+
+    extra_seconds = int((self.minutes - int(self.minutes)) * 60)
+    seconds += extra_seconds
+
+    extra_microseconds = int((self.seconds - int(self.seconds)) * 1e6)
+    microseconds += extra_microseconds
+
+    # Crear un nuevo objeto relativedelta con los valores normalizados
+    return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds,
+                         microseconds=microseconds, months=months, years=years)

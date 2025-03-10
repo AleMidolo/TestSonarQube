@@ -11,8 +11,12 @@ def vertex3tuple(vertices):
     result = []
     for i in range(n):
         # Obtener el vértice actual y los dos adyacentes
-        prev = vertices[(i - 1) % n]
-        current = vertices[i]
-        next_ = vertices[(i + 1) % n]
-        result.append((prev, current, next_))
+        prev_index = (i - 1) % n
+        current_index = i
+        next_index = (i + 1) % n
+        
+        # Crear la tupla de 3 elementos
+        triplet = (vertices[prev_index], vertices[current_index], vertices[next_index])
+        result.append(triplet)
+    
     return result
