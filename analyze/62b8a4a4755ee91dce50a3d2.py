@@ -8,18 +8,14 @@ def _fromutc(self, dt):
         Un oggetto :class:`datetime.datetime` con consapevolezza del fuso orario.
     """
     if dt.tzinfo is not self:
-        raise ValueError("fromutc: dt.tzinfo is not self")
+        raise ValueError("dt deve avere lo stesso fuso orario di self")
     
     # Converti il datetime in UTC
-    dt = dt.replace(tzinfo=None)
-    timestamp = (dt - datetime(1970, 1, 1)).total_seconds()
-    
-    # Ottieni il fuso orario locale
-    local_dt = datetime.fromtimestamp(timestamp, self)
+    dt = dt.astimezone(self)
     
     # Controlla se il datetime è ambiguo
-    fold = 0
-    if self._fold and local_dt.replace(fold=0) == local_dt.replace(fold=1):
-        fold = 1
+    if self._is_ambiguous(dt):
+        # Se è ambiguo, imposta fold=1 per indicare la seconda occorrenza
+        dt = dt.replace(fold=1)
     
-    return local_dt.replace(fold=fold)
+    return dt

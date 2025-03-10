@@ -4,5 +4,4 @@ def _dump_string(obj, dumper=None):
     """
     if dumper is not None:
         return dumper(obj)
-    else:
-        return str(obj)
+    return str(obj)

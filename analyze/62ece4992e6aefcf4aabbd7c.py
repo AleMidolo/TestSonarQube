@@ -7,5 +7,6 @@ def oneline(script, separator=" && "):
     :param separator: Il separatore da utilizzare tra i comandi (default è " && ").
     :return: Una stringa che rappresenta lo script su una sola riga.
     """
-    lines = script.strip().splitlines()
-    return separator.join(line.strip() for line in lines if line.strip())
+    if isinstance(script, str):
+        script = script.splitlines()
+    return separator.join(line.strip() for line in script if line.strip())

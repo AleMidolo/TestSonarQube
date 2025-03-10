@@ -19,7 +19,8 @@ def scale(self, other=None, recompute=False):
         return self._scale
     elif isinstance(other, float):
         if self._scale == 0:
-            raise LenaValueError("Impossibile riscalare un istogramma con scala pari a zero.")
+            raise LenaValueError("Non è possibile riscalare un istogramma con scala pari a zero.")
+        # Riscala l'istogramma
         scale_factor = other / self._scale
         self.bins = [bin_value * scale_factor for bin_value in self.bins]
         self._scale = other

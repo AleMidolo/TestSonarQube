@@ -9,7 +9,7 @@ def xargs(
         *,
         color: bool = False,
         target_concurrency: int = 1,
-        _max_length: int = _get_platform_max_length(),
+        _max_length: int = os.get_terminal_size().columns if sys.platform != "win32" else 80,
         **kwargs: Any,
 ) -> tuple[int, bytes]:
     """
@@ -26,28 +26,18 @@ def xargs(
 
     processes = []
     for i in range(0, len(varargs), target_concurrency):
-        chunk = varargs[i:i + target_concurrency]
-        if color and sys.platform != "win32":
-            process = subprocess.Popen(cmd + tuple(chunk), **kwargs)
-        else:
-            process = subprocess.Popen(cmd + tuple(chunk), **kwargs)
+        args = list(cmd) + list(varargs[i:i + target_concurrency])
+        process = subprocess.Popen(args, **kwargs)
         processes.append(process)
 
-    exit_codes = []
-    outputs = []
+    output = b""
     for process in processes:
-        stdout, stderr = process.communicate()
-        exit_codes.append(process.returncode)
-        outputs.append(stdout)
+        process.wait()
+        if color and sys.platform != "win32":
+            os.close(slave)
+            output += os.read(master, _max_length)
+            os.close(master)
+        else:
+            output += process.communicate()[0]
 
-    if color and sys.platform != "win32":
-        os.close(master)
-        os.close(slave)
-
-    return max(exit_codes), b''.join(outputs)
-
-def _get_platform_max_length() -> int:
-    if sys.platform == "win32":
-        return 8191
-    else:
-        return 131072
+    return (process.returncode, output)

@@ -20,7 +20,7 @@ def was_processed(processed, path_name, verbose):
     abs_path = os.path.abspath(path_name)
     if abs_path in processed:
         if verbose:
-            print(f"Il percorso '{abs_path}' è già stato elaborato.")
+            print(f"Il percorso {abs_path} è già stato elaborato.")
         return True
     else:
         processed.add(abs_path)

@@ -26,7 +26,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     # Create the BEGIN message
     begin_message = {
         "mode": mode,
-        "bookmarks": list(bookmarks) if bookmarks else None,
+        "bookmarks": bookmarks,
         "metadata": metadata,
         "timeout": timeout,
         "db": db,
@@ -37,7 +37,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     }
     
     # Add the BEGIN message to the output queue
-    self.output_queue.append(("BEGIN", begin_message))
+    self.output_queue.append(begin_message)
     
-    # Return a Response object with the provided handlers
-    return Response(handlers=handlers)
+    # Return a Response object
+    return Response(handlers)

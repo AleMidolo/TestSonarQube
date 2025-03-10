@@ -10,7 +10,7 @@ def _group_files_by_xml_filename(source, xmls, files):
         Percorso della cartella o dell'archivio zip.
     xmls : list
         Nomi dei file XML.
-    files : list
+    files: list
         Lista dei file presenti nella cartella o nell'archivio zip.
 
     Ritorna

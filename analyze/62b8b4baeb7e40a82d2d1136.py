@@ -1,5 +1,4 @@
-from zope.interface import providedBy, implementer, provider
-from zope.interface.exceptions import Invalid
+from zope.interface import Invalid, providedBy
 from zope.interface.verify import verifyObject, verifyClass
 
 def _verify(iface, candidate, tentative=False, vtype=None):
@@ -25,9 +24,8 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     errors = []
 
     # Verifica che il candidato dichiari di fornire l'interfaccia
-    if not tentative:
-        if not iface.providedBy(candidate):
-            errors.append(f"{candidate} non dichiara di fornire l'interfaccia {iface}")
+    if not tentative and not iface.providedBy(candidate):
+        errors.append(f"{candidate} non dichiara di fornire l'interfaccia {iface}")
 
     # Verifica i metodi e gli attributi
     try:

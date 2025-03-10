@@ -18,13 +18,13 @@ def absorb(self, args):
                 A, B = expr[1], expr[2]
                 if isinstance(B, tuple) and B[0] == '|' and B[1] == A:
                     return A  # A & (A | B) = A
-                if isinstance(B, tuple) and B[0] == '|' and B[1] == ('~', A):
+                if isinstance(B, tuple) and B[0] == '|' and isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
                     return ('&', A, B[2])  # A & (~A | B) = A & B
             elif expr[0] == '|':
                 A, B = expr[1], expr[2]
                 if isinstance(B, tuple) and B[0] == '&' and B[1] == A:
                     return A  # A | (A & B) = A
-                if isinstance(B, tuple) and B[0] == '&' and B[1] == ('~', A):
+                if isinstance(B, tuple) and B[0] == '&' and isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
                     return ('|', A, B[2])  # A | (~A & B) = A | B
         return expr
 

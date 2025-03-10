@@ -32,12 +32,3 @@ def _convert_non_cli_args(self, parser_name, values_dict):
             if ',' in value:
                 values_dict[key] = value.split(',')
                 continue
-            
-            # Try to convert to dict if the value is a JSON-like string
-            if value.startswith('{') and value.endswith('}'):
-                try:
-                    import json
-                    values_dict[key] = json.loads(value)
-                    continue
-                except json.JSONDecodeError:
-                    pass

@@ -19,7 +19,7 @@ def _validate_labels(labels: Dict[str, Union[str, List[str]]]) -> None:
       - **value**: il messaggio di errore.
     """
     key_regex = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')
-    value_regex = re.compile(r'^[a-zA-Z0-9_]+$')
+    value_regex = re.compile(r'^[a-zA-Z0-9_\-\.]*$')
     errors = []
 
     for key, value in labels.items():
