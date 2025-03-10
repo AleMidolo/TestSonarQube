@@ -1,16 +1,16 @@
 def append_text_to_file(file_name, text_buffer, encoding, overwrite=False):
     """
-    Escribe en el archivo especificado el búfer de texto proporcionado.  
-    Crea el archivo si es necesario.  
-    :param file_name: Nombre del archivo.  
+    Scrive nel file specificato il buffer di testo fornito.  
+    Crea il file se necessario.  
+    :param file_name: Nome del file.  
     :type file_name: str  
-    :param text_buffer: Búfer de texto a escribir.  
+    :param text_buffer: Buffer di testo da scrivere.  
     :type text_buffer: str  
-    :param encoding: La codificación a utilizar.  
+    :param encoding: La codifica da utilizzare.  
     :type encoding: str  
-    :param overwrite: Si es verdadero, el archivo será sobrescrito.  
+    :param overwrite: Se impostato a True, il file viene sovrascritto.  
     :type overwrite: bool  
-    :return: El número de bytes escritos o un valor menor que 0 si ocurre un error.  
+    :return: Il numero di byte scritti o un valore inferiore a 0 in caso di errore.  
     :rtype int  
     """
     try:
@@ -19,5 +19,5 @@ def append_text_to_file(file_name, text_buffer, encoding, overwrite=False):
             bytes_written = file.write(text_buffer)
             return bytes_written
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Errore durante la scrittura del file: {e}")
         return -1

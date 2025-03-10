@@ -1,28 +1,34 @@
 def _update_context(self, context):
     """
-    Actualiza *context* con las propiedades de este grafo.
+    Aggiorna il *context* con le proprietà di questo grafo.
 
-    *context.error* se amplía con los índices de los errores.  
-    Ejemplo de subcontexto para un grafo con los campos "E,t,error_E_low":  
-    `{"error": {"x_low": {"index": 2}}}`.  
-    Ten en cuenta que los nombres de los errores se denominan "x", "y" y "z"  
-    (esto corresponde a las primeras tres coordenadas, si están presentes),  
-    lo que permite simplificar la representación gráfica.  
-    Los valores existentes no se eliminan de *context.value* ni de sus subcontextos.
+    *context.error* viene aggiornato aggiungendo gli indici degli errori.
+    Esempio di subcontext per un grafo con i campi "E,t,error_E_low":
+    `{"error": {"x_low": {"index": 2}}}`.
+    Nota che i nomi degli errori sono chiamati "x", "y" e "z"
+    (questo corrisponde alle prime tre coordinate, se presenti),
+    il che consente di semplificare la rappresentazione grafica.
+    I valori esistenti non vengono rimossi
+    da *context.value* e dai suoi subcontesti.
 
-    Se llama durante la "destrucción" del grafo (por ejemplo,  
-    en :class:`.ToCSV`). Por destrucción nos referimos a la conversión  
-    a otra estructura (como texto) en el flujo.  
-    El objeto grafo no se destruye realmente en este proceso.
+    Viene chiamato durante la "distruzione" del grafo (ad esempio,
+    nella classe :class:`.ToCSV`). Per "distruzione" si intende la conversione
+    in un'altra struttura (come il testo) nel flusso di lavoro.
+    L'oggetto grafo non viene realmente distrutto in questo processo.
     """
     if not hasattr(context, 'error'):
         context.error = {}
 
-    # Supongamos que el grafo tiene una propiedad `error_indices` que contiene los índices de los errores
-    if hasattr(self, 'error_indices'):
+    # Assuming self has a property `error_indices` that contains the error indices
+    # and a property `coordinates` that contains the coordinate names (e.g., ["x", "y", "z"])
+    if hasattr(self, 'error_indices') and hasattr(self, 'coordinates'):
         for i, error_index in enumerate(self.error_indices):
-            error_name = ['x', 'y', 'z'][i] if i < 3 else f'error_{i}'
-            context.error[f'{error_name}_low'] = {'index': error_index}
+            if i < len(self.coordinates):
+                coord_name = self.coordinates[i]
+                context.error[f"{coord_name}_low"] = {"index": error_index}
 
-    # No se eliminan los valores existentes en context.value o sus subcontextos
+    # Ensure existing values in context.value are not removed
+    if not hasattr(context, 'value'):
+        context.value = {}
+
     return context

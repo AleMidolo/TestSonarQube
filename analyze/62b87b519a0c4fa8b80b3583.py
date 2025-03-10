@@ -1,35 +1,35 @@
 def scale(self, other=None):
     """
-    Obtiene o establece la escala del gráfico.
+    Ottieni o imposta la scala del grafico.
 
-    Si *other* es ``None``, devuelve la escala de este gráfico.
+    Se *other* è ``None``, restituisce la scala di questo grafico.
 
-    Si se proporciona un valor numérico en *other*, se reajusta la escala a ese valor.  
-    Si el gráfico tiene una escala desconocida o igual a cero,  
-    intentar reajustar la escala generará una excepción :exc:`~.LenaValueError`.
+    Se viene fornito un valore numerico per *other*, il grafico viene ridimensionato a quel valore.
+    Se il grafico ha una scala sconosciuta o pari a zero, 
+    il tentativo di ridimensionarlo genererà un'eccezione :exc:`~.LenaValueError`.
 
-    Para obtener resultados significativos, se utilizan los campos del gráfico.  
-    Solo se reajusta la última coordenada.  
-    Por ejemplo, si el gráfico tiene coordenadas *x* e *y*,  
-    entonces se reajustará *y*, y para un gráfico tridimensional  
-    se reajustará *z*.  
-    Todos los errores se reajustan junto con su coordenada.
+    Per ottenere risultati significativi, vengono utilizzati i campi del grafico.
+    Solo l'ultima coordinata viene ridimensionata.
+    Ad esempio, se il grafico ha coordinate *x* e *y*, 
+    verrà ridimensionata *y*, mentre per un grafico tridimensionale 
+    verrà ridimensionata *z*.
+    Tutti gli errori associati vengono ridimensionati insieme alla loro coordinata.
     """
     if other is None:
         return self._scale
-    else:
-        if not isinstance(other, (int, float)):
-            raise TypeError("La escala debe ser un valor numérico.")
+    elif isinstance(other, (int, float)):
         if self._scale == 0 or self._scale is None:
-            raise LenaValueError("No se puede reajustar la escala si es desconocida o igual a cero.")
+            raise LenaValueError("Impossibile ridimensionare un grafico con scala sconosciuta o pari a zero.")
+        scale_factor = other / self._scale
         self._scale = other
-        # Reajustar la última coordenada y sus errores
+        # Ridimensiona l'ultima coordinata e gli errori associati
         if hasattr(self, 'y'):
-            self.y *= other
+            self.y *= scale_factor
             if hasattr(self, 'y_err'):
-                self.y_err *= other
+                self.y_err *= scale_factor
         elif hasattr(self, 'z'):
-            self.z *= other
+            self.z *= scale_factor
             if hasattr(self, 'z_err'):
-                self.z_err *= other
-        return self._scale
+                self.z_err *= scale_factor
+    else:
+        raise TypeError("Il valore di scala deve essere un numero o None.")

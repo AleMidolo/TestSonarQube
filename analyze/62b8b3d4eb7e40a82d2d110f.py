@@ -1,17 +1,18 @@
-import os
-
 def _should_attempt_c_optimizations():
     """
-    Devuelve un valor verdadero si deberíamos intentar usar las optimizaciones en C.
+    Restituisce un valore vero se dovremmo tentare di utilizzare le ottimizzazioni in C.
 
-    Esto tiene en cuenta si estamos utilizando PyPy y el valor de la variable de entorno  
-    ``PURE_PYTHON``, tal como se define en `_use_c_impl`.
+    Questo tiene conto del fatto che stiamo utilizzando PyPy e del valore della variabile di ambiente
+    ``PURE_PYTHON``, come definito in `_use_c_impl`.
     """
-    # Verificar si estamos en PyPy
-    is_pypy = hasattr(sys, 'pypy_version_info')
-    
-    # Verificar si la variable de entorno PURE_PYTHON está configurada
-    pure_python = os.getenv('PURE_PYTHON', '').lower() in ('1', 'true', 'yes')
-    
-    # Intentar optimizaciones en C si no estamos en PyPy y PURE_PYTHON no está configurado
+    import os
+    import platform
+
+    # Controlla se stiamo eseguendo su PyPy
+    is_pypy = platform.python_implementation() == "PyPy"
+
+    # Controlla la variabile di ambiente PURE_PYTHON
+    pure_python = os.getenv("PURE_PYTHON", "").lower() in ("1", "true", "yes")
+
+    # Tentiamo le ottimizzazioni in C solo se non siamo su PyPy e PURE_PYTHON non è impostato
     return not is_pypy and not pure_python

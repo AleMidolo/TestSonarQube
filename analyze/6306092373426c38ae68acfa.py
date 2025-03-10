@@ -1,11 +1,13 @@
 def get_spec_defaults(self):
     """
-    Resolver los valores de los argumentos desde la especificación y otras fuentes.
+    Risolvere i valori degli argomenti dal file di specifica e da altre fonti.
     """
+    # Assuming self.spec is a dictionary or similar structure that holds the specification
     defaults = {}
-    # Aquí se implementaría la lógica para obtener los valores predeterminados
-    # desde la especificación y otras fuentes.
-    # Por ejemplo:
-    # defaults['param1'] = self.spec.get('param1', 'default_value1')
-    # defaults['param2'] = self.spec.get('param2', 'default_value2')
+    if hasattr(self, 'spec'):
+        for key, value in self.spec.items():
+            if isinstance(value, dict) and 'default' in value:
+                defaults[key] = value['default']
+            else:
+                defaults[key] = value
     return defaults

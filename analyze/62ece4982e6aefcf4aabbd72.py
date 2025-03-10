@@ -1,5 +1,5 @@
 def unquote(name):
     """
-    Eliminar comillas del nombre dado.
+    Rimuovi le virgolette dal nome fornito.
     """
     return name.strip('"\'')

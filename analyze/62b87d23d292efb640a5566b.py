@@ -1,35 +1,35 @@
 import subprocess
 
-def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
+def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=False, env=None):
     """
-    Llama al/los comando(s) dado(s).
+    Esegui il comando specificato.
 
-    :param commands: Lista de comandos a ejecutar.
-    :param args: Lista de argumentos para los comandos.
-    :param cwd: Directorio de trabajo actual (opcional).
-    :param verbose: Si es True, muestra la salida del comando (opcional).
-    :param hide_stderr: Si es True, oculta la salida de error (opcional).
-    :param env: Diccionario de variables de entorno (opcional).
-    :return: El resultado de la ejecución del comando.
+    :param comandi: Lista di comandi da eseguire.
+    :param argomenti: Lista di argomenti da passare ai comandi.
+    :param cwd: Directory di lavoro corrente (opzionale).
+    :param verbose: Se True, stampa il comando eseguito (opzionale).
+    :param nascondi_stderr: Se True, nasconde l'output di stderr (opzionale).
+    :param env: Dizionario delle variabili d'ambiente (opzionale).
+    :return: Il risultato dell'esecuzione del comando.
     """
-    command_list = commands + args
-    stderr = subprocess.DEVNULL if hide_stderr else None
-    stdout = subprocess.PIPE if verbose else None
-
-    try:
-        result = subprocess.run(
-            command_list,
-            cwd=cwd,
-            env=env,
-            stdout=stdout,
-            stderr=stderr,
-            text=True,
-            check=True
-        )
-        if verbose:
-            print(result.stdout)
-        return result
-    except subprocess.CalledProcessError as e:
-        if verbose:
-            print(f"Error: {e.stderr}")
-        raise
+    command = comandi + argomenti
+    stderr = subprocess.DEVNULL if nascondi_stderr else subprocess.PIPE
+    
+    if verbose:
+        print(f"Esecuzione comando: {' '.join(command)}")
+    
+    result = subprocess.run(
+        command,
+        cwd=cwd,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=stderr,
+        text=True
+    )
+    
+    if verbose:
+        print(f"Output: {result.stdout}")
+        if result.stderr:
+            print(f"Errore: {result.stderr}")
+    
+    return result

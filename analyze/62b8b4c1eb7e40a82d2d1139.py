@@ -1,11 +1,19 @@
 def verifyClass(iface, candidate, tentative=False):
     """
-    Verifica que el *candidate* pueda proporcionar correctamente *iface*.
+    Verifica che il *candidate* possa fornire correttamente *iface*.
     """
+    if not all(hasattr(candidate, attr) for attr in dir(iface) if not attr.startswith('__')):
+        return False
+    
     if not tentative:
-        return issubclass(candidate, iface)
-    else:
-        try:
-            return issubclass(candidate, iface)
-        except TypeError:
-            return False
+        for attr in dir(iface):
+            if not attr.startswith('__'):
+                iface_attr = getattr(iface, attr)
+                candidate_attr = getattr(candidate, attr)
+                if not callable(iface_attr) and not callable(candidate_attr):
+                    if iface_attr != candidate_attr:
+                        return False
+                elif callable(iface_attr) != callable(candidate_attr):
+                    return False
+    
+    return True

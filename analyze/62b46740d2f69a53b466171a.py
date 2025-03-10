@@ -1,19 +1,11 @@
 def pretty(self, indent=0, debug=False):
     """
-    Devuelve una representación formateada de manera legible de 'self'.
-    """
-    if debug:
-        print(f"Debug: Indent level = {indent}")
+    Restituisce una rappresentazione formattata in modo leggibile di sé stesso.
     
-    # Example implementation for a class with attributes
-    if hasattr(self, '__dict__'):
-        result = []
-        for key, value in self.__dict__.items():
-            if hasattr(value, 'pretty'):
-                formatted_value = value.pretty(indent + 4, debug)
-            else:
-                formatted_value = repr(value)
-            result.append(f"{' ' * indent}{key}: {formatted_value}")
-        return "\n".join(result)
-    else:
-        return repr(self)
+    obj = f"'{self.obj}'" if isinstance(self.obj, str) else repr(self.obj)
+    debug_details = "debug=True, " if debug else ""
+    return (" " * indent) + f"{self.__class__.__name__}({debug_details}{obj})"
+    """
+    obj = f"'{self.obj}'" if isinstance(self.obj, str) else repr(self.obj)
+    debug_details = "debug=True, " if debug else ""
+    return (" " * indent) + f"{self.__class__.__name__}({debug_details}{obj})"

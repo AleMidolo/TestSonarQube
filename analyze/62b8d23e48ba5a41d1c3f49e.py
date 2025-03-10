@@ -1,12 +1,9 @@
-import random
-
 def popitem(self):
     """
-    Encontrar, eliminar y devolver un par (clave, valor) aleatorio mediante __choice en la clase.
+    Rimuovi e restituisci una coppia `(chiave, valore)` casuale.
     """
     if not self:
         raise KeyError("popitem(): dictionary is empty")
-    
-    key = random.choice(list(self.keys()))
+    key = next(iter(self))
     value = self.pop(key)
     return (key, value)

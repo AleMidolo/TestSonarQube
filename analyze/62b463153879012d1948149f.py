@@ -1,45 +1,42 @@
 def _eval_file(prefix, file_path):
     """
-    Identifica el tipo de archivo del paquete: `asset` o `rendition`.
+    Identifica il tipo di file del pacchetto: `asset` o `rendition`.
 
-    Identifica el tipo de archivo del paquete y actualiza `packages` con el tipo y
-    la ruta del archivo en análisis.
+    Identifica il tipo di file del pacchetto e aggiorna `packages` con il tipo e
+    il percorso del file in analisi.
 
-    Parámetros
+    Parametri
     ----------
     prefix : str
-        nombre del archivo XML sin extensión
+        Nome del file XML senza estensione.
     file_path : str
-        ruta completa del archivo
+        Percorso completo del file.
 
-    Retorna
+    Restituisce
     -------
     dict
-        Un diccionario con el tipo de archivo y la ruta del archivo.
+        Un dizionario contenente il tipo di file e il percorso del file.
     """
     import os
 
-    # Extraer el nombre del archivo y la carpeta
+    # Estrai il nome del file e la cartella dal percorso completo
     filename = os.path.basename(file_path)
     file_folder = os.path.dirname(file_path)
 
-    # Determinar el tipo de archivo basado en el prefijo
-    if prefix in filename:
-        if "asset" in filename.lower():
-            file_type = "asset"
-        elif "rendition" in filename.lower():
-            file_type = "rendition"
-        else:
-            file_type = "unknown"
+    # Determina il tipo di file in base al prefisso
+    if prefix.startswith("asset"):
+        file_type = "asset"
+    elif prefix.startswith("rendition"):
+        file_type = "rendition"
     else:
         file_type = "unknown"
 
-    # Crear el diccionario de retorno
+    # Crea il dizionario di ritorno
     result = {
         "type": file_type,
-        "path": file_path,
+        "file_path": file_path,
         "filename": filename,
-        "folder": file_folder
+        "file_folder": file_folder
     }
 
     return result

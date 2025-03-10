@@ -2,6 +2,10 @@ from functools import wraps
 from collections import OrderedDict
 
 def mru_cache(maxsize=128, typed=False):
+    """
+    Decorator per racchiudere una funzione con un oggetto richiamabile che memorizza
+    fino a `maxsize` risultati basandosi su un algoritmo di tipo Most Recently Used (MRU).
+    """
     def decorator(func):
         cache = OrderedDict()
 

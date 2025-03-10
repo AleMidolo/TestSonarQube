@@ -1,47 +1,32 @@
 def validate(self, path):
     """
-    Valida el objeto OCFL en la ruta o en la raíz de pyfs.
-
-    Devuelve True si es válido (se permiten advertencias), False en caso contrario.
+    Valida l'oggetto OCFL nel percorso specificato o nella radice di pyfs.
     """
     import os
-    import json
     from fs import open_fs
 
-    # Verificar si la ruta existe
-    if not os.path.exists(path):
-        return False
-
-    # Abrir el sistema de archivos en la ruta dada
+    # Open the filesystem at the given path
     fs = open_fs(path)
 
-    # Verificar la existencia del archivo 'inventory.json'
+    # Check if the required OCFL structure exists
+    if not fs.exists('0=ocfl_object_1.0'):
+        return False
+
+    # Validate the inventory file
     if not fs.exists('inventory.json'):
         return False
 
-    # Leer y validar el archivo 'inventory.json'
-    with fs.open('inventory.json', 'r') as f:
-        try:
-            inventory = json.load(f)
-        except json.JSONDecodeError:
+    # Validate the manifest in the inventory
+    inventory_path = fs.getsyspath('inventory.json')
+    with open(inventory_path, 'r') as f:
+        import json
+        inventory = json.load(f)
+        if 'manifest' not in inventory:
             return False
 
-    # Verificar la estructura básica del inventario
-    required_keys = {'id', 'type', 'digestAlgorithm', 'head', 'manifest', 'versions'}
-    if not required_keys.issubset(inventory.keys()):
+    # Validate the content directory
+    if not fs.exists('content'):
         return False
 
-    # Verificar que el algoritmo de digest sea válido
-    if inventory['digestAlgorithm'] not in {'sha256', 'sha512'}:
-        return False
-
-    # Verificar que todas las versiones estén presentes en el manifiesto
-    manifest = inventory['manifest']
-    versions = inventory['versions']
-    for version, files in versions.items():
-        for file_path, file_digest in files.items():
-            if file_digest not in manifest:
-                return False
-
-    # Si todas las validaciones pasan, retornar True
+    # If all checks pass, the object is valid
     return True

@@ -2,22 +2,20 @@ import re
 
 def make_find_paths(find_paths):
     """
-    Dada una secuencia de fragmentos de rutas o patrones proporcionados a través de `--find`, transforma todos los fragmentos de rutas en patrones glob. Deja los patrones existentes sin modificar.
+    Dati una sequenza di percorsi frammentati o pattern passati tramite `--find`, trasforma tutti i percorsi frammentati in pattern glob. Lascia invariati i pattern già esistenti.
 
-    Por ejemplo, dado un `find_paths` de:
-
+    Ad esempio, dato `find_paths` come:
       ['foo.txt', 'pp:root/somedir']
 
-    ... se transforma en:
-
+    ... trasforma in:
       ['sh:**/*foo.txt*/**', 'pp:root/somedir']
     """
     transformed_paths = []
     for path in find_paths:
         if re.match(r'^[a-zA-Z]+:', path):
-            # Si el path ya tiene un prefijo (como 'pp:'), lo dejamos sin modificar
+            # If the path already has a prefix (e.g., 'pp:'), leave it unchanged
             transformed_paths.append(path)
         else:
-            # Si no tiene prefijo, lo transformamos en un patrón glob
+            # Transform the path into a glob pattern
             transformed_paths.append(f'sh:**/*{path}*/**')
     return transformed_paths

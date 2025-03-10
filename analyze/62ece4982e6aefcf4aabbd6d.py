@@ -2,13 +2,13 @@ from typing import List
 
 def string_to_int(string: str, alphabet: List[str]) -> int:
     """
-    Convertir una cadena a un número, utilizando el alfabeto dado.  
+    Convertire una stringa in un numero, utilizzando l'alfabeto fornito.  
 
-    Se asume que la entrada tiene el dígito más significativo primero.
+    Si assume che l'input abbia la cifra più significativa per prima.
     """
     base = len(alphabet)
-    result = 0
+    num = 0
     for i, char in enumerate(string):
-        value = alphabet.index(char)
-        result = result * base + value
-    return result
+        power = len(string) - i - 1
+        num += alphabet.index(char) * (base ** power)
+    return num

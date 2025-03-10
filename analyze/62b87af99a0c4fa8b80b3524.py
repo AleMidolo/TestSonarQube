@@ -1,5 +1,5 @@
 def is_run_el(obj):
     """
-    El objeto contiene el método ejecutable 'run'.
+    Controlla se l'oggetto contiene il metodo eseguibile 'run'.
     """
     return callable(getattr(obj, 'run', None))

@@ -1,25 +1,29 @@
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
-from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.backends import default_backend
 
-def verificar_firma_reenviable(clave_publica, documento, firma):
+def verify_relayable_signature(public_key, doc, signature):
     """
-    Verifica los elementos XML firmados para tener confianza de que el autor declarado realmente generó este mensaje.
+    Verifica gli elementi XML firmati per avere la certezza che l'autore dichiarato abbia effettivamente generato questo messaggio.
     
-    :param clave_publica: La clave pública en formato PEM.
-    :param documento: El documento XML que se va a verificar.
-    :param firma: La firma digital del documento.
-    :return: True si la firma es válida, False en caso contrario.
+    :param public_key: La chiave pubblica in formato PEM.
+    :param doc: Il documento XML come stringa.
+    :param signature: La firma del documento.
+    :return: True se la firma è valida, False altrimenti.
     """
     try:
-        # Cargar la clave pública
-        public_key = serialization.load_pem_public_key(clave_publica)
+        # Deserializza la chiave pubblica
+        pub_key = serialization.load_pem_public_key(
+            public_key.encode(),
+            backend=default_backend()
+        )
         
-        # Verificar la firma
-        public_key.verify(
-            firma,
-            documento,
+        # Verifica la firma
+        pub_key.verify(
+            signature,
+            doc.encode(),
             padding.PSS(
                 mgf=padding.MGF1(hashes.SHA256()),
                 salt_length=padding.PSS.MAX_LENGTH
@@ -27,5 +31,6 @@ def verificar_firma_reenviable(clave_publica, documento, firma):
             hashes.SHA256()
         )
         return True
-    except InvalidSignature:
+    except Exception as e:
+        print(f"Verification failed: {e}")
         return False

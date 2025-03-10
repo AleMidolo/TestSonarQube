@@ -1,35 +1,40 @@
-import subprocess
-
-def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra_vars=None, ansible_args=None):
+def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
+                     extra_vars=None, ansible_args=None):
     """
-    Envuelve la interfaz de línea de comandos (CLI) de 'ansible-playbook'.
+    Avvolge il comando 'ansible-playbook' della CLI.
 
-    :param ir_workspace: Un objeto Infrared Workspace que representa el espacio de trabajo activo.
-    :param ir_plugin: Un objeto InfraredPlugin del plugin actual.
-    :param playbook_path: La ruta del playbook que se va a ejecutar.
-    :param verbose: Nivel de verbosidad de Ansible.
-    :param extra_vars: dict. Se pasa a Ansible como extra-vars.
-    :param ansible_args: dict de argumentos de ansible-playbook que se pasan directamente a Ansible.
+    :param ir_workspace: Un oggetto Infrared Workspace che rappresenta lo spazio di lavoro attivo
+    :param ir_plugin: Un oggetto InfraredPlugin del plugin corrente
+    :param playbook_path: il percorso del playbook da eseguire
+    :param verbose: Livello di verbosità di Ansible
+    :param extra_vars: dict. Passato ad Ansible come extra-vars
+    :param ansible_args: dizionario di argomenti per ansible-playbook da inoltrare
+        direttamente ad Ansible.
     """
-    # Construir el comando base
+    import subprocess
+
+    # Costruisci il comando base
     command = ['ansible-playbook', playbook_path]
 
-    # Agregar verbosidad si se especifica
+    # Aggiungi il livello di verbosità se specificato
     if verbose:
         command.extend(['-' + 'v' * verbose])
 
-    # Agregar extra_vars si se especifica
+    # Aggiungi extra_vars se specificato
     if extra_vars:
         extra_vars_str = ' '.join([f"{k}={v}" for k, v in extra_vars.items()])
         command.extend(['--extra-vars', extra_vars_str])
 
-    # Agregar argumentos adicionales de Ansible si se especifica
+    # Aggiungi ansible_args se specificato
     if ansible_args:
         for key, value in ansible_args.items():
             command.extend([f"--{key}", str(value)])
 
-    # Ejecutar el comando
+    # Esegui il comando
     result = subprocess.run(command, capture_output=True, text=True)
 
-    # Devolver la salida y el código de retorno
-    return result.stdout, result.stderr, result.returncode
+    # Gestisci l'output
+    if result.returncode != 0:
+        print(f"Errore durante l'esecuzione del playbook: {result.stderr}")
+    else:
+        print(f"Playbook eseguito con successo: {result.stdout}")

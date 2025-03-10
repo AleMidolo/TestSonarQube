@@ -2,17 +2,17 @@ import re
 
 def process_text_links(text):
     """
-    Procesa los enlaces en el texto, añadiendo algunos atributos y convirtiendo enlaces de texto en hipervínculos.
+    Elabora i collegamenti nel testo, aggiungendo alcuni attributi e trasformando i collegamenti testuali in link cliccabili.
     """
-    # Expresión regular para encontrar URLs
+    # Regular expression to match URLs
     url_pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
     
-    # Función para reemplazar URLs con hipervínculos
+    # Function to replace matched URLs with HTML anchor tags
     def replace_with_link(match):
         url = match.group(0)
         return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
     
-    # Reemplazar todas las URLs en el texto con hipervínculos
+    # Replace URLs in the text with clickable links
     processed_text = url_pattern.sub(replace_with_link, text)
     
     return processed_text

@@ -1,70 +1,56 @@
 import logging
-import yaml
 import os
+import json
+import yaml
 
 def load_configurations(config_filenames, overrides=None, resolve_env=True):
     """
-    Dada una secuencia de nombres de archivo de configuración, carga y valida cada archivo de configuración. Si el archivo de configuración no puede ser leído debido a permisos insuficientes o errores al analizar el archivo de configuración, se registrará el error en el log. De lo contrario, devuelve los resultados como una tupla que contiene: un diccionario que asocia el nombre del archivo de configuración con su configuración analizada correspondiente, y una secuencia de instancias de `logging.LogRecord` que contienen cualquier error de análisis.
+    Dato un elenco di nomi di file di configurazione, carica e valida ciascun file di configurazione.
+    Restituisci i risultati come una tupla composta da:
+    - un dizionario che associa il nome del file di configurazione alla corrispondente configurazione analizzata,
+    - una sequenza di istanze di `logging.LogRecord` contenenti eventuali errori di analisi.
     """
-    configs = {}
+    configurations = {}
     errors = []
-    
+
     if overrides is None:
         overrides = {}
-    
+
     for filename in config_filenames:
         try:
             with open(filename, 'r') as file:
-                config = yaml.safe_load(file)
-                
-                if resolve_env:
-                    for key, value in config.items():
-                        if isinstance(value, str) and value.startswith('${') and value.endswith('}'):
-                            env_var = value[2:-1]
-                            config[key] = os.getenv(env_var, value)
-                
+                if filename.endswith('.json'):
+                    config = json.load(file)
+                elif filename.endswith('.yaml') or filename.endswith('.yml'):
+                    config = yaml.safe_load(file)
+                else:
+                    raise ValueError(f"Unsupported file format: {filename}")
+
                 # Apply overrides
                 for key, value in overrides.items():
                     if key in config:
                         config[key] = value
-                
-                configs[filename] = config
-                
-        except PermissionError:
-            error_msg = f"Permission denied when trying to read {filename}"
-            logging.error(error_msg)
-            errors.append(logging.LogRecord(
-                name=__name__,
-                level=logging.ERROR,
-                pathname=__file__,
-                lineno=0,
-                msg=error_msg,
-                args=None,
-                exc_info=None
-            ))
-        except yaml.YAMLError as e:
-            error_msg = f"Error parsing YAML in {filename}: {e}"
-            logging.error(error_msg)
-            errors.append(logging.LogRecord(
-                name=__name__,
-                level=logging.ERROR,
-                pathname=__file__,
-                lineno=0,
-                msg=error_msg,
-                args=None,
-                exc_info=None
-            ))
+
+                # Resolve environment variables if required
+                if resolve_env:
+                    for key, value in config.items():
+                        if isinstance(value, str) and value.startswith('$'):
+                            env_var = value[1:]
+                            config[key] = os.getenv(env_var, value)
+
+                configurations[filename] = config
+
         except Exception as e:
-            error_msg = f"Unexpected error loading {filename}: {e}"
+            error_msg = f"Error loading configuration from {filename}: {str(e)}"
             logging.error(error_msg)
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
-                pathname=__file__,
+                pathname=filename,
                 lineno=0,
                 msg=error_msg,
                 args=None,
                 exc_info=None
             ))
-    
-    return configs, errors
+
+    return configurations, errors

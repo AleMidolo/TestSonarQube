@@ -1,14 +1,20 @@
 def validate_arg_deprecation(self, cli_args, answer_file_args):
     """
-    Valida y muestra los argumentos obsoletos.
+    Valida e stampa gli argomenti deprecati.
 
-    :param cli_args: el diccionario de argumentos provenientes de la línea de comandos (CLI)
-    :param answer_file_args: el diccionario de argumentos provenientes de archivos
+    :param cli_args: il dizionario degli argomenti dalla CLI
+    :param answer_file_args: il dizionario degli argomenti dai file
     """
-    deprecated_args = set(cli_args.keys()).intersection(answer_file_args.keys())
-    if deprecated_args:
-        print("Advertencia: Los siguientes argumentos están obsoletos y no deben usarse:")
-        for arg in deprecated_args:
-            print(f"- {arg}")
-    else:
-        print("No se encontraron argumentos obsoletos.")
+    deprecated_args = {
+        'old_arg1': 'new_arg1',
+        'old_arg2': 'new_arg2',
+        # Aggiungi altri argomenti deprecati qui
+    }
+
+    for arg in cli_args:
+        if arg in deprecated_args:
+            print(f"Attenzione: L'argomento '{arg}' è deprecato. Usa '{deprecated_args[arg]}' invece.")
+
+    for arg in answer_file_args:
+        if arg in deprecated_args:
+            print(f"Attenzione: L'argomento '{arg}' è deprecato. Usa '{deprecated_args[arg]}' invece.")

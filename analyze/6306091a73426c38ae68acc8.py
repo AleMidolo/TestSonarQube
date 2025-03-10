@@ -1,13 +1,12 @@
 def list_of_file_names(settings_dirs, spec_option):
     """
-    Crea un nuevo tipo complejo "IniType".
+    Crea un nuovo tipo complesso IniType
     """
-    class IniType:
-        def __init__(self, settings_dirs, spec_option):
-            self.settings_dirs = settings_dirs
-            self.spec_option = spec_option
-
-        def __repr__(self):
-            return f"IniType(settings_dirs={self.settings_dirs}, spec_option={self.spec_option})"
-
-    return IniType(settings_dirs, spec_option)
+    import os
+    file_names = []
+    for directory in settings_dirs:
+        if os.path.isdir(directory):
+            for file in os.listdir(directory):
+                if file.endswith(spec_option):
+                    file_names.append(os.path.join(directory, file))
+    return file_names

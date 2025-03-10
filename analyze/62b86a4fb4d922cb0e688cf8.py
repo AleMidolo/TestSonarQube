@@ -2,22 +2,23 @@ import re
 
 def validate_value(value):
     """
-    Validar el valor proporcionado contra la expresión regular correspondiente.
+    Convalida il valore fornito rispetto alla corrispondente espressione regolare.
 
-    Argumentos:
-        value: la cadena de texto a validar
+    Argomenti:
+        value: la stringa da convalidare
 
-    Excepciones:
-        ValidationError: si el valor proporcionado no cumple con la expresión regular.
+    Eccezioni:
+        ValidationError: se il valore fornito non è conforme all'espressione regolare.
     """
-    # Expresión regular para validar que el valor sea alfanumérico
-    regex = re.compile(r'^[a-zA-Z0-9]+$')
+    # Definisci l'espressione regolare per la convalida
+    # Esempio: accetta solo stringhe alfanumeriche con lunghezza tra 3 e 10 caratteri
+    pattern = re.compile(r'^[a-zA-Z0-9]{3,10}$')
     
-    if not regex.match(value):
-        raise ValidationError("El valor proporcionado no cumple con la expresión regular.")
+    if not pattern.match(value):
+        raise ValidationError("Il valore fornito non è conforme all'espressione regolare.")
     
     return True
 
 class ValidationError(Exception):
-    """Excepción personalizada para errores de validación."""
+    """Eccezione sollevata quando la convalida fallisce."""
     pass

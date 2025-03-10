@@ -2,25 +2,24 @@ from functools import wraps
 
 def unit_of_work(metadata=None, timeout=None):
     """
-    Esta función es un decorador para funciones de transacción que permite un control adicional sobre cómo se lleva a cabo la transacción.
+    Decorator for transaction functions that allows additional control over how the transaction is executed.
 
-    :param metadata: Un diccionario con metadatos.
+    :param metadata: A dictionary with metadata. The specified metadata will be associated with the executing transaction and visible in the output of `dbms.listQueries` and `dbms.listTransactions` procedures. It will also be logged in the `query.log` file.
     :type metadata: dict
-    :param timeout: El tiempo de espera de la transacción en segundos.
-    :type timeout: float o None
+
+    :param timeout: The transaction timeout in seconds. Transactions that run longer than the configured timeout will be terminated by the database. This feature allows limiting the execution time of queries/transactions. The specified timeout overrides the default timeout configured in the database using the `dbms.transaction.timeout` setting. The value must not represent a negative duration. A duration of zero will allow the transaction to run indefinitely. A value of `None` will use the default timeout configured in the database.
+    :type timeout: float or None
     """
     def decorator(func):
         @wraps(func)
-        def wrapper(tx, *args, **kwargs):
-            # Aplicar metadatos si se proporcionan
+        def wrapper(*args, **kwargs):
+            # Here you would typically integrate with a transaction management system
+            # For example, in Neo4j, you might use the session or transaction context
+            # This is a simplified example
             if metadata is not None:
-                tx.run("CALL dbms.setTXMetaData($metadata)", metadata=metadata)
-            
-            # Aplicar timeout si se proporciona
+                kwargs['metadata'] = metadata
             if timeout is not None:
-                tx.run("CALL dbms.setTransactionTimeout($timeout)", timeout=timeout)
-            
-            # Ejecutar la función de transacción
-            return func(tx, *args, **kwargs)
+                kwargs['timeout'] = timeout
+            return func(*args, **kwargs)
         return wrapper
     return decorator

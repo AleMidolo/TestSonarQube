@@ -1,14 +1,16 @@
 def amend_bzparams(self, params, bug_ids):
     """
-    Modificar los parámetros de Bugzilla
+    Modifica i parametri di Bugzilla.
+
+    :param params: Dizionario contenente i parametri da modificare.
+    :param bug_ids: Lista di ID dei bug da aggiornare.
+    :return: True se l'operazione è riuscita, False altrimenti.
     """
-    # Assuming params is a dictionary of parameters to be updated
-    # and bug_ids is a list of bug IDs to which the parameters should be applied.
-    for bug_id in bug_ids:
-        # Here you would typically make an API call to Bugzilla to update the parameters
-        # for each bug ID. This is a placeholder for that logic.
-        print(f"Updating parameters for bug {bug_id}: {params}")
-        # Example API call (pseudo-code):
-        # response = bugzilla_api.update_bug(bug_id, params)
-        # if response.status_code != 200:
-        #     raise Exception(f"Failed to update bug {bug_id}")
+    try:
+        for bug_id in bug_ids:
+            # Supponiamo che self.bz sia un'istanza di un client Bugzilla
+            self.bz.update_bug(bug_id, params)
+        return True
+    except Exception as e:
+        print(f"Errore durante la modifica dei parametri: {e}")
+        return False

@@ -2,17 +2,16 @@ import argparse
 
 def parse_arguments(*arguments):
     """
-    Dado los argumentos de línea de comandos con los que se invocó este script, analiza los argumentos y los devuelve como una instancia de 'ArgumentParser'.
+    Dati gli argomenti della riga di comando con cui è stato invocato questo script,
+    analizza gli argomenti e restituiscili come un'istanza di ArgumentParser.
     """
-    parser = argparse.ArgumentParser(description="Analiza los argumentos de línea de comandos.")
+    parser = argparse.ArgumentParser(description="Parse command line arguments.")
     
-    # Aquí puedes agregar los argumentos que esperas recibir
-    # Ejemplo:
-    # parser.add_argument('-f', '--file', type=str, help='Archivo de entrada')
+    # Example of adding arguments (customize as needed)
+    parser.add_argument('-f', '--file', type=str, help="Path to the input file")
+    parser.add_argument('-v', '--verbose', action='store_true', help="Enable verbose output")
     
-    # Si no se proporcionan argumentos, se usa sys.argv por defecto
-    if not arguments:
-        import sys
-        arguments = sys.argv[1:]
+    # Parse the arguments
+    args = parser.parse_args(arguments)
     
-    return parser.parse_args(arguments)
+    return args

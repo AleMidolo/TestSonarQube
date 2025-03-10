@@ -1,10 +1,10 @@
 def _legacy_mergeOrderings(orderings):
     """
-    Combinar múltiples ordenamientos de manera que se preserve el orden dentro de cada uno.
+    Unisci più ordinamenti in modo che l'ordine all'interno di ciascun ordinamento venga preservato.
 
-    Los ordenamientos están restringidos de tal forma que, si un objeto aparece en dos o más ordenamientos, entonces el sufijo que comienza con dicho objeto debe estar presente en ambos ordenamientos.
+    Gli ordinamenti sono vincolati in modo tale che, se un oggetto appare in due o più ordinamenti, il suffisso che inizia con l'oggetto deve essere presente in entrambi gli ordinamenti.
 
-    Por ejemplo:
+    Ad esempio:
 
     >>> _mergeOrderings([
     ... ['x', 'y', 'z'],
@@ -34,9 +34,9 @@ def _legacy_mergeOrderings(orderings):
 
     # Initialize queue with nodes having zero in-degree
     queue = deque([node for node in all_nodes if in_degree[node] == 0])
-    result = []
 
     # Perform topological sort
+    result = []
     while queue:
         u = queue.popleft()
         result.append(u)
@@ -47,6 +47,6 @@ def _legacy_mergeOrderings(orderings):
 
     # Check for cycles (if any node still has in-degree > 0)
     if len(result) != len(all_nodes):
-        raise ValueError("Input orderings contain a cycle or conflicting constraints.")
+        raise ValueError("Input orderings contain a cycle or are inconsistent.")
 
     return result

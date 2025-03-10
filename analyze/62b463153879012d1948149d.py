@@ -3,27 +3,25 @@ from collections import defaultdict
 
 def _explore_folder(folder):
     """
-    Obtiene los datos de los paquetes desde la carpeta.
+    Ottiene i dati dei pacchetti dalla cartella
 
-    Agrupa los archivos por el nombre base de su archivo XML y devuelve los datos en formato de diccionario.
+    Raggruppa i file in base al loro nome base XML e restituisce i dati in formato dizionario.
 
-    Parámetros
+    Parametri
     ----------
     folder : str
-        Carpeta del paquete
+        Cartella del pacchetto
 
-    Retorna
+    Restituisce
     -------
     dict
-        Diccionario que agrupa los archivos por el nombre base de su archivo XML.
+        Dizionario con i file raggruppati per nome base XML
     """
     file_groups = defaultdict(list)
     
-    for root, dirs, files in os.walk(folder):
-        for file in files:
-            if file.endswith('.xml'):
-                base_name = os.path.splitext(file)[0]
-                file_path = os.path.join(root, file)
-                file_groups[base_name].append(file_path)
+    for filename in os.listdir(folder):
+        if filename.endswith('.xml'):
+            base_name = os.path.splitext(filename)[0]
+            file_groups[base_name].append(os.path.join(folder, filename))
     
     return dict(file_groups)

@@ -1,21 +1,20 @@
 def validate_as_prior_version(self, prior):
     """
-    Verifique que `prior` sea una versión previa válida del objeto de inventario actual.
+    Verifica che "prior" sia una versione precedente valida dell'oggetto inventario corrente.
 
-    La variable de entrada `prior` también se espera que sea un objeto de tipo `InventoryValidator,
-    y se asume que tanto el inventario actual (`self`) como el inventario previo (`prior`) han sido
-    verificados para garantizar su consistencia interna.
+    La variabile di input "prior" deve essere un oggetto di tipo InventoryValidator
+    e si presume che sia l'inventario corrente (self) sia l'inventario "prior" siano stati
+    verificati per coerenza interna.
     """
-    if not isinstance(prior, type(self)):
-        raise TypeError("El objeto `prior` debe ser una instancia de la misma clase que el inventario actual.")
+    if not isinstance(prior, InventoryValidator):
+        raise TypeError("prior must be an instance of InventoryValidator")
     
-    # Aquí puedes agregar más validaciones específicas para asegurar que `prior` es una versión previa válida.
-    # Por ejemplo, podrías verificar que las fechas de `prior` sean anteriores a las de `self`.
+    # Add logic to compare self and prior to ensure prior is a valid previous version
+    # For example, check if prior's timestamp is earlier than self's timestamp
+    if prior.timestamp >= self.timestamp:
+        raise ValueError("prior must be an earlier version than the current inventory")
     
-    # Ejemplo de validación de fechas (asumiendo que ambos objetos tienen un atributo `date`)
-    if hasattr(self, 'date') and hasattr(prior, 'date'):
-        if prior.date >= self.date:
-            raise ValueError("La fecha del inventario previo debe ser anterior a la del inventario actual.")
+    # Additional validation logic can be added here based on specific requirements
+    # For example, checking if certain fields in prior are consistent with self
     
-    # Si todas las validaciones pasan, retornar True
     return True

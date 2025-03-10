@@ -1,30 +1,26 @@
 def validate_hierarchy(self, validate_objects=True, check_digests=True, show_warnings=False):
     """
-    Validar la jerarquía de la raíz de almacenamiento.
+    Valida la gerarchia di archiviazione.
 
-    Retorna:
-        num_objects - número de objetos verificados
-        good_objects - número de objetos verificados que se encontraron válidos
+    Restituisce:
+        num_objects - numero di oggetti verificati
+        good_objects - numero di oggetti verificati che sono risultati validi
     """
     num_objects = 0
     good_objects = 0
     
-    # Simulación de la validación de objetos
+    # Simulate validation logic
     if validate_objects:
-        # Aquí iría la lógica para validar los objetos
-        # Por ejemplo, recorrer la jerarquía y validar cada objeto
-        num_objects = 100  # Ejemplo: 100 objetos verificados
-        good_objects = 95  # Ejemplo: 95 objetos válidos
+        # Example: Validate objects in the hierarchy
+        num_objects = 100  # Example number of objects
+        good_objects = 95   # Example number of valid objects
     
-    # Simulación de la verificación de digests
     if check_digests:
-        # Aquí iría la lógica para verificar los digests
-        # Por ejemplo, comparar los digests de los objetos con los esperados
-        pass
+        # Example: Check digests of objects
+        pass  # Add digest checking logic here
     
-    # Simulación de mostrar advertencias
     if show_warnings:
-        # Aquí iría la lógica para mostrar advertencias si se encuentran problemas
-        pass
+        # Example: Show warnings if any
+        pass  # Add warning logic here
     
     return num_objects, good_objects

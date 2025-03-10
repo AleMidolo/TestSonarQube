@@ -1,6 +1,11 @@
 def parser_flags(parser):
     """
-    Dado una instancia de 'argparse.ArgumentParser', devuelve sus banderas de argumentos en una cadena separada por espacios.
+    Dato un'istanza di `argparse.ArgumentParser`, restituisce i flag degli argomenti in una stringa separata da spazi.  
+    Args:
+        parser: istanza di `argparse.ArgumentParser`
+
+    Returns:
+        flag degli argomenti in una stringa separata da spazi
     """
     flags = []
     for action in parser._actions:

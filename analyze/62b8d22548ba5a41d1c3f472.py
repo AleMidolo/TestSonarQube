@@ -1,7 +1,11 @@
 def cachedmethod(cache, key=hashkey, lock=None):
     """
-    Decorador para envolver un método de clase o de instancia con una función memoizadora  
-    que guarda los resultados en una caché.
+    Decorator per racchiudere un metodo di classe o di istanza con una funzione memoizzante che salva i risultati in una cache.
+
+    :param cache: La cache in cui memorizzare i risultati.
+    :param key: Funzione per generare la chiave di cache. Default è hashkey.
+    :param lock: Lock opzionale per sincronizzare l'accesso alla cache.
+    :return: Il metodo decorato con la funzionalità di caching.
     """
     def decorator(method):
         def wrapper(self, *args, **kwargs):

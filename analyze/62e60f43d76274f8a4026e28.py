@@ -3,27 +3,28 @@ import pytz
 
 def hydrate_time(nanoseconds, tz=None):
     """
-    Hidratador para valores de `Time` y `LocalTime`.
+    Idratatore per valori di `Time` e `LocalTime`.
 
-    :param nanoseconds: El tiempo en nanosegundos desde la medianoche.
-    :param tz: La zona horaria (opcional).
-    :return: Un objeto `time` o `datetime.time` con la zona horaria aplicada si se proporciona.
+    :param nanoseconds: Il tempo in nanosecondi.
+    :param tz: Il fuso orario (timezone) opzionale.
+    :return: Un oggetto `time` con il tempo calcolato.
     """
-    # Convert nanoseconds to seconds and microseconds
-    seconds = nanoseconds // 1_000_000_000
-    microseconds = (nanoseconds % 1_000_000_000) // 1000
+    # Convert nanoseconds to seconds
+    seconds = nanoseconds / 1e9
     
     # Calculate hours, minutes, seconds, and microseconds
-    hours = seconds // 3600
+    hours = int(seconds // 3600)
     seconds %= 3600
-    minutes = seconds // 60
+    minutes = int(seconds // 60)
     seconds %= 60
+    microseconds = int((seconds - int(seconds)) * 1e6)
+    seconds = int(seconds)
     
     # Create a time object
     time_obj = time(hour=hours, minute=minutes, second=seconds, microsecond=microseconds)
     
+    # If timezone is provided, localize the time
     if tz:
-        # If a timezone is provided, localize the time
         tz_obj = pytz.timezone(tz)
         time_obj = tz_obj.localize(time_obj)
     

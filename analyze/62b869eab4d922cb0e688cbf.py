@@ -1,36 +1,28 @@
 def generate_default_observer_schema(app):
     """
-    Generar el esquema de observador predeterminado para cada recurso de Kubernetes presente en  
-    ``spec.manifest`` para el cual no se haya especificado un esquema de observador personalizado.
+    Genera lo schema di osservazione predefinito per ogni risorsa Kubernetes presente in
+    ``spec.manifest`` per la quale non è stato specificato uno schema di osservazione personalizzato.
 
-    Argumentos:
-    app(krake.data.kubernetes.Application): La aplicación para la cual se generará un esquema de observador predeterminado.
+    Argomenti:
+        app (krake.data.kubernetes.Application): L'applicazione per la quale generare uno
+            schema di osservazione predefinito.
     """
     default_schema = {
-        "type": "object",
-        "properties": {
-            "status": {
-                "type": "object",
-                "properties": {
-                    "conditions": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "type": {"type": "string"},
-                                "status": {"type": "string"},
-                                "lastTransitionTime": {"type": "string"},
-                                "reason": {"type": "string"},
-                                "message": {"type": "string"}
-                            },
-                            "required": ["type", "status"]
-                        }
-                    }
-                },
-                "required": ["conditions"]
-            }
+        "apiVersion": "v1",
+        "kind": "ObserverSchema",
+        "metadata": {
+            "name": "default-observer-schema",
+            "namespace": app.metadata.namespace
         },
-        "required": ["status"]
+        "spec": {
+            "rules": [
+                {
+                    "apiGroups": ["*"],
+                    "resources": ["*"],
+                    "verbs": ["get", "list", "watch"]
+                }
+            ]
+        }
     }
 
     for resource in app.spec.manifest:

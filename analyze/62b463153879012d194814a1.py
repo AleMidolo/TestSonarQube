@@ -1,13 +1,9 @@
 def add_rendition(self, lang, file_path):
-    """
-    Adds a new rendition of the document in the specified language.
-
+    """Add a new rendition of the document in a specific language.
+    
     Args:
         lang (str): The language code for the rendition (e.g., 'en' for English).
-        file_path (str): The path to the file containing the rendition.
-
-    Returns:
-        None
+        file_path (str): The file path to the rendition document.
     """
     if not hasattr(self, 'renditions'):
         self.renditions = {}
