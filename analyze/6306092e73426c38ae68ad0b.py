@@ -4,10 +4,10 @@ def validate_min_max_args(self, args):
 
     :param args: प्राप्त किए गए आर्ग्युमेंट्स।
     """
-    min_value = 0  # यहां न्यूनतम मान सेट करें
-    max_value = 100  # यहां अधिकतम मान सेट करें
+    if not hasattr(self, 'min_value') or not hasattr(self, 'max_value'):
+        raise ValueError("min_value और max_value को परिभाषित करें।")
     
     for arg in args:
-        if not (min_value <= arg <= max_value):
+        if not (self.min_value <= arg <= self.max_value):
             return False
     return True

@@ -5,17 +5,30 @@ def point_type(name, fields, srid_map):
     :param name: सबक्लास का नाम
     :param fields: सबक्लास में शामिल करने के लिए फ़ील्ड्स
     :param srid_map: SRID मैपिंग
-    :return: निर्मित सबक्लास
+    :return: डायनामिक रूप से बनाई गई पॉइंट सबक्लास
     """
-    class PointSubclass:
-        def __init__(self, **kwargs):
-            for field in fields:
-                setattr(self, field, kwargs.get(field))
-            self.srid = srid_map.get(name, 4326)  # Default SRID is 4326 (WGS84)
+    from sqlalchemy import Column, Integer, Float
+    from sqlalchemy.ext.declarative import declarative_base
+
+    Base = declarative_base()
+
+    class PointSubclass(Base):
+        __tablename__ = name.lower()
+
+        id = Column(Integer, primary_key=True)
+        x = Column(Float)
+        y = Column(Float)
+
+        for field_name, field_type in fields.items():
+            setattr(PointSubclass, field_name, Column(field_type))
+
+        def __init__(self, x, y, **kwargs):
+            self.x = x
+            self.y = y
+            for key, value in kwargs.items():
+                setattr(self, key, value)
 
         def __repr__(self):
-            fields_str = ', '.join(f"{field}={getattr(self, field)}" for field in fields)
-            return f"{name}({fields_str}, srid={self.srid})"
+            return f"<{self.__class__.__name__}(x={self.x}, y={self.y})>"
 
-    PointSubclass.__name__ = name
     return PointSubclass

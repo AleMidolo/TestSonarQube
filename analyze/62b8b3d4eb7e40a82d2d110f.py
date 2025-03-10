@@ -10,8 +10,8 @@ def _should_attempt_c_optimizations():
     # Check if we are running on PyPy
     is_pypy = hasattr(sys, 'pypy_version_info')
     
-    # Check the value of the PURE_PYTHON environment variable
+    # Check if the PURE_PYTHON environment variable is set
     pure_python = os.getenv('PURE_PYTHON', '').lower() in ('1', 'true', 'yes')
     
-    # Return True if not on PyPy and PURE_PYTHON is not set to True
+    # Return True if not on PyPy and PURE_PYTHON is not set
     return not is_pypy and not pure_python

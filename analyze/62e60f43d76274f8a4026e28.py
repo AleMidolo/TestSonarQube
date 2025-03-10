@@ -13,7 +13,6 @@ def hydrate_time(nanoseconds, tz=None):
     """
     # Convert nanoseconds to seconds
     seconds = nanoseconds / 1e9
-    
     # Create a datetime object from the timestamp
     dt = datetime.fromtimestamp(seconds, tz=timezone.utc)
     

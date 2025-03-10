@@ -1,10 +1,10 @@
 def add_asset(self, basename, file_path):
     """
-    Adds an asset to the object's asset dictionary. The asset is stored with the basename as the key and the file path as the value.
+    Adds an asset to the object's asset dictionary.
 
     Args:
-        basename (str): The base name of the asset (e.g., "artigo02-gf03").
-        file_path (str): The full path to the asset file.
+        basename (str): The base name of the asset.
+        file_path (str): The file path of the asset.
 
     Returns:
         None

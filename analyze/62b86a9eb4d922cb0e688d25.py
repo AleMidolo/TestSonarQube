@@ -9,5 +9,5 @@ def _get_resource_name_regex():
     """
     # यहां एक उदाहरण नियमित अभिव्यक्ति है जो संसाधन नाम को मान्य करती है।
     # आप इसे अपनी आवश्यकताओं के अनुसार संशोधित कर सकते हैं।
-    resource_name_pattern = re.compile(r'^[a-zA-Z0-9_\-]+$')
+    resource_name_pattern = re.compile(r'^[a-zA-Z0-9_-]+$')
     return resource_name_pattern

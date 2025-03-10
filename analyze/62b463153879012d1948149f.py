@@ -16,25 +16,19 @@ def _eval_file(prefix, file_path):
     रिटर्न्स
     -------
     dict
-        फ़ाइल प्रकार और पते के साथ एक डिक्शनरी
+        फ़ाइल प्रकार और फ़ाइल पथ के साथ एक डिक्शनरी
     """
+    file_type = None
     file_name = os.path.basename(file_path)
-    file_folder = os.path.dirname(file_path)
     
-    # Determine file type based on prefix or file name
-    if prefix.startswith("asset"):
-        file_type = "asset"
-    elif prefix.startswith("rendition"):
-        file_type = "rendition"
-    else:
-        file_type = "unknown"
+    # Check if the file is an asset or rendition based on the prefix
+    if prefix in file_name:
+        if "asset" in file_name.lower():
+            file_type = "asset"
+        elif "rendition" in file_name.lower():
+            file_type = "rendition"
     
-    # Update packages with file type and path
-    packages = {
+    return {
         "file_type": file_type,
-        "file_path": file_path,
-        "file_name": file_name,
-        "file_folder": file_folder
+        "file_path": file_path
     }
-    
-    return packages

@@ -10,9 +10,4 @@ def dehydrate_timedelta(value):
     """
     if not isinstance(value, timedelta):
         raise TypeError("Expected a timedelta object")
-    
-    return {
-        'days': value.days,
-        'seconds': value.seconds,
-        'microseconds': value.microseconds
-    }
+    return value.total_seconds()

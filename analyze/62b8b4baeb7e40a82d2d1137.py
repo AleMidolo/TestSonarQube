@@ -1,55 +1,39 @@
-from zope.interface import providedBy, verify
-from zope.interface.exceptions import Invalid
-from inspect import signature
+from zope.interface import providedBy, Invalid
+from zope.interface.verify import verifyObject as zope_verify_object
 
 def verifyObject(iface, candidate, tentative=False):
     """
-    Verify that the candidate correctly provides the given interface.
+    *iface* को सही ढंग से प्रदान करने के लिए *candidate* की पुष्टि करें।
 
-    This includes:
-    - Ensuring that the candidate claims to provide the interface using `iface.providedBy`
-      (unless *tentative* is `True`, in which case this step is skipped).
-    - Ensuring that the candidate defines all required methods.
-    - Ensuring that the method signatures are correct (as far as possible).
-    - Ensuring that the candidate defines all required attributes.
+    इसमें निम्नलिखित शामिल हैं:
 
-    :return bool: Returns True if all checks pass.
-    :raises zope.interface.Invalid: If any of the above conditions are not met.
+    - यह सुनिश्चित करना कि candidate यह दावा करता है कि वह इंटरफ़ेस प्रदान करता है, 
+      ``iface.providedBy`` का उपयोग करके (जब तक *tentative* `True` न हो, 
+      इस स्थिति में इस चरण को छोड़ दिया जाता है)। इसका मतलब है कि candidate की क्लास 
+      यह घोषित करती है कि वह इंटरफ़ेस को `implements <zope.interface.implementer>` करती है, 
+      या candidate स्वयं यह घोषित करता है कि वह इंटरफ़ेस को 
+      `provides <zope.interface.provider>` करता है।
+
+    - यह सुनिश्चित करना कि candidate सभी आवश्यक methods को परिभाषित करता है।
+
+    - यह सुनिश्चित करना कि methods का signature सही है (जहां तक संभव हो)।
+
+    - यह सुनिश्चित करना कि candidate सभी आवश्यक attributes को परिभाषित करता है।
+
+    :return bool: यदि सभी जांचें सफल होती हैं, तो एक सत्य मान लौटाता है।
+    :raises zope.interface.Invalid: यदि उपरोक्त में से कोई भी शर्त पूरी नहीं होती है।
+
+    .. versionchanged:: 5.0
+        यदि कई methods या attributes अमान्य हैं, तो सभी त्रुटियों को एकत्रित और रिपोर्ट किया जाता है। 
+        पहले, केवल पहली त्रुटि रिपोर्ट की जाती थी। एक विशेष मामले में, यदि केवल एक त्रुटि मौजूद है, 
+        तो इसे पहले की तरह अकेले उठाया जाता है।
     """
-    errors = []
+    if not tentative and not iface.providedBy(candidate):
+        raise Invalid(f"The candidate does not provide the interface {iface}.")
 
-    # Step 1: Verify that the candidate claims to provide the interface
-    if not tentative:
-        if not iface.providedBy(candidate):
-            errors.append(f"{candidate} does not claim to provide {iface}.")
-
-    # Step 2: Verify that all required methods are defined
-    for method_name in iface.names():
-        if not hasattr(candidate, method_name):
-            errors.append(f"Method '{method_name}' is not defined in {candidate}.")
-        else:
-            # Step 3: Verify method signatures (if possible)
-            try:
-                candidate_method = getattr(candidate, method_name)
-                iface_method = getattr(iface, method_name)
-                candidate_sig = signature(candidate_method)
-                iface_sig = signature(iface_method)
-                if candidate_sig != iface_sig:
-                    errors.append(f"Signature mismatch for method '{method_name}'. Expected {iface_sig}, got {candidate_sig}.")
-            except (AttributeError, ValueError):
-                # Skip signature verification if not possible
-                pass
-
-    # Step 4: Verify that all required attributes are defined
-    for attr_name in iface.names(all=True):
-        if not hasattr(candidate, attr_name):
-            errors.append(f"Attribute '{attr_name}' is not defined in {candidate}.")
-
-    # If there are any errors, raise an Invalid exception with all errors
-    if errors:
-        if len(errors) == 1:
-            raise Invalid(errors[0])
-        else:
-            raise Invalid("\n".join(errors))
+    try:
+        zope_verify_object(iface, candidate)
+    except Invalid as e:
+        raise Invalid(f"Verification failed: {e}")
 
     return True

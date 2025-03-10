@@ -20,29 +20,17 @@ def absorb(self, args):
                 if op == '&':
                     if left == right:
                         result.append(left)
-                    elif isinstance(right, tuple) and len(right) == 3:
-                        if right[0] == '|' and right[1] == left:
-                            result.append(left)
-                        elif right[0] == '|' and right[1] == ('~', left):
-                            result.append(('&', left, right[2]))
-                    elif isinstance(left, tuple) and len(left) == 3:
-                        if left[0] == '|' and left[1] == right:
-                            result.append(right)
-                        elif left[0] == '|' and left[1] == ('~', right):
-                            result.append(('&', right, left[2]))
+                    elif isinstance(right, tuple) and right[0] == '|' and right[1] == left:
+                        result.append(left)
+                    elif isinstance(right, tuple) and right[0] == '|' and right[1] == ('~', left):
+                        result.append(('&', left, right[2]))
                 elif op == '|':
                     if left == right:
                         result.append(left)
-                    elif isinstance(right, tuple) and len(right) == 3:
-                        if right[0] == '&' and right[1] == left:
-                            result.append(left)
-                        elif right[0] == '&' and right[1] == ('~', left):
-                            result.append(('|', left, right[2]))
-                    elif isinstance(left, tuple) and len(left) == 3:
-                        if left[0] == '&' and left[1] == right:
-                            result.append(right)
-                        elif left[0] == '&' and left[1] == ('~', right):
-                            result.append(('|', right, left[2]))
+                    elif isinstance(right, tuple) and right[0] == '&' and right[1] == left:
+                        result.append(left)
+                    elif isinstance(right, tuple) and right[0] == '&' and right[1] == ('~', left):
+                        result.append(('|', left, right[2]))
                 else:
                     result.append(expr)
             else:

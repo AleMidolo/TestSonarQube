@@ -18,13 +18,19 @@ def update_last_applied_manifest_list_from_resp(
     """
     for i, (schema_item, resp_item) in enumerate(zip(observer_schema, response)):
         if isinstance(schema_item, dict) and isinstance(resp_item, dict):
+            if i >= len(last_applied_manifest):
+                last_applied_manifest.append({})
             update_last_applied_manifest_dict_from_resp(
                 last_applied_manifest[i], schema_item, resp_item
             )
         elif isinstance(schema_item, list) and isinstance(resp_item, list):
+            if i >= len(last_applied_manifest):
+                last_applied_manifest.append([])
             update_last_applied_manifest_list_from_resp(
                 last_applied_manifest[i], schema_item, resp_item
             )
         else:
-            if schema_item not in last_applied_manifest:
+            if i >= len(last_applied_manifest):
+                last_applied_manifest.append(resp_item)
+            else:
                 last_applied_manifest[i] = resp_item
