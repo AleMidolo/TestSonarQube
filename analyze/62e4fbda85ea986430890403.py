@@ -2,10 +2,10 @@ import random
 
 def _shuffled(seq: Sequence[str]) -> list[str]:
     """
-    Barajar de manera determinista.
+    Barajar de manera determinista
     """
-    # Usar una semilla fija para asegurar que el barajado sea determinista
+    # Use a fixed seed for deterministic shuffling
     random.seed(42)
-    shuffled_seq = list(seq)  # Convertir a lista para poder barajar
+    shuffled_seq = list(seq)
     random.shuffle(shuffled_seq)
     return shuffled_seq

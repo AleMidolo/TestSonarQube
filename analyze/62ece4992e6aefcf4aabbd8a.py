@@ -22,37 +22,37 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                     config.update(overrides)
                 configs[filename] = config
         except PermissionError as e:
-            logging.error(f"Permission denied when trying to read {filename}: {e}")
+            logging.error(f"Permission denied when reading configuration file: {filename}")
             log_records.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=__file__,
-                lineno=logging.currentframe().f_lineno,
-                msg=f"Permission denied when trying to read {filename}: {e}",
+                lineno=0,
+                msg=f"Permission denied when reading configuration file: {filename}",
                 args=None,
-                exc_info=None
+                exc_info=e
             ))
         except yaml.YAMLError as e:
-            logging.error(f"Error parsing YAML in {filename}: {e}")
+            logging.error(f"Error parsing configuration file: {filename}")
             log_records.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=__file__,
-                lineno=logging.currentframe().f_lineno,
-                msg=f"Error parsing YAML in {filename}: {e}",
+                lineno=0,
+                msg=f"Error parsing configuration file: {filename}",
                 args=None,
-                exc_info=None
+                exc_info=e
             ))
         except Exception as e:
-            logging.error(f"Unexpected error loading {filename}: {e}")
+            logging.error(f"Unexpected error when reading configuration file: {filename}")
             log_records.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=__file__,
-                lineno=logging.currentframe().f_lineno,
-                msg=f"Unexpected error loading {filename}: {e}",
+                lineno=0,
+                msg=f"Unexpected error when reading configuration file: {filename}",
                 args=None,
-                exc_info=None
+                exc_info=e
             ))
 
     return configs, log_records

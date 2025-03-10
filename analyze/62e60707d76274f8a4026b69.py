@@ -4,10 +4,24 @@ def point_type(name, fields, srid_map):
     """
     from collections import namedtuple
 
-    # Crear una subclase de namedtuple con los campos dados
-    PointSubclass = namedtuple(name, fields)
+    # Crear una clase base Point
+    class Point:
+        def __init__(self, x, y, srid=None):
+            self.x = x
+            self.y = y
+            self.srid = srid
 
-    # Agregar el atributo srid_map a la subclase
-    PointSubclass.srid_map = srid_map
+        def __repr__(self):
+            return f"Point(x={self.x}, y={self.y}, srid={self.srid})"
 
-    return PointSubclass
+    # Crear una subclase dinámica de Point
+    DynamicPoint = type(name, (Point,), {})
+
+    # Agregar campos adicionales a la subclase
+    for field_name, field_type in fields.items():
+        setattr(DynamicPoint, field_name, field_type)
+
+    # Agregar el mapa SRID a la subclase
+    DynamicPoint.srid_map = srid_map
+
+    return DynamicPoint

@@ -9,28 +9,20 @@ def generate_default_observer_schema(app):
     default_schema = {
         "type": "object",
         "properties": {
-            "status": {
+            "apiVersion": {"type": "string"},
+            "kind": {"type": "string"},
+            "metadata": {
                 "type": "object",
                 "properties": {
-                    "conditions": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "type": {"type": "string"},
-                                "status": {"type": "string"},
-                                "lastTransitionTime": {"type": "string"},
-                                "reason": {"type": "string"},
-                                "message": {"type": "string"}
-                            },
-                            "required": ["type", "status"]
-                        }
-                    }
+                    "name": {"type": "string"},
+                    "namespace": {"type": "string"}
                 },
-                "required": ["conditions"]
-            }
+                "required": ["name"]
+            },
+            "spec": {"type": "object"},
+            "status": {"type": "object"}
         },
-        "required": ["status"]
+        "required": ["apiVersion", "kind", "metadata"]
     }
 
     for resource in app.spec.manifest:

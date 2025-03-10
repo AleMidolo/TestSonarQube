@@ -17,7 +17,7 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     else:
         nodeinfo_url = f"{url}/.well-known/nodeinfo"
 
-    document = {
+    well_known_document = {
         "links": [
             {
                 "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
@@ -30,4 +30,4 @@ def get_nodeinfo_well_known_document(url, document_path=None):
         ]
     }
 
-    return document
+    return well_known_document

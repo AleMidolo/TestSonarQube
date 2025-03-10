@@ -1,6 +1,6 @@
 import json
-from typing import Dict
 from xml.etree import ElementTree as ET
+from typing import Dict
 
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
@@ -13,7 +13,7 @@ def parse_diaspora_webfinger(document: str) -> Dict:
         data = json.loads(document)
         return data
     except json.JSONDecodeError:
-        # Si falla, intentar parsear como XML (XRD)
+        # Si falla, intentar parsear como XML/XRD
         try:
             root = ET.fromstring(document)
             result = {}

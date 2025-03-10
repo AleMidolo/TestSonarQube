@@ -35,11 +35,10 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     errors = []
 
     # Verificar si el candidato proporciona la interfaz
-    if not tentative:
-        if not iface.providedBy(candidate):
-            errors.append(f"{candidate} no proporciona la interfaz {iface}")
+    if not tentative and not iface.providedBy(candidate):
+        errors.append(f"{candidate} no proporciona la interfaz {iface}")
 
-    # Verificar métodos y atributos
+    # Verificar los métodos y atributos necesarios
     try:
         if vtype == 'class':
             verifyClass(iface, candidate)
@@ -48,7 +47,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     except Invalid as e:
         errors.append(str(e))
 
-    # Manejar errores
+    # Manejar los errores
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])

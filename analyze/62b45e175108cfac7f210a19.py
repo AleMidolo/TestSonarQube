@@ -10,11 +10,14 @@ def validate_fixity(self, fixity, manifest_files):
     if "files" not in fixity:
         raise ValueError("El bloque de fijación debe contener una clave 'files'.")
     
+    if not isinstance(fixity["files"], dict):
+        raise ValueError("La clave 'files' en el bloque de fijación debe ser un diccionario.")
+    
     for file_name, checksum in fixity["files"].items():
         if file_name not in manifest_files:
-            raise ValueError(f"El archivo {file_name} no está listado en el manifiesto.")
+            raise ValueError(f"El archivo '{file_name}' no está listado en el manifiesto.")
         
-        if not isinstance(checksum, str) or not checksum:
-            raise ValueError(f"El checksum para {file_name} debe ser una cadena no vacía.")
+        if not isinstance(checksum, str):
+            raise ValueError(f"El checksum para el archivo '{file_name}' debe ser una cadena de texto.")
     
     return True

@@ -1,6 +1,6 @@
 def round_half_to_even(n):
     """
-    Rounds a number to the nearest integer, with ties (i.e., 0.5) rounded to the nearest even integer.
+    Rounds a number to the nearest integer, with ties (0.5) rounded to the nearest even integer.
 
     :param n: The number to round.
     :return: The rounded integer.

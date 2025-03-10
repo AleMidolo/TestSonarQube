@@ -29,12 +29,14 @@ def _legacy_mergeOrderings(orderings):
                 in_degree[v] += 1
             all_nodes.add(u)
             all_nodes.add(v)
+        if ordering:
+            all_nodes.add(ordering[-1])
 
-    # Initialize the queue with nodes having zero in-degree
+    # Initialize queue with nodes having zero in-degree
     queue = deque([node for node in all_nodes if in_degree[node] == 0])
+    result = []
 
     # Perform topological sort
-    result = []
     while queue:
         u = queue.popleft()
         result.append(u)
@@ -42,5 +44,9 @@ def _legacy_mergeOrderings(orderings):
             in_degree[v] -= 1
             if in_degree[v] == 0:
                 queue.append(v)
+
+    # Check for cycles (if any node still has in-degree > 0)
+    if len(result) != len(all_nodes):
+        raise ValueError("Input orderings contain a cycle or conflicting constraints.")
 
     return result

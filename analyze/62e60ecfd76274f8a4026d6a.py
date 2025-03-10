@@ -8,20 +8,20 @@ def protocol_handlers(cls, protocol_version=None):
         todas las versiones relevantes y compatibles del protocolo
     :raise TypeError: si la versión del protocolo no se pasa como una tupla
     """
-    # Diccionario de manejadores disponibles
-    handlers = {
-        (3, 0): cls.HandlerV3_0,
-        (3, 5): cls.HandlerV3_5,
-        (4, 0): cls.HandlerV4_0,
-        (4, 1): cls.HandlerV4_1,
+    # Supongamos que tenemos un diccionario de manejadores disponibles
+    available_handlers = {
+        (3, 5): "HandlerV3_5",
+        (4, 0): "HandlerV4_0",
+        (4, 1): "HandlerV4_1",
+        (4, 2): "HandlerV4_2",
     }
 
     if protocol_version is not None:
         if not isinstance(protocol_version, tuple):
             raise TypeError("La versión del protocolo debe ser una tupla.")
-        if protocol_version in handlers:
-            return {protocol_version: handlers[protocol_version]}
+        if protocol_version in available_handlers:
+            return {protocol_version: available_handlers[protocol_version]}
         else:
             return {}
     else:
-        return handlers
+        return available_handlers

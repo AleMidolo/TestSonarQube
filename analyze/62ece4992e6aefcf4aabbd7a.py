@@ -6,4 +6,4 @@ def is_gitbash():
 
     :return: True si es gitbash
     """
-    return 'GITBASH' in os.environ.get('TERM_PROGRAM', '').upper()
+    return 'GIT_BASH' in os.environ.get('TERM_PROGRAM', '')

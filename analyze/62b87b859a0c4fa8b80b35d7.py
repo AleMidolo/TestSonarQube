@@ -16,16 +16,19 @@ def to_csv(self, separator=",", header=None):
     """
     csv_lines = []
     
+    # Agregar el encabezado si está presente
     if header is not None:
         csv_lines.append(header)
     
+    # Convertir cada punto a formato CSV
     for point in self.points:
-        # Convert coordinates to string separated by the separator
-        coords_str = separator.join(map(str, point.coords))
-        # Convert values to string separated by the separator
-        values_str = separator.join(map(str, point.values))
-        # Combine coordinates and values
-        csv_line = f"{coords_str}{separator}{values_str}"
+        # Convertir la coordenada a cadena
+        coord_str = separator.join(map(str, point.coordinate))
+        # Convertir el valor a cadena
+        value_str = separator.join(map(str, point.value))
+        # Combinar coordenada y valor
+        csv_line = f"{coord_str}{separator}{value_str}"
         csv_lines.append(csv_line)
     
+    # Unir todas las líneas con saltos de línea
     return "\n".join(csv_lines)

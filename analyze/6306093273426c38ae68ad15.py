@@ -20,5 +20,5 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     # Ejecutar el comando
     result = subprocess.run(command, capture_output=True, text=True)
     
-    # Retornar los resultados
+    # Devolver los resultados de la ejecución
     return result
