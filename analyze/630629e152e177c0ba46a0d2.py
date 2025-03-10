@@ -1,9 +1,10 @@
 import requests
-from xml.etree import ElementTree
+from urllib.parse import urlparse
+from xml.etree import ElementTree as ET
 
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    Retrieve a and parse a remote Diaspora webfinger document.
+    Retrieve and parse a remote Diaspora webfinger document.
 
     :arg handle: Remote handle to retrieve
     :returns: dict
@@ -20,21 +21,21 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         response.raise_for_status()
         
         # Parse the XML response
-        root = ElementTree.fromstring(response.content)
+        root = ET.fromstring(response.content)
         
-        # Extract relevant information from the XML
+        # Extract relevant information
         result = {}
         for link in root.findall('{http://webfinger.net/rel/profile-page}link'):
-            result['profile_page'] = link.get('href')
-        
-        for link in root.findall('{http://webfinger.net/rel/avatar}link'):
-            result['avatar'] = link.get('href')
-        
-        for link in root.findall('{http://webfinger.net/rel/hcard}link'):
-            result['hcard'] = link.get('href')
+            if link.get('rel') == 'http://webfinger.net/rel/profile-page':
+                result['profile_page'] = link.get('href')
+            elif link.get('rel') == 'http://webfinger.net/rel/avatar':
+                result['avatar'] = link.get('href')
         
         return result
     
     except requests.exceptions.RequestException as e:
         print(f"Error retrieving webfinger document: {e}")
+        return {}
+    except ET.ParseError as e:
+        print(f"Error parsing webfinger document: {e}")
         return {}

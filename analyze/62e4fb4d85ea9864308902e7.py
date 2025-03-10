@@ -12,27 +12,29 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     if not cmd:
         return cmd
 
-    # Handle shebang lines
-    if cmd[0].startswith('#!'):
-        # Extract the interpreter path from the shebang
-        interpreter = cmd[0][2:].strip()
-        # Split the interpreter path into parts
-        interpreter_parts = interpreter.split()
-        # The first part is the interpreter path
-        interpreter_path = interpreter_parts[0]
-        # The rest are arguments to the interpreter
-        interpreter_args = interpreter_parts[1:]
-        # Normalize the interpreter path
-        interpreter_path = os.path.normpath(interpreter_path)
-        # Reconstruct the command
-        cmd = (interpreter_path,) + tuple(interpreter_args) + cmd[1:]
+    # Extract the first part of the command (the executable)
+    executable = cmd[0]
 
-    # Normalize paths in the command
-    normalized_cmd = []
-    for part in cmd:
-        if os.path.exists(part):
-            normalized_cmd.append(os.path.normpath(part))
-        else:
-            normalized_cmd.append(part)
+    # If the executable is a shebang, we need to handle it
+    if executable.startswith('#!'):
+        # Split the shebang line into parts
+        shebang_parts = executable.split()
+        if len(shebang_parts) < 2:
+            return cmd  # Invalid shebang, return as-is
 
-    return tuple(normalized_cmd)
+        # The interpreter is the second part of the shebang
+        interpreter = shebang_parts[1]
+
+        # If the interpreter is a path, we need to resolve it
+        if os.path.exists(interpreter):
+            interpreter = os.path.abspath(interpreter)
+
+        # Replace the shebang with the interpreter and the rest of the command
+        return (interpreter,) + cmd[1:]
+
+    # If the executable is a path, we need to resolve it
+    if os.path.exists(executable):
+        executable = os.path.abspath(executable)
+
+    # Return the normalized command
+    return (executable,) + cmd[1:]

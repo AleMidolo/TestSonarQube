@@ -1,7 +1,7 @@
 import subprocess
 import sys
 import os
-from typing import Sequence, Any, Tuple
+from typing import Sequence, Any
 
 def xargs(
         cmd: tuple[str, ...],
@@ -23,12 +23,14 @@ def xargs(
         master, slave = pty.openpty()
         kwargs['stdout'] = slave
         kwargs['stderr'] = slave
-        kwargs['stdin'] = subprocess.PIPE
 
     processes = []
     for i in range(0, len(varargs), target_concurrency):
-        args = list(cmd) + list(varargs[i:i + target_concurrency])
-        process = subprocess.Popen(args, **kwargs)
+        chunk = varargs[i:i + target_concurrency]
+        process = subprocess.Popen(
+            cmd + tuple(chunk),
+            **kwargs
+        )
         processes.append(process)
 
     for process in processes:
@@ -41,4 +43,10 @@ def xargs(
     else:
         output = b""
 
-    return (process.returncode, output)
+    return (0, output)
+
+def _get_platform_max_length() -> int:
+    if sys.platform == "win32":
+        return 8192
+    else:
+        return 65536

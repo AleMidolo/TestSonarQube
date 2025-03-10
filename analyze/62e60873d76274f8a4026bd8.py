@@ -12,9 +12,8 @@ def protocol_handlers(cls, protocol_version=None):
         relevant and supported protocol versions
     :raise TypeError: if protocol version is not passed in a tuple
     """
-    # Example implementation assuming some predefined handlers
+    # Example of available handlers (this would be defined elsewhere in the class)
     available_handlers = {
-        (3, 0): "HandlerForV3_0",
         (3, 5): "HandlerForV3_5",
         (4, 0): "HandlerForV4_0",
         (4, 1): "HandlerForV4_1",

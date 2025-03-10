@@ -4,7 +4,7 @@ def pop_u16(self):
     16-bit unsigned integer.
     """
     if len(self.data) < 2:
-        raise ValueError("Not enough data to pop a 16-bit unsigned integer.")
-    value = (self.data[-2] << 8) | self.data[-1]
-    self.data = self.data[:-2]
-    return value
+        raise ValueError("Not enough bytes to pop a 16-bit unsigned integer.")
+    byte1 = self.data.pop()
+    byte2 = self.data.pop()
+    return (byte2 << 8) | byte1

@@ -2,20 +2,27 @@ def _include_groups(self, parser_dict):
     """
     Resolves the include dict directive in the spec files.
     """
-    if 'include' not in parser_dict:
+    if not isinstance(parser_dict, dict):
         return parser_dict
 
-    include_dict = parser_dict['include']
-    for key, value in include_dict.items():
-        if key in parser_dict:
-            if isinstance(parser_dict[key], dict) and isinstance(value, dict):
-                parser_dict[key].update(value)
-            elif isinstance(parser_dict[key], list) and isinstance(value, list):
-                parser_dict[key].extend(value)
-            else:
-                parser_dict[key] = value
+    if 'include' in parser_dict:
+        include_key = parser_dict['include']
+        if include_key in self.spec:
+            included_dict = self.spec[include_key]
+            if isinstance(included_dict, dict):
+                # Merge the included dict with the current dict, giving precedence to the current dict
+                merged_dict = {**included_dict, **parser_dict}
+                # Remove the 'include' key as it's no longer needed
+                merged_dict.pop('include', None)
+                return merged_dict
         else:
-            parser_dict[key] = value
+            raise ValueError(f"Include key '{include_key}' not found in spec.")
 
-    del parser_dict['include']
+    # Recursively apply to nested dictionaries
+    for key, value in parser_dict.items():
+        if isinstance(value, dict):
+            parser_dict[key] = self._include_groups(value)
+        elif isinstance(value, list):
+            parser_dict[key] = [self._include_groups(item) if isinstance(item, dict) else item for item in value]
+
     return parser_dict

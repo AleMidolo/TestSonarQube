@@ -14,27 +14,35 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     import sys
 
     # Get the exception traceback
-    tb = sys.exc_info()[2]
-    
-    # Limit the traceback to max_level
-    limited_tb = traceback.format_tb(tb, limit=max_level)
-    
-    # Format the exception message
-    exception_message = f"{type(e).__name__}: {str(e)}\n"
-    
-    # Add the traceback to the message
-    exception_message += "".join(limited_tb)
-    
-    # Limit the path levels in the traceback
-    if max_path_level > 0:
-        lines = exception_message.splitlines()
-        for i in range(len(lines)):
-            if "File" in lines[i] and "line" in lines[i]:
-                path = lines[i].split(",")[0].split("File ")[1].strip()
-                path_parts = path.split("/")
-                if len(path_parts) > max_path_level:
-                    path_parts = path_parts[-max_path_level:]
-                    lines[i] = lines[i].replace(path, ".../" + "/".join(path_parts))
-        exception_message = "\n".join(lines)
-    
-    return exception_message
+    exc_type, exc_value, exc_traceback = sys.exc_info()
+    if exc_traceback is None:
+        exc_traceback = e.__traceback__
+
+    # Format the exception
+    tb_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
+    tb_str = "".join(tb_list)
+
+    # Limit the call stack level
+    if max_level is not None:
+        tb_lines = tb_str.splitlines()
+        if len(tb_lines) > max_level:
+            tb_lines = tb_lines[:max_level]
+            tb_lines.append("... (call stack truncated)")
+        tb_str = "\n".join(tb_lines)
+
+    # Limit the path level
+    if max_path_level is not None:
+        tb_lines = tb_str.splitlines()
+        for i, line in enumerate(tb_lines):
+            if "File" in line and "line" in line:
+                parts = line.split(", ")
+                if len(parts) > 1:
+                    path = parts[0].split("File ")[1]
+                    path_parts = path.split("/")
+                    if len(path_parts) > max_path_level:
+                        path_parts = path_parts[-max_path_level:]
+                        path = "/".join(path_parts)
+                        tb_lines[i] = f"File {path}, {parts[1]}"
+        tb_str = "\n".join(tb_lines)
+
+    return tb_str

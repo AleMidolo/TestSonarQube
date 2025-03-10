@@ -13,10 +13,20 @@ def get_versions():
             "packages": {}
         }
 
-        # Get versions of installed packages
-        for dist in importlib.metadata.distributions():
-            versions["packages"][dist.metadata["Name"]] = dist.version
+        # Example: Get version of some common packages
+        packages_to_check = ["numpy", "pandas", "requests"]
+        for package in packages_to_check:
+            try:
+                versions["packages"][package] = importlib.metadata.version(package)
+            except importlib.metadata.PackageNotFoundError:
+                versions["packages"][package] = "Not installed"
 
         return versions
-    except Exception:
-        return {"python": "unknown", "platform": "unknown", "packages": {}}
+
+    except Exception as e:
+        # Return default version information if any error occurs
+        return {
+            "python": "Unknown",
+            "platform": "Unknown",
+            "packages": {}
+        }

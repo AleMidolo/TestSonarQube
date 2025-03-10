@@ -8,24 +8,55 @@ def validate(self, inventory, extract_spec_version=False):
     """
     if extract_spec_version:
         if 'type' in inventory:
-            type_value = inventory['type']
-            if isinstance(type_value, str) and type_value.startswith("stix"):
-                spec_version = type_value.split("-")[-1]
-                if spec_version in ["2.0", "2.1"]:
-                    self.spec_version = spec_version
-                else:
-                    print("Invalid type value, using default spec_version.")
-            else:
-                print("Invalid type value, using default spec_version.")
+            spec_version = inventory['type']
+            if not self._is_valid_spec_version(spec_version):
+                spec_version = self.spec_version
         else:
-            print("No type value found, using default spec_version.")
-    
-    # Perform validation based on self.spec_version
-    if self.spec_version == "2.0":
-        # Validation logic for STIX 2.0
-        pass
-    elif self.spec_version == "2.1":
-        # Validation logic for STIX 2.1
-        pass
+            spec_version = self.spec_version
     else:
-        print("Unsupported specification version.")
+        spec_version = self.spec_version
+
+    # Perform validation based on the determined spec_version
+    return self._validate_inventory(inventory, spec_version)
+
+def _is_valid_spec_version(self, spec_version):
+    """
+    Check if the given spec_version is valid.
+    """
+    # Placeholder for actual validation logic
+    return spec_version in ['1.0', '1.1', '2.0']
+
+def _validate_inventory(self, inventory, spec_version):
+    """
+    Validate the inventory based on the given spec_version.
+    """
+    # Placeholder for actual validation logic
+    if spec_version == '1.0':
+        return self._validate_v1_0(inventory)
+    elif spec_version == '1.1':
+        return self._validate_v1_1(inventory)
+    elif spec_version == '2.0':
+        return self._validate_v2_0(inventory)
+    else:
+        raise ValueError(f"Unsupported spec_version: {spec_version}")
+
+def _validate_v1_0(self, inventory):
+    """
+    Validate inventory against version 1.0 of the specification.
+    """
+    # Placeholder for actual validation logic
+    return True
+
+def _validate_v1_1(self, inventory):
+    """
+    Validate inventory against version 1.1 of the specification.
+    """
+    # Placeholder for actual validation logic
+    return True
+
+def _validate_v2_0(self, inventory):
+    """
+    Validate inventory against version 2.0 of the specification.
+    """
+    # Placeholder for actual validation logic
+    return True

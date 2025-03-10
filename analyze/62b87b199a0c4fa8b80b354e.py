@@ -7,21 +7,20 @@ def is_fill_request_seq(seq):
     and it is not a Source sequence.
     """
     # Assuming FillRequest and Source are classes or types that can be checked
-    # For example, FillRequest could be a class and Source could be another class
-    # This is a placeholder implementation; you would need to replace it with actual logic
-    
-    # Example logic:
-    # Check if seq is an instance of FillRequest
-    if isinstance(seq, FillRequest):
-        return True
-    
-    # Check if seq is a sequence and contains at least one FillRequest element
-    if isinstance(seq, (list, tuple)):
-        return any(isinstance(item, FillRequest) for item in seq)
-    
-    # Check if seq is not a Source sequence
-    if isinstance(seq, Source):
+    # Replace with actual type checking logic as needed
+    def is_fill_request(element):
+        return isinstance(element, FillRequest)  # Replace FillRequest with actual type
+
+    def is_source(element):
+        return isinstance(element, Source)  # Replace Source with actual type
+
+    if is_source(seq):
         return False
-    
-    # If none of the above conditions are met, return False
+
+    if is_fill_request(seq):
+        return True
+
+    if isinstance(seq, (list, tuple)):
+        return any(is_fill_request(element) for element in seq)
+
     return False

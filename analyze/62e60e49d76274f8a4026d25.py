@@ -42,7 +42,9 @@ def unit_of_work(metadata=None, timeout=None):
             if timeout is not None:
                 tx.set_timeout(timeout)
             
-            # Execute the function
+            # Execute the original function
             return func(*args, **kwargs)
+        
         return wrapper
+    
     return decorator

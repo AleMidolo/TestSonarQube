@@ -32,8 +32,8 @@ def normalized(self):
     microseconds += int(fractional_seconds * 1e6)
 
     # Normalize the time components
-    seconds += microseconds // 1e6
-    microseconds = microseconds % 1e6
+    seconds += microseconds // 1000000
+    microseconds = microseconds % 1000000
     minutes += seconds // 60
     seconds = seconds % 60
     hours += minutes // 60

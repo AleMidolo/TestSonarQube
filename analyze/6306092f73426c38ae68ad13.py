@@ -21,13 +21,11 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
         command.extend(["--extra-vars", extra_vars_str])
 
     if ansible_args:
-        for key, value in ansible_args.items():
+        for arg, value in ansible_args.items():
             if value is True:
-                command.append(f"--{key}")
-            elif value is False:
-                continue
+                command.append(f"--{arg}")
             else:
-                command.extend([f"--{key}", str(value)])
+                command.extend([f"--{arg}", str(value)])
 
     try:
         subprocess.run(command, check=True)
