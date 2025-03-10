@@ -7,15 +7,27 @@ def point_type(name, fields, srid_map):
     :param srid_map: SRID मैपिंग
     :return: डायनामिक रूप से बनाई गई पॉइंट सबक्लास
     """
-    from collections import namedtuple
+    from sqlalchemy import Column, Integer, Float
+    from sqlalchemy.ext.declarative import declarative_base
 
-    # SRID मैपिंग को फ़ील्ड्स में जोड़ें
-    fields_with_srid = fields + ('srid',)
+    Base = declarative_base()
 
-    # नामित टपल (namedtuple) बनाएं
-    PointSubclass = namedtuple(name, fields_with_srid)
+    class Point(Base):
+        __tablename__ = name.lower()
+        id = Column(Integer, primary_key=True)
+        x = Column(Float)
+        y = Column(Float)
 
-    # SRID मैपिंग को सबक्लास में जोड़ें
-    PointSubclass.srid_map = srid_map
+        def __init__(self, x, y):
+            self.x = x
+            self.y = y
 
-    return PointSubclass
+        def __repr__(self):
+            return f"<Point(x={self.x}, y={self.y})>"
+
+    for field_name, field_type in fields.items():
+        setattr(Point, field_name, Column(field_type))
+
+    Point.srid_map = srid_map
+
+    return Point

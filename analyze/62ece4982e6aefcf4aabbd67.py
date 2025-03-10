@@ -13,9 +13,7 @@ def vertex3tuple(vertices):
     n = len(vertices)
     result = []
     for i in range(n):
-        # Get the current vertex and its two neighbors
-        current = vertices[i]
-        prev = vertices[(i - 1) % n]
-        next_ = vertices[(i + 1) % n]
-        result.append((prev, current, next_))
+        # वर्तमान वर्टेक्स और उसके दोनों ओर के वर्टेक्स
+        triplet = (vertices[(i-1) % n], vertices[i], vertices[(i+1) % n])
+        result.append(triplet)
     return result

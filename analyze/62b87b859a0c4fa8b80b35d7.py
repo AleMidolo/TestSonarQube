@@ -19,11 +19,9 @@ def to_csv(self, separator=",", header=None):
     """
     csv_lines = []
     
-    # Add header if provided
     if header is not None:
         csv_lines.append(header)
     
-    # Iterate over points in the graph
     for point in self.points:
         # Convert coordinates to string separated by the separator
         coords_str = separator.join(map(str, point.coordinates))

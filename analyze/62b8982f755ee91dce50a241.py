@@ -19,22 +19,22 @@ def normalized(self):
     seconds = int(self.seconds)
     microseconds = int(self.microseconds)
     
-    # Calculate the remaining fractional parts and add them to the next higher unit
-    remaining_days = self.days - days
-    remaining_hours = self.hours - hours
-    remaining_minutes = self.minutes - minutes
-    remaining_seconds = self.seconds - seconds
-    remaining_microseconds = self.microseconds - microseconds
+    # Handle fractional parts
+    fractional_days = self.days - days
+    fractional_hours = self.hours - hours
+    fractional_minutes = self.minutes - minutes
+    fractional_seconds = self.seconds - seconds
+    fractional_microseconds = self.microseconds - microseconds
     
-    # Add the remaining fractional parts to the next higher unit
-    hours += int(remaining_days * 24)
-    minutes += int(remaining_hours * 60)
-    seconds += int(remaining_minutes * 60)
-    microseconds += int(remaining_seconds * 1e6)
+    # Add fractional parts to the next lower unit
+    hours += int(fractional_days * 24)
+    minutes += int(fractional_hours * 60)
+    seconds += int(fractional_minutes * 60)
+    microseconds += int(fractional_seconds * 1e6)
     
-    # Normalize the values to ensure they are within valid ranges
-    seconds += microseconds // 1000000
-    microseconds = microseconds % 1000000
+    # Normalize the values
+    seconds += microseconds // 1e6
+    microseconds = microseconds % 1e6
     minutes += seconds // 60
     seconds = seconds % 60
     hours += minutes // 60
@@ -42,5 +42,4 @@ def normalized(self):
     days += hours // 24
     hours = hours % 24
     
-    # Return a new relativedelta object with normalized values
     return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds, microseconds=microseconds)

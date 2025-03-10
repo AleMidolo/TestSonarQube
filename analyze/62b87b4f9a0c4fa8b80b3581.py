@@ -18,16 +18,14 @@ def scale(self, other=None, recompute=False):
     यदि ऐसा करने का प्रयास किया जाता है,  
     तो :exc:`.LenaValueError` त्रुटि उत्पन्न की जाएगी।
     """
-    if not hasattr(self, '_scale') or recompute:
-        # Calculate the scale (integral) of the histogram
-        self._scale = sum(self.bins)
-    
     if other is None:
+        if not hasattr(self, '_scale') or recompute:
+            self._scale = self._compute_scale()
         return self._scale
     else:
+        if not isinstance(other, (int, float)):
+            raise TypeError("other must be a float or int")
         if self._scale == 0:
-            raise LenaValueError("Cannot rescale a histogram with zero scale.")
-        # Rescale the histogram
-        scale_factor = other / self._scale
-        self.bins = [bin_value * scale_factor for bin_value in self.bins]
+            raise LenaValueError("Cannot rescale a histogram with zero scale")
         self._scale = other
+        self._rescale_histogram(other)

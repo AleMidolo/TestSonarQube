@@ -13,7 +13,7 @@ def find_path_type(path):
     यह केवल "0=*" नमस्ते फ़ाइलों को देखकर निर्देशिका के प्रकार का निर्धारण करता है।
     """
     if not os.path.exists(path):
-        return "त्रुटि: पथ मौजूद नहीं है"
+        return "पथ मौजूद नहीं है"
     
     if os.path.isfile(path):
         return "file"
@@ -24,10 +24,10 @@ def find_path_type(path):
             return "root"
         
         # Check if it's an OCFL object
-        for root, dirs, files in os.walk(path):
-            if "inventory.json" in files:
+        for item in os.listdir(path):
+            if item.startswith("0="):
                 return "object"
         
-        return "त्रुटि: पथ OCFL स्टोरेज रूट या ऑब्जेक्ट नहीं है"
+        return "यह निर्देशिका OCFL रूट या ऑब्जेक्ट नहीं है"
     
-    return "त्रुटि: अज्ञात पथ प्रकार"
+    return "अज्ञात प्रकार"

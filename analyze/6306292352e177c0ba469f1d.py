@@ -12,7 +12,7 @@ def find_tags(text: str, replacer: Callable = None) -> Tuple[Set, str]:
 
     एक सेट के रूप में टैग्स और मूल या बदला हुआ टेक्स्ट लौटाता है।
     """
-    # Regex to match tags, ignoring those inside code blocks
+    # Regex to find tags, ignoring those inside code blocks
     tag_pattern = re.compile(r'(?<!`)#(\w+)(?!`)')
     
     # Find all tags in the text
@@ -22,6 +22,8 @@ def find_tags(text: str, replacer: Callable = None) -> Tuple[Set, str]:
     if replacer:
         def replace_tag(match):
             return replacer(match.group(1))
-        text = tag_pattern.sub(replace_tag, text)
+        modified_text = tag_pattern.sub(replace_tag, text)
+    else:
+        modified_text = text
     
-    return tags, text
+    return tags, modified_text
