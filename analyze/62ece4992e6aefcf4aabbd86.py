@@ -13,5 +13,6 @@ def _dump_string(obj, dumper=None):
     将对象转储为 Python 2 的 Unicode 字符串或 Python 3 的字符串。
     """
     if dumper is None:
-        dumper = yaml.dump
-    return dumper(obj, default_flow_style=False, allow_unicode=True)
+        return yaml.dump(obj, default_flow_style=False, allow_unicode=True)
+    else:
+        return dumper.dump(obj)

@@ -1,6 +1,6 @@
 from datetime import datetime
 from dateutil.parser import parse as dateutil_parse
-from dateutil.tz import tzoffset, tzfile
+from dateutil.tz import tzoffset
 
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
@@ -16,15 +16,19 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     :raises TypeError: 当输入为非字符串或字符流时抛出。
     :raises OverflowError: 当解析的日期超出系统上最大的有效 C 整数时抛出。
     """
+    if not isinstance(timestr, str):
+        raise TypeError("Input must be a string or character stream.")
+    
     if default is not None and not isinstance(default, datetime):
-        raise TypeError("default must be a datetime object or None")
-
-    if ignoretz:
-        tzinfos = None
-
+        raise TypeError("Default must be a datetime object or None.")
+    
+    if tzinfos is not None and not (isinstance(tzinfos, dict) and not callable(tzinfos):
+        raise TypeError("tzinfos must be a dictionary or a callable.")
+    
     try:
         parsed = dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
-    except Exception as e:
-        raise type(e)(f"Failed to parse timestr: {e}")
-
-    return parsed
+        return parsed
+    except ValueError as e:
+        raise ValueError(f"Invalid date format: {e}")
+    except OverflowError as e:
+        raise OverflowError(f"Date out of range: {e}")

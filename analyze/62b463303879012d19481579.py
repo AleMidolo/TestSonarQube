@@ -7,15 +7,16 @@ def _extract_number_and_supplment_from_issue_element(issue):
     suppl = None
     
     # 假设 issue 是一个字符串，包含数字和可能的补充信息
-    # 例如: "123 Suppl 2" 或 "456"
-    parts = issue.split()
-    
-    if parts:
-        # 提取第一个部分作为 number
-        number = parts[0]
+    if isinstance(issue, str):
+        # 提取数字部分
+        import re
+        number_match = re.search(r'\d+', issue)
+        if number_match:
+            number = int(number_match.group())
         
-        # 检查是否有补充信息
-        if len(parts) > 1 and parts[1].lower() == 'suppl':
-            suppl = parts[2] if len(parts) > 2 else None
+        # 提取补充信息部分
+        suppl_match = re.search(r'suppl|sup|Suppl|Sup', issue)
+        if suppl_match:
+            suppl = suppl_match.group().lower()
     
     return number, suppl

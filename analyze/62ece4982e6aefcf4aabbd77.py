@@ -31,15 +31,15 @@ def parse_frequency(frequency):
         num = int(parts[0])
         unit = parts[1].lower()
         
-        if unit in ["days", "day", "d"]:
+        if unit in ['days', 'day', 'd']:
             return timedelta(days=num)
-        elif unit in ["weeks", "week", "w"]:
+        elif unit in ['weeks', 'week', 'w']:
             return timedelta(weeks=num)
-        elif unit in ["hours", "hour", "h"]:
+        elif unit in ['hours', 'hour', 'h']:
             return timedelta(hours=num)
-        elif unit in ["minutes", "minute", "min", "m"]:
+        elif unit in ['minutes', 'minute', 'min', 'm']:
             return timedelta(minutes=num)
-        elif unit in ["seconds", "second", "sec", "s"]:
+        elif unit in ['seconds', 'second', 'sec', 's']:
             return timedelta(seconds=num)
         else:
             raise ValueError("Unsupported time unit")

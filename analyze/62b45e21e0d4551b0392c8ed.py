@@ -18,10 +18,10 @@ def find_path_type(path):
     if os.path.isfile(path):
         return "file"
     
-    namaste_files = [f for f in os.listdir(path) if f.startswith('0=')]
+    namaste_files = [f for f in os.listdir(path) if f.startswith("0=")]
     
     if not namaste_files:
-        return "路径不是 OCFL 存储根目录或对象"
+        return "路径不包含 Namaste 文件"
     
     namaste_file = namaste_files[0]
     with open(os.path.join(path, namaste_file), 'r') as f:

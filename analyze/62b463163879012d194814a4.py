@@ -17,16 +17,30 @@ def _explore_zipfile(zip_path):
     Returns
     -------
     dict
-        以XML文件名为键，文件内容为值的字典
+        根据XML文件名分组的文件数据
     """
-    file_groups = defaultdict(list)
-    
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        for file_name in zip_ref.namelist():
+    def _group_files_by_xml_filename(file_list):
+        """
+        根据文件的XML文件名对其进行分组。
+
+        参数
+        ----------
+        file_list : `list`
+            文件列表
+
+        Returns
+        -------
+        dict
+            根据XML文件名分组的文件数据
+        """
+        grouped_files = defaultdict(list)
+        for file_name in file_list:
             if file_name.endswith('.xml'):
-                xml_filename = file_name.split('/')[-1]
-                with zip_ref.open(file_name) as file:
-                    content = file.read()
-                    file_groups[xml_filename].append(content)
-    
-    return dict(file_groups)
+                base_name = file_name[:-4]  # 去掉.xml后缀
+                grouped_files[base_name].append(file_name)
+        return grouped_files
+
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        file_list = zip_ref.namelist()
+        grouped_files = _group_files_by_xml_filename(file_list)
+        return grouped_files

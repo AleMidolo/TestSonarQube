@@ -14,35 +14,13 @@ def _legacy_mergeOrderings(orderings):
     ... ])
     ['x', 'y', 'q', 1, 3, 5, 'z']
     """
-    from collections import defaultdict, deque
-
-    # 构建图
-    graph = defaultdict(set)
-    in_degree = defaultdict(int)
-    all_nodes = set()
-
+    merged = []
+    seen = set()
+    
     for ordering in orderings:
-        for i in range(len(ordering) - 1):
-            u, v = ordering[i], ordering[i + 1]
-            if v not in graph[u]:
-                graph[u].add(v)
-                in_degree[v] += 1
-            all_nodes.add(u)
-            all_nodes.add(v)
-        if ordering:
-            all_nodes.add(ordering[-1])
-
-    # 初始化队列
-    queue = deque([node for node in all_nodes if in_degree[node] == 0])
-
-    # 拓扑排序
-    result = []
-    while queue:
-        node = queue.popleft()
-        result.append(node)
-        for neighbor in graph[node]:
-            in_degree[neighbor] -= 1
-            if in_degree[neighbor] == 0:
-                queue.append(neighbor)
-
-    return result
+        for item in ordering:
+            if item not in seen:
+                merged.append(item)
+                seen.add(item)
+    
+    return merged

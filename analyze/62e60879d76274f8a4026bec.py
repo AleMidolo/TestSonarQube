@@ -9,9 +9,9 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None,
     :param db: The name of the database to start the transaction on. Requires Bolt 4.0+.
     :param imp_user: The user to impersonate. Requires Bolt 4.4+.
     :param dehydration_hooks: A dictionary where keys are types (classes) and values are dehydration functions.
-                              Dehydration functions take a value and return a PackStream-recognizable object.
+                              The dehydration function takes a value and returns a PackStream-recognizable object.
     :param hydration_hooks: A mapping where keys are types (classes) and values are hydration functions.
-                            Hydration functions take a PackStream-recognizable value and can return any object.
+                            The hydration function takes a PackStream-recognizable value and can return any object.
     :param handlers: Additional handlers to pass to the returned Response object.
     :return: A Response object.
     """

@@ -4,5 +4,5 @@ def fill(self, coord, weight=1):
 
     超出直方图边界的坐标将被忽略。
     """
-    if self.is_within_bounds(coord):
+    if 0 <= coord < len(self.histogram):
         self.histogram[coord] += weight

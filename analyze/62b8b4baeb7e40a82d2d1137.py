@@ -38,16 +38,16 @@ def verifyObject(iface, candidate, tentative=False):
             candidate_method = getattr(candidate, name)
             if callable(candidate_method):
                 try:
-                    candidate_sig = signature(candidate_method)
-                    iface_sig = signature(desc.getSignature())
-                    if candidate_sig != iface_sig:
-                        errors.append(f"Method {name} has incorrect signature: expected {iface_sig}, got {candidate_sig}")
+                    sig = signature(candidate_method)
+                    expected_sig = signature(desc.getSignature())
+                    if sig != expected_sig:
+                        errors.append(f"Method {name} has incorrect signature: expected {expected_sig}, got {sig}")
                 except ValueError:
-                    # If signature cannot be determined, skip signature check
+                    # Skip signature check if the method is not callable or signature cannot be determined
                     pass
 
     # Step 4: Ensure the candidate defines all required attributes
-    required_attrs = iface.namesAndDescriptions(all=True)
+    required_attrs = iface.namesAndDescriptions(all=False)
     for name, desc in required_attrs:
         if not hasattr(candidate, name):
             errors.append(f"{candidate} is missing required attribute {name}")

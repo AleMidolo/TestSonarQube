@@ -14,7 +14,7 @@ def validate(self, path):
 
     # 检查是否存在 inventory.json 文件
     inventory_path = os.path.join(path, "inventory.json")
-    if not os.path.isfile(inventory_path):
+    if not os.path.exists(inventory_path):
         return False
 
     # 尝试解析 inventory.json 文件
@@ -25,14 +25,21 @@ def validate(self, path):
         return False
 
     # 检查 inventory 中是否包含必要的字段
-    required_fields = ["id", "type", "digestAlgorithm", "head", "manifest", "versions"]
+    required_fields = ["head", "manifest", "versions"]
     for field in required_fields:
         if field not in inventory:
             return False
 
-    # 检查 versions 是否包含至少一个版本
-    if not inventory.get("versions"):
+    # 检查 versions 目录是否存在
+    versions_path = os.path.join(path, "versions")
+    if not os.path.exists(versions_path):
         return False
+
+    # 检查每个版本目录是否存在
+    for version in inventory["versions"]:
+        version_path = os.path.join(versions_path, version)
+        if not os.path.exists(version_path):
+            return False
 
     # 如果所有检查都通过，则返回 True
     return True
