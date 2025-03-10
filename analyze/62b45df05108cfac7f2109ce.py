@@ -1,32 +1,35 @@
 def validate(self, path):
     """
-    Validate OCFL object at path or pyfs root.
+    如果路径或 pyfs 根目录中的 OCFL 对象有效，则返回真，否则返回假。
+    验证路径或 pyfs 根目录中的 OCFL 对象。
 
-    Returns True if valid (warnings permitted), False otherwise.
+    如果对象有效（允许警告），则返回真，否则返回假。
     """
     import os
     from fs import open_fs
 
-    # Check if the path exists
+    # 检查路径是否存在
     if not os.path.exists(path):
         return False
 
-    # Open the filesystem at the given path
+    # 打开文件系统
     fs = open_fs(path)
 
-    # Check for the presence of required OCFL files and directories
+    # 检查是否存在 OCFL 对象的基本结构
     required_files = ['inventory.json', 'inventory.json.sha512']
-    required_dirs = ['extensions', 'objects']
-
     for file in required_files:
         if not fs.exists(file):
             return False
 
-    for dir in required_dirs:
-        if not fs.isdir(dir):
+    # 检查 inventory.json 文件是否有效
+    try:
+        inventory = fs.readtext('inventory.json')
+        import json
+        inventory_data = json.loads(inventory)
+        if 'id' not in inventory_data or 'type' not in inventory_data or inventory_data['type'] != 'Object':
             return False
+    except:
+        return False
 
-    # Additional validation logic can be added here
-    # For example, checking the structure of the inventory.json file
-
+    # 如果所有检查都通过，则返回 True
     return True

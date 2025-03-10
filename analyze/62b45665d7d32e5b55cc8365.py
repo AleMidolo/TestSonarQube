@@ -2,27 +2,29 @@ import argparse
 
 def parse_arguments(*unparsed_arguments):
     """
-    Given command-line arguments with which this script was invoked, parse the arguments and return
-    them as a dict mapping from subparser name (or "global") to an argparse.Namespace instance.
+    解析参数并将其作为字典映射返回
+
+    给定调用该脚本时使用的命令行参数，解析这些参数并返回一个字典，该字典将子解析器名称（或 "global"）映射到相应的 argparse.Namespace 实例。
     """
-    parser = argparse.ArgumentParser(description="Parse command-line arguments.")
-    subparsers = parser.add_subparsers(dest="subparser_name", help="Sub-command help")
+    parser = argparse.ArgumentParser(description="Parse command line arguments.")
+    subparsers = parser.add_subparsers(dest='subparser_name', help='sub-command help')
 
-    # Example subparser for a command
-    subparser_example = subparsers.add_parser("example", help="Example subcommand")
-    subparser_example.add_argument("--example_arg", type=str, help="Example argument")
+    # Example subparser for 'command1'
+    parser_command1 = subparsers.add_parser('command1', help='command1 help')
+    parser_command1.add_argument('--arg1', type=str, help='arg1 help')
 
-    # Global arguments
-    parser.add_argument("--global_arg", type=str, help="Global argument")
+    # Example subparser for 'command2'
+    parser_command2 = subparsers.add_parser('command2', help='command2 help')
+    parser_command2.add_argument('--arg2', type=int, help='arg2 help')
 
     # Parse the arguments
-    parsed_args = parser.parse_args(unparsed_arguments)
+    args = parser.parse_args(unparsed_arguments)
 
-    # Organize parsed arguments into a dictionary
-    args_dict = {}
-    if parsed_args.subparser_name:
-        args_dict[parsed_args.subparser_name] = parsed_args
+    # Create a dictionary to map subparser names to their respective Namespace objects
+    parsed_arguments = {}
+    if hasattr(args, 'subparser_name'):
+        parsed_arguments[args.subparser_name] = args
     else:
-        args_dict["global"] = parsed_args
+        parsed_arguments['global'] = args
 
-    return args_dict
+    return parsed_arguments

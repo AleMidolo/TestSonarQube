@@ -1,13 +1,8 @@
 def fill(self, coord, weight=1):
     """
-    Fill histogram at *coord* with the given *weight*.
+    根据给定的 *weight* 在 *coord* 处填充直方图。
 
-    Coordinates outside the histogram edges are ignored.
+    超出直方图边界的坐标将被忽略。
     """
-    if not hasattr(self, 'histogram'):
-        self.histogram = {}
-
-    if coord in self.histogram:
+    if self.is_within_bounds(coord):
         self.histogram[coord] += weight
-    else:
-        self.histogram[coord] = weight

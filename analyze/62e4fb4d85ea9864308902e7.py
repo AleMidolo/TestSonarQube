@@ -3,38 +3,31 @@ import sys
 
 def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     """
-    Fixes for the following issues on windows
-    - https://bugs.python.org/issue8557
-    - windows does not parse shebangs
+    补全 exe 的完整路径并以其原始形式返回
 
-    This function also makes deep-path shebangs work just fine
+    修复以下在 Windows 上的问题：  
+    - https://bugs.python.org/issue8557  
+    - Windows 无法解析 shebang  
+
+    此函数还可以使深路径的 shebang 正常工作。
     """
     if not cmd:
         return cmd
 
-    if sys.platform != 'win32':
+    # 获取第一个命令（通常是可执行文件）
+    executable = cmd[0]
+
+    # 如果可执行文件已经是一个完整路径，直接返回
+    if os.path.isabs(executable):
         return cmd
 
-    first_arg = cmd[0]
-    if not first_arg.endswith('.exe'):
-        first_arg += '.exe'
+    # 尝试在 PATH 中查找可执行文件
+    path = os.environ.get('PATH', '')
+    for dir in path.split(os.pathsep):
+        full_path = os.path.join(dir, executable)
+        if os.path.isfile(full_path):
+            # 找到可执行文件，返回完整路径的命令
+            return (full_path,) + cmd[1:]
 
-    # Check if the first argument is a shebang
-    if first_arg.startswith('#!'):
-        # Extract the interpreter path from the shebang
-        interpreter_path = first_arg[2:].strip()
-        # Normalize the interpreter path
-        interpreter_path = os.path.normpath(interpreter_path)
-        # Replace the shebang with the normalized interpreter path
-        cmd = (interpreter_path,) + cmd[1:]
-
-    # Ensure the first argument is an absolute path
-    if not os.path.isabs(first_arg):
-        # Search for the executable in the PATH
-        for path in os.environ.get('PATH', '').split(os.pathsep):
-            full_path = os.path.join(path, first_arg)
-            if os.path.isfile(full_path):
-                first_arg = full_path
-                break
-
-    return (first_arg,) + cmd[1:]
+    # 如果未找到，返回原始命令
+    return cmd

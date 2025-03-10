@@ -1,15 +1,8 @@
 def pretty(self, indent=0, debug=False):
     """
-    Return a pretty formatted representation of self.
+    返回对象自身的美观格式化表示。
+    `obj = f"'{self.obj}'" if isinstance(self.obj, str) else repr(self.obj) return (" " * indent) + f"{self.__class__.__name__}({debug_details}{obj})"`
     """
-    indent_str = ' ' * indent
-    result = f"{indent_str}{self.__class__.__name__}(\n"
-    
-    for key, value in self.__dict__.items():
-        if debug:
-            result += f"{indent_str}  {key}: {repr(value)}\n"
-        else:
-            result += f"{indent_str}  {key}: {value}\n"
-    
-    result += f"{indent_str})"
-    return result
+    debug_details = f"debug={debug}, " if debug else ""
+    obj = f"'{self.obj}'" if isinstance(self.obj, str) else repr(self.obj)
+    return (" " * indent) + f"{self.__class__.__name__}({debug_details}{obj})"

@@ -1,67 +1,36 @@
-import argparse
-import sys
-
 def bash_completion():
     """
-    Return a bash completion script for the borgmatic command. Produce this by introspecting
-    borgmatic's command-line argument parsers.
+    通过检查 borgmatic 的命令行参数解析器生成 borgmatic 命令。
+
+    返回一个用于 borgmatic 命令的 bash 补全脚本。通过检查 borgmatic 的命令行参数解析器生成此脚本。
     """
-    parser = argparse.ArgumentParser(description='Borgmatic command-line interface.')
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+    import argparse
+    import subprocess
 
-    # Add subcommands and their arguments
-    init_parser = subparsers.add_parser('init', help='Initialize a new borgmatic repository')
-    init_parser.add_argument('--encryption', choices=['repokey', 'keyfile'], help='Encryption type')
-    init_parser.add_argument('--append-only', action='store_true', help='Enable append-only mode')
+    # 创建参数解析器
+    parser = argparse.ArgumentParser(description='Generate bash completion script for borgmatic.')
+    parser.add_argument('--generate-bash-completion', action='store_true', help='Generate bash completion script.')
 
-    create_parser = subparsers.add_parser('create', help='Create a new backup')
-    create_parser.add_argument('--exclude', action='append', help='Exclude patterns')
-    create_parser.add_argument('--compression', choices=['lz4', 'zstd'], help='Compression algorithm')
+    # 解析命令行参数
+    args = parser.parse_args()
 
-    prune_parser = subparsers.add_parser('prune', help='Prune old backups')
-    prune_parser.add_argument('--keep-daily', type=int, help='Number of daily backups to keep')
-    prune_parser.add_argument('--keep-weekly', type=int, help='Number of weekly backups to keep')
+    if args.generate_bash_completion:
+        # 生成 bash 补全脚本
+        completion_script = """
+        _borgmatic_completion() {
+            local cur prev opts
+            COMPREPLY=()
+            cur="${COMP_WORDS[COMP_CWORD]}"
+            prev="${COMP_WORDS[COMP_CWORD-1]}"
+            opts=$(borgmatic --help | grep -oP '--\\K\\w+')
 
-    check_parser = subparsers.add_parser('check', help='Check the integrity of backups')
-    check_parser.add_argument('--repair', action='store_true', help='Attempt to repair any issues')
-
-    # Generate bash completion script
-    script = """
-_borgmatic_completion() {
-    local cur prev commands
-    COMPREPLY=()
-    cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-1]}"
-    commands="init create prune check"
-
-    if [[ ${cur} == -* ]]; then
-        local opts=""
-        case "${prev}" in
-            init)
-                opts="--encryption --append-only"
-                ;;
-            create)
-                opts="--exclude --compression"
-                ;;
-            prune)
-                opts="--keep-daily --keep-weekly"
-                ;;
-            check)
-                opts="--repair"
-                ;;
-            *)
-                ;;
-        esac
-        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        return 0
-    fi
-
-    if [[ ${prev} == borgmatic ]]; then
-        COMPREPLY=( $(compgen -W "${commands}" -- ${cur}) )
-        return 0
-    fi
-}
-
-complete -F _borgmatic_completion borgmatic
-"""
-    return script
+            if [[ ${cur} == -* ]]; then
+                COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+                return 0
+            fi
+        }
+        complete -F _borgmatic_completion borgmatic
+        """
+        return completion_script
+    else:
+        return "Usage: borgmatic --generate-bash-completion"

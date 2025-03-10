@@ -1,12 +1,13 @@
 def reset(self):
     """
-    Reset the histogram.
+    当前上下文被重置为一个空字典，类的直方图桶（bins）将使用 *initial_value* 或 *make_bins()* 重新初始化。
+    重置直方图。
 
-    Current context is reset to an empty dict.
-    Bins are reinitialized with the *initial_value*
-    or with *make_bins()* (depending on the initialization).
+
+    当前上下文被重置为一个空字典。
+    直方图桶（bins）将根据初始化方式，使用 *initial_value* 或 *make_bins()* 重新初始化。
     """
-    self.current_context = {}
+    self.context = {}
     if hasattr(self, 'initial_value'):
         self.bins = [self.initial_value] * len(self.bins)
     else:

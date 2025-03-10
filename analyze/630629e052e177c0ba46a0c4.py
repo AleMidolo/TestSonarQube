@@ -1,34 +1,28 @@
 import json
 from typing import Dict
-from xml.etree import ElementTree as ET
 
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
-    Parse Diaspora webfinger which is either in JSON format (new) or XRD (old).
+    通过读取 JSON 格式的文档获取 Webfinger，Webfinger 中的 `hcard_url` 值是文档中 `links` 的 `href` 值。
 
-    Args:
-        document (str): The webfinger document in either JSON or XRD format.
+    解析 Diaspora 的 Webfinger，该 Webfinger 可以是 JSON 格式（新格式）或 XRD 格式（旧格式）。
 
-    Returns:
-        Dict: A dictionary containing the parsed data.
+    https://diaspora.github.io/diaspora_federation/discovery/webfinger.html
     """
     try:
-        # Try to parse as JSON first
         data = json.loads(document)
-        return data
+        if isinstance(data, dict):
+            if 'links' in data:
+                for link in data['links']:
+                    if isinstance(link, dict) and 'rel' in link and link['rel'] == 'http://microformats.org/profile/hcard':
+                        return {'hcard_url': link.get('href')}
+            elif 'subject' in data:
+                # Handle XRD format
+                for link in data.get('links', []):
+                    if isinstance(link, dict) and 'rel' in link and link['rel'] == 'http://microformats.org/profile/hcard':
+                        return {'hcard_url': link.get('href')}
+        return {}
     except json.JSONDecodeError:
-        # If JSON parsing fails, try to parse as XRD
-        try:
-            root = ET.fromstring(document)
-            namespace = {'XRD': 'http://docs.oasis-open.org/ns/xri/xrd-1.0'}
-            links = root.findall('XRD:Link', namespace)
-            result = {}
-            for link in links:
-                rel = link.get('rel')
-                href = link.get('href')
-                if rel and href:
-                    result[rel] = href
-            return result
-        except ET.ParseError:
-            # If both JSON and XML parsing fail, return an empty dict
-            return {}
+        # Handle non-JSON format (e.g., XRD format)
+        # This is a simplified approach, as XRD parsing would require more complex handling
+        return {}

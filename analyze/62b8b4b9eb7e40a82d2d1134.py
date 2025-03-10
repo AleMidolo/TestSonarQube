@@ -1,15 +1,13 @@
-def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
-    """Return attribute names and descriptions defined by interface.
-    
-    Args:
-        all (bool): If True, return all attributes. If False, return only non-private attributes.
-    
-    Returns:
-        dict: A dictionary where keys are attribute names and values are their descriptions.
+def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
+    """
+    返回当前类属性的名称和描述。
+    如果all为假，则返回由接口定义的属性名称和描述。
     """
     attributes = {}
-    for name, value in self.__dict__.items():
-        if not all and name.startswith('_'):
-            continue
-        attributes[name] = value.__doc__ if value.__doc__ else "No description available."
+    for name, value in self.__class__.__dict__.items():
+        if not name.startswith('__'):
+            if not all and not hasattr(value, '__isinterface__'):
+                continue
+            description = value.__doc__ if value.__doc__ else "No description available."
+            attributes[name] = description
     return attributes

@@ -1,39 +1,36 @@
+import xml.etree.ElementTree as ET
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+
 def verify_relayable_signature(public_key, doc, signature):
     """
-    Verify the signed XML elements to have confidence that the claimed
-    author did actually generate this message.
+    验证已签名的XML元素，以确保声明的作者确实生成了此消息。
+
+    :param public_key: 公钥，用于验证签名
+    :param doc: 已签名的XML文档
+    :param signature: 签名
+    :return: 如果签名验证成功返回True，否则返回False
     """
-    from cryptography.hazmat.primitives import hashes
-    from cryptography.hazmat.primitives.asymmetric import padding
-    from cryptography.hazmat.primitives import serialization
-    from cryptography.hazmat.backends import default_backend
-    from lxml import etree
-
-    # Load the public key
-    pub_key = serialization.load_pem_public_key(
-        public_key.encode(),
-        backend=default_backend()
-    )
-
-    # Parse the XML document
-    root = etree.fromstring(doc)
-
-    # Extract the signature element
-    signature_element = root.find(".//{http://www.w3.org/2000/09/xmldsig#}Signature")
-    if signature_element is None:
-        raise ValueError("No signature found in the document")
-
-    # Canonicalize the signed info
-    signed_info = etree.tostring(signature_element.find(".//{http://www.w3.org/2000/09/xmldsig#}SignedInfo"), method="c14n")
-
-    # Verify the signature
     try:
+        # 将公钥从PEM格式加载
+        pub_key = serialization.load_pem_public_key(public_key)
+
+        # 将XML文档转换为字符串
+        doc_str = ET.tostring(doc, encoding='unicode')
+
+        # 使用公钥验证签名
         pub_key.verify(
             signature,
-            signed_info,
-            padding.PKCS1v15(),
+            doc_str.encode('utf-8'),
+            padding.PSS(
+                mgf=padding.MGF1(hashes.SHA256()),
+                salt_length=padding.PSS.MAX_LENGTH
+            ),
             hashes.SHA256()
         )
         return True
     except Exception as e:
+        print(f"Signature verification failed: {e}")
         return False

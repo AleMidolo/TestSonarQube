@@ -2,15 +2,12 @@ import re
 
 def _get_resource_name_regex():
     """
-    Build or return the regular expressions that are used to validate
-    the name of the Krake resources.
+    返回用于验证 Krake 资源名称的正则表达式  
+    构建或返回用于验证 Krake 资源名称的正则表达式。
 
-    Returns:
-        (re.Pattern): the compiled regular expressions, to validate
-        the resource name.
+    返回值：  
+        (re.Pattern)：编译后的正则表达式，用于验证资源名称。
     """
-    # Example regex pattern for resource names (adjust as needed)
-    # This pattern allows alphanumeric characters, hyphens, and underscores,
-    # and ensures the name starts and ends with an alphanumeric character.
-    pattern = r'^[a-zA-Z0-9]([a-zA-Z0-9-_]*[a-zA-Z0-9])?$'
+    # 假设资源名称由小写字母、数字和连字符组成，且长度在1到63个字符之间
+    pattern = r'^[a-z0-9-]{1,63}$'
     return re.compile(pattern)

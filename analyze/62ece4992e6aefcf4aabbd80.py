@@ -2,30 +2,42 @@ import os
 
 def remove_ending_os_sep(input_list):
     """
-    Iterate over a string list and remove trailing os seperator characters.
+    如果输入列表为 None，则返回 []
 
-    Each string is tested if its length is greater than one and if the last
-    character is the pathname seperator. If so, the pathname seperator character
-    is removed.
+    遍历字符串列表并移除末尾的操作系统分隔符。
 
-    Args:
-        input_list: list of strings
+    函数会检测每个字符的长度是否大于 1，并且最后一个字符是否为路径分隔符。
 
-    Returns:
-        Processed list of strings
+    返回值：
+    移除末尾操作系统分隔符后的列表。
 
-    Raises:
-        TypeError
+    遍历字符串列表并移除末尾的操作系统分隔符字符。
+
+    函数会检测每个字符的长度是否大于 1，并且最后一个字符是否为路径分隔符。如果是，则移除路径分隔符。
+
+    参数：
+      `input_list`: 字符串列表
+
+    返回值：
+      处理后的字符串列表
+
+    异常：
+      `TypeError`
     """
-    if not isinstance(input_list, list):
-        raise TypeError("Input must be a list of strings.")
+    if input_list is None:
+        return []
     
-    processed_list = []
+    if not isinstance(input_list, list):
+        raise TypeError("input_list must be a list")
+    
+    result = []
     for item in input_list:
         if not isinstance(item, str):
-            raise TypeError("All elements in the list must be strings.")
+            raise TypeError("All elements in input_list must be strings")
+        
         if len(item) > 1 and item[-1] == os.sep:
-            processed_list.append(item[:-1])
+            result.append(item[:-1])
         else:
-            processed_list.append(item)
-    return processed_list
+            result.append(item)
+    
+    return result

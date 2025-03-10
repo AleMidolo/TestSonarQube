@@ -1,18 +1,17 @@
-def oneline(script, seperator=" && "):
+def oneline(script, separator=" && "):
     """
-    Converts a script to one line command.
-    This is useful to run a single ssh command and pass a one line script.
+    将脚本转换为带有给定分隔符的单行命令。
+    参数：
+      `script`: str  
+      `separator`: str  
+    返回值：
+      `str`，单行命令。
 
-    :param script: A list of commands or a multi-line string of commands.
-    :param seperator: The separator used to join the commands (default is " && ").
-    :return: A single-line string of commands.
+    将脚本转换为单行命令。
+    这在通过 SSH 执行单行脚本时非常有用。
+
+    :param script:
+    :return:
     """
-    if isinstance(script, str):
-        # Split the multi-line string into individual commands
-        commands = [cmd.strip() for cmd in script.splitlines() if cmd.strip()]
-    else:
-        # Assume it's a list of commands
-        commands = [cmd.strip() for cmd in script if cmd.strip()]
-    
-    # Join the commands with the specified separator
-    return seperator.join(commands)
+    lines = script.strip().splitlines()
+    return separator.join(line.strip() for line in lines if line.strip())

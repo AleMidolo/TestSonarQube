@@ -1,37 +1,37 @@
 def normalized(self):
     """
-    Return a version of this object represented entirely using integer
-    values for the relative attributes.
+    将所有时间单位标准化为整数。
+
+    返回一个完全使用整数值表示相对属性的对象版本。
 
     >>> relativedelta(days=1.5, hours=2).normalized()
     relativedelta(days=+1, hours=+14)
 
     :return:
-        Returns a :class:`dateutil.relativedelta.relativedelta` object.
+      返回一个 :class:`dateutil.relativedelta.relativedelta` 对象。
     """
     from dateutil.relativedelta import relativedelta
 
-    # Convert all attributes to integers
+    # 将小数部分转换为整数
     days = int(self.days)
     hours = int(self.hours)
     minutes = int(self.minutes)
     seconds = int(self.seconds)
     microseconds = int(self.microseconds)
 
-    # Handle fractional parts
-    fractional_days = self.days - days
-    fractional_hours = self.hours - hours
-    fractional_minutes = self.minutes - minutes
-    fractional_seconds = self.seconds - seconds
-    fractional_microseconds = self.microseconds - microseconds
+    # 处理小数部分
+    extra_hours = int((self.days - days) * 24)
+    extra_minutes = int((self.hours - hours) * 60)
+    extra_seconds = int((self.minutes - minutes) * 60)
+    extra_microseconds = int((self.seconds - seconds) * 1e6)
 
-    # Convert fractional parts to lower units
-    hours += int(fractional_days * 24)
-    minutes += int(fractional_hours * 60)
-    seconds += int(fractional_minutes * 60)
-    microseconds += int(fractional_seconds * 1e6)
+    # 累加额外的时间
+    hours += extra_hours
+    minutes += extra_minutes
+    seconds += extra_seconds
+    microseconds += extra_microseconds
 
-    # Handle overflow
+    # 处理进位
     if microseconds >= 1e6:
         seconds += microseconds // 1e6
         microseconds = microseconds % 1e6

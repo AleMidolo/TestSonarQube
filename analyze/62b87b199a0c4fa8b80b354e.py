@@ -1,28 +1,21 @@
 def is_fill_request_seq(seq):
     """
-    Test whether *seq* can be converted to a FillRequestSeq.
+    检查 seq 是否可以转换为 FillRequestSeq，并返回布尔值。
+    测试 *seq* 是否可以转换为 FillRequestSeq。
 
-    True only if it is a FillRequest element
-    or contains at least one such,
-    and it is not a Source sequence.
+    仅当以下条件时返回真：
+    - 它是一个 FillRequest 元素，或者包含至少一个 FillRequest 元素；
+    - 它不是一个 Source 序列。
     """
-    # Assuming FillRequest and Source are classes or types that can be checked
-    # Here, we assume that FillRequest and Source are types or have a specific attribute/method to identify them
-    # For example, let's assume FillRequest has a method `is_fill_request()` and Source has `is_source()`
-    
-    # Check if the sequence itself is a FillRequest
-    if hasattr(seq, 'is_fill_request') and seq.is_fill_request():
+    # 假设 FillRequest 和 Source 是自定义类
+    from collections.abc import Sequence
+
+    # 检查是否是 FillRequest 元素
+    if isinstance(seq, FillRequest):
         return True
-    
-    # Check if the sequence contains at least one FillRequest element
-    if isinstance(seq, (list, tuple)):
-        for item in seq:
-            if hasattr(item, 'is_fill_request') and item.is_fill_request():
-                return True
-    
-    # Check if the sequence is a Source sequence
-    if hasattr(seq, 'is_source') and seq.is_source():
-        return False
-    
-    # If none of the above conditions are met, return False
+
+    # 检查是否是序列且包含至少一个 FillRequest 元素
+    if isinstance(seq, Sequence) and not isinstance(seq, Source):
+        return any(isinstance(item, FillRequest) for item in seq)
+
     return False

@@ -1,12 +1,10 @@
 def index(self, key):
     """
-    Return the index of the given item.
+    以整数形式返回键。
+    返回给定项的索引。
 
-    :param key: a key
-    :return: index
+    :param key: 一个键
+    :return: 索引
     :rtype: int
     """
-    for i, item in enumerate(self):
-        if item == key:
-            return i
-    raise ValueError(f"{key} is not in the list")
+    return int(key)

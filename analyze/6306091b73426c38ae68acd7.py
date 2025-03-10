@@ -1,18 +1,6 @@
 def ansible_config_manager(cls):
     """
-    Gets the ansible config manager.
+    通过 `cls._get_service()` 中的 `ServiceName.ANSIBLE_CONFIG_MANAGER` 获取 Ansible 配置管理器。
+    获取 Ansible 配置管理器。
     """
-    # Assuming the config manager is a class attribute or can be instantiated
-    # Here, we return the config manager instance or create one if it doesn't exist
-    if not hasattr(cls, '_config_manager'):
-        cls._config_manager = AnsibleConfigManager()
-    return cls._config_manager
-
-
-class AnsibleConfigManager:
-    """
-    A placeholder class for the Ansible Config Manager.
-    """
-    def __init__(self):
-        # Initialize any necessary configurations or settings
-        pass
+    return cls._get_service(ServiceName.ANSIBLE_CONFIG_MANAGER)

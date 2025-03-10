@@ -1,40 +1,29 @@
-import re
 from datetime import timedelta
 
 def parse_frequency(frequency):
-    """
-    Given a frequency string with a number and a unit of time, return a corresponding
-    datetime.timedelta instance or None if the frequency is None or "always".
-
-    For instance, given "3 weeks", return datetime.timedelta(weeks=3)
-
-    Raise ValueError if the given frequency cannot be parsed.
-    """
     if frequency is None or frequency.lower() == "always":
         return None
     
-    pattern = re.compile(r'^(\d+)\s*(second|minute|hour|day|week|month|year)s?$', re.IGNORECASE)
-    match = pattern.match(frequency.strip())
+    try:
+        parts = frequency.strip().split()
+        if len(parts) != 2:
+            raise ValueError("Invalid frequency format. Expected format: 'number timeunit'")
+        
+        num = int(parts[0])
+        unit = parts[1].lower()
+        
+        if unit in ['days', 'day']:
+            return timedelta(days=num)
+        elif unit in ['weeks', 'week']:
+            return timedelta(weeks=num)
+        elif unit in ['hours', 'hour']:
+            return timedelta(hours=num)
+        elif unit in ['minutes', 'minute']:
+            return timedelta(minutes=num)
+        elif unit in ['seconds', 'second']:
+            return timedelta(seconds=num)
+        else:
+            raise ValueError(f"Unsupported time unit: {unit}")
     
-    if not match:
-        raise ValueError(f"Invalid frequency format: {frequency}")
-    
-    value = int(match.group(1))
-    unit = match.group(2).lower()
-    
-    if unit == "second":
-        return timedelta(seconds=value)
-    elif unit == "minute":
-        return timedelta(minutes=value)
-    elif unit == "hour":
-        return timedelta(hours=value)
-    elif unit == "day":
-        return timedelta(days=value)
-    elif unit == "week":
-        return timedelta(weeks=value)
-    elif unit == "month":
-        return timedelta(days=value * 30)  # Approximation
-    elif unit == "year":
-        return timedelta(days=value * 365)  # Approximation
-    else:
-        raise ValueError(f"Unsupported time unit: {unit}")
+    except ValueError as e:
+        raise ValueError(f"Failed to parse frequency: {frequency}. Error: {e}")

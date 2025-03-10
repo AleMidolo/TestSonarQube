@@ -1,15 +1,12 @@
 def tzname_in_python2(namefunc):
     """
-    Change unicode output into bytestrings in Python 2
+    在 Python 2 中将 Unicode 输出转换为字节字符串
 
-    tzname() API changed in Python 3. It used to return bytes, but was changed
-    to unicode strings
+    在 Python 3 中，tzname() API 发生了变化。它曾经返回字节字符串，但在 Python 3 中被更改为返回 Unicode 字符串。
     """
     def wrapper(*args, **kwargs):
         result = namefunc(*args, **kwargs)
-        if isinstance(result, tuple):
-            return tuple(s.encode('utf-8') if isinstance(s, unicode) else s for s in result)
-        elif isinstance(result, unicode):
+        if isinstance(result, unicode):
             return result.encode('utf-8')
         return result
     return wrapper

@@ -1,9 +1,9 @@
 def get_option_spec(self, command_name, argument_name):
     """
-    Gets the specification for the specified option name.
+    获取指定选项名称的规范。通过 `self.get_parser_option_specs()` 获取给定 `command_name` 的选项。
+    获取指定选项名称的规范。
     """
-    if not hasattr(self, '_option_specs'):
-        return None
-    
-    command_specs = self._option_specs.get(command_name, {})
-    return command_specs.get(argument_name, None)
+    option_specs = self.get_parser_option_specs(command_name)
+    if option_specs and argument_name in option_specs:
+        return option_specs[argument_name]
+    return None

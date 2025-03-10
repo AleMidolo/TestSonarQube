@@ -1,16 +1,27 @@
 def vertex3tuple(vertices):
     """
-    Return 3 points for each vertex of the polygon. This will include the vertex and the 2 points on both sides of the vertex.
+    获取多边形每个顶点的3个点。  
+    这将包括顶点本身以及顶点两侧的两个点。  
+    如果下标超出范围，则将索引值视为0。  
+    参数：
+      vertices：需要转换的顶点列表。
+    返回值：
+      返回一个列表，其中每个元素是由顶点表示的元组。
 
-    :param vertices: List of vertices of the polygon.
-    :return: List of 3-tuples representing the vertex and its two adjacent vertices.
+    对于多边形的每个顶点，返回3个点。这包括顶点本身以及顶点两侧的两个点。
+
+    假设多边形的顶点为 `A, B, C, D`，  
+    函数将返回以下结果：  
+    `DAB, ABC, BCD, CDA` -> 返回3个点的元组。
+    # A    B    C    D  -> 顶点
     """
     n = len(vertices)
     result = []
     for i in range(n):
-        # Get the current vertex and its two adjacent vertices
-        prev_vertex = vertices[(i - 1) % n]
-        curr_vertex = vertices[i]
-        next_vertex = vertices[(i + 1) % n]
-        result.append((prev_vertex, curr_vertex, next_vertex))
+        # 获取当前顶点及其两侧的顶点
+        prev_index = (i - 1) % n
+        next_index = (i + 1) % n
+        # 组成三元组
+        triplet = (vertices[prev_index], vertices[i], vertices[next_index])
+        result.append(triplet)
     return result

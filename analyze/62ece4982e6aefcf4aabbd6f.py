@@ -1,40 +1,38 @@
 import requests
 import tarfile
 from pathlib import Path
-import shutil
 
 def get_repo_archive(url: str, destination_path: Path) -> Path:
     """
-    Given an url and a destination path, retrieve and extract .tar.gz archive
-    which contains 'desc' file for each package.
-    Each .tar.gz archive corresponds to an Arch Linux repo ('core', 'extra', 'community').
+    给定一个 URL 和目标路径，下载并提取包含每个软件包的 'desc' 文件的 .tar.gz 压缩包。
+    每个 .tar.gz 压缩包对应一个 Arch Linux 仓库（如 'core'、'extra'、'community'）。
 
-    Args:
-        url: url of the .tar.gz archive to download
-        destination_path: the path on disk where to extract archive
+    参数：
+      url：要下载的 .tar.gz 压缩包的 URL。
+      destination_path：在磁盘上提取压缩包的目标路径。
 
-    Returns:
-        a directory Path where the archive has been extracted to.
+    返回值：
+      返回提取压缩包的目录路径。
     """
-    # Ensure the destination path exists
+    # 确保目标路径存在
     destination_path.mkdir(parents=True, exist_ok=True)
-
-    # Download the archive
+    
+    # 下载压缩包
     response = requests.get(url, stream=True)
-    if response.status_code != 200:
-        raise Exception(f"Failed to download archive from {url}")
-
-    # Save the archive to a temporary file
-    temp_archive_path = destination_path / "temp_archive.tar.gz"
-    with open(temp_archive_path, 'wb') as f:
+    response.raise_for_status()
+    
+    # 保存压缩包到临时文件
+    temp_tar_path = destination_path / "temp_archive.tar.gz"
+    with open(temp_tar_path, 'wb') as f:
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)
-
-    # Extract the archive
-    with tarfile.open(temp_archive_path, 'r:gz') as tar:
+    
+    # 提取压缩包
+    with tarfile.open(temp_tar_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
-
-    # Remove the temporary archive file
-    temp_archive_path.unlink()
-
+    
+    # 删除临时压缩包
+    temp_tar_path.unlink()
+    
+    # 返回提取后的目录路径
     return destination_path
