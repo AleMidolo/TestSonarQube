@@ -23,7 +23,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     :param handlers: funzioni gestore passate all'oggetto Response restituito
     :return: oggetto Response
     """
-    # Create the BEGIN message
+    # Creazione del messaggio BEGIN
     begin_message = {
         "mode": mode,
         "bookmarks": list(bookmarks) if bookmarks else None,
@@ -36,8 +36,9 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         **handlers
     }
 
-    # Add the BEGIN message to the output queue
+    # Aggiunta del messaggio alla coda di output
     self.output_queue.append(("BEGIN", begin_message))
 
-    # Return a Response object
-    return Response(handlers)
+    # Creazione e restituzione dell'oggetto Response
+    response = Response(handlers)
+    return response

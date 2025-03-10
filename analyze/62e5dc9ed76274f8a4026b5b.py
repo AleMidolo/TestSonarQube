@@ -1,7 +1,9 @@
 import warnings
 
 def deprecated(message):
-    """
-    Decorator per deprecare funzioni e metodi.
-
-    Esempio di utilizzo:
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            warnings.warn(f"{func.__name__} is deprecated: {message}", DeprecationWarning, stacklevel=2)
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator

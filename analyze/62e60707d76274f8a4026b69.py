@@ -13,7 +13,7 @@ def point_type(name, fields, srid_map):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             for field in fields:
-                setattr(self, field, kwargs.get(field, None))
+                setattr(self, field, kwargs.get(field))
             self.srid_map = srid_map
 
         def __repr__(self):

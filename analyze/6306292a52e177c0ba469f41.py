@@ -13,11 +13,11 @@ def test_tag(tag: str) -> bool:
     if not tag:
         return False
     
-    # Controlla che tutti i caratteri siano alfanumerici o trattini bassi
+    # Verifica che il tag contenga solo caratteri alfanumerici e trattini bassi
     if not tag.replace("_", "").isalnum():
         return False
     
-    # Controlla che il primo carattere non sia un numero
+    # Verifica che il tag non inizi con un numero
     if tag[0].isdigit():
         return False
     

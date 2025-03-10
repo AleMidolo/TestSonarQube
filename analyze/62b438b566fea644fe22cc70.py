@@ -14,7 +14,7 @@ def bash_completion():
     for line in help_output.splitlines():
         if line.strip().startswith('-'):
             options.append(line.strip().split()[0])
-        elif line.strip() and not line.strip().startswith('usage:'):
+        elif line.strip() and not line.strip().startswith(' '):
             commands.append(line.strip().split()[0])
 
     # Genera lo script di completamento bash
@@ -25,11 +25,14 @@ _borgmatic_completion() {
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     opts="{}"
+    commands="{}"
 
-    if [[ ${cur} == -* ]]; then
+    if [[ ${cur} == -* ]] ; then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
     else
-        COMPREPLY=( $(compgen -W "{}" -- ${cur}) )
+        COMPREPLY=( $(compgen -W "${commands}" -- ${cur}) )
+        return 0
     fi
 }
 

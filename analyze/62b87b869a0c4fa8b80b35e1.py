@@ -30,32 +30,39 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     Restituisce il grafico risultante.
     """
+    import numpy as np
+    from collections import namedtuple
+
     if make_value is None:
         make_value = lambda bin_: bin_
 
-    if get_coordinate not in ["left", "right", "middle"]:
+    if scale is None:
+        scale = hist.scale if hasattr(hist, 'scale') else None
+
+    bins = hist.bins
+    bin_edges = hist.bin_edges
+
+    if get_coordinate == "left":
+        x_coords = bin_edges[:-1]
+    elif get_coordinate == "right":
+        x_coords = bin_edges[1:]
+    elif get_coordinate == "middle":
+        x_coords = (bin_edges[:-1] + bin_edges[1:]) / 2
+    else:
         raise ValueError("get_coordinate deve essere 'left', 'right' o 'middle'")
 
-    graph = []
-    for i, bin_ in enumerate(hist):
-        if get_coordinate == "left":
-            x = hist.bin_left(i)
-        elif get_coordinate == "right":
-            x = hist.bin_right(i)
-        elif get_coordinate == "middle":
-            x = hist.bin_center(i)
+    values = [make_value(bin_) for bin_ in bins]
 
-        y = make_value(bin_)
-        if isinstance(y, tuple):
-            graph.append((x,) + y)
-        else:
-            graph.append((x, y))
+    if isinstance(values[0], (tuple, list, np.ndarray)):
+        num_fields = len(values[0])
+        if len(field_names) != num_fields + 1:
+            raise ValueError("Il numero di field_names deve essere uguale alla dimensione del risultato di make_value più uno per la coordinata x")
+        Graph = namedtuple('Graph', field_names)
+        graph_data = [Graph(x, *value) for x, value in zip(x_coords, values)]
+    else:
+        if len(field_names) != 2:
+            raise ValueError("Il numero di field_names deve essere 2 per un grafico semplice")
+        Graph = namedtuple('Graph', field_names)
+        graph_data = [Graph(x, value) for x, value in zip(x_coords, values)]
 
-    if scale is True:
-        scale = hist.scale
-
-    return type('Graph', (), {
-        'data': graph,
-        'field_names': field_names,
-        'scale': scale
-    })
+    return graph_data

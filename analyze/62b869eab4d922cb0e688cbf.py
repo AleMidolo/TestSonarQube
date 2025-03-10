@@ -8,21 +8,30 @@ def generate_default_observer_schema(app):
             schema di osservazione predefinito.
     """
     default_schema = {
-        "apiVersion": "v1",
-        "kind": "ObserverSchema",
-        "metadata": {
-            "name": "default-observer-schema",
-            "namespace": app.metadata.namespace
+        "type": "object",
+        "properties": {
+            "status": {
+                "type": "object",
+                "properties": {
+                    "conditions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "type": {"type": "string"},
+                                "status": {"type": "string"},
+                                "lastTransitionTime": {"type": "string"},
+                                "reason": {"type": "string"},
+                                "message": {"type": "string"}
+                            },
+                            "required": ["type", "status"]
+                        }
+                    }
+                },
+                "required": ["conditions"]
+            }
         },
-        "spec": {
-            "rules": [
-                {
-                    "apiGroups": ["*"],
-                    "resources": ["*"],
-                    "verbs": ["get", "list", "watch"]
-                }
-            ]
-        }
+        "required": ["status"]
     }
 
     for resource in app.spec.manifest:

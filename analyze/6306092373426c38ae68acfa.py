@@ -4,8 +4,8 @@ def get_spec_defaults(self):
     """
     # Placeholder implementation
     defaults = {}
-    # Logic to resolve values from specification file and other sources
+    # Logic to resolve argument values from the specification file and other sources
     # For example:
-    # defaults['param1'] = self.spec_file.get('param1', 'default_value1')
-    # defaults['param2'] = self.other_source.get('param2', 'default_value2')
+    # defaults['arg1'] = self.spec_file.get('arg1', 'default_value1')
+    # defaults['arg2'] = self.other_source.get('arg2', 'default_value2')
     return defaults

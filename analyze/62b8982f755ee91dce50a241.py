@@ -10,27 +10,26 @@ def normalized(self):
     """
     from dateutil.relativedelta import relativedelta
 
-    # Convert fractional days to hours
+    # Convert days to integer and handle fractional days
     days = int(self.days)
-    fractional_days = self.days - days
-    hours = self.hours + fractional_days * 24
+    remaining_hours = (self.days - days) * 24
 
-    # Convert fractional hours to minutes
-    hours = int(hours)
-    fractional_hours = hours - int(hours)
-    minutes = self.minutes + fractional_hours * 60
+    # Convert hours to integer and handle fractional hours
+    hours = int(self.hours + remaining_hours)
+    remaining_minutes = (self.hours + remaining_hours - hours) * 60
 
-    # Convert fractional minutes to seconds
-    minutes = int(minutes)
-    fractional_minutes = minutes - int(minutes)
-    seconds = self.seconds + fractional_minutes * 60
+    # Convert minutes to integer and handle fractional minutes
+    minutes = int(self.minutes + remaining_minutes)
+    remaining_seconds = (self.minutes + remaining_minutes - minutes) * 60
 
-    # Convert fractional seconds to microseconds
-    seconds = int(seconds)
-    fractional_seconds = seconds - int(seconds)
-    microseconds = self.microseconds + fractional_seconds * 1e6
+    # Convert seconds to integer and handle fractional seconds
+    seconds = int(self.seconds + remaining_seconds)
+    remaining_microseconds = (self.seconds + remaining_seconds - seconds) * 1e6
 
-    # Create a new relativedelta with integer values
+    # Convert microseconds to integer
+    microseconds = int(self.microseconds + remaining_microseconds)
+
+    # Create a new relativedelta object with integer values
     return relativedelta(
         years=self.years,
         months=self.months,
@@ -38,14 +37,13 @@ def normalized(self):
         hours=hours,
         minutes=minutes,
         seconds=seconds,
-        microseconds=int(microseconds),
+        microseconds=microseconds,
         leapdays=self.leapdays,
         year=self.year,
         month=self.month,
         day=self.day,
-        weekday=self.weekday,
         hour=self.hour,
         minute=self.minute,
         second=self.second,
-        microsecond=int(self.microsecond),
+        microsecond=self.microsecond
     )

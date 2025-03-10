@@ -10,12 +10,12 @@ def make_parsers():
     # Creazione dei sottoparser
     subparsers = main_parser.add_subparsers(title="comandi", dest="comando")
 
-    # Creazione del primo sottoparser
-    parser_a = subparsers.add_parser('comando_a', help="Descrizione del comando A")
-    parser_a.add_argument('arg1', type=str, help="Argomento 1 per comando A")
+    # Esempio di sottoparser 1
+    parser_1 = subparsers.add_parser('comando1', help='Descrizione del comando 1')
+    parser_1.add_argument('arg1', type=str, help='Argomento 1 per comando1')
 
-    # Creazione del secondo sottoparser
-    parser_b = subparsers.add_parser('comando_b', help="Descrizione del comando B")
-    parser_b.add_argument('arg2', type=int, help="Argomento 2 per comando B")
+    # Esempio di sottoparser 2
+    parser_2 = subparsers.add_parser('comando2', help='Descrizione del comando 2')
+    parser_2.add_argument('arg2', type=int, help='Argomento 2 per comando2')
 
     return main_parser, subparsers

@@ -1,6 +1,6 @@
 import math
 
-def gaussiana(x):
+def gaussian(x):
     """
     Questa funzione calcola il valore della distribuzione gaussiana per un dato `x`, con una media `u` pari a 0.2 e una deviazione standard `sigma` pari a 0.1.
     """
