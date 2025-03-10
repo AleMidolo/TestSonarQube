@@ -6,33 +6,23 @@ def _extract_number_and_supplment_from_issue_element(issue):
         issue (str): El contenido del elemento 'issue'.
     
     Returns:
-        tuple: Una tupla con dos elementos (number, suppl), donde 'number' es el número de la edición
-               y 'suppl' es el suplemento, si existe. Si no se encuentra un número o suplemento, se devuelve None.
+        tuple: Una tupla con dos elementos (number, suppl), donde:
+            - number (str): El número extraído.
+            - suppl (str): El suplemento extraído, si existe. Si no, será una cadena vacía.
     """
-    number = None
-    suppl = None
+    number = ''
+    suppl = ''
     
-    # Buscar el número en el formato "Número X"
-    if "Número" in issue:
-        parts = issue.split("Número")
-        number_part = parts[1].strip()
-        number = ''.join(filter(str.isdigit, number_part))
+    if issue:
+        # Buscar el suplemento (suppl) en el texto
+        suppl_index = issue.lower().find('suppl')
+        if suppl_index != -1:
+            # Extraer el suplemento
+            suppl = issue[suppl_index:].strip()
+            # Extraer el número antes del suplemento
+            number = issue[:suppl_index].strip()
+        else:
+            # Si no hay suplemento, el número es todo el contenido
+            number = issue.strip()
     
-    # Buscar el suplemento en el formato "Suplemento X"
-    if "Suplemento" in issue:
-        parts = issue.split("Suplemento")
-        suppl_part = parts[1].strip()
-        suppl = ''.join(filter(str.isdigit, suppl_part))
-    
-    # Si no se encuentra en el formato anterior, intentar extraer el número y suplemento directamente
-    if number is None and suppl is None:
-        # Asumir que el número y suplemento están separados por un guion o espacio
-        parts = issue.split()
-        for part in parts:
-            if part.isdigit():
-                if number is None:
-                    number = part
-                else:
-                    suppl = part
-    
-    return (number, suppl)
+    return number, suppl

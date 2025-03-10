@@ -9,13 +9,14 @@ def initialize(self):
     os.makedirs("ocfl_root", exist_ok=True)
     os.makedirs("ocfl_root/objects", exist_ok=True)
     os.makedirs("ocfl_root/extensions", exist_ok=True)
+    os.makedirs("ocfl_root/logs", exist_ok=True)
 
-    # Crear el archivo de configuración OCFL
+    # Crear el archivo de configuración básico
     config = {
-        "type": "https://ocfl.io/1.0/spec/#inventory",
-        "digestAlgorithm": "sha512",
-        "head": None,
-        "versions": {}
+        "type": "ocfl_root",
+        "version": "1.0",
+        "description": "OCFL Root Storage",
+        "created": "2023-10-01T00:00:00Z"
     }
 
     with open("ocfl_root/ocfl_config.json", "w") as config_file:
@@ -23,20 +24,14 @@ def initialize(self):
 
     # Crear el archivo de inventario inicial
     inventory = {
-        "id": "urn:uuid:00000000-0000-0000-0000-000000000000",
-        "type": "Object",
-        "digestAlgorithm": "sha512",
         "head": "v1",
         "versions": {
             "v1": {
                 "created": "2023-10-01T00:00:00Z",
-                "state": {},
-                "message": "Initial version"
+                "state": {}
             }
         }
     }
 
     with open("ocfl_root/inventory.json", "w") as inventory_file:
         json.dump(inventory, inventory_file, indent=4)
-
-    print("Raíz de almacenamiento OCFL inicializada correctamente.")

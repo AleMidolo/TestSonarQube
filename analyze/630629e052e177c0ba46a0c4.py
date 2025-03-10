@@ -1,5 +1,5 @@
 import json
-from xml.etree import ElementTree as ET
+from xml.etree import ElementTree
 from typing import Dict
 
 def parse_diaspora_webfinger(document: str) -> Dict:
@@ -15,7 +15,7 @@ def parse_diaspora_webfinger(document: str) -> Dict:
     except json.JSONDecodeError:
         # Si falla, intentar parsear como XML (XRD)
         try:
-            root = ET.fromstring(document)
+            root = ElementTree.fromstring(document)
             result = {}
             for link in root.findall('{http://docs.oasis-open.org/ns/xri/xrd-1.0}Link'):
                 rel = link.get('rel')
@@ -23,6 +23,6 @@ def parse_diaspora_webfinger(document: str) -> Dict:
                 if rel and href:
                     result[rel] = href
             return result
-        except ET.ParseError:
-            # Si ambos intentos fallan, devolver un diccionario vacío
+        except ElementTree.ParseError:
+            # Si ambos fallan, devolver un diccionario vacío
             return {}

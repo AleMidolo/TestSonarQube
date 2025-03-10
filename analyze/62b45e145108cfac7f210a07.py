@@ -13,10 +13,10 @@ def validate(self, inventory, extract_spec_version=False):
                 return self.spec_version[spec_type]
             else:
                 # Realizar otras pruebas basadas en la versión proporcionada en self.spec_version
-                return self.spec_version.get('default', None)
+                return self.spec_version.get('default', 'unknown')
         else:
             # Realizar otras pruebas basadas en la versión proporcionada en self.spec_version
-            return self.spec_version.get('default', None)
+            return self.spec_version.get('default', 'unknown')
     else:
         # Validar el inventario sin extraer la versión de la especificación
         return True

@@ -4,21 +4,44 @@ def validate(self, path):
 
     Devuelve True si es válido (se permiten advertencias), False en caso contrario.
     """
-    # Implementación de la validación del objeto OCFL
-    # Aquí se asume que se realiza alguna validación específica del objeto OCFL
-    # y se devuelve True si es válido, False en caso contrario.
-    
-    # Ejemplo de validación básica (esto es solo un esqueleto)
-    try:
-        # Verificar si el path existe
-        if not os.path.exists(path):
-            return False
-        
-        # Aquí se podrían agregar más validaciones específicas del objeto OCFL
-        # Por ejemplo, verificar la estructura de directorios, archivos, etc.
-        
-        # Si todas las validaciones pasan, devolver True
-        return True
-    except Exception as e:
-        # En caso de error, devolver False
+    import os
+    import json
+    from fs import open_fs
+
+    # Verificar si la ruta existe
+    if not os.path.exists(path):
         return False
+
+    # Abrir el sistema de archivos en la ruta dada
+    fs = open_fs(path)
+
+    # Verificar la existencia del archivo 'inventory.json'
+    if not fs.exists('inventory.json'):
+        return False
+
+    # Leer y validar el archivo 'inventory.json'
+    with fs.open('inventory.json', 'r') as f:
+        try:
+            inventory = json.load(f)
+        except json.JSONDecodeError:
+            return False
+
+    # Verificar la estructura básica del inventario
+    required_keys = {'id', 'type', 'digestAlgorithm', 'head', 'manifest', 'versions'}
+    if not required_keys.issubset(inventory.keys()):
+        return False
+
+    # Verificar que el algoritmo de digest sea válido
+    if inventory['digestAlgorithm'] not in {'sha256', 'sha512'}:
+        return False
+
+    # Verificar que todas las versiones estén presentes en el manifiesto
+    manifest = inventory['manifest']
+    versions = inventory['versions']
+    for version, files in versions.items():
+        for file_path, file_digest in files.items():
+            if file_digest not in manifest:
+                return False
+
+    # Si todas las validaciones pasan, retornar True
+    return True

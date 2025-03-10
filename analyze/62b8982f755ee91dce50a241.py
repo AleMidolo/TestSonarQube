@@ -1,5 +1,3 @@
-from dateutil.relativedelta import relativedelta
-
 def normalized(self):
     """
     Devuelve una versión de este objeto representada completamente utilizando valores enteros para los atributos relativos.
@@ -10,32 +8,44 @@ def normalized(self):
     :return:
         Devuelve un objeto de la clase :class:`dateutil.relativedelta.relativedelta`.
     """
-    # Convertir los atributos fraccionarios a enteros
+    from dateutil.relativedelta import relativedelta
+
+    # Convertir días fraccionarios a horas
     days = int(self.days)
-    hours = int(self.hours)
-    minutes = int(self.minutes)
-    seconds = int(self.seconds)
-    microseconds = int(self.microseconds)
+    fractional_days = self.days - days
+    hours = self.hours + fractional_days * 24
 
-    # Calcular los residuos de las conversiones
-    residual_hours = (self.days - days) * 24
-    residual_minutes = (self.hours - hours + residual_hours) * 60
-    residual_seconds = (self.minutes - minutes + residual_minutes) * 60
-    residual_microseconds = (self.seconds - seconds + residual_seconds) * 1_000_000
+    # Convertir horas fraccionarias a minutos
+    hours = int(hours)
+    fractional_hours = hours - int(hours)
+    minutes = self.minutes + fractional_hours * 60
 
-    # Ajustar los valores de los atributos
-    hours += int(residual_hours)
-    minutes += int(residual_minutes)
-    seconds += int(residual_seconds)
-    microseconds += int(residual_microseconds)
+    # Convertir minutos fraccionarios a segundos
+    minutes = int(minutes)
+    fractional_minutes = minutes - int(minutes)
+    seconds = self.seconds + fractional_minutes * 60
 
-    # Asegurarse de que los valores estén dentro de los límites
-    minutes += seconds // 60
-    seconds %= 60
-    hours += minutes // 60
-    minutes %= 60
-    days += hours // 24
-    hours %= 24
+    # Convertir segundos fraccionarios a microsegundos
+    seconds = int(seconds)
+    fractional_seconds = seconds - int(seconds)
+    microseconds = self.microseconds + fractional_seconds * 1e6
 
-    # Crear y devolver el nuevo objeto relativedelta
-    return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds, microseconds=microseconds)
+    # Crear un nuevo relativedelta con valores enteros
+    return relativedelta(
+        years=self.years,
+        months=self.months,
+        days=days,
+        hours=hours,
+        minutes=minutes,
+        seconds=seconds,
+        microseconds=microseconds,
+        leapdays=self.leapdays,
+        year=self.year,
+        month=self.month,
+        day=self.day,
+        weekday=self.weekday,
+        hour=self.hour,
+        minute=self.minute,
+        second=self.second,
+        microsecond=self.microsecond
+    )

@@ -5,13 +5,13 @@ def bash_completion():
     import subprocess
     import sys
 
-    # Comando para generar el script de autocompletado de borgmatic
+    # Comando para generar el script de autocompletado
     command = ["borgmatic", "--bash-completion"]
 
     try:
         # Ejecutar el comando y capturar la salida
-        result = subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.run(command, capture_output=True, text=True, check=True)
         return result.stdout
     except subprocess.CalledProcessError as e:
-        print(f"Error al generar el script de autocompletado: {e.stderr}", file=sys.stderr)
+        print(f"Error al generar el script de autocompletado: {e}", file=sys.stderr)
         return None
