@@ -1,18 +1,17 @@
 import os
+import sys
 
 def _should_attempt_c_optimizations():
     """
-    如果我们使用 C 优化，则返回一个真值。
+    यदि हमें C अनुकूलन का प्रयास करना चाहिए, तो एक सत्य मान लौटाएं।  
 
-    如果我们应该尝试使用 C 优化，则返回一个真值。
-
-    这会考虑我们是否运行在 PyPy 上，以及 `_use_c_impl` 中定义的 ``PURE_PYTHON`` 环境变量的值。
+    यह इस बात को ध्यान में रखता है कि क्या हम PyPy पर हैं और `_use_c_impl` में परिभाषित ``PURE_PYTHON`` पर्यावरण चर का मान क्या है।
     """
-    # 检查是否运行在 PyPy 上
+    # Check if we are running on PyPy
     is_pypy = hasattr(sys, 'pypy_version_info')
     
-    # 检查 PURE_PYTHON 环境变量是否设置为真值
-    pure_python = os.getenv('PURE_PYTHON', '').lower() in ('true', '1', 't')
+    # Check if PURE_PYTHON environment variable is set to a truthy value
+    pure_python = os.getenv('PURE_PYTHON', '').lower() in ('1', 'true', 'yes')
     
-    # 如果不在 PyPy 上且 PURE_PYTHON 未设置为真值，则尝试 C 优化
+    # Attempt C optimizations if not on PyPy and PURE_PYTHON is not set
     return not is_pypy and not pure_python

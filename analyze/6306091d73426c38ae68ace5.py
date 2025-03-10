@@ -1,17 +1,9 @@
 def _include_groups(self, parser_dict):
     """
-    解析规范文件中的 include dict 指令。
+    स्पेक फाइलों में 'include dict' निर्देश को हल करता है।
     """
     if 'include' in parser_dict:
-        include_dict = parser_dict['include']
-        for key, value in include_dict.items():
-            if key in parser_dict:
-                if isinstance(parser_dict[key], dict) and isinstance(value, dict):
-                    parser_dict[key].update(value)
-                elif isinstance(parser_dict[key], list) and isinstance(value, list):
-                    parser_dict[key].extend(value)
-                else:
-                    parser_dict[key] = value
-            else:
-                parser_dict[key] = value
+        for group in parser_dict['include']:
+            if group in self.groups:
+                parser_dict.update(self.groups[group])
     return parser_dict

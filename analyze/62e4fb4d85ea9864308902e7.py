@@ -1,32 +1,28 @@
 import os
-import sys
 
 def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     """
-    补全 exe 的完整路径并以其原始形式返回
+    Normalizes a command tuple to handle Windows-specific issues with shebangs and deep paths.
 
-    修复以下在 Windows 上的问题：  
-    - https://bugs.python.org/issue8557  
-    - Windows 无法解析 shebang  
+    Args:
+        cmd: A tuple of strings representing the command to be normalized.
 
-    此函数还可以使深路径的 shebang 正常工作。
+    Returns:
+        A tuple of strings representing the normalized command.
     """
     if not cmd:
         return cmd
 
-    # 获取第一个命令（通常是可执行文件）
-    executable = cmd[0]
+    # Handle shebang on Windows
+    if os.name == 'nt' and len(cmd) > 0:
+        first_arg = cmd[0]
+        if first_arg.startswith('#!'):
+            # Extract the interpreter path from the shebang
+            interpreter_path = first_arg[2:].strip()
+            # Normalize the path to handle deep paths
+            interpreter_path = os.path.normpath(interpreter_path)
+            # Replace the shebang with the normalized interpreter path
+            normalized_cmd = (interpreter_path,) + cmd[1:]
+            return normalized_cmd
 
-    # 如果可执行文件已经是一个完整路径，直接返回
-    if os.path.isabs(executable):
-        return cmd
-
-    # 尝试在 PATH 中查找可执行文件
-    path = os.environ.get('PATH', '')
-    for dir in path.split(os.pathsep):
-        full_path = os.path.join(dir, executable)
-        if os.path.isfile(full_path):
-            return (full_path,) + cmd[1:]
-
-    # 如果找不到，返回原始命令
     return cmd

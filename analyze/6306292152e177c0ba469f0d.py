@@ -1,12 +1,13 @@
-from typing import Dict, Any
+from typing import TypeVar
 
-def identify_request(request: Dict[str, Any]) -> bool:
-    """
-    检查通过 JSON 加载的请求体是否包含事件。如果包含，则返回真。否则，返回假。
+RequestType = TypeVar('RequestType')
 
-    尝试识别这是否是一个 Matrix 请求。
+def identify_request(request: RequestType) -> bool:
     """
-    # 假设 Matrix 请求体中包含 'event' 键
-    if 'event' in request:
-        return True
+    यह फ़ंक्शन यह पहचानने की कोशिश करता है कि क्या यह एक मैट्रिक्स (Matrix) अनुरोध है।
+    """
+    # Assuming that a Matrix request has a specific attribute or structure
+    # For example, if a Matrix request has a 'matrix' key in its data
+    if hasattr(request, 'data') and isinstance(request.data, dict):
+        return 'matrix' in request.data
     return False

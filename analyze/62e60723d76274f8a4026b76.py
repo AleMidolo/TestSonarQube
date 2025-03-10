@@ -1,33 +1,45 @@
-from datetime import time, timedelta
+from datetime import datetime, timedelta, timezone
 
 class Time:
     def __init__(self, hour, minute, second, microsecond, tzinfo=None):
-        self._time = time(hour, minute, second, microsecond, tzinfo)
+        self.hour = hour
+        self.minute = minute
+        self.second = second
+        self.microsecond = microsecond
+        self.tzinfo = tzinfo
 
     @classmethod
     def from_ticks(cls, ticks, tz=None):
         """
-        根据时间戳（自午夜以来的纳秒数）创建一个时间对象。
+        टिक से समय बनाएं (आधी रात के बाद से नैनोसेकंड)।
 
-        :param ticks: 自午夜以来的纳秒数
+        :param ticks: आधी रात के बाद से नैनोसेकंड
         :type ticks: int
-        :param tz: 可选的时区信息
+        :param tz: वैकल्पिक टाइमज़ोन
         :type tz: datetime.tzinfo
+
         :rtype: Time
-        :raises ValueError: 如果时间戳超出范围(0 <= ticks < 86400000000000)
+
+        :raises ValueError: यदि ticks सीमा से बाहर है
+            (0 <= ticks < 86400000000000)
         """
         if not (0 <= ticks < 86400000000000):
-            raise ValueError("时间戳超出范围(0 <= ticks < 86400000000000)")
-
+            raise ValueError("ticks must be in the range 0 <= ticks < 86400000000000")
+        
         # Convert ticks to microseconds
         microseconds = ticks // 1000
-
-        # Create a timedelta representing the time since midnight
+        
+        # Create a timedelta from the microseconds
         delta = timedelta(microseconds=microseconds)
-
-        # Extract hours, minutes, seconds, and microseconds from the timedelta
-        hours, remainder = divmod(delta.seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        microseconds = delta.microseconds
-
-        return cls(hours, minutes, seconds, microseconds, tz)
+        
+        # Create a datetime object at midnight and add the timedelta
+        midnight = datetime(1, 1, 1, tzinfo=tz)
+        dt = midnight + delta
+        
+        # Extract time components
+        hour = dt.hour
+        minute = dt.minute
+        second = dt.second
+        microsecond = dt.microsecond
+        
+        return cls(hour, minute, second, microsecond, tz)

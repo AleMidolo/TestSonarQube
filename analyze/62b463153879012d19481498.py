@@ -2,8 +2,7 @@ import os
 
 def files_list(path):
     """
-    返回给定路径中的文件。
-    返回 `path` 中的文件。
+    `path` में फ़ाइलों को वापस करें।
     """
     if not os.path.exists(path):
         return []

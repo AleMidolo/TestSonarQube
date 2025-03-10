@@ -2,34 +2,36 @@ import os
 
 def find_path_type(path):
     """
-    返回一个字符串，指示给定路径的类型。
+    दिए गए पथ पर मौजूद वस्तु के प्रकार को इंगित करने वाला एक स्ट्रिंग लौटाता है।
 
-    返回值：
-      'root' - 看起来像是一个 OCFL 存储根目录
-      'object' - 看起来像是一个 OCFL 对象
-      'file' - 一个文件，可能是一个清单文件
-      其他字符串解释错误描述
+    लौटाए जाने वाले मान:
+        'root' - ऐसा लगता है कि यह OCFL स्टोरेज रूट है
+        'object' - ऐसा लगता है कि यह OCFL ऑब्जेक्ट है
+        'file' - यह एक फ़ाइल है, जो शायद एक इन्वेंटरी हो सकती है
+        अन्य स्ट्रिंग - त्रुटि विवरण को समझाती है
 
-    仅通过查看 "0=*" Namaste 文件来确定目录类型。
+    यह केवल "0=*" नमस्ते फ़ाइलों को देखकर निर्देशिका के प्रकार का निर्धारण करता है।
     """
     if not os.path.exists(path):
-        return "路径不存在"
+        return "त्रुटि: पथ मौजूद नहीं है"
     
     if os.path.isfile(path):
         return "file"
     
-    namaste_files = [f for f in os.listdir(path) if f.startswith("0=")]
+    if os.path.isdir(path):
+        # Check if it's an OCFL storage root
+        if os.path.exists(os.path.join(path, "0=ocfl_1.0")):
+            return "root"
+        
+        # Check if it's an OCFL object
+        if os.path.exists(os.path.join(path, "0=ocfl_object_1.0")):
+            return "object"
+        
+        # Check for any "0=*" file
+        for item in os.listdir(path):
+            if item.startswith("0="):
+                return "object"
+        
+        return "त्रुटि: पथ OCFL रूट या ऑब्जेक्ट नहीं है"
     
-    if not namaste_files:
-        return "路径不是 OCFL 存储根目录或对象"
-    
-    namaste_file = namaste_files[0]
-    with open(os.path.join(path, namaste_file), 'r') as f:
-        content = f.read().strip()
-    
-    if content == "ocfl_1.0":
-        return "root"
-    elif content.startswith("ocfl_object_"):
-        return "object"
-    else:
-        return "未知的 Namaste 文件内容"
+    return "त्रुटि: अज्ञात पथ प्रकार"

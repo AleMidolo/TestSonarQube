@@ -1,35 +1,36 @@
 def scale(self, other=None):
     """
-    获取或设置图表的比例。
+    ग्राफ़ का स्केल प्राप्त करें या सेट करें।
 
-    如果参数 *other* 为 ``None``，则返回此图表的比例。
+    यदि *other* ``None`` है, तो इस ग्राफ़ का स्केल लौटाएं।
 
-    如果提供了一个数值类型的 *other*，则将图表重新缩放到该值。
-    如果图表的比例未知或为零，对其重新缩放将会引发:exc: `~.LenaValueError` 异常。
+    यदि *other* एक संख्यात्मक मान है, तो ग्राफ़ को उस मान पर पुनः स्केल करें।
+    यदि ग्राफ़ का स्केल अज्ञात है या शून्य है,
+    तो पुनः स्केल करने पर :exc:`~.LenaValueError` उत्पन्न होगा।
 
-    为了获得有意义的结果，将使用图表的字段。
-    仅最后一个坐标会被重新缩放。
-    例如，如果图表具有 *x* 和 *y* 坐标，则 *y* 会被重新缩放；对于三维图表，*z* 会被重新缩放。
-    所有的误差值也会与其对应的坐标一起重新缩放。
+    सार्थक परिणाम प्राप्त करने के लिए, ग्राफ़ के फ़ील्ड्स का उपयोग किया जाता है।
+    केवल अंतिम निर्देशांक (coordinate) को पुनः स्केल किया जाता है।
+    उदाहरण के लिए, यदि ग्राफ़ में *x* और *y* निर्देशांक हैं,
+    तो *y* को पुनः स्केल किया जाएगा, और यदि ग्राफ़ 3-आयामी (3-dimensional) है,
+    तो *z* को पुनः स्केल किया जाएगा।
+    सभी त्रुटियों (errors) को उनके निर्देशांक के साथ पुनः स्केल किया जाता है।
     """
     if other is None:
         return self._scale
     elif isinstance(other, (int, float)):
-        if self._scale == 0 or self._scale is None:
-            raise LenaValueError("Cannot rescale chart with unknown or zero scale.")
+        if self._scale is None or self._scale == 0:
+            raise ValueError("Cannot rescale graph with unknown or zero scale.")
         # Rescale the last coordinate
         if hasattr(self, 'z'):
             self.z *= other / self._scale
-            if hasattr(self, 'z_error'):
-                self.z_error *= other / self._scale
         elif hasattr(self, 'y'):
             self.y *= other / self._scale
-            if hasattr(self, 'y_error'):
-                self.y_error *= other / self._scale
         elif hasattr(self, 'x'):
             self.x *= other / self._scale
-            if hasattr(self, 'x_error'):
-                self.x_error *= other / self._scale
+        # Rescale errors if they exist
+        if hasattr(self, 'errors'):
+            for i in range(len(self.errors)):
+                self.errors[i] *= other / self._scale
         self._scale = other
     else:
-        raise TypeError("Scale must be a numeric value or None.")
+        raise TypeError("Expected a numeric value or None for scaling.")

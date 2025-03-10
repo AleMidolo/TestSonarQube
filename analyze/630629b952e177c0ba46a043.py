@@ -1,22 +1,26 @@
+import requests
+
 def get_nodeinfo_well_known_document(url, document_path=None):
     """
-    返回一个格式化的字典，其中包括如 `url` 和 `document_path` 等信息。
+    NodeInfo .well-known दस्तावेज़ उत्पन्न करें।  
 
-    生成一个 NodeInfo 的 `.well-known` 文档。
+    स्पेसिफिकेशन देखें: [http://nodeinfo.diaspora.software](http://nodeinfo.diaspora.software)  
 
-    参考规范: http://nodeinfo.diaspora.software
+    पैरामीटर (Arguments): 
+    - url: पूरा बेस URL प्रोटोकॉल के साथ, जैसे `https://example.com`  
+    - document_path: कस्टम NodeInfo दस्तावेज़ पथ, यदि प्रदान किया गया हो (वैकल्पिक)  
 
-    :arg url: 完整的基础 URL，包含协议，例如 `https://example.com`
-    :document_path: 如果提供了自定义的 NodeInfo 文档路径，则使用该路径（可选）
-    :返回值: 字典
+    रिटर्न (Returns):  
+    - dict: एक स्वरूपित डिक्शनरी
     """
     if document_path is None:
         document_path = "/.well-known/nodeinfo"
     
-    well_known_url = f"{url.rstrip('/')}{document_path}"
+    full_url = f"{url.rstrip('/')}{document_path}"
     
-    return {
-        "url": url,
-        "document_path": document_path,
-        "well_known_url": well_known_url
-    }
+    try:
+        response = requests.get(full_url)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        return {"error": str(e)}

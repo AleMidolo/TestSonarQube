@@ -1,41 +1,23 @@
 def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     """
-    使用 `vars` 字典运行 Ansible CLI。
+    Ansible CLI को vars_dict के साथ चलाता है।
 
-    :param vars_dict: dict, 将作为 Ansible 的 extra-vars 传递
-    :param cli_args: list, 命令行参数列表
-    :param ir_workspace: 一个表示当前活动的工作区的Infrared Workspace 对象
-    :param ir_plugin: 一个表示当前插件的InfraredPlugin 对象
-    :return: ansible 的结果
+    :param vars_dict: dict, इसे Ansible extra-vars के रूप में पास किया जाएगा
+    :param cli_args: कमांड लाइन आर्ग्युमेंट्स की सूची
+    :param ir_workspace: एक Infrared Workspace ऑब्जेक्ट जो सक्रिय वर्कस्पेस को दर्शाता है
+    :param ir_plugin: वर्तमान प्लगइन का एक InfraredPlugin ऑब्जेक्ट
+    :return: ansible के परिणाम
     """
-    from ansible.cli.playbook import PlaybookCLI
-    from ansible.parsing.dataloader import DataLoader
-    from ansible.vars.manager import VariableManager
-    from ansible.inventory.manager import InventoryManager
-    from ansible.executor.playbook_executor import PlaybookExecutor
+    import subprocess
 
-    # 初始化 DataLoader
-    loader = DataLoader()
+    # Convert vars_dict to a string format suitable for Ansible extra-vars
+    extra_vars = " ".join([f"{k}={v}" for k, v in vars_dict.items()])
 
-    # 初始化 InventoryManager
-    inventory = InventoryManager(loader=loader, sources=cli_args.get('inventory', None))
+    # Construct the full command
+    command = ["ansible-playbook"] + cli_args + ["--extra-vars", extra_vars]
 
-    # 初始化 VariableManager
-    variable_manager = VariableManager(loader=loader, inventory=inventory)
+    # Execute the command
+    result = subprocess.run(command, capture_output=True, text=True)
 
-    # 设置 extra-vars
-    variable_manager.extra_vars = vars_dict
-
-    # 初始化 PlaybookExecutor
-    pbex = PlaybookExecutor(
-        playbooks=cli_args.get('playbooks', []),
-        inventory=inventory,
-        variable_manager=variable_manager,
-        loader=loader,
-        passwords={}
-    )
-
-    # 运行 playbook
-    result = pbex.run()
-
+    # Return the result
     return result

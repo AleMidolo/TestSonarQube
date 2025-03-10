@@ -1,17 +1,25 @@
 def next_version(version):
     """
-    根据现有模式生成下一个版本标识符
+    दिए गए संस्करण पैटर्न के अनुसार अगला संस्करण पहचानकर्ता प्राप्त करें।
 
-    遵循现有格式的下一个版本标识符
-    必须能够处理以零开头和非零开头的两种情况。
+    यह फ़ंक्शन शून्य-प्रिफिक्स (zero-prefixed) और गैर-शून्य-प्रिफिक्स (non-zero prefixed) दोनों प्रकार के संस्करणों को संभालने में सक्षम होना चाहिए।
     """
-    # 将版本字符串转换为整数
-    version_num = int(version)
+    # Split the version string into parts
+    parts = version.split('.')
     
-    # 增加版本号
-    next_version_num = version_num + 1
+    # Convert each part to an integer
+    parts = [int(part) for part in parts]
     
-    # 将整数转换回字符串，并保持原有长度
-    next_version_str = str(next_version_num).zfill(len(version))
+    # Increment the last part
+    parts[-1] += 1
+    
+    # Handle carry-over for parts
+    for i in range(len(parts) - 1, 0, -1):
+        if parts[i] > 9:
+            parts[i] = 0
+            parts[i - 1] += 1
+    
+    # Convert back to string
+    next_version_str = '.'.join(map(str, parts))
     
     return next_version_str

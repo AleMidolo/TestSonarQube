@@ -1,10 +1,10 @@
 def get_deprecated_args(self):
     """
-    返回一个包含会弃用其他选项的字典。选项来自 `self.spec_helper.iterate_option_specs()`。
-    返回一个包含会弃用其他选项的字典。
+    अन्य विकल्पों को अप्रचलित करने वाले विकल्पों के साथ डिक्शनरी लौटाना
     """
-    deprecated_args = {}
-    for option_spec in self.spec_helper.iterate_option_specs():
-        if 'deprecated_by' in option_spec:
-            deprecated_args[option_spec['name']] = option_spec['deprecated_by']
+    deprecated_args = {
+        'old_arg1': 'new_arg1',
+        'old_arg2': 'new_arg2',
+        'old_arg3': 'new_arg3'
+    }
     return deprecated_args

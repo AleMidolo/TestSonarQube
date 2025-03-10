@@ -1,10 +1,9 @@
 def minimalBases(classes):
     """
-    以列表格式返回所有没有子类的类。
-    将基类列表简化为其有序的最小等价集合。
+    आधार कक्षाओं (base classes) की सूची को उसके क्रमबद्ध न्यूनतम समकक्ष (ordered minimum equivalent) में घटाएं।
     """
     minimal = []
     for cls in classes:
-        if not any(issubclass(other, cls) for other in classes if other != cls):
+        if not any(issubclass(cls, base) for base in minimal):
             minimal.append(cls)
     return minimal

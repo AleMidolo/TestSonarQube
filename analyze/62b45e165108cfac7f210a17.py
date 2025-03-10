@@ -1,20 +1,20 @@
 def get_logical_path_map(inventory, version):
     """
-    返回库存（inventory）中各状态的文件路径，并以字典类型表示。
-    获取库存中某个版本的状态逻辑路径到磁盘文件的映射。
+    इन्वेंटरी में दिए गए संस्करण (version) के लिए स्थिति (state) में लॉजिकल पथों और डिस्क पर फ़ाइलों के बीच का मैप प्राप्त करें।
 
-    返回一个字典：`logical_path_in_state -> set(content_files)`
+    रिटर्न करता है एक डिक्शनरी: 
+    `logical_path_in_state -> set(content_files)`
 
-    集合`content_files`可能包含对比所描述版本更高版本中重复文件的引用。
+    `content_files` का सेट उन डुप्लिकेट फ़ाइलों के संदर्भ भी शामिल कर सकता है जो उस संस्करण के बाद के संस्करणों में मौजूद हैं जिसे वर्णित किया जा रहा है।
     """
     logical_path_map = {}
     
     for logical_path, file_versions in inventory.items():
-        content_files = set()
-        for file_version, file_path in file_versions.items():
-            if file_version >= version:
-                content_files.add(file_path)
-        if content_files:
+        if version in file_versions:
+            content_files = set()
+            for v, content_file in file_versions.items():
+                if v >= version:
+                    content_files.add(content_file)
             logical_path_map[logical_path] = content_files
     
     return logical_path_map

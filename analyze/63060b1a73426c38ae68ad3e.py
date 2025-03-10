@@ -1,34 +1,28 @@
 import os
-import yaml
+import json
 
 def get_plugin_spec_flatten_dict(plugin_dir):
     """
-    使用 YAML 来读取 `plugin_dir` 中的各种信息，并以字典形式将其返回。
-    从插件规范创建一个扁平化的字典
+    प्लगइन स्पेसिफिकेशन से एक फ्लैट डिक्शनरी बनाता है।
 
-    :param plugin_dir: 插件目录的路径
-    :return: 一个包含插件属性的扁平化字典
+    :param plugin_dir: प्लगइन की डायरेक्टरी का पथ
+    :return: एक फ्लैट डिक्शनरी जो प्लगइन की प्रॉपर्टीज़ को समाहित करती है
     """
-    flattened_dict = {}
+    plugin_spec_path = os.path.join(plugin_dir, 'plugin_spec.json')
+    if not os.path.exists(plugin_spec_path):
+        raise FileNotFoundError(f"Plugin specification file not found at {plugin_spec_path}")
     
-    # 遍历插件目录中的所有 YAML 文件
-    for root, dirs, files in os.walk(plugin_dir):
-        for file in files:
-            if file.endswith('.yaml') or file.endswith('.yml'):
-                file_path = os.path.join(root, file)
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    yaml_data = yaml.safe_load(f)
-                    if yaml_data:
-                        # 将 YAML 数据扁平化并合并到主字典中
-                        for key, value in yaml_data.items():
-                            if key in flattened_dict:
-                                if isinstance(flattened_dict[key], list):
-                                    flattened_dict[key].extend(value)
-                                elif isinstance(flattened_dict[key], dict):
-                                    flattened_dict[key].update(value)
-                                else:
-                                    flattened_dict[key] = value
-                            else:
-                                flattened_dict[key] = value
+    with open(plugin_spec_path, 'r') as file:
+        plugin_spec = json.load(file)
     
-    return flattened_dict
+    def flatten_dict(d, parent_key='', sep='.'):
+        items = []
+        for k, v in d.items():
+            new_key = f"{parent_key}{sep}{k}" if parent_key else k
+            if isinstance(v, dict):
+                items.extend(flatten_dict(v, new_key, sep=sep).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
+    
+    return flatten_dict(plugin_spec)

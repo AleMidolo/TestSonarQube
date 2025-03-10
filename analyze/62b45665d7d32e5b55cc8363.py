@@ -2,23 +2,20 @@ import argparse
 
 def make_parsers():
     """
-    构建一个解析器及其子解析器，并将它们作为一个元组返回。
-
-    构建一个顶级解析器及其子解析器，并将它们作为一个元组返回。
+    एक शीर्ष-स्तरीय (top-level) पार्सर और उसके सबपार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
     """
-    # 创建顶级解析器
-    parser = argparse.ArgumentParser(description="顶级解析器")
+    # शीर्ष-स्तरीय पार्सर बनाएं
+    top_parser = argparse.ArgumentParser(description="शीर्ष-स्तरीय पार्सर")
     
-    # 创建子解析器
-    subparsers = parser.add_subparsers(dest="command", help="子命令")
+    # सबपार्सर बनाएं
+    subparsers = top_parser.add_subparsers(title="सबपार्सर", dest="subcommand")
     
-    # 添加第一个子命令
-    parser_a = subparsers.add_parser("command_a", help="执行命令A")
-    parser_a.add_argument("--arg1", type=int, help="命令A的参数1")
+    # पहला सबपार्सर
+    parser_a = subparsers.add_parser('command_a', help='कमांड ए के लिए सहायता')
+    parser_a.add_argument('--option_a', type=str, help='कमांड ए के लिए विकल्प')
     
-    # 添加第二个子命令
-    parser_b = subparsers.add_parser("command_b", help="执行命令B")
-    parser_b.add_argument("--arg2", type=str, help="命令B的参数2")
+    # दूसरा सबपार्सर
+    parser_b = subparsers.add_parser('command_b', help='कमांड बी के लिए सहायता')
+    parser_b.add_argument('--option_b', type=int, help='कमांड बी के लिए विकल्प')
     
-    # 返回解析器和子解析器
-    return parser, subparsers
+    return top_parser, subparsers

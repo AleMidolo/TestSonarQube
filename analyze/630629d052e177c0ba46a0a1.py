@@ -6,21 +6,17 @@ from cryptography.hazmat.backends import default_backend
 
 def verify_relayable_signature(public_key, doc, signature):
     """
-    验证已签名的XML元素，以确保声明的作者确实生成了此消息。
-
-    :param public_key: 公钥，用于验证签名
-    :param doc: 需要验证的文档（XML元素）
-    :param signature: 签名
-    :return: 如果验证成功返回True，否则返回False
+    हस्ताक्षरित XML तत्वों को सत्यापित करें ताकि यह सुनिश्चित किया जा सके 
+    कि दावा किया गया लेखक ने वास्तव में यह संदेश उत्पन्न किया है।
     """
     try:
-        # 加载公钥
+        # Load the public key
         pub_key = serialization.load_pem_public_key(
             public_key.encode(),
             backend=default_backend()
         )
         
-        # 验证签名
+        # Verify the signature
         pub_key.verify(
             signature,
             doc.encode(),

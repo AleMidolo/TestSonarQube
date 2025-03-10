@@ -1,14 +1,9 @@
 def extend_cli(self, root_subparsers):
     """
-    将规范 CLI 选项添加到主入口点。
+    मुख्य एंट्री पॉइंट में स्पेक CLI विकल्प जोड़ता है।
 
-    :param root_subparsers: 要扩展的子解析器对象。
+    :param subparser: वह सबपार्सर ऑब्जेक्ट जिसे विस्तारित करना है।
     """
-    # 添加一个子命令
-    subparser = root_subparsers.add_parser('extend', help='扩展 CLI 选项')
-    
-    # 添加一个选项
-    subparser.add_argument('--option', type=str, help='这是一个示例选项')
-    
-    # 添加另一个选项
-    subparser.add_argument('--flag', action='store_true', help='这是一个标志选项')
+    spec_parser = root_subparsers.add_parser('spec', help='स्पेक संबंधित कमांड')
+    spec_parser.add_argument('--option1', help='स्पेक विकल्प 1')
+    spec_parser.add_argument('--option2', help='स्पेक विकल्प 2')

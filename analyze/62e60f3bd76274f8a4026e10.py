@@ -2,19 +2,14 @@ from datetime import timedelta
 
 def dehydrate_timedelta(value):
     """
-    使用 `timedelta` 的值来生成 `Structure` 类。
-    用于 `time` 值的转换器。
+    `timedelta` मानों के लिए डिहाइड्रेटर।  
 
-    :param value: 输入的 `timedelta` 对象
-    :type value: timedelta
-    :return: 包含 `days`, `seconds`, `microseconds` 的字典
-    :rtype: dict
+    :param value:  
+    :type value: timedelta  
+    :return:  
     """
     if not isinstance(value, timedelta):
         raise TypeError("Expected a timedelta object")
     
-    return {
-        'days': value.days,
-        'seconds': value.seconds,
-        'microseconds': value.microseconds
-    }
+    # Convert timedelta to total seconds and return as a float
+    return value.total_seconds()

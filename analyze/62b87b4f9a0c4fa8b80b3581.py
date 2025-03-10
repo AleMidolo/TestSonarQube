@@ -1,29 +1,15 @@
 def scale(self, other=None, recompute=False):
-    """
-    计算或设置直方图的比例（积分值）。
-
-    如果参数 *other* 为 ``None``，则返回当前直方图的比例。
-    如果之前未计算过比例值，则会计算并存储该值以供后续使用（除非明确要求重新计算）。
-    请注意，在对直方图进行更改（填充数据）后，如果之前已计算过比例值，则需要显式地重新计算比例。
-
-    如果提供了一个浮点数 *other*，则将当前直方图的比例调整为 *other*。
-
-    无法对比例为零的直方图进行重新调整。如果尝试这样做，将会引发 :exc:`.LenaValueError` 异常。
-    """
     if other is None:
         if not hasattr(self, '_scale') or recompute:
-            self._scale = self._compute_scale()
+            # Calculate the scale (integral) of the histogram
+            self._scale = sum(self.bins)
         return self._scale
     else:
         if not isinstance(other, (int, float)):
-            raise TypeError("Scale must be a float or integer.")
+            raise TypeError("Scale factor must be a float or integer.")
         if self._scale == 0:
             raise LenaValueError("Cannot rescale a histogram with zero scale.")
-        self._scale = float(other)
-
-def _compute_scale(self):
-    """
-    计算直方图的比例（积分值）。
-    """
-    # 假设 self.bins 是一个包含直方图数据的列表
-    return sum(self.bins)
+        # Rescale the histogram
+        scale_factor = other / self._scale
+        self.bins = [bin_value * scale_factor for bin_value in self.bins]
+        self._scale = other

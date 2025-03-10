@@ -1,20 +1,24 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone, timedelta
 
 def hydrate_time(nanoseconds, tz=None):
     """
-    将纳秒转换为固定格式的时间。
-    用于处理 `Time` 和 `LocalTime` 值的转换器。
+    `Time` और `LocalTime` मानों के लिए हाइड्रेटर।  
 
-    :param nanoseconds: 纳秒数
-    :param tz: 时区信息，默认为None
-    :return: 格式化后的时间字符串
+    पैरामीटर (Parameters):
+    - nanoseconds: समय को नैनोसेकंड में दर्शाने वाला पूर्णांक
+    - tz: समय क्षेत्र (timezone) जिसमें समय को दर्शाना है (डिफ़ॉल्ट: None)
+
+    वापसी मान:
+    - समय (datetime.datetime ऑब्जेक्ट)
     """
-    # 将纳秒转换为秒
+    # Convert nanoseconds to seconds
     seconds = nanoseconds / 1e9
-    # 创建一个时间戳
-    dt = datetime(1970, 1, 1) + timedelta(seconds=seconds)
-    # 如果提供了时区信息，则转换为该时区
+    
+    # Create a datetime object from the timestamp
+    dt = datetime.fromtimestamp(seconds, tz=timezone.utc)
+    
+    # If a timezone is provided, convert the datetime to that timezone
     if tz is not None:
-        dt = dt.replace(tzinfo=timezone.utc).astimezone(tz)
-    # 返回格式化后的时间字符串
-    return dt.strftime('%Y-%m-%d %H:%M:%S.%f')
+        dt = dt.astimezone(tz)
+    
+    return dt

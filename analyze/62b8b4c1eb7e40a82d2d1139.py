@@ -1,16 +1,8 @@
 def verifyClass(iface, candidate, tentative=False):
     """
-    验证 *candidate* 是否可能正确地提供 *iface*。
+    यह फ़ंक्शन सत्यापित करता है कि *candidate* सही तरीके से *iface* प्रदान कर सकता है या नहीं।
     """
-    if not hasattr(candidate, '__bases__'):
-        return False
-    
-    if iface in candidate.__bases__:
-        return True
-    
-    if tentative:
-        for base in candidate.__bases__:
-            if verifyClass(iface, base, tentative):
-                return True
-    
-    return False
+    if not tentative:
+        return all(hasattr(candidate, attr) and callable(getattr(candidate, attr)) for attr in dir(iface) if not attr.startswith('__'))
+    else:
+        return all(hasattr(candidate, attr) for attr in dir(iface) if not attr.startswith('__'))

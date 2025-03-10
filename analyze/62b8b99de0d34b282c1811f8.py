@@ -1,8 +1,7 @@
 def _reset_logging(cls):
     """
-    重置日志系统
+    Reset logging configuration to default settings.
     """
     import logging
-    logging.shutdown()
     logging.root.handlers = []
-    logging.basicConfig()
+    logging.basicConfig(level=logging.WARNING)

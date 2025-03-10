@@ -1,30 +1,37 @@
 def extostr(cls, e, max_level=30, max_path_level=5):
     """
-    将异常格式化为字符串
-    格式化异常信息。
-
-    :param e: 任意异常实例。
-    :type e: Exception
-    :param max_level: 最大调用堆栈层级（默认值为30）
-    :type max_level: int
-    :param max_path_level: 最大路径层级（默认值为5）
-    :type max_path_level: int
-    :return: 可读的异常字符串
-    :rtype: str
+    अपवाद को स्वरूपित करें।  
+    :param e: कोई भी अपवाद उदाहरण।  
+    :type e: Exception  
+    :param max_level: अधिकतम कॉल स्टैक स्तर (डिफ़ॉल्ट 30)।  
+    :type max_level: int  
+    :param max_path_level: अधिकतम पथ स्तर (डिफ़ॉल्ट 5)।  
+    :type max_path_level: int  
+    :return: अपवाद को पढ़ने योग्य स्ट्रिंग।  
+    :rtype: str  
     """
     import traceback
-    import sys
-
-    # 获取异常信息
-    exc_type, exc_value, exc_traceback = sys.exc_info()
     
-    # 格式化异常信息
-    formatted_exception = traceback.format_exception(exc_type, exc_value, exc_traceback, limit=max_level)
+    # Get the exception type and message
+    exception_type = type(e).__name__
+    exception_message = str(e)
     
-    # 限制路径层级
-    formatted_exception = [line for line in formatted_exception if line.count('/') <= max_path_level]
+    # Get the traceback
+    tb_list = traceback.format_tb(e.__traceback__)
     
-    # 将列表转换为字符串
-    exception_str = ''.join(formatted_exception)
+    # Limit the traceback levels
+    if len(tb_list) > max_level:
+        tb_list = tb_list[:max_level]
     
-    return exception_str
+    # Format the traceback
+    formatted_traceback = []
+    for level, tb in enumerate(tb_list):
+        if level >= max_path_level:
+            break
+        formatted_traceback.append(f"Level {level + 1}:\n{tb}")
+    
+    # Combine the exception type, message, and traceback
+    formatted_exception = f"{exception_type}: {exception_message}\n"
+    formatted_exception += "\n".join(formatted_traceback)
+    
+    return formatted_exception

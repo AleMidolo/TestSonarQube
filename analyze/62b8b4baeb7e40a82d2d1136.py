@@ -1,50 +1,37 @@
 from zope.interface import Invalid, providedBy
+from zope.interface.verify import verifyObject, verifyClass
 
 def _verify(iface, candidate, tentative=False, vtype=None):
     """
-    验证 *candidate* 是否能够正确地提供 *iface*。
+    Verify that the candidate correctly provides the interface.
 
-    这个过程包括以下步骤：
+    This includes:
+    - Ensuring the candidate claims to provide the interface using `iface.providedBy`
+      (unless tentative is True, in which case this step is skipped).
+    - Ensuring the candidate defines all required methods.
+    - Ensuring the methods have the correct signatures (as far as possible).
+    - Ensuring the candidate defines all required attributes.
 
-    - 确保候选对象声明其提供了接口，通过调用 ``iface.providedBy`` （如果 *tentative* 为真，则跳过此步骤）。这意味着候选对象的类必须声明 `implements <zope.interface.implementer>` 该接口，或者候选对象自身声明 `provides <zope.interface.provider>` 该接口。
-
-    - 确保候选对象定义了所有必要的方法。
-
-    - 确保这些方法具有正确的签名（在可能的范围内进行检查）。
-
-    - 确保候选对象定义了所有必要的属性。
-
-    :return bool: 如果所有可以检查的条件都通过，则返回真。
-    :raises zope.interface.Invalid: 如果上述任何条件不满足
-
-    .. versionchanged:: 5.0
-    如果有多个方法或属性无效，将收集并报告所有这些错误。之前的行为是仅报告第一个错误。作为一个特殊情况，如果只有一个错误，则像之前一样单独抛出该错误。
+    :return bool: Returns a true value if all checks pass.
+    :raises zope.interface.Invalid: If any of the above conditions are not met.
     """
     errors = []
 
-    # Step 1: Ensure the candidate declares it provides the interface
-    if not tentative and not iface.providedBy(candidate):
-        errors.append(f"{candidate} does not provide {iface}")
+    # Step 1: Verify that the candidate claims to provide the interface
+    if not tentative:
+        if not iface.providedBy(candidate):
+            errors.append(f"{candidate} does not claim to provide {iface}.")
 
-    # Step 2: Ensure the candidate defines all required methods
-    required_methods = iface.namesAndDescriptions(all=True)
-    for name, desc in required_methods:
-        if not hasattr(candidate, name):
-            errors.append(f"{candidate} is missing required method {name}")
+    # Step 2: Verify that the candidate defines all required methods and attributes
+    try:
+        if vtype == 'class':
+            verifyClass(iface, candidate)
         else:
-            # Step 3: Ensure the methods have the correct signatures (if possible)
-            # This is a simplified check; a full signature check would require more complex logic
-            method = getattr(candidate, name)
-            if not callable(method):
-                errors.append(f"{name} is not a callable method on {candidate}")
+            verifyObject(iface, candidate)
+    except Invalid as e:
+        errors.append(str(e))
 
-    # Step 4: Ensure the candidate defines all required attributes
-    required_attrs = iface.namesAndDescriptions(all=True)
-    for name, desc in required_attrs:
-        if not hasattr(candidate, name):
-            errors.append(f"{candidate} is missing required attribute {name}")
-
-    # Handle errors
+    # Step 3: If there are any errors, raise them
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
