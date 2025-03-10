@@ -6,12 +6,12 @@ def protocol_handlers(cls, protocol_version=None):
     :return: diccionario que mapea tuplas de versión a clases de controladores para todas las versiones relevantes y compatibles del protocolo
     :raise TypeError: si la versión del protocolo no se pasa como una tupla
     """
-    # Supongamos que tenemos un diccionario de controladores disponibles
+    # Diccionario de controladores de protocolo Bolt disponibles
     available_handlers = {
-        (3, 5): "HandlerForV3_5",
-        (4, 0): "HandlerForV4_0",
-        (4, 1): "HandlerForV4_1",
-        (4, 2): "HandlerForV4_2",
+        (3, 5): cls.BoltV3_5Handler,
+        (4, 0): cls.BoltV4_0Handler,
+        (4, 1): cls.BoltV4_1Handler,
+        # Agrega más versiones y controladores según sea necesario
     }
 
     if protocol_version is not None:

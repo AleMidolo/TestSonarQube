@@ -18,9 +18,9 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
                 value, timestamp = wrapper._cache[key]
                 if timer() - timestamp < ttl:
                     return value
-            result = cached_func(*args, **kwargs)
-            wrapper._cache[key] = (result, timer())
-            return result
+            value = cached_func(*args, **kwargs)
+            wrapper._cache[key] = (value, timer())
+            return value
 
         wrapper._cache = {}
         return wrapper

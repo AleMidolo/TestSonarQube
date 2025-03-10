@@ -1,4 +1,5 @@
-import datetime
+import re
+from datetime import timedelta
 
 def parse_frequency(frequency):
     """
@@ -11,28 +12,28 @@ def parse_frequency(frequency):
     if frequency is None or frequency.lower() == "always":
         return None
     
-    try:
-        num, unit = frequency.strip().split()
-        num = int(num)
-    except ValueError:
+    pattern = re.compile(r'^(\d+)\s*(second|minute|hour|day|week|month|year)s?$', re.IGNORECASE)
+    match = pattern.match(frequency.strip())
+    
+    if not match:
         raise ValueError(f"Frecuencia no válida: {frequency}")
     
-    unit = unit.lower()
-    if unit in ["second", "seconds", "s"]:
-        return datetime.timedelta(seconds=num)
-    elif unit in ["minute", "minutes", "m"]:
-        return datetime.timedelta(minutes=num)
-    elif unit in ["hour", "hours", "h"]:
-        return datetime.timedelta(hours=num)
-    elif unit in ["day", "days", "d"]:
-        return datetime.timedelta(days=num)
-    elif unit in ["week", "weeks", "w"]:
-        return datetime.timedelta(weeks=num)
-    elif unit in ["month", "months"]:
-        # Approximate months as 30 days
-        return datetime.timedelta(days=num * 30)
-    elif unit in ["year", "years", "y"]:
-        # Approximate years as 365 days
-        return datetime.timedelta(days=num * 365)
+    value = int(match.group(1))
+    unit = match.group(2).lower()
+    
+    if unit == "second":
+        return timedelta(seconds=value)
+    elif unit == "minute":
+        return timedelta(minutes=value)
+    elif unit == "hour":
+        return timedelta(hours=value)
+    elif unit == "day":
+        return timedelta(days=value)
+    elif unit == "week":
+        return timedelta(weeks=value)
+    elif unit == "month":
+        return timedelta(days=value * 30)  # Aproximación de 30 días por mes
+    elif unit == "year":
+        return timedelta(days=value * 365)  # Aproximación de 365 días por año
     else:
         raise ValueError(f"Unidad de tiempo no válida: {unit}")

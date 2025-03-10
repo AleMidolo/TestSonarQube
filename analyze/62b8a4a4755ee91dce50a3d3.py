@@ -14,13 +14,15 @@ def fromutc(self, dt):
     dt_utc = dt.astimezone(self.utc)
     
     # Convertir el datetime UTC a la nueva zona horaria
-    dt_new = dt_utc.astimezone(self)
+    dt_local = dt_utc.astimezone(self)
     
     # Verificar si el datetime es ambiguo en la nueva zona horaria
-    if self.is_ambiguous(dt_new):
+    if self.is_ambiguous(dt_local):
         # Si es ambiguo, determinar si está en el "pliegue"
-        if self.is_folded(dt_new):
+        if self.is_folded(dt_local):
             # Si está en el pliegue, ajustar el datetime
-            dt_new = self.resolve_ambiguity(dt_new, fold=1)
+            dt_local = self.resolve_ambiguous(dt_local, fold=1)
+        else:
+            dt_local = self.resolve_ambiguous(dt_local, fold=0)
     
-    return dt_new
+    return dt_local

@@ -4,9 +4,9 @@ def parse_version(s: str) -> tuple[int, ...]:
     Convierte una cadena de versión en una tupla de enteros para facilitar la comparación.
     
     Args:
-        s (str): Cadena de versión en formato "X.Y.Z..." donde X, Y, Z son números enteros.
+        s (str): Cadena que representa la versión (e.g., "1.2.3").
     
     Returns:
-        tuple[int, ...]: Tupla de enteros representando la versión.
+        tuple[int, ...]: Tupla de enteros representando la versión (e.g., (1, 2, 3)).
     """
     return tuple(map(int, s.split('.')))

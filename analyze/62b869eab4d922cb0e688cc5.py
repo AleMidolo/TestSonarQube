@@ -20,7 +20,7 @@ def update_last_applied_manifest_dict_from_resp(
     """
     for key, schema in observer_schema.items():
         if key not in response:
-            raise KeyError(f"Field '{key}' not found in the Kubernetes response.")
+            raise KeyError(f"Field '{key}' not found in Kubernetes response.")
         
         if isinstance(schema, dict):
             if key not in last_applied_manifest:
@@ -31,6 +31,8 @@ def update_last_applied_manifest_dict_from_resp(
         elif isinstance(schema, list):
             if key not in last_applied_manifest:
                 last_applied_manifest[key] = []
+            # Assuming there's a function `update_last_applied_manifest_list_from_resp`
+            # to handle list types.
             update_last_applied_manifest_list_from_resp(
                 last_applied_manifest[key], schema, response[key]
             )

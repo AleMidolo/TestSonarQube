@@ -11,25 +11,22 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     
     stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
     
-    try:
-        result = subprocess.run(
-            full_command,
-            cwd=cwd,
-            env=env,
-            stdout=subprocess.PIPE,
-            stderr=stderr,
-            text=True,
-            check=True
-        )
-        
-        if verbose:
-            print(f"Command executed: {' '.join(full_command)}")
-            print(f"Output: {result.stdout}")
-        
-        return result.stdout
+    process = subprocess.Popen(
+        full_command,
+        cwd=cwd,
+        stdout=subprocess.PIPE,
+        stderr=stderr,
+        env=env,
+        text=True
+    )
     
-    except subprocess.CalledProcessError as e:
-        if verbose:
-            print(f"Command failed: {' '.join(full_command)}")
-            print(f"Error: {e.stderr}")
-        raise
+    stdout, stderr = process.communicate()
+    
+    if verbose:
+        print(f"Command: {' '.join(full_command)}")
+        if stdout:
+            print(f"Stdout: {stdout}")
+        if stderr and not hide_stderr:
+            print(f"Stderr: {stderr}")
+    
+    return process.returncode, stdout, stderr

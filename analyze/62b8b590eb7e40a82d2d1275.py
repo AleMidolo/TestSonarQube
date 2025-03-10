@@ -16,26 +16,25 @@ def _legacy_mergeOrderings(orderings):
     """
     from collections import defaultdict, deque
 
-    # Construir el grafo de dependencias
+    # Build a graph and in-degree count
     graph = defaultdict(set)
     in_degree = defaultdict(int)
     all_nodes = set()
 
     for ordering in orderings:
         for i in range(len(ordering) - 1):
-            u = ordering[i]
-            v = ordering[i + 1]
+            u, v = ordering[i], ordering[i + 1]
             if v not in graph[u]:
                 graph[u].add(v)
                 in_degree[v] += 1
             all_nodes.add(u)
             all_nodes.add(v)
 
-    # Inicializar la cola con nodos que no tienen dependencias
+    # Initialize the queue with nodes having zero in-degree
     queue = deque([node for node in all_nodes if in_degree[node] == 0])
     result = []
 
-    # Realizar un ordenamiento topológico
+    # Perform topological sort
     while queue:
         u = queue.popleft()
         result.append(u)
@@ -43,9 +42,5 @@ def _legacy_mergeOrderings(orderings):
             in_degree[v] -= 1
             if in_degree[v] == 0:
                 queue.append(v)
-
-    # Verificar si hay un ciclo (si hay nodos con in_degree > 0)
-    if len(result) != len(all_nodes):
-        raise ValueError("Existe un ciclo en los ordenamientos proporcionados.")
 
     return result

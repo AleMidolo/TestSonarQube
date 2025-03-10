@@ -18,7 +18,7 @@ def send_document(url, data, timeout=10, method="post", *args, **kwargs):
         elif method.lower() == "get":
             response = requests.get(url, params=data, timeout=timeout, *args, **kwargs)
         else:
-            raise ValueError(f"Método HTTP no soportado: {method}")
+            raise ValueError(f"Unsupported method: {method}")
         
         response.raise_for_status()
         return (response.status_code, None)

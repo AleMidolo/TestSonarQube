@@ -14,11 +14,11 @@ def regex_dict(item):
 
     regex_keys = regex_dict(rules)
 
-        Argumentos:
-            item (dict): Diccionario a convertir.
+    Argumentos:
+        item (dict): Diccionario a convertir.
 
-        Retorno:
-            dict: Diccionario con claves convertidas a expresiones regulares.
+    Retorno:
+        dict: Diccionario con claves convertidas a expresiones regulares.
     """
     regex_dict = {}
     for key, value in item.items():

@@ -17,9 +17,9 @@ def difference(d1, d2, level=-1):
         if k not in d2:
             diff[k] = v
         elif isinstance(v, dict) and isinstance(d2[k], dict) and level != 0:
-            sub_diff = difference(v, d2[k], level - 1 if level > 0 else -1)
-            if sub_diff:
-                diff[k] = sub_diff
+            nested_diff = difference(v, d2[k], level - 1 if level > 0 else -1)
+            if nested_diff:
+                diff[k] = nested_diff
         elif v != d2[k]:
             diff[k] = v
     return diff

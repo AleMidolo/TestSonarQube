@@ -1,21 +1,22 @@
-from enum import Enum
+from typing import Union
 
-class RequestType(Enum):
-    PUBLIC_MESSAGE = 1
-    PRIVATE_MESSAGE = 2
-    LEGACY_PAYLOAD = 3
-
-def identify_request(request: RequestType):
+def identify_request(request: RequestType) -> Union[str, None]:
     """
     Intente identificar si esta es una solicitud de Diaspora.
 
     Primero intente con un mensaje público. Luego con un mensaje privado. Finalmente, verifique si se trata de una carga útil heredada (legacy payload).
     """
-    if request == RequestType.PUBLIC_MESSAGE:
-        return "Es una solicitud de Diaspora: Mensaje público."
-    elif request == RequestType.PRIVATE_MESSAGE:
-        return "Es una solicitud de Diaspora: Mensaje privado."
-    elif request == RequestType.LEGACY_PAYLOAD:
-        return "Es una solicitud de Diaspora: Carga útil heredada."
-    else:
-        return "No se pudo identificar la solicitud."
+    # Check for public message
+    if hasattr(request, 'public_message') and request.public_message:
+        return "Public message identified"
+    
+    # Check for private message
+    elif hasattr(request, 'private_message') and request.private_message:
+        return "Private message identified"
+    
+    # Check for legacy payload
+    elif hasattr(request, 'legacy_payload') and request.legacy_payload:
+        return "Legacy payload identified"
+    
+    # If none of the above, return None
+    return None

@@ -9,4 +9,4 @@ def render(pieces, style):
     elif style == "patch":
         return f"{pieces['patch']}"
     else:
-        raise ValueError("Estilo no soportado")
+        raise ValueError(f"Estilo no soportado: {style}")

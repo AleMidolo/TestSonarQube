@@ -8,4 +8,6 @@ def is_file_exist(file_name):
     :return: Devuelve `True` (existe) o `False` (no existe o el nombre del archivo no es válido).  
     :rtype: bool  
     """
+    if not isinstance(file_name, str) or not file_name:
+        return False
     return os.path.isfile(file_name)

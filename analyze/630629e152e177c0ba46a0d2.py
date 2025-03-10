@@ -11,21 +11,13 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     # Parse the handle to extract the username and domain
     if '@' not in handle:
         raise ValueError("Invalid handle format. Expected format: user@domain")
-    
+
     username, domain = handle.split('@')
-    
-    # Construct the webfinger URL
-    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
-    
+    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{username}@{domain}"
+
     try:
-        # Make the GET request to retrieve the webfinger document
         response = requests.get(webfinger_url)
         response.raise_for_status()
-        
-        # Parse the JSON response
-        webfinger_data = response.json()
-        
-        return webfinger_data
-    
+        return response.json()
     except requests.exceptions.RequestException as e:
         raise Exception(f"Failed to retrieve webfinger document: {e}")

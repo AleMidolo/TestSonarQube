@@ -6,5 +6,7 @@ def _get_seq_with_type(seq, bufsize=None):
     """
     if isinstance(seq, (str, bytes, bytearray)):
         return seq, type(seq)
-    else:
-        return list(seq), list
+    try:
+        return list(seq), type(seq)
+    except TypeError:
+        return seq, type(seq)
