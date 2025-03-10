@@ -7,20 +7,36 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param parser_name: 命令名称，例如 main、virsh、ospd 等
     :param values_dict: 包含参数的字典
     """
-    if parser_name == 'main':
-        # 假设 main 命令的参数需要转换为整数
+    if parser_name == "main":
+        # 根据 main 命令的特定需求进行类型转换
         for key, value in values_dict.items():
-            if key in ['port', 'timeout']:
+            if key == "port":
                 values_dict[key] = int(value)
-    elif parser_name == 'virsh':
-        # 假设 virsh 命令的参数需要转换为布尔值
-        for key, value in values_dict.items():
-            if key in ['verbose', 'debug']:
-                values_dict[key] = value.lower() == 'true'
-    elif parser_name == 'ospd':
-        # 假设 ospd 命令的参数需要转换为浮点数
-        for key, value in values_dict.items():
-            if key in ['threshold', 'rate']:
+            elif key == "verbose":
+                values_dict[key] = bool(value)
+            elif key == "timeout":
                 values_dict[key] = float(value)
-    # 可以根据需要添加更多的 parser_name 处理逻辑
-    return values_dict
+    elif parser_name == "virsh":
+        # 根据 virsh 命令的特定需求进行类型转换
+        for key, value in values_dict.items():
+            if key == "memory":
+                values_dict[key] = int(value)
+            elif key == "cpu":
+                values_dict[key] = int(value)
+    elif parser_name == "ospd":
+        # 根据 ospd 命令的特定需求进行类型转换
+        for key, value in values_dict.items():
+            if key == "threads":
+                values_dict[key] = int(value)
+            elif key == "debug":
+                values_dict[key] = bool(value)
+    else:
+        # 默认情况下，尝试将值转换为整数或浮点数
+        for key, value in values_dict.items():
+            try:
+                values_dict[key] = int(value)
+            except ValueError:
+                try:
+                    values_dict[key] = float(value)
+                except ValueError:
+                    pass

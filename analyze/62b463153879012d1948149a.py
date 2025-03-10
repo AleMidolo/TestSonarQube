@@ -9,7 +9,7 @@ def _group_files_by_xml_filename(source, xmls, files):
     参数
     ----------
     source: str
-        源文件路径
+        源路径
     xmls: list
         XML 文件列表
     files: list
@@ -19,7 +19,7 @@ def _group_files_by_xml_filename(source, xmls, files):
     -------
     dict
         键：XML 文件的名称
-        值：对应的文件列表
+        值：Package
     """
     grouped_files = {}
     

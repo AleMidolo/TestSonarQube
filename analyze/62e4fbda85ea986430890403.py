@@ -7,6 +7,6 @@ def _shuffled(seq: Sequence[str]) -> list[str]:
     """
     FIXED_RANDOM_SEED = 42  # 固定随机种子
     random.seed(FIXED_RANDOM_SEED)
-    shuffled_seq = seq.copy()
+    shuffled_seq = list(seq)
     random.shuffle(shuffled_seq)
     return shuffled_seq

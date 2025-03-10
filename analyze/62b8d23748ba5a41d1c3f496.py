@@ -27,6 +27,7 @@ def lfu_cache(maxsize=128, typed=False):
                 return cache[key][0]
 
             result = func(*args, **kwargs)
+
             if len(cache) >= maxsize:
                 # Remove the least frequently used item
                 lfu_key = next(iter(freq[min_freq]))
@@ -34,11 +35,11 @@ def lfu_cache(maxsize=128, typed=False):
                 del freq[min_freq][lfu_key]
                 if not freq[min_freq]:
                     del freq[min_freq]
-                    min_freq += 1
 
             cache[key] = (result, 1)
             freq[1][key] = None
             min_freq = 1
+
             return result
 
         return wrapper

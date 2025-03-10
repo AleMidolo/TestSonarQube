@@ -14,31 +14,34 @@ def _legacy_mergeOrderings(orderings):
     ... ])
     ['x', 'y', 'q', 1, 3, 5, 'z']
     """
-    merged = []
-    seen = set()
-    
-    while True:
-        # 找到所有列表的第一个元素
-        candidates = []
-        for ordering in orderings:
-            if ordering:
-                candidates.append(ordering[0])
-        
-        if not candidates:
-            break
-        
-        # 找到所有候选元素中最先出现的元素
-        for candidate in candidates:
-            if candidate not in seen:
-                merged.append(candidate)
-                seen.add(candidate)
-                # 从所有列表中移除该元素
-                for ordering in orderings:
-                    if ordering and ordering[0] == candidate:
-                        ordering.pop(0)
-                break
-        else:
-            # 如果没有找到新的元素，说明所有元素都已处理
-            break
-    
-    return merged
+    from collections import defaultdict, deque
+
+    # 构建图
+    graph = defaultdict(set)
+    in_degree = defaultdict(int)
+    all_nodes = set()
+
+    for ordering in orderings:
+        for i in range(len(ordering) - 1):
+            u, v = ordering[i], ordering[i + 1]
+            if v not in graph[u]:
+                graph[u].add(v)
+                in_degree[v] += 1
+            all_nodes.add(u)
+            all_nodes.add(v)
+        if ordering:
+            all_nodes.add(ordering[-1])
+
+    # 拓扑排序
+    queue = deque([node for node in all_nodes if in_degree[node] == 0])
+    result = []
+
+    while queue:
+        u = queue.popleft()
+        result.append(u)
+        for v in graph[u]:
+            in_degree[v] -= 1
+            if in_degree[v] == 0:
+                queue.append(v)
+
+    return result

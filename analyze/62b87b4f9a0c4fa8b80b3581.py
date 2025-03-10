@@ -21,7 +21,7 @@ def scale(self, other=None, recompute=False):
         if self._scale == 0:
             raise LenaValueError("Cannot rescale a histogram with zero scale.")
         # 调整比例
-        self._scale = float(other)
+        self._scale = other
         return self._scale
 
 def _compute_scale(self):
@@ -30,6 +30,3 @@ def _compute_scale(self):
     """
     # 假设 self._data 是直方图的数据
     return sum(self._data)
-
-class LenaValueError(Exception):
-    pass

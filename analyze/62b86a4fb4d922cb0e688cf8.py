@@ -10,11 +10,12 @@ def validate_value(value):
     异常:
         ValidationError: 如果给定的值不符合正则表达式，将抛出此异常。
     """
-    # 假设我们使用一个简单的正则表达式来验证值是否为有效的电子邮件地址
-    regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+    # 假设我们使用一个简单的正则表达式来验证值
+    # 例如，验证一个只包含字母和数字的字符串
+    pattern = r'^[A-Za-z0-9]+$'
     
-    if not re.match(regex, value):
-        raise ValidationError(f"Invalid value: {value} does not match the required pattern.")
+    if not re.match(pattern, value):
+        raise ValidationError("The value does not match the required pattern.")
     
     return True
 

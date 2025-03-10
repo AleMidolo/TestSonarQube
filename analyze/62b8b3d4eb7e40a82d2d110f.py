@@ -11,7 +11,7 @@ def _should_attempt_c_optimizations():
     # 检查是否运行在 PyPy 上
     is_pypy = hasattr(sys, 'pypy_version_info')
     
-    # 检查 PURE_PYTHON 环境变量的值
+    # 检查 PURE_PYTHON 环境变量
     pure_python = os.getenv('PURE_PYTHON', '').lower() in ('1', 'true', 'yes')
     
     # 如果不在 PyPy 上且 PURE_PYTHON 未设置为真值，则尝试 C 优化

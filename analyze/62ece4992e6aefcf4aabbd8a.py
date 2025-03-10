@@ -7,7 +7,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     根据一系列配置文件名，加载并验证每个配置文件。如果由于权限不足或解析配置文件出错导致无法读取配置文件，将记录错误日志。否则，将结果以一个元组的形式返回，包含一个将配置文件名映射到相应的解析后的配置的字典和一个包含所有解析错误的 `logging.LogRecord` 实例序列。
     根据一系列配置文件名，加载并验证每个配置文件。将结果以一个元组的形式返回，包含一个将配置文件名映射到相应的解析后的配置的字典和一个包含所有解析错误的 `logging.LogRecord` 实例序列。
     """
-    configs = {}
+    config_dict = {}
     errors = []
     
     for filename in config_filenames:
@@ -23,10 +23,10 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 
                 if overrides:
                     for key, value in overrides.items():
-                        config[key] = value
+                        if key in config:
+                            config[key] = value
                 
-                configs[filename] = config
-                
+                config_dict[filename] = config
         except PermissionError:
             logging.error(f"Permission denied when trying to read {filename}")
             errors.append(logging.LogRecord(
@@ -61,4 +61,4 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 exc_info=None
             ))
     
-    return configs, errors
+    return config_dict, errors

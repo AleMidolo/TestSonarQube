@@ -9,16 +9,11 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
     
     for subparser_name, parser in subparsers.items():
         try:
-            # Try to parse the arguments with the current subparser
-            parsed_args, unknown_args = parser.parse_known_args(unparsed_arguments)
-            if unknown_args:
-                # If there are unknown args, it means this subparser didn't fully parse the args
-                continue
+            parsed_args, remaining = parser.parse_known_args(unparsed_arguments)
             parsed_results[subparser_name] = parsed_args
-            # Remove the parsed args from the remaining_args list
-            remaining_args = [arg for arg in remaining_args if arg not in unparsed_arguments]
+            remaining_args = remaining
         except SystemExit:
-            # If parsing fails, continue to the next subparser
+            # Ignore SystemExit exceptions that argparse might raise
             continue
     
     return parsed_results, remaining_args

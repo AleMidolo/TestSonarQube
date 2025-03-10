@@ -20,12 +20,13 @@ def find_roots(
     if roots is None:
         roots = set()
     
-    # 获取所有可能的根节点
-    candidates = set(graph.subjects(prop, None))
+    # 获取所有作为子节点的节点
+    children = set(graph.subjects(prop, None))
     
-    # 过滤掉那些作为其他节点的子节点的候选节点
-    for candidate in candidates:
-        if not any(graph.triples((None, prop, candidate))):
-            roots.add(candidate)
+    # 获取所有作为父节点的节点
+    parents = set(graph.objects(None, prop))
+    
+    # 根节点是没有父节点的节点
+    roots.update(children - parents)
     
     return roots

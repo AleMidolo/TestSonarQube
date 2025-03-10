@@ -9,5 +9,7 @@ def _replace_url_args(url, url_args):
     """
     if url_args:
         for key, value in url_args.items():
-            url = url.replace(f'{{{key}}}', str(value), 1)
+            placeholder = f'{{{key}}}'
+            if placeholder in url:
+                url = url.replace(placeholder, str(value), 1)
     return url

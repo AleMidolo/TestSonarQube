@@ -21,15 +21,19 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left", field_names=("x"
 
     返回生成的图形。
     """
+    import numpy as np
+
     if make_value is None:
         make_value = lambda bin_: bin_
 
     if scale is None:
         scale = hist.scale if hasattr(hist, 'scale') else None
 
-    graph = []
+    bins = hist.bins
+    x_coords = []
+    y_values = []
 
-    for bin_ in hist.bins:
+    for i, bin_ in enumerate(bins):
         if get_coordinate == "left":
             x = bin_.left
         elif get_coordinate == "right":
@@ -39,12 +43,22 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left", field_names=("x"
         else:
             raise ValueError("Invalid get_coordinate value. Must be 'left', 'right', or 'middle'.")
 
-        value = make_value(bin_)
-        if isinstance(value, (tuple, list)):
-            graph_point = (x,) + tuple(value)
-        else:
-            graph_point = (x, value)
+        y = make_value(bin_)
+        x_coords.append(x)
+        y_values.append(y)
 
-        graph.append(graph_point)
+    x_coords = np.array(x_coords)
+    y_values = np.array(y_values)
+
+    if len(field_names) != y_values.shape[1] + 1:
+        raise ValueError("Number of field_names must match the dimensionality of the result.")
+
+    graph = {
+        field_names[0]: x_coords,
+        **{field_names[i+1]: y_values[:, i] for i in range(y_values.shape[1])}
+    }
+
+    if scale is not None:
+        graph['scale'] = scale
 
     return graph

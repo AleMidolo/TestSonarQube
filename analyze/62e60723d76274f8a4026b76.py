@@ -8,7 +8,7 @@ def from_ticks(cls, ticks, tz=None):
     :type ticks: int
     :param tz: 可选的时区信息
     :type tz: datetime.tzinfo
-    :rtype: time
+    :rtype: Time
     :raises ValueError: 如果时间戳超出范围(0 <= ticks < 86400000000000)
     """
     if not (0 <= ticks < 86400000000000):
@@ -16,13 +16,12 @@ def from_ticks(cls, ticks, tz=None):
     
     # 将纳秒转换为秒和微秒
     seconds, nanoseconds = divmod(ticks, 1_000_000_000)
-    microseconds = nanoseconds // 1_000
+    microseconds = nanoseconds // 1000
     
-    # 将秒转换为小时、分钟和秒
-    hours, remainder = divmod(seconds, 3600)
-    minutes, seconds = divmod(remainder, 60)
+    # 创建一个timedelta对象来表示自午夜以来的时间
+    delta = timedelta(seconds=seconds, microseconds=microseconds)
     
-    # 创建时间对象
-    time_obj = time(hour=int(hours), minute=int(minutes), second=int(seconds), microsecond=int(microseconds), tzinfo=tz)
+    # 创建一个时间对象
+    t = (time.min + delta).replace(tzinfo=tz)
     
-    return time_obj
+    return t

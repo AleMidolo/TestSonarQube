@@ -12,34 +12,39 @@ def validate(self, path):
     if not os.path.exists(path):
         return False
 
-    # 检查是否存在必要的OCFL文件
+    # 检查是否存在必要的 OCFL 文件结构
     required_files = ['inventory.json', 'inventory.json.sha512']
     for file in required_files:
         if not os.path.exists(os.path.join(path, file)):
             return False
 
-    # 读取并解析inventory.json
+    # 验证 inventory.json 文件
+    inventory_path = os.path.join(path, 'inventory.json')
     try:
-        with open(os.path.join(path, 'inventory.json'), 'r') as f:
+        with open(inventory_path, 'r') as f:
             inventory = json.load(f)
     except (json.JSONDecodeError, IOError):
         return False
 
-    # 检查inventory.json中的基本结构
-    required_keys = ['id', 'type', 'digestAlgorithm', 'head', 'manifest', 'versions']
-    for key in required_keys:
-        if key not in inventory:
+    # 检查 inventory.json 中的必要字段
+    required_fields = ['id', 'type', 'digestAlgorithm', 'head', 'manifest', 'versions']
+    for field in required_fields:
+        if field not in inventory:
             return False
 
-    # 检查digestAlgorithm是否为支持的算法
-    supported_algorithms = ['sha512', 'sha256']
-    if inventory['digestAlgorithm'] not in supported_algorithms:
+    # 验证 inventory.json.sha512 文件
+    sha512_path = os.path.join(path, 'inventory.json.sha512')
+    try:
+        with open(sha512_path, 'r') as f:
+            sha512_hash = f.read().strip()
+    except IOError:
         return False
 
-    # 检查versions中的每个版本
-    for version, version_data in inventory['versions'].items():
-        if 'created' not in version_data or 'state' not in version_data:
-            return False
+    # 计算 inventory.json 的 SHA-512 哈希值并验证
+    import hashlib
+    with open(inventory_path, 'rb') as f:
+        file_hash = hashlib.sha512(f.read()).hexdigest()
+    if file_hash != sha512_hash:
+        return False
 
-    # 如果所有检查都通过，则返回True
     return True

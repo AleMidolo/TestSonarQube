@@ -8,6 +8,8 @@ def dehydrate_time(value):
     :return: 包含 ticks 的 Structure 对象
     :rtype: Structure
     """
-    if value is None:
-        return None
-    return Structure(ticks=value.ticks)
+    if not hasattr(value, 'ticks'):
+        raise ValueError("The provided value does not have a 'ticks' attribute.")
+    
+    # Assuming Structure is a class that can be initialized with a dictionary
+    return Structure({'ticks': value.ticks})

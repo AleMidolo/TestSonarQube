@@ -33,8 +33,9 @@ def identify_request(request: RequestType) -> bool:
     if 'private_message' in request.headers:
         return True
 
-    # 检查是否为旧式（Legacy）负载
+    # 检查是否为旧式负载
     if 'legacy_payload' in request.headers:
         return True
 
+    # 如果以上条件均不满足，返回 False
     return False

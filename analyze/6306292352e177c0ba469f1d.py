@@ -1,7 +1,7 @@
 import re
 from typing import Set, Tuple, Callable
 
-def find_tags(text: str, replacer: Callable = None) -> Tuple[Set, str]:
+def find_tags(text: str, replacer: Callable[[str], str] = None) -> Tuple[Set[str], str]:
     """
     在文本中查找标签。
 

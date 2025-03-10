@@ -33,13 +33,11 @@ def unit_of_work(metadata=None, timeout=None):
     """
     def decorator(func):
         @wraps(func)
-        def wrapper(*args, **kwargs):
-            # 在这里可以添加对事务的额外控制逻辑
-            # 例如，设置超时或附加元数据
+        def wrapper(tx, *args, **kwargs):
             if metadata is not None:
-                kwargs['metadata'] = metadata
+                tx.run("CALL dbms.setTXMetaData($metadata)", metadata=metadata)
             if timeout is not None:
-                kwargs['timeout'] = timeout
-            return func(*args, **kwargs)
+                tx.run("CALL dbms.setTransactionTimeout($timeout)", timeout=timeout)
+            return func(tx, *args, **kwargs)
         return wrapper
     return decorator

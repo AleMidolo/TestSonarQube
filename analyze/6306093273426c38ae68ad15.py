@@ -11,7 +11,7 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     import subprocess
     import json
 
-    # 将 vars_dict 转换为 JSON 字符串，以便作为 extra-vars 传递
+    # 将 vars_dict 转换为 JSON 字符串，以便传递给 Ansible
     extra_vars = json.dumps(vars_dict)
 
     # 构建 Ansible 命令

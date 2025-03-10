@@ -18,10 +18,13 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
     if not isinstance(timestr, str):
         raise TypeError("Input must be a string or character stream.")
-
+    
+    if default is not None and not isinstance(default, datetime):
+        raise TypeError("Default must be a datetime object or None.")
+    
     try:
-        dt = dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
-        return dt
+        parsed = dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+        return parsed
     except ValueError as e:
         raise ValueError(f"Invalid date format: {e}")
     except OverflowError as e:
