@@ -6,42 +6,38 @@ def validate(self, path):
     """
     import os
     import json
-    from fs import open_fs
 
     # Verificar si la ruta existe
     if not os.path.exists(path):
         return False
 
-    # Abrir el sistema de archivos en la ruta dada
-    fs = open_fs(path)
+    # Verificar si es un directorio
+    if not os.path.isdir(path):
+        return False
 
     # Verificar la existencia del archivo 'inventory.json'
-    if not fs.exists('inventory.json'):
+    inventory_path = os.path.join(path, 'inventory.json')
+    if not os.path.isfile(inventory_path):
         return False
 
-    # Leer y validar el archivo 'inventory.json'
-    with fs.open('inventory.json', 'r') as f:
-        try:
+    # Intentar cargar el archivo 'inventory.json'
+    try:
+        with open(inventory_path, 'r') as f:
             inventory = json.load(f)
-        except json.JSONDecodeError:
-            return False
+    except json.JSONDecodeError:
+        return False
 
     # Verificar la estructura básica del inventario
-    required_keys = {'id', 'type', 'digestAlgorithm', 'head', 'manifest', 'versions'}
-    if not required_keys.issubset(inventory.keys()):
+    if 'id' not in inventory or 'type' not in inventory or 'digestAlgorithm' not in inventory:
         return False
 
-    # Verificar que el algoritmo de digest sea válido
-    if inventory['digestAlgorithm'] not in {'sha256', 'sha512'}:
+    # Verificar que el tipo sea 'Object'
+    if inventory.get('type') != 'Object':
         return False
 
-    # Verificar que todas las versiones estén presentes en el manifiesto
-    manifest = inventory['manifest']
-    versions = inventory['versions']
-    for version, files in versions.items():
-        for file_path, file_digest in files.items():
-            if file_digest not in manifest:
-                return False
+    # Verificar que el algoritmo de digest sea soportado (por ejemplo, 'sha512')
+    if inventory.get('digestAlgorithm') != 'sha512':
+        return False
 
-    # Si todas las validaciones pasan, retornar True
+    # Si todas las verificaciones pasan, devolver True
     return True

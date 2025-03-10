@@ -19,33 +19,21 @@ def absorb(self, args):
                 if isinstance(B, tuple) and B[0] == '|':
                     if B[1] == A:
                         return A
-                    elif B[2] == A:
-                        return A
+                    elif isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
+                        return ('&', A, B[2])
                 elif isinstance(B, tuple) and B[0] == '&':
                     if B[1] == A:
-                        return A
-                    elif B[2] == A:
                         return A
             elif expr[0] == '|':
                 A, B = expr[1], expr[2]
                 if isinstance(B, tuple) and B[0] == '&':
                     if B[1] == A:
                         return A
-                    elif B[2] == A:
-                        return A
+                    elif isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
+                        return ('|', A, B[2])
                 elif isinstance(B, tuple) and B[0] == '|':
                     if B[1] == A:
                         return A
-                    elif B[2] == A:
-                        return A
-            elif expr[0] == '~':
-                A = expr[1]
-                if isinstance(A, tuple) and A[0] == '|':
-                    B = A[2]
-                    return ('&', A[1], B)
-                elif isinstance(A, tuple) and A[0] == '&':
-                    B = A[2]
-                    return ('|', A[1], B)
         return expr
 
-    return [apply_absorption(arg) for arg in args]
+    return [apply_absorption(expr) for expr in args]

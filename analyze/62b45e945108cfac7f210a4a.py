@@ -9,22 +9,23 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     num_objects = 0
     good_objects = 0
     
-    # Simulación de la validación de objetos
-    if validate_objects:
-        # Aquí iría la lógica para validar los objetos
-        # Por ejemplo, recorrer la jerarquía y validar cada objeto
-        num_objects = 100  # Ejemplo: 100 objetos verificados
-        good_objects = 95  # Ejemplo: 95 objetos válidos
+    # Placeholder logic for validating hierarchy
+    # This would typically involve traversing the storage root and validating objects
+    # based on the parameters provided.
     
-    # Simulación de la verificación de digests
+    if validate_objects:
+        # Simulate object validation
+        num_objects = 100  # Example: 100 objects checked
+        good_objects = 95   # Example: 95 objects are valid
+    
     if check_digests:
-        # Aquí iría la lógica para verificar los digests
-        # Por ejemplo, comparar los digests de los objetos con los esperados
+        # Simulate digest checking
+        # This would involve verifying the integrity of objects using their digests
         pass
     
-    # Simulación de mostrar advertencias
     if show_warnings:
-        # Aquí iría la lógica para mostrar advertencias si se encuentran problemas
+        # Simulate showing warnings for invalid objects
+        # This would involve logging or displaying warnings for invalid objects
         pass
     
     return num_objects, good_objects

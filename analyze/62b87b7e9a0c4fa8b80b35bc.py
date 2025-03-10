@@ -20,9 +20,11 @@ def _update_context(self, context):
 
     # Supongamos que el grafo tiene una propiedad `error_indices` que contiene los índices de los errores
     if hasattr(self, 'error_indices'):
-        for i, error_index in enumerate(self.error_indices):
-            error_name = ['x', 'y', 'z'][i] if i < 3 else f'error_{i}'
-            context.error[f'{error_name}_low'] = {'index': error_index}
+        for key, index in self.error_indices.items():
+            # Simplificar los nombres de los errores a "x", "y", "z"
+            simplified_key = key.replace('_low', '').replace('_high', '')
+            if simplified_key in ['x', 'y', 'z']:
+                context.error[f"{simplified_key}_low"] = {"index": index}
 
     # No se eliminan los valores existentes en context.value o sus subcontextos
     return context

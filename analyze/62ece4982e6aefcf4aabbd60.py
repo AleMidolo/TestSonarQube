@@ -10,21 +10,27 @@ def size_to_bytes(size: str) -> int:
     Returns:
         Una representación decimal del tamaño del archivo
 
-    Ejemplos::
+        Ejemplos::
 
-        >>> size_to_bytes("500")
-        500
-        >>> size_to_bytes("1K")
-        1000
+            >>> size_to_bytes("500")
+            500
+            >>> size_to_bytes("1K")
+            1000
     """
     size = size.strip().upper()
-    if size[-1] == 'K':
-        return int(size[:-1]) * 1000
-    elif size[-1] == 'M':
-        return int(size[:-1]) * 1000 * 1000
-    elif size[-1] == 'G':
-        return int(size[:-1]) * 1000 * 1000 * 1000
-    elif size[-1] == 'T':
-        return int(size[:-1]) * 1000 * 1000 * 1000 * 1000
-    else:
+    if size[-1] not in ['K', 'M', 'G', 'T']:
         return int(size)
+    
+    unit = size[-1]
+    num = float(size[:-1])
+    
+    if unit == 'K':
+        return int(num * 10**3)
+    elif unit == 'M':
+        return int(num * 10**6)
+    elif unit == 'G':
+        return int(num * 10**9)
+    elif unit == 'T':
+        return int(num * 10**12)
+    else:
+        raise ValueError(f"Unidad no reconocida: {unit}")

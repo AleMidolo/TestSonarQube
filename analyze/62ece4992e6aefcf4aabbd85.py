@@ -24,13 +24,11 @@ def find_roots(
     if roots is None:
         roots = set()
 
-    # Obtener todos los nodos que son sujetos en triples con la propiedad dada
-    subjects = set(graph.subjects(predicate=prop))
+    # Obtener todos los sujetos y objetos relacionados con la propiedad
+    subjects = set(graph.subjects(prop, None))
+    objects = set(graph.objects(None, prop))
 
-    # Obtener todos los nodos que son objetos en triples con la propiedad dada
-    objects = set(graph.objects(predicate=prop))
-
-    # Las raíces son los nodos que son sujetos pero no objetos
-    roots.update(subjects - objects)
+    # Las raíces son los objetos que no aparecen como sujetos
+    roots.update(objects - subjects)
 
     return roots

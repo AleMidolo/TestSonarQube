@@ -35,33 +35,29 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     if make_value is None:
         make_value = lambda bin_: bin_
 
+    bins = hist.bins
+    bin_edges = hist.bin_edges
+    bin_widths = np.diff(bin_edges)
+
+    if get_coordinate == "left":
+        x_coords = bin_edges[:-1]
+    elif get_coordinate == "right":
+        x_coords = bin_edges[1:]
+    elif get_coordinate == "middle":
+        x_coords = bin_edges[:-1] + bin_widths / 2
+    else:
+        raise ValueError("get_coordinate debe ser 'left', 'right' o 'middle'.")
+
+    values = [make_value(bin_) for bin_ in bins]
+
     if scale is True:
         scale = hist.scale
 
-    bins = hist.bins
-    x_coords = []
-    y_values = []
-
-    for i, bin_ in enumerate(bins):
-        if get_coordinate == "left":
-            x = hist.bin_edges[i]
-        elif get_coordinate == "right":
-            x = hist.bin_edges[i + 1]
-        elif get_coordinate == "middle":
-            x = (hist.bin_edges[i] + hist.bin_edges[i + 1]) / 2
-        else:
-            raise ValueError("get_coordinate debe ser 'left', 'right' o 'middle'")
-
-        y = make_value(bin_)
-        x_coords.append(x)
-        y_values.append(y)
-
-    if isinstance(y_values[0], (tuple, list, np.ndarray)):
-        y_values = list(zip(*y_values))
-        data = {field_names[0]: x_coords}
-        for i, y in enumerate(y_values):
-            data[field_names[i + 1]] = y
+    graph_data = {field_names[0]: x_coords}
+    if len(field_names) > 1:
+        for i, field in enumerate(field_names[1:]):
+            graph_data[field] = [value[i] if isinstance(value, (tuple, list)) else value for value in values]
     else:
-        data = {field_names[0]: x_coords, field_names[1]: y_values}
+        graph_data[field_names[1]] = values
 
-    return data
+    return graph_data

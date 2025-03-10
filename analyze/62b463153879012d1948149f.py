@@ -25,9 +25,9 @@ def _eval_file(prefix, file_path):
 
     # Determinar el tipo de archivo basado en el prefijo
     if prefix in filename:
-        if "asset" in filename.lower():
+        if "asset" in filename:
             file_type = "asset"
-        elif "rendition" in filename.lower():
+        elif "rendition" in filename:
             file_type = "rendition"
         else:
             file_type = "unknown"
@@ -37,9 +37,7 @@ def _eval_file(prefix, file_path):
     # Crear el diccionario de retorno
     result = {
         "type": file_type,
-        "path": file_path,
-        "filename": filename,
-        "folder": file_folder
+        "path": file_path
     }
 
     return result

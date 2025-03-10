@@ -5,9 +5,16 @@ def validate_choices_args(self, args):
     :param args: Los argumentos recibidos.
     """
     if not hasattr(self, 'choices'):
-        raise AttributeError("No 'choices' attribute defined in the class.")
+        raise AttributeError("El objeto no tiene un atributo 'choices' definido.")
     
-    for arg_name, arg_value in args.items():
-        if arg_name in self.choices:
-            if arg_value not in self.choices[arg_name]:
-                raise ValueError(f"Invalid value '{arg_value}' for argument '{arg_name}'. Valid options are: {self.choices[arg_name]}")
+    if not isinstance(self.choices, (list, tuple)):
+        raise TypeError("El atributo 'choices' debe ser una lista o tupla.")
+    
+    if not args:
+        raise ValueError("No se proporcionaron argumentos para validar.")
+    
+    for arg in args:
+        if arg not in self.choices:
+            raise ValueError(f"El argumento '{arg}' no es una opción válida. Opciones disponibles: {self.choices}")
+    
+    return True

@@ -1,6 +1,3 @@
-from datetime import datetime, timedelta
-import pytz
-
 def _fromutc(self, dt):
     """
     Dado un objeto 'datetime' consciente de la zona horaria en una zona horaria específica, calcula un objeto 'datetime' consciente de la zona horaria en una nueva zona horaria.
@@ -10,23 +7,18 @@ def _fromutc(self, dt):
     :param dt:  
         Un objeto :class:`datetime.datetime` consciente de la zona horaria.
     """
-    if dt.tzinfo is None:
-        raise ValueError("El objeto datetime debe ser consciente de la zona horaria.")
+    if dt.tzinfo is not self:
+        raise ValueError("El objeto datetime no está en la zona horaria correcta.")
     
     # Convertir el datetime a UTC
-    utc_dt = dt.astimezone(pytz.UTC)
+    utc_dt = dt.astimezone(self.utc)
     
-    # Obtener la nueva zona horaria (esto es un ejemplo, deberías reemplazarlo con la lógica adecuada)
-    new_tz = pytz.timezone('America/New_York')
-    
-    # Convertir el datetime a la nueva zona horaria
-    new_dt = utc_dt.astimezone(new_tz)
+    # Convertir el datetime UTC a la nueva zona horaria
+    new_dt = utc_dt.astimezone(self)
     
     # Verificar si el datetime es ambiguo en la nueva zona horaria
-    is_ambiguous = new_tz._utc_transition_times and new_dt in new_tz._utc_transition_times
-    
-    if is_ambiguous:
-        # Si es ambiguo, ajustar el datetime para que sea la primera ocurrencia
-        new_dt = new_dt - timedelta(hours=1)
+    if self.is_ambiguous(new_dt):
+        # Si es ambiguo, ajustar al primer ocurrencia
+        new_dt = self.resolve_ambiguity(new_dt, first=True)
     
     return new_dt

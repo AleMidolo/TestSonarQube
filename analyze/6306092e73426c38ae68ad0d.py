@@ -8,7 +8,8 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
     :param spec_option: las especificaciones de la opción
     :return: la instancia del tipo complejo
     """
-    # Crear una instancia del tipo complejo basado en las especificaciones
+    # Aquí se implementaría la lógica para crear el tipo de argumento complejo
+    # Por ejemplo, se podría crear una clase dinámica o un objeto con las especificaciones dadas
     complex_type = {
         "subcommand": subcommand,
         "type_name": type_name,

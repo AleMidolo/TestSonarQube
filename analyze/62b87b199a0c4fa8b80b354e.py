@@ -7,10 +7,21 @@ def is_fill_request_seq(seq):
     y no es una secuencia de tipo Source.
     """
     # Assuming FillRequest and Source are classes or types defined elsewhere
-    from typing import Sequence
+    from typing import Sequence, Any
 
-    if isinstance(seq, FillRequest):
+    def is_fill_request(item: Any) -> bool:
+        return isinstance(item, FillRequest)
+
+    def is_source_seq(seq: Sequence) -> bool:
+        return isinstance(seq, Source)
+
+    if is_source_seq(seq):
+        return False
+
+    if is_fill_request(seq):
         return True
-    elif isinstance(seq, Sequence) and not isinstance(seq, Source):
-        return any(isinstance(item, FillRequest) for item in seq)
+
+    if isinstance(seq, Sequence):
+        return any(is_fill_request(item) for item in seq)
+
     return False

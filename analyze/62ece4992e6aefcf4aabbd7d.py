@@ -20,7 +20,7 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     if extra_env is not None:
         env.update(extra_env)
 
-    # Convertir la función a un comando ejecutable
+    # Construir el comando para ejecutar la función en un subproceso
     module_name = func.__module__
     func_name = func.__name__
     command = [sys.executable, '-c', f'from {module_name} import {func_name}; {func_name}()']

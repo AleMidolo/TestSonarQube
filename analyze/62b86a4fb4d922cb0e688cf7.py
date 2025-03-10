@@ -19,5 +19,5 @@ def validate_key(key):
     return True
 
 class ValidationError(Exception):
-    """Excepción personalizada para errores de validación."""
+    """Excepción lanzada cuando la validación falla."""
     pass

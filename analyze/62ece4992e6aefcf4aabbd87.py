@@ -23,7 +23,7 @@ def build_app_logger(name='app', logfile='app.log', debug=True):
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.DEBUG if debug else logging.INFO)
 
-    # Formato de los logs
+    # Crear un formateador y agregarlo a los manejadores
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     file_handler.setFormatter(formatter)
     console_handler.setFormatter(formatter)
