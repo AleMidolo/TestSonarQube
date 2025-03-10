@@ -9,7 +9,7 @@ def pop_u16(self):
     byte1 = self.data.pop()
     byte2 = self.data.pop()
     
-    # Combine the two bytes into a 16-bit integer (big-endian)
+    # Combine the bytes in big-endian order
     u16_value = (byte2 << 8) | byte1
     
     return u16_value

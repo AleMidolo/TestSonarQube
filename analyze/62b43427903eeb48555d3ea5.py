@@ -17,13 +17,12 @@ def format(
                 formatted_sql = formatted_sql.replace(f":{key}", "?")
             else:
                 formatted_sql = formatted_sql.replace(f":{key}", "?")
-        return formatted_sql, out_params
+        return formatted_sql, list(out_params.values())
     elif isinstance(params, (list, tuple)):
         # Convert positional parameters to out-style
-        out_params = list(params)
         formatted_sql = sql
         for i in range(len(params)):
             formatted_sql = formatted_sql.replace(f":{i}", "?")
-        return formatted_sql, out_params
+        return formatted_sql, list(params)
     else:
         raise TypeError("params must be a dict, list, or tuple")

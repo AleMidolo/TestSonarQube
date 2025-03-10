@@ -10,10 +10,10 @@ def create_complex_argumet_type(self, subcommand, type_name, option_name, spec_o
     """
     # Create a dictionary to represent the complex argument type
     complex_type = {
-        'subcommand': subcommand,
-        'type_name': type_name,
-        'option_name': option_name,
-        'spec_option': spec_option
+        "subcommand": subcommand,
+        "type_name": type_name,
+        "option_name": option_name,
+        "spec_option": spec_option
     }
     
     # Return the complex type instance

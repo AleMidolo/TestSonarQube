@@ -14,5 +14,5 @@ def file_to_textbuffer(file_name, encoding):
             text_buffer = file.read()
         return text_buffer
     except Exception as e:
-        print(f"Error reading file: {e}")
+        print(f"त्रुटि: {e}")
         return None

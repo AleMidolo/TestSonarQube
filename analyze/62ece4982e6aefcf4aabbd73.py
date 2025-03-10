@@ -19,7 +19,7 @@ def split(s, platform='this'):
     
     if platform == 1:
         # POSIX style splitting
-        return shlex.split(s, posix=True)
+        return shlex.split(s)
     elif platform == 0:
         # Windows/CMD style splitting
         return re.findall(r'(?:[^\s"]+|"[^"]*")+', s)

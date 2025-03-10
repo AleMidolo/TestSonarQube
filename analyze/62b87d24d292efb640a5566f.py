@@ -6,9 +6,11 @@ def render(pieces, style):
     :param style: प्रस्तुति शैली
     :return: प्रस्तुत संस्करण
     """
-    if style == "simple":
-        return ".".join(map(str, pieces))
-    elif style == "verbose":
-        return f"संस्करण: {'-'.join(map(str, pieces))}"
+    if style == "plain":
+        return " ".join(pieces)
+    elif style == "markdown":
+        return " ".join(f"**{piece}**" for piece in pieces)
+    elif style == "html":
+        return " ".join(f"<b>{piece}</b>" for piece in pieces)
     else:
-        raise ValueError("अज्ञात शैली")
+        raise ValueError("असमर्थित शैली")

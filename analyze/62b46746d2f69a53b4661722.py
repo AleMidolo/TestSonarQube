@@ -16,16 +16,16 @@ def absorb(self, args):
     for expr in args:
         if isinstance(expr, tuple):
             if expr[0] == '&':
-                if expr[1] == expr[2][1] or expr[1] == expr[2][2]:
+                if expr[1] == expr[2][1]:
                     result.append(expr[1])
-                elif expr[1][0] == '~' and expr[1][1] == expr[2][1]:
+                elif expr[1] == ('~', expr[2][1]):
                     result.append(('&', expr[1], expr[2][2]))
                 else:
                     result.append(expr)
             elif expr[0] == '|':
-                if expr[1] == expr[2][1] or expr[1] == expr[2][2]:
+                if expr[1] == expr[2][1]:
                     result.append(expr[1])
-                elif expr[1][0] == '~' and expr[1][1] == expr[2][1]:
+                elif expr[1] == ('~', expr[2][1]):
                     result.append(('|', expr[1], expr[2][2]))
                 else:
                     result.append(expr)

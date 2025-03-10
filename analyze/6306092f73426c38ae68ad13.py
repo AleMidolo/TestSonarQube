@@ -21,10 +21,14 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
         command.extend(["--extra-vars", extra_vars_str])
 
     if ansible_args:
-        for arg, value in ansible_args.items():
-            command.extend([f"--{arg}", str(value)])
+        for key, value in ansible_args.items():
+            if value is True:
+                command.append(f"--{key}")
+            else:
+                command.extend([f"--{key}", str(value)])
 
     try:
         subprocess.run(command, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Ansible playbook execution failed with error: {e}")
+        raise

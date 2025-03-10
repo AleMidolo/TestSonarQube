@@ -2,7 +2,6 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.backends import default_backend
 
 def verify_relayable_signature(public_key, doc, signature):
     """
@@ -11,15 +10,12 @@ def verify_relayable_signature(public_key, doc, signature):
     """
     try:
         # Load the public key
-        pub_key = serialization.load_pem_public_key(
-            public_key.encode(),
-            backend=default_backend()
-        )
+        pub_key = serialization.load_pem_public_key(public_key)
         
         # Verify the signature
         pub_key.verify(
             signature,
-            doc.encode(),
+            doc,
             padding.PSS(
                 mgf=padding.MGF1(hashes.SHA256()),
                 salt_length=padding.PSS.MAX_LENGTH

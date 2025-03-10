@@ -12,24 +12,26 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     """
     import traceback
     
-    # Get the exception traceback
-    tb = traceback.format_exception(type(e), e, e.__traceback__)
+    # Get the exception message
+    exception_message = str(e)
+    
+    # Get the traceback as a list of strings
+    tb_list = traceback.format_tb(e.__traceback__)
     
     # Limit the traceback to max_level
-    if len(tb) > max_level:
-        tb = tb[:max_level]
-        tb.append(f"... (truncated to {max_level} levels)")
+    if len(tb_list) > max_level:
+        tb_list = tb_list[:max_level]
     
-    # Limit the path levels in each traceback line
-    for i in range(len(tb)):
-        parts = tb[i].split('\n')
-        if len(parts) > 1:
-            path_parts = parts[0].split('/')
-            if len(path_parts) > max_path_level:
-                parts[0] = '/'.join(path_parts[-max_path_level:])
-            tb[i] = '\n'.join(parts)
+    # Format the traceback
+    formatted_traceback = []
+    for i, tb_line in enumerate(tb_list):
+        if i >= max_path_level:
+            break
+        formatted_traceback.append(tb_line.strip())
     
-    # Join the traceback into a single string
-    formatted_traceback = ''.join(tb)
+    # Combine the exception message and formatted traceback
+    result = f"Exception: {exception_message}\n"
+    result += "Traceback (most recent call last):\n"
+    result += "\n".join(formatted_traceback)
     
-    return formatted_traceback
+    return result

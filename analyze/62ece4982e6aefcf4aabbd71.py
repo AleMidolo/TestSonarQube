@@ -22,9 +22,9 @@ def regex_dict(item):
     रिटर्न करता है:
         एक dict जिसमें कुंजियाँ regex में परिवर्तित होती हैं
     """
-    regex_dict = {}
+    regex_item = {}
     for key, value in item.items():
         # Replace '*' with '.*' to match any sequence of characters
         regex_key = re.escape(key).replace('\\*', '.*')
-        regex_dict[regex_key] = value
-    return regex_dict
+        regex_item[regex_key] = value
+    return regex_item

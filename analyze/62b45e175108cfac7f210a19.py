@@ -8,7 +8,7 @@ def validate_fixity(self, fixity, manifest_files):
         raise ValueError("फिक्सिटी ब्लॉक एक डिक्शनरी होना चाहिए।")
     
     if not isinstance(manifest_files, list):
-        raise ValueError("मैनिफेस्ट फाइलें एक सूची होनी चाहिए।")
+        raise ValueError("मैनिफेस्ट फाइल्स एक लिस्ट होनी चाहिए।")
     
     for file_name, checksum in fixity.items():
         if file_name not in manifest_files:

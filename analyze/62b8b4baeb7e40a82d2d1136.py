@@ -20,7 +20,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     # Step 1: Verify that the candidate claims to provide the interface
     if not tentative:
         if not iface.providedBy(candidate):
-            errors.append(f"{candidate} does not provide {iface}")
+            errors.append(f"{candidate} does not claim to provide {iface}.")
 
     # Step 2: Verify the candidate's methods and attributes
     try:

@@ -4,11 +4,9 @@ def validate_choices_args(self, args):
 
     :param args: प्राप्त किए गए आर्ग्युमेंट्स।
     """
+    # Assuming self.choices contains the valid options
     if not hasattr(self, 'choices'):
         raise AttributeError("No choices defined for validation.")
-    
-    if not isinstance(args, (list, tuple)):
-        args = [args]
     
     for arg in args:
         if arg not in self.choices:

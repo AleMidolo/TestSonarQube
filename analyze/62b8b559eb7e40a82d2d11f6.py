@@ -8,6 +8,6 @@ def determineMetaclass(bases, explicit_mc=None):
     metaclass = type(bases[0])
     for base in bases[1:]:
         if type(base) is not metaclass:
-            raise TypeError("Metaclass conflict: the bases have different metaclasses")
+            return type
     
     return metaclass

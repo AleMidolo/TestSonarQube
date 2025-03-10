@@ -19,5 +19,5 @@ def append_text_to_file(file_name, text_buffer, encoding, overwrite=False):
             bytes_written = file.write(text_buffer)
         return bytes_written
     except Exception as e:
-        print(f"Error writing to file: {e}")
+        print(f"Error: {e}")
         return -1

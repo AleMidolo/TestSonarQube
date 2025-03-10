@@ -26,11 +26,16 @@ def _eval_file(prefix, file_path):
     else:
         file_type = "unknown"
 
-    # फ़ाइल का पूरा पथ
-    full_path = os.path.abspath(file_path)
+    # फ़ाइल का नाम और फ़ोल्डर निकालें
+    file_name = os.path.basename(file_path)
+    file_folder = os.path.dirname(file_path)
 
-    # रिटर्न डिक्शनरी
-    return {
+    # परिणाम डिक्शनरी बनाएं
+    result = {
         "file_type": file_type,
-        "file_path": full_path
+        "file_name": file_name,
+        "file_folder": file_folder,
+        "file_path": file_path
     }
+
+    return result

@@ -8,33 +8,29 @@ def initialize(self):
     # OCFL storage root directory structure
     ocfl_structure = {
         "0=ocfl_1.1": "",
-        "ocfl_layout.json": json.dumps({
-            "type": "https://ocfl.io/1.1/spec/#layout-hierarchical",
-            "description": "Hierarchical OCFL storage layout"
-        }),
-        "inventory.json": json.dumps({
-            "id": "urn:uuid:new-ocfl-root",
-            "type": "Object",
-            "head": "v1",
-            "versions": {
-                "v1": {
-                    "created": "2023-10-01T00:00:00Z",
-                    "state": {}
-                }
-            }
-        }),
-        "v1": {
-            "content": {}
-        }
+        "inventory.json": "",
+        "inventory.json.sha512": "",
+        "extensions": {},
+        "logs": {},
+        "objects": {}
     }
 
-    # Create the OCFL storage root directory and files
-    for path, content in ocfl_structure.items():
-        if isinstance(content, dict):
-            os.makedirs(path, exist_ok=True)
-            for sub_path, sub_content in content.items():
-                with open(os.path.join(path, sub_path), 'w') as f:
-                    f.write(sub_content)
+    # Create the OCFL storage root directory
+    if not os.path.exists("ocfl_root"):
+        os.makedirs("ocfl_root")
+
+    # Create the necessary files and directories
+    for key, value in ocfl_structure.items():
+        if key.endswith(".json"):
+            with open(os.path.join("ocfl_root", key), "w") as f:
+                json.dump({}, f)
+        elif key.endswith(".sha512"):
+            with open(os.path.join("ocfl_root", key), "w") as f:
+                f.write("")
+        elif isinstance(value, dict):
+            os.makedirs(os.path.join("ocfl_root", key), exist_ok=True)
         else:
-            with open(path, 'w') as f:
-                f.write(content)
+            with open(os.path.join("ocfl_root", key), "w") as f:
+                f.write(value)
+
+    print("OCFL storage root initialized successfully.")

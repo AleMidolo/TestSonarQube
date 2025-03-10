@@ -13,6 +13,5 @@ def from_raw_values(cls, values):
     for value in values:
         # Process each raw value and add it to the Bookmarks object
         # This is a placeholder for the actual deserialization logic
-        bookmark = value.strip()  # Example: strip whitespace
-        bookmarks.add(bookmark)  # Assuming there's an add method in Bookmarks
+        bookmarks.add(value)
     return bookmarks

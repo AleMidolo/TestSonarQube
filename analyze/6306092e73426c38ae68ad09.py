@@ -6,5 +6,5 @@ def validate_length_args(self, args):
     if not args:
         raise ValueError("कोई तर्क प्रदान नहीं किया गया है।")
     if len(args) < 1:
-        raise ValueError("तर्कों की संख्या अपर्याप्त है।")
+        raise ValueError("तर्कों की लंबाई कम से कम 1 होनी चाहिए।")
     return True

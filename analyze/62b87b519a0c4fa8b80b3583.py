@@ -19,17 +19,17 @@ def scale(self, other=None):
         return self._scale
     elif isinstance(other, (int, float)):
         if self._scale is None or self._scale == 0:
-            raise LenaValueError("ग्राफ़ का स्केल अज्ञात या शून्य है।")
+            raise LenaValueError("Cannot rescale graph with unknown or zero scale.")
         # Rescale the last coordinate
         if hasattr(self, 'y'):
-            self.y = self.y * other / self._scale
+            self.y = self.y * (other / self._scale)
         elif hasattr(self, 'z'):
-            self.z = self.z * other / self._scale
+            self.z = self.z * (other / self._scale)
         # Rescale errors if they exist
         if hasattr(self, 'y_err'):
-            self.y_err = self.y_err * other / self._scale
+            self.y_err = self.y_err * (other / self._scale)
         if hasattr(self, 'z_err'):
-            self.z_err = self.z_err * other / self._scale
+            self.z_err = self.z_err * (other / self._scale)
         self._scale = other
     else:
-        raise TypeError("अमान्य प्रकार का इनपुट। संख्यात्मक मान आवश्यक है।")
+        raise TypeError("Expected a numeric value or None for scaling.")

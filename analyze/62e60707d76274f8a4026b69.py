@@ -5,27 +5,17 @@ def point_type(name, fields, srid_map):
     :param name: सबक्लास का नाम
     :param fields: सबक्लास के फ़ील्ड्स (डिक्शनरी के रूप में)
     :param srid_map: SRID मैपिंग (डिक्शनरी के रूप में)
-    :return: बनाया गया पॉइंट सबक्लास
+    :return: बनाई गई सबक्लास
     """
-    from sqlalchemy import Column, Integer, Float
-    from sqlalchemy.ext.declarative import declarative_base
-    from geoalchemy2 import Geometry
+    class PointSubclass:
+        def __init__(self, **kwargs):
+            for field, value in kwargs.items():
+                setattr(self, field, value)
+            self.srid = srid_map.get(name, 4326)  # Default SRID is 4326 (WGS84)
 
-    Base = declarative_base()
+        def __repr__(self):
+            fields_str = ', '.join(f"{field}={getattr(self, field)}" for field in fields)
+            return f"{name}({fields_str}, srid={self.srid})"
 
-    attrs = {
-        '__tablename__': name.lower(),
-        'id': Column(Integer, primary_key=True),
-        'geom': Column(Geometry(geometry_type='POINT', srid=srid_map.get('default', 4326)))
-    }
-
-    for field_name, field_type in fields.items():
-        if field_type == 'int':
-            attrs[field_name] = Column(Integer)
-        elif field_type == 'float':
-            attrs[field_name] = Column(Float)
-        else:
-            raise ValueError(f"असमर्थित फ़ील्ड प्रकार: {field_type}")
-
-    PointSubclass = type(name, (Base,), attrs)
+    PointSubclass.__name__ = name
     return PointSubclass

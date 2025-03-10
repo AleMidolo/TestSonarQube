@@ -9,3 +9,6 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
     
     for arg in deprecated_args:
         print(f"अप्रचलित तर्क: {arg}")
+        print(f"CLI से मान: {cli_args[arg]}")
+        print(f"फ़ाइल से मान: {answer_file_args[arg]}")
+        print("---")
