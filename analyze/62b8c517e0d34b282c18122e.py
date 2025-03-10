@@ -13,33 +13,29 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     :rtype: str
     """
     import traceback
-    import os
+    import sys
 
     # 获取异常的堆栈信息
-    stack = traceback.extract_tb(e.__traceback__)
-    stack_str = []
+    exc_type, exc_value, exc_traceback = sys.exc_info()
+    stack = traceback.extract_tb(exc_traceback)
 
     # 限制堆栈层级
-    stack = stack[:max_level]
+    if len(stack) > max_level:
+        stack = stack[:max_level]
 
+    # 格式化堆栈信息
+    stack_str = []
     for frame in stack:
+        file_path = frame.filename
         # 限制路径层级
-        path = frame.filename
-        path_parts = path.split(os.sep)
-        if len(path_parts) > max_path_level:
-            path = os.sep.join(path_parts[-max_path_level:])
-        
-        # 格式化每一帧的堆栈信息
-        stack_str.append(f"File \"{path}\", line {frame.lineno}, in {frame.name}\n    {frame.line}")
+        if max_path_level > 0:
+            parts = file_path.split('/')
+            if len(parts) > max_path_level:
+                file_path = '/'.join(parts[-max_path_level:])
+        stack_str.append(f"File \"{file_path}\", line {frame.lineno}, in {frame.name}\n  {frame.line}")
 
-    # 将堆栈信息拼接成字符串
-    stack_str = "\n".join(stack_str)
-    
-    # 获取异常类型和消息
-    exception_type = type(e).__name__
-    exception_msg = str(e)
+    # 格式化异常信息
+    exception_str = f"{exc_type.__name__}: {exc_value}\n"
+    exception_str += "\n".join(stack_str)
 
-    # 拼接完整的异常信息
-    result = f"{exception_type}: {exception_msg}\n{stack_str}"
-    
-    return result
+    return exception_str

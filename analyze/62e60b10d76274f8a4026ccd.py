@@ -7,9 +7,9 @@ def data(self, *keys):
     :return: 一个以字段名称为键的值字典
     :raises: :exc: 如果指定了超出范围的索引，则会抛出`IndexError` 
     """
-    # Assuming self._data is a dictionary or list that holds the record data
+    # Assuming self._data is a dictionary or list-like structure containing the record data
     if not keys:
-        return self._data.copy() if isinstance(self._data, dict) else dict(enumerate(self._data))
+        return dict(self._data) if isinstance(self._data, dict) else dict(enumerate(self._data))
     
     result = {}
     for key in keys:

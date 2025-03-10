@@ -6,15 +6,19 @@ def fromutc(self, dt):
 
     :param dt: 一个带有时区信息的 :class:`datetime.datetime` 对象。
     """
-    if dt.tzinfo is None:
-        raise ValueError("fromutc() requires a timezone-aware datetime")
+    if dt.tzinfo is not self:
+        raise ValueError("fromutc: dt.tzinfo is not self")
     
-    # Convert the datetime to the local timezone
-    local_dt = dt.astimezone(self)
+    # Convert dt to UTC
+    dt = dt.replace(tzinfo=None)
+    dt = dt - self.utcoffset(dt)
     
-    # Check if the local datetime is ambiguous
-    if self.is_ambiguous(local_dt):
+    # Convert UTC to local time
+    dt = dt + self.utcoffset(dt)
+    
+    # Check if the datetime is ambiguous
+    if self.is_ambiguous(dt):
         # If ambiguous, return the first occurrence
-        return local_dt.replace(fold=0)
-    else:
-        return local_dt
+        dt = self._fold_first(dt)
+    
+    return dt.replace(tzinfo=self)

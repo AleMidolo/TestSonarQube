@@ -1,5 +1,4 @@
 import os
-import platform
 
 def _should_attempt_c_optimizations():
     """
@@ -9,11 +8,11 @@ def _should_attempt_c_optimizations():
 
     这会考虑我们是否运行在 PyPy 上，以及 `_use_c_impl` 中定义的 ``PURE_PYTHON`` 环境变量的值。
     """
-    # Check if running on PyPy
-    is_pypy = platform.python_implementation() == "PyPy"
+    # 检查是否运行在 PyPy 上
+    is_pypy = hasattr(sys, 'pypy_version_info')
     
-    # Check if PURE_PYTHON environment variable is set
-    pure_python = os.getenv("PURE_PYTHON", "").lower() in ("1", "true", "yes")
+    # 检查 PURE_PYTHON 环境变量是否设置为真值
+    pure_python = os.getenv('PURE_PYTHON', '').lower() in ('true', '1', 't', 'y', 'yes')
     
-    # Return True if not running on PyPy and PURE_PYTHON is not set
+    # 如果不在 PyPy 上且 PURE_PYTHON 未设置为真值，则尝试 C 优化
     return not is_pypy and not pure_python

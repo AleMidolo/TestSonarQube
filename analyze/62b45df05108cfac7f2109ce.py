@@ -6,29 +6,32 @@ def validate(self, path):
     如果对象有效（允许警告），则返回真，否则返回假。
     """
     import os
-    from fs import open_fs
+    import json
 
     # 检查路径是否存在
     if not os.path.exists(path):
         return False
 
-    # 打开文件系统
-    fs = open_fs(path)
+    # 检查是否存在 inventory.json 文件
+    inventory_path = os.path.join(path, "inventory.json")
+    if not os.path.isfile(inventory_path):
+        return False
 
-    # 检查是否存在 OCFL 对象的基本结构
-    required_files = ['inventory.json', 'inventory.json.sha512']
-    for file in required_files:
-        if not fs.exists(file):
-            return False
-
-    # 检查 inventory.json 文件是否有效
+    # 尝试解析 inventory.json 文件
     try:
-        inventory = fs.readtext('inventory.json')
-        import json
-        inventory_data = json.loads(inventory)
-        if 'id' not in inventory_data or 'type' not in inventory_data or inventory_data['type'] != 'Object':
+        with open(inventory_path, 'r') as f:
+            inventory = json.load(f)
+    except json.JSONDecodeError:
+        return False
+
+    # 检查 inventory 中是否包含必要的字段
+    required_fields = ["id", "type", "digestAlgorithm", "head", "manifest", "versions"]
+    for field in required_fields:
+        if field not in inventory:
             return False
-    except:
+
+    # 检查 versions 是否包含至少一个版本
+    if not inventory.get("versions"):
         return False
 
     # 如果所有检查都通过，则返回 True

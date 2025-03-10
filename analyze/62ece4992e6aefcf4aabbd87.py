@@ -23,7 +23,7 @@ def build_app_logger(name='app', logfile='app.log', debug=True):
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.DEBUG if debug else logging.INFO)
 
-    # 创建格式化器
+    # 创建日志格式
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     file_handler.setFormatter(formatter)
     console_handler.setFormatter(formatter)

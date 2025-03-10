@@ -7,8 +7,8 @@ def validate_choices_args(self, args):
     if not hasattr(self, 'choices'):
         raise AttributeError("The 'choices' attribute is not defined.")
     
-    if not isinstance(self.choices, (list, tuple, set)):
-        raise TypeError("The 'choices' attribute must be a list, tuple, or set.")
+    if not isinstance(self.choices, (list, tuple)):
+        raise TypeError("The 'choices' attribute must be a list or tuple.")
     
     if args not in self.choices:
         raise ValueError(f"The argument '{args}' is not a valid choice. Valid choices are: {self.choices}")
