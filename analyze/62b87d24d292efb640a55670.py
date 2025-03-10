@@ -16,4 +16,4 @@ def get_versions():
         }
         return version_info
     except Exception as e:
-        return {"error": str(e), "default": "No se pudo obtener la información de la versión."}
+        return {"error": str(e), "default_version": "1.0.0"}

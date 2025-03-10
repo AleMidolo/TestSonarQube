@@ -22,7 +22,8 @@ def send_document(url, data, timeout=10, method="post", *args, **kwargs):
         else:
             raise ValueError(f"Método HTTP no soportado: {method}")
         
-        return response.status_code, None
+        response.raise_for_status()
+        return (response.status_code, None)
     
     except requests.exceptions.RequestException as e:
-        return None, e
+        return (None, e)

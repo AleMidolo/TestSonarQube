@@ -25,5 +25,4 @@ def split(s, platform='this'):
     else:
         raise ValueError("Invalid platform value. Use 'this', 1 (POSIX), or 0 (Windows/CMD).")
     
-    matches = pattern.findall(s)
-    return [match.strip('"\'') for match in matches]
+    return pattern.findall(s)

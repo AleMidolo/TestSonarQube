@@ -10,21 +10,17 @@ def validate_from_content(cls, spec_content=None):
     :return: Diccionario con los datos cargados desde un archivo spec (YAML)
     """
     if spec_content is None:
-        raise ValueError("El contenido del archivo spec no puede ser None.")
+        raise cls.IRValidatorException("El contenido del archivo spec no puede ser nulo.")
     
     try:
         spec_data = yaml.safe_load(spec_content)
     except yaml.YAMLError as e:
-        raise ValueError(f"Error al cargar el contenido YAML: {e}")
+        raise cls.IRValidatorException(f"Error al cargar el contenido YAML: {e}")
     
     required_fields = ['field1', 'field2', 'field3']  # Ejemplo de campos requeridos
     
     for field in required_fields:
         if field not in spec_data:
-            raise IRValidatorException(f"Falta el campo obligatorio: {field}")
+            raise cls.IRValidatorException(f"Falta el campo obligatorio: {field}")
     
     return spec_data
-
-class IRValidatorException(Exception):
-    """Excepción personalizada para errores de validación."""
-    pass

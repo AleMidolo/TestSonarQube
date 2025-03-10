@@ -6,4 +6,6 @@ def _create_in_regex(self) -> Pattern:
 
     Devuelve la expresión regular para el parámetro "in-style" (:class:`re.Pattern`).
     """
-    return re.compile(r'\b(in|inside|within)\b', re.IGNORECASE)
+    # Define the regex pattern for "in-style" parameter
+    pattern = r"in\s*\(([^)]+)\)"
+    return re.compile(pattern)

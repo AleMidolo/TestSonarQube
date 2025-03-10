@@ -8,6 +8,6 @@ def format_dt(dt):
         dt (datetime): Objeto datetime a formatear.
     
     Returns:
-        str: Fecha y hora formateada en el formato esperado por los nodos D*.
+        str: Fecha formateada en el formato esperado por los nodos D*.
     """
     return dt.strftime('%Y-%m-%dT%H:%M:%S')

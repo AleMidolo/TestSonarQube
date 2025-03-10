@@ -6,8 +6,8 @@ def _group_files_by_xml_filename(source, xmls, files):
 
     Parámetros
     ----------
-    *xmls* : list  
-        Lista de nombres de los archivos XML.  
+    *xml_filename* : str  
+        Nombres de los archivos XML.  
 
     *files* : list  
         Lista de archivos en la carpeta o archivo comprimido (zip).  
@@ -16,12 +16,16 @@ def _group_files_by_xml_filename(source, xmls, files):
     -------
     *dict*
         *key*: Nombre de los archivos XML.  
-        *value*: Lista de archivos asociados al XML.  
+        *name*: Paquete.  
     """
     grouped_files = {}
     
     for xml in xmls:
-        xml_base = xml.split('.')[0]  # Obtener el nombre base sin la extensión
-        grouped_files[xml] = [file for file in files if file.startswith(xml_base)]
+        xml_base = xml.split('.')[0]  # Obtener el nombre base del archivo XML
+        grouped_files[xml_base] = []
+        
+        for file in files:
+            if file.startswith(xml_base):
+                grouped_files[xml_base].append(file)
     
     return grouped_files
