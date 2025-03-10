@@ -10,10 +10,10 @@ def make_find_paths(find_paths):
 
     ['sh:**/*foo.txt*/**', 'pp:root/somedir']
     """
-    result = []
+    modified_paths = []
     for path in find_paths:
-        if path.startswith('pp:'):
-            result.append(path)
+        if not path.startswith(('pp:', 'sh:')):
+            modified_paths.append(f'sh:**/*{path}*/**')
         else:
-            result.append(f'sh:**/*{path}*/**')
-    return result
+            modified_paths.append(path)
+    return modified_paths

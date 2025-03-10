@@ -1,6 +1,6 @@
 from dateutil.parser import parse as dateutil_parse
 from datetime import datetime
-from dateutil.tz import gettz
+from dateutil.tz import tzoffset, gettz
 
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
@@ -23,6 +23,9 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         यह पैरामीटर एक डिक्शनरी हो सकता है जिसमें टाइम ज़ोन उपनाम टाइम ज़ोन नामों को टाइम ज़ोन से 
         मैप करते हैं या एक फ़ंक्शन हो सकता है जो दो पैरामीटर (``tzname`` और ``tzoffset``) लेता है 
         और एक टाइम ज़ोन लौटाता है।
+
+        जिन टाइम ज़ोन को नामों से मैप किया गया है, वे UTC से सेकंड में एक पूर्णांक ऑफ़सेट 
+        या :class:`tzinfo` ऑब्जेक्ट हो सकते हैं।
 
     :param \*\*kwargs:
         ``_parse()`` को पास किए गए कीवर्ड आर्ग्युमेंट्स।

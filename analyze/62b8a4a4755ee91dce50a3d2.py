@@ -6,15 +6,15 @@ def _fromutc(self, dt):
     - `dt`:  
       एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
     """
-    if dt.tzinfo is None:
-        raise ValueError("The input datetime must be timezone-aware.")
+    if dt.tzinfo is not self:
+        raise ValueError("dt.tzinfo is not self")
     
-    # Convert the datetime to the local timezone
+    # Convert to local time
     local_dt = dt.astimezone(self)
     
-    # Check if the datetime is ambiguous
+    # Check if the local time is ambiguous
     if self._is_ambiguous(local_dt):
         # If it's ambiguous, return the first occurrence
-        return self._resolve_ambiguous_time(local_dt, first=True)
-    
-    return local_dt
+        return self._from_local(local_dt, first=True)
+    else:
+        return local_dt

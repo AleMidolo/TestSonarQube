@@ -23,16 +23,15 @@ def to_csv(self, separator=",", header=None):
     if header is not None:
         csv_lines.append(header)
     
-    # Iterate over each point in the graph
+    # Iterate through the points in the graph
     for point in self.points:
         # Convert coordinates to string separated by the separator
-        coords_str = separator.join(map(str, point.coordinates))
+        coord_str = separator.join(map(str, point.coordinates))
         # Convert values to string separated by the separator
-        values_str = separator.join(map(str, point.values))
+        value_str = separator.join(map(str, point.values))
         # Combine coordinates and values into a single CSV line
-        csv_line = f"{coords_str}{separator}{values_str}"
+        csv_line = f"{coord_str}{separator}{value_str}"
         csv_lines.append(csv_line)
     
     # Join all lines with newline characters to form the final CSV string
-    csv_output = "\n".join(csv_lines)
-    return csv_output
+    return "\n".join(csv_lines)

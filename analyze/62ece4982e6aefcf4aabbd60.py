@@ -17,7 +17,7 @@ def size_to_bytes(size: str) -> int:
         >>> size_to_bytes("1K")
         1000
     """
-    size = size.upper()
+    size = size.strip().upper()
     if size[-1] == 'K':
         return int(size[:-1]) * 1000
     elif size[-1] == 'M':

@@ -26,7 +26,5 @@ def update_last_applied_manifest_list_from_resp(
                 last_applied_manifest[i], schema_item, resp_item
             )
         else:
-            if i >= len(last_applied_manifest):
-                last_applied_manifest.append(resp_item)
-            else:
+            if schema_item not in last_applied_manifest:
                 last_applied_manifest[i] = resp_item

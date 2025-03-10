@@ -19,7 +19,7 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
         if isinstance(value, dict):
             observer_schema[key] = generate_default_observer_schema_dict(value)
         elif isinstance(value, list):
-            observer_schema[key] = [None] * len(value)
+            observer_schema[key] = generate_default_observer_schema_list(value)
         else:
             observer_schema[key] = None
     
@@ -28,5 +28,30 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
         for field in identifying_fields:
             if field in manifest_dict:
                 observer_schema[field] = manifest_dict[field]
+    
+    return observer_schema
+
+
+def generate_default_observer_schema_list(manifest_list):
+    """
+    यह फ़ंक्शन :func:``generate_default_observer_schema_dict`` के साथ मिलकर पुनरावृत्त रूप से (recursively) कॉल किया जाता है ताकि किसी Kubernetes संसाधन (resource) के एक भाग से डिफ़ॉल्ट ``observer_schema`` का हिस्सा उत्पन्न किया जा सके, जिसे क्रमशः ``manifest_dict`` या ``manifest_list`` द्वारा परिभाषित किया गया है।
+
+    आर्ग्युमेंट्स (Args):
+    - manifest_list (list): आंशिक Kubernetes संसाधन (Partial Kubernetes resources)।
+
+    रिटर्न्स (Returns):
+    - list: उत्पन्न आंशिक observer_schema (Generated partial observer_schema)।
+
+    यह फ़ंक्शन ``manifest_list`` से एक नई सूची बनाता है और सभी non-list और non-dict मानों को ``None`` से बदल देता है।
+    """
+    observer_schema = []
+    
+    for item in manifest_list:
+        if isinstance(item, dict):
+            observer_schema.append(generate_default_observer_schema_dict(item))
+        elif isinstance(item, list):
+            observer_schema.append(generate_default_observer_schema_list(item))
+        else:
+            observer_schema.append(None)
     
     return observer_schema

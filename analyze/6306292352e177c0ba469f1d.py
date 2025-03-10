@@ -12,18 +12,16 @@ def find_tags(text: str, replacer: Callable = None) -> Tuple[Set, str]:
 
     एक सेट के रूप में टैग्स और मूल या बदला हुआ टेक्स्ट लौटाता है।
     """
-    # Regex to match tags (words starting with @)
-    tag_pattern = re.compile(r'(?<!`)(@\w+)(?!`)')
-    
+    # Regex to find tags, ignoring those inside code blocks
+    tag_pattern = re.compile(r'(?<!`)#(\w+)(?!`)')
+    tags = set()
+    modified_text = text
+
     # Find all tags in the text
-    tags = set(tag_pattern.findall(text))
-    
-    # If a replacer function is provided, replace the tags in the text
-    if replacer:
-        def replace_tag(match):
-            return replacer(match.group(1))
-        modified_text = tag_pattern.sub(replace_tag, text)
-    else:
-        modified_text = text
-    
+    for match in tag_pattern.finditer(text):
+        tag = match.group(1)
+        tags.add(tag)
+        if replacer:
+            modified_text = modified_text.replace(f'#{tag}', replacer(tag))
+
     return tags, modified_text

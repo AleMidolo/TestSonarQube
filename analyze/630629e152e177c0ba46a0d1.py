@@ -12,11 +12,11 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
         
         # Make the request to retrieve the WebFinger document
-        response = requests.get(webfinger_url)
-        response.raise_for_status()  # Raise an exception for HTTP errors
+        response = requests.get(webfinger_url, timeout=5)
+        response.raise_for_status()
         
-        # Return the response content if successful
+        # Return the JSON content as a string
         return response.text
-    except (requests.RequestException, IndexError):
+    except (requests.RequestException, ValueError):
         # Return None if any error occurs
         return None

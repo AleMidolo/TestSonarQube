@@ -24,11 +24,11 @@ def _convert_non_cli_args(self, parser_name, values_dict):
                 pass
             
             # Try to convert to boolean
-            if value.lower() in ['true', 'false']:
+            if value.lower() in ('true', 'false'):
                 values_dict[key] = value.lower() == 'true'
                 continue
             
-            # Try to convert to list if the value is a comma-separated string
+            # Try to convert to list if the value is comma-separated
             if ',' in value:
                 values_dict[key] = value.split(',')
                 continue

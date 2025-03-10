@@ -18,21 +18,21 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     # Ensure the destination directory exists
     destination_path.mkdir(parents=True, exist_ok=True)
     
-    # Download the archive
+    # Download the .tar.gz file
     response = requests.get(url, stream=True)
     response.raise_for_status()
     
-    # Save the archive to a temporary file
-    archive_path = destination_path / "archive.tar.gz"
-    with open(archive_path, 'wb') as f:
+    # Save the downloaded file temporarily
+    temp_file = destination_path / "archive.tar.gz"
+    with open(temp_file, 'wb') as f:
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)
     
-    # Extract the archive
-    with tarfile.open(archive_path, 'r:gz') as tar:
+    # Extract the .tar.gz file
+    with tarfile.open(temp_file, 'r:gz') as tar:
         tar.extractall(path=destination_path)
     
-    # Remove the temporary archive file
-    archive_path.unlink()
+    # Remove the temporary .tar.gz file
+    temp_file.unlink()
     
     return destination_path

@@ -6,31 +6,35 @@ def generate_default_observer_schema(app):
         app (krake.data.kubernetes.Application): वह एप्लिकेशन जिसके लिए डिफ़ॉल्ट ऑब्ज़र्वर स्कीमा उत्पन्न करना है।
     """
     default_schema = {
-        "apiVersion": "krake.eclabs.io/v1alpha1",
-        "kind": "ObserverSchema",
-        "metadata": {
-            "name": f"{app.metadata.name}-default-observer-schema",
-            "namespace": app.metadata.namespace
+        "type": "object",
+        "properties": {
+            "status": {
+                "type": "object",
+                "properties": {
+                    "conditions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "type": {"type": "string"},
+                                "status": {"type": "string"},
+                                "lastTransitionTime": {"type": "string"},
+                                "reason": {"type": "string"},
+                                "message": {"type": "string"}
+                            },
+                            "required": ["type", "status"]
+                        }
+                    }
+                },
+                "required": ["conditions"]
+            }
         },
-        "spec": {
-            "resources": []
-        }
+        "required": ["status"]
     }
 
-    if hasattr(app, 'spec') and hasattr(app.spec, 'manifest'):
-        for resource in app.spec.manifest:
-            resource_schema = {
-                "group": resource.get("group", ""),
-                "version": resource.get("version", ""),
-                "kind": resource.get("kind", ""),
-                "observer": {
-                    "type": "Kubernetes",
-                    "config": {
-                        "apiVersion": resource.get("apiVersion", ""),
-                        "kind": resource.get("kind", "")
-                    }
-                }
-            }
-            default_schema["spec"]["resources"].append(resource_schema)
+    # Iterate over all resources in the application's manifest
+    for resource in app.spec.manifest:
+        if not hasattr(resource, 'observer_schema'):
+            resource.observer_schema = default_schema
 
-    return default_schema
+    return app

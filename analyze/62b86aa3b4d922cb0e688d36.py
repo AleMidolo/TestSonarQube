@@ -4,7 +4,7 @@ from typing import Dict, List, Union
 class ValidationError(Exception):
     def __init__(self, messages: List[Dict[str, str]]):
         self.messages = messages
-        super().__init__(f"Validation failed with errors: {messages}")
+        super().__init__(str(messages))
 
 def _validate_labels(labels: Dict[Union[str, bool], Union[str, List, bool]]) -> None:
     """
@@ -35,11 +35,7 @@ def _validate_labels(labels: Dict[Union[str, bool], Union[str, List, bool]]) -> 
         
         # Validate value
         if isinstance(value, list):
-            for item in value:
-                if not isinstance(item, str):
-                    errors.append({str(item): 'expected string or bytes-like object'})
-                elif not value_pattern.match(item):
-                    errors.append({item: f"Label value '{item}' does not match the regex {value_pattern.pattern}"})
+            errors.append({str(value): 'expected string or bytes-like object'})
         elif not isinstance(value, str):
             errors.append({str(value): 'expected string or bytes-like object'})
         elif not value_pattern.match(value):

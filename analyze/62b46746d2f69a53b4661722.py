@@ -15,18 +15,34 @@ def absorb(self, args):
     result = []
     for expr in args:
         if isinstance(expr, tuple):
-            if expr[0] == '&':
-                if expr[1] == expr[2][1]:
-                    result.append(expr[1])
-                elif expr[1] == ('~', expr[2][1]):
-                    result.append(('&', expr[1], expr[2][2]))
-                else:
-                    result.append(expr)
-            elif expr[0] == '|':
-                if expr[1] == expr[2][1]:
-                    result.append(expr[1])
-                elif expr[1] == ('~', expr[2][1]):
-                    result.append(('|', expr[1], expr[2][2]))
+            if len(expr) == 3:
+                op, left, right = expr
+                if op == '&':
+                    if left == right:
+                        result.append(left)
+                    elif isinstance(right, tuple) and len(right) == 3:
+                        if right[0] == '|' and right[1] == left:
+                            result.append(left)
+                        elif right[0] == '|' and right[1] == ('~', left):
+                            result.append(('&', left, right[2]))
+                    elif isinstance(left, tuple) and len(left) == 3:
+                        if left[0] == '|' and left[1] == right:
+                            result.append(right)
+                        elif left[0] == '|' and left[1] == ('~', right):
+                            result.append(('&', right, left[2]))
+                elif op == '|':
+                    if left == right:
+                        result.append(left)
+                    elif isinstance(right, tuple) and len(right) == 3:
+                        if right[0] == '&' and right[1] == left:
+                            result.append(left)
+                        elif right[0] == '&' and right[1] == ('~', left):
+                            result.append(('|', left, right[2]))
+                    elif isinstance(left, tuple) and len(left) == 3:
+                        if left[0] == '&' and left[1] == right:
+                            result.append(right)
+                        elif left[0] == '&' and left[1] == ('~', right):
+                            result.append(('|', right, left[2]))
                 else:
                     result.append(expr)
             else:

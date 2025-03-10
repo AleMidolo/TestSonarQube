@@ -16,4 +16,11 @@ def fromutc(self, dt):
         raise ValueError("fromutc() requires a timezone-aware datetime")
     
     # Convert the datetime to the target timezone
-    return dt.astimezone(self)
+    result = dt.astimezone(self)
+    
+    # Check if the datetime is ambiguous
+    if self.is_ambiguous(result):
+        # If it's ambiguous, adjust to the first occurrence
+        result = self.resolve_ambiguous(result, is_dst=False)
+    
+    return result

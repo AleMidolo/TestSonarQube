@@ -26,7 +26,7 @@ def normalized(self):
     fractional_seconds = self.seconds - seconds
     fractional_microseconds = self.microseconds - microseconds
     
-    # Add fractional parts to the next lower unit
+    # Convert fractional parts to lower units
     hours += int(fractional_days * 24)
     minutes += int(fractional_hours * 60)
     seconds += int(fractional_minutes * 60)

@@ -13,15 +13,9 @@ def dict_insert(dic, val, key, *keys):
     :param key: कुंजियों की श्रृंखला में पहली कुंजी जो मान को स्टोर करेगी।
     :param keys: कुंजियों की श्रृंखला में उप-कुंजियां।
     """
-    if not keys:
-        dic[key] = val
-        return dic
-    
     current = dic
     for k in keys[:-1]:
         if k not in current:
             current[k] = {}
         current = current[k]
-    
     current[keys[-1]] = val
-    return dic

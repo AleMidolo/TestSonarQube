@@ -19,22 +19,12 @@ class Time:
         if not (0 <= ticks < 86400000000000):
             raise ValueError("ticks must be in the range 0 <= ticks < 86400000000000")
         
-        # Convert ticks to seconds and nanoseconds
-        seconds = ticks // 1_000_000_000
-        nanoseconds = ticks % 1_000_000_000
+        nanoseconds_per_second = 1_000_000_000
+        seconds = ticks // nanoseconds_per_second
+        nanoseconds = ticks % nanoseconds_per_second
         
-        # Create a datetime object at midnight
-        midnight = datetime(1970, 1, 1)
+        midnight = datetime(1970, 1, 1, 0, 0, 0, tzinfo=tz)
+        time_delta = timedelta(seconds=seconds, microseconds=nanoseconds // 1000)
+        result_time = (midnight + time_delta).time()
         
-        # Add the seconds and nanoseconds to midnight
-        dt = midnight + timedelta(seconds=seconds, microseconds=nanoseconds // 1000)
-        
-        # Extract the time part
-        t = dt.time()
-        
-        # If a timezone is provided, localize the time
-        if tz is not None:
-            dt = datetime.combine(dt.date(), t, tzinfo=tz)
-            t = dt.timetz()
-        
-        return t
+        return result_time

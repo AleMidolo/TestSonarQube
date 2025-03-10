@@ -1,20 +1,13 @@
 def was_processed(processed, path_name, verbose):
     """
-    Check if a given path_name has already been processed.
-
-    Args:
-        processed (set): A set of already processed path names.
-        path_name (str): The path name to check.
-        verbose (bool): If True, print additional information.
-
-    Returns:
-        bool: True if the path_name has been processed, False otherwise.
+    यहाँ फ़ंक्शन का कार्यान्वयन होगा
     """
     if path_name in processed:
         if verbose:
-            print(f"{path_name} has already been processed.")
+            print(f"'{path_name}' has already been processed.")
         return True
     else:
+        processed.add(path_name)
         if verbose:
-            print(f"{path_name} has not been processed yet.")
+            print(f"'{path_name}' is being processed for the first time.")
         return False
