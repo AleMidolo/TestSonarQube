@@ -2,7 +2,7 @@ def get(self, key, default=None):
     """
     D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.
     """
-    if key in self:
+    try:
         return self[key]
-    else:
+    except KeyError:
         return default

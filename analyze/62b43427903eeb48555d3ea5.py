@@ -30,15 +30,25 @@ def format(
             out_params[f":{key}"] = value
         formatted_sql = sql
         for key, value in params.items():
-            formatted_sql = formatted_sql.replace(f"%({key})s", f":{key}")
-        return formatted_sql, out_params
-    elif isinstance(params, (list, tuple)):
+            if isinstance(sql, bytes):
+                placeholder = f"%({key})s".encode()
+                replacement = f":{key}".encode()
+            else:
+                placeholder = f"%({key})s"
+                replacement = f":{key}"
+            formatted_sql = formatted_sql.replace(placeholder, replacement)
+    else:
         # Ordinal parameter style
         out_params = []
         formatted_sql = sql
         for i, value in enumerate(params):
             out_params.append(value)
-            formatted_sql = formatted_sql.replace(f"%s", f":{i+1}", 1)
-        return formatted_sql, out_params
-    else:
-        raise TypeError("params must be a mapping or sequence")
+            if isinstance(sql, bytes):
+                placeholder = f"%s".encode()
+                replacement = f":{i + 1}".encode()
+            else:
+                placeholder = f"%s"
+                replacement = f":{i + 1}"
+            formatted_sql = formatted_sql.replace(placeholder, replacement, 1)
+    
+    return formatted_sql, out_params

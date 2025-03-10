@@ -34,6 +34,5 @@ def _eval_file(prefix, file_path):
     
     return {
         "type": file_type,
-        "path": file_path,
-        "folder": file_folder
+        "path": file_path
     }

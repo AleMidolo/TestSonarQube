@@ -28,4 +28,5 @@ def remove_ending_os_sep(input_list):
             processed_list.append(item[:-1])
         else:
             processed_list.append(item)
+    
     return processed_list

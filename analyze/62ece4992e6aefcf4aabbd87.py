@@ -6,7 +6,7 @@ def build_app_logger(name='app', logfile='app.log', debug=True):
 
     Args:
         name (str): Name of the logger. Defaults to 'app'.
-        logfile (str): Name of the log file. Defaults to 'app.log'.
+        logfile (str): File to which logs will be written. Defaults to 'app.log'.
         debug (bool): If True, sets the log level to DEBUG. Otherwise, sets it to INFO.
 
     Returns:
@@ -19,17 +19,11 @@ def build_app_logger(name='app', logfile='app.log', debug=True):
     file_handler = logging.FileHandler(logfile)
     file_handler.setLevel(logging.DEBUG if debug else logging.INFO)
 
-    # Create a console handler
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.DEBUG if debug else logging.INFO)
-
-    # Create a formatter and set it for both handlers
+    # Create a formatter and set it for the handler
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     file_handler.setFormatter(formatter)
-    console_handler.setFormatter(formatter)
 
-    # Add the handlers to the logger
+    # Add the handler to the logger
     logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
 
     return logger

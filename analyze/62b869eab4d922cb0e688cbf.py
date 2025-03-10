@@ -8,33 +8,36 @@ def generate_default_observer_schema(app):
             default observer schema
     """
     default_schema = {
-        "type": "object",
-        "properties": {
-            "status": {
-                "type": "object",
-                "properties": {
-                    "conditions": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "type": {"type": "string"},
-                                "status": {"type": "string"},
-                                "lastTransitionTime": {"type": "string"},
-                                "reason": {"type": "string"},
-                                "message": {"type": "string"}
-                            },
-                            "required": ["type", "status"]
-                        }
-                    }
-                }
-            }
+        "apiVersion": "v1",
+        "kind": "ObserverSchema",
+        "metadata": {
+            "name": "default-observer-schema",
+            "namespace": app.metadata.namespace
         },
-        "required": ["status"]
+        "spec": {
+            "resources": []
+        }
     }
 
     for resource in app.spec.manifest:
-        if not hasattr(resource, 'observer_schema'):
-            resource.observer_schema = default_schema
+        resource_schema = {
+            "group": resource.get("group", ""),
+            "version": resource.get("version", "v1"),
+            "kind": resource.get("kind", ""),
+            "namespace": resource.get("metadata", {}).get("namespace", ""),
+            "name": resource.get("metadata", {}).get("name", ""),
+            "observer": {
+                "type": "status",
+                "status": {
+                    "conditions": [
+                        {
+                            "type": "Ready",
+                            "status": "True"
+                        }
+                    ]
+                }
+            }
+        }
+        default_schema["spec"]["resources"].append(resource_schema)
 
-    return app
+    return default_schema

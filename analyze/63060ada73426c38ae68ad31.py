@@ -7,21 +7,16 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param parser_name: The command name, e.g. main, virsh, ospd, etc
     :param values_dict: The dict of with arguments
     """
-    if parser_name == "main":
-        if "port" in values_dict:
-            values_dict["port"] = int(values_dict["port"])
-        if "timeout" in values_dict:
-            values_dict["timeout"] = float(values_dict["timeout"])
-        if "verbose" in values_dict:
-            values_dict["verbose"] = values_dict["verbose"].lower() == "true"
-    elif parser_name == "virsh":
-        if "memory" in values_dict:
-            values_dict["memory"] = int(values_dict["memory"])
-        if "cpu" in values_dict:
-            values_dict["cpu"] = int(values_dict["cpu"])
-    elif parser_name == "ospd":
-        if "retries" in values_dict:
-            values_dict["retries"] = int(values_dict["retries"])
-        if "delay" in values_dict:
-            values_dict["delay"] = float(values_dict["delay"])
-    # Add more parser-specific conversions as needed
+    for key, value in values_dict.items():
+        if isinstance(value, str):
+            if value.lower() == 'true':
+                values_dict[key] = True
+            elif value.lower() == 'false':
+                values_dict[key] = False
+            elif value.isdigit():
+                values_dict[key] = int(value)
+            else:
+                try:
+                    values_dict[key] = float(value)
+                except ValueError:
+                    pass  # Leave as string if conversion fails

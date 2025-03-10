@@ -15,16 +15,15 @@ def _explore_zipfile(zip_path):
     Returns
     -------
     dict
-        A dictionary where keys are XML basenames and values are lists of file paths.
+        A dictionary where keys are XML basenames and values are lists of file data.
     """
-    data = defaultdict(list)
+    data_dict = defaultdict(list)
     
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        for file_info in zip_ref.infolist():
-            if not file_info.is_dir():
-                file_name = os.path.basename(file_info.filename)
-                if file_name.endswith('.xml'):
-                    basename = os.path.splitext(file_name)[0]
-                    data[basename].append(file_info.filename)
+        for file_name in zip_ref.namelist():
+            base_name = os.path.splitext(os.path.basename(file_name))[0]
+            with zip_ref.open(file_name) as file:
+                file_data = file.read()
+                data_dict[base_name].append(file_data)
     
-    return dict(data)
+    return dict(data_dict)

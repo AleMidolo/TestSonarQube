@@ -12,7 +12,7 @@ def addignored(ignored):
     # Split the output into a list of filenames
     ignored_files = result.stdout.splitlines()
     
-    # Filter the list to include only the files that are in the ignored list
+    # Filter the list to only include files that are in the ignored list
     filtered_files = [file for file in ignored_files if file in ignored]
     
     # Sort the list of ignored files

@@ -12,16 +12,16 @@ def protocol_handlers(cls, protocol_version=None):
         relevant and supported protocol versions
     :raise TypeError: if protocol version is not passed in a tuple
     """
-    # Example implementation assuming some predefined handlers
+    # Example of available handlers (this would be defined elsewhere in the class)
     available_handlers = {
-        (3, 5): cls.BoltV3_5Handler,
-        (4, 0): cls.BoltV4_0Handler,
-        (4, 1): cls.BoltV4_1Handler,
+        (3, 5): "HandlerForV3_5",
+        (4, 0): "HandlerForV4_0",
+        (4, 1): "HandlerForV4_1",
     }
 
     if protocol_version is not None:
         if not isinstance(protocol_version, tuple):
-            raise TypeError("protocol_version must be a tuple")
+            raise TypeError("Protocol version must be a tuple.")
         if protocol_version in available_handlers:
             return {protocol_version: available_handlers[protocol_version]}
         else:

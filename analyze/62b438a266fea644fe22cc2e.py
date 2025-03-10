@@ -17,13 +17,13 @@ def parse_arguments(*unparsed_arguments):
     parser_command2.add_argument('--arg2', type=int, help='Argument 2 for command2')
 
     # Parse the arguments
-    args = parser.parse_args(unparsed_arguments)
+    parsed_args = parser.parse_args(list(unparsed_arguments))
 
-    # Organize the parsed arguments into a dictionary
-    parsed_args = {}
-    if hasattr(args, 'subparser_name'):
-        parsed_args[args.subparser_name] = args
+    # Organize parsed arguments into a dictionary
+    args_dict = {}
+    if hasattr(parsed_args, 'subparser_name'):
+        args_dict[parsed_args.subparser_name] = parsed_args
     else:
-        parsed_args['global'] = args
+        args_dict['global'] = parsed_args
 
-    return parsed_args
+    return args_dict

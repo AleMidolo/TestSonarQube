@@ -1,7 +1,7 @@
 import logging
+import os
 import json
 import yaml
-import os
 
 def load_configurations(config_filenames, overrides=None, resolve_env=True):
     """
@@ -9,7 +9,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     the results as a tuple of: dict of configuration filename to corresponding parsed configuration,
     and sequence of logging.LogRecord instances containing any parse errors.
     """
-    configs = {}
+    configurations = {}
     errors = []
 
     if overrides is None:
@@ -23,6 +23,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 elif filename.endswith('.yaml') or filename.endswith('.yml'):
                     config = yaml.safe_load(file)
                 else:
+                    logging.error(f"Unsupported file format: {filename}")
                     errors.append(logging.LogRecord(
                         name=__name__,
                         level=logging.ERROR,
@@ -41,17 +42,18 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                             config[key] = os.getenv(env_var, value)
 
                 config.update(overrides)
-                configs[filename] = config
+                configurations[filename] = config
 
         except Exception as e:
+            logging.error(f"Error loading configuration file {filename}: {e}")
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=f"Error loading configuration file {filename}: {str(e)}",
+                msg=f"Error loading configuration file {filename}: {e}",
                 args=None,
-                exc_info=e
+                exc_info=None
             ))
 
-    return configs, errors
+    return configurations, errors
