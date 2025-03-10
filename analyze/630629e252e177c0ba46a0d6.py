@@ -17,9 +17,3 @@ def retrieve_diaspora_host_meta(host):
     
     # Assuming XRD is a class that can be initialized with the XML root
     return XRD(xml_root)
-
-# Assuming XRD is a class that can be initialized with an XML root
-class XRD:
-    def __init__(self, xml_root):
-        self.xml_root = xml_root
-        # Additional parsing logic can be added here

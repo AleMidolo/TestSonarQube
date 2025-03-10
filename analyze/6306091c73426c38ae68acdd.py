@@ -22,6 +22,6 @@ def validate_from_file(cls, yaml_file=None):
     
     missing_fields = [field for field in required_fields if field not in data]
     if missing_fields:
-        raise cls.IRValidatorException(f"Missing mandatory fields: {', '.join(missing_fields)}")
+        raise cls.IRValidatorException(f"Missing mandatory fields: {missing_fields}")
     
     return data

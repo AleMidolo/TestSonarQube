@@ -1,8 +1,8 @@
-import xml.etree.ElementTree as ET
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
+from cryptography.exceptions import InvalidSignature
 
 def verify_relayable_signature(public_key, doc, signature):
     """
@@ -10,29 +10,24 @@ def verify_relayable_signature(public_key, doc, signature):
     author did actually generate this message.
     
     :param public_key: The public key used for verification.
-    :param doc: The XML document to verify.
-    :param signature: The signature to verify against the document.
+    :param doc: The document (XML) that was signed.
+    :param signature: The signature to verify.
     :return: True if the signature is valid, False otherwise.
     """
     try:
-        # Parse the XML document
-        root = ET.fromstring(doc)
+        # Load the public key
+        pub_key = serialization.load_pem_public_key(public_key)
         
-        # Serialize the XML document to bytes
-        doc_bytes = ET.tostring(root, encoding='utf-8')
-        
-        # Verify the signature using the public key
-        public_key.verify(
+        # Verify the signature
+        pub_key.verify(
             signature,
-            doc_bytes,
+            doc,
             padding.PSS(
                 mgf=padding.MGF1(hashes.SHA256()),
                 salt_length=padding.PSS.MAX_LENGTH
             ),
             hashes.SHA256()
         )
-        
         return True
-    except Exception as e:
-        print(f"Verification failed: {e}")
+    except InvalidSignature:
         return False

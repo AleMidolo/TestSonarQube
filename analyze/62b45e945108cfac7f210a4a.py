@@ -15,20 +15,20 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     num_objects = 0
     good_objects = 0
 
-    # Placeholder logic for validation
-    # This would typically involve traversing the hierarchy and validating objects
+    # Placeholder for actual validation logic
+    # This would involve iterating through the storage hierarchy, checking objects, and validating digests
     # For example:
-    # for obj in self.get_all_objects():
+    # for obj in self.storage_root.iter_objects():
     #     num_objects += 1
     #     if validate_objects and obj.is_valid():
-    #         if check_digests and obj.check_digest():
+    #         if check_digests and obj.verify_digest():
     #             good_objects += 1
     #         elif not check_digests:
     #             good_objects += 1
     #     elif not validate_objects:
     #         good_objects += 1
 
-    # For demonstration purposes, let's assume we have 100 objects and 95 are valid
+    # For now, return dummy values
     num_objects = 100
     good_objects = 95
 

@@ -14,7 +14,4 @@ def get_option_spec(self, command_name, argument_name):
     if command_name in self.options:
         if argument_name in self.options[command_name]:
             return self.options[command_name][argument_name]
-        else:
-            raise ValueError(f"Argument '{argument_name}' not found in command '{command_name}'.")
-    else:
-        raise ValueError(f"Command '{command_name}' not found.")
+    return None

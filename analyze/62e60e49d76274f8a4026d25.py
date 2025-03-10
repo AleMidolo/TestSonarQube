@@ -31,12 +31,12 @@ def unit_of_work(metadata=None, timeout=None):
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            # Here you would typically handle the transaction logic, including
-            # applying the metadata and timeout to the transaction.
-            # For example, if using a Neo4j driver, you might do something like:
-            # with driver.session() as session:
-            #     session.write_transaction(func, *args, **kwargs, metadata=metadata, timeout=timeout)
-            # This is a simplified example and assumes the function `func` is a transaction function.
+            # Attach metadata and timeout to the transaction if provided
+            tx = args[0]  # Assuming the first argument is the transaction object
+            if metadata is not None:
+                tx.metadata = metadata
+            if timeout is not None:
+                tx.timeout = timeout
             return func(*args, **kwargs)
         return wrapper
     return decorator

@@ -10,4 +10,4 @@ def format_dt(dt):
     Returns:
         str: The formatted datetime string.
     """
-    return dt.strftime('%Y-%m-%d %H:%M:%S')
+    return dt.strftime("%Y-%m-%dT%H:%M:%S.%fZ")

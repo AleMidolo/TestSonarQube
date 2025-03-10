@@ -29,15 +29,14 @@ def format(
         for key, value in params.items():
             out_params[f":{key}"] = value
         formatted_sql = sql
-        for key, value in params.items():
-            formatted_sql = formatted_sql.replace(f":{key}", f"?")
-        return formatted_sql, out_params
-    elif isinstance(params, (list, tuple)):
-        # Ordinal parameter style
-        out_params = list(params)
-        formatted_sql = sql
-        for i in range(len(params)):
-            formatted_sql = formatted_sql.replace(f"?", f":{i+1}", 1)
-        return formatted_sql, out_params
+        for key in params:
+            formatted_sql = formatted_sql.replace(f"%({key})s", f":{key}")
     else:
-        raise TypeError("params must be a Mapping or Sequence")
+        # Ordinal parameter style
+        out_params = []
+        formatted_sql = sql
+        for i, value in enumerate(params):
+            out_params.append(value)
+            formatted_sql = formatted_sql.replace("%s", f":{i+1}", 1)
+    
+    return formatted_sql, out_params

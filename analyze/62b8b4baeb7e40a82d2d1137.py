@@ -1,5 +1,5 @@
 from zope.interface import Invalid, providedBy
-from zope.interface.verify import verifyObject as zope_verifyObject
+from inspect import signature
 
 def verifyObject(iface, candidate, tentative=False):
     """
@@ -32,10 +32,41 @@ def verifyObject(iface, candidate, tentative=False):
         As a special case, if only one such error is present, it is raised
         alone, like before.
     """
-    if not tentative and not iface.providedBy(candidate):
-        raise Invalid(f"The candidate does not provide the interface {iface}.")
+    errors = []
 
-    try:
-        return zope_verifyObject(iface, candidate)
-    except Invalid as e:
-        raise Invalid(f"Verification failed: {e}")
+    # Step 1: Verify that the candidate claims to provide the interface
+    if not tentative:
+        if not iface.providedBy(candidate):
+            errors.append(f"{candidate} does not claim to provide {iface}")
+
+    # Step 2: Verify that the candidate defines all necessary methods
+    for method_name in iface.names():
+        if not hasattr(candidate, method_name):
+            errors.append(f"{candidate} is missing method {method_name}")
+            continue
+
+        # Step 3: Verify method signatures
+        candidate_method = getattr(candidate, method_name)
+        iface_method = getattr(iface, method_name)
+        try:
+            candidate_sig = signature(candidate_method)
+            iface_sig = signature(iface_method)
+            if candidate_sig != iface_sig:
+                errors.append(f"Method {method_name} has incorrect signature. Expected {iface_sig}, got {candidate_sig}")
+        except ValueError:
+            # If signature cannot be determined, skip signature check
+            pass
+
+    # Step 4: Verify that the candidate defines all necessary attributes
+    for attr_name in iface.names(all=True):
+        if not hasattr(candidate, attr_name):
+            errors.append(f"{candidate} is missing attribute {attr_name}")
+
+    # Handle errors
+    if errors:
+        if len(errors) == 1:
+            raise Invalid(errors[0])
+        else:
+            raise Invalid("\n".join(errors))
+
+    return True

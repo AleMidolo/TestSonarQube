@@ -5,25 +5,24 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     Call the given command(s).
 
     :param commands: List of commands to execute.
-    :param args: List of arguments to pass to the commands.
-    :param cwd: Current working directory for the command execution.
-    :param verbose: If True, print the command and its output.
-    :param hide_stderr: If True, suppress stderr output.
-    :param env: Environment variables to pass to the command.
-    :return: The return code of the command execution.
+    :param args: List of arguments to pass to the command.
+    :param cwd: Current working directory for the command (optional).
+    :param verbose: If True, print the command before executing (optional).
+    :param hide_stderr: If True, suppress stderr output (optional).
+    :param env: Environment variables to pass to the command (optional).
+    :return: The return code of the command.
     """
     full_command = commands + args
-    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
-    
     if verbose:
         print(f"Running command: {' '.join(full_command)}")
     
+    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
     process = subprocess.Popen(
         full_command,
         cwd=cwd,
+        env=env,
         stdout=subprocess.PIPE,
         stderr=stderr,
-        env=env,
         text=True
     )
     
@@ -31,8 +30,8 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     
     if verbose:
         if stdout:
-            print(f"stdout: {stdout}")
+            print(stdout)
         if stderr and not hide_stderr:
-            print(f"stderr: {stderr}")
+            print(stderr)
     
     return process.returncode

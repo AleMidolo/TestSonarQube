@@ -48,7 +48,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     except Invalid as e:
         errors.append(str(e))
 
-    # Step 3: Handle errors
+    # Step 3: Collect and report errors
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])

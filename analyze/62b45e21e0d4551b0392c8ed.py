@@ -21,15 +21,15 @@ def find_path_type(path):
     namaste_files = [f for f in os.listdir(path) if f.startswith('0=')]
     
     if not namaste_files:
-        return f"No Namaste file found in {path}"
+        return 'file'
     
     namaste_file = namaste_files[0]
     with open(os.path.join(path, namaste_file), 'r') as f:
         content = f.read().strip()
     
-    if content == 'ocfl_object_1.0':
-        return 'object'
-    elif content == 'ocfl_1.0':
+    if content == 'ocfl_1.0':
         return 'root'
+    elif content == 'ocfl_object_1.0':
+        return 'object'
     else:
         return f"Unknown Namaste content: {content}"

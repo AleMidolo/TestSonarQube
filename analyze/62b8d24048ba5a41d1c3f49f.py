@@ -1,23 +1,20 @@
 import time
-from functools import wraps, lru_cache
+from functools import lru_cache, wraps
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     def decorator(func):
-        @lru_cache(maxsize=maxsize, typed=typed)
-        def cached_func(*args, **kwargs):
-            return func(*args, **kwargs)
+        cache = lru_cache(maxsize=maxsize, typed=typed)(func)
+        cache.expire_times = {}
 
         @wraps(func)
-        def wrapper(*args, **kwargs):
-            key = (args, frozenset(kwargs.items())) if typed else (args, tuple(kwargs.items()))
-            if key in wrapper._cache_info:
-                value, timestamp = wrapper._cache_info[key]
-                if timer() - timestamp < ttl:
-                    return value
-            result = cached_func(*args, **kwargs)
-            wrapper._cache_info[key] = (result, timer())
-            return result
-
-        wrapper._cache_info = {}
-        return wrapper
+        def wrapped(*args, **kwargs):
+            key = args + (tuple(sorted(kwargs.items())),) if kwargs else args
+            current_time = timer()
+            if key in cache.expire_times and current_time >= cache.expire_times[key]:
+                cache.cache_clear()
+                cache.expire_times.pop(key, None)
+            if key not in cache.expire_times:
+                cache.expire_times[key] = current_time + ttl
+            return cache(*args, **kwargs)
+        return wrapped
     return decorator

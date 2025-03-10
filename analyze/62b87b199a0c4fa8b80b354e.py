@@ -8,6 +8,11 @@ def is_fill_request_seq(seq):
     """
     from collections.abc import Sequence
 
+    # Assuming FillRequest and Source are defined elsewhere
+    # For example:
+    # class FillRequest: pass
+    # class Source: pass
+
     if isinstance(seq, FillRequest):
         return True
     elif isinstance(seq, Sequence):

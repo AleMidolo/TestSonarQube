@@ -15,23 +15,18 @@ def absorb(self, args):
     """
     def apply_absorption(expr):
         if isinstance(expr, tuple):
-            if len(expr) == 3:
-                op, left, right = expr
-                if op == '&':
-                    if left == right:
-                        return left
-                    if isinstance(right, tuple) and right[0] == '|' and right[1] == left:
-                        return left
-                    if isinstance(right, tuple) and right[0] == '|' and right[1] == ('~', left):
-                        return (op, left, right[2])
-                elif op == '|':
-                    if left == right:
-                        return left
-                    if isinstance(right, tuple) and right[0] == '&' and right[1] == left:
-                        return left
-                    if isinstance(right, tuple) and right[0] == '&' and right[1] == ('~', left):
-                        return (op, left, right[2])
-            return (op, apply_absorption(left), apply_absorption(right))
+            if expr[0] == '&':
+                A, B = expr[1], expr[2]
+                if isinstance(B, tuple) and B[0] == '|' and B[1] == A:
+                    return A
+                if isinstance(B, tuple) and B[0] == '|' and isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
+                    return ('&', A, B[2])
+            elif expr[0] == '|':
+                A, B = expr[1], expr[2]
+                if isinstance(B, tuple) and B[0] == '&' and B[1] == A:
+                    return A
+                if isinstance(B, tuple) and B[0] == '&' and isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
+                    return ('|', A, B[2])
         return expr
 
     return [apply_absorption(arg) for arg in args]

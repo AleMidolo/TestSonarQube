@@ -14,6 +14,6 @@ def make_array(shape, dtype=np.dtype("float32")):
     Returns
     -------
     numpy.ndarray
-        An array of the specified shape and data type.
+        An array of the specified shape and dtype.
     """
     return np.zeros(shape, dtype=dtype)

@@ -1,5 +1,5 @@
 import requests
-from xml.etree import ElementTree
+from lxml import etree
 
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
@@ -8,11 +8,8 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     :arg handle: Remote handle to retrieve
     :returns: dict
     """
-    # Split the handle into username and domain
-    username, domain = handle.split('@')
-    
     # Construct the webfinger URL
-    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
+    webfinger_url = f"https://{handle.split('@')[1]}/.well-known/webfinger?resource=acct:{handle}"
     
     try:
         # Send a GET request to the webfinger URL
@@ -20,24 +17,18 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         response.raise_for_status()
         
         # Parse the XML response
-        root = ElementTree.fromstring(response.content)
+        root = etree.fromstring(response.content)
         
         # Extract relevant information from the XML
         result = {}
-        for link in root.findall('{http://webfinger.net/rel/profile-page}link'):
-            result['profile_page'] = link.get('href')
-        
-        for link in root.findall('{http://webfinger.net/rel/avatar}link'):
-            result['avatar'] = link.get('href')
-        
-        for link in root.findall('{http://webfinger.net/rel/hcard}link'):
-            result['hcard'] = link.get('href')
+        for link in root.findall("{http://webfinger.net/rel/profile-page}link"):
+            result[link.get("rel")] = link.get("href")
         
         return result
     
     except requests.exceptions.RequestException as e:
         print(f"Error retrieving webfinger document: {e}")
         return {}
-    except ElementTree.ParseError as e:
+    except etree.XMLSyntaxError as e:
         print(f"Error parsing webfinger document: {e}")
         return {}

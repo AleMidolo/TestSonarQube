@@ -23,13 +23,12 @@ def to_csv(self, separator=",", header=None):
         csv_lines.append(header)
     
     for point in self.points:
-        # Convert coordinate to string separated by the given separator
+        # Convert coordinate to string
         coord_str = separator.join(map(str, point.coordinate))
-        # Convert value to string separated by the given separator
+        # Convert value to string
         value_str = separator.join(map(str, point.value))
-        # Combine coordinate and value into a single CSV line
+        # Combine coordinate and value
         csv_line = f"{coord_str}{separator}{value_str}"
         csv_lines.append(csv_line)
     
-    # Join all lines with newline characters
     return "\n".join(csv_lines)

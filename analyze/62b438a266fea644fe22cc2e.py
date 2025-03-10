@@ -8,20 +8,21 @@ def parse_arguments(*unparsed_arguments):
     parser = argparse.ArgumentParser(description="Parse command-line arguments.")
     subparsers = parser.add_subparsers(dest="subparser_name", help="Sub-command help")
 
-    # Example subparser for a command called 'example'
-    example_parser = subparsers.add_parser('example', help='Example command help')
-    example_parser.add_argument('--example_arg', type=str, help='Example argument')
+    # Example subparser for a command
+    subparser_example = subparsers.add_parser("example", help="Example subcommand")
+    subparser_example.add_argument("--example_arg", type=str, help="Example argument")
 
-    # Add more subparsers as needed
+    # Global arguments
+    parser.add_argument("--global_arg", type=str, help="Global argument")
 
     # Parse the arguments
     parsed_args = parser.parse_args(unparsed_arguments)
 
-    # Organize the parsed arguments into a dictionary
+    # Organize parsed arguments into a dictionary
     args_dict = {}
-    if hasattr(parsed_args, 'subparser_name'):
+    if parsed_args.subparser_name:
         args_dict[parsed_args.subparser_name] = parsed_args
     else:
-        args_dict['global'] = parsed_args
+        args_dict["global"] = parsed_args
 
     return args_dict

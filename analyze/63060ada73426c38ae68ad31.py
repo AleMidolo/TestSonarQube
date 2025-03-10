@@ -8,27 +8,23 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param values_dict: The dict of with arguments
     """
     if parser_name == "main":
-        if "port" in values_dict:
-            values_dict["port"] = int(values_dict["port"])
-        if "timeout" in values_dict:
-            values_dict["timeout"] = float(values_dict["timeout"])
-        if "verbose" in values_dict:
-            values_dict["verbose"] = values_dict["verbose"].lower() == "true"
-    
+        for key, value in values_dict.items():
+            if value.isdigit():
+                values_dict[key] = int(value)
+            elif value.replace('.', '', 1).isdigit():
+                values_dict[key] = float(value)
+            elif value.lower() in ('true', 'false'):
+                values_dict[key] = value.lower() == 'true'
     elif parser_name == "virsh":
-        if "memory" in values_dict:
-            values_dict["memory"] = int(values_dict["memory"])
-        if "cpu" in values_dict:
-            values_dict["cpu"] = int(values_dict["cpu"])
-        if "autostart" in values_dict:
-            values_dict["autostart"] = values_dict["autostart"].lower() == "true"
-    
+        for key, value in values_dict.items():
+            if key.endswith('_count'):
+                values_dict[key] = int(value)
+            elif key.endswith('_enabled'):
+                values_dict[key] = value.lower() == 'true'
     elif parser_name == "ospd":
-        if "threads" in values_dict:
-            values_dict["threads"] = int(values_dict["threads"])
-        if "debug" in values_dict:
-            values_dict["debug"] = values_dict["debug"].lower() == "true"
-    
+        for key, value in values_dict.items():
+            if key.startswith('num_'):
+                values_dict[key] = int(value)
+            elif key.startswith('is_'):
+                values_dict[key] = value.lower() == 'true'
     # Add more parser-specific conversions as needed
-    
-    return values_dict
