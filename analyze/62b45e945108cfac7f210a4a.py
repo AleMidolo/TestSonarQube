@@ -10,7 +10,7 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     good_objects = 0
     
     # 假设我们有一个存储根层次结构的列表
-    hierarchy = self.get_hierarchy()
+    hierarchy = self.get_hierarchy()  # 假设这个方法返回存储根层次结构的列表
     
     for obj in hierarchy:
         num_objects += 1

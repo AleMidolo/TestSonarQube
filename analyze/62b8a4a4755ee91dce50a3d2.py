@@ -11,15 +11,12 @@ def _fromutc(self, dt):
     if dt.tzinfo is not self:
         raise ValueError("dt.tzinfo is not self")
     
-    # Convert the datetime to naive UTC
-    naive_utc = dt.replace(tzinfo=None) - dt.utcoffset()
-    
-    # Convert the naive UTC datetime to the new timezone
-    new_dt = naive_utc.replace(tzinfo=self)
+    # Convert the datetime to the new timezone
+    new_dt = dt.astimezone(self)
     
     # Check if the new datetime is ambiguous
     if self._is_ambiguous(new_dt):
-        # If ambiguous, return the first occurrence
-        new_dt = self._fold_first(new_dt)
+        # If ambiguous, set the fold attribute to 0 (first occurrence)
+        new_dt = new_dt.replace(fold=0)
     
     return new_dt

@@ -13,24 +13,27 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     :rtype: str
     """
     import traceback
-    import sys
+    import os
 
     # 获取异常的堆栈信息
-    exc_type, exc_value, exc_traceback = sys.exc_info()
-    stack = traceback.extract_tb(exc_traceback, limit=max_level)
+    tb_list = traceback.format_exception(type(e), e, e.__traceback__)
+    tb_str = ''.join(tb_list)
 
-    # 格式化堆栈信息
-    stack_str = []
-    for frame in stack:
-        file_path = frame.filename
-        # 限制路径层级
-        path_parts = file_path.split('/')
-        if len(path_parts) > max_path_level:
-            file_path = '/'.join(path_parts[-max_path_level:])
-        stack_str.append(f"File \"{file_path}\", line {frame.lineno}, in {frame.name}\n    {frame.line}")
+    # 限制堆栈层级
+    if max_level > 0:
+        tb_lines = tb_str.splitlines()
+        tb_str = '\n'.join(tb_lines[:max_level])
 
-    # 格式化异常信息
-    exception_str = f"{exc_type.__name__}: {exc_value}\n"
-    exception_str += "\n".join(stack_str)
+    # 限制路径层级
+    if max_path_level > 0:
+        tb_lines = tb_str.splitlines()
+        for i in range(len(tb_lines)):
+            if 'File "' in tb_lines[i]:
+                path = tb_lines[i].split('"')[1]
+                parts = path.split(os.sep)
+                if len(parts) > max_path_level:
+                    parts = parts[-max_path_level:]
+                    tb_lines[i] = tb_lines[i].replace(path, os.sep.join(parts))
+        tb_str = '\n'.join(tb_lines)
 
-    return exception_str
+    return tb_str

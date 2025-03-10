@@ -6,12 +6,7 @@ def get_parser_option_specs(self, command_name):
     :return: 所有命令选项的列表
     """
     # 假设 self.parser 是一个 argparse.ArgumentParser 对象
-    if hasattr(self, 'parser') and self.parser is not None:
-        # 获取所有选项
-        options = []
-        for action in self.parser._actions:
-            if isinstance(action, argparse._StoreAction) or isinstance(action, argparse._StoreTrueAction) or isinstance(action, argparse._StoreFalseAction):
-                options.append(action.dest)
-        return options
+    if command_name in self.parser._actions:
+        return [action.option_strings for action in self.parser._actions if action.option_strings]
     else:
         return []

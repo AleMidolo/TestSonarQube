@@ -10,5 +10,5 @@ def extend_cli(self, root_subparsers):
     # 添加一个选项
     subparser.add_argument('--option', type=str, help='示例选项')
     
-    # 添加一个标志
+    # 添加另一个选项
     subparser.add_argument('--flag', action='store_true', help='示例标志')

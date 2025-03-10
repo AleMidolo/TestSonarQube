@@ -35,15 +35,15 @@ def verifyObject(iface, candidate, tentative=False):
         else:
             # Step 3: Ensure the methods have the correct signatures (if possible)
             # This is a simplified check; a full signature check would require more complex logic
-            candidate_method = getattr(candidate, name)
-            if not callable(candidate_method):
-                errors.append(f"{name} is not callable in {candidate}")
+            method = getattr(candidate, name)
+            if not callable(method):
+                errors.append(f"{name} is not a callable method on {candidate}")
 
     # Step 4: Ensure the candidate defines all required attributes
-    required_attrs = iface.names(all=True)
-    for attr in required_attrs:
-        if not hasattr(candidate, attr):
-            errors.append(f"{candidate} is missing required attribute {attr}")
+    required_attrs = iface.namesAndDescriptions(all=False)
+    for name, desc in required_attrs:
+        if not hasattr(candidate, name):
+            errors.append(f"{candidate} is missing required attribute {name}")
 
     # Handle errors
     if errors:

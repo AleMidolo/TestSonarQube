@@ -1,16 +1,8 @@
 def amend_bzparams(self, params, bug_ids):
     """
     修改 Bugzilla 参数
-
-    :param params: 需要修改的参数，类型为字典
-    :param bug_ids: 需要修改的 Bug ID 列表，类型为列表
-    :return: 修改结果，类型为布尔值
     """
-    try:
-        # 假设这里有一个 Bugzilla 的 API 调用
-        # 例如: self.bzapi.update_bugs(bug_ids, params)
-        # 这里我们模拟一个成功的修改
-        return True
-    except Exception as e:
-        print(f"Error amending Bugzilla parameters: {e}")
-        return False
+    # 假设我们有一个 Bugzilla 客户端实例 self.bz_client
+    # 使用提供的 params 和 bug_ids 来更新 Bugzilla 中的 bug
+    for bug_id in bug_ids:
+        self.bz_client.update_bug(bug_id, params)

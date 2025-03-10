@@ -31,7 +31,5 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
     if padding is not None:
         if len(result_str) < padding:
             result_str = alphabet[0] * (padding - len(result_str)) + result_str
-        elif len(result_str) > padding:
-            raise ValueError("Padding length is smaller than the length of the result string.")
     
     return result_str

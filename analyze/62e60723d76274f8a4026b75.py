@@ -18,8 +18,8 @@ def round_half_to_even(n):
     >>> round_half_to_even(4.7)
     5
 
-    :param n: 浮点数
-    :return: 四舍五入到最接近的偶数
+    :param n: 要四舍五入的浮点数
+    :return: 四舍五入后的整数
     """
     if n % 1 == 0.5:
         if int(n) % 2 == 0:

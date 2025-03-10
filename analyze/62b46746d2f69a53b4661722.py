@@ -18,23 +18,31 @@ def absorb(self, args):
     for expr in args:
         if isinstance(expr, tuple):
             if expr[0] == '&':
-                a, b = expr[1], expr[2]
-                if isinstance(b, tuple) and b[0] == '|':
-                    if a == b[1]:
-                        new_args.append(a)
-                    elif a == ('~', b[1]):
-                        new_args.append(('&', a, b[2]))
+                if isinstance(expr[1], tuple) and expr[1][0] == '|':
+                    if expr[1][1] == expr[2]:
+                        new_args.append(expr[2])
+                    elif expr[1][2] == expr[2]:
+                        new_args.append(expr[2])
+                    else:
+                        new_args.append(expr)
+                elif isinstance(expr[1], tuple) and expr[1][0] == '~':
+                    if expr[1][1] == expr[2]:
+                        new_args.append(('&', expr[2], expr[1][2]))
                     else:
                         new_args.append(expr)
                 else:
                     new_args.append(expr)
             elif expr[0] == '|':
-                a, b = expr[1], expr[2]
-                if isinstance(b, tuple) and b[0] == '&':
-                    if a == b[1]:
-                        new_args.append(a)
-                    elif a == ('~', b[1]):
-                        new_args.append(('|', a, b[2]))
+                if isinstance(expr[1], tuple) and expr[1][0] == '&':
+                    if expr[1][1] == expr[2]:
+                        new_args.append(expr[2])
+                    elif expr[1][2] == expr[2]:
+                        new_args.append(expr[2])
+                    else:
+                        new_args.append(expr)
+                elif isinstance(expr[1], tuple) and expr[1][0] == '~':
+                    if expr[1][1] == expr[2]:
+                        new_args.append(('|', expr[2], expr[1][2]))
                     else:
                         new_args.append(expr)
                 else:

@@ -20,11 +20,10 @@ def validate_from_file(cls, yaml_file=None):
     except Exception as e:
         raise IRValidatorException(f"Failed to load YAML file: {e}")
 
-    # Assuming required_fields is a class attribute or defined elsewhere
-    required_fields = getattr(cls, 'required_fields', [])
-
-    missing_fields = [field for field in required_fields if field not in data]
-    if missing_fields:
-        raise IRValidatorException(f"Missing required fields: {missing_fields}")
+    # Assuming the required fields are 'field1', 'field2', and 'field3'
+    required_fields = ['field1', 'field2', 'field3']
+    for field in required_fields:
+        if field not in data:
+            raise IRValidatorException(f"Missing required field: {field}")
 
     return data

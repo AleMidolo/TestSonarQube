@@ -8,6 +8,6 @@ def check_digests_present_and_used(self, manifest_files, digests_used):
     
     for digest in digests_used:
         if not any(manifest_file.get('digest') == digest for manifest_file in manifest_files):
-            return self.error(f"Digest {digest} not found in any manifest file")
+            return self.error(f"Digest not found in any manifest file: {digest}")
     
     return None

@@ -5,10 +5,9 @@ def get_versions():
     """
     try:
         # 假设版本信息存储在某个文件或通过某个API获取
-        # 这里我们模拟一个获取版本信息的操作
+        # 这里只是一个示例，实际实现可能需要读取文件或调用API
         version = "1.0.0"  # 假设这是获取到的版本信息
         return version
     except Exception as e:
-        # 如果获取版本信息失败，返回默认值
-        default_version = "0.0.0"
-        return default_version
+        # 如果无法获取版本信息，返回默认值
+        return "0.0.0"

@@ -45,10 +45,17 @@ def _eval_file(prefix, file_path):
             'file_path': file_path
         }
     else:
-        # 如果文件类型不是 PDF
+        # 识别文件类型是 asset 还是 rendition
+        if 'asset' in file_name.lower():
+            ftype = 'asset'
+        elif 'rendition' in file_name.lower():
+            ftype = 'rendition'
+        else:
+            ftype = 'unknown'
+
         return {
             'component_id': prefix,
             'file_path': file_path,
-            'ftype': mime_type if mime_type else 'unknown',
-            'file_path': file_path
+            'ftype': ftype,
+            'mime_type': mime_type
         }

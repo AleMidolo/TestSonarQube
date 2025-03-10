@@ -6,7 +6,7 @@ def identify_request(request: Dict[str, Any]) -> bool:
 
     尝试识别这是否是一个 Matrix 请求。
     """
-    # 检查请求体中是否包含 'event' 键
+    # Matrix 请求通常包含 'event' 字段
     if 'event' in request:
         return True
     return False

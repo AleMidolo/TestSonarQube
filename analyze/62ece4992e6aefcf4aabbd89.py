@@ -13,4 +13,5 @@ def gaussian(x):
     mean = 0.2
     std_dev = 0.1
     exponent = -((x - mean) ** 2) / (2 * (std_dev ** 2))
-    return (1 / (std_dev * math.sqrt(2 * math.pi))) * math.exp(exponent)
+    coefficient = 1 / (std_dev * math.sqrt(2 * math.pi))
+    return coefficient * math.exp(exponent)
