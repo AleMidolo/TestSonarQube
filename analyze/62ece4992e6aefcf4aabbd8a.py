@@ -16,18 +16,18 @@ def load_configurations(config_filenames: List[str], overrides: Optional[Dict] =
     for config_filename in config_filenames:
         try:
             with open(config_filename, 'r') as file:
-                config = yaml.safe_load(file)
+                config_data = yaml.safe_load(file)
                 
                 if resolve_env:
-                    for key, value in config.items():
+                    for key, value in config_data.items():
                         if isinstance(value, str) and value.startswith('${') and value.endswith('}'):
                             env_var = value[2:-1]
-                            config[key] = os.getenv(env_var, value)
+                            config_data[key] = os.getenv(env_var, value)
                 
                 if overrides:
-                    config.update(overrides)
+                    config_data.update(overrides)
                 
-                configurations[config_filename] = config
+                configurations[config_filename] = config_data
         except Exception as e:
             error_message = f"Error loading configuration from {config_filename}: {str(e)}"
             errors.append(logging.LogRecord(

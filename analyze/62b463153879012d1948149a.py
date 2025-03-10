@@ -1,6 +1,6 @@
 def _group_files_by_xml_filename(source, xmls, files):
     """
-    Raggruppa i file per il nome base degli XML
+    Raggruppa i file per il nome base degli XML.
 
     Raggruppa i file in base al nome base degli XML e restituisce i dati in formato dizionario.
 
@@ -9,7 +9,7 @@ def _group_files_by_xml_filename(source, xmls, files):
     source : str
         Percorso della cartella o dell'archivio zip.
     xmls : list
-        Nomi dei file XML.
+        Lista dei nomi dei file XML.
     files : list
         Lista dei file presenti nella cartella o nell'archivio zip.
 

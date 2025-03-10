@@ -12,10 +12,8 @@ def make_find_paths(find_paths):
     """
     transformed_paths = []
     for path in find_paths:
-        if re.match(r'^[a-zA-Z]+:', path):
-            # Se il percorso inizia con un prefisso (es. 'pp:'), lo lascia invariato
+        if path.startswith(('sh:', 'pp:')):
             transformed_paths.append(path)
         else:
-            # Trasforma il percorso frammentato in un pattern glob
             transformed_paths.append(f'sh:**/*{path}*/**')
     return transformed_paths

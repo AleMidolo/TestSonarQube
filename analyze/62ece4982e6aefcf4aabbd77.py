@@ -33,8 +33,8 @@ def parse_frequency(frequency):
     elif unit == "week":
         return timedelta(weeks=value)
     elif unit == "month":
-        return timedelta(days=value * 30)  # Approximazione di un mese come 30 giorni
+        return timedelta(days=value * 30)  # Approximazione
     elif unit == "year":
-        return timedelta(days=value * 365)  # Approximazione di un anno come 365 giorni
+        return timedelta(days=value * 365)  # Approximazione
     else:
-        raise ValueError(f"Unità di tempo non riconosciuta: {unit}")
+        raise ValueError(f"Unità di tempo non supportata: {unit}")

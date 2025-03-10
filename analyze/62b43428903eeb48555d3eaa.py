@@ -16,6 +16,6 @@ def formatmany(
             out_params = [f"out_{i}" for i in range(len(params))]
             formatted_params.append(out_params)
         else:
-            raise TypeError("params must be a Mapping or Sequence")
+            raise TypeError("params must be either a dict or a sequence")
 
     return formatted_sql, formatted_params

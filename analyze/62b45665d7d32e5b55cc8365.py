@@ -8,20 +8,20 @@ def parse_arguments(*unparsed_arguments):
     subparsers = parser.add_subparsers(dest="subparser_name", help="Sub-command help")
 
     # Example subparser
-    subparser_example = subparsers.add_parser("example", help="Example subparser")
-    subparser_example.add_argument("--example_arg", type=str, help="Example argument")
+    parser_a = subparsers.add_parser('subparser_a', help='Subparser A help')
+    parser_a.add_argument('--arg1', type=str, help='Argument 1 for subparser A')
 
-    # Global arguments
-    parser.add_argument("--global_arg", type=str, help="Global argument")
+    parser_b = subparsers.add_parser('subparser_b', help='Subparser B help')
+    parser_b.add_argument('--arg2', type=int, help='Argument 2 for subparser B')
 
     # Parse the arguments
     args = parser.parse_args(unparsed_arguments)
 
     # Organize the parsed arguments into a dictionary
     parsed_args = {}
-    if hasattr(args, "subparser_name"):
+    if hasattr(args, 'subparser_name'):
         parsed_args[args.subparser_name] = args
     else:
-        parsed_args["global"] = args
+        parsed_args['global'] = args
 
     return parsed_args

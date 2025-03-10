@@ -1,6 +1,5 @@
 import requests
 from urllib.parse import urlparse
-import json
 
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
@@ -18,7 +17,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     try:
         # Make the GET request to retrieve the webfinger document
         response = requests.get(webfinger_url)
-        response.raise_for_status()  # Raise an exception for HTTP errors
+        response.raise_for_status()
         
         # Parse the JSON response
         webfinger_data = response.json()

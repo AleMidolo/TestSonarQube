@@ -15,14 +15,10 @@ def split(s, platform='this'):
     if platform == 'this':
         platform = 1 if sys.platform != 'win32' else 0
     
-    if platform == 1:  # POSIX style
-        regex = re.compile(r"""
-            (?:[^\s"']+|"[^"]*"|'[^']*')+
-        """, re.VERBOSE)
-    else:  # Windows/CMD style
-        regex = re.compile(r"""
-            (?:[^\s"]+|"[^"]*")+
-        """, re.VERBOSE)
+    if platform == 1:  # POSIX
+        regex = r'''((?:[^\s"']|"[^"]*"|'[^']*')+)'''
+    else:  # Windows/CMD
+        regex = r'''((?:[^\s"]|"[^"]*")+)'''
     
-    matches = regex.findall(s)
+    matches = re.findall(regex, s)
     return [match.strip('"\'') for match in matches]

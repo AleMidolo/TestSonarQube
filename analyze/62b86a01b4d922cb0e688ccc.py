@@ -4,10 +4,10 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
 
     Args:
         manifest_dict (dict): Partial Kubernetes resources.
-        first_level (bool, optional): If True, indicates that the dictionary represents the entire observer_schema of a Kubernetes resource.
+        first_level (bool, optional): If True, indicates that the dictionary represents the entire `observer_schema` of a Kubernetes resource.
 
     Returns:
-        dict: The generated partial observer_schema.
+        dict: The generated partial `observer_schema`.
     """
     observer_schema = {}
     
@@ -32,7 +32,7 @@ def generate_default_observer_schema_list(manifest_list):
         manifest_list (list): Partial Kubernetes resources in list format.
 
     Returns:
-        list: The generated partial observer_schema.
+        list: The generated partial `observer_schema`.
     """
     observer_schema = []
     

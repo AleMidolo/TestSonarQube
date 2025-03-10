@@ -1,12 +1,7 @@
 import subprocess
 import sys
 import os
-from typing import Sequence, Any, Tuple
-
-def _get_platform_max_length() -> int:
-    # This function should return the platform-specific maximum command length.
-    # For simplicity, we'll return a default value.
-    return 32768
+from typing import Sequence, Any
 
 def xargs(
         cmd: tuple[str, ...],
@@ -28,47 +23,31 @@ def xargs(
         master, slave = pty.openpty()
         kwargs['stdout'] = slave
         kwargs['stderr'] = slave
+        kwargs['stdin'] = subprocess.PIPE
 
-    # Split varargs into chunks based on _max_length
-    chunks = []
-    current_chunk = []
-    current_length = 0
-
-    for arg in varargs:
-        arg_length = len(arg) + 1  # +1 for the space
-        if current_length + arg_length > _max_length:
-            chunks.append(current_chunk)
-            current_chunk = []
-            current_length = 0
-        current_chunk.append(arg)
-        current_length += arg_length
-
-    if current_chunk:
-        chunks.append(current_chunk)
-
-    # Execute commands in parallel up to target_concurrency
     processes = []
-    for chunk in chunks:
-        full_cmd = list(cmd) + chunk
-        if color and sys.platform != "win32":
-            process = subprocess.Popen(full_cmd, **kwargs)
-        else:
-            process = subprocess.Popen(full_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs)
+    for i in range(0, len(varargs), target_concurrency):
+        chunk = varargs[i:i + target_concurrency]
+        process = subprocess.Popen(
+            cmd + tuple(chunk),
+            **kwargs
+        )
         processes.append(process)
-        if len(processes) >= target_concurrency:
-            for p in processes:
-                p.wait()
-            processes = []
 
-    # Wait for remaining processes
-    for p in processes:
-        p.wait()
-
-    # Collect output
     output = b""
-    for p in processes:
-        stdout, stderr = p.communicate()
-        output += stdout + stderr
+    for process in processes:
+        process.wait()
+        if color and sys.platform != "win32":
+            os.close(slave)
+            output += os.read(master, 1024)
+            os.close(master)
+        else:
+            output += process.communicate()[0]
 
-    # Return the last process's return code and the combined output
-    return processes[-1].returncode if processes else 0, output
+    return (process.returncode, output)
+
+def _get_platform_max_length() -> int:
+    if sys.platform == "win32":
+        return 8191
+    else:
+        return 131072

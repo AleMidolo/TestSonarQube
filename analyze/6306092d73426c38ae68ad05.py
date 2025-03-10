@@ -4,7 +4,7 @@ def get_option_spec(self, command_name, argument_name):
     
     :param command_name: Il nome del comando.
     :param argument_name: Il nome dell'argomento.
-    :return: La specifica dell'opzione, se trovata, altrimenti None.
+    :return: La specifica dell'opzione, se trovata; altrimenti None.
     """
     if hasattr(self, 'options') and isinstance(self.options, dict):
         command_options = self.options.get(command_name, {})

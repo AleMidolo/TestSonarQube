@@ -8,4 +8,4 @@ def format_dt(dt):
         raise TypeError("L'oggetto fornito non è un'istanza di datetime")
     
     # Formato atteso: YYYY-MM-DDTHH:MM:SS
-    return dt.strftime("%Y-%m-%dT%H:%M:%S")
+    return dt.strftime('%Y-%m-%dT%H:%M:%S')

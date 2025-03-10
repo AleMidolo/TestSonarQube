@@ -12,20 +12,26 @@ def absorb(self, args):
 
         A & (~A | B) = A & B, A | (~A & B) = A | B
     """
-    def apply_absorption(expr):
+    new_args = []
+    for expr in args:
         if isinstance(expr, tuple):
             if expr[0] == '&':
                 A, B = expr[1], expr[2]
-                if isinstance(B, tuple) and B[0] == '|' and B[1] == A:
-                    return A
-                elif isinstance(B, tuple) and B[0] == '|' and isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
-                    return ('&', A, B[2])
+                if isinstance(B, tuple) and B[0] == '|':
+                    if B[1] == A:
+                        new_args.append(A)
+                        continue
+                    elif isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
+                        new_args.append(('&', A, B[2]))
+                        continue
             elif expr[0] == '|':
                 A, B = expr[1], expr[2]
-                if isinstance(B, tuple) and B[0] == '&' and B[1] == A:
-                    return A
-                elif isinstance(B, tuple) and B[0] == '&' and isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
-                    return ('|', A, B[2])
-        return expr
-
-    return [apply_absorption(expr) for expr in args]
+                if isinstance(B, tuple) and B[0] == '&':
+                    if B[1] == A:
+                        new_args.append(A)
+                        continue
+                    elif isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
+                        new_args.append(('|', A, B[2]))
+                        continue
+        new_args.append(expr)
+    return new_args

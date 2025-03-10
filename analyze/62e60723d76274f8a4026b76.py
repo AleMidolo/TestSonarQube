@@ -1,12 +1,8 @@
-import datetime
+from datetime import time, timedelta
 
 class Time:
     def __init__(self, hour, minute, second, microsecond, tzinfo=None):
-        self.hour = hour
-        self.minute = minute
-        self.second = second
-        self.microsecond = microsecond
-        self.tzinfo = tzinfo
+        self._time = time(hour, minute, second, microsecond, tzinfo)
 
     @classmethod
     def from_ticks(cls, ticks, tz=None):
@@ -25,21 +21,14 @@ class Time:
         """
         if not (0 <= ticks < 86400000000000):
             raise ValueError("ticks must be between 0 and 86400000000000")
-        
-        # Convert ticks to microseconds
-        microseconds = ticks // 1000
-        
-        # Create a timedelta from the microseconds
-        delta = datetime.timedelta(microseconds=microseconds)
-        
-        # Create a datetime object at midnight and add the timedelta
-        midnight = datetime.datetime(1, 1, 1, tzinfo=tz)
-        dt = midnight + delta
-        
-        # Extract time components
-        hour = dt.hour
-        minute = dt.minute
-        second = dt.second
-        microsecond = dt.microsecond
-        
-        return cls(hour, minute, second, microsecond, tzinfo=tz)
+
+        nanoseconds = ticks
+        microseconds = nanoseconds // 1000
+        seconds = microseconds // 1000000
+        microseconds = microseconds % 1000000
+        minutes = seconds // 60
+        seconds = seconds % 60
+        hours = minutes // 60
+        minutes = minutes % 60
+
+        return cls(hours, minutes, seconds, microseconds, tz)

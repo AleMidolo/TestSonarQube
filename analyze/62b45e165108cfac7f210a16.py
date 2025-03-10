@@ -9,7 +9,7 @@ def validate_as_prior_version(self, prior):
     if not isinstance(prior, InventoryValidator):
         raise TypeError("prior must be an instance of InventoryValidator")
     
-    # Assuming InventoryValidator has a method to compare versions
+    # Assuming InventoryValidator has a method `is_prior_version` that checks if it's a valid prior version
     if not prior.is_prior_version(self):
         raise ValueError("prior is not a valid prior version of the current inventory")
     
