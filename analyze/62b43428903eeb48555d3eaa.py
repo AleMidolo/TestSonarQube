@@ -14,6 +14,6 @@ def formatmany(
             # Handle ordinal parameters
             formatted_params.append(list(params))
         else:
-            raise TypeError("Parameters must be either a dictionary or a sequence.")
+            raise TypeError("Unsupported parameter type. Expected dict, list, or tuple.")
 
     return formatted_sql, formatted_params

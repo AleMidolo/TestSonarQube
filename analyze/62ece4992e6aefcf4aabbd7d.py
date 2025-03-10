@@ -15,7 +15,7 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     extra_env : dict[str, str]
         सब-प्रोसेस के लिए सेट किए जाने वाले कोई भी अतिरिक्त पर्यावरण वेरिएबल।
     """
-    # Get the module name and function name
+    # Get the module and function name
     module_name = func.__module__
     func_name = func.__name__
 

@@ -8,14 +8,12 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param values_dict: तर्कों के साथ डिक्शनरी।
     """
     for key, value in values_dict.items():
-        if isinstance(value, str):
-            if value.lower() == 'true':
-                values_dict[key] = True
-            elif value.lower() == 'false':
-                values_dict[key] = False
-            elif value.isdigit():
-                values_dict[key] = int(value)
-            elif value.replace('.', '', 1).isdigit():
-                values_dict[key] = float(value)
-            elif value.lower() == 'none':
-                values_dict[key] = None
+        if value.isdigit():
+            values_dict[key] = int(value)
+        elif value.replace('.', '', 1).isdigit():
+            values_dict[key] = float(value)
+        elif value.lower() in ('true', 'false'):
+            values_dict[key] = value.lower() == 'true'
+        else:
+            values_dict[key] = value
+    return values_dict

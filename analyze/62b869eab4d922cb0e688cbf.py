@@ -6,35 +6,26 @@ def generate_default_observer_schema(app):
         app (krake.data.kubernetes.Application): वह एप्लिकेशन जिसके लिए डिफ़ॉल्ट ऑब्ज़र्वर स्कीमा उत्पन्न करना है।
     """
     default_schema = {
-        "type": "object",
-        "properties": {
-            "status": {
-                "type": "object",
-                "properties": {
-                    "conditions": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "type": {"type": "string"},
-                                "status": {"type": "string"},
-                                "lastTransitionTime": {"type": "string"},
-                                "reason": {"type": "string"},
-                                "message": {"type": "string"}
-                            },
-                            "required": ["type", "status"]
-                        }
-                    }
-                },
-                "required": ["conditions"]
-            }
+        "apiVersion": "krake.ecliptik.com/v1alpha1",
+        "kind": "ObserverSchema",
+        "metadata": {
+            "name": f"{app.metadata.name}-default-observer",
+            "namespace": app.metadata.namespace
         },
-        "required": ["status"]
+        "spec": {
+            "resources": []
+        }
     }
 
-    # Iterate over all resources in the application's manifest
-    for resource in app.spec.manifest:
-        if not hasattr(resource, 'observer_schema'):
-            resource.observer_schema = default_schema
+    if hasattr(app.spec, 'manifest') and app.spec.manifest:
+        for resource in app.spec.manifest:
+            resource_type = resource.get("kind", "").lower()
+            if resource_type:
+                default_schema["spec"]["resources"].append({
+                    "kind": resource["kind"],
+                    "apiVersion": resource["apiVersion"],
+                    "name": resource["metadata"]["name"],
+                    "namespace": resource["metadata"].get("namespace", "default")
+                })
 
-    return app
+    return default_schema

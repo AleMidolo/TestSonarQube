@@ -13,21 +13,7 @@ def fromutc(self, dt):
         एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
     """
     if dt.tzinfo is None:
-        raise ValueError("fromutc() requires a timezone-aware datetime")
+        raise ValueError("The input datetime must be timezone-aware.")
     
     # Convert the datetime to the target timezone
-    offset = dt.tzinfo.utcoffset(dt)
-    if offset is None:
-        raise ValueError("utcoffset() returned None")
-    
-    # Calculate the new datetime in the target timezone
-    new_dt = dt + offset
-    
-    # Check if the new datetime is ambiguous
-    if new_dt.tzinfo is not None:
-        is_ambiguous = new_dt.tzinfo._is_ambiguous(new_dt)
-        if is_ambiguous:
-            # Handle the ambiguous case (e.g., by choosing the first occurrence)
-            new_dt = new_dt.tzinfo._resolve_ambiguous_time(new_dt, is_first=True)
-    
-    return new_dt
+    return dt.astimezone(self)

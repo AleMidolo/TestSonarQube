@@ -7,24 +7,21 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     command_list = commands if isinstance(commands, list) else [commands]
     command_list.extend(args)
     
-    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
+    stderr = subprocess.DEVNULL if hide_stderr else None
     
-    process = subprocess.Popen(
+    if verbose:
+        print(f"Running command: {' '.join(command_list)}")
+    
+    result = subprocess.run(
         command_list,
         cwd=cwd,
+        env=env,
         stdout=subprocess.PIPE,
         stderr=stderr,
-        env=env,
         text=True
     )
     
-    stdout, stderr = process.communicate()
-    
     if verbose:
-        print(f"Command: {' '.join(command_list)}")
-        if stdout:
-            print(f"Stdout: {stdout}")
-        if stderr and not hide_stderr:
-            print(f"Stderr: {stderr}")
+        print(f"Command output: {result.stdout}")
     
-    return process.returncode, stdout, stderr
+    return result

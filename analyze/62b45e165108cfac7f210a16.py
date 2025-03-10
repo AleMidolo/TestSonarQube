@@ -4,18 +4,15 @@ def validate_as_prior_version(self, prior):
 
     इनपुट वैरिएबल प्रायर को भी एक इन्वेंटरी वैलिडेटर ऑब्जेक्ट माना जाता है और माना जाता है कि स्व और प्रायर दोनों इन्वेंटरी को आंतरिक संगतता के लिए जाँच लिया गया है।
     """
-    if not isinstance(prior, type(self)):
-        return False
-    
-    # Check if the prior version is indeed a previous version
     # Assuming that the inventory objects have a version attribute
     if not hasattr(self, 'version') or not hasattr(prior, 'version'):
-        return False
+        raise ValueError("Both objects must have a 'version' attribute.")
     
-    if self.version <= prior.version:
+    # Check if the prior version is indeed prior to the current version
+    if prior.version >= self.version:
         return False
     
     # Additional checks can be added here based on specific requirements
-    # For example, checking if the prior version's data is a subset of the current version's data
+    # For example, checking if the prior version is compatible with the current version
     
     return True

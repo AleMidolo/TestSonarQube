@@ -8,5 +8,5 @@ def list_of_file_names(settings_dirs, spec_option):
         if os.path.isdir(directory):
             for file in os.listdir(directory):
                 if file.endswith(spec_option):
-                    file_names.append(os.path.join(directory, file))
+                    file_names.append(file)
     return file_names

@@ -30,7 +30,8 @@ def _group_files_by_xml_filename(source, xmls, files):
         grouped_files[xml_basename] = []
         
         for file in files:
-            if xml_basename in file:
+            file_basename = os.path.splitext(os.path.basename(file))[0]
+            if file_basename == xml_basename:
                 grouped_files[xml_basename].append(file)
     
     return grouped_files

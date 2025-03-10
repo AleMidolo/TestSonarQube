@@ -11,20 +11,14 @@ def data(self, *keys):
     अपवाद (Raises): 
     - :exc:`IndexError` यदि कोई सीमा से बाहर का इंडेक्स निर्दिष्ट किया गया है।
     """
-    # Assuming self.record is a dictionary-like object that holds the data
     if not keys:
-        return self.record.copy()
+        return self.__dict__
     
     result = {}
     for key in keys:
         if isinstance(key, int):
-            # Handle index-based access
-            if key < 0 or key >= len(self.record):
+            if key < 0 or key >= len(self.__dict__):
                 raise IndexError("Index out of range")
-            # Assuming self.record is a list or similar structure for index-based access
-            result[key] = self.record[key]
-        else:
-            # Handle key-based access
-            result[key] = self.record.get(key, None)
-    
+            key = list(self.__dict__.keys())[key]
+        result[key] = self.__dict__.get(key, None)
     return result

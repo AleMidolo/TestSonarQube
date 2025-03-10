@@ -15,33 +15,6 @@ def _fromutc(self, dt):
     # Check if the local time is ambiguous
     if self._is_ambiguous(local_dt):
         # If it's ambiguous, return the first occurrence
-        return self._fold_first(local_dt)
-    else:
-        return local_dt
-
-def _is_ambiguous(self, dt):
-    """
-    Check if the given datetime is ambiguous in the current timezone.
+        return self._fold_ambiguous(local_dt)
     
-    Parameters:
-    - `dt`: A timezone-aware datetime object.
-    
-    Returns:
-    - `bool`: True if the datetime is ambiguous, False otherwise.
-    """
-    # This is a placeholder implementation. The actual logic will depend on the timezone rules.
-    # For example, in a timezone that observes DST, a datetime might be ambiguous during the fall transition.
-    return False
-
-def _fold_first(self, dt):
-    """
-    Return the first occurrence of an ambiguous datetime.
-    
-    Parameters:
-    - `dt`: A timezone-aware datetime object that is ambiguous.
-    
-    Returns:
-    - `datetime`: The first occurrence of the ambiguous datetime.
-    """
-    # This is a placeholder implementation. The actual logic will depend on the timezone rules.
-    return dt
+    return local_dt

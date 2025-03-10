@@ -2,12 +2,12 @@ def update_last_applied_manifest_dict_from_resp(
     last_applied_manifest, observer_schema, response
 ):
     """
-    Updates the partial `last_applied_manifest` with values from the partial Kubernetes response.
+    Updates the partial `last_applied_manifest` from a partial Kubernetes response recursively.
 
     Args:
         last_applied_manifest (dict): The partial `last_applied_manifest` being updated.
         observer_schema (dict): The partial `observer_schema`.
-        response (dict): The partial response from the Kubernetes API.
+        response (dict): The partial response received from the Kubernetes API.
 
     Raises:
         KeyError: If the observed fields are not present in the Kubernetes response.
@@ -25,4 +25,5 @@ def update_last_applied_manifest_dict_from_resp(
                 last_applied_manifest[key], value, response[key]
             )
         else:
-            last_applied_manifest[key] = response[key]
+            if key not in last_applied_manifest:
+                last_applied_manifest[key] = response[key]

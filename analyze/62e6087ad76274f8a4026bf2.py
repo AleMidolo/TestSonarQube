@@ -23,9 +23,9 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         "type": "DISCARD",
         "n": n,
         "qid": qid,
-        "dehydration_hooks": dehydration_hooks,
-        "hydration_hooks": hydration_hooks,
-        **handlers
+        "dehydration_hooks": dehydration_hooks if dehydration_hooks else {},
+        "hydration_hooks": hydration_hooks if hydration_hooks else {},
+        "handlers": handlers
     }
     
     # Add the DISCARD message to the output queue

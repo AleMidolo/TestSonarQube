@@ -23,7 +23,7 @@ def to_csv(self, separator=",", header=None):
     if header is not None:
         csv_lines.append(header)
     
-    # Iterate over the points in the graph
+    # Iterate over points in the graph
     for point in self.points:
         # Convert coordinates to string separated by the separator
         coords_str = separator.join(map(str, point.coordinates))
