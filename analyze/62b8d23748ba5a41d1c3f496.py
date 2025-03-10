@@ -16,7 +16,7 @@ def lfu_cache(maxsize=128, typed=False):
                 key = args + tuple(sorted(kwargs.items()))
 
             if key in cache:
-                # Increment frequency
+                # Increment the frequency of the key
                 freq = frequency[key]
                 frequency[key] += 1
                 del frequency_list[freq][key]
@@ -30,8 +30,10 @@ def lfu_cache(maxsize=128, typed=False):
             result = func(*args, **kwargs)
 
             if len(cache) >= maxsize:
-                # Evict the least frequently used item
+                # Remove the least frequently used item
                 evict_key, _ = frequency_list[min_freq].popitem(last=False)
+                if not frequency_list[min_freq]:
+                    del frequency_list[min_freq]
                 del cache[evict_key]
                 del frequency[evict_key]
 

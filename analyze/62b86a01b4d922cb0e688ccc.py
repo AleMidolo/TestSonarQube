@@ -1,14 +1,13 @@
 def generate_default_observer_schema_dict(manifest_dict, first_level=False):
     """
-    Generates a new dictionary based on the `manifest_dict` where all non-dict and non-list values are replaced with `None`.
-    If `first_level` is True, the function copies the identifying fields from the manifest.
+    Generates a default observer schema dictionary based on the provided manifest dictionary.
 
     Args:
         manifest_dict (dict): Partial Kubernetes resources.
-        first_level (bool, optional): If True, indicates that the dictionary represents the entire `observer_schema` of a Kubernetes resource.
+        first_level (bool, optional): If True, indicates that the dictionary represents the entire observer_schema of a Kubernetes resource.
 
     Returns:
-        dict: The generated partial `observer_schema`.
+        dict: The generated partial observer_schema.
     """
     observer_schema = {}
     
@@ -27,13 +26,13 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
 
 def generate_default_observer_schema_list(manifest_list):
     """
-    Generates a new list based on the `manifest_list` where all non-dict and non-list values are replaced with `None`.
+    Generates a default observer schema list based on the provided manifest list.
 
     Args:
         manifest_list (list): Partial Kubernetes resources in list format.
 
     Returns:
-        list: The generated partial `observer_schema`.
+        list: The generated partial observer_schema.
     """
     observer_schema = []
     

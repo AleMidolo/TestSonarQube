@@ -2,16 +2,17 @@ def minimalBases(classes):
     """
     Riduce una lista di classi base al suo equivalente minimo ordinato.
     """
-    # Creiamo un insieme per memorizzare le classi uniche
+    # Create a set to store unique classes
     unique_classes = set()
     
-    # Iteriamo attraverso le classi
+    # Iterate through the list of classes
     for cls in classes:
-        # Se la classe non è già nell'insieme, la aggiungiamo
-        if cls not in unique_classes:
+        # Check if the class is already in the set
+        if not any(issubclass(cls, existing_cls) for existing_cls in unique_classes):
+            # Remove any existing classes that are subclasses of the current class
+            unique_classes = {existing_cls for existing_cls in unique_classes if not issubclass(existing_cls, cls)}
+            # Add the current class to the set
             unique_classes.add(cls)
     
-    # Convertiamo l'insieme in una lista ordinata
-    minimal_classes = sorted(unique_classes, key=lambda x: x.__name__)
-    
-    return minimal_classes
+    # Return the sorted list of unique classes
+    return sorted(unique_classes, key=lambda x: x.__name__)

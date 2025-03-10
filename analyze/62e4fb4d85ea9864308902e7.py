@@ -1,30 +1,26 @@
 def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     """
-    Normalizes the command tuple to handle issues with shebangs and paths on Windows.
+    Corrections for the following issues on Windows:
+    - https://bugs.python.org/issue8557
+    - Windows does not correctly interpret shebangs
 
-    Args:
-        cmd: A tuple of strings representing the command and its arguments.
-
-    Returns:
-        A tuple of strings with the normalized command and arguments.
+    This function also allows proper functioning of shebangs with deep paths.
     """
     if not cmd:
         return cmd
 
-    # Handle shebang issues on Windows
-    first_arg = cmd[0]
-    if first_arg.startswith('#!'):
+    # Handle shebang lines
+    if cmd[0].startswith('#!'):
         # Extract the interpreter path from the shebang
-        interpreter_path = first_arg[2:].strip()
+        interpreter = cmd[0][2:].strip()
         # Replace the shebang with the interpreter path
-        cmd = (interpreter_path,) + cmd[1:]
+        cmd = (interpreter,) + cmd[1:]
 
-    # Normalize paths to handle deep paths correctly
+    # Normalize paths for Windows
     normalized_cmd = []
-    for arg in cmd:
-        if '\\' in arg:
-            # Replace backslashes with forward slashes
-            arg = arg.replace('\\', '/')
-        normalized_cmd.append(arg)
+    for part in cmd:
+        # Replace forward slashes with backslashes for Windows compatibility
+        part = part.replace('/', '\\')
+        normalized_cmd.append(part)
 
     return tuple(normalized_cmd)

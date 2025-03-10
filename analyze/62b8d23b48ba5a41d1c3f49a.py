@@ -8,28 +8,21 @@ def mru_cache(maxsize=128, typed=False):
     """
     def decorator(func):
         cache = OrderedDict()
-
+        
         @wraps(func)
         def wrapper(*args, **kwargs):
-            if typed:
-                key = (args, tuple(sorted(kwargs.items())))
-            else:
-                key = args + tuple(sorted(kwargs.items()))
-
+            key = args + tuple(kwargs.items()) if typed else args
             if key in cache:
-                # Move the accessed key to the end to mark it as most recently used
+                # Move the accessed key to the end to mark it as recently used
                 cache.move_to_end(key)
                 return cache[key]
-
             result = func(*args, **kwargs)
             cache[key] = result
-
             if len(cache) > maxsize:
-                # Remove the least recently used item
-                cache.popitem(last=False)
-
+                # Remove the most recently used item (last in OrderedDict)
+                cache.popitem(last=True)
             return result
-
+        
         return wrapper
-
+    
     return decorator

@@ -16,16 +16,16 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
     command = ['ansible-playbook', playbook_path]
 
     # Add verbose level if specified
-    if verbose is not None:
+    if verbose:
         command.extend(['-' + 'v' * verbose])
 
     # Add extra-vars if specified
-    if extra_vars is not None:
+    if extra_vars:
         extra_vars_str = ' '.join([f"{k}={v}" for k, v in extra_vars.items()])
         command.extend(['--extra-vars', extra_vars_str])
 
     # Add additional ansible arguments if specified
-    if ansible_args is not None:
+    if ansible_args:
         for key, value in ansible_args.items():
             if value is True:
                 command.append(f"--{key}")

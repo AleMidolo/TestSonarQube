@@ -12,7 +12,7 @@ def scale(self, other=None, recompute=False):
     Viene sollevata un'eccezione :exc:`.LenaValueError` se si tenta di farlo.
     """
     if not hasattr(self, '_scale') or recompute:
-        # Calcola la scala come l'integrale dell'istogramma
+        # Calcola la scala come integrale dell'istogramma
         self._scale = sum(self.bins)
     
     if other is None:
@@ -25,4 +25,4 @@ def scale(self, other=None, recompute=False):
         self.bins = [bin_value * scale_factor for bin_value in self.bins]
         self._scale = other
     else:
-        raise TypeError("Il parametro 'other' deve essere None o un float.")
+        raise TypeError("Il parametro 'other' deve essere un float o None.")

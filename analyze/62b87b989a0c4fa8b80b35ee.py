@@ -6,7 +6,7 @@ def reset(self):
     I bin vengono reinizializzati con il *valore_iniziale*
     o con *make_bins()* (a seconda dell'inizializzazione).
     """
-    self.contesto = {}
+    self.context = {}
     if hasattr(self, 'valore_iniziale'):
         self.bins = [self.valore_iniziale] * len(self.bins)
     else:

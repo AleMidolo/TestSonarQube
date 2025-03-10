@@ -32,3 +32,5 @@ def _convert_non_cli_args(self, parser_name, values_dict):
             if ',' in value:
                 values_dict[key] = value.split(',')
                 continue
+
+    return values_dict

@@ -3,17 +3,17 @@ import subprocess
 def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=False, env=None):
     """
     Esegui il comando specificato.
-    
+
     :param comandi: Lista di comandi da eseguire.
     :param argomenti: Lista di argomenti da passare ai comandi.
     :param cwd: Directory di lavoro corrente (opzionale).
     :param verbose: Se True, stampa l'output del comando (opzionale).
     :param nascondi_stderr: Se True, nasconde l'output di errore (opzionale).
-    :param env: Dizionario di variabili d'ambiente (opzionale).
-    :return: Tupla contenente (stdout, stderr, returncode).
+    :param env: Dizionario delle variabili d'ambiente (opzionale).
+    :return: Il codice di ritorno del comando eseguito.
     """
     command = comandi + argomenti
-    stderr = subprocess.PIPE if nascondi_stderr else None
+    stderr = subprocess.DEVNULL if nascondi_stderr else subprocess.PIPE
     
     process = subprocess.Popen(
         command,
@@ -29,4 +29,7 @@ def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=Fal
     if verbose:
         print(stdout)
     
-    return stdout, stderr, process.returncode
+    if stderr and not nascondi_stderr:
+        print(stderr)
+    
+    return process.returncode
