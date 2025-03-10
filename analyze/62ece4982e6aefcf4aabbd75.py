@@ -11,8 +11,5 @@ def aggiungi_ignorati(ignorati):
     # Filtra i file ignorati in base alla lista fornita
     filtered_files = [file for file in ignored_files if file in ignorati]
     
-    # Ordina la lista dei file ignorati
-    filtered_files.sort()
-    
-    # Restituisci i file come una singola stringa separata da virgole
+    # Restituisci i file come una stringa separata da virgole
     return ', '.join(filtered_files)

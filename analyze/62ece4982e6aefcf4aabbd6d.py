@@ -9,6 +9,6 @@ def string_to_int(string: str, alphabet: List[str]) -> int:
     base = len(alphabet)
     num = 0
     for i, char in enumerate(string):
-        power = len(string) - i - 1
-        num += alphabet.index(char) * (base ** power)
+        value = alphabet.index(char)
+        num = num * base + value
     return num

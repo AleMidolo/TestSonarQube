@@ -4,7 +4,13 @@ def dehydrate_point(value):
 
     :param value: Un oggetto di tipo `Point`.
     :type value: Point
-    :return: Un dizionario con le coordinate x e y del punto.
+    :return: Una rappresentazione serializzata del punto.
     :rtype: dict
     """
-    return {'x': value.x, 'y': value.y}
+    if not hasattr(value, 'x') or not hasattr(value, 'y'):
+        raise ValueError("L'oggetto fornito non è un punto valido.")
+    
+    return {
+        'x': value.x,
+        'y': value.y
+    }

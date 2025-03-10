@@ -19,4 +19,3 @@ def dict_insert(dic, val, key, *keys):
             current[k] = {}
         current = current[k]
     current[keys[-1]] = val
-    return dic

@@ -19,8 +19,8 @@ def data(self, *keys):
                 # Se la chiave è un indice, verifica che sia valido
                 if key < 0 or key >= len(self.__dict__):
                     raise IndexError("Indice fuori dai limiti")
-                # Converti l'indice in una chiave
+                # Converti l'indice in una chiave effettiva
                 key = list(self.__dict__.keys())[key]
-            # Aggiungi la chiave al risultato, anche se non esiste
+            # Aggiungi la chiave al risultato, anche se non esiste (valore None)
             result[key] = self.__dict__.get(key, None)
     return result

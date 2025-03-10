@@ -7,26 +7,28 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     :param commands: Lista di comandi da eseguire.
     :param args: Lista di argomenti da passare ai comandi.
     :param cwd: Directory di lavoro corrente (opzionale).
-    :param verbose: Se True, stampa l'output del comando (opzionale).
-    :param hide_stderr: Se True, nasconde l'output di errore (opzionale).
+    :param verbose: Se True, stampa i comandi eseguiti (opzionale).
+    :param hide_stderr: Se True, nasconde l'output di stderr (opzionale).
     :param env: Dizionario di variabili d'ambiente (opzionale).
-    :return: Tupla contenente l'output del comando e il codice di uscita.
+    :return: Il codice di ritorno del comando eseguito.
     """
-    command = commands + args
-    stderr = subprocess.PIPE if hide_stderr else None
+    full_command = commands + args
+    if verbose:
+        print(f"Esecuzione del comando: {' '.join(full_command)}")
+    
+    stderr = subprocess.DEVNULL if hide_stderr else None
     
     process = subprocess.Popen(
-        command,
+        full_command,
         cwd=cwd,
-        stdout=subprocess.PIPE,
-        stderr=stderr,
         env=env,
-        text=True
+        stdout=subprocess.PIPE,
+        stderr=stderr
     )
     
-    stdout, stderr = process.communicate()
+    stdout, _ = process.communicate()
     
     if verbose:
-        print(stdout)
+        print(stdout.decode())
     
-    return stdout, process.returncode
+    return process.returncode

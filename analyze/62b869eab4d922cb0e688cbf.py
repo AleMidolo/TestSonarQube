@@ -17,16 +17,23 @@ def generate_default_observer_schema(app):
         "spec": {
             "rules": [
                 {
-                    "apiGroups": ["*"],
-                    "resources": ["*"],
-                    "verbs": ["get", "list", "watch"]
+                    "resource": {
+                        "apiVersion": "*",
+                        "kind": "*"
+                    },
+                    "observation": {
+                        "interval": "60s",
+                        "timeout": "30s",
+                        "successThreshold": 1,
+                        "failureThreshold": 3
+                    }
                 }
             ]
         }
     }
 
-    for resource in app.spec.manifest:
-        if not hasattr(resource, 'observer_schema'):
-            resource.observer_schema = default_schema
-
-    return app
+    # Aggiungi lo schema di osservazione predefinito all'applicazione
+    if not hasattr(app.spec, 'observerSchemas'):
+        app.spec.observerSchemas = []
+    
+    app.spec.observerSchemas.append(default_schema)

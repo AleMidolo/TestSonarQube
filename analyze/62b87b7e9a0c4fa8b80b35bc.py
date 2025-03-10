@@ -19,16 +19,18 @@ def _update_context(self, context):
     if not hasattr(context, 'error'):
         context.error = {}
 
-    # Assuming self has a property `error_indices` that contains the error indices
-    # and a property `coordinates` that contains the coordinate names (e.g., ["x", "y", "z"])
-    if hasattr(self, 'error_indices') and hasattr(self, 'coordinates'):
-        for i, error_index in enumerate(self.error_indices):
-            if i < len(self.coordinates):
-                coord_name = self.coordinates[i]
-                context.error[f"{coord_name}_low"] = {"index": error_index}
+    # Aggiorna gli errori con gli indici corrispondenti
+    for i, field in enumerate(self.fields):
+        if field.startswith('error_'):
+            error_type = field.split('_')[1]
+            error_name = field.split('_')[2]
+            if error_type not in context.error:
+                context.error[error_type] = {}
+            context.error[error_type][error_name] = {'index': i}
 
-    # Ensure existing values in context.value are not removed
+    # Mantieni i valori esistenti in context.value
     if not hasattr(context, 'value'):
         context.value = {}
-
-    return context
+    for key, value in self.values.items():
+        if key not in context.value:
+            context.value[key] = value

@@ -5,7 +5,7 @@ def to_csv(self, separator=",", header=None):
     Args:
         separator (str): Delimiter for values, default is a comma.
         header (str, optional): If not None, this string is the first line of the output 
-                                (a newline is automatically added).
+                               (a newline is automatically added).
 
     Returns:
         str: The CSV representation of the graph.

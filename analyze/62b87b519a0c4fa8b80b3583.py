@@ -32,4 +32,4 @@ def scale(self, other=None):
             if hasattr(self, 'z_err'):
                 self.z_err *= scale_factor
     else:
-        raise TypeError("Il valore di scala deve essere un numero o None.")
+        raise TypeError("Il parametro 'other' deve essere un numero o None.")

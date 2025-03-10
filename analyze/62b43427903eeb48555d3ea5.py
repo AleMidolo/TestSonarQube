@@ -13,20 +13,20 @@ def format(
     - L'insieme dei parametri convertiti in stile "out" (:class:`dict` o :class:`list`).
     """
     if isinstance(params, dict):
-        # Convert dictionary-style params to out-style
+        # Convert dictionary params to out style
         out_params = {f"out_{key}": value for key, value in params.items()}
-        # Replace placeholders in SQL with out-style placeholders
+        # Replace placeholders in SQL with out style placeholders
         formatted_sql = sql
         for key in params:
             formatted_sql = formatted_sql.replace(f":{key}", f":out_{key}")
     elif isinstance(params, (list, tuple)):
-        # Convert list-style params to out-style
+        # Convert list/tuple params to out style
         out_params = [f"out_{i}" for i in range(len(params))]
-        # Replace placeholders in SQL with out-style placeholders
+        # Replace placeholders in SQL with out style placeholders
         formatted_sql = sql
         for i in range(len(params)):
             formatted_sql = formatted_sql.replace(f"?", f":out_{i}", 1)
     else:
-        raise TypeError("params must be either a dict, list, or tuple")
+        raise TypeError("params must be a dict, list, or tuple")
 
     return formatted_sql, out_params

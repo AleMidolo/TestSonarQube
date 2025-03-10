@@ -2,46 +2,43 @@ from functools import wraps
 from collections import defaultdict, OrderedDict
 
 def lfu_cache(maxsize=128, typed=False):
+    """
+    Decorator per racchiudere una funzione con un oggetto callable di memoizzazione
+    che salva fino a `maxsize` risultati basandosi su un algoritmo Least Frequently Used (LFU).
+    """
     def decorator(func):
         cache = {}
         frequency = defaultdict(int)
-        frequency_list = defaultdict(OrderedDict)
+        freq_map = defaultdict(OrderedDict)
         min_freq = 0
 
         @wraps(func)
         def wrapper(*args, **kwargs):
-            if typed:
-                key = (args, tuple(sorted(kwargs.items())))
-            else:
-                key = args + tuple(sorted(kwargs.items()))
-
+            nonlocal min_freq
+            key = args + tuple(sorted(kwargs.items())) if typed else args + tuple(kwargs.items())
             if key in cache:
-                # Increment the frequency of the key
+                # Increment frequency
                 freq = frequency[key]
                 frequency[key] += 1
-                del frequency_list[freq][key]
-                if not frequency_list[freq]:
-                    del frequency_list[freq]
-                    if freq == min_freq:
-                        min_freq += 1
-                frequency_list[freq + 1][key] = None
+                # Remove from current frequency map
+                del freq_map[freq][key]
+                # Add to new frequency map
+                freq_map[freq + 1][key] = None
+                # Update min_freq if necessary
+                if freq == min_freq and not freq_map[freq]:
+                    min_freq += 1
                 return cache[key]
-
-            result = func(*args, **kwargs)
-
+            # If cache is full, evict the least frequently used item
             if len(cache) >= maxsize:
-                # Remove the least frequently used item
-                lfu_key, _ = frequency_list[min_freq].popitem(last=False)
-                del cache[lfu_key]
-                del frequency[lfu_key]
-
+                evict_key, _ = freq_map[min_freq].popitem(last=False)
+                del cache[evict_key]
+                del frequency[evict_key]
+            # Add new item to cache
+            result = func(*args, **kwargs)
             cache[key] = result
             frequency[key] = 1
-            frequency_list[1][key] = None
+            freq_map[1][key] = None
             min_freq = 1
-
             return result
-
         return wrapper
-
     return decorator

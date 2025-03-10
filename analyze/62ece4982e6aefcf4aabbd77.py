@@ -1,4 +1,3 @@
-import re
 from datetime import timedelta
 
 def parse_frequency(frequency):
@@ -13,28 +12,26 @@ def parse_frequency(frequency):
     if frequency is None or frequency.lower() == "always":
         return None
     
-    pattern = re.compile(r'^(\d+)\s*(second|minute|hour|day|week|month|year)s?$', re.IGNORECASE)
-    match = pattern.match(frequency.strip())
-    
-    if not match:
+    try:
+        num, unit = frequency.strip().split()
+        num = int(num)
+    except ValueError:
         raise ValueError(f"Invalid frequency format: {frequency}")
     
-    value = int(match.group(1))
-    unit = match.group(2).lower()
-    
-    if unit == "second":
-        return timedelta(seconds=value)
-    elif unit == "minute":
-        return timedelta(minutes=value)
-    elif unit == "hour":
-        return timedelta(hours=value)
-    elif unit == "day":
-        return timedelta(days=value)
-    elif unit == "week":
-        return timedelta(weeks=value)
-    elif unit == "month":
-        return timedelta(days=30 * value)  # Approximate month as 30 days
-    elif unit == "year":
-        return timedelta(days=365 * value)  # Approximate year as 365 days
+    unit = unit.lower()
+    if unit in ["second", "seconds", "sec", "s"]:
+        return timedelta(seconds=num)
+    elif unit in ["minute", "minutes", "min", "m"]:
+        return timedelta(minutes=num)
+    elif unit in ["hour", "hours", "hr", "h"]:
+        return timedelta(hours=num)
+    elif unit in ["day", "days", "d"]:
+        return timedelta(days=num)
+    elif unit in ["week", "weeks", "w"]:
+        return timedelta(weeks=num)
+    elif unit in ["month", "months", "mon"]:
+        return timedelta(days=num * 30)  # Approximate month as 30 days
+    elif unit in ["year", "years", "y"]:
+        return timedelta(days=num * 365)  # Approximate year as 365 days
     else:
         raise ValueError(f"Unsupported time unit: {unit}")
