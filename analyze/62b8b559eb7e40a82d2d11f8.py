@@ -5,6 +5,6 @@ def minimalBases(classes):
     """
     minimal = []
     for cls in classes:
-        if not any(issubclass(other, cls) for other in classes if other is not cls):
+        if not any(issubclass(other, cls) for other in classes if other != cls):
             minimal.append(cls)
     return minimal

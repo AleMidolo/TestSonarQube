@@ -7,5 +7,7 @@ def directlyProvidedBy(object):
     """
     provides = getattr(object, "__provides__", None)
     if provides is None:
-        return None
+        # 如果没有直接提供接口，返回空声明
+        from zope.interface import declarations
+        return declarations.empty
     return provides

@@ -6,17 +6,11 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
     尝试检索一个符合RFC7033标准的WebFinger文档。如果失败，不会抛出异常。
     """
     try:
-        # 假设handle是类似"user@example.com"的格式
-        parts = handle.split('@')
-        if len(parts) != 2:
-            return None
-        
-        domain = parts[1]
-        webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
-        
-        response = requests.get(webfinger_url, timeout=5)
-        response.raise_for_status()
-        
+        # 假设WebFinger文档的URL格式为 https://example.com/.well-known/webfinger?resource=acct:handle
+        url = f"https://{handle.split('@')[1]}/.well-known/webfinger"
+        params = {'resource': f'acct:{handle}'}
+        response = requests.get(url, params=params)
+        response.raise_for_status()  # 如果响应状态码不是200，抛出HTTPError
         return response.text
-    except (requests.RequestException, ValueError):
+    except (requests.RequestException, IndexError):
         return None

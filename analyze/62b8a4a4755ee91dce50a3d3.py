@@ -7,17 +7,20 @@ def fromutc(self, dt):
     :param dt: 一个带有时区信息的 :class:`datetime.datetime` 对象。
     """
     if dt.tzinfo is not self:
-        raise ValueError("fromutc: dt.tzinfo is not self")
+        raise ValueError("dt.tzinfo is not self")
     
-    # Convert dt to naive datetime in UTC
-    dt = dt.replace(tzinfo=None)
-    
-    # Get the local time in the new timezone
-    local_dt = self.localize(dt, is_dst=False)
+    # Convert the datetime to the local time
+    local_dt = dt.replace(tzinfo=None) + self.utcoffset(dt)
     
     # Check if the local time is ambiguous
-    if self.is_ambiguous(local_dt):
-        # If ambiguous, return the first occurrence
-        local_dt = self.localize(dt, is_dst=True)
+    if self._is_ambiguous(local_dt):
+        # If it's ambiguous, check if it's in the fold
+        if not self._fold:
+            # If not in the fold, adjust to the first occurrence
+            local_dt = local_dt.replace(fold=0)
+        else:
+            # If in the fold, adjust to the second occurrence
+            local_dt = local_dt.replace(fold=1)
     
-    return local_dt
+    # Return the local datetime with the appropriate timezone
+    return local_dt.replace(tzinfo=self)

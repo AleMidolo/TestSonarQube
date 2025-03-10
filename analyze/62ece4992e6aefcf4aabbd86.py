@@ -14,4 +14,4 @@ def _dump_string(obj, dumper=None):
     """
     if dumper is None:
         dumper = yaml.SafeDumper
-    return yaml.dump(obj, Dumper=dumper, allow_unicode=True)
+    return yaml.dump(obj, Dumper=dumper, default_flow_style=False, allow_unicode=True)

@@ -21,15 +21,12 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
         result.append(alphabet[remainder])
         number = number // base
     
-    # Reverse to get the most significant digit first
+    # 如果指定了填充长度，并且结果长度小于填充长度，则进行填充
+    if padding is not None:
+        while len(result) < padding:
+            result.append(alphabet[0])
+    
+    # 反转列表以得到最高有效位优先的字符串
     result.reverse()
     
-    # Convert list to string
-    result_str = ''.join(result)
-    
-    # Apply padding if specified
-    if padding is not None:
-        if len(result_str) < padding:
-            result_str = alphabet[0] * (padding - len(result_str)) + result_str
-    
-    return result_str
+    return ''.join(result)

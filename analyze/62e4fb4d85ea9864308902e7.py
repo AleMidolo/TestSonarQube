@@ -26,8 +26,7 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     for dir in path.split(os.pathsep):
         full_path = os.path.join(dir, executable)
         if os.path.isfile(full_path):
-            # 找到可执行文件，返回完整路径的命令
             return (full_path,) + cmd[1:]
 
-    # 如果未找到，返回原始命令
+    # 如果找不到，返回原始命令
     return cmd

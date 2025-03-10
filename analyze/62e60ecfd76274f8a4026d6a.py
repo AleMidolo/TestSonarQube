@@ -9,9 +9,9 @@ def protocol_handlers(cls, protocol_version=None):
     """
     # 假设支持的协议版本和处理程序
     supported_versions = {
-        (3, 5): "BoltV3_5Handler",
-        (4, 0): "BoltV4_0Handler",
-        (4, 1): "BoltV4_1Handler",
+        (3, 5): "BoltProtocolHandlerV3_5",
+        (4, 0): "BoltProtocolHandlerV4_0",
+        (4, 1): "BoltProtocolHandlerV4_1",
     }
 
     if protocol_version is not None:

@@ -18,15 +18,8 @@ def format(
 
       - 转换后的 out-style 参数集合（类型：`dict` 或 `list`）。
     """
-    # Convert the SQL query using the converter
-    formatted_sql = self._converter.convert(sql)
+    # 使用 self._converter.convert 方法进行转换
+    formatted_sql, converted_params = self._converter.convert(sql, params)
     
-    # Convert the parameters to out-style
-    if isinstance(params, dict):
-        # If params is a dictionary, convert it to out-style dictionary
-        out_params = {k: self._converter.convert_param(v) for k, v in params.items()}
-    else:
-        # If params is a sequence, convert it to out-style list
-        out_params = [self._converter.convert_param(v) for v in params]
-    
-    return formatted_sql, out_params
+    # 返回格式化后的 SQL 和转换后的参数
+    return formatted_sql, converted_params

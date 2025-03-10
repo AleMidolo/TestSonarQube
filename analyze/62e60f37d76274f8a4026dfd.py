@@ -8,4 +8,6 @@ def dehydrate_time(value):
     :return: 包含 ticks 的 Structure 对象
     :rtype: Structure
     """
+    if value is None:
+        return None
     return Structure(ticks=value.ticks)

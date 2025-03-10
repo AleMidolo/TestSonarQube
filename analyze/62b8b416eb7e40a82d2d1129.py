@@ -6,4 +6,4 @@ def names(self, all=False):  # pylint:disable=redefined-builtin
     if all:
         return [attr for attr in dir(self) if not callable(getattr(self, attr)) and not attr.startswith("__")]
     else:
-        return [attr for attr in dir(self.__class__) if not callable(getattr(self.__class__, attr)) and not attr.startswith("__")]
+        return [attr for attr in self.__dict__.keys() if not callable(getattr(self, attr)) and not attr.startswith("__")]

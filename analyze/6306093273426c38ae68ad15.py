@@ -8,19 +8,34 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     :param ir_plugin: 一个表示当前插件的InfraredPlugin 对象
     :return: ansible 的结果
     """
-    import subprocess
+    from ansible.cli.playbook import PlaybookCLI
+    from ansible.parsing.dataloader import DataLoader
+    from ansible.vars.manager import VariableManager
+    from ansible.inventory.manager import InventoryManager
+    from ansible.executor.playbook_executor import PlaybookExecutor
 
-    # 构建 Ansible 命令
-    ansible_command = ["ansible-playbook"]
-    ansible_command.extend(cli_args)
+    # 初始化 DataLoader
+    loader = DataLoader()
 
-    # 添加 extra-vars
-    if vars_dict:
-        extra_vars = " ".join([f"{k}={v}" for k, v in vars_dict.items()])
-        ansible_command.extend(["--extra-vars", extra_vars])
+    # 初始化 InventoryManager
+    inventory = InventoryManager(loader=loader, sources=cli_args.get('inventory', None))
 
-    # 运行 Ansible 命令
-    result = subprocess.run(ansible_command, capture_output=True, text=True)
+    # 初始化 VariableManager
+    variable_manager = VariableManager(loader=loader, inventory=inventory)
 
-    # 返回 Ansible 的结果
+    # 设置 extra-vars
+    variable_manager.extra_vars = vars_dict
+
+    # 初始化 PlaybookExecutor
+    pbex = PlaybookExecutor(
+        playbooks=cli_args.get('playbooks', []),
+        inventory=inventory,
+        variable_manager=variable_manager,
+        loader=loader,
+        passwords={}
+    )
+
+    # 运行 playbook
+    result = pbex.run()
+
     return result

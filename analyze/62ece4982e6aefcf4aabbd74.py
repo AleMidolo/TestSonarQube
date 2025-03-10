@@ -11,22 +11,10 @@ def prepare_repository_from_archive(
     filename: Optional[str] = None,
     tmp_path: Union[PosixPath, str] = "/tmp",
 ) -> str:
-    """
-    给定一个已存在的 `archive_path`，解压该文件。
-    返回一个可以用作源 URL 的文件仓库 URL。
-
-    此函数不处理传入的归档文件不存在的情况。
-
-    @param archive_path : 归档文件路径  
-    @param filename: 文件名  
-    @param tmp_path: 临时文件路径  
-    @return 仓库 URL
-    """
-    # Convert tmp_path to Path object if it's a string
-    if isinstance(tmp_path, str):
-        tmp_path = Path(tmp_path)
+    # Ensure tmp_path is a Path object
+    tmp_path = Path(tmp_path)
     
-    # Create a temporary directory within the specified tmp_path
+    # Create a temporary directory within tmp_path
     with tempfile.TemporaryDirectory(dir=tmp_path) as temp_dir:
         temp_dir_path = Path(temp_dir)
         

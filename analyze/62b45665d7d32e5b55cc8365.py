@@ -6,24 +6,26 @@ def parse_arguments(*unparsed_arguments):
 
     给定调用该脚本时使用的命令行参数，解析这些参数并返回一个字典，该字典将子解析器名称（或 "global"）映射到相应的 argparse.Namespace 实例。
     """
-    parser = argparse.ArgumentParser(description="Global parser")
-    subparsers = parser.add_subparsers(dest="subparser_name", help="Sub-commands")
+    # 创建主解析器
+    parser = argparse.ArgumentParser(description="主解析器")
+    subparsers = parser.add_subparsers(dest="subparser_name", help="子解析器名称")
 
-    # Example subparser
-    subparser1 = subparsers.add_parser('subcommand1', help='First subcommand')
-    subparser1.add_argument('--arg1', type=str, help='Argument for subcommand1')
+    # 添加全局参数
+    parser.add_argument('--global-arg', type=str, help="全局参数")
 
-    subparser2 = subparsers.add_parser('subcommand2', help='Second subcommand')
-    subparser2.add_argument('--arg2', type=int, help='Argument for subcommand2')
+    # 创建子解析器1
+    parser_sub1 = subparsers.add_parser('sub1', help="子解析器1")
+    parser_sub1.add_argument('--sub1-arg', type=str, help="子解析器1的参数")
 
-    # Parse the arguments
+    # 创建子解析器2
+    parser_sub2 = subparsers.add_parser('sub2', help="子解析器2")
+    parser_sub2.add_argument('--sub2-arg', type=int, help="子解析器2的参数")
+
+    # 解析参数
     args = parser.parse_args(unparsed_arguments)
 
-    # Organize the parsed arguments into a dictionary
-    parsed_args = {}
-    if hasattr(args, 'subparser_name'):
-        parsed_args[args.subparser_name] = args
+    # 根据子解析器名称返回相应的字典
+    if args.subparser_name:
+        return {args.subparser_name: args}
     else:
-        parsed_args['global'] = args
-
-    return parsed_args
+        return {'global': args}

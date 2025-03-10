@@ -11,39 +11,35 @@ def normalized(self):
       返回一个 :class:`dateutil.relativedelta.relativedelta` 对象。
     """
     from dateutil.relativedelta import relativedelta
+    import math
 
-    # 将天数的浮点数部分转换为小时
+    # Convert all attributes to integers
     days = int(self.days)
-    hours = self.hours + (self.days - days) * 24
+    hours = int(self.hours)
+    minutes = int(self.minutes)
+    seconds = int(self.seconds)
+    microseconds = int(self.microseconds)
 
-    # 将小时数的浮点数部分转换为分钟
-    hours = int(hours)
-    minutes = self.minutes + (hours - int(hours)) * 60
+    # Handle fractional parts
+    fractional_days = self.days - days
+    if fractional_days != 0:
+        hours += int(fractional_days * 24)
+        fractional_hours = (fractional_days * 24) - int(fractional_days * 24)
+        if fractional_hours != 0:
+            minutes += int(fractional_hours * 60)
+            fractional_minutes = (fractional_hours * 60) - int(fractional_hours * 60)
+            if fractional_minutes != 0:
+                seconds += int(fractional_minutes * 60)
+                fractional_seconds = (fractional_minutes * 60) - int(fractional_minutes * 60)
+                if fractional_seconds != 0:
+                    microseconds += int(fractional_seconds * 1e6)
 
-    # 将分钟数的浮点数部分转换为秒
-    minutes = int(minutes)
-    seconds = self.seconds + (minutes - int(minutes)) * 60
+    # Normalize the time units
+    carry, seconds = divmod(seconds, 60)
+    minutes += carry
+    carry, minutes = divmod(minutes, 60)
+    hours += carry
+    carry, hours = divmod(hours, 24)
+    days += carry
 
-    # 将秒数的浮点数部分转换为微秒
-    seconds = int(seconds)
-    microseconds = self.microseconds + (seconds - int(seconds)) * 1e6
-
-    # 返回标准化后的 relativedelta 对象
-    return relativedelta(
-        years=self.years,
-        months=self.months,
-        days=days,
-        hours=hours,
-        minutes=minutes,
-        seconds=seconds,
-        microseconds=microseconds,
-        leapdays=self.leapdays,
-        year=self.year,
-        month=self.month,
-        day=self.day,
-        weekday=self.weekday,
-        hour=self.hour,
-        minute=self.minute,
-        second=self.second,
-        microsecond=self.microsecond
-    )
+    return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds, microseconds=microseconds)

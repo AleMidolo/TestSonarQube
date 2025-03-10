@@ -6,11 +6,11 @@ def protocol_handlers(cls, protocol_version=None):
     :return: 一个字典，键为版本元组，值为所有相关且受支持的协议版本的处理程序类
     :raise TypeError: 如果协议版本未以元组形式传入
     """
-    # 假设这是支持的协议版本及其对应的处理程序
+    # 假设我们有一些支持的协议版本及其处理程序
     supported_versions = {
-        (3, 5): "BoltV3_5Handler",
-        (4, 0): "BoltV4_0Handler",
-        (4, 1): "BoltV4_1Handler",
+        (3, 5): "HandlerForV3_5",
+        (4, 0): "HandlerForV4_0",
+        (4, 1): "HandlerForV4_1",
     }
 
     if protocol_version is not None:
