@@ -7,4 +7,4 @@ def _inline_r_setup(code: str) -> str:
     options(warn = 1)
     options(stringsAsFactors = FALSE)
     """
-    return setup_code + code
+    return f"{setup_code}\n{code}"

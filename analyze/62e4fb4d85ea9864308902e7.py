@@ -20,7 +20,4 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
         # Replace the shebang with the normalized interpreter path
         cmd = (interpreter_path,) + cmd[1:]
 
-    # Normalize all paths in the command tuple
-    normalized_cmd = tuple(os.path.normpath(arg) if os.path.isabs(arg) else arg for arg in cmd)
-
-    return normalized_cmd
+    return cmd

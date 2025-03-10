@@ -7,7 +7,7 @@ def add_asset(self, basename, file_path):
         file_path (str): The file path of the asset.
     
     Returns:
-        dict: The updated dictionary with the new asset added.
+        dict: The updated dictionary of assets.
     """
     if not hasattr(self, 'assets'):
         self.assets = {}

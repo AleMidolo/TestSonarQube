@@ -5,16 +5,28 @@ def pretty(self, indent=0, debug=False):
     if debug:
         print(f"Debug: Indent level = {indent}")
     
-    # Assuming self is a dictionary-like object for this example
+    # Asumiendo que self es un diccionario o una lista para este ejemplo
     if isinstance(self, dict):
         result = "{\n"
         for key, value in self.items():
-            result += " " * (indent + 4) + f"{key}: "
-            if isinstance(value, dict):
-                result += value.pretty(indent + 4, debug) + ",\n"
+            result += " " * (indent + 4) + f"{repr(key)}: "
+            if isinstance(value, (dict, list)):
+                result += value.pretty(indent + 4, debug)
             else:
-                result += str(value) + ",\n"
+                result += repr(value)
+            result += ",\n"
         result += " " * indent + "}"
-        return result
+    elif isinstance(self, list):
+        result = "[\n"
+        for item in self:
+            result += " " * (indent + 4)
+            if isinstance(item, (dict, list)):
+                result += item.pretty(indent + 4, debug)
+            else:
+                result += repr(item)
+            result += ",\n"
+        result += " " * indent + "]"
     else:
-        return str(self)
+        result = repr(self)
+    
+    return result

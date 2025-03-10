@@ -24,7 +24,7 @@ def remove_ending_os_sep(input_list):
         if not isinstance(item, str):
             raise TypeError("Todos los elementos de la lista deben ser cadenas.")
         
-        if len(item) > 1 and item.endswith(os.sep):
+        if len(item) > 1 and item[-1] == os.sep:
             processed_list.append(item[:-1])
         else:
             processed_list.append(item)

@@ -13,16 +13,21 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
     if base == 0:
         raise ValueError("El alfabeto no puede estar vacío.")
     
+    if number == 0:
+        return alphabet[0] if not padding else alphabet[0] * padding
+    
     result = []
     while number > 0:
-        number, remainder = divmod(number, base)
+        remainder = number % base
         result.append(alphabet[remainder])
+        number = number // base
     
-    if not result:
-        result.append(alphabet[0])
+    result.reverse()
     
-    if padding is not None:
-        while len(result) < padding:
-            result.append(alphabet[0])
+    if padding:
+        if len(result) < padding:
+            result = [alphabet[0]] * (padding - len(result)) + result
+        elif len(result) > padding:
+            raise ValueError("El padding es menor que la longitud del número convertido.")
     
-    return ''.join(reversed(result))
+    return ''.join(result)

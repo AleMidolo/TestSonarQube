@@ -1,12 +1,16 @@
 import json
-from typing import Dict
 from xml.etree import ElementTree as ET
+from typing import Dict
 
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
     Analiza el webfinger de Diaspora, que puede estar en formato JSON (nuevo) o en formato XRD (antiguo).
 
-    [https://diaspora.github.io/diaspora_federation/discovery/webfinger.html](https://diaspora.github.io/diaspora_federation/discovery/webfinger.html)
+    Args:
+        document (str): El documento webfinger en formato JSON o XRD.
+
+    Returns:
+        Dict: Un diccionario con la información extraída del webfinger.
     """
     try:
         # Intentar parsear como JSON
@@ -24,5 +28,5 @@ def parse_diaspora_webfinger(document: str) -> Dict:
                     result[rel] = href
             return result
         except ET.ParseError:
-            # Si ambos fallan, devolver un diccionario vacío
+            # Si no es ni JSON ni XML válido, devolver un diccionario vacío
             return {}
