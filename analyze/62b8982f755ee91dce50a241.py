@@ -11,26 +11,13 @@ def normalized(self):
     from dateutil.relativedelta import relativedelta
 
     # Convert fractional days to hours
-    total_hours = int(self.days * 24) + self.hours
-    days = total_hours // 24
-    hours = total_hours % 24
+    total_hours = self.hours + (self.days % 1) * 24
+    days = int(self.days)
+    hours = int(total_hours)
 
-    # Create a new relativedelta object with integer values
-    return relativedelta(
-        years=self.years,
-        months=self.months,
-        days=days,
-        hours=hours,
-        minutes=self.minutes,
-        seconds=self.seconds,
-        microseconds=self.microseconds,
-        leapdays=self.leapdays,
-        year=self.year,
-        month=self.month,
-        day=self.day,
-        weekday=self.weekday,
-        hour=self.hour,
-        minute=self.minute,
-        second=self.second,
-        microsecond=self.microsecond
-    )
+    # Handle overflow from hours to days
+    if hours >= 24:
+        days += hours // 24
+        hours = hours % 24
+
+    return relativedelta(days=days, hours=hours)

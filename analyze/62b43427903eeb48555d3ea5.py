@@ -17,7 +17,7 @@ def format(
         out_params = {f"out_{key}": value for key, value in params.items()}
         # Replace placeholders in SQL with out style placeholders
         formatted_sql = sql
-        for key in params:
+        for key in params.keys():
             formatted_sql = formatted_sql.replace(f":{key}", f":out_{key}")
     elif isinstance(params, (list, tuple)):
         # Convert list/tuple params to out style

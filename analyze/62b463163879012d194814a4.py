@@ -22,9 +22,7 @@ def _explore_zipfile(zip_path):
     
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         for file_name in zip_ref.namelist():
-            base_name = os.path.basename(file_name)
-            if base_name.endswith('.xml'):
-                base_name_without_ext = os.path.splitext(base_name)[0]
-                grouped_files[base_name_without_ext].append(file_name)
+            base_name = os.path.splitext(file_name)[0]
+            grouped_files[base_name].append(file_name)
     
     return dict(grouped_files)

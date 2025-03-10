@@ -1,59 +1,61 @@
 def hist_to_graph(hist, make_value=None, get_coordinate="left",
                   field_names=("x", "y"), scale=None):
     """
-    Converti un :class:`.histogram` in un :class:`.graph`.
+    Convert a histogram to a graph.
 
-    *make_value* è una funzione utilizzata per impostare il valore di un punto del grafico.
-    Per impostazione predefinita, il valore è il contenuto del bin.
-    *make_value* accetta un singolo valore (contenuto del bin) senza contesto.
+    Parameters:
+    - hist: The histogram to convert.
+    - make_value: Function to set the value of a graph point. Defaults to bin content.
+    - get_coordinate: Determines the coordinate of a graph point. Can be "left", "right", or "middle".
+    - field_names: Names of the graph fields. Must match the result dimension.
+    - scale: The scale of the graph. If True, uses the histogram's scale.
 
-    Questa opzione può essere utilizzata per creare barre di errore nel grafico.
-    Ad esempio, per creare un grafico con errori a partire da un istogramma
-    dove i bin contengono una named tuple con i campi *mean*, *mean_error* e un contesto,
-    si potrebbe utilizzare:
-
-    >>> make_value = lambda bin_: (bin_.mean, bin_.mean_error)
-
-    *get_coordinate* definisce quale sarà la coordinata di un punto del grafico
-    creato a partire da un bin dell'istogramma. Può essere "left" (sinistra, predefinito),
-    "right" (destra) o "middle" (centro).
-
-    *field_names* imposta i nomi dei campi del grafico. Il loro numero deve essere
-    uguale alla dimensione del risultato. Per un *make_value* come quello sopra,
-    i nomi dei campi sarebbero *("x", "y_mean", "y_mean_error")*.
-
-    *scale* diventa la scala del grafico (sconosciuta per impostazione predefinita).
-    Se è ``True``, utilizza la scala dell'istogramma.
-
-    *hist* deve contenere solo bin numerici (senza contesto) oppure *make_value*
-    deve rimuovere il contesto quando crea un grafico numerico.
-
-    Restituisce il grafico risultante.
+    Returns:
+    - The resulting graph.
     """
+    import numpy as np
+
     if make_value is None:
         make_value = lambda bin_: bin_
 
-    if scale is True:
-        scale = hist.scale
+    if get_coordinate not in ["left", "right", "middle"]:
+        raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
 
+    # Extract bin edges and contents
+    bin_edges = hist.bin_edges
+    bin_contents = hist.bin_contents
+
+    # Determine the x-coordinates based on get_coordinate
+    if get_coordinate == "left":
+        x_coords = bin_edges[:-1]
+    elif get_coordinate == "right":
+        x_coords = bin_edges[1:]
+    elif get_coordinate == "middle":
+        x_coords = (bin_edges[:-1] + bin_edges[1:]) / 2
+
+    # Apply make_value to each bin content
+    y_values = [make_value(bin_) for bin_ in bin_contents]
+
+    # Ensure y_values is a list of tuples or lists
+    if not all(isinstance(y, (tuple, list)) for y in y_values):
+        y_values = [(y,) for y in y_values]
+
+    # Check if field_names match the dimension of y_values
+    if len(field_names) != len(y_values[0]) + 1:
+        raise ValueError("field_names must match the dimension of the result")
+
+    # Create the graph
     graph = []
-
-    for bin_ in hist.bins:
-        if get_coordinate == "left":
-            x = bin_.left
-        elif get_coordinate == "right":
-            x = bin_.right
-        elif get_coordinate == "middle":
-            x = (bin_.left + bin_.right) / 2
-        else:
-            raise ValueError("get_coordinate deve essere 'left', 'right' o 'middle'")
-
-        value = make_value(bin_.value)
-        if isinstance(value, tuple):
-            point = (x,) + value
-        else:
-            point = (x, value)
-
+    for x, y in zip(x_coords, y_values):
+        point = {"x": x}
+        for i, field in enumerate(field_names[1:]):
+            point[field] = y[i]
         graph.append(point)
 
-    return graph
+    # Set the scale if provided
+    if scale is True:
+        scale = hist.scale
+    elif scale is None:
+        scale = "unknown"
+
+    return graph, scale

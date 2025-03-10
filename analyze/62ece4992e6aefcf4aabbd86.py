@@ -4,6 +4,9 @@ def _dump_string(obj, dumper=None):
     """
     if dumper is not None:
         return dumper(obj)
-    if isinstance(obj, bytes):
+    if isinstance(obj, str):
+        return obj
+    elif isinstance(obj, bytes):
         return obj.decode('utf-8')
-    return str(obj)
+    else:
+        return str(obj)

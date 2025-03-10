@@ -6,25 +6,20 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
 
     L'output avrà la cifra più significativa per prima.
     '''
-    if number < 0:
-        raise ValueError("Il numero deve essere non negativo.")
+    if number == 0:
+        return alphabet[0] if not padding else alphabet[0] * padding
     
     base = len(alphabet)
-    if base == 0:
-        raise ValueError("L'alfabeto non può essere vuoto.")
-    
     result = []
+    
     while number > 0:
         remainder = number % base
         result.append(alphabet[remainder])
         number = number // base
     
-    if not result:
-        result.append(alphabet[0])
-    
     result.reverse()
     
-    if padding is not None:
+    if padding:
         while len(result) < padding:
             result.insert(0, alphabet[0])
     

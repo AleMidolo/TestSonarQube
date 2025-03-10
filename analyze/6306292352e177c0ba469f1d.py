@@ -1,7 +1,7 @@
 import re
 from typing import Set, Tuple, Callable
 
-def find_tags(text: str, replacer: Callable = None) -> Tuple[Set, str]:
+def find_tags(text: str, replacer: Callable = None) -> Tuple[Set[str], str]:
     """
     Trova i tag nel testo.
 

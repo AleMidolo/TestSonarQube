@@ -7,11 +7,7 @@ def find_roots(graph, prop):
     Presuppone triple nella forma (figlio, prop, genitore), ovvero la direzione di
     `RDFS.subClassOf` o `SKOS.broader`.
     """
-    roots = set()
-    all_subjects = set(graph.subjects(prop, None))
-    all_objects = set(graph.objects(None, prop))
-    
-    # Le radici sono i soggetti che non compaiono come oggetti in nessuna tripla
-    roots = all_subjects - all_objects
-    
+    all_nodes = set(graph.subjects()) | set(graph.objects())
+    parents = set(graph.objects(None, prop))
+    roots = all_nodes - parents
     return roots
