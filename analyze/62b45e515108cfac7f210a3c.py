@@ -1,36 +1,39 @@
 def initialize(self):
     """
-    एक नया OCFL स्टोरेज रूट बनाएँ और प्रारंभ करें।
+    Crear e inicializar una nueva raíz de almacenamiento OCFL.
     """
     import os
     import json
 
-    # OCFL storage root directory structure
-    ocfl_structure = {
-        "0=ocfl_1.1": "",
-        "inventory.json": "",
-        "inventory.json.sha512": "",
-        "extensions": {},
-        "logs": {},
-        "objects": {}
+    # Crear la estructura de directorios básica
+    os.makedirs("ocfl_root", exist_ok=True)
+    os.makedirs("ocfl_root/0=ocfl_object_1", exist_ok=True)
+    os.makedirs("ocfl_root/0=ocfl_object_1/v1", exist_ok=True)
+    os.makedirs("ocfl_root/0=ocfl_object_1/v1/content", exist_ok=True)
+
+    # Crear el archivo de inventario
+    inventory = {
+        "id": "urn:uuid:12345678-1234-5678-1234-567812345678",
+        "type": "Object",
+        "digestAlgorithm": "sha512",
+        "head": "v1",
+        "versions": {
+            "v1": {
+                "created": "2023-10-01T00:00:00Z",
+                "state": {
+                    "content": {}
+                }
+            }
+        }
     }
 
-    # Create the OCFL storage root directory
-    if not os.path.exists("ocfl_root"):
-        os.makedirs("ocfl_root")
+    with open("ocfl_root/0=ocfl_object_1/v1/inventory.json", "w") as f:
+        json.dump(inventory, f, indent=4)
 
-    # Create the necessary files and directories
-    for key, value in ocfl_structure.items():
-        if key == "0=ocfl_1.1":
-            with open(os.path.join("ocfl_root", key), "w") as f:
-                f.write("ocfl_1.1")
-        elif key.endswith(".json"):
-            with open(os.path.join("ocfl_root", key), "w") as f:
-                json.dump({}, f)
-        elif key.endswith(".sha512"):
-            with open(os.path.join("ocfl_root", key), "w") as f:
-                f.write("")
-        elif isinstance(value, dict):
-            os.makedirs(os.path.join("ocfl_root", key), exist_ok=True)
+    # Crear el archivo de inventario con firma
+    with open("ocfl_root/0=ocfl_object_1/v1/inventory.json.sha512", "w") as f:
+        f.write("sha512_hash_of_inventory_json")
 
-    print("OCFL storage root initialized successfully.")
+    # Crear el archivo de declaración OCFL
+    with open("ocfl_root/0=ocfl_object_1/ocfl_object.txt", "w") as f:
+        f.write("ocfl_object_1\n")

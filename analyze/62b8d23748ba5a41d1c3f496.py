@@ -11,7 +11,7 @@ def lfu_cache(maxsize=128, typed=False):
         @wraps(func)
         def wrapper(*args, **kwargs):
             nonlocal min_freq
-            key = args + tuple(sorted(kwargs.items())) if typed else args
+            key = args + tuple(sorted(kwargs.items())) if typed else args + tuple(sorted(kwargs.items()))
             if key in cache:
                 frequency[key] += 1
                 freq = frequency[key]

@@ -1,10 +1,17 @@
 def match(filename):
     """
-    तर्क (Args):
-    - `filename`: वह फ़ाइल नाम जिसे मिलाना है।
+    Verificar si el nombre de archivo es un tipo que este módulo soporta
 
-    रिटर्न (Returns):
-    - यदि फ़ाइल प्रकार समर्थित नहीं है, तो `False` लौटाएगा। यदि समर्थित है, तो `True` लौटाएगा।
+    Argumentos:
+        filename: Nombre de archivo a verificar
+    Retorna:
+        'False' si no es compatible, 'True' si es soportado
     """
+    # Lista de extensiones soportadas
     supported_extensions = ['.txt', '.csv', '.json', '.xml']
-    return any(filename.endswith(ext) for ext in supported_extensions)
+    
+    # Verificar si el archivo tiene una extensión soportada
+    for ext in supported_extensions:
+        if filename.endswith(ext):
+            return True
+    return False

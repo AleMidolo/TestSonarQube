@@ -2,22 +2,16 @@ import argparse
 
 def parse_subparser_arguments(unparsed_arguments, subparsers):
     """
-    दिए गए तर्कों (arguments) की एक श्रृंखला और एक डिक्शनरी जो सबपार्सर (subparser) के नाम को 
-    argparse.ArgumentParser इंस्टेंस से मैप करती है, के आधार पर, प्रत्येक अनुरोधित क्रिया के 
-    सबपार्सर को सभी तर्कों को पार्स (parse) करने का मौका दें। 
+    Dada una secuencia de argumentos y un diccionario que mapea el nombre de un subparser a una instancia de `argparse.ArgumentParser`, permite que cada subparser solicitado intente analizar todos los argumentos. Esto permite que argumentos comunes como "--repository" sean compartidos entre múltiples subparsers.
 
-    यह प्रक्रिया सामान्य तर्कों जैसे "--repository" को कई सबपार्सरों के बीच साझा करने की अनुमति देती है।
-
-    परिणाम को एक ट्यूपल (tuple) के रूप में लौटाएं, जिसमें शामिल हैं:
-    1. एक डिक्शनरी जो सबपार्सर के नाम को पार्स किए गए तर्कों के नेमस्पेस (namespace) से मैप करती है।
-    2. उन तर्कों की एक सूची जो किसी भी सबपार्सर द्वारा दावा नहीं किए गए हैं।
+    Devuelve el resultado como una tupla que contiene: (un diccionario que mapea el nombre del subparser a un espacio de nombres (`namespace`) de argumentos analizados, una lista de argumentos restantes que no fueron reclamados por ningún subparser).
     """
     parsed_args = {}
-    remaining_args = unparsed_arguments.copy()
+    remaining_args = list(unparsed_arguments)
     
-    for subparser_name, parser in subparsers.items():
+    for subparser_name, subparser in subparsers.items():
         try:
-            args, remaining = parser.parse_known_args(remaining_args)
+            args, remaining = subparser.parse_known_args(remaining_args)
             parsed_args[subparser_name] = args
             remaining_args = remaining
         except argparse.ArgumentError:

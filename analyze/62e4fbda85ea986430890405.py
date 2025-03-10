@@ -1,7 +1,7 @@
 import subprocess
 import sys
 import os
-from typing import Sequence, Any, Tuple
+from typing import Sequence, Any
 
 def _get_platform_max_length() -> int:
     # This function should return the platform-specific maximum command length.
@@ -9,56 +9,46 @@ def _get_platform_max_length() -> int:
     return 32768
 
 def xargs(
-    cmd: tuple[str, ...],
-    varargs: Sequence[str],
-    *,
-    color: bool = False,
-    target_concurrency: int = 1,
-    _max_length: int = _get_platform_max_length(),
-    **kwargs: Any,
+        cmd: tuple[str, ...],
+        varargs: Sequence[str],
+        *,
+        color: bool = False,
+        target_concurrency: int = 1,
+        _max_length: int = _get_platform_max_length(),
+        **kwargs: Any,
 ) -> tuple[int, bytes]:
     """
-    Xargs का एक सरल कार्यान्वयन।
+    Una implementación simplificada de xargs.
 
-    - color: यदि प्लेटफ़ॉर्म इसे सपोर्ट करता है, तो एक PTY (Pseudo Terminal) बनाएं।
-    - target_concurrency: एक साथ चलने वाले विभाजनों (partitions) की लक्षित संख्या।
+    - color: Crea un pty si está en una plataforma que lo soporte.
+    - target_concurrency: Número objetivo de particiones para ejecutar de forma concurrente.
     """
     if color and sys.platform != "win32":
-        # Use a PTY if color is enabled and the platform is not Windows
         import pty
         master, slave = pty.openpty()
         kwargs['stdout'] = slave
         kwargs['stderr'] = slave
 
-    # Split varargs into chunks based on the maximum length
-    chunks = []
-    current_chunk = []
-    current_length = 0
+    # Split varargs into chunks based on target_concurrency
+    chunk_size = len(varargs) // target_concurrency
+    chunks = [varargs[i:i + chunk_size] for i in range(0, len(varargs), chunk_size)]
 
-    for arg in varargs:
-        arg_length = len(arg) + 1  # +1 for the space
-        if current_length + arg_length > _max_length:
-            chunks.append(current_chunk)
-            current_chunk = []
-            current_length = 0
-        current_chunk.append(arg)
-        current_length += arg_length
-
-    if current_chunk:
-        chunks.append(current_chunk)
-
-    # Execute the command with each chunk
-    exit_code = 0
-    output = b""
-
+    results = []
     for chunk in chunks:
-        full_cmd = list(cmd) + chunk
+        full_cmd = list(cmd) + list(chunk)
         try:
-            result = subprocess.run(full_cmd, check=True, capture_output=True, **kwargs)
-            output += result.stdout
+            process = subprocess.Popen(full_cmd, **kwargs)
+            stdout, stderr = process.communicate()
+            results.append((process.returncode, stdout))
         except subprocess.CalledProcessError as e:
-            exit_code = e.returncode
-            output += e.stdout
-            output += e.stderr
+            results.append((e.returncode, e.output))
 
-    return (exit_code, output)
+    # Combine results
+    final_returncode = 0
+    final_output = b""
+    for returncode, output in results:
+        if returncode != 0:
+            final_returncode = returncode
+        final_output += output
+
+    return final_returncode, final_output

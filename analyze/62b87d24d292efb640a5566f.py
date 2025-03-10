@@ -1,14 +1,16 @@
 def render(pieces, style):
     """
-    दिए गए संस्करण टुकड़ों को निर्दिष्ट शैली में प्रस्तुत करें।
+    Renderiza las piezas de versión dadas en el estilo solicitado.
+    
+    :param pieces: Diccionario con las piezas de la versión.
+    :param style: Estilo de renderizado (por ejemplo, 'full', 'short', etc.).
+    :return: Versión renderizada como cadena de texto.
     """
-    if style == "plain":
-        return " ".join(pieces)
-    elif style == "bold":
-        return "**" + " ".join(pieces) + "**"
-    elif style == "italic":
-        return "*" + " ".join(pieces) + "*"
-    elif style == "code":
-        return "`" + " ".join(pieces) + "`"
+    if style == 'full':
+        return f"{pieces['major']}.{pieces['minor']}.{pieces['patch']}"
+    elif style == 'short':
+        return f"{pieces['major']}.{pieces['minor']}"
+    elif style == 'patch':
+        return f"{pieces['patch']}"
     else:
-        return " ".join(pieces)  # Default to plain style if style is not recognized
+        raise ValueError(f"Estilo '{style}' no soportado.")

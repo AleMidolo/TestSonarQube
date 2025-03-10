@@ -1,13 +1,14 @@
 def _replace_register(flow_params, register_number, register_value):
     """
-    दिए गए रजिस्टर नंबर में फ्लो से मान को बदलें  
+    Reemplazar el valor de los flujos al número de registro dado
 
-    डिक्शनरी में 'register_value' कुंजी को 'register_number' द्वारा दिए गए रजिस्टर नंबर से बदल दिया जाएगा  
+    La clave 'register_value' en el diccionario será reemplazada por el número de registro proporcionado por 'register_number'
 
-    पैरामीटर विवरण:
-    - flow_params: एक डिक्शनरी जिसमें परिभाषित फ्लो शामिल हैं  
-    - register_number: वह रजिस्टर नंबर जिसमें मान संग्रहीत किया जाएगा  
-    - register_value: वह कुंजी जिसे रजिस्टर नंबर द्वारा बदल दिया जाएगा  
+    :param flow_params: Diccionario que contiene los flujos definidos  
+    :param register_number: El número del registro donde se almacenará el valor  
+    :param register_value: Clave que será reemplazada por el número de registro  
     """
-    flow_params[register_number] = register_value
+    if flow_params and isinstance(flow_params, dict):
+        if register_value in flow_params:
+            flow_params[register_value] = register_number
     return flow_params

@@ -1,15 +1,9 @@
 def _getTargetClass(self):
     """
-    इसका उपयोग उस कार्यान्वयन (implementation) को लौटाने के लिए करें,
-    जिसका उपयोग किया जा रहा है, बिना 'Py' या 'Fallback' प्रत्यय (suffix) के।
+    Defina esto para devolver la implementación en uso,
+    sin el sufijo 'Py' o 'Fallback'.
     """
-    # Assuming the class name is stored in self.__class__.__name__
     class_name = self.__class__.__name__
-    
-    # Remove 'Py' or 'Fallback' suffix if present
-    if class_name.endswith('Py'):
+    if class_name.endswith('Py') or class_name.endswith('Fallback'):
         return class_name[:-2]
-    elif class_name.endswith('Fallback'):
-        return class_name[:-8]
-    else:
-        return class_name
+    return class_name

@@ -3,42 +3,38 @@ import shutil
 import tempfile
 from pathlib import Path
 from typing import Optional, Union
-import zipfile
-import tarfile
+from urllib.parse import urljoin
 
 def prepare_repository_from_archive(
     archive_path: str,
     filename: Optional[str] = None,
     tmp_path: Union[PosixPath, str] = "/tmp",
 ) -> str:
-    """
-    मौजूदा `archive_path` को अनकंप्रेस करें।  
-    यह एक फ़ाइल रिपॉजिटरी URL लौटाता है जिसे ओरिजिन URL के रूप में उपयोग किया जा सकता है।  
-
-    यह उस स्थिति को संभालने का काम नहीं करता है जहां दिया गया आर्काइव मौजूद नहीं है।
-    """
     # Convert tmp_path to Path object if it's a string
     tmp_path = Path(tmp_path) if isinstance(tmp_path, str) else tmp_path
     
-    # Create a temporary directory in the specified tmp_path
-    temp_dir = tempfile.mkdtemp(dir=tmp_path)
+    # Ensure the tmp_path exists
+    tmp_path.mkdir(parents=True, exist_ok=True)
     
-    # Determine the archive filename
-    if filename is None:
-        filename = os.path.basename(archive_path)
-    
-    # Extract the archive based on its type
-    if archive_path.endswith('.zip'):
-        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-            zip_ref.extractall(temp_dir)
-    elif archive_path.endswith('.tar.gz') or archive_path.endswith('.tgz'):
-        with tarfile.open(archive_path, 'r:gz') as tar_ref:
-            tar_ref.extractall(temp_dir)
-    elif archive_path.endswith('.tar'):
-        with tarfile.open(archive_path, 'r:') as tar_ref:
-            tar_ref.extractall(temp_dir)
-    else:
-        raise ValueError("Unsupported archive format")
-    
-    # Return the path to the extracted repository
-    return temp_dir
+    # Create a temporary directory within tmp_path
+    with tempfile.TemporaryDirectory(dir=tmp_path) as temp_dir:
+        # Extract the archive to the temporary directory
+        shutil.unpack_archive(archive_path, temp_dir)
+        
+        # If filename is provided, use it as the repository name
+        if filename:
+            repo_name = filename
+        else:
+            # Use the archive's basename without extension as the repository name
+            repo_name = Path(archive_path).stem
+        
+        # Create the final repository path
+        repo_path = tmp_path / repo_name
+        
+        # Move the extracted contents to the final repository path
+        shutil.move(temp_dir, repo_path)
+        
+        # Generate the URL for the repository
+        repo_url = urljoin("file://", str(repo_path))
+        
+        return repo_url

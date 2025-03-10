@@ -1,33 +1,44 @@
 def validate(self, path):
     """
-    पथ या pyfs रूट पर OCFL ऑब्जेक्ट को मान्य करें।
+    Valida el objeto OCFL en la ruta o en la raíz de pyfs.
 
-    यदि मान्य है (चेतावनियाँ स्वीकार्य हैं), तो True लौटाता है, अन्यथा False।
+    Devuelve True si es válido (se permiten advertencias), False en caso contrario.
     """
-    # Placeholder implementation for OCFL validation
-    # This should be replaced with actual OCFL validation logic
-    try:
-        # Check if the path exists
-        if not os.path.exists(path):
-            return False
-        
-        # Check for required OCFL structure
-        # Example: Check for 'inventory.json' and 'version' directories
-        required_files = ['inventory.json']
-        required_dirs = ['versions']
-        
-        for file in required_files:
-            if not os.path.isfile(os.path.join(path, file)):
-                return False
-        
-        for dir in required_dirs:
-            if not os.path.isdir(os.path.join(path, dir)):
-                return False
-        
-        # If all checks pass, return True
-        return True
-    
-    except Exception as e:
-        # Log the exception if needed
-        print(f"Validation error: {e}")
+    import os
+    import json
+
+    # Verificar si la ruta existe
+    if not os.path.exists(path):
         return False
+
+    # Verificar si es un directorio
+    if not os.path.isdir(path):
+        return False
+
+    # Verificar la existencia del archivo 'inventory.json'
+    inventory_path = os.path.join(path, 'inventory.json')
+    if not os.path.isfile(inventory_path):
+        return False
+
+    # Intentar cargar el archivo 'inventory.json'
+    try:
+        with open(inventory_path, 'r') as f:
+            inventory = json.load(f)
+    except json.JSONDecodeError:
+        return False
+
+    # Verificar la estructura básica del inventario
+    required_keys = {'id', 'type', 'digestAlgorithm', 'head', 'manifest', 'versions'}
+    if not required_keys.issubset(inventory.keys()):
+        return False
+
+    # Verificar que el algoritmo de digestión sea válido
+    if inventory['digestAlgorithm'] not in ['sha256', 'sha512']:
+        return False
+
+    # Verificar que hay al menos una versión
+    if not inventory['versions']:
+        return False
+
+    # Si todas las verificaciones pasan, devolver True
+    return True

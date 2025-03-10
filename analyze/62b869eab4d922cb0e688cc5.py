@@ -2,28 +2,34 @@ def update_last_applied_manifest_dict_from_resp(
     last_applied_manifest, observer_schema, response
 ):
     """
-    Updates the partial `last_applied_manifest` from a partial Kubernetes response recursively.
+    Junto con :func:``update_last_applied_manifest_list_from_resp``, esta
+    función se llama de forma recursiva para actualizar un ``last_applied_manifest``
+    parcial a partir de una respuesta parcial de Kubernetes.
 
-    Args:
-        last_applied_manifest (dict): The partial `last_applied_manifest` being updated.
-        observer_schema (dict): The partial `observer_schema`.
-        response (dict): The partial response received from the Kubernetes API.
+    Argumentos:
+        last_applied_manifest (dict): ``last_applied_manifest`` parcial que se está
+            actualizando.
+        observer_schema (dict): ``observer_schema`` parcial.
+        response (dict): respuesta parcial de la API de Kubernetes.
 
-    Raises:
-        KeyError: If the observed fields are not present in the Kubernetes response.
+    Excepciones:
+        KeyError: Si el campo observado no está presente en la respuesta de Kubernetes.
 
-    This function iterates through all observed fields and initializes their values if they are not already present in `last_applied_manifest`.
+    Esta función recorre todos los campos observados e inicializa su valor en
+    ``last_applied_manifest`` si aún no están presentes.
     """
-    for key, value in observer_schema.items():
+    for key, schema in observer_schema.items():
         if key not in response:
-            raise KeyError(f"Field '{key}' not found in the Kubernetes response.")
+            raise KeyError(f"El campo observado '{key}' no está presente en la respuesta de Kubernetes.")
         
-        if isinstance(value, dict):
+        if isinstance(schema, dict):
             if key not in last_applied_manifest:
                 last_applied_manifest[key] = {}
-            update_last_applied_manifest_dict_from_resp(
-                last_applied_manifest[key], value, response[key]
-            )
+            update_last_applied_manifest_dict_from_resp(last_applied_manifest[key], schema, response[key])
+        elif isinstance(schema, list):
+            if key not in last_applied_manifest:
+                last_applied_manifest[key] = []
+            update_last_applied_manifest_list_from_resp(last_applied_manifest[key], schema, response[key])
         else:
             if key not in last_applied_manifest:
                 last_applied_manifest[key] = response[key]

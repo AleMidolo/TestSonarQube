@@ -1,12 +1,10 @@
-def get_option_spec(self, command_name):
+def get_option_spec(self, command_name, argument_name):
     """
-    दिए गए विकल्प नाम के लिए विनिर्देश प्राप्त करता है।
-    
-    :param command_name: विकल्प का नाम
-    :return: विकल्प का विनिर्देश
+    Obtiene la especificación para el nombre de opción especificado.
     """
-    # Assuming self.options is a dictionary where keys are command names and values are their specifications
+    # Assuming self.options is a dictionary where keys are command names and values are dictionaries
+    # of argument specifications.
     if command_name in self.options:
-        return self.options[command_name]
-    else:
-        return None
+        if argument_name in self.options[command_name]:
+            return self.options[command_name][argument_name]
+    return None

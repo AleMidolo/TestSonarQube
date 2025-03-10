@@ -3,26 +3,26 @@ import json
 
 def get_plugin_spec_flatten_dict(plugin_dir):
     """
-    प्लगइन स्पेसिफिकेशन से एक फ्लैट डिक्शनरी बनाता है।
+    Crea un diccionario plano a partir de la especificación del plugin.
 
-    :param plugin_dir: प्लगइन की डायरेक्टरी का पथ
-    :return: एक फ्लैट डिक्शनरी जो प्लगइन की प्रॉपर्टीज़ को समाहित करती है
+    :param plugin_dir: Una ruta al directorio del plugin  
+    :return: Un diccionario plano que contiene las propiedades del plugin
     """
-    spec_file = os.path.join(plugin_dir, 'plugin_spec.json')
-    if not os.path.exists(spec_file):
-        raise FileNotFoundError(f"Plugin specification file not found in {plugin_dir}")
-    
-    with open(spec_file, 'r') as f:
-        spec_data = json.load(f)
-    
-    flat_dict = {}
-    def flatten(d, parent_key='', sep='.'):
+    plugin_spec_path = os.path.join(plugin_dir, 'plugin_spec.json')
+    if not os.path.exists(plugin_spec_path):
+        raise FileNotFoundError(f"El archivo 'plugin_spec.json' no se encuentra en el directorio {plugin_dir}")
+
+    with open(plugin_spec_path, 'r') as file:
+        plugin_spec = json.load(file)
+
+    def flatten_dict(d, parent_key='', sep='.'):
+        items = []
         for k, v in d.items():
             new_key = f"{parent_key}{sep}{k}" if parent_key else k
             if isinstance(v, dict):
-                flatten(v, new_key, sep=sep)
+                items.extend(flatten_dict(v, new_key, sep=sep).items())
             else:
-                flat_dict[new_key] = v
-        return flat_dict
-    
-    return flatten(spec_data)
+                items.append((new_key, v))
+        return dict(items)
+
+    return flatten_dict(plugin_spec)

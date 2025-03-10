@@ -1,30 +1,52 @@
-import os
-import hashlib
-
 def validate_version_inventories(self, version_dirs):
     """
-    प्रत्येक संस्करण के पास उस बिंदु तक एक इन्वेंटरी होनी चाहिए।
+    Cada versión DEBE tener un inventario hasta ese punto.
 
-    साथ ही, किसी भी सामग्री डाइजेस्ट का रिकॉर्ड रखें जो रूट इन्वेंटरी में मौजूद डाइजेस्ट से अलग हो,
-    ताकि सामग्री को सत्यापित करते समय हम उन्हें भी जांच सकें।
+    También se debe mantener un registro de cualquier resumen de contenido (digest) 
+    que sea diferente de los que están en el inventario raíz, 
+    para que también podamos verificarlos al validar el contenido.
 
-    version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
+    'version_dirs' es un arreglo de nombres de directorios de versiones 
+    y se asume que están en secuencia de versiones (1, 2, 3...).
     """
-    root_inventory = {}
-    discrepancies = []
+    root_inventory = self._load_root_inventory()  # Load the root inventory
+    previous_inventory = root_inventory
+    discrepancies = {}
 
     for version_dir in version_dirs:
-        inventory_path = os.path.join(version_dir, "inventory.txt")
-        if not os.path.exists(inventory_path):
-            raise FileNotFoundError(f"Inventory file not found in {version_dir}")
-
-        with open(inventory_path, 'r') as file:
-            for line in file:
-                file_path, file_digest = line.strip().split()
-                if file_path in root_inventory:
-                    if root_inventory[file_path] != file_digest:
-                        discrepancies.append((file_path, root_inventory[file_path], file_digest))
-                else:
-                    root_inventory[file_path] = file_digest
+        version_inventory = self._load_version_inventory(version_dir)
+        
+        # Check if the version has an inventory
+        if not version_inventory:
+            raise ValueError(f"Version {version_dir} does not have an inventory.")
+        
+        # Compare with the previous inventory
+        diff = self._compare_inventories(previous_inventory, version_inventory)
+        if diff:
+            discrepancies[version_dir] = diff
+        
+        # Update the previous inventory for the next iteration
+        previous_inventory = version_inventory
 
     return discrepancies
+
+def _load_root_inventory(self):
+    """
+    Load the root inventory.
+    """
+    # Implementation to load the root inventory
+    pass
+
+def _load_version_inventory(self, version_dir):
+    """
+    Load the inventory for a specific version directory.
+    """
+    # Implementation to load the version inventory
+    pass
+
+def _compare_inventories(self, inv1, inv2):
+    """
+    Compare two inventories and return the differences.
+    """
+    # Implementation to compare inventories
+    pass

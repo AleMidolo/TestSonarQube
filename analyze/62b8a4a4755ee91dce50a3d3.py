@@ -1,19 +1,23 @@
 def fromutc(self, dt):
     """
-    दिए गए टाइमज़ोन में एक टाइमज़ोन-अवेयर डेटटाइम को लेते हुए,
-    एक नए टाइमज़ोन में टाइमज़ोन-अवेयर डेटटाइम की गणना करता है।
+    Dado un objeto "datetime" que contiene información de la zona horaria al que pertenece, calcula un objeto "datetime" para una zona horaria diferente, que contenga información de la nueva zona horaria al que pertenece.
 
-    चूंकि यह वह समय है जब हमें *पक्का* पता है कि हमारे पास एक 
-    अस्पष्टता रहित डेटटाइम ऑब्जेक्ट है, हम इस अवसर का उपयोग यह 
-    निर्धारित करने के लिए करते हैं कि क्या डेटटाइम अस्पष्ट है और 
-    "फोल्ड" स्थिति में है (उदाहरण के लिए, यदि यह अस्पष्ट डेटटाइम 
-    का पहला घटना है, कालानुक्रमिक रूप से)।
+    Dado que esta es la única ocasión en la que *sabemos* que tenemos un objeto datetime no ambiguo, aprovechamos esta oportunidad para determinar si el datetime es ambiguo y está en un estado de "pliegue" (por ejemplo, si es la primera ocurrencia, cronológicamente, del datetime ambiguo).
 
     :param dt:
-        एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
+        Un objeto :class:`datetime.datetime` con conocimiento de zona horaria.
     """
     if dt.tzinfo is None:
-        raise ValueError("fromutc() requires a timezone-aware datetime object")
+        raise ValueError("fromutc() requires a timezone-aware datetime")
     
-    # Convert the datetime to the target timezone
-    return dt.astimezone(self)
+    # Convertir el datetime a UTC
+    dt_utc = dt.astimezone(self)
+    
+    # Verificar si el datetime es ambiguo
+    if self._is_ambiguous(dt_utc):
+        # Si es ambiguo, determinar si está en el "pliegue"
+        if self._fold(dt_utc):
+            # Si está en el pliegue, ajustar el datetime
+            dt_utc = dt_utc.replace(fold=1)
+    
+    return dt_utc

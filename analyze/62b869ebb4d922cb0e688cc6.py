@@ -2,30 +2,32 @@ def update_last_applied_manifest_list_from_resp(
     last_applied_manifest, observer_schema, response
 ):
     """
-    साथ में :func:``update_last_applied_manifest_dict_from_resp``, यह फ़ंक्शन 
-    पुनरावृत्त रूप से कॉल किया जाता है ताकि आंशिक ``last_applied_manifest`` को 
-    आंशिक Kubernetes प्रतिक्रिया से अपडेट किया जा सके।
+    Junto con :func:``update_last_applied_manifest_dict_from_resp``, esta
+    función se llama de forma recursiva para actualizar un ``last_applied_manifest``
+    parcial a partir de una respuesta parcial de Kubernetes.
 
-    आर्ग्युमेंट्स (Args):
-        last_applied_manifest (list): आंशिक ``last_applied_manifest`` जो 
-            अपडेट किया जा रहा है।
-        observer_schema (list): आंशिक ``observer_schema``।
-        response (list): Kubernetes API से प्राप्त आंशिक प्रतिक्रिया।
+    Argumentos:
+        last_applied_manifest (list): ``last_applied_manifest`` parcial que se
+            está actualizando.
+        observer_schema (list): ``observer_schema`` parcial.
+        response (list): respuesta parcial de la API de Kubernetes.
 
-    यह फ़ंक्शन सभी देखे गए फ़ील्ड्स (observed fields) के माध्यम से जाता है और 
-    यदि वे पहले से मौजूद नहीं हैं तो उनके मान को ``last_applied_manifest`` में 
-    आरंभ (initialize) करता है।
+    Esta función recorre todos los campos observados e inicializa su valor en
+    ``last_applied_manifest`` si aún no están presentes.
     """
-    for i, item in enumerate(observer_schema):
-        if i >= len(last_applied_manifest):
-            last_applied_manifest.append(response[i])
-        elif isinstance(item, dict) and isinstance(last_applied_manifest[i], dict):
+    for i, (schema_item, resp_item) in enumerate(zip(observer_schema, response)):
+        if isinstance(schema_item, dict) and isinstance(resp_item, dict):
+            if i >= len(last_applied_manifest):
+                last_applied_manifest.append({})
             update_last_applied_manifest_dict_from_resp(
-                last_applied_manifest[i], item, response[i]
+                last_applied_manifest[i], schema_item, resp_item
             )
-        elif isinstance(item, list) and isinstance(last_applied_manifest[i], list):
+        elif isinstance(schema_item, list) and isinstance(resp_item, list):
+            if i >= len(last_applied_manifest):
+                last_applied_manifest.append([])
             update_last_applied_manifest_list_from_resp(
-                last_applied_manifest[i], item, response[i]
+                last_applied_manifest[i], schema_item, resp_item
             )
         else:
-            last_applied_manifest[i] = response[i]
+            if i >= len(last_applied_manifest):
+                last_applied_manifest.append(resp_item)

@@ -1,7 +1,7 @@
 def parser_flags(parser):
     """
-    दिए गए argparse.ArgumentParser इंस्टेंस के लिए, इसके आर्गुमेंट फ्लैग्स को एक स्पेस-सेपरेटेड 
-    स्ट्रिंग के रूप में रिटर्न करें।
+    Dada una instancia de 'argparse.ArgumentParser', devuelve sus banderas de argumentos
+    en una cadena separada por espacios.
     """
     flags = []
     for action in parser._actions:

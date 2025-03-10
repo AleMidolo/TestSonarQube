@@ -1,56 +1,66 @@
 import logging
-import json
 import os
-from typing import Dict, List, Tuple, Optional
+import yaml
 
-def load_configurations(config_filenames: List[str], overrides: Optional[Dict] = None, resolve_env: bool = True) -> Tuple[Dict[str, Dict], List[logging.LogRecord]]:
+def load_configurations(config_filenames, overrides=None, resolve_env=True):
     """
-    Load and validate each configuration file given a sequence of configuration filenames.
-    Return the result as a tuple containing:
-    1. A dictionary mapping configuration filenames to their parsed configurations.
-    2. A sequence of `logging.LogRecord` instances containing any parsing errors.
+    Dada una secuencia de nombres de archivo de configuración, carga y valida cada archivo de configuración. 
+    Si el archivo de configuración no puede ser leído debido a permisos insuficientes o errores al analizar 
+    el archivo de configuración, se registrará el error en el log. De lo contrario, devuelve los resultados 
+    como una tupla que contiene: un diccionario que asocia el nombre del archivo de configuración con su 
+    configuración analizada correspondiente, y una secuencia de instancias de `logging.LogRecord` que 
+    contienen cualquier error de análisis.
     """
     configurations = {}
-    errors = []
-    
+    log_records = []
+
     for filename in config_filenames:
         try:
             with open(filename, 'r') as file:
-                config_data = json.load(file)
+                config = yaml.safe_load(file)
                 
                 if resolve_env:
-                    for key, value in config_data.items():
-                        if isinstance(value, str) and value.startswith('$'):
-                            env_var = value[1:]
-                            config_data[key] = os.getenv(env_var, value)
+                    for key, value in config.items():
+                        if isinstance(value, str) and value.startswith('${') and value.endswith('}'):
+                            env_var = value[2:-1]
+                            config[key] = os.getenv(env_var, value)
                 
                 if overrides:
-                    config_data.update(overrides)
+                    config.update(overrides)
                 
-                configurations[filename] = config_data
-        except json.JSONDecodeError as e:
-            error_msg = f"JSON parsing error in file {filename}: {str(e)}"
-            logging.error(error_msg)
-            errors.append(logging.LogRecord(
+                configurations[filename] = config
+        except PermissionError:
+            logging.error(f"Permiso denegado para leer el archivo de configuración: {filename}")
+            log_records.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=error_msg,
+                msg=f"Permiso denegado para leer el archivo de configuración: {filename}",
+                args=None,
+                exc_info=None
+            ))
+        except yaml.YAMLError as e:
+            logging.error(f"Error al analizar el archivo de configuración {filename}: {e}")
+            log_records.append(logging.LogRecord(
+                name=__name__,
+                level=logging.ERROR,
+                pathname=filename,
+                lineno=0,
+                msg=f"Error al analizar el archivo de configuración {filename}: {e}",
                 args=None,
                 exc_info=None
             ))
         except Exception as e:
-            error_msg = f"Error loading configuration file {filename}: {str(e)}"
-            logging.error(error_msg)
-            errors.append(logging.LogRecord(
+            logging.error(f"Error inesperado al procesar el archivo de configuración {filename}: {e}")
+            log_records.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=error_msg,
+                msg=f"Error inesperado al procesar el archivo de configuración {filename}: {e}",
                 args=None,
                 exc_info=None
             ))
-    
-    return configurations, errors
+
+    return configurations, log_records

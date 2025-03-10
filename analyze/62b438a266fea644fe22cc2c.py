@@ -1,21 +1,21 @@
 def make_parsers():
     """
-    शीर्ष-स्तरीय पार्सर और इसके उप-पार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
+    Crear un analizador de nivel superior y sus subanalizadores, y devolverlos como una tupla.
     """
     import argparse
 
-    # शीर्ष-स्तरीय पार्सर बनाएं
-    parser = argparse.ArgumentParser(description="शीर्ष-स्तरीय पार्सर")
+    # Crear el analizador de nivel superior
+    parser = argparse.ArgumentParser(description="Analizador de nivel superior")
 
-    # उप-पार्सर बनाएं
-    subparsers = parser.add_subparsers(dest="command", help="उप-पार्सर कमांड")
+    # Crear subanalizadores
+    subparsers = parser.add_subparsers(dest="command", help="Subcomandos disponibles")
 
-    # उप-पार्सर 1
-    parser_a = subparsers.add_parser('command_a', help='कमांड A के लिए उप-पार्सर')
-    parser_a.add_argument('--option_a', type=int, help='कमांड A के लिए विकल्प')
+    # Subanalizador para el comando 'foo'
+    parser_foo = subparsers.add_parser('foo', help='Comando foo')
+    parser_foo.add_argument('--bar', type=int, help='Argumento bar para foo')
 
-    # उप-पार्सर 2
-    parser_b = subparsers.add_parser('command_b', help='कमांड B के लिए उप-पार्सर')
-    parser_b.add_argument('--option_b', type=str, help='कमांड B के लिए विकल्प')
+    # Subanalizador para el comando 'baz'
+    parser_baz = subparsers.add_parser('baz', help='Comando baz')
+    parser_baz.add_argument('--qux', type=str, help='Argumento qux para baz')
 
     return parser, subparsers

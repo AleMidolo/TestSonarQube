@@ -5,17 +5,30 @@ def find_roots(
     graph: Graph, prop: URIRef, roots: Optional[Set[Node]] = None
 ) -> Set[Node]:
     """
-    यह फ़ंक्शन ट्रांजिटिव पदानुक्रम में रूट्स खोजने के लिए उपयोग किया जाता है। उदाहरण के लिए, यदि आप `graph` और `rdflib.RDFS.subClassOf` पास करते हैं, तो यह उप-वर्ग पदानुक्रम के सभी रूट्स का सेट लौटाएगा।
+    Encuentra las raíces en algún tipo de jerarquía transitiva.
+
+    find_roots(graph, rdflib.RDFS.subClassOf)
+
+    Devolverá un conjunto con todas las raíces de la jerarquía de subclases.
+
+    Se asume que los triples tienen la forma `(hijo, prop, padre)`, es decir, la dirección de `RDFS.subClassOf` o `SKOS.broader`.
+
+    Argumentos:
+    graph: Objeto de la clase `Graph`.
+    prop: Objeto de la clase `URIRef`.
+    roots: Lista opcional con tipo `set`.
+
+    Retorno:
+    roots: Un conjunto con los nodos.
     """
     if roots is None:
         roots = set()
-    
-    # Collect all nodes that are subjects in the graph with the given property
-    all_nodes = set(graph.subjects(prop, None))
-    
-    # Find nodes that are not objects in any triple with the given property
-    for node in all_nodes:
-        if not any(graph.triples((None, prop, node))):
-            roots.add(node)
-    
+
+    # Obtener todos los sujetos y objetos relacionados con la propiedad
+    subjects = set(graph.subjects(prop, None))
+    objects = set(graph.objects(None, prop))
+
+    # Las raíces son los objetos que no aparecen como sujetos
+    roots.update(objects - subjects)
+
     return roots

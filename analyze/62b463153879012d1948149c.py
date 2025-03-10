@@ -2,21 +2,21 @@ import os
 
 def select_filenames_by_prefix(prefix, files):
     """
-    दस्तावेज़ पैकेज से संबंधित फ़ाइलें प्राप्त करें।
+    Obtén los archivos que pertenecen a un paquete de documentos.
 
-    `files` सूची में से उन फ़ाइलों को लौटाएं जिनके नाम `prefix` से शुरू होते हैं।
+    Retorna los archivos de la lista `files` cuyos nombres comienzan con `prefix`.
 
-    पैरामीटर्स (Parameters)
+    Parámetros
     ----------
-    `prefix` : str  
-        फ़ाइल नाम का प्रीफ़िक्स (Prefix)  
+    prefix : str  
+    Prefijo del nombre del archivo.  
 
-    `files` : str list  
-        फ़ाइल पथों (File paths) की सूची  
+    files : lista de str  
+    Rutas de los archivos.  
 
-    रिटर्न्स (Returns)
+    Retorna
     -------
     list  
-        उन फ़ाइल पथों की सूची, जिनके बेसनाम (basename) फ़ाइलें दिए गए प्रीफ़िक्स से मेल खाती हैं।  
+    Lista de rutas de archivos cuyos nombres base coinciden con el prefijo `prefix`.
     """
     return [file for file in files if os.path.basename(file).startswith(prefix)]

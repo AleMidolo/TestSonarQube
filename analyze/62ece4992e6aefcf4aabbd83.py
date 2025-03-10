@@ -2,32 +2,31 @@ import subprocess
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    दिए गए कमांड(s) को कॉल करें।
-    
-    :param commands: कमांड(s) की सूची
-    :param args: कमांड के लिए आर्ग्यूमेंट्स
-    :param cwd: कमांड को रन करने के लिए वर्किंग डायरेक्टरी
-    :param verbose: यदि True है, तो कमांड का आउटपुट प्रिंट करें
-    :param hide_stderr: यदि True है, तो स्टडर्र को छुपाएं
-    :param env: पर्यावरण वेरिएबल्स
-    :return: कमांड का रिटर्न कोड
+    Llama al/los comando(s) dado(s).
+
+    :param commands: Lista de comandos a ejecutar.
+    :param args: Lista de argumentos para los comandos.
+    :param cwd: Directorio de trabajo actual (opcional).
+    :param verbose: Si es True, imprime la salida del comando (opcional).
+    :param hide_stderr: Si es True, oculta la salida de error (opcional).
+    :param env: Diccionario de variables de entorno (opcional).
+    :return: Tupla con el código de salida y la salida del comando.
     """
-    command = commands + args
-    stderr = subprocess.DEVNULL if hide_stderr else None
-    stdout = subprocess.PIPE if verbose else None
+    full_command = commands + args
+    stderr = subprocess.PIPE if hide_stderr else None
     
     process = subprocess.Popen(
-        command,
+        full_command,
         cwd=cwd,
-        env=env,
-        stdout=stdout,
+        stdout=subprocess.PIPE,
         stderr=stderr,
+        env=env,
         text=True
     )
     
-    if verbose:
-        for line in process.stdout:
-            print(line, end='')
+    stdout, stderr = process.communicate()
     
-    process.wait()
-    return process.returncode
+    if verbose:
+        print(stdout)
+    
+    return process.returncode, stdout

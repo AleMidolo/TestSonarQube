@@ -2,28 +2,26 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
           db=None, imp_user=None, dehydration_hooks=None,
           hydration_hooks=None, **handlers):
     """
-    आउटपुट कतार (output queue) में एक BEGIN संदेश जोड़ता है।
+    Añade un mensaje 'BEGIN' a la cola de salida.
 
-    :param mode: रूटिंग के लिए एक्सेस मोड - "READ" या "WRITE" (डिफ़ॉल्ट)
-    :param bookmarks: बुकमार्क मानों का iterable, जिनके बाद यह ट्रांजेक्शन शुरू होना चाहिए
-    :param metadata: ट्रांजेक्शन से जोड़ने के लिए कस्टम मेटाडेटा डिक्शनरी
-    :param timeout: ट्रांजेक्शन निष्पादन के लिए समय सीमा (सेकंड में)
-    :param db: उस डेटाबेस का नाम जिसके खिलाफ ट्रांजेक्शन शुरू करना है
-        इसके लिए Bolt 4.0+ की आवश्यकता है।
-    :param imp_user: वह उपयोगकर्ता जिसे प्रतिरूपित (impersonate) करना है
-        इसके लिए Bolt 4.4+ की आवश्यकता है।
+    :param mode: modo de acceso para el enrutamiento - "READ" o "WRITE" (por defecto)
+    :param bookmarks: iterable de valores de marcadores después de los cuales debería comenzar esta transacción
+    :param metadata: diccionario de metadatos personalizados para adjuntar a la transacción
+    :param timeout: tiempo de espera para la ejecución de la transacción (en segundos)
+    :param db: nombre de la base de datos contra la cual iniciar la transacción
+        Requiere Bolt 4.0+.
+    :param imp_user: el usuario a suplantar
+        Requiere Bolt 4.4+.
     :param dehydration_hooks:
-        प्रकारों को डीहाइड्रेट (dehydrate) करने के लिए हुक्स (dict, जिसमें type (class) से dehydration
-        फ़ंक्शन तक मैपिंग हो)। डीहाइड्रेशन फ़ंक्शन मान (value) प्राप्त करता है और 
-        packstream द्वारा समझे जाने वाले प्रकार के ऑब्जेक्ट को लौटाता है।
+        Ganchos para deshidratar tipos (diccionario de tipo (clase) a función de deshidratación). 
+        Las funciones de deshidratación reciben el valor y devuelven un objeto de tipo entendido por 'packstream'.
     :param hydration_hooks:
-        प्रकारों को हाइड्रेट (hydrate) करने के लिए हुक्स (type (class) से 
-        हाइड्रेशन फ़ंक्शन तक की मैपिंग)। हाइड्रेशन फ़ंक्शन packstream द्वारा समझे जाने वाले 
-        प्रकार के मान को प्राप्त करता है और कुछ भी लौटाने के लिए स्वतंत्र है।
-    :param handlers: हैंडलर फ़ंक्शन, जो लौटाए गए Response ऑब्जेक्ट में पास किए जाते हैं
-    :return: Response ऑब्जेक्ट
+        Ganchos para hidratar tipos (mapeo de tipo (clase) a función de hidratación). 
+        Las funciones de hidratación reciben el valor de un tipo entendido por 'packstream' y son libres de devolver cualquier cosa.
+    :param handlers: funciones manejadoras pasadas al objeto 'Response' devuelto
+    :return: objeto 'Response'
     """
-    # Create the BEGIN message
+    # Crear el mensaje BEGIN con los parámetros proporcionados
     begin_message = {
         "mode": mode,
         "bookmarks": bookmarks,
@@ -35,9 +33,10 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         "hydration_hooks": hydration_hooks,
         **handlers
     }
-
-    # Add the BEGIN message to the output queue
-    self.output_queue.append(begin_message)
-
-    # Return a Response object
-    return Response(begin_message)
+    
+    # Añadir el mensaje a la cola de salida
+    self.output_queue.append(("BEGIN", begin_message))
+    
+    # Crear y devolver un objeto Response con los manejadores proporcionados
+    response = Response(**handlers)
+    return response

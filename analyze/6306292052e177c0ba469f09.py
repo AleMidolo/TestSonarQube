@@ -6,19 +6,17 @@ class RequestType(Enum):
     LEGACY_PAYLOAD = 3
     UNKNOWN = 4
 
-def identify_request(request: RequestType) -> bool:
+def identify_request(request: RequestType) -> str:
     """
-    यह फ़ंक्शन यह पहचानने की कोशिश करता है कि यह एक Diaspora अनुरोध है या नहीं।
+    Intente identificar si esta es una solicitud de Diaspora.
 
-    सबसे पहले सार्वजनिक संदेश (public message) की जांच करें। 
-    फिर निजी संदेश (private message) की जांच करें। 
-    अंत में यह जांचें कि क्या यह एक पुराना (legacy) payload है।
+    Primero intente con un mensaje público. Luego con un mensaje privado. Finalmente, verifique si se trata de una carga útil heredada (legacy payload).
     """
     if request == RequestType.PUBLIC_MESSAGE:
-        return True
+        return "Esta es una solicitud de Diaspora: Mensaje público."
     elif request == RequestType.PRIVATE_MESSAGE:
-        return True
+        return "Esta es una solicitud de Diaspora: Mensaje privado."
     elif request == RequestType.LEGACY_PAYLOAD:
-        return True
+        return "Esta es una solicitud de Diaspora: Carga útil heredada."
     else:
-        return False
+        return "No se pudo identificar la solicitud como una de Diaspora."

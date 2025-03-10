@@ -1,21 +1,18 @@
 def get_parser_option_specs(self, command_name):
     """
-    निर्दिष्ट कमांड के लिए सभी विकल्प प्राप्त करता है।
+    Obtiene todas las opciones para el comando especificado.
 
-    :param command_name: कमांड का नाम (जैसे main, virsh, ospd, आदि...)
-    :return: सभी कमांड विकल्पों की सूची
+    :param command_name: el nombre del comando (main, virsh, ospd, etc...)
+    :return: la lista de todas las opciones del comando
     """
-    # यहां हम मानते हैं कि कमांड विकल्पों को एक डिक्शनरी में संग्रहीत किया गया है
-    # जहां कुंजी कमांड नाम है और मान विकल्पों की सूची है
-    command_options = {
-        "main": ["--help", "--version", "--verbose"],
-        "virsh": ["--connect", "--list", "--details"],
-        "ospd": ["--config", "--log-level", "--output"]
-    }
+    if not hasattr(self, '_command_parser_specs'):
+        self._command_parser_specs = {}
+
+    if command_name in self._command_parser_specs:
+        return self._command_parser_specs[command_name]
     
-    # यदि कमांड नाम डिक्शनरी में मौजूद है, तो उसके विकल्प लौटाएं
-    if command_name in command_options:
-        return command_options[command_name]
-    else:
-        # यदि कमांड नाम नहीं मिलता है, तो खाली सूची लौटाएं
-        return []
+    # Aquí se asume que hay un método para obtener las especificaciones del parser
+    # dependiendo del comando. Esto es un ejemplo genérico.
+    parser_specs = self._get_parser_specs_for_command(command_name)
+    self._command_parser_specs[command_name] = parser_specs
+    return parser_specs

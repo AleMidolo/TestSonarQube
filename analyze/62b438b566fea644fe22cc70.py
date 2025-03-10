@@ -1,22 +1,35 @@
 def bash_completion():
     """
-    बॉर्गमैटिक कमांड के लिए बाश कम्प्लीशन स्क्रिप्ट लौटाएं।  
-    यह स्क्रिप्ट बॉर्गमैटिक के कमांड-लाइन आर्ग्युमेंट पार्सर्स का निरीक्षण करके उत्पन्न की जाती है।
+    Devuelve un script de autocompletado para bash para el comando de borgmatic. Esto se genera mediante la introspección de los analizadores de argumentos de línea de comandos de borgmatic.
     """
-    script = """
-_borgmatic_completion() {
+    import subprocess
+
+    # Obtener la salida de borgmatic --help
+    result = subprocess.run(['borgmatic', '--help'], capture_output=True, text=True)
+    help_output = result.stdout
+
+    # Extraer las opciones y comandos de la salida de ayuda
+    options = []
+    for line in help_output.splitlines():
+        if line.strip().startswith('-'):
+            options.append(line.split()[0])
+
+    # Generar el script de autocompletado para bash
+    bash_script = f"""
+_borgmatic_completion() {{
     local cur prev opts
     COMPREPLY=()
-    cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts=$(borgmatic --help | grep -oP '^\s*\K\S+')
+    cur="${{COMP_WORDS[COMP_CWORD]}}"
+    prev="${{COMP_WORDS[COMP_CWORD-1]}}"
+    opts="{' '.join(options)}"
 
-    if [[ ${cur} == -* ]]; then
-        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    if [[ "${{cur}}" == -* ]]; then
+        COMPREPLY=( $(compgen -W "${{opts}}" -- "${{cur}}") )
         return 0
     fi
-}
+}}
 
 complete -F _borgmatic_completion borgmatic
 """
-    return script
+
+    return bash_script

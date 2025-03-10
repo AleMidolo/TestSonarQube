@@ -1,21 +1,21 @@
-import argparse
-
 def make_parsers():
     """
-    एक शीर्ष-स्तरीय (top-level) पार्सर और उसके सबपार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
+    Crea un analizador de nivel superior y sus subanalizadores, y devuélvalos como una tupla.
     """
-    # शीर्ष-स्तरीय पार्सर बनाएं
-    top_parser = argparse.ArgumentParser(description="शीर्ष-स्तरीय पार्सर")
-    
-    # सबपार्सर बनाएं
-    subparsers = top_parser.add_subparsers(title="सबपार्सर", dest="command")
-    
-    # पहला सबपार्सर
-    parser_a = subparsers.add_parser('command_a', help='कमांड ए के लिए सहायता')
-    parser_a.add_argument('--option_a', type=int, help='कमांड ए के लिए विकल्प')
-    
-    # दूसरा सबपार्सर
-    parser_b = subparsers.add_parser('command_b', help='कमांड बी के लिए सहायता')
-    parser_b.add_argument('--option_b', type=str, help='कमांड बी के लिए विकल्प')
-    
-    return top_parser, subparsers
+    import argparse
+
+    # Crear el analizador de nivel superior
+    parser = argparse.ArgumentParser(description="Analizador de nivel superior")
+
+    # Crear subanalizadores
+    subparsers = parser.add_subparsers(dest="command", help="Subcomandos disponibles")
+
+    # Subanalizador 1
+    parser_sub1 = subparsers.add_parser("sub1", help="Subcomando 1")
+    parser_sub1.add_argument("arg1", type=str, help="Argumento 1 para subcomando 1")
+
+    # Subanalizador 2
+    parser_sub2 = subparsers.add_parser("sub2", help="Subcomando 2")
+    parser_sub2.add_argument("arg2", type=int, help="Argumento 2 para subcomando 2")
+
+    return parser, subparsers

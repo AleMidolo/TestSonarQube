@@ -4,35 +4,28 @@ def format(
         params: Union[Dict[Union[str, int], Any], Sequence[Any]],
 ) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
     """
-    SQL क्वेरी को "in-style" पैरामीटर्स के बजाय "out-style" पैरामीटर्स का उपयोग करने के लिए कन्वर्ट करें।
+    Convierte la consulta SQL para usar parámetros de estilo "out" en lugar de parámetros de estilo "in".
 
-    *sql* (:class:`str` या :class:`bytes`) SQL क्वेरी है।
+    Args:
+        sql: La consulta SQL como str o bytes.
+        params: Los parámetros de estilo "in" como un diccionario o una secuencia.
 
-    *params* (:class:`~collections.abc.Mapping` या :class:`~collections.abc.Sequence`)  
-    "in-style" पैरामीटर्स का सेट है। यह प्रत्येक पैरामीटर (:class:`str` या :class:`int`) को उसके मान से मैप करता है।  
-    यदि :attr:`.SQLParams.in_style` एक नामित पैरामीटर शैली है, तो *params* को :class:`~collections.abc.Mapping` होना चाहिए।  
-    यदि :attr:`.SQLParams.in_style` एक क्रमबद्ध पैरामीटर शैली है, तो *params* को :class:`~collections.abc.Sequence` होना चाहिए।
-
-    यह एक :class:`tuple` लौटाता है जिसमें शामिल हैं:
-
-    -       फॉर्मेट की गई SQL क्वेरी (:class:`str` या :class:`bytes`)।
-
-    -       कन्वर्ट किए गए "out-style" पैरामीटर्स का सेट (:class:`dict` या :class:`list`)।
+    Returns:
+        Una tupla que contiene la consulta SQL formateada y los parámetros convertidos de estilo "out".
     """
     if isinstance(params, dict):
-        # Convert named parameters to out-style
-        out_params = {}
-        for key, value in params.items():
-            out_params[f":{key}"] = value
+        # Convertir parámetros de estilo "in" con nombre a estilo "out"
+        out_params = {f"out_{key}": value for key, value in params.items()}
         formatted_sql = sql
         for key, value in params.items():
-            formatted_sql = formatted_sql.replace(f":{key}", "?")
-        return formatted_sql, list(out_params.values())
+            formatted_sql = formatted_sql.replace(f":{key}", f":out_{key}")
     elif isinstance(params, (list, tuple)):
-        # Convert positional parameters to out-style
+        # Convertir parámetros de estilo "in" ordinales a estilo "out"
+        out_params = [f"out_{i}" for i in range(len(params))]
         formatted_sql = sql
         for i in range(len(params)):
-            formatted_sql = formatted_sql.replace(f"?", "?", 1)
-        return formatted_sql, list(params)
+            formatted_sql = formatted_sql.replace(f"?", f":out_{i}", 1)
     else:
-        raise TypeError("params must be a dict, list, or tuple")
+        raise TypeError("params debe ser un diccionario o una secuencia")
+
+    return formatted_sql, out_params

@@ -1,6 +1,28 @@
 def _update_context(self, context):
     """
-    इस फ़ंक्शन का उपयोग *context* को इस ग्राफ़ की विशेषताओं के साथ अपडेट करने के लिए किया जाता है।
+    Actualiza *context* con las propiedades de este grafo.
 
-    - *context.error* में त्रुटियों (errors) के इंडेक्स जोड़े जाते हैं।  
-    उदाहरण के लिए, यदि ग्राफ़ में "E, t, error_E_low" नामक फ़ील्ड्स हैं, तो एक उप-संदर्भ (subcontext) इस प्रकार हो सकता है:
+    *context.error* se amplía con los índices de los errores.  
+    Ejemplo de subcontexto para un grafo con los campos "E,t,error_E_low":  
+    `{"error": {"x_low": {"index": 2}}}`.  
+    Ten en cuenta que los nombres de los errores se denominan "x", "y" y "z"  
+    (esto corresponde a las primeras tres coordenadas, si están presentes),  
+    lo que permite simplificar la representación gráfica.  
+    Los valores existentes no se eliminan de *context.value* ni de sus subcontextos.
+
+    Se llama durante la "destrucción" del grafo (por ejemplo,  
+    en :class:`.ToCSV`). Por destrucción nos referimos a la conversión  
+    a otra estructura (como texto) en el flujo.  
+    El objeto grafo no se destruye realmente en este proceso.
+    """
+    if not hasattr(context, 'error'):
+        context.error = {}
+
+    # Supongamos que el grafo tiene una propiedad `error_indices` que contiene los índices de los errores
+    if hasattr(self, 'error_indices'):
+        for i, error_index in enumerate(self.error_indices):
+            error_name = ['x', 'y', 'z'][i] if i < 3 else f'error_{i}'
+            context.error[f'{error_name}_low'] = {'index': error_index}
+
+    # No se eliminan los valores existentes en context.value o sus subcontextos
+    return context

@@ -1,20 +1,16 @@
 def get_logical_path_map(inventory, version):
     """
-    इन्वेंटरी में दिए गए संस्करण (version) के लिए स्थिति (state) में लॉजिकल पथों और डिस्क पर फ़ाइलों के बीच का मैप प्राप्त करें।
+    Obtén un mapa de las rutas lógicas en el estado hacia los archivos en disco para una versión específica en el inventario.
 
-    रिटर्न करता है एक डिक्शनरी: 
-    `logical_path_in_state -> set(content_files)`
+    Devuelve un diccionario: `logical_path_in_state -> set(content_files)`
 
-    `content_files` का सेट उन डुप्लिकेट फ़ाइलों के संदर्भ भी शामिल कर सकता है जो उस संस्करण के बाद के संस्करणों में मौजूद हैं जिसे वर्णित किया जा रहा है।
+    El conjunto de `content_files` puede incluir referencias a archivos duplicados en versiones posteriores a la versión que se está describiendo.
     """
     logical_path_map = {}
     
-    for logical_path, file_versions in inventory.items():
-        content_files = set()
-        for file_version, files in file_versions.items():
-            if file_version <= version:
-                content_files.update(files)
-        if content_files:
-            logical_path_map[logical_path] = content_files
+    for logical_path, versions_data in inventory.items():
+        if version in versions_data:
+            content_files = versions_data[version]
+            logical_path_map[logical_path] = set(content_files)
     
     return logical_path_map

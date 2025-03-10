@@ -3,11 +3,12 @@ from typing import Optional
 
 def fetch_content_type(url: str) -> Optional[str]:
     """
-    रिमोट यूआरएल का हेड प्राप्त करें ताकि कंटेंट टाइप निर्धारित किया जा सके।
+    Obtén el encabezado HEAD de la URL remota para determinar el tipo de contenido.
     """
     try:
         response = requests.head(url, timeout=5)
         response.raise_for_status()
-        return response.headers.get('Content-Type')
-    except (requests.RequestException, ValueError):
+        content_type = response.headers.get('Content-Type')
+        return content_type
+    except requests.RequestException:
         return None

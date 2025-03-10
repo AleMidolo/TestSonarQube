@@ -1,6 +1,13 @@
 def status_str(self, prefix=''):
     """
-    वैलिडेटर की स्थिति की स्ट्रिंग लौटाएं, जिसमें वैकल्पिक `prefix` जोड़ा जा सकता है।
+    Devuelve una cadena con el estado del validador, con un prefijo opcional.
     """
-    # Assuming the validator has a status attribute
-    return f"{prefix}{self.status}"
+    # Asumiendo que el validador tiene atributos que representan su estado
+    status = f"{prefix}Estado del validador: "
+    if hasattr(self, 'is_valid'):
+        status += "Válido" if self.is_valid else "Inválido"
+    if hasattr(self, 'last_checked'):
+        status += f", Última verificación: {self.last_checked}"
+    if hasattr(self, 'error_message'):
+        status += f", Mensaje de error: {self.error_message}"
+    return status

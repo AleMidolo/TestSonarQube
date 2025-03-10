@@ -1,35 +1,17 @@
 def unit_of_work(metadata=None, timeout=None):
     """
-    यह फ़ंक्शन ट्रांज़ेक्शन फ़ंक्शन्स के लिए एक डेकोरेटर है, जो यह नियंत्रित करने की अतिरिक्त सुविधा प्रदान करता है कि ट्रांज़ेक्शन कैसे निष्पादित किया जाए।
+    Esta función es un decorador para funciones de transacción que permite un control adicional sobre cómo se lleva a cabo la transacción.
 
-    :param metadata: 
-        मेटाडेटा के साथ एक डिक्शनरी।  
-        निर्दिष्ट मेटाडेटा निष्पादित ट्रांज़ेक्शन से जुड़ा होगा और ``dbms.listQueries`` और ``dbms.listTransactions`` प्रक्रियाओं के आउटपुट में दिखाई देगा।  
-        यह ``query.log`` में भी लॉग किया जाएगा।  
-        यह सुविधा ट्रांज़ेक्शन्स को टैग करना आसान बनाती है और ``dbms.setTXMetaData`` प्रक्रिया के समकक्ष है।  
-        प्रक्रिया संदर्भ के लिए देखें: [https://neo4j.com/docs/operations-manual/current/reference/procedures/](https://neo4j.com/docs/operations-manual/current/reference/procedures/)।  
-    :type metadata: `dict`
-
-    :param timeout: 
-        ट्रांज़ेक्शन का टाइमआउट (सेकंड में)।  
-        जो ट्रांज़ेक्शन्स निर्दिष्ट टाइमआउट से अधिक समय तक चलते हैं, उन्हें डेटाबेस द्वारा समाप्त कर दिया जाएगा।  
-        यह सुविधा क्वेरी/ट्रांज़ेक्शन निष्पादन समय को सीमित करने की अनुमति देती है।  
-        निर्दिष्ट टाइमआउट डेटाबेस में कॉन्फ़िगर किए गए डिफ़ॉल्ट टाइमआउट (``dbms.transaction.timeout`` सेटिंग) को ओवरराइड करता है।  
-        मान नकारात्मक अवधि का प्रतिनिधित्व नहीं करना चाहिए।  
-        शून्य अवधि (0) ट्रांज़ेक्शन को अनिश्चित काल तक चलने देगी।  
-        `None` का उपयोग डेटाबेस में कॉन्फ़िगर किए गए डिफ़ॉल्ट टाइमआउट का उपयोग करेगा।  
-    :type timeout: `float` या `:const:None`
+    :param metadata: Un diccionario con metadatos.
+    :type metadata: dict
+    :param timeout: El tiempo de espera de la transacción en segundos.
+    :type timeout: float o None
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            # Here you would typically add logic to handle the metadata and timeout
-            # For example, setting up a transaction with the given metadata and timeout
-            # and then executing the function within that transaction context.
-            # This is a simplified example.
-            if metadata is not None:
-                print(f"Metadata: {metadata}")
-            if timeout is not None:
-                print(f"Timeout: {timeout} seconds")
+            # Aquí se podría agregar la lógica para manejar los metadatos y el timeout
+            # Por ejemplo, pasarlos a la transacción o configurar el entorno de la transacción
+            # En este ejemplo, simplemente llamamos a la función original
             return func(*args, **kwargs)
         return wrapper
     return decorator

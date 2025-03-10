@@ -1,25 +1,17 @@
 def point_type(name, fields, srid_map):
     """
-    डायनामिक रूप से एक पॉइंट सबक्लास बनाएं।
-
-    :param name: सबक्लास का नाम
-    :param fields: सबक्लास में शामिल करने के लिए फ़ील्ड्स
-    :param srid_map: SRID मैपिंग
-    :return: डायनामिक रूप से बनाई गई पॉइंट सबक्लास
+    Crear dinámicamente una subclase de 'Point'.
     """
-    from django.contrib.gis.db import models
+    class DynamicPoint(Point):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            for field in fields:
+                setattr(self, field, kwargs.get(field))
+            self.srid = srid_map.get(name, 4326)  # Default SRID is 4326 (WGS84)
 
-    class Meta:
-        app_label = 'your_app_label'  # Replace with your app label
+        def __repr__(self):
+            fields_str = ', '.join(f"{field}={getattr(self, field)}" for field in fields)
+            return f"{name}({fields_str}, srid={self.srid})"
 
-    attrs = {
-        '__module__': __name__,
-        'Meta': Meta,
-    }
-
-    for field_name, field_type in fields.items():
-        attrs[field_name] = field_type
-
-    attrs['srid_map'] = srid_map
-
-    return type(name, (models.PointField,), attrs)
+    DynamicPoint.__name__ = name
+    return DynamicPoint

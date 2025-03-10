@@ -1,6 +1,7 @@
 def cached(cache, key=hashkey, lock=None):
     """
-    यह एक डेकोरेटर है जो किसी फ़ंक्शन को एक मेमोराइज़िंग कॉल करने योग्य (memoizing callable) के साथ रैप करता है, जो परिणामों को कैश में सहेजता है।
+    Decorador para envolver una función con una llamada que memoriza y guarda  
+    los resultados en una caché.
     """
     def decorator(func):
         def wrapper(*args, **kwargs):

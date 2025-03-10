@@ -1,15 +1,19 @@
 def get_versions():
     """
-    संस्करण जानकारी प्राप्त करें या यदि ऐसा करने में असमर्थ हैं तो डिफ़ॉल्ट मान लौटाएं।
+    Obtén la información de la versión o devuelve el valor predeterminado si no es posible obtenerla.
     """
+    import sys
+    import platform
+
     try:
-        import pkg_resources
-        versions = {}
-        for package in ['numpy', 'pandas', 'scipy', 'matplotlib']:
-            try:
-                versions[package] = pkg_resources.get_distribution(package).version
-            except pkg_resources.DistributionNotFound:
-                versions[package] = 'Not Installed'
-        return versions
-    except ImportError:
-        return {'numpy': '1.0.0', 'pandas': '1.0.0', 'scipy': '1.0.0', 'matplotlib': '1.0.0'}
+        version_info = {
+            "python_version": sys.version,
+            "platform": platform.platform(),
+            "system": platform.system(),
+            "release": platform.release(),
+            "machine": platform.machine(),
+            "processor": platform.processor(),
+        }
+        return version_info
+    except Exception as e:
+        return {"error": str(e), "default_version": "1.0.0"}
