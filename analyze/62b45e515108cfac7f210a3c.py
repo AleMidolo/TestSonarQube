@@ -5,36 +5,14 @@ def initialize(self):
     import os
 
     # 创建根目录
-    if not os.path.exists(self.root_path):
-        os.makedirs(self.root_path)
-
+    if not os.path.exists('ocfl_root'):
+        os.makedirs('ocfl_root')
+    
     # 创建必要的子目录和文件
-    required_dirs = ['extensions', 'objects']
-    for dir_name in required_dirs:
-        dir_path = os.path.join(self.root_path, dir_name)
-        if not os.path.exists(dir_path):
-            os.makedirs(dir_path)
-
+    os.makedirs('ocfl_root/0=ocfl_object_1.0')
+    with open('ocfl_root/0=ocfl_object_1.0/inventory.json', 'w') as f:
+        f.write('{}')
+    
     # 创建 namaste 文件
-    namaste_file_path = os.path.join(self.root_path, '0=ocfl_object_1.0')
-    with open(namaste_file_path, 'w') as namaste_file:
-        namaste_file.write('ocfl_object_1.0\n')
-
-    # 创建 inventory.json 文件
-    inventory_path = os.path.join(self.root_path, 'inventory.json')
-    inventory = {
-        "id": "urn:uuid:12345678-1234-5678-1234-567812345678",
-        "type": "Object",
-        "digestAlgorithm": "sha512",
-        "head": "v1",
-        "versions": {
-            "v1": {
-                "created": "2023-10-01T00:00:00Z",
-                "state": {},
-                "message": "Initial version"
-            }
-        }
-    }
-    import json
-    with open(inventory_path, 'w') as inventory_file:
-        json.dump(inventory, inventory_file, indent=2)
+    with open('ocfl_root/0=ocfl_object_1.0/0=ocfl_object_1.0', 'w') as f:
+        f.write('ocfl_object_1.0')

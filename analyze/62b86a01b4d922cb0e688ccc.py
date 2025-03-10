@@ -32,8 +32,6 @@ def generate_default_observer_schema_list(manifest_list):
     """
     根据 `manifest_list` 文件中的值类型（例如字典和列表），生成新列表中不同元素对应的值。然后返回新的列表。
 
-    与函数 :func:``generate_default_observer_schema_dict`` 一起，该函数被递归调用，用于从部分 Kubernetes 资源中生成默认的 `observer_schema` 的一部分，这些资源分别由 `manifest_dict` 或 `manifest_list` 定义。
-
     参数:
       manifest_list (list): 部分 Kubernetes 资源。
 

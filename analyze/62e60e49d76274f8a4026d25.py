@@ -33,14 +33,16 @@ def unit_of_work(metadata=None, timeout=None):
     """
     def decorator(func):
         @wraps(func)
-        def wrapper(*args, **kwargs):
-            # 在这里可以添加事务的元数据和超时设置
+        def wrapper(tx, *args, **kwargs):
+            # 设置事务的元数据
             if metadata is not None:
-                # 假设有一个方法可以将元数据附加到事务中
-                pass
+                tx.run("CALL dbms.setTXMetaData($metadata)", metadata=metadata)
+            
+            # 设置事务的超时时间
             if timeout is not None:
-                # 假设有一个方法可以设置事务的超时时间
-                pass
-            return func(*args, **kwargs)
+                tx.run("CALL dbms.setTransactionTimeout($timeout)", timeout=timeout)
+            
+            # 执行事务函数
+            return func(tx, *args, **kwargs)
         return wrapper
     return decorator

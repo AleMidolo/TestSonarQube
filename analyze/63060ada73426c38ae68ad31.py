@@ -8,18 +8,27 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param values_dict: 包含参数的字典
     """
     if parser_name == 'main':
-        # 假设 main 命令的参数需要转换为整数
-        for key, value in values_dict.items():
-            if key in ['port', 'timeout']:
-                values_dict[key] = int(value)
+        if 'port' in values_dict:
+            values_dict['port'] = int(values_dict['port'])
+        if 'timeout' in values_dict:
+            values_dict['timeout'] = float(values_dict['timeout'])
+        if 'verbose' in values_dict:
+            values_dict['verbose'] = values_dict['verbose'].lower() == 'true'
+    
     elif parser_name == 'virsh':
-        # 假设 virsh 命令的参数需要转换为布尔值
-        for key, value in values_dict.items():
-            if key in ['verbose', 'debug']:
-                values_dict[key] = value.lower() == 'true'
+        if 'memory' in values_dict:
+            values_dict['memory'] = int(values_dict['memory'])
+        if 'cpu' in values_dict:
+            values_dict['cpu'] = int(values_dict['cpu'])
+        if 'autostart' in values_dict:
+            values_dict['autostart'] = values_dict['autostart'].lower() == 'true'
+    
     elif parser_name == 'ospd':
-        # 假设 ospd 命令的参数需要转换为浮点数
-        for key, value in values_dict.items():
-            if key in ['threshold', 'rate']:
-                values_dict[key] = float(value)
-    # 可以根据需要添加更多的命令和转换逻辑
+        if 'interval' in values_dict:
+            values_dict['interval'] = float(values_dict['interval'])
+        if 'retries' in values_dict:
+            values_dict['retries'] = int(values_dict['retries'])
+        if 'debug' in values_dict:
+            values_dict['debug'] = values_dict['debug'].lower() == 'true'
+    
+    # 可以根据需要添加更多的 parser_name 和对应的转换逻辑

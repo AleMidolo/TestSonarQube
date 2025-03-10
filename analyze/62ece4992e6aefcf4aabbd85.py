@@ -19,14 +19,14 @@ def find_roots(
     """
     if roots is None:
         roots = set()
-    
+
     # 获取所有作为子节点的节点
     children = set(graph.subjects(prop, None))
-    
+
     # 获取所有作为父节点的节点
     parents = set(graph.objects(None, prop))
-    
+
     # 根节点是没有父节点的节点
     roots.update(children - parents)
-    
+
     return roots

@@ -6,16 +6,28 @@ def validate_version_inventories(self, version_dirs):
 
     `version_dirs` 是一个包含版本目录名称的数组，并假定按照版本顺序排列（1, 2, 3...)。
     """
-    root_inventory = self.get_root_inventory()  # 假设有一个方法获取根清单
-    differences = {}
+    root_inventory = set()  # 根清单
+    differences = {}  # 记录每个版本与根清单的差异
 
     for version_dir in version_dirs:
-        version_inventory = self.get_version_inventory(version_dir)  # 假设有一个方法获取版本清单
-        if not self.is_complete_inventory(version_inventory, root_inventory):
-            raise ValueError(f"Inventory in {version_dir} is not complete.")
+        # 假设每个版本目录下有一个名为 'inventory.txt' 的文件
+        with open(f"{version_dir}/inventory.txt", 'r') as file:
+            current_inventory = set(file.read().splitlines())
         
-        diff = self.compare_inventories(version_inventory, root_inventory)  # 假设有一个方法比较清单
+        # 如果是第一个版本，将其作为根清单
+        if not root_inventory:
+            root_inventory = current_inventory
+            differences[version_dir] = "Initial version, no differences."
+            continue
+        
+        # 计算当前版本与根清单的差异
+        diff = current_inventory - root_inventory
         if diff:
-            differences[version_dir] = diff
-
+            differences[version_dir] = f"Added items: {diff}"
+        else:
+            differences[version_dir] = "No differences from root inventory."
+        
+        # 更新根清单为当前版本的清单
+        root_inventory = current_inventory
+    
     return differences

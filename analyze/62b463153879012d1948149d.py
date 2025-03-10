@@ -23,8 +23,8 @@ def _explore_folder(folder):
 
         参数
         ----------
-        files: `list`
-            文件夹中的所有文件
+        files: `list`  
+            文件列表
 
         返回值
         -------
@@ -34,17 +34,15 @@ def _explore_folder(folder):
         for file in files:
             if file.endswith('.xml'):
                 base_name = os.path.splitext(file)[0]
-                grouped_files[base_name] = [file]
-            else:
-                base_name = os.path.splitext(file)[0]
-                if base_name in grouped_files:
-                    grouped_files[base_name].append(file)
-                else:
-                    grouped_files[base_name] = [file]
+                grouped_files[base_name] = []
+        for file in files:
+            base_name = os.path.splitext(file)[0]
+            if base_name in grouped_files:
+                grouped_files[base_name].append(file)
         return grouped_files
 
     if not os.path.isdir(folder):
-        raise ValueError(f"The folder {folder} does not exist.")
+        raise ValueError(f"The provided path '{folder}' is not a valid directory.")
 
-    files = os.listdir(folder)
+    files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
     return _group_files_by_xml_filename(files)

@@ -22,7 +22,7 @@ def update_last_applied_manifest_dict_from_resp(last_applied_manifest, observer_
             elif isinstance(schema, list):
                 last_applied_manifest[key] = []
             else:
-                last_applied_manifest[key] = None
+                last_applied_manifest[key] = response[key]
         
         if isinstance(schema, dict):
             update_last_applied_manifest_dict_from_resp(last_applied_manifest[key], schema, response[key])

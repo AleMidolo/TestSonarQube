@@ -7,7 +7,7 @@ from cryptography.hazmat.backends import default_backend
 def verify_relayable_signature(public_key, doc, signature):
     """
     验证已签名的XML元素，以确保声明的作者确实生成了此消息。
-
+    
     :param public_key: 公钥，用于验证签名
     :param doc: 需要验证的XML文档（字节串）
     :param signature: 签名（字节串）

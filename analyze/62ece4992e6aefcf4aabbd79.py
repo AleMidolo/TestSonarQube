@@ -1,4 +1,4 @@
-import os
+import re
 
 def make_find_paths(find_paths):
     """
@@ -19,12 +19,11 @@ def make_find_paths(find_paths):
 
     `['sh:**/*foo.txt*/**', 'pp:root/somedir']`
     """
-    result = []
-    for path in find_paths:
-        if path.startswith('pp:'):
-            result.append(path)
-        else:
-            # Convert path to glob pattern
-            glob_pattern = f'sh:**/*{os.path.basename(path)}*/**'
-            result.append(glob_pattern)
-    return tuple(result)
+    def convert_path(path):
+        # 如果路径已经是模式（以 'sh:' 或 'pp:' 开头），则保持不变
+        if re.match(r'^(sh:|pp:)', path):
+            return path
+        # 否则，将其转换为 glob 模式
+        return f'sh:**/*{path}*/**'
+    
+    return tuple(convert_path(path) for path in find_paths)

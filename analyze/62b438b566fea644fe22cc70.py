@@ -7,30 +7,44 @@ def bash_completion():
     import argparse
     import subprocess
 
-    # 获取 borgmatic 的命令行参数解析器
-    parser = argparse.ArgumentParser(description='borgmatic command line interface')
-    # 这里假设 borgmatic 的命令行参数解析器已经定义好
-    # 你可以根据实际情况添加参数
-    parser.add_argument('--config', help='Path to configuration file')
-    parser.add_argument('--verbosity', help='Verbosity level')
-    parser.add_argument('--help', action='store_true', help='Show help message')
+    # 创建参数解析器
+    parser = argparse.ArgumentParser(description='Generate bash completion script for borgmatic.')
+    
+    # 获取 borgmatic 的命令行参数
+    try:
+        output = subprocess.check_output(['borgmatic', '--help'], stderr=subprocess.STDOUT, text=True)
+    except subprocess.CalledProcessError as e:
+        output = e.output
+
+    # 解析输出以提取命令和选项
+    lines = output.splitlines()
+    commands = []
+    options = []
+    for line in lines:
+        if line.strip().startswith('borgmatic'):
+            commands.append(line.strip().split()[1])
+        elif line.strip().startswith('-'):
+            options.append(line.strip().split()[0])
 
     # 生成 bash 补全脚本
     bash_script = """
-    #!/bin/bash
-    _borgmatic_completion() {
-        local cur prev opts
-        COMPREPLY=()
-        cur="${COMP_WORDS[COMP_CWORD]}"
-        prev="${COMP_WORDS[COMP_CWORD-1]}"
-        opts="--config --verbosity --help"
+# borgmatic bash completion
+_borgmatic_completion() {
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="{}"
+    commands="{}"
 
-        if [[ ${cur} == -* ]] ; then
-            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-            return 0
-        fi
-    }
-    complete -F _borgmatic_completion borgmatic
-    """
+    if [[ ${cur} == -* ]]; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    else
+        COMPREPLY=( $(compgen -W "${commands}" -- ${cur}) )
+    fi
+    return 0
+}
+complete -F _borgmatic_completion borgmatic
+""".format(' '.join(options), ' '.join(commands))
 
     return bash_script

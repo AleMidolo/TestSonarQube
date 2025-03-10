@@ -7,14 +7,7 @@ def directlyProvidedBy(object):
     """
     provides = getattr(object, "__provides__", None)
     if provides is None:
-        # 如果没有指定规范，尝试获取 implements 规范
-        implements = getattr(object, "__implemented__", None)
-        if implements is not None:
-            # 如果 implements 规范存在，返回其提供的接口
-            return implements
-        else:
-            # 如果没有提供任何规范，返回空
-            return None
-    else:
-        # 如果提供了规范，直接返回
-        return provides
+        # 如果没有直接提供接口，返回空声明
+        from zope.interface import declarations
+        return declarations.empty
+    return provides

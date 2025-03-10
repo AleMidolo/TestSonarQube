@@ -22,11 +22,11 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
         return cmd
 
     # 尝试在 PATH 中查找可执行文件
-    path = os.environ.get('PATH', '')
-    for dir in path.split(os.pathsep):
-        full_path = os.path.join(dir, executable)
+    for path in os.environ.get('PATH', '').split(os.pathsep):
+        full_path = os.path.join(path, executable)
         if os.path.isfile(full_path):
+            # 找到可执行文件后，返回完整路径的命令
             return (full_path,) + cmd[1:]
 
-    # 如果找不到，返回原始命令
+    # 如果未找到，返回原始命令
     return cmd
