@@ -13,10 +13,10 @@ def identify_request(request: RequestType) -> str:
     Prova prima con un messaggio pubblico. Poi con un messaggio privato. Infine, verifica se si tratta di un payload legacy.
     """
     if request == RequestType.PUBLIC_MESSAGE:
-        return "Public message identified."
+        return "Richiesta Diaspora: Messaggio pubblico"
     elif request == RequestType.PRIVATE_MESSAGE:
-        return "Private message identified."
+        return "Richiesta Diaspora: Messaggio privato"
     elif request == RequestType.LEGACY_PAYLOAD:
-        return "Legacy payload identified."
+        return "Richiesta Diaspora: Payload legacy"
     else:
-        return "Unknown request type."
+        return "Tipo di richiesta sconosciuto"

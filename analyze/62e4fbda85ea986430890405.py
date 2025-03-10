@@ -1,22 +1,22 @@
 import subprocess
 import sys
 import os
-from typing import Sequence, Any, Tuple
+from typing import Sequence, Any
 
 def _get_platform_max_length() -> int:
     # This is a placeholder function to simulate getting the platform's max command length.
     # On most Unix-like systems, you can use `getconf ARG_MAX` to get the maximum length.
-    return 131072  # Default value for many Unix-like systems
+    return 131072  # Default value for many Unix systems
 
 def xargs(
-        cmd: Tuple[str, ...],
+        cmd: tuple[str, ...],
         varargs: Sequence[str],
         *,
         color: bool = False,
         target_concurrency: int = 1,
         _max_length: int = _get_platform_max_length(),
         **kwargs: Any,
-) -> Tuple[int, bytes]:
+) -> tuple[int, bytes]:
     """
     Un'implementazione semplificata di xargs.
 
@@ -50,22 +50,25 @@ def xargs(
     processes = []
     for chunk in chunks:
         full_cmd = list(cmd) + chunk
-        process = subprocess.Popen(full_cmd, **kwargs)
+        if color and sys.platform != "win32":
+            process = subprocess.Popen(full_cmd, **kwargs)
+        else:
+            process = subprocess.Popen(full_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs)
         processes.append(process)
         if len(processes) >= target_concurrency:
             for p in processes:
                 p.wait()
             processes = []
 
-    # Wait for any remaining processes
+    # Wait for remaining processes
     for p in processes:
         p.wait()
 
-    # Collect output if color is True
+    # Collect output
     output = b""
-    if color and sys.platform != "win32":
-        os.close(slave)
-        output = os.read(master, 1024)
-        os.close(master)
+    for p in processes:
+        stdout, stderr = p.communicate()
+        output += stdout + stderr
 
-    return (0, output)
+    # Return the last process's return code and the combined output
+    return processes[-1].returncode if processes else 0, output

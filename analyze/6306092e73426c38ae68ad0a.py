@@ -11,6 +11,6 @@ def validate_choices_args(self, args):
         raise TypeError("L'attributo 'choices' deve essere una lista o una tupla.")
     
     if args not in self.choices:
-        raise ValueError(f"L'argomento '{args}' non è tra le opzioni valide: {self.choices}")
+        raise ValueError(f"L'argomento '{args}' non è tra le opzioni disponibili: {self.choices}")
     
     return True

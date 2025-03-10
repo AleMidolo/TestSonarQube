@@ -30,39 +30,29 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     Restituisce il grafico risultante.
     """
-    import numpy as np
-    from collections import namedtuple
-
     if make_value is None:
         make_value = lambda bin_: bin_
 
     if scale is None:
         scale = hist.scale if hasattr(hist, 'scale') else None
 
-    bins = hist.bins
-    bin_edges = hist.bin_edges
+    graph = []
+    for bin_ in hist.bins:
+        if get_coordinate == "left":
+            x = bin_.left
+        elif get_coordinate == "right":
+            x = bin_.right
+        elif get_coordinate == "middle":
+            x = (bin_.left + bin_.right) / 2
+        else:
+            raise ValueError("get_coordinate deve essere 'left', 'right' o 'middle'")
 
-    if get_coordinate == "left":
-        x_coords = bin_edges[:-1]
-    elif get_coordinate == "right":
-        x_coords = bin_edges[1:]
-    elif get_coordinate == "middle":
-        x_coords = (bin_edges[:-1] + bin_edges[1:]) / 2
-    else:
-        raise ValueError("get_coordinate deve essere 'left', 'right' o 'middle'")
+        value = make_value(bin_.content)
+        if isinstance(value, tuple):
+            graph_point = (x,) + value
+        else:
+            graph_point = (x, value)
 
-    values = [make_value(bin_) for bin_ in bins]
+        graph.append(graph_point)
 
-    if isinstance(values[0], (tuple, list, np.ndarray)):
-        num_fields = len(values[0])
-        if len(field_names) != num_fields + 1:
-            raise ValueError("Il numero di field_names deve essere uguale alla dimensione del risultato di make_value più uno per la coordinata x")
-        Graph = namedtuple('Graph', field_names)
-        graph_data = [Graph(x, *value) for x, value in zip(x_coords, values)]
-    else:
-        if len(field_names) != 2:
-            raise ValueError("Il numero di field_names deve essere 2 per un grafico semplice")
-        Graph = namedtuple('Graph', field_names)
-        graph_data = [Graph(x, value) for x, value in zip(x_coords, values)]
-
-    return graph_data
+    return graph

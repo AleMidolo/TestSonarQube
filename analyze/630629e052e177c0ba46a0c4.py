@@ -16,8 +16,10 @@ def parse_diaspora_webfinger(document: str) -> Dict:
         # If JSON parsing fails, try to parse as XML (old format)
         try:
             root = ET.fromstring(document)
+            namespace = {'XRD': 'http://docs.oasis-open.org/ns/xri/xrd-1.0'}
+            links = root.findall('XRD:Link', namespace)
             result = {}
-            for link in root.findall('{http://docs.oasis-open.org/ns/xri/xrd-1.0}Link'):
+            for link in links:
                 rel = link.get('rel')
                 href = link.get('href')
                 if rel and href:

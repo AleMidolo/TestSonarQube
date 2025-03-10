@@ -9,5 +9,4 @@ def strip_root(percorso, radice):
     """
     if not percorso.startswith(radice):
         raise ValueError("La radice non è un prefisso del percorso.")
-    
     return percorso[len(radice):]

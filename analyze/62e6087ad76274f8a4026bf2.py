@@ -18,21 +18,14 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **
     discard_message = {
         "type": "DISCARD",
         "n": n,
-        "qid": qid
+        "qid": qid,
+        "dehydration_hooks": dehydration_hooks if dehydration_hooks else {},
+        "hydration_hooks": hydration_hooks if hydration_hooks else {},
+        "handlers": handlers
     }
-
-    # Aggiunta degli hook di disidratazione e idratazione se forniti
-    if dehydration_hooks is not None:
-        discard_message["dehydration_hooks"] = dehydration_hooks
-    if hydration_hooks is not None:
-        discard_message["hydration_hooks"] = hydration_hooks
-
-    # Aggiunta degli handler se forniti
-    if handlers:
-        discard_message.update(handlers)
 
     # Aggiunta del messaggio alla coda di output
     self.output_queue.append(discard_message)
 
-    # Restituzione dell'oggetto Response
-    return Response(discard_message)
+    # Restituzione di un oggetto Response con i gestori specificati
+    return Response(handlers=handlers)

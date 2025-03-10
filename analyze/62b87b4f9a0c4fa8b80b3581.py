@@ -15,11 +15,13 @@ def scale(self, other=None, recompute=False):
         if not hasattr(self, '_scale') or recompute:
             self._scale = sum(self.bins)
         return self._scale
-    else:
-        if not isinstance(other, (int, float)):
-            raise TypeError("Il valore di scala deve essere un numero.")
+    elif isinstance(other, float):
+        if not hasattr(self, '_scale') or recompute:
+            self._scale = sum(self.bins)
         if self._scale == 0:
-            raise LenaValueError("Non è possibile riscalare un istogramma con scala pari a zero.")
+            raise LenaValueError("Cannot scale a histogram with zero scale.")
         scale_factor = other / self._scale
         self.bins = [bin_value * scale_factor for bin_value in self.bins]
         self._scale = other
+    else:
+        raise TypeError("Expected a float or None for 'other'.")

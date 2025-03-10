@@ -13,11 +13,11 @@ def bash_completion():
     options = []
     for line in help_output.splitlines():
         if line.strip().startswith('-'):
-            options.append(line.strip().split()[0])
-        elif line.strip() and not line.strip().startswith(' '):
-            commands.append(line.strip().split()[0])
+            options.append(line.split()[0])
+        elif line.strip() and not line.strip().startswith('usage:'):
+            commands.append(line.split()[0])
 
-    # Genera lo script di completamento bash
+    # Genera lo script di completamento
     script = """
 _borgmatic_completion() {
     local cur prev opts

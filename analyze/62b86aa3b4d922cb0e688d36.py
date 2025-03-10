@@ -19,17 +19,17 @@ def _validate_labels(labels: Dict[str, Union[str, List[str]]]) -> None:
       - **value**: il messaggio di errore.
     """
     errors = []
-    key_regex = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')  # Esempio di regex per chiavi
-    value_regex = re.compile(r'^[a-zA-Z0-9_]+$')  # Esempio di regex per valori
+    key_regex = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')
+    value_regex = re.compile(r'^[a-zA-Z0-9_]+$')
 
     for key, value in labels.items():
-        # Validazione della chiave
+        # Validate key
         if not isinstance(key, str):
             errors.append({str(key): 'expected string or bytes-like object'})
         elif not key_regex.match(key):
             errors.append({key: f"Label key '{key}' does not match the regex {key_regex.pattern}"})
 
-        # Validazione del valore
+        # Validate value
         if isinstance(value, list):
             for item in value:
                 if not isinstance(item, str):

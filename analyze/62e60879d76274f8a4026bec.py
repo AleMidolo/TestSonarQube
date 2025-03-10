@@ -26,7 +26,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     # Creazione del messaggio BEGIN
     begin_message = {
         "mode": mode,
-        "bookmarks": list(bookmarks) if bookmarks else None,
+        "bookmarks": bookmarks,
         "metadata": metadata,
         "timeout": timeout,
         "db": db,

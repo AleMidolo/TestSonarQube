@@ -6,8 +6,16 @@ def is_fill_request_seq(seq):
     o contiene almeno un elemento di questo tipo,  
     e non è una sequenza di tipo Source.
     """
+    from collections.abc import Sequence
+    from typing import Any
+
     # Assuming FillRequest and Source are defined somewhere
-    from typing import Sequence
+    # For the sake of this implementation, let's assume they are classes
+    class FillRequest:
+        pass
+
+    class Source:
+        pass
 
     if isinstance(seq, FillRequest):
         return True

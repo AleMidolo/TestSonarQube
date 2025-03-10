@@ -9,5 +9,5 @@ def reset(self):
     self.context = {}
     if hasattr(self, 'valore_iniziale'):
         self.bins = [self.valore_iniziale] * len(self.bins)
-    else:
+    elif hasattr(self, 'make_bins'):
         self.bins = self.make_bins()

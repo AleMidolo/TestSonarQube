@@ -2,4 +2,4 @@ def _c_optimizations_ignored():
     """
     L'opposto di `_c_optimizations_required`.
     """
-    pass
+    return not _c_optimizations_required()

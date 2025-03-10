@@ -30,16 +30,16 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
 
 def generate_default_observer_schema_list(manifest_list):
     """
-    Funzione ausiliaria per gestire le liste all'interno del dizionario manifest.
+    Funzione ausiliaria per gestire le liste all'interno del dizionario.
     """
-    observer_schema_list = []
+    observer_schema = []
     
     for item in manifest_list:
         if isinstance(item, dict):
-            observer_schema_list.append(generate_default_observer_schema_dict(item))
+            observer_schema.append(generate_default_observer_schema_dict(item))
         elif isinstance(item, list):
-            observer_schema_list.append(generate_default_observer_schema_list(item))
+            observer_schema.append(generate_default_observer_schema_list(item))
         else:
-            observer_schema_list.append(None)
+            observer_schema.append(None)
     
-    return observer_schema_list
+    return observer_schema
