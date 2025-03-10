@@ -1,19 +1,19 @@
 import yaml
+from typing import Dict, Optional
 
 class IRValidatorException(Exception):
     pass
 
-def validate_from_content(cls, spec_content=None):
+def validate_from_content(cls, spec_content: Optional[str] = None) -> Dict:
     """
     Valida que el contenido del archivo spec (YAML) tenga todos los campos requeridos.
 
     :param spec_content: contenido del archivo spec
-    :raise IRValidatorException: cuando faltan datos obligatorios
-    en el archivo spec
+    :raise IRValidatorException: cuando faltan datos obligatorios en el archivo spec
     :return: Diccionario con los datos cargados desde un archivo spec (YAML)
     """
     if spec_content is None:
-        raise IRValidatorException("El contenido del archivo spec no puede ser None.")
+        raise IRValidatorException("El contenido del archivo spec no puede ser nulo.")
     
     try:
         spec_data = yaml.safe_load(spec_content)

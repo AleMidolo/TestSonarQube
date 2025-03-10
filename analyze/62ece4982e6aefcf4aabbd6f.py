@@ -1,5 +1,5 @@
-import tarfile
 import requests
+import tarfile
 from pathlib import Path
 
 def get_repo_archive(url: str, destination_path: Path) -> Path:
@@ -22,16 +22,16 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     response.raise_for_status()
     
     # Guardar el archivo temporalmente
-    temp_file = destination_path / "temp_archive.tar.gz"
-    with open(temp_file, 'wb') as f:
+    temp_tar_path = destination_path / "temp_repo.tar.gz"
+    with open(temp_tar_path, 'wb') as f:
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)
     
     # Extraer el archivo .tar.gz
-    with tarfile.open(temp_file, 'r:gz') as tar:
+    with tarfile.open(temp_tar_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
     
     # Eliminar el archivo temporal
-    temp_file.unlink()
+    temp_tar_path.unlink()
     
     return destination_path

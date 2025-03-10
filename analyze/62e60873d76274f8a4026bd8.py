@@ -17,9 +17,8 @@ def protocol_handlers(cls, protocol_version=None):
     if protocol_version is not None:
         if not isinstance(protocol_version, tuple):
             raise TypeError("La versión del protocolo debe ser una tupla.")
-        if protocol_version in available_handlers:
-            return {protocol_version: available_handlers[protocol_version]}
-        else:
-            return {}
+        # Filtra el diccionario para incluir solo la versión especificada
+        return {protocol_version: available_handlers.get(protocol_version)}
     else:
+        # Devuelve todos los controladores disponibles
         return available_handlers

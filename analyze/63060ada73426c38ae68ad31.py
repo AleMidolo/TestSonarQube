@@ -7,13 +7,28 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param parser_name: El nombre del comando, por ejemplo: main, virsh, ospd, etc.
     :param values_dict: El diccionario con los argumentos.
     """
-    for key, value in values_dict.items():
-        if value.isdigit():
-            values_dict[key] = int(value)
-        elif value.replace('.', '', 1).isdigit():
-            values_dict[key] = float(value)
-        elif value.lower() in ('true', 'false'):
-            values_dict[key] = value.lower() == 'true'
-        else:
-            # Si no es un número ni un booleano, se deja como string
-            pass
+    if parser_name == "main":
+        if "timeout" in values_dict:
+            values_dict["timeout"] = int(values_dict["timeout"])
+        if "verbose" in values_dict:
+            values_dict["verbose"] = bool(values_dict["verbose"])
+        if "retries" in values_dict:
+            values_dict["retries"] = int(values_dict["retries"])
+    
+    elif parser_name == "virsh":
+        if "memory" in values_dict:
+            values_dict["memory"] = int(values_dict["memory"])
+        if "cpu" in values_dict:
+            values_dict["cpu"] = int(values_dict["cpu"])
+        if "active" in values_dict:
+            values_dict["active"] = values_dict["active"].lower() == "true"
+    
+    elif parser_name == "ospd":
+        if "port" in values_dict:
+            values_dict["port"] = int(values_dict["port"])
+        if "ssl" in values_dict:
+            values_dict["ssl"] = values_dict["ssl"].lower() == "true"
+        if "timeout" in values_dict:
+            values_dict["timeout"] = float(values_dict["timeout"])
+    
+    # Add more parser-specific conversions as needed

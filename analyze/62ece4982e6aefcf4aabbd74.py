@@ -10,6 +10,12 @@ def prepare_repository_from_archive(
     filename: Optional[str] = None,
     tmp_path: Union[PosixPath, str] = "/tmp",
 ) -> str:
+    """
+    Dado un `archive_path` existente, descomprímelo.  
+    Devuelve una URL del repositorio de archivos que puede ser utilizada como URL de origen.
+
+    Este método no maneja el caso en el que el archivo comprimido proporcionado no exista.
+    """
     # Convert tmp_path to Path object if it's a string
     if isinstance(tmp_path, str):
         tmp_path = Path(tmp_path)
@@ -25,6 +31,6 @@ def prepare_repository_from_archive(
     shutil.unpack_archive(archive_path, temp_dir)
     
     # Construct the repository URL
-    repo_url = urljoin("file://", temp_dir)
+    repo_url = urljoin('file://', temp_dir)
     
     return repo_url

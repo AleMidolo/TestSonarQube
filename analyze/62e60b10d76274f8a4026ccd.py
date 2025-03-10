@@ -6,21 +6,22 @@ def data(self, *keys):
     :return: diccionario de valores, indexado por el nombre del campo.  
     :raises: :exc:`IndexError` si se especifica un índice fuera de los límites.  
     """
-    # Asumimos que self._fields contiene las claves y self._values contiene los valores
-    # Esto es un ejemplo, ajusta según la implementación real de tu clase
-    if not keys:
-        return dict(zip(self._fields, self._values))
-    
+    # Asumimos que self._fields es una lista de nombres de campos y self._values es una lista de valores correspondientes
     result = {}
-    for key in keys:
-        if isinstance(key, int):
-            if key < 0 or key >= len(self._values):
-                raise IndexError("Índice fuera de los límites")
-            result[self._fields[key]] = self._values[key]
-        else:
-            if key in self._fields:
-                index = self._fields.index(key)
-                result[key] = self._values[index]
+    if not keys:
+        for field, value in zip(self._fields, self._values):
+            result[field] = value
+    else:
+        for key in keys:
+            if isinstance(key, int):
+                if key < 0 or key >= len(self._fields):
+                    raise IndexError("Índice fuera de los límites")
+                field = self._fields[key]
+                result[field] = self._values[key]
             else:
-                result[key] = None
+                if key in self._fields:
+                    index = self._fields.index(key)
+                    result[key] = self._values[index]
+                else:
+                    result[key] = None
     return result

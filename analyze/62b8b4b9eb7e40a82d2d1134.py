@@ -11,5 +11,5 @@ def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
     attributes = {}
     for name, value in self.__dict__.items():
         if all or not name.startswith('_'):
-            attributes[name] = value.__doc__ if value.__doc__ else "No description available"
+            attributes[name] = value.__doc__ if value.__doc__ else "No description available."
     return attributes

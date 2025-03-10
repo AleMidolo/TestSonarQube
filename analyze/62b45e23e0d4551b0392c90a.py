@@ -24,4 +24,4 @@ def validate_version_inventories(self, version_dirs):
         
         for key, value in inventory.items():
             if key in root_inventory and value != root_inventory[key]:
-                print(f"Digest mismatch for {key} in version {version_dir}")
+                print(f"Warning: Digest mismatch for {key} in version {version_dir}")

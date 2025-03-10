@@ -11,15 +11,14 @@ def _fromutc(self, dt):
         raise ValueError("El objeto datetime debe ser consciente de la zona horaria.")
     
     # Convertir el datetime a UTC
-    utc_dt = dt.astimezone(self.utc)
+    dt_utc = dt.astimezone(self.utc)
     
     # Convertir el datetime UTC a la nueva zona horaria
-    new_dt = utc_dt.astimezone(self)
+    dt_local = dt_utc.astimezone(self)
     
     # Verificar si el datetime es ambiguo en la nueva zona horaria
-    if self.is_ambiguous(new_dt):
-        # Si es ambiguo, determinar si está en el "pliegue"
-        if self._fold:
-            new_dt = self._fold_ambiguous(new_dt)
+    if self.is_ambiguous(dt_local):
+        # Si es ambiguo, ajustar para la primera ocurrencia
+        dt_local = self.resolve_ambiguity(dt_local, first=True)
     
-    return new_dt
+    return dt_local

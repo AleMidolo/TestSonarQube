@@ -4,7 +4,7 @@ def names(self, all=False):  # pylint:disable=redefined-builtin
     
     Args:
         all (bool): Si es True, devuelve todos los atributos, incluyendo los privados.
-                   Si es False, devuelve solo los atributos públicos.
+                    Si es False, devuelve solo los atributos públicos.
     
     Returns:
         list: Una lista de nombres de atributos.

@@ -15,12 +15,12 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     username, domain = handle.split('@')
     
     # Construct the webfinger URL
-    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{username}@{domain}"
+    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
     
     try:
         # Make the GET request to retrieve the webfinger document
         response = requests.get(webfinger_url)
-        response.raise_for_status()  # Raise an exception for HTTP errors
+        response.raise_for_status()
         
         # Parse the JSON response
         webfinger_data = response.json()
@@ -29,5 +29,3 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     
     except requests.exceptions.RequestException as e:
         raise Exception(f"Failed to retrieve webfinger document: {e}")
-    except ValueError as e:
-        raise Exception(f"Failed to parse webfinger document: {e}")

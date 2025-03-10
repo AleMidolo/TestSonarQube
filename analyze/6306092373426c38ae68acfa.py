@@ -8,4 +8,6 @@ def get_spec_defaults(self):
         for key, value in self.spec.items():
             if isinstance(value, dict) and 'default' in value:
                 defaults[key] = value['default']
+            else:
+                defaults[key] = value
     return defaults

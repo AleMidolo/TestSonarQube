@@ -30,34 +30,31 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     Devuelve el gráfico resultante.
     """
-    import numpy as np
-
     if make_value is None:
         make_value = lambda bin_: bin_
-
-    bins = hist.bins
-    bin_edges = hist.bin_edges
-    bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
-
-    if get_coordinate == "left":
-        x_coords = bin_edges[:-1]
-    elif get_coordinate == "right":
-        x_coords = bin_edges[1:]
-    elif get_coordinate == "middle":
-        x_coords = bin_centers
-    else:
-        raise ValueError("get_coordinate debe ser 'left', 'right' o 'middle'")
-
-    values = [make_value(bin_) for bin_ in bins]
 
     if scale is True:
         scale = hist.scale
 
-    graph_data = {field_names[0]: x_coords}
-    if len(field_names) > 1:
-        for i, field in enumerate(field_names[1:]):
-            graph_data[field] = [value[i] for value in values]
-    else:
-        graph_data[field_names[1]] = values
+    graph_data = []
+    for bin_ in hist.bins:
+        if get_coordinate == "left":
+            x = bin_.left
+        elif get_coordinate == "right":
+            x = bin_.right
+        elif get_coordinate == "middle":
+            x = (bin_.left + bin_.right) / 2
+        else:
+            raise ValueError("get_coordinate debe ser 'left', 'right' o 'middle'")
 
-    return graph_data
+        value = make_value(bin_.content)
+        if isinstance(value, tuple):
+            graph_data.append((x,) + value)
+        else:
+            graph_data.append((x, value))
+
+    return type('Graph', (), {
+        'data': graph_data,
+        'field_names': field_names,
+        'scale': scale
+    })

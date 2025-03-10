@@ -3,12 +3,12 @@ import sys
 
 def split(s, platform='this'):
     """
-    Variante multiplataforma de `shlex.split()` para dividir cadenas de línea de comandos.
+    Variante multiplataforma de `shlex.split()` para dividir cadenas de línea de comandos.  
     Diseñado para su uso con `subprocess`, inyección de argumentos (`argv`), etc. Utiliza expresiones regulares rápidas.
 
-    platform:  'this'= detección automática de la plataforma actual;
-      1= POSIX;
-      0=Windows/CMD
+    platform:  'this'= detección automática de la plataforma actual;  
+      1= POSIX;  
+      0=Windows/CMD  
       (otros valores están reservados).
     """
     if platform == 'this':
@@ -25,4 +25,5 @@ def split(s, platform='this'):
     else:
         raise ValueError("Invalid platform value. Use 'this', 1 (POSIX), or 0 (Windows/CMD).")
     
-    return [match.group(0) for match in pattern.finditer(s)]
+    matches = pattern.findall(s)
+    return [match.strip('"\'') for match in matches]

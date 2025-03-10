@@ -4,17 +4,20 @@ def check_digests_present_and_used(self, manifest_files, digests_used):
     """
     # Extract all digests from the manifest files
     manifest_digests = set()
-    for manifest in manifest_files:
-        manifest_digests.update(manifest.get('digests', []))
+    for file in manifest_files:
+        with open(file, 'r') as f:
+            for line in f:
+                if 'digest' in line:
+                    manifest_digests.add(line.strip().split()[-1])
     
-    # Check if all required digests are present in the manifest
-    missing_digests = set(digests_used) - manifest_digests
-    if missing_digests:
-        raise ValueError(f"Missing digests in manifest: {missing_digests}")
+    # Check if all digests in the manifest are used
+    for digest in manifest_digests:
+        if digest not in digests_used:
+            return False
     
-    # Check if all manifest digests are used
-    unused_digests = manifest_digests - set(digests_used)
-    if unused_digests:
-        raise ValueError(f"Unused digests in manifest: {unused_digests}")
+    # Check if all used digests are in the manifest
+    for digest in digests_used:
+        if digest not in manifest_digests:
+            return False
     
     return True

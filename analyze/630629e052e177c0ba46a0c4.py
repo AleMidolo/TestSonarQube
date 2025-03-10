@@ -6,14 +6,18 @@ def parse_diaspora_webfinger(document: str) -> Dict:
     """
     Analiza el webfinger de Diaspora, que puede estar en formato JSON (nuevo) o en formato XRD (antiguo).
 
-    [https://diaspora.github.io/diaspora_federation/discovery/webfinger.html](https://diaspora.github.io/diaspora_federation/discovery/webfinger.html)
+    Args:
+        document (str): El documento webfinger en formato JSON o XRD.
+
+    Returns:
+        Dict: Un diccionario con la información extraída del webfinger.
     """
     try:
         # Intentar parsear como JSON
         data = json.loads(document)
         return data
     except json.JSONDecodeError:
-        # Si falla, intentar parsear como XML/XRD
+        # Si falla, intentar parsear como XML (XRD)
         try:
             root = ET.fromstring(document)
             result = {}

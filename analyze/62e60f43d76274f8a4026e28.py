@@ -5,7 +5,7 @@ def hydrate_time(nanoseconds, tz=None):
     """
     Hidratador para valores de `Time` y `LocalTime`.
 
-    :param nanoseconds: El número de nanosegundos desde la medianoche.
+    :param nanoseconds: El tiempo en nanosegundos.
     :param tz: La zona horaria (opcional).
     :return: Un objeto `time` o `datetime.time` con la zona horaria aplicada si se proporciona.
     """
@@ -13,18 +13,15 @@ def hydrate_time(nanoseconds, tz=None):
     seconds = nanoseconds // 1_000_000_000
     microseconds = (nanoseconds % 1_000_000_000) // 1000
     
-    # Calculate hours, minutes, seconds, and microseconds
-    hours = seconds // 3600
-    seconds %= 3600
-    minutes = seconds // 60
-    seconds %= 60
+    # Create a timedelta object to represent the time
+    delta = timedelta(seconds=seconds, microseconds=microseconds)
     
-    # Create a time object
-    time_obj = time(hour=hours, minute=minutes, second=seconds, microsecond=microseconds)
+    # Create a time object from the timedelta
+    t = (datetime.min + delta).time()
     
     if tz:
         # If a timezone is provided, localize the time
         tz_obj = pytz.timezone(tz)
-        time_obj = tz_obj.localize(time_obj)
+        t = tz_obj.localize(datetime.combine(datetime.today(), t)).time()
     
-    return time_obj
+    return t
