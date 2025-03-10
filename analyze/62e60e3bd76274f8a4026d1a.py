@@ -7,6 +7,6 @@ def from_raw_values(cls, values):
     :param values: Valores de cadenas ASCII (marcadores sin procesar)
     :type values: Iterable[str]
     """
-    # Assuming the class "Bookmarks" has a constructor that accepts a list of processed values
+    # Assuming the Bookmarks class has a constructor that takes a list of processed values
     processed_values = [value.strip() for value in values]  # Example processing step
     return cls(processed_values)

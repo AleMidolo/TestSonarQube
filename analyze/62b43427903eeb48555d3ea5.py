@@ -6,21 +6,12 @@ def format(
     """
     Convierte la consulta SQL para usar parámetros de estilo "out" en lugar de parámetros de estilo "in".
 
-    *sql* (:class:`str` o :class:`bytes`) es la consulta SQL.
+    Args:
+        sql: La consulta SQL como str o bytes.
+        params: Los parámetros de estilo "in" como un diccionario o una secuencia.
 
-    *params* (:class:`~collections.abc.Mapping` o :class:`~collections.abc.Sequence`)  
-    contiene el conjunto de parámetros de estilo "in". Mapea cada parámetro  
-    (:class:`str` o :class:`int`) a un valor. Si :attr:`.SQLParams.in_style`  
-    es un estilo de parámetro con nombre, entonces *params* debe ser un :class:`~collections.abc.Mapping`.  
-    Si :attr:`.SQLParams.in_style` es un estilo de parámetro ordinal, entonces  
-    *params* debe ser un :class:`~collections.abc.Sequence`.
-
-    Devuelve una :class:`tuple` que contiene:
-
-    - La consulta SQL formateada (:class:`str` o :class:`bytes`).
-
-    - El conjunto de parámetros convertidos de estilo "out" (:class:`dict` o  
-      :class:`list`).
+    Returns:
+        Una tupla que contiene la consulta SQL formateada y los parámetros convertidos de estilo "out".
     """
     if isinstance(params, dict):
         # Convertir parámetros de estilo "in" con nombre a estilo "out"
@@ -29,7 +20,7 @@ def format(
         for key, value in params.items():
             formatted_sql = formatted_sql.replace(f":{key}", f":out_{key}")
     elif isinstance(params, (list, tuple)):
-        # Convertir parámetros de estilo "in" ordinal a estilo "out"
+        # Convertir parámetros de estilo "in" ordinales a estilo "out"
         out_params = [f"out_{i}" for i in range(len(params))]
         formatted_sql = sql
         for i in range(len(params)):

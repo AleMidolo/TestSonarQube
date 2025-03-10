@@ -10,12 +10,15 @@ def _fromutc(self, dt):
     if dt.tzinfo is not self:
         raise ValueError("El objeto datetime no está en la zona horaria correcta.")
     
-    # Convertir a la nueva zona horaria
-    new_dt = dt.astimezone(self)
+    # Convertir el datetime a UTC
+    utc_dt = dt.astimezone(self.utc)
     
-    # Verificar si el datetime es ambiguo
-    if self._is_ambiguous(new_dt):
+    # Convertir el datetime UTC a la nueva zona horaria
+    new_dt = utc_dt.astimezone(self)
+    
+    # Verificar si el datetime es ambiguo en la nueva zona horaria
+    if self.is_ambiguous(new_dt):
         # Si es ambiguo, ajustar al primer ocurrencia
-        new_dt = self._fold_first(new_dt)
+        new_dt = self.resolve_ambiguity(new_dt, first=True)
     
     return new_dt

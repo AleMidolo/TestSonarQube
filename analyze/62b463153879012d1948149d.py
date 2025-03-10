@@ -15,7 +15,7 @@ def _explore_folder(folder):
     Retorna
     -------
     dict
-        Diccionario donde las claves son los nombres base de los archivos XML y los valores son listas de archivos asociados.
+        Diccionario con los archivos agrupados por el nombre base del archivo XML.
     """
     file_groups = defaultdict(list)
     
@@ -23,6 +23,7 @@ def _explore_folder(folder):
         for file in files:
             if file.endswith('.xml'):
                 base_name = os.path.splitext(file)[0]
-                file_groups[base_name].append(os.path.join(root, file))
+                file_path = os.path.join(root, file)
+                file_groups[base_name].append(file_path)
     
     return dict(file_groups)

@@ -7,28 +7,16 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param parser_name: El nombre del comando, por ejemplo: main, virsh, ospd, etc.
     :param values_dict: El diccionario con los argumentos.
     """
-    if parser_name == "main":
-        if "port" in values_dict:
-            values_dict["port"] = int(values_dict["port"])
-        if "timeout" in values_dict:
-            values_dict["timeout"] = float(values_dict["timeout"])
-        if "verbose" in values_dict:
-            values_dict["verbose"] = values_dict["verbose"].lower() == "true"
-    
-    elif parser_name == "virsh":
-        if "memory" in values_dict:
-            values_dict["memory"] = int(values_dict["memory"])
-        if "cpu" in values_dict:
-            values_dict["cpu"] = int(values_dict["cpu"])
-        if "autostart" in values_dict:
-            values_dict["autostart"] = values_dict["autostart"].lower() == "true"
-    
-    elif parser_name == "ospd":
-        if "threads" in values_dict:
-            values_dict["threads"] = int(values_dict["threads"])
-        if "debug" in values_dict:
-            values_dict["debug"] = values_dict["debug"].lower() == "true"
-    
-    # Add more parser-specific conversions as needed
-    
+    for key, value in values_dict.items():
+        if isinstance(value, str):
+            if value.lower() == 'true':
+                values_dict[key] = True
+            elif value.lower() == 'false':
+                values_dict[key] = False
+            elif value.isdigit():
+                values_dict[key] = int(value)
+            elif value.replace('.', '', 1).isdigit():
+                values_dict[key] = float(value)
+            elif value.lower() == 'none':
+                values_dict[key] = None
     return values_dict

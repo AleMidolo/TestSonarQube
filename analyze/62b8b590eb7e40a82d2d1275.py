@@ -16,7 +16,7 @@ def _legacy_mergeOrderings(orderings):
     """
     from collections import defaultdict, deque
 
-    # Construir el grafo de dependencias
+    # Build a graph and in-degree count
     graph = defaultdict(set)
     in_degree = defaultdict(int)
     all_nodes = set()
@@ -30,10 +30,10 @@ def _legacy_mergeOrderings(orderings):
             all_nodes.add(u)
             all_nodes.add(v)
 
-    # Inicializar la cola con nodos que no tienen dependencias
+    # Initialize queue with nodes having zero in-degree
     queue = deque([node for node in all_nodes if in_degree[node] == 0])
 
-    # Orden topológico
+    # Perform topological sort
     result = []
     while queue:
         u = queue.popleft()

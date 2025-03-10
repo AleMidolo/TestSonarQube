@@ -4,9 +4,9 @@ import os
 from typing import Sequence, Any
 
 def _get_platform_max_length() -> int:
-    # This is a placeholder function to simulate getting the platform's max command length.
-    # On Unix-like systems, you can use `getconf ARG_MAX` to get the actual value.
-    return 131072  # Default value for many Unix systems
+    # This function should return the platform-specific maximum command length.
+    # For simplicity, we'll return a default value.
+    return 32768
 
 def xargs(
         cmd: tuple[str, ...],
@@ -29,43 +29,26 @@ def xargs(
         kwargs['stdout'] = slave
         kwargs['stderr'] = slave
 
-    # Split varargs into chunks based on _max_length
-    chunks = []
-    current_chunk = []
-    current_length = 0
+    # Split varargs into chunks based on target_concurrency
+    chunk_size = len(varargs) // target_concurrency
+    chunks = [varargs[i:i + chunk_size] for i in range(0, len(varargs), chunk_size)]
 
-    for arg in varargs:
-        arg_length = len(arg) + 1  # +1 for the space
-        if current_length + arg_length > _max_length:
-            chunks.append(current_chunk)
-            current_chunk = []
-            current_length = 0
-        current_chunk.append(arg)
-        current_length += arg_length
-
-    if current_chunk:
-        chunks.append(current_chunk)
-
-    # Execute commands with concurrency
-    processes = []
+    results = []
     for chunk in chunks:
-        full_cmd = list(cmd) + chunk
-        if color and sys.platform != "win32":
+        full_cmd = list(cmd) + list(chunk)
+        try:
             process = subprocess.Popen(full_cmd, **kwargs)
-        else:
-            process = subprocess.Popen(full_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs)
-        processes.append(process)
+            stdout, stderr = process.communicate()
+            results.append((process.returncode, stdout))
+        except subprocess.CalledProcessError as e:
+            results.append((e.returncode, e.output))
 
-    # Wait for all processes to complete
-    exit_codes = []
-    outputs = []
-    for process in processes:
-        stdout, stderr = process.communicate()
-        exit_codes.append(process.returncode)
-        outputs.append(stdout)
+    # Combine results
+    final_returncode = 0
+    final_output = b""
+    for returncode, output in results:
+        if returncode != 0:
+            final_returncode = returncode
+        final_output += output
 
-    # Combine outputs and return the highest exit code
-    combined_output = b''.join(outputs)
-    max_exit_code = max(exit_codes) if exit_codes else 0
-
-    return (max_exit_code, combined_output)
+    return final_returncode, final_output

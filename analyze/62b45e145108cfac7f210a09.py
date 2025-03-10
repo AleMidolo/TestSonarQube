@@ -1,28 +1,24 @@
 def check_digests_present_and_used(self, manifest_files, digests_used):
     """
     Verifique que todos los resúmenes necesarios en el manifiesto estén presentes y se utilicen.
-    
-    Args:
-        manifest_files (list): Lista de archivos de manifiesto.
-        digests_used (set): Conjunto de resúmenes utilizados.
-    
-    Returns:
-        bool: True si todos los resúmenes necesarios están presentes y se utilizan, False en caso contrario.
     """
-    # Obtener todos los resúmenes necesarios del manifiesto
-    required_digests = set()
+    # Extract all digests from the manifest files
+    manifest_digests = set()
     for manifest_file in manifest_files:
         with open(manifest_file, 'r') as file:
             for line in file:
-                if line.strip():
-                    required_digests.add(line.strip())
+                if 'digest' in line:
+                    digest = line.split('digest:')[1].strip()
+                    manifest_digests.add(digest)
     
-    # Verificar que todos los resúmenes necesarios estén presentes
-    if not required_digests.issubset(digests_used):
-        return False
+    # Check if all digests in the manifest are used
+    for digest in manifest_digests:
+        if digest not in digests_used:
+            return False
     
-    # Verificar que todos los resúmenes utilizados estén en los necesarios
-    if not digests_used.issubset(required_digests):
-        return False
+    # Check if all used digests are in the manifest
+    for digest in digests_used:
+        if digest not in manifest_digests:
+            return False
     
     return True

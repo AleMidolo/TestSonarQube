@@ -13,7 +13,7 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     :return: El resultado de la ejecución del comando.
     """
     command = commands + args
-    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
+    stderr = subprocess.PIPE if hide_stderr else None
     process = subprocess.Popen(
         command,
         cwd=cwd,
@@ -23,10 +23,13 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
         text=True
     )
     stdout, stderr = process.communicate()
-
+    
     if verbose:
         print(stdout)
-        if stderr and not hide_stderr:
+    
+    if process.returncode != 0:
+        if not hide_stderr and stderr:
             print(stderr)
-
-    return process.returncode, stdout, stderr
+        raise subprocess.CalledProcessError(process.returncode, command)
+    
+    return stdout

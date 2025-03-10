@@ -6,17 +6,12 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
 
     La salida tiene el dígito más significativo primero.
     """
-    if number < 0:
-        raise ValueError("El número debe ser no negativo.")
+    if number == 0:
+        return alphabet[0] if padding is None else alphabet[0].rjust(padding, alphabet[0])
     
     base = len(alphabet)
-    if base == 0:
-        raise ValueError("El alfabeto no puede estar vacío.")
-    
-    if number == 0:
-        return alphabet[0] if not padding else alphabet[0] * padding
-    
     result = []
+    
     while number > 0:
         remainder = number % base
         result.append(alphabet[remainder])
@@ -24,10 +19,9 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
     
     result.reverse()
     
-    if padding:
-        if len(result) < padding:
-            result = [alphabet[0]] * (padding - len(result)) + result
-        elif len(result) > padding:
-            raise ValueError("El padding es menor que la longitud del número convertido.")
+    result_str = ''.join(result)
     
-    return ''.join(result)
+    if padding is not None:
+        result_str = result_str.rjust(padding, alphabet[0])
+    
+    return result_str

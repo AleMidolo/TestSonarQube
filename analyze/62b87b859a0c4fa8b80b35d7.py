@@ -1,8 +1,5 @@
 def to_csv(self, separator=",", header=None):
     """
-    .. deprecated:: 0.5 en Lena 0.5 to_csv ya no se utiliza.
-          Los iterables se convierten en tablas.
-
     Convierte los puntos del gráfico a formato CSV.
 
     *separator* delimita los valores, el valor predeterminado es una coma.
@@ -25,7 +22,6 @@ def to_csv(self, separator=",", header=None):
     )
     
     csv_lines = []
-    
     if header is not None:
         csv_lines.append(header)
     

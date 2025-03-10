@@ -21,6 +21,7 @@ def find_tags(texto: str, reemplazador: Callable = None) -> Tuple[Set, str]:
     if reemplazador is not None:
         def replace_tag(match):
             return reemplazador(match.group(1))
+        
         texto = tag_pattern.sub(replace_tag, texto)
     
     return tags, texto

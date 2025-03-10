@@ -1,5 +1,5 @@
 from zope.interface import Invalid, providedBy
-from zope.interface.verify import verifyObject, verifyClass
+from inspect import signature
 
 def _verify(iface, candidate, tentative=False, vtype=None):
     """
@@ -34,19 +34,33 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     """
     errors = []
 
-    # Verificar si el candidato afirma proporcionar la interfaz
-    if not tentative:
-        if not iface.providedBy(candidate):
-            errors.append(f"{candidate} no afirma proporcionar la interfaz {iface}.")
+    # Verificar si el candidato proporciona la interfaz
+    if not tentative and not iface.providedBy(candidate):
+        errors.append(f"{candidate} no proporciona la interfaz {iface}")
 
-    # Verificar métodos y atributos
-    try:
-        if vtype == 'class':
-            verifyClass(iface, candidate)
+    # Verificar métodos requeridos
+    required_methods = iface.namesAndDescriptions(all=True)
+    for name, desc in required_methods:
+        if not hasattr(candidate, name):
+            errors.append(f"El método requerido '{name}' no está definido en {candidate}")
         else:
-            verifyObject(iface, candidate)
-    except Invalid as e:
-        errors.append(str(e))
+            # Verificar la firma del método
+            candidate_method = getattr(candidate, name)
+            if callable(candidate_method):
+                try:
+                    sig = signature(candidate_method)
+                    expected_sig = signature(desc.getSignature())
+                    if sig != expected_sig:
+                        errors.append(f"La firma del método '{name}' no coincide: esperado {expected_sig}, obtenido {sig}")
+                except ValueError:
+                    # Si no se puede obtener la firma, se omite la verificación
+                    pass
+
+    # Verificar atributos requeridos
+    required_attrs = iface.namesAndDescriptions(all=True)
+    for name, desc in required_attrs:
+        if not hasattr(candidate, name):
+            errors.append(f"El atributo requerido '{name}' no está definido en {candidate}")
 
     # Manejar errores
     if errors:

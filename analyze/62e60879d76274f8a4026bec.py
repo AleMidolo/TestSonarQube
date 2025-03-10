@@ -30,12 +30,13 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         "db": db,
         "imp_user": imp_user,
         "dehydration_hooks": dehydration_hooks,
-        "hydration_hooks": hydration_hooks
+        "hydration_hooks": hydration_hooks,
+        **handlers
     }
     
     # Añadir el mensaje a la cola de salida
     self.output_queue.append(("BEGIN", begin_message))
     
     # Crear y devolver un objeto Response con los manejadores proporcionados
-    response = Response(handlers=handlers)
+    response = Response(**handlers)
     return response

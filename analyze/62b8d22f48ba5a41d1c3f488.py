@@ -5,5 +5,6 @@ def popitem(self):
     if not self:
         raise KeyError("El diccionario está vacío")
     key = next(iter(self))
-    value = self.pop(key)
-    return (key, value)
+    value = self[key]
+    del self[key]
+    return key, value

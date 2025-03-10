@@ -7,7 +7,8 @@ def _extract_number_and_supplment_from_issue_element(issue):
     
     Returns:
         tuple: Una tupla con dos elementos (number, suppl), donde 'number' es el número de la edición
-               y 'suppl' es el suplemento (si existe). Si no se encuentra un número, ambos serán None.
+               y 'suppl' es el suplemento (si existe). Si no se encuentra un número o suplemento,
+               se devuelve None para ese valor.
     """
     number = None
     suppl = None
@@ -23,4 +24,4 @@ def _extract_number_and_supplment_from_issue_element(issue):
     if suppl_match:
         suppl = int(suppl_match.group(1))
     
-    return (number, suppl)
+    return number, suppl

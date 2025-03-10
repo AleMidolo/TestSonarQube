@@ -17,27 +17,27 @@ def absorb(self, args):
             if expr[0] == '&':
                 A, B = expr[1], expr[2]
                 if isinstance(B, tuple) and B[0] == '|':
-                    if A == B[1]:
+                    if B[1] == A:
                         return A
-                    elif A == ('~', B[1]):
-                        return ('&', A, B[2])
+                    elif B[2] == A:
+                        return A
                 elif isinstance(B, tuple) and B[0] == '&':
-                    if A == B[1]:
-                        return A
-                    elif A == ('~', B[1]):
+                    if B[1] == ('~', A):
                         return ('&', A, B[2])
+                    elif B[2] == ('~', A):
+                        return ('&', A, B[1])
             elif expr[0] == '|':
                 A, B = expr[1], expr[2]
                 if isinstance(B, tuple) and B[0] == '&':
-                    if A == B[1]:
+                    if B[1] == A:
                         return A
-                    elif A == ('~', B[1]):
-                        return ('|', A, B[2])
+                    elif B[2] == A:
+                        return A
                 elif isinstance(B, tuple) and B[0] == '|':
-                    if A == B[1]:
-                        return A
-                    elif A == ('~', B[1]):
+                    if B[1] == ('~', A):
                         return ('|', A, B[2])
+                    elif B[2] == ('~', A):
+                        return ('|', A, B[1])
         return expr
 
     return [apply_absorption(arg) for arg in args]
