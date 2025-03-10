@@ -16,7 +16,7 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     if document_path is None:
         document_path = "/.well-known/nodeinfo"
     
-    full_url = f"{url}{document_path}"
+    full_url = f"{url.rstrip('/')}{document_path}"
     
     try:
         response = requests.get(full_url)

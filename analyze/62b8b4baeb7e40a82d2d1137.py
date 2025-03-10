@@ -1,5 +1,5 @@
-from zope.interface import providedBy, Invalid
-from zope.interface.verify import verifyObject as zope_verify_object
+from zope.interface import providedBy, verify
+from zope.interface.exceptions import Invalid
 
 def verifyObject(iface, candidate, tentative=False):
     """
@@ -28,11 +28,12 @@ def verifyObject(iface, candidate, tentative=False):
         पहले, केवल पहली त्रुटि रिपोर्ट की जाती थी। एक विशेष मामले में, यदि केवल एक त्रुटि मौजूद है, 
         तो इसे पहले की तरह अकेले उठाया जाता है।
     """
-    if not tentative and not iface.providedBy(candidate):
-        raise Invalid(f"The candidate does not provide the interface {iface}.")
+    if not tentative:
+        if not iface.providedBy(candidate):
+            raise Invalid(f"The candidate does not provide the interface {iface}.")
 
     try:
-        zope_verify_object(iface, candidate)
+        verify.verifyObject(iface, candidate)
     except Invalid as e:
         raise Invalid(f"Verification failed: {e}")
 

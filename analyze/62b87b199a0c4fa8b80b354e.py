@@ -7,17 +7,27 @@ def is_fill_request_seq(seq):
     - या इसमें कम से कम एक FillRequest तत्व हो,  
     - और यह Source अनुक्रम (Source sequence) न हो।
     """
-    # Assuming FillRequest is a class or type that we can check against
-    # Assuming Source sequence is a type or class that we can check against
+    # Assuming FillRequest is a class or type that represents a FillRequest element
+    # and SourceSequence is a class or type that represents a Source sequence.
+    # You need to replace these with the actual types or classes used in your code.
     
-    # Check if seq is a single FillRequest element
-    if isinstance(seq, FillRequest):
+    from typing import Sequence
+    
+    def is_fill_request(element):
+        # Replace with actual check for FillRequest
+        return isinstance(element, FillRequest)
+    
+    def is_source_sequence(seq):
+        # Replace with actual check for SourceSequence
+        return isinstance(seq, SourceSequence)
+    
+    if is_source_sequence(seq):
+        return False
+    
+    if is_fill_request(seq):
         return True
     
-    # Check if seq is a sequence and contains at least one FillRequest element
-    if isinstance(seq, (list, tuple)) and any(isinstance(item, FillRequest) for item in seq):
-        # Check if seq is not a Source sequence
-        if not isinstance(seq, SourceSequence):
-            return True
+    if isinstance(seq, Sequence):
+        return any(is_fill_request(element) for element in seq)
     
     return False

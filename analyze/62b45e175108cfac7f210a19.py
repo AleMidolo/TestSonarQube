@@ -5,16 +5,13 @@ def validate_fixity(self, fixity, manifest_files):
     जो मैनिफेस्ट में सूचीबद्ध हैं, वही संदर्भित की गई हैं।
     """
     if not isinstance(fixity, dict):
-        raise ValueError("फिक्सिटी ब्लॉक एक डिक्शनरी होना चाहिए।")
+        raise ValueError("Fixity block must be a dictionary.")
     
     if not isinstance(manifest_files, list):
-        raise ValueError("मैनिफेस्ट फाइलें एक सूची होनी चाहिए।")
+        raise ValueError("Manifest files must be a list.")
     
     for file_name, checksum in fixity.items():
         if file_name not in manifest_files:
-            raise ValueError(f"फाइल '{file_name}' मैनिफेस्ट में सूचीबद्ध नहीं है।")
-        
-        if not isinstance(checksum, str):
-            raise ValueError(f"फाइल '{file_name}' के लिए चेकसम एक स्ट्रिंग होना चाहिए।")
+            raise ValueError(f"File '{file_name}' in fixity block is not listed in the manifest.")
     
     return True

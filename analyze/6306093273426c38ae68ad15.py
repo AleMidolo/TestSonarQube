@@ -17,7 +17,7 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     # Prepare the Ansible command
     ansible_command = ['ansible-playbook'] + cli_args + ['-e', extra_vars]
 
-    # Run the Ansible command
+    # Execute the Ansible command
     result = subprocess.run(ansible_command, capture_output=True, text=True)
 
     # Return the result

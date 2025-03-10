@@ -5,7 +5,7 @@ def verifyClass(iface, candidate, tentative=False):
     if tentative:
         # Tentative mode: Check if candidate has all the methods of iface
         for method in dir(iface):
-            if not method.startswith('__') and not hasattr(candidate, method):
+            if callable(getattr(iface, method)) and not hasattr(candidate, method):
                 return False
         return True
     else:

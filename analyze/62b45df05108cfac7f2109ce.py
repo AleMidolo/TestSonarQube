@@ -7,19 +7,27 @@ def validate(self, path):
     # Placeholder implementation for OCFL validation
     # This should be replaced with actual OCFL validation logic
     try:
-        # Example: Check if the path exists and is a directory
+        # Check if the path exists
         if not os.path.exists(path):
             return False
         
-        # Example: Check for required OCFL files and directories
-        required_files = ['inventory.json', 'inventory.json.sha512']
+        # Check for required OCFL structure
+        # Example: Check for 'inventory.json' and 'version' directories
+        required_files = ['inventory.json']
+        required_dirs = ['versions']
+        
         for file in required_files:
-            if not os.path.exists(os.path.join(path, file)):
+            if not os.path.isfile(os.path.join(path, file)):
+                return False
+        
+        for dir in required_dirs:
+            if not os.path.isdir(os.path.join(path, dir)):
                 return False
         
         # If all checks pass, return True
         return True
+    
     except Exception as e:
-        # Log the error or handle it as needed
+        # Log the exception if needed
         print(f"Validation error: {e}")
         return False

@@ -11,11 +11,11 @@ def make_parsers():
     subparsers = top_parser.add_subparsers(title="सबपार्सर", dest="command")
     
     # पहला सबपार्सर
-    parser_a = subparsers.add_parser('command_a', help='कमांड ए के लिए मदद')
-    parser_a.add_argument('--option_a', type=str, help='कमांड ए के लिए विकल्प')
+    parser_a = subparsers.add_parser('command_a', help='कमांड ए के लिए सहायता')
+    parser_a.add_argument('--option_a', type=int, help='कमांड ए के लिए विकल्प')
     
     # दूसरा सबपार्सर
-    parser_b = subparsers.add_parser('command_b', help='कमांड बी के लिए मदद')
-    parser_b.add_argument('--option_b', type=int, help='कमांड बी के लिए विकल्प')
+    parser_b = subparsers.add_parser('command_b', help='कमांड बी के लिए सहायता')
+    parser_b.add_argument('--option_b', type=str, help='कमांड बी के लिए विकल्प')
     
     return top_parser, subparsers

@@ -7,16 +7,25 @@ def mru_cache(maxsize=128, typed=False):
         
         @wraps(func)
         def wrapper(*args, **kwargs):
-            key = args + tuple(kwargs.items()) if typed else args
+            if typed:
+                key = (args, tuple((k, type(v)) for k, v in sorted(kwargs.items())))
+            else:
+                key = (args, tuple(sorted(kwargs.items())))
+            
             if key in cache:
                 # Move the accessed key to the end to mark it as most recently used
                 cache.move_to_end(key)
                 return cache[key]
+            
             result = func(*args, **kwargs)
             cache[key] = result
+            
             if len(cache) > maxsize:
                 # Remove the least recently used item
                 cache.popitem(last=False)
+            
             return result
+        
         return wrapper
+    
     return decorator

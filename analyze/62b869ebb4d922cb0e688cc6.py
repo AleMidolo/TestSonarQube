@@ -16,21 +16,16 @@ def update_last_applied_manifest_list_from_resp(
     यदि वे पहले से मौजूद नहीं हैं तो उनके मान को ``last_applied_manifest`` में 
     आरंभ (initialize) करता है।
     """
-    for i, (schema_item, resp_item) in enumerate(zip(observer_schema, response)):
-        if isinstance(schema_item, dict) and isinstance(resp_item, dict):
-            if i >= len(last_applied_manifest):
-                last_applied_manifest.append({})
+    for i, item in enumerate(observer_schema):
+        if i >= len(last_applied_manifest):
+            last_applied_manifest.append(response[i])
+        elif isinstance(item, dict) and isinstance(last_applied_manifest[i], dict):
             update_last_applied_manifest_dict_from_resp(
-                last_applied_manifest[i], schema_item, resp_item
+                last_applied_manifest[i], item, response[i]
             )
-        elif isinstance(schema_item, list) and isinstance(resp_item, list):
-            if i >= len(last_applied_manifest):
-                last_applied_manifest.append([])
+        elif isinstance(item, list) and isinstance(last_applied_manifest[i], list):
             update_last_applied_manifest_list_from_resp(
-                last_applied_manifest[i], schema_item, resp_item
+                last_applied_manifest[i], item, response[i]
             )
         else:
-            if i >= len(last_applied_manifest):
-                last_applied_manifest.append(resp_item)
-            else:
-                last_applied_manifest[i] = resp_item
+            last_applied_manifest[i] = response[i]

@@ -2,9 +2,15 @@ def dehydrate_point(value):
     """
     पॉइंट डेटा के लिए डिहाइड्रेटर।
 
-    :param value: पॉइंट ऑब्जेक्ट
-    :type value: Point  
-    :return: पॉइंट के निर्देशांक (x, y) का टपल
-    :rtype: tuple
+    :param value: The Point object to be dehydrated.
+    :type value: Point
+    :return: A dictionary representing the dehydrated Point data.
+    :rtype: dict
     """
-    return (value.x, value.y)
+    if not isinstance(value, Point):
+        raise TypeError("Expected a Point object")
+    
+    return {
+        'x': value.x,
+        'y': value.y
+    }

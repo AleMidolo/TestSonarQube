@@ -7,7 +7,7 @@ def _fromutc(self, dt):
       एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
     """
     if dt.tzinfo is not self:
-        raise ValueError("dt.tzinfo is not self")
+        raise ValueError('fromutc: dt.tzinfo is not self')
     
     # Convert to local time
     local_dt = dt.astimezone(self)
@@ -15,6 +15,21 @@ def _fromutc(self, dt):
     # Check if the local time is ambiguous
     if self._is_ambiguous(local_dt):
         # If it's ambiguous, return the first occurrence
-        return self._resolve_ambiguous_time(local_dt, first=True)
-    
-    return local_dt
+        return self._fold_first(local_dt)
+    else:
+        return local_dt
+
+def _is_ambiguous(self, dt):
+    """
+    Check if the given datetime is ambiguous in the current timezone.
+    """
+    # This is a placeholder implementation. The actual logic depends on the timezone rules.
+    # For example, in a timezone that observes DST, a datetime might be ambiguous during the fall transition.
+    return False
+
+def _fold_first(self, dt):
+    """
+    Return the first occurrence of an ambiguous datetime.
+    """
+    # This is a placeholder implementation. The actual logic depends on the timezone rules.
+    return dt.replace(fold=0)

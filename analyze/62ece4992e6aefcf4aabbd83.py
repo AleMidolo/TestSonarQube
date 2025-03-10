@@ -3,31 +3,31 @@ import subprocess
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
     दिए गए कमांड(s) को कॉल करें।
+    
+    :param commands: कमांड(s) की सूची
+    :param args: कमांड के लिए आर्ग्यूमेंट्स
+    :param cwd: कमांड को रन करने के लिए वर्किंग डायरेक्टरी
+    :param verbose: यदि True है, तो कमांड का आउटपुट प्रिंट करें
+    :param hide_stderr: यदि True है, तो स्टडर्र को छुपाएं
+    :param env: पर्यावरण वेरिएबल्स
+    :return: कमांड का रिटर्न कोड
     """
-    command_list = commands if isinstance(commands, list) else [commands]
-    full_command = command_list + args
+    command = commands + args
+    stderr = subprocess.DEVNULL if hide_stderr else None
+    stdout = subprocess.PIPE if verbose else None
     
-    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
+    process = subprocess.Popen(
+        command,
+        cwd=cwd,
+        env=env,
+        stdout=stdout,
+        stderr=stderr,
+        text=True
+    )
     
-    try:
-        result = subprocess.run(
-            full_command,
-            cwd=cwd,
-            env=env,
-            stdout=subprocess.PIPE,
-            stderr=stderr,
-            text=True,
-            check=True
-        )
-        
-        if verbose:
-            print(f"Command executed: {' '.join(full_command)}")
-            print(f"Output: {result.stdout}")
-        
-        return result.stdout
+    if verbose:
+        for line in process.stdout:
+            print(line, end='')
     
-    except subprocess.CalledProcessError as e:
-        if verbose:
-            print(f"Command failed: {' '.join(full_command)}")
-            print(f"Error: {e.stderr}")
-        raise
+    process.wait()
+    return process.returncode

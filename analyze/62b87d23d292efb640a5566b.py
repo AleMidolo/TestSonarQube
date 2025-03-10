@@ -12,7 +12,7 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     if verbose:
         print(f"Running command: {' '.join(full_command)}")
     
-    process = subprocess.Popen(
+    result = subprocess.run(
         full_command,
         cwd=cwd,
         env=env,
@@ -21,14 +21,9 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
         text=True
     )
     
-    stdout, stderr = process.communicate()
-    
     if verbose:
-        if stdout:
-            print("Output:")
-            print(stdout)
-        if stderr and not hide_stderr:
-            print("Error:")
-            print(stderr)
+        print(f"Command output: {result.stdout}")
+        if not hide_stderr:
+            print(f"Command error output: {result.stderr}")
     
-    return process.returncode, stdout, stderr
+    return result

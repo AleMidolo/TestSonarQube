@@ -18,9 +18,8 @@ def normalized(self):
     minutes = int(self.minutes)
     seconds = int(self.seconds)
     microseconds = int(self.microseconds)
-    months = int(self.months)
     years = int(self.years)
+    months = int(self.months)
     
     # Create a new relativedelta object with normalized values
-    return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds,
-                         microseconds=microseconds, months=months, years=years)
+    return relativedelta(years=years, months=months, days=days, hours=hours, minutes=minutes, seconds=seconds, microseconds=microseconds)

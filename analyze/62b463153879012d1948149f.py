@@ -1,5 +1,3 @@
-import os
-
 def _eval_file(prefix, file_path):
     """
     पैकेज के फ़ाइल प्रकार की पहचान करें: `asset` या `rendition`।
@@ -16,19 +14,23 @@ def _eval_file(prefix, file_path):
     रिटर्न्स
     -------
     dict
-        फ़ाइल प्रकार और फ़ाइल पथ के साथ एक डिक्शनरी
+        फ़ाइल प्रकार और पते के साथ एक डिक्शनरी
     """
-    file_type = None
-    file_name = os.path.basename(file_path)
-    
-    # Check if the file is an asset or rendition based on the prefix
-    if prefix in file_name:
-        if "asset" in file_name.lower():
-            file_type = "asset"
-        elif "rendition" in file_name.lower():
-            file_type = "rendition"
-    
+    import os
+
+    # फ़ाइल प्रकार की पहचान करें
+    if prefix.startswith("asset"):
+        file_type = "asset"
+    elif prefix.startswith("rendition"):
+        file_type = "rendition"
+    else:
+        file_type = "unknown"
+
+    # फ़ाइल का पूरा पथ
+    full_path = os.path.abspath(file_path)
+
+    # रिटर्न डिक्शनरी
     return {
         "file_type": file_type,
-        "file_path": file_path
+        "file_path": full_path
     }

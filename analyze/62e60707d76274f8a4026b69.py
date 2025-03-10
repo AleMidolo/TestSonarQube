@@ -7,28 +7,19 @@ def point_type(name, fields, srid_map):
     :param srid_map: SRID मैपिंग
     :return: डायनामिक रूप से बनाई गई पॉइंट सबक्लास
     """
-    from sqlalchemy import Column, Integer, Float
-    from sqlalchemy.ext.declarative import declarative_base
+    from django.contrib.gis.db import models
 
-    Base = declarative_base()
+    class Meta:
+        app_label = 'your_app_label'  # Replace with your app label
 
-    class PointSubclass(Base):
-        __tablename__ = name.lower()
+    attrs = {
+        '__module__': __name__,
+        'Meta': Meta,
+    }
 
-        id = Column(Integer, primary_key=True)
-        x = Column(Float)
-        y = Column(Float)
+    for field_name, field_type in fields.items():
+        attrs[field_name] = field_type
 
-        for field_name, field_type in fields.items():
-            setattr(PointSubclass, field_name, Column(field_type))
+    attrs['srid_map'] = srid_map
 
-        def __init__(self, x, y, **kwargs):
-            self.x = x
-            self.y = y
-            for key, value in kwargs.items():
-                setattr(self, key, value)
-
-        def __repr__(self):
-            return f"<{self.__class__.__name__}(x={self.x}, y={self.y})>"
-
-    return PointSubclass
+    return type(name, (models.PointField,), attrs)

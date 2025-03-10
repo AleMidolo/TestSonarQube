@@ -11,17 +11,16 @@ def data(self, *keys):
     अपवाद (Raises): 
     - :exc:`IndexError` यदि कोई सीमा से बाहर का इंडेक्स निर्दिष्ट किया गया है।
     """
-    if not hasattr(self, '_data'):
-        self._data = {}
-
+    # Assuming self.record is a dictionary-like object that holds the data
     if not keys:
-        return self._data.copy()
-
+        return dict(self.record)
+    
     result = {}
     for key in keys:
         if isinstance(key, int):
-            if key < 0 or key >= len(self._data):
+            if key < 0 or key >= len(self.record):
                 raise IndexError("Index out of range")
-            key = list(self._data.keys())[key]
-        result[key] = self._data.get(key, None)
+            result[key] = self.record.get(key, None)
+        else:
+            result[key] = self.record.get(key, None)
     return result
