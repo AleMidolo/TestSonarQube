@@ -12,9 +12,9 @@ def dict_insert(dic, val, key, *keys):
     :param key: 键链中的第一个键，用于存储值
     :param keys: 键链中的子键
     """
-    if not keys:
-        dic[key] = val
-    else:
-        if key not in dic:
-            dic[key] = {}
-        dict_insert(dic[key], val, *keys)
+    current = dic
+    for k in keys[:-1]:
+        if k not in current:
+            current[k] = {}
+        current = current[k]
+    current[keys[-1] if keys else key] = val

@@ -7,18 +7,19 @@ def is_fill_request_seq(seq):
     - 它是一个 FillRequest 元素，或者包含至少一个 FillRequest 元素；
     - 它不是一个 Source 序列。
     """
-    # 假设 FillRequest 和 Source 是自定义类
-    from collections.abc import Sequence
+    # 假设 FillRequest 和 Source 是类或类型
+    from typing import Sequence, Type
 
-    # 检查是否是 FillRequest 元素
+    FillRequest = Type('FillRequest')  # 假设 FillRequest 是一个类型
+    Source = Type('Source')  # 假设 Source 是一个类型
+
+    if isinstance(seq, Source):
+        return False
+
     if isinstance(seq, FillRequest):
         return True
 
-    # 检查是否是序列且包含至少一个 FillRequest 元素
     if isinstance(seq, Sequence):
-        if any(isinstance(item, FillRequest) for item in seq):
-            # 检查是否不是 Source 序列
-            if not isinstance(seq, Source):
-                return True
+        return any(isinstance(item, FillRequest) for item in seq)
 
     return False

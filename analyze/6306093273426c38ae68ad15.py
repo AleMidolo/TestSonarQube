@@ -9,21 +9,16 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     :return: ansible 的结果
     """
     import subprocess
-    import shlex
+    import json
 
-    # 将 vars_dict 转换为 Ansible 的 extra-vars 格式
-    extra_vars = " ".join([f"{key}={value}" for key, value in vars_dict.items()])
+    # 将 vars_dict 转换为 JSON 字符串，以便传递给 Ansible
+    extra_vars = json.dumps(vars_dict)
 
-    # 构建完整的 Ansible 命令
-    ansible_command = f"ansible-playbook {extra_vars} {' '.join(cli_args)}"
+    # 构建 Ansible 命令
+    ansible_command = ["ansible-playbook"] + cli_args + ["-e", extra_vars]
 
-    # 使用 subprocess 运行 Ansible 命令
-    process = subprocess.Popen(shlex.split(ansible_command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = process.communicate()
+    # 运行 Ansible 命令
+    result = subprocess.run(ansible_command, capture_output=True, text=True)
 
     # 返回 Ansible 的结果
-    return {
-        "stdout": stdout.decode("utf-8"),
-        "stderr": stderr.decode("utf-8"),
-        "returncode": process.returncode
-    }
+    return result

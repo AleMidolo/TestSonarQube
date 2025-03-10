@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-
 def fromutc(self, dt):
     """
     给定一个在给定时区中带有时区信息的日期时间对象，计算在新时区的带有时区信息的日期时间。
@@ -8,20 +6,19 @@ def fromutc(self, dt):
 
     :param dt: 一个带有时区信息的 :class:`datetime.datetime` 对象。
     """
-    if dt.tzinfo is None:
-        raise ValueError("The input datetime must be timezone-aware.")
+    if dt.tzinfo is not self:
+        raise ValueError("fromutc: dt.tzinfo is not self")
     
-    # Convert the datetime to the target timezone
-    new_dt = dt.astimezone(self)
+    # Convert dt to UTC
+    dt = dt.replace(tzinfo=None)
+    dt = dt - self.utcoffset(dt)
     
-    # Check if the datetime is ambiguous
-    if self.is_ambiguous(new_dt):
-        # If ambiguous, check if it's in the fold
-        if not new_dt.fold:
-            # If not in the fold, adjust to the first occurrence
-            new_dt = new_dt.replace(fold=0)
-        else:
-            # If in the fold, adjust to the second occurrence
-            new_dt = new_dt.replace(fold=1)
+    # Convert to local time
+    dt = dt + self.utcoffset(dt)
     
-    return new_dt
+    # Check for ambiguity
+    if self.is_ambiguous(dt):
+        # If ambiguous, return the first occurrence
+        dt = self._fold_first(dt)
+    
+    return dt.replace(tzinfo=self)

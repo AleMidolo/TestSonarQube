@@ -15,14 +15,13 @@ def get_config():
             self.error = None
 
     config = VersioneerConfig()
-    # 设置默认属性值
-    config.version = "0.0.0"
+    config.version = "0.1"
     config.tag_prefix = "v"
     config.parentdir_prefix = "project-"
     config.vcs = "git"
     config.style = "pep440"
-    config.long_version = "0.0.0+unknown"
-    config.short_version = "0.0.0"
+    config.long_version = "0.1.0"
+    config.short_version = "0.1"
     config.error = None
 
     return config

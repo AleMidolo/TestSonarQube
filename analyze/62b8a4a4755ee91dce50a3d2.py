@@ -10,13 +10,15 @@ def _fromutc(self, dt):
     """
     if dt.tzinfo is None:
         raise ValueError("The input datetime must be timezone-aware.")
-    
+
     # Convert the datetime to the new timezone
     new_dt = dt.astimezone(self)
-    
-    # Check if the new datetime is ambiguous
+
+    # Check if the datetime is ambiguous
     if self.is_ambiguous(new_dt):
-        # If ambiguous, return the first occurrence
-        new_dt = self.resolve_ambiguity(new_dt, is_dst=False)
-    
+        # If ambiguous, check if it's in the fold
+        if new_dt.fold:
+            # Handle the ambiguous case (e.g., choose the earlier time)
+            new_dt = new_dt.replace(fold=0)
+
     return new_dt

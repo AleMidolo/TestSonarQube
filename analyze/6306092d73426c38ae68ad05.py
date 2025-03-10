@@ -4,6 +4,7 @@ def get_option_spec(self, command_name, argument_name):
     获取指定选项名称的规范。
     """
     option_specs = self.get_parser_option_specs(command_name)
-    if option_specs and argument_name in option_specs:
+    if argument_name in option_specs:
         return option_specs[argument_name]
-    return None
+    else:
+        return None

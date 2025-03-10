@@ -10,8 +10,8 @@ def directlyProvidedBy(object):
         # 如果没有指定规范，尝试获取 implements 规范
         implements = getattr(object, "__implemented__", None)
         if implements is not None:
-            # 如果 implements 规范存在，返回其直接提供的接口
-            return implements.directlyProvidedBy(object)
+            # 如果 implements 规范存在，返回其提供的接口
+            return implements
         else:
             # 如果没有提供任何规范，返回空
             return None

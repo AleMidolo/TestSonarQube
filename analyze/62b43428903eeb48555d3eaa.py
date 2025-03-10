@@ -22,10 +22,10 @@ def formatmany(
     """
     formatted_sql = sql
     formatted_params = []
-
+    
     for params in many_params:
         converted_sql, converted_params = self._converter.convert_many(sql, params)
         formatted_sql = converted_sql
         formatted_params.append(converted_params)
-
+    
     return formatted_sql, formatted_params

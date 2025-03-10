@@ -6,12 +6,11 @@ def xml_children_as_dict(node):
     """
     result = {}
     for child in node:
-        tag = child.tag
-        if tag in result:
-            if isinstance(result[tag], list):
-                result[tag].append(child.text)
-            else:
-                result[tag] = [result[tag], child.text]
+        if child.tag not in result:
+            result[child.tag] = child.text
         else:
-            result[tag] = child.text
+            if isinstance(result[child.tag], list):
+                result[child.tag].append(child.text)
+            else:
+                result[child.tag] = [result[child.tag], child.text]
     return result
