@@ -1,4 +1,3 @@
-import json
 import requests
 
 def get_nodeinfo_well_known_document(url, document_path=None):

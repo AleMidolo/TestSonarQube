@@ -28,8 +28,8 @@ def find_path_type(path):
             return "object"
         
         # Check for "0=*" files
-        for filename in os.listdir(path):
-            if filename.startswith("0="):
+        for item in os.listdir(path):
+            if item.startswith("0="):
                 return "object"
         
         return "त्रुटि: पथ OCFL रूट या ऑब्जेक्ट नहीं है"

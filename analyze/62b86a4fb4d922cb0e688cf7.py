@@ -11,10 +11,14 @@ def validate_key(key):
         ValidationError: यदि दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।
     """
     # Define the regular expression pattern for the key
-    pattern = r'^[A-Za-z0-9_]+$'  # Example pattern: alphanumeric and underscore
+    pattern = r'^[A-Za-z0-9_]+$'
     
-    if not re.match(pattern, key):
-        raise ValidationError("Invalid key format. Key must be alphanumeric and may contain underscores.")
+    # Compile the regular expression
+    regex = re.compile(pattern)
+    
+    # Check if the key matches the pattern
+    if not regex.match(key):
+        raise ValidationError("Invalid key format. Key must contain only alphanumeric characters and underscores.")
     
     return True
 

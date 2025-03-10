@@ -12,9 +12,9 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     process = subprocess.Popen(
         command_list,
         cwd=cwd,
+        env=env,
         stdout=subprocess.PIPE,
         stderr=stderr,
-        env=env,
         text=True
     )
     
@@ -22,10 +22,9 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     
     if verbose:
         print(f"Command: {' '.join(command_list)}")
-        print(f"Working Directory: {cwd}")
-        print(f"Environment: {env}")
-        print(f"Output:\n{stdout}")
-        if stderr:
-            print(f"Errors:\n{stderr}")
+        if stdout:
+            print(f"Stdout: {stdout}")
+        if stderr and not hide_stderr:
+            print(f"Stderr: {stderr}")
     
     return process.returncode, stdout, stderr

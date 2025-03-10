@@ -8,32 +8,27 @@ def _group_files_by_xml_filename(source, xmls, files):
 
     पैरामीटर्स (Parameters)
     ----------
-    source : `str`
-        स्रोत फ़ोल्डर या ज़िप फ़ाइल का पथ।
-    
-    xmls : `list`
-        XML फ़ाइलों की सूची।
-    
-    files : `list`
-        फ़ोल्डर या ज़िप फ़ाइल में मौजूद फ़ाइलों की सूची।
+    xml_filename : `str`  
+        XML फ़ाइलों के नाम।  
+
+    files : `list`  
+        फ़ोल्डर या ज़िप फ़ाइल में मौजूद फ़ाइलों की सूची।  
 
     रिटर्न्स (Returns)
     -------
-    dict
-        - key: XML फ़ाइलों के नाम।
-        - value: पैकेज (Package)।
+    dict  
+        - key: XML फ़ाइलों के नाम।  
+        - value: पैकेज (Package)।  
     """
     grouped_files = {}
     
     for xml in xmls:
         xml_basename = os.path.splitext(os.path.basename(xml))[0]
-        package = []
+        grouped_files[xml_basename] = []
         
         for file in files:
             file_basename = os.path.splitext(os.path.basename(file))[0]
             if file_basename == xml_basename:
-                package.append(file)
-        
-        grouped_files[xml_basename] = package
+                grouped_files[xml_basename].append(file)
     
     return grouped_files

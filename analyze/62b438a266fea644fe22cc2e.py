@@ -15,7 +15,7 @@ def parse_arguments(*unparsed_arguments):
     # Parse the arguments
     args = parser.parse_args(unparsed_arguments)
 
-    # Create a dictionary to map subparser names to their arguments
+    # Create a dictionary to map subparser names to their respective Namespace objects
     parsed_arguments = {}
     if hasattr(args, 'subparser_name'):
         parsed_arguments[args.subparser_name] = args

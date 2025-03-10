@@ -1,3 +1,6 @@
+import os
+import hashlib
+
 def validate_version_inventories(self, version_dirs):
     """
     प्रत्येक संस्करण के पास उस बिंदु तक एक इन्वेंटरी होनी चाहिए।
@@ -7,18 +10,24 @@ def validate_version_inventories(self, version_dirs):
 
     version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
     """
+    root_inventory = {}
+    discrepancies = []
+
     for version_dir in version_dirs:
-        inventory_path = os.path.join(version_dir, "inventory.json")
+        inventory_path = os.path.join(version_dir, "inventory.txt")
         if not os.path.exists(inventory_path):
             raise FileNotFoundError(f"Inventory not found for version: {version_dir}")
-        
-        with open(inventory_path, 'r') as f:
-            inventory = json.load(f)
-        
-        root_inventory_path = os.path.join(version_dirs[0], "inventory.json")
-        with open(root_inventory_path, 'r') as f:
-            root_inventory = json.load(f)
-        
-        for content_digest in inventory.get("content_digests", []):
-            if content_digest not in root_inventory.get("content_digests", []):
-                print(f"Content digest {content_digest} in version {version_dir} differs from root inventory.")
+
+        with open(inventory_path, 'r') as file:
+            current_inventory = {}
+            for line in file:
+                filename, filehash = line.strip().split()
+                current_inventory[filename] = filehash
+
+                if filename in root_inventory:
+                    if root_inventory[filename] != filehash:
+                        discrepancies.append((filename, root_inventory[filename], filehash))
+                else:
+                    root_inventory[filename] = filehash
+
+    return discrepancies

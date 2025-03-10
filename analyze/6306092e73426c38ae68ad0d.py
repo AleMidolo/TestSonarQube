@@ -8,11 +8,13 @@ def create_complex_argumet_type(self, subcommand, type_name, option_name, spec_o
     :param spec_option: विकल्प की विशिष्टताएँ (option's specifications)
     :return: जटिल प्रकार का उदाहरण (complex type instance)
     """
-    # Create a complex type instance based on the provided parameters
-    complex_type_instance = {
-        "subcommand": subcommand,
-        "type_name": type_name,
-        "option_name": option_name,
-        "spec_option": spec_option
+    # Create a dictionary to represent the complex argument type
+    complex_type = {
+        'subcommand': subcommand,
+        'type_name': type_name,
+        'option_name': option_name,
+        'spec_option': spec_option
     }
-    return complex_type_instance
+    
+    # Return the complex type instance
+    return complex_type

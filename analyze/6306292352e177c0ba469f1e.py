@@ -5,7 +5,7 @@ def process_text_links(text):
     टेक्स्ट में लिंक को प्रोसेस करें, कुछ विशेषताएँ जोड़ें और टेक्स्ट में मौजूद लिंक को हाइपरलिंक में बदलें।
     """
     # Regular expression to find URLs in the text
-    url_pattern = re.compile(r'https?://\S+')
+    url_pattern = re.compile(r'https?://\S+|www\.\S+')
     
     def replace_with_hyperlink(match):
         url = match.group(0)

@@ -1,4 +1,3 @@
-import re
 from datetime import timedelta
 
 def parse_frequency(frequency):
@@ -13,24 +12,26 @@ def parse_frequency(frequency):
     if frequency is None or frequency.lower() == "हमेशा":
         return None
     
-    pattern = re.compile(r'(\d+)\s*(सप्ताह|दिन|घंटे|मिनट|सेकंड)')
-    match = pattern.match(frequency)
-    
-    if not match:
+    try:
+        num, unit = frequency.strip().split()
+        num = int(num)
+    except ValueError:
         raise ValueError("Invalid frequency format")
     
-    value = int(match.group(1))
-    unit = match.group(2)
+    unit_mapping = {
+        "सेकंड": "seconds",
+        "मिनट": "minutes",
+        "घंटे": "hours",
+        "दिन": "days",
+        "सप्ताह": "weeks",
+        "महीने": "months",  # Note: timedelta does not support months directly
+        "साल": "years"      # Note: timedelta does not support years directly
+    }
     
-    if unit == "सप्ताह":
-        return timedelta(weeks=value)
-    elif unit == "दिन":
-        return timedelta(days=value)
-    elif unit == "घंटे":
-        return timedelta(hours=value)
-    elif unit == "मिनट":
-        return timedelta(minutes=value)
-    elif unit == "सेकंड":
-        return timedelta(seconds=value)
-    else:
+    if unit not in unit_mapping:
         raise ValueError("Invalid time unit")
+    
+    if unit_mapping[unit] in ["months", "years"]:
+        raise ValueError("timedelta does not support months or years directly")
+    
+    return timedelta(**{unit_mapping[unit]: num})
