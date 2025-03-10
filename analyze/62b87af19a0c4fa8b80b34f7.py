@@ -22,11 +22,10 @@ def difference(d1, d2, level=-1):
     for key, value in d1.items():
         if key not in d2:
             diff[key] = value
-        elif isinstance(value, dict) and isinstance(d2[key], dict):
-            if level != 1:
-                sub_diff = difference(value, d2[key], level - 1 if level != -1 else -1)
-                if sub_diff:
-                    diff[key] = sub_diff
+        elif isinstance(value, dict) and isinstance(d2[key], dict) and level != 1:
+            sub_diff = difference(value, d2[key], level - 1 if level != -1 else -1)
+            if sub_diff:
+                diff[key] = sub_diff
         elif value != d2[key]:
             diff[key] = value
 

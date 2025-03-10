@@ -23,26 +23,13 @@ def update_last_applied_manifest_dict_from_resp(
             raise KeyError(f"Field '{field}' not found in the Kubernetes response.")
         
         if field not in last_applied_manifest:
-            if isinstance(schema, dict):
-                last_applied_manifest[field] = {}
-                update_last_applied_manifest_dict_from_resp(
-                    last_applied_manifest[field], schema, response[field]
-                )
-            elif isinstance(schema, list):
-                last_applied_manifest[field] = []
-                update_last_applied_manifest_list_from_resp(
-                    last_applied_manifest[field], schema, response[field]
-                )
-            else:
-                last_applied_manifest[field] = response[field]
-        else:
-            if isinstance(schema, dict):
-                update_last_applied_manifest_dict_from_resp(
-                    last_applied_manifest[field], schema, response[field]
-                )
-            elif isinstance(schema, list):
-                update_last_applied_manifest_list_from_resp(
-                    last_applied_manifest[field], schema, response[field]
-                )
-            else:
-                last_applied_manifest[field] = response[field]
+            last_applied_manifest[field] = response[field]
+        
+        if isinstance(schema, dict) and isinstance(response[field], dict):
+            update_last_applied_manifest_dict_from_resp(
+                last_applied_manifest[field], schema, response[field]
+            )
+        elif isinstance(schema, list) and isinstance(response[field], list):
+            update_last_applied_manifest_list_from_resp(
+                last_applied_manifest[field], schema, response[field]
+            )

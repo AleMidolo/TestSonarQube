@@ -8,13 +8,14 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
     try:
         # Extract the domain from the handle
         domain = handle.split('@')[-1]
-        # Construct the webfinger URL
-        url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
-        # Make the GET request
-        response = requests.get(url, timeout=5)
+        webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
+        
+        # Make the request to retrieve the webfinger document
+        response = requests.get(webfinger_url, timeout=5)
         response.raise_for_status()
-        # Return the response content if successful
+        
+        # Return the content if successful
         return response.text
-    except (requests.RequestException, IndexError):
+    except (requests.RequestException, ValueError):
         # Return None if any error occurs
         return None

@@ -19,20 +19,29 @@ def _update_context(self, context):
     if not hasattr(context, 'error'):
         context.error = {}
 
-    # Assuming the graph has properties like 'error_E_low', 'error_E_high', etc.
-    # We map these to 'x', 'y', 'z' based on their order.
-    error_mapping = {'x': 0, 'y': 1, 'z': 2}
-    error_index = 0
+    # Assuming self has a property `error_indices` that contains the indices of errors
+    if hasattr(self, 'error_indices'):
+        for error_name, index in self.error_indices.items():
+            if error_name not in context.error:
+                context.error[error_name] = {}
+            context.error[error_name]['index'] = index
 
-    for key, value in self.__dict__.items():
-        if key.startswith('error_'):
-            # Extract the coordinate name (e.g., 'E' from 'error_E_low')
-            coordinate = key.split('_')[1]
-            # Map to 'x', 'y', or 'z'
-            if coordinate in error_mapping:
-                error_name = list(error_mapping.keys())[list(error_mapping.values()).index(error_mapping[coordinate])]
-                # Append the error index to the context
-                if error_name not in context.error:
-                    context.error[error_name] = {}
-                context.error[error_name]['index'] = error_index
-                error_index += 1
+    # Assuming self has a property `fields` that contains the fields of the graph
+    if hasattr(self, 'fields'):
+        for field in self.fields:
+            if field.startswith('error_'):
+                error_type = field.split('_')[1]
+                if error_type not in context.error:
+                    context.error[error_type] = {}
+                # Assuming the index is derived from the field name
+                context.error[error_type]['index'] = self.fields.index(field)
+
+    # Ensure that the error names are simplified to "x", "y", "z" if they correspond to coordinates
+    if hasattr(self, 'coordinates'):
+        for i, coord in enumerate(self.coordinates):
+            if i < 3:  # Only the first three coordinates are simplified
+                error_key = ['x', 'y', 'z'][i]
+                if error_key in context.error:
+                    context.error[error_key]['index'] = context.error.get(coord, {}).get('index', None)
+
+    return context

@@ -12,7 +12,6 @@ def _explore_zipfile(zip_path):
     ----------
     zip_path : str
         zip file path
-
     Returns
     -------
     dict
@@ -24,6 +23,7 @@ def _explore_zipfile(zip_path):
         for file_name in zip_ref.namelist():
             basename = os.path.basename(file_name)
             if basename.endswith('.xml'):
-                data[basename].append(file_name)
+                xml_basename = basename[:-4]  # Remove '.xml' extension
+                data[xml_basename].append(file_name)
     
     return dict(data)

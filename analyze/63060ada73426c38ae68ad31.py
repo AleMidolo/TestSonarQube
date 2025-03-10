@@ -8,28 +8,27 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param values_dict: The dict of with arguments
     """
     if parser_name == "main":
-        for key, value in values_dict.items():
-            if key == "port":
-                values_dict[key] = int(value)
-            elif key == "verbose":
-                values_dict[key] = bool(value)
-            elif key == "timeout":
-                values_dict[key] = float(value)
+        if "port" in values_dict:
+            values_dict["port"] = int(values_dict["port"])
+        if "timeout" in values_dict:
+            values_dict["timeout"] = float(values_dict["timeout"])
+        if "verbose" in values_dict:
+            values_dict["verbose"] = values_dict["verbose"].lower() == "true"
+    
     elif parser_name == "virsh":
-        for key, value in values_dict.items():
-            if key == "memory":
-                values_dict[key] = int(value)
-            elif key == "cpu":
-                values_dict[key] = int(value)
-            elif key == "active":
-                values_dict[key] = bool(value)
+        if "memory" in values_dict:
+            values_dict["memory"] = int(values_dict["memory"])
+        if "cpu" in values_dict:
+            values_dict["cpu"] = int(values_dict["cpu"])
+        if "autostart" in values_dict:
+            values_dict["autostart"] = values_dict["autostart"].lower() == "true"
+    
     elif parser_name == "ospd":
-        for key, value in values_dict.items():
-            if key == "threads":
-                values_dict[key] = int(value)
-            elif key == "debug":
-                values_dict[key] = bool(value)
-            elif key == "interval":
-                values_dict[key] = float(value)
+        if "threads" in values_dict:
+            values_dict["threads"] = int(values_dict["threads"])
+        if "debug" in values_dict:
+            values_dict["debug"] = values_dict["debug"].lower() == "true"
+    
     # Add more parser-specific conversions as needed
+    
     return values_dict

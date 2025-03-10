@@ -6,21 +6,11 @@ def is_fill_request_seq(seq):
     or contains at least one such,
     and it is not a Source sequence.
     """
-    # Assuming FillRequest and Source are classes or types that can be checked
-    # Replace with actual type checking logic as needed
-    def is_fill_request(element):
-        return isinstance(element, FillRequest)  # Replace FillRequest with actual type
+    from collections.abc import Sequence
 
-    def is_source(element):
-        return isinstance(element, Source)  # Replace Source with actual type
-
-    if is_source(seq):
-        return False
-
-    if is_fill_request(seq):
+    if isinstance(seq, FillRequest):
         return True
-
-    if isinstance(seq, (list, tuple)):
-        return any(is_fill_request(element) for element in seq)
-
+    elif isinstance(seq, Sequence):
+        if any(isinstance(item, FillRequest) for item in seq):
+            return not isinstance(seq, Source)
     return False

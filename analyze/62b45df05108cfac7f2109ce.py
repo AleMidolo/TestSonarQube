@@ -16,17 +16,17 @@ def validate(self, path):
 
     # Check for the presence of required OCFL files and directories
     required_files = ['inventory.json', 'inventory.json.sha512']
-    required_dirs = ['objects']
+    required_dirs = ['extensions', 'objects']
 
-    # Validate required files
     for file in required_files:
         if not fs.exists(file):
             return False
 
-    # Validate required directories
-    for directory in required_dirs:
-        if not fs.isdir(directory):
+    for dir in required_dirs:
+        if not fs.isdir(dir):
             return False
 
-    # If all checks pass, return True
+    # Additional validation logic can be added here
+    # For example, checking the structure of the inventory.json file
+
     return True

@@ -3,10 +3,10 @@ def get_silent_args(self, args):
     list of silenced argument
 
     :param args: The received arguments.
-    :return: list, slienced argument names
+    :return: list, silenced argument names
     """
     silenced_args = []
     for arg in args:
-        if arg.startswith('_'):
-            silenced_args.append(arg)
+        if arg.startswith('--silent-'):
+            silenced_args.append(arg[len('--silent-'):])
     return silenced_args

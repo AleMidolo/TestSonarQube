@@ -13,36 +13,26 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     import traceback
     import sys
 
-    # Get the exception traceback
-    exc_type, exc_value, exc_traceback = sys.exc_info()
-    if exc_traceback is None:
-        exc_traceback = e.__traceback__
+    # Get the exception type and message
+    exc_type = type(e).__name__
+    exc_msg = str(e)
 
-    # Format the exception
-    tb_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-    tb_str = "".join(tb_list)
+    # Get the traceback
+    tb_list = traceback.format_tb(sys.exc_info()[2])
 
-    # Limit the call stack level
-    if max_level is not None:
-        tb_lines = tb_str.splitlines()
-        if len(tb_lines) > max_level:
-            tb_lines = tb_lines[:max_level]
-            tb_lines.append("... (call stack truncated)")
-        tb_str = "\n".join(tb_lines)
+    # Limit the traceback to max_level
+    if len(tb_list) > max_level:
+        tb_list = tb_list[:max_level]
 
-    # Limit the path level
-    if max_path_level is not None:
-        tb_lines = tb_str.splitlines()
-        for i, line in enumerate(tb_lines):
-            if "File" in line and "line" in line:
-                parts = line.split(", ")
-                if len(parts) > 1:
-                    path = parts[0].split("File ")[1]
-                    path_parts = path.split("/")
-                    if len(path_parts) > max_path_level:
-                        path_parts = path_parts[-max_path_level:]
-                        path = "/".join(path_parts)
-                        tb_lines[i] = f"File {path}, {parts[1]}"
-        tb_str = "\n".join(tb_lines)
+    # Format the traceback
+    formatted_tb = []
+    for i, tb in enumerate(tb_list):
+        if i >= max_path_level:
+            break
+        formatted_tb.append(tb.strip())
 
-    return tb_str
+    # Combine the exception type, message, and traceback
+    result = f"{exc_type}: {exc_msg}\n"
+    result += "\n".join(formatted_tb)
+
+    return result

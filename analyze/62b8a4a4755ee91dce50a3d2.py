@@ -18,11 +18,8 @@ def _fromutc(self, dt):
     new_dt = dt.astimezone(self)
 
     # Check if the datetime is ambiguous in the new timezone
-    if self._is_ambiguous(new_dt):
-        # If the original datetime was in a fold state, ensure the new one is too
-        if dt.fold:
-            new_dt = new_dt.replace(fold=1)
-        else:
-            new_dt = new_dt.replace(fold=0)
+    if new_dt.fold:
+        # If it's ambiguous, ensure it's the first occurrence
+        new_dt = new_dt.replace(fold=0)
 
     return new_dt

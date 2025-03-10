@@ -1,4 +1,4 @@
-from zope.interface import Invalid
+from zope.interface import Invalid, providedBy
 from zope.interface.verify import verifyObject, verifyClass
 
 def _verify(iface, candidate, tentative=False, vtype=None):
@@ -33,11 +33,13 @@ def _verify(iface, candidate, tentative=False, vtype=None):
         alone, like before.
     """
     errors = []
-    
+
+    # Step 1: Verify that the candidate claims to provide the interface
     if not tentative:
         if not iface.providedBy(candidate):
-            errors.append(f"{candidate} does not provide {iface}")
-    
+            errors.append(f"{candidate} does not claim to provide {iface}")
+
+    # Step 2: Verify that the candidate defines all necessary methods and attributes
     try:
         if vtype == 'class':
             verifyClass(iface, candidate)
@@ -45,11 +47,12 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             verifyObject(iface, candidate)
     except Invalid as e:
         errors.append(str(e))
-    
+
+    # Step 3: Handle errors
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
         else:
             raise Invalid("\n".join(errors))
-    
+
     return True

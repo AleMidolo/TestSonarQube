@@ -12,7 +12,7 @@ def process_text_links(text):
         url = match.group(0)
         return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
     
-    # Replace URLs in the text with clickable links
+    # Replace URLs in the text with links
     processed_text = url_pattern.sub(replace_with_link, text)
     
     return processed_text
