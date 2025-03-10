@@ -8,7 +8,7 @@ def dehydrate_time(value):
     :type value: Time  
     :return:  
     """
-    if isinstance(value, time):
-        return value.isoformat()
-    else:
-        raise TypeError("Expected a time object")
+    if not isinstance(value, time):
+        raise TypeError("Expected a datetime.time object")
+    
+    return value.isoformat()

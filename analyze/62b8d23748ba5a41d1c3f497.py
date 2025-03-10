@@ -8,6 +8,7 @@ def popitem(self):
     # Find the key with the least frequency
     min_key = min(self.keys(), key=lambda k: self[k])
     
-    # Remove and return the (key, value) pair
+    # Remove the key-value pair
     value = self.pop(min_key)
+    
     return (min_key, value)

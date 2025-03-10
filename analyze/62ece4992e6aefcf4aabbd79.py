@@ -12,12 +12,10 @@ def make_find_paths(find_paths):
 
     ['sh:**/*foo.txt*/**', 'pp:root/somedir']
     """
-    result = []
+    transformed_paths = []
     for path in find_paths:
-        if re.match(r'^[a-zA-Z]+:', path):
-            # If the path starts with a pattern prefix (e.g., 'pp:'), leave it unchanged
-            result.append(path)
+        if path.startswith('pp:'):
+            transformed_paths.append(path)
         else:
-            # Otherwise, convert it to a glob pattern
-            result.append(f'sh:**/*{path}*/**')
-    return result
+            transformed_paths.append(f'sh:**/*{path}*/**')
+    return transformed_paths

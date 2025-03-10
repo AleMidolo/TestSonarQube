@@ -13,7 +13,7 @@ def find_path_type(path):
     यह केवल "0=*" नमस्ते फ़ाइलों को देखकर निर्देशिका के प्रकार का निर्धारण करता है।
     """
     if not os.path.exists(path):
-        return "पथ मौजूद नहीं है"
+        return "त्रुटि: पथ मौजूद नहीं है"
     
     if os.path.isfile(path):
         return "file"
@@ -28,6 +28,6 @@ def find_path_type(path):
             if item.startswith("0="):
                 return "object"
         
-        return "यह निर्देशिका OCFL रूट या ऑब्जेक्ट नहीं है"
+        return "त्रुटि: पथ OCFL रूट या ऑब्जेक्ट नहीं है"
     
-    return "अज्ञात प्रकार"
+    return "त्रुटि: अज्ञात पथ प्रकार"
