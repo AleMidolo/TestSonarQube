@@ -23,7 +23,7 @@ def format(
         out_params = list(params)
         formatted_sql = sql
         for i in range(len(params)):
-            formatted_sql = formatted_sql.replace(f"?", "?", 1)
+            formatted_sql = formatted_sql.replace(f":{i}", "?")
         return formatted_sql, out_params
     else:
         raise TypeError("params must be a dict, list, or tuple")

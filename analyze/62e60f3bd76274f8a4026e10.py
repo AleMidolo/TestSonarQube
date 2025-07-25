@@ -11,5 +11,5 @@ def dehydrate_timedelta(value):
     if not isinstance(value, timedelta):
         raise TypeError("Expected a timedelta object")
     
-    # Convert timedelta to total seconds and return as a float
+    # Convert timedelta to total seconds (float)
     return value.total_seconds()

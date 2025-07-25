@@ -1,5 +1,5 @@
 from zope.interface import Invalid, providedBy
-from zope.interface.verify import verifyObject, verifyClass
+from inspect import signature
 
 def _verify(iface, candidate, tentative=False, vtype=None):
     """
@@ -18,20 +18,34 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     errors = []
 
     # Step 1: Verify that the candidate claims to provide the interface
-    if not tentative:
-        if not iface.providedBy(candidate):
-            errors.append(f"{candidate} does not claim to provide {iface}.")
+    if not tentative and not iface.providedBy(candidate):
+        errors.append(f"{candidate} does not claim to provide {iface}.")
 
-    # Step 2: Verify that the candidate defines all required methods and attributes
-    try:
-        if vtype == 'class':
-            verifyClass(iface, candidate)
+    # Step 2: Verify that the candidate defines all required methods
+    required_methods = iface.namesAndDescriptions(all=True)
+    for name, desc in required_methods:
+        if not hasattr(candidate, name):
+            errors.append(f"Method {name} is required but not implemented by {candidate}.")
         else:
-            verifyObject(iface, candidate)
-    except Invalid as e:
-        errors.append(str(e))
+            # Step 3: Verify method signatures (if possible)
+            candidate_method = getattr(candidate, name)
+            if callable(candidate_method):
+                try:
+                    candidate_sig = signature(candidate_method)
+                    required_sig = signature(desc.getSignature())
+                    if candidate_sig != required_sig:
+                        errors.append(f"Method {name} has an incorrect signature. Expected {required_sig}, got {candidate_sig}.")
+                except ValueError:
+                    # If signature cannot be determined, skip this check
+                    pass
 
-    # Step 3: If there are any errors, raise them
+    # Step 4: Verify that the candidate defines all required attributes
+    required_attrs = iface.namesAndDescriptions(all=False)
+    for name, desc in required_attrs:
+        if not hasattr(candidate, name):
+            errors.append(f"Attribute {name} is required but not defined by {candidate}.")
+
+    # If there are any errors, raise an Invalid exception with all errors
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])

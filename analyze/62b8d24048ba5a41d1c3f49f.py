@@ -1,5 +1,5 @@
 import time
-from functools import wraps, lru_cache
+from functools import lru_cache, wraps
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     """

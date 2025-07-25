@@ -1,6 +1,6 @@
 import subprocess
 import sys
-from typing import Sequence, Any, Tuple
+from typing import Sequence, Any
 
 def xargs(
         cmd: tuple[str, ...],
@@ -18,36 +18,24 @@ def xargs(
     - target_concurrency: एक साथ चलने वाले विभाजनों (partitions) की लक्षित संख्या।
     """
     if color and sys.platform != "win32":
-        import pty
-        import os
+        kwargs["stdin"] = subprocess.PIPE
+        kwargs["stdout"] = subprocess.PIPE
+        kwargs["stderr"] = subprocess.PIPE
+        kwargs["universal_newlines"] = True
+        kwargs["bufsize"] = 1
+        kwargs["preexec_fn"] = lambda: subprocess.call(["stty", "raw", "-echo"])
 
-        master_fd, slave_fd = pty.openpty()
-        process = subprocess.Popen(
-            cmd + tuple(varargs),
-            stdout=slave_fd,
-            stderr=slave_fd,
-            close_fds=True,
-            **kwargs
-        )
-        os.close(slave_fd)
-        output = b""
-        while True:
-            try:
-                data = os.read(master_fd, 1024)
-                if not data:
-                    break
-                output += data
-            except OSError:
-                break
-        os.close(master_fd)
-        return_code = process.wait()
-        return (return_code, output)
-    else:
-        process = subprocess.Popen(
-            cmd + tuple(varargs),
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            **kwargs
-        )
+    processes = []
+    for i in range(0, len(varargs), target_concurrency):
+        chunk = varargs[i:i + target_concurrency]
+        process = subprocess.Popen(cmd + tuple(chunk), **kwargs)
+        processes.append(process)
+
+    exit_codes = []
+    outputs = []
+    for process in processes:
         stdout, stderr = process.communicate()
-        return (process.returncode, stdout)
+        exit_codes.append(process.returncode)
+        outputs.append(stdout)
+
+    return (max(exit_codes), b"".join(outputs)

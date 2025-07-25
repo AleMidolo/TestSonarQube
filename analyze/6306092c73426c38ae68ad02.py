@@ -11,4 +11,4 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
         print(f"अप्रचलित तर्क: {arg}")
         print(f"CLI से मान: {cli_args[arg]}")
         print(f"फ़ाइल से मान: {answer_file_args[arg]}")
-        print("यह तर्क अप्रचलित है और भविष्य के संस्करणों में हटाया जा सकता है।\n")
+        print("-" * 40)

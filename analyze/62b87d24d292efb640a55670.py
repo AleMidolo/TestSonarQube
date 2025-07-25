@@ -12,9 +12,4 @@ def get_versions():
                 versions[package] = 'Not Installed'
         return versions
     except ImportError:
-        return {
-            'numpy': '1.21.0',
-            'pandas': '1.3.0',
-            'scipy': '1.7.0',
-            'matplotlib': '3.4.0'
-        }
+        return {'numpy': '1.0.0', 'pandas': '1.0.0', 'scipy': '1.0.0', 'matplotlib': '1.0.0'}

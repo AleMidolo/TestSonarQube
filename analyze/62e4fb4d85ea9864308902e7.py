@@ -14,15 +14,15 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
         return cmd
 
     # Handle shebang on Windows
-    if os.name == 'nt' and len(cmd) > 0:
-        first_arg = cmd[0]
-        if first_arg.startswith('#!'):
-            # Extract the interpreter path from the shebang
-            interpreter_path = first_arg[2:].strip()
-            # Normalize the path to handle deep paths
-            interpreter_path = os.path.normpath(interpreter_path)
-            # Replace the shebang with the normalized interpreter path
-            normalized_cmd = (interpreter_path,) + cmd[1:]
-            return normalized_cmd
+    if os.name == 'nt' and len(cmd) > 1 and cmd[0].startswith('#!'):
+        # Extract the interpreter path from the shebang
+        interpreter = cmd[0][2:].strip()
+        # Normalize the interpreter path
+        interpreter = os.path.normpath(interpreter)
+        # Replace the shebang with the normalized interpreter path
+        cmd = (interpreter,) + cmd[1:]
 
-    return cmd
+    # Normalize all paths in the command tuple
+    normalized_cmd = tuple(os.path.normpath(arg) if os.path.isabs(arg) else arg for arg in cmd)
+
+    return normalized_cmd

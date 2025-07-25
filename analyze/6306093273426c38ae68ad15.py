@@ -11,10 +11,10 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     import subprocess
 
     # Convert vars_dict to a string format suitable for Ansible extra-vars
-    extra_vars = " ".join([f"{k}={v}" for k, v in vars_dict.items()])
+    extra_vars = " ".join([f"{key}={value}" for key, value in vars_dict.items()])
 
-    # Construct the full command
-    command = ["ansible-playbook"] + cli_args + ["--extra-vars", extra_vars]
+    # Construct the full command to run Ansible playbook
+    command = ["ansible-playbook"] + cli_args + ["-e", extra_vars]
 
     # Execute the command
     result = subprocess.run(command, capture_output=True, text=True)

@@ -12,10 +12,6 @@ def amend_bzparams(self, params, bug_ids):
         params['status'] = 'RESOLVED'
         # Example: Setting the resolution
         params['resolution'] = 'FIXED'
-        # You can also add more complex logic here
-        # For example, checking if the bug is already resolved
-        if params.get('status') == 'RESOLVED':
-            params['comment'] = f"Bug {bug_id} is already resolved."
-        # You can also log the changes or perform other actions
-        print(f"Parameters amended for bug {bug_id}: {params}")
-    return params
+        # You can also add more complex logic based on the bug_id or other conditions
+        # For now, just print the modified params for demonstration
+        print(f"Modified params for bug {bug_id}: {params}")
