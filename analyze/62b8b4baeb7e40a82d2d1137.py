@@ -30,14 +30,14 @@ def verifyObject(iface, candidate, tentative=False):
         alone, like before.
     """
     from zope.interface import providedBy, Invalid
-    from inspect import signature, Signature
+    from inspect import signature, Parameter
 
     errors = []
 
     if not tentative and not providedBy(candidate, iface):
         errors.append(f"{candidate} does not provide {iface}")
 
-    required_methods = iface.names()  # Assuming iface has a method to list required methods
+    required_methods = iface.names()
     for method_name in required_methods:
         if not hasattr(candidate, method_name):
             errors.append(f"{candidate} is missing method {method_name}")
@@ -47,10 +47,15 @@ def verifyObject(iface, candidate, tentative=False):
         expected_signature = signature(getattr(iface, method_name))
         actual_signature = signature(method)
 
-        if expected_signature != actual_signature:
-            errors.append(f"Method {method_name} in {candidate} has incorrect signature")
+        if len(expected_signature.parameters) != len(actual_signature.parameters):
+            errors.append(f"{method_name} has incorrect number of parameters in {candidate}")
+            continue
 
-    required_attributes = iface.attributes()  # Assuming iface has a method to list required attributes
+        for param in expected_signature.parameters.values():
+            if param.default is Parameter.empty and param.name not in actual_signature.parameters:
+                errors.append(f"{method_name} is missing required parameter {param.name} in {candidate}")
+
+    required_attributes = iface.attributes()
     for attr_name in required_attributes:
         if not hasattr(candidate, attr_name):
             errors.append(f"{candidate} is missing attribute {attr_name}")
@@ -58,7 +63,6 @@ def verifyObject(iface, candidate, tentative=False):
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
-        else:
-            raise Invalid(errors)
+        raise Invalid(errors)
 
     return True

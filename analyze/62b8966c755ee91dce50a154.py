@@ -77,56 +77,62 @@ def isoparse(self, dt_str):
     from dateutil import tz
 
     # Define regex patterns for parsing
-    date_pattern = r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?(?:W(\d{2})(?:-?(\d))?)?'
+    date_pattern = r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?'
+    week_pattern = r'(\d{4})-W(\d{2})(?:-?(\d{1}))?'
     time_pattern = r'T(\d{1,2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?)?'
-    tz_pattern = r'([+-]\d{2}:\d{2}|Z|[+-]\d{2}\d{2}|[+-]\d{2})?'
+    tz_pattern = r'([+-]\d{2}:\d{2}|Z|[+-]\d{4}|[+-]\d{2})?'
 
     # Combine patterns
-    full_pattern = re.compile(f'^{date_pattern}(?:{time_pattern})?{tz_pattern}?$')
+    iso_pattern = re.compile(f'^{date_pattern}(?:{week_pattern})?{time_pattern}?{tz_pattern}$')
 
-    match = full_pattern.match(dt_str)
+    match = iso_pattern.match(dt_str)
     if not match:
-        raise ValueError(f"Invalid ISO-8601 datetime string: {dt_str}")
+        raise ValueError(f"Invalid ISO-8601 string: {dt_str}")
 
     # Extract date components
-    year = int(match.group(1))
-    month = int(match.group(2) or 1)
-    day = int(match.group(3) or 1)
-    week = match.group(4)
-    week_day = match.group(5)
+    year, month, day = match.group(1), match.group(2), match.group(3)
+    week, iso_day = match.group(5), match.group(6)
 
     if week:
-        # ISO week date
-        week = int(week)
-        week_day = int(week_day or 1)
-        # Calculate the first day of the year
+        # Handle ISO week date
+        year, week, iso_day = int(year), int(week), int(iso_day or 1)
         first_day_of_year = datetime(year, 1, 1)
-        # Calculate the first Monday of the year
-        first_monday = first_day_of_year + timedelta(days=(7 - first_day_of_year.isoweekday()) % 7)
-        # Calculate the date
-        date = first_monday + timedelta(weeks=week - 1, days=week_day - 1)
+        first_weekday = first_day_of_year.isoweekday()
+        days_to_first_week = (7 - first_weekday) % 7
+        first_week_start = first_day_of_year + timedelta(days=days_to_first_week)
+        date = first_week_start + timedelta(weeks=week - 1, days=iso_day - 1)
     else:
-        # Regular date
+        # Handle calendar date
+        year, month, day = int(year), int(month or 1), int(day or 1)
         date = datetime(year, month, day)
 
     # Extract time components
-    hour = int(match.group(6) or 0)
-    minute = int(match.group(7) or 0)
-    second = int(match.group(8) or 0)
-    microsecond = int(match.group(9) or 0)
+    hour, minute, second, microsecond = match.group(7), match.group(8), match.group(9), match.group(10)
+    hour = int(hour or 0)
+    minute = int(minute or 0)
+    second = int(second or 0)
+    microsecond = int(microsecond.ljust(6, '0')) if microsecond else 0
 
-    # Create datetime object
-    dt = date.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
+    # Handle midnight case
+    if hour == 24 and minute == 0 and second == 0:
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+    else:
+        date = date.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
 
     # Extract timezone
-    tz_str = match.group(10)
-    if tz_str == 'Z':
-        dt = dt.replace(tzinfo=tz.tzutc())
-    elif tz_str:
-        if ':' in tz_str:
-            offset = tz.tzoffset(None, int(tz_str[:3]) * 3600 + int(tz_str[4:]) * 60)
-        else:
-            offset = tz.tzoffset(None, int(tz_str) * 3600)
-        dt = dt.replace(tzinfo=offset)
+    tz_offset = match.group(11)
+    if tz_offset == 'Z':
+        tzinfo = tz.tzutc()
+    elif tz_offset:
+        sign = 1 if tz_offset[0] == '+' else -1
+        hours = int(tz_offset[1:3])
+        minutes = int(tz_offset[3:5]) if len(tz_offset) > 3 else 0
+        tzinfo = tz.tzoffset(None, sign * (hours * 3600 + minutes * 60))
+    else:
+        tzinfo = None
 
-    return dt
+    # Set timezone info
+    if tzinfo:
+        date = date.replace(tzinfo=tzinfo)
+
+    return date

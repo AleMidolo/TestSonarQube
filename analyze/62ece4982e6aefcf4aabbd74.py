@@ -31,6 +31,6 @@ def prepare_repository_from_archive(
     if filename:
         extracted_path = tmp_path / filename
     else:
-        extracted_path = next(tmp_path.iterdir())  # Get the first extracted directory
+        extracted_path = next(tmp_path.iterdir())
 
     return f'file://{extracted_path.resolve()}'

@@ -6,6 +6,6 @@ def test_tag(tag: str) -> bool:
         return False
     if len(tag) > 20:
         return False
-    if not tag.isalnum():
+    if not tag.isalnum() and '_' not in tag:
         return False
     return True

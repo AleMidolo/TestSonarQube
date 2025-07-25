@@ -15,6 +15,7 @@ def make_find_paths(find_paths):
     for path in find_paths:
         if ':' in path:  # Check if it's an existing pattern
             transformed_paths.append(path)
-        else:  # Transform path fragment into glob pattern
-            transformed_paths.append(f'sh:**/*{path}*/**')
+        else:  # Transform the path fragment into a glob pattern
+            transformed_path = f'sh:**/*{path}*/**'
+            transformed_paths.append(transformed_path)
     return transformed_paths

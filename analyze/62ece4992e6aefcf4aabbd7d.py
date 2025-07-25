@@ -1,5 +1,6 @@
 import subprocess
 import os
+import sys
 import multiprocessing
 
 def subprocess_run_helper(func, *args, timeout, extra_env=None):
@@ -19,6 +20,7 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     def target():
         if extra_env:
             os.environ.update(extra_env)
+        # Call the function with the provided arguments
         func(*args)
 
     process = multiprocessing.Process(target=target)
@@ -29,3 +31,5 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
         process.terminate()
         process.join()
         raise TimeoutError("The function call timed out.")
+    
+    return process.exitcode
