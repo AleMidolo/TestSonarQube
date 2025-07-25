@@ -16,8 +16,8 @@ def difference(d1, d2, level=-1):
     for k, v in d1.items():
         if k not in d2:
             diff[k] = v
-        elif isinstance(v, dict) and isinstance(d2[k], dict) and level != 1:
-            sub_diff = difference(v, d2[k], level - 1 if level != -1 else -1)
+        elif isinstance(v, dict) and isinstance(d2[k], dict) and level != 0:
+            sub_diff = difference(v, d2[k], level - 1 if level > 0 else -1)
             if sub_diff:
                 diff[k] = sub_diff
         elif v != d2[k]:

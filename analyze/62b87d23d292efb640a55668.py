@@ -4,13 +4,12 @@ def get_config():
     """
     class VersioneerConfig:
         def __init__(self):
-            self.version = "0.1.0"
-            self.description = "Default configuration for Versioneer"
+            self.version = "1.0.0"
             self.author = "Unknown"
-            self.license = "MIT"
-        
+            self.description = "Default configuration for Versioneer"
+
         def __repr__(self):
-            return f"VersioneerConfig(version={self.version}, description={self.description}, author={self.author}, license={self.license})"
-    
+            return f"VersioneerConfig(version={self.version}, author={self.author}, description={self.description})"
+
     config = VersioneerConfig()
     return config
