@@ -34,17 +34,22 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         result = {
             'subject': webfinger_data['subject'],
             'aliases': webfinger_data.get('aliases', []),
-            'links': {}
+            'links': {},
+            'properties': {}
         }
         
-        # Analizza i link
+        # Elabora i link
         for link in webfinger_data.get('links', []):
             if 'rel' in link and 'href' in link:
                 result['links'][link['rel']] = link['href']
                 
+        # Elabora le proprietà
+        for key, value in webfinger_data.get('properties', {}).items():
+            result['properties'][key] = value
+            
         return result
         
     except requests.exceptions.RequestException as e:
         raise ConnectionError(f"Impossibile recuperare il webfinger: {str(e)}")
     except json.JSONDecodeError:
-        raise ValueError("Il documento webfinger non è in formato JSON valido")
+        raise ValueError("Documento webfinger non è in formato JSON valido")

@@ -18,9 +18,10 @@ def validate_from_file(cls, yaml_file=None):
         if not isinstance(yaml_data, dict):
             raise IRValidatorException("Il file YAML deve contenere un dizionario")
             
-        required_fields = ['field1', 'field2', 'field3']  # Add required fields here
-        
+        # Verifica campi obbligatori
+        required_fields = ['field1', 'field2', 'field3']  # Esempio campi richiesti
         missing_fields = []
+        
         for field in required_fields:
             if field not in yaml_data:
                 missing_fields.append(field)

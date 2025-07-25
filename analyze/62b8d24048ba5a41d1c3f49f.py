@@ -6,6 +6,8 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     def decorator(func):
         # Cache che memorizza i risultati e i timestamp
         cache = OrderedDict()
+        # Cache per i timestamp di scadenza
+        expires = OrderedDict()
         
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -15,37 +17,33 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
                 key += tuple(type(arg) for arg in args)
                 key += tuple(type(val) for val in kwargs.values())
             
-            # Ottiene il timestamp corrente
+            # Verifica se la chiave è nella cache e non è scaduta
             now = timer()
-            
-            # Rimuove le entry scadute
-            expired = []
-            for k, (val, timestamp) in cache.items():
-                if now - timestamp > ttl:
-                    expired.append(k)
-            for k in expired:
-                cache.pop(k)
-                
-            # Controlla se il risultato è in cache e non scaduto
-            if key in cache:
-                val, timestamp = cache[key]
-                if now - timestamp <= ttl:
+            try:
+                result = cache[key]
+                if now < expires[key]:
                     # Sposta l'elemento in fondo (LRU)
                     cache.move_to_end(key)
-                    return val
+                    expires.move_to_end(key)
+                    return result
                 else:
                     # Rimuove l'elemento scaduto
-                    cache.pop(key)
+                    del cache[key]
+                    del expires[key]
+            except KeyError:
+                pass
             
             # Calcola il nuovo risultato
             result = func(*args, **kwargs)
             
             # Aggiunge il risultato alla cache
-            cache[key] = (result, now)
+            cache[key] = result
+            expires[key] = now + ttl
             
             # Rimuove gli elementi più vecchi se la cache supera maxsize
             while len(cache) > maxsize:
                 cache.popitem(last=False)
+                expires.popitem(last=False)
                 
             return result
             
@@ -55,7 +53,7 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
             'ttl': ttl,
             'current_size': len(cache)
         }
-        wrapper.cache_clear = cache.clear
+        wrapper.cache_clear = lambda: (cache.clear(), expires.clear())
         
         return wrapper
     return decorator

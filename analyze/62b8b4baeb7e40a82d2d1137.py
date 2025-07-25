@@ -30,40 +30,48 @@ def verifyObject(iface, candidate, tentative=False):
                 desc_sig = signature(desc)
                 
                 if impl_sig != desc_sig:
-                    errors['wrong_signature'].append((name, str(desc_sig), str(impl_sig)))
+                    errors['wrong_signature'].append(
+                        (name, f"Expected {desc_sig}, got {impl_sig}")
+                    )
             except ValueError:
-                # Non è possibile ottenere la firma
+                # Non è possibile ottenere la firma, lo ignoriamo
                 pass
 
         else:
             # Verifica attributi
-            if not hasattr(candidate, name):
+            try:
+                getattr(candidate, name)
+            except AttributeError:
                 errors['missing_attributes'].append(name)
 
     # Gestione errori
     if not errors:
         return True
 
-    # Crea messaggi di errore
-    error_messages = []
-    
+    # Se c'è un solo tipo di errore con una sola istanza
+    total_errors = sum(len(v) for v in errors.values())
+    if total_errors == 1:
+        for error_type, instances in errors.items():
+            if instances:
+                if error_type == 'missing_methods':
+                    raise BrokenImplementation(iface, instances[0])
+                elif error_type == 'not_callable':
+                    raise BrokenMethodImplementation(iface, instances[0])
+                elif error_type == 'wrong_signature':
+                    name, msg = instances[0]
+                    raise BrokenMethodImplementation(iface, name, msg)
+                elif error_type == 'missing_attributes':
+                    raise BrokenImplementation(iface, instances[0])
+
+    # Altrimenti, raccogliamo tutti gli errori
+    error_msg = []
     if errors['missing_methods']:
-        error_messages.append(f"Metodi mancanti: {', '.join(errors['missing_methods'])}")
-    
+        error_msg.append(f"Missing methods: {', '.join(errors['missing_methods'])}")
     if errors['not_callable']:
-        error_messages.append(f"Attributi non chiamabili: {', '.join(errors['not_callable'])}")
-    
+        error_msg.append(f"Non-callable methods: {', '.join(errors['not_callable'])}")
     if errors['wrong_signature']:
-        sig_errors = [f"{name} (atteso: {exp}, trovato: {got})" 
-                     for name, exp, got in errors['wrong_signature']]
-        error_messages.append(f"Firme errate: {', '.join(sig_errors)}")
-    
+        error_msg.append(f"Wrong signatures: {'; '.join(f'{name}: {msg}' for name, msg in errors['wrong_signature'])}")
     if errors['missing_attributes']:
-        error_messages.append(f"Attributi mancanti: {', '.join(errors['missing_attributes'])}")
+        error_msg.append(f"Missing attributes: {', '.join(errors['missing_attributes'])}")
 
-    # Se c'è un solo errore, solleva direttamente quello
-    if len(error_messages) == 1:
-        raise BrokenImplementation(iface, error_messages[0])
-
-    # Altrimenti solleva tutti gli errori insieme
-    raise Invalid("\n".join(error_messages))
+    raise Invalid('\n'.join(error_msg))

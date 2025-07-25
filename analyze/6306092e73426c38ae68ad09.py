@@ -4,8 +4,10 @@ def validate_length_args(self, args):
 
     :param args: Gli argomenti ricevuti.  
     """
-    for arg_name, arg_value in args.items():
-        if hasattr(self, f'max_length_{arg_name}'):
-            max_length = getattr(self, f'max_length_{arg_name}')
-            if len(str(arg_value)) > max_length:
-                raise ValueError(f"Il valore dell'argomento '{arg_name}' supera la lunghezza massima consentita di {max_length} caratteri")
+    for arg in args:
+        if isinstance(arg, str):
+            if len(arg) > self.max_length:
+                raise ValueError(f"L'argomento '{arg}' supera la lunghezza massima consentita di {self.max_length} caratteri")
+        elif isinstance(arg, (list, tuple, dict, set)):
+            if len(arg) > self.max_length:
+                raise ValueError(f"L'argomento di tipo {type(arg).__name__} supera la lunghezza massima consentita di {self.max_length} elementi")

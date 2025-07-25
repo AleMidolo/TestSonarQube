@@ -8,17 +8,17 @@ _borgmatic()
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     
     # Main borgmatic commands
-    opts="init create prune list info check extract mount umount rcreate rlist rinfo rdelete config validate"
-
+    opts="init create prune list info check extract export-tar mount umount rcreate rinfo rlist rdelete config validate"
+    
     # Common options
-    common_opts="--config --verbosity --syslog-verbosity --json --help --version"
+    common_opts="-h --help -c --config --verbosity --syslog-verbosity"
     
     case "${prev}" in
         borgmatic)
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;
-        --config)
+        -c|--config)
             COMPREPLY=( $(compgen -f -- ${cur}) )
             return 0
             ;;
@@ -26,18 +26,35 @@ _borgmatic()
             COMPREPLY=( $(compgen -W "0 1 2 3" -- ${cur}) )
             return 0
             ;;
+        create)
+            COMPREPLY=( $(compgen -W "--progress --stats --json" -- ${cur}) )
+            return 0
+            ;;
+        prune)
+            COMPREPLY=( $(compgen -W "--stats --list --dry-run" -- ${cur}) )
+            return 0
+            ;;
+        list|info)
+            COMPREPLY=( $(compgen -W "--archive --json" -- ${cur}) )
+            return 0
+            ;;
+        check)
+            COMPREPLY=( $(compgen -W "--repository --archives --verify-data" -- ${cur}) )
+            return 0
+            ;;
+        extract)
+            COMPREPLY=( $(compgen -W "--archive --path --destination" -- ${cur}) )
+            return 0
+            ;;
+        mount)
+            COMPREPLY=( $(compgen -W "--archive --path --mount-point --foreground" -- ${cur}) )
+            return 0
+            ;;
         *)
-            # If we're typing an option
-            if [[ ${cur} == -* ]] ; then
-                COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
-                return 0
-            fi
+            COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
+            return 0
             ;;
     esac
-
-    # Default to files/folders completion
-    COMPREPLY=( $(compgen -f -- ${cur}) )
-    return 0
 }
 
 complete -F _borgmatic borgmatic

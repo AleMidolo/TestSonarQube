@@ -36,7 +36,8 @@ def _verify(iface, candidate, tentative=False, vtype=None):
                 
                 if expected_sig.parameters != actual_sig.parameters:
                     errors['signatures'].append(
-                        f"Method {name} has wrong signature: expected {expected_sig}, got {actual_sig}"
+                        f"Method {name} has wrong signature. "
+                        f"Expected {expected_sig}, got {actual_sig}"
                     )
             except ValueError:
                 pass  # Skip signature check if not possible
@@ -59,12 +60,12 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             if error_list:
                 raise Invalid(error_list[0])
 
-    # Otherwise raise all errors
+    # Multiple errors - raise all of them
     if errors:
         error_msg = []
         for category, msgs in errors.items():
             if msgs:
                 error_msg.extend(msgs)
-        raise Invalid('\n'.join(error_msg))
+        raise Invalid("\n".join(error_msg))
 
     return True

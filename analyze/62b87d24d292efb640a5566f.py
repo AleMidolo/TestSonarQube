@@ -4,25 +4,27 @@ def render(pieces, style):
     """
     rendered = []
     
+    # Dictionary mapping styles to their piece representations
+    styles = {
+        'unicode': {
+            'K': '♔', 'Q': '♕', 'R': '♖', 'B': '♗', 'N': '♘', 'P': '♙',
+            'k': '♚', 'q': '♛', 'r': '♜', 'b': '♝', 'n': '♞', 'p': '♟'
+        },
+        'ascii': {
+            'K': 'K', 'Q': 'Q', 'R': 'R', 'B': 'B', 'N': 'N', 'P': 'P',
+            'k': 'k', 'q': 'q', 'r': 'r', 'b': 'b', 'n': 'n', 'p': 'p'
+        }
+    }
+    
+    # Check if style exists
+    if style not in styles:
+        raise ValueError(f"Style '{style}' not supported")
+        
+    # Convert each piece to its styled representation
     for piece in pieces:
-        if style == "unicode":
-            # Unicode chess piece symbols
-            symbols = {
-                "K": "♔", "Q": "♕", "R": "♖", "B": "♗", "N": "♘", "P": "♙",
-                "k": "♚", "q": "♛", "r": "♜", "b": "♝", "n": "♞", "p": "♟"
-            }
-            rendered.append(symbols.get(piece, piece))
-            
-        elif style == "ascii":
-            # ASCII representations
-            symbols = {
-                "K": "K", "Q": "Q", "R": "R", "B": "B", "N": "N", "P": "P",
-                "k": "k", "q": "q", "r": "r", "b": "b", "n": "n", "p": "p"
-            }
-            rendered.append(symbols.get(piece, piece))
-            
+        if piece in styles[style]:
+            rendered.append(styles[style][piece])
         else:
-            # Default to original piece notation
-            rendered.append(piece)
+            rendered.append(piece)  # Keep unchanged if no mapping exists
             
-    return "".join(rendered)
+    return rendered

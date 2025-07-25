@@ -15,7 +15,7 @@ def parse_arguments(*arguments):
         # If arguments were passed to function, parse those
         args = parser.parse_args(arguments)
     else:
-        # Otherwise parse from sys.argv
+        # Otherwise parse sys.argv
         args = parser.parse_args()
         
     return args

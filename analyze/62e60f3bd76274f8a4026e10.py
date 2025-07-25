@@ -18,13 +18,16 @@ def dehydrate_timedelta(value):
     
     if days:
         result += f"{days}D"
-    
+        
     if hours or minutes or seconds or microseconds:
         result += "T"
+        
         if hours:
             result += f"{hours}H"
+            
         if minutes:
             result += f"{minutes}M"
+            
         if seconds:
             if microseconds:
                 result += f"{seconds}.{microseconds:06d}S"
@@ -33,7 +36,4 @@ def dehydrate_timedelta(value):
         elif microseconds:
             result += f"0.{microseconds:06d}S"
             
-    if result == "P":
-        result = "PT0S"
-        
-    return result
+    return result if result != "P" else "PT0S"

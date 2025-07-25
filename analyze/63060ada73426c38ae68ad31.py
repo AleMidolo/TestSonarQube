@@ -26,7 +26,8 @@ def _convert_non_cli_args(self, parser_name, values_dict):
             # Convert boolean strings
             if arg_type == bool:
                 if isinstance(value, str):
-                    values_dict[arg_name] = value.lower() in ('true', 't', 'yes', 'y', '1')
+                    value = value.lower()
+                    values_dict[arg_name] = value in ('true', 't', 'yes', 'y', '1')
             # Convert numeric types
             elif arg_type in (int, float):
                 values_dict[arg_name] = arg_type(value)
@@ -38,5 +39,5 @@ def _convert_non_cli_args(self, parser_name, values_dict):
                 values_dict[arg_name] = arg_type(value)
                 
         except (ValueError, TypeError):
-            # Keep original value if conversion fails
+            # If conversion fails, keep original value
             continue

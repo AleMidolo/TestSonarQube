@@ -6,4 +6,4 @@ def os_is_mac():
     :rtype: bool
     """
     import platform
-    return platform.system().lower() == 'darwin'
+    return platform.system() == 'Darwin'

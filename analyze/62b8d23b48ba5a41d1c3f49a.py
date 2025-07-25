@@ -29,10 +29,10 @@ def mru_cache(maxsize=128, typed=False):
                 
                 # Se la cache è piena, rimuovi l'elemento usato meno recentemente
                 if len(cache) >= maxsize:
-                    # Rimuovi il primo elemento (il meno recente)
-                    oldest_key = order.pop(0)
-                    del cache[oldest_key]
-                
+                    # Rimuovi l'elemento più vecchio
+                    oldest = order.pop(0)
+                    del cache[oldest]
+                    
                 # Aggiungi il nuovo risultato alla cache
                 cache[key] = result
                 order.append(key)

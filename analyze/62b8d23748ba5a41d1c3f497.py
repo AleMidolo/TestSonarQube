@@ -6,20 +6,17 @@ def popitem(self):
         raise KeyError("Cache is empty")
         
     # Find item with minimum frequency
-    min_freq = min(self.freq_map.values())
+    min_freq = min(self.freq_counter.values())
     
-    # Find first key with minimum frequency
-    min_key = None
-    for key in self.freq_map:
-        if self.freq_map[key] == min_freq:
-            min_key = key
-            break
-            
-    # Get value before removing
-    min_value = self.cache[min_key]
+    # Get all items with minimum frequency
+    min_freq_items = [(k,v) for k,v in self.cache.items() 
+                     if self.freq_counter[k] == min_freq]
     
-    # Remove item from cache and frequency map
-    del self.cache[min_key]
-    del self.freq_map[min_key]
+    # Get least recently used among min frequency items
+    lru_key, lru_value = min_freq_items[0]
     
-    return (min_key, min_value)
+    # Remove item from cache and frequency counter
+    del self.cache[lru_key]
+    del self.freq_counter[lru_key]
+    
+    return (lru_key, lru_value)

@@ -18,7 +18,7 @@ def _include_groups(self, parser_dict):
                     # Merge included dict with current dict
                     merged = included_dict.copy()
                     merged.update(value)
-                    # Remove the include directive
+                    # Remove include directive
                     del merged['include']
                     result[key] = merged
                 else:
