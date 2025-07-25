@@ -19,4 +19,4 @@ def identify_request(request: RequestType) -> str:
     elif request == RequestType.LEGACY_PAYLOAD:
         return "Esta es una solicitud de Diaspora: Carga útil heredada."
     else:
-        return "No se pudo identificar la solicitud como una de Diaspora."
+        return "No se pudo identificar la solicitud como una solicitud de Diaspora."

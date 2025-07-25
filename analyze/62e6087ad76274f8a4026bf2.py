@@ -16,7 +16,7 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
     """
     # Crear el mensaje DISCARD
     discard_message = {
-        "type": "DISCARD",
+        "name": "DISCARD",
         "n": n,
         "qid": qid
     }
@@ -33,5 +33,5 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
     # Añadir el mensaje a la cola de salida
     self.output_queue.append(discard_message)
 
-    # Devolver el objeto Response con los manejadores
-    return Response(handlers=handlers)
+    # Devolver la respuesta con los manejadores
+    return self.Response(handlers)

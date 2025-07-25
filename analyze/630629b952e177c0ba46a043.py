@@ -1,5 +1,3 @@
-import json
-
 def get_nodeinfo_well_known_document(url, document_path=None):
     """
     Genera un documento .well-known de NodeInfo.

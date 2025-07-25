@@ -31,7 +31,6 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     Devuelve el gráfico resultante.
     """
     import numpy as np
-    from collections import namedtuple
 
     if make_value is None:
         make_value = lambda bin_: bin_
@@ -40,29 +39,29 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         scale = hist.scale
 
     bins = hist.bins
-    edges = hist.edges
+    x_coords = []
+    y_values = []
 
-    if get_coordinate == "left":
-        x_coords = edges[:-1]
-    elif get_coordinate == "right":
-        x_coords = edges[1:]
-    elif get_coordinate == "middle":
-        x_coords = (edges[:-1] + edges[1:]) / 2
+    for i, bin_ in enumerate(bins):
+        if get_coordinate == "left":
+            x = hist.bin_edges[i]
+        elif get_coordinate == "right":
+            x = hist.bin_edges[i + 1]
+        elif get_coordinate == "middle":
+            x = (hist.bin_edges[i] + hist.bin_edges[i + 1]) / 2
+        else:
+            raise ValueError("get_coordinate debe ser 'left', 'right' o 'middle'")
+
+        y = make_value(bin_)
+        x_coords.append(x)
+        y_values.append(y)
+
+    if isinstance(y_values[0], (tuple, list, np.ndarray)):
+        y_values = list(zip(*y_values))
+        data = {field_names[0]: x_coords}
+        for i, y in enumerate(y_values):
+            data[field_names[i + 1]] = y
     else:
-        raise ValueError("get_coordinate debe ser 'left', 'right' o 'middle'")
+        data = {field_names[0]: x_coords, field_names[1]: y_values}
 
-    values = [make_value(bin_) for bin_ in bins]
-
-    if isinstance(values[0], (tuple, list, np.ndarray)):
-        num_fields = len(values[0])
-        if len(field_names) != num_fields + 1:
-            raise ValueError("El número de field_names debe coincidir con la dimensión del resultado de make_value más 1")
-        Graph = namedtuple('Graph', field_names)
-        graph_data = [Graph(x, *value) for x, value in zip(x_coords, values)]
-    else:
-        if len(field_names) != 2:
-            raise ValueError("El número de field_names debe ser 2 para valores escalares")
-        Graph = namedtuple('Graph', field_names)
-        graph_data = [Graph(x, value) for x, value in zip(x_coords, values)]
-
-    return graph_data
+    return data

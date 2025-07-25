@@ -6,23 +6,21 @@ def data(self, *keys):
     :return: diccionario de valores, indexado por el nombre del campo.  
     :raises: :exc:`IndexError` si se especifica un índice fuera de los límites.  
     """
-    # Asumimos que self._fields es una lista de nombres de campos y self._values es una lista de valores
-    if not hasattr(self, '_fields') or not hasattr(self, '_values'):
-        raise AttributeError("El objeto no tiene los atributos '_fields' o '_values' necesarios.")
-    
+    # Asumimos que self._fields contiene las claves y self._values contiene los valores
+    # Esto es un ejemplo, ajusta según la implementación real de tu clase
     if not keys:
         return dict(zip(self._fields, self._values))
     
     result = {}
     for key in keys:
         if isinstance(key, int):
-            if key < 0 or key >= len(self._fields):
-                raise IndexError("Índice fuera de los límites.")
-            field = self._fields[key]
-            value = self._values[key]
+            if key < 0 or key >= len(self._values):
+                raise IndexError("Índice fuera de los límites")
+            result[self._fields[key]] = self._values[key]
         else:
-            field = key
-            value = self._values[self._fields.index(key)] if key in self._fields else None
-        result[field] = value
-    
+            if key in self._fields:
+                index = self._fields.index(key)
+                result[key] = self._values[index]
+            else:
+                result[key] = None
     return result

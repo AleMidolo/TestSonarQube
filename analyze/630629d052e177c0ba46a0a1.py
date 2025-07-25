@@ -1,7 +1,7 @@
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
-from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
+from cryptography.exceptions import InvalidSignature
 
 def verificar_firma_reenviable(clave_publica, documento, firma):
     """
@@ -14,15 +14,12 @@ def verificar_firma_reenviable(clave_publica, documento, firma):
     """
     try:
         # Cargar la clave pública
-        public_key = serialization.load_pem_public_key(
-            clave_publica.encode(),
-            backend=None
-        )
+        public_key = serialization.load_pem_public_key(clave_publica)
         
         # Verificar la firma
         public_key.verify(
             firma,
-            documento.encode(),
+            documento,
             padding.PSS(
                 mgf=padding.MGF1(hashes.SHA256()),
                 salt_length=padding.PSS.MAX_LENGTH
@@ -30,6 +27,5 @@ def verificar_firma_reenviable(clave_publica, documento, firma):
             hashes.SHA256()
         )
         return True
-    except Exception as e:
-        print(f"Error al verificar la firma: {e}")
+    except InvalidSignature:
         return False

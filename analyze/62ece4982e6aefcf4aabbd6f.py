@@ -21,17 +21,17 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     response = requests.get(url, stream=True)
     response.raise_for_status()
     
-    # Guardar el archivo descargado temporalmente
-    temp_tar_path = destination_path / "temp_repo.tar.gz"
-    with open(temp_tar_path, 'wb') as f:
+    # Guardar el archivo temporalmente
+    tar_gz_path = destination_path / "repo.tar.gz"
+    with open(tar_gz_path, 'wb') as f:
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)
     
     # Extraer el archivo .tar.gz
-    with tarfile.open(temp_tar_path, 'r:gz') as tar:
+    with tarfile.open(tar_gz_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
     
-    # Eliminar el archivo temporal
-    temp_tar_path.unlink()
+    # Eliminar el archivo .tar.gz después de extraerlo
+    tar_gz_path.unlink()
     
     return destination_path

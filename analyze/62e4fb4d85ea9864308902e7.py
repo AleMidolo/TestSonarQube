@@ -12,13 +12,17 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
         return cmd
 
     # Handle shebang lines
-    first_arg = cmd[0]
-    if first_arg.startswith('#!'):
-        # Extract the interpreter path from the shebang
-        interpreter_path = first_arg[2:].strip()
-        # Normalize the path for Windows
-        interpreter_path = os.path.normpath(interpreter_path)
-        # Replace the shebang with the normalized interpreter path
-        return (interpreter_path,) + cmd[1:]
+    if cmd[0].startswith('#!'):
+        # Extract the path from the shebang
+        shebang_path = cmd[0][2:].strip()
+        # Normalize the path to handle deep paths
+        normalized_path = os.path.normpath(shebang_path)
+        # Replace the shebang with the normalized path
+        cmd = (normalized_path,) + cmd[1:]
+
+    # Handle Windows-specific issues
+    if os.name == 'nt':
+        # Replace forward slashes with backslashes in paths
+        cmd = tuple(arg.replace('/', '\\') for arg in cmd)
 
     return cmd

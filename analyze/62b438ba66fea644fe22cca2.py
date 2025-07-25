@@ -1,38 +1,49 @@
 from ruamel.yaml.nodes import ScalarNode, MappingNode
 
 def deep_merge_nodes(nodes):
+    """
+    Dado un conjunto de datos de configuración anidada de borgmatic como una lista de tuplas en la forma de:
+
+        (
+            ruamel.yaml.nodes.ScalarNode como clave,
+            ruamel.yaml.nodes.MappingNode u otro tipo de nodo como valor,
+        ),
+
+    ... fusionar profundamente cualquier valor de nodo correspondiente a claves duplicadas y devolver el resultado. Si hay claves en conflicto con valores que no son de tipo `MappingNode` (por ejemplo, enteros o cadenas de texto), el último de los valores prevalece.
+    """
     merged_nodes = {}
-    
-    for key_node, value_node in nodes:
-        key = key_node.value
-        
-        if key in merged_nodes:
-            existing_value_node = merged_nodes[key]
-            
-            if isinstance(existing_value_node, MappingNode) and isinstance(value_node, MappingNode):
+
+    for key, value in nodes:
+        if key.value in merged_nodes:
+            existing_value = merged_nodes[key.value]
+            if isinstance(existing_value, MappingNode) and isinstance(value, MappingNode):
                 # Merge the MappingNodes
-                existing_mapping = {k.value: v for k, v in existing_value_node.value}
-                new_mapping = {k.value: v for k, v in value_node.value}
-                
-                # Deep merge the mappings
-                for new_key, new_value in new_mapping.items():
-                    if new_key in existing_mapping and isinstance(existing_mapping[new_key], MappingNode) and isinstance(new_value, MappingNode):
-                        # Recursively merge nested MappingNodes
-                        merged_nested_nodes = deep_merge_nodes([(ScalarNode(tag='tag:yaml.org,2002:str', value=new_key), new_value)])
-                        existing_mapping[new_key] = merged_nested_nodes[0][1]
+                existing_items = {item[0].value: item[1] for item in existing_value.value}
+                for item_key, item_value in value.value:
+                    if item_key.value in existing_items:
+                        if isinstance(existing_items[item_key.value], MappingNode) and isinstance(item_value, MappingNode):
+                            # Recursively merge nested MappingNodes
+                            merged_items = deep_merge_nodes([
+                                (item_key, existing_items[item_key.value]),
+                                (item_key, item_value),
+                            ])
+                            existing_items[item_key.value] = merged_items[0][1]
+                        else:
+                            # Overwrite non-MappingNode values
+                            existing_items[item_key.value] = item_value
                     else:
-                        # Overwrite or add new key-value pair
-                        existing_mapping[new_key] = new_value
-                
-                # Convert the merged mapping back to a list of tuples
-                merged_value = [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v] for k, v in existing_mapping.items()]
-                merged_nodes[key] = MappingNode(tag='tag:yaml.org,2002:map', value=merged_value)
+                        existing_items[item_key.value] = item_value
+                # Convert the merged items back to a list of tuples
+                merged_value = MappingNode(
+                    tag=existing_value.tag,
+                    value=[(ScalarNode(tag=item_key.tag, value=item_key.value), item_value) for item_key, item_value in existing_items.items()],
+                )
+                merged_nodes[key.value] = merged_value
             else:
-                # If either value is not a MappingNode, the last value prevails
-                merged_nodes[key] = value_node
+                # Overwrite non-MappingNode values
+                merged_nodes[key.value] = value
         else:
-            # If the key is not in the merged_nodes, just add it
-            merged_nodes[key] = value_node
-    
-    # Convert the merged_nodes dictionary back to a list of tuples
-    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged_nodes.items()]
+            merged_nodes[key.value] = value
+
+    # Convert the merged dictionary back to a list of tuples
+    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=key), value) for key, value in merged_nodes.items()]

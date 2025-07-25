@@ -7,11 +7,6 @@ def from_raw_values(cls, values):
     :param values: Valores de cadenas ASCII (marcadores sin procesar)
     :type values: Iterable[str]
     """
-    # Assuming the Bookmarks class is defined elsewhere and has a method to add bookmarks
-    bookmarks = cls()
-    for value in values:
-        # Process each raw value and add it to the Bookmarks object
-        # This is a placeholder for the actual processing logic
-        processed_value = value.strip()  # Example: strip whitespace
-        bookmarks.add(processed_value)  # Assuming there's an add method
-    return bookmarks
+    # Assuming the Bookmarks class has a constructor that takes a list of processed values
+    processed_values = [value.strip() for value in values]  # Example processing step
+    return cls(processed_values)
