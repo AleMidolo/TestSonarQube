@@ -5,7 +5,9 @@ def names(self, all=False): # pylint:disable=redefined-builtin
     Return the attribute names defined by the interface.
     """
     if all:
-        return list(self._attributes.keys())
+        # Return all attribute names including inherited ones
+        return list(self.__dict__.keys())
     else:
-        return [name for name, attr in self._attributes.items() 
-                if not attr.is_hidden()]
+        # Return only directly defined attribute names
+        return [name for name in self.__dict__.keys() 
+                if not name.startswith('_')]

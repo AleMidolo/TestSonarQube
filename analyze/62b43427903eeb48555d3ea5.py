@@ -42,36 +42,36 @@ def format(
     result = ''
     i = 0
     while i < len(sql):
-        # Look for parameter marker
         if sql[i:i+len(self.in_style.prefix)] == self.in_style.prefix:
-            param_name = ''
+            # Found parameter marker
             i += len(self.in_style.prefix)
+            param_name = ''
             
             # Extract parameter name/number
             while i < len(sql) and (sql[i].isalnum() or sql[i] == '_'):
                 param_name += sql[i]
                 i += 1
                 
-            if param_name:
-                # Get parameter value
-                param_value = params_dict[param_name]
+            if self.in_style.suffix:
+                i += len(self.in_style.suffix)
                 
-                # Add to output parameters
-                if self.out_style.is_named:
-                    out_param_name = f"p{param_counter}"
-                    out_params[out_param_name] = param_value
-                    result += self.out_style.prefix + out_param_name
-                else:
-                    out_params.append(param_value)
-                    result += self.out_style.prefix
-                    
-                param_counter += 1
+            # Get parameter value
+            param_value = params_dict[param_name]
+            
+            # Add to output params
+            if self.out_style.is_named:
+                new_name = f"p{param_counter}"
+                out_params[new_name] = param_value
+                result += f"{self.out_style.prefix}{new_name}{self.out_style.suffix}"
             else:
-                result += self.in_style.prefix
+                out_params.append(param_value)
+                result += self.out_style.prefix
+                
+            param_counter += 1
         else:
             result += sql[i]
             i += 1
-
+            
     # Convert back to bytes if input was bytes
     if is_bytes:
         result = result.encode('utf-8')

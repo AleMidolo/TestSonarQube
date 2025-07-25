@@ -20,10 +20,10 @@ def select_filenames_by_prefix(prefix, files):
     matching_files = []
     
     for file_path in files:
-        # Get just the filename without directory path
+        # Get the basename of the file
         basename = os.path.basename(file_path)
         
-        # Check if filename starts with prefix
+        # Check if basename starts with prefix
         if basename.startswith(prefix):
             matching_files.append(file_path)
             

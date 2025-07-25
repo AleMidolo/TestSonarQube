@@ -7,9 +7,17 @@ def integral(bins, edges):
     Their format is defined in :class:`.histogram` description.
     """
     total = 0.0
+    
+    # Ensure bins and edges have compatible lengths
+    if len(bins) != len(edges) - 1:
+        raise ValueError("Length of bins must be one less than length of edges")
+        
+    # Iterate through bins and calculate area for each bin
     for i in range(len(bins)):
-        # Calculate width of each bin
-        bin_width = edges[i + 1] - edges[i]
-        # Multiply bin height by width and add to total
-        total += bins[i] * bin_width
+        # Width of the bin
+        width = edges[i+1] - edges[i]
+        # Area = height * width
+        area = bins[i] * width
+        total += area
+        
     return total

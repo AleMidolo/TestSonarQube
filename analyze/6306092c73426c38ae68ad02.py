@@ -14,7 +14,7 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
         if old_arg in cli_args:
             print(f"Warning: Argument '{old_arg}' is deprecated. Please use '{new_arg}' instead.")
 
-    # Check answer file args for deprecated arguments  
+    # Check answer file args for deprecated arguments 
     for old_arg, new_arg in deprecated_args.items():
         if old_arg in answer_file_args:
             print(f"Warning: Argument '{old_arg}' in answer file is deprecated. Please use '{new_arg}' instead.")

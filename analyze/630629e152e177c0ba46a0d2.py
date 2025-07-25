@@ -51,10 +51,10 @@ def retrieve_and_parse_diaspora_webfinger(handle):
                 
         # Get additional properties
         for prop in data.get('properties', {}):
-            if prop.endswith('#guid'):
+            if prop == 'http://joindiaspora.com/guid':
                 result['guid'] = data['properties'][prop]
-            elif prop.endswith('#pubkey'):
-                result['pubkey'] = data['properties'][prop]
+            elif prop == 'http://joindiaspora.com/seed_location':
+                result['pod'] = data['properties'][prop]
                 
         return result
         

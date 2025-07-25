@@ -17,14 +17,14 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             # Verify method exists
             if not hasattr(candidate, name):
                 errors['methods'].append(
-                    f"The {name!r} method was not provided"
+                    f"Method {name!r} not implemented"
                 )
                 continue
 
             method = getattr(candidate, name)
             if not callable(method):
                 errors['methods'].append(
-                    f"The {name!r} attribute is not callable"
+                    f"Attribute {name!r} is not callable"
                 )
                 continue
 
@@ -33,13 +33,13 @@ def _verify(iface, candidate, tentative=False, vtype=None):
                 desc.validateSignature(method)
             except Invalid as e:
                 errors['signatures'].append(
-                    f"The signature of {name!r} is incorrect: {str(e)}"
+                    f"Method {name!r} has invalid signature: {str(e)}"
                 )
         else:
             # Verify attribute exists
             if not hasattr(candidate, name):
                 errors['attributes'].append(
-                    f"The {name!r} attribute was not provided"
+                    f"Attribute {name!r} not provided"
                 )
 
     # If no errors, return True
@@ -55,7 +55,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     if len(all_errors) == 1:
         raise Invalid(all_errors[0])
 
-    # If multiple errors, raise them all together
+    # If multiple errors, raise them all
     if all_errors:
         raise Invalid('\n'.join(all_errors))
 

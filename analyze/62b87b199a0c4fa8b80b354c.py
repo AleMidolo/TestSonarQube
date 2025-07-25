@@ -16,5 +16,5 @@ def _get_seq_with_type(seq, bufsize=None):
     try:
         return list(seq), list
     except TypeError:
-        # If not iterable, wrap in list
+        # If seq is not iterable, wrap it in a list
         return [seq], list

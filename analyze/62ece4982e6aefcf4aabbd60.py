@@ -24,9 +24,11 @@ def size_to_bytes(size: str) -> int:
         'T': 1000000000000,
     }
 
-    if size[-1].upper() in units:
+    size = size.strip().upper()
+    
+    if size[-1] in units:
         number = float(size[:-1])
-        unit = size[-1].upper()
+        unit = size[-1]
         return int(number * units[unit])
     else:
         return int(size)

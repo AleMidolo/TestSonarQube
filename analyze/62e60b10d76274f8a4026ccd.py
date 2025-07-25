@@ -12,15 +12,17 @@ def data(self, *keys):
     :raises: :exc:`IndexError` if an out-of-bounds index is specified
     """
     if not keys:
-        # If no keys specified, return all items
+        # If no keys provided, return all items
         return dict(zip(self._keys, self._values))
     
     result = {}
     for key in keys:
         if isinstance(key, int):
             # Handle index access
-            if key < 0 or key >= len(self._keys):
-                raise IndexError(f"Index {key} is out of bounds")
+            if key < 0:
+                key = len(self._keys) + key
+            if key >= len(self._keys) or key < 0:
+                raise IndexError(f"Index {key} out of bounds")
             result[self._keys[key]] = self._values[key]
         else:
             # Handle key access

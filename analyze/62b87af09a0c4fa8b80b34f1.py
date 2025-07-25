@@ -13,19 +13,17 @@ def fill(self, coord, weight=1):
         if x < self.edges[i][0] or x >= self.edges[i][-1]:
             return
             
-    # Find the bin indices for each dimension
+    # Find bin indices for each dimension
     indices = []
     for dim, x in enumerate(coord):
+        # Find the bin index using binary search
         edges = self.edges[dim]
-        # Binary search to find correct bin
-        left, right = 0, len(edges)-1
-        while left < right:
-            mid = (left + right) // 2
-            if x < edges[mid]:
-                right = mid
-            else:
-                left = mid + 1
-        indices.append(left-1)
+        idx = 0
+        for j in range(len(edges)-1):
+            if edges[j] <= x < edges[j+1]:
+                idx = j
+                break
+        indices.append(idx)
         
     # Add weight to the bin
     self.values[tuple(indices)] += weight

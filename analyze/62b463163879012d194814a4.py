@@ -14,8 +14,7 @@ def _explore_zipfile(zip_path):
     """
     import zipfile
     from collections import defaultdict
-    import os
-
+    
     # Dictionary to store grouped files
     grouped_files = defaultdict(dict)
     
@@ -25,15 +24,19 @@ def _explore_zipfile(zip_path):
         file_list = zip_ref.namelist()
         
         # Group files by their XML basename
-        for file_name in file_list:
+        for filename in file_list:
+            # Skip directories
+            if filename.endswith('/'):
+                continue
+                
             # Get base name without extension
-            base_name = os.path.splitext(os.path.basename(file_name))[0]
+            base_name = filename.split('/')[-1].rsplit('.', 1)[0]
             
             # Get file extension
-            extension = os.path.splitext(file_name)[1].lower()
+            extension = filename.split('.')[-1].lower()
             
             # Read file content
-            with zip_ref.open(file_name) as f:
+            with zip_ref.open(filename) as f:
                 content = f.read()
                 
             # Store content in grouped_files dictionary

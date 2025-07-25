@@ -39,20 +39,11 @@ def mru_cache(maxsize=128, typed=False):
                 
                 # Remove oldest if cache too large
                 if len(cache) > maxsize:
-                    oldest = order.pop(0)
-                    del cache[oldest]
+                    oldest_key = order.pop(0)
+                    del cache[oldest_key]
                     
                 return result
                 
-        wrapper.cache_info = lambda: {
-            'maxsize': maxsize,
-            'currsize': len(cache),
-            'hits': len(order),
-            'misses': func.__code__.co_firstlineno
-        }
-        
-        wrapper.cache_clear = lambda: cache.clear() or order.clear()
-        
         return wrapper
         
     return decorator

@@ -32,11 +32,11 @@ def generate_default_observer_schema(app):
             }],
             'state': {
                 'ready': {
-                    'path': 'status.phase',
-                    'value': 'Running'
+                    'path': 'status.conditions[?type=="Ready"].status',
+                    'value': 'True'
                 }
             }
         }
         
-        # Add default schema to observer
+        # Add default schema to observer spec
         app.spec.observer[kind] = default_schema
