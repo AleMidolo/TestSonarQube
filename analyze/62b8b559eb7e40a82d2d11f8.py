@@ -6,7 +6,7 @@ def minimalBases(classes):
         classes (list): A list of base classes.
     
     Returns:
-        list: A list of base classes that is the minimal equivalent of the input list.
+        list: A list of base classes that is the minimal equivalent.
     """
     minimal = []
     for cls in classes:

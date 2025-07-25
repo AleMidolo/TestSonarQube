@@ -12,9 +12,6 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     configurations = {}
     errors = []
 
-    if overrides is None:
-        overrides = {}
-
     for filename in config_filenames:
         try:
             with open(filename, 'r') as file:
@@ -41,7 +38,10 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                             env_var = value[1:]
                             config[key] = os.getenv(env_var, value)
 
-                config.update(overrides)
+                if overrides:
+                    for key, value in overrides.items():
+                        config[key] = value
+
                 configurations[filename] = config
 
         except Exception as e:

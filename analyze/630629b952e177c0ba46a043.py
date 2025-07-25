@@ -20,10 +20,6 @@ def get_nodeinfo_well_known_document(url, document_path=None):
             {
                 "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
                 "href": f"{url.rstrip('/')}/nodeinfo/2.0"
-            },
-            {
-                "rel": "http://nodeinfo.diaspora.software/ns/schema/2.1",
-                "href": f"{url.rstrip('/')}/nodeinfo/2.1"
             }
         ]
     }

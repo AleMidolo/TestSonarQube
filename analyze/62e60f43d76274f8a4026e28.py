@@ -12,11 +12,14 @@ def hydrate_time(nanoseconds, tz=None):
     seconds, nanoseconds = divmod(nanoseconds, 1_000_000_000)
     microseconds = nanoseconds // 1_000
     
-    # Create a time object
-    t = time.fromisoformat("00:00:00") + timedelta(seconds=seconds, microseconds=microseconds)
+    # Create a timedelta representing the time since midnight
+    delta = timedelta(seconds=seconds, microseconds=microseconds)
+    
+    # Create a time object from the timedelta
+    t = (time.min + delta).time()
     
     # Apply timezone if provided
     if tz is not None:
-        t = t.replace(tzinfo=timezone.utc).astimezone(tz)
+        t = t.replace(tzinfo=timezone(tz))
     
     return t

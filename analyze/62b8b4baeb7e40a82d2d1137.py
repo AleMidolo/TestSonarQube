@@ -32,8 +32,9 @@ def verifyObject(iface, candidate, tentative=False):
         As a special case, if only one such error is present, it is raised
         alone, like before.
     """
-    if not tentative and not providedBy(candidate, iface):
-        raise Invalid(f"The candidate does not provide the interface {iface}.")
+    if not tentative:
+        if not iface.providedBy(candidate):
+            raise Invalid(f"The candidate does not provide the interface {iface}.")
 
     try:
         return zope_verify_object(iface, candidate)

@@ -1,41 +1,39 @@
-import xml.etree.ElementTree as ET
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
-
 def verify_relayable_signature(public_key, doc, signature):
     """
     Verify the signed XML elements to have confidence that the claimed
     author did actually generate this message.
-    
-    :param public_key: The public key used for verification.
-    :param doc: The XML document to be verified.
-    :param signature: The signature to be verified.
-    :return: True if the signature is valid, False otherwise.
     """
+    from cryptography.hazmat.primitives import hashes
+    from cryptography.hazmat.primitives.asymmetric import padding
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.backends import default_backend
+    from lxml import etree
+
+    # Load the public key
+    pub_key = serialization.load_pem_public_key(
+        public_key.encode(),
+        backend=default_backend()
+    )
+
+    # Parse the XML document
+    root = etree.fromstring(doc)
+
+    # Extract the signature element
+    signature_element = root.find(".//{http://www.w3.org/2000/09/xmldsig#}Signature")
+    if signature_element is None:
+        raise ValueError("No signature found in the document")
+
+    # Canonicalize the signed info
+    signed_info = etree.tostring(signature_element.find(".//{http://www.w3.org/2000/09/xmldsig#}SignedInfo"), method="c14n")
+
+    # Verify the signature
     try:
-        # Parse the XML document
-        root = ET.fromstring(doc)
-        
-        # Serialize the XML document to a string
-        serialized_doc = ET.tostring(root, encoding='utf-8', method='xml')
-        
-        # Load the public key
-        pub_key = serialization.load_pem_public_key(public_key)
-        
-        # Verify the signature
         pub_key.verify(
             signature,
-            serialized_doc,
-            padding.PSS(
-                mgf=padding.MGF1(hashes.SHA256()),
-                salt_length=padding.PSS.MAX_LENGTH
-            ),
+            signed_info,
+            padding.PKCS1v15(),
             hashes.SHA256()
         )
-        
         return True
     except Exception as e:
-        print(f"Verification failed: {e}")
         return False

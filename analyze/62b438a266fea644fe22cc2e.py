@@ -16,11 +16,11 @@ def parse_arguments(*unparsed_arguments):
     parser.add_argument("--global_arg", type=str, help="Global argument")
 
     # Parse the arguments
-    parsed_args = parser.parse_args(unparsed_arguments)
+    parsed_args = parser.parse_args(list(unparsed_arguments))
 
     # Organize parsed arguments into a dictionary
     args_dict = {}
-    if parsed_args.subparser_name:
+    if hasattr(parsed_args, "subparser_name"):
         args_dict[parsed_args.subparser_name] = parsed_args
     else:
         args_dict["global"] = parsed_args

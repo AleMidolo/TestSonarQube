@@ -7,9 +7,10 @@ def list_of_file_names(settings_dirs, spec_option):
         spec_option (str): A specification option to filter files.
 
     Returns:
-        list: A list of file names that match the specification.
+        list: A list of file names that match the specification option.
     """
     import os
+
     file_names = []
     for directory in settings_dirs:
         if os.path.isdir(directory):

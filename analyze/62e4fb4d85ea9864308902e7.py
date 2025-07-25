@@ -12,27 +12,29 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     if not cmd:
         return cmd
 
-    # Handle shebang on Windows
-    if os.name == 'nt':
-        first_arg = cmd[0]
-        if first_arg.startswith('#!'):
-            # Extract the interpreter path from the shebang
-            interpreter = first_arg[2:].strip()
-            # Normalize the interpreter path
-            interpreter = os.path.normpath(interpreter)
-            # Replace the shebang with the interpreter path
-            cmd = (interpreter,) + cmd[1:]
+    if sys.platform != 'win32':
+        return cmd
 
-    # Handle deep-path shebangs
-    if os.name == 'nt':
-        first_arg = cmd[0]
-        if os.path.exists(first_arg):
-            # If the first argument is a file, try to read the shebang
-            with open(first_arg, 'r') as f:
-                first_line = f.readline().strip()
-                if first_line.startswith('#!'):
-                    interpreter = first_line[2:].strip()
-                    interpreter = os.path.normpath(interpreter)
-                    cmd = (interpreter,) + cmd
+    first_arg = cmd[0]
+    if not first_arg.endswith('.exe'):
+        first_arg += '.exe'
 
-    return cmd
+    # Check if the first argument is a shebang
+    if first_arg.startswith('#!'):
+        # Extract the interpreter path from the shebang
+        interpreter_path = first_arg[2:].strip()
+        # Normalize the interpreter path
+        interpreter_path = os.path.normpath(interpreter_path)
+        # Replace the shebang with the normalized interpreter path
+        cmd = (interpreter_path,) + cmd[1:]
+
+    # Ensure the first argument is an absolute path
+    if not os.path.isabs(first_arg):
+        # Search for the executable in the PATH
+        for path in os.environ.get('PATH', '').split(os.pathsep):
+            full_path = os.path.join(path, first_arg)
+            if os.path.isfile(full_path):
+                first_arg = full_path
+                break
+
+    return (first_arg,) + cmd[1:]

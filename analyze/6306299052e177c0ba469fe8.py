@@ -11,6 +11,6 @@ def check_sender_and_entity_handle_match(sender_handle, entity_handle):
         entity_handle (str): The handle of the entity in the payload.
 
     Returns:
-        bool: True if the sender and entity handles match, False otherwise.
+        bool: True if the handles match, False otherwise.
     """
     return sender_handle == entity_handle

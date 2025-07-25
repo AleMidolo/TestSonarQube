@@ -14,11 +14,8 @@ def _fromutc(self, dt):
     if dt.tzinfo is None:
         raise ValueError("The input datetime must be timezone-aware.")
 
-    # Convert the datetime to UTC
-    utc_dt = dt.astimezone(self.utc)
-
-    # Convert the UTC datetime to the new timezone
-    new_dt = utc_dt.astimezone(self)
+    # Convert the datetime to the new timezone
+    new_dt = dt.astimezone(self)
 
     # Check if the datetime is ambiguous in the new timezone
     if self._is_ambiguous(new_dt):

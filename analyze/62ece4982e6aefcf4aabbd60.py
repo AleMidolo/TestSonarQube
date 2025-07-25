@@ -11,6 +11,7 @@ def size_to_bytes(size: str) -> int:
         A decimal representation of file size
 
     Examples::
+
         >>> size_to_bytes("500")
         500
         >>> size_to_bytes("1K")

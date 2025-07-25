@@ -19,10 +19,11 @@ def prepare_repository_from_archive(
     """
     # Ensure tmp_path is a Path object
     tmp_path = Path(tmp_path)
-    
+    tmp_path.mkdir(parents=True, exist_ok=True)
+
     # Create a temporary directory to extract the archive
     extract_dir = Path(mkdtemp(dir=tmp_path))
-    
+
     # Determine the archive type and extract it
     if archive_path.endswith('.tar.gz') or archive_path.endswith('.tgz'):
         with tarfile.open(archive_path, 'r:gz') as tar:
@@ -32,16 +33,12 @@ def prepare_repository_from_archive(
             tar.extractall(path=extract_dir)
     elif archive_path.endswith('.zip'):
         with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-            zip_ref.extractall(extract_dir)
+            zip_ref.extractall(path=extract_dir)
     else:
         raise ValueError(f"Unsupported archive format: {archive_path}")
-    
-    # If a specific filename is provided, ensure it exists in the extracted directory
+
+    # If a specific filename is provided, return the path to that file
     if filename:
-        extracted_path = extract_dir / filename
-        if not extracted_path.exists():
-            raise FileNotFoundError(f"File {filename} not found in the archive.")
-        return str(extracted_path)
-    
-    # Return the path to the extracted directory
-    return str(extract_dir)
+        return str(extract_dir / filename)
+    else:
+        return str(extract_dir)

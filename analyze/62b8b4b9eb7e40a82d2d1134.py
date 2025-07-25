@@ -1,9 +1,8 @@
-def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
+def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
     """Return attribute names and descriptions defined by interface.
     
     Args:
-        all (bool): If True, return all attributes and descriptions. 
-                   If False, return only the non-private attributes and descriptions.
+        all (bool): If True, return all attributes. If False, return only non-private attributes.
     
     Returns:
         dict: A dictionary where keys are attribute names and values are their descriptions.

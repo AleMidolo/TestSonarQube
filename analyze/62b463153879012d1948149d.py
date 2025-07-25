@@ -17,8 +17,8 @@ def _explore_folder(folder):
     dict
         A dictionary where keys are XML basenames and values are lists of file paths.
     """
-    if not os.path.isdir(folder):
-        raise ValueError(f"The provided path '{folder}' is not a valid directory.")
+    if not os.path.exists(folder):
+        raise FileNotFoundError(f"The folder {folder} does not exist.")
 
     file_groups = defaultdict(list)
 

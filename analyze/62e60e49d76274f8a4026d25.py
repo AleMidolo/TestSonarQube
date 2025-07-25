@@ -1,3 +1,5 @@
+from functools import wraps
+
 def unit_of_work(metadata=None, timeout=None):
     """
     This function is a decorator for transaction functions that allows extra control over how the transaction is carried out.
@@ -30,19 +32,12 @@ def unit_of_work(metadata=None, timeout=None):
     :type timeout: float or :const:`None`
     """
     def decorator(func):
-        def wrapper(*args, **kwargs):
-            # Extract the transaction object from the arguments
-            tx = args[0] if args else kwargs.get('tx')
-            
-            # Apply metadata if provided
+        @wraps(func)
+        def wrapper(tx, *args, **kwargs):
             if metadata is not None:
-                tx.metadata = metadata
-            
-            # Apply timeout if provided
+                tx.run("CALL dbms.setTXMetaData($metadata)", metadata=metadata)
             if timeout is not None:
-                tx.timeout = timeout
-            
-            # Execute the function
-            return func(*args, **kwargs)
+                tx.run("CALL dbms.setTransactionTimeout($timeout)", timeout=timeout)
+            return func(tx, *args, **kwargs)
         return wrapper
     return decorator

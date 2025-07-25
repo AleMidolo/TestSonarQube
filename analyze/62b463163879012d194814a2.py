@@ -12,10 +12,7 @@ def add_asset(self, basename, file_path):
     if not hasattr(self, 'assets'):
         self.assets = {}
     
-    # Generate the full asset name by combining basename and file extension
-    import os
-    file_extension = os.path.splitext(file_path)[1]
-    asset_name = f"{basename}{file_extension}"
-    
-    # Add the asset to the dictionary
-    self.assets[asset_name] = file_path
+    # Generate keys for different file extensions
+    self.assets[f"{basename}.tiff"] = file_path.replace(".tiff", ".tiff")
+    self.assets[f"{basename}.jpg"] = file_path.replace(".tiff", ".jpg")
+    self.assets[f"{basename}.png"] = file_path.replace(".tiff", ".png")

@@ -19,11 +19,23 @@ def _update_context(self, context):
     if not hasattr(context, 'error'):
         context.error = {}
 
-    # Assuming self has properties like 'error_indices' and 'fields'
-    for i, field in enumerate(self.fields):
-        if 'error' in field:
-            error_type = field.split('_')[-1]  # Extract error type (e.g., 'low')
-            error_name = ['x', 'y', 'z'][i]  # Map to x, y, z based on index
+    # Assuming self has properties like 'error_E_low', 'error_E_high', etc.
+    # and we need to map them to 'x', 'y', 'z' errors.
+    error_mapping = {
+        'error_E_low': 'x_low',
+        'error_E_high': 'x_high',
+        'error_t_low': 'y_low',
+        'error_t_high': 'y_high',
+        # Add more mappings as needed
+    }
+
+    for attr, error_name in error_mapping.items():
+        if hasattr(self, attr):
+            index = getattr(self, attr)
             if error_name not in context.error:
                 context.error[error_name] = {}
-            context.error[error_name][error_type] = {"index": i}
+            context.error[error_name]['index'] = index
+
+    # Ensure that the context.value is not modified
+    if not hasattr(context, 'value'):
+        context.value = {}
