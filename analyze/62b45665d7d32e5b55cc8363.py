@@ -22,10 +22,10 @@ def make_parsers():
     
     # Subparser para completar tarea
     complete_parser = subparsers.add_parser('complete', help='Marcar tarea como completada')
-    complete_parser.add_argument('task_id', type=int, help='ID de la tarea a completar')
+    complete_parser.add_argument('task_id', type=int, help='ID de la tarea')
 
     # Subparser para eliminar tarea
     delete_parser = subparsers.add_parser('delete', help='Eliminar una tarea')
-    delete_parser.add_argument('task_id', type=int, help='ID de la tarea a eliminar')
+    delete_parser.add_argument('task_id', type=int, help='ID de la tarea')
 
     return parser, subparsers

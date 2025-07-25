@@ -20,15 +20,18 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         x = get_coord(bin)
         y = make_value(bin.content)
         
-        # Handle both single values and tuples returned by make_value
-        if isinstance(y, tuple):
-            points.append((x,) + y)
+        # Handle both scalar and tuple y values
+        if isinstance(y, (tuple, list)):
+            points.append((x,) + tuple(y))
         else:
             points.append((x, y))
 
-    # Determine field names based on points structure
-    if points and len(points[0]) != len(field_names):
-        raise ValueError("Number of field names must match point dimension")
+    # Determine dimensions based on points
+    dimensions = len(points[0])
+    
+    # Validate field_names matches dimensions
+    if len(field_names) != dimensions:
+        raise ValueError(f"Number of field names ({len(field_names)}) must match dimensions ({dimensions})")
 
     # Create graph with appropriate scale
     if scale is True:

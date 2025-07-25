@@ -1,88 +1,94 @@
 def load_configurations(config_filenames, overrides=None, resolve_env=True):
-    """
-    Dada una secuencia de nombres de archivo de configuración, carga y valida cada archivo de configuración. Si el archivo de configuración no puede ser leído debido a permisos insuficientes o errores al analizar el archivo de configuración, se registrará el error en el log. De lo contrario, devuelve los resultados como una tupla que contiene: un diccionario que asocia el nombre del archivo de configuración con su configuración analizada correspondiente, y una secuencia de instancias de `logging.LogRecord` que contienen cualquier error de análisis.
-    """
     import logging
-    import yaml
     import os
+    import yaml
     from pathlib import Path
 
-    # Initialize return values
     configs = {}
     errors = []
     logger = logging.getLogger(__name__)
 
-    # Process each config file
+    if overrides is None:
+        overrides = {}
+
     for filename in config_filenames:
         try:
-            # Check if file exists and is readable
-            config_path = Path(filename)
-            if not config_path.exists():
-                raise FileNotFoundError(f"Configuration file not found: {filename}")
+            path = Path(filename)
             
-            if not os.access(filename, os.R_OK):
-                raise PermissionError(f"Permission denied reading configuration file: {filename}")
+            if not path.exists():
+                error = logging.LogRecord(
+                    name=__name__,
+                    level=logging.ERROR,
+                    pathname=filename,
+                    lineno=0,
+                    msg=f"Configuration file not found: {filename}",
+                    args=(),
+                    exc_info=None
+                )
+                errors.append(error)
+                continue
 
-            # Load and parse YAML file
+            if not os.access(path, os.R_OK):
+                error = logging.LogRecord(
+                    name=__name__,
+                    level=logging.ERROR, 
+                    pathname=filename,
+                    lineno=0,
+                    msg=f"Insufficient permissions to read configuration file: {filename}",
+                    args=(),
+                    exc_info=None
+                )
+                errors.append(error)
+                continue
+
             with open(filename, 'r') as f:
                 config = yaml.safe_load(f)
 
-            # Apply any overrides if provided
-            if overrides and isinstance(overrides, dict):
-                def deep_update(d, u):
-                    for k, v in u.items():
-                        if isinstance(v, dict) and k in d and isinstance(d[k], dict):
-                            deep_update(d[k], v)
-                        else:
-                            d[k] = v
-                deep_update(config, overrides)
+            # Apply overrides
+            if filename in overrides:
+                config.update(overrides[filename])
 
             # Resolve environment variables if requested
             if resolve_env:
-                def resolve_env_vars(obj):
-                    if isinstance(obj, dict):
-                        return {k: resolve_env_vars(v) for k, v in obj.items()}
-                    elif isinstance(obj, list):
-                        return [resolve_env_vars(item) for item in obj]
-                    elif isinstance(obj, str) and obj.startswith('$'):
-                        env_var = obj[1:]
-                        return os.environ.get(env_var, obj)
-                    return obj
-                
-                config = resolve_env_vars(config)
+                config = _resolve_env_vars(config)
 
             configs[filename] = config
 
-        except FileNotFoundError as e:
-            error_record = logger.makeLogRecord({
-                'msg': str(e),
-                'levelno': logging.ERROR,
-                'exc_info': True
-            })
-            errors.append(error_record)
-            
-        except PermissionError as e:
-            error_record = logger.makeLogRecord({
-                'msg': str(e),
-                'levelno': logging.ERROR,
-                'exc_info': True
-            })
-            errors.append(error_record)
-            
         except yaml.YAMLError as e:
-            error_record = logger.makeLogRecord({
-                'msg': f"Error parsing configuration file {filename}: {str(e)}",
-                'levelno': logging.ERROR,
-                'exc_info': True
-            })
-            errors.append(error_record)
-            
+            error = logging.LogRecord(
+                name=__name__,
+                level=logging.ERROR,
+                pathname=filename, 
+                lineno=0,
+                msg=f"Error parsing configuration file {filename}: {str(e)}",
+                args=(),
+                exc_info=None
+            )
+            errors.append(error)
         except Exception as e:
-            error_record = logger.makeLogRecord({
-                'msg': f"Unexpected error processing configuration file {filename}: {str(e)}",
-                'levelno': logging.ERROR,
-                'exc_info': True
-            })
-            errors.append(error_record)
+            error = logging.LogRecord(
+                name=__name__,
+                level=logging.ERROR,
+                pathname=filename,
+                lineno=0, 
+                msg=f"Unexpected error loading configuration file {filename}: {str(e)}",
+                args=(),
+                exc_info=None
+            )
+            errors.append(error)
 
     return configs, errors
+
+def _resolve_env_vars(config):
+    """Helper function to resolve environment variables in config values"""
+    import os
+    
+    if isinstance(config, dict):
+        return {k: _resolve_env_vars(v) for k, v in config.items()}
+    elif isinstance(config, list):
+        return [_resolve_env_vars(v) for v in config]
+    elif isinstance(config, str) and config.startswith('$'):
+        env_var = config[1:]
+        return os.environ.get(env_var, config)
+    else:
+        return config

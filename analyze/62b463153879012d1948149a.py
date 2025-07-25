@@ -32,8 +32,7 @@ def _group_files_by_xml_filename(source, xmls, files):
         if matching_files:
             result[xml] = {
                 'name': xml_base,
-                'files': matching_files,
-                'source': source
+                'files': matching_files
             }
             
     return result

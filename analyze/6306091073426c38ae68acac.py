@@ -2,7 +2,7 @@ def dict_insert(dic, val, key, *keys):
     if not keys:
         dic[key] = val
         return dic
-        
+    
     if key not in dic:
         dic[key] = {}
         
@@ -11,6 +11,6 @@ def dict_insert(dic, val, key, *keys):
         if k not in current:
             current[k] = {}
         current = current[k]
-        
+    
     current[keys[-1]] = val
     return dic

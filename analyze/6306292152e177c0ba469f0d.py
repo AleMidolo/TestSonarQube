@@ -2,46 +2,29 @@ def identify_request(request: RequestType) -> bool:
     """
     Intente identificar si esta es una solicitud de Matrix.
     """
-    # Check if request has Matrix-specific headers or patterns
-    if hasattr(request, 'headers'):
-        # Look for common Matrix headers
-        matrix_headers = [
-            'Authorization',
-            'X-Matrix',
-            'Matrix-',
-        ]
+    # Verificar si el request es None
+    if request is None:
+        return False
         
-        for header in matrix_headers:
-            if header in request.headers:
+    # Verificar si tiene los atributos típicos de una solicitud Matrix
+    try:
+        # Verificar si tiene el formato correcto de una solicitud Matrix
+        if hasattr(request, 'type') and hasattr(request, 'content'):
+            # Verificar si el tipo corresponde a Matrix
+            if request.type.startswith('m.'):
                 return True
                 
-    # Check URL path if available
-    if hasattr(request, 'path'):
-        matrix_paths = [
-            '/_matrix',
-            '/matrix',
-            '/.well-known/matrix'
-        ]
-        
-        for path in matrix_paths:
-            if request.path.startswith(path):
+        # Verificar si tiene un token de acceso Matrix
+        if hasattr(request, 'access_token'):
+            if request.access_token.startswith('syt_'):
                 return True
                 
-    # Check request body if available
-    if hasattr(request, 'body'):
-        matrix_keywords = [
-            'access_token',
-            'device_id', 
-            'user_id',
-            'room_id'
-        ]
+        # Verificar si tiene un ID de usuario Matrix
+        if hasattr(request, 'user_id'):
+            if request.user_id.startswith('@') and ':' in request.user_id:
+                return True
+                
+    except AttributeError:
+        return False
         
-        try:
-            body = request.body.decode('utf-8')
-            for keyword in matrix_keywords:
-                if keyword in body:
-                    return True
-        except:
-            pass
-            
     return False

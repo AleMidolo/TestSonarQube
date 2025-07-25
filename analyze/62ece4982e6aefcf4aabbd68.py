@@ -1,12 +1,12 @@
 def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = None) -> str:
-    # Manejo del caso especial cuando el número es 0
+    # Caso especial para el 0
     if number == 0:
         result = alphabet[0]
         if padding:
             result = result.rjust(padding, alphabet[0])
         return result
         
-    # Convertir el número usando el alfabeto dado
+    # Convertir el número usando el alfabeto
     base = len(alphabet)
     result = ""
     

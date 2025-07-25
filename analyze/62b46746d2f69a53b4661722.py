@@ -16,7 +16,6 @@ def absorb(self, args):
                     expr2 = result[j]
                     
                     # Check absorption cases
-                    
                     # A & (A | B) = A
                     if (isinstance(expr1, str) and isinstance(expr2, tuple) and 
                         len(expr2) == 3 and expr2[1] == '|' and
@@ -47,8 +46,8 @@ def absorb(self, args):
                         result[j] = (expr1, '|', expr2[2])
                         modified = True
                         
-        # Remove duplicates while preserving order
-        seen = set()
-        result = [x for x in result if not (x in seen or seen.add(x))]
-                        
+    # Remove duplicates while preserving order
+    seen = set()
+    result = [x for x in result if not (x in seen or seen.add(x))]
+    
     return result

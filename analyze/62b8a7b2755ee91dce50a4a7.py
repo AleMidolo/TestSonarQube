@@ -24,9 +24,6 @@ def default_tzinfo(dt, tzinfo):
     :return:
         Devuelve un objeto :py:class:`datetime.datetime` que contienen información de la zona horaria a la que pertenece.
     """
-    # Si el datetime ya tiene zona horaria, lo devolvemos sin cambios
     if dt.tzinfo is not None:
         return dt
-        
-    # Si no tiene zona horaria, le asignamos la proporcionada
     return dt.replace(tzinfo=tzinfo)

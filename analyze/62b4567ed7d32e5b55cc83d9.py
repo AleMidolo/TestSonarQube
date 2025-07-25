@@ -1,43 +1,53 @@
 def deep_merge_nodes(nodes):
     result = {}
     
-    # Iterate through all nodes and merge them
+    # Recorrer cada nodo en la lista de entrada
     for key_node, value_node in nodes:
         key = key_node.value
         
-        # If key doesn't exist yet, just add it
+        # Si la clave no existe, simplemente agregar el par clave-valor
         if key not in result:
             result[key] = (key_node, value_node)
             continue
             
-        # If key exists, merge the values
+        # Si la clave existe, necesitamos fusionar los valores
         existing_value = result[key][1]
         
-        # If both nodes are mapping nodes, merge them recursively
-        if (isinstance(existing_value, type(value_node)) and 
-            hasattr(existing_value, 'tag') and
-            existing_value.tag == 'tag:yaml.org,2002:map' and
-            value_node.tag == 'tag:yaml.org,2002:map'):
+        # Si ambos son MappingNodes, hacer una fusión profunda
+        if (isinstance(value_node, type(existing_value)) and 
+            hasattr(value_node, 'tag') and
+            value_node.tag == 'tag:yaml.org,2002:map' and
+            existing_value.tag == 'tag:yaml.org,2002:map'):
             
-            # Convert mapping node values to dict for easier merging
-            existing_dict = {k.value: v for k,v in existing_value.value}
-            new_dict = {k.value: v for k,v in value_node.value}
+            # Convertir los nodos existentes a un diccionario para facilitar la búsqueda
+            existing_dict = {k.value: v for k, v in existing_value.value}
+            new_dict = {k.value: v for k, v in value_node.value}
             
-            # Merge the dictionaries
-            for k, v in new_dict.items():
-                existing_dict[k] = v
-                
-            # Convert back to list of tuples format
-            merged_value = [(k_node, v) for k_node, v in value_node.value 
-                          if k_node.value in existing_dict]
+            # Fusionar los diccionarios
+            merged_pairs = []
+            all_keys = set(existing_dict.keys()) | set(new_dict.keys())
             
-            result[key] = (key_node, type(value_node)(
-                tag=value_node.tag,
-                value=merged_value
-            ))
+            for k in all_keys:
+                if k in new_dict:
+                    # Encontrar el nodo clave original que corresponde a este valor
+                    key_node = next(kn for kn, _ in value_node.value if kn.value == k)
+                    merged_pairs.append((key_node, new_dict[k]))
+                else:
+                    # Encontrar el nodo clave original que corresponde a este valor
+                    key_node = next(kn for kn, _ in existing_value.value if kn.value == k)
+                    merged_pairs.append((key_node, existing_dict[k]))
             
-        # For non-mapping nodes, take the latest value
+            # Crear un nuevo MappingNode con los valores fusionados
+            merged_value = type(value_node)(
+                tag='tag:yaml.org,2002:map',
+                value=merged_pairs
+            )
+            result[key] = (key_node, merged_value)
+            
         else:
+            # Si no son MappingNodes o son de diferentes tipos,
+            # el último valor prevalece
             result[key] = (key_node, value_node)
-            
+    
+    # Convertir el diccionario resultante de vuelta a una lista de tuplas
     return list(result.values())

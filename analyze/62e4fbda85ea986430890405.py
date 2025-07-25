@@ -36,7 +36,7 @@ def xargs(
     def _run_chunk(chunk: list[str]) -> tuple[int, bytes]:
         full_cmd = list(cmd) + chunk
         
-        if color and hasattr(os, 'openpty'):
+        if color and hasattr(pty, 'openpty'):
             master, slave = pty.openpty()
             process = subprocess.Popen(
                 full_cmd,
@@ -60,25 +60,33 @@ def xargs(
             process = subprocess.run(
                 full_cmd,
                 stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
+                stderr=subprocess.PIPE,
                 **kwargs
             )
-            return process.returncode, process.stdout
+            return process.returncode, process.stdout + process.stderr
 
     chunks = _chunk_args(varargs, _max_length)
     
-    if target_concurrency <= 1:
-        for chunk in chunks:
-            retcode, output = _run_chunk(chunk)
-            if retcode != 0:
-                return retcode, output
-        return 0, b''
+    if target_concurrency > 1:
+        with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
+            results = list(executor.map(_run_chunk, chunks))
+        
+        # Combine results, prioritizing non-zero return codes
+        final_code = 0
+        final_output = b''
+        for code, output in results:
+            if code != 0:
+                final_code = code
+            final_output += output
+        return final_code, final_output
     
-    with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
-        futures = [executor.submit(_run_chunk, chunk) for chunk in chunks]
-        for future in futures:
-            retcode, output = future.result()
-            if retcode != 0:
-                return retcode, output
-                
-    return 0, b''
+    else:
+        # Sequential execution
+        final_code = 0
+        final_output = b''
+        for chunk in chunks:
+            code, output = _run_chunk(chunk)
+            if code != 0:
+                final_code = code
+            final_output += output
+        return final_code, final_output

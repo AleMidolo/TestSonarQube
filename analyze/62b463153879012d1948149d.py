@@ -23,7 +23,7 @@ def _explore_folder(folder):
     for filename in os.listdir(folder):
         filepath = os.path.join(folder, filename)
         
-        # Solo procesar archivos, no carpetas
+        # Solo procesar archivos, no directorios
         if os.path.isfile(filepath):
             # Obtener nombre base y extensión
             basename, ext = os.path.splitext(filename)
@@ -34,6 +34,8 @@ def _explore_folder(folder):
             # Si es PDF, agregar a la entrada correspondiente
             elif ext.lower() == '.pdf':
                 files_dict[basename]['pdf'] = filepath
-    
-    # Convertir defaultdict a dict normal
+            # Si es TXT, agregar a la entrada correspondiente  
+            elif ext.lower() == '.txt':
+                files_dict[basename]['txt'] = filepath
+                
     return dict(files_dict)
