@@ -1,33 +1,24 @@
 def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=False):
     """
-    给定一个渲染后的配置 YAML，将其写入目标文件。
-      如果文件已存在且 `overwrite` 参数为假，则在写入任何内容之前中止操作。
-      如果文件不存在，则创建它。
-      否则，将内容写入文件。
-
-    返回值：`None`
-
-    给定一个目标配置文件名和渲染的配置 YAML，将其写入文件。必要时创建包含的目录。但如果文件已存在且 `overwrite` 参数为假，则在写入任何内容之前中止操作。
+    Given a target config filename and rendered config YAML, write it out to file. Create any
+    containing directories as needed. But if the file already exists and overwrite is False,
+    abort before writing anything.
     """
     import os
     import pathlib
 
-    # 获取目标文件的目录路径
-    config_dir = os.path.dirname(config_filename)
-    
-    # 如果目录不存在则创建
-    if config_dir:
-        pathlib.Path(config_dir).mkdir(parents=True, exist_ok=True)
-        
-    # 检查文件是否已存在
+    # Get directory path and create if doesn't exist
+    directory = os.path.dirname(config_filename)
+    if directory:
+        pathlib.Path(directory).mkdir(parents=True, exist_ok=True)
+
+    # Check if file exists and overwrite flag
     if os.path.exists(config_filename) and not overwrite:
-        return None
-        
-    # 写入配置文件
+        return False
+
+    # Write the configuration file with specified mode
     with open(config_filename, 'w') as f:
+        os.chmod(config_filename, mode)
         f.write(rendered_config)
-        
-    # 设置文件权限
-    os.chmod(config_filename, mode)
     
-    return None
+    return True

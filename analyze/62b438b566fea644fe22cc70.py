@@ -1,10 +1,9 @@
 def bash_completion():
     """
-    通过检查 borgmatic 的命令行参数解析器生成 borgmatic 命令。
-
-    返回一个用于 borgmatic 命令的 bash 补全脚本。通过检查 borgmatic 的命令行参数解析器生成此脚本。
+    Return a bash completion script for the borgmatic command. Produce this by introspecting
+    borgmatic's command-line argument parsers.
     """
-    completion_script = '''
+    return '''
 _borgmatic()
 {
     local cur prev opts
@@ -12,44 +11,39 @@ _borgmatic()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     
-    # 主要命令选项
-    opts="init create prune check list info export-tar extract mount umount config validate"
+    # List of all borgmatic commands
+    opts="init create prune check list info export-tar extract mount umount rcreate rlist rinfo rdelete config validate generate-key"
     
-    # 通用选项
-    common_opts="--config --verbosity --syslog-verbosity --log-file --monitoring-verbosity --help"
+    # List of options that take config file paths
+    config_opts="-c --config --borgmatic-source-directory"
     
-    # 根据前一个单词提供不同的补全
+    # Handle completion for different cases
     case "${prev}" in
         borgmatic)
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;
-        --config)
-            COMPREPLY=( $(compgen -f -- ${cur}) )
+        -c|--config)
+            COMPREPLY=( $(compgen -f -X '!*.yaml' -- ${cur}) )
             return 0
             ;;
-        --verbosity|--syslog-verbosity|--monitoring-verbosity)
-            COMPREPLY=( $(compgen -W "0 1 2 3" -- ${cur}) )
-            return 0
-            ;;
-        --log-file)
-            COMPREPLY=( $(compgen -f -- ${cur}) )
+        --borgmatic-source-directory)
+            COMPREPLY=( $(compgen -d -- ${cur}) )
             return 0
             ;;
         *)
-            # 如果当前输入以破折号开头，提供选项补全
+            # If current word starts with -, complete with options
             if [[ ${cur} == -* ]] ; then
-                COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
+                COMPREPLY=( $(compgen -W "${config_opts}" -- ${cur}) )
                 return 0
             fi
             ;;
     esac
     
-    # 默认补全为主要命令
-    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    # Default to completing files
+    COMPREPLY=( $(compgen -f -- ${cur}) )
     return 0
 }
 
 complete -F _borgmatic borgmatic
 '''
-    return completion_script

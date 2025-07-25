@@ -1,22 +1,19 @@
 def addignored(ignored):
     """
-    使用 `git` 命令获取文件名，将其转换为列表，仅筛选被忽略的文件，对列表进行排序，并将这些文件作为一个字符串返回，文件名之间用逗号分隔。
+    Use the git command to obtain the file names, turn it into a list, sort the list for only ignored files, return those files as a single string with each filename separated by a comma.
     """
     import subprocess
     
-    # 运行git ls-files命令获取所有文件
+    # Run git ls-files command to get list of ignored files
     result = subprocess.run(['git', 'ls-files', '--others', '--ignored', '--exclude-standard'], 
                           capture_output=True, 
                           text=True)
     
-    # 将输出转换为列表并过滤空行
-    files = [f for f in result.stdout.split('\n') if f]
+    # Split output into list and remove empty strings
+    ignored_files = [x for x in result.stdout.split('\n') if x]
     
-    # 筛选被忽略的文件
-    ignored_files = [f for f in files if f in ignored]
-    
-    # 对列表排序
+    # Sort the list
     ignored_files.sort()
     
-    # 用逗号连接文件名
+    # Join list elements with commas and return
     return ','.join(ignored_files)

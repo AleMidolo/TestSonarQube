@@ -1,22 +1,31 @@
 def process_text_links(text):
     """
-    处理文本中的链接，添加一些属性并将文本链接转换为可点击的超链接。
+    Process links in text, adding some attributes and linkifying textual links.
     """
     import re
     
-    # 匹配URL的正则表达式模式
-    url_pattern = r'(https?://[^\s<>"]+|www\.[^\s<>"]+)'
+    # Regular expression for finding URLs
+    url_pattern = r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
     
-    def replace_url(match):
+    # Regular expression for finding HTML links
+    html_link_pattern = r'<a[^>]*>.*?</a>'
+    
+    # First process existing HTML links
+    def add_attributes(match):
+        link = match.group(0)
+        if 'target=' not in link:
+            link = link.replace('<a ', '<a target="_blank" rel="noopener noreferrer" ')
+        return link
+    
+    text = re.sub(html_link_pattern, add_attributes, text)
+    
+    # Then convert plain URLs to HTML links
+    def linkify(match):
         url = match.group(0)
-        # 如果URL不以http开头,添加http://
-        if url.startswith('www.'):
+        if not url.startswith(('http://', 'https://')):
             url = 'http://' + url
-            
-        # 构建带属性的HTML链接标签
-        return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
+        return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{match.group(0)}</a>'
     
-    # 使用正则表达式替换所有匹配的URL
-    processed_text = re.sub(url_pattern, replace_url, text)
+    text = re.sub(url_pattern, linkify, text)
     
-    return processed_text
+    return text

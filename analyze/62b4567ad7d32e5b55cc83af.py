@@ -1,10 +1,11 @@
 def parse_arguments(*arguments):
     """
-    根据调用此脚本时提供的命令行参数，解析这些参数并将其作为一个 `ArgumentParser` 实例返回。
+    Given command-line arguments with which this script was invoked, parse the arguments and return
+    them as an ArgumentParser instance.
     """
     import argparse
     
-    parser = argparse.ArgumentParser(description='Command line argument parser')
+    parser = argparse.ArgumentParser(description='Parse command line arguments')
     
     # Add arguments
     parser.add_argument('--input', '-i', type=str, help='Input file path')

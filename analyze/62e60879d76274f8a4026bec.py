@@ -1,47 +1,41 @@
-def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None, imp_user=None, dehydration_hooks=None, hydration_hooks=None, **handlers):
+def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
+          db=None, imp_user=None, dehydration_hooks=None,
+          hydration_hooks=None, **handlers):
+    
     # Set default mode to WRITE if not specified
     if mode is None:
         mode = "WRITE"
-    elif mode not in ("READ", "WRITE"):
+    
+    # Validate mode
+    if mode not in ("READ", "WRITE"):
         raise ValueError("Mode must be either 'READ' or 'WRITE'")
 
-    # Initialize parameters dictionary
-    parameters = {}
-    
-    # Add bookmarks if provided
+    # Build extra parameters dict
+    extra = {}
     if bookmarks:
-        parameters["bookmarks"] = list(bookmarks)
-        
-    # Add metadata if provided
+        extra["bookmarks"] = list(bookmarks)
     if metadata:
-        parameters["metadata"] = metadata
-        
-    # Add timeout if provided
+        extra["metadata"] = metadata
     if timeout is not None:
-        parameters["timeout"] = timeout
-        
-    # Add database name if provided (Bolt 4.0+)
-    if db is not None:
-        parameters["db"] = db
-        
-    # Add impersonated user if provided (Bolt 4.4+)
-    if imp_user is not None:
-        parameters["imp_user"] = imp_user
-
-    # Create transaction context with hooks
-    tx_context = {
-        "mode": mode,
-        "parameters": parameters
-    }
+        extra["timeout"] = timeout
+    if db:
+        extra["db"] = db
+    if imp_user:
+        extra["imp_user"] = imp_user
     
+    # Add hooks if provided
     if dehydration_hooks:
-        tx_context["dehydration_hooks"] = dehydration_hooks
+        extra["dehydration_hooks"] = dehydration_hooks
     if hydration_hooks:
-        tx_context["hydration_hooks"] = hydration_hooks
+        extra["hydration_hooks"] = hydration_hooks
 
-    # Create and return Response object with handlers
-    response = Response(tx_context)
-    for key, handler in handlers.items():
-        response.add_handler(key, handler)
-        
-    return response
+    # Create BEGIN message
+    message = {
+        "mode": mode
+    }
+    if extra:
+        message.update(extra)
+
+    # Add message to output queue and create Response
+    self._append(("BEGIN", message))
+    return Response(self._connection, **handlers)

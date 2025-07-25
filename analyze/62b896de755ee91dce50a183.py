@@ -1,52 +1,67 @@
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
-    """Parse date/time string to datetime.datetime object."""
+    """
+    Parse the date/time string into a :class:`datetime.datetime` object.
     
+    :param timestr: Any date/time string using the supported formats.
+    :param default: The default datetime object, if this is a datetime object and not ``None``, 
+                   elements specified in ``timestr`` replace elements in the default object.
+    :param ignoretz: If set ``True``, time zones in parsed strings are ignored and a naive 
+                    :class:`datetime.datetime` object is returned.
+    :param tzinfos: Additional time zone names / aliases which may be present in the string.
+    :param **kwargs: Keyword arguments as passed to ``_parse()``.
+    :return: Returns a :class:`datetime.datetime` object or tuple with datetime and fuzzy tokens
+    :raises: ParserError, TypeError, OverflowError
+    """
     if not isinstance(timestr, str):
-        raise TypeError("Parser must be given a string or character stream, not %r" % timestr)
-        
-    # Default datetime object to use for missing values
-    default_datetime = default or datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-    
+        raise TypeError("Parser must be given a string or character stream, not "
+                      f"{type(timestr).__name__}")
+
+    # Handle empty string
+    if not timestr:
+        raise ParserError("String is empty")
+
     try:
-        # Parse the string using _parse() internal method
+        # Parse the string using internal _parse method
         res, tokens = self._parse(timestr, **kwargs)
-        
-        if res is None:
-            raise ParserError("Unknown string format: %s" % timestr)
-            
-        # Convert parsed elements to datetime
-        year = res.year if res.year is not None else default_datetime.year
-        month = res.month if res.month is not None else default_datetime.month
-        day = res.day if res.day is not None else default_datetime.day
-        hour = res.hour if res.hour is not None else default_datetime.hour
-        minute = res.minute if res.minute is not None else default_datetime.minute
-        second = res.second if res.second is not None else default_datetime.second
-        microsecond = res.microsecond if res.microsecond is not None else default_datetime.microsecond
-        
-        # Handle timezone
-        tzinfo = None
-        if not ignoretz:
-            if res.tzname:
-                if tzinfos:
-                    if callable(tzinfos):
-                        tzinfo = tzinfos(res.tzname, res.tzoffset)
-                    else:
-                        if res.tzname in tzinfos:
-                            tzinfo = tzinfos[res.tzname]
-                            if isinstance(tzinfo, numbers.Number):
-                                tzinfo = datetime.timezone(datetime.timedelta(seconds=tzinfo))
-                elif res.tzoffset:
-                    tzinfo = datetime.timezone(datetime.timedelta(seconds=res.tzoffset))
-                    
-        try:
-            dt = datetime.datetime(year, month, day, hour, minute, second,
-                                 microsecond, tzinfo=tzinfo)
-        except ValueError as e:
-            raise ParserError(str(e))
-            
+
+        # If no tokens found and fuzzy parsing not enabled, raise error
+        if not tokens and not kwargs.get('fuzzy', False):
+            raise ParserError("String does not contain a date.")
+
+        # Build datetime object
+        if res.year is None:
+            res.year = default.year if default else datetime.now().year
+        if res.month is None:
+            res.month = default.month if default else 1
+        if res.day is None:
+            res.day = default.day if default else 1
+
+        # Create aware or naive datetime based on ignoretz
+        if res.tzname and not ignoretz:
+            if tzinfos is not None:
+                # Handle tzinfos dictionary or callable
+                if isinstance(tzinfos, dict):
+                    tz = tzinfos.get(res.tzname)
+                else:
+                    tz = tzinfos(res.tzname, res.tzoffset)
+                if tz is None:
+                    raise ParserError(f"Unknown timezone name: {res.tzname}")
+            elif res.tzoffset:
+                tz = datetime.timezone(datetime.timedelta(seconds=res.tzoffset))
+            else:
+                tz = None
+        else:
+            tz = None
+
+        dt = datetime.datetime(
+            year=res.year, month=res.month, day=res.day,
+            hour=res.hour or 0, minute=res.minute or 0, second=res.second or 0,
+            microsecond=res.microsecond or 0, tzinfo=tz
+        )
+
         if kwargs.get('fuzzy_with_tokens', False):
             return dt, tokens
         return dt
-        
-    except (TypeError, ValueError, OverflowError) as e:
-        raise ParserError(str(e))
+
+    except (ValueError, OverflowError) as e:
+        raise ParserError(f"Unknown string format: {timestr}") from e

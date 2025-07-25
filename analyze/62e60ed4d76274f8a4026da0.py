@@ -1,8 +1,7 @@
 def keys(self):
     """
-    以List格式返回类的 __keys 属性
-    返回记录的键。
-
-    :return: 键名列表
+    Return the keys of the record.
+    
+    :return: list of key names
     """
-    return list(self.__keys)
+    return list(self.__dict__.keys())

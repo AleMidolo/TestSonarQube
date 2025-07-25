@@ -1,55 +1,45 @@
 def normalized(self):
-    """
-    将所有时间单位标准化为整数。
+    # Convert all float values to integer values
+    days = int(self.days)
+    hours_remainder = (self.days - days) * 24 + self.hours
+    hours = int(hours_remainder)
+    minutes_remainder = (hours_remainder - hours) * 60 + self.minutes
+    minutes = int(minutes_remainder)
+    seconds_remainder = (minutes_remainder - minutes) * 60 + self.seconds
+    seconds = int(seconds_remainder)
+    microseconds = int((seconds_remainder - seconds) * 1000000 + self.microseconds)
 
-    返回一个完全使用整数值表示相对属性的对象版本。
+    # Handle microseconds overflow
+    seconds += microseconds // 1000000
+    microseconds = microseconds % 1000000
 
-    >>> relativedelta(days=1.5, hours=2).normalized()
-    relativedelta(days=+1, hours=+14)
+    # Handle seconds overflow
+    minutes += seconds // 60
+    seconds = seconds % 60
 
-    :return:
-        返回一个 :class:`dateutil.relativedelta.relativedelta` 对象。
-    """
-    # 创建一个新的relativedelta对象来存储结果
-    result = relativedelta()
-    
-    # 处理年和月,直接复制
-    result.years = self.years
-    result.months = self.months
-    
-    # 将天数转换为小时
-    total_hours = self.hours + (self.days * 24)
-    
-    # 将小时转换为分钟
-    total_minutes = self.minutes + (total_hours * 60)
-    
-    # 将分钟转换为秒
-    total_seconds = self.seconds + (total_minutes * 60)
-    
-    # 将秒转换为微秒
-    total_microseconds = self.microseconds + (total_seconds * 1000000)
-    
-    # 从微秒开始,逐级向上计算并取整
-    result.microseconds = total_microseconds % 1000000
-    remaining_seconds = total_microseconds // 1000000
-    
-    result.seconds = remaining_seconds % 60
-    remaining_minutes = remaining_seconds // 60
-    
-    result.minutes = remaining_minutes % 60
-    remaining_hours = remaining_minutes // 60
-    
-    result.hours = remaining_hours % 24
-    result.days = remaining_hours // 24
-    
-    # 复制其他属性
-    result.year = self.year
-    result.month = self.month
-    result.day = self.day
-    result.weekday = self.weekday
-    result.hour = self.hour
-    result.minute = self.minute
-    result.second = self.second
-    result.microsecond = self.microsecond
-    
-    return result
+    # Handle minutes overflow
+    hours += minutes // 60
+    minutes = minutes % 60
+
+    # Handle hours overflow
+    days += hours // 24
+    hours = hours % 24
+
+    return self.__class__(
+        years=self.years,
+        months=self.months,
+        days=days,
+        hours=hours,
+        minutes=minutes,
+        seconds=seconds,
+        microseconds=microseconds,
+        leapdays=self.leapdays,
+        year=self.year,
+        month=self.month,
+        day=self.day,
+        weekday=self.weekday,
+        hour=self.hour,
+        minute=self.minute,
+        second=self.second,
+        microsecond=self.microsecond
+    )

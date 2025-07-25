@@ -1,49 +1,43 @@
 def verifyObject(iface, candidate, tentative=False):
     from zope.interface.exceptions import Invalid, DoesNotImplement, BrokenImplementation, BrokenMethodImplementation
-    from zope.interface.verify import verifyClass
     from zope.interface.interface import Method
     
-    # Step 1: Check if candidate provides interface
-    if not tentative:
-        if not iface.providedBy(candidate):
-            raise DoesNotImplement(iface)
-
-    # Collect all errors
     errors = []
     
-    # Step 2 & 3: Check methods
+    # Check if candidate claims to provide interface
+    if not tentative and not iface.providedBy(candidate):
+        errors.append(DoesNotImplement(iface))
+
+    # Check methods and attributes
     for name, desc in iface.namesAndDescriptions(1):
+        try:
+            attr = getattr(candidate, name)
+        except AttributeError:
+            errors.append(BrokenImplementation(iface, name))
+            continue
+
+        # If it's a method, verify the signature
         if isinstance(desc, Method):
-            # Check if method exists
-            try:
-                attr = getattr(candidate, name)
-            except AttributeError:
-                errors.append(BrokenImplementation(iface, name))
-                continue
-
-            # Check if it's callable
             if not callable(attr):
-                errors.append(BrokenMethodImplementation(name, "Not a method"))
+                errors.append(BrokenMethodImplementation(name, "Not callable"))
                 continue
-
+                
             # Check method signature
             try:
-                verifyClass(iface, attr.__class__)
-            except Invalid as e:
+                desc.getSignatureInfo()
+            except ValueError as e:
                 errors.append(BrokenMethodImplementation(name, str(e)))
-                
-    # Step 4: Check attributes
-    for name, desc in iface.namesAndDescriptions(1):
-        if not isinstance(desc, Method):
-            try:
-                getattr(candidate, name)
-            except AttributeError:
-                errors.append(BrokenImplementation(iface, name))
 
-    # Raise collected errors
+    # If no errors, return True
+    if not errors:
+        return True
+        
+    # If only one error, raise it directly
     if len(errors) == 1:
         raise errors[0]
-    elif errors:
+        
+    # If multiple errors, raise Invalid with all errors
+    if errors:
         raise Invalid(errors)
 
     return True

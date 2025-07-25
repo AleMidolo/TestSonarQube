@@ -4,77 +4,76 @@ def format(
     params: Union[Dict[Union[str, int], Any], Sequence[Any]],
 ) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
     """
-    将 SQL 使用 `self._converter.convert` 方法进行转换
+    Convert the SQL query to use the out-style parameters instead of
+    the in-style parameters.
 
-    将 SQL 查询从 in-style 参数转换为 out-style 参数。
+    *sql* (:class:`str` or :class:`bytes`) is the SQL query.
 
-    *sql*（类型：`str` 或 `bytes`）是 SQL 查询语句。
+    *params* (:class:`~collections.abc.Mapping` or :class:`~collections.abc.Sequence`)
+    contains the set of in-style parameters. It maps each parameter
+    (:class:`str` or :class:`int`) to value. If :attr:`.SQLParams.in_style`
+    is a named parameter style. then *params* must be a :class:`~collections.abc.Mapping`.
+    If :attr:`.SQLParams.in_style` is an ordinal parameter style, then
+    *params* must be a :class:`~collections.abc.Sequence`.
 
-    *params*（类型：`~collections.abc.Mapping` 或 `~collections.abc.Sequence`）包含一组 in-style 参数。它将每个参数（类型：`str` 或 `int`）映射到对应的值。如果 `SQLParams.in_style` 是命名参数样式，那么 *params* 必须是一个 `~collections.abc.Mapping` 类型。如果 `SQLParams.in_style` 是序号参数样式，那么 **params** 必须是一个 `~collections.abc.Sequence` 类型。
+    Returns a :class:`tuple` containing:
 
-    返回一个包含以下内容的元组（`tuple`）：
+    -       The formatted SQL query (:class:`str` or :class:`bytes`).
 
-      - 格式化后的 SQL 查询（类型：`str` 或 `bytes`）。
-
-      - 转换后的 out-style 参数集合（类型：`dict` 或 `list`）。
+    -       The set of converted out-style parameters (:class:`dict` or
+            :class:`list`).
     """
-    # 检查参数类型是否匹配样式
-    if self.in_style.is_named:
-        if not isinstance(params, Mapping):
-            raise TypeError("Named parameter style requires a mapping for params")
+    # Handle bytes vs string
+    is_bytes = isinstance(sql, bytes)
+    if is_bytes:
+        sql = sql.decode('utf-8')
+        
+    # Convert params to dict if sequence
+    if isinstance(params, Sequence):
+        params_dict = {str(i): val for i, val in enumerate(params)}
     else:
-        if not isinstance(params, Sequence) or isinstance(params, (str, bytes)):
-            raise TypeError("Positional parameter style requires a sequence for params")
+        params_dict = params
 
-    # 初始化输出参数集合
-    out_params: Union[Dict[Union[str, int], Any], List[Any]]
+    # Initialize output params
     out_params = {} if self.out_style.is_named else []
+    param_counter = 0
     
-    # 初始化参数计数器和SQL构建器
-    param_count = 0
-    formatted_sql = sql
-    
-    if self.in_style.is_named:
-        # 处理命名参数
-        for param_name, value in params.items():
-            # 生成输出参数名
-            out_name = self.out_style.format_param(param_count) if self.out_style.is_named else param_count
+    # Process the SQL string
+    result = ''
+    i = 0
+    while i < len(sql):
+        # Look for parameter markers
+        if sql[i:i+len(self.in_style.prefix)] == self.in_style.prefix:
+            param_name = ''
+            i += len(self.in_style.prefix)
             
-            # 转换参数值
-            converted_value = self._converter.convert(value)
-            
-            # 替换SQL中的参数占位符
-            formatted_sql = formatted_sql.replace(
-                self.in_style.format_param(param_name),
-                self.out_style.format_param(out_name)
-            )
-            
-            # 存储转换后的参数
-            if self.out_style.is_named:
-                out_params[out_name] = converted_value
-            else:
-                out_params.append(converted_value)
+            # Extract parameter name/number
+            while i < len(sql) and (sql[i].isalnum() or sql[i] == '_'):
+                param_name += sql[i]
+                i += 1
                 
-            param_count += 1
-    else:
-        # 处理序号参数
-        for i, value in enumerate(params):
-            # 生成输出参数名
-            out_name = self.out_style.format_param(i) if self.out_style.is_named else i
-            
-            # 转换参数值
-            converted_value = self._converter.convert(value)
-            
-            # 替换SQL中的参数占位符
-            formatted_sql = formatted_sql.replace(
-                self.in_style.format_param(i),
-                self.out_style.format_param(out_name)
-            )
-            
-            # 存储转换后的参数
-            if self.out_style.is_named:
-                out_params[out_name] = converted_value
+            if param_name:
+                # Get parameter value
+                param_value = params_dict[param_name]
+                
+                # Add to output parameters
+                if self.out_style.is_named:
+                    out_param_name = f"p{param_counter}"
+                    out_params[out_param_name] = param_value
+                    result += self.out_style.prefix + out_param_name
+                else:
+                    out_params.append(param_value)
+                    result += self.out_style.prefix
+                    
+                param_counter += 1
             else:
-                out_params.append(converted_value)
-    
-    return formatted_sql, out_params
+                result += self.in_style.prefix
+        else:
+            result += sql[i]
+            i += 1
+
+    # Convert back to bytes if input was bytes
+    if is_bytes:
+        result = result.encode('utf-8')
+        
+    return result, out_params

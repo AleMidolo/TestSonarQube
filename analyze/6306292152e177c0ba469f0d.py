@@ -1,29 +1,24 @@
 def identify_request(request: RequestType) -> bool:
     """
-    检查通过 JSON 加载的请求体是否包含事件。如果包含，则返回真。否则，返回假。
-
-    尝试识别这是否是一个 Matrix 请求。
+    Try to identify whether this is a Matrix request
     """
-    # Check if request is a dict
-    if not isinstance(request, dict):
-        return False
-        
-    # Check if request contains events
-    if 'events' not in request:
-        return False
-        
-    # Check if events is a list
-    if not isinstance(request['events'], list):
-        return False
-        
-    # Check if there are any events
-    if len(request['events']) == 0:
-        return False
-        
-    # Check if each event is a dict
-    for event in request['events']:
-        if not isinstance(event, dict):
-            return False
+    # Check if request has Matrix-specific headers
+    if 'Authorization' in request.headers:
+        auth_header = request.headers['Authorization']
+        if auth_header.startswith('Bearer'):
+            # Matrix access tokens are typically Bearer tokens
+            return True
             
-    # If all checks pass, this appears to be a valid Matrix request
-    return True
+    # Check for Matrix API endpoints in request path
+    matrix_endpoints = ['/_matrix', '/_synapse']
+    for endpoint in matrix_endpoints:
+        if request.path.startswith(endpoint):
+            return True
+            
+    # Check content type for Matrix-specific formats
+    if 'Content-Type' in request.headers:
+        content_type = request.headers['Content-Type']
+        if 'application/json' in content_type and any(x in request.path for x in ['sync', 'events', 'rooms']):
+            return True
+            
+    return False

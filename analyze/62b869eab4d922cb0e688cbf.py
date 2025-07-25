@@ -1,57 +1,38 @@
 def generate_default_observer_schema(app):
     """
-    为 ``spec.manifest`` 中的每个 Kubernetes 资源生成默认的观察者模式（observer schema），前提是尚未为其指定自定义的观察者模式。
+    Generate the default observer schema for each Kubernetes resource present in
+    ``spec.manifest`` for which a custom observer schema hasn't been specified.
 
-    参数：
-        app (krake.data.kubernetes.Application): 需要为其生成默认观察者模式的应用程序。
+    Args:
+        app (krake.data.kubernetes.Application): The application for which to generate a
+            default observer schema
     """
+    # Initialize empty observer schema if none exists
     if not app.spec.observer:
         app.spec.observer = {}
         
-    for resource in app.spec.manifest:
-        # 获取资源的 kind 和 apiVersion
-        kind = resource.get('kind')
-        api_version = resource.get('apiVersion')
+    # Iterate through each manifest in the application spec
+    for manifest in app.spec.manifest:
+        # Get resource kind from manifest
+        kind = manifest.get('kind')
         
-        # 生成资源的唯一标识符
-        resource_id = f"{api_version}/{kind}"
-        
-        # 如果该资源还没有观察者模式，则生成默认的
-        if resource_id not in app.spec.observer:
-            default_schema = {
-                'apiVersion': api_version,
-                'kind': kind,
-                'conditions': [
-                    {
-                        'type': 'Available',
-                        'status': 'True'
-                    }
-                ]
+        # Skip if kind not found or already has observer schema
+        if not kind or kind.lower() in app.spec.observer:
+            continue
+            
+        # Generate default schema based on resource kind
+        default_schema = {
+            'conditions': [{
+                'type': 'Available',
+                'status': 'True'
+            }],
+            'state': {
+                'ready': {
+                    'path': 'status.phase',
+                    'value': 'Running'
+                }
             }
-            
-            # 为特定类型的资源添加额外的默认条件
-            if kind == 'Deployment':
-                default_schema['conditions'].append({
-                    'type': 'Progressing',
-                    'status': 'True'
-                })
-            elif kind == 'StatefulSet':
-                default_schema['conditions'].append({
-                    'type': 'Ready',
-                    'status': 'True'
-                })
-            elif kind == 'Pod':
-                default_schema['conditions'].extend([
-                    {
-                        'type': 'Ready',
-                        'status': 'True'
-                    },
-                    {
-                        'type': 'PodScheduled',
-                        'status': 'True'
-                    }
-                ])
-                
-            app.spec.observer[resource_id] = default_schema
-            
-    return app
+        }
+        
+        # Add default schema to observer spec
+        app.spec.observer[kind.lower()] = default_schema

@@ -1,67 +1,64 @@
 from collections import defaultdict
-from functools import wraps
+import functools
 
 def lfu_cache(maxsize=128, typed=False):
     def decorator(func):
-        # 存储缓存结果
+        # Cache to store function results
         cache = {}
-        # 存储每个key的使用频率
-        frequencies = defaultdict(int)
-        # 存储每个频率对应的keys
-        freq_list = defaultdict(set)
-        # 当前最小频率
-        min_freq = 0
-        
-        @wraps(func)
+        # Counter to track frequency of key access
+        freq_counter = defaultdict(int)
+        # Track order of insertion for keys with same frequency
+        freq_order = []
+
+        @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            # 根据typed参数决定是否区分参数类型
+            # Create cache key based on args and kwargs
+            key = (*args, *(sorted(kwargs.items())))
             if typed:
-                key = (*args, *sorted(kwargs.items()), 
-                      *(type(arg) for arg in args),
-                      *(type(v) for k,v in sorted(kwargs.items())))
-            else:
-                key = (*args, *sorted(kwargs.items()))
-                
-            # 如果key在缓存中
+                key += tuple(type(arg) for arg in args)
+                key += tuple(type(val) for val in kwargs.values())
+            
+            # Return cached result if exists
             if key in cache:
-                # 更新使用频率
-                old_freq = frequencies[key]
-                frequencies[key] += 1
-                freq_list[old_freq].remove(key)
-                if not freq_list[old_freq] and old_freq == min_freq:
-                    min_freq += 1
-                freq_list[frequencies[key]].add(key)
+                freq_counter[key] += 1
+                freq_order.remove(key)
+                freq_order.append(key)
                 return cache[key]
-            
-            # 计算新结果
+
+            # Calculate new result
             result = func(*args, **kwargs)
-            
-            # 如果缓存已满,删除使用频率最少的项
+
+            # If cache is full, remove least frequently used item
             if len(cache) >= maxsize:
-                # 获取最小频率对应的任意一个key
-                lfu_key = next(iter(freq_list[min_freq]))
-                # 删除相关记录
-                cache.pop(lfu_key)
-                freq_list[min_freq].remove(lfu_key)
-                del frequencies[lfu_key]
-            
-            # 添加新结果到缓存
+                min_freq = min(freq_counter.values())
+                # Get all keys with minimum frequency
+                min_freq_keys = [k for k, v in freq_counter.items() if v == min_freq]
+                # Remove the oldest key with minimum frequency
+                for k in freq_order:
+                    if k in min_freq_keys:
+                        del cache[k]
+                        del freq_counter[k]
+                        freq_order.remove(k)
+                        break
+
+            # Add new result to cache
             cache[key] = result
-            frequencies[key] = 1
-            freq_list[1].add(key)
-            min_freq = 1
-            
+            freq_counter[key] = 1
+            freq_order.append(key)
             return result
-            
-        # 添加缓存清理方法
+
+        # Add clear method to wrapper
         def clear_cache():
             cache.clear()
-            frequencies.clear()
-            freq_list.clear()
-            nonlocal min_freq
-            min_freq = 0
-            
-        wrapper.clear_cache = clear_cache
+            freq_counter.clear()
+            freq_order.clear()
+
+        wrapper.clear = clear_cache
         return wrapper
-        
+
+    # Handle no-argument case
+    if callable(maxsize):
+        f = maxsize
+        maxsize = 128
+        return decorator(f)
     return decorator

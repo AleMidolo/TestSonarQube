@@ -1,39 +1,49 @@
 def parse_arguments(*unparsed_arguments):
     """
-    解析参数并将其作为字典映射返回
-
-    给定调用该脚本时使用的命令行参数，解析这些参数并返回一个字典，该字典将子解析器名称（或 "global"）映射到相应的 argparse.Namespace 实例。
+    Given command-line arguments with which this script was invoked, parse the arguments and return
+    them as a dict mapping from subparser name (or "global") to an argparse.Namespace instance.
     """
     import argparse
 
-    # 创建主解析器
-    parser = argparse.ArgumentParser(description='命令行参数解析器')
+    # Create main parser
+    parser = argparse.ArgumentParser(description='Command line argument parser')
     
-    # 添加全局参数
-    parser.add_argument('--verbose', '-v', action='store_true', help='启用详细输出')
+    # Add global arguments that apply to all subcommands
+    parser.add_argument('--verbose', action='store_true', help='Enable verbose output')
+    parser.add_argument('--config', type=str, help='Path to config file')
     
-    # 创建子解析器
+    # Create subparsers
     subparsers = parser.add_subparsers(dest='command')
     
-    # 添加 "add" 子命令
-    add_parser = subparsers.add_parser('add', help='添加操作')
-    add_parser.add_argument('numbers', nargs='+', type=float, help='要相加的数字')
+    # Add subparser for different commands
+    run_parser = subparsers.add_parser('run')
+    run_parser.add_argument('--input', type=str, required=True, help='Input file path')
+    run_parser.add_argument('--output', type=str, required=True, help='Output file path')
     
-    # 添加 "multiply" 子命令
-    multiply_parser = subparsers.add_parser('multiply', help='乘法操作')
-    multiply_parser.add_argument('numbers', nargs='+', type=float, help='要相乘的数字')
+    test_parser = subparsers.add_parser('test')
+    test_parser.add_argument('--test-file', type=str, required=True, help='Test file path')
     
-    # 解析参数
-    if unparsed_arguments:
-        args = parser.parse_args(unparsed_arguments)
-    else:
-        args = parser.parse_args()
+    # Parse arguments
+    args = parser.parse_args(unparsed_arguments if unparsed_arguments else None)
+    
+    # Create dict to store parsed arguments
+    parsed_args = {}
+    
+    # Store global arguments
+    parsed_args['global'] = argparse.Namespace(
+        verbose=args.verbose,
+        config=args.config
+    )
+    
+    # Store command-specific arguments
+    if args.command == 'run':
+        parsed_args['run'] = argparse.Namespace(
+            input=args.input,
+            output=args.output
+        )
+    elif args.command == 'test':
+        parsed_args['test'] = argparse.Namespace(
+            test_file=args.test_file
+        )
         
-    # 创建返回字典
-    result = {'global': args}
-    
-    # 如果指定了子命令，将其添加到结果字典中
-    if hasattr(args, 'command') and args.command:
-        result[args.command] = args
-        
-    return result
+    return parsed_args

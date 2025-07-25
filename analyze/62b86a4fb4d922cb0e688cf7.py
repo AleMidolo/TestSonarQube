@@ -1,28 +1,27 @@
 def validate_key(key):
     """
-    根据对应的正则表达式验证给定的键。
+    Validate the given key against the corresponding regular expression.
 
-    参数:
-        key: 要验证的字符串
+    Args:
+        key: the string to validate
 
-    异常:
-        ValidationError: 如果给定的键不符合正则表达式，则抛出此异常。
+    Raises:
+        ValidationError: if the given key is not conform to the regular expression.
     """
     import re
     
-    class ValidationError(Exception):
-        pass
-        
-    # 键的正则表达式模式:
-    # - 只能包含字母、数字、下划线
-    # - 必须以字母开头
-    # - 长度在1-64个字符之间
-    pattern = r'^[a-zA-Z][a-zA-Z0-9_]{0,63}$'
+    # Regular expression pattern for valid keys
+    # Allows alphanumeric characters, underscores, hyphens
+    pattern = r'^[a-zA-Z0-9_-]+$'
     
     if not isinstance(key, str):
         raise ValidationError("Key must be a string")
         
-    if not re.match(pattern, key):
-        raise ValidationError("Invalid key format. Key must start with a letter and contain only letters, numbers and underscores")
+    if not key:
+        raise ValidationError("Key cannot be empty")
         
-    return True
+    if not re.match(pattern, key):
+        raise ValidationError("Key contains invalid characters. Only alphanumeric characters, underscores and hyphens are allowed.")
+
+class ValidationError(Exception):
+    pass

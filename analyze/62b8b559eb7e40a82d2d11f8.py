@@ -1,14 +1,27 @@
 def minimalBases(classes):
     """
-    以列表格式返回所有没有子类的类。
-    将基类列表简化为其有序的最小等价集合。
+    Reduce a list of base classes to its ordered minimum equivalent
     """
-    # 创建一个集合来存储所有类的子类
-    subclasses = set()
-    for c in classes:
-        for base in classes:
-            if issubclass(c, base) and c != base:
-                subclasses.add(base)
+    # Create result list to store minimal bases
+    result = []
     
-    # 返回不在子类集合中的类的列表
-    return [c for c in classes if c not in subclasses]
+    # Iterate through each class in input list
+    for c in classes:
+        # Check if class should be included
+        should_include = True
+        
+        # Compare against classes already in result
+        for r in result:
+            # Skip if class is a base class of one already included
+            if issubclass(r, c):
+                should_include = False
+                break
+            # Remove existing class if new class is more specific
+            elif issubclass(c, r):
+                result.remove(r)
+        
+        # Add class if it should be included
+        if should_include:
+            result.append(c)
+            
+    return result

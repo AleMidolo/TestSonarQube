@@ -1,13 +1,23 @@
 def add_asset(self, basename, file_path):
     """
-    将类中由 `filepath()` 调用的文件路径分配给类中 `_assets` 的 `basename`。
-    "{
-        "artigo02-gf03.tiff": "/path/artigo02-gf03.tiff",
-        "artigo02-gf03.jpg": "/path/artigo02-gf03.jpg", 
-        "artigo02-gf03.png": "/path/artigo02-gf03.png",
-    }
-    """
-    if not hasattr(self, '_assets'):
-        self._assets = {}
+    Adds an asset file to the assets dictionary.
+    
+    Args:
+        basename (str): Base filename without extension
+        file_path (str): Full path to the asset file
         
-    self._assets[basename] = file_path
+    Returns:
+        dict: Updated assets dictionary mapping filenames to paths
+    """
+    # Get file extension from path
+    extension = file_path.split('.')[-1].lower()
+    
+    # Create filename with extension
+    filename = f"{basename}.{extension}"
+    
+    # Add to assets dict
+    if not hasattr(self, 'assets'):
+        self.assets = {}
+    self.assets[filename] = file_path
+    
+    return self.assets

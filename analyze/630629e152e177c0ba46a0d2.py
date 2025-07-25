@@ -1,52 +1,66 @@
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    检索并解析远程 Diaspora WebFinger 文档。
+    Retrieve a and parse a remote Diaspora webfinger document.
 
-    :arg handle: 要检索的远程句柄 
-    :returns: 字典
+    :arg handle: Remote handle to retrieve
+    :returns: dict
     """
     import requests
-    import json
+    import xml.etree.ElementTree as ET
     from urllib.parse import urlparse
 
-    # 验证句柄格式
+    # Split handle into user and host
     if '@' not in handle:
-        raise ValueError("Invalid handle format")
-
-    username, domain = handle.split('@')
+        raise ValueError("Handle must contain @")
     
-    # 构建 WebFinger URL
-    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
+    user, host = handle.split('@', 1)
+    
+    # Construct webfinger URL
+    webfinger_url = f"https://{host}/.well-known/webfinger?resource=acct:{handle}"
     
     try:
-        # 发送请求获取 WebFinger 文档
+        # Get the webfinger document
         response = requests.get(webfinger_url)
         response.raise_for_status()
         
-        # 解析 JSON 响应
+        # Parse the JSON response
         data = response.json()
         
-        # 提取相关信息到字典
+        # Extract relevant information
         result = {
-            'username': username,
-            'domain': domain,
-            'subject': data.get('subject', ''),
-            'aliases': data.get('aliases', []),
-            'links': {}
+            'handle': handle,
+            'host': host,
+            'guid': None,
+            'profile_url': None,
+            'atom_url': None,
+            'salmon_url': None,
+            'pubkey': None
         }
         
-        # 解析链接
+        # Parse links
         for link in data.get('links', []):
             rel = link.get('rel', '')
-            if rel:
-                result['links'][rel] = {
-                    'href': link.get('href', ''),
-                    'type': link.get('type', '')
-                }
+            href = link.get('href', '')
+            
+            if rel == 'http://microformats.org/profile/hcard':
+                result['profile_url'] = href
+            elif rel == 'http://schemas.google.com/g/2010#updates-from':
+                result['atom_url'] = href
+            elif rel == 'salmon':
+                result['salmon_url'] = href
+                
+        # Get public key if available
+        for prop in data.get('properties', {}).items():
+            if prop[0] == 'http://joindiaspora.com/guid':
+                result['guid'] = prop[1]
+            elif prop[0] == 'http://joindiaspora.com/seed_location':
+                result['pod'] = prop[1]
+            elif prop[0] == 'http://joindiaspora.com/public_key':
+                result['pubkey'] = prop[1]
                 
         return result
         
     except requests.exceptions.RequestException as e:
-        raise ConnectionError(f"Failed to retrieve WebFinger document: {str(e)}")
-    except json.JSONDecodeError:
-        raise ValueError("Invalid WebFinger document format")
+        raise ConnectionError(f"Failed to retrieve webfinger document: {str(e)}")
+    except (ValueError, KeyError) as e:
+        raise ValueError(f"Failed to parse webfinger document: {str(e)}")

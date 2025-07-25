@@ -1,24 +1,34 @@
 def fill(self, coord, weight=1):
     """
-    根据给定的 *weight* 在 *coord* 处填充直方图。
+    Fill histogram at *coord* with the given *weight*.
     
-    超出直方图边界的坐标将被忽略。
+    Coordinates outside the histogram edges are ignored.
     """
-    # 检查坐标是否为序列类型
-    if not hasattr(coord, '__iter__'):
-        raise TypeError("coord must be a sequence")
+    # Check if coord is within histogram bounds
+    if not isinstance(coord, (list, tuple)):
+        coord = [coord]
         
-    # 检查坐标维度是否与直方图维度匹配
-    if len(coord) != self.ndim:
-        raise ValueError(f"coord must have {self.ndim} dimensions")
-        
-    # 检查坐标是否在直方图边界内
+    # Check each dimension is within bounds
     for i, x in enumerate(coord):
-        if x < 0 or x >= self.shape[i]:
-            return  # 忽略超出边界的坐标
+        if x < self.edges[i][0] or x >= self.edges[i][-1]:
+            return
             
-    # 将坐标转换为整数索引
-    idx = tuple(int(x) for x in coord)
+    # Find the bin indices for each dimension
+    indices = []
+    for dim, x in enumerate(coord):
+        # Find the bin index using binary search
+        edges = self.edges[dim]
+        left = 0
+        right = len(edges) - 1
+        
+        while left < right:
+            mid = (left + right) // 2
+            if x < edges[mid]:
+                right = mid
+            else:
+                left = mid + 1
+                
+        indices.append(left - 1)
     
-    # 在指定位置增加权重
-    self.data[idx] += weight
+    # Add weight to the bin
+    self.values[tuple(indices)] += weight

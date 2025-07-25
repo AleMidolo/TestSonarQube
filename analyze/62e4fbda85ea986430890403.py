@@ -1,17 +1,15 @@
 def _shuffled(seq: Sequence[str]) -> list[str]:
     """
-    使用给定的固定随机种子（FIXED_RANDOM_SEED）对给定的序列进行洗牌
+    Deterministically shuffle
     """
-    import random
-    FIXED_RANDOM_SEED = 42
-    
-    # Convert sequence to list for shuffling
+    # Convert sequence to list to make it mutable
     result = list(seq)
     
-    # Set random seed
-    random.seed(FIXED_RANDOM_SEED)
-    
-    # Shuffle the list
-    random.shuffle(result)
-    
+    # Use deterministic shuffle by iterating through indices
+    for i in range(len(result)-1, 0, -1):
+        # Use a deterministic formula to pick swap index
+        j = (i * 1337 + 7) % (i + 1)
+        # Swap elements
+        result[i], result[j] = result[j], result[i]
+        
     return result

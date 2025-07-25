@@ -1,20 +1,22 @@
 def amend_bzparams(self, params, bug_ids):
     """
-    修改 Bugzilla 参数
+    Amend the Bugzilla params
     """
-    if not params or not bug_ids:
-        return params
-        
-    # Convert single bug_id to list
+    # Convert single bug ID to list if needed
     if isinstance(bug_ids, (int, str)):
         bug_ids = [str(bug_ids)]
     else:
         bug_ids = [str(bug_id) for bug_id in bug_ids]
-        
-    # Add bug_ids to params
-    if len(bug_ids) == 1:
-        params['id'] = bug_ids[0]
+
+    # Add bug IDs to params if not already present
+    if 'ids' not in params:
+        params['ids'] = bug_ids
+    elif isinstance(params['ids'], (list, tuple)):
+        params['ids'].extend(bug_ids)
     else:
-        params['ids'] = ','.join(bug_ids)
-        
+        params['ids'] = [params['ids']] + bug_ids
+
+    # Remove any duplicates while preserving order
+    params['ids'] = list(dict.fromkeys(params['ids']))
+
     return params

@@ -1,28 +1,31 @@
 def initialize(self):
     """
-    创建并初始化一个新的 OCFL 存储根目录。
+    Create and initialize a new OCFL storage root.
     """
-    # 创建根目录
-    os.makedirs(self.root_path, exist_ok=True)
+    # Create root directory if it doesn't exist
+    os.makedirs(self.storage_root, exist_ok=True)
     
-    # 创建 namaste 文件
-    namaste_path = os.path.join(self.root_path, "0=ocfl_1.0")
-    with open(namaste_path, "w") as f:
+    # Create OCFL storage root marker file
+    namaste_file = os.path.join(self.storage_root, "0=ocfl_1.0")
+    with open(namaste_file, "w") as f:
         f.write("ocfl_1.0")
         
-    # 创建 ocfl_layout.json 文件
-    layout = {
-        "extension": "000",
-        "description": "OCFL Storage Root",
-        "layout": {
-            "type": "flat" 
-        }
+    # Create storage root inventory
+    inventory = {
+        "id": "ocfl_1.0",
+        "type": "https://ocfl.io/1.0/spec/#inventory",
+        "digestAlgorithm": "sha512",
+        "head": None,
+        "contentDirectory": "content",
+        "manifest": {},
+        "versions": {}
     }
     
-    layout_path = os.path.join(self.root_path, "ocfl_layout.json")
-    with open(layout_path, "w") as f:
-        json.dump(layout, f, indent=2)
+    # Write inventory file
+    inventory_path = os.path.join(self.storage_root, "inventory.json")
+    with open(inventory_path, "w") as f:
+        json.dump(inventory, f, indent=2)
         
-    # 创建对象目录
-    objects_path = os.path.join(self.root_path, "objects")
-    os.makedirs(objects_path, exist_ok=True)
+    # Create content directory
+    content_dir = os.path.join(self.storage_root, "content")
+    os.makedirs(content_dir, exist_ok=True)

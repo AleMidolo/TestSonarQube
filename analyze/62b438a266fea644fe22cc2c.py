@@ -1,25 +1,29 @@
 def make_parsers():
     """
-    创建一个顶级解析器及其子解析器，并将它们作为元组返回。
+    Build a top-level parser and its subparsers and return them as a tuple.
     """
     import argparse
     
-    # 创建顶级解析器
-    parser = argparse.ArgumentParser(description='命令行工具')
-    subparsers = parser.add_subparsers(dest='command', help='可用命令')
+    # Create top-level parser
+    parser = argparse.ArgumentParser(description='Command line tool')
+    subparsers = parser.add_subparsers(dest='command', help='Available commands')
     
-    # 创建子解析器
-    # add 子命令
-    add_parser = subparsers.add_parser('add', help='添加操作')
-    add_parser.add_argument('x', type=int, help='第一个数')
-    add_parser.add_argument('y', type=int, help='第二个数')
+    # Create subparsers
+    run_parser = subparsers.add_parser('run', help='Run the program')
+    config_parser = subparsers.add_parser('config', help='Configure settings')
+    test_parser = subparsers.add_parser('test', help='Run tests')
     
-    # delete 子命令
-    delete_parser = subparsers.add_parser('delete', help='删除操作')
-    delete_parser.add_argument('name', help='要删除的名称')
+    # Add arguments to run parser
+    run_parser.add_argument('-i', '--input', help='Input file')
+    run_parser.add_argument('-o', '--output', help='Output file')
+    run_parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output')
     
-    # list 子命令
-    list_parser = subparsers.add_parser('list', help='列表操作')
-    list_parser.add_argument('--all', action='store_true', help='显示所有内容')
+    # Add arguments to config parser
+    config_parser.add_argument('--set', help='Set a configuration value')
+    config_parser.add_argument('--get', help='Get a configuration value')
+    
+    # Add arguments to test parser
+    test_parser.add_argument('-u', '--unit', action='store_true', help='Run unit tests')
+    test_parser.add_argument('-i', '--integration', action='store_true', help='Run integration tests')
     
     return parser, subparsers

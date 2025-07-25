@@ -1,24 +1,31 @@
 def list_of_file_names(settings_dirs, spec_option):
     """
-    通过 `cli.ListOfFileNames()` 创建并返回一个新的 `IniType` 复合类型。
-    创建一个新的 `IniType` 复合类型。
+    Create a new IniType complex type
     """
-    class ListOfFileNames:
-        def __init__(self):
-            self.settings_dirs = settings_dirs
-            self.spec_option = spec_option
-            self.files = []
+    file_names = []
+    
+    # Handle single directory case
+    if isinstance(settings_dirs, str):
+        settings_dirs = [settings_dirs]
+        
+    # Iterate through all directories
+    for directory in settings_dirs:
+        # Handle spec_option file extension
+        if spec_option.startswith('.'):
+            pattern = f'*{spec_option}'
+        else:
+            pattern = f'*.{spec_option}'
             
-        def get_files(self):
-            """获取文件列表"""
-            import os
-            for directory in self.settings_dirs:
-                if os.path.exists(directory):
-                    for file in os.listdir(directory):
-                        if file.endswith(self.spec_option):
-                            full_path = os.path.join(directory, file)
-                            self.files.append(full_path)
-            return self.files
+        # Get list of matching files in directory
+        import glob
+        import os
+        
+        search_path = os.path.join(directory, pattern)
+        matching_files = glob.glob(search_path)
+        
+        # Add file names without extension to list
+        for file_path in matching_files:
+            file_name = os.path.splitext(os.path.basename(file_path))[0]
+            file_names.append(file_name)
             
-    file_names = ListOfFileNames()
-    return file_names.get_files()
+    return sorted(list(set(file_names))) # Remove duplicates and sort

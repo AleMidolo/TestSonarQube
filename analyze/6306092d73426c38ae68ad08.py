@@ -1,38 +1,47 @@
 def _get_conditionally_required_args(self, command_name, options_spec, args):
     """
-    列出符合 ``required_when`` 条件的参数。
+    List arguments with ``required_when`` condition matched.
 
-    :param command_name: 命令名称。
-    :param options_spec: 命令选项规范的列表。
-    :param args: 接收到的输入参数。
-    :return: list，符合 ``required_when`` 条件的参数名称列表。
+    :param command_name: the command name.
+    :param options_spec:  the list of command spec options.
+    :param args: the received input arguments
+    :return: list, list of argument names with matched ``required_when``
+        condition
     """
     required_args = []
     
     for option in options_spec:
-        # 检查选项是否有required_when条件
-        if 'required_when' in option:
-            condition = option['required_when']
+        # Skip if no required_when condition
+        if 'required_when' not in option:
+            continue
             
-            # 如果条件是字符串,视为依赖其他参数
-            if isinstance(condition, str):
-                # 检查依赖的参数是否存在且有值
-                if condition in args and args[condition]:
-                    required_args.append(option['name'])
+        required_when = option['required_when']
+        
+        # Check if required_when is a callable
+        if callable(required_when):
+            if required_when(args):
+                required_args.append(option['name'])
+                
+        # Check if required_when is a dict with conditions
+        elif isinstance(required_when, dict):
+            conditions_met = True
+            
+            for key, value in required_when.items():
+                if key not in args or args[key] != value:
+                    conditions_met = False
+                    break
                     
-            # 如果条件是函数,执行函数检查
-            elif callable(condition):
-                if condition(args):
+            if conditions_met:
+                required_args.append(option['name'])
+                
+        # Check if required_when is a string expression
+        elif isinstance(required_when, str):
+            try:
+                # Evaluate the expression with args as context
+                if eval(required_when, {'args': args}):
                     required_args.append(option['name'])
-                    
-            # 如果条件是字典,检查多个参数条件
-            elif isinstance(condition, dict):
-                matches = True
-                for key, value in condition.items():
-                    if key not in args or args[key] != value:
-                        matches = False
-                        break
-                if matches:
-                    required_args.append(option['name'])
-    
+            except:
+                # Skip if expression evaluation fails
+                continue
+                
     return required_args

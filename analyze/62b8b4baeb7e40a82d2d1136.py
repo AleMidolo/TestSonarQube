@@ -1,52 +1,62 @@
 def _verify(iface, candidate, tentative=False, vtype=None):
-    from zope.interface.exceptions import Invalid, DoesNotImplement
-    from zope.interface.verify import verifyObject
+    from zope.interface.exceptions import Invalid
     from zope.interface.interface import Method
-    
-    errors = []
+    from collections import defaultdict
 
-    # Step 1: Check if candidate declares it provides the interface
-    if not tentative:
-        if not iface.providedBy(candidate):
-            errors.append(DoesNotImplement(iface))
+    errors = defaultdict(list)
 
-    # Step 2 & 3: Check methods and their signatures
-    for name, desc in iface.namesAndDescriptions(1):
+    # Check if candidate claims to provide interface
+    if not tentative and not iface.providedBy(candidate):
+        errors['provided'].append(
+            f"{candidate!r} does not provide interface {iface!r}"
+        )
+
+    # Check methods and attributes
+    for name, desc in iface.namesAndDescriptions(all=True):
         if isinstance(desc, Method):
-            # Check if method exists
-            try:
-                attr = getattr(candidate, name)
-            except AttributeError:
-                errors.append(Invalid(f"The '{name}' attribute was not provided."))
+            # Verify method exists
+            if not hasattr(candidate, name):
+                errors['methods'].append(
+                    f"Method {name!r} not implemented"
+                )
                 continue
 
-            # Verify it's callable
-            if not callable(attr):
-                errors.append(Invalid(f"The '{name}' attribute is not callable."))
+            method = getattr(candidate, name)
+            if not callable(method):
+                errors['methods'].append(
+                    f"Attribute {name!r} is not callable"
+                )
                 continue
 
-            # Check method signature if possible
+            # Verify method signature
             try:
-                if hasattr(desc, 'getSignatureInfo'):
-                    sig_info = desc.getSignatureInfo()
-                    method_sig = verifyObject(sig_info, attr)
-                    if not method_sig:
-                        errors.append(Invalid(f"The '{name}' method has an invalid signature."))
-            except Exception as e:
-                errors.append(Invalid(f"Error verifying signature of '{name}': {str(e)}"))
+                desc.validateSignature(method)
+            except Invalid as e:
+                errors['signatures'].append(
+                    f"Method {name!r} has invalid signature: {str(e)}"
+                )
+        else:
+            # Verify attribute exists
+            if not hasattr(candidate, name):
+                errors['attributes'].append(
+                    f"Attribute {name!r} not provided"
+                )
 
-    # Step 4: Check attributes
-    for name, desc in iface.namesAndDescriptions(1):
-        if not isinstance(desc, Method):
-            try:
-                getattr(candidate, name)
-            except AttributeError:
-                errors.append(Invalid(f"The '{name}' attribute was not provided."))
-
-    # Handle errors
-    if len(errors) == 0:
+    # If no errors, return True
+    if not errors:
         return True
-    elif len(errors) == 1:
-        raise errors[0]
-    else:
-        raise Invalid(f"Multiple errors: {'; '.join(str(e) for e in errors)}")
+
+    # Collect all errors
+    all_errors = []
+    for error_type, error_list in errors.items():
+        all_errors.extend(error_list)
+
+    # If only one error, raise it directly
+    if len(all_errors) == 1:
+        raise Invalid(all_errors[0])
+
+    # If multiple errors, raise them all together
+    if all_errors:
+        raise Invalid('\n'.join(all_errors))
+
+    return True

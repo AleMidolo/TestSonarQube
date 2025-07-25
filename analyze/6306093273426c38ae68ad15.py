@@ -1,53 +1,63 @@
 def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     """
-    使用 `vars` 字典运行 Ansible CLI。
+    Runs ansible cli with vars dict
 
-    :param vars_dict: dict, 将作为 Ansible 的 extra-vars 传递
-    :param cli_args: list, 命令行参数列表 
-    :param ir_workspace: 一个表示当前活动的工作区的Infrared Workspace 对象
-    :param ir_plugin: 一个表示当前插件的InfraredPlugin 对象
-    :return: ansible 的结果
+    :param vars_dict: dict, Will be passed as Ansible extra-vars
+    :param cli_args: the list  of command line arguments
+    :param ir_workspace: An Infrared Workspace object represents the active
+     workspace
+    :param ir_plugin: An InfraredPlugin object of the current plugin
+    :return: ansible results
     """
-    import os
-    import json
-    import subprocess
-    from tempfile import NamedTemporaryFile
+    # Convert vars_dict to extra vars format
+    extra_vars = ['{}={}'.format(key, value) for key, value in vars_dict.items()]
     
-    # 创建临时文件存储extra vars
-    with NamedTemporaryFile(mode='w', suffix='.json', delete=False) as vars_file:
-        json.dump(vars_dict, vars_file)
-        vars_file_path = vars_file.name
-
+    # Build ansible command
+    ansible_cmd = ['ansible-playbook']
+    
+    # Add workspace inventory if exists
+    if ir_workspace.inventory:
+        ansible_cmd.extend(['-i', ir_workspace.inventory])
+    
+    # Add plugin playbook path
+    ansible_cmd.append(ir_plugin.playbook_path)
+    
+    # Add extra vars
+    if extra_vars:
+        ansible_cmd.extend(['--extra-vars', ' '.join(extra_vars)])
+    
+    # Add any additional CLI arguments
+    if cli_args:
+        ansible_cmd.extend(cli_args)
+    
     try:
-        # 构建ansible-playbook命令
-        cmd = ['ansible-playbook']
-        
-        # 添加命令行参数
-        cmd.extend(cli_args)
-        
-        # 添加extra vars文件
-        cmd.extend(['-e', '@' + vars_file_path])
-        
-        # 如果workspace有inventory文件,添加inventory参数
-        if hasattr(ir_workspace, 'inventory') and ir_workspace.inventory:
-            cmd.extend(['-i', ir_workspace.inventory])
-            
-        # 如果plugin有playbook路径,添加playbook参数    
-        if hasattr(ir_plugin, 'playbook_path') and ir_plugin.playbook_path:
-            cmd.append(ir_plugin.playbook_path)
-            
-        # 运行ansible-playbook命令
-        result = subprocess.run(
-            cmd,
+        # Execute ansible command
+        import subprocess
+        process = subprocess.Popen(
+            ansible_cmd,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            universal_newlines=True,
-            check=True
+            universal_newlines=True
         )
         
-        return result
+        # Get output
+        stdout, stderr = process.communicate()
         
-    finally:
-        # 清理临时文件
-        if os.path.exists(vars_file_path):
-            os.unlink(vars_file_path)
+        # Check return code
+        if process.returncode != 0:
+            raise Exception(f"Ansible playbook execution failed: {stderr}")
+            
+        # Parse and return results
+        return {
+            'status': 'SUCCESS',
+            'return_code': process.returncode,
+            'stdout': stdout,
+            'stderr': stderr
+        }
+        
+    except Exception as e:
+        return {
+            'status': 'FAILED',
+            'error': str(e),
+            'return_code': process.returncode if 'process' in locals() else None
+        }

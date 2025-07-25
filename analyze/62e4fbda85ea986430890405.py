@@ -1,3 +1,10 @@
+import os
+import pty
+import subprocess
+import sys
+from concurrent.futures import ThreadPoolExecutor
+from typing import Any, Sequence
+
 def xargs(
         cmd: tuple[str, ...],
         varargs: Sequence[str],
@@ -7,78 +14,68 @@ def xargs(
         _max_length: int = _get_platform_max_length(),
         **kwargs: Any,
 ) -> tuple[int, bytes]:
-    if not varargs:
-        return 0, b''
+    
+    def _run_chunk(chunk: list[str]) -> tuple[int, bytes]:
+        full_cmd = list(cmd) + chunk
+        
+        if color and sys.platform != 'win32':
+            master, slave = pty.openpty()
+            proc = subprocess.Popen(
+                full_cmd,
+                stdout=slave,
+                stderr=slave,
+                **kwargs
+            )
+            os.close(slave)
+            
+            output = b''
+            while True:
+                try:
+                    chunk = os.read(master, 1024)
+                    if not chunk:
+                        break
+                    output += chunk
+                except OSError:
+                    break
+                    
+            os.close(master)
+            returncode = proc.wait()
+            
+        else:
+            proc = subprocess.run(
+                full_cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                **kwargs
+            )
+            output = proc.stdout
+            returncode = proc.returncode
+            
+        return returncode, output
 
-    # Calculate chunks based on max command line length
-    chunks = []
-    current_chunk = []
-    current_length = sum(len(arg) + 1 for arg in cmd)  # +1 for spaces
-
+    # Split varargs into chunks that fit within max length
+    chunks: list[list[str]] = [[]]
+    current_length = 0
+    
     for arg in varargs:
         arg_length = len(arg) + 1  # +1 for space
         if current_length + arg_length > _max_length:
-            if current_chunk:  # Only append non-empty chunks
-                chunks.append(current_chunk)
-            current_chunk = [arg]
-            current_length = sum(len(arg) + 1 for arg in cmd) + arg_length
-        else:
-            current_chunk.append(arg)
-            current_length += arg_length
+            chunks.append([])
+            current_length = 0
+        chunks[-1].append(arg)
+        current_length += arg_length
 
-    if current_chunk:
-        chunks.append(current_chunk)
+    # Run chunks concurrently
+    with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
+        results = list(executor.map(_run_chunk, chunks))
 
-    # Distribute chunks into target_concurrency partitions
-    partitions = [[] for _ in range(target_concurrency)]
-    for i, chunk in enumerate(chunks):
-        partitions[i % target_concurrency].append(chunk)
-
-    # Run commands in parallel
-    output = b''
-    max_returncode = 0
+    # Combine results
+    final_returncode = 0
+    final_output = b''
     
-    def run_partition(partition):
-        nonlocal output, max_returncode
-        for chunk in partition:
-            full_cmd = list(cmd) + chunk
-            if color:
-                import pty
-                pid, fd = pty.fork()
-                if pid == 0:  # Child process
-                    os.execvp(full_cmd[0], full_cmd)
-                else:  # Parent process
-                    chunk_output = b''
-                    while True:
-                        try:
-                            chunk_output += os.read(fd, 1024)
-                        except OSError:
-                            break
-                    _, status = os.waitpid(pid, 0)
-                    max_returncode = max(max_returncode, status >> 8)
-                    output += chunk_output
-            else:
-                import subprocess
-                process = subprocess.run(
-                    full_cmd,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
-                    **kwargs
-                )
-                max_returncode = max(max_returncode, process.returncode)
-                output += process.stdout
+    for returncode, output in results:
+        if returncode != 0:
+            final_returncode = returncode
+        final_output += output
 
-    # Create and start threads for each partition
-    import threading
-    threads = []
-    for partition in partitions:
-        if partition:  # Only create threads for non-empty partitions
-            thread = threading.Thread(target=run_partition, args=(partition,))
-            threads.append(thread)
-            thread.start()
-
-    # Wait for all threads to complete
-    for thread in threads:
-        thread.join()
-
-    return max_returncode, output
+    return final_returncode, final_output

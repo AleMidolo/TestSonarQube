@@ -1,37 +1,56 @@
 def validate_hierarchy(self, validate_objects=True, check_digests=True, show_warnings=False):
     """
-    验证存储根层次结构。
+    Validate storage root hierarchy.
 
-    返回:
-        num_objects (int): 检查的对象数量。
-        good_objects (int): 检查后被认为有效的对象数量。
+    Returns:
+        num_objects - number of objects checked
+        good_objects - number of objects checked that were found to be valid
     """
     num_objects = 0
     good_objects = 0
-    
-    # 遍历所有存储对象
-    for obj in self.get_all_objects():
-        num_objects += 1
-        
-        try:
-            # 验证对象
-            if validate_objects:
-                obj.validate()
-                
-            # 检查摘要
-            if check_digests:
-                stored_digest = obj.get_digest()
-                calculated_digest = obj.calculate_digest()
-                if stored_digest != calculated_digest:
-                    if show_warnings:
-                        print(f"Warning: Digest mismatch for object {obj.id}")
-                    continue
-                    
-            good_objects += 1
-            
-        except Exception as e:
-            if show_warnings:
-                print(f"Warning: Failed to validate object {obj.id}: {str(e)}")
-            continue
-            
+
+    # Walk through all directories recursively
+    for root, dirs, files in os.walk(self.root_path):
+        for filename in files:
+            filepath = os.path.join(root, filename)
+            num_objects += 1
+
+            try:
+                # Validate individual object
+                if validate_objects:
+                    # Check file exists
+                    if not os.path.exists(filepath):
+                        if show_warnings:
+                            print(f"Warning: File {filepath} does not exist")
+                        continue
+
+                    # Check file is readable
+                    if not os.access(filepath, os.R_OK):
+                        if show_warnings:
+                            print(f"Warning: File {filepath} is not readable")
+                        continue
+
+                    # Check file size > 0
+                    if os.path.getsize(filepath) == 0:
+                        if show_warnings:
+                            print(f"Warning: File {filepath} is empty")
+                        continue
+
+                    # Validate checksum if requested
+                    if check_digests:
+                        stored_digest = self._get_stored_digest(filepath)
+                        if stored_digest:
+                            computed_digest = self._compute_digest(filepath)
+                            if stored_digest != computed_digest:
+                                if show_warnings:
+                                    print(f"Warning: Digest mismatch for {filepath}")
+                                continue
+
+                good_objects += 1
+
+            except Exception as e:
+                if show_warnings:
+                    print(f"Warning: Error validating {filepath}: {str(e)}")
+                continue
+
     return num_objects, good_objects

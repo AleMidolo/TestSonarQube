@@ -1,23 +1,23 @@
 def make_parsers():
     """
-    构建一个解析器及其子解析器，并将它们作为一个元组返回。
-
-    构建一个顶级解析器及其子解析器，并将它们作为一个元组返回。
+    Build a top-level parser and its subparsers and return them as a tuple.
     """
     import argparse
     
-    # 创建顶级解析器
-    parser = argparse.ArgumentParser(description='命令行工具')
-    subparsers = parser.add_subparsers(dest='command', help='可用命令')
-
-    # 创建子解析器
-    parser_a = subparsers.add_parser('a', help='命令 a')
-    parser_a.add_argument('--foo', type=str, help='foo 参数')
+    # Create the top-level parser
+    parser = argparse.ArgumentParser(description='Command line tool')
+    subparsers = parser.add_subparsers(dest='command', help='Available commands')
     
-    parser_b = subparsers.add_parser('b', help='命令 b') 
-    parser_b.add_argument('--bar', type=int, help='bar 参数')
+    # Create subparsers for different commands
+    # Add command
+    add_parser = subparsers.add_parser('add', help='Add a new item')
+    add_parser.add_argument('item', help='Item to add')
     
-    parser_c = subparsers.add_parser('c', help='命令 c')
-    parser_c.add_argument('--baz', type=float, help='baz 参数')
-
+    # Remove command  
+    remove_parser = subparsers.add_parser('remove', help='Remove an item')
+    remove_parser.add_argument('item', help='Item to remove')
+    
+    # List command
+    list_parser = subparsers.add_parser('list', help='List all items')
+    
     return parser, subparsers

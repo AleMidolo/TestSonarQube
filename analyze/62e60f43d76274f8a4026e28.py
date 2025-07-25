@@ -1,32 +1,40 @@
 def hydrate_time(nanoseconds, tz=None):
     """
-    将纳秒转换为固定格式的时间。
-    用于处理 `Time` 和 `LocalTime` 值的转换器。
+    Hydrator for `Time` and `LocalTime` values.
 
-    :param nanoseconds: 纳秒时间戳
-    :param tz: 时区信息,默认为None
-    :return: 格式化的时间字符串
+    :param nanoseconds:
+    :param tz:
+    :return: Time
     """
-    from datetime import datetime, timezone, timedelta
+    from datetime import time, timezone, timedelta
+
+    # Calculate hours, minutes, seconds and microseconds from nanoseconds
+    total_seconds = nanoseconds // 1_000_000_000
+    remaining_nanos = nanoseconds % 1_000_000_000
     
-    # 将纳秒转换为秒
-    seconds = nanoseconds / 1e9
-    
-    # 创建datetime对象
-    dt = datetime.fromtimestamp(seconds)
-    
-    # 如果指定了时区
+    hours = int(total_seconds // 3600)
+    minutes = int((total_seconds % 3600) // 60)
+    seconds = int(total_seconds % 60)
+    microseconds = int(remaining_nanos // 1000)
+
+    # If timezone is provided, create timezone object
     if tz is not None:
-        if isinstance(tz, str):
-            # 如果tz是字符串,创建timezone对象
-            offset = int(tz[1:3]) * 3600 + int(tz[3:5]) * 60
+        if isinstance(tz, int):
+            tz = timezone(timedelta(seconds=tz))
+        elif isinstance(tz, str):
+            # Handle timezone string format like '+01:00'
+            hours_offset = int(tz[1:3])
+            minutes_offset = int(tz[4:6])
+            total_seconds = hours_offset * 3600 + minutes_offset * 60
             if tz[0] == '-':
-                offset = -offset
-            tz = timezone(timedelta(seconds=offset))
-        dt = dt.astimezone(tz)
-    
-    # 格式化输出,包含纳秒
-    microseconds = int((nanoseconds % 1e9) / 1e3)
-    time_str = dt.strftime('%H:%M:%S.') + f'{microseconds:06d}'
-    
-    return time_str
+                total_seconds = -total_seconds
+            tz = timezone(timedelta(seconds=total_seconds))
+
+    # Create and return time object
+    return time(
+        hour=hours % 24,
+        minute=minutes,
+        second=seconds,
+        microsecond=microseconds,
+        tzinfo=tz
+    )

@@ -1,53 +1,50 @@
 def extend_cli(self, root_subparsers):
     """
-    将规范 CLI 选项添加到主入口点。
-
-    :param subparser: 要扩展的子解析器对象。
+    Adds the spec cli options to to the main entry point.
+    
+    :param subparser: the subparser object to extend.
     """
-    # 创建一个新的子解析器
-    parser = root_subparsers.add_parser(
-        'standards',
-        help='Standards and specifications related commands'
+    # Create spec subparser
+    spec_parser = root_subparsers.add_parser(
+        'spec',
+        help='Commands for working with package specifications'
     )
-
-    # 添加子命令解析器
-    subparsers = parser.add_subparsers(
-        title='Standards commands',
-        dest='standards_command'
+    
+    # Create subparser for spec commands
+    spec_subparsers = spec_parser.add_subparsers(dest='spec_command')
+    
+    # Add create command
+    create_parser = spec_subparsers.add_parser(
+        'create', 
+        help='Create a new package specification'
     )
-
-    # 添加列表命令
-    list_parser = subparsers.add_parser(
+    create_parser.add_argument(
+        'name',
+        help='Name of the specification to create'
+    )
+    
+    # Add list command
+    list_parser = spec_subparsers.add_parser(
         'list',
-        help='List available standards'
+        help='List available specifications'
     )
-    list_parser.add_argument(
-        '--format',
-        choices=['text', 'json'],
-        default='text',
-        help='Output format'
+    
+    # Add edit command  
+    edit_parser = spec_subparsers.add_parser(
+        'edit',
+        help='Edit an existing specification'
     )
-
-    # 添加验证命令
-    validate_parser = subparsers.add_parser(
-        'validate',
-        help='Validate against standards'
+    edit_parser.add_argument(
+        'name',
+        help='Name of the specification to edit'
     )
-    validate_parser.add_argument(
-        'standard',
-        help='Standard to validate against'
+    
+    # Add delete command
+    delete_parser = spec_subparsers.add_parser(
+        'delete',
+        help='Delete a specification'
     )
-    validate_parser.add_argument(
-        'file',
-        help='File to validate'
-    )
-
-    # 添加信息命令
-    info_parser = subparsers.add_parser(
-        'info',
-        help='Show detailed information about a standard'
-    )
-    info_parser.add_argument(
-        'standard',
-        help='Standard to show information about'
+    delete_parser.add_argument(
+        'name',
+        help='Name of the specification to delete'
     )

@@ -1,33 +1,42 @@
 def _explore_folder(folder):
+    """
+    Get packages' data from folder
+
+    Groups files by their XML basename and returns data in dict format.
+
+    Parameters
+    ----------
+    folder : str
+        Folder of the package
+    Returns
+    -------
+    dict
+    """
     import os
-    import re
+    from collections import defaultdict
     
-    # Initialize empty dictionary to store grouped files
-    grouped_files = {}
+    # Dictionary to store file groups
+    file_groups = defaultdict(dict)
     
-    # Get all files in the folder
-    files = os.listdir(folder)
-    
-    # Group files by XML filename
-    for file in files:
-        # Get full file path
-        file_path = os.path.join(folder, file)
-        
-        # Skip if not a file
-        if not os.path.isfile(file_path):
-            continue
+    # Walk through folder
+    for root, _, files in os.walk(folder):
+        for file in files:
+            # Get full file path
+            file_path = os.path.join(root, file)
             
-        # Extract base filename without extension
-        base_name = os.path.splitext(file)[0]
-        
-        # Remove any suffixes like _eng, _chn etc
-        base_name = re.sub(r'_[a-z]{3}$', '', base_name)
-        
-        # Initialize list for this base name if not exists
-        if base_name not in grouped_files:
-            grouped_files[base_name] = []
+            # Get file extension
+            _, ext = os.path.splitext(file)
             
-        # Add file to group
-        grouped_files[base_name].append(file_path)
-        
-    return grouped_files
+            # Get base filename without extension
+            base_name = os.path.splitext(file)[0]
+            
+            # If XML file, use as key
+            if ext.lower() == '.xml':
+                file_groups[base_name]['xml'] = file_path
+            # Group other files by extension under same base name
+            else:
+                if 'other' not in file_groups[base_name]:
+                    file_groups[base_name]['other'] = []
+                file_groups[base_name]['other'].append(file_path)
+    
+    return dict(file_groups)

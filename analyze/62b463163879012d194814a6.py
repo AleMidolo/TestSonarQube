@@ -1,15 +1,18 @@
 def files_list_from_zipfile(zip_path):
     """
-    返回给定压缩文件路径中的文件列表。
-
-    返回 `zip_path` 中的文件。
+    Return the files in `zip_path`
+    
+    Args:
+        zip_path (str): Path to the zip file
+        
+    Returns:
+        list: List of file paths contained in the zip file
     """
     import zipfile
     
     files_list = []
     
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        # Get list of files in zip archive
         files_list = zip_ref.namelist()
         
     return files_list

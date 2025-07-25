@@ -1,14 +1,17 @@
-def register_vcs_handler(vcs, method): # 装饰器
-    """
-    创建一个装饰器，用于将方法标记为对象的处理器。
-    创建一个装饰器，用于将方法标记为某个版本控制系统（VCS）的处理器。
+def register_vcs_handler(vcs, method):  # decorator
+    """Create decorator to mark a method as the handler of a VCS.
+
+    Args:
+        vcs: The version control system name
+        method: The method name to handle
+
+    Returns:
+        A decorator function that registers the handler
     """
     def decorate(f):
-        """
-        创建一个装饰器，用于将方法标记为某个版本控制系统（VCS）的处理器。
-        """
-        # 给函数添加vcs和method属性
-        f.vcs = vcs
-        f.method = method
+        # Store the handler in the function's attributes
+        if not hasattr(f, '_vcs_handlers'):
+            f._vcs_handlers = {}
+        f._vcs_handlers[(vcs, method)] = True
         return f
     return decorate

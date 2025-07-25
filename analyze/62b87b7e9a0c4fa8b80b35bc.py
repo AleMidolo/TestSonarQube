@@ -1,37 +1,35 @@
 def _update_context(self, context):
-    # Get field names from the graph
-    fields = self.fields()
+    # Map field names to error names (x, y, z)
+    error_name_map = {
+        'E': 'x',
+        't': 'y',
+        'phi': 'z'
+    }
     
-    # Initialize error context if not exists
+    # Get all field names from the graph
+    field_names = [f for f in self.fields]
+    
+    # Initialize error context if not present
     if not hasattr(context, 'error'):
         context.error = {}
         
-    # Map coordinate names to x,y,z
-    coord_map = {0: 'x', 1: 'y', 2: 'z'}
-    
-    # Look for error fields in format "error_<field>_low/high"
-    for field in fields:
-        if field.startswith('error_'):
-            # Parse error field name
+    # Look for error fields (those containing "error" in name)
+    for field in field_names:
+        if 'error' in field.lower():
+            # Parse the error field name to get base field and bound
             parts = field.split('_')
-            if len(parts) >= 3 and parts[-1] in ['low', 'high']:
-                # Get base field name
-                base_field = '_'.join(parts[1:-1])
+            base_field = parts[1]  # E.g. 'E' from 'error_E_low'
+            bound = parts[-1]      # E.g. 'low' from 'error_E_low'
+            
+            # Map base field to x/y/z if possible
+            error_name = error_name_map.get(base_field, base_field)
+            
+            # Create error subcontext if needed
+            error_key = f"{error_name}_{bound}"
+            if error_key not in context.error:
+                context.error[error_key] = {}
                 
-                # Find index of base field
-                try:
-                    base_idx = fields.index(base_field)
-                    # Map to x,y,z if applicable
-                    error_name = coord_map.get(base_idx, base_field)
-                    
-                    # Update context
-                    if error_name not in context.error:
-                        context.error[error_name] = {}
-                    context.error[error_name][parts[-1]] = {
-                        'index': fields.index(field)
-                    }
-                except ValueError:
-                    # Base field not found, skip
-                    continue
-    
+            # Store index of error field
+            context.error[error_key]['index'] = field_names.index(field)
+            
     return context

@@ -1,47 +1,65 @@
 def _legacy_mergeOrderings(orderings):
-    # 创建一个字典来存储每个元素在各个列表中的位置
-    element_positions = {}
-    
-    # 遍历所有排序列表
+    """
+    Merge multiple orderings so that within-ordering order is preserved
+
+    Orderings are constrained in such a way that if an object appears
+    in two or more orderings, then the suffix that begins with the
+    object must be in both orderings.
+
+    For example:
+
+    >>> _mergeOrderings([
+    ... ['x', 'y', 'z'],
+    ... ['q', 'z'],
+    ... [1, 3, 5],
+    ... ['z']
+    ... ])
+    ['x', 'y', 'q', 1, 3, 5, 'z']
+    """
+    if not orderings:
+        return []
+        
+    # Create a mapping of elements to their positions in each ordering
+    positions = {}
     for ordering in orderings:
-        for pos, element in enumerate(ordering):
-            if element not in element_positions:
-                element_positions[element] = []
-            element_positions[element].append(pos)
+        for i, elem in enumerate(ordering):
+            if elem not in positions:
+                positions[elem] = []
+            positions[elem].append(i)
             
-    # 创建结果列表
-    result = []
-    # 记录已处理的元素
-    seen = set()
-    
-    # 遍历所有排序列表
+    # Create a set of all unique elements
+    all_elements = set()
     for ordering in orderings:
-        # 遍历当前列表中的每个元素
-        for element in ordering:
-            # 如果元素已经在结果中,跳过
-            if element in seen:
+        all_elements.update(ordering)
+        
+    result = []
+    used = set()
+    
+    while len(used) < len(all_elements):
+        # Find elements that can be added next
+        candidates = []
+        for elem in all_elements:
+            if elem in used:
                 continue
                 
-            # 检查是否可以添加当前元素
+            # Check if all elements before this one in each ordering are used
             can_add = True
-            # 获取当前元素在所有列表中的位置
-            positions = element_positions[element]
-            
-            # 检查当前元素之前的所有元素是否都已经处理
-            for ordering_idx, pos in enumerate(positions):
-                current_ordering = orderings[ordering_idx]
-                # 检查当前位置之前的元素
-                for prev_pos in range(pos):
-                    prev_element = current_ordering[prev_pos]
-                    if prev_element not in seen:
+            for ordering in orderings:
+                if elem in ordering:
+                    idx = ordering.index(elem)
+                    if any(x not in used for x in ordering[:idx]):
                         can_add = False
                         break
-                if not can_add:
-                    break
-                    
-            # 如果可以添加当前元素
+                        
             if can_add:
-                result.append(element)
-                seen.add(element)
+                candidates.append(elem)
                 
+        # Add the candidate that appears earliest in its orderings
+        if not candidates:
+            raise ValueError("Circular dependency detected")
+            
+        best_candidate = min(candidates, key=lambda x: min(positions[x]))
+        result.append(best_candidate)
+        used.add(best_candidate)
+        
     return result

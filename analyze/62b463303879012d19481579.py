@@ -1,36 +1,31 @@
 def _extract_number_and_supplment_from_issue_element(issue):
     """
-    从 issue 的内容中返回 number 和 sup 的可能值。
-    从 issue 的内容中提取 number 和 suppl 的可能值。
+    Extract the possible values of number and suppl from the contents of issue.
     """
-    # Initialize empty values
+    if issue is None:
+        return None, None
+        
+    # Remove any whitespace
+    issue_text = issue.strip()
+    
+    if not issue_text:
+        return None, None
+        
+    # Split on spaces to separate number and supplement
+    parts = issue_text.split()
+    
     number = None
     suppl = None
     
-    # If issue is None or empty, return default values
-    if not issue:
-        return number, suppl
-        
-    # Convert issue to string and remove whitespace
-    issue_text = str(issue).strip()
-    
-    # Check if issue contains supplement indicator
-    if 'suppl' in issue_text.lower():
-        # Extract supplement value
-        suppl_parts = issue_text.lower().split('suppl')
-        if len(suppl_parts) > 1:
-            suppl = suppl_parts[1].strip()
-            # Extract number from first part if exists
-            if suppl_parts[0].strip():
-                number = suppl_parts[0].strip()
-    else:
-        # If no supplement, treat entire text as number
-        number = issue_text
-        
-    # Clean up number and supplement values
-    if number:
-        number = number.strip(' .,;')
-    if suppl:
-        suppl = suppl.strip(' .,;')
+    # Extract number from first part
+    if parts:
+        try:
+            number = int(parts[0])
+        except ValueError:
+            number = parts[0]
+            
+    # Check for supplement in remaining parts
+    if len(parts) > 1:
+        suppl = ' '.join(parts[1:])
         
     return number, suppl
