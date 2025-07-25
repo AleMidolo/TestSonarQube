@@ -10,8 +10,8 @@ def render(pieces, style):
     elif style == "html":
         return "<div>" + "".join(pieces) + "</div>"
     elif style == "markdown":
-        return "_" + "".join(pieces) + "_"
+        return "**" + "".join(pieces) + "**"
     elif style == "latex":
-        return "\\text{" + "".join(pieces) + "}"
+        return "\\textbf{" + "".join(pieces) + "}"
     else:
         return "".join(pieces)

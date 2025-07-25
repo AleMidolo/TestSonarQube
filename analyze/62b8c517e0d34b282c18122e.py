@@ -17,35 +17,23 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     tb_list = traceback.format_exception(type(e), e, e.__traceback__)
     
     # Format the path to be relative and shortened
-    def format_path(path):
-        try:
-            rel_path = os.path.relpath(path)
-            parts = rel_path.split(os.sep)
-            if len(parts) > max_path_level:
-                return os.sep.join(['...'] + parts[-max_path_level:])
-            return rel_path
-        except ValueError:
-            return path
-
-    # Process each line of the traceback
-    formatted_lines = []
-    level = 0
-    
+    formatted_tb = []
     for line in tb_list:
-        if 'File "' in line:
-            # Format file paths in traceback
-            path_start = line.find('File "') + 6
-            path_end = line.find('"', path_start)
-            original_path = line[path_start:path_end]
-            formatted_path = format_path(original_path)
-            line = line[:path_start] + formatted_path + line[path_end:]
-            
-            level += 1
-            if level > max_level:
-                formatted_lines.append("  [Additional frames truncated...]\n")
-                break
-                
-        formatted_lines.append(line)
+        if "File" in line:
+            parts = line.split('"')
+            if len(parts) > 1:
+                path = parts[1]
+                # Shorten path to max_path_level directories
+                path_parts = path.split(os.sep)
+                if len(path_parts) > max_path_level:
+                    path = os.sep.join(['...'] + path_parts[-max_path_level:])
+                line = line.replace(parts[1], path)
+        formatted_tb.append(line)
     
-    # Join all lines and remove any extra whitespace
-    return ''.join(formatted_lines).strip()
+    # Limit the traceback to max_level frames
+    if len(formatted_tb) > max_level:
+        formatted_tb = formatted_tb[:max_level]
+        formatted_tb.append(f"... (traceback truncated to {max_level} levels)\n")
+        
+    # Join all lines and return
+    return ''.join(formatted_tb)

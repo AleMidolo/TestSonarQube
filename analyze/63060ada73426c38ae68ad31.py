@@ -8,16 +8,16 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param values_dict: तर्कों के साथ डिक्शनरी।
     """
     # Get parser configuration for this command
-    parser_dict = self.parser_dict.get(parser_name, {})
+    parser_config = self.config.get(parser_name, {})
     
-    # Iterate through all arguments in values_dict
+    # Iterate through arguments in values_dict
     for arg_name, value in values_dict.items():
         # Skip if value is None
         if value is None:
             continue
             
-        # Get argument type from parser configuration
-        arg_type = parser_dict.get(arg_name, {}).get('type', str)
+        # Get argument type from parser config
+        arg_type = parser_config.get(arg_name, {}).get('type', str)
         
         try:
             # Convert boolean strings
@@ -41,3 +41,5 @@ def _convert_non_cli_args(self, parser_name, values_dict):
         except (ValueError, TypeError):
             # Keep original value if conversion fails
             continue
+            
+    return values_dict

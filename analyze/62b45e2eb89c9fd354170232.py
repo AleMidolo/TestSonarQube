@@ -9,25 +9,25 @@ def next_version(version):
     i = len(nums) - 1
     
     while i >= 0:
-        # If current digit is less than 9, increment it and break
-        if nums[i] < 9:
+        # If current digit is 9, set to 0 and continue to next digit
+        if nums[i] == 9:
+            nums[i] = 0
+            i -= 1
+        # Otherwise increment current digit and break
+        else:
             nums[i] += 1
             break
-        # If current digit is 9, set to 0 and continue to next digit
-        nums[i] = 0
-        i -= 1
-        
-    # If we've gone through all digits and they're all 9s
-    # Add a new digit 1 at the start
-    if i < 0:
-        nums.insert(0, 1)
     
-    # Convert back to strings preserving original zero padding
+    # If we ran out of digits to increment, add a 1 at the start
+    if i < 0:
+        nums = [1] + nums
+        
+    # Convert back to strings, preserving any leading zeros
     result = []
-    for i in range(len(parts)):
+    for i, num in enumerate(nums):
         # Get original length of this part
-        orig_len = len(parts[i])
-        # Zero pad the new number to match original length
-        result.append(str(nums[i]).zfill(orig_len))
+        orig_len = len(parts[i]) if i < len(parts) else 1
+        # Format with leading zeros if needed
+        result.append(str(num).zfill(orig_len))
         
     return '.'.join(result)

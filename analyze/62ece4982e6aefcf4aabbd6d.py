@@ -7,7 +7,7 @@ def string_to_int(string: str, alphabet: List[str]) -> int:
     base = len(alphabet)
     result = 0
     
-    # Create mapping of characters to their values
+    # Create a mapping from characters to their values
     char_to_val = {char: i for i, char in enumerate(alphabet)}
     
     # Process each character from left to right

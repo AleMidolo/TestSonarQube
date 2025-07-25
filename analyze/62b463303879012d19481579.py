@@ -14,22 +14,22 @@ def _extract_number_and_supplment_from_issue_element(issue):
             parts = issue.lower().split('suppl')
             if parts[0]:
                 number = parts[0].strip()
-            if len(parts) > 1 and parts[1]:
+            if len(parts) > 1:
                 suppl = parts[1].strip()
         else:
             # If no supplement, treat entire string as number
             number = issue
             
-        # Convert number to integer if possible
-        try:
-            number = int(number) if number else None
-        except (ValueError, TypeError):
-            number = number
-            
-        # Clean up supplement value
+        # Clean up number - remove any non-numeric characters
+        if number:
+            number = ''.join(c for c in number if c.isdigit())
+            if not number:
+                number = None
+                
+        # Clean up supplement - remove any non-alphanumeric characters
         if suppl:
-            suppl = suppl.strip(' .')
-            if suppl.startswith('.'):
-                suppl = suppl[1:]
+            suppl = ''.join(c for c in suppl if c.isalnum())
+            if not suppl:
+                suppl = None
                 
     return number, suppl

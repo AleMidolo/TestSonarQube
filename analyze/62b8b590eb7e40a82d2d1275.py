@@ -21,34 +21,31 @@ def _legacy_mergeOrderings(orderings):
                 dependencies[prev].add(item)
                 
     # Get all unique items
-    all_items = set()
-    for ordering in orderings:
-        all_items.update(ordering)
-        
-    # Build result by taking items with no dependencies first
+    all_items = set(item_positions.keys())
+    
+    # Initialize result list
     result = []
-    while all_items:
-        # Find items with no dependencies
-        available = set()
-        for item in all_items:
-            has_deps = False
-            for deps in dependencies.values():
-                if item in deps:
-                    has_deps = True
-                    break
-            if not has_deps:
-                available.add(item)
-                
+    
+    # Keep track of items we've added
+    added = set()
+    
+    # Helper function to check if an item can be added
+    def can_add(item):
+        if item in dependencies:
+            # Check that all dependencies have been added
+            return all(dep in added for dep in dependencies[item])
+        return True
+        
+    # Add items until we've used them all
+    while len(result) < len(all_items):
+        # Find items that can be added
+        available = [item for item in all_items if item not in added and can_add(item)]
+        
         if not available:
             raise ValueError("Circular dependency detected")
             
-        # Take the first available item
-        next_item = available.pop()
-        result.append(next_item)
-        all_items.remove(next_item)
+        # Add the first available item
+        result.append(available[0])
+        added.add(available[0])
         
-        # Remove this item from dependencies
-        if next_item in dependencies:
-            del dependencies[next_item]
-            
     return result

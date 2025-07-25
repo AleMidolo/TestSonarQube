@@ -18,22 +18,23 @@ def _group_files_by_xml_filename(source, xmls, files):
         - key: XML फ़ाइलों के नाम।  
         - value: पैकेज (Package)।  
     """
-    grouped_files = {}
+    packages = {}
     
     # Group files by XML base name
     for xml in xmls:
         xml_base = xml.rsplit('.', 1)[0]  # Remove extension
+        package_files = []
         
         # Find all files that start with the XML base name
-        matching_files = [f for f in files if f.startswith(xml_base)]
-        
-        # Create package with source and matching files
-        package = {
-            'source': source,
-            'files': matching_files
-        }
-        
-        # Add to grouped dictionary
-        grouped_files[xml] = package
-        
-    return grouped_files
+        for file in files:
+            if file.startswith(xml_base):
+                package_files.append(file)
+                
+        # Create package if files found
+        if package_files:
+            packages[xml] = {
+                'source': source,
+                'files': package_files
+            }
+            
+    return packages

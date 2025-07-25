@@ -10,38 +10,34 @@ def format(
         
     # Convert named parameters style
     if isinstance(params, dict):
-        new_params = {}
-        counter = 1
-        new_sql = sql
+        formatted_sql = sql
+        formatted_params = {}
+        param_count = 0
         
-        # Replace each named parameter with positional parameter
-        for key, value in params.items():
-            param_name = f'${counter}'
-            if isinstance(sql, str):
-                new_sql = new_sql.replace(f':{key}', param_name)
-                new_sql = new_sql.replace(f'%({key})s', param_name)
-            else: # bytes
-                new_sql = new_sql.replace(f':{key}'.encode(), param_name.encode())
-                new_sql = new_sql.replace(f'%({key})s'.encode(), param_name.encode())
-            new_params[counter] = value
-            counter += 1
+        # Replace named parameters with positional parameters
+        for param_name, param_value in params.items():
+            param_placeholder = f'%({param_name})s'
+            if isinstance(sql, bytes):
+                param_placeholder = param_placeholder.encode()
             
-        return new_sql, new_params
+            if param_placeholder in formatted_sql:
+                param_count += 1
+                new_placeholder = '%s' if isinstance(sql, str) else b'%s'
+                formatted_sql = formatted_sql.replace(param_placeholder, new_placeholder)
+                formatted_params[param_count] = param_value
+                
+        return formatted_sql, formatted_params
         
     # Convert positional parameters style 
     else:
-        new_params = {}
-        new_sql = sql
+        formatted_sql = sql
+        formatted_params = list(params)
         
-        # Replace each ? or %s with $n style parameter
-        for i, value in enumerate(params, 1):
-            param_name = f'${i}'
-            if isinstance(sql, str):
-                new_sql = new_sql.replace('?', param_name, 1)
-                new_sql = new_sql.replace('%s', param_name, 1)
-            else: # bytes
-                new_sql = new_sql.replace(b'?', param_name.encode(), 1)
-                new_sql = new_sql.replace(b'%s', param_name.encode(), 1)
-            new_params[i] = value
+        # Replace %s with numbered parameters
+        param_count = len(params)
+        for i in range(param_count):
+            old_placeholder = '%s' if isinstance(sql, str) else b'%s'
+            new_placeholder = f'${i+1}' if isinstance(sql, str) else f'${i+1}'.encode()
+            formatted_sql = formatted_sql.replace(old_placeholder, new_placeholder, 1)
             
-        return new_sql, new_params
+        return formatted_sql, formatted_params

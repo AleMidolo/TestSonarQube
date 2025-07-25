@@ -44,14 +44,16 @@ def retrieve_and_parse_diaspora_webfinger(handle):
                         'type': link.get('type', '')
                     }
                     
-        # Add additional properties if present
-        if 'subject' in data:
-            result['subject'] = data['subject']
+        # Add aliases if present
         if 'aliases' in data:
             result['aliases'] = data['aliases']
             
+        # Add subject if present
+        if 'subject' in data:
+            result['subject'] = data['subject']
+            
         return result
-
+        
     except requests.exceptions.RequestException as e:
         raise ConnectionError(f"Failed to retrieve webfinger document: {str(e)}")
     except json.JSONDecodeError:

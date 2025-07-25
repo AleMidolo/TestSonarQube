@@ -37,24 +37,19 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
 
     # प्लेबुक को एक्जीक्यूट करें
     try:
-        loader = DataLoader()
-        inventory = InventoryManager(loader=loader, sources=inventory_file)
-        variable_manager = VariableManager(loader=loader, inventory=inventory)
-
-        pbex = PlaybookExecutor(
-            playbooks=cli_args,
-            inventory=inventory,
-            variable_manager=variable_manager,
-            loader=loader,
-            extra_vars=vars_dict
+        result = subprocess.run(
+            ansible_cmd,
+            cwd=playbook_dir,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
         )
-
-        return pbex.run()
-
-    except Exception as e:
-        print(f"Ansible प्लेबुक एक्जीक्यूशन में त्रुटि: {str(e)}")
-        return 1
-
+        return result.returncode
+    except subprocess.CalledProcessError as e:
+        print(f"Ansible execution failed: {e}")
+        print(f"stdout: {e.stdout.decode()}")
+        print(f"stderr: {e.stderr.decode()}")
+        return e.returncode
     finally:
         # क्लीनअप - एक्स्ट्रा वेरिएबल्स फाइल हटाएं
         if os.path.exists(extra_vars_file):

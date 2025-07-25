@@ -10,8 +10,7 @@ def parser_flags(parser):
             continue
             
         # Get all option strings (flags) for this argument
-        for opt in action.option_strings:
-            flags.append(opt)
-            
-    # Return space-separated string of flags
+        flags.extend(action.option_strings)
+        
+    # Sort flags and join with spaces
     return ' '.join(sorted(flags))

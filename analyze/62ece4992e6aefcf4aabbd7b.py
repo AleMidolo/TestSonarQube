@@ -17,7 +17,7 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     # Create parent directories if they don't exist
     config_path.parent.mkdir(parents=True, exist_ok=True)
     
-    # Write configuration to file with specified mode
+    # Write the configuration
     with open(config_path, 'w') as f:
         f.write(rendered_config)
     

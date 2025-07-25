@@ -14,11 +14,11 @@ def _explore_folder(folder):
     import os
     from collections import defaultdict
     
-    # Initialize dictionary to store grouped files
+    # Initialize defaultdict to store grouped files
     grouped_files = defaultdict(list)
     
     # Walk through the folder
-    for root, dirs, files in os.walk(folder):
+    for root, _, files in os.walk(folder):
         for file in files:
             # Get full file path
             file_path = os.path.join(root, file)

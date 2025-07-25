@@ -14,5 +14,5 @@ def _get_seq_with_type(seq, bufsize=None):
             return list(itertools.islice(seq, bufsize)), list
         return list(seq), list
     else:
-        # If not a sequence, wrap in list
+        # If not sequence-like, wrap in list
         return [seq], list

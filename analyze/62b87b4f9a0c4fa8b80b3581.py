@@ -16,7 +16,7 @@ def scale(self, other=None, recompute=False):
         if current_scale == 0:
             raise LenaValueError("Cannot rescale histogram with zero scale")
             
-        # Rescale histogram by multiplying all values by ratio
+        # Rescale by multiplying all values by ratio of scales
         scale_ratio = float(other) / current_scale
         for key in self:
             self[key] *= scale_ratio

@@ -9,16 +9,12 @@ def validate_as_prior_version(self, prior):
         return False
         
     # Check that all items in prior version exist in current version
-    # with same or greater quantities
-    for item_id, prior_qty in prior.inventory.items():
+    for item_id in prior.inventory:
         if item_id not in self.inventory:
             return False
-        if self.inventory[item_id] < prior_qty:
-            return False
             
-    # Check that all transactions in prior version exist in current version
-    for txn in prior.transactions:
-        if txn not in self.transactions:
+        # Check that quantities have not decreased
+        if self.inventory[item_id] < prior.inventory[item_id]:
             return False
             
     return True

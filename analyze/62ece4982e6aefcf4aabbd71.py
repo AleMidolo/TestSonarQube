@@ -2,7 +2,7 @@ def regex_dict(item):
     import re
     
     # Create new dict to store transformed keys
-    result = {}
+    transformed = {}
     
     # Iterate through key-value pairs in input dict
     for key, value in item.items():
@@ -10,7 +10,7 @@ def regex_dict(item):
         # Escape dots, replace * with .* 
         regex_key = key.replace('.', '\.').replace('*', '.*')
         
-        # Add to result dict with regex key and original value
-        result[regex_key] = value
+        # Add to transformed dict with regex key and original value
+        transformed[regex_key] = value
         
-    return result
+    return transformed

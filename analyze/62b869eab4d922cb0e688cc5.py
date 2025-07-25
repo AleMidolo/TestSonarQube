@@ -37,6 +37,6 @@ def update_last_applied_manifest_dict_from_resp(
             else:
                 # Handle simple lists
                 last_applied_manifest[field] = response[field]
+        # Update simple values
         else:
-            # Update simple values
             last_applied_manifest[field] = response[field]

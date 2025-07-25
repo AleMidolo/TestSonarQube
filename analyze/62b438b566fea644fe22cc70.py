@@ -16,7 +16,7 @@ _borgmatic()
             return 0
             ;;
         --repository)
-            _filedir
+            _filedir -d
             return 0
             ;;
         --archive)
@@ -32,7 +32,7 @@ _borgmatic()
         return 0
     fi
 
-    # Handle commands
+    # Complete command names
     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
     return 0
 }

@@ -18,8 +18,7 @@ def directlyProvidedBy(object): # pylint:disable=redefined-builtin
     if isinstance(object, type):
         implements = provides._implements
         if implements is not None:
-            # Remove the class-level declarations by getting only directly provided interfaces
-            provides = Provides(object)
-            directlyProvides(provides, *implements.declared)
+            # Remove class declarations to get only direct declarations
+            provides = provides - implements
             
     return provides
