@@ -6,7 +6,7 @@ def get_silent_args(self, args):
     :return: list，被静默的参数名称列表。
     """
     silent_args = []
-    for arg in args:
-        if arg.startswith('_'):
-            silent_args.append(arg)
+    for arg_name, arg_value in args.items():
+        if arg_value is None:
+            silent_args.append(arg_name)
     return silent_args

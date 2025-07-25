@@ -14,12 +14,13 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     """
     if os.path.exists(config_filename) and not overwrite:
         return
-
-    # Ensure the directory exists
+    
+    # 创建包含的目录（如果不存在）
     os.makedirs(os.path.dirname(config_filename), exist_ok=True)
-
+    
+    # 将渲染后的配置写入文件
     with open(config_filename, 'w') as f:
         yaml.dump(rendered_config, f, default_flow_style=False)
-
-    # Set the file permissions
+    
+    # 设置文件权限
     os.chmod(config_filename, mode)

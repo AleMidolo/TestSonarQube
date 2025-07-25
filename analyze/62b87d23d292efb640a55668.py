@@ -10,11 +10,8 @@ def get_config():
             self.parentdir_prefix = None
             self.vcs = None
             self.style = None
-            self.long_version_post = None
-            self.long_version_pre = None
-            self.dirty = None
-            self.full = None
-            self.short = None
+            self.long_version = None
+            self.short_version = None
             self.error = None
 
     config = VersioneerConfig()
@@ -24,11 +21,8 @@ def get_config():
     config.parentdir_prefix = "project-"
     config.vcs = "git"
     config.style = "pep440"
-    config.long_version_post = ""
-    config.long_version_pre = ""
-    config.dirty = False
-    config.full = True
-    config.short = False
+    config.long_version = "0.0.0+unknown"
+    config.short_version = "0.0.0"
     config.error = None
 
     return config

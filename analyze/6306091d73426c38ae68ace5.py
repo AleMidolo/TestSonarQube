@@ -2,21 +2,9 @@ def _include_groups(self, parser_dict):
     """
     解析规范文件中的 include dict 指令。
     """
-    if 'include' not in parser_dict:
-        return parser_dict
-
-    include_dict = parser_dict['include']
-    if not isinstance(include_dict, dict):
-        raise ValueError("'include' must be a dictionary")
-
-    for key, value in include_dict.items():
-        if key not in parser_dict:
-            parser_dict[key] = value
-        else:
-            if isinstance(parser_dict[key], dict) and isinstance(value, dict):
-                parser_dict[key].update(value)
+    if 'include' in parser_dict:
+        for group in parser_dict['include']:
+            if group in self.groups:
+                self.groups[group].update(parser_dict['include'][group])
             else:
-                parser_dict[key] = value
-
-    del parser_dict['include']
-    return parser_dict
+                self.groups[group] = parser_dict['include'][group]

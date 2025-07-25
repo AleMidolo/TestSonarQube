@@ -1,9 +1,9 @@
 import subprocess
 import sys
 import os
-import importlib
+import inspect
 
-def subprocess_run_helper(func, *args, timeout, extra_env=None):
+def subprocess_run_helper(func, *args, timeout=None, extra_env=None):
     """
     在子进程中运行一个函数
 
@@ -22,13 +22,13 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
       `*args`: str。任何额外的命令行参数，这些参数将作为 subprocess.run 的第一个参数传递。
       `extra_env`: dict[str, str]。为子进程设置的额外环境变量。
     """
-    # 获取函数的模块名和函数名
-    module_name = func.__module__
+    # 获取函数的模块路径和名称
+    module_name = inspect.getmodule(func).__name__
     func_name = func.__name__
 
     # 构建命令行参数
-    command = [sys.executable, '-c', f'from {module_name} import {func_name}; {func_name}()']
-    command.extend(args)
+    cmd = [sys.executable, '-c', f'from {module_name} import {func_name}; {func_name}()']
+    cmd.extend(args)
 
     # 合并环境变量
     env = os.environ.copy()
@@ -36,6 +36,6 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
         env.update(extra_env)
 
     # 运行子进程
-    result = subprocess.run(command, env=env, timeout=timeout, capture_output=True, text=True)
+    result = subprocess.run(cmd, env=env, timeout=timeout, capture_output=True, text=True)
 
     return result

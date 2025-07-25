@@ -17,21 +17,16 @@ def extostr(cls, e, max_level=30, max_path_level=5):
 
     # 获取异常的堆栈信息
     exc_type, exc_value, exc_traceback = sys.exc_info()
-    stack = traceback.extract_tb(exc_traceback)
-
-    # 限制堆栈层级
-    if len(stack) > max_level:
-        stack = stack[:max_level]
+    stack = traceback.extract_tb(exc_traceback, limit=max_level)
 
     # 格式化堆栈信息
     stack_str = []
     for frame in stack:
         file_path = frame.filename
         # 限制路径层级
-        if max_path_level > 0:
-            parts = file_path.split('/')
-            if len(parts) > max_path_level:
-                file_path = '/'.join(parts[-max_path_level:])
+        path_parts = file_path.split('/')
+        if len(path_parts) > max_path_level:
+            file_path = '/'.join(path_parts[-max_path_level:])
         stack_str.append(f"File \"{file_path}\", line {frame.lineno}, in {frame.name}\n    {frame.line}")
 
     # 格式化异常信息

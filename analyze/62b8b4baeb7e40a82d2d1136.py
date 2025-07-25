@@ -18,7 +18,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     :raises zope.interface.Invalid: 如果上述任何条件不满足
 
     .. versionchanged:: 5.0
-    如果有多个方法或属性无效，将收集并报告所有这些错误。之前的行为是仅报告第一个错误。作为一个特殊情况，如果只有一个错误，则像之前一样单独抛出该错误。
+      如果有多个方法或属性无效，将收集并报告所有这些错误。之前的行为是仅报告第一个错误。作为一个特殊情况，如果只有一个错误，则像之前一样单独抛出该错误。
     """
     errors = []
 
@@ -41,7 +41,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
                 errors.append(f"{name} is not callable on {candidate}")
 
     # Step 4: Verify that the candidate defines all required attributes
-    required_attrs = iface.namesAndDescriptions(all=True)
+    required_attrs = iface.namesAndDescriptions(all=False)
     for name, desc in required_attrs:
         if not hasattr(candidate, name):
             errors.append(f"{candidate} is missing required attribute {name}")

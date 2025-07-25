@@ -22,10 +22,10 @@ def xargs(
     """
     def _get_platform_max_length() -> int:
         # 获取平台的最大命令行长度
-        if sys.platform == "linux":
-            return os.sysconf("SC_ARG_MAX")
+        if sys.platform == "win32":
+            return 8191
         else:
-            return 131072  # 默认值
+            return 131072  # Linux 和 macOS 的典型值
 
     def _chunk_args(args: Sequence[str], max_length: int) -> list[list[str]]:
         # 将参数列表分块，确保每个块的长度不超过最大长度
@@ -34,7 +34,7 @@ def xargs(
         current_length = 0
 
         for arg in args:
-            arg_length = len(arg) + 1  # 包括空格
+            arg_length = len(arg) + 1  # 加上空格
             if current_length + arg_length > max_length:
                 chunks.append(current_chunk)
                 current_chunk = []
@@ -50,8 +50,7 @@ def xargs(
     def _run_command(cmd: tuple[str, ...], args: Sequence[str], color: bool) -> tuple[int, bytes]:
         # 运行命令并返回退出码和输出
         full_cmd = list(cmd) + list(args)
-        if color:
-            # 使用伪终端运行命令
+        if color and sys.platform != "win32":
             import pty
             master, slave = pty.openpty()
             process = subprocess.Popen(full_cmd, stdout=slave, stderr=slave, **kwargs)
@@ -68,19 +67,18 @@ def xargs(
             os.close(master)
             return process.wait(), output
         else:
-            # 直接运行命令
             process = subprocess.Popen(full_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs)
             stdout, _ = process.communicate()
             return process.returncode, stdout
 
     # 分块处理参数
-    chunks = _chunk_args(varargs, _max_length - sum(len(arg) for arg in cmd) - 1)
+    chunks = _chunk_args(varargs, _max_length - sum(len(arg) + 1 for arg in cmd))
 
     # 并发执行命令
     results = []
     for chunk in chunks:
-        exit_code, output = _run_command(cmd, chunk, color)
-        results.append((exit_code, output))
+        returncode, output = _run_command(cmd, chunk, color)
+        results.append((returncode, output))
 
     # 返回最后一个命令的结果
     return results[-1]

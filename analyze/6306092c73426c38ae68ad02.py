@@ -6,16 +6,6 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
     :param cli_args: 来自命令行的参数字典
     :param answer_file_args: 来自文件的参数字典
     """
-    deprecated_args = {
-        'old_arg1': 'new_arg1',
-        'old_arg2': 'new_arg2',
-        # Add more deprecated arguments and their replacements here
-    }
-
-    for arg in cli_args:
-        if arg in deprecated_args:
-            print(f"Warning: The argument '{arg}' is deprecated. Use '{deprecated_args[arg]}' instead.")
-
-    for arg in answer_file_args:
-        if arg in deprecated_args:
-            print(f"Warning: The argument '{arg}' is deprecated. Use '{deprecated_args[arg]}' instead.")
+    deprecated_args = set(cli_args.keys()).intersection(answer_file_args.keys())
+    for arg in deprecated_args:
+        print(f"警告: 参数 '{arg}' 已被弃用，建议使用文件中的配置。")

@@ -1,5 +1,4 @@
 import requests
-from urllib.parse import urlparse
 from lxml import etree
 
 def retrieve_and_parse_diaspora_webfinger(handle):
@@ -9,21 +8,18 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     :arg handle: 要检索的远程句柄
     :returns: 字典
     """
-    # 解析句柄，获取用户名和域名
-    username, domain = handle.split('@')
-    
-    # 构造 WebFinger URL
-    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
+    # Construct the WebFinger URL
+    webfinger_url = f"https://{handle.split('@')[1]}/.well-known/webfinger?resource=acct:{handle}"
     
     try:
-        # 发送 GET 请求获取 WebFinger 文档
+        # Send a GET request to the WebFinger URL
         response = requests.get(webfinger_url)
         response.raise_for_status()
         
-        # 解析 XML 文档
+        # Parse the XML response
         root = etree.fromstring(response.content)
         
-        # 提取所需信息
+        # Extract relevant information from the XML
         result = {}
         for link in root.findall("{http://webfinger.net/rel/profile-page}"):
             result['profile_page'] = link.get('href')

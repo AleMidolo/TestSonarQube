@@ -9,21 +9,21 @@ def verify_relayable_signature(public_key, doc, signature):
     验证已签名的XML元素，以确保声明的作者确实生成了此消息。
 
     :param public_key: 公钥，用于验证签名
-    :param doc: 要验证的XML文档
+    :param doc: 已签名的XML文档
     :param signature: 签名
-    :return: True如果签名验证成功，否则False
+    :return: 如果签名验证成功返回True，否则返回False
     """
     try:
+        # 将公钥从PEM格式加载
+        pub_key = serialization.load_pem_public_key(public_key)
+
         # 将XML文档转换为字符串
         doc_str = ET.tostring(doc, encoding='unicode')
-        
-        # 将公钥从PEM格式加载
-        pub_key = serialization.load_pem_public_key(public_key.encode())
-        
-        # 验证签名
+
+        # 使用公钥验证签名
         pub_key.verify(
             signature,
-            doc_str.encode(),
+            doc_str.encode('utf-8'),
             padding.PSS(
                 mgf=padding.MGF1(hashes.SHA256()),
                 salt_length=padding.PSS.MAX_LENGTH

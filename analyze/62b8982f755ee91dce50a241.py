@@ -11,42 +11,34 @@ def normalized(self):
       返回一个 :class:`dateutil.relativedelta.relativedelta` 对象。
     """
     from dateutil.relativedelta import relativedelta
-    import math
 
-    # 将天数的浮点数部分转换为小时
-    days_fractional, days_integral = math.modf(self.days)
-    hours_from_days = days_fractional * 24
+    # Convert all attributes to integers
+    days = int(self.days)
+    hours = int(self.hours)
+    minutes = int(self.minutes)
+    seconds = int(self.seconds)
+    microseconds = int(self.microseconds)
+    years = int(self.years)
+    months = int(self.months)
+    weeks = int(self.weeks)
 
-    # 将小时数的浮点数部分转换为分钟
-    hours_fractional, hours_integral = math.modf(self.hours + hours_from_days)
-    minutes_from_hours = hours_fractional * 60
+    # Handle fractional parts
+    if hasattr(self, 'days') and self.days != days:
+        hours += int((self.days - days) * 24)
+    if hasattr(self, 'hours') and self.hours != hours:
+        minutes += int((self.hours - hours) * 60)
+    if hasattr(self, 'minutes') and self.minutes != minutes:
+        seconds += int((self.minutes - minutes) * 60)
+    if hasattr(self, 'seconds') and self.seconds != seconds:
+        microseconds += int((self.seconds - seconds) * 1e6)
 
-    # 将分钟数的浮点数部分转换为秒
-    minutes_fractional, minutes_integral = math.modf(self.minutes + minutes_from_hours)
-    seconds_from_minutes = minutes_fractional * 60
-
-    # 将秒数的浮点数部分转换为微秒
-    seconds_fractional, seconds_integral = math.modf(self.seconds + seconds_from_minutes)
-    microseconds_from_seconds = seconds_fractional * 1e6
-
-    # 将微秒数的浮点数部分舍去
-    microseconds_integral = int(microseconds_from_seconds + self.microseconds)
-
-    # 创建新的 relativedelta 对象
     return relativedelta(
-        years=self.years,
-        months=self.months,
-        days=int(days_integral),
-        hours=int(hours_integral),
-        minutes=int(minutes_integral),
-        seconds=int(seconds_integral),
-        microseconds=microseconds_integral,
-        leapdays=self.leapdays,
-        year=self.year,
-        month=self.month,
-        day=self.day,
-        hour=self.hour,
-        minute=self.minute,
-        second=self.second,
-        microsecond=self.microsecond
+        years=years,
+        months=months,
+        days=days,
+        hours=hours,
+        minutes=minutes,
+        seconds=seconds,
+        microseconds=microseconds,
+        weeks=weeks
     )
