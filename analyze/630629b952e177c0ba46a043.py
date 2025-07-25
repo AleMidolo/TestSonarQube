@@ -17,11 +17,7 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     # Asegurarse de que la URL no termine en /
     url = url.rstrip('/')
     
-    # Asegurarse de que document_path comience con /
-    if not document_path.startswith('/'):
-        document_path = '/' + document_path
-
-    # Crear el documento well-known según la especificación
+    # Construir el documento well-known según la especificación
     well_known_document = {
         "links": [
             {
@@ -30,5 +26,5 @@ def get_nodeinfo_well_known_document(url, document_path=None):
             }
         ]
     }
-
+    
     return well_known_document

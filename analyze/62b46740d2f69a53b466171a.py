@@ -18,7 +18,7 @@ def pretty(self, indent=0, debug=False):
             items = [f"{indent_str}  {k}: {v.pretty(indent+1) if hasattr(v, 'pretty') else v}" 
                     for k, v in self.items()]
             result += "{\n" + ",\n".join(items) + f"\n{indent_str}}}"
-        
+            
         # Para listas, tuplas, sets
         else:
             items = [f"{indent_str}  {item.pretty(indent+1) if hasattr(item, 'pretty') else item}" 

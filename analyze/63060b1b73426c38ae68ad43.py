@@ -4,43 +4,49 @@ def extend_cli(self, root_subparsers):
 
     :param subparser: el objeto subparser que se va a extender.
     """
-    # Create specification subparser
-    spec_parser = root_subparsers.add_parser(
+    # Create the parser for the "spec" command
+    parser_spec = root_subparsers.add_parser(
         'spec',
-        help='Specification related commands'
+        help='Manage API specifications'
     )
-    
-    # Create subparsers for spec commands
-    spec_subparsers = spec_parser.add_subparsers(
-        title='Specification commands',
+
+    # Create subparsers for spec command
+    spec_subparsers = parser_spec.add_subparsers(
+        title='spec commands',
         dest='spec_command'
     )
 
     # Add validate command
     validate_parser = spec_subparsers.add_parser(
         'validate',
-        help='Validate a specification file'
+        help='Validate an API specification'
     )
     validate_parser.add_argument(
         'spec_file',
-        help='Path to specification file'
+        help='Path to the specification file'
     )
 
-    # Add create command  
-    create_parser = spec_subparsers.add_parser(
-        'create',
-        help='Create a new specification file'
+    # Add convert command
+    convert_parser = spec_subparsers.add_parser(
+        'convert',
+        help='Convert specification between formats'
     )
-    create_parser.add_argument(
-        'output',
-        help='Output path for new specification file'
+    convert_parser.add_argument(
+        'input_file',
+        help='Input specification file'
     )
-
-    # Add list command
-    list_parser = spec_subparsers.add_parser(
-        'list',
-        help='List available specifications'
+    convert_parser.add_argument(
+        'output_file',
+        help='Output specification file'
     )
-
-    # Make spec_command required
-    spec_parser.set_defaults(spec_command='list')
+    convert_parser.add_argument(
+        '--from-format',
+        choices=['yaml', 'json'],
+        help='Input format (default: auto-detect)'
+    )
+    convert_parser.add_argument(
+        '--to-format',
+        choices=['yaml', 'json'],
+        required=True,
+        help='Output format'
+    )

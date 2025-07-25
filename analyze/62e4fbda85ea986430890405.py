@@ -60,10 +60,10 @@ def xargs(
             process = subprocess.run(
                 full_cmd,
                 stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
                 **kwargs
             )
-            return process.returncode, process.stdout + process.stderr
+            return process.returncode, process.stdout
 
     chunks = _chunk_args(varargs, _max_length)
     

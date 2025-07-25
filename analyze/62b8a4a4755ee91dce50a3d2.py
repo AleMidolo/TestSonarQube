@@ -27,14 +27,12 @@ def _fromutc(self, dt):
     timestamps = []
     
     # Probar offsets antes y después
-    for offset in [local_offset, local_offset + datetime.timedelta(hours=1)]:
+    for offset in [local_offset, local_offset - timedelta(hours=1)]:
         local_ts = (local_dt - offset).timestamp()
         timestamps.append(local_ts)
     
-    # Si los timestamps son diferentes, el datetime es ambiguo
+    # Si hay múltiples timestamps válidos, estamos en un pliegue
     is_fold = len(set(timestamps)) > 1
     
-    # Establecer el atributo fold
-    local_dt = local_dt.replace(fold=int(is_fold))
-    
-    return local_dt
+    # Crear nuevo datetime con el fold flag apropiado
+    return local_dt.replace(fold=int(is_fold))

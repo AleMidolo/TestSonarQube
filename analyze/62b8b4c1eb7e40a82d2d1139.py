@@ -35,6 +35,6 @@ def verifyClass(iface, candidate, tentative=False):
             if len(iface_sig.parameters) != len(candidate_sig.parameters):
                 if tentative:
                     return False
-                raise TypeError(f"'{attr}' has incorrect number of arguments")
+                raise TypeError(f"'{attr}' has incorrect number of parameters")
                 
     return True

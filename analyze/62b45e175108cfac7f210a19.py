@@ -18,17 +18,12 @@ def validate_fixity(self, fixity, manifest_files):
     if fixity["message_digest_algorithm"].lower() not in valid_algorithms:
         raise ValueError(f"Algoritmo de digest no válido. Debe ser uno de: {valid_algorithms}")
 
-    # Verificar que message_digest sea un diccionario
-    if not isinstance(fixity["message_digest"], dict):
-        raise ValueError("message_digest debe ser un diccionario")
-
-    # Verificar que solo se referencien archivos del manifiesto
-    for file_path in fixity["message_digest"]:
+    # Verificar que los digests referencien archivos del manifiesto
+    for file_path, digest in fixity["message_digest"].items():
         if file_path not in manifest_files:
             raise ValueError(f"El archivo '{file_path}' en el bloque de fijación no está listado en el manifiesto")
-
-    # Verificar que los digests sean strings no vacíos
-    for file_path, digest in fixity["message_digest"].items():
+        
+        # Verificar que los digests sean strings no vacíos
         if not isinstance(digest, str) or not digest:
             raise ValueError(f"Digest inválido para el archivo '{file_path}'")
 

@@ -8,7 +8,7 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
     """
     parsed_args = {}
     remaining_args = list(unparsed_arguments)
-    
+
     # Iterate through each subparser
     for name, subparser in subparsers.items():
         try:
@@ -19,5 +19,5 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
         except:
             # If parsing fails, skip this subparser
             continue
-            
+
     return parsed_args, remaining_args

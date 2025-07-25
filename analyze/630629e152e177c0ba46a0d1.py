@@ -30,5 +30,4 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
             return None
             
     except Exception:
-        # Capturar cualquier error y retornar None
         return None

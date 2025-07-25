@@ -9,56 +9,48 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     :param ir_plugin: Un objeto InfraredPlugin del plugin actual.
     :return: resultados de Ansible.
     """
-    import os
-    import json
-    import subprocess
-    from tempfile import NamedTemporaryFile
+    # Configurar argumentos de Ansible
+    ansible_args = []
+    
+    # Agregar playbook path
+    playbook_path = os.path.join(ir_plugin.path, 'main.yml')
+    ansible_args.append(playbook_path)
 
-    # Crear archivo temporal para las variables extra
-    with NamedTemporaryFile(mode='w', suffix='.json', delete=False) as vars_file:
-        json.dump(vars_dict, vars_file)
-        vars_file_path = vars_file.name
+    # Agregar inventory si existe en workspace
+    if ir_workspace.inventory:
+        ansible_args.extend(['-i', ir_workspace.inventory])
+
+    # Agregar variables extra como JSON
+    if vars_dict:
+        extra_vars = json.dumps(vars_dict)
+        ansible_args.extend(['--extra-vars', extra_vars])
+
+    # Agregar argumentos CLI adicionales
+    if cli_args:
+        ansible_args.extend(cli_args)
 
     try:
-        # Construir comando base de ansible-playbook
-        cmd = ['ansible-playbook']
+        # Configurar entorno
+        os.environ['ANSIBLE_CONFIG'] = os.path.join(ir_plugin.path, 'ansible.cfg')
         
-        # Agregar argumentos de CLI
-        cmd.extend(cli_args)
-        
-        # Agregar archivo de variables extra
-        cmd.extend(['--extra-vars', f'@{vars_file_path}'])
-        
-        # Agregar inventario del workspace si existe
-        if hasattr(ir_workspace, 'inventory'):
-            cmd.extend(['-i', ir_workspace.inventory])
-            
-        # Agregar playbook principal del plugin
-        if hasattr(ir_plugin, 'playbook'):
-            cmd.append(ir_plugin.playbook)
-            
         # Ejecutar ansible-playbook
-        process = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True
+        ansible = ansible_playbook.AnsiblePlaybook(
+            playbook=playbook_path,
+            inventory=ir_workspace.inventory,
+            extra_vars=vars_dict,
+            verbosity=1
         )
         
-        # Capturar salida
-        stdout, stderr = process.communicate()
+        # Ejecutar y obtener resultados
+        results = ansible.run()
         
-        # Verificar código de salida
-        if process.returncode != 0:
-            raise Exception(f"Error ejecutando Ansible: {stderr}")
-            
-        return {
-            'rc': process.returncode,
-            'stdout': stdout,
-            'stderr': stderr
-        }
-        
+        return results
+
+    except Exception as e:
+        LOG.error("Error ejecutando playbook: %s", str(e))
+        raise
+
     finally:
-        # Limpiar archivo temporal
-        if os.path.exists(vars_file_path):
-            os.unlink(vars_file_path)
+        # Limpiar entorno
+        if 'ANSIBLE_CONFIG' in os.environ:
+            del os.environ['ANSIBLE_CONFIG']

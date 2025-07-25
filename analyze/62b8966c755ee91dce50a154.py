@@ -29,13 +29,13 @@ def isoparse(self, dt_str):
     # Analizar fecha
     date_parts = None
     for pattern_name, pattern in DATE_PATTERNS.items():
-        match = re.match(pattern + '$', date_str)
+        match = re.match(pattern, date_str)
         if match:
             date_parts = match.groupdict()
             break
-    
+
     if not date_parts:
-        raise ValueError(f"Invalid ISO format date string: {date_str}")
+        raise ValueError("Invalid ISO format date")
 
     # Convertir fecha
     if 'week' in date_parts:
@@ -49,18 +49,18 @@ def isoparse(self, dt_str):
         day = int(date_parts.get('day', '1'))
         dt = datetime(year, month, day)
 
-    # Si no hay tiempo, retornar datetime con tiempo 00:00:00
+    # Si no hay hora, retornar
     if not time_str:
         return dt
 
-    # Analizar tiempo y zona horaria
+    # Analizar hora
     time_match = re.match(TIME_PATTERN + TZ_PATTERN, time_str)
     if not time_match:
-        raise ValueError(f"Invalid ISO format time string: {time_str}")
-
+        raise ValueError("Invalid ISO format time")
+    
     time_parts = time_match.groupdict()
     
-    # Convertir tiempo
+    # Convertir hora
     hour = int(time_parts.get('hour', '0'))
     if hour == 24:  # Convertir 24:00 a 00:00 del día siguiente
         hour = 0

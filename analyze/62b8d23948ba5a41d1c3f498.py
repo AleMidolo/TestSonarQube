@@ -24,27 +24,22 @@ def lru_cache(maxsize=128, typed=False):
             result = func(*args, **kwargs)
             
             # Agregar a cache
-            cache[key] = result
-            
-            # Remover el elemento menos usado si se excede maxsize
-            if maxsize and len(cache) > maxsize:
-                cache.popitem(last=False)
+            if maxsize > 0:
+                if len(cache) >= maxsize:
+                    # Eliminar el elemento menos recientemente usado
+                    cache.popitem(last=False)
+                cache[key] = result
                 
             return result
             
-        # Agregar métodos para acceder a la cache
+        # Agregar métodos de utilidad
         wrapper.cache_info = lambda: {
-            'hits': sum(1 for _ in cache),
-            'maxsize': maxsize,
-            'currsize': len(cache)
+            "hits": sum(1 for _ in cache),
+            "maxsize": maxsize,
+            "currsize": len(cache)
         }
         wrapper.cache_clear = cache.clear
         
         return wrapper
-        
-    # Si se usa como @lru_cache sin paréntesis
-    if callable(maxsize):
-        func, maxsize = maxsize, 128
-        return decorator(func)
         
     return decorator

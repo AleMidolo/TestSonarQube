@@ -8,18 +8,16 @@ def _replace_register(flow_params, register_number, register_value):
     :param register_number: El número del registro donde se almacenará el valor  
     :param register_value: Clave que será reemplazada por el número de registro  
     """
-    # Si flow_params es un diccionario
-    if isinstance(flow_params, dict):
-        # Iterar sobre cada clave y valor
-        for key, value in flow_params.items():
-            # Si el valor es un diccionario, llamada recursiva
-            if isinstance(value, dict):
-                _replace_register(value, register_number, register_value)
-            # Si el valor es una lista, procesar cada elemento
-            elif isinstance(value, list):
-                for i, item in enumerate(value):
-                    if isinstance(item, dict):
-                        _replace_register(item, register_number, register_value)
-            # Si el valor coincide con register_value, reemplazarlo
-            elif value == register_value:
-                flow_params[key] = register_number
+    # Recorrer el diccionario de forma recursiva
+    for key, value in flow_params.items():
+        # Si el valor es un diccionario, llamar recursivamente
+        if isinstance(value, dict):
+            _replace_register(value, register_number, register_value)
+        # Si el valor es una lista, revisar cada elemento
+        elif isinstance(value, list):
+            for i, item in enumerate(value):
+                if isinstance(item, dict):
+                    _replace_register(item, register_number, register_value)
+        # Si el valor coincide con register_value, reemplazarlo
+        elif value == register_value:
+            flow_params[key] = register_number

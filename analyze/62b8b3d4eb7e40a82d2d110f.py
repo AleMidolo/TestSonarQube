@@ -5,10 +5,9 @@ def _should_attempt_c_optimizations():
     # Check if running on PyPy
     is_pypy = platform.python_implementation() == 'PyPy'
     
-    # Get PURE_PYTHON environment variable, defaulting to None if not set
-    pure_python = os.environ.get('PURE_PYTHON')
-    
-    # Return True only if:
-    # 1. Not running on PyPy
-    # 2. PURE_PYTHON env var is not set to any truthy value
-    return not is_pypy and not pure_python
+    # Check PURE_PYTHON environment variable
+    pure_python = os.environ.get('PURE_PYTHON', '').lower()
+    use_pure_python = pure_python in ('1', 'true', 't', 'yes', 'y')
+
+    # Return True only if not PyPy and not using pure Python
+    return not (is_pypy or use_pure_python)
