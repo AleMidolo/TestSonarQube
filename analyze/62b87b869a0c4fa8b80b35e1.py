@@ -29,14 +29,11 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     परिणामी ग्राफ़ लौटाएं।
     """
-    import numpy as np
-
     if make_value is None:
-        make_value = lambda bin_: bin_.content
+        make_value = lambda bin_: (bin_.content,)
 
     coordinates = []
     values = []
-    errors = []
 
     for bin_ in hist.bins:
         if get_coordinate == "left":
@@ -48,21 +45,12 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         else:
             raise ValueError("Invalid value for get_coordinate")
 
-        value_tuple = make_value(bin_)
+        value = make_value(bin_)
         coordinates.append(coordinate)
-        values.append(value_tuple[0])
-        if len(value_tuple) > 1:
-            errors.append(value_tuple[1])
-        else:
-            errors.append(0)
+        values.append(value)
 
     if scale is True:
-        scale_factor = hist.scale
-    else:
-        scale_factor = 1
+        # Implement scaling logic if needed
+        pass
 
-    coordinates = np.array(coordinates) * scale_factor
-    values = np.array(values) * scale_factor
-    errors = np.array(errors) * scale_factor
-
-    return {field_names[0]: coordinates, field_names[1]: values, field_names[2]: errors}
+    return Graph(coordinates, values, field_names)

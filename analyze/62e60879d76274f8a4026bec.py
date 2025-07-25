@@ -25,17 +25,6 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     """
     # Implementation of the function goes here
     # This is a placeholder for the actual logic
-    response = self._create_response_object()
-    # Add the BEGIN message to the output queue
-    self.output_queue.append({
-        'mode': mode,
-        'bookmarks': bookmarks,
-        'metadata': metadata,
-        'timeout': timeout,
-        'db': db,
-        'imp_user': imp_user,
-        'dehydration_hooks': dehydration_hooks,
-        'hydration_hooks': hydration_hooks,
-        'handlers': handlers
-    })
+    response = self._create_response(mode, bookmarks, metadata, timeout, db, imp_user, dehydration_hooks, hydration_hooks, **handlers)
+    self.output_queue.append(response)
     return response

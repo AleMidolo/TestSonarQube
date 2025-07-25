@@ -7,5 +7,5 @@ def _get_resource_name_regex():
     रिटर्न करता है:
     - (re.Pattern): संकलित नियमित अभिव्यक्तियां, जो संसाधन नाम को मान्य करने के लिए उपयोग की जाती हैं।
     """
-    pattern = r'^[a-zA-Z0-9-_]{1,256}$'  # Example pattern for resource names
+    pattern = r'^[a-zA-Z0-9_-]+$'  # Example pattern for resource names
     return re.compile(pattern)

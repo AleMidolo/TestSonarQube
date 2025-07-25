@@ -5,10 +5,10 @@ def _extract_number_and_supplment_from_issue_element(issue):
     import re
 
     # Regular expression to find number and supplement
-    match = re.search(r'(\d+)([a-zA-Z]*)', issue)
+    match = re.search(r'(\d+)(?:\s*([a-zA-Z]+))?', issue)
     
     if match:
         number = match.group(1)
-        suppl = match.group(2) if match.group(2) else None
-        return number, suppl
+        supplement = match.group(2) if match.group(2) else None
+        return number, supplement
     return None, None

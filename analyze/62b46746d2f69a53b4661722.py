@@ -12,42 +12,51 @@ def absorb(self, args):
 
     A & (~A | B) = A & B, A | (~A & B) = A | B
     """
-    def apply_absorption(expr):
-        # Implementing absorption laws
-        if isinstance(expr, tuple):
-            a, op, b = expr
-            if op == '&':
-                if a == b:
-                    return a
-                elif isinstance(b, tuple) and b[1] == '|':
-                    if a == b[0]:
-                        return a
-            elif op == '|':
-                if a == b:
-                    return a
-                elif isinstance(b, tuple) and b[1] == '&':
-                    if a == b[0]:
-                        return a
-        return expr
-
-    def apply_negative_absorption(expr):
-        # Implementing negative absorption laws
-        if isinstance(expr, tuple):
-            a, op, b = expr
-            if op == '&':
-                if isinstance(b, tuple) and b[1] == '|':
-                    if a == ('~', b[0]):
-                        return ('&', a, b[2])
-            elif op == '|':
-                if isinstance(b, tuple) and b[1] == '&':
-                    if a == ('~', b[0]):
-                        return ('|', a, b[2])
-        return expr
-
     result = []
     for expr in args:
-        absorbed_expr = apply_absorption(expr)
-        final_expr = apply_negative_absorption(absorbed_expr)
-        result.append(final_expr)
-
+        # Apply absorption laws
+        if '&' in expr and '|' in expr:
+            # Check for A & (A | B) = A
+            if expr.count('&') == 1 and expr.count('|') == 1:
+                parts = expr.split('&')
+                if len(parts) == 2:
+                    a = parts[0].strip()
+                    b = parts[1].strip()
+                    if f"({a} | {b})" in expr or f"({b} | {a})" in expr:
+                        result.append(a)
+                        continue
+            # Check for A | (A & B) = A
+            if expr.count('|') == 1 and expr.count('&') == 1:
+                parts = expr.split('|')
+                if len(parts) == 2:
+                    a = parts[0].strip()
+                    b = parts[1].strip()
+                    if f"({a} & {b})" in expr or f"({b} & {a})" in expr:
+                        result.append(a)
+                        continue
+        
+        # Apply negative absorption laws
+        if '&' in expr and '~' in expr:
+            # Check for A & (~A | B) = A & B
+            if expr.count('&') == 1 and expr.count('|') == 1:
+                parts = expr.split('&')
+                if len(parts) == 2:
+                    a = parts[0].strip()
+                    b = parts[1].strip()
+                    if f"~{a}" in expr or f"~{b}" in expr:
+                        result.append(f"{a} & {b}")
+                        continue
+            # Check for A | (~A & B) = A | B
+            if expr.count('|') == 1 and expr.count('&') == 1:
+                parts = expr.split('|')
+                if len(parts) == 2:
+                    a = parts[0].strip()
+                    b = parts[1].strip()
+                    if f"~{a}" in expr or f"~{b}" in expr:
+                        result.append(f"{a} | {b}")
+                        continue
+        
+        # If no absorption applied, keep the original expression
+        result.append(expr)
+    
     return result

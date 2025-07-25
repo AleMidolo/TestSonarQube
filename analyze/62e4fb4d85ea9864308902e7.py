@@ -16,7 +16,7 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
             # Handle shebangs
             normalized_cmd.append(part)
         else:
-            # Normalize paths (for example, replace backslashes with forward slashes)
-            normalized_cmd.append(part.replace('\\', '/'))
+            # Normalize the path for Windows
+            normalized_cmd.append(part.replace('/', '\\'))
 
     return tuple(normalized_cmd)

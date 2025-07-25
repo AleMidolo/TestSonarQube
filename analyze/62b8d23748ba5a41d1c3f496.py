@@ -10,7 +10,7 @@ def lfu_cache(maxsize=128, typed=False):
         cache = {}
         frequency = defaultdict(int)
         order = OrderedDict()
-
+        
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             key = (args, frozenset(kwargs.items())) if typed else args
@@ -24,13 +24,13 @@ def lfu_cache(maxsize=128, typed=False):
             order[key] = None
             
             if len(cache) > maxsize:
-                lfu_key = min(order, key=lambda k: (frequency[k], order[k]))
+                lfu_key = min(order, key=lambda k: frequency[k])
                 del cache[lfu_key]
                 del frequency[lfu_key]
                 del order[lfu_key]
                 
             return result
-
+        
         return wrapper
-
+    
     return decorator

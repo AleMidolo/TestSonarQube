@@ -27,7 +27,7 @@ def format(
     elif isinstance(params, (list, tuple)):
         # Positional parameters
         for index, value in enumerate(params):
-            sql = sql.replace(f"?{index + 1}", str(value))
+            sql = sql.replace(f"?{index}", str(value))
         return sql, list(params)
     else:
         raise TypeError("params must be a dictionary or a sequence")

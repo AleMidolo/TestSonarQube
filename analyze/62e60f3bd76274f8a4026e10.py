@@ -6,7 +6,7 @@ def dehydrate_timedelta(value):
 
     :param value:  
     :type value: timedelta  
-    :return:  
+    :return: 
     """
     if not isinstance(value, timedelta):
         raise ValueError("Input must be a timedelta object.")

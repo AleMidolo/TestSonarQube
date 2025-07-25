@@ -17,11 +17,7 @@ def retrieve_diaspora_host_meta(host):
     # Check if the request was successful
     if response.status_code == 200:
         # Parse the response content as XML
-        xrd_content = response.content
-        xrd_tree = etree.fromstring(xrd_content)
-
-        # Return the parsed XRD instance
-        return xrd_tree
+        xrd_content = etree.fromstring(response.content)
+        return xrd_content
     else:
-        # Handle errors (e.g., host not found, server error)
-        raise Exception(f"Failed to retrieve host meta from {host}: {response.status_code}")
+        raise Exception(f"Failed to retrieve host meta from {host}, status code: {response.status_code}")

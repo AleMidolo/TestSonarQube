@@ -7,7 +7,7 @@ def _should_attempt_c_optimizations():
 
     यह इस बात को ध्यान में रखता है कि क्या हम PyPy पर हैं और `_use_c_impl` में परिभाषित ``PURE_PYTHON`` पर्यावरण चर का मान क्या है।
     """
-    pure_python_env = os.getenv('_use_c_impl', 'FALSE')
     is_pypy = sys.platform.startswith('pypy')
+    pure_python_env = os.getenv('_use_c_impl', 'FALSE').upper() == 'PURE_PYTHON'
     
-    return is_pypy and pure_python_env != 'PURE_PYTHON'
+    return is_pypy and not pure_python_env

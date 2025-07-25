@@ -12,13 +12,11 @@ def formatmany(
         if isinstance(params, dict):
             # If params is a dictionary, convert to out-style
             out_params.append(params)
-            # Replace placeholders in the SQL with the corresponding values
             for key, value in params.items():
                 formatted_sql = formatted_sql.replace(f":{key}", str(value))
         elif isinstance(params, (list, tuple)):
             # If params is a list or tuple, convert to out-style
             out_params.append(params)
-            # Replace placeholders in the SQL with the corresponding values
             for index, value in enumerate(params):
                 formatted_sql = formatted_sql.replace(f"${index + 1}", str(value))
 

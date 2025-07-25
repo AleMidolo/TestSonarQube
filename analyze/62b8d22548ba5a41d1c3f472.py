@@ -12,7 +12,7 @@ def cachedmethod(cache, key=hashkey, lock=None):
             # Acquire lock if provided
             if lock:
                 with lock:
-                    # Check again in case another thread has already computed the value
+                    # Check again in case another thread has computed it
                     if cache_key in cache:
                         return cache[cache_key]
                     # Call the function and cache the result

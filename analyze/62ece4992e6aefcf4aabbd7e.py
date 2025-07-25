@@ -15,5 +15,5 @@ def _resolve_string(matcher):
             return default_value
         else:
             raise ValueError(f"Environment variable '{name}' is not defined and no default value provided.")
-    
+
     return value
