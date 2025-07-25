@@ -14,11 +14,11 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
             from generate_default_observer_schema_list import generate_default_observer_schema_list
             observer_schema[key] = generate_default_observer_schema_list(value)
             
-        # For first level, copy identifying fields
+        # For first level, preserve identifying fields
         elif first_level and key in ['apiVersion', 'kind', 'metadata']:
             observer_schema[key] = value
             
-        # For all other values, set to None
+        # Set all other values to None    
         else:
             observer_schema[key] = None
             

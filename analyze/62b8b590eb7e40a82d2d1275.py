@@ -8,10 +8,10 @@ def _legacy_mergeOrderings(orderings):
                 suffix1 = ordering[i:]
                 suffix2 = orderings[position[element][0]][position[element][1]:]
                 if suffix1 != suffix2:
-                    raise ValueError(f"Inconsistent orderings for element {element}")
+                    raise ValueError("Inconsistent orderings")
             else:
                 position[element] = (orderings.index(ordering), i)
-    
+
     # Create result list by merging orderings
     result = []
     used = set()

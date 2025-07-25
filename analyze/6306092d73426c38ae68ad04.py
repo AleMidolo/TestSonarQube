@@ -14,7 +14,7 @@ def get_parser_option_specs(self, command_name):
     if parser is None:
         return options
         
-    # Get all options from the parser
+    # Iterate through all options in the parser
     for action in parser._actions:
         # Skip help action
         if isinstance(action, argparse._HelpAction):

@@ -16,7 +16,7 @@ def validate_from_content(cls, spec_content=None):
     if not isinstance(spec_content, dict):
         raise IRValidatorException("Spec content must be a dictionary")
     
-    # Validate required fields
+    # Check for required fields
     missing_fields = []
     for field in required_fields:
         if field not in spec_content:

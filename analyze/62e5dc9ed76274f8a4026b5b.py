@@ -8,10 +8,10 @@ def deprecated(message):
     def foo(x):
         pass
     """
-    import warnings
-    import functools
-    
     def decorator(func):
+        import warnings
+        import functools
+        
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             warnings.warn(
@@ -20,5 +20,7 @@ def deprecated(message):
                 stacklevel=2
             )
             return func(*args, **kwargs)
+            
         return wrapper
+        
     return decorator

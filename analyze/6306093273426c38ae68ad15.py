@@ -26,30 +26,28 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
         # Construct Ansible CLI command
         ansible_args = ['ansible-playbook']
         ansible_args.extend(cli_args)
+        
+        # Add workspace inventory if exists
+        if ir_workspace and hasattr(ir_workspace, 'inventory'):
+            ansible_args.extend(['-i', ir_workspace.inventory])
+            
+        # Add plugin specific settings
+        if ir_plugin and hasattr(ir_plugin, 'ansible_config'):
+            os.environ['ANSIBLE_CONFIG'] = ir_plugin.ansible_config
+            
+        # Add extra vars file
         ansible_args.extend(['--extra-vars', f'@{extra_vars_file}'])
-
-        if ir_workspace:
-            # Add inventory file if workspace has one
-            inventory_file = os.path.join(ir_workspace.path, 'hosts')
-            if os.path.exists(inventory_file):
-                ansible_args.extend(['-i', inventory_file])
-
-        if ir_plugin:
-            # Add plugin specific playbook directory
-            playbook_dir = os.path.join(ir_plugin.path, 'playbooks')
-            if os.path.exists(playbook_dir):
-                ansible_args.append(playbook_dir)
-
+        
         # Initialize Ansible components
         loader = DataLoader()
         inventory = InventoryManager(loader=loader)
         variable_manager = VariableManager(loader=loader, inventory=inventory)
-
+        
         # Run playbook
         playbook = PlaybookCLI(ansible_args)
         playbook.parse()
         return playbook.run()
-
+        
     finally:
         # Cleanup temporary file
         if os.path.exists(extra_vars_file):

@@ -31,7 +31,7 @@ def xargs(
         
     else:
         # Run in parallel
-        with ThreadPoolExecutor(max_workers=min(target_concurrency, num_partitions)) as executor:
+        with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
             futures = []
             for partition in partitions:
                 future = executor.submit(
@@ -74,7 +74,7 @@ def _partition_varargs(varargs: Sequence[str], max_length: int) -> list[tuple[st
         
     return partitions
 
-def _run_command(cmd: tuple[str, ...], color: bool = False, **kwargs: Any) -> tuple[int, bytes]:
+def _run_command(cmd: tuple[str, ...], *, color: bool = False, **kwargs: Any) -> tuple[int, bytes]:
     """Run a single command and return (return_code, output)"""
     if color and sys.platform != 'win32':
         import pty

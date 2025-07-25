@@ -11,8 +11,10 @@ _borgmatic()
     opts="init create prune list info check extract export-tar mount umount rcreate rinfo rlist rdelete config validate"
 
     # Common options
-    common_opts="--config --verbosity --syslog-verbosity --json --help --version"
-    
+    common_opts="--config --verbosity --syslog-verbosity --log-file --monitoring-verbosity \
+                 --dry-run --help --version"
+
+    # Handle different previous arguments
     case "${prev}" in
         borgmatic)
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
@@ -22,22 +24,24 @@ _borgmatic()
             COMPREPLY=( $(compgen -f -- ${cur}) )
             return 0
             ;;
-        --verbosity|--syslog-verbosity)
-            COMPREPLY=( $(compgen -W "0 1 2 3" -- ${cur}) )
+        --verbosity|--syslog-verbosity|--monitoring-verbosity)
+            COMPREPLY=( $(compgen -W "CRITICAL ERROR WARNING INFO DEBUG TRACE" -- ${cur}) )
+            return 0
+            ;;
+        create|prune|list|info|check|extract|mount)
+            COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
             return 0
             ;;
         *)
+            # If current word starts with -, complete from common options
+            if [[ ${cur} == -* ]]; then
+                COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
+            else
+                COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            fi
+            return 0
             ;;
     esac
-
-    if [[ ${cur} == -* ]] ; then
-        COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
-        return 0
-    fi
-
-    # Complete with main commands if no other matches
-    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-    return 0
 }
 
 complete -F _borgmatic borgmatic

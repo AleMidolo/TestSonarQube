@@ -20,7 +20,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         x = get_coord(bin_)
         y = make_value(bin_.value)
         
-        # Handle single values vs tuples
+        # Handle single value vs tuple return from make_value
         if isinstance(y, tuple):
             points.append((x,) + y)
         else:
@@ -30,14 +30,10 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     if scale is True:
         scale = hist.scale
             
-    # Create field names based on y value dimensions
-    if len(points[0]) > 2:
-        # Extend field names if y returns multiple values
-        base_names = list(field_names)
-        while len(base_names) < len(points[0]):
-            base_names.append(f"{field_names[1]}_{len(base_names)-1}")
-        field_names = tuple(base_names)
+    # Create field names based on number of values per point
+    if len(points[0]) != len(field_names):
+        raise ValueError("Number of field names must match number of values per point")
         
-    # Create and return graph
+    # Import graph class and create new graph
     from .graph import Graph
     return Graph(points, field_names=field_names, scale=scale)

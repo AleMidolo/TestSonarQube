@@ -6,5 +6,7 @@ options(width=10000)  # Prevent line wrapping
 options(encoding='UTF-8')  # Set UTF-8 encoding
 """
     
-    # Combine setup options with provided code
-    return r_setup + "\n" + code
+    # Combine setup code with input code
+    full_code = r_setup + "\n" + code
+    
+    return full_code
