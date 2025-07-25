@@ -1,6 +1,5 @@
 def initialize(self):
     """Crea e inizializza una nuova radice di archiviazione OCFL."""
-    
     # Create root directory if it doesn't exist
     if not os.path.exists(self.root_path):
         os.makedirs(self.root_path)
@@ -12,19 +11,30 @@ def initialize(self):
         
     # Create ocfl_layout.json file
     layout = {
-        "extension": "000",
-        "description": "OCFL Storage Root",
-        "layout": {
-            "type": "flat",
-            "digest-algorithm": "sha512"
-        }
+        "extension": "0001-flat-direct-storage-layout",
+        "description": "Flat direct storage layout"
     }
-    
-    layout_path = os.path.join(self.root_path, "ocfl_layout.json")
+    layout_path = os.path.join(self.root_path, "ocfl_layout.json") 
     with open(layout_path, "w") as f:
         json.dump(layout, f, indent=2)
         
-    # Create extensions directory
-    extensions_dir = os.path.join(self.root_path, "extensions")
-    if not os.path.exists(extensions_dir):
-        os.makedirs(extensions_dir)
+    # Create storage root inventory
+    inventory = {
+        "id": "root",
+        "type": "https://ocfl.io/1.0/spec/#inventory",
+        "digestAlgorithm": "sha512",
+        "head": "v1",
+        "contentDirectory": "content",
+        "manifest": {},
+        "versions": {
+            "v1": {
+                "created": datetime.datetime.now().isoformat(),
+                "state": {},
+                "message": "Initial commit"
+            }
+        }
+    }
+    
+    inventory_path = os.path.join(self.root_path, "inventory.json")
+    with open(inventory_path, "w") as f:
+        json.dump(inventory, f, indent=2)

@@ -17,7 +17,7 @@ def lru_cache(maxsize=128, typed=False):
                 key += str([type(arg) for arg in args])
                 key += str({k: type(v) for k, v in kwargs.items()})
             
-            # Se il risultato è già in cache
+            # Se il risultato è già in cache, aggiorna l'ordine e restituiscilo
             if key in cache:
                 # Aggiorna l'ordine di utilizzo
                 order.remove(key)

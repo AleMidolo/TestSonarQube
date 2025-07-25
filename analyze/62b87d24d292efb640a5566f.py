@@ -18,7 +18,7 @@ def render(pieces, style):
     
     # Check if style exists
     if style not in styles:
-        raise ValueError(f"Style '{style}' not supported")
+        raise ValueError(f"Invalid style: {style}")
         
     # Convert each piece to its styled representation
     for piece in pieces:

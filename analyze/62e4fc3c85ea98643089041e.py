@@ -3,8 +3,9 @@ def _inline_r_setup(code: str) -> str:
     r_setup = """
 options(warn=-1)  # Suppress warnings
 options(width=10000)  # Prevent line wrapping
-options(encoding='UTF-8')  # Set UTF-8 encoding
+options(digits.secs=3)  # Show milliseconds in times
+options(scipen=999)  # Prevent scientific notation
 """
     
-    # Combine setup code with input code
+    # Combine the setup code with the input code
     return r_setup + "\n" + code

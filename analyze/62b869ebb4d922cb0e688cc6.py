@@ -23,16 +23,24 @@ def update_last_applied_manifest_list_from_resp(
 
         # If schema is a dict, recursively update nested dict
         if isinstance(schema, dict):
+            if not isinstance(last_applied_manifest[i], dict):
+                last_applied_manifest[i] = {}
             from .utils import update_last_applied_manifest_dict_from_resp
-            last_applied_manifest[i] = update_last_applied_manifest_dict_from_resp(
-                last_applied_manifest[i], schema, resp_item
+            update_last_applied_manifest_dict_from_resp(
+                last_applied_manifest[i], 
+                schema,
+                resp_item
             )
-        # If schema is a list, recursively update nested list 
+        # If schema is a list, recursively update nested list  
         elif isinstance(schema, list):
-            last_applied_manifest[i] = update_last_applied_manifest_list_from_resp(
-                last_applied_manifest[i], schema, resp_item
+            if not isinstance(last_applied_manifest[i], list):
+                last_applied_manifest[i] = []
+            update_last_applied_manifest_list_from_resp(
+                last_applied_manifest[i],
+                schema,
+                resp_item
             )
-        # Otherwise copy value directly
+        # For primitive values, copy directly from response
         else:
             last_applied_manifest[i] = resp_item
 

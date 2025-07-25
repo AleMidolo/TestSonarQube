@@ -15,18 +15,16 @@ def build_app_logger(name='app', logfile='app.log', debug=True):
         
     # Create formatters
     file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    console_formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+    console_formatter = logging.Formatter('%(levelname)s: %(message)s')
     
-    # Create file handler
+    # Create and configure file handler
     file_handler = logging.FileHandler(logfile)
     file_handler.setFormatter(file_formatter)
+    logger.addHandler(file_handler)
     
-    # Create console handler
+    # Create and configure console handler
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(console_formatter)
-    
-    # Add handlers to logger
-    logger.addHandler(file_handler)
     logger.addHandler(console_handler)
     
     return logger

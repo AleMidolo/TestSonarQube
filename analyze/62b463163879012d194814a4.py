@@ -31,18 +31,15 @@ def _explore_zipfile(zip_path):
             # Ottiene il nome base del file (senza estensione)
             base_name = os.path.splitext(os.path.basename(file_name))[0]
             
-            # Se il file è un XML, usa il suo nome come chiave
-            if file_name.endswith('.xml'):
-                base_name = base_name
-            else:
-                # Per altri file, cerca di trovare il nome base XML correlato
-                # rimuovendo eventuali suffissi comuni
+            # Se il file è un XML
+            if file_name.lower().endswith('.xml'):
+                # Rimuove eventuali suffissi dopo il nome base
                 base_name = base_name.split('_')[0]
-            
-            # Aggiunge il file al gruppo appropriato
+                
+            # Aggiunge il file al gruppo corrispondente
             grouped_files[base_name].append({
-                'path': file_name,
-                'content': zip_ref.read(file_name)
+                'name': file_name,
+                'data': zip_ref.read(file_name)
             })
     
     # Converte defaultdict in dict normale

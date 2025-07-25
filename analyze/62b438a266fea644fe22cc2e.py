@@ -11,18 +11,18 @@ def parse_arguments(*unparsed_arguments):
     
     # Create subparser for 'run' command
     run_parser = subparsers.add_parser('run', help='Run the application')
-    run_parser.add_argument('--input', '-i', required=True, help='Input file')
-    run_parser.add_argument('--output', '-o', required=True, help='Output file')
+    run_parser.add_argument('--input', '-i', type=str, required=True, help='Input file')
+    run_parser.add_argument('--output', '-o', type=str, help='Output file')
     
     # Create subparser for 'test' command  
     test_parser = subparsers.add_parser('test', help='Run tests')
-    test_parser.add_argument('--test-dir', '-t', required=True, help='Test directory')
+    test_parser.add_argument('--test-dir', '-t', type=str, help='Test directory')
     
     # Parse arguments
-    if len(unparsed_arguments) == 0:
-        args = parser.parse_args()
-    else:
+    if len(unparsed_arguments) > 0:
         args = parser.parse_args(unparsed_arguments)
+    else:
+        args = parser.parse_args()
         
     # Create dictionary to store parsed arguments
     parsed_args = {}

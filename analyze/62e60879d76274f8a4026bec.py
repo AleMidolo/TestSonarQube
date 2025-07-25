@@ -26,39 +26,34 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     # Inizializza il dizionario dei parametri extra
     extra = {}
     
-    # Gestisce i bookmarks se presenti
+    # Aggiungi i bookmarks se specificati
     if bookmarks:
         extra["bookmarks"] = list(bookmarks)
         
-    # Gestisce i metadata se presenti
+    # Aggiungi i metadata se specificati
     if metadata:
         extra["tx_metadata"] = metadata
         
-    # Gestisce il timeout se presente
+    # Aggiungi il timeout se specificato
     if timeout:
         extra["tx_timeout"] = int(1000 * timeout)
         
-    # Gestisce la modalità di accesso
+    # Aggiungi la modalità di accesso se specificata
     if mode:
         extra["mode"] = mode
         
-    # Gestisce il database target se presente
+    # Aggiungi il database se specificato
     if db:
         extra["db"] = db
         
-    # Gestisce l'impersonazione utente se presente
+    # Aggiungi l'utente da impersonare se specificato
     if imp_user:
         extra["imp_user"] = imp_user
 
-    # Configura gli hook di serializzazione/deserializzazione
-    if dehydration_hooks:
-        self.dehydration_hooks.update(dehydration_hooks)
-    if hydration_hooks:
-        self.hydration_hooks.update(hydration_hooks)
-
-    # Crea e restituisce la Response con il messaggio BEGIN
-    return self._append(
-        "BEGIN",
-        extra,
-        response=Response(self, **handlers)
-    )
+    # Crea un nuovo oggetto Response con gli handler specificati
+    response = Response(hydration_hooks=hydration_hooks, **handlers)
+    
+    # Aggiungi il messaggio BEGIN alla coda con i parametri extra
+    self.append(BEGIN, extra, response=response, dehydration_hooks=dehydration_hooks)
+    
+    return response

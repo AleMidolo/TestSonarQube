@@ -17,7 +17,7 @@ def generate_default_observer_schema(app):
                 }
             }
             
-            # Add schema to default_schema using resource name as key
+            # Add schema to default_schema dictionary using resource name as key
             resource_name = resource.get('metadata', {}).get('name')
             if resource_name:
                 default_schema[resource_name] = resource_schema

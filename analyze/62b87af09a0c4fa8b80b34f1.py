@@ -13,14 +13,9 @@ def fill(self, coord, weight=1):
 
     # Trova gli indici dei bin per ogni dimensione
     indices = []
-    for dim, x in enumerate(coord):
-        # Trova il bin corretto usando ricerca binaria
-        edges = self.edges[dim]
-        idx = 0
-        for j in range(len(edges)-1):
-            if edges[j] <= x < edges[j+1]:
-                idx = j
-                break
+    for i, x in enumerate(coord):
+        # Trova il bin corrispondente usando ricerca binaria
+        idx = np.searchsorted(self.edges[i], x) - 1
         indices.append(idx)
 
     # Incrementa il contenuto del bin

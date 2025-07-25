@@ -1,34 +1,28 @@
 def _update_context(self, context):
-    # Dictionary to map field indices to x,y,z labels
-    coord_names = {0: 'x', 1: 'y', 2: 'z'}
+    # Dictionary to map field names to x,y,z coordinates
+    coord_map = {'E': 'x', 't': 'y', 'phi': 'z'}
     
-    # Initialize error context if it doesn't exist
-    if not hasattr(context, 'error'):
-        context.error = {}
-        
-    # Look through field names for error fields
-    for field_name in self.fields:
-        # Check if field name contains 'error'
-        if 'error' in field_name.lower():
-            # Extract base field name and error type (low/high)
-            parts = field_name.split('_')
-            if len(parts) >= 3 and parts[-1] in ['low', 'high']:
-                base_field = parts[1]
-                error_type = parts[-1]
+    # Find error fields in the graph
+    for field in self.fields:
+        # Check if field has error components
+        if field.startswith('error_'):
+            # Extract base field name and error type
+            base_field, error_type = field.split('error_')[1].split('_')
+            
+            # Map the base field to x,y,z coordinate name
+            if base_field in coord_map:
+                coord_name = coord_map[base_field]
                 
-                # Get index of base field
-                try:
-                    base_index = self.fields.index(base_field)
-                    # Map to x,y,z if index is 0,1,2
-                    if base_index in coord_names:
-                        coord = coord_names[base_index]
-                        
-                        # Create nested error structure
-                        if coord not in context.error:
-                            context.error[coord] = {}
-                        context.error[coord][error_type] = {'index': self.fields.index(field_name)}
-                except ValueError:
-                    # Base field not found, skip
-                    continue
+                # Initialize error dict if needed
+                if 'error' not in context:
+                    context['error'] = {}
                     
+                # Add error index to context
+                error_key = f"{coord_name}_{error_type}"
+                if error_key not in context['error']:
+                    context['error'][error_key] = {}
+                    
+                # Store the field index
+                context['error'][error_key]['index'] = self.fields.index(field)
+                
     return context

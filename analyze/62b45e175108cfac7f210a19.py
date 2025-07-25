@@ -8,40 +8,34 @@ def validate_fixity(self, fixity, manifest_files):
         raise ValueError("Fixity block must be a dictionary")
         
     # Check that all required fields are present
-    required_fields = ['message_digest_algorithm', 'message_digest']
+    required_fields = ['messageDigestAlgorithm', 'files']
     for field in required_fields:
         if field not in fixity:
             raise ValueError(f"Missing required field '{field}' in fixity block")
             
     # Validate message digest algorithm
-    valid_algorithms = ['md5', 'sha1', 'sha256', 'sha512']
-    if fixity['message_digest_algorithm'].lower() not in valid_algorithms:
-        raise ValueError(f"Invalid message digest algorithm. Must be one of: {valid_algorithms}")
+    if not isinstance(fixity['messageDigestAlgorithm'], str):
+        raise ValueError("messageDigestAlgorithm must be a string")
         
-    # Validate message digests
-    digests = fixity['message_digest']
-    if not isinstance(digests, dict):
-        raise ValueError("Message digests must be a dictionary")
+    # Validate files block
+    files = fixity.get('files', {})
+    if not isinstance(files, dict):
+        raise ValueError("files block must be a dictionary")
         
-    # Check that all referenced files exist in manifest
-    for filename in digests:
+    # Check that all files referenced exist in manifest
+    for filename in files:
         if filename not in manifest_files:
-            raise ValueError(f"File '{filename}' referenced in fixity but not found in manifest")
+            raise ValueError(f"File '{filename}' in fixity block not found in manifest")
             
-    # Validate digest format based on algorithm
-    for filename, digest in digests.items():
-        if not isinstance(digest, str):
-            raise ValueError(f"Digest for file '{filename}' must be a string")
+    # Validate each file entry
+    for filename, entry in files.items():
+        if not isinstance(entry, dict):
+            raise ValueError(f"File entry for '{filename}' must be a dictionary")
             
-        # Check digest length matches algorithm
-        expected_length = {
-            'md5': 32,
-            'sha1': 40, 
-            'sha256': 64,
-            'sha512': 128
-        }[fixity['message_digest_algorithm'].lower()]
-        
-        if len(digest) != expected_length:
-            raise ValueError(f"Invalid digest length for {filename}. Expected {expected_length} characters for {fixity['message_digest_algorithm']}")
+        if 'messageDigest' not in entry:
+            raise ValueError(f"Missing messageDigest for file '{filename}'")
+            
+        if not isinstance(entry['messageDigest'], str):
+            raise ValueError(f"messageDigest for file '{filename}' must be a string")
             
     return True
