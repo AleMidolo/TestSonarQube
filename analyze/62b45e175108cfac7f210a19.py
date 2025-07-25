@@ -1,6 +1,6 @@
 def validate_fixity(self, fixity, manifest_files):
     """
-    Convalida l'attributo fixty block nell'inventario.
+    Convalida l'attributo fixity block nell'inventario.
 
     Controlla la struttura del blocco di fissità e assicurati che siano referenziati solo i file elencati nel manifesto.
     """

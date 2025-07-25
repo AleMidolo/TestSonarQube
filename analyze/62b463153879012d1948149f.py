@@ -24,9 +24,9 @@ def _eval_file(prefix, file_path):
     file_folder = os.path.dirname(file_path)
 
     # Determina il tipo di file in base al prefisso
-    if prefix.lower() == "asset":
+    if prefix.startswith("asset"):
         file_type = "asset"
-    elif prefix.lower() == "rendition":
+    elif prefix.startswith("rendition"):
         file_type = "rendition"
     else:
         file_type = "unknown"

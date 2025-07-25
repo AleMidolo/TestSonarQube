@@ -4,9 +4,10 @@ def validate_min_max_args(self, args):
 
     :param args: Gli argomenti ricevuti.
     """
-    if not hasattr(self, 'min_value') or not hasattr(self, 'max_value'):
-        raise AttributeError("min_value and max_value must be defined in the class.")
+    min_value = 0  # Sostituisci con il valore minimo desiderato
+    max_value = 100  # Sostituisci con il valore massimo desiderato
     
     for arg in args:
-        if not (self.min_value <= arg <= self.max_value):
-            raise ValueError(f"Argument {arg} is not between {self.min_value} and {self.max_value}.")
+        if not (min_value <= arg <= max_value):
+            raise ValueError(f"Il valore {arg} non è compreso tra {min_value} e {max_value}.")
+    return True

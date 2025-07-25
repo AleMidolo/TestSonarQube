@@ -13,12 +13,22 @@ def validate(self, inventory, extract_spec_version=False):
             if spec_type in self.supported_spec_versions:
                 self.spec_version = spec_type
             else:
-                print("Invalid type value. Falling back to default spec version.")
+                print("Tipo non valido. Utilizzo della versione specificata in self.spec_version.")
         else:
-            print("No type value found. Falling back to default spec version.")
+            print("Tipo non presente. Utilizzo della versione specificata in self.spec_version.")
     
-    # Perform validation based on the determined spec version
-    if self.spec_version in self.supported_spec_versions:
-        self._validate_inventory(inventory)
+    # Esegui la validazione basata sulla versione specificata
+    if self.spec_version == "v1":
+        self._validate_v1(inventory)
+    elif self.spec_version == "v2":
+        self._validate_v2(inventory)
     else:
-        raise ValueError("Unsupported specification version.")
+        raise ValueError(f"Versione specifica non supportata: {self.spec_version}")
+
+def _validate_v1(self, inventory):
+    # Implementazione della validazione per la versione v1
+    pass
+
+def _validate_v2(self, inventory):
+    # Implementazione della validazione per la versione v2
+    pass

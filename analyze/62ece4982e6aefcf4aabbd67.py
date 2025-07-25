@@ -11,9 +11,9 @@ def vertex3tuple(vertices):
     n = len(vertices)
     result = []
     for i in range(n):
-        # Get the previous, current, and next vertex
-        prev = vertices[(i - 1) % n]
-        curr = vertices[i]
-        next_ = vertices[(i + 1) % n]
-        result.append((prev, curr, next_))
+        # Calcola gli indici per i punti precedenti e successivi
+        prev = (i - 1) % n
+        next_ = (i + 1) % n
+        # Aggiungi la tupla di 3 punti al risultato
+        result.append((vertices[prev], vertices[i], vertices[next_]))
     return result

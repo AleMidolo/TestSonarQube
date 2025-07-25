@@ -9,10 +9,10 @@ def _should_attempt_c_optimizations():
     import platform
 
     # Controlla se stiamo eseguendo su PyPy
-    is_pypy = platform.python_implementation() == "PyPy"
+    is_pypy = platform.python_implementation() == 'PyPy'
 
-    # Controlla la variabile di ambiente PURE_PYTHON
-    pure_python = os.getenv("PURE_PYTHON", "").lower() in ("1", "true", "yes")
+    # Controlla se la variabile di ambiente PURE_PYTHON è impostata
+    pure_python = os.getenv('PURE_PYTHON', '').lower() in ('1', 'true', 'yes')
 
     # Tentiamo le ottimizzazioni in C solo se non siamo su PyPy e PURE_PYTHON non è impostato
     return not is_pypy and not pure_python

@@ -5,21 +5,10 @@ def get_parser_option_specs(self, command_name):
     :param command_name: il nome del comando (main, virsh, ospd, ecc...)
     :return: la lista di tutte le opzioni del comando
     """
-    if not hasattr(self, '_command_options'):
-        self._command_options = {}
-
-    if command_name in self._command_options:
-        return self._command_options[command_name]
-
-    # Simulate fetching options for the command
-    # This is a placeholder implementation
-    options = []
-    if command_name == "main":
-        options = ["--help", "--version", "--verbose"]
-    elif command_name == "virsh":
-        options = ["--connect", "--list", "--details"]
-    elif command_name == "ospd":
-        options = ["--config", "--log-level", "--daemon"]
-
-    self._command_options[command_name] = options
-    return options
+    # Assuming self.parser is an instance of argparse.ArgumentParser or similar
+    if hasattr(self, 'parser') and hasattr(self.parser, '_actions'):
+        # Filter actions that are related to the specified command
+        options = [action for action in self.parser._actions if command_name in action.option_strings]
+        return options
+    else:
+        return []

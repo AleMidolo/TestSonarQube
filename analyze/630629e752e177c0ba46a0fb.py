@@ -17,8 +17,10 @@ def send_document(url, data, timeout=10, method="post", *args, **kwargs):
             response = requests.post(url, data=data, timeout=timeout, *args, **kwargs)
         elif method.lower() == "put":
             response = requests.put(url, data=data, timeout=timeout, *args, **kwargs)
+        elif method.lower() == "patch":
+            response = requests.patch(url, data=data, timeout=timeout, *args, **kwargs)
         else:
-            raise ValueError("Unsupported HTTP method. Use 'post' or 'put'.")
+            raise ValueError(f"Metodo non supportato: {method}")
         
         return response.status_code, None
     except requests.exceptions.RequestException as e:

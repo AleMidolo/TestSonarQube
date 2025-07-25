@@ -9,7 +9,7 @@ def directlyProvidedBy(object):  # pylint:disable=redefined-builtin
             # Potremmo aver ottenuto la specifica "implements", come
             # ottimizzazione. In tal caso, è come avere una sola base, che
             # escludiamo per evitare dichiarazioni fornite dalla classe:
-            or getattr(provides, "__class__", None) is None
+            or getattr(provides, "__bases__", None) == (object,)
     ):
         return None
     return provides

@@ -3,31 +3,30 @@ import subprocess
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
     Esegui il/i comando/i fornito/i.
-    
-    :param commands: Lista di comandi da eseguire.
-    :param args: Lista di argomenti da passare ai comandi.
-    :param cwd: Directory di lavoro corrente (opzionale).
-    :param verbose: Se True, stampa i comandi eseguiti (opzionale).
-    :param hide_stderr: Se True, nasconde l'output di stderr (opzionale).
-    :param env: Dizionario delle variabili d'ambiente (opzionale).
-    :return: Output del comando eseguito.
     """
+    if isinstance(commands, str):
+        commands = [commands]
+    
     full_command = commands + args
-    if verbose:
-        print(f"Esecuzione del comando: {' '.join(full_command)}")
     
     stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
     
-    result = subprocess.run(
+    process = subprocess.Popen(
         full_command,
         cwd=cwd,
-        env=env,
         stdout=subprocess.PIPE,
         stderr=stderr,
+        env=env,
         text=True
     )
     
-    if verbose:
-        print(f"Output del comando: {result.stdout}")
+    stdout, stderr = process.communicate()
     
-    return result.stdout
+    if verbose:
+        print(f"Command: {' '.join(full_command)}")
+        if stdout:
+            print(f"Stdout: {stdout}")
+        if stderr and not hide_stderr:
+            print(f"Stderr: {stderr}")
+    
+    return process.returncode, stdout, stderr

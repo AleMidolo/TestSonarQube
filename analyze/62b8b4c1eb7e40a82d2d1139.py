@@ -1,16 +1,16 @@
 def verifyClass(iface, candidate, tentative=False):
     """
     Verifica che il *candidate* possa fornire correttamente *iface*.
-    
-    :param iface: L'interfaccia da verificare.
-    :param candidate: La classe o oggetto da verificare.
-    :param tentative: Se True, restituisce un valore booleano invece di sollevare un'eccezione.
-    :return: True se il candidato soddisfa l'interfaccia, altrimenti False se tentative è True.
-    :raises: TypeError se il candidato non soddisfa l'interfaccia e tentative è False.
     """
-    if not all(hasattr(candidate, attr) for attr in dir(iface) if not attr.startswith('__')):
-        if tentative:
-            return False
-        else:
-            raise TypeError(f"{candidate.__name__} does not implement all required methods of {iface.__name__}")
+    if not all(hasattr(candidate, attr) for attr in dir(iface) if not attr.startswith('__'):
+        return False
+    if not tentative:
+        for attr in dir(iface):
+            if not attr.startswith('__'):
+                iface_attr = getattr(iface, attr)
+                candidate_attr = getattr(candidate, attr)
+                if not callable(iface_attr) and iface_attr != candidate_attr:
+                    return False
+                if callable(iface_attr) and not callable(candidate_attr):
+                    return False
     return True

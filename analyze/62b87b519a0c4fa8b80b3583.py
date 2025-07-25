@@ -17,23 +17,19 @@ def scale(self, other=None):
     """
     if other is None:
         return self._scale
-    
-    if not isinstance(other, (int, float)):
-        raise TypeError("Il valore di scala deve essere numerico.")
-    
-    if self._scale == 0 or self._scale is None:
-        raise LenaValueError("Impossibile ridimensionare un grafico con scala sconosciuta o pari a zero.")
-    
-    # Ridimensiona l'ultima coordinata
-    if hasattr(self, 'y'):
-        self.y = [y * other / self._scale for y in self.y]
-        if hasattr(self, 'y_err'):
-            self.y_err = [err * other / self._scale for err in self.y_err]
-    elif hasattr(self, 'z'):
-        self.z = [z * other / self._scale for z in self.z]
-        if hasattr(self, 'z_err'):
-            self.z_err = [err * other / self._scale for err in self.z_err]
+    elif isinstance(other, (int, float)):
+        if self._scale == 0 or self._scale is None:
+            raise LenaValueError("Impossibile ridimensionare un grafico con scala sconosciuta o pari a zero.")
+        scale_factor = other / self._scale
+        self._scale = other
+        # Ridimensiona l'ultima coordinata e gli errori associati
+        if hasattr(self, 'y'):
+            self.y *= scale_factor
+            if hasattr(self, 'y_err'):
+                self.y_err *= scale_factor
+        elif hasattr(self, 'z'):
+            self.z *= scale_factor
+            if hasattr(self, 'z_err'):
+                self.z_err *= scale_factor
     else:
-        raise AttributeError("Il grafico non ha coordinate ridimensionabili.")
-    
-    self._scale = other
+        raise TypeError("Il valore di scala deve essere un numero o None.")

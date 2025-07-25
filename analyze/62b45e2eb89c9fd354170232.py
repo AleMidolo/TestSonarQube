@@ -7,18 +7,22 @@ def next_version(version):
     # Split the version into parts
     parts = version.split('.')
     
+    # Convert parts to integers
+    parts = [int(part) for part in parts]
+    
     # Increment the last part
-    last_part = int(parts[-1]) + 1
+    parts[-1] += 1
     
-    # Handle leading zeros if any
-    if parts[-1].startswith('0'):
-        # Preserve the leading zeros
-        last_part_str = f"{last_part:0{len(parts[-1])}d}"
-    else:
-        last_part_str = str(last_part)
+    # Handle carry-over for parts with leading zeros
+    for i in range(len(parts) - 1, 0, -1):
+        if parts[i] > 9:
+            parts[i] = 0
+            parts[i - 1] += 1
     
-    # Update the last part
-    parts[-1] = last_part_str
+    # Convert parts back to strings
+    parts = [str(part) for part in parts]
     
-    # Join the parts back together
-    return '.'.join(parts)
+    # Join the parts with '.' to form the new version
+    new_version = '.'.join(parts)
+    
+    return new_version

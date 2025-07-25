@@ -7,7 +7,7 @@ def hydrate_time(nanoseconds, tz=None):
 
     :param nanoseconds: Il tempo in nanosecondi.
     :param tz: Il fuso orario (timezone) opzionale.
-    :return: Un oggetto `time` rappresentante il tempo.
+    :return: Un oggetto `time` o `datetime.time` con il fuso orario specificato.
     """
     # Convert nanoseconds to seconds
     seconds = nanoseconds / 1e9
@@ -23,11 +23,9 @@ def hydrate_time(nanoseconds, tz=None):
     # Create a time object
     time_obj = time(hour=hours, minute=minutes, second=seconds, microsecond=microseconds)
     
-    # If a timezone is provided, localize the time
     if tz:
-        tz = pytz.timezone(tz)
-        dt = datetime.combine(datetime.today(), time_obj)
-        localized_dt = tz.localize(dt)
-        time_obj = localized_dt.timetz()
+        # If a timezone is provided, localize the time
+        tz_obj = pytz.timezone(tz)
+        time_obj = tz_obj.localize(time_obj)
     
     return time_obj

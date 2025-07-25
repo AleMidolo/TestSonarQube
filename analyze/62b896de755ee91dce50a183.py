@@ -1,6 +1,7 @@
 from datetime import datetime
-from dateutil import parser
-from dateutil.tz import gettz
+from dateutil.parser import parse as dateutil_parse
+from dateutil.tz import tzoffset
+from dateutil.parser import ParserError
 
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
@@ -26,6 +27,9 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         funzione che accetta due parametri (``tzname`` e ``tzoffset``) e restituisce
         un fuso orario.
 
+        I fusi orari a cui vengono mappati i nomi possono essere un offset intero
+        rispetto all'UTC in secondi o un oggetto :class:`tzinfo`.
+
     :param \*\*kwargs:
         Argomenti keyword passati a ``_parse()``.
 
@@ -47,10 +51,19 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         Sollevato se la data analizzata supera il più grande intero C valido
         sul tuo sistema.
     """
-    if default is not None and not isinstance(default, datetime):
-        raise TypeError("default must be a datetime object or None")
+    try:
+        if default is not None and not isinstance(default, datetime):
+            raise TypeError("default deve essere un oggetto datetime o None")
 
-    if ignoretz:
-        tzinfos = None
+        if ignoretz:
+            tzinfos = None
 
-    return parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+        dt = dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+        return dt
+
+    except ParserError as e:
+        raise ParserError(f"Errore durante l'analisi della stringa di data/ora: {e}")
+    except TypeError as e:
+        raise TypeError(f"Input non valido: {e}")
+    except OverflowError as e:
+        raise OverflowError(f"Data analizzata supera il limite: {e}")

@@ -11,33 +11,28 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     :rtype: str
     """
     import traceback
-    import sys
-
-    # Ottieni il traceback
-    tb = sys.exc_info()[2]
-    if tb is None:
-        tb = e.__traceback__
-
+    
+    # Ottieni la traccia dello stack
+    stack_trace = traceback.format_exc()
+    
     # Limita il numero di livelli dello stack
-    stack = traceback.extract_tb(tb, limit=max_level)
-
-    # Costruisci il percorso dell'eccezione
-    path = []
-    for frame in stack:
-        file_path = frame.filename
-        # Limita il livello del percorso
-        if len(path) < max_path_level:
-            path.append(file_path)
-        else:
-            break
-
-    # Costruisci la stringa dell'eccezione
-    exception_str = f"Exception: {str(e)}\n"
-    exception_str += f"Type: {type(e).__name__}\n"
-    exception_str += f"Traceback (most recent call last):\n"
-    for frame in stack:
-        exception_str += f"  File \"{frame.filename}\", line {frame.lineno}, in {frame.name}\n"
-        exception_str += f"    {frame.line}\n"
-    exception_str += f"Path: {' -> '.join(path)}\n"
-
-    return exception_str
+    stack_lines = stack_trace.splitlines()
+    if len(stack_lines) > max_level:
+        stack_lines = stack_lines[:max_level]
+        stack_lines.append("... (stack trace truncated)")
+    
+    # Limita il numero di livelli del percorso
+    path_lines = []
+    for line in stack_lines:
+        if "File" in line and "line" in line:
+            parts = line.split(",")
+            if len(parts) > max_path_level:
+                parts = parts[:max_path_level]
+                parts.append("... (path truncated)")
+            line = ",".join(parts)
+        path_lines.append(line)
+    
+    # Unisci le linee per formare la stringa finale
+    formatted_trace = "\n".join(path_lines)
+    
+    return formatted_trace
