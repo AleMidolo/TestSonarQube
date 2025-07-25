@@ -20,7 +20,7 @@ def prepare_repository_from_archive(
     # Create a temporary directory to extract the archive
     extract_dir = tempfile.mkdtemp(dir=tmp_path)
     
-    # Determine the archive type based on the file extension
+    # Determine the archive type and extract it
     if archive_path.endswith('.zip'):
         with ZipFile(archive_path, 'r') as zip_ref:
             zip_ref.extractall(extract_dir)
@@ -37,8 +37,8 @@ def prepare_repository_from_archive(
     if filename:
         extracted_file_path = os.path.join(extract_dir, filename)
         if not os.path.exists(extracted_file_path):
-            raise FileNotFoundError(f"The file {filename} was not found in the archive.")
+            raise FileNotFoundError(f"File {filename} not found in the archive")
         return extracted_file_path
     
-    # Otherwise, return the path to the extracted directory
+    # Otherwise, return the directory where the archive was extracted
     return extract_dir

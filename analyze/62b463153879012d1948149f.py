@@ -19,7 +19,7 @@ def _eval_file(prefix, file_path):
     """
     import os
 
-    # Estrai il nome del file e la cartella dal percorso
+    # Estrai il nome del file e la cartella dal percorso completo
     filename = os.path.basename(file_path)
     file_folder = os.path.dirname(file_path)
 

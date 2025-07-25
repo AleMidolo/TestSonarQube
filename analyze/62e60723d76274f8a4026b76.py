@@ -22,15 +22,19 @@ class Time:
         if not (0 <= ticks < 86400000000000):
             raise ValueError("ticks must be between 0 and 86400000000000")
 
-        # Convert ticks to microseconds
+        nanoseconds_in_second = 1_000_000_000
+        nanoseconds_in_minute = 60 * nanoseconds_in_second
+        nanoseconds_in_hour = 60 * nanoseconds_in_minute
+
+        hours = ticks // nanoseconds_in_hour
+        ticks %= nanoseconds_in_hour
+
+        minutes = ticks // nanoseconds_in_minute
+        ticks %= nanoseconds_in_minute
+
+        seconds = ticks // nanoseconds_in_second
+        ticks %= nanoseconds_in_second
+
         microseconds = ticks // 1000
-
-        # Create a timedelta representing the time since midnight
-        delta = timedelta(microseconds=microseconds)
-
-        # Extract hours, minutes, seconds, and microseconds
-        hours, remainder = divmod(delta.seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        microseconds = delta.microseconds
 
         return cls(hours, minutes, seconds, microseconds, tz)

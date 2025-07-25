@@ -4,7 +4,7 @@ def dehydrate_point(value):
 
     :param value: Un oggetto di tipo `Point`.
     :type value: Point
-    :return: Una rappresentazione serializzata del punto, tipicamente una tupla (x, y).
-    :rtype: tuple
+    :return: Un dizionario con le coordinate x e y del punto.
+    :rtype: dict
     """
-    return (value.x, value.y)
+    return {'x': value.x, 'y': value.y}

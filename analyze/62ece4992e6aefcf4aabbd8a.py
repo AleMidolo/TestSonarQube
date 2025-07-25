@@ -13,20 +13,20 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     configurations = {}
     errors = []
 
-    for filename in config_filenames:
+    for config_filename in config_filenames:
         try:
-            with open(filename, 'r') as file:
-                if filename.endswith('.json'):
+            with open(config_filename, 'r') as file:
+                if config_filename.endswith('.json'):
                     config = json.load(file)
-                elif filename.endswith('.yaml') or filename.endswith('.yml'):
+                elif config_filename.endswith('.yaml') or config_filename.endswith('.yml'):
                     config = yaml.safe_load(file)
                 else:
                     errors.append(logging.LogRecord(
                         name=__name__,
                         level=logging.ERROR,
-                        pathname=filename,
+                        pathname=__file__,
                         lineno=0,
-                        msg=f"Unsupported file format: {filename}",
+                        msg=f"Unsupported file format for {config_filename}",
                         args=None,
                         exc_info=None
                     ))
@@ -43,15 +43,15 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                         if key in config:
                             config[key] = value
 
-                configurations[filename] = config
+                configurations[config_filename] = config
 
         except Exception as e:
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
-                pathname=filename,
+                pathname=__file__,
                 lineno=0,
-                msg=str(e),
+                msg=f"Error loading configuration from {config_filename}: {str(e)}",
                 args=None,
                 exc_info=None
             ))

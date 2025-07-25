@@ -23,12 +23,18 @@ def validate(self, inventory, extract_spec_version=False):
     elif self.spec_version == "v2":
         self._validate_v2(inventory)
     else:
-        raise ValueError(f"Versione specifica non supportata: {self.spec_version}")
+        raise ValueError(f"Versione della specifica non supportata: {self.spec_version}")
 
 def _validate_v1(self, inventory):
-    # Implementazione della validazione per la versione v1
+    """
+    Esegue la validazione per la versione v1 della specifica.
+    """
+    # Implementazione della validazione per v1
     pass
 
 def _validate_v2(self, inventory):
-    # Implementazione della validazione per la versione v2
+    """
+    Esegue la validazione per la versione v2 della specifica.
+    """
+    # Implementazione della validazione per v2
     pass

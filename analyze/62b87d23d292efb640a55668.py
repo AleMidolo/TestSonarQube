@@ -6,11 +6,12 @@ def get_config():
 
     config = VersioneerConfig()
     # Popola l'oggetto config con i valori necessari
-    config.VCS = "git"
-    config.style = "pep440"
-    config.versionfile_source = "my_package/_version.py"
-    config.versionfile_build = "my_package/_version.py"
-    config.tag_prefix = "v"
-    config.parentdir_prefix = "my_package-"
+    # Esempio:
+    # config.VCS = "git"
+    # config.style = "pep440"
+    # config.versionfile_source = "myproject/_version.py"
+    # config.versionfile_build = "myproject/_version.py"
+    # config.tag_prefix = "v"
+    # config.parentdir_prefix = "myproject-"
 
     return config

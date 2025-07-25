@@ -12,7 +12,7 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     """
     import traceback
     
-    # Ottieni la traccia dello stack
+    # Estrai lo stack trace
     stack_trace = traceback.format_exc()
     
     # Limita il numero di livelli dello stack
@@ -33,6 +33,6 @@ def extostr(cls, e, max_level=30, max_path_level=5):
         path_lines.append(line)
     
     # Unisci le linee per formare la stringa finale
-    formatted_trace = "\n".join(path_lines)
+    formatted_exception = "\n".join(path_lines)
     
-    return formatted_trace
+    return formatted_exception

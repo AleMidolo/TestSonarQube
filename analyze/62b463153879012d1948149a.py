@@ -10,17 +10,19 @@ def _group_files_by_xml_filename(source, xmls, files):
         Percorso della cartella o dell'archivio zip.
     xmls : list
         Nomi dei file XML.
-    files: list
+    files : list
         Lista dei file presenti nella cartella o nell'archivio zip.
 
     Ritorna
     -------
     dict
         - chiave: nome dei file XML.
-        - valore: lista dei file associati.
+        - valore: lista di file associati al nome XML.
     """
     grouped_files = {}
+    
     for xml in xmls:
         xml_base = xml.split('.')[0]  # Estrae il nome base senza estensione
-        grouped_files[xml] = [file for file in files if file.startswith(xml_base)]
+        grouped_files[xml] = [file for file in files if xml_base in file]
+    
     return grouped_files

@@ -2,31 +2,27 @@ def validate(self, path):
     """
     Valida l'oggetto OCFL nel percorso specificato o nella radice di pyfs.
     """
-    # Implementazione della validazione OCFL
-    # Questo è un esempio di base, potrebbe essere necessario adattarlo
-    # in base alle specifiche OCFL e alla struttura del filesystem.
-
+    # Implementazione della validazione dell'oggetto OCFL
+    # Questo è un esempio di implementazione, potrebbe essere necessario adattarlo
+    # in base alle specifiche dell'oggetto OCFL e del filesystem utilizzato.
+    
     import os
     from fs import open_fs
-
+    
     # Apri il filesystem
     fs = open_fs(path)
-
-    # Verifica la presenza di file e directory necessari
-    required_files = ['0=ocfl_object_1.0', 'inventory.json', 'inventory.json.sha512']
+    
+    # Verifica la presenza dei file e delle directory necessari
+    required_files = ['inventory.json', 'manifest-sha512.txt']
     for file in required_files:
         if not fs.exists(file):
-            return False
-
-    # Verifica la struttura del contenuto
-    content_dir = 'content'
-    if not fs.exists(content_dir):
-        return False
-
-    # Verifica la presenza di almeno un file nel contenuto
-    content_files = fs.listdir(content_dir)
-    if not content_files:
-        return False
-
-    # Se tutte le verifiche sono passate, l'oggetto è valido
+            raise FileNotFoundError(f"File richiesto non trovato: {file}")
+    
+    # Verifica la struttura delle directory
+    required_dirs = ['objects', 'versions']
+    for dir in required_dirs:
+        if not fs.isdir(dir):
+            raise NotADirectoryError(f"Directory richiesta non trovata: {dir}")
+    
+    # Se tutto è valido, restituisci True
     return True

@@ -2,7 +2,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.backends import default_backend
+from cryptography.exceptions import InvalidSignature
 
 def verify_relayable_signature(public_key, doc, signature):
     """
@@ -14,11 +14,8 @@ def verify_relayable_signature(public_key, doc, signature):
     :return: True se la firma è valida, False altrimenti.
     """
     try:
-        # Carica la chiave pubblica
-        pub_key = serialization.load_pem_public_key(
-            public_key.encode(),
-            backend=default_backend()
-        )
+        # Deserializza la chiave pubblica
+        pub_key = serialization.load_pem_public_key(public_key.encode())
         
         # Verifica la firma
         pub_key.verify(
@@ -31,6 +28,8 @@ def verify_relayable_signature(public_key, doc, signature):
             hashes.SHA256()
         )
         return True
+    except InvalidSignature:
+        return False
     except Exception as e:
         print(f"Errore durante la verifica della firma: {e}")
         return False

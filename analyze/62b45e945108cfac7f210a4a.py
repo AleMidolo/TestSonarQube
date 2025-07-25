@@ -13,10 +13,10 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     if validate_objects:
         # Example: Validate objects in the hierarchy
         num_objects = 100  # Example value
-        good_objects = 95   # Example value
+        good_objects = 95  # Example value
     
     if check_digests:
-        # Example: Check digests of objects
+        # Example: Check digests for integrity
         pass
     
     if show_warnings:

@@ -13,17 +13,17 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     if document_path is None:
         document_path = "/.well-known/nodeinfo"
     
-    nodeinfo_url = f"{url.rstrip('/')}{document_path}"
+    nodeinfo_url = f"{url}{document_path}"
     
     well_known_document = {
         "links": [
             {
                 "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
-                "href": f"{nodeinfo_url}/2.0"
+                "href": f"{url}/nodeinfo/2.0"
             },
             {
                 "rel": "http://nodeinfo.diaspora.software/ns/schema/2.1",
-                "href": f"{nodeinfo_url}/2.1"
+                "href": f"{url}/nodeinfo/2.1"
             }
         ]
     }

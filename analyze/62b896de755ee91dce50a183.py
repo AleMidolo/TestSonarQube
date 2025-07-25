@@ -1,7 +1,7 @@
 from datetime import datetime
 from dateutil.parser import parse as dateutil_parse
 from dateutil.tz import tzoffset
-from dateutil.parser import ParserError
+from dateutil.tz import gettz
 
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
@@ -51,19 +51,18 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         Sollevato se la data analizzata supera il più grande intero C valido
         sul tuo sistema.
     """
+    if not isinstance(timestr, str):
+        raise TypeError("Input must be a string.")
+
+    if default is not None and not isinstance(default, datetime):
+        raise TypeError("Default must be a datetime object or None.")
+
+    if ignoretz:
+        tzinfos = None
+
     try:
-        if default is not None and not isinstance(default, datetime):
-            raise TypeError("default deve essere un oggetto datetime o None")
+        parsed_datetime = dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+    except Exception as e:
+        raise ValueError(f"Failed to parse the date string: {e}")
 
-        if ignoretz:
-            tzinfos = None
-
-        dt = dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
-        return dt
-
-    except ParserError as e:
-        raise ParserError(f"Errore durante l'analisi della stringa di data/ora: {e}")
-    except TypeError as e:
-        raise TypeError(f"Input non valido: {e}")
-    except OverflowError as e:
-        raise OverflowError(f"Data analizzata supera il limite: {e}")
+    return parsed_datetime

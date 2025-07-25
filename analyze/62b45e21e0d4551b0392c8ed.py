@@ -23,13 +23,16 @@ def find_path_type(path):
     if not namaste_files:
         return "La directory non contiene file Namaste."
     
+    if len(namaste_files) > 1:
+        return "La directory contiene più file Namaste, il che non è consentito."
+    
     namaste_file = namaste_files[0]
     with open(os.path.join(path, namaste_file), 'r') as f:
         content = f.read().strip()
     
     if content == "ocfl_1.0":
         return "root"
-    elif content == "ocfl_object_1.0":
+    elif content.startswith("ocfl_object_"):
         return "object"
     else:
-        return f"Tipo di file Namaste non riconosciuto: {content}"
+        return f"Contenuto del file Namaste non riconosciuto: {content}"
