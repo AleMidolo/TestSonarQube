@@ -16,5 +16,7 @@ def parse_arguments(*arguments):
             elif len(arg) == 3:
                 parser.add_argument(arg[0], type=arg[1], help=arg[2])
                 
-    # Parse arguments and return
-    return parser.parse_args()
+    # Parse arguments
+    args = parser.parse_args()
+    
+    return args

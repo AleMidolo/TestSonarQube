@@ -18,7 +18,7 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     # Remove trailing slash from URL if present
     base_url = url.rstrip('/')
     
-    # Create the links list with supported NodeInfo versions
+    # Create the links array with supported NodeInfo versions
     links = [
         {
             "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",

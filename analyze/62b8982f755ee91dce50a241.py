@@ -49,28 +49,28 @@ def normalized(self):
         frac_months = self.months - total_months
         total_years += int(frac_months / 12)
 
-    # Normalize each unit
-    # microseconds to seconds
+    # Normalize smaller units into larger ones
+    # microseconds -> seconds
     total_seconds += total_microseconds // 1000000
     total_microseconds = total_microseconds % 1000000
-
-    # seconds to minutes
+    
+    # seconds -> minutes
     total_minutes += total_seconds // 60
     total_seconds = total_seconds % 60
-
-    # minutes to hours
+    
+    # minutes -> hours
     total_hours += total_minutes // 60
     total_minutes = total_minutes % 60
-
-    # hours to days
+    
+    # hours -> days
     total_days += total_hours // 24
     total_hours = total_hours % 24
-
-    # days to months (approximate)
+    
+    # days -> months (approximate)
     total_months += total_days // 30
     total_days = total_days % 30
-
-    # months to years
+    
+    # months -> years
     total_years += total_months // 12
     total_months = total_months % 12
 

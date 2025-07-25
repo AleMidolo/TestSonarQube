@@ -14,11 +14,11 @@ def _explore_folder(folder):
     import os
     from collections import defaultdict
     
-    # Initialize empty defaultdict to store grouped files
-    grouped_files = defaultdict(list)
+    # Initialize dictionary to store file groups
+    file_groups = defaultdict(list)
     
     # Walk through the folder
-    for root, dirs, files in os.walk(folder):
+    for root, _, files in os.walk(folder):
         for file in files:
             # Get full file path
             file_path = os.path.join(root, file)
@@ -26,9 +26,9 @@ def _explore_folder(folder):
             # Get base name without extension
             base_name = os.path.splitext(file)[0]
             
-            # Group files by their base names
+            # Group files by base name
             if file.lower().endswith(('.xml', '.pdf', '.txt')):
-                grouped_files[base_name].append(file_path)
+                file_groups[base_name].append(file_path)
     
-    # Convert defaultdict to regular dict before returning
-    return dict(grouped_files)
+    # Convert defaultdict to regular dict
+    return dict(file_groups)

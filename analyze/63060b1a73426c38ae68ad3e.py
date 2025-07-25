@@ -7,28 +7,35 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     """
     flattened_dict = {}
     
-    try:
-        # Read and parse plugin specification file
-        spec_file = os.path.join(plugin_dir, 'plugin.json')
-        with open(spec_file, 'r', encoding='utf-8') as f:
-            spec = json.load(f)
+    def flatten_dict(d, parent_key=''):
+        for key, value in d.items():
+            new_key = f"{parent_key}.{key}" if parent_key else key
             
-        def flatten(d, parent_key=''):
-            for key, value in d.items():
-                new_key = f"{parent_key}.{key}" if parent_key else key
+            if isinstance(value, dict):
+                flatten_dict(value, new_key)
+            else:
+                flattened_dict[new_key] = value
                 
-                if isinstance(value, dict):
-                    flatten(value, new_key)
-                else:
-                    flattened_dict[new_key] = value
+    try:
+        # Try to read plugin specification file
+        spec_file = os.path.join(plugin_dir, 'plugin.json')
+        if not os.path.exists(spec_file):
+            spec_file = os.path.join(plugin_dir, 'plugin.yaml')
+            
+        if os.path.exists(spec_file):
+            # Read the specification file based on extension
+            if spec_file.endswith('.json'):
+                with open(spec_file, 'r') as f:
+                    spec = json.load(f)
+            else:
+                with open(spec_file, 'r') as f:
+                    spec = yaml.safe_load(f)
                     
-        flatten(spec)
-        
-    except FileNotFoundError:
-        print(f"Plugin specification file not found in {plugin_dir}")
-    except json.JSONDecodeError:
-        print(f"Invalid JSON format in plugin specification file")
+            # Flatten the dictionary
+            flatten_dict(spec)
+            
     except Exception as e:
-        print(f"Error processing plugin specification: {str(e)}")
+        print(f"Error reading plugin specification: {str(e)}")
+        return {}
         
     return flattened_dict

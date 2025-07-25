@@ -6,5 +6,5 @@ def set_cut_chars(self, before: bytes, after: bytes) -> None:
         before: इन डिलीमीटर (delimiters) से पहले फाइल को विभाजित (split) करें।
         after: इन डिलीमीटर (delimiters) के बाद फाइल को विभाजित (split) करें।
     """
-    self.cut_before = before
-    self.cut_after = after
+    self.cut_before_bytes = before
+    self.cut_after_bytes = after

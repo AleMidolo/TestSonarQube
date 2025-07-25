@@ -29,25 +29,23 @@ def extostr(cls, e, max_level=30, max_path_level=5):
 
     # Process each line of the traceback
     formatted_lines = []
-    stack_level = 0
+    level = 0
     
     for line in tb_list:
         if 'File "' in line:
-            # This is a file reference line
-            stack_level += 1
-            if stack_level > max_level:
-                continue
-                
-            # Format the file path
-            start = line.find('File "') + 6
-            end = line.find('"', start)
-            file_path = line[start:end]
-            formatted_path = format_path(file_path)
-            line = line[:start] + formatted_path + line[end:]
+            # Format file paths in traceback
+            path_start = line.find('File "') + 6
+            path_end = line.find('"', path_start)
+            original_path = line[path_start:path_end]
+            formatted_path = format_path(original_path)
+            line = line[:path_start] + formatted_path + line[path_end:]
             
+            level += 1
+            if level > max_level:
+                formatted_lines.append("  [Additional frames truncated...]\n")
+                break
+                
         formatted_lines.append(line)
     
     # Join all lines and remove any extra whitespace
-    result = ''.join(formatted_lines).strip()
-    
-    return result
+    return ''.join(formatted_lines).strip()

@@ -36,18 +36,10 @@ def extend_cli(self, root_subparsers):
         help='Path to spec file to validate'
     )
 
-    # Add export command
-    export_parser = spec_subparsers.add_parser(
-        'export',
-        help='Export spec to different format'
-    )
-    export_parser.add_argument(
-        'spec_file',
-        help='Path to spec file to export'
-    )
-    export_parser.add_argument(
-        '--format',
-        choices=['json', 'yaml', 'toml'],
-        default='json',
-        help='Output format'
-    )
+    # Add other common arguments
+    for p in [init_parser, validate_parser]:
+        p.add_argument(
+            '--verbose', '-v',
+            action='store_true',
+            help='Enable verbose output'
+        )

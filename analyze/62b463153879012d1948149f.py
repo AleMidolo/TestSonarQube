@@ -22,7 +22,7 @@ def _eval_file(prefix, file_path):
     # Check if file is an asset or rendition based on prefix
     if prefix.endswith('_asset'):
         result['type'] = 'asset'
-    elif prefix.endswith('_rendition'): 
+    elif prefix.endswith('_rendition'):
         result['type'] = 'rendition'
     else:
         result['type'] = 'unknown'

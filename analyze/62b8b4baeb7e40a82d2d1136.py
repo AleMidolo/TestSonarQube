@@ -41,6 +41,6 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
-        raise Invalid(errors)
+        raise Invalid('\n'.join(errors))
         
     return True
