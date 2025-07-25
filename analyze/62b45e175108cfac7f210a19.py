@@ -8,35 +8,34 @@ def validate_fixity(self, fixity, manifest_files):
     if not isinstance(fixity, dict):
         return False
         
-    # Check that all required keys exist
+    # Check if all required keys exist in fixity block
     required_keys = ['message_digest_algorithm', 'message_digests']
     if not all(key in fixity for key in required_keys):
         return False
         
-    # Check message digest algorithm is string
-    if not isinstance(fixity['message_digest_algorithm'], str):
-        return False
-        
-    # Check message digests is list
+    # Check if message_digests is a list
     if not isinstance(fixity['message_digests'], list):
         return False
         
     # Check each message digest entry
     for digest in fixity['message_digests']:
-        # Each entry should be a dict
+        # Verify digest structure
         if not isinstance(digest, dict):
             return False
             
-        # Should have required fields
-        if not all(key in digest for key in ['file_path', 'hash']):
+        if 'file_path' not in digest or 'hash' not in digest:
             return False
             
-        # Fields should be strings
-        if not isinstance(digest['file_path'], str) or not isinstance(digest['hash'], str):
-            return False
-            
-        # File path should exist in manifest files
+        # Check if referenced file exists in manifest
         if digest['file_path'] not in manifest_files:
             return False
             
+        # Validate hash format based on algorithm
+        if fixity['message_digest_algorithm'].lower() == 'md5':
+            if not len(digest['hash']) == 32:
+                return False
+        elif fixity['message_digest_algorithm'].lower() == 'sha256':
+            if not len(digest['hash']) == 64:
+                return False
+                
     return True

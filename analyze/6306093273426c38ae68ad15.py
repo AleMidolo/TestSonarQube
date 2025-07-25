@@ -22,47 +22,34 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     playbook_path = os.path.join(ir_plugin.path, 'playbooks')
     inventory_path = os.path.join(ir_workspace.path, 'hosts')
     
-    # एक्स्ट्रा वेरिएबल्स को JSON फाइल में लिखें
-    extra_vars_file = os.path.join(ir_workspace.path, 'extra_vars.json')
-    with open(extra_vars_file, 'w') as f:
-        json.dump(vars_dict, f)
-
+    # एक्स्ट्रा वेरिएबल्स को JSON में कन्वर्ट करें
+    extra_vars = json.dumps(vars_dict)
+    
     # Ansible CLI कमांड तैयार करें
     ansible_cmd = ['ansible-playbook']
     ansible_cmd.extend(cli_args)
-    ansible_cmd.extend([
-        '-i', inventory_path,
-        '--extra-vars', f'@{extra_vars_file}',
-        os.path.join(playbook_path, 'main.yml')
-    ])
-
-    try:
-        # Ansible प्लेबुक को चलाएं
-        process = subprocess.Popen(
-            ansible_cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True
-        )
-        
-        stdout, stderr = process.communicate()
-        return_code = process.returncode
-
-        result = {
-            'rc': return_code,
-            'stdout': stdout,
-            'stderr': stderr
-        }
-
-        if return_code != 0:
-            raise Exception(f"Ansible playbook execution failed: {stderr}")
-
-        return result
-
-    except Exception as e:
-        raise Exception(f"Error running ansible playbook: {str(e)}")
+    ansible_cmd.extend(['-i', inventory_path])
+    ansible_cmd.extend(['--extra-vars', extra_vars])
     
-    finally:
-        # क्लीनअप - एक्स्ट्रा वेरिएबल्स फाइल को हटाएं
-        if os.path.exists(extra_vars_file):
-            os.remove(extra_vars_file)
+    # Ansible के लिए आवश्यक ऑब्जेक्ट्स इनिशियलाइज़ करें
+    loader = DataLoader()
+    inventory = InventoryManager(loader=loader, sources=inventory_path)
+    variable_manager = VariableManager(loader=loader, inventory=inventory)
+    
+    # प्लेबुक एग्जीक्यूटर सेटअप करें
+    playbook = PlaybookExecutor(
+        playbooks=[playbook_path],
+        inventory=inventory,
+        variable_manager=variable_manager,
+        loader=loader,
+        options=CLI.base_parser().parse_args(ansible_cmd[1:]),
+        passwords={}
+    )
+    
+    try:
+        # प्लेबुक चलाएं और परिणाम रिटर्न करें
+        result = playbook.run()
+        return result
+    except Exception as e:
+        print(f"Error running playbook: {str(e)}")
+        return 1

@@ -5,11 +5,7 @@ def get_pattern(pattern, strip=True):
     # Special characters in regex that need to be escaped
     special_chars = '.^$*+?{}[]\\|()'
     
-    # Strip whitespace if strip=True
-    if strip:
-        pattern = pattern.strip()
-    
-    # Escape special regex characters
+    # Escape special characters
     escaped_pattern = ''
     for char in pattern:
         if char in special_chars:
@@ -17,4 +13,8 @@ def get_pattern(pattern, strip=True):
         else:
             escaped_pattern += char
             
+    # Strip whitespace if strip=True
+    if strip:
+        escaped_pattern = escaped_pattern.strip()
+        
     return escaped_pattern

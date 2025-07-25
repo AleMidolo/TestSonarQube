@@ -44,7 +44,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
             )
             log_records.append(record)
             logger.error(f"Error loading config file {filename}: {str(e)}")
-            
+
     return configs, log_records
 
 def _resolve_env_vars(config):
@@ -53,11 +53,9 @@ def _resolve_env_vars(config):
         return {k: _resolve_env_vars(v) for k, v in config.items()}
     elif isinstance(config, list):
         return [_resolve_env_vars(v) for v in config]
-    elif isinstance(config, str):
-        # Replace ${VAR} or $VAR with environment variable
-        if config.startswith('$'):
-            var = config.lstrip('${').rstrip('}')
-            return os.environ.get(var, config)
+    elif isinstance(config, str) and config.startswith('$'):
+        env_var = config[1:]
+        return os.environ.get(env_var, config)
     return config
 
 def _apply_overrides(config, overrides):

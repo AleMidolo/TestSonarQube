@@ -19,33 +19,37 @@ def absorb(self, args):
                 
                 # Check absorption cases
                 # A & (A | B) = A
-                if expr1.is_and() and expr2.is_or():
-                    if expr1 in expr2.args:
-                        result[j] = expr1
-                        changed = True
-                        
-                # A | (A & B) = A        
-                elif expr1.is_or() and expr2.is_and():
-                    if expr1 in expr2.args:
-                        result[j] = expr1
-                        changed = True
+                if isinstance(expr1, str) and isinstance(expr2, tuple):
+                    if expr2[1] == '|' and expr1 in expr2[0]:
+                        if expr1 not in result:
+                            result.append(expr1)
+                            changed = True
                 
-                # Check negative absorption cases
+                # A | (A & B) = A            
+                if isinstance(expr1, str) and isinstance(expr2, tuple):
+                    if expr2[1] == '&' and expr1 in expr2[0]:
+                        if expr1 not in result:
+                            result.append(expr1)
+                            changed = True
+                            
+                # Negative absorption
                 # A & (~A | B) = A & B
-                if expr1.is_and() and expr2.is_or():
-                    if expr1.negate() in expr2.args:
-                        new_expr = expr1 & expr2.args[1]
-                        result[j] = new_expr
-                        changed = True
-                        
+                if isinstance(expr1, str) and isinstance(expr2, tuple):
+                    if expr2[1] == '|' and f'~{expr1}' in expr2[0]:
+                        new_expr = (expr1, '&', expr2[0][1])
+                        if new_expr not in result:
+                            result.append(new_expr)
+                            changed = True
+                
                 # A | (~A & B) = A | B
-                elif expr1.is_or() and expr2.is_and():
-                    if expr1.negate() in expr2.args:
-                        new_expr = expr1 | expr2.args[1]
-                        result[j] = new_expr
-                        changed = True
-                        
-        # Remove any duplicates
+                if isinstance(expr1, str) and isinstance(expr2, tuple):
+                    if expr2[1] == '&' and f'~{expr1}' in expr2[0]:
+                        new_expr = (expr1, '|', expr2[0][1]) 
+                        if new_expr not in result:
+                            result.append(new_expr)
+                            changed = True
+                            
+        # Remove redundant expressions
         result = list(set(result))
                         
     return result

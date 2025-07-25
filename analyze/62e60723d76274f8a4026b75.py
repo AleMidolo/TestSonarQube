@@ -35,6 +35,6 @@ def round_half_to_even(n):
             return floor
         else:
             return floor + 1
-    # Otherwise round normally
+    # Otherwise use regular rounding
     else:
         return round(n)

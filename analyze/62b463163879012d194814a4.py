@@ -30,23 +30,14 @@ def _explore_zipfile(zip_path):
             # Get basename without extension
             base_name = os.path.splitext(os.path.basename(file_name))[0]
             
-            # If file has XML basename (ends with .xml when extension added back)
-            if file_name.endswith('.xml'):
-                # Use base_name as key and add full filename to list
-                grouped_files[base_name].append(file_name)
+            # Read file content
+            with zip_ref.open(file_name) as f:
+                content = f.read()
                 
-                # Add any related files with same basename
-                for related_file in file_list:
-                    if related_file != file_name and \
-                       os.path.splitext(os.path.basename(related_file))[0] == base_name:
-                        grouped_files[base_name].append(related_file)
-                        
-        # Read contents of each file
-        result = {}
-        for base_name, files in grouped_files.items():
-            result[base_name] = {}
-            for file_name in files:
-                with zip_ref.open(file_name) as f:
-                    result[base_name][file_name] = f.read()
-                    
-    return result
+            # Group files with same basename
+            grouped_files[base_name].append({
+                'name': file_name,
+                'content': content
+            })
+    
+    return dict(grouped_files)

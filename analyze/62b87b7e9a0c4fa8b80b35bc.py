@@ -7,34 +7,35 @@ def _update_context(self, context):
         context.error = {}
 
     # Map coordinate names to x,y,z
-    coord_map = {0:'x', 1:'y', 2:'z'}
+    coord_names = ['x', 'y', 'z']
     
-    # Look for error fields and add to context
+    # Look for error fields and update context
     for field in field_names:
         # Check if field name contains 'error'
         if 'error' in field.lower():
-            # Extract coordinate name from error field
-            for i, coord in coord_map.items():
-                if f'error_{coord}' in field.lower():
-                    # Get index of this error field
-                    idx = field_names.index(field)
-                    
-                    # Add to context.error
-                    if coord not in context.error:
-                        context.error[coord] = {}
-                    context.error[coord]['index'] = idx
-                    break
+            # Extract base name before '_error'
+            base = field.split('_error')[0].lower()
             
-            # Handle _low/_high variants
-            if '_low' in field.lower():
-                coord = field.split('_')[1].lower()
-                if coord not in context.error:
-                    context.error[coord] = {}
-                context.error[coord]['index'] = field_names.index(field)
-            elif '_high' in field.lower():
-                coord = field.split('_')[1].lower() 
-                if coord not in context.error:
-                    context.error[coord] = {}
-                context.error[coord]['index'] = field_names.index(field)
+            # Map to x,y,z if possible
+            for i, coord in enumerate(coord_names):
+                if base == self.get_field_names()[i].lower():
+                    base = coord
+                    break
+                    
+            # Get index of error field
+            idx = field_names.index(field)
+            
+            # Add to context.error
+            if base + '_low' not in context.error:
+                context.error[base + '_low'] = {}
+            context.error[base + '_low']['index'] = idx
+            
+            if base + '_high' not in context.error:
+                context.error[base + '_high'] = {}
+            context.error[base + '_high']['index'] = idx
 
+    # Preserve existing values in context.value
+    if hasattr(context, 'value'):
+        pass
+        
     return context

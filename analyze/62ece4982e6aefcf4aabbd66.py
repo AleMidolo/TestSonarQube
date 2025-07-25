@@ -9,6 +9,7 @@ def was_processed(processed, path_name, verbose):
                 print(f"File {path_name} was already processed")
             return True
         return False
+        
     except Exception as e:
         if verbose:
             print(f"Error checking if {path_name} was processed: {str(e)}")

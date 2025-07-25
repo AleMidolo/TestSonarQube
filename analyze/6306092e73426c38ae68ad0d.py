@@ -14,29 +14,29 @@ def create_complex_argumet_type(self, subcommand, type_name, option_name, spec_o
     # Add validation method
     def validate(self, value):
         if not isinstance(value, str):
-            raise ValueError(f"{option_name} must be a string")
+            raise ValueError(f"Value for {option_name} must be a string")
         
         # Apply any specific validation rules from spec_option
         if 'min_length' in spec_option:
             if len(value) < spec_option['min_length']:
-                raise ValueError(f"{option_name} must be at least {spec_option['min_length']} characters")
+                raise ValueError(f"{option_name} must be at least {spec_option['min_length']} characters long")
                 
         if 'max_length' in spec_option:
             if len(value) > spec_option['max_length']:
-                raise ValueError(f"{option_name} must be at most {spec_option['max_length']} characters")
+                raise ValueError(f"{option_name} cannot be longer than {spec_option['max_length']} characters")
                 
         if 'pattern' in spec_option:
             import re
             if not re.match(spec_option['pattern'], value):
-                raise ValueError(f"{option_name} must match pattern: {spec_option['pattern']}")
-                
-        return value
+                raise ValueError(f"{option_name} does not match required pattern {spec_option['pattern']}")
         
+        return value
+    
     # Add string representation method
     def __str__(self):
         return f"Complex argument type for {subcommand}:{option_name}"
-        
-    # Add the methods to the class
+    
+    # Add methods to the class
     complex_type.validate = validate
     complex_type.__str__ = __str__
     

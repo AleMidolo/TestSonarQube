@@ -11,37 +11,12 @@ def from_raw_values(cls, values):
     bookmarks = []
     for value in values:
         try:
-            # Remove any leading/trailing whitespace
-            value = value.strip()
-            
-            # Skip empty lines
-            if not value:
-                continue
-                
-            # Parse the raw bookmark string and create bookmark object
-            bookmark = cls._parse_raw_bookmark(value)
-            if bookmark:
+            # Remove any whitespace and convert to string
+            bookmark = str(value).strip()
+            if bookmark:  # Only add non-empty bookmarks
                 bookmarks.append(bookmark)
-                
-        except Exception:
-            # Skip any invalid bookmarks
+        except (ValueError, TypeError):
+            # Skip invalid values
             continue
             
     return cls(bookmarks)
-
-@classmethod
-def _parse_raw_bookmark(cls, raw_string):
-    """Helper method to parse a single raw bookmark string"""
-    try:
-        # Split on first whitespace to separate URL from title
-        parts = raw_string.split(None, 1)
-        if len(parts) == 2:
-            url, title = parts
-        else:
-            url = parts[0]
-            title = ""
-            
-        return {"url": url, "title": title}
-        
-    except Exception:
-        return None

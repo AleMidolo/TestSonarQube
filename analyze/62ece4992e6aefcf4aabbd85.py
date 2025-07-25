@@ -9,14 +9,11 @@ def find_roots(
     subjects = set(graph.subjects(prop))
     objects = set(graph.objects(prop))
     
-    # Root nodes are subjects that are not objects
+    # Root nodes are subjects that are not objects of the property
     root_nodes = subjects - objects
     
-    # If no roots found and we have subjects, pick arbitrary subject as root
-    if not root_nodes and subjects:
-        root_nodes = {next(iter(subjects))}
+    # If roots set was provided, only keep nodes from that set
+    if roots:
+        root_nodes = root_nodes & roots
         
-    # Add found roots to provided/initialized set
-    roots.update(root_nodes)
-    
-    return roots
+    return root_nodes

@@ -1,5 +1,5 @@
 def data(self, *keys):
-    # If no keys provided, return all data
+    # If no keys provided, return all fields
     if not keys:
         return dict(zip(self._fields, self))
         

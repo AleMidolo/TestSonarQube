@@ -33,13 +33,10 @@ def verifyObject(iface, candidate, tentative=False):
                     
                     if method_sig:
                         # Compare signatures
-                        required_params = sig_info.get('required', ())
-                        optional_params = sig_info.get('optional', ())
-                        varargs = sig_info.get('varargs', None)
-                        kwargs = sig_info.get('kwargs', None)
-                        
-                        if len(method_sig.parameters) < len(required_params):
-                            errors.append(BrokenMethodImplementation(name, "Incorrect number of required arguments"))
+                        if (sig_info['positional'] != method_sig.parameters or 
+                            sig_info['required'] != len([p for p in method_sig.parameters.values() 
+                                                       if p.default == p.empty])):
+                            errors.append(BrokenMethodImplementation(name, "Incorrect signature"))
             except Exception:
                 # If signature verification fails, continue with other checks
                 pass

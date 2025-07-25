@@ -17,9 +17,9 @@ def get_plugin_spec_flatten_dict(plugin_dir):
                 flattened_dict[new_key] = value
                 
     try:
-        # Try to read and parse plugin specification file
-        spec_file = f"{plugin_dir}/plugin_spec.json"
-        with open(spec_file, 'r', encoding='utf-8') as f:
+        # Try to read plugin specification file
+        spec_file = f"{plugin_dir}/plugin.json"
+        with open(spec_file, 'r') as f:
             import json
             plugin_spec = json.load(f)
             
@@ -29,7 +29,7 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     except FileNotFoundError:
         print(f"Plugin specification file not found in {plugin_dir}")
     except json.JSONDecodeError:
-        print("Invalid JSON format in plugin specification file")
+        print(f"Invalid JSON format in plugin specification file")
     except Exception as e:
         print(f"Error processing plugin specification: {str(e)}")
         

@@ -12,5 +12,4 @@ def popitem(self):
     # Remove the key-value pair
     del self[key]
     
-    # Return the key-value pair as a tuple
     return (key, value)

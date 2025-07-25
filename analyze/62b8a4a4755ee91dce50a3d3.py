@@ -20,11 +20,9 @@ def fromutc(self, dt):
     if std_offset == utc_offset:
         return dtoff.replace(tzinfo=self)
         
-    # We're in a fold if the UTC offset equals standard time
-    dtdst = dtoff + dst_offset - std_offset
-    if std_offset == utc_offset:
-        fold = 1
-    else:
-        fold = 0
-    
-    return dtdst.replace(tzinfo=self, fold=fold)
+    # We're in a fold - check if this is the first occurrence
+    dtdst = dtoff - dst_offset
+    if self.dst(dtdst) is None:
+        return dtdst.replace(tzinfo=self)
+        
+    return dtoff.replace(tzinfo=self)

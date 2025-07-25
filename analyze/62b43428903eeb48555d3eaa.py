@@ -1,7 +1,7 @@
 def formatmany(
-        self,
-        sql: AnyStr,
-        many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
+    self,
+    sql: AnyStr,
+    many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
 ) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
     
     # Convert params to list for processing
@@ -37,39 +37,39 @@ def formatmany(
                 converted_sql = converted_sql.replace(b"%" + name_bytes + b")s",
                     b"?" if self.out_style == "qmark" else str(f"${i}").encode())
                     
-        # Convert parameters to list in correct order
+        # Convert parameters to list format
         converted_params = []
         for param_dict in params_list:
             ordered_params = [param_dict[name] for name in param_names]
-            if self.out_style == "numeric":
-                # For numeric style, convert to dict with position numbers
-                ordered_params = {i+1: val for i, val in enumerate(ordered_params)}
-            converted_params.append(ordered_params)
-            
+            if self.out_style == "qmark":
+                converted_params.append(ordered_params)
+            else:
+                converted_params.append(dict(enumerate(ordered_params, start=1)))
+                
     else:
         # For ordinal parameters
-        # Replace ? or :1,:2 with ? or $1,$2 based on out_style 
+        # Replace ? or $n with new style
         converted_sql = sql
         param_count = len(first_param)
         
         if isinstance(sql, str):
-            for i in range(param_count):
-                converted_sql = converted_sql.replace(f":{i+1}",
-                    "?" if self.out_style == "qmark" else f"${i+1}")
+            if self.out_style == "qmark":
+                converted_sql = converted_sql.replace("$", "?")
+            else:
+                for i in range(param_count, 0, -1):
+                    converted_sql = converted_sql.replace("?", f"${i}")
         else:
             # For bytes
-            for i in range(param_count):
-                pos = str(i+1).encode()
-                converted_sql = converted_sql.replace(b":" + pos,
-                    b"?" if self.out_style == "qmark" else str(f"${i+1}").encode())
+            if self.out_style == "qmark":
+                converted_sql = converted_sql.replace(b"$", b"?")
+            else:
+                for i in range(param_count, 0, -1):
+                    converted_sql = converted_sql.replace(b"?", str(f"${i}").encode())
                     
-        # Convert parameters based on out_style
-        if self.out_style == "numeric":
-            # Convert sequences to dicts with position numbers
-            converted_params = [{i+1: val for i, val in enumerate(param_seq)} 
-                              for param_seq in params_list]
-        else:
-            # Keep as sequences for qmark style
+        # Convert parameters
+        if self.out_style == "qmark":
             converted_params = list(params_list)
+        else:
+            converted_params = [dict(enumerate(p, start=1)) for p in params_list]
             
     return converted_sql, converted_params

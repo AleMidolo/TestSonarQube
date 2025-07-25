@@ -1,63 +1,51 @@
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
-    if default is not None and not isinstance(default, datetime.datetime):
-        raise TypeError("Default must be a datetime.datetime object")
-        
-    # Convert string input to unicode if needed
-    if isinstance(timestr, bytes):
-        timestr = timestr.decode('ascii')
-
+    """Parse a date/time string into a datetime.datetime object."""
+    
     if not isinstance(timestr, str):
-        raise TypeError("Parser must be given a string or character stream, not a %s" % type(timestr).__name__)
-
-    # Initialize result with default or current time
-    res = default or datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-
-    try:
-        # Parse the string using internal _parse method
-        parsed_result = self._parse(timestr, **kwargs)
+        raise TypeError("Parser must be given a string or character stream, not %r" % timestr)
         
-        if isinstance(parsed_result, tuple):
-            # Handle fuzzy_with_tokens case
-            dt, tokens = parsed_result
+    # Default datetime object to use for missing values
+    default_datetime = datetime.datetime.now() if default is None else default
+    
+    try:
+        # Parse the string using _parse() internal method
+        res, tokens = self._parse(timestr, **kwargs)
+        
+        if res is None:
+            raise ParserError("Unknown string format: %s" % timestr)
+            
+        # Get year, month, day values
+        year = res.year if res.year is not None else default_datetime.year
+        month = res.month if res.month is not None else default_datetime.month
+        day = res.day if res.day is not None else default_datetime.day
+        
+        # Get time values
+        hour = res.hour if res.hour is not None else default_datetime.hour
+        minute = res.minute if res.minute is not None else default_datetime.minute
+        second = res.second if res.second is not None else default_datetime.second
+        microsecond = res.microsecond if res.microsecond is not None else default_datetime.microsecond
+        
+        # Handle timezone
+        if ignoretz:
+            tzinfo = None
         else:
-            dt = parsed_result
-            tokens = None
-
-        # Apply timezone info if needed
-        if dt.tzinfo is not None and not ignoretz:
-            if tzinfos is not None:
-                # Handle custom timezone info
+            tzinfo = res.tzinfo
+            
+            # Use tzinfos if provided
+            if tzinfo is not None and tzinfos is not None:
                 if isinstance(tzinfos, dict):
-                    if dt.tzname() in tzinfos:
-                        tz = tzinfos[dt.tzname()]
-                        if isinstance(tz, int):
-                            dt = dt.replace(tzinfo=datetime.timezone(datetime.timedelta(seconds=tz)))
-                        else:
-                            dt = dt.replace(tzinfo=tz)
+                    if tzinfo in tzinfos:
+                        tzinfo = tzinfos[tzinfo]
                 elif callable(tzinfos):
-                    dt = dt.replace(tzinfo=tzinfos(dt.tzname(), dt.utcoffset()))
-        elif ignoretz:
-            dt = dt.replace(tzinfo=None)
-
-        # Merge with default
-        if default is not None:
-            # Replace any unspecified components with defaults
-            current = {
-                'year': dt.year if dt.year != 1900 else default.year,
-                'month': dt.month if dt.month != 1 else default.month,
-                'day': dt.day if dt.day != 1 else default.day,
-                'hour': dt.hour if dt.hour != 0 else default.hour,
-                'minute': dt.minute if dt.minute != 0 else default.minute,
-                'second': dt.second if dt.second != 0 else default.second,
-                'microsecond': dt.microsecond if dt.microsecond != 0 else default.microsecond,
-            }
-            dt = dt.replace(**current)
-
-        if tokens is not None:
-            return dt, tokens
-        return dt
-
-    except ValueError as e:
-        raise ParserError(str(e))
-    except OverflowError as e:
-        raise OverflowError("Parsed date exceeds the largest valid C integer on your system")
+                    tzinfo = tzinfos(tzinfo, res.tzoffset)
+                    
+        try:
+            return datetime.datetime(year, month, day, hour, minute, second,
+                                   microsecond, tzinfo=tzinfo)
+        except ValueError as e:
+            raise ParserError(str(e))
+        except OverflowError as e:
+            raise OverflowError(str(e))
+            
+    except Exception as e:
+        raise ParserError("Unknown string format: %s" % timestr)
