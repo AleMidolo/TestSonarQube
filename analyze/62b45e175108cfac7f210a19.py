@@ -26,12 +26,12 @@ def validate_fixity(self, fixity, manifest_files):
         if 'file_path' not in digest or 'hash' not in digest:
             return False
             
-        # Verify file path exists in manifest
+        # Verify file exists in manifest
         if digest['file_path'] not in manifest_files:
             return False
             
-        # Verify hash is a non-empty string
-        if not isinstance(digest['hash'], str) or not digest['hash']:
+        # Verify hash is a string
+        if not isinstance(digest['hash'], str):
             return False
             
     return True

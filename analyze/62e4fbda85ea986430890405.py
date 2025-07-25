@@ -46,44 +46,35 @@ def xargs(
         processes = []
         
         for chunk in batch:
-            if color and sys.platform != 'win32' and hasattr(pty, 'openpty'):
-                # Create a pseudo-terminal for colored output
+            if color and sys.platform != 'win32' and hasattr(os, 'openpty'):
                 master, slave = pty.openpty()
-                process = subprocess.Popen(
-                    (*cmd, *chunk),
-                    stdout=slave,
-                    stderr=slave,
-                    **kwargs
-                )
-                os.close(slave)
-                processes.append((process, master))
-            else:
-                process = subprocess.Popen(
-                    (*cmd, *chunk),
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    **kwargs
-                )
-                processes.append((process, None))
-
-        # Wait for all processes in batch and collect output
-        for process, master in processes:
-            if master is not None:
-                # Read from pseudo-terminal
+                kwargs['stdin'] = slave
+                kwargs['stdout'] = slave
+                kwargs['stderr'] = slave
+            
+            process = subprocess.Popen(
+                [*cmd, *chunk],
+                stdout=subprocess.PIPE if not color else None,
+                stderr=subprocess.STDOUT if not color else None,
+                **kwargs
+            )
+            processes.append((process, master if color else None))
+            
+        # Wait for all processes in batch to complete
+        for process, master_fd in processes:
+            if color and master_fd is not None:
                 output = b''
-                try:
-                    while True:
-                        output += os.read(master, 1024)
-                except OSError:
-                    pass
-                os.close(master)
+                while True:
+                    try:
+                        output += os.read(master_fd, 1024)
+                    except OSError:
+                        break
+                os.close(master_fd)
             else:
-                # Read from pipes
-                stdout, stderr = process.communicate()
-                output = stdout + stderr
+                output, _ = process.communicate()
                 
             retcode = process.wait()
             max_retcode = max(max_retcode, retcode)
-            all_output += output
-
+            all_output += output or b''
+            
     return max_retcode, all_output

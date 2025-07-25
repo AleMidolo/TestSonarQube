@@ -41,3 +41,5 @@ def _convert_non_cli_args(self, parser_name, values_dict):
         except (ValueError, TypeError):
             # Keep original value if conversion fails
             continue
+            
+    return values_dict

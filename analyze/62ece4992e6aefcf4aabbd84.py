@@ -26,7 +26,7 @@ def is_ipv4(target):
         if num < 0 or num > 255:
             return False
             
-        # Check leading zeros
+        # Leading zeros not allowed
         if len(octet) > 1 and octet[0] == '0':
             return False
             

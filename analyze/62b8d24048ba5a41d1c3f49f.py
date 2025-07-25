@@ -21,43 +21,43 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
                 key += tuple(sorted(kwargs.items()))
                 if typed:
                     key += tuple(type(v) for v in kwargs.values())
+            key = hash(key)
             
-            # Get current time
-            now = timer()
+            current_time = timer()
             
             # Check if result in cache and not expired
             if key in cache:
                 result, timestamp = cache[key]
-                if now - timestamp <= ttl:
-                    # Move key to end of LRU
+                if current_time - timestamp <= ttl:
+                    # Move to end of LRU
                     lru.move_to_end(key)
                     return result
                 else:
-                    # Remove expired entry
+                    # Remove expired item
                     del cache[key]
                     del lru[key]
             
-            # Call function and cache result
+            # Calculate new result
             result = func(*args, **kwargs)
             
-            # Remove oldest entry if cache full
-            if maxsize and len(cache) >= maxsize:
-                oldest = next(iter(lru))
-                del cache[oldest]
-                del lru[oldest]
-                
-            # Add new result to cache
-            cache[key] = (result, now)
+            # Add to cache
+            cache[key] = (result, current_time)
             lru[key] = None
             
+            # Remove oldest if over maxsize
+            if len(cache) > maxsize:
+                oldest_key = next(iter(lru))
+                del cache[oldest_key]
+                del lru[oldest_key]
+                
             return result
             
-        # Add clear method to wrapper
-        def clear():
+        # Add cache clear method
+        def clear_cache():
             cache.clear()
             lru.clear()
             
-        wrapper.clear = clear
+        wrapper.clear_cache = clear_cache
         return wrapper
         
     return decorator

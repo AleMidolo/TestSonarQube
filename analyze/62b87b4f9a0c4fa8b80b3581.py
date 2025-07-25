@@ -4,7 +4,7 @@ def scale(self, other=None, recompute=False):
         if hasattr(self, '_scale') and not recompute:
             return self._scale
             
-        # Compute and store scale
+        # Calculate and store scale
         self._scale = sum(self.values())
         return self._scale
         
@@ -16,10 +16,12 @@ def scale(self, other=None, recompute=False):
         if current_scale == 0:
             raise LenaValueError("Cannot rescale histogram with zero scale")
             
-        # Rescale histogram by multiplying all values by ratio
-        scale_ratio = float(other) / current_scale
+        # Calculate scaling factor
+        factor = float(other) / current_scale
+        
+        # Scale all values
         for key in self:
-            self[key] *= scale_ratio
+            self[key] *= factor
             
         # Update stored scale
         self._scale = other

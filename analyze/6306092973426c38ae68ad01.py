@@ -4,18 +4,13 @@ def get_deprecated_args(self):
     """
     deprecated_args = {
         'generator': 'site',
-        'maxlag': None,
-        'useHtml': None,
-        'nopreload': None,
+        'followRedirects': 'follow_redirects',
+        'returndict': 'return_dict', 
+        'encodeTitle': 'encode_title',
+        'notitle': 'no_title',
+        'noredirect': 'no_redirect',
         'throttle': None,
-        'sysop': 'user',
+        'sysop': None,
         'async': None,
-        'safe_title': None,
-        'compress': None,
-        'max_retries': None,
-        'retry_wait': None,
-        'ssl': None,
-        'verify': None,
-        'protocol': 'scheme'
     }
     return deprecated_args

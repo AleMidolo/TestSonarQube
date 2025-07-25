@@ -19,6 +19,4 @@ def from_ticks(cls, ticks, tz=None):
     seconds = total_seconds % 60
 
     # Create time object with calculated components
-    time = cls(hours, minutes, seconds, microseconds=microseconds, tzinfo=tz)
-    
-    return time
+    return cls(hours, minutes, seconds, microseconds=microseconds*1000 + nanoseconds//1000, tzinfo=tz)

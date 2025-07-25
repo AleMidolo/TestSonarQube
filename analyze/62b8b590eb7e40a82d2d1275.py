@@ -7,52 +7,45 @@ def _legacy_mergeOrderings(orderings):
     
     # Process each ordering list
     for ordering in orderings:
-        # Track position of each item in current ordering
+        # Track position of each item in this ordering
         for i, item in enumerate(ordering):
-            # If item seen before, verify suffix matches
-            if item in item_positions:
-                # Get suffix from current ordering
-                curr_suffix = ordering[i:]
-                
-                # Get suffix from previous ordering
-                for prev_ordering in orderings:
-                    if item in prev_ordering:
-                        prev_i = prev_ordering.index(item)
-                        prev_suffix = prev_ordering[prev_i:]
-                        
-                        # Suffixes must match
-                        if curr_suffix != prev_suffix:
-                            raise ValueError("Inconsistent orderings")
+            if item not in item_positions:
+                item_positions[item] = []
+            item_positions[item].append(i)
             
             # Add dependencies - each item must come after previous items
             if i > 0:
                 prev = ordering[i-1]
-                if item not in dependencies:
-                    dependencies[item] = set()
-                dependencies[item].add(prev)
+                if prev not in dependencies:
+                    dependencies[prev] = set()
+                dependencies[prev].add(item)
                 
-            # Update position
-            item_positions[item] = i
-            
-    # Build result by processing items with no dependencies first
-    result = []
-    processed = set()
+    # Get all unique items
+    all_items = set(item_positions.keys())
     
-    while item_positions:
-        # Find items with no unprocessed dependencies
-        available = []
-        for item in item_positions:
-            if item not in dependencies or \
-               all(dep in processed for dep in dependencies[item]):
-                available.append(item)
-                
+    # Initialize result list
+    result = []
+    
+    # Keep track of items we've added
+    added = set()
+    
+    # Helper function to check if an item can be added
+    def can_add(item):
+        if item in dependencies:
+            # Check that all dependencies have been added
+            return all(dep in added for dep in dependencies[item])
+        return True
+        
+    # Add items until we've used them all
+    while len(result) < len(all_items):
+        # Find items that can be added
+        available = [item for item in all_items if item not in added and can_add(item)]
+        
         if not available:
-            raise ValueError("Circular dependency")
+            raise ValueError("Circular dependency detected")
             
-        # Add item with lowest position
-        next_item = min(available, key=lambda x: item_positions[x])
-        result.append(next_item)
-        processed.add(next_item)
-        del item_positions[next_item]
+        # Add the first available item
+        result.append(available[0])
+        added.add(available[0])
         
     return result

@@ -15,6 +15,6 @@ def fetch_content_type(url: str) -> Optional[str]:
         # Return content type if found, otherwise None
         return content_type if content_type else None
         
-    except requests.RequestException:
+    except requests.exceptions.RequestException:
         # Return None if request fails
         return None

@@ -1,35 +1,28 @@
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
-    """
-    छवि के हाइपरलिंक (href) को उसके घटक भागों में विभाजित करें।
-
-    :param image_href: छवि का हाइपरलिंक (href)
-    :returns: एक ट्यूपल (tuple) के रूप में परिणाम, जिसमें (image_id, netloc, use_ssl) शामिल हैं
-    :raises ValueError: यदि हाइपरलिंक अमान्य है
-    """
     from urllib.parse import urlparse
-
+    
     try:
-        # Parse the URL
+        # Parse the URL into components
         parsed = urlparse(image_href)
         
-        # Check if scheme is http or https
-        if parsed.scheme not in ['http', 'https']:
-            raise ValueError("Invalid URL scheme")
-            
-        # Determine if SSL is used
-        use_ssl = parsed.scheme == 'https'
-        
-        # Get the netloc (hostname)
+        # Get the netloc (domain)
         netloc = parsed.netloc
+        
+        # Determine if SSL should be used based on scheme
+        use_ssl = parsed.scheme == 'https'
         
         # Extract image ID from path
         path_parts = parsed.path.strip('/').split('/')
         if not path_parts or not path_parts[-1]:
-            raise ValueError("Invalid image path")
+            raise ValueError("Invalid image reference - missing image ID")
             
         image_id = path_parts[-1]
         
+        # Validate components
+        if not netloc or not image_id:
+            raise ValueError("Invalid image reference - missing required components")
+            
         return (image_id, netloc, use_ssl)
         
     except Exception as e:
-        raise ValueError(f"Invalid image URL: {str(e)}")
+        raise ValueError(f"Invalid image reference: {str(e)}")

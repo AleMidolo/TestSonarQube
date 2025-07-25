@@ -5,7 +5,7 @@ def get_parser_option_specs(self, command_name):
     :param command_name: कमांड का नाम (जैसे main, virsh, ospd, आदि...)
     :return: सभी कमांड विकल्पों की सूची
     """
-    # Get the parser object for the specified command
+    # Get the parser for the specified command
     parser = self.parsers.get(command_name)
     
     if not parser:
@@ -14,34 +14,25 @@ def get_parser_option_specs(self, command_name):
     # Initialize empty list to store options
     options = []
     
-    # Iterate through all options in the parser
+    # Get all options from the parser
     for action in parser._actions:
         # Skip help action
         if isinstance(action, argparse._HelpAction):
             continue
             
-        # Get option strings (short and long forms)
+        # Get option strings (both short and long forms)
         opt_strings = action.option_strings
         
-        # Get option type
-        opt_type = action.type.__name__ if action.type else 'str'
-        
-        # Get default value
-        default = action.default
-        
-        # Get help text
-        help_text = action.help
-        
-        # Get if required
-        required = action.required
-        
-        # Create option spec dictionary
+        # Get option details
         option_spec = {
-            'name': opt_strings,
-            'type': opt_type,
-            'default': default,
-            'help': help_text,
-            'required': required
+            'name': action.dest,
+            'flags': opt_strings,
+            'help': action.help,
+            'default': action.default,
+            'required': action.required,
+            'type': str(action.type) if action.type else None,
+            'choices': action.choices,
+            'nargs': action.nargs
         }
         
         options.append(option_spec)

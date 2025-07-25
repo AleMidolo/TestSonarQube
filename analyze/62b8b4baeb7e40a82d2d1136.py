@@ -30,8 +30,8 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             except Invalid as e:
                 errors.append(str(e))
         
-        # Check required attributes
         else:
+            # Check required attributes
             try:
                 getattr(candidate, name)
             except AttributeError:
@@ -41,6 +41,6 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
-        raise Invalid('\n'.join(errors))
+        raise Invalid(errors)
         
     return True

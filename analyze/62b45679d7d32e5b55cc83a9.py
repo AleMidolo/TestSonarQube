@@ -5,6 +5,12 @@ def parser_flags(parser):
     """
     flags = []
     for action in parser._actions:
-        if len(action.option_strings) > 0:
-            flags.extend(action.option_strings)
+        # Skip help action
+        if action.dest == 'help':
+            continue
+            
+        # Get all option strings (flags) for this argument
+        flags.extend(action.option_strings)
+        
+    # Sort flags and join with spaces
     return ' '.join(sorted(flags))

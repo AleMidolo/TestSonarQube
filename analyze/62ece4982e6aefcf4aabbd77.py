@@ -38,7 +38,6 @@ def parse_frequency(frequency):
         return datetime.timedelta(days=number * 30)
     elif unit in ['साल', 'वर्ष']:
         return datetime.timedelta(days=number * 365)
-    
-    # Create timedelta with mapped unit
-    kwargs = {unit_mapping[unit]: number}
-    return datetime.timedelta(**kwargs)
+    else:
+        # Create timedelta with mapped unit
+        return datetime.timedelta(**{unit_mapping[unit]: number})

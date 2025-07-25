@@ -4,8 +4,7 @@ def _inline_r_setup(code: str) -> str:
     options(warn=-1)  # Suppress warnings
     options(width=120)  # Set output width
     options(scipen=10)  # Reduce scientific notation
-    options(digits.secs=3)  # Set time precision
-    options(show.error.messages=TRUE)  # Show error messages
+    options(digits.secs=3)  # Display milliseconds in times
     """
     
     # Combine setup code with user code
