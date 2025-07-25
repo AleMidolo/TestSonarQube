@@ -11,13 +11,17 @@ def make_parsers():
     subparsers = parser.add_subparsers(dest='command', help='可用命令')
     
     # 创建子解析器
-    # 示例子命令1
-    parser_a = subparsers.add_parser('command-a', help='命令A的帮助信息')
-    parser_a.add_argument('--arg1', help='参数1的帮助信息')
+    # 添加 add 子命令
+    add_parser = subparsers.add_parser('add', help='添加操作')
+    add_parser.add_argument('x', type=int, help='第一个数')
+    add_parser.add_argument('y', type=int, help='第二个数')
     
-    # 示例子命令2 
-    parser_b = subparsers.add_parser('command-b', help='命令B的帮助信息')
-    parser_b.add_argument('--arg2', help='参数2的帮助信息')
+    # 添加 list 子命令
+    list_parser = subparsers.add_parser('list', help='列表操作')
+    list_parser.add_argument('-a', '--all', action='store_true', help='显示所有内容')
     
-    # 返回解析器元组
+    # 添加 delete 子命令
+    delete_parser = subparsers.add_parser('delete', help='删除操作')
+    delete_parser.add_argument('id', type=int, help='要删除的ID')
+    
     return parser, subparsers

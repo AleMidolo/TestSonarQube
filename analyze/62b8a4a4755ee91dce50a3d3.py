@@ -11,18 +11,23 @@ def fromutc(self, dt):
 
     utc = dt.replace(tzinfo=None)
 
-    # 计算本地时间
-    local = utc + self.utcoffset(utc)
+    # 计算本地时间的偏移量
+    local_offset = self._transition_info[self._find_trans_idx(utc)][0]
+    
+    # 转换为本地时间
+    local_dt = utc + local_offset
 
     # 检查是否在DST转换期间
-    if self.dst(local) != self.dst(utc):
-        # 在DST转换期间,重新计算本地时间
-        local = utc + self.utcoffset(local)
-        
-        # 再次检查DST状态
-        if self.dst(local) != self.dst(utc):
-            # 如果仍然不匹配,使用第一次计算的结果
-            local = utc + self.utcoffset(utc)
-
-    # 设置正确的时区信息
-    return local.replace(tzinfo=self)
+    idx = self._find_trans_idx(local_dt)
+    trans_info = self._transition_info[idx]
+    
+    # 检查是否存在歧义
+    if idx > 0:
+        prev_info = self._transition_info[idx - 1]
+        if prev_info[0] > trans_info[0]:  # 从DST转换到标准时间
+            fold_delta = prev_info[0] - trans_info[0]
+            if local_dt - fold_delta <= local_dt < local_dt + fold_delta:
+                # 在折叠期间
+                return local_dt.replace(fold=1, tzinfo=self)
+    
+    return local_dt.replace(tzinfo=self)

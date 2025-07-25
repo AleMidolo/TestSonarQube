@@ -15,7 +15,7 @@ def _fromutc(self, dt):
     # 获取UTC偏移量
     utc_offset = self.utcoffset(dt)
     if utc_offset is None:
-        raise ValueError("fromutc() requires a non-None utcoffset()")
+        return dt
 
     # 计算本地时间
     local_dt = dt + utc_offset
@@ -23,7 +23,7 @@ def _fromutc(self, dt):
     # 获取dst偏移量
     dst_offset = self.dst(local_dt)
     if dst_offset is None:
-        raise ValueError("fromutc() requires a non-None dst()")
+        return local_dt
 
-    # 调整最终时间
+    # 计算最终时间(考虑夏令时)
     return local_dt + dst_offset

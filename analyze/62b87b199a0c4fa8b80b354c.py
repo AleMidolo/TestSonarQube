@@ -10,11 +10,17 @@ def _get_seq_with_type(seq, bufsize=None):
     
     # 如果是迭代器或生成器,转换为列表
     if hasattr(seq, '__iter__'):
-        if bufsize is None:
-            return list(seq), list
-        else:
+        if bufsize is not None:
             # 如果指定了bufsize,只获取指定长度
-            return list(itertools.islice(seq, bufsize)), list
+            seq_list = []
+            for i, item in enumerate(seq):
+                if i >= bufsize:
+                    break
+                seq_list.append(item)
+            return seq_list, list
+        else:
+            # 否则获取全部
+            return list(seq), list
             
-    # 如果不是序列类型或迭代器,抛出异常
-    raise TypeError(f"'{type(seq).__name__}' object is not a sequence or iterator")
+    # 如果不是序列也不是可迭代对象,包装成列表
+    return [seq], list

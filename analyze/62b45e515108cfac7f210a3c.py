@@ -15,12 +15,11 @@ def initialize(self):
         "extension": "000",
         "description": "OCFL Storage Root",
         "layout": {
-            "type": "flat",
-            "pattern": "^[a-f0-9]{2}/[a-f0-9]{2}/[a-f0-9]{2}/.*$"
+            "type": "flat" 
         }
     }
     
-    layout_path = os.path.join(self.root_path, "ocfl_layout.json") 
+    layout_path = os.path.join(self.root_path, "ocfl_layout.json")
     with open(layout_path, "w") as f:
         json.dump(layout, f, indent=2)
         

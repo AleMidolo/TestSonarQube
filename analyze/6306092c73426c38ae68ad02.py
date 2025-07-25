@@ -28,5 +28,5 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
             # 从参数字典中删除旧参数
             if old_arg in cli_args:
                 del cli_args[old_arg]
-            if old_arg in answer_file_args:
+            if old_arg in answer_file_args:  
                 del answer_file_args[old_arg]

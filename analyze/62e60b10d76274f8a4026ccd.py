@@ -11,14 +11,12 @@ def data(self, *keys):
     
     # 如果没有提供keys,返回所有数据
     if not keys:
-        return self._data.copy()
+        return self._data
         
     # 处理提供的keys
     for key in keys:
         if isinstance(key, int):
             # 处理索引
-            if key < 0:
-                key = len(self._data) + key
             if key < 0 or key >= len(self._data):
                 raise IndexError(f"Index {key} is out of range")
             field_name = list(self._data.keys())[key]

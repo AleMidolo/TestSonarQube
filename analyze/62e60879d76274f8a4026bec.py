@@ -8,35 +8,51 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None,
     # Initialize parameters dictionary
     parameters = {}
     
-    # Add optional parameters if provided
-    if bookmarks is not None:
+    # Add bookmarks if provided
+    if bookmarks:
         parameters["bookmarks"] = list(bookmarks)
-    if metadata is not None:
+        
+    # Add metadata if provided
+    if metadata:
         parameters["metadata"] = metadata
+        
+    # Add timeout if provided
     if timeout is not None:
         parameters["timeout"] = timeout
+        
+    # Add database name if provided
     if db is not None:
         parameters["db"] = db
+        
+    # Add impersonated user if provided
     if imp_user is not None:
         parameters["imp_user"] = imp_user
-        
-    # Set up hooks
-    if dehydration_hooks is None:
-        dehydration_hooks = {}
-    if hydration_hooks is None:
-        hydration_hooks = {}
-        
-    # Create transaction context
-    tx_context = {
+
+    # Set up dehydration hooks
+    if dehydration_hooks:
+        self._dehydration_hooks = dehydration_hooks
+    else:
+        self._dehydration_hooks = {}
+
+    # Set up hydration hooks
+    if hydration_hooks:
+        self._hydration_hooks = hydration_hooks
+    else:
+        self._hydration_hooks = {}
+
+    # Create BEGIN transaction message
+    message = {
         "mode": mode,
-        "parameters": parameters,
-        "dehydration_hooks": dehydration_hooks,
-        "hydration_hooks": hydration_hooks
+        "parameters": parameters
     }
-    
+
     # Create and return Response object with handlers
-    response = Response(tx_context)
-    for key, handler in handlers.items():
-        response.add_handler(key, handler)
+    response = Response(message, **handlers)
+    
+    # Apply hydration/dehydration hooks to response
+    if self._hydration_hooks:
+        response.set_hydration_hooks(self._hydration_hooks)
+    if self._dehydration_hooks:
+        response.set_dehydration_hooks(self._dehydration_hooks)
         
     return response

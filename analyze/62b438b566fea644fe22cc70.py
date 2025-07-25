@@ -13,10 +13,10 @@ _borgmatic()
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     
     # 主要命令选项
-    opts="init create check prune list info export-tar extract mount umount config validate"
+    opts="init create prune check list info export-tar extract mount umount config validate"
     
     # 通用选项
-    common_opts="--config --verbosity --syslog-verbosity --log-file --monitoring-verbosity --help"
+    common_opts="--config --verbosity --log-file --help --version"
     
     # 根据前一个单词提供不同的补全
     case "${prev}" in
@@ -28,8 +28,8 @@ _borgmatic()
             COMPREPLY=( $(compgen -f -- ${cur}) )
             return 0
             ;;
-        --verbosity|--syslog-verbosity|--monitoring-verbosity)
-            COMPREPLY=( $(compgen -W "0 1 2 3" -- ${cur}) )
+        --verbosity)
+            COMPREPLY=( $(compgen -W "0 1 2" -- ${cur}) )
             return 0
             ;;
         --log-file)
@@ -37,13 +37,13 @@ _borgmatic()
             return 0
             ;;
         *)
-            # 如果当前输入以破折号开头，提供选项补全
+            # 如果当前输入以破折号开头,提供通用选项
             if [[ ${cur} == -* ]] ; then
                 COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
                 return 0
             fi
             
-            # 否则提供命令补全
+            # 否则提供主要命令
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;

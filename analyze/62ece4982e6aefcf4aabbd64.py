@@ -22,8 +22,8 @@ def strip_root(path, root):
     # 移除root
     stripped_path = path[len(root):]
     
-    # 如果结果为空,返回'.'表示当前目录
-    if not stripped_path:
-        return '.'
+    # 移除开头的/
+    if stripped_path.startswith('/'):
+        stripped_path = stripped_path[1:]
         
     return stripped_path

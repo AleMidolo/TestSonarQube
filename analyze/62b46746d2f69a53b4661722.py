@@ -1,5 +1,5 @@
 def absorb(self, args):
-    # 创建结果列表
+    # 初始化结果列表
     result = list(args)
     changed = True
     
@@ -19,38 +19,39 @@ def absorb(self, args):
                 expr2 = result[j]
                 
                 # 检查吸收律 A & (A | B) = A
-                if (expr1.is_and() and expr2.is_or() and 
-                    any(t1 == t2 for t1 in expr1.terms for t2 in expr2.terms)):
-                    result[i] = expr1
-                    result[j] = None
-                    changed = True
+                if (isinstance(expr1, str) and isinstance(expr2, tuple) and 
+                    len(expr2) == 3 and expr2[1] == '|' and
+                    expr1 == expr2[0]):
+                    if expr1 not in result:
+                        result.append(expr1)
+                        changed = True
                 
-                # 检查吸收律 A | (A & B) = A  
-                elif (expr1.is_or() and expr2.is_and() and
-                      any(t1 == t2 for t1 in expr1.terms for t2 in expr2.terms)):
-                    result[i] = expr1
-                    result[j] = None
-                    changed = True
-                    
+                # 检查吸收律 A | (A & B) = A        
+                if (isinstance(expr1, str) and isinstance(expr2, tuple) and
+                    len(expr2) == 3 and expr2[1] == '&' and
+                    expr1 == expr2[0]):
+                    if expr1 not in result:
+                        result.append(expr1)
+                        changed = True
+                        
                 # 检查负吸收律 A & (~A | B) = A & B
-                elif (expr1.is_and() and expr2.is_or() and
-                      any(t1.is_not() and t1.term == t2 
-                          for t1 in expr2.terms for t2 in expr1.terms)):
-                    new_terms = [t for t in expr2.terms if not any(
-                        t.is_not() and t.term == t2 for t2 in expr1.terms)]
-                    result[j] = self.make_and(expr1.terms + new_terms)
-                    changed = True
-                    
+                if (isinstance(expr1, str) and isinstance(expr2, tuple) and
+                    len(expr2) == 3 and expr2[1] == '|' and
+                    isinstance(expr2[0], tuple) and len(expr2[0]) == 2 and
+                    expr2[0][0] == '~' and expr2[0][1] == expr1):
+                    new_expr = (expr1, '&', expr2[2])
+                    if new_expr not in result:
+                        result.append(new_expr)
+                        changed = True
+                        
                 # 检查负吸收律 A | (~A & B) = A | B
-                elif (expr1.is_or() and expr2.is_and() and
-                      any(t1.is_not() and t1.term == t2
-                          for t1 in expr2.terms for t2 in expr1.terms)):
-                    new_terms = [t for t in expr2.terms if not any(
-                        t.is_not() and t.term == t2 for t2 in expr1.terms)]
-                    result[j] = self.make_or(expr1.terms + new_terms)
-                    changed = True
-                    
-        # 移除None值并去重
-        result = list(set(x for x in result if x is not None))
-        
+                if (isinstance(expr1, str) and isinstance(expr2, tuple) and
+                    len(expr2) == 3 and expr2[1] == '&' and
+                    isinstance(expr2[0], tuple) and len(expr2[0]) == 2 and
+                    expr2[0][0] == '~' and expr2[0][1] == expr1):
+                    new_expr = (expr1, '|', expr2[2])
+                    if new_expr not in result:
+                        result.append(new_expr)
+                        changed = True
+                        
     return result

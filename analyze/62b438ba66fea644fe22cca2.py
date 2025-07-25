@@ -11,38 +11,33 @@ def deep_merge_nodes(nodes):
             merged[key] = (key_node, value_node)
             continue
             
-        # Get existing value node for this key
-        existing_value_node = merged[key][1]
+        # If key exists, we need to merge
+        existing_value = merged[key][1]
         
-        # If both nodes are mapping nodes, merge them
-        if (isinstance(value_node, type(existing_value_node)) and 
-            hasattr(value_node, 'value') and 
-            hasattr(existing_value_node, 'value')):
+        # If both nodes are MappingNodes, do a deep merge
+        if (isinstance(existing_value, type(value_node)) and 
+            hasattr(existing_value, 'value') and 
+            hasattr(value_node, 'value')):
             
-            # Convert inner nodes to dict for merging
-            existing_dict = {k.value: v for k,v in existing_value_node.value}
-            new_dict = {k.value: v for k,v in value_node.value}
+            # Convert existing mapping to dict for easier lookup
+            existing_dict = {k.value: (k,v) for k,v in existing_value.value}
             
-            # Update existing dict with new values
-            existing_dict.update(new_dict)
-            
+            # Merge in new values
+            for k, v in value_node.value:
+                existing_dict[k.value] = (k,v)
+                
             # Convert back to list of tuples
-            merged_value = [
-                (ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) 
-                for k,v in existing_dict.items()
-            ]
+            merged_value = list(existing_dict.values())
             
-            # Create new mapping node with merged values
-            merged_node = type(value_node)(
+            # Create new MappingNode with merged values
+            merged[key] = (key_node, type(value_node)(
                 tag=value_node.tag,
                 value=merged_value
-            )
+            ))
             
-            merged[key] = (key_node, merged_node)
-            
-        # If not both mapping nodes, take the latest value
+        # If not both MappingNodes, keep the latest value
         else:
             merged[key] = (key_node, value_node)
-            
-    # Return list of merged tuples
+    
+    # Convert merged dict back to list of tuples
     return list(merged.values())

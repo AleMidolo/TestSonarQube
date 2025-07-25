@@ -22,7 +22,7 @@ def regex_dict(item):
         # 在开头和结尾添加 ^ 和 $
         regex_key = '^' + re.escape(key).replace('\\*', '.*') + '$'
         
-        # 将转换后的正则表达式键和原值添加到结果字典
+        # 将转换后的键和原值存入新字典
         result[regex_key] = value
         
     return result

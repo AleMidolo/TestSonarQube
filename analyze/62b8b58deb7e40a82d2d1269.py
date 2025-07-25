@@ -16,8 +16,5 @@ def directlyProvidedBy(object):
         # 如果对象是类,返回空声明
         return _empty
         
-    # 返回对象的provides声明
+    # 返回对象的provides属性
     return provides
-
-# 定义空声明常量
-_empty = Declaration()
