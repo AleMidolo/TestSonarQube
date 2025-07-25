@@ -3,7 +3,7 @@ def absorb(self, args):
     result = list(args)
     changed = True
     
-    # 持续应用吸收律直到没有变化
+    # 循环直到没有变化
     while changed:
         changed = False
         n = len(result)
@@ -21,15 +21,13 @@ def absorb(self, args):
                 # 检查吸收律 A & (A | B) = A
                 if (expr1.is_and() and expr2.is_or() and 
                     any(t1 == t2 for t1 in expr1.terms for t2 in expr2.terms)):
-                    result[i] = expr1
-                    result[j] = None
+                    result[j] = expr1
                     changed = True
-                
+                    
                 # 检查吸收律 A | (A & B) = A  
                 elif (expr1.is_or() and expr2.is_and() and
                       any(t1 == t2 for t1 in expr1.terms for t2 in expr2.terms)):
-                    result[i] = expr1
-                    result[j] = None
+                    result[j] = expr1
                     changed = True
                     
                 # 检查负吸收律 A & (~A | B) = A & B
@@ -38,7 +36,7 @@ def absorb(self, args):
                           for t1 in expr2.terms for t2 in expr1.terms)):
                     new_terms = [t for t in expr2.terms if not any(
                         t.is_not() and t.term == t2 for t2 in expr1.terms)]
-                    result[j] = self.make_and(expr1.terms + new_terms)
+                    result[j] = expr1 & Expression.make_and(new_terms)
                     changed = True
                     
                 # 检查负吸收律 A | (~A & B) = A | B
@@ -47,10 +45,8 @@ def absorb(self, args):
                           for t1 in expr2.terms for t2 in expr1.terms)):
                     new_terms = [t for t in expr2.terms if not any(
                         t.is_not() and t.term == t2 for t2 in expr1.terms)]
-                    result[j] = self.make_or(expr1.terms + new_terms)
+                    result[j] = expr1 | Expression.make_or(new_terms)
                     changed = True
                     
-        # 移除None值并去重
-        result = list(set(x for x in result if x is not None))
-        
-    return result
+    # 移除重复项并返回
+    return list(set(result))

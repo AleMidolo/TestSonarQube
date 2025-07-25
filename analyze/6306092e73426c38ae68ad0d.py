@@ -4,8 +4,8 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
 
     构建复杂参数类型
 
-    :param subcommand: 命令名称
-    :param type_name: 复杂类型名称 
+    :param subcommand: 命令名称 
+    :param type_name: 复杂类型名称
     :param option_name: 选项名称
     :param spec_option: 选项的具体规范
     :return: 复杂类型实例

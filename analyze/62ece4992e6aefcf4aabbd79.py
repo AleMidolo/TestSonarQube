@@ -11,7 +11,7 @@ def make_find_paths(find_paths):
             result.append(path)
             continue
             
-        # Convert normal paths to glob pattern
+        # Convert regular paths to glob pattern
         # Add **/* prefix and */** suffix to match file anywhere in directory tree
         glob_path = f'sh:**/*{path}*/**'
         result.append(glob_path)

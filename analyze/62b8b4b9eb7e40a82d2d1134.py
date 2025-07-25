@@ -6,18 +6,22 @@ def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
     # 获取类的所有属性
     attributes = {}
     
+    # 如果all为True,获取所有属性
     if all:
-        # 获取所有属性,包括继承的
         for name, attr in self.__class__.__dict__.items():
-            if not name.startswith('_'):  # 排除私有属性
-                doc = getattr(attr, '__doc__', None)
-                attributes[name] = doc or ''
+            # 跳过私有属性和特殊方法
+            if not name.startswith('_'):
+                # 获取属性的文档字符串作为描述
+                desc = attr.__doc__ if hasattr(attr, '__doc__') else ''
+                attributes[name] = desc
+                
+    # 如果all为False,只获取接口定义的属性
     else:
-        # 只获取接口定义的属性
-        for name in dir(self):
-            if not name.startswith('_'):  # 排除私有属性
-                attr = getattr(self, name)
-                if hasattr(attr, '__doc__'):
-                    attributes[name] = attr.__doc__ or ''
+        # 获取类实现的接口
+        for interface in self.__class__.__bases__:
+            for name, attr in interface.__dict__.items():
+                if not name.startswith('_'):
+                    desc = attr.__doc__ if hasattr(attr, '__doc__') else ''
+                    attributes[name] = desc
                     
     return attributes

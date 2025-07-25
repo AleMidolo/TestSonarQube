@@ -12,7 +12,7 @@ def validate_key(key):
     
     class ValidationError(Exception):
         pass
-
+        
     # 键的正则表达式模式:
     # - 只能包含字母、数字、下划线
     # - 必须以字母开头

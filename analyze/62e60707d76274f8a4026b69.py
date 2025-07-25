@@ -27,10 +27,9 @@ def point_type(name, fields, srid_map):
         
     def __repr__(self):
         values = [getattr(self, field) for field in fields]
-        fields_str = ', '.join(f'{f}={v!r}' for f, v in zip(fields, values))
         if self.srid is not None:
-            fields_str += f', srid={self.srid!r}'
-        return f'{name}({fields_str})'
+            values.append(f"srid={self.srid}")
+        return f"{name}({', '.join(map(str, values))})"
     
     class_attrs['__init__'] = __init__
     class_attrs['__repr__'] = __repr__

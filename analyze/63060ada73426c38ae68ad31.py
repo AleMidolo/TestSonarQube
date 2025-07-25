@@ -28,8 +28,8 @@ def _convert_non_cli_args(self, parser_name, values_dict):
                 arg_type = action.type
                 break
                 
-        # 如果找到类型定义则进行转换
-        if arg_type:
+        # 如果找到类型定义且不是str,进行类型转换
+        if arg_type and arg_type != str:
             try:
                 # 处理列表类型
                 if isinstance(value, list):

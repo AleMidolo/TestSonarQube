@@ -8,11 +8,11 @@ def identify_request(request: RequestType):
     except (json.JSONDecodeError, AttributeError):
         pass
 
-    # Try XML if JSON fails
+    # Try to parse as XML if JSON fails
     try:
-        xml_data = ET.fromstring(request.body)
+        xml_tree = ET.fromstring(request.body)
         # Check if root tag is Magic_ENV_TAG
-        if xml_data.tag == 'Magic_ENV_TAG':
+        if xml_tree.tag == 'Magic_ENV_TAG':
             return True
     except (ET.ParseError, AttributeError):
         pass

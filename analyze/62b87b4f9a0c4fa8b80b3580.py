@@ -11,5 +11,6 @@ def integral(bins, edges):
         # 计算每个bin的宽度
         width = edges[i + 1] - edges[i]
         # 计算每个矩形的面积并累加
-        total += bins[i] * width
+        area = bins[i] * width
+        total += area
     return total

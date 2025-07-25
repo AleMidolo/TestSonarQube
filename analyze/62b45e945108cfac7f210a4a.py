@@ -14,11 +14,11 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
         num_objects += 1
         
         try:
-            # 验证对象完整性
+            # 验证对象
             if validate_objects:
                 obj.validate()
                 
-            # 检查摘要值
+            # 检查摘要
             if check_digests:
                 stored_digest = obj.get_digest()
                 calculated_digest = obj.calculate_digest()

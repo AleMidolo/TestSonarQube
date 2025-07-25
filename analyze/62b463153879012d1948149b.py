@@ -9,14 +9,14 @@ def match_file_by_prefix(prefix, file_path):
     参数
     ----------
     prefix: str  
-        文件名的前缀
+      文件名的前缀
     file_path: str
-        文件路径
+      文件路径
 
     返回值
     -------
     bool
-        True - 文件属于指定的文档包
+      True - 文件属于指定的文档包
     """
     import os
     
@@ -24,7 +24,6 @@ def match_file_by_prefix(prefix, file_path):
     filename = os.path.basename(file_path)
     
     # 检查文件名是否以prefix-或prefix.开头
-    if filename.startswith(prefix + '-') or filename.startswith(prefix + '.'):
+    if filename.startswith(prefix + "-") or filename.startswith(prefix + "."):
         return True
-    
     return False
