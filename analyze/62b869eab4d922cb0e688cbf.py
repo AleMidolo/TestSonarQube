@@ -21,5 +21,6 @@ def generate_default_observer_schema(app):
                     'template': resource.get('spec', {}).get('template', {})
                 }
             }
+            resource['observer'] = default_schema[resource['kind']]
     
-    return default_schema
+    return app

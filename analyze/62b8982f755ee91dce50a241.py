@@ -1,5 +1,3 @@
-from dateutil.relativedelta import relativedelta
-
 def normalized(self):
     """
     将所有时间单位标准化为整数。
@@ -14,7 +12,7 @@ def normalized(self):
     """
     total_days = int(self.days) + int(self.hours // 24)
     total_hours = int(self.hours % 24)
-    total_minutes = int(self.minutes)
-    total_seconds = int(self.seconds)
+    total_minutes = int(self.minutes) + int(self.seconds // 60)
+    total_seconds = int(self.seconds % 60)
 
     return relativedelta(days=total_days, hours=total_hours, minutes=total_minutes, seconds=total_seconds)

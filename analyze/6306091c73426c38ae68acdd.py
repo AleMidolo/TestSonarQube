@@ -10,7 +10,7 @@ def validate_from_file(cls, yaml_file=None):
 
     required_fields = ['field1', 'field2', 'field3']  # 假设这些是必需字段
 
-    with open(yaml_file, 'r') as file:
+    with open(yaml_file, 'r', encoding='utf-8') as file:
         data = yaml.safe_load(file)
 
     missing_fields = [field for field in required_fields if field not in data]

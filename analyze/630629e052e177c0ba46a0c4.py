@@ -15,8 +15,8 @@ def parse_diaspora_webfinger(document: str) -> Dict:
         data = json.loads(document)
         if isinstance(data, dict) and 'links' in data:
             for link in data['links']:
-                if 'rel' in link and link['rel'] == 'http://webfinger.net/rel/hcard':
-                    return {'hcard_url': link['href']}
+                if link.get('rel') == 'http://webfinger.net/rel/hcard':
+                    return {'hcard_url': link.get('href')}
     except json.JSONDecodeError:
         pass
 

@@ -26,7 +26,7 @@ def _group_files_by_xml_filename(source, xmls, files):
         grouped_files[xml_filename] = []
 
         for file in files:
-            if file.endswith('.xml') and file.startswith(xml_filename[:-4]):  # Match based on filename without .xml
+            if file.endswith('.xml') and file.startswith(xml_filename[:-4]):  # Match based on XML filename
                 grouped_files[xml_filename].append(file)
 
     return grouped_files

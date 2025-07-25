@@ -8,16 +8,11 @@ def retrieve_diaspora_host_meta(host):
     import requests
     from lxml import etree
 
-    # Construct the host-meta URL
-    host_meta_url = f"https://{host}/host-meta"
+    url = f"https://{host}/host-meta"
+    response = requests.get(url)
 
-    # Send a GET request to the host-meta URL
-    response = requests.get(host_meta_url)
+    if response.status_code != 200:
+        raise Exception(f"Failed to retrieve host-meta for {host}: {response.status_code}")
 
-    # Check if the request was successful
-    if response.status_code == 200:
-        # Parse the response content as XML
-        xrd = etree.fromstring(response.content)
-        return xrd
-    else:
-        response.raise_for_status()
+    xrd = etree.fromstring(response.content)
+    return xrd

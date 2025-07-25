@@ -17,5 +17,4 @@ def fromutc(self, dt):
         raise ValueError("The datetime is ambiguous in the new timezone")
 
     # Return the datetime in the new timezone
-    new_dt = utc_dt.astimezone(self)
-    return new_dt
+    return utc_dt.astimezone(self)

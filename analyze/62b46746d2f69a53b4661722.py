@@ -18,28 +18,23 @@ def absorb(self, args):
     for expr in args:
         # Apply Absorption Law
         if isinstance(expr, tuple) and len(expr) == 3:
-            op1, operator, op2 = expr
-            if operator == '&':
-                if op1 == op2 or (op1 == 'A' and op2 == ('A', '|', 'B')) or (op2 == 'A' and op1 == ('A', '|', 'B')):
-                    new_args.append(op1)
-                    continue
-            elif operator == '|':
-                if op1 == op2 or (op1 == 'A' and op2 == ('A', '&', 'B')) or (op2 == 'A' and op1 == ('A', '&', 'B')):
-                    new_args.append(op1)
-                    continue
-        
-        # Apply Negative Absorption Law
-        if isinstance(expr, tuple) and len(expr) == 3:
-            op1, operator, op2 = expr
-            if operator == '&':
-                if op1 == ('~', op2) or op2 == ('~', op1):
-                    new_args.append(('&', op1, op2))
-                    continue
-            elif operator == '|':
-                if op1 == ('~', op2) or op2 == ('~', op1):
-                    new_args.append(('|', op1, op2))
-                    continue
-        
-        new_args.append(expr)
-    
+            a, op, b = expr
+            if op == '&':
+                if (a == b) or (b == ('|', a)):
+                    new_args.append(a)
+                elif (a == ('|', b)):
+                    new_args.append(a)
+                elif (a == ('~', b)):
+                    new_args.append(('&', a, b))
+                else:
+                    new_args.append(expr)
+            elif op == '|':
+                if (a == b) or (b == ('&', a)):
+                    new_args.append(a)
+                elif (a == ('~', b)):
+                    new_args.append(('|', a, b))
+                else:
+                    new_args.append(expr)
+        else:
+            new_args.append(expr)
     return new_args

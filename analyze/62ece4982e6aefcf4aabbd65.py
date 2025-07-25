@@ -8,4 +8,4 @@ def parser_flags(parser):
     返回值：
       参数标志组成的以空格分隔的字符串
     """
-    return ' '.join(flag for action in parser._actions for flag in action.option_strings)
+    return ' '.join([flag for action in parser._actions for flag in action.option_strings])

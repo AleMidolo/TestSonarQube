@@ -16,14 +16,14 @@ def extostr(cls, e, max_level=30, max_path_level=5):
 
     def format_exception(exc, level, path_level):
         if level > max_level:
-            return f"[... {level - max_level} more levels ...]"
+            return f"{exc.__class__.__name__}: {str(exc)}\n[...]\n"
         
         tb_lines = traceback.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__)
         formatted_tb = ''.join(tb_lines)
 
         if path_level > max_path_level:
-            return f"[... {path_level - max_path_level} more paths ...]"
+            return f"{exc.__class__.__name__}: {str(exc)}\n[...]\n"
 
         return formatted_tb
 
-    return format_exception(e, 1, 1)
+    return format_exception(e, 0, 0)

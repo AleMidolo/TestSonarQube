@@ -13,8 +13,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None,
     :param handlers: 传递给返回的Response对象的处理函数
     :return: Response 对象
     """
-    # Implementation of the method
+    # Implementation of the function goes here
     response = Response()  # Assuming Response is a predefined class
-    # Logic to handle the parameters and start the transaction
-    # ...
+    # Add logic to handle the parameters and create a response
     return response

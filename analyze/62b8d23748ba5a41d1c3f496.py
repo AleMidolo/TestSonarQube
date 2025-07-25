@@ -8,29 +8,32 @@ class LFUCache:
         self.freq = defaultdict(OrderedDict)
         self.min_freq = 0
 
-    def get(self, key):
-        if key not in self.cache:
-            return -1
-        value, freq = self.cache[key]
-        del self.freq[freq][key]
+    def _update(self, key):
+        freq = self.cache[key][1]
+        self.freq[freq].pop(key)
         if not self.freq[freq]:
             del self.freq[freq]
             if self.min_freq == freq:
                 self.min_freq += 1
-        self.freq[freq + 1][key] = value
-        self.cache[key] = (value, freq + 1)
-        return value
+        self.cache[key][1] += 1
+        self.freq[freq + 1][key] = self.cache[key]
+    
+    def get(self, key):
+        if key not in self.cache:
+            return None
+        self._update(key)
+        return self.cache[key][0]
 
     def put(self, key, value):
         if key in self.cache:
-            self.cache[key] = (value, self.cache[key][1])
-            self.get(key)  # Update frequency
+            self.cache[key][0] = value
+            self._update(key)
             return
         if len(self.cache) >= self.maxsize:
             lfu_key, _ = self.freq[self.min_freq].popitem(last=False)
             del self.cache[lfu_key]
-        self.cache[key] = (value, 1)
-        self.freq[1][key] = value
+        self.cache[key] = [value, 1]
+        self.freq[1][key] = self.cache[key]
         self.min_freq = 1
 
 def lfu_cache(maxsize=128, typed=False):
@@ -40,7 +43,7 @@ def lfu_cache(maxsize=128, typed=False):
     保存最多 `maxsize` 个结果。
     """
     def decorator(func):
-        lfu_cache_instance = LFUCache(maxsize)
+        lfu_cache = LFUCache(maxsize)
 
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -48,10 +51,10 @@ def lfu_cache(maxsize=128, typed=False):
                 key = (tuple(args), frozenset(kwargs.items()))
             else:
                 key = tuple(args) + tuple(sorted(kwargs.items()))
-            result = lfu_cache_instance.get(key)
-            if result == -1:
+            result = lfu_cache.get(key)
+            if result is None:
                 result = func(*args, **kwargs)
-                lfu_cache_instance.put(key, result)
+                lfu_cache.put(key, result)
             return result
 
         return wrapper
