@@ -6,10 +6,10 @@ def hydrate_time(nanoseconds, tz=None):
 
     पैरामीटर (Parameters):
     - nanoseconds: समय को नैनोसेकंड में दर्शाने वाला पूर्णांक
-    - tz: समय क्षेत्र (timezone) जिसमें समय को दर्शाना है (डिफ़ॉल्ट: UTC)
+    - tz: समय क्षेत्र (timezone) जिसमें समय को प्रदर्शित करना है (डिफ़ॉल्ट: UTC)
 
     वापसी मान:
-    - समय (datetime object)
+    - समय (datetime ऑब्जेक्ट)
     """
     # Convert nanoseconds to seconds
     seconds = nanoseconds / 1e9

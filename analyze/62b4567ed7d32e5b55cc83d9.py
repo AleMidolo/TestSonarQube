@@ -16,25 +16,37 @@ def deep_merge_nodes(nodes):
                 
                 # Create a dictionary to hold the merged key-value pairs
                 merged_value = {}
-                for k_node, v_node in existing_value:
-                    merged_value[k_node.value] = v_node
                 
-                for k_node, v_node in new_value:
-                    merged_value[k_node.value] = v_node
+                # Add all existing key-value pairs
+                for existing_key_node, existing_val_node in existing_value:
+                    merged_value[existing_key_node.value] = existing_val_node
+                
+                # Add or overwrite with new key-value pairs
+                for new_key_node, new_val_node in new_value:
+                    merged_value[new_key_node.value] = new_val_node
                 
                 # Convert the merged dictionary back to a list of tuples
-                merged_value_list = [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged_value.items()]
+                merged_value_list = [
+                    (ScalarNode(tag='tag:yaml.org,2002:str', value=k), v)
+                    for k, v in merged_value.items()
+                ]
                 
-                # Update the existing MappingNode with the merged values
-                merged_nodes[key] = MappingNode(tag='tag:yaml.org,2002:map', value=merged_value_list)
+                # Create a new MappingNode with the merged values
+                merged_nodes[key] = MappingNode(
+                    tag='tag:yaml.org,2002:map',
+                    value=merged_value_list
+                )
             else:
-                # If either node is not a MappingNode, prefer the new value
+                # If either node is not a MappingNode, overwrite with the new value
                 merged_nodes[key] = value_node
         else:
             # If the key is not already in the merged_nodes, add it
             merged_nodes[key] = value_node
     
     # Convert the merged_nodes dictionary back to a list of tuples
-    result = [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged_nodes.items()]
+    result = [
+        (ScalarNode(tag='tag:yaml.org,2002:str', value=k), v)
+        for k, v in merged_nodes.items()
+    ]
     
     return result

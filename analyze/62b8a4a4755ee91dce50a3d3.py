@@ -12,15 +12,8 @@ def fromutc(self, dt):
     :param dt:
         एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
     """
-    if dt.tzinfo is not self:
-        raise ValueError("fromutc() requires a datetime with the same timezone as self")
+    if dt.tzinfo is None:
+        raise ValueError("fromutc() requires a timezone-aware datetime object")
     
-    # Convert the datetime to the new timezone
-    new_dt = dt.astimezone(self)
-    
-    # Check if the datetime is ambiguous
-    if self.is_ambiguous(new_dt):
-        # If it's ambiguous, return the first occurrence
-        new_dt = self.resolve_ambiguous(new_dt, is_dst=False)
-    
-    return new_dt
+    # Convert the datetime to the target timezone
+    return dt.astimezone(self)

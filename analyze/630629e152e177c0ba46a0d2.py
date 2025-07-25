@@ -9,17 +9,17 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     :वापसी: डिक्शनरी (dict)
     """
     # Construct the WebFinger URL
-    webfinger_url = f"https://{handle.split('@')[1]}/.well-known/webfinger?resource=acct:{handle}"
+    webfinger_url = f"https://{handle.split('@')[2]}/.well-known/webfinger?resource=acct:{handle}"
     
     try:
-        # Fetch the WebFinger document
+        # Send a GET request to the WebFinger URL
         response = requests.get(webfinger_url)
         response.raise_for_status()
         
         # Parse the XML response
         root = etree.fromstring(response.content)
         
-        # Extract relevant information
+        # Extract relevant information from the XML
         result = {}
         for link in root.findall("{http://webfinger.net/rel/profile-page}link"):
             result[link.get("rel")] = link.get("href")
@@ -27,7 +27,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         return result
     
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching WebFinger document: {e}")
+        print(f"Error retrieving WebFinger document: {e}")
         return {}
     except etree.XMLSyntaxError as e:
         print(f"Error parsing WebFinger document: {e}")

@@ -7,6 +7,6 @@ def index(self, key):
     :rtype: int
     """
     try:
-        return self._data.index(key)
+        return self.index(key)
     except ValueError:
         return -1

@@ -5,21 +5,32 @@ def initialize(self):
     import os
     import json
 
-    # OCFL रूट डायरेक्टरी बनाएँ
-    if not os.path.exists('ocfl_root'):
-        os.makedirs('ocfl_root')
-
-    # OCFL संस्करण फ़ाइल बनाएँ
-    ocfl_version = {
-        "type": "https://ocfl.io/1.0/spec/#inventory",
-        "digestAlgorithm": "sha512",
-        "head": None,
-        "versions": {},
-        "manifest": {},
-        "id": "urn:uuid:12345678-1234-5678-1234-567812345678"
+    # OCFL storage root directory structure
+    ocfl_structure = {
+        "0=ocfl_1.1": "",
+        "inventory.json": "",
+        "inventory.json.sha512": "",
+        "extensions": {},
+        "logs": {},
+        "objects": {}
     }
 
-    with open('ocfl_root/ocfl_version.json', 'w') as f:
-        json.dump(ocfl_version, f, indent=4)
+    # Create the OCFL storage root directory
+    if not os.path.exists("ocfl_root"):
+        os.makedirs("ocfl_root")
 
-    print("OCFL स्टोरेज रूट सफलतापूर्वक प्रारंभ किया गया।")
+    # Create the necessary files and directories
+    for key, value in ocfl_structure.items():
+        if key == "0=ocfl_1.1":
+            with open(os.path.join("ocfl_root", key), "w") as f:
+                f.write("ocfl_1.1")
+        elif key.endswith(".json"):
+            with open(os.path.join("ocfl_root", key), "w") as f:
+                json.dump({}, f)
+        elif key.endswith(".sha512"):
+            with open(os.path.join("ocfl_root", key), "w") as f:
+                f.write("")
+        elif isinstance(value, dict):
+            os.makedirs(os.path.join("ocfl_root", key), exist_ok=True)
+
+    print("OCFL storage root initialized successfully.")

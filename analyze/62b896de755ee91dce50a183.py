@@ -1,5 +1,6 @@
 from dateutil.parser import parse as dateutil_parse
 from datetime import datetime
+from dateutil.tz import gettz
 
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
@@ -23,23 +24,6 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         मैप करते हैं या एक फ़ंक्शन हो सकता है जो दो पैरामीटर (``tzname`` और ``tzoffset``) लेता है 
         और एक टाइम ज़ोन लौटाता है।
 
-        जिन टाइम ज़ोन को नामों से मैप किया गया है, वे UTC से सेकंड में एक पूर्णांक ऑफ़सेट 
-        या :class:`tzinfo` ऑब्जेक्ट हो सकते हैं।
-
-        .. doctest::
-           :options: +NORMALIZE_WHITESPACE
-
-            >>> from dateutil.parser import parse
-            >>> from dateutil.tz import gettz
-            >>> tzinfos = {"BRST": -7200, "CST": gettz("America/Chicago")}
-            >>> parse("2012-01-19 17:21:00 BRST", tzinfos=tzinfos)
-            datetime.datetime(2012, 1, 19, 17, 21, tzinfo=tzoffset(u'BRST', -7200))
-            >>> parse("2012-01-19 17:21:00 CST", tzinfos=tzinfos)
-            datetime.datetime(2012, 1, 19, 17, 21,
-                              tzinfo=tzfile('/usr/share/zoneinfo/America/Chicago'))
-
-        यदि ``ignoretz`` सेट किया गया है, तो इस पैरामीटर को अनदेखा किया जाएगा।
-
     :param \*\*kwargs:
         ``_parse()`` को पास किए गए कीवर्ड आर्ग्युमेंट्स।
 
@@ -61,5 +45,8 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
     if default is not None and not isinstance(default, datetime):
         raise TypeError("default must be a datetime.datetime object or None")
+
+    if ignoretz:
+        tzinfos = None
 
     return dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)

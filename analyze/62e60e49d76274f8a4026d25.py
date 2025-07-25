@@ -23,9 +23,13 @@ def unit_of_work(metadata=None, timeout=None):
     def decorator(func):
         def wrapper(*args, **kwargs):
             # Here you would typically add logic to handle the metadata and timeout
-            # For example, you might pass these parameters to a transaction manager
-            # or use them to configure the transaction context.
-            # This is a placeholder for the actual implementation.
+            # For example, setting up a transaction with the given metadata and timeout
+            # and then executing the function within that transaction context.
+            # This is a simplified example.
+            if metadata is not None:
+                print(f"Metadata: {metadata}")
+            if timeout is not None:
+                print(f"Timeout: {timeout} seconds")
             return func(*args, **kwargs)
         return wrapper
     return decorator

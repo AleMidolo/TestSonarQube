@@ -7,10 +7,10 @@ def build_app_logger(name='app', logfile='app.log', debug=True):
     Args:
         name (str): लॉगर का नाम। डिफ़ॉल्ट 'app' है।
         logfile (str): लॉग फ़ाइल का नाम। डिफ़ॉल्ट 'app.log' है।
-        debug (bool): यदि True है, तो डिबग स्तर पर लॉगिंग करें। अन्यथा, INFO स्तर पर लॉगिंग करें।
+        debug (bool): यदि True, तो डिबग स्तर पर लॉगिंग करें। अन्यथा, INFO स्तर पर लॉगिंग करें।
     
     Returns:
-        logging.Logger: कॉन्फ़िगर किया गया लॉगर।
+        logging.Logger: कॉन्फ़िगर किया गया लॉगर ऑब्जेक्ट।
     """
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG if debug else logging.INFO)
@@ -28,7 +28,7 @@ def build_app_logger(name='app', logfile='app.log', debug=True):
     file_handler.setFormatter(formatter)
     console_handler.setFormatter(formatter)
     
-    # हैंडलर को लॉगर में जोड़ें
+    # लॉगर में हैंडलर जोड़ें
     logger.addHandler(file_handler)
     logger.addHandler(console_handler)
     

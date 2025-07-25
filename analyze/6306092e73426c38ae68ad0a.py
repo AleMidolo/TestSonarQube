@@ -8,10 +8,10 @@ def validate_choices_args(self, args):
         raise AttributeError("'choices' attribute is not defined in the class.")
     
     if not isinstance(self.choices, (list, tuple)):
-        raise TypeError("'choices' should be a list or tuple.")
+        raise TypeError("'choices' should be a list or tuple of available options.")
     
     for arg in args:
         if arg not in self.choices:
-            raise ValueError(f"Invalid choice: {arg}. Valid choices are: {self.choices}")
+            raise ValueError(f"Invalid choice: {arg}. Available choices are {self.choices}.")
     
     return True

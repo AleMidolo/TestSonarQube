@@ -23,7 +23,8 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     :param handlers: हैंडलर फ़ंक्शन, जो लौटाए गए Response ऑब्जेक्ट में पास किए जाते हैं
     :return: Response ऑब्जेक्ट
     """
-    message = {
+    # Create the BEGIN message
+    begin_message = {
         "mode": mode,
         "bookmarks": bookmarks,
         "metadata": metadata,
@@ -34,5 +35,9 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         "hydration_hooks": hydration_hooks,
         **handlers
     }
-    self.output_queue.append(("BEGIN", message))
-    return self._get_response()
+
+    # Add the BEGIN message to the output queue
+    self.output_queue.append(begin_message)
+
+    # Return a Response object
+    return Response(begin_message)

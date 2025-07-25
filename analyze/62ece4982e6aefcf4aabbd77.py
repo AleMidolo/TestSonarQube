@@ -18,21 +18,22 @@ def parse_frequency(frequency):
     except ValueError:
         raise ValueError("Invalid frequency format")
     
-    unit = unit.lower()
+    unit_mapping = {
+        "सेकंड": "seconds",
+        "मिनट": "minutes",
+        "घंटे": "hours",
+        "दिन": "days",
+        "सप्ताह": "weeks",
+        "महीने": "days",  # Approximate 30 days per month
+        "वर्ष": "days"   # Approximate 365 days per year
+    }
     
-    if unit == "सेकंड" or unit == "सेकंडों":
-        return timedelta(seconds=num)
-    elif unit == "मिनट" or unit == "मिनटों":
-        return timedelta(minutes=num)
-    elif unit == "घंटे" or unit == "घंटों":
-        return timedelta(hours=num)
-    elif unit == "दिन" or unit == "दिनों":
-        return timedelta(days=num)
-    elif unit == "सप्ताह" or unit == "सप्ताहों":
-        return timedelta(weeks=num)
-    elif unit == "महीने" or unit == "महीनों":
-        return timedelta(days=num * 30)  # Approximate
-    elif unit == "साल" or unit == "सालों":
-        return timedelta(days=num * 365)  # Approximate
-    else:
-        raise ValueError("Unknown time unit")
+    if unit not in unit_mapping:
+        raise ValueError("Invalid time unit")
+    
+    if unit == "महीने":
+        num *= 30
+    elif unit == "वर्ष":
+        num *= 365
+    
+    return timedelta(**{unit_mapping[unit]: num})

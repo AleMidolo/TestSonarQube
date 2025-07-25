@@ -4,13 +4,13 @@ def test_tag(tag: str) -> bool:
     """
     # टैग के लिए मान्यता की शर्तें:
     # 1. टैग खाली नहीं होना चाहिए।
-    # 2. टैग में केवल अक्षर, संख्याएं, और अंडरस्कोर (_) हो सकते हैं।
+    # 2. टैग में केवल अक्षर, संख्या, और अंडरस्कोर (_) हो सकते हैं।
     # 3. टैग की लंबाई 1 से 50 वर्णों के बीच होनी चाहिए।
     
     if not tag:
         return False
     
-    if not tag.isalnum() and '_' not in tag:
+    if not tag.isalnum() and not all(c == '_' for c in tag if not c.isalnum()):
         return False
     
     if len(tag) < 1 or len(tag) > 50:

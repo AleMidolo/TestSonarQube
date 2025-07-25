@@ -6,8 +6,8 @@ def amend_bzparams(self, params, bug_ids):
     for bug_id in bug_ids:
         if bug_id in params:
             # Modify the parameters for the given bug ID
-            params[bug_id] = {**params[bug_id], **{'status': 'MODIFIED'}}
+            params[bug_id] = {**params[bug_id], 'status': 'modified'}
         else:
-            # If the bug ID is not in params, add it with default modified status
-            params[bug_id] = {'status': 'MODIFIED'}
+            # Add new entry for the bug ID if it doesn't exist
+            params[bug_id] = {'status': 'new'}
     return params

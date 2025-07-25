@@ -6,8 +6,8 @@ def parse_arguments(*arguments):
     ArgumentParser इंस्टेंस के रूप में लौटाना है।
     """
     parser = argparse.ArgumentParser(description="Parse command-line arguments.")
-    # Add arguments to the parser as needed
-    # Example: parser.add_argument('--example', type=int, help='An example argument')
+    # Add your argument parsing logic here
+    # Example: parser.add_argument('--example', type=str, help='An example argument')
     
     # Parse the arguments
     args = parser.parse_args(arguments)
