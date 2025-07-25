@@ -1,6 +1,6 @@
 from datetime import datetime
 from dateutil.parser import parse as dateutil_parse
-from dateutil.tz import gettz
+from dateutil.tz import tzoffset
 from dateutil.parser import ParserError
 
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
@@ -58,13 +58,10 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         if default is not None and not isinstance(default, datetime):
             raise TypeError("Default must be a datetime object or None.")
 
-        if ignoretz:
-            tzinfos = None
-
         result = dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
         return result
 
     except ParserError as e:
-        raise ParserError(f"Failed to parse date string: {e}")
+        raise ParserError(f"Invalid or unknown string format: {e}")
     except OverflowError as e:
         raise OverflowError(f"Parsed date exceeds the largest valid C integer: {e}")

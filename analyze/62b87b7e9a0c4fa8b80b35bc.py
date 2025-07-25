@@ -19,18 +19,24 @@ def _update_context(self, context):
     if not hasattr(context, 'error'):
         context.error = {}
 
-    # Assuming self has properties like 'error_indices' or similar
-    # that store the indices of errors.
-    # This is a placeholder for the actual logic to update the context.
-    if hasattr(self, 'error_indices'):
-        for error_name, index in self.error_indices.items():
-            if error_name not in context.error:
-                context.error[error_name] = {}
-            context.error[error_name]['index'] = index
+    # Assuming the graph has properties like 'error_x_low', 'error_y_low', etc.
+    # We map these to 'x', 'y', 'z' for simplicity.
+    error_mapping = {
+        'error_x_low': 'x_low',
+        'error_x_high': 'x_high',
+        'error_y_low': 'y_low',
+        'error_y_high': 'y_high',
+        'error_z_low': 'z_low',
+        'error_z_high': 'z_high',
+    }
 
-    # Update other properties of the graph into context if necessary
-    # This is a placeholder for additional logic.
-    if hasattr(self, 'properties'):
-        for key, value in self.properties.items():
-            if key not in context:
-                context[key] = value
+    for attr, error_key in error_mapping.items():
+        if hasattr(self, attr):
+            error_index = getattr(self, attr)
+            if error_key not in context.error:
+                context.error[error_key] = {}
+            context.error[error_key]['index'] = error_index
+
+    # Ensure that existing values in context.value are not removed
+    if not hasattr(context, 'value'):
+        context.value = {}

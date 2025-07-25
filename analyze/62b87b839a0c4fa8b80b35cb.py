@@ -1,11 +1,15 @@
 def _get_err_indices(self, coord_name):
     """
     Get error indices corresponding to a coordinate.
+
+    Args:
+        coord_name (str): The name of the coordinate.
+
+    Returns:
+        list: A list of indices where errors occur for the given coordinate.
     """
-    if not hasattr(self, 'errors'):
-        raise AttributeError("The object does not have an 'errors' attribute.")
-    
-    if coord_name not in self.errors:
-        raise KeyError(f"Coordinate '{coord_name}' not found in errors.")
-    
-    return self.errors[coord_name]
+    err_indices = []
+    for i, coord in enumerate(self.coordinates):
+        if coord == coord_name and self.errors[i]:
+            err_indices.append(i)
+    return err_indices

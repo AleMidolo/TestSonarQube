@@ -7,21 +7,18 @@ def get_versions():
         import platform
         import importlib.metadata
 
-        python_version = sys.version
-        os_info = platform.platform()
-        try:
-            package_version = importlib.metadata.version('your_package_name')
-        except importlib.metadata.PackageNotFoundError:
-            package_version = "unknown"
+        versions = {
+            "python": sys.version,
+            "platform": platform.platform(),
+            "packages": {}
+        }
 
-        return {
-            "python_version": python_version,
-            "os_info": os_info,
-            "package_version": package_version
-        }
-    except Exception:
-        return {
-            "python_version": "unknown",
-            "os_info": "unknown",
-            "package_version": "unknown"
-        }
+        # Example: Get version of a commonly used package like 'requests'
+        try:
+            versions["packages"]["requests"] = importlib.metadata.version("requests")
+        except importlib.metadata.PackageNotFoundError:
+            versions["packages"]["requests"] = "Not installed"
+
+        return versions
+    except Exception as e:
+        return {"error": str(e), "default": "Unable to retrieve version information"}

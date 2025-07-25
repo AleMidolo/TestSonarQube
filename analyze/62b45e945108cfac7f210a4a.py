@@ -15,22 +15,24 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     num_objects = 0
     good_objects = 0
 
-    # Placeholder logic for validating the hierarchy
-    # This would typically involve traversing the storage hierarchy,
-    # validating objects, and checking digests if required.
-
-    if validate_objects:
-        # Simulate checking objects
-        num_objects = 100  # Example: 100 objects checked
-        good_objects = 95  # Example: 95 objects are valid
-
-    if check_digests:
-        # Simulate checking digests
-        # This would involve verifying the integrity of objects
-        pass
-
-    if show_warnings:
-        # Simulate showing warnings
-        print("Warning: Some objects may be invalid.")
-
+    # Placeholder logic for validation
+    # This would typically involve iterating through the storage hierarchy,
+    # checking each object's validity, and optionally verifying digests.
+    
+    # Example logic:
+    for obj in self.storage_objects:
+        num_objects += 1
+        is_valid = True
+        
+        if validate_objects:
+            is_valid = obj.is_valid()
+        
+        if check_digests and is_valid:
+            is_valid = obj.verify_digest()
+        
+        if is_valid:
+            good_objects += 1
+        elif show_warnings:
+            print(f"Warning: Object {obj.id} is invalid.")
+    
     return num_objects, good_objects

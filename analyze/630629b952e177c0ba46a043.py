@@ -12,7 +12,7 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     """
     if document_path is None:
         document_path = "/.well-known/nodeinfo"
-    
+
     well_known_document = {
         "links": [
             {
@@ -25,5 +25,5 @@ def get_nodeinfo_well_known_document(url, document_path=None):
             }
         ]
     }
-    
+
     return well_known_document

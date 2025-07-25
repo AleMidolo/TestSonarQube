@@ -24,11 +24,8 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
     
     result.reverse()
     
-    result_str = ''.join(result)
-    
     if padding is not None:
-        if padding < len(result_str):
-            raise ValueError("Padding must be greater than or equal to the length of the result.")
-        result_str = result_str.rjust(padding, alphabet[0])
+        while len(result) < padding:
+            result.insert(0, alphabet[0])
     
-    return result_str
+    return ''.join(result)

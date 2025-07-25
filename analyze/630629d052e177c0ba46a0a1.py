@@ -2,38 +2,38 @@ def verify_relayable_signature(public_key, doc, signature):
     """
     Verify the signed XML elements to have confidence that the claimed
     author did actually generate this message.
+
+    Args:
+        public_key (str): The public key used for verification.
+        doc (str): The XML document to be verified.
+        signature (str): The signature to verify against the document.
+
+    Returns:
+        bool: True if the signature is valid, False otherwise.
     """
     from cryptography.hazmat.primitives import hashes
     from cryptography.hazmat.primitives.asymmetric import padding
-    from cryptography.hazmat.primitives.asymmetric import rsa
     from cryptography.hazmat.primitives import serialization
     from cryptography.hazmat.backends import default_backend
     from lxml import etree
 
-    # Parse the XML document
-    root = etree.fromstring(doc)
-
-    # Extract the signature element
-    signature_element = root.find(".//{http://www.w3.org/2000/09/xmldsig#}Signature")
-    if signature_element is None:
-        raise ValueError("No signature found in the document")
-
-    # Serialize the XML document excluding the signature element
-    for elem in signature_element.iter():
-        elem.getparent().remove(elem)
-    canonical_doc = etree.tostring(root, method="c14n")
-
     # Load the public key
-    public_key = serialization.load_pem_public_key(
+    pub_key = serialization.load_pem_public_key(
         public_key.encode(),
         backend=default_backend()
     )
 
+    # Parse the XML document
+    root = etree.fromstring(doc.encode())
+
+    # Extract the signature element
+    signature_element = etree.fromstring(signature.encode())
+
     # Verify the signature
     try:
-        public_key.verify(
-            signature,
-            canonical_doc,
+        pub_key.verify(
+            signature_element.text.encode(),
+            etree.tostring(root),
             padding.PKCS1v15(),
             hashes.SHA256()
         )

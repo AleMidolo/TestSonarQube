@@ -14,15 +14,14 @@ def protocol_handlers(cls, protocol_version=None):
     """
     # Example implementation assuming some predefined handlers
     available_handlers = {
-        (3, 0): "HandlerForV3_0",
-        (3, 5): "HandlerForV3_5",
-        (4, 0): "HandlerForV4_0",
-        (4, 1): "HandlerForV4_1",
+        (3, 5): cls.BoltV3_5Handler,
+        (4, 0): cls.BoltV4_0Handler,
+        (4, 1): cls.BoltV4_1Handler,
     }
 
     if protocol_version is not None:
         if not isinstance(protocol_version, tuple):
-            raise TypeError("Protocol version must be a tuple.")
+            raise TypeError("protocol_version must be a tuple")
         if protocol_version in available_handlers:
             return {protocol_version: available_handlers[protocol_version]}
         else:

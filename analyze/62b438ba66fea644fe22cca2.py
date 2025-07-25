@@ -20,7 +20,7 @@ def deep_merge_nodes(nodes):
                 for k, v in new_dict.items():
                     if k in existing_dict and isinstance(existing_dict[k], ruamel.yaml.nodes.MappingNode) and isinstance(v, ruamel.yaml.nodes.MappingNode):
                         # Recursively merge nested MappingNodes
-                        existing_dict[k] = deep_merge_nodes([(ruamel.yaml.nodes.ScalarNode(tag='tag:yaml.org,2002:str', value=k), v)])
+                        existing_dict[k] = deep_merge_nodes([(ruamel.yaml.nodes.ScalarNode(tag='tag:yaml.org,2002:str', value=k), existing_dict[k]), (ruamel.yaml.nodes.ScalarNode(tag='tag:yaml.org,2002:str', value=k), v)])[0][1]
                     else:
                         # Overwrite or add the new value
                         existing_dict[k] = v

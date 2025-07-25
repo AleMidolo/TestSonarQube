@@ -7,6 +7,4 @@ def dehydrate_time(value):
     :return: A string representation of the time in 'HH:MM:SS' format.
     :rtype: str
     """
-    if value is None:
-        return None
     return value.strftime('%H:%M:%S')
