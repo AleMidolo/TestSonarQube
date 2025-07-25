@@ -1,44 +1,44 @@
 import os
 import shutil
-import tarfile
-import zipfile
+import tempfile
 from pathlib import Path
 from typing import Optional, Union
-from tempfile import mkdtemp
+from zipfile import ZipFile
+from tarfile import TarFile
 
 def prepare_repository_from_archive(
     archive_path: str,
     filename: Optional[str] = None,
     tmp_path: Union[PosixPath, str] = "/tmp",
 ) -> str:
-    """
-    Given an existing archive_path, uncompress it.
-    Returns a file repo url which can be used as origin url.
-
-    This does not deal with the case where the archive passed along does not exist.
-    """
-    # Ensure tmp_path is a Path object
-    tmp_path = Path(tmp_path)
+    # Convert tmp_path to Path object if it's a string
+    tmp_path = Path(tmp_path) if isinstance(tmp_path, str) else tmp_path
+    
+    # Ensure the temporary directory exists
     tmp_path.mkdir(parents=True, exist_ok=True)
-
+    
     # Create a temporary directory to extract the archive
-    extract_dir = Path(mkdtemp(dir=tmp_path))
-
-    # Determine the archive type and extract it
-    if archive_path.endswith('.tar.gz') or archive_path.endswith('.tgz'):
-        with tarfile.open(archive_path, 'r:gz') as tar:
-            tar.extractall(path=extract_dir)
+    extract_dir = tempfile.mkdtemp(dir=tmp_path)
+    
+    # Determine the archive type based on the file extension
+    if archive_path.endswith('.zip'):
+        with ZipFile(archive_path, 'r') as zip_ref:
+            zip_ref.extractall(extract_dir)
+    elif archive_path.endswith('.tar.gz') or archive_path.endswith('.tgz'):
+        with TarFile.open(archive_path, 'r:gz') as tar_ref:
+            tar_ref.extractall(extract_dir)
+    elif archive_path.endswith('.tar.bz2') or archive_path.endswith('.tbz'):
+        with TarFile.open(archive_path, 'r:bz2') as tar_ref:
+            tar_ref.extractall(extract_dir)
     elif archive_path.endswith('.tar'):
-        with tarfile.open(archive_path, 'r:') as tar:
-            tar.extractall(path=extract_dir)
-    elif archive_path.endswith('.zip'):
-        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-            zip_ref.extractall(path=extract_dir)
+        with TarFile.open(archive_path, 'r:') as tar_ref:
+            tar_ref.extractall(extract_dir)
     else:
-        raise ValueError(f"Unsupported archive format: {archive_path}")
-
+        raise ValueError("Unsupported archive format")
+    
     # If a specific filename is provided, return the path to that file
     if filename:
-        return str(extract_dir / filename)
-    else:
-        return str(extract_dir)
+        return str(Path(extract_dir) / filename)
+    
+    # Otherwise, return the path to the extracted directory
+    return extract_dir

@@ -4,12 +4,10 @@ RequestType = TypeVar('RequestType')
 
 def identify_request(request: RequestType) -> bool:
     """
-    Try to identify whether this is a Matrix request
+    यह फ़ंक्शन यह पहचानने की कोशिश करता है कि क्या यह एक मैट्रिक्स (Matrix) अनुरोध है।
     """
-    # Assuming RequestType has a 'headers' attribute that is a dictionary
-    if hasattr(request, 'headers'):
-        headers = request.headers
-        # Check for a specific header that indicates a Matrix request
-        if 'X-Matrix-Request' in headers:
-            return True
+    # Assuming that a Matrix request has a specific attribute or structure
+    # For example, if a Matrix request has a 'matrix' key in its data
+    if hasattr(request, 'data') and isinstance(request.data, dict):
+        return 'matrix' in request.data
     return False

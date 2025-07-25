@@ -1,35 +1,36 @@
 def scale(self, other=None):
     """
-    Get or set the scale of the graph.
+    ग्राफ़ का स्केल प्राप्त करें या सेट करें।
 
-    If *other* is ``None``, return the scale of this graph.
+    यदि *other* ``None`` है, तो इस ग्राफ़ का स्केल लौटाएं।
 
-    If a numeric *other* is provided, rescale to that value.
-    If the graph has unknown or zero scale,
-    rescaling that will raise :exc:`~.LenaValueError`.
+    यदि *other* एक संख्यात्मक मान है, तो ग्राफ़ को उस मान पर पुनः स्केल करें।
+    यदि ग्राफ़ का स्केल अज्ञात है या शून्य है,
+    तो पुनः स्केल करने पर :exc:`~.LenaValueError` उत्पन्न होगा।
 
-    To get meaningful results, graph's fields are used.
-    Only the last coordinate is rescaled.
-    For example, if the graph has *x* and *y* coordinates,
-    then *y* will be rescaled, and for a 3-dimensional graph
-    *z* will be rescaled.
-    All errors are rescaled together with their coordinate.
+    सार्थक परिणाम प्राप्त करने के लिए, ग्राफ़ के फ़ील्ड्स का उपयोग किया जाता है।
+    केवल अंतिम निर्देशांक (coordinate) को पुनः स्केल किया जाता है।
+    उदाहरण के लिए, यदि ग्राफ़ में *x* और *y* निर्देशांक हैं,
+    तो *y* को पुनः स्केल किया जाएगा, और यदि ग्राफ़ 3-आयामी (3-dimensional) है,
+    तो *z* को पुनः स्केल किया जाएगा।
+    सभी त्रुटियों (errors) को उनके निर्देशांक के साथ पुनः स्केल किया जाता है।
     """
     if other is None:
         return self._scale
     elif isinstance(other, (int, float)):
-        if self._scale == 0 or self._scale is None:
-            raise ValueError("Cannot rescale a graph with unknown or zero scale.")
-        scale_factor = other / self._scale
-        # Rescale the last coordinate and its errors
-        if hasattr(self, 'y'):
-            self.y *= scale_factor
-            if hasattr(self, 'y_err'):
-                self.y_err *= scale_factor
-        elif hasattr(self, 'z'):
-            self.z *= scale_factor
-            if hasattr(self, 'z_err'):
-                self.z_err *= scale_factor
+        if self._scale is None or self._scale == 0:
+            raise ValueError("Cannot rescale graph with unknown or zero scale.")
+        # Rescale the last coordinate
+        if hasattr(self, 'z'):
+            self.z *= other / self._scale
+        elif hasattr(self, 'y'):
+            self.y *= other / self._scale
+        elif hasattr(self, 'x'):
+            self.x *= other / self._scale
+        # Rescale errors if they exist
+        if hasattr(self, 'errors'):
+            for i in range(len(self.errors)):
+                self.errors[i] *= other / self._scale
         self._scale = other
     else:
-        raise TypeError("Scale must be a numeric value or None.")
+        raise TypeError("Expected a numeric value or None for scaling.")

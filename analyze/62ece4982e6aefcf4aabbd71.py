@@ -2,29 +2,29 @@ import re
 
 def regex_dict(item):
     """
-    Convert *.cpp keys to regex keys
+    *.cpp कुंजियों को regex कुंजियों में बदलें
 
-    Given a dict where the keys are all filenames with wildcards, convert only
-    the keys into equivalent regexes and leave the values intact.
+    एक dict दिया गया है जिसमें सभी कुंजियाँ वाइल्डकार्ड के साथ फ़ाइल नाम हैं,
+    केवल कुंजियों को उनके समकक्ष regex में बदलें और मानों को वैसा ही छोड़ दें।
 
-    Example:
+    उदाहरण:
 
-    rules = {
+    नियम (rules) = {
         '*.cpp':
             {'a': 'arf', 'b': 'bark', 'c': 'coo'},
         '*.h':
-            {'h': 'help'}
+           {'h': 'help'}
     }
     regex_keys = regex_dict(rules)
 
-    Args:
-        item: dict to convert
-    Returns:
-        dict with keys converted to regexes
+    आर्ग्युमेंट्स:
+        item: वह dict जिसे बदलना है
+    रिटर्न करता है:
+        एक dict जिसमें कुंजियाँ regex में परिवर्तित होती हैं
     """
-    regex_dict = {}
+    regex_item = {}
     for key, value in item.items():
-        # Convert the wildcard pattern to a regex pattern
-        regex_pattern = re.escape(key).replace(r'\*', '.*')
-        regex_dict[re.compile(regex_pattern)] = value
-    return regex_dict
+        # Replace '*' with '.*' to match any sequence of characters
+        regex_key = re.escape(key).replace('\\*', '.*')
+        regex_item[regex_key] = value
+    return regex_item

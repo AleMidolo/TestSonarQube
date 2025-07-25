@@ -1,22 +1,8 @@
 def verifyClass(iface, candidate, tentative=False):
     """
-    Verify that the *candidate* might correctly provide *iface*.
-    
-    Args:
-        iface: The interface to be implemented.
-        candidate: The class or object to be verified.
-        tentative: If True, allows for partial implementation.
-    
-    Returns:
-        bool: True if the candidate might correctly provide the interface, False otherwise.
+    यह फ़ंक्शन सत्यापित करता है कि *candidate* सही तरीके से *iface* प्रदान कर सकता है या नहीं।
     """
-    if not hasattr(candidate, '__mro__'):
-        return False
-    
-    required_methods = set(dir(iface))
-    candidate_methods = set(dir(candidate))
-    
-    if tentative:
-        return required_methods.issubset(candidate_methods)
+    if not tentative:
+        return all(hasattr(candidate, attr) and callable(getattr(candidate, attr)) for attr in dir(iface) if not attr.startswith('__'))
     else:
-        return required_methods == candidate_methods
+        return all(hasattr(candidate, attr) for attr in dir(iface) if not attr.startswith('__'))

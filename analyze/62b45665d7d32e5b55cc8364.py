@@ -1,24 +1,35 @@
 def parse_subparser_arguments(unparsed_arguments, subparsers):
     """
-    Given a sequence of arguments and a dict from subparser name to argparse.ArgumentParser
-    instance, give each requested action's subparser a shot at parsing all arguments. This allows
-    common arguments like "--repository" to be shared across multiple subparsers.
+    दिए गए तर्कों (arguments) की एक श्रृंखला और एक डिक्शनरी जो सबपार्सर (subparser) के नाम को 
+    argparse.ArgumentParser इंस्टेंस से मैप करती है, के आधार पर, प्रत्येक अनुरोधित क्रिया के 
+    सबपार्सर को सभी तर्कों को पार्स (parse) करने का मौका दें। 
 
-    Return the result as a tuple of (a dict mapping from subparser name to a parsed namespace of
-    arguments, a list of remaining arguments not claimed by any subparser).
+    यह प्रक्रिया सामान्य तर्कों जैसे "--repository" को कई सबपार्सरों के बीच साझा करने की अनुमति देती है।
+
+    परिणाम को एक ट्यूपल (tuple) के रूप में लौटाएं, जिसमें शामिल हैं:
+    1. एक डिक्शनरी जो सबपार्सर के नाम को पार्स किए गए तर्कों के नेमस्पेस (namespace) से मैप करती है।
+    2. उन तर्कों की सूची जो किसी भी सबपार्सर द्वारा दावा नहीं किए गए हैं।
     """
-    parsed_args = {}
-    remaining_args = list(unparsed_arguments)
-    
-    for subparser_name, subparser in subparsers.items():
-        try:
-            # Try to parse the arguments with the current subparser
-            args, remaining = subparser.parse_known_args(remaining_args)
-            if args:
-                parsed_args[subparser_name] = args
-                remaining_args = remaining
-        except SystemExit:
-            # If parsing fails, continue to the next subparser
-            continue
-    
-    return parsed_args, remaining_args
+    import argparse
+
+    # Initialize the main parser
+    main_parser = argparse.ArgumentParser()
+    subparsers_dict = {}
+
+    # Add subparsers to the main parser
+    for name, parser in subparsers.items():
+        subparser = main_parser.add_subparsers().add_parser(name)
+        subparsers_dict[name] = subparser
+
+    # Parse the arguments using the main parser
+    parsed_args, remaining_args = main_parser.parse_known_args(unparsed_arguments)
+
+    # Create a dictionary to store the parsed arguments for each subparser
+    parsed_subparser_args = {}
+
+    # Iterate through the subparsers and parse the arguments
+    for name, subparser in subparsers_dict.items():
+        subparser_args, remaining_args = subparser.parse_known_args(remaining_args)
+        parsed_subparser_args[name] = subparser_args
+
+    return parsed_subparser_args, remaining_args

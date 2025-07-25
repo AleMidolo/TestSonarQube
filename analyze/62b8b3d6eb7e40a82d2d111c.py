@@ -1,11 +1,10 @@
 def _normalizeargs(sequence, output=None):
     """
-    Normalize declaration arguments
+    घोषणा तर्कों को सामान्यीकृत करें
 
-    Normalization arguments might contain Declarions, tuples, or single
-    interfaces.
+    सामान्यीकरण तर्कों में घोषणाएँ, ट्यूपल, या एकल इंटरफेस हो सकते हैं।
 
-    Anything but individual interfaces or implements specs will be expanded.
+    व्यक्तिगत इंटरफेस या लागू विनिर्देशों को छोड़कर अन्य सभी का विस्तार किया जाएगा।
     """
     if output is None:
         output = []

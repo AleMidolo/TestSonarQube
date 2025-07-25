@@ -2,8 +2,8 @@ import os
 
 def is_gitbash():
     """
-    returns True if you run in a Windows gitbash
+    यदि आप Windows के Gitbash में प्रोग्राम चला रहे हैं तो True रिटर्न करता है।
 
-    :return: True if gitbash
+    :return: यदि Gitbash है तो True
     """
-    return os.environ.get('TERM_PROGRAM') == 'mintty' and os.name == 'nt'
+    return 'GITBASH' in os.environ.get('TERM_PROGRAM', '').upper()

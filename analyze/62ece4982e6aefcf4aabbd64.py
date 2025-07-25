@@ -1,18 +1,7 @@
 def strip_root(path, root):
     """
-    Remove root from path, throw exception on failure.
-
-    Args:
-        path (str): The full path.
-        root (str): The root part of the path to be removed.
-
-    Returns:
-        str: A path without the root.
-
-    Raises:
-        ValueError: If the root is not found at the beginning of the path.
+    पथ से रूट को हटाएं, और यदि यह विफल होता है, तो अपवाद फेंकें।
     """
     if not path.startswith(root):
-        raise ValueError(f"Root '{root}' not found at the beginning of path '{path}'")
-    
+        raise ValueError(f"Path '{path}' does not start with root '{root}'")
     return path[len(root):]

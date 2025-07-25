@@ -1,24 +1,26 @@
 def check_digests_present_and_used(self, manifest_files, digests_used):
     """
-    Check all digests in manifest that are needed are present and used.
+    मैनिफेस्ट में सभी आवश्यक डाइजेस्ट्स की जांच करें कि वे मौजूद हैं और उपयोग हो रहे हैं।
+    
+    Args:
+        manifest_files (list): मैनिफेस्ट फाइलों की सूची।
+        digests_used (set): उपयोग किए गए डाइजेस्ट्स का सेट।
+    
+    Returns:
+        bool: True अगर सभी डाइजेस्ट्स मौजूद हैं और उपयोग हो रहे हैं, अन्यथा False।
     """
-    # Extract all digests from the manifest files
-    manifest_digests = set()
+    # मैनिफेस्ट फाइलों से सभी डाइजेस्ट्स को इकट्ठा करें
+    all_digests = set()
     for manifest_file in manifest_files:
         with open(manifest_file, 'r') as file:
             for line in file:
                 if 'digest' in line:
-                    digest = line.split('digest=')[1].split()[0]
-                    manifest_digests.add(digest)
+                    digest = line.split('digest:')[1].strip()
+                    all_digests.add(digest)
     
-    # Check if all required digests are present in the manifest
-    missing_digests = set(digests_used) - manifest_digests
-    if missing_digests:
-        raise ValueError(f"Missing digests in manifest: {missing_digests}")
-    
-    # Check if all digests in the manifest are used
-    unused_digests = manifest_digests - set(digests_used)
-    if unused_digests:
-        raise ValueError(f"Unused digests in manifest: {unused_digests}")
+    # सभी डाइजेस्ट्स की जांच करें कि वे मौजूद हैं और उपयोग हो रहे हैं
+    for digest in all_digests:
+        if digest not in digests_used:
+            return False
     
     return True

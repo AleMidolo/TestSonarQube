@@ -2,39 +2,27 @@ import re
 from datetime import timedelta
 
 def parse_frequency(frequency):
-    """
-    Given a frequency string with a number and a unit of time, return a corresponding
-    datetime.timedelta instance or None if the frequency is None or "always".
-
-    For instance, given "3 weeks", return datetime.timedelta(weeks=3)
-
-    Raise ValueError if the given frequency cannot be parsed.
-    """
-    if frequency is None or frequency.lower() == "always":
+    if frequency is None or frequency.lower() == "हमेशा":
         return None
     
-    pattern = re.compile(r'^(\d+)\s*(second|minute|hour|day|week|month|year)s?$', re.IGNORECASE)
-    match = pattern.match(frequency.strip())
+    pattern = re.compile(r'(\d+)\s*(सप्ताह|दिन|घंटे|मिनट|सेकंड)')
+    match = pattern.match(frequency)
     
     if not match:
-        raise ValueError(f"Invalid frequency format: {frequency}")
+        raise ValueError("Invalid frequency format")
     
     value = int(match.group(1))
-    unit = match.group(2).lower()
+    unit = match.group(2)
     
-    if unit == "second":
-        return timedelta(seconds=value)
-    elif unit == "minute":
-        return timedelta(minutes=value)
-    elif unit == "hour":
-        return timedelta(hours=value)
-    elif unit == "day":
-        return timedelta(days=value)
-    elif unit == "week":
+    if unit == "सप्ताह":
         return timedelta(weeks=value)
-    elif unit == "month":
-        return timedelta(days=value * 30)  # Approximation
-    elif unit == "year":
-        return timedelta(days=value * 365)  # Approximation
+    elif unit == "दिन":
+        return timedelta(days=value)
+    elif unit == "घंटे":
+        return timedelta(hours=value)
+    elif unit == "मिनट":
+        return timedelta(minutes=value)
+    elif unit == "सेकंड":
+        return timedelta(seconds=value)
     else:
-        raise ValueError(f"Unsupported time unit: {unit}")
+        raise ValueError("Unsupported time unit")

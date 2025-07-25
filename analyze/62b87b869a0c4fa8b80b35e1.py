@@ -1,66 +1,46 @@
 def hist_to_graph(hist, make_value=None, get_coordinate="left",
-                 field_names=("x", "y"), scale=None):
+                  field_names=("x", "y"), scale=None):
     """
-    Convert a :class:`.histogram` to a :class:`.graph`.
+    Convert a histogram to a graph.
 
-    *make_value* is a function to set the value of a graph's point.
-    By default it is bin content.
-    *make_value* accepts a single value (bin content) without context.
+    Args:
+        hist: The histogram to convert.
+        make_value: A function that sets the value of the graph point.
+                   Defaults to the bin content.
+        get_coordinate: Defines the coordinate of the graph point from the histogram bin.
+                       Can be "left" (default), "right", or "middle".
+        field_names: The field names for the graph. The number should match the dimension of the result.
+        scale: The scale of the graph. If True, uses the histogram's scale.
 
-    This option could be used to create graph's error bars.
-    For example, to create a graph with errors
-    from a histogram where bins contain
-    a named tuple with fields *mean*, *mean_error* and a context
-    one could use
-
-    >>> make_value = lambda bin_: (bin_.mean, bin_.mean_error)
-
-    *get_coordinate* defines what the coordinate
-    of a graph point created from a histogram bin will be.
-    It can be "left" (default), "right" and "middle".
-
-    *field_names* set field names of the graph. Their number
-    must be the same as the dimension of the result.
-    For a *make_value* above they would be
-    *("x", "y_mean", "y_mean_error")*.
-
-    *scale* becomes the graph's scale (unknown by default).
-    If it is ``True``, it uses the histogram scale.
-
-    *hist* must contain only numeric bins (without context)
-    or *make_value* must remove context when creating a numeric graph.
-
-    Return the resulting graph.
+    Returns:
+        The resulting graph.
     """
-    from collections import namedtuple
+    import numpy as np
 
     if make_value is None:
-        make_value = lambda bin_: bin_
+        make_value = lambda bin_: bin_.content
 
+    if get_coordinate not in ["left", "right", "middle"]:
+        raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
+
+    # Determine the coordinates based on get_coordinate
+    if get_coordinate == "left":
+        coordinates = hist.bin_edges[:-1]
+    elif get_coordinate == "right":
+        coordinates = hist.bin_edges[1:]
+    elif get_coordinate == "middle":
+        coordinates = (hist.bin_edges[:-1] + hist.bin_edges[1:]) / 2
+
+    # Apply make_value to each bin
+    values = [make_value(bin_) for bin_ in hist.bins]
+
+    # Create the graph
+    graph = np.array(list(zip(coordinates, values)), dtype=[(field_names[0], 'f8'), (field_names[1], 'f8')])
+
+    # Apply scale if provided
     if scale is True:
-        scale = hist.scale
-
-    graph_points = []
-    for bin_ in hist.bins:
-        if get_coordinate == "left":
-            x = bin_.left_edge
-        elif get_coordinate == "right":
-            x = bin_.right_edge
-        elif get_coordinate == "middle":
-            x = (bin_.left_edge + bin_.right_edge) / 2
-        else:
-            raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
-
-        value = make_value(bin_.content)
-        if isinstance(value, tuple):
-            graph_point = (x,) + value
-        else:
-            graph_point = (x, value)
-
-        graph_points.append(graph_point)
-
-    Graph = namedtuple('Graph', field_names)
-    graph = Graph(*zip(*graph_points))
-    graph.scale = scale
+        graph = graph * hist.scale
+    elif scale is not None:
+        graph = graph * scale
 
     return graph

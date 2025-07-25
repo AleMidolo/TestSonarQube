@@ -1,11 +1,9 @@
 def extend_cli(self, root_subparsers):
     """
-    Adds the spec cli options to the main entry point.
+    मुख्य एंट्री पॉइंट में स्पेक CLI विकल्प जोड़ता है।
 
-    :param root_subparsers: the subparser object to extend.
+    :param subparser: वह सबपार्सर ऑब्जेक्ट जिसे विस्तारित करना है।
     """
-    spec_parser = root_subparsers.add_parser('spec', help='Manage specifications')
-    spec_parser.add_argument('--list', action='store_true', help='List all specifications')
-    spec_parser.add_argument('--add', type=str, help='Add a new specification')
-    spec_parser.add_argument('--remove', type=str, help='Remove a specification')
-    spec_parser.add_argument('--update', type=str, help='Update an existing specification')
+    spec_parser = root_subparsers.add_parser('spec', help='स्पेक संबंधित कमांड')
+    spec_parser.add_argument('--option1', help='स्पेक विकल्प 1')
+    spec_parser.add_argument('--option2', help='स्पेक विकल्प 2')

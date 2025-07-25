@@ -2,8 +2,10 @@ import re
 
 def _create_in_regex(self) -> Pattern:
     """
-    Create the in-style parameter regular expression.
+    इन-स्टाइल पैरामीटर रेगुलर एक्सप्रेशन बनाएं।
 
-    Returns the in-style parameter regular expression (:class:`re.Pattern`).
+    रिटर्न करता है इन-स्टाइल पैरामीटर रेगुलर एक्सप्रेशन (:class:`re.Pattern`)।
     """
-    return re.compile(r'\{([^}]+)\}')
+    # Example regex pattern for in-style parameters
+    pattern = r"\{([^}]+)\}"
+    return re.compile(pattern)

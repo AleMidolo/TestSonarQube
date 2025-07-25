@@ -1,12 +1,11 @@
 def _legacy_mergeOrderings(orderings):
     """
-    Merge multiple orderings so that within-ordering order is preserved
+    कई क्रमबद्ध सूचियों को इस प्रकार संयोजित करें कि प्रत्येक सूची के भीतर का क्रम संरक्षित रहे।
 
-    Orderings are constrained in such a way that if an object appears
-    in two or more orderings, then the suffix that begins with the
-    object must be in both orderings.
+    इन सूचियों पर यह प्रतिबंध है कि यदि कोई वस्तु दो या अधिक सूचियों में प्रकट होती है,
+    तो उस वस्तु से शुरू होने वाला उपसर्ग (suffix) सभी सूचियों में समान होना चाहिए।
 
-    For example:
+    उदाहरण के लिए:
 
     >>> _mergeOrderings([
     ... ['x', 'y', 'z'],

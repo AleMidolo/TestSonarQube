@@ -1,42 +1,39 @@
-from zope.interface import Invalid, providedBy
-from zope.interface.verify import verifyObject as zope_verify_object
+from zope.interface import providedBy, verify
+from zope.interface.exceptions import Invalid
 
 def verifyObject(iface, candidate, tentative=False):
     """
-    Verify that *candidate* might correctly provide *iface*.
+    *iface* को सही ढंग से प्रदान करने के लिए *candidate* की पुष्टि करें।
 
-    This involves:
+    इसमें निम्नलिखित शामिल हैं:
 
-    - Making sure the candidate claims that it provides the
-      interface using ``iface.providedBy`` (unless *tentative* is `True`,
-      in which case this step is skipped). This means that the candidate's class
-      declares that it `implements <zope.interface.implementer>` the interface,
-      or the candidate itself declares that it `provides <zope.interface.provider>`
-      the interface
+    - यह सुनिश्चित करना कि candidate यह दावा करता है कि वह इंटरफ़ेस प्रदान करता है, 
+      ``iface.providedBy`` का उपयोग करके (जब तक *tentative* `True` न हो, 
+      इस स्थिति में इस चरण को छोड़ दिया जाता है)। इसका मतलब है कि candidate की क्लास 
+      यह घोषित करती है कि वह इंटरफ़ेस को `implements <zope.interface.implementer>` करती है, 
+      या candidate स्वयं यह घोषित करता है कि वह इंटरफ़ेस को 
+      `provides <zope.interface.provider>` करता है।
 
-    - Making sure the candidate defines all the necessary methods
+    - यह सुनिश्चित करना कि candidate सभी आवश्यक methods को परिभाषित करता है।
 
-    - Making sure the methods have the correct signature (to the
-      extent possible)
+    - यह सुनिश्चित करना कि methods का signature सही है (जहां तक संभव हो)।
 
-    - Making sure the candidate defines all the necessary attributes
+    - यह सुनिश्चित करना कि candidate सभी आवश्यक attributes को परिभाषित करता है।
 
-    :return bool: Returns a true value if everything that could be
-       checked passed.
-    :raises zope.interface.Invalid: If any of the previous
-       conditions does not hold.
+    :return bool: यदि सभी जांचें सफल होती हैं, तो एक सत्य मान लौटाता है।
+    :raises zope.interface.Invalid: यदि उपरोक्त में से कोई भी शर्त पूरी नहीं होती है।
 
     .. versionchanged:: 5.0
-        If multiple methods or attributes are invalid, all such errors
-        are collected and reported. Previously, only the first error was reported.
-        As a special case, if only one such error is present, it is raised
-        alone, like before.
+        यदि कई methods या attributes अमान्य हैं, तो सभी त्रुटियों को एकत्रित और रिपोर्ट किया जाता है। 
+        पहले, केवल पहली त्रुटि रिपोर्ट की जाती थी। एक विशेष मामले में, यदि केवल एक त्रुटि मौजूद है, 
+        तो इसे पहले की तरह अकेले उठाया जाता है।
     """
-    if not tentative:
-        if not iface.providedBy(candidate):
-            raise Invalid(f"The candidate does not provide the interface {iface}.")
+    if not tentative and not iface.providedBy(candidate):
+        raise Invalid(f"{candidate} does not provide {iface}")
 
     try:
-        return zope_verify_object(iface, candidate)
+        verify.verifyObject(iface, candidate)
     except Invalid as e:
         raise Invalid(f"Verification failed: {e}")
+
+    return True

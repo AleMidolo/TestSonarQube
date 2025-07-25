@@ -1,33 +1,33 @@
 def difference(d1, d2, level=-1):
     """
-    Return a dictionary with items from *d1* not contained in *d2*.
+    यह फ़ंक्शन एक डिक्शनरी लौटाता है जिसमें *d1* के वे आइटम्स शामिल होते हैं जो *d2* में नहीं हैं।
+    
+    *level* पुनरावृत्ति की अधिकतम गहराई निर्धारित करता है। अनंत पुनरावृत्ति के लिए,
+    इसे -1 पर सेट करें। स्तर 1 के लिए,
+    यदि कोई कुंजी *d1* और *d2* दोनों में मौजूद है, लेकिन उसके मान अलग-अलग हैं,
+    तो उसे अंतर में शामिल किया जाता है।
+    अधिक जानकारी के लिए :func:`intersection` देखें।
 
-    *level* sets the maximum depth of recursion. For infinite recursion,
-    set that to -1. For level 1,
-    if a key is present both in *d1* and *d2* but has different values,
-    it is included into the difference.
-    See :func:`intersection` for more details.
+    *d1* और *d2* अपरिवर्तित रहते हैं। हालाँकि, *d1* या इसके कुछ
+    उपशब्दकोश सीधे लौटाए जा सकते हैं।
+    जब उचित हो तो परिणाम की एक गहरी प्रतिलिपि बनाएँ।
 
-    *d1* and *d2* remain unchanged. However, *d1* or some of its
-    subdictionaries may be returned directly.
-    Make a deep copy of the result when appropriate.
-
-    .. versionadded:: 0.5
-       add keyword argument *level*.
+    ..versionadded::0.5
+    कीवर्ड तर्क *level* जोड़ें।
     """
     if level == 0:
         return {}
-
+    
     diff = {}
-    for key, value in d1.items():
+    for key in d1:
         if key not in d2:
-            diff[key] = value
-        elif isinstance(value, dict) and isinstance(d2[key], dict):
+            diff[key] = d1[key]
+        elif isinstance(d1[key], dict) and isinstance(d2[key], dict):
             if level != 1:
-                sub_diff = difference(value, d2[key], level - 1 if level != -1 else -1)
+                sub_diff = difference(d1[key], d2[key], level - 1 if level != -1 else -1)
                 if sub_diff:
                     diff[key] = sub_diff
-        elif value != d2[key]:
-            diff[key] = value
-
+        elif d1[key] != d2[key]:
+            diff[key] = d1[key]
+    
     return diff

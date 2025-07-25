@@ -1,28 +1,26 @@
 import subprocess
 import sys
 import os
-import inspect
 
 def subprocess_run_helper(func, *args, timeout, extra_env=None):
     """
-    Run a function in a sub-process.
+    एक सब-प्रोसेस में एक फ़ंक्शन चलाएँ।
 
-    Parameters
-    ----------
+    पैरामीटर (Parameters)
+    ---------------------
     func : function
-        The function to be run.  It must be in a module that is importable.
+        वह फ़ंक्शन जिसे चलाना है। यह किसी ऐसे मॉड्यूल में होना चाहिए जिसे आयात (import) किया जा सके।
     *args : str
-        Any additional command line arguments to be passed in
-        the first argument to ``subprocess.run``.
+        कोई भी अतिरिक्त कमांड लाइन तर्क जो ``subprocess.run`` के पहले तर्क में पास किए जाने हैं।
     extra_env : dict[str, str]
-        Any additional environment variables to be set for the subprocess.
+        सब-प्रोसेस के लिए सेट किए जाने वाले कोई भी अतिरिक्त पर्यावरण वेरिएबल।
     """
-    # Get the module and function name
-    module_name = inspect.getmodule(func).__name__
+    # Get the module name and function name
+    module_name = func.__module__
     func_name = func.__name__
 
     # Prepare the command to run the function in a subprocess
-    command = [sys.executable, "-c", f"from {module_name} import {func_name}; {func_name}(*{args})"]
+    command = [sys.executable, '-c', f'from {module_name} import {func_name}; {func_name}(*{args})']
 
     # Prepare the environment
     env = os.environ.copy()
@@ -32,8 +30,5 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     # Run the subprocess
     result = subprocess.run(command, env=env, timeout=timeout, capture_output=True, text=True)
 
-    # Check for errors
-    if result.returncode != 0:
-        raise RuntimeError(f"Subprocess failed with return code {result.returncode}: {result.stderr}")
-
-    return result.stdout
+    # Return the result
+    return result

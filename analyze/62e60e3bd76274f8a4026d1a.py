@@ -1,11 +1,17 @@
 def from_raw_values(cls, values):
     """
-    Create a Bookmarks object from a list of raw bookmark string values.
+    कच्चे बुकमार्क स्ट्रिंग मानों की सूची से एक Bookmarks ऑब्जेक्ट बनाएं।
 
-    You should not need to use this method unless you want to deserialize
-    bookmarks.
+    इस विधि का उपयोग करने की आवश्यकता नहीं होनी चाहिए जब तक कि आप 
+    बुकमार्क्स को डीसिरियलाइज़ (deserialize) करना न चाहें।
 
-    :param values: ASCII string values (raw bookmarks)
+    :param values: ASCII स्ट्रिंग मान (कच्चे बुकमार्क्स)
     :type values: Iterable[str]
     """
-    return cls(values)
+    # Assuming the Bookmarks class is defined elsewhere
+    bookmarks = cls()
+    for value in values:
+        # Process each raw value and add it to the Bookmarks object
+        # This is a placeholder for the actual deserialization logic
+        bookmarks.add(value)
+    return bookmarks

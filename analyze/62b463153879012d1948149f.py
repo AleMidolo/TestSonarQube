@@ -1,38 +1,36 @@
 def _eval_file(prefix, file_path):
     """
-    Identifica o tipo de arquivo do pacote: `asset` ou `rendition`.
+    पैकेज के फ़ाइल प्रकार की पहचान करें: `asset` या `rendition`।
 
-    Identifica o tipo de arquivo do pacote e atualiza `packages` com o tipo e
-    o endereço do arquivo em análise.
+    पैकेज के फ़ाइल प्रकार की पहचान करें और `packages` को फ़ाइल के प्रकार और पते के साथ अपडेट करें जो विश्लेषण में है।
 
-    Parameters
+    पैरामीटर्स
     ----------
     prefix : str
-        nome do arquivo XML sem extensão
+        XML फ़ाइल का नाम बिना एक्सटेंशन के
     file_path : str
-        caminho completo do arquivo
+        फ़ाइल का पूरा पथ
 
-    Returns
+    रिटर्न्स
     -------
     dict
-        Um dicionário contendo o tipo de arquivo e o caminho do arquivo.
+        फ़ाइल प्रकार और पते के साथ एक डिक्शनरी
     """
     import os
 
-    # Extrai o nome do arquivo e a extensão
-    file_name = os.path.basename(file_path)
-    file_extension = os.path.splitext(file_name)[1].lower()
-
-    # Determina o tipo de arquivo com base na extensão
-    if file_extension in ['.jpg', '.png', '.gif', '.mp4', '.mov']:
-        file_type = 'asset'
-    elif file_extension in ['.xml', '.json', '.txt']:
-        file_type = 'rendition'
+    # फ़ाइल प्रकार की पहचान करें
+    if prefix.startswith("asset"):
+        file_type = "asset"
+    elif prefix.startswith("rendition"):
+        file_type = "rendition"
     else:
-        file_type = 'unknown'
+        file_type = "unknown"
 
-    # Retorna um dicionário com o tipo de arquivo e o caminho do arquivo
+    # फ़ाइल का पूरा पथ
+    full_path = os.path.abspath(file_path)
+
+    # रिटर्न डिक्शनरी
     return {
-        'type': file_type,
-        'path': file_path
+        "file_type": file_type,
+        "file_path": full_path
     }

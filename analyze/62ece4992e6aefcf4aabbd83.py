@@ -2,24 +2,15 @@ import subprocess
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Call the given command(s).
-
-    :param commands: List of commands to execute.
-    :param args: List of arguments to pass to the commands.
-    :param cwd: Current working directory for the command (default is None).
-    :param verbose: If True, print the command and its output (default is False).
-    :param hide_stderr: If True, suppress stderr output (default is False).
-    :param env: Environment variables to pass to the command (default is None).
-    :return: The return code of the command.
+    दिए गए कमांड(s) को कॉल करें।
     """
-    full_command = commands + args
+    command_list = commands if isinstance(commands, list) else [commands]
+    command_list.extend(args)
+    
     stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
     
-    if verbose:
-        print(f"Running command: {' '.join(full_command)}")
-    
     process = subprocess.Popen(
-        full_command,
+        command_list,
         cwd=cwd,
         stdout=subprocess.PIPE,
         stderr=stderr,
@@ -30,9 +21,10 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     stdout, stderr = process.communicate()
     
     if verbose:
+        print(f"Command: {' '.join(command_list)}")
         if stdout:
-            print(f"stdout:\n{stdout}")
+            print(f"Stdout: {stdout}")
         if stderr and not hide_stderr:
-            print(f"stderr:\n{stderr}")
+            print(f"Stderr: {stderr}")
     
-    return process.returncode
+    return process.returncode, stdout, stderr

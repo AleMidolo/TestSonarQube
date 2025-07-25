@@ -3,17 +3,17 @@ from lxml import etree
 
 def retrieve_diaspora_host_meta(host):
     """
-    Retrieve a remote Diaspora host-meta document.
+    एक रिमोट डायस्पोरा होस्ट-मेटा डॉक्यूमेंट प्राप्त करें।
 
-    :arg host: Host to retrieve from
-    :returns: ``XRD`` instance
+    :arg host: वह होस्ट जिससे डेटा प्राप्त करना है
+    :returns: ``XRD`` इंस्टेंस
     """
     url = f"https://{host}/.well-known/host-meta"
     response = requests.get(url)
     response.raise_for_status()
     
     # Parse the XML response
-    xml_root = etree.fromstring(response.content)
+    xml_content = response.content
+    xrd = etree.fromstring(xml_content)
     
-    # Return the parsed XRD instance
-    return xml_root
+    return xrd

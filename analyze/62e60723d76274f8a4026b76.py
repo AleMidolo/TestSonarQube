@@ -1,27 +1,45 @@
-from datetime import time, timedelta
+from datetime import datetime, timedelta, timezone
 
-def from_ticks(cls, ticks, tz=None):
-    """
-    Create a time from ticks (nanoseconds since midnight).
+class Time:
+    def __init__(self, hour, minute, second, microsecond, tzinfo=None):
+        self.hour = hour
+        self.minute = minute
+        self.second = second
+        self.microsecond = microsecond
+        self.tzinfo = tzinfo
 
-    :param ticks: nanoseconds since midnight
-    :type ticks: int
-    :param tz: optional timezone
-    :type tz: datetime.tzinfo
+    @classmethod
+    def from_ticks(cls, ticks, tz=None):
+        """
+        टिक से समय बनाएं (आधी रात के बाद से नैनोसेकंड)।
 
-    :rtype: Time
+        :param ticks: आधी रात के बाद से नैनोसेकंड
+        :type ticks: int
+        :param tz: वैकल्पिक टाइमज़ोन
+        :type tz: datetime.tzinfo
 
-    :raises ValueError: if ticks is out of bounds
-        (0 <= ticks < 86400000000000)
-    """
-    if not (0 <= ticks < 86400000000000):
-        raise ValueError("ticks must be between 0 and 86400000000000")
-    
-    nanoseconds = ticks % 1000000000
-    seconds_total = ticks // 1000000000
-    seconds = seconds_total % 60
-    minutes_total = seconds_total // 60
-    minutes = minutes_total % 60
-    hours = minutes_total // 60
-    
-    return time(hour=hours, minute=minutes, second=seconds, microsecond=nanoseconds // 1000, tzinfo=tz)
+        :rtype: Time
+
+        :raises ValueError: यदि ticks सीमा से बाहर है
+            (0 <= ticks < 86400000000000)
+        """
+        if not (0 <= ticks < 86400000000000):
+            raise ValueError("ticks must be in the range 0 <= ticks < 86400000000000")
+        
+        # Convert ticks to microseconds
+        microseconds = ticks // 1000
+        
+        # Create a timedelta from the microseconds
+        delta = timedelta(microseconds=microseconds)
+        
+        # Create a datetime object at midnight and add the timedelta
+        midnight = datetime(1, 1, 1, tzinfo=tz)
+        dt = midnight + delta
+        
+        # Extract time components
+        hour = dt.hour
+        minute = dt.minute
+        second = dt.second
+        microsecond = dt.microsecond
+        
+        return cls(hour, minute, second, microsecond, tz)

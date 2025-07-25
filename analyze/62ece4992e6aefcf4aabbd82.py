@@ -2,14 +2,11 @@ import re
 
 def get_pattern(pattern, strip=True):
     """
-    This method converts the given string to regex pattern.
+    यह मेथड दी गई स्ट्रिंग को रेगुलर एक्सप्रेशन (Regex) पैटर्न में बदलता है।
     
-    Args:
-        pattern (str): The string to be converted to a regex pattern.
-        strip (bool): If True, strips leading and trailing whitespace from the pattern.
-    
-    Returns:
-        re.Pattern: The compiled regex pattern.
+    :param pattern: स्ट्रिंग जिसे रेगुलर एक्सप्रेशन पैटर्न में बदलना है।
+    :param strip: यदि True है, तो स्ट्रिंग के शुरुआत और अंत के सफेद स्थान हटा दिए जाएंगे।
+    :return: रेगुलर एक्सप्रेशन पैटर्न।
     """
     if strip:
         pattern = pattern.strip()

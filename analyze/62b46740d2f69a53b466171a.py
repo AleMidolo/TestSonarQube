@@ -1,6 +1,6 @@
 def pretty(self, indent=0, debug=False):
     """
-    Return a pretty formatted representation of self.
+    स्वयं का एक सुंदर स्वरूपित प्रतिनिधित्व लौटाएँ।
     """
     indent_str = ' ' * indent
     result = f"{indent_str}{self.__class__.__name__}(\n"

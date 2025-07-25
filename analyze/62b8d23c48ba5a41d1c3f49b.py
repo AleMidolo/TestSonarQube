@@ -1,9 +1,10 @@
 def popitem(self):
     """
-    Remove and return the `(key, value)` pair most recently used.
+    सबसे हाल ही में उपयोग किए गए `(कुंजी, मान)` जोड़े को हटाएं और वापस करें।
     """
     if not self:
-        raise KeyError("popitem(): dictionary is empty")
+        raise KeyError("Dictionary is empty")
     key = next(reversed(self))
-    value = self.pop(key)
+    value = self[key]
+    del self[key]
     return (key, value)

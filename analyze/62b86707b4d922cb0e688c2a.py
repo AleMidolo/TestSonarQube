@@ -1,19 +1,18 @@
 def on(self, hook):
     """
-    Decorator function to add a new handler to the registry.
+    रजिस्ट्री में एक नया हैंडलर जोड़ने के लिए डेकोरेटर फ़ंक्शन।
 
-    Args:
-        hook (HookType): Hook attribute for which to register the handler.
+    पैरामीटर (Args):
+    - hook (HookType): वह हुक विशेषता जिसके लिए हैंडलर को पंजीकृत (register) करना है।
 
-    Returns:
-        callable: Decorator for registering listeners for the specified
-        hook.
+    रिटर्न (Returns):
+    - callable: निर्दिष्ट हुक के लिए श्रोताओं (listeners) को पंजीकृत करने के लिए डेकोरेटर।
     """
     def decorator(func):
-        if not hasattr(self, '_registry'):
-            self._registry = {}
-        if hook not in self._registry:
-            self._registry[hook] = []
-        self._registry[hook].append(func)
+        if not hasattr(self, '_listeners'):
+            self._listeners = {}
+        if hook not in self._listeners:
+            self._listeners[hook] = []
+        self._listeners[hook].append(func)
         return func
     return decorator

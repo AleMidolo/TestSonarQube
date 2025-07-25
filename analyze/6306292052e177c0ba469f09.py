@@ -1,22 +1,24 @@
-from enum import Enum
+from typing import Union
 
-class RequestType(Enum):
-    PUBLIC_MESSAGE = 1
-    PRIVATE_MESSAGE = 2
-    LEGACY_PAYLOAD = 3
-    UNKNOWN = 4
-
-def identify_request(request: RequestType) -> str:
+def identify_request(request: RequestType) -> bool:
     """
-    Try to identify whether this is a Diaspora request.
+    यह फ़ंक्शन यह पहचानने की कोशिश करता है कि यह एक Diaspora अनुरोध है या नहीं।
 
-    Try first public message. Then private message. Then check if this is a legacy payload.
+    सबसे पहले सार्वजनिक संदेश (public message) की जांच करें। 
+    फिर निजी संदेश (private message) की जांच करें। 
+    अंत में यह जांचें कि क्या यह एक पुराना (legacy) payload है।
     """
-    if request == RequestType.PUBLIC_MESSAGE:
-        return "This is a public message request."
-    elif request == RequestType.PRIVATE_MESSAGE:
-        return "This is a private message request."
-    elif request == RequestType.LEGACY_PAYLOAD:
-        return "This is a legacy payload request."
-    else:
-        return "This request type is unknown."
+    # Check for public message
+    if hasattr(request, 'public_message') and request.public_message:
+        return True
+    
+    # Check for private message
+    if hasattr(request, 'private_message') and request.private_message:
+        return True
+    
+    # Check for legacy payload
+    if hasattr(request, 'legacy_payload') and request.legacy_payload:
+        return True
+    
+    # If none of the above, it's not a Diaspora request
+    return False

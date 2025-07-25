@@ -1,21 +1,21 @@
 def dict_insert(dic, val, key, *keys):
     """
-    Insert a value of a nested key into a dictionary.
+    एक डिक्शनरी में नेस्टेड कुंजी का मान डालें।
 
-    To insert a value for a nested key, all ancestor keys should be given as
-    method's arguments.
+    नेस्टेड कुंजी के लिए मान डालने के लिए, सभी पूर्वज कुंजियों को 
+    इस मेथड के आर्ग्युमेंट्स के रूप में दिया जाना चाहिए।
 
-    Example:
-      dict_insert({}, 'val', 'key1.key2'.split('.'))
+    उदाहरण:
+      dict_insert({}, 'मान', 'कुंजी1.कुंजी2'.split('.'))
 
-    :param dic: a dictionary object to insert the nested key value into
-    :param val: a value to insert to the given dictionary
-    :param key: first key in a chain of keys that will store the value
-    :param keys: sub keys in the keys chain
+    :param dic: वह डिक्शनरी ऑब्जेक्ट जिसमें नेस्टेड कुंजी का मान डालना है।
+    :param val: वह मान जो दी गई डिक्शनरी में डालना है।
+    :param key: कुंजियों की श्रृंखला में पहली कुंजी जो मान को स्टोर करेगी।
+    :param keys: कुंजियों की श्रृंखला में उप-कुंजियां।
     """
     current = dic
     for k in keys[:-1]:
         if k not in current:
             current[k] = {}
         current = current[k]
-    current[keys[-1] if keys else key] = val
+    current[keys[-1]] = val

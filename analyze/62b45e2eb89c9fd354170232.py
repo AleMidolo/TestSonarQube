@@ -1,19 +1,25 @@
 def next_version(version):
     """
-    Next version identifier following existing pattern.
+    दिए गए संस्करण पैटर्न के अनुसार अगला संस्करण पहचानकर्ता प्राप्त करें।
 
-    Must deal with both zero-prefixed and non-zero prefixed versions.
+    यह फ़ंक्शन शून्य-प्रिफिक्स (zero-prefixed) और गैर-शून्य-प्रिफिक्स (non-zero prefixed) दोनों प्रकार के संस्करणों को संभालने में सक्षम होना चाहिए।
     """
-    # Split the version into parts
+    # Split the version string into parts
     parts = version.split('.')
     
+    # Convert each part to an integer
+    parts = [int(part) for part in parts]
+    
     # Increment the last part
-    last_part = int(parts[-1]) + 1
-    parts[-1] = str(last_part)
+    parts[-1] += 1
     
-    # Handle zero-prefixed versions
-    if parts[-1].startswith('0'):
-        parts[-1] = parts[-1].zfill(len(parts[-1]))
+    # Handle carry-over for parts
+    for i in range(len(parts) - 1, 0, -1):
+        if parts[i] > 9:
+            parts[i] = 0
+            parts[i - 1] += 1
     
-    # Join the parts back together
-    return '.'.join(parts)
+    # Convert back to string
+    next_version_str = '.'.join(map(str, parts))
+    
+    return next_version_str

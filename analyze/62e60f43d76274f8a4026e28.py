@@ -1,25 +1,24 @@
-from datetime import time, timedelta, timezone
+from datetime import datetime, timezone, timedelta
 
 def hydrate_time(nanoseconds, tz=None):
     """
-    Hydrator for `Time` and `LocalTime` values.
+    `Time` और `LocalTime` मानों के लिए हाइड्रेटर।  
 
-    :param nanoseconds: The number of nanoseconds since midnight.
-    :param tz: The timezone to apply (optional).
-    :return: A `time` object representing the given nanoseconds.
+    पैरामीटर (Parameters):
+    - nanoseconds: समय को नैनोसेकंड में दर्शाने वाला पूर्णांक
+    - tz: समय क्षेत्र (timezone) जिसमें समय को दर्शाना है (डिफ़ॉल्ट: None)
+
+    वापसी मान:
+    - समय (datetime.datetime ऑब्जेक्ट)
     """
-    # Convert nanoseconds to seconds and microseconds
-    seconds, nanoseconds = divmod(nanoseconds, 1_000_000_000)
-    microseconds = nanoseconds // 1_000
+    # Convert nanoseconds to seconds
+    seconds = nanoseconds / 1e9
     
-    # Create a timedelta representing the time since midnight
-    delta = timedelta(seconds=seconds, microseconds=microseconds)
+    # Create a datetime object from the timestamp
+    dt = datetime.fromtimestamp(seconds, tz=timezone.utc)
     
-    # Create a time object from the timedelta
-    t = (time.min + delta).time()
-    
-    # Apply timezone if provided
+    # If a timezone is provided, convert the datetime to that timezone
     if tz is not None:
-        t = t.replace(tzinfo=timezone(tz))
+        dt = dt.astimezone(tz)
     
-    return t
+    return dt

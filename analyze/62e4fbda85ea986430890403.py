@@ -2,11 +2,10 @@ import random
 
 def _shuffled(seq: Sequence[str]) -> list[str]:
     """
-    Deterministically shuffle the input sequence of strings.
+    निर्धारित (Deterministically) तरीके से शफल करें
     """
-    # Create a copy of the sequence to avoid modifying the original
-    seq_copy = list(seq)
     # Use a fixed seed for deterministic shuffling
     random.seed(42)
-    random.shuffle(seq_copy)
-    return seq_copy
+    shuffled_seq = list(seq)
+    random.shuffle(shuffled_seq)
+    return shuffled_seq

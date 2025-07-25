@@ -1,16 +1,22 @@
 def vertex3tuple(vertices):
     """
-    Return 3 points for each vertex of the polygon. This will include the vertex and the 2 points on both sides of the vertex.
+    प्रत्येक वर्टेक्स के लिए 3 पॉइंट्स लौटाएगा।  
+    यह वर्टेक्स और उसके दोनों ओर के 2 पॉइंट्स को शामिल करेगा।  
 
-    :param vertices: List of vertices of the polygon.
-    :return: List of 3-tuples representing the vertex and its two adjacent vertices.
+    उदाहरण के लिए:  
+    यदि पॉलीगॉन के वर्टेक्स ABCD हैं, तो यह निम्नलिखित 3-ट्यूपल्स लौटाएगा:  
+    `DAB, ABC, BCD, CDA`  
+    वर्टेक्स का क्रम:
+
+    # A    B    C    D  -> वर्टेक्स का क्रम
     """
     n = len(vertices)
     result = []
     for i in range(n):
-        # Get the current vertex and its two adjacent vertices
-        prev_vertex = vertices[(i - 1) % n]
-        curr_vertex = vertices[i]
-        next_vertex = vertices[(i + 1) % n]
-        result.append((prev_vertex, curr_vertex, next_vertex))
+        # Get the current vertex and its two neighbors
+        current = vertices[i]
+        prev = vertices[(i - 1) % n]
+        next_ = vertices[(i + 1) % n]
+        # Create the 3-tuple and add it to the result
+        result.append((prev, current, next_))
     return result

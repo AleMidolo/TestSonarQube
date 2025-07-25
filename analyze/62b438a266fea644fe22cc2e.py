@@ -2,27 +2,24 @@ import argparse
 
 def parse_arguments(*unparsed_arguments):
     """
-    Given command-line arguments with which this script was invoked, parse the arguments and return
-    them as a dict mapping from subparser name (or "global") to an argparse.Namespace instance.
+    इस स्क्रिप्ट को जिन कमांड-लाइन आर्ग्युमेंट्स के साथ चलाया गया है, उन आर्ग्युमेंट्स को पार्स (parse) करें और उन्हें एक डिक्शनरी (dict) के रूप में लौटाएं। यह डिक्शनरी सबपार्सर (subparser) के नाम (या "global") को `argparse.Namespace` इंस्टेंस से मैप करती है।
     """
     parser = argparse.ArgumentParser(description="Parse command-line arguments.")
-    subparsers = parser.add_subparsers(dest="subparser_name", help="Sub-command help")
+    subparsers = parser.add_subparsers(dest="command", help="Sub-command help")
 
-    # Example subparser for a command
-    subparser_example = subparsers.add_parser("example", help="Example subcommand")
-    subparser_example.add_argument("--example_arg", type=str, help="Example argument")
-
-    # Global arguments
-    parser.add_argument("--global_arg", type=str, help="Global argument")
+    # Add subparsers here as needed
+    # Example:
+    # subparser_example = subparsers.add_parser('example', help='Example subparser')
+    # subparser_example.add_argument('--example_arg', type=str, help='Example argument')
 
     # Parse the arguments
-    parsed_args = parser.parse_args(list(unparsed_arguments))
+    args = parser.parse_args(unparsed_arguments)
 
-    # Organize parsed arguments into a dictionary
-    args_dict = {}
-    if hasattr(parsed_args, "subparser_name"):
-        args_dict[parsed_args.subparser_name] = parsed_args
+    # Create a dictionary to map subparser names to their respective Namespace objects
+    parsed_arguments = {}
+    if hasattr(args, 'command'):
+        parsed_arguments[args.command] = args
     else:
-        args_dict["global"] = parsed_args
+        parsed_arguments['global'] = args
 
-    return args_dict
+    return parsed_arguments

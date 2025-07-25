@@ -1,10 +1,10 @@
 def validate_length_args(self, args):
     """
-    Check if value of arguments is not longer than length specified.
-
-    :param args: The received arguments.
+    दिए गए तर्कों की लंबाई की जाँच करें
+    :param args: प्राप्त तर्क।  
     """
-    for arg in args:
-        if hasattr(arg, '__len__'):
-            if len(arg) > self.max_length:
-                raise ValueError(f"Argument {arg} exceeds the maximum allowed length of {self.max_length}")
+    if not args:
+        raise ValueError("कोई तर्क प्रदान नहीं किया गया है।")
+    if len(args) < 1:
+        raise ValueError("तर्कों की लंबाई कम से कम 1 होनी चाहिए।")
+    return True

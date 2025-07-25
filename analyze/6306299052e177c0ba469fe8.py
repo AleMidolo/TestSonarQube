@@ -1,16 +1,14 @@
 def check_sender_and_entity_handle_match(sender_handle, entity_handle):
     """
-    Ensure that sender and entity handles match.
+    सुनिश्चित करें कि सेंडर और एंटिटी हैंडल मेल खाते हैं।
 
-    Basically we've already verified the sender is who they say when receiving the payload. However, the sender might
-    be trying to set another author in the payload itself, since Diaspora has the sender in both the payload headers
-    AND the object. We must ensure they're the same.
+    मूल रूप से, हमने पहले ही यह सत्यापित कर लिया है कि जब पेलोड प्राप्त हो रहा है, तो सेंडर वही है जो वह होने का दावा करता है। हालांकि, सेंडर पेलोड में किसी अन्य लेखक को सेट करने की कोशिश कर सकता है, क्योंकि Diaspora में सेंडर की जानकारी पेलोड हेडर और ऑब्जेक्ट दोनों में होती है। हमें यह सुनिश्चित करना होगा कि ये दोनों समान हैं।
 
     Args:
-        sender_handle (str): The handle of the sender.
-        entity_handle (str): The handle of the entity in the payload.
+        sender_handle (str): सेंडर का हैंडल।
+        entity_handle (str): एंटिटी का हैंडल।
 
     Returns:
-        bool: True if the handles match, False otherwise.
+        bool: True अगर सेंडर और एंटिटी हैंडल मेल खाते हैं, अन्यथा False।
     """
     return sender_handle == entity_handle

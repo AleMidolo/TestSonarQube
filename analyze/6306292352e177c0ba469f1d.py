@@ -1,18 +1,27 @@
-from typing import Set, Tuple, Callable
 import re
+from typing import Set, Tuple, Callable
 
 def find_tags(text: str, replacer: Callable = None) -> Tuple[Set, str]:
     """
-    Find tags in text.
+    टेक्स्ट में टैग्स खोजें।
 
-    Tries to ignore tags inside code blocks.
+    कोड ब्लॉक्स के अंदर मौजूद टैग्स को अनदेखा करने की कोशिश करता है।
 
-    Optionally, if passed a "replacer", will also replace the tag word with the result
-    of the replacer function called with the tag word.
+    वैकल्पिक रूप से, यदि "replacer" पास किया गया है, तो यह टैग शब्द को 
+    replacer फ़ंक्शन द्वारा लौटाए गए परिणाम से बदल देगा, जिसे टैग शब्द के साथ कॉल किया गया है।
 
-    Returns a set of tags and the original or replaced text.
+    एक सेट के रूप में टैग्स और मूल या बदला हुआ टेक्स्ट लौटाता है।
     """
-    # Regular expression to match tags (words starting with #)
-    tag_pattern = re.compile(r'#\w+')
+    # Regex to find tags (assuming tags are words starting with '@')
+    tag_pattern = re.compile(r'(?<!`)(@\w+)(?!`)')
     
-    # Regular expression to match code blocks (
+    # Find all tags in the text
+    tags = set(tag_pattern.findall(text))
+    
+    # Replace tags if a replacer function is provided
+    if replacer:
+        def replace_tag(match):
+            return replacer(match.group(1))
+        text = tag_pattern.sub(replace_tag, text)
+    
+    return tags, text

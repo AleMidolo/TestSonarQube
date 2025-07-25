@@ -1,32 +1,54 @@
 def absorb(self, args):
     """
-    Given an `args` sequence of expressions, return a new list of expression
-    applying absorption and negative absorption.
+    `args` अभिव्यक्तियों के अनुक्रम को दिया गया है, एक नई सूची लौटाएं जिसमें अवशोषण और नकारात्मक अवशोषण लागू किया गया हो।
 
-    See https://en.wikipedia.org/wiki/Absorption_law
+    अधिक जानकारी के लिए देखें: [https://en.wikipedia.org/wiki/Absorption_law](https://en.wikipedia.org/wiki/Absorption_law)
 
-    Absorption::
+    **अवशोषण (Absorption):**
 
-        A & (A | B) = A, A | (A & B) = A
+    A & (A | B) = A, A | (A & B) = A
 
-    Negative absorption::
+    **नकारात्मक अवशोषण (Negative Absorption):**
 
-        A & (~A | B) = A & B, A | (~A & B) = A | B
+    A & (~A | B) = A & B, A | (~A & B) = A | B
     """
-    def apply_absorption(expr):
+    result = []
+    for expr in args:
         if isinstance(expr, tuple):
-            if expr[0] == '&':
-                a, b = expr[1], expr[2]
-                if isinstance(b, tuple) and b[0] == '|' and b[1] == a:
-                    return a  # A & (A | B) = A
-                if isinstance(b, tuple) and b[0] == '|' and b[1] == ('~', a):
-                    return ('&', a, b[2])  # A & (~A | B) = A & B
-            elif expr[0] == '|':
-                a, b = expr[1], expr[2]
-                if isinstance(b, tuple) and b[0] == '&' and b[1] == a:
-                    return a  # A | (A & B) = A
-                if isinstance(b, tuple) and b[0] == '&' and b[1] == ('~', a):
-                    return ('|', a, b[2])  # A | (~A & B) = A | B
-        return expr
-
-    return [apply_absorption(arg) for arg in args]
+            if len(expr) == 3:
+                op, left, right = expr
+                if op == '&':
+                    if left == right:
+                        result.append(left)
+                    elif isinstance(right, tuple) and len(right) == 3 and right[0] == '|':
+                        if left == right[1]:
+                            result.append(left)
+                        elif left == right[2]:
+                            result.append(left)
+                        else:
+                            result.append(expr)
+                    elif isinstance(right, tuple) and len(right) == 3 and right[0] == '|' and right[1] == ('~', left):
+                        result.append(('&', left, right[2]))
+                    else:
+                        result.append(expr)
+                elif op == '|':
+                    if left == right:
+                        result.append(left)
+                    elif isinstance(right, tuple) and len(right) == 3 and right[0] == '&':
+                        if left == right[1]:
+                            result.append(left)
+                        elif left == right[2]:
+                            result.append(left)
+                        else:
+                            result.append(expr)
+                    elif isinstance(right, tuple) and len(right) == 3 and right[0] == '&' and right[1] == ('~', left):
+                        result.append(('|', left, right[2]))
+                    else:
+                        result.append(expr)
+                else:
+                    result.append(expr)
+            else:
+                result.append(expr)
+        else:
+            result.append(expr)
+    return result

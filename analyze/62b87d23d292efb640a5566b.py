@@ -2,24 +2,18 @@ import subprocess
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Call the given command(s).
-
-    :param commands: List of commands to execute.
-    :param args: List of arguments to pass to the commands.
-    :param cwd: Current working directory for the command (optional).
-    :param verbose: If True, print the command and its output (optional).
-    :param hide_stderr: If True, suppress stderr output (optional).
-    :param env: Environment variables to pass to the command (optional).
-    :return: The output of the command.
+    दिए गए कमांड(s) को चलाएं।
     """
-    full_command = commands + args
-    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
+    command_list = commands if isinstance(commands, list) else [commands]
+    command_list.extend(args)
+    
+    stderr = subprocess.DEVNULL if hide_stderr else None
     
     if verbose:
-        print(f"Running command: {' '.join(full_command)}")
+        print(f"Running command: {' '.join(command_list)}")
     
     result = subprocess.run(
-        full_command,
+        command_list,
         cwd=cwd,
         env=env,
         stdout=subprocess.PIPE,
@@ -30,4 +24,4 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     if verbose:
         print(f"Command output: {result.stdout}")
     
-    return result.stdout
+    return result

@@ -1,6 +1,6 @@
 def plus_or_dot(pieces):
     """
-    Return a + if we don't already have one, else return a .
+     यदि हमारे पास पहले से "+" है, तो "." लौटाएं, अन्यथा "+" लौटाएं।
     """
     if '+' in pieces:
         return '.'

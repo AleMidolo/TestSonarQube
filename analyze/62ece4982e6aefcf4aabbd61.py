@@ -1,6 +1,6 @@
 def _dictsum(dicts):
     """
-    Combine values of the dictionaries supplied by iterable dicts.
+    पुनरावृत्तीय dicts द्वारा प्रदान किए गए शब्दकोशों के मानों को संयोजित करें।
 
     >>> _dictsum([{'a': 1, 'b': 2}, {'a': 5, 'b': 0}])
     {'a': 6, 'b': 2}

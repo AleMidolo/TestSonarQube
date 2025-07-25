@@ -3,43 +3,26 @@ from zope.interface.verify import verifyObject, verifyClass
 
 def _verify(iface, candidate, tentative=False, vtype=None):
     """
-    Verify that *candidate* might correctly provide *iface*.
+    Verify that the candidate correctly provides the interface.
 
-    This involves:
+    This includes:
+    - Ensuring the candidate claims to provide the interface using `iface.providedBy`
+      (unless tentative is True, in which case this step is skipped).
+    - Ensuring the candidate defines all required methods.
+    - Ensuring the methods have the correct signatures (as far as possible).
+    - Ensuring the candidate defines all required attributes.
 
-    - Making sure the candidate claims that it provides the
-      interface using ``iface.providedBy`` (unless *tentative* is `True`,
-      in which case this step is skipped). This means that the candidate's class
-      declares that it `implements <zope.interface.implementer>` the interface,
-      or the candidate itself declares that it `provides <zope.interface.provider>`
-      the interface
-
-    - Making sure the candidate defines all the necessary methods
-
-    - Making sure the methods have the correct signature (to the
-      extent possible)
-
-    - Making sure the candidate defines all the necessary attributes
-
-    :return bool: Returns a true value if everything that could be
-       checked passed.
-    :raises zope.interface.Invalid: If any of the previous
-       conditions does not hold.
-
-    .. versionchanged:: 5.0
-        If multiple methods or attributes are invalid, all such errors
-        are collected and reported. Previously, only the first error was reported.
-        As a special case, if only one such error is present, it is raised
-        alone, like before.
+    :return bool: Returns a true value if all checks pass.
+    :raises zope.interface.Invalid: If any of the above conditions are not met.
     """
     errors = []
 
     # Step 1: Verify that the candidate claims to provide the interface
     if not tentative:
         if not iface.providedBy(candidate):
-            errors.append(f"{candidate} does not claim to provide {iface}")
+            errors.append(f"{candidate} does not claim to provide {iface}.")
 
-    # Step 2: Verify that the candidate defines all necessary methods and attributes
+    # Step 2: Verify that the candidate defines all required methods and attributes
     try:
         if vtype == 'class':
             verifyClass(iface, candidate)
@@ -48,7 +31,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     except Invalid as e:
         errors.append(str(e))
 
-    # Step 3: Collect and report errors
+    # Step 3: If there are any errors, raise them
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])

@@ -1,9 +1,12 @@
-def get_option_spec(self, command_name, argument_name):
+def get_option_spec(self, command_name):
     """
-    Gets the specification for the specified option name.
-    """
-    if not hasattr(self, '_option_specs'):
-        return None
+    दिए गए विकल्प नाम के लिए विनिर्देश प्राप्त करता है।
     
-    command_specs = self._option_specs.get(command_name, {})
-    return command_specs.get(argument_name, None)
+    Args:
+        command_name (str): विकल्प का नाम जिसके लिए विनिर्देश प्राप्त करना है।
+    
+    Returns:
+        dict: विकल्प का विनिर्देश, यदि उपलब्ध हो। अन्यथा, None।
+    """
+    # Assuming self.options is a dictionary where keys are command names and values are their specifications
+    return self.options.get(command_name, None)

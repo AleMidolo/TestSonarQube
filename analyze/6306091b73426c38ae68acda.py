@@ -1,5 +1,5 @@
 def plugins_manager(cls):
     """
-    Gets the plugin manager.
+    प्लगइन मैनेजर प्राप्त करता है।
     """
-    return cls._plugin_manager
+    return cls._plugins_manager

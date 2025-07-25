@@ -3,22 +3,18 @@ from typing import Tuple
 
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
-    Parse an image href into composite parts.
+    छवि के हाइपरलिंक (href) को उसके घटक भागों में विभाजित करें।
 
-    :param image_href: href of an image
-    :returns: a tuple of the form (image_id, netloc, use_ssl)
-    :raises ValueError: if the image_href is not a valid URL or does not contain an image ID
+    :param image_href: छवि का हाइपरलिंक (href)
+    :returns: एक ट्यूपल (tuple) के रूप में परिणाम, जिसमें (image_id, netloc, use_ssl) शामिल हैं
+    :raises ValueError: यदि हाइपरलिंक अमान्य है
     """
     parsed_url = urlparse(image_href)
     if not parsed_url.netloc or not parsed_url.path:
-        raise ValueError("Invalid image href: missing netloc or path")
+        raise ValueError("Invalid image href")
 
-    # Extract the image ID from the path
     image_id = parsed_url.path.strip('/')
-    if not image_id:
-        raise ValueError("Invalid image href: missing image ID")
-
-    # Determine if the URL uses SSL
+    netloc = parsed_url.netloc
     use_ssl = parsed_url.scheme == 'https'
 
-    return (image_id, parsed_url.netloc, use_ssl)
+    return image_id, netloc, use_ssl

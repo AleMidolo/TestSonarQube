@@ -1,11 +1,17 @@
 def validate_choices_args(self, args):
     """
-    Check if value of choice arguments is one of the available choices.
+    चॉइस आर्ग्युमेंट्स का मान उपलब्ध विकल्पों में से एक है या नहीं, इसकी जांच करें।
 
-    :param args: The received arguments.
+    :param args: प्राप्त किए गए आर्ग्युमेंट्स।
     """
-    for arg_name, arg_value in args.items():
-        if hasattr(self, arg_name):
-            choices = getattr(self, arg_name).choices
-            if arg_value not in choices:
-                raise ValueError(f"Invalid value for {arg_name}. Must be one of {choices}")
+    if not hasattr(self, 'choices'):
+        raise AttributeError("'choices' attribute is not defined in the class.")
+    
+    if not isinstance(self.choices, (list, tuple)):
+        raise TypeError("'choices' should be a list or tuple.")
+    
+    for arg in args:
+        if arg not in self.choices:
+            raise ValueError(f"Invalid choice: {arg}. Valid choices are: {self.choices}")
+    
+    return True

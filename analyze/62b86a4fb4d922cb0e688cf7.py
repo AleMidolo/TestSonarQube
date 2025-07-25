@@ -2,16 +2,18 @@ import re
 
 def validate_key(key):
     """
-    Validate the given key against the corresponding regular expression.
+    दिए गए कुंजी (key) को संबंधित नियमित अभिव्यक्ति (regular expression) के खिलाफ सत्यापित करें।
 
-    Args:
-        key: the string to validate
+    आर्ग्युमेंट्स (Args):
+        key: सत्यापन के लिए स्ट्रिंग (string)
 
-    Raises:
-        ValidationError: if the given key is not conform to the regular expression.
+    त्रुटि (Raises):
+        ValidationError: यदि दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।
     """
     # Define the regular expression pattern for the key
-    pattern = r'^[A-Za-z0-9_]+$'  # Example pattern: alphanumeric and underscores
+    pattern = r'^[A-Za-z0-9_]+$'  # Example pattern: alphanumeric and underscore
     
     if not re.match(pattern, key):
-        raise ValidationError(f"Key '{key}' does not match the required pattern.")
+        raise ValueError("ValidationError: दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।")
+    
+    return True

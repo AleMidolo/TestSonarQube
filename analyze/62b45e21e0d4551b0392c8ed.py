@@ -2,34 +2,36 @@ import os
 
 def find_path_type(path):
     """
-    Return a string indicating the type of thing at the given path.
+    दिए गए पथ पर मौजूद वस्तु के प्रकार को इंगित करने वाला एक स्ट्रिंग लौटाता है।
 
-    Return values:
-        'root' - looks like an OCFL Storage Root
-        'object' - looks like an OCFL Object
-        'file' - a file, might be an inventory
-        other string explains error description
+    लौटाए जाने वाले मान:
+        'root' - ऐसा लगता है कि यह OCFL स्टोरेज रूट है
+        'object' - ऐसा लगता है कि यह OCFL ऑब्जेक्ट है
+        'file' - यह एक फ़ाइल है, जो शायद एक इन्वेंटरी हो सकती है
+        अन्य स्ट्रिंग - त्रुटि विवरण को समझाती है
 
-    Looks only at "0=*" Namaste files to determine the directory type.
+    यह केवल "0=*" नमस्ते फ़ाइलों को देखकर निर्देशिका के प्रकार का निर्धारण करता है।
     """
     if not os.path.exists(path):
-        return "Path does not exist"
+        return "त्रुटि: पथ मौजूद नहीं है"
     
     if os.path.isfile(path):
         return "file"
     
-    namaste_files = [f for f in os.listdir(path) if f.startswith('0=')]
+    if os.path.isdir(path):
+        # Check if it's an OCFL storage root
+        if os.path.exists(os.path.join(path, "0=ocfl_1.0")):
+            return "root"
+        
+        # Check if it's an OCFL object
+        if os.path.exists(os.path.join(path, "0=ocfl_object_1.0")):
+            return "object"
+        
+        # Check for any "0=*" file
+        for item in os.listdir(path):
+            if item.startswith("0="):
+                return "object"
+        
+        return "त्रुटि: पथ OCFL रूट या ऑब्जेक्ट नहीं है"
     
-    if not namaste_files:
-        return "No Namaste file found"
-    
-    namaste_file = namaste_files[0]
-    with open(os.path.join(path, namaste_file), 'r') as f:
-        content = f.read().strip()
-    
-    if content == "ocfl_1.0":
-        return "root"
-    elif content == "ocfl_object_1.0":
-        return "object"
-    else:
-        return f"Unknown Namaste content: {content}"
+    return "त्रुटि: अज्ञात पथ प्रकार"

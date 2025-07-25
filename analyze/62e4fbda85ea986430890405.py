@@ -1,7 +1,6 @@
 import subprocess
 import sys
-import os
-from typing import Sequence, Any
+from typing import Sequence, Any, Tuple
 
 def xargs(
         cmd: tuple[str, ...],
@@ -13,34 +12,42 @@ def xargs(
         **kwargs: Any,
 ) -> tuple[int, bytes]:
     """
-    A simplified implementation of xargs.
+    Xargs का एक सरल कार्यान्वयन।
 
-    color: Make a pty if on a platform that supports it
-    target_concurrency: Target number of partitions to run concurrently
+    - color: यदि प्लेटफ़ॉर्म इसे सपोर्ट करता है, तो एक PTY (Pseudo Terminal) बनाएं।
+    - target_concurrency: एक साथ चलने वाले विभाजनों (partitions) की लक्षित संख्या।
     """
     if color and sys.platform != "win32":
         import pty
-        master, slave = pty.openpty()
-        kwargs['stdout'] = slave
-        kwargs['stderr'] = slave
+        import os
 
-    processes = []
-    for i in range(0, len(varargs), target_concurrency):
-        chunk = varargs[i:i + target_concurrency]
+        master_fd, slave_fd = pty.openpty()
         process = subprocess.Popen(
-            cmd + tuple(chunk),
+            cmd + tuple(varargs),
+            stdout=slave_fd,
+            stderr=slave_fd,
+            close_fds=True,
             **kwargs
         )
-        processes.append(process)
-
-    for process in processes:
-        process.wait()
-
-    if color and sys.platform != "win32":
-        os.close(slave)
-        output = os.read(master, _max_length)
-        os.close(master)
-    else:
+        os.close(slave_fd)
         output = b""
-
-    return (process.returncode, output)
+        while True:
+            try:
+                data = os.read(master_fd, 1024)
+                if not data:
+                    break
+                output += data
+            except OSError:
+                break
+        os.close(master_fd)
+        return_code = process.wait()
+        return (return_code, output)
+    else:
+        process = subprocess.Popen(
+            cmd + tuple(varargs),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            **kwargs
+        )
+        stdout, stderr = process.communicate()
+        return (process.returncode, stdout)

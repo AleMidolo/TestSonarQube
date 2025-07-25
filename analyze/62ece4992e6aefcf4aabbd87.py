@@ -2,15 +2,7 @@ import logging
 
 def build_app_logger(name='app', logfile='app.log', debug=True):
     """
-    General purpose application logger. Useful mainly for debugging.
-
-    Args:
-        name (str): Name of the logger. Defaults to 'app'.
-        logfile (str): File to which logs will be written. Defaults to 'app.log'.
-        debug (bool): If True, sets the log level to DEBUG. Otherwise, sets it to INFO.
-
-    Returns:
-        logging.Logger: Configured logger instance.
+    सामान्य उद्देश्य के लिए एप्लिकेशन लॉगर। मुख्य रूप से डिबगिंग के लिए उपयोगी।
     """
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG if debug else logging.INFO)

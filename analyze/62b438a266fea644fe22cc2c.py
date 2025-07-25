@@ -2,20 +2,20 @@ import argparse
 
 def make_parsers():
     """
-    Build a top-level parser and its subparsers and return them as a tuple.
+    शीर्ष-स्तरीय पार्सर और इसके उप-पार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
     """
-    # Create the top-level parser
-    parser = argparse.ArgumentParser(description="Top-level parser")
+    # शीर्ष-स्तरीय पार्सर बनाएं
+    parser = argparse.ArgumentParser(description="शीर्षक स्तर का पार्सर")
     
-    # Create subparsers
-    subparsers = parser.add_subparsers(dest="command", help="Sub-command help")
+    # उप-पार्सर बनाएं
+    subparsers = parser.add_subparsers(dest="command", help="उप-कमांड")
     
-    # Example subparser 1
-    parser_a = subparsers.add_parser('command_a', help='Command A help')
-    parser_a.add_argument('--arg1', type=int, help='Argument 1 for command A')
+    # उप-पार्सर 1
+    parser_a = subparsers.add_parser('command_a', help='कमांड ए के लिए मदद')
+    parser_a.add_argument('--option_a', type=str, help='कमांड ए के लिए विकल्प')
     
-    # Example subparser 2
-    parser_b = subparsers.add_parser('command_b', help='Command B help')
-    parser_b.add_argument('--arg2', type=str, help='Argument 2 for command B')
+    # उप-पार्सर 2
+    parser_b = subparsers.add_parser('command_b', help='कमांड बी के लिए मदद')
+    parser_b.add_argument('--option_b', type=int, help='कमांड बी के लिए विकल्प')
     
     return parser, subparsers

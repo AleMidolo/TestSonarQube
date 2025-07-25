@@ -3,21 +3,20 @@ from typing import Optional
 
 def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
     """
-    Try to retrieve an RFC7033 webfinger document. Does not raise if it fails.
+    एक RFC7033 वेबफिंगर दस्तावेज़ प्राप्त करने का प्रयास करें। 
+    यदि यह विफल होता है, तो कोई अपवाद उत्पन्न नहीं करता।
     """
     try:
-        # Split the handle into username and domain
-        username, domain = handle.split('@')
+        # Extract the domain from the handle
+        domain = handle.split('@')[-1]
+        webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
         
-        # Construct the webfinger URL
-        url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
-        
-        # Make the GET request
-        response = requests.get(url, headers={"Accept": "application/jrd+json"})
+        # Make the request to retrieve the WebFinger document
+        response = requests.get(webfinger_url, timeout=5)
         response.raise_for_status()
         
-        # Return the response content if successful
+        # Return the JSON content if successful
         return response.text
-    except Exception:
+    except (requests.RequestException, ValueError):
         # Return None if any error occurs
         return None

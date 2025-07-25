@@ -1,7 +1,7 @@
 def _create_converter(self) -> _converting._Converter:
     """
-    Create the parameter style converter.
+    पैरामीटर स्टाइल कन्वर्टर बनाएं।
 
-    Returns the parameter style converter (:class:`._converting._Converter`).
+    रिटर्न करता है पैरामीटर स्टाइल कन्वर्टर (:class:`._converting._Converter`)।
     """
     return _converting._Converter()
