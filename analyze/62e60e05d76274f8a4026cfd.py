@@ -6,7 +6,7 @@ def index(self, key):
     :return: indice  
     :rtype: int
     """
-    for idx, element in enumerate(self):
-        if element == key:
+    for idx, value in enumerate(self):
+        if value == key:
             return idx
     raise ValueError(f"Key {key} not found in the collection.")

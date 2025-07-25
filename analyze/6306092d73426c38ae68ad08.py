@@ -20,7 +20,7 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
 
 def _evaluate_condition(self, condition, args):
     # Implementa la logica per valutare la condizione
-    # Restituisce True se la condizione è soddisfatta, altrimenti False
-    # Questo è un esempio di implementazione, la logica specifica dipenderà
-    # dai dettagli della condizione e degli argomenti.
-    return all(arg in args for arg in condition)
+    # Questa funzione deve restituire True se la condizione è soddisfatta
+    # e False altrimenti.
+    # Placeholder per la logica di valutazione della condizione
+    return True  # Modificare con la logica reale

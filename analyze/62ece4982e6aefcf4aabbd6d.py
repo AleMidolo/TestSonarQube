@@ -7,7 +7,7 @@ def string_to_int(string: str, alphabet: List[str]) -> int:
     Si assume che l'input abbia la cifra più significativa per prima.
     """
     base = len(alphabet)
-    result = 0
+    value = 0
     for char in string:
-        result = result * base + alphabet.index(char)
-    return result
+        value = value * base + alphabet.index(char)
+    return value

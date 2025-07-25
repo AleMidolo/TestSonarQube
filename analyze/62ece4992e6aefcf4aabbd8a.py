@@ -29,14 +29,8 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
 
             configurations[filename] = config
 
-        except json.JSONDecodeError as e:
-            log_record = logger.error(f"Error parsing {filename}: {e}")
-            log_records.append(log_record)
-        except FileNotFoundError as e:
-            log_record = logger.error(f"File not found: {filename}: {e}")
-            log_records.append(log_record)
         except Exception as e:
-            log_record = logger.error(f"Unexpected error with {filename}: {e}")
+            log_record = logger.error(f"Error loading configuration from {filename}: {e}")
             log_records.append(log_record)
 
     return configurations, log_records

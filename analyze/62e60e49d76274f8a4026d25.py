@@ -31,9 +31,8 @@ def unit_of_work(metadata=None, timeout=None):
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            # Logica per gestire i metadati e il timeout
-            # Questo è un esempio e potrebbe richiedere l'integrazione con il driver Neo4j
-            with some_neo4j_transaction_manager(metadata=metadata, timeout=timeout) as tx:
-                return func(tx, *args, **kwargs)
+            # Implementazione della logica per gestire la transazione
+            # e applicare i metadati e il timeout
+            pass  # Sostituire con la logica effettiva
         return wrapper
     return decorator
