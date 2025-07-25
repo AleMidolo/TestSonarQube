@@ -4,7 +4,7 @@ from typing import Dict, List, Union
 class ValidationError(Exception):
     def __init__(self, messages: List[Dict[str, str]]):
         self.messages = messages
-        super().__init__(f"Validation failed with {len(messages)} errors.")
+        super().__init__(f"Validation failed with errors: {messages}")
 
 def validate_key(key: str) -> bool:
     # Example regex for key validation
@@ -13,10 +13,10 @@ def validate_key(key: str) -> bool:
 
 def validate_value(value: str) -> bool:
     # Example regex for value validation
-    value_regex = r'^[a-zA-Z0-9_]*$'
+    value_regex = r'^[a-zA-Z0-9_]+$'
     return bool(re.match(value_regex, value))
 
-def _validate_labels(labels: Dict[Union[str, bool], Union[str, List, bool]]) -> None:
+def _validate_labels(labels: Dict[Union[str, int, bool], Union[str, List, bool]]) -> None:
     errors = []
     
     for key, value in labels.items():
@@ -36,7 +36,7 @@ def _validate_labels(labels: Dict[Union[str, bool], Union[str, List, bool]]) -> 
                     errors.append({str(item): 'expected string or bytes-like object'})
                 elif not validate_value(item):
                     errors.append({item: f"Label value '{item}' does not match the regex"})
-        elif not isinstance(value, bool):
+        else:
             errors.append({str(value): 'expected string or bytes-like object'})
     
     if errors:

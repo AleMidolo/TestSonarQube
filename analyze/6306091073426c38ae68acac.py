@@ -5,7 +5,7 @@ def dict_insert(dic, val, key, *keys):
     要为嵌套键插入值，必须将所有上级键作为方法的参数提供。
 
     示例：
-      dict_insert({}, 'val', 'key1.key2'.split('.'))
+        dict_insert({}, 'val', 'key1.key2'.split('.'))
 
     :param dic: 要插入嵌套键值的字典对象
     :param val: 要插入到字典中的值
@@ -18,4 +18,3 @@ def dict_insert(dic, val, key, *keys):
             current[k] = {}
         current = current[k]
     current[keys[-1] if keys else key] = val
-    return dic

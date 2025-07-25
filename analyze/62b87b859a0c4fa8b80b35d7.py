@@ -25,9 +25,10 @@ def to_csv(self, separator=", ", header=None):
 
     for point in self.points:
         # Convert coordinates to string
-        coords = separator.join(map(str, point.coordinates))
+        coords = separator.join(map(str, point.coords))
         # Convert values to string
         values = separator.join(map(str, point.values))
+        # Combine coordinates and values
         output.append(f"{coords}{separator}{values}\n")
 
     return "".join(output)

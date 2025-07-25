@@ -3,12 +3,11 @@ def get_versions():
     获取版本信息。如果无法获取版本信息，则返回默认值。
     获取版本信息或在无法获取时返回默认值
     """
+    import sys
     try:
-        # 假设我们有一个获取版本信息的函数或方法
-        # 这里我们模拟一个获取版本信息的操作
-        version = "1.0.0"  # 假设这是获取到的版本信息
-        return version
+        # 尝试获取 Python 版本信息
+        version_info = sys.version_info
+        return f"Python {version_info.major}.{version_info.minor}.{version_info.micro}"
     except Exception as e:
         # 如果无法获取版本信息，返回默认值
-        default_version = "0.0.0"
-        return default_version
+        return "Unknown version"

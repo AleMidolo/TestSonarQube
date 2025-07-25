@@ -17,10 +17,28 @@ def _legacy_mergeOrderings(orderings):
     merged = []
     seen = set()
     
-    for ordering in orderings:
-        for item in ordering:
-            if item not in seen:
-                merged.append(item)
-                seen.add(item)
+    while True:
+        # 找到所有列表的第一个元素
+        candidates = []
+        for ordering in orderings:
+            if ordering:
+                candidates.append(ordering[0])
+        
+        if not candidates:
+            break
+        
+        # 找到所有候选元素中最先出现的元素
+        for candidate in candidates:
+            if candidate not in seen:
+                merged.append(candidate)
+                seen.add(candidate)
+                # 从所有列表中移除该元素
+                for ordering in orderings:
+                    if ordering and ordering[0] == candidate:
+                        ordering.pop(0)
+                break
+        else:
+            # 如果没有找到新的元素，说明所有元素都已处理
+            break
     
     return merged

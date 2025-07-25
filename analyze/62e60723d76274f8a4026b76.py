@@ -8,11 +8,11 @@ def from_ticks(cls, ticks, tz=None):
     :type ticks: int
     :param tz: 可选的时区信息
     :type tz: datetime.tzinfo
-    :rtype: Time
+    :rtype: time
     :raises ValueError: 如果时间戳超出范围(0 <= ticks < 86400000000000)
     """
     if not (0 <= ticks < 86400000000000):
-        raise ValueError("时间戳超出范围 (0 <= ticks < 86400000000000)")
+        raise ValueError("时间戳超出范围(0 <= ticks < 86400000000000)")
     
     # 将纳秒转换为秒和微秒
     seconds, nanoseconds = divmod(ticks, 1_000_000_000)
@@ -23,6 +23,6 @@ def from_ticks(cls, ticks, tz=None):
     minutes, seconds = divmod(remainder, 60)
     
     # 创建时间对象
-    time_obj = time(hour=hours, minute=minutes, second=seconds, microsecond=microseconds, tzinfo=tz)
+    time_obj = time(hour=int(hours), minute=int(minutes), second=int(seconds), microsecond=int(microseconds), tzinfo=tz)
     
     return time_obj

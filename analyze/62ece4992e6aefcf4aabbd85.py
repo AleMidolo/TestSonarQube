@@ -1,7 +1,9 @@
 from typing import Set, Optional
 from rdflib import Graph, URIRef, Node
 
-def find_roots(graph: Graph, prop: URIRef, roots: Optional[Set[Node]] = None) -> Set[Node]:
+def find_roots(
+    graph: Graph, prop: URIRef, roots: Optional[Set[Node]] = None
+) -> Set[Node]:
     """
     在某种传递层级结构中查找根节点。
     `find_roots(graph, rdflib.RDFS.subClassOf)` 将返回子类层级结构中所有根节点的集合。
@@ -21,9 +23,9 @@ def find_roots(graph: Graph, prop: URIRef, roots: Optional[Set[Node]] = None) ->
     # 获取所有可能的根节点
     candidates = set(graph.subjects(prop, None))
     
-    # 过滤掉那些有父节点的候选节点
+    # 过滤掉那些作为其他节点的子节点的候选节点
     for candidate in candidates:
-        if not any(graph.triples((candidate, prop, None)):
+        if not any(graph.triples((None, prop, candidate))):
             roots.add(candidate)
     
     return roots

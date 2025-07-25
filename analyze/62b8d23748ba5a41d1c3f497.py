@@ -5,10 +5,9 @@ def popitem(self):
     if not self:
         raise KeyError("popitem(): dictionary is empty")
     
-    # Find the least recently used key
-    lru_key = next(iter(self))
+    # 找到最少使用的键
+    least_used_key = min(self, key=lambda k: self[k])
     
-    # Remove the key-value pair
-    value = self.pop(lru_key)
-    
-    return (lru_key, value)
+    # 移除并返回键值对
+    value = self.pop(least_used_key)
+    return (least_used_key, value)

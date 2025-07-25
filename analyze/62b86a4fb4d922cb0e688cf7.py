@@ -10,7 +10,7 @@ def validate_key(key):
     异常:
         ValidationError: 如果给定的键不符合正则表达式，则抛出此异常。
     """
-    # 定义正则表达式，假设键只能包含字母、数字和下划线，且长度为1到50
+    # 定义正则表达式，假设键只能包含字母、数字和下划线，且长度在1到50之间
     pattern = r'^[a-zA-Z0-9_]{1,50}$'
     
     if not re.match(pattern, key):

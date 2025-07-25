@@ -25,6 +25,6 @@ def make_find_paths(find_paths):
             result.append(path)
         else:
             # Convert path to glob pattern
-            glob_pattern = f'sh:**/*{os.path.basename(path)}*/**'
+            glob_pattern = f"sh:**/*{os.path.basename(path)}*/**"
             result.append(glob_pattern)
     return tuple(result)

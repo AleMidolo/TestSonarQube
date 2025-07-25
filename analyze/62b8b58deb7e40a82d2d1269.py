@@ -8,10 +8,14 @@ def directlyProvidedBy(object):
     provides = getattr(object, "__provides__", None)
     if provides is None:
         # 如果没有指定规范，尝试获取 implements 规范
-        implements = getattr(object, "__implements__", None)
+        implements = getattr(object, "__implemented__", None)
         if implements is not None:
-            # 如果 implements 规范存在，去除基类提供的声明
-            from zope.interface import implementedBy
-            return implementedBy(object) - implementedBy(object.__class__)
-        return None
-    return provides
+            # 如果只有一个基类，去除它以排除类提供的声明
+            if len(implements) == 1:
+                return None
+            else:
+                return implements
+        else:
+            return None
+    else:
+        return provides

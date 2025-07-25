@@ -21,14 +21,17 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
         result.append(alphabet[remainder])
         number = number // base
     
-    # Reverse to get the most significant digit first
+    # Reverse the result to get the most significant digit first
     result.reverse()
     
     # Convert list to string
     result_str = ''.join(result)
     
-    # Apply padding if necessary
+    # Apply padding if specified
     if padding is not None:
-        result_str = result_str.rjust(padding, alphabet[0])
+        if len(result_str) < padding:
+            result_str = alphabet[0] * (padding - len(result_str)) + result_str
+        elif len(result_str) > padding:
+            raise ValueError("Padding length is smaller than the length of the result string.")
     
     return result_str

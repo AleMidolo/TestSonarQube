@@ -7,17 +7,20 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param parser_name: 命令名称，例如 main、virsh、ospd 等
     :param values_dict: 包含参数的字典
     """
-    for key, value in values_dict.items():
-        if isinstance(value, str):
-            # 尝试将字符串转换为整数
-            if value.isdigit():
+    if parser_name == 'main':
+        # 假设 main 命令的参数需要转换为整数
+        for key, value in values_dict.items():
+            if key in ['port', 'timeout']:
                 values_dict[key] = int(value)
-            # 尝试将字符串转换为浮点数
-            elif value.replace('.', '', 1).isdigit():
-                values_dict[key] = float(value)
-            # 尝试将字符串转换为布尔值
-            elif value.lower() in ('true', 'false'):
+    elif parser_name == 'virsh':
+        # 假设 virsh 命令的参数需要转换为布尔值
+        for key, value in values_dict.items():
+            if key in ['verbose', 'debug']:
                 values_dict[key] = value.lower() == 'true'
-            # 其他情况保持为字符串
-            else:
-                values_dict[key] = value
+    elif parser_name == 'ospd':
+        # 假设 ospd 命令的参数需要转换为浮点数
+        for key, value in values_dict.items():
+            if key in ['threshold', 'rate']:
+                values_dict[key] = float(value)
+    # 可以根据需要添加更多的 parser_name 处理逻辑
+    return values_dict
