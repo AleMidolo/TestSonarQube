@@ -17,11 +17,11 @@ def is_fill_request_seq(seq):
     except NameError:
         pass
         
-    # Handle single item case
+    # If seq is a single item, check if it's a FillRequest
     if not isinstance(seq, Sequence):
         return is_fill_request(seq)
         
-    # Handle sequence case
+    # If seq is a sequence, check if it contains at least one FillRequest
     has_fill_request = False
     for item in seq:
         if is_fill_request(item):

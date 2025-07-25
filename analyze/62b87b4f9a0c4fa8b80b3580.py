@@ -10,7 +10,6 @@ def integral(bins, edges):
     for i in range(len(bins)):
         # 计算每个bin的宽度
         width = edges[i + 1] - edges[i]
-        # 面积 = 高度 * 宽度
-        area = bins[i] * width
-        total += area
+        # 计算每个矩形的面积并累加
+        total += bins[i] * width
     return total

@@ -4,44 +4,50 @@ def extend_cli(self, root_subparsers):
 
     :param subparser: 要扩展的子解析器对象。
     """
-    # 创建子命令解析器
+    # 创建一个新的子解析器
     parser = root_subparsers.add_parser(
         'standards',
         help='Standards and specifications related commands'
     )
-    
-    # 添加子命令
+
+    # 添加子命令解析器
     subparsers = parser.add_subparsers(
         title='Standards commands',
         dest='standards_command'
     )
-    
+
     # 添加列表命令
     list_parser = subparsers.add_parser(
         'list',
         help='List available standards'
     )
-    
-    # 添加查看命令
-    view_parser = subparsers.add_parser(
-        'view',
-        help='View details of a specific standard'
+    list_parser.add_argument(
+        '--format',
+        choices=['text', 'json'],
+        default='text',
+        help='Output format'
     )
-    view_parser.add_argument(
-        'standard_id',
-        help='ID of the standard to view'
-    )
-    
+
     # 添加验证命令
     validate_parser = subparsers.add_parser(
         'validate',
-        help='Validate against a standard'
+        help='Validate against standards'
     )
     validate_parser.add_argument(
-        'standard_id',
-        help='ID of the standard to validate against'
+        'standard',
+        help='Standard to validate against'
     )
     validate_parser.add_argument(
-        'target',
-        help='Target to validate'
+        'file',
+        help='File to validate'
+    )
+
+    # 添加信息命令
+    info_parser = subparsers.add_parser(
+        'info',
+        help='Show detailed information about a standard'
+    )
+    info_parser.add_argument(
+        'standard',
+        help='Standard to show information about'
     )

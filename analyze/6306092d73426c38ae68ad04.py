@@ -33,13 +33,10 @@ def get_parser_option_specs(self, command_name):
         # 构建选项规格
         option_spec = {
             'names': option_names,
-            'dest': action.dest,
-            'help': action.help,
             'required': action.required,
+            'help': action.help or '',
             'default': action.default,
-            'type': action.type.__name__ if action.type else None,
-            'choices': action.choices,
-            'action': action.__class__.__name__
+            'type': action.type.__name__ if action.type else 'str'
         }
         
         options.append(option_spec)

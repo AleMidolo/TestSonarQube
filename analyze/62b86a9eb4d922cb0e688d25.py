@@ -14,4 +14,5 @@ def _get_resource_name_regex():
     # - 长度在1-63个字符之间
     pattern = r'^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$'
     
+    # 编译正则表达式并返回
     return re.compile(pattern)

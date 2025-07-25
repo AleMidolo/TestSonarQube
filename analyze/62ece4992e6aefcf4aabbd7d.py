@@ -20,7 +20,7 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     if extra_env:
         env.update(extra_env)
 
-    # Run the subprocess with timeout
+    # Run the subprocess
     result = subprocess.run(
         cmd,
         env=env,

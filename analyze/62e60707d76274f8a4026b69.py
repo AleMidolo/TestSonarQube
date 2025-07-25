@@ -4,34 +4,35 @@ def point_type(name, fields, srid_map):
     """
     class_attrs = {
         '__slots__': tuple(fields) + ('srid',),
-        '_fields': tuple(fields),
         '_srid_map': srid_map
     }
 
     def __init__(self, *args, **kwargs):
         if len(args) > len(fields):
-            raise TypeError(f'Expected {len(fields)} arguments, got {len(args)}')
+            raise TypeError(f"Expected {len(fields)} arguments, got {len(args)}")
         
-        # Set values from positional args
+        # Set fields from positional args
         for field, value in zip(fields, args):
             setattr(self, field, value)
             
-        # Set remaining fields from kwargs
-        remaining_fields = set(fields) - {fields[i] for i in range(len(args))}
-        for field in remaining_fields:
-            if field in kwargs:
-                setattr(self, field, kwargs[field])
-            else:
-                setattr(self, field, None)
+        # Set fields from keyword args
+        for field, value in kwargs.items():
+            if field not in fields:
+                raise TypeError(f"Unexpected keyword argument '{field}'")
+            setattr(self, field, value)
+            
+        # Set default values for unset fields
+        for field in fields:
+            if not hasattr(self, field):
+                setattr(self, field, 0.0)
                 
-        # Set SRID
-        self.srid = kwargs.get('srid', None)
-        
+        # Set default SRID
+        self.srid = srid_map.get('default', None)
+    
     def __repr__(self):
-        field_values = [f'{field}={getattr(self, field)}' for field in fields]
-        if self.srid is not None:
-            field_values.append(f'srid={self.srid}')
-        return f"{name}({', '.join(field_values)})"
+        values = [getattr(self, field) for field in fields]
+        fields_str = ', '.join(f"{field}={value}" for field, value in zip(fields, values))
+        return f"{name}({fields_str})"
     
     class_attrs['__init__'] = __init__
     class_attrs['__repr__'] = __repr__

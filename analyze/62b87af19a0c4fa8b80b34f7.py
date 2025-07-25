@@ -23,7 +23,7 @@ def difference(d1, d2, level=-1):
                 if nested_diff:
                     result[key] = nested_diff
             # 如果值不相等，且level为1或-1，则添加到结果中
-            elif value != d2[key]:
+            elif value != d2[key] and level in {1, -1}:
                 result[key] = value
                 
     return result

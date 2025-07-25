@@ -29,7 +29,7 @@ def normalized(self):
     # 将秒转换为微秒
     total_microseconds = self.microseconds + (total_seconds * 1000000)
     
-    # 反向计算,将微秒规范化为更大的单位
+    # 从微秒开始,逐级向上计算并取整
     result.microseconds = total_microseconds % 1000000
     remaining_seconds = total_microseconds // 1000000
     

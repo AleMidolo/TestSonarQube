@@ -24,7 +24,7 @@ def size_to_bytes(size: str) -> int:
 
     size = size.strip().upper()
     
-    # 如果输入只包含数字
+    # 如果只有数字,直接返回整数值
     if size.isdigit():
         return int(size)
         
@@ -37,8 +37,8 @@ def size_to_bytes(size: str) -> int:
         else:
             unit += char
             
-    # 如果没有找到有效单位，返回原始数字
-    if unit not in units:
+    # 如果没有找到有效单位,返回原始数字
+    if not unit or unit not in units:
         return int(float(number))
         
     # 计算字节数

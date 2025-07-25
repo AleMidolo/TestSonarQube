@@ -20,7 +20,7 @@ def validate_version_inventories(self, version_dirs):
         if not version_inventory:
             raise ValueError(f"Version {version} missing complete inventory")
             
-        # 与根清单比较,记录差异
+        # 计算与根清单的差异
         diffs = {}
         for file_path, checksum in version_inventory.items():
             if file_path not in root_inventory:

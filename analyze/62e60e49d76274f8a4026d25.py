@@ -7,10 +7,10 @@ def unit_of_work(metadata=None, timeout=None):
             return f(*args, **kwargs)
         
         # Copy function metadata
-        wrapper.__name__ = f.__name__
-        wrapper.__doc__ = f.__doc__
+        from functools import update_wrapper
+        update_wrapper(wrapper, f)
         
-        # Add metadata and timeout as attributes
+        # Add metadata and timeout attributes
         wrapper.metadata = metadata
         wrapper.timeout = timeout
         

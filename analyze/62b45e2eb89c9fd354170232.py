@@ -18,7 +18,7 @@ def next_version(version):
             nums[i] += 1
             break
             
-    # If we carried through all digits, add a 1 at start
+    # If we carried through all digits, add a 1 at the start
     if i < 0:
         nums = [1] + nums
         lengths = [1] + lengths

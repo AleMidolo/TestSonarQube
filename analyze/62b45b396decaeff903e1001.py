@@ -15,6 +15,6 @@ def amend_bzparams(self, params, bug_ids):
     if len(bug_ids) == 1:
         params['id'] = bug_ids[0]
     else:
-        params['ids'] = bug_ids
+        params['ids'] = ','.join(bug_ids)
         
     return params

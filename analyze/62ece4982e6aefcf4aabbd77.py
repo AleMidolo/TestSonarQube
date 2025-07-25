@@ -16,7 +16,7 @@ def parse_frequency(frequency):
     """
     if frequency is None or frequency == "always":
         return None
-
+        
     try:
         # 分割频率字符串为数字和单位
         number, unit = frequency.split()
@@ -37,12 +37,12 @@ def parse_frequency(frequency):
         }
         
         # 检查单位是否支持
-        if unit.lower() not in units:
+        if unit not in units:
             raise ValueError(f"Unsupported time unit: {unit}")
             
-        # 构建timedelta参数
-        kwargs = {units[unit.lower()]: number}
+        # 构造timedelta参数
+        kwargs = {units[unit]: number}
         return timedelta(**kwargs)
         
-    except (ValueError, AttributeError):
+    except (ValueError, TypeError):
         raise ValueError(f"Invalid frequency format: {frequency}")

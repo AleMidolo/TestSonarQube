@@ -13,12 +13,8 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     # 设置stderr重定向
     stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
     
-    # 如果verbose为True,打印执行的命令
-    if verbose:
-        print(f"Running command: {' '.join(cmd)}")
-    
+    # 执行命令
     try:
-        # 执行命令
         process = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
@@ -29,17 +25,22 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
         )
         
         # 获取输出
-        output, error = process.communicate()
+        stdout, stderr = process.communicate()
         
+        # 打印详细信息
+        if verbose:
+            if stdout:
+                print(stdout)
+            if stderr and not hide_stderr:
+                print(stderr, file=sys.stderr)
+                
         # 检查返回码
         if process.returncode != 0:
-            if error and not hide_stderr:
-                print(f"Error: {error}", file=sys.stderr)
             raise subprocess.CalledProcessError(process.returncode, cmd)
             
-        return output.strip() if output else ""
+        return stdout.strip() if stdout else ""
         
     except (OSError, subprocess.CalledProcessError) as e:
         if verbose:
-            print(f"Command failed: {str(e)}", file=sys.stderr)
+            print(f"Command failed: {e}", file=sys.stderr)
         raise

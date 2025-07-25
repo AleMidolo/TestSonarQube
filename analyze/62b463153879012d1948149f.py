@@ -24,22 +24,22 @@ def _eval_file(prefix, file_path):
     # Get component ID (filename without extension)
     component_id = os.path.splitext(filename)[0]
     
-    # Handle PDF files
+    # For PDF files
     if ext == 'pdf':
         return {
             'component_id': component_id,
             'file_path': file_path
         }
         
-    # Determine file type based on filename
-    if '_asset' in filename:
+    # Determine file type based on path
+    if 'asset' in file_path.lower():
         ftype = 'asset'
-    elif '_rendition' in filename:
-        ftype = 'rendition'
+    elif 'rendition' in file_path.lower():
+        ftype = 'rendition' 
     else:
         ftype = 'unknown'
         
-    # Return dictionary with all file info
+    # For non-PDF files
     return {
         'component_id': component_id,
         'file_path': file_path,

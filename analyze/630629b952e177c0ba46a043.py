@@ -11,13 +11,13 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     :返回值: 字典
     """
     # 移除URL末尾的斜杠
-    base_url = url.rstrip('/')
+    url = url.rstrip('/')
     
     # 如果没有提供document_path,使用默认路径
     if document_path is None:
         document_path = '/nodeinfo/2.0'
     else:
-        # 确保document_path以斜杠开头
+        # 确保document_path以/开头
         document_path = f"/{document_path.lstrip('/')}"
     
     # 构建返回的字典
@@ -25,7 +25,7 @@ def get_nodeinfo_well_known_document(url, document_path=None):
         "links": [
             {
                 "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
-                "href": f"{base_url}{document_path}"
+                "href": f"{url}{document_path}"
             }
         ]
     }

@@ -23,6 +23,6 @@ def check_digests_present_and_used(self, manifest_files, digests_used):
         # 检查是否所有使用的摘要都在清单中
         missing_digests = set(digests_used) - manifest_digests
         if missing_digests:
-            return self.error(f"Missing required digests in manifest: {missing_digests}")
+            return self.error(f"Missing digests in manifest: {missing_digests}")
 
     return None
