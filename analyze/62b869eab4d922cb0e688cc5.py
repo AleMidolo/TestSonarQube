@@ -20,12 +20,10 @@ def update_last_applied_manifest_dict_from_resp(
     """
     for key, value in observer_schema.items():
         if key not in last_applied_manifest:
-            if isinstance(value, dict):
-                last_applied_manifest[key] = {}
-                update_last_applied_manifest_dict_from_resp(
-                    last_applied_manifest[key], value, response.get(key, {})
-                )
-            elif key in response:
-                last_applied_manifest[key] = response[key]
-            else:
+            if key not in response:
                 raise KeyError(f"El campo observado '{key}' no está presente en la respuesta de Kubernetes.")
+            last_applied_manifest[key] = response[key]
+        if isinstance(value, dict):
+            update_last_applied_manifest_dict_from_resp(
+                last_applied_manifest[key], value, response
+            )

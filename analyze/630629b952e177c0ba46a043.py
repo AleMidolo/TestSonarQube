@@ -11,7 +11,6 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     Un diccionario (`dict`).
     """
     nodeinfo_document = {
-        "version": "2.0",
         "links": [
             {
                 "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",

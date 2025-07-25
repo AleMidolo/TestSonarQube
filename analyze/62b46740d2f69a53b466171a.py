@@ -5,10 +5,10 @@ def pretty(self, indent=0, debug=False):
     indent_str = ' ' * indent
     representation = f"{indent_str}Class: {self.__class__.__name__}\n"
     
-    for attr, value in self.__dict__.items():
-        representation += f"{indent_str}  {attr}: {value}\n"
-    
     if debug:
-        representation += f"{indent_str}  Debug Info: {self.__dict__}\n"
+        representation += f"{indent_str}Debug Info: {vars(self)}\n"
+    
+    for attr, value in vars(self).items():
+        representation += f"{indent_str}{attr}: {value}\n"
     
     return representation
