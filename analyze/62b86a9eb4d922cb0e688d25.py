@@ -10,8 +10,8 @@ def _get_resource_name_regex():
     
     # 资源名称规则:
     # - 必须以字母或数字开头和结尾
-    # - 可以包含字母、数字、连字符(-)
-    # - 长度在1-63个字符之间
-    pattern = r'^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$'
+    # - 可以包含字母、数字、连字符(-)和点(.)
+    # - 长度在1-253个字符之间
+    pattern = r'^[a-zA-Z0-9][a-zA-Z0-9\-\.]{0,251}[a-zA-Z0-9]$'
     
     return re.compile(pattern)

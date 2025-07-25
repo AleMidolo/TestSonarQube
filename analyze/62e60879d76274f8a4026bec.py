@@ -20,39 +20,37 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None,
     if timeout is not None:
         parameters["timeout"] = timeout
         
-    # Add database name if provided
+    # Add database name if provided (Bolt 4.0+)
     if db is not None:
         parameters["db"] = db
         
-    # Add impersonated user if provided
+    # Add impersonated user if provided (Bolt 4.4+)
     if imp_user is not None:
         parameters["imp_user"] = imp_user
 
-    # Set up dehydration hooks
-    if dehydration_hooks:
-        self._dehydration_hooks = dehydration_hooks
-    else:
-        self._dehydration_hooks = {}
-
-    # Set up hydration hooks
-    if hydration_hooks:
-        self._hydration_hooks = hydration_hooks
-    else:
-        self._hydration_hooks = {}
-
-    # Create BEGIN transaction message
-    message = {
+    # Create transaction configuration
+    tx_config = {
         "mode": mode,
         "parameters": parameters
     }
 
-    # Create and return Response object with handlers
-    response = Response(message=message, 
-                       dehydration_hooks=self._dehydration_hooks,
-                       hydration_hooks=self._hydration_hooks)
+    # Set up dehydration hooks
+    if dehydration_hooks:
+        self._dehydration_hooks = dehydration_hooks
     
-    # Add any custom handlers
-    for key, handler in handlers.items():
-        response.add_handler(key, handler)
+    # Set up hydration hooks
+    if hydration_hooks:
+        self._hydration_hooks = hydration_hooks
 
-    return response
+    # Begin transaction and create Response object
+    try:
+        self._connection.begin(tx_config)
+        response = Response(self._connection, **handlers)
+        return response
+    except Exception as e:
+        # Clean up hooks if set
+        if dehydration_hooks:
+            self._dehydration_hooks = None
+        if hydration_hooks:
+            self._hydration_hooks = None
+        raise e

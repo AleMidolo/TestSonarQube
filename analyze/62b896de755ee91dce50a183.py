@@ -45,7 +45,6 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
             if not ignoretz and tz is not None:
                 dt = dt.replace(tzinfo=tz)
                 
-            # Return parsed datetime
             if kwargs.get('fuzzy_with_tokens', False):
                 return dt, res.tokens
             return dt

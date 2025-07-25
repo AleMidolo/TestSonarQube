@@ -4,5 +4,5 @@ def _c_optimizations_ignored():
     与 `_c_optimizations_required` 功能相反。
     """
     import os
-    pure_python = os.environ.get('PURE_PYTHON')
-    return pure_python is not None and pure_python != '0'
+    pure_python = os.environ.get("PURE_PYTHON")
+    return pure_python is not None and pure_python != "0"

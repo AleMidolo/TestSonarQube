@@ -17,7 +17,7 @@ def retrieve_diaspora_host_meta(host):
         response.raise_for_status()
         
         # 解析 XRD 文档
-        xrd = XRD.parse_xrd(response.text)
+        xrd = XRD.parse_xml(response.content)
         return xrd
         
     except requests.exceptions.RequestException as e:
@@ -27,7 +27,7 @@ def retrieve_diaspora_host_meta(host):
             response = requests.get(host_meta_url)
             response.raise_for_status()
             
-            xrd = XRD.parse_xrd(response.text)
+            xrd = XRD.parse_xml(response.content)
             return xrd
             
         except requests.exceptions.RequestException as e:

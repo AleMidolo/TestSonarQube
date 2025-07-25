@@ -13,7 +13,7 @@ _borgmatic()
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     
     # 主要命令选项
-    opts="init create check prune list info export-tar extract mount umount config validate"
+    opts="init create prune check list info export-tar extract mount umount config validate"
     
     # 通用选项
     common_opts="--config --verbosity --syslog-verbosity --log-file --monitoring-verbosity --help"

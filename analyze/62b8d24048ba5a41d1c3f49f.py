@@ -9,8 +9,10 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     并为每个缓存项设置一个生存时间（TTL，单位为秒）。
     """
     def decorator(func):
-        # 使用OrderedDict存储缓存,保持插入顺序
+        # 使用OrderedDict来实现LRU缓存
         cache = OrderedDict()
+        # 存储缓存项的过期时间
+        expires = OrderedDict()
         
         # 生成缓存键的函数
         def make_key(args, kwargs):
@@ -27,30 +29,35 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
             
             # 检查是否在缓存中且未过期
             if key in cache:
-                result, timestamp = cache[key]
-                if now - timestamp <= ttl:
-                    # 将访问的项移到末尾(最近使用)
+                if now < expires[key]:
+                    # 将访问的项移到OrderedDict的末尾
                     cache.move_to_end(key)
-                    return result
+                    expires.move_to_end(key)
+                    return cache[key]
                 else:
-                    # 过期则删除
+                    # 删除过期项
                     del cache[key]
+                    del expires[key]
             
-            # 计算新结果
+            # 计算新值
             result = func(*args, **kwargs)
             
             # 如果缓存已满，删除最早的项
             if maxsize > 0:
                 while len(cache) >= maxsize:
                     cache.popitem(last=False)
-                    
-            # 存储新结果
-            cache[key] = (result, now)
+                    expires.popitem(last=False)
+                
+                # 添加新项到缓存
+                cache[key] = result
+                expires[key] = now + ttl
+            
             return result
             
-        # 添加缓存清理方法
+        # 添加清除缓存的方法
         def clear_cache():
             cache.clear()
+            expires.clear()
             
         wrapper.clear_cache = clear_cache
         return wrapper

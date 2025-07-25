@@ -10,11 +10,9 @@ def lru_cache(maxsize=128, typed=False):
         access_order = []
         
         def wrapper(*args, **kwargs):
-            # 如果考虑类型,将参数转换为包含类型的key
+            # 如果考虑类型,将参数类型加入key
             if typed:
-                key = (*args, *kwargs.items(), 
-                      *(type(arg) for arg in args),
-                      *(type(val) for val in kwargs.values()))
+                key = (*args, *kwargs.items(), *tuple(type(arg) for arg in args))
             else:
                 key = (*args, *kwargs.items())
                 
@@ -24,7 +22,7 @@ def lru_cache(maxsize=128, typed=False):
                 access_order.remove(key)
                 access_order.append(key)
                 return cache[key]
-                
+            
             # 计算新结果
             result = func(*args, **kwargs)
             
@@ -33,26 +31,22 @@ def lru_cache(maxsize=128, typed=False):
                 oldest_key = access_order.pop(0)
                 del cache[oldest_key]
                 
-            # 存储新结果
+            # 添加新结果到缓存
             cache[key] = result
             access_order.append(key)
             
             return result
             
-        # 添加缓存信息接口
+        # 添加缓存信息方法
         wrapper.cache_info = lambda: {
             "hits": len(access_order),
             "maxsize": maxsize,
             "currsize": len(cache)
         }
         
-        # 清除缓存接口
+        # 清除缓存方法
         wrapper.cache_clear = lambda: (cache.clear(), access_order.clear())
         
         return wrapper
-        
-    # 如果maxsize为None,则不做缓存
-    if maxsize is None:
-        return lambda func: func
         
     return decorator

@@ -8,19 +8,19 @@ def _include_groups(self, parser_dict):
     if 'include' not in parser_dict:
         return parser_dict
         
-    includes = parser_dict.pop('include')
-    if not isinstance(includes, list):
-        includes = [includes]
+    included_groups = parser_dict.pop('include')
+    
+    if not isinstance(included_groups, (list, tuple)):
+        included_groups = [included_groups]
         
     result = {}
-    for include in includes:
-        if isinstance(include, dict):
-            result.update(include)
-        elif isinstance(include, str):
-            # 假设include字符串是一个文件路径
-            with open(include, 'r') as f:
-                included_dict = self._parse_file(f)
-                result.update(included_dict)
-                
+    for group in included_groups:
+        if isinstance(group, dict):
+            result.update(group)
+        elif isinstance(group, str):
+            # 假设从某处加载group定义
+            group_dict = self._load_group(group)
+            result.update(group_dict)
+            
     result.update(parser_dict)
     return result

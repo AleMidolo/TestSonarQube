@@ -29,56 +29,60 @@ def xargs(
     if current_chunk:
         chunks.append(current_chunk)
 
-    # Distribute chunks into target_concurrency partitions
-    partitions = [[] for _ in range(target_concurrency)]
-    for i, chunk in enumerate(chunks):
-        partitions[i % target_concurrency].append(chunk)
+    # Split chunks into target_concurrency partitions
+    if target_concurrency > 1:
+        partitions = [[] for _ in range(target_concurrency)]
+        for i, chunk in enumerate(chunks):
+            partitions[i % target_concurrency].append(chunk)
+    else:
+        partitions = [chunks]
 
-    # Run commands in parallel
+    # Execute commands
     output = b''
-    max_returncode = 0
+    max_return_code = 0
     
-    def run_partition(partition):
-        nonlocal output, max_returncode
+    for partition in partitions:
+        processes = []
         for chunk in partition:
             full_cmd = list(cmd) + chunk
+            
             if color:
                 import pty
-                pid, fd = pty.fork()
-                if pid == 0:  # Child process
-                    os.execvp(full_cmd[0], full_cmd)
-                else:  # Parent process
-                    chunk_output = b''
-                    while True:
-                        try:
-                            chunk_output += os.read(fd, 1024)
-                        except OSError:
-                            break
-                    _, status = os.waitpid(pid, 0)
-                    max_returncode = max(max_returncode, status >> 8)
-                    output += chunk_output
-            else:
-                import subprocess
-                process = subprocess.run(
+                master_fd, slave_fd = pty.openpty()
+                process = subprocess.Popen(
                     full_cmd,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
+                    stdout=slave_fd,
+                    stderr=slave_fd,
                     **kwargs
                 )
-                max_returncode = max(max_returncode, process.returncode)
-                output += process.stdout
+                os.close(slave_fd)
+            else:
+                process = subprocess.Popen(
+                    full_cmd,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    **kwargs
+                )
+            
+            processes.append((process, master_fd if color else None))
 
-    # Create and start threads for each partition
-    import threading
-    threads = []
-    for partition in partitions:
-        if partition:  # Only create threads for non-empty partitions
-            thread = threading.Thread(target=run_partition, args=(partition,))
-            threads.append(thread)
-            thread.start()
+        # Wait for all processes in partition to complete
+        for process, fd in processes:
+            if color:
+                while True:
+                    try:
+                        chunk = os.read(fd, 1024)
+                        if not chunk:
+                            break
+                        output += chunk
+                    except OSError:
+                        break
+                os.close(fd)
+            else:
+                stdout, stderr = process.communicate()
+                output += stdout + stderr
+            
+            return_code = process.wait()
+            max_return_code = max(max_return_code, return_code)
 
-    # Wait for all threads to complete
-    for thread in threads:
-        thread.join()
-
-    return max_returncode, output
+    return max_return_code, output

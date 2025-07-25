@@ -19,11 +19,11 @@ def difference(d1, d2, level=-1):
             # 如果两个值都是字典，则递归比较
             if isinstance(value, dict) and isinstance(d2[key], dict):
                 # 递归调用，level减1
-                nested_diff = difference(value, d2[key], level - 1 if level > 0 else -1)
+                nested_diff = difference(value, d2[key], level-1 if level > 0 else -1)
                 if nested_diff:
                     result[key] = nested_diff
             # 如果值不相等，且level为1或-1，则添加到结果中
-            elif value != d2[key] and level in {1, -1}:
+            elif value != d2[key]:
                 result[key] = value
                 
     return result

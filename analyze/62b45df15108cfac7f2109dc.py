@@ -4,12 +4,6 @@ def status_str(self, prefix=''):
     返回验证器状态的字符串，并可选择性地添加前缀。
     """
     result = []
-    # 对messages列表进行排序
-    sorted_messages = sorted(self.messages)
-    
-    # 遍历排序后的messages,添加前缀和消息内容
-    for message in sorted_messages:
-        result.append(f"{prefix}{message}")
-        
-    # 将结果列表用换行符连接成字符串
+    for message in sorted(self.messages):
+        result.append(prefix + message)
     return '\n'.join(result)

@@ -1,18 +1,20 @@
 def verifyObject(iface, candidate, tentative=False):
     from zope.interface.exceptions import Invalid, DoesNotImplement, BrokenImplementation, BrokenMethodImplementation
+    from zope.interface.verify import verifyClass
     from zope.interface.interface import Method
     
-    errors = []
-
-    # Step 1: Check if candidate declares it provides the interface
+    # Step 1: Check if candidate provides interface (skip if tentative)
     if not tentative:
         if not iface.providedBy(candidate):
-            errors.append(DoesNotImplement(iface))
+            raise DoesNotImplement(iface)
 
+    # Collect all errors
+    errors = []
+    
     # Step 2 & 3: Check methods - existence and signature
     for name, desc in iface.namesAndDescriptions(1):
         if isinstance(desc, Method):
-            # Check method exists
+            # Check if method exists
             try:
                 attr = getattr(candidate, name)
             except AttributeError:
@@ -29,11 +31,11 @@ def verifyObject(iface, candidate, tentative=False):
                 if not desc.validateSignature(attr):
                     errors.append(BrokenMethodImplementation(name, "Incorrect method signature"))
             except ValueError:
-                # Can't validate signature
+                # If we can't validate signature, we skip it
                 pass
 
     # Step 4: Check attributes
-    for name, desc in iface.namesAndDescriptions(0):
+    for name, desc in iface.namesAndDescriptions(1):
         if not isinstance(desc, Method):
             try:
                 getattr(candidate, name)
@@ -44,6 +46,6 @@ def verifyObject(iface, candidate, tentative=False):
     if len(errors) == 1:
         raise errors[0]
     elif errors:
-        raise Invalid(errors)
+        raise Invalid("Multiple implementation errors", errors)
 
     return True

@@ -35,7 +35,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
             'links': {}
         }
         
-        # 解析 links 数组
+        # 解析链接
         for link in data.get('links', []):
             rel = link.get('rel', '')
             if rel:
@@ -50,3 +50,5 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         raise ConnectionError(f"Failed to retrieve WebFinger document: {str(e)}")
     except json.JSONDecodeError:
         raise ValueError("Invalid WebFinger document format")
+    except Exception as e:
+        raise Exception(f"Error processing WebFinger document: {str(e)}")
