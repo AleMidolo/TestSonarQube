@@ -11,11 +11,7 @@ def next_version(version):
     last_part = int(parts[-1]) + 1
     parts[-1] = str(last_part)
     
-    # Handle leading zeros if any
-    if parts[-1].startswith('0'):
-        parts[-1] = parts[-1].zfill(len(parts[-1]))
-    
-    # Reconstruct the version string
+    # Join the parts back together
     next_version = '.'.join(parts)
     
     return next_version

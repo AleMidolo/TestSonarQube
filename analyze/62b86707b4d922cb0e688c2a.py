@@ -9,10 +9,10 @@ def on(self, hook):
     callable: Decorador para registrar los listeners para el hook especificado.
     """
     def decorator(func):
-        if not hasattr(self, '_hooks'):
-            self._hooks = {}
-        if hook not in self._hooks:
-            self._hooks[hook] = []
-        self._hooks[hook].append(func)
+        if not hasattr(self, '_handlers'):
+            self._handlers = {}
+        if hook not in self._handlers:
+            self._handlers[hook] = []
+        self._handlers[hook].append(func)
         return func
     return decorator

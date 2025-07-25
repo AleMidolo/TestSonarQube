@@ -12,15 +12,16 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
             return None
         username, domain = handle.split('@')
         
-        # Construct the WebFinger URL
-        url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
+        # Construct the webfinger URL
+        webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
         
-        # Make the request
-        response = requests.get(url, headers={"Accept": "application/jrd+json"})
+        # Make the GET request
+        response = requests.get(webfinger_url, timeout=5)
         response.raise_for_status()
         
         # Return the response content if successful
         return response.text
+    
     except (requests.RequestException, ValueError):
         # Return None if any error occurs
         return None

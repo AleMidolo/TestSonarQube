@@ -5,14 +5,22 @@ def _extract_number_and_supplment_from_issue_element(issue):
     number = None
     suppl = None
     
-    if issue:
-        # Split the issue string by '-' to separate number and supplement
-        parts = issue.split('-')
-        if len(parts) > 0:
-            # The first part is assumed to be the number
-            number = parts[0].strip()
-            if len(parts) > 1:
-                # The second part is assumed to be the supplement
-                suppl = parts[1].strip()
+    if issue is not None:
+        issue_str = str(issue).strip()
+        if issue_str:
+            # Buscar el número principal
+            number_match = re.search(r'\d+', issue_str)
+            if number_match:
+                number = int(number_match.group())
+            
+            # Buscar el suplemento (suppl)
+            suppl_match = re.search(r'suppl\s*(\d+)', issue_str, re.IGNORECASE)
+            if suppl_match:
+                suppl = int(suppl_match.group(1))
+            else:
+                # Si no se encuentra 'suppl', verificar si hay un 's' seguido de un número
+                suppl_match = re.search(r's\s*(\d+)', issue_str, re.IGNORECASE)
+                if suppl_match:
+                    suppl = int(suppl_match.group(1))
     
     return number, suppl

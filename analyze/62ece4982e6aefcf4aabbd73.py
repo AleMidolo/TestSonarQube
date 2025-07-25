@@ -15,14 +15,10 @@ def split(s, platform='this'):
         platform = 1 if sys.platform != 'win32' else 0
     
     if platform == 1:  # POSIX
-        pattern = re.compile(r"""
-            (?:[^\s"']+|"[^"]*"|'[^']*')+
-        """, re.VERBOSE)
+        pattern = re.compile(r"""((?:[^\s"']|"[^"]*"|'[^']*')+)""")
     elif platform == 0:  # Windows/CMD
-        pattern = re.compile(r"""
-            (?:[^\s"]+|"[^"]*")+
-        """, re.VERBOSE)
+        pattern = re.compile(r"""((?:[^\s"]|"[^"]*")+)""")
     else:
         raise ValueError("Invalid platform value. Use 'this', 1 (POSIX), or 0 (Windows/CMD).")
     
-    return [match.group(0) for match in pattern.finditer(s)]
+    return pattern.findall(s)

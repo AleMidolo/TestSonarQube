@@ -16,6 +16,6 @@ def identify_request(request: RequestType) -> str:
     elif request == RequestType.PRIVATE_MESSAGE:
         return "Esta es una solicitud de Diaspora: Mensaje privado."
     elif request == RequestType.LEGACY_PAYLOAD:
-        return "Esta es una solicitud de Diaspora: Carga útil heredada."
+        return "Esta es una solicitud de Diaspora: Carga útil heredada (legacy payload)."
     else:
         return "Tipo de solicitud no reconocido."

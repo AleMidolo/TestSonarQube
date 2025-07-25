@@ -6,7 +6,10 @@ def determineMetaclass(bases, explicit_mc=None):
         metaclass = explicit_mc
     else:
         metaclass = type(bases[0]) if bases else type
+    
     for base in bases[1:]:
-        if type(base) is not metaclass:
-            raise TypeError("metaclass conflict: the metaclass of a derived class must be a (non-strict) subclass of the metaclasses of all its bases")
+        base_metaclass = type(base)
+        if base_metaclass is not metaclass:
+            metaclass = type
+    
     return metaclass

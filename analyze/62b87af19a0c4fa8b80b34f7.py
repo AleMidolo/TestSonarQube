@@ -22,4 +22,5 @@ def difference(d1, d2, level=-1):
                 diff[k] = sub_diff
         elif v != d2[k]:
             diff[k] = v
+    
     return diff

@@ -12,16 +12,13 @@ def is_fill_request_seq(seq):
     def is_fill_request(item: Any) -> bool:
         return isinstance(item, FillRequest)
 
-    def is_source_seq(seq: Sequence) -> bool:
-        return isinstance(seq, Source)
-
-    if is_source_seq(seq):
-        return False
-
-    if is_fill_request(seq):
-        return True
+    def is_source(item: Any) -> bool:
+        return isinstance(item, Source)
 
     if isinstance(seq, Sequence):
-        return any(is_fill_request(item) for item in seq)
-
-    return False
+        if any(is_fill_request(item) for item in seq):
+            return not all(is_source(item) for item in seq)
+        else:
+            return False
+    else:
+        return is_fill_request(seq) and not is_source(seq)

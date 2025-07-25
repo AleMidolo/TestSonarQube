@@ -9,13 +9,7 @@ def validate_as_prior_version(self, prior):
     if not isinstance(prior, type(self)):
         return False
     
-    # Aquí puedes agregar lógica adicional para comparar los inventarios
-    # Por ejemplo, verificar si el inventario actual es una versión posterior válida del inventario previo
-    # Esto podría incluir comparar fechas, versiones, o cualquier otro atributo relevante
+    # Aquí puedes agregar más validaciones específicas para comparar `self` y `prior`
+    # Por ejemplo, verificar si `prior` es efectivamente una versión anterior de `self`
     
-    # Ejemplo básico: asumimos que el inventario actual es válido si tiene una fecha posterior
-    if hasattr(self, 'date') and hasattr(prior, 'date'):
-        return self.date > prior.date
-    
-    # Si no hay atributos de fecha, asumimos que es válido
     return True

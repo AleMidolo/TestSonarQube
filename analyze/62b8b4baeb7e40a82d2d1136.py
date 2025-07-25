@@ -35,8 +35,9 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     errors = []
 
     # Verificar si el candidato proporciona la interfaz
-    if not tentative and not iface.providedBy(candidate):
-        errors.append(f"{candidate} no proporciona la interfaz {iface}")
+    if not tentative:
+        if not iface.providedBy(candidate):
+            errors.append(f"{candidate} no proporciona la interfaz {iface}")
 
     # Verificar métodos y atributos
     try:

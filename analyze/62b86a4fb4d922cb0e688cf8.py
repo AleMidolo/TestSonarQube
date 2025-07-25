@@ -11,9 +11,9 @@ def validate_value(value):
         ValidationError: si el valor proporcionado no cumple con la expresión regular.
     """
     # Expresión regular para validar que el valor sea alfanumérico
-    regex = r'^[a-zA-Z0-9]+$'
+    regex = re.compile(r'^[a-zA-Z0-9]+$')
     
-    if not re.match(regex, value):
+    if not regex.match(value):
         raise ValidationError("El valor proporcionado no cumple con la expresión regular.")
     
     return True

@@ -1,3 +1,5 @@
+from dateutil.relativedelta import relativedelta
+
 def normalized(self):
     """
     Devuelve una versión de este objeto representada completamente utilizando valores enteros para los atributos relativos.
@@ -8,48 +10,28 @@ def normalized(self):
     :return:
         Devuelve un objeto de la clase :class:`dateutil.relativedelta.relativedelta`.
     """
-    from dateutil.relativedelta import relativedelta
-    import math
+    # Convertir todos los atributos a enteros
+    days = int(self.days)
+    hours = int(self.hours)
+    minutes = int(self.minutes)
+    seconds = int(self.seconds)
+    microseconds = int(self.microseconds)
+    months = int(self.months)
+    years = int(self.years)
 
-    # Convertir días fraccionarios a horas
-    days_fractional, days_integer = math.modf(self.days)
-    hours_from_days = days_fractional * 24
+    # Ajustar los valores fraccionarios
+    extra_hours = int((self.days - days) * 24)
+    hours += extra_hours
 
-    # Sumar las horas fraccionarias a las horas existentes
-    total_hours = self.hours + hours_from_days
-    hours_fractional, hours_integer = math.modf(total_hours)
-    minutes_from_hours = hours_fractional * 60
+    extra_minutes = int((self.hours - int(self.hours)) * 60)
+    minutes += extra_minutes
 
-    # Sumar los minutos fraccionarios a los minutos existentes
-    total_minutes = self.minutes + minutes_from_hours
-    minutes_fractional, minutes_integer = math.modf(total_minutes)
-    seconds_from_minutes = minutes_fractional * 60
+    extra_seconds = int((self.minutes - int(self.minutes)) * 60)
+    seconds += extra_seconds
 
-    # Sumar los segundos fraccionarios a los segundos existentes
-    total_seconds = self.seconds + seconds_from_minutes
-    seconds_fractional, seconds_integer = math.modf(total_seconds)
-    microseconds_from_seconds = seconds_fractional * 1e6
+    extra_microseconds = int((self.seconds - int(self.seconds)) * 1e6)
+    microseconds += extra_microseconds
 
-    # Sumar los microsegundos fraccionarios a los microsegundos existentes
-    total_microseconds = self.microseconds + microseconds_from_seconds
-    microseconds_integer = int(round(total_microseconds))
-
-    # Crear el nuevo objeto relativedelta con valores enteros
-    return relativedelta(
-        years=self.years,
-        months=self.months,
-        days=int(days_integer),
-        hours=int(hours_integer),
-        minutes=int(minutes_integer),
-        seconds=int(seconds_integer),
-        microseconds=microseconds_integer,
-        leapdays=self.leapdays,
-        year=self.year,
-        month=self.month,
-        day=self.day,
-        weekday=self.weekday,
-        hour=self.hour,
-        minute=self.minute,
-        second=self.second,
-        microsecond=self.microsecond
-    )
+    # Crear y devolver el nuevo objeto relativedelta
+    return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds,
+                         microseconds=microseconds, months=months, years=years)

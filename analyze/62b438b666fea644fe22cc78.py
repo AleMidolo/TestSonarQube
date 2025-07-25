@@ -10,9 +10,7 @@ def parse_arguments(*arguments):
     # Ejemplo:
     # parser.add_argument('-f', '--file', type=str, help='Archivo de entrada')
     
-    # Si no se proporcionan argumentos, se usa sys.argv por defecto
-    if not arguments:
-        import sys
-        arguments = sys.argv[1:]
+    # Parsear los argumentos
+    args = parser.parse_args(arguments)
     
-    return parser.parse_args(arguments)
+    return args

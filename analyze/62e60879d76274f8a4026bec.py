@@ -22,7 +22,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     :return: objeto 'Response'
     """
     # Crear el mensaje BEGIN con los parámetros proporcionados
-    message = {
+    begin_message = {
         "mode": mode,
         "bookmarks": bookmarks,
         "metadata": metadata,
@@ -35,7 +35,8 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     }
     
     # Añadir el mensaje a la cola de salida
-    self.output_queue.append(("BEGIN", message))
+    self.output_queue.append(("BEGIN", begin_message))
     
     # Crear y devolver un objeto Response con los manejadores proporcionados
-    return Response(**handlers)
+    response = Response(**handlers)
+    return response
