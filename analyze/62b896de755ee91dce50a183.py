@@ -1,60 +1,48 @@
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
-    डेट/समय स्ट्रिंग को :class:`datetime.datetime` ऑब्जेक्ट में पार्स करें।
-
-    :param timestr:
-        कोई भी डेट/समय स्ट्रिंग जो समर्थित फॉर्मेट्स का उपयोग करती हो।
-
-    :param default:
-        डिफ़ॉल्ट datetime ऑब्जेक्ट। यदि यह एक datetime ऑब्जेक्ट है और ``None`` नहीं है, 
-        तो ``timestr`` में निर्दिष्ट तत्व डिफ़ॉल्ट ऑब्जेक्ट के तत्वों को बदल देंगे।
-
-    :param ignoretz:
-        यदि ``True`` सेट किया गया है, तो पार्स की गई स्ट्रिंग में टाइम ज़ोन को अनदेखा किया जाएगा 
-        और एक साधारण :class:`datetime.datetime` ऑब्जेक्ट लौटाया जाएगा।
-
-    :param tzinfos:
-        अतिरिक्त टाइम ज़ोन नाम/उपनाम जो स्ट्रिंग में हो सकते हैं। यह आर्ग्युमेंट टाइम ज़ोन नामों 
-        (और वैकल्पिक रूप से उन टाइम ज़ोन से ऑफ़सेट्स) को टाइम ज़ोन से मैप करता है। 
-        यह पैरामीटर एक डिक्शनरी हो सकता है जिसमें टाइम ज़ोन उपनाम टाइम ज़ोन नामों को टाइम ज़ोन से 
-        मैप करते हैं या एक फ़ंक्शन हो सकता है जो दो पैरामीटर (``tzname`` और ``tzoffset``) लेता है 
-        और एक टाइम ज़ोन लौटाता है।
-
-        जिन टाइम ज़ोन को नामों से मैप किया गया है, वे UTC से सेकंड में एक पूर्णांक ऑफ़सेट 
-        या :class:`tzinfo` ऑब्जेक्ट हो सकते हैं।
-
-        .. doctest::
-           :options: +NORMALIZE_WHITESPACE
-
-            >>> from dateutil.parser import parse
-            >>> from dateutil.tz import gettz
-            >>> tzinfos = {"BRST": -7200, "CST": gettz("America/Chicago")}
-            >>> parse("2012-01-19 17:21:00 BRST", tzinfos=tzinfos)
-            datetime.datetime(2012, 1, 19, 17, 21, tzinfo=tzoffset(u'BRST', -7200))
-            >>> parse("2012-01-19 17:21:00 CST", tzinfos=tzinfos)
-            datetime.datetime(2012, 1, 19, 17, 21,
-                              tzinfo=tzfile('/usr/share/zoneinfo/America/Chicago'))
-
-        यदि ``ignoretz`` सेट किया गया है, तो इस पैरामीटर को अनदेखा किया जाएगा।
-
-    :param \*\*kwargs:
-        ``_parse()`` को पास किए गए कीवर्ड आर्ग्युमेंट्स।
-
-    :return:
-        एक :class:`datetime.datetime` ऑब्जेक्ट लौटाता है या, यदि ``fuzzy_with_tokens`` विकल्प ``True`` है, 
-        तो एक ट्यूपल लौटाता है, जिसमें पहला तत्व :class:`datetime.datetime` ऑब्जेक्ट होता है और दूसरा 
-        ट्यूपल होता है जिसमें अस्पष्ट टोकन होते हैं।
-
-    :raises ParserError:
-        अमान्य या अज्ञात स्ट्रिंग फॉर्मेट के लिए, यदि प्रदान किया गया :class:`tzinfo` वैध फॉर्मेट में नहीं है, 
-        या यदि एक अमान्य तिथि बनाई जाएगी, तो यह त्रुटि उठाई जाती है।
-
-    :raises TypeError:
-        गैर-स्ट्रिंग या कैरेक्टर स्ट्रीम इनपुट के लिए यह त्रुटि उठाई जाती है।
-
-    :raises OverflowError:
-        यदि पार्स की गई तिथि आपके सिस्टम पर सबसे बड़े वैध C पूर्णांक से अधिक हो जाती है, 
-        तो यह त्रुटि उठाई जाती है।
+    Analizza la stringa di data/ora in un oggetto :class:`datetime.datetime`.
+    
+    Args:
+        timestr: Qualsiasi stringa di data/ora che utilizza i formati supportati.
+        default: L'oggetto datetime predefinito. Se questo è un oggetto datetime e non None,
+                gli elementi specificati in timestr sostituiscono gli elementi nell'oggetto predefinito.
+        ignoretz: Se True, i fusi orari nelle stringhe analizzate vengono ignorati.
+        tzinfos: Dizionario o funzione per mappare nomi di fusi orari a oggetti tzinfo.
+        **kwargs: Argomenti keyword passati a _parse().
+        
+    Returns:
+        datetime.datetime o (datetime.datetime, tuple) se fuzzy_with_tokens=True
+        
+    Raises:
+        ParserError: Per formati di stringa non validi o sconosciuti
+        TypeError: Per input non stringa
+        OverflowError: Se la data supera il massimo intero C
     """
-    from dateutil import parser
-    return parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+    
+    if not isinstance(timestr, str):
+        raise TypeError("Parser requires string or character stream, not %s" % 
+                      type(timestr).__name__)
+        
+    # Rimuovi spazi bianchi iniziali e finali
+    timestr = timestr.strip()
+    
+    res = self._parse(timestr, **kwargs)
+    
+    if res is None:
+        raise ParserError("Unknown string format: %s" % timestr)
+        
+    if len(res) == 2:
+        res, tokens = res
+    else:
+        tokens = ()
+        
+    if default is not None:
+        res = self._populate_defaut(res, default)
+        
+    if not ignoretz:
+        res = self._add_tzinfo(res, tzinfos)
+        
+    if kwargs.get('fuzzy_with_tokens', False):
+        return res, tokens
+        
+    return res

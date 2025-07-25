@@ -1,10 +1,10 @@
 def set_cut_chars(self, before: bytes, after: bytes) -> None:
     """
-    स्लाइस पॉइंट्स को सीमांकित (delimit) करने के लिए उपयोग किए जाने वाले बाइट्स सेट करें।
+    Imposta i byte utilizzati per delimitare i punti di taglio.
 
-    आर्ग्युमेंट्स (Args):
-        before: इन डिलीमीटर (delimiters) से पहले फाइल को विभाजित (split) करें।
-        after: इन डिलीमीटर (delimiters) के बाद फाइल को विभाजित (split) करें।
+    Argomenti:
+        before: Divide il file prima di questi delimitatori.
+        after: Divide il file dopo questi delimitatori.
     """
-    self.before_cut_chars = before
-    self.after_cut_chars = after
+    self.cut_before = before
+    self.cut_after = after

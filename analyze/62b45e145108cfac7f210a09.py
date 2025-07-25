@@ -1,15 +1,24 @@
 def check_digests_present_and_used(self, manifest_files, digests_used):
     """
-    मैनिफेस्ट में सभी आवश्यक डाइजेस्ट्स की जांच करें कि वे मौजूद हैं और उपयोग हो रहे हैं।
+    Verifica che tutti i digest nel manifesto necessari siano presenti e utilizzati.
     """
-    missing_digests = []
-    used_digests = set(digests_used)
-
+    # Get all digests from manifest files
+    manifest_digests = set()
     for manifest in manifest_files:
-        for digest in manifest.get('digests', []):
-            if digest in used_digests:
-                used_digests.remove(digest)
-
-    missing_digests = list(used_digests)
-
-    return missing_digests
+        if 'digest' in manifest:
+            manifest_digests.add(manifest['digest'])
+            
+    # Get all digests that were actually used
+    used_digests = set(digests_used)
+    
+    # Check that all manifest digests were used
+    unused_digests = manifest_digests - used_digests
+    if unused_digests:
+        raise ValueError(f"Found unused digests in manifest: {unused_digests}")
+        
+    # Check that all used digests are in manifest
+    missing_digests = used_digests - manifest_digests
+    if missing_digests:
+        raise ValueError(f"Used digests not found in manifest: {missing_digests}")
+        
+    return True

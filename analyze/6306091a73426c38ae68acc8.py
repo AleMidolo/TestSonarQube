@@ -1,15 +1,20 @@
 def list_of_file_names(settings_dirs, spec_option):
     """
-    एक नया IniType कॉम्प्लेक्स टाइप बनाएं
+    Crea un nuovo tipo complesso IniType
     """
-    import os
-    
     file_names = []
     
+    # Iterate through each directory path
     for directory in settings_dirs:
-        if os.path.exists(directory):
-            for file in os.listdir(directory):
-                if spec_option in file:
-                    file_names.append(file)
-    
+        # Check if directory exists and is a directory
+        if os.path.isdir(directory):
+            # Get list of files in directory
+            files = os.listdir(directory)
+            
+            # Filter files based on spec_option
+            for file in files:
+                if spec_option in file and file.endswith('.ini'):
+                    # Add full path to file_names list
+                    file_names.append(os.path.join(directory, file))
+                    
     return file_names

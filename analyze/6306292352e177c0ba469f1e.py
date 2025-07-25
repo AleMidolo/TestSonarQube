@@ -1,18 +1,22 @@
 def process_text_links(text):
     """
-    टेक्स्ट में लिंक को प्रोसेस करें, कुछ विशेषताएँ जोड़ें और टेक्स्ट में मौजूद लिंक को हाइपरलिंक में बदलें।
+    Elabora i collegamenti nel testo, aggiungendo alcuni attributi e trasformando i collegamenti testuali in link cliccabili.
     """
     import re
-
-    # Regex pattern to find URLs
-    url_pattern = r'(https?://[^\s]+)'
     
-    # Function to replace found URLs with HTML hyperlinks
-    def replace_with_hyperlink(match):
+    # Pattern per trovare URL nel testo
+    url_pattern = r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
+    
+    # Funzione per sostituire gli URL con link HTML
+    def replace_with_link(match):
         url = match.group(0)
-        return f'<a href="{url}" target="_blank">{url}</a>'
+        # Se l'URL non inizia con http/https, aggiungi http://
+        if not url.startswith(('http://', 'https://')):
+            url = 'http://' + url
+        # Crea il link HTML con attributi target="_blank" e rel="noopener noreferrer"
+        return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{match.group(0)}</a>'
     
-    # Substitute URLs in the text with hyperlinks
-    processed_text = re.sub(url_pattern, replace_with_hyperlink, text)
+    # Sostituisci tutti gli URL trovati con i link HTML
+    processed_text = re.sub(url_pattern, replace_with_link, text)
     
     return processed_text

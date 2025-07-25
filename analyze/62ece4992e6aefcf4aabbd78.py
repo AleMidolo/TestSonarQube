@@ -1,8 +1,9 @@
 def is_local(host):
     """
-    होस्ट की जाँच करता है कि क्या यह लोकलहोस्ट है।
-
-    :param host: होस्टनाम या IP एड्रेस।
-    :return: True यदि होस्ट लोकलहोस्ट है, अन्यथा False।
+    Verifica se l'host è il localhost.
+    
+    :param host: Il nome host o l'indirizzo IP.
+    :return: True se l'host è il localhost.
     """
-    return host in ('localhost', '127.0.0.1', '::1')
+    localhost_names = ['localhost', '127.0.0.1', '::1', '0:0:0:0:0:0:0:1']
+    return host.lower() in localhost_names

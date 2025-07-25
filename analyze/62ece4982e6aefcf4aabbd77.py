@@ -1,38 +1,35 @@
-import datetime
-import re
-
 def parse_frequency(frequency):
-    """
-    एक संख्या और समय की इकाई के साथ एक आवृत्ति स्ट्रिंग दी गई है, एक संगत
-    datetime.timedelta इंस्टेंस लौटाएँ या यदि आवृत्ति None या "हमेशा" है, तो None लौटाएँ।
+    import datetime
+    import re
 
-    उदाहरण के लिए, "3 सप्ताह" दिया गया है, datetime.timedelta(weeks=3) लौटाएँ
-
-    यदि दी गई आवृत्ति को पार्स नहीं किया जा सकता है, तो ValueError उठाएँ।
-    """
-    if frequency is None or frequency.lower() == "हमेशा":
+    if frequency is None or frequency.lower() == "always":
         return None
 
-    match = re.match(r'(\d+)\s*(\w+)', frequency)
+    # Regular expression to match number and unit
+    match = re.match(r"(\d+)\s*(\w+)", frequency.strip())
     if not match:
-        raise ValueError("Invalid frequency format")
+        raise ValueError(f"Invalid frequency format: {frequency}")
 
-    value, unit = match.groups()
-    value = int(value)
+    value = int(match.group(1))
+    unit = match.group(2).lower()
 
-    if unit in ['सेकंड', 'सेकंड', 'second', 'seconds']:
-        return datetime.timedelta(seconds=value)
-    elif unit in ['मिनट', 'मिनट', 'minute', 'minutes']:
-        return datetime.timedelta(minutes=value)
-    elif unit in ['घंटा', 'घंटे', 'hour', 'hours']:
-        return datetime.timedelta(hours=value)
-    elif unit in ['दिन', 'दिन', 'day', 'days']:
-        return datetime.timedelta(days=value)
-    elif unit in ['सप्ताह', 'सप्ताह', 'week', 'weeks']:
-        return datetime.timedelta(weeks=value)
-    elif unit in ['महीना', 'महीने', 'month', 'months']:
-        return datetime.timedelta(days=value * 30)  # Approximation
-    elif unit in ['साल', 'साल', 'year', 'years']:
-        return datetime.timedelta(days=value * 365)  # Approximation
-    else:
-        raise ValueError("Unknown time unit")
+    # Map of units to timedelta arguments
+    units_map = {
+        'second': 'seconds',
+        'seconds': 'seconds',
+        'minute': 'minutes', 
+        'minutes': 'minutes',
+        'hour': 'hours',
+        'hours': 'hours',
+        'day': 'days',
+        'days': 'days',
+        'week': 'weeks',
+        'weeks': 'weeks'
+    }
+
+    if unit not in units_map:
+        raise ValueError(f"Invalid time unit: {unit}")
+
+    # Create timedelta with the appropriate unit
+    kwargs = {units_map[unit]: value}
+    return datetime.timedelta(**kwargs)

@@ -1,13 +1,25 @@
 def popitem(self):
     """
-    सबसे कम बार उपयोग किए गए `(key, value)` जोड़े को हटाएं और वापस करें।
+    Rimuove e restituisce la coppia `(chiave, valore)` meno frequentemente utilizzata.
     """
-    if not self.data:
-        raise KeyError("popitem(): dictionary is empty")
+    if not self.cache:  # if cache is empty
+        raise KeyError("Cache is empty")
+        
+    # Find item with minimum frequency
+    min_freq = min(self.freq_map.values())
     
-    # Find the least frequently used item
-    least_used_key = min(self.usage_count, key=self.usage_count.get)
-    value = self.data.pop(least_used_key)
-    del self.usage_count[least_used_key]
+    # Find first key with minimum frequency
+    min_key = None
+    for key in self.freq_map:
+        if self.freq_map[key] == min_freq:
+            min_key = key
+            break
+            
+    # Get value before removing
+    value = self.cache[min_key]
     
-    return least_used_key, value
+    # Remove item from cache and frequency map
+    del self.cache[min_key]
+    del self.freq_map[min_key]
+    
+    return (min_key, value)

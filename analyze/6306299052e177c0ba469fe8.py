@@ -1,7 +1,15 @@
 def check_sender_and_entity_handle_match(sender_handle, entity_handle):
     """
-    सुनिश्चित करें कि सेंडर और एंटिटी हैंडल मेल खाते हैं।
+    Assicurati che i valori di `sender_handle` e `entity_handle` corrispondano.
 
-    मूल रूप से, हमने पहले ही यह सत्यापित कर लिया है कि जब पेलोड प्राप्त हो रहा है, तो सेंडर वही है जो वह होने का दावा करता है। हालांकि, सेंडर पेलोड में किसी अन्य लेखक को सेट करने की कोशिश कर सकता है, क्योंकि Diaspora में सेंडर की जानकारी पेलोड हेडर और ऑब्जेक्ट दोनों में होती है। हमें यह सुनिश्चित करना होगा कि ये दोनों समान हैं।
+    Fondamentalmente, abbiamo già verificato che il mittente sia chi dichiara di essere al momento della ricezione del payload. Tuttavia, il mittente potrebbe cercare di impostare un altro autore all'interno del payload stesso, poiché 'Diaspora' include il mittente sia negli header del payload che nell'oggetto. Dobbiamo garantire che siano identici.
     """
-    return sender_handle == entity_handle
+    if not sender_handle or not entity_handle:
+        return False
+        
+    # Normalize handles by converting to lowercase and stripping whitespace
+    normalized_sender = sender_handle.lower().strip()
+    normalized_entity = entity_handle.lower().strip()
+    
+    # Check if the normalized handles match exactly
+    return normalized_sender == normalized_entity

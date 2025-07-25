@@ -1,19 +1,24 @@
 def generate_default_observer_schema(app):
-    """
-    प्रत्येक Kubernetes संसाधन के लिए डिफ़ॉल्ट ऑब्ज़र्वर स्कीमा उत्पन्न करें जो ``spec.manifest`` में मौजूद है और जिसके लिए कोई कस्टम ऑब्ज़र्वर स्कीमा निर्दिष्ट नहीं किया गया है।
-
-    आर्ग्युमेंट्स:
-        app (krake.data.kubernetes.Application): वह एप्लिकेशन जिसके लिए डिफ़ॉल्ट ऑब्ज़र्वर स्कीमा उत्पन्न करना है।
-    """
     default_schema = {}
-    for resource in app.spec.manifest:
-        if 'custom_observer_schema' not in resource:
-            default_schema[resource['kind']] = {
-                'apiVersion': resource['apiVersion'],
-                'metadata': {
-                    'name': resource['metadata']['name'],
-                    'namespace': resource['metadata'].get('namespace', 'default')
-                },
-                'spec': resource.get('spec', {})
-            }
+    
+    if hasattr(app, 'spec') and hasattr(app.spec, 'manifest'):
+        for resource in app.spec.manifest:
+            # Skip if resource already has a custom observer schema
+            if resource.get('metadata', {}).get('name') in app.spec.get('observer_schema', {}):
+                continue
+                
+            # Generate default schema for each resource
+            resource_name = resource.get('metadata', {}).get('name')
+            if resource_name:
+                default_schema[resource_name] = {
+                    'ready': {
+                        'path': 'status.conditions[?(@.type=="Ready")].status',
+                        'value': 'True'
+                    },
+                    'available': {
+                        'path': 'status.conditions[?(@.type=="Available")].status',
+                        'value': 'True'
+                    }
+                }
+    
     return default_schema

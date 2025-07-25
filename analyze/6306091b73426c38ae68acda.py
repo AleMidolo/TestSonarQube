@@ -1,19 +1,8 @@
 def plugins_manager(cls):
     """
-    प्लगइन मैनेजर प्राप्त करता है।
+    Ottiene il gestore dei plugin.
     """
-    class PluginManager:
-        def __init__(self):
-            self.plugins = []
-
-        def load_plugin(self, plugin):
-            self.plugins.append(plugin)
-
-        def unload_plugin(self, plugin):
-            self.plugins.remove(plugin)
-
-        def list_plugins(self):
-            return self.plugins
-
-    cls.plugin_manager = PluginManager()
-    return cls
+    if not hasattr(cls, '_plugins_manager'):
+        from plugins.manager import PluginsManager
+        cls._plugins_manager = PluginsManager()
+    return cls._plugins_manager

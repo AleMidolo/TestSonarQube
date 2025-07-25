@@ -1,10 +1,21 @@
 def match(filename):
     """
-    तर्क (Args):
-    - `filename`: वह फ़ाइल नाम जिसे मिलाना है।
+    Verifica se il nome file è di un tipo supportato da questo modulo
 
-    रिटर्न (Returns):
-    - यदि फ़ाइल प्रकार समर्थित नहीं है, तो `False` लौटाएगा। यदि समर्थित है, तो `True` लौटाएगा।
+    Argomenti:
+        filename: Nome file da confrontare
+    Ritorna:
+        False se non è una corrispondenza, True se è supportato
     """
-    supported_extensions = ['.txt', '.csv', '.json', '.xml']
-    return any(filename.endswith(ext) for ext in supported_extensions)
+    # Lista delle estensioni supportate
+    supported_extensions = ['.txt', '.doc', '.docx', '.pdf', '.rtf']
+    
+    # Converte il filename in minuscolo per un confronto case-insensitive
+    filename = filename.lower()
+    
+    # Verifica se il file termina con una delle estensioni supportate
+    for ext in supported_extensions:
+        if filename.endswith(ext):
+            return True
+            
+    return False

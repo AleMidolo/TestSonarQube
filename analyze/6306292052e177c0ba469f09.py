@@ -1,16 +1,20 @@
 def identify_request(request: RequestType):
     """
-    यह फ़ंक्शन यह पहचानने की कोशिश करता है कि यह एक Diaspora अनुरोध है या नहीं।
+    Prova a identificare se si tratta di una richiesta Diaspora.
 
-    सबसे पहले सार्वजनिक संदेश (public message) की जांच करें। 
-    फिर निजी संदेश (private message) की जांच करें। 
-    अंत में यह जांचें कि क्या यह एक पुराना (legacy) payload है।
+    Prova prima con un messaggio pubblico. Poi con un messaggio privato. Infine, verifica se si tratta di un payload legacy.
     """
-    if request.is_public_message():
-        return "Public Message"
-    elif request.is_private_message():
-        return "Private Message"
-    elif request.is_legacy_payload():
-        return "Legacy Payload"
-    else:
-        return "Unknown Request"
+    # Check if it's a public message
+    if hasattr(request, 'public') and request.public:
+        return 'public'
+        
+    # Check if it's a private message
+    if hasattr(request, 'private') and request.private:
+        return 'private'
+        
+    # Check if it's a legacy payload
+    if hasattr(request, 'legacy_format'):
+        return 'legacy'
+        
+    # If none of the above, return unknown
+    return 'unknown'

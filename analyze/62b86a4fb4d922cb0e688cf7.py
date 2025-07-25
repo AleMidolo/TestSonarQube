@@ -1,18 +1,30 @@
-import re
-
-class ValidationError(Exception):
-    pass
-
 def validate_key(key):
     """
-    दिए गए कुंजी (key) को संबंधित नियमित अभिव्यक्ति (regular expression) के खिलाफ सत्यापित करें।
+    Valida la chiave fornita rispetto alla corrispondente espressione regolare.
 
-    आर्ग्युमेंट्स (Args):
-        key: सत्यापन के लिए स्ट्रिंग (string)
+    Argomenti:
+        key: la stringa da validare
 
-    त्रुटि (Raises):
-        ValidationError: यदि दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।
+    Eccezioni:
+        ValidationError: se la chiave fornita non è conforme all'espressione regolare.
     """
-    pattern = r'^[A-Za-z0-9]{8,}$'  # Example pattern: at least 8 alphanumeric characters
+    import re
+
+    class ValidationError(Exception):
+        pass
+
+    # Pattern per validare la chiave:
+    # - Deve iniziare con una lettera
+    # - Può contenere lettere, numeri e underscore
+    # - Lunghezza minima 3, massima 32 caratteri
+    pattern = r'^[a-zA-Z][a-zA-Z0-9_]{2,31}$'
+
+    if not isinstance(key, str):
+        raise ValidationError("La chiave deve essere una stringa")
+
     if not re.match(pattern, key):
-        raise ValidationError("दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।")
+        raise ValidationError("La chiave non è valida. Deve iniziare con una lettera, " 
+                            "contenere solo lettere, numeri e underscore, "
+                            "ed essere lunga tra 3 e 32 caratteri")
+
+    return True

@@ -1,48 +1,46 @@
-import time
-from collections import OrderedDict
 from functools import wraps
+from collections import OrderedDict
+import time
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
-    """
-    एक डेकोरेटर जो एक फ़ंक्शन को एक मेमोराइज़िंग कॉलेबल के साथ रैप करता है,
-    जो `maxsize` तक के परिणामों को सेव करता है। यह एक Least Recently Used (LRU)
-    एल्गोरिदम पर आधारित होता है और प्रत्येक आइटम के लिए एक समय-सीमा (Time-To-Live, TTL) 
-    मान लागू करता है।
-    """
     def decorator(func):
+        # Create cache as OrderedDict to maintain LRU order
         cache = OrderedDict()
-        timestamps = {}
-
+        
         @wraps(func)
         def wrapper(*args, **kwargs):
+            # Create cache key based on args and typed flag
+            key = str(args) + str(kwargs)
             if typed:
-                key = (args, frozenset(kwargs.items()))
-            else:
-                key = (tuple(args), frozenset(kwargs.items()))
-
-            current_time = timer()
+                key += str(tuple(type(arg) for arg in args))
+                key += str(tuple(type(val) for val in kwargs.values()))
+                
+            # Get current time
+            now = timer()
+            
+            # Check if key exists and hasn't expired
             if key in cache:
-                if current_time - timestamps[key] < ttl:
-                    # Move to end to show that it was recently used
+                result, timestamp = cache[key]
+                if now - timestamp <= ttl:
+                    # Move to end to mark as most recently used
                     cache.move_to_end(key)
-                    return cache[key]
+                    return result
                 else:
-                    # Remove expired item
+                    # Remove expired entry
                     del cache[key]
-                    del timestamps[key]
-
-            # Call the function and cache the result
+                    
+            # Call function and cache result
             result = func(*args, **kwargs)
-            cache[key] = result
-            timestamps[key] = current_time
-
-            # Maintain the cache size
-            if len(cache) > maxsize:
+            cache[key] = (result, now)
+            
+            # Remove oldest entries if cache is too large
+            while len(cache) > maxsize:
                 cache.popitem(last=False)
-                timestamps.popitem(last=False)
-
+                
             return result
-
+            
+        # Add cache clear method
+        wrapper.cache_clear = cache.clear
+        
         return wrapper
-
     return decorator

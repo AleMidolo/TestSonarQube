@@ -1,29 +1,40 @@
 def scale(self, other=None, recompute=False):
     """
-    Histogram का स्केल (इंटीग्रल) गणना करें या सेट करें।
+    Calcola o imposta la scala (integrale dell'istogramma).
 
-    यदि *other* ``None`` है, तो इस हिस्टोग्राम का स्केल लौटाएं।  
-    यदि इसका स्केल पहले गणना नहीं किया गया है,  
-    तो इसे गणना करके संग्रहीत किया जाएगा ताकि बाद में उपयोग किया जा सके  
-    (जब तक कि *recompute* को स्पष्ट रूप से न कहा जाए)।  
-    ध्यान दें कि यदि हिस्टोग्राम को बदला (फिल किया) गया है,  
-    तो यदि स्केल पहले से गणना किया गया था,  
-    तो इसे स्पष्ट रूप से फिर से गणना करना आवश्यक है।  
+    Se *other* è ``None``, restituisce la scala di questo istogramma.  
+    Se la scala non è stata calcolata in precedenza, viene calcolata e memorizzata per un utilizzo successivo (a meno che non venga esplicitamente richiesto di *ricalcolare*).  
+    Nota che, dopo aver modificato (riempito) l'istogramma, è necessario ricalcolare esplicitamente la scala se era stata calcolata in precedenza.
 
-    यदि एक फ्लोट *other* प्रदान किया गया है,  
-    तो self को *other* के अनुसार पुनः स्केल करें।  
+    Se viene fornito un valore float in *other*, l'oggetto corrente (*self*) viene riscalato al valore di *other*.
 
-    ऐसे हिस्टोग्राम जिनका स्केल शून्य है,  
-    उन्हें पुनः स्केल नहीं किया जा सकता।  
-    यदि ऐसा करने का प्रयास किया जाता है,  
-    तो :exc:`.LenaValueError` त्रुटि उत्पन्न की जाएगी।
+    Gli istogrammi con scala pari a zero non possono essere riscalati.  
+    Viene sollevata un'eccezione :exc:`.LenaValueError` se si tenta di farlo.
     """
+    # Se other è None, calcola e restituisce la scala
     if other is None:
-        if not hasattr(self, '_scale_computed') or recompute:
-            self._compute_scale()
+        # Se la scala non è stata calcolata o viene richiesto il ricalcolo
+        if self._scale is None or recompute:
+            # Calcola l'integrale dell'istogramma sommando i contenuti dei bin
+            self._scale = sum(self._contents)
         return self._scale
+        
+    # Se viene fornito un valore per riscalare
     else:
-        if self._scale == 0:
-            raise LenaValueError("Cannot rescale a histogram with zero scale.")
-        self._scale = other
-        self._update_histogram()
+        # Calcola la scala corrente
+        current_scale = self.scale()
+        
+        # Controlla se la scala è zero
+        if current_scale == 0:
+            raise LenaValueError("Cannot rescale histogram with zero scale")
+            
+        # Calcola il fattore di scala
+        scale_factor = float(other) / current_scale
+        
+        # Riscala i contenuti e gli errori
+        self._contents = [x * scale_factor for x in self._contents]
+        if self._errors is not None:
+            self._errors = [x * scale_factor for x in self._errors]
+            
+        # Aggiorna la scala memorizzata
+        self._scale = float(other)

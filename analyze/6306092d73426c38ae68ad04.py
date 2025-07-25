@@ -1,14 +1,39 @@
 def get_parser_option_specs(self, command_name):
     """
-    निर्दिष्ट कमांड के लिए सभी विकल्प प्राप्त करता है।
+    Ottiene tutte le opzioni per il comando specificato
 
-    :param command_name: कमांड का नाम (जैसे main, virsh, ospd, आदि...)
-    :return: सभी कमांड विकल्पों की सूची
+    :param command_name: il nome del comando (main, virsh, ospd, ecc...)
+    :return: la lista di tutte le opzioni del comando
     """
-    options = {
-        'main': ['--help', '--version', '--verbose'],
-        'virsh': ['--connect', '--list', '--start'],
-        'ospd': ['--config', '--debug', '--status']
-    }
+    # Initialize empty list to store options
+    options = []
     
-    return options.get(command_name, [])
+    # Get the parser for the specified command
+    parser = self.parsers.get(command_name)
+    
+    if parser is None:
+        return options
+        
+    # Iterate through all options in the parser
+    for action in parser._actions:
+        # Skip help action
+        if isinstance(action, argparse._HelpAction):
+            continue
+            
+        # Get option names (both short and long forms)
+        option_names = action.option_strings
+        
+        # Get option details
+        option_spec = {
+            'names': option_names,
+            'help': action.help,
+            'required': action.required,
+            'default': action.default,
+            'type': str(action.type) if action.type else None,
+            'choices': action.choices,
+            'dest': action.dest
+        }
+        
+        options.append(option_spec)
+        
+    return options

@@ -1,135 +1,99 @@
 def isoparse(self, dt_str):
-    """
-    एक ISO-8601 दिनांक और समय स्ट्रिंग को :class:`datetime.datetime` में पार्स करें।
-
-    एक ISO-8601 दिनांक और समय स्ट्रिंग में एक दिनांक भाग होता है, जिसके बाद वैकल्पिक रूप से 
-    समय भाग हो सकता है। दिनांक और समय भाग एक एकल कैरेक्टर सेपरेटर द्वारा अलग किए जाते हैं, 
-    जो आधिकारिक मानक में ``T`` होता है। अधूरे दिनांक प्रारूप (जैसे ``YYYY-MM``) को समय भाग 
-    के साथ *संयोजित नहीं* किया जा सकता।
-
-    समर्थित दिनांक प्रारूप:
-
-    सामान्य:
-    - ``YYYY``
-    - ``YYYY-MM`` या ``YYYYMM``
-    - ``YYYY-MM-DD`` या ``YYYYMMDD``
-
-    असामान्य:
-    - ``YYYY-Www`` या ``YYYYWww`` - ISO सप्ताह (दिन डिफ़ॉल्ट रूप से 0 होता है)
-    - ``YYYY-Www-D`` या ``YYYYWwwD`` - ISO सप्ताह और दिन
-
-    ISO सप्ताह और दिन की संख्या :func:`datetime.date.isocalendar` के समान तर्क का पालन करती है।
-
-    समर्थित समय प्रारूप:
-    - ``hh``
-    - ``hh:mm`` या ``hhmm``
-    - ``hh:mm:ss`` या ``hhmmss``
-    - ``hh:mm:ss.ssssss`` (6 उप-सेकंड अंकों तक)
-
-    मध्यरात्रि (`hh`) के लिए एक विशेष मामला है, क्योंकि मानक 00:00 और 24:00 दोनों को 
-    प्रतिनिधित्व के रूप में समर्थन करता है। दशमलव सेपरेटर एक डॉट या कॉमा हो सकता है।
-
-    .. चेतावनी::
-
-        सेकंड के अलावा अन्य भिन्नात्मक घटकों के लिए समर्थन ISO-8601 मानक का हिस्सा है, 
-        लेकिन वर्तमान में इस पार्सर में लागू नहीं किया गया है।
-
-    समर्थित समय क्षेत्र ऑफसेट प्रारूप:
-    - `Z` (UTC)
-    - `±HH:MM`
-    - `±HHMM`
-    - `±HH`
-
-    ऑफसेट को :class:`dateutil.tz.tzoffset` ऑब्जेक्ट्स के रूप में दर्शाया जाएगा, 
-    सिवाय UTC के, जिसे :class:`dateutil.tz.tzutc` के रूप में दर्शाया जाएगा। UTC के 
-    समकक्ष समय क्षेत्र ऑफसेट (जैसे `+00:00`) को भी :class:`dateutil.tz.tzutc` के रूप में 
-    दर्शाया जाएगा।
-
-    :param dt_str:
-        एक स्ट्रिंग या स्ट्रीम जिसमें केवल एक ISO-8601 दिनांक और समय स्ट्रिंग हो।
-
-    :return:
-        एक :class:`datetime.datetime` लौटाता है जो स्ट्रिंग का प्रतिनिधित्व करता है। 
-        निर्दिष्ट नहीं किए गए घटक उनके न्यूनतम मान पर डिफ़ॉल्ट होते हैं।
-
-    .. चेतावनी::
-
-        संस्करण 2.7.0 से, पार्सर की सख्ती को अनुबंध का स्थिर हिस्सा नहीं माना जाना चाहिए। 
-        कोई भी मान्य ISO-8601 स्ट्रिंग जो डिफ़ॉल्ट सेटिंग्स के साथ सही ढंग से पार्स होती है, 
-        भविष्य के संस्करणों में सही ढंग से पार्स होती रहेगी, लेकिन अमान्य स्ट्रिंग्स जो 
-        वर्तमान में विफल होती हैं (जैसे ``2017-01-01T00:00+00:00:00``) भविष्य के संस्करणों 
-        में विफल होने की गारंटी नहीं है यदि वे एक मान्य दिनांक को एन्कोड करती हैं।
-
-    .. versionadded:: 2.7.0
-    """
     from datetime import datetime, timedelta
+    from dateutil.tz import tzutc, tzoffset
     import re
-    from dateutil import tz
 
     # Regular expressions for parsing
-    date_regex = re.compile(r'(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?')
-    week_regex = re.compile(r'(\d{4})-W(\d{2})(?:-?(\d))?')
-    time_regex = re.compile(r'(\d{1,2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?)?')
-    offset_regex = re.compile(r'Z|([+-]\d{2}):?(\d{2})?|([+-]\d{2})(\d{2})?|([+-]\d{2})')
+    DATE_PATTERNS = {
+        'full': r'(?P<year>\d{4})-?(?P<month>\d{2})-?(?P<day>\d{2})',
+        'year_month': r'(?P<year>\d{4})-?(?P<month>\d{2})',
+        'year': r'(?P<year>\d{4})',
+        'week': r'(?P<year>\d{4})-?W(?P<week>\d{2})(?:-?(?P<weekday>\d))?'
+    }
 
-    # Split date and time
+    TIME_PATTERN = r'(?P<hour>[0-2]\d)(?::?(?P<minute>\d{2})(?::?(?P<second>\d{2})(?:[.,](?P<microsecond>\d{1,6}))?)?)?' 
+    TIMEZONE_PATTERN = r'(?P<tzname>Z|(?P<tzsign>[+-])(?P<tzhour>\d{2})(?::?(?P<tzminute>\d{2})?)?)?$'
+
+    dt_str = dt_str.strip()
+    
+    # Split date and time parts
     if 'T' in dt_str:
-        date_str, time_str = dt_str.split('T', 1)
+        date_str, time_str = dt_str.split('T')
     else:
-        date_str, time_str = dt_str, ''
+        if any(c in dt_str for c in ':.,+-Z'):  # Contains time components
+            date_str, time_str = dt_str.split(' ', 1)
+        else:
+            date_str, time_str = dt_str, ''
 
     # Parse date
-    match = date_regex.match(date_str)
-    if match:
-        year = int(match.group(1))
-        month = int(match.group(2) or 1)
-        day = int(match.group(3) or 1)
-    else:
-        match = week_regex.match(date_str)
+    date_parts = None
+    for pattern_name, pattern in DATE_PATTERNS.items():
+        match = re.match(pattern, date_str)
         if match:
-            year = int(match.group(1))
-            week = int(match.group(2))
-            day = int(match.group(3) or 1)
-            # Calculate the first day of the week
-            first_day_of_year = datetime(year, 1, 1)
-            first_weekday = first_day_of_year.weekday()
-            days_to_first_monday = (7 - first_weekday) % 7
-            first_monday = first_day_of_year + timedelta(days=days_to_first_monday)
-            date = first_monday + timedelta(weeks=week - 1, days=day - 1)
-            return date
-        else:
-            raise ValueError("Invalid date format")
+            date_parts = match.groupdict()
+            break
+    
+    if not date_parts:
+        raise ValueError("Invalid ISO format")
 
-    # Parse time
-    match = time_regex.match(time_str)
-    if match:
-        hour = int(match.group(1))
-        minute = int(match.group(2) or 0)
-        second = int(match.group(3) or 0)
-        microsecond = int(match.group(4) or 0)
-    else:
-        hour, minute, second, microsecond = 0, 0, 0, 0
+    # Convert year-week format to year-month-day if necessary
+    if 'week' in date_parts:
+        from datetime import date
+        year = int(date_parts['year'])
+        week = int(date_parts['week'])
+        weekday = int(date_parts.get('weekday', '1'))
+        temp_date = datetime.strptime(f"{year}-W{week}-{weekday}", "%Y-W%W-%w").date()
+        date_parts = {'year': temp_date.year, 'month': temp_date.month, 'day': temp_date.day}
 
-    # Handle midnight case
-    if hour == 24:
-        hour = 0
-        day += 1
+    # Set default values for date parts
+    year = int(date_parts['year'])
+    month = int(date_parts.get('month', 1))
+    day = int(date_parts.get('day', 1))
 
-    # Parse offset
-    offset = None
-    if 'Z' in time_str:
-        offset = tz.tzutc()
-    else:
-        offset_match = offset_regex.search(time_str)
-        if offset_match:
-            if offset_match.group(1):  # ±HH:MM or Z
-                sign = 1 if offset_match.group(1)[0] == '+' else -1
-                hours = int(offset_match.group(2) or offset_match.group(3))
-                minutes = int(offset_match.group(4) or 0)
-                offset = tz.tzoffset(None, sign * (hours * 3600 + minutes * 60))
+    # Default time values
+    hour = minute = second = microsecond = 0
+    tz = None
+
+    # Parse time if present
+    if time_str:
+        time_match = re.match(TIME_PATTERN + TIMEZONE_PATTERN, time_str)
+        if not time_match:
+            raise ValueError("Invalid time format")
+        
+        time_parts = time_match.groupdict()
+        
+        # Parse time components
+        if time_parts.get('hour'):
+            hour = int(time_parts['hour'])
+            if hour == 24:  # Handle special case of 24:00
+                hour = 0
+                day += 1
+                
+        if time_parts.get('minute'):
+            minute = int(time_parts['minute'])
+            
+        if time_parts.get('second'):
+            second = int(time_parts['second'])
+            
+        if time_parts.get('microsecond'):
+            microsecond = int(time_parts['microsecond'].ljust(6, '0'))
+
+        # Parse timezone
+        if time_parts.get('tzname'):
+            if time_parts['tzname'] == 'Z':
+                tz = tzutc()
             else:
-                raise ValueError("Invalid offset format")
+                tzsign = 1 if time_parts['tzsign'] == '+' else -1
+                tzhour = int(time_parts['tzhour'])
+                tzminute = int(time_parts.get('tzminute', 0))
+                offset = tzsign * (tzhour * 60 + tzminute) * 60
+                
+                if offset == 0:
+                    tz = tzutc()
+                else:
+                    tz = tzoffset(None, offset)
 
-    # Create datetime object
-    dt = datetime(year, month, day, hour, minute, second, microsecond, tzinfo=offset)
-    return dt
+    try:
+        return datetime(year, month, day, hour, minute, second, microsecond, tzinfo=tz)
+    except ValueError as e:
+        raise ValueError(f"Invalid date/time components: {str(e)}")

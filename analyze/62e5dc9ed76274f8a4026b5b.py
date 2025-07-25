@@ -1,16 +1,26 @@
 def deprecated(message):
     """
-    फ़ंक्शन और विधियों को अप्रचलित घोषित करने के लिए डेकोरेटर।
-
-    ::
-
-        @deprecated("'foo' को 'bar' के पक्ष में अप्रचलित घोषित किया गया है")
-        def foo(x):
-            pass
+    Decorator per deprecare funzioni e metodi.
+    
+    Esempio di utilizzo:
+    
+    @deprecated("'foo' è stato deprecato a favore di 'bar'")
+    def foo(x):
+        pass
     """
     def decorator(func):
+        import warnings
+        import functools
+        
+        @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            print(f"Warning: {func.__name__} is deprecated. {message}")
+            warnings.warn(
+                f"{func.__name__}: {message}",
+                category=DeprecationWarning,
+                stacklevel=2
+            )
             return func(*args, **kwargs)
+            
         return wrapper
+        
     return decorator

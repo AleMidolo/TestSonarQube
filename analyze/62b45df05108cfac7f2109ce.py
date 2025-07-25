@@ -1,21 +1,44 @@
 def validate(self, path):
     """
-    पथ या pyfs रूट पर OCFL ऑब्जेक्ट को मान्य करें।
-
-    यदि मान्य है (चेतावनियाँ स्वीकार्य हैं), तो True लौटाता है, अन्यथा False।
+    Valida l'oggetto OCFL nel percorso specificato o nella radice di pyfs.
     """
-    # OCFL ऑब्जेक्ट की वैधता की जांच करने के लिए कोड यहाँ लिखें
-    # उदाहरण के लिए, फ़ाइलों की उपस्थिति, संरचना, आदि की जांच करें
-    # यदि सभी शर्तें पूरी होती हैं, तो True लौटाएँ, अन्यथा False लौटाएँ
+    # Verifica che il percorso esista
+    if not self.fs.exists(path):
+        raise ValueError(f"Il percorso {path} non esiste")
 
-    # यह एक साधारण उदाहरण है, वास्तविक कार्यान्वयन को आपकी आवश्यकताओं के अनुसार अनुकूलित करें
-    valid = True  # मान लें कि यह मान्य है
-    warnings = []  # चेतावनियों को संग्रहीत करने के लिए एक सूची
+    # Verifica la presenza del file namaste 
+    namaste_path = self.fs.join_path(path, "0=ocfl_object_1.0")
+    if not self.fs.exists(namaste_path):
+        raise ValueError(f"File namaste mancante in {path}")
 
-    # यहाँ पर OCFL ऑब्जेक्ट की वैधता की जांच करें
-    # यदि कोई चेतावनी हो, तो उसे warnings सूची में जोड़ें
+    # Verifica la presenza dell'inventario
+    inventory_path = self.fs.join_path(path, "inventory.json")
+    if not self.fs.exists(inventory_path):
+        raise ValueError(f"File inventory.json mancante in {path}")
 
-    if valid:
-        return True
-    else:
-        return False
+    # Carica e valida l'inventario
+    with self.fs.open(inventory_path) as f:
+        inventory = json.load(f)
+
+    # Verifica i campi obbligatori dell'inventario
+    required_fields = ["id", "type", "digestAlgorithm", "head", "versions"]
+    for field in required_fields:
+        if field not in inventory:
+            raise ValueError(f"Campo {field} mancante nell'inventario")
+
+    # Verifica che l'algoritmo di digest sia valido
+    valid_algorithms = ["sha256", "sha512"]
+    if inventory["digestAlgorithm"] not in valid_algorithms:
+        raise ValueError(f"Algoritmo digest non valido: {inventory['digestAlgorithm']}")
+
+    # Verifica la presenza delle versioni
+    versions_path = self.fs.join_path(path, "v1")
+    if not self.fs.exists(versions_path):
+        raise ValueError("Directory delle versioni mancante")
+
+    # Verifica che head punti a una versione valida
+    head = inventory["head"]
+    if not self.fs.exists(self.fs.join_path(path, head)):
+        raise ValueError(f"La versione head {head} non esiste")
+
+    return True

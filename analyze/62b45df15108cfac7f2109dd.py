@@ -1,8 +1,10 @@
 def status_str(self, prefix=''):
     """
-    सत्यापन लॉग (validation log) का स्ट्रिंग प्रतिनिधित्व लौटाएं, वैकल्पिक प्रीफिक्स के साथ।
+    Restituisce la rappresentazione in formato stringa del registro di validazione, con un prefisso opzionale.
     """
-    log_representation = f"{prefix}Validation Log:\n"
-    for entry in self.validation_log:
-        log_representation += f"{prefix} - {entry}\n"
-    return log_representation.strip()
+    result = []
+    for error in self.errors:
+        result.append(f"{prefix}{error}")
+    for warning in self.warnings:
+        result.append(f"{prefix}{warning}")
+    return "\n".join(result) if result else f"{prefix}OK"

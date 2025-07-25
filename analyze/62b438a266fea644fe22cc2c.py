@@ -1,21 +1,25 @@
 def make_parsers():
     """
-    शीर्ष-स्तरीय पार्सर और इसके उप-पार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
+    Crea un parser di livello superiore e i suoi sottoparser, quindi restituiscili come una tupla.
     """
     import argparse
 
-    # मुख्य पार्सर बनाएँ
-    main_parser = argparse.ArgumentParser(description='मुख्य पार्सर')
-    
-    # उप-पार्सर बनाएँ
-    subparsers = main_parser.add_subparsers(dest='command', help='उप-पार्सर मदद')
+    # Create main parser
+    parser = argparse.ArgumentParser(description='Command line tool')
+    subparsers = parser.add_subparsers(dest='command', help='Available commands')
 
-    # एक उप-पार्सर जोड़ें
-    sub_parser1 = subparsers.add_parser('command1', help='कमांड 1 मदद')
-    sub_parser1.add_argument('--option1', type=str, help='विकल्प 1')
+    # Create "add" subparser
+    add_parser = subparsers.add_parser('add', help='Add a new item')
+    add_parser.add_argument('name', help='Name of the item')
+    add_parser.add_argument('--quantity', type=int, default=1, help='Quantity to add')
 
-    # दूसरे उप-पार्सर जोड़ें
-    sub_parser2 = subparsers.add_parser('command2', help='कमांड 2 मदद')
-    sub_parser2.add_argument('--option2', type=int, help='विकल्प 2')
+    # Create "list" subparser 
+    list_parser = subparsers.add_parser('list', help='List all items')
+    list_parser.add_argument('--sort', choices=['name', 'date'], default='name', 
+                            help='Sort items by name or date')
 
-    return main_parser, subparsers
+    # Create "remove" subparser
+    remove_parser = subparsers.add_parser('remove', help='Remove an item')
+    remove_parser.add_argument('name', help='Name of item to remove')
+
+    return (parser, add_parser, list_parser, remove_parser)

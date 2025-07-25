@@ -1,20 +1,36 @@
 def next_version(version):
-    """
-    दिए गए संस्करण पैटर्न के अनुसार अगला संस्करण पहचानकर्ता प्राप्त करें।
-
-    यह फ़ंक्शन शून्य-प्रिफिक्स (zero-prefixed) और गैर-शून्य-प्रिफिक्स (non-zero prefixed) दोनों प्रकार के संस्करणों को संभालने में सक्षम होना चाहिए।
-    """
-    # Split the version into its components
+    # Split version into parts
     parts = version.split('.')
     
-    # Convert the last part to an integer and increment it
-    parts[-1] = str(int(parts[-1]) + 1)
+    # Convert to integers
+    nums = [int(x) for x in parts]
     
-    # Handle carry over if the last part was 10
-    for i in range(len(parts) - 1, 0, -1):
-        if int(parts[i]) == 10:
-            parts[i] = '0'
-            parts[i - 1] = str(int(parts[i - 1]) + 1)
+    # Start from rightmost digit
+    i = len(nums) - 1
     
-    # Join the parts back together
-    return '.'.join(parts)
+    while i >= 0:
+        # If current digit is 9, set to 0 and continue carrying
+        if nums[i] == 9:
+            nums[i] = 0
+            i -= 1
+        # Otherwise increment digit and break
+        else:
+            nums[i] += 1
+            break
+            
+    # If we carried through all digits, add new digit 1 at start
+    if i < 0:
+        nums.insert(0, 1)
+        
+    # Convert back to strings, preserving leading zeros
+    result = []
+    for i, num in enumerate(nums):
+        # Keep leading zeros if original had them
+        if parts[i].startswith('0') and num != 0:
+            result.append('0' + str(num))
+        elif parts[i].startswith('0'):
+            result.append('0' + str(num))
+        else:
+            result.append(str(num))
+            
+    return '.'.join(result)

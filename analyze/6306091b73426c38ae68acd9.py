@@ -1,6 +1,8 @@
 def workspace_manager(cls):
     """
-    वर्कस्पेस मैनेजर प्राप्त करता है।
+    Ottiene il gestore dello spazio di lavoro.
     """
-    # Assuming the workspace manager is a class method that returns an instance of a workspace manager
-    return cls()  # Create and return an instance of the class passed as an argument
+    if not hasattr(cls, '_workspace_manager'):
+        from workspace.manager import WorkspaceManager
+        cls._workspace_manager = WorkspaceManager()
+    return cls._workspace_manager

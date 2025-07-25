@@ -1,58 +1,34 @@
 def get_nodeinfo_well_known_document(url, document_path=None):
     """
-    NodeInfo .well-known दस्तावेज़ उत्पन्न करें।  
-
-    स्पेसिफिकेशन देखें: [http://nodeinfo.diaspora.software](http://nodeinfo.diaspora.software)  
-
-    पैरामीटर (Arguments): 
-    - url: पूरा बेस URL प्रोटोकॉल के साथ, जैसे `https://example.com`  
-    - document_path: कस्टम NodeInfo दस्तावेज़ पथ, यदि प्रदान किया गया हो (वैकल्पिक)  
-
-    रिटर्न (Returns):  
-    - dict: एक स्वरूपित डिक्शनरी
+    Genera un documento NodeInfo `.well-known`.
+    
+    Consulta la specifica: [http://nodeinfo.diaspora.software](http://nodeinfo.diaspora.software)
+    
+    :param url: L'URL base completo con protocollo, ad esempio `https://example.com`  
+    :param document_path: Percorso personalizzato per il documento NodeInfo, se fornito (opzionale)  
+    :returns: dict
     """
-    import json
-
-    nodeinfo_document = {
-        "version": "2.0",
-        "software": {
-            "name": "YourSoftwareName",
-            "version": "1.0.0"
-        },
-        "protocols": [
-            "activitypub",
-            "activitystreams",
-            "webfinger"
-        ],
-        "services": {
-            "outbound": [
-                {
-                    "name": "Service Name",
-                    "url": "https://service.example.com"
-                }
-            ],
-            "inbound": [
-                {
-                    "name": "Another Service",
-                    "url": "https://another.service.example.com"
-                }
-            ]
-        },
-        "metadata": {
-            "description": "A brief description of the node.",
-            "icon": {
-                "type": "image/png",
-                "url": f"{url}/path/to/icon.png"
+    # Remove trailing slash from url if present
+    url = url.rstrip('/')
+    
+    # Use default path if none provided
+    if document_path is None:
+        document_path = '/nodeinfo/2.0'
+        
+    # Remove leading slash from document path if present
+    document_path = document_path.lstrip('/')
+    
+    # Build the full nodeinfo URL
+    nodeinfo_url = f"{url}/{document_path}"
+    
+    # Create the well-known document according to spec
+    well_known_doc = {
+        "links": [
+            {
+                "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
+                "href": nodeinfo_url
             }
-        }
+        ]
     }
-
-    if document_path:
-        nodeinfo_url = f"{url}/{document_path}"
-    else:
-        nodeinfo_url = f"{url}/.well-known/nodeinfo"
-
-    return {
-        "nodeinfo": nodeinfo_url,
-        "data": nodeinfo_document
-    }
+    
+    return well_known_doc

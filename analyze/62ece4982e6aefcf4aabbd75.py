@@ -1,23 +1,19 @@
-import subprocess
-
 def addignored(ignored):
-    """
-    1. गिट कमांड का उपयोग करें ताकि सभी फ़ाइल नाम प्राप्त किए जा सकें।
-    2. प्राप्त फ़ाइल नामों को एक सूची (list) में बदलें।
-    3. सूची को केवल उन फ़ाइलों के लिए छांटें जो `.gitignore` में अनदेखी (ignored) की गई हैं।
-    4. उन फ़ाइल नामों को एक स्ट्रिंग में बदलें, जिसमें प्रत्येक नाम अल्पविराम (comma) से अलग हो।  
-    5. अंतिम परिणाम को फ़ंक्शन से लौटाएं।
-    """
-    # Get the list of all files in the repository
-    result = subprocess.run(['git', 'ls-files'], stdout=subprocess.PIPE, text=True)
-    all_files = result.stdout.splitlines()
-
-    # Read the .gitignore file
-    with open('.gitignore', 'r') as f:
-        ignored_patterns = f.read().splitlines()
-
-    # Filter the files that are ignored
-    ignored_files = [file for file in all_files if any(file.startswith(pattern) for pattern in ignored_patterns)]
-
-    # Join the ignored files into a single string separated by commas
-    return ', '.join(ignored_files)
+    import subprocess
+    
+    # Esegui il comando git ls-files per ottenere tutti i file
+    git_files = subprocess.check_output(['git', 'ls-files', '--others', '--ignored', '--exclude-standard']).decode('utf-8')
+    
+    # Converti l'output in una lista di file
+    files_list = git_files.strip().split('\n')
+    
+    # Filtra i file vuoti
+    files_list = [f for f in files_list if f]
+    
+    # Ordina la lista alfabeticamente
+    files_list.sort()
+    
+    # Unisci i nomi dei file con virgole
+    ignored_files = ','.join(files_list)
+    
+    return ignored_files

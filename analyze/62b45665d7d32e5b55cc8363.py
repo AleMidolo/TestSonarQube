@@ -1,21 +1,31 @@
 def make_parsers():
-    """
-    एक शीर्ष-स्तरीय (top-level) पार्सर और उसके सबपार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
-    """
+    """Crea un parser di livello superiore e i suoi sottoparser e restituiscili come una tupla."""
     import argparse
 
-    # शीर्ष-स्तरीय पार्सर बनाना
-    top_parser = argparse.ArgumentParser(description='Top-level parser')
-    
-    # सबपार्सर बनाना
-    subparsers = top_parser.add_subparsers(dest='command', help='Sub-command help')
+    # Parser principale
+    parser = argparse.ArgumentParser(description='Tool di gestione file')
+    subparsers = parser.add_subparsers(dest='command', help='Comandi disponibili')
 
-    # एक सबपार्सर जोड़ना
-    sub_parser1 = subparsers.add_parser('command1', help='Help for command1')
-    sub_parser1.add_argument('--option1', type=str, help='Option 1 for command1')
+    # Sottoparser per il comando 'list'
+    list_parser = subparsers.add_parser('list', help='Elenca i file in una directory')
+    list_parser.add_argument('directory', nargs='?', default='.', help='Directory da elencare')
+    list_parser.add_argument('-r', '--recursive', action='store_true', help='Elenca ricorsivamente')
 
-    # दूसरे सबपार्सर को जोड़ना
-    sub_parser2 = subparsers.add_parser('command2', help='Help for command2')
-    sub_parser2.add_argument('--option2', type=int, help='Option 2 for command2')
+    # Sottoparser per il comando 'copy'
+    copy_parser = subparsers.add_parser('copy', help='Copia file')
+    copy_parser.add_argument('source', help='File sorgente')
+    copy_parser.add_argument('destination', help='Destinazione')
+    copy_parser.add_argument('-f', '--force', action='store_true', help='Sovrascrive file esistenti')
 
-    return top_parser, subparsers
+    # Sottoparser per il comando 'move'
+    move_parser = subparsers.add_parser('move', help='Sposta file')
+    move_parser.add_argument('source', help='File sorgente')
+    move_parser.add_argument('destination', help='Destinazione')
+    move_parser.add_argument('-f', '--force', action='store_true', help='Sovrascrive file esistenti')
+
+    # Sottoparser per il comando 'delete'
+    delete_parser = subparsers.add_parser('delete', help='Elimina file')
+    delete_parser.add_argument('files', nargs='+', help='File da eliminare')
+    delete_parser.add_argument('-r', '--recursive', action='store_true', help='Elimina ricorsivamente')
+
+    return parser, list_parser, copy_parser, move_parser, delete_parser

@@ -1,17 +1,20 @@
 def vertex3tuple(vertices):
-    """
-    कोड यहाँ लिखें
-
-    विवरण:
-    प्रत्येक वर्टेक्स के लिए 3 पॉइंट्स लौटाएगा।  
-    यह वर्टेक्स और उसके दोनों ओर के 2 पॉइंट्स को शामिल करेगा।  
-
-    उदाहरण के लिए:  
-    यदि पॉलीगॉन के वर्टेक्स ABCD हैं, तो यह निम्नलिखित 3-ट्यूपल्स लौटाएगा:  
-    `DAB, ABC, BCD, CDA`  
-    वर्टेक्स का क्रम:
-
-    # A    B    C    D  -> वर्टेक्स का क्रम
-    """
+    # Create list to store 3-vertex tuples
+    vertex_tuples = []
+    
+    # Get number of vertices
     n = len(vertices)
-    return [(vertices[(i-1) % n], vertices[i], vertices[(i+1) % n]) for i in range(n)]
+    
+    # For each vertex index
+    for i in range(n):
+        # Get previous vertex (wrap around to end if at start)
+        prev = vertices[(i-1) % n]
+        # Get current vertex
+        curr = vertices[i]
+        # Get next vertex (wrap around to start if at end) 
+        next = vertices[(i+1) % n]
+        
+        # Add tuple of (previous, current, next) vertices
+        vertex_tuples.append((prev, curr, next))
+        
+    return vertex_tuples

@@ -1,28 +1,44 @@
 def subprocess_run_helper(func, *args, timeout, extra_env=None):
-    """
-    एक सब-प्रोसेस में एक फ़ंक्शन चलाएँ।
-
-    पैरामीटर (Parameters)
-    ---------------------
-    func : function
-        वह फ़ंक्शन जिसे चलाना है। यह किसी ऐसे मॉड्यूल में होना चाहिए जिसे आयात (import) किया जा सके।
-    *args : str
-        कोई भी अतिरिक्त कमांड लाइन तर्क जो ``subprocess.run`` के पहले तर्क में पास किए जाने हैं।
-    extra_env : dict[str, str]
-        सब-प्रोसेस के लिए सेट किए जाने वाले कोई भी अतिरिक्त पर्यावरण वेरिएबल।
-    """
     import subprocess
+    import sys
     import os
-
-    # Prepare the environment
+    
+    # Prepare environment variables
     env = os.environ.copy()
     if extra_env:
         env.update(extra_env)
-
-    # Prepare the command to run
-    command = [func] + list(args)
-
-    # Run the subprocess
-    result = subprocess.run(command, env=env, timeout=timeout)
-
-    return result
+        
+    # Get function module and name
+    module_name = func.__module__
+    func_name = func.__name__
+    
+    # Build Python command to execute function
+    cmd = [
+        sys.executable,
+        '-c',
+        f'import {module_name}; {module_name}.{func_name}()'
+    ]
+    
+    # Add any additional command line arguments
+    if args:
+        cmd.extend(args)
+        
+    # Run subprocess with timeout
+    try:
+        result = subprocess.run(
+            cmd,
+            env=env,
+            timeout=timeout,
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        return result
+    except subprocess.TimeoutExpired as e:
+        print(f"Process timed out after {timeout} seconds")
+        raise e
+    except subprocess.CalledProcessError as e:
+        print(f"Process failed with return code {e.returncode}")
+        print(f"stdout: {e.stdout}")
+        print(f"stderr: {e.stderr}")
+        raise e

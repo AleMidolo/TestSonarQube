@@ -1,34 +1,43 @@
 def verify_relayable_signature(public_key, doc, signature):
     """
-    हस्ताक्षरित XML तत्वों को सत्यापित करें ताकि यह सुनिश्चित किया जा सके 
-    कि दावा किया गया लेखक ने वास्तव में यह संदेश उत्पन्न किया है।
+    Verifica gli elementi XML firmati per avere la certezza che l'autore dichiarato abbia effettivamente generato questo messaggio.
     """
-    from lxml import etree
-    from cryptography.hazmat.primitives import hashes
-    from cryptography.hazmat.primitives.asymmetric import padding
-    from cryptography.hazmat.backends import default_backend
-    from cryptography.hazmat.primitives import serialization
-
-    # Load the public key
-    public_key = serialization.load_pem_public_key(
-        public_key.encode(),
-        backend=default_backend()
-    )
-
-    # Parse the XML document
-    root = etree.fromstring(doc)
-
-    # Extract the signed data
-    signed_data = etree.tostring(root, method='xml', exclusive=True)
-
-    # Verify the signature
     try:
-        public_key.verify(
-            signature,
-            signed_data,
-            padding.PKCS1v15(),
-            hashes.SHA256()
-        )
-        return True
+        # Import required libraries
+        from cryptography.hazmat.primitives import hashes
+        from cryptography.hazmat.primitives.asymmetric import padding
+        from cryptography.hazmat.primitives.serialization import load_pem_public_key
+        from cryptography.exceptions import InvalidSignature
+        
+        # Convert doc to bytes if it's not already
+        if isinstance(doc, str):
+            doc = doc.encode('utf-8')
+            
+        # Load the public key if it's in PEM format
+        if isinstance(public_key, str):
+            public_key = load_pem_public_key(public_key.encode())
+            
+        # Convert signature from base64 if needed
+        import base64
+        if isinstance(signature, str):
+            signature = base64.b64decode(signature)
+            
+        # Verify the signature
+        try:
+            public_key.verify(
+                signature,
+                doc,
+                padding.PSS(
+                    mgf=padding.MGF1(hashes.SHA256()),
+                    salt_length=padding.PSS.MAX_LENGTH
+                ),
+                hashes.SHA256()
+            )
+            return True
+        except InvalidSignature:
+            return False
+            
     except Exception as e:
+        # Log error if needed
+        print(f"Error verifying signature: {str(e)}")
         return False

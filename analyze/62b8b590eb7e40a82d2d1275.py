@@ -1,46 +1,27 @@
 def _legacy_mergeOrderings(orderings):
-    """
-    कई क्रमबद्ध सूचियों को इस प्रकार संयोजित करें कि प्रत्येक सूची के भीतर का क्रम संरक्षित रहे।
-
-    इन सूचियों पर यह प्रतिबंध है कि यदि कोई वस्तु दो या अधिक सूचियों में प्रकट होती है,
-    तो उस वस्तु से शुरू होने वाला उपसर्ग (suffix) सभी सूचियों में समान होना चाहिए।
-
-    उदाहरण के लिए:
-
-    >>> _mergeOrderings([
-    ... ['x', 'y', 'z'],
-    ... ['q', 'z'],
-    ... [1, 3, 5],
-    ... ['z']
-    ... ])
-    ['x', 'y', 'q', 1, 3, 5, 'z']
-    """
-    from collections import defaultdict, deque
-
-    # Create a graph to represent the orderings
-    graph = defaultdict(set)
-    in_degree = defaultdict(int)
-    all_items = set()
-
-    # Build the graph and in-degree count
+    # Create a dictionary to store the position of each element in its ordering
+    position = {}
     for ordering in orderings:
-        for i in range(len(ordering)):
-            all_items.add(ordering[i])
-            if i > 0:
-                if ordering[i] not in graph[ordering[i - 1]]:
-                    graph[ordering[i - 1]].add(ordering[i])
-                    in_degree[ordering[i]] += 1
+        for i, element in enumerate(ordering):
+            if element in position:
+                # Check if suffixes match when element appears in multiple orderings
+                suffix1 = ordering[i:]
+                suffix2 = orderings[position[element][0]][position[element][1]:]
+                if suffix1 != suffix2:
+                    raise ValueError("Inconsistent orderings")
+            else:
+                position[element] = (orderings.index(ordering), i)
 
-    # Initialize the queue with items that have no incoming edges
-    queue = deque([item for item in all_items if in_degree[item] == 0])
-    merged_order = []
-
-    while queue:
-        current = queue.popleft()
-        merged_order.append(current)
-        for neighbor in graph[current]:
-            in_degree[neighbor] -= 1
-            if in_degree[neighbor] == 0:
-                queue.append(neighbor)
-
-    return merged_order
+    # Create result list by merging orderings
+    result = []
+    used = set()
+    
+    # Process each ordering
+    for ordering in orderings:
+        # Add elements from this ordering that haven't been used yet
+        for element in ordering:
+            if element not in used:
+                result.append(element)
+                used.add(element)
+                
+    return result

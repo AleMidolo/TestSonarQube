@@ -1,10 +1,9 @@
 def inject_config(self):
     """
-    कॉन्फ़िग पथ के लिए पर्यावरण वेरिएबल सेट करें, यदि यह परिभाषित नहीं है।
+    Imposta la variabile d'ambiente per il percorso del file di configurazione, se non è già definita.
     """
     import os
-
-    config_path = os.getenv('CONFIG_PATH')
-    if config_path is None:
-        default_path = '/etc/default/config'
-        os.environ['CONFIG_PATH'] = default_path
+    
+    if 'CONFIG_PATH' not in os.environ:
+        default_config_path = os.path.join(os.path.dirname(__file__), 'config.ini')
+        os.environ['CONFIG_PATH'] = default_config_path

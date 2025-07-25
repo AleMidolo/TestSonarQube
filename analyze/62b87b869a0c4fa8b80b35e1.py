@@ -1,56 +1,39 @@
 def hist_to_graph(hist, make_value=None, get_coordinate="left",
                   field_names=("x", "y"), scale=None):
-    """
-    एक :class:`.histogram` को :class:`.graph` में बदलें।
-
-    *make_value* एक फ़ंक्शन है जो ग्राफ़ के बिंदु का मान सेट करता है।
-    डिफ़ॉल्ट रूप से यह बिन की सामग्री (bin content) होती है।
-    *make_value* एकल मान (बिन सामग्री) को संदर्भ (context) के बिना स्वीकार करता है।
-
-    इस विकल्प का उपयोग ग्राफ़ की त्रुटि पट्टियाँ (error bars) बनाने के लिए किया जा सकता है।
-    उदाहरण के लिए, एक ऐसे हिस्टोग्राम से त्रुटियों के साथ ग्राफ़ बनाने के लिए
-    जहां बिन में *mean*, *mean_error* और एक संदर्भ के साथ नामित ट्यूपल (named tuple) हो,
-    आप निम्नलिखित का उपयोग कर सकते हैं:
-
-    >>> make_value = lambda bin_: (bin_.mean, bin_.mean_error)
-
-    *get_coordinate* यह परिभाषित करता है कि हिस्टोग्राम बिन से बनाए गए ग्राफ़ बिंदु का
-    निर्देशांक (coordinate) क्या होगा। यह "left" (डिफ़ॉल्ट), "right" और "middle" हो सकता है।
-
-    *field_names* ग्राफ़ के फ़ील्ड नाम सेट करता है। इनकी संख्या परिणाम के आयाम (dimension)
-    के समान होनी चाहिए। ऊपर दिए गए *make_value* के लिए ये होंगे
-    *("x", "y_mean", "y_mean_error")*।
-
-    *scale* ग्राफ़ का स्केल बन जाता है (डिफ़ॉल्ट रूप से अज्ञात)।
-    यदि यह ``True`` है, तो यह हिस्टोग्राम का स्केल उपयोग करता है।
-
-    *hist* में केवल संख्यात्मक बिन (numeric bins) होने चाहिए (संदर्भ के बिना)
-    या *make_value* को संदर्भ हटाकर एक संख्यात्मक ग्राफ़ बनाना चाहिए।
-
-    परिणामी ग्राफ़ लौटाएं।
-    """
-    import numpy as np
-
-    if make_value is None:
-        make_value = lambda bin_: bin_
-
-    bin_edges = hist['bin_edges']
-    bin_contents = hist['bin_contents']
-
-    if get_coordinate == "left":
-        coordinates = bin_edges[:-1]
-    elif get_coordinate == "right":
-        coordinates = bin_edges[1:]
-    elif get_coordinate == "middle":
-        coordinates = (bin_edges[:-1] + bin_edges[1:]) / 2
-    else:
-        raise ValueError("Invalid value for get_coordinate. Must be 'left', 'right', or 'middle'.")
-
-    values = np.array([make_value(content) for content in bin_contents])
     
+    # Default make_value function just returns bin content
+    if make_value is None:
+        make_value = lambda x: x
+        
+    # Get coordinate mapping functions
+    coordinate_funcs = {
+        "left": lambda bin_: bin_.edges[0],
+        "right": lambda bin_: bin_.edges[1], 
+        "middle": lambda bin_: (bin_.edges[0] + bin_.edges[1])/2
+    }
+    
+    get_coord = coordinate_funcs[get_coordinate]
+    
+    # Create points list
+    points = []
+    for bin_ in hist:
+        x = get_coord(bin_)
+        y = make_value(bin_.value)
+        
+        # Handle single values vs tuples
+        if isinstance(y, tuple):
+            points.append((x,) + y)
+        else:
+            points.append((x, y))
+            
+    # Set scale if requested
     if scale is True:
-        scale_factor = hist.get('scale_factor', 1)
-        values = values * scale_factor
-
-    graph = {field_names[i]: values[:, i] for i in range(len(field_names))}
-    return graph
+        scale = hist.scale
+            
+    # Create field names based on number of values
+    if len(points[0]) != len(field_names):
+        raise ValueError("Number of field names must match number of values per point")
+        
+    # Import Graph class and create new graph
+    from .graph import Graph
+    return Graph(points, field_names=field_names, scale=scale)

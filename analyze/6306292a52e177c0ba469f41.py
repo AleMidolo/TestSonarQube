@@ -1,11 +1,21 @@
 def test_tag(tag: str) -> bool:
     """
-    किसी शब्द का परीक्षण करें कि क्या उसे टैग के रूप में स्वीकार किया जा सकता है।
+    Verifica se una parola può essere accettata come tag.
     """
-    if not tag or not isinstance(tag, str):
+    # Check if tag is empty or contains only whitespace
+    if not tag or tag.isspace():
         return False
-    if len(tag) > 30 or len(tag) < 1:
+        
+    # Check if tag contains only alphanumeric chars and underscores
+    if not tag.replace('_','').isalnum():
         return False
-    if not tag.isalnum() and not all(char in ['-', '_'] for char in tag):
+        
+    # Check if tag starts with a letter
+    if not tag[0].isalpha():
         return False
+        
+    # Check if tag is all lowercase
+    if not tag.islower():
+        return False
+        
     return True

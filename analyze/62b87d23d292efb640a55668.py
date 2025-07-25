@@ -1,19 +1,17 @@
 def get_config():
     """
-    # VersioneerConfig() ऑब्जेक्ट बनाएं, इसे डेटा से भरें और इसे लौटाएं।
+    Crea, popola e restituisci l'oggetto VersioneerConfig()
     """
-    class VersioneerConfig:
-        def __init__(self):
-            self.data = {}
-
-        def fill_data(self):
-            # यहाँ डेटा भरने की प्रक्रिया को लागू करें
-            self.data = {
-                'version': '1.0.0',
-                'author': 'Your Name',
-                'email': 'your.email@example.com'
-            }
-
+    from versioneer import VersioneerConfig
+    
     config = VersioneerConfig()
-    config.fill_data()
+    
+    # Populate config settings
+    config.VCS = "git"
+    config.style = "pep440"
+    config.tag_prefix = ""
+    config.parentdir_prefix = "myproject-"
+    config.versionfile_source = "myproject/_version.py"
+    config.verbose = False
+    
     return config

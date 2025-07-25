@@ -1,14 +1,21 @@
 def _normalizeargs(sequence, output=None):
     """
-    घोषणा तर्कों को सामान्यीकृत करें
+    Normalizza gli argomenti della dichiarazione
 
-    सामान्यीकरण तर्कों में घोषणाएँ, ट्यूपल, या एकल इंटरफेस हो सकते हैं।
+    Gli argomenti di normalizzazione possono contenere Dichiarazioni, tuple o singole
+    interfacce.
 
-    व्यक्तिगत इंटरफेस या लागू विनिर्देशों को छोड़कर अन्य सभी का विस्तार किया जाएगा।
+    Qualsiasi cosa diversa da interfacce individuali o specifiche di implementazione verrà espansa.
     """
-    if isinstance(sequence, tuple):
-        return [seq for seq in sequence]
-    elif hasattr(sequence, '__iter__'):
-        return list(sequence)
-    else:
-        return [sequence]
+    if output is None:
+        output = []
+        
+    for item in sequence:
+        if isinstance(item, (list, tuple)):
+            _normalizeargs(item, output)
+        elif hasattr(item, 'interfaces'):
+            _normalizeargs(item.interfaces, output)
+        else:
+            output.append(item)
+            
+    return output

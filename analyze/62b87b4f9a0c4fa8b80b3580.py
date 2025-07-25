@@ -1,16 +1,16 @@
 def integral(bins, edges):
     """
-    histogram के लिए इंटीग्रल (स्केल) की गणना करें।
-
-    *bins* में मान (values) होते हैं, और *edges* इंटीग्रेशन के लिए जाल (mesh) बनाते हैं।  
-    इनका प्रारूप (format) :class:`.histogram` विवरण में परिभाषित है।
+    Calcola l'integrale (scala per un istogramma).
+    
+    *i bins* contengono i valori, mentre *gli edges* formano la griglia  
+    per l'integrazione.  
+    Il loro formato è definito nella descrizione della classe :class:`.histogram`.
     """
-    import numpy as np
-
-    # Calculate the width of each bin
-    bin_widths = np.diff(edges)
-
-    # Calculate the integral by summing the product of bins and bin widths
-    integral_values = np.cumsum(bins * bin_widths)
-
-    return integral_values
+    total = 0.0
+    
+    # Loop through bins and multiply each bin height by its width
+    for i in range(len(bins)):
+        bin_width = edges[i+1] - edges[i]
+        total += bins[i] * bin_width
+        
+    return total

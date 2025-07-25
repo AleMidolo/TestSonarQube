@@ -1,10 +1,12 @@
 def validate_choices_args(self, args):
     """
-    चॉइस आर्ग्युमेंट्स का मान उपलब्ध विकल्पों में से एक है या नहीं, इसकी जांच करें।
+    Verifica se il valore degli argomenti di scelta è una delle opzioni disponibili.  
 
-    :param args: प्राप्त किए गए आर्ग्युमेंट्स।
+    :param args: Gli argomenti ricevuti.  
     """
-    available_choices = self.get_available_choices()  # Assuming this method exists
-    if args not in available_choices:
-        raise ValueError(f"Invalid choice: {args}. Available choices are: {available_choices}")
-    return True
+    for arg_name, arg_value in args.items():
+        if hasattr(self, f'_{arg_name}_choices'):
+            choices = getattr(self, f'_{arg_name}_choices')
+            if arg_value not in choices:
+                raise ValueError(f"Invalid value '{arg_value}' for argument '{arg_name}'. "
+                               f"Valid choices are: {choices}")

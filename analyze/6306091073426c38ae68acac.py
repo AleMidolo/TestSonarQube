@@ -1,21 +1,15 @@
 def dict_insert(dic, val, key, *keys):
-    """
-    एक डिक्शनरी में नेस्टेड कुंजी का मान डालें।
+    if not keys:
+        # Base case - no more nested keys, insert value directly
+        dic[key] = val
+        return
 
-    नेस्टेड कुंजी के लिए मान डालने के लिए, सभी पूर्वज कुंजियों को 
-    इस मेथड के आर्ग्युमेंट्स के रूप में दिया जाना चाहिए।
+    # Create nested dictionary if it doesn't exist
+    if key not in dic:
+        dic[key] = {}
+    elif not isinstance(dic[key], dict):
+        # Convert existing value to dict if needed
+        dic[key] = {}
 
-    उदाहरण:
-      dict_insert({}, 'मान', 'कुंजी1.कुंजी2'.split('.'))
-
-    :param dic: वह डिक्शनरी ऑब्जेक्ट जिसमें नेस्टेड कुंजी का मान डालना है।
-    :param val: वह मान जो दी गई डिक्शनरी में डालना है।
-    :param key: कुंजियों की श्रृंखला में पहली कुंजी जो मान को स्टोर करेगी।
-    :param keys: कुंजियों की श्रृंखला में उप-कुंजियां।
-    """
-    current = dic
-    for k in (key,) + keys:
-        if k not in current:
-            current[k] = {}
-        current = current[k]
-    current = val
+    # Recursively insert into nested dictionary
+    dict_insert(dic[key], val, keys[0], *keys[1:])

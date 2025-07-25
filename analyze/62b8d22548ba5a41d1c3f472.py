@@ -1,28 +1,28 @@
 def cachedmethod(cache, key=hashkey, lock=None):
     """
-    यह डेकोरेटर एक क्लास या इंस्टेंस मेथड को एक मेमोराइज़िंग कॉल करने योग्य फ़ंक्शन के साथ रैप करता है, जो परिणामों को कैश में सहेजता है।
+    Decorator per racchiudere un metodo di classe o di istanza con una funzione memoizzante che salva i risultati in una cache.
     """
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            # Generate the cache key
-            cache_key = key(*args, **kwargs)
-            # Check if the result is in the cache
-            if cache_key in cache:
-                return cache[cache_key]
-            # Acquire lock if provided
-            if lock:
-                with lock:
-                    # Check again in case another thread has computed it
-                    if cache_key in cache:
-                        return cache[cache_key]
-                    # Call the function and cache the result
-                    result = func(*args, **kwargs)
-                    cache[cache_key] = result
-                    return result
-            else:
-                # Call the function and cache the result
-                result = func(*args, **kwargs)
-                cache[cache_key] = result
+    def decorator(method):
+        def wrapper(self, *args, **kwargs):
+            # Genera la chiave per la cache
+            k = key(self, *args, **kwargs)
+            
+            # Se è specificato un lock, lo acquisisce
+            if lock is not None:
+                lock.acquire()
+                
+            try:
+                # Prova a recuperare il risultato dalla cache
+                return cache[k]
+            except KeyError:
+                # Se non presente in cache, calcola il risultato
+                result = method(self, *args, **kwargs)
+                cache[k] = result
                 return result
+            finally:
+                # Rilascia il lock se presente
+                if lock is not None:
+                    lock.release()
+                    
         return wrapper
     return decorator

@@ -1,11 +1,17 @@
-import re
-
 def _get_resource_name_regex():
     """
-    क्रैके संसाधनों के नाम को मान्य करने के लिए उपयोग किए जाने वाले नियमित अभिव्यक्तियों का निर्माण करें या उन्हें लौटाएँ।
+    Crea o restituisci le espressioni regolari utilizzate per convalidare il nome delle risorse Krake.
 
-    रिटर्न करता है:
-    - (re.Pattern): संकलित नियमित अभिव्यक्तियां, जो संसाधन नाम को मान्य करने के लिए उपयोग की जाती हैं।
+    **Restituisce:**  
+        `(re.Pattern)`: le espressioni regolari compilate, utilizzate per convalidare il nome della risorsa.
     """
-    pattern = r'^[a-zA-Z0-9-_]+$'  # Example pattern for resource names
+    import re
+    
+    # Pattern per nomi di risorse validi:
+    # - Deve iniziare con una lettera minuscola
+    # - Può contenere lettere minuscole, numeri e trattini
+    # - Non può terminare con un trattino
+    # - Lunghezza tra 1 e 63 caratteri
+    pattern = r'^[a-z][a-z0-9-]{0,61}[a-z0-9]$'
+    
     return re.compile(pattern)

@@ -1,42 +1,34 @@
 def format(
-                self,
-                sql: AnyStr,
-                params: Union[Dict[Union[str, int], Any], Sequence[Any]],
-        ) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
+    self,
+    sql: AnyStr,
+    params: Union[Dict[Union[str, int], Any], Sequence[Any]],
+) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
     """
-    SQL क्वेरी को "in-style" पैरामीटर्स के बजाय "out-style" पैरामीटर्स का उपयोग करने के लिए कन्वर्ट करें।
+    Converte la query SQL per utilizzare i parametri in stile "out" invece dei parametri in stile "in".
 
-    *sql* (:class:`str` या :class:`bytes`) SQL क्वेरी है।
+    Args:
+        sql (AnyStr): La query SQL.
+        params (Union[Dict[Union[str, int], Any], Sequence[Any]]): I parametri da convertire.
 
-    *params* (:class:`~collections.abc.Mapping` या :class:`~collections.abc.Sequence`)  
-    "in-style" पैरामीटर्स का सेट है। यह प्रत्येक पैरामीटर (:class:`str` या :class:`int`) को उसके मान से मैप करता है।  
-    यदि :attr:`.SQLParams.in_style` एक नामित पैरामीटर शैली है, तो *params* को :class:`~collections.abc.Mapping` होना चाहिए।  
-    यदि :attr:`.SQLParams.in_style` एक क्रमबद्ध पैरामीटर शैली है, तो *params* को :class:`~collections.abc.Sequence` होना चाहिए।
-
-    यह एक :class:`tuple` लौटाता है जिसमें शामिल हैं:
-
-    -       फॉर्मेट की गई SQL क्वेरी (:class:`str` या :class:`bytes`)।
-
-    -       कन्वर्ट किए गए "out-style" पैरामीटर्स का सेट (:class:`dict` या :class:`list`)।
+    Returns:
+        Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]: Tupla contenente la query SQL formattata
+        e l'insieme dei parametri convertiti.
     """
-    if isinstance(params, dict):
-        # Named parameters
-        for key, value in params.items():
-            sql = sql.replace(f":{key}", self._format_value(value))
-        return sql, list(params.values())
-    elif isinstance(params, (list, tuple)):
-        # Positional parameters
-        for index, value in enumerate(params):
-            sql = sql.replace(f"?{index}", self._format_value(value))
-        return sql, params
-    else:
-        raise ValueError("params must be a dictionary or a sequence")
+    # Se i parametri sono una sequenza
+    if isinstance(params, (list, tuple)):
+        # Converte ogni ? in %s
+        formatted_sql = sql.replace('?', '%s')
+        return formatted_sql, params
 
-def _format_value(self, value: Any) -> str:
-    # Convert the value to a string representation for SQL
-    if isinstance(value, str):
-        return f"'{value}'"
-    elif value is None:
-        return "NULL"
+    # Se i parametri sono un dizionario
+    elif isinstance(params, dict):
+        # Converte ogni :name o @name in %(name)s
+        formatted_sql = sql
+        for key in params.keys():
+            formatted_sql = formatted_sql.replace(f':{key}', f'%({key})s')
+            formatted_sql = formatted_sql.replace(f'@{key}', f'%({key})s')
+        return formatted_sql, params
+
+    # Se i parametri non sono né sequenza né dizionario
     else:
-        return str(value)
+        raise ValueError("I parametri devono essere una sequenza o un dizionario")

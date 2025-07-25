@@ -1,12 +1,29 @@
 def get_versions():
     """
-    संस्करण जानकारी प्राप्त करें या यदि ऐसा करने में असमर्थ हैं तो डिफ़ॉल्ट मान लौटाएं।
+    Ottieni le informazioni sulla versione o restituisci il valore predefinito se non è possibile ottenerle.
     """
     try:
-        # Assuming we are trying to get version information from a package
-        import pkg_resources
-        versions = {pkg.project_name: pkg.version for pkg in pkg_resources.working_set}
+        import sys
+        import platform
+        
+        versions = {
+            'python': sys.version.split()[0],
+            'platform': platform.platform(),
+            'machine': platform.machine(),
+            'processor': platform.processor(),
+            'system': platform.system(),
+            'release': platform.release()
+        }
+        
         return versions
+        
     except Exception:
-        # Return default values if unable to get version information
-        return {"default_package": "1.0.0"}
+        # Return default values if version info cannot be obtained
+        return {
+            'python': 'unknown',
+            'platform': 'unknown',
+            'machine': 'unknown', 
+            'processor': 'unknown',
+            'system': 'unknown',
+            'release': 'unknown'
+        }

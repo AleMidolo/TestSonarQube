@@ -1,25 +1,27 @@
 def fromutc(self, dt):
-    """
-    दिए गए टाइमज़ोन में एक टाइमज़ोन-अवेयर डेटटाइम को लेते हुए,
-    एक नए टाइमज़ोन में टाइमज़ोन-अवेयर डेटटाइम की गणना करता है।
-
-    चूंकि यह वह समय है जब हमें *पक्का* पता है कि हमारे पास एक 
-    अस्पष्टता रहित डेटटाइम ऑब्जेक्ट है, हम इस अवसर का उपयोग यह 
-    निर्धारित करने के लिए करते हैं कि क्या डेटटाइम अस्पष्ट है और 
-    "फोल्ड" स्थिति में है (उदाहरण के लिए, यदि यह अस्पष्ट डेटटाइम 
-    का पहला घटना है, कालानुक्रमिक रूप से)।
-
-    :param dt:
-        एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
-    """
-    # Assuming self is a timezone object
-    if dt.tzinfo is None:
-        raise ValueError("dt must be timezone-aware")
+    # Verifica che dt sia un datetime con timezone
+    if dt.tzinfo is not self:
+        dt = dt.replace(tzinfo=self)
     
-    # Convert the datetime to UTC
-    utc_dt = dt.astimezone(self.utc)
+    # Ottieni l'offset UTC per questo datetime
+    utc_offset = self.utcoffset(dt)
     
-    # Calculate the new timezone-aware datetime
-    new_dt = utc_dt.astimezone(self)
+    if utc_offset is None:
+        return dt
     
-    return new_dt
+    # Calcola il nuovo datetime aggiungendo l'offset UTC
+    dt = dt + utc_offset
+    
+    # Gestione del fold per datetime ambigui
+    dst_offset = self.dst(dt)
+    if dst_offset is not None:
+        # Se c'è un cambio DST, verifica se il datetime è ambiguo
+        standard_offset = self.utcoffset(dt - dst_offset)
+        if standard_offset is not None:
+            # Se gli offset sono diversi, il datetime è ambiguo
+            if standard_offset != utc_offset:
+                # Imposta fold=1 se questo è il primo datetime nell'ambiguità
+                fold = 1 if standard_offset > utc_offset else 0
+                dt = dt.replace(fold=fold)
+    
+    return dt

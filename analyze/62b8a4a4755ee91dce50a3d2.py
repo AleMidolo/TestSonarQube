@@ -1,21 +1,31 @@
 def _fromutc(self, dt):
-    """
-    यह वह स्थिति है जब हमें *पक्का* पता होता है कि हमारे पास एक अस्पष्टता रहित (unambiguous) डेटटाइम ऑब्जेक्ट है। इस मौके का उपयोग करते हुए, हम यह निर्धारित करते हैं कि क्या यह डेटटाइम अस्पष्ट (ambiguous) है और "फोल्ड" स्थिति में है (उदाहरण के लिए, यदि यह अस्पष्ट डेटटाइम का पहला कालानुक्रमिक (chronological) उदाहरण है)।
+    """Convert aware datetime in UTC to this timezone."""
+    if dt.tzinfo is not self:
+        dt = dt.replace(tzinfo=self)
+    
+    utc_offset = self.utcoffset(dt)
+    if utc_offset is None:
+        return dt
 
-    पैरामीटर:
-    - `dt`:  
-      एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
-    """
-    if dt.tzinfo is None:
-        raise ValueError("dt must be timezone-aware")
+    # Convert to timestamp, add offset and convert back
+    ts = (dt.replace(tzinfo=None) - datetime.datetime(1970,1,1)).total_seconds()
+    ts += utc_offset.total_seconds()
     
-    # Check if the datetime is ambiguous
-    if dt.dst() is not None and dt.dst() != timedelta(0):
-        # If the datetime has a non-zero DST offset, it is ambiguous
-        raise ValueError("Ambiguous datetime")
+    # Create local datetime
+    local_dt = datetime.datetime.fromtimestamp(ts, self)
     
-    # Determine if the datetime is in the 'fold' state
-    if dt < self._fold_start:
-        return dt.replace(tzinfo=self)
-    else:
-        return dt.replace(tzinfo=self, fold=1)
+    # Check if datetime is ambiguous (in DST transition)
+    fold = 0
+    if self.dst(local_dt) is not None:
+        # Get timestamps for both possible folds
+        local_dt0 = local_dt.replace(fold=0) 
+        local_dt1 = local_dt.replace(fold=1)
+        
+        ts0 = (local_dt0.replace(tzinfo=None) - datetime.datetime(1970,1,1)).total_seconds()
+        ts1 = (local_dt1.replace(tzinfo=None) - datetime.datetime(1970,1,1)).total_seconds()
+        
+        # If original timestamp is closer to second fold, use fold=1
+        if abs(ts - ts1) < abs(ts - ts0):
+            fold = 1
+            
+    return local_dt.replace(fold=fold)

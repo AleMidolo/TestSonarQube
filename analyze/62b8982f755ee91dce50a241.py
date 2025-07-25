@@ -1,18 +1,45 @@
 def normalized(self):
     """
-    यह फ़ंक्शन इस ऑब्जेक्ट का एक ऐसा संस्करण लौटाता है, जिसमें सभी सापेक्ष गुण (relative attributes) पूरी तरह से पूर्णांक मानों (integer values) में दर्शाए गए हों।
-
-    उदाहरण:
+    Restituisce una versione di questo oggetto rappresentata interamente utilizzando valori interi per gli attributi relativi.
 
     >>> relativedelta(days=1.5, hours=2).normalized()
     relativedelta(days=+1, hours=+14)
 
-    :वापसी मान (Return):
-    यह एक `dateutil.relativedelta.relativedelta` क्लास का ऑब्जेक्ट लौटाता है।
+    :return:
+        Restituisce un oggetto di tipo :class:`dateutil.relativedelta.relativedelta`.
     """
-    total_days = int(self.days) + int(self.hours // 24)
-    total_hours = int(self.hours % 24)
-    total_minutes = int(self.minutes)
-    total_seconds = int(self.seconds)
+    # Convert fractional days to hours
+    days = int(self.days)
+    hours = int((self.days - days) * 24 + self.hours)
+    
+    # Convert fractional hours to minutes
+    extra_hours = int(hours)
+    minutes = int((hours - extra_hours) * 60 + self.minutes)
+    
+    # Convert fractional minutes to seconds
+    extra_minutes = int(minutes) 
+    seconds = int((minutes - extra_minutes) * 60 + self.seconds)
+    
+    # Convert fractional seconds to microseconds
+    extra_seconds = int(seconds)
+    microseconds = int((seconds - extra_seconds) * 1000000 + self.microseconds)
 
-    return relativedelta(days=total_days, hours=total_hours, minutes=total_minutes, seconds=total_seconds)
+    # Create new relativedelta with normalized values
+    return type(self)(
+        years=self.years,
+        months=self.months,
+        days=days,
+        hours=extra_hours,
+        minutes=extra_minutes,
+        seconds=extra_seconds,
+        microseconds=microseconds,
+        leapdays=self.leapdays,
+        year=self.year,
+        month=self.month,
+        day=self.day,
+        weekday=self.weekday,
+        hour=self.hour,
+        minute=self.minute,
+        second=self.second,
+        microsecond=self.microsecond
+    )

@@ -1,22 +1,50 @@
-import subprocess
-import os
+def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=False, env=None):
+    """
+    Esegui il comando specificato.
+    """
+    import subprocess
+    import sys
 
-def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
-    """
-    दिए गए कमांड(s) को चलाएं।
-    """
-    if cwd is None:
-        cwd = os.getcwd()
-    
-    if env is None:
-        env = os.environ.copy()
-    
-    command_list = [commands] + args
-    if verbose:
-        print(f"Running command: {' '.join(command_list)} in {cwd}")
-    
-    stderr = subprocess.DEVNULL if hide_stderr else None
-    
-    result = subprocess.run(command_list, cwd=cwd, env=env, stderr=stderr)
-    
-    return result.returncode
+    # Costruisci il comando completo
+    if isinstance(comandi, str):
+        cmd = [comandi]
+    else:
+        cmd = list(comandi)
+        
+    if argomenti:
+        if isinstance(argomenti, str):
+            cmd.append(argomenti)
+        else:
+            cmd.extend(argomenti)
+
+    # Imposta gli stream di output
+    stdout = subprocess.PIPE
+    stderr = subprocess.DEVNULL if nascondi_stderr else subprocess.PIPE
+
+    try:
+        # Esegui il comando
+        process = subprocess.Popen(
+            cmd,
+            stdout=stdout,
+            stderr=stderr,
+            cwd=cwd,
+            env=env,
+            universal_newlines=True
+        )
+
+        # Leggi l'output
+        out, err = process.communicate()
+        
+        # Stampa l'output se verbose è True
+        if verbose:
+            if out:
+                print(out)
+            if err and not nascondi_stderr:
+                print(err, file=sys.stderr)
+
+        return process.returncode, out, err
+
+    except Exception as e:
+        if verbose:
+            print(f"Errore nell'esecuzione del comando: {e}", file=sys.stderr)
+        return -1, "", str(e)

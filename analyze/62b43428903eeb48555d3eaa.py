@@ -1,23 +1,24 @@
 def formatmany(
-                self,
-                sql: AnyStr,
-                many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
-        ) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
-    # Initialize the formatted SQL query and the output parameters list
-    formatted_sql = sql
+    self,
+    sql: AnyStr,
+    many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
+) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
+    # Convert each params set to out-style
     out_params = []
-
-    # Process each set of parameters
     for params in many_params:
-        if isinstance(params, dict):
-            # If params is a dictionary, convert to out-style
-            out_params.append(params)
+        # Format SQL and convert params for first iteration only
+        if not out_params:
+            sql, _ = self.format(sql, params)
+        # Convert params to out-style
+        if isinstance(params, Mapping):
+            # Named parameters
+            out_param_dict = {}
             for key, value in params.items():
-                formatted_sql = formatted_sql.replace(f":{key}", str(value))
-        elif isinstance(params, (list, tuple)):
-            # If params is a list or tuple, convert to out-style
-            out_params.append(params)
-            for index, value in enumerate(params):
-                formatted_sql = formatted_sql.replace(f"${index + 1}", str(value))
-
-    return formatted_sql, out_params
+                out_key = self._convert_param_name(key)
+                out_param_dict[out_key] = value
+            out_params.append(out_param_dict)
+        else:
+            # Ordinal parameters 
+            out_params.append(list(params))
+            
+    return sql, out_params

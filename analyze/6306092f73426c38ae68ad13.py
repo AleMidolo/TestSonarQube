@@ -1,36 +1,48 @@
 def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
                      extra_vars=None, ansible_args=None):
     """
-    'ansible-playbook' CLI को रैप करता है।
+    Avvolge il comando 'ansible-playbook' della CLI.
 
-    :param ir_workspace: एक Infrared Workspace ऑब्जेक्ट जो सक्रिय वर्कस्पेस को दर्शाता है।
-    :param ir_plugin: वर्तमान प्लगइन का एक InfraredPlugin ऑब्जेक्ट।
-    :param playbook_path: वह प्लेबुक जिसे निष्पादित करना है।
-    :param verbose: Ansible की वर्बोसिटी स्तर।
-    :param extra_vars: dict। इसे Ansible को अतिरिक्त वेरिएबल्स (extra-vars) के रूप में पास किया जाता है।
-    :param ansible_args: ansible-playbook के तर्कों का एक dict, जिसे सीधे Ansible तक पहुँचाने के लिए उपयोग किया जाता है।
+    :param ir_workspace: Un oggetto Infrared Workspace che rappresenta lo spazio di lavoro attivo
+    :param ir_plugin: Un oggetto InfraredPlugin del plugin corrente 
+    :param playbook_path: il percorso del playbook da eseguire
+    :param verbose: Livello di verbosità di Ansible
+    :param extra_vars: dict. Passato ad Ansible come extra-vars
+    :param ansible_args: dizionario di argomenti per ansible-playbook da inoltrare
+        direttamente ad Ansible.
     """
-    import subprocess
-    import json
-
-    command = ['ansible-playbook', playbook_path]
-
-    if verbose is not None:
-        command.append(f'-v' * verbose)
-
+    
+    # Inizializza la lista dei comandi base
+    cmd = ['ansible-playbook', playbook_path]
+    
+    # Aggiungi il livello di verbosità se specificato
+    if verbose:
+        verbosity = '-' + ('v' * verbose)
+        cmd.append(verbosity)
+        
+    # Aggiungi l'inventory file dallo workspace
+    if ir_workspace and ir_workspace.inventory:
+        cmd.extend(['-i', ir_workspace.inventory])
+        
+    # Aggiungi le extra vars se specificate
     if extra_vars:
-        extra_vars_str = ' '.join(f'--extra-vars="{key}={value}"' for key, value in extra_vars.items())
-        command.append(extra_vars_str)
-
+        for key, value in extra_vars.items():
+            cmd.extend(['-e', f'{key}={value}'])
+            
+    # Aggiungi gli argomenti ansible aggiuntivi
     if ansible_args:
-        for key, value in ansible_args.items():
-            command.append(f'--{key}')
-            if value is not None:
-                command.append(str(value))
-
-    result = subprocess.run(command, capture_output=True, text=True, cwd=ir_workspace.path)
-
-    if result.returncode != 0:
-        raise RuntimeError(f"Ansible playbook failed: {result.stderr}")
-
-    return json.loads(result.stdout)
+        for arg, value in ansible_args.items():
+            if value is True:
+                cmd.append(f'--{arg}')
+            elif value is not None:
+                cmd.extend([f'--{arg}', str(value)])
+                
+    # Esegui il comando ansible-playbook
+    import subprocess
+    try:
+        result = subprocess.run(cmd, check=True, text=True, 
+                              stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE)
+        return result
+    except subprocess.CalledProcessError as e:
+        raise Exception(f"Errore nell'esecuzione di ansible-playbook: {e.stderr}")

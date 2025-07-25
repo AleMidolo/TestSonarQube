@@ -1,25 +1,26 @@
 def is_fill_request_seq(seq):
-    """
-    जाँच करें कि *seq* को FillRequestSeq में बदला जा सकता है।  
-
-    यह True तभी लौटाएगा जब:  
-    - यह एक FillRequest तत्व हो,  
-    - या इसमें कम से कम एक FillRequest तत्व हो,  
-    - और यह Source अनुक्रम (Source sequence) न हो।
-    """
-    # Check if seq is a FillRequest element
-    if isinstance(seq, FillRequest):
-        return True
+    from collections.abc import Sequence
+    from typing import Union
     
-    # Check if seq contains at least one FillRequest element
-    if any(isinstance(item, FillRequest) for item in seq):
-        # Check if seq is not a Source sequence
-        if not is_source_sequence(seq):
+    # Check if seq is a FillRequest object
+    try:
+        if isinstance(seq, FillRequest):
             return True
-    
-    return False
-
-def is_source_sequence(seq):
-    # Placeholder function to determine if seq is a Source sequence
-    # This should contain the actual logic to identify a Source sequence
+    except NameError:
+        pass
+        
+    # Check if seq is a Source sequence
+    try:
+        if isinstance(seq, Source):
+            return False
+    except NameError:
+        pass
+        
+    # Check if seq is a sequence containing at least one FillRequest
+    if isinstance(seq, Sequence):
+        try:
+            return any(isinstance(item, FillRequest) for item in seq)
+        except NameError:
+            return False
+            
     return False

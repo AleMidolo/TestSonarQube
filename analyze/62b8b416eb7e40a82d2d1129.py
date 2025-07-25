@@ -1,10 +1,5 @@
 def names(self, all=False): # pylint:disable=redefined-builtin
-    """
-    इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम लौटाएं।
+    """Restituisce i nomi degli attributi definiti dall'interfaccia."""
     if not all:
-    इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम लौटाएं।
-    """
-    if all:
-        return [attr for attr in dir(self) if not attr.startswith('_')]
-    else:
-        return [attr for attr in dir(self) if not attr.startswith('_') and not callable(getattr(self, attr))]
+        return [name for name in self.__dict__ if not name.startswith('_')]
+    return list(self.__dict__.keys())

@@ -1,16 +1,16 @@
 def file_to_textbuffer(file_name, encoding):
     """
-    एक फाइल को टेक्स्ट बफर (UTF-8) में लोड करें, पढ़ने के दौरान निर्दिष्ट एन्कोडिंग का उपयोग करें।
-    सावधानी: यह पूरी फाइल को मेमोरी में पढ़ेगा।
-    :param file_name: फाइल का नाम।
-    :type file_name: str
-    :param encoding: उपयोग करने के लिए एन्कोडिंग।
+    Carica un file in un buffer di testo (UTF-8), utilizzando la codifica specificata durante la lettura.
+    ATTENZIONE: Questo metodo leggerà l'intero file IN MEMORIA.
+    :param file_name: Nome del file.
+    :type file_name: str 
+    :param encoding: Codifica da utilizzare.
     :type encoding: str
-    :return: एक टेक्स्ट बफर या त्रुटि की स्थिति में None।
+    :return: Un buffer di testo o None in caso di errore.
     :rtype: str
     """
     try:
-        with open(file_name, 'r', encoding=encoding) as file:
-            return file.read()
-    except Exception as e:
+        with open(file_name, 'r', encoding=encoding) as f:
+            return f.read()
+    except Exception:
         return None

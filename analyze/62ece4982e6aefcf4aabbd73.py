@@ -1,24 +1,36 @@
-import re
-import platform
-
 def split(s, platform='this'):
-    """
-    यह `shlex.split()` का मल्टी-प्लेटफ़ॉर्म संस्करण है, जिसका उपयोग कमांड-लाइन विभाजन के लिए किया जाता है।  
-    इसे `subprocess` के साथ उपयोग किया जा सकता है, जैसे `argv` इंजेक्शन आदि के लिए।  
-    यह तेज़ REGEX का उपयोग करता है।  
-
-    प्लेटफ़ॉर्म विकल्प:
-    - `'this'`: वर्तमान प्लेटफ़ॉर्म से स्वतः-पहचान  
-    - `1`: POSIX शैली  
-    - `0`: Windows/CMD शैली  
-    - (अन्य मान भविष्य के लिए आरक्षित हैं)
-    """
+    import re
+    import sys
+    
+    # Determine platform
     if platform == 'this':
-        platform = 1 if platform.system() != 'Windows' else 0
-
-    if platform == 1:  # POSIX
-        pattern = r'(?<!\\)"([^"]*(?:\\.[^"]*)*)"(?!\\)|(?<!\\)' + r"'([^']*(?:\\.[^']*)*)'(?!\\)|[^\s\"']+"
-    else:  # Windows
-        pattern = r'(?<!\\)"([^"]*(?:\\.[^"]*)*)"(?!\\)|[^\s"']+|"(?:[^"]|\\")*"'
-
-    return re.findall(pattern, s)
+        platform = 1 if sys.platform != 'win32' else 0
+        
+    if platform == 1:  # POSIX style
+        # Match either a non-whitespace sequence, or a quoted string with possible escaped quotes
+        pattern = r'''(?:[^\s"']|"(?:\\.|[^"])*"|'(?:\\.|[^'])*')+'''
+        
+        # Split and handle quotes/escapes
+        tokens = re.findall(pattern, s)
+        result = []
+        for token in tokens:
+            if (token.startswith('"') and token.endswith('"')) or \
+               (token.startswith("'") and token.endswith("'")):
+                # Remove quotes and unescape
+                token = token[1:-1].replace('\\"', '"').replace("\\'", "'")
+            result.append(token)
+            
+    else:  # Windows/CMD style
+        # Match either a non-whitespace sequence, or a quoted string
+        pattern = r'''(?:[^\s"]|"[^"]*")+'''
+        
+        # Split and handle quotes
+        tokens = re.findall(pattern, s)
+        result = []
+        for token in tokens:
+            if token.startswith('"') and token.endswith('"'):
+                # Remove quotes but don't unescape
+                token = token[1:-1]
+            result.append(token)
+            
+    return result

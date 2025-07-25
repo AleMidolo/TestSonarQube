@@ -1,17 +1,33 @@
 def difference(d1, d2, level=-1):
-    def recursive_difference(dict1, dict2, current_level):
-        result = {}
-        for key in dict1:
-            if key not in dict2:
-                result[key] = dict1[key]
-            else:
-                if isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
-                    if current_level != 0:
-                        nested_diff = recursive_difference(dict1[key], dict2[key], current_level - 1)
-                        if nested_diff:
-                            result[key] = nested_diff
-                elif dict1[key] != dict2[key]:
-                    result[key] = dict1[key]
-        return result
+    """
+    Restituisce un dizionario con gli elementi di *d1* che non sono contenuti in *d2*.
 
-    return recursive_difference(d1, d2, level)
+    Il parametro *level* definisce la profondità massima della ricorsione. Per una ricorsione infinita, 
+    impostare *level* a -1. Per livello 1, se una chiave è presente sia in *d1* che in *d2* ma ha valori diversi,
+    viene inclusa nella differenza. Consulta la funzione :func:`intersection` per ulteriori dettagli.
+
+    *d1* e *d2* rimangono invariati. Tuttavia, *d1* o alcuni dei suoi sottodizionari potrebbero essere 
+    restituiti direttamente. Effettua una copia profonda (deep copy) del risultato quando appropriato.
+    """
+    result = {}
+    
+    # Per ogni chiave in d1
+    for key in d1:
+        # Se la chiave non è in d2, aggiungi l'elemento al risultato
+        if key not in d2:
+            result[key] = d1[key]
+        # Se siamo al livello massimo di ricorsione e i valori sono diversi
+        elif level == 1 and d1[key] != d2[key]:
+            result[key] = d1[key]
+        # Se non siamo al livello massimo e entrambi i valori sono dizionari
+        elif level != 1 and isinstance(d1[key], dict) and isinstance(d2[key], dict):
+            # Ricorsione con livello decrementato (se non è -1)
+            next_level = level - 1 if level > 0 else -1
+            diff = difference(d1[key], d2[key], next_level)
+            if diff:  # Se c'è una differenza, aggiungila al risultato
+                result[key] = diff
+        # Se i valori sono diversi e non sono entrambi dizionari
+        elif d1[key] != d2[key]:
+            result[key] = d1[key]
+            
+    return result

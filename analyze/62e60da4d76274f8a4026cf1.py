@@ -1,16 +1,27 @@
 def values(self, *keys):
     """
-    रिकॉर्ड के मान (values) लौटाता है, और वैकल्पिक रूप से केवल कुछ विशिष्ट मानों को शामिल करने के लिए इंडेक्स या कुंजी द्वारा फ़िल्टर करता है।
+    Restituisce i valori del record, con la possibilità di filtrare per includere solo determinati valori in base all'indice o alla chiave.
 
-    पैरामीटर (Parameters): 
-    - keys: उन आइटम्स के इंडेक्स या कुंजियाँ (keys) जिन्हें शामिल करना है; यदि कोई कुंजी प्रदान नहीं की जाती है, तो सभी मान (values) शामिल किए जाएंगे।  
-
-    वापसी (Return):
-    - मानों (values) की सूची।  
-
-    वापसी प्रकार (Return Type):
-    - सूची (list)
+    :param keys: indici o chiavi degli elementi da includere; se non viene fornito nessun parametro, verranno inclusi tutti i valori
+    :return: lista di valori
+    :rtype: list
     """
     if not keys:
-        return list(self.data.values())
-    return [self.data[key] for key in keys if key in self.data]
+        # Se non sono specificate chiavi, restituisce tutti i valori
+        return list(self._values)
+    
+    result = []
+    for key in keys:
+        if isinstance(key, int):
+            # Se la chiave è un indice numerico
+            if 0 <= key < len(self._values):
+                result.append(self._values[key])
+        else:
+            # Se la chiave è una stringa
+            try:
+                index = self._fields.index(key)
+                result.append(self._values[index])
+            except ValueError:
+                pass
+    
+    return result

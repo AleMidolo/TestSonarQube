@@ -1,11 +1,5 @@
 def replace_dots(value, arg):
     """
-    दिए गए स्ट्रिंग में सभी '.' को `arg` से बदलता है।  
-    आर्ग्युमेंट्स (Args):  
-    - `value`: पुराना स्ट्रिंग  
-    - `arg`: नया स्ट्रिंग, जो '.' को बदलने के लिए उपयोग किया जाएगा  
-
-    रिटर्न्स (Returns):  
-    - `str`: बदला हुआ स्ट्रिंग
+    Sostituisce tutti i valori di '.' con arg nella stringa fornita
     """
-    return value.replace('.', arg)
+    return value.replace('.', str(arg))

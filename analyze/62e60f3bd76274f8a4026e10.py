@@ -1,25 +1,39 @@
-from datetime import timedelta
-
 def dehydrate_timedelta(value):
     """
-    `timedelta` मानों के लिए डिहाइड्रेटर।  
+    Deidratatore per valori di tipo `timedelta`.
 
-    :param value:  
-    :type value: timedelta  
-    :return:  
+    :param value: Valore timedelta da deidratare
+    :type value: timedelta
+    :return: Stringa rappresentante il timedelta in formato ISO 8601
     """
-    if not isinstance(value, timedelta):
-        raise ValueError("Input must be a timedelta object.")
+    days = value.days
+    seconds = value.seconds
+    microseconds = value.microseconds
     
-    total_seconds = int(value.total_seconds())
-    days = total_seconds // 86400
-    hours = (total_seconds % 86400) // 3600
-    minutes = (total_seconds % 3600) // 60
-    seconds = total_seconds % 60
+    hours = seconds // 3600
+    minutes = (seconds % 3600) // 60
+    seconds = seconds % 60
     
-    return {
-        'days': days,
-        'hours': hours,
-        'minutes': minutes,
-        'seconds': seconds
-    }
+    result = "P"
+    
+    if days:
+        result += f"{days}D"
+        
+    if hours or minutes or seconds or microseconds:
+        result += "T"
+        
+        if hours:
+            result += f"{hours}H"
+            
+        if minutes:
+            result += f"{minutes}M"
+            
+        if seconds:
+            if microseconds:
+                result += f"{seconds}.{microseconds:06d}S"
+            else:
+                result += f"{seconds}S"
+        elif microseconds:
+            result += f"0.{microseconds:06d}S"
+            
+    return result if result != "P" else "PT0S"

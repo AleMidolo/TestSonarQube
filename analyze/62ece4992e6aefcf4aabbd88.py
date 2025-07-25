@@ -1,14 +1,14 @@
-import numpy as np
-
 def make_array(shape, dtype=np.dtype("float32")):
     """
-    यह फ़ंक्शन एक ऐरे बनाता है जिसमें दिए गए आकार (shape) और डेटा प्रकार (dtype) का उपयोग किया जाता है।
-
-    पैरामीटर (Parameters):
-    - shape : ट्यूपल  
-      बनाने वाले ऐरे का आकार (shape)।
-
-    - dtype : `numpy.dtype`  
-      बनाने वाले ऐरे का डेटा प्रकार (data-type)।
+    Funzione per creare un array con una forma e un tipo di dato specificati.
+    
+    Parametri
+    ----------
+    shape : tuple
+        forma dell'array da creare
+    dtype : `numpy.dtype`
+        tipo di dato dell'array da creare
     """
-    return np.empty(shape, dtype=dtype)
+    # Create and return a new numpy array filled with zeros
+    # with the specified shape and data type
+    return np.zeros(shape=shape, dtype=dtype)

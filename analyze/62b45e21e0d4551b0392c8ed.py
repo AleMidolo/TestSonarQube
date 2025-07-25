@@ -1,27 +1,35 @@
 def find_path_type(path):
-    """
-    दिए गए पथ पर मौजूद वस्तु के प्रकार को इंगित करने वाला एक स्ट्रिंग लौटाता है।
-
-    लौटाए जाने वाले मान:
-        'root' - ऐसा लगता है कि यह OCFL स्टोरेज रूट है
-        'object' - ऐसा लगता है कि यह OCFL ऑब्जेक्ट है
-        'file' - यह एक फ़ाइल है, जो शायद एक इन्वेंटरी हो सकती है
-        अन्य स्ट्रिंग - त्रुटि विवरण को समझाती है
-
-    यह केवल "0=*" नमस्ते फ़ाइलों को देखकर निर्देशिका के प्रकार का निर्धारण करता है।
-    """
     import os
-
+    
+    # Check if path exists
     if not os.path.exists(path):
         return "Path does not exist"
+        
+    # Check if it's a directory
+    if not os.path.isdir(path):
+        if os.path.isfile(path):
+            return "file"
+        return "Path is not a directory"
 
-    if os.path.isdir(path):
-        if any(file.startswith("0=") for file in os.listdir(path)):
-            return 'root'
-        else:
-            return 'object'
+    # Look for Namaste files starting with "0="
+    namaste_files = [f for f in os.listdir(path) if f.startswith("0=")]
     
-    if os.path.isfile(path):
-        return 'file'
-    
-    return "Unknown type"
+    if not namaste_files:
+        return "No Namaste files found"
+        
+    # Check content of first Namaste file found
+    namaste_content = ""
+    try:
+        with open(os.path.join(path, namaste_files[0]), 'r') as f:
+            namaste_content = f.read().strip()
+    except:
+        return "Error reading Namaste file"
+        
+    # Check content to determine type
+    if "ocfl_" in namaste_content.lower():
+        if "root" in namaste_content.lower():
+            return "root"
+        elif "object" in namaste_content.lower():
+            return "object"
+            
+    return f"Unknown Namaste content: {namaste_content}"

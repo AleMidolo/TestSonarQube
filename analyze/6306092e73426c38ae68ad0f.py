@@ -1,26 +1,44 @@
 def get_nested_custom_and_control_args(self, args):
     """
-    इनपुट आर्ग्युमेंट्स को नेस्टेड और कस्टम में विभाजित करें।
+    Suddivide gli argomenti di input in controlli nidificati e personalizzati.
 
-    कंट्रोल आर्ग्युमेंट्स: IR (Intermediate Representation) व्यवहार को नियंत्रित करते हैं। 
-        ये आर्ग्युमेंट्स spec.yml फाइल में नहीं डाले जाएंगे।
-    नेस्टेड आर्ग्युमेंट्स: Ansible प्लेबुक्स द्वारा उपयोग किए जाते हैं और 
-        spec.yml फाइल में डाले जाएंगे।
-    कस्टम आर्ग्युमेंट्स: सामान्य नेस्टेड उपयोग के बजाय कस्टम Ansible वेरिएबल्स का उपयोग करने के लिए।
+    Argomenti di controllo: controllano il comportamento dell'IR. Questi argomenti
+        non saranno inseriti nel file spec yml.
+    Argomenti nidificati: sono utilizzati dai playbook di Ansible e saranno inseriti
+        nel file spec yml.
+    Argomenti personalizzati: variabili Ansible personalizzate da utilizzare al posto
+        dell'uso normale degli argomenti nidificati.
 
-    :param args: एकत्रित आर्ग्युमेंट्स की सूची।
-    :return: (dict, dict): फ्लैट डिक्शनरीज़ (control_args, nested_args)
+    :param args: la lista raccolta di argomenti.
+    :return: (dict, dict): dizionari piatti (control_args, nested_args)
     """
     control_args = {}
     nested_args = {}
+    custom_args = {}
 
-    for arg in args:
-        if isinstance(arg, dict):
-            if 'control' in arg:
-                control_args.update(arg)
-            else:
-                nested_args.update(arg)
+    # Iterate through all arguments
+    for arg, value in args.items():
+        if arg.startswith('--'):
+            # Control arguments start with --
+            control_args[arg[2:]] = value
+        elif '__' in arg:
+            # Nested arguments contain __
+            keys = arg.split('__')
+            current_dict = nested_args
+            
+            # Build nested dictionary structure
+            for key in keys[:-1]:
+                if key not in current_dict:
+                    current_dict[key] = {}
+                current_dict = current_dict[key]
+            
+            # Set the final value
+            current_dict[keys[-1]] = value
         else:
-            nested_args[arg] = None
+            # Custom arguments are everything else
+            custom_args[arg] = value
+
+    # Merge custom args into nested args
+    nested_args.update(custom_args)
 
     return control_args, nested_args

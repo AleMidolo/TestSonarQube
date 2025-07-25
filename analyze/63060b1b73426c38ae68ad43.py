@@ -1,14 +1,30 @@
 def extend_cli(self, root_subparsers):
     """
-    मुख्य एंट्री पॉइंट में स्पेक CLI विकल्प जोड़ता है।
+    Aggiunge le opzioni CLI specifiche al punto di ingresso principale.
 
-    :param subparser: वह सबपार्सर ऑब्जेक्ट जिसे विस्तारित करना है।
+    :param subparser: l'oggetto subparser da estendere.
     """
-    # उदाहरण के लिए, एक नया सबपार्सर जोड़ें
-    parser = root_subparsers.add_parser('example', help='यह एक उदाहरण है।')
+    parser = root_subparsers.add_parser(
+        'run',
+        help='Run the application'
+    )
     
-    # विकल्प जोड़ें
-    parser.add_argument('--option', type=str, help='एक वैकल्पिक तर्क।')
+    parser.add_argument(
+        '-c', '--config',
+        help='Path to configuration file',
+        default='config.yaml'
+    )
     
-    # अन्य आवश्यकताएँ या तर्क जोड़ें
-    parser.add_argument('required_arg', type=int, help='एक आवश्यक तर्क।')
+    parser.add_argument(
+        '-v', '--verbose',
+        help='Increase output verbosity',
+        action='store_true'
+    )
+    
+    parser.add_argument(
+        '--version',
+        action='version',
+        version='%(prog)s 1.0'
+    )
+    
+    parser.set_defaults(func=self.run)

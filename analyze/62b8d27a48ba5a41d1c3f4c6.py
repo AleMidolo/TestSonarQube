@@ -1,16 +1,29 @@
 def cached(cache, key=hashkey, lock=None):
     """
-    यह एक डेकोरेटर है जो किसी फ़ंक्शन को एक मेमोराइज़िंग कॉल करने योग्य (memoizing callable) के साथ रैप करता है, जो परिणामों को कैश में सहेजता है।
+    Decorator per racchiudere una funzione con un callable di memoizzazione che salva
+    i risultati in una cache.
     """
-    def decorator(func):
+    def decorator(function):
         def wrapper(*args, **kwargs):
-            # Create a unique cache key based on the function arguments
-            cache_key = key(*args, **kwargs)
-            if cache_key in cache:
-                return cache[cache_key]
-            with (lock if lock else dummy_lock):
-                if cache_key not in cache:  # Double-check in case another thread added it
-                    cache[cache_key] = func(*args, **kwargs)
-            return cache[cache_key]
+            k = key(*args, **kwargs)
+            
+            try:
+                # Try to get result from cache
+                result = cache[k]
+            except KeyError:
+                # If not in cache, compute and store result
+                if lock is not None:
+                    with lock:
+                        result = function(*args, **kwargs)
+                        cache[k] = result
+                else:
+                    result = function(*args, **kwargs)
+                    cache[k] = result
+                    
+            return result
+            
+        wrapper.__doc__ = function.__doc__
+        wrapper.__name__ = function.__name__
         return wrapper
+        
     return decorator

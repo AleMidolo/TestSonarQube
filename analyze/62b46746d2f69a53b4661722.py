@@ -1,72 +1,46 @@
 def absorb(self, args):
-    """
-    `args` अभिव्यक्तियों के अनुक्रम को दिया गया है, एक नई सूची लौटाएं जिसमें अवशोषण और नकारात्मक अवशोषण लागू किया गया हो।
-
-    अधिक जानकारी के लिए देखें: [https://en.wikipedia.org/wiki/Absorption_law](https://en.wikipedia.org/wiki/Absorption_law)
-
-    **अवशोषण (Absorption):**
-
-    A & (A | B) = A, A | (A & B) = A
-
-    **नकारात्मक अवशोषण (Negative Absorption):**
-
-    A & (~A | B) = A & B, A | (~A & B) = A | B
-    """
-    result = []
-    for expr in args:
-        # Apply absorption laws
-        if '&' in expr and '|' in expr:
-            # Check for A & (A | B) = A
-            if expr.count('&') == 1 and expr.count('|') == 1:
-                parts = expr.split('&')
-                if len(parts) == 2:
-                    a = parts[0].strip()
-                    b = parts[1].strip()
-                    if '|' in b:
-                        b_parts = b.split('|')
-                        if a in b_parts:
-                            result.append(a)
-                            continue
-            # Check for A | (A & B) = A
-            if expr.count('|') == 1 and expr.count('&') == 1:
-                parts = expr.split('|')
-                if len(parts) == 2:
-                    a = parts[0].strip()
-                    b = parts[1].strip()
-                    if '&' in b:
-                        b_parts = b.split('&')
-                        if a in b_parts:
-                            result.append(a)
-                            continue
-        
-        # Apply negative absorption laws
-        if '&' in expr and '~' in expr:
-            # Check for A & (~A | B) = A & B
-            if expr.count('&') == 1 and expr.count('|') == 1:
-                parts = expr.split('&')
-                if len(parts) == 2:
-                    a = parts[0].strip()
-                    b = parts[1].strip()
-                    if '~' in b:
-                        b_parts = b.split('|')
-                        if any('~' + a in part for part in b_parts):
-                            result.append(f"{a} & {b_parts[1].strip()}")
-                            continue
-        
-        if '|' in expr and '~' in expr:
-            # Check for A | (~A & B) = A | B
-            if expr.count('|') == 1 and expr.count('&') == 1:
-                parts = expr.split('|')
-                if len(parts) == 2:
-                    a = parts[0].strip()
-                    b = parts[1].strip()
-                    if '~' in b:
-                        b_parts = b.split('&')
-                        if any('~' + a in part for part in b_parts):
-                            result.append(f"{a} | {b_parts[1].strip()}")
-                            continue
-        
-        # If no absorption applied, keep the original expression
-        result.append(expr)
+    result = list(args)
+    changed = True
     
+    while changed:
+        changed = False
+        n = len(result)
+        
+        for i in range(n):
+            for j in range(n):
+                if i == j:
+                    continue
+                    
+                # Assorbimento A & (A | B) = A
+                if (isinstance(result[i], And) and 
+                    isinstance(result[j], Or) and
+                    result[i].args[0] in result[j].args):
+                    result[j] = result[i]
+                    changed = True
+                
+                # Assorbimento A | (A & B) = A 
+                if (isinstance(result[i], Or) and
+                    isinstance(result[j], And) and 
+                    result[i].args[0] in result[j].args):
+                    result[j] = result[i]
+                    changed = True
+                    
+                # Assorbimento negativo A & (~A | B) = A & B
+                if (isinstance(result[i], And) and
+                    isinstance(result[j], Or) and
+                    Not(result[i].args[0]) in result[j].args):
+                    new_args = [arg for arg in result[j].args 
+                              if arg != Not(result[i].args[0])]
+                    result[j] = And(result[i].args[0], *new_args)
+                    changed = True
+                    
+                # Assorbimento negativo A | (~A & B) = A | B
+                if (isinstance(result[i], Or) and
+                    isinstance(result[j], And) and
+                    Not(result[i].args[0]) in result[j].args):
+                    new_args = [arg for arg in result[j].args
+                              if arg != Not(result[i].args[0])]
+                    result[j] = Or(result[i].args[0], *new_args)
+                    changed = True
+                    
     return result

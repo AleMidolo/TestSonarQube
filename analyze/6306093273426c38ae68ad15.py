@@ -1,28 +1,50 @@
 def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     """
-    Ansible CLI को vars_dict के साथ चलाता है।
+    Esegue il comando Ansible CLI con un dizionario di variabili.
 
-    :param vars_dict: dict, इसे Ansible extra-vars के रूप में पास किया जाएगा
-    :param cli_args: कमांड लाइन आर्ग्युमेंट्स की सूची
-    :param ir_workspace: एक Infrared Workspace ऑब्जेक्ट जो सक्रिय वर्कस्पेस को दर्शाता है
-    :param ir_plugin: वर्तमान प्लगइन का एक InfraredPlugin ऑब्जेक्ट
-    :return: ansible के परिणाम
+    :param vars_dict: dict, Sarà passato come extra-vars ad Ansible
+    :param cli_args: la lista di argomenti della riga di comando
+    :param ir_workspace: Un oggetto Infrared Workspace che rappresenta
+                         lo spazio di lavoro attivo
+    :param ir_plugin: Un oggetto InfraredPlugin del plugin corrente
+    :return: risultati di Ansible
     """
-    import subprocess
+    import os
     import json
+    import tempfile
+    from ansible.cli.playbook import PlaybookCLI
+    from ansible.parsing.dataloader import DataLoader
+    from ansible.inventory.manager import InventoryManager
+    from ansible.vars.manager import VariableManager
 
-    # Prepare the command to run the Ansible playbook
-    command = ['ansible-playbook'] + cli_args
-    if vars_dict:
-        extra_vars = json.dumps(vars_dict)
-        command += ['--extra-vars', extra_vars]
+    # Create temporary file for extra vars
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as tmp:
+        json.dump(vars_dict, tmp)
+        extra_vars_file = tmp.name
 
-    # Set the working directory to the Infrared workspace
-    workspace_path = ir_workspace.path
-    result = subprocess.run(command, cwd=workspace_path, capture_output=True, text=True)
-
-    # Check for errors
-    if result.returncode != 0:
-        raise RuntimeError(f"Ansible playbook failed: {result.stderr}")
-
-    return result.stdout
+    try:
+        # Construct Ansible CLI command
+        ansible_args = ['ansible-playbook']
+        ansible_args.extend(cli_args)
+        
+        # Add workspace inventory if exists
+        if ir_workspace and os.path.exists(ir_workspace.inventory):
+            ansible_args.extend(['-i', ir_workspace.inventory])
+            
+        # Add extra vars file
+        ansible_args.extend(['--extra-vars', f'@{extra_vars_file}'])
+        
+        # Initialize Ansible components
+        loader = DataLoader()
+        inventory = InventoryManager(loader=loader, sources=ir_workspace.inventory)
+        variable_manager = VariableManager(loader=loader, inventory=inventory)
+        
+        # Create and run playbook CLI
+        pbcli = PlaybookCLI(ansible_args)
+        pbcli.parse()
+        return pbcli.run()
+        
+    finally:
+        # Cleanup temporary file
+        if os.path.exists(extra_vars_file):
+            os.unlink(extra_vars_file)

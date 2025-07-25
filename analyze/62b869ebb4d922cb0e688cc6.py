@@ -1,22 +1,39 @@
 def update_last_applied_manifest_list_from_resp(
     last_applied_manifest, observer_schema, response
 ):
-    """
-    साथ में :func:``update_last_applied_manifest_dict_from_resp``, यह फ़ंक्शन 
-    पुनरावृत्त रूप से कॉल किया जाता है ताकि आंशिक ``last_applied_manifest`` को 
-    आंशिक Kubernetes प्रतिक्रिया से अपडेट किया जा सके।
+    # Handle empty cases
+    if not observer_schema or not response:
+        return last_applied_manifest
 
-    आर्ग्युमेंट्स (Args):
-        last_applied_manifest (list): आंशिक ``last_applied_manifest`` जो 
-            अपडेट किया जा रहा है।
-        observer_schema (list): आंशिक ``observer_schema``।
-        response (list): Kubernetes API से प्राप्त आंशिक प्रतिक्रिया।
+    # Ensure last_applied_manifest is a list
+    if not isinstance(last_applied_manifest, list):
+        last_applied_manifest = []
 
-    यह फ़ंक्शन सभी देखे गए फ़ील्ड्स (observed fields) के माध्यम से जाता है और 
-    यदि वे पहले से मौजूद नहीं हैं तो उनके मान को ``last_applied_manifest`` में 
-    आरंभ (initialize) करता है।
-    """
-    for field in observer_schema:
-        if field not in last_applied_manifest:
-            last_applied_manifest[field] = response.get(field, None)
+    # Extend last_applied_manifest if needed
+    while len(last_applied_manifest) < len(response):
+        last_applied_manifest.append({})
+
+    # Iterate through response items
+    for i, resp_item in enumerate(response):
+        if i >= len(observer_schema):
+            break
+
+        # Get corresponding schema for this item
+        schema = observer_schema[i]
+
+        # If schema is a dict, recursively update nested dict
+        if isinstance(schema, dict):
+            from .utils import update_last_applied_manifest_dict_from_resp
+            last_applied_manifest[i] = update_last_applied_manifest_dict_from_resp(
+                last_applied_manifest[i], schema, resp_item
+            )
+        # If schema is a list, recursively update nested list 
+        elif isinstance(schema, list):
+            last_applied_manifest[i] = update_last_applied_manifest_list_from_resp(
+                last_applied_manifest[i], schema, resp_item
+            )
+        # Otherwise copy value directly
+        else:
+            last_applied_manifest[i] = resp_item
+
     return last_applied_manifest

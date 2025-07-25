@@ -1,33 +1,51 @@
-from collections import OrderedDict
-from functools import wraps
-
 def lru_cache(maxsize=128, typed=False):
     """
-    एक डेकोरेटर जो एक फ़ंक्शन को एक मेमोराइज़िंग कॉलेबल के साथ रैप करता है,
-    जो `maxsize` तक के परिणामों को सेव करता है। यह परिणामों को 
-    Least Recently Used (LRU) एल्गोरिदम के आधार पर प्रबंधित करता है।
+    Decorator per racchiudere una funzione con un oggetto callable che memorizza
+    fino a `maxsize` risultati basandosi su un algoritmo Least Recently Used (LRU).
     """
     def decorator(func):
-        cache = OrderedDict()
-
-        @wraps(func)
-        def wrapper(*args):
+        # Dictionary per memorizzare i risultati della cache
+        cache = {}
+        # Lista per tenere traccia dell'ordine di utilizzo
+        order = []
+        
+        def wrapper(*args, **kwargs):
+            # Crea una chiave univoca per gli argomenti
+            key = str(args) + str(kwargs)
             if typed:
-                key = args
-            else:
-                key = tuple(map(repr, args))
-
+                # Se typed=True, include i tipi degli argomenti nella chiave
+                key += str([type(arg) for arg in args])
+                key += str({k: type(v) for k, v in kwargs.items()})
+            
+            # Se il risultato è già in cache
             if key in cache:
-                cache.move_to_end(key)
+                # Aggiorna l'ordine di utilizzo
+                order.remove(key)
+                order.append(key)
                 return cache[key]
-            result = func(*args)
+            
+            # Calcola il nuovo risultato
+            result = func(*args, **kwargs)
+            
+            # Se la cache è piena, rimuovi l'elemento meno recentemente usato
+            if len(cache) >= maxsize:
+                oldest_key = order.pop(0)
+                del cache[oldest_key]
+            
+            # Aggiungi il nuovo risultato alla cache
             cache[key] = result
-            if len(cache) > maxsize:
-                cache.popitem(last=False)
+            order.append(key)
+            
             return result
-
-        wrapper.cache_clear = cache.clear
-        wrapper.cache_info = lambda: (len(cache), maxsize)
+            
         return wrapper
-
+    
+    # Se maxsize è None, non applicare la cache
+    if maxsize is None:
+        return lambda func: func
+        
+    # Se maxsize <= 0, disabilita la cache
+    if maxsize <= 0:
+        return lambda func: func
+        
     return decorator

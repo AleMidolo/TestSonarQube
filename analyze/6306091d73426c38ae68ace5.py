@@ -1,9 +1,32 @@
 def _include_groups(self, parser_dict):
     """
-    स्पेक फाइलों में 'include dict' निर्देश को हल करता है।
+    Risolve la direttiva "include dict" nei file di specifica
     """
-    include_dict = parser_dict.get('include', {})
-    for group, items in include_dict.items():
-        if group not in self.groups:
-            self.groups[group] = []
-        self.groups[group].extend(items)
+    if not parser_dict:
+        return {}
+        
+    result = {}
+    for key, value in parser_dict.items():
+        if isinstance(value, dict):
+            if 'include' in value:
+                # Get included dictionary name
+                include_name = value['include']
+                
+                # Look up included dictionary in self.groups
+                if include_name in self.groups:
+                    included_dict = self.groups[include_name]
+                    # Merge included dict with current dict
+                    merged = included_dict.copy()
+                    merged.update(value)
+                    # Remove the include directive
+                    del merged['include']
+                    result[key] = merged
+                else:
+                    raise KeyError(f"Referenced group '{include_name}' not found")
+            else:
+                # Recursively process nested dictionaries
+                result[key] = self._include_groups(value)
+        else:
+            result[key] = value
+            
+    return result

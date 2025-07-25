@@ -1,33 +1,40 @@
 def _group_files_by_xml_filename(source, xmls, files):
     """
-    XML फ़ाइलों के बेस नाम के आधार पर फ़ाइलों को समूहित करें
+    Raggruppa i file per il nome base degli XML
 
-    यह फ़ंक्शन XML फ़ाइलों के बेस नाम के आधार पर फ़ाइलों को समूहित करता है और डेटा को डिक्शनरी प्रारूप में लौटाता है।
+    Raggruppa i file in base al nome base degli XML e restituisce i dati in formato dizionario.
 
-    पैरामीटर्स (Parameters)
+    Parametri
     ----------
-    xml_filename : `str`  
-        XML फ़ाइलों के नाम।  
-
-    files : `list`  
-        फ़ोल्डर या ज़िप फ़ाइल में मौजूद फ़ाइलों की सूची।  
-
-    रिटर्न्स (Returns)
+    xml_filename : str  
+        Nomi dei file XML.  
+    
+    files: list  
+        Lista dei file presenti nella cartella o nell'archivio zip.  
+    
+    Ritorna
     -------
     dict  
-        - key: XML फ़ाइलों के नाम।  
-        - value: पैकेज (Package)।  
+        - chiave: nome dei file XML.  
+        - valore: Package.  
     """
-    grouped_files = {}
+    result = {}
     
+    # Iterate through XML files
     for xml in xmls:
-        base_name = xml.split('.')[0]  # Extract base name from XML filename
-        grouped_files[base_name] = []
-
-    for file in files:
-        for xml in xmls:
-            base_name = xml.split('.')[0]
-            if file.startswith(base_name):
-                grouped_files[base_name].append(file)
-
-    return grouped_files
+        # Get base filename without extension
+        base_name = xml.rsplit('.', 1)[0]
+        
+        # Find all files that start with the XML base name
+        matching_files = [f for f in files if f.startswith(base_name)]
+        
+        # Create package with XML and matching files
+        package = {
+            'xml': xml,
+            'files': matching_files
+        }
+        
+        # Add to result dictionary
+        result[base_name] = package
+        
+    return result

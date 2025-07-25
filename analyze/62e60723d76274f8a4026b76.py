@@ -1,29 +1,28 @@
 def from_ticks(cls, ticks, tz=None):
     """
-    टिक से समय बनाएं (आधी रात के बाद से नैनोसेकंड)।
+    Crea un'istanza di tempo a partire dai ticks (nanosecondi trascorsi dalla mezzanotte).
 
-    :param ticks: आधी रात के बाद से नैनोसेकंड
+    :param ticks: nanosecondi trascorsi dalla mezzanotte
     :type ticks: int
-    :param tz: वैकल्पिक टाइमज़ोन
+    :param tz: fuso orario opzionale
     :type tz: datetime.tzinfo
 
     :rtype: Time
 
-    :raises ValueError: यदि ticks सीमा से बाहर है
+    :raises ValueError: se il valore di ticks è fuori dai limiti
         (0 <= ticks < 86400000000000)
     """
-    if not (0 <= ticks < 86400000000000):
-        raise ValueError("Ticks must be in the range 0 to 86400000000000.")
+    if not 0 <= ticks < 86400000000000:
+        raise ValueError("Ticks value must be between 0 and 86400000000000")
+        
+    # Convert nanoseconds to hours, minutes, seconds, microseconds
+    total_microseconds = ticks // 1000
+    hours = total_microseconds // 3600000000
+    remaining = total_microseconds % 3600000000
+    minutes = remaining // 60000000
+    remaining = remaining % 60000000
+    seconds = remaining // 1000000
+    microseconds = remaining % 1000000
     
-    from datetime import datetime, timedelta
-
-    # Calculate the time from ticks
-    midnight = datetime(1, 1, 1)  # Arbitrary date
-    time_delta = timedelta(microseconds=ticks / 1000)
-    time = midnight + time_delta
-
-    if tz is not None:
-        import pytz
-        time = tz.localize(time)
-
-    return time
+    # Create new Time instance
+    return cls(hours, minutes, seconds, microseconds, tz)

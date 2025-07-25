@@ -1,24 +1,23 @@
 def match_file_by_prefix(prefix, file_path):
     """
-    पहचानें कि क्या `file_path` किसी दिए गए `prefix` द्वारा दस्तावेज़ पैकेज से संबंधित है
+    Identifica se un `file_path` appartiene a un pacchetto di documenti in base a un determinato `prefix`.
 
-    एक पैकेज से संबंधित दस्तावेज़ों के लिए `True` लौटाएँ।
+    Restituisce `True` per i documenti che appartengono a un pacchetto.
 
-    पैरामीटर
+    Parametri
     ----------
-    prefix : str
-    फ़ाइलनाम उपसर्ग
-    file_path : str
-    फ़ाइल पथ
-    रिटर्न
+    prefix : str  
+        Prefisso del nome del file  
+
+    file_path : str  
+        Percorso del file  
+    Restituisce
     -------
-    bool
-    सत्य - फ़ाइल पैकेज से संबंधित है
+    bool  
+        `True` - il file appartiene al pacchetto
     """
-    import os
+    # Extract filename from path
+    filename = file_path.split('/')[-1]
     
-    # Extract the file name from the file path
-    file_name = os.path.basename(file_path)
-    
-    # Check if the file name starts with the given prefix
-    return file_name.startswith(prefix)
+    # Check if filename starts with prefix
+    return filename.startswith(prefix)
