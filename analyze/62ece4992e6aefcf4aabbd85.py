@@ -5,11 +5,12 @@ def find_roots(
 ) -> Set["Node"]:
     if roots is None:
         roots = set()
-
-    all_nodes = {s for s, p, o in graph}  # Get all subjects in the graph
-    child_nodes = {o for s, p, o in graph if p == prop}  # Get all child nodes
-
-    # Find root nodes (nodes that are not children of any node)
-    root_nodes = all_nodes - child_nodes
-
-    return root_nodes
+    
+    all_nodes = {s for s, p, o in graph.triples((None, prop, None))}
+    child_nodes = {o for s, p, o in graph.triples((None, prop, None))}
+    
+    for node in all_nodes:
+        if node not in child_nodes:
+            roots.add(node)
+    
+    return roots

@@ -17,8 +17,10 @@ def split(s, platform='this'):
 
     if platform == 1:  # POSIX
         pattern = r'(?:"([^"]*)"|\'([^\']*)|(\S+))'
-    else:  # Windows
-        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+)?)'
+    elif platform == 0:  # Windows
+        pattern = r'(?:"([^"]*)"|\'([^\']*)|([^"\s]+)|(\S+)?)'
+    else:
+        raise ValueError("Unsupported platform value")
 
     matches = re.findall(pattern, s)
     return [m[0] or m[1] or m[2] for m in matches]

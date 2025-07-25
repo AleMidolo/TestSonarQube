@@ -10,13 +10,11 @@ def create_complex_argument_type(self, subcommand, type_name, option_name,
     :return: l'istanza del tipo complesso
     """
     class ComplexArgumentType:
-        def __init__(self, subcommand, type_name, option_name, spec_option):
-            self.subcommand = subcommand
-            self.type_name = type_name
-            self.option_name = option_name
-            self.spec_option = spec_option
+        def __init__(self, name, specs):
+            self.name = name
+            self.specs = specs
 
         def __repr__(self):
-            return f"ComplexArgumentType(subcommand={self.subcommand}, type_name={self.type_name}, option_name={self.option_name}, spec_option={self.spec_option})"
+            return f"ComplexArgumentType(name={self.name}, specs={self.specs})"
 
-    return ComplexArgumentType(subcommand, type_name, option_name, spec_option)
+    return ComplexArgumentType(type_name, spec_option)
