@@ -12,7 +12,7 @@ def cached(cache, key=hashkey, lock=None):
                 return cache[cache_key]
             # Si no está en caché, llamar a la función
             result = func(*args, **kwargs)
-            # Guardar el resultado en la caché
+            # Almacenar el resultado en la caché
             cache[cache_key] = result
             return result
         return wrapper

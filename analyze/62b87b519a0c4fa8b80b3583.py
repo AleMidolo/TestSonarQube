@@ -16,13 +16,15 @@ def scale(self, other=None):
     Todos los errores se reajustan junto con su coordenada.
     """
     if other is None:
-        return self.scale_value  # Assuming scale_value is an attribute of the class
+        return self._scale  # Assuming _scale is an attribute that holds the current scale
 
     if not isinstance(other, (int, float)):
         raise ValueError("El valor de 'other' debe ser un número.")
 
-    if self.scale_value is None or self.scale_value == 0:
+    if self._scale is None or self._scale == 0:
         raise LenaValueError("La escala es desconocida o igual a cero.")
 
-    # Assuming we have a method to adjust the scale
-    self.adjust_scale(other)
+    # Assuming the last coordinate is stored in a specific attribute
+    self._scale[-1] = other  # Reajustar la última coordenada
+    # Reajustar todos los errores asociados
+    self._errors[-1] *= (other / self._scale[-1])  # Ajustar errores en consecuencia

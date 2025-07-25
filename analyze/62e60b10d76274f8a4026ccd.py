@@ -17,5 +17,5 @@ def data(self, *keys):
             result[key] = self[key]
         else:
             result[key] = getattr(self, key, None)
-    
+
     return result

@@ -26,7 +26,7 @@ class LFUCache:
             return
         if key in self.cache:
             self.cache[key] = (value, self.cache[key][1])
-            self.get(key)
+            self.get(key)  # Update frequency
             return
         if len(self.cache) >= self.maxsize:
             evict_key, _ = self.freq[self.min_freq].popitem(last=False)
@@ -44,12 +44,13 @@ def lfu_cache(maxsize=128, typed=False):
             if typed:
                 key = (tuple(args), frozenset(kwargs.items()))
             else:
-                key = (tuple(map(str, args)), frozenset((str(k), str(v)) for k, v in kwargs.items()))
-            result = cache.get(key)
-            if result == -1:
-                result = func(*args, **kwargs)
-                cache.put(key, result)
+                key = tuple(args) + tuple(sorted(kwargs.items()))
+            if key in cache.cache:
+                return cache.get(key)
+            result = func(*args, **kwargs)
+            cache.put(key, result)
             return result
 
         return wrapper
+
     return decorator

@@ -6,7 +6,7 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
     
     base = len(alphabet)
     if base < 2:
-        raise ValueError("Alphabet must contain at least two characters")
+        raise ValueError("Alphabet must have at least two characters")
     
     if number == 0:
         result = alphabet[0]

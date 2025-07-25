@@ -20,7 +20,7 @@ def validate(self, path):
         # Si todas las comprobaciones son exitosas, se devuelve True
         return True
     except Exception as e:
-        # Manejo de excepciones, se puede registrar el error o manejarlo de otra forma
+        # Manejo de excepciones, se puede registrar el error si es necesario
         print(f"Error durante la validación: {e}")
         return False
 
