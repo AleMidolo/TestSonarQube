@@ -24,8 +24,10 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
             observer_schema[key] = None
 
     if first_level:
-        # Assuming 'metadata' is an identifying field that needs to be copied
-        if 'metadata' in manifest_dict:
-            observer_schema['metadata'] = manifest_dict['metadata']
+        # Assuming 'name' and 'namespace' are identifying fields
+        if 'name' in manifest_dict:
+            observer_schema['name'] = manifest_dict['name']
+        if 'namespace' in manifest_dict:
+            observer_schema['namespace'] = manifest_dict['namespace']
 
     return observer_schema

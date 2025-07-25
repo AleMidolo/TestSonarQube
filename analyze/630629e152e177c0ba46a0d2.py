@@ -13,4 +13,4 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     if response.status_code == 200:
         return response.json()
     else:
-        return {}
+        response.raise_for_status()

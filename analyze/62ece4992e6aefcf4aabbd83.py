@@ -9,14 +9,14 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
         cwd = os.getcwd()
     
     if env is None:
-        env = os.environ
-
-    command_list = [commands] + args
+        env = os.environ.copy()
+    
+    command = [commands] + args
+    stderr = subprocess.DEVNULL if hide_stderr else None
+    
     if verbose:
-        print(f"Running command: {' '.join(command_list)} in {cwd}")
-
-    with open(os.devnull, 'w') as devnull:
-        stderr = subprocess.DEVNULL if hide_stderr else None
-        result = subprocess.run(command_list, cwd=cwd, env=env, stderr=stderr)
-
+        print(f"Running command: {' '.join(command)} in {cwd}")
+    
+    result = subprocess.run(command, cwd=cwd, env=env, stderr=stderr)
+    
     return result.returncode

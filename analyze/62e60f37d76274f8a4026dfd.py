@@ -8,4 +8,4 @@ def dehydrate_time(value):
     """
     if value is None:
         return None
-    return value.isoformat()  # Assuming value is a datetime.time object
+    return value.isoformat()

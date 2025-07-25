@@ -13,12 +13,12 @@ def fromutc(self, dt):
         एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
     """
     if dt.tzinfo is None:
-        raise ValueError("dt must be a timezone-aware datetime object")
+        raise ValueError("dt must be timezone-aware")
     
     # Convert the datetime to UTC
     utc_dt = dt.astimezone(self.utc)
     
-    # Calculate the new timezone-aware datetime
+    # Calculate the new datetime in the current timezone
     new_dt = utc_dt.astimezone(self)
     
     return new_dt
