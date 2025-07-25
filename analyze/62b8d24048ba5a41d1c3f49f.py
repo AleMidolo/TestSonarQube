@@ -1,53 +1,71 @@
-from functools import wraps
-from collections import OrderedDict
-import time
-
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
+    """
+    एक डेकोरेटर जो एक फ़ंक्शन को एक मेमोराइज़िंग कॉलेबल के साथ रैप करता है,
+    जो `maxsize` तक के परिणामों को सेव करता है। यह एक Least Recently Used (LRU)
+    एल्गोरिदम पर आधारित होता है और प्रत्येक आइटम के लिए एक समय-सीमा (Time-To-Live, TTL) 
+    मान लागू करता है।
+    """
     def decorator(func):
-        # Create cache as ordered dictionary
-        cache = OrderedDict()
+        # Create cache dict to store results and timestamps
+        cache = {}
+        # Create ordered dict to track LRU
+        lru = collections.OrderedDict()
         
-        @wraps(func)
+        @functools.wraps(func)
         def wrapper(*args, **kwargs):
             # Create cache key based on args
-            key = str(args)
-            if typed:
-                key += str(type(args))
-            if kwargs:
-                key += str(sorted(kwargs.items()))
-                if typed:
-                    key += str(type(kwargs))
-                    
-            now = timer()
+            key = _make_key(args, kwargs, typed)
             
-            # Check if key exists and hasn't expired
+            curr_time = timer()
+            
+            # Check if result in cache and not expired
             if key in cache:
                 result, timestamp = cache[key]
-                if now - timestamp <= ttl:
-                    # Move to end to mark as recently used
-                    cache.move_to_end(key)
+                if curr_time - timestamp <= ttl:
+                    # Move to end of LRU
+                    lru.move_to_end(key)
                     return result
                 else:
                     # Remove expired item
                     del cache[key]
-                    
-            # Compute new result
+                    del lru[key]
+            
+            # Calculate new result
             result = func(*args, **kwargs)
             
             # Add to cache
-            cache[key] = (result, now)
+            cache[key] = (result, curr_time)
+            lru[key] = None
             
-            # Remove oldest items if cache is too large
+            # Remove oldest if over maxsize
             while len(cache) > maxsize:
-                cache.popitem(last=False)
+                oldest = next(iter(lru))
+                del cache[oldest]
+                del lru[oldest]
                 
             return result
             
-        # Add cache clear method
-        def clear_cache():
-            cache.clear()
+        def _make_key(args, kwds, typed):
+            # Helper to create cache keys
+            key = args
+            if kwds:
+                key += tuple(sorted(kwds.items()))
+            if typed:
+                key += tuple(type(arg) for arg in args)
+                if kwds:
+                    key += tuple(type(val) for val in kwds.values())
+            return hash(key)
             
-        wrapper.clear_cache = clear_cache
+        # Add cache info method
+        wrapper.cache_info = lambda: {
+            'maxsize': maxsize,
+            'ttl': ttl,
+            'currsize': len(cache)
+        }
+        
+        # Add cache clear method  
+        wrapper.cache_clear = lambda: cache.clear() or lru.clear()
+        
         return wrapper
         
     return decorator

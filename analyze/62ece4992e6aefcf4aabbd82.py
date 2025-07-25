@@ -1,16 +1,20 @@
 def get_pattern(pattern, strip=True):
     """
-    This method converts the given string to regex pattern
+    यह मेथड दी गई स्ट्रिंग को रेगुलर एक्सप्रेशन (Regex) पैटर्न में बदलता है।
     """
-    # Escape special regex characters
-    special_chars = ['\\', '^', '$', '.', '|', '?', '*', '+', '(', ')', '[', ']', '{', '}']
+    # Special characters in regex that need to be escaped
+    special_chars = '.^$*+?{}[]\\|()'
     
-    # If strip is True, remove leading/trailing whitespace
+    # Strip whitespace if strip=True
     if strip:
         pattern = pattern.strip()
-        
-    # Escape special characters by adding backslash
-    for char in special_chars:
-        pattern = pattern.replace(char, '\\' + char)
-        
-    return pattern
+    
+    # Escape special regex characters
+    escaped_pattern = ''
+    for char in pattern:
+        if char in special_chars:
+            escaped_pattern += '\\' + char
+        else:
+            escaped_pattern += char
+            
+    return escaped_pattern

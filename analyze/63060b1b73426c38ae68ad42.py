@@ -1,4 +1,11 @@
 def inject_config(self):
-    """Set the environment variable for config path, if it is undefined."""
-    if 'ANSIBLE_CONFIG' not in os.environ:
-        os.environ['ANSIBLE_CONFIG'] = self.ansible_config_path
+    """
+    कॉन्फ़िग पथ के लिए पर्यावरण वेरिएबल सेट करें, यदि यह परिभाषित नहीं है।
+    """
+    import os
+    
+    # Check if config path environment variable is not set
+    if 'CONFIG_PATH' not in os.environ:
+        # Set default config path to current directory
+        default_config_path = os.path.join(os.getcwd(), 'config')
+        os.environ['CONFIG_PATH'] = default_config_path

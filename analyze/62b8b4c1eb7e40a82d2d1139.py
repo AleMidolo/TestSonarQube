@@ -1,40 +1,45 @@
 def verifyClass(iface, candidate, tentative=False):
     """
-    Verify that the *candidate* might correctly provide *iface*.
+    यह फ़ंक्शन सत्यापित करता है कि *candidate* सही तरीके से *iface* प्रदान कर सकता है या नहीं।
     """
+    # Check if candidate is a class
+    if not isinstance(candidate, type):
+        raise TypeError("Candidate must be a class")
+        
     # Get all attributes defined in the interface
     iface_attrs = dir(iface)
     
-    # Get all attributes defined in the candidate
-    candidate_attrs = dir(candidate)
-    
-    # Check each attribute required by the interface
+    # Check each attribute in interface
     for attr in iface_attrs:
         # Skip private/special attributes
         if attr.startswith('_'):
             continue
             
-        # Check if attribute exists in candidate
-        if attr not in candidate_attrs:
-            if tentative:
-                continue
-            else:
-                raise AttributeError(f"'{attr}' not found in candidate class")
-                
-        # Get the interface and candidate attributes
+        # Get interface attribute
         iface_attr = getattr(iface, attr)
-        candidate_attr = getattr(candidate, attr)
         
-        # Check if attributes are callable (methods)
+        # Check if attribute exists in candidate
+        if not hasattr(candidate, attr):
+            if tentative:
+                return False
+            raise AttributeError(f"'{attr}' not found in {candidate.__name__}")
+            
+        # Get candidate attribute
+        cand_attr = getattr(candidate, attr)
+        
+        # Check if attribute is callable (method)
         if callable(iface_attr):
-            if not callable(candidate_attr):
-                raise TypeError(f"'{attr}' must be callable")
+            if not callable(cand_attr):
+                if tentative:
+                    return False
+                raise TypeError(f"'{attr}' must be callable in {candidate.__name__}")
                 
             # Check method signature matches
-            if not tentative:
-                iface_sig = str(iface_attr.__code__.co_varnames)
-                candidate_sig = str(candidate_attr.__code__.co_varnames)
-                if iface_sig != candidate_sig:
-                    raise TypeError(f"Method signature mismatch for '{attr}'")
-    
+            if hasattr(iface_attr, '__code__'):
+                if (iface_attr.__code__.co_argcount != 
+                    cand_attr.__code__.co_argcount):
+                    if tentative:
+                        return False
+                    raise TypeError(f"'{attr}' has wrong number of arguments")
+                    
     return True

@@ -1,35 +1,36 @@
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
-    Parse an image href into composite parts.
+    छवि के हाइपरलिंक (href) को उसके घटक भागों में विभाजित करें।
 
-    :param image_href: href of an image 
-    :returns: a tuple of the form (image_id, netloc, use_ssl)
-    :raises ValueError:
+    :param image_href: छवि का हाइपरलिंक (href)
+    :returns: एक ट्यूपल (tuple) के रूप में परिणाम, जिसमें (image_id, netloc, use_ssl) शामिल हैं
+    :raises ValueError: यदि हाइपरलिंक अमान्य है
     """
     from urllib.parse import urlparse
-    
-    if not image_href:
-        raise ValueError("Image href cannot be empty")
-        
-    # Try to parse the URL
+
     try:
+        # Parse the URL
         parsed = urlparse(image_href)
-    except Exception:
-        raise ValueError(f"Invalid image href: {image_href}")
         
-    # Get the netloc (hostname)
-    netloc = parsed.netloc
-    if not netloc:
-        raise ValueError(f"No hostname found in href: {image_href}")
+        # Check if scheme is valid (http or https)
+        if parsed.scheme not in ('http', 'https'):
+            raise ValueError("Invalid URL scheme")
+            
+        # Get netloc (domain)
+        netloc = parsed.netloc
+        if not netloc:
+            raise ValueError("Missing domain in URL")
+            
+        # Get image ID from path
+        path_parts = parsed.path.strip('/').split('/')
+        if not path_parts or not path_parts[-1]:
+            raise ValueError("Invalid image path")
+        image_id = path_parts[-1]
         
-    # Determine if using SSL
-    use_ssl = parsed.scheme == 'https'
-    
-    # Get image ID from path
-    path_parts = parsed.path.split('/')
-    image_id = path_parts[-1] if path_parts else ''
-    
-    if not image_id:
-        raise ValueError(f"No image ID found in href: {image_href}")
+        # Determine if SSL is used
+        use_ssl = parsed.scheme == 'https'
         
-    return (image_id, netloc, use_ssl)
+        return (image_id, netloc, use_ssl)
+        
+    except Exception as e:
+        raise ValueError(f"Invalid image URL: {str(e)}")

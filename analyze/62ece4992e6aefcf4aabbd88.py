@@ -1,12 +1,12 @@
 def make_array(shape, dtype=np.dtype("float32")):
     """
-    Function to create an array with shape and dtype.
+    यह फ़ंक्शन एक ऐरे बनाता है जिसमें दिए गए आकार (shape) और डेटा प्रकार (dtype) का उपयोग किया जाता है।
 
-    Parameters
-    ----------
-    shape : tuple
-        shape of the array to create
-    dtype : `numpy.dtype`
-        data-type of the array to create
+    पैरामीटर (Parameters):
+    - shape : ट्यूपल  
+      बनाने वाले ऐरे का आकार (shape)।
+
+    - dtype : `numpy.dtype`  
+      बनाने वाले ऐरे का डेटा प्रकार (data-type)।
     """
-    return np.zeros(shape=shape, dtype=dtype)
+    return np.zeros(shape, dtype=dtype)

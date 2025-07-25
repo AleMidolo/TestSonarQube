@@ -1,22 +1,19 @@
 def list_of_file_names(settings_dirs, spec_option):
     """
-    Create a new IniType complex type
+    एक नया IniType कॉम्प्लेक्स टाइप बनाएं
     """
     file_names = []
     
-    # Handle single directory case
-    if isinstance(settings_dirs, str):
-        settings_dirs = [settings_dirs]
-        
-    # Iterate through all directories
-    for directory in settings_dirs:
-        # Handle different spec options
-        if spec_option == 'ini':
-            file_names.extend([f for f in os.listdir(directory) if f.endswith('.ini')])
-        elif spec_option == 'conf':
-            file_names.extend([f for f in os.listdir(directory) if f.endswith('.conf')])
-        elif spec_option == 'all':
-            file_names.extend([f for f in os.listdir(directory) if f.endswith(('.ini', '.conf'))])
-            
-    # Remove duplicates while preserving order
-    return list(dict.fromkeys(file_names))
+    # Iterate through each directory path in settings_dirs
+    for dir_path in settings_dirs:
+        # Check if spec_option is a string
+        if isinstance(spec_option, str):
+            # Add file name with spec_option extension
+            file_names.append(f"{dir_path}/{spec_option}.ini")
+        # If spec_option is a list/tuple
+        elif isinstance(spec_option, (list, tuple)):
+            # Add file names for each option in spec_option
+            for option in spec_option:
+                file_names.append(f"{dir_path}/{option}.ini")
+                
+    return file_names

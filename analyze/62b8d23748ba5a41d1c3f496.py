@@ -1,64 +1,85 @@
 from collections import defaultdict
-import functools
+from functools import wraps
 
 def lfu_cache(maxsize=128, typed=False):
     def decorator(func):
-        # Cache to store function results
+        # Store cache and frequency information
         cache = {}
-        # Counter to track frequency of key access
         freq_counter = defaultdict(int)
-        # Track order of insertion for same frequency items
-        insertion_order = []
-
-        @functools.wraps(func)
+        freq_lists = defaultdict(set)
+        min_freq = 0
+        
+        @wraps(func)
         def wrapper(*args, **kwargs):
-            # Create cache key based on args and kwargs
-            key = (*args, *(sorted(kwargs.items())))
+            # Create cache key based on arguments
             if typed:
-                key += tuple(type(arg) for arg in args)
-                key += tuple(type(val) for val in kwargs.values())
-            
-            # Return cached result if exists
+                key = (*args, *[(k, type(v), v) for k, v in kwargs.items()])
+            else:
+                key = (*args, *sorted(kwargs.items()))
+                
+            try:
+                key = hash(key)
+            except TypeError:
+                # If unhashable, don't cache
+                return func(*args, **kwargs)
+                
+            # Return from cache if exists
             if key in cache:
+                # Update frequency
+                old_freq = freq_counter[key]
                 freq_counter[key] += 1
+                new_freq = freq_counter[key]
+                
+                # Update frequency lists
+                freq_lists[old_freq].remove(key)
+                if not freq_lists[old_freq] and old_freq == min_freq:
+                    min_freq = new_freq
+                freq_lists[new_freq].add(key)
+                
                 return cache[key]
-
-            # Calculate new result
+                
+            # Compute new value
             result = func(*args, **kwargs)
-
+            
             # If cache is full, remove least frequently used item
             if len(cache) >= maxsize:
-                # Find minimum frequency
-                min_freq = min(freq_counter.values())
-                # Get all keys with minimum frequency
-                min_freq_keys = [k for k, v in freq_counter.items() if v == min_freq]
-                # Remove the oldest key with minimum frequency
-                for k in insertion_order:
-                    if k in min_freq_keys:
-                        del cache[k]
-                        del freq_counter[k]
-                        insertion_order.remove(k)
-                        break
-
+                # Get key to remove from min frequency list
+                lfu_key = next(iter(freq_lists[min_freq]))
+                
+                # Remove from all tracking structures
+                del cache[lfu_key]
+                del freq_counter[lfu_key]
+                freq_lists[min_freq].remove(lfu_key)
+                
             # Add new result to cache
             cache[key] = result
             freq_counter[key] = 1
-            insertion_order.append(key)
-
+            freq_lists[1].add(key)
+            min_freq = 1
+            
             return result
-
-        # Add clear method to wrapper
-        def clear_cache():
+            
+        # Add cache info method
+        def cache_info():
+            return {
+                'hits': sum(freq_counter.values()) - len(cache),
+                'misses': len(cache),
+                'maxsize': maxsize,
+                'currsize': len(cache)
+            }
+            
+        wrapper.cache_info = cache_info
+        
+        # Add cache clear method
+        def cache_clear():
             cache.clear()
             freq_counter.clear()
-            insertion_order.clear()
-
-        wrapper.clear_cache = clear_cache
+            freq_lists.clear()
+            nonlocal min_freq
+            min_freq = 0
+            
+        wrapper.cache_clear = cache_clear
+        
         return wrapper
-
-    if callable(maxsize):
-        # Handle case where decorator is used without parameters
-        func = maxsize
-        maxsize = 128
-        return decorator(func)
+        
     return decorator

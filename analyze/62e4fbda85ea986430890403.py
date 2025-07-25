@@ -1,15 +1,15 @@
 def _shuffled(seq: Sequence[str]) -> list[str]:
     """
-    Deterministically shuffle
+    निर्धारित (Deterministically) तरीके से शफल करें
     """
-    # Convert sequence to list to make it mutable
+    # Convert sequence to list for shuffling
     result = list(seq)
     
-    # Use a fixed seed for deterministic shuffling
-    n = len(result)
-    for i in range(n-1):
-        # Use a deterministic formula to swap elements
-        j = (i * i + n) % n
+    # Use deterministic Fisher-Yates shuffle
+    for i in range(len(result)-1, 0, -1):
+        # Use deterministic index based on position
+        j = (i * 1337) % (i + 1)
+        # Swap elements
         result[i], result[j] = result[j], result[i]
         
     return result

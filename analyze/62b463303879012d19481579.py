@@ -1,31 +1,35 @@
 def _extract_number_and_supplment_from_issue_element(issue):
     """
-    Extract the possible values of number and suppl from the contents of issue.
+    समस्या (issue) की सामग्री से number और suppl के संभावित मानों को निकालें।
     """
-    if issue is None:
-        return None, None
-        
-    # Remove any whitespace
-    issue_text = issue.strip()
-    
-    if not issue_text:
-        return None, None
-        
-    # Split on spaces to separate number and supplement
-    parts = issue_text.split()
-    
     number = None
     suppl = None
     
-    # Extract number from first part
-    if parts:
-        try:
-            number = int(parts[0])
-        except ValueError:
-            number = parts[0]
-            
-    # Check for supplement in remaining parts
-    if len(parts) > 1:
-        suppl = ' '.join(parts[1:])
+    if issue:
+        # Remove any whitespace
+        issue = issue.strip()
         
+        # Check if issue contains supplement indicator
+        if 'suppl' in issue.lower():
+            parts = issue.lower().split('suppl')
+            if parts[0]:
+                number = parts[0].strip()
+            if len(parts) > 1 and parts[1]:
+                suppl = parts[1].strip()
+        else:
+            # If no supplement, treat entire string as number
+            number = issue
+            
+        # Convert number to integer if possible
+        try:
+            number = int(number) if number else None
+        except (ValueError, TypeError):
+            number = number
+            
+        # Clean up supplement value
+        if suppl:
+            suppl = suppl.strip(' .')
+            if suppl.startswith('.'):
+                suppl = suppl[1:]
+                
     return number, suppl

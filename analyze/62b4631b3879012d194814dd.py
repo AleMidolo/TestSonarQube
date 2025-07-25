@@ -1,5 +1,3 @@
 def fix_namespace_prefix_w(content):
-    """
-    Convert text that defaults to 'w:st="' to 'w-st="'
-    """
+    # Replace 'w:st="' with 'w-st="' in the content
     return content.replace('w:st="', 'w-st="')

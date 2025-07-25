@@ -1,6 +1,6 @@
 def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
-          db=None, imp_user=None, dehydration_hooks=None,
-          hydration_hooks=None, **handlers):
+              db=None, imp_user=None, dehydration_hooks=None,
+              hydration_hooks=None, **handlers):
     
     # Set default mode to WRITE if not specified
     if mode is None:
@@ -10,32 +10,43 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     if mode not in ("READ", "WRITE"):
         raise ValueError("Mode must be either 'READ' or 'WRITE'")
 
-    # Build extra parameters dict
-    extra = {}
-    if bookmarks:
-        extra["bookmarks"] = list(bookmarks)
-    if metadata:
-        extra["metadata"] = metadata
-    if timeout is not None:
-        extra["timeout"] = timeout
-    if db:
-        extra["db"] = db
-    if imp_user:
-        extra["imp_user"] = imp_user
+    # Initialize parameters dict
+    parameters = {}
+    
+    # Add mode
+    parameters["mode"] = mode
+
+    # Add optional parameters if provided
+    if bookmarks is not None:
+        parameters["bookmarks"] = list(bookmarks)
+    
+    if metadata is not None:
+        parameters["metadata"] = metadata
         
-    # Add hooks if provided
-    if dehydration_hooks:
-        extra["dehydration_hooks"] = dehydration_hooks
-    if hydration_hooks:
-        extra["hydration_hooks"] = hydration_hooks
+    if timeout is not None:
+        parameters["timeout"] = timeout
+        
+    if db is not None:
+        parameters["db"] = db
+        
+    if imp_user is not None:
+        parameters["imp_user"] = imp_user
 
-    # Create BEGIN message
+    # Create message dict
     message = {
-        "mode": mode
+        "type": "BEGIN",
+        "parameters": parameters
     }
-    if extra:
-        message.update(extra)
 
-    # Add message to output queue and create Response
-    self._append(("BEGIN", message))
-    return Response(self._connection, **handlers)
+    # Add hooks if provided
+    if dehydration_hooks is not None:
+        message["dehydration_hooks"] = dehydration_hooks
+        
+    if hydration_hooks is not None:
+        message["hydration_hooks"] = hydration_hooks
+
+    # Add message to output queue
+    self._append(message, **handlers)
+
+    # Return Response object
+    return Response(self, **handlers)

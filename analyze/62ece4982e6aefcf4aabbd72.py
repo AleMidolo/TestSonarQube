@@ -1,6 +1,6 @@
 def unquote(name):
     """
-    Remove quote from the given name.
+    दिए गए नाम से उद्धरण (quotes) को हटाने के लिए फ़ंक्शन।
     """
     if name.startswith('"') and name.endswith('"'):
         return name[1:-1]

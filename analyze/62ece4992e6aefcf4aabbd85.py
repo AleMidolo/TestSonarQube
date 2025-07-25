@@ -1,25 +1,19 @@
-def find_roots(graph: "Graph", prop: "URIRef", roots: Optional[Set["Node"]] = None) -> Set["Node"]:
-    """
-    Find the roots in some sort of transitive hierarchy.
-
-    find_roots(graph, rdflib.RDFS.subClassOf)
-    will return a set of all roots of the sub-class hierarchy
-
-    Assumes triple of the form (child, prop, parent), i.e. the direction of
-    RDFS.subClassOf or SKOS.broader
-    """
-    # If roots not provided, get all subjects that appear as objects in triples with prop
+def find_roots(
+    graph: "Graph", prop: "URIRef", roots: Optional[Set["Node"]] = None
+) -> Set["Node"]:
+    # Initialize empty set if roots not provided
     if roots is None:
         roots = set()
-        for s, p, o in graph:
-            if p == prop:
-                roots.add(o)
-                
-    # Get all objects that appear as subjects with prop
-    children = set()
-    for s, p, o in graph:
-        if p == prop:
-            children.add(s)
-            
-    # Roots are those that have no parents
-    return roots - children
+        
+    # Get all subjects and objects connected by the property
+    subjects = set(graph.subjects(prop))
+    objects = set(graph.objects(prop))
+    
+    # Root nodes are subjects that are not objects of the property
+    root_nodes = subjects - objects
+    
+    # If roots set was provided, only keep nodes from that set
+    if roots:
+        root_nodes = root_nodes & roots
+        
+    return root_nodes

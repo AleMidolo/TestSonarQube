@@ -1,45 +1,51 @@
 def mru_cache(maxsize=128, typed=False):
-    """
-    Decorator to wrap a function with a memoizing callable that saves
-    up to `maxsize` results based on a Most Recently Used (MRU)
-    algorithm.
-    """
     def decorator(func):
-        # Store cache and order of usage
-        cache = {}
-        order = []
-        
-        def make_key(args, kwargs):
-            # Create cache key from arguments
-            key = (args, frozenset(kwargs.items()))
-            if typed:
-                # Add types to key if typed=True
-                key += tuple(type(arg) for arg in args)
-                key += tuple(type(val) for val in kwargs.values())
-            return hash(key)
-        
+        from functools import wraps
+        from collections import OrderedDict
+
+        # Create cache dictionary
+        cache = OrderedDict()
+
+        @wraps(func)
         def wrapper(*args, **kwargs):
-            key = make_key(args, kwargs)
-            
+            # Create cache key based on arguments
+            if typed:
+                key = (tuple(args), tuple(sorted(kwargs.items())), 
+                      tuple(type(arg) for arg in args),
+                      tuple(type(val) for val in kwargs.values()))
+            else:
+                key = (tuple(args), tuple(sorted(kwargs.items())))
+
+            # Check if result is in cache
             if key in cache:
-                # Move accessed item to front of order
-                order.remove(key)
-                order.append(key)
+                # Move to end since it was most recently used
+                cache.move_to_end(key)
                 return cache[key]
-                
+
+            # Calculate result
             result = func(*args, **kwargs)
-            
-            if len(cache) >= maxsize:
-                # Remove least recently used item
-                lru_key = order.pop(0)
-                del cache[lru_key]
-                
-            # Add new result to cache
+
+            # Add to cache
             cache[key] = result
-            order.append(key)
             
+            # Remove oldest item if cache is full
+            if maxsize and len(cache) > maxsize:
+                cache.popitem(last=False)
+
             return result
-            
+
+        # Add cache info method
+        def cache_info():
+            return {
+                'maxsize': maxsize,
+                'currsize': len(cache),
+                'hits': sum(1 for _ in cache.values()),
+                'misses': wrapper.misses if hasattr(wrapper, 'misses') else 0
+            }
+
+        wrapper.cache_info = cache_info
+        wrapper.cache = cache
+        wrapper.misses = 0
+
         return wrapper
-        
     return decorator

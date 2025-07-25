@@ -1,16 +1,16 @@
 def popitem(self):
     """
-    Remove and return the `(key, value)` pair first inserted.
+    पहले डाली गई `(key, value)` जोड़ी को हटाएं और लौटाएं।
     """
     if not self:
-        raise KeyError('Dictionary is empty')
+        raise KeyError("Dictionary is empty")
         
-    # Get first key and value
+    # Get first key-value pair
     first_key = next(iter(self))
     first_value = self[first_key]
     
-    # Remove the item
+    # Remove the pair from dictionary
     del self[first_key]
     
-    # Return key-value pair as tuple
+    # Return the removed pair as tuple
     return (first_key, first_value)

@@ -1,56 +1,57 @@
 def _legacy_mergeOrderings(orderings):
-    """
-    Merge multiple orderings so that within-ordering order is preserved
-
-    Orderings are constrained in such a way that if an object appears
-    in two or more orderings, then the suffix that begins with the
-    object must be in both orderings.
-
-    For example:
-
-    >>> _mergeOrderings([
-    ... ['x', 'y', 'z'],
-    ... ['q', 'z'],
-    ... [1, 3, 5],
-    ... ['z']
-    ... ])
-    ['x', 'y', 'q', 1, 3, 5, 'z']
-    """
-    if not orderings:
-        return []
-        
-    # Create a mapping of elements to their next elements in each ordering
-    next_elements = {}
-    for ordering in orderings:
-        for i in range(len(ordering)-1):
-            curr = ordering[i]
-            next_elem = ordering[i+1]
-            if curr not in next_elements:
-                next_elements[curr] = next_elem
-            elif next_elements[curr] != next_elem:
-                raise ValueError("Inconsistent orderings")
-
-    # Find all elements that are not successors of any other element
-    all_elements = set()
-    successor_elements = set()
-    for ordering in orderings:
-        all_elements.update(ordering)
-        if len(ordering) > 1:
-            successor_elements.update(ordering[1:])
+    # Create a dictionary to store item positions
+    item_positions = {}
     
-    start_elements = all_elements - successor_elements
-
-    # Build the merged ordering
-    result = []
-    current = list(start_elements)
-    seen = set()
+    # Create a dictionary to store items that must come before others
+    dependencies = {}
     
-    while current:
-        elem = current.pop(0)
-        if elem not in seen:
-            result.append(elem)
-            seen.add(elem)
-            if elem in next_elements:
-                current.append(next_elements[elem])
+    # Process each ordering list
+    for ordering in orderings:
+        # Track position of each item in this ordering
+        for i, item in enumerate(ordering):
+            if item not in item_positions:
+                item_positions[item] = []
+            item_positions[item].append(i)
+            
+            # Add dependencies - each item must come after previous items
+            if i > 0:
+                prev = ordering[i-1]
+                if prev not in dependencies:
+                    dependencies[prev] = set()
+                dependencies[prev].add(item)
                 
+    # Get all unique items
+    all_items = set()
+    for ordering in orderings:
+        all_items.update(ordering)
+        
+    # Build result list
+    result = []
+    used = set()
+    
+    while len(result) < len(all_items):
+        # Find items with no remaining dependencies
+        available = set()
+        for item in all_items:
+            if item not in used:
+                has_deps = False
+                for deps in dependencies.values():
+                    if item in deps:
+                        has_deps = True
+                        break
+                if not has_deps:
+                    available.add(item)
+                    
+        if not available:
+            raise ValueError("Circular dependency detected")
+            
+        # Add the first available item
+        item = next(iter(available))
+        result.append(item)
+        used.add(item)
+        
+        # Remove this item from dependencies
+        if item in dependencies:
+            del dependencies[item]
+            
     return result

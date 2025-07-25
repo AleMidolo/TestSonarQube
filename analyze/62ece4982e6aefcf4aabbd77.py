@@ -1,43 +1,44 @@
 def parse_frequency(frequency):
-    """
-    Given a frequency string with a number and a unit of time, return a corresponding
-    datetime.timedelta instance or None if the frequency is None or "always".
-
-    For instance, given "3 weeks", return datetime.timedelta(weeks=3)
-
-    Raise ValueError if the given frequency cannot be parsed.
-    """
-    from datetime import timedelta
+    import datetime
+    import re
     
-    if frequency is None or frequency.lower() == "always":
+    if frequency is None or frequency.lower() == "हमेशा":
         return None
         
-    try:
-        # Split into number and unit
-        parts = frequency.strip().split()
-        if len(parts) != 2:
-            raise ValueError(f"Invalid frequency format: {frequency}")
-            
-        number = float(parts[0])
-        unit = parts[1].lower().rstrip('s')  # Remove potential plural 's'
+    # Match number and unit pattern
+    match = re.match(r"(\d+)\s*([^\d\s]+)", frequency)
+    if not match:
+        raise ValueError(f"Invalid frequency format: {frequency}")
         
-        # Map units to timedelta parameters
-        unit_mapping = {
-            'day': 'days',
-            'week': 'weeks', 
-            'hour': 'hours',
-            'minute': 'minutes',
-            'second': 'seconds',
-            'microsecond': 'microseconds',
-            'millisecond': 'milliseconds'
-        }
+    number = int(match.group(1))
+    unit = match.group(2).strip().lower()
+    
+    # Map Hindi units to timedelta arguments
+    unit_mapping = {
+        'दिन': 'days',
+        'दिनों': 'days',
+        'सप्ताह': 'weeks', 
+        'हफ्ता': 'weeks',
+        'हफ्ते': 'weeks',
+        'महीना': 'days',
+        'महीने': 'days',
+        'साल': 'days',
+        'वर्ष': 'days',
+        'घंटा': 'hours',
+        'घंटे': 'hours',
+        'मिनट': 'minutes',
+        'सेकंड': 'seconds'
+    }
+    
+    if unit not in unit_mapping:
+        raise ValueError(f"Invalid time unit: {unit}")
         
-        if unit not in unit_mapping:
-            raise ValueError(f"Invalid time unit: {unit}")
-            
-        # Create timedelta with the appropriate unit
-        kwargs = {unit_mapping[unit]: number}
-        return timedelta(**kwargs)
-        
-    except (ValueError, AttributeError) as e:
-        raise ValueError(f"Could not parse frequency: {frequency}") from e
+    # Handle special cases for months and years
+    if unit in ['महीना', 'महीने']:
+        return datetime.timedelta(days=number * 30)
+    elif unit in ['साल', 'वर्ष']:
+        return datetime.timedelta(days=number * 365)
+    
+    # Create timedelta with mapped unit
+    kwargs = {unit_mapping[unit]: number}
+    return datetime.timedelta(**kwargs)

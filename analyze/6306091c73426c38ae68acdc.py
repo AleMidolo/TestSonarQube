@@ -1,36 +1,34 @@
 def validate_from_content(cls, spec_content=None):
-    """
-    validates that spec (YAML) content has all required fields
-
-    :param spec_content: content of spec file
-    :raise IRValidatorException: when mandatory data
-    is missing in spec file
-    :return: Dictionary with data loaded from a spec (YAML) file
-    """
-    if spec_content is None:
-        raise IRValidatorException("No spec content provided")
+    if not spec_content:
+        raise IRValidatorException("Spec content cannot be empty")
         
     try:
-        # Try to load YAML content
-        yaml_content = yaml.safe_load(spec_content)
+        # Load YAML content into dictionary
+        spec_dict = yaml.safe_load(spec_content)
         
-        if not isinstance(yaml_content, dict):
-            raise IRValidatorException("Spec content must be a YAML dictionary")
+        # Check if spec_dict is valid
+        if not isinstance(spec_dict, dict):
+            raise IRValidatorException("Invalid YAML format - must be a dictionary")
             
-        # Check for required fields
+        # List of required fields
         required_fields = ['name', 'version', 'description']
-        missing_fields = []
         
+        # Check for required fields
         for field in required_fields:
-            if field not in yaml_content:
-                missing_fields.append(field)
+            if field not in spec_dict:
+                raise IRValidatorException(f"Required field '{field}' missing in spec file")
                 
-        if missing_fields:
-            raise IRValidatorException(
-                f"Missing mandatory fields in spec: {', '.join(missing_fields)}"
-            )
+        # Validate field types
+        if not isinstance(spec_dict['name'], str):
+            raise IRValidatorException("'name' field must be a string")
             
-        return yaml_content
+        if not isinstance(spec_dict['version'], (str, int, float)):
+            raise IRValidatorException("'version' field must be a string or number")
+            
+        if not isinstance(spec_dict['description'], str):
+            raise IRValidatorException("'description' field must be a string")
+            
+        return spec_dict
         
     except yaml.YAMLError as e:
         raise IRValidatorException(f"Invalid YAML content: {str(e)}")

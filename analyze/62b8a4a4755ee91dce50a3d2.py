@@ -1,42 +1,35 @@
 def _fromutc(self, dt):
-    """
-    Given a timezone-aware datetime in a given timezone, calculates a
-    timezone-aware datetime in a new timezone.
-
-    Since this is the one time that we *know* we have an unambiguous
-    datetime object, we take this opportunity to determine whether the
-    datetime is ambiguous and in a "fold" state (e.g. if it's the first
-    occurrence, chronologically, of the ambiguous datetime).
-
-    :param dt:
-        A timezone-aware :class:`datetime.datetime` object.
-    """
-    # Check if input datetime is timezone aware and in UTC
+    # Ensure dt is timezone-aware and in UTC
     if dt.tzinfo is not self:
         dt = dt.replace(tzinfo=self)
-
+    
+    # Get UTC offset for the datetime
     utc_offset = self.utcoffset(dt)
     if utc_offset is None:
         return dt
-
-    # Convert to local time by adding UTC offset
-    dt = dt + utc_offset
-
-    # Check if datetime is ambiguous (in DST transition)
-    dst_offset = self.dst(dt)
+    
+    # Add the offset to get local time
+    local_dt = dt + utc_offset
+    
+    # Check if this time is ambiguous (falls in DST transition)
+    dst_offset = self.dst(local_dt)
     if dst_offset is None:
-        return dt
-
-    # Adjust for DST if needed
-    fold = 0
-    if self._isdst(dt - dst_offset) != self._isdst(dt):
-        # We're in a DST transition period
-        utc = dt - utc_offset
+        return local_dt
         
-        # Check if we're in the fold
-        fold = (
-            self._isdst(dt - dst_offset) and
-            not self._isdst(dt)
-        )
-
-    return dt.replace(fold=fold)
+    # If we're in DST transition period
+    standard_offset = self.utcoffset(local_dt - dst_offset)
+    if standard_offset is None:
+        return local_dt
+        
+    # Check if datetime is ambiguous
+    if standard_offset != utc_offset:
+        # Get both possible times
+        earlier = local_dt - dst_offset
+        later = local_dt
+        
+        # Return earlier time by default for ambiguous times
+        if earlier.replace(tzinfo=None) <= dt.replace(tzinfo=None):
+            return earlier
+        return later
+        
+    return local_dt

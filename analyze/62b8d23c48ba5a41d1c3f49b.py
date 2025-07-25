@@ -1,15 +1,15 @@
 def popitem(self):
     """
-    Remove and return the `(key, value)` pair most recently used.
+    सबसे हाल ही में उपयोग किए गए `(कुंजी, मान)` जोड़े को हटाएं और वापस करें।
     """
     if not self:
         raise KeyError('Dictionary is empty')
         
-    # Get the most recently used key from the end of the order list
-    key = self._order[-1]
+    # Get the most recently used key from the internal ordered dict
+    key = next(reversed(self))
     value = self[key]
     
     # Remove the key-value pair
     del self[key]
     
-    return key, value
+    return (key, value)

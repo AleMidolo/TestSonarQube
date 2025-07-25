@@ -1,48 +1,55 @@
 def absorb(self, args):
-    result = []
-    for arg in args:
-        # Check if arg is an AND or OR operation
-        if isinstance(arg, (And, Or)):
-            # Get operator and operands
-            op = type(arg)
-            terms = arg.args
-            
-            # Check each term for absorption
-            absorbed = False
-            for term in terms:
-                # Check for regular absorption
-                if term in args:
-                    if (op is And and any(isinstance(t, Or) and term in t.args for t in terms)) or \
-                       (op is Or and any(isinstance(t, And) and term in t.args for t in terms)):
-                        result.append(term)
-                        absorbed = True
-                        break
+    # Create copy of input list to avoid modifying original
+    result = args.copy()
+    
+    # Keep track if any changes were made in a pass
+    changed = True
+    while changed:
+        changed = False
+        
+        # Check each pair of expressions
+        for i in range(len(result)):
+            for j in range(len(result)):
+                if i == j:
+                    continue
+                    
+                # Get expressions to compare
+                expr1 = result[i]
+                expr2 = result[j]
                 
-                # Check for negative absorption
-                if isinstance(term, Not):
-                    neg_term = term.args[0]
-                    if neg_term in args:
-                        if op is And:
-                            # A & (~A | B) = A & B
-                            for t in terms:
-                                if isinstance(t, Or) and neg_term in t.args:
-                                    new_terms = [x for x in t.args if x != neg_term]
-                                    result.append(And(neg_term, *new_terms))
-                                    absorbed = True
-                                    break
-                        else:
-                            # A | (~A & B) = A | B
-                            for t in terms:
-                                if isinstance(t, And) and neg_term in t.args:
-                                    new_terms = [x for x in t.args if x != neg_term]
-                                    result.append(Or(neg_term, *new_terms))
-                                    absorbed = True
-                                    break
-            
-            # If no absorption occurred, keep original term
-            if not absorbed:
-                result.append(arg)
-        else:
-            result.append(arg)
-            
+                # Check absorption cases
+                # A & (A | B) = A
+                if isinstance(expr1, str) and isinstance(expr2, tuple):
+                    if expr2[1] == '|' and expr1 in expr2[0]:
+                        if expr1 not in result:
+                            result.append(expr1)
+                            changed = True
+                
+                # A | (A & B) = A            
+                if isinstance(expr1, str) and isinstance(expr2, tuple):
+                    if expr2[1] == '&' and expr1 in expr2[0]:
+                        if expr1 not in result:
+                            result.append(expr1)
+                            changed = True
+                            
+                # Negative absorption
+                # A & (~A | B) = A & B
+                if isinstance(expr1, str) and isinstance(expr2, tuple):
+                    if expr2[1] == '|' and f'~{expr1}' in expr2[0]:
+                        new_expr = (expr1, '&', expr2[0][1])
+                        if new_expr not in result:
+                            result.append(new_expr)
+                            changed = True
+                
+                # A | (~A & B) = A | B
+                if isinstance(expr1, str) and isinstance(expr2, tuple):
+                    if expr2[1] == '&' and f'~{expr1}' in expr2[0]:
+                        new_expr = (expr1, '|', expr2[0][1]) 
+                        if new_expr not in result:
+                            result.append(new_expr)
+                            changed = True
+                            
+        # Remove redundant expressions
+        result = list(set(result))
+                        
     return result

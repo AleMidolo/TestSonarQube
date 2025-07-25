@@ -1,33 +1,15 @@
 def protocol_handlers(cls, protocol_version=None):
-    """
-    Return a dictionary of available Bolt protocol handlers,
-    keyed by version tuple. If an explicit protocol version is
-    provided, the dictionary will contain either zero or one items,
-    depending on whether that version is supported. If no protocol
-    version is provided, all available versions will be returned.
-
-    :param protocol_version: tuple identifying a specific protocol
-        version (e.g. (3, 5)) or None
-    :return: dictionary of version tuple to handler class for all
-        relevant and supported protocol versions
-    :raise TypeError: if protocol version is not passed in a tuple
-    """
-    # Dictionary mapping protocol versions to their handler classes
-    handlers = {
-        (3, 0): BoltProtocolV3,
-        (4, 0): BoltProtocolV4,
-        (4, 1): BoltProtocolV4_1,
-        (4, 2): BoltProtocolV4_2,
-        (4, 3): BoltProtocolV4_3,
-        (4, 4): BoltProtocolV4_4,
-        (5, 0): BoltProtocolV5,
-        (5, 1): BoltProtocolV5_1
-    }
-
-    if protocol_version is None:
-        return handlers
-
-    if not isinstance(protocol_version, tuple):
+    # Check if protocol_version is a tuple when provided
+    if protocol_version is not None and not isinstance(protocol_version, tuple):
         raise TypeError("Protocol version must be specified as a tuple")
 
-    return {k: v for k, v in handlers.items() if k == protocol_version}
+    # Get all handlers registered with the class
+    handlers = {version: handler for version, handler in cls.__dict__.items() 
+               if isinstance(version, tuple)}
+
+    # If specific version requested, return only that handler if it exists
+    if protocol_version is not None:
+        return {protocol_version: handlers.get(protocol_version)} if protocol_version in handlers else {}
+
+    # Otherwise return all handlers
+    return handlers

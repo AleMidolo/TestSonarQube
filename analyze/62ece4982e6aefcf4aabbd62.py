@@ -1,6 +1,6 @@
 def _replace_url_args(url, url_args):
     """
-    Replace any custom string URL items with values in args
+    किसी भी कस्टम स्ट्रिंग URL आइटम को `args` में दिए गए मानों से बदलें।
     """
     if not url_args:
         return url

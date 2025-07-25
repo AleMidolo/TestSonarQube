@@ -1,36 +1,29 @@
 def data(self, *keys):
-    """
-    Return the keys and values of this record as a dictionary,
-    optionally including only certain values by index or key. Keys
-    provided in the items that are not in the record will be
-    inserted with a value of :const:`None`; indexes provided
-    that are out of bounds will trigger an :exc:`IndexError`.
-
-    :param keys: indexes or keys of the items to include; if none
-                  are provided, all values will be included
-    :return: dictionary of values, keyed by field name
-    :raises: :exc:`IndexError` if an out-of-bounds index is specified
-    """
+    # If no keys provided, return all data
     if not keys:
-        # If no keys specified, return all items
-        return dict(zip(self._keys, self._values))
-    
+        return dict(zip(self._fields, self))
+        
+    # Initialize result dictionary
     result = {}
+    
+    # Process each requested key
     for key in keys:
-        if isinstance(key, int):
-            # Handle index access
-            if key < 0:
-                key = len(self._keys) + key
-            if key >= len(self._keys) or key < 0:
-                raise IndexError(f"Index {key} is out of bounds")
-            result[self._keys[key]] = self._values[key]
-        else:
-            # Handle key access
-            try:
-                index = self._keys.index(key)
-                result[key] = self._values[index]
-            except ValueError:
-                # Key not found, set value to None
-                result[key] = None
-                
+        try:
+            # Handle numeric index
+            if isinstance(key, int):
+                if 0 <= key < len(self):
+                    result[self._fields[key]] = self[key]
+                else:
+                    raise IndexError(f"Index {key} is out of range")
+            # Handle string field name
+            else:
+                try:
+                    index = self._fields.index(key)
+                    result[key] = self[index]
+                except ValueError:
+                    result[key] = None
+                    
+        except IndexError:
+            raise IndexError(f"Index {key} is out of range")
+            
     return result

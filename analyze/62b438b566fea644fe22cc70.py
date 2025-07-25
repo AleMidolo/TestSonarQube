@@ -1,16 +1,13 @@
 def bash_completion():
-    """
-    Return a bash completion script for the borgmatic command. Produce this by introspecting
-    borgmatic's command-line argument parsers.
-    """
     return '''
+# Borgmatic bash completion script
 _borgmatic()
 {
     local cur prev words cword
     _init_completion || return
 
-    # List of all available borgmatic commands
-    local commands="init create prune check config validate generate-key list info export-tar extract mount umount"
+    # List of all available commands
+    local commands="init create prune check config list info mount umount extract export-tar restore"
     
     # Handle command completion
     if [ $cword -eq 1 ]; then
@@ -21,30 +18,21 @@ _borgmatic()
     # Handle options based on command
     case ${words[1]} in
         create)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --dry-run --monitoring-verbosity" -- "$cur") )
+            COMPREPLY=( $(compgen -W "--help --config --verbosity --list --stats --progress --dry-run" -- "$cur") )
             ;;
         prune)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --dry-run --monitoring-verbosity" -- "$cur") )
+            COMPREPLY=( $(compgen -W "--help --config --verbosity --list --stats --dry-run" -- "$cur") )
             ;;
         check)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --only --monitoring-verbosity" -- "$cur") )
-            ;;
-        list|info)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --archive" -- "$cur") )
+            COMPREPLY=( $(compgen -W "--help --config --verbosity --repository --archives --prefix" -- "$cur") )
             ;;
         mount)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json --archive --mount-point" -- "$cur") )
+            COMPREPLY=( $(compgen -W "--help --config --verbosity --archive --mount-point --foreground" -- "$cur") )
             ;;
         *)
-            COMPREPLY=( $(compgen -W "--config --verbosity --json" -- "$cur") )
+            COMPREPLY=( $(compgen -W "--help --config --verbosity" -- "$cur") )
             ;;
     esac
-
-    # Handle file completion for --config option
-    if [[ $prev == "--config" ]]; then
-        _filedir yaml
-        return 0
-    fi
 
     return 0
 }

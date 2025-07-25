@@ -1,9 +1,17 @@
 def match_pubdate(node, pubdate_xpaths):
     """
-    Returns the first match in the pubdate_xpaths list
+    `pubdate_xpaths` सूची में पहला मेलित मान (match) लौटाता है।
     """
     for xpath in pubdate_xpaths:
-        matches = node.xpath(xpath)
-        if matches:
-            return matches[0]
+        try:
+            # Try to find matching element using xpath
+            match = node.xpath(xpath)
+            if match:
+                # Return first matching value if found
+                return match[0]
+        except:
+            # Skip any xpath that causes errors
+            continue
+    
+    # Return None if no matches found
     return None

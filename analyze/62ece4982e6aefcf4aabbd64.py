@@ -1,10 +1,14 @@
 def strip_root(path, root):
-    """Remove root from path. If fails, throw exception
-    
-    Returns:
-        A path without root
+    """   
+    पथ से रूट को हटाएं, और यदि यह विफल होता है, तो अपवाद फेंकें।
     """
     if not path.startswith(root):
         raise ValueError(f"Path '{path}' does not start with root '{root}'")
         
-    return path[len(root):].lstrip('/')
+    stripped = path[len(root):]
+    
+    # Remove leading slash if present
+    if stripped.startswith('/') or stripped.startswith('\\'):
+        stripped = stripped[1:]
+        
+    return stripped

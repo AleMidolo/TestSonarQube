@@ -1,40 +1,48 @@
 def extend_cli(self, root_subparsers):
     """
-    Adds the spec cli options to to the main entry point.
-    
-    :param subparser: the subparser object to extend.
+    मुख्य एंट्री पॉइंट में स्पेक CLI विकल्प जोड़ता है।
+
+    :param subparser: वह सबपार्सर ऑब्जेक्ट जिसे विस्तारित करना है।
     """
-    # Create a subparser for spec commands
+    # Create spec subparser
     spec_parser = root_subparsers.add_parser(
         'spec',
-        help='Commands for working with specs'
+        help='Manage project specifications'
     )
     
-    # Create subparsers for the spec parser
-    spec_subparsers = spec_parser.add_subparsers(dest='spec_command')
-    
-    # Add create command
-    create_parser = spec_subparsers.add_parser(
-        'create',
-        help='Create a new spec file'
+    # Create subparsers for spec command
+    spec_subparsers = spec_parser.add_subparsers(
+        title='spec commands',
+        dest='spec_command'
     )
-    create_parser.add_argument(
-        'name',
-        help='Name of the spec to create'
+
+    # Add init command
+    init_parser = spec_subparsers.add_parser(
+        'init',
+        help='Initialize a new spec file'
     )
-    
-    # Add validate command
+    init_parser.add_argument(
+        '--template',
+        help='Template to use for spec file',
+        default='default'
+    )
+
+    # Add validate command  
     validate_parser = spec_subparsers.add_parser(
-        'validate', 
-        help='Validate an existing spec file'
+        'validate',
+        help='Validate spec file'
     )
     validate_parser.add_argument(
-        'path',
+        'spec_file',
         help='Path to spec file to validate'
     )
-    
-    # Add list command
-    list_parser = spec_subparsers.add_parser(
-        'list',
-        help='List available specs'
+
+    # Add update command
+    update_parser = spec_subparsers.add_parser(
+        'update',
+        help='Update spec file'
+    )
+    update_parser.add_argument(
+        'spec_file',
+        help='Path to spec file to update'
     )

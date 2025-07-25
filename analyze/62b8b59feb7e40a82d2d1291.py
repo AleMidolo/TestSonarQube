@@ -1,7 +1,7 @@
 def _getTargetClass(self):
     """
-    Define this to return the implementation in use,
-    without the 'Py' or 'Fallback' suffix.
+    इसका उपयोग उस कार्यान्वयन (implementation) को लौटाने के लिए करें,
+    जिसका उपयोग किया जा रहा है, बिना 'Py' या 'Fallback' प्रत्यय (suffix) के।
     """
     class_name = self.__class__.__name__
     if class_name.endswith('Py'):

@@ -1,7 +1,10 @@
 def is_none_string(val: any) -> bool:
     """
-    Check if a string represents a None value.
+    यह फ़ंक्शन जांचता है कि दी गई स्ट्रिंग None मान का प्रतिनिधित्व करती है या नहीं।
     """
     if isinstance(val, str):
-        return val.lower() in ('none', 'null', '')
+        # Convert string to lowercase and remove whitespace
+        val = val.lower().strip()
+        # Check if string represents None
+        return val in ['none', 'null', 'nil']
     return False

@@ -1,55 +1,42 @@
 def split(s, platform='this'):
-    """
-    Multi-platform variant of shlex.split() for command-line splitting.
-    For use with subprocess, for argv injection etc. Using fast REGEX.
-    
-    platform: 'this' = auto from current platform;
-              1 = POSIX;
-              0 = Windows/CMD
-              (other values reserved)
-    """
     import re
     import sys
     
+    # Determine platform
     if platform == 'this':
-        platform = 1 if sys.platform != 'win32' else 0
+        platform = 0 if sys.platform.startswith('win') else 1
+    
+    if platform == 1:  # POSIX style
+        # Match either:
+        # - Quoted string with escaped quotes allowed
+        # - Unquoted string with no whitespace
+        pattern = r'''(?:[^\s'"]*(?:'[^']*'|"[^"]*")[^\s'"]*)+|[^\s'"]+'''
         
-    if platform == 1:  # POSIX
-        # Match single or double quoted strings, or unquoted sequences
-        pattern = r'''(?:[^\s"']+|"[^"]*"|'[^']*')+'''
-        matches = re.findall(pattern, s)
-        # Remove surrounding quotes if present
-        return [m.strip('"\'') for m in matches]
-        
-    elif platform == 0:  # Windows/CMD
-        # Windows command line splitting rules:
-        # - Backslash is literal unless followed by quote
-        # - Quotes must be paired
-        # - Spaces outside quotes separate arguments
+        # Split and clean up quotes
+        parts = re.findall(pattern, s)
         result = []
-        current = []
-        in_quotes = False
-        i = 0
-        
-        while i < len(s):
-            if s[i] == '"':
-                if in_quotes and i + 1 < len(s) and s[i + 1] == '"':
-                    current.append('"')
-                    i += 1
-                else:
-                    in_quotes = not in_quotes
-            elif s[i] == ' ' and not in_quotes:
-                if current:
-                    result.append(''.join(current))
-                    current = []
-            else:
-                current.append(s[i])
-            i += 1
+        for part in parts:
+            # Remove outer quotes if present
+            if (part.startswith('"') and part.endswith('"')) or \
+               (part.startswith("'") and part.endswith("'")):
+                part = part[1:-1]
+            # Unescape inner quotes
+            part = part.replace('\\"', '"').replace("\\'", "'")
+            result.append(part)
             
-        if current:
-            result.append(''.join(current))
-            
-        return result
+    else:  # Windows/CMD style
+        # Match either:
+        # - Quoted string (no escaped quotes in Windows)
+        # - Unquoted string with no whitespace
+        pattern = r'"[^"]*"|[^\s"]+'
         
-    else:
-        raise ValueError("Unsupported platform value")
+        # Split and clean up quotes
+        parts = re.findall(pattern, s)
+        result = []
+        for part in parts:
+            # Remove outer quotes if present
+            if part.startswith('"') and part.endswith('"'):
+                part = part[1:-1]
+            result.append(part)
+            
+    return result

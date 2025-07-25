@@ -1,64 +1,60 @@
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    Retrieve a and parse a remote Diaspora webfinger document.
+    डायस्पोरा वेबफिंगर डॉक्यूमेंट को प्राप्त करें और पार्स करें।
 
-    :arg handle: Remote handle to retrieve
-    :returns: dict
+    :पैरामीटर हैंडल: प्राप्त करने के लिए रिमोट हैंडल  
+    :वापसी: डिक्शनरी (dict)
     """
     import requests
-    import xml.etree.ElementTree as ET
+    import json
     from urllib.parse import urlparse
 
-    # Split handle into user and host
+    # Handle validation
     if '@' not in handle:
-        raise ValueError("Handle must contain @")
-    
-    user, host = handle.split('@', 1)
+        raise ValueError("Invalid handle format - must contain @")
+
+    # Split handle into user and domain
+    username, domain = handle.split('@', 1)
     
     # Construct webfinger URL
-    webfinger_url = f"https://{host}/.well-known/webfinger?resource=acct:{handle}"
-    
+    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
+
     try:
-        # Get the webfinger document
+        # Make HTTP request
         response = requests.get(webfinger_url)
         response.raise_for_status()
         
-        # Parse the JSON response
+        # Parse JSON response
         data = response.json()
         
         # Extract relevant information
         result = {
             'handle': handle,
-            'host': host,
-            'guid': None,
-            'profile_url': None,
-            'atom_url': None,
-            'salmon_url': None,
-            'pubkey': None
+            'domain': domain,
+            'username': username,
+            'links': {}
         }
         
         # Parse links
-        for link in data.get('links', []):
-            rel = link.get('rel', '')
-            href = link.get('href', '')
+        if 'links' in data:
+            for link in data['links']:
+                if 'rel' in link:
+                    result['links'][link['rel']] = {
+                        'href': link.get('href', ''),
+                        'type': link.get('type', '')
+                    }
+                    
+        # Add additional properties if present
+        if 'subject' in data:
+            result['subject'] = data['subject']
+        if 'aliases' in data:
+            result['aliases'] = data['aliases']
             
-            if rel == 'http://microformats.org/profile/hcard':
-                result['profile_url'] = href
-            elif rel == 'http://schemas.google.com/g/2010#updates-from':
-                result['atom_url'] = href
-            elif rel == 'salmon':
-                result['salmon_url'] = href
-                
-        # Get additional properties
-        for prop in data.get('properties', {}):
-            if prop == 'http://joindiaspora.com/guid':
-                result['guid'] = data['properties'][prop]
-            elif prop == 'http://joindiaspora.com/seed_location':
-                result['seed_location'] = data['properties'][prop]
-                
         return result
-        
+
     except requests.exceptions.RequestException as e:
         raise ConnectionError(f"Failed to retrieve webfinger document: {str(e)}")
-    except (ValueError, KeyError) as e:
-        raise ValueError(f"Failed to parse webfinger document: {str(e)}")
+    except json.JSONDecodeError:
+        raise ValueError("Invalid webfinger document format")
+    except Exception as e:
+        raise Exception(f"Error processing webfinger document: {str(e)}")

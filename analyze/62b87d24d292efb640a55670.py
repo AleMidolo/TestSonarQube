@@ -1,6 +1,6 @@
 def get_versions():
     """
-    Get version information or return default if unable to do so.
+    संस्करण जानकारी प्राप्त करें या यदि ऐसा करने में असमर्थ हैं तो डिफ़ॉल्ट मान लौटाएं।
     """
     try:
         import pkg_resources
@@ -10,15 +10,17 @@ def get_versions():
         versions = {
             'python': sys.version.split()[0],
             'platform': platform.platform(),
-            'pkg_resources': pkg_resources.__version__
+            'packages': {
+                dist.key: dist.version
+                for dist in pkg_resources.working_set
+            }
         }
-        
         return versions
         
     except Exception:
-        # Return default version info if unable to get actual versions
+        # Return default values if unable to get version info
         return {
             'python': 'unknown',
             'platform': 'unknown',
-            'pkg_resources': 'unknown'
+            'packages': {}
         }

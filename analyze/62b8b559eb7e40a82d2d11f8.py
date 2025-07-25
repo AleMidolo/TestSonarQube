@@ -1,29 +1,28 @@
 def minimalBases(classes):
     """
-    Reduce a list of base classes to its ordered minimum equivalent
+    आधार कक्षाओं (base classes) की सूची को उसके क्रमबद्ध न्यूनतम समकक्ष (ordered minimum equivalent) में घटाएं।
     """
     if not classes:
         return []
         
-    # Create result list starting with first class
-    result = [classes[0]]
-    
-    # Check each subsequent class
-    for c in classes[1:]:
-        # Check if class is already covered by a superclass
-        redundant = False
-        for r in result:
-            if issubclass(r, c):
-                redundant = True
-                break
-            # Replace any classes that this class covers
-            elif issubclass(c, r):
-                result[result.index(r)] = c
-                redundant = True
-                break
-                
-        # Add non-redundant classes
-        if not redundant:
-            result.append(c)
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_classes = []
+    for cls in classes:
+        if cls not in seen:
+            seen.add(cls)
+            unique_classes.append(cls)
             
-    return result
+    # Remove redundant base classes
+    minimal = []
+    for i, cls in enumerate(unique_classes):
+        is_redundant = False
+        for j in range(i + 1, len(unique_classes)):
+            # Check if cls is a base class of any later class
+            if issubclass(unique_classes[j], cls):
+                is_redundant = True
+                break
+        if not is_redundant:
+            minimal.append(cls)
+            
+    return minimal

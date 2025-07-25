@@ -1,18 +1,20 @@
 def _get_seq_with_type(seq, bufsize=None):
     """
-    Return a (sequence, type) pair.
-    Sequence is derived from *seq*
-    (or is *seq*, if that is of a sequence type).
+    (sequence, type) जोड़ी लौटाता है।
+    Sequence *seq* से प्राप्त किया जाता है
+    (या *seq* ही होता है, यदि वह sequence प्रकार का है)।
     """
-    # Check if seq is already a sequence type
     if isinstance(seq, (list, tuple, range)):
         return seq, type(seq)
-    
-    # Convert to list if not a sequence
-    if hasattr(seq, '__iter__'):
-        # Convert iterator to list
-        seq_list = list(seq)
-        return seq_list, list
-    
-    # If not iterable, wrap in list
-    return [seq], list
+    elif isinstance(seq, str):
+        return list(seq), list
+    elif hasattr(seq, '__iter__'):
+        # Convert other iterables to list
+        if bufsize is None:
+            return list(seq), list
+        else:
+            # Use bufsize if specified
+            return list(itertools.islice(seq, bufsize)), list
+    else:
+        # If not iterable, wrap in list
+        return [seq], list

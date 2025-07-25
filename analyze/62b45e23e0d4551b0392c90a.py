@@ -1,47 +1,32 @@
 def validate_version_inventories(self, version_dirs):
     """
-    Each version SHOULD have an inventory up to that point.
+    प्रत्येक संस्करण के पास उस बिंदु तक एक इन्वेंटरी होनी चाहिए।
 
-    Also keep a record of any content digests different from those in the root inventory
-    so that we can also check them when validating the content.
+    साथ ही, किसी भी सामग्री डाइजेस्ट का रिकॉर्ड रखें जो रूट इन्वेंटरी में मौजूद डाइजेस्ट से अलग हो,
+    ताकि सामग्री को सत्यापित करते समय हम उन्हें भी जांच सकें।
 
-    version_dirs is an array of version directory names and is assumed to be in
-    version sequence (1, 2, 3...).
+    version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
     """
-    # Keep track of digests that differ from root inventory
-    different_digests = set()
+    # Track all unique content digests seen
+    all_digests = set()
     
-    # Get root inventory for comparison
-    root_inventory = self.get_inventory()
-    if not root_inventory:
-        raise ValueError("No root inventory found")
-        
-    # Check each version directory
+    # Get root inventory digests
+    root_inventory = self.get_root_inventory()
+    root_digests = set(root_inventory.get_all_digests())
+    
+    # Validate each version has inventory
     for version in version_dirs:
-        version_inventory = self.get_inventory(version)
+        inventory_path = os.path.join(version, 'inventory.json')
+        if not os.path.exists(inventory_path):
+            raise ValidationError(f"Missing inventory file for version {version}")
+            
+        # Load inventory and get digests
+        with open(inventory_path) as f:
+            inventory = json.load(f)
+            version_digests = set(inventory.get_all_digests())
+            
+        # Add any new digests not in root inventory
+        diff_digests = version_digests - root_digests
+        all_digests.update(diff_digests)
         
-        if not version_inventory:
-            raise ValueError(f"Missing inventory for version {version}")
-            
-        # Compare digests with root inventory
-        for file_path, digest in version_inventory.items():
-            if file_path in root_inventory:
-                if digest != root_inventory[file_path]:
-                    different_digests.add((file_path, digest))
-            else:
-                # New file not in root inventory
-                different_digests.add((file_path, digest))
-                
-        # Validate that inventory contains all files up to this version
-        expected_files = set()
-        for v in version_dirs[:version_dirs.index(version) + 1]:
-            version_files = self.get_version_files(v)
-            expected_files.update(version_files)
-            
-        inventory_files = set(version_inventory.keys())
-        missing_files = expected_files - inventory_files
-        
-        if missing_files:
-            raise ValueError(f"Version {version} inventory missing files: {missing_files}")
-            
-    return different_digests
+    return all_digests

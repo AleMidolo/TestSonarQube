@@ -1,28 +1,24 @@
 def parse_arguments(*unparsed_arguments):
-    """
-    Given command-line arguments with which this script was invoked, parse the arguments and return
-    them as a dict mapping from subparser name (or "global") to an argparse.Namespace instance.
-    """
     import argparse
-
+    
     # Create main parser
     parser = argparse.ArgumentParser(description='Command line argument parser')
     
-    # Add global arguments that apply to all subcommands
-    parser.add_argument('--verbose', action='store_true', help='Enable verbose output')
-    parser.add_argument('--config', type=str, help='Path to config file')
-    
-    # Create subparsers
+    # Create subparsers object
     subparsers = parser.add_subparsers(dest='command')
     
-    # Add subparser for 'run' command
-    run_parser = subparsers.add_parser('run', help='Run the application')
-    run_parser.add_argument('--input', type=str, required=True, help='Input file path')
-    run_parser.add_argument('--output', type=str, required=True, help='Output file path')
+    # Add global arguments to main parser
+    parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose output')
+    parser.add_argument('--config', '-c', help='Path to config file')
     
-    # Add subparser for 'init' command  
-    init_parser = subparsers.add_parser('init', help='Initialize configuration')
-    init_parser.add_argument('--force', action='store_true', help='Force initialization')
+    # Create subparser for 'run' command
+    run_parser = subparsers.add_parser('run', help='Run the application')
+    run_parser.add_argument('--input', '-i', required=True, help='Input file path')
+    run_parser.add_argument('--output', '-o', required=True, help='Output file path')
+    
+    # Create subparser for 'test' command  
+    test_parser = subparsers.add_parser('test', help='Run tests')
+    test_parser.add_argument('--test-dir', '-t', help='Test directory path')
     
     # Parse arguments
     args = parser.parse_args(unparsed_arguments if unparsed_arguments else None)
@@ -30,17 +26,11 @@ def parse_arguments(*unparsed_arguments):
     # Create dict to store parsed arguments
     parsed_args = {}
     
-    # Store global arguments
-    parsed_args['global'] = argparse.Namespace(
-        verbose=args.verbose,
-        config=args.config
-    )
-    
-    # Store command-specific arguments if a command was specified
     if args.command:
-        command_args = vars(args).copy()
-        del command_args['verbose']
-        del command_args['config']
-        parsed_args[args.command] = argparse.Namespace(**command_args)
-    
+        # Store command-specific arguments
+        parsed_args[args.command] = args
+    else:
+        # Store global arguments
+        parsed_args['global'] = args
+        
     return parsed_args

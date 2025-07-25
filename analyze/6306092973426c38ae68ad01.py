@@ -1,10 +1,13 @@
 def get_deprecated_args(self):
     """
-    Returning dict with options which deprecate others.
+    अन्य विकल्पों को अप्रचलित करने वाले विकल्पों के साथ डिक्शनरी लौटाना
     """
-    deprecated_args = {}
-    for option in self.options:
-        if hasattr(option, 'deprecated_options'):
-            for deprecated in option.deprecated_options:
-                deprecated_args[deprecated] = option.name
+    # Dictionary mapping deprecated argument names to their replacements
+    deprecated_args = {
+        'old_arg1': 'new_arg1',
+        'old_arg2': 'new_arg2', 
+        'deprecated_option': 'current_option',
+        'legacy_param': 'modern_param'
+    }
+    
     return deprecated_args

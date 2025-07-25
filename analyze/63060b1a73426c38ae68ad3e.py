@@ -1,37 +1,34 @@
 def get_plugin_spec_flatten_dict(plugin_dir):
     """
-    Creates a flat dict from the plugin spec
+    प्लगइन स्पेसिफिकेशन से एक फ्लैट डिक्शनरी बनाता है।
 
-    :param plugin_dir: A path to the plugin's dir
-    :return: A flatten dictionary contains the plugin's properties
+    :param plugin_dir: प्लगइन की डायरेक्टरी का पथ 
+    :return: एक फ्लैट डिक्शनरी जो प्लगइन की प्रॉपर्टीज़ को समाहित करती है
     """
     flattened_dict = {}
     
     try:
-        # Read and parse plugin spec file
-        spec_file = os.path.join(plugin_dir, 'plugin.spec')
-        if not os.path.exists(spec_file):
-            return flattened_dict
+        # Read and parse plugin specification file
+        spec_file = os.path.join(plugin_dir, 'plugin.json')
+        with open(spec_file, 'r', encoding='utf-8') as f:
+            spec = json.load(f)
             
-        with open(spec_file) as f:
-            spec_data = yaml.safe_load(f)
-            
-        def flatten_dict(d, parent_key=''):
-            items = []
+        def flatten(d, parent_key=''):
             for k, v in d.items():
                 new_key = f"{parent_key}.{k}" if parent_key else k
                 
                 if isinstance(v, dict):
-                    items.extend(flatten_dict(v, new_key).items())
+                    flatten(v, new_key)
                 else:
-                    items.append((new_key, v))
-            return dict(items)
-            
-        # Flatten the nested dictionary
-        if isinstance(spec_data, dict):
-            flattened_dict = flatten_dict(spec_data)
-            
-    except (yaml.YAMLError, IOError):
-        pass
+                    flattened_dict[new_key] = v
+                    
+        flatten(spec)
+        
+    except FileNotFoundError:
+        print(f"Plugin specification file not found in {plugin_dir}")
+    except json.JSONDecodeError:
+        print(f"Invalid JSON format in plugin specification file")
+    except Exception as e:
+        print(f"Error processing plugin specification: {str(e)}")
         
     return flattened_dict

@@ -1,33 +1,35 @@
 def _update_context(self, context):
-    # Map field names to error names (x, y, z)
-    error_name_map = {
-        'E': 'x',
-        't': 'y',
-        'phi': 'z'
-    }
-    
-    # Get all field names from the graph
-    field_names = [f for f in self.fields]
+    # Get all field names in the graph
+    field_names = self.get_field_names()
     
     # Initialize error context if not present
     if not hasattr(context, 'error'):
         context.error = {}
-        
-    # Look for error fields (those containing "error" in name)
+
+    # Map coordinate names to x,y,z
+    coord_names = ['x', 'y', 'z']
+    
+    # Look for error fields and update context
     for field in field_names:
+        # Check if field name contains 'error'
         if 'error' in field.lower():
-            # Parse the error field name to get base field and bound
-            parts = field.split('_')
-            base_field = parts[1]  # E from error_E_low
-            bound = parts[-1]      # low from error_E_low
+            # Extract base name before '_error'
+            base = field.split('_error')[0].lower()
             
-            # Map the base field to x/y/z if possible
-            error_name = error_name_map.get(base_field, base_field)
+            # Map to x,y,z if possible
+            for i, coord in enumerate(coord_names):
+                if base == coord:
+                    base = coord
+                    break
+                    
+            # Get index of error field
+            idx = field_names.index(field)
             
-            # Create the error subcontext structure
-            error_key = f"{error_name}_{bound}"
-            if error_key not in context.error:
-                context.error[error_key] = {}
-                
-            # Store the index of this error field
-            context.error[error_key]['index'] = field_names.index(field)
+            # Add to context.error
+            if base not in context.error:
+                context.error[base] = {}
+            context.error[base]['index'] = idx
+
+    # Preserve existing values in context.value
+    if hasattr(context, 'value'):
+        pass

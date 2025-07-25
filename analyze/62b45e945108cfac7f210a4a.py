@@ -1,60 +1,46 @@
 def validate_hierarchy(self, validate_objects=True, check_digests=True, show_warnings=False):
     """
-    Validate storage root hierarchy.
+    स्टोरेज रूट हाइरार्की को मान्य करें।
 
-    Returns:
-        num_objects - number of objects checked
-        good_objects - number of objects checked that were found to be valid
+    रिटर्न करता है:
+        num_objects - जांचे गए ऑब्जेक्ट्स की संख्या
+        good_objects - जांचे गए ऑब्जेक्ट्स की संख्या जो मान्य पाए गए
     """
     num_objects = 0
     good_objects = 0
-
-    # Walk through all directories recursively
-    for root, dirs, files in os.walk(self.root_path):
+    
+    # Recursively walk through all directories
+    for root, dirs, files in self.walk():
         for file in files:
             num_objects += 1
-            file_path = os.path.join(root, file)
             
-            is_valid = True
+            # Get full path
+            filepath = os.path.join(root, file)
             
-            # Validate file exists
-            if not os.path.exists(file_path):
-                if show_warnings:
-                    print(f"Warning: File {file_path} does not exist")
-                is_valid = False
-                continue
-                
-            if validate_objects:
-                # Validate file can be opened and read
-                try:
-                    with open(file_path, 'rb') as f:
-                        content = f.read()
-                except:
-                    if show_warnings:
-                        print(f"Warning: Could not read file {file_path}")
-                    is_valid = False
-                    continue
-                    
+            try:
+                # Validate object if requested
+                if validate_objects:
+                    obj = self.get_object(filepath)
+                    if obj is None:
+                        if show_warnings:
+                            print(f"Warning: Could not load object at {filepath}")
+                        continue
+                        
+                # Check digest if requested        
                 if check_digests:
-                    # Validate checksum if digest file exists
-                    digest_path = file_path + '.digest'
-                    if os.path.exists(digest_path):
-                        try:
-                            with open(digest_path, 'r') as f:
-                                stored_digest = f.read().strip()
-                            calculated_digest = hashlib.sha256(content).hexdigest()
-                            if stored_digest != calculated_digest:
-                                if show_warnings:
-                                    print(f"Warning: Digest mismatch for {file_path}")
-                                is_valid = False
-                                continue
-                        except:
-                            if show_warnings:
-                                print(f"Warning: Could not validate digest for {file_path}")
-                            is_valid = False
-                            continue
-            
-            if is_valid:
+                    stored_digest = self.get_digest(filepath)
+                    computed_digest = self.compute_digest(filepath)
+                    
+                    if stored_digest != computed_digest:
+                        if show_warnings:
+                            print(f"Warning: Digest mismatch for {filepath}")
+                        continue
+                
                 good_objects += 1
+                
+            except Exception as e:
+                if show_warnings:
+                    print(f"Warning: Error validating {filepath}: {str(e)}")
+                continue
                 
     return num_objects, good_objects

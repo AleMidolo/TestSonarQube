@@ -1,36 +1,21 @@
 def _get_conditionally_required_args(self, command_name, options_spec, args):
-    """
-    List arguments with ``required_when`` condition matched.
-
-    :param command_name: the command name.
-    :param options_spec:  the list of command spec options.
-    :param args: the received input arguments
-    :return: list, list of argument names with matched ``required_when``
-        condition
-    """
-    required_args = []
+    conditionally_required = []
     
     for option in options_spec:
-        # Skip if option doesn't have required_when condition
-        if 'required_when' not in option:
-            continue
+        # Check if option has required_when condition
+        if 'required_when' in option:
+            required_when = option['required_when']
             
-        condition = option['required_when']
-        
-        # Evaluate the required_when condition
-        try:
-            # Create context with args for condition evaluation
-            context = {k: v for k, v in args.items()}
+            # Get the dependent argument and expected value
+            dependent_arg = required_when.get('arg')
+            expected_value = required_when.get('value')
             
-            # If condition evaluates to True, add argument name to required list
-            if eval(condition, {"__builtins__": {}}, context):
-                required_args.append(option['name'])
+            # Check if dependent argument exists in provided args
+            if dependent_arg in args:
+                actual_value = args[dependent_arg]
                 
-        except Exception as e:
-            # Log error if condition evaluation fails
-            self.logger.error(
-                f"Failed to evaluate required_when condition '{condition}' "
-                f"for argument '{option.get('name')}' in command '{command_name}': {str(e)}"
-            )
-            
-    return required_args
+                # If actual value matches expected value, this option becomes required
+                if actual_value == expected_value:
+                    conditionally_required.append(option['name'])
+                    
+    return conditionally_required

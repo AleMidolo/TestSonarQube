@@ -1,36 +1,32 @@
 def send_document(url, data, timeout=10, method="post", *args, **kwargs):
-    """
-    Helper method to send a document via POST.
-
-    Additional ``*args`` and ``**kwargs`` will be passed on to ``requests.post``.
-
-    :arg url: Full url to send to, including protocol
-    :arg data: Dictionary (will be form-encoded), bytes, or file-like object to send in the body
-    :arg timeout: Seconds to wait for response (defaults to 10)
-    :arg method: Method to use, defaults to post
-    :returns: Tuple of status code (int or None) and error (exception class instance or None)
-    """
     import requests
-    
+    from requests.exceptions import RequestException
+
     try:
-        # Get the appropriate request method
-        request_method = getattr(requests, method.lower())
+        # Convert method to lowercase
+        method = method.lower()
         
-        # Make the request
-        response = request_method(
-            url,
-            data=data,
-            timeout=timeout,
-            *args,
-            **kwargs
-        )
+        # Select HTTP method
+        if method == "post":
+            response = requests.post(url, data=data, timeout=timeout, *args, **kwargs)
+        elif method == "put":
+            response = requests.put(url, data=data, timeout=timeout, *args, **kwargs)
+        elif method == "patch":
+            response = requests.patch(url, data=data, timeout=timeout, *args, **kwargs)
+        else:
+            raise ValueError(f"Unsupported HTTP method: {method}")
+
+        # Force raise for bad status codes
+        response.raise_for_status()
         
-        # Return status code and None for error
         return response.status_code, None
-        
-    except requests.exceptions.RequestException as e:
-        # Return None for status code and the exception
+
+    except RequestException as e:
+        # Handle requests library exceptions
+        if hasattr(e.response, 'status_code'):
+            return e.response.status_code, e
         return None, e
+        
     except Exception as e:
-        # Handle any other unexpected errors
+        # Handle any other exceptions
         return None, e

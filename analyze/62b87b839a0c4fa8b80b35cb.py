@@ -1,12 +1,9 @@
 def _get_err_indices(self, coord_name):
     """
-    Get error indices corresponding to a coordinate.
+    एक समन्वय (coordinate) से संबंधित त्रुटि सूचकांक (error indices) प्राप्त करें।
     """
-    if coord_name == 'x':
-        return [0, 3, 4]
-    elif coord_name == 'y': 
-        return [1, 3, 5]
-    elif coord_name == 'z':
-        return [2, 4, 5]
+    # Get error indices for the given coordinate
+    if coord_name in self.error_indices:
+        return self.error_indices[coord_name]
     else:
-        raise ValueError(f"Invalid coordinate name: {coord_name}")
+        return []  # Return empty list if no errors found for coordinate

@@ -1,22 +1,11 @@
 def status_str(self, prefix=''):
     """
-    Return string representation of validation log, with optional prefix.
+    सत्यापन लॉग (validation log) का स्ट्रिंग प्रतिनिधित्व लौटाएं, वैकल्पिक प्रीफिक्स के साथ।
     """
-    output = []
+    result = []
     for entry in self.log:
-        if entry.status == 'pass':
-            status = '���'
-        elif entry.status == 'fail': 
-            status = '���'
-        elif entry.status == 'warn':
-            status = '!'
+        if isinstance(entry, str):
+            result.append(prefix + entry)
         else:
-            status = '?'
-            
-        msg = f"{prefix}{status} {entry.message}"
-        if entry.details:
-            msg += f" ({entry.details})"
-            
-        output.append(msg)
-        
-    return '\n'.join(output)
+            result.append(prefix + str(entry))
+    return '\n'.join(result)

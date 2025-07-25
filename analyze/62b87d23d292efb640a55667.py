@@ -1,22 +1,11 @@
-def register_vcs_handler(vcs, method):  # decorator
-    """Create decorator to mark a method as the handler of a VCS.
-
-    Args:
-        vcs: The version control system name
-        method: The method name to handle
-
-    Returns:
-        A decorator function that registers the handler
+def register_vcs_handler(vcs, method):  # डेकोरेटर
+    """
+    एक डेकोरेटर बनाएं जो किसी विधि को VCS के हैंडलर के रूप में चिह्नित करे।
     """
     def decorate(f):
-        # Store the handler function in the registry
-        if not hasattr(decorate, '_registry'):
-            decorate._registry = {}
-            
-        if vcs not in decorate._registry:
-            decorate._registry[vcs] = {}
-            
-        decorate._registry[vcs][method] = f
+        # हैंडलर को रजिस्टर करें
+        if not hasattr(f, '_vcs_handlers'):
+            f._vcs_handlers = {}
+        f._vcs_handlers[vcs] = method
         return f
-        
     return decorate

@@ -1,22 +1,22 @@
 def parse_arguments(*arguments):
-    """
-    Given command-line arguments with which this script was invoked, parse the arguments and return
-    them as an ArgumentParser instance.
-    """
     import argparse
     
-    parser = argparse.ArgumentParser(description='Parse command line arguments')
+    # Create ArgumentParser instance
+    parser = argparse.ArgumentParser(description='Command line argument parser')
     
-    # Add arguments
-    parser.add_argument('--input', '-i', type=str, help='Input file path')
-    parser.add_argument('--output', '-o', type=str, help='Output file path')
-    parser.add_argument('--verbose', '-v', action='store_true', help='Increase output verbosity')
-    parser.add_argument('--version', action='version', version='%(prog)s 1.0')
-    
+    # Add arguments to parser
+    for arg in arguments:
+        if isinstance(arg, str):
+            parser.add_argument(arg)
+        elif isinstance(arg, tuple):
+            # Handle tuple arguments with name and help text
+            if len(arg) == 2:
+                parser.add_argument(arg[0], help=arg[1])
+            # Handle tuple arguments with name, type and help text  
+            elif len(arg) == 3:
+                parser.add_argument(arg[0], type=arg[1], help=arg[2])
+                
     # Parse arguments
-    if len(arguments) > 0:
-        args = parser.parse_args(arguments)
-    else:
-        args = parser.parse_args()
-        
+    args = parser.parse_args()
+    
     return args

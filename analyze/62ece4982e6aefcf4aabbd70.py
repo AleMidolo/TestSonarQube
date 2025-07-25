@@ -1,9 +1,9 @@
 def os_is_mac():
     """
-    Checks if the os is macOS
+    जाँच करता है कि ऑपरेटिंग सिस्टम macOS है या नहीं।
 
-    :return: True is macOS
+    :return: यदि macOS है तो True
     :rtype: bool
     """
     import platform
-    return platform.system() == 'Darwin'
+    return platform.system().lower() == 'darwin'

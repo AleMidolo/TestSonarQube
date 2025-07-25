@@ -1,37 +1,35 @@
 def validate_from_file(cls, yaml_file=None):
     """
-    Loads & validates that a YAML file has all required fields
+    एक YAML फ़ाइल को लोड और सत्यापित करता है कि उसमें सभी आवश्यक फ़ील्ड्स मौजूद हैं।
 
-    :param yaml_file: Path to YAML file 
-    :raise IRValidatorException: when mandatory data is missing in file
-    :return: Dictionary with data loaded from a YAML file
+    :param yaml_file: YAML फ़ाइल का पथ
+    :raise IRValidatorException: जब फ़ाइल में अनिवार्य डेटा गायब हो 
+    :return: YAML फ़ाइल से लोड किए गए डेटा के साथ एक डिक्शनरी
     """
-    import yaml
-    import os.path
-
-    if yaml_file is None or not os.path.isfile(yaml_file):
-        raise IRValidatorException(f"YAML file not found: {yaml_file}")
-
     try:
-        with open(yaml_file, 'r') as f:
-            yaml_data = yaml.safe_load(f)
+        import yaml
+        
+        if yaml_file is None:
+            raise IRValidatorException("YAML फ़ाइल का पथ प्रदान नहीं किया गया")
             
-        if not isinstance(yaml_data, dict):
-            raise IRValidatorException("YAML file must contain a dictionary/mapping")
+        with open(yaml_file, 'r', encoding='utf-8') as f:
+            data = yaml.safe_load(f)
             
-        # Validate required fields exist
-        required_fields = ['name', 'description', 'version']
-        missing_fields = [field for field in required_fields if field not in yaml_data]
+        if not isinstance(data, dict):
+            raise IRValidatorException("YAML फ़ाइल एक वैध डिक्शनरी नहीं है")
+            
+        required_fields = ['name', 'version', 'description']  # आवश्यक फ़ील्ड्स की सूची
+        
+        missing_fields = [field for field in required_fields if field not in data]
         
         if missing_fields:
-            raise IRValidatorException(f"Missing required fields in YAML: {', '.join(missing_fields)}")
+            raise IRValidatorException(f"निम्नलिखित आवश्यक फ़ील्ड्स गायब हैं: {', '.join(missing_fields)}")
             
-        return yaml_data
+        return data
         
     except yaml.YAMLError as e:
-        raise IRValidatorException(f"Error parsing YAML file: {str(e)}")
+        raise IRValidatorException(f"YAML फ़ाइल पार्स करने में त्रुटि: {str(e)}")
+    except FileNotFoundError:
+        raise IRValidatorException(f"फ़ाइल नहीं मिली: {yaml_file}")
     except Exception as e:
-        raise IRValidatorException(f"Error validating YAML file: {str(e)}")
-
-class IRValidatorException(Exception):
-    pass
+        raise IRValidatorException(f"अप्रत्याशित त्रुटि: {str(e)}")

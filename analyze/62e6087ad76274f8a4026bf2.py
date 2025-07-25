@@ -1,38 +1,41 @@
 def discard(self, n=-1, qid=-1, dehydration_hooks=None, 
             hydration_hooks=None, **handlers):
     """
-    Appends a DISCARD message to the output queue.
+    आउटपुट कतार (output queue) में एक DISCARD संदेश जोड़ता है।
 
-    :param n: number of records to discard, default = -1 (ALL)
-    :param qid: query ID to discard for, default = -1 (last query) 
+    :param n: डिस्कार्ड करने के लिए रिकॉर्ड्स की संख्या, डिफ़ॉल्ट = -1 (सभी)
+    :param qid: उस क्वेरी ID के लिए डिस्कार्ड करना है, डिफ़ॉल्ट = -1 (अंतिम क्वेरी)
     :param dehydration_hooks:
-        Hooks to dehydrate types (dict from type (class) to dehydration
-        function). Dehydration functions receive the value and returns an
-        object of type understood by packstream.
+        प्रकारों को डीहाइड्रेट (dehydrate) करने के लिए हुक्स (hooks) 
+        (क्लास से डीहाइड्रेशन फ़ंक्शन तक का डिक्शनरी)। 
+        डीहाइड्रेशन फ़ंक्शन वैल्यू प्राप्त करता है और 
+        पैकस्ट्रीम (packstream) द्वारा समझे जाने वाले प्रकार की 
+        ऑब्जेक्ट को लौटाता है।
     :param hydration_hooks:
-        Hooks to hydrate types (mapping from type (class) to
-        dehydration function). Dehydration functions receive the value of
-        type understood by packstream and are free to return anything.
-    :param handlers: handler functions passed into the returned Response object
+        प्रकारों को हाइड्रेट (hydrate) करने के लिए हुक्स 
+        (क्लास से हाइड्रेशन फ़ंक्शन तक का मैपिंग)। 
+        हाइड्रेशन फ़ंक्शन पैकस्ट्रीम द्वारा समझे जाने वाले प्रकार 
+        की वैल्यू प्राप्त करता है और कुछ भी लौटाने के लिए स्वतंत्र है।
+    :param handlers: हैंडलर फ़ंक्शन जो लौटाए गए Response ऑब्जेक्ट में पास किए जाते हैं।
     """
-    if dehydration_hooks is None:
-        dehydration_hooks = {}
-    if hydration_hooks is None:
-        hydration_hooks = {}
-
-    # Create DISCARD message
-    message = {
-        "type": "DISCARD",
+    # Create message parameters
+    parameters = {
         "n": n,
-        "qid": qid
+        "qid": qid if qid >= 0 else self._last_qid
     }
-
-    # Add message to output queue
-    self._append_message(message)
-
-    # Create and return Response object with handlers
-    return Response(
-        hydration_hooks=hydration_hooks,
-        dehydration_hooks=dehydration_hooks,
+    
+    # Create message with DISCARD type
+    message = Message("DISCARD", parameters)
+    
+    # Create response object with hooks and handlers
+    response = Response(
+        message,
+        dehydration_hooks or {},
+        hydration_hooks or {},
         **handlers
     )
+    
+    # Add response to output queue
+    self._responses.append(response)
+    
+    return response

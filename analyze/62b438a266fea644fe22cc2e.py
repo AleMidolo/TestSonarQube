@@ -1,49 +1,36 @@
 def parse_arguments(*unparsed_arguments):
-    """
-    Given command-line arguments with which this script was invoked, parse the arguments and return
-    them as a dict mapping from subparser name (or "global") to an argparse.Namespace instance.
-    """
     import argparse
-
+    
     # Create main parser
     parser = argparse.ArgumentParser(description='Command line argument parser')
     
-    # Add global arguments that apply to all subcommands
-    parser.add_argument('--verbose', action='store_true', help='Enable verbose output')
-    parser.add_argument('--config', type=str, help='Path to config file')
-    
-    # Create subparsers
+    # Create subparsers object
     subparsers = parser.add_subparsers(dest='command')
     
-    # Add subparser for different commands
-    run_parser = subparsers.add_parser('run')
-    run_parser.add_argument('--input', type=str, required=True, help='Input file path')
-    run_parser.add_argument('--output', type=str, required=True, help='Output file path')
+    # Add global arguments to main parser
+    parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose output')
+    parser.add_argument('--config', '-c', help='Path to config file')
     
-    test_parser = subparsers.add_parser('test')
-    test_parser.add_argument('--test-file', type=str, required=True, help='Test file path')
+    # Create "run" subparser
+    run_parser = subparsers.add_parser('run', help='Run the application')
+    run_parser.add_argument('--input', '-i', required=True, help='Input file path')
+    run_parser.add_argument('--output', '-o', required=True, help='Output file path')
+    
+    # Create "test" subparser  
+    test_parser = subparsers.add_parser('test', help='Run tests')
+    test_parser.add_argument('--test-dir', '-t', required=True, help='Test directory path')
     
     # Parse arguments
     args = parser.parse_args(unparsed_arguments if unparsed_arguments else None)
     
-    # Create dict to store parsed arguments
+    # Create return dictionary
     parsed_args = {}
     
-    # Store global arguments
-    parsed_args['global'] = argparse.Namespace(
-        verbose=args.verbose,
-        config=args.config
-    )
+    # Add global arguments
+    parsed_args['global'] = args
     
-    # Store command-specific arguments
-    if args.command == 'run':
-        parsed_args['run'] = argparse.Namespace(
-            input=args.input,
-            output=args.output
-        )
-    elif args.command == 'test':
-        parsed_args['test'] = argparse.Namespace(
-            test_file=args.test_file
-        )
+    # Add subparser arguments if a command was specified
+    if hasattr(args, 'command') and args.command:
+        parsed_args[args.command] = args
         
     return parsed_args

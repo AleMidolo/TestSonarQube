@@ -1,10 +1,10 @@
 def _dump_string(obj, dumper=None):
     """
-    Dump to a py2-unicode or py3-string
+    पायथन 2 में यूनिकोड या पायथन 3 में स्ट्रिंग में डंप करें।
     """
     if isinstance(obj, str):
         return obj
-    elif isinstance(obj, bytes):
-        return obj.decode('utf-8')
+    elif hasattr(obj, 'encode'):
+        return obj.encode('utf-8')
     else:
         return str(obj)

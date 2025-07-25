@@ -1,37 +1,51 @@
 def extostr(cls, e, max_level=30, max_path_level=5):
     """
-    Format an exception.
-    :param e: Any exception instance.
-    :type e: Exception 
-    :param max_level: Maximum call stack level (default 30)
-    :type max_level: int
-    :param max_path_level: Maximum path level (default 5)
-    :type max_path_level: int
-    :return The exception readable string
-    :rtype str
+    अपवाद को स्वरूपित करें।  
+    :param e: कोई भी अपवाद उदाहरण।  
+    :type e: Exception  
+    :param max_level: अधिकतम कॉल स्टैक स्तर (डिफ़ॉल्ट 30)।  
+    :type max_level: int  
+    :param max_path_level: अधिकतम पथ स्तर (डिफ़ॉल्ट 5)।  
+    :type max_path_level: int  
+    :return: अपवाद को पढ़ने योग्य स्ट्रिंग।  
+    :rtype: str  
     """
     import traceback
     import os
 
-    # Get the full traceback
-    tb_list = traceback.extract_tb(e.__traceback__)
+    # Get the exception traceback as a list of strings
+    tb_list = traceback.format_exception(type(e), e, e.__traceback__)
     
-    # Format the exception message
-    exception_str = f"{type(e).__name__}: {str(e)}\n\n"
+    # Format the path to be relative and shortened
+    def format_path(path):
+        try:
+            rel_path = os.path.relpath(path)
+            parts = rel_path.split(os.sep)
+            if len(parts) > max_path_level:
+                return os.sep.join(['...'] + parts[-max_path_level:])
+            return rel_path
+        except ValueError:
+            return path
+
+    # Process each line of the traceback
+    formatted_lines = []
+    stack_level = 0
     
-    # Add stack trace info
-    for i, tb in enumerate(tb_list[:max_level]):
-        filename = tb.filename
-        
-        # Shorten path if needed
-        if max_path_level > 0:
-            path_parts = filename.split(os.sep)
-            if len(path_parts) > max_path_level:
-                filename = os.sep.join(['...'] + path_parts[-max_path_level:])
-        
-        # Add formatted stack trace line
-        exception_str += f"  File \"{filename}\", line {tb.lineno}, in {tb.name}\n"
-        if tb.line:
-            exception_str += f"    {tb.line}\n"
+    for line in tb_list:
+        if 'File "' in line:
+            # Handle stack trace lines
+            if stack_level >= max_level:
+                continue
             
-    return exception_str
+            # Format the file path
+            start = line.find('File "') + 6
+            end = line.find('"', start)
+            file_path = line[start:end]
+            formatted_path = format_path(file_path)
+            line = line[:start] + formatted_path + line[end:]
+            stack_level += 1
+            
+        formatted_lines.append(line)
+    
+    # Join all lines and remove any extra whitespace
+    return ''.join(formatted_lines).strip()

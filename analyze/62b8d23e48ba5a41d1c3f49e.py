@@ -1,15 +1,19 @@
 def popitem(self):
     """
-    Remove and return a random `(key, value)` pair.
+    एक यादृच्छिक `(कुंजी, मान)` जोड़ी को हटाएं और लौटाएं।
     """
-    if not self:  # Check if dictionary is empty
-        raise KeyError('Dictionary is empty')
+    if not self:
+        raise KeyError("Dictionary is empty")
         
     # Get a random key from the dictionary
-    key = next(iter(self))
+    import random
+    key = random.choice(list(self.keys()))
+    
+    # Get the value for that key
     value = self[key]
     
     # Remove the key-value pair
     del self[key]
     
+    # Return the key-value pair as a tuple
     return (key, value)

@@ -1,20 +1,22 @@
 def validate_arg_deprecation(self, cli_args, answer_file_args):
     """
-    Validates and prints the deprecated arguments.
+    अप्रचलित तर्कों को मान्य करता है और उन्हें प्रिंट करता है।
 
-    :param cli_args: the dict of arguments from cli
-    :param answer_file_args:  the dict of arguments from files
+    :param cli_args: CLI (कमांड लाइन इंटरफ़ेस) से प्राप्त तर्कों की डिक्शनरी 
+    :param answer_file_args: फ़ाइलों से प्राप्त तर्कों की डिक्शनरी
     """
     deprecated_args = {
-        'arg_name': 'new_arg_name',  # Map of old arg names to new ones
+        'force': 'use --yes instead',
+        'quiet': 'use --silent instead',
+        'verbose': 'use --debug instead'
     }
 
-    # Check CLI args for deprecated arguments
-    for old_arg, new_arg in deprecated_args.items():
-        if old_arg in cli_args:
-            print(f"Warning: Argument '{old_arg}' is deprecated. Please use '{new_arg}' instead.")
+    # Check CLI args for deprecated options
+    for arg in cli_args:
+        if arg in deprecated_args:
+            print(f"Warning: The argument '--{arg}' is deprecated. {deprecated_args[arg]}")
 
-    # Check answer file args for deprecated arguments  
-    for old_arg, new_arg in deprecated_args.items():
-        if old_arg in answer_file_args:
-            print(f"Warning: Argument '{old_arg}' in answer file is deprecated. Please use '{new_arg}' instead.")
+    # Check answer file args for deprecated options 
+    for arg in answer_file_args:
+        if arg in deprecated_args:
+            print(f"Warning: The argument '{arg}' in answer file is deprecated. {deprecated_args[arg]}")

@@ -1,24 +1,18 @@
 def _normalizeargs(sequence, output=None):
     """
-    Normalize declaration arguments
+    घोषणा तर्कों को सामान्यीकृत करें
 
-    Normalization arguments might contain Declarions, tuples, or single
-    interfaces.
+    सामान्यीकरण तर्कों में घोषणाएँ, ट्यूपल, या एकल इंटरफेस हो सकते हैं।
 
-    Anything but individial interfaces or implements specs will be expanded.
+    व्यक्तिगत इंटरफेस या लागू विनिर्देशों को छोड़कर अन्य सभी का विस्तार किया जाएगा।
     """
     if output is None:
         output = []
+    
+    if isinstance(sequence, (list, tuple)):
+        for item in sequence:
+            _normalizeargs(item, output)
+    else:
+        output.append(sequence)
         
-    for arg in sequence:
-        if isinstance(arg, (list, tuple)):
-            _normalizeargs(arg, output)
-        elif hasattr(arg, 'interfaces'):
-            # If arg is a Declaration, expand its interfaces
-            _normalizeargs(arg.interfaces, output)
-        else:
-            # Single interface or implements spec
-            if arg not in output:
-                output.append(arg)
-                
     return output

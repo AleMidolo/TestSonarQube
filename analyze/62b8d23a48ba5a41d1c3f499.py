@@ -1,15 +1,15 @@
 def popitem(self):
     """
-    Remove and return the `(key, value)` pair least recently used.
+    सबसे हाल ही में उपयोग किए गए `(key, value)` जोड़े को हटाएं और वापस करें।
     """
     if not self:
         raise KeyError('Dictionary is empty')
         
-    # Get the first item from the internal dict since it will be the LRU item
-    key = next(iter(self))
+    # Get the most recently used key
+    key = next(reversed(self))
     value = self[key]
     
-    # Remove the item from the dictionary
+    # Remove the key-value pair
     del self[key]
     
     return (key, value)

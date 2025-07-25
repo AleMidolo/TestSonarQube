@@ -1,6 +1,6 @@
 def subclasses(cls):
     """
-    Return all subclasses of a class, recursively
+    किसी क्लास के सभी सबक्लासेस को पुनरावृत्त रूप से (recursively) प्राप्त करें।
     """
     subs = cls.__subclasses__()
     for sub in cls.__subclasses__():

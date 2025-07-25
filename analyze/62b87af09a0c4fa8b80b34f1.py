@@ -1,31 +1,15 @@
 def fill(self, coord, weight=1):
     """
-    Fill histogram at *coord* with the given *weight*.
-    
-    Coordinates outside the histogram edges are ignored.
+    *coord* पर दिए गए *weight* के साथ हिस्टोग्राम को भरें।
+
+    यदि *coord* हिस्टोग्राम की सीमाओं के बाहर है, तो उसे अनदेखा कर दिया जाएगा।
     """
-    # Check if coord is within histogram bounds
-    if not isinstance(coord, (list, tuple)):
-        coord = [coord]
+    # Check if coordinate is within histogram bounds
+    if not self._in_range(coord):
+        return
         
-    # Check each dimension is within bounds
-    for i, x in enumerate(coord):
-        if x < self.edges[i][0] or x >= self.edges[i][-1]:
-            return
-            
-    # Find the bin indices for each dimension
-    indices = []
-    for dim, x in enumerate(coord):
-        # Find rightmost edge that is <= x using binary search
-        edges = self.edges[dim]
-        left, right = 0, len(edges)
-        while left < right:
-            mid = (left + right) // 2
-            if edges[mid] <= x:
-                left = mid + 1
-            else:
-                right = mid
-        indices.append(left - 1)
-        
+    # Get bin index for the coordinate
+    bin_idx = self._get_bin_index(coord)
+    
     # Add weight to the bin
-    self.values[tuple(indices)] += weight
+    self._bins[bin_idx] += weight

@@ -1,42 +1,43 @@
 def _explore_zipfile(zip_path):
     """
-    Get packages' data from zip_path
+    ज़िप पथ से पैकेजों का डेटा प्राप्त करता है।  
 
-    Groups files by their XML basename and returns data in dict format.
+    फ़ाइलों को उनके XML बेसनाम (basename) के आधार पर समूहित करता है और डेटा को डिक्शनरी (dict) प्रारूप में लौटाता है।  
 
-    Parameters
+    पैरामीटर (Parameters)
     ----------
-    zip_path : str
-        zip file path
-    Returns
+    zip_path : str  
+        ज़िप फ़ाइल का पथ।  
+
+    रिटर्न्स (Returns)
     -------
     dict
     """
     import zipfile
-    from collections import defaultdict
     import os
+    from collections import defaultdict
 
     # Dictionary to store grouped files
-    grouped_files = defaultdict(dict)
+    grouped_files = defaultdict(list)
     
-    # Open and read zip file
+    # Open zip file
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         # Get list of all files in zip
         file_list = zip_ref.namelist()
         
         # Group files by their XML basename
         for file_name in file_list:
-            # Get base name without extension
+            # Get basename without extension
             base_name = os.path.splitext(os.path.basename(file_name))[0]
-            
-            # Get file extension
-            extension = os.path.splitext(file_name)[1].lower()
             
             # Read file content
             with zip_ref.open(file_name) as f:
                 content = f.read()
                 
-            # Store content in grouped_files dictionary
-            grouped_files[base_name][extension] = content
-            
+            # Group files with same basename
+            grouped_files[base_name].append({
+                'name': file_name,
+                'content': content
+            })
+    
     return dict(grouped_files)

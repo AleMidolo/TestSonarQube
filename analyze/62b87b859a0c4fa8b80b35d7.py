@@ -1,26 +1,29 @@
 def to_csv(self, separator=",", header=None):
-    # Start with header if provided
+    """Convert graph points to CSV format."""
     result = []
+    
+    # Add header if provided
     if header is not None:
-        result.append(str(header))
-
+        result.append(header)
+        
     # Convert each point to CSV format
-    for point in self.points:
-        # Convert coordinate to string, splitting multi-dimensional coordinates
-        if isinstance(point.coordinate, (list, tuple)):
-            coord_str = separator.join(str(x) for x in point.coordinate)
+    for point in self:
+        # Convert coordinates to string, separated by separator
+        coord_str = separator.join(str(x) for x in point.coords)
+        
+        # Convert values to string, separated by separator 
+        if hasattr(point, 'values'):
+            if isinstance(point.values, (list, tuple)):
+                val_str = separator.join(str(x) for x in point.values)
+            else:
+                val_str = str(point.values)
+            
+            # Combine coordinates and values
+            point_str = coord_str + separator + val_str
         else:
-            coord_str = str(point.coordinate)
-
-        # Convert value to string, splitting multi-dimensional values
-        if isinstance(point.value, (list, tuple)):
-            value_str = separator.join(str(x) for x in point.value)
-        else:
-            value_str = str(point.value)
-
-        # Combine coordinate and value
-        line = coord_str + separator + value_str
-        result.append(line)
-
+            point_str = coord_str
+            
+        result.append(point_str)
+        
     # Join all lines with newlines
     return "\n".join(result)

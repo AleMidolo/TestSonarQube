@@ -1,6 +1,6 @@
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Call the given command(s).
+    दिए गए कमांड(s) को कॉल करें।
     """
     import subprocess
     import sys
@@ -17,32 +17,20 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
                 cmd_list.extend(args)
                 
         if verbose:
-            print("Running command: " + " ".join(cmd_list))
+            print(' '.join(cmd_list))
+            
+        stderr = subprocess.DEVNULL if hide_stderr else None
             
         try:
-            stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
-            process = subprocess.Popen(
+            subprocess.check_call(
                 cmd_list,
-                stdout=subprocess.PIPE,
-                stderr=stderr,
                 cwd=cwd,
-                env=env,
-                universal_newlines=True
+                stderr=stderr,
+                env=env
             )
-            
-            output, error = process.communicate()
-            
-            if process.returncode != 0:
-                if error and not hide_stderr:
-                    print(f"Error: {error}", file=sys.stderr)
-                return False
-                
-            if output and verbose:
-                print(output)
-                
-        except Exception as e:
-            if verbose:
-                print(f"Failed to execute command: {e}", file=sys.stderr)
-            return False
-            
-    return True
+        except subprocess.CalledProcessError as e:
+            print(f"Command failed with return code {e.returncode}")
+            sys.exit(1)
+        except FileNotFoundError:
+            print(f"Command not found: {cmd}")
+            sys.exit(1)

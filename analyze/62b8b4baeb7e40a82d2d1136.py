@@ -1,59 +1,46 @@
 def _verify(iface, candidate, tentative=False, vtype=None):
     from zope.interface.exceptions import Invalid
     from zope.interface.interface import Method
-    from collections import defaultdict
-
-    errors = defaultdict(list)
-
+    from zope.interface.verify import verifyObject
+    
+    errors = []
+    
     # Check if candidate claims to provide interface
     if not tentative and not iface.providedBy(candidate):
-        raise Invalid(f"{candidate!r} does not provide interface {iface!r}")
-
-    # Check methods and attributes
-    for name, desc in iface.namesAndDescriptions(all=True):
+        errors.append(f"{candidate} does not provide interface {iface}")
+        
+    # Check required methods
+    for name, desc in iface.namesAndDescriptions(1):
         if isinstance(desc, Method):
-            # Verify method exists
-            if not hasattr(candidate, name):
-                errors['missing_methods'].append(name)
-                continue
-
-            method = getattr(candidate, name)
-            if not callable(method):
-                errors['not_callable'].append(name)
-                continue
-
-            # Verify method signature
+            # Check if method exists
             try:
-                from inspect import signature
-                impl_sig = signature(method)
-                iface_sig = signature(desc)
+                attr = getattr(candidate, name)
+            except AttributeError:
+                errors.append(f"Method {name} not provided by {candidate}")
+                continue
                 
-                if impl_sig.parameters != iface_sig.parameters:
-                    errors['wrong_signature'].append(name)
-            except ValueError:
-                # Can't get signature, skip check
-                pass
-
+            # Check if it's callable
+            if not callable(attr):
+                errors.append(f"Attribute {name} is not callable on {candidate}")
+                continue
+                
+            # Verify method signature if possible
+            try:
+                verifyObject(desc, attr, name)
+            except Invalid as e:
+                errors.append(str(e))
+        
+        # Check required attributes
         else:
-            # Verify attribute exists
-            if not hasattr(candidate, name):
-                errors['missing_attributes'].append(name)
-
-    # Raise errors if any found
+            try:
+                getattr(candidate, name)
+            except AttributeError:
+                errors.append(f"Attribute {name} not provided by {candidate}")
+    
+    # If there are errors, raise them
     if errors:
-        messages = []
-        if errors['missing_methods']:
-            messages.append(f"Missing required methods: {', '.join(errors['missing_methods'])}")
-        if errors['not_callable']:
-            messages.append(f"Attributes that should be methods: {', '.join(errors['not_callable'])}")
-        if errors['wrong_signature']:
-            messages.append(f"Methods with wrong signatures: {', '.join(errors['wrong_signature'])}")
-        if errors['missing_attributes']:
-            messages.append(f"Missing required attributes: {', '.join(errors['missing_attributes'])}")
-
-        if len(messages) == 1:
-            raise Invalid(messages[0])
-        else:
-            raise Invalid('\n'.join(messages))
-
+        if len(errors) == 1:
+            raise Invalid(errors[0])
+        raise Invalid(errors)
+        
     return True

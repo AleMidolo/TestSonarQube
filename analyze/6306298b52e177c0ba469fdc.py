@@ -1,10 +1,15 @@
 def xml_children_as_dict(node):
-    """
-    Turn the children of node <xml> into a dict, keyed by tag name.
+    # Create empty dictionary to store children
+    children_dict = {}
     
-    This is only a shallow conversation - child nodes are not recursively processed.
-    """
-    result = {}
+    # Iterate through all child nodes
     for child in node:
-        result[child.tag] = child
-    return result
+        # Skip non-element nodes like text/comments
+        if not isinstance(child.tag, str):
+            continue
+            
+        # Use tag name as key and store node as value
+        tag_name = child.tag
+        children_dict[tag_name] = child
+        
+    return children_dict

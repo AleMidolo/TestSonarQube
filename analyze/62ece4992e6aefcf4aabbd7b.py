@@ -1,24 +1,27 @@
 def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=False):
     """
-    Given a target config filename and rendered config YAML, write it out to file. Create any
-    containing directories as needed. But if the file already exists and overwrite is False,
-    abort before writing anything.
+    एक लक्षित कॉन्फ़िग फ़ाइल नाम और रेंडर किया गया YAML कॉन्फ़िग दिए जाने पर, इसे फ़ाइल में लिखें।
+    आवश्यकतानुसार किसी भी समाहित डायरेक्टरी को बनाएं।
+    लेकिन यदि फ़ाइल पहले से मौजूद है और `overwrite` False है, तो कुछ भी लिखने से पहले प्रक्रिया को रोक दें।
     """
     import os
     import pathlib
 
-    # Get directory path and create if doesn't exist
-    directory = os.path.dirname(config_filename)
-    if directory:
-        pathlib.Path(directory).mkdir(parents=True, exist_ok=True)
-
-    # Check if file exists and overwrite flag
-    if os.path.exists(config_filename) and not overwrite:
+    # Convert path to Path object
+    config_path = pathlib.Path(config_filename)
+    
+    # Check if file exists and overwrite is False
+    if config_path.exists() and not overwrite:
         return False
-
-    # Write the configuration file with specified mode
-    with open(config_filename, 'w') as f:
-        os.chmod(config_filename, mode)
+        
+    # Create parent directories if they don't exist
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    # Write configuration to file with specified mode
+    with open(config_path, 'w') as f:
         f.write(rendered_config)
+    
+    # Set file permissions
+    os.chmod(config_path, mode)
     
     return True

@@ -1,46 +1,42 @@
 def update_last_applied_manifest_dict_from_resp(
     last_applied_manifest, observer_schema, response
 ):
-    """
-    Together with :func:``update_last_applied_manifest_list_from_resp``, this
-    function is called recursively to update a partial ``last_applied_manifest``
-    from a partial Kubernetes response
-
-    Args:
-        last_applied_manifest (dict): partial ``last_applied_manifest`` being
-            updated
-        observer_schema (dict): partial ``observer_schema``
-        response (dict): partial response from the Kubernetes API.
-
-    Raises:
-        KeyError: If the observed field is not present in the Kubernetes response
-    """
-    # Go through all fields in the observer schema
-    for field, schema in observer_schema.items():
-        # Skip if field is already in last_applied_manifest
-        if field in last_applied_manifest:
+    # Iterate through all fields in observer schema
+    for field, value in observer_schema.items():
+        # Skip if field doesn't exist in response
+        if field not in response:
             continue
             
-        # Get value from response, raise KeyError if not found
-        try:
-            value = response[field]
-        except KeyError:
-            raise KeyError(f"Field {field} not found in Kubernetes response")
-            
-        # Handle nested dictionaries recursively
-        if isinstance(schema, dict) and isinstance(value, dict):
-            last_applied_manifest[field] = {}
+        # Initialize field in last_applied_manifest if it doesn't exist
+        if field not in last_applied_manifest:
+            if isinstance(response[field], dict):
+                last_applied_manifest[field] = {}
+            elif isinstance(response[field], list):
+                last_applied_manifest[field] = []
+            else:
+                last_applied_manifest[field] = response[field]
+                continue
+
+        # Recursively update nested dictionaries
+        if isinstance(value, dict) and isinstance(response[field], dict):
             update_last_applied_manifest_dict_from_resp(
-                last_applied_manifest[field], schema, value
+                last_applied_manifest[field], value, response[field]
             )
-            
-        # Handle lists recursively if schema is a dict
-        elif isinstance(schema, dict) and isinstance(value, list):
-            last_applied_manifest[field] = []
-            update_last_applied_manifest_list_from_resp(
-                last_applied_manifest[field], schema, value
-            )
-            
-        # For simple values, just copy them over
+        # Update lists
+        elif isinstance(value, list) and isinstance(response[field], list):
+            if len(value) > 0 and isinstance(value[0], dict):
+                # Handle list of dictionaries
+                if len(last_applied_manifest[field]) < len(response[field]):
+                    last_applied_manifest[field].extend(
+                        [{}] * (len(response[field]) - len(last_applied_manifest[field]))
+                    )
+                for i in range(len(response[field])):
+                    update_last_applied_manifest_dict_from_resp(
+                        last_applied_manifest[field][i], value[0], response[field][i]
+                    )
+            else:
+                # Handle simple lists
+                last_applied_manifest[field] = response[field]
         else:
-            last_applied_manifest[field] = value
+            # Update simple values
+            last_applied_manifest[field] = response[field]

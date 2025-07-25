@@ -1,30 +1,28 @@
 def identify_request(request: RequestType) -> bool:
     """
-    Try to identify whether this is a Matrix request
+    यह फ़ंक्शन यह पहचानने की कोशिश करता है कि क्या यह एक मैट्रिक्स (Matrix) अनुरोध है।
     """
-    # Check if request has Matrix-specific headers
-    if 'Authorization' in request.headers:
-        auth_header = request.headers['Authorization']
-        if auth_header.startswith('Bearer'):
-            # Matrix access tokens are typically Bearer tokens
+    # Check if request is None
+    if request is None:
+        return False
+        
+    # Check if request has matrix-related attributes/properties
+    matrix_keywords = ['matrix', 'matrices', 'array', 'grid', 'table']
+    
+    # Convert request to string and check for matrix keywords
+    request_str = str(request).lower()
+    for keyword in matrix_keywords:
+        if keyword in request_str:
             return True
             
-    # Check for Matrix API endpoints
-    if request.path.startswith('/_matrix/'):
-        return True
-        
-    # Check for Matrix server name in host
-    if 'matrix' in request.host.lower():
-        return True
-        
-    # Check content type for Matrix-specific formats
-    if request.content_type == 'application/json':
-        try:
-            body = request.get_json()
-            # Check for common Matrix request fields
-            if any(key in body for key in ['user_id', 'room_id', 'event_id', 'device_id']):
+    # Check if request has matrix-like structure
+    try:
+        # Check if request is iterable and has nested structure
+        if hasattr(request, '__iter__'):
+            first_elem = next(iter(request))
+            if hasattr(first_elem, '__iter__'):
                 return True
-        except:
-            pass
-            
+    except:
+        pass
+        
     return False

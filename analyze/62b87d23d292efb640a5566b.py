@@ -1,6 +1,6 @@
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Call the given command(s).
+    दिए गए कमांड(s) को चलाएं।
     """
     import subprocess
     import sys
@@ -17,10 +17,10 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
                 cmd_list.extend(args)
                 
         if verbose:
-            print("Running command: " + " ".join(cmd_list))
+            print('Running:', ' '.join(cmd_list))
             
         try:
-            stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
+            stderr = subprocess.DEVNULL if hide_stderr else None
             process = subprocess.Popen(
                 cmd_list,
                 stdout=subprocess.PIPE,
@@ -33,18 +33,17 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
             output, error = process.communicate()
             
             if process.returncode != 0:
+                print(f"Error executing command: {' '.join(cmd_list)}")
                 if error and not hide_stderr:
-                    print(f"Error: {error}", file=sys.stderr)
-                raise subprocess.CalledProcessError(process.returncode, cmd_list)
+                    print(f"Error output: {error}")
+                sys.exit(process.returncode)
                 
             if verbose and output:
                 print(output)
                 
-            return output.strip() if output else ""
+            return output.strip() if output else None
             
-        except FileNotFoundError:
-            print(f"Command not found: {cmd}", file=sys.stderr)
-            raise
         except Exception as e:
-            print(f"Error executing command: {e}", file=sys.stderr)
-            raise
+            print(f"Exception occurred while executing command: {' '.join(cmd_list)}")
+            print(f"Error: {str(e)}")
+            sys.exit(1)

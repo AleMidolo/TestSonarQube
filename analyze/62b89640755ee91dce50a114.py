@@ -1,13 +1,14 @@
 def tzname_in_python2(namefunc):
     """
-    Change unicode output into bytestrings in Python 2
+    Python 2 में यूनिकोड आउटपुट को बाइटस्ट्रिंग्स में बदलें।
 
-    tzname() API changed in Python 3. It used to return bytes, but was changed
-    to unicode strings
+    tzname() API ने Python 3 में बदलाव किया। पहले यह बाइट्स लौटाता था, 
+    लेकिन इसे यूनिकोड स्ट्रिंग्स में बदल दिया गया।
     """
     def adjust_encoding(*args, **kwargs):
         name = namefunc(*args, **kwargs)
-        if name is not None and isinstance(name, str):
-            name = name.encode()
-        return name
+        if name is not None:
+            if isinstance(name, str):
+                return name.encode('ASCII')
+            return name
     return adjust_encoding

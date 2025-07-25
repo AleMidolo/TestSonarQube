@@ -1,14 +1,13 @@
 def reset(self):
     """
-    Reset the histogram.
-    
-    Current context is reset to an empty dict.
-    Bins are reinitialized with the *initial_value*
-    or with *make_bins()* (depending on the initialization).
+    हिस्टोग्राम को रीसेट करें।  
+
+    - वर्तमान संदर्भ को एक खाली डिक्शनरी में रीसेट कर दिया गया है।  
+    - बिन्स को *initial_value* या *make_bins()* (प्रारंभिक सेटअप के आधार पर) के साथ पुनः प्रारंभ किया गया है।  
     """
-    self.context = {}
+    self.current = {}
     
     if hasattr(self, 'initial_value'):
-        self.bins = {key: self.initial_value for key in self.bins.keys()}
+        self.bins = self.initial_value.copy()
     else:
         self.bins = self.make_bins()

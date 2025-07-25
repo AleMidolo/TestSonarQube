@@ -1,24 +1,14 @@
 def _resolve_string(matcher):
-    """
-    Get the value from environment given a matcher containing a name and an optional default value.
-    If the variable is not defined in environment and no default value is provided, an Error is raised.
-    """
-    import os
+    # मैचर से नाम और डिफ़ॉल्ट मान निकालें
+    name = matcher.group(1)
+    default = matcher.group(2) if matcher.lastindex > 1 else None
     
-    # Split matcher into name and default value if present
-    parts = matcher.split(':-')
-    name = parts[0].strip()
-    
-    # Get default value if provided
-    default = parts[1].strip() if len(parts) > 1 else None
-    
-    # Try to get value from environment
+    # पर्यावरण से मान प्राप्त करें
     value = os.environ.get(name)
     
-    if value is None:
-        if default is not None:
-            return default
-        else:
-            raise ValueError(f"Environment variable '{name}' not found and no default value provided")
-            
-    return value
+    # यदि मान नहीं मिला और डिफ़ॉल्ट नहीं दिया गया
+    if value is None and default is None:
+        raise ValueError(f"Environment variable '{name}' not found and no default value provided")
+        
+    # यदि मान नहीं मिला तो डिफ़ॉल्ट लौटाएं
+    return value if value is not None else default

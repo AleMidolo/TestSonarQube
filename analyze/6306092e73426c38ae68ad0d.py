@@ -1,47 +1,44 @@
 def create_complex_argumet_type(self, subcommand, type_name, option_name, spec_option):
     """
-    Build the complex argument type
+    जटिल आर्गुमेंट प्रकार (complex argument type) बनाएं
 
-    :param subcommand: the command name
-    :param type_name: the complex type name 
-    :param option_name: the option name
-    :param spec_option: option's specifications
-    :return: the complex type instance
+    :param subcommand: कमांड का नाम
+    :param type_name: जटिल प्रकार का नाम (complex type name) 
+    :param option_name: विकल्प का नाम (option name)
+    :param spec_option: विकल्प की विशिष्टताएँ (option's specifications)
+    :return: जटिल प्रकार का उदाहरण (complex type instance)
     """
-    # Create a new class dynamically with the type name
+    # Create a new class dynamically for the complex type
     complex_type = type(type_name, (), {})
     
     # Add validation method
-    def validate(cls, value):
-        if not value:
-            raise ValueError(f"Value required for {option_name}")
-            
-        # Handle different complex type validations based on spec_option
-        if 'allowed_values' in spec_option:
-            if value not in spec_option['allowed_values']:
-                raise ValueError(f"Value {value} not in allowed values for {option_name}")
+    def validate(self, value):
+        if not isinstance(value, str):
+            raise ValueError(f"Value for {option_name} must be a string")
+        
+        # Apply any specific validation rules from spec_option
+        if 'min_length' in spec_option:
+            if len(value) < spec_option['min_length']:
+                raise ValueError(f"{option_name} must be at least {spec_option['min_length']} characters long")
+                
+        if 'max_length' in spec_option:
+            if len(value) > spec_option['max_length']:
+                raise ValueError(f"{option_name} cannot exceed {spec_option['max_length']} characters")
                 
         if 'pattern' in spec_option:
             import re
             if not re.match(spec_option['pattern'], value):
-                raise ValueError(f"Value {value} does not match pattern for {option_name}")
-                
-        if 'min_length' in spec_option:
-            if len(value) < spec_option['min_length']:
-                raise ValueError(f"Value {value} is shorter than minimum length for {option_name}")
-                
-        if 'max_length' in spec_option:
-            if len(value) > spec_option['max_length']:
-                raise ValueError(f"Value {value} is longer than maximum length for {option_name}")
+                raise ValueError(f"{option_name} does not match required pattern {spec_option['pattern']}")
         
         return value
-        
-    # Add string representation method
-    def __str__(cls):
-        return f"Complex argument type for {subcommand} {option_name}"
-        
-    # Add methods to the class
-    setattr(complex_type, 'validate', classmethod(validate))
-    setattr(complex_type, '__str__', classmethod(__str__))
     
-    return complex_type
+    # Add string representation method
+    def __str__(self):
+        return f"Complex argument type for {subcommand}:{option_name}"
+    
+    # Add methods to the class
+    complex_type.validate = validate
+    complex_type.__str__ = __str__
+    
+    # Create and return an instance
+    return complex_type()

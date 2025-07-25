@@ -1,19 +1,16 @@
 def _get_resource_name_regex():
     """
-    Build or return the regular expressions that are used to validate
-    the name of the Krake resources.
+    क्रैके संसाधनों के नाम को मान्य करने के लिए उपयोग किए जाने वाले नियमित अभिव्यक्तियों का निर्माण करें या उन्हें लौटाएँ।
 
-    Returns:
-        (re.Pattern): the compiled regular expressions, to validate
-        the resource name.
+    रिटर्न करता है:
+    - (re.Pattern): संकलित नियमित अभिव्यक्तियां, जो संसाधन नाम को मान्य करने के लिए उपयोग की जाती हैं।
     """
     import re
     
-    # Regex pattern that matches:
-    # - Must start with lowercase letter or number
-    # - Can contain lowercase letters, numbers, hyphens
-    # - Must end with lowercase letter or number
-    # - Length between 1-63 characters
-    pattern = r'^[a-z0-9][a-z0-9-]*[a-z0-9]$'
+    # Valid resource name pattern:
+    # - Must start with a letter or underscore
+    # - Can contain letters, numbers, underscores, hyphens
+    # - Must be between 1-63 characters
+    pattern = r'^[a-zA-Z_][a-zA-Z0-9_-]{0,62}$'
     
     return re.compile(pattern)

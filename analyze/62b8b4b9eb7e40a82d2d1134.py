@@ -1,11 +1,10 @@
 def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
-    """Return attribute names and descriptions defined by interface.
+    """
+    इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम और विवरण लौटाएं।
     if not all:
-
-    Return attribute names and descriptions defined by interface.
+    इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम और विवरण लौटाएं।
     """
     attrs = {}
-    for name, desc in self.getDescriptionFor():
-        if all or not name.startswith('_'):
-            attrs[name] = desc
+    for name, desc in self.getDescriptionFor(all):
+        attrs[name] = desc
     return attrs
