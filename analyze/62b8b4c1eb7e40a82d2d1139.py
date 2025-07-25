@@ -21,7 +21,7 @@ def verifyClass(iface, candidate, tentative=False):
             else:
                 raise AttributeError(f"'{attr}' not found in candidate class")
                 
-        # Get the interface and candidate attributes
+        # Get interface and candidate attributes
         iface_attr = getattr(iface, attr)
         candidate_attr = getattr(candidate, attr)
         

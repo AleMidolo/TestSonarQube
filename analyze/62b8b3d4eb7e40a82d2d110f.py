@@ -13,7 +13,7 @@ def _should_attempt_c_optimizations():
         return False
         
     if pure_python:
-        # Check various string values that could indicate True
+        # Check various strings that could indicate True
         return not pure_python.lower() in ('1', 'true', 't', 'yes', 'y', 'on')
         
     return True

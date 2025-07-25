@@ -13,25 +13,28 @@ def deep_merge_nodes(nodes):
         # We've seen this key before - need to merge
         existing_value_node = merged[key][1]
         
-        # If both nodes are mappings, do a deep merge
-        if (value_node.tag == 'tag:yaml.org,2002:map' and 
-            existing_value_node.tag == 'tag:yaml.org,2002:map'):
+        # If both nodes are mapping nodes, do a deep merge
+        if (hasattr(value_node, 'tag') and 'map' in value_node.tag and
+            hasattr(existing_value_node, 'tag') and 'map' in existing_value_node.tag):
             
-            # Recursively merge the nested mapping nodes
-            merged_value = deep_merge_nodes(value_node.value + existing_value_node.value)
+            # Convert the mapping node values to dict for easier lookup
+            existing_dict = {k.value: (k,v) for k,v in existing_value_node.value}
+            new_dict = {k.value: (k,v) for k,v in value_node.value}
             
-            # Create new mapping node with merged values
-            merged[key] = (
-                key_node,
-                type(value_node)(
-                    tag='tag:yaml.org,2002:map',
-                    value=merged_value
-                )
-            )
+            # Merge the new mapping into existing
+            for new_key, new_val in new_dict.items():
+                if new_key not in existing_dict:
+                    existing_dict[new_key] = new_val
+            
+            # Convert back to list of tuples
+            merged_value = list(existing_dict.values())
+            
+            # Create new MappingNode with merged values
+            merged[key] = (key_node, type(value_node)(tag=value_node.tag, value=merged_value))
             
         else:
-            # For non-mapping nodes, keep the existing value since we're iterating in reverse
-            continue
+            # For non-mapping nodes, keep the most recent value
+            merged[key] = (key_node, value_node)
             
     # Convert merged dict back to list of tuples
     return list(merged.values())

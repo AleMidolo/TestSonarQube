@@ -11,14 +11,31 @@ def fromutc(self, dt):
     :param dt:
         A timezone-aware :class:`datetime.datetime` object.
     """
+    # Ensure input is timezone-aware and in UTC
     if dt.tzinfo is not self:
-        dt = dt.replace(tzinfo=self)
+        dt = dt.astimezone(self)
 
-    utc_offset = self._transition_info(dt.replace(fold=0))[0]
-    dt_out = dt + utc_offset
+    # Calculate UTC offset for the given datetime
+    utc_offset = self.utcoffset(dt)
+    if utc_offset is None:
+        return dt
 
-    # Check if we're in a fold
-    if self._fold_status(dt_out):
-        return dt_out.replace(fold=1)
+    # Add the offset to get local time
+    local_dt = dt + utc_offset
+
+    # Check if datetime is ambiguous (in DST transition)
+    dst_offset = self.dst(local_dt)
+    if dst_offset is None:
+        return local_dt
+
+    # Calculate fold status
+    # If we're in a fold, the actual offset should be different than the one we used
+    actual_offset = self.utcoffset(local_dt)
+    if actual_offset != utc_offset:
+        # We're in a fold, adjust the datetime
+        local_dt = dt + actual_offset
+        local_dt = local_dt.replace(fold=1)
     else:
-        return dt_out.replace(fold=0)
+        local_dt = local_dt.replace(fold=0)
+
+    return local_dt

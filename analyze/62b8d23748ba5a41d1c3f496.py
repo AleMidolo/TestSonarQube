@@ -7,8 +7,8 @@ def lfu_cache(maxsize=128, typed=False):
         cache = {}
         # Counter to track frequency of key access
         freq_counter = defaultdict(int)
-        # Track order of insertion for keys with same frequency
-        freq_order = []
+        # Track order of insertion for same frequency items
+        insertion_order = []
 
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -21,8 +21,6 @@ def lfu_cache(maxsize=128, typed=False):
             # Return cached result if exists
             if key in cache:
                 freq_counter[key] += 1
-                freq_order.remove(key)
-                freq_order.append(key)
                 return cache[key]
 
             # Calculate new result
@@ -30,35 +28,37 @@ def lfu_cache(maxsize=128, typed=False):
 
             # If cache is full, remove least frequently used item
             if len(cache) >= maxsize:
+                # Find minimum frequency
                 min_freq = min(freq_counter.values())
                 # Get all keys with minimum frequency
                 min_freq_keys = [k for k, v in freq_counter.items() if v == min_freq]
-                # Remove the oldest key among those with minimum frequency
-                for k in freq_order:
+                # Remove the oldest key with minimum frequency
+                for k in insertion_order:
                     if k in min_freq_keys:
                         del cache[k]
                         del freq_counter[k]
-                        freq_order.remove(k)
+                        insertion_order.remove(k)
                         break
 
             # Add new result to cache
             cache[key] = result
             freq_counter[key] = 1
-            freq_order.append(key)
+            insertion_order.append(key)
+
             return result
 
         # Add clear method to wrapper
         def clear_cache():
             cache.clear()
             freq_counter.clear()
-            freq_order.clear()
+            insertion_order.clear()
 
-        wrapper.clear = clear_cache
+        wrapper.clear_cache = clear_cache
         return wrapper
 
-    # Handle no-argument case
     if callable(maxsize):
-        f = maxsize
+        # Handle case where decorator is used without parameters
+        func = maxsize
         maxsize = 128
-        return decorator(f)
+        return decorator(func)
     return decorator

@@ -12,24 +12,24 @@ def update_last_applied_manifest_list_from_resp(
     # Iterate through response items and update manifest
     for i, resp_item in enumerate(response):
         if i < len(observer_schema):
-            # If schema item is a dict, recursively update
-            if isinstance(observer_schema[i], dict):
-                if not isinstance(last_applied_manifest[i], dict):
-                    last_applied_manifest[i] = {}
+            # Get corresponding schema for this item
+            schema_item = observer_schema[i]
+            
+            # Handle dict case recursively
+            if isinstance(resp_item, dict) and isinstance(schema_item, dict):
+                from .utils import update_last_applied_manifest_dict_from_resp
                 update_last_applied_manifest_dict_from_resp(
-                    last_applied_manifest[i],
-                    observer_schema[i],
+                    last_applied_manifest[i], 
+                    schema_item,
                     resp_item
                 )
-            # If schema item is a list, recursively update
-            elif isinstance(observer_schema[i], list):
-                if not isinstance(last_applied_manifest[i], list):
-                    last_applied_manifest[i] = []
+            # Handle list case recursively  
+            elif isinstance(resp_item, list) and isinstance(schema_item, list):
                 update_last_applied_manifest_list_from_resp(
                     last_applied_manifest[i],
-                    observer_schema[i],
+                    schema_item,
                     resp_item
                 )
-            # For primitive types, directly copy value
+            # Handle primitive values
             else:
                 last_applied_manifest[i] = resp_item

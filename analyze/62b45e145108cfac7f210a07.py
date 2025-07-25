@@ -24,27 +24,23 @@ def validate(self, inventory, extract_spec_version=False):
         if field not in inventory:
             raise ValueError(f"Missing required field: {field}")
 
-    # Validate ID
-    if not isinstance(inventory['id'], str):
-        raise ValueError("ID must be a string")
-
-    # Validate type
-    if not isinstance(inventory['type'], str):
-        raise ValueError("Type must be a string")
+    # Validate type field format
     if not inventory['type'].startswith('inventory/'):
-        raise ValueError("Type must start with 'inventory/'")
+        raise ValueError("Type field must start with 'inventory/'")
 
-    # Validate items
+    # Validate items is a list
     if not isinstance(inventory['items'], list):
-        raise ValueError("Items must be a list")
+        raise ValueError("Items field must be a list")
 
-    # Validate each item
+    # Validate each item in items list
     for item in inventory['items']:
         if not isinstance(item, dict):
             raise ValueError("Each item must be a dictionary")
-        if 'id' not in item:
-            raise ValueError("Each item must have an ID")
-        if not isinstance(item['id'], str):
-            raise ValueError("Item ID must be a string")
+        
+        # Validate required item fields
+        required_item_fields = ['id', 'type']
+        for field in required_item_fields:
+            if field not in item:
+                raise ValueError(f"Missing required field in item: {field}")
 
     return True

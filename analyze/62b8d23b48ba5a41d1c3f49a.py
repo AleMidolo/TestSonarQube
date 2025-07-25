@@ -5,9 +5,9 @@ def mru_cache(maxsize=128, typed=False):
     algorithm.
     """
     def decorator(func):
-        # Store cache and order of usage
+        # Store cache and order of access
         cache = {}
-        order = []
+        access_order = []
         
         def make_key(args, kwargs):
             # Create cache key from arguments
@@ -17,41 +17,37 @@ def mru_cache(maxsize=128, typed=False):
                 key += tuple(type(arg) for arg in args)
                 key += tuple(type(val) for val in kwargs.values())
             return hash(key)
-            
+        
         def wrapper(*args, **kwargs):
             key = make_key(args, kwargs)
             
-            try:
-                # Try to get from cache
-                result = cache[key]
-                # Update access order
-                order.remove(key)
-                order.append(key)
-                return result
+            if key in cache:
+                # Move accessed item to front of access order
+                access_order.remove(key)
+                access_order.append(key)
+                return cache[key]
                 
-            except KeyError:
-                # Calculate result
-                result = func(*args, **kwargs)
+            result = func(*args, **kwargs)
+            
+            if len(cache) >= maxsize:
+                # Remove least recently used item
+                lru_key = access_order.pop(0)
+                del cache[lru_key]
                 
-                # Add to cache
-                cache[key] = result
-                order.append(key)
-                
-                # Remove oldest if cache too large
-                if len(cache) > maxsize:
-                    oldest = order.pop(0)
-                    del cache[oldest]
-                    
-                return result
-                
+            # Add new result to cache
+            cache[key] = result
+            access_order.append(key)
+            
+            return result
+            
         wrapper.cache_info = lambda: {
             'maxsize': maxsize,
             'currsize': len(cache),
-            'hits': len(order),
-            'misses': func.__code__.co_firstlineno
+            'cache': cache,
+            'access_order': access_order
         }
         
-        wrapper.cache_clear = lambda: cache.clear() or order.clear()
+        wrapper.cache_clear = lambda: (cache.clear(), access_order.clear())
         
         return wrapper
         

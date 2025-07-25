@@ -30,13 +30,9 @@ def _explore_folder(folder):
             # Get base filename without extension
             base_name = os.path.splitext(file)[0]
             
-            # If XML file, use as key
-            if ext.lower() == '.xml':
-                file_groups[base_name]['xml'] = file_path
-            # Group other files by extension
-            else:
-                if 'other' not in file_groups[base_name]:
-                    file_groups[base_name]['other'] = []
-                file_groups[base_name]['other'].append(file_path)
+            # Group files by base name
+            if ext.lower() in ['.xml', '.pdf', '.txt']:
+                file_groups[base_name][ext.lower()] = file_path
     
+    # Convert defaultdict to regular dict
     return dict(file_groups)

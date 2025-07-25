@@ -3,7 +3,7 @@ from functools import wraps
 
 def lru_cache(maxsize=128, typed=False):
     def decorator(func):
-        # Create ordered dictionary to store cache
+        # Create ordered dictionary to store cached results
         cache = OrderedDict()
         
         @wraps(func)
@@ -17,15 +17,17 @@ def lru_cache(maxsize=128, typed=False):
                       tuple(type(v) for v in kwargs.values()))
             else:
                 key = (args, tuple(sorted(kwargs.items())))
-                
+            
             # Return cached result if it exists
             if key in cache:
                 # Move to end to mark as most recently used
                 cache.move_to_end(key)
                 return cache[key]
-                
-            # Calculate result and store in cache
+            
+            # Calculate result
             result = func(*args, **kwargs)
+            
+            # Add to cache
             cache[key] = result
             
             # Remove oldest item if cache is full

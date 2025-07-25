@@ -21,22 +21,11 @@ def get_nested_custom_and_control_args(self, args):
         # Check if argument is a control argument (starts with '__')
         if arg_name.startswith('__'):
             control_args[arg_name] = arg_value
-        
         # Check if argument is a custom argument (contains ':')
         elif ':' in arg_name:
-            # Split the custom argument name into parts
-            parts = arg_name.split(':')
-            
-            # Build nested dictionary structure
-            current_dict = nested_args
-            for part in parts[:-1]:
-                if part not in current_dict:
-                    current_dict[part] = {}
-                current_dict = current_dict[part]
-            
-            # Set the final value
-            current_dict[parts[-1]] = arg_value
-            
+            # Split the custom argument name and add to nested args
+            custom_key = arg_name.split(':')[-1]
+            nested_args[custom_key] = arg_value
         # Regular nested argument
         else:
             nested_args[arg_name] = arg_value

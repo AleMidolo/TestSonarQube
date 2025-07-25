@@ -3,47 +3,46 @@ def absorb(self, args):
     for arg in args:
         # Check if arg is an AND or OR operation
         if isinstance(arg, (And, Or)):
-            op = arg.op
+            # Get operator and operands
+            op = type(arg)
             terms = arg.args
             
-            # Look for absorption patterns in each term
+            # Check each term for absorption
             absorbed = False
-            for i, term1 in enumerate(terms):
-                for j, term2 in enumerate(terms):
-                    if i == j:
-                        continue
-                        
-                    # Regular absorption: A & (A | B) = A or A | (A & B) = A
-                    if (op == '&' and isinstance(term2, Or) and term1 in term2.args) or \
-                       (op == '|' and isinstance(term2, And) and term1 in term2.args):
-                        result.append(term1)
+            for term in terms:
+                # Check for regular absorption
+                if term in args:
+                    if (op is And and any(isinstance(t, Or) and term in t.args for t in terms)) or \
+                       (op is Or and any(isinstance(t, And) and term in t.args for t in terms)):
+                        result.append(term)
                         absorbed = True
                         break
-                        
-                    # Negative absorption: A & (~A | B) = A & B or A | (~A & B) = A | B
-                    if op == '&' and isinstance(term2, Or):
-                        for t in term2.args:
-                            if isinstance(t, Not) and t.arg == term1:
-                                remaining = [x for x in term2.args if x != t]
-                                result.append(And(term1, *remaining))
-                                absorbed = True
-                                break
-                    elif op == '|' and isinstance(term2, And):
-                        for t in term2.args:
-                            if isinstance(t, Not) and t.arg == term1:
-                                remaining = [x for x in term2.args if x != t]
-                                result.append(Or(term1, *remaining))
-                                absorbed = True
-                                break
-                                
-                if absorbed:
-                    break
-                    
-            # If no absorption found, keep original expression
+                
+                # Check for negative absorption
+                if isinstance(term, Not):
+                    neg_term = term.args[0]
+                    if neg_term in args:
+                        if op is And:
+                            # A & (~A | B) = A & B
+                            for t in terms:
+                                if isinstance(t, Or) and neg_term in t.args:
+                                    new_terms = [x for x in t.args if x != neg_term]
+                                    result.append(And(neg_term, *new_terms))
+                                    absorbed = True
+                                    break
+                        else:
+                            # A | (~A & B) = A | B
+                            for t in terms:
+                                if isinstance(t, And) and neg_term in t.args:
+                                    new_terms = [x for x in t.args if x != neg_term]
+                                    result.append(Or(neg_term, *new_terms))
+                                    absorbed = True
+                                    break
+            
+            # If no absorption occurred, keep original term
             if not absorbed:
                 result.append(arg)
         else:
-            # Not an operation, keep as is
             result.append(arg)
             
     return result

@@ -12,11 +12,11 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
     :param ansible_args: dict of ansible-playbook arguments to plumb down
         directly to Ansible.
     """
-    # Initialize command list with base ansible-playbook command
-    cmd = ['ansible-playbook']
+    import subprocess
+    import os
 
-    # Add playbook path
-    cmd.append(playbook_path)
+    # Build base command
+    cmd = ['ansible-playbook', playbook_path]
 
     # Add verbosity if specified
     if verbose:
@@ -25,13 +25,9 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
 
     # Add extra vars if provided
     if extra_vars:
-        cmd.append('--extra-vars')
-        extra_vars_str = ' '.join([f"{k}={v}" for k, v in extra_vars.items()])
-        cmd.append(f"'{extra_vars_str}'")
-
-    # Add inventory file from workspace
-    if hasattr(ir_workspace, 'inventory'):
-        cmd.extend(['-i', ir_workspace.inventory])
+        extra_vars_arg = '--extra-vars'
+        for key, value in extra_vars.items():
+            cmd.extend([extra_vars_arg, f"{key}={value}"])
 
     # Add any additional ansible arguments
     if ansible_args:
@@ -41,23 +37,28 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
             elif value:
                 cmd.extend([f"--{arg}", str(value)])
 
-    # Convert command list to string
-    cmd_str = ' '.join(cmd)
+    # Set environment variables from workspace if available
+    env = os.environ.copy()
+    if hasattr(ir_workspace, 'ansible_config'):
+        env['ANSIBLE_CONFIG'] = ir_workspace.ansible_config
+    
+    if hasattr(ir_workspace, 'inventory'):
+        cmd.extend(['-i', ir_workspace.inventory])
 
     # Execute ansible-playbook command
-    import subprocess
     try:
         process = subprocess.Popen(
-            cmd_str,
-            shell=True,
+            cmd,
+            env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True
         )
+        
         stdout, stderr = process.communicate()
         
         if process.returncode != 0:
-            raise Exception(f"Ansible playbook execution failed: {stderr}")
+            raise Exception(f"Ansible playbook execution failed:\n{stderr}")
             
         return stdout
         

@@ -11,17 +11,17 @@ def generate_default_observer_schema(app):
     if not app.spec.observer:
         app.spec.observer = {}
         
-    # Get list of resources from manifest
-    resources = app.spec.manifest
-    
-    # For each resource in manifest
-    for resource in resources:
-        # Get resource kind and API version
-        kind = resource.get('kind')
-        api_version = resource.get('apiVersion')
+    # Iterate through each manifest in the application spec
+    for manifest in app.spec.manifest:
+        # Get the resource kind from the manifest
+        kind = manifest.get('kind')
         
-        # Skip if resource already has custom observer schema
-        if f"{api_version}/{kind}" in app.spec.observer:
+        # Skip if kind is not present
+        if not kind:
+            continue
+            
+        # Skip if observer schema already exists for this kind
+        if kind in app.spec.observer:
             continue
             
         # Generate default schema based on resource kind
@@ -29,25 +29,14 @@ def generate_default_observer_schema(app):
             'conditions': [{
                 'type': 'Available',
                 'status': 'True'
-            }]
+            }],
+            'state': {
+                'ready': {
+                    'path': 'status.conditions[?type=="Ready"].status',
+                    'value': 'True'
+                }
+            }
         }
         
-        # Add special handling for common resource types
-        if kind == 'Deployment':
-            default_schema['conditions'].append({
-                'type': 'Progressing',
-                'status': 'True'
-            })
-        elif kind == 'StatefulSet':
-            default_schema['conditions'].append({
-                'type': 'Ready',
-                'status': 'True'  
-            })
-        elif kind == 'Pod':
-            default_schema['conditions'].append({
-                'type': 'Ready',
-                'status': 'True'
-            })
-            
-        # Add generated schema to observer
-        app.spec.observer[f"{api_version}/{kind}"] = default_schema
+        # Add default schema to observer
+        app.spec.observer[kind] = default_schema
