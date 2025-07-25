@@ -16,29 +16,58 @@ def absorb(self, args):
     def apply_absorption(expr):
         if isinstance(expr, tuple):
             if expr[0] == '&':
-                left, right = expr[1], expr[2]
-                if isinstance(right, tuple) and right[0] == '|':
-                    if left == right[1]:
-                        return left
-                    elif left == ('~', right[1]):
-                        return ('&', left, right[2])
-                elif isinstance(left, tuple) and left[0] == '|':
-                    if right == left[1]:
-                        return right
-                    elif right == ('~', left[1]):
-                        return ('&', right, left[2])
+                if isinstance(expr[1], tuple) and expr[1][0] == '|':
+                    if expr[1][1] == expr[2]:
+                        return expr[2]
+                    elif expr[1][2] == expr[2]:
+                        return expr[2]
+                elif isinstance(expr[2], tuple) and expr[2][0] == '|':
+                    if expr[2][1] == expr[1]:
+                        return expr[1]
+                    elif expr[2][2] == expr[1]:
+                        return expr[1]
             elif expr[0] == '|':
-                left, right = expr[1], expr[2]
-                if isinstance(right, tuple) and right[0] == '&':
-                    if left == right[1]:
-                        return left
-                    elif left == ('~', right[1]):
-                        return ('|', left, right[2])
-                elif isinstance(left, tuple) and left[0] == '&':
-                    if right == left[1]:
-                        return right
-                    elif right == ('~', left[1]):
-                        return ('|', right, left[2])
+                if isinstance(expr[1], tuple) and expr[1][0] == '&':
+                    if expr[1][1] == expr[2]:
+                        return expr[2]
+                    elif expr[1][2] == expr[2]:
+                        return expr[2]
+                elif isinstance(expr[2], tuple) and expr[2][0] == '&':
+                    if expr[2][1] == expr[1]:
+                        return expr[1]
+                    elif expr[2][2] == expr[1]:
+                        return expr[1]
         return expr
 
-    return [apply_absorption(arg) for arg in args]
+    def apply_negative_absorption(expr):
+        if isinstance(expr, tuple):
+            if expr[0] == '&':
+                if isinstance(expr[1], tuple) and expr[1][0] == '|':
+                    if isinstance(expr[1][1], tuple) and expr[1][1][0] == '~' and expr[1][1][1] == expr[2]:
+                        return ('&', expr[2], expr[1][2])
+                    elif isinstance(expr[1][2], tuple) and expr[1][2][0] == '~' and expr[1][2][1] == expr[2]:
+                        return ('&', expr[2], expr[1][1])
+                elif isinstance(expr[2], tuple) and expr[2][0] == '|':
+                    if isinstance(expr[2][1], tuple) and expr[2][1][0] == '~' and expr[2][1][1] == expr[1]:
+                        return ('&', expr[1], expr[2][2])
+                    elif isinstance(expr[2][2], tuple) and expr[2][2][0] == '~' and expr[2][2][1] == expr[1]:
+                        return ('&', expr[1], expr[2][1])
+            elif expr[0] == '|':
+                if isinstance(expr[1], tuple) and expr[1][0] == '&':
+                    if isinstance(expr[1][1], tuple) and expr[1][1][0] == '~' and expr[1][1][1] == expr[2]:
+                        return ('|', expr[2], expr[1][2])
+                    elif isinstance(expr[1][2], tuple) and expr[1][2][0] == '~' and expr[1][2][1] == expr[2]:
+                        return ('|', expr[2], expr[1][1])
+                elif isinstance(expr[2], tuple) and expr[2][0] == '&':
+                    if isinstance(expr[2][1], tuple) and expr[2][1][0] == '~' and expr[2][1][1] == expr[1]:
+                        return ('|', expr[1], expr[2][2])
+                    elif isinstance(expr[2][2], tuple) and expr[2][2][0] == '~' and expr[2][2][1] == expr[1]:
+                        return ('|', expr[1], expr[2][1])
+        return expr
+
+    new_args = []
+    for expr in args:
+        expr = apply_absorption(expr)
+        expr = apply_negative_absorption(expr)
+        new_args.append(expr)
+    return new_args

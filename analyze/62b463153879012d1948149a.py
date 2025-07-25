@@ -9,23 +9,23 @@ def _group_files_by_xml_filename(source, xmls, files):
     Parameters
     ----------
     source : str
-        The source directory or zipfile path
+        The source directory or zipfile.
     xmls : list
-        List of XML filenames
+        List of XML filenames.
     files : list
-        List of files in the folder or zipfile
+        List of files in the folder or zipfile.
 
     Returns
     -------
     dict
         key: name of the XML files
-        value: list of files associated with the XML file
+        value: Package
     """
     grouped_files = {}
     
     for xml in xmls:
         xml_basename = os.path.splitext(xml)[0]
-        associated_files = [file for file in files if file.startswith(xml_basename)]
-        grouped_files[xml] = associated_files
+        matching_files = [file for file in files if file.startswith(xml_basename)]
+        grouped_files[xml] = matching_files
     
     return grouped_files

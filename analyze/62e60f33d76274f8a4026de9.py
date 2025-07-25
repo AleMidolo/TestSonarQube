@@ -7,10 +7,10 @@ def dehydrate_point(value):
     :return: A dictionary representation of the Point object.
     :rtype: dict
     """
-    if not hasattr(value, 'x') or not hasattr(value, 'y'):
-        raise ValueError("The provided value does not have 'x' and 'y' attributes.")
-    
+    if not value:
+        return None
     return {
         'x': value.x,
-        'y': value.y
+        'y': value.y,
+        'z': value.z if hasattr(value, 'z') else None
     }

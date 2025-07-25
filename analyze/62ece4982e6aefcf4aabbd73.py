@@ -23,6 +23,6 @@ def split(s, platform='this'):
             (?:[^\s"]+|"[^"]*")+
         """, re.VERBOSE)
     else:
-        raise ValueError("Invalid platform value. Use 'this', 1 (POSIX), or 0 (Windows/CMD).")
+        raise ValueError("Invalid platform value")
     
     return [match.group(0) for match in regex.finditer(s)]

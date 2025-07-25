@@ -27,8 +27,7 @@ def data(self, *keys):
                 if key < 0 or key >= len(self._fields):
                     raise IndexError(f"Index {key} is out of bounds.")
                 field = self._fields[key]
-                value = self._values[key]
-                result[field] = value
+                result[field] = self._values[key]
             else:
                 # Handle key-based access
                 if key in self._fields:

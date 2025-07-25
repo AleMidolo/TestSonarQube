@@ -9,4 +9,4 @@ def index(self, key):
     for i, item in enumerate(self):
         if item == key:
             return i
-    raise ValueError(f"{key} is not in the list")
+    raise ValueError(f"{key} is not in list")

@@ -1,26 +1,45 @@
-import datetime
+from datetime import time, timedelta, tzinfo
 
-def from_ticks(cls, ticks, tz=None):
-    """
-    Create a time from ticks (nanoseconds since midnight).
+class Time:
+    def __init__(self, hour, minute, second, microsecond, tzinfo=None):
+        self._hour = hour
+        self._minute = minute
+        self._second = second
+        self._microsecond = microsecond
+        self._tzinfo = tzinfo
 
-    :param ticks: nanoseconds since midnight
-    :type ticks: int
-    :param tz: optional timezone
-    :type tz: datetime.tzinfo
+    @classmethod
+    def from_ticks(cls, ticks, tz=None):
+        """
+        Create a time from ticks (nanoseconds since midnight).
 
-    :rtype: Time
+        :param ticks: nanoseconds since midnight
+        :type ticks: int
+        :param tz: optional timezone
+        :type tz: datetime.tzinfo
 
-    :raises ValueError: if ticks is out of bounds
-        (0 <= ticks < 86400000000000)
-    """
-    if not (0 <= ticks < 86400000000000):
-        raise ValueError("ticks must be between 0 and 86400000000000")
-    
-    nanoseconds = ticks % 1000000000
-    seconds = (ticks // 1000000000) % 60
-    minutes = (ticks // 60000000000) % 60
-    hours = ticks // 3600000000000
-    
-    time_obj = datetime.time(hour=hours, minute=minutes, second=seconds, microsecond=nanoseconds // 1000, tzinfo=tz)
-    return time_obj
+        :rtype: Time
+
+        :raises ValueError: if ticks is out of bounds
+            (0 <= ticks < 86400000000000)
+        """
+        if not (0 <= ticks < 86400000000000):
+            raise ValueError("ticks must be between 0 and 86400000000000")
+
+        nanoseconds_per_hour = 3600 * 10**9
+        nanoseconds_per_minute = 60 * 10**9
+        nanoseconds_per_second = 10**9
+        nanoseconds_per_microsecond = 10**3
+
+        hours = ticks // nanoseconds_per_hour
+        ticks %= nanoseconds_per_hour
+
+        minutes = ticks // nanoseconds_per_minute
+        ticks %= nanoseconds_per_minute
+
+        seconds = ticks // nanoseconds_per_second
+        ticks %= nanoseconds_per_second
+
+        microseconds = ticks // nanoseconds_per_microsecond
+
+        return cls(hours, minutes, seconds, microseconds, tz)

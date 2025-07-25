@@ -1,33 +1,32 @@
-import os
-import logging
-from fs import open_fs
-
 def validate(self, path):
     """
     Validate OCFL object at path or pyfs root.
 
     Returns True if valid (warnings permitted), False otherwise.
     """
-    try:
-        if os.path.exists(path):
-            # If the path is a directory, validate it as an OCFL object
-            if os.path.isdir(path):
-                # Placeholder for actual OCFL validation logic
-                logging.warning("OCFL validation logic not implemented.")
-                return True
-            else:
-                logging.error(f"Path {path} is not a directory.")
-                return False
-        else:
-            # Try to open the path as a pyfs filesystem
-            try:
-                fs = open_fs(path)
-                # Placeholder for actual OCFL validation logic
-                logging.warning("OCFL validation logic not implemented.")
-                return True
-            except Exception as e:
-                logging.error(f"Failed to open filesystem at {path}: {e}")
-                return False
-    except Exception as e:
-        logging.error(f"An error occurred during validation: {e}")
+    import os
+    from fs import open_fs
+
+    # Check if the path exists
+    if not os.path.exists(path):
         return False
+
+    # Open the filesystem at the given path
+    fs = open_fs(path)
+
+    # Check for the presence of required OCFL files and directories
+    required_files = ['inventory.json', 'inventory.json.sha512']
+    required_dirs = ['objects']
+
+    # Validate required files
+    for file in required_files:
+        if not fs.exists(file):
+            return False
+
+    # Validate required directories
+    for directory in required_dirs:
+        if not fs.isdir(directory):
+            return False
+
+    # If all checks pass, return True
+    return True

@@ -17,16 +17,26 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
     """
     # Create the DISCARD message
     discard_message = {
-        'type': 'DISCARD',
-        'n': n,
-        'qid': qid,
-        'dehydration_hooks': dehydration_hooks,
-        'hydration_hooks': hydration_hooks,
-        'handlers': handlers
+        "type": "DISCARD",
+        "n": n,
+        "qid": qid
     }
-    
-    # Append the DISCARD message to the output queue
+
+    # Append the message to the output queue
     self.output_queue.append(discard_message)
-    
-    # Return the Response object with the handlers
-    return Response(handlers=handlers)
+
+    # Apply dehydration hooks if provided
+    if dehydration_hooks:
+        for key, value in discard_message.items():
+            if type(value) in dehydration_hooks:
+                discard_message[key] = dehydration_hooks[type(value)](value)
+
+    # Apply hydration hooks if provided
+    if hydration_hooks:
+        for key, value in discard_message.items():
+            if type(value) in hydration_hooks:
+                discard_message[key] = hydration_hooks[type(value)](value)
+
+    # Create and return the Response object with handlers
+    response = Response(discard_message, **handlers)
+    return response

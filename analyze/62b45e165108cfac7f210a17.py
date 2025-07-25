@@ -9,12 +9,12 @@ def get_logical_path_map(inventory, version):
     """
     logical_path_map = {}
     
-    for logical_path, file_versions in inventory.items():
-        content_files = set()
-        for file_version, file_path in file_versions.items():
-            if file_version <= version:
-                content_files.add(file_path)
-        if content_files:
+    for logical_path, versions in inventory.items():
+        if version in versions:
+            content_files = set()
+            for v in range(version, max(versions.keys()) + 1):
+                if v in versions:
+                    content_files.update(versions[v])
             logical_path_map[logical_path] = content_files
     
     return logical_path_map

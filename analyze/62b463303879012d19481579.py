@@ -3,7 +3,7 @@ def _extract_number_and_supplment_from_issue_element(issue):
     Extract the possible values of number and suppl from the contents of issue.
     
     Args:
-        issue (str): The issue string from which to extract the number and supplement.
+        issue (str): The issue string to extract number and supplement from.
     
     Returns:
         tuple: A tuple containing the extracted number and supplement (number, suppl).
@@ -19,7 +19,7 @@ def _extract_number_and_supplment_from_issue_element(issue):
         for part in parts:
             if part.isdigit():
                 number = int(part)
-            elif part.lower().startswith('suppl'):
-                suppl = part
+            elif part.lower().startswith('s'):
+                suppl = part[1:] if len(part) > 1 else None
     
     return number, suppl

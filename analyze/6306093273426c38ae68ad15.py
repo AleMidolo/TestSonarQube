@@ -14,7 +14,7 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     extra_vars = " ".join([f"{key}={value}" for key, value in vars_dict.items()])
     
     # Construct the full command to run Ansible
-    command = ["ansible-playbook"] + cli_args + ["--extra-vars", extra_vars]
+    command = ["ansible-playbook"] + cli_args + ["-e", extra_vars]
     
     # Execute the command
     result = subprocess.run(command, capture_output=True, text=True)

@@ -32,28 +32,52 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     Return the resulting graph.
     """
-    if make_value is None:
-        make_value = lambda bin_: bin_
+    from collections import namedtuple
+    import numpy as np
 
+    # Determine the coordinate for each bin
+    if get_coordinate == "left":
+        coordinates = hist.bin_edges[:-1]
+    elif get_coordinate == "right":
+        coordinates = hist.bin_edges[1:]
+    elif get_coordinate == "middle":
+        coordinates = (hist.bin_edges[:-1] + hist.bin_edges[1:]) / 2
+    else:
+        raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
+
+    # Default make_value function if not provided
+    if make_value is None:
+        make_value = lambda bin_content: bin_content
+
+    # Extract values from histogram bins
+    values = [make_value(bin_content) for bin_content in hist.bin_contents]
+
+    # Determine the number of fields required
+    if isinstance(values[0], (tuple, list)):
+        num_fields = len(values[0]) + 1  # +1 for the x-coordinate
+    else:
+        num_fields = 2  # x and y
+
+    # Ensure field_names has the correct length
+    if len(field_names) != num_fields:
+        raise ValueError(f"field_names must have {num_fields} elements")
+
+    # Create the graph data structure
+    GraphPoint = namedtuple('GraphPoint', field_names)
+    graph_data = []
+
+    for coord, value in zip(coordinates, values):
+        if isinstance(value, (tuple, list)):
+            graph_data.append(GraphPoint(coord, *value))
+        else:
+            graph_data.append(GraphPoint(coord, value))
+
+    # Determine the scale
     if scale is True:
         scale = hist.scale
+    elif scale is None:
+        scale = "unknown"
 
-    graph_points = []
-    for bin_ in hist.bins:
-        if get_coordinate == "left":
-            x = bin_.left
-        elif get_coordinate == "right":
-            x = bin_.right
-        elif get_coordinate == "middle":
-            x = (bin_.left + bin_.right) / 2
-        else:
-            raise ValueError("Invalid get_coordinate value. Must be 'left', 'right', or 'middle'.")
-
-        value = make_value(bin_.content)
-        if isinstance(value, tuple):
-            graph_point = (x,) + value
-        else:
-            graph_point = (x, value)
-        graph_points.append(graph_point)
-
-    return Graph(graph_points, field_names=field_names, scale=scale)
+    # Create and return the graph
+    Graph = namedtuple('Graph', ['data', 'scale'])
+    return Graph(data=graph_data, scale=scale)

@@ -11,4 +11,4 @@ def values(self, *keys):
     if not keys:
         return list(self.__dict__.values())
     else:
-        return [self.__dict__.get(key) for key in keys]
+        return [self.__dict__[key] if isinstance(key, str) else list(self.__dict__.values())[key] for key in keys]

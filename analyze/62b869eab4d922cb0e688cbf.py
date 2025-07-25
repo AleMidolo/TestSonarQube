@@ -8,36 +8,34 @@ def generate_default_observer_schema(app):
             default observer schema
     """
     default_schema = {
-        "apiVersion": "v1",
-        "kind": "ObserverSchema",
-        "metadata": {
-            "name": "default-observer-schema",
-            "namespace": app.metadata.namespace
-        },
-        "spec": {
-            "resources": []
-        }
-    }
-
-    for resource in app.spec.manifest:
-        resource_schema = {
-            "group": resource.get("group", ""),
-            "version": resource.get("version", "v1"),
-            "kind": resource.get("kind", ""),
-            "namespace": resource.get("metadata", {}).get("namespace", ""),
-            "name": resource.get("metadata", {}).get("name", ""),
-            "observer": {
-                "type": "status",
-                "status": {
-                    "conditions": [
-                        {
-                            "type": "Ready",
-                            "status": "True"
+        "type": "object",
+        "properties": {
+            "status": {
+                "type": "object",
+                "properties": {
+                    "conditions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "type": {"type": "string"},
+                                "status": {"type": "string"},
+                                "lastTransitionTime": {"type": "string"},
+                                "reason": {"type": "string"},
+                                "message": {"type": "string"}
+                            },
+                            "required": ["type", "status"]
                         }
-                    ]
+                    }
                 }
             }
-        }
-        default_schema["spec"]["resources"].append(resource_schema)
+        },
+        "required": ["status"]
+    }
 
-    return default_schema
+    if not hasattr(app.spec, 'manifest'):
+        return
+
+    for resource in app.spec.manifest:
+        if not hasattr(resource, 'observer_schema') or not resource.observer_schema:
+            resource.observer_schema = default_schema

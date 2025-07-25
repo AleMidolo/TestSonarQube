@@ -5,15 +5,15 @@ def point_type(name, fields, srid_map):
     Args:
         name (str): The name of the new Point subclass.
         fields (dict): A dictionary of field names and their corresponding types.
-        srid_map (dict): A dictionary mapping SRID values to coordinate reference systems.
+        srid_map (dict): A dictionary mapping field names to SRID values.
 
     Returns:
-        type: A new Point subclass with the specified fields and SRID mapping.
+        type: A new Point subclass with the specified fields and SRID mappings.
     """
     class Point:
         def __init__(self, **kwargs):
-            for field, field_type in fields.items():
-                setattr(self, field, kwargs.get(field, field_type()))
+            for field, value in kwargs.items():
+                setattr(self, field, value)
             self.srid_map = srid_map
 
         def __repr__(self):
@@ -21,4 +21,7 @@ def point_type(name, fields, srid_map):
             return f"{name}({fields_str})"
 
     Point.__name__ = name
+    Point.__qualname__ = name
+    Point.__annotations__ = fields
+
     return Point

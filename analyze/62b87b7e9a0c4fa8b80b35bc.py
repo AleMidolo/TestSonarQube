@@ -19,24 +19,20 @@ def _update_context(self, context):
     if not hasattr(context, 'error'):
         context.error = {}
 
-    # Assuming self has properties like 'error_E_low', 'error_E_high', etc.
-    # These properties are mapped to 'x', 'y', 'z' for simplicity.
-    error_mapping = {
-        'error_E_low': 'x_low',
-        'error_E_high': 'x_high',
-        'error_t_low': 'y_low',
-        'error_t_high': 'y_high',
-        'error_z_low': 'z_low',
-        'error_z_high': 'z_high',
-    }
+    # Assuming the graph has properties like 'error_E_low', 'error_E_high', etc.
+    # We map these to 'x', 'y', 'z' based on their order.
+    error_mapping = {'x': 0, 'y': 1, 'z': 2}
+    error_index = 0
 
-    for attr, error_name in error_mapping.items():
-        if hasattr(self, attr):
-            index = getattr(self, attr)
-            if error_name not in context.error:
-                context.error[error_name] = {}
-            context.error[error_name]['index'] = index
-
-    # Ensure that existing values in context.value are not removed
-    if not hasattr(context, 'value'):
-        context.value = {}
+    for key, value in self.__dict__.items():
+        if key.startswith('error_'):
+            # Extract the coordinate name (e.g., 'E' from 'error_E_low')
+            coordinate = key.split('_')[1]
+            # Map to 'x', 'y', or 'z'
+            if coordinate in error_mapping:
+                error_name = list(error_mapping.keys())[list(error_mapping.values()).index(error_mapping[coordinate])]
+                # Append the error index to the context
+                if error_name not in context.error:
+                    context.error[error_name] = {}
+                context.error[error_name]['index'] = error_index
+                error_index += 1

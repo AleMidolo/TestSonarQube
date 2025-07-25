@@ -12,8 +12,8 @@ def next_version(version):
     parts[-1] = str(last_part)
     
     # Handle zero-prefixed versions
-    if len(parts[-1]) > 1 and parts[-1][0] == '0':
-        parts[-1] = parts[-1][1:]
+    if parts[-1].startswith('0'):
+        parts[-1] = parts[-1].zfill(len(parts[-1]))
     
-    # Reconstruct the version string
+    # Join the parts back together
     return '.'.join(parts)

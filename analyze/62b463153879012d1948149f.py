@@ -22,17 +22,12 @@ def _eval_file(prefix, file_path):
     file_name = os.path.basename(file_path)
     file_folder = os.path.dirname(file_path)
     
-    if prefix in file_name:
-        if "asset" in file_name.lower():
-            file_type = "asset"
-        elif "rendition" in file_name.lower():
-            file_type = "rendition"
-        else:
-            file_type = "unknown"
+    if file_name.startswith(prefix) and file_name.endswith('.xml'):
+        file_type = 'asset'
     else:
-        file_type = "unknown"
+        file_type = 'rendition'
     
     return {
-        "type": file_type,
-        "path": file_path
+        'type': file_type,
+        'path': file_path
     }
