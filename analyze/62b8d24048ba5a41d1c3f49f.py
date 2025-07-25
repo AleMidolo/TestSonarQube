@@ -25,7 +25,7 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
             if key in cache:
                 result, timestamp = cache[key]
                 if current_time - timestamp <= ttl:
-                    # Mover el elemento al final (más recientemente usado)
+                    # Mover el item al final (más recientemente usado)
                     cache.move_to_end(key)
                     return result
                 else:

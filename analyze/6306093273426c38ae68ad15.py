@@ -47,8 +47,9 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
         return results
 
     except Exception as e:
-        raise Exception(f"Error ejecutando playbook: {str(e)}")
-    
+        LOG.error("Error ejecutando playbook: %s", str(e))
+        raise
+
     finally:
         # Limpiar entorno
         if 'ANSIBLE_CONFIG' in os.environ:

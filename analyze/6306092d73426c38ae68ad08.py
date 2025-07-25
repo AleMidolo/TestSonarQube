@@ -15,21 +15,22 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
             
             # Evaluar la condición required_when
             if isinstance(required_condition, str):
-                # Si es string, verificar si el argumento mencionado existe
-                if required_condition in args and args[required_condition]:
-                    conditionally_required.append(option['name'])
-            elif isinstance(required_condition, dict):
-                # Si es diccionario, evaluar la condición compleja
-                matches = True
-                for key, value in required_condition.items():
-                    if key not in args or args[key] != value:
-                        matches = False
-                        break
-                if matches:
-                    conditionally_required.append(option['name'])
+                # Si es una cadena, evaluar como expresión
+                try:
+                    condition_met = eval(required_condition, {'args': args})
+                except:
+                    condition_met = False
             elif callable(required_condition):
-                # Si es una función, evaluarla
-                if required_condition(args):
-                    conditionally_required.append(option['name'])
-                    
+                # Si es una función, llamarla con los argumentos
+                try:
+                    condition_met = required_condition(args)
+                except:
+                    condition_met = False
+            else:
+                # Si es un valor booleano directo
+                condition_met = bool(required_condition)
+                
+            if condition_met:
+                conditionally_required.append(option['name'])
+                
     return conditionally_required

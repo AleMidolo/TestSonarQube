@@ -17,7 +17,7 @@ def _explore_folder(folder):
     from collections import defaultdict
     
     # Diccionario para almacenar los archivos agrupados
-    files_dict = defaultdict(dict)
+    files_dict = defaultdict(list)
     
     # Recorrer todos los archivos en la carpeta
     for filename in os.listdir(folder):
@@ -25,17 +25,18 @@ def _explore_folder(folder):
         
         # Solo procesar archivos, no directorios
         if os.path.isfile(filepath):
-            # Obtener nombre base y extensión
-            basename, ext = os.path.splitext(filename)
+            # Obtener el nombre base sin extensión
+            base_name = os.path.splitext(filename)[0]
             
-            # Si es XML, usar como clave base
-            if ext.lower() == '.xml':
-                files_dict[basename]['xml'] = filepath
-            # Si es PDF, agregar a la entrada correspondiente
-            elif ext.lower() == '.pdf':
-                files_dict[basename]['pdf'] = filepath
-            # Si es TXT, agregar a la entrada correspondiente  
-            elif ext.lower() == '.txt':
-                files_dict[basename]['txt'] = filepath
-                
+            # Si termina en números, obtener la parte base
+            while base_name[-1].isdigit():
+                base_name = base_name[:-1]
+            
+            # Agregar el archivo completo a la lista del nombre base
+            files_dict[base_name].append({
+                'filename': filename,
+                'filepath': filepath
+            })
+            
+    # Convertir defaultdict a dict normal
     return dict(files_dict)

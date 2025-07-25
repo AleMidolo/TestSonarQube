@@ -33,9 +33,7 @@ def _explore_zipfile(zip_path):
                 for related_file in zip_ref.namelist():
                     related_base = os.path.splitext(os.path.basename(related_file))[0]
                     if related_base == base_name:
-                        grouped_files[key].append({
-                            'filename': related_file,
-                            'data': zip_ref.read(related_file)
-                        })
+                        grouped_files[key].append(related_file)
     
+    # Convertir defaultdict a dict regular
     return dict(grouped_files)

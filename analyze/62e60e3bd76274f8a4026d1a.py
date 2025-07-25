@@ -10,12 +10,14 @@ def from_raw_values(cls, values):
     bookmarks = []
     for value in values:
         try:
-            # Remove any whitespace and validate string is not empty
-            bookmark = value.strip()
-            if bookmark:
+            # Remove any whitespace and validate string
+            value = value.strip()
+            if value:
+                # Convert string to float if possible
+                bookmark = float(value)
                 bookmarks.append(bookmark)
-        except (AttributeError, TypeError):
-            # Skip invalid values that can't be converted to string
+        except ValueError:
+            # Skip invalid values
             continue
             
     return cls(bookmarks)

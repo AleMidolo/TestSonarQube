@@ -16,7 +16,11 @@ _borgmatic()
             _filedir
             return 0
             ;;
-        extract|mount)
+        mount)
+            _filedir -d
+            return 0
+            ;;
+        extract)
             _filedir -d
             return 0
             ;;
@@ -30,7 +34,6 @@ _borgmatic()
     fi
 
     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-    return 0
 }
 
 complete -F _borgmatic borgmatic

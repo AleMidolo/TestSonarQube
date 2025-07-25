@@ -7,16 +7,21 @@ def formatmany(
     # Convert each params set to out style
     out_params = []
     for params in many_params:
-        # Format single params set
-        _, converted_params = self.format(sql, params)
-        out_params.append(converted_params)
-        
-    # Format SQL once using first params set
-    try:
-        first_params = next(iter(many_params))
-    except StopIteration:
-        first_params = {}
-        
-    formatted_sql, _ = self.format(sql, first_params)
-    
-    return formatted_sql, out_params
+        # Format SQL and convert params for first iteration only
+        if not out_params:
+            sql, param_map = self._format(sql, params)
+            out_params.append(param_map)
+        else:
+            # Just convert params using same mapping
+            if isinstance(params, Mapping):
+                param_map = {i: params[k] for k, i in self._param_map.items()}
+            else:
+                param_map = {i: params[k] for k, i in enumerate(self._param_map)}
+            out_params.append(param_map)
+
+    # Convert param maps to lists if using ordinal out style
+    if self.out_style in (ParamStyle.QMARK, ParamStyle.FORMAT):
+        max_param = max(max(p.keys()) for p in out_params)
+        out_params = [[p.get(i) for i in range(max_param + 1)] for p in out_params]
+
+    return sql, out_params
