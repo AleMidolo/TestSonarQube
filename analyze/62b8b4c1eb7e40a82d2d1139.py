@@ -20,7 +20,7 @@ def verifyClass(iface, candidate, tentative=False):
         iface_attr = getattr(iface, attr)
         candidate_attr = getattr(candidate, attr)
         
-        # Check if attributes are callable (methods)
+        # Check if attribute is a method
         if callable(iface_attr):
             if not callable(candidate_attr):
                 if tentative:
@@ -34,5 +34,5 @@ def verifyClass(iface, candidate, tentative=False):
                 if tentative:
                     return False
                 raise TypeError(f"Method signature mismatch for '{attr}'")
-    
+                
     return True

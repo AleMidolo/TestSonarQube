@@ -8,7 +8,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     # Check if candidate claims to provide interface
     if not tentative and not iface.providedBy(candidate):
         errors['provide'].append(
-            f"{candidate} does not provide interface {iface.__name__}"
+            f"Class {candidate} does not provide interface {iface.__name__}"
         )
 
     # Check methods and attributes
@@ -17,14 +17,14 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             # Check if method exists
             if not hasattr(candidate, name):
                 errors['methods'].append(
-                    f"Method {name} not provided by {candidate}"
+                    f"Method '{name}' not implemented"
                 )
                 continue
 
             method = getattr(candidate, name)
             if not callable(method):
                 errors['methods'].append(
-                    f"{name} is not callable on {candidate}"
+                    f"Attribute '{name}' is not callable as required"
                 )
                 continue
 
@@ -36,7 +36,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
                 
                 if impl_sig.parameters != iface_sig.parameters:
                     errors['signatures'].append(
-                        f"Method {name} has wrong signature: {impl_sig} != {iface_sig}"
+                        f"Method '{name}' has wrong signature: {impl_sig} != {iface_sig}"
                     )
             except ValueError:
                 # Can't get signature, skip check
@@ -46,26 +46,24 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             # Check if attribute exists
             if not hasattr(candidate, name):
                 errors['attributes'].append(
-                    f"Attribute {name} not provided by {candidate}"
+                    f"Attribute '{name}' not provided"
                 )
 
     # If no errors, return True
     if not errors:
         return True
 
-    # If single error, raise it directly
-    total_errors = sum(len(errs) for errs in errors.values())
-    if total_errors == 1:
-        for err_list in errors.values():
-            if err_list:
-                raise Invalid(err_list[0])
+    # Collect all error messages
+    all_errors = []
+    for category, messages in errors.items():
+        all_errors.extend(messages)
 
-    # Multiple errors - raise all of them
-    if errors:
-        error_msg = []
-        for category, err_list in errors.items():
-            if err_list:
-                error_msg.extend(err_list)
-        raise Invalid("\n".join(error_msg))
+    # If single error, raise it directly
+    if len(all_errors) == 1:
+        raise Invalid(all_errors[0])
+
+    # Otherwise raise all errors together
+    if all_errors:
+        raise Invalid("\n".join(all_errors))
 
     return True

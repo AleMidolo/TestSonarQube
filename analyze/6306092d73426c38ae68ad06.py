@@ -7,11 +7,11 @@ def get_silent_args(self, args):
     """
     silent_args = []
     
-    # Check each argument
+    # Iterate through args and check for silent flag
     for arg in args:
-        # If argument starts with @ it is silenced
-        if str(arg).startswith('@'):
-            # Remove @ and add to silent list
-            silent_args.append(str(arg)[1:])
+        if isinstance(arg, str) and arg.startswith('-s'):
+            # Remove -s prefix to get actual argument name
+            silent_arg = arg[2:]
+            silent_args.append(silent_arg)
             
     return silent_args

@@ -22,13 +22,13 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     nodeinfo_url = f"{url}/{document_path}"
     
     # Create the well-known document according to spec
-    well_known = {
-        'links': [
+    well_known_doc = {
+        "links": [
             {
-                'rel': 'http://nodeinfo.diaspora.software/ns/schema/2.0',
-                'href': nodeinfo_url
+                "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
+                "href": nodeinfo_url
             }
         ]
     }
     
-    return well_known
+    return well_known_doc

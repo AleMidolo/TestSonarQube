@@ -12,7 +12,7 @@ def mru_cache(maxsize=128, typed=False):
         def wrapper(*args, **kwargs):
             # Crea una chiave per la cache basata sugli argomenti
             if typed:
-                key = (*args, *kwargs.items(), *(type(arg) for arg in args))
+                key = (*args, *kwargs.items(), *[type(arg) for arg in args])
             else:
                 key = (*args, *kwargs.items())
                 
@@ -29,9 +29,9 @@ def mru_cache(maxsize=128, typed=False):
                 
                 # Se la cache è piena, rimuovi l'elemento usato meno recentemente
                 if len(cache) >= maxsize:
-                    # Rimuovi l'elemento più vecchio
-                    oldest = order.pop(0)
-                    del cache[oldest]
+                    # Rimuovi il primo elemento (least recently used)
+                    oldest_key = order.pop(0)
+                    del cache[oldest_key]
                 
                 # Aggiungi il nuovo risultato alla cache
                 cache[key] = result

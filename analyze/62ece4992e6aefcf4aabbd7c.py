@@ -4,7 +4,7 @@ def oneline(script, separator=" && "):
     Questo è utile per eseguire un singolo comando SSH e passare uno script su una sola riga.
 
     :param script: String containing multiline script
-    :param separator: String to use as command separator (default " && ")
+    :param separator: String to use as command separator (default: " && ")
     :return: Single line string with commands separated by separator
     """
     # Split script into lines and remove empty lines

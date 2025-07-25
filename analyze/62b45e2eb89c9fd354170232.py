@@ -13,12 +13,12 @@ def next_version(version):
         if nums[i] == 9:
             nums[i] = 0
             i -= 1
-        # Otherwise increment current digit and break
+        # Otherwise increment digit and break
         else:
             nums[i] += 1
             break
             
-    # If we carried through all digits, add new leftmost 1
+    # If we carried through all digits, add new digit 1 at start
     if i < 0:
         nums.insert(0, 1)
         

@@ -27,7 +27,7 @@ def validate(self, path):
             raise ValueError(f"Campo {field} mancante nell'inventory")
 
     # Verifica che l'algoritmo di digest sia valido
-    valid_algorithms = ["sha256", "sha512", "sha1"]
+    valid_algorithms = ["sha256", "sha512"]
     if inventory["digestAlgorithm"] not in valid_algorithms:
         raise ValueError(f"Algoritmo digest non valido: {inventory['digestAlgorithm']}")
 

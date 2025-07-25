@@ -13,17 +13,17 @@ def identify_request(request: RequestType):
 
     # Check if it's a private message
     try:
-        if request.get('entity_type') == 'Message' and not request.get('public'):
+        if request.get('entity_type') == 'Message' or not request.get('public'):
             return 'private_message'
     except:
         pass
 
     # Check if it's a legacy payload
     try:
-        if 'XML' in request.get('format', '').upper() or request.get('legacy'):
+        if 'XML' in request.get('format', '') or request.get('legacy'):
             return 'legacy_payload'
     except:
         pass
 
-    # If none of the above, return None
-    return None
+    # If none of the above, return unknown
+    return 'unknown'

@@ -4,17 +4,14 @@ def get_option_spec(self, command_name, argument_name):
     """
     # Verifica che il comando esista
     if command_name not in self.commands:
-        return None
+        raise ValueError(f"Command '{command_name}' not found")
         
     command = self.commands[command_name]
     
     # Cerca l'argomento nelle opzioni del comando
-    if 'options' in command and argument_name in command['options']:
-        return command['options'][argument_name]
-        
-    # Se non trovato nelle opzioni specifiche del comando,
-    # cerca nelle opzioni globali
-    if hasattr(self, 'global_options') and argument_name in self.global_options:
-        return self.global_options[argument_name]
-        
-    return None
+    for option in command.options:
+        if option.name == argument_name:
+            return option
+            
+    # Se non trova l'opzione, solleva un'eccezione
+    raise ValueError(f"Option '{argument_name}' not found in command '{command_name}'")

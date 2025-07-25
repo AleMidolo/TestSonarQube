@@ -27,7 +27,7 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     
     # Handle empty string case
     if not timestr:
-        raise ParserError("String is empty")
+        raise ParserError("String cannot be empty")
         
     try:
         # Call internal _parse method with all arguments
@@ -40,6 +40,9 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
             
         return res
         
-    except Exception as e:
-        # Convert parsing exceptions to ParserError
+    except ValueError as e:
+        # Convert ValueError to ParserError
         raise ParserError(str(e))
+    except OverflowError:
+        # Re-raise OverflowError
+        raise

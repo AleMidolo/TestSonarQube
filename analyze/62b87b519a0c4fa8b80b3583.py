@@ -17,14 +17,14 @@ def scale(self, other=None):
     
     # Scale the last coordinate and its errors
     scale_factor = other / self._scale
-    
     self._data[last_coord] *= scale_factor
     
     # Scale associated errors if present
     error_fields = [f for f in fields if f.startswith(f"{last_coord}_err")]
-    for err_field in error_fields:
-        self._data[err_field] *= scale_factor
+    for error_field in error_fields:
+        self._data[error_field] *= scale_factor
         
+    # Update the scale
     self._scale = other
     
     return self

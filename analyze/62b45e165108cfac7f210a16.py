@@ -13,7 +13,7 @@ def validate_as_prior_version(self, prior):
     # Verifica che la data di prior sia precedente
     if prior.date >= self.date:
         raise ValueError("La data dell'inventario prior deve essere precedente a quella corrente")
-    
+        
     # Verifica che gli articoli in prior esistano anche nell'inventario corrente
     for item_id in prior.items:
         if item_id not in self.items:

@@ -10,43 +10,41 @@ def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=Fal
         cmd = [comandi]
     else:
         cmd = list(comandi)
-        
+    
     if argomenti:
         if isinstance(argomenti, str):
             cmd.append(argomenti)
         else:
             cmd.extend(argomenti)
 
-    # Imposta stderr
-    if nascondi_stderr:
-        stderr = subprocess.DEVNULL
-    else:
-        stderr = subprocess.PIPE
+    # Imposta gli stream di output
+    stdout = subprocess.PIPE
+    stderr = subprocess.DEVNULL if nascondi_stderr else subprocess.PIPE
 
     try:
         # Esegui il comando
-        if verbose:
-            print(f"Esecuzione comando: {' '.join(cmd)}")
-            
-        processo = subprocess.Popen(
+        process = subprocess.Popen(
             cmd,
-            stdout=subprocess.PIPE,
+            stdout=stdout,
             stderr=stderr,
             cwd=cwd,
             env=env,
             universal_newlines=True
         )
+
+        # Leggi l'output
+        out, err = process.communicate()
         
-        output, error = processo.communicate()
-        
-        if processo.returncode != 0:
-            if error and not nascondi_stderr:
-                print(f"Errore: {error}", file=sys.stderr)
-            return False
-            
-        return output.strip() if output else True
-        
+        # Stampa l'output se verbose è True
+        if verbose:
+            if out:
+                print(out)
+            if err and not nascondi_stderr:
+                print(err, file=sys.stderr)
+
+        return process.returncode, out, err
+
     except Exception as e:
         if verbose:
-            print(f"Errore nell'esecuzione del comando: {str(e)}", file=sys.stderr)
-        return False
+            print(f"Errore nell'esecuzione del comando: {e}", file=sys.stderr)
+        return -1, "", str(e)

@@ -5,7 +5,7 @@ def determineMetaclass(bases, explicit_mc=None):
     # If there's an explicit metaclass, start with that
     metaclass = explicit_mc
     
-    # If no explicit metaclass, look through the bases
+    # If no explicit metaclass, look through base classes
     if metaclass is None:
         if bases:
             # Get metaclasses from all base classes

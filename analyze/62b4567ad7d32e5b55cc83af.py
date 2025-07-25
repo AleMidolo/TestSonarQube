@@ -5,17 +5,17 @@ def parse_arguments(*arguments):
     """
     import argparse
     
-    parser = argparse.ArgumentParser(description='Parse command line arguments')
+    parser = argparse.ArgumentParser(description='Process command line arguments')
     
     # Add arguments to parser
-    parser.add_argument('--input', '-i', type=str, help='Input file path')
-    parser.add_argument('--output', '-o', type=str, help='Output file path')
-    parser.add_argument('--verbose', '-v', action='store_true', help='Increase output verbosity')
+    parser.add_argument('args', nargs='*', help='Command line arguments')
     
     # Parse arguments
     if len(arguments) > 0:
+        # If arguments were passed to function, parse those
         args = parser.parse_args(arguments)
     else:
+        # Otherwise parse from sys.argv
         args = parser.parse_args()
         
     return args

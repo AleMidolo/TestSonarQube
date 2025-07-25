@@ -1,5 +1,5 @@
 def isoparse(self, dt_str):
-    from datetime import datetime, timedelta
+    from datetime import datetime, timedelta, date
     from dateutil.tz import tzutc, tzoffset
     import re
 
@@ -10,13 +10,13 @@ def isoparse(self, dt_str):
         'year': r'(?P<year>\d{4})',
         'week': r'(?P<year>\d{4})-?W(?P<week>\d{2})(?:-?(?P<weekday>\d))?'
     }
-
+    
     TIME_PATTERN = r'(?P<hour>[0-2]\d)(?::?(?P<minute>\d{2})(?::?(?P<second>\d{2})(?:[.,](?P<microsecond>\d{1,6}))?)?)?' 
     TIMEZONE_PATTERN = r'(?P<tzname>Z|(?P<tzsign>[+-])(?P<tzhour>\d{2})(?::?(?P<tzminute>\d{2})?)?)?$'
 
     dt_str = dt_str.strip()
     
-    # Split date and time parts
+    # Split datetime string into date and time parts
     if 'T' in dt_str:
         date_str, time_str = dt_str.split('T')
     else:
@@ -26,69 +26,77 @@ def isoparse(self, dt_str):
             date_str, time_str = dt_str, ''
 
     # Parse date
-    date_parts = None
+    date_components = None
     for pattern_name, pattern in DATE_PATTERNS.items():
-        match = re.match(pattern, date_str)
+        match = re.match(pattern + '$', date_str)
         if match:
-            date_parts = match.groupdict()
+            groups = match.groupdict()
+            if pattern_name == 'week':
+                # Handle ISO week dates
+                year = int(groups['year'])
+                week = int(groups['week'])
+                weekday = int(groups.get('weekday', '1'))
+                date_components = date.fromisocalendar(year, week, weekday)
+            else:
+                year = int(groups['year'])
+                month = int(groups.get('month', '1'))
+                day = int(groups.get('day', '1'))
+                date_components = date(year, month, day)
             break
-
-    if not date_parts:
-        raise ValueError(f"Invalid ISO format date '{date_str}'")
-
-    # Convert date parts to integers
-    year = int(date_parts['year'])
     
-    if 'week' in date_parts:
-        # Handle ISO week date format
-        week = int(date_parts['week'])
-        weekday = int(date_parts.get('weekday', '1'))
-        date_ord = datetime.strptime(f"{year}-W{week}-{weekday}", "%Y-W%W-%w").date()
-        month, day = date_ord.month, date_ord.day
+    if date_components is None and date_str:
+        raise ValueError(f"Invalid ISO format date '{date_str}'")
+    
+    if not time_str:
+        return datetime.combine(date_components or date(1, 1, 1), datetime.min.time())
+
+    # Parse time
+    time_match = re.match(TIME_PATTERN + TIMEZONE_PATTERN, time_str)
+    if not time_match:
+        raise ValueError(f"Invalid ISO format time '{time_str}'")
+
+    groups = time_match.groupdict()
+    
+    # Handle special case of hour 24
+    hour = int(groups['hour'])
+    if hour == 24:
+        if any(groups.get(k) not in (None, '00') for k in ['minute', 'second', 'microsecond']):
+            raise ValueError("Hour 24 only valid with 0 minutes and seconds")
+        hour = 0
+        if date_components:
+            date_components += timedelta(days=1)
+    
+    minute = int(groups.get('minute', '0'))
+    second = int(groups.get('second', '0'))
+    
+    # Handle microseconds
+    microsecond = groups.get('microsecond')
+    if microsecond:
+        microsecond = int(microsecond.ljust(6, '0'))
     else:
-        month = int(date_parts.get('month', '1'))
-        day = int(date_parts.get('day', '1'))
+        microsecond = 0
 
-    # Initialize time components
-    hour = minute = second = microsecond = 0
+    # Handle timezone
     tz = None
-
-    # Parse time if present
-    if time_str:
-        time_match = re.match(TIME_PATTERN + TIMEZONE_PATTERN, time_str)
-        if not time_match:
-            raise ValueError(f"Invalid ISO format time '{time_str}'")
-
-        time_parts = time_match.groupdict()
-        
-        # Parse time components
-        if time_parts.get('hour'):
-            hour = int(time_parts['hour'])
-            if hour == 24:  # Special case for midnight
-                hour = 0
+    if groups['tzname'] is not None:
+        if groups['tzname'] == 'Z':
+            tz = tzutc()
+        else:
+            tzsign = 1 if groups['tzsign'] == '+' else -1
+            tzhour = int(groups['tzhour'])
+            tzminute = int(groups.get('tzminute', '0'))
             
-            if time_parts.get('minute'):
-                minute = int(time_parts['minute'])
-                
-                if time_parts.get('second'):
-                    second = int(time_parts['second'])
-                    
-                    if time_parts.get('microsecond'):
-                        microsecond = int(time_parts['microsecond'].ljust(6, '0'))
-
-        # Parse timezone
-        if time_parts.get('tzname'):
-            if time_parts['tzname'] == 'Z':
+            offset = tzsign * timedelta(hours=tzhour, minutes=tzminute)
+            
+            # Convert zero offset to UTC
+            if offset == timedelta(0):
                 tz = tzutc()
             else:
-                tzsign = 1 if time_parts['tzsign'] == '+' else -1
-                tzhour = int(time_parts['tzhour'])
-                tzminute = int(time_parts.get('tzminute', '0'))
-                
-                offset = tzsign * (tzhour * 60 + tzminute) * 60
-                if offset == 0:
-                    tz = tzutc()
-                else:
-                    tz = tzoffset(None, offset)
+                tz = tzoffset(None, tzsign * (tzhour * 3600 + tzminute * 60))
 
-    return datetime(year, month, day, hour, minute, second, microsecond, tz)
+    return datetime(
+        date_components.year if date_components else 1,
+        date_components.month if date_components else 1,
+        date_components.day if date_components else 1,
+        hour, minute, second, microsecond, tz
+    )

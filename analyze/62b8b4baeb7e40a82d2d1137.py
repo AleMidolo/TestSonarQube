@@ -54,14 +54,16 @@ def verifyObject(iface, candidate, tentative=False):
         error_messages.append(f"Attributi non chiamabili: {', '.join(errors['not_callable'])}")
     
     if errors['wrong_signature']:
-        for name, expected, got in errors['wrong_signature']:
-            error_messages.append(f"Firma errata per {name}: atteso {expected}, trovato {got}")
+        sig_errors = [f"{name} (atteso: {exp}, trovato: {got})" 
+                     for name, exp, got in errors['wrong_signature']]
+        error_messages.append(f"Firme errate: {', '.join(sig_errors)}")
     
     if errors['missing_attributes']:
         error_messages.append(f"Attributi mancanti: {', '.join(errors['missing_attributes'])}")
 
-    # Solleva eccezione
+    # Se c'è un solo errore, solleva direttamente quello
     if len(error_messages) == 1:
         raise BrokenImplementation(iface, error_messages[0])
-    else:
-        raise Invalid("\n".join(error_messages))
+
+    # Altrimenti solleva tutti gli errori insieme
+    raise Invalid("\n".join(error_messages))

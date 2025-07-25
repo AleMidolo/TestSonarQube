@@ -35,4 +35,4 @@ def scale(self, other=None, recompute=False):
         self._contents = [c * scale_factor for c in self._contents]
         
         # Aggiorna la scala memorizzata
-        self._scale = other
+        self._scale = float(other)

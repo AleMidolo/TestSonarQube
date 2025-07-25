@@ -7,16 +7,13 @@ def process_text_links(text):
     # Pattern per trovare URL nel testo
     url_pattern = r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
     
-    # Funzione per sostituire gli URL con link HTML
-    def replace_with_link(match):
-        url = match.group(0)
-        # Se l'URL non inizia con http/https, aggiungi http://
-        if not url.startswith(('http://', 'https://')):
-            url = 'http://' + url
-        # Crea il link HTML con attributi target="_blank" e rel="noopener noreferrer"
-        return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{match.group(0)}</a>'
+    # Pattern per trovare link in formato [testo](url)
+    markdown_pattern = r'\[(.*?)\]\((.*?)\)'
     
-    # Sostituisci tutti gli URL trovati con i link HTML
-    processed_text = re.sub(url_pattern, replace_with_link, text)
+    # Sostituisce gli URL semplici con link HTML
+    text = re.sub(url_pattern, r'<a href="\1" target="_blank" rel="noopener noreferrer">\1</a>', text)
     
-    return processed_text
+    # Sostituisce i link in formato markdown con link HTML
+    text = re.sub(markdown_pattern, r'<a href="\2" target="_blank" rel="noopener noreferrer">\1</a>', text)
+    
+    return text

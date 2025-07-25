@@ -9,41 +9,52 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
     :return: l'istanza del tipo complesso
     """
     # Create a custom type class dynamically
-    type_class = type(type_name, (), {})
-    
-    def type_validator(value):
-        # Check if value matches the specification
-        if not isinstance(value, str):
-            raise TypeError(f"{option_name} must be a string")
+    class ComplexType:
+        def __init__(self, value):
+            self.value = value
             
-        # Parse the value according to spec_option
+        def __str__(self):
+            return str(self.value)
+            
+        @staticmethod
+        def validate(value):
+            try:
+                # Check if value matches specification
+                if 'pattern' in spec_option:
+                    import re
+                    if not re.match(spec_option['pattern'], value):
+                        raise ValueError(f"Value does not match pattern {spec_option['pattern']}")
+                
+                # Check value constraints
+                if 'min' in spec_option and value < spec_option['min']:
+                    raise ValueError(f"Value must be >= {spec_option['min']}")
+                if 'max' in spec_option and value > spec_option['max']:
+                    raise ValueError(f"Value must be <= {spec_option['max']}")
+                    
+                # Check allowed values
+                if 'choices' in spec_option and value not in spec_option['choices']:
+                    raise ValueError(f"Value must be one of {spec_option['choices']}")
+                    
+                return value
+                
+            except Exception as e:
+                raise argparse.ArgumentTypeError(str(e))
+    
+    # Create type converter function
+    def type_converter(value):
         try:
-            if 'format' in spec_option:
-                # Validate against format specification
-                if not spec_option['format'].match(value):
-                    raise ValueError(f"{value} does not match required format for {option_name}")
-                    
-            if 'choices' in spec_option:
-                # Validate against allowed choices
-                if value not in spec_option['choices']:
-                    raise ValueError(f"{value} is not a valid choice for {option_name}")
-                    
-            if 'validator' in spec_option:
-                # Run custom validator function
-                if not spec_option['validator'](value):
-                    raise ValueError(f"{value} failed validation for {option_name}")
-                    
-            return value
+            # Convert value to appropriate Python type
+            if type_name == 'int':
+                value = int(value)
+            elif type_name == 'float': 
+                value = float(value)
+            elif type_name == 'bool':
+                value = value.lower() in ('true', 't', 'yes', 'y', '1')
+                
+            # Validate converted value
+            return ComplexType.validate(value)
             
-        except Exception as e:
-            raise ArgumentTypeError(f"Invalid value for {option_name}: {str(e)}")
-    
-    # Add the validator as the __call__ method
-    type_class.__call__ = staticmethod(type_validator)
-    
-    # Add metadata
-    type_class.subcommand = subcommand
-    type_class.option_name = option_name
-    type_class.spec = spec_option
-    
-    return type_class()
+        except ValueError as e:
+            raise argparse.ArgumentTypeError(f"Invalid {option_name}: {str(e)}")
+            
+    return type_converter
