@@ -18,10 +18,10 @@ def vertex3tuple(vertices):
     n = len(vertices)
     result = []
     for i in range(n):
+        # 获取当前顶点及其两侧的顶点
         prev_index = (i - 1) % n
         next_index = (i + 1) % n
-        prev_point = vertices[prev_index]
-        current_point = vertices[i]
-        next_point = vertices[next_index]
-        result.append((prev_point, current_point, next_point))
+        # 组成三元组
+        triplet = (vertices[prev_index], vertices[i], vertices[next_index])
+        result.append(triplet)
     return result

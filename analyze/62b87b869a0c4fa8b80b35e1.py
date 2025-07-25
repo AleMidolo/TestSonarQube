@@ -34,11 +34,11 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left", field_names=("x"
 
     for bin_ in hist.bins:
         if get_coordinate == "left":
-            x_coord = bin_.left
+            x_coord = bin_.left_edge
         elif get_coordinate == "right":
-            x_coord = bin_.right
+            x_coord = bin_.right_edge
         elif get_coordinate == "middle":
-            x_coord = (bin_.left + bin_.right) / 2
+            x_coord = (bin_.left_edge + bin_.right_edge) / 2
         else:
             raise ValueError("Invalid get_coordinate value. Must be 'left', 'right', or 'middle'.")
 
@@ -47,12 +47,15 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left", field_names=("x"
         x_coords.append(x_coord)
         y_values.append(y_value)
 
-    if len(field_names) != len(y_values[0]) + 1:
+    x_coords = np.array(x_coords)
+    y_values = np.array(y_values)
+
+    if len(field_names) != y_values.shape[1] + 1:
         raise ValueError("Number of field_names must match the dimensionality of the result.")
 
     graph = {
-        field_names[0]: np.array(x_coords),
-        **{field_names[i+1]: np.array([y[i] for y in y_values]) for i in range(len(y_values[0]))}
+        field_names[0]: x_coords,
+        **{field_names[i + 1]: y_values[:, i] for i in range(y_values.shape[1])}
     }
 
     if scale is not None:

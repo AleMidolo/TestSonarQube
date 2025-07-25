@@ -20,10 +20,17 @@ def _update_context(self, context):
         if field.startswith('error_'):
             # 提取错误类型，例如 "x_low" 或 "y_high"
             error_type = field[len('error_'):]
-            axis = error_type.split('_')[0]  # 提取 "x", "y", 或 "z"
-            error_key = f"{axis}_{error_type.split('_')[1]}"  # 例如 "x_low"
-            
+            # 将错误类型映射到 "x", "y", "z"
+            if error_type.startswith('x'):
+                error_name = 'x'
+            elif error_type.startswith('y'):
+                error_name = 'y'
+            elif error_type.startswith('z'):
+                error_name = 'z'
+            else:
+                continue  # 如果不是 x, y, z 错误，跳过
+
             # 更新 context.error
-            if axis not in context.error:
-                context.error[axis] = {}
-            context.error[axis][error_key] = {"index": i}
+            if error_name not in context.error:
+                context.error[error_name] = {}
+            context.error[error_name][error_type] = {'index': i}

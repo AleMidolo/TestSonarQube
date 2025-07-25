@@ -6,3 +6,9 @@ def fill(self, coord, weight=1):
     """
     if self.is_within_bounds(coord):
         self.histogram[coord] += weight
+
+def is_within_bounds(self, coord):
+    """
+    检查给定的坐标是否在直方图的边界内。
+    """
+    return 0 <= coord < len(self.histogram)

@@ -1,5 +1,5 @@
 from datetime import datetime
-from dateutil import parser
+from dateutil.parser import parse as dateutil_parse
 from dateutil.tz import gettz
 
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
@@ -22,14 +22,8 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     if default is not None and not isinstance(default, datetime):
         raise TypeError("Default must be a datetime object or None.")
     
-    if tzinfos is not None and not (isinstance(tzinfos, dict) or callable(tzinfos)):
-        raise TypeError("tzinfos must be a dictionary or a callable.")
-    
     try:
-        parsed = parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
-    except parser.ParserError as e:
-        raise parser.ParserError(f"Failed to parse timestr: {e}")
-    except OverflowError as e:
-        raise OverflowError(f"Parsed date exceeds the maximum valid C integer: {e}")
-    
-    return parsed
+        parsed = dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+        return parsed
+    except Exception as e:
+        raise type(e)(f"Failed to parse timestr: {e}")

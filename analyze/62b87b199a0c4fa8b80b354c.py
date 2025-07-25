@@ -7,4 +7,4 @@ def _get_seq_with_type(seq, bufsize=None):
     if isinstance(seq, (list, tuple, str, bytes, bytearray)):
         return seq, type(seq)
     else:
-        return list(seq), list
+        return list(seq), type(seq)

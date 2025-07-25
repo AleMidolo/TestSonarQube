@@ -5,7 +5,10 @@ def dehydrate_point(value):
 
     :param value: Point 对象
     :type value: Point
-    :return: 转换后的结构类
+    :return: 转换后的数据结构
+    :rtype: dict
     """
-    # 假设 Point 类有 x 和 y 属性
-    return {'x': value.x, 'y': value.y}
+    if hasattr(value, 'x') and hasattr(value, 'y'):
+        return {'x': value.x, 'y': value.y}
+    else:
+        raise ValueError("Invalid Point object: missing 'x' or 'y' attribute")

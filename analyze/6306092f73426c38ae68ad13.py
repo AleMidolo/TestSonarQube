@@ -10,25 +10,30 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
     :param extra_vars: dict。作为额外变量 (extra-vars) 传递给 Ansible
     :param ansible_args: ansible-playbook 参数的字典，直接传递给 Ansible
     """
-    command = ["ansible-playbook", playbook_path]
+    # 构建基本命令
+    command = ['ansible-playbook', playbook_path]
 
+    # 添加详细级别
     if verbose:
-        command.append(f"-{verbose}")
+        command.extend(['-' + 'v' * verbose])
 
+    # 添加额外变量
     if extra_vars:
-        extra_vars_str = " ".join([f"{k}={v}" for k, v in extra_vars.items()])
-        command.extend(["--extra-vars", extra_vars_str])
+        extra_vars_str = ' '.join([f"{k}={v}" for k, v in extra_vars.items()])
+        command.extend(['--extra-vars', extra_vars_str])
 
+    # 添加其他 Ansible 参数
     if ansible_args:
         for arg, value in ansible_args.items():
             if value is True:
                 command.append(f"--{arg}")
+            elif value is False:
+                continue
             else:
                 command.extend([f"--{arg}", str(value)])
 
-    try:
-        result = subprocess.run(command, check=True, capture_output=True, text=True)
-        return result.stdout
-    except subprocess.CalledProcessError as e:
-        print(f"Ansible playbook execution failed: {e.stderr}")
-        raise
+    # 执行命令
+    result = subprocess.run(command, capture_output=True, text=True)
+
+    # 返回执行结果
+    return result

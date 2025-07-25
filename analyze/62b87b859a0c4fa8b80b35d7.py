@@ -4,7 +4,7 @@ def to_csv(self, separator=", ", header=None):
         In Lena 0.5, `to_csv` is no longer used.
         Iterables will be converted to tables.
 
-    Converts the points of the graph to CSV format.
+    Convert the points of the graph to CSV format.
 
     *separator* is used to separate values, default is a comma.
 
@@ -12,8 +12,8 @@ def to_csv(self, separator=", ", header=None):
     (a newline will be automatically added).
 
     Since the graph can be multidimensional,
-    for each point, its coordinates are first converted to strings
-    (separated by *separator*), and then each part of its value is processed.
+    for each point, first convert its coordinates to a string
+    (separated by *separator*), and then process each part of its value.
 
     To convert :class:`Graph` to CSV in a Lena sequence,
     use :class:`lena.output.ToCSV`.
@@ -24,11 +24,11 @@ def to_csv(self, separator=", ", header=None):
         output = []
 
     for point in self.points:
-        # Convert coordinates to string separated by separator
-        coords_str = separator.join(map(str, point.coordinates))
-        # Convert values to string separated by separator
-        values_str = separator.join(map(str, point.values))
+        # Convert coordinates to string
+        coords = separator.join(map(str, point.coordinates))
+        # Convert values to string
+        values = separator.join(map(str, point.values))
         # Combine coordinates and values
-        output.append(f"{coords_str}{separator}{values_str}\n")
+        output.append(f"{coords}{separator}{values}\n")
 
     return "".join(output)

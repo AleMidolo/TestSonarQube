@@ -4,12 +4,13 @@ from collections import OrderedDict
 def mru_cache(maxsize=128, typed=False):
     def decorator(func):
         cache = OrderedDict()
-
+        
         @wraps(func)
         def wrapper(*args, **kwargs):
-            key = args + tuple(sorted(kwargs.items()))
             if typed:
-                key = tuple(map(type, args)) + tuple((k, type(v)) for k, v in sorted(kwargs.items()))
+                key = (args, tuple((k, type(v)) for k, v in sorted(kwargs.items())))
+            else:
+                key = (args, tuple(sorted(kwargs.items())))
             
             if key in cache:
                 # Move the accessed key to the end to mark it as recently used

@@ -2,7 +2,7 @@ import socket
 
 def is_local(host):
     """
-    检查主机是否是本地主机，
+    检查主机是否是本地主机，  
     本地主机包括本地 IP、用户名、本地域名、`localhost` 和 `127.0.0.1`。
 
     参数:

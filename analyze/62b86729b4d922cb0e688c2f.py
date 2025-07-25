@@ -32,7 +32,8 @@ def base_config(user, etcd_host="localhost", etcd_port=2379):
         },
         "etcd": {
             "host": etcd_host,
-            "port": etcd_port
+            "port": etcd_port,
+            "timeout": 5
         },
         "docs": {
             "enabled": True,

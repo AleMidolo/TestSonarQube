@@ -23,8 +23,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 
                 if overrides:
                     for key, value in overrides.items():
-                        if key in config:
-                            config[key] = value
+                        config[key] = value
                 
                 configs[filename] = config
                 
@@ -33,7 +32,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
-                pathname=filename,
+                pathname=__file__,
                 lineno=0,
                 msg=f"Permission denied when trying to read {filename}",
                 args=None,
@@ -44,7 +43,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
-                pathname=filename,
+                pathname=__file__,
                 lineno=0,
                 msg=f"Failed to parse JSON in {filename}",
                 args=None,
@@ -55,7 +54,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
-                pathname=filename,
+                pathname=__file__,
                 lineno=0,
                 msg=f"Unexpected error when reading {filename}: {e}",
                 args=None,

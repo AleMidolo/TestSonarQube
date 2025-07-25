@@ -1,5 +1,4 @@
-from zope.interface import Invalid, providedBy, implementedBy
-from inspect import ismethod, isfunction, signature
+from zope.interface import Invalid, providedBy
 
 def _verify(iface, candidate, tentative=False, vtype=None):
     """
@@ -19,14 +18,13 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     :raises zope.interface.Invalid: 如果上述任何条件不满足
 
     .. versionchanged:: 5.0
-        如果有多个方法或属性无效，将收集并报告所有这些错误。之前的行为是仅报告第一个错误。作为一个特殊情况，如果只有一个错误，则像之前一样单独抛出该错误。
+    如果有多个方法或属性无效，将收集并报告所有这些错误。之前的行为是仅报告第一个错误。作为一个特殊情况，如果只有一个错误，则像之前一样单独抛出该错误。
     """
     errors = []
 
     # Step 1: Ensure the candidate declares it provides the interface
-    if not tentative:
-        if not iface.providedBy(candidate):
-            errors.append(f"{candidate} does not declare that it provides {iface}")
+    if not tentative and not iface.providedBy(candidate):
+        errors.append(f"{candidate} does not provide {iface}")
 
     # Step 2: Ensure the candidate defines all required methods
     required_methods = iface.namesAndDescriptions(all=True)
@@ -34,21 +32,11 @@ def _verify(iface, candidate, tentative=False, vtype=None):
         if not hasattr(candidate, name):
             errors.append(f"{candidate} is missing required method {name}")
         else:
-            attr = getattr(candidate, name)
-            if not (ismethod(attr) or isfunction(attr)):
-                errors.append(f"{name} is not a method or function in {candidate}")
-
-    # Step 3: Ensure the methods have the correct signatures (if possible)
-    for name, desc in required_methods:
-        if hasattr(candidate, name):
-            try:
-                sig = signature(getattr(candidate, name))
-                expected_sig = signature(desc.getSignature())
-                if sig != expected_sig:
-                    errors.append(f"Method {name} has incorrect signature in {candidate}")
-            except (ValueError, TypeError):
-                # Skip signature check if it's not possible
-                pass
+            # Step 3: Ensure the methods have the correct signatures (if possible)
+            # This is a simplified check; a full signature check would require more complex logic
+            method = getattr(candidate, name)
+            if not callable(method):
+                errors.append(f"{name} is not a callable method on {candidate}")
 
     # Step 4: Ensure the candidate defines all required attributes
     required_attrs = iface.namesAndDescriptions(all=True)

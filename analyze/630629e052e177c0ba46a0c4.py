@@ -16,20 +16,13 @@ def parse_diaspora_webfinger(document: str) -> Dict:
                 for link in data['links']:
                     if isinstance(link, dict) and 'rel' in link and link['rel'] == 'http://microformats.org/profile/hcard':
                         return {'hcard_url': link.get('href')}
-            elif 'subject' in data:
+            elif 'Subject' in data and 'Alias' in data:
                 # Handle XRD format (old format)
-                for link in data.get('links', []):
-                    if isinstance(link, dict) and 'rel' in link and link['rel'] == 'http://microformats.org/profile/hcard':
+                for link in data.get('Link', []):
+                    if isinstance(link, dict) and link.get('rel') == 'http://microformats.org/profile/hcard':
                         return {'hcard_url': link.get('href')}
-        return {}
     except json.JSONDecodeError:
-        # Handle XRD format (old format)
-        from xml.etree import ElementTree as ET
-        try:
-            root = ET.fromstring(document)
-            for link in root.findall('{http://docs.oasis-open.org/ns/xri/xrd-1.0}Link'):
-                if link.get('rel') == 'http://microformats.org/profile/hcard':
-                    return {'hcard_url': link.get('href')}
-            return {}
-        except ET.ParseError:
-            return {}
+        # Handle non-JSON format (e.g., XRD format)
+        pass
+    
+    return {}

@@ -8,4 +8,3 @@ def validate_length_args(self, args):
     for arg in args:
         if len(str(arg)) > max_length:
             raise ValueError(f"参数 {arg} 的长度超过了最大允许长度 {max_length}")
-    return True

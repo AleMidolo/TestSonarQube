@@ -3,7 +3,7 @@ import re
 class ValidationError(Exception):
     def __init__(self, messages):
         self.messages = messages
-        super().__init__(str(messages))
+        super().__init__(f"Validation failed with errors: {messages}")
 
 def validate_key(key):
     # Example regex for key validation
@@ -28,11 +28,14 @@ def _validate_labels(labels):
     for key, value in labels.items():
         key_valid, key_error = validate_key(key)
         if not key_valid:
-            errors.append({str(key): key_error})
+            errors.append({key: key_error})
         
-        value_valid, value_error = validate_value(value)
-        if not value_valid:
-            errors.append({str(value): value_error})
+        if isinstance(value, (list, dict)):
+            errors.append({str(value): 'expected string or bytes-like object'})
+        else:
+            value_valid, value_error = validate_value(value)
+            if not value_valid:
+                errors.append({key: value_error})
     
     if errors:
         raise ValidationError(errors)

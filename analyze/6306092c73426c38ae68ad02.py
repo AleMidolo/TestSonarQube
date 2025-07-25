@@ -7,4 +7,4 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
     """
     deprecated_args = set(cli_args.keys()).intersection(answer_file_args.keys())
     for arg in deprecated_args:
-        print(f"警告: 参数 '{arg}' 已被弃用，建议使用来自文件的参数。")
+        print(f"警告: 参数 '{arg}' 已被弃用，建议使用文件中的配置。")
