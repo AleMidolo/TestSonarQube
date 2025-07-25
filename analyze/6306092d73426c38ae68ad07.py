@@ -7,4 +7,5 @@ def validate_requires_args(self, args):
     
     if missing_args:
         raise ValueError(f"Missing required arguments: {', '.join(missing_args)}")
+    
     return True

@@ -22,7 +22,6 @@ def lfu_cache(maxsize=128, typed=False):
         if len(cache) >= maxsize:
             lfu_key = min(order, key=lambda k: frequency[k])
             del cache[lfu_key]
-            del frequency[lfu_key]
             order.remove(lfu_key)
         
         cache[key] = result

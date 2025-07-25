@@ -11,16 +11,17 @@ def data(self, *keys):
     :return: dictionary of values, keyed by field name
     :raises: :exc:`IndexError` if an out-of-bounds index is specified
     """
-    record_dict = {}
-    for key in keys:
-        if isinstance(key, int):
-            if key < 0 or key >= len(self):
-                raise IndexError("Index out of bounds")
-            record_dict[self.keys()[key]] = self.values()[key]
-        else:
-            record_dict[key] = self.get(key, None)
-    
+    result = {}
     if not keys:
-        return dict(zip(self.keys(), self.values()))
-    
-    return record_dict
+        # If no keys are provided, return all items
+        for key in self.record.keys():
+            result[key] = self.record.get(key, None)
+    else:
+        for key in keys:
+            if isinstance(key, int):
+                if key < 0 or key >= len(self.record):
+                    raise IndexError("Index out of bounds")
+                result[self.record[key]] = self.record.get(self.record[key], None)
+            else:
+                result[key] = self.record.get(key, None)
+    return result

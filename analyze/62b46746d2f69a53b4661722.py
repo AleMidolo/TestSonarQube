@@ -16,19 +16,19 @@ def absorb(self, args):
     result = []
     for expr in args:
         if isinstance(expr, tuple) and len(expr) == 3:
-            a, op, b = expr
-            if op == '&':
-                if (a == b) or (b == ('|', a)):
-                    result.append(a)
-                elif (a == ('~', b)) or (b == ('|', ('~', a))):
-                    result.append(('&', a, b))
+            op1, operator, op2 = expr
+            if operator == '&':
+                if op1 == op2 or (op1 == f'~{op2}' or op2 == f'~{op1}'):
+                    result.append(op1)
+                elif op1.startswith('~') and op2.startswith('~'):
+                    result.append(expr)
                 else:
                     result.append(expr)
-            elif op == '|':
-                if (a == b) or (b == ('&', a)):
-                    result.append(a)
-                elif (a == ('~', b)) or (b == ('&', ('~', a))):
-                    result.append(('|', a, b))
+            elif operator == '|':
+                if op1 == op2 or (op1 == f'~{op2}' or op2 == f'~{op1}'):
+                    result.append(op1)
+                elif op1.startswith('~') and op2.startswith('~'):
+                    result.append(expr)
                 else:
                     result.append(expr)
         else:

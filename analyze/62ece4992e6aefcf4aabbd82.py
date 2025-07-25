@@ -11,4 +11,4 @@ def get_pattern(pattern, strip=True):
     escaped_pattern = re.escape(pattern)
     
     # Return the regex pattern
-    return escaped_pattern
+    return f"^{escaped_pattern}$"

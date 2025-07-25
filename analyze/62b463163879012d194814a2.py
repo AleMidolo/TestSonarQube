@@ -12,15 +12,10 @@ def add_asset(self, basename, file_path):
         "artigo02-gf03.png": "/path/artigo02-gf03.png",
     }
     """
-    extensions = ['.tiff', '.jpg', '.png']
-    asset_dict = {}
-    
-    for ext in extensions:
-        asset_key = f"{basename}{ext}"
-        asset_dict[asset_key] = file_path
-    
-    # Assuming there's an internal storage dictionary to hold the assets
     if not hasattr(self, 'assets'):
         self.assets = {}
     
-    self.assets.update(asset_dict)
+    extensions = ['.tiff', '.jpg', '.png']
+    for ext in extensions:
+        asset_key = f"{basename}{ext}"
+        self.assets[asset_key] = file_path
