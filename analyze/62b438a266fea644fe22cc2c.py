@@ -8,14 +8,14 @@ def make_parsers():
     parser = argparse.ArgumentParser(description="शीर्ष-स्तरीय पार्सर")
     
     # उप-पार्सर बनाएं
-    subparsers = parser.add_subparsers(dest="command", help="उप-कमांड")
+    subparsers = parser.add_subparsers(dest="command", help="उप-पार्सर कमांड")
     
     # पहला उप-पार्सर
-    parser_a = subparsers.add_parser("command_a", help="कमांड A के लिए मदद")
-    parser_a.add_argument("arg1", type=int, help="कमांड A के लिए पहला तर्क")
+    parser_a = subparsers.add_parser("command_a", help="कमांड A के लिए उप-पार्सर")
+    parser_a.add_argument("--option_a", type=int, help="कमांड A के लिए विकल्प")
     
     # दूसरा उप-पार्सर
-    parser_b = subparsers.add_parser("command_b", help="कमांड B के लिए मदद")
-    parser_b.add_argument("arg2", type=str, help="कमांड B के लिए पहला तर्क")
+    parser_b = subparsers.add_parser("command_b", help="कमांड B के लिए उप-पार्सर")
+    parser_b.add_argument("--option_b", type=str, help="कमांड B के लिए विकल्प")
     
     return parser, subparsers

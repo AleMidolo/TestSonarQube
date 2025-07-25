@@ -10,15 +10,15 @@ def identify_request(request: RequestType) -> Union[bool, str]:
     """
     # Check for public message
     if hasattr(request, 'public_message') and request.public_message:
-        return "Public message detected"
+        return "Public Message"
     
     # Check for private message
     if hasattr(request, 'private_message') and request.private_message:
-        return "Private message detected"
+        return "Private Message"
     
     # Check for legacy payload
     if hasattr(request, 'legacy_payload') and request.legacy_payload:
-        return "Legacy payload detected"
+        return "Legacy Payload"
     
     # If none of the above, return False
     return False

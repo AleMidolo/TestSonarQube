@@ -13,11 +13,11 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
     2. उन तर्कों की सूची जो किसी भी सबपार्सर द्वारा दावा नहीं किए गए हैं।
     """
     parsed_args = {}
-    remaining_args = unparsed_arguments.copy()
+    remaining_args = list(unparsed_arguments)
     
-    for subparser_name, parser in subparsers.items():
+    for subparser_name, subparser in subparsers.items():
         try:
-            args, remaining = parser.parse_known_args(remaining_args)
+            args, remaining = subparser.parse_known_args(remaining_args)
             parsed_args[subparser_name] = args
             remaining_args = remaining
         except argparse.ArgumentError:

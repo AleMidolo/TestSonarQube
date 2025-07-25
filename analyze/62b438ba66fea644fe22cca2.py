@@ -18,22 +18,20 @@ def deep_merge_nodes(nodes):
                 existing_dict = {k.value: v for k, v in existing_value}
                 new_dict = {k.value: v for k, v in new_value}
                 
-                # Merge the dictionaries, with new values overwriting existing ones
+                # Merge the dictionaries
                 merged_dict = {**existing_dict, **new_dict}
                 
-                # Convert the merged dictionary back to a list of tuples
+                # Convert back to a list of tuples
                 merged_value = [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged_dict.items()]
                 
-                # Create a new MappingNode with the merged value
+                # Update the merged node
                 merged[key] = MappingNode(tag='tag:yaml.org,2002:map', value=merged_value)
             else:
-                # If either node is not a MappingNode, the new value overwrites the existing one
+                # If either node is not a MappingNode, the last value wins
                 merged[key] = value_node
         else:
             # If the key is not in the merged dictionary, just add it
             merged[key] = value_node
     
     # Convert the merged dictionary back to a list of tuples
-    result = [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged.items()]
-    
-    return result
+    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged.items()]

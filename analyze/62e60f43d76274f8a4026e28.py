@@ -9,7 +9,7 @@ def hydrate_time(nanoseconds, tz=None):
     - tz: समय क्षेत्र (timezone) जिसमें समय को दर्शाना है (डिफ़ॉल्ट: UTC)
 
     वापसी मान:
-    - समय (datetime.datetime ऑब्जेक्ट)
+    - समय (datetime object)
     """
     # Convert nanoseconds to seconds
     seconds = nanoseconds / 1e9

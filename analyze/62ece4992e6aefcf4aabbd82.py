@@ -6,7 +6,7 @@ def get_pattern(pattern, strip=True):
     
     :param pattern: स्ट्रिंग जिसे रेगुलर एक्सप्रेशन पैटर्न में बदलना है।
     :param strip: यदि True है, तो स्ट्रिंग के शुरुआती और अंतिम सफेद स्थान हटा दिए जाएंगे।
-    :return: कंपाइल्ड रेगुलर एक्सप्रेशन पैटर्न।
+    :return: रेगुलर एक्सप्रेशन पैटर्न।
     """
     if strip:
         pattern = pattern.strip()

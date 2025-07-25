@@ -7,10 +7,17 @@ def validate(self, path):
 
     यदि मान्य है (चेतावनियाँ स्वीकार्य हैं), तो True लौटाता है, अन्यथा False।
     """
-    if not os.path.exists(path) and not isinstance(path, pyfs.FS):
+    if isinstance(path, pyfs.base.FS):
+        # pyfs रूट के लिए मान्यता
+        if not path.exists("inventory.json"):
+            return False
+        # अन्य मान्यता तर्क यहाँ जोड़ें
+        return True
+    elif os.path.exists(path):
+        # सामान्य फ़ाइल पथ के लिए मान्यता
+        if not os.path.isfile(os.path.join(path, "inventory.json")):
+            return False
+        # अन्य मान्यता तर्क यहाँ जोड़ें
+        return True
+    else:
         return False
-    
-    # Placeholder for actual validation logic
-    # This should be replaced with the actual OCFL validation logic
-    # For now, we assume the path is valid if it exists or is a pyfs FS object
-    return True

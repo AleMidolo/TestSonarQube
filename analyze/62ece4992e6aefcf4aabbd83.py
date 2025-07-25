@@ -3,29 +3,27 @@ import subprocess
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
     दिए गए कमांड(s) को कॉल करें।
-    
-    :param commands: कमांड(s) की सूची
-    :param args: कमांड के लिए आर्ग्युमेंट्स
-    :param cwd: कमांड को रन करने के लिए वर्किंग डायरेक्टरी
-    :param verbose: यदि True है, तो कमांड का आउटपुट प्रिंट करें
-    :param hide_stderr: यदि True है, तो stderr को छुपाएं
-    :param env: पर्यावरण वेरिएबल्स
-    :return: कमांड का रिटर्न कोड
     """
-    full_command = commands + args
-    stderr = subprocess.DEVNULL if hide_stderr else None
+    command_list = commands if isinstance(commands, list) else [commands]
+    full_command = command_list + args
     
-    process = subprocess.Popen(
+    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
+    
+    if verbose:
+        print(f"Running command: {' '.join(full_command)}")
+    
+    result = subprocess.run(
         full_command,
         cwd=cwd,
-        stdout=subprocess.PIPE if verbose else None,
+        env=env,
+        stdout=subprocess.PIPE,
         stderr=stderr,
-        env=env
+        text=True
     )
     
     if verbose:
-        for line in process.stdout:
-            print(line.decode().strip())
+        print(f"Command output: {result.stdout}")
+        if not hide_stderr:
+            print(f"Command error output: {result.stderr}")
     
-    process.wait()
-    return process.returncode
+    return result

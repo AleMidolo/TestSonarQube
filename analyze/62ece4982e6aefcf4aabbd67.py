@@ -17,5 +17,6 @@ def vertex3tuple(vertices):
         current = vertices[i]
         prev = vertices[(i - 1) % n]
         next_ = vertices[(i + 1) % n]
+        # Create the 3-tuple and add it to the result
         result.append((prev, current, next_))
     return result

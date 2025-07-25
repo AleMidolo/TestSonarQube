@@ -1,3 +1,5 @@
+import os
+
 def _eval_file(prefix, file_path):
     """
     पैकेज के फ़ाइल प्रकार की पहचान करें: `asset` या `rendition`।
@@ -16,26 +18,23 @@ def _eval_file(prefix, file_path):
     dict
         फ़ाइल प्रकार और पते के साथ एक डिक्शनरी
     """
-    import os
-
-    # फ़ाइल प्रकार की पहचान करें
+    file_name = os.path.basename(file_path)
+    file_folder = os.path.dirname(file_path)
+    
+    # Determine file type based on prefix or file name
     if prefix.startswith("asset"):
         file_type = "asset"
     elif prefix.startswith("rendition"):
         file_type = "rendition"
     else:
         file_type = "unknown"
-
-    # फ़ाइल का नाम और फ़ोल्डर निकालें
-    file_name = os.path.basename(file_path)
-    file_folder = os.path.dirname(file_path)
-
-    # परिणाम डिक्शनरी बनाएं
-    result = {
+    
+    # Update packages with file type and path
+    packages = {
         "file_type": file_type,
+        "file_path": file_path,
         "file_name": file_name,
-        "file_folder": file_folder,
-        "file_path": file_path
+        "file_folder": file_folder
     }
-
-    return result
+    
+    return packages

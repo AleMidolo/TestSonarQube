@@ -4,13 +4,15 @@ def render(pieces, style):
     
     :param pieces: संस्करण टुकड़ों की सूची
     :param style: प्रस्तुति शैली
-    :return: प्रस्तुत संस्करण
+    :return: प्रस्तुत संस्करण टुकड़े
     """
     if style == "plain":
-        return " ".join(pieces)
-    elif style == "markdown":
-        return " ".join(f"**{piece}**" for piece in pieces)
-    elif style == "html":
-        return " ".join(f"<b>{piece}</b>" for piece in pieces)
+        return "\n".join(pieces)
+    elif style == "bold":
+        return "\n".join(f"**{piece}**" for piece in pieces)
+    elif style == "italic":
+        return "\n".join(f"*{piece}*" for piece in pieces)
+    elif style == "code":
+        return "\n".join(f"`{piece}`" for piece in pieces)
     else:
-        raise ValueError("असमर्थित शैली")
+        return "\n".join(pieces)

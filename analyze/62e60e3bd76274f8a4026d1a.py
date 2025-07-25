@@ -13,5 +13,11 @@ def from_raw_values(cls, values):
     for value in values:
         # Process each raw value and add it to the Bookmarks object
         # This is a placeholder for the actual deserialization logic
-        bookmarks.add(value)
+        bookmark = process_raw_value(value)  # Replace with actual processing logic
+        bookmarks.add(bookmark)
     return bookmarks
+
+# Placeholder function for processing raw values
+def process_raw_value(value):
+    # Implement the logic to convert raw value to a bookmark object
+    return value  # Replace with actual processing logic

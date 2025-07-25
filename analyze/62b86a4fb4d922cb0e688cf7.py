@@ -18,7 +18,7 @@ def validate_key(key):
     
     # Check if the key matches the pattern
     if not regex.match(key):
-        raise ValidationError("Invalid key format. Key must be 8-20 characters long and contain only letters, numbers, and underscores.")
+        raise ValidationError("Invalid key format. Key must be 8-20 characters long and can only contain letters, numbers, and underscores.")
     
     return True
 

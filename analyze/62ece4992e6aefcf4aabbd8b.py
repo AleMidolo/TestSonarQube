@@ -4,5 +4,4 @@ def force_string(obj):
     """
     if isinstance(obj, str):
         return obj.encode('utf-8')
-    else:
-        raise TypeError("Input must be a string")
+    return obj

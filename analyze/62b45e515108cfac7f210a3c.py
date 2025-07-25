@@ -7,30 +7,18 @@ def initialize(self):
 
     # OCFL storage root directory structure
     ocfl_structure = {
-        "0=ocfl_1.1": "",
-        "inventory.json": "",
-        "inventory.json.sha512": "",
-        "extensions": {},
-        "logs": {},
-        "objects": {}
+        "0=ocfl_1.0": "",
+        "ocfl_layout.json": json.dumps({"type": "https://ocfl.io/1.0/spec/#layout-hierarchical"})
     }
 
     # Create the OCFL storage root directory
-    if not os.path.exists("ocfl_root"):
-        os.makedirs("ocfl_root")
+    if not os.path.exists(self.root):
+        os.makedirs(self.root)
 
-    # Create the necessary files and directories
-    for key, value in ocfl_structure.items():
-        if key.endswith(".json"):
-            with open(os.path.join("ocfl_root", key), "w") as f:
-                json.dump({}, f)
-        elif key.endswith(".sha512"):
-            with open(os.path.join("ocfl_root", key), "w") as f:
-                f.write("")
-        elif isinstance(value, dict):
-            os.makedirs(os.path.join("ocfl_root", key), exist_ok=True)
-        else:
-            with open(os.path.join("ocfl_root", key), "w") as f:
-                f.write(value)
+    # Create the required files and directories
+    for filename, content in ocfl_structure.items():
+        filepath = os.path.join(self.root, filename)
+        with open(filepath, 'w') as f:
+            f.write(content)
 
-    print("OCFL storage root initialized successfully.")
+    print(f"OCFL storage root initialized at {self.root}")

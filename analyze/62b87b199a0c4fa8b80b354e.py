@@ -7,8 +7,8 @@ def is_fill_request_seq(seq):
     - या इसमें कम से कम एक FillRequest तत्व हो,  
     - और यह Source अनुक्रम (Source sequence) न हो।
     """
-    # Assuming FillRequest is a class or type that we can check against
-    # Assuming Source sequence is a type or class that we can check against
+    # Assuming FillRequest is a class or type that represents a FillRequest element
+    # Assuming Source sequence is a specific type or class that represents a Source sequence
     
     # Check if seq is a single FillRequest element
     if isinstance(seq, FillRequest):
