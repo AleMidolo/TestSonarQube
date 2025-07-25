@@ -15,36 +15,18 @@ def absorb(self, args):
     result = []
     for expr in args:
         if isinstance(expr, tuple):
-            if len(expr) == 3:
-                op, left, right = expr
-                if op == '&':
-                    if left == right:
-                        result.append(left)
-                    elif isinstance(right, tuple) and len(right) == 3 and right[0] == '|':
-                        if left == right[1]:
-                            result.append(left)
-                        elif left == right[2]:
-                            result.append(left)
-                        else:
-                            result.append(expr)
-                    elif isinstance(right, tuple) and len(right) == 3 and right[0] == '|' and right[1] == ('~', left):
-                        result.append(('&', left, right[2]))
-                    else:
-                        result.append(expr)
-                elif op == '|':
-                    if left == right:
-                        result.append(left)
-                    elif isinstance(right, tuple) and len(right) == 3 and right[0] == '&':
-                        if left == right[1]:
-                            result.append(left)
-                        elif left == right[2]:
-                            result.append(left)
-                        else:
-                            result.append(expr)
-                    elif isinstance(right, tuple) and len(right) == 3 and right[0] == '&' and right[1] == ('~', left):
-                        result.append(('|', left, right[2]))
-                    else:
-                        result.append(expr)
+            if expr[0] == '&':
+                if expr[1] == expr[2][1]:
+                    result.append(expr[1])
+                elif expr[1] == ('~', expr[2][1]):
+                    result.append(('&', expr[1], expr[2][2]))
+                else:
+                    result.append(expr)
+            elif expr[0] == '|':
+                if expr[1] == expr[2][1]:
+                    result.append(expr[1])
+                elif expr[1] == ('~', expr[2][1]):
+                    result.append(('|', expr[1], expr[2][2]))
                 else:
                     result.append(expr)
             else:

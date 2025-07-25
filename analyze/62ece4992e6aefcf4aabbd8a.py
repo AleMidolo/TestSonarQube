@@ -28,7 +28,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 
                 configurations[filename] = config
         except yaml.YAMLError as e:
-            error_msg = f"YAML parsing error in file {filename}: {e}"
+            error_msg = f"Error parsing configuration file {filename}: {e}"
             logging.error(error_msg)
             errors.append(logging.LogRecord(
                 name=__name__,
@@ -40,7 +40,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 exc_info=None
             ))
         except Exception as e:
-            error_msg = f"Error loading configuration from file {filename}: {e}"
+            error_msg = f"Unexpected error loading configuration file {filename}: {e}"
             logging.error(error_msg)
             errors.append(logging.LogRecord(
                 name=__name__,

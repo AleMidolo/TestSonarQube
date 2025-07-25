@@ -8,10 +8,9 @@ def parse_arguments(*arguments):
     parser = argparse.ArgumentParser(description="Parse command-line arguments.")
     
     # Add arguments to the parser
-    for arg in arguments:
-        parser.add_argument(arg)
+    parser.add_argument('args', nargs='*', help="List of arguments to parse.")
     
     # Parse the arguments
-    args = parser.parse_args()
+    parsed_args = parser.parse_args(arguments)
     
-    return args
+    return parsed_args

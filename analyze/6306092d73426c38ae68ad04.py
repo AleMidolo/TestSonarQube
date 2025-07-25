@@ -5,9 +5,17 @@ def get_parser_option_specs(self, command_name):
     :param command_name: कमांड का नाम (जैसे main, virsh, ospd, आदि...)
     :return: सभी कमांड विकल्पों की सूची
     """
-    # Assuming self.parser_options is a dictionary where keys are command names
-    # and values are lists of option specs for that command.
-    if command_name in self.parser_options:
-        return self.parser_options[command_name]
+    # यहां हम मानते हैं कि कमांड विकल्पों की जानकारी एक डिक्शनरी में संग्रहीत है
+    # जहां कुंजी कमांड नाम है और मान विकल्पों की सूची है
+    command_options = {
+        "main": ["--help", "--version", "--verbose"],
+        "virsh": ["--connect", "--list", "--details"],
+        "ospd": ["--config", "--log-level", "--output"]
+    }
+    
+    # यदि कमांड नाम डिक्शनरी में मौजूद है, तो उसके विकल्प लौटाएं
+    if command_name in command_options:
+        return command_options[command_name]
     else:
+        # यदि कमांड नाम नहीं मिलता है, तो खाली सूची लौटाएं
         return []

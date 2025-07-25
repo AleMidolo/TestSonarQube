@@ -22,26 +22,26 @@ def lfu_cache(maxsize=128, typed=False):
                 del freq_map[freq][key]
                 if not freq_map[freq]:
                     del freq_map[freq]
+                    if freq == min_freq:
+                        min_freq += 1
                 freq_map[freq + 1][key] = None
                 return cache[key]
 
-            result = func(*args, **kwargs)
-
+            # If cache is full, evict the least frequently used item
             if len(cache) >= maxsize:
-                # Remove the least frequently used item
-                while min_freq not in freq_map or not freq_map[min_freq]:
-                    min_freq += 1
                 evict_key, _ = freq_map[min_freq].popitem(last=False)
+                if not freq_map[min_freq]:
+                    del freq_map[min_freq]
                 del cache[evict_key]
                 del frequency[evict_key]
 
+            # Add new item to cache
+            result = func(*args, **kwargs)
             cache[key] = result
             frequency[key] = 1
             freq_map[1][key] = None
             min_freq = 1
-
             return result
 
         return wrapper
-
     return decorator

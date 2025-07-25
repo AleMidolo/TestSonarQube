@@ -2,15 +2,9 @@ def dehydrate_point(value):
     """
     पॉइंट डेटा के लिए डिहाइड्रेटर।
 
-    :param value: Point object to be dehydrated.
+    :param value: पॉइंट ऑब्जेक्ट
     :type value: Point  
-    :return: A dictionary representing the dehydrated point.
-    :rtype: dict
+    :return: पॉइंट ऑब्जेक्ट के निर्देशांक (x, y)
+    :rtype: tuple
     """
-    if not hasattr(value, 'x') or not hasattr(value, 'y'):
-        raise ValueError("The provided value does not have 'x' and 'y' attributes.")
-    
-    return {
-        'x': value.x,
-        'y': value.y
-    }
+    return (value.x, value.y)

@@ -10,7 +10,7 @@ def validate_fixity(self, fixity, manifest_files):
     if not isinstance(manifest_files, list):
         raise ValueError("मैनिफेस्ट फाइल्स एक लिस्ट होनी चाहिए।")
     
-    for file_name in fixity.keys():
+    for file_name, checksum in fixity.items():
         if file_name not in manifest_files:
             raise ValueError(f"फाइल '{file_name}' मैनिफेस्ट में सूचीबद्ध नहीं है।")
     

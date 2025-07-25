@@ -8,7 +8,7 @@ def is_fill_request_seq(seq):
     - और यह Source अनुक्रम (Source sequence) न हो।
     """
     # Assuming FillRequest is a class or type that represents a FillRequest element
-    # Assuming Source sequence is a type or class that represents a Source sequence
+    # Assuming Source sequence is a specific type or has a specific attribute to identify it
     
     # Check if seq is a single FillRequest element
     if isinstance(seq, FillRequest):
@@ -16,7 +16,7 @@ def is_fill_request_seq(seq):
     
     # Check if seq is a sequence and contains at least one FillRequest element
     if isinstance(seq, (list, tuple)) and any(isinstance(item, FillRequest) for item in seq):
-        # Check if seq is not a Source sequence
+        # Check if it is not a Source sequence
         if not isinstance(seq, SourceSequence):
             return True
     

@@ -36,18 +36,17 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         x_coords = (bin_edges[:-1] + bin_edges[1:]) / 2
 
     # Apply make_value to each bin
-    y_values = [make_value(bin_) for bin_ in bin_contents]
+    values = [make_value(bin_) for bin_ in bin_contents]
 
     # Create the graph
-    graph = {}
-    graph[field_names[0]] = x_coords
-    for i, field in enumerate(field_names[1:]):
-        graph[field] = [y[i] for y in y_values]
+    graph = np.array(list(zip(x_coords, *values)))
 
-    # Handle scale
+    # Set field names
+    if len(field_names) != graph.shape[1]:
+        raise ValueError("Number of field names must match the dimensions of the result")
+
+    # Set scale if provided
     if scale is True:
-        graph['scale'] = hist.scale
-    elif scale is not None:
-        graph['scale'] = scale
+        scale = hist.scale
 
-    return graph
+    return graph, field_names, scale

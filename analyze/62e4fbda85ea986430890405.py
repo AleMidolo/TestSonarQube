@@ -1,15 +1,21 @@
 import subprocess
 import sys
-from typing import Sequence, Any
+import os
+from typing import Sequence, Any, Tuple
+
+def _get_platform_max_length() -> int:
+    # This function should return the platform-specific maximum command length.
+    # For simplicity, we'll return a default value.
+    return 32768
 
 def xargs(
-        cmd: tuple[str, ...],
-        varargs: Sequence[str],
-        *,
-        color: bool = False,
-        target_concurrency: int = 1,
-        _max_length: int = _get_platform_max_length(),
-        **kwargs: Any,
+    cmd: tuple[str, ...],
+    varargs: Sequence[str],
+    *,
+    color: bool = False,
+    target_concurrency: int = 1,
+    _max_length: int = _get_platform_max_length(),
+    **kwargs: Any,
 ) -> tuple[int, bytes]:
     """
     Xargs का एक सरल कार्यान्वयन।
@@ -23,19 +29,25 @@ def xargs(
         kwargs["stderr"] = subprocess.PIPE
         kwargs["universal_newlines"] = True
         kwargs["bufsize"] = 1
-        kwargs["preexec_fn"] = lambda: subprocess.call(["stty", "raw", "-echo"])
+        kwargs["preexec_fn"] = os.setsid
 
-    processes = []
+    results = []
     for i in range(0, len(varargs), target_concurrency):
         chunk = varargs[i:i + target_concurrency]
-        process = subprocess.Popen(cmd + tuple(chunk), **kwargs)
-        processes.append(process)
+        full_cmd = cmd + tuple(chunk)
+        try:
+            process = subprocess.Popen(full_cmd, **kwargs)
+            stdout, stderr = process.communicate()
+            results.append((process.returncode, stdout))
+        except subprocess.CalledProcessError as e:
+            results.append((e.returncode, e.output))
 
-    exit_codes = []
-    outputs = []
-    for process in processes:
-        stdout, stderr = process.communicate()
-        exit_codes.append(process.returncode)
-        outputs.append(stdout)
+    # Combine results
+    final_returncode = 0
+    final_output = b""
+    for returncode, output in results:
+        if returncode != 0:
+            final_returncode = returncode
+        final_output += output
 
-    return (max(exit_codes), b"".join(outputs)
+    return (final_returncode, final_output)
