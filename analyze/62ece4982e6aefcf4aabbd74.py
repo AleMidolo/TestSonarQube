@@ -33,12 +33,12 @@ def prepare_repository_from_archive(
         with tarfile.open(archive_path, 'r:*') as tar_ref:
             tar_ref.extractall(tmp_path)
     else:
-        raise ValueError("Unsupported archive format: {}".format(file_extension))
+        raise ValueError("Unsupported archive format")
     
-    # Construct the repository URL
+    # Construct the URL for the extracted repository
     if filename:
-        repo_path = tmp_path / filename
+        extracted_file_path = tmp_path / filename
     else:
-        repo_path = tmp_path / Path(archive_path).stem
+        extracted_file_path = next(tmp_path.glob('*'))  # Get the first extracted directory or file
     
-    return str(repo_path.resolve())
+    return f'file://{extracted_file_path.resolve()}'

@@ -18,8 +18,9 @@ def xargs(
         # Create a pseudo-terminal if supported
         import pty
         master_fd, slave_fd = pty.openpty()
-        os.setsid()
         os.close(slave_fd)
+        os.dup2(master_fd, 1)  # Redirect stdout to the master
+        os.dup2(master_fd, 2)  # Redirect stderr to the master
 
     # Split varargs into chunks for concurrency
     chunk_size = (len(varargs) + target_concurrency - 1) // target_concurrency
@@ -28,8 +29,8 @@ def xargs(
     with Pool(processes=target_concurrency) as pool:
         results = pool.map(run_command, chunks)
 
-    # Combine results
+    # Combine return codes and output
     return_code = sum(result.returncode for result in results)
-    combined_output = b''.join(result.stdout for result in results)
+    output = b''.join(result.stdout for result in results)
 
-    return return_code, combined_output
+    return return_code, output

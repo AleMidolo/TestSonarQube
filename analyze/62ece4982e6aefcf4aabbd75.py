@@ -10,8 +10,8 @@ def addignored(ignored):
     # Ottieni l'output e trasformalo in una lista di file
     ignored_files = result.stdout.strip().split('\n')
     
-    # Estrai solo i nomi dei file ignorati
-    ignored_files = [line.split(':')[1].strip() for line in ignored_files if line]
+    # Rimuovi eventuali spazi bianchi e filtra i file non vuoti
+    ignored_files = [file.strip() for file in ignored_files if file.strip()]
     
     # Ordina la lista di file ignorati
     ignored_files.sort()

@@ -22,6 +22,7 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         hydration_hooks = {}
 
     # Logica per aggiungere un messaggio DISCARD alla coda di output
+    # Questo è un esempio di come potrebbe essere implementato
     message = {
         'type': 'DISCARD',
         'n': n,

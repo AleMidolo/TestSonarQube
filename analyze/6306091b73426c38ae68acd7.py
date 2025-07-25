@@ -8,8 +8,8 @@ def ansible_config_manager(cls):
     from ansible.playbook.play import Play
     from ansible.executor.task_queue_manager import TaskQueueManager
     from ansible.utils.display import Display
-    from ansible.inventory.host import Host
     from ansible.inventory.group import Group
+    from ansible.inventory.host import Host
 
     # Initialize necessary components
     loader = DataLoader()

@@ -4,12 +4,12 @@ def render(pieces, style):
     """
     rendered_output = []
     for piece in pieces:
-        if style == 'bold':
+        if style == "bold":
             rendered_output.append(f"**{piece}**")
-        elif style == 'italic':
+        elif style == "italic":
             rendered_output.append(f"*{piece}*")
-        elif style == 'underline':
+        elif style == "underline":
             rendered_output.append(f"__{piece}__")
         else:
             rendered_output.append(piece)
-    return ''.join(rendered_output)
+    return "\n".join(rendered_output)

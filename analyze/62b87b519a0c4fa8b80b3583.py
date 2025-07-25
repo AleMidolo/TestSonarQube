@@ -30,8 +30,7 @@ def scale(self, other=None):
 
         # Scale associated errors if they exist
         if hasattr(self, 'errors'):
-            for i in range(len(self.errors)):
-                self.errors[i] *= other
+            self.errors[-1] *= other
 
         self.scale_value = other  # Update the scale value
     else:

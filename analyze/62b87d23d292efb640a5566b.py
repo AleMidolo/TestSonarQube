@@ -12,7 +12,7 @@ def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=Fal
     stderr = subprocess.DEVNULL if nascondi_stderr else None
     
     if verbose:
-        print(f"Running command: {' '.join(command)} in {cwd if cwd else 'current directory'}")
+        print(f"Running command: {' '.join(command)} in {cwd}")
     
     result = subprocess.run(command, cwd=cwd, env=env, stderr=stderr)
     

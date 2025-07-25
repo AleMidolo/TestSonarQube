@@ -7,8 +7,8 @@ def directlyProvidedBy(object):  # pylint:disable=redefined-builtin
     if provides is None:  # nessuna specifica
         return None  # Nessuna interfaccia fornita
 
-    # Se abbiamo una specifica "implements", trattiamola come una sola base
+    # Se abbiamo una specifica "implements", la trattiamo come una sola base
     if isinstance(provides, list) and len(provides) == 1:
-        return provides[0]
+        return provides[0]  # Restituiamo la prima interfaccia
 
-    return provides
+    return provides  # Restituiamo le interfacce fornite
