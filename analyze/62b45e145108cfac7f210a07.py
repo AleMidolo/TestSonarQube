@@ -14,17 +14,11 @@ def validate(self, inventory, extract_spec_version=False):
         spec_version = self.spec_version
 
     # Perform validation based on the determined spec_version
-    if spec_version == 'v1':
-        return self.validate_v1(inventory)
-    elif spec_version == 'v2':
-        return self.validate_v2(inventory)
-    else:
-        raise ValueError("Invalid spec version: {}".format(spec_version))
+    if not self.is_valid_inventory(inventory, spec_version):
+        raise ValueError("Invalid inventory based on the specified version.")
 
-def validate_v1(self, inventory):
-    # Implementation for v1 validation
-    pass
+    return True
 
-def validate_v2(self, inventory):
-    # Implementation for v2 validation
-    pass
+def is_valid_inventory(self, inventory, spec_version):
+    # Placeholder for actual validation logic
+    return True  # Assume the inventory is valid for the sake of this example

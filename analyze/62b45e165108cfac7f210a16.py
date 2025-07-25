@@ -9,7 +9,7 @@ def validate_as_prior_version(self, prior):
 
     # Assuming both self and prior have a method to get their inventory data
     if self.inventory_data == prior.inventory_data:
-        return self.error("The prior version is the same as the current version.")
+        return self.error("The prior version cannot be the same as the current version.")
 
     # Additional checks can be added here to validate the prior version
     # For example, checking timestamps, version numbers, etc.

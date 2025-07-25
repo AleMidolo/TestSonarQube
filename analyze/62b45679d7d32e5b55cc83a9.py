@@ -1,5 +1,5 @@
 def parser_flags(parser):
     """
-    给定一个 `argparse.ArgumentParser` 实例，返回其参数标志（flags）组成的以空格分隔的字符串。。
+    给定一个 `argparse.ArgumentParser` 实例，返回其参数标志（flags）组成的以空格分隔的字符串。
     """
     return ' '.join(flag for action in parser._actions for flag in action.option_strings)

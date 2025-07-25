@@ -31,10 +31,9 @@ def prepare_repository_from_archive(
     with zipfile.ZipFile(archive_path, 'r') as zip_ref:
         zip_ref.extractall(extraction_path)
 
-    # If a filename is provided, return the URL for that specific file
+    # If a filename is provided, return the path to that file
     if filename:
-        file_path = extraction_path / filename
-        return f"file://{file_path.resolve()}"
-    
-    # Otherwise, return the URL for the extraction directory
-    return f"file://{extraction_path.resolve()}"
+        return str(extraction_path / filename)
+
+    # Otherwise, return the path to the extraction directory
+    return str(extraction_path)
