@@ -15,7 +15,7 @@ def initialize(self):
         "description": "OCFL Storage Root",
         "layout": {
             "type": "flat",
-            "digestAlgorithm": "sha512"
+            "pattern": "{object-id}"
         }
     }
     

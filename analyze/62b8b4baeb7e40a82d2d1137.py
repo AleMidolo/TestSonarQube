@@ -15,7 +15,7 @@ def verifyObject(iface, candidate, tentative=False):
             attr = getattr(candidate, name)
         except AttributeError:
             errors['missing_attributes'].append(
-                f"The {name} attribute was not provided."
+                f"The '{name}' attribute was not provided."
             )
             continue
 
@@ -23,39 +23,32 @@ def verifyObject(iface, candidate, tentative=False):
         if isinstance(desc, Method):
             if not callable(attr):
                 errors['invalid_methods'].append(
-                    f"{name} is not callable but is defined as a method in {iface}"
+                    f"The '{name}' attribute is not callable but should be."
                 )
                 continue
 
             # Check method signature
             try:
-                from inspect import signature
-                impl_sig = signature(attr)
-                iface_sig = desc.getSignatureInfo()
-
-                # Compare required arguments
-                impl_params = list(impl_sig.parameters.values())
-                required_params = iface_sig['required']
-                
-                if len(impl_params) < len(required_params):
-                    errors['invalid_signatures'].append(
-                        f"{name} takes too few arguments"
-                    )
-
-            except ValueError:
-                errors['invalid_signatures'].append(
-                    f"Could not verify signature of {name}"
+                desc.getSignatureInfo()
+            except ValueError as e:
+                errors['signature_errors'].append(
+                    f"Invalid signature for '{name}': {str(e)}"
                 )
 
-    # If we have errors, raise them
+    # If we have any errors, raise them
     if errors:
-        all_errors = []
+        if sum(len(v) for v in errors.values()) == 1:
+            # Special case: only one error, raise it directly
+            error_msg = next(msg for msgs in errors.values() for msg in msgs)
+            raise Invalid(error_msg)
+        
+        # Multiple errors: combine them all
+        error_messages = []
         for error_type, messages in errors.items():
-            all_errors.extend(messages)
-            
-        if len(all_errors) == 1:
-            raise Invalid(all_errors[0])
-        elif len(all_errors) > 1:
-            raise Invalid('\n'.join(all_errors))
+            if messages:
+                error_messages.extend(messages)
+        
+        if error_messages:
+            raise Invalid('\n'.join(error_messages))
 
     return True

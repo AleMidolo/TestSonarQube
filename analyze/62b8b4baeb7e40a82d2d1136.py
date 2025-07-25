@@ -24,7 +24,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             method = getattr(candidate, name)
             if not callable(method):
                 errors['methods'].append(
-                    f"{name!r} is not a method but {method!r}"
+                    f"The {name!r} attribute is not callable"
                 )
                 continue
 
@@ -48,7 +48,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
 
     # Collect all errors
     all_errors = []
-    for category, error_list in errors.items():
+    for error_type, error_list in errors.items():
         all_errors.extend(error_list)
 
     # If only one error, raise it directly

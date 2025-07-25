@@ -9,11 +9,11 @@ def _get_resource_name_regex():
     """
     import re
     
-    # Resource names must:
-    # - Start with a lowercase letter or number
-    # - Can contain lowercase letters, numbers, and hyphens
-    # - End with a lowercase letter or number
-    # - Be between 1-63 characters
-    pattern = r'^[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'
+    # Regex pattern that matches:
+    # - Must start with lowercase letter or number
+    # - Can contain lowercase letters, numbers, hyphens
+    # - Must end with lowercase letter or number
+    # - Length between 1-63 characters
+    pattern = r'^[a-z0-9][a-z0-9-]*[a-z0-9]$'
     
     return re.compile(pattern)

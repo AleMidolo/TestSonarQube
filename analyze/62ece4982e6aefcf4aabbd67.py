@@ -5,11 +5,14 @@ def vertex3tuple(vertices):
     # Get length of vertices list
     n = len(vertices)
     
-    # For each vertex, get previous, current and next vertex
+    # Iterate through each vertex
     for i in range(n):
-        prev = vertices[(i-1) % n]  # Previous vertex (wraps around)
-        curr = vertices[i]          # Current vertex
-        next = vertices[(i+1) % n]  # Next vertex (wraps around)
+        # Get previous vertex (wrap around to end if at start)
+        prev = vertices[(i-1) % n]
+        # Get current vertex
+        curr = vertices[i]
+        # Get next vertex (wrap around to start if at end) 
+        next = vertices[(i+1) % n]
         
         # Add tuple of (prev, curr, next) vertices
         result.append((prev, curr, next))

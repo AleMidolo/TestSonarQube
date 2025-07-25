@@ -6,40 +6,51 @@ def bash_completion():
     return '''
 _borgmatic()
 {
-    local cur prev words cword
-    _init_completion || return
-
-    # List of all available commands
-    local commands="init create prune check config validate"
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
     
-    # Handle command completion
-    if [ $cword -eq 1 ]; then
-        COMPREPLY=( $(compgen -W "${commands}" -- ${cur}) )
+    # List of all borgmatic commands
+    opts="init create prune check list info export-tar extract mount umount rcreate rlist rinfo rdelete config validate generate-key"
+    
+    # List of options that take values
+    value_opts="-c --config --repository --archive --destination --json --monitoring-verbosity --verbosity"
+    
+    # Handle option completion
+    if [[ ${cur} == -* ]]; then
+        COMPREPLY=( $(compgen -W "--help --version --borgmatic-source-directory --verbosity \
+            --json --monitoring-verbosity -c --config --repository --archive \
+            --destination --dry-run --progress --stats --list --files --prefix" -- ${cur}) )
         return 0
     fi
-
-    # Handle options based on command
-    case ${words[1]} in
-        init)
-            COMPREPLY=( $(compgen -W "--encryption --append-only --storage-quota" -- ${cur}) )
+    
+    # Handle command completion
+    if [[ ${COMP_CWORD} -eq 1 ]]; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+    
+    # Handle value completion for specific options
+    case "${prev}" in
+        -c|--config)
+            COMPREPLY=( $(compgen -f -- ${cur}) )
+            return 0
             ;;
-        create)
-            COMPREPLY=( $(compgen -W "--progress --stats --dry-run --exclude --compression" -- ${cur}) )
+        --repository|--archive|--destination)
+            COMPREPLY=( $(compgen -f -- ${cur}) )
+            return 0
             ;;
-        prune)
-            COMPREPLY=( $(compgen -W "--keep-daily --keep-weekly --keep-monthly --dry-run" -- ${cur}) )
+        --verbosity|--monitoring-verbosity)
+            COMPREPLY=( $(compgen -W "0 1 2" -- ${cur}) )
+            return 0
             ;;
-        check)
-            COMPREPLY=( $(compgen -W "--repository --archives --verify-data" -- ${cur}) )
-            ;;
-        config)
-            COMPREPLY=( $(compgen -W "--list --generate --edit" -- ${cur}) )
-            ;;
-        validate)
-            COMPREPLY=( $(compgen -W "--config --lint" -- ${cur}) )
+        *)
             ;;
     esac
-
+    
+    # Default to file completion
+    COMPREPLY=( $(compgen -f ${cur}) )
     return 0
 }
 

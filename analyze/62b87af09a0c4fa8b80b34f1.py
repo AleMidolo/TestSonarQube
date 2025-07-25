@@ -5,16 +5,27 @@ def fill(self, coord, weight=1):
     Coordinates outside the histogram edges are ignored.
     """
     # Check if coord is within histogram bounds
+    if not isinstance(coord, (list, tuple)):
+        coord = [coord]
+        
+    # Check each dimension is within bounds
     for i, x in enumerate(coord):
         if x < self.edges[i][0] or x >= self.edges[i][-1]:
             return
             
-    # Find bin indices for each dimension
+    # Find the bin indices for each dimension
     indices = []
     for dim, x in enumerate(coord):
-        # Find the bin index using binary search
-        idx = np.searchsorted(self.edges[dim], x) - 1
-        indices.append(idx)
+        edges = self.edges[dim]
+        # Binary search to find correct bin
+        left, right = 0, len(edges)-1
+        while left < right:
+            mid = (left + right) // 2
+            if x < edges[mid]:
+                right = mid
+            else:
+                left = mid + 1
+        indices.append(left-1)
         
     # Add weight to the bin
-    self.hist[tuple(indices)] += weight
+    self.values[tuple(indices)] += weight

@@ -16,5 +16,5 @@ def identify_request(request: RequestType):
     if hasattr(request, 'legacy_payload'):
         return 'legacy'
         
-    # If none of the above, return None
+    # If none of the above, return None to indicate unidentified request
     return None

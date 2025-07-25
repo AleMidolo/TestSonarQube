@@ -8,18 +8,23 @@ def cached(cache, key=hashkey, lock=None):
             k = key(*args, **kwargs)
             
             try:
-                # Try to get result from cache first
+                # Try to get result from cache
                 result = cache[k]
                 return result
             except KeyError:
-                # If not in cache, compute and store result
+                # Key not found, need to compute result
                 if lock is not None:
                     with lock:
+                        # Check cache again in case another thread computed result
+                        if k in cache:
+                            return cache[k]
                         result = func(*args, **kwargs)
                         cache[k] = result
                 else:
+                    # No lock needed, just compute and cache result
                     result = func(*args, **kwargs)
                     cache[k] = result
+                    
                 return result
                 
         return wrapper

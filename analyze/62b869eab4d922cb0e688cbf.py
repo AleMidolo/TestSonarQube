@@ -13,10 +13,10 @@ def generate_default_observer_schema(app):
         
     # Iterate through each manifest in the application spec
     for manifest in app.spec.manifest:
-        # Get the resource kind from the manifest
+        # Get resource kind from manifest
         kind = manifest.get('kind')
         
-        # Skip if kind is not present
+        # Skip if kind not found
         if not kind:
             continue
             
@@ -32,8 +32,8 @@ def generate_default_observer_schema(app):
             }],
             'state': {
                 'ready': {
-                    'path': 'status.conditions[?type=="Ready"].status',
-                    'value': 'True'
+                    'path': 'status.phase',
+                    'value': 'Running'
                 }
             }
         }

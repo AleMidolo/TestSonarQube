@@ -31,36 +31,29 @@ def _legacy_mergeOrderings(orderings):
             successors[ordering[i]].add(ordering[i+1])
             
     # Create a set of elements with no predecessors
-    no_predecessors = set(all_elements)
+    has_pred = set()
     for succ_set in successors.values():
-        no_predecessors.difference_update(succ_set)
-        
-    # Build the merged ordering
-    result = []
-    used = set()
+        has_pred.update(succ_set)
+    no_pred = all_elements - has_pred
     
-    while no_predecessors:
+    # Build result list by repeatedly taking elements with no predecessors
+    result = []
+    while no_pred:
         # Take any element with no predecessors
-        elem = no_predecessors.pop()
+        elem = no_pred.pop()
         result.append(elem)
-        used.add(elem)
         
-        # Update no_predecessors set
-        # Check if any successor of elem now has all predecessors used
-        for ordering in orderings:
-            if elem in ordering:
-                idx = ordering.index(elem)
-                if idx + 1 < len(ordering):
-                    next_elem = ordering[idx + 1]
-                    # Check if all predecessors of next_elem are used
-                    all_pred_used = True
-                    for other_ordering in orderings:
-                        if next_elem in other_ordering:
-                            pred_idx = other_ordering.index(next_elem)
-                            if not all(pred in used for pred in other_ordering[:pred_idx]):
-                                all_pred_used = False
-                                break
-                    if all_pred_used and next_elem not in used:
-                        no_predecessors.add(next_elem)
-                        
+        # Remove this element from successor sets and update no_pred
+        succs = successors[elem]
+        del successors[elem]
+        
+        # Check if removing elem as predecessor creates new elements with no predecessors
+        for other_succs in successors.values():
+            if elem in other_succs:
+                other_succs.remove(elem)
+                
+        for e in succs:
+            if not any(e in s for s in successors.values()):
+                no_pred.add(e)
+                
     return result

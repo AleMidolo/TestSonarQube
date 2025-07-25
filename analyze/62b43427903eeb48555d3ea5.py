@@ -34,7 +34,7 @@ def format(
     else:
         params_dict = params
 
-    # Initialize output params
+    # Create output params container
     out_params = {} if self.out_style.is_named else []
     param_counter = 0
     
@@ -42,7 +42,7 @@ def format(
     result = ''
     i = 0
     while i < len(sql):
-        # Look for parameter markers
+        # Look for parameter marker
         if sql[i:i+len(self.in_style.prefix)] == self.in_style.prefix:
             param_name = ''
             i += len(self.in_style.prefix)
