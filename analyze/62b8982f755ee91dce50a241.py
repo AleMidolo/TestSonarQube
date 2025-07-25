@@ -10,21 +10,26 @@ def normalized(self):
     microseconds = int((seconds_remainder - seconds) * 1000000 + self.microseconds)
 
     # Handle microseconds overflow
-    seconds += microseconds // 1000000
-    microseconds = microseconds % 1000000
-
+    if microseconds >= 1000000:
+        seconds += microseconds // 1000000
+        microseconds %= 1000000
+    
     # Handle seconds overflow
-    minutes += seconds // 60
-    seconds = seconds % 60
+    if seconds >= 60:
+        minutes += seconds // 60
+        seconds %= 60
 
     # Handle minutes overflow
-    hours += minutes // 60
-    minutes = minutes % 60
+    if minutes >= 60:
+        hours += minutes // 60
+        minutes %= 60
 
     # Handle hours overflow
-    days += hours // 24
-    hours = hours % 24
+    if hours >= 24:
+        days += hours // 24
+        hours %= 24
 
+    # Create new relativedelta with normalized values
     return self.__class__(
         years=self.years,
         months=self.months,
@@ -38,8 +43,5 @@ def normalized(self):
         month=self.month,
         day=self.day,
         weekday=self.weekday,
-        hour=self.hour,
-        minute=self.minute,
-        second=self.second,
-        microsecond=self.microsecond
+        fold=self.fold
     )

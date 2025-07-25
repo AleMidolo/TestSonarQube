@@ -5,7 +5,7 @@ def _resolve_string(matcher):
     """
     import os
     
-    # Split matcher into name and default value (if provided)
+    # Split matcher into name and default value if present
     parts = matcher.split(':-')
     name = parts[0].strip()
     
@@ -15,13 +15,10 @@ def _resolve_string(matcher):
     # Try to get value from environment
     value = os.environ.get(name)
     
-    # Return value if found in environment
-    if value is not None:
-        return value
-        
-    # Return default if provided
-    if default is not None:
-        return default
-        
-    # Raise error if no value found and no default provided
-    raise ValueError(f"Environment variable '{name}' not found and no default value provided")
+    if value is None:
+        if default is not None:
+            return default
+        else:
+            raise ValueError(f"Environment variable '{name}' not found and no default value provided")
+            
+    return value

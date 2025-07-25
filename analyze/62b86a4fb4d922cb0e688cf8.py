@@ -19,7 +19,7 @@ def validate_value(value):
 
     # Check if value matches pattern
     if not re.match(pattern, value):
-        raise ValidationError("Value contains invalid characters")
+        raise ValidationError("Value contains invalid characters. Only alphanumeric characters, spaces, hyphens and underscores are allowed.")
 
 class ValidationError(Exception):
     """Custom exception for validation errors"""

@@ -11,7 +11,7 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
     required_args = []
     
     for option in options_spec:
-        # Skip if no required_when condition
+        # Skip if option doesn't have required_when condition
         if 'required_when' not in option:
             continue
             
@@ -40,7 +40,7 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
                 if eval(required_when, {'args': args}):
                     required_args.append(option['name'])
             except:
-                # Log warning that expression evaluation failed
-                pass
+                # Skip if expression evaluation fails
+                continue
                 
     return required_args

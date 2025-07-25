@@ -27,12 +27,11 @@ def parse_diaspora_webfinger(document: str) -> Dict:
         return result
         
     except json.JSONDecodeError:
-        # Try parsing as XRD (old format) 
+        # Try parsing as XRD (old format)
         try:
-            # Add XML namespace
             ns = {'xrd': 'http://docs.oasis-open.org/ns/xri/xrd-1.0'}
-            
             root = ElementTree.fromstring(document)
+            
             result = {
                 'subject': '',
                 'aliases': [],

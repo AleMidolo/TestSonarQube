@@ -5,7 +5,7 @@ def popitem(self):
     if not self:
         raise KeyError("Dictionary is empty")
         
-    # Find the key with minimum frequency
+    # Find key with minimum frequency count
     min_freq = min(self.freq.values())
     min_key = None
     

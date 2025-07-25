@@ -25,28 +25,31 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
 
     # Add extra vars if provided
     if extra_vars:
-        extra_vars_arg = '--extra-vars'
-        if isinstance(extra_vars, dict):
-            # Convert dict to JSON string
-            import json
-            extra_vars = json.dumps(extra_vars)
-        cmd.extend([extra_vars_arg, extra_vars])
+        cmd.append('--extra-vars')
+        extra_vars_str = ' '.join([f"{k}={v}" for k, v in extra_vars.items()])
+        cmd.append(f"'{extra_vars_str}'")
+
+    # Add inventory file from workspace
+    if hasattr(ir_workspace, 'inventory'):
+        cmd.extend(['-i', ir_workspace.inventory])
 
     # Add any additional ansible arguments
     if ansible_args:
-        for key, value in ansible_args.items():
+        for arg, value in ansible_args.items():
             if value is True:
-                # For flag arguments
-                cmd.append(f"--{key}")
+                cmd.append(f"--{arg}")
             elif value:
-                # For arguments with values
-                cmd.append(f"--{key}={value}")
+                cmd.extend([f"--{arg}", str(value)])
+
+    # Convert command list to string
+    cmd_str = ' '.join(cmd)
 
     # Execute ansible-playbook command
     import subprocess
     try:
         process = subprocess.Popen(
-            cmd,
+            cmd_str,
+            shell=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True
@@ -54,7 +57,7 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
         stdout, stderr = process.communicate()
         
         if process.returncode != 0:
-            raise Exception(f"Ansible playbook execution failed:\n{stderr}")
+            raise Exception(f"Ansible playbook execution failed: {stderr}")
             
         return stdout
         

@@ -42,7 +42,7 @@ def validate(self, path):
             if f'v{i}' != v:
                 return False
                 
-        # If all checks pass, return True
+        # All validation passed
         return True
         
     except Exception:

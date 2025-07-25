@@ -10,22 +10,17 @@ def list_of_file_names(settings_dirs, spec_option):
         
     # Iterate through all directories
     for directory in settings_dirs:
-        # Handle spec_option file extension
-        if spec_option.startswith('.'):
-            pattern = f'*{spec_option}'
+        # Handle spec option cases
+        if spec_option.endswith('*'):
+            # Get all files matching pattern
+            base = spec_option[:-1]
+            for file in os.listdir(directory):
+                if file.startswith(base):
+                    file_names.append(os.path.join(directory, file))
         else:
-            pattern = f'*.{spec_option}'
-            
-        # Get list of matching files in directory
-        import glob
-        import os
-        
-        search_path = os.path.join(directory, pattern)
-        matching_files = glob.glob(search_path)
-        
-        # Add file names without extension to list
-        for file_path in matching_files:
-            file_name = os.path.splitext(os.path.basename(file_path))[0]
-            file_names.append(file_name)
-            
-    return sorted(list(set(file_names))) # Remove duplicates and sort
+            # Get specific file
+            file_path = os.path.join(directory, spec_option)
+            if os.path.exists(file_path):
+                file_names.append(file_path)
+                
+    return file_names

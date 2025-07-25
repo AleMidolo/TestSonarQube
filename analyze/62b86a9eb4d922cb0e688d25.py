@@ -11,7 +11,7 @@ def _get_resource_name_regex():
     
     # Resource names must:
     # - Start with a lowercase letter or number
-    # - Can contain lowercase letters, numbers, hyphens
+    # - Can contain lowercase letters, numbers, and hyphens
     # - End with a lowercase letter or number
     # - Be between 1-63 characters
     pattern = r'^[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'

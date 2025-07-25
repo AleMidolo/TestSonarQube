@@ -10,23 +10,16 @@ def is_fill_request_seq(seq):
     if not seq:
         return False
         
-    # Import needed for isinstance check
-    from typing import Sequence
-    from fill_request import FillRequest, Source
+    # Import needed for isinstance checks
+    from collections.abc import Sequence
     
-    # If seq is a single FillRequest and not a Source
-    if isinstance(seq, FillRequest) and not isinstance(seq, Source):
-        return True
+    # If seq is a single element, check if it's a FillRequest
+    if not isinstance(seq, Sequence):
+        return isinstance(seq, FillRequest)
         
-    # If seq is a sequence, check if it contains at least one FillRequest
-    if isinstance(seq, Sequence):
-        # Return False if it's a Source sequence
-        if isinstance(seq, Source):
-            return False
-            
-        # Check each element
-        for element in seq:
-            if isinstance(element, FillRequest):
-                return True
-                
-    return False
+    # Check if it's a Source sequence
+    if isinstance(seq, Source):
+        return False
+        
+    # Check if any element is a FillRequest
+    return any(isinstance(item, FillRequest) for item in seq)

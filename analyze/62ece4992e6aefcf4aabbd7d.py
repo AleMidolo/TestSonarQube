@@ -13,26 +13,25 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
         Any additional environment variables to be set for the subprocess.
     """
     import subprocess
-    import sys
     import os
-    from pathlib import Path
-
-    # Get the module and function names
+    import sys
+    
+    # Get the module and function name
     module_name = func.__module__
     func_name = func.__name__
-
-    # Build the Python command to execute the function
-    cmd = [
-        sys.executable,
-        "-c",
-        f"from {module_name} import {func_name}; {func_name}(*{args})"
-    ]
-
-    # Set up environment variables
+    
+    # Build the command to run
+    cmd = [sys.executable, "-c",
+           f"from {module_name} import {func_name}; {func_name}()"]
+    
+    # Add any additional arguments
+    cmd.extend(args)
+    
+    # Set up environment
     env = os.environ.copy()
     if extra_env:
         env.update(extra_env)
-
+        
     # Run the subprocess with timeout
     try:
         result = subprocess.run(
@@ -47,5 +46,4 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     except subprocess.TimeoutExpired as e:
         raise TimeoutError(f"Function timed out after {timeout} seconds") from e
     except subprocess.CalledProcessError as e:
-        raise RuntimeError(f"Function failed with exit code {e.returncode}. "
-                         f"stderr: {e.stderr}") from e
+        raise RuntimeError(f"Function failed with exit code {e.returncode}") from e

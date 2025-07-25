@@ -10,12 +10,8 @@ def match(filename):
     # List of supported file extensions
     supported_extensions = ['.txt', '.csv', '.json', '.xml', '.yaml', '.yml']
     
-    # Convert filename to lowercase and get extension
-    if not isinstance(filename, str):
-        return False
-        
-    filename = filename.lower()
-    _, ext = os.path.splitext(filename)
+    # Get the file extension from filename
+    file_ext = os.path.splitext(filename)[1].lower()
     
     # Check if extension is in supported list
-    return ext in supported_extensions
+    return file_ext in supported_extensions

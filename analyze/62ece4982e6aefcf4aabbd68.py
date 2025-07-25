@@ -10,7 +10,7 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
             result = alphabet[0] * padding
         return result
         
-    # Convert number to string using given alphabet
+    # Convert number to string using the alphabet
     base = len(alphabet)
     result = []
     

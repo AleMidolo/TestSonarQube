@@ -11,25 +11,24 @@ def get_parser_option_specs(self, command_name):
     # Initialize empty list to store options
     options = []
     
-    # Iterate through all parser actions to get options
+    # Iterate through all options in the parser
     for action in parser._actions:
         # Skip help action
         if isinstance(action, argparse._HelpAction):
             continue
             
-        # Get option strings (both short and long forms)
-        option_strings = action.option_strings
+        # Get option names (both short and long forms)
+        option_names = action.option_strings
         
-        # Get option details
+        # Get option properties
         option_spec = {
-            'name': action.dest,
-            'flags': option_strings,
+            'names': option_names,
             'help': action.help,
             'default': action.default,
             'required': action.required,
-            'type': str(action.type) if action.type else None,
+            'type': action.type.__name__ if action.type else None,
             'choices': action.choices,
-            'metavar': action.metavar
+            'dest': action.dest
         }
         
         options.append(option_spec)

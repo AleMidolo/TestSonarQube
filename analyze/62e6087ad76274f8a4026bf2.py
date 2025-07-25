@@ -31,8 +31,9 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
     self._append_message(message)
 
     # Create and return Response object with handlers
-    return Response(
+    response = Response(
         hydration_hooks=hydration_hooks,
         dehydration_hooks=dehydration_hooks,
         **handlers
     )
+    return response

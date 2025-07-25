@@ -29,16 +29,10 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
             first_line = f.readline().decode('utf-8').strip()
             
         if first_line.startswith('#!'):
-            interpreter = first_line[2:].strip().split()
-            if interpreter:
-                # Handle both direct interpreter path and env usage
-                if interpreter[0] == '/usr/bin/env':
-                    if len(interpreter) > 1:
-                        return (interpreter[1], exe) + cmd[1:]
-                else:
-                    # Get basename of interpreter path
-                    interpreter_cmd = os.path.basename(interpreter[0])
-                    return (interpreter_cmd, exe) + cmd[1:]
+            interpreter = first_line[2:].strip().split()[0]
+            if interpreter.endswith('python'):
+                return (sys.executable, exe) + cmd[1:]
+            return (interpreter, exe) + cmd[1:]
     except (IOError, UnicodeDecodeError):
         pass
 
