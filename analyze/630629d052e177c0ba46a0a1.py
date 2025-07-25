@@ -14,7 +14,7 @@ def verify_relayable_signature(public_key, doc, signature):
 
     # Load the public key
     key_data = KeyData()
-    key_data.load(public_key)
+    key_data.load_public_key(public_key)
     ctx.key = key_data
 
     # Find the signature in the document
@@ -23,9 +23,9 @@ def verify_relayable_signature(public_key, doc, signature):
         raise ValueError("Signature not found in the document.")
 
     # Verify the signature
+    signature = Signature(signature_node)
     try:
-        verify(signature_node, ctx)
+        ctx.verify(signature)
         return True
     except Exception as e:
-        print(f"Signature verification failed: {e}")
         return False

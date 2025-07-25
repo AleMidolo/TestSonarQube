@@ -10,16 +10,19 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
     1. एक डिक्शनरी जो सबपार्सर के नाम को पार्स किए गए तर्कों के नेमस्पेस (namespace) से मैप करती है।
     2. उन तर्कों की सूची जो किसी भी सबपार्सर द्वारा दावा नहीं किए गए हैं।
     """
+    from argparse import Namespace
+
     parsed_results = {}
     remaining_arguments = unparsed_arguments[:]
     
-    for name, subparser in subparsers.items():
-        # Attempt to parse arguments for the current subparser
+    for subparser_name, subparser in subparsers.items():
+        # Try to parse arguments for the current subparser
         try:
+            # Parse the arguments for the current subparser
             parsed_args, remaining_arguments = subparser.parse_known_args(remaining_arguments)
-            parsed_results[name] = parsed_args
+            parsed_results[subparser_name] = parsed_args
         except SystemExit:
             # Handle the case where parsing fails
             continue
-    
+
     return parsed_results, remaining_arguments

@@ -18,7 +18,7 @@ def from_ticks(cls, ticks, tz=None):
     from datetime import datetime, timedelta
 
     # Calculate the time from ticks
-    time_delta = timedelta(nanoseconds=ticks)
+    time_delta = timedelta(microseconds=ticks / 1000)
     midnight = datetime.combine(datetime.today(), datetime.min.time())
     result_time = midnight + time_delta
 

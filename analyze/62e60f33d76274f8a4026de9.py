@@ -4,7 +4,7 @@ def dehydrate_point(value):
 
     :param value: Point object to dehydrate
     :type value: Point  
-    :return: A dictionary representation of the Point
+    :return: Dehydrated representation of the Point
     """
     if not isinstance(value, Point):
         raise ValueError("Expected a Point instance")

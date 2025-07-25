@@ -34,6 +34,6 @@ def unit_of_work(metadata=None, timeout=None):
         def wrapper(*args, **kwargs):
             # यहाँ ट्रांज़ेक्शन लॉजिक लागू करें
             # मेटाडेटा और टाइमआउट का उपयोग करें
-            pass  # वास्तविक कार्यान्वयन यहाँ होगा
+            return func(*args, **kwargs)
         return wrapper
     return decorator

@@ -11,48 +11,18 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     रिटर्न (Returns):  
     - dict: एक स्वरूपित डिक्शनरी
     """
-    import json
-
     nodeinfo_document = {
         "version": "2.0",
-        "software": {
-            "name": "YourSoftwareName",
-            "version": "1.0.0"
-        },
-        "protocols": [
-            "activitypub",
-            "activitystreams",
-            "webfinger"
-        ],
         "services": {
-            "outbound": [
-                {
-                    "name": "Service Name",
-                    "url": "https://service.example.com"
-                }
-            ],
-            "inbound": [
-                {
-                    "name": "Another Service",
-                    "url": "https://another.service.example.com"
-                }
-            ]
+            "outbound": [],
+            "inbound": []
         },
-        "metadata": {
-            "description": "A brief description of the node.",
-            "icon": {
-                "type": "image/png",
-                "url": f"{url}/path/to/icon.png"
+        "links": [
+            {
+                "rel": "self",
+                "href": f"{url}/{document_path or '.well-known/nodeinfo'}"
             }
-        }
+        ]
     }
-
-    if document_path:
-        nodeinfo_url = f"{url}/{document_path}"
-    else:
-        nodeinfo_url = f"{url}/.well-known/nodeinfo"
-
-    return {
-        "nodeinfo": nodeinfo_url,
-        "data": nodeinfo_document
-    }
+    
+    return nodeinfo_document

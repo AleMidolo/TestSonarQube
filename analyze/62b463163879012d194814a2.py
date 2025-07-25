@@ -2,8 +2,7 @@ def add_asset(self, basename, file_path):
     """
     Adds an asset to the internal storage with the given basename and file path.
     
-    The function expects a basename and a file path, and it will store the asset
-    in a dictionary format where the key is the basename and the value is the file path.
+    The function will create entries for different file formats based on the basename.
     
     Example:
     {
@@ -12,7 +11,12 @@ def add_asset(self, basename, file_path):
         "artigo02-gf03.png": "/path/artigo02-gf03.png"
     }
     """
-    if not hasattr(self, 'assets'):
-        self.assets = {}
+    formats = ['tiff', 'jpg', 'png']
+    assets = {}
     
-    self.assets[basename] = file_path
+    for fmt in formats:
+        asset_name = f"{basename}.{fmt}"
+        assets[asset_name] = file_path
+    
+    # Assuming there's a method to store the assets in the class
+    self.store_assets(assets)

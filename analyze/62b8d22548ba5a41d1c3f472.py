@@ -4,21 +4,27 @@ def cachedmethod(cache, key=hashkey, lock=None):
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            # Create a unique cache key based on the function arguments
+            # Generate the cache key
             cache_key = key(*args, **kwargs)
+            # Check if the result is in the cache
             if cache_key in cache:
                 return cache[cache_key]
-            with (lock if lock else dummy_lock):
-                if cache_key not in cache:  # Double-check in case another thread added it
-                    cache[cache_key] = func(*args, **kwargs)
-            return cache[cache_key]
+            # Acquire lock if provided
+            if lock:
+                with lock:
+                    # Check again in case another thread has computed the value
+                    if cache_key in cache:
+                        return cache[cache_key]
+                    # Compute the value
+                    result = func(*args, **kwargs)
+                    # Store the result in cache
+                    cache[cache_key] = result
+                    return result
+            else:
+                # Compute the value
+                result = func(*args, **kwargs)
+                # Store the result in cache
+                cache[cache_key] = result
+                return result
         return wrapper
     return decorator
-
-# Dummy lock for cases where no lock is provided
-class dummy_lock:
-    def __enter__(self):
-        pass
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        pass
