@@ -11,6 +11,6 @@ def _normalizeargs(sequence, output=None):
     elif isinstance(sequence, dict):
         return {key: _normalizeargs(value, output) for key, value in sequence.items()}
     elif hasattr(sequence, '__iter__'):
-        return list(map(lambda x: _normalizeargs(x, output), sequence))
+        return list(sequence)
     else:
         return sequence

@@ -4,9 +4,10 @@ def validate_as_prior_version(self, prior):
 
     इनपुट वैरिएबल प्रायर को भी एक इन्वेंटरी वैलिडेटर ऑब्जेक्ट माना जाता है और माना जाता है कि स्व और प्रायर दोनों इन्वेंटरी को आंतरिक संगतता के लिए जाँच लिया गया है।
     """
-    # Assuming self and prior have a method to get their version
+    # यहाँ पर लॉजिक जो यह निर्धारित करता है कि prior एक मान्य पूर्व संस्करण है
     if not isinstance(prior, InventoryValidator):
         return False
     
-    # Check if the prior version is actually a previous version of the current inventory
+    # उदाहरण के लिए, हम यह मान सकते हैं कि यदि prior का संस्करण संख्या 
+    # वर्तमान संस्करण संख्या से कम है, तो यह एक मान्य पूर्व संस्करण है
     return self.version > prior.version
