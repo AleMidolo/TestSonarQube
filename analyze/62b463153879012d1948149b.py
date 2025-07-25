@@ -20,5 +20,11 @@ def match_file_by_prefix(prefix, file_path):
     bool
         True - 文件属于指定的文档包
     """
+    # 获取文件名
     file_name = os.path.basename(file_path)
-    return file_name.startswith(f"{prefix}-") or file_name.startswith(f"{prefix}.")
+    
+    # 检查文件名是否以 prefix + "-" 或 prefix + "." 开头
+    if file_name.startswith(prefix + "-") or file_name.startswith(prefix + "."):
+        return True
+    else:
+        return False

@@ -18,3 +18,4 @@ def dict_insert(dic, val, key, *keys):
             current[k] = {}
         current = current[k]
     current[keys[-1] if keys else key] = val
+    return dic

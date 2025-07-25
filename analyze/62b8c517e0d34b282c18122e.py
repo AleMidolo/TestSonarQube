@@ -16,24 +16,18 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     import os
 
     # 获取异常的堆栈信息
-    stack = traceback.extract_tb(e.__traceback__)
-    stack_str = []
-
+    tb_list = traceback.format_exception(type(e), e, e.__traceback__)
+    
     # 限制堆栈层级
-    stack = stack[:max_level]
-
-    for frame in stack:
-        # 限制路径层级
-        path = frame.filename.split(os.sep)
-        if len(path) > max_path_level:
-            path = path[-max_path_level:]
-        path = os.sep.join(path)
-
-        # 格式化堆栈信息
-        stack_str.append(f"File \"{path}\", line {frame.lineno}, in {frame.name}\n  {frame.line}")
-
-    # 格式化异常信息
-    exception_str = f"{type(e).__name__}: {str(e)}\n"
-    exception_str += "\n".join(stack_str)
-
-    return exception_str
+    if len(tb_list) > max_level:
+        tb_list = tb_list[:max_level]
+        tb_list.append(f"... (truncated to {max_level} levels)")
+    
+    # 限制路径层级
+    for i in range(len(tb_list)):
+        parts = tb_list[i].split(os.sep)
+        if len(parts) > max_path_level:
+            tb_list[i] = os.sep.join(parts[-max_path_level:])
+    
+    # 将堆栈信息拼接成字符串
+    return ''.join(tb_list)

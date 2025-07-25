@@ -27,6 +27,3 @@ def _compute_scale(self):
     """
     # 假设 self._data 是直方图的数据
     return sum(self._data)
-
-class LenaValueError(Exception):
-    pass

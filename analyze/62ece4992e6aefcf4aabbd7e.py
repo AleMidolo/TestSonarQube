@@ -8,8 +8,8 @@ def _resolve_string(matcher):
     给定一个包含一个名称和一个可选的默认值的匹配器，从环境中获取值。
     如果环境中未定义该变量且未提供默认值，则会引发错误。
     """
-    name = matcher.group(1)
-    default = matcher.group(2) if matcher.group(2) else None
+    name = matcher.group('name')
+    default = matcher.group('default') if 'default' in matcher.groupdict() else None
     
     value = os.getenv(name)
     

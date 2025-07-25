@@ -25,5 +25,16 @@ def identify_request(request: RequestType) -> bool:
     except ET.ParseError:
         pass
 
-    # 如果以上条件都不满足，返回 False
+    # 检查是否为公共消息
+    if 'public_message' in request.headers:
+        return True
+
+    # 检查是否为私有消息
+    if 'private_message' in request.headers:
+        return True
+
+    # 检查是否为旧式（Legacy）负载
+    if 'legacy_payload' in request.headers:
+        return True
+
     return False

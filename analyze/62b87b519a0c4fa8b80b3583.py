@@ -20,16 +20,16 @@ def scale(self, other=None):
         # Rescale the last coordinate
         if hasattr(self, 'z'):
             self.z *= other / self._scale
-            if hasattr(self, 'z_err'):
-                self.z_err *= other / self._scale
+            if hasattr(self, 'z_error'):
+                self.z_error *= other / self._scale
         elif hasattr(self, 'y'):
             self.y *= other / self._scale
-            if hasattr(self, 'y_err'):
-                self.y_err *= other / self._scale
+            if hasattr(self, 'y_error'):
+                self.y_error *= other / self._scale
         elif hasattr(self, 'x'):
             self.x *= other / self._scale
-            if hasattr(self, 'x_err'):
-                self.x_err *= other / self._scale
+            if hasattr(self, 'x_error'):
+                self.x_error *= other / self._scale
         self._scale = other
     else:
-        raise TypeError("Invalid type for scaling factor.")
+        raise TypeError("Expected a numeric value or None for scaling.")

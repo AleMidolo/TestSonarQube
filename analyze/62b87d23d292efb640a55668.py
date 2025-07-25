@@ -15,6 +15,7 @@ def get_config():
             self.error = None
 
     config = VersioneerConfig()
+    # 设置默认属性值
     config.version = "0.1"
     config.tag_prefix = "v"
     config.parentdir_prefix = "project-"

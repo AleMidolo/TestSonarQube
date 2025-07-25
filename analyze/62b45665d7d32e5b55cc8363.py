@@ -14,10 +14,10 @@ def make_parsers():
     
     # 添加第一个子命令
     parser_a = subparsers.add_parser("command_a", help="执行命令A")
-    parser_a.add_argument("--option_a", type=int, help="命令A的选项")
+    parser_a.add_argument("--arg1", type=int, help="命令A的参数1")
     
     # 添加第二个子命令
     parser_b = subparsers.add_parser("command_b", help="执行命令B")
-    parser_b.add_argument("--option_b", type=str, help="命令B的选项")
+    parser_b.add_argument("--arg2", type=str, help="命令B的参数2")
     
     return parser, subparsers

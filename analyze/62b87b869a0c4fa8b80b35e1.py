@@ -26,40 +26,34 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left", field_names=("x"
     if make_value is None:
         make_value = lambda bin_: bin_
 
-    if scale is None:
-        scale = hist.scale if hasattr(hist, 'scale') else None
+    # Determine the coordinates based on the get_coordinate parameter
+    if get_coordinate == "left":
+        coordinates = hist.bin_edges[:-1]
+    elif get_coordinate == "right":
+        coordinates = hist.bin_edges[1:]
+    elif get_coordinate == "middle":
+        coordinates = (hist.bin_edges[:-1] + hist.bin_edges[1:]) / 2
+    else:
+        raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
 
-    bins = hist.bins
-    x_coords = []
-    y_values = []
+    # Apply make_value to each bin
+    values = [make_value(bin_) for bin_ in hist.bins]
 
-    for i, bin_ in enumerate(bins):
-        if get_coordinate == "left":
-            x = bin_.left
-        elif get_coordinate == "right":
-            x = bin_.right
-        elif get_coordinate == "middle":
-            x = (bin_.left + bin_.right) / 2
-        else:
-            raise ValueError("Invalid get_coordinate value. Must be 'left', 'right', or 'middle'.")
+    # Ensure the number of field names matches the dimensionality of the values
+    if len(field_names) != len(values[0]) + 1:
+        raise ValueError("Number of field names must match the dimensionality of the values")
 
-        y = make_value(bin_)
-
-        x_coords.append(x)
-        y_values.append(y)
-
-    x_coords = np.array(x_coords)
-    y_values = np.array(y_values)
-
-    if len(field_names) != y_values.shape[1] + 1:
-        raise ValueError("Number of field_names must match the dimensionality of the result.")
-
+    # Create the graph
     graph = {
-        field_names[0]: x_coords,
-        **{field_names[i+1]: y_values[:, i] for i in range(y_values.shape[1])}
+        field_names[0]: coordinates,
+        **{field_names[i+1]: [v[i] for v in values] for i in range(len(values[0]))}
     }
 
+    # Apply scale if provided
     if scale is not None:
-        graph['scale'] = scale
+        if scale:
+            graph["scale"] = hist.scale
+        else:
+            graph["scale"] = None
 
     return graph

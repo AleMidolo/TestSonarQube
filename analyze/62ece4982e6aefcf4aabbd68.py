@@ -27,9 +27,8 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
     # Convert list to string
     result_str = ''.join(result)
     
-    # Apply padding if specified
+    # Apply padding if necessary
     if padding is not None:
-        if len(result_str) < padding:
-            result_str = alphabet[0] * (padding - len(result_str)) + result_str
+        result_str = result_str.rjust(padding, alphabet[0])
     
     return result_str

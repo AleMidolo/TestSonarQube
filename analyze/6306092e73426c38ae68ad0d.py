@@ -11,17 +11,9 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
     :return: 复杂类型实例
     """
     # 假设 COMPLEX_TYPES 是一个字典，存储了复杂类型名称与对应函数的映射
-    COMPLEX_TYPES = {
-        'type1': lambda vars, defaults, plugin_path, subcommand, spec_option: complex_action(vars, defaults, plugin_path, subcommand, spec_option),
-        'type2': lambda vars, defaults, plugin_path, subcommand, spec_option: complex_action(vars, defaults, plugin_path, subcommand, spec_option),
-        # 可以根据需要添加更多类型
-    }
-    
-    # 获取对应的复杂类型函数
-    complex_type_func = COMPLEX_TYPES.get(type_name)
-    
-    if complex_type_func:
-        # 调用复杂类型函数并返回结果
-        return complex_type_func(self.vars, self.defaults, self.plugin_path, subcommand, spec_option)
+    if type_name in self.COMPLEX_TYPES:
+        complex_func = self.COMPLEX_TYPES[type_name]
+        # 调用复杂类型函数，传入参数并返回结果
+        return complex_func((self.vars, self.defaults, self.plugin_path), subcommand, spec_option)
     else:
         raise ValueError(f"Unknown complex type: {type_name}")

@@ -12,28 +12,34 @@ def validate(self, path):
     if not os.path.exists(path):
         return False
 
-    # 检查是否存在必要的 OCFL 文件结构
-    required_files = ['inventory.json', 'inventory.json.sha512']
-    for file in required_files:
-        if not os.path.exists(os.path.join(path, file)):
-            return False
+    # 检查是否存在 inventory.json 文件
+    inventory_path = os.path.join(path, "inventory.json")
+    if not os.path.exists(inventory_path):
+        return False
 
-    # 验证 inventory.json 文件
-    inventory_path = os.path.join(path, 'inventory.json')
+    # 尝试解析 inventory.json 文件
     try:
         with open(inventory_path, 'r') as f:
             inventory = json.load(f)
-        
-        # 检查 inventory.json 中的基本结构
-        if 'id' not in inventory or 'type' not in inventory or 'digestAlgorithm' not in inventory:
-            return False
-        
-        # 检查 digestAlgorithm 是否为 sha512
-        if inventory['digestAlgorithm'] != 'sha512':
+    except json.JSONDecodeError:
+        return False
+
+    # 检查 inventory 中是否包含必要的字段
+    required_fields = ["head", "manifest", "versions"]
+    for field in required_fields:
+        if field not in inventory:
             return False
 
-    except (json.JSONDecodeError, KeyError):
+    # 检查 versions 目录是否存在
+    versions_path = os.path.join(path, "versions")
+    if not os.path.exists(versions_path):
         return False
+
+    # 检查每个版本目录是否存在
+    for version in inventory["versions"]:
+        version_path = os.path.join(versions_path, version)
+        if not os.path.exists(version_path):
+            return False
 
     # 如果所有检查都通过，则返回 True
     return True

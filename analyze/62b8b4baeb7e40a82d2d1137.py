@@ -18,7 +18,7 @@ def verifyObject(iface, candidate, tentative=False):
     :raises zope.interface.Invalid: 如果上述任何条件不满足
 
     .. versionchanged:: 5.0
-      如果有多个方法或属性无效，将收集并报告所有这些错误。之前的行为是仅报告第一个错误。作为一个特殊情况，如果只有一个错误，则像之前一样单独抛出该错误。
+    如果有多个方法或属性无效，将收集并报告所有这些错误。之前的行为是仅报告第一个错误。作为一个特殊情况，如果只有一个错误，则像之前一样单独抛出该错误。
     """
     errors = []
 
@@ -31,19 +31,19 @@ def verifyObject(iface, candidate, tentative=False):
     required_methods = iface.namesAndDescriptions(all=True)
     for name, desc in required_methods:
         if not hasattr(candidate, name):
-            errors.append(f"{candidate} is missing required method {name}")
+            errors.append(f"Method {name} is required but not found in {candidate}")
         else:
             # Step 3: Ensure the methods have the correct signatures (if possible)
             # This is a simplified check; a full signature check would require more complex logic
-            candidate_method = getattr(candidate, name)
-            if not callable(candidate_method):
+            method = getattr(candidate, name)
+            if not callable(method):
                 errors.append(f"{name} is not callable in {candidate}")
 
     # Step 4: Ensure the candidate defines all required attributes
-    required_attrs = iface.namesAndDescriptions(all=True)
-    for name, desc in required_attrs:
+    required_attrs = iface.names(all=True)
+    for name in required_attrs:
         if not hasattr(candidate, name):
-            errors.append(f"{candidate} is missing required attribute {name}")
+            errors.append(f"Attribute {name} is required but not found in {candidate}")
 
     # Handle errors
     if errors:

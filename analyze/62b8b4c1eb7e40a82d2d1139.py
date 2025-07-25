@@ -1,24 +1,21 @@
 def verifyClass(iface, candidate, tentative=False):
     """
     验证 *candidate* 是否可能正确地提供 *iface*。
-
-    :param iface: 接口类，表示期望的接口。
-    :param candidate: 候选类，需要验证是否实现了接口。
-    :param tentative: 如果为True，则允许部分实现。
-    :return: 如果候选类实现了接口，返回True；否则返回False。
+    
+    :param iface: 预期的接口类
+    :param candidate: 要验证的候选类
+    :param tentative: 如果为True，允许部分匹配
+    :return: 如果候选类可能提供接口，则返回True，否则返回False
     """
-    if not isinstance(iface, type):
-        raise TypeError("iface must be a class")
-
     if not isinstance(candidate, type):
-        raise TypeError("candidate must be a class")
-
+        return False
+    
     iface_methods = set(dir(iface))
     candidate_methods = set(dir(candidate))
-
+    
     if tentative:
-        # 允许部分实现
-        return iface_methods.issubset(candidate_methods)
+        # 允许部分匹配，只要候选类实现了接口中的部分方法
+        return len(iface_methods.intersection(candidate_methods)) > 0
     else:
-        # 必须完全实现
-        return iface_methods == candidate_methods
+        # 要求完全匹配，候选类必须实现接口中的所有方法
+        return iface_methods.issubset(candidate_methods)

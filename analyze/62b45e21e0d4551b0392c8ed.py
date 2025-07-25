@@ -18,7 +18,7 @@ def find_path_type(path):
     if os.path.isfile(path):
         return "file"
     
-    namaste_files = [f for f in os.listdir(path) if f.startswith("0=")]
+    namaste_files = [f for f in os.listdir(path) if f.startswith('0=')]
     
     if not namaste_files:
         return "路径不包含 Namaste 文件"
@@ -29,7 +29,7 @@ def find_path_type(path):
     
     if content == "ocfl_1.0":
         return "root"
-    elif content == "ocfl_object_1.0":
+    elif content.startswith("ocfl_object_"):
         return "object"
     else:
         return "未知的 Namaste 文件内容"
