@@ -14,7 +14,7 @@ def parse_frequency(frequency):
         return None
     
     pattern = re.compile(r'^(\d+)\s*(second|minute|hour|day|week|month|year)s?$', re.IGNORECASE)
-    match = pattern.match(frequency)
+    match = pattern.match(frequency.strip())
     
     if not match:
         raise ValueError(f"Frequenza non valida: {frequency}")

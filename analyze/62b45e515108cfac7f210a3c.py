@@ -1,30 +1,42 @@
 def initialize(self):
-    """
-    Crea e inizializza una nuova radice di archiviazione OCFL.
-    """
+    """Crea e inizializza una nuova radice di archiviazione OCFL."""
     import os
+    import json
 
     # Crea la directory radice OCFL
-    if not os.path.exists(self.root_path):
-        os.makedirs(self.root_path)
-
-    # Crea il file di dichiarazione OCFL
-    declaration_path = os.path.join(self.root_path, "0=ocfl_1.0")
-    with open(declaration_path, 'w') as f:
-        f.write("ocfl_1.0\n")
-
-    # Crea la directory per gli oggetti OCFL
-    objects_path = os.path.join(self.root_path, "objects")
-    if not os.path.exists(objects_path):
-        os.makedirs(objects_path)
-
-    # Crea la directory per i file di log
-    logs_path = os.path.join(self.root_path, "logs")
-    if not os.path.exists(logs_path):
-        os.makedirs(logs_path)
+    os.makedirs(self.root_path, exist_ok=True)
 
     # Crea il file di configurazione OCFL
-    config_path = os.path.join(self.root_path, "ocfl_config.json")
-    if not os.path.exists(config_path):
-        with open(config_path, 'w') as f:
-            f.write('{"version": "1.0", "storage_layout": "flat"}')
+    config = {
+        "ocfl-version": "1.0",
+        "type": "https://ocfl.io/1.0/spec/#inventory",
+        "digestAlgorithm": "sha512",
+        "contentDirectory": "content",
+        "manifest": {},
+        "versions": {}
+    }
+
+    with open(os.path.join(self.root_path, "0=ocfl_1.0"), 'w') as f:
+        json.dump(config, f, indent=4)
+
+    # Crea la directory per il contenuto
+    os.makedirs(os.path.join(self.root_path, "content"), exist_ok=True)
+
+    # Crea il file di inventario iniziale
+    inventory = {
+        "id": "urn:uuid:12345678-1234-5678-1234-567812345678",
+        "type": "https://ocfl.io/1.0/spec/#inventory",
+        "digestAlgorithm": "sha512",
+        "head": "v1",
+        "versions": {
+            "v1": {
+                "created": "2023-10-01T00:00:00Z",
+                "state": {},
+                "message": "Initial version"
+            }
+        },
+        "manifest": {}
+    }
+
+    with open(os.path.join(self.root_path, "inventory.json"), 'w') as f:
+        json.dump(inventory, f, indent=4)

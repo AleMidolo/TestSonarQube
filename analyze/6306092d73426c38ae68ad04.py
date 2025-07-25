@@ -12,7 +12,7 @@ def get_parser_option_specs(self, command_name):
         return self._command_options[command_name]
 
     # Simulate fetching options for the command
-    # This is a placeholder for actual implementation
+    # This is a placeholder implementation
     options = []
     if command_name == "main":
         options = ["--help", "--version", "--verbose"]

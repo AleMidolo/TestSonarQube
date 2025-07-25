@@ -2,17 +2,22 @@ def _include_groups(self, parser_dict):
     """
     Risolve la direttiva "include dict" nei file di specifica
     """
-    if 'include' in parser_dict:
-        include_dict = parser_dict['include']
-        for key, value in include_dict.items():
-            if key in parser_dict:
-                if isinstance(parser_dict[key], list) and isinstance(value, list):
-                    parser_dict[key].extend(value)
-                elif isinstance(parser_dict[key], dict) and isinstance(value, dict):
-                    parser_dict[key].update(value)
+    if not isinstance(parser_dict, dict):
+        return parser_dict
+
+    for key, value in parser_dict.items():
+        if isinstance(value, dict):
+            if "include" in value:
+                include_key = value["include"]
+                if include_key in parser_dict:
+                    parser_dict[key] = parser_dict[include_key]
                 else:
-                    parser_dict[key] = value
+                    raise ValueError(f"Include key '{include_key}' not found in parser_dict")
             else:
-                parser_dict[key] = value
-        del parser_dict['include']
+                self._include_groups(value)
+        elif isinstance(value, list):
+            for i, item in enumerate(value):
+                if isinstance(item, dict):
+                    value[i] = self._include_groups(item)
+
     return parser_dict

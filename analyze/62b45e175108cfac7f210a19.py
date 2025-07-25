@@ -7,15 +7,11 @@ def validate_fixity(self, fixity, manifest_files):
     if not isinstance(fixity, dict):
         raise ValueError("Il blocco di fissità deve essere un dizionario.")
     
-    for file_name, checksums in fixity.items():
+    for file_name, checksum in fixity.items():
         if file_name not in manifest_files:
             raise ValueError(f"Il file '{file_name}' non è presente nel manifesto.")
         
-        if not isinstance(checksums, dict):
-            raise ValueError(f"I checksum per il file '{file_name}' devono essere un dizionario.")
-        
-        for algorithm, checksum in checksums.items():
-            if not isinstance(algorithm, str) or not isinstance(checksum, str):
-                raise ValueError(f"L'algoritmo e il checksum per il file '{file_name}' devono essere stringhe.")
+        if not isinstance(checksum, str) or not checksum:
+            raise ValueError(f"Il checksum per il file '{file_name}' deve essere una stringa non vuota.")
     
     return True

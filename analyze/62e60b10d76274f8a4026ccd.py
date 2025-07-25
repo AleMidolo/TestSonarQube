@@ -8,19 +8,17 @@ def data(self, *keys):
     :return: dizionario dei valori, indicizzati per nome del campo  
     :raises: :exc:`IndexError` se viene specificato un indice fuori dai limiti  
     """
-    result = {}
+    # Assuming self._data is a dictionary or list-like structure that holds the record data
     if not keys:
-        # Se non vengono fornite chiavi, restituisci tutti i valori
-        for key in self.__dict__:
-            result[key] = self.__dict__[key]
-    else:
-        for key in keys:
-            if isinstance(key, int):
-                # Se la chiave è un indice, verifica che sia valido
-                if key < 0 or key >= len(self.__dict__):
-                    raise IndexError("Indice fuori dai limiti")
-                # Converti l'indice in una chiave effettiva
-                key = list(self.__dict__.keys())[key]
-            # Aggiungi la chiave al risultato, anche se non esiste nel record
-            result[key] = self.__dict__.get(key, None)
+        return dict(self._data) if hasattr(self, '_data') else {}
+    
+    result = {}
+    for key in keys:
+        if isinstance(key, int):
+            if key < 0 or key >= len(self._data):
+                raise IndexError("Index out of bounds")
+            result[key] = self._data[key]
+        else:
+            result[key] = self._data.get(key, None) if hasattr(self._data, 'get') else None
+    
     return result

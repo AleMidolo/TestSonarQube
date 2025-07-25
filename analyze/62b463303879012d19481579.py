@@ -2,18 +2,21 @@ def _extract_number_and_supplment_from_issue_element(issue):
     """
     Estrai i possibili valori di numero e supplemento dai issue.
 
-    :param issue: L'elemento issue da cui estrarre numero e supplemento.
-    :return: Una tupla contenente il numero e il supplemento (se presenti).
+    Args:
+        issue (str): La stringa contenente il numero e il supplemento.
+
+    Returns:
+        tuple: Una tupla contenente il numero (int) e il supplemento (str, se presente, altrimenti None).
     """
-    number = None
-    supplement = None
+    # Rimuovi eventuali spazi bianchi all'inizio e alla fine
+    issue = issue.strip()
     
-    if issue is not None:
-        # Supponiamo che l'elemento issue sia una stringa con formato "numero-supplemento"
-        parts = issue.split('-')
-        if len(parts) > 0:
-            number = parts[0]
-        if len(parts) > 1:
-            supplement = parts[1]
+    # Cerca un numero seguito da un supplemento (es. "123A")
+    if issue[-1].isalpha():
+        number = int(issue[:-1])
+        supplement = issue[-1]
+    else:
+        number = int(issue)
+        supplement = None
     
     return number, supplement

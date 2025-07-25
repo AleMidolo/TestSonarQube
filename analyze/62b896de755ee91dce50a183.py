@@ -1,7 +1,6 @@
 from datetime import datetime
-from dateutil.parser import parse as dateutil_parse
-from dateutil.tz import tzoffset
-from dateutil.parser import ParserError
+from dateutil import parser
+from dateutil.tz import gettz
 
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
@@ -27,9 +26,6 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         funzione che accetta due parametri (``tzname`` e ``tzoffset``) e restituisce
         un fuso orario.
 
-        I fusi orari a cui vengono mappati i nomi possono essere un offset intero
-        rispetto all'UTC in secondi o un oggetto :class:`tzinfo`.
-
     :param \*\*kwargs:
         Argomenti keyword passati a ``_parse()``.
 
@@ -51,19 +47,20 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         Sollevato se la data analizzata supera il più grande intero C valido
         sul tuo sistema.
     """
+    if not isinstance(timestr, str):
+        raise TypeError("Input must be a string.")
+
+    if default is not None and not isinstance(default, datetime):
+        raise TypeError("Default must be a datetime object or None.")
+
+    if ignoretz:
+        tzinfos = None
+
     try:
-        if default is not None and not isinstance(default, datetime):
-            raise TypeError("default must be a datetime object or None")
-
-        if ignoretz:
-            tzinfos = None
-
-        dt = dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
-        return dt
-
-    except ParserError as e:
-        raise ParserError(f"Invalid date format: {e}")
-    except TypeError as e:
-        raise TypeError(f"Invalid input type: {e}")
+        parsed_datetime = parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+    except parser.ParserError as e:
+        raise parser.ParserError(f"Invalid or unknown string format: {e}")
     except OverflowError as e:
-        raise OverflowError(f"Date exceeds maximum value: {e}")
+        raise OverflowError(f"Parsed date exceeds the largest valid C integer on your system: {e}")
+
+    return parsed_datetime
