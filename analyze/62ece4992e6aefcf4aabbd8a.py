@@ -23,6 +23,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 elif filename.endswith('.yaml') or filename.endswith('.yml'):
                     config = yaml.safe_load(file)
                 else:
+                    logging.error(f"Unsupported file format: {filename}")
                     errors.append(logging.LogRecord(
                         name=__name__,
                         level=logging.ERROR,
@@ -44,12 +45,13 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 configurations[filename] = config
 
         except Exception as e:
+            logging.error(f"Error loading configuration file {filename}: {e}")
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=str(e),
+                msg=f"Error loading configuration file {filename}: {e}",
                 args=None,
                 exc_info=None
             ))

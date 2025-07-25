@@ -18,14 +18,14 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
         number, remainder = divmod(number, base)
         result.append(alphabet[remainder])
     
-    if not result:
-        result.append(alphabet[0])
-    
+    # Reverse to get the most significant digit first
     result_str = ''.join(reversed(result))
     
+    # Apply padding if specified
     if padding is not None:
-        if padding < len(result_str):
-            raise ValueError("Padding must be greater than or equal to the length of the result.")
-        result_str = result_str.rjust(padding, alphabet[0])
+        if len(result_str) < padding:
+            result_str = alphabet[0] * (padding - len(result_str)) + result_str
+        elif len(result_str) > padding:
+            raise ValueError("Padding is smaller than the length of the result.")
     
     return result_str

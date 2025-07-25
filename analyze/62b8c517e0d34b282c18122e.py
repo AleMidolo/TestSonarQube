@@ -14,27 +14,30 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     import sys
 
     # Get the exception traceback
-    exc_type, exc_value, exc_traceback = sys.exc_info()
-    
-    # Format the exception traceback
-    tb_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-    
+    tb = sys.exc_info()[2]
+    if tb is None:
+        tb = e.__traceback__
+
     # Limit the traceback to max_level
-    if len(tb_list) > max_level:
-        tb_list = tb_list[:max_level]
-    
-    # Join the traceback into a single string
-    tb_str = "".join(tb_list)
-    
-    # Limit the path level in the traceback
-    if max_path_level > 0:
-        lines = tb_str.splitlines()
-        for i in range(len(lines)):
-            if "File" in lines[i] and "line" in lines[i]:
-                path = lines[i].split(",")[0].split("File ")[1].strip()
-                parts = path.split("/")
-                if len(parts) > max_path_level:
-                    lines[i] = lines[i].replace(path, "/".join(parts[-max_path_level:]))
-        tb_str = "\n".join(lines)
-    
-    return tb_str
+    if tb is not None:
+        tb = traceback.extract_tb(tb, limit=max_level)
+
+    # Format the exception message
+    exception_message = f"{type(e).__name__}: {str(e)}"
+
+    # Format the traceback
+    if tb is not None:
+        formatted_traceback = []
+        for frame in tb:
+            # Limit the path level
+            file_path = frame.filename
+            if max_path_level > 0:
+                file_path = "/".join(file_path.split("/")[-max_path_level:])
+            formatted_traceback.append(f"  File \"{file_path}\", line {frame.lineno}, in {frame.name}")
+            if frame.line:
+                formatted_traceback.append(f"    {frame.line.strip()}")
+
+        formatted_traceback = "\n".join(formatted_traceback)
+        exception_message = f"{exception_message}\n{formatted_traceback}"
+
+    return exception_message

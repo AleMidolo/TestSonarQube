@@ -19,21 +19,23 @@ def _legacy_mergeOrderings(orderings):
     from collections import defaultdict, deque
 
     # Build a graph and in-degree count
-    graph = defaultdict(list)
+    graph = defaultdict(set)
     in_degree = defaultdict(int)
-    nodes = set()
+    all_nodes = set()
 
     for ordering in orderings:
         for i in range(len(ordering) - 1):
             u, v = ordering[i], ordering[i + 1]
             if v not in graph[u]:
-                graph[u].append(v)
+                graph[u].add(v)
                 in_degree[v] += 1
-            nodes.add(u)
-            nodes.add(v)
+            all_nodes.add(u)
+            all_nodes.add(v)
+        if ordering:
+            all_nodes.add(ordering[-1])
 
     # Initialize queue with nodes having zero in-degree
-    queue = deque([node for node in nodes if in_degree[node] == 0])
+    queue = deque([node for node in all_nodes if in_degree[node] == 0])
 
     # Perform topological sort
     result = []

@@ -6,7 +6,7 @@ def cachedmethod(cache, key=hashkey, lock=None):
     def decorator(method):
         def wrapper(self, *args, **kwargs):
             cache_key = key(self, *args, **kwargs)
-            if lock:
+            if lock is not None:
                 with lock:
                     if cache_key in cache:
                         return cache[cache_key]

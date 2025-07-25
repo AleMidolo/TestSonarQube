@@ -19,21 +19,11 @@ def _update_context(self, context):
     if not hasattr(context, 'error'):
         context.error = {}
 
-    # Assuming the graph has properties like 'error_E_low', 'error_E_high', etc.
-    # We map these to 'x', 'y', 'z' based on their order.
-    error_mapping = {'x': 0, 'y': 1, 'z': 2}
-    error_counter = 0
-
-    for attr in dir(self):
-        if attr.startswith('error_'):
-            # Extract the error type (e.g., 'low', 'high')
-            error_type = attr.split('_')[-1]
-            # Determine the coordinate ('x', 'y', 'z')
-            coordinate = list(error_mapping.keys())[error_counter % len(error_mapping)]
-            # Get the index of the error in the graph's fields
-            error_index = getattr(self, attr)
-            # Update the context with the error information
-            if coordinate not in context.error:
-                context.error[coordinate] = {}
-            context.error[coordinate][error_type] = {"index": error_index}
-            error_counter += 1
+    # Assuming self has properties like 'error_indices' and 'fields'
+    for i, field in enumerate(self.fields):
+        if 'error' in field:
+            error_type = field.split('_')[-1]  # Extract error type (e.g., 'low')
+            error_name = ['x', 'y', 'z'][i]  # Map to x, y, z based on index
+            if error_name not in context.error:
+                context.error[error_name] = {}
+            context.error[error_name][error_type] = {"index": i}

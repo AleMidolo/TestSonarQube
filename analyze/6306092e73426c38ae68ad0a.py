@@ -6,6 +6,6 @@ def validate_choices_args(self, args):
     """
     for arg_name, arg_value in args.items():
         if hasattr(self, arg_name):
-            choices = getattr(self, arg_name).choices
+            choices = getattr(self, arg_name)
             if arg_value not in choices:
                 raise ValueError(f"Invalid value for {arg_name}. Expected one of {choices}, got {arg_value}")

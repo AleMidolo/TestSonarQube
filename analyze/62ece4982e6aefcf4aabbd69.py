@@ -9,7 +9,6 @@ def _replace_register(flow_params, register_number, register_value):
     :param register_number: The number of register where value will be stored
     :param register_value: Key to be replaced by register number
     """
-    for flow in flow_params:
-        if register_value in flow:
-            flow[register_number] = flow.pop(register_value)
+    if register_value in flow_params:
+        flow_params[register_number] = flow_params.pop(register_value)
     return flow_params

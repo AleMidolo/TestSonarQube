@@ -1,10 +1,10 @@
 import os
 import shutil
 import tarfile
-import tempfile
+import zipfile
 from pathlib import Path
 from typing import Optional, Union
-from zipfile import ZipFile
+from tempfile import mkdtemp
 
 def prepare_repository_from_archive(
     archive_path: str,
@@ -17,12 +17,11 @@ def prepare_repository_from_archive(
 
     This does not deal with the case where the archive passed along does not exist.
     """
-    # Convert tmp_path to Path object if it's a string
-    if isinstance(tmp_path, str):
-        tmp_path = Path(tmp_path)
+    # Ensure tmp_path is a Path object
+    tmp_path = Path(tmp_path)
     
     # Create a temporary directory to extract the archive
-    extract_dir = tempfile.mkdtemp(dir=tmp_path)
+    extract_dir = Path(mkdtemp(dir=tmp_path))
     
     # Determine the archive type and extract it
     if archive_path.endswith('.tar.gz') or archive_path.endswith('.tgz'):
@@ -32,17 +31,17 @@ def prepare_repository_from_archive(
         with tarfile.open(archive_path, 'r:') as tar:
             tar.extractall(path=extract_dir)
     elif archive_path.endswith('.zip'):
-        with ZipFile(archive_path, 'r') as zip_ref:
+        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
             zip_ref.extractall(extract_dir)
     else:
         raise ValueError(f"Unsupported archive format: {archive_path}")
     
     # If a specific filename is provided, ensure it exists in the extracted directory
     if filename:
-        extracted_path = os.path.join(extract_dir, filename)
-        if not os.path.exists(extracted_path):
+        extracted_path = extract_dir / filename
+        if not extracted_path.exists():
             raise FileNotFoundError(f"File {filename} not found in the archive.")
-        return extracted_path
+        return str(extracted_path)
     
     # Return the path to the extracted directory
-    return extract_dir
+    return str(extract_dir)

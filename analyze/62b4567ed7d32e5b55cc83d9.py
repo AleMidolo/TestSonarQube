@@ -14,32 +14,22 @@ def deep_merge_nodes(nodes):
                 existing_value = existing_value_node.value
                 new_value = value_node.value
 
-                # Create a dictionary to hold the merged key-value pairs
-                merged_dict = {}
-                for k_node, v_node in existing_value:
-                    merged_dict[k_node.value] = (k_node, v_node)
+                # Convert the list of tuples to a dictionary for easier merging
+                existing_dict = {k.value: v for k, v in existing_value}
+                new_dict = {k.value: v for k, v in new_value}
 
-                for k_node, v_node in new_value:
-                    k = k_node.value
-                    if k in merged_dict:
-                        existing_k_node, existing_v_node = merged_dict[k]
-                        if isinstance(existing_v_node, MappingNode) and isinstance(v_node, MappingNode):
-                            # Recursively merge nested MappingNodes
-                            merged_dict[k] = (k_node, deep_merge_nodes([(k_node, existing_v_node), (k_node, v_node)])[0][1])
-                        else:
-                            # Overwrite with the new value if not a MappingNode
-                            merged_dict[k] = (k_node, v_node)
-                    else:
-                        merged_dict[k] = (k_node, v_node)
+                # Merge the dictionaries, with new values overwriting existing ones
+                merged_dict = {**existing_dict, **new_dict}
 
                 # Convert the merged dictionary back to a list of tuples
-                merged_value = [(k_node, v_node) for k_node, v_node in merged_dict.values()]
-                merged_nodes[key] = MappingNode(tag=existing_value_node.tag, value=merged_value)
+                merged_value = [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v] for k, v in merged_dict.items()]
+                merged_nodes[key] = MappingNode(tag='tag:yaml.org,2002:map', value=merged_value)
             else:
                 # If either value is not a MappingNode, the last value wins
                 merged_nodes[key] = value_node
         else:
+            # If the key is not in the merged_nodes, just add it
             merged_nodes[key] = value_node
 
-    # Convert the merged dictionary back to a list of tuples
-    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=key), value_node) for key, value_node in merged_nodes.items()]
+    # Convert the merged_nodes dictionary back to a list of tuples
+    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v] for k, v in merged_nodes.items()]

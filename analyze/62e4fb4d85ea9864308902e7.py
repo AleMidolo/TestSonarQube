@@ -20,10 +20,19 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
             interpreter = first_arg[2:].strip()
             # Normalize the interpreter path
             interpreter = os.path.normpath(interpreter)
-            # Replace the shebang with the interpreter
+            # Replace the shebang with the interpreter path
             cmd = (interpreter,) + cmd[1:]
 
-    # Normalize the command path
-    cmd = tuple(os.path.normpath(arg) if os.path.isabs(arg) else arg for arg in cmd)
+    # Handle deep-path shebangs
+    if os.name == 'nt':
+        first_arg = cmd[0]
+        if os.path.exists(first_arg):
+            # If the first argument is a file, try to read the shebang
+            with open(first_arg, 'r') as f:
+                first_line = f.readline().strip()
+                if first_line.startswith('#!'):
+                    interpreter = first_line[2:].strip()
+                    interpreter = os.path.normpath(interpreter)
+                    cmd = (interpreter,) + cmd
 
     return cmd

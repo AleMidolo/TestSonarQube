@@ -9,6 +9,6 @@ def _get_resource_name_regex():
         (re.Pattern): the compiled regular expressions, to validate
         the resource name.
     """
-    # Example regex pattern for resource names (adjust as needed)
-    pattern = r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+    # Example regex pattern for resource names: alphanumeric with underscores and hyphens
+    pattern = r'^[a-zA-Z0-9_-]+$'
     return re.compile(pattern)

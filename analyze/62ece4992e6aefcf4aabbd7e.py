@@ -6,11 +6,12 @@ def _resolve_string(matcher):
     If the variable is not defined in environment and no default value is provided, an Error is raised.
     """
     name = matcher.get('name')
-    default = matcher.get('default', None)
+    default_value = matcher.get('default', None)
     
     if name not in os.environ:
-        if default is None:
+        if default_value is not None:
+            return default_value
+        else:
             raise ValueError(f"Environment variable '{name}' is not defined and no default value is provided.")
-        return default
     
     return os.environ[name]

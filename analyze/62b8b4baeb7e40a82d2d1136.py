@@ -1,6 +1,3 @@
-from zope.interface import Invalid, providedBy
-from zope.interface.verify import verifyObject, verifyClass
-
 def _verify(iface, candidate, tentative=False, vtype=None):
     """
     Verify that *candidate* might correctly provide *iface*.
@@ -32,12 +29,18 @@ def _verify(iface, candidate, tentative=False, vtype=None):
         As a special case, if only one such error is present, it is raised
         alone, like before.
     """
+    from zope.interface import Invalid
+    from zope.interface.verify import verifyObject, verifyClass
+
     errors = []
 
     # Step 1: Verify that the candidate claims to provide the interface
     if not tentative:
-        if not iface.providedBy(candidate):
-            errors.append(f"{candidate} does not claim to provide {iface}")
+        try:
+            if not iface.providedBy(candidate):
+                errors.append(f"{candidate} does not claim to provide {iface}")
+        except Exception as e:
+            errors.append(f"Error checking if {candidate} provides {iface}: {e}")
 
     # Step 2: Verify that the candidate defines all necessary methods and attributes
     try:

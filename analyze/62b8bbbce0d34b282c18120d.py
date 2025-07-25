@@ -6,8 +6,6 @@ def is_file_exist(file_name):
     :param file_name: File name.
     :type file_name: str
     :return: Return true (exist), false (do not exist, or invalid file name)
-    :rtype: bool
+    :rtype bool
     """
-    if not isinstance(file_name, str):
-        return False
     return os.path.isfile(file_name)
