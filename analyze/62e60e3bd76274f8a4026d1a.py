@@ -1,15 +1,14 @@
 def from_raw_values(cls, values):
     """
-    Crear un objeto "Bookmarks" a partir de una lista de valores de marcadores en formato de cadena sin procesar.
+    从一组原始书签字符串值创建一个 Bookmarks 对象。
 
-    No deberías necesitar usar este método a menos que desees deserializar marcadores.
+    除非您需要反序列化书签，否则不需要使用此方法。
 
-    :param values: Valores de cadenas ASCII (marcadores sin procesar)
+    :param values: ASCII 字符串值（原始书签）
     :type values: Iterable[str]
     """
     bookmarks = []
     for value in values:
-        # Suponiendo que cada valor es una cadena que representa un marcador
-        # Aquí se puede agregar lógica para procesar cada valor según sea necesario
-        bookmarks.append(value.strip())  # Eliminar espacios en blanco
+        if isinstance(value, str):
+            bookmarks.append(value)
     return cls(bookmarks)

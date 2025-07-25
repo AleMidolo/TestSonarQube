@@ -1,8 +1,9 @@
 def fill(self, coord, weight=1):
     """
-    Llena el histograma en *coord* con el *weight* dado.
+    根据给定的 *weight* 在 *coord* 处填充直方图。
 
-    Las coordenadas fuera de los límites del histograma son ignoradas.
+    超出直方图边界的坐标将被忽略。
     """
-    if 0 <= coord[0] < self.width and 0 <= coord[1] < self.height:
-        self.histogram[coord[0]][coord[1]] += weight
+    x, y = coord
+    if 0 <= x < self.width and 0 <= y < self.height:
+        self.histogram[y][x] += weight

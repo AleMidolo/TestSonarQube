@@ -1,15 +1,10 @@
 def popitem(self):
     """
-    Elimina y devuelve el par (clave, valor) menos recientemente utilizado.
+    移除并返回最久未使用的键值对。
     """
     if not self.data:
         raise KeyError("popitem(): dictionary is empty")
     
-    # Find the least recently used item
-    lru_key = next(iter(self.data))
-    lru_value = self.data[lru_key]
-    
-    # Remove the item from the dictionary
-    del self.data[lru_key]
-    
-    return (lru_key, lru_value)
+    oldest_key = next(iter(self.data))
+    value = self.data.pop(oldest_key)
+    return oldest_key, value

@@ -2,15 +2,27 @@ import requests
 
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    Recupera y analiza un documento "webfinger" remoto de Diaspora.
+    检索并解析远程 Diaspora WebFinger 文档。
 
-    :arg handle: Identificador remoto a recuperar
-    :returns: dict
+    :arg handle: 要检索的远程句柄
+    :returns: 字典
     """
-    url = f"https://{handle}/.well-known/webfinger?resource=acct:{handle}"
-    response = requests.get(url)
+    # Construct the WebFinger URL
+    webfinger_url = f"https://{handle}/.well-known/webfinger?resource=acct:{handle}"
     
-    if response.status_code == 200:
-        return response.json()
-    else:
-        response.raise_for_status()
+    try:
+        # Send a GET request to the WebFinger URL
+        response = requests.get(webfinger_url)
+        response.raise_for_status()  # Raise an error for bad responses
+        
+        # Parse the JSON response
+        webfinger_data = response.json()
+        
+        return webfinger_data
+    
+    except requests.exceptions.RequestException as e:
+        print(f"Error retrieving WebFinger document: {e}")
+        return {}
+    except ValueError:
+        print("Error parsing JSON response.")
+        return {}

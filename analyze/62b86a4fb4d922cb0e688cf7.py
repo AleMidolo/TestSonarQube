@@ -5,16 +5,14 @@ class ValidationError(Exception):
 
 def validate_key(key):
     """
-    Validar la clave proporcionada contra la expresión regular correspondiente.
+    根据对应的正则表达式验证给定的键。
 
-    Argumentos:
-            key: la cadena de texto a validar.
+    参数:
+        key: 要验证的字符串
 
-    Excepciones:
-            ValidationError: si la clave proporcionada no cumple con la expresión regular.
+    异常:
+        ValidationError: 如果给定的键不符合正则表达式，则抛出此异常。
     """
-    # Definir la expresión regular para la clave
-    pattern = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'  # Al menos 8 caracteres, al menos una letra y un número
-
+    pattern = r'^[a-zA-Z0-9_]+$'  # 示例正则表达式，允许字母、数字和下划线
     if not re.match(pattern, key):
-        raise ValidationError("La clave proporcionada no cumple con los requisitos.")
+        raise ValidationError(f"Invalid key: {key}")

@@ -1,7 +1,7 @@
 def pop(self, key, default=__marker):
     """
-    D.pop(k[,d]) -> v, elimina la clave especificada y devuelve el valor correspondiente.
-    Si la clave no se encuentra, se devuelve `d` si se proporciona; de lo contrario, se genera una excepción KeyError.
+    `D.pop(k[, d]) -> v`：移除指定的键并返回对应的值。  
+    如果未找到指定的键，则返回 `d`（如果提供了 `d`）；否则会引发 `KeyError` 异常。
     """
     if key in self:
         value = self[key]

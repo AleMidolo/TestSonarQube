@@ -4,26 +4,29 @@ from pathlib import Path
 
 def get_repo_archive(url: str, destination_path: Path) -> Path:
     """
-    Dado un URL y una ruta de destino, recuperar y extraer un archivo .tar.gz que contiene el archivo 'desc' para cada paquete.  
-    Cada archivo .tar.gz corresponde a un repositorio de Arch Linux ('core', 'extra', 'community').
+    给定一个 URL 和目标路径，下载并提取包含每个软件包的 'desc' 文件的 .tar.gz 压缩包。
+    每个 .tar.gz 压缩包对应一个 Arch Linux 仓库（如 'core'、'extra'、'community'）。
 
-    Argumentos:
-        url: URL del archivo .tar.gz a descargar.
-        destination_path: la ruta en el disco donde se extraerá el archivo.
+    参数：
+      url：要下载的 .tar.gz 压缩包的 URL。
+      destination_path：在磁盘上提取压缩包的目标路径。
 
-    Retorno:
-        un objeto Path que representa el directorio donde se ha extraído el archivo.
+    返回值：
+      返回提取压缩包的目录路径。
     """
-    # Descargar el archivo .tar.gz
-    response = requests.get(url)
-    tar_gz_path = destination_path / 'repo_archive.tar.gz'
+    # 创建目标路径目录
+    destination_path.mkdir(parents=True, exist_ok=True)
     
-    with open(tar_gz_path, 'wb') as f:
+    # 下载 .tar.gz 文件
+    response = requests.get(url)
+    tar_file_path = destination_path / 'repo.tar.gz'
+    
+    with open(tar_file_path, 'wb') as f:
         f.write(response.content)
     
-    # Extraer el archivo .tar.gz
-    with tarfile.open(tar_gz_path, 'r:gz') as tar:
+    # 提取 .tar.gz 文件
+    with tarfile.open(tar_file_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
     
-    # Retornar el directorio donde se ha extraído el archivo
+    # 返回提取后的目录路径
     return destination_path

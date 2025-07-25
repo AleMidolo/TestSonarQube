@@ -9,23 +9,31 @@ def prepare_repository_from_archive(
     tmp_path: Union[Path, str] = "/tmp",
 ) -> str:
     """
-    Dado un `archive_path` existente, descomprímelo.  
-    Devuelve una URL del repositorio de archivos que puede ser utilizada como URL de origen.
+    给定一个已存在的 `archive_path`，解压该文件。
+    返回一个可以用作源 URL 的文件仓库 URL。
 
-    Este método no maneja el caso en el que el archivo comprimido proporcionado no exista.
+    此函数不处理传入的归档文件不存在的情况。
+
+    @param archive_path : 归档文件路径  
+    @param filename: 文件名  
+    @param tmp_path: 临时文件路径  
+    @return 仓库 URL
     """
-    # Convert tmp_path to Path object
+    # Ensure tmp_path is a Path object
     tmp_path = Path(tmp_path)
-    
-    # Create temporary directory if it doesn't exist
     tmp_path.mkdir(parents=True, exist_ok=True)
-    
-    # Define the extraction path
+
+    # Determine the extraction path
     extraction_path = tmp_path / Path(archive_path).stem
-    
-    # Unzip the archive
+    extraction_path.mkdir(exist_ok=True)
+
+    # Extract the archive
     with zipfile.ZipFile(archive_path, 'r') as zip_ref:
         zip_ref.extractall(extraction_path)
-    
-    # Return the URL of the repository
-    return f"file://{extraction_path.resolve()}"
+
+    # If a filename is provided, return the path to that file
+    if filename:
+        return str(extraction_path / filename)
+
+    # Otherwise, return the path to the extraction directory
+    return str(extraction_path)

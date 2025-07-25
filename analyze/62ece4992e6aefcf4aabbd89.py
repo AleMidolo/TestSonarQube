@@ -1,10 +1,11 @@
+import numpy as np
+
 def gaussian(x):
     """
-    Calcular la Gaussiana centrada en u = 0.2 y sigma = 0.1.  
+    计算以均值 0.2 为中心，标准差为 0.1 的高斯分布。
+
+    以均值 0.2 为中心，标准差为 0.1 的高斯分布。
     """
-    import math
-    u = 0.2
-    sigma = 0.1
-    coefficient = 1 / (sigma * math.sqrt(2 * math.pi))
-    exponent = -((x - u) ** 2) / (2 * sigma ** 2)
-    return coefficient * math.exp(exponent)
+    mean = 0.2
+    std_dev = 0.1
+    return (1 / (std_dev * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x - mean) / std_dev) ** 2)

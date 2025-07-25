@@ -1,10 +1,14 @@
 def _get_seq_with_type(seq, bufsize=None):
     """
-    Devuelve un par (secuencia, tipo).
-    La secuencia se deriva de *seq*
-    (o es *seq*, si este es de un tipo de secuencia).
+    返回一个 (sequence, type) 对。
+    sequence 是从 *seq* 派生的
+    （或者是 *seq* 本身，如果它是一个序列类型）。
     """
-    if isinstance(seq, (list, tuple, set, str)):
+    if isinstance(seq, (list, tuple, str)):
         return seq, type(seq)
     else:
-        return (seq,), type(seq)
+        if bufsize is not None:
+            seq = list(seq)[:bufsize]
+        else:
+            seq = list(seq)
+        return seq, type(seq)

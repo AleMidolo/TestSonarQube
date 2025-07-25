@@ -1,15 +1,9 @@
 def render(pieces, style):
     """
-    Renderiza las piezas de versión dadas en el estilo solicitado.
+    将输入的组件和样式渲染为对应的样式。
+    将给定的组件渲染为要求的样式。
     """
     rendered_output = []
     for piece in pieces:
-        if style == 'bold':
-            rendered_output.append(f"**{piece}**")
-        elif style == 'italic':
-            rendered_output.append(f"*{piece}*")
-        elif style == 'underline':
-            rendered_output.append(f"__{piece}__")
-        else:
-            rendered_output.append(piece)
-    return '\n'.join(rendered_output)
+        rendered_output.append(f"<div class='{style}'>{piece}</div>")
+    return ''.join(rendered_output)

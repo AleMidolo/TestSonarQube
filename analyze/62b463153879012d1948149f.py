@@ -1,38 +1,47 @@
 def _eval_file(prefix, file_path):
     """
-    Identifica el tipo de archivo del paquete: `asset` o `rendition`.
+    识别给定文件的类型。如果文件与给定的前缀不匹配，或者文件类型是 XML，则返回 `None`。  
+    如果文件类型是 "pdf"，返回一个包含键 `component_id` 和 `file_path` 的字典。  
+    如果文件类型不是 "pdf"，返回一个包含键 `component_id`、`file_path`、`ftype` 和 `file_path` 的字典。
 
-    Identifica el tipo de archivo del paquete y actualiza `packages` con el tipo y
-    la ruta del archivo en análisis.
+    识别包中的文件类型：`asset` 或 `rendition`。
 
-    Parámetros
+    识别包中的文件类型，并使用文件的类型和路径更新 `packages`。
+
+    参数
     ----------
-    prefix : str
-        nombre del archivo XML sin extensión
-    file_path : str
-        nombre del archivo
+    prefix: `str`  
+        XML 文件的名称（不带扩展名）。
 
-    Retorna
-    -------
+    filename: `str`  
+        文件名。
+
+    file_folder: `str`  
+        文件所在的文件夹。
+
+    返回值
+    ----------
     dict
     """
     import os
 
-    # Initialize the result dictionary
-    result = {}
-
-    # Determine the file type based on the file extension
+    # Extract file extension
     _, file_extension = os.path.splitext(file_path)
+    file_extension = file_extension.lower()
 
-    if file_extension in ['.jpg', '.png', '.gif']:
-        file_type = 'asset'
-    elif file_extension in ['.pdf', '.docx', '.pptx']:
-        file_type = 'rendition'
+    # Check if the file matches the prefix
+    if not file_path.startswith(prefix) or file_extension == '.xml':
+        return None
+
+    # Prepare the result dictionary
+    result = {
+        'component_id': prefix,
+        'file_path': file_path
+    }
+
+    # Check the file type
+    if file_extension == '.pdf':
+        return result
     else:
-        file_type = 'unknown'
-
-    # Update the result dictionary
-    result['type'] = file_type
-    result['path'] = os.path.join(prefix, file_path)
-
-    return result
+        result['ftype'] = file_extension
+        return result

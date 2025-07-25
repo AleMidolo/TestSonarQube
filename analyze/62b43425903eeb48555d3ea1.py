@@ -3,10 +3,10 @@ from re import Pattern
 
 def _create_in_regex(self) -> Pattern:
     """
-    Crea la expresión regular del parámetro "in-style".
+    创建 in-style 参数的正则表达式。
 
-        Devuelve la expresión regular para el parámetro "in-style" (:class:`re.Pattern`).
+    返回 in-style 参数的正则表达式 (:class:`re.Pattern`).
     """
-    # Definición de la expresión regular para "in-style"
-    regex_pattern = r'in-style'  # Aquí se puede ajustar la expresión regular según sea necesario
-    return re.compile(regex_pattern)
+    # 假设 in-style 参数的格式为 "value1,value2,value3"
+    # 我们将创建一个正则表达式来匹配这些值
+    return re.compile(r'^(?P<value>[^,]+)(,(?P<value>[^,]+))*$')

@@ -1,33 +1,37 @@
 import subprocess
 import os
 import sys
+import pickle
 
 def subprocess_run_helper(func, *args, timeout, extra_env=None):
     """
-    Ejecutar una función en un subproceso.
+    在子进程中运行一个函数
 
-    Parametros
-    ----------
-    func : funcion
-        La función que se ejecutara. Debe estar en un modulo que sea importable.
-    *args : str
-        Cualquier argumento adicional de linea de comandos que se pasara como primer argumento a ``subprocess.run``.
-    extra_env : dict[str, str]
-        Cualquier variable de entorno adicional que se establecerá para el subproceso.
+    参数：
+      `func`: function，需要运行的函数。该函数必须位于可导入的模块中。
+      `*args`: str。任何额外的命令行参数，这些参数将作为 subprocess.run 的第一个参数传递。
+      `extra_env`: dict[str, str]。为子进程设置的额外环境变量。
+    返回值：
+      `CompletedProcess` 实例。
+
+    在子进程中运行一个函数。
     """
-    # Asegurarse de que el módulo de la función sea importable
-    module_name = func.__module__
-    function_name = func.__name__
-
-    # Crear el comando a ejecutar
-    command = [sys.executable, '-c', f'import {module_name}; {module_name}.{function_name}(*{args})']
-
-    # Configurar el entorno
+    # Prepare the environment
     env = os.environ.copy()
     if extra_env:
         env.update(extra_env)
 
-    # Ejecutar el subproceso
-    result = subprocess.run(command, env=env, timeout=timeout, capture_output=True, text=True)
+    # Serialize the function and arguments
+    func_name = func.__module__ + '.' + func.__qualname__
+    serialized_args = pickle.dumps(args)
+
+    # Create the command to run
+    command = [sys.executable, '-c', f'import pickle; import {func.__module__}; '
+                                       f'func = {func_name}; '
+                                       f'args = pickle.loads({serialized_args}); '
+                                       f'func(*args)']
+
+    # Run the subprocess
+    result = subprocess.run(command, env=env, timeout=timeout, capture_output=True)
 
     return result

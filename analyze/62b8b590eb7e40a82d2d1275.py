@@ -1,11 +1,11 @@
 def _legacy_mergeOrderings(orderings):
     """
-    Combinar múltiples ordenamientos de manera que se preserve el orden dentro de cada uno.
+    将多个列表按出现顺序合并为一个不包含重复元素的列表。
+    合并多个排序列表（orderings），同时保留每个排序列表中的顺序。
 
-    Los ordenamientos están restringidos de tal forma que, si un objeto aparece en dos o más ordenamientos, entonces el sufijo que comienza con dicho objeto debe estar presente en ambos ordenamientos.
+    这些排序列表受到以下约束：如果某个对象出现在两个或多个排序列表中，那么以该对象为起点的后缀部分必须在所有相关的排序列表中一致。
 
-    Por ejemplo:
-
+    例如：
     >>> _mergeOrderings([
     ... ['x', 'y', 'z'],
     ... ['q', 'z'],
@@ -14,31 +14,16 @@ def _legacy_mergeOrderings(orderings):
     ... ])
     ['x', 'y', 'q', 1, 3, 5, 'z']
     """
-    from collections import defaultdict, deque
+    seen = set()
+    result = []
 
-    # Create a graph and in-degree count
-    graph = defaultdict(list)
-    in_degree = defaultdict(int)
+    def add_ordering(ordering):
+        for item in ordering:
+            if item not in seen:
+                seen.add(item)
+                result.append(item)
 
-    # Build the graph
     for ordering in orderings:
-        for i in range(len(ordering)):
-            if i > 0:
-                graph[ordering[i - 1]].append(ordering[i])
-                in_degree[ordering[i]] += 1
-            if ordering[i] not in in_degree:
-                in_degree[ordering[i]] = 0
+        add_ordering(ordering)
 
-    # Topological sort using Kahn's algorithm
-    queue = deque([item for item in in_degree if in_degree[item] == 0])
-    merged_order = []
-
-    while queue:
-        current = queue.popleft()
-        merged_order.append(current)
-        for neighbor in graph[current]:
-            in_degree[neighbor] -= 1
-            if in_degree[neighbor] == 0:
-                queue.append(neighbor)
-
-    return merged_order
+    return result

@@ -1,11 +1,9 @@
-def names(self, all=False):  # pylint:disable=redefined-builtin
+def names(self, all=False): # pylint:disable=redefined-builtin
     """
-    Devuelve los nombres de los atributos definidos por la interfaz.
-    if not all:
-
-    Devuelve los nombres de los atributos definidos por la interfaz.
+    返回当前类的属性名称。
+    如果all为假，则返回接口定义的属性名称。
     """
     if all:
-        return [attr for attr in dir(self) if not attr.startswith('_')]
+        return [attr for attr in dir(self) if not attr.startswith('__')]
     else:
-        return [attr for attr in dir(self) if not attr.startswith('_') and not callable(getattr(self, attr))]
+        return [attr for attr in self.__class__.__dict__ if not attr.startswith('__')]

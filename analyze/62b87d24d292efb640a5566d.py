@@ -1,5 +1,9 @@
 def plus_or_dot(pieces):
-    """ 
-    Devuelve un "+" si no tenemos uno ya, de lo contrario, devuelve un "."
     """
-    return "+" if "+" not in pieces else "."
+    如果片段的闭合标签（closet-tag）中包含 "+"，则返回 "."；否则，返回 "+"。
+    如果尚未存在“+”，则返回“+”，否则返回“.”。
+    """
+    if '+' in pieces:
+        return '.'
+    else:
+        return '+'

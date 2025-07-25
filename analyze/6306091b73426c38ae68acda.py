@@ -1,8 +1,6 @@
 def plugins_manager(cls):
     """
-    Obtiene el gestor de plugins.
+    通过 `cls._get_service()` 中的 `ServiceName.PLUGINS_MANAGER` 获取插件管理器。
+    获取插件管理器。
     """
-    # Assuming there is a PluginManager class that handles plugins
-    if not hasattr(cls, '_plugin_manager'):
-        cls._plugin_manager = PluginManager()
-    return cls._plugin_manager
+    return cls._get_service(ServiceName.PLUGINS_MANAGER)

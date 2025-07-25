@@ -1,27 +1,23 @@
 def _update_context(self, context):
     """
-    Actualiza *context* con las propiedades de este grafo.
+    更新 *context*，使其包含此图的属性。
 
-    *context.error* se amplía con los índices de los errores.  
-    Ejemplo de subcontexto para un grafo con los campos "E,t,error_E_low":  
-    `{"error": {"x_low": {"index": 2}}}`.  
-    Ten en cuenta que los nombres de los errores se denominan "x", "y" y "z"  
-    (esto corresponde a las primeras tres coordenadas, si están presentes),  
-    lo que permite simplificar la representación gráfica.  
-    Los valores existentes no se eliminan de *context.value* ni de sus subcontextos.
+    *context.error* 会附加错误的索引。
+    例如，对于一个具有字段 "E, t, error_E_low" 的图，其子上下文可能为：
+    {"error": {"x_low": {"index": 2}}}
+    请注意，错误名称被称为 "x"、"y" 和 "z"（这对应于前三个坐标，如果它们存在的话），这使得绘图更加简化。
+    现有的值不会从 *context.value* 及其子上下文中移除。
 
-    Se llama durante la "destrucción" del grafo (por ejemplo,  
-    en :class:`.ToCSV`). Por destrucción nos referimos a la conversión  
-    a otra estructura (como texto) en el flujo.  
-    El objeto grafo no se destruye realmente en este proceso.
+    此方法在图的“销毁”过程中被调用（例如，在 :class:`.ToCSV` 中）。
+    这里的“销毁”是指在流程中将图转换为另一种结构（如文本）。
+    在此过程中，图对象实际上并未被真正销毁。
     """
-    # Implementación del método
-    if 'error' not in context:
-        context['error'] = {}
+    # 假设 self 有属性 error_indices 和 coordinates
+    if not hasattr(context, 'error'):
+        context.error = {}
     
-    # Supongamos que self.errors es un diccionario que contiene los errores
-    for i, error in enumerate(self.errors):
-        error_name = ['x', 'y', 'z'][i] if i < 3 else f'error_{i}'
-        context['error'][error_name] = {'index': error.index}
+    for i, coord in enumerate(self.coordinates):
+        if coord in self.error_indices:
+            context.error[f"{coord}_low"] = {"index": i}
     
-    # No eliminamos valores existentes en context.value ni en subcontextos
+    # 这里可以添加更多的逻辑来更新 context 的其他部分

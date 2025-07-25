@@ -1,10 +1,12 @@
 def tzname_in_python2(namefunc):
     """
-    Cambiar la salida de unicode a cadenas de bytes en Python 2
+    在 Python 2 中将 Unicode 输出转换为字节字符串
 
-    La API tzname() cambió en Python 3. Solía devolver bytes, pero fue modificada
-    para devolver cadenas unicode.
+    在 Python 3 中，tzname() API 发生了变化。它曾经返回字节字符串，但在 Python 3 中被更改为返回 Unicode 字符串。
     """
     def wrapper(*args, **kwargs):
-        return namefunc(*args, **kwargs).encode('utf-8')
+        result = namefunc(*args, **kwargs)
+        if isinstance(result, unicode):  # Check if the result is a Unicode string
+            return result.encode('utf-8')  # Convert to byte string
+        return result  # Return as is if it's not a Unicode string
     return wrapper

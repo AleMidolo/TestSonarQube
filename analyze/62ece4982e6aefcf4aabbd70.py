@@ -2,9 +2,10 @@ import platform
 
 def os_is_mac():
     """
-    Verifica si el sistema operativo es macOS
+    检查操作系统是否为 macOS
 
-    :return: True si es macOS
+    :return: bool, 如果是 macOS 则返回真，否则返回假。
+    :return: 如果是 macOS 则返回真
     :rtype: bool
     """
     return platform.system() == "Darwin"

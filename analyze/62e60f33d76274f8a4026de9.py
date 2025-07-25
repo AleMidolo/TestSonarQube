@@ -1,14 +1,15 @@
-def dehydrate_point(value):  
+def dehydrate_point(value):
     """
-    Deshidratador para datos de tipo `Point`.  
+    结构类是根据值的长度生成的。
+    用于处理 Point 数据的转换器
 
-    :param value: Un objeto de tipo Point que se desea deshidratar.
-    :type value: Point  
-    :return: Un diccionario con las coordenadas del punto.
+    :param value: 
+    :type value: Point
+    :return: 
     """
     if not isinstance(value, Point):
-        raise ValueError("El valor debe ser una instancia de Point.")
-    
+        raise ValueError("Expected a Point instance")
+
     return {
         'x': value.x,
         'y': value.y

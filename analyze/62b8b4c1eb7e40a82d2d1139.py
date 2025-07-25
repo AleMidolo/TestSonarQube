@@ -1,7 +1,7 @@
 def verifyClass(iface, candidate, tentative=False):
     """
-    Verifica que el *candidate* pueda proporcionar correctamente *iface*.
+    验证 *candidate* 是否可能正确地提供 *iface*。
     """
     if tentative:
-        return issubclass(candidate, iface) or (hasattr(candidate, '__bases__') and any(issubclass(base, iface) for base in candidate.__bases__))
-    return isinstance(candidate, iface) or issubclass(candidate, iface)
+        return issubclass(candidate, iface) or iface in candidate.__bases__
+    return isinstance(candidate, iface)

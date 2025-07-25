@@ -1,15 +1,11 @@
 def extend_cli(self, root_subparsers):
     """
-    Agrega las opciones de línea de comandos (CLI) de especificación al punto de entrada principal.
+    将规范 CLI 选项添加到主入口点。
 
-    :param subparser: el objeto subparser que se va a extender.
+    :param subparser: 要扩展的子解析器对象。
     """
-    # Crear un subcomando para la CLI
-    cli_parser = root_subparsers.add_parser('spec', help='Opciones de especificación')
+    # 示例代码：添加一个子命令
+    parser = root_subparsers.add_parser('example', help='示例子命令')
+    parser.add_argument('--option', type=str, help='示例选项')
     
-    # Agregar opciones al subcomando
-    cli_parser.add_argument('--option1', type=str, help='Descripción de la opción 1')
-    cli_parser.add_argument('--option2', type=int, help='Descripción de la opción 2')
-    cli_parser.add_argument('--flag', action='store_true', help='Descripción de un flag')
-    
-    # Aquí se pueden agregar más opciones según sea necesario
+    # 其他选项可以在这里添加

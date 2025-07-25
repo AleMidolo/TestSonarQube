@@ -1,17 +1,13 @@
 def next_version(version):
     """
-    El identificador de la siguiente versión debe seguir el patrón existente.
+    根据现有模式生成下一个版本标识符
 
-    Debe manejar tanto versiones con prefijo de ceros como versiones sin prefijo de ceros.
+    遵循现有格式的下一个版本标识符
+    必须能够处理以零开头和非零开头的两种情况。
     """
     parts = version.split('.')
-    for i in range(len(parts) - 1, -1, -1):
+    for i in reversed(range(len(parts))):
         if parts[i].isdigit():
             parts[i] = str(int(parts[i]) + 1)
-            break
-        else:
-            parts[i] = '0'
-    else:
-        parts.append('1')
-    
-    return '.'.join(parts)
+            return '.'.join(parts[:i + 1]) + '.' + '.'.join(parts[i + 1:])
+    return '1.0'  # Default case if version is empty or invalid

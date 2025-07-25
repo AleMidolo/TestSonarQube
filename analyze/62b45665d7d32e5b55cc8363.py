@@ -1,24 +1,22 @@
+import argparse
+
 def make_parsers():
     """
-    Crea un analizador de nivel superior y sus subanalizadores, y devuélvalos como una tupla.
+    构建一个解析器及其子解析器，并将它们作为一个元组返回。
+
+    构建一个顶级解析器及其子解析器，并将它们作为一个元组返回。
     """
-    class HighLevelParser:
-        def parse(self, data):
-            # Implementación del análisis de nivel superior
-            return f"HighLevelParser: {data}"
-
-    class SubParserA:
-        def parse(self, data):
-            # Implementación del análisis de SubParserA
-            return f"SubParserA: {data}"
-
-    class SubParserB:
-        def parse(self, data):
-            # Implementación del análisis de SubParserB
-            return f"SubParserB: {data}"
-
-    high_level_parser = HighLevelParser()
-    sub_parser_a = SubParserA()
-    sub_parser_b = SubParserB()
-
-    return (high_level_parser, sub_parser_a, sub_parser_b)
+    # 创建顶级解析器
+    top_parser = argparse.ArgumentParser(prog='top_parser')
+    
+    # 创建子解析器
+    subparsers = top_parser.add_subparsers(dest='command', required=True)
+    
+    # 添加子解析器
+    sub_parser_a = subparsers.add_parser('command_a', help='Help for command A')
+    sub_parser_a.add_argument('--option_a', type=str, help='Option for command A')
+    
+    sub_parser_b = subparsers.add_parser('command_b', help='Help for command B')
+    sub_parser_b.add_argument('--option_b', type=int, help='Option for command B')
+    
+    return top_parser, subparsers

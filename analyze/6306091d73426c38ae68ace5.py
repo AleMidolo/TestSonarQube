@@ -1,15 +1,10 @@
 def _include_groups(self, parser_dict):
     """
-    Resuelve la directiva de inclusión del diccionario en los archivos de especificación.
+    解析规范文件中的 include dict 指令。
     """
-    included_groups = {}
-    for key, value in parser_dict.items():
-        if isinstance(value, dict) and 'include' in value:
-            included_key = value['include']
-            if included_key in parser_dict:
-                included_groups[key] = parser_dict[included_key]
-            else:
-                raise KeyError(f"Included key '{included_key}' not found in parser_dict.")
+    include_dict = parser_dict.get('include', {})
+    for group_name, group_content in include_dict.items():
+        if isinstance(group_content, dict):
+            self._process_group(group_name, group_content)
         else:
-            included_groups[key] = value
-    return included_groups
+            raise ValueError(f"Group content for '{group_name}' must be a dictionary.")

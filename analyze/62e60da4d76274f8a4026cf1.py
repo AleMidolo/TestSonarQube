@@ -1,11 +1,13 @@
 def values(self, *keys):
     """
-    Devuelve los valores del registro, filtrando opcionalmente para incluir solo ciertos valores por índice o clave.
+    以列表的形式返回通过 `self.index` 过滤的键。
+    返回记录的值，可以选择性地通过索引或键进行过滤，仅包含特定的值。
 
-    :param keys: índices o claves de los elementos a incluir; si no se proporcionan, se incluirán todos los valores  
-    :return: lista de valores  
+    :param keys: 要包含的项目的索引或键；如果未提供任何参数，则包含所有值
+    :return: 值的列表
     :rtype: list
     """
     if not keys:
-        return list(self.data.values())
-    return [self.data[key] for key in keys if key in self.data]
+        return [self.index[key] for key in self.index]
+    
+    return [self.index[key] for key in keys if key in self.index]

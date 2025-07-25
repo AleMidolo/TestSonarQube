@@ -1,26 +1,27 @@
 def match_file_by_prefix(prefix, file_path):
     """
-    Identifica si un `file_path` pertenece a un paquete de documentos según un `prefix` dado.
+    根据给定的文件路径，如果文件路径的文件名以指定的前缀加上“-”或指定的前缀加上“.”开头，则返回真。
 
-    Retorna `True` para documentos que pertenecen a un paquete.
+    确定文件路径是否属于指定前缀的文档包
 
-    Parámetros
+    如果文件属于文档包，则返回真。
+
+    参数
     ----------
-    prefix : str  
-    Prefijo del nombre del archivo.  
+    prefix: str  
+        文件名的前缀
+    file_path: str
+        文件路径
 
-    file_path : str  
-    Ruta del archivo.  
-
-    Retorna
+    返回值
     -------
     bool
-    `True` - el archivo pertenece al paquete.  
+        True - 文件属于指定的文档包
     """
     import os
-    
-    # Extraer el nombre del archivo de la ruta
+
+    # 获取文件名
     file_name = os.path.basename(file_path)
-    
-    # Verificar si el nombre del archivo comienza con el prefijo dado
-    return file_name.startswith(prefix)
+
+    # 检查文件名是否以指定前缀加上“-”或“.”开头
+    return file_name.startswith(prefix + '-') or file_name.startswith(prefix + '.')

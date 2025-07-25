@@ -1,15 +1,15 @@
 def _inline_r_setup(code: str) -> str:
     """
-    Algunos comportamientos de R no pueden configurarse mediante variables de entorno, sino que solo pueden configurarse a través de opciones de R una vez que R ha iniciado. Estas se configuran aquí.
+    一些 R 的行为无法通过环境变量进行配置，
+    只能在 R 启动后通过 R 的选项进行配置。这些选项在此处设置。
     """
-    # Aquí se pueden establecer opciones de R necesarias para la ejecución del código
-    options = [
-        "options(stringsAsFactors = FALSE)",  # Ejemplo de opción
-        "options(scipen = 999)"                # Evitar notación científica
-    ]
-    
-    # Unir las opciones en un solo bloque de código
-    setup_code = "\n".join(options)
-    
-    # Devolver el código de configuración junto con el código proporcionado
-    return f"{setup_code}\n{code}"
+    import rpy2.robjects as ro
+
+    # Set R options
+    ro.r('options(stringsAsFactors = FALSE)')
+    ro.r('options(scipen = 999)')  # Disable scientific notation
+
+    # Execute the provided R code
+    ro.r(code)
+
+    return "R setup complete and code executed."

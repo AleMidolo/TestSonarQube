@@ -1,23 +1,29 @@
 def _fromutc(self, dt):
     """
-    Dado un objeto 'datetime' consciente de la zona horaria en una zona horaria específica, calcula un objeto 'datetime' consciente de la zona horaria en una nueva zona horaria.
+    给定一个特定时区的日期时间，计算在新时区的日期时间。
 
-    Dado que esta es la única ocasión en la que *sabemos* que tenemos un objeto 'datetime' no ambiguo, aprovechamos esta oportunidad para determinar si el 'datetime' es ambiguo y está en un estado de "pliegue" (por ejemplo, si es la primera ocurrencia, cronológicamente, del 'datetime' ambiguo).
+    给定一个带有时区信息的日期时间对象，计算在新时区的带有时区信息的日期时间。
 
-    :param dt:  
-        Un objeto :class:`datetime.datetime` consciente de la zona horaria.
+    由于这是我们*明确知道*日期时间对象没有歧义的唯一时刻，我们利用这个机会来判断该日期时间是否存在歧义，并且是否处于“折叠”状态（例如，如果这是歧义日期时间的第一个按时间顺序出现的实例）。
+
+    :param dt: 一个带有时区信息的 :class:`datetime.datetime` 对象。
     """
-    # Verificar que el objeto dt es consciente de la zona horaria
+    # 检查输入的日期时间对象是否带有时区信息
     if dt.tzinfo is None:
-        raise ValueError("El objeto datetime debe ser consciente de la zona horaria")
+        raise ValueError("dt must be a timezone-aware datetime object")
 
-    # Convertir el datetime a la nueva zona horaria
-    new_dt = dt.astimezone(self)
+    # 获取当前时区的UTC偏移量
+    utc_offset = self.utcoffset(dt)
 
-    # Determinar si el datetime es ambiguo
-    if new_dt.dst() != timedelta(0):
-        # Si hay un cambio de horario, verificar si es la primera ocurrencia
-        if new_dt < self.utcoffset() + new_dt.dst():
-            return new_dt - new_dt.dst()
-    
-    return new_dt
+    # 计算新的日期时间
+    new_dt = dt - utc_offset
+
+    # 检查是否存在歧义
+    if new_dt in self._ambiguous_dates:
+        # 处理歧义情况
+        if self._is_first_occurrence(new_dt):
+            return new_dt.replace(tzinfo=self)
+        else:
+            raise ValueError("Ambiguous datetime detected")
+
+    return new_dt.replace(tzinfo=self)

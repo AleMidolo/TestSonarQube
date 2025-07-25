@@ -1,29 +1,33 @@
-def _explore_folder(folder):  
+import os
+from collections import defaultdict
+
+def _explore_folder(folder):
     """
-    Obtiene los datos de los paquetes desde la carpeta.  
+    通过使用 _group_files_by_xml_filename 将给定组中的文件进行分组。
 
-    Agrupa los archivos por el nombre base de su archivo XML y devuelve los datos en formato de diccionario.  
+    从文件夹中获取包的数据
 
-    Parámetros  
-    ----------  
-    folder : str  
-        Carpeta del paquete  
+    根据 XML 文件的文件名对文件进行分组，并以字典格式返回数据。
 
-    Retorna  
-    -------  
-    dict  
+    参数
+    ----------
+    folder: `str`  
+        包所在的文件夹
+
+    返回值
+    -------
+    dict
     """
-    import os
-    import xml.etree.ElementTree as ET
+    def _group_files_by_xml_filename(files):
+        grouped_files = defaultdict(list)
+        for file in files:
+            if file.endswith('.xml'):
+                xml_filename = os.path.splitext(file)[0]
+                grouped_files[xml_filename].append(file)
+        return dict(grouped_files)
 
-    data = {}
-    
-    for filename in os.listdir(folder):
-        if filename.endswith('.xml'):
-            base_name = os.path.splitext(filename)[0]
-            file_path = os.path.join(folder, filename)
-            tree = ET.parse(file_path)
-            root = tree.getroot()
-            data[base_name] = root
+    if not os.path.isdir(folder):
+        raise ValueError(f"The provided folder path '{folder}' is not a valid directory.")
 
-    return data
+    files = os.listdir(folder)
+    return _group_files_by_xml_filename(files)

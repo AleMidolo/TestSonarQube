@@ -1,30 +1,37 @@
 def scale(self, other=None):
     """
-    Obtiene o establece la escala del gráfico.
+    获取或设置图表的比例。
 
-    Si *other* es ``None``, devuelve la escala de este gráfico.
+    如果参数 *other* 为 ``None``，则返回此图表的比例。
 
-    Si se proporciona un valor numérico en *other*, se reajusta la escala a ese valor.  
-    Si el gráfico tiene una escala desconocida o igual a cero,  
-    intentar reajustar la escala generará una excepción :exc:`~.LenaValueError`.
+    如果提供了一个数值类型的 *other*，则将图表重新缩放到该值。
+    如果图表的比例未知或为零，对其重新缩放将会引发:exc: `~.LenaValueError` 异常。
 
-    Para obtener resultados significativos, se utilizan los campos del gráfico.  
-    Solo se reajusta la última coordenada.  
-    Por ejemplo, si el gráfico tiene coordenadas *x* e *y*,  
-    entonces se reajustará *y*, y para un gráfico tridimensional  
-    se reajustará *z*.  
-    Todos los errores se reajustan junto con su coordenada.
+    为了获得有意义的结果，将使用图表的字段。
+    仅最后一个坐标会被重新缩放。
+    例如，如果图表具有 *x* 和 *y* 坐标，则 *y* 会被重新缩放；对于三维图表，*z* 会被重新缩放。
+    所有的误差值也会与其对应的坐标一起重新缩放。
     """
     if other is None:
-        return self.current_scale  # Devuelve la escala actual del gráfico
+        return self.current_scale  # 假设有一个属性 current_scale 存储当前比例
 
     if not isinstance(other, (int, float)):
-        raise ValueError("El valor de 'other' debe ser un número.")
+        raise ValueError("参数 *other* 必须是数值类型")
 
     if self.current_scale is None or self.current_scale == 0:
-        raise LenaValueError("La escala es desconocida o igual a cero.")
+        raise LenaValueError("图表的比例未知或为零，无法重新缩放")
 
-    # Reajustar la escala a 'other'
-    self.current_scale = other
-    # Aquí se puede incluir la lógica para reajustar las coordenadas
-    self.adjust_coordinates()
+    # 假设有一个方法来获取最后一个坐标
+    last_coordinate = self.get_last_coordinate()  
+    new_scale = other / self.current_scale
+
+    # 重新缩放最后一个坐标
+    last_coordinate *= new_scale
+
+    # 假设有一个方法来设置新的坐标
+    self.set_last_coordinate(last_coordinate)
+
+    # 重新缩放误差值
+    self.error_values = [error * new_scale for error in self.error_values]
+
+    self.current_scale = other  # 更新当前比例

@@ -1,9 +1,9 @@
 def merge_extra_vars(vars_dict, extra_vars=None):
     """
-    Extiende ``vars_dict`` con ``extra-vars``
+    使用 ``extra-vars`` 扩展 ``vars_dict``。
 
-    :param vars_dict: Diccionario en el que se fusionarán las extra-vars  
-    :param extra_vars: Lista de extra-vars
+    :param vars_dict: 要合并 extra-vars 的字典
+    :param extra_vars: extra-vars的列表
     """
     if extra_vars is None:
         return vars_dict
@@ -12,6 +12,6 @@ def merge_extra_vars(vars_dict, extra_vars=None):
         if isinstance(var, dict):
             vars_dict.update(var)
         else:
-            raise ValueError("Cada elemento en extra_vars debe ser un diccionario.")
+            raise ValueError("extra_vars should be a list of dictionaries.")
     
     return vars_dict

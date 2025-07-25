@@ -1,31 +1,29 @@
 def extostr(cls, e, max_level=30, max_path_level=5):
     """
-    Formatear una excepción.  
-    :param e: Cualquier instancia de excepción.  
-    :type e: Exception  
-    :param max_level: Nivel máximo de la pila de llamadas (por defecto 30).  
-    :type max_level: int  
-    :param max_path_level: Nivel máximo de la ruta (por defecto 5).  
-    :type max_path_level: int  
-    :return: La cadena legible de la excepción.  
-    :rtype: str  
+    将异常格式化为字符串
+    格式化异常信息。
+
+    :param e: 任意异常实例。
+    :type e: Exception
+    :param max_level: 最大调用堆栈层级（默认值为30）
+    :type max_level: int
+    :param max_path_level: 最大路径层级（默认值为5）
+    :type max_path_level: int
+    :return: 可读的异常字符串
+    :rtype: str
     """
     import traceback
 
-    # Limitar la profundidad de la pila de llamadas
-    tb_list = traceback.extract_tb(e.__traceback__)
-    tb_list = tb_list[:max_level]
+    def format_exception(exc, level, path_level):
+        if level <= 0 or path_level <= 0:
+            return "..."  # Limit reached
+        tb = traceback.extract_tb(exc.__traceback__)
+        formatted_tb = []
+        for frame in tb[:max_level]:
+            formatted_tb.append(f"File \"{frame.filename}\", line {frame.lineno}, in {frame.name}")
+        return "\n".join(formatted_tb)
 
-    # Formatear la traza
-    formatted_trace = []
-    for frame in tb_list:
-        filename, lineno, name, line = frame
-        if tb_list.index(frame) < max_path_level:
-            formatted_trace.append(f'File "{filename}", line {lineno}, in {name}\n    {line}')
-    
-    # Obtener el mensaje de la excepción
     exception_message = str(e)
-
-    # Unir todo en una cadena
-    result = f"{exception_message}\nTraceback (most recent call last):\n" + "\n".join(formatted_trace)
-    return result
+    formatted_traceback = format_exception(e, max_level, max_path_level)
+    
+    return f"{type(e).__name__}: {exception_message}\nTraceback (most recent call last):\n{formatted_traceback}"

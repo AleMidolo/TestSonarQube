@@ -1,30 +1,43 @@
 def remove_ending_os_sep(input_list):
     """
-    Itera sobre una lista de cadenas y elimina los caracteres separadores de ruta del sistema operativo al final.
+    如果输入列表为 None，则返回 []
 
-    Cada cadena se verifica para determinar si su longitud es mayor que uno y si el último
-    carácter es el separador de ruta. Si es así, se elimina el carácter separador de ruta.
+    遍历字符串列表并移除末尾的操作系统分隔符。
 
-    Argumentos:
-        input_list: lista de cadenas
+    函数会检测每个字符的长度是否大于 1，并且最后一个字符是否为路径分隔符。
 
-    Devuelve:
-        Lista procesada de cadenas
+    返回值：
+    移除末尾操作系统分隔符后的列表。
 
-    Excepciones:
-        TypeError
+    遍历字符串列表并移除末尾的操作系统分隔符字符。
+
+    函数会检测每个字符的长度是否大于 1，并且最后一个字符是否为路径分隔符。如果是，则移除路径分隔符。
+
+    参数：
+      `input_list`: 字符串列表
+
+    返回值：
+      处理后的字符串列表
+
+    异常：
+      `TypeError`
     """
-    if not isinstance(input_list, list):
-        raise TypeError("input_list debe ser una lista de cadenas")
-    
     import os
-    os_sep = os.sep
-    processed_list = []
 
+    if input_list is None:
+        return []
+
+    if not isinstance(input_list, list):
+        raise TypeError("input_list must be a list")
+
+    result = []
     for item in input_list:
-        if isinstance(item, str) and len(item) > 1 and item.endswith(os_sep):
-            processed_list.append(item[:-1])
+        if isinstance(item, str) and len(item) > 1:
+            if item[-1] == os.sep:
+                result.append(item[:-1])
+            else:
+                result.append(item)
         else:
-            processed_list.append(item)
+            result.append(item)
 
-    return processed_list
+    return result

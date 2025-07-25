@@ -1,31 +1,34 @@
 def _group_files_by_xml_filename(source, xmls, files):
     """
-    Agrupa archivos por el nombre base de su archivo XML.
+    将文件按 XML 文件名分组并以字典格式返回数据。
 
-    Agrupa los archivos según el nombre base de su archivo XML y devuelve los datos en formato dict.
+    按 XML 文件的文件名分组文件
 
-    Parámetros
+    将文件按其 XML 文件的文件名分组，并以字典格式返回数据。
+
+    参数
     ----------
-    *xml_filename* : str  
-        Nombres de los archivos XML.  
+    xml_filename: str  
+        XML 文件名  
+    files: list  
+        文件夹或压缩文件中的文件列表  
 
-    *files* : list  
-        Lista de archivos en la carpeta o archivo comprimido (zip).  
-
-    Retorna
+    返回值
     -------
-    *dict*
-        *key*: Nombre de los archivos XML.  
-        *name*: Paquete.  
+    dict
+        键：XML 文件的名称  
+        值：Package  
     """
     grouped_files = {}
     
     for xml in xmls:
-        base_name = xml.rsplit('.', 1)[0]  # Get the base name without extension
-        grouped_files[base_name] = []
+        xml_filename = xml.split('/')[-1]  # Assuming the XML filename is the last part of the path
+        grouped_files[xml_filename] = []
 
         for file in files:
-            if file.startswith(base_name):
-                grouped_files[base_name].append(file)
+            if file.endswith('.xml') and file == xml:
+                continue  # Skip the XML file itself
+            if xml_filename in file:
+                grouped_files[xml_filename].append(file)
 
     return grouped_files

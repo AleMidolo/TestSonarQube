@@ -1,26 +1,20 @@
 def identify_request(request: RequestType):
     """
-    Intente identificar si esta es una solicitud de Diaspora.
+    检查通过 JSON 加载的请求体是否包含事件。如果包含，则返回真；否则，检查从请求体加载的 XML 的标签是否为 Magic_ENV_TAG，如果是，则返回真。如果上述条件均不满足，则返回假。
 
-    Primero intente con un mensaje público. Luego con un mensaje privado. Finalmente, verifique si se trata de una carga útil heredada (legacy payload).
+    尝试识别这是否是一个 Diaspora 请求。
+
+    首先尝试检查是否为公共消息，然后检查是否为私有消息。最后检查这是否是旧式（Legacy）负载。
     """
-    if is_public_message(request):
-        return "Public Message"
-    elif is_private_message(request):
-        return "Private Message"
-    elif is_legacy_payload(request):
-        return "Legacy Payload"
-    else:
-        return "Unknown Request"
+    # 假设 request 是一个字典，包含 JSON 和 XML 数据
+    if 'json' in request:
+        json_data = request['json']
+        if 'event' in json_data:
+            return True
 
-def is_public_message(request):
-    # Implementación para verificar si es un mensaje público
-    return hasattr(request, 'public') and request.public
+    if 'xml' in request:
+        xml_data = request['xml']
+        if xml_data.tag == 'Magic_ENV_TAG':
+            return True
 
-def is_private_message(request):
-    # Implementación para verificar si es un mensaje privado
-    return hasattr(request, 'private') and request.private
-
-def is_legacy_payload(request):
-    # Implementación para verificar si es una carga útil heredada
-    return hasattr(request, 'legacy') and request.legacy
+    return False

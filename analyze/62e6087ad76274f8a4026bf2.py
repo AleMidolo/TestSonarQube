@@ -1,37 +1,27 @@
-def discard(self, n=-1, qid=-1, dehydration_hooks=None,
-            hydration_hooks=None, **handlers):
+def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **handlers):
     """
-    Añade un mensaje 'DISCARD' a la cola de salida.
+    将一个DISCARD消息添加到输出队列。
 
-    :param n: número de registros a descartar, por defecto = -1 (TODOS)
-    :param qid: ID de consulta para descartar, por defecto = -1 (última consulta)
-    :param dehydration_hooks:
-        Ganchos para deshidratar tipos (diccionario de tipo (clase) a función
-        de deshidratación). Las funciones de deshidratación reciben el valor y devuelven un objeto de un tipo entendido por 'packstream'.
-    :param hydration_hooks:
-        Ganchos para hidratar tipos (mapeo de tipo (clase) a función de
-        hidratación). Las funciones de hidratación reciben el valor de un tipo
-        entendido por 'packstream' y son libres de devolver cualquier cosa.
-    :param handlers: funciones manejadoras pasadas al objeto 'Response' devuelto
+    :param n: 要丢弃的记录数量，默认值为 -1（全部丢弃）
+    :param qid: 要丢弃的查询ID，默认值为 -1（最后一个查询）
+    :param dehydration_hooks: 用于处理类型dehydration的钩子（字典，键为类型（类），值为dehydration函数）。dehydration函数接收一个值，并返回一个 PackStream 可识别的对象。
+    :param hydration_hooks: 用于处理类型hydration的钩子（映射，键为类型（类），值为hydration函数）。hydration函数接收一个 PackStream 可识别的值，并可以返回任意对象。
+    :param handlers: 传递给返回的Response对象的处理函数
     """
-    # Implementación del método
+    # Implementation of the discard method
     if dehydration_hooks is None:
         dehydration_hooks = {}
     if hydration_hooks is None:
         hydration_hooks = {}
 
-    # Aquí se añadiría la lógica para manejar el mensaje 'DISCARD'
-    # y utilizar los ganchos de deshidratación e hidratación según sea necesario.
-    
-    # Ejemplo de lógica (esto es solo un esqueleto y debe ser adaptado a la lógica real):
-    message = {
-        'type': 'DISCARD',
+    # Create a discard message
+    discard_message = {
         'n': n,
         'qid': qid,
         'dehydration_hooks': dehydration_hooks,
         'hydration_hooks': hydration_hooks,
         'handlers': handlers
     }
-    
-    # Suponiendo que hay una cola de salida a la que se añade el mensaje
-    self.output_queue.append(message)
+
+    # Add the discard message to the output queue
+    self.output_queue.append(discard_message)

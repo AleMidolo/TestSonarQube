@@ -1,7 +1,12 @@
 def strip_root(path, root):
     """
-    Eliminar la raíz de la ruta, lanzar una excepción en caso de fallo.
+    从路径中移除根目录。如果失败，则抛出异常。
+
+    返回值:
+        一个不包含根目录的路径
+
+    从路径中移除根目录。失败时抛出异常。
     """
     if not path.startswith(root):
-        raise ValueError("La ruta no comienza con la raíz proporcionada.")
+        raise ValueError("路径不以根目录开头")
     return path[len(root):]

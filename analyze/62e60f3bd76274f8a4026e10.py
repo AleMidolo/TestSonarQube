@@ -1,25 +1,21 @@
 from datetime import timedelta
 
+class Structure:
+    def __init__(self, days=0, seconds=0, microseconds=0):
+        self.days = days
+        self.seconds = seconds
+        self.microseconds = microseconds
+
 def dehydrate_timedelta(value):
     """
-    Deshidratador para valores de `timedelta`.
+    使用 `timedelta` 的值来生成 `Structure` 类。
+    用于 `time` 值的转换器。
 
     :param value: 
-    :type value: timedelta  
+    :type value: timedelta
     :return: 
     """
     if not isinstance(value, timedelta):
-        raise ValueError("El valor debe ser una instancia de timedelta.")
+        raise ValueError("The value must be an instance of timedelta.")
     
-    total_seconds = int(value.total_seconds())
-    days = total_seconds // (24 * 3600)
-    hours = (total_seconds % (24 * 3600)) // 3600
-    minutes = (total_seconds % 3600) // 60
-    seconds = total_seconds % 60
-    
-    return {
-        'days': days,
-        'hours': hours,
-        'minutes': minutes,
-        'seconds': seconds
-    }
+    return Structure(days=value.days, seconds=value.seconds, microseconds=value.microseconds)

@@ -1,13 +1,14 @@
 def paging(response, max_results):
-    """ 
-    Devuelve la respuesta de WAPI página por página.
+    """
+    根据 max_results 指定的长度返回每个响应。
 
-    Argumentos:
-        response (list): Respuesta de WAPI.
-        max_results (int): Número máximo de objetos que se devolverán en una página.
+    以分页方式返回 WAPI 响应。
 
-    Retorna:
-        Objeto generador con la respuesta de WAPI dividida página por página.
+    参数：
+      response (list): WAPI 响应数据。
+      max_results (int): 每页返回的最大对象数量。
+    返回值：
+      一个生成器对象，按页分割 WAPI 响应数据。
     """
     for i in range(0, len(response), max_results):
         yield response[i:i + max_results]

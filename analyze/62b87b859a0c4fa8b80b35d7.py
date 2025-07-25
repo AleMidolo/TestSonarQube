@@ -1,33 +1,33 @@
-def to_csv(self, separator=",", header=None):
+def to_csv(self, separator=", ", header=None):
     """
-    .. deprecated:: 0.5 en Lena 0.5 to_csv ya no se utiliza.
-          Los iterables se convierten en tablas.
+    .. 已废弃:: 0.5 在 Lena 0.5 中，`to_csv` 不再使用。
+        可迭代对象将被转换为表格。
 
-    Convierte los puntos del gráfico a formato CSV.
+    将图的点转换为 CSV 格式。
 
-    *separator* delimita los valores, el valor predeterminado es una coma.
+    *separator* 用于分隔值，默认是逗号。
 
-    *header*, si no es ``None``, es la primera línea de la salida
-    (se agrega automáticamente un salto de línea).
+    *header* 如果不为 ``None``，将作为输出的第一行字符串
+    （会自动添加换行符）。
 
-    Dado que un gráfico puede ser multidimensional,
-    para cada punto, primero su coordenada se convierte en una cadena
-    (separada por *separator*), y luego cada parte de su valor.
+    由于图可以是多维的，
+    对于每个点，首先将其坐标转换为字符串
+    （用 *separator* 分隔），然后再处理其值的每个部分。
 
-    Para convertir un :class:`Graph` a formato CSV dentro de una secuencia de Lena,
-    utiliza :class:`lena.output.ToCSV`.
+    要在 Lena 序列中将 :class:`Graph` 转换为 CSV，
+    请使用 :class:`lena.output.ToCSV`。
     """
-    import csv
-    from io import StringIO
-
-    output = StringIO()
-    writer = csv.writer(output, delimiter=separator)
-
+    # Assuming self.points is a list of points in the graph
+    csv_lines = []
+    
     if header is not None:
-        writer.writerow(header)
-
-    for point in self.points:  # Assuming self.points is a list of points
-        row = [str(coord) for coord in point]  # Convert coordinates to string
-        writer.writerow(row)
-
-    return output.getvalue()
+        csv_lines.append(header + "\n")
+    
+    for point in self.points:
+        # Convert point coordinates to string and join with separator
+        point_str = separator.join(map(str, point.coordinates))
+        # Assuming point.values is a list of values associated with the point
+        values_str = separator.join(map(str, point.values))
+        csv_lines.append(f"{point_str}{separator}{values_str}\n")
+    
+    return ''.join(csv_lines)

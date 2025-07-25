@@ -1,17 +1,17 @@
 def integral(bins, edges):
     """
-    Calcular la integral (escala para un histograma).
+    计算整体图形的面积
+    计算积分（直方图的缩放比例）。
 
-    *bins* contiene los valores, y *edges* forman la malla  
-    para la integración.  
-    Su formato está definido en la descripción de la clase :class:`.histogram`.
+    *`bins`* 包含数值，*`edges`* 构成积分的网格。  
+    在 :class:`.histogram` 的描述中定义了它们的格式。
     """
     if len(bins) != len(edges) - 1:
         raise ValueError("Length of bins must be one less than length of edges.")
     
-    integral_value = 0.0
+    area = 0.0
     for i in range(len(bins)):
         width = edges[i + 1] - edges[i]
-        integral_value += bins[i] * width
+        area += bins[i] * width
     
-    return integral_value
+    return area

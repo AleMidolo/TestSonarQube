@@ -1,18 +1,18 @@
 def cached(cache, key=hashkey, lock=None):
     """
-    Decorador para envolver una función con una llamada que memoriza y guarda  
-    los resultados en una caché.
+    返回一个装饰器函数，将结果保存到缓存中
+    一个用于包装一个函数，通过一个支持记忆功能的可调用对象将结果保存到缓存中的装饰器。
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            # Generar la clave de caché
+            # 生成缓存键
             cache_key = key(*args, **kwargs)
-            # Intentar obtener el resultado de la caché
+            # 尝试从缓存中获取结果
             if cache_key in cache:
                 return cache[cache_key]
-            # Si no está en caché, llamar a la función
+            # 如果缓存中没有，调用原始函数
             result = func(*args, **kwargs)
-            # Guardar el resultado en la caché
+            # 将结果存入缓存
             cache[cache_key] = result
             return result
         return wrapper

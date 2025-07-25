@@ -1,7 +1,8 @@
 def keys(self):
     """
-    Devuelve las claves del registro.
+    以List格式返回类的 __keys 属性
+    返回记录的键。
 
-    :return: lista de nombres de claves
+    :return: 键名列表
     """
-    return list(self._registry.keys())
+    return self.__keys

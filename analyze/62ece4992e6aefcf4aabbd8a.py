@@ -1,34 +1,33 @@
-import json
-import logging
-import os
-
 def load_configurations(config_filenames, overrides=None, resolve_env=True):
-    """
-    Dada una secuencia de nombres de archivo de configuración, carga y valida cada archivo de configuración. 
-    Si el archivo de configuración no puede ser leído debido a permisos insuficientes o errores al analizar 
-    el archivo de configuración, se registrará el error en el log. De lo contrario, devuelve los resultados 
-    como una tupla que contiene: un diccionario que asocia el nombre del archivo de configuración con su 
-    configuración analizada correspondiente, y una secuencia de instancias de `logging.LogRecord` que 
-    contienen cualquier error de análisis.
-    """
-    if overrides is None:
-        overrides = {}
+    import logging
+    import os
+    import json
 
-    configurations = {}
-    log_records = []
     logger = logging.getLogger(__name__)
+    error_records = []
+    config_dict = {}
 
     for filename in config_filenames:
         try:
-            if resolve_env:
-                filename = os.path.expandvars(filename)
+            if not os.path.isfile(filename):
+                raise FileNotFoundError(f"Configuration file {filename} not found.")
+            
             with open(filename, 'r') as file:
                 config = json.load(file)
-                # Apply overrides
-                config.update(overrides)
-                configurations[filename] = config
-        except (IOError, json.JSONDecodeError) as e:
-            log_record = logger.error(f"Error loading configuration from {filename}: {e}")
-            log_records.append(log_record)
 
-    return configurations, log_records
+            if overrides:
+                config.update(overrides)
+
+            if resolve_env:
+                for key, value in config.items():
+                    if isinstance(value, str) and value.startswith('$'):
+                        env_var = value[1:]
+                        config[key] = os.getenv(env_var, value)
+
+            config_dict[filename] = config
+
+        except Exception as e:
+            log_record = logger.error(f"Error loading configuration file {filename}: {e}")
+            error_records.append(log_record)
+
+    return config_dict, error_records

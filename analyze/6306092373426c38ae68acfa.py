@@ -1,15 +1,7 @@
-def get_spec_defaults(self):  
+def get_spec_defaults(self):
     """
-    Resolver los valores de los argumentos desde la especificación y otras fuentes.
+    使用 `self._get_defaults()` 从规范和其他来源解析参数的值。
+
+    从规范和其他来源解析参数的值。
     """
-    defaults = {}
-    # Aquí se pueden agregar las especificaciones y otras fuentes de valores
-    # Por ejemplo, se puede obtener valores de un archivo de configuración
-    # o de variables de entorno.
-    
-    # Ejemplo de valores por defecto
-    defaults['arg1'] = 'default_value1'
-    defaults['arg2'] = 'default_value2'
-    
-    # Se pueden agregar más lógica para resolver los valores
-    return defaults
+    return self._get_defaults()

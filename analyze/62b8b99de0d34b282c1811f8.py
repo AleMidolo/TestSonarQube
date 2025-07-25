@@ -1,6 +1,6 @@
 def _reset_logging(cls):
     """
-    Restablecer
+    重置日志系统
     """
     import logging
     for handler in logging.root.handlers[:]:

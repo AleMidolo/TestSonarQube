@@ -1,19 +1,25 @@
 def make_find_paths(find_paths):
     """
-    Dada una secuencia de fragmentos de rutas o patrones proporcionados a través de `--find`, transforma todos los fragmentos de rutas en patrones glob. Deja los patrones existentes sin modificar.
+    给定一个路径序列，将所有路径转换为 glob 模式。现有的模式保持不变。
 
-    Por ejemplo, dado un `find_paths` de:
+    参数:
+        find_paths: 路径序列
+    返回:
+        转换后的路径元组
 
-      ['foo.txt', 'pp:root/somedir']
+    给定通过 `--find` 参数传递的一系列路径片段或模式，将所有路径片段转换为 glob 模式。现有的模式保持不变。
 
-    ... se transforma en:
+    例如，给定 `find_paths` 为：
 
-      ['sh:**/*foo.txt*/**', 'pp:root/somedir']
+    `['foo.txt', 'pp:root/somedir']`
+
+    将其转换为：
+
+    `['sh:**/*foo.txt*/**', 'pp:root/somedir']`
     """
-    transformed_paths = []
-    for path in find_paths:
-        if not path.startswith('pp:'):
-            transformed_paths.append(f'sh:**/*{path}*/**')
-        else:
-            transformed_paths.append(path)
-    return transformed_paths
+    def convert_to_glob(path):
+        if ':' in path:
+            return path  # Keep existing patterns unchanged
+        return f'sh:**/*{path}*/**'
+
+    return tuple(convert_to_glob(path) for path in find_paths)

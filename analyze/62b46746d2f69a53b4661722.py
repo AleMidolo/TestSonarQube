@@ -1,43 +1,40 @@
 def absorb(self, args):
     """
-    Dada una secuencia `args` de expresiones, devuelve una nueva lista de expresiones aplicando absorción y absorción negativa.
+    对于给定的表达式序列 `args`，返回一个应用吸收律的新表达式列表。
 
-    Consulta https://es.wikipedia.org/wiki/Leyes_de_absorci%C3%B3n
+    对于给定的表达式序列 `args`，返回一个应用吸收律和负吸收律的新表达式列表。
 
-    Absorción::
+    参考：https://en.wikipedia.org/wiki/Absorption_law
 
-        A & (A | B) = A, A | (A & B) = A
+    吸收律（Absorption）::
 
-    Absorción negativa::
+      A & (A | B) = A, A | (A & B) = A
 
-        A & (~A | B) = A & B, A | (~A & B) = A | B
+    负吸收律（Negative Absorption）::
+
+      A & (~A | B) = A & B, A | (~A & B) = A | B
     """
-    result = []
+    new_expressions = []
     for expr in args:
+        # Apply Absorption Law
         if isinstance(expr, tuple) and len(expr) == 3:
             a, op, b = expr
             if op == '&':
-                if b == ('|', a, _):
-                    result.append(a)
-                elif b == ('&', a, _):
-                    result.append(a)
-                elif b == ('|', ('~', a), _):
-                    result.append(('&', a, b[2]))
-                elif b == ('&', ('~', a), _):
-                    result.append(('|', a, b[2]))
+                if (a == b) or (b == ('|', a)):
+                    new_expressions.append(a)
+                elif (a == ('|', b)):
+                    new_expressions.append(a)
+                elif (a == ('~', b)):
+                    new_expressions.append(('&', a, b))
                 else:
-                    result.append(expr)
+                    new_expressions.append(expr)
             elif op == '|':
-                if b == ('&', a, _):
-                    result.append(a)
-                elif b == ('|', a, _):
-                    result.append(a)
-                elif b == ('&', ('~', a), _):
-                    result.append(('|', a, b[2]))
-                elif b == ('|', ('~', a), _):
-                    result.append(('&', a, b[2]))
+                if (a == b) or (b == ('&', a)):
+                    new_expressions.append(a)
+                elif (a == ('~', b)):
+                    new_expressions.append(('|', a, b))
                 else:
-                    result.append(expr)
+                    new_expressions.append(expr)
         else:
-            result.append(expr)
-    return result
+            new_expressions.append(expr)
+    return new_expressions

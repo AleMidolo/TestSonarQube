@@ -1,40 +1,29 @@
 def _verify(iface, candidate, tentative=False, vtype=None):
     """
-    Verifica que *candidate* pueda proporcionar correctamente *iface*.
+    验证 *candidate* 是否能够正确地提供 *iface*。
 
-    Esto implica:
+    这个过程包括以下步骤：
 
-    - Asegurarse de que el candidato afirme que proporciona la
-      interfaz utilizando ``iface.providedBy`` (a menos que *tentative* sea `True`,
-      en cuyo caso este paso se omite). Esto significa que la clase del candidato
-      declara que `implementa <zope.interface.implementer>` la interfaz,
-      o que el propio candidato declara que `proporciona <zope.interface.provider>`
-      la interfaz.
+    - 确保候选对象声明其提供了接口，通过调用 ``iface.providedBy`` （如果 *tentative* 为真，则跳过此步骤）。这意味着候选对象的类必须声明 `implements <zope.interface.implementer>` 该接口，或者候选对象自身声明 `provides <zope.interface.provider>` 该接口。
 
-    - Asegurarse de que el candidato defina todos los métodos necesarios.
+    - 确保候选对象定义了所有必要的方法。
 
-    - Asegurarse de que los métodos tengan la firma correcta (en la
-      medida de lo posible).
+    - 确保这些方法具有正确的签名（在可能的范围内进行检查）。
 
-    - Asegurarse de que el candidato defina todos los atributos necesarios.
+    - 确保候选对象定义了所有必要的属性。
 
-    :return bool: Devuelve un valor verdadero si todo lo que se pudo
-       verificar pasó.
-    :raises zope.interface.Invalid: Si alguna de las condiciones anteriores
-       no se cumple.
+    :return bool: 如果所有可以检查的条件都通过，则返回真。
+    :raises zope.interface.Invalid: 如果上述任何条件不满足
 
     .. versionchanged:: 5.0
-        Si múltiples métodos o atributos son inválidos, todos esos errores
-        se recopilan y se informan. Anteriormente, solo se informaba el primer error.
-        Como caso especial, si solo hay un error presente, se lanza
-        de forma individual, como antes.
+      如果有多个方法或属性无效，将收集并报告所有这些错误。之前的行为是仅报告第一个错误。作为一个特殊情况，如果只有一个错误，则像之前一样单独抛出该错误。
     """
     from zope.interface import providedBy, Invalid
-    from inspect import signature, isfunction
+    from inspect import signature, Parameter
 
     errors = []
 
-    if not tentative and not providedBy(candidate, iface):
+    if not tentative and not providedBy(candidate).isOrExtends(iface):
         errors.append(f"{candidate} does not provide {iface}")
 
     required_methods = iface.names()
@@ -44,23 +33,20 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             continue
         
         method = getattr(candidate, method_name)
-        if not isfunction(method):
-            errors.append(f"{method_name} in {candidate} is not a function")
+        if not callable(method):
+            errors.append(f"{method_name} in {candidate} is not callable")
             continue
         
         # Check method signature
-        iface_method = iface.lookup(method_name)
-        if iface_method is not None:
-            iface_signature = signature(iface_method)
-            candidate_signature = signature(method)
-            if iface_signature != candidate_signature:
-                errors.append(f"Signature mismatch for {method_name} in {candidate}")
-
-    # Check for required attributes
-    required_attributes = iface.attributes()
-    for attr_name in required_attributes:
-        if not hasattr(candidate, attr_name):
-            errors.append(f"{candidate} is missing attribute {attr_name}")
+        if vtype is not None:
+            sig = signature(method)
+            if len(sig.parameters) < 1 or list(sig.parameters.keys())[0] != 'self':
+                errors.append(f"{method_name} in {candidate} has incorrect signature")
+    
+    required_attributes = [attr for attr in iface.names() if not callable(getattr(iface, attr))]
+    for attr in required_attributes:
+        if not hasattr(candidate, attr):
+            errors.append(f"{candidate} is missing attribute {attr}")
 
     if errors:
         if len(errors) == 1:

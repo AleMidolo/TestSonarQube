@@ -1,33 +1,29 @@
 def difference(d1, d2, level=-1):
     """
-    Devuelve un diccionario con los elementos de *d1* que no están contenidos en *d2*.
+    返回一个字典，其中包含 *d1* 中不在 *d2* 中的项。
 
-    El parámetro *level* establece la profundidad máxima de recursión. Para recursión infinita, configúralo en -1. Para un nivel 1, si una clave está presente tanto en *d1* como en *d2* pero tiene valores diferentes, se incluye en la diferencia. Consulta :func:`intersection` para más detalles.
+    参数 *level* 用于设置递归的最大深度。对于无限递归，则将其设置为-1。如果设置为 1，当某个键同时存在于 *d1* 和 *d2* 中但其值不同，则该键值对会包含在差异结果中。
+    有关更多详细信息，请参阅 :func:`intersection`。
 
-    *d1* y *d2* permanecen sin cambios. Sin embargo, *d1* o algunos de sus subdiccionarios pueden ser devueltos directamente. Realiza una copia profunda del resultado cuando sea apropiado.
+    *d1* 和 *d2* 本身不会被修改。然而，*d1* 或其某些子字典可能会直接作为返回值。如果需要，请对结果进行深拷贝。
 
-    .. versionadded:: 0.5  
-       Agrega el argumento de palabra clave *level*.
+    .. 版本新增:: 0.5  
+     添加了关键字参数 *level*。
     """
-    from collections.abc import MutableMapping
-    import copy
-
-    def recursive_difference(d1, d2, level):
-        if level == 0:
-            return {}
-        
-        result = {}
-        for key, value in d1.items():
-            if key not in d2:
-                result[key] = copy.deepcopy(value) if isinstance(value, MutableMapping) else value
-            else:
-                if isinstance(value, MutableMapping) and isinstance(d2[key], MutableMapping):
-                    nested_diff = recursive_difference(value, d2[key], level - 1 if level > 0 else -1)
-                    if nested_diff:
-                        result[key] = nested_diff
-                elif value != d2[key]:
-                    result[key] = copy.deepcopy(value)
-
-        return result
-
-    return recursive_difference(d1, d2, level)
+    if level == 0:
+        return {}
+    
+    result = {}
+    
+    for key in d1:
+        if key not in d2:
+            result[key] = d1[key]
+        else:
+            if isinstance(d1[key], dict) and isinstance(d2[key], dict):
+                nested_diff = difference(d1[key], d2[key], level - 1)
+                if nested_diff:
+                    result[key] = nested_diff
+            elif level == 1 and d1[key] != d2[key]:
+                result[key] = d1[key]
+    
+    return result

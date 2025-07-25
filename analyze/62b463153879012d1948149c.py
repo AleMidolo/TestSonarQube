@@ -1,20 +1,21 @@
 def select_filenames_by_prefix(prefix, files):
     """
-    Obtén los archivos que pertenecen a un paquete de documentos.
+    对于文件列表中的每个文件，返回所有与给定前缀匹配的文件。
 
-    Retorna los archivos de la lista `files` cuyos nombres comienzan con `prefix`.
+    获取属于文档包的文件。
 
-    Parámetros
+    返回 `files` 列表中文件名以 `prefix` 开头的文件。
+
+    参数
     ----------
-    prefix : str  
-    Prefijo del nombre del archivo.  
+    prefix: str  
+        文件名前缀  
+    files: list[str]  
+        文件路径列表  
 
-    files : lista de str  
-    Rutas de los archivos.  
-
-    Retorna
+    返回值
     -------
-    list  
-    Lista de rutas de archivos cuyos nombres base coinciden con el prefijo `prefix`.
+    list
+        文件路径列表，其中的文件名与前缀 `prefix` 匹配。
     """
     return [file for file in files if file.startswith(prefix)]
