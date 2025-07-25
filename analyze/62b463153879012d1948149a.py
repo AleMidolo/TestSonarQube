@@ -23,18 +23,14 @@ def _group_files_by_xml_filename(source, xmls, files):
     # Group files by XML base name
     for xml in xmls:
         xml_base = xml.rsplit('.', 1)[0]  # Remove extension
-        package_files = []
         
         # Find all files that start with the XML base name
-        for file in files:
-            if file.startswith(xml_base):
-                package_files.append(file)
-                
-        # Create package if files found
-        if package_files:
-            packages[xml] = {
-                'source': source,
-                'files': package_files
-            }
-            
+        related_files = [f for f in files if f.startswith(xml_base)]
+        
+        # Create package dictionary with source and files
+        packages[xml] = {
+            'source': source,
+            'files': related_files
+        }
+        
     return packages

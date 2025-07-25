@@ -39,17 +39,13 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
                 elif callable(tzinfos):
                     tzinfo = tzinfos(tzinfo, res.tzoffset)
                     
-                if isinstance(tzinfo, int):
-                    tzinfo = datetime.timezone(datetime.timedelta(seconds=tzinfo))
-                    
         try:
-            return datetime.datetime(year, month, day,
-                                   hour, minute, second, microsecond,
-                                   tzinfo=tzinfo)
+            return datetime.datetime(year, month, day, hour, minute, second,
+                                   microsecond, tzinfo=tzinfo)
         except ValueError as e:
             raise ParserError(str(e))
-        except OverflowError as e:
-            raise OverflowError(str(e))
             
-    except Exception as e:
-        raise ParserError("Unknown string format: %s" % timestr)
+    except (TypeError, ValueError) as e:
+        raise ParserError(str(e))
+    except OverflowError as e:
+        raise OverflowError(str(e))

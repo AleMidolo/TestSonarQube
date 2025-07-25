@@ -9,7 +9,7 @@ def addignored(ignored):
     # Convert output to list of filenames
     files = result.stdout.strip().split('\n')
     
-    # Filter for only ignored files
+    # Filter only ignored files
     ignored_files = [f for f in files if f]
     
     # Join filenames with commas

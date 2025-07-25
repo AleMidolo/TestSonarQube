@@ -15,16 +15,14 @@ def fromutc(self, dt):
     if dst_offset is None:
         return dtoff.replace(tzinfo=self)
         
-    # If standard offset and DST offset are the same, no fold
+    # If standard offset and DST offset are the same, no ambiguity
     std_offset = self.utcoffset(dtoff) - dst_offset
     if std_offset == utc_offset:
         return dtoff.replace(tzinfo=self)
         
-    # We're in a fold - check if this is the first or second occurrence
-    dtdst = dtoff - dst_offset
-    if self.dst(dtdst) is not None:
-        # First occurrence
+    # We're in the fold if dtoff occurs twice
+    dtdst = dtoff + dst_offset
+    if self.utcoffset(dtdst) == utc_offset:
         return dtdst.replace(tzinfo=self)
     else:
-        # Second occurrence
         return dtoff.replace(tzinfo=self)

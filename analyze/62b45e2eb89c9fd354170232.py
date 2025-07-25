@@ -1,15 +1,15 @@
 def next_version(version):
-    # Split version string into parts
+    # Split version into parts
     parts = version.split('.')
     
-    # Convert parts to integers
+    # Convert to integers
     nums = [int(x) for x in parts]
     
     # Start from rightmost digit
     i = len(nums) - 1
     
     while i >= 0:
-        # If current digit is 9, set to 0 and continue to next digit
+        # If current digit is 9, set to 0 and continue left
         if nums[i] == 9:
             nums[i] = 0
             i -= 1
@@ -18,11 +18,11 @@ def next_version(version):
             nums[i] += 1
             break
     
-    # If we ran out of digits to increment, add a 1 at the start
+    # If we ran out of digits to increment, add a 1 at start
     if i < 0:
-        nums = [1] + nums
+        nums.insert(0, 1)
         
-    # Convert back to strings, preserving any leading zeros
+    # Convert back to strings, preserving leading zeros
     result = []
     for i, num in enumerate(nums):
         # Get original length of this part

@@ -17,23 +17,37 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     tb_list = traceback.format_exception(type(e), e, e.__traceback__)
     
     # Format the path to be relative and shortened
-    formatted_tb = []
-    for line in tb_list:
-        if "File" in line:
-            parts = line.split('"')
-            if len(parts) > 1:
-                path = parts[1]
-                # Shorten path to max_path_level directories
-                path_parts = path.split(os.sep)
-                if len(path_parts) > max_path_level:
-                    path = os.sep.join(['...'] + path_parts[-max_path_level:])
-                line = line.replace(parts[1], path)
-        formatted_tb.append(line)
+    def format_path(path):
+        try:
+            rel_path = os.path.relpath(path)
+            parts = rel_path.split(os.sep)
+            if len(parts) > max_path_level:
+                return os.sep.join(['...'] + parts[-max_path_level:])
+            return rel_path
+        except ValueError:
+            return path
+
+    # Process each line of the traceback
+    formatted_lines = []
+    stack_level = 0
     
-    # Limit the traceback to max_level frames
-    if len(formatted_tb) > max_level:
-        formatted_tb = formatted_tb[:max_level]
-        formatted_tb.append(f"... (traceback truncated to {max_level} levels)\n")
-        
-    # Join all lines and return
-    return ''.join(formatted_tb)
+    for line in tb_list:
+        if 'File "' in line:
+            # Handle stack trace lines
+            if stack_level >= max_level:
+                continue
+            
+            # Format the file path
+            start = line.find('File "') + 6
+            end = line.find('"', start)
+            file_path = line[start:end]
+            formatted_path = format_path(file_path)
+            line = line[:start] + formatted_path + line[end:]
+            stack_level += 1
+            
+        formatted_lines.append(line)
+    
+    # Join all lines and remove any extra whitespace
+    result = ''.join(formatted_lines).strip()
+    
+    return result

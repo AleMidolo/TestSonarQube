@@ -15,18 +15,17 @@ def xargs(
 ) -> tuple[int, bytes]:
     
     if not varargs:
-        # No arguments to process
         return 0, b''
-    
-    # Build command arguments in chunks that fit within max length
+        
+    # Split varargs into chunks that fit within max command length
     chunks = []
     current_chunk = []
-    current_length = sum(len(arg) + 1 for arg in cmd)  # +1 for spaces
+    current_length = sum(len(arg) + 1 for arg in cmd)
     
     for arg in varargs:
         arg_length = len(arg) + 1  # +1 for space
         if current_length + arg_length > _max_length:
-            if current_chunk:  # Only add non-empty chunks
+            if current_chunk:
                 chunks.append(current_chunk)
             current_chunk = [arg]
             current_length = sum(len(arg) + 1 for arg in cmd) + arg_length
@@ -37,44 +36,59 @@ def xargs(
     if current_chunk:
         chunks.append(current_chunk)
 
-    # Process chunks with specified concurrency
-    all_output = b''
+    # Run commands in parallel up to target_concurrency
+    processes = []
+    output = b''
     max_retcode = 0
     
     for i in range(0, len(chunks), target_concurrency):
         batch = chunks[i:i + target_concurrency]
-        processes = []
         
         for chunk in batch:
-            if color and sys.platform != 'win32' and hasattr(os, 'openpty'):
+            cmd_with_args = list(cmd) + chunk
+            
+            if color and sys.platform != 'win32' and hasattr(pty, 'openpty'):
+                # Use PTY for color output
                 master, slave = pty.openpty()
-                kwargs['stdin'] = slave
-                kwargs['stdout'] = slave
-                kwargs['stderr'] = slave
-            
-            process = subprocess.Popen(
-                [*cmd, *chunk],
-                stdout=subprocess.PIPE if not color else None,
-                stderr=subprocess.STDOUT if not color else None,
-                **kwargs
-            )
-            processes.append((process, master if color else None))
-            
-        # Wait for all processes in batch to complete
-        for process, master_fd in processes:
-            if color and master_fd is not None:
-                output = b''
+                p = subprocess.Popen(
+                    cmd_with_args,
+                    stdout=slave,
+                    stderr=slave,
+                    **kwargs
+                )
+                os.close(slave)
+                processes.append((p, master))
+            else:
+                p = subprocess.Popen(
+                    cmd_with_args,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    **kwargs
+                )
+                processes.append((p, None))
+                
+        # Wait for batch to complete
+        for p, master in processes:
+            if master is not None:
+                # Read from PTY
+                out = b''
                 while True:
                     try:
-                        output += os.read(master_fd, 1024)
+                        chunk = os.read(master, 1024)
+                        if not chunk:
+                            break
+                        out += chunk
                     except OSError:
                         break
-                os.close(master_fd)
+                os.close(master)
             else:
-                output, _ = process.communicate()
+                # Read from pipes
+                out, _ = p.communicate()
                 
-            retcode = process.wait()
+            retcode = p.wait()
             max_retcode = max(max_retcode, retcode)
-            all_output += output or b''
+            output += out
             
-    return max_retcode, all_output
+        processes = []
+
+    return max_retcode, output

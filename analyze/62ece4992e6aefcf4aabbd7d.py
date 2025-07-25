@@ -33,4 +33,4 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     except subprocess.TimeoutExpired as e:
         raise TimeoutError(f"Function timed out after {timeout} seconds") from e
     except subprocess.CalledProcessError as e:
-        raise RuntimeError(f"Subprocess failed with exit code {e.returncode}") from e
+        raise RuntimeError(f"Function failed with return code {e.returncode}") from e

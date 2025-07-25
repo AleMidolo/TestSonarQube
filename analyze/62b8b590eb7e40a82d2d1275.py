@@ -32,12 +32,14 @@ def _legacy_mergeOrderings(orderings):
     # Helper function to check if an item can be added
     def can_add(item):
         if item in dependencies:
-            # Check that all dependencies have been added
-            return all(dep in added for dep in dependencies[item])
+            # Check that all items this depends on are already added
+            for dep in dependencies[item]:
+                if dep not in added:
+                    return False
         return True
         
     # Add items until we've used them all
-    while len(result) < len(all_items):
+    while len(added) < len(all_items):
         # Find items that can be added
         available = [item for item in all_items if item not in added and can_add(item)]
         

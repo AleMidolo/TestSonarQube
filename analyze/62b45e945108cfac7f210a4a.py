@@ -25,7 +25,7 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
                             print(f"Warning: Object {obj_path} does not exist")
                         continue
                         
-                    # Validate checksum if requested    
+                    # Verify digest if requested
                     if check_digests:
                         stored_digest = self.get_digest(obj_path)
                         actual_digest = self.calculate_digest(obj_path)
@@ -40,5 +40,6 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
                 except Exception as e:
                     if show_warnings:
                         print(f"Warning: Error validating {file}: {str(e)}")
-                        
+                    continue
+                    
     return num_objects, good_objects

@@ -33,22 +33,33 @@ def parse_diaspora_webfinger(document: str) -> Dict:
             root = ET.fromstring(document)
             
             result = {
-                'subject': root.findtext('Subject', ''),
-                'aliases': [alias.text for alias in root.findall('Alias')],
+                'subject': '',
+                'aliases': [],
                 'links': []
             }
             
-            # Parse links
+            # Get subject
+            subject = root.find('Subject')
+            if subject is not None:
+                result['subject'] = subject.text
+                
+            # Get aliases
+            for alias in root.findall('Alias'):
+                if alias.text:
+                    result['aliases'].append(alias.text)
+                    
+            # Get links
             for link in root.findall('Link'):
-                result['links'].append({
+                link_data = {
                     'rel': link.get('rel', ''),
                     'type': link.get('type', ''),
                     'href': link.get('href', '')
-                })
+                }
+                result['links'].append(link_data)
                 
             return result
-
+            
         except ET.ParseError:
-            raise ValueError("Invalid document format - must be either JSON or XRD")
+            raise ValueError("Invalid document format - neither valid JSON nor XRD")
 
     return {}

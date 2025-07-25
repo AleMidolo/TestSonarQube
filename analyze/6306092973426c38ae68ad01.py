@@ -4,11 +4,11 @@ def get_deprecated_args(self):
     """
     deprecated_args = {
         'generator': 'site',
-        'defaultsort': 'defaultsort',
-        'nocontent': 'content',
-        'onlyif': 'if',
-        'onlyifnot': 'ifnot',
-        'catfilter': 'categoryfilter',
-        'notcatfilter': 'notcategoryfilter'
+        'maxlag': None,
+        'useHtml': None,
+        'nopreload': None,
+        'throttle': None,
+        'sysop': 'user',
+        'async': None,  # async is a reserved word in Python 3.7
     }
     return deprecated_args

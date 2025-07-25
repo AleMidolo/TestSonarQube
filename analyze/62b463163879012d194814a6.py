@@ -7,7 +7,7 @@ def files_list_from_zipfile(zip_path):
     files_list = []
     
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        # Get list of file names in zip
+        # Get list of all files in zip
         files_list = zip_ref.namelist()
         
         # Sort the list alphabetically

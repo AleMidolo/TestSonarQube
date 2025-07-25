@@ -9,7 +9,7 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
         # Create cache dict to store results and timestamps
         cache = {}
         # Create ordered dict to track LRU
-        lru = collections.OrderedDict()
+        cache_order = collections.OrderedDict()
         
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -21,41 +21,41 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
                 key += tuple(sorted(kwargs.items()))
                 if typed:
                     key += tuple(type(v) for v in kwargs.values())
-            key = hash(key)
             
-            current_time = timer()
+            # Get current time
+            now = timer()
             
             # Check if result in cache and not expired
             if key in cache:
                 result, timestamp = cache[key]
-                if current_time - timestamp <= ttl:
-                    # Move to end of LRU
-                    lru.move_to_end(key)
+                if now - timestamp <= ttl:
+                    # Move key to end to mark as most recently used
+                    cache_order.move_to_end(key)
                     return result
                 else:
-                    # Remove expired item
+                    # Remove expired entry
                     del cache[key]
-                    del lru[key]
+                    del cache_order[key]
             
-            # Calculate new result
+            # Call function to get result
             result = func(*args, **kwargs)
             
             # Add to cache
-            cache[key] = (result, current_time)
-            lru[key] = None
+            cache[key] = (result, now)
+            cache_order[key] = None
             
-            # Remove oldest if over maxsize
-            if len(cache) > maxsize:
-                oldest_key = next(iter(lru))
+            # Remove oldest entries if cache too large
+            while len(cache) > maxsize:
+                oldest_key = next(iter(cache_order))
                 del cache[oldest_key]
-                del lru[oldest_key]
+                del cache_order[oldest_key]
                 
             return result
             
         # Add cache clear method
         def clear_cache():
             cache.clear()
-            lru.clear()
+            cache_order.clear()
             
         wrapper.clear_cache = clear_cache
         return wrapper

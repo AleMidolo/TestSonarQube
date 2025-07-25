@@ -11,46 +11,44 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     import os
     import json
     import subprocess
-    from ansible.cli import CLI
-    from ansible.parsing.dataloader import DataLoader
-    from ansible.inventory.manager import InventoryManager
-    from ansible.vars.manager import VariableManager
-    from ansible.playbook.play import Play
-    from ansible.executor.playbook_executor import PlaybookExecutor
+    from tempfile import NamedTemporaryFile
 
-    # Ansible के लिए आवश्यक डायरेक्टरी पथ सेट करें
-    playbook_dir = os.path.join(ir_plugin.path, 'playbooks')
-    inventory_file = os.path.join(ir_workspace.path, 'hosts')
+    # Create temporary file for vars
+    with NamedTemporaryFile(suffix='.json', mode='w', delete=False) as vars_file:
+        json.dump(vars_dict, vars_file)
+        vars_file_path = vars_file.name
 
-    # एक्स्ट्रा वेरिएबल्स को JSON फाइल में लिखें
-    extra_vars_file = os.path.join(ir_workspace.path, 'extra_vars.json')
-    with open(extra_vars_file, 'w') as f:
-        json.dump(vars_dict, f)
-
-    # Ansible CLI कमांड तैयार करें
-    ansible_cmd = ['ansible-playbook']
-    ansible_cmd.extend(cli_args)
-    ansible_cmd.extend([
-        '-i', inventory_file,
-        '--extra-vars', '@' + extra_vars_file
-    ])
-
-    # प्लेबुक को एक्जीक्यूट करें
     try:
+        # Build ansible-playbook command
+        cmd = ['ansible-playbook']
+        
+        # Add any CLI arguments
+        if cli_args:
+            cmd.extend(cli_args)
+
+        # Add workspace inventory if exists
+        if ir_workspace and hasattr(ir_workspace, 'inventory'):
+            cmd.extend(['-i', ir_workspace.inventory])
+
+        # Add plugin playbook path if exists  
+        if ir_plugin and hasattr(ir_plugin, 'playbook_path'):
+            cmd.append(ir_plugin.playbook_path)
+
+        # Add vars file
+        cmd.extend(['--extra-vars', f'@{vars_file_path}'])
+
+        # Execute ansible-playbook
         result = subprocess.run(
-            ansible_cmd,
-            cwd=playbook_dir,
-            check=True,
+            cmd,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
+            check=True
         )
-        return result.returncode
-    except subprocess.CalledProcessError as e:
-        print(f"Ansible execution failed: {e}")
-        print(f"stdout: {e.stdout.decode()}")
-        print(f"stderr: {e.stderr.decode()}")
-        return e.returncode
+
+        return result
+
     finally:
-        # क्लीनअप - एक्स्ट्रा वेरिएबल्स फाइल हटाएं
-        if os.path.exists(extra_vars_file):
-            os.remove(extra_vars_file)
+        # Cleanup temp file
+        if os.path.exists(vars_file_path):
+            os.unlink(vars_file_path)
