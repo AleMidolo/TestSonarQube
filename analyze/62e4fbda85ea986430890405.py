@@ -25,35 +25,20 @@ def xargs(
         kwargs['stderr'] = slave
         kwargs['stdin'] = subprocess.PIPE
 
-    # Split varargs into chunks based on target_concurrency
-    chunk_size = (len(varargs) + target_concurrency - 1) // target_concurrency
-    chunks = [varargs[i:i + chunk_size] for i in range(0, len(varargs), chunk_size)]
+    processes = []
+    for i in range(0, len(varargs), target_concurrency):
+        args = list(cmd) + list(varargs[i:i + target_concurrency])
+        process = subprocess.Popen(args, **kwargs)
+        processes.append(process)
 
-    exit_code = 0
-    output = b""
-
-    for chunk in chunks:
-        full_cmd = list(cmd) + list(chunk)
-        try:
-            process = subprocess.Popen(full_cmd, **kwargs)
-            stdout, stderr = process.communicate()
-            output += stdout if stdout else b""
-            output += stderr if stderr else b""
-            if process.returncode != 0:
-                exit_code = process.returncode
-        except Exception as e:
-            output += str(e).encode()
-            exit_code = 1
+    for process in processes:
+        process.wait()
 
     if color and sys.platform != "win32":
-        os.close(master)
         os.close(slave)
-
-    return exit_code, output
-
-def _get_platform_max_length() -> int:
-    """Get the maximum command length allowed by the platform."""
-    if sys.platform == "win32":
-        return 8191  # Windows command line length limit
+        output = os.read(master, _max_length)
+        os.close(master)
     else:
-        return 131072  # Common limit on Unix-like systems
+        output = b""
+
+    return (process.returncode, output)

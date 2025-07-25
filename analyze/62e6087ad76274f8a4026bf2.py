@@ -17,13 +17,16 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
     """
     # Create the DISCARD message
     discard_message = {
-        "type": "DISCARD",
-        "n": n,
-        "qid": qid
+        'type': 'DISCARD',
+        'n': n,
+        'qid': qid,
+        'dehydration_hooks': dehydration_hooks,
+        'hydration_hooks': hydration_hooks,
+        'handlers': handlers
     }
-
-    # Append the message to the output queue
+    
+    # Append the DISCARD message to the output queue
     self.output_queue.append(discard_message)
-
-    # Create and return a Response object with the provided handlers
+    
+    # Return the Response object with the handlers
     return Response(handlers=handlers)

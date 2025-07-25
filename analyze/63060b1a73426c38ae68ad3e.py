@@ -8,7 +8,7 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     :param plugin_dir: A path to the plugin's dir
     :return: A flatten dictionary contains the plugin's properties
     """
-    spec_file = os.path.join(plugin_dir, 'plugin_spec.json')
+    spec_file = os.path.join(plugin_dir, 'plugin.spec.json')
     if not os.path.exists(spec_file):
         raise FileNotFoundError(f"Plugin spec file not found in {plugin_dir}")
 

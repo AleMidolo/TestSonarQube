@@ -4,7 +4,7 @@ def test_tag(tag: str) -> bool:
     
     A tag is considered valid if it meets the following criteria:
     - It is not empty.
-    - It contains only alphanumeric characters and underscores.
+    - It contains only alphanumeric characters or underscores.
     - It is not longer than 50 characters.
     
     Args:

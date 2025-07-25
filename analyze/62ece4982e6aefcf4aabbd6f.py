@@ -1,6 +1,7 @@
-import tarfile
 import requests
+import tarfile
 from pathlib import Path
+import shutil
 
 def get_repo_archive(url: str, destination_path: Path) -> Path:
     """
@@ -20,19 +21,20 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     
     # Download the archive
     response = requests.get(url, stream=True)
-    response.raise_for_status()
+    if response.status_code != 200:
+        raise Exception(f"Failed to download archive from {url}")
     
     # Save the archive to a temporary file
-    archive_path = destination_path / "archive.tar.gz"
-    with open(archive_path, 'wb') as f:
+    temp_archive_path = destination_path / "temp_archive.tar.gz"
+    with open(temp_archive_path, 'wb') as f:
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)
     
     # Extract the archive
-    with tarfile.open(archive_path, 'r:gz') as tar:
+    with tarfile.open(temp_archive_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
     
     # Remove the temporary archive file
-    archive_path.unlink()
+    temp_archive_path.unlink()
     
     return destination_path

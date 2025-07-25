@@ -38,8 +38,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     if scale is True:
         scale = hist.scale
 
-    graph = Graph(scale=scale)
-
+    graph_points = []
     for bin_ in hist.bins:
         if get_coordinate == "left":
             x = bin_.left
@@ -52,8 +51,9 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
         value = make_value(bin_.content)
         if isinstance(value, tuple):
-            graph.add_point(**dict(zip(field_names, (x,) + value)))
+            graph_point = (x,) + value
         else:
-            graph.add_point(**dict(zip(field_names, (x, value))))
+            graph_point = (x, value)
+        graph_points.append(graph_point)
 
-    return graph
+    return Graph(graph_points, field_names=field_names, scale=scale)

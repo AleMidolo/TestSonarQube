@@ -6,7 +6,10 @@ def identify_request(request: RequestType) -> bool:
     """
     Try to identify whether this is a Matrix request
     """
-    # Assuming a Matrix request has a specific header or attribute
+    # Assuming RequestType has a method or attribute that can be checked
+    # For example, if it has a 'headers' attribute that contains 'Matrix' in some form
     if hasattr(request, 'headers'):
-        return 'Matrix' in request.headers.get('User-Agent', '')
+        headers = getattr(request, 'headers', {})
+        if 'Matrix' in headers.get('User-Agent', ''):
+            return True
     return False

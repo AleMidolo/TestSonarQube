@@ -10,12 +10,15 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     :raises ValueError: if the image_href is not a valid URL or does not contain an image ID
     """
     parsed_url = urlparse(image_href)
-    if not parsed_url.netloc or not parsed_url.path:
-        raise ValueError("Invalid image href: missing netloc or path")
-
-    image_id = parsed_url.path.strip('/')
-    if not image_id:
-        raise ValueError("Invalid image href: missing image ID")
-
+    if not parsed_url.netloc:
+        raise ValueError("Invalid image href: no netloc found")
+    
+    path_parts = parsed_url.path.strip('/').split('/')
+    if not path_parts:
+        raise ValueError("Invalid image href: no image ID found")
+    
+    image_id = path_parts[-1]
+    netloc = parsed_url.netloc
     use_ssl = parsed_url.scheme == 'https'
-    return image_id, parsed_url.netloc, use_ssl
+    
+    return image_id, netloc, use_ssl

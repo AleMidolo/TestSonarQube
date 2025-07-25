@@ -11,7 +11,6 @@ def _explore_folder(folder):
     ----------
     folder : str
         Folder of the package
-
     Returns
     -------
     dict

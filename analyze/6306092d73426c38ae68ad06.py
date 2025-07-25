@@ -7,6 +7,6 @@ def get_silent_args(self, args):
     """
     silenced_args = []
     for arg in args:
-        if arg.startswith('_'):
+        if not args[arg]:
             silenced_args.append(arg)
     return silenced_args
