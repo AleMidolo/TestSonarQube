@@ -17,8 +17,8 @@ def validate_from_content(cls, spec_content=None):
             raise IRValidatorException(f"Campo requerido '{field}' no encontrado en el archivo spec")
             
     # Validaciones adicionales específicas
-    if not isinstance(spec_content['version'], (str, int, float)):
-        raise IRValidatorException("El campo 'version' debe ser un string o número")
+    if not isinstance(spec_content['version'], (int, float, str)):
+        raise IRValidatorException("El campo 'version' debe ser un número o string")
         
     if not isinstance(spec_content['description'], str):
         raise IRValidatorException("El campo 'description' debe ser un string")

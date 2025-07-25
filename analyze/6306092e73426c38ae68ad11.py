@@ -9,9 +9,9 @@ def merge_extra_vars(vars_dict, extra_vars=None):
         return vars_dict
         
     if isinstance(extra_vars, list):
-        for var in extra_vars:
-            if isinstance(var, dict):
-                vars_dict.update(var)
+        for extra_var in extra_vars:
+            if isinstance(extra_var, dict):
+                vars_dict.update(extra_var)
     elif isinstance(extra_vars, dict):
         vars_dict.update(extra_vars)
         

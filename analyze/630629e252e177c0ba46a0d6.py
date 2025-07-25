@@ -25,4 +25,4 @@ def retrieve_diaspora_host_meta(host):
             continue
             
     # If we get here, both URLs failed
-    raise ConnectionError(f"Could not retrieve host-meta from {host}")
+    raise ConnectionError(f"Could not retrieve host-meta document from {host}")

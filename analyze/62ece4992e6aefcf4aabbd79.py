@@ -6,8 +6,7 @@ def make_find_paths(find_paths):
             result.append(path)
         else:
             # Transform file/path fragment into glob pattern
-            # Format: sh:**/*fragment*/**
-            fragment = path
-            pattern = f"sh:**/*{fragment}*/**"
-            result.append(pattern)
+            # Wrap with **/* and */** to match anywhere in path
+            glob_pattern = f"sh:**/*{path}*/**"
+            result.append(glob_pattern)
     return result

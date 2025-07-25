@@ -33,12 +33,12 @@ def mru_cache(maxsize=128, typed=False):
                 # Calcular nuevo resultado
                 result = func(*args, **kwargs)
                 
-                # Si el caché está lleno, eliminar el elemento más reciente
+                # Si alcanzamos el tamaño máximo, eliminar el más reciente
                 if len(cache) >= maxsize:
                     oldest = order.pop()
                     del cache[oldest]
                 
-                # Agregar nuevo resultado al caché
+                # Almacenar nuevo resultado
                 cache[key] = result
                 order.append(key)
                 return result

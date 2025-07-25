@@ -21,5 +21,4 @@ def make_parsers():
     parser_delete = subparsers.add_parser('delete', help='Eliminar un elemento')
     parser_delete.add_argument('id', help='ID del elemento a eliminar')
 
-    # Devolver una tupla con el parser principal y los subparsers
     return (parser, parser_add, parser_list, parser_delete)

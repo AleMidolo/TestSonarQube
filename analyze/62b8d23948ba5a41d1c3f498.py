@@ -26,15 +26,15 @@ def lru_cache(maxsize=128, typed=False):
             # Agregar a cache
             cache[key] = result
             
-            # Mantener tamaño máximo
+            # Remover el elemento menos usado si se excede maxsize
             if maxsize and len(cache) > maxsize:
-                # Eliminar el elemento menos recientemente usado
                 cache.popitem(last=False)
                 
             return result
             
-        # Agregar método para limpiar cache
-        wrapper.cache_clear = cache.clear
+        # Agregar métodos para acceder a la cache
+        wrapper.cache_info = lambda: cache
+        wrapper.cache_clear = lambda: cache.clear()
         
         return wrapper
         

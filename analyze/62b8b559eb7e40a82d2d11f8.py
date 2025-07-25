@@ -2,7 +2,6 @@ def minimalBases(classes):
     """
     Reduce una lista de clases base a su equivalente mínimo ordenado.
     """
-    # Si no hay clases, retornar lista vacía
     if not classes:
         return []
         

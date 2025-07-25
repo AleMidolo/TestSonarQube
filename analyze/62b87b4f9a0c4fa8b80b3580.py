@@ -8,8 +8,6 @@ def integral(bins, edges):
     """
     total = 0.0
     for i in range(len(bins)):
-        # Calculate width of each bin
-        width = edges[i+1] - edges[i]
-        # Multiply bin height by width and add to total
-        total += bins[i] * width
+        bin_width = edges[i+1] - edges[i]
+        total += bins[i] * bin_width
     return total

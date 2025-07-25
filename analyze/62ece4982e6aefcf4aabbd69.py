@@ -8,7 +8,7 @@ def _replace_register(flow_params, register_number, register_value):
     :param register_number: El número del registro donde se almacenará el valor  
     :param register_value: Clave que será reemplazada por el número de registro  
     """
-    # Recorrer el diccionario de forma recursiva
+    # Recorrer el diccionario de manera recursiva
     for key, value in flow_params.items():
         # Si el valor es un diccionario, llamar recursivamente
         if isinstance(value, dict):

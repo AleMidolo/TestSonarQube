@@ -20,30 +20,34 @@ def deep_merge_nodes(nodes):
             existing_value.tag == 'tag:yaml.org,2002:map'):
             
             # Convertir los nodos existentes a un diccionario para facilitar la búsqueda
-            existing_dict = {n[0].value: n[1] for n in existing_value.value}
+            existing_dict = {k.value: v for k, v in existing_value.value}
+            new_dict = {k.value: v for k, v in value_node.value}
             
-            # Fusionar los nuevos valores
-            for sub_key_node, sub_value_node in value_node.value:
-                existing_dict[sub_key_node.value] = sub_value_node
-                
-            # Reconstruir el MappingNode con los valores fusionados
+            # Fusionar los diccionarios
+            merged_pairs = []
+            all_keys = set(existing_dict.keys()) | set(new_dict.keys())
+            
+            for k in all_keys:
+                if k in new_dict:
+                    # Encontrar el nodo clave original que corresponde a este valor
+                    key_node = next(kn for kn, _ in value_node.value if kn.value == k)
+                    merged_pairs.append((key_node, new_dict[k]))
+                else:
+                    # Encontrar el nodo clave original que corresponde a este valor
+                    key_node = next(kn for kn, _ in existing_value.value if kn.value == k)
+                    merged_pairs.append((key_node, existing_dict[k]))
+            
+            # Crear un nuevo MappingNode con los valores fusionados
             merged_value = type(value_node)(
                 tag='tag:yaml.org,2002:map',
-                value=[(k_node, existing_dict[k_node.value]) 
-                      for k_node, _ in existing_value.value 
-                      if k_node.value in existing_dict]
+                value=merged_pairs
             )
-            
-            # Agregar cualquier nueva clave que no existía previamente
-            for k_node, v_node in value_node.value:
-                if k_node.value not in {n[0].value for n in merged_value.value}:
-                    merged_value.value.append((k_node, v_node))
-                    
             result[key] = (key_node, merged_value)
             
-        # Si no son MappingNodes o son de diferente tipo, el último valor prevalece
         else:
+            # Si no son MappingNodes o son de diferentes tipos,
+            # el último valor prevalece
             result[key] = (key_node, value_node)
     
-    # Convertir el diccionario resultado de vuelta a una lista de tuplas
+    # Convertir el diccionario resultante de vuelta a una lista de tuplas
     return list(result.values())

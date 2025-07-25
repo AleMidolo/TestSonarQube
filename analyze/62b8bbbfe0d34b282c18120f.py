@@ -12,5 +12,5 @@ def file_to_textbuffer(file_name, encoding):
     try:
         with open(file_name, 'r', encoding=encoding) as file:
             return file.read()
-    except Exception:
+    except (IOError, UnicodeDecodeError):
         return None

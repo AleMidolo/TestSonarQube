@@ -1,6 +1,6 @@
 def add_asset(self, basename, file_path):
     """
-    Adds an asset file to the assets dictionary using basename as key and file_path as value.
+    Adds an asset file to the asset dictionary using basename as key and file_path as value.
     
     Args:
         basename (str): Base filename to use as key

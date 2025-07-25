@@ -10,35 +10,35 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     # Obtener la configuración del parser
     parser_config = self.config.get(parser_name, {})
     
-    # Iterar sobre los argumentos en values_dict
+    # Iterar sobre los argumentos
     for arg_name, value in values_dict.items():
-        # Obtener la configuración del argumento específico
-        arg_config = parser_config.get(arg_name, {})
+        # Obtener el tipo definido en la configuración
+        arg_type = parser_config.get(arg_name, {}).get('type', str)
         
-        # Si el valor es None o vacío, continuar
-        if value is None or value == '':
+        # Convertir valores booleanos
+        if arg_type == bool:
+            if isinstance(value, str):
+                values_dict[arg_name] = value.lower() in ('true', 't', 'yes', 'y', '1')
             continue
             
-        # Obtener el tipo del argumento de la configuración
-        arg_type = arg_config.get('type', str)
-        
-        try:
-            # Convertir listas
-            if isinstance(value, str) and ',' in value:
-                value = [item.strip() for item in value.split(',')]
-                if arg_type != list:
-                    value = [arg_type(item) for item in value]
-            # Convertir booleanos
-            elif arg_type == bool:
-                if isinstance(value, str):
-                    value = value.lower() in ('true', 'yes', '1', 'on')
-            # Convertir otros tipos
-            else:
-                value = arg_type(value)
+        # Convertir valores numéricos
+        if arg_type in (int, float):
+            try:
+                values_dict[arg_name] = arg_type(value)
+            except (ValueError, TypeError):
+                continue
                 
-            # Actualizar el valor en el diccionario
-            values_dict[arg_name] = value
-            
-        except (ValueError, TypeError):
-            # Si hay error en la conversión, dejar el valor original
+        # Convertir listas
+        if arg_type == list:
+            if isinstance(value, str):
+                values_dict[arg_name] = [x.strip() for x in value.split(',') if x.strip()]
             continue
+            
+        # Convertir diccionarios
+        if arg_type == dict:
+            if isinstance(value, str):
+                try:
+                    import json
+                    values_dict[arg_name] = json.loads(value)
+                except json.JSONDecodeError:
+                    continue

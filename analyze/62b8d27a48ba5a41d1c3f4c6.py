@@ -14,16 +14,15 @@ def cached(cache, key=hashkey, lock=None):
             
             if lock is not None:
                 with lock:
-                    try:
+                    if k in cache:
                         return cache[k]
-                    except KeyError:
-                        v = func(*args, **kwargs)
-                        cache[k] = v
-                        return v
-            
-            v = func(*args, **kwargs)
-            cache[k] = v
-            return v
+                    result = func(*args, **kwargs)
+                    cache[k] = result
+            else:
+                result = func(*args, **kwargs)
+                cache[k] = result
+                
+            return result
             
         return wrapper
     return decorator

@@ -14,4 +14,4 @@ def status_str(self, prefix=''):
     if not result:
         result.append(f"{prefix}Valid")
         
-    return '\n'.join(result)
+    return "\n".join(result)

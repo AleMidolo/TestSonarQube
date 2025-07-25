@@ -34,7 +34,7 @@ def _validate_labels(labels):
                 str(value): 'se esperaba un objeto de tipo cadena o bytes'
             })
             
-    # Si hay errores, lanzar la excepción con todos los errores encontrados
+    # Si se encontraron errores, lanzar la excepción
     if errors:
         raise ValidationError(errors)
 
