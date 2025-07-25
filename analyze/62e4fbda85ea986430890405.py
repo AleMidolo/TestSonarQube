@@ -7,20 +7,38 @@ def xargs(
         _max_length: int = _get_platform_max_length(),
         **kwargs: Any,
 ) -> tuple[int, bytes]:
+    """
+    Una implementación simplificada de xargs.
+
+    - color: Crea un pty si está en una plataforma que lo soporte.
+    - target_concurrency: Número objetivo de particiones para ejecutar de forma concurrente.
+    """
     import subprocess
+    import os
     from multiprocessing import Pool
 
     def run_command(args):
         return subprocess.run(cmd + args, capture_output=True)
 
-    # Chunk the varargs into smaller lists based on target_concurrency
-    chunks = [varargs[i:i + target_concurrency] for i in range(0, len(varargs), target_concurrency)]
+    if color:
+        # Create a pseudo-terminal if supported
+        import pty
+        master_fd, slave_fd = pty.openpty()
+        os.set_blocking(master_fd, False)
+        os.set_blocking(slave_fd, False)
+
+    # Split varargs into chunks based on target_concurrency
+    chunk_size = max(1, len(varargs) // target_concurrency)
+    chunks = [varargs[i:i + chunk_size] for i in range(0, len(varargs), chunk_size)]
 
     with Pool(processes=target_concurrency) as pool:
         results = pool.map(run_command, chunks)
 
-    # Combine the return codes and output
+    # Combine results
     return_code = sum(result.returncode for result in results)
-    combined_output = b''.join(result.stdout for result in results)
+    output = b''.join(result.stdout for result in results)
 
-    return return_code, combined_output
+    if color:
+        os.close(slave_fd)
+
+    return return_code, output

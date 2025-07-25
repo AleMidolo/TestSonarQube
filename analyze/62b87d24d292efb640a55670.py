@@ -1,16 +1,10 @@
 def get_versions():
     """
-    Ottieni le informazioni sulla versione o restituisci il valore predefinito se non è possibile ottenerle.
+    Obtén la información de la versión o devuelve el valor predeterminado si no es posible obtenerla.
     """
-    import platform
-
     try:
-        version_info = {
-            "python_version": platform.python_version(),
-            "platform": platform.platform(),
-            "system": platform.system(),
-            "release": platform.release(),
-        }
+        import pkg_resources
+        version_info = pkg_resources.get_distribution("your_package_name").version
         return version_info
     except Exception:
-        return {"error": "Impossibile ottenere le informazioni sulla versione."}
+        return "Versión no disponible"

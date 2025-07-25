@@ -5,14 +5,14 @@ class ValidationError(Exception):
 
 def validate_value(value):
     """
-    Convalida il valore fornito rispetto alla corrispondente espressione regolare.
+    Validar el valor proporcionado contra la expresión regular correspondiente.
 
-    Argomenti:
-        value: la stringa da convalidare
+    Argumentos:
+        value: la cadena de texto a validar
 
-    Eccezioni:
-        ValidationError: se il valore fornito non è conforme all'espressione regolare.
+    Excepciones:
+        ValidationError: si el valor proporcionado no cumple con la expresión regular.
     """
-    pattern = r'^[a-zA-Z0-9_]+$'  # Esempio di espressione regolare
+    pattern = r'^[a-zA-Z0-9_]+$'  # Ejemplo de expresión regular
     if not re.match(pattern, value):
-        raise ValidationError(f"Il valore '{value}' non è conforme all'espressione regolare.")
+        raise ValidationError(f"El valor '{value}' no es válido.")

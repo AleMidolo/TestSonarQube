@@ -1,18 +1,18 @@
 def cached(cache, key=hashkey, lock=None):
     """
-    Decorator per racchiudere una funzione con un callable di memoizzazione che salva  
-    i risultati in una cache.
+    Decorador para envolver una función con una llamada que memoriza y guarda  
+    los resultados en una caché.
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            # Genera la chiave per la cache
+            # Generar la clave de caché
             cache_key = key(*args, **kwargs)
-            # Controlla se il risultato è già nella cache
+            # Intentar obtener el resultado de la caché
             if cache_key in cache:
                 return cache[cache_key]
-            # Se non è nella cache, chiama la funzione
+            # Si no está en caché, llamar a la función
             result = func(*args, **kwargs)
-            # Salva il risultato nella cache
+            # Almacenar el resultado en la caché
             cache[cache_key] = result
             return result
         return wrapper

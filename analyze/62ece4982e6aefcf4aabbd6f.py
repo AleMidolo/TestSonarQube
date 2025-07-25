@@ -4,34 +4,26 @@ from pathlib import Path
 
 def get_repo_archive(url: str, destination_path: Path) -> Path:
     """
-    Dato un URL e un percorso di destinazione, recupera e decomprimi un archivio .tar.gz che contiene il file 'desc' per ogni pacchetto.  
-    Ogni archivio .tar.gz corrisponde a un repository di Arch Linux ('core', 'extra', 'community').
-    Args:
-        url: URL dell'archivio .tar.gz da scaricare
-        destination_path: il percorso sul disco dove estrarre l'archivio
+    Dado un URL y una ruta de destino, recuperar y extraer un archivo .tar.gz que contiene el archivo 'desc' para cada paquete.  
+    Cada archivo .tar.gz corresponde a un repositorio de Arch Linux ('core', 'extra', 'community').
 
-    Returns:
-        un oggetto Path che rappresenta la directory dove l'archivio è stato estratto.
+    Argumentos:
+        url: URL del archivo .tar.gz a descargar.
+        destination_path: la ruta en el disco donde se extraerá el archivo.
+
+    Retorno:
+        un objeto Path que representa el directorio donde se ha extraído el archivo.
     """
-    # Scarica l'archivio
+    # Descargar el archivo .tar.gz
     response = requests.get(url)
-    response.raise_for_status()  # Verifica che la richiesta sia andata a buon fine
-
-    # Crea la directory di destinazione se non esiste
-    destination_path.mkdir(parents=True, exist_ok=True)
-
-    # Percorso del file temporaneo
-    temp_file_path = destination_path / "archive.tar.gz"
-
-    # Scrivi il contenuto scaricato in un file temporaneo
-    with open(temp_file_path, 'wb') as temp_file:
-        temp_file.write(response.content)
-
-    # Estrai l'archivio .tar.gz
-    with tarfile.open(temp_file_path, 'r:gz') as tar:
+    tar_gz_path = destination_path / 'repo_archive.tar.gz'
+    
+    with open(tar_gz_path, 'wb') as f:
+        f.write(response.content)
+    
+    # Extraer el archivo .tar.gz
+    with tarfile.open(tar_gz_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
-
-    # Rimuovi il file temporaneo
-    temp_file_path.unlink()
-
+    
+    # Retornar el directorio donde se ha extraído el archivo
     return destination_path

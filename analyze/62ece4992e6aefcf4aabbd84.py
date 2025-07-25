@@ -1,7 +1,11 @@
-def is_ipv4(target):
+import re
+
+def es_ipv4(objetivo):
     """
-    Verifica se è un indirizzo IPv4 o no.
+    Probar si es una dirección IPv4 o no
     """
-    import re
-    pattern = r'^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
-    return re.match(pattern, target) is not None
+    patron = r'^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.' \
+             r'(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.' \
+             r'(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.' \
+             r'(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
+    return re.match(patron, objetivo) is not None

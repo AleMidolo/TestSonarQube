@@ -2,9 +2,9 @@ import requests
 
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    Recupera e analizza un documento webfinger remoto di Diaspora.
+    Recupera y analiza un documento "webfinger" remoto de Diaspora.
 
-    :arg handle: Handle remoto da recuperare  
+    :arg handle: Identificador remoto a recuperar
     :returns: dict
     """
     url = f"https://{handle}/.well-known/webfinger?resource=acct:{handle}"

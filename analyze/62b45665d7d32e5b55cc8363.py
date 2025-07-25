@@ -1,16 +1,24 @@
-import argparse
-
 def make_parsers():
-    """Crea un parser di livello superiore e i suoi sottoparser e restituiscili come una tupla."""
-    main_parser = argparse.ArgumentParser(description="Parser di livello superiore")
-    
-    subparsers = main_parser.add_subparsers(dest='command', required=True)
+    """
+    Crea un analizador de nivel superior y sus subanalizadores, y devuélvalos como una tupla.
+    """
+    class HighLevelParser:
+        def parse(self, data):
+            # Implementación del análisis de nivel superior
+            return f"HighLevelParser: {data}"
 
-    # Esempio di sottoparser
-    parser_a = subparsers.add_parser('comando_a', help='Esegui il comando A')
-    parser_a.add_argument('--opzione_a', type=int, help='Opzione per il comando A')
+    class SubParserA:
+        def parse(self, data):
+            # Implementación del análisis para SubParserA
+            return f"SubParserA: {data}"
 
-    parser_b = subparsers.add_parser('comando_b', help='Esegui il comando B')
-    parser_b.add_argument('--opzione_b', type=str, help='Opzione per il comando B')
+    class SubParserB:
+        def parse(self, data):
+            # Implementación del análisis para SubParserB
+            return f"SubParserB: {data}"
 
-    return main_parser, subparsers
+    high_level_parser = HighLevelParser()
+    sub_parser_a = SubParserA()
+    sub_parser_b = SubParserB()
+
+    return (high_level_parser, sub_parser_a, sub_parser_b)

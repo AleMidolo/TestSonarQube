@@ -1,45 +1,33 @@
 def validate_version_inventories(self, version_dirs):
     """
-    Ogni versione DOVREBBE avere un inventario fino a quel punto.
-    Inoltre, tieni traccia di eventuali digest di contenuto diversi da quelli
-    presenti nell'inventario principale, in modo da poterli verificare
-    anche durante la validazione del contenuto.
+    Cada versión DEBE tener un inventario hasta ese punto.
 
-    version_dirs è un array di nomi di directory di versione e si presume
-        che sia in sequenza di versione (1, 2, 3...).
+    También se debe mantener un registro de cualquier resumen de contenido (digest) 
+    que sea diferente de los que están en el inventario raíz, 
+    para que también podamos verificarlos al validar el contenido.
+
+    'version_dirs' es un arreglo de nombres de directorios de versiones 
+    y se asume que están en secuencia de versiones (1, 2, 3...).
     """
-    main_inventory = {}
-    content_digests = {}
-    
-    for i, version_dir in enumerate(version_dirs):
-        # Simulate loading the inventory for the current version
-        current_inventory = self.load_inventory(version_dir)
-        
-        # Check if the current version inventory is valid
-        if i > 0:
-            previous_inventory = self.load_inventory(version_dirs[i - 1])
-            if not self.is_valid_inventory(previous_inventory, current_inventory):
-                raise ValueError(f"Invalid inventory for version {version_dir}")
-        
-        # Track content digests
-        for item in current_inventory:
-            digest = self.calculate_digest(item)
-            if item in main_inventory:
-                if main_inventory[item] != digest:
-                    content_digests[item] = digest
-            else:
-                main_inventory[item] = digest
+    root_inventory = self.load_inventory(version_dirs[0])
+    mismatched_digests = {}
 
-    return main_inventory, content_digests
+    for version in version_dirs:
+        current_inventory = self.load_inventory(version)
+        
+        if not self.validate_inventory(current_inventory, root_inventory):
+            raise ValueError(f"Invalid inventory for version: {version}")
+        
+        for item, digest in current_inventory.items():
+            if item in root_inventory and root_inventory[item] != digest:
+                mismatched_digests[item] = digest
 
-def load_inventory(self, version_dir):
-    # Placeholder for loading inventory logic
+    return mismatched_digests
+
+def load_inventory(self, version):
+    # Simulated method to load inventory for a given version
     pass
 
-def is_valid_inventory(self, previous_inventory, current_inventory):
-    # Placeholder for inventory validation logic
-    pass
-
-def calculate_digest(self, item):
-    # Placeholder for digest calculation logic
+def validate_inventory(self, current_inventory, root_inventory):
+    # Simulated method to validate the current inventory against the root inventory
     pass

@@ -1,10 +1,10 @@
 def _legacy_mergeOrderings(orderings):
     """
-    Unisci più ordinamenti in modo che l'ordine all'interno di ciascun ordinamento venga preservato.
+    Combinar múltiples ordenamientos de manera que se preserve el orden dentro de cada uno.
 
-    Gli ordinamenti sono vincolati in modo tale che, se un oggetto appare in due o più ordinamenti, il suffisso che inizia con l'oggetto deve essere presente in entrambi gli ordinamenti.
+    Los ordenamientos están restringidos de tal forma que, si un objeto aparece en dos o más ordenamientos, entonces el sufijo que comienza con dicho objeto debe estar presente en ambos ordenamientos.
 
-    Ad esempio:
+    Por ejemplo:
 
     >>> _mergeOrderings([
     ... ['x', 'y', 'z'],
@@ -23,11 +23,12 @@ def _legacy_mergeOrderings(orderings):
     # Build the graph and in-degree count
     for ordering in orderings:
         for i in range(len(ordering)):
+            if i == 0:
+                in_degree[ordering[i]]  # Initialize in-degree for the first element
             if i > 0:
                 graph[ordering[i - 1]].append(ordering[i])
                 in_degree[ordering[i]] += 1
-            if ordering[i] not in in_degree:
-                in_degree[ordering[i]] = 0
+                in_degree[ordering[i - 1]]  # Initialize in-degree for the previous element
 
     # Topological sort using Kahn's algorithm
     queue = deque([node for node in in_degree if in_degree[node] == 0])

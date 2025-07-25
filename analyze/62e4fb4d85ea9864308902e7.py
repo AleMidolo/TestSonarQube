@@ -1,21 +1,22 @@
 def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
-    import os
-    import sys
+    """
+    Correcciones para los siguientes problemas en Windows:  
+    - https://bugs.python.org/issue8557  
+    - Windows no interpreta correctamente los 'shebangs'  
 
-    if sys.platform == "win32":
-        # Normalize the command for Windows
-        normalized_cmd = []
-        for part in cmd:
-            # Handle shebangs
-            if part.startswith("#!"):
-                # Normalize shebang path
-                shebang_path = part[2:].strip()
-                if os.path.isabs(shebang_path):
-                    normalized_cmd.append(part)
-                else:
-                    # Convert to absolute path
-                    normalized_cmd.append("#!" + os.path.abspath(shebang_path))
-            else:
-                normalized_cmd.append(part)
-        return tuple(normalized_cmd)
-    return cmd
+    Esta función también permite que los 'shebangs' con rutas profundas funcionen correctamente.
+    """
+    if not cmd:
+        return cmd
+
+    # Normalize the command by replacing backslashes with forward slashes
+    normalized_cmd = tuple(part.replace('\\', '/') for part in cmd)
+
+    # Handle shebangs
+    if normalized_cmd[0].startswith('#!'):
+        shebang_parts = normalized_cmd[0].split()
+        if len(shebang_parts) > 1:
+            shebang_parts[1] = shebang_parts[1].replace('\\', '/')
+            normalized_cmd = (shebang_parts[0],) + tuple(shebang_parts[1:]) + normalized_cmd[1:]
+
+    return normalized_cmd

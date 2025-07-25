@@ -1,23 +1,22 @@
 def validate_fixity(self, fixity, manifest_files):
     """
-    Convalida l'attributo fixty block nell'inventario.
+    Validar el bloque de fijación en el inventario.
 
-    Controlla la struttura del blocco di fissità e assicurati che siano referenziati solo i file elencati nel manifesto.
+    Verificar la estructura del bloque de fijación y asegurarse de que solo se referencien los archivos listados en el manifiesto.
     """
+    # Verificar que el fixity sea un diccionario
     if not isinstance(fixity, dict):
-        raise ValueError("Fixity must be a dictionary.")
+        raise ValueError("El bloque de fijación debe ser un diccionario.")
 
-    required_keys = {'algorithm', 'checksums'}
-    if not required_keys.issubset(fixity.keys()):
-        raise ValueError(f"Fixity block must contain the keys: {required_keys}")
+    # Verificar que todos los archivos en el bloque de fijación estén en el manifiesto
+    manifest_set = set(manifest_files)
+    for file in fixity.keys():
+        if file not in manifest_set:
+            raise ValueError(f"El archivo '{file}' en el bloque de fijación no está en el manifiesto.")
 
-    if not isinstance(fixity['checksums'], dict):
-        raise ValueError("Checksums must be a dictionary.")
-
-    for file, checksum in fixity['checksums'].items():
-        if file not in manifest_files:
-            raise ValueError(f"File '{file}' referenced in fixity is not in the manifest.")
+    # Verificar la estructura del bloque de fijación
+    for file, checksum in fixity.items():
         if not isinstance(checksum, str):
-            raise ValueError(f"Checksum for file '{file}' must be a string.")
-
+            raise ValueError(f"El checksum para el archivo '{file}' debe ser una cadena.")
+    
     return True

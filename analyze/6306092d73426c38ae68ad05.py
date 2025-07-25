@@ -1,15 +1,24 @@
 def get_option_spec(self, command_name, argument_name):
     """
-    Ottiene la specifica per il nome dell'opzione specificato.
+    Obtiene la especificación para el nombre de opción especificado.
     """
-    # Assuming there's a dictionary that holds command options
-    command_options = {
-        'command1': {'arg1': 'spec1', 'arg2': 'spec2'},
-        'command2': {'arg1': 'spec3', 'arg2': 'spec4'},
+    # Aquí se asume que hay un diccionario que contiene las especificaciones de las opciones
+    option_specs = {
+        'command1': {
+            'arg1': {'type': 'string', 'required': True},
+            'arg2': {'type': 'int', 'required': False}
+        },
+        'command2': {
+            'arg1': {'type': 'bool', 'required': True},
+            'arg2': {'type': 'string', 'required': True}
+        }
     }
     
-    if command_name in command_options:
-        if argument_name in command_options[command_name]:
-            return command_options[command_name][argument_name]
+    # Verificar si el comando existe
+    if command_name in option_specs:
+        # Verificar si el argumento existe para el comando
+        if argument_name in option_specs[command_name]:
+            return option_specs[command_name][argument_name]
     
+    # Si no se encuentra la especificación, devolver None o lanzar una excepción
     return None

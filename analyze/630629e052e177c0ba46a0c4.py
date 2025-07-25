@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
-    Analizza il webfinger di Diaspora, che può essere in formato JSON (nuovo) o in formato XRD (vecchio).
+    Analiza el webfinger de Diaspora, que puede estar en formato JSON (nuevo) o en formato XRD (antiguo).
 
     [https://diaspora.github.io/diaspora_federation/discovery/webfinger.html](https://diaspora.github.io/diaspora_federation/discovery/webfinger.html)
     """

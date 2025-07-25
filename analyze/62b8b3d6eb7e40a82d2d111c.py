@@ -1,21 +1,23 @@
 def _normalizeargs(sequence, output=None):
     """
-    Normalizza gli argomenti della dichiarazione
+    Normalizar argumentos de declaración
 
-    Gli argomenti di normalizzazione possono contenere Dichiarazioni, tuple o singole
-    interfacce.
+    Los argumentos de normalización pueden contener Declaraciones, tuplas o interfaces individuales.
 
-    Qualsiasi cosa diversa da interfacce individuali o specifiche di implementazione verrà espansa.
+    Cualquier cosa que no sean interfaces individuales o especificaciones de implementación será expandida.
     """
-    if output is None:
-        output = []
-
+    normalized = []
+    
     for item in sequence:
-        if isinstance(item, tuple):
-            output.extend(_normalizeargs(item))
-        elif isinstance(item, (list, set)):
-            output.extend(_normalizeargs(list(item)))
+        if isinstance(item, (tuple, list)):
+            normalized.extend(_normalizeargs(item, output))
+        elif isinstance(item, str) or hasattr(item, '__interface__'):
+            normalized.append(item)
         else:
-            output.append(item)
-
-    return output
+            # Expand the item if it's not a valid interface or declaration
+            normalized.append(str(item))
+    
+    if output is not None:
+        output.extend(normalized)
+    
+    return normalized

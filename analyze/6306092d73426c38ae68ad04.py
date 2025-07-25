@@ -1,9 +1,9 @@
 def get_parser_option_specs(self, command_name):
     """
-    Ottiene tutte le opzioni per il comando specificato
+    Obtiene todas las opciones para el comando especificado.
 
-    :param command_name: il nome del comando (main, virsh, ospd, ecc...)
-    :return: la lista di tutte le opzioni del comando
+    :param command_name: el nombre del comando (main, virsh, ospd, etc...)
+    :return: la lista de todas las opciones del comando
     """
     options = {
         'main': ['--help', '--version', '--verbose'],

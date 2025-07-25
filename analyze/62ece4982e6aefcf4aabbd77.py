@@ -2,12 +2,11 @@ import datetime
 
 def parse_frequency(frequency):
     """
-    Dato un valore di frequenza sotto forma di stringa contenente un numero e un'unità di tempo,
-    restituisci un'istanza corrispondente di datetime.timedelta o None se la frequenza è None o "always".
+    Dado un string de frecuencia con un número y una unidad de tiempo, devuelve una instancia correspondiente de 'datetime.timedelta' o 'None' si la frecuencia es 'None' o "always".
 
-    Ad esempio, dato "3 weeks", restituisci datetime.timedelta(weeks=3).
+    Por ejemplo, dado "3 weeks", devuelve datetime.timedelta(weeks=3).
 
-    Genera un'eccezione ValueError se la frequenza fornita non può essere analizzata.
+    Lanza ValueError si la frecuencia proporcionada no puede ser analizada
     """
     if frequency is None or frequency.lower() == "always":
         return None
@@ -15,18 +14,22 @@ def parse_frequency(frequency):
     units = {
         'seconds': 'seconds',
         'second': 'seconds',
+        's': 'seconds',
         'minutes': 'minutes',
         'minute': 'minutes',
+        'm': 'minutes',
         'hours': 'hours',
         'hour': 'hours',
+        'h': 'hours',
         'days': 'days',
         'day': 'days',
         'weeks': 'weeks',
         'week': 'weeks',
+        'w': 'weeks',
         'months': 'days',  # Approximation: 1 month = 30 days
-        'month': 'days',
-        'years': 'days',   # Approximation: 1 year = 365 days
-        'year': 'days'
+        'month': 'days',    # Approximation: 1 month = 30 days
+        'years': 'days',    # Approximation: 1 year = 365 days
+        'year': 'days'      # Approximation: 1 year = 365 days
     }
 
     parts = frequency.split()

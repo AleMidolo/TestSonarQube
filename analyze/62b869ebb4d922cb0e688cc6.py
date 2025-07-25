@@ -2,23 +2,22 @@ def update_last_applied_manifest_list_from_resp(
     last_applied_manifest, observer_schema, response
 ):
     """
-    Insieme alla funzione :func:``update_last_applied_manifest_dict_from_resp``, 
-    questa funzione viene chiamata ricorsivamente per aggiornare un 
-    ``last_applied_manifest`` parziale a partire da una risposta parziale di Kubernetes.
+    Junto con :func:``update_last_applied_manifest_dict_from_resp``, esta
+    función se llama de forma recursiva para actualizar un ``last_applied_manifest``
+    parcial a partir de una respuesta parcial de Kubernetes.
 
-    Argomenti:
-        last_applied_manifest (list): ``last_applied_manifest`` parziale in fase di aggiornamento.
-        observer_schema (list): ``observer_schema`` parziale.
-        response (list): risposta parziale dall'API di Kubernetes.
+    Argumentos:
+        last_applied_manifest (list): ``last_applied_manifest`` parcial que se
+            está actualizando.
+        observer_schema (list): ``observer_schema`` parcial.
+        response (list): respuesta parcial de la API de Kubernetes.
 
-    Questa funzione attraversa tutti i campi osservati e inizializza il loro valore 
-    in ``last_applied_manifest`` se non sono ancora presenti.
+    Esta función recorre todos los campos observados e inicializa su valor en
+    ``last_applied_manifest`` si aún no están presentes.
     """
-    for schema in observer_schema:
-        field = schema.get('field')
-        if field not in last_applied_manifest:
-            last_applied_manifest[field] = response.get(field, None)
-        if isinstance(schema.get('children'), list):
-            update_last_applied_manifest_list_from_resp(
-                last_applied_manifest[field], schema['children'], response.get(field, {})
-            )
+    for schema_item in observer_schema:
+        field_name = schema_item.get('name')
+        if field_name not in last_applied_manifest:
+            last_applied_manifest[field_name] = response.get(field_name, None)
+    
+    return last_applied_manifest

@@ -2,17 +2,15 @@ import os
 
 def _resolve_string(matcher):
     """
-    Ottieni il valore dall'ambiente dato un matcher che contiene un nome e un valore predefinito opzionale.  
-    Se la variabile non è definita nell'ambiente e non viene fornito alcun valore predefinito, viene generato un errore.
+    Obtener el valor del entorno dado un matcher que contiene un nombre y un valor predeterminado opcional.  
+    Si la variable no está definida en el entorno y no se proporciona un valor predeterminado, se genera un Error.
     """
-    name, default_value = matcher.get('name'), matcher.get('default')
+    name = matcher.get('name')
+    default_value = matcher.get('default', None)
     
-    value = os.getenv(name)
+    value = os.getenv(name, default_value)
     
     if value is None:
-        if default_value is not None:
-            return default_value
-        else:
-            raise ValueError(f"Environment variable '{name}' is not defined and no default value provided.")
+        raise ValueError(f"La variable de entorno '{name}' no está definida y no se proporcionó un valor predeterminado.")
     
     return value

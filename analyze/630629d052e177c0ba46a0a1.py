@@ -1,30 +1,29 @@
-def verify_relayable_signature(public_key, doc, signature):
+def verificar_firma_reenviable(clave_publica, documento, firma):
     """
-    Verifica gli elementi XML firmati per avere la certezza che l'autore dichiarato abbia effettivamente generato questo messaggio.
+    Verifica los elementos XML firmados para tener confianza de que el autor declarado realmente generó este mensaje.
     """
     from lxml import etree
-    from xmlsec import SignatureContext, verify, KeyData, Key
+    from xmlsec import SignatureContext, Key, constants
 
-    # Parse the XML document
-    root = etree.fromstring(doc)
+    # Cargar el documento XML
+    doc = etree.fromstring(documento)
 
-    # Create a signature context
+    # Crear un contexto de firma
     ctx = SignatureContext()
 
-    # Load the public key
-    key = Key.from_string(public_key, KeyData.KeyFormat.PEM)
+    # Cargar la clave pública
+    key = Key.from_string(clave_publica, constants.KeyDataFormatPem, constants.KeyTypePublic)
     ctx.key = key
 
-    # Find the signature node in the XML
-    signature_node = root.find('.//{http://www.w3.org/2000/09/xmldsig#}Signature')
+    # Buscar la firma en el documento
+    signature_node = doc.find('.//{http://www.w3.org/2000/09/xmldsig#}Signature')
 
     if signature_node is None:
-        raise ValueError("Signature element not found in the document.")
+        raise ValueError("No se encontró la firma en el documento.")
 
-    # Verify the signature
+    # Verificar la firma
     try:
-        verify(signature_node, ctx)
+        ctx.verify(signature_node)
         return True
     except Exception as e:
-        print(f"Signature verification failed: {e}")
         return False

@@ -1,31 +1,29 @@
 def get_nested_custom_and_control_args(self, args):
     """
-    Suddivide gli argomenti di input in controlli nidificati e personalizzati.
+    Divide los argumentos de entrada en controlados, anidados y personalizados.
 
-    Argomenti di controllo: controllano il comportamento dell'IR. Questi argomenti
-        non saranno inseriti nel file spec yml.
-    Argomenti nidificati: sono utilizzati dai playbook di Ansible e saranno inseriti
-        nel file spec yml.
-    Argomenti personalizzati: variabili Ansible personalizzate da utilizzare al posto
-        dell'uso normale degli argomenti nidificati.
+    Argumentos de control: controlan el comportamiento de IR. Estos argumentos no se incluirán en el archivo spec yml.
+    Argumentos anidados: son utilizados por los playbooks de Ansible y se incluirán en el archivo spec yml.
+    Argumentos personalizados: Variables personalizadas de Ansible que se usarán en lugar del uso normal de argumentos anidados.
 
-    :param args: la lista raccolta di argomenti.
-    :return: (dict, dict): dizionari piatti (control_args, nested_args)
+    :param args: la lista recopilada de argumentos.
+    :return: (dict, dict): diccionarios planos (control_args, nested_args)
     """
     control_args = {}
     nested_args = {}
-    
+    custom_args = {}
+
     for arg in args:
         if isinstance(arg, dict):
             for key, value in arg.items():
-                if key.startswith('control_'):
+                if key.startswith('custom_'):
+                    custom_args[key] = value
+                elif key in ['control_arg1', 'control_arg2']:  # Example control args
                     control_args[key] = value
-                elif key.startswith('nested_'):
-                    nested_args[key] = value
                 else:
-                    nested_args[key] = value  # Treat as custom if not prefixed
+                    nested_args[key] = value
         else:
             # Handle non-dict args if necessary
-            pass
+            continue
 
     return control_args, nested_args

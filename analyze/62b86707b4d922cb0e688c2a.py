@@ -1,16 +1,16 @@
 def on(self, hook):
     """
-    Funzione decorator per aggiungere un nuovo gestore al registro.
+    Función decoradora para agregar un nuevo manejador al registro.
 
-    Argomenti:
-    - `hook` (HookType): Attributo del hook per il quale registrare il gestore.
+    Argumentos:
+    hook (HookType): Atributo del hook para el cual se registrará el manejador.
 
-    Restituisce:
-    - `callable`: Decorator per registrare i listener per il hook specificato.
+    Retorna:
+    callable: Decorador para registrar los listeners para el hook especificado.
     """
     def decorator(func):
-        if hook not in self._hooks:
-            self._hooks[hook] = []
-        self._hooks[hook].append(func)
+        if hook not in self._listeners:
+            self._listeners[hook] = []
+        self._listeners[hook].append(func)
         return func
     return decorator

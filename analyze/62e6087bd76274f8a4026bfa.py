@@ -1,13 +1,13 @@
 def pop_u16(self):
     """
-    Rimuove gli ultimi due byte da `self.data`, restituendoli come un intero senza segno a 16 bit in formato big-endian.
+    Elimina los últimos dos bytes de `self.data`, devolviéndolos como un entero sin signo de 16 bits en formato big-endian.
     """
     if len(self.data) < 2:
-        raise ValueError("Non ci sono abbastanza byte per rimuovere.")
+        raise ValueError("Not enough data to pop 16 bits.")
     
-    # Rimuove gli ultimi due byte
+    # Extraer los últimos dos bytes
     last_two_bytes = self.data[-2:]
+    # Eliminar los últimos dos bytes de self.data
     self.data = self.data[:-2]
-    
-    # Converte i byte in un intero senza segno a 16 bit in formato big-endian
-    return (last_two_bytes[0] << 8) | last_two_bytes[1]
+    # Convertir los bytes a un entero sin signo de 16 bits en formato big-endian
+    return int.from_bytes(last_two_bytes, byteorder='big', signed=False)

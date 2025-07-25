@@ -1,12 +1,13 @@
 def paging(response, max_results):
-    """
-    Restituisce la risposta WAPI pagina per pagina
-        Argomenti: 
-        response (list): Risposta WAPI.  
-        max_results (int): Numero massimo di oggetti da restituire in una singola pagina.  
+    """ 
+    Devuelve la respuesta de WAPI página por página.
 
-        Restituisce: 
-        Oggetto generatore con la risposta WAPI suddivisa pagina per pagina.  
+    Argumentos:
+        response (list): Respuesta de WAPI.
+        max_results (int): Número máximo de objetos que se devolverán en una página.
+
+    Retorna:
+        Objeto generador con la respuesta de WAPI dividida página por página.
     """
     for i in range(0, len(response), max_results):
         yield response[i:i + max_results]

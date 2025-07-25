@@ -1,16 +1,16 @@
 def append_text_to_file(file_name, text_buffer, encoding, overwrite=False):
     """
-    Scrive nel file specificato il buffer di testo fornito.  
-    Crea il file se necessario.  
-    :param file_name: Nome del file.  
+    Escribe en el archivo especificado el búfer de texto proporcionado.  
+    Crea el archivo si es necesario.  
+    :param file_name: Nombre del archivo.  
     :type file_name: str  
-    :param text_buffer: Buffer di testo da scrivere.  
+    :param text_buffer: Búfer de texto a escribir.  
     :type text_buffer: str  
-    :param encoding: La codifica da utilizzare.  
+    :param encoding: La codificación a utilizar.  
     :type encoding: str  
-    :param overwrite: Se impostato a True, il file viene sovrascritto.  
+    :param overwrite: Si es verdadero, el archivo será sobrescrito.  
     :type overwrite: bool  
-    :return: Il numero di byte scritti o un valore inferiore a 0 in caso di errore.  
+    :return: El número de bytes escritos o un valor menor que 0 si ocurre un error.  
     :rtype int  
     """
     try:

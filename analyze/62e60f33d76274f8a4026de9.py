@@ -1,10 +1,10 @@
-def dehydrate_point(value):
+def dehydrate_point(value):  
     """
-    Deidratatore per i dati di tipo `Point`.
+    Deshidratador para datos de tipo `Point`.  
 
     :param value:  
     :type value: Point  
-    :return: 
+    :return:  
     """
     if not isinstance(value, Point):
         raise ValueError("Expected a Point instance")

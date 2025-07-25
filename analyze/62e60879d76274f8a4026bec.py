@@ -1,29 +1,22 @@
 def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
           db=None, imp_user=None, dehydration_hooks=None,
           hydration_hooks=None, **handlers):
-    """
-    Aggiunge un messaggio BEGIN alla coda di output.
-
-    :param mode: modalità di accesso per il routing - "READ" o "WRITE" (predefinito)
-    :param bookmarks: iterabile di valori di segnalibro dopo i quali questa transazione dovrebbe iniziare
-    :param metadata: dizionario di metadati personalizzati da allegare alla transazione
-    :param timeout: timeout per l'esecuzione della transazione (in secondi)
-    :param db: nome del database su cui avviare la transazione
-        Richiede Bolt 4.0+.
-    :param imp_user: l'utente da impersonare
-        Richiede Bolt 4.4+.
-    :param dehydration_hooks:
-        Hook per disidratare i tipi (dizionario da tipo (classe) a funzione di disidratazione).
-        Le funzioni di disidratazione ricevono il valore e restituiscono un oggetto di tipo
-        compreso da packstream.
-    :param hydration_hooks:
-        Hook per idratare i tipi (mappatura da tipo (classe) a funzione di idratazione).
-        Le funzioni di idratazione ricevono il valore di tipo compreso da packstream
-        e possono restituire qualsiasi cosa.
-    :param handlers: funzioni gestore passate all'oggetto Response restituito
-    :return: oggetto Response
-    """
-    # Implementazione della logica per aggiungere un messaggio BEGIN alla coda di output
-    response = self._create_response(mode, bookmarks, metadata, timeout, db, imp_user, dehydration_hooks, hydration_hooks, **handlers)
-    self._output_queue.append(response)
-    return response
+    # Create the message to be sent
+    message = {
+        'action': 'BEGIN',
+        'mode': mode or 'WRITE',
+        'bookmarks': bookmarks or [],
+        'metadata': metadata or {},
+        'timeout': timeout,
+        'db': db,
+        'imp_user': imp_user,
+        'dehydration_hooks': dehydration_hooks or {},
+        'hydration_hooks': hydration_hooks or {},
+        'handlers': handlers
+    }
+    
+    # Add the message to the output queue
+    self.output_queue.append(message)
+    
+    # Return a response object
+    return Response(message)

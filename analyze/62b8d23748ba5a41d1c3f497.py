@@ -1,15 +1,17 @@
 def popitem(self):
     """
-    Rimuove e restituisce la coppia `(chiave, valore)` meno frequentemente utilizzata.
+    Elimina y devuelve el par (clave, valor) menos utilizado con mayor frecuencia.
     """
     if not self.data:
         raise KeyError("popitem(): dictionary is empty")
     
-    # Trova la chiave con il valore di accesso minimo
-    min_key = min(self.access_count, key=self.access_count.get)
+    # Find the key with the least frequency
+    least_used_key = min(self.data, key=self.data.get)
     
-    # Rimuove la chiave dalla struttura dati
-    value = self.data.pop(min_key)
-    del self.access_count[min_key]
+    # Get the value associated with that key
+    value = self.data[least_used_key]
     
-    return (min_key, value)
+    # Remove the key-value pair from the dictionary
+    del self.data[least_used_key]
+    
+    return least_used_key, value

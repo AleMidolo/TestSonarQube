@@ -1,16 +1,16 @@
 def _include_groups(self, parser_dict):
     """
-    Risolve la direttiva "include dict" nei file di specifica
+    Resuelve la directiva de inclusión del diccionario en los archivos de especificación.
     """
-    if 'include' in parser_dict:
-        include_files = parser_dict['include']
-        for include_file in include_files:
-            with open(include_file, 'r') as f:
-                included_dict = self._parse_file(f)
-                parser_dict.update(included_dict)
-    return parser_dict
+    included_groups = {}
+    for key, value in parser_dict.items():
+        if isinstance(value, dict) and 'include' in value:
+            included_groups[key] = self._process_inclusion(value['include'])
+        else:
+            included_groups[key] = value
+    return included_groups
 
-def _parse_file(self, file):
-    # Dummy implementation for parsing a file into a dictionary
-    # This should be replaced with actual parsing logic
-    return {}  # Replace with actual parsing logic
+def _process_inclusion(self, include_path):
+    # Aquí se implementaría la lógica para procesar la inclusión
+    # Por ejemplo, cargar un archivo o un grupo de configuraciones
+    return {}  # Retornar un diccionario vacío como un ejemplo

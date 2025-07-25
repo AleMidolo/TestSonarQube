@@ -1,12 +1,9 @@
 def _get_err_indices(self, coord_name):
     """
-    Ottieni gli indici di errore corrispondenti a una coordinata.
+    Obtener los índices de error correspondientes a una coordenada.
     """
-    # Assuming we have a dictionary of coordinates with their error indices
-    error_indices = {
-        'x': [0, 1, 2],
-        'y': [3, 4],
-        'z': [5, 6, 7, 8]
-    }
-    
-    return error_indices.get(coord_name, [])
+    # Suponiendo que self.errors es un diccionario que mapea nombres de coordenadas a listas de índices de error
+    if coord_name in self.errors:
+        return self.errors[coord_name]
+    else:
+        return []

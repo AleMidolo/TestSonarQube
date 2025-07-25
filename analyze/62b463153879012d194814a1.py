@@ -1,6 +1,7 @@
 def add_rendition(self, lang, file_path):
-    """ {
-        "originale": "artigo02.pdf",
+    """
+    {
+        "original": "artigo02.pdf",
         "en": "artigo02-en.pdf",
     }
     """

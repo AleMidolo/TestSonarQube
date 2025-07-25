@@ -1,6 +1,6 @@
 def determineMetaclass(bases, explicit_mc=None):
     """
-    Determina la metaclasse a partire da una o più basi e da un'eventuale __metaclass__ esplicita.
+    Determina la metaclase a partir de una o más clases base y un __metaclass__ explícito opcional.
     """
     if explicit_mc is not None:
         return explicit_mc

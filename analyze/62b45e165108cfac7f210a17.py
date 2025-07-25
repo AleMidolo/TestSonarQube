@@ -1,10 +1,10 @@
 def get_logical_path_map(inventory, version):
     """
-    Ottiene una mappa dei percorsi logici nello stato verso i file su disco per una determinata versione nell'inventario.
+    Obtén un mapa de las rutas lógicas en el estado hacia los archivos en disco para una versión específica en el inventario.
 
-    Restituisce un dizionario: `logical_path_in_state -> set(content_files)`
+    Devuelve un diccionario: `logical_path_in_state -> set(content_files)`
 
-    Il set di `content_files` può includere riferimenti a file duplicati presenti in versioni successive rispetto alla versione descritta.
+    El conjunto de `content_files` puede incluir referencias a archivos duplicados en versiones posteriores a la versión que se está describiendo.
     """
     logical_path_map = {}
     

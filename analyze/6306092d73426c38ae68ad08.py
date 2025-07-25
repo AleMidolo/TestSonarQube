@@ -1,26 +1,18 @@
 def _get_conditionally_required_args(self, command_name, options_spec, args):
     """
-    Elenca gli argomenti con la condizione ``required_when`` soddisfatta.
+    Lista los argumentos con la condición ``required_when`` que coincide.
 
-    :param command_name: il nome del comando.
-    :param options_spec: la lista delle opzioni specifiche del comando.
-    :param args: gli argomenti di input ricevuti.
-    :return: list, lista dei nomi degli argomenti con la condizione
-        ``required_when`` soddisfatta.
+    :param command_name: el nombre del comando.
+    :param options_spec: la lista de opciones de especificación del comando.
+    :param args: los argumentos de entrada recibidos.
+    :return: list, lista de nombres de argumentos que coinciden con la condición ``required_when``.
     """
     required_args = []
     
     for option in options_spec:
         if 'required_when' in option:
             condition = option['required_when']
-            if self._evaluate_condition(condition, args):
+            if condition(args):
                 required_args.append(option['name'])
     
     return required_args
-
-def _evaluate_condition(self, condition, args):
-    # Implementa la logica per valutare la condizione
-    # Restituisce True se la condizione è soddisfatta, altrimenti False
-    # Questo è un esempio di implementazione, la logica specifica dipenderà
-    # dai dettagli della condizione e degli argomenti.
-    return all(arg in args for arg in condition.get('args', []))

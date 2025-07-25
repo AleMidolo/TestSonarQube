@@ -1,12 +1,13 @@
 def validate_min_max_args(self, args):
     """
-    Verifica se il valore degli argomenti è compreso tra i valori minimo e massimo.
+    Verifica si el valor de los argumentos está entre los valores mínimo y máximo.
 
-    :param args: Gli argomenti ricevuti.
+    :param args: Los argumentos recibidos.
     """
-    min_value = self.min_value  # Assuming min_value is defined in the class
-    max_value = self.max_value  # Assuming max_value is defined in the class
-    
+    min_value = self.min_value  # Suponiendo que min_value es un atributo de la clase
+    max_value = self.max_value  # Suponiendo que max_value es un atributo de la clase
+
     for arg in args:
         if not (min_value <= arg <= max_value):
-            raise ValueError(f"Il valore {arg} non è compreso tra {min_value} e {max_value}.")
+            return False
+    return True

@@ -2,7 +2,7 @@ import re
 
 def get_pattern(pattern, strip=True):
     """
-    Questo metodo converte la stringa fornita in un oggetto pattern regex
+    Este método convierte la cadena proporcionada en un objeto de patrón regex.
     """
     if strip:
         pattern = pattern.strip()

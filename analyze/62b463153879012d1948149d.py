@@ -1,33 +1,29 @@
 def _explore_folder(folder):  
     """
-    Ottiene i dati dei pacchetti dalla cartella  
+    Obtiene los datos de los paquetes desde la carpeta.  
 
-    Raggruppa i file in base al loro nome base XML e restituisce i dati in formato dizionario.  
+    Agrupa los archivos por el nombre base de su archivo XML y devuelve los datos en formato de diccionario.  
 
-    Parametri  
+    Parámetros  
     ----------  
     folder : str  
-        Cartella del pacchetto  
+        Carpeta del paquete  
 
-    Restituisce  
+    Retorna  
     -------  
     dict  
     """
     import os
     import xml.etree.ElementTree as ET
 
-    package_data = {}
-
+    data = {}
+    
     for filename in os.listdir(folder):
         if filename.endswith('.xml'):
             base_name = os.path.splitext(filename)[0]
             file_path = os.path.join(folder, filename)
-
-            try:
-                tree = ET.parse(file_path)
-                root = tree.getroot()
-                package_data[base_name] = root
-            except ET.ParseError as e:
-                print(f"Error parsing {file_path}: {e}")
-
-    return package_data
+            tree = ET.parse(file_path)
+            root = tree.getroot()
+            data[base_name] = {child.tag: child.text for child in root}
+    
+    return data
