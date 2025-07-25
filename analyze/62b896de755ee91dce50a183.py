@@ -26,9 +26,6 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         funzione che accetta due parametri (``tzname`` e ``tzoffset``) e restituisce
         un fuso orario.
 
-        I fusi orari a cui vengono mappati i nomi possono essere un offset intero
-        rispetto all'UTC in secondi o un oggetto :class:`tzinfo`.
-
     :param \*\*kwargs:
         Argomenti keyword passati a ``_parse()``.
 

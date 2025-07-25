@@ -27,10 +27,7 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
     # Add additional ansible arguments if specified
     if ansible_args:
         for key, value in ansible_args.items():
-            if value is True:
-                command.append(f"--{key}")
-            else:
-                command.extend([f"--{key}", str(value)])
+            command.extend([f"--{key}", str(value)])
 
     # Execute the command
     result = subprocess.run(command, capture_output=True, text=True)

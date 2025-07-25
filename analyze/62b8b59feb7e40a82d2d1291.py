@@ -1,6 +1,6 @@
 def _getTargetClass(self):
     """
-    Definire questo metodo per restituire l'implementazione in uso,
+    Definire questo metodo per restituire l'implementazione in uso, 
     senza il suffisso 'Py' o 'Fallback'.
     """
     class_name = self.__class__.__name__

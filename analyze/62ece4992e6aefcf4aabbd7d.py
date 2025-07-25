@@ -16,23 +16,20 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     extra_env : dict[str, str]
         Eventuali variabili d'ambiente aggiuntive da impostare per il sottoprocesso.
     """
-    # Ottieni il modulo e il nome della funzione
+    # Costruisci il comando per eseguire la funzione
     module_name = func.__module__
     func_name = func.__name__
-
-    # Costruisci il comando per eseguire la funzione
     command = [sys.executable, '-c', f'from {module_name} import {func_name}; {func_name}()']
-
-    # Aggiungi eventuali argomenti aggiuntivi
-    if args:
-        command.extend(args)
-
+    
+    # Aggiungi gli argomenti aggiuntivi
+    command.extend(args)
+    
     # Prepara l'ambiente
     env = os.environ.copy()
     if extra_env:
         env.update(extra_env)
-
+    
     # Esegui il sottoprocesso
     result = subprocess.run(command, env=env, timeout=timeout, capture_output=True, text=True)
-
+    
     return result

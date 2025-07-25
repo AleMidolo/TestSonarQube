@@ -1,6 +1,6 @@
 def vertex3tuple(vertices):
     """
-    Restituisce 3 punti per ogni vertice del poligono. Questo includerà il vertice e i 2 punti su entrambi i lati del vertice.
+    Restituisce 3 punti per ogni vertice del poligono. Questo includerà il vertice e i 2 punti su entrambi i lati del vertice::
 
     Esempio:  
     Poligono con vertici ABCD  

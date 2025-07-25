@@ -8,5 +8,14 @@ def oneline(script, separator=" && "):
     :return: Una stringa che rappresenta lo script su una sola riga.
     """
     if isinstance(script, str):
-        script = script.splitlines()
-    return separator.join(line.strip() for line in script if line.strip())
+        lines = script.splitlines()
+    elif isinstance(script, list):
+        lines = script
+    else:
+        raise TypeError("Il parametro 'script' deve essere una stringa o una lista di stringhe.")
+    
+    # Rimuove le righe vuote e gli spazi bianchi in eccesso
+    lines = [line.strip() for line in lines if line.strip()]
+    
+    # Unisce le righe con il separatore specificato
+    return separator.join(lines)

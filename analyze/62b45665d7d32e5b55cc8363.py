@@ -5,17 +5,17 @@ def make_parsers():
     import argparse
 
     # Creazione del parser principale
-    parser = argparse.ArgumentParser(description="Parser principale")
+    main_parser = argparse.ArgumentParser(description="Parser principale")
 
     # Creazione dei sottoparser
-    subparsers = parser.add_subparsers(dest="command", help="Comandi disponibili")
+    subparsers = main_parser.add_subparsers(title="comandi", dest="comando")
 
-    # Sottoparser per il comando 'foo'
-    parser_foo = subparsers.add_parser('foo', help='Esegui il comando foo')
-    parser_foo.add_argument('--bar', type=int, help='Argomento bar per foo')
+    # Esempio di sottoparser 1
+    parser_1 = subparsers.add_parser('comando1', help='Descrizione del comando 1')
+    parser_1.add_argument('arg1', type=str, help='Argomento 1 per comando1')
 
-    # Sottoparser per il comando 'baz'
-    parser_baz = subparsers.add_parser('baz', help='Esegui il comando baz')
-    parser_baz.add_argument('--qux', type=str, help='Argomento qux per baz')
+    # Esempio di sottoparser 2
+    parser_2 = subparsers.add_parser('comando2', help='Descrizione del comando 2')
+    parser_2.add_argument('arg2', type=int, help='Argomento 2 per comando2')
 
-    return parser, subparsers
+    return main_parser, subparsers

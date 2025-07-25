@@ -12,11 +12,12 @@ def protocol_handlers(cls, protocol_version=None):
         per tutte le versioni di protocollo rilevanti e supportate
     :raise TypeError: se la versione del protocollo non è passata come una tupla
     """
-    # Esempio di gestori di protocollo disponibili
+    # Dizionario che mappa le versioni del protocollo ai gestori
     available_handlers = {
-        (3, 5): "BoltV3_5Handler",
-        (4, 0): "BoltV4_0Handler",
-        (4, 1): "BoltV4_1Handler",
+        (3, 5): cls.BoltV3_5Handler,
+        (4, 0): cls.BoltV4_0Handler,
+        (4, 1): cls.BoltV4_1Handler,
+        # Aggiungi altre versioni supportate qui
     }
 
     if protocol_version is not None:

@@ -10,7 +10,7 @@ def get_parser_option_specs(self, command_name):
 
     if command_name in self._command_options:
         return self._command_options[command_name]
-    
+
     # Simulate fetching options for the command
     # This is a placeholder implementation
     options = []
@@ -20,8 +20,6 @@ def get_parser_option_specs(self, command_name):
         options = ["--connect", "--list", "--details"]
     elif command_name == "ospd":
         options = ["--config", "--log-level", "--daemon"]
-    else:
-        options = ["--option1", "--option2", "--option3"]
-    
+
     self._command_options[command_name] = options
     return options

@@ -7,9 +7,9 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
     parsed_args = {}
     remaining_args = list(unparsed_arguments)
     
-    for subparser_name, parser in subparsers.items():
+    for subparser_name, subparser in subparsers.items():
         try:
-            args, remaining = parser.parse_known_args(remaining_args)
+            args, remaining = subparser.parse_known_args(remaining_args)
             parsed_args[subparser_name] = args
             remaining_args = remaining
         except SystemExit:

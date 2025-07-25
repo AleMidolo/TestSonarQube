@@ -17,10 +17,10 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     
     if check_digests:
         # Example: Check digests of objects
-        pass  # Placeholder for actual digest checking logic
+        pass
     
     if show_warnings:
         # Example: Show warnings if any
-        pass  # Placeholder for actual warning logic
+        pass
     
     return num_objects, good_objects

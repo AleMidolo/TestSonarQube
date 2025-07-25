@@ -1,5 +1,4 @@
 import json
-from urllib.parse import urljoin
 
 def get_nodeinfo_well_known_document(url, document_path=None):
     """
@@ -7,23 +6,26 @@ def get_nodeinfo_well_known_document(url, document_path=None):
 
     Consulta la specifica: [http://nodeinfo.diaspora.software](http://nodeinfo.diaspora.software)
 
-    :param url: L'URL base completo con protocollo, ad esempio `https://example.com  
+    :param url: L'URL base completo con protocollo, ad esempio `https://example.com`  
     :param document_path: Percorso personalizzato per il documento NodeInfo, se fornito (opzionale)  
     :returns: dict
     """
     if document_path is None:
         document_path = "/.well-known/nodeinfo"
     
-    full_url = urljoin(url, document_path)
+    nodeinfo_url = f"{url}{document_path}"
     
-    # Simulazione di un documento NodeInfo ben noto
-    nodeinfo_document = {
+    well_known_document = {
         "links": [
             {
                 "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
-                "href": urljoin(url, "/nodeinfo/2.0")
+                "href": f"{nodeinfo_url}/2.0"
+            },
+            {
+                "rel": "http://nodeinfo.diaspora.software/ns/schema/2.1",
+                "href": f"{nodeinfo_url}/2.1"
             }
         ]
     }
     
-    return nodeinfo_document
+    return well_known_document

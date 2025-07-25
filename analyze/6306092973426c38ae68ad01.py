@@ -3,8 +3,8 @@ def get_deprecated_args(self):
     Restituzione di un dizionario con opzioni che deprecano altre.
     """
     deprecated_args = {
-        'old_option_1': 'new_option_1',
-        'old_option_2': 'new_option_2',
-        'old_option_3': 'new_option_3'
+        'old_arg1': 'new_arg1',
+        'old_arg2': 'new_arg2',
+        'old_arg3': 'new_arg3'
     }
     return deprecated_args
