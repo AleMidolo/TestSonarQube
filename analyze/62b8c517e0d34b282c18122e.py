@@ -12,21 +12,23 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     """
     import traceback
     
-    # Ottieni la traccia dello stack
-    stack_trace = traceback.format_exc(limit=max_level)
+    # Ottieni lo stack trace
+    stack_trace = traceback.format_exc()
     
-    # Limita il percorso del file se necessario
+    # Limita il numero di livelli dello stack
+    stack_lines = stack_trace.splitlines()
+    if len(stack_lines) > max_level * 2:  # Ogni livello ha 2 righe
+        stack_lines = stack_lines[:max_level * 2]
+        stack_lines.append("... (stack trace troncato)")
+    
+    # Limita il numero di livelli del percorso
+    formatted_trace = "\n".join(stack_lines)
     if max_path_level > 0:
-        lines = stack_trace.splitlines()
-        for i in range(len(lines)):
-            if "File" in lines[i]:
-                path_parts = lines[i].split(",")[0].split("File ")[1].strip().split("/")
-                if len(path_parts) > max_path_level:
-                    lines[i] = lines[i].replace("/".join(path_parts), "/".join(path_parts[-max_path_level:]))
-        stack_trace = "\n".join(lines)
+        formatted_trace = "\n".join(stack_lines[:max_path_level * 2])
+        formatted_trace += "\n... (percorso troncato)"
     
     # Aggiungi il messaggio dell'eccezione
-    exception_message = f"Exception: {str(e)}\n"
-    full_message = exception_message + stack_trace
+    exception_message = str(e)
+    formatted_trace = f"{exception_message}\n{formatted_trace}"
     
-    return full_message
+    return formatted_trace

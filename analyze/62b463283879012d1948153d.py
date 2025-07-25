@@ -1,9 +1,13 @@
 def match_pubdate(node, pubdate_xpaths):
     """
     Restituisce la prima corrispondenza nella lista `pubdate_xpaths`.
+    
+    :param node: L'elemento XML/HTML da cui cercare.
+    :param pubdate_xpaths: Lista di percorsi XPath da provare.
+    :return: Il primo valore trovato corrispondente a uno degli XPath, o None se nessuno corrisponde.
     """
     for xpath in pubdate_xpaths:
-        match = node.xpath(xpath)
-        if match:
-            return match[0]
+        result = node.xpath(xpath)
+        if result:
+            return result[0]
     return None

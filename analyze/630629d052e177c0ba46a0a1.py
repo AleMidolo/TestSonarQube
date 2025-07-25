@@ -13,14 +13,14 @@ def verify_relayable_signature(public_key, doc, signature):
     :param signature: La firma del documento.
     :return: True se la firma è valida, False altrimenti.
     """
+    # Carica la chiave pubblica
+    pub_key = serialization.load_pem_public_key(
+        public_key.encode(),
+        backend=default_backend()
+    )
+    
+    # Verifica la firma
     try:
-        # Carica la chiave pubblica
-        pub_key = serialization.load_pem_public_key(
-            public_key.encode(),
-            backend=default_backend()
-        )
-        
-        # Verifica la firma
         pub_key.verify(
             signature,
             doc.encode(),
@@ -32,5 +32,4 @@ def verify_relayable_signature(public_key, doc, signature):
         )
         return True
     except Exception as e:
-        print(f"Errore durante la verifica della firma: {e}")
         return False

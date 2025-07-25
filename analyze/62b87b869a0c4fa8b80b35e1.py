@@ -3,15 +3,15 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     """
     Convert a histogram to a graph.
 
-    Args:
-        hist: The histogram to convert.
-        make_value: A function to set the value of a graph point. Defaults to the bin content.
-        get_coordinate: Defines the coordinate of a graph point. Can be "left", "right", or "middle".
-        field_names: Names of the graph fields. Must match the result dimension.
-        scale: The scale of the graph. If True, uses the histogram's scale.
+    Parameters:
+    hist (Histogram): The input histogram.
+    make_value (callable): Function to set the value of a graph point. Defaults to bin content.
+    get_coordinate (str): Defines the coordinate of a graph point. Can be "left", "right", or "middle".
+    field_names (tuple): Names of the graph fields. Must match the result dimension.
+    scale (bool or Scale): The scale of the graph. If True, uses the histogram's scale.
 
     Returns:
-        The resulting graph.
+    Graph: The resulting graph.
     """
     import numpy as np
 
@@ -30,29 +30,23 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         x_coords = bin_edges[:-1]
     elif get_coordinate == "right":
         x_coords = bin_edges[1:]
-    elif get_coordinate == "middle":
+    else:  # middle
         x_coords = (bin_edges[:-1] + bin_edges[1:]) / 2
 
-    # Apply make_value to each bin content
+    # Apply make_value to bin contents
     y_values = [make_value(bin_) for bin_ in bin_contents]
 
     # Ensure y_values is a list of tuples or lists
     if not all(isinstance(y, (tuple, list)) for y in y_values):
         y_values = [(y,) for y in y_values]
 
-    # Check if field_names match the dimension of y_values
-    if len(field_names) != len(y_values[0]) + 1:
-        raise ValueError("field_names must match the dimension of the result")
+    # Combine x_coords and y_values into graph data
+    graph_data = []
+    for x, y in zip(x_coords, y_values):
+        graph_data.append((x,) + tuple(y))
 
     # Create the graph
-    graph = []
-    for x, y in zip(x_coords, y_values):
-        point = (x,) + tuple(y)
-        graph.append(point)
+    from some_graph_library import Graph  # Replace with actual graph library
+    graph = Graph(data=graph_data, field_names=field_names, scale=scale)
 
-    # Set the scale if provided
-    if scale is True:
-        scale = hist.scale
-
-    # Return the graph as a structured array or similar
-    return np.array(graph, dtype=[(name, 'float64') for name in field_names])
+    return graph

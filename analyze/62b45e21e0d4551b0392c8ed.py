@@ -18,7 +18,7 @@ def find_path_type(path):
     if os.path.isfile(path):
         return "file"
     
-    namaste_files = [f for f in os.listdir(path) if f.startswith('0=')]
+    namaste_files = [f for f in os.listdir(path) if f.startswith("0=")]
     
     if not namaste_files:
         return "La directory non contiene file Namaste."
@@ -27,9 +27,9 @@ def find_path_type(path):
     with open(os.path.join(path, namaste_file), 'r') as f:
         content = f.read().strip()
     
-    if content == "ocfl_object_1.0":
-        return "object"
-    elif content == "ocfl_1.0":
+    if content == "ocfl_1.0":
         return "root"
+    elif content == "ocfl_object_1.0":
+        return "object"
     else:
-        return f"Tipo di Namaste non riconosciuto: {content}"
+        return f"Tipo di file Namaste sconosciuto: {content}"

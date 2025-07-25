@@ -2,14 +2,6 @@ def get_config():
     """
     Crea, popola e restituisci l'oggetto VersioneerConfig()
     """
-    class VersioneerConfig:
-        def __init__(self):
-            self.version = "1.0.0"
-            self.author = "Unknown"
-            self.description = "Default configuration for Versioneer"
-
-        def __repr__(self):
-            return f"VersioneerConfig(version={self.version}, author={self.author}, description={self.description})"
-
-    config = VersioneerConfig()
+    from versioneer import get_config as get_versioneer_config
+    config = get_versioneer_config()
     return config

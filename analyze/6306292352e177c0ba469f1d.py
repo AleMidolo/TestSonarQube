@@ -14,4 +14,4 @@ def find_tags(text: str, replacer: Callable = None) -> Tuple[Set, str]:
     # Regex per trovare i tag (parole che iniziano con '#')
     tag_pattern = re.compile(r'#\w+')
     
-    # Regex per trovare i blocchi di codice (contenuti tra
+    # Regex per ignorare i tag all'interno dei blocchi di codice (
