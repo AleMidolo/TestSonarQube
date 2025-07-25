@@ -16,11 +16,9 @@ def protocol_handlers(cls, protocol_version=None):
         raise TypeError("protocol_version must be a tuple")
 
     handlers = {
-        (3, 0): "HandlerFor3_0",
-        (3, 1): "HandlerFor3_1",
-        (3, 2): "HandlerFor3_2",
         (3, 5): "HandlerFor3_5",
-        # Add more protocol versions and their handlers as needed
+        (4, 0): "HandlerFor4_0",
+        (4, 1): "HandlerFor4_1",
     }
 
     if protocol_version is not None:

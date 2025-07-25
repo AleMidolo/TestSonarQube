@@ -18,15 +18,23 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
         Any additional environment variables to be set for the subprocess.
     """
     def target():
-        if extra_env:
+        # Set up the environment
+        if extra_env is not None:
             os.environ.update(extra_env)
-        # Call the function with the provided arguments
-        func(*args)
+        
+        # Prepare the arguments for the function
+        func_args = [func.__module__, func.__name__] + list(args)
+        
+        # Call the function
+        return func(*args)
 
+    # Create a subprocess
     process = multiprocessing.Process(target=target)
     process.start()
+    
+    # Wait for the process to complete or timeout
     process.join(timeout)
-
+    
     if process.is_alive():
         process.terminate()
         process.join()
