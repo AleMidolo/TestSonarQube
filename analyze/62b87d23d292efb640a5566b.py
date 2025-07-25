@@ -10,7 +10,7 @@ def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=Fal
         cmd = [comandi]
     else:
         cmd = list(comandi)
-    
+        
     if argomenti:
         if isinstance(argomenti, str):
             cmd.append(argomenti)

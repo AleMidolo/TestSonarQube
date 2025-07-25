@@ -27,12 +27,16 @@ def _convert_non_cli_args(self, parser_name, values_dict):
             if arg_type == bool:
                 if isinstance(value, str):
                     values_dict[arg_name] = value.lower() in ('true', 't', 'yes', 'y', '1')
-            # Convert numbers
+            # Convert numeric types
             elif arg_type in (int, float):
                 values_dict[arg_name] = arg_type(value)
             # Convert lists
             elif arg_type == list and isinstance(value, str):
                 values_dict[arg_name] = value.split(',')
+            # Convert other types
+            else:
+                values_dict[arg_name] = arg_type(value)
+                
         except (ValueError, TypeError):
-            # If conversion fails, keep original string value
+            # Keep original value if conversion fails
             continue

@@ -18,43 +18,38 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
             
         @staticmethod
         def validate(value):
-            try:
-                # Check if value matches specification
-                if 'pattern' in spec_option:
-                    import re
-                    if not re.match(spec_option['pattern'], value):
-                        raise ValueError(f"Value does not match pattern {spec_option['pattern']}")
-                
-                # Check value constraints
-                if 'min' in spec_option and value < spec_option['min']:
-                    raise ValueError(f"Value must be >= {spec_option['min']}")
-                if 'max' in spec_option and value > spec_option['max']:
-                    raise ValueError(f"Value must be <= {spec_option['max']}")
+            # Validate based on spec_option
+            if 'pattern' in spec_option:
+                import re
+                if not re.match(spec_option['pattern'], value):
+                    raise ValueError(f"Invalid format for {option_name}")
                     
-                # Check allowed values
-                if 'choices' in spec_option and value not in spec_option['choices']:
-                    raise ValueError(f"Value must be one of {spec_option['choices']}")
+            if 'choices' in spec_option:
+                if value not in spec_option['choices']:
+                    raise ValueError(f"Value must be one of: {spec_option['choices']}")
                     
-                return value
-                
-            except Exception as e:
-                raise argparse.ArgumentTypeError(str(e))
+            if 'min' in spec_option:
+                try:
+                    if float(value) < spec_option['min']:
+                        raise ValueError(f"Value must be >= {spec_option['min']}")
+                except ValueError:
+                    raise ValueError("Value must be a number")
+                    
+            if 'max' in spec_option:
+                try:
+                    if float(value) > spec_option['max']:
+                        raise ValueError(f"Value must be <= {spec_option['max']}")
+                except ValueError:
+                    raise ValueError("Value must be a number")
+                    
+            return value
+            
+        def __call__(self, value):
+            validated_value = self.validate(value)
+            return ComplexType(validated_value)
+            
+    # Set the type name
+    ComplexType.__name__ = type_name
     
-    # Create type converter function
-    def type_converter(value):
-        try:
-            # Convert value to appropriate Python type
-            if type_name == 'int':
-                value = int(value)
-            elif type_name == 'float': 
-                value = float(value)
-            elif type_name == 'bool':
-                value = value.lower() in ('true', 't', 'yes', 'y', '1')
-                
-            # Validate converted value
-            return ComplexType.validate(value)
-            
-        except ValueError as e:
-            raise argparse.ArgumentTypeError(f"Invalid {option_name}: {str(e)}")
-            
-    return type_converter
+    # Create instance
+    return ComplexType()

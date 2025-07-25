@@ -13,7 +13,7 @@ def match(filename):
     # Converte il filename in minuscolo per un confronto case-insensitive
     filename = filename.lower()
     
-    # Controlla se il file termina con una delle estensioni supportate
+    # Verifica se il file termina con una delle estensioni supportate
     for ext in supported_extensions:
         if filename.endswith(ext):
             return True

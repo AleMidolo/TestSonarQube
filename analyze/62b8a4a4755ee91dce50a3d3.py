@@ -14,15 +14,14 @@ def fromutc(self, dt):
     
     # Gestione del fold per datetime ambigui
     dst_offset = self.dst(dt)
-    if dst_offset is None:
-        return dt
-        
-    # Se c'è una transizione DST, determina se siamo nel fold
-    std_offset = self.utcoffset(dt) - dst_offset
-    delta = std_offset - utc_offset
+    if dst_offset is not None:
+        # Se c'è un cambio DST, verifica se il datetime è ambiguo
+        standard_offset = self.utcoffset(dt - dst_offset)
+        if standard_offset is not None:
+            # Se gli offset sono diversi, il datetime è ambiguo
+            if standard_offset != utc_offset:
+                # Imposta fold=1 se questo è il primo datetime nell'ambiguità
+                fold = 1 if standard_offset > utc_offset else 0
+                dt = dt.replace(fold=fold)
     
-    if delta:
-        # Se delta è positivo, siamo nel fold (prima occorrenza)
-        dt = dt.replace(fold=delta.total_seconds() > 0)
-        
     return dt

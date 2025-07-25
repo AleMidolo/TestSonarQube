@@ -2,10 +2,10 @@ def vertex3tuple(vertices):
     # Create list to store 3-vertex tuples
     vertex_tuples = []
     
-    # Get length of vertices list
+    # Get number of vertices
     n = len(vertices)
     
-    # Iterate through each vertex
+    # For each vertex index
     for i in range(n):
         # Get previous vertex (wrap around to end if at start)
         prev = vertices[(i-1) % n]

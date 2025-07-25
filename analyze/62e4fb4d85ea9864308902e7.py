@@ -16,7 +16,8 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
                 return (sys.executable,) + cmd
             elif ext == '.sh':
                 # Aggiungi bash come interprete
-                bash_path = 'bash'
-                return (bash_path,) + cmd
+                bash_path = 'C:\\Program Files\\Git\\bin\\bash.exe'
+                if os.path.exists(bash_path):
+                    return (bash_path,) + cmd
                 
     return cmd

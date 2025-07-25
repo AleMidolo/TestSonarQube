@@ -24,25 +24,30 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     if not isinstance(timestr, str):
         raise TypeError("Parser must be given a string or character stream, not %r"
                       % type(timestr).__name__)
-    
+
     # Handle empty string case
     if not timestr:
-        raise ParserError("String cannot be empty")
+        raise ParserError("String is empty")
         
     try:
-        # Call internal _parse method with all arguments
-        res, tokens = self._parse(timestr, default=default, ignoretz=ignoretz,
-                                tzinfos=tzinfos, **kwargs)
+        # Parse the string using internal _parse method
+        res, tokens = self._parse(timestr, **kwargs)
             
-        # If fuzzy_with_tokens is True, return tuple of (datetime, tokens)
-        if kwargs.get('fuzzy_with_tokens', False):
-            return res, tokens
+        if res is None:
+            raise ParserError("String does not contain a date.")
             
-        return res
+        # If default is provided, replace any unspecified items
+        if default is not None:
+            res = self._populate_defaut(res, default)
+            
+        # Create datetime object from parsed components
+        dt = self._build_datetime(res, ignoretz=ignoretz, tzinfos=tzinfos)
         
-    except ValueError as e:
-        # Convert ValueError to ParserError
+        # Return results based on fuzzy_with_tokens setting
+        if kwargs.get('fuzzy_with_tokens', False):
+            return dt, tokens
+        else:
+            return dt
+            
+    except (ValueError, OverflowError) as e:
         raise ParserError(str(e))
-    except OverflowError:
-        # Re-raise OverflowError
-        raise

@@ -29,7 +29,7 @@ def deep_merge_nodes(nodes):
             # Create new merged mapping node
             merged_value = type(value_node)(
                 tag=value_node.tag,
-                value=[(k,v) for _,(k,v) in sorted(existing_dict.items())]
+                value=[(k,v) for k,(k,v) in existing_dict.items()]
             )
             merged[key] = (key_node, merged_value)
             
@@ -37,5 +37,5 @@ def deep_merge_nodes(nodes):
         else:
             merged[key] = (key_node, value_node)
             
-    # Return merged nodes as list of tuples
-    return [(k,v) for _,(k,v) in sorted(merged.items())]
+    # Convert merged dict back to list of tuples
+    return list(merged.values())

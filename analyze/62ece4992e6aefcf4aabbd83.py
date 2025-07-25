@@ -21,18 +21,19 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
         # Build full command with arguments
         full_cmd = shlex.split(cmd) + args
         
-        # Configure subprocess parameters
-        stderr_opt = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
+        # Set stderr handling
+        stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
         
+        # Print command if verbose
         if verbose:
-            print(f"Executing command: {' '.join(full_cmd)}")
+            print(f"Executing: {' '.join(full_cmd)}")
             
         try:
             # Run command
             process = subprocess.Popen(
                 full_cmd,
                 stdout=subprocess.PIPE,
-                stderr=stderr_opt,
+                stderr=stderr,
                 cwd=cwd,
                 env=env,
                 universal_newlines=True
@@ -41,31 +42,28 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
             # Get output
             stdout, stderr = process.communicate()
             
-            # Store results
-            result = {
+            results.append({
                 'command': cmd,
                 'returncode': process.returncode,
-                'stdout': stdout.strip() if stdout else '',
-                'stderr': stderr.strip() if stderr else ''
-            }
-            
-            results.append(result)
+                'stdout': stdout,
+                'stderr': stderr
+            })
             
             if verbose:
-                print(f"Return code: {result['returncode']}")
+                print(f"Return code: {process.returncode}")
                 if stdout:
-                    print(f"Output:\n{result['stdout']}")
+                    print(f"Output:\n{stdout}")
                 if stderr and not hide_stderr:
-                    print(f"Errors:\n{result['stderr']}")
+                    print(f"Error:\n{stderr}")
                     
         except Exception as e:
             if verbose:
-                print(f"Error executing command: {str(e)}")
+                print(f"Error executing {cmd}: {str(e)}")
             results.append({
                 'command': cmd,
                 'returncode': -1,
-                'stdout': '',
+                'stdout': None,
                 'stderr': str(e)
             })
             
-    return results[0] if len(results) == 1 else results
+    return results

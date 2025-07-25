@@ -6,25 +6,26 @@ def _fromutc(self, dt):
     utc_offset = self.utcoffset(dt)
     if utc_offset is None:
         return dt
-    
+
     # Convert to timestamp, add offset and convert back
     ts = (dt.replace(tzinfo=None) - datetime.datetime(1970,1,1)).total_seconds()
     ts += utc_offset.total_seconds()
     
-    # Create new datetime in local time
+    # Create local datetime
     local_dt = datetime.datetime.fromtimestamp(ts, self)
     
     # Check if datetime is ambiguous (in DST transition)
-    dst_offset = self.dst(local_dt)
-    if dst_offset is not None:
-        # Get standard offset
-        std_offset = utc_offset - dst_offset
-        # Check if we're in fold
-        ts_std = ts - dst_offset.total_seconds()
-        local_dt_std = datetime.datetime.fromtimestamp(ts_std, self)
+    fold = 0
+    if self.dst(local_dt) is not None:
+        # Get timestamps for both possible folds
+        fold0_dt = local_dt.replace(fold=0) 
+        fold1_dt = local_dt.replace(fold=1)
         
-        if local_dt == local_dt_std:
-            # Datetime is ambiguous, set fold=1 for second occurrence
-            return local_dt.replace(fold=1)
-    
-    return local_dt
+        fold0_ts = (fold0_dt.replace(tzinfo=None) - datetime.datetime(1970,1,1)).total_seconds()
+        fold1_ts = (fold1_dt.replace(tzinfo=None) - datetime.datetime(1970,1,1)).total_seconds()
+        
+        # If original UTC timestamp matches second fold, use fold=1
+        if abs(ts - fold1_ts) < abs(ts - fold0_ts):
+            fold = 1
+            
+    return local_dt.replace(fold=fold)

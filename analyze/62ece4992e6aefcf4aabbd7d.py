@@ -8,11 +8,15 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     if extra_env:
         env.update(extra_env)
         
-    # Build command to run function
+    # Get function module and name
+    module_name = func.__module__
+    func_name = func.__name__
+    
+    # Build Python command to execute function
     cmd = [
-        sys.executable, 
+        sys.executable,
         '-c',
-        f'import {func.__module__}; {func.__module__}.{func.__name__}()'
+        f'import {module_name}; {module_name}.{func_name}()'
     ]
     
     # Add any additional command line arguments
@@ -30,13 +34,11 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
             text=True
         )
         return result
-        
     except subprocess.TimeoutExpired as e:
         print(f"Process timed out after {timeout} seconds")
-        raise
-        
+        raise e
     except subprocess.CalledProcessError as e:
         print(f"Process failed with return code {e.returncode}")
         print(f"stdout: {e.stdout}")
         print(f"stderr: {e.stderr}")
-        raise
+        raise e

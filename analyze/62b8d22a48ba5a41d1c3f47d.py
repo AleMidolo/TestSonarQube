@@ -9,5 +9,5 @@ def pop(self, key, default=__marker):
         return value
     except KeyError:
         if default is __marker:
-            raise
+            raise KeyError(key)
         return default

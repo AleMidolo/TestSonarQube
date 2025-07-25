@@ -18,33 +18,34 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     from ansible.vars.manager import VariableManager
 
     # Create temporary file for extra vars
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as tmp:
-        json.dump(vars_dict, tmp)
-        extra_vars_file = tmp.name
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as vars_file:
+        json.dump(vars_dict, vars_file)
+        vars_file_path = vars_file.name
 
     try:
         # Construct Ansible CLI command
         ansible_args = ['ansible-playbook']
         ansible_args.extend(cli_args)
-        
-        # Add workspace inventory if exists
-        if ir_workspace and hasattr(ir_workspace, 'inventory'):
-            ansible_args.extend(['-i', ir_workspace.inventory])
-        
-        # Add extra vars file
-        ansible_args.extend(['--extra-vars', f'@{extra_vars_file}'])
+        ansible_args.extend(['--extra-vars', '@' + vars_file_path])
 
-        # Initialize Ansible components
+        # Set up Ansible environment
         loader = DataLoader()
-        inventory = InventoryManager(loader=loader, sources=ir_workspace.inventory)
+        inventory = InventoryManager(loader=loader)
         variable_manager = VariableManager(loader=loader, inventory=inventory)
 
-        # Create and run playbook CLI
+        # Initialize PlaybookCLI
         pbcli = PlaybookCLI(ansible_args)
-        pbcli.parse()
-        return pbcli.run()
+        
+        # Set workspace and plugin specific environment variables
+        os.environ['IR_WORKSPACE'] = ir_workspace.path
+        os.environ['IR_PLUGIN'] = ir_plugin.name
+
+        # Run playbook
+        results = pbcli.run()
+
+        return results
 
     finally:
-        # Cleanup temporary file
-        if os.path.exists(extra_vars_file):
-            os.unlink(extra_vars_file)
+        # Cleanup temporary vars file
+        if os.path.exists(vars_file_path):
+            os.unlink(vars_file_path)

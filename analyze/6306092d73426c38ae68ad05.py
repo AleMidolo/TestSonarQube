@@ -9,9 +9,8 @@ def get_option_spec(self, command_name, argument_name):
     command = self.commands[command_name]
     
     # Cerca l'argomento nelle opzioni del comando
-    for option in command.options:
-        if option.name == argument_name:
-            return option
-            
-    # Se non trova l'opzione, solleva un'eccezione
-    raise ValueError(f"Option '{argument_name}' not found in command '{command_name}'")
+    if argument_name not in command.options:
+        raise ValueError(f"Option '{argument_name}' not found for command '{command_name}'")
+        
+    # Restituisce la specifica dell'opzione
+    return command.options[argument_name]

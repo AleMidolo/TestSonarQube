@@ -33,13 +33,14 @@ def _explore_zipfile(zip_path):
             
             # Se il file è un XML
             if file_name.lower().endswith('.xml'):
-                # Rimuove eventuali suffissi dopo il nome base
-                base_name = base_name.split('_')[0]
+                # Rimuove l'eventuale suffisso numerico dal nome base
+                base_name = base_name.rstrip('0123456789')
                 
                 # Aggiunge il file al gruppo corrispondente
                 grouped_files[base_name].append({
                     'path': file_name,
-                    'content': zip_ref.read(file_name)
+                    'content': zip_ref.read(file_name).decode('utf-8')
                 })
     
+    # Converte defaultdict in dict normale
     return dict(grouped_files)

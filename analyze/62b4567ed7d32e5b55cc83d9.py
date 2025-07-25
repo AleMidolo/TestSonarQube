@@ -16,27 +16,35 @@ def deep_merge_nodes(nodes):
         # If both nodes are mapping nodes, merge them recursively
         if (isinstance(value_node, type(existing_value_node)) and 
             hasattr(value_node, 'value') and 
-            hasattr(existing_value_node, 'value')):
+            hasattr(existing_value_node, 'value') and
+            value_node.tag == 'tag:yaml.org,2002:map' and
+            existing_value_node.tag == 'tag:yaml.org,2002:map'):
             
-            # Create dict of existing key/value pairs
+            # Convert mapping node values to dict for easier merging
             existing_dict = {k.value: v for k,v in existing_value_node.value}
+            new_dict = {k.value: v for k,v in value_node.value}
             
-            # Update with new values
-            for k, v in value_node.value:
-                existing_dict[k.value] = v
+            # Update existing dict with new values
+            for k, v in new_dict.items():
+                existing_dict[k] = v
                 
             # Convert back to list of tuples
-            merged_value = [(k, existing_dict[k.value]) 
-                          for k in sorted(existing_dict.keys(), key=lambda x: x)]
+            merged_value = [(k_node, existing_dict[k_node.value]) 
+                          for k_node, _ in existing_value_node.value 
+                          if k_node.value in existing_dict]
             
-            # Create new mapping node with merged values
-            merged_node = type(value_node)(
+            # Add any new keys
+            for k_node, v_node in value_node.value:
+                if k_node.value not in [k.value for k,_ in merged_value]:
+                    merged_value.append((k_node, v_node))
+                    
+            # Create new mapping node with merged values    
+            merged[key] = (key_node, type(value_node)(
                 tag=value_node.tag,
                 value=merged_value
-            )
-            merged[key] = (key_node, merged_node)
+            ))
             
-        # For non-mapping nodes, latest value wins
+        # For non-mapping nodes, newer value overwrites
         else:
             merged[key] = (key_node, value_node)
             

@@ -22,17 +22,19 @@ def _group_files_by_xml_filename(source, xmls, files):
     
     # Iterate through XML files
     for xml in xmls:
-        # Get base name without extension
-        xml_base = xml.rsplit('.', 1)[0]
+        # Get base filename without extension
+        base_name = xml.rsplit('.', 1)[0]
         
         # Find all files that start with the XML base name
-        matching_files = [f for f in files if f.startswith(xml_base)]
+        matching_files = [f for f in files if f.startswith(base_name)]
+        
+        # Create package with XML and matching files
+        package = {
+            'xml': xml,
+            'files': matching_files
+        }
         
         # Add to result dictionary
-        if matching_files:
-            result[xml] = {
-                'source': source,
-                'files': matching_files
-            }
-            
+        result[base_name] = package
+        
     return result

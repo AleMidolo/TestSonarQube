@@ -1,28 +1,27 @@
 def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = None) -> str:
-    # Handle negative numbers
-    if number < 0:
-        raise ValueError("Number must be non-negative")
-        
-    # Handle zero case
+    # Handle special case of 0
     if number == 0:
         result = alphabet[0]
         if padding:
-            result = alphabet[0] * padding
+            result = result.rjust(padding, alphabet[0])
         return result
         
+    # Convert number to string using the provided alphabet
     base = len(alphabet)
-    digits = []
+    result = ""
     
     # Convert to the desired base
-    while number:
-        digits.append(alphabet[number % base])
-        number //= base
+    n = abs(number)
+    while n:
+        result = alphabet[n % base] + result
+        n //= base
         
-    # Reverse to get most significant digit first
-    result = ''.join(digits[::-1])
-    
-    # Add padding if needed
+    # Add negative sign if needed
+    if number < 0:
+        result = '-' + result
+        
+    # Add padding if specified
     if padding:
-        result = alphabet[0] * (padding - len(result)) + result if len(result) < padding else result
+        result = result.rjust(padding, alphabet[0])
         
     return result

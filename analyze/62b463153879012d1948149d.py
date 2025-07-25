@@ -11,7 +11,7 @@ def _explore_folder(folder):
 
     Restituisce  
     -------  
-    dict
+    dict  
     """
     import os
     from collections import defaultdict

@@ -5,7 +5,7 @@ def parse_arguments(*unparsed_arguments):
     parser = argparse.ArgumentParser(description='Command line argument parser')
     subparsers = parser.add_subparsers(dest='command')
     
-    # Add global arguments to main parser
+    # Add global arguments
     parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose output')
     parser.add_argument('--config', '-c', type=str, help='Path to config file')
     
@@ -24,14 +24,11 @@ def parse_arguments(*unparsed_arguments):
     else:
         args = parser.parse_args(unparsed_arguments)
         
-    # Create dictionary to store parsed arguments
+    # Create dictionary mapping subparser name to parsed args
     parsed_args = {}
-    
     if args.command is None:
-        # Store global arguments
         parsed_args['global'] = args
     else:
-        # Store command-specific arguments
         parsed_args[args.command] = args
         
     return parsed_args

@@ -5,25 +5,16 @@ def identify_request(request: RequestType):
     Prova prima con un messaggio pubblico. Poi con un messaggio privato. Infine, verifica se si tratta di un payload legacy.
     """
     # Check if it's a public message
-    try:
-        if request.get('entity_type') == 'Post' and request.get('public'):
-            return 'public_message'
-    except:
-        pass
-
+    if hasattr(request, 'public') and request.public:
+        return 'public'
+        
     # Check if it's a private message
-    try:
-        if request.get('entity_type') == 'Message' or not request.get('public'):
-            return 'private_message'
-    except:
-        pass
-
+    if hasattr(request, 'private') and request.private:
+        return 'private'
+        
     # Check if it's a legacy payload
-    try:
-        if 'XML' in request.get('format', '') or request.get('legacy'):
-            return 'legacy_payload'
-    except:
-        pass
-
+    if hasattr(request, 'legacy_format'):
+        return 'legacy'
+        
     # If none of the above, return unknown
     return 'unknown'

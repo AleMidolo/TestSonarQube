@@ -11,20 +11,11 @@ def initialize(self):
         
     # Create ocfl_layout.json file
     layout = {
-        "extension": "000",
-        "description": "OCFL Storage Root",
-        "type": "flat"
+        "extension": "0001-flat-direct-storage-layout",
+        "description": "Flat direct storage layout",
+        "parameters": {}
     }
+    
     layout_path = os.path.join(self.root_path, "ocfl_layout.json") 
     with open(layout_path, "w") as f:
         json.dump(layout, f, indent=2)
-        
-    # Create extensions directory
-    extensions_dir = os.path.join(self.root_path, "extensions")
-    if not os.path.exists(extensions_dir):
-        os.makedirs(extensions_dir)
-        
-    # Create objects directory
-    objects_dir = os.path.join(self.root_path, "objects") 
-    if not os.path.exists(objects_dir):
-        os.makedirs(objects_dir)

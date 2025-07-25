@@ -11,12 +11,12 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         if '@' not in handle:
             return None
             
-        username, domain = handle.split('@')
+        user, domain = handle.split('@', 1)
         
         # Costruisci l'URL del documento webfinger
         webfinger_url = f"https://{domain}/.well-known/webfinger"
         params = {
-            'resource': f'acct:{quote(handle)}'
+            'resource': f'acct:{quote(user)}@{domain}'
         }
         
         # Effettua la richiesta HTTP
@@ -28,10 +28,11 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         )
         
         # Verifica il codice di stato
-        if response.status_code == 200:
-            return response.text
+        if response.status_code != 200:
+            return None
             
-    except (requests.RequestException, ValueError):
-        pass
+        # Restituisci il contenuto del documento
+        return response.text
         
-    return None
+    except Exception:
+        return None
