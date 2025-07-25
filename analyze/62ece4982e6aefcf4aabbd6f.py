@@ -21,7 +21,7 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     response.raise_for_status()
     
     # Save the archive to a temporary file
-    temp_archive_path = destination_path / "temp_archive.tar.gz"
+    temp_archive_path = destination_path / "archive.tar.gz"
     with open(temp_archive_path, 'wb') as f:
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)

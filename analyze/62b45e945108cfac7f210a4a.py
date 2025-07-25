@@ -12,15 +12,15 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     # Simulate validation logic
     if validate_objects:
         # Example: Validate objects in the hierarchy
-        num_objects = 100  # Example number of objects
-        good_objects = 95   # Example number of valid objects
+        num_objects = 100  # Example value
+        good_objects = 95   # Example value
     
     if check_digests:
         # Example: Check digests of objects
-        pass  # Add digest checking logic here
+        pass
     
     if show_warnings:
         # Example: Show warnings if any
-        pass  # Add warning logic here
+        pass
     
     return num_objects, good_objects

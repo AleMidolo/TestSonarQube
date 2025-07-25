@@ -8,24 +8,21 @@ def validate_version_inventories(self, version_dirs):
     version_dirs è un array di nomi di directory di versione e si presume
     che sia in sequenza di versione (1, 2, 3...).
     """
-    inventories = {}
+    inventory = {}
     for version_dir in version_dirs:
-        inventory_path = os.path.join(version_dir, "inventory.json")
-        if not os.path.exists(inventory_path):
-            raise FileNotFoundError(f"Inventory not found for version: {version_dir}")
+        # Load the inventory for the current version
+        current_inventory = self.load_inventory(version_dir)
         
-        with open(inventory_path, 'r') as f:
-            inventory = json.load(f)
+        # Check if the current inventory is a superset of the previous inventory
+        if not all(item in current_inventory for item in inventory):
+            raise ValueError(f"Inventory for version {version_dir} is not a superset of the previous inventory.")
         
-        inventories[version_dir] = inventory
+        # Update the inventory with the current version's inventory
+        inventory.update(current_inventory)
         
-        # Check for discrepancies in content digests
-        if version_dir != version_dirs[0]:  # Skip the first version
-            previous_version = version_dirs[version_dirs.index(version_dir) - 1]
-            previous_inventory = inventories[previous_version]
-            
-            for key, value in inventory.items():
-                if key in previous_inventory and previous_inventory[key] != value:
-                    print(f"Warning: Content digest mismatch for {key} in {version_dir}")
+        # Track any content digests that differ from the main inventory
+        differing_digests = {k: v for k, v in current_inventory.items() if k in inventory and inventory[k] != v}
+        if differing_digests:
+            self.log_differing_digests(version_dir, differing_digests)
     
-    return inventories
+    return inventory

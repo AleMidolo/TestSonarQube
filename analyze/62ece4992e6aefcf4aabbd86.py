@@ -6,7 +6,4 @@ def _dump_string(obj, dumper=None):
         return dumper(obj)
     if isinstance(obj, bytes):
         return obj.decode('utf-8')
-    elif isinstance(obj, str):
-        return obj
-    else:
-        return str(obj)
+    return str(obj)

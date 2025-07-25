@@ -21,11 +21,11 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **
         "qid": qid,
         "dehydration_hooks": dehydration_hooks if dehydration_hooks else {},
         "hydration_hooks": hydration_hooks if hydration_hooks else {},
-        **handlers
+        "handlers": handlers
     }
     
     # Aggiunta del messaggio alla coda di output
     self.output_queue.append(discard_message)
     
-    # Restituzione dell'oggetto Response
+    # Restituzione dell'oggetto Response con i gestori
     return Response(handlers=handlers)

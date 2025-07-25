@@ -14,9 +14,9 @@ def protocol_handlers(cls, protocol_version=None):
     """
     # Dizionario di esempio che mappa le versioni del protocollo ai gestori
     available_handlers = {
-        (3, 5): "HandlerForV3_5",
-        (4, 0): "HandlerForV4_0",
-        (4, 1): "HandlerForV4_1",
+        (3, 5): cls.HandlerV3_5,
+        (4, 0): cls.HandlerV4_0,
+        (4, 1): cls.HandlerV4_1,
     }
 
     if protocol_version is not None:

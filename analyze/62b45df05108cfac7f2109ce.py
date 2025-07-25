@@ -10,23 +10,19 @@ def validate(self, path):
 
     # Check if the required OCFL structure exists
     if not fs.exists('0=ocfl_object_1.0'):
-        return False
+        raise ValueError("Invalid OCFL object: missing '0=ocfl_object_1.0' file")
 
     # Validate the inventory file
     if not fs.exists('inventory.json'):
-        return False
+        raise ValueError("Invalid OCFL object: missing 'inventory.json' file")
 
-    # Validate the manifest in the inventory
-    inventory_path = fs.getsyspath('inventory.json')
-    with open(inventory_path, 'r') as f:
-        import json
-        inventory = json.load(f)
-        if 'manifest' not in inventory:
-            return False
+    # Validate the manifest file
+    if not fs.exists('manifest.json'):
+        raise ValueError("Invalid OCFL object: missing 'manifest.json' file")
 
-    # Validate the content directory
-    if not fs.exists('content'):
-        return False
+    # Validate the versions directory
+    if not fs.exists('versions'):
+        raise ValueError("Invalid OCFL object: missing 'versions' directory")
 
-    # If all checks pass, the object is valid
+    # If all checks pass, the OCFL object is valid
     return True

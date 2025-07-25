@@ -10,6 +10,6 @@ def dehydrate_time(value):
     :rtype: str
     """
     if not isinstance(value, time):
-        raise TypeError("Expected a time object")
+        raise TypeError("Expected a datetime.time object")
     
     return value.strftime('%H:%M:%S')

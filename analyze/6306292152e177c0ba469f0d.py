@@ -10,7 +10,14 @@ def identify_request(request: RequestType) -> bool:
     Returns:
         bool: True se la richiesta è di tipo Matrix, False altrimenti.
     """
-    # Assuming RequestType has a 'type' attribute or similar to identify Matrix requests
-    if hasattr(request, 'type'):
-        return request.type == 'Matrix'
+    # Assuming RequestType has a method or attribute to check if it's a Matrix request
+    if hasattr(request, 'is_matrix_request'):
+        return request.is_matrix_request()
+    
+    # Alternatively, check for specific attributes or patterns in the request
+    if hasattr(request, 'headers'):
+        headers = request.headers
+        if 'Matrix-Request' in headers:
+            return True
+    
     return False

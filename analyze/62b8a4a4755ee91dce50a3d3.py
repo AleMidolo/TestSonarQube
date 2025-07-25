@@ -15,15 +15,12 @@ def fromutc(self, dt):
     # Convert the datetime to UTC
     dt_utc = dt.astimezone(self.utc)
     
-    # Calculate the offset from UTC for the new timezone
-    offset = self.utcoffset(dt_utc)
+    # Convert the UTC datetime to the new timezone
+    dt_new = dt_utc.astimezone(self)
     
-    # Apply the offset to get the new datetime
-    new_dt = dt_utc + offset
-    
-    # Check if the new datetime is ambiguous (e.g., during a DST transition)
-    if self.is_ambiguous(new_dt):
+    # Check if the datetime is ambiguous in the new timezone
+    if self.is_ambiguous(dt_new):
         # If ambiguous, set the fold attribute to 1 (second occurrence)
-        new_dt = new_dt.replace(fold=1)
+        dt_new = dt_new.replace(fold=1)
     
-    return new_dt
+    return dt_new

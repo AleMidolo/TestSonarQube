@@ -11,12 +11,12 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     flat_dict = {}
     
     # Check if the directory exists
-    if not os.path.isdir(plugin_dir):
+    if not os.path.exists(plugin_dir):
         raise FileNotFoundError(f"The directory {plugin_dir} does not exist.")
     
     # Look for a spec file (e.g., plugin_spec.json) in the plugin directory
     spec_file = os.path.join(plugin_dir, "plugin_spec.json")
-    if not os.path.isfile(spec_file):
+    if not os.path.exists(spec_file):
         raise FileNotFoundError(f"No plugin specification file found in {plugin_dir}.")
     
     # Load the JSON file
@@ -24,7 +24,7 @@ def get_plugin_spec_flatten_dict(plugin_dir):
         spec_data = json.load(file)
     
     # Flatten the dictionary
-    def flatten_dict(d, parent_key='', sep='.'):
+    def flatten_dict(d, parent_key='', sep='_'):
         items = []
         for k, v in d.items():
             new_key = f"{parent_key}{sep}{k}" if parent_key else k

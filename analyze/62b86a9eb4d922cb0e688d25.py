@@ -7,7 +7,9 @@ def _get_resource_name_regex():
     **Restituisce:**  
         `(re.Pattern)`: le espressioni regolari compilate, utilizzate per convalidare il nome della risorsa.
     """
-    # Definisci un pattern per convalidare i nomi delle risorse Krake
+    # Definisci il pattern per convalidare il nome della risorsa
     # Esempio: solo lettere minuscole, numeri e trattini, lunghezza tra 1 e 63 caratteri
     pattern = r'^[a-z0-9-]{1,63}$'
+    
+    # Compila e restituisci l'espressione regolare
     return re.compile(pattern)

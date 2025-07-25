@@ -14,8 +14,7 @@ def ansible_config_manager(cls):
         """A sample callback plugin used for performing an action as results come in"""
         def v2_runner_on_ok(self, result, **kwargs):
             """Print a json representation of the result"""
-            host = result._host
-            print(f"{host.get_name()}: {result._result}")
+            print(result._result)
 
     loader = DataLoader()
     inventory = InventoryManager(loader=loader, sources='localhost,')

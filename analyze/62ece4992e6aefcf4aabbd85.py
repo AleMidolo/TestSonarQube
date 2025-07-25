@@ -8,10 +8,10 @@ def find_roots(graph, prop):
     `RDFS.subClassOf` o `SKOS.broader`.
     """
     roots = set()
-    all_subjects = set(graph.subjects(predicate=prop))
-    all_objects = set(graph.objects(predicate=prop))
+    all_subjects = set(graph.subjects(prop, None))
+    all_objects = set(graph.objects(None, prop))
     
-    # Le radici sono quei soggetti che non compaiono come oggetti in nessuna tripla
+    # Le radici sono i soggetti che non compaiono come oggetti in nessuna tripla
     roots = all_subjects - all_objects
     
     return roots

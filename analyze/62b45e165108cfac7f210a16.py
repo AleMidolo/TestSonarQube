@@ -9,12 +9,10 @@ def validate_as_prior_version(self, prior):
     if not isinstance(prior, InventoryValidator):
         raise TypeError("prior must be an instance of InventoryValidator")
     
-    # Add logic to compare self and prior to ensure prior is a valid previous version
-    # For example, check if prior's timestamp is earlier than self's timestamp
-    if prior.timestamp >= self.timestamp:
-        raise ValueError("prior must be an earlier version than the current inventory")
-    
-    # Additional validation logic can be added here based on specific requirements
-    # For example, checking if certain fields in prior are consistent with self
+    # Add additional validation logic here if needed
+    # For example, check if the prior version is indeed older than the current version
+    # This is just a placeholder for the actual logic you might need
+    if not self.is_older_than(prior):
+        raise ValueError("prior must be an older version of the inventory")
     
     return True
