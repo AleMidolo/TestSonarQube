@@ -8,20 +8,25 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     :param args: Lista de argumentos para los comandos.
     :param cwd: Directorio de trabajo actual (opcional).
     :param verbose: Si es True, muestra la salida del comando (opcional).
-    :param hide_stderr: Si es True, oculta la salida de error (opcional).
+    :param hide_stderr: Si es True, oculta los errores estándar (opcional).
     :param env: Diccionario de variables de entorno (opcional).
-    :return: El código de retorno del comando.
+    :return: El resultado de la ejecución del comando.
     """
-    full_command = commands + args
-    stderr = subprocess.DEVNULL if hide_stderr else None
-    stdout = None if verbose else subprocess.DEVNULL
-
+    command = commands + args
+    stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
     process = subprocess.Popen(
-        full_command,
+        command,
         cwd=cwd,
-        stdout=stdout,
+        stdout=subprocess.PIPE,
         stderr=stderr,
-        env=env
+        env=env,
+        text=True
     )
-    process.communicate()
-    return process.returncode
+    stdout, stderr = process.communicate()
+
+    if verbose:
+        print(stdout)
+        if stderr and not hide_stderr:
+            print(stderr)
+
+    return process.returncode, stdout, stderr

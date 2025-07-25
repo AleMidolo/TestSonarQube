@@ -20,16 +20,19 @@ def scale(self, other=None, recompute=False):
             self._scale = self._compute_scale()
         return self._scale
     else:
-        if not hasattr(self, '_scale') or recompute:
-            self._scale = self._compute_scale()
-        if self._scale == 0:
-            raise LenaValueError("Cannot rescale a histogram with zero scale.")
-        scale_factor = other / self._scale
+        if not isinstance(other, (int, float)):
+            raise TypeError("El valor de escala debe ser un número flotante o entero.")
+        if self.scale() == 0:
+            raise LenaValueError("No se puede reescalar un histograma con escala igual a cero.")
+        scale_factor = other / self.scale()
         self._data = [value * scale_factor for value in self._data]
         self._scale = other
 
 def _compute_scale(self):
     """
-    Calcula la escala del histograma como la suma de todos los valores.
+    Calcula la escala del histograma como la suma de todos los valores en el histograma.
     """
     return sum(self._data)
+
+class LenaValueError(Exception):
+    pass

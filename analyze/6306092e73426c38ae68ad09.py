@@ -7,5 +7,5 @@ def validate_length_args(self, args):
     max_length = 100  # Longitud máxima permitida
     for arg in args:
         if len(str(arg)) > max_length:
-            raise ValueError(f"El argumento {arg} supera la longitud máxima permitida de {max_length} caracteres.")
+            raise ValueError(f"Argument '{arg}' exceeds the maximum allowed length of {max_length}.")
     return True

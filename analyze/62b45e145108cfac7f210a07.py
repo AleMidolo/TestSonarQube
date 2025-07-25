@@ -9,28 +9,22 @@ def validate(self, inventory, extract_spec_version=False):
     if extract_spec_version:
         if 'type' in inventory:
             spec_type = inventory['type']
-            if spec_type in ['v1', 'v2', 'v3']:
+            if spec_type in self.supported_spec_versions:
                 self.spec_version = spec_type
             else:
-                # Si el tipo no es válido, usar la versión predeterminada
-                self.spec_version = self.spec_version
+                # Fallback to default spec version if type is not valid
+                self.spec_version = self.default_spec_version
         else:
-            # Si no hay tipo, usar la versión predeterminada
+            # Use the instance's spec version if type is not provided
             self.spec_version = self.spec_version
-    
-    # Aquí iría la lógica de validación del inventario basada en la versión de la especificación
-    # Por ejemplo:
-    if self.spec_version == 'v1':
-        # Validación para la versión 1
-        pass
-    elif self.spec_version == 'v2':
-        # Validación para la versión 2
-        pass
-    elif self.spec_version == 'v3':
-        # Validación para la versión 3
-        pass
     else:
-        raise ValueError(f"Versión de especificación no soportada: {self.spec_version}")
-    
-    # Retornar True si la validación es exitosa
-    return True
+        # Use the instance's spec version if extract_spec_version is False
+        self.spec_version = self.spec_version
+
+    # Perform validation based on the determined spec version
+    if self.spec_version == 'v1':
+        return self._validate_v1(inventory)
+    elif self.spec_version == 'v2':
+        return self._validate_v2(inventory)
+    else:
+        raise ValueError(f"Unsupported spec version: {self.spec_version}")

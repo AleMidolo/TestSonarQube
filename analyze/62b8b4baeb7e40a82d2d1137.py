@@ -23,11 +23,11 @@ def verifyObject(iface, candidate, tentative=False):
     """
     if not tentative:
         if not iface.providedBy(candidate):
-            raise Invalid(f"{candidate} no proporciona la interfaz {iface}.")
-    
+            raise Invalid(f"{candidate} does not provide {iface}")
+
     try:
         zope_verify_object(iface, candidate)
     except Invalid as e:
-        raise Invalid(f"Error en la verificación de la interfaz: {e}")
-    
+        raise Invalid(f"Verification failed: {e}")
+
     return True

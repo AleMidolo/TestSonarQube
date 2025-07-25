@@ -4,12 +4,12 @@ def names(self, all=False):  # pylint:disable=redefined-builtin
     
     Args:
         all (bool): Si es True, devuelve todos los atributos, incluyendo los privados.
-                   Si es False, devuelve solo los atributos públicos.
+                    Si es False, devuelve solo los atributos públicos.
     
     Returns:
         list: Una lista de nombres de atributos.
     """
     if all:
-        return [attr for attr in dir(self) if not callable(getattr(self, attr))]
+        return [name for name in dir(self) if not name.startswith('__')]
     else:
-        return [attr for attr in dir(self) if not callable(getattr(self, attr)) and not attr.startswith('_')]
+        return [name for name in dir(self) if not name.startswith('_')]

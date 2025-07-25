@@ -21,22 +21,18 @@ def scale(self, other=None):
         if not isinstance(other, (int, float)):
             raise TypeError("La escala debe ser un valor numérico.")
         if self._scale == 0 or self._scale is None:
-            raise LenaValueError("No se puede reajustar la escala si es desconocida o igual a cero.")
+            raise LenaValueError("No se puede reajustar la escala de un gráfico con escala desconocida o igual a cero.")
         
         # Reajustar la última coordenada
-        if hasattr(self, 'z'):
-            self.z *= other / self._scale
-        elif hasattr(self, 'y'):
+        if hasattr(self, 'y'):
             self.y *= other / self._scale
-        elif hasattr(self, 'x'):
-            self.x *= other / self._scale
+        elif hasattr(self, 'z'):
+            self.z *= other / self._scale
         
-        # Reajustar los errores asociados
-        if hasattr(self, 'z_err'):
-            self.z_err *= other / self._scale
-        elif hasattr(self, 'y_err'):
+        # Reajustar errores si existen
+        if hasattr(self, 'y_err'):
             self.y_err *= other / self._scale
-        elif hasattr(self, 'x_err'):
-            self.x_err *= other / self._scale
+        elif hasattr(self, 'z_err'):
+            self.z_err *= other / self._scale
         
         self._scale = other

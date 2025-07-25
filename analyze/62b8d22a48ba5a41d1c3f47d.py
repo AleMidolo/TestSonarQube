@@ -10,4 +10,4 @@ def pop(self, key, default=__marker):
     elif default is not __marker:
         return default
     else:
-        raise KeyError(f"KeyError: {key}")
+        raise KeyError(f"KeyError: '{key}'")

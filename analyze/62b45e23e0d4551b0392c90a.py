@@ -9,37 +9,21 @@ def validate_version_inventories(self, version_dirs):
     'version_dirs' es un arreglo de nombres de directorios de versiones 
     y se asume que están en secuencia de versiones (1, 2, 3...).
     """
-    if not version_dirs:
-        raise ValueError("No version directories provided.")
-    
-    # Assuming the root inventory is in the first version directory
-    root_inventory = self._load_inventory(version_dirs[0])
-    if not root_inventory:
-        raise ValueError("Root inventory is missing or empty.")
-    
-    # Track digests that differ from the root inventory
-    differing_digests = {}
-    
-    for version_dir in version_dirs:
-        inventory = self._load_inventory(version_dir)
-        if not inventory:
-            raise ValueError(f"Inventory missing in version directory: {version_dir}")
-        
-        # Compare digests with the root inventory
-        for key, digest in inventory.items():
-            if key in root_inventory:
-                if digest != root_inventory[key]:
-                    differing_digests[key] = digest
-            else:
-                differing_digests[key] = digest
-    
-    return differing_digests
+    root_inventory = self.get_root_inventory()  # Assume this method exists to get the root inventory
+    discrepancies = {}
 
-def _load_inventory(self, version_dir):
-    """
-    Helper method to load the inventory from a version directory.
-    This is a placeholder and should be implemented based on the actual inventory format.
-    """
-    # Placeholder implementation
-    # In a real scenario, this would load the inventory from the directory
-    return {"file1": "digest1", "file2": "digest2"}  # Example inventory
+    for version_dir in version_dirs:
+        version_inventory = self.get_version_inventory(version_dir)  # Assume this method exists to get the version inventory
+        
+        # Check if the version inventory exists
+        if not version_inventory:
+            raise ValueError(f"Version {version_dir} does not have an inventory.")
+        
+        # Compare with root inventory and record discrepancies
+        for key, value in version_inventory.items():
+            if key in root_inventory and root_inventory[key] != value:
+                if version_dir not in discrepancies:
+                    discrepancies[version_dir] = {}
+                discrepancies[version_dir][key] = value
+    
+    return discrepancies

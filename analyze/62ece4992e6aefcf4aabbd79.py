@@ -14,10 +14,10 @@ def make_find_paths(find_paths):
     """
     transformed_paths = []
     for path in find_paths:
-        if re.match(r'^\w+:', path):
+        if re.match(r'^[a-zA-Z]+:', path):
             # Si el path ya tiene un prefijo (como 'pp:'), lo dejamos sin modificar
             transformed_paths.append(path)
         else:
-            # Si no tiene prefijo, lo transformamos en un patrón glob
+            # Transformamos el fragmento de ruta en un patrón glob
             transformed_paths.append(f'sh:**/*{path}*/**')
     return transformed_paths

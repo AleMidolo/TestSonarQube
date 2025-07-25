@@ -6,6 +6,6 @@ def _shuffled(seq: Sequence[str]) -> list[str]:
     """
     # Use a fixed seed for deterministic shuffling
     random.seed(42)
-    shuffled_seq = seq.copy()
+    shuffled_seq = list(seq)
     random.shuffle(shuffled_seq)
     return shuffled_seq
