@@ -11,5 +11,5 @@ def render(pieces, style):
         elif style == 'underline':
             rendered_output.append(f"__{piece}__")
         else:
-            rendered_output.append(piece)  # Default to plain text
+            rendered_output.append(piece)
     return '\n'.join(rendered_output)

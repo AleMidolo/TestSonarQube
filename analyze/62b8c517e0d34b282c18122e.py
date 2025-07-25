@@ -18,17 +18,17 @@ def extostr(cls, e, max_level=30, max_path_level=5):
 
     # Get the traceback information
     tb = traceback.extract_tb(e.__traceback__)
-    tb_info = []
+    tb_info = tb[:max_level]
 
-    for frame in tb[:max_level]:
+    # Format the traceback information
+    formatted_tb = []
+    for frame in tb_info:
         filename, lineno, funcname, code = frame
-        tb_info.append(f'File "{filename}", line {lineno}, in {funcname}\n    {code}')
+        if len(formatted_tb) < max_path_level:
+            formatted_tb.append(f'File "{filename}", line {lineno}, in {funcname}\n    {code}')
 
-    # Limit the number of paths shown
-    if len(tb_info) > max_path_level:
-        tb_info = tb_info[:max_path_level] + [f"... and {len(tb) - max_path_level} more lines"]
+    # Combine the exception type, message, and formatted traceback
+    result = f"{exc_type}: {exc_message}\n"
+    result += "\n".join(formatted_tb)
 
-    # Combine the information into a single string
-    formatted_exception = f"{exc_type}: {exc_message}\n" + "\n".join(tb_info)
-    
-    return formatted_exception
+    return result

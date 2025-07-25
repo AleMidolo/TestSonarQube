@@ -18,11 +18,11 @@ def find_path_type(path):
     if os.path.isdir(path):
         if any(file.startswith("0=") for file in os.listdir(path)):
             if "inventory" in os.listdir(path):
-                return "object"
-            return "root"
-        return "altra stringa: nessun file '0=*' trovato."
+                return 'object'
+            return 'root'
+        return 'altra stringa: nessun file "0=*" trovato.'
 
     if os.path.isfile(path):
-        return "file"
+        return 'file'
 
-    return "altra stringa: tipo di elemento sconosciuto."
+    return 'altra stringa: tipo di elemento sconosciuto.'

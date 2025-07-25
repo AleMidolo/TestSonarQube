@@ -15,10 +15,16 @@ def update_last_applied_manifest_list_from_resp(
     in ``last_applied_manifest`` se non sono ancora presenti.
     """
     for schema_field in observer_schema:
-        if schema_field not in last_applied_manifest:
-            last_applied_manifest[schema_field] = response.get(schema_field, None)
-        elif isinstance(last_applied_manifest[schema_field], list) and isinstance(response.get(schema_field), list):
-            last_applied_manifest[schema_field].extend(response[schema_field])
-        elif isinstance(last_applied_manifest[schema_field], dict) and isinstance(response.get(schema_field), dict):
-            update_last_applied_manifest_dict_from_resp(last_applied_manifest[schema_field], observer_schema[schema_field], response[schema_field])
+        if isinstance(schema_field, dict):
+            field_name = schema_field.get('name')
+            if field_name not in last_applied_manifest:
+                last_applied_manifest[field_name] = response.get(field_name, None)
+            update_last_applied_manifest_list_from_resp(
+                last_applied_manifest[field_name], 
+                schema_field.get('children', []), 
+                response.get(field_name, {})
+            )
+        elif isinstance(schema_field, str):
+            if schema_field not in last_applied_manifest:
+                last_applied_manifest[schema_field] = response.get(schema_field, None)
     return last_applied_manifest

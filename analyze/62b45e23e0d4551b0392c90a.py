@@ -15,33 +15,28 @@ def validate_version_inventories(self, version_dirs):
         # Simulate loading the inventory for the current version
         current_inventory = self.load_inventory(version_dir)
         
-        # Check if the current inventory is valid
-        if not self.is_valid_inventory(current_inventory):
-            raise ValueError(f"Invalid inventory for version {version_dir}")
+        # Check if the current version has an inventory
+        if not current_inventory:
+            raise ValueError(f"Missing inventory for version {i + 1} in {version_dir}")
         
-        # Ensure all previous versions have been accounted for
-        for j in range(i + 1):
+        # Validate that all previous versions have inventories
+        for j in range(i):
             previous_version_dir = version_dirs[j]
-            if previous_version_dir not in main_inventory:
-                main_inventory[previous_version_dir] = self.load_inventory(previous_version_dir)
+            previous_inventory = self.load_inventory(previous_version_dir)
+            if not previous_inventory:
+                raise ValueError(f"Missing inventory for version {j + 1} in {previous_version_dir}")
         
         # Track content digests
-        for item in current_inventory:
-            digest = self.calculate_digest(item)
-            if digest not in content_digests:
-                content_digests[digest] = []
-            content_digests[digest].append(version_dir)
+        for item, digest in current_inventory.items():
+            if item in main_inventory:
+                if main_inventory[item] != digest:
+                    content_digests[item] = digest
+            else:
+                main_inventory[item] = digest
     
     return main_inventory, content_digests
 
 def load_inventory(self, version_dir):
     # Placeholder for loading inventory logic
-    pass
-
-def is_valid_inventory(self, inventory):
-    # Placeholder for inventory validation logic
-    pass
-
-def calculate_digest(self, item):
-    # Placeholder for digest calculation logic
-    pass
+    # This should return a dictionary of items and their digests
+    return {}

@@ -30,6 +30,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     Restituisce il grafico risultante.
     """
+    # Implementazione della funzione
     if make_value is None:
         make_value = lambda bin_: bin_
 
@@ -42,7 +43,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         elif get_coordinate == "middle":
             x = bin_.center
         else:
-            raise ValueError("Invalid value for get_coordinate")
+            raise ValueError("get_coordinate must be 'left', 'right', or 'middle'.")
 
         values = make_value(bin_)
         coordinates.append((x, *values))
@@ -53,7 +54,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     graph = {field: [] for field in field_names}
     for coord in coordinates:
-        for field, value in zip(field_names, coord):
-            graph[field].append(value)
+        for i, field in enumerate(field_names):
+            graph[field].append(coord[i])
 
     return graph

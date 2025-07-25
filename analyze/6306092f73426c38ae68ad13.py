@@ -16,7 +16,7 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
 
     command = ['ansible-playbook', playbook_path]
 
-    if verbose is not None:
+    if verbose:
         command.append(f'-v' * verbose)
 
     if extra_vars:
