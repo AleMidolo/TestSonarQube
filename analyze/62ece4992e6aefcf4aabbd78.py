@@ -21,25 +21,25 @@ def is_local(host):
     if host in ['localhost', '127.0.0.1']:
         return True
         
-    # 获取本机主机名
+    # 获取本机hostname
     local_hostname = socket.gethostname().lower()
     if host == local_hostname:
         return True
         
     # 获取本机IP地址
     try:
-        local_ip = socket.gethostbyname(local_hostname)
+        local_ip = socket.gethostbyname(socket.gethostname())
         if host == local_ip:
             return True
-    except socket.gaierror:
+    except:
         pass
         
     # 获取本机所有IP地址
     try:
-        local_ips = [ip for ip in socket.gethostbyname_ex(local_hostname)[2]]
+        local_ips = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2]]
         if host in local_ips:
             return True
-    except socket.gaierror:
+    except:
         pass
         
     return False

@@ -3,7 +3,7 @@ def verifyObject(iface, candidate, tentative=False):
     from zope.interface.verify import verifyClass
     from zope.interface.interface import Method
     
-    # Step 1: Check if candidate provides interface (skip if tentative)
+    # Step 1: Check if candidate provides interface
     if not tentative:
         if not iface.providedBy(candidate):
             raise DoesNotImplement(iface)
@@ -11,7 +11,7 @@ def verifyObject(iface, candidate, tentative=False):
     # Collect all errors
     errors = []
     
-    # Step 2 & 3: Check methods - existence and signature
+    # Step 2 & 3: Check methods
     for name, desc in iface.namesAndDescriptions(1):
         if isinstance(desc, Method):
             # Check if method exists
@@ -26,14 +26,12 @@ def verifyObject(iface, candidate, tentative=False):
                 errors.append(BrokenMethodImplementation(name, "Not a method"))
                 continue
 
-            # Check method signature if possible
+            # Check method signature
             try:
-                if not desc.validateSignature(attr):
-                    errors.append(BrokenMethodImplementation(name, "Incorrect method signature"))
-            except ValueError:
-                # If we can't validate signature, we skip it
-                pass
-
+                verifyClass(iface, attr.__class__)
+            except Invalid as e:
+                errors.append(BrokenMethodImplementation(name, str(e)))
+                
     # Step 4: Check attributes
     for name, desc in iface.namesAndDescriptions(1):
         if not isinstance(desc, Method):
@@ -42,10 +40,10 @@ def verifyObject(iface, candidate, tentative=False):
             except AttributeError:
                 errors.append(BrokenImplementation(iface, name))
 
-    # Handle errors
+    # Raise collected errors
     if len(errors) == 1:
         raise errors[0]
     elif errors:
-        raise Invalid("Multiple implementation errors", errors)
+        raise Invalid(errors)
 
     return True

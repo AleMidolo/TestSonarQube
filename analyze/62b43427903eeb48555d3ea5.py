@@ -21,37 +21,107 @@ def format(
     # 检查参数类型是否匹配样式
     if self.in_style.is_named():
         if not isinstance(params, Mapping):
-            raise TypeError("Named parameter style requires mapping params")
+            raise TypeError("Named parameter style requires a mapping for params")
     else:
         if not isinstance(params, Sequence) or isinstance(params, (str, bytes)):
-            raise TypeError("Positional parameter style requires sequence params")
+            raise TypeError("Positional parameter style requires a sequence for params")
 
-    # 转换参数
-    converted_params = {}
-    if isinstance(params, Mapping):
-        # 命名参数样式
-        for key, value in params.items():
-            converted_params[key] = self._converter.convert(value)
-    else:
-        # 序号参数样式
-        converted_params = [self._converter.convert(value) for value in params]
-
-    # 根据输出样式格式化SQL
-    if self.out_style.is_named():
-        # 如果输入是序号样式但输出需要命名样式
-        if isinstance(converted_params, list):
-            named_params = {f"p{i}": val for i, val in enumerate(converted_params)}
-            formatted_sql = self._convert_positional_to_named(sql, len(converted_params))
-            converted_params = named_params
+    # 初始化输出参数集合
+    out_params: Union[Dict[Union[str, int], Any], List[Any]]
+    out_params = {} if self.out_style.is_named() else []
+    
+    # 初始化参数计数器和SQL构建器
+    param_count = 0
+    formatted_sql = sql
+    
+    if isinstance(sql, str):
+        # 处理字符串类型的SQL
+        if self.in_style.is_named():
+            # 处理命名参数
+            for param_name in params:
+                param_value = params[param_name]
+                # 转换参数值
+                converted_value = self._converter.convert(param_value)
+                if self.out_style.is_named():
+                    # 生成新的参数名
+                    new_param_name = f"p{param_count}"
+                    out_params[new_param_name] = converted_value
+                    # 替换SQL中的参数占位符
+                    formatted_sql = formatted_sql.replace(
+                        f"{self.in_style.prefix}{param_name}{self.in_style.suffix}",
+                        f"{self.out_style.prefix}{new_param_name}{self.out_style.suffix}"
+                    )
+                else:
+                    out_params.append(converted_value)
+                    # 替换SQL中的参数占位符
+                    formatted_sql = formatted_sql.replace(
+                        f"{self.in_style.prefix}{param_name}{self.in_style.suffix}",
+                        self.out_style.placeholder
+                    )
+                param_count += 1
         else:
-            formatted_sql = sql
+            # 处理位置参数
+            for param_value in params:
+                # 转换参数值
+                converted_value = self._converter.convert(param_value)
+                if self.out_style.is_named():
+                    # 生成新的参数名
+                    new_param_name = f"p{param_count}"
+                    out_params[new_param_name] = converted_value
+                    # 替换SQL中的参数占位符
+                    formatted_sql = formatted_sql.replace(
+                        self.in_style.placeholder,
+                        f"{self.out_style.prefix}{new_param_name}{self.out_style.suffix}",
+                        1
+                    )
+                else:
+                    out_params.append(converted_value)
+                    # 替换SQL中的参数占位符
+                    formatted_sql = formatted_sql.replace(
+                        self.in_style.placeholder,
+                        self.out_style.placeholder,
+                        1
+                    )
+                param_count += 1
     else:
-        # 如果输入是命名样式但输出需要序号样式
-        if isinstance(converted_params, dict):
-            param_list = []
-            formatted_sql = self._convert_named_to_positional(sql, converted_params, param_list)
-            converted_params = param_list
+        # 处理bytes类型的SQL
+        # 将相同的逻辑应用于bytes，但使用bytes方法
+        if self.in_style.is_named():
+            for param_name in params:
+                param_value = params[param_name]
+                converted_value = self._converter.convert(param_value)
+                if self.out_style.is_named():
+                    new_param_name = f"p{param_count}".encode()
+                    out_params[new_param_name] = converted_value
+                    formatted_sql = formatted_sql.replace(
+                        f"{self.in_style.prefix}{param_name}{self.in_style.suffix}".encode(),
+                        f"{self.out_style.prefix}{new_param_name.decode()}{self.out_style.suffix}".encode()
+                    )
+                else:
+                    out_params.append(converted_value)
+                    formatted_sql = formatted_sql.replace(
+                        f"{self.in_style.prefix}{param_name}{self.in_style.suffix}".encode(),
+                        self.out_style.placeholder.encode()
+                    )
+                param_count += 1
         else:
-            formatted_sql = sql
+            for param_value in params:
+                converted_value = self._converter.convert(param_value)
+                if self.out_style.is_named():
+                    new_param_name = f"p{param_count}".encode()
+                    out_params[new_param_name] = converted_value
+                    formatted_sql = formatted_sql.replace(
+                        self.in_style.placeholder.encode(),
+                        f"{self.out_style.prefix}{new_param_name.decode()}{self.out_style.suffix}".encode(),
+                        1
+                    )
+                else:
+                    out_params.append(converted_value)
+                    formatted_sql = formatted_sql.replace(
+                        self.in_style.placeholder.encode(),
+                        self.out_style.placeholder.encode(),
+                        1
+                    )
+                param_count += 1
 
-    return formatted_sql, converted_params
+    return formatted_sql, out_params

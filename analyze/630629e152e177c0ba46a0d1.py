@@ -11,7 +11,7 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         if '@' not in handle:
             return None
             
-        username, domain = handle.split('@', 1)
+        username, domain = handle.split('@')
         
         # 构建WebFinger URL
         webfinger_url = f"https://{domain}/.well-known/webfinger"
@@ -28,11 +28,10 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         )
         
         # 检查响应状态
-        if response.status_code != 200:
-            return None
+        if response.status_code == 200:
+            return response.text
             
-        # 返回WebFinger文档
-        return response.text
+    except (requests.RequestException, ValueError):
+        pass
         
-    except Exception:
-        return None
+    return None

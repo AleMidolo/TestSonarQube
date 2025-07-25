@@ -36,9 +36,8 @@ def _explore_zipfile(zip_path):
                 grouped_files[xml_key].append(file_name)
             else:
                 # 查找对应的XML文件名
-                for potential_xml in file_list:
-                    if potential_xml.endswith('.xml') and file_name.startswith(potential_xml.rsplit('.', 1)[0]):
-                        xml_key = potential_xml.rsplit('.', 1)[0]
+                for xml_key in grouped_files.keys():
+                    if base_name.startswith(xml_key):
                         grouped_files[xml_key].append(file_name)
                         break
     

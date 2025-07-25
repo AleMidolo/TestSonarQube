@@ -11,9 +11,9 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
     for name, subparser in subparsers.items():
         try:
             # 尝试用当前子解析器解析所有参数
-            # parse_known_args() 返回一个包含已解析参数和未知参数的元组
-            parsed, unknown = subparser.parse_known_args(remaining_args)
-            parsed_args[name] = parsed
+            # parse_known_args() 返回一个包含已知参数的命名空间和未知参数列表的元组
+            namespace, unknown = subparser.parse_known_args(remaining_args)
+            parsed_args[name] = namespace
             remaining_args = unknown
         except:
             # 如果解析失败，继续尝试下一个子解析器

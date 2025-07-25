@@ -6,7 +6,7 @@ def formatmany(
     # Convert each params in many_params using the converter
     converted_params = [self._converter.convert_many(params) for params in many_params]
     
-    # If no params provided, return original sql and empty list
+    # If no params, return original sql and empty list
     if not converted_params:
         return sql, []
         
@@ -20,12 +20,11 @@ def formatmany(
             raise TypeError("All parameters must be of same type (dict)")
         return sql, converted_params
         
-    # For positional parameters (sequence)
-    elif isinstance(first_params, (list, tuple)):
+    # For positional parameters (sequence) 
+    if isinstance(first_params, (list, tuple)):
         # Verify all params are sequences
         if not all(isinstance(p, (list, tuple)) for p in converted_params):
             raise TypeError("All parameters must be of same type (sequence)")
         return sql, converted_params
         
-    else:
-        raise TypeError("Parameters must be either dict or sequence type")
+    raise TypeError("Parameters must be either dict or sequence type")

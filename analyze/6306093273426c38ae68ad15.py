@@ -48,10 +48,6 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
         
         return result
         
-    except subprocess.CalledProcessError as e:
-        # 处理ansible执行错误
-        raise Exception(f"Ansible playbook execution failed: {e.stderr}")
-        
     finally:
         # 清理临时文件
         if os.path.exists(vars_file_path):

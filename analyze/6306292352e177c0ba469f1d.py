@@ -16,7 +16,6 @@ def find_tags(text: str, replacer: callable = None) -> Tuple[Set, str]:
     in_code_block = False
     lines = text.split('\n')
     
-    # 遍历每一行
     for i, line in enumerate(lines):
         # 检查是否进入或离开代码块
         if line.strip().startswith('

@@ -9,31 +9,31 @@ def fromutc(self, dt):
     if dt.tzinfo is not self:
         dt = dt.replace(tzinfo=self)
 
-    utc_offset = self._transition_info[self._find_trans_idx(dt.replace(tzinfo=None))][0]
-    
+    utc_offset = self.utcoffset(dt)
+    if utc_offset is None:
+        return dt
+
     # 计算本地时间
     local_dt = dt + utc_offset
-    
+
     # 检查是否在DST转换期间
-    idx = self._find_trans_idx(local_dt.replace(tzinfo=None))
-    trans_info = self._transition_info[idx]
-    
+    dst_offset = self.dst(local_dt)
+    if dst_offset is None:
+        return local_dt
+
     # 检查是否存在歧义
-    if idx > 0:
-        prev_info = self._transition_info[idx - 1]
-        if prev_info[0] > trans_info[0]:  # 如果是从DST转向标准时间
-            ambiguous_start = local_dt - (prev_info[0] - trans_info[0])
-            if ambiguous_start <= local_dt < (ambiguous_start + (prev_info[0] - trans_info[0])):
-                # 在歧义期间，使用第一次出现的时间
-                return local_dt.replace(tzinfo=self)
-    
-    # 检查是否在"空洞"期间
-    if idx > 0:
-        prev_info = self._transition_info[idx - 1]
-        if prev_info[0] < trans_info[0]:  # 如果是从标准时间转向DST
-            gap_start = local_dt - (trans_info[0] - prev_info[0])
-            if gap_start <= local_dt < (gap_start + (trans_info[0] - prev_info[0])):
-                # 在"空洞"期间，调整到转换后的时间
-                return (local_dt + (trans_info[0] - prev_info[0])).replace(tzinfo=self)
-    
-    return local_dt.replace(tzinfo=self)
+    utc_offset_alt = self.utcoffset(local_dt - dst_offset)
+    if utc_offset_alt is None:
+        return local_dt
+
+    if utc_offset != utc_offset_alt:
+        # 存在歧义，检查是否在"折叠"状态
+        if utc_offset > utc_offset_alt:
+            # 从夏令时转换到标准时间
+            fold = 1
+        else:
+            # 从标准时间转换到夏令时
+            fold = 0
+        return local_dt.replace(fold=fold)
+
+    return local_dt

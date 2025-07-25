@@ -10,10 +10,14 @@ def format_dt(dt):
     # 确保时区信息存在
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
-    
-    # 格式化为ISO格式字符串,去掉毫秒
+        
+    # 转换为ISO格式字符串,去掉毫秒
     formatted = dt.isoformat()
     if '.' in formatted:
         formatted = formatted[:formatted.index('.')]
+        
+    # 添加Z表示UTC时区
+    if formatted.endswith('+00:00'):
+        formatted = formatted[:-6] + 'Z'
         
     return formatted

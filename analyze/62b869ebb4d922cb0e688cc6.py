@@ -1,50 +1,58 @@
 def update_last_applied_manifest_list_from_resp(last_applied_manifest, observer_schema, response):
     # Handle empty cases
     if not observer_schema or not response:
-        return
-    
-    # Ensure last_applied_manifest has enough elements
+        return last_applied_manifest
+
+    # Ensure last_applied_manifest is initialized as a list
+    if last_applied_manifest is None:
+        last_applied_manifest = []
+
+    # Extend last_applied_manifest if needed to match response length
     while len(last_applied_manifest) < len(response):
         last_applied_manifest.append({})
-        
-    # Iterate through response items
-    for i, resp_item in enumerate(response):
-        if i >= len(observer_schema):
+
+    # Update each item in the list
+    for i, (schema_item, resp_item) in enumerate(zip(observer_schema, response)):
+        if i >= len(last_applied_manifest):
             break
             
-        schema_item = observer_schema[i]
-        
-        # Skip if schema item is not a dict
-        if not isinstance(schema_item, dict):
-            continue
+        # Handle dict type schema items
+        if isinstance(schema_item, dict):
+            if not isinstance(last_applied_manifest[i], dict):
+                last_applied_manifest[i] = {}
+            for key, schema_value in schema_item.items():
+                if key in resp_item:
+                    if isinstance(schema_value, dict):
+                        if key not in last_applied_manifest[i]:
+                            last_applied_manifest[i][key] = {}
+                        update_last_applied_manifest_dict_from_resp(
+                            last_applied_manifest[i][key],
+                            schema_value,
+                            resp_item[key]
+                        )
+                    elif isinstance(schema_value, list):
+                        if key not in last_applied_manifest[i]:
+                            last_applied_manifest[i][key] = []
+                        update_last_applied_manifest_list_from_resp(
+                            last_applied_manifest[i][key],
+                            schema_value,
+                            resp_item[key]
+                        )
+                    else:
+                        last_applied_manifest[i][key] = resp_item[key]
+
+        # Handle list type schema items 
+        elif isinstance(schema_item, list):
+            if not isinstance(last_applied_manifest[i], list):
+                last_applied_manifest[i] = []
+            update_last_applied_manifest_list_from_resp(
+                last_applied_manifest[i],
+                schema_item,
+                resp_item
+            )
             
-        # Get or create manifest item
-        manifest_item = last_applied_manifest[i]
-        if not isinstance(manifest_item, dict):
-            manifest_item = {}
-            last_applied_manifest[i] = manifest_item
-            
-        # Update fields based on schema
-        for field, value in resp_item.items():
-            if field in schema_item:
-                if isinstance(value, dict) and isinstance(schema_item[field], dict):
-                    # Recursively handle nested dicts
-                    if field not in manifest_item:
-                        manifest_item[field] = {}
-                    update_last_applied_manifest_dict_from_resp(
-                        manifest_item[field],
-                        schema_item[field], 
-                        value
-                    )
-                elif isinstance(value, list) and isinstance(schema_item[field], list):
-                    # Recursively handle nested lists
-                    if field not in manifest_item:
-                        manifest_item[field] = []
-                    update_last_applied_manifest_list_from_resp(
-                        manifest_item[field],
-                        schema_item[field],
-                        value
-                    )
-                else:
-                    # Update simple field
-                    manifest_item[field] = value
+        # Handle primitive type schema items
+        else:
+            last_applied_manifest[i] = resp_item
+
+    return last_applied_manifest

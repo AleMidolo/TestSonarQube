@@ -1,20 +1,29 @@
 from datetime import timedelta
 
 def parse_frequency(frequency):
+    """
+    给定一个包含数字和时间单位的频率字符串，返回一个对应的 `datetime.timedelta` 实例。
+
+    如果频率为 `None` 或 `"always"`，则返回 `None`。
+
+    如果给定的频率无法解析，则抛出 `ValueError` 异常。
+
+    例如，给定 `"3 timeunit"`，返回 `datetime.timedelta(timeunit=3)`。
+
+    @param frequency : 一个频率字符串，格式为 `"数字 时间单位"`
+
+    @return str, 对应的 `datetime.timedelta` 实例或 `None`
+    """
     if frequency is None or frequency == "always":
         return None
-        
+
     try:
-        # Split frequency string into number and unit
-        parts = frequency.split()
-        if len(parts) != 2:
-            raise ValueError(f"Invalid frequency format: {frequency}")
-            
-        number = float(parts[0])
-        unit = parts[1].lower()
+        # 分割频率字符串为数字和单位
+        number, unit = frequency.split()
+        number = int(number)
         
-        # Map of valid time units to timedelta parameters
-        valid_units = {
+        # 支持的时间单位映射
+        units = {
             'days': 'days',
             'day': 'days',
             'weeks': 'weeks', 
@@ -24,19 +33,16 @@ def parse_frequency(frequency):
             'minutes': 'minutes',
             'minute': 'minutes',
             'seconds': 'seconds',
-            'second': 'seconds',
-            'microseconds': 'microseconds',
-            'microsecond': 'microseconds'
+            'second': 'seconds'
         }
         
-        if unit not in valid_units:
-            raise ValueError(f"Invalid time unit: {unit}")
+        # 检查单位是否支持
+        if unit.lower() not in units:
+            raise ValueError(f"Unsupported time unit: {unit}")
             
-        # Create timedelta with the appropriate unit
-        kwargs = {valid_units[unit]: number}
+        # 构建timedelta参数
+        kwargs = {units[unit.lower()]: number}
         return timedelta(**kwargs)
         
-    except ValueError as e:
-        if str(e).startswith("Invalid"):
-            raise
+    except (ValueError, AttributeError):
         raise ValueError(f"Invalid frequency format: {frequency}")

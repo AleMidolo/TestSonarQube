@@ -21,8 +21,8 @@ def get_pattern(pattern, strip=True):
         # 根据strip参数决定是否去除两端空格
         if strip:
             pattern = pattern.strip()
-        # 编译为正则表达式模式并返回    
+        # 编译正则表达式并返回
         return re.compile(pattern)
         
     # 如果既不是Pattern也不是str类型,抛出异常
-    raise TypeError("pattern must be string or compiled pattern")
+    raise TypeError("Pattern must be string or compiled pattern")

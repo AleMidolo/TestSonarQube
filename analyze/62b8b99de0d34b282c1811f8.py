@@ -4,12 +4,13 @@ def _reset_logging(cls):
     """
     import logging
     
-    # Remove all existing handlers
-    root = logging.getLogger()
-    for handler in root.handlers[:]:
-        root.removeHandler(handler)
+    # 移除所有现有的handlers
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
         
-    # Reset logging configuration
-    logging.basicConfig(level=logging.INFO,
-                       format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                       datefmt='%Y-%m-%d %H:%M:%S')
+    # 重置logging配置
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )

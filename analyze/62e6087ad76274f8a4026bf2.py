@@ -14,7 +14,7 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **
         "qid": qid
     }
 
-    # 创建消息结构
+    # 创建消息
     message = {
         "signature": 0x2F,  # DISCARD message signature
         "fields": message_params
@@ -28,13 +28,12 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **
 
     # 创建响应对象
     response = Response(
-        message=message,
+        handlers=handlers,
         dehydration_hooks=dehydration_hooks,
-        hydration_hooks=hydration_hooks,
-        **handlers
+        hydration_hooks=hydration_hooks
     )
 
-    # 将消息添加到输出队列
+    # 将消息和响应添加到输出队列
     self._append(message, response)
 
     return response
