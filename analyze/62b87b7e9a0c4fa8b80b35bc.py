@@ -17,4 +17,5 @@ def _update_context(self, context):
         if coord in context.error:
             context.error[coord] = {"index": self.error_indices[i]}
     
-    # 这里可以添加更多的逻辑来更新 context 的其他部分
+    # 其他属性的更新逻辑
+    # 例如，更新 context.value 等

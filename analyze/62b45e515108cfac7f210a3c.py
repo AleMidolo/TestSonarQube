@@ -3,15 +3,20 @@ def initialize(self):
     创建并初始化一个新的 OCFL 存储根目录。
     """
     # 创建 OCFL 存储根目录
-    os.makedirs(self.root_directory, exist_ok=True)
-    
-    # 初始化必要的子目录
-    os.makedirs(os.path.join(self.root_directory, 'objects'), exist_ok=True)
-    os.makedirs(os.path.join(self.root_directory, 'metadata'), exist_ok=True)
-    
-    # 创建一个初始的配置文件
-    config_path = os.path.join(self.root_directory, 'config.json')
-    with open(config_path, 'w') as config_file:
-        json.dump({"version": "1.0", "created": datetime.now().isoformat()}, config_file)
-    
-    print("OCFL 存储根目录已创建并初始化。")
+    import os
+
+    root_directory = "ocfl_root"  # OCFL 存储根目录名称
+    if not os.path.exists(root_directory):
+        os.makedirs(root_directory)  # 创建目录
+        print(f"OCFL 存储根目录 '{root_directory}' 已创建。")
+    else:
+        print(f"OCFL 存储根目录 '{root_directory}' 已存在。")
+
+    # 初始化其他必要的文件或配置
+    config_file = os.path.join(root_directory, "config.json")
+    if not os.path.exists(config_file):
+        with open(config_file, 'w') as f:
+            f.write('{}')  # 创建一个空的配置文件
+        print(f"配置文件 '{config_file}' 已创建。")
+    else:
+        print(f"配置文件 '{config_file}' 已存在。")

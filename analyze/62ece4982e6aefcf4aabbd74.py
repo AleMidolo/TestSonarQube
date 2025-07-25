@@ -23,17 +23,18 @@ def prepare_repository_from_archive(
     tmp_path = Path(tmp_path)
     tmp_path.mkdir(parents=True, exist_ok=True)
 
+    # Determine the extraction path
+    extraction_path = tmp_path / Path(archive_path).stem
+    extraction_path.mkdir(exist_ok=True)
+
     # Extract the archive
     with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-        zip_ref.extractall(tmp_path)
+        zip_ref.extractall(extraction_path)
 
-    # If a filename is provided, construct the repository URL
+    # If a filename is provided, return the URL for that specific file
     if filename:
-        file_path = tmp_path / filename
-        if file_path.exists():
-            return f"file://{file_path.resolve()}"
-        else:
-            raise FileNotFoundError(f"{filename} not found in the archive.")
+        file_path = extraction_path / filename
+        return f"file://{file_path.resolve()}"
     
-    # If no filename is provided, return the URL of the tmp_path
-    return f"file://{tmp_path.resolve()}"
+    # Otherwise, return the URL for the extraction directory
+    return f"file://{extraction_path.resolve()}"
