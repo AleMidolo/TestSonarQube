@@ -14,7 +14,7 @@ def parse_frequency(frequency):
     unit = match.group(2).strip().lower()
     
     # Map Hindi units to timedelta arguments
-    unit_map = {
+    unit_mapping = {
         'दिन': 'days',
         'दिनों': 'days',
         'सप्ताह': 'weeks', 
@@ -23,18 +23,22 @@ def parse_frequency(frequency):
         'महीना': 'days',
         'महीने': 'days',
         'साल': 'days',
-        'वर्ष': 'days'
+        'वर्ष': 'days',
+        'घंटा': 'hours',
+        'घंटे': 'hours',
+        'मिनट': 'minutes',
+        'सेकंड': 'seconds'
     }
     
-    if unit not in unit_map:
+    if unit not in unit_mapping:
         raise ValueError(f"Invalid time unit: {unit}")
         
-    # Convert months/years to days
+    # Handle special cases for months and years
     if unit in ['महीना', 'महीने']:
-        number *= 30
+        return datetime.timedelta(days=number * 30)
     elif unit in ['साल', 'वर्ष']:
-        number *= 365
-        
-    # Create timedelta with appropriate argument
-    kwargs = {unit_map[unit]: number}
+        return datetime.timedelta(days=number * 365)
+    
+    # Create timedelta with mapped unit
+    kwargs = {unit_mapping[unit]: number}
     return datetime.timedelta(**kwargs)

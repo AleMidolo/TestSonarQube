@@ -1,9 +1,3 @@
-import os
-import pty
-import subprocess
-import sys
-from typing import Any, Sequence
-
 def xargs(
         cmd: tuple[str, ...],
         varargs: Sequence[str],
@@ -14,79 +8,80 @@ def xargs(
         **kwargs: Any,
 ) -> tuple[int, bytes]:
     
+    # Handle empty varargs case
     if not varargs:
-        return 0, b''
-        
-    # Split varargs into chunks that fit within max command length
-    chunks = []
-    current_chunk = []
-    current_length = sum(len(arg) + 1 for arg in cmd)
+        proc = subprocess.Popen(cmd, **kwargs)
+        stdout, _ = proc.communicate()
+        return proc.returncode, stdout or b''
+
+    # Split varargs into partitions based on max length
+    partitions = []
+    current_partition = []
+    current_length = 0
     
     for arg in varargs:
         arg_length = len(arg) + 1  # +1 for space
         if current_length + arg_length > _max_length:
-            chunks.append(current_chunk)
-            current_chunk = [arg]
-            current_length = sum(len(arg) + 1 for arg in cmd) + arg_length
+            if current_partition:
+                partitions.append(current_partition)
+            current_partition = [arg]
+            current_length = arg_length
         else:
-            current_chunk.append(arg)
+            current_partition.append(arg)
             current_length += arg_length
             
-    if current_chunk:
-        chunks.append(current_chunk)
+    if current_partition:
+        partitions.append(current_partition)
 
-    # Run commands in parallel up to target_concurrency
+    # Run commands in parallel based on target_concurrency
     processes = []
-    output = b''
-    max_retcode = 0
+    outputs = []
+    return_codes = []
     
-    for i in range(0, len(chunks), target_concurrency):
-        batch = chunks[i:i + target_concurrency]
+    for i in range(0, len(partitions), target_concurrency):
+        batch = partitions[i:i + target_concurrency]
+        processes = []
         
-        for chunk in batch:
-            cmd_with_args = list(cmd) + chunk
-            
-            if color and sys.platform != 'win32' and hasattr(pty, 'openpty'):
-                # Use PTY for color output
+        for partition in batch:
+            # Create PTY if color is enabled
+            if color and sys.platform != 'win32':
+                import pty
                 master, slave = pty.openpty()
                 proc = subprocess.Popen(
-                    cmd_with_args,
+                    (*cmd, *partition),
                     stdout=slave,
-                    stderr=slave,
                     **kwargs
                 )
                 os.close(slave)
                 processes.append((proc, master))
             else:
                 proc = subprocess.Popen(
-                    cmd_with_args,
+                    (*cmd, *partition),
                     stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
                     **kwargs
                 )
                 processes.append((proc, None))
-                
-        # Wait for batch to complete
+
+        # Wait for processes and collect output
         for proc, master in processes:
             if master is not None:
-                # Read from PTY
-                try:
-                    while True:
+                output = b''
+                while True:
+                    try:
                         chunk = os.read(master, 1024)
                         if not chunk:
                             break
                         output += chunk
-                except OSError:
-                    pass
+                    except OSError:
+                        break
                 os.close(master)
             else:
-                # Read from pipes
-                stdout, stderr = proc.communicate()
-                output += stdout + stderr
+                output = proc.communicate()[0]
                 
-            retcode = proc.wait()
-            max_retcode = max(max_retcode, retcode)
-            
-        processes = []
+            proc.wait()
+            return_codes.append(proc.returncode)
+            outputs.append(output or b'')
 
-    return max_retcode, output
+    # Return max return code and concatenated output
+    final_output = b''.join(outputs)
+    return max(return_codes), final_output

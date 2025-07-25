@@ -15,7 +15,7 @@ def check_digests_present_and_used(self, manifest_files, digests_used):
     if unused_digests:
         raise ValueError(f"Found unused digests in manifest: {unused_digests}")
         
-    # Check if all used digests are present in manifest
+    # Check if all used digests exist in manifest
     missing_digests = digests_used - manifest_digests
     if missing_digests:
         raise ValueError(f"Used digests not found in manifest: {missing_digests}")

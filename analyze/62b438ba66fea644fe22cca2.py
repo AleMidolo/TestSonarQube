@@ -1,8 +1,8 @@
 def deep_merge_nodes(nodes):
-    # Dictionary to store merged nodes by key
+    # Create dict to store merged results
     merged = {}
     
-    # Iterate through all node tuples
+    # Iterate through all nodes
     for key_node, value_node in nodes:
         key = key_node.value
         
@@ -11,41 +11,35 @@ def deep_merge_nodes(nodes):
             merged[key] = (key_node, value_node)
             continue
             
-        # Get existing value node for this key
-        existing_value_node = merged[key][1]
+        # If key exists, need to merge
+        existing_value = merged[key][1]
         
-        # If both nodes are mapping nodes, merge them recursively
-        if (value_node.tag == 'tag:yaml.org,2002:map' and 
-            existing_value_node.tag == 'tag:yaml.org,2002:map'):
+        # If both are mapping nodes, merge recursively
+        if (hasattr(existing_value, 'tag') and 
+            hasattr(value_node, 'tag') and
+            existing_value.tag == 'tag:yaml.org,2002:map' and 
+            value_node.tag == 'tag:yaml.org,2002:map'):
             
             # Convert mapping node values to dict for easier merging
-            existing_dict = {k.value: v for k,v in existing_value_node.value}
-            new_dict = {k.value: v for k,v in value_node.value}
+            existing_dict = {k.value: (k,v) for k,v in existing_value.value}
+            new_dict = {k.value: (k,v) for k,v in value_node.value}
             
-            # Update existing dict with new values
+            # Merge the dicts
             for k, v in new_dict.items():
                 existing_dict[k] = v
                 
             # Convert back to list of tuples
-            merged_value = [(k_node, existing_dict[k_node.value]) 
-                          for k_node, _ in existing_value_node.value 
-                          if k_node.value in existing_dict]
+            merged_value = list(existing_dict.values())
             
-            # Add any new keys
-            for k_node, v_node in value_node.value:
-                if k_node.value not in [k.value for k,_ in merged_value]:
-                    merged_value.append((k_node, v_node))
-                    
-            # Create new mapping node with merged values    
-            merged_mapping = type(value_node)(
+            # Create new mapping node with merged values
+            merged[key] = (key_node, type(value_node)(
                 tag='tag:yaml.org,2002:map',
                 value=merged_value
-            )
-            merged[key] = (key_node, merged_mapping)
+            ))
             
-        # For non-mapping nodes, just take the latest value
+        # For non-mapping nodes, take the latest value
         else:
             merged[key] = (key_node, value_node)
             
-    # Convert merged dict back to list of tuples
+    # Return list of merged tuples
     return list(merged.values())

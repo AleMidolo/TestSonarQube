@@ -15,20 +15,17 @@ def scale(self, other=None):
     if len(self.fields) > 0:
         last_field = self.fields[-1]
         
-        # Rescale the coordinate values
+        # Scale the coordinate values
         self.data[last_field] *= factor
         
-        # Rescale any associated errors
+        # Scale any associated errors
         error_field = f"{last_field}_err"
         if error_field in self.data:
             self.data[error_field] *= factor
             
-        # Rescale any asymmetric errors
-        error_low = f"{last_field}_err_low"
-        error_high = f"{last_field}_err_high"
-        if error_low in self.data and error_high in self.data:
-            self.data[error_low] *= factor
-            self.data[error_high] *= factor
+        sys_error_field = f"{last_field}_sys_err" 
+        if sys_error_field in self.data:
+            self.data[sys_error_field] *= factor
             
     # Update the scale
     self._scale = other

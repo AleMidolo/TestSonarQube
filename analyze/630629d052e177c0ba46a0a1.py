@@ -10,9 +10,9 @@ def verify_relayable_signature(public_key, doc, signature):
         from cryptography.hazmat.primitives.serialization import load_pem_public_key
         from cryptography.exceptions import InvalidSignature
         
-        # Convert doc to bytes if it's not already
+        # Convert doc to bytes if it's a string
         if isinstance(doc, str):
-            message = doc.encode('utf-8')
+            message = doc.encode()
         else:
             message = doc
             

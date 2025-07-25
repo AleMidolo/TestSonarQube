@@ -20,16 +20,16 @@ def _extract_number_and_supplment_from_issue_element(issue):
             # If no supplement, treat entire string as number
             number = issue
             
-        # Clean up number - remove any non-numeric characters
-        if number:
-            number = ''.join(c for c in number if c.isdigit())
-            if not number:
-                number = None
-                
-        # Clean up supplement - remove any non-alphanumeric characters
+        # Convert number to integer if possible
+        try:
+            number = int(number) if number else None
+        except (ValueError, TypeError):
+            number = number
+            
+        # Clean up supplement value
         if suppl:
-            suppl = ''.join(c for c in suppl if c.isalnum())
-            if not suppl:
-                suppl = None
-    
+            suppl = suppl.strip(' .')
+            if suppl.startswith('.'):
+                suppl = suppl[1:]
+                
     return number, suppl

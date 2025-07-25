@@ -51,7 +51,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
             result['aliases'] = data['aliases']
             
         return result
-        
+
     except requests.exceptions.RequestException as e:
         raise ConnectionError(f"Failed to retrieve webfinger document: {str(e)}")
     except json.JSONDecodeError:

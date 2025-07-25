@@ -8,4 +8,4 @@ def validate_choices_args(self, args):
         if hasattr(self, 'choices') and arg_name in self.choices:
             valid_choices = self.choices[arg_name]
             if arg_value not in valid_choices:
-                raise ValueError(f"Argument '{arg_name}' must be one of {valid_choices}. Got '{arg_value}'")
+                raise ValueError(f"Argument '{arg_name}' must be one of {valid_choices}, got '{arg_value}'")

@@ -38,16 +38,15 @@ def get_nested_custom_and_control_args(self, args):
         current_dict = nested_args
         
         # Build nested dictionary structure
-        for path_part in nested_path[:-1]:
-            if path_part not in current_dict:
-                current_dict[path_part] = {}
-            current_dict = current_dict[path_part]
-            
-        # Set the final value
-        current_dict[nested_path[-1]] = value
+        for i, path_part in enumerate(nested_path):
+            if i == len(nested_path) - 1:
+                current_dict[path_part] = value
+            else:
+                if path_part not in current_dict:
+                    current_dict[path_part] = {}
+                current_dict = current_dict[path_part]
 
-    # Merge custom args into nested args with special handling
-    for custom_key, custom_value in custom_args.items():
-        nested_args[custom_key] = custom_value
-
+    # Merge custom args into nested args
+    nested_args.update(custom_args)
+    
     return control_args, nested_args

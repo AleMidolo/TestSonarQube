@@ -8,15 +8,15 @@ def is_gitbash():
     import sys
     
     # Check if running on Windows
-    if os.name != 'nt':
+    if sys.platform != 'win32':
         return False
         
-    # Check for MINGW in system path which indicates GitBash
-    if 'MINGW' in sys.executable.upper():
+    # Check for MINGW in environment variables which indicates Git Bash
+    if 'MINGW' in os.environ.get('MSYSTEM', ''):
         return True
         
-    # Check for common GitBash environment variables
-    if os.environ.get('MSYSTEM', '').startswith('MINGW'):
+    # Check for Git Bash specific environment variables
+    if os.environ.get('TERM') == 'xterm' and os.environ.get('SHELL', '').endswith('bash.exe'):
         return True
         
     return False

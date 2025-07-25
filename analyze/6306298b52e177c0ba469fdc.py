@@ -4,19 +4,11 @@ def xml_children_as_dict(node):
     
     # Iterate through all child nodes
     for child in node:
-        # Skip text nodes and comments
+        # Skip non-element nodes like text/comments
         if not isinstance(child.tag, str):
             continue
             
-        # Get tag name
-        tag = child.tag
+        # Use the tag name as key and store the child node as value
+        children_dict[child.tag] = child
         
-        # If tag already exists in dict, make it a list
-        if tag in children_dict:
-            if not isinstance(children_dict[tag], list):
-                children_dict[tag] = [children_dict[tag]]
-            children_dict[tag].append(child)
-        else:
-            children_dict[tag] = child
-            
     return children_dict

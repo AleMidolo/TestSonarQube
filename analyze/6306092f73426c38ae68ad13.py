@@ -16,31 +16,35 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
     # Base command
     cmd = ['ansible-playbook', playbook_path]
     
-    # Add verbosity
+    # Add verbosity if specified
     if verbose:
         if isinstance(verbose, bool):
             cmd.append('-v')
         elif isinstance(verbose, int):
             cmd.append('-' + 'v' * verbose)
             
-    # Add inventory if workspace has one
-    if hasattr(ir_workspace, 'inventory'):
+    # Add extra vars if provided
+    if extra_vars:
+        if isinstance(extra_vars, dict):
+            for key, value in extra_vars.items():
+                cmd.extend(['--extra-vars', f'{key}={value}'])
+                
+    # Add inventory file from workspace if it exists
+    if ir_workspace and hasattr(ir_workspace, 'inventory'):
         cmd.extend(['-i', ir_workspace.inventory])
         
-    # Add extra vars
-    if extra_vars:
-        for key, value in extra_vars.items():
-            cmd.extend(['--extra-vars', f'{key}={value}'])
-            
-    # Add any additional ansible arguments
+    # Add any additional Ansible arguments
     if ansible_args:
-        for arg, value in ansible_args.items():
-            if value is True:
-                cmd.append(f'--{arg}')
-            elif value is not False:
-                cmd.extend([f'--{arg}', str(value)])
-                
-    # Execute the playbook
+        if isinstance(ansible_args, dict):
+            for key, value in ansible_args.items():
+                if len(key) == 1:
+                    cmd.append(f'-{key}')
+                else:
+                    cmd.append(f'--{key}')
+                if value is not None:
+                    cmd.append(str(value))
+                    
+    # Execute the command
     try:
         result = subprocess.run(
             cmd,
@@ -49,6 +53,6 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
             stderr=subprocess.PIPE,
             universal_newlines=True
         )
-        return result.stdout
+        return result
     except subprocess.CalledProcessError as e:
         raise Exception(f"Ansible playbook execution failed: {e.stderr}")

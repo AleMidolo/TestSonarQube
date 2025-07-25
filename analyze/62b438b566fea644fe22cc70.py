@@ -27,7 +27,7 @@ _borgmatic()
     esac
 
     # Handle general options
-    if [[ ${cur} == -* ]]; then
+    if [[ ${cur} == -* ]] ; then
         COMPREPLY=( $(compgen -W "--help --verbosity --config --repository --archive" -- ${cur}) )
         return 0
     fi

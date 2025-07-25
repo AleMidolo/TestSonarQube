@@ -11,47 +11,51 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     import os
     import json
     import subprocess
-    from tempfile import NamedTemporaryFile
+    from ansible.cli import CLI
+    from ansible.parsing.dataloader import DataLoader
+    from ansible.inventory.manager import InventoryManager
+    from ansible.vars.manager import VariableManager
+    from ansible.playbook.play import Play
+    from ansible.executor.playbook_executor import PlaybookExecutor
 
-    # Create temporary file for vars
-    with NamedTemporaryFile(mode='w', suffix='.json', delete=False) as vars_file:
-        json.dump(vars_dict, vars_file)
-        vars_file_path = vars_file.name
+    # Ansible के लिए आवश्यक डायरेक्टरी पथ सेट करें
+    playbook_dir = os.path.join(ir_plugin.path, 'playbooks')
+    inventory_file = os.path.join(ir_workspace.path, 'hosts')
 
+    # एक्स्ट्रा वेरिएबल्स को JSON फाइल में लिखें
+    extra_vars_file = os.path.join(ir_workspace.path, 'extra_vars.json')
+    with open(extra_vars_file, 'w') as f:
+        json.dump(vars_dict, f)
+
+    # Ansible CLI कमांड तैयार करें
+    ansible_cmd = ['ansible-playbook']
+    ansible_cmd.extend(cli_args)
+    ansible_cmd.extend([
+        '-i', inventory_file,
+        '--extra-vars', '@' + extra_vars_file
+    ])
+
+    # प्लेबुक को एक्जीक्यूट करें
     try:
-        # Build ansible-playbook command
-        cmd = ['ansible-playbook']
-        
-        # Add any CLI arguments
-        cmd.extend(cli_args)
-        
-        # Add vars file as extra vars
-        cmd.extend(['-e', f'@{vars_file_path}'])
-        
-        # Add workspace inventory if exists
-        if ir_workspace and hasattr(ir_workspace, 'inventory'):
-            cmd.extend(['-i', ir_workspace.inventory])
-            
-        # Add plugin playbook path if exists  
-        if ir_plugin and hasattr(ir_plugin, 'playbook_path'):
-            cmd.append(ir_plugin.playbook_path)
+        loader = DataLoader()
+        inventory = InventoryManager(loader=loader, sources=inventory_file)
+        variable_manager = VariableManager(loader=loader, inventory=inventory)
 
-        # Run ansible-playbook command
-        result = subprocess.run(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True,
-            check=True
+        pbex = PlaybookExecutor(
+            playbooks=cli_args,
+            inventory=inventory,
+            variable_manager=variable_manager,
+            loader=loader,
+            extra_vars=vars_dict
         )
-        
-        return result
 
-    except subprocess.CalledProcessError as e:
-        # Handle ansible errors
-        raise Exception(f"Ansible playbook failed: {e.stderr}")
-        
+        return pbex.run()
+
+    except Exception as e:
+        print(f"Ansible प्लेबुक एक्जीक्यूशन में त्रुटि: {str(e)}")
+        return 1
+
     finally:
-        # Cleanup temp vars file
-        if os.path.exists(vars_file_path):
-            os.unlink(vars_file_path)
+        # क्लीनअप - एक्स्ट्रा वेरिएबल्स फाइल हटाएं
+        if os.path.exists(extra_vars_file):
+            os.remove(extra_vars_file)

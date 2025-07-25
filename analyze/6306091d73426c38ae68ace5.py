@@ -21,6 +21,6 @@ def _include_groups(self, parser_dict):
             parser_dict[key] = self._include_groups(value)
         elif isinstance(value, list):
             parser_dict[key] = [self._include_groups(item) if isinstance(item, dict) else item 
-                              for item in value]
+                               for item in value]
             
     return parser_dict

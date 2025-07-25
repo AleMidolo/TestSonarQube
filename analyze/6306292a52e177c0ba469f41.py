@@ -6,15 +6,15 @@ def test_tag(tag: str) -> bool:
     if not tag:
         return False
         
-    # Check if tag contains only valid characters (alphanumeric and underscore)
+    # Check if tag contains only alphanumeric chars and underscore
     if not all(c.isalnum() or c == '_' for c in tag):
         return False
         
-    # Check if tag starts with a letter
+    # Check if tag starts with letter
     if not tag[0].isalpha():
         return False
         
-    # Check if tag is between 2 and 30 characters
+    # Check length is between 2 and 30 chars
     if len(tag) < 2 or len(tag) > 30:
         return False
         
