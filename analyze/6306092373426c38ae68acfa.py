@@ -10,14 +10,11 @@ def get_spec_defaults(self):
             if param.default is not None:
                 defaults[param.name] = param.default
                 
-    # Get defaults from other sources like config files
-    if hasattr(self, 'config'):
-        defaults.update(self.config.get('defaults', {}))
-        
-    # Get defaults from environment variables
-    for key, value in os.environ.items():
-        if key.startswith(self.env_prefix):
-            param_name = key[len(self.env_prefix):].lower()
-            defaults[param_name] = value
-            
+    # Get defaults from function signature if available
+    if hasattr(self, 'func'):
+        sig = inspect.signature(self.func)
+        for name, param in sig.parameters.items():
+            if param.default is not inspect.Parameter.empty:
+                defaults[name] = param.default
+                
     return defaults

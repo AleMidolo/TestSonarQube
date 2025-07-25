@@ -7,29 +7,34 @@ def _update_context(self, context):
         context.error = {}
 
     # Map coordinate names to x,y,z
-    coord_names = ['x', 'y', 'z']
+    coord_map = {0:'x', 1:'y', 2:'z'}
     
-    # Look for error fields and update context
+    # Look for error fields and add to context
     for field in field_names:
         # Check if field name contains 'error'
         if 'error' in field.lower():
-            # Extract base name before '_error'
-            base = field.split('_error')[0].lower()
-            
-            # Map to x,y,z if possible
-            for i, coord in enumerate(coord_names):
-                if base == coord:
-                    base = coord
-                    break
+            # Extract coordinate name from error field
+            for i, coord in coord_map.items():
+                if f'error_{coord}' in field.lower():
+                    # Get index of this error field
+                    idx = field_names.index(field)
                     
-            # Get index of error field
-            idx = field_names.index(field)
+                    # Add to context.error
+                    if coord not in context.error:
+                        context.error[coord] = {}
+                    context.error[coord]['index'] = idx
+                    break
             
-            # Add to context.error
-            if base not in context.error:
-                context.error[base] = {}
-            context.error[base]['index'] = idx
+            # Handle _low/_high variants
+            if '_low' in field.lower():
+                coord = field.split('_')[1].lower()
+                if coord not in context.error:
+                    context.error[coord] = {}
+                context.error[coord]['index'] = field_names.index(field)
+            elif '_high' in field.lower():
+                coord = field.split('_')[1].lower() 
+                if coord not in context.error:
+                    context.error[coord] = {}
+                context.error[coord]['index'] = field_names.index(field)
 
-    # Preserve existing values in context.value
-    if hasattr(context, 'value'):
-        pass
+    return context

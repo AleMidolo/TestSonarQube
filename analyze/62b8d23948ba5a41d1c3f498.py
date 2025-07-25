@@ -43,19 +43,5 @@ def lru_cache(maxsize=128, typed=False):
             
         wrapper.cache_info = cache_info
         
-        # Add cache clear method
-        def cache_clear():
-            cache.clear()
-            order.clear()
-            
-        wrapper.cache_clear = cache_clear
-        
         return wrapper
-        
-    # Handle no-argument case
-    if callable(maxsize):
-        func = maxsize
-        maxsize = 128
-        return decorator(func)
-        
     return decorator

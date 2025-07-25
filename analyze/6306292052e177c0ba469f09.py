@@ -8,7 +8,7 @@ def identify_request(request: RequestType):
         return 'private'
         
     # Finally check if it's a legacy payload
-    if hasattr(request, 'legacy') and request.legacy:
+    if hasattr(request, 'legacy_payload'):
         return 'legacy'
         
     # If none of the above, return None

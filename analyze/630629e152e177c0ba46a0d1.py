@@ -19,7 +19,7 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
             'resource': f'acct:{handle}'
         }
         
-        # Make request with timeout
+        # Make request
         response = requests.get(webfinger_url, params=params, timeout=10)
         
         if response.status_code == 200:

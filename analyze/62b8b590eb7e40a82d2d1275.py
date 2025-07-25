@@ -2,56 +2,54 @@ def _legacy_mergeOrderings(orderings):
     # Create a dictionary to store item positions
     item_positions = {}
     
-    # Create a dictionary to store items that must come before others
-    dependencies = {}
+    # Create a dictionary to store items that must come after each item
+    must_follow = {}
     
-    # Process each ordering list
+    # Process each ordering
     for ordering in orderings:
-        # Track position of each item in this ordering
         for i, item in enumerate(ordering):
+            # Add item to must_follow dict if not already present
+            if item not in must_follow:
+                must_follow[item] = set()
+            
+            # Record position of item in this ordering
             if item not in item_positions:
                 item_positions[item] = []
             item_positions[item].append(i)
             
-            # Add dependencies - each item must come after previous items
-            if i > 0:
-                prev = ordering[i-1]
-                if prev not in dependencies:
-                    dependencies[prev] = set()
-                dependencies[prev].add(item)
-                
-    # Get all unique items
-    all_items = set()
-    for ordering in orderings:
-        all_items.update(ordering)
-        
-    # Build result list
+            # Add all items that must follow this item
+            must_follow[item].update(ordering[i+1:])
+    
+    # Create result list
     result = []
     used = set()
     
-    while len(result) < len(all_items):
-        # Find items with no remaining dependencies
-        available = set()
-        for item in all_items:
-            if item not in used:
-                has_deps = False
-                for deps in dependencies.values():
-                    if item in deps:
-                        has_deps = True
-                        break
-                if not has_deps:
-                    available.add(item)
-                    
-        if not available:
+    # Helper function to check if an item can be added
+    def can_add(item):
+        # Item must not be used already
+        if item in used:
+            return False
+            
+        # All items that must come before this item must be used
+        for other_item in must_follow:
+            if item in must_follow[other_item] and other_item not in used:
+                return False
+                
+        return True
+    
+    # Keep adding items until all are used
+    while len(used) < len(must_follow):
+        # Find next available item
+        available = None
+        for item in must_follow:
+            if can_add(item):
+                available = item
+                break
+                
+        if available is None:
             raise ValueError("Circular dependency detected")
             
-        # Add the first available item
-        item = next(iter(available))
-        result.append(item)
-        used.add(item)
+        result.append(available)
+        used.add(available)
         
-        # Remove this item from dependencies
-        if item in dependencies:
-            del dependencies[item]
-            
     return result

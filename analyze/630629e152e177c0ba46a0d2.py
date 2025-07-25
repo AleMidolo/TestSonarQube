@@ -14,24 +14,24 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         raise ValueError("Invalid handle format - must contain @")
 
     # Split handle into user and domain
-    username, domain = handle.split('@', 1)
+    user, domain = handle.split('@', 1)
     
     # Construct webfinger URL
     webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
 
     try:
-        # Make HTTP request
+        # Get webfinger document
         response = requests.get(webfinger_url)
         response.raise_for_status()
         
         # Parse JSON response
         data = response.json()
         
-        # Extract relevant information
+        # Extract relevant information into dictionary
         result = {
             'handle': handle,
             'domain': domain,
-            'username': username,
+            'username': user,
             'links': {}
         }
         
@@ -44,7 +44,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
                         'type': link.get('type', '')
                     }
                     
-        # Add additional properties if present
+        # Add additional fields if present
         if 'subject' in data:
             result['subject'] = data['subject']
         if 'aliases' in data:

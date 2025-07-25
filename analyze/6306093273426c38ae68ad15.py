@@ -17,12 +17,12 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     from ansible.vars.manager import VariableManager
     from ansible.playbook.play import Play
     from ansible.executor.playbook_executor import PlaybookExecutor
-
+    
     # Ansible के लिए आवश्यक डायरेक्टरी पथ सेट करें
-    playbook_dir = os.path.join(ir_plugin.path, 'playbooks')
-    inventory_file = os.path.join(ir_workspace.path, 'hosts')
-
-    # एक्स्ट्रा वेरिएबल्स को JSON फाइल में सेव करें
+    playbook_path = os.path.join(ir_plugin.path, 'playbooks')
+    inventory_path = os.path.join(ir_workspace.path, 'hosts')
+    
+    # एक्स्ट्रा वेरिएबल्स को JSON फाइल में लिखें
     extra_vars_file = os.path.join(ir_workspace.path, 'extra_vars.json')
     with open(extra_vars_file, 'w') as f:
         json.dump(vars_dict, f)
@@ -31,32 +31,38 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     ansible_cmd = ['ansible-playbook']
     ansible_cmd.extend(cli_args)
     ansible_cmd.extend([
-        '-i', inventory_file,
-        '--extra-vars', f'@{extra_vars_file}'
+        '-i', inventory_path,
+        '--extra-vars', f'@{extra_vars_file}',
+        os.path.join(playbook_path, 'main.yml')
     ])
 
-    # Ansible प्लेबुक एग्जीक्यूटर सेटअप
-    loader = DataLoader()
-    inventory = InventoryManager(loader=loader, sources=inventory_file)
-    variable_manager = VariableManager(loader=loader, inventory=inventory)
-
-    # प्लेबुक एग्जीक्यूटर को कॉन्फ़िगर करें
-    playbook_executor = PlaybookExecutor(
-        playbooks=cli_args,
-        inventory=inventory,
-        variable_manager=variable_manager,
-        loader=loader,
-        passwords={}
-    )
-
-    # प्लेबुक चलाएं और परिणाम रिटर्न करें
     try:
-        result = playbook_executor.run()
+        # Ansible प्लेबुक को चलाएं
+        process = subprocess.Popen(
+            ansible_cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True
+        )
+        
+        stdout, stderr = process.communicate()
+        return_code = process.returncode
+
+        result = {
+            'rc': return_code,
+            'stdout': stdout,
+            'stderr': stderr
+        }
+
+        if return_code != 0:
+            raise Exception(f"Ansible playbook execution failed: {stderr}")
+
         return result
+
     except Exception as e:
-        print(f"Ansible प्लेबुक एग्जीक्यूशन में त्रुटि: {str(e)}")
-        return 1
+        raise Exception(f"Error running ansible playbook: {str(e)}")
+    
     finally:
-        # क्लीनअप - एक्स्ट्रा वेरिएबल्स फाइल हटाएं
+        # क्लीनअप - एक्स्ट्रा वेरिएबल्स फाइल को हटाएं
         if os.path.exists(extra_vars_file):
             os.remove(extra_vars_file)

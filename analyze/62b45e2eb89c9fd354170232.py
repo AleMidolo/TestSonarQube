@@ -1,5 +1,5 @@
 def next_version(version):
-    # Split version into parts by dot
+    # Split version string into parts
     parts = version.split('.')
     
     # Convert parts to integers
@@ -9,28 +9,25 @@ def next_version(version):
     i = len(nums) - 1
     
     while i >= 0:
-        # If current digit is 9, set to 0 and continue to next digit
-        if nums[i] == 9:
-            nums[i] = 0
-            i -= 1
-        else:
-            # Otherwise increment current digit and break
+        # If current digit is less than 9, increment it and break
+        if nums[i] < 9:
             nums[i] += 1
             break
-            
-    # If we ran out of digits to increment, add a 1 at the start
+        # If current digit is 9, set to 0 and continue to next digit
+        nums[i] = 0
+        i -= 1
+        
+    # If we've gone through all digits and they're all 9s
+    # Add a new digit 1 at the start
     if i < 0:
         nums.insert(0, 1)
-        
+    
     # Convert back to strings preserving original zero padding
     result = []
-    for i in range(len(nums)):
-        # Get original part to check if it had zero padding
-        orig = parts[i] if i < len(parts) else ''
-        if orig.startswith('0') and len(orig) > 1:
-            # Preserve zero padding
-            result.append(str(nums[i]).zfill(len(orig)))
-        else:
-            result.append(str(nums[i]))
-            
+    for i in range(len(parts)):
+        # Get original length of this part
+        orig_len = len(parts[i])
+        # Format number with same number of digits
+        result.append(str(nums[i]).zfill(orig_len))
+        
     return '.'.join(result)

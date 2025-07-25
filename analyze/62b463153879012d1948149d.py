@@ -14,7 +14,7 @@ def _explore_folder(folder):
     import os
     from collections import defaultdict
     
-    # Initialize dictionary to store grouped files
+    # Initialize empty defaultdict to store grouped files
     grouped_files = defaultdict(list)
     
     # Walk through the folder
@@ -30,5 +30,5 @@ def _explore_folder(folder):
             if file.lower().endswith(('.xml', '.pdf', '.txt')):
                 grouped_files[base_name].append(file_path)
     
-    # Convert defaultdict to regular dict
+    # Convert defaultdict to regular dict before returning
     return dict(grouped_files)

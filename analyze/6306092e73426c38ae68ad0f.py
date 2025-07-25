@@ -16,44 +16,37 @@ def get_nested_custom_and_control_args(self, args):
     custom_args = {}
 
     # Control arguments that should not be included in spec.yml
-    control_arg_list = ['debug', 'verbose', 'dry_run', 'no_color']
+    control_arg_keys = ['debug', 'verbose', 'dry_run', 'no_color']
     
     # Process each argument
     for arg in args:
-        key = arg.split('=')[0].strip('--')  # Remove -- prefix
-        value = arg.split('=')[1] if '=' in arg else True
+        key = arg.get('name')
+        value = arg.get('value')
         
-        # Convert string values to appropriate types
-        if isinstance(value, str):
-            if value.lower() == 'true':
-                value = True
-            elif value.lower() == 'false':
-                value = False
-            elif value.isdigit():
-                value = int(value)
-            elif value.replace('.','',1).isdigit():
-                value = float(value)
-                
-        # Categorize arguments
-        if key in control_arg_list:
+        # Check if argument is a control argument
+        if key in control_arg_keys:
             control_args[key] = value
-        elif key.startswith('custom_'):
+            continue
+            
+        # Check if argument is a custom argument (starts with 'custom_')
+        if key.startswith('custom_'):
             custom_args[key] = value
-        else:
-            # Handle nested arguments with dot notation
-            if '.' in key:
-                parts = key.split('.')
-                current = nested_args
-                for part in parts[:-1]:
-                    if part not in current:
-                        current[part] = {}
-                    current = current[part]
-                current[parts[-1]] = value
-            else:
-                nested_args[key] = value
-                
-    # Merge custom args into nested args
-    if custom_args:
-        nested_args['custom'] = custom_args
+            continue
+            
+        # All other arguments are treated as nested
+        nested_path = key.split('.')
+        current_dict = nested_args
         
+        # Build nested dictionary structure
+        for i, path_part in enumerate(nested_path):
+            if i == len(nested_path) - 1:
+                current_dict[path_part] = value
+            else:
+                if path_part not in current_dict:
+                    current_dict[path_part] = {}
+                current_dict = current_dict[path_part]
+
+    # Merge custom args into nested args
+    nested_args.update(custom_args)
+    
     return control_args, nested_args

@@ -8,32 +8,48 @@ def verifyObject(iface, candidate, tentative=False):
     # Check if candidate claims to provide interface
     if not tentative:
         if not iface.providedBy(candidate):
-            errors.append(DoesNotImplement(iface))
+            raise DoesNotImplement(iface)
 
-    # Check methods and attributes
+    # Verify all required methods
     for name, desc in iface.namesAndDescriptions(1):
-        try:
-            attr = getattr(candidate, name)
-        except AttributeError:
-            errors.append(BrokenImplementation(iface, name))
-            continue
-
-        # If it's a method, verify the signature
         if isinstance(desc, Method):
+            # Check if method exists
             try:
-                # Get method signature
-                import inspect
-                actual_sig = inspect.signature(attr)
-                expected_sig = inspect.signature(desc.interface[name])
-                
-                # Compare parameters
-                if str(actual_sig) != str(expected_sig):
-                    errors.append(BrokenMethodImplementation(name, desc, attr))
-            except (ValueError, TypeError):
-                # If we can't get the signature, skip this check
+                attr = getattr(candidate, name)
+            except AttributeError:
+                errors.append(BrokenImplementation(iface, name))
+                continue
+
+            # Verify method signature if possible
+            if not callable(attr):
+                errors.append(BrokenMethodImplementation(name, "Not a method"))
+                continue
+
+            try:
+                # Check method signature
+                if hasattr(desc, 'getSignatureInfo'):
+                    sig_info = desc.getSignatureInfo()
+                    method_sig = getattr(attr, '__signature__', None)
+                    
+                    if method_sig:
+                        # Compare signatures
+                        required_params = sig_info.get('required', ())
+                        optional_params = sig_info.get('optional', ())
+                        varargs = sig_info.get('varargs', None)
+                        kwargs = sig_info.get('kwargs', None)
+                        
+                        if len(method_sig.parameters) < len(required_params):
+                            errors.append(BrokenMethodImplementation(name, "Incorrect number of required arguments"))
+            except Exception:
+                # If signature verification fails, continue with other checks
                 pass
 
-    # If there are any errors, raise them
+        else:
+            # Verify attributes
+            if not hasattr(candidate, name):
+                errors.append(BrokenImplementation(iface, name))
+
+    # Handle errors
     if errors:
         if len(errors) == 1:
             raise errors[0]

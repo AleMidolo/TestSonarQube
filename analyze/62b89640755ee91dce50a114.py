@@ -10,5 +10,7 @@ def tzname_in_python2(namefunc):
         if name is not None:
             if isinstance(name, str):
                 return name.encode('ASCII')
-            return name
+            elif isinstance(name, unicode):
+                return name.encode('ASCII')
+        return name
     return adjust_encoding

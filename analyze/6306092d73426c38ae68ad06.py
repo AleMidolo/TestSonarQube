@@ -11,6 +11,7 @@ def get_silent_args(self, args):
     if isinstance(args, dict):
         # Iterate through args and find ones marked as silent
         for arg_name, arg_value in args.items():
+            # Check if arg has silent flag set to True
             if isinstance(arg_value, dict) and arg_value.get('silent', False):
                 silent_args.append(arg_name)
                 
