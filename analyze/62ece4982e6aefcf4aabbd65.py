@@ -7,8 +7,9 @@ def parser_flags(parser):
     for action in parser._actions:
         # Get all option strings (flags) for this argument
         for opt in action.option_strings:
-            # Add the flag to our list
-            flags.append(opt)
+            # Add the flag to our list if it starts with '-'
+            if opt.startswith('-'):
+                flags.append(opt)
     
     # Join all flags with spaces and return
     return ' '.join(flags)

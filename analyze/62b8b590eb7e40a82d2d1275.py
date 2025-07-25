@@ -22,11 +22,11 @@ def _legacy_mergeOrderings(orderings):
     used = set()
     
     # Para cada ordenamiento
-    for i, ordering in enumerate(orderings):
+    for ordering in orderings:
         # Para cada elemento en el ordenamiento
-        for j, element in enumerate(ordering):
-            # Si el elemento no ha sido usado y su primera aparición es en esta posición
-            if element not in used and positions[element] == (i, j):
+        for element in ordering:
+            # Si el elemento no ha sido usado
+            if element not in used:
                 result.append(element)
                 used.add(element)
     

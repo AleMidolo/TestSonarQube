@@ -9,7 +9,7 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     from urllib.parse import urlparse
     
     if not image_href:
-        raise ValueError("El enlace de imagen está vacío")
+        raise ValueError("El enlace de la imagen está vacío")
         
     try:
         # Analizar la URL
@@ -17,11 +17,10 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
         
         # Verificar el esquema
         if parsed_url.scheme not in ['http', 'https']:
-            raise ValueError("Esquema de URL no válido")
+            raise ValueError("El esquema de URL debe ser http o https")
             
         # Obtener el netloc
-        netloc = parsed_url.netloc
-        if not netloc:
+        if not parsed_url.netloc:
             raise ValueError("URL sin dominio válido")
             
         # Determinar si usa SSL
@@ -30,11 +29,11 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
         # Obtener el ID de la imagen del path
         path_parts = parsed_url.path.strip('/').split('/')
         if not path_parts[-1]:
-            raise ValueError("URL no contiene ID de imagen")
+            raise ValueError("No se pudo extraer el ID de la imagen")
             
         image_id = path_parts[-1]
         
-        return (image_id, netloc, use_ssl)
+        return (image_id, parsed_url.netloc, use_ssl)
         
     except Exception as e:
-        raise ValueError(f"Error al analizar la URL de la imagen: {str(e)}")
+        raise ValueError(f"Error al analizar el enlace de la imagen: {str(e)}")

@@ -13,23 +13,24 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     if cmd[0].endswith('.py'):
         return cmd
         
-    # Leer el primer archivo para buscar shebang
+    # Leer la primera línea del archivo para buscar shebang
     try:
-        with open(cmd[0], 'rb') as f:
-            first_line = f.readline().decode('utf-8').strip()
-            
-        # Verificar si hay shebang
-        if first_line.startswith('#!'):
-            interpreter = first_line[2:].strip().split()
-            
-            # Si el shebang especifica python, usar el intérprete actual
-            if any('python' in part.lower() for part in interpreter):
-                return ('python', *cmd)
-                
-            # Si hay otro intérprete, usarlo
-            return (*interpreter, *cmd)
-            
+        with open(cmd[0], 'r') as f:
+            first_line = f.readline().strip()
     except (IOError, UnicodeDecodeError):
-        pass
+        return cmd
         
-    return cmd
+    # Verificar si hay shebang
+    if not first_line.startswith('#!'):
+        return cmd
+        
+    # Extraer el intérprete del shebang
+    interpreter = first_line[2:].strip().split()
+    
+    # Si el intérprete es python, usar sys.executable
+    if any('python' in part.lower() for part in interpreter):
+        import sys
+        return (sys.executable,) + (cmd[0],) + cmd[1:]
+        
+    # Para otros intérpretes, usar el path del shebang
+    return tuple(interpreter + [cmd[0]] + list(cmd[1:]))

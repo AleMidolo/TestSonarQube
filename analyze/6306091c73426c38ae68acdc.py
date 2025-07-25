@@ -16,17 +16,15 @@ def validate_from_content(cls, spec_content=None):
         if field not in spec_content:
             raise IRValidatorException(f"Campo requerido '{field}' no encontrado en el archivo spec")
             
-    # Validaciones adicionales
-    if not isinstance(spec_content['name'], str):
-        raise IRValidatorException("El campo 'name' debe ser una cadena de texto")
-        
+    # Validaciones adicionales específicas
     if not isinstance(spec_content['version'], (str, int, float)):
-        raise IRValidatorException("El campo 'version' debe ser un número o cadena de texto")
+        raise IRValidatorException("El campo 'version' debe ser un string o número")
         
     if not isinstance(spec_content['description'], str):
-        raise IRValidatorException("El campo 'description' debe ser una cadena de texto")
+        raise IRValidatorException("El campo 'description' debe ser un string")
         
     if not isinstance(spec_content['author'], str):
-        raise IRValidatorException("El campo 'author' debe ser una cadena de texto")
-
+        raise IRValidatorException("El campo 'author' debe ser un string")
+        
+    # Si todas las validaciones pasan, retornar el contenido validado
     return spec_content

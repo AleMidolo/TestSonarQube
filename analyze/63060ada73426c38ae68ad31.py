@@ -31,7 +31,7 @@ def _convert_non_cli_args(self, parser_name, values_dict):
             # Convertir booleanos
             elif arg_type == bool:
                 if isinstance(value, str):
-                    value = value.lower() in ('true', 't', 'yes', 'y', '1')
+                    value = value.lower() in ('true', 'yes', '1', 'on')
             # Convertir otros tipos
             else:
                 value = arg_type(value)

@@ -22,5 +22,5 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
         except Exception:
             # If parsing fails, continue to next subparser
             continue
-            
+    
     return parsed_args, remaining_args

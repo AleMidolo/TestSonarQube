@@ -5,12 +5,11 @@ def popitem(self):
     if not self:
         raise KeyError('Dictionary is empty')
         
-    # Get first key and value
-    first_key = next(iter(self))
-    first_value = self[first_key]
+    # Get first key-value pair from ordered dict
+    key = next(iter(self))
+    value = self[key]
     
     # Remove the item
-    del self[first_key]
+    del self[key]
     
-    # Return key-value pair as tuple
-    return (first_key, first_value)
+    return (key, value)

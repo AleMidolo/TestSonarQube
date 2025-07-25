@@ -1,33 +1,20 @@
 def scale(self, other=None, recompute=False):
     if other is None:
-        # Return current scale if already computed and no recompute requested
-        if hasattr(self, '_scale') and not recompute:
-            return self._scale
-            
-        # Calculate scale as integral of histogram
-        self._scale = sum(self.values())
+        # Return current scale
+        if self._scale is None or recompute:
+            # Calculate scale if not computed or recompute requested
+            self._scale = sum(self.data)
         return self._scale
-        
     else:
-        # Validate other is a float
-        if not isinstance(other, (int, float)):
-            raise TypeError("Scale value must be a number")
-            
-        # Get current scale
+        # Rescale histogram to other
         current_scale = self.scale()
-        
-        # Check for zero scale
         if current_scale == 0:
-            raise ValueError("Cannot rescale histogram with zero scale")
+            raise LenaValueError("Cannot rescale histogram with zero scale")
             
-        # Calculate scale factor
-        factor = other / current_scale
+        # Calculate scaling factor and apply to data
+        factor = float(other) / current_scale
+        self.data = [x * factor for x in self.data]
         
-        # Rescale all values
-        for key in self:
-            self[key] *= factor
-            
-        # Update stored scale
+        # Update scale
         self._scale = other
-        
         return self

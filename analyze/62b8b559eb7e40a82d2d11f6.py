@@ -24,12 +24,12 @@ def determineMetaclass(bases, explicit_mc=None):
         
     # Si hay múltiples metaclases, encontrar la más específica
     candidate = metaclasses[0]
-    for metaclass in metaclasses[1:]:
-        if issubclass(candidate, metaclass):
+    for mc in metaclasses[1:]:
+        if issubclass(candidate, mc):
             continue
-        if issubclass(metaclass, candidate):
-            candidate = metaclass
+        if issubclass(mc, candidate):
+            candidate = mc
         else:
-            raise TypeError("Conflicting metaclasses:", candidate, metaclass)
+            raise TypeError("Conflicting metaclasses:", candidate, mc)
             
     return candidate

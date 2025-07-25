@@ -1,20 +1,17 @@
 def addignored(ignored):
-    # Importar subprocess para ejecutar comandos git
+    # Import subprocess to run git commands
     import subprocess
     
-    # Ejecutar comando git ls-files para obtener todos los archivos
-    all_files = subprocess.check_output(['git', 'ls-files', '--others', '--ignored', '--exclude-standard']).decode('utf-8')
+    # Run git ls-files command to get all files
+    git_files = subprocess.check_output(['git', 'ls-files', '--others', '--ignored', '--exclude-standard']).decode('utf-8')
     
-    # Convertir la salida en una lista, eliminando espacios en blanco
-    ignored_files = all_files.strip().split('\n')
+    # Split output into list and remove empty strings
+    files_list = [x for x in git_files.split('\n') if x]
     
-    # Filtrar archivos vacíos
-    ignored_files = [f for f in ignored_files if f]
+    # Sort the list alphabetically
+    files_list.sort()
     
-    # Ordenar la lista alfabéticamente
-    ignored_files.sort()
+    # Join list elements with commas
+    ignored_files = ','.join(files_list)
     
-    # Unir los archivos con comas
-    result = ','.join(ignored_files)
-    
-    return result
+    return ignored_files

@@ -15,7 +15,7 @@ def mru_cache(maxsize=128, typed=False):
             if kwargs:
                 key += tuple(sorted(kwargs.items()))
             if typed:
-                # Si typed=True, incluir los tipos en la clave
+                # Incluir los tipos si typed=True
                 key += tuple(type(arg) for arg in args)
                 key += tuple(type(v) for v in kwargs.values())
             return hash(key)
@@ -23,34 +23,25 @@ def mru_cache(maxsize=128, typed=False):
         def wrapper(*args, **kwargs):
             key = make_key(*args, **kwargs)
             
-            if key in cache:
-                # Si el resultado está en caché, actualizar orden
+            try:
+                # Si el resultado está en caché, moverlo al final (más reciente)
+                result = cache[key]
                 order.remove(key)
                 order.append(key)
-                return cache[key]
+                return result
+            except KeyError:
+                # Calcular nuevo resultado
+                result = func(*args, **kwargs)
                 
-            result = func(*args, **kwargs)
-            
-            if len(cache) >= maxsize:
-                # Si el caché está lleno, eliminar el elemento más recientemente usado
-                old_key = order.pop()
-                del cache[old_key]
+                # Si el caché está lleno, eliminar el elemento más reciente
+                if len(cache) >= maxsize:
+                    oldest = order.pop()
+                    del cache[oldest]
                 
-            # Almacenar nuevo resultado
-            cache[key] = result
-            order.append(key)
-            
-            return result
-            
-        wrapper.cache_info = lambda: {
-            'maxsize': maxsize,
-            'currsize': len(cache),
-            'hits': sum(1 for k in order if k in cache),
-            'misses': sum(1 for k in order if k not in cache)
-        }
-        
-        wrapper.cache_clear = lambda: cache.clear() or order.clear()
-        
+                # Agregar nuevo resultado al caché
+                cache[key] = result
+                order.append(key)
+                return result
+                
         return wrapper
-    
     return decorator

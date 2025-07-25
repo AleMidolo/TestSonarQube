@@ -14,7 +14,7 @@ def split(s, platform='this'):
         # Patrón para dividir argumentos estilo Windows CMD 
         pattern = r'''((?:[^ "]\S*|"[^"]*")+)'''
     
-    # Dividir la cadena usando el patrón
+    # Dividir la cadena usando el patrón apropiado
     args = re.findall(pattern, s)
     
     # Procesar cada argumento

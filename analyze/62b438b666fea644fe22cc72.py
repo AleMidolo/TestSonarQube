@@ -6,5 +6,5 @@ def parser_flags(parser):
             continue
         # Add all option strings (flags) for this argument
         flags.extend(action.option_strings)
-    # Return flags joined by spaces
+    # Join all flags with spaces and return
     return ' '.join(sorted(flags))

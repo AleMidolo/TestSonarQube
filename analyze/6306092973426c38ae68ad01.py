@@ -13,5 +13,6 @@ def get_deprecated_args(self):
         'sslcert': 'ssl_cert',
         'sslkey': 'ssl_key',
         'sslrootcert': 'ssl_ca',
-        'ssl': 'ssl_enable'
+        'ssl': 'ssl_enable',
+        'client_encoding': 'encoding'
     }

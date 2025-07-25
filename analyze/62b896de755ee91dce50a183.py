@@ -20,8 +20,9 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
     
     if not isinstance(timestr, str):
-        raise TypeError("Parser must be given a string or character stream, not %r" % type(timestr))
-        
+        raise TypeError("Parser must be given a string or character stream, not a %s" % 
+                      type(timestr).__name__)
+            
     # Preprocesar la cadena de entrada
     timestr = timestr.strip()
     
@@ -45,7 +46,7 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
             return res, tuple(tokens)
         return res
         
-    except (ValueError, OverflowError) as e:
+    except ValueError as e:
         raise ParserError(str(e))
-    except Exception as e:
-        raise ParserError("Unknown string format: %s" % timestr)
+    except OverflowError:
+        raise OverflowError("Date exceeds the maximum value supported on this system")

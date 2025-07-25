@@ -10,7 +10,7 @@ def protocol_handlers(cls, protocol_version=None):
         (5, 0): BoltProtocolV5
     }
 
-    # Si no se especifica versión, devolver todos los controladores
+    # Si no se especifica versión, devolver todos los handlers
     if protocol_version is None:
         return handlers
 
@@ -18,8 +18,9 @@ def protocol_handlers(cls, protocol_version=None):
     if not isinstance(protocol_version, tuple):
         raise TypeError("La versión del protocolo debe ser una tupla")
 
-    # Si se especifica versión, devolver solo el controlador para esa versión
-    # si existe, o un diccionario vacío si no existe
+    # Si se especifica versión, devolver solo el handler correspondiente si existe
+    filtered_handlers = {}
     if protocol_version in handlers:
-        return {protocol_version: handlers[protocol_version]}
-    return {}
+        filtered_handlers[protocol_version] = handlers[protocol_version]
+
+    return filtered_handlers

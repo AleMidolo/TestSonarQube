@@ -10,17 +10,21 @@ def identify_request(request: RequestType) -> bool:
     try:
         # Verificar si tiene el formato correcto de una solicitud Matrix
         if hasattr(request, 'type') and hasattr(request, 'content'):
-            # Verificar si el tipo de solicitud es válido para Matrix
-            valid_types = ['m.room.message', 'm.room.member', 'm.room.create']
-            if request.type in valid_types:
+            # Verificar si el tipo corresponde a Matrix
+            if request.type.startswith('m.'):
                 return True
                 
-        # Verificar si tiene el formato de URL Matrix
-        if hasattr(request, 'url'):
-            if '/_matrix/' in request.url:
+        # Verificar si tiene un token de acceso Matrix
+        if hasattr(request, 'access_token'):
+            if request.access_token.startswith('syt_'):
                 return True
                 
-        return False
-        
+        # Verificar si tiene un ID de usuario Matrix
+        if hasattr(request, 'user_id'):
+            if request.user_id.startswith('@') and ':' in request.user_id:
+                return True
+                
     except AttributeError:
         return False
+        
+    return False
