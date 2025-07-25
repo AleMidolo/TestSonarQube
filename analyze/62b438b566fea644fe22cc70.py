@@ -7,7 +7,7 @@ def bash_completion():
     import argparse
     import subprocess
 
-    # 创建参数解析器
+    # 创建命令行参数解析器
     parser = argparse.ArgumentParser(description='Generate bash completion script for borgmatic.')
     parser.add_argument('--generate-bash-completion', action='store_true', help='Generate bash completion script.')
 
@@ -24,7 +24,7 @@ def bash_completion():
             prev="${COMP_WORDS[COMP_CWORD-1]}"
             opts=$(borgmatic --help | grep -oP '--\\K\\w+')
 
-            if [[ ${cur} == -* ]]; then
+            if [[ ${cur} == -* ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
                 return 0
             fi

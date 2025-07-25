@@ -6,8 +6,8 @@ def minimalBases(classes):
     minimal = []
     for cls in classes:
         is_minimal = True
-        for other_cls in classes:
-            if cls != other_cls and issubclass(cls, other_cls):
+        for other in classes:
+            if cls != other and issubclass(cls, other):
                 is_minimal = False
                 break
         if is_minimal:

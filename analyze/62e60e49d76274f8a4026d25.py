@@ -34,7 +34,9 @@ def unit_of_work(metadata=None, timeout=None):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # 在这里可以添加事务的元数据和超时设置
+            # 在这里可以添加对事务的元数据和超时的处理逻辑
+            # 例如，将元数据和超时传递给事务管理器
+            # 这里只是一个示例，实际实现可能需要与数据库驱动程序集成
             if metadata is not None:
                 kwargs['metadata'] = metadata
             if timeout is not None:

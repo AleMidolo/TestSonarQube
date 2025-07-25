@@ -22,7 +22,7 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
       `*args`: str。任何额外的命令行参数，这些参数将作为 subprocess.run 的第一个参数传递。
       `extra_env`: dict[str, str]。为子进程设置的额外环境变量。
     """
-    # 获取函数的模块路径和名称
+    # 获取函数的模块和名称
     module_name = inspect.getmodule(func).__name__
     func_name = func.__name__
 

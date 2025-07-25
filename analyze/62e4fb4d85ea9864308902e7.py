@@ -14,20 +14,21 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     if not cmd:
         return cmd
 
-    # 获取第一个命令（通常是可执行文件）
     executable = cmd[0]
-
-    # 如果可执行文件已经是一个完整路径，直接返回
     if os.path.isabs(executable):
         return cmd
 
-    # 尝试在 PATH 中查找可执行文件
+    # Check if the executable is in the PATH
     path = os.environ.get('PATH', '')
     for dir in path.split(os.pathsep):
         full_path = os.path.join(dir, executable)
         if os.path.isfile(full_path):
-            # 找到可执行文件，返回完整路径的命令
             return (full_path,) + cmd[1:]
 
-    # 如果未找到，返回原始命令
+    # If not found in PATH, try to resolve it relative to the current directory
+    full_path = os.path.abspath(executable)
+    if os.path.isfile(full_path):
+        return (full_path,) + cmd[1:]
+
+    # If still not found, return the original command
     return cmd

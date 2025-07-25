@@ -10,18 +10,19 @@ def get_config():
             self.parentdir_prefix = None
             self.vcs = None
             self.style = None
-            self.long_version_py = None
-            self.short_version_py = None
-            self.verbose = False
+            self.long_version = None
+            self.short_version = None
+            self.error = None
 
     config = VersioneerConfig()
-    config.version = "0.1"
+    # 设置默认属性值
+    config.version = "0.0.0"
     config.tag_prefix = "v"
     config.parentdir_prefix = "project-"
     config.vcs = "git"
     config.style = "pep440"
-    config.long_version_py = "long_version.py"
-    config.short_version_py = "short_version.py"
-    config.verbose = True
+    config.long_version = "0.0.0+unknown"
+    config.short_version = "0.0.0"
+    config.error = None
 
     return config

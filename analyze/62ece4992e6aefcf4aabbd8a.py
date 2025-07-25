@@ -27,6 +27,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                             config[key] = value
                 
                 configs[filename] = config
+                
         except PermissionError:
             logging.error(f"Permission denied when trying to read {filename}")
             errors.append(logging.LogRecord(

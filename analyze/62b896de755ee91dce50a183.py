@@ -1,6 +1,6 @@
 from datetime import datetime
 from dateutil.parser import parse as dateutil_parse
-from dateutil.tz import gettz
+from dateutil.tz import tzoffset, tzfile
 
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
@@ -19,7 +19,12 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     if default is not None and not isinstance(default, datetime):
         raise TypeError("default must be a datetime object or None")
 
-    # Parse the timestr using dateutil.parser.parse
-    parsed_datetime = dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+    if ignoretz:
+        tzinfos = None
 
-    return parsed_datetime
+    try:
+        parsed = dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+    except Exception as e:
+        raise type(e)(f"Failed to parse timestr: {e}")
+
+    return parsed

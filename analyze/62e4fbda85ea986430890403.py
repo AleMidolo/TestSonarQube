@@ -1,7 +1,7 @@
 import random
 from typing import Sequence
 
-FIXED_RANDOM_SEED = 42  # 固定随机种子
+FIXED_RANDOM_SEED = 42
 
 def _shuffled(seq: Sequence[str]) -> list[str]:
     """
