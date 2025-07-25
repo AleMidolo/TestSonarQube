@@ -38,6 +38,5 @@ def verify_relayable_signature(public_key, doc, signature):
             return False
             
     except Exception as e:
-        # Log error if needed
-        print(f"Error verifying signature: {str(e)}")
+        # If any error occurs during verification, return False
         return False

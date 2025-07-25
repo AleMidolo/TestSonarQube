@@ -5,8 +5,7 @@ def directlyProvidedBy(object):  # pylint:disable=redefined-builtin
     """
     provides = getattr(object, "__provides__", None)
     if (provides is None or 
-        provides.__class__ is Implements):
+        getattr(provides, "_implements", None) is not None):
         return _empty
-
-    # We have a Provides object
-    return provides.declared
+        
+    return provides

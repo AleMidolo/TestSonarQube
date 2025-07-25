@@ -11,12 +11,12 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         if '@' not in handle:
             return None
             
-        user, domain = handle.split('@', 1)
+        username, domain = handle.split('@')
         
         # Costruisci l'URL del documento webfinger
         webfinger_url = f"https://{domain}/.well-known/webfinger"
         params = {
-            'resource': f'acct:{quote(user)}@{domain}'
+            'resource': f'acct:{quote(handle)}'
         }
         
         # Effettua la richiesta HTTP

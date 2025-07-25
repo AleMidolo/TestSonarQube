@@ -32,7 +32,7 @@ def mru_cache(maxsize=128, typed=False):
                     # Rimuovi l'elemento più vecchio
                     oldest = order.pop(0)
                     del cache[oldest]
-                    
+                
                 # Aggiungi il nuovo risultato alla cache
                 cache[key] = result
                 order.append(key)

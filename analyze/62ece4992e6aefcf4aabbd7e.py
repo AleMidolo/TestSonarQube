@@ -18,7 +18,6 @@ def _resolve_string(matcher):
         if default_value is not None:
             return default_value
         # Otherwise raise error
-        else:
-            raise ValueError(f"Environment variable '{var_name}' not found and no default value provided")
-            
+        raise ValueError(f"Environment variable '{var_name}' not found and no default value provided")
+        
     return value

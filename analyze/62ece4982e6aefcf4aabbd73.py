@@ -19,9 +19,10 @@ def split(s, platform='this'):
                 # Remove quotes and unescape
                 token = token[1:-1].replace('\\"', '"').replace("\\'", "'")
             result.append(token)
-            
-    else:  # Windows/CMD style
-        # Match either a non-whitespace sequence, or a quoted string
+        return result
+        
+    elif platform == 0:  # Windows/CMD style
+        # Windows doesn't interpret escapes, just quotes
         pattern = r'''(?:[^\s"]|"[^"]*")+'''
         
         # Split and handle quotes
@@ -29,8 +30,9 @@ def split(s, platform='this'):
         result = []
         for token in tokens:
             if token.startswith('"') and token.endswith('"'):
-                # Remove quotes but don't unescape
-                token = token[1:-1]
+                token = token[1:-1]  # Remove quotes
             result.append(token)
-            
-    return result
+        return result
+        
+    else:
+        raise ValueError("Invalid platform value")

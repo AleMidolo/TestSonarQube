@@ -9,10 +9,10 @@ _borgmatic()
     
     # Main borgmatic commands
     opts="init create prune list info check extract export-tar mount umount rcreate rinfo rlist rdelete config validate"
-    
+
     # Common options
     common_opts="-h --help -c --config --verbosity --syslog-verbosity"
-    
+
     case "${prev}" in
         borgmatic)
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
@@ -26,33 +26,39 @@ _borgmatic()
             COMPREPLY=( $(compgen -W "0 1 2 3" -- ${cur}) )
             return 0
             ;;
+        *)
+            ;;
+    esac
+
+    if [[ ${cur} == -* ]] ; then
+        COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
+        return 0
+    fi
+
+    # Command-specific options
+    case "${COMP_WORDS[1]}" in
         create)
-            COMPREPLY=( $(compgen -W "--progress --stats --json" -- ${cur}) )
-            return 0
+            COMPREPLY=( $(compgen -W "--list --stats --json" -- ${cur}) )
             ;;
         prune)
-            COMPREPLY=( $(compgen -W "--stats --list --dry-run" -- ${cur}) )
-            return 0
+            COMPREPLY=( $(compgen -W "--list --stats --json" -- ${cur}) )
             ;;
-        list|info)
+        list)
+            COMPREPLY=( $(compgen -W "--archive --json --format" -- ${cur}) )
+            ;;
+        info)
             COMPREPLY=( $(compgen -W "--archive --json" -- ${cur}) )
-            return 0
             ;;
         check)
-            COMPREPLY=( $(compgen -W "--repository --archives --verify-data" -- ${cur}) )
-            return 0
+            COMPREPLY=( $(compgen -W "--archive --verify-data --json" -- ${cur}) )
             ;;
         extract)
-            COMPREPLY=( $(compgen -W "--archive --path --destination" -- ${cur}) )
-            return 0
+            COMPREPLY=( $(compgen -W "--archive --path --destination --json" -- ${cur}) )
             ;;
         mount)
-            COMPREPLY=( $(compgen -W "--archive --path --mount-point --foreground" -- ${cur}) )
-            return 0
+            COMPREPLY=( $(compgen -W "--archive --path --mount-point --json" -- ${cur}) )
             ;;
         *)
-            COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
-            return 0
             ;;
     esac
 }

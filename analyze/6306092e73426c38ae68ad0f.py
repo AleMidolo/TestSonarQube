@@ -19,28 +19,24 @@ def get_nested_custom_and_control_args(self, args):
     # Iterate through all arguments
     for arg, value in args.items():
         if arg.startswith('--'):
-            # Remove leading dashes for control args
-            clean_arg = arg.lstrip('-')
-            control_args[clean_arg] = value
+            # Control arguments start with --
+            control_args[arg[2:]] = value
         elif '__' in arg:
-            # Handle nested arguments
-            parts = arg.split('__')
+            # Nested arguments contain __
+            keys = arg.split('__')
             current_dict = nested_args
             
-            # Build nested structure
-            for part in parts[:-1]:
-                if part not in current_dict:
-                    current_dict[part] = {}
-                current_dict = current_dict[part]
+            # Build nested dictionary structure
+            for key in keys[:-1]:
+                if key not in current_dict:
+                    current_dict[key] = {}
+                current_dict = current_dict[key]
             
             # Set the final value
-            current_dict[parts[-1]] = value
-        elif arg.startswith('custom_'):
-            # Handle custom arguments
-            custom_args[arg] = value
+            current_dict[keys[-1]] = value
         else:
-            # Default to nested args
-            nested_args[arg] = value
+            # Custom arguments are everything else
+            custom_args[arg] = value
 
     # Merge custom args into nested args
     nested_args.update(custom_args)

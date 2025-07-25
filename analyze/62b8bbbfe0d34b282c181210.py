@@ -23,6 +23,12 @@ def append_text_to_file(file_name, text_buffer, encoding, overwrite=False):
             bytes_written = f.write(text_buffer)
             return bytes_written
             
-    except Exception as e:
-        # In caso di errore ritorna -1
+    except IOError:
+        # Restituisce -1 in caso di errore di I/O
         return -1
+    except UnicodeEncodeError:
+        # Restituisce -2 in caso di errore di codifica
+        return -2
+    except Exception:
+        # Restituisce -3 per altri errori
+        return -3

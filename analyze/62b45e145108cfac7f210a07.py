@@ -26,26 +26,22 @@ def validate(self, inventory, extract_spec_version=False):
         except (AttributeError, TypeError):
             pass
 
-    # Validazione campi obbligatori
     required_fields = ['bomFormat', 'specVersion', 'version']
     for field in required_fields:
         if field not in inventory:
             raise ValueError(f"Campo obbligatorio mancante: {field}")
 
-    # Validazione specVersion
     if inventory['specVersion'] != self.spec_version:
-        raise ValueError(f"Versione della specifica non valida. Attesa: {self.spec_version}")
+        raise ValueError(f"Versione della specifica non valida. Attesa: {self.spec_version}, Trovata: {inventory['specVersion']}")
 
-    # Validazione bomFormat
-    if inventory['bomFormat'] != 'CycloneDX':
-        raise ValueError("Il formato BOM deve essere 'CycloneDX'")
-
-    # Validazione version
-    try:
-        version = int(inventory['version'])
-        if version < 1:
-            raise ValueError("La versione deve essere un numero intero positivo")
-    except (ValueError, TypeError):
-        raise ValueError("La versione deve essere un numero intero positivo")
+    if 'components' in inventory:
+        if not isinstance(inventory['components'], list):
+            raise ValueError("Il campo 'components' deve essere una lista")
+        
+        for component in inventory['components']:
+            if not isinstance(component, dict):
+                raise ValueError("Ogni componente deve essere un dizionario")
+            if 'name' not in component or 'version' not in component:
+                raise ValueError("I componenti devono avere i campi 'name' e 'version'")
 
     return True

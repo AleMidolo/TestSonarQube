@@ -11,41 +11,45 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     """
     import os
     import json
-    import tempfile
     from ansible.cli.playbook import PlaybookCLI
     from ansible.parsing.dataloader import DataLoader
     from ansible.inventory.manager import InventoryManager
     from ansible.vars.manager import VariableManager
+    
+    # Crea un file temporaneo per le extra vars
+    extra_vars_file = os.path.join(ir_workspace.path, 'extra_vars.json')
+    with open(extra_vars_file, 'w') as f:
+        json.dump(vars_dict, f)
 
-    # Create temporary file for extra vars
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as vars_file:
-        json.dump(vars_dict, vars_file)
-        vars_file_path = vars_file.name
-
+    # Costruisci gli argomenti per Ansible
+    ansible_args = ['ansible-playbook']
+    ansible_args.extend(cli_args)
+    ansible_args.extend(['--extra-vars', '@' + extra_vars_file])
+    
+    # Aggiungi l'inventory se specificato nel workspace
+    if ir_workspace.inventory:
+        ansible_args.extend(['-i', ir_workspace.inventory])
+    
+    # Configura Ansible
+    loader = DataLoader()
+    inventory = InventoryManager(loader=loader)
+    variable_manager = VariableManager(loader=loader, inventory=inventory)
+    
+    # Esegui il playbook
+    playbook = PlaybookCLI(ansible_args)
+    playbook.parse()
+    
     try:
-        # Construct Ansible CLI command
-        ansible_args = ['ansible-playbook']
-        ansible_args.extend(cli_args)
-        ansible_args.extend(['--extra-vars', '@' + vars_file_path])
-
-        # Set up Ansible environment
-        loader = DataLoader()
-        inventory = InventoryManager(loader=loader)
-        variable_manager = VariableManager(loader=loader, inventory=inventory)
-
-        # Initialize PlaybookCLI
-        pbcli = PlaybookCLI(ansible_args)
+        result = playbook.run()
         
-        # Set workspace and plugin specific environment variables
-        os.environ['IR_WORKSPACE'] = ir_workspace.path
-        os.environ['IR_PLUGIN'] = ir_plugin.name
-
-        # Run playbook
-        results = pbcli.run()
-
-        return results
-
-    finally:
-        # Cleanup temporary vars file
-        if os.path.exists(vars_file_path):
-            os.unlink(vars_file_path)
+        # Pulisci il file temporaneo
+        if os.path.exists(extra_vars_file):
+            os.remove(extra_vars_file)
+            
+        return result
+        
+    except Exception as e:
+        # Pulisci il file temporaneo anche in caso di errore
+        if os.path.exists(extra_vars_file):
+            os.remove(extra_vars_file)
+        raise Exception(f"Errore durante l'esecuzione del playbook: {str(e)}")

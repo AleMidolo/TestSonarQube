@@ -2,26 +2,25 @@ def fill(self, coord, weight=1):
     """
     Riempie l'istogramma alla posizione *coord* con il peso specificato *weight*.
     """
-    # Verifica che coord sia una tupla/lista con la dimensione corretta
-    if not isinstance(coord, (tuple, list)) or len(coord) != self.dim:
-        raise ValueError(f"coord deve essere una sequenza di {self.dim} valori")
-
+    # Verifica che coord sia una tupla di coordinate valide
+    if not isinstance(coord, tuple):
+        raise TypeError("Le coordinate devono essere specificate come tupla")
+        
+    # Verifica che le dimensioni delle coordinate corrispondano a quelle dell'istogramma
+    if len(coord) != len(self.bins):
+        raise ValueError("Il numero di coordinate non corrisponde alle dimensioni dell'istogramma")
+    
     # Verifica che le coordinate siano all'interno dei limiti
     for i, x in enumerate(coord):
-        if x < self.edges[i][0] or x >= self.edges[i][-1]:
-            return  # Ignora valori fuori dai limiti
-
-    # Trova gli indici dei bin per ogni dimensione
-    indices = []
-    for dim, x in enumerate(coord):
-        # Trova il bin corretto usando ricerca binaria
-        edges = self.edges[dim]
-        idx = 0
-        for j in range(len(edges)-1):
-            if edges[j] <= x < edges[j+1]:
-                idx = j
-                break
-        indices.append(idx)
-
-    # Incrementa il contenuto del bin
-    self.content[tuple(indices)] += weight
+        if x < 0 or x >= len(self.bins[i]):
+            raise ValueError(f"Coordinata {i} fuori dai limiti dell'istogramma")
+            
+    # Converte le coordinate in un indice lineare per accedere all'array dei contenuti
+    idx = 0
+    stride = 1
+    for i in range(len(coord)-1, -1, -1):
+        idx += coord[i] * stride
+        stride *= len(self.bins[i])
+        
+    # Aggiunge il peso alla bin corrispondente
+    self.contents[idx] += weight

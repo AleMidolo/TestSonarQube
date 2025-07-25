@@ -17,17 +17,23 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
             # Evaluate the condition based on the args
             if isinstance(condition, str):
                 # Simple condition checking if another arg exists
-                if condition in args and args[condition]:
+                if condition in args and option['name'] not in args:
                     conditionally_required.append(option['name'])
+                    
             elif callable(condition):
                 # Complex condition using a function
-                if condition(args):
+                if condition(args) and option['name'] not in args:
                     conditionally_required.append(option['name'])
+                    
             elif isinstance(condition, dict):
-                # Dictionary condition checking arg value
-                for arg_name, required_value in condition.items():
-                    if arg_name in args and args[arg_name] == required_value:
-                        conditionally_required.append(option['name'])
+                # Dictionary condition checking arg values
+                all_conditions_met = True
+                for arg_name, expected_value in condition.items():
+                    if arg_name not in args or args[arg_name] != expected_value:
+                        all_conditions_met = False
                         break
                         
+                if all_conditions_met and option['name'] not in args:
+                    conditionally_required.append(option['name'])
+    
     return conditionally_required
