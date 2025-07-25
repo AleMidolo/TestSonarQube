@@ -7,5 +7,5 @@ def inject_config(self):
     # Check if config path environment variable is not set
     if 'CONFIG_PATH' not in os.environ:
         # Set default config path to current directory
-        default_config_path = os.path.join(os.getcwd(), 'config')
-        os.environ['CONFIG_PATH'] = default_config_path
+        default_path = os.path.join(os.getcwd(), 'config')
+        os.environ['CONFIG_PATH'] = default_path

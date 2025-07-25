@@ -5,7 +5,7 @@ def popitem(self):
     if not self:
         raise KeyError('Dictionary is empty')
         
-    # Get the most recently used key from the internal ordering
+    # Get the most recently used key from the internal ordered dict
     key = next(reversed(self))
     value = self[key]
     

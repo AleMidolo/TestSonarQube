@@ -6,7 +6,7 @@ def test_tag(tag: str) -> bool:
     if not tag:
         return False
         
-    # Check if tag contains only alphanumeric chars and underscore
+    # Check if tag contains only alphanumeric chars and underscores
     if not all(c.isalnum() or c == '_' for c in tag):
         return False
         

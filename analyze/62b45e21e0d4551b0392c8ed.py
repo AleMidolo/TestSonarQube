@@ -21,9 +21,9 @@ def find_path_type(path):
         return "No namaste files found"
         
     # Check content of first namaste file
-    namaste_path = os.path.join(path, namaste_files[0])
+    namaste_file = os.path.join(path, namaste_files[0])
     try:
-        with open(namaste_path) as f:
+        with open(namaste_file, 'r') as f:
             content = f.read().strip()
             
         if content == "ocfl_object_1.0":

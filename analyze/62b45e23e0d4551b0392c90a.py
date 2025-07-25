@@ -7,29 +7,26 @@ def validate_version_inventories(self, version_dirs):
 
     version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
     """
-    # Dictionary to store digests that differ from root inventory
-    different_digests = set()
+    # Track all unique content digests seen
+    all_digests = set()
     
-    # Get root inventory digest
+    # Get root inventory digests
     root_inventory = self.get_root_inventory()
-    if not root_inventory:
-        raise ValueError("Root inventory not found")
-        
     root_digests = set(root_inventory.get_all_digests())
     
-    # Validate each version has inventory and track different digests
+    # Validate each version has inventory
     for version in version_dirs:
-        inventory_path = os.path.join(version, "inventory.json")
+        inventory_path = os.path.join(version, 'inventory.json')
         if not os.path.exists(inventory_path):
-            raise ValueError(f"Missing inventory for version {version}")
+            raise ValidationError(f"Missing inventory file for version {version}")
             
+        # Load inventory and get digests
         with open(inventory_path) as f:
-            version_inventory = json.load(f)
+            inventory = json.load(f)
+            version_digests = set(inventory.get_all_digests())
             
-        # Get digests for this version
-        version_digests = set(version_inventory.get_all_digests())
+        # Add any new digests not in root inventory
+        diff_digests = version_digests - root_digests
+        all_digests.update(diff_digests)
         
-        # Add any digests not in root inventory to tracking set
-        different_digests.update(version_digests - root_digests)
-        
-    return different_digests
+    return all_digests

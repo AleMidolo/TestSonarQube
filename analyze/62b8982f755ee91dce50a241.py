@@ -50,29 +50,29 @@ def normalized(self):
         total_years += int(frac_months / 12)
 
     # Normalize smaller units into larger ones
-    # microseconds -> seconds
-    total_seconds += total_microseconds // 1000000
-    total_microseconds = total_microseconds % 1000000
-    
-    # seconds -> minutes
-    total_minutes += total_seconds // 60
-    total_seconds = total_seconds % 60
-    
-    # minutes -> hours
-    total_hours += total_minutes // 60
-    total_minutes = total_minutes % 60
-    
-    # hours -> days
-    total_days += total_hours // 24
-    total_hours = total_hours % 24
-    
-    # days -> months (approximate)
-    total_months += total_days // 30
-    total_days = total_days % 30
-    
-    # months -> years
-    total_years += total_months // 12
-    total_months = total_months % 12
+    if total_microseconds >= 1000000:
+        total_seconds += total_microseconds // 1000000
+        total_microseconds = total_microseconds % 1000000
+        
+    if total_seconds >= 60:
+        total_minutes += total_seconds // 60
+        total_seconds = total_seconds % 60
+        
+    if total_minutes >= 60:
+        total_hours += total_minutes // 60
+        total_minutes = total_minutes % 60
+        
+    if total_hours >= 24:
+        total_days += total_hours // 24
+        total_hours = total_hours % 24
+        
+    if total_days >= 30:  # Approximate
+        total_months += total_days // 30
+        total_days = total_days % 30
+        
+    if total_months >= 12:
+        total_years += total_months // 12
+        total_months = total_months % 12
 
     # Create and return new relativedelta object
     from dateutil.relativedelta import relativedelta

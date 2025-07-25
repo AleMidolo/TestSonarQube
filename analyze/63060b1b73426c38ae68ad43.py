@@ -23,7 +23,7 @@ def extend_cli(self, root_subparsers):
     )
     init_parser.add_argument(
         '--template',
-        help='Template to use for spec initialization'
+        help='Template file to use for initialization'
     )
 
     # Add validate command  
@@ -36,5 +36,12 @@ def extend_cli(self, root_subparsers):
         help='Path to spec file to validate'
     )
 
-    # Add other spec-related commands as needed
-    return spec_parser
+    # Add update command
+    update_parser = spec_subparsers.add_parser(
+        'update',
+        help='Update existing spec file'
+    )
+    update_parser.add_argument(
+        'spec_file',
+        help='Path to spec file to update'
+    )

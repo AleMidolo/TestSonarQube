@@ -33,6 +33,6 @@ def verifyClass(iface, candidate, tentative=False):
             iface_sig = str(iface_attr.__code__.co_varnames)
             cand_sig = str(cand_attr.__code__.co_varnames)
             if iface_sig != cand_sig and not tentative:
-                raise TypeError(f"'{attr}' has incompatible signature")
+                raise TypeError(f"'{attr}' signature mismatch")
                 
     return True

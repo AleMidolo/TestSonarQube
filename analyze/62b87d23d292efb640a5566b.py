@@ -17,10 +17,10 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
                 cmd_list.extend(args)
                 
         if verbose:
-            print("Running command:", " ".join(cmd_list))
+            print('Running:', ' '.join(cmd_list))
             
         try:
-            stderr = subprocess.DEVNULL if hide_stderr else subprocess.PIPE
+            stderr = subprocess.DEVNULL if hide_stderr else None
             process = subprocess.Popen(
                 cmd_list,
                 stdout=subprocess.PIPE,
@@ -30,19 +30,17 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
                 universal_newlines=True
             )
             
-            output, error = process.communicate()
+            output = process.communicate()[0]
+            retcode = process.poll()
             
-            if process.returncode != 0:
-                if error and not hide_stderr:
-                    print(f"Error: {error}", file=sys.stderr)
-                return False
+            if retcode:
+                raise subprocess.CalledProcessError(
+                    retcode, cmd_list, output=output
+                )
                 
-            if output and verbose:
-                print(output)
-                
-        except Exception as e:
-            if not hide_stderr:
-                print(f"Error executing command: {e}", file=sys.stderr)
-            return False
+            return output.strip()
             
-    return True
+        except (OSError, subprocess.CalledProcessError) as e:
+            if verbose:
+                print('Error running command:', str(e))
+            raise

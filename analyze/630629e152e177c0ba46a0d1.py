@@ -11,7 +11,7 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         if '@' not in handle:
             return None
             
-        _, domain = handle.split('@')
+        _, domain = handle.split('@', 1)
         
         # Construct webfinger URL
         webfinger_url = f"https://{domain}/.well-known/webfinger"

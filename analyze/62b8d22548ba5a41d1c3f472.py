@@ -4,24 +4,23 @@ def cachedmethod(cache, key=hashkey, lock=None):
     """
     def decorator(method):
         def wrapper(self, *args, **kwargs):
-            # Get cache instance - either from instance or class
-            c = cache(self) if callable(cache) else cache
-            
+            # Get the cache instance
+            c = cache(self)
             if c is None:
                 return method(self, *args, **kwargs)
                 
             # Generate cache key
-            k = key(self, *args, **kwargs)
+            k = key(args, kwargs)
             
             try:
                 # Try to get cached result
-                with lock or nullcontext():
+                with lock(self) if lock is not None else nullcontext():
                     result = c[k]
                 return result
             except KeyError:
-                # Calculate and cache result if not found
+                # Cache miss - call method and store result
                 result = method(self, *args, **kwargs)
-                with lock or nullcontext():
+                with lock(self) if lock is not None else nullcontext():
                     c[k] = result
                 return result
                 

@@ -7,28 +7,29 @@ def _update_context(self, context):
         context.error = {}
 
     # Map coordinate names to x,y,z
-    coord_map = {0:'x', 1:'y', 2:'z'}
+    coord_map = {'E': 'x', 't': 'y', 'phi': 'z'}
     
     # Look for error fields and add to context
     for field in field_names:
         # Check if field name contains 'error'
         if 'error' in field.lower():
-            # Extract coordinate name from error field
-            # e.g. error_E_low -> E
-            coord = field.split('_')[1]
+            # Extract base coordinate name (before _error)
+            base = field.split('_error')[0]
             
-            # Map to x,y,z if possible
-            try:
-                coord_idx = field_names.index(coord)
-                if coord_idx < 3:  # Only map first 3 coordinates
-                    coord = coord_map[coord_idx]
-            except:
-                pass
-                
+            # Get mapped coordinate name (x,y,z) if exists
+            coord_name = coord_map.get(base, base)
+            
             # Add error field index to context
-            error_name = f"{coord}_low" if "low" in field.lower() else f"{coord}_high"
-            if error_name not in context.error:
-                context.error[error_name] = {}
-            context.error[error_name]["index"] = field_names.index(field)
-            
-    return context
+            if '_low' in field:
+                if coord_name not in context.error:
+                    context.error[coord_name] = {}
+                context.error[coord_name]['index'] = field_names.index(field)
+                
+            elif '_high' in field:
+                if coord_name not in context.error:
+                    context.error[coord_name] = {}
+                context.error[coord_name]['index'] = field_names.index(field)
+    
+    # Preserve existing values in context.value
+    if hasattr(context, 'value'):
+        pass

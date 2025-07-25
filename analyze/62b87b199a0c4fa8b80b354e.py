@@ -15,7 +15,7 @@ def is_fill_request_seq(seq):
     if not isinstance(seq, Sequence) or isinstance(seq, str):
         return False
         
-    # Check if seq contains at least one FillRequest
+    # Check if seq has at least one FillRequest element
     has_fill_request = False
     for item in seq:
         if isinstance(item, FillRequest):

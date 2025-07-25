@@ -5,7 +5,8 @@ def validate_choices_args(self, args):
     :param args: प्राप्त किए गए आर्ग्युमेंट्स।
     """
     for arg_name, arg_value in args.items():
-        if hasattr(self, 'choices') and arg_name in self.choices:
-            valid_choices = self.choices[arg_name]
-            if arg_value not in valid_choices:
-                raise ValueError(f"Argument '{arg_name}' must be one of {valid_choices}, got '{arg_value}'")
+        if hasattr(self, f'_{arg_name}_choices'):
+            choices = getattr(self, f'_{arg_name}_choices')
+            if arg_value not in choices:
+                raise ValueError(f"Invalid value '{arg_value}' for argument '{arg_name}'. "
+                               f"Allowed values are: {choices}")
