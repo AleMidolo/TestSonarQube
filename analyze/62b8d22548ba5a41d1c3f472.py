@@ -4,15 +4,15 @@ def cachedmethod(cache, key=hashkey, lock=None):
     que guarda los resultados en una caché.
     """
     def decorator(func):
-        def wrapper(*args, **kwargs):
+        def wrapper(self, *args, **kwargs):
             # Generar la clave de caché
-            cache_key = key(*args, **kwargs)
-            # Intentar obtener el resultado de la caché
+            cache_key = key(self, *args, **kwargs)
+            # Comprobar si el resultado está en la caché
             if cache_key in cache:
                 return cache[cache_key]
-            # Si no está en caché, llamar al método y guardar el resultado
-            with (lock if lock else dummy_lock):
-                result = func(*args, **kwargs)
+            # Si no está en la caché, ejecutar el método
+            with (lock or dummy_lock):
+                result = func(self, *args, **kwargs)
                 cache[cache_key] = result
             return result
         return wrapper
@@ -22,5 +22,5 @@ def cachedmethod(cache, key=hashkey, lock=None):
 class dummy_lock:
     def __enter__(self):
         pass
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, *args):
         pass

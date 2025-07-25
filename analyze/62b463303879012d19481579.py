@@ -13,5 +13,5 @@ def _extract_number_and_supplment_from_issue_element(issue):
                 number = part.split('=')[1] if '=' in part else part[6:]
             elif part.startswith('suppl'):
                 suppl = part.split('=')[1] if '=' in part else part[5:]
-    
+
     return number, suppl

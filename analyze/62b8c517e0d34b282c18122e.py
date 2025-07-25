@@ -12,18 +12,22 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     """
     import traceback
 
-    # Limitar la profundidad de la pila de llamadas
-    tb_lines = traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__)
-    tb_lines = tb_lines[:max_level]
+    # Limitar el nivel de la pila de llamadas
+    tb = traceback.extract_tb(e.__traceback__)
+    tb = tb[:max_level]
 
-    # Formatear la ruta de la excepción
-    formatted_tb = ''.join(tb_lines)
-    exception_message = f"Exception: {str(e)}\nTraceback (most recent call last):\n{formatted_tb}"
+    # Formatear la traza
+    formatted_trace = []
+    for frame in tb:
+        filename, lineno, name, line = frame
+        if tb.index(frame) < max_path_level:
+            formatted_trace.append(f'File "{filename}", line {lineno}, in {name}\n    {line}')
+    
+    # Obtener el mensaje de la excepción
+    exception_message = str(e)
 
-    # Limitar la profundidad de la ruta
-    if max_path_level > 0:
-        lines = exception_message.splitlines()
-        limited_lines = lines[:max_path_level + 2]  # +2 for the exception message and traceback header
-        exception_message = '\n'.join(limited_lines)
+    # Unir todo en una cadena
+    result = f'Exception: {exception_message}\nTraceback (most recent call last):\n'
+    result += '\n'.join(formatted_trace)
 
-    return exception_message
+    return result

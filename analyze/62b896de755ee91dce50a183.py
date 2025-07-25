@@ -48,4 +48,16 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         Se lanza si la fecha analizada excede el entero C más grande válido en tu sistema.
     """
     from dateutil import parser
-    return parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+    from datetime import datetime
+
+    # Validate input
+    if not isinstance(timestr, str):
+        raise TypeError("timestr must be a string or character stream")
+
+    # Parse the date string
+    try:
+        dt = parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+    except (ValueError, OverflowError) as e:
+        raise ParserError(f"Error parsing date string: {e}")
+
+    return dt

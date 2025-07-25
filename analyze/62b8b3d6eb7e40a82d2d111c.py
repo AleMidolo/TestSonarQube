@@ -10,12 +10,11 @@ def _normalizeargs(sequence, output=None):
     
     for item in sequence:
         if isinstance(item, (tuple, list)):
-            normalized.extend(_normalizeargs(item, output))
+            normalized.extend(item)
         elif isinstance(item, str) or hasattr(item, '__interface__'):
             normalized.append(item)
         else:
-            # Expand the item if it's not a valid interface or declaration
-            normalized.append(str(item))
+            raise ValueError(f"Item {item} is not a valid interface or declaration.")
     
     if output is not None:
         output.extend(normalized)

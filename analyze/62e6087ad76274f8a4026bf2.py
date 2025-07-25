@@ -15,5 +15,20 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
     :param handlers: funciones manejadoras pasadas al objeto 'Response' devuelto
     """
     # Implementación del método
-    # Aquí se añadiría la lógica para manejar el mensaje 'DISCARD'
-    pass
+    if dehydration_hooks is None:
+        dehydration_hooks = {}
+    if hydration_hooks is None:
+        hydration_hooks = {}
+
+    # Aquí se construiría el mensaje 'DISCARD'
+    message = {
+        'type': 'DISCARD',
+        'n': n,
+        'qid': qid,
+        'dehydration_hooks': dehydration_hooks,
+        'hydration_hooks': hydration_hooks,
+        'handlers': handlers
+    }
+
+    # Se añadiría el mensaje a la cola de salida
+    self.output_queue.append(message)

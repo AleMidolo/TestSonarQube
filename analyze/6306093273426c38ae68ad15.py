@@ -21,9 +21,8 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     # Ejecutar el comando y capturar la salida
     result = subprocess.run(command, capture_output=True, text=True)
 
-    # Manejar errores en la ejecución
+    # Procesar la salida
     if result.returncode != 0:
-        raise RuntimeError(f"Ansible playbook execution failed: {result.stderr}")
+        raise Exception(f"Ansible playbook failed: {result.stderr}")
 
-    # Retornar los resultados de Ansible
     return result.stdout

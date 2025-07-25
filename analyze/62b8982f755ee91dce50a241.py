@@ -10,8 +10,6 @@ def normalized(self):
     :return:
         Devuelve un objeto de la clase :class:`dateutil.relativedelta.relativedelta`.
     """
-    total_hours = int(self.hours) + int(self.days * 24) + int(self.minutes / 60)
-    total_days = int(self.days) + (total_hours // 24)
-    total_hours = total_hours % 24
-
-    return relativedelta(days=total_days, hours=total_hours, minutes=self.minutes % 60)
+    total_days = int(self.days) + int(self.hours // 24)
+    total_hours = int(self.hours % 24)
+    return relativedelta(days=total_days, hours=total_hours)

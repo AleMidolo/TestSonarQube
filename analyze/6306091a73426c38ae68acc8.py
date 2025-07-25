@@ -19,4 +19,5 @@ def list_of_file_names(settings_dirs, spec_option):
                     continue
             return file_names
 
-    return IniType(settings_dirs, spec_option)
+    ini_instance = IniType(settings_dirs, spec_option)
+    return ini_instance.get_file_names()

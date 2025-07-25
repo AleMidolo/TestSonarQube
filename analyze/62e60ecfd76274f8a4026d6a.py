@@ -15,7 +15,7 @@ def protocol_handlers(cls, protocol_version=None):
     handlers = {
         (3, 5): "HandlerFor3_5",
         (4, 0): "HandlerFor4_0",
-        # Agregar más versiones y sus manejadores aquí
+        (4, 1): "HandlerFor4_1",
     }
 
     if protocol_version is not None:
