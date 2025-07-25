@@ -1,26 +1,29 @@
 from typing import List, Optional
 
 def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = None) -> str:
-    """
-    Convierte un número a una cadena, utilizando el alfabeto proporcionado.  
-
-    La salida tiene el dígito más significativo primero.
-    """
-    if number == 0:
-        return alphabet[0] if padding is None else alphabet[0] * padding
+    if number < 0:
+        raise ValueError("Number must be non-negative")
     
     base = len(alphabet)
-    result = []
+    if base == 0:
+        raise ValueError("Alphabet must not be empty")
     
+    result = []
     while number > 0:
         remainder = number % base
         result.append(alphabet[remainder])
         number = number // base
     
+    if not result:
+        result.append(alphabet[0])
+    
     result.reverse()
     
-    if padding is not None:
-        while len(result) < padding:
-            result.insert(0, alphabet[0])
+    result_str = ''.join(result)
     
-    return ''.join(result)
+    if padding is not None:
+        if padding < len(result_str):
+            raise ValueError("Padding must be greater than or equal to the length of the result")
+        result_str = result_str.rjust(padding, alphabet[0])
+    
+    return result_str

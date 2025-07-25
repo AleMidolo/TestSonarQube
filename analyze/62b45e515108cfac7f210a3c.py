@@ -5,33 +5,31 @@ def initialize(self):
     import os
     import json
 
-    # Crear la estructura de directorios básica
-    os.makedirs("ocfl_root", exist_ok=True)
-    os.makedirs("ocfl_root/objects", exist_ok=True)
-    os.makedirs("ocfl_root/extensions", exist_ok=True)
-    os.makedirs("ocfl_root/logs", exist_ok=True)
+    # Crear directorio raíz
+    os.makedirs(self.root_path, exist_ok=True)
 
-    # Crear el archivo de configuración básico
-    config = {
-        "type": "ocfl_root",
-        "version": "1.0",
-        "description": "OCFL Root Storage",
-        "created": "2023-10-01T00:00:00Z"
-    }
-
-    with open("ocfl_root/ocfl_config.json", "w") as config_file:
-        json.dump(config, config_file, indent=4)
-
-    # Crear el archivo de inventario inicial
+    # Crear archivo de inventario inicial
     inventory = {
+        "id": "urn:uuid:12345678-1234-5678-1234-567812345678",
+        "type": "Object",
         "head": "v1",
         "versions": {
             "v1": {
                 "created": "2023-10-01T00:00:00Z",
-                "state": {}
+                "state": {},
+                "message": "Initial version"
             }
         }
     }
 
-    with open("ocfl_root/inventory.json", "w") as inventory_file:
-        json.dump(inventory, inventory_file, indent=4)
+    inventory_path = os.path.join(self.root_path, "inventory.json")
+    with open(inventory_path, 'w') as f:
+        json.dump(inventory, f, indent=4)
+
+    # Crear directorio para la versión inicial
+    version_path = os.path.join(self.root_path, "v1")
+    os.makedirs(version_path, exist_ok=True)
+
+    # Crear archivo de contenido vacío
+    content_path = os.path.join(version_path, "content")
+    os.makedirs(content_path, exist_ok=True)

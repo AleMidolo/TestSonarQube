@@ -4,7 +4,6 @@ class RequestType(Enum):
     PUBLIC_MESSAGE = 1
     PRIVATE_MESSAGE = 2
     LEGACY_PAYLOAD = 3
-    UNKNOWN = 4
 
 def identify_request(request: RequestType) -> str:
     """
@@ -19,4 +18,4 @@ def identify_request(request: RequestType) -> str:
     elif request == RequestType.LEGACY_PAYLOAD:
         return "Esta es una solicitud de Diaspora: Carga útil heredada."
     else:
-        return "No se pudo identificar la solicitud como una solicitud de Diaspora."
+        return "Tipo de solicitud no reconocido."

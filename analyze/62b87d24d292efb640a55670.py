@@ -6,17 +6,14 @@ def get_versions():
     import platform
 
     try:
-        python_version = sys.version
-        system_info = platform.system()
-        system_version = platform.version()
-        return {
-            "python_version": python_version,
-            "system_info": system_info,
-            "system_version": system_version
+        version_info = {
+            "python_version": sys.version,
+            "platform": platform.platform(),
+            "system": platform.system(),
+            "release": platform.release(),
+            "machine": platform.machine(),
+            "processor": platform.processor(),
         }
+        return version_info
     except Exception as e:
-        return {
-            "python_version": "Unknown",
-            "system_info": "Unknown",
-            "system_version": "Unknown"
-        }
+        return {"error": str(e), "default": "No se pudo obtener la información de la versión."}

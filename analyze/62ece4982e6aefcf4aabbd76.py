@@ -11,4 +11,7 @@ def match(filename):
     supported_extensions = ['.txt', '.csv', '.json', '.xml']
     
     # Verificar si el archivo tiene una extensión soportada
-    return any(filename.endswith(ext) for ext in supported_extensions)
+    for ext in supported_extensions:
+        if filename.endswith(ext):
+            return True
+    return False

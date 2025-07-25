@@ -10,8 +10,8 @@ def _should_attempt_c_optimizations():
     # Verificar si estamos en PyPy
     is_pypy = hasattr(sys, 'pypy_version_info')
     
-    # Verificar si la variable de entorno PURE_PYTHON está configurada
+    # Verificar la variable de entorno PURE_PYTHON
     pure_python = os.getenv('PURE_PYTHON', '').lower() in ('1', 'true', 'yes')
     
-    # Intentar optimizaciones en C si no estamos en PyPy y PURE_PYTHON no está configurado
+    # Intentar optimizaciones en C si no estamos en PyPy y no se ha forzado el uso de Python puro
     return not is_pypy and not pure_python

@@ -11,11 +11,11 @@ def parse_arguments(*unparsed_arguments):
     parser.add_argument('--global-arg', type=str, help="A global argument")
 
     # Subparser for command 'foo'
-    foo_parser = subparsers.add_parser('foo', help="foo command help")
+    foo_parser = subparsers.add_parser('foo', help="foo help")
     foo_parser.add_argument('--foo-arg', type=str, help="foo argument")
 
     # Subparser for command 'bar'
-    bar_parser = subparsers.add_parser('bar', help="bar command help")
+    bar_parser = subparsers.add_parser('bar', help="bar help")
     bar_parser.add_argument('--bar-arg', type=int, help="bar argument")
 
     # Parse the arguments

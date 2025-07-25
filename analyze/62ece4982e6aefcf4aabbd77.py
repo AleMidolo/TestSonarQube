@@ -1,4 +1,3 @@
-import re
 from datetime import timedelta
 
 def parse_frequency(frequency):
@@ -12,28 +11,25 @@ def parse_frequency(frequency):
     if frequency is None or frequency.lower() == "always":
         return None
     
-    pattern = re.compile(r'^(\d+)\s*(second|minute|hour|day|week|month|year)s?$', re.IGNORECASE)
-    match = pattern.match(frequency.strip())
-    
-    if not match:
-        raise ValueError(f"Frecuencia no válida: {frequency}")
-    
-    value = int(match.group(1))
-    unit = match.group(2).lower()
-    
-    if unit == "second":
-        return timedelta(seconds=value)
-    elif unit == "minute":
-        return timedelta(minutes=value)
-    elif unit == "hour":
-        return timedelta(hours=value)
-    elif unit == "day":
-        return timedelta(days=value)
-    elif unit == "week":
-        return timedelta(weeks=value)
-    elif unit == "month":
-        return timedelta(days=value * 30)  # Aproximación de 30 días por mes
-    elif unit == "year":
-        return timedelta(days=value * 365)  # Aproximación de 365 días por año
-    else:
-        raise ValueError(f"Unidad de tiempo no válida: {unit}")
+    try:
+        parts = frequency.strip().split()
+        if len(parts) != 2:
+            raise ValueError("Formato de frecuencia no válido")
+        
+        num = int(parts[0])
+        unit = parts[1].lower()
+        
+        if unit in ["second", "seconds"]:
+            return timedelta(seconds=num)
+        elif unit in ["minute", "minutes"]:
+            return timedelta(minutes=num)
+        elif unit in ["hour", "hours"]:
+            return timedelta(hours=num)
+        elif unit in ["day", "days"]:
+            return timedelta(days=num)
+        elif unit in ["week", "weeks"]:
+            return timedelta(weeks=num)
+        else:
+            raise ValueError("Unidad de tiempo no reconocida")
+    except (ValueError, IndexError):
+        raise ValueError("Frecuencia no puede ser analizada")

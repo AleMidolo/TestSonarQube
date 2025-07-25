@@ -12,21 +12,23 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
     :param ansible_args: dict de argumentos de ansible-playbook que se pasan directamente a Ansible.
     """
     # Construir el comando base
-    command = ['ansible-playbook', playbook_path]
+    command = ["ansible-playbook", playbook_path]
 
     # Agregar verbosidad si se especifica
     if verbose:
-        command.extend(['-' + 'v' * verbose])
+        command.append(f"-{verbose}")
 
     # Agregar extra_vars si se especifica
     if extra_vars:
-        extra_vars_str = ' '.join([f"{k}={v}" for k, v in extra_vars.items()])
-        command.extend(['--extra-vars', extra_vars_str])
+        extra_vars_str = " ".join([f"{k}={v}" for k, v in extra_vars.items()])
+        command.extend(["--extra-vars", extra_vars_str])
 
     # Agregar argumentos adicionales de Ansible si se especifica
     if ansible_args:
         for key, value in ansible_args.items():
-            command.extend([f"--{key}", str(value)])
+            command.append(f"--{key}")
+            if value is not None:
+                command.append(str(value))
 
     # Ejecutar el comando
     result = subprocess.run(command, capture_output=True, text=True)

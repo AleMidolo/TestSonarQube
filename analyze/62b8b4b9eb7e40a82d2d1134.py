@@ -9,7 +9,7 @@ def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
         dict: Un diccionario donde las claves son los nombres de los atributos y los valores son las descripciones.
     """
     attributes = {}
-    for name, value in self.__dict__.items():
+    for name, attr in self.__dict__.items():
         if all or not name.startswith('_'):
-            attributes[name] = value.__doc__ if value.__doc__ else "No description available"
+            attributes[name] = attr.__doc__ if attr.__doc__ else "No description available."
     return attributes

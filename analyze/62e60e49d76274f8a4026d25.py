@@ -11,16 +11,10 @@ def unit_of_work(metadata=None, timeout=None):
     """
     def decorator(func):
         @wraps(func)
-        def wrapper(tx, *args, **kwargs):
-            # Aplicar metadatos si se proporcionan
-            if metadata is not None:
-                tx.run("CALL dbms.setTXMetaData($metadata)", metadata=metadata)
-            
-            # Aplicar timeout si se proporciona
-            if timeout is not None:
-                tx.run("CALL dbms.setTransactionTimeout($timeout)", timeout=timeout)
-            
-            # Ejecutar la función de transacción
-            return func(tx, *args, **kwargs)
+        def wrapper(*args, **kwargs):
+            # Aquí se puede agregar lógica adicional para manejar metadata y timeout
+            # Por ejemplo, se podría pasar metadata y timeout a la transacción
+            # En este ejemplo, simplemente llamamos a la función original
+            return func(*args, **kwargs)
         return wrapper
     return decorator

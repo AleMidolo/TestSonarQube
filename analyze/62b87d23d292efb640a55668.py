@@ -5,12 +5,9 @@ def get_config():
     class VersioneerConfig:
         def __init__(self):
             self.version = "0.1.0"
-            self.description = "Versioneer Configuration"
-            self.author = "Anonymous"
-            self.license = "MIT"
-        
-        def __repr__(self):
-            return f"VersioneerConfig(version={self.version}, description={self.description}, author={self.author}, license={self.license})"
-    
+            self.vcs = "git"
+            self.tag_prefix = "v"
+            self.parentdir_prefix = ""
+
     config = VersioneerConfig()
     return config

@@ -35,6 +35,6 @@ def format(
         for i in range(len(params)):
             formatted_sql = formatted_sql.replace(f"?", f":out_{i}", 1)
     else:
-        raise TypeError("params debe ser un Mapping o Sequence")
+        raise TypeError("params debe ser un Mapping o una Sequence")
 
     return formatted_sql, out_params

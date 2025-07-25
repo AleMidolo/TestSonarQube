@@ -1,6 +1,6 @@
 def cached(cache, key=hashkey, lock=None):
     """
-    Decorador para envolver una función con una llamada que memoriza y guarda  
+    Decorador para envolver una función con una llamada que memoriza y guarda
     los resultados en una caché.
     """
     def decorator(func):

@@ -10,26 +10,18 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     :param verbose: Si es True, muestra la salida del comando (opcional).
     :param hide_stderr: Si es True, oculta la salida de error (opcional).
     :param env: Diccionario de variables de entorno (opcional).
-    :return: El resultado de la ejecución del comando.
+    :return: El código de retorno del comando.
     """
-    command_list = commands + args
+    full_command = commands + args
     stderr = subprocess.DEVNULL if hide_stderr else None
-    stdout = subprocess.PIPE if verbose else None
+    stdout = None if verbose else subprocess.DEVNULL
 
-    try:
-        result = subprocess.run(
-            command_list,
-            cwd=cwd,
-            env=env,
-            stdout=stdout,
-            stderr=stderr,
-            text=True,
-            check=True
-        )
-        if verbose:
-            print(result.stdout)
-        return result
-    except subprocess.CalledProcessError as e:
-        if verbose:
-            print(f"Error: {e.stderr}")
-        raise
+    process = subprocess.Popen(
+        full_command,
+        cwd=cwd,
+        stdout=stdout,
+        stderr=stderr,
+        env=env
+    )
+    process.wait()
+    return process.returncode

@@ -8,8 +8,11 @@ def test_tag(tag: str) -> bool:
     Returns:
         bool: True si la palabra es aceptada como etiqueta, False en caso contrario.
     """
-    # Definir reglas para aceptar una etiqueta
-    # Por ejemplo, la etiqueta debe tener al menos 3 caracteres y no contener espacios
-    if len(tag) >= 3 and ' ' not in tag:
-        return True
-    return False
+    # Aquí puedes definir las reglas para aceptar una etiqueta
+    # Por ejemplo, que no esté vacía, que no contenga espacios, etc.
+    if not tag:
+        return False
+    if ' ' in tag:
+        return False
+    # Puedes agregar más condiciones según sea necesario
+    return True

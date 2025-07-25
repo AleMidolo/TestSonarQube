@@ -10,13 +10,8 @@ def minimalBases(classes):
     
     # Eliminar clases que son subclases de otras en la lista
     minimal_classes = []
-    for i, cls in enumerate(unique_classes):
-        is_minimal = True
-        for other_cls in unique_classes[i+1:]:
-            if issubclass(cls, other_cls):
-                is_minimal = False
-                break
-        if is_minimal:
+    for cls in unique_classes:
+        if not any(issubclass(cls, other) for other in unique_classes if other is not cls):
             minimal_classes.append(cls)
     
     return minimal_classes

@@ -4,7 +4,7 @@ from collections import defaultdict, OrderedDict
 def lfu_cache(maxsize=128, typed=False):
     def decorator(func):
         cache = {}
-        frequency = defaultdict(OrderedDict)
+        freq = defaultdict(OrderedDict)
         min_freq = 0
 
         @wraps(func)
@@ -13,30 +13,30 @@ def lfu_cache(maxsize=128, typed=False):
                 key = (args, tuple(sorted(kwargs.items())))
             else:
                 key = args + tuple(sorted(kwargs.items()))
-
+            
             if key in cache:
-                # Increment frequency and move to the next frequency level
-                freq = cache[key][1]
-                frequency[freq].pop(key)
-                if not frequency[freq]:
-                    if freq == min_freq:
+                # Increment frequency
+                freq_val = cache[key][1]
+                del freq[freq_val][key]
+                if not freq[freq_val]:
+                    del freq[freq_val]
+                    if min_freq == freq_val:
                         min_freq += 1
-                    del frequency[freq]
+                freq[freq_val + 1][key] = None
                 cache[key][1] += 1
-                frequency[cache[key][1]][key] = None
                 return cache[key][0]
             
             result = func(*args, **kwargs)
             
             if len(cache) >= maxsize:
-                # Remove the least frequently used item
-                evict_key, _ = frequency[min_freq].popitem(last=False)
-                if not frequency[min_freq]:
-                    del frequency[min_freq]
+                # Evict the least frequently used item
+                evict_key, _ = freq[min_freq].popitem(last=False)
+                if not freq[min_freq]:
+                    del freq[min_freq]
                 del cache[evict_key]
             
             cache[key] = [result, 1]
-            frequency[1][key] = None
+            freq[1][key] = None
             min_freq = 1
             
             return result

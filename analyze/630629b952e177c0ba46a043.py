@@ -1,3 +1,5 @@
+import json
+
 def get_nodeinfo_well_known_document(url, document_path=None):
     """
     Genera un documento .well-known de NodeInfo.
@@ -15,17 +17,17 @@ def get_nodeinfo_well_known_document(url, document_path=None):
     else:
         nodeinfo_url = f"{url}/.well-known/nodeinfo"
 
-    well_known_document = {
+    document = {
         "links": [
             {
                 "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
-                "href": f"{nodeinfo_url}/2.0"
+                "href": f"{url}/nodeinfo/2.0"
             },
             {
                 "rel": "http://nodeinfo.diaspora.software/ns/schema/2.1",
-                "href": f"{nodeinfo_url}/2.1"
+                "href": f"{url}/nodeinfo/2.1"
             }
         ]
     }
 
-    return well_known_document
+    return document
