@@ -12,12 +12,15 @@ def fromutc(self, dt):
         raise ValueError("El objeto datetime debe tener información de zona horaria.")
 
     # Convertir el datetime a la zona horaria local
-    local_dt = dt.astimezone(self)
+    utc_dt = dt.astimezone(self.utc)
+    
+    # Calcular el nuevo datetime en la zona horaria deseada
+    new_dt = utc_dt.astimezone(self)
 
     # Determinar si el datetime es ambiguo
-    if local_dt.dst() != timedelta(0):
-        # Si hay un desplazamiento horario, verificar si es la primera ocurrencia
-        if local_dt < self.utcoffset() + self.dst():
-            return local_dt - self.dst()
+    if new_dt.dst() != timedelta(0):
+        # Si es ambiguo, determinar si es la primera ocurrencia
+        if new_dt < self.fold:
+            new_dt = new_dt.replace(fold=1)
     
-    return local_dt
+    return new_dt

@@ -51,8 +51,8 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     from datetime import datetime
 
     # Validar el tipo de entrada
-    if not isinstance(timestr, (str, bytes)):
-        raise TypeError("timestr debe ser una cadena o flujo de caracteres")
+    if not isinstance(timestr, str):
+        raise TypeError("timestr debe ser una cadena")
 
     # Usar el método de análisis de dateutil
     dt = parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)

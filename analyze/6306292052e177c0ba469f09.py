@@ -15,12 +15,12 @@ def identify_request(request: RequestType):
 
 def is_public_message(request):
     # Implementación para verificar si es un mensaje público
-    return request.get('type') == 'public'
+    return hasattr(request, 'public') and request.public
 
 def is_private_message(request):
     # Implementación para verificar si es un mensaje privado
-    return request.get('type') == 'private'
+    return hasattr(request, 'private') and request.private
 
 def is_legacy_payload(request):
     # Implementación para verificar si es una carga útil heredada
-    return 'legacy' in request
+    return hasattr(request, 'legacy') and request.legacy

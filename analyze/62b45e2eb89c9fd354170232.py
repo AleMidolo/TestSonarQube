@@ -11,4 +11,7 @@ def next_version(version):
             break
         else:
             parts[i] = '0'
+    else:
+        parts.append('1')
+    
     return '.'.join(parts)

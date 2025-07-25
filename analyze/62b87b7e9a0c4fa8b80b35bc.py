@@ -19,11 +19,10 @@ def _update_context(self, context):
     if 'error' not in context:
         context['error'] = {}
     
-    # Supongamos que self.errors es un diccionario que contiene los errores
-    for i, error in enumerate(self.errors):
-        if error not in context['error']:
-            context['error'][error] = {}
-        context['error'][error]['index'] = i
-
-    # No eliminamos valores existentes en context.value
-    # Se pueden agregar más propiedades del grafo a context si es necesario
+    # Supongamos que tenemos una lista de errores y sus índices
+    error_indices = self.get_error_indices()  # Método hipotético para obtener índices de errores
+    for i, error in enumerate(error_indices):
+        error_name = f"x_{i + 1}"  # Nombres de errores "x", "y", "z", etc.
+        context['error'][error_name] = {'index': error['index']}
+    
+    # No eliminamos valores existentes en context.value ni en subcontextos

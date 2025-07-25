@@ -12,7 +12,7 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     """
     import traceback
 
-    # Limitar la profundidad de la pila de llamadas
+    # Limitar el nivel de la pila de llamadas
     tb = traceback.extract_tb(e.__traceback__)
     tb = tb[:max_level]
 

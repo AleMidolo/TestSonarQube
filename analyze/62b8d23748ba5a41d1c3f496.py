@@ -42,9 +42,9 @@ def lfu_cache(maxsize=128, typed=False):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             if typed:
-                key = (args, frozenset(kwargs.items()))
+                key = (tuple(args), frozenset(kwargs.items()))
             else:
-                key = (tuple(map(str, args)), frozenset((str(k), v) for k, v in kwargs.items()))
+                key = (tuple(map(str, args)), frozenset((str(k), str(v)) for k, v in kwargs.items()))
             if key in cache.cache:
                 return cache.get(key)
             result = func(*args, **kwargs)

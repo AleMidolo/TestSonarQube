@@ -10,4 +10,4 @@ def _c_optimizations_available():
         import some_c_optimization_module  # Reemplazar con el nombre real del módulo
         return some_c_optimization_module
     except ImportError:
-        return False
+        raise ImportError("Las optimizaciones en C son requeridas pero no están disponibles.")

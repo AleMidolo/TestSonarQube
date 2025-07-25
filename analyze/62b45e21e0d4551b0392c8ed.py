@@ -13,10 +13,9 @@ def find_path_type(path):
     import os
 
     if not os.path.exists(path):
-        return "La ruta no existe"
+        return "La ruta no existe."
 
     if os.path.isdir(path):
-        # Verificar si es una raíz de almacenamiento OCFL
         if any(file.startswith("0=") for file in os.listdir(path)):
             return 'root'
         else:
@@ -24,4 +23,4 @@ def find_path_type(path):
     elif os.path.isfile(path):
         return 'file'
     else:
-        return "Tipo de elemento desconocido"
+        return "Tipo de elemento desconocido."
