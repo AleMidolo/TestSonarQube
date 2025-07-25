@@ -1,6 +1,5 @@
 from zope.interface import providedBy, verify
 from zope.interface.exceptions import Invalid
-from zope.interface.interface import Method, Attribute
 
 def verifyObject(iface, candidate, tentative=False):
     """
@@ -12,8 +11,8 @@ def verifyObject(iface, candidate, tentative=False):
       using ``iface.providedBy`` (unless *tentative* is `True`,
       in which case this step is skipped). This means that the candidate's class
       declares that it implements the interface with `implements <zope.interface.implementer>`,
-      or the candidate itself declares that it provides the interface
-      with `provides <zope.interface.provider>`.
+      or the candidate itself declares that it provides the interface with
+      `provides <zope.interface.provider>`.
 
     - Ensuring that the candidate defines all required methods.
 
@@ -21,7 +20,7 @@ def verifyObject(iface, candidate, tentative=False):
 
     - Ensuring that the candidate defines all required attributes.
 
-    :return bool: Returns a truth value if all checks succeed.
+    :return bool: Returns a truth value if all checks pass.
     :raises zope.interface.Invalid: If any of the above conditions are not met.
 
     .. versionchanged:: 5.0
@@ -34,35 +33,25 @@ def verifyObject(iface, candidate, tentative=False):
     # Step 1: Verify that the candidate claims to provide the interface
     if not tentative:
         if not iface.providedBy(candidate):
-            errors.append(f"{candidate} does not claim to provide {iface}.")
+            errors.append(f"The candidate does not claim to provide the interface {iface}.")
 
-    # Step 2: Verify that all required methods are defined
-    for name, method in iface.namesAndDescriptions():
-        if isinstance(method, Method):
-            if not hasattr(candidate, name):
-                errors.append(f"Method '{name}' is required but not implemented by {candidate}.")
-            else:
-                # Step 3: Verify method signatures (as far as possible)
-                candidate_method = getattr(candidate, name)
-                if not callable(candidate_method):
-                    errors.append(f"'{name}' is not a callable method in {candidate}.")
-                else:
-                    # Basic signature check (number of arguments)
-                    expected_args = method.getSignatureInfo()['args']
-                    actual_args = candidate_method.__code__.co_argcount
-                    if actual_args < len(expected_args):
-                        errors.append(f"Method '{name}' in {candidate} has fewer arguments than required.")
+    # Step 2: Verify that the candidate defines all required methods
+    try:
+        verify.verifyClass(iface, candidate.__class__)
+    except Invalid as e:
+        errors.append(str(e))
 
-    # Step 4: Verify that all required attributes are defined
-    for name, attribute in iface.namesAndDescriptions():
-        if isinstance(attribute, Attribute):
-            if not hasattr(candidate, name):
-                errors.append(f"Attribute '{name}' is required but not defined by {candidate}.")
+    # Step 3: Verify that the candidate defines all required attributes
+    try:
+        verify.verifyObject(iface, candidate)
+    except Invalid as e:
+        errors.append(str(e))
 
-    # Raise collected errors or return True if no errors
+    # If there are any errors, raise them
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
         else:
             raise Invalid("\n".join(errors))
+
     return True

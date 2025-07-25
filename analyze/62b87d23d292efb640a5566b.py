@@ -12,9 +12,9 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     process = subprocess.Popen(
         command_list,
         cwd=cwd,
-        env=env,
         stdout=subprocess.PIPE,
         stderr=stderr,
+        env=env,
         text=True
     )
     

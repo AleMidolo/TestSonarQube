@@ -39,5 +39,5 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     # Add the BEGIN message to the output queue
     self.output_queue.append(begin_message)
 
-    # Return a Response object (assuming self.create_response is a method that creates a Response object)
-    return self.create_response(begin_message)
+    # Return a Response object
+    return Response(begin_message)

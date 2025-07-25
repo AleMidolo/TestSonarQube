@@ -9,6 +9,6 @@ def check_sender_and_entity_handle_match(sender_handle, entity_handle):
         entity_handle (str): एंटिटी का हैंडल।
 
     Returns:
-        bool: True अगर सेंडर और एंटिटी हैंडल मेल खाते हैं, अन्यथा False।
+        bool: True यदि सेंडर और एंटिटी हैंडल मेल खाते हैं, अन्यथा False।
     """
     return sender_handle == entity_handle

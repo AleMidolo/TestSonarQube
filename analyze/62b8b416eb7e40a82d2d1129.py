@@ -1,7 +1,16 @@
 def names(self, all=False):  # pylint:disable=redefined-builtin
     """
     इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम लौटाएं।
+    
+    Args:
+        all (bool): यदि True है, तो सभी एट्रिब्यूट नाम लौटाएं। अन्यथा, केवल इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम लौटाएं।
+    
+    Returns:
+        list: एट्रिब्यूट नामों की सूची।
+    """
     if not all:
-        return [attr for attr in self.__dict__ if not attr.startswith('_')]
+        # केवल इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम लौटाएं
+        return [attr for attr in dir(self) if not attr.startswith('_')]
     else:
-        return list(self.__dict__.keys())
+        # सभी एट्रिब्यूट नाम लौटाएं
+        return dir(self)

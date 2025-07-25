@@ -10,24 +10,24 @@ def validate_version_inventories(self, version_dirs):
 
     version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
     """
-    root_inventory = {}
+    inventory_digests = {}
     discrepancies = []
 
     for version_dir in version_dirs:
         inventory_path = os.path.join(version_dir, "inventory.txt")
         if not os.path.exists(inventory_path):
-            raise FileNotFoundError(f"Inventory not found for version: {version_dir}")
+            raise FileNotFoundError(f"Inventory file not found in {version_dir}")
 
-        with open(inventory_path, 'r') as file:
-            current_inventory = {}
-            for line in file:
-                filename, filehash = line.strip().split()
-                current_inventory[filename] = filehash
+        with open(inventory_path, 'rb') as f:
+            content = f.read()
+            digest = hashlib.sha256(content).hexdigest()
 
-                if filename in root_inventory:
-                    if root_inventory[filename] != filehash:
-                        discrepancies.append((filename, root_inventory[filename], filehash))
-                else:
-                    root_inventory[filename] = filehash
+        if version_dir == version_dirs[0]:
+            root_digest = digest
+        else:
+            if digest != root_digest:
+                discrepancies.append((version_dir, digest))
 
-    return discrepancies
+        inventory_digests[version_dir] = digest
+
+    return inventory_digests, discrepancies

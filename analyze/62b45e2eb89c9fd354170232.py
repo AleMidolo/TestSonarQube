@@ -13,7 +13,7 @@ def next_version(version):
     # Increment the last part
     parts[-1] += 1
     
-    # Handle carry-over if any part exceeds 9
+    # Handle carry-over for parts
     for i in range(len(parts) - 1, 0, -1):
         if parts[i] > 9:
             parts[i] = 0

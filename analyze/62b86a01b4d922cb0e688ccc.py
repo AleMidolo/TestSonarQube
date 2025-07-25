@@ -19,12 +19,7 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
         if isinstance(value, dict):
             observer_schema[key] = generate_default_observer_schema_dict(value)
         elif isinstance(value, list):
-            observer_schema[key] = []
-            for item in value:
-                if isinstance(item, dict):
-                    observer_schema[key].append(generate_default_observer_schema_dict(item))
-                else:
-                    observer_schema[key].append(None)
+            observer_schema[key] = [None] * len(value)
         else:
             observer_schema[key] = None
     

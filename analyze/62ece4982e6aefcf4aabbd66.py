@@ -1,6 +1,6 @@
 def was_processed(processed, path_name, verbose):
     """
-    Check if the given path_name has already been processed.
+    Check if a given path_name has already been processed.
 
     Args:
         processed (set): A set of already processed path names.

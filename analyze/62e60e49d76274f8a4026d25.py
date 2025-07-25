@@ -2,16 +2,6 @@ def unit_of_work(metadata=None, timeout=None):
     """
     यह फ़ंक्शन ट्रांज़ेक्शन फ़ंक्शन्स के लिए एक डेकोरेटर है, जो यह नियंत्रित करने की अतिरिक्त सुविधा प्रदान करता है कि ट्रांज़ेक्शन कैसे निष्पादित किया जाए।
 
-    उदाहरण के लिए, एक टाइमआउट लागू किया जा सकता है::
-
-    from neo4j import unit_of_work
-
-    @unit_of_work(timeout=100)
-    def count_people_tx(tx):
-        result = tx.run("MATCH (a:Person) RETURN count(a) AS persons")
-        record = result.single()
-        return record["persons"]
-
     :param metadata: 
         मेटाडेटा के साथ एक डिक्शनरी।  
         निर्दिष्ट मेटाडेटा निष्पादित ट्रांज़ेक्शन से जुड़ा होगा और ``dbms.listQueries`` और ``dbms.listTransactions`` प्रक्रियाओं के आउटपुट में दिखाई देगा।  
@@ -33,8 +23,14 @@ def unit_of_work(metadata=None, timeout=None):
     def decorator(func):
         def wrapper(*args, **kwargs):
             # Here you would typically add logic to handle the metadata and timeout
-            # For example, passing these parameters to the transaction function
+            # For example, setting transaction metadata and timeout in a database session
             # This is a placeholder for the actual implementation
+            if metadata is not None:
+                # Set metadata logic here
+                pass
+            if timeout is not None:
+                # Set timeout logic here
+                pass
             return func(*args, **kwargs)
         return wrapper
     return decorator

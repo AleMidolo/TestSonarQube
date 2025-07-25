@@ -13,10 +13,9 @@ def cachedmethod(cache, key=hashkey, lock=None):
                         return cache[cache_key]
                     result = method(self, *args, **kwargs)
                     cache[cache_key] = result
-                    return result
             else:
                 result = method(self, *args, **kwargs)
                 cache[cache_key] = result
-                return result
+            return result
         return wrapper
     return decorator
