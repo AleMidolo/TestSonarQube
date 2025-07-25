@@ -18,12 +18,12 @@ def _update_context(self, context):
     # 假设 self.fields 是图的字段列表
     for i, field in enumerate(self.fields):
         if field.startswith('error_'):
-            # 提取错误类型，例如 "x_low" 从 "error_x_low"
+            # 提取错误类型，例如 "x_low" 或 "y_high"
             error_type = field[len('error_'):]
-            # 确定错误名称（x, y, z）
-            error_name = 'x' if i == 0 else 'y' if i == 1 else 'z' if i == 2 else None
-            if error_name:
-                # 更新 context.error
-                if error_name not in context.error:
-                    context.error[error_name] = {}
-                context.error[error_name][error_type] = {'index': i}
+            axis = error_type.split('_')[0]  # 提取 "x", "y", 或 "z"
+            error_key = f"{axis}_{error_type.split('_')[1]}"  # 例如 "x_low"
+            
+            # 更新 context.error
+            if axis not in context.error:
+                context.error[axis] = {}
+            context.error[axis][error_key] = {"index": i}

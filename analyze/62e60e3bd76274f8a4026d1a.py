@@ -11,5 +11,6 @@ def from_raw_values(cls, values):
     bookmarks = cls()
     for value in values:
         # Process each raw value and add it to the Bookmarks object
+        # This is a placeholder for the actual processing logic
         bookmarks.add_bookmark(value)
     return bookmarks

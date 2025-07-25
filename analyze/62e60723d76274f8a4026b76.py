@@ -12,16 +12,17 @@ def from_ticks(cls, ticks, tz=None):
     :raises ValueError: 如果时间戳超出范围(0 <= ticks < 86400000000000)
     """
     if not (0 <= ticks < 86400000000000):
-        raise ValueError("时间戳超出范围(0 <= ticks < 86400000000000)")
+        raise ValueError("时间戳超出范围 (0 <= ticks < 86400000000000)")
     
     # 将纳秒转换为秒和微秒
     seconds, nanoseconds = divmod(ticks, 1_000_000_000)
     microseconds = nanoseconds // 1000
     
-    # 创建一个timedelta对象来表示自午夜以来的时间
-    delta = timedelta(seconds=seconds, microseconds=microseconds)
+    # 将秒转换为小时、分钟、秒
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
     
-    # 创建一个时间对象
-    t = (time.min + delta).replace(tzinfo=tz)
+    # 创建时间对象
+    time_obj = time(hour=int(hours), minute=int(minutes), second=int(seconds), microsecond=int(microseconds), tzinfo=tz)
     
-    return t
+    return time_obj

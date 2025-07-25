@@ -14,16 +14,16 @@ def verify_relayable_signature(public_key, doc, signature):
     :return: 如果签名验证成功返回True，否则返回False
     """
     try:
-        # 将公钥从PEM格式加载
+        # 加载公钥
         pub_key = serialization.load_pem_public_key(public_key)
 
-        # 将XML文档转换为字符串
-        doc_str = ET.tostring(doc, encoding='unicode')
+        # 将XML文档转换为字节
+        doc_bytes = ET.tostring(doc, encoding='utf-8')
 
-        # 使用公钥验证签名
+        # 验证签名
         pub_key.verify(
             signature,
-            doc_str.encode('utf-8'),
+            doc_bytes,
             padding.PSS(
                 mgf=padding.MGF1(hashes.SHA256()),
                 salt_length=padding.PSS.MAX_LENGTH

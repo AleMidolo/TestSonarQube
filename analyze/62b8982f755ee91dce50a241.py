@@ -12,33 +12,38 @@ def normalized(self):
     """
     from dateutil.relativedelta import relativedelta
 
-    # Convert all attributes to integers
+    # 将天数的浮点数部分转换为小时
     days = int(self.days)
-    hours = int(self.hours)
-    minutes = int(self.minutes)
-    seconds = int(self.seconds)
-    microseconds = int(self.microseconds)
-    years = int(self.years)
-    months = int(self.months)
-    weeks = int(self.weeks)
+    hours = self.hours + (self.days - days) * 24
 
-    # Handle fractional parts
-    if hasattr(self, 'days') and self.days != days:
-        hours += int((self.days - days) * 24)
-    if hasattr(self, 'hours') and self.hours != hours:
-        minutes += int((self.hours - hours) * 60)
-    if hasattr(self, 'minutes') and self.minutes != minutes:
-        seconds += int((self.minutes - minutes) * 60)
-    if hasattr(self, 'seconds') and self.seconds != seconds:
-        microseconds += int((self.seconds - seconds) * 1e6)
+    # 将小时数的浮点数部分转换为分钟
+    hours = int(hours)
+    minutes = self.minutes + (hours - int(hours)) * 60
 
+    # 将分钟数的浮点数部分转换为秒
+    minutes = int(minutes)
+    seconds = self.seconds + (minutes - int(minutes)) * 60
+
+    # 将秒数的浮点数部分转换为微秒
+    seconds = int(seconds)
+    microseconds = self.microseconds + (seconds - int(seconds)) * 1e6
+
+    # 返回标准化后的 relativedelta 对象
     return relativedelta(
-        years=years,
-        months=months,
+        years=self.years,
+        months=self.months,
         days=days,
         hours=hours,
         minutes=minutes,
         seconds=seconds,
         microseconds=microseconds,
-        weeks=weeks
+        leapdays=self.leapdays,
+        year=self.year,
+        month=self.month,
+        day=self.day,
+        weekday=self.weekday,
+        hour=self.hour,
+        minute=self.minute,
+        second=self.second,
+        microsecond=self.microsecond
     )

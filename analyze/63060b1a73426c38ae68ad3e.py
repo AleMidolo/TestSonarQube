@@ -23,11 +23,9 @@ def get_plugin_spec_flatten_dict(plugin_dir):
                         for key, value in yaml_data.items():
                             if key in flattened_dict:
                                 if isinstance(flattened_dict[key], list):
-                                    flattened_dict[key].extend(value)
-                                elif isinstance(flattened_dict[key], dict):
-                                    flattened_dict[key].update(value)
+                                    flattened_dict[key].extend(value if isinstance(value, list) else [value])
                                 else:
-                                    flattened_dict[key] = value
+                                    flattened_dict[key] = [flattened_dict[key], value]
                             else:
                                 flattened_dict[key] = value
     

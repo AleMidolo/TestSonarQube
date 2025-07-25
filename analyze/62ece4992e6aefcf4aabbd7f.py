@@ -1,4 +1,4 @@
-import urllib.parse
+from urllib.parse import urlparse
 from typing import Tuple
 
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
@@ -7,9 +7,9 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     
     :param image_href: 图像的 href
     :returns: 一个元组，格式为 (image_id, netloc, use_ssl)
-    :raises ValueError: 如果无法解析 href
+    :raises ValueError: 如果 image_href 无法解析
     """
-    parsed_url = urllib.parse.urlparse(image_href)
+    parsed_url = urlparse(image_href)
     if not parsed_url.netloc:
         raise ValueError("Invalid image href: no netloc found")
     

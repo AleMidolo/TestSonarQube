@@ -7,8 +7,8 @@ def validate_as_prior_version(self, prior):
     if not isinstance(prior, InventoryValidator):
         return self.error("Prior must be an instance of InventoryValidator.")
     
-    # 假设 InventoryValidator 有一个方法 `is_valid_prior` 来检查 prior 是否是有效的先前版本
-    if not prior.is_valid_prior(self):
-        return self.error("Prior is not a valid previous version of the current inventory.")
+    # 假设我们有一些方法来比较两个库存对象的版本
+    if not self.is_valid_prior_version(prior):
+        return self.error("Prior version is not valid.")
     
     return True

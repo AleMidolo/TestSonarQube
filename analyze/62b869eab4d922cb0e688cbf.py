@@ -21,16 +21,14 @@ def generate_default_observer_schema(app):
                                     "properties": {
                                         "type": {"type": "string"},
                                         "status": {"type": "string"},
-                                        "lastTransitionTime": {"type": "string", "format": "date-time"},
+                                        "lastTransitionTime": {"type": "string"},
                                         "reason": {"type": "string"},
                                         "message": {"type": "string"}
-                                    },
-                                    "required": ["type", "status"]
+                                    }
                                 }
                             }
                         }
                     }
-                },
-                "required": ["status"]
+                }
             }
     return app

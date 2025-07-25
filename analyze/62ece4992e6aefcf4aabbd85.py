@@ -27,6 +27,6 @@ def find_roots(
     parents = set(graph.objects(None, prop))
     
     # 根节点是没有父节点的节点
-    roots.update(children - parents)
+    roots.update(parents - children)
     
     return roots

@@ -7,36 +7,25 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     :param parser_name: 命令名称，例如 main、virsh、ospd 等
     :param values_dict: 包含参数的字典
     """
-    if parser_name == "main":
-        # 根据 main 命令的特定需求进行类型转换
+    if parser_name == 'main':
         for key, value in values_dict.items():
-            if key == "port":
+            if value.isdigit():
                 values_dict[key] = int(value)
-            elif key == "verbose":
-                values_dict[key] = bool(value)
-            elif key == "timeout":
+            elif value.replace('.', '', 1).isdigit():
                 values_dict[key] = float(value)
-    elif parser_name == "virsh":
-        # 根据 virsh 命令的特定需求进行类型转换
+            elif value.lower() in ('true', 'false'):
+                values_dict[key] = value.lower() == 'true'
+    elif parser_name == 'virsh':
         for key, value in values_dict.items():
-            if key == "memory":
+            if key in ['memory', 'vcpu']:
                 values_dict[key] = int(value)
-            elif key == "cpu":
-                values_dict[key] = int(value)
-    elif parser_name == "ospd":
-        # 根据 ospd 命令的特定需求进行类型转换
+            elif key in ['autostart', 'persistent']:
+                values_dict[key] = value.lower() == 'true'
+    elif parser_name == 'ospd':
         for key, value in values_dict.items():
-            if key == "threads":
+            if key in ['port', 'timeout']:
                 values_dict[key] = int(value)
-            elif key == "debug":
-                values_dict[key] = bool(value)
-    else:
-        # 默认情况下，尝试将值转换为整数或浮点数
-        for key, value in values_dict.items():
-            try:
-                values_dict[key] = int(value)
-            except ValueError:
-                try:
-                    values_dict[key] = float(value)
-                except ValueError:
-                    pass
+            elif key in ['verbose', 'debug']:
+                values_dict[key] = value.lower() == 'true'
+    # 可以根据需要添加更多的 parser_name 处理逻辑
+    return values_dict

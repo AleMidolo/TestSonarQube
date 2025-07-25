@@ -6,5 +6,6 @@ def _getTargetClass(self):
     if class_name.endswith('Py'):
         return class_name[:-2]
     elif class_name.endswith('Fallback'):
-        return class_name[:-8]
-    return class_name
+        return class_name[:-7]
+    else:
+        return class_name

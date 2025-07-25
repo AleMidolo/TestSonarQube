@@ -37,7 +37,7 @@ def unit_of_work(metadata=None, timeout=None):
             if metadata is not None:
                 tx.run("CALL dbms.setTXMetaData($metadata)", metadata=metadata)
             if timeout is not None:
-                tx.run("CALL dbms.setTransactionTimeout($timeout)", timeout=timeout)
+                tx.run("CALL dbms.setTXTimeout($timeout)", timeout=timeout)
             return func(tx, *args, **kwargs)
         return wrapper
     return decorator

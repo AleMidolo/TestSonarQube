@@ -9,13 +9,15 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     :return: ansible 的结果
     """
     import subprocess
-    import json
-
-    # 将 vars_dict 转换为 JSON 字符串，以便传递给 Ansible
-    extra_vars = json.dumps(vars_dict)
 
     # 构建 Ansible 命令
-    ansible_command = ["ansible-playbook"] + cli_args + ["-e", extra_vars]
+    ansible_command = ["ansible-playbook"]
+    ansible_command.extend(cli_args)
+
+    # 添加 extra-vars
+    if vars_dict:
+        extra_vars = " ".join([f"{k}={v}" for k, v in vars_dict.items()])
+        ansible_command.extend(["--extra-vars", extra_vars])
 
     # 运行 Ansible 命令
     result = subprocess.run(ansible_command, capture_output=True, text=True)

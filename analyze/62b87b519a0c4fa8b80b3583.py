@@ -16,7 +16,7 @@ def scale(self, other=None):
         return self._scale
     elif isinstance(other, (int, float)):
         if self._scale == 0 or self._scale is None:
-            raise ValueError("Cannot rescale chart with unknown or zero scale.")
+            raise LenaValueError("Cannot rescale chart with unknown or zero scale.")
         scaling_factor = other / self._scale
         # Rescale the last coordinate
         if hasattr(self, 'y'):
