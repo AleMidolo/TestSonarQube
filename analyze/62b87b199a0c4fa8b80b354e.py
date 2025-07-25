@@ -10,21 +10,19 @@ def is_fill_request_seq(seq):
     from typing import Sequence
     from collections.abc import Sequence as SequenceType
     
-    # Check if seq is a single FillRequest element
-    if hasattr(seq, 'is_fill_request') and seq.is_fill_request:
-        return True
-        
-    # Check if seq is a Source sequence - return False if so
+    # Check if seq is a Source sequence
     if hasattr(seq, 'is_source') and seq.is_source:
         return False
         
-    # Check if seq is a sequence type
-    if not isinstance(seq, SequenceType):
-        return False
+    # Check if seq itself is a FillRequest
+    if hasattr(seq, 'is_fill_request') and seq.is_fill_request:
+        return True
         
-    # Check if any element in sequence is a FillRequest
-    for element in seq:
-        if hasattr(element, 'is_fill_request') and element.is_fill_request:
-            return True
-            
+    # Check if seq is a sequence type
+    if isinstance(seq, SequenceType):
+        # Recursively check elements
+        for element in seq:
+            if is_fill_request_seq(element):
+                return True
+                
     return False

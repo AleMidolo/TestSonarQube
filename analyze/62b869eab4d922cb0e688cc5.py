@@ -41,6 +41,6 @@ def update_last_applied_manifest_dict_from_resp(
                 last_applied_manifest[field], schema, value
             )
             
-        # For simple values, copy directly
+        # For simple values, just copy them over
         else:
             last_applied_manifest[field] = value

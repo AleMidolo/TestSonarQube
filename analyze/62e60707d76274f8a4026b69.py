@@ -4,18 +4,18 @@ def point_type(name, fields, srid_map):
     """
     class_attrs = {
         '__slots__': tuple(fields),
-        'srid_map': srid_map
+        '_srid_map': srid_map
     }
 
     def __init__(self, *args, **kwargs):
         if len(args) > len(fields):
             raise TypeError(f"{name} takes {len(fields)} positional arguments but {len(args)} were given")
-            
-        # Set positional args
+        
+        # Set positional arguments
         for field, value in zip(fields, args):
             setattr(self, field, value)
             
-        # Set keyword args
+        # Set keyword arguments
         for field, value in kwargs.items():
             if field not in fields:
                 raise TypeError(f"{name} got an unexpected keyword argument '{field}'")
@@ -35,10 +35,10 @@ def point_type(name, fields, srid_map):
     def __eq__(self, other):
         if not isinstance(other, type(self)):
             return NotImplemented
-        return all(getattr(self, f) == getattr(other, f) for f in fields)
+        return all(getattr(self, field) == getattr(other, field) for field in fields)
 
     def __hash__(self):
-        return hash(tuple(getattr(self, f) for f in fields))
+        return hash(tuple(getattr(self, field) for field in fields))
 
     class_attrs['__init__'] = __init__
     class_attrs['__repr__'] = __repr__

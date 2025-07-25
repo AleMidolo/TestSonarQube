@@ -54,7 +54,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
             if prop == 'http://joindiaspora.com/guid':
                 result['guid'] = data['properties'][prop]
             elif prop == 'http://joindiaspora.com/seed_location':
-                result['pod'] = data['properties'][prop]
+                result['seed_location'] = data['properties'][prop]
                 
         return result
         

@@ -7,56 +7,53 @@ def _verify(iface, candidate, tentative=False, vtype=None):
 
     # Check if candidate claims to provide interface
     if not tentative and not iface.providedBy(candidate):
-        errors['provided'].append(
-            f"{candidate!r} does not provide interface {iface!r}"
-        )
+        raise Invalid(f"{candidate!r} does not provide interface {iface!r}")
 
     # Check methods and attributes
     for name, desc in iface.namesAndDescriptions(all=True):
         if isinstance(desc, Method):
             # Verify method exists
             if not hasattr(candidate, name):
-                errors['methods'].append(
-                    f"Method {name!r} not implemented"
-                )
+                errors['missing_methods'].append(name)
                 continue
 
             method = getattr(candidate, name)
             if not callable(method):
-                errors['methods'].append(
-                    f"Attribute {name!r} is not callable"
-                )
+                errors['not_callable'].append(name)
                 continue
 
             # Verify method signature
             try:
-                desc.validateSignature(method)
-            except Invalid as e:
-                errors['signatures'].append(
-                    f"Method {name!r} has invalid signature: {str(e)}"
-                )
+                from inspect import signature
+                impl_sig = signature(method)
+                iface_sig = signature(desc)
+                
+                if impl_sig.parameters != iface_sig.parameters:
+                    errors['wrong_signature'].append(name)
+            except ValueError:
+                # Can't get signature, skip check
+                pass
+
         else:
             # Verify attribute exists
             if not hasattr(candidate, name):
-                errors['attributes'].append(
-                    f"Attribute {name!r} not provided"
-                )
+                errors['missing_attributes'].append(name)
 
-    # If no errors, return True
-    if not errors:
-        return True
+    # Raise errors if any found
+    if errors:
+        messages = []
+        if errors['missing_methods']:
+            messages.append(f"Missing required methods: {', '.join(errors['missing_methods'])}")
+        if errors['not_callable']:
+            messages.append(f"Attributes that should be methods: {', '.join(errors['not_callable'])}")
+        if errors['wrong_signature']:
+            messages.append(f"Methods with wrong signatures: {', '.join(errors['wrong_signature'])}")
+        if errors['missing_attributes']:
+            messages.append(f"Missing required attributes: {', '.join(errors['missing_attributes'])}")
 
-    # Collect all errors
-    all_errors = []
-    for error_type, error_list in errors.items():
-        all_errors.extend(error_list)
-
-    # If only one error, raise it directly
-    if len(all_errors) == 1:
-        raise Invalid(all_errors[0])
-
-    # If multiple errors, raise them all
-    if all_errors:
-        raise Invalid('\n'.join(all_errors))
+        if len(messages) == 1:
+            raise Invalid(messages[0])
+        else:
+            raise Invalid('\n'.join(messages))
 
     return True

@@ -16,25 +16,25 @@ def extend_cli(self, root_subparsers):
     # Add create command
     create_parser = spec_subparsers.add_parser(
         'create',
-        help='Create a new spec'
+        help='Create a new spec file'
     )
     create_parser.add_argument(
         'name',
         help='Name of the spec to create'
     )
     
+    # Add validate command
+    validate_parser = spec_subparsers.add_parser(
+        'validate', 
+        help='Validate an existing spec file'
+    )
+    validate_parser.add_argument(
+        'path',
+        help='Path to spec file to validate'
+    )
+    
     # Add list command
     list_parser = spec_subparsers.add_parser(
         'list',
         help='List available specs'
-    )
-    
-    # Add validate command
-    validate_parser = spec_subparsers.add_parser(
-        'validate', 
-        help='Validate a spec'
-    )
-    validate_parser.add_argument(
-        'spec_file',
-        help='Path to spec file to validate'
     )

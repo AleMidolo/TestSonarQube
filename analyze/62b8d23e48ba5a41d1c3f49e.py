@@ -2,7 +2,7 @@ def popitem(self):
     """
     Remove and return a random `(key, value)` pair.
     """
-    if not self:
+    if not self:  # Check if dictionary is empty
         raise KeyError('Dictionary is empty')
         
     # Get a random key from the dictionary

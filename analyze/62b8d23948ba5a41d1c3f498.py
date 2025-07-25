@@ -38,17 +38,17 @@ def lru_cache(maxsize=128, typed=False):
             
         # Add cache info method
         def cache_info():
-            hits = sum(1 for _ in cache)
-            misses = func.__code__.co_firstlineno
-            return {'hits': hits, 'misses': misses, 'maxsize': maxsize, 'currsize': len(cache)}
+            hits = sum(1 for k in cache)
+            return {
+                'hits': hits,
+                'misses': wrapper.calls - hits,
+                'maxsize': maxsize,
+                'currsize': len(cache)
+            }
             
+        wrapper.cache = cache
         wrapper.cache_info = cache_info
-        
-        # Add cache clear method
-        def cache_clear():
-            cache.clear()
-            
-        wrapper.cache_clear = cache_clear
+        wrapper.calls = 0
         
         return wrapper
     return decorator

@@ -50,10 +50,10 @@ def xargs(
             output = b''
             while True:
                 try:
-                    chunk = os.read(master, 1024)
-                    if not chunk:
+                    data = os.read(master, 1024)
+                    if not data:
                         break
-                    output += chunk
+                    output += data
                 except OSError:
                     break
                     
@@ -72,15 +72,15 @@ def xargs(
             
         return returncode, output
 
-    # Split args into chunks that fit within max length
+    # Split arguments into chunks based on max length
     chunks = _chunk_args(varargs, _max_length)
     
-    # Run chunks in parallel up to target_concurrency
+    # Run chunks in parallel using ThreadPoolExecutor
     with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
         results = list(executor.map(_run_chunk, chunks))
-        
+    
     # Combine results
     final_returncode = max((rc for rc, _ in results), default=0)
-    final_output = b''.join(out for _, out in results)
+    final_output = b''.join(output for _, output in results)
     
     return final_returncode, final_output

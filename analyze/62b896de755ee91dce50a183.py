@@ -35,39 +35,32 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
 
         # Replace any elements specified in res
         repl = {}
-        for attr in ("year", "month", "day", "hour", 
-                    "minute", "second", "microsecond"):
+        for attr in ["year", "month", "day", "hour", 
+                    "minute", "second", "microsecond"]:
             if getattr(res, attr) is not None:
                 repl[attr] = getattr(res, attr)
 
-        ret = default.replace(**repl)
+        dt = default.replace(**repl)
 
         # Handle timezone
-        if not ignoretz:
-            if res.tzname:
-                if tzinfos is None:
-                    raise ParserError("tzinfos parameter required for %s" % 
-                                    res.tzname)
+        if res.tzname is not None and not ignoretz:
+            if tzinfos is None:
+                raise ParserError("tzinfos parameter required for %s" % res.tzname)
                 
-                if isinstance(tzinfos, dict):
-                    tz = tzinfos.get(res.tzname)
-                else:
-                    tz = tzinfos(res.tzname, res.tzoffset)
+            if callable(tzinfos):
+                tz = tzinfos(res.tzname, res.tzoffset)
+            else:
+                tz = tzinfos.get(res.tzname)
                 
-                if tz is None:
-                    raise ParserError("Unknown timezone for %s" % res.tzname)
+            if tz is None:
+                raise ParserError("Unknown timezone name: %s" % res.tzname)
                 
-                ret = ret.replace(tzinfo=tz)
-            
-            elif res.tzoffset is not None:
-                ret = ret.replace(tzinfo=datetime.timezone(
-                    datetime.timedelta(seconds=res.tzoffset)))
+            dt = dt.replace(tzinfo=tz)
 
-        # Return results
         if kwargs.get('fuzzy_with_tokens', False):
-            return ret, tokens
+            return dt, tokens
         else:
-            return ret
+            return dt
 
     except (TypeError, ValueError, OverflowError) as e:
         raise ParserError(str(e))

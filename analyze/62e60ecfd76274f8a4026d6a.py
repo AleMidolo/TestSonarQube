@@ -24,10 +24,17 @@ def protocol_handlers(cls, protocol_version=None):
         (5, 1): BoltProtocolV5_1
     }
 
+    # If no specific version requested, return all handlers
     if protocol_version is None:
         return handlers
 
+    # Validate protocol_version is a tuple
     if not isinstance(protocol_version, tuple):
         raise TypeError("Protocol version must be specified as a tuple")
 
-    return {k: v for k, v in handlers.items() if k == protocol_version}
+    # If specific version requested, return only that handler if supported
+    if protocol_version in handlers:
+        return {protocol_version: handlers[protocol_version]}
+    
+    # Return empty dict if requested version not supported
+    return {}
