@@ -1,11 +1,11 @@
+from collections import OrderedDict
+from functools import wraps
+
 def lru_cache(maxsize=128, typed=False):
     """
     Decorator per racchiudere una funzione con un oggetto callable che memorizza
     fino a `maxsize` risultati basandosi su un algoritmo Least Recently Used (LRU).
     """
-    from collections import OrderedDict
-    from functools import wraps
-
     def decorator(func):
         cache = OrderedDict()
 

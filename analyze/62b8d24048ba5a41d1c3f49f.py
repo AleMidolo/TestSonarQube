@@ -14,22 +14,28 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
 
         @wraps(func)
         def wrapper(*args, **kwargs):
-            key = args if not typed else (type(arg).__name__ for arg in args)
+            key = args if not typed else (args, frozenset(kwargs.items()))
+            current_time = timer()
+
+            # Invalidate expired cache entries
             if key in cache:
-                if timer() - cache_times[key] < ttl:
+                if current_time - cache_times[key] < ttl:
+                    # Move to end to show that it was recently used
                     cache.move_to_end(key)
                     return cache[key]
                 else:
+                    # Remove expired entry
                     del cache[key]
                     del cache_times[key]
 
+            # Call the function and cache the result
             result = func(*args, **kwargs)
             cache[key] = result
-            cache_times[key] = timer()
+            cache_times[key] = current_time
 
+            # Maintain the cache size
             if len(cache) > maxsize:
-                cache.popitem(last=False)
-                del cache_times[next(iter(cache))]
+                cache.popitem(last=False)  # Remove the first (oldest) item
 
             return result
 

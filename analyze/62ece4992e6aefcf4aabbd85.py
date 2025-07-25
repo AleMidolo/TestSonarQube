@@ -7,12 +7,11 @@ def find_roots(
     if roots is None:
         roots = set()
 
-    # Get all nodes that have no parents
-    all_nodes = set(graph.subjects())
-    child_nodes = set(graph.objects(None, prop))
-    root_candidates = all_nodes - child_nodes
+    # Get all nodes that have the property as a child
+    children = set(graph.subjects(prop, None))
 
-    # Add root candidates to the roots set
-    roots.update(root_candidates)
+    # Find all nodes that are not children (i.e., they are roots)
+    all_nodes = set(graph.subjects())
+    roots = all_nodes - children
 
     return roots
