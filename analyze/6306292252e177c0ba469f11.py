@@ -9,8 +9,8 @@ def format_dt(dt):
     """
     def ensure_timezone(dt):
         if dt.tzinfo is None:
-            return dt.replace(tzinfo=pytz.UTC)
-        return dt.astimezone(pytz.UTC)
+            return pytz.utc.localize(dt)
+        return dt.astimezone(pytz.utc)
 
     dt_with_tz = ensure_timezone(dt)
     return dt_with_tz.strftime('%Y-%m-%dT%H:%M:%SZ')

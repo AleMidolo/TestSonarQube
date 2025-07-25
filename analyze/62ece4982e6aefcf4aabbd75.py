@@ -11,7 +11,7 @@ def addignored(ignored):
                             text=True)
 
     if result.returncode != 0:
-        raise RuntimeError(f"Error getting ignored files: {result.stderr.strip()}")
+        raise Exception("Error while executing git command: " + result.stderr)
 
     # 将输出转换为列表并去除空白
     ignored_files = [line.strip() for line in result.stdout.splitlines() if line.strip()]

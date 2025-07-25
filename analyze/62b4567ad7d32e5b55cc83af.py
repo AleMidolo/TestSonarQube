@@ -6,7 +6,7 @@ def parse_arguments(*arguments):
     """
     parser = argparse.ArgumentParser()
     
-    # 这里可以根据需要添加参数
+    # 这里可以添加你需要的参数
     parser.add_argument('--example', type=str, help='示例参数')
     
     # 解析传入的参数

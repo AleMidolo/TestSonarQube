@@ -23,7 +23,7 @@ def parse_frequency(frequency):
     if frequency is None or frequency.lower() == "always":
         return None
 
-    time_units = {
+    units = {
         "seconds": "seconds",
         "second": "seconds",
         "minutes": "minutes",
@@ -34,9 +34,8 @@ def parse_frequency(frequency):
         "day": "days",
         "weeks": "weeks",
         "week": "weeks",
-        "months": "days",  # Approximation: 1 month = 30 days
-        "months": "days",  # Approximation: 1 month = 30 days
-        "years": "days"    # Approximation: 1 year = 365 days
+        "months": "days",  # Approximation, as timedelta does not support months
+        "years": "days"    # Approximation, as timedelta does not support years
     }
 
     parts = frequency.split()
@@ -49,8 +48,14 @@ def parse_frequency(frequency):
         raise ValueError("Invalid number in frequency")
 
     unit = parts[1].lower()
-    if unit not in time_units:
+    if unit not in units:
         raise ValueError("Invalid time unit in frequency")
 
-    kwargs = {time_units[unit]: value}
-    return datetime.timedelta(**kwargs)
+    if unit in ["months", "years"]:
+        # Approximate months and years as 30 days and 365 days respectively
+        if unit == "months":
+            return datetime.timedelta(days=value * 30)
+        elif unit == "years":
+            return datetime.timedelta(days=value * 365)
+
+    return datetime.timedelta(**{units[unit]: value})
