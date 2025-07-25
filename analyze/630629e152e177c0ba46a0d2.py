@@ -31,7 +31,7 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         if 'subject' not in data or not data.get('links'):
             raise ValueError("Formato de respuesta webfinger inválido")
             
-        # Construir diccionario de respuesta
+        # Construir diccionario de resultado
         result = {
             'subject': data['subject'],
             'aliases': data.get('aliases', []),

@@ -27,7 +27,7 @@ def regex_dict(item):
     for key, value in item.items():
         # Escapar caracteres especiales excepto *
         escaped_key = re.escape(key).replace('\\*', '.*')
-        # Agregar ^ al inicio y $ al final para match completo
+        # Agregar ^ al inicio y $ al final para match exacto
         regex_key = f'^{escaped_key}$'
         # Agregar al diccionario resultado
         result[regex_key] = value

@@ -20,7 +20,7 @@ def _eval_file(prefix, file_path):
     """
     result = {}
     
-    # Get filename from path
+    # Extract filename from path
     filename = file_path.split('/')[-1]
     
     # Check if file is an asset or rendition

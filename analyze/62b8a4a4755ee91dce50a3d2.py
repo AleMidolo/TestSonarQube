@@ -27,11 +27,14 @@ def _fromutc(self, dt):
     timestamps = []
     
     # Probar offsets antes y después
-    for offset in [local_offset, local_offset + timedelta(hours=1)]:
-        local_ts = (local_dt - offset).timestamp()
-        timestamps.append(local_ts)
-    
-    # Si hay múltiples timestamps posibles, estamos en un pliegue
+    for offset in [local_offset - timedelta(hours=1), local_offset + timedelta(hours=1)]:
+        try:
+            local_ts = (dt.replace(tzinfo=None) - offset).timestamp()
+            timestamps.append(local_ts)
+        except (ValueError, OverflowError):
+            continue
+            
+    # Si hay múltiples timestamps válidos, estamos en un pliegue
     is_fold = len(set(timestamps)) > 1
     
     # Establecer el atributo fold si es necesario

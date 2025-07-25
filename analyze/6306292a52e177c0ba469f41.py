@@ -8,15 +8,14 @@ def test_tag(tag: str) -> bool:
         
     # Verificar que solo contenga caracteres alfanuméricos y guiones bajos
     valid_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_')
-    if not all(char in valid_chars for char in tag):
-        return False
-        
+    
+    # Verificar cada caracter
+    for char in tag:
+        if char not in valid_chars:
+            return False
+            
     # Verificar que no empiece con número
     if tag[0].isdigit():
-        return False
-        
-    # Verificar longitud mínima
-    if len(tag) < 2:
         return False
         
     return True

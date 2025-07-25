@@ -22,4 +22,4 @@ def make_parsers():
     list_parser = subparsers.add_parser('list', help='Listar elementos')
     list_parser.add_argument('--sort', action='store_true', help='Ordenar la lista')
 
-    return parser, subparsers
+    return parser, add_parser, remove_parser, list_parser

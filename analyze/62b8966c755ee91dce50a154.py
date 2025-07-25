@@ -13,76 +13,86 @@ def isoparse(self, dt_str):
 
     TIME_PATTERN = r'(?P<hour>[0-2]\d)(?::?(?P<minute>\d{2})(?::?(?P<second>\d{2})(?:[.,](?P<microsecond>\d{1,6}))?)?)?' 
     
-    TIMEZONE_PATTERN = r'(?P<tzname>Z|(?P<tzsign>[+-])(?P<tzhour>\d{2})(?::?(?P<tzminute>\d{2})?)?)?$'
+    TZ_PATTERN = r'(?P<tzname>Z|(?P<tzsign>[+-])(?P<tzhour>\d{2})(?::?(?P<tzminute>\d{2})?)?)?$'
 
-    # Eliminar la T entre fecha y hora si existe
-    dt_str = dt_str.replace('T', ' ').strip()
-
+    dt_str = dt_str.strip()
+    
     # Separar fecha y hora
-    parts = dt_str.split()
-    date_str = parts[0]
-    time_str = parts[1] if len(parts) > 1 else ''
+    if 'T' in dt_str:
+        date_str, time_str = dt_str.split('T')
+    else:
+        if any(c in dt_str for c in ':.-+Z'):  # Tiene componentes de hora
+            date_str, time_str = dt_str.split(' ', 1)
+        else:
+            date_str, time_str = dt_str, ''
 
-    # Analizar la fecha
-    date_match = None
-    for pattern in DATE_PATTERNS.values():
+    # Analizar fecha
+    date_parts = None
+    for pattern_name, pattern in DATE_PATTERNS.items():
         match = re.match(pattern, date_str)
         if match:
-            date_match = match
+            date_parts = match.groupdict()
             break
 
-    if not date_match:
+    if not date_parts:
         raise ValueError("Invalid ISO format date")
 
-    date_parts = date_match.groupdict()
-
-    # Manejar fechas basadas en semanas ISO
+    # Convertir fecha
     if 'week' in date_parts:
+        # Manejo de fechas basadas en semanas
         year = int(date_parts['year'])
         week = int(date_parts['week'])
         weekday = int(date_parts.get('weekday', '1'))
-        jan1 = date(year, 1, 1)
-        week_1 = jan1 + timedelta(days=(8 - jan1.isoweekday()))
-        result_date = week_1 + timedelta(weeks=week-1, days=weekday-1)
-        year, month, day = result_date.year, result_date.month, result_date.day
+        date_obj = datetime.strptime(f"{year}-W{week}-{weekday}", "%Y-W%W-%w").date()
     else:
+        # Fecha normal
         year = int(date_parts['year'])
-        month = int(date_parts.get('month', 1))
-        day = int(date_parts.get('day', 1))
+        month = int(date_parts.get('month', '1'))
+        day = int(date_parts.get('day', '1'))
+        date_obj = date(year, month, day)
 
     # Valores por defecto para hora
     hour = minute = second = microsecond = 0
     tz = None
 
-    # Analizar la hora si existe
+    # Analizar hora si existe
     if time_str:
-        time_match = re.match(TIME_PATTERN + TIMEZONE_PATTERN, time_str)
+        time_match = re.match(TIME_PATTERN + TZ_PATTERN, time_str)
         if not time_match:
             raise ValueError("Invalid ISO format time")
-        
+            
         time_parts = time_match.groupdict()
         
-        hour = int(time_parts.get('hour', 0))
-        if hour == 24:  # Convertir 24:00 a 00:00 del día siguiente
-            hour = 0
-            day += 1
+        # Convertir componentes de hora
+        if time_parts.get('hour'):
+            hour = int(time_parts['hour'])
+            if hour == 24:  # Manejar caso especial de medianoche
+                hour = 0
+                
+        if time_parts.get('minute'):
+            minute = int(time_parts['minute'])
             
-        minute = int(time_parts.get('minute', 0))
-        second = int(time_parts.get('second', 0))
-        microsecond = int((time_parts.get('microsecond') or '').ljust(6, '0'))
+        if time_parts.get('second'):
+            second = int(time_parts['second'])
+            
+        if time_parts.get('microsecond'):
+            microsecond = int(time_parts['microsecond'].ljust(6, '0'))
 
-        # Analizar zona horaria
+        # Procesar zona horaria
         if time_parts.get('tzname'):
             if time_parts['tzname'] == 'Z':
                 tz = tzutc()
             else:
                 tzsign = 1 if time_parts['tzsign'] == '+' else -1
                 tzhour = int(time_parts['tzhour'])
-                tzminute = int(time_parts.get('tzminute', 0))
-                offset = tzsign * (tzhour * 60 + tzminute) * 60
-                if offset == 0:
+                tzminute = int(time_parts.get('tzminute', '0'))
+                
+                offset = tzsign * timedelta(hours=tzhour, minutes=tzminute)
+                
+                if offset.total_seconds() == 0:
                     tz = tzutc()
                 else:
-                    tz = tzoffset(None, offset)
+                    tz = tzoffset(None, tzsign * (tzhour * 3600 + tzminute * 60))
 
-    return datetime(year, month, day, hour, minute, second, microsecond, tz)
+    return datetime(date_obj.year, date_obj.month, date_obj.day,
+                   hour, minute, second, microsecond, tz)

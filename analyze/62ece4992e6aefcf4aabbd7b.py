@@ -9,7 +9,7 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     # Get directory path from config filename
     config_dir = os.path.dirname(config_filename)
 
-    # Create parent directories if they don't exist
+    # Create directories if they don't exist
     if config_dir:
         pathlib.Path(config_dir).mkdir(parents=True, exist_ok=True)
 
@@ -17,7 +17,9 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     if os.path.exists(config_filename) and not overwrite:
         raise FileExistsError(f"Configuration file {config_filename} already exists and overwrite=False")
 
-    # Write the configuration with specified mode
+    # Write the configuration file with specified mode
     with open(config_filename, 'w') as f:
-        os.chmod(config_filename, mode)
         f.write(rendered_config)
+    
+    # Set file permissions
+    os.chmod(config_filename, mode)

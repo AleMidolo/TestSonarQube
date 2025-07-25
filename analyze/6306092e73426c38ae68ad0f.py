@@ -18,7 +18,7 @@ def get_nested_custom_and_control_args(self, args):
     for arg_name, arg_value in args.items():
         if arg_name.startswith('--'):
             # Control arguments start with '--'
-            clean_name = arg_name[2:]  # Remove '--' prefix
+            clean_name = arg_name[2:]
             control_args[clean_name] = arg_value
         elif '__' in arg_name:
             # Nested arguments contain '__'
@@ -28,20 +28,13 @@ def get_nested_custom_and_control_args(self, args):
             nested_args[parent][child] = arg_value
         elif arg_name.startswith('custom_'):
             # Custom arguments start with 'custom_'
-            clean_name = arg_name[7:]  # Remove 'custom_' prefix
-            custom_args[clean_name] = arg_value
+            custom_args[arg_name] = arg_value
         else:
             # Regular nested arguments
             nested_args[arg_name] = arg_value
 
-    # Merge custom args into nested args, overwriting any conflicts
-    for key, value in custom_args.items():
-        if key in nested_args:
-            if isinstance(nested_args[key], dict):
-                nested_args[key].update(value if isinstance(value, dict) else {key: value})
-            else:
-                nested_args[key] = value
-        else:
-            nested_args[key] = value
+    # Merge custom args into nested args
+    for custom_key, custom_value in custom_args.items():
+        nested_args[custom_key] = custom_value
 
     return control_args, nested_args

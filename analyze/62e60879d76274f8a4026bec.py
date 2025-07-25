@@ -34,7 +34,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         
     if hydration_hooks:
         self.hydration_hooks.update(hydration_hooks)
-    
+
     # Crear y enviar el mensaje BEGIN
     message = ("BEGIN", extras)
     

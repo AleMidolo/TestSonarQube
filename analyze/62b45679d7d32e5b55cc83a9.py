@@ -1,10 +1,12 @@
 def parser_flags(parser):
+    """
+    Dada una instancia de 'argparse.ArgumentParser', devuelve sus banderas de argumentos
+    en una cadena separada por espacios.
+    """
     flags = []
     for action in parser._actions:
-        # Skip the default help action
-        if action.dest == 'help':
-            continue
-        # Add all option strings (flags) for this argument
-        flags.extend(action.option_strings)
-    # Return flags joined by spaces
+        # Obtener todas las opciones (flags) para esta acción
+        flags.extend([opt for opt in action.option_strings])
+    
+    # Unir todas las flags con espacios y devolver
     return ' '.join(sorted(flags))

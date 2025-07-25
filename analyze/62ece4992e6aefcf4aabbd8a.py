@@ -9,7 +9,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
 
     # Initialize return values
     configs = {}
-    errors = []
+    error_logs = []
     logger = logging.getLogger(__name__)
 
     # Process each config file
@@ -22,7 +22,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 raise FileNotFoundError(f"Configuration file not found: {filename}")
             
             if not os.access(path, os.R_OK):
-                raise PermissionError(f"Permission denied reading configuration file: {filename}")
+                raise PermissionError(f"Insufficient permissions to read: {filename}")
 
             # Load and parse YAML file
             with open(path, 'r') as f:
@@ -48,10 +48,10 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 args=(),
                 exc_info=None
             )
-            errors.append(error_record)
+            error_logs.append(error_record)
             logger.error(f"Error loading configuration file {filename}: {str(e)}")
 
-    return configs, errors
+    return configs, error_logs
 
 def resolve_environment_variables(config):
     """Helper function to resolve environment variables in config"""
@@ -67,11 +67,14 @@ def resolve_environment_variables(config):
     return config
 
 def apply_overrides(config, overrides):
-    """Helper function to apply configuration overrides"""
-    if isinstance(config, dict) and isinstance(overrides, dict):
-        for k, v in overrides.items():
-            if k in config and isinstance(config[k], dict) and isinstance(v, dict):
-                config[k] = apply_overrides(config[k], v)
-            else:
-                config[k] = v
-    return config
+    """Helper function to apply override values to config"""
+    if not isinstance(config, dict):
+        return config
+        
+    result = config.copy()
+    for key, value in overrides.items():
+        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+            result[key] = apply_overrides(result[key], value)
+        else:
+            result[key] = value
+    return result
