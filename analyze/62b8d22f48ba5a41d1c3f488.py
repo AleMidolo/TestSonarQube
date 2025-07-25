@@ -4,7 +4,6 @@ def popitem(self):
     """
     if not self.data:
         raise KeyError("popitem(): dictionary is empty")
-    
     first_key = next(iter(self.data))
     value = self.data.pop(first_key)
     return first_key, value
