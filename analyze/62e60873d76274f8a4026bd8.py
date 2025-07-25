@@ -32,5 +32,9 @@ def protocol_handlers(cls, protocol_version=None):
     if not isinstance(protocol_version, tuple):
         raise TypeError("Protocol version must be specified as a tuple")
 
-    # If specific version requested, return only that handler if supported
-    return {protocol_version: handlers[protocol_version]} if protocol_version in handlers else {}
+    # If specific version requested, return dict with just that handler if supported
+    if protocol_version in handlers:
+        return {protocol_version: handlers[protocol_version]}
+    
+    # Return empty dict if requested version not supported
+    return {}

@@ -22,7 +22,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         extra["db"] = db
     if imp_user:
         extra["imp_user"] = imp_user
-    
+        
     # Add hooks if provided
     if dehydration_hooks:
         extra["dehydration_hooks"] = dehydration_hooks

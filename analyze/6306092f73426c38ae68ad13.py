@@ -37,14 +37,14 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
             elif value:
                 cmd.extend([f"--{arg}", str(value)])
 
-    # Set environment variables from workspace if available
+    # Set environment variables from workspace
     env = os.environ.copy()
     if hasattr(ir_workspace, 'ansible_config'):
         env['ANSIBLE_CONFIG'] = ir_workspace.ansible_config
 
-    # Set inventory from workspace if available
-    if hasattr(ir_workspace, 'inventory'):
-        cmd.extend(['-i', ir_workspace.inventory])
+    # Set plugin-specific environment variables
+    if hasattr(ir_plugin, 'ansible_env'):
+        env.update(ir_plugin.ansible_env)
 
     # Execute ansible-playbook command
     try:

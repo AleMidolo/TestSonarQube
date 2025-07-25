@@ -7,31 +7,31 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     """
     flattened_dict = {}
     
-    def flatten_dict(d, parent_key=''):
-        for key, value in d.items():
-            new_key = f"{parent_key}.{key}" if parent_key else key
-            
-            if isinstance(value, dict):
-                flatten_dict(value, new_key)
-            else:
-                flattened_dict[new_key] = value
-    
     try:
-        # Try to read and parse the plugin spec file
+        # Read and parse plugin spec file
         spec_file = os.path.join(plugin_dir, 'plugin.spec')
         if not os.path.exists(spec_file):
-            return {}
+            return flattened_dict
             
-        with open(spec_file, 'r') as f:
+        with open(spec_file) as f:
             spec_data = yaml.safe_load(f)
             
-        if not spec_data or not isinstance(spec_data, dict):
-            return {}
+        def flatten_dict(d, parent_key=''):
+            items = []
+            for k, v in d.items():
+                new_key = f"{parent_key}.{k}" if parent_key else k
+                
+                if isinstance(v, dict):
+                    items.extend(flatten_dict(v, new_key).items())
+                else:
+                    items.append((new_key, v))
+            return dict(items)
             
-        # Flatten the dictionary
-        flatten_dict(spec_data)
+        # Flatten the nested dictionary
+        flattened_dict = flatten_dict(spec_data)
         
-        return flattened_dict
-        
-    except (yaml.YAMLError, IOError):
+    except Exception as e:
+        # Return empty dict if any error occurs
         return {}
+        
+    return flattened_dict

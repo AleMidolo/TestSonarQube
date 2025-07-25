@@ -5,7 +5,7 @@ def determineMetaclass(bases, explicit_mc=None):
     # Start with explicit metaclass if provided
     metaclass = explicit_mc
     
-    # If no explicit metaclass, get metaclass from first base
+    # If no explicit metaclass, get from first base class
     if metaclass is None and bases:
         metaclass = type(bases[0])
         
@@ -21,4 +21,4 @@ def determineMetaclass(bases, explicit_mc=None):
         raise TypeError("Incompatible metaclasses: %s and %s" % 
                        (metaclass.__name__, base_mc.__name__))
                        
-    return metaclass if metaclass is not None else type
+    return metaclass

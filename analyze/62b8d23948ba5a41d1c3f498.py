@@ -24,10 +24,8 @@ def lru_cache(maxsize=128, typed=False):
                 cache.move_to_end(key)
                 return cache[key]
             
-            # Calculate result
+            # Calculate result and cache it
             result = func(*args, **kwargs)
-            
-            # Add to cache
             cache[key] = result
             
             # Remove oldest item if cache is full

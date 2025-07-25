@@ -15,10 +15,10 @@ def get_spec_defaults(self):
         defaults.update(self.defaults)
         
     # Get defaults from environment variables if configured
-    if hasattr(self, 'env_defaults') and self.env_defaults:
-        import os
+    if hasattr(self, 'env_defaults'):
         for key, env_var in self.env_defaults.items():
-            if env_var in os.environ:
-                defaults[key] = os.environ[env_var]
+            value = os.environ.get(env_var)
+            if value is not None:
+                defaults[key] = value
                 
     return defaults

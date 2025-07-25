@@ -10,6 +10,10 @@ def unit_of_work(metadata=None, timeout=None):
         wrapper.__name__ = f.__name__
         wrapper.__doc__ = f.__doc__
         
+        # Add metadata and timeout as attributes that can be accessed
+        wrapper.metadata = metadata
+        wrapper.timeout = timeout
+        
         return wrapper
         
     # Handle case where decorator is used without parameters

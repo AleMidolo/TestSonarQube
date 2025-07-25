@@ -10,7 +10,7 @@ def deep_merge_nodes(nodes):
             merged[key] = (key_node, value_node)
             continue
             
-        # We've seen this key before - need to merge
+        # Key exists, need to merge
         existing_value_node = merged[key][1]
         
         # If both nodes are mapping nodes, do a deep merge
@@ -21,26 +21,29 @@ def deep_merge_nodes(nodes):
             existing_dict = {k.value: v for k,v in existing_value_node.value}
             new_dict = {k.value: v for k,v in value_node.value}
             
-            # Update existing dict with new values
+            # Update existing with new values
             existing_dict.update(new_dict)
             
-            # Convert back to list of tuples format
+            # Convert back to list of tuples
             merged_value = [
-                (k_node, v) 
-                for k_node, v in value_node.value 
-                if k_node.value in existing_dict
+                (k_node, v_node) 
+                for k_node, v_node in existing_value_node.value
+                if k_node.value not in new_dict
             ]
+            merged_value.extend([
+                (k_node, v_node)
+                for k_node, v_node in value_node.value 
+            ])
             
             # Create new mapping node with merged values
             merged_mapping = type(value_node)(
                 tag=value_node.tag,
                 value=merged_value
             )
-            
             merged[key] = (key_node, merged_mapping)
             
         else:
-            # For non-mapping nodes, just keep the latest value
+            # For non-mapping nodes, just use the latest value
             merged[key] = (key_node, value_node)
             
     # Convert merged dict back to list of tuples

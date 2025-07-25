@@ -30,7 +30,7 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
             # Check if key exists and hasn't expired
             if key in cache:
                 if current_time - timestamps[key] < ttl:
-                    # Move accessed item to end (most recently used)
+                    # Move to end to mark as most recently used
                     cache.move_to_end(key)
                     return cache[key]
                 else:

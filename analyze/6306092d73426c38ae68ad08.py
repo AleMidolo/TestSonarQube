@@ -37,11 +37,14 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
         # Check if required_when is a string expression
         elif isinstance(required_when, str):
             try:
-                # Evaluate the expression with args as context
-                if eval(required_when, {'args': args}):
+                # Create context with args for eval
+                context = {'args': args}
+                if eval(required_when, {'__builtins__': {}}, context):
                     required_args.append(option['name'])
             except:
-                # Skip if expression evaluation fails
-                continue
+                # Log warning about invalid expression
+                self._logger.warning(
+                    f"Invalid required_when expression for {command_name}: {required_when}"
+                )
                 
     return required_args

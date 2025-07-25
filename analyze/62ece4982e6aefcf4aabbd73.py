@@ -15,41 +15,30 @@ def split(s, platform='this'):
         platform = 1 if sys.platform != 'win32' else 0
         
     if platform == 1:  # POSIX
-        # Match single or double quoted strings, or unquoted sequences
+        # Match either a non-whitespace sequence, or a quoted string
         pattern = r'''(?:[^\s"']+|"[^"]*"|'[^']*')+'''
-        matches = re.findall(pattern, s)
-        # Remove surrounding quotes if present
-        return [m.strip('"\'') for m in matches]
         
-    elif platform == 0:  # Windows/CMD
-        # Windows command line splitting rules:
-        # - Backslash is literal unless followed by quote
-        # - Quotes must be paired
-        # - Spaces outside quotes separate arguments
+        # Split and handle quotes
+        tokens = re.findall(pattern, s)
         result = []
-        current = []
-        in_quotes = False
-        i = 0
-        
-        while i < len(s):
-            if s[i] == '"':
-                if in_quotes and i + 1 < len(s) and s[i + 1] == '"':
-                    current.append('"')
-                    i += 1
-                else:
-                    in_quotes = not in_quotes
-            elif s[i] == ' ' and not in_quotes:
-                if current:
-                    result.append(''.join(current))
-                    current = []
-            else:
-                current.append(s[i])
-            i += 1
+        for token in tokens:
+            # Remove surrounding quotes and unescape
+            if (token.startswith('"') and token.endswith('"')) or \
+               (token.startswith("'") and token.endswith("'")):
+                token = token[1:-1]
+            result.append(token)
             
-        if current:
-            result.append(''.join(current))
-            
-        return result
+    else:  # Windows/CMD
+        # Windows splits on spaces unless quoted
+        pattern = r'''("[^"]*"|[^\s"]+)'''
         
-    else:
-        raise ValueError("Unsupported platform value")
+        # Split and handle quotes
+        tokens = re.findall(pattern, s)
+        result = []
+        for token in tokens:
+            # Remove surrounding quotes but don't unescape
+            if token.startswith('"') and token.endswith('"'):
+                token = token[1:-1]
+            result.append(token)
+            
+    return result

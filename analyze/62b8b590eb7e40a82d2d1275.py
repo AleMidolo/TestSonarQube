@@ -19,47 +19,62 @@ def _legacy_mergeOrderings(orderings):
     if not orderings:
         return []
         
-    # Create a mapping of elements to their positions in each ordering
-    positions = {}
+    # Create a mapping of element -> list of indices where it appears
+    element_positions = {}
     for ordering in orderings:
-        for i, elem in enumerate(ordering):
-            if elem not in positions:
-                positions[elem] = []
-            positions[elem].append(i)
+        for i, element in enumerate(ordering):
+            if element not in element_positions:
+                element_positions[element] = []
+            element_positions[element].append((ordering, i))
             
-    # Create a set of all unique elements
-    all_elements = set()
-    for ordering in orderings:
-        all_elements.update(ordering)
-        
     result = []
     used = set()
     
-    while len(used) < len(all_elements):
-        # Find elements that can be added next
-        candidates = []
-        for elem in all_elements:
-            if elem in used:
-                continue
-                
-            # Check if all elements before this one in each ordering are used
-            can_add = True
-            for ordering in orderings:
-                if elem in ordering:
-                    idx = ordering.index(elem)
-                    if any(x not in used for x in ordering[:idx]):
-                        can_add = False
-                        break
-                        
-            if can_add:
-                candidates.append(elem)
-                
-        # Add the candidate that appears earliest in its orderings
+    while True:
+        # Find elements that can be added (those that appear first in their lists)
+        candidates = set()
+        for ordering in orderings:
+            if ordering:
+                element = ordering[0]
+                if element not in used:
+                    candidates.add(element)
+                    
         if not candidates:
-            raise ValueError("Circular dependency detected")
+            break
             
-        best_candidate = min(candidates, key=lambda x: min(positions[x]))
-        result.append(best_candidate)
-        used.add(best_candidate)
+        # For each candidate, check if it appears later in other lists
+        valid_candidates = set()
+        for candidate in candidates:
+            valid = True
+            suffix = None
+            
+            for pos_list in element_positions[candidate]:
+                ordering, idx = pos_list
+                if idx > 0 and ordering[0] != candidate:
+                    valid = False
+                    break
+                    
+                current_suffix = ordering[idx:]
+                if suffix is None:
+                    suffix = current_suffix
+                elif suffix != current_suffix:
+                    valid = False
+                    break
+                    
+            if valid:
+                valid_candidates.add(candidate)
+                
+        if not valid_candidates:
+            break
+            
+        # Add a valid candidate to result and remove from orderings
+        element = valid_candidates.pop()
+        result.append(element)
+        used.add(element)
         
+        # Remove the element from the front of any ordering that starts with it
+        for ordering in orderings:
+            if ordering and ordering[0] == element:
+                ordering.pop(0)
+                
     return result

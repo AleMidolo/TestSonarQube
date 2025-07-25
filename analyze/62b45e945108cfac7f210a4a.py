@@ -16,41 +16,31 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
             num_objects += 1
 
             try:
-                # Validate individual object
+                # Validate individual object if requested
                 if validate_objects:
-                    # Check file exists
-                    if not os.path.exists(filepath):
+                    is_valid = True
+                    
+                    # Check file exists and is readable
+                    if not os.path.isfile(filepath):
+                        is_valid = False
                         if show_warnings:
-                            print(f"Warning: File {filepath} does not exist")
-                        continue
-
-                    # Check file is readable
-                    if not os.access(filepath, os.R_OK):
-                        if show_warnings:
-                            print(f"Warning: File {filepath} is not readable")
-                        continue
-
-                    # Check file size > 0
-                    if os.path.getsize(filepath) == 0:
-                        if show_warnings:
-                            print(f"Warning: File {filepath} is empty")
-                        continue
-
-                    # Validate checksum if requested
-                    if check_digests:
+                            print(f"Warning: File {filepath} does not exist or is not accessible")
+                    
+                    # Check file digests if requested
+                    if check_digests and is_valid:
                         stored_digest = self._get_stored_digest(filepath)
-                        if stored_digest:
-                            computed_digest = self._compute_digest(filepath)
-                            if stored_digest != computed_digest:
-                                if show_warnings:
-                                    print(f"Warning: Digest mismatch for {filepath}")
-                                continue
-
-                good_objects += 1
+                        computed_digest = self._compute_file_digest(filepath)
+                        
+                        if stored_digest != computed_digest:
+                            is_valid = False
+                            if show_warnings:
+                                print(f"Warning: Digest mismatch for {filepath}")
+                    
+                    if is_valid:
+                        good_objects += 1
 
             except Exception as e:
                 if show_warnings:
                     print(f"Warning: Error validating {filepath}: {str(e)}")
-                continue
 
     return num_objects, good_objects

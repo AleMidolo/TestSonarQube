@@ -22,7 +22,7 @@ def data(self, *keys):
             if key < 0:
                 key = len(self._keys) + key
             if key >= len(self._keys) or key < 0:
-                raise IndexError(f"Index {key} out of range")
+                raise IndexError(f"Index {key} is out of bounds")
             result[self._keys[key]] = self._values[key]
         else:
             # Handle key access

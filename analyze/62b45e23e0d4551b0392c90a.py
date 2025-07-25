@@ -14,15 +14,15 @@ def validate_version_inventories(self, version_dirs):
     # Get root inventory for comparison
     root_inventory = self.get_inventory()
     if not root_inventory:
-        raise ValueError("No root inventory found")
+        raise ValueError("Root inventory not found")
         
     # Check each version directory
-    for version_dir in version_dirs:
-        version_inventory_path = os.path.join(version_dir, "inventory.txt")
+    for version in version_dirs:
+        version_inventory_path = os.path.join(version, "inventory.txt")
         
         # Verify inventory exists for this version
         if not os.path.exists(version_inventory_path):
-            raise ValueError(f"Missing inventory for version {version_dir}")
+            raise ValueError(f"Missing inventory for version {version}")
             
         # Load version inventory
         version_inventory = self.load_inventory(version_inventory_path)
@@ -35,4 +35,7 @@ def validate_version_inventories(self, version_dirs):
             else:
                 different_digests.add((file_path, digest))
                 
-    return different_digests
+    # Store different digests for later content validation
+    self.different_digests = different_digests
+    
+    return True

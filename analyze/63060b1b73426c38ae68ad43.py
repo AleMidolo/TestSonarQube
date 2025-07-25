@@ -15,7 +15,7 @@ def extend_cli(self, root_subparsers):
     
     # Add create command
     create_parser = spec_subparsers.add_parser(
-        'create', 
+        'create',
         help='Create a new package specification'
     )
     create_parser.add_argument(
@@ -26,13 +26,13 @@ def extend_cli(self, root_subparsers):
     # Add list command
     list_parser = spec_subparsers.add_parser(
         'list',
-        help='List available specifications'
+        help='List available package specifications'
     )
     
-    # Add edit command  
+    # Add edit command
     edit_parser = spec_subparsers.add_parser(
         'edit',
-        help='Edit an existing specification'
+        help='Edit an existing package specification'
     )
     edit_parser.add_argument(
         'name',
@@ -42,7 +42,7 @@ def extend_cli(self, root_subparsers):
     # Add delete command
     delete_parser = spec_subparsers.add_parser(
         'delete',
-        help='Delete a specification'
+        help='Delete a package specification'
     )
     delete_parser.add_argument(
         'name',

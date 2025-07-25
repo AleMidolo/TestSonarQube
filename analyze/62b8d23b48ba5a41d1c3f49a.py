@@ -5,9 +5,9 @@ def mru_cache(maxsize=128, typed=False):
     algorithm.
     """
     def decorator(func):
-        # Store cache and order of keys
+        # Store cache and order of usage
         cache = {}
-        key_order = []
+        order = []
         
         def make_key(args, kwargs):
             # Create cache key from arguments
@@ -24,9 +24,9 @@ def mru_cache(maxsize=128, typed=False):
             try:
                 # Try to get from cache
                 result = cache[key]
-                # Move key to end (most recently used)
-                key_order.remove(key)
-                key_order.append(key)
+                # Update access order
+                order.remove(key)
+                order.append(key)
                 return result
                 
             except KeyError:
@@ -35,11 +35,11 @@ def mru_cache(maxsize=128, typed=False):
                 
                 # Add to cache
                 cache[key] = result
-                key_order.append(key)
+                order.append(key)
                 
                 # Remove oldest if cache too large
                 if len(cache) > maxsize:
-                    oldest_key = key_order.pop(0)
+                    oldest_key = order.pop(0)
                     del cache[oldest_key]
                     
                 return result
@@ -47,11 +47,11 @@ def mru_cache(maxsize=128, typed=False):
         wrapper.cache_info = lambda: {
             'maxsize': maxsize,
             'currsize': len(cache),
-            'cache': cache,
-            'order': key_order
+            'hits': len(order),
+            'misses': func.__code__.co_firstlineno
         }
         
-        wrapper.cache_clear = lambda: cache.clear() or key_order.clear()
+        wrapper.cache_clear = lambda: cache.clear() or order.clear()
         
         return wrapper
         

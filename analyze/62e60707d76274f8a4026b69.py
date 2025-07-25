@@ -10,12 +10,12 @@ def point_type(name, fields, srid_map):
     def __init__(self, *args, **kwargs):
         if len(args) > len(fields):
             raise TypeError(f"{name} takes {len(fields)} positional arguments but {len(args)} were given")
-        
-        # Set positional arguments
+            
+        # Set positional args
         for field, value in zip(fields, args):
             setattr(self, field, value)
             
-        # Set keyword arguments
+        # Set keyword args
         for field, value in kwargs.items():
             if field not in fields:
                 raise TypeError(f"{name} got an unexpected keyword argument '{field}'")
@@ -29,8 +29,8 @@ def point_type(name, fields, srid_map):
                 raise TypeError(f"Missing required argument: '{field}'")
 
     def __repr__(self):
-        args = [f"{field}={getattr(self, field)!r}" for field in fields]
-        return f"{name}({', '.join(args)})"
+        args = [getattr(self, field) for field in fields]
+        return f"{name}({', '.join(repr(arg) for arg in args)})"
 
     def __eq__(self, other):
         if not isinstance(other, type(self)):
