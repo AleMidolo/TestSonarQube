@@ -20,7 +20,10 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
     if hydration_hooks is None:
         hydration_hooks = {}
 
-    # Aquí se construiría el mensaje 'DISCARD'
+    # Aquí se añadiría la lógica para manejar el mensaje 'DISCARD'
+    # y utilizar los ganchos de deshidratación e hidratación según sea necesario.
+    
+    # Ejemplo de lógica (esto es solo un esqueleto y debe ser adaptado a la lógica real):
     message = {
         'type': 'DISCARD',
         'n': n,
@@ -29,6 +32,6 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         'hydration_hooks': hydration_hooks,
         'handlers': handlers
     }
-
-    # Se añadiría el mensaje a la cola de salida
+    
+    # Suponiendo que hay una cola de salida a la que se añade el mensaje
     self.output_queue.append(message)

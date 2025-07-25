@@ -4,4 +4,4 @@ def verifyClass(iface, candidate, tentative=False):
     """
     if tentative:
         return issubclass(candidate, iface) or (hasattr(candidate, '__bases__') and any(issubclass(base, iface) for base in candidate.__bases__))
-    return isinstance(candidate, iface)
+    return isinstance(candidate, iface) or issubclass(candidate, iface)

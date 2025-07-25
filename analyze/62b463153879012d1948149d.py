@@ -24,6 +24,6 @@ def _explore_folder(folder):
             file_path = os.path.join(folder, filename)
             tree = ET.parse(file_path)
             root = tree.getroot()
-            data[base_name] = {child.tag: child.text for child in root}
-    
+            data[base_name] = root
+
     return data
