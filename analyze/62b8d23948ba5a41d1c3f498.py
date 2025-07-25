@@ -10,7 +10,7 @@ def lru_cache(maxsize=128, typed=False):
         access_order = []
         
         def wrapper(*args, **kwargs):
-            # 如果考虑类型,将参数类型加入key
+            # 如果考虑类型,将参数转换为包含类型的key
             if typed:
                 key = (*args, *kwargs.items(), 
                       *(type(arg) for arg in args),
@@ -51,7 +51,7 @@ def lru_cache(maxsize=128, typed=False):
         
         return wrapper
         
-    # 如果maxsize为None,不使用缓存
+    # 如果maxsize为None,则不做缓存
     if maxsize is None:
         return lambda func: func
         

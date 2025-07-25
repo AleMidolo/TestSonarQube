@@ -17,18 +17,18 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     # Get netloc (domain)
     netloc = parsed.netloc
     if not netloc:
-        raise ValueError("Invalid image href - no netloc found")
+        raise ValueError("Invalid image href: missing domain")
 
     # Determine if using SSL
     use_ssl = parsed.scheme == 'https'
 
     # Extract image ID from path
     path_parts = parsed.path.split('/')
-    if not path_parts or len(path_parts) < 2:
-        raise ValueError("Invalid image href - no image ID found")
-    
+    if len(path_parts) < 2:
+        raise ValueError("Invalid image href: missing image ID")
     image_id = path_parts[-1]  # Get last part of path as image ID
+    
     if not image_id:
-        raise ValueError("Invalid image href - empty image ID")
+        raise ValueError("Invalid image href: empty image ID")
 
     return (image_id, netloc, use_ssl)

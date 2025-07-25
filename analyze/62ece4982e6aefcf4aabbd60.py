@@ -14,17 +14,16 @@ def size_to_bytes(size: str) -> int:
         'T': 1000000000000,
         'P': 1000000000000000,
         'E': 1000000000000000000,
-        'KB': 1024,
-        'MB': 1048576,
-        'GB': 1073741824,
-        'TB': 1099511627776,
-        'PB': 1125899906842624,
-        'EB': 1152921504606846976
+        'KB': 1000,
+        'MB': 1000000,
+        'GB': 1000000000,
+        'TB': 1000000000000,
+        'PB': 1000000000000000,
+        'EB': 1000000000000000000
     }
 
     size = size.strip().upper()
     
-    # 如果输入只包含数字
     if size.isdigit():
         return int(size)
         
@@ -37,9 +36,16 @@ def size_to_bytes(size: str) -> int:
         else:
             unit += char
             
-    # 如果没有找到有效单位，返回原始数字
-    if unit not in units:
-        return int(float(number))
+    if not number or not unit:
+        raise ValueError(f"Invalid size format: {size}")
         
-    # 计算字节数
-    return int(float(number) * units[unit])
+    if unit not in units:
+        raise ValueError(f"Invalid unit: {unit}")
+        
+    # 转换为浮点数并乘以单位
+    try:
+        number = float(number)
+    except ValueError:
+        raise ValueError(f"Invalid number format: {number}")
+        
+    return int(number * units[unit])

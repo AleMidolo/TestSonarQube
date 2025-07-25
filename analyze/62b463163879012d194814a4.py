@@ -41,5 +41,5 @@ def _explore_zipfile(zip_path):
                         grouped_files[xml_key].append(file_name)
                         break
     
-    # 将defaultdict转换为普通dict并返回
+    # 将defaultdict转换为普通字典并返回
     return dict(grouped_files)

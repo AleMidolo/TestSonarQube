@@ -21,23 +21,25 @@ def _eval_file(prefix, file_path):
     if ext == 'xml':
         return None
         
-    # Get component ID (filename without extension)
-    component_id = os.path.splitext(filename)[0]
+    # Get component ID (everything after prefix until extension)
+    component_id = filename[len(prefix):-(len(ext)+1)]
     
-    # For PDF files
+    # Handle PDF files
     if ext == 'pdf':
         return {
             'component_id': component_id,
             'file_path': file_path
         }
-    
-    # Determine file type based on filename
-    if 'asset' in filename.lower():
-        ftype = 'asset'
-    else:
-        ftype = 'rendition'
         
-    # For all other files
+    # Determine file type based on path
+    if 'asset' in file_path.lower():
+        ftype = 'asset'
+    elif 'rendition' in file_path.lower():
+        ftype = 'rendition' 
+    else:
+        ftype = 'unknown'
+        
+    # Return full dict for non-PDF files
     return {
         'component_id': component_id,
         'file_path': file_path,

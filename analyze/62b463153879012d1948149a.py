@@ -29,11 +29,11 @@ def _group_files_by_xml_filename(source, xmls, files):
         # 找到与该XML文件名相关的所有文件
         related_files = []
         for file in files:
-            # 如果文件名以XML文件名开头
+            # 如果文件名以XML文件名开头，则认为是相关文件
             if file.startswith(xml_name):
                 related_files.append(file)
                 
-        # 如果找到相关文件，则添加到结果字典中
+        # 将相关文件组成Package添加到结果字典中
         if related_files:
             result[xml_name] = {
                 'source': source,

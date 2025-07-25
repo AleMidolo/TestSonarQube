@@ -11,7 +11,7 @@ def render(pieces, style):
         if style == "bold":
             rendered.append(f"**{piece}**")
         elif style == "italic":
-            rendered.append(f"*{piece}*") 
+            rendered.append(f"*{piece}*")
         elif style == "underline":
             rendered.append(f"_{piece}_")
         else:

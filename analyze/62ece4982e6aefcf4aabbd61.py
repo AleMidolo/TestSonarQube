@@ -21,9 +21,8 @@ def _dictsum(dicts):
     # 创建结果字典
     result = {}
     
-    # 对每个键进行遍历
+    # 对每个键,计算所有字典中该键对应值的和
     for key in all_keys:
-        # 将所有字典中该键对应的值相加
         result[key] = sum(d.get(key, 0) for d in dicts)
         
     return result

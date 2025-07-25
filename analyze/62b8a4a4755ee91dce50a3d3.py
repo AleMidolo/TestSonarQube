@@ -9,25 +9,29 @@ def fromutc(self, dt):
     if dt.tzinfo is not self:
         dt = dt.replace(tzinfo=self)
 
-    utc = dt.replace(tzinfo=None)
+    utc_offset = self._transition_info[self._find_trans(dt)][0]
+    return dt + utc_offset
 
-    # 计算本地时间的偏移量
-    local_offset = self._transition_info[self._find_trans_idx(utc)][0]
+    # 获取本地时间
+    local_dt = dt + utc_offset
     
-    # 转换为本地时间
-    local_dt = utc + local_offset
-
     # 检查是否在DST转换期间
-    idx = self._find_trans_idx(local_dt)
+    idx = self._find_trans(local_dt)
     trans_info = self._transition_info[idx]
     
     # 检查是否存在歧义
     if idx > 0:
         prev_info = self._transition_info[idx - 1]
-        if prev_info[0] > trans_info[0]:  # 从DST转换到标准时间
-            fold_delta = prev_info[0] - trans_info[0]
-            if local_dt - fold_delta <= local_dt < local_dt + fold_delta:
-                # 在折叠期间
-                return local_dt.replace(fold=1, tzinfo=self)
+        if prev_info[0] != trans_info[0]:  # 如果偏移量不同
+            # 计算转换时间
+            trans_time = self._transitions[idx]
+            
+            # 检查是否在"折叠"期间
+            if local_dt.replace(tzinfo=None) >= trans_time:
+                # 在转换之后，使用新的偏移量
+                return dt + trans_info[0]
+            else:
+                # 在转换之前，使用旧的偏移量
+                return dt + prev_info[0]
     
-    return local_dt.replace(tzinfo=self)
+    return local_dt

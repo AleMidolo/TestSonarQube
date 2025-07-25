@@ -11,29 +11,28 @@ def parse_arguments(*unparsed_arguments):
     
     # 添加全局参数
     parser.add_argument('--verbose', '-v', action='store_true', help='启用详细输出')
+    parser.add_argument('--config', '-c', type=str, help='配置文件路径')
     
     # 创建子解析器
     subparsers = parser.add_subparsers(dest='command')
     
-    # 添加 "add" 子命令
-    add_parser = subparsers.add_parser('add', help='添加操作')
-    add_parser.add_argument('numbers', nargs='+', type=float, help='要相加的数字')
+    # 添加 "init" 子命令
+    init_parser = subparsers.add_parser('init', help='初始化配置')
+    init_parser.add_argument('--force', '-f', action='store_true', help='强制初始化')
     
-    # 添加 "multiply" 子命令
-    multiply_parser = subparsers.add_parser('multiply', help='乘法操作')
-    multiply_parser.add_argument('numbers', nargs='+', type=float, help='要相乘的数字')
+    # 添加 "run" 子命令
+    run_parser = subparsers.add_parser('run', help='运行任务')
+    run_parser.add_argument('--name', '-n', type=str, required=True, help='任务名称')
+    run_parser.add_argument('--timeout', '-t', type=int, default=60, help='超时时间(秒)')
     
     # 解析参数
-    if unparsed_arguments:
-        args = parser.parse_args(unparsed_arguments)
-    else:
-        args = parser.parse_args()
-        
+    args = parser.parse_args(unparsed_arguments if unparsed_arguments else None)
+    
     # 创建返回字典
     result = {'global': args}
     
     # 如果指定了子命令，将其添加到结果字典中
-    if hasattr(args, 'command') and args.command:
+    if args.command:
         result[args.command] = args
         
     return result

@@ -12,9 +12,13 @@ def directlyProvidedBy(object):
         return _empty
         
     # 如果对象有__provides__属性
+    spec = provides
+
+    # 检查是否为类
     if isinstance(object, type):
-        # 如果对象是类,返回空声明
-        return _empty
-        
-    # 返回对象的provides属性
-    return provides
+        # 对于类,我们需要移除implements规范
+        implements = implementedBy(object)
+        if implements is not None:
+            spec = provides - implements
+
+    return spec

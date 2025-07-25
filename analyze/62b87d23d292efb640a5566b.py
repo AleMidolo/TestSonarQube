@@ -37,9 +37,8 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
                 print(f"Error: {error}", file=sys.stderr)
             raise subprocess.CalledProcessError(process.returncode, cmd)
             
-        return output.strip() if output else ""
+        return output.strip()
         
     except (OSError, subprocess.CalledProcessError) as e:
-        if verbose:
-            print(f"Command failed: {str(e)}", file=sys.stderr)
+        print(f"Command failed: {e}", file=sys.stderr)
         raise

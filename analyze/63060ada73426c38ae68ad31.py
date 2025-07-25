@@ -11,8 +11,8 @@ def _convert_non_cli_args(self, parser_name, values_dict):
         return
 
     # 获取该解析器的参数定义
-    parser = self._parsers.get(parser_name)
-    if not parser:
+    parser_args = self.get_parser_args(parser_name)
+    if not parser_args:
         return
 
     # 遍历所有参数
@@ -21,21 +21,28 @@ def _convert_non_cli_args(self, parser_name, values_dict):
         if value is None:
             continue
             
-        # 获取参数的类型
-        arg_type = None
-        for action in parser._actions:
-            if action.dest == arg_name:
-                arg_type = action.type
-                break
-                
-        # 如果找到类型定义且不是str,进行类型转换
-        if arg_type and arg_type != str:
-            try:
-                # 处理列表类型
-                if isinstance(value, list):
-                    values_dict[arg_name] = [arg_type(v) for v in value]
-                else:
-                    values_dict[arg_name] = arg_type(value)
-            except (ValueError, TypeError):
-                # 转换失败时保持原值
-                continue
+        # 获取参数定义
+        arg_def = parser_args.get(arg_name)
+        if not arg_def:
+            continue
+
+        # 获取参数类型
+        arg_type = arg_def.get('type')
+        if not arg_type:
+            continue
+
+        try:
+            # 根据类型转换值
+            if arg_type == bool:
+                if isinstance(value, str):
+                    values_dict[arg_name] = value.lower() in ('true', 't', 'yes', 'y', '1')
+            elif arg_type == int:
+                values_dict[arg_name] = int(value)
+            elif arg_type == float:
+                values_dict[arg_name] = float(value)
+            elif arg_type == list:
+                if isinstance(value, str):
+                    values_dict[arg_name] = value.split(',')
+        except (ValueError, TypeError):
+            # 转换失败时保持原值
+            continue

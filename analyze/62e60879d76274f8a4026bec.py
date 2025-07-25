@@ -47,12 +47,12 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None,
     }
 
     # Create and return Response object with handlers
-    response = Response(message, **handlers)
+    response = Response(message=message, 
+                       dehydration_hooks=self._dehydration_hooks,
+                       hydration_hooks=self._hydration_hooks)
     
-    # Apply hydration/dehydration hooks to response
-    if self._hydration_hooks:
-        response.set_hydration_hooks(self._hydration_hooks)
-    if self._dehydration_hooks:
-        response.set_dehydration_hooks(self._dehydration_hooks)
-        
+    # Add any custom handlers
+    for key, handler in handlers.items():
+        response.add_handler(key, handler)
+
     return response

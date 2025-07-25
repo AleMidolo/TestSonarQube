@@ -11,35 +11,25 @@ def split(s, platform='this'):
         # - Quoted string with escaped quotes allowed
         # - Unquoted string with no whitespace
         pattern = r'''(?:[^\s'"]*(?:'[^']*'|"[^"]*")[^\s'"]*)+|[^\s'"]+'''
-        tokens = re.findall(pattern, s)
         
-        # Remove surrounding quotes and unescape internal quotes
-        result = []
-        for token in tokens:
-            if token.startswith('"') and token.endswith('"'):
-                token = token[1:-1].replace('\\"', '"')
-            elif token.startswith("'") and token.endswith("'"):
-                token = token[1:-1].replace("\\'", "'")
-            result.append(token)
-        return result
+    else:  # Windows/CMD style
+        # Match either:
+        # - Quoted string with escaped quotes allowed
+        # - Unquoted string with no whitespace
+        pattern = r'''(?:"[^"]*"|'[^']*'|\S+)'''
 
-    elif platform == 0:  # Windows/CMD style
-        # Windows command line parsing rules:
-        # - Quotes only needed if spaces in argument
-        # - Backslash only escapes quote if immediately before it
-        # - Quotes can appear in middle of argument
-        pattern = r'''(?:"[^"]*"|[^\s"])+'''
-        tokens = re.findall(pattern, s)
-        
-        result = []
-        for token in tokens:
-            if token.startswith('"') and token.endswith('"'):
-                # Remove surrounding quotes
-                token = token[1:-1]
-            # Handle escaped quotes
-            token = re.sub(r'\\(?=")', '', token)
-            result.append(token)
-        return result
+    # Find all matches
+    tokens = re.findall(pattern, s)
 
-    else:
-        raise ValueError("Invalid platform value")
+    # Remove surrounding quotes and unescape internal quotes
+    result = []
+    for token in tokens:
+        if (token.startswith('"') and token.endswith('"')) or \
+           (token.startswith("'") and token.endswith("'")):
+            # Remove surrounding quotes
+            token = token[1:-1]
+            # Unescape internal quotes
+            token = token.replace('\\"', '"').replace("\\'", "'")
+        result.append(token)
+
+    return result

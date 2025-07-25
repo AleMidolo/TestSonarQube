@@ -32,6 +32,6 @@ def retrieve_diaspora_host_meta(host):
             
         except requests.exceptions.RequestException as e:
             raise Exception(f"Failed to retrieve host-meta from {host}: {str(e)}")
-    
+            
     except Exception as e:
         raise Exception(f"Failed to parse host-meta from {host}: {str(e)}")

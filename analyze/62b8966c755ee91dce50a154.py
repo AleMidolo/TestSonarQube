@@ -24,9 +24,9 @@ def isoparse(self, dt_str):
     """
 
     tz_pattern = r"""
-        (?P<tz_sign>[+-])? 
-        (?P<tz_hour>\d{2}):?
-        (?P<tz_minute>\d{2})?
+        (?P<tz_sign>[+-])?
+        (?P<tz_hour>\d{2})?
+        :?(?P<tz_minute>\d{2})?
         |Z
     """
 
@@ -34,35 +34,37 @@ def isoparse(self, dt_str):
     
     match = re.match(full_pattern, dt_str.strip(), re.VERBOSE)
     if not match:
-        raise ValueError(f"Invalid ISO format: {dt_str}")
+        raise ValueError("Invalid ISO format")
     
     parts = match.groupdict()
 
     # 处理日期部分
     year = int(parts['year'])
-    month = int(parts.get('month', 1) or 1)
-    day = int(parts.get('day', 1) or 1)
-
-    # 处理ISO周格式
-    if parts.get('week'):
+    month = int(parts['month']) if parts['month'] else 1
+    
+    if parts['week']:
+        # ISO周日期处理
         week = int(parts['week'])
-        weekday = int(parts.get('weekday', 1) or 1)
-        jan1 = datetime(year, 1, 1)
-        week_offset = timedelta(weeks=week-1, days=weekday-1)
-        base_date = jan1 + week_offset
-        year, month, day = base_date.year, base_date.month, base_date.day
+        weekday = int(parts['weekday']) if parts['weekday'] else 1
+        date_ord = datetime(year, 1, 1).toordinal()
+        week_ord = date_ord + (week - 1) * 7 + (weekday - 1)
+        temp_date = datetime.fromordinal(week_ord)
+        year, month, day = temp_date.year, temp_date.month, temp_date.day
+    else:
+        day = int(parts['day']) if parts['day'] else 1
 
     # 处理时间部分
-    hour = int(parts.get('hour', 0) or 0)
+    hour = int(parts['hour']) if parts['hour'] else 0
     if hour == 24:  # 处理24:00特殊情况
         hour = 0
         day += 1
-    minute = int(parts.get('minute', 0) or 0)
-    second = int(parts.get('second', 0) or 0)
+        
+    minute = int(parts['minute']) if parts['minute'] else 0
+    second = int(parts['second']) if parts['second'] else 0
     
     # 处理微秒
     microsecond = 0
-    if parts.get('microsecond'):
+    if parts['microsecond']:
         microsecond = int(parts['microsecond'].ljust(6, '0')[:6])
 
     # 处理时区
@@ -71,8 +73,8 @@ def isoparse(self, dt_str):
         if 'Z' in dt_str:
             tz = tzutc()
         else:
-            tz_hour = int(parts['tz_hour'])
-            tz_minute = int(parts.get('tz_minute', 0) or 0)
+            tz_hour = int(parts['tz_hour'] or 0)
+            tz_minute = int(parts['tz_minute'] or 0)
             offset = tz_hour * 60 + tz_minute
             if parts['tz_sign'] == '-':
                 offset = -offset
