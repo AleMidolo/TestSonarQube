@@ -9,7 +9,12 @@ def get_versions():
             try:
                 versions[package] = pkg_resources.get_distribution(package).version
             except pkg_resources.DistributionNotFound:
-                versions[package] = "Not installed"
+                versions[package] = "Not Installed"
         return versions
     except ImportError:
-        return {"numpy": "1.0.0", "pandas": "1.0.0", "scipy": "1.0.0", "matplotlib": "1.0.0"}
+        return {
+            'numpy': '1.21.0',
+            'pandas': '1.3.0',
+            'scipy': '1.7.0',
+            'matplotlib': '3.4.0'
+        }

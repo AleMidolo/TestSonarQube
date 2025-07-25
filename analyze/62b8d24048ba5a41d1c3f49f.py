@@ -27,5 +27,4 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
 
         wrapper._cache = {}
         return wrapper
-
     return decorator

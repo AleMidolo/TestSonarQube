@@ -4,8 +4,8 @@ def validate_min_max_args(self, args):
 
     :param args: प्राप्त किए गए आर्ग्युमेंट्स।
     """
-    min_value = 0  # यहां न्यूनतम मान सेट करें
-    max_value = 100  # यहां अधिकतम मान सेट करें
+    min_value = 0  # न्यूनतम मान
+    max_value = 100  # अधिकतम मान
     
     for arg in args:
         if not (min_value <= arg <= max_value):

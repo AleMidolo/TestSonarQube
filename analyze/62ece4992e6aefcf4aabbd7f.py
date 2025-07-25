@@ -10,11 +10,12 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     :raises ValueError: यदि हाइपरलिंक अमान्य है
     """
     parsed_url = urlparse(image_href)
+    
     if not parsed_url.netloc or not parsed_url.path:
         raise ValueError("Invalid image href")
-
+    
     image_id = parsed_url.path.strip('/')
     netloc = parsed_url.netloc
     use_ssl = parsed_url.scheme == 'https'
-
+    
     return image_id, netloc, use_ssl

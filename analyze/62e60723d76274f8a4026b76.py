@@ -15,18 +15,17 @@ def from_ticks(cls, ticks, tz=None):
         (0 <= ticks < 86400000000000)
     """
     if not (0 <= ticks < 86400000000000):
-        raise ValueError("ticks must be in the range [0, 86400000000000)")
+        raise ValueError("ticks must be in the range 0 <= ticks < 86400000000000")
     
-    nanoseconds_per_second = 1_000_000_000
-    seconds_per_day = 86400
+    nanoseconds = ticks % 1000
+    microseconds = (ticks // 1000) % 1000
+    milliseconds = (ticks // 1000000) % 1000
+    seconds = (ticks // 1000000000) % 60
+    minutes = (ticks // 60000000000) % 60
+    hours = (ticks // 3600000000000) % 24
     
-    total_seconds = ticks // nanoseconds_per_second
-    nanoseconds = ticks % nanoseconds_per_second
-    
-    hours = total_seconds // 3600
-    minutes = (total_seconds % 3600) // 60
-    seconds = total_seconds % 60
-    
-    time_obj = datetime.time(hour=hours, minute=minutes, second=seconds, microsecond=nanoseconds // 1000, tzinfo=tz)
+    time_obj = datetime.time(hour=hours, minute=minutes, second=seconds, 
+                             microsecond=milliseconds * 1000 + microseconds, 
+                             tzinfo=tz)
     
     return time_obj

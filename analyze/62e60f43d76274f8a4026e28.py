@@ -6,10 +6,10 @@ def hydrate_time(nanoseconds, tz=None):
 
     पैरामीटर (Parameters):
     - nanoseconds: समय को नैनोसेकंड में दर्शाने वाला पूर्णांक
-    - tz: समय क्षेत्र (timezone) जो datetime.timezone या str हो सकता है
+    - tz: समय क्षेत्र (timezone) जिसमें समय को दर्शाना है (डिफ़ॉल्ट: None)
 
     वापसी मान:
-    - समय (datetime.datetime ऑब्जेक्ट)
+    - समय (datetime object)
     """
     # Convert nanoseconds to seconds
     seconds = nanoseconds / 1e9
@@ -19,9 +19,6 @@ def hydrate_time(nanoseconds, tz=None):
     
     # If a timezone is provided, convert the datetime to that timezone
     if tz is not None:
-        if isinstance(tz, str):
-            from pytz import timezone as pytz_timezone
-            tz = pytz_timezone(tz)
         dt = dt.astimezone(tz)
     
     return dt

@@ -17,20 +17,43 @@ def xargs(
     - color: यदि प्लेटफ़ॉर्म इसे सपोर्ट करता है, तो एक PTY (Pseudo Terminal) बनाएं।
     - target_concurrency: एक साथ चलने वाले विभाजनों (partitions) की लक्षित संख्या।
     """
-    if color and sys.platform != "win32":
-        import pty
-        import os
+    try:
+        if color and sys.platform != "win32":
+            # Use a PTY for color support on Unix-like systems
+            import pty
+            master_fd, slave_fd = pty.openpty()
+            process = subprocess.Popen(
+                cmd + tuple(varargs),
+                stdout=slave_fd,
+                stderr=slave_fd,
+                close_fds=True,
+                **kwargs
+            )
+            os.close(slave_fd)
+            output = b""
+            while True:
+                try:
+                    data = os.read(master_fd, 1024)
+                    if not data:
+                        break
+                    output += data
+                except OSError:
+                    break
+            os.close(master_fd)
+            return_code = process.wait()
+        else:
+            # Regular subprocess call
+            process = subprocess.Popen(
+                cmd + tuple(varargs),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                **kwargs
+            )
+            output, _ = process.communicate()
+            return_code = process.returncode
 
-        def run_with_pty(args):
-            master, slave = pty.openpty()
-            process = subprocess.Popen(args, stdout=slave, stderr=slave, stdin=slave, **kwargs)
-            os.close(slave)
-            output = os.read(master, _max_length)
-            os.close(master)
-            return process.wait(), output
+        return return_code, output
 
-        return run_with_pty(cmd + tuple(varargs))
-    else:
-        process = subprocess.Popen(cmd + tuple(varargs), stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs)
-        output, _ = process.communicate()
-        return process.returncode, output
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1, b""

@@ -5,37 +5,37 @@ def generate_default_observer_schema(app):
     आर्ग्युमेंट्स:
         app (krake.data.kubernetes.Application): वह एप्लिकेशन जिसके लिए डिफ़ॉल्ट ऑब्ज़र्वर स्कीमा उत्पन्न करना है।
     """
-    default_schema = {}
-    
-    if hasattr(app, 'spec') and hasattr(app.spec, 'manifest'):
-        manifest = app.spec.manifest
-        if isinstance(manifest, dict):
-            for resource in manifest.get('resources', []):
-                if isinstance(resource, dict) and 'kind' in resource:
-                    kind = resource['kind']
-                    if kind not in default_schema:
-                        default_schema[kind] = {
-                            'type': 'object',
-                            'properties': {
-                                'status': {
-                                    'type': 'object',
-                                    'properties': {
-                                        'conditions': {
-                                            'type': 'array',
-                                            'items': {
-                                                'type': 'object',
-                                                'properties': {
-                                                    'type': {'type': 'string'},
-                                                    'status': {'type': 'string'},
-                                                    'lastTransitionTime': {'type': 'string'},
-                                                    'reason': {'type': 'string'},
-                                                    'message': {'type': 'string'}
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+    default_schema = {
+        "type": "object",
+        "properties": {
+            "status": {
+                "type": "object",
+                "properties": {
+                    "conditions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "type": {"type": "string"},
+                                "status": {"type": "string"},
+                                "lastTransitionTime": {"type": "string", "format": "date-time"},
+                                "reason": {"type": "string"},
+                                "message": {"type": "string"}
+                            },
+                            "required": ["type", "status"]
                         }
-    
-    return default_schema
+                    }
+                },
+                "required": ["conditions"]
+            }
+        },
+        "required": ["status"]
+    }
+
+    # Check if the app has a manifest and if it contains any resources
+    if hasattr(app.spec, 'manifest') and app.spec.manifest:
+        for resource in app.spec.manifest:
+            if not hasattr(resource, 'observer_schema'):
+                resource.observer_schema = default_schema
+
+    return app

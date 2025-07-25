@@ -12,9 +12,9 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     configurations = {}
     errors = []
 
-    for config_filename in config_filenames:
+    for filename in config_filenames:
         try:
-            with open(config_filename, 'r') as file:
+            with open(filename, 'r') as file:
                 config = yaml.safe_load(file)
                 
                 if resolve_env:
@@ -26,26 +26,26 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 if overrides:
                     config.update(overrides)
                 
-                configurations[config_filename] = config
+                configurations[filename] = config
         except yaml.YAMLError as e:
-            error_msg = f"Error parsing configuration file {config_filename}: {e}"
+            error_msg = f"Error parsing configuration file {filename}: {e}"
             logging.error(error_msg)
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
-                pathname=__file__,
+                pathname=filename,
                 lineno=0,
                 msg=error_msg,
                 args=None,
                 exc_info=None
             ))
         except Exception as e:
-            error_msg = f"Unexpected error loading configuration file {config_filename}: {e}"
+            error_msg = f"Unexpected error loading configuration file {filename}: {e}"
             logging.error(error_msg)
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
-                pathname=__file__,
+                pathname=filename,
                 lineno=0,
                 msg=error_msg,
                 args=None,

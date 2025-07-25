@@ -9,18 +9,17 @@ def parse_arguments(*unparsed_arguments):
 
     # Add subparsers here as needed
     # Example:
-    # subparser_example = subparsers.add_parser('example', help='Example subparser')
-    # subparser_example.add_argument('--example_arg', type=str, help='Example argument')
+    # subparser1 = subparsers.add_parser('subparser1', help='subparser1 help')
+    # subparser1.add_argument('--arg1', type=int, help='arg1 help')
 
     # Parse the arguments
     args = parser.parse_args(unparsed_arguments)
 
-    # Convert the Namespace to a dictionary
-    args_dict = vars(args)
-
-    # If a subparser was used, map the subparser name to its arguments
-    if 'subparser_name' in args_dict:
-        subparser_name = args_dict.pop('subparser_name')
-        return {subparser_name: args_dict}
+    # Create a dictionary to map subparser names to their arguments
+    parsed_arguments = {}
+    if hasattr(args, 'subparser_name'):
+        parsed_arguments[args.subparser_name] = args
     else:
-        return {'global': args_dict}
+        parsed_arguments["global"] = args
+
+    return parsed_arguments

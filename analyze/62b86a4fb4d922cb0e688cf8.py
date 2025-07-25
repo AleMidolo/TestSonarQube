@@ -14,7 +14,6 @@ def validate_value(value):
     pattern = r'^[a-zA-Z0-9]+$'
     
     if not re.match(pattern, value):
-        raise ValidationError("दिया गया मान नियमित अभिव्यक्ति के अनुरूप नहीं है।")
-
-class ValidationError(Exception):
-    pass
+        raise ValueError("ValidationError: दिया गया मान नियमित अभिव्यक्ति के अनुरूप नहीं है।")
+    
+    return True

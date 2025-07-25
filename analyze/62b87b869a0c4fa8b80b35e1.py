@@ -9,7 +9,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
                     Defaults to the bin content.
         get_coordinate: Defines the coordinate of the graph point from the histogram bin.
                         Can be "left", "right", or "middle".
-        field_names: Sets the field names of the graph. The number should match the dimension of the result.
+        field_names: The field names for the graph. The number should match the result's dimension.
         scale: The scale of the graph. If True, uses the histogram's scale.
 
     Returns:
@@ -23,30 +23,31 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     if get_coordinate not in ["left", "right", "middle"]:
         raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
 
-    if scale is None:
-        scale = hist.scale if hasattr(hist, 'scale') else None
+    # Extract bin edges and contents
+    bin_edges = hist.bin_edges
+    bin_contents = hist.bin_contents
 
-    bins = hist.bins
-    x_coords = []
-    y_values = []
+    # Calculate coordinates based on get_coordinate
+    if get_coordinate == "left":
+        x_coords = bin_edges[:-1]
+    elif get_coordinate == "right":
+        x_coords = bin_edges[1:]
+    else:  # middle
+        x_coords = (bin_edges[:-1] + bin_edges[1:]) / 2
 
-    for bin_ in bins:
-        if get_coordinate == "left":
-            x_coord = bin_.left_edge
-        elif get_coordinate == "right":
-            x_coord = bin_.right_edge
-        elif get_coordinate == "middle":
-            x_coord = (bin_.left_edge + bin_.right_edge) / 2
+    # Apply make_value to each bin
+    values = [make_value(bin_) for bin_ in bin_contents]
 
-        x_coords.append(x_coord)
-        y_values.append(make_value(bin_))
-
-    graph = np.recarray(len(x_coords), dtype=[(field_names[0], 'f8')] + [(name, 'f8') for name in field_names[1:]])
+    # Create the graph
+    graph = {}
     graph[field_names[0]] = x_coords
-    for i, name in enumerate(field_names[1:]):
-        graph[name] = [y[i] for y in y_values]
+    for i, field in enumerate(field_names[1:]):
+        graph[field] = np.array([val[i] if isinstance(val, (tuple, list)) else val for val in values])
 
-    if scale is not None:
-        graph.scale = scale
+    # Set scale if provided
+    if scale is True:
+        graph['scale'] = hist.scale
+    elif scale is not None:
+        graph['scale'] = scale
 
     return graph

@@ -5,43 +5,39 @@ def lfu_cache(maxsize=128, typed=False):
     def decorator(func):
         cache = {}
         frequency = defaultdict(int)
-        freq_map = defaultdict(OrderedDict)
+        frequency_list = defaultdict(OrderedDict)
         min_freq = 0
 
         @wraps(func)
         def wrapper(*args, **kwargs):
+            nonlocal min_freq
             if typed:
                 key = (args, tuple(sorted(kwargs.items())))
             else:
                 key = args + tuple(sorted(kwargs.items()))
 
             if key in cache:
-                # Increment frequency and update frequency map
+                # Increment frequency
                 freq = frequency[key]
                 frequency[key] += 1
-                del freq_map[freq][key]
-                if not freq_map[freq]:
-                    del freq_map[freq]
+                del frequency_list[freq][key]
+                if not frequency_list[freq]:
                     if freq == min_freq:
                         min_freq += 1
-                freq_map[freq + 1][key] = None
+                frequency_list[freq + 1][key] = None
                 return cache[key]
 
             # If cache is full, remove the least frequently used item
             if len(cache) >= maxsize:
-                # Remove the least frequently used item
-                lfu_key = next(iter(freq_map[min_freq]))
-                del cache[lfu_key]
-                del frequency[lfu_key]
-                del freq_map[min_freq][lfu_key]
-                if not freq_map[min_freq]:
-                    del freq_map[min_freq]
+                evict_key, _ = frequency_list[min_freq].popitem(last=False)
+                del cache[evict_key]
+                del frequency[evict_key]
 
             # Add new item to cache
             result = func(*args, **kwargs)
             cache[key] = result
             frequency[key] = 1
-            freq_map[1][key] = None
+            frequency_list[1][key] = None
             min_freq = 1
             return result
 
