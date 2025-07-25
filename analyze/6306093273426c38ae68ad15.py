@@ -8,16 +8,20 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     :param ir_plugin: वर्तमान प्लगइन का एक InfraredPlugin ऑब्जेक्ट
     :return: ansible के परिणाम
     """
-    import subprocess
+    from ansible.cli.playbook import PlaybookCLI
+    from ansible import context
+    from ansible.module_utils.common.collections import ImmutableDict
 
-    # Convert vars_dict to a string format suitable for Ansible extra-vars
-    extra_vars = " ".join([f"{key}={value}" for key, value in vars_dict.items()])
+    # Set up Ansible context
+    context.CLIARGS = ImmutableDict(cli_args)
 
-    # Construct the full command
-    command = ["ansible-playbook"] + cli_args + ["--extra-vars", extra_vars]
+    # Prepare extra vars
+    extra_vars = vars_dict
 
-    # Execute the command
-    result = subprocess.run(command, capture_output=True, text=True)
+    # Initialize PlaybookCLI
+    cli = PlaybookCLI([])
 
-    # Return the result
+    # Run the playbook
+    result = cli.run()
+
     return result

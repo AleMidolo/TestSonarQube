@@ -27,5 +27,5 @@ def send_document(url, data, timeout=10, method="post", *args, **kwargs):
             raise ValueError(f"Unsupported HTTP method: {method}")
         
         return response.status_code, None
-    except requests.exceptions.RequestException as e:
+    except Exception as e:
         return None, e

@@ -15,5 +15,4 @@ def retrieve_diaspora_host_meta(host):
     # Parse the XML response
     xml_tree = etree.fromstring(response.content)
     
-    # Return the parsed XML tree (XRD instance)
     return xml_tree

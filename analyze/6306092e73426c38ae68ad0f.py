@@ -17,6 +17,8 @@ def get_nested_custom_and_control_args(self, args):
     for key, value in args.items():
         if key.startswith('_'):
             control_args[key] = value
+        elif isinstance(value, dict):
+            nested_args[key] = value
         else:
             nested_args[key] = value
     

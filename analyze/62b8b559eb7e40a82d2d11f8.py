@@ -8,17 +8,12 @@ def minimalBases(classes):
     # Iterate through each class in the input list
     for cls in classes:
         # Check if the class is already in the minimal_bases list
-        if cls in minimal_bases:
-            continue
-        # Check if the class is a subclass of any class in the minimal_bases list
-        is_subclass = False
-        for base in minimal_bases:
-            if issubclass(cls, base):
-                is_subclass = True
-                break
-        # If the class is not a subclass of any class in the minimal_bases list, add it
-        if not is_subclass:
-            minimal_bases.append(cls)
+        if cls not in minimal_bases:
+            # Check if the class is a subclass of any class in the minimal_bases list
+            is_subclass = any(issubclass(cls, base) for base in minimal_bases)
+            if not is_subclass:
+                # Add the class to the minimal_bases list
+                minimal_bases.append(cls)
     
     # Return the minimal bases list
     return minimal_bases

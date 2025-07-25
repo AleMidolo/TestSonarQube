@@ -19,16 +19,16 @@ def formatmany(
     2. *कन्वर्ट किए गए "out-style" पैरामीटर्स का सेट* (`list`), जो `dict` या `list` के रूप में होता है।
     """
     formatted_sql = sql
-    formatted_params = []
+    out_params = []
 
     for params in many_params:
         if isinstance(params, dict):
             # Handle named parameters
-            formatted_params.append({k: v for k, v in params.items()})
+            out_params.append({k: v for k, v in params.items()})
         elif isinstance(params, (list, tuple)):
             # Handle ordinal parameters
-            formatted_params.append([v for v in params])
+            out_params.append([v for v in params])
         else:
             raise TypeError("Unsupported parameter type. Expected dict or sequence.")
 
-    return formatted_sql, formatted_params
+    return formatted_sql, out_params

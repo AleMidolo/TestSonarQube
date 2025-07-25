@@ -5,5 +5,5 @@ def is_local(host):
     :param host: होस्टनाम या IP एड्रेस।
     :return: True यदि होस्ट लोकलहोस्ट है, अन्यथा False।
     """
-    local_hosts = ['localhost', '127.0.0.1', '::1']
+    local_hosts = {'localhost', '127.0.0.1', '::1'}
     return host in local_hosts

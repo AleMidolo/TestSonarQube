@@ -12,8 +12,6 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
         वह फ़ंक्शन जिसे चलाना है। यह किसी ऐसे मॉड्यूल में होना चाहिए जिसे आयात (import) किया जा सके।
     *args : str
         कोई भी अतिरिक्त कमांड लाइन तर्क जो ``subprocess.run`` के पहले तर्क में पास किए जाने हैं।
-    timeout : float
-        सब-प्रोसेस के लिए टाइमआउट मान।
     extra_env : dict[str, str]
         सब-प्रोसेस के लिए सेट किए जाने वाले कोई भी अतिरिक्त पर्यावरण वेरिएबल।
     """
@@ -30,7 +28,6 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
         env.update(extra_env)
 
     # Run the subprocess
-    result = subprocess.run(command, env=env, timeout=timeout, capture_output=True, text=True)
+    result = subprocess.run(command, env=env, timeout=timeout, check=True)
 
-    # Return the result
     return result

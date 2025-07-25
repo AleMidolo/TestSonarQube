@@ -1,3 +1,5 @@
+import os
+
 def match_file_by_prefix(prefix, file_path):
     """
     पहचानें कि क्या `file_path` किसी दिए गए `prefix` द्वारा दस्तावेज़ पैकेज से संबंधित है
@@ -15,6 +17,8 @@ def match_file_by_prefix(prefix, file_path):
     bool
         सत्य - फ़ाइल पैकेज से संबंधित है
     """
-    import os
-    file_name = os.path.basename(file_path)
-    return file_name.startswith(prefix)
+    # Get the filename from the file path
+    filename = os.path.basename(file_path)
+    
+    # Check if the filename starts with the given prefix
+    return filename.startswith(prefix)

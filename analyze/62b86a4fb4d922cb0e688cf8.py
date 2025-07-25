@@ -10,10 +10,10 @@ def validate_value(value):
     त्रुटि (Raises):
         ValidationError: यदि दिया गया मान नियमित अभिव्यक्ति के अनुरूप नहीं है।
     """
-    # यहाँ एक उदाहरण नियमित अभिव्यक्ति है जो केवल अक्षर और संख्याओं को स्वीकार करती है
-    regex_pattern = r'^[a-zA-Z0-9]+$'
+    # Example regex pattern: Only alphanumeric characters are allowed
+    pattern = r'^[a-zA-Z0-9]+$'
     
-    if not re.match(regex_pattern, value):
+    if not re.match(pattern, value):
         raise ValidationError("दिया गया मान नियमित अभिव्यक्ति के अनुरूप नहीं है।")
 
 class ValidationError(Exception):

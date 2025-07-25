@@ -13,4 +13,4 @@ def _resolve_string(matcher):
     elif default:
         return default[0]
     else:
-        raise ValueError(f"Environment variable '{name}' is not defined and no default value provided.")
+        raise ValueError(f"Environment variable '{name}' is not defined and no default value is provided.")

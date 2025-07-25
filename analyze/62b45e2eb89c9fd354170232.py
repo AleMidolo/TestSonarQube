@@ -7,7 +7,7 @@ def next_version(version):
     # Split the version string into parts
     parts = version.split('.')
     
-    # Convert each part to an integer
+    # Convert each part to integer
     parts = [int(part) for part in parts]
     
     # Increment the last part
@@ -19,7 +19,7 @@ def next_version(version):
             parts[i] = 0
             parts[i - 1] += 1
     
-    # Convert back to string
+    # Convert parts back to string
     next_version_str = '.'.join(map(str, parts))
     
     return next_version_str

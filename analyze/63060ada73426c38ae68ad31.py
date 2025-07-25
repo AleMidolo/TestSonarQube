@@ -9,24 +9,12 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     """
     for key, value in values_dict.items():
         if isinstance(value, str):
-            # Try to convert to int
-            try:
+            # Try to convert to int if possible
+            if value.isdigit():
                 values_dict[key] = int(value)
-                continue
-            except ValueError:
-                pass
-            
-            # Try to convert to float
-            try:
+            # Try to convert to float if possible
+            elif value.replace('.', '', 1).isdigit():
                 values_dict[key] = float(value)
-                continue
-            except ValueError:
-                pass
-            
-            # Try to convert to boolean
-            if value.lower() in ('true', 'false'):
+            # Convert boolean strings to boolean
+            elif value.lower() in ('true', 'false'):
                 values_dict[key] = value.lower() == 'true'
-                continue
-            
-            # If all conversions fail, keep as string
-            values_dict[key] = value

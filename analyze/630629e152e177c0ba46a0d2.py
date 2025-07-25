@@ -9,12 +9,12 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     :वापसी: डिक्शनरी (dict)
     """
     # Construct the WebFinger URL
-    webfinger_url = f"https://{handle.split('@')[1]}/.well-known/webfinger?resource=acct:{handle}"
+    webfinger_url = f"https://{handle.split('@')[2]}/.well-known/webfinger?resource=acct:{handle}"
     
     try:
         # Send a GET request to the WebFinger URL
         response = requests.get(webfinger_url)
-        response.raise_for_status()
+        response.raise_for_status()  # Raise an exception for HTTP errors
         
         # Parse the XML response
         root = etree.fromstring(response.content)

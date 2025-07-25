@@ -4,7 +4,7 @@ def _get_seq_with_type(seq, bufsize=None):
     Sequence *seq* से प्राप्त किया जाता है
     (या *seq* ही होता है, यदि वह sequence प्रकार का है)।
     """
-    if isinstance(seq, (list, tuple, str, bytes)):
+    if isinstance(seq, (list, tuple, str, bytes, bytearray)):
         return seq, type(seq)
     else:
         return list(seq), type(seq)

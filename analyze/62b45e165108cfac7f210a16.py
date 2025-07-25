@@ -7,11 +7,11 @@ def validate_as_prior_version(self, prior):
     if not isinstance(prior, type(self)):
         return False
     
-    # Check if the prior version is indeed a previous version
+    # Check if the prior version is indeed older than the current version
     if prior.version >= self.version:
         return False
     
-    # Additional checks can be added here based on specific requirements
-    # For example, checking if the prior version's data is consistent with the current version
+    # Additional checks can be added here based on specific business rules
+    # For example, checking if the prior version's data is a subset of the current version's data
     
     return True

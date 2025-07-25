@@ -6,9 +6,15 @@ def get_config():
         def __init__(self):
             self.data = {}
 
-        def fill_data(self, **kwargs):
-            self.data.update(kwargs)
+        def add_data(self, key, value):
+            self.data[key] = value
+
+        def get_data(self):
+            return self.data
 
     config = VersioneerConfig()
-    config.fill_data(version="1.0.0", author="Your Name", description="Sample configuration")
+    # यहां आप डेटा जोड़ सकते हैं, उदाहरण के लिए:
+    config.add_data('version', '1.0.0')
+    config.add_data('author', 'Your Name')
+
     return config

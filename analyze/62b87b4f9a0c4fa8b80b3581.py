@@ -29,3 +29,19 @@ def scale(self, other=None, recompute=False):
             raise LenaValueError("Cannot rescale a histogram with zero scale")
         self._scale = other
         self._rescale_histogram(other)
+
+def _compute_scale(self):
+    """
+    हिस्टोग्राम का स्केल गणना करें।
+    """
+    # यहां स्केल गणना करने का तरीका लागू करें
+    # उदाहरण के लिए, यह सभी बिन मानों का योग हो सकता है
+    return sum(self.bins)
+
+def _rescale_histogram(self, scale_factor):
+    """
+    हिस्टोग्राम को दिए गए स्केल फैक्टर के अनुसार पुनः स्केल करें।
+    """
+    # यहां हिस्टोग्राम को पुनः स्केल करने का तरीका लागू करें
+    # उदाहरण के लिए, प्रत्येक बिन मान को scale_factor से गुणा करें
+    self.bins = [bin_value * scale_factor for bin_value in self.bins]
