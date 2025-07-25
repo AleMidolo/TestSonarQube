@@ -29,6 +29,6 @@ def split(s, platform='this'):
     if platform == 1:  # POSIX style
         return re.findall(r'(?:"([^"]*)"|\'([^\']*)|(\S+))', s)
     elif platform == 0:  # Windows/CMD style
-        return re.findall(r'(?:"([^"]*)"|(\S+))', s)
+        return re.findall(r'(?:"([^"]*)"|\'([^\']*)|(\S+)|(\s+)', s)
     else:
-        return []
+        return re.findall(r'(?:"([^"]*)"|\'([^\']*)|(\S+))', s)

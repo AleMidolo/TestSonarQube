@@ -22,6 +22,6 @@ def match_file_by_prefix(prefix, file_path):
 
     # 获取文件名
     file_name = os.path.basename(file_path)
-
+    
     # 检查文件名是否以指定前缀加上“-”或“.”开头
     return file_name.startswith(prefix + '-') or file_name.startswith(prefix + '.')

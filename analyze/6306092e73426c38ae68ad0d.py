@@ -14,4 +14,4 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
     if complex_action is None:
         raise ValueError(f"Unknown complex type: {type_name}")
 
-    return complex_action((self.vars, self.defaults, self.plugin_path), subcommand, spec_option)
+    return complex_action(self.vars, self.defaults, self.plugin_path, subcommand, spec_option)

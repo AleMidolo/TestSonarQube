@@ -9,6 +9,8 @@ def is_fill_request_seq(seq):
     """
     if isinstance(seq, FillRequest):
         return True
+    if any(isinstance(item, FillRequest) for item in seq):
+        return True
     if isinstance(seq, Source):
         return False
-    return any(isinstance(item, FillRequest) for item in seq)
+    return False

@@ -6,12 +6,11 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
 
     调用给定的命令。
     """
-    command = [commands] + list(args)
+    command = [commands] + args
     if verbose:
-        print(f"Running command: {' '.join(command)}")
-    
-    stderr = subprocess.STDOUT if hide_stderr else subprocess.PIPE
-    
+        print(f"Running command: {' '.join(command)} in {cwd}")
+
+    stderr = subprocess.DEVNULL if hide_stderr else None
     result = subprocess.run(command, cwd=cwd, env=env, stdout=subprocess.PIPE, stderr=stderr, text=True)
-    
+
     return result.stdout, result.returncode

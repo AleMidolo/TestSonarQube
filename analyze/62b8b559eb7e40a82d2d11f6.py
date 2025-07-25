@@ -13,6 +13,6 @@ def determineMetaclass(bases, explicit_mc=None):
     metaclass = metaclasses[0]
     for mc in metaclasses[1:]:
         if not issubclass(mc, metaclass):
-            metaclass = type('CombinedMeta', (metaclass, mc), {})
+            metaclass = type('Meta', (metaclass, mc), {})
     
     return metaclass

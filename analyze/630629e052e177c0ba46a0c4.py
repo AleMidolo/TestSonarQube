@@ -1,5 +1,5 @@
-from typing import Dict
 import json
+from typing import Dict
 import xml.etree.ElementTree as ET
 
 def parse_diaspora_webfinger(document: str) -> Dict:

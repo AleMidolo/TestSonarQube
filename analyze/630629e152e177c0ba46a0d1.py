@@ -10,6 +10,7 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         response = requests.get(url)
         if response.status_code == 200:
             return response.text
+        else:
+            return None
     except requests.RequestException:
-        pass
-    return None
+        return None

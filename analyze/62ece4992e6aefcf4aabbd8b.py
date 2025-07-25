@@ -9,6 +9,6 @@ def force_string(obj):
 
     此函数在对象是字符串的情况下，返回对应的 UTF-8 编码的字节对象。
     """
-    if isinstance(obj, (bytes, bytearray)):
+    if isinstance(obj, (bytes, np.bytes_)):
         return obj.decode('utf-8')
     return obj
