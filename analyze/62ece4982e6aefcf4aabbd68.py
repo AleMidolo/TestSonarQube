@@ -13,20 +13,20 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
     if base == 0:
         raise ValueError("El alfabeto no puede estar vacío.")
     
-    if number == 0:
-        return alphabet[0] if padding is None else alphabet[0].rjust(padding, alphabet[0])
-    
     result = []
     while number > 0:
         remainder = number % base
         result.append(alphabet[remainder])
         number = number // base
     
+    if not result:
+        result.append(alphabet[0])
+    
     result.reverse()
     
-    output = ''.join(result)
-    
     if padding is not None:
-        output = output.rjust(padding, alphabet[0])
+        if padding < len(result):
+            raise ValueError("El padding no puede ser menor que la longitud del resultado.")
+        result = [alphabet[0]] * (padding - len(result)) + result
     
-    return output
+    return ''.join(result)

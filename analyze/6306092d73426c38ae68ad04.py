@@ -12,18 +12,9 @@ def get_parser_option_specs(self, command_name):
         return self._command_parser_specs[command_name]
     
     # Assuming the parser specs are stored in a dictionary or similar structure
-    # This is a placeholder for the actual implementation
-    parser_specs = self._load_parser_specs(command_name)
-    self._command_parser_specs[command_name] = parser_specs
-    return parser_specs
-
-def _load_parser_specs(self, command_name):
-    """
-    Loads the parser specifications for the given command.
-
-    :param command_name: the name of the command
-    :return: the list of options for the command
-    """
-    # Placeholder for actual implementation
-    # This could involve reading from a configuration file, database, etc.
+    # You would need to implement the logic to fetch or generate the specs
+    # For example, if the specs are stored in a dictionary:
+    # self._command_parser_specs[command_name] = self._generate_parser_specs(command_name)
+    
+    # Placeholder return for the sake of the example
     return []

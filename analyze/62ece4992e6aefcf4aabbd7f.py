@@ -12,12 +12,12 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     try:
         parsed_url = urlparse(image_href)
         if not parsed_url.netloc or not parsed_url.path:
-            raise ValueError("Invalid image href: missing netloc or path.")
+            raise ValueError("El enlace no es válido o no puede ser analizado correctamente.")
         
-        image_id = parsed_url.path.strip('/')
+        image_id = parsed_url.path.split('/')[-1]
         netloc = parsed_url.netloc
         use_ssl = parsed_url.scheme == 'https'
         
         return image_id, netloc, use_ssl
     except Exception as e:
-        raise ValueError(f"Failed to parse image href: {e}")
+        raise ValueError(f"Error al analizar el enlace: {e}")

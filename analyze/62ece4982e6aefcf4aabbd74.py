@@ -25,12 +25,12 @@ def prepare_repository_from_archive(
     
     # Determine the filename if not provided
     if filename is None:
-        filename = os.path.basename(archive_path)
+        filename = Path(archive_path).name
     
     # Extract the archive to the temporary directory
     shutil.unpack_archive(archive_path, temp_dir)
     
     # Construct the repository URL
-    repo_url = urljoin('file://', temp_dir)
+    repo_url = urljoin('file://', str(temp_dir))
     
     return repo_url

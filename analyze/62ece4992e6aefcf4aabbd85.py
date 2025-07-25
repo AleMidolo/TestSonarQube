@@ -24,10 +24,10 @@ def find_roots(
     if roots is None:
         roots = set()
 
-    # Obtener todos los nodos que son "hijos" en la relación prop
+    # Obtener todos los nodos que son hijos en la jerarquía
     children = set(graph.subjects(prop, None))
 
-    # Obtener todos los nodos que son "padres" en la relación prop
+    # Obtener todos los nodos que son padres en la jerarquía
     parents = set(graph.objects(None, prop))
 
     # Las raíces son los nodos que son padres pero no hijos

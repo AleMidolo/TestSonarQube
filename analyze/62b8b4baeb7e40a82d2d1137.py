@@ -1,5 +1,5 @@
 from zope.interface import Invalid, providedBy
-from zope.interface.verify import verifyObject as zope_verify_object
+from zope.interface.verify import verifyObject as zope_verifyObject
 
 def verifyObject(iface, candidate, tentative=False):
     """
@@ -21,12 +21,11 @@ def verifyObject(iface, candidate, tentative=False):
     .. versionchanged:: 5.0  
         Si múltiples métodos o atributos son inválidos, todos esos errores se recopilan y se informan. Anteriormente, solo se informaba el primer error. Como caso especial, si solo hay un error presente, este se lanza de forma individual, como antes.
     """
-    if not tentative:
-        if not iface.providedBy(candidate):
-            raise Invalid(f"The candidate does not provide the interface {iface}.")
+    if not tentative and not iface.providedBy(candidate):
+        raise Invalid(f"The candidate does not provide the interface {iface}.")
 
     try:
-        zope_verify_object(iface, candidate)
+        zope_verifyObject(iface, candidate)
     except Invalid as e:
         raise Invalid(f"Verification failed: {e}")
 

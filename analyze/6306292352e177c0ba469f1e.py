@@ -12,7 +12,7 @@ def process_text_links(text):
         url = match.group(0)
         return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
     
-    # Reemplazar todas las URLs en el texto con hipervínculos
+    # Reemplazar URLs en el texto con hipervínculos
     processed_text = url_pattern.sub(replace_with_link, text)
     
     return processed_text

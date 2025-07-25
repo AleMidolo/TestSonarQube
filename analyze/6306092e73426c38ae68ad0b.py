@@ -4,11 +4,12 @@ def validate_min_max_args(self, args):
 
     :param args: Los argumentos recibidos.
     """
-    min_value = 0  # Define el valor mínimo
-    max_value = 100  # Define el valor máximo
+    min_value = getattr(self, 'min_value', None)
+    max_value = getattr(self, 'max_value', None)
     
-    for arg in args:
-        if not (min_value <= arg <= max_value):
-            raise ValueError(f"El valor {arg} no está entre {min_value} y {max_value}.")
-    
-    return True
+    if min_value is not None and max_value is not None:
+        for arg in args:
+            if not (min_value <= arg <= max_value):
+                raise ValueError(f"El valor {arg} no está entre {min_value} y {max_value}.")
+    else:
+        raise AttributeError("Los atributos 'min_value' y 'max_value' no están definidos.")

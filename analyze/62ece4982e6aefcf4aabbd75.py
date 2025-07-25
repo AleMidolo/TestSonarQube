@@ -8,11 +8,11 @@ def addignored(ignored):
     result = subprocess.run(['git', 'ls-files', '--ignored', '--exclude-standard'], stdout=subprocess.PIPE, text=True)
     ignored_files = result.stdout.splitlines()
     
-    # Filtrar los archivos ignorados que están en la lista de ignorados
+    # Filtrar los archivos ignorados que coincidan con la lista proporcionada
     filtered_files = [file for file in ignored_files if file in ignored]
     
     # Ordenar la lista de archivos ignorados
     filtered_files.sort()
     
-    # Devolver los archivos como una cadena separada por comas
+    # Convertir la lista en una cadena separada por comas
     return ', '.join(filtered_files)

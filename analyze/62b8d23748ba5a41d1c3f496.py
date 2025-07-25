@@ -5,8 +5,8 @@ def lfu_cache(maxsize=128, typed=False):
     def decorator(func):
         cache = {}
         frequency = defaultdict(int)
-        frequency_lists = defaultdict(OrderedDict)
-        min_frequency = 0
+        frequency_list = defaultdict(OrderedDict)
+        min_freq = 0
 
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -16,30 +16,34 @@ def lfu_cache(maxsize=128, typed=False):
                 key = args + tuple(sorted(kwargs.items()))
 
             if key in cache:
-                # Increment the frequency of the key
+                # Increment frequency
+                freq = frequency[key]
                 frequency[key] += 1
-                # Move the key to the new frequency list
-                frequency_lists[frequency[key] - 1].pop(key)
-                frequency_lists[frequency[key]][key] = None
-                # Update min_frequency if necessary
-                if not frequency_lists[min_frequency]:
-                    min_frequency += 1
+                del frequency_list[freq][key]
+                if not frequency_list[freq]:
+                    del frequency_list[freq]
+                    if freq == min_freq:
+                        min_freq += 1
+                frequency_list[freq + 1][key] = None
                 return cache[key]
 
-            # If the cache is full, evict the least frequently used item
+            result = func(*args, **kwargs)
+
             if len(cache) >= maxsize:
-                evict_key = next(iter(frequency_lists[min_frequency]))
-                frequency_lists[min_frequency].pop(evict_key)
+                # Evict the least frequently used item
+                evict_key, _ = frequency_list[min_freq].popitem(last=False)
+                if not frequency_list[min_freq]:
+                    del frequency_list[min_freq]
                 del cache[evict_key]
                 del frequency[evict_key]
 
-            # Add the new item to the cache
-            result = func(*args, **kwargs)
             cache[key] = result
             frequency[key] = 1
-            frequency_lists[1][key] = None
-            min_frequency = 1
+            frequency_list[1][key] = None
+            min_freq = 1
+
             return result
 
         return wrapper
+
     return decorator

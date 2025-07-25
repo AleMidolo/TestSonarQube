@@ -17,14 +17,31 @@ def scale(self, other=None, recompute=False):
     """
     if other is None:
         if not hasattr(self, '_scale') or recompute:
-            self._scale = self.integral()
+            self._scale = self._compute_scale()
         return self._scale
     else:
-        if not isinstance(other, (int, float)):
-            raise TypeError("El valor de escala debe ser un número flotante o entero.")
-        if self.scale() == 0:
-            raise LenaValueError("No se puede reescalar un histograma con escala igual a cero.")
-        current_scale = self.scale()
+        if not hasattr(self, '_scale') or recompute:
+            self._scale = self._compute_scale()
+        if self._scale == 0:
+            raise LenaValueError("Cannot rescale a histogram with zero scale.")
+        scale_factor = other / self._scale
+        self._rescale(scale_factor)
         self._scale = other
-        for bin in self.bins:
-            bin.content *= (other / current_scale)
+
+def _compute_scale(self):
+    """
+    Calcula la escala del histograma (integral del histograma).
+    """
+    return sum(self.bins)
+
+def _rescale(self, scale_factor):
+    """
+    Reescala los bins del histograma por el factor dado.
+    """
+    self.bins = [bin_value * scale_factor for bin_value in self.bins]
+
+class LenaValueError(Exception):
+    """
+    Excepción personalizada para errores de valor en Lena.
+    """
+    pass

@@ -4,11 +4,12 @@ def check_digests_present_and_used(self, manifest_files, digests_used):
     """
     # Extract all digests from the manifest files
     manifest_digests = set()
-    for file in manifest_files:
-        with open(file, 'r') as f:
-            for line in f:
+    for manifest_file in manifest_files:
+        with open(manifest_file, 'r') as file:
+            for line in file:
                 if 'digest' in line:
-                    manifest_digests.add(line.strip().split()[-1])
+                    digest = line.split('digest:')[1].strip()
+                    manifest_digests.add(digest)
     
     # Check if all digests in the manifest are used
     for digest in manifest_digests:

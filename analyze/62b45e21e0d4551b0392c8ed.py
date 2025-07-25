@@ -18,17 +18,20 @@ def find_path_type(path):
     if os.path.isfile(path):
         return "file"
     
-    namaste_files = [f for f in os.listdir(path) if f.startswith("0=")]
+    if os.path.isdir(path):
+        namaste_files = [f for f in os.listdir(path) if f.startswith("0=")]
+        
+        if not namaste_files:
+            return "No se encontraron archivos Namaste en la ruta."
+        
+        for namaste_file in namaste_files:
+            with open(os.path.join(path, namaste_file), 'r') as f:
+                content = f.read().strip()
+                if content == "ocfl_object_1.0":
+                    return "object"
+                elif content == "ocfl_1.0":
+                    return "root"
+        
+        return "No se pudo determinar el tipo de directorio basado en los archivos Namaste."
     
-    if not namaste_files:
-        return "No se encontraron archivos Namaste en la ruta."
-    
-    for namaste_file in namaste_files:
-        with open(os.path.join(path, namaste_file), 'r') as f:
-            content = f.read().strip()
-            if content == "ocfl_object_1.0":
-                return "object"
-            elif content == "ocfl_1.0":
-                return "root"
-    
-    return "No se pudo determinar el tipo de elemento en la ruta."
+    return "La ruta no es un archivo ni un directorio."

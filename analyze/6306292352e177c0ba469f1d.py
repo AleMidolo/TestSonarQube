@@ -13,6 +13,8 @@ def find_tags(texto: str, reemplazador: Callable = None) -> Tuple[Set, str]:
         def replace_tag(match):
             return reemplazador(match.group(1))
         
-        texto = tag_pattern.sub(replace_tag, texto)
+        texto_reemplazado = tag_pattern.sub(replace_tag, texto)
+    else:
+        texto_reemplazado = texto
     
-    return tags, texto
+    return tags, texto_reemplazado

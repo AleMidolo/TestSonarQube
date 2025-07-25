@@ -10,21 +10,27 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     good_objects = 0
     
     # Simulate validation logic
-    # This is a placeholder for actual implementation
     if validate_objects:
         # Example: Iterate through objects and validate them
-        for obj in self.storage_root.objects:
+        for obj in self.get_objects():
             num_objects += 1
-            if obj.is_valid():
+            if self.is_valid(obj, check_digests):
                 good_objects += 1
             elif show_warnings:
-                print(f"Warning: Object {obj.id} is invalid.")
-    
-    if check_digests:
-        # Example: Check digests for integrity
-        for obj in self.storage_root.objects:
-            if not obj.check_digest():
-                if show_warnings:
-                    print(f"Warning: Digest mismatch for object {obj.id}.")
+                print(f"Warning: Object {obj} is invalid.")
     
     return num_objects, good_objects
+
+def get_objects(self):
+    """
+    Simulate retrieving objects from the storage hierarchy.
+    """
+    # Placeholder for actual object retrieval logic
+    return []
+
+def is_valid(self, obj, check_digests):
+    """
+    Simulate validation of an object.
+    """
+    # Placeholder for actual validation logic
+    return True

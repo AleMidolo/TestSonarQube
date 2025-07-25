@@ -1,10 +1,10 @@
 import yaml
-from typing import Dict, Optional
+from typing import Dict, Any
 
 class IRValidatorException(Exception):
     pass
 
-def validate_from_content(cls, spec_content: Optional[str] = None) -> Dict:
+def validate_from_content(cls, spec_content=None) -> Dict[str, Any]:
     """
     Valida que el contenido del archivo spec (YAML) tenga todos los campos requeridos.
 

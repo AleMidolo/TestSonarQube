@@ -15,27 +15,31 @@ def _eval_file(prefix, file_path):
     Retorna
     -------
     dict
-        Un diccionario con el tipo de archivo y la ruta del archivo.
+        Diccionario con el tipo de archivo y la ruta del archivo.
     """
     import os
 
-    # Extraer el nombre del archivo y la extensión
-    file_name = os.path.basename(file_path)
-    file_extension = os.path.splitext(file_name)[1].lower()
+    # Extraer el nombre del archivo y la carpeta
+    filename = os.path.basename(file_path)
+    file_folder = os.path.dirname(file_path)
 
-    # Determinar el tipo de archivo basado en la extensión
-    if file_extension in ['.jpg', '.png', '.gif', '.tiff', '.bmp']:
-        file_type = 'asset'
-    elif file_extension in ['.mp4', '.mov', '.avi', '.mkv']:
-        file_type = 'rendition'
+    # Determinar el tipo de archivo basado en el prefijo
+    if prefix in filename:
+        if "asset" in filename.lower():
+            file_type = "asset"
+        elif "rendition" in filename.lower():
+            file_type = "rendition"
+        else:
+            file_type = "unknown"
     else:
-        file_type = 'unknown'
+        file_type = "unknown"
 
     # Crear el diccionario de retorno
     result = {
-        'prefix': prefix,
-        'file_path': file_path,
-        'file_type': file_type
+        "type": file_type,
+        "path": file_path,
+        "filename": filename,
+        "folder": file_folder
     }
 
     return result

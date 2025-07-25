@@ -9,19 +9,14 @@ def select_filenames_by_prefix(prefix, files):
     Parámetros
     ----------
     prefix : str  
-    Prefijo del nombre del archivo.  
+        Prefijo del nombre del archivo.  
 
     files : lista de str  
-    Rutas de los archivos.  
+        Rutas de los archivos.  
 
     Retorna
     -------
     list  
-    Lista de rutas de archivos cuyos nombres base coinciden con el prefijo `prefix`.
+        Lista de rutas de archivos cuyos nombres base coinciden con el prefijo `prefix`.
     """
-    selected_files = []
-    for file_path in files:
-        file_name = os.path.basename(file_path)
-        if file_name.startswith(prefix):
-            selected_files.append(file_path)
-    return selected_files
+    return [file for file in files if os.path.basename(file).startswith(prefix)]

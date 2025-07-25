@@ -1,21 +1,17 @@
-from typing import Union
+from typing import TypeVar
 
-def identify_request(request: Union[str, dict]) -> bool:
+RequestType = TypeVar('RequestType')
+
+def identify_request(request: RequestType) -> bool:
     """
     Intente identificar si esta es una solicitud de Matrix.
-    
-    Args:
-        request (Union[str, dict]): La solicitud a identificar, que puede ser un string o un diccionario.
-    
-    Returns:
-        bool: True si la solicitud es de Matrix, False en caso contrario.
     """
-    if isinstance(request, dict):
-        # Verifica si el diccionario contiene claves comunes en solicitudes de Matrix
-        if "type" in request and request["type"] == "m.room.message":
+    # Assuming RequestType has a 'headers' attribute that is a dictionary
+    if hasattr(request, 'headers'):
+        headers = request.headers
+        # Check for common Matrix request headers
+        if 'Authorization' in headers and headers['Authorization'].startswith('Bearer '):
             return True
-    elif isinstance(request, str):
-        # Verifica si el string contiene un patrón común en solicitudes de Matrix
-        if "m.room.message" in request:
+        if 'Content-Type' in headers and headers['Content-Type'] == 'application/json':
             return True
     return False

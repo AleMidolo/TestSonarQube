@@ -6,7 +6,7 @@ def register_vcs_handler(vcs, method):  # decorador
         method: El método que se utilizará para manejar el VCS.
 
     Returns:
-        Un decorador que marca el método como el manejador del VCS especificado.
+        Un decorador que marca el método como el manejador del VCS.
     """
     def decorate(f):
         f.vcs = vcs

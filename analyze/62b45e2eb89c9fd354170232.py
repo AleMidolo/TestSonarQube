@@ -10,23 +10,15 @@ def next_version(version):
     # Increment the last part
     last_part = int(parts[-1]) + 1
     
-    # Handle the case where the last part overflows (e.g., 9 -> 10)
-    carry = 0
-    for i in range(len(parts) - 1, -1, -1):
-        if i == len(parts) - 1:
-            parts[i] = str(last_part)
-        else:
-            parts[i] = str(int(parts[i]) + carry)
-        
-        if int(parts[i]) > 9:
-            parts[i] = '0'
-            carry = 1
-        else:
-            carry = 0
+    # Handle leading zeros if any
+    if parts[-1].startswith('0'):
+        # Preserve the number of digits
+        last_part_str = f"{last_part:0{len(parts[-1])}d}"
+    else:
+        last_part_str = str(last_part)
     
-    # If there's still a carry, prepend '1' to the parts
-    if carry:
-        parts.insert(0, '1')
+    # Update the last part
+    parts[-1] = last_part_str
     
-    # Reconstruct the version string
+    # Join the parts back together
     return '.'.join(parts)
