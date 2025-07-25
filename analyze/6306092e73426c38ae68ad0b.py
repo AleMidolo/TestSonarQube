@@ -11,10 +11,12 @@ def validate_min_max_args(self, args):
             max_val = getattr(self, f'max_{arg_name}')
             
             if not isinstance(arg_value, (int, float)):
-                raise TypeError(f"Parameter {arg_name} must be a number")
-                
+                try:
+                    arg_value = float(arg_value)
+                except (ValueError, TypeError):
+                    raise ValueError(f"Parameter {arg_name} must be a number")
+                    
             if arg_value < min_val:
-                raise ValueError(f"Parameter {arg_name} cannot be less than {min_val}")
-                
+                raise ValueError(f"Parameter {arg_name} must be greater than or equal to {min_val}")
             if arg_value > max_val:
-                raise ValueError(f"Parameter {arg_name} cannot be greater than {max_val}")
+                raise ValueError(f"Parameter {arg_name} must be less than or equal to {max_val}")

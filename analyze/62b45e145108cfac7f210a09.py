@@ -15,14 +15,14 @@ def check_digests_present_and_used(self, manifest_files, digests_used):
         except (KeyError, TypeError):
             return self.error(f"Invalid manifest format in {manifest}")
 
-        # 检查清单中的摘要是否都被使用
+        # 检查所有摘要是否都被使用
         unused_digests = manifest_digests - set(digests_used)
         if unused_digests:
             return self.error(f"Found unused digests in manifest: {unused_digests}")
 
-        # 检查使用的摘要是否都在清单中
+        # 检查是否所有使用的摘要都在清单中
         missing_digests = set(digests_used) - manifest_digests
         if missing_digests:
-            return self.error(f"Missing required digests in manifest: {missing_digests}")
+            return self.error(f"Missing digests in manifest: {missing_digests}")
 
     return None

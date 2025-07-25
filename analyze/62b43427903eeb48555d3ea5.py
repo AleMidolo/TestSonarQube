@@ -19,70 +19,33 @@ def format(
       - 转换后的 out-style 参数集合（类型：`dict` 或 `list`）。
     """
     # 检查参数类型是否匹配样式
-    if self.in_style.is_named():
+    if self.in_style.is_named:
         if not isinstance(params, Mapping):
-            raise TypeError("Named parameter style requires a mapping for params")
+            raise TypeError("Named parameter style requires a mapping")
     else:
         if not isinstance(params, Sequence) or isinstance(params, (str, bytes)):
-            raise TypeError("Positional parameter style requires a sequence for params")
+            raise TypeError("Positional parameter style requires a sequence")
 
-    # 初始化输出参数集合
-    out_params: Union[Dict[Union[str, int], Any], List[Any]]
-    out_params = {} if self.out_style.is_named() else []
-    
-    # 初始化参数计数器和SQL构建器
-    param_count = 0
-    formatted_sql = sql
-    
-    if isinstance(sql, str):
-        # 处理字符串类型的SQL
-        if self.in_style.is_named():
-            # 处理命名参数
-            for param_name in params:
-                param_value = params[param_name]
-                converted_value = self._converter.convert(param_value)
-                
-                if self.out_style.is_named():
-                    out_param_name = f"p{param_count}"
-                    out_params[out_param_name] = converted_value
-                    formatted_sql = formatted_sql.replace(
-                        f"{self.in_style.prefix}{param_name}{self.in_style.suffix}",
-                        f"{self.out_style.prefix}{out_param_name}{self.out_style.suffix}"
-                    )
-                else:
-                    out_params.append(converted_value)
-                    formatted_sql = formatted_sql.replace(
-                        f"{self.in_style.prefix}{param_name}{self.in_style.suffix}",
-                        self.out_style.placeholder
-                    )
-                param_count += 1
-        else:
-            # 处理序号参数
-            for param_value in params:
-                converted_value = self._converter.convert(param_value)
-                
-                if self.out_style.is_named():
-                    out_param_name = f"p{param_count}"
-                    out_params[out_param_name] = converted_value
-                    formatted_sql = formatted_sql.replace(
-                        self.in_style.placeholder,
-                        f"{self.out_style.prefix}{out_param_name}{self.out_style.suffix}",
-                        1
-                    )
-                else:
-                    out_params.append(converted_value)
-                    formatted_sql = formatted_sql.replace(
-                        self.in_style.placeholder,
-                        self.out_style.placeholder,
-                        1
-                    )
-                param_count += 1
+    # 转换参数
+    converted_params = {}
+    if isinstance(params, Mapping):
+        # 处理命名参数
+        for key, value in params.items():
+            converted_params[key] = self._converter.convert(value)
     else:
-        # 处理bytes类型的SQL
-        formatted_sql = sql
-        if isinstance(params, Mapping):
-            out_params = {k: self._converter.convert(v) for k, v in params.items()}
-        else:
-            out_params = [self._converter.convert(v) for v in params]
+        # 处理序号参数
+        converted_params = [self._converter.convert(value) for value in params]
 
-    return formatted_sql, out_params
+    # 根据参数类型格式化SQL
+    if isinstance(sql, str):
+        formatted_sql = sql
+    elif isinstance(sql, bytes):
+        formatted_sql = sql.decode('utf-8')
+    else:
+        raise TypeError("SQL must be str or bytes")
+
+    # 返回格式化后的SQL和转换后的参数
+    if isinstance(sql, bytes):
+        formatted_sql = formatted_sql.encode('utf-8')
+    
+    return formatted_sql, converted_params

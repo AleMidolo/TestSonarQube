@@ -12,13 +12,11 @@ def find_roots(
     objects = set(graph.objects(None, prop))
     
     # 根节点是那些作为宾语但不作为主语的节点
-    # 以及那些既不作为主语也不作为宾语的节点
-    new_roots = objects - subjects
-    
-    # 如果提供了roots参数,将新找到的根节点添加到roots中
-    if roots:
-        roots.update(new_roots)
-        return roots
-    
-    # 否则直接返回新找到的根节点集合
-    return new_roots
+    # 如果subjects为空,则所有objects都是根节点
+    if not subjects:
+        roots.update(objects)
+    else:
+        # 找出在objects中但不在subjects中的节点,它们就是根节点
+        roots.update(objects - subjects)
+        
+    return roots

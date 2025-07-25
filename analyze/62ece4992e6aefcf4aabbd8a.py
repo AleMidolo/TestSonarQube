@@ -47,7 +47,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 exc_info=None
             )
             error_logs.append(error_record)
-            logger.error(f"Failed to load configuration from {filename}", exc_info=True)
+            logger.error(f"Failed to load configuration from {filename}: {str(e)}")
             
     return configs, error_logs
 

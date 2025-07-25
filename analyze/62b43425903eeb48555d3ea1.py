@@ -16,5 +16,5 @@ def _create_in_regex(self) -> Pattern:
     \}              # 结束大括号
     """
     
-    # 编译正则表达式并返回Pattern对象
+    # 编译正则表达式,使用verbose模式以支持注释和空白
     return re.compile(pattern, re.VERBOSE)

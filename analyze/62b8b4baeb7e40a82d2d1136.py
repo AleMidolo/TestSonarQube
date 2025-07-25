@@ -20,7 +20,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
                 errors.append(Invalid(f"The '{name}' attribute was not provided."))
                 continue
 
-            # Verify it's callable
+            # Check if it's callable
             if not callable(attr):
                 errors.append(Invalid(f"The '{name}' attribute is not callable."))
                 continue

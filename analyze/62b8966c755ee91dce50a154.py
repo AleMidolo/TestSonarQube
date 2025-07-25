@@ -40,31 +40,26 @@ def isoparse(self, dt_str):
 
     # 处理日期部分
     year = int(parts['year'])
+    month = int(parts['month']) if parts['month'] else 1
     
-    if parts['month']:
-        month = int(parts['month'])
-        day = int(parts['day'] or 1)
-    elif parts['week']:
-        # ISO周处理
+    if parts['week']:
+        # ISO周日期处理
         week = int(parts['week'])
-        weekday = int(parts['weekday'] or 1)
-        jan1 = datetime(year, 1, 1)
-        week_offset = timedelta(weeks=week-1, days=weekday-1)
-        temp_date = jan1 + week_offset
+        weekday = int(parts['weekday']) if parts['weekday'] else 1
+        temp_date = datetime.strptime(f"{year}-W{week}-{weekday}", "%Y-W%W-%w")
         month = temp_date.month
         day = temp_date.day
     else:
-        month = 1
-        day = 1
+        day = int(parts['day']) if parts['day'] else 1
 
     # 处理时间部分
-    hour = int(parts['hour'] or 0)
+    hour = int(parts['hour']) if parts['hour'] else 0
     if hour == 24:  # 处理24:00特殊情况
         hour = 0
         day += 1
         
-    minute = int(parts['minute'] or 0)
-    second = int(parts['second'] or 0)
+    minute = int(parts['minute']) if parts['minute'] else 0
+    second = int(parts['second']) if parts['second'] else 0
     
     # 处理微秒
     microsecond = 0

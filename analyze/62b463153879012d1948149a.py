@@ -33,7 +33,7 @@ def _group_files_by_xml_filename(source, xmls, files):
             if file.startswith(xml_name):
                 related_files.append(file)
                 
-        # 将分组结果存入字典
+        # 如果找到相关文件，添加到结果字典
         if related_files:
             result[xml_name] = {
                 'source': source,

@@ -12,39 +12,35 @@ def _legacy_mergeOrderings(orderings):
     # 创建结果列表
     result = []
     # 记录已处理的元素
-    used = set()
+    seen = set()
     
-    # 持续处理直到所有元素都被使用
-    while len(used) < len(element_positions):
-        # 找到当前可以添加的元素
-        # 元素必须在其所在的所有列表中,其之前的元素都已经被使用
-        next_element = None
-        
-        for element, positions in element_positions.items():
-            if element in used:
+    # 遍历所有排序列表
+    for ordering in orderings:
+        # 遍历当前列表中的每个元素
+        for element in ordering:
+            # 如果元素已经在结果中,跳过
+            if element in seen:
                 continue
                 
-            can_use = True
-            # 检查该元素在每个包含它的列表中,是否其前面的元素都已使用
-            for ordering in orderings:
-                if element in ordering:
-                    idx = ordering.index(element)
-                    # 检查该元素之前的元素是否都已使用
-                    for i in range(idx):
-                        if ordering[i] not in used:
-                            can_use = False
-                            break
-                    if not can_use:
-                        break
-                        
-            if can_use:
-                next_element = element
-                break
-                
-        if next_element is None:
-            raise ValueError("Cannot merge orderings - circular dependency detected")
+            # 检查是否可以添加当前元素
+            can_add = True
+            # 获取当前元素在所有列表中的位置
+            positions = element_positions[element]
             
-        result.append(next_element)
-        used.add(next_element)
-        
+            # 检查当前元素前面的所有元素是否都已经处理过
+            for ordering_idx, pos in enumerate(positions):
+                # 检查当前位置之前的元素
+                for prev_pos in range(pos):
+                    prev_element = orderings[ordering_idx][prev_pos]
+                    if prev_element not in seen:
+                        can_add = False
+                        break
+                if not can_add:
+                    break
+                    
+            # 如果可以添加当前元素
+            if can_add:
+                result.append(element)
+                seen.add(element)
+                
     return result

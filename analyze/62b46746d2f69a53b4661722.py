@@ -3,7 +3,7 @@ def absorb(self, args):
     result = list(args)
     changed = True
     
-    # 循环直到没有变化
+    # 持续应用吸收律直到没有变化
     while changed:
         changed = False
         n = len(result)
@@ -19,34 +19,36 @@ def absorb(self, args):
                 expr2 = result[j]
                 
                 # 检查吸收律 A & (A | B) = A
-                if (expr1.is_and() and expr2.is_or() and 
-                    any(t1 == t2 for t1 in expr1.terms for t2 in expr2.terms)):
+                if (expr1.is_and() and 
+                    expr2.is_or() and
+                    expr1 in expr2.args):
                     result[j] = expr1
                     changed = True
                     
-                # 检查吸收律 A | (A & B) = A  
-                elif (expr1.is_or() and expr2.is_and() and
-                      any(t1 == t2 for t1 in expr1.terms for t2 in expr2.terms)):
+                # 检查吸收律 A | (A & B) = A 
+                if (expr1.is_or() and
+                    expr2.is_and() and 
+                    expr1 in expr2.args):
                     result[j] = expr1
                     changed = True
                     
                 # 检查负吸收律 A & (~A | B) = A & B
-                elif (expr1.is_and() and expr2.is_or() and
-                      any(t1.is_not() and t1.term == t2 
-                          for t1 in expr2.terms for t2 in expr1.terms)):
-                    new_terms = [t for t in expr2.terms if not any(
-                        t.is_not() and t.term == t2 for t2 in expr1.terms)]
-                    result[j] = expr1 & Expression.make_and(new_terms)
+                if (expr1.is_and() and
+                    expr2.is_or() and
+                    expr1.negate() in expr2.args):
+                    new_args = [arg for arg in expr2.args if arg != expr1.negate()]
+                    result[j] = expr1 & new_args[0]
                     changed = True
                     
                 # 检查负吸收律 A | (~A & B) = A | B
-                elif (expr1.is_or() and expr2.is_and() and
-                      any(t1.is_not() and t1.term == t2
-                          for t1 in expr2.terms for t2 in expr1.terms)):
-                    new_terms = [t for t in expr2.terms if not any(
-                        t.is_not() and t.term == t2 for t2 in expr1.terms)]
-                    result[j] = expr1 | Expression.make_or(new_terms)
+                if (expr1.is_or() and
+                    expr2.is_and() and
+                    expr1.negate() in expr2.args):
+                    new_args = [arg for arg in expr2.args if arg != expr1.negate()]
+                    result[j] = expr1 | new_args[0]
                     changed = True
                     
-    # 移除重复项并返回
-    return list(set(result))
+        # 移除重复项
+        result = list(set(result))
+                    
+    return result

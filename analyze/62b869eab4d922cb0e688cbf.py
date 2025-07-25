@@ -13,39 +13,36 @@ def generate_default_observer_schema(app):
         kind = resource.get('kind')
         api_version = resource.get('apiVersion')
         
+        # 如果资源没有 kind 或 apiVersion,跳过
+        if not kind or not api_version:
+            continue
+            
         # 生成资源的唯一标识符
         resource_id = f"{api_version}/{kind}"
         
-        # 如果该资源还没有观察者模式，则生成默认的
+        # 如果该资源还没有观察者模式,则生成默认的
         if resource_id not in app.spec.observer:
-            default_schema = {
-                'apiVersion': api_version,
-                'kind': kind,
-                'conditions': [
+            app.spec.observer[resource_id] = {
+                "conditions": [
                     {
-                        'type': 'Available',
-                        'status': 'True'
+                        "type": "Available",
+                        "status": "True"
                     }
                 ]
             }
             
-            # 为特定类型的资源添加额外的默认条件
-            if kind == 'Deployment':
-                default_schema['conditions'].append({
-                    'type': 'Progressing',
-                    'status': 'True'
+            # 为某些特定资源类型添加额外的默认观察条件
+            if kind.lower() in ['deployment', 'statefulset', 'daemonset']:
+                app.spec.observer[resource_id]["conditions"].append({
+                    "type": "Progressing",
+                    "status": "True"
                 })
-            elif kind == 'StatefulSet':
-                default_schema['conditions'].append({
-                    'type': 'Ready',
-                    'status': 'True'
-                })
-            elif kind == 'DaemonSet':
-                default_schema['conditions'].append({
-                    'type': 'DaemonSetAvailable',
-                    'status': 'True'
-                })
-                
-            app.spec.observer[resource_id] = default_schema
             
+            # Pod类型资源的特殊处理
+            if kind.lower() == 'pod':
+                app.spec.observer[resource_id]["conditions"] = [{
+                    "type": "Ready",
+                    "status": "True"
+                }]
+                
     return app

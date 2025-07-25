@@ -47,6 +47,7 @@ def xargs(
                 pid, fd = pty.fork()
                 if pid == 0:  # Child process
                     os.execvp(full_cmd[0], full_cmd)
+                    os._exit(1)
                 else:  # Parent process
                     chunk_output = b''
                     while True:
@@ -55,8 +56,7 @@ def xargs(
                         except OSError:
                             break
                     _, status = os.waitpid(pid, 0)
-                    max_returncode = max(max_returncode, status >> 8)
-                    output += chunk_output
+                    returncode = os.WEXITSTATUS(status)
             else:
                 import subprocess
                 process = subprocess.run(
@@ -65,8 +65,11 @@ def xargs(
                     stderr=subprocess.STDOUT,
                     **kwargs
                 )
-                max_returncode = max(max_returncode, process.returncode)
-                output += process.stdout
+                chunk_output = process.stdout
+                returncode = process.returncode
+            
+            output += chunk_output
+            max_returncode = max(max_returncode, returncode)
 
     # Create and start threads for each partition
     import threading
