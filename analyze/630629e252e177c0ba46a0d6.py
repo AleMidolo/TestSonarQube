@@ -14,9 +14,9 @@ def retrieve_diaspora_host_meta(host):
     # Effettuare la richiesta GET per recuperare il documento
     response = requests.get(host_meta_url)
 
-    # Verificare se la richiesta ha avuto successo
+    # Verificare se la richiesta è andata a buon fine
     if response.status_code == 200:
-        # Analizzare il documento XML
+        # Analizzare il contenuto XML
         xrd = etree.fromstring(response.content)
         return xrd
     else:

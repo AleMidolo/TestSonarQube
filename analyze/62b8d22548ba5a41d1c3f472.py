@@ -6,21 +6,21 @@ def cachedmethod(cache, key=hashkey, lock=None):
         def wrapper(self, *args, **kwargs):
             # Generate the cache key
             cache_key = key(self, *args, **kwargs)
-            # Check if the result is already cached
+            # Check if the result is in the cache
             if cache_key in cache:
                 return cache[cache_key]
             # Acquire lock if provided
             if lock:
                 with lock:
-                    # Check again in case another thread has cached the result
+                    # Check again in case another thread has computed it
                     if cache_key in cache:
                         return cache[cache_key]
-                    # Call the function and cache the result
+                    # Call the function and store the result in cache
                     result = func(self, *args, **kwargs)
                     cache[cache_key] = result
                     return result
             else:
-                # Call the function and cache the result
+                # Call the function and store the result in cache
                 result = func(self, *args, **kwargs)
                 cache[cache_key] = result
                 return result

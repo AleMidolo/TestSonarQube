@@ -32,16 +32,17 @@ def verifyObject(iface, candidate, tentative=False):
             errors.append(f"{candidate} is missing method {method}")
             continue
         
+        # Check method signature
         method_signature = signature(getattr(candidate, method))
-        iface_signature = signature(iface.names()[method][1])
+        iface_method_signature = signature(iface.names()[method][1])
         
-        if len(method_signature.parameters) != len(iface_signature.parameters):
+        if len(method_signature.parameters) != len(iface_method_signature.parameters):
             errors.append(f"{method} in {candidate} has incorrect number of parameters")
             continue
         
-        for param in iface_signature.parameters:
-            if param.name not in method_signature.parameters:
-                errors.append(f"{method} in {candidate} is missing parameter {param.name}")
+        for param in iface_method_signature.parameters:
+            if param not in method_signature.parameters:
+                errors.append(f"{method} in {candidate} is missing parameter {param}")
     
     required_attributes = iface.names().keys()  # Assuming attributes are also defined in iface
     for attr in required_attributes:
