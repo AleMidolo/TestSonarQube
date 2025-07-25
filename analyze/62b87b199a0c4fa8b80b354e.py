@@ -15,7 +15,10 @@ def is_fill_request_seq(seq):
         return True
 
     # 检查是否是序列且包含至少一个 FillRequest 元素
-    if isinstance(seq, Sequence) and not isinstance(seq, Source):
-        return any(isinstance(item, FillRequest) for item in seq)
+    if isinstance(seq, Sequence):
+        if any(isinstance(item, FillRequest) for item in seq):
+            # 检查是否不是 Source 序列
+            if not isinstance(seq, Source):
+                return True
 
     return False

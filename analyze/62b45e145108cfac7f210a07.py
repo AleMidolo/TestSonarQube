@@ -17,29 +17,30 @@ def validate(self, inventory, extract_spec_version=False):
         spec_version = self.spec_version
 
     # Perform validation based on the determined spec_version
-    self.perform_validation(inventory, spec_version)
+    self.validate_inventory(inventory, spec_version)
 
 def determine_spec_version(self, type_value):
     """
-    根据 `type` 值来确定规范版本。
+    根据 `type` 值确定规范版本。
+    如果 `type` 值无效或无法确定版本，则返回 None。
     """
-    # Placeholder logic to determine spec version based on type
-    if type_value == "type_a":
-        return "1.0"
-    elif type_value == "type_b":
-        return "2.0"
+    # Example logic to determine spec version based on type_value
+    if type_value == 'type_a':
+        return '1.0'
+    elif type_value == 'type_b':
+        return '2.0'
     else:
         return None
 
-def perform_validation(self, inventory, spec_version):
+def validate_inventory(self, inventory, spec_version):
     """
-    根据给定的规范版本执行库存验证。
+    根据给定的规范版本验证库存。
     """
-    # Placeholder logic for validation based on spec_version
-    if spec_version == "1.0":
+    # Example validation logic based on spec_version
+    if spec_version == '1.0':
         # Perform validation for version 1.0
         pass
-    elif spec_version == "2.0":
+    elif spec_version == '2.0':
         # Perform validation for version 2.0
         pass
     else:

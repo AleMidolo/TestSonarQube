@@ -6,10 +6,13 @@ def render(pieces, style):
     # 假设 style 是一个字典，包含渲染的样式信息
     # 例如：style = {'color': 'red', 'font_size': 12}
     
-    # 这里我们简单地返回一个字符串，表示渲染后的结果
+    # 这里假设 pieces 是一个字符串列表，每个字符串代表一个组件
     rendered_pieces = []
     for piece in pieces:
-        rendered_piece = f"<div style='color: {style.get('color', 'black')}; font-size: {style.get('font_size', 14)}px;'>{piece}</div>"
+        # 根据样式渲染每个组件
+        rendered_piece = f"<span style='color: {style.get('color', 'black')}; font-size: {style.get('font_size', 12)}px;'>{piece}</span>"
         rendered_pieces.append(rendered_piece)
     
-    return "\n".join(rendered_pieces)
+    # 将渲染后的组件拼接成一个字符串
+    rendered_output = ''.join(rendered_pieces)
+    return rendered_output

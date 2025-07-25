@@ -19,12 +19,12 @@ def make_find_paths(find_paths):
 
     `['sh:**/*foo.txt*/**', 'pp:root/somedir']`
     """
-    result = []
+    converted_paths = []
     for path in find_paths:
         if re.match(r'^[a-zA-Z]+:', path):
             # 如果路径已经是模式（如 'pp:root/somedir'），则保持不变
-            result.append(path)
+            converted_paths.append(path)
         else:
             # 否则将路径转换为 glob 模式
-            result.append(f'sh:**/*{path}*/**')
-    return tuple(result)
+            converted_paths.append(f'sh:**/*{path}*/**')
+    return tuple(converted_paths)

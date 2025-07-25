@@ -1,5 +1,4 @@
 import yaml
-from yaml import YAMLError
 
 class IRValidatorException(Exception):
     pass
@@ -13,11 +12,11 @@ def validate_from_content(cls, spec_content=None):
     :return: 从规范（YAML）文件加载的数据字典
     """
     if spec_content is None:
-        raise IRValidatorException("Spec content cannot be None")
+        raise IRValidatorException("Spec content cannot be None.")
     
     try:
         data = yaml.safe_load(spec_content)
-    except YAMLError as e:
+    except yaml.YAMLError as e:
         raise IRValidatorException(f"Invalid YAML content: {e}")
     
     required_fields = ['field1', 'field2', 'field3']  # Replace with actual required fields

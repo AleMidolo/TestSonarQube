@@ -7,17 +7,16 @@ def data(self, *keys):
     :return: 一个以字段名称为键的值字典
     :raises: :exc: 如果指定了超出范围的索引，则会抛出`IndexError` 
     """
-    # Assuming self._data is a dictionary or list-like structure containing the record data
+    # Assuming self._data is a dictionary or list-like structure that holds the record data
     if not keys:
-        return dict(self._data) if isinstance(self._data, dict) else dict(enumerate(self._data))
+        return dict(self._data) if hasattr(self._data, 'items') else dict(enumerate(self._data))
     
     result = {}
     for key in keys:
         if isinstance(key, int):
             if key < 0 or key >= len(self._data):
-                raise IndexError("Index out of range")
+                raise IndexError(f"Index {key} is out of range.")
             result[key] = self._data[key]
         else:
             result[key] = self._data.get(key, None)
-    
     return result

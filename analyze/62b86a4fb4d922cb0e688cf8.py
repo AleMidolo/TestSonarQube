@@ -10,8 +10,7 @@ def validate_value(value):
     异常:
         ValidationError: 如果给定的值不符合正则表达式，将抛出此异常。
     """
-    # 假设我们使用一个简单的正则表达式来验证值
-    # 例如，验证值是否为一个有效的电子邮件地址
+    # 假设我们使用一个简单的正则表达式来验证值是否为有效的电子邮件地址
     regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
     
     if not re.match(regex, value):

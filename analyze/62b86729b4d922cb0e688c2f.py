@@ -17,7 +17,7 @@ def base_config(user, etcd_host="localhost", etcd_port=2379):
             "enabled": False,
             "cert_file": None,
             "key_file": None,
-            "ca_file": None
+            "ca_cert": None
         },
         "authentication": {
             "enabled": True,

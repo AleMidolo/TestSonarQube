@@ -11,8 +11,8 @@ def find_tags(text: str, replacer: Callable = None) -> Tuple[Set, str]:
 
     返回一个包含标签的集合以及原始文本或替换后的文本。
     """
-    # 正则表达式匹配标签，假设标签以#开头
-    tag_pattern = re.compile(r'(?<!#)#(\w+)')
+    # 正则表达式匹配标签，假设标签以#开头，且不包含空格
+    tag_pattern = re.compile(r'(?<!\S)#\w+')
     
     # 忽略代码块中的标签
     code_block_pattern = re.compile(r'

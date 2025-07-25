@@ -13,29 +13,22 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     :rtype: str
     """
     import traceback
-    import sys
+    import os
 
     # 获取异常的堆栈信息
-    exc_type, exc_value, exc_traceback = sys.exc_info()
-    stack = traceback.extract_tb(exc_traceback)
+    tb_list = traceback.format_exception(type(e), e, e.__traceback__)
 
     # 限制堆栈层级
-    if len(stack) > max_level:
-        stack = stack[:max_level]
+    if len(tb_list) > max_level:
+        tb_list = tb_list[:max_level]
+        tb_list.append(f"... (truncated to {max_level} levels)")
 
-    # 格式化堆栈信息
-    stack_str = []
-    for frame in stack:
-        file_path = frame.filename
-        # 限制路径层级
-        if max_path_level > 0:
-            parts = file_path.split('/')
-            if len(parts) > max_path_level:
-                file_path = '/'.join(parts[-max_path_level:])
-        stack_str.append(f"File \"{file_path}\", line {frame.lineno}, in {frame.name}\n  {frame.line}")
+    # 限制路径层级
+    for i in range(len(tb_list)):
+        parts = tb_list[i].split(os.sep)
+        if len(parts) > max_path_level:
+            parts = parts[-max_path_level:]
+            tb_list[i] = os.sep.join(parts)
 
-    # 格式化异常信息
-    exception_str = f"{exc_type.__name__}: {exc_value}\n"
-    exception_str += "\n".join(stack_str)
-
-    return exception_str
+    # 将堆栈信息拼接成字符串
+    return ''.join(tb_list)

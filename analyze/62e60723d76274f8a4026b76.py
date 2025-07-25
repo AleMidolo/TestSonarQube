@@ -22,12 +22,12 @@ class Time:
         # Convert ticks to microseconds
         microseconds = ticks // 1000
         
-        # Calculate hours, minutes, seconds, and microseconds
-        hours = microseconds // 3600000000
-        microseconds %= 3600000000
-        minutes = microseconds // 60000000
-        microseconds %= 60000000
-        seconds = microseconds // 1000000
-        microseconds %= 1000000
+        # Create a timedelta representing the time since midnight
+        delta = timedelta(microseconds=microseconds)
+        
+        # Extract hours, minutes, seconds, and microseconds
+        hours, remainder = divmod(delta.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        microseconds = delta.microseconds
         
         return cls(hours, minutes, seconds, microseconds, tz)

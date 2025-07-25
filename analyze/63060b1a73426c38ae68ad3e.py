@@ -9,25 +9,22 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     :param plugin_dir: 插件目录的路径
     :return: 一个包含插件属性的扁平化字典
     """
+    plugin_spec_file = os.path.join(plugin_dir, 'plugin_spec.yaml')
+    if not os.path.exists(plugin_spec_file):
+        raise FileNotFoundError(f"Plugin spec file not found in {plugin_dir}")
+
+    with open(plugin_spec_file, 'r') as file:
+        plugin_spec = yaml.safe_load(file)
+
+    # Flatten the dictionary
     flattened_dict = {}
-    
-    # 遍历插件目录中的所有文件
-    for root, dirs, files in os.walk(plugin_dir):
-        for file in files:
-            if file.endswith('.yaml') or file.endswith('.yml'):
-                file_path = os.path.join(root, file)
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    try:
-                        data = yaml.safe_load(f)
-                        if isinstance(data, dict):
-                            # 将嵌套字典扁平化
-                            for key, value in data.items():
-                                if isinstance(value, dict):
-                                    for sub_key, sub_value in value.items():
-                                        flattened_dict[f"{key}.{sub_key}"] = sub_value
-                                else:
-                                    flattened_dict[key] = value
-                    except yaml.YAMLError as e:
-                        print(f"Error parsing YAML file {file_path}: {e}")
-    
-    return flattened_dict
+    def flatten(d, parent_key='', sep='.'):
+        for k, v in d.items():
+            new_key = f"{parent_key}{sep}{k}" if parent_key else k
+            if isinstance(v, dict):
+                flatten(v, new_key, sep=sep)
+            else:
+                flattened_dict[new_key] = v
+        return flattened_dict
+
+    return flatten(plugin_spec)

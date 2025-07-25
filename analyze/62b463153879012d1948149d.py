@@ -24,7 +24,7 @@ def _explore_folder(folder):
 
         参数
         ----------
-        files: `list`
+        files: `list`  
             文件列表
 
         返回值
@@ -42,7 +42,7 @@ def _explore_folder(folder):
         return grouped_files
 
     if not os.path.isdir(folder):
-        raise ValueError(f"The provided folder '{folder}' does not exist or is not a directory.")
+        raise ValueError(f"The folder {folder} does not exist.")
 
-    files = [os.path.join(folder, f) for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
+    files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
     return _group_files_by_xml_filename(files)

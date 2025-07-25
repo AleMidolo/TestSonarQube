@@ -9,10 +9,10 @@ def _normalizeargs(sequence, output=None):
     if output is None:
         output = []
     
-    if isinstance(sequence, (list, tuple)):
-        for item in sequence:
+    for item in sequence:
+        if isinstance(item, (list, tuple)):
             _normalizeargs(item, output)
-    else:
-        output.append(sequence)
+        else:
+            output.append(item)
     
     return output

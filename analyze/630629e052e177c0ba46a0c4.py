@@ -12,14 +12,17 @@ def parse_diaspora_webfinger(document: str) -> Dict:
     try:
         data = json.loads(document)
         if isinstance(data, dict):
-            links = data.get('links', [])
-            for link in links:
-                if isinstance(link, dict) and link.get('rel') == 'http://microformats.org/profile/hcard':
-                    hcard_url = link.get('href')
-                    if hcard_url:
-                        return {'hcard_url': hcard_url}
+            if 'links' in data:
+                for link in data['links']:
+                    if isinstance(link, dict) and 'rel' in link and link['rel'] == 'http://microformats.org/profile/hcard':
+                        return {'hcard_url': link.get('href')}
+            elif 'subject' in data:
+                # Handle XRD format (old format)
+                for link in data.get('links', []):
+                    if isinstance(link, dict) and link.get('rel') == 'http://microformats.org/profile/hcard':
+                        return {'hcard_url': link.get('href')}
     except json.JSONDecodeError:
-        # Handle XRD format (old format) if necessary
+        # Handle non-JSON format (e.g., XRD format)
         pass
-    
+
     return {}

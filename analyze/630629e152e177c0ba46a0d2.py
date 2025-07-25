@@ -19,14 +19,17 @@ def retrieve_and_parse_diaspora_webfinger(handle):
         # 解析 XML 文档
         root = etree.fromstring(response.content)
         
-        # 提取所需信息并构建字典
+        # 提取所需信息
         result = {}
-        for link in root.findall("{http://webfinger.net/rel/profile-page}link"):
-            result[link.get("rel")] = link.get("href")
+        for link in root.findall("{http://webfinger.net/webfinger}link"):
+            rel = link.get("rel")
+            href = link.get("href")
+            if rel and href:
+                result[rel] = href
         
         return result
     
-    except requests.exceptions.RequestException as e:
+    except requests.RequestException as e:
         print(f"Error retrieving WebFinger document: {e}")
         return {}
     except etree.XMLSyntaxError as e:

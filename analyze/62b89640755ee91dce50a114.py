@@ -4,13 +4,9 @@ def tzname_in_python2(namefunc):
 
     在 Python 3 中，tzname() API 发生了变化。它曾经返回字节字符串，但在 Python 3 中被更改为返回 Unicode 字符串。
     """
-    import sys
-    if sys.version_info[0] == 2:
-        def wrapper(*args, **kwargs):
-            result = namefunc(*args, **kwargs)
-            if isinstance(result, unicode):
-                return result.encode('utf-8')
-            return result
-        return wrapper
-    else:
-        return namefunc
+    def wrapper(*args, **kwargs):
+        result = namefunc(*args, **kwargs)
+        if isinstance(result, unicode):
+            return result.encode('utf-8')
+        return result
+    return wrapper

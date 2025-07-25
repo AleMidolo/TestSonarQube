@@ -10,20 +10,19 @@ def difference(d1, d2, level=-1):
     .. 版本新增:: 0.5  
       添加了关键字参数 *level*。
     """
-    def _diff(d1, d2, current_level):
-        if current_level == 0:
-            return {}
-        
-        diff_dict = {}
-        for key in d1:
-            if key not in d2:
-                diff_dict[key] = d1[key]
-            elif isinstance(d1[key], dict) and isinstance(d2[key], dict):
-                nested_diff = _diff(d1[key], d2[key], current_level - 1 if current_level != -1 else -1)
-                if nested_diff:
-                    diff_dict[key] = nested_diff
-            elif d1[key] != d2[key]:
-                diff_dict[key] = d1[key]
-        return diff_dict
+    if not isinstance(d1, dict) or not isinstance(d2, dict):
+        return d1 if d1 != d2 else {}
 
-    return _diff(d1, d2, level)
+    diff = {}
+    for key in d1:
+        if key not in d2:
+            diff[key] = d1[key]
+        else:
+            if level != 0:
+                if isinstance(d1[key], dict) and isinstance(d2[key], dict):
+                    sub_diff = difference(d1[key], d2[key], level - 1 if level > 0 else -1)
+                    if sub_diff:
+                        diff[key] = sub_diff
+                elif d1[key] != d2[key]:
+                    diff[key] = d1[key]
+    return diff
