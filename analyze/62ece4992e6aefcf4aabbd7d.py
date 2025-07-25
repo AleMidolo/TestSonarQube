@@ -8,24 +8,20 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     module_name = func.__module__
     func_name = func.__name__
 
-    # Preparar el entorno
+    # Construir el comando Python a ejecutar
+    cmd = [sys.executable, '-c',
+           f'import {module_name}; {module_name}.{func_name}()']
+    
+    # Agregar argumentos adicionales
+    cmd.extend(args)
+
+    # Preparar environment
     env = os.environ.copy()
     if extra_env:
         env.update(extra_env)
 
-    # Construir el comando Python para ejecutar la función
-    cmd = [
-        sys.executable,
-        '-c',
-        f'import {module_name}; {module_name}.{func_name}()'
-    ]
-
-    # Agregar argumentos adicionales
-    if args:
-        cmd.extend(args)
-
+    # Ejecutar el subproceso
     try:
-        # Ejecutar el subproceso
         result = subprocess.run(
             cmd,
             env=env,
@@ -36,6 +32,9 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
         )
         return result
     except subprocess.TimeoutExpired as e:
-        raise TimeoutError(f"La función {func_name} excedió el tiempo límite de {timeout} segundos")
+        print(f"Proceso terminado por timeout después de {timeout} segundos")
+        raise e
     except subprocess.CalledProcessError as e:
-        raise RuntimeError(f"Error al ejecutar {func_name}: {e.stderr}")
+        print(f"Error en el subproceso: {e}")
+        print(f"Salida de error: {e.stderr}")
+        raise e

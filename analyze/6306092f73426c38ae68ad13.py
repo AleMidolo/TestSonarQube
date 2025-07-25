@@ -33,7 +33,7 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
         for arg, value in ansible_args.items():
             if value is True:
                 cmd.append(f'--{arg}')
-            elif value is not None:
+            elif value is not False:
                 cmd.extend([f'--{arg}', str(value)])
                 
     # Ejecutar el comando

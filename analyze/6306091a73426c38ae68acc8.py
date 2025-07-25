@@ -14,7 +14,7 @@ def list_of_file_names(settings_dirs, spec_option):
             file_names.append(f"{directory}/{spec_option}.ini")
         # If spec_option is a list/tuple
         elif isinstance(spec_option, (list, tuple)):
-            # Add each option as a separate file name
+            # Add file names for each option in spec_option
             for option in spec_option:
                 file_names.append(f"{directory}/{option}.ini")
                 

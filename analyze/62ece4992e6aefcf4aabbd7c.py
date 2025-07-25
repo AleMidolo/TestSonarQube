@@ -10,5 +10,5 @@ def oneline(script, separator=" && "):
     # Dividir el script en líneas y eliminar líneas vacías
     lines = [line.strip() for line in script.split('\n') if line.strip()]
     
-    # Unir las líneas con el separador
+    # Unir las líneas usando el separador
     return separator.join(lines)

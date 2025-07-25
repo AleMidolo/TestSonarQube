@@ -12,8 +12,8 @@ def minimalBases(classes):
     minimal = []
     for i, cls in enumerate(unique_classes):
         is_ancestor = False
-        for other in unique_classes[i+1:]:
-            if issubclass(other, cls):
+        for other_cls in unique_classes[i+1:]:
+            if issubclass(other_cls, cls):
                 is_ancestor = True
                 break
         if not is_ancestor:

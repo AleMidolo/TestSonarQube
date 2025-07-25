@@ -67,23 +67,18 @@ def xargs(
 
     chunks = _chunk_args(varargs, _max_length)
     
-    if target_concurrency > 1:
-        with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
-            results = list(executor.map(_run_chunk, chunks))
-        
-        # Return the first non-zero exit code, or 0 if all succeeded
-        for retcode, _ in results:
-            if retcode != 0:
-                return retcode, b''.join(output for _, output in results)
-        return 0, b''.join(output for _, output in results)
-    
-    else:
-        # Sequential execution
-        combined_output = b''
+    if target_concurrency <= 1:
         for chunk in chunks:
             retcode, output = _run_chunk(chunk)
-            combined_output += output
             if retcode != 0:
-                return retcode, combined_output
-                
-        return 0, combined_output
+                return retcode, output
+        return 0, b''
+    
+    with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
+        results = list(executor.map(_run_chunk, chunks))
+        
+    for retcode, output in results:
+        if retcode != 0:
+            return retcode, output
+            
+    return 0, b''

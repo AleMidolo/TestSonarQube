@@ -1,46 +1,52 @@
 def verifyObject(iface, candidate, tentative=False):
-    from zope.interface.exceptions import Invalid, DoesNotImplement, BrokenImplementation, BrokenMethodImplementation
+    from zope.interface.exceptions import Invalid, DoesNotImplement
+    from zope.interface.verify import verifyClass
     from zope.interface.interface import Method
     
     errors = []
 
-    # Verify interface is provided
+    # Check if candidate claims to provide interface
     if not tentative and not iface.providedBy(candidate):
         errors.append(DoesNotImplement(iface))
 
-    # Verify methods and attributes
+    # Get all attributes defined by the interface
     for name, desc in iface.namesAndDescriptions(1):
-        try:
-            attr = getattr(candidate, name)
-        except AttributeError:
-            errors.append(BrokenImplementation(iface, name))
+        # Skip if attribute doesn't exist
+        if not hasattr(candidate, name):
+            errors.append(Invalid(f"The object is missing attribute '{name}' from interface {iface.__name__}"))
             continue
 
-        # Verify methods
+        attr = getattr(candidate, name)
+        
+        # If it's a method, verify the signature
         if isinstance(desc, Method):
+            # Get method object
             if not callable(attr):
-                errors.append(BrokenMethodImplementation(name, "Not callable"))
+                errors.append(Invalid(f"'{name}' is not callable but interface {iface.__name__} defines it as a method"))
                 continue
-                
+
             # Verify method signature
             try:
                 from inspect import signature
                 method_sig = signature(attr)
                 interface_sig = signature(desc)
                 
-                if len(method_sig.parameters) != len(interface_sig.parameters):
-                    errors.append(BrokenMethodImplementation(
-                        name,
-                        f"Incorrect number of arguments: expected {len(interface_sig.parameters)}, got {len(method_sig.parameters)}"
+                # Compare parameters
+                if str(method_sig) != str(interface_sig):
+                    errors.append(Invalid(
+                        f"Method '{name}' signature {method_sig} does not match interface signature {interface_sig}"
                     ))
             except ValueError:
-                # Can't verify signature, skip
+                # Can't get signature, skip verification
                 pass
 
-    # Handle errors
-    if len(errors) == 1:
-        raise errors[0]
-    elif errors:
-        raise Invalid(errors)
+    # If we have errors, raise them
+    if errors:
+        if len(errors) == 1:
+            raise errors[0]
+        raise Invalid(
+            f"The object failed to implement interface {iface.__name__}: " + 
+            "; ".join(str(e) for e in errors)
+        )
 
     return True

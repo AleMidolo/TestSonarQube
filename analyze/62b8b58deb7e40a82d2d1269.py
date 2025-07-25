@@ -12,8 +12,7 @@ def directlyProvidedBy(object):  # pylint:disable=redefined-builtin
     # Si es así, es como tener solo una base que eliminamos para excluir 
     # declaraciones proporcionadas por la clase
     spec = provides
-    bases = spec.__bases__
-    if len(bases) == 1 and bases[0] is getattr(object, "__implemented__", None):
+    if spec.isImplementation():
         return _empty
         
     return provides

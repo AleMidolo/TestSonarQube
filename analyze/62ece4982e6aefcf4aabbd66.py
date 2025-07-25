@@ -5,9 +5,9 @@ def was_processed(processed, path_name, verbose):
     # Verificar si la ruta ya está en el conjunto
     if abs_path in processed:
         if verbose:
-            print(f"Advertencia: {path_name} ya fue procesado anteriormente")
+            print(f"Warning: {path_name} already processed")
         return True
         
-    # Si no está en el conjunto, agregarlo
+    # Si no está en el conjunto, agregarla y devolver False
     processed.add(abs_path)
     return False

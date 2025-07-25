@@ -41,25 +41,25 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
                 
     # Manejar zona horaria
     if not ignoretz:
-        if res.tzname and tzinfos:
-            if callable(tzinfos):
-                tz = tzinfos(res.tzname, res.tzoffset)
+        if res.tzinfo is None and tzinfos is not None:
+            # Intentar obtener tzinfo del diccionario/función tzinfos
+            if isinstance(tzinfos, dict):
+                if res.tzname in tzinfos:
+                    tzinfo = tzinfos[res.tzname]
+                    if isinstance(tzinfo, int):
+                        from datetime import timedelta
+                        tzinfo = self.tzoffset(res.tzname, timedelta(seconds=tzinfo))
+                    res = res.replace(tzinfo=tzinfo)
             else:
-                tz = tzinfos.get(res.tzname)
-            if tz is not None:
-                res = res.replace(tzinfo=tz)
-                
-    elif ignoretz:
+                # tzinfos es una función
+                try:
+                    res = res.replace(tzinfo=tzinfos(res.tzname, res.tzoffset))
+                except:
+                    pass
+    else:
         res = res.replace(tzinfo=None)
         
-    # Validar resultado
-    try:
-        res = datetime(res.year, res.month, res.day,
-                      res.hour, res.minute, res.second,
-                      res.microsecond, res.tzinfo)
-    except ValueError as e:
-        raise ParserError(str(e))
-        
+    # Devolver resultado
     if kwargs.get('fuzzy_with_tokens', False):
         return res, tokens
     else:

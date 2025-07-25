@@ -11,9 +11,8 @@ def lru_cache(maxsize=128, typed=False):
             # Crear clave de cache
             key = str(args) + str(kwargs)
             if typed:
-                # Si typed=True, incluir los tipos en la clave
-                key += str(tuple(type(arg) for arg in args))
-                key += str(tuple(type(val) for val in kwargs.values()))
+                key += str([type(arg) for arg in args])
+                key += str([type(val) for val in kwargs.values()])
                 
             # Verificar si el resultado está en cache
             if key in cache:
@@ -25,21 +24,21 @@ def lru_cache(maxsize=128, typed=False):
             result = func(*args, **kwargs)
             
             # Agregar a cache
-            cache[key] = result
-            
-            # Si excede maxsize, eliminar el elemento menos usado
-            if len(cache) > maxsize:
-                cache.popitem(last=False)
+            if maxsize > 0:
+                if len(cache) >= maxsize:
+                    # Eliminar el elemento menos recientemente usado
+                    cache.popitem(last=False)
+                cache[key] = result
                 
             return result
             
-        # Agregar métodos para acceder a la cache
-        wrapper.cache_info = lambda: cache
+        # Agregar métodos auxiliares
+        wrapper.cache_info = lambda: f"CacheInfo(maxsize={maxsize}, currsize={len(cache)})"
         wrapper.cache_clear = lambda: cache.clear()
         
         return wrapper
         
-    # Si se usa sin paréntesis
+    # Si se usa como @lru_cache sin paréntesis
     if callable(maxsize):
         func, maxsize = maxsize, 128
         return decorator(func)

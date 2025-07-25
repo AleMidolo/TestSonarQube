@@ -19,5 +19,7 @@ def protocol_handlers(cls, protocol_version=None):
         raise TypeError("La versión del protocolo debe ser una tupla")
 
     # Si se especifica versión, devolver solo el manejador para esa versión
-    # si existe, o un diccionario vacío si no existe
-    return {protocol_version: handlers[protocol_version]} if protocol_version in handlers else {}
+    # o un diccionario vacío si la versión no está soportada
+    if protocol_version in handlers:
+        return {protocol_version: handlers[protocol_version]}
+    return {}

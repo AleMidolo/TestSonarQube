@@ -13,11 +13,12 @@ def validate_as_prior_version(self, prior):
         if product_id not in self.quantities:
             raise ValueError(f"Producto {product_id} no existe en inventario actual")
         if self.quantities[product_id] < prior_qty:
-            raise ValueError(f"Cantidad actual de {product_id} es menor que en versión previa")
+            raise ValueError(f"Cantidad de {product_id} es menor que en versión previa")
 
-    # Verificar que los IDs de productos sean consistentes
-    if not set(prior.products.keys()).issubset(set(self.products.keys())):
-        raise ValueError("Los productos del inventario previo deben existir en el actual")
+    # Verificar que los precios sean consistentes
+    for product_id, prior_price in prior.prices.items():
+        if product_id in self.prices:
+            if self.prices[product_id] < prior_price:
+                raise ValueError(f"Precio de {product_id} es menor que en versión previa")
 
-    # Si pasa todas las validaciones, retornar True
     return True

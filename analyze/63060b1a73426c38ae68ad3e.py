@@ -17,9 +17,9 @@ def get_plugin_spec_flatten_dict(plugin_dir):
                 flattened[new_key] = value
                 
     try:
-        # Intenta leer el archivo spec.json del directorio del plugin
-        import json
+        # Intentar leer el archivo spec.json del directorio del plugin
         import os
+        import json
         
         spec_path = os.path.join(plugin_dir, 'spec.json')
         
@@ -29,7 +29,7 @@ def get_plugin_spec_flatten_dict(plugin_dir):
         with open(spec_path, 'r') as f:
             spec = json.load(f)
             
-        # Aplana el diccionario recursivamente
+        # Aplanar el diccionario recursivamente
         flatten_dict(spec)
         
         return flattened

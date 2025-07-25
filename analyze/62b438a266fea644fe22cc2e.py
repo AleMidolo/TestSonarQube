@@ -11,12 +11,12 @@ def parse_arguments(*unparsed_arguments):
     subparsers = parser.add_subparsers(dest='command')
     
     # Initialize dictionary to store parsed arguments
-    parsed_args = {'global': None}
+    parsed_args = {}
     
     # If no arguments provided, show help and exit
     if len(unparsed_arguments) == 0:
         parser.print_help()
-        return parsed_args
+        return {}
         
     try:
         # Parse the arguments
@@ -25,7 +25,7 @@ def parse_arguments(*unparsed_arguments):
         # Store global arguments
         parsed_args['global'] = args
         
-        # If a subcommand was used, store its arguments under its name
+        # If a subcommand was used, store its arguments separately
         if args.command:
             parsed_args[args.command] = args
             
@@ -33,4 +33,4 @@ def parse_arguments(*unparsed_arguments):
         
     except Exception as e:
         parser.print_help()
-        return parsed_args
+        return {}

@@ -23,24 +23,18 @@ def fromutc(self, dt):
     # Calcular el nuevo datetime
     local_dt = dt + (local_offset - utc_offset)
     
-    # Verificar si estamos en un periodo ambiguo (pliegue)
+    # Verificar si el datetime es ambiguo (está en un "pliegue")
     fold = 0
-    if self._fold_status(local_dt):
-        # Si hay ambigüedad, verificamos si es la primera ocurrencia
-        prev_offset = self.utcoffset(local_dt.replace(fold=0))
-        next_offset = self.utcoffset(local_dt.replace(fold=1))
+    if self._is_ambiguous(local_dt):
+        # Verificar si es la primera ocurrencia
+        earlier_offset = self.utcoffset(local_dt.replace(fold=0))
+        later_offset = self.utcoffset(local_dt.replace(fold=1))
         
-        if prev_offset > next_offset:
-            # Estamos en un periodo de transición DST->STD
-            fold = utc_ts >= (local_dt.replace(fold=0) - prev_offset).timestamp()
+        if earlier_offset > later_offset:
+            # Si estamos en la primera ocurrencia
+            fold = 0
+        else:
+            # Si estamos en la segunda ocurrencia
+            fold = 1
             
     return local_dt.replace(tzinfo=self, fold=fold)
-
-def _fold_status(self, dt):
-    """Helper method para detectar si un datetime está en un periodo ambiguo"""
-    try:
-        prev_offset = self.utcoffset(dt.replace(fold=0))
-        next_offset = self.utcoffset(dt.replace(fold=1))
-        return prev_offset != next_offset
-    except:
-        return False

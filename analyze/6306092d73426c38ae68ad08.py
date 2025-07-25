@@ -31,6 +31,6 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
                 
             # Si la condición se cumple, agregar el argumento a la lista
             if condition_met:
-                conditionally_required.append(option['name'])
+                conditionally_required.append(option.get('name', ''))
                 
     return conditionally_required

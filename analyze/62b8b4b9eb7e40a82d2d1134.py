@@ -7,5 +7,5 @@ def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
     """
     attrs = {}
     for name, attr in self.namesAndDescriptions_impl(all):
-        attrs[name] = attr.getDoc()
+        attrs[name] = attr
     return attrs

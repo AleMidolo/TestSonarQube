@@ -13,10 +13,11 @@ def amend_bzparams(self, params, bug_ids):
             
     if 'include_fields' not in params:
         params['include_fields'] = ['id', 'summary', 'status', 'resolution', 
-                                  'creator', 'assigned_to', 'creation_time',
-                                  'last_change_time', 'component', 'product']
+                                  'product', 'component', 'version', 'platform',
+                                  'whiteboard', 'keywords', 'assigned_to',
+                                  'creator', 'creation_time', 'last_change_time']
                                   
     if 'exclude_fields' not in params:
-        params['exclude_fields'] = []
+        params['exclude_fields'] = ['description', 'cc', 'comments', 'history']
         
     return params
