@@ -1,30 +1,21 @@
 def is_fill_request_seq(seq):
-    # Check if seq is None or empty
-    if not seq:
-        return False
-        
-    # Import needed for isinstance check
-    from typing import Sequence
-    from fillrequest import FillRequest
-    
-    # If seq is a single FillRequest, return True
+    """
+    Verifica se *seq* può essere convertito in un oggetto di tipo FillRequestSeq.
+
+    Restituisce `True` solo se *seq* è un elemento di tipo FillRequest  
+    o contiene almeno un elemento di questo tipo,  
+    e non è una sequenza di tipo Source.
+    """
+    from collections.abc import Sequence
+    from typing import Type
+
+    # Supponiamo che FillRequest e Source siano classi definite altrove
+    FillRequest = Type('FillRequest')  # Placeholder per la classe FillRequest
+    Source = Type('Source')  # Placeholder per la classe Source
+
     if isinstance(seq, FillRequest):
         return True
-        
-    # Check if seq is a sequence and not a string (which is also a sequence)
-    if not isinstance(seq, Sequence) or isinstance(seq, str):
+    elif isinstance(seq, Sequence) and not isinstance(seq, Source):
+        return any(isinstance(item, FillRequest) for item in seq)
+    else:
         return False
-        
-    # Check if seq has at least one FillRequest element
-    has_fill_request = False
-    for item in seq:
-        if isinstance(item, FillRequest):
-            has_fill_request = True
-            break
-            
-    # Check if seq is not a Source sequence
-    from source import Source
-    is_source_seq = isinstance(seq, Source) or (hasattr(seq, '__iter__') and all(isinstance(x, Source) for x in seq))
-    
-    # Return True if has at least one FillRequest and is not a Source sequence
-    return has_fill_request and not is_source_seq

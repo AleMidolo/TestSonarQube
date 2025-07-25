@@ -1,8 +1,11 @@
-def gaussian(x):
+import math
+
+def gaussiana(x):
     """
-    गौसियन 0.1 के सिग्मा के साथ 0.2 के आसपास केन्द्रित है।
+    Questa funzione calcola il valore della distribuzione gaussiana per un dato `x`, con una media `u` pari a 0.2 e una deviazione standard `sigma` pari a 0.1.
     """
-    import math
-    mu = 0.2  # mean
-    sigma = 0.1  # standard deviation
-    return (1.0/(sigma*math.sqrt(2*math.pi))) * math.exp(-(x-mu)**2/(2*sigma**2))
+    u = 0.2
+    sigma = 0.1
+    coefficient = 1 / (sigma * math.sqrt(2 * math.pi))
+    exponent = -((x - u) ** 2) / (2 * sigma ** 2)
+    return coefficient * math.exp(exponent)

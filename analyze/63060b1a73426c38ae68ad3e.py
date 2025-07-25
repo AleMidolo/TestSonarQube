@@ -1,36 +1,39 @@
+import os
+import json
+
 def get_plugin_spec_flatten_dict(plugin_dir):
     """
-    प्लगइन स्पेसिफिकेशन से एक फ्लैट डिक्शनरी बनाता है।
+    Crea un dizionario non annidato a partire dalle specifiche del plugin.
 
-    :param plugin_dir: प्लगइन की डायरेक्टरी का पथ 
-    :return: एक फ्लैट डिक्शनरी जो प्लगइन की प्रॉपर्टीज़ को समाहित करती है
+    :param plugin_dir: Un percorso alla directory del plugin  
+    :return: Un dizionario piatto che contiene le proprietà del plugin
     """
-    flattened_dict = {}
+    flat_dict = {}
     
-    def flatten_dict(d, parent_key=''):
-        for key, value in d.items():
-            new_key = f"{parent_key}.{key}" if parent_key else key
-            
-            if isinstance(value, dict):
-                flatten_dict(value, new_key)
+    # Check if the directory exists
+    if not os.path.isdir(plugin_dir):
+        raise FileNotFoundError(f"The directory {plugin_dir} does not exist.")
+    
+    # Look for a spec file (e.g., plugin_spec.json) in the plugin directory
+    spec_file = os.path.join(plugin_dir, "plugin_spec.json")
+    if not os.path.isfile(spec_file):
+        raise FileNotFoundError(f"No plugin specification file found in {plugin_dir}.")
+    
+    # Load the JSON file
+    with open(spec_file, 'r') as file:
+        spec_data = json.load(file)
+    
+    # Flatten the dictionary
+    def flatten_dict(d, parent_key='', sep='.'):
+        items = []
+        for k, v in d.items():
+            new_key = f"{parent_key}{sep}{k}" if parent_key else k
+            if isinstance(v, dict):
+                items.extend(flatten_dict(v, new_key, sep=sep).items())
             else:
-                flattened_dict[new_key] = value
-                
-    try:
-        # Try to read plugin specification file
-        spec_file = f"{plugin_dir}/plugin.json"
-        with open(spec_file, 'r') as f:
-            import json
-            plugin_spec = json.load(f)
-            
-        # Flatten the dictionary
-        flatten_dict(plugin_spec)
-        
-    except FileNotFoundError:
-        print(f"Plugin specification file not found in {plugin_dir}")
-    except json.JSONDecodeError:
-        print(f"Invalid JSON format in plugin specification file")
-    except Exception as e:
-        print(f"Error processing plugin specification: {str(e)}")
-        
-    return flattened_dict
+                items.append((new_key, v))
+        return dict(items)
+    
+    flat_dict = flatten_dict(spec_data)
+    
+    return flat_dict

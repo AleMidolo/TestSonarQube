@@ -1,10 +1,10 @@
 def _c_optimizations_available():
     """
-    C ऑप्टिमाइज़ेशन मॉड्यूल लौटाएं, यदि उपलब्ध हो, अन्यथा एक झूठा मान।  
+    Restituisce il modulo di ottimizzazione C, se disponibile, altrimenti un valore falso.
 
-    यदि ऑप्टिमाइज़ेशन आवश्यक हैं लेकिन उपलब्ध नहीं हैं, तो यह `ImportError` उत्पन्न करता है।  
+    Se le ottimizzazioni sono richieste ma non disponibili, viene sollevata un'eccezione `ImportError`.
 
-    यह यह नहीं बताता कि इन्हें उपयोग करना चाहिए या नहीं।
+    Questo non specifica se le ottimizzazioni debbano essere utilizzate o meno.
     """
     try:
         import _c_optimizations

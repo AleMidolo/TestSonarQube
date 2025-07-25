@@ -1,36 +1,32 @@
+import subprocess
+
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    दिए गए कमांड(s) को कॉल करें।
-    """
-    import subprocess
-    import sys
+    Esegui il/i comando/i fornito/i.
     
-    if isinstance(commands, str):
-        commands = [commands]
-        
-    for cmd in commands:
-        cmd_list = [cmd]
-        if args:
-            if isinstance(args, str):
-                cmd_list.append(args)
-            else:
-                cmd_list.extend(args)
-                
-        if verbose:
-            print(' '.join(cmd_list))
-            
-        stderr = subprocess.DEVNULL if hide_stderr else None
-            
-        try:
-            subprocess.check_call(
-                cmd_list,
-                cwd=cwd,
-                stderr=stderr,
-                env=env
-            )
-        except subprocess.CalledProcessError as e:
-            print(f"Command failed with return code {e.returncode}")
-            sys.exit(1)
-        except FileNotFoundError:
-            print(f"Command not found: {cmd}")
-            sys.exit(1)
+    :param commands: Lista di comandi da eseguire.
+    :param args: Lista di argomenti da passare ai comandi.
+    :param cwd: Directory di lavoro corrente (opzionale).
+    :param verbose: Se True, stampa l'output del comando (opzionale).
+    :param hide_stderr: Se True, nasconde l'output di errore (opzionale).
+    :param env: Dizionario di variabili d'ambiente (opzionale).
+    :return: Tupla contenente l'output del comando e il codice di uscita.
+    """
+    command = commands + args
+    stderr = subprocess.PIPE if hide_stderr else None
+    
+    process = subprocess.Popen(
+        command,
+        cwd=cwd,
+        stdout=subprocess.PIPE,
+        stderr=stderr,
+        env=env,
+        text=True
+    )
+    
+    stdout, stderr = process.communicate()
+    
+    if verbose:
+        print(stdout)
+    
+    return stdout, process.returncode

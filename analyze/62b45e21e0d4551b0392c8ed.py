@@ -1,37 +1,37 @@
+import os
+
 def find_path_type(path):
-    import os
-    
-    # Check if path exists
+    """
+    Restituisce una stringa che indica il tipo di elemento presente nel percorso specificato.
+
+    Valori restituiti:
+        'root' - sembra essere una Radice di Archiviazione OCFL (OCFL Storage Root)
+        'object' - sembra essere un Oggetto OCFL (OCFL Object)
+        'file' - un file, potrebbe essere un inventario
+        altra stringa - descrive un errore o una spiegazione del problema
+
+    Si basa esclusivamente sui file "0=*" Namaste per determinare il tipo di directory.
+    """
     if not os.path.exists(path):
-        return "Path does not exist"
-        
-    # If it's a file, return 'file'
+        return "Il percorso specificato non esiste."
+    
     if os.path.isfile(path):
         return "file"
-        
-    # If it's not a directory, return error
-    if not os.path.isdir(path):
-        return "Path is neither file nor directory"
-        
-    # Look for namaste files in directory
-    files = os.listdir(path)
-    namaste_files = [f for f in files if f.startswith("0=")]
     
-    if not namaste_files:
-        return "No namaste files found"
+    if os.path.isdir(path):
+        namaste_files = [f for f in os.listdir(path) if f.startswith("0=")]
+        if not namaste_files:
+            return "La directory non contiene file Namaste."
         
-    # Check content of first namaste file
-    namaste_file = os.path.join(path, namaste_files[0])
-    try:
-        with open(namaste_file, 'r') as f:
+        namaste_file = namaste_files[0]
+        with open(os.path.join(path, namaste_file), 'r') as f:
             content = f.read().strip()
-            
-        if content == "ocfl_object_1.0":
-            return "object"
-        elif content == "ocfl_1.0":
+        
+        if content == "ocfl_1.0":
             return "root"
+        elif content.startswith("ocfl_object_"):
+            return "object"
         else:
-            return f"Unknown namaste file content: {content}"
-            
-    except Exception as e:
-        return f"Error reading namaste file: {str(e)}"
+            return f"Contenuto del file Namaste non riconosciuto: {content}"
+    
+    return "Tipo di percorso non riconosciuto."

@@ -1,24 +1,10 @@
 def add_rendition(self, lang, file_path):
-    """
-    Adds a rendition file path for a specific language to the renditions dictionary.
+    """Add a new rendition of the document in a specific language.
     
     Args:
-        lang (str): Language code for the rendition (e.g. 'en', 'es')
-        file_path (str): Path to the rendition file
-        
-    Returns:
-        None
-        
-    Example:
-    {
-        "original": "artigo02.pdf",
-        "en": "artigo02-en.pdf",
-    }
+        lang (str): The language code for the rendition (e.g., 'en' for English).
+        file_path (str): The file path to the rendition document.
     """
     if not hasattr(self, 'renditions'):
         self.renditions = {}
-        
-    if lang == 'original':
-        self.renditions['original'] = file_path
-    else:
-        self.renditions[lang] = file_path
+    self.renditions[lang] = file_path

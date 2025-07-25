@@ -1,5 +1,5 @@
 def _c_optimizations_ignored():
     """
-    `_c_optimizations_required` का विपरीत।
+    L'opposto di `_c_optimizations_required`.
     """
-    return False
+    return not _c_optimizations_required()

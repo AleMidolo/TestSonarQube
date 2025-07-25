@@ -1,32 +1,33 @@
 def size_to_bytes(size: str) -> int:
-    units = {
-        'K': 1000,
-        'M': 1000000,
-        'G': 1000000000,
-        'T': 1000000000000,
-        'P': 1000000000000000,
-        'E': 1000000000000000000,
-        'Ki': 1024,
-        'Mi': 1048576,
-        'Gi': 1073741824,
-        'Ti': 1099511627776,
-        'Pi': 1125899906842624,
-        'Ei': 1152921504606846976
-    }
+    """
+    Convertire una dimensione di file leggibile dall'uomo in byte.
 
-    size = size.strip()
-    
-    # Handle case with no unit (just bytes)
-    if size.isdigit():
+    Il valore risultante è un'approssimazione poiché il valore di input è nella maggior parte dei casi arrotondato.
+
+    Args:
+        size: Una stringa che rappresenta una dimensione di file leggibile dall'uomo (es: '500K')
+
+    Returns:
+        Una rappresentazione decimale della dimensione del file
+
+    Esempi::
+
+        >>> size_to_bytes("500")
+        500
+        >>> size_to_bytes("1K")
+        1000
+    """
+    size = size.strip().upper()
+    if size[-1] in ['K', 'M', 'G', 'T']:
+        num = float(size[:-1])
+        unit = size[-1]
+        if unit == 'K':
+            return int(num * 1000)
+        elif unit == 'M':
+            return int(num * 1000 ** 2)
+        elif unit == 'G':
+            return int(num * 1000 ** 3)
+        elif unit == 'T':
+            return int(num * 1000 ** 4)
+    else:
         return int(size)
-        
-    # Extract numeric value and unit
-    for unit in sorted(units.keys(), key=len, reverse=True):
-        if size.endswith(unit):
-            try:
-                number = float(size[:-len(unit)])
-                return int(number * units[unit])
-            except ValueError:
-                raise ValueError(f"Invalid size format: {size}")
-                
-    raise ValueError(f"Invalid size format: {size}")

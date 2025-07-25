@@ -1,105 +1,75 @@
+from datetime import datetime
+from dateutil import parser
+
 def isoparse(self, dt_str):
-    from datetime import datetime, timedelta, date
-    from dateutil.tz import tzutc, tzoffset
-    import re
+    """
+    Analizza una stringa datetime in formato ISO-8601 in un oggetto :class:`datetime.datetime`.
 
-    # Regular expressions for parsing
-    DATE_PATTERNS = {
-        'basic': r'(?P<year>\d{4})(?P<month>\d{2})(?P<day>\d{2})',
-        'extended': r'(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})',
-        'basic_week': r'(?P<year>\d{4})W(?P<week>\d{2})(?P<weekday>\d)?',
-        'extended_week': r'(?P<year>\d{4})-W(?P<week>\d{2})(?:-(?P<weekday>\d))?',
-        'year_month_basic': r'(?P<year>\d{4})(?P<month>\d{2})',
-        'year_month_extended': r'(?P<year>\d{4})-(?P<month>\d{2})',
-        'year': r'(?P<year>\d{4})'
-    }
+    Una stringa datetime in formato ISO-8601 consiste in una parte relativa alla data, seguita
+    opzionalmente da una parte relativa all'ora. Le due parti sono separate da un singolo carattere
+    separatore, che è ``T`` nello standard ufficiale. I formati di data incompleti (come ``YYYY-MM``)
+    *non* possono essere combinati con una parte relativa all'ora.
 
-    TIME_PATTERN = r'(?P<hour>[0-2]\d)(?::?(?P<minute>[0-5]\d)(?::?(?P<second>[0-5]\d)(?:[.,](?P<microsecond>\d{1,6}))?)?)?' 
-    
-    TIMEZONE_PATTERNS = {
-        'Z': r'Z',
-        'offset': r'(?P<tzoffset_sign>[+-])(?P<tzoffset_hour>\d{2})(?::?(?P<tzoffset_minute>\d{2}))?'
-    }
+    I formati di data supportati sono:
 
-    dt_str = dt_str.strip()
+    Comuni:
 
-    # Split into date and time parts
-    if 'T' in dt_str:
-        date_str, time_str = dt_str.split('T', 1)
-    else:
-        date_str = dt_str
-        time_str = ''
+    - ``YYYY``
+    - ``YYYY-MM`` o ``YYYYMM``
+    - ``YYYY-MM-DD`` o ``YYYYMMDD``
 
-    # Parse date
-    date_match = None
-    for pattern in DATE_PATTERNS.values():
-        match = re.match(pattern + '$', date_str)
-        if match:
-            date_match = match
-            break
+    Non comuni:
 
-    if not date_match:
-        raise ValueError("Invalid ISO format date")
+    - ``YYYY-Www`` o ``YYYYWww`` - Settimana ISO (il giorno predefinito è 0)
+    - ``YYYY-Www-D`` o ``YYYYWwwD`` - Settimana ISO e giorno
 
-    date_parts = date_match.groupdict()
-    
-    # Handle different date formats
-    if 'week' in date_parts:
-        # ISO week date
-        year = int(date_parts['year'])
-        week = int(date_parts['week'])
-        weekday = int(date_parts.get('weekday', '1'))
-        dt = datetime.strptime(f"{year}-{week}-{weekday}", "%Y-%W-%w")
-    else:
-        # Calendar date
-        year = int(date_parts['year'])
-        month = int(date_parts.get('month', '1'))
-        day = int(date_parts.get('day', '1'))
-        dt = datetime(year, month, day)
+    La numerazione delle settimane e dei giorni ISO segue la stessa logica di
+    :func:`datetime.date.isocalendar`.
 
-    # Parse time if present
-    if time_str:
-        time_parts = re.match(TIME_PATTERN, time_str.split('+')[0].split('-')[0].split('Z')[0])
-        if not time_parts:
-            raise ValueError("Invalid ISO format time")
-            
-        time_dict = time_parts.groupdict()
-        
-        hour = int(time_dict.get('hour', '0'))
-        if hour == 24:
-            hour = 0
-            dt = dt + timedelta(days=1)
-            
-        minute = int(time_dict.get('minute', '0'))
-        second = int(time_dict.get('second', '0'))
-        
-        microsecond = time_dict.get('microsecond')
-        if microsecond:
-            microsecond = int(microsecond.ljust(6, '0'))
-        else:
-            microsecond = 0
+    I formati di ora supportati sono:
 
-        dt = dt.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
+    - ``hh``
+    - ``hh:mm`` o ``hhmm``
+    - ``hh:mm:ss`` o ``hhmmss``
+    - ``hh:mm:ss.ssssss`` (fino a 6 cifre per i sotto-secondi)
 
-        # Parse timezone
-        tz = None
-        if 'Z' in time_str:
-            tz = tzutc()
-        else:
-            offset_match = re.search(TIMEZONE_PATTERNS['offset'], time_str)
-            if offset_match:
-                offset_dict = offset_match.groupdict()
-                offset_sign = 1 if offset_dict['tzoffset_sign'] == '+' else -1
-                offset_hour = int(offset_dict['tzoffset_hour'])
-                offset_minute = int(offset_dict.get('tzoffset_minute', '0'))
-                offset = offset_sign * timedelta(hours=offset_hour, minutes=offset_minute)
-                
-                if offset.total_seconds() == 0:
-                    tz = tzutc()
-                else:
-                    tz = tzoffset(None, offset_sign * (offset_hour * 3600 + offset_minute * 60))
+    La mezzanotte è un caso speciale per `hh`, poiché lo standard supporta sia
+    00:00 che 24:00 come rappresentazione. Il separatore decimale può essere
+    sia un punto che una virgola.
 
-        if tz is not None:
-            dt = dt.replace(tzinfo=tz)
+    .. attenzione::
 
-    return dt
+        Il supporto per componenti frazionari diversi dai secondi fa parte dello
+        standard ISO-8601, ma non è attualmente implementato in questo parser.
+
+    I formati di offset del fuso orario supportati sono:
+
+    - `Z` (UTC)
+    - `±HH:MM`
+    - `±HHMM`
+    - `±HH`
+
+    Gli offset saranno rappresentati come oggetti :class:`dateutil.tz.tzoffset`,
+    con l'eccezione di UTC, che sarà rappresentato come :class:`dateutil.tz.tzutc`.
+    Gli offset del fuso orario equivalenti a UTC (come `+00:00`) saranno anch'essi
+    rappresentati come :class:`dateutil.tz.tzutc`.
+
+    :param dt_str:
+        Una stringa o un flusso contenente solo una stringa datetime in formato ISO-8601.
+
+    :return:
+        Restituisce un oggetto :class:`datetime.datetime` che rappresenta la stringa.
+        I componenti non specificati assumono il loro valore minimo.
+
+    .. avvertenza::
+
+        A partire dalla versione 2.7.0, la rigidità del parser non deve essere considerata
+        una parte stabile del contratto. Qualsiasi stringa ISO-8601 valida che viene analizzata
+        correttamente con le impostazioni predefinite continuerà a essere analizzata correttamente
+        nelle versioni future, ma le stringhe non valide che attualmente falliscono (ad esempio
+        ``2017-01-01T00:00+00:00:00``) non sono garantite di continuare a fallire nelle versioni
+        future se codificano una data valida.
+
+    .. versioneaggiunta:: 2.7.0
+    """
+    return parser.isoparse(dt_str)

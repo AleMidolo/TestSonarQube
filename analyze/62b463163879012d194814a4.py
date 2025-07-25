@@ -1,44 +1,30 @@
+import zipfile
+import os
+from collections import defaultdict
+
 def _explore_zipfile(zip_path):
     """
-    ज़िप पथ से पैकेजों का डेटा प्राप्त करता है।  
+    Ottiene i dati dei pacchetti dal percorso zip fornito.
 
-    फ़ाइलों को उनके XML बेसनाम (basename) के आधार पर समूहित करता है और डेटा को डिक्शनरी (dict) प्रारूप में लौटाता है।  
+    Raggruppa i file in base al nome base dei loro file XML e restituisce i dati in formato dizionario.
 
-    पैरामीटर (Parameters)
+    Parametri
     ----------
     zip_path : str  
-        ज़िप फ़ाइल का पथ।  
+        Percorso del file zip.
 
-    रिटर्न्स (Returns)
+    Restituisce
     -------
     dict
+        Un dizionario che raggruppa i file in base al nome base dei loro file XML.
     """
-    import zipfile
-    import os
-    from collections import defaultdict
-
-    # Dictionary to store grouped files
     grouped_files = defaultdict(list)
     
-    # Open zip file
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        # Get list of all files in zip
-        file_list = zip_ref.namelist()
-        
-        # Group files by their XML basename
-        for file_name in file_list:
-            # Get basename without extension
-            base_name = os.path.splitext(os.path.basename(file_name))[0]
-            
-            # If file has XML basename (ends with .xml when extension added back)
-            if file_name.endswith('.xml'):
-                # Use base_name as key and store full path
-                grouped_files[base_name].append(file_name)
-                
-                # Add any related files with same basename
-                for related_file in file_list:
-                    if os.path.splitext(os.path.basename(related_file))[0] == base_name and related_file != file_name:
-                        grouped_files[base_name].append(related_file)
+        for file_name in zip_ref.namelist():
+            base_name = os.path.basename(file_name)
+            if base_name.endswith('.xml'):
+                base_name_without_ext = os.path.splitext(base_name)[0]
+                grouped_files[base_name_without_ext].append(file_name)
     
-    # Convert defaultdict to regular dict before returning
     return dict(grouped_files)

@@ -1,46 +1,35 @@
-def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
+import subprocess
+
+def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=False, env=None):
     """
-    दिए गए कमांड(s) को चलाएं।
+    Esegui il comando specificato.
+
+    :param comandi: Lista di comandi da eseguire.
+    :param argomenti: Lista di argomenti da passare ai comandi.
+    :param cwd: Directory di lavoro corrente (opzionale).
+    :param verbose: Se True, stampa il comando eseguito (opzionale).
+    :param nascondi_stderr: Se True, nasconde l'output di stderr (opzionale).
+    :param env: Dizionario delle variabili d'ambiente (opzionale).
+    :return: Il risultato dell'esecuzione del comando.
     """
-    import subprocess
-    import sys
+    command = comandi + argomenti
+    stderr = subprocess.DEVNULL if nascondi_stderr else subprocess.PIPE
     
-    if isinstance(commands, str):
-        commands = [commands]
-        
-    for cmd in commands:
-        cmd_list = [cmd]
-        if args:
-            if isinstance(args, str):
-                cmd_list.append(args)
-            else:
-                cmd_list.extend(args)
-                
-        if verbose:
-            print('Running:', ' '.join(cmd_list))
-            
-        try:
-            stderr = subprocess.DEVNULL if hide_stderr else None
-            process = subprocess.Popen(
-                cmd_list,
-                stdout=subprocess.PIPE,
-                stderr=stderr,
-                cwd=cwd,
-                env=env,
-                universal_newlines=True
-            )
-            
-            output = process.communicate()[0]
-            retcode = process.poll()
-            
-            if retcode:
-                raise subprocess.CalledProcessError(
-                    retcode, cmd_list, output=output
-                )
-                
-            return output.strip()
-            
-        except (OSError, subprocess.CalledProcessError) as e:
-            if verbose:
-                print('Error running command:', str(e))
-            raise
+    if verbose:
+        print(f"Esecuzione comando: {' '.join(command)}")
+    
+    result = subprocess.run(
+        command,
+        cwd=cwd,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=stderr,
+        text=True
+    )
+    
+    if verbose:
+        print(f"Output: {result.stdout}")
+        if result.stderr:
+            print(f"Errore: {result.stderr}")
+    
+    return result

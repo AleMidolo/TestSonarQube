@@ -1,25 +1,18 @@
 def make_parsers():
-    """
-    एक शीर्ष-स्तरीय (top-level) पार्सर और उसके सबपार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
-    """
     import argparse
 
-    # Create top level parser
-    parser = argparse.ArgumentParser(description='Main command line tool')
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+    # Creazione del parser di livello superiore
+    parser = argparse.ArgumentParser(description="Parser principale")
 
-    # Create parser for 'add' command
-    add_parser = subparsers.add_parser('add', help='Add a new item')
-    add_parser.add_argument('name', help='Name of the item')
-    add_parser.add_argument('--value', '-v', help='Value of the item')
+    # Creazione dei sottoparser
+    subparsers = parser.add_subparsers(dest="command", help="Comandi disponibili")
 
-    # Create parser for 'list' command  
-    list_parser = subparsers.add_parser('list', help='List all items')
-    list_parser.add_argument('--sort', '-s', choices=['name', 'value'], 
-                            help='Sort output by field')
+    # Sottoparser per il comando 'foo'
+    parser_foo = subparsers.add_parser('foo', help="Esegui il comando foo")
+    parser_foo.add_argument('--bar', type=int, help="Parametro bar per il comando foo")
 
-    # Create parser for 'delete' command
-    delete_parser = subparsers.add_parser('delete', help='Delete an item')
-    delete_parser.add_argument('name', help='Name of item to delete')
+    # Sottoparser per il comando 'baz'
+    parser_baz = subparsers.add_parser('baz', help="Esegui il comando baz")
+    parser_baz.add_argument('--qux', type=str, help="Parametro qux per il comando baz")
 
-    return (parser, add_parser, list_parser, delete_parser)
+    return parser, subparsers

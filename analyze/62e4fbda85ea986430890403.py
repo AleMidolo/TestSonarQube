@@ -1,15 +1,11 @@
+import random
+
 def _shuffled(seq: Sequence[str]) -> list[str]:
-    """
-    निर्धारित (Deterministically) तरीके से शफल करें
-    """
-    # Convert sequence to list for shuffling
-    result = list(seq)
-    
-    # Use deterministic Fisher-Yates shuffle
-    for i in range(len(result)-1, 0, -1):
-        # Use deterministic index based on position
-        j = (i * 1337) % (i + 1)
-        # Swap elements
-        result[i], result[j] = result[j], result[i]
-        
-    return result
+    """Mescolamento deterministico"""
+    # Create a copy of the sequence to avoid modifying the original
+    seq_copy = list(seq)
+    # Use a fixed seed for deterministic shuffling
+    random.seed(42)
+    # Shuffle the sequence
+    random.shuffle(seq_copy)
+    return seq_copy

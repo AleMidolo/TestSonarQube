@@ -1,55 +1,66 @@
+from datetime import datetime
+from dateutil import parser
+from dateutil.tz import gettz
+
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
-    """Parse a date/time string into a datetime.datetime object."""
-    
+    """
+    Analizza la stringa di data/ora in un oggetto :class:`datetime.datetime`.
+
+    :param timestr:
+        Qualsiasi stringa di data/ora che utilizza i formati supportati.
+
+    :param default:
+        L'oggetto datetime predefinito. Se questo è un oggetto datetime e non
+        ``None``, gli elementi specificati in ``timestr`` sostituiscono gli elementi
+        nell'oggetto predefinito.
+
+    :param ignoretz:
+        Se impostato su ``True``, i fusi orari nelle stringhe analizzate vengono ignorati
+        e viene restituito un oggetto :class:`datetime.datetime` senza fuso orario.
+
+    :param tzinfos:
+        Nomi/alias di fusi orari aggiuntivi che possono essere presenti nella stringa.
+        Questo argomento mappa i nomi dei fusi orari (e opzionalmente gli offset da
+        quei fusi orari) ai fusi orari. Questo parametro può essere un dizionario con
+        alias di fusi orari che mappano i nomi dei fusi orari ai fusi orari o una
+        funzione che accetta due parametri (``tzname`` e ``tzoffset``) e restituisce
+        un fuso orario.
+
+    :param \*\*kwargs:
+        Argomenti keyword passati a ``_parse()``.
+
+    :return:
+        Restituisce un oggetto :class:`datetime.datetime` o, se l'opzione
+        ``fuzzy_with_tokens`` è impostata su ``True``, restituisce una tupla, il cui
+        primo elemento è un oggetto :class:`datetime.datetime` e il secondo è una
+        tupla contenente i token fuzzy.
+
+    :raises ParserError:
+        Sollevato per formati di stringa non validi o sconosciuti, se il
+        :class:`tzinfo` fornito non è in un formato valido o se verrebbe creata
+        una data non valida.
+
+    :raises TypeError:
+        Sollevato per input non stringa o flusso di caratteri.
+
+    :raises OverflowError:
+        Sollevato se la data analizzata supera il più grande intero C valido
+        sul tuo sistema.
+    """
     if not isinstance(timestr, str):
-        raise TypeError("Parser must be given a string or character stream, not %r" % timestr)
-        
-    # Default datetime object to use for missing values
-    default_datetime = default or datetime.datetime.now()
-    
+        raise TypeError("Input must be a string.")
+
+    if default is not None and not isinstance(default, datetime):
+        raise TypeError("Default must be a datetime object or None.")
+
+    if ignoretz:
+        tzinfos = None
+
     try:
-        # Parse the string using internal _parse method
-        res, tokens = self._parse(timestr, **kwargs)
-        
-        if res is None:
-            raise ParserError("Unknown string format: %s" % timestr)
-            
-        # Get year, month, day values
-        year = res.year if res.year is not None else default_datetime.year
-        month = res.month if res.month is not None else default_datetime.month
-        day = res.day if res.day is not None else default_datetime.day
-        
-        # Get time values
-        hour = res.hour if res.hour is not None else default_datetime.hour
-        minute = res.minute if res.minute is not None else default_datetime.minute
-        second = res.second if res.second is not None else default_datetime.second
-        microsecond = res.microsecond if res.microsecond is not None else default_datetime.microsecond
-        
-        # Handle timezone
-        if ignoretz:
-            tzinfo = None
-        else:
-            tzinfo = res.tzinfo
-            
-            # Use tzinfos if provided
-            if tzinfo is not None and tzinfos is not None:
-                if isinstance(tzinfos, dict):
-                    if tzinfo in tzinfos:
-                        tzinfo = tzinfos[tzinfo]
-                elif callable(tzinfos):
-                    tzinfo = tzinfos(tzinfo, res.tzoffset)
-                    
-                if isinstance(tzinfo, int):
-                    tzinfo = datetime.timezone(datetime.timedelta(seconds=tzinfo))
-                    
-        try:
-            return datetime.datetime(year, month, day,
-                                   hour, minute, second, microsecond,
-                                   tzinfo=tzinfo)
-        except ValueError as e:
-            raise ParserError(str(e))
-        except OverflowError as e:
-            raise OverflowError(str(e))
-            
-    except Exception as e:
-        raise ParserError("Unknown string format: %s" % timestr)
+        parsed_datetime = parser.parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
+    except parser.ParserError as e:
+        raise parser.ParserError(f"Invalid or unknown string format: {e}")
+    except OverflowError as e:
+        raise OverflowError(f"Parsed date exceeds the largest valid C integer on your system: {e}")
+
+    return parsed_datetime

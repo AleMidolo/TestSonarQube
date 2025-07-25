@@ -1,15 +1,17 @@
 def render(pieces, style):
     """
-    दिए गए संस्करण टुकड़ों को निर्दिष्ट शैली में प्रस्तुत करें।
+    Renderizzare i pezzi forniti nella versione richiesta dello stile.
+
+    :param pieces: Lista di pezzi da renderizzare.
+    :param style: Stile di renderizzazione richiesto.
+    :return: Stringa rappresentante i pezzi renderizzati.
     """
-    if not pieces:
-        return ""
-        
     if style == "plain":
-        return "".join(pieces)
+        return "\n".join(pieces)
     elif style == "html":
-        return "<div>" + "".join(pieces) + "</div>"
-    elif style == "markdown":
-        return "_" + "".join(pieces) + "_"
+        return "<ul>\n" + "\n".join(f"<li>{piece}</li>" for piece in pieces) + "\n</ul>"
+    elif style == "json":
+        import json
+        return json.dumps(pieces)
     else:
-        return "".join(pieces)
+        raise ValueError(f"Stile non supportato: {style}")

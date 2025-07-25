@@ -1,28 +1,24 @@
+import re
+
 def validate_value(value):
     """
-    दिए गए मान को संबंधित नियमित अभिव्यक्ति (Regular Expression) के अनुसार सत्यापित करें।
+    Convalida il valore fornito rispetto alla corrispondente espressione regolare.
 
-    आर्ग्युमेंट्स (Args):
-        value: सत्यापन के लिए स्ट्रिंग
+    Argomenti:
+        value: la stringa da convalidare
 
-    त्रुटि (Raises):
-        ValidationError: यदि दिया गया मान नियमित अभिव्यक्ति के अनुरूप नहीं है।
+    Eccezioni:
+        ValidationError: se il valore fornito non è conforme all'espressione regolare.
     """
-    import re
-
-    class ValidationError(Exception):
-        pass
-
-    # Check if value is string
-    if not isinstance(value, str):
-        raise ValidationError("Input must be a string")
-
-    # Regular expression pattern for validation
-    # Allows alphanumeric characters and some special characters
-    pattern = r'^[a-zA-Z0-9_\-\.]+$'
-
-    # Validate the value against pattern
-    if not re.match(pattern, value):
-        raise ValidationError("Invalid value format. Only alphanumeric characters, underscore, hyphen and dot are allowed.")
-
+    # Definisci l'espressione regolare per la convalida
+    # Esempio: accetta solo stringhe alfanumeriche con lunghezza tra 3 e 10 caratteri
+    pattern = re.compile(r'^[a-zA-Z0-9]{3,10}$')
+    
+    if not pattern.match(value):
+        raise ValidationError("Il valore fornito non è conforme all'espressione regolare.")
+    
     return True
+
+class ValidationError(Exception):
+    """Eccezione sollevata quando la convalida fallisce."""
+    pass

@@ -1,54 +1,23 @@
+import re
+import sys
+
 def split(s, platform='this'):
-    import re
-    import sys
-    
-    # Determine platform
+    """
+    ### Variante multi-piattaforma di `shlex.split()` per la divisione di stringhe da riga di comando.  
+    Progettata per l'uso con `subprocess`, per l'iniezione di argomenti (`argv`) ecc. Utilizza espressioni regolari (REGEX) veloci.
+
+    - **platform**:  
+      - `'this'`: rilevamento automatico della piattaforma corrente.  
+      - `1`: stile POSIX.  
+      - `0`: stile Windows/CMD.  
+      - (altri valori riservati).
+    """
     if platform == 'this':
-        platform = 0 if sys.platform.startswith('win') else 1
+        platform = 1 if sys.platform != 'win32' else 0
     
-    if platform == 1:  # POSIX style
-        # Handle escaped quotes and spaces
-        s = s.replace('\\"', '\x00').replace("\\'", '\x01')
-        
-        # Split on spaces while preserving quoted strings
-        pattern = r'''(?:[^\s"'\\]|\\.|"(?:\\.|[^"])*"|'(?:\\.|[^'])*')+'''
-        tokens = re.findall(pattern, s)
-        
-        # Clean up tokens
-        result = []
-        for token in tokens:
-            # Remove enclosing quotes if present
-            if (token.startswith('"') and token.endswith('"')) or \
-               (token.startswith("'") and token.endswith("'")):
-                token = token[1:-1]
-            
-            # Restore escaped characters
-            token = token.replace('\x00', '"').replace('\x01', "'")
-            token = token.replace('\\\\', '\\').replace('\\"', '"').replace("\\'", "'")
-            result.append(token)
-            
-        return result
-        
-    elif platform == 0:  # Windows/CMD style
-        # Handle escaped quotes
-        s = s.replace('\\"', '\x00')
-        
-        # Split on spaces while preserving quoted strings
-        pattern = r'''(?:[^\s"]|"(?:\\.|[^"])*")+'''
-        tokens = re.findall(pattern, s)
-        
-        # Clean up tokens
-        result = []
-        for token in tokens:
-            # Remove enclosing quotes if present
-            if token.startswith('"') and token.endswith('"'):
-                token = token[1:-1]
-                
-            # Restore escaped characters    
-            token = token.replace('\x00', '"').replace('\\\\', '\\')
-            result.append(token)
-            
-        return result
-        
-    else:
-        raise ValueError("Invalid platform value")
+    if platform == 1:  # POSIX
+        regex = re.compile(r'''((?:[^\s"']|"[^"]*"|'[^']*')+)''')
+    else:  # Windows/CMD
+        regex = re.compile(r'''((?:[^\s"]|"[^"]*")+)''')
+    
+    return regex.findall(s)

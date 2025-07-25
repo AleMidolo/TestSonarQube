@@ -1,36 +1,32 @@
+import argparse
+
 def parse_arguments(*unparsed_arguments):
-    import argparse
-    
-    # Create main parser
-    parser = argparse.ArgumentParser(description='Command line argument parser')
-    
-    # Create subparsers object
-    subparsers = parser.add_subparsers(dest='command')
-    
-    # Add global arguments to main parser
-    parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose output')
-    parser.add_argument('--config', '-c', help='Path to config file')
-    
-    # Create "run" subparser
-    run_parser = subparsers.add_parser('run', help='Run the application')
-    run_parser.add_argument('--input', '-i', required=True, help='Input file path')
-    run_parser.add_argument('--output', '-o', required=True, help='Output file path')
-    
-    # Create "test" subparser  
-    test_parser = subparsers.add_parser('test', help='Run tests')
-    test_parser.add_argument('--test-dir', '-t', required=True, help='Test directory path')
-    
-    # Parse arguments
-    args = parser.parse_args(unparsed_arguments if unparsed_arguments else None)
-    
-    # Create dictionary to store parsed arguments
-    parsed_args = {}
-    
-    if args.command:
-        # Store subparser arguments
-        parsed_args[args.command] = args
+    """
+    Dato un insieme di argomenti della riga di comando con cui è stato invocato questo script, analizza gli argomenti e restituiscili come un dizionario che mappa il nome del sotto-parser (o "global") a un'istanza di argparse.Namespace.
+    """
+    # Create the main parser
+    main_parser = argparse.ArgumentParser(description="Main parser")
+    main_parser.add_argument('--global-arg', type=str, help='Global argument')
+
+    # Create subparsers
+    subparsers = main_parser.add_subparsers(dest='subparser_name', help='Sub-commands')
+
+    # Subparser for command 'command1'
+    parser_command1 = subparsers.add_parser('command1', help='Command 1 help')
+    parser_command1.add_argument('--arg1', type=str, help='Argument 1 for command1')
+
+    # Subparser for command 'command2'
+    parser_command2 = subparsers.add_parser('command2', help='Command 2 help')
+    parser_command2.add_argument('--arg2', type=int, help='Argument 2 for command2')
+
+    # Parse the arguments
+    parsed_args = main_parser.parse_args(unparsed_arguments)
+
+    # Organize the parsed arguments into a dictionary
+    result = {}
+    if hasattr(parsed_args, 'subparser_name'):
+        result[parsed_args.subparser_name] = parsed_args
     else:
-        # Store global arguments
-        parsed_args['global'] = args
-        
-    return parsed_args
+        result['global'] = parsed_args
+
+    return result

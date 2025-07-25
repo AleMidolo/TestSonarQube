@@ -1,27 +1,27 @@
 def scale(self, other=None, recompute=False):
+    """
+    Calcola o imposta la scala (integrale dell'istogramma).
+
+    Se *other* è ``None``, restituisce la scala di questo istogramma.  
+    Se la scala non è stata calcolata in precedenza, viene calcolata e memorizzata per un utilizzo successivo (a meno che non venga esplicitamente richiesto di *ricalcolare*).  
+    Nota che, dopo aver modificato (riempito) l'istogramma, è necessario ricalcolare esplicitamente la scala se era stata calcolata in precedenza.
+
+    Se viene fornito un valore float in *other*, l'oggetto corrente (*self*) viene riscalato al valore di *other*.
+
+    Gli istogrammi con scala pari a zero non possono essere riscalati.  
+    Viene sollevata un'eccezione :exc:`.LenaValueError` se si tenta di farlo.
+    """
+    if not hasattr(self, '_scale') or recompute:
+        # Calcola la scala come integrale dell'istogramma
+        self._scale = sum(self.bins) * self.bin_width
+    
     if other is None:
-        # Return current scale if already computed and recompute not requested
-        if hasattr(self, '_scale') and not recompute:
-            return self._scale
-            
-        # Compute and store scale
-        self._scale = sum(self.values())
         return self._scale
-        
-    else:
-        # Get current scale
-        current_scale = self.scale()
-        
-        # Check for zero scale
-        if current_scale == 0:
-            raise LenaValueError("Cannot rescale histogram with zero scale")
-            
-        # Rescale by multiplying all values by ratio of scales
-        scale_ratio = float(other) / current_scale
-        for key in self:
-            self[key] *= scale_ratio
-            
-        # Update stored scale
+    elif isinstance(other, float):
+        if self._scale == 0:
+            raise LenaValueError("Cannot scale a histogram with zero scale.")
+        scale_factor = other / self._scale
+        self.bins = [bin * scale_factor for bin in self.bins]
         self._scale = other
-        
-        return self
+    else:
+        raise TypeError("Expected a float or None for 'other'.")

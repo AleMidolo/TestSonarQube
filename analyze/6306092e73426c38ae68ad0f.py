@@ -1,53 +1,26 @@
 def get_nested_custom_and_control_args(self, args):
     """
-    इनपुट आर्ग्युमेंट्स को नेस्टेड और कस्टम में विभाजित करें।
+    Suddivide gli argomenti di input in controlli nidificati e personalizzati.
 
-    कंट्रोल आर्ग्युमेंट्स: IR (Intermediate Representation) व्यवहार को नियंत्रित करते हैं। 
-        ये आर्ग्युमेंट्स spec.yml फाइल में नहीं डाले जाएंगे।
-    नेस्टेड आर्ग्युमेंट्स: Ansible प्लेबुक्स द्वारा उपयोग किए जाते हैं और 
-        spec.yml फाइल में डाले जाएंगे।
-    कस्टम आर्ग्युमेंट्स: सामान्य नेस्टेड उपयोग के बजाय कस्टम Ansible वेरिएबल्स का उपयोग करने के लिए।
+    Argomenti di controllo: controllano il comportamento dell'IR. Questi argomenti
+        non saranno inseriti nel file spec yml.
+    Argomenti nidificati: sono utilizzati dai playbook di Ansible e saranno inseriti
+        nel file spec yml.
+    Argomenti personalizzati: variabili Ansible personalizzate da utilizzare al posto
+        dell'uso normale degli argomenti nidificati.
 
-    :param args: एकत्रित आर्ग्युमेंट्स की सूची।
-    :return: (dict, dict): फ्लैट डिक्शनरीज़ (control_args, nested_args)
+    :param args: la lista raccolta di argomenti.
+    :return: (dict, dict): dizionari piatti (control_args, nested_args)
     """
     control_args = {}
     nested_args = {}
-    custom_args = {}
-
-    # Control arguments that should not be included in spec.yml
-    control_arg_keys = ['debug', 'verbose', 'dry_run', 'no_color']
     
-    # Process each argument
-    for arg in args:
-        key = arg.get('name')
-        value = arg.get('value')
-        
-        # Check if argument is a control argument
-        if key in control_arg_keys:
+    for key, value in args.items():
+        if key.startswith('control_'):
             control_args[key] = value
-            continue
-            
-        # Check if argument is a custom argument (starts with 'custom_')
-        if key.startswith('custom_'):
-            custom_args[key] = value
-            continue
-            
-        # All other arguments are treated as nested
-        nested_path = key.split('.')
-        current_dict = nested_args
-        
-        # Build nested dictionary structure
-        for path_part in nested_path[:-1]:
-            if path_part not in current_dict:
-                current_dict[path_part] = {}
-            current_dict = current_dict[path_part]
-            
-        # Set the final value
-        current_dict[nested_path[-1]] = value
-
-    # Merge custom args into nested args with special handling
-    for custom_key, custom_value in custom_args.items():
-        nested_args[custom_key] = custom_value
-
+        elif key.startswith('custom_'):
+            nested_args[key] = value
+        else:
+            nested_args[key] = value
+    
     return control_args, nested_args

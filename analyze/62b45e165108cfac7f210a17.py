@@ -1,19 +1,19 @@
 def get_logical_path_map(inventory, version):
+    """
+    Ottiene una mappa dei percorsi logici nello stato verso i file su disco per una determinata versione nell'inventario.
+
+    Restituisce un dizionario: `logical_path_in_state -> set(content_files)`
+
+    Il set di `content_files` può includere riferimenti a file duplicati presenti in versioni successive rispetto alla versione descritta.
+    """
     logical_path_map = {}
     
-    # Get all content files for this version and later versions
-    content_files = set()
-    for v in inventory.versions:
-        if v >= version:
-            content_files.update(inventory.get_content_files(v))
-            
-    # Build mapping of logical paths to content files
-    for logical_path in inventory.get_logical_paths(version):
-        matching_files = set()
-        for content_file in content_files:
-            if inventory.matches_logical_path(logical_path, content_file, version):
-                matching_files.add(content_file)
-        if matching_files:
-            logical_path_map[logical_path] = matching_files
-            
+    for logical_path, versions in inventory.items():
+        if version in versions:
+            content_files = set()
+            for v in range(version, max(versions.keys()) + 1):
+                if v in versions:
+                    content_files.update(versions[v])
+            logical_path_map[logical_path] = content_files
+    
     return logical_path_map

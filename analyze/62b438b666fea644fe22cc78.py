@@ -1,20 +1,17 @@
+import argparse
+
 def parse_arguments(*arguments):
-    import argparse
+    """
+    Dati gli argomenti della riga di comando con cui è stato invocato questo script,
+    analizza gli argomenti e restituiscili come un'istanza di ArgumentParser.
+    """
+    parser = argparse.ArgumentParser(description="Parse command line arguments.")
     
-    # Create ArgumentParser instance
-    parser = argparse.ArgumentParser(description='Command line argument parser')
+    # Example of adding arguments (customize as needed)
+    parser.add_argument('-f', '--file', type=str, help="Path to the input file")
+    parser.add_argument('-v', '--verbose', action='store_true', help="Enable verbose output")
     
-    # Add arguments to parser
-    for arg in arguments:
-        if isinstance(arg, str):
-            parser.add_argument(arg)
-        elif isinstance(arg, tuple):
-            # Handle tuple arguments with name and help text
-            if len(arg) == 2:
-                parser.add_argument(arg[0], help=arg[1])
-            # Handle tuple arguments with name, type and help text
-            elif len(arg) == 3:
-                parser.add_argument(arg[0], type=arg[1], help=arg[2])
-                
-    # Parse arguments and return
-    return parser.parse_args()
+    # Parse the arguments
+    args = parser.parse_args(arguments)
+    
+    return args

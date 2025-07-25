@@ -1,52 +1,53 @@
 def hist_to_graph(hist, make_value=None, get_coordinate="left",
                   field_names=("x", "y"), scale=None):
-    # Default make_value function returns bin content
+    """
+    Convert a histogram to a graph.
+
+    Parameters:
+    - hist: The histogram to convert.
+    - make_value: Function to set the value of a graph point. Defaults to bin content.
+    - get_coordinate: Determines the coordinate of a graph point. Can be "left", "right", or "middle".
+    - field_names: Names of the graph fields. Must match the result dimension.
+    - scale: Scale of the graph. If True, uses the histogram's scale.
+
+    Returns:
+    - The resulting graph.
+    """
+    import numpy as np
+
     if make_value is None:
-        make_value = lambda x: x
+        make_value = lambda bin_: bin_
 
-    # Get coordinates based on specified method
-    def get_bin_coordinate(bin):
-        if get_coordinate == "left":
-            return bin.left
-        elif get_coordinate == "right":
-            return bin.right
-        elif get_coordinate == "middle":
-            return (bin.left + bin.right) / 2
-        else:
-            raise ValueError("get_coordinate must be 'left', 'right' or 'middle'")
+    if get_coordinate not in ["left", "right", "middle"]:
+        raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
 
-    # Create points list
-    points = []
-    for bin in hist:
-        x = get_bin_coordinate(bin)
-        y = make_value(bin.content)
-        
-        # Handle both single values and tuples from make_value
-        if isinstance(y, (tuple, list)):
-            points.append((x,) + tuple(y))
-        else:
-            points.append((x, y))
+    # Extract bin edges and contents
+    bin_edges = hist.bin_edges
+    bin_contents = hist.bin_contents
 
-    # Create graph with appropriate dimensions
-    from graph import Graph
-    sample_point = points[0]
-    dimensions = len(sample_point)
-    
-    # Verify field_names matches dimensions
-    if len(field_names) != dimensions:
-        raise ValueError(f"Number of field names ({len(field_names)}) must match point dimensions ({dimensions})")
-    
-    # Create graph
-    graph = Graph(dimensions=dimensions, field_names=field_names)
-    
-    # Add points to graph
-    for point in points:
-        graph.add_point(*point)
-        
-    # Set scale if specified
+    # Calculate coordinates based on get_coordinate
+    if get_coordinate == "left":
+        x_coords = bin_edges[:-1]
+    elif get_coordinate == "right":
+        x_coords = bin_edges[1:]
+    elif get_coordinate == "middle":
+        x_coords = (bin_edges[:-1] + bin_edges[1:]) / 2
+
+    # Apply make_value to each bin content
+    y_values = [make_value(bin_) for bin_ in bin_contents]
+
+    # Ensure y_values is a list of tuples or lists
+    if not all(isinstance(y, (tuple, list)) for y in y_values):
+        y_values = [(y,) for y in y_values]
+
+    # Create the graph data
+    graph_data = {field_names[0]: x_coords}
+    for i in range(len(y_values[0])):
+        graph_data[field_names[i + 1]] = [y[i] for y in y_values]
+
+    # Handle scale
     if scale is True:
-        graph.scale = hist.scale
-    elif scale is not None:
-        graph.scale = scale
-        
-    return graph
+        scale = hist.scale
+
+    # Return the graph (assuming a Graph class exists)
+    return Graph(data=graph_data, scale=scale)

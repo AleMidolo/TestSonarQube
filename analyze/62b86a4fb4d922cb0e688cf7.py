@@ -1,18 +1,24 @@
+import re
+
 def validate_key(key):
-    import re
-    from django.core.exceptions import ValidationError
+    """
+    Valida la chiave fornita rispetto alla corrispondente espressione regolare.
 
-    # Regular expression pattern for key validation
-    # Allows alphanumeric characters and underscores, minimum 1 character
-    pattern = r'^[a-zA-Z0-9_]+$'
+    Argomenti:
+        key: la stringa da validare
 
-    if not isinstance(key, str):
-        raise ValidationError("Key must be a string")
-
-    if not key:
-        raise ValidationError("Key cannot be empty")
-
-    if not re.match(pattern, key):
-        raise ValidationError("Key can only contain letters, numbers and underscores")
-
+    Eccezioni:
+        ValidationError: se la chiave fornita non è conforme all'espressione regolare.
+    """
+    # Definisci l'espressione regolare per la validazione della chiave
+    # Esempio: la chiave deve essere composta da lettere minuscole e numeri, lunghezza 8-16 caratteri
+    pattern = re.compile(r'^[a-z0-9]{8,16}$')
+    
+    if not pattern.match(key):
+        raise ValidationError("La chiave fornita non è conforme all'espressione regolare.")
+    
     return True
+
+class ValidationError(Exception):
+    """Eccezione sollevata quando la validazione fallisce."""
+    pass

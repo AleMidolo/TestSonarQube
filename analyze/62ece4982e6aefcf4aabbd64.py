@@ -1,14 +1,12 @@
-def strip_root(path, root):
-    """   
-    पथ से रूट को हटाएं, और यदि यह विफल होता है, तो अपवाद फेंकें।
+def strip_root(percorso, radice):
     """
-    if not path.startswith(root):
-        raise ValueError(f"Path '{path}' does not start with root '{root}'")
-        
-    stripped = path[len(root):]
+    Rimuovi la radice dal percorso, genera un'eccezione in caso di errore.
     
-    # Remove leading slash if present
-    if stripped.startswith('/') or stripped.startswith('\\'):
-        stripped = stripped[1:]
-        
-    return stripped
+    :param percorso: Il percorso completo da cui rimuovere la radice.
+    :param radice: La radice da rimuovere dal percorso.
+    :return: Il percorso senza la radice.
+    :raises ValueError: Se la radice non è un prefisso del percorso.
+    """
+    if not percorso.startswith(radice):
+        raise ValueError("La radice non è un prefisso del percorso.")
+    return percorso[len(radice):]

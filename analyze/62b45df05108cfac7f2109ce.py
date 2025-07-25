@@ -1,48 +1,32 @@
 def validate(self, path):
-    try:
-        # Check if path exists
-        if not os.path.exists(path):
-            return False
-            
-        # Verify OCFL structure
-        # Check for required files/directories
-        required_files = [
-            'inventory.json',
-            '0=ocfl_object_1.0',
-            'v1'
-        ]
-        
-        for file in required_files:
-            if not os.path.exists(os.path.join(path, file)):
-                return False
-                
-        # Validate inventory.json
-        inventory_path = os.path.join(path, 'inventory.json')
-        with open(inventory_path) as f:
-            try:
-                inventory = json.load(f)
-                
-                # Check required inventory fields
-                required_fields = ['id', 'type', 'digestAlgorithm', 'versions']
-                for field in required_fields:
-                    if field not in inventory:
-                        return False
-                        
-                # Validate versions
-                if not inventory['versions']:
-                    return False
-                    
-                # Check version directories exist
-                for version in inventory['versions']:
-                    version_path = os.path.join(path, version)
-                    if not os.path.exists(version_path):
-                        return False
-                        
-            except json.JSONDecodeError:
-                return False
-                
-        # If all checks pass
-        return True
-        
-    except Exception:
+    """
+    Valida l'oggetto OCFL nel percorso specificato o nella radice di pyfs.
+    """
+    import os
+    from fs import open_fs
+
+    # Open the filesystem at the given path
+    fs = open_fs(path)
+
+    # Check if the required OCFL structure exists
+    if not fs.exists('0=ocfl_object_1.0'):
         return False
+
+    # Validate the inventory file
+    if not fs.exists('inventory.json'):
+        return False
+
+    # Validate the manifest in the inventory
+    inventory_path = fs.getsyspath('inventory.json')
+    with open(inventory_path, 'r') as f:
+        import json
+        inventory = json.load(f)
+        if 'manifest' not in inventory:
+            return False
+
+    # Validate the content directory
+    if not fs.exists('content'):
+        return False
+
+    # If all checks pass, the object is valid
+    return True

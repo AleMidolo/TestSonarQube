@@ -1,6 +1,5 @@
-def fix_namespace_prefix_w(content):
+def correggi_prefisso_namespace_w(contenuto):
     """
-    ऐसा कोड लिखें जो उस टेक्स्ट को परिवर्तित करे जो डिफ़ॉल्ट रूप से 'w:st="' है, उसे 'w-st="' में बदल दे।
+    Converte il testo che di default è 'w:st="' in 'w-st="'.
     """
-    # Replace 'w:st="' with 'w-st="' in the content
-    return content.replace('w:st="', 'w-st="')
+    return contenuto.replace('w:st="', 'w-st="')

@@ -1,41 +1,17 @@
 def validate_fixity(self, fixity, manifest_files):
     """
-    इन्वेंटरी में फिक्सिटी ब्लॉक को सत्यापित करें।
-    फिक्सिटी ब्लॉक की संरचना की जांच करें और सुनिश्चित करें कि केवल वे फाइलें
-    जो मैनिफेस्ट में सूचीबद्ध हैं, वही संदर्भित की गई हैं।
+    Convalida l'attributo fixty block nell'inventario.
+
+    Controlla la struttura del blocco di fissità e assicurati che siano referenziati solo i file elencati nel manifesto.
     """
-    # Check if fixity block is a dictionary
     if not isinstance(fixity, dict):
-        return False
+        raise ValueError("Il blocco di fissità deve essere un dizionario.")
+    
+    for file_name, checksum in fixity.items():
+        if file_name not in manifest_files:
+            raise ValueError(f"Il file '{file_name}' non è presente nel manifesto.")
         
-    # Check if all required keys exist in fixity block
-    required_keys = ['message_digest_algorithm', 'message_digests']
-    if not all(key in fixity for key in required_keys):
-        return False
-        
-    # Check if message_digests is a list
-    if not isinstance(fixity['message_digests'], list):
-        return False
-        
-    # Check each message digest entry
-    for digest in fixity['message_digests']:
-        # Verify digest structure
-        if not isinstance(digest, dict):
-            return False
-            
-        if 'file_path' not in digest or 'hash' not in digest:
-            return False
-            
-        # Check if referenced file exists in manifest
-        if digest['file_path'] not in manifest_files:
-            return False
-            
-        # Validate hash format based on algorithm
-        if fixity['message_digest_algorithm'].lower() == 'md5':
-            if not len(digest['hash']) == 32:
-                return False
-        elif fixity['message_digest_algorithm'].lower() == 'sha256':
-            if not len(digest['hash']) == 64:
-                return False
-                
+        if not isinstance(checksum, str) or not checksum:
+            raise ValueError(f"Il checksum per il file '{file_name}' deve essere una stringa non vuota.")
+    
     return True

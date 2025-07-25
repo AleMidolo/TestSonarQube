@@ -1,25 +1,47 @@
 def generate_default_observer_schema_dict(manifest_dict, first_level=False):
-    # Initialize empty dictionary for observer schema
+    """
+    Generates a default observer schema dictionary based on the provided manifest dictionary.
+
+    Args:
+        manifest_dict (dict): Partial Kubernetes resources.
+        first_level (bool, optional): If True, indicates that the dictionary represents the entire observer_schema of a Kubernetes resource.
+
+    Returns:
+        dict: The generated partial observer_schema.
+    """
     observer_schema = {}
     
-    # Iterate through key-value pairs in manifest dictionary
     for key, value in manifest_dict.items():
-        
-        # Handle nested dictionaries recursively
         if isinstance(value, dict):
             observer_schema[key] = generate_default_observer_schema_dict(value)
-            
-        # Handle lists by calling generate_default_observer_schema_list
         elif isinstance(value, list):
-            from .utils import generate_default_observer_schema_list
             observer_schema[key] = generate_default_observer_schema_list(value)
-            
-        # For first level, copy identifying fields
-        elif first_level and key in ['apiVersion', 'kind', 'metadata']:
-            observer_schema[key] = value
-            
-        # For all other values, set to None
         else:
-            observer_schema[key] = None
-            
+            if first_level and key in ['apiVersion', 'kind', 'metadata']:
+                observer_schema[key] = value
+            else:
+                observer_schema[key] = None
+    
+    return observer_schema
+
+def generate_default_observer_schema_list(manifest_list):
+    """
+    Generates a default observer schema list based on the provided manifest list.
+
+    Args:
+        manifest_list (list): Partial Kubernetes resources in list format.
+
+    Returns:
+        list: The generated partial observer_schema.
+    """
+    observer_schema = []
+    
+    for item in manifest_list:
+        if isinstance(item, dict):
+            observer_schema.append(generate_default_observer_schema_dict(item))
+        elif isinstance(item, list):
+            observer_schema.append(generate_default_observer_schema_list(item))
+        else:
+            observer_schema.append(None)
+    
     return observer_schema

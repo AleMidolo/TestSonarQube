@@ -1,21 +1,16 @@
 def get_config():
     """
-    # VersioneerConfig() ऑब्जेक्ट बनाएं, इसे डेटा से भरें और इसे लौटाएं।
+    Crea, popola e restituisci l'oggetto VersioneerConfig()
     """
-    class VersioneerConfig:
-        def __init__(self):
-            self.VCS = "git"
-            self.style = "pep440"
-            self.tag_prefix = ""
-            self.parentdir_prefix = "myproject-" 
-            self.versionfile_source = "src/_version.py"
-            self.versionfile_build = "myproject/_version.py"
-            self.tag_regex = r"^v[0-9]+\.[0-9]+\.[0-9]+$"
-            self.verbose = False
-            self.update_files = True
-            self.look_for_files = ["setup.py", "setup.cfg", "pyproject.toml"]
-            self.allow_dirty = False
-            self.git_describe_command = "git describe --tags --long --dirty --always"
+    from versioneer import VersioneerConfig
 
-    cfg = VersioneerConfig()
-    return cfg
+    config = VersioneerConfig()
+    # Popola l'oggetto config con i valori necessari
+    config.VCS = "git"
+    config.style = "pep440"
+    config.versionfile_source = "my_package/_version.py"
+    config.versionfile_build = "my_package/_version.py"
+    config.tag_prefix = "v"
+    config.parentdir_prefix = "my_package-"
+
+    return config

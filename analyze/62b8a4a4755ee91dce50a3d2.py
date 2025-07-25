@@ -1,35 +1,13 @@
 def _fromutc(self, dt):
-    # Ensure dt is timezone-aware and in UTC
     if dt.tzinfo is not self:
-        dt = dt.replace(tzinfo=self)
+        raise ValueError("dt.tzinfo is not self")
     
-    # Get UTC offset for the datetime
-    utc_offset = self.utcoffset(dt)
-    if utc_offset is None:
-        return dt
+    # Convert the datetime to the new timezone
+    new_dt = dt.astimezone(self)
     
-    # Add the offset to get local time
-    local_dt = dt + utc_offset
+    # Check if the datetime is ambiguous in the new timezone
+    if self._is_ambiguous(new_dt):
+        # If ambiguous, set the fold attribute accordingly
+        new_dt = new_dt.replace(fold=1 if new_dt.fold else 0)
     
-    # Check if this time is ambiguous (falls in DST transition)
-    dst_offset = self.dst(local_dt)
-    if dst_offset is None:
-        return local_dt
-        
-    # If we're in DST transition period
-    standard_offset = self.utcoffset(local_dt - dst_offset)
-    if standard_offset is None:
-        return local_dt
-        
-    # Check if datetime is ambiguous
-    if standard_offset != utc_offset:
-        # Get both possible times
-        earlier = local_dt - dst_offset
-        later = local_dt
-        
-        # Return earlier time by default for ambiguous times
-        if earlier.replace(tzinfo=None) <= dt.replace(tzinfo=None):
-            return earlier
-        return later
-        
-    return local_dt
+    return new_dt

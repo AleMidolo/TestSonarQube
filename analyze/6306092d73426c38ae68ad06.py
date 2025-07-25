@@ -1,17 +1,12 @@
 def get_silent_args(self, args):
     """
-    मौन (साइलेंट) तर्कों की सूची प्राप्त करें।
+    Restituisce l'elenco degli argomenti silenziati.
 
-    :param args: प्राप्त तर्क (arguments)।
-    :return: list, मौन (साइलेंट) तर्कों के नाम।
+    :param args: Gli argomenti ricevuti.
+    :return: list, nomi degli argomenti silenziati.
     """
     silent_args = []
-    
-    # Check if args is a dictionary
-    if isinstance(args, dict):
-        # Iterate through args and find ones marked as silent
-        for arg_name, arg_value in args.items():
-            if isinstance(arg_value, dict) and arg_value.get('silent', False):
-                silent_args.append(arg_name)
-                
+    for arg in args:
+        if arg.startswith('--'):
+            silent_args.append(arg[2:])
     return silent_args

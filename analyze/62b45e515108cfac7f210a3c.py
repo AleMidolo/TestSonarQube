@@ -1,27 +1,21 @@
 def initialize(self):
     """
-    एक नया OCFL स्टोरेज रूट बनाएँ और प्रारंभ करें।
+    Crea e inizializza una nuova radice di archiviazione OCFL.
     """
-    # Create root directory if it doesn't exist
-    if not os.path.exists(self.root):
-        os.makedirs(self.root)
-        
-    # Create namaste file
-    namaste_path = os.path.join(self.root, "0=ocfl_1.0")
-    with open(namaste_path, 'w') as f:
-        f.write("ocfl_1.0")
-        
-    # Create storage root declaration file
-    storage_root_path = os.path.join(self.root, "ocfl_1.0.txt") 
-    with open(storage_root_path, 'w') as f:
-        f.write("This directory is an OCFL Storage Root")
-        
-    # Create extensions directory
-    extensions_dir = os.path.join(self.root, "extensions")
-    if not os.path.exists(extensions_dir):
-        os.makedirs(extensions_dir)
-        
-    # Create objects directory
-    objects_dir = os.path.join(self.root, "objects") 
-    if not os.path.exists(objects_dir):
-        os.makedirs(objects_dir)
+    import os
+
+    # Crea la directory radice OCFL
+    os.makedirs("ocfl_root", exist_ok=True)
+
+    # Crea il file di dichiarazione OCFL
+    with open(os.path.join("ocfl_root", "0=ocfl_object_1.0"), "w") as f:
+        f.write("ocfl_1.0\n")
+
+    # Crea la directory per gli oggetti OCFL
+    os.makedirs(os.path.join("ocfl_root", "objects"), exist_ok=True)
+
+    # Crea il file di inventario
+    with open(os.path.join("ocfl_root", "inventory.json"), "w") as f:
+        f.write('{"head": "v1", "versions": {}}')
+
+    print("Radice OCFL inizializzata con successo.")

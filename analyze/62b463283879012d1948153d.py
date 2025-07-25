@@ -1,17 +1,13 @@
 def match_pubdate(node, pubdate_xpaths):
     """
-    `pubdate_xpaths` सूची में पहला मेलित मान (match) लौटाता है।
+    Restituisce la prima corrispondenza nella lista `pubdate_xpaths`.
+    
+    :param node: L'elemento XML/HTML da cui cercare.
+    :param pubdate_xpaths: Lista di XPath per cercare la data di pubblicazione.
+    :return: La prima corrispondenza trovata, o None se nessuna corrispondenza è trovata.
     """
     for xpath in pubdate_xpaths:
-        try:
-            # Try to find matching element using xpath
-            match = node.xpath(xpath)
-            if match:
-                # Return first matching value if found
-                return match[0]
-        except:
-            # Skip any xpath that causes errors
-            continue
-    
-    # Return None if no matches found
+        result = node.xpath(xpath)
+        if result:
+            return result[0]
     return None

@@ -1,15 +1,30 @@
 def protocol_handlers(cls, protocol_version=None):
-    # Check if protocol_version is a tuple when provided
-    if protocol_version is not None and not isinstance(protocol_version, tuple):
-        raise TypeError("Protocol version must be specified as a tuple")
+    """
+    Restituisce un dizionario dei gestori di protocollo Bolt disponibili,
+    indicizzati per tuple di versione. Se viene fornita una versione di protocollo
+    esplicita, il dizionario conterrà zero o un elemento, a seconda che quella
+    versione sia supportata o meno. Se non viene fornita alcuna versione di protocollo,
+    verranno restituite tutte le versioni disponibili.
 
-    # Get all handlers registered with the class
-    handlers = {version: handler for version, handler in cls.__dict__.items() 
-               if isinstance(version, tuple)}
+    :param protocol_version: tupla che identifica una specifica versione
+        del protocollo (ad esempio, (3, 5)) oppure None
+    :return: dizionario che associa una tupla di versione alla classe del gestore
+        per tutte le versioni di protocollo rilevanti e supportate
+    :raise TypeError: se la versione del protocollo non è passata come una tupla
+    """
+    # Dizionario di esempio che mappa le versioni del protocollo ai gestori
+    available_handlers = {
+        (3, 5): "HandlerForV3_5",
+        (4, 0): "HandlerForV4_0",
+        (4, 1): "HandlerForV4_1",
+    }
 
-    # If specific version requested, return only that handler if it exists
     if protocol_version is not None:
-        return {protocol_version: handlers.get(protocol_version)} if protocol_version in handlers else {}
-
-    # Otherwise return all handlers
-    return handlers
+        if not isinstance(protocol_version, tuple):
+            raise TypeError("La versione del protocollo deve essere una tupla.")
+        if protocol_version in available_handlers:
+            return {protocol_version: available_handlers[protocol_version]}
+        else:
+            return {}
+    else:
+        return available_handlers

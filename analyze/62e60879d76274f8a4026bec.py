@@ -1,57 +1,44 @@
 def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
-              db=None, imp_user=None, dehydration_hooks=None,
-              hydration_hooks=None, **handlers):
-    
-    # Set default mode to WRITE if not specified
-    if mode is None:
-        mode = "WRITE"
-    
-    # Validate mode
-    if mode not in ("READ", "WRITE"):
-        raise ValueError("Mode must be either 'READ' or 'WRITE'")
+          db=None, imp_user=None, dehydration_hooks=None,
+          hydration_hooks=None, **handlers):
+    """
+    Aggiunge un messaggio BEGIN alla coda di output.
 
-    # Initialize parameters dict
-    parameters = {}
-    
-    # Add mode
-    parameters["mode"] = mode
-    
-    # Add bookmarks if provided
-    if bookmarks:
-        parameters["bookmarks"] = list(bookmarks)
-        
-    # Add metadata if provided
-    if metadata:
-        parameters["metadata"] = metadata
-        
-    # Add timeout if provided
-    if timeout is not None:
-        parameters["timeout"] = timeout
-        
-    # Add database if provided
-    if db is not None:
-        parameters["db"] = db
-        
-    # Add impersonated user if provided
-    if imp_user is not None:
-        parameters["imp_user"] = imp_user
-        
-    # Add dehydration hooks if provided
-    if dehydration_hooks is not None:
-        parameters["dehydration_hooks"] = dehydration_hooks
-        
-    # Add hydration hooks if provided 
-    if hydration_hooks is not None:
-        parameters["hydration_hooks"] = hydration_hooks
-
-    # Create BEGIN message
-    message = {
-        "type": "BEGIN",
-        "parameters": parameters
+    :param mode: modalità di accesso per il routing - "READ" o "WRITE" (predefinito)
+    :param bookmarks: iterabile di valori di segnalibro dopo i quali questa transazione dovrebbe iniziare
+    :param metadata: dizionario di metadati personalizzati da allegare alla transazione
+    :param timeout: timeout per l'esecuzione della transazione (in secondi)
+    :param db: nome del database su cui avviare la transazione
+        Richiede Bolt 4.0+.
+    :param imp_user: l'utente da impersonare
+        Richiede Bolt 4.4+.
+    :param dehydration_hooks:
+        Hook per disidratare i tipi (dizionario da tipo (classe) a funzione di disidratazione).
+        Le funzioni di disidratazione ricevono il valore e restituiscono un oggetto di tipo
+        compreso da packstream.
+    :param hydration_hooks:
+        Hook per idratare i tipi (mappatura da tipo (classe) a funzione di idratazione).
+        Le funzioni di idratazione ricevono il valore di tipo compreso da packstream
+        e possono restituire qualsiasi cosa.
+    :param handlers: funzioni gestore passate all'oggetto Response restituito
+    :return: oggetto Response
+    """
+    # Create the BEGIN message
+    begin_message = {
+        "mode": mode,
+        "bookmarks": list(bookmarks) if bookmarks else None,
+        "metadata": metadata,
+        "timeout": timeout,
+        "db": db,
+        "imp_user": imp_user,
+        "dehydration_hooks": dehydration_hooks,
+        "hydration_hooks": hydration_hooks,
+        **handlers
     }
     
-    # Add message to output queue
-    self._append(message, **handlers)
+    # Add the BEGIN message to the output queue
+    self.output_queue.append(("BEGIN", begin_message))
     
-    # Return Response object
-    return Response(self, **handlers)
+    # Create and return a Response object
+    response = Response(handlers)
+    return response

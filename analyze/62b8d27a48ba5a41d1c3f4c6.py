@@ -1,25 +1,25 @@
+from functools import wraps
+
 def cached(cache, key=hashkey, lock=None):
     """
-    यह एक डेकोरेटर है जो किसी फ़ंक्शन को एक मेमोराइज़िंग कॉल करने योग्य (memoizing callable) के साथ रैप करता है, जो परिणामों को कैश में सहेजता है।
+    Decorator per racchiudere una funzione con un callable di memoizzazione che salva  
+    i risultati in una cache.
     """
     def decorator(func):
+        @wraps(func)
         def wrapper(*args, **kwargs):
-            k = key(*args, **kwargs)
-            
-            try:
-                # Try to get result from cache
-                result = cache[k]
-                return result
-            except KeyError:
-                # If not in cache, compute and store result
-                if lock:
-                    with lock:
-                        result = func(*args, **kwargs)
-                        cache[k] = result
-                else:
+            cache_key = key(*args, **kwargs)
+            if lock:
+                with lock:
+                    if cache_key in cache:
+                        return cache[cache_key]
                     result = func(*args, **kwargs)
-                    cache[k] = result
-                return result
-                
+                    cache[cache_key] = result
+            else:
+                if cache_key in cache:
+                    return cache[cache_key]
+                result = func(*args, **kwargs)
+                cache[cache_key] = result
+            return result
         return wrapper
     return decorator

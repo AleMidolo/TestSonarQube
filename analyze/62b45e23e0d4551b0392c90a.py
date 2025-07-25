@@ -1,32 +1,31 @@
 def validate_version_inventories(self, version_dirs):
     """
-    प्रत्येक संस्करण के पास उस बिंदु तक एक इन्वेंटरी होनी चाहिए।
+    Ogni versione DOVREBBE avere un inventario fino a quel punto.
+    Inoltre, tieni traccia di eventuali digest di contenuto diversi da quelli
+    presenti nell'inventario principale, in modo da poterli verificare
+    anche durante la validazione del contenuto.
 
-    साथ ही, किसी भी सामग्री डाइजेस्ट का रिकॉर्ड रखें जो रूट इन्वेंटरी में मौजूद डाइजेस्ट से अलग हो,
-    ताकि सामग्री को सत्यापित करते समय हम उन्हें भी जांच सकें।
-
-    version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
+    version_dirs è un array di nomi di directory di versione e si presume
+    che sia in sequenza di versione (1, 2, 3...).
     """
-    # Track all unique content digests seen
-    all_digests = set()
-    
-    # Get root inventory digests
-    root_inventory = self.get_root_inventory()
-    root_digests = set(root_inventory.get_all_digests())
-    
-    # Validate each version has inventory
-    for version in version_dirs:
-        inventory_path = os.path.join(version, 'inventory.json')
+    inventories = {}
+    for version_dir in version_dirs:
+        inventory_path = os.path.join(version_dir, "inventory.json")
         if not os.path.exists(inventory_path):
-            raise ValidationError(f"Missing inventory file for version {version}")
-            
-        # Load inventory and get digests
-        with open(inventory_path) as f:
-            inventory = json.load(f)
-            version_digests = set(inventory.get_all_digests())
-            
-        # Add any new digests not in root inventory
-        diff_digests = version_digests - root_digests
-        all_digests.update(diff_digests)
+            raise FileNotFoundError(f"Inventory not found for version: {version_dir}")
         
-    return all_digests
+        with open(inventory_path, 'r') as f:
+            inventory = json.load(f)
+        
+        inventories[version_dir] = inventory
+        
+        # Check for discrepancies in content digests
+        if version_dir != version_dirs[0]:  # Skip the first version
+            previous_version = version_dirs[version_dirs.index(version_dir) - 1]
+            previous_inventory = inventories[previous_version]
+            
+            for key, value in inventory.items():
+                if key in previous_inventory and previous_inventory[key] != value:
+                    print(f"Warning: Content digest mismatch for {key} in {version_dir}")
+    
+    return inventories

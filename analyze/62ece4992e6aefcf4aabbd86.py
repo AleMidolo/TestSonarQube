@@ -1,10 +1,12 @@
 def _dump_string(obj, dumper=None):
     """
-    पायथन 2 में यूनिकोड या पायथन 3 में स्ट्रिंग में डंप करें।
+    Serializza in una stringa Unicode (Python 2) o in una stringa (Python 3).
     """
-    if isinstance(obj, str):
+    if dumper is not None:
+        return dumper(obj)
+    if isinstance(obj, bytes):
+        return obj.decode('utf-8')
+    elif isinstance(obj, str):
         return obj
-    elif hasattr(obj, 'encode'):
-        return obj.encode('utf-8')
     else:
         return str(obj)

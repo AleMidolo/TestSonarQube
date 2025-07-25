@@ -1,30 +1,29 @@
+from datetime import datetime, timedelta
+
 def fromutc(self, dt):
-    """Convert aware datetime in UTC to this timezone."""
-    if dt.tzinfo is not self:
-        dt = dt.replace(tzinfo=self)
+    """
+    Dato un oggetto datetime con consapevolezza del fuso orario (timezone-aware) in un determinato fuso orario, calcola un oggetto datetime con consapevolezza del fuso orario in un nuovo fuso orario.
+
+    Poiché questa è l'unica occasione in cui *sappiamo* di avere un oggetto datetime non ambiguo, cogliamo l'opportunità per determinare se il datetime è ambiguo e si trova in uno stato di "fold" (ad esempio, se è la prima occorrenza, in ordine cronologico, del datetime ambiguo).
+
+    :param dt:  
+        Un oggetto :class:`datetime.datetime` con consapevolezza del fuso orario (timezone-aware).
+    """
+    if dt.tzinfo is None:
+        raise ValueError("fromutc() requires a timezone-aware datetime object")
     
-    utc_offset = self.utcoffset(dt)
-    if utc_offset is None:
-        return dt
+    # Convert the datetime to UTC
+    dt_utc = dt.astimezone(self.utc)
     
-    # Convert UTC to local time
-    dtoff = dt.replace(tzinfo=None) + utc_offset
+    # Calculate the offset from UTC for the new timezone
+    offset = self.utcoffset(dt_utc)
     
-    # Check if we're in a fold
-    dst_offset = self.dst(dtoff)
-    if dst_offset is None:
-        return dtoff.replace(tzinfo=self)
-        
-    # If standard offset and DST offset are the same, no fold
-    std_offset = self.utcoffset(dtoff) - dst_offset
-    if std_offset == utc_offset:
-        return dtoff.replace(tzinfo=self)
-        
-    # We're in a fold if the UTC offset equals standard time
-    dtdst = dtoff + dst_offset - std_offset
-    if std_offset == utc_offset:
-        fold = 1
-    else:
-        fold = 0
+    # Apply the offset to get the new datetime
+    new_dt = dt_utc + offset
     
-    return dtdst.replace(tzinfo=self, fold=fold)
+    # Check if the new datetime is ambiguous (e.g., during a DST transition)
+    if self.is_ambiguous(new_dt):
+        # If ambiguous, set the fold attribute to 1 (second occurrence)
+        new_dt = new_dt.replace(fold=1)
+    
+    return new_dt

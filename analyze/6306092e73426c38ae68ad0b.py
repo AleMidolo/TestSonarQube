@@ -1,13 +1,13 @@
 def validate_min_max_args(self, args):
     """
-    जांचें कि आर्ग्युमेंट्स का मान न्यूनतम और अधिकतम मानों के बीच है या नहीं।
+    Verifica se il valore degli argomenti è compreso tra i valori minimo e massimo.
 
-    :param args: प्राप्त किए गए आर्ग्युमेंट्स।
+    :param args: Gli argomenti ricevuti.
     """
-    for arg_name, arg_value in args.items():
-        if hasattr(self, f'min_{arg_name}') and hasattr(self, f'max_{arg_name}'):
-            min_val = getattr(self, f'min_{arg_name}')
-            max_val = getattr(self, f'max_{arg_name}')
-            
-            if not (min_val <= arg_value <= max_val):
-                raise ValueError(f'{arg_name} का मान {min_val} और {max_val} के बीच होना चाहिए')
+    if not hasattr(self, 'min_value') or not hasattr(self, 'max_value'):
+        raise AttributeError("min_value and max_value must be defined in the class.")
+    
+    for arg in args:
+        if not (self.min_value <= arg <= self.max_value):
+            raise ValueError(f"Argument {arg} is not between {self.min_value} and {self.max_value}.")
+    return True

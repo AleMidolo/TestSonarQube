@@ -1,10 +1,7 @@
 def setdefault(self, key, default=None):
     """
-    D.setdefault(k[, d]) -> D.get(k, d)
-    साथ ही, यदि `k` (कुंजी) `D` (डिक्शनरी) में मौजूद नहीं है, तो `D[k] = d` सेट कर दिया जाता है।
+    D.setdefault(k[,d]) -> D.get(k,d), imposta anche D[k]=d se k non è presente in D.
     """
-    try:
-        return self[key]
-    except KeyError:
+    if key not in self:
         self[key] = default
-        return default
+    return self[key]

@@ -1,50 +1,40 @@
-def bash_completion():
-    return '''
-# borgmatic bash completion script
-_borgmatic()
-{
-    local cur prev words cword
-    _init_completion || return
+import subprocess
 
-    # Complete subcommands
-    if [[ $cword -eq 1 ]]; then
-        COMPREPLY=( $( compgen -W "init create prune check list info mount extract export-tar serve config validate" -- "$cur" ) )
+def bash_completion():
+    """
+    Restituisci uno script bash di completamento per il comando "borgmatic". Genera questo script analizzando i parser degli argomenti della riga di comando di "borgmatic".
+    """
+    # Ottieni l'output di 'borgmatic --help' per analizzare i comandi disponibili
+    result = subprocess.run(['borgmatic', '--help'], capture_output=True, text=True)
+    help_output = result.stdout
+
+    # Estrai i comandi disponibili dall'output di help
+    commands = []
+    for line in help_output.splitlines():
+        if line.strip().startswith('-'):
+            command = line.split()[0]
+            commands.append(command)
+
+    # Genera lo script di completamento bash
+    bash_script = """
+_borgmatic_completion() {
+    local cur prev commands
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    commands="{}"
+
+    if [[ ${cur} == -* ]]; then
+        COMPREPLY=( $(compgen -W "${commands}" -- ${cur}) )
         return 0
     fi
-
-    # Complete options based on subcommand
-    case ${words[1]} in
-        create)
-            COMPREPLY=( $( compgen -W "--config --excludes --help --json --list --progress --stats" -- "$cur" ) )
-            ;;
-        prune) 
-            COMPREPLY=( $( compgen -W "--config --help --list --stats" -- "$cur" ) )
-            ;;
-        check)
-            COMPREPLY=( $( compgen -W "--config --help --json --progress --repair" -- "$cur" ) )
-            ;;
-        list|info)
-            COMPREPLY=( $( compgen -W "--config --help --json" -- "$cur" ) )
-            ;;
-        mount)
-            COMPREPLY=( $( compgen -W "--config --help --mount-point --archive" -- "$cur" ) )
-            ;;
-        extract)
-            COMPREPLY=( $( compgen -W "--config --help --archive --path" -- "$cur" ) )
-            ;;
-        export-tar)
-            COMPREPLY=( $( compgen -W "--config --help --archive --tar" -- "$cur" ) )
-            ;;
-        serve)
-            COMPREPLY=( $( compgen -W "--config --help" -- "$cur" ) )
-            ;;
-        config|validate)
-            COMPREPLY=( $( compgen -W "--config --help" -- "$cur" ) )
-            ;;
-    esac
-
-    return 0
 }
 
-complete -F _borgmatic borgmatic
-'''
+complete -F _borgmatic_completion borgmatic
+""".format(" ".join(commands))
+
+    return bash_script
+
+# Esempio di utilizzo
+if __name__ == "__main__":
+    print(bash_completion())

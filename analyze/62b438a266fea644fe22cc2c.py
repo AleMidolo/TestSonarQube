@@ -1,22 +1,21 @@
+import argparse
+
 def make_parsers():
     """
-    शीर्ष-स्तरीय पार्सर और इसके उप-पार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
+    Crea un parser di livello superiore e i suoi sottoparser, quindi restituiscili come una tupla.
     """
-    import argparse
-    
-    # Create main parser
-    parser = argparse.ArgumentParser(description='Main command line parser')
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+    # Creazione del parser principale
+    main_parser = argparse.ArgumentParser(description="Parser principale")
 
-    # Create parser for 'add' command
-    add_parser = subparsers.add_parser('add', help='Add items')
-    add_parser.add_argument('items', nargs='+', help='Items to add')
+    # Creazione dei sottoparser
+    subparsers = main_parser.add_subparsers(title="comandi", dest="comando")
 
-    # Create parser for 'remove' command  
-    remove_parser = subparsers.add_parser('remove', help='Remove items')
-    remove_parser.add_argument('items', nargs='+', help='Items to remove')
+    # Sottoparser per il comando 'comando1'
+    parser_comando1 = subparsers.add_parser('comando1', help="Descrizione del comando1")
+    parser_comando1.add_argument('arg1', type=int, help="Descrizione di arg1")
 
-    # Create parser for 'list' command
-    list_parser = subparsers.add_parser('list', help='List all items')
+    # Sottoparser per il comando 'comando2'
+    parser_comando2 = subparsers.add_parser('comando2', help="Descrizione del comando2")
+    parser_comando2.add_argument('arg2', type=str, help="Descrizione di arg2")
 
-    return (parser, add_parser, remove_parser, list_parser)
+    return main_parser, subparsers

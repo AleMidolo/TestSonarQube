@@ -1,15 +1,21 @@
+import re
+
 def make_find_paths(find_paths):
     """
-    `--find` के लिए पास किए गए पथ खंडों (path fragments) या पैटर्न के अनुक्रम को लें और सभी पथ खंडों को ग्लोब पैटर्न में बदलें। मौजूदा पैटर्न को बिना बदले पास करें।
+    Dati una sequenza di percorsi frammentati o pattern passati tramite `--find`, trasforma tutti i percorsi frammentati in pattern glob. Lascia invariati i pattern già esistenti.
+
+    Ad esempio, dato `find_paths` come:
+      ['foo.txt', 'pp:root/somedir']
+
+    ... trasforma in:
+      ['sh:**/*foo.txt*/**', 'pp:root/somedir']
     """
-    result = []
+    transformed_paths = []
     for path in find_paths:
-        # Check if path is already a pattern (starts with pp:)
-        if path.startswith('pp:'):
-            result.append(path)
+        if re.match(r'^[a-zA-Z]+:', path):
+            # If the path already has a prefix (e.g., 'pp:'), leave it unchanged
+            transformed_paths.append(path)
         else:
-            # Convert path fragment to glob pattern
-            # Add **/* prefix and */** suffix to match files anywhere in directory tree
-            glob_pattern = f'sh:**/*{path}*/**'
-            result.append(glob_pattern)
-    return result
+            # Transform the path into a glob pattern
+            transformed_paths.append(f'sh:**/*{path}*/**')
+    return transformed_paths

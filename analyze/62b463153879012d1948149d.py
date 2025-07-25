@@ -1,34 +1,27 @@
+import os
+from collections import defaultdict
+
 def _explore_folder(folder):
     """
-    फ़ोल्डर से पैकेज का डेटा प्राप्त करें।  
+    Ottiene i dati dei pacchetti dalla cartella
 
-    फ़ाइलों को उनके XML बेसनाम के आधार पर समूहित करता है और डेटा को डिक्शनरी (dict) प्रारूप में लौटाता है।  
+    Raggruppa i file in base al loro nome base XML e restituisce i dati in formato dizionario.
 
-    पैरामीटर  
+    Parametri
+    ----------
     folder : str
-        पैकेज का फ़ोल्डर।  
+        Cartella del pacchetto
 
-    रिटर्न्स  
+    Restituisce
+    -------
     dict
+        Dizionario con i file raggruppati per nome base XML
     """
-    import os
-    from collections import defaultdict
+    file_groups = defaultdict(list)
     
-    # Initialize empty defaultdict to store grouped files
-    grouped_files = defaultdict(list)
+    for filename in os.listdir(folder):
+        if filename.endswith('.xml'):
+            base_name = os.path.splitext(filename)[0]
+            file_groups[base_name].append(os.path.join(folder, filename))
     
-    # Walk through the folder
-    for root, dirs, files in os.walk(folder):
-        for file in files:
-            # Get full file path
-            file_path = os.path.join(root, file)
-            
-            # Get base name without extension
-            base_name = os.path.splitext(file)[0]
-            
-            # Group files by their base names
-            if file.lower().endswith(('.xml', '.pdf', '.txt')):
-                grouped_files[base_name].append(file_path)
-    
-    # Convert defaultdict to regular dict before returning
-    return dict(grouped_files)
+    return dict(file_groups)

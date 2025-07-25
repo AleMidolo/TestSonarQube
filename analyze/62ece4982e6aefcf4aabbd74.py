@@ -1,31 +1,47 @@
+import os
+import shutil
+import tempfile
+from pathlib import Path
+from typing import Optional, Union
+from zipfile import ZipFile
+from tarfile import TarFile
+
 def prepare_repository_from_archive(
     archive_path: str,
     filename: Optional[str] = None,
     tmp_path: Union[PosixPath, str] = "/tmp",
 ) -> str:
-    import os
-    import shutil
-    import tempfile
-    from pathlib import Path
+    # Convert tmp_path to Path object if it's a string
+    tmp_path = Path(tmp_path) if isinstance(tmp_path, str) else tmp_path
     
-    # Create temporary directory
-    temp_dir = tempfile.mkdtemp(dir=tmp_path)
+    # Ensure the temporary directory exists
+    tmp_path.mkdir(parents=True, exist_ok=True)
     
-    # Get filename from archive path if not provided
-    if filename is None:
-        filename = os.path.basename(archive_path)
+    # Create a temporary directory to extract the archive
+    extract_dir = tempfile.mkdtemp(dir=tmp_path)
     
-    # Extract archive to temp directory
+    # Determine the archive type based on the file extension
     if archive_path.endswith('.zip'):
-        shutil.unpack_archive(archive_path, temp_dir, 'zip')
-    elif archive_path.endswith(('.tar.gz', '.tgz')):
-        shutil.unpack_archive(archive_path, temp_dir, 'gztar') 
+        with ZipFile(archive_path, 'r') as zip_ref:
+            zip_ref.extractall(extract_dir)
+    elif archive_path.endswith('.tar.gz') or archive_path.endswith('.tgz'):
+        with TarFile.open(archive_path, 'r:gz') as tar_ref:
+            tar_ref.extractall(extract_dir)
+    elif archive_path.endswith('.tar.bz2') or archive_path.endswith('.tbz'):
+        with TarFile.open(archive_path, 'r:bz2') as tar_ref:
+            tar_ref.extractall(extract_dir)
     elif archive_path.endswith('.tar'):
-        shutil.unpack_archive(archive_path, temp_dir, 'tar')
+        with TarFile.open(archive_path, 'r:') as tar_ref:
+            tar_ref.extractall(extract_dir)
     else:
-        raise ValueError(f"Unsupported archive format: {archive_path}")
-
-    # Convert temp directory path to file URL format
-    repo_url = Path(temp_dir).as_uri()
+        raise ValueError("Unsupported archive format")
     
-    return repo_url
+    # If a specific filename is provided, return the path to that file
+    if filename:
+        file_path = Path(extract_dir) / filename
+        if not file_path.exists():
+            raise FileNotFoundError(f"The file {filename} was not found in the archive.")
+        return str(file_path)
+    
+    # Otherwise, return the path to the extracted directory
+    return extract_dir

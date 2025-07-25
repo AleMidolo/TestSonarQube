@@ -1,31 +1,24 @@
+import requests
+from typing import Optional
+
 def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
     """
-    एक RFC7033 वेबफिंगर दस्तावेज़ प्राप्त करने का प्रयास करें। 
-    यदि यह विफल होता है, तो कोई अपवाद उत्पन्न नहीं करता।
+    Prova a recuperare un documento webfinger conforme a RFC7033. Non genera eccezioni in caso di fallimento.
     """
-    import requests
-    from urllib.parse import urlparse
-    
     try:
-        # Extract domain from handle
-        if '@' not in handle:
-            return None
-            
-        _, domain = handle.split('@', 1)
+        # Split the handle into username and domain
+        username, domain = handle.split('@')
         
-        # Construct webfinger URL
-        webfinger_url = f"https://{domain}/.well-known/webfinger"
-        params = {
-            'resource': f'acct:{handle}'
-        }
+        # Construct the WebFinger URL
+        url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
         
-        # Make request with timeout
-        response = requests.get(webfinger_url, params=params, timeout=10)
+        # Make the GET request
+        response = requests.get(url, headers={"Accept": "application/jrd+json"})
         
+        # Check if the request was successful
         if response.status_code == 200:
             return response.text
-            
-    except (requests.RequestException, ValueError):
-        pass
-        
-    return None
+        else:
+            return None
+    except Exception:
+        return None

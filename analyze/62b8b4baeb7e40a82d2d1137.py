@@ -1,55 +1,33 @@
-def verifyObject(iface, candidate, tentative=False):
-    from zope.interface.exceptions import Invalid, DoesNotImplement, BrokenImplementation, BrokenMethodImplementation
-    from zope.interface.interface import Method
-    from zope.interface.verify import verifyClass
-    
-    errors = []
+from zope.interface import providedBy, Interface, Invalid
+from zope.interface.verify import verifyObject as zope_verify_object
 
-    # Check if candidate claims to provide interface
+def verifyObject(iface, candidate, tentative=False):
+    """
+    Verifica che il *candidate* possa fornire correttamente l'*iface*.
+
+    Questo comporta:
+
+    - Assicurarsi che il candidato dichiari di fornire l'interfaccia utilizzando ``iface.providedBy`` (a meno che *tentative* sia `True`, nel qual caso questo passaggio viene saltato). Questo significa che la classe del candidato dichiara di `implementare <zope.interface.implementer>` l'interfaccia, oppure che il candidato stesso dichiara di `fornire <zope.interface.provider>` l'interfaccia.
+
+    - Assicurarsi che il candidato definisca tutti i metodi necessari.
+
+    - Assicurarsi che i metodi abbiano la firma corretta (per quanto possibile).
+
+    - Assicurarsi che il candidato definisca tutti gli attributi necessari.
+
+    :return bool: Restituisce un valore vero se tutto ciò che poteva essere verificato è stato superato.
+    :raises zope.interface.Invalid: Se una qualsiasi delle condizioni precedenti non è soddisfatta.
+
+    .. versionchanged:: 5.0  
+        Se più metodi o attributi sono invalidi, tutti questi errori vengono raccolti e riportati. In precedenza, veniva segnalato solo il primo errore. Come caso speciale, se è presente un solo errore, viene sollevato singolarmente, come in passato.
+    """
     if not tentative:
         if not iface.providedBy(candidate):
-            raise DoesNotImplement(iface)
+            raise Invalid(f"The candidate does not provide the interface {iface}.")
 
-    # Verify all required methods
-    for name, desc in iface.namesAndDescriptions(1):
-        if isinstance(desc, Method):
-            # Check if method exists
-            try:
-                attr = getattr(candidate, name)
-            except AttributeError:
-                errors.append(BrokenImplementation(iface, name))
-                continue
-
-            # Verify method signature if possible
-            if not callable(attr):
-                errors.append(BrokenMethodImplementation(name, "Not a method"))
-                continue
-
-            try:
-                # Check method signature
-                if hasattr(desc, 'getSignatureInfo'):
-                    sig_info = desc.getSignatureInfo()
-                    method_sig = getattr(attr, '__signature__', None)
-                    
-                    if method_sig:
-                        # Compare signatures
-                        if (sig_info['positional'] != method_sig.parameters or 
-                            sig_info['required'] != len([p for p in method_sig.parameters.values() 
-                                                       if p.default == p.empty])):
-                            errors.append(BrokenMethodImplementation(name, "Incorrect signature"))
-            except Exception:
-                # If signature verification fails, continue with other checks
-                pass
-
-        else:
-            # Verify attributes
-            if not hasattr(candidate, name):
-                errors.append(BrokenImplementation(iface, name))
-
-    # Handle errors
-    if errors:
-        if len(errors) == 1:
-            raise errors[0]
-        raise Invalid(errors)
+    try:
+        zope_verify_object(iface, candidate)
+    except Invalid as e:
+        raise Invalid(f"Verification failed: {e}")
 
     return True

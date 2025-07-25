@@ -1,29 +1,27 @@
 def cachedmethod(cache, key=hashkey, lock=None):
     """
-    यह डेकोरेटर एक क्लास या इंस्टेंस मेथड को एक मेमोराइज़िंग कॉल करने योग्य फ़ंक्शन के साथ रैप करता है, जो परिणामों को कैश में सहेजता है।
+    Decorator per racchiudere un metodo di classe o di istanza con una funzione memoizzante che salva i risultati in una cache.
+
+    :param cache: La cache in cui memorizzare i risultati.
+    :param key: Funzione per generare la chiave di cache. Default è hashkey.
+    :param lock: Lock opzionale per sincronizzare l'accesso alla cache.
+    :return: Il metodo decorato con la funzionalità di caching.
     """
     def decorator(method):
         def wrapper(self, *args, **kwargs):
-            # Get the cache instance
-            c = cache(self)
-            if c is None:
-                return method(self, *args, **kwargs)
-                
-            # Generate cache key
-            k = key(args, kwargs)
-            
-            try:
-                # Try to get cached result
-                with lock(self) if lock is not None else nullcontext():
-                    result = c[k]
-                return result
-            except KeyError:
-                # Cache miss - call method and store result
+            cache_key = key(self, *args, **kwargs)
+            if lock:
+                with lock:
+                    if cache_key in cache:
+                        return cache[cache_key]
+                    result = method(self, *args, **kwargs)
+                    cache[cache_key] = result
+                    return result
+            else:
+                if cache_key in cache:
+                    return cache[cache_key]
                 result = method(self, *args, **kwargs)
-                with lock(self) if lock is not None else nullcontext():
-                    c[k] = result
+                cache[cache_key] = result
                 return result
-                
         return wrapper
-        
     return decorator

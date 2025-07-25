@@ -1,33 +1,24 @@
 def next_version(version):
-    # Split version string into parts
+    """
+    Prossimo identificatore di versione seguendo il modello esistente.
+
+    Deve gestire sia versioni con prefisso zero che versioni senza prefisso zero.
+    """
+    # Split the version into parts
     parts = version.split('.')
     
-    # Convert parts to integers
-    nums = [int(x) for x in parts]
+    # Increment the last part
+    last_part = int(parts[-1]) + 1
     
-    # Start from rightmost digit
-    i = len(nums) - 1
+    # Handle the case where the last part overflows (e.g., 9 -> 10)
+    if last_part > 9:
+        parts[-1] = '0'
+        if len(parts) > 1:
+            parts[-2] = str(int(parts[-2]) + 1)
+        else:
+            parts.insert(0, '1')
+    else:
+        parts[-1] = str(last_part)
     
-    while i >= 0:
-        # If current digit is less than 9, increment it and break
-        if nums[i] < 9:
-            nums[i] += 1
-            break
-        # If current digit is 9, set to 0 and continue to next digit
-        nums[i] = 0
-        i -= 1
-        
-    # If we've gone through all digits and they're all 9s
-    # Add a new digit 1 at the start
-    if i < 0:
-        nums.insert(0, 1)
-    
-    # Convert back to strings preserving original zero padding
-    result = []
-    for i in range(len(parts)):
-        # Get original length of this part
-        orig_len = len(parts[i])
-        # Format number with same number of digits
-        result.append(str(nums[i]).zfill(orig_len))
-        
-    return '.'.join(result)
+    # Reconstruct the version string
+    return '.'.join(parts)

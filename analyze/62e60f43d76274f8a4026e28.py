@@ -1,27 +1,31 @@
+from datetime import time, timedelta
+import pytz
+
 def hydrate_time(nanoseconds, tz=None):
     """
-    `Time` और `LocalTime` मानों के लिए हाइड्रेटर।  
+    Idratatore per valori di `Time` e `LocalTime`.
 
-    पैरामीटर (Parameters):
-    -nanoseconds: 
-    - tz: 
-
-    वापसी मान:
-    - समय 
+    :param nanoseconds: Il tempo in nanosecondi.
+    :param tz: Il fuso orario (timezone) opzionale.
+    :return: Un oggetto `time` con il tempo calcolato.
     """
-    # Convert nanoseconds to hours, minutes, seconds
-    total_seconds = nanoseconds // 1_000_000_000
-    hours = total_seconds // 3600
-    minutes = (total_seconds % 3600) // 60
-    seconds = total_seconds % 60
-    nanos = nanoseconds % 1_000_000_000
-
-    # Format time components
-    if tz is None:
-        # Return UTC time
-        time_str = f"{hours:02d}:{minutes:02d}:{seconds:02d}.{nanos:09d}"
-    else:
-        # Return local time with timezone
-        time_str = f"{hours:02d}:{minutes:02d}:{seconds:02d}.{nanos:09d} {tz}"
-
-    return time_str
+    # Convert nanoseconds to seconds
+    seconds = nanoseconds / 1e9
+    
+    # Calculate hours, minutes, seconds, and microseconds
+    hours = int(seconds // 3600)
+    seconds %= 3600
+    minutes = int(seconds // 60)
+    seconds %= 60
+    microseconds = int((seconds - int(seconds)) * 1e6)
+    seconds = int(seconds)
+    
+    # Create a time object
+    time_obj = time(hour=hours, minute=minutes, second=seconds, microsecond=microseconds)
+    
+    # If timezone is provided, localize the time
+    if tz:
+        tz_obj = pytz.timezone(tz)
+        time_obj = tz_obj.localize(time_obj)
+    
+    return time_obj

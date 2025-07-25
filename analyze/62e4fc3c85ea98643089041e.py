@@ -1,13 +1,13 @@
 def _inline_r_setup(code: str) -> str:
-    # Add R options setup code before the user's code
+    """
+    Alcuni comportamenti di R non possono essere configurati tramite variabili di ambiente, ma possono essere configurati solo tramite opzioni di R una volta che R è stato avviato. Questi vengono impostati qui.
+    """
     setup_code = """
-options(warn=-1)  # Suppress warnings
-options(width=120)  # Set output width
-options(scipen=999)  # Avoid scientific notation
-options(stringsAsFactors=FALSE)  # Don't convert strings to factors by default
-"""
-    
-    # Combine setup code with user code
-    full_code = setup_code + "\n" + code
-    
-    return full_code
+    options(
+        repos = c(CRAN = "https://cloud.r-project.org/"),
+        warn = 1,
+        stringsAsFactors = FALSE,
+        encoding = "UTF-8"
+    )
+    """
+    return f"{setup_code}\n{code}"

@@ -1,11 +1,8 @@
-def register_vcs_handler(vcs, method):  # डेकोरेटर
-    """
-    एक डेकोरेटर बनाएं जो किसी विधि को VCS के हैंडलर के रूप में चिह्नित करे।
-    """
-    def decorate(f):
-        # हैंडलर को रजिस्टर करें
-        if not hasattr(f, '_vcs_handlers'):
-            f._vcs_handlers = {}
-        f._vcs_handlers[vcs] = method
-        return f
-    return decorate
+def registra_gestore_vcs(vcs, metodo):  # decorator
+    """Crea un decorator per contrassegnare un metodo come gestore di un VCS."""
+    def decorator(func):
+        if not hasattr(func, '_vcs_gestori'):
+            func._vcs_gestori = {}
+        func._vcs_gestori[vcs] = metodo
+        return func
+    return decorator

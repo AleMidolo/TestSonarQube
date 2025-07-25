@@ -1,48 +1,46 @@
 def validate(self, inventory, extract_spec_version=False):
     """
-    दिए गए इन्वेंटरी को सत्यापित करें।
+    Convalida un inventario specificato.
 
-    यदि `extract_spec_version` का मान `True` है, तो यह `type` मान को देखकर 
-    स्पेसिफिकेशन वर्जन निर्धारित करेगा। यदि `type` मान मौजूद नहीं है या यह 
-    मान्य नहीं है, तो अन्य परीक्षण `self.spec_version` में दिए गए वर्जन के 
-    आधार पर किए जाएंगे।
+    Se `extract_spec_version` è impostato su `True`, verrà esaminato il valore del tipo (`type`) 
+    per determinare la versione della specifica. Nel caso in cui non sia presente un valore per 
+    il tipo o questo non sia valido, verranno eseguiti altri test basati sulla versione specificata 
+    in `self.spec_version`.
     """
-    if not isinstance(inventory, dict):
-        raise ValueError("Inventory must be a dictionary")
-
     if extract_spec_version:
         if 'type' in inventory:
-            type_value = inventory['type']
-            if isinstance(type_value, str):
-                # Extract version from type value
-                if type_value.startswith('v'):
-                    try:
-                        version = float(type_value[1:])
-                        self.spec_version = version
-                    except ValueError:
-                        pass # Use default spec_version if conversion fails
+            spec_type = inventory['type']
+            if spec_type in self.supported_spec_versions:
+                self.spec_version = spec_type
+            else:
+                print("Invalid type value. Falling back to default spec version.")
+                self.spec_version = self.default_spec_version
+        else:
+            print("No type value found. Falling back to default spec version.")
+            self.spec_version = self.default_spec_version
+    
+    # Perform validation based on the determined spec version
+    if self.spec_version == "v1":
+        self._validate_v1(inventory)
+    elif self.spec_version == "v2":
+        self._validate_v2(inventory)
+    else:
+        raise ValueError(f"Unsupported spec version: {self.spec_version}")
 
-    # Validate required fields based on spec_version
-    required_fields = ['id', 'name']
-    if self.spec_version >= 2.0:
-        required_fields.extend(['description', 'category'])
+def _validate_v1(self, inventory):
+    """
+    Validate inventory against v1 specification.
+    """
+    # Example validation logic for v1
+    if 'name' not in inventory:
+        raise ValueError("Inventory must have a 'name' field for v1 specification.")
+    # Add more validation rules as needed
 
-    for field in required_fields:
-        if field not in inventory:
-            raise ValueError(f"Missing required field: {field}")
-        if not inventory[field]:  # Check if value is empty
-            raise ValueError(f"Field '{field}' cannot be empty")
-
-    # Validate data types
-    if not isinstance(inventory['id'], (str, int)):
-        raise ValueError("'id' must be string or integer")
-    if not isinstance(inventory['name'], str):
-        raise ValueError("'name' must be string")
-
-    if self.spec_version >= 2.0:
-        if not isinstance(inventory['description'], str):
-            raise ValueError("'description' must be string")
-        if not isinstance(inventory['category'], str):
-            raise ValueError("'category' must be string")
-
-    return True
+def _validate_v2(self, inventory):
+    """
+    Validate inventory against v2 specification.
+    """
+    # Example validation logic for v2
+    if 'id' not in inventory:
+        raise ValueError("Inventory must have an 'id' field for v2 specification.")
+    # Add more validation rules as needed
