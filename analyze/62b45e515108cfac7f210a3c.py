@@ -5,12 +5,12 @@ def initialize(self):
     import os
 
     # Define the root directory for OCFL storage
-    root_directory = "ocfl_root"
+    root_directory = "ocfl_storage_root"
 
     # Check if the directory already exists
     if not os.path.exists(root_directory):
-        # Create the root directory
+        # Create the directory
         os.makedirs(root_directory)
-        print(f"OCFL storage root directory '{root_directory}' created.")
+        print(f"OCFL storage root directory '{root_directory}' has been created.")
     else:
         print(f"OCFL storage root directory '{root_directory}' already exists.")

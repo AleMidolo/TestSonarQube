@@ -11,8 +11,8 @@ def determineMetaclass(bases, explicit_mc=None):
 
     # 取所有元类的交集
     metaclass = metaclasses[0]
-    for m in metaclasses[1:]:
-        if not issubclass(m, metaclass):
-            metaclass = type('CombinedMeta', (metaclass, m), {})
+    for mc in metaclasses[1:]:
+        if not issubclass(mc, metaclass):
+            raise TypeError("基类的元类不一致")
     
     return metaclass

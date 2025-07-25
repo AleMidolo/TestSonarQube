@@ -12,7 +12,7 @@ def mru_cache(maxsize=128, typed=False):
 
         @wraps(func)
         def wrapper(*args, **kwargs):
-            key = args if not typed else (args, frozenset(kwargs.items()))
+            key = (args, frozenset(kwargs.items())) if typed else args
             if key in cache:
                 cache.move_to_end(key)  # Move the accessed item to the end
                 return cache[key]

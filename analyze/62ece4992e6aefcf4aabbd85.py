@@ -1,8 +1,5 @@
-from typing import Optional, Set
-from rdflib import Graph, URIRef
-
 def find_roots(
-    graph: Graph, prop: URIRef, roots: Optional[Set["Node"]] = None
+    graph: "Graph", prop: "URIRef", roots: Optional[Set["Node"]] = None
 ) -> Set["Node"]:
     """
     在某种传递层级结构中查找根节点。
@@ -20,13 +17,11 @@ def find_roots(
     if roots is None:
         roots = set()
 
-    # Find all nodes that have parents
-    children_with_parents = {child for child, _, parent in graph.triples((None, prop, None))}
+    all_children = {child for child, _, _ in graph.triples((None, prop, None))}
+    all_parents = {parent for _, _, parent in graph.triples((None, prop, None))}
 
-    # Find all nodes that are parents
-    parents = {parent for _, _, parent in graph.triples((None, prop, None))}
+    # 根节点是没有父节点的节点
+    root_candidates = all_children - all_parents
 
-    # Roots are those nodes that are not parents of any other nodes
-    roots = {child for child in children_with_parents if child not in parents}
-
+    roots.update(root_candidates)
     return roots

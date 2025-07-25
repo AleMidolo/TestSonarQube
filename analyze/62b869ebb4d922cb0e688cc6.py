@@ -14,10 +14,8 @@ def update_last_applied_manifest_list_from_resp(last_applied_manifest, observer_
         if field not in last_applied_manifest:
             last_applied_manifest[field] = None  # Initialize with None or appropriate default
 
-        # If the field is a list, we need to update it recursively
-        if isinstance(last_applied_manifest[field], list) and isinstance(response, list):
-            for item in response:
-                if item not in last_applied_manifest[field]:
-                    last_applied_manifest[field].append(item)
+        # If the field is a list, we need to update it with the response
+        if isinstance(last_applied_manifest[field], list):
+            last_applied_manifest[field] = response.get(field, [])
 
     return last_applied_manifest

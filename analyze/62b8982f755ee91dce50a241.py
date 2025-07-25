@@ -10,7 +10,7 @@ def normalized(self):
     relativedelta(days=+1, hours=+14)
 
     :return:
-      返回一个 :class:`dateutil.relativedelta.relativedelta` 对象。
+        返回一个 :class:`dateutil.relativedelta.relativedelta` 对象。
     """
     total_days = int(self.days) + int(self.hours // 24)
     total_hours = int(self.hours % 24)

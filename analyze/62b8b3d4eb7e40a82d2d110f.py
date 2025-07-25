@@ -10,8 +10,10 @@ def _should_attempt_c_optimizations():
     import sys
 
     # Check if running on PyPy
-    if 'pypy' in sys.version.lower():
-        return False
+    is_pypy = 'pypy' in sys.version.lower()
 
     # Check the environment variable for PURE_PYTHON
-    return os.getenv('_use_c_impl', '0') != '1'
+    pure_python = os.getenv('PURE_PYTHON', '0') == '1'
+
+    # Return True if not running on PyPy and PURE_PYTHON is not set
+    return not is_pypy and not pure_python

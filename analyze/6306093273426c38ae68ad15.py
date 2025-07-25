@@ -16,8 +16,8 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     if vars_dict:
         command += ['--extra-vars', json.dumps(vars_dict)]
 
-    # Run the command in the context of the Infrared workspace and plugin
-    result = subprocess.run(command, capture_output=True, text=True, cwd=ir_workspace.path)
+    # Run the command
+    result = subprocess.run(command, capture_output=True, text=True)
 
     # Check for errors
     if result.returncode != 0:
