@@ -11,7 +11,7 @@ def point_type(name, fields, srid_map):
         def __repr__(self):
             return f"{name}(" + ", ".join(f"{field}={getattr(self, field)}" for field in fields) + ")"
 
-    # Add a class attribute for SRID mapping
+    # Add SRID mapping
     Point.srid_map = srid_map
 
     return Point

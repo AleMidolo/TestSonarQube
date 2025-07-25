@@ -8,10 +8,12 @@ def get_spec_defaults(self):
         for arg in self.spec.get('args', []):
             if 'default' in arg:
                 defaults[arg['name']] = arg['default']
-    # Assuming 'self.other_sources' contains other sources for defaults
-    if hasattr(self, 'other_sources'):
-        for source in self.other_sources:
+    
+    # Assuming 'self.sources' contains other sources to extract defaults
+    if hasattr(self, 'sources'):
+        for source in self.sources:
             for arg in source.get('args', []):
                 if 'default' in arg and arg['name'] not in defaults:
                     defaults[arg['name']] = arg['default']
+    
     return defaults

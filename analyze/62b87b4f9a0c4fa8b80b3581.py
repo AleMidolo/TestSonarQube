@@ -26,5 +26,4 @@ def scale(self, other=None, recompute=False):
     if self._scale == 0:
         raise LenaValueError("Cannot rescale a histogram with zero scale.")
 
-    self._scale = other
-    self._rescale_histogram(other)
+    self._scale = other * self._scale

@@ -14,7 +14,7 @@ def make_parsers():
     sub_parser_a = subparsers.add_parser('command_a', help='कमांड A के लिए मदद')
     sub_parser_a.add_argument('--option', type=str, help='कमांड A के लिए विकल्प')
 
-    # एक और उप-पार्सर जोड़ें
+    # दूसरे उप-पार्सर जोड़ें
     sub_parser_b = subparsers.add_parser('command_b', help='कमांड B के लिए मदद')
     sub_parser_b.add_argument('--flag', action='store_true', help='कमांड B के लिए फ्लैग')
 

@@ -12,7 +12,7 @@ def xargs(
     from multiprocessing import Pool
 
     def _get_platform_max_length():
-        return os.pathconf('.', 'PC_PATH_MAX')
+        return 4096  # Example value, adjust as necessary
 
     def run_command(args):
         return subprocess.run(cmd + args, capture_output=True)
@@ -28,4 +28,7 @@ def xargs(
         results = pool.map(run_command, partitions)
 
     # Combine results
-    return (sum(result.returncode for result in results), b''.join(result.stdout for result in results))
+    return_code = sum(result.returncode for result in results)
+    combined_output = b''.join(result.stdout for result in results)
+
+    return return_code, combined_output

@@ -4,11 +4,23 @@ def cached(cache, key=hashkey, lock=None):
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            # Create a unique cache key based on the function arguments
+            # Generate the cache key
             cache_key = key(*args, **kwargs)
-            with (lock or dummy_lock):
-                if cache_key in cache:
-                    return cache[cache_key]
+            # Check if the result is in the cache
+            if cache_key in cache:
+                return cache[cache_key]
+            # Acquire lock if provided
+            if lock:
+                with lock:
+                    # Check again in case another thread has added the result
+                    if cache_key in cache:
+                        return cache[cache_key]
+                    # Call the function and cache the result
+                    result = func(*args, **kwargs)
+                    cache[cache_key] = result
+                    return result
+            else:
+                # Call the function and cache the result
                 result = func(*args, **kwargs)
                 cache[cache_key] = result
                 return result

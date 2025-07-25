@@ -30,7 +30,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     परिणामी ग्राफ़ लौटाएं।
     """
     if make_value is None:
-        make_value = lambda bin_: (bin_.content,)
+        make_value = lambda bin_: bin_.content
 
     coordinates = []
     values = []
@@ -53,4 +53,12 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         # Implement scaling logic if needed
         pass
 
-    return Graph(coordinates, values, field_names)
+    graph = {
+        field_names[0]: coordinates,
+        field_names[1]: [v[0] for v in values],
+    }
+
+    if len(field_names) > 2:
+        graph[field_names[2]] = [v[1] for v in values]
+
+    return graph
