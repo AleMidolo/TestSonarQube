@@ -1,16 +1,16 @@
 def size_to_bytes(size: str) -> int:
     """
-    Convertire una dimensione di file leggibile dall'uomo in byte.
+    Convertir tamaño de archivo legible por humanos a bytes.
 
-    Il valore risultante è un'approssimazione poiché il valore di input è nella maggior parte dei casi arrotondato.
+    El valor resultante es una aproximación, ya que el valor de entrada en la mayoría de los casos está redondeado.
 
     Args:
-        size: Una stringa che rappresenta una dimensione di file leggibile dall'uomo (es: '500K')
+        size: Una cadena que representa un tamaño de archivo legible por humanos (por ejemplo: '500K')
 
     Returns:
-        Una rappresentazione decimale della dimensione del file
+        Una representación decimal del tamaño del archivo
 
-    Esempi::
+    Ejemplos::
 
         >>> size_to_bytes("500")
         500

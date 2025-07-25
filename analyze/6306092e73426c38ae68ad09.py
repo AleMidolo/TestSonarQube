@@ -1,10 +1,11 @@
 def validate_length_args(self, args):
     """
-    Verifica se il valore degli argomenti non supera la lunghezza specificata.
+    Verifica si el valor de los argumentos no supera la longitud especificada.
 
-    :param args: Gli argomenti ricevuti.
+    :param args: Los argumentos recibidos.
     """
-    max_length = 100  # Esempio di lunghezza massima consentita
+    max_length = 100  # Ejemplo de longitud máxima permitida
     for arg in args:
         if len(str(arg)) > max_length:
-            raise ValueError(f"L'argomento {arg} supera la lunghezza massima consentita di {max_length} caratteri.")
+            raise ValueError(f"El argumento {arg} supera la longitud máxima permitida de {max_length} caracteres.")
+    return True

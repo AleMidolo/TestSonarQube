@@ -1,40 +1,52 @@
 def validate_version_inventories(self, version_dirs):
     """
-    Ogni versione DOVREBBE avere un inventario fino a quel punto.
-    Inoltre, tieni traccia di eventuali digest di contenuto diversi da quelli
-    presenti nell'inventario principale, in modo da poterli verificare
-    anche durante la validazione del contenuto.
+    Cada versión DEBE tener un inventario hasta ese punto.
 
-    version_dirs è un array di nomi di directory di versione e si presume
-    che sia in sequenza di versione (1, 2, 3...).
+    También se debe mantener un registro de cualquier resumen de contenido (digest) 
+    que sea diferente de los que están en el inventario raíz, 
+    para que también podamos verificarlos al validar el contenido.
+
+    'version_dirs' es un arreglo de nombres de directorios de versiones 
+    y se asume que están en secuencia de versiones (1, 2, 3...).
     """
-    inventory = set()
+    root_inventory = self._load_root_inventory()  # Load the root inventory
+    previous_inventory = root_inventory
+    discrepancies = {}
+
     for version_dir in version_dirs:
-        # Assuming each version directory contains an 'inventory.txt' file
-        inventory_path = os.path.join(version_dir, 'inventory.txt')
-        if not os.path.exists(inventory_path):
-            raise FileNotFoundError(f"Inventory file not found in {version_dir}")
+        version_inventory = self._load_version_inventory(version_dir)
         
-        with open(inventory_path, 'r') as file:
-            current_inventory = set(file.read().splitlines())
+        # Check if the version has an inventory
+        if not version_inventory:
+            raise ValueError(f"Version {version_dir} does not have an inventory.")
         
-        # Check if the current inventory is a superset of the previous inventory
-        if not current_inventory.issuperset(inventory):
-            raise ValueError(f"Inventory in {version_dir} is not a superset of previous inventories")
+        # Compare with the previous inventory
+        diff = self._compare_inventories(previous_inventory, version_inventory)
+        if diff:
+            discrepancies[version_dir] = diff
         
-        # Update the main inventory with the current inventory
-        inventory.update(current_inventory)
-        
-        # Track any content digests that are not in the main inventory
-        # Assuming content digests are stored in a 'content_digests.txt' file
-        content_digests_path = os.path.join(version_dir, 'content_digests.txt')
-        if os.path.exists(content_digests_path):
-            with open(content_digests_path, 'r') as file:
-                content_digests = set(file.read().splitlines())
-            
-            # Check if any content digest is not in the main inventory
-            missing_digests = content_digests - inventory
-            if missing_digests:
-                raise ValueError(f"Content digests {missing_digests} in {version_dir} are not in the main inventory")
-    
-    return True
+        # Update the previous inventory for the next iteration
+        previous_inventory = version_inventory
+
+    return discrepancies
+
+def _load_root_inventory(self):
+    """
+    Load the root inventory.
+    """
+    # Implementation to load the root inventory
+    pass
+
+def _load_version_inventory(self, version_dir):
+    """
+    Load the inventory for a specific version directory.
+    """
+    # Implementation to load the version inventory
+    pass
+
+def _compare_inventories(self, inv1, inv2):
+    """
+    Compare two inventories and return the differences.
+    """
+    # Implementation to compare inventories
+    pass

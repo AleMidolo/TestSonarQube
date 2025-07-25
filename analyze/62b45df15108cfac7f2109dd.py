@@ -1,5 +1,5 @@
 def status_str(self, prefix=''):
     """
-    Restituisce la rappresentazione in formato stringa del registro di validazione, con un prefisso opzionale.
+    Devuelve la representación en forma de cadena del registro de validación, con un prefijo opcional.
     """
-    return f"{prefix}Validation Status: {self.status}"
+    return f"{prefix}Status: {self.status}"

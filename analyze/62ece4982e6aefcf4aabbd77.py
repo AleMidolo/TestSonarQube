@@ -3,21 +3,20 @@ from datetime import timedelta
 
 def parse_frequency(frequency):
     """
-    Dato un valore di frequenza sotto forma di stringa contenente un numero e un'unità di tempo,
-    restituisci un'istanza corrispondente di datetime.timedelta o None se la frequenza è None o "always".
+    Dado un string de frecuencia con un número y una unidad de tiempo, devuelve una instancia correspondiente de 'datetime.timedelta' o 'None' si la frecuencia es 'None' o "always".
 
-    Ad esempio, dato "3 weeks", restituisci datetime.timedelta(weeks=3).
+    Por ejemplo, dado "3 weeks", devuelve datetime.timedelta(weeks=3).
 
-    Genera un'eccezione ValueError se la frequenza fornita non può essere analizzata.
+    Lanza ValueError si la frecuencia proporcionada no puede ser analizada
     """
     if frequency is None or frequency.lower() == "always":
         return None
     
     pattern = re.compile(r'^(\d+)\s*(second|minute|hour|day|week|month|year)s?$', re.IGNORECASE)
-    match = pattern.match(frequency)
+    match = pattern.match(frequency.strip())
     
     if not match:
-        raise ValueError(f"Frequenza non valida: {frequency}")
+        raise ValueError(f"Frecuencia no válida: {frequency}")
     
     value = int(match.group(1))
     unit = match.group(2).lower()
@@ -33,8 +32,8 @@ def parse_frequency(frequency):
     elif unit == "week":
         return timedelta(weeks=value)
     elif unit == "month":
-        return timedelta(days=30 * value)  # Approximazione di un mese come 30 giorni
+        return timedelta(days=value * 30)  # Aproximación de 30 días por mes
     elif unit == "year":
-        return timedelta(days=365 * value)  # Approximazione di un anno come 365 giorni
+        return timedelta(days=value * 365)  # Aproximación de 365 días por año
     else:
-        raise ValueError(f"Unità di tempo non riconosciuta: {unit}")
+        raise ValueError(f"Unidad de tiempo no válida: {unit}")

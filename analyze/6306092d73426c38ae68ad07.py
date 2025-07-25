@@ -1,7 +1,7 @@
-def validate_requires_args(self, args):
+def validar_argumentos_requeridos(self, args):
     """
-    Verifica se sono stati forniti tutti gli argomenti richiesti.
+    Verifica si se han proporcionado todos los argumentos requeridos.
     """
-    if not args:
-        raise ValueError("Nessun argomento fornito.")
+    if not all(args.values()):
+        raise ValueError("Faltan argumentos requeridos.")
     return True

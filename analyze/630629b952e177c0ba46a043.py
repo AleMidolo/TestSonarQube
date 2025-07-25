@@ -1,20 +1,20 @@
-import json
-
 def get_nodeinfo_well_known_document(url, document_path=None):
     """
-    Genera un documento NodeInfo `.well-known`.
+    Genera un documento .well-known de NodeInfo.
 
-    Consulta la specifica: [http://nodeinfo.diaspora.software](http://nodeinfo.diaspora.software)
+    Consulta la especificación: [http://nodeinfo.diaspora.software](http://nodeinfo.diaspora.software)
 
-    :param url: L'URL base completo con protocollo, ad esempio `https://example.com`  
-    :param document_path: Percorso personalizzato per il documento NodeInfo, se fornito (opzionale)  
-    :returns: dict
+    :arg url: La URL base completa con protocolo, por ejemplo, `https://example.com`.
+    :arg document_path: Ruta personalizada para el documento NodeInfo si se proporciona (opcional).
+
+    :returns:
+    Un diccionario (`dict`).
     """
-    if document_path is None:
-        document_path = "/.well-known/nodeinfo"
-    
-    nodeinfo_url = f"{url.rstrip('/')}{document_path}"
-    
+    if document_path:
+        nodeinfo_url = f"{url}/{document_path.lstrip('/')}"
+    else:
+        nodeinfo_url = f"{url}/.well-known/nodeinfo"
+
     well_known_document = {
         "links": [
             {
@@ -27,5 +27,4 @@ def get_nodeinfo_well_known_document(url, document_path=None):
             }
         ]
     }
-    
     return well_known_document

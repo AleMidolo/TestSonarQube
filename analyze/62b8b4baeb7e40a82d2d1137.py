@@ -1,32 +1,56 @@
 from zope.interface import Invalid, providedBy
-from zope.interface.verify import verifyObject as zope_verifyObject
+import inspect
 
 def verifyObject(iface, candidate, tentative=False):
     """
-    Verifica che il *candidate* possa fornire correttamente l'*iface*.
+    Verifica que el *candidate* pueda proporcionar correctamente la interfaz *iface*.
 
-    Questo comporta:
+    Esto implica:
 
-    - Assicurarsi che il candidato dichiari di fornire l'interfaccia utilizzando ``iface.providedBy`` (a meno che *tentative* sia `True`, nel qual caso questo passaggio viene saltato). Questo significa che la classe del candidato dichiara di `implementare <zope.interface.implementer>` l'interfaccia, oppure che il candidato stesso dichiara di `fornire <zope.interface.provider>` l'interfaccia.
+    - Asegurarse de que el candidato afirma que proporciona la interfaz utilizando ``iface.providedBy`` (a menos que *tentative* sea `True`, en cuyo caso este paso se omite). Esto significa que la clase del candidato declara que `implementa <zope.interface.implementer>` la interfaz, o que el propio candidato declara que `proporciona <zope.interface.provider>` la interfaz.
 
-    - Assicurarsi che il candidato definisca tutti i metodi necessari.
+    - Asegurarse de que el candidato define todos los métodos necesarios.
 
-    - Assicurarsi che i metodi abbiano la firma corretta (per quanto possibile).
+    - Asegurarse de que los métodos tienen la firma correcta (en la medida de lo posible).
 
-    - Assicurarsi che il candidato definisca tutti gli attributi necessari.
+    - Asegurarse de que el candidato define todos los atributos necesarios.
 
-    :return bool: Restituisce un valore vero se tutto ciò che poteva essere verificato è stato superato.
-    :raises zope.interface.Invalid: Se una qualsiasi delle condizioni precedenti non è soddisfatta.
+    :return bool: Devuelve un valor verdadero si todo lo que se pudo verificar pasó correctamente.
+    :raises zope.interface.Invalid: Si alguna de las condiciones anteriores no se cumple.
 
     .. versionchanged:: 5.0  
-        Se più metodi o attributi sono invalidi, tutti questi errori vengono raccolti e riportati. In precedenza, veniva segnalato solo il primo errore. Come caso speciale, se è presente un solo errore, viene sollevato singolarmente, come in passato.
+        Si múltiples métodos o atributos son inválidos, todos esos errores se recopilan y se informan. Anteriormente, solo se informaba el primer error. Como caso especial, si solo hay un error presente, este se lanza de forma individual, como antes.
     """
-    if not tentative and not iface.providedBy(candidate):
-        raise Invalid(f"The candidate does not provide the interface {iface}.")
+    errors = []
 
-    try:
-        zope_verifyObject(iface, candidate)
-    except Invalid as e:
-        raise Invalid(f"Verification failed: {e}")
+    # Verificar si el candidato proporciona la interfaz, a menos que tentative sea True
+    if not tentative and not iface.providedBy(candidate):
+        errors.append(f"El candidato no proporciona la interfaz {iface.__name__}.")
+
+    # Verificar métodos requeridos
+    for method_name in iface.names():
+        if not hasattr(candidate, method_name):
+            errors.append(f"El candidato no tiene el método requerido: {method_name}.")
+            continue
+
+        # Verificar la firma del método si es posible
+        candidate_method = getattr(candidate, method_name)
+        if inspect.isfunction(candidate_method) or inspect.ismethod(candidate_method):
+            try:
+                inspect.signature(candidate_method)
+            except ValueError:
+                errors.append(f"La firma del método {method_name} no es válida.")
+
+    # Verificar atributos requeridos
+    for attr_name in iface.names(all=True):
+        if not hasattr(candidate, attr_name):
+            errors.append(f"El candidato no tiene el atributo requerido: {attr_name}.")
+
+    # Manejar errores
+    if errors:
+        if len(errors) == 1:
+            raise Invalid(errors[0])
+        else:
+            raise Invalid("\n".join(errors))
 
     return True

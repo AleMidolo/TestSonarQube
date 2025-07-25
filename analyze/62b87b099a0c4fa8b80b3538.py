@@ -1,5 +1,5 @@
 def is_fill_request_el(obj):
     """
-    L'oggetto contiene i metodi eseguibili `fill` e `request`.
+    El objeto contiene métodos ejecutables `fill` y `request`.
     """
     return callable(getattr(obj, 'fill', None)) and callable(getattr(obj, 'request', None))

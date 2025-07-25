@@ -2,18 +2,18 @@ import os
 
 def find_path_type(path):
     """
-    Restituisce una stringa che indica il tipo di elemento presente nel percorso specificato.
+    Devuelve una cadena que indica el tipo de elemento en la ruta proporcionada.
 
-    Valori restituiti:
-        'root' - sembra essere una Radice di Archiviazione OCFL (OCFL Storage Root)
-        'object' - sembra essere un Oggetto OCFL (OCFL Object)
-        'file' - un file, potrebbe essere un inventario
-        altra stringa - descrive un errore o una spiegazione del problema
+    Valores de retorno:
+        'root' - parece ser una Raíz de Almacenamiento OCFL
+        'object' - parece ser un Objeto OCFL
+        'file' - un archivo, podría ser un inventario
+        otra cadena explica la descripción del error
 
-    Si basa esclusivamente sui file "0=*" Namaste per determinare il tipo di directory.
+    Solo examina los archivos "0=*" Namaste para determinar el tipo de directorio.
     """
     if not os.path.exists(path):
-        return "Il percorso specificato non esiste."
+        return "La ruta no existe."
     
     if os.path.isfile(path):
         return "file"
@@ -21,15 +21,14 @@ def find_path_type(path):
     namaste_files = [f for f in os.listdir(path) if f.startswith("0=")]
     
     if not namaste_files:
-        return "La directory non contiene file Namaste."
+        return "No se encontraron archivos Namaste en la ruta."
     
-    namaste_file = namaste_files[0]
-    with open(os.path.join(path, namaste_file), 'r') as f:
-        content = f.read().strip()
+    for namaste_file in namaste_files:
+        with open(os.path.join(path, namaste_file), 'r') as f:
+            content = f.read().strip()
+            if content == "ocfl_object_1.0":
+                return "object"
+            elif content == "ocfl_1.0":
+                return "root"
     
-    if content == "ocfl_1.0":
-        return "root"
-    elif content == "ocfl_object_1.0":
-        return "object"
-    else:
-        return f"Contenuto del file Namaste non riconosciuto: {content}"
+    return "No se pudo determinar el tipo de la ruta."

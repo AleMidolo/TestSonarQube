@@ -1,21 +1,21 @@
-import argparse
-
 def make_parsers():
     """
-    Crea un parser di livello superiore e i suoi sottoparser, quindi restituiscili come una tupla.
+    Crear un analizador de nivel superior y sus subanalizadores, y devolverlos como una tupla.
     """
-    # Creazione del parser principale
-    main_parser = argparse.ArgumentParser(description="Parser principale")
+    import argparse
 
-    # Creazione dei sottoparser
-    subparsers = main_parser.add_subparsers(title="comandi", dest="comando")
+    # Crear el analizador de nivel superior
+    parser = argparse.ArgumentParser(description="Analizador de nivel superior")
 
-    # Sottoparser per il comando 'comando1'
-    parser_comando1 = subparsers.add_parser('comando1', help="Descrizione del comando1")
-    parser_comando1.add_argument('arg1', type=str, help="Descrizione di arg1")
+    # Crear subanalizadores
+    subparsers = parser.add_subparsers(dest="command", help="Subcomandos disponibles")
 
-    # Sottoparser per il comando 'comando2'
-    parser_comando2 = subparsers.add_parser('comando2', help="Descrizione del comando2")
-    parser_comando2.add_argument('arg2', type=int, help="Descrizione di arg2")
+    # Subanalizador para el comando 'foo'
+    parser_foo = subparsers.add_parser('foo', help='Comando foo')
+    parser_foo.add_argument('--bar', type=int, help='Argumento bar para foo')
 
-    return main_parser, subparsers
+    # Subanalizador para el comando 'baz'
+    parser_baz = subparsers.add_parser('baz', help='Comando baz')
+    parser_baz.add_argument('--qux', type=str, help='Argumento qux para baz')
+
+    return parser, subparsers

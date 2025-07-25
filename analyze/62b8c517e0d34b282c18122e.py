@@ -1,42 +1,31 @@
 def extostr(cls, e, max_level=30, max_path_level=5):
     """
-    Formatta un'eccezione.
-    :param e: Qualsiasi istanza di eccezione.
+    Formatear una excepción.
+    :param e: Cualquier instancia de excepción.
     :type e: Exception
-    :param max_level: Livello massimo dello stack delle chiamate (predefinito 30)
+    :param max_level: Nivel máximo de la pila de llamadas (por defecto 30).
     :type max_level: int
-    :param max_path_level: Livello massimo del percorso (predefinito 5)
+    :param max_path_level: Nivel máximo de la ruta (por defecto 5).
     :type max_path_level: int
-    :return: La stringa leggibile dell'eccezione
+    :return: La cadena legible de la excepción.
     :rtype: str
     """
     import traceback
     
-    # Estrai lo stack trace
-    stack_trace = traceback.format_exc()
+    # Obtener la traza de la excepción
+    tb_list = traceback.format_exception(type(e), e, e.__traceback__)
     
-    # Limita il numero di livelli dello stack
-    stack_lines = stack_trace.splitlines()
-    if len(stack_lines) > max_level:
-        stack_lines = stack_lines[:max_level]
-        stack_lines.append("... (stack trace truncated)")
+    # Limitar el número de niveles de la pila de llamadas
+    if len(tb_list) > max_level:
+        tb_list = tb_list[:max_level]
     
-    # Limita il numero di livelli del percorso
-    path_lines = []
-    for line in stack_lines:
-        if "File" in line and "line" in line:
-            parts = line.split(", ")
-            if len(parts) > max_path_level:
-                parts = parts[:max_path_level]
-                parts.append("... (path truncated)")
-            line = ", ".join(parts)
-        path_lines.append(line)
+    # Limitar el número de niveles de la ruta
+    for i in range(len(tb_list)):
+        parts = tb_list[i].split('\n')
+        if len(parts) > max_path_level * 2:
+            parts = parts[:max_path_level * 2]
+            parts.append('...')
+        tb_list[i] = '\n'.join(parts)
     
-    # Unisci le linee in una stringa
-    formatted_trace = "\n".join(path_lines)
-    
-    # Aggiungi il messaggio dell'eccezione
-    exception_message = str(e)
-    formatted_exception = f"{exception_message}\n{formatted_trace}"
-    
-    return formatted_exception
+    # Unir la traza en una sola cadena
+    return ''.join(tb_list)

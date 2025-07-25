@@ -1,11 +1,11 @@
 def _convert_non_cli_args(self, parser_name, values_dict):
     """
-    Converte gli argomenti nei tipi corretti modificando il parametro values_dict.
+    Convierte los argumentos a los tipos correctos modificando el parámetro values_dict.
 
-    Per impostazione predefinita, tutti i valori sono stringhe.
+    Por defecto, todos los valores son cadenas de texto (strings).
 
-    :param parser_name: Il nome del comando, ad esempio main, virsh, ospd, ecc.
-    :param values_dict: Il dizionario con gli argomenti
+    :param parser_name: El nombre del comando, por ejemplo: main, virsh, ospd, etc.
+    :param values_dict: El diccionario con los argumentos.
     """
     for key, value in values_dict.items():
         if isinstance(value, str):

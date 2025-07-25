@@ -1,7 +1,7 @@
-def strip_root(percorso, radice):
+def strip_root(path, root):
     """
-    Rimuovi la radice dal percorso, genera un'eccezione in caso di errore.
+    Eliminar la raíz de la ruta, lanzar una excepción en caso de fallo.
     """
-    if not percorso.startswith(radice):
-        raise ValueError("Il percorso non inizia con la radice specificata.")
-    return percorso[len(radice):]
+    if not path.startswith(root):
+        raise ValueError("La ruta no comienza con la raíz especificada.")
+    return path[len(root):]

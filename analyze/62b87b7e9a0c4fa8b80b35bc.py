@@ -1,36 +1,28 @@
 def _update_context(self, context):
     """
-    Aggiorna il *context* con le proprietà di questo grafo.
+    Actualiza *context* con las propiedades de este grafo.
 
-    *context.error* viene aggiornato aggiungendo gli indici degli errori.
-    Esempio di subcontext per un grafo con i campi "E,t,error_E_low":
-    `{"error": {"x_low": {"index": 2}}}`.
-    Nota che i nomi degli errori sono chiamati "x", "y" e "z"
-    (questo corrisponde alle prime tre coordinate, se presenti),
-    il che consente di semplificare la rappresentazione grafica.
-    I valori esistenti non vengono rimossi
-    da *context.value* e dai suoi subcontesti.
+    *context.error* se amplía con los índices de los errores.  
+    Ejemplo de subcontexto para un grafo con los campos "E,t,error_E_low":  
+    `{"error": {"x_low": {"index": 2}}}`.  
+    Ten en cuenta que los nombres de los errores se denominan "x", "y" y "z"  
+    (esto corresponde a las primeras tres coordenadas, si están presentes),  
+    lo que permite simplificar la representación gráfica.  
+    Los valores existentes no se eliminan de *context.value* ni de sus subcontextos.
 
-    Viene chiamato durante la "distruzione" del grafo (ad esempio,
-    nella classe :class:`.ToCSV`). Per "distruzione" si intende la conversione
-    in un'altra struttura (come il testo) nel flusso di lavoro.
-    L'oggetto grafo non viene realmente distrutto in questo processo.
+    Se llama durante la "destrucción" del grafo (por ejemplo,  
+    en :class:`.ToCSV`). Por destrucción nos referimos a la conversión  
+    a otra estructura (como texto) en el flujo.  
+    El objeto grafo no se destruye realmente en este proceso.
     """
     if not hasattr(context, 'error'):
         context.error = {}
 
-    # Aggiorna gli errori con gli indici corrispondenti
-    for i, error_key in enumerate(['x', 'y', 'z']):
-        if hasattr(self, f'error_{error_key}_low'):
-            context.error[f'{error_key}_low'] = {'index': i * 2}
-        if hasattr(self, f'error_{error_key}_high'):
-            context.error[f'{error_key}_high'] = {'index': i * 2 + 1}
+    # Supongamos que el grafo tiene una propiedad `error_indices` que contiene los índices de los errores
+    if hasattr(self, 'error_indices'):
+        for i, error_index in enumerate(self.error_indices):
+            error_name = ['x', 'y', 'z'][i] if i < 3 else f'error_{i}'
+            context.error[f'{error_name}_low'] = {'index': error_index}
 
-    # Mantieni i valori esistenti in context.value
-    if not hasattr(context, 'value'):
-        context.value = {}
-
-    # Aggiungi eventuali altre proprietà del grafo al contesto
-    for key, value in self.__dict__.items():
-        if key not in ['error_x_low', 'error_x_high', 'error_y_low', 'error_y_high', 'error_z_low', 'error_z_high']:
-            context.value[key] = value
+    # No se eliminan los valores existentes en context.value o sus subcontextos
+    return context

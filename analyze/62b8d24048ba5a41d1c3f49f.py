@@ -1,5 +1,5 @@
 import time
-from functools import wraps, lru_cache
+from functools import lru_cache, wraps
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     def decorator(func):
@@ -9,13 +9,17 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
 
         @wraps(func)
         def wrapper(*args, **kwargs):
-            key = (args, frozenset(kwargs.items())) if kwargs else args
+            key = (args, frozenset(kwargs.items())) if typed else (args, tuple(kwargs.items()))
+            current_time = timer()
             if key in wrapper._cache_info:
-                value, timestamp = wrapper._cache_info[key]
-                if timer() - timestamp < ttl:
-                    return value
+                last_access_time, result = wrapper._cache_info[key]
+                if current_time - last_access_time < ttl:
+                    wrapper._cache_info[key] = (current_time, result)
+                    return result
+                else:
+                    del wrapper._cache_info[key]
             result = cached_func(*args, **kwargs)
-            wrapper._cache_info[key] = (result, timer())
+            wrapper._cache_info[key] = (current_time, result)
             return result
 
         wrapper._cache_info = {}

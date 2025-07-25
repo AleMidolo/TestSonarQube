@@ -4,27 +4,27 @@ from collections import defaultdict
 
 def _explore_zipfile(zip_path):
     """
-    Ottiene i dati dei pacchetti dal percorso zip fornito.
+    Obtiene los datos de los paquetes desde `zip_path`.
 
-    Raggruppa i file in base al nome base dei loro file XML e restituisce i dati in formato dizionario.
+    Agrupa los archivos por el nombre base de su archivo XML y devuelve los datos en formato de diccionario.
 
-    Parametri
+    Parámetros
     ----------
-    zip_path : str  
-        Percorso del file zip.
-
-    Restituisce
+    zip_path: str  
+        Ruta del archivo zip.
+    Retorna
     -------
-    dict
-        Un dizionario che raggruppa i file in base al nome base dei loro file XML.
+    dict  
+        Diccionario que agrupa los archivos por el nombre base de su archivo XML.
     """
-    data = defaultdict(list)
+    data_dict = defaultdict(list)
     
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         for file_name in zip_ref.namelist():
-            base_name = os.path.splitext(os.path.basename(file_name))[0]
-            if file_name.endswith('.xml'):
-                with zip_ref.open(file_name) as xml_file:
-                    data[base_name].append(xml_file.read())
+            base_name = os.path.basename(file_name)
+            if base_name.endswith('.xml'):
+                base_key = base_name[:-4]  # Remove '.xml' extension
+                with zip_ref.open(file_name) as file:
+                    data_dict[base_key].append(file.read())
     
-    return dict(data)
+    return dict(data_dict)

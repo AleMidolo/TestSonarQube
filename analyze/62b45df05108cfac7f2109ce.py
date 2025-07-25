@@ -1,39 +1,44 @@
 def validate(self, path):
     """
-    Valida l'oggetto OCFL nel percorso specificato o nella radice di pyfs.
+    Valida el objeto OCFL en la ruta o en la raíz de pyfs.
+
+    Devuelve True si es válido (se permiten advertencias), False en caso contrario.
     """
-    # Implementazione della validazione dell'oggetto OCFL
-    # Questo è un esempio di implementazione, potrebbe essere necessario adattarlo
-    # in base alle specifiche OCFL e alla struttura del filesystem.
-
     import os
-    from pathlib import Path
+    import json
 
-    # Verifica se il percorso esiste
+    # Verificar si la ruta existe
     if not os.path.exists(path):
-        raise FileNotFoundError(f"Il percorso {path} non esiste.")
+        return False
 
-    # Verifica se il percorso è una directory
+    # Verificar si es un directorio
     if not os.path.isdir(path):
-        raise NotADirectoryError(f"Il percorso {path} non è una directory.")
+        return False
 
-    # Verifica la presenza dei file e delle directory richiesti da OCFL
-    required_files = ["0=ocfl_object_1.0", "inventory.json", "inventory.json.sha512"]
-    for file in required_files:
-        if not os.path.exists(os.path.join(path, file)):
-            raise ValueError(f"File richiesto {file} non trovato nel percorso {path}.")
+    # Verificar la existencia del archivo 'inventory.json'
+    inventory_path = os.path.join(path, 'inventory.json')
+    if not os.path.isfile(inventory_path):
+        return False
 
-    # Verifica la struttura delle directory
-    for root, dirs, files in os.walk(path):
-        for dir_name in dirs:
-            if dir_name.startswith("v"):
-                # Verifica che le directory di versione siano numerate correttamente
-                try:
-                    version_number = int(dir_name[1:])
-                    if version_number < 1:
-                        raise ValueError(f"Numero di versione non valido nella directory {dir_name}.")
-                except ValueError:
-                    raise ValueError(f"Formato non valido per la directory di versione {dir_name}.")
+    # Intentar cargar el archivo 'inventory.json'
+    try:
+        with open(inventory_path, 'r') as f:
+            inventory = json.load(f)
+    except json.JSONDecodeError:
+        return False
 
-    # Se tutte le verifiche sono passate, l'oggetto OCFL è valido
+    # Verificar la estructura básica del inventario
+    required_keys = {'id', 'type', 'digestAlgorithm', 'head', 'manifest', 'versions'}
+    if not required_keys.issubset(inventory.keys()):
+        return False
+
+    # Verificar que el algoritmo de digestión sea válido
+    if inventory['digestAlgorithm'] not in ['sha256', 'sha512']:
+        return False
+
+    # Verificar que hay al menos una versión
+    if not inventory['versions']:
+        return False
+
+    # Si todas las verificaciones pasan, devolver True
     return True

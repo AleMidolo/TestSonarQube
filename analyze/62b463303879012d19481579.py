@@ -1,32 +1,27 @@
 def _extract_number_and_supplment_from_issue_element(issue):
     """
-    Estrai i possibili valori di numero e supplemento dai issue.
-
+    Extrae los posibles valores de 'number' y 'suppl' a partir del contenido de 'issue'.
+    
     Args:
-        issue (str): La stringa che rappresenta il numero e il supplemento dell'issue.
-
+        issue (str): El contenido del elemento 'issue'.
+    
     Returns:
-        tuple: Una tupla contenente il numero (int) e il supplemento (str) estratti.
-               Se il supplemento non è presente, il secondo elemento della tupla sarà None.
+        tuple: Una tupla con dos elementos (number, suppl), donde 'number' es el número de la edición
+               y 'suppl' es el suplemento (si existe). Si no se encuentra un número o suplemento,
+               se devuelve None para ese valor.
     """
-    # Rimuovi eventuali spazi bianchi all'inizio e alla fine
-    issue = issue.strip()
+    number = None
+    suppl = None
     
-    # Cerca un numero all'inizio della stringa
-    number_part = ''
-    i = 0
-    while i < len(issue) and issue[i].isdigit():
-        number_part += issue[i]
-        i += 1
+    # Buscar el número en el texto
+    import re
+    number_match = re.search(r'\d+', issue)
+    if number_match:
+        number = int(number_match.group())
     
-    # Se non è stato trovato un numero, restituisci None per entrambi i valori
-    if not number_part:
-        return (None, None)
+    # Buscar el suplemento en el texto
+    suppl_match = re.search(r'suppl\.?\s*(\d+)', issue, re.IGNORECASE)
+    if suppl_match:
+        suppl = int(suppl_match.group(1))
     
-    # Converti il numero in intero
-    number = int(number_part)
-    
-    # Il resto della stringa è il supplemento
-    suppliment = issue[i:].strip() or None
-    
-    return (number, suppliment)
+    return number, suppl

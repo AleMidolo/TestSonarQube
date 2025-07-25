@@ -1,9 +1,9 @@
 def values(self, *keys):
     """
-    Restituisce i valori del record, con la possibilità di filtrare per includere solo determinati valori in base all'indice o alla chiave.
+    Devuelve los valores del registro, filtrando opcionalmente para incluir solo ciertos valores por índice o clave.
 
-    :param keys: indici o chiavi degli elementi da includere; se non viene fornito nessun parametro, verranno inclusi tutti i valori  
-    :return: lista di valori  
+    :param keys: índices o claves de los elementos a incluir; si no se proporcionan, se incluirán todos los valores  
+    :return: lista de valores  
     :rtype: list
     """
     if not keys:

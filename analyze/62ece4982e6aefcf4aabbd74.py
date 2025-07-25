@@ -3,8 +3,7 @@ import shutil
 import tempfile
 from pathlib import Path
 from typing import Optional, Union
-from zipfile import ZipFile
-from tarfile import TarFile
+from urllib.parse import urljoin
 
 def prepare_repository_from_archive(
     archive_path: str,
@@ -14,34 +13,28 @@ def prepare_repository_from_archive(
     # Convert tmp_path to Path object if it's a string
     tmp_path = Path(tmp_path) if isinstance(tmp_path, str) else tmp_path
     
-    # Ensure the temporary directory exists
+    # Ensure the tmp_path exists
     tmp_path.mkdir(parents=True, exist_ok=True)
     
-    # Create a temporary directory to extract the archive
-    extract_dir = tempfile.mkdtemp(dir=tmp_path)
-    
-    # Determine the archive type based on the file extension
-    if archive_path.endswith('.zip'):
-        with ZipFile(archive_path, 'r') as zip_ref:
-            zip_ref.extractall(extract_dir)
-    elif archive_path.endswith('.tar.gz') or archive_path.endswith('.tgz'):
-        with TarFile.open(archive_path, 'r:gz') as tar_ref:
-            tar_ref.extractall(extract_dir)
-    elif archive_path.endswith('.tar.bz2') or archive_path.endswith('.tbz2'):
-        with TarFile.open(archive_path, 'r:bz2') as tar_ref:
-            tar_ref.extractall(extract_dir)
-    elif archive_path.endswith('.tar'):
-        with TarFile.open(archive_path, 'r') as tar_ref:
-            tar_ref.extractall(extract_dir)
-    else:
-        raise ValueError("Unsupported archive format")
-    
-    # If a specific filename is provided, return the path to that file
-    if filename:
-        file_path = os.path.join(extract_dir, filename)
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f"File {filename} not found in the archive")
-        return file_path
-    
-    # Otherwise, return the path to the extracted directory
-    return extract_dir
+    # Create a temporary directory within tmp_path
+    with tempfile.TemporaryDirectory(dir=tmp_path) as temp_dir:
+        # Extract the archive to the temporary directory
+        shutil.unpack_archive(archive_path, temp_dir)
+        
+        # If filename is provided, use it as the repository name
+        if filename:
+            repo_name = filename
+        else:
+            # Use the archive's basename without extension as the repository name
+            repo_name = Path(archive_path).stem
+        
+        # Create the final repository path
+        repo_path = tmp_path / repo_name
+        
+        # Move the extracted contents to the final repository path
+        shutil.move(temp_dir, repo_path)
+        
+        # Generate the URL for the repository
+        repo_url = urljoin("file://", str(repo_path))
+        
+        return repo_url

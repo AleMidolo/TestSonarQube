@@ -1,43 +1,66 @@
 import logging
 import os
 import yaml
-from typing import Dict, List, Tuple, Optional, Sequence
 
-def load_configurations(config_filenames: List[str], overrides: Optional[Dict] = None, resolve_env: bool = True) -> Tuple[Dict[str, Dict], Sequence[logging.LogRecord]]:
+def load_configurations(config_filenames, overrides=None, resolve_env=True):
     """
-    Dato un elenco di nomi di file di configurazione, carica e valida ciascun file di configurazione.
-    Restituisci i risultati come una tupla composta da:
-    - un dizionario che associa il nome del file di configurazione alla corrispondente configurazione analizzata,
-    - una sequenza di istanze di `logging.LogRecord` contenenti eventuali errori di analisi.
+    Dada una secuencia de nombres de archivo de configuración, carga y valida cada archivo de configuración. 
+    Si el archivo de configuración no puede ser leído debido a permisos insuficientes o errores al analizar 
+    el archivo de configuración, se registrará el error en el log. De lo contrario, devuelve los resultados 
+    como una tupla que contiene: un diccionario que asocia el nombre del archivo de configuración con su 
+    configuración analizada correspondiente, y una secuencia de instancias de `logging.LogRecord` que 
+    contienen cualquier error de análisis.
     """
     configurations = {}
-    errors = []
+    log_records = []
 
-    for config_filename in config_filenames:
+    for filename in config_filenames:
         try:
-            with open(config_filename, 'r') as file:
-                config_data = yaml.safe_load(file)
+            with open(filename, 'r') as file:
+                config = yaml.safe_load(file)
                 
                 if resolve_env:
-                    for key, value in config_data.items():
+                    for key, value in config.items():
                         if isinstance(value, str) and value.startswith('${') and value.endswith('}'):
                             env_var = value[2:-1]
-                            config_data[key] = os.getenv(env_var, value)
+                            config[key] = os.getenv(env_var, value)
                 
                 if overrides:
-                    config_data.update(overrides)
+                    config.update(overrides)
                 
-                configurations[config_filename] = config_data
-        except Exception as e:
-            error_message = f"Error loading configuration from {config_filename}: {str(e)}"
-            errors.append(logging.LogRecord(
+                configurations[filename] = config
+        except PermissionError:
+            logging.error(f"Permiso denegado para leer el archivo de configuración: {filename}")
+            log_records.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
-                pathname=__file__,
+                pathname=filename,
                 lineno=0,
-                msg=error_message,
+                msg=f"Permiso denegado para leer el archivo de configuración: {filename}",
+                args=None,
+                exc_info=None
+            ))
+        except yaml.YAMLError as e:
+            logging.error(f"Error al analizar el archivo de configuración {filename}: {e}")
+            log_records.append(logging.LogRecord(
+                name=__name__,
+                level=logging.ERROR,
+                pathname=filename,
+                lineno=0,
+                msg=f"Error al analizar el archivo de configuración {filename}: {e}",
+                args=None,
+                exc_info=None
+            ))
+        except Exception as e:
+            logging.error(f"Error inesperado al procesar el archivo de configuración {filename}: {e}")
+            log_records.append(logging.LogRecord(
+                name=__name__,
+                level=logging.ERROR,
+                pathname=filename,
+                lineno=0,
+                msg=f"Error inesperado al procesar el archivo de configuración {filename}: {e}",
                 args=None,
                 exc_info=None
             ))
 
-    return configurations, errors
+    return configurations, log_records
