@@ -16,14 +16,15 @@ def scale(self, other=None):
     Todos los errores se reajustan junto con su coordenada.
     """
     if other is None:
-        return self.current_scale  # Devuelve la escala actual del gráfico
+        return self._scale  # Assuming _scale is an attribute holding the current scale
 
     if not isinstance(other, (int, float)):
         raise ValueError("El valor de 'other' debe ser un número.")
 
-    if self.current_scale is None or self.current_scale == 0:
+    if self._scale is None or self._scale == 0:
         raise LenaValueError("La escala es desconocida o igual a cero.")
 
-    # Suponiendo que la escala se almacena en un atributo llamado 'scale'
-    self.scale[-1] = other  # Reajusta la última coordenada de la escala
-    self.adjust_errors()  # Reajusta todos los errores junto con su coordenada
+    # Assuming the last coordinate is stored in a specific attribute
+    self._scale[-1] = other  # Reajustar la última coordenada
+    # Reajustar todos los errores asociados
+    self._errors[-1] *= (other / self._scale[-1])  # Ajustar errores en consecuencia

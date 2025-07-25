@@ -18,13 +18,14 @@ def remove_ending_os_sep(input_list):
         raise TypeError("input_list debe ser una lista de cadenas")
     
     import os
-    os_sep = os.sep
+    
+    path_sep = os.path.sep
     processed_list = []
-
+    
     for item in input_list:
-        if isinstance(item, str) and len(item) > 1 and item.endswith(os_sep):
+        if isinstance(item, str) and len(item) > 1 and item.endswith(path_sep):
             processed_list.append(item[:-1])
         else:
             processed_list.append(item)
-
+    
     return processed_list

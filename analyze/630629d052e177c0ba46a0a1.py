@@ -15,15 +15,10 @@ def verificar_firma_reenviable(clave_publica, documento, firma):
     key = Key.from_string(clave_publica, constants.KeyDataFormatPem, constants.KeyTypePublic)
     ctx.key = key
 
-    # Buscar la firma en el documento
-    signature_node = doc.find('.//{http://www.w3.org/2000/09/xmldsig#}Signature')
-
-    if signature_node is None:
-        raise ValueError("No se encontró la firma en el documento.")
-
     # Verificar la firma
     try:
-        ctx.verify(signature_node)
+        ctx.verify(firma)
         return True
     except Exception as e:
+        print(f"Error al verificar la firma: {e}")
         return False

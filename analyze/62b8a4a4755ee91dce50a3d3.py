@@ -16,7 +16,7 @@ def fromutc(self, dt):
 
     # Determinar si el datetime es ambiguo
     if local_dt.dst() != timedelta(0):
-        # Si hay un desplazamiento horario, determinar si es la primera ocurrencia
+        # Si hay un desplazamiento horario, verificar si es la primera ocurrencia
         if local_dt < self.utcoffset() + self.dst():
             return local_dt - self.dst()
     

@@ -28,6 +28,6 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
         env.update(extra_env)
 
     # Ejecutar el subproceso
-    result = subprocess.run(command, env=env, timeout=timeout, capture_output=True, text=True)
+    result = subprocess.run(command, env=env, timeout=timeout, text=True, capture_output=True)
 
     return result

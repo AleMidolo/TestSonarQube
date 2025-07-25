@@ -27,30 +27,22 @@ def verifyObject(iface, candidate, tentative=False):
         errors.append(f"{candidate} does not provide {iface}")
 
     required_methods = iface.names()
-    for method_name in required_methods:
+    for method_name, method in required_methods.items():
         if not hasattr(candidate, method_name):
             errors.append(f"{candidate} is missing method {method_name}")
             continue
         
-        method = getattr(candidate, method_name)
-        iface_method = iface.lookup(method_name)
+        candidate_method = getattr(candidate, method_name)
+        iface_signature = signature(method)
+        candidate_signature = signature(candidate_method)
 
-        if not callable(method):
-            errors.append(f"{method_name} in {candidate} is not callable")
+        if len(iface_signature.parameters) != len(candidate_signature.parameters):
+            errors.append(f"{method_name} has incorrect number of parameters in {candidate}")
             continue
 
-        # Check method signature
-        try:
-            candidate_signature = signature(method)
-            iface_signature = signature(iface_method)
-            if len(candidate_signature.parameters) != len(iface_signature.parameters):
-                errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
-            else:
-                for param in iface_signature.parameters:
-                    if param.default is Parameter.empty and param.name not in candidate_signature.parameters:
-                        errors.append(f"{method_name} in {candidate} is missing required parameter {param.name}")
-        except ValueError:
-            errors.append(f"Could not inspect signature of {method_name} in {candidate}")
+        for param in iface_signature.parameters.values():
+            if param.default is Parameter.empty and param.name not in candidate_signature.parameters:
+                errors.append(f"{method_name} is missing required parameter {param.name} in {candidate}")
 
     required_attributes = iface.names()
     for attr_name in required_attributes:

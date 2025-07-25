@@ -14,34 +14,26 @@ def xargs(
     - target_concurrency: Número objetivo de particiones para ejecutar de forma concurrente.
     """
     import subprocess
-    import os
     from multiprocessing import Pool
 
     def run_command(args):
         return subprocess.run(cmd + args, capture_output=True)
 
-    if color:
-        # Create a pseudo-terminal if supported
-        import pty
-        master_fd, slave_fd = pty.openpty()
-        os.set_blocking(master_fd, False)
-        os.set_blocking(slave_fd, False)
-        pty_enabled = True
-    else:
-        pty_enabled = False
-
     # Split varargs into chunks based on target_concurrency
     chunk_size = max(1, len(varargs) // target_concurrency)
     chunks = [varargs[i:i + chunk_size] for i in range(0, len(varargs), chunk_size)]
 
-    with Pool(processes=target_concurrency) as pool:
-        results = pool.map(run_command, chunks)
+    if color:
+        # Create a pseudo-terminal if supported
+        import pty
+        master, slave = pty.openpty()
+        # Use the slave fd for the subprocess
+        process = Pool(target_concurrency)
+        results = process.map(run_command, chunks)
+        process.close()
+        process.join()
+    else:
+        results = [run_command(chunk) for chunk in chunks]
 
     # Combine results
-    return_code = sum(result.returncode for result in results)
-    combined_output = b''.join(result.stdout for result in results)
-
-    if pty_enabled:
-        os.close(slave_fd)
-
-    return return_code, combined_output
+    return sum(result.returncode for result in results), b''.join(result.stdout for result in results)

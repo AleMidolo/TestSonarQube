@@ -3,27 +3,22 @@ def formatmany(
                 sql: AnyStr,
                 many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
         ) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
-    # Determine the parameter style
-    if isinstance(many_params, dict):
-        param_style = 'named'
-    elif isinstance(many_params, list) and all(isinstance(param, (list, tuple)) for param in many_params):
-        param_style = 'ordinal'
+    # Determine the parameter style based on the SQL query
+    if self.SQLParams.in_style == 'named':
+        # Convert to named parameters
+        formatted_sql = sql
+        out_params = []
+        for params in many_params:
+            out_param = {f":{key}": value for key, value in params.items()}
+            out_params.append(out_param)
+            formatted_sql = formatted_sql.replace("?", f":{key}", 1)  # Replace only the first occurrence
     else:
-        raise ValueError("Invalid parameter style")
+        # Convert to ordinal parameters
+        formatted_sql = sql
+        out_params = []
+        for params in many_params:
+            out_param = list(params)
+            out_params.append(out_param)
+            formatted_sql = formatted_sql.replace("?", "?", 1)  # Replace only the first occurrence
 
-    # Prepare the formatted SQL and converted parameters
-    formatted_sql = sql
-    converted_params = []
-
-    for params in many_params:
-        if param_style == 'named':
-            # Convert named parameters to out style
-            converted_param = {key: value for key, value in params.items()}
-            formatted_sql = formatted_sql.replace(':{}'.format(key), '%s')
-            converted_params.append(converted_param)
-        elif param_style == 'ordinal':
-            # Convert ordinal parameters to out style
-            converted_param = list(params)
-            converted_params.append(converted_param)
-
-    return formatted_sql, converted_params
+    return formatted_sql, out_params

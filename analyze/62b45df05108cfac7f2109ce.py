@@ -6,22 +6,14 @@ def validate(self, path):
     """
     try:
         # Simulación de validación del objeto OCFL
-        if not path:
+        if not os.path.exists(path):
             return False
         
-        # Aquí se realizarían las comprobaciones necesarias para validar el objeto OCFL
-        # Por ejemplo, verificar la existencia de archivos, estructura, etc.
+        # Aquí se realizarían las validaciones necesarias
+        # Por ejemplo, verificar la estructura de directorios, archivos, etc.
         
-        # Si se encuentran advertencias, se pueden registrar pero aún así devolver True
-        warnings = []
-        
-        # Ejemplo de advertencia
-        if "warning_condition" in path:
-            warnings.append("Advertencia: condición de advertencia encontrada.")
-        
-        # Si todas las validaciones pasan
+        # Si todas las validaciones pasan, se devuelve True
         return True
-    
     except Exception as e:
-        # En caso de error, se devuelve False
+        # En caso de error, se puede registrar el error o manejarlo
         return False

@@ -9,6 +9,6 @@ def _should_attempt_c_optimizations():
     ``PURE_PYTHON``, tal como se define en `_use_c_impl`.
     """
     is_pypy = 'pypy' in sys.version.lower()
-    pure_python = os.getenv('PURE_PYTHON', '0') == '1'
+    pure_python_env = os.getenv('PURE_PYTHON', '0') == '1'
     
-    return not (is_pypy or pure_python)
+    return not is_pypy and not pure_python_env
