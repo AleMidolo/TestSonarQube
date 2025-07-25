@@ -15,26 +15,19 @@ def hydrate_time(nanoseconds, tz=None):
     # 创建datetime对象
     dt = datetime.fromtimestamp(seconds)
     
-    # 如果指定了时区
+    # 处理时区
     if tz is not None:
         if isinstance(tz, str):
-            # 如果时区是字符串格式,创建timezone对象
-            try:
-                hours = int(tz[1:3])
-                minutes = int(tz[3:]) if len(tz) > 3 else 0
-                sign = 1 if tz[0] == '+' else -1
-                tz = timezone(timedelta(hours=sign*hours, minutes=minutes))
-            except:
-                raise ValueError("Invalid timezone format")
+            # 如果tz是字符串,假设格式为'+/-HH:MM'
+            sign = 1 if tz[0] == '+' else -1
+            hours = int(tz[1:3])
+            minutes = int(tz[4:6])
+            offset = timedelta(hours=sign*hours, minutes=sign*minutes)
+            tz = timezone(offset)
         dt = dt.astimezone(tz)
     
-    # 格式化输出,包含微秒
-    time_str = dt.strftime('%H:%M:%S.%f')[:-3]
+    # 格式化输出,包含纳秒
+    microseconds = int((nanoseconds % 1e9) / 1e3)
+    formatted_time = dt.strftime('%H:%M:%S.') + f'{microseconds:06d}'
     
-    # 如果有时区信息,添加时区偏移
-    if tz is not None:
-        offset = dt.strftime('%z')
-        if offset:
-            time_str += f" {offset[:3]}:{offset[3:]}"
-            
-    return time_str
+    return formatted_time

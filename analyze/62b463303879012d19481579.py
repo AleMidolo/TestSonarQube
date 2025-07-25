@@ -3,37 +3,37 @@ def _extract_number_and_supplment_from_issue_element(issue):
     从 issue 的内容中返回 number 和 sup 的可能值。
     从 issue 的内容中提取 number 和 suppl 的可能值。
     """
-    # Initialize empty values
+    # 初始化返回值
     number = None
     suppl = None
     
-    # If issue is None or empty, return default values
+    # 如果 issue 为空则直接返回
     if not issue:
         return number, suppl
         
-    # Convert issue to string and remove whitespace
-    issue_text = str(issue).strip()
+    # 移除空白字符
+    issue = issue.strip()
     
-    # Check if issue contains supplement indicator
-    if 'suppl' in issue_text.lower():
-        # Extract supplement value
-        suppl_parts = issue_text.lower().split('suppl')
-        if len(suppl_parts) > 1:
-            suppl = suppl_parts[1].strip()
-            # Remove any non-numeric characters
-            suppl = ''.join(c for c in suppl if c.isdigit())
-            if suppl:
-                suppl = int(suppl)
-        # Extract number value if present before suppl
-        number_part = suppl_parts[0].strip()
-        if number_part:
-            number = ''.join(c for c in number_part if c.isdigit())
-            if number:
-                number = int(number)
+    # 处理常见的补充格式,如 "1 suppl", "1 s", "1s"等
+    if "suppl" in issue.lower() or "s" in issue.lower():
+        parts = issue.lower().replace("suppl", "s").split()
+        if len(parts) >= 2:
+            try:
+                number = int(parts[0])
+                suppl = "s"
+            except ValueError:
+                pass
+        elif len(parts) == 1 and parts[0].endswith("s"):
+            try:
+                number = int(parts[0][:-1])
+                suppl = "s"
+            except ValueError:
+                pass
+    # 处理纯数字的情况
     else:
-        # If no supplement, extract just the number
-        number = ''.join(c for c in issue_text if c.isdigit())
-        if number:
-            number = int(number)
+        try:
+            number = int(issue)
+        except ValueError:
+            pass
             
     return number, suppl

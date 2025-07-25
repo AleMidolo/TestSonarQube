@@ -11,25 +11,26 @@ def unit_of_work(metadata=None, timeout=None):
                 if timeout < 0:
                     raise ValueError("timeout cannot be negative")
             
-            # 存储事务设置
-            tx_settings = {}
+            # 存储事务配置
+            tx_config = {}
             if metadata is not None:
-                tx_settings["metadata"] = metadata
+                tx_config["metadata"] = metadata
             if timeout is not None:
-                tx_settings["timeout"] = timeout
+                tx_config["timeout"] = timeout
                 
             # 执行事务函数
-            def run_tx(tx):
-                # 如果有元数据,设置到事务中
-                if metadata:
-                    tx.set_metadata(metadata)
-                # 如果有超时设置,应用到事务中    
-                if timeout is not None:
-                    tx.set_timeout(timeout)
-                # 执行原始事务函数    
+            def run_transaction(tx):
                 return f(tx, *args, **kwargs)
                 
-            return run_tx
+            # 返回事务配置和事务函数
+            return run_transaction, tx_config
             
         return wrapper
+        
+    # 如果直接传入函数而不是配置参数
+    if callable(metadata):
+        f = metadata
+        metadata = None
+        return decorator(f)
+        
     return decorator

@@ -35,19 +35,15 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 config = _apply_overrides(config, overrides)
                 
             configs[filename] = config
-                
+            
         except (PermissionError, yaml.YAMLError) as e:
-            error_record = logging.LogRecord(
-                name=__name__,
-                level=logging.ERROR,
-                pathname=filename,
-                lineno=0,
-                msg=f"Error loading configuration file {filename}: {str(e)}",
-                args=(),
-                exc_info=None
-            )
+            error_record = logger.makeLogRecord({
+                'msg': f"Error loading configuration file {filename}: {str(e)}",
+                'levelno': logging.ERROR,
+                'exc_info': True
+            })
             error_logs.append(error_record)
-            logger.error(f"Failed to load configuration from {filename}", exc_info=True)
+            logger.handle(error_record)
 
     return configs, error_logs
 
@@ -64,12 +60,10 @@ def _resolve_env_vars(config):
 
 def _apply_overrides(config, overrides):
     """Helper function to apply configuration overrides"""
-    if isinstance(config, dict):
-        result = config.copy()
+    if isinstance(config, dict) and isinstance(overrides, dict):
         for k, v in overrides.items():
-            if k in result and isinstance(result[k], dict) and isinstance(v, dict):
-                result[k] = _apply_overrides(result[k], v)
+            if k in config and isinstance(config[k], dict) and isinstance(v, dict):
+                config[k] = _apply_overrides(config[k], v)
             else:
-                result[k] = v
-        return result
+                config[k] = v
     return config

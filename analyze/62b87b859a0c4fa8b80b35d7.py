@@ -7,12 +7,12 @@ def to_csv(self, separator=", ", header=None):
     # Process each point in the graph
     for point in self.points:
         # Convert coordinates to strings
-        coord_strs = [str(coord) for coord in point.coordinates]
+        coord_strs = [str(x) for x in point.coordinates]
         
         # Convert values to strings
         if hasattr(point, 'values'):
             if isinstance(point.values, (list, tuple)):
-                value_strs = [str(val) for val in point.values]
+                value_strs = [str(v) for v in point.values]
             else:
                 value_strs = [str(point.values)]
         else:

@@ -26,7 +26,7 @@ def parse_diaspora_webfinger(document: str) -> Dict:
             document = document.replace('xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0"', '')
             root = ET.fromstring(document)
             
-            # Find Link element with hcard rel
+            # Look for Link element with hcard rel
             for link in root.findall('.//Link'):
                 rel = link.get('rel')
                 if rel == 'http://microformats.org/profile/hcard':

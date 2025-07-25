@@ -6,19 +6,19 @@ def fill(self, coord, weight=1):
     """
     # 检查坐标是否为序列类型
     if not hasattr(coord, '__iter__'):
-        raise TypeError("coord must be iterable")
+        raise TypeError("coord must be a sequence")
         
     # 检查坐标维度是否与直方图维度匹配
     if len(coord) != self.ndim:
-        raise ValueError(f"coord dimension {len(coord)} does not match histogram dimension {self.ndim}")
+        raise ValueError(f"coord must have {self.ndim} dimensions")
         
-    # 检查坐标是否在边界内
-    for i, x in enumerate(coord):
-        if x < 0 or x >= self.shape[i]:
+    # 检查坐标是否在直方图边界内
+    for i, c in enumerate(coord):
+        if c < 0 or c >= self.shape[i]:
             return  # 忽略超出边界的坐标
             
     # 将坐标转换为整数索引
-    idx = tuple(int(x) for x in coord)
+    idx = tuple(int(c) for c in coord)
     
     # 在指定位置增加权重
     self.data[idx] += weight

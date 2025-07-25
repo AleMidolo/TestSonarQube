@@ -5,8 +5,13 @@ def tzname_in_python2(namefunc):
     在 Python 3 中，tzname() API 发生了变化。它曾经返回字节字符串，但在 Python 3 中被更改为返回 Unicode 字符串。
     """
     def convert_to_bytes(*args, **kwargs):
-        name = namefunc(*args, **kwargs)
-        if name is not None and isinstance(name, unicode):
-            return name.encode('ascii')
-        return name
+        result = namefunc(*args, **kwargs)
+        if result is None:
+            return None
+        elif isinstance(result, str):
+            return result
+        elif isinstance(result, unicode):
+            return result.encode('ascii')
+        else:
+            return str(result)
     return convert_to_bytes

@@ -28,10 +28,11 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         )
         
         # 检查响应状态
-        if response.status_code == 200:
-            return response.text
+        if response.status_code != 200:
+            return None
             
-    except (requests.RequestException, ValueError):
-        pass
+        # 返回WebFinger文档
+        return response.text
         
-    return None
+    except Exception:
+        return None

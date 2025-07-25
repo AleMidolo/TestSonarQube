@@ -17,6 +17,11 @@ def verify_relayable_signature(public_key, doc, signature):
         if isinstance(public_key, str):
             public_key = load_pem_public_key(public_key.encode())
             
+        # Convert signature from base64 if needed
+        import base64
+        if isinstance(signature, str):
+            signature = base64.b64decode(signature)
+            
         # Verify the signature
         try:
             public_key.verify(
@@ -33,5 +38,6 @@ def verify_relayable_signature(public_key, doc, signature):
             return False
             
     except Exception as e:
-        # Return False for any other errors during verification
+        # Log error if needed
+        print(f"Signature verification failed: {str(e)}")
         return False

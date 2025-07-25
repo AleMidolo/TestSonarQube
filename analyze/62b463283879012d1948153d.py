@@ -5,10 +5,7 @@ def match_pubdate(node, pubdate_xpaths):
     返回 `pubdate_xpaths` 列表中的第一个匹配项。
     """
     for xpath in pubdate_xpaths:
-        try:
-            matches = node.xpath(xpath)
-            if matches:
-                return matches[0]
-        except:
-            continue
+        matches = node.xpath(xpath)
+        if matches:
+            return matches[0]
     return None

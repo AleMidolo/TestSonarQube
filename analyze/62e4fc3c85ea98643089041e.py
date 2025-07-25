@@ -5,7 +5,7 @@ def _inline_r_setup(code: str) -> str:
     """
     setup_code = """
     options(warn=-1)  # Suppress warnings
-    options(width=10000)  # Prevent line wrapping in output
+    options(width=1000)  # Prevent line wrapping in output
     options(encoding='UTF-8')  # Set encoding to UTF-8
     """
     

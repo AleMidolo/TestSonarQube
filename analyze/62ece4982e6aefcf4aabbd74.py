@@ -11,22 +11,21 @@ def prepare_repository_from_archive(
     # Create temporary directory
     temp_dir = tempfile.mkdtemp(dir=tmp_path)
     
-    # Get filename if not provided
+    # If filename not provided, use basename of archive_path
     if not filename:
         filename = os.path.basename(archive_path)
     
-    # Extract archive based on file extension
-    if filename.endswith('.zip'):
-        shutil.unpack_archive(archive_path, temp_dir, 'zip')
-    elif filename.endswith('.tar.gz') or filename.endswith('.tgz'):
-        shutil.unpack_archive(archive_path, temp_dir, 'gztar')
-    elif filename.endswith('.tar'):
-        shutil.unpack_archive(archive_path, temp_dir, 'tar')
-    else:
-        # For other formats, just copy the file
-        shutil.copy2(archive_path, os.path.join(temp_dir, filename))
-
-    # Convert temp directory path to file URL
+    # Copy archive to temp directory
+    temp_archive = os.path.join(temp_dir, filename)
+    shutil.copy2(archive_path, temp_archive)
+    
+    # Extract archive
+    shutil.unpack_archive(temp_archive, temp_dir)
+    
+    # Remove the archive file after extraction
+    os.remove(temp_archive)
+    
+    # Convert temp_dir to file URL format
     repo_url = Path(temp_dir).as_uri()
     
     return repo_url

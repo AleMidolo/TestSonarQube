@@ -12,17 +12,17 @@ def get_pattern(pattern, strip=True):
     """
     import re
     
-    # 如果已经是正则表达式模式对象,直接返回
+    # 如果已经是编译好的正则表达式模式,直接返回
     if isinstance(pattern, re.Pattern):
         return pattern
         
     # 如果是字符串类型
     if isinstance(pattern, str):
-        # 根据strip参数决定是否去除空格
+        # 根据strip参数决定是否去除两端空格
         if strip:
             pattern = pattern.strip()
-        # 编译为正则表达式模式对象并返回    
+        # 编译为正则表达式模式并返回    
         return re.compile(pattern)
         
-    # 其他类型抛出异常
-    raise TypeError(f"pattern must be string or Pattern object, not {type(pattern)}")
+    # 如果既不是Pattern也不是str类型,抛出异常
+    raise TypeError("pattern must be string or compiled pattern")

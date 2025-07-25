@@ -16,26 +16,34 @@ def _get_conditionally_required_args(self, command_name, options_spec, args):
             
         condition = option['required_when']
         
-        # If condition is a string, treat it as a dependent argument
+        # If condition is a string, evaluate it as a Python expression
         if isinstance(condition, str):
-            if args.get(condition):
-                required_args.append(option['name'])
+            # Create a context with the current args
+            context = dict(args)
+            try:
+                if eval(condition, {}, context):
+                    required_args.append(option['name'])
+            except Exception:
+                # If evaluation fails, skip this condition
+                continue
                 
-        # If condition is a dict, evaluate the condition
+        # If condition is a callable
+        elif callable(condition):
+            try:
+                if condition(args):
+                    required_args.append(option['name'])
+            except Exception:
+                # If evaluation fails, skip this condition
+                continue
+                
+        # If condition is a dict with key-value pairs
         elif isinstance(condition, dict):
-            should_require = True
-            
+            matches = True
             for key, value in condition.items():
                 if args.get(key) != value:
-                    should_require = False
+                    matches = False
                     break
-                    
-            if should_require:
-                required_args.append(option['name'])
-                
-        # If condition is a callable, call it with args
-        elif callable(condition):
-            if condition(args):
+            if matches:
                 required_args.append(option['name'])
                 
     return required_args

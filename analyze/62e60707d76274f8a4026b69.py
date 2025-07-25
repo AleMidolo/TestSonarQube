@@ -4,16 +4,35 @@ def point_type(name, fields, srid_map):
     """
     class_attrs = {
         '__slots__': tuple(fields) + ('srid',),
-        '__init__': lambda self, *args: (
-            setattr(self, 'srid', srid_map.get(len(args), 0)) or
-            [setattr(self, f, v) for f, v in zip(fields, args)]
-        ),
-        '__repr__': lambda self: f"{name}({', '.join(str(getattr(self, f)) for f in fields)})",
-        '__eq__': lambda self, other: (
-            isinstance(other, type(self)) and
-            all(getattr(self, f) == getattr(other, f) for f in fields)
-        ),
-        '__hash__': lambda self: hash(tuple(getattr(self, f) for f in fields))
+        '_srid_map': srid_map
     }
+
+    def __init__(self, *args, **kwargs):
+        if len(args) > len(fields):
+            raise TypeError(f"Expected {len(fields)} arguments, got {len(args)}")
+        
+        # Set values from positional args
+        for field, value in zip(fields, args):
+            setattr(self, field, value)
+            
+        # Set remaining fields from kwargs
+        for field in fields[len(args):]:
+            if field in kwargs:
+                setattr(self, field, kwargs[field])
+            else:
+                setattr(self, field, None)
+                
+        # Set SRID
+        self.srid = kwargs.get('srid', None)
+        
+    def __repr__(self):
+        values = [getattr(self, field) for field in fields]
+        args_str = ', '.join(repr(v) for v in values)
+        if self.srid is not None:
+            args_str += f", srid={self.srid}"
+        return f"{name}({args_str})"
+    
+    class_attrs['__init__'] = __init__
+    class_attrs['__repr__'] = __repr__
     
     return type(name, (), class_attrs)
