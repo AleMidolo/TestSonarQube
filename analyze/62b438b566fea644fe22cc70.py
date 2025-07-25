@@ -23,14 +23,18 @@ def bash_completion():
 
     # Generate the completion script
     if len(sys.argv) > 1 and sys.argv[1] == 'completion':
-        command = sys.argv[2] if len(sys.argv) > 2 else ''
-        if command == 'init':
-            print('init')
-        elif command == 'config':
-            print('config')
-        elif command == 'run':
-            print('run')
-        else:
-            print('init config run')
-    else:
-        parser.print_help()
+        print('complete -o default -o nospace -F _borgmatic_completion borgmatic')
+        return
+
+    # Function to handle completion
+    def _borgmatic_completion(prefix, parsed_args, **kwargs):
+        if parsed_args.command == 'init':
+            return ['--config', '--dry-run']
+        elif parsed_args.command == 'config':
+            return ['--list', '--edit']
+        elif parsed_args.command == 'run':
+            return ['--verbose', '--dry-run']
+        return []
+
+    # If not in completion mode, show help
+    parser.print_help()

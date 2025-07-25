@@ -7,8 +7,8 @@ def validate_version_inventories(self, version_dirs):
 
     version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
     """
-    inventory_digests = set()
-    discrepancies = {}
+    inventory_digests = {}
+    discrepancies = []
 
     for version in version_dirs:
         inventory_path = f"{version}/inventory.json"
@@ -16,25 +16,21 @@ def validate_version_inventories(self, version_dirs):
         try:
             with open(inventory_path, 'r') as file:
                 inventory = json.load(file)
+                current_digest = inventory.get('digest')
                 
-                # Validate the inventory for the current version
-                if not self.validate_inventory(inventory):
-                    raise ValueError(f"Invalid inventory in version {version}")
-
-                # Record the digests from the current inventory
-                current_digests = set(item['digest'] for item in inventory.get('items', []))
+                # Check if the current version's inventory digest matches the root inventory
+                if version == version_dirs[0]:  # Assuming the first version is the root
+                    root_digest = current_digest
+                else:
+                    if current_digest != root_digest:
+                        discrepancies.append((version, current_digest))
                 
-                # Check for discrepancies with the root inventory
-                new_digests = current_digests - inventory_digests
-                if new_digests:
-                    discrepancies[version] = new_digests
-                
-                # Update the recorded digests
-                inventory_digests.update(current_digests)
+                # Record the digest for the current version
+                inventory_digests[version] = current_digest
 
         except FileNotFoundError:
-            raise FileNotFoundError(f"Inventory file not found for version {version}")
+            raise Exception(f"Inventory file not found for version: {version}")
         except json.JSONDecodeError:
-            raise ValueError(f"Error decoding JSON for inventory in version {version}")
+            raise Exception(f"Error decoding JSON for inventory file: {inventory_path}")
 
     return discrepancies

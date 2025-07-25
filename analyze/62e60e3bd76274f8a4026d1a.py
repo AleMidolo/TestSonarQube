@@ -12,5 +12,5 @@ def from_raw_values(cls, values):
     for value in values:
         # Assuming each value is a bookmark string, we can append it to the list
         bookmarks.append(value)
-    # Create an instance of the Bookmarks class with the list of bookmarks
+    # Create an instance of the Bookmarks class (assuming it has an __init__ method that accepts a list)
     return cls(bookmarks)

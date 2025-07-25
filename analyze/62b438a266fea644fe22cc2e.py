@@ -8,14 +8,14 @@ def parse_arguments(*unparsed_arguments):
     subparsers = parser.add_subparsers(dest='subparser_name')
 
     # Example subparser
-    subparser_a = subparsers.add_parser('sub_a')
+    subparser_a = subparsers.add_parser('subparser_a')
     subparser_a.add_argument('--option_a', type=str, help='Option for subparser A')
 
-    subparser_b = subparsers.add_parser('sub_b')
+    subparser_b = subparsers.add_parser('subparser_b')
     subparser_b.add_argument('--option_b', type=int, help='Option for subparser B')
 
     # Parse the arguments
     args = parser.parse_args(unparsed_arguments)
 
     # Convert Namespace to dict
-    return {args.subparser_name: args}
+    return vars(args)

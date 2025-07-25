@@ -11,7 +11,7 @@ def directlyProvidedBy(object): # pylint:disable=redefined-builtin
             # जैसे केवल एक बेस हो, जिसे हम क्लास-प्रदत्त घोषणाओं को 
             # बाहर करने के लिए हटा देते हैं:
 
-    दिए गए ऑब्जेक्ट द्वारा सीधे प्रदान किए गए इंटरफेस लौटाता है
+    दिए गए ऑब्जेक्ट द्वारा सीधे प्रदान किए गए इंटरफ़ेस लौटाता है
 
     लौटाया गया मान `~zope.interfaces.interfaces.ideclaration` है।
     """
@@ -19,5 +19,6 @@ def directlyProvidedBy(object): # pylint:disable=redefined-builtin
     if provides is None:
         implements = getattr(object, "__implements__", None)
         if implements is not None:
+            # Assuming we have a way to extract the base declaration
             return implements[0] if isinstance(implements, (list, tuple)) else implements
     return provides

@@ -21,7 +21,6 @@ def get_nested_custom_and_control_args(self, args):
             else:
                 nested_args.update(arg)
         else:
-            # Assuming custom arguments are just strings or other types
             nested_args[arg] = None
 
     return control_args, nested_args

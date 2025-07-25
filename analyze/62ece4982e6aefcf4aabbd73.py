@@ -14,11 +14,11 @@ def split(s, platform='this'):
     - (अन्य मान भविष्य के लिए आरक्षित हैं)
     """
     if platform == 'this':
-        platform = 1 if os.name == 'posix' else 0
+        platform = 1 if platform.system() != 'Windows' else 0
 
     if platform == 1:  # POSIX
-        pattern = r'(?<!\\)"([^"]*(?:\\.[^"]*)*)"(?!\\)|(?<!\\)' + r"'([^']*(?:\\.[^']*)*)'(?!\\)|[^\s]+"
+        pattern = r'(?<!\\)"([^"\\]*(?:\\.[^"\\]*)*)"(?!\\)|(?<!\\)' + r"'([^'\\]*(?:\\.[^'\\]*)*)'(?!\\)|(?<!\\)\S+"
     else:  # Windows
-        pattern = r'(?<!\\)"([^"]*(?:\\.[^"]*)*)"(?!\\)|[^\s]+'
+        pattern = r'(?<!\\)"([^"\\]*(?:\\.[^"\\]*)*)"(?!\\)|(?<!\\)' + r"'([^'\\]*(?:\\.[^'\\]*)*)'(?!\\)|(?<!\\)\S+"
 
     return re.findall(pattern, s)
