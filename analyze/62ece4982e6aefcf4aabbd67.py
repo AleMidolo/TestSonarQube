@@ -10,7 +10,7 @@ def vertex3tuple(vertices):
     यदि पॉलीगॉन के वर्टेक्स ABCD हैं, तो यह निम्नलिखित 3-ट्यूपल्स लौटाएगा:  
     `DAB, ABC, BCD, CDA`  
     वर्टेक्स का क्रम:
-
+    
     # A    B    C    D  -> वर्टेक्स का क्रम
     """
     n = len(vertices)

@@ -16,13 +16,10 @@ def from_ticks(cls, ticks, tz=None):
         raise ValueError("Ticks must be in the range 0 to 86400000000000.")
     
     from datetime import datetime, timedelta
-    
+
     # Calculate the time from ticks
+    midnight = datetime(1, 1, 1, 0, 0, 0, 0, tzinfo=tz)
     time_delta = timedelta(microseconds=ticks / 1000)
-    midnight = datetime.combine(datetime.today(), datetime.min.time())
     result_time = midnight + time_delta
-    
-    if tz is not None:
-        result_time = result_time.astimezone(tz)
-    
+
     return result_time.time()

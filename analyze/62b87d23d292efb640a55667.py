@@ -6,7 +6,7 @@ def register_vcs_handler(vcs, method):  # डेकोरेटर
         यह आंतरिक फ़ंक्शन डेकोरेटर के रूप में कार्य करता है।    
     """
     def decorate(f):
-        # यहाँ पर VCS हैंडलर के रूप में विधि को चिह्नित करने की लॉजिक डालें
+        # यहाँ पर VCS हैंडलर को चिह्नित करने की लॉजिक डालें
         f.vcs_handler = True
         f.vcs_type = vcs
         f.method = method

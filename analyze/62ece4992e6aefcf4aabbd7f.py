@@ -14,7 +14,7 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     if not all([parsed_url.scheme, parsed_url.netloc]):
         raise ValueError("अमान्य हाइपरलिंक")
 
-    image_id = parsed_url.path.strip('/')
+    image_id = parsed_url.path.lstrip('/')
     netloc = parsed_url.netloc
     use_ssl = parsed_url.scheme == 'https'
 

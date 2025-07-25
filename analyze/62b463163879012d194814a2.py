@@ -2,17 +2,20 @@ def add_asset(self, basename, file_path):
     """
     Adds an asset to the internal storage with the given basename and file path.
     
-    The function expects a basename and a file path, and it will store the asset
-    in a dictionary format where the key is the basename and the value is the file path.
+    The function will create entries for different file formats based on the basename.
     
-    Example:
-    {
-        "artigo02-gf03.tiff": "/path/artigo02-gf03.tiff",
-        "artigo02-gf03.jpg": "/path/artigo02-gf03.jpg",
-        "artigo02-gf03.png": "/path/artigo02-gf03.png"
-    }
+    Args:
+        basename (str): The base name of the asset without the extension.
+        file_path (str): The path to the asset file.
+    
+    Returns:
+        dict: A dictionary mapping file names to their respective paths.
     """
-    if not hasattr(self, 'assets'):
-        self.assets = {}
+    extensions = ['tiff', 'jpg', 'png']
+    asset_dict = {}
     
-    self.assets[basename] = file_path
+    for ext in extensions:
+        asset_name = f"{basename}.{ext}"
+        asset_dict[asset_name] = file_path
+    
+    return asset_dict
