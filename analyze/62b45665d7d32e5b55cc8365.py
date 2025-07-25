@@ -21,8 +21,6 @@ def parse_arguments(*unparsed_arguments):
 
     # Create a dictionary to hold the results
     result = {}
-    
-    # Map the subparser name to the corresponding Namespace
     if args.subparser_name:
         result[args.subparser_name] = args
     else:

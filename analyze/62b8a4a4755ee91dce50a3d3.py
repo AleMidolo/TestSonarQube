@@ -8,13 +8,19 @@ def fromutc(self, dt):
     """
     if dt.tzinfo is None:
         raise ValueError("dt must be a timezone-aware datetime object")
-
+    
     # Convert the datetime to UTC
     utc_dt = dt.astimezone(self.utc)
-
-    # Check for ambiguity and whether it is in a "folded" state
-    if self.is_ambiguous(utc_dt):
-        raise ValueError("The datetime is ambiguous in the new timezone")
-
-    # Return the datetime in the new timezone
-    return utc_dt.astimezone(self)
+    
+    # Convert the UTC datetime to the new timezone
+    new_tz_dt = utc_dt.astimezone(self)
+    
+    # Check for ambiguity and folded state
+    if new_tz_dt.dst() != timedelta(0):
+        # If the new timezone has a daylight saving time offset
+        if new_tz_dt.utcoffset() != new_tz_dt.dst():
+            # Check if the datetime is in a folded state
+            if new_tz_dt.fold == 0:
+                new_tz_dt = new_tz_dt.replace(fold=1)
+    
+    return new_tz_dt

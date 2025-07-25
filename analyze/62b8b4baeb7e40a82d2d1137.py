@@ -29,18 +29,24 @@ def verifyObject(iface, candidate, tentative=False):
     required_methods = iface.names()
     for method_name in required_methods:
         if not hasattr(candidate, method_name):
-            errors.append(f"{method_name} is missing in {candidate}")
+            errors.append(f"{candidate} is missing method {method_name}")
             continue
         
         method = getattr(candidate, method_name)
-        expected_signature = iface.methodSignature(method_name)
-        if not is_signature_compatible(signature(method), expected_signature):
-            errors.append(f"{method_name} has an invalid signature in {candidate}")
+        if not callable(method):
+            errors.append(f"{method_name} in {candidate} is not callable")
+            continue
+        
+        expected_signature = iface.method(method_name).signature
+        actual_signature = signature(method)
+        
+        if not is_signature_compatible(expected_signature, actual_signature):
+            errors.append(f"{method_name} in {candidate} has an invalid signature")
 
     required_attributes = iface.attributes()
     for attr_name in required_attributes:
         if not hasattr(candidate, attr_name):
-            errors.append(f"{attr_name} is missing in {candidate}")
+            errors.append(f"{candidate} is missing attribute {attr_name}")
 
     if errors:
         if len(errors) == 1:
@@ -50,7 +56,9 @@ def verifyObject(iface, candidate, tentative=False):
 
     return True
 
-def is_signature_compatible(actual_sig, expected_sig):
-    # This function checks if the actual method signature is compatible with the expected signature.
-    # This is a placeholder for the actual implementation.
+def is_signature_compatible(expected, actual):
+    # This function checks if the actual signature is compatible with the expected signature
+    # This is a simplified version and may need to be expanded based on specific requirements
+    if len(actual.parameters) < len(expected.parameters):
+        return False
     return True

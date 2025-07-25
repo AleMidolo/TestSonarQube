@@ -7,13 +7,17 @@ def addignored(ignored):
     # 获取被忽略的文件列表
     result = subprocess.run(['git', 'ls-files', '--ignored', '--exclude-standard'], 
                             stdout=subprocess.PIPE, 
+                            stderr=subprocess.PIPE, 
                             text=True)
-    
-    # 将结果转换为列表并去除空白字符
+
+    if result.returncode != 0:
+        raise RuntimeError(f"Error getting ignored files: {result.stderr}")
+
+    # 将输出转换为列表并去除空白
     ignored_files = [line.strip() for line in result.stdout.splitlines() if line.strip()]
-    
-    # 对文件名进行排序
+
+    # 排序文件列表
     ignored_files.sort()
-    
-    # 将文件名列表转换为逗号分隔的字符串
+
+    # 将文件名用逗号连接成字符串
     return ','.join(ignored_files)

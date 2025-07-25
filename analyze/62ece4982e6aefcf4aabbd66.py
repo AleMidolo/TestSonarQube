@@ -18,7 +18,7 @@ def was_processed(processed, path_name, verbose):
 
     if absolute_path in processed:
         if verbose:
-            print(f"Warning: '{absolute_path}' has already been processed.")
+            print(f"Warning: {absolute_path} has already been processed.")
         return True
     else:
         processed.add(absolute_path)
