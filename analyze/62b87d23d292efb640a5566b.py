@@ -8,13 +8,13 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     if isinstance(commands, str):
         commands = [commands]
     
-    if env is None:
-        env = os.environ.copy()
+    if cwd is None:
+        cwd = os.getcwd()
     
     for command in commands:
         full_command = [command] + args
         if verbose:
-            print(f"Running command: {' '.join(full_command)}")
+            print(f"Running command: {' '.join(full_command)} in {cwd}")
         
         with open(os.devnull, 'w') as devnull:
             stderr = subprocess.DEVNULL if hide_stderr else None

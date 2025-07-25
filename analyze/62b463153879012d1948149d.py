@@ -1,3 +1,6 @@
+import os
+import xml.etree.ElementTree as ET
+
 def _explore_folder(folder):
     """
     Get packages' data from folder
@@ -12,21 +15,14 @@ def _explore_folder(folder):
     -------
     dict
     """
-    import os
-    from collections import defaultdict
-    import xml.etree.ElementTree as ET
-
-    package_data = defaultdict(list)
-
+    data = {}
+    
     for filename in os.listdir(folder):
         if filename.endswith('.xml'):
             basename = os.path.splitext(filename)[0]
             file_path = os.path.join(folder, filename)
-            try:
-                tree = ET.parse(file_path)
-                root = tree.getroot()
-                package_data[basename].append(root)
-            except ET.ParseError:
-                print(f"Error parsing {file_path}")
-
-    return dict(package_data)
+            tree = ET.parse(file_path)
+            root = tree.getroot()
+            data[basename] = {child.tag: child.text for child in root}
+    
+    return data

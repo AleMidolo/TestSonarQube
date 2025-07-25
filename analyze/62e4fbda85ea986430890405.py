@@ -27,7 +27,4 @@ def xargs(
         results = pool.map(run_command, chunks)
 
     # Combine results
-    return_code = sum(result.returncode for result in results)
-    combined_output = b''.join(result.stdout for result in results)
-
-    return return_code, combined_output
+    return (sum(result.returncode for result in results), b''.join(result.stdout for result in results))

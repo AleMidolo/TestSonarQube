@@ -17,14 +17,14 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         else:  # get_coordinate == "middle"
             x = (hist.bin_edges[i] + hist.bin_edges[i + 1]) / 2
 
-        y_values = make_value(bin_)
-        if isinstance(y_values, tuple):
-            graph_data.append((x, *y_values))
+        value = make_value(bin_)
+        if isinstance(value, tuple):
+            graph_data.append((x, *value))
         else:
-            graph_data.append((x, y_values))
+            graph_data.append((x, value))
 
     if scale is True:
-        # Apply histogram scale to graph data if needed
+        # Apply histogram scale to graph if needed
         pass  # Implement scaling logic if required
 
     return graph_data
