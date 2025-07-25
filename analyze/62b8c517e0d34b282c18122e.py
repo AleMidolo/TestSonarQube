@@ -27,7 +27,6 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     exception_message = str(e)
 
     # Combinar todo en una cadena
-    result = f'Exception: {exception_message}\nTraceback (most recent call last):\n'
-    result += '\n'.join(formatted_trace)
-
+    result = f"{exception_message}\nTraceback (most recent call last):\n" + "\n".join(formatted_trace)
+    
     return result

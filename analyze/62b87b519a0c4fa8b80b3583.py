@@ -16,7 +16,7 @@ def scale(self, other=None):
     Todos los errores se reajustan junto con su coordenada.
     """
     if other is None:
-        return self._scale  # Assuming _scale is an attribute that holds the current scale
+        return self._scale  # Assuming _scale is an attribute holding the current scale
 
     if not isinstance(other, (int, float)):
         raise ValueError("El valor de 'other' debe ser un número.")
@@ -26,8 +26,9 @@ def scale(self, other=None):
 
     # Assuming the scale is a list or similar structure where the last element is the one to adjust
     self._scale[-1] = other
-    # Adjust errors accordingly if they are stored in a similar structure
+
+    # Adjust errors accordingly, assuming errors are stored in a similar structure
     if hasattr(self, '_errors'):
-        self._errors[-1] = self._calculate_error(other)  # Placeholder for error calculation logic
+        self._errors[-1] = self._errors[-1] * (other / self._scale[-1])
 
     return self._scale

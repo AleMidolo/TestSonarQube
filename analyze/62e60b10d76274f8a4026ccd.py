@@ -14,8 +14,8 @@ def data(self, *keys):
         if isinstance(key, int):
             if key < 0 or key >= len(self):
                 raise IndexError("Índice fuera de los límites.")
-            result[key] = self[key]
+            result[self.keys()[key]] = self[self.keys()[key]]
         else:
             result[key] = getattr(self, key, None)
-
+    
     return result

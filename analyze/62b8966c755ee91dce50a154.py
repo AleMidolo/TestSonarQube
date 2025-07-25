@@ -81,37 +81,46 @@ def isoparse(self, dt_str):
 
     # Handle week date if applicable
     if match.group(2) is None and match.group(3) is None:
-        week = int(match.group(4))
-        week_day = int(match.group(5) or 0)
-        date = datetime.fromisocalendar(year, week, week_day)
+        week = match.group(4)
+        if week:
+            week_number = int(match.group(5))
+            day = int(match.group(6) or 1)
+            # Calculate the date from the week number
+            first_day_of_year = datetime(year, 1, 1)
+            first_week_start = first_day_of_year + timedelta(days=(7 - first_day_of_year.isoweekday()))
+            date = first_week_start + timedelta(weeks=week_number - 1, days=day - 1)
+        else:
+            date = datetime(year, month, day)
     else:
         date = datetime(year, month, day)
 
     # Extract time components
-    hour = int(match.group(6) or 0)
-    minute = int(match.group(7) or 0)
-    second = int(match.group(8) or 0)
-    microsecond = int(match.group(9) or 0)
+    hour = int(match.group(7) or 0)
+    minute = int(match.group(8) or 0)
+    second = int(match.group(9) or 0)
+    microsecond = int(match.group(10) or 0)
 
-    # Set time
-    date = date.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
+    # Handle special case for midnight
+    if hour == 24 and minute == 0 and second == 0:
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+    else:
+        date = date.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
 
     # Handle timezone
-    tz_info = match.group(10)
-    if tz_info == 'Z':
-        date = date.replace(tzinfo=tz.UTC)
-    elif tz_info:
-        if match.group(11):
-            offset_hours = int(match.group(11))
-            offset_minutes = int(match.group(12) or 0)
-            date = date.replace(tzinfo=tz.tzoffset(None, timedelta(hours=offset_hours, minutes=offset_minutes)))
-        elif match.group(13):
-            offset_hours = int(match.group(13))
-            offset_minutes = 0
-            date = date.replace(tzinfo=tz.tzoffset(None, timedelta(hours=offset_hours)))
-        elif match.group(14):
-            offset_hours = int(match.group(14))
-            offset_minutes = int(match.group(15))
-            date = date.replace(tzinfo=tz.tzoffset(None, timedelta(hours=offset_hours, minutes=offset_minutes)))
+    tzinfo = None
+    if match.group(11):
+        if match.group(11) == 'Z':
+            tzinfo = tz.tzutc()
+        else:
+            if match.group(12):
+                offset_hours = int(match.group(12))
+                offset_minutes = int(match.group(13) or 0)
+                tzinfo = tz.tzoffset(None, offset_hours * 3600 + offset_minutes * 60)
+            else:
+                offset_hours = int(match.group(14))
+                tzinfo = tz.tzoffset(None, offset_hours * 3600)
+
+    if tzinfo:
+        date = date.replace(tzinfo=tzinfo)
 
     return date

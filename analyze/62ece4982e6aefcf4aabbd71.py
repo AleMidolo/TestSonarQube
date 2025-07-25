@@ -22,6 +22,7 @@ def regex_dict(item):
     """
     regex_dict = {}
     for key, value in item.items():
+        # Convertir la clave con comodines a una expresión regular
         regex_key = re.escape(key).replace(r'\*', '.*')
         regex_dict[regex_key] = value
     return regex_dict

@@ -22,6 +22,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     :return: objeto 'Response'
     """
     # Implementación del método
+    response = self._create_response_object(handlers)
     transaction_message = {
         "mode": mode or "WRITE",
         "bookmarks": list(bookmarks) if bookmarks else [],
@@ -30,12 +31,8 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         "db": db,
         "imp_user": imp_user,
         "dehydration_hooks": dehydration_hooks or {},
-        "hydration_hooks": hydration_hooks or {},
-        "handlers": handlers
+        "hydration_hooks": hydration_hooks or {}
     }
     
-    # Aquí se añadiría la lógica para enviar el mensaje 'BEGIN' a la cola de salida
-    # y crear un objeto 'Response' que se devolvería.
-    
-    response = self.send_message('BEGIN', transaction_message)
+    self._queue_message('BEGIN', transaction_message)
     return response

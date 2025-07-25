@@ -13,8 +13,6 @@ def add_asset(self, basename, file_path):
     # Extracting the file extension
     file_extension = file_path.split('.')[-1]
     
-    # Creating the asset key
+    # Creating the asset entry
     asset_key = f"{basename}.{file_extension}"
-    
-    # Adding the asset to the dictionary
     self.assets[asset_key] = file_path
