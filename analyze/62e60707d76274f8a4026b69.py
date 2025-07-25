@@ -4,7 +4,7 @@ def point_type(name, fields, srid_map):
 
     :param name: Nome della sottoclasse da creare.
     :param fields: Lista di campi (attributi) da aggiungere alla sottoclasse.
-    :param srid_map: Dizionario che mappa i nomi dei campi ai loro SRID.
+    :param srid_map: Dizionario che mappa i nomi dei campi ai rispettivi SRID.
     :return: La sottoclasse creata.
     """
     from shapely.geometry import Point

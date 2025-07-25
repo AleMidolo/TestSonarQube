@@ -18,9 +18,9 @@ def _validate_labels(labels: Dict[str, Union[str, List[str]]]) -> None:
       - **key**: la chiave dell'etichetta o il valore dell'etichetta per cui si è verificato un errore, come stringa.
       - **value**: il messaggio di errore.
     """
-    key_regex = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')
-    value_regex = re.compile(r'^[a-zA-Z0-9_\-\.]*$')
     errors = []
+    key_regex = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')
+    value_regex = re.compile(r'^[a-zA-Z0-9_]*$')
 
     for key, value in labels.items():
         # Validate key

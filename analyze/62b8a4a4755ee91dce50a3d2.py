@@ -11,11 +11,14 @@ def _fromutc(self, dt):
         raise ValueError("dt deve avere lo stesso fuso orario di self")
     
     # Converti il datetime in UTC
-    dt = dt.astimezone(self)
+    utc_dt = dt.astimezone(self.utc)
+    
+    # Converti il datetime UTC nel nuovo fuso orario
+    new_dt = utc_dt.astimezone(self)
     
     # Controlla se il datetime è ambiguo
-    if self._is_ambiguous(dt):
+    if self._is_ambiguous(new_dt):
         # Se è ambiguo, imposta fold=1 per indicare la seconda occorrenza
-        dt = dt.replace(fold=1)
+        new_dt = new_dt.replace(fold=1)
     
-    return dt
+    return new_dt

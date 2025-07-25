@@ -7,20 +7,20 @@ def _extract_number_and_supplment_from_issue_element(issue):
 
     Returns:
         tuple: Una tupla contenente il numero (int) e il supplemento (str).
+               Se il supplemento non è presente, il secondo elemento sarà None.
     """
-    # Rimuovi eventuali spazi bianchi
-    issue = issue.strip()
+    # Split the issue into parts based on spaces
+    parts = issue.split()
     
-    # Trova il numero e il supplemento
-    number = ''
-    suppl = ''
-    for char in issue:
-        if char.isdigit():
-            number += char
+    # Initialize number and supplement
+    number = None
+    supplement = None
+    
+    # Iterate through the parts to find the number and supplement
+    for part in parts:
+        if part.isdigit():
+            number = int(part)
         else:
-            suppl += char
+            supplement = part
     
-    # Converti il numero in intero
-    number = int(number) if number else 0
-    
-    return number, suppl
+    return number, supplement

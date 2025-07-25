@@ -12,17 +12,13 @@ def validate_value(value):
     """
     # Definisci l'espressione regolare per la convalida
     # Esempio: accetta solo stringhe alfanumeriche con lunghezza tra 3 e 20 caratteri
-    regex_pattern = r'^[a-zA-Z0-9]{3,20}$'
+    regex = re.compile(r'^[a-zA-Z0-9]{3,20}$')
     
-    # Compila l'espressione regolare
-    pattern = re.compile(regex_pattern)
-    
-    # Verifica se il valore corrisponde al pattern
-    if not pattern.match(value):
+    if not regex.match(value):
         raise ValidationError("Il valore fornito non è conforme all'espressione regolare.")
     
     return True
 
 class ValidationError(Exception):
-    """Eccezione sollevata quando la convalida fallisce."""
+    """Eccezione sollevata quando il valore non è conforme all'espressione regolare."""
     pass

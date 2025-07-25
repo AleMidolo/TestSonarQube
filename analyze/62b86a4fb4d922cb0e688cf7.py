@@ -11,7 +11,7 @@ def validate_key(key):
         ValidationError: se la chiave fornita non è conforme all'espressione regolare.
     """
     # Definisci l'espressione regolare per la validazione della chiave
-    key_pattern = re.compile(r'^[A-Za-z0-9_\-]{8,}$')
+    key_pattern = re.compile(r'^[A-Za-z0-9_\-]{8,32}$')
     
     if not key_pattern.match(key):
         raise ValidationError("La chiave fornita non è conforme all'espressione regolare.")

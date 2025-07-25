@@ -14,26 +14,18 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     if not os.path.exists(plugin_dir):
         raise FileNotFoundError(f"The directory {plugin_dir} does not exist.")
     
-    # Look for a spec file (e.g., plugin_spec.json) in the plugin directory
-    spec_file = os.path.join(plugin_dir, "plugin_spec.json")
-    if not os.path.exists(spec_file):
-        raise FileNotFoundError(f"No plugin specification file found in {plugin_dir}.")
-    
-    # Load the spec file
-    with open(spec_file, 'r') as f:
-        spec_data = json.load(f)
-    
-    # Flatten the dictionary
-    def flatten_dict(d, parent_key='', sep='_'):
-        items = []
-        for k, v in d.items():
-            new_key = f"{parent_key}{sep}{k}" if parent_key else k
-            if isinstance(v, dict):
-                items.extend(flatten_dict(v, new_key, sep=sep).items())
-            else:
-                items.append((new_key, v))
-        return dict(items)
-    
-    flat_dict = flatten_dict(spec_data)
-    
+    # Iterate over all files in the plugin directory
+    for root, dirs, files in os.walk(plugin_dir):
+        for file in files:
+            if file.endswith('.json'):
+                file_path = os.path.join(root, file)
+                with open(file_path, 'r') as f:
+                    data = json.load(f)
+                    # Flatten the dictionary
+                    for key, value in data.items():
+                        if isinstance(value, dict):
+                            for sub_key, sub_value in value.items():
+                                flat_dict[f"{key}.{sub_key}"] = sub_value
+                        else:
+                            flat_dict[key] = value
     return flat_dict

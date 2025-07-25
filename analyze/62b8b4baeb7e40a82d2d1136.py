@@ -24,8 +24,9 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     errors = []
 
     # Verifica che il candidato dichiari di fornire l'interfaccia
-    if not tentative and not iface.providedBy(candidate):
-        errors.append(f"{candidate} non dichiara di fornire l'interfaccia {iface}")
+    if not tentative:
+        if not iface.providedBy(candidate):
+            errors.append(f"{candidate} non dichiara di fornire l'interfaccia {iface}.")
 
     # Verifica i metodi e gli attributi
     try:

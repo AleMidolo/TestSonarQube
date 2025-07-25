@@ -9,31 +9,16 @@ def initialize(self):
     # Crea il file di dichiarazione OCFL
     declaration = {
         "type": "https://ocfl.io/1.0/spec/#inventory",
-        "digestAlgorithm": "sha512",
-        "contentDirectory": "content",
-        "id": "urn:uuid:12345678-1234-5678-1234-567812345678",
-        "head": "v1"
+        "ocfl_version": "1.0",
+        "content_directory": "content",
+        "digest_algorithm": "sha512",
+        "head": None,
+        "manifest": {},
+        "versions": {}
     }
 
-    with open(os.path.join(self.root_path, "0=ocfl_object_1.0"), 'w') as f:
-        f.write(json.dumps(declaration, indent=2))
+    with open(os.path.join(self.root_path, "0=ocfl_1.0"), 'w') as f:
+        json.dump(declaration, f, indent=4)
 
-    # Crea la directory per il contenuto
+    # Crea la directory del contenuto
     os.makedirs(os.path.join(self.root_path, "content"), exist_ok=True)
-
-    # Crea il file di inventario iniziale
-    inventory = {
-        "id": "urn:uuid:12345678-1234-5678-1234-567812345678",
-        "type": "https://ocfl.io/1.0/spec/#inventory",
-        "digestAlgorithm": "sha512",
-        "head": "v1",
-        "versions": {
-            "v1": {
-                "created": "2023-10-01T00:00:00Z",
-                "state": {}
-            }
-        }
-    }
-
-    with open(os.path.join(self.root_path, "inventory.json"), 'w') as f:
-        f.write(json.dumps(inventory, indent=2))

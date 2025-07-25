@@ -1,8 +1,9 @@
 import logging
 import os
 import yaml
+from typing import Dict, List, Tuple, Optional, Sequence
 
-def load_configurations(config_filenames, overrides=None, resolve_env=True):
+def load_configurations(config_filenames: List[str], overrides: Optional[Dict] = None, resolve_env: bool = True) -> Tuple[Dict[str, Dict], Sequence[logging.LogRecord]]:
     """
     Dato un elenco di nomi di file di configurazione, carica e valida ciascun file di configurazione.
     Restituisci i risultati come una tupla composta da:
@@ -12,9 +13,9 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     configurations = {}
     errors = []
 
-    for filename in config_filenames:
+    for config_filename in config_filenames:
         try:
-            with open(filename, 'r') as file:
+            with open(config_filename, 'r') as file:
                 config = yaml.safe_load(file)
                 
                 if resolve_env:
@@ -24,18 +25,15 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                             config[key] = os.getenv(env_var, value)
                 
                 if overrides:
-                    for key, value in overrides.items():
-                        if key in config:
-                            config[key] = value
+                    config.update(overrides)
                 
-                configurations[filename] = config
+                configurations[config_filename] = config
         except Exception as e:
-            error_message = f"Error loading configuration from {filename}: {str(e)}"
-            logging.error(error_message)
+            error_message = f"Error loading configuration from {config_filename}: {str(e)}"
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
-                pathname=filename,
+                pathname=__file__,
                 lineno=0,
                 msg=error_message,
                 args=None,

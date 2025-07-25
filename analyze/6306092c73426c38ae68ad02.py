@@ -6,10 +6,9 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
     :param answer_file_args: il dizionario degli argomenti dai file
     """
     deprecated_args = set(cli_args.keys()).intersection(answer_file_args.keys())
-    
     if deprecated_args:
-        print("Attenzione: I seguenti argomenti sono deprecati e non dovrebbero essere usati:")
+        print("Deprecated arguments found in both CLI and answer file:")
         for arg in deprecated_args:
             print(f"- {arg}")
     else:
-        print("Nessun argomento deprecato trovato.")
+        print("No deprecated arguments found.")

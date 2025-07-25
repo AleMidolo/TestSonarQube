@@ -13,6 +13,6 @@ def merge_extra_vars(vars_dict, extra_vars=None):
             key, value = var.split('=', 1)
             vars_dict[key] = value
         else:
-            vars_dict[var] = True
+            vars_dict[var] = None
     
     return vars_dict

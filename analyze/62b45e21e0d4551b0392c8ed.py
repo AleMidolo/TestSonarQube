@@ -29,7 +29,7 @@ def find_path_type(path):
     
     if content == "ocfl_1.0":
         return "root"
-    elif content == "ocfl_object_1.0":
+    elif content.startswith("ocfl_object_"):
         return "object"
     else:
-        return f"Tipo di file Namaste sconosciuto: {content}"
+        return "Il file Namaste non corrisponde a un tipo OCFL riconosciuto."

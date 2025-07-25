@@ -15,13 +15,11 @@ def next_version(version):
     for i in range(len(parts) - 1, 0, -1):
         if int(parts[i]) > 9:
             parts[i] = '0'
-            parts[i-1] = str(int(parts[i-1]) + 1)
+            parts[i - 1] = str(int(parts[i - 1]) + 1
     
     # Handle the case where the first part overflows (e.g., 9 -> 10)
     if int(parts[0]) > 9:
         parts[0] = '10'
     
     # Reconstruct the version string
-    new_version = '.'.join(parts)
-    
-    return new_version
+    return '.'.join(parts)

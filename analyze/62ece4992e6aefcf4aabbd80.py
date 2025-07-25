@@ -24,10 +24,8 @@ def remove_ending_os_sep(input_list):
     for item in input_list:
         if not isinstance(item, str):
             raise TypeError("Tutti gli elementi della lista devono essere stringhe.")
-        
         if len(item) > 1 and item[-1] == os.sep:
             processed_list.append(item[:-1])
         else:
             processed_list.append(item)
-    
     return processed_list

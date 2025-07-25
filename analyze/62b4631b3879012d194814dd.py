@@ -6,6 +6,6 @@ def correggi_prefisso_namespace_w(contenuto):
         contenuto (str): Il testo da correggere.
     
     Returns:
-        str: Il testo con il prefisso corretto.
+        str: Il testo con il prefisso namespace corretto.
     """
     return contenuto.replace('w:st="', 'w-st="')

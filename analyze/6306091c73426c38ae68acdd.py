@@ -12,7 +12,7 @@ def validate_from_file(cls, yaml_file=None):
     :return: Dizionario con i dati caricati da un file YAML
     """
     if yaml_file is None:
-        raise IRValidatorException("Il percorso del file YAML non è stato specificato.")
+        raise IRValidatorException("Il percorso del file YAML non è stato fornito.")
     
     try:
         with open(yaml_file, 'r') as file:
@@ -22,8 +22,7 @@ def validate_from_file(cls, yaml_file=None):
     except yaml.YAMLError as e:
         raise IRValidatorException(f"Errore nel parsing del file YAML: {e}")
     
-    # Esempio di validazione: controlla che ci siano alcuni campi obbligatori
-    required_fields = ['field1', 'field2', 'field3']
+    required_fields = ['field1', 'field2', 'field3']  # Esempio di campi obbligatori
     for field in required_fields:
         if field not in data:
             raise IRValidatorException(f"Campo obbligatorio mancante: {field}")

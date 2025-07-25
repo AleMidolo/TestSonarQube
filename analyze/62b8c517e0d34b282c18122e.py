@@ -17,18 +17,14 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     
     # Limita il numero di livelli dello stack
     stack_lines = stack_trace.splitlines()
-    if len(stack_lines) > max_level * 2:  # Ogni livello ha 2 righe
-        stack_lines = stack_lines[:max_level * 2]
+    if len(stack_lines) > max_level:
+        stack_lines = stack_lines[:max_level]
         stack_lines.append("... (stack trace troncato)")
     
     # Limita il numero di livelli del percorso
     formatted_trace = "\n".join(stack_lines)
-    if max_path_level > 0:
-        formatted_trace = "\n".join(stack_lines[:max_path_level * 2])
+    if len(formatted_trace.splitlines()) > max_path_level:
+        formatted_trace = "\n".join(formatted_trace.splitlines()[:max_path_level])
         formatted_trace += "\n... (percorso troncato)"
-    
-    # Aggiungi il messaggio dell'eccezione
-    exception_message = str(e)
-    formatted_trace = f"{exception_message}\n{formatted_trace}"
     
     return formatted_trace

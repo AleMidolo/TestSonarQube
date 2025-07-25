@@ -1,12 +1,9 @@
-from functools import wraps
-
 def cached(cache, key=hashkey, lock=None):
     """
-    Decorator per racchiudere una funzione con un callable di memoizzazione che salva  
+    Decorator per racchiudere una funzione con un callable di memoizzazione che salva
     i risultati in una cache.
     """
     def decorator(func):
-        @wraps(func)
         def wrapper(*args, **kwargs):
             cache_key = key(*args, **kwargs)
             if lock:

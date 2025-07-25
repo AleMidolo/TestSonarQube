@@ -1,17 +1,17 @@
 def hist_to_graph(hist, make_value=None, get_coordinate="left",
-                  field_names=("x", "y"), scale=None):
+                 field_names=("x", "y"), scale=None):
     """
     Convert a histogram to a graph.
 
     Parameters:
-    hist (Histogram): The input histogram.
-    make_value (callable): Function to set the value of a graph point. Defaults to bin content.
-    get_coordinate (str): Defines the coordinate of a graph point. Can be "left", "right", or "middle".
-    field_names (tuple): Names of the graph fields. Must match the result dimension.
-    scale (bool or Scale): The scale of the graph. If True, uses the histogram's scale.
+    - hist: The histogram to convert.
+    - make_value: Function to set the value of a graph point. Defaults to bin content.
+    - get_coordinate: Determines the coordinate of a graph point. Can be "left", "right", or "middle".
+    - field_names: Names of the graph fields. Must match the result dimension.
+    - scale: The scale of the graph. If True, uses the histogram's scale.
 
     Returns:
-    Graph: The resulting graph.
+    - The resulting graph.
     """
     import numpy as np
 
@@ -21,32 +21,30 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     if get_coordinate not in ["left", "right", "middle"]:
         raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
 
-    # Extract bin edges and contents
+    if scale is True:
+        scale = hist.scale
+
+    bins = hist.bins
     bin_edges = hist.bin_edges
-    bin_contents = hist.bin_contents
+    graph_points = []
 
-    # Calculate coordinates based on get_coordinate
-    if get_coordinate == "left":
-        x_coords = bin_edges[:-1]
-    elif get_coordinate == "right":
-        x_coords = bin_edges[1:]
-    else:  # middle
-        x_coords = (bin_edges[:-1] + bin_edges[1:]) / 2
+    for i, bin_ in enumerate(bins):
+        if get_coordinate == "left":
+            x = bin_edges[i]
+        elif get_coordinate == "right":
+            x = bin_edges[i + 1]
+        elif get_coordinate == "middle":
+            x = (bin_edges[i] + bin_edges[i + 1]) / 2
 
-    # Apply make_value to bin contents
-    y_values = [make_value(bin_) for bin_ in bin_contents]
+        value = make_value(bin_)
+        if not isinstance(value, (tuple, list)):
+            value = (value,)
 
-    # Ensure y_values is a list of tuples or lists
-    if not all(isinstance(y, (tuple, list)) for y in y_values):
-        y_values = [(y,) for y in y_values]
+        if len(value) != len(field_names) - 1:
+            raise ValueError("Length of make_value result must match field_names minus one")
 
-    # Combine x_coords and y_values into graph data
-    graph_data = []
-    for x, y in zip(x_coords, y_values):
-        graph_data.append((x,) + tuple(y))
+        graph_point = (x,) + value
+        graph_points.append(graph_point)
 
-    # Create the graph
-    from some_graph_library import Graph  # Replace with actual graph library
-    graph = Graph(data=graph_data, field_names=field_names, scale=scale)
-
+    graph = np.array(graph_points, dtype=[(name, 'float64') for name in field_names])
     return graph

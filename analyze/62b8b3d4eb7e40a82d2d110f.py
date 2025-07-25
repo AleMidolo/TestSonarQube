@@ -11,7 +11,7 @@ def _should_attempt_c_optimizations():
     # Controlla se stiamo eseguendo su PyPy
     is_pypy = platform.python_implementation() == "PyPy"
 
-    # Controlla se la variabile di ambiente PURE_PYTHON è impostata
+    # Controlla la variabile di ambiente PURE_PYTHON
     pure_python = os.getenv("PURE_PYTHON", "").lower() in ("1", "true", "yes")
 
     # Tentiamo le ottimizzazioni in C solo se non siamo su PyPy e PURE_PYTHON non è impostato

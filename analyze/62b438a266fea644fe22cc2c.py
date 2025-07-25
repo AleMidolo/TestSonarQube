@@ -8,14 +8,14 @@ def make_parsers():
     parser = argparse.ArgumentParser(description="Parser principale")
 
     # Creazione dei sottoparser
-    subparsers = parser.add_subparsers(title="comandi", dest="comando")
+    subparsers = parser.add_subparsers(dest="command", help="Comandi disponibili")
 
-    # Esempio di sottoparser 1
-    parser_a = subparsers.add_parser('comando_a', help='Descrizione del comando A')
-    parser_a.add_argument('arg1', type=int, help='Descrizione di arg1')
+    # Aggiunta di un sottoparser per il comando 'foo'
+    parser_foo = subparsers.add_parser("foo", help="Esegui il comando foo")
+    parser_foo.add_argument("--bar", type=int, help="Parametro bar per il comando foo")
 
-    # Esempio di sottoparser 2
-    parser_b = subparsers.add_parser('comando_b', help='Descrizione del comando B')
-    parser_b.add_argument('arg2', type=str, help='Descrizione di arg2')
+    # Aggiunta di un sottoparser per il comando 'baz'
+    parser_baz = subparsers.add_parser("baz", help="Esegui il comando baz")
+    parser_baz.add_argument("--qux", type=str, help="Parametro qux per il comando baz")
 
     return parser, subparsers

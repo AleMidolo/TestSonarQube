@@ -4,10 +4,9 @@ def _inline_r_setup(code: str) -> str:
     """
     setup_code = """
     options(
-        repos = c(CRAN = "https://cloud.r-project.org/"),
+        repos = c(CRAN = "https://cloud.r-project.org"),
         warn = 1,
-        stringsAsFactors = FALSE,
-        encoding = "UTF-8"
+        stringsAsFactors = FALSE
     )
     """
     return f"{setup_code}\n{code}"

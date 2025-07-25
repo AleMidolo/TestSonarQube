@@ -1,5 +1,5 @@
 def add_rendition(self, lang, file_path):
-    """Adds a new rendition of the document in a specified language.
+    """Add a new rendition of the document in a specific language.
     
     Args:
         lang (str): The language code for the rendition (e.g., 'en' for English).
