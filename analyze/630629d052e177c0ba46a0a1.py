@@ -16,7 +16,7 @@ def verify_relayable_signature(public_key, doc, signature):
     key = KeyData()
     key.load(public_key, KeyInfo.KEY_DATA_FORMAT_PEM)
 
-    # Add the key to the context
+    # Attach the key to the context
     ctx.key = key
 
     # Find the signature in the document

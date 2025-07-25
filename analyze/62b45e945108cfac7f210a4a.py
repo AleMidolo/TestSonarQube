@@ -34,9 +34,9 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     return num_objects, good_objects
 
 def validate_object(self, obj):
-    # Placeholder for actual object validation logic
+    # Placeholder for object validation logic
     return True
 
 def check_digest(self, obj):
-    # Placeholder for actual digest checking logic
+    # Placeholder for digest checking logic
     return True

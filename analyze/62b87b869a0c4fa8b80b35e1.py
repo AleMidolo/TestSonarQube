@@ -9,21 +9,21 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     graph_data = []
     bin_width = hist.bin_width
     for i, bin_ in enumerate(hist.bins):
-        value = make_value(bin_)
         if get_coordinate == "left":
-            x = hist.bin_edges[i]
+            x = bin_.left
         elif get_coordinate == "right":
-            x = hist.bin_edges[i + 1]
+            x = bin_.right
         else:  # get_coordinate == "middle"
-            x = (hist.bin_edges[i] + hist.bin_edges[i + 1]) / 2
+            x = bin_.center
 
-        if isinstance(value, tuple):
-            graph_data.append((x, *value))
+        y_values = make_value(bin_)
+        if isinstance(y_values, tuple):
+            graph_data.append((x, *y_values))
         else:
-            graph_data.append((x, value))
+            graph_data.append((x, y_values))
 
     if scale is True:
-        # Apply histogram scale to graph data if needed
+        # Apply histogram scale to the graph if needed
         pass  # Implement scaling logic if required
 
-    return graph_data  # Return the resulting graph data
+    return Graph(data=graph_data, field_names=field_names)

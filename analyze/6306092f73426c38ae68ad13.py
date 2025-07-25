@@ -30,8 +30,9 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
             if value is not None:
                 command.append(str(value))
 
-    try:
-        result = subprocess.run(command, check=True, text=True, capture_output=True)
-        return result.stdout
-    except subprocess.CalledProcessError as e:
-        return {"error": str(e), "output": e.output}
+    result = subprocess.run(' '.join(command), shell=True, capture_output=True, text=True)
+
+    if result.returncode != 0:
+        raise RuntimeError(f"Ansible playbook failed: {result.stderr}")
+
+    return json.loads(result.stdout)

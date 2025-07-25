@@ -13,6 +13,6 @@ def point_type(name, fields, srid_map):
             self.srid = srid_map.get(name, None)
 
         def __repr__(self):
-            return f"{self.__class__.__name__}({', '.join(map(str, self))}, srid={self.srid})"
+            return f"{self.__class__.__name__}({', '.join(map(str, self))})"
 
     return Point

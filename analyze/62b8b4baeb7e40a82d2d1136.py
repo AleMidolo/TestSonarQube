@@ -53,7 +53,7 @@ def _verify(iface, candidate, tentative=False, vtype=None):
         iface_sig = signature(iface_method)
         candidate_sig = signature(method)
 
-        if len(candidate_sig.parameters) != len(iface_sig.parameters):
+        if len(iface_sig.parameters) != len(candidate_sig.parameters):
             errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
             continue
 

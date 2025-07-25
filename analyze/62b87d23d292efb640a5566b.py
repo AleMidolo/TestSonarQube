@@ -14,12 +14,17 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
         if verbose:
             print(f"Running command: {' '.join(full_command)}")
         
-        process = subprocess.Popen(full_command, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE if not hide_stderr else subprocess.DEVNULL, env=env)
-        stdout, stderr = process.communicate()
+        result = subprocess.run(
+            full_command,
+            cwd=cwd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE if not hide_stderr else subprocess.DEVNULL,
+            env=env
+        )
         
-        if process.returncode != 0:
-            raise subprocess.CalledProcessError(process.returncode, full_command, output=stdout, stderr=stderr)
+        output.append(result.stdout.decode('utf-8'))
         
-        output.append(stdout.decode('utf-8'))
+        if result.returncode != 0:
+            raise subprocess.CalledProcessError(result.returncode, full_command, output=result.stderr.decode('utf-8'))
     
     return output

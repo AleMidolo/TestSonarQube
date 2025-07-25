@@ -3,8 +3,8 @@ from functools import wraps
 def mru_cache(maxsize=128, typed=False):
     """Decorator to wrap a function with a memoizing callable that saves
     up to `maxsize` results based on a Most Recently Used (MRU)
-    algorithm.
-    """
+    algorithm."""
+    
     cache = {}
     order = []
 
@@ -24,7 +24,7 @@ def mru_cache(maxsize=128, typed=False):
             cache[key] = result
             order.append(key)
             return result
-
+        
         return wrapped
-
+    
     return wrapper

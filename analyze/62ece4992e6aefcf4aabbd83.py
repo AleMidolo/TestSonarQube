@@ -16,11 +16,9 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
         if verbose:
             print(f"Running command: {' '.join(full_command)}")
         
-        with subprocess.Popen(full_command, cwd=cwd, env=env, 
-                              stdout=subprocess.PIPE, 
-                              stderr=subprocess.PIPE if not hide_stderr else subprocess.DEVNULL) as process:
-            stdout, stderr = process.communicate()
-            if process.returncode != 0:
-                raise subprocess.CalledProcessError(process.returncode, full_command, output=stdout, stderr=stderr)
-            if verbose:
-                print(stdout.decode())
+        with open(os.devnull, 'w') as devnull:
+            stderr = subprocess.DEVNULL if hide_stderr else None
+            result = subprocess.run(full_command, cwd=cwd, env=env, stderr=stderr)
+        
+        if result.returncode != 0:
+            raise subprocess.CalledProcessError(result.returncode, full_command)

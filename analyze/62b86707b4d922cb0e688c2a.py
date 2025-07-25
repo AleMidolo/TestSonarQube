@@ -9,9 +9,9 @@ def on(self, hook):
         callable: Decorator for registering listeners for the specified
         hook.
     """
-    def decorator(handler):
+    def decorator(func):
         if hook not in self._handlers:
             self._handlers[hook] = []
-        self._handlers[hook].append(handler)
-        return handler
+        self._handlers[hook].append(func)
+        return func
     return decorator
