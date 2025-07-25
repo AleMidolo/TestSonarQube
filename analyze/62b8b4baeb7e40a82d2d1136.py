@@ -1,5 +1,5 @@
 from zope.interface import Invalid, providedBy, implementedBy
-from inspect import ismethod, isfunction, signature
+from inspect import signature
 
 def _verify(iface, candidate, tentative=False, vtype=None):
     """
@@ -23,34 +23,30 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     """
     errors = []
 
-    # Step 1: Verify that the candidate declares it provides the interface
+    # Step 1: Ensure the candidate declares it provides the interface
     if not tentative:
         if not iface.providedBy(candidate):
             errors.append(f"{candidate} does not provide {iface}")
 
-    # Step 2: Verify that the candidate defines all required methods
+    # Step 2: Ensure the candidate defines all required methods
     required_methods = iface.namesAndDescriptions(all=True)
     for name, desc in required_methods:
         if not hasattr(candidate, name):
             errors.append(f"{candidate} is missing required method {name}")
         else:
-            attr = getattr(candidate, name)
-            if not (ismethod(attr) or isfunction(attr)):
-                errors.append(f"{name} is not a method or function in {candidate}")
+            # Step 3: Ensure the methods have the correct signatures
+            candidate_method = getattr(candidate, name)
+            if callable(candidate_method):
+                try:
+                    candidate_sig = signature(candidate_method)
+                    iface_sig = signature(desc.getSignature())
+                    if candidate_sig != iface_sig:
+                        errors.append(f"Method {name} has incorrect signature: expected {iface_sig}, got {candidate_sig}")
+                except ValueError:
+                    # If signature cannot be determined, skip this check
+                    pass
 
-    # Step 3: Verify that the methods have the correct signatures
-    for name, desc in required_methods:
-        if hasattr(candidate, name):
-            try:
-                sig = signature(getattr(candidate, name))
-                iface_sig = signature(desc.getSignature())
-                if sig != iface_sig:
-                    errors.append(f"Signature mismatch for method {name} in {candidate}")
-            except ValueError:
-                # Skip if signature cannot be determined
-                pass
-
-    # Step 4: Verify that the candidate defines all required attributes
+    # Step 4: Ensure the candidate defines all required attributes
     required_attrs = iface.namesAndDescriptions(all=True)
     for name, desc in required_attrs:
         if not hasattr(candidate, name):

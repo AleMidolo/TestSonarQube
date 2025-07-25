@@ -21,12 +21,12 @@ def format(
     # Convert the SQL query using the converter
     formatted_sql = self._converter.convert(sql)
     
-    # Convert the parameters to out-style
+    # Convert the params to out-style
     if isinstance(params, dict):
         # If params is a dictionary, convert it to out-style dictionary
-        out_params = {k: self._converter.convert_param(v) for k, v in params.items()}
+        out_params = {k: self._converter.convert_value(v) for k, v in params.items()}
     else:
         # If params is a sequence, convert it to out-style list
-        out_params = [self._converter.convert_param(v) for v in params]
+        out_params = [self._converter.convert_value(v) for v in params]
     
     return formatted_sql, out_params

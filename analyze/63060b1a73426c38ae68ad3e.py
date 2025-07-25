@@ -9,19 +9,13 @@ def get_plugin_spec_flatten_dict(plugin_dir):
     :param plugin_dir: 插件目录的路径
     :return: 一个包含插件属性的扁平化字典
     """
-    plugin_spec = {}
-    
-    # 遍历插件目录中的所有 YAML 文件
-    for root, dirs, files in os.walk(plugin_dir):
-        for file in files:
-            if file.endswith('.yaml') or file.endswith('.yml'):
-                file_path = os.path.join(root, file)
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    data = yaml.safe_load(f)
-                    if data:
-                        plugin_spec.update(data)
-    
-    # 扁平化字典
+    plugin_spec_file = os.path.join(plugin_dir, 'plugin.yaml')
+    if not os.path.exists(plugin_spec_file):
+        raise FileNotFoundError(f"Plugin specification file not found in {plugin_dir}")
+
+    with open(plugin_spec_file, 'r') as file:
+        plugin_spec = yaml.safe_load(file)
+
     def flatten_dict(d, parent_key='', sep='.'):
         items = []
         for k, v in d.items():
@@ -31,5 +25,5 @@ def get_plugin_spec_flatten_dict(plugin_dir):
             else:
                 items.append((new_key, v))
         return dict(items)
-    
+
     return flatten_dict(plugin_spec)

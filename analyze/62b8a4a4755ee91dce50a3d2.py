@@ -14,11 +14,10 @@ def _fromutc(self, dt):
     # Convert the datetime to the new timezone
     new_dt = dt.astimezone(self)
 
-    # Check if the datetime is ambiguous
+    # Check if the datetime is ambiguous in the new timezone
     if self.is_ambiguous(new_dt):
-        # If ambiguous, check if it's in the fold
-        if new_dt.fold:
-            # Handle the ambiguous case (e.g., choose the earlier time)
-            new_dt = new_dt.replace(fold=0)
+        # If it's ambiguous, we need to decide whether to use the first or second occurrence
+        # For simplicity, we'll use the first occurrence
+        new_dt = self.resolve_ambiguity(new_dt, is_dst=False)
 
     return new_dt

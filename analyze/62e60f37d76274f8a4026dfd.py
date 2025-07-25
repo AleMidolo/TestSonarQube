@@ -5,7 +5,9 @@ def dehydrate_time(value):
 
     :param value: Time 对象
     :type value: Time
-    :return: 包含 ticks 的字典
-    :rtype: dict
+    :return: 包含 ticks 的 Structure 对象
+    :rtype: Structure
     """
-    return {'ticks': value.ticks()}
+    if value is None:
+        return None
+    return Structure(ticks=value.ticks)

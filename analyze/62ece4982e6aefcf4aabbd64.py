@@ -9,10 +9,7 @@ def strip_root(path, root):
     """
     if not path.startswith(root):
         raise ValueError(f"Path '{path}' does not start with root '{root}'")
-    
     stripped_path = path[len(root):]
-    
-    # Remove any leading slashes
-    stripped_path = stripped_path.lstrip('/')
-    
+    if stripped_path.startswith('/'):
+        stripped_path = stripped_path[1:]
     return stripped_path

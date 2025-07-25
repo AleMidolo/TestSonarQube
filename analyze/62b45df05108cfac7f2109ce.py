@@ -12,7 +12,7 @@ def validate(self, path):
     if not os.path.exists(path):
         return False
 
-    # 检查是否存在必要的 OCFL 文件
+    # 检查是否存在必要的 OCFL 文件结构
     required_files = ['inventory.json', 'inventory.json.sha512']
     for file in required_files:
         if not os.path.exists(os.path.join(path, file)):
@@ -23,21 +23,16 @@ def validate(self, path):
     try:
         with open(inventory_path, 'r') as f:
             inventory = json.load(f)
-    except (json.JSONDecodeError, IOError):
-        return False
-
-    # 检查 inventory.json 的基本结构
-    required_keys = ['id', 'type', 'digestAlgorithm', 'head', 'manifest', 'versions']
-    for key in required_keys:
-        if key not in inventory:
+        
+        # 检查 inventory.json 中的基本结构
+        if 'id' not in inventory or 'type' not in inventory or 'digestAlgorithm' not in inventory:
+            return False
+        
+        # 检查 digestAlgorithm 是否为 sha512
+        if inventory['digestAlgorithm'] != 'sha512':
             return False
 
-    # 检查 digestAlgorithm 是否为 sha512
-    if inventory.get('digestAlgorithm') != 'sha512':
-        return False
-
-    # 检查 manifest 和 versions 是否为空
-    if not inventory.get('manifest') or not inventory.get('versions'):
+    except (json.JSONDecodeError, KeyError):
         return False
 
     # 如果所有检查都通过，则返回 True

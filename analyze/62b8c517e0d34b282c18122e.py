@@ -23,17 +23,17 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     stack = stack[:max_level]
 
     for frame in stack:
-        # 获取文件路径并限制路径层级
-        file_path = frame.filename
-        path_parts = file_path.split(os.sep)
-        if len(path_parts) > max_path_level:
-            file_path = os.sep.join(path_parts[-max_path_level:])
-        
-        # 格式化堆栈信息
-        stack_str.append(f"File \"{file_path}\", line {frame.lineno}, in {frame.name}\n    {frame.line}")
+        # 限制路径层级
+        path = frame.filename.split(os.sep)
+        if len(path) > max_path_level:
+            path = path[-max_path_level:]
+        path = os.sep.join(path)
 
-    # 将堆栈信息与异常信息结合
-    stack_trace = "\n".join(stack_str)
-    exception_str = f"{type(e).__name__}: {str(e)}\n{stack_trace}"
+        # 格式化堆栈信息
+        stack_str.append(f"File \"{path}\", line {frame.lineno}, in {frame.name}\n  {frame.line}")
+
+    # 格式化异常信息
+    exception_str = f"{type(e).__name__}: {str(e)}\n"
+    exception_str += "\n".join(stack_str)
 
     return exception_str

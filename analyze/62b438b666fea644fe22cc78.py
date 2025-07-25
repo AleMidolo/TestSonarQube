@@ -7,7 +7,7 @@ def parse_arguments(*arguments):
     parser = argparse.ArgumentParser(description="Parse command line arguments.")
     
     # 添加一个示例参数
-    parser.add_argument('--example', type=str, help="An example argument.")
+    parser.add_argument('--example', type=str, help='An example argument')
     
     # 解析传入的参数
     args = parser.parse_args(arguments)

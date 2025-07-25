@@ -28,7 +28,7 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
     
     try:
         result = subprocess.run(command, check=True, capture_output=True, text=True)
-        print(result.stdout)
+        return result.stdout
     except subprocess.CalledProcessError as e:
         print(f"Ansible playbook execution failed: {e.stderr}")
         raise

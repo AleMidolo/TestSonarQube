@@ -20,7 +20,8 @@ def validate_from_file(cls, yaml_file=None):
     except Exception as e:
         raise IRValidatorException(f"Failed to load YAML file: {e}")
 
-    required_fields = ['field1', 'field2', 'field3']  # 假设这些是必需字段
+    # Assuming the required fields are 'field1', 'field2', and 'field3'
+    required_fields = ['field1', 'field2', 'field3']
     for field in required_fields:
         if field not in data:
             raise IRValidatorException(f"Missing required field: {field}")
