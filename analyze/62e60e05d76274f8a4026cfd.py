@@ -1,12 +1,13 @@
 def index(self, key):
     """
-    Devuelve el índice del elemento dado.
+    以整数形式返回键。
+    返回给定项的索引。
 
-    :param key: una clave  
-    :return: index  
+    :param key: 一个键
+    :return: 索引
     :rtype: int
     """
-    for i in range(len(self)):
-        if self[i] == key:
-            return i
-    raise ValueError(f"{key} is not in list")
+    try:
+        return self.keys().index(key)
+    except ValueError:
+        raise KeyError(f"Key {key} not found")

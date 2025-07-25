@@ -1,19 +1,26 @@
 def _get_seq_with_type(seq, bufsize=None):
     """
-    Devuelve un par (secuencia, tipo).
-    La secuencia se deriva de *seq*
-    (o es *seq*, si este es de un tipo de secuencia).
+    返回一个 (sequence, type) 对。
+    sequence 是从 *seq* 派生的
+    （或者是 *seq* 本身，如果它是一个序列类型）。
     """
-    # Check if seq is already a sequence type
-    if isinstance(seq, (list, tuple, set, frozenset)):
+    # 检查是否为序列类型
+    if isinstance(seq, (list, tuple, bytes, bytearray)):
         return seq, type(seq)
     
-    # Convert iterables to list
+    # 如果是迭代器或生成器,转换为列表
     if hasattr(seq, '__iter__'):
-        # Use bufsize if provided, otherwise convert entire sequence
         if bufsize is not None:
-            return list(itertools.islice(seq, bufsize)), list
-        return list(seq), list
-        
-    # If not iterable, wrap in list
+            # 如果指定了bufsize,只获取指定长度
+            seq_list = []
+            for i, item in enumerate(seq):
+                if i >= bufsize:
+                    break
+                seq_list.append(item)
+            return seq_list, list
+        else:
+            # 否则获取全部
+            return list(seq), list
+            
+    # 如果不是序列也不是可迭代对象,包装成列表
     return [seq], list

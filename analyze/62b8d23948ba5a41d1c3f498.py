@@ -1,50 +1,57 @@
 def lru_cache(maxsize=128, typed=False):
+    """
+    一个用于将函数包装为一个带有记忆功能的可调用对象的装饰器，
+    该对象基于最近最少使用（LRU）算法保存，最多 `maxsize` 个结果。
+    """
     def decorator(func):
-        from functools import wraps
-        from collections import OrderedDict
+        # 使用字典存储缓存结果
+        cache = {}
+        # 使用列表记录访问顺序
+        access_order = []
         
-        # Cache para almacenar resultados
-        cache = OrderedDict()
-        
-        @wraps(func)
         def wrapper(*args, **kwargs):
-            # Crear clave de cache
+            # 如果考虑类型,将参数转换为包含类型的key
             if typed:
-                key = (args, tuple(sorted(kwargs.items())), tuple(type(arg) for arg in args))
+                key = tuple([(arg, type(arg)) for arg in args] + 
+                          sorted([(k, type(v), v) for k, v in kwargs.items()]))
             else:
-                key = (args, tuple(sorted(kwargs.items())))
+                key = tuple(list(args) + sorted(kwargs.items()))
                 
-            # Verificar si el resultado está en cache
+            # 如果结果在缓存中
             if key in cache:
-                # Mover el item al final (más recientemente usado)
-                cache.move_to_end(key)
+                # 更新访问顺序
+                access_order.remove(key)
+                access_order.append(key)
                 return cache[key]
                 
-            # Calcular resultado
+            # 计算新结果
             result = func(*args, **kwargs)
             
-            # Agregar a cache
-            cache[key] = result
-            
-            # Remover el elemento menos usado si se excede maxsize
-            if maxsize and len(cache) > maxsize:
-                cache.popitem(last=False)
+            # 如果缓存已满,删除最久未使用的项
+            if len(cache) >= maxsize:
+                oldest_key = access_order.pop(0)
+                del cache[oldest_key]
                 
+            # 存储新结果
+            cache[key] = result
+            access_order.append(key)
+            
             return result
             
-        # Agregar métodos de utilidad
+        # 添加缓存统计信息
         wrapper.cache_info = lambda: {
-            'hits': sum(1 for _ in cache),
-            'maxsize': maxsize,
-            'currsize': len(cache)
+            "hits": len(access_order),
+            "maxsize": maxsize,
+            "currsize": len(cache)
         }
-        wrapper.cache_clear = cache.clear
+        
+        # 清除缓存
+        wrapper.cache_clear = lambda: (cache.clear(), access_order.clear())
         
         return wrapper
         
-    # Si se usa directamente como @lru_cache
-    if callable(maxsize):
-        func, maxsize = maxsize, 128
-        return decorator(func)
+    # 如果maxsize为None,则不使用缓存
+    if maxsize is None:
+        return lambda func: func
         
     return decorator

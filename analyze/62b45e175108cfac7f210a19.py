@@ -1,29 +1,38 @@
 def validate_fixity(self, fixity, manifest_files):
     """
-    Validar el bloque de fijación en el inventario.
-
-    Verificar la estructura del bloque de fijación y asegurarse de que solo se referencien los archivos listados en el manifiesto.
+    验证库存（inventory）中的校验（fixity）块。检查校验块的结构，并保证仅引用了清单中列出的文件。在类中返回`error()`。
     """
     if not isinstance(fixity, dict):
-        raise ValueError("El bloque de fijación debe ser un diccionario")
-
-    # Verificar que tenga las claves requeridas
-    required_keys = ["message_digest_algorithm", "message_digest"]
-    for key in required_keys:
-        if key not in fixity:
-            raise ValueError(f"Falta la clave requerida '{key}' en el bloque de fijación")
-
-    # Verificar que el algoritmo sea válido
-    valid_algorithms = ["md5", "sha1", "sha256", "sha512"]
-    if fixity["message_digest_algorithm"].lower() not in valid_algorithms:
-        raise ValueError(f"Algoritmo de digest no válido. Debe ser uno de: {valid_algorithms}")
-
-    # Verificar que los digests referencien archivos del manifiesto
-    for file_path, digest in fixity["message_digest"].items():
-        if file_path not in manifest_files:
-            raise ValueError(f"El archivo '{file_path}' en el bloque de fijación no está presente en el manifiesto")
+        return self.error("Fixity block must be a dictionary")
         
-        if not isinstance(digest, str):
-            raise ValueError(f"El digest para '{file_path}' debe ser una cadena")
-
-    return True
+    # Check required fields
+    required_fields = ["message-digest-algorithm", "message-digest"]
+    for field in required_fields:
+        if field not in fixity:
+            return self.error(f"Missing required field '{field}' in fixity block")
+            
+    # Validate algorithm field
+    if not isinstance(fixity["message-digest-algorithm"], str):
+        return self.error("message-digest-algorithm must be a string")
+        
+    # Validate digest field
+    digests = fixity["message-digest"]
+    if not isinstance(digests, list):
+        return self.error("message-digest must be a list")
+        
+    # Check each digest entry
+    for digest in digests:
+        if not isinstance(digest, dict):
+            return self.error("Each message-digest entry must be a dictionary")
+            
+        if "file" not in digest or "hash" not in digest:
+            return self.error("Each message-digest entry must have 'file' and 'hash' fields")
+            
+        if not isinstance(digest["file"], str) or not isinstance(digest["hash"], str):
+            return self.error("Digest file and hash values must be strings")
+            
+        # Verify file exists in manifest
+        if digest["file"] not in manifest_files:
+            return self.error(f"Digest references non-existent file: {digest['file']}")
+            
+    return None

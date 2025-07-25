@@ -1,39 +1,41 @@
 def _convert_non_cli_args(self, parser_name, values_dict):
     """
-    Convierte los argumentos a los tipos correctos modificando el parámetro values_dict.
+    通过修改 values_dict 参数将参数转换为正确的类型。
 
-    Por defecto, todos los valores son cadenas de texto (strings).
+    默认情况下，所有的值都是字符串。
 
-    :param parser_name: El nombre del comando, por ejemplo: main, virsh, ospd, etc.
-    :param values_dict: El diccionario con los argumentos.
+    :param parser_name: 命令名称，例如 main、virsh、ospd 等
+    :param values_dict: 包含参数的字典
     """
-    # Obtener la configuración del parser
-    parser_config = self.config.get(parser_name, {})
-    
-    # Iterar sobre los argumentos en values_dict
+    if not values_dict:
+        return
+
+    # 获取该解析器的参数定义
+    parser = self._parsers.get(parser_name)
+    if not parser:
+        return
+
+    # 遍历所有参数
     for arg_name, value in values_dict.items():
-        # Obtener el tipo definido en la configuración
-        arg_type = parser_config.get(arg_name, {}).get('type', str)
-        
-        # Ignorar si el valor es None
+        # 跳过None值
         if value is None:
             continue
             
-        try:
-            # Convertir listas
-            if isinstance(value, list):
-                values_dict[arg_name] = [arg_type(v) for v in value]
-            # Convertir valores individuales
-            else:
-                # Manejar booleanos especialmente
-                if arg_type == bool:
-                    if isinstance(value, str):
-                        values_dict[arg_name] = value.lower() in ('true', 't', 'yes', 'y', '1')
-                    else:
-                        values_dict[arg_name] = bool(value)
+        # 获取参数的类型
+        arg_type = None
+        for action in parser._actions:
+            if action.dest == arg_name:
+                arg_type = action.type
+                break
+                
+        # 如果找到类型定义则进行转换
+        if arg_type:
+            try:
+                # 处理列表类型
+                if isinstance(value, list):
+                    values_dict[arg_name] = [arg_type(v) for v in value]
                 else:
                     values_dict[arg_name] = arg_type(value)
-                    
-        except (ValueError, TypeError):
-            # Si falla la conversión, dejar el valor original
-            continue
+            except (ValueError, TypeError):
+                # 转换失败时保持原值
+                continue

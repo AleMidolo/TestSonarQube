@@ -1,29 +1,18 @@
 def popitem(self):
     """
-    Elimina y devuelve el par (clave, valor) menos utilizado con mayor frecuencia.
+    移除并返回最少使用的键值对。
     """
-    if not self.cache:  # Si el cache está vacío
-        raise KeyError("Cache is empty")
+    if not self:
+        raise KeyError('Dictionary is empty')
         
-    # Encontrar la frecuencia mínima
-    min_freq = min(self.freq_list.keys())
+    # 获取最少使用的节点
+    node = self.head.next
     
-    # Obtener la lista de claves con esa frecuencia
-    lru_list = self.freq_list[min_freq]
+    # 从双向链表中删除该节点
+    self._remove_node(node)
     
-    # Obtener la clave menos usada recientemente (la última de la lista)
-    lru_key = lru_list[-1]
+    # 从哈希表中删除该键值对
+    del self.cache[node.key]
     
-    # Obtener el valor asociado
-    lru_value = self.cache[lru_key].value
-    
-    # Eliminar la clave del cache y de la lista de frecuencias
-    del self.cache[lru_key]
-    lru_list.remove(lru_key)
-    
-    # Si la lista de frecuencia queda vacía, eliminarla
-    if not lru_list:
-        del self.freq_list[min_freq]
-        
-    # Devolver el par (clave, valor)
-    return (lru_key, lru_value)
+    # 返回键值对
+    return node.key, node.value

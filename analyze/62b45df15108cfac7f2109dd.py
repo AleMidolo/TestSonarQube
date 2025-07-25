@@ -1,19 +1,13 @@
 def status_str(self, prefix=''):
     """
-    Devuelve la representación en forma de cadena del registro de validación, con un prefijo opcional.
+    返回带有 self.log.status_str 的字符串表示形式，可选添加前缀。
+    返回验证日志的字符串表示形式，可选添加前缀。
     """
-    result = []
-    if self.errors:
-        result.append(f"{prefix}Errores:")
-        for error in self.errors:
-            result.append(f"{prefix}  {error}")
-    
-    if self.warnings:
-        result.append(f"{prefix}Advertencias:")
-        for warning in self.warnings:
-            result.append(f"{prefix}  {warning}")
-            
-    if not result:
-        result.append(f"{prefix}Sin errores ni advertencias")
+    if hasattr(self, 'log') and hasattr(self.log, 'status_str'):
+        status = self.log.status_str
+    else:
+        status = ''
         
-    return "\n".join(result)
+    if prefix:
+        return f"{prefix}{status}"
+    return status

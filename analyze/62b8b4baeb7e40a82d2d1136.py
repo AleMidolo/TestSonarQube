@@ -1,68 +1,52 @@
 def _verify(iface, candidate, tentative=False, vtype=None):
-    from zope.interface.exceptions import Invalid
+    from zope.interface.exceptions import Invalid, DoesNotImplement
+    from zope.interface.verify import verifyObject
     from zope.interface.interface import Method
-    from collections import defaultdict
+    
+    errors = []
 
-    errors = defaultdict(list)
+    # Step 1: Check if candidate declares it provides the interface
+    if not tentative:
+        if not iface.providedBy(candidate):
+            errors.append(DoesNotImplement(iface))
 
-    # Check if candidate claims to provide interface
-    if not tentative and not iface.providedBy(candidate):
-        errors['general'].append(
-            f"Class {candidate} does not implement interface {iface.__name__}"
-        )
-
-    # Check methods and attributes
-    for name, desc in iface.namesAndDescriptions(all=True):
+    # Step 2 & 3: Check methods and their signatures
+    for name, desc in iface.namesAndDescriptions(1):
         if isinstance(desc, Method):
             # Check if method exists
-            if not hasattr(candidate, name):
-                errors['methods'].append(
-                    f"Method '{name}' not provided by {candidate}"
-                )
+            try:
+                attr = getattr(candidate, name)
+            except AttributeError:
+                errors.append(Invalid(f"The '{name}' attribute was not provided."))
                 continue
 
-            method = getattr(candidate, name)
-            if not callable(method):
-                errors['methods'].append(
-                    f"Attribute '{name}' is not callable as required"
-                )
+            # Verify it's callable
+            if not callable(attr):
+                errors.append(Invalid(f"The '{name}' attribute is not callable."))
                 continue
 
             # Check method signature if possible
             try:
-                import inspect
-                impl_sig = inspect.signature(method)
-                iface_sig = inspect.signature(desc)
-                
-                if impl_sig.parameters != iface_sig.parameters:
-                    errors['signatures'].append(
-                        f"Method '{name}' has incorrect signature: {impl_sig} != {iface_sig}"
-                    )
-            except (ValueError, TypeError):
-                pass  # Skip signature checking if not possible
+                if hasattr(desc, 'getSignatureInfo'):
+                    sig_info = desc.getSignatureInfo()
+                    method_sig = verifyObject(sig_info, attr)
+                    if not method_sig:
+                        errors.append(Invalid(f"The '{name}' method has incorrect signature."))
+            except Exception as e:
+                errors.append(Invalid(f"Error verifying signature of '{name}': {str(e)}"))
 
-        else:
-            # Check if attribute exists
-            if not hasattr(candidate, name):
-                errors['attributes'].append(
-                    f"Attribute '{name}' not provided by {candidate}"
-                )
+    # Step 4: Check attributes
+    for name, desc in iface.namesAndDescriptions(1):
+        if not isinstance(desc, Method):
+            try:
+                getattr(candidate, name)
+            except AttributeError:
+                errors.append(Invalid(f"The '{name}' attribute was not provided."))
 
-    # If no errors, return True
-    if not any(errors.values()):
+    # Handle errors
+    if len(errors) == 0:
         return True
-
-    # Collect all error messages
-    all_errors = []
-    for category, messages in errors.items():
-        all_errors.extend(messages)
-
-    # If only one error, raise it directly
-    if len(all_errors) == 1:
-        raise Invalid(all_errors[0])
-
-    # Otherwise raise all errors together
-    if all_errors:
-        raise Invalid('\n'.join(all_errors))
-
-    return True
+    elif len(errors) == 1:
+        raise errors[0]
+    else:
+        raise Invalid(f"Multiple errors: {'; '.join(str(e) for e in errors)}")

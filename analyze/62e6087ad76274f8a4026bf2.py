@@ -1,42 +1,39 @@
 def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **handlers):
     """
-    Añade un mensaje 'DISCARD' a la cola de salida.
+    将一个DISCARD消息添加到输出队列。
 
-    :param n: número de registros a descartar, por defecto = -1 (TODOS)
-    :param qid: ID de consulta para descartar, por defecto = -1 (última consulta)
-    :param dehydration_hooks:
-        Ganchos para deshidratar tipos (diccionario de tipo (clase) a función
-        de deshidratación). Las funciones de deshidratación reciben el valor y devuelven un objeto de un tipo entendido por 'packstream'.
-    :param hydration_hooks:
-        Ganchos para hidratar tipos (mapeo de tipo (clase) a función de
-     hidratación). Las funciones de hidratación reciben el valor de un tipo
-        entendido por 'packstream' y son libres de devolver cualquier cosa.
-    :param handlers: funciones manejadoras pasadas al objeto 'Response' devuelto
+    :param n: 要丢弃的记录数量，默认值为 -1（全部丢弃）
+    :param qid: 要丢弃的查询ID，默认值为 -1（最后一个查询）
+    :param dehydration_hooks: 用于处理类型dehydration的钩子（字典，键为类型（类），值为dehydration函数）。dehydration函数接收一个值，并返回一个 PackStream 可识别的对象。
+    :param hydration_hooks: 用于处理类型hydration的钩子（映射，键为类型（类），值为hydration函数）。hydration函数接收一个 PackStream 可识别的值，并可以返回任意对象。
+    :param handlers: 传递给返回的Response对象的处理函数
     """
-    if qid == -1:
-        qid = self._last_qid
-        
-    # Crear mensaje DISCARD
-    message = {
-        "type": "DISCARD",
+    # 创建DISCARD消息参数字典
+    message_params = {
         "n": n,
         "qid": qid
     }
-    
-    # Aplicar hooks de deshidratación si existen
+
+    # 创建消息结构
+    message = {
+        "signature": 0x2F,  # DISCARD消息的签名
+        "fields": [message_params]
+    }
+
+    # 应用dehydration钩子
     if dehydration_hooks:
         for type_, hook in dehydration_hooks.items():
-            if isinstance(message, type_):
-                message = hook(message)
-                
-    # Añadir mensaje a la cola de salida
-    self._outbox.append(message)
-    
-    # Crear y devolver objeto Response con los handlers
+            if isinstance(message_params, type_):
+                message_params = hook(message_params)
+
+    # 将消息添加到输出队列
+    self.append(message)
+
+    # 创建响应对象
     response = Response(
-        connection=self,
-        hydration_hooks=hydration_hooks or {},
+        self,
+        hydration_hooks=hydration_hooks,
         **handlers
     )
-    
+
     return response

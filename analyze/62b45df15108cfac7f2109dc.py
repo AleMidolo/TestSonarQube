@@ -1,17 +1,9 @@
 def status_str(self, prefix=''):
     """
-    Devuelve una cadena con el estado del validador, con un prefijo opcional.
+    通过访问排序后的 `self.messages` 列表，返回一个字符串。每次访问时，将前缀（prefix）和排序后的 `self.messages` 列表中的元素添加到结果中。
+    返回验证器状态的字符串，并可选择性地添加前缀。
     """
-    status = []
-    if hasattr(self, 'is_valid'):
-        status.append('valid' if self.is_valid else 'invalid')
-    if hasattr(self, 'errors') and self.errors:
-        status.append(f'errors={len(self.errors)}')
-    if hasattr(self, 'warnings') and self.warnings:
-        status.append(f'warnings={len(self.warnings)}')
-        
-    status_text = ', '.join(status)
-    if not status_text:
-        status_text = 'empty'
-        
-    return f'{prefix}[{status_text}]'
+    result = []
+    for message in sorted(self.messages):
+        result.append(prefix + message)
+    return '\n'.join(result)

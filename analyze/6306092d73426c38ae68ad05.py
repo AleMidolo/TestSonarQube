@@ -1,16 +1,15 @@
 def get_option_spec(self, command_name, argument_name):
     """
-    Obtiene la especificación para el nombre de opción especificado.
+    获取指定选项名称的规范。通过 `self.get_parser_option_specs()` 获取给定 `command_name` 的选项。
+    获取指定选项名称的规范。
     """
-    # Verificar que el comando existe
-    if command_name not in self.commands:
-        raise ValueError(f"Command '{command_name}' not found")
-        
-    command = self.commands[command_name]
+    # Get all option specs for the command
+    option_specs = self.get_parser_option_specs(command_name)
     
-    # Buscar el argumento en las opciones del comando
-    if argument_name not in command.options:
-        raise ValueError(f"Option '{argument_name}' not found for command '{command_name}'")
-        
-    # Retornar la especificación de la opción
-    return command.options[argument_name]
+    # Search for matching argument name in option specs
+    for option_spec in option_specs:
+        if option_spec.get('name') == argument_name:
+            return option_spec
+            
+    # Return None if no matching option spec found
+    return None

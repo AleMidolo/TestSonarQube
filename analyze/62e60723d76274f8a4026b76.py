@@ -1,32 +1,28 @@
 def from_ticks(cls, ticks, tz=None):
     """
-    Crear una hora a partir de ticks (nanosegundos desde la medianoche).
+    根据时间戳（自午夜以来的纳秒数）创建一个时间对象。
 
-    :param ticks: nanosegundos desde la medianoche 
-    :type ticks: int
-    :param tz: zona horaria opcional
+    :param ticks: 自午夜以来的纳秒数
+    :type ticks: int 
+    :param tz: 可选的时区信息
     :type tz: datetime.tzinfo
-
     :rtype: Time
-
-    :raises ValueError: si los ticks están fuera de los límites
-        (0 <= ticks < 86400000000000)
+    :raises ValueError: 如果时间戳超出范围(0 <= ticks < 86400000000000)
     """
+    # 检查时间戳范围
     if not 0 <= ticks < 86400000000000:
-        raise ValueError("Ticks must be between 0 and 86400000000000")
+        raise ValueError("时间戳必须在0到86400000000000之间")
         
-    # Convert nanoseconds to hours, minutes, seconds, microseconds
-    total_microseconds = ticks // 1000
-    hours = total_microseconds // 3600000000
-    remaining = total_microseconds % 3600000000
-    minutes = remaining // 60000000
-    remaining = remaining % 60000000
-    seconds = remaining // 1000000
-    microseconds = remaining % 1000000
+    # 计算时分秒和微秒
+    nanoseconds = ticks
+    microseconds = nanoseconds // 1000
+    seconds = microseconds // 1000000
+    microseconds = microseconds % 1000000
     
-    # Create Time object using the calculated components
-    return cls(hour=int(hours), 
-              minute=int(minutes), 
-              second=int(seconds),
-              microsecond=int(microseconds), 
-              tzinfo=tz)
+    hours = seconds // 3600
+    seconds = seconds % 3600
+    minutes = seconds // 60
+    seconds = seconds % 60
+
+    # 创建时间对象
+    return cls(hours, minutes, seconds, microseconds, tz)

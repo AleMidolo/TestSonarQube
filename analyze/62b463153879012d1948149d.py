@@ -1,39 +1,33 @@
 def _explore_folder(folder):
-    """
-    Obtiene los datos de los paquetes desde la carpeta.  
-
-    Agrupa los archivos por el nombre base de su archivo XML y devuelve los datos en formato de diccionario.  
-
-    Parámetros  
-    ----------  
-    folder : str  
-        Carpeta del paquete  
-
-    Retorna  
-    -------  
-    dict
-    """
     import os
-    from collections import defaultdict
+    import re
     
-    # Diccionario para almacenar los archivos agrupados
-    files_dict = defaultdict(dict)
+    # Initialize empty dictionary to store grouped files
+    grouped_files = {}
     
-    # Recorrer todos los archivos en la carpeta
-    for filename in os.listdir(folder):
-        filepath = os.path.join(folder, filename)
+    # Get all files in the folder
+    files = os.listdir(folder)
+    
+    # Group files by XML filename
+    for file in files:
+        # Get full file path
+        file_path = os.path.join(folder, file)
         
-        # Solo procesar archivos, no carpetas
-        if os.path.isfile(filepath):
-            # Obtener nombre base y extensión
-            basename, ext = os.path.splitext(filename)
+        # Skip if not a file
+        if not os.path.isfile(file_path):
+            continue
             
-            # Si es XML, usar como clave base
-            if ext.lower() == '.xml':
-                files_dict[basename]['xml'] = filepath
-            # Si es PDF, agregar a la entrada correspondiente
-            elif ext.lower() == '.pdf':
-                files_dict[basename]['pdf'] = filepath
-                
-    # Convertir defaultdict a dict normal
-    return dict(files_dict)
+        # Extract base filename without extension
+        base_name = os.path.splitext(file)[0]
+        
+        # Remove any suffixes like _eng, _chn etc
+        base_name = re.sub(r'_[a-z]{3}$', '', base_name)
+        
+        # Initialize list for this base name if not exists
+        if base_name not in grouped_files:
+            grouped_files[base_name] = []
+            
+        # Add file to group
+        grouped_files[base_name].append(file_path)
+        
+    return grouped_files

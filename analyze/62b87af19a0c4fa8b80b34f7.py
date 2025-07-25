@@ -1,29 +1,29 @@
 def difference(d1, d2, level=-1):
     """
-    Devuelve un diccionario con los elementos de *d1* que no están contenidos en *d2*.
+    返回一个字典，其中包含 *d1* 中不在 *d2* 中的项。
 
-    El parámetro *level* establece la profundidad máxima de recursión. Para recursión infinita, configúralo en -1. Para un nivel 1, si una clave está presente tanto en *d1* como en *d2* pero tiene valores diferentes, se incluye en la diferencia. Consulta :func:`intersection` para más detalles.
+    参数 *level* 用于设置递归的最大深度。对于无限递归，则将其设置为-1。如果设置为 1，当某个键同时存在于 *d1* 和 *d2* 中但其值不同，则该键值对会包含在差异结果中。
+    有关更多详细信息，请参阅 :func:`intersection`。
 
-    *d1* y *d2* permanecen sin cambios. Sin embargo, *d1* o algunos de sus subdiccionarios pueden ser devueltos directamente. Realiza una copia profunda del resultado cuando sea apropiado.
-
-    .. versionadded:: 0.5  
-       Agrega el argumento de palabra clave *level*.
+    *d1* 和 *d2* 本身不会被修改。然而，*d1* 或其某些子字典可能会直接作为返回值。如果需要，请对结果进行深拷贝。
     """
     result = {}
     
-    # Iterate through all keys in d1
-    for key in d1:
-        # If key not in d2, include the entire value from d1
+    # 遍历d1中的所有键值对
+    for key, value in d1.items():
+        # 如果键不在d2中，直接添加到结果中
         if key not in d2:
-            result[key] = d1[key]
-        # If we haven't reached max recursion level and both values are dicts
-        elif level != 0 and isinstance(d1[key], dict) and isinstance(d2[key], dict):
-            # Recursively get difference of nested dicts
-            nested_diff = difference(d1[key], d2[key], level - 1 if level > 0 else -1)
-            if nested_diff:
-                result[key] = nested_diff
-        # If values are different at this level
-        elif d1[key] != d2[key]:
-            result[key] = d1[key]
-            
+            result[key] = value
+        # 如果键在d2中且level不为0
+        elif level != 0:
+            # 如果两个值都是字典，则递归比较
+            if isinstance(value, dict) and isinstance(d2[key], dict):
+                # 递归调用，level减1
+                nested_diff = difference(value, d2[key], level - 1 if level > 0 else -1)
+                if nested_diff:
+                    result[key] = nested_diff
+            # 如果值不相等，且level为1或-1，则添加到结果中
+            elif value != d2[key]:
+                result[key] = value
+                
     return result

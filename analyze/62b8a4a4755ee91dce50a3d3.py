@@ -1,40 +1,39 @@
 def fromutc(self, dt):
     """
-    Dado un objeto "datetime" que contiene información de la zona horaria al que pertenece, calcula un objeto "datetime" para una zona horaria diferente, que contenga información de la nueva zona horaria al que pertenece.
+    给定一个在给定时区中带有时区信息的日期时间对象，计算在新时区的带有时区信息的日期时间。
 
-    Dado que esta es la única ocasión en la que *sabemos* que tenemos un objeto datetime no ambiguo, aprovechamos esta oportunidad para determinar si el datetime es ambiguo y está en un estado de "pliegue" (por ejemplo, si es la primera ocurrencia, cronológicamente, del datetime ambiguo).
+    由于这是我们*明确知道*日期时间对象没有歧义的唯一时刻，我们利用这个机会来判断该日期时间是否存在歧义，并且是否处于"折叠"状态（例如，如果这是歧义日期时间的第一个按时间顺序出现的实例）。
 
-    :param dt:
-        Un objeto :class:`datetime.datetime` con conocimiento de zona horaria.
+    :param dt: 一个带有时区信息的 :class:`datetime.datetime` 对象。
     """
     if dt.tzinfo is not self:
-        dt = dt.astimezone(self)
+        dt = dt.replace(tzinfo=self)
 
-    utc_offset = dt.utcoffset()
-    if utc_offset is None:
-        return dt
-
-    # Convertir a timestamp UTC
-    utc_ts = (dt - utc_offset).timestamp()
+    utc_offset = self._transition_info[self._find_trans_idx(dt.replace(tzinfo=None))][0]
     
-    # Obtener el offset local para este timestamp
-    local_offset = self.utcoffset(dt)
+    # 计算本地时间
+    local_dt = dt + utc_offset
     
-    # Calcular el nuevo datetime
-    local_dt = dt + (local_offset - utc_offset)
+    # 检查是否在DST转换期间
+    idx = self._find_trans_idx(local_dt.replace(tzinfo=None))
+    trans_info = self._transition_info[idx]
     
-    # Verificar si el datetime es ambiguo (está en un "pliegue")
-    fold = 0
-    if self._is_ambiguous(local_dt):
-        # Verificar si es la primera ocurrencia
-        earlier_offset = self.utcoffset(local_dt.replace(fold=0))
-        later_offset = self.utcoffset(local_dt.replace(fold=1))
-        
-        if earlier_offset > later_offset:
-            # Si estamos en la transición DST->STD
-            fold = utc_ts >= (local_dt.replace(fold=0) - earlier_offset).timestamp()
-        else:
-            # Si estamos en la transición STD->DST
-            fold = utc_ts >= (local_dt.replace(fold=1) - later_offset).timestamp()
-            
-    return local_dt.replace(fold=fold)
+    # 检查是否存在歧义
+    if idx > 0:
+        prev_info = self._transition_info[idx - 1]
+        if prev_info[0] > trans_info[0]:  # 如果是从DST转向标准时间
+            ambiguous_start = local_dt - (prev_info[0] - trans_info[0])
+            if ambiguous_start <= local_dt < (ambiguous_start + (prev_info[0] - trans_info[0])):
+                # 在歧义期间，使用第一次出现的时间
+                return local_dt.replace(tzinfo=self)
+    
+    # 检查是否在"空洞"期间
+    if idx > 0:
+        prev_info = self._transition_info[idx - 1]
+        if prev_info[0] < trans_info[0]:  # 如果是从标准时间转向DST
+            gap_start = local_dt - (trans_info[0] - prev_info[0])
+            if gap_start <= local_dt < (gap_start + (trans_info[0] - prev_info[0])):
+                # 在"空洞"期间，调整到转换后的时间
+                return (local_dt + (trans_info[0] - prev_info[0])).replace(tzinfo=self)
+    
+    return local_dt.replace(tzinfo=self)

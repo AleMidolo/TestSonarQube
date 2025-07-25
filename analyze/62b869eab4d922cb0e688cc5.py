@@ -1,23 +1,23 @@
-def update_last_applied_manifest_dict_from_resp(
-    last_applied_manifest, observer_schema, response
-):
-    # Iterate through all fields in the observer schema
-    for field, value in observer_schema.items():
-        # If field doesn't exist in response, raise KeyError
-        if field not in response:
-            raise KeyError(f"Field {field} not found in Kubernetes response")
+def update_last_applied_manifest_dict_from_resp(last_applied_manifest, observer_schema, response):
+    # Iterate through all fields in observer schema
+    for field_name, field_schema in observer_schema.items():
+        # If field not initialized in last_applied_manifest, initialize it
+        if field_name not in last_applied_manifest:
+            last_applied_manifest[field_name] = {}
 
-        # If field doesn't exist in last_applied_manifest, initialize it
-        if field not in last_applied_manifest:
-            if isinstance(value, dict):
-                last_applied_manifest[field] = {}
-                update_last_applied_manifest_dict_from_resp(
-                    last_applied_manifest[field], value, response[field]
-                )
-            elif isinstance(value, list):
-                last_applied_manifest[field] = []
-                update_last_applied_manifest_list_from_resp(
-                    last_applied_manifest[field], value[0], response[field]
-                )
-            else:
-                last_applied_manifest[field] = response[field]
+        # If field not in response, raise KeyError
+        if field_name not in response:
+            raise KeyError(f"Field {field_name} not found in Kubernetes response")
+
+        # If field schema is a dict, recursively update nested fields
+        if isinstance(field_schema, dict):
+            update_last_applied_manifest_dict_from_resp(
+                last_applied_manifest[field_name],
+                field_schema,
+                response[field_name]
+            )
+        # Otherwise copy value directly from response
+        else:
+            last_applied_manifest[field_name] = response[field_name]
+
+    return last_applied_manifest

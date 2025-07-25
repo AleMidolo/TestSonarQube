@@ -1,25 +1,30 @@
 def scale(self, other=None, recompute=False):
+    # Return current scale if no other value provided
     if other is None:
-        # Return current scale
-        if self._scale is None or recompute:
-            # Calculate scale as sum of bin contents
-            self._scale = sum(self.bins)
+        # Recompute scale if requested or not computed before
+        if recompute or not hasattr(self, '_scale'):
+            self._scale = sum(self.values())
         return self._scale
+        
+    # Set new scale
     else:
-        # Rescale histogram to other
+        # Convert other to float
+        other = float(other)
+        
+        # Get current scale
         current_scale = self.scale()
         
         # Check for zero scale
         if current_scale == 0:
+            from lena.core.exceptions import LenaValueError
             raise LenaValueError("Cannot rescale histogram with zero scale")
             
-        # Calculate scaling factor
-        factor = float(other) / current_scale
-        
-        # Scale all bins
-        self.bins = [bin_content * factor for bin_content in self.bins]
-        
-        # Update scale
+        # Calculate scaling factor and apply to all values
+        factor = other / current_scale
+        for key in self:
+            self[key] *= factor
+            
+        # Update stored scale
         self._scale = other
         
         return self

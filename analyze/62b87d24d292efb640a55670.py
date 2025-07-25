@@ -1,27 +1,24 @@
 def get_versions():
     """
-    Obtén la información de la versión o devuelve el valor predeterminado si no es posible obtenerla.
+    获取版本信息。如果无法获取版本信息，则返回默认值。
+    获取版本信息或在无法获取时返回默认值
     """
     try:
+        # 尝试获取版本信息
         import pkg_resources
-        import platform
-        import sys
-
-        versions = {
-            'python': sys.version.split()[0],
-            'platform': platform.platform(),
-            'packages': {
-                pkg.key: pkg.version 
-                for pkg in pkg_resources.working_set
-            }
-        }
+        versions = {}
         
+        # 获取已安装包的版本信息
+        installed_packages = pkg_resources.working_set
+        for package in installed_packages:
+            versions[package.key] = package.version
+            
         return versions
         
     except Exception:
-        # Return default version info if unable to get actual versions
+        # 如果获取失败,返回默认值
         return {
-            'python': 'unknown',
-            'platform': 'unknown',
-            'packages': {}
+            'python': '3.x',
+            'pip': 'unknown',
+            'setuptools': 'unknown'
         }

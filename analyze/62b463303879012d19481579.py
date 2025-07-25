@@ -1,41 +1,40 @@
 def _extract_number_and_supplment_from_issue_element(issue):
     """
-    Extrae los posibles valores de 'number' y 'suppl' a partir del contenido de 'issue'.
+    从 issue 的内容中返回 number 和 sup 的可能值。
+    从 issue 的内容中提取 number 和 suppl 的可能值。
     """
-    if not issue:
-        return None, None
-        
-    # Remove any whitespace
-    issue = issue.strip()
-    
-    # Check for supplement indicator
-    suppl = None
+    # Initialize empty values
     number = None
+    suppl = None
     
-    # Common supplement indicators
-    suppl_indicators = ['Suppl', 'suppl', 'Supplement', 'supplement', 'S']
+    # If issue is None or empty, return default values
+    if not issue:
+        return number, suppl
+        
+    # Convert issue to string and remove whitespace
+    issue_text = str(issue).strip()
     
-    for indicator in suppl_indicators:
-        if indicator in issue:
-            # Split on supplement indicator
-            parts = issue.split(indicator)
-            
-            # Get number part
-            if parts[0].strip():
-                number = parts[0].strip()
-            
-            # Get supplement part if it exists
-            if len(parts) > 1 and parts[1].strip():
-                suppl = parts[1].strip()
-                # Remove any leading/trailing punctuation
-                suppl = suppl.strip('.:() ')
-            else:
-                suppl = '1' # Default supplement number
-                
-            return number, suppl
-    
-    # If no supplement found, treat entire string as issue number
-    # Remove any punctuation/spaces
-    number = issue.strip('.:() ')
+    # Check if issue contains supplement indicator
+    if 'suppl' in issue_text.lower():
+        # Extract supplement value
+        suppl_parts = issue_text.lower().split('suppl')
+        if len(suppl_parts) > 1:
+            suppl = suppl_parts[1].strip().strip('.')
+            # Extract number from first part if exists
+            if suppl_parts[0].strip():
+                number = suppl_parts[0].strip()
+    else:
+        # If no supplement, treat entire text as number
+        number = issue_text
+        
+    # Clean up number - remove any non-numeric characters
+    if number:
+        number = ''.join(c for c in number if c.isdigit())
+        number = number if number else None
+        
+    # Clean up supplement - remove any non-alphanumeric characters
+    if suppl:
+        suppl = ''.join(c for c in suppl if c.isalnum())
+        suppl = suppl if suppl else None
     
     return number, suppl

@@ -1,20 +1,38 @@
 def point_type(name, fields, srid_map):
     """
-    Crear dinámicamente una subclase de 'Point'.
+    动态创建一个 Point 子类。
     """
-    class DynamicPoint(Point):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            for field in fields:
+    class_attrs = {
+        '__slots__': tuple(fields) + ('srid',),
+        '_srid_map': srid_map
+    }
+
+    def __init__(self, *args, **kwargs):
+        if len(args) > len(fields):
+            raise TypeError(f"Expected {len(fields)} arguments, got {len(args)}")
+        
+        # Set values from positional args
+        for field, value in zip(fields, args):
+            setattr(self, field, value)
+            
+        # Set remaining fields from kwargs
+        for field in fields[len(args):]:
+            if field in kwargs:
+                setattr(self, field, kwargs[field])
+            else:
                 setattr(self, field, None)
                 
-        def __str__(self):
-            field_str = ', '.join(f'{field}={getattr(self, field)}' for field in fields)
-            return f"{name}({field_str}, srid={self.srid})"
-            
-        @property
-        def srid(self):
-            return srid_map.get(self.__class__.__name__, 4326)
-            
-    DynamicPoint.__name__ = name
-    return DynamicPoint
+        # Set SRID
+        self.srid = kwargs.get('srid', None)
+        
+    def __repr__(self):
+        values = [getattr(self, field) for field in fields]
+        fields_str = ', '.join(f'{f}={v!r}' for f, v in zip(fields, values))
+        if self.srid is not None:
+            fields_str += f', srid={self.srid!r}'
+        return f'{name}({fields_str})'
+    
+    class_attrs['__init__'] = __init__
+    class_attrs['__repr__'] = __repr__
+    
+    return type(name, (), class_attrs)

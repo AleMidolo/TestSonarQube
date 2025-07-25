@@ -1,12 +1,15 @@
 def _inline_r_setup(code: str) -> str:
-    # Define R setup commands
-    r_setup = """
+    """
+    一些 R 的行为无法通过环境变量进行配置，
+    只能在 R 启动后通过 R 的选项进行配置。这些选项在此处设置。
+    """
+    setup_code = """
     options(warn=-1)  # Suppress warnings
-    options(width=1000)  # Increase output width
-    options(scipen=999)  # Prevent scientific notation
+    options(width=10000)  # Prevent line wrapping in output
+    options(encoding='UTF-8')  # Set encoding to UTF-8
     """
     
-    # Combine setup with provided code
-    full_code = r_setup + "\n" + code
+    # Combine setup code with input code
+    full_code = setup_code + "\n" + code
     
     return full_code

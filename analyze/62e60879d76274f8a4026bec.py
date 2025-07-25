@@ -1,45 +1,47 @@
-def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
-          db=None, imp_user=None, dehydration_hooks=None,
-          hydration_hooks=None, **handlers):
+def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None, db=None, imp_user=None, dehydration_hooks=None, hydration_hooks=None, **handlers):
+    # Set default mode to WRITE if not specified
+    if mode is None:
+        mode = "WRITE"
+    elif mode not in ("READ", "WRITE"):
+        raise ValueError("Mode must be either 'READ' or 'WRITE'")
+
+    # Initialize parameters dictionary
+    parameters = {}
     
-    # Validar el modo
-    valid_modes = ("READ", "WRITE")
-    if mode is not None and mode not in valid_modes:
-        raise ValueError(f"Mode must be one of {valid_modes}")
-    
-    # Construir los extras para el mensaje BEGIN
-    extras = {}
-    
-    if mode is not None:
-        extras["mode"] = mode
-        
+    # Add bookmarks if provided
     if bookmarks:
-        extras["bookmarks"] = list(bookmarks)
+        parameters["bookmarks"] = list(bookmarks)
         
+    # Add metadata if provided
     if metadata:
-        extras["metadata"] = metadata
+        parameters["metadata"] = metadata
         
+    # Add timeout if provided
     if timeout is not None:
-        extras["timeout"] = timeout
+        parameters["timeout"] = timeout
         
+    # Add database name if provided (Bolt 4.0+)
     if db is not None:
-        extras["db"] = db
+        parameters["db"] = db
         
+    # Add impersonated user if provided (Bolt 4.4+)
     if imp_user is not None:
-        extras["imp_user"] = imp_user
-        
-    # Configurar los hooks de serialización si se proporcionan
+        parameters["imp_user"] = imp_user
+
+    # Create transaction context with hooks
+    tx_context = {
+        "mode": mode,
+        "parameters": parameters
+    }
+    
     if dehydration_hooks:
-        self._dehydration_hooks.update(dehydration_hooks)
-        
+        tx_context["dehydration_hooks"] = dehydration_hooks
     if hydration_hooks:
-        self._hydration_hooks.update(hydration_hooks)
-    
-    # Crear y enviar el mensaje BEGIN
-    message = ("BEGIN", extras)
-    
-    # Crear y retornar el objeto Response con los handlers proporcionados
-    response = Response(self, message, **handlers)
-    self._append(message, response)
-    
+        tx_context["hydration_hooks"] = hydration_hooks
+
+    # Create and return Response object with handlers
+    response = Response(tx_context)
+    for key, handler in handlers.items():
+        response.add_handler(key, handler)
+        
     return response

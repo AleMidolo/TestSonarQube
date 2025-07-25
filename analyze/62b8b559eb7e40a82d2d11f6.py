@@ -1,28 +1,26 @@
 def determineMetaclass(bases, explicit_mc=None):
     """
-    Determina la metaclase a partir de una o más clases base y un __metaclass__ explícito opcional.
+    从一个或多个基类以及可选的显式 __metaclass__ 中确定元类。
     """
     metaclasses = []
     
-    # Agregar metaclase explícita si existe
-    if explicit_mc is not None:
-        metaclasses.append(explicit_mc)
-    
-    # Obtener metaclases de las clases base
+    # 收集所有基类的元类
     for base in bases:
         if hasattr(base, '__class__'):
-            metaclass = type(base)
-            if metaclass not in metaclasses:
-                metaclasses.append(metaclass)
+            metaclasses.append(type(base))
     
+    # 如果有显式指定的元类,添加到列表中
+    if explicit_mc is not None:
+        metaclasses.append(explicit_mc)
+        
     if not metaclasses:
         return type
-    
-    # Si solo hay una metaclase, retornarla
+        
+    # 如果只有一个元类,直接返回
     if len(metaclasses) == 1:
         return metaclasses[0]
         
-    # Si hay múltiples metaclases, encontrar la más específica
+    # 如果有多个元类,找出最具体的那个
     candidate = metaclasses[0]
     for mc in metaclasses[1:]:
         if issubclass(candidate, mc):
@@ -30,6 +28,6 @@ def determineMetaclass(bases, explicit_mc=None):
         if issubclass(mc, candidate):
             candidate = mc
         else:
-            raise TypeError("Conflicting metaclasses:", candidate, mc)
+            raise TypeError("Incompatible metaclasses")
             
     return candidate

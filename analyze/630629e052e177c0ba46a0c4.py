@@ -1,74 +1,39 @@
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
-    Analiza el webfinger de Diaspora, que puede estar en formato JSON (nuevo) o en formato XRD (antiguo).
-    
-    Args:
-        document: String containing the webfinger document in JSON or XRD format
-        
-    Returns:
-        Dictionary with parsed webfinger data
+    通过读取 JSON 格式的文档获取 Webfinger，Webfinger 中的 `hcard_url` 值是文档中 `links` 的 `href` 值。
+
+    解析 Diaspora 的 Webfinger，该 Webfinger 可以是 JSON 格式（新格式）或 XRD 格式（旧格式）。
+
+    https://diaspora.github.io/diaspora_federation/discovery/webfinger.html
     """
     import json
-    import xml.etree.ElementTree as ET
     from typing import Dict
-    
+    import xml.etree.ElementTree as ET
+
     # Try parsing as JSON first
     try:
         data = json.loads(document)
-        result = {
-            'subject': data.get('subject', ''),
-            'aliases': data.get('aliases', []),
-            'links': []
-        }
         
-        # Parse links
+        # Look for hcard_url in links
         for link in data.get('links', []):
-            link_data = {
-                'rel': link.get('rel', ''),
-                'href': link.get('href', ''),
-                'type': link.get('type', '')
-            }
-            result['links'].append(link_data)
-            
-        return result
-        
+            if link.get('rel') == 'http://microformats.org/profile/hcard':
+                return {'hcard_url': link.get('href')}
+                
     except json.JSONDecodeError:
-        # If JSON fails, try parsing as XML/XRD
+        # If JSON parsing fails, try XRD format
         try:
+            # Remove XML namespace to simplify parsing
+            document = document.replace('xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0"', '')
             root = ET.fromstring(document)
             
-            # Define XML namespaces
-            ns = {
-                'xrd': 'http://docs.oasis-open.org/ns/xri/xrd-1.0',
-                'hm': 'http://host-meta.net/xrd/1.0'
-            }
-            
-            result = {
-                'subject': '',
-                'aliases': [],
-                'links': []
-            }
-            
-            # Get subject
-            subject = root.find('.//xrd:Subject', ns)
-            if subject is not None:
-                result['subject'] = subject.text
-                
-            # Get aliases
-            for alias in root.findall('.//xrd:Alias', ns):
-                if alias.text:
-                    result['aliases'].append(alias.text)
+            # Look for Link element with hcard rel
+            for link in root.findall('.//Link'):
+                rel = link.get('rel')
+                if rel == 'http://microformats.org/profile/hcard':
+                    return {'hcard_url': link.get('href')}
                     
-            # Get links
-            for link in root.findall('.//xrd:Link', ns):
-                link_data = {
-                    'rel': link.get('rel', ''),
-                    'href': link.get('href', ''),
-                    'type': link.get('type', '')
-                }
-                result['links'].append(link_data)
-                
-            return result
-            
         except ET.ParseError:
-            raise ValueError("Document is neither valid JSON nor valid XML/XRD format")
+            pass
+
+    # Return empty dict if no hcard_url found
+    return {'hcard_url': None}

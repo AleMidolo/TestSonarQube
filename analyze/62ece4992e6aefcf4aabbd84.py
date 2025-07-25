@@ -1,29 +1,35 @@
-def es_ipv4(objetivo):
+def is_ipv4(target):
     """
-    Probar si es una dirección IPv4 o no
+    测试是否为 IPv4 地址。
+
+    返回值：布尔值，如果目标是 IPv4 地址，则返回真，否则返回假。
     """
-    # Dividir la cadena por puntos
-    octetos = objetivo.split('.')
-    
-    # Una IPv4 debe tener exactamente 4 octetos
-    if len(octetos) != 4:
+    # 检查输入是否为字符串
+    if not isinstance(target, str):
         return False
         
-    # Verificar cada octeto
-    for octeto in octetos:
-        # Verificar que sea un número
-        if not octeto.isdigit():
+    # 按点分割字符串
+    parts = target.split('.')
+    
+    # IPv4 地址必须有 4 个部分
+    if len(parts) != 4:
+        return False
+        
+    # 检查每个部分
+    for part in parts:
+        # 检查是否为数字
+        if not part.isdigit():
             return False
             
-        # Convertir a entero
-        num = int(octeto)
+        # 转换为整数
+        num = int(part)
         
-        # Verificar rango válido (0-255)
+        # 检查范围是否在 0-255 之间
         if num < 0 or num > 255:
             return False
             
-        # Verificar que no tenga ceros a la izquierda
-        if len(octeto) > 1 and octeto[0] == '0':
+        # 检查是否有前导零
+        if len(part) > 1 and part[0] == '0':
             return False
             
     return True

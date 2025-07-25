@@ -1,44 +1,41 @@
 def _validate_labels(labels):
-    import re
-    from typing import Dict, Any
+    """
+    检查给定标签中的键和值是否通过 `validate_key()` 和 `validate_value()` 验证。
+    检查给定标签中的键和值是否符合其对应的正则表达式。
 
-    # Expresión regular para validar claves de etiquetas
-    KEY_REGEX = r'^[a-zA-Z][a-zA-Z0-9_-]*$'
-    
-    # Lista para almacenar los errores encontrados
+    参数:
+        labels (dict): 需要验证的不同标签。
+
+    异常:
+        ValidationError: 如果任何键或值不符合其对应的正则表达式，将抛出此异常。
+    """
     errors = []
     
-    # Validar que labels sea un diccionario
     if not isinstance(labels, dict):
-        raise ValidationError([{"labels": "se esperaba un diccionario"}])
+        raise ValidationError("Labels must be a dictionary")
         
-    # Iterar sobre cada par clave-valor en las etiquetas
     for key, value in labels.items():
-        
-        # Validar que la clave sea una cadena
-        if not isinstance(key, (str, bytes)):
-            errors.append({
-                str(key): 'se esperaba un objeto de tipo cadena o bytes'
-            })
-            continue
+        # Validate key
+        try:
+            if not isinstance(key, (str, bytes)):
+                errors.append({str(key): 'expected string or bytes-like object'})
+                continue
+                
+            if not validate_key(key):
+                errors.append({key: f"Label key '{key}' does not match the regex [...]"})
+        except Exception as e:
+            errors.append({str(key): str(e)})
             
-        # Validar que la clave coincida con la expresión regular
-        if not re.match(KEY_REGEX, str(key)):
-            errors.append({
-                str(key): f"La clave de la etiqueta '{key}' no coincide con la expresión regular {KEY_REGEX}"
-            })
+        # Validate value  
+        try:
+            if not isinstance(value, (str, bytes)):
+                errors.append({str(value): 'expected string or bytes-like object'})
+                continue
+                
+            if not validate_value(value):
+                errors.append({value: f"Label value '{value}' does not match the regex [...]"})
+        except Exception as e:
+            errors.append({str(value): str(e)})
             
-        # Validar que el valor sea una cadena
-        if not isinstance(value, (str, bytes)):
-            errors.append({
-                str(value): 'se esperaba un objeto de tipo cadena o bytes'
-            })
-            
-    # Si se encontraron errores, lanzar la excepción
     if errors:
-        raise ValidationError(errors)
-
-class ValidationError(Exception):
-    def __init__(self, messages):
-        self.messages = messages
-        super().__init__(str(messages))
+        raise ValidationError(messages=errors)

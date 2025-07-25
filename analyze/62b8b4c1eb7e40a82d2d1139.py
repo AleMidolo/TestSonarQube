@@ -1,40 +1,48 @@
 def verifyClass(iface, candidate, tentative=False):
     """
-    Verifica que el *candidate* pueda proporcionar correctamente *iface*.
+    验证 *candidate* 是否可能正确地提供 *iface*。
     """
-    # Get all attributes defined in the interface
-    required_attrs = dir(iface)
+    # 获取接口定义的所有属性
+    required = set(dir(iface))
     
-    # Filter out private/special attributes
-    required_attrs = [attr for attr in required_attrs if not attr.startswith('_')]
+    # 获取候选类的所有属性
+    implemented = set(dir(candidate))
     
-    # Check each required attribute
-    for attr in required_attrs:
-        # Check if attribute exists in candidate
-        if not hasattr(candidate, attr):
-            if tentative:
+    # 检查所有必需的接口属性是否都已实现
+    missing = required - implemented
+    
+    if tentative:
+        # 如果是暂定验证,只要有任何一个属性匹配即可
+        return bool(required & implemented)
+    else:
+        # 严格验证模式下,所有必需属性都必须实现
+        if missing:
+            return False
+            
+        # 验证方法签名是否匹配
+        for name in required:
+            if not hasattr(iface, name):
+                continue
+                
+            iface_attr = getattr(iface, name)
+            cand_attr = getattr(candidate, name)
+            
+            # 检查属性类型是否一致
+            if type(iface_attr) != type(cand_attr):
                 return False
-            raise AttributeError(f"'{candidate.__name__}' missing required attribute '{attr}'")
-            
-        # Get the interface and candidate attributes
-        iface_attr = getattr(iface, attr)
-        candidate_attr = getattr(candidate, attr)
-        
-        # If attribute is a method, verify signature matches
-        if callable(iface_attr):
-            if not callable(candidate_attr):
-                if tentative:
-                    return False
-                raise TypeError(f"'{attr}' must be callable")
                 
-            # Compare number of arguments
-            from inspect import signature
-            iface_sig = signature(iface_attr)
-            candidate_sig = signature(candidate_attr)
-            
-            if len(iface_sig.parameters) != len(candidate_sig.parameters):
-                if tentative:
+            # 如果是方法,检查参数列表是否匹配
+            if callable(iface_attr):
+                if not callable(cand_attr):
                     return False
-                raise TypeError(f"'{attr}' has incorrect number of arguments")
+                    
+                # 获取方法签名
+                from inspect import signature
+                iface_sig = signature(iface_attr)
+                cand_sig = signature(cand_attr)
                 
-    return True
+                # 验证参数是否匹配
+                if str(iface_sig) != str(cand_sig):
+                    return False
+                    
+        return True

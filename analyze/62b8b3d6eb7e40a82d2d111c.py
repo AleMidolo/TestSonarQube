@@ -1,27 +1,19 @@
 def _normalizeargs(sequence, output=None):
     """
-    Normalizar argumentos de declaración
+    规范化声明参数
 
-    Los argumentos de normalización pueden contener Declaraciones, tuplas o interfaces individuales.
+    规范化的参数可能包含声明、元组或单个接口。
 
-    Cualquier cosa que no sean interfaces individuales o especificaciones de implementación será expandida.
+    除了单个接口或实现规范之外的任何内容都将被展开。
     """
     if output is None:
         output = []
-        
-    if not sequence:
-        return output
-        
-    # Handle single item
-    if not hasattr(sequence, '__iter__') or isinstance(sequence, str):
-        output.append(sequence)
-        return output
-        
-    # Recursively process sequence
-    for item in sequence:
-        if isinstance(item, (list, tuple)):
+    
+    if isinstance(sequence, (list, tuple)):
+        for item in sequence:
             _normalizeargs(item, output)
-        else:
-            output.append(item)
+    else:
+        if sequence not in output:
+            output.append(sequence)
             
     return output

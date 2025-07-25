@@ -1,27 +1,27 @@
-def verificar_firma_reenviable(clave_publica, documento, firma):
+def verify_relayable_signature(public_key, doc, signature):
     """
-    Verifica los elementos XML firmados para tener confianza de que el autor declarado realmente generó este mensaje.
+    验证已签名的XML元素，以确保声明的作者确实生成了此消息。
     """
     try:
-        # Importar las librerías necesarias
+        # Import required crypto libraries
         from cryptography.hazmat.primitives import hashes
         from cryptography.hazmat.primitives.asymmetric import padding
+        from cryptography.hazmat.primitives.serialization import load_pem_public_key
         from cryptography.exceptions import InvalidSignature
         
-        # Crear el objeto hash SHA256
-        hasher = hashes.Hash(hashes.SHA256())
-        
-        # Actualizar el hash con el contenido del documento
-        hasher.update(documento.encode('utf-8'))
-        
-        # Obtener el valor del hash
-        digest = hasher.finalize()
-        
+        # Convert doc to bytes if it's not already
+        if isinstance(doc, str):
+            doc = doc.encode('utf-8')
+            
+        # Load the public key if it's in PEM format
+        if isinstance(public_key, str):
+            public_key = load_pem_public_key(public_key.encode())
+            
+        # Verify the signature
         try:
-            # Verificar la firma usando la clave pública
-            clave_publica.verify(
-                firma,
-                digest,
+            public_key.verify(
+                signature,
+                doc,
                 padding.PSS(
                     mgf=padding.MGF1(hashes.SHA256()),
                     salt_length=padding.PSS.MAX_LENGTH
@@ -29,10 +29,9 @@ def verificar_firma_reenviable(clave_publica, documento, firma):
                 hashes.SHA256()
             )
             return True
-            
         except InvalidSignature:
             return False
             
     except Exception as e:
-        print(f"Error al verificar la firma: {str(e)}")
+        # Return False for any other errors during verification
         return False

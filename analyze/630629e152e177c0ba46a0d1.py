@@ -1,33 +1,38 @@
 def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
     """
-    Intenta recuperar un documento webfinger conforme a RFC7033.
-    No genera una excepción si falla.
+    尝试检索一个符合RFC7033标准的WebFinger文档。如果失败，不会抛出异常。
     """
     import requests
     from urllib.parse import urlparse, quote
     from typing import Optional
 
     try:
-        # Validar formato del handle
+        # 解析handle格式 user@domain.com
         if '@' not in handle:
             return None
             
-        # Separar usuario y dominio
-        user, domain = handle.split('@', 1)
+        username, domain = handle.split('@', 1)
         
-        # Construir URL webfinger según RFC7033
+        # 构建WebFinger URL
         webfinger_url = f"https://{domain}/.well-known/webfinger"
         params = {
-            'resource': f'acct:{quote(user)}@{domain}'
+            'resource': f'acct:{quote(username)}@{domain}'
         }
-
-        # Realizar petición HTTP
-        response = requests.get(webfinger_url, params=params, timeout=10)
         
-        if response.status_code == 200:
-            return response.text
-        else:
+        # 发送请求
+        response = requests.get(
+            webfinger_url,
+            params=params,
+            headers={'Accept': 'application/jrd+json'},
+            timeout=10
+        )
+        
+        # 检查响应状态
+        if response.status_code != 200:
             return None
             
+        # 返回WebFinger文档
+        return response.text
+        
     except Exception:
         return None

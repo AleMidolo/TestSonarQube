@@ -1,33 +1,46 @@
 def _legacy_mergeOrderings(orderings):
-    # Crear un diccionario para almacenar las posiciones de cada elemento
-    positions = {}
+    # 创建一个字典来存储每个元素在各个列表中的位置
+    element_positions = {}
     
-    # Para cada ordenamiento
+    # 遍历所有排序列表
     for ordering in orderings:
-        # Para cada elemento en el ordenamiento
-        for i, element in enumerate(ordering):
-            # Si el elemento ya existe en positions
-            if element in positions:
-                # Verificar que los sufijos coincidan
-                suffix1 = ordering[i:]
-                suffix2 = orderings[positions[element][0]][positions[element][1]:]
-                if suffix1 != suffix2:
-                    raise ValueError("Inconsistent orderings")
-            else:
-                # Almacenar la posición del elemento (índice del ordering, índice del elemento)
-                positions[element] = (orderings.index(ordering), i)
-    
-    # Crear el resultado final
+        for pos, element in enumerate(ordering):
+            if element not in element_positions:
+                element_positions[element] = []
+            element_positions[element].append(pos)
+            
+    # 创建结果列表
     result = []
-    used = set()
+    # 记录已处理的元素
+    seen = set()
     
-    # Para cada ordenamiento
+    # 遍历所有排序列表
     for ordering in orderings:
-        # Para cada elemento en el ordenamiento
+        # 遍历当前列表中的每个元素
         for element in ordering:
-            # Si el elemento no ha sido usado
-            if element not in used:
+            # 如果元素已经在结果中,跳过
+            if element in seen:
+                continue
+                
+            # 检查是否可以添加当前元素
+            can_add = True
+            # 获取当前元素在所有列表中的位置
+            positions = element_positions[element]
+            
+            # 检查当前元素前面的所有元素是否都已经处理过
+            for ordering_idx, pos in enumerate(positions):
+                # 检查当前位置之前的元素
+                for prev_pos in range(pos):
+                    prev_element = orderings[ordering_idx][prev_pos]
+                    if prev_element not in seen:
+                        can_add = False
+                        break
+                if not can_add:
+                    break
+                    
+            # 如果可以添加当前元素
+            if can_add:
                 result.append(element)
-                used.add(element)
-    
+                seen.add(element)
+                
     return result

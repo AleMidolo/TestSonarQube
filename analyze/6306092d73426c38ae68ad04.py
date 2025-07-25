@@ -1,38 +1,42 @@
 def get_parser_option_specs(self, command_name):
     """
-    Obtiene todas las opciones para el comando especificado.
+    获取指定命令的所有选项
 
-    :param command_name: el nombre del comando (main, virsh, ospd, etc...)
-    :return: la lista de todas las opciones del comando
+    :param command_name: 命令名称（如 main、virsh、ospd 等）
+    :return: 所有命令选项的列表
     """
-    # Verificar que el comando existe
-    if command_name not in self.commands:
+    # 获取指定命令的解析器
+    parser = self.parsers.get(command_name)
+    if not parser:
         return []
         
-    # Obtener el parser del comando
-    parser = self.commands[command_name]
-    
-    # Lista para almacenar todas las opciones
+    # 存储所有选项
     options = []
     
-    # Recorrer todas las opciones del parser
+    # 遍历解析器中的所有选项
     for action in parser._actions:
-        # Obtener los nombres de la opción (corto y largo)
-        option_strings = action.option_strings
-        
-        # Si no tiene strings de opción, continuar
-        if not option_strings:
+        # 跳过帮助选项
+        if action.dest == 'help':
             continue
             
-        # Crear diccionario con especificación de la opción
+        # 获取选项名称
+        option_names = []
+        for opt_str in action.option_strings:
+            if opt_str.startswith('--'):
+                option_names.append(opt_str[2:])
+            elif opt_str.startswith('-'):
+                option_names.append(opt_str[1:])
+                
+        if not option_names:
+            continue
+            
+        # 构建选项规格
         option_spec = {
-            'names': option_strings,
-            'help': action.help,
+            'names': option_names,
             'required': action.required,
+            'help': action.help or '',
             'default': action.default,
-            'type': action.type.__name__ if action.type else None,
-            'choices': action.choices,
-            'dest': action.dest
+            'type': action.type.__name__ if action.type else 'str'
         }
         
         options.append(option_spec)

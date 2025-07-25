@@ -1,39 +1,44 @@
 def _group_files_by_xml_filename(source, xmls, files):
     """
-    Agrupa archivos por el nombre base de su archivo XML.
+    将文件按 XML 文件名分组并以字典格式返回数据。
 
-    Agrupa los archivos según el nombre base de su archivo XML y devuelve los datos en formato dict.
+    按 XML 文件的文件名分组文件
 
-    Parámetros
+    将文件按其 XML 文件的文件名分组，并以字典格式返回数据。
+
+    参数
     ----------
-    *xml_filename* : str  
-        Nombres de los archivos XML.  
+    xml_filename: str  
+        XML 文件名  
+    files: list  
+        文件夹或压缩文件中的文件列表  
 
-    *files* : list  
-        Lista de archivos en la carpeta o archivo comprimido (zip).  
-
-    Retorna
+    返回值
     -------
-    *dict*
-        *key*: Nombre de los archivos XML.  
-        *name*: Paquete.  
+    dict
+        键：XML 文件的名称  
+        值：Package  
     """
     result = {}
     
-    # Iterate through XML files
+    # 遍历所有XML文件
     for xml in xmls:
-        # Get base name without extension
-        xml_base = xml.rsplit('.', 1)[0]
+        # 获取XML文件名(不含扩展名)
+        xml_name = xml.rsplit('.', 1)[0]
         
-        # Find all files that start with the XML base name
-        matching_files = [f for f in files if f.startswith(xml_base)]
-        
-        # Add to result dictionary
-        if matching_files:
-            result[xml] = {
-                'name': xml_base,
-                'files': matching_files,
-                'source': source
+        # 找到与该XML文件名相关的所有文件
+        related_files = []
+        for file in files:
+            # 如果文件名以XML文件名开头
+            if file.startswith(xml_name):
+                related_files.append(file)
+                
+        # 如果找到相关文件，则添加到结果字典中
+        if related_files:
+            result[xml_name] = {
+                'source': source,
+                'xml': xml,
+                'files': related_files
             }
             
     return result

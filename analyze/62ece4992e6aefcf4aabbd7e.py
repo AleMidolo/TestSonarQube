@@ -1,15 +1,24 @@
 def _resolve_string(matcher):
-    # Extraer nombre y valor predeterminado del matcher
-    parts = matcher.group(1).split(':')
-    var_name = parts[0]
-    default = parts[1] if len(parts) > 1 else None
+    """
+    给定一个包含一个名称和一个可选的默认值（位于其分组字典中）的匹配器，从环境中获取值。
+    如果环境中未定义该变量且未提供默认值，则会引发错误。
+
+    给定一个包含一个名称和一个可选的默认值的匹配器，从环境中获取值。
+    如果环境中未定义该变量且未提供默认值，则会引发错误。
+    """
+    name = matcher.group('name')
+    default = matcher.group('default')
     
-    # Obtener valor del entorno
-    value = os.environ.get(var_name)
+    # 尝试从环境变量中获取值
+    value = os.environ.get(name)
     
-    # Si no hay valor y no hay default, error
-    if value is None and default is None:
-        raise ValueError(f"Environment variable '{var_name}' is not defined and no default value was provided")
-        
-    # Retornar valor del entorno o default
-    return value if value is not None else default
+    # 如果环境变量中没有该值
+    if value is None:
+        # 如果提供了默认值，则使用默认值
+        if default is not None:
+            return default
+        # 如果没有默认值，则抛出错误
+        else:
+            raise KeyError(f"Environment variable '{name}' not found and no default value provided")
+            
+    return value

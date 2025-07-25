@@ -1,17 +1,27 @@
 def dehydrate_timedelta(value):
     """
-    Deshidratador para valores de `timedelta`.
+    使用 `timedelta` 的值来生成 `Structure` 类。
+    用于 `time` 值的转换器。
 
-    :param value:  
-    :type value: timedelta  
-    :return:  
+    :param value: 
+    :type value: timedelta
+    :return: 
     """
-    if value is None:
+    if not value:
         return None
         
-    total_seconds = int(value.total_seconds())
-    hours = total_seconds // 3600
-    minutes = (total_seconds % 3600) // 60
-    seconds = total_seconds % 60
+    days = value.days
+    seconds = value.seconds
+    microseconds = value.microseconds
     
-    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+    hours = seconds // 3600
+    minutes = (seconds % 3600) // 60
+    seconds = seconds % 60
+    
+    return {
+        'days': days,
+        'hours': hours,
+        'minutes': minutes,
+        'seconds': seconds,
+        'microseconds': microseconds
+    }

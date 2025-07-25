@@ -1,12 +1,10 @@
 def _get_err_indices(self, coord_name):
     """
-    Obtener los índices de error correspondientes a una coordenada.
+    查找与 `coord_name` 对应的所有错误索引。
+    获取与某个坐标对应的错误索引。
     """
-    if coord_name == 'x':
-        return [0, 3, 6]
-    elif coord_name == 'y': 
-        return [1, 4, 7]
-    elif coord_name == 'z':
-        return [2, 5, 8]
-    else:
-        raise ValueError(f"Invalid coordinate name: {coord_name}. Must be 'x', 'y' or 'z'")
+    err_indices = []
+    for i, coord in enumerate(self.coords):
+        if coord == coord_name and self.errors[i]:
+            err_indices.append(i)
+    return err_indices

@@ -1,41 +1,55 @@
 def bash_completion():
     """
-    Devuelve un script de autocompletado para bash para el comando de borgmatic. Esto se genera mediante la introspección de los analizadores de argumentos de línea de comandos de borgmatic.
+    通过检查 borgmatic 的命令行参数解析器生成 borgmatic 命令。
+
+    返回一个用于 borgmatic 命令的 bash 补全脚本。通过检查 borgmatic 的命令行参数解析器生成此脚本。
     """
-    return '''
+    completion_script = '''
 _borgmatic()
 {
     local cur prev opts
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="--config --help --version init create check extract list info mount umount prune"
-
+    
+    # 主要命令选项
+    opts="init create prune check list info export-tar extract mount umount config validate"
+    
+    # 通用选项
+    common_opts="--config --verbosity --syslog-verbosity --log-file --monitoring-verbosity --help"
+    
+    # 根据前一个单词提供不同的补全
     case "${prev}" in
+        borgmatic)
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;;
         --config)
-            _filedir
+            COMPREPLY=( $(compgen -f -- ${cur}) )
             return 0
             ;;
-        mount)
-            _filedir -d
+        --verbosity|--syslog-verbosity|--monitoring-verbosity)
+            COMPREPLY=( $(compgen -W "0 1 2 3" -- ${cur}) )
             return 0
             ;;
-        extract)
-            _filedir -d
+        --log-file)
+            COMPREPLY=( $(compgen -f -- ${cur}) )
             return 0
             ;;
         *)
+            # 如果当前输入以破折号开头，提供选项补全
+            if [[ ${cur} == -* ]] ; then
+                COMPREPLY=( $(compgen -W "${common_opts}" -- ${cur}) )
+                return 0
+            fi
+            
+            # 否则提供命令补全
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
             ;;
     esac
-
-    if [[ ${cur} == -* ]] ; then
-        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        return 0
-    fi
-
-    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-    return 0
 }
 
 complete -F _borgmatic borgmatic
 '''
+    return completion_script

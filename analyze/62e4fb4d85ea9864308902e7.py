@@ -1,36 +1,30 @@
 def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
-    """
-    Correcciones para los siguientes problemas en Windows:  
-    - https://bugs.python.org/issue8557  
-    - Windows no interpreta correctamente los 'shebangs'  
+    import os
+    import sys
+    import shutil
     
-    Esta función también permite que los 'shebangs' con rutas profundas funcionen correctamente.
-    """
     if not cmd:
         return cmd
         
-    # Si el primer elemento es un archivo Python, no necesita normalización
-    if cmd[0].endswith('.py'):
-        return cmd
-        
-    # Leer la primera línea del archivo para buscar shebang
-    try:
-        with open(cmd[0], 'r') as f:
-            first_line = f.readline().strip()
-    except (IOError, UnicodeDecodeError):
-        return cmd
-        
-    # Verificar si hay shebang
-    if not first_line.startswith('#!'):
-        return cmd
-        
-    # Extraer el intérprete del shebang
-    interpreter = first_line[2:].strip().split()
+    # Get first argument (executable)
+    exe = cmd[0]
     
-    # Si el intérprete es python, usar sys.executable
-    if any('python' in part.lower() for part in interpreter):
-        import sys
-        return (sys.executable,) + (cmd[0],) + cmd[1:]
+    # Handle shebang on Windows
+    if sys.platform == 'win32' and os.path.exists(exe):
+        with open(exe, 'rb') as f:
+            # Check if file starts with shebang
+            if f.read(2) == b'#!':
+                shebang = f.readline().decode().strip()
+                interpreter = shebang.split()[0]
+                
+                # Get full path of interpreter
+                interpreter_path = shutil.which(os.path.basename(interpreter))
+                if interpreter_path:
+                    return (interpreter_path, exe) + cmd[1:]
+    
+    # Get full path of executable
+    exe_path = shutil.which(exe)
+    if exe_path:
+        return (exe_path,) + cmd[1:]
         
-    # Para otros intérpretes, usar el path del shebang
-    return tuple(interpreter + [cmd[0]] + list(cmd[1:]))
+    return cmd

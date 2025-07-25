@@ -1,8 +1,7 @@
 def _create_converter(self) -> _converting._Converter:
     """
-    Crear el convertidor de estilo de parámetros.
+    创建参数样式转换器。
 
-    Devuelve el convertidor de estilo de parámetros (:class:`._converting._Converter`).
+    返回参数样式转换器 (:class:`._converting._Converter`)。
     """
-    from ._converting import _Converter
-    return _Converter()
+    return _converting._Converter()

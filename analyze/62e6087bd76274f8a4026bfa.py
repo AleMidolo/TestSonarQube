@@ -1,6 +1,12 @@
 def pop_u16(self):
-    if len(self.data) < 2:
-        raise ValueError("Not enough bytes to pop u16")
-    value = int.from_bytes(self.data[-2:], byteorder='big', signed=False)
-    self.data = self.data[:-2]
-    return value
+    """
+    在 `self.data` 中移除最后两个元素并返回
+    移除数据中的最后两个字节，并将它们以大端序的16位无符号整数返回。
+    """
+    # 取出最后两个字节
+    b1 = self.data.pop()
+    b2 = self.data.pop()
+    
+    # 按大端序组合成16位无符号整数
+    # b2为高字节,b1为低字节
+    return (b2 << 8) | b1

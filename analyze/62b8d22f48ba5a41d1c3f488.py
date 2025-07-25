@@ -1,16 +1,17 @@
 def popitem(self):
     """
-    Eliminar y devolver el par `(clave, valor)` que fue insertado primero.
+    删除与第一个插入的键对应的值，并以元组 `(key, value)` 的格式返回。
+    删除并返回第一个插入的 `(key, value)` 键值对。
     """
     if not self:
         raise KeyError('Dictionary is empty')
         
     # Get first key and value
-    first_key = next(iter(self))
-    first_value = self[first_key]
+    key = next(iter(self))
+    value = self[key]
     
-    # Remove the item
-    del self[first_key]
+    # Delete the key-value pair
+    del self[key]
     
-    # Return key-value pair as tuple
-    return (first_key, first_value)
+    # Return as tuple
+    return (key, value)

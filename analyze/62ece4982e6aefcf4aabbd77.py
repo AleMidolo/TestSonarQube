@@ -1,38 +1,42 @@
+from datetime import timedelta
+
 def parse_frequency(frequency):
-    from datetime import timedelta
-    
-    if frequency is None or frequency.lower() == "always":
+    if frequency is None or frequency == "always":
         return None
         
     try:
-        # Split into number and unit
-        parts = frequency.strip().split()
+        # Split frequency string into number and unit
+        parts = frequency.split()
         if len(parts) != 2:
             raise ValueError(f"Invalid frequency format: {frequency}")
             
         number = float(parts[0])
         unit = parts[1].lower()
         
-        # Map units to timedelta parameters
-        unit_mapping = {
-            'second': 'seconds',
-            'seconds': 'seconds',
-            'minute': 'minutes', 
-            'minutes': 'minutes',
-            'hour': 'hours',
-            'hours': 'hours',
-            'day': 'days',
+        # Map of valid time units to timedelta parameters
+        valid_units = {
             'days': 'days',
+            'day': 'days',
+            'weeks': 'weeks', 
             'week': 'weeks',
-            'weeks': 'weeks'
+            'hours': 'hours',
+            'hour': 'hours',
+            'minutes': 'minutes',
+            'minute': 'minutes',
+            'seconds': 'seconds',
+            'second': 'seconds',
+            'microseconds': 'microseconds',
+            'microsecond': 'microseconds'
         }
         
-        if unit not in unit_mapping:
+        if unit not in valid_units:
             raise ValueError(f"Invalid time unit: {unit}")
             
-        # Create timedelta with the appropriate parameter
-        kwargs = {unit_mapping[unit]: number}
+        # Create timedelta with the appropriate unit
+        kwargs = {valid_units[unit]: number}
         return timedelta(**kwargs)
         
-    except (ValueError, TypeError) as e:
-        raise ValueError(f"Could not parse frequency: {frequency}") from e
+    except ValueError as e:
+        if str(e).startswith("Invalid"):
+            raise
+        raise ValueError(f"Invalid frequency format: {frequency}")

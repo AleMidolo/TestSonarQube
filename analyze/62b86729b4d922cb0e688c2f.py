@@ -1,24 +1,53 @@
 def base_config(user, etcd_host="localhost", etcd_port=2379):
     """
-    Crea una configuración con algunos parámetros simples, los cuales tienen un valor predeterminado que puede ser configurado.
+    创建一个包含一些简单参数的配置，其中关键参数包括 "tls"、"authentication"、"authorization"、"etcd"、"docs" 和 "log"。
 
-    Argumentos:
-    user (str): el nombre del usuario para la autenticación estática.
-    etcd_host (str): el host para la base de datos.
-    etcd_port (int): el puerto para la base de datos.
+    创建一个包含一些简单参数的配置，这些参数具有默认值，可以根据需要进行设置。
 
-    Retorna:
-    dict: la configuración creada.
+    参数:
+      user (str): 用于静态认证的用户名。
+      etcd_host (str): 数据库的主机地址。
+      etcd_port (int): 数据库的端口号。
+
+    返回值:
+      dict: 建的配置字典。
     """
     config = {
-        "auth": {
-            "user": user,
-            "type": "static"
+        "tls": {
+            "enabled": False,
+            "cert_file": "",
+            "key_file": "",
+            "ca_file": ""
         },
-        "database": {
-            "host": etcd_host,
-            "port": etcd_port,
-            "type": "etcd"
+        "authentication": {
+            "enabled": True,
+            "type": "static",
+            "static": {
+                "users": {
+                    user: {
+                        "password": "default_password"
+                    }
+                }
+            }
+        },
+        "authorization": {
+            "enabled": True,
+            "type": "simple",
+            "rules": []
+        },
+        "etcd": {
+            "endpoints": [f"http://{etcd_host}:{etcd_port}"],
+            "dial_timeout": 5,
+            "request_timeout": 5
+        },
+        "docs": {
+            "enabled": True,
+            "path": "/docs"
+        },
+        "log": {
+            "level": "info",
+            "format": "text",
+            "output": "stdout"
         }
     }
     

@@ -1,25 +1,29 @@
 def validate_as_prior_version(self, prior):
-    # Verificar que prior sea una instancia de InventoryValidator
+    """
+    检查 `prior` 是否是当前库存（inventory）对象的有效先前版本。
+
+    输入变量 `prior` 也应是一个 `InventoryValidator` 对象，并且假定 `self` 和 `prior` 的库存对象都已经过内部一致性检查。在类中返回 `error()`。
+    """
+    # 检查prior是否为InventoryValidator对象
     if not isinstance(prior, type(self)):
-        raise TypeError("El inventario previo debe ser del mismo tipo")
+        return self.error("Prior version must be an InventoryValidator object")
 
-    # Verificar que la fecha del prior sea anterior
-    if prior.date >= self.date:
-        raise ValueError("La fecha del inventario previo debe ser anterior")
+    # 检查时间戳,确保prior是较早的版本
+    if prior.timestamp >= self.timestamp:
+        return self.error("Prior version must have earlier timestamp")
 
-    # Verificar que los productos existentes en prior existan en self
-    # con cantidades mayores o iguales
-    for product_id, prior_qty in prior.quantities.items():
-        if product_id not in self.quantities:
-            raise ValueError(f"Producto {product_id} no existe en inventario actual")
-        if self.quantities[product_id] < prior_qty:
-            raise ValueError(f"Cantidad de {product_id} es menor que en versión previa")
+    # 检查库存变化的合理性
+    for item_id in set(self.inventory.keys()) | set(prior.inventory.keys()):
+        prior_qty = prior.inventory.get(item_id, 0)
+        current_qty = self.inventory.get(item_id, 0)
+        
+        # 检查数量变化是否合理
+        if current_qty < 0:
+            return self.error(f"Invalid negative quantity for item {item_id}")
+            
+        # 检查数量变化是否过大
+        if abs(current_qty - prior_qty) > self.max_change_threshold:
+            return self.error(f"Unreasonable quantity change for item {item_id}")
 
-    # Verificar que los productos tengan los mismos atributos
-    for product_id in prior.products:
-        if product_id not in self.products:
-            raise ValueError(f"Producto {product_id} no existe en inventario actual")
-        if prior.products[product_id] != self.products[product_id]:
-            raise ValueError(f"Atributos de producto {product_id} han cambiado")
-
-    return True
+    # 所有检查都通过
+    return None

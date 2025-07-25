@@ -1,21 +1,16 @@
 def popitem(self):
     """
-    Elimina y devuelve el par (clave, valor) menos recientemente utilizado.
+    移除并返回最久未使用的键值对。
     """
-    if not self.cache:  # Si el cache está vacío
-        raise KeyError("Cache is empty")
+    if not self:
+        raise KeyError('Dictionary is empty')
         
-    # Obtener el nodo menos recientemente usado (el último de la lista)
-    lru_node = self.tail.prev
+    # 获取最久未使用的键值对(链表头部)
+    key = self.head.next.key
+    value = self[key]
     
-    # Obtener la clave y valor antes de eliminar
-    key = lru_node.key
-    value = lru_node.value
-    
-    # Eliminar el nodo de la lista doblemente enlazada
-    self._remove_node(lru_node)
-    
-    # Eliminar la entrada del diccionario
-    del self.cache[key]
+    # 从字典和双向链表中删除该节点
+    self._remove(key)
+    del self[key]
     
     return key, value

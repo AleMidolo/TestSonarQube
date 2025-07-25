@@ -1,36 +1,40 @@
 def _get_conditionally_required_args(self, command_name, options_spec, args):
     """
-    Lista los argumentos con la condición ``required_when`` que coincide.
+    列出符合 ``required_when`` 条件的参数。
 
-    :param command_name: el nombre del comando.
-    :param options_spec: la lista de opciones de especificación del comando.
-    :param args: los argumentos de entrada recibidos.
-    :return: list, lista de nombres de argumentos que coinciden con la condición ``required_when``.
+    :param command_name: 命令名称。
+    :param options_spec: 命令选项规范的列表。
+    :param args: 接收到的输入参数。
+    :return: list，符合 ``required_when`` 条件的参数名称列表。
     """
-    conditionally_required = []
+    required_args = []
     
     for option in options_spec:
-        if 'required_when' in option:
-            required_condition = option['required_when']
+        # Skip if option has no required_when condition
+        if 'required_when' not in option:
+            continue
             
-            # Evaluar la condición required_when
-            if isinstance(required_condition, str):
-                # Si es una cadena, evaluar como expresión
-                try:
-                    condition_met = eval(required_condition, {'args': args})
-                except:
-                    condition_met = False
-            elif callable(required_condition):
-                # Si es una función, llamarla con los argumentos
-                try:
-                    condition_met = required_condition(args)
-                except:
-                    condition_met = False
-            else:
-                # Si es un valor booleano directo
-                condition_met = bool(required_condition)
+        required_when = option['required_when']
+        
+        # If required_when is a string (argument name)
+        if isinstance(required_when, str):
+            if args.get(required_when):
+                required_args.append(option['name'])
                 
-            if condition_met:
-                conditionally_required.append(option['name'])
+        # If required_when is a dict with conditions
+        elif isinstance(required_when, dict):
+            conditions_met = True
+            for key, value in required_when.items():
+                if args.get(key) != value:
+                    conditions_met = False
+                    break
+            
+            if conditions_met:
+                required_args.append(option['name'])
                 
-    return conditionally_required
+        # If required_when is a callable
+        elif callable(required_when):
+            if required_when(args):
+                required_args.append(option['name'])
+                
+    return required_args

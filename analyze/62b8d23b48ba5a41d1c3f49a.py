@@ -1,46 +1,41 @@
+from collections import OrderedDict
+from functools import wraps
+
 def mru_cache(maxsize=128, typed=False):
-    """
-    Decorador para envolver una función con un objeto invocable que memoriza hasta `maxsize` resultados 
-    basados en un algoritmo de Más Recientemente Usado (MRU).
-    """
     def decorator(func):
-        # Diccionario para almacenar el caché
-        cache = {}
-        # Lista para mantener el orden de uso
-        order = []
+        # 使用OrderedDict来存储缓存,保持插入顺序
+        cache = OrderedDict()
         
+        @wraps(func)
         def wrapper(*args, **kwargs):
-            # Crear clave para el caché
+            # 如果typed=True,将参数类型也作为key的一部分
             if typed:
-                key = (args, tuple(sorted(kwargs.items())), tuple(type(arg) for arg in args))
+                key = (tuple(args), tuple(sorted(kwargs.items())), 
+                      tuple(type(arg) for arg in args),
+                      tuple(type(v) for v in kwargs.values()))
             else:
-                key = (args, tuple(sorted(kwargs.items())))
+                key = (tuple(args), tuple(sorted(kwargs.items())))
                 
-            # Verificar si el resultado está en caché
+            # 如果key在缓存中,将其移到最后(最近使用)并返回值
             if key in cache:
-                # Actualizar orden de uso
-                order.remove(key)
-                order.append(key)
+                cache.move_to_end(key)
                 return cache[key]
                 
-            # Calcular resultado
+            # 计算新的结果
             result = func(*args, **kwargs)
             
-            # Si el caché está lleno, eliminar el elemento más recientemente usado
+            # 如果缓存已满,删除最近最少使用的项(第一个)
             if len(cache) >= maxsize:
-                oldest_key = order.pop()
-                del cache[oldest_key]
+                cache.popitem(last=False)
                 
-            # Almacenar nuevo resultado
+            # 添加新结果到缓存
             cache[key] = result
-            order.append(key)
-            
             return result
             
-        # Agregar atributos para acceder al caché
-        wrapper.cache_info = lambda: {'hits': len(order), 'maxsize': maxsize, 'currsize': len(cache)}
-        wrapper.cache_clear = lambda: (cache.clear(), order.clear())
+        # 添加缓存清理方法
+        def clear_cache():
+            cache.clear()
+        wrapper.clear_cache = clear_cache
         
         return wrapper
-        
     return decorator

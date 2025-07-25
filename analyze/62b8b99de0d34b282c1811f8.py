@@ -1,16 +1,15 @@
 def _reset_logging(cls):
     """
-    Restablecer
+    重置日志系统
     """
-    # Reset logging configuration to default state
     import logging
     
     # Remove all existing handlers
-    for handler in logging.root.handlers[:]:
-        logging.root.removeHandler(handler)
+    root = logging.getLogger()
+    for handler in root.handlers[:]:
+        root.removeHandler(handler)
         
-    # Reset logging level to default WARNING
-    logging.root.setLevel(logging.WARNING)
-    
     # Reset logging configuration
-    logging.basicConfig()
+    logging.basicConfig(level=logging.INFO,
+                       format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                       datefmt='%Y-%m-%d %H:%M:%S')

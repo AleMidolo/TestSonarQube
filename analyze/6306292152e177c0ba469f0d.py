@@ -1,30 +1,29 @@
 def identify_request(request: RequestType) -> bool:
     """
-    Intente identificar si esta es una solicitud de Matrix.
+    检查通过 JSON 加载的请求体是否包含事件。如果包含，则返回真。否则，返回假。
+
+    尝试识别这是否是一个 Matrix 请求。
     """
-    # Verificar si el request es None
-    if request is None:
+    # Check if request is a dict
+    if not isinstance(request, dict):
         return False
         
-    # Verificar si tiene los atributos típicos de una solicitud Matrix
-    try:
-        # Verificar si tiene el formato correcto de una solicitud Matrix
-        if hasattr(request, 'type') and hasattr(request, 'content'):
-            # Verificar si el tipo de solicitud es válido para Matrix
-            valid_types = ['m.room.message', 'm.room.member', 'm.room.create']
-            if request.type in valid_types:
-                return True
-                
-        # Verificar si tiene el token de acceso Matrix
-        if hasattr(request, 'access_token') and request.access_token:
-            return True
-            
-        # Verificar si tiene el ID de usuario Matrix
-        if hasattr(request, 'user_id') and request.user_id.startswith('@'):
-            return True
-            
-    except AttributeError:
+    # Check if request contains events
+    if 'events' not in request:
         return False
         
-    # Si no cumple ninguna condición, no es una solicitud Matrix
-    return False
+    # Check if events is a list
+    if not isinstance(request['events'], list):
+        return False
+        
+    # Check if there are any events
+    if len(request['events']) == 0:
+        return False
+        
+    # Check if each event is a dict
+    for event in request['events']:
+        if not isinstance(event, dict):
+            return False
+            
+    # If all checks pass, this appears to be a valid Matrix request
+    return True

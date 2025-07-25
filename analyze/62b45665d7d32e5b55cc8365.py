@@ -1,36 +1,39 @@
 def parse_arguments(*unparsed_arguments):
+    """
+    解析参数并将其作为字典映射返回
+
+    给定调用该脚本时使用的命令行参数，解析这些参数并返回一个字典，该字典将子解析器名称（或 "global"）映射到相应的 argparse.Namespace 实例。
+    """
     import argparse
+
+    # 创建主解析器
+    parser = argparse.ArgumentParser(description='命令行参数解析器')
     
-    # Create main parser
-    parser = argparse.ArgumentParser(description='Command line argument parser')
+    # 添加全局参数
+    parser.add_argument('--verbose', '-v', action='store_true', help='启用详细输出')
     
-    # Add global arguments that apply to all subcommands
-    parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose output')
+    # 创建子解析器
+    subparsers = parser.add_subparsers(dest='command')
     
-    # Create subparsers
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+    # 添加 "add" 子命令
+    add_parser = subparsers.add_parser('add', help='添加操作')
+    add_parser.add_argument('numbers', nargs='+', type=float, help='要相加的数字')
     
-    # Initialize dictionary to store parsed arguments
-    parsed_args = {}
+    # 添加 "multiply" 子命令
+    multiply_parser = subparsers.add_parser('multiply', help='乘法操作')
+    multiply_parser.add_argument('numbers', nargs='+', type=float, help='要相乘的数字')
     
-    # If no arguments provided, show help
-    if len(unparsed_arguments) == 0:
-        parser.print_help()
-        return {}
+    # 解析参数
+    if unparsed_arguments:
+        args = parser.parse_args(unparsed_arguments)
+    else:
+        args = parser.parse_args()
         
-    try:
-        # Parse the arguments
-        args = parser.parse_args(unparsed_arguments[0])
+    # 创建返回字典
+    result = {'global': args}
+    
+    # 如果指定了子命令，将其添加到结果字典中
+    if hasattr(args, 'command') and args.command:
+        result[args.command] = args
         
-        # Store global arguments
-        parsed_args['global'] = args
-        
-        # Store subcommand arguments if a subcommand was used
-        if args.command:
-            parsed_args[args.command] = args
-            
-        return parsed_args
-        
-    except Exception as e:
-        parser.print_help()
-        return {}
+    return result

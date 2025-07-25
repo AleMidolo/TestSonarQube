@@ -1,42 +1,45 @@
 def _explore_zipfile(zip_path):
     """
-    Obtiene los datos de los paquetes desde `zip_path`.
-    
-    Agrupa los archivos por el nombre base de su archivo XML y devuelve los datos en formato de diccionario.
-    
-    Parámetros
+    通过 `_group_files_by_xml_filename` 对给定的 zip 路径进行分组。
+
+    从`zip_path`获取包数据。
+
+    根据文件的XML文件名对其进行分组，并用字典格式返回数据。
+
+    参数
     ----------
-    zip_path: str  
-        Ruta del archivo zip.
-    Retorna
+    zip_path : `str`
+        zip文件路径
+    Returns
     -------
-    dict  
+    dict
     """
     import zipfile
-    import os
     from collections import defaultdict
     
-    # Diccionario para almacenar los archivos agrupados
+    # 创建一个默认字典来存储分组
     grouped_files = defaultdict(list)
     
-    # Abrir el archivo zip
+    # 打开zip文件
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        # Iterar sobre todos los archivos en el zip
-        for filename in zip_ref.namelist():
-            # Obtener el nombre base del archivo (sin extensión)
-            base_name = os.path.splitext(os.path.basename(filename))[0]
+        # 获取所有文件名列表
+        file_list = zip_ref.namelist()
+        
+        # 遍历所有文件
+        for file_name in file_list:
+            # 获取文件的基本名称（不包含扩展名）
+            base_name = file_name.rsplit('.', 1)[0]
             
-            # Si el archivo termina en .xml
-            if filename.lower().endswith('.xml'):
-                # Usar el nombre base como clave
-                key = base_name
+            # 如果文件名以.xml结尾，将其作为键
+            if file_name.endswith('.xml'):
+                xml_key = base_name
+                grouped_files[xml_key].append(file_name)
             else:
-                # Para otros archivos, buscar el nombre base del XML relacionado
-                # Asumiendo que los archivos relacionados comparten el mismo nombre base
-                key = base_name.split('_')[0]  # Eliminar sufijos después del guión bajo
-            
-            # Agregar el nombre del archivo a la lista correspondiente
-            grouped_files[key].append(filename)
+                # 查找对应的XML文件名
+                for xml_key in grouped_files.keys():
+                    if base_name.startswith(xml_key):
+                        grouped_files[xml_key].append(file_name)
+                        break
     
-    # Convertir defaultdict a dict regular
+    # 将defaultdict转换为普通字典并返回
     return dict(grouped_files)

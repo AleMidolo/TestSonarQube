@@ -1,32 +1,23 @@
-def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
+def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
     """
-    Devuelve los nombres y descripciones de los atributos definidos por la interfaz.
-        if not all:
-
-    Devuelve los nombres y descripciones de los atributos definidos por la interfaz.
+    返回当前类属性的名称和描述。
+    如果all为假，则返回由接口定义的属性名称和描述。
     """
-    result = {}
-    for name, attr in self.namesAndDescriptions_impl(all):
-        if isinstance(attr, str):
-            result[name] = attr
-        elif hasattr(attr, 'getDoc'):
-            result[name] = attr.getDoc()
-        else:
-            result[name] = ''
-    return result
-
-def namesAndDescriptions_impl(self, all):
-    """Helper implementation method that gets names and descriptions"""
-    attrs = []
+    # 获取类的所有属性
+    attributes = {}
     
-    # Get all attributes if all=True, otherwise just direct attributes
     if all:
-        for base in self.__bases__:
-            if hasattr(base, 'namesAndDescriptions_impl'):
-                attrs.extend(base.namesAndDescriptions_impl(all))
-    
-    # Add direct interface attributes
-    for name in self._InterfaceClass__attrs:
-        attrs.append((name, self._InterfaceClass__attrs[name]))
-        
-    return attrs
+        # 获取所有属性,包括继承的
+        for name, attr in self.__class__.__dict__.items():
+            if not name.startswith('_'):  # 排除私有属性
+                doc = getattr(attr, '__doc__', None)
+                attributes[name] = doc or ''
+    else:
+        # 只获取接口定义的属性
+        for name in dir(self):
+            if not name.startswith('_'):  # 排除私有属性
+                attr = getattr(self, name)
+                if hasattr(attr, '__doc__'):
+                    attributes[name] = attr.__doc__ or ''
+                    
+    return attributes

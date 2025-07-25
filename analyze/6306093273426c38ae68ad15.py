@@ -1,56 +1,53 @@
 def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     """
-    Ejecuta el CLI de Ansible con un diccionario de variables.
+    使用 `vars` 字典运行 Ansible CLI。
 
-    :param vars_dict: dict, Será pasado como extra-vars de Ansible.
-    :param cli_args: la lista de argumentos de línea de comandos.
-    :param ir_workspace: Un objeto Infrared Workspace que representa el 
-    espacio de trabajo activo.
-    :param ir_plugin: Un objeto InfraredPlugin del plugin actual.
-    :return: resultados de Ansible.
+    :param vars_dict: dict, 将作为 Ansible 的 extra-vars 传递
+    :param cli_args: list, 命令行参数列表 
+    :param ir_workspace: 一个表示当前活动的工作区的Infrared Workspace 对象
+    :param ir_plugin: 一个表示当前插件的InfraredPlugin 对象
+    :return: ansible 的结果
     """
-    # Configurar argumentos de Ansible
-    ansible_args = []
+    import os
+    import json
+    import subprocess
+    from tempfile import NamedTemporaryFile
     
-    # Agregar playbook path
-    playbook_path = os.path.join(ir_plugin.path, 'main.yml')
-    ansible_args.append(playbook_path)
-
-    # Agregar inventory si existe en workspace
-    if ir_workspace.inventory:
-        ansible_args.extend(['-i', ir_workspace.inventory])
-
-    # Agregar variables extra como JSON
-    if vars_dict:
-        extra_vars = json.dumps(vars_dict)
-        ansible_args.extend(['--extra-vars', extra_vars])
-
-    # Agregar argumentos CLI adicionales
-    if cli_args:
-        ansible_args.extend(cli_args)
+    # 创建临时文件存储extra vars
+    with NamedTemporaryFile(mode='w', suffix='.json', delete=False) as vars_file:
+        json.dump(vars_dict, vars_file)
+        vars_file_path = vars_file.name
 
     try:
-        # Configurar entorno
-        os.environ['ANSIBLE_CONFIG'] = os.path.join(ir_plugin.path, 'ansible.cfg')
+        # 构建ansible-playbook命令
+        cmd = ['ansible-playbook']
         
-        # Ejecutar ansible-playbook
-        ansible = ansible_playbook.AnsiblePlaybook(
-            playbook=playbook_path,
-            inventory=ir_workspace.inventory,
-            extra_vars=vars_dict,
-            verbosity=1
+        # 添加命令行参数
+        cmd.extend(cli_args)
+        
+        # 添加extra vars文件
+        cmd.extend(['-e', f'@{vars_file_path}'])
+        
+        # 如果workspace有inventory文件,添加inventory参数
+        if hasattr(ir_workspace, 'inventory') and ir_workspace.inventory:
+            cmd.extend(['-i', ir_workspace.inventory])
+            
+        # 如果plugin有playbook路径,添加playbook参数    
+        if hasattr(ir_plugin, 'playbook_path') and ir_plugin.playbook_path:
+            cmd.append(ir_plugin.playbook_path)
+            
+        # 运行ansible-playbook命令
+        result = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
+            check=True
         )
         
-        # Ejecutar y obtener resultados
-        results = ansible.run()
+        return result
         
-        return results
-
-    except Exception as e:
-        LOG.error("Error ejecutando playbook: %s", str(e))
-        raise
-
     finally:
-        # Limpiar entorno
-        if 'ANSIBLE_CONFIG' in os.environ:
-            del os.environ['ANSIBLE_CONFIG']
+        # 清理临时文件
+        if os.path.exists(vars_file_path):
+            os.unlink(vars_file_path)

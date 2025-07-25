@@ -1,51 +1,59 @@
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    Recupera y analiza un documento "webfinger" remoto de Diaspora.
+    检索并解析远程 Diaspora WebFinger 文档。
 
-    :arg handle: Identificador remoto a recuperar 
-    :returns: dict
+    :arg handle: 要检索的远程句柄 
+    :returns: 字典
     """
     import requests
     import json
     from urllib.parse import urlparse
 
-    # Validar formato del handle
+    # 验证句柄格式
     if '@' not in handle:
-        raise ValueError("Handle debe tener formato usuario@dominio")
-        
-    # Separar usuario y dominio
-    username, domain = handle.split('@')
+        raise ValueError("Invalid handle format")
+
+    username, domain = handle.split('@', 1)
     
-    # Construir URL webfinger
-    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
-    
+    # 构建 WebFinger URL
+    webfinger_url = f"https://{domain}/.well-known/webfinger"
+    params = {
+        'resource': f'acct:{handle}'
+    }
+
     try:
-        # Hacer petición HTTP
-        response = requests.get(webfinger_url, timeout=10)
+        # 发送请求获取 WebFinger 文档
+        response = requests.get(webfinger_url, params=params)
         response.raise_for_status()
         
-        # Parsear respuesta JSON
+        # 解析 JSON 响应
         data = response.json()
         
-        # Validar formato de respuesta
-        if 'subject' not in data or not data.get('links'):
-            raise ValueError("Formato de respuesta webfinger inválido")
-            
-        # Construir diccionario de respuesta
+        # 提取相关信息到字典
         result = {
-            'subject': data['subject'],
-            'aliases': data.get('aliases', []),
+            'handle': handle,
+            'username': username,
+            'domain': domain,
             'links': {}
         }
         
-        # Procesar links
-        for link in data['links']:
-            if 'rel' in link and 'href' in link:
-                result['links'][link['rel']] = link['href']
-                
+        # 解析链接
+        if 'links' in data:
+            for link in data['links']:
+                rel = link.get('rel', '')
+                href = link.get('href', '')
+                if rel and href:
+                    result['links'][rel] = href
+                    
+        # 添加其他可能的字段
+        if 'subject' in data:
+            result['subject'] = data['subject']
+        if 'aliases' in data:
+            result['aliases'] = data['aliases']
+            
         return result
-        
+
     except requests.exceptions.RequestException as e:
-        raise ConnectionError(f"Error al recuperar webfinger: {str(e)}")
+        raise ConnectionError(f"Failed to retrieve WebFinger document: {str(e)}")
     except json.JSONDecodeError:
-        raise ValueError("Respuesta webfinger no es JSON válido")
+        raise ValueError("Invalid WebFinger document format")

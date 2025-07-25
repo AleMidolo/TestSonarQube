@@ -1,32 +1,15 @@
 def pretty(self, indent=0, debug=False):
     """
-    Devuelve una representación formateada de manera legible de 'self'.
+    返回对象自身的美观格式化表示。
     """
-    # Crear el string de indentación basado en el nivel de indent
-    indent_str = "  " * indent
+    # 处理对象值的表示形式
+    obj = f"'{self.obj}'" if isinstance(self.obj, str) else repr(self.obj)
     
-    # Si debug está activado, incluir información adicional
-    if debug:
-        result = f"{indent_str}{self.__class__.__name__}:\n"
-    else:
-        result = f"{indent_str}"
-
-    # Si el objeto es una colección (lista, diccionario, etc)
-    if hasattr(self, '__iter__') and not isinstance(self, (str, bytes)):
-        # Para diccionarios
-        if isinstance(self, dict):
-            items = [f"{indent_str}  {k}: {v.pretty(indent+1) if hasattr(v, 'pretty') else v}" 
-                    for k, v in self.items()]
-            result += "{\n" + ",\n".join(items) + f"\n{indent_str}}}"
-            
-        # Para listas, tuplas, sets
-        else:
-            items = [f"{indent_str}  {item.pretty(indent+1) if hasattr(item, 'pretty') else item}" 
-                    for item in self]
-            result += "[\n" + ",\n".join(items) + f"\n{indent_str}]"
+    # 如果开启debug模式，添加额外的调试信息
+    debug_details = f"id={id(self)}, " if debug else ""
     
-    # Para objetos simples
-    else:
-        result += str(self)
-        
-    return result
+    # 构建缩进的格式化字符串
+    indentation = " " * indent
+    
+    # 返回格式化后的字符串
+    return indentation + f"{self.__class__.__name__}({debug_details}{obj})"

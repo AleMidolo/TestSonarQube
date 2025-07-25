@@ -3,26 +3,26 @@ def scale(self, other=None):
         return self._scale
         
     if not isinstance(other, (int, float)):
-        raise TypeError("Scale must be a numeric value")
+        raise TypeError("Scale factor must be a number")
         
     if self._scale is None or self._scale == 0:
-        raise LenaValueError("Cannot rescale graph with unknown or zero scale")
+        raise LenaValueError("Cannot rescale chart with unknown or zero scale")
         
-    # Get the scale factor
-    factor = other / self._scale
+    # Get the last coordinate axis
+    coords = self.get_coordinates()
+    if not coords:
+        return
+        
+    last_coord = coords[-1]
+    scale_factor = other / self._scale
     
-    # Get the last coordinate index
-    last_coord = len(self.coordinates) - 1
+    # Rescale the last coordinate values
+    self._data[last_coord] *= scale_factor
     
-    # Rescale the last coordinate and its errors
-    self.coordinates[last_coord] *= factor
-    
-    if hasattr(self, 'errors') and self.errors is not None:
-        for error in self.errors:
-            if error is not None and last_coord < len(error):
-                error[last_coord] *= factor
-                
+    # Rescale any associated errors
+    error_name = f"{last_coord}_err"
+    if error_name in self._data:
+        self._data[error_name] *= scale_factor
+        
     # Update the scale
     self._scale = other
-    
-    return self._scale

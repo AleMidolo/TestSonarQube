@@ -1,39 +1,44 @@
 def get_plugin_spec_flatten_dict(plugin_dir):
     """
-    Crea un diccionario plano a partir de la especificación del plugin.
+    使用 YAML 来读取 `plugin_dir` 中的各种信息，并以字典形式将其返回。
+    从插件规范创建一个扁平化的字典
 
-    :param plugin_dir: Una ruta al directorio del plugin  
-    :return: Un diccionario plano que contiene las propiedades del plugin
+    :param plugin_dir: 插件目录的路径 
+    :return: 一个包含插件属性的扁平化字典
     """
-    flattened = {}
+    import os
+    import yaml
     
-    def flatten_dict(d, parent_key=''):
-        for key, value in d.items():
-            new_key = f"{parent_key}.{key}" if parent_key else key
+    # 初始化结果字典
+    result = {}
+    
+    # 读取插件目录下的 plugin.yaml 文件
+    spec_file = os.path.join(plugin_dir, 'plugin.yaml')
+    if not os.path.exists(spec_file):
+        return result
+        
+    # 读取 YAML 文件
+    with open(spec_file, 'r', encoding='utf-8') as f:
+        try:
+            spec = yaml.safe_load(f)
+        except yaml.YAMLError:
+            return result
             
-            if isinstance(value, dict):
-                flatten_dict(value, new_key)
+    def flatten_dict(d, parent_key='', sep='.'):
+        """递归地将嵌套字典扁平化"""
+        items = []
+        for k, v in d.items():
+            new_key = f"{parent_key}{sep}{k}" if parent_key else k
+            
+            if isinstance(v, dict):
+                items.extend(flatten_dict(v, new_key, sep=sep).items())
             else:
-                flattened[new_key] = value
+                items.append((new_key, v))
                 
-    try:
-        # Intentar leer el archivo spec.json del directorio del plugin
-        import os
-        import json
+        return dict(items)
         
-        spec_path = os.path.join(plugin_dir, 'spec.json')
+    # 扁平化字典
+    if isinstance(spec, dict):
+        result = flatten_dict(spec)
         
-        if not os.path.exists(spec_path):
-            return {}
-            
-        with open(spec_path, 'r') as f:
-            spec = json.load(f)
-            
-        # Aplanar el diccionario recursivamente
-        flatten_dict(spec)
-        
-        return flattened
-        
-    except Exception as e:
-        print(f"Error al procesar la especificación del plugin: {str(e)}")
-        return {}
+    return result

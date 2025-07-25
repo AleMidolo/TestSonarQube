@@ -1,10 +1,10 @@
 def set_cut_chars(self, before: bytes, after: bytes) -> None:
     """
-    Establece los bytes utilizados para delimitar los puntos de corte.
+    设置用于分隔切片点的字节。
 
-    Argumentos:
-        before: Divide el archivo antes de estos delimitadores.
-        after: Divide el archivo después de estos delimitadores.
+    参数:
+      before: 在这些分隔符之前分割文件。
+      after: 在这些分隔符之后分割文件。
     """
-    self.before_cut = before
-    self.after_cut = after
+    self.cut_before = before
+    self.cut_after = after

@@ -1,46 +1,55 @@
 def extend_cli(self, root_subparsers):
     """
-    Agrega las opciones de línea de comandos (CLI) de especificación al punto de entrada principal.
+    将规范 CLI 选项添加到主入口点。
 
-    :param subparser: el objeto subparser que se va a extender.
+    :param subparser: 要扩展的子解析器对象。
     """
-    # Create specification subparser
-    spec_parser = root_subparsers.add_parser(
-        'spec',
-        help='Specification related commands'
-    )
-    
-    # Create subparsers for spec commands
-    spec_subparsers = spec_parser.add_subparsers(
-        title='Specification commands',
-        dest='spec_command'
+    # 创建一个新的子命令解析器
+    parser = root_subparsers.add_parser(
+        'standards',
+        help='Standards and specifications related commands'
     )
 
-    # Add validate command
-    validate_parser = spec_subparsers.add_parser(
+    # 创建子命令的子解析器
+    subparsers = parser.add_subparsers(
+        title='Standards commands',
+        dest='standards_command'
+    )
+
+    # 添加列出标准的命令
+    list_parser = subparsers.add_parser(
+        'list',
+        help='List available standards'
+    )
+    list_parser.add_argument(
+        '--format',
+        choices=['text', 'json'],
+        default='text',
+        help='Output format'
+    )
+
+    # 添加查看标准详情的命令
+    view_parser = subparsers.add_parser(
+        'view',
+        help='View standard details'
+    )
+    view_parser.add_argument(
+        'standard_id',
+        help='ID of the standard to view'
+    )
+
+    # 添加验证标准的命令
+    validate_parser = subparsers.add_parser(
         'validate',
-        help='Validate a specification file'
+        help='Validate against a standard'
     )
     validate_parser.add_argument(
-        'spec_file',
-        help='Path to specification file'
+        'standard_id',
+        help='ID of the standard to validate against'
+    )
+    validate_parser.add_argument(
+        'input_file',
+        help='File to validate'
     )
 
-    # Add create command  
-    create_parser = spec_subparsers.add_parser(
-        'create',
-        help='Create a new specification file'
-    )
-    create_parser.add_argument(
-        'output',
-        help='Output path for new specification file'
-    )
-
-    # Add list command
-    list_parser = spec_subparsers.add_parser(
-        'list',
-        help='List available specifications'
-    )
-
-    # Make spec_command required
-    spec_parser.set_defaults(spec_command='list')
+    return parser

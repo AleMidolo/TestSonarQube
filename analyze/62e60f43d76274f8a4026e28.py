@@ -1,35 +1,32 @@
 def hydrate_time(nanoseconds, tz=None):
     """
-    Hidratador para valores de `Time` y `LocalTime`.
+    将纳秒转换为固定格式的时间。
+    用于处理 `Time` 和 `LocalTime` 值的转换器。
 
-    :param nanoseconds: Number of nanoseconds since midnight
-    :param tz: Optional timezone 
-    :return: Time
+    :param nanoseconds: 纳秒时间戳
+    :param tz: 时区信息,默认为None
+    :return: 格式化的时间字符串
     """
-    from datetime import time, timezone, timedelta
+    from datetime import datetime, timezone, timedelta
     
-    # Calculate hours, minutes, seconds and microseconds from nanoseconds
-    total_microseconds = nanoseconds // 1000
-    hours = total_microseconds // (3600 * 1000000)
-    remaining = total_microseconds % (3600 * 1000000)
-    minutes = remaining // (60 * 1000000)
-    remaining = remaining % (60 * 1000000)
-    seconds = remaining // 1000000
-    microseconds = remaining % 1000000
-
-    # Create time object
+    # 将纳秒转换为秒
+    seconds = nanoseconds / 1e9
+    
+    # 创建datetime对象
+    dt = datetime.fromtimestamp(seconds)
+    
+    # 处理时区
     if tz is not None:
-        # If timezone provided, create timezone object
         if isinstance(tz, str):
-            offset = int(tz.replace('UTC', ''))
-            tz = timezone(timedelta(hours=offset))
-        return time(hour=int(hours), 
-                   minute=int(minutes),
-                   second=int(seconds),
-                   microsecond=int(microseconds),
-                   tzinfo=tz)
-    else:
-        return time(hour=int(hours),
-                   minute=int(minutes), 
-                   second=int(seconds),
-                   microsecond=int(microseconds))
+            # 如果tz是字符串,假设是UTC偏移量格式如'+08:00'
+            offset = int(tz[1:3]) * 3600 + int(tz[4:6]) * 60
+            if tz[0] == '-':
+                offset = -offset
+            tz = timezone(timedelta(seconds=offset))
+        dt = dt.astimezone(tz)
+    
+    # 格式化输出,包含纳秒精度
+    microseconds = int((nanoseconds % 1e9) / 1e3)
+    time_str = dt.strftime('%H:%M:%S.{:06d}'.format(microseconds))
+    
+    return time_str

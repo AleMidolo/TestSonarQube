@@ -1,34 +1,33 @@
 def get_nodeinfo_well_known_document(url, document_path=None):
     """
-    Genera un documento .well-known de NodeInfo.
+    返回一个格式化的字典，其中包括如 `url` 和 `document_path` 等信息。
 
-    Consulta la especificación: [http://nodeinfo.diaspora.software](http://nodeinfo.diaspora.software)
+    生成一个 NodeInfo 的 `.well-known` 文档。
 
-    :arg url: La URL base completa con protocolo, por ejemplo, `https://example.com`.
-    :arg document_path: Ruta personalizada para el documento NodeInfo si se proporciona (opcional).
+    参考规范: http://nodeinfo.diaspora.software
 
-    :returns:
-    Un diccionario (`dict`).
+    :arg url: 完整的基础 URL，包含协议，例如 `https://example.com`
+    :document_path: 如果提供了自定义的 NodeInfo 文档路径，则使用该路径（可选）
+    :返回值: 字典
     """
-    # Si no se proporciona una ruta personalizada, usar la ruta por defecto
-    if document_path is None:
-        document_path = "/nodeinfo/2.0"
-
-    # Asegurarse de que la URL no termine en /
-    url = url.rstrip('/')
+    # 移除URL末尾的斜杠
+    base_url = url.rstrip('/')
     
-    # Asegurarse de que document_path comience con /
-    if not document_path.startswith('/'):
-        document_path = '/' + document_path
-
-    # Crear el documento well-known según la especificación
-    well_known_document = {
+    # 如果没有提供document_path,使用默认路径
+    if document_path is None:
+        document_path = '/nodeinfo/2.0'
+    else:
+        # 确保document_path以斜杠开头
+        document_path = f"/{document_path.lstrip('/')}"
+    
+    # 构建返回的字典
+    well_known_doc = {
         "links": [
             {
                 "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
-                "href": f"{url}{document_path}"
+                "href": f"{base_url}{document_path}"
             }
         ]
     }
-
-    return well_known_document
+    
+    return well_known_doc

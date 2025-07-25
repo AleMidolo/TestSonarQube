@@ -1,9 +1,10 @@
 def inject_config(self):
     """
-    Establece la variable de entorno para la ruta de configuración si no está definida.
+    如果 `os.environ` 中不存在 `ANSIBLE_CONFIG` 属性，则将其设置为 `self.ansible_config_path`。
+
+    如果配置路径的环境变量未定义，则进行设置。
     """
     import os
     
-    if 'CONFIG_PATH' not in os.environ:
-        default_config_path = os.path.join(os.path.dirname(__file__), 'config')
-        os.environ['CONFIG_PATH'] = default_config_path
+    if 'ANSIBLE_CONFIG' not in os.environ:
+        os.environ['ANSIBLE_CONFIG'] = self.ansible_config_path

@@ -1,47 +1,46 @@
 def validate_version_inventories(self, version_dirs):
     """
-    Cada versión DEBE tener un inventario hasta ese punto.
+    每个版本**应当**包含截至该版本的完整清单。  
 
-    También se debe mantener un registro de cualquier resumen de contenido (digest) 
-    que sea diferente de los que están en el inventorio raíz, 
-    para que también podamos verificarlos al validar el contenido.
+    同时，记录所有与根清单不同的内容摘要，以便在验证内容时能够检查这些差异。  
 
-    'version_dirs' es un arreglo de nombres de directorios de versiones 
-    y se asume que están en secuencia de versiones (1, 2, 3...).
+    `version_dirs` 是一个包含版本目录名称的数组，并假定按照版本顺序排列（1, 2, 3...）。
     """
-    digests_to_verify = set()
+    # 存储每个版本的清单差异
+    version_diffs = {}
     
-    # Validar que exista un inventario para cada versión
-    for version_dir in version_dirs:
-        inventory_path = os.path.join(version_dir, "inventory.txt")
+    # 获取根目录清单
+    root_inventory = self.get_root_inventory()
+    
+    # 遍历每个版本目录
+    for version in version_dirs:
+        version_inventory = self.get_version_inventory(version)
         
-        if not os.path.exists(inventory_path):
-            raise ValueError(f"No se encontró inventario para la versión {version_dir}")
+        # 检查是否包含完整清单
+        if not version_inventory:
+            raise ValueError(f"Version {version} missing complete inventory")
             
-        # Leer el inventario de la versión actual
-        with open(inventory_path) as f:
-            version_inventory = f.readlines()
+        # 与根清单比较,记录差异
+        diffs = {}
+        for file_path, checksum in version_inventory.items():
+            if file_path not in root_inventory:
+                diffs[file_path] = {'status': 'added', 'checksum': checksum}
+            elif root_inventory[file_path] != checksum:
+                diffs[file_path] = {
+                    'status': 'modified',
+                    'old_checksum': root_inventory[file_path],
+                    'new_checksum': checksum
+                }
+                
+        for file_path in root_inventory:
+            if file_path not in version_inventory:
+                diffs[file_path] = {
+                    'status': 'deleted',
+                    'old_checksum': root_inventory[file_path]
+                }
+                
+        # 存储该版本的差异
+        if diffs:
+            version_diffs[version] = diffs
             
-        # Obtener los digests del inventario actual
-        version_digests = set()
-        for line in version_inventory:
-            if line.strip():
-                digest = line.split()[0]
-                version_digests.add(digest)
-                
-        # Comparar con el inventario raíz y agregar digests diferentes
-        root_inventory_path = "inventory.txt"
-        if os.path.exists(root_inventory_path):
-            with open(root_inventory_path) as f:
-                root_inventory = f.readlines()
-                
-            root_digests = set()
-            for line in root_inventory:
-                if line.strip():
-                    digest = line.split()[0] 
-                    root_digests.add(digest)
-                    
-            # Agregar digests que son diferentes al inventario raíz
-            digests_to_verify.update(version_digests - root_digests)
-                
-    return digests_to_verify
+    return version_diffs

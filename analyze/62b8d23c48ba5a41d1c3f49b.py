@@ -1,19 +1,15 @@
 def popitem(self):
     """
-    Eliminar y devolver el par (clave, valor) más recientemente utilizado.
+    移除并返回最近使用的键值对。
     """
-    if not self.cache:  # Si el cache está vacío
-        raise KeyError("Cache is empty")
+    if not self:
+        raise KeyError('Dictionary is empty')
         
-    # Obtener la clave más recientemente utilizada (última en el orden)
-    key = next(reversed(self.order))
+    # 获取最近使用的键值对
+    key = next(reversed(self))
+    value = self[key]
     
-    # Obtener el valor asociado
-    value = self.cache[key]
+    # 从字典中删除该键值对
+    del self[key]
     
-    # Eliminar la clave del cache y del orden
-    del self.cache[key]
-    self.order.remove(key)
-    
-    # Devolver el par (clave, valor)
-    return (key, value)
+    return key, value

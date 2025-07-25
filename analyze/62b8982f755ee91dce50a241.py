@@ -1,53 +1,49 @@
 def normalized(self):
-    days = 0
-    hours = 0
-    minutes = 0
-    seconds = 0
-    microseconds = 0
+    """
+    将所有时间单位标准化为整数。
 
-    # Convert fractional days to hours
-    if self.days:
-        days = int(self.days)
-        hours += (self.days - days) * 24
+    返回一个完全使用整数值表示相对属性的对象版本。
 
-    # Convert fractional hours to minutes 
-    if self.hours or hours:
-        total_hours = self.hours + hours
-        hours = int(total_hours)
-        minutes += (total_hours - hours) * 60
+    >>> relativedelta(days=1.5, hours=2).normalized()
+    relativedelta(days=+1, hours=+14)
 
-    # Convert fractional minutes to seconds
-    if self.minutes or minutes:
-        total_minutes = self.minutes + minutes
-        minutes = int(total_minutes)
-        seconds += (total_minutes - minutes) * 60
-
-    # Convert fractional seconds to microseconds
-    if self.seconds or seconds:
-        total_seconds = self.seconds + seconds
-        seconds = int(total_seconds)
-        microseconds += (total_seconds - seconds) * 1000000
-
-    if self.microseconds or microseconds:
-        total_microseconds = self.microseconds + microseconds
-        microseconds = int(total_microseconds)
-
-    # Create new relativedelta with normalized values
-    return self.__class__(
-        years=self.years,
-        months=self.months,
-        days=days,
-        hours=hours,
-        minutes=minutes,
-        seconds=seconds,
-        microseconds=microseconds,
-        leapdays=self.leapdays,
-        year=self.year,
-        month=self.month,
-        day=self.day,
-        weekday=self.weekday,
-        hour=self.hour,
-        minute=self.minute,
-        second=self.second,
-        microsecond=self.microsecond
+    :return:
+        返回一个 :class:`dateutil.relativedelta.relativedelta` 对象。
+    """
+    # 创建一个新的relativedelta对象来存储结果
+    result = relativedelta()
+    
+    # 处理年和月,直接复制整数部分
+    result.years = int(self.years)
+    result.months = int(self.months)
+    
+    # 计算总秒数
+    total_seconds = (
+        self.days * 86400 +  # 天转秒
+        self.hours * 3600 +  # 小时转秒
+        self.minutes * 60 +  # 分钟转秒
+        self.seconds         # 秒
     )
+    
+    # 从总秒数中提取各个时间单位
+    days, remainder = divmod(total_seconds, 86400)
+    hours, remainder = divmod(remainder, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    
+    # 设置标准化后的值
+    result.days = int(days)
+    result.hours = int(hours)
+    result.minutes = int(minutes)
+    result.seconds = int(seconds)
+    
+    # 复制其他属性
+    result.year = self.year
+    result.month = self.month
+    result.day = self.day
+    result.weekday = self.weekday
+    result.hour = self.hour
+    result.minute = self.minute
+    result.second = self.second
+    result.microsecond = self.microsecond
+    
+    return result

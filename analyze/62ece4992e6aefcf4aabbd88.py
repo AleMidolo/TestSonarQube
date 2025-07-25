@@ -1,12 +1,22 @@
 def make_array(shape, dtype=np.dtype("float32")):
     """
-    Devuelve un arreglo lleno de ceros con la forma y el tipo de datos especificados.
+    返回一个具有指定形状和类型的全零数组。
 
-    Argumentos:
-        shape : tuple
-            Forma del arreglo a crear.
-        dtype : `numpy.dtype`
-            Tipo de datos del arreglo a crear.
-    Retorno: array
+    参数：
+      shape : 元组  
+        要创建的数组的形状  
+      dtype : `numpy.dtype`  
+        要创建的数组的数据类型  
+
+    返回值：数组
+
+    该函数创建一个具有指定形状和数据类型的数组。
+
+      参数
+      ----------
+      shape : 元组
+          要创建的数组的形状
+      dtype : `numpy.dtype`
+          要创建的数组的数据类型
     """
-    return np.zeros(shape=shape, dtype=dtype)
+    return np.zeros(shape, dtype=dtype)

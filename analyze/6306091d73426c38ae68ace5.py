@@ -1,25 +1,26 @@
 def _include_groups(self, parser_dict):
     """
-    Resuelve la directiva de inclusión del diccionario en los archivos de especificación.
+    解析规范文件中的 include dict 指令。
     """
-    if not parser_dict:
-        return {}
+    if not isinstance(parser_dict, dict):
+        return parser_dict
+        
+    if 'include' not in parser_dict:
+        return parser_dict
+        
+    included_groups = parser_dict.pop('include')
+    
+    if not isinstance(included_groups, (list, tuple)):
+        included_groups = [included_groups]
         
     result = {}
-    for key, value in parser_dict.items():
-        if isinstance(value, dict):
-            if '@include' in value:
-                include_file = value['@include']
-                try:
-                    with open(include_file, 'r') as f:
-                        included_dict = json.load(f)
-                    result[key] = self._include_groups(included_dict)
-                except (IOError, json.JSONDecodeError) as e:
-                    print(f"Error including file {include_file}: {str(e)}")
-                    result[key] = value
-            else:
-                result[key] = self._include_groups(value)
-        else:
-            result[key] = value
+    for group in included_groups:
+        if isinstance(group, dict):
+            result.update(group)
+        elif isinstance(group, str):
+            # 假设从某处加载group定义
+            group_dict = self._load_group(group)
+            result.update(group_dict)
             
+    result.update(parser_dict)
     return result

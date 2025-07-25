@@ -1,32 +1,39 @@
 def validate_value(value):
     """
-    Validar el valor proporcionado contra la expresión regular correspondiente.
+    根据对应的正则表达式验证给定的值。
 
-    Argumentos:
-        value: la cadena de texto a validar
+    参数:
+        value: 要验证的字符串
 
-    Excepciones:
-        ValidationError: si el valor proporcionado no cumple con la expresión regular.
+    异常:
+        ValidationError: 如果给定的值不符合正则表达式，将抛出此异常。
     """
     import re
 
-    # Expresión regular para validar que el valor solo contenga letras, números y espacios
-    pattern = r'^[a-zA-Z0-9\s]+$'
+    class ValidationError(Exception):
+        pass
 
-    # Validar que el valor no esté vacío
-    if not value:
-        raise ValidationError("El valor no puede estar vacío")
+    # 定义正则表达式模式
+    patterns = {
+        'email': r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+        'phone': r'^\+?1?\d{9,15}$',
+        'url': r'^(http|https):\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(\/\S*)?$',
+        'date': r'^\d{4}-\d{2}-\d{2}$',
+        'time': r'^([01]?[0-9]|2[0-3]):[0-5][0-9]$'
+    }
 
-    # Validar que el valor sea una cadena de texto
+    # 检查值是否为字符串
     if not isinstance(value, str):
-        raise ValidationError("El valor debe ser una cadena de texto")
+        raise ValidationError("输入值必须是字符串类型")
 
-    # Validar que el valor cumpla con la expresión regular
-    if not re.match(pattern, value):
-        raise ValidationError("El valor solo puede contener letras, números y espacios")
+    # 尝试匹配所有模式
+    valid = False
+    for pattern in patterns.values():
+        if re.match(pattern, value):
+            valid = True
+            break
+    
+    if not valid:
+        raise ValidationError(f"输入值 '{value}' 不符合任何有效格式")
 
     return True
-
-class ValidationError(Exception):
-    """Excepción personalizada para errores de validación"""
-    pass

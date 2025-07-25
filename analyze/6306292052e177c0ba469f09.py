@@ -1,20 +1,21 @@
 def identify_request(request: RequestType):
-    """
-    Intente identificar si esta es una solicitud de Diaspora.
+    # Try to load as JSON first
+    try:
+        json_data = json.loads(request.body)
+        # Check if it contains events
+        if 'events' in json_data:
+            return True
+    except (json.JSONDecodeError, AttributeError):
+        pass
 
-    Primero intente con un mensaje público. Luego con un mensaje privado. Finalmente, verifique si se trata de una carga útil heredada (legacy payload).
-    """
-    # Check if it's a public message
-    if hasattr(request, 'public') and request.public:
-        return 'public'
-        
-    # Check if it's a private message
-    if hasattr(request, 'private') and request.private:
-        return 'private'
-        
-    # Check if it's a legacy payload
-    if hasattr(request, 'legacy') and request.legacy:
-        return 'legacy'
-        
-    # If none of the above, return None
-    return None
+    # Try XML if JSON fails
+    try:
+        xml_data = ET.fromstring(request.body)
+        # Check if root tag is Magic_ENV_TAG
+        if xml_data.tag == 'Magic_ENV_TAG':
+            return True
+    except (ET.ParseError, AttributeError):
+        pass
+
+    # If neither condition is met, return False
+    return False

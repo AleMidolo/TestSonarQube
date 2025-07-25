@@ -1,18 +1,18 @@
 def _get_resource_name_regex():
     """
-    Construye o devuelve las expresiones regulares que se utilizan para validar  
-    el nombre de los recursos de Krake.
+    返回用于验证 Krake 资源名称的正则表达式  
+    构建或返回用于验证 Krake 资源名称的正则表达式。
 
-    Retorna:  
-        (re.Pattern): las expresiones regulares compiladas, para validar  
-        el nombre del recurso.
+    返回值：  
+        (re.Pattern)：编译后的正则表达式，用于验证资源名称。
     """
     import re
     
-    # Patrón que permite letras, números, guiones y puntos
-    # Debe comenzar y terminar con alfanumérico
-    # Longitud mínima 1, máxima 253 caracteres
-    pattern = r'^[a-zA-Z0-9][-a-zA-Z0-9.]*[a-zA-Z0-9]$|^[a-zA-Z0-9]$'
+    # 资源名称规则:
+    # - 必须以字母或数字开头和结尾
+    # - 可以包含字母、数字、连字符(-)
+    # - 长度在1-63个字符之间
+    pattern = r'^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$'
     
-    # Compilar y retornar el patrón
+    # 编译正则表达式并返回
     return re.compile(pattern)

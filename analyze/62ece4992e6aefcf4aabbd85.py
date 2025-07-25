@@ -1,25 +1,23 @@
 def find_roots(
     graph: "Graph", prop: "URIRef", roots: Optional[Set["Node"]] = None
 ) -> Set["Node"]:
-    # Si no se proporcionan raíces, inicializar conjunto vacío
+    # 如果没有提供roots参数，初始化一个空集合
     if roots is None:
         roots = set()
     
-    # Obtener todos los sujetos y objetos que participan en la propiedad
+    # 获取所有作为主语(subject)的节点
     subjects = set(graph.subjects(prop))
-    objects = set(graph.objects(prop))
     
-    # Las raíces son los objetos que no aparecen como sujetos
-    # Es decir, los nodos que no tienen padres
-    roots.update(objects - subjects)
+    # 获取所有作为宾语(object)的节点 
+    objects = set(graph.objects(None, prop))
     
-    # Si no hay raíces explícitas, los nodos sin padres son raíces
-    if not roots:
-        roots.update(subjects - objects)
+    # 根节点是那些作为宾语出现但不作为主语出现的节点
+    # 以及作为主语出现但其宾语不在图中的节点
+    new_roots = objects - subjects
+    orphan_subjects = subjects - set(s for s in subjects if any(graph.objects(s, prop)))
     
-    # Si aún no hay raíces, todos los nodos son raíces
-    if not roots:
-        roots.update(subjects)
-        roots.update(objects)
-        
+    # 合并结果
+    roots.update(new_roots)
+    roots.update(orphan_subjects)
+    
     return roots

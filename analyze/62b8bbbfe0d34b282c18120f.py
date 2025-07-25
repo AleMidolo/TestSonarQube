@@ -1,16 +1,17 @@
 def file_to_textbuffer(file_name, encoding):
     """
-    Cargar un archivo en un búfer de texto (UTF-8), utilizando la codificación especificada al leer.
-    PRECAUCIÓN: Esto leerá todo el archivo EN MEMORIA.
-    :param file_name: Nombre del archivo.
-    :type file_name: str
-    :param encoding: Codificación a utilizar.
+    将文件加载到文本缓冲区（UTF-8），在读取时使用指定的编码。
+    注意：此操作会将整个文件加载到内存中。
+
+    :param file_name: 文件名。
+    :type file_name: str 
+    :param encoding: 要使用的编码。
     :type encoding: str
-    :return: Un búfer de texto o 'None' en caso de error.
+    :return: 文本缓冲区，若发生错误则返回 None。
     :rtype: str
     """
     try:
-        with open(file_name, 'r', encoding=encoding) as file:
-            return file.read()
-    except (IOError, UnicodeDecodeError):
+        with open(file_name, 'r', encoding=encoding) as f:
+            return f.read()
+    except Exception:
         return None

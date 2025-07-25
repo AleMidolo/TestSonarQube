@@ -1,30 +1,39 @@
 def validate_from_content(cls, spec_content=None):
     """
-    Valida que el contenido del archivo spec (YAML) tenga todos los campos requeridos.
+    验证规范（YAML）内容是否包含所有必需字段。
 
-    :param spec_content: contenido del archivo spec
-    :raise IRValidatorException: cuando faltan datos obligatorios
-    en el archivo spec
-    :return: Diccionario con los datos cargados desde un archivo spec (YAML)
+    :param spec_content: 规范文件的内容
+    :raise IRValidatorException: 当规范文件中缺少必需数据时抛出异常 
+    :return: 从规范（YAML）文件加载的数据字典
     """
     if spec_content is None:
-        raise IRValidatorException("El contenido del archivo spec no puede estar vacío")
-
-    required_fields = ['name', 'version', 'description', 'author']
-    
-    for field in required_fields:
-        if field not in spec_content:
-            raise IRValidatorException(f"Campo requerido '{field}' no encontrado en el archivo spec")
+        raise IRValidatorException("规范内容不能为空")
+        
+    try:
+        # 尝试加载YAML内容
+        import yaml
+        data = yaml.safe_load(spec_content)
+        
+        # 验证是否为字典
+        if not isinstance(data, dict):
+            raise IRValidatorException("规范内容必须是有效的YAML字典格式")
             
-    # Validaciones adicionales específicas
-    if not isinstance(spec_content['version'], (int, float, str)):
-        raise IRValidatorException("El campo 'version' debe ser un número o string")
+        # 检查必需字段
+        required_fields = ['name', 'version', 'description']
+        missing_fields = []
         
-    if not isinstance(spec_content['description'], str):
-        raise IRValidatorException("El campo 'description' debe ser un string")
+        for field in required_fields:
+            if field not in data:
+                missing_fields.append(field)
+                
+        if missing_fields:
+            raise IRValidatorException(
+                f"规范中缺少以下必需字段: {', '.join(missing_fields)}"
+            )
+            
+        return data
         
-    if not isinstance(spec_content['author'], str):
-        raise IRValidatorException("El campo 'author' debe ser un string")
-
-    # Si todas las validaciones pasan, retornar el contenido validado
-    return spec_content
+    except yaml.YAMLError as e:
+        raise IRValidatorException(f"无效的YAML格式: {str(e)}")
+    except Exception as e:
+        raise IRValidatorException(f"验证规范内容时发生错误: {str(e)}")

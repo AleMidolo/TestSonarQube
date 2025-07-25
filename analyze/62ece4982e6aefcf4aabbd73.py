@@ -1,29 +1,35 @@
 def split(s, platform='this'):
     import re
-    import os
     import sys
 
-    # Determinar plataforma
+    # Determine platform if auto-detect
     if platform == 'this':
-        platform = 1 if os.name == 'posix' else 0
-    
-    if platform == 1:  # POSIX
-        # Patrón para dividir argumentos estilo POSIX/bash
-        pattern = r'''((?:[^ "']\S*|"[^"]*"|'[^']*')+)'''
-    else:  # Windows/CMD
-        # Patrón para dividir argumentos estilo Windows CMD 
-        pattern = r'''((?:[^ "]\S*|"[^"]*")+)'''
-    
-    # Dividir la cadena usando el patrón apropiado
-    args = re.findall(pattern, s)
-    
-    # Procesar cada argumento
-    processed_args = []
-    for arg in args:
-        # Eliminar comillas externas si existen
-        if (arg.startswith('"') and arg.endswith('"')) or \
-           (arg.startswith("'") and arg.endswith("'")):
-            arg = arg[1:-1]
-        processed_args.append(arg)
+        platform = 1 if sys.platform != 'win32' else 0
+
+    if platform == 1:  # POSIX style
+        # Match either:
+        # - Quoted string with escaped quotes allowed
+        # - Unquoted string with no whitespace
+        pattern = r'''(?:[^\s'"]*(?:'[^']*'|"[^"]*")[^\s'"]*)+|[^\s'"]+'''
         
-    return processed_args
+    else:  # Windows/CMD style
+        # Match either:
+        # - Quoted string with escaped quotes allowed
+        # - Unquoted string with no whitespace
+        pattern = r'''(?:"[^"]*"|'[^']*'|\S+)'''
+
+    # Find all matches
+    tokens = re.findall(pattern, s)
+
+    # Remove surrounding quotes and unescape internal quotes
+    result = []
+    for token in tokens:
+        if (token.startswith('"') and token.endswith('"')) or \
+           (token.startswith("'") and token.endswith("'")):
+            # Remove surrounding quotes
+            token = token[1:-1]
+            # Unescape internal quotes
+            token = token.replace('\\"', '"').replace("\\'", "'")
+        result.append(token)
+
+    return result

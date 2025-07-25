@@ -1,6 +1,6 @@
 def subclasses(cls):
     """
-    Devuelve todas las subclases de una clase, de forma recursiva.
+    递归地返回一个类的所有子类。
     """
     subs = cls.__subclasses__()
     result = []

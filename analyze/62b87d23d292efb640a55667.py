@@ -1,15 +1,14 @@
-def register_vcs_handler(vcs, method):  # decorador
-    """Crear un decorador para marcar un método como el manejador de un VCS.
-    
-    Args:
-        vcs: El sistema de control de versiones
-        method: El método a decorar
-        
-    Returns:
-        Función decoradora
+def register_vcs_handler(vcs, method): # 装饰器
+    """
+    创建一个装饰器，用于将方法标记为对象的处理器。
+    创建一个装饰器，用于将方法标记为某个版本控制系统（VCS）的处理器。
     """
     def decorate(f):
-        # Almacena el manejador VCS en el atributo _vcs_handler del método
-        f._vcs_handler = (vcs, method)
+        """
+        创建一个装饰器，用于将方法标记为某个版本控制系统（VCS）的处理器。
+        """
+        # 给函数添加vcs和method属性
+        f.vcs = vcs
+        f.method = method
         return f
     return decorate
