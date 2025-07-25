@@ -22,28 +22,31 @@ def verifyObject(iface, candidate, tentative=False):
                 errors.append(BrokenMethodImplementation(name, "Not callable"))
                 continue
             
-            # Check method signature using inspect
-            import inspect
+            # Check method signature
             try:
-                impl_sig = inspect.signature(attr)
-                iface_sig = desc.getSignatureInfo()
+                from inspect import signature
+                method_sig = signature(attr)
+                interface_sig = signature(desc)
                 
-                # Compare required arguments
-                impl_params = [p for p in impl_sig.parameters.values() 
-                             if p.default == inspect.Parameter.empty and 
-                             p.kind not in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD)]
-                
-                if len(impl_params) < len(iface_sig.get('required', [])):
-                    errors.append(BrokenMethodImplementation(name, "Incorrect number of required arguments"))
+                if len(method_sig.parameters) != len(interface_sig.parameters):
+                    errors.append(BrokenMethodImplementation(name, "Incorrect number of arguments"))
+                    continue
                     
+                # Check parameter names and kinds match
+                for (p1, param1), (p2, param2) in zip(method_sig.parameters.items(), 
+                                                     interface_sig.parameters.items()):
+                    if param1.kind != param2.kind:
+                        errors.append(BrokenMethodImplementation(name, 
+                            f"Parameter {p1} has wrong parameter kind"))
+                        break
+                        
             except ValueError:
-                # Can't get signature, skip detailed checking
-                pass
+                errors.append(BrokenMethodImplementation(name, "Invalid method signature"))
 
     # If we have errors, raise them
-    if errors:
-        if len(errors) == 1:
-            raise errors[0]
+    if len(errors) == 1:
+        raise errors[0]
+    elif errors:
         raise Invalid(errors)
 
     return True

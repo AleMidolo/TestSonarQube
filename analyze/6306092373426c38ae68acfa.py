@@ -10,17 +10,15 @@ def get_spec_defaults(self):
             if param.default is not param.empty:
                 defaults[param_name] = param.default
                 
-        # Get values from environment variables if specified
-        if hasattr(self.spec, 'env_vars'):
-            for param_name, env_var in self.spec.env_vars.items():
-                if env_var in os.environ:
-                    defaults[param_name] = os.environ[env_var]
-                    
-        # Get values from config file if specified
-        if hasattr(self.spec, 'config_file') and os.path.exists(self.spec.config_file):
-            with open(self.spec.config_file) as f:
-                config = json.load(f)
-                for param_name, value in config.items():
-                    defaults[param_name] = value
-                    
+    # Get defaults from class/instance attributes if they exist
+    if hasattr(self, 'defaults'):
+        defaults.update(self.defaults)
+        
+    # Get defaults from environment variables if configured
+    if hasattr(self, 'env_defaults') and self.env_defaults:
+        import os
+        for key, env_var in self.env_defaults.items():
+            if env_var in os.environ:
+                defaults[key] = os.environ[env_var]
+                
     return defaults

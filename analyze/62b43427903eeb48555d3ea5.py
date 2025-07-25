@@ -54,18 +54,20 @@ def format(
                 
             if param_name:
                 # Get parameter value
-                param_value = params_dict[param_name] if self.in_style.is_named else params_dict[str(param_name)]
+                param_value = params_dict[param_name]
                 
                 # Add to output parameters
                 if self.out_style.is_named:
                     out_param_name = f"p{param_counter}"
                     out_params[out_param_name] = param_value
-                    result += self.out_style.prefix + out_param_name
+                    result += f"{self.out_style.prefix}{out_param_name}"
                 else:
                     out_params.append(param_value)
                     result += self.out_style.prefix
                     
                 param_counter += 1
+            else:
+                result += self.in_style.prefix
         else:
             result += sql[i]
             i += 1

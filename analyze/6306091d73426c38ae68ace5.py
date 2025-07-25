@@ -16,8 +16,4 @@ def _include_groups(self, parser_dict):
             else:
                 raise ValueError(f"Group '{group}' referenced in include directive not found")
                 
-    for value in parser_dict.values():
-        if isinstance(value, dict):
-            self._include_groups(value)
-            
     return parser_dict

@@ -43,16 +43,16 @@ def _legacy_mergeOrderings(orderings):
         elem = no_pred.pop()
         result.append(elem)
         
-        # Remove this element from successor sets and update no_pred
+        # Remove this element from successor lists
         succs = successors[elem]
         del successors[elem]
         
-        # Check if removing elem as predecessor creates new elements with no predecessors
-        for other_succs in successors.values():
-            if elem in other_succs:
-                other_succs.remove(elem)
+        # Check if any elements now have no predecessors
+        for succ_set in successors.values():
+            if elem in succ_set:
+                succ_set.remove(elem)
                 
-        for e in succs:
+        for e, succ_set in successors.items():
             if not any(e in s for s in successors.values()):
                 no_pred.add(e)
                 

@@ -6,25 +6,27 @@ def is_fill_request_seq(seq):
     or contains at least one such,
     and it is not a Source sequence.
     """
-    # Import needed for type checking
+    # Check if seq is None or empty
+    if not seq:
+        return False
+        
+    # Import needed for isinstance check
     from typing import Sequence
-    from collections.abc import Sequence as SequenceType
+    from fill_request import FillRequest, Source
     
-    # Check if seq is a single FillRequest element
-    if hasattr(seq, 'is_fill_request') and seq.is_fill_request:
+    # If seq is a single FillRequest and not a Source
+    if isinstance(seq, FillRequest) and not isinstance(seq, Source):
         return True
         
-    # Check if seq is a Source sequence - return False if so
-    if hasattr(seq, 'is_source') and seq.is_source:
-        return False
-        
-    # Check if seq is a sequence type
-    if not isinstance(seq, SequenceType):
-        return False
-        
-    # Check if any element in sequence is a FillRequest
-    for element in seq:
-        if hasattr(element, 'is_fill_request') and element.is_fill_request:
-            return True
+    # If seq is a sequence, check if it contains at least one FillRequest
+    if isinstance(seq, Sequence):
+        # Return False if it's a Source sequence
+        if isinstance(seq, Source):
+            return False
             
+        # Check each element
+        for element in seq:
+            if isinstance(element, FillRequest):
+                return True
+                
     return False

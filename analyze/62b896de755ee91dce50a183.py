@@ -40,27 +40,32 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         if res.tzname and not ignoretz:
             if tzinfos is not None:
                 # Handle tzinfos dictionary or callable
-                if isinstance(tzinfos, dict):
-                    tz = tzinfos.get(res.tzname)
+                if callable(tzinfos):
+                    tzdata = tzinfos(res.tzname, res.tzoffset)
                 else:
-                    tz = tzinfos(res.tzname, res.tzoffset)
-                if tz is None:
+                    tzdata = tzinfos.get(res.tzname)
+                
+                if tzdata is not None:
+                    if isinstance(tzdata, int):
+                        tzinfo = tzoffset(res.tzname, tzdata)
+                    else:
+                        tzinfo = tzdata
+                    dt = datetime(res.year, res.month, res.day,
+                                res.hour or 0, res.minute or 0, res.second or 0,
+                                res.microsecond or 0, tzinfo=tzinfo)
+                else:
                     raise ParserError(f"Unknown timezone name: {res.tzname}")
-            elif res.tzoffset:
-                tz = datetime.timezone(datetime.timedelta(seconds=res.tzoffset))
             else:
-                tz = None
+                # Create tzinfo from offset
+                tzinfo = tzoffset(res.tzname, res.tzoffset) if res.tzoffset else None
+                dt = datetime(res.year, res.month, res.day,
+                            res.hour or 0, res.minute or 0, res.second or 0,
+                            res.microsecond or 0, tzinfo=tzinfo)
         else:
-            tz = None
-
-        dt = datetime.datetime(
-            res.year, res.month, res.day,
-            res.hour if res.hour is not None else 0,
-            res.minute if res.minute is not None else 0,
-            res.second if res.second is not None else 0,
-            res.microsecond if res.microsecond is not None else 0,
-            tzinfo=tz
-        )
+            # Create naive datetime
+            dt = datetime(res.year, res.month, res.day,
+                        res.hour or 0, res.minute or 0, res.second or 0,
+                        res.microsecond or 0)
 
         if kwargs.get('fuzzy_with_tokens', False):
             return dt, tokens

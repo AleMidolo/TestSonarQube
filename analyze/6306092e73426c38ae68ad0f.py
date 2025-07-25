@@ -25,7 +25,7 @@ def get_nested_custom_and_control_args(self, args):
         elif ':' in arg_name:
             nested_key = arg_name.replace(':', '.')
             nested_args[nested_key] = arg_value
-        # Otherwise it's a nested argument
+        # Regular nested argument
         else:
             nested_args[arg_name] = arg_value
 

@@ -29,12 +29,10 @@ def _fromutc(self, dt):
 
     # Adjust for DST if needed
     fold = 0
-    if self._isdst(dt - dst_offset) != self._isdst(dt):
-        # We're in a DST transition period
-        utc = (dt - utc_offset).replace(tzinfo=None)
-        earlier = self._normalize(utc + self._dst_base_offset())
-        later = self._normalize(utc + self._dst_base_offset() + dst_offset)
-        if later <= dt:
+    if self._isdst(dt):
+        # Check if we're in a fold
+        dt_before = dt - dst_offset
+        if self._isdst(dt_before):
             fold = 1
-
+    
     return dt.replace(fold=fold)

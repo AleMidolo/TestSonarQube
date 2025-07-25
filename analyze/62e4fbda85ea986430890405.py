@@ -15,67 +15,74 @@ def xargs(
         **kwargs: Any,
 ) -> tuple[int, bytes]:
     
-    def _run_chunk(chunk: list[str]) -> tuple[int, bytes]:
-        full_cmd = list(cmd) + chunk
+    def _chunk_args(args: Sequence[str], max_len: int) -> list[tuple[str, ...]]:
+        chunks = []
+        current_chunk = []
+        current_len = 0
+        
+        for arg in args:
+            arg_len = len(arg) + 1  # +1 for space
+            if current_len + arg_len > max_len and current_chunk:
+                chunks.append(tuple(current_chunk))
+                current_chunk = []
+                current_len = 0
+            current_chunk.append(arg)
+            current_len += arg_len
+            
+        if current_chunk:
+            chunks.append(tuple(current_chunk))
+            
+        return chunks
+
+    def _run_chunk(chunk: tuple[str, ...]) -> tuple[int, bytes]:
+        full_cmd = (*cmd, *chunk)
         
         if color and sys.platform != 'win32':
             master, slave = pty.openpty()
+            try:
+                proc = subprocess.Popen(
+                    full_cmd,
+                    stdout=slave,
+                    stderr=slave,
+                    **kwargs
+                )
+                os.close(slave)
+                output = b''
+                while True:
+                    try:
+                        chunk = os.read(master, 1024)
+                        if not chunk:
+                            break
+                        output += chunk
+                    except OSError:
+                        break
+                return proc.wait(), output
+            finally:
+                os.close(master)
+        else:
             proc = subprocess.Popen(
                 full_cmd,
-                stdout=slave,
-                stderr=slave,
-                **kwargs
-            )
-            os.close(slave)
-            
-            output = b''
-            while True:
-                try:
-                    chunk = os.read(master, 1024)
-                    if not chunk:
-                        break
-                    output += chunk
-                except OSError:
-                    break
-                    
-            os.close(master)
-            returncode = proc.wait()
-            
-        else:
-            proc = subprocess.run(
-                full_cmd,
                 stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
+                stderr=subprocess.PIPE,
                 **kwargs
             )
-            output = proc.stdout
-            returncode = proc.returncode
-            
-        return returncode, output
+            stdout, stderr = proc.communicate()
+            return proc.returncode, stdout + stderr
 
-    # Split varargs into chunks that fit within max length
-    chunks: list[list[str]] = [[]]
-    current_length = 0
+    chunks = _chunk_args(varargs, _max_length)
     
-    for arg in varargs:
-        arg_length = len(arg) + 1  # +1 for space
-        if current_length + arg_length > _max_length:
-            chunks.append([])
-            current_length = 0
-        chunks[-1].append(arg)
-        current_length += arg_length
-
-    # Run chunks concurrently
+    if target_concurrency == 1:
+        for chunk in chunks:
+            retcode, output = _run_chunk(chunk)
+            if retcode != 0:
+                return retcode, output
+        return 0, b''
+    
     with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
-        results = list(executor.map(_run_chunk, chunks))
-
-    # Combine results
-    final_returncode = 0
-    final_output = b''
+        futures = [executor.submit(_run_chunk, chunk) for chunk in chunks]
+        for future in futures:
+            retcode, output = future.result()
+            if retcode != 0:
+                return retcode, output
     
-    for returncode, output in results:
-        if returncode != 0:
-            final_returncode = returncode
-        final_output += output
-
-    return final_returncode, final_output
+    return 0, b''

@@ -37,11 +37,16 @@ def create_complex_argumet_type(self, subcommand, type_name, option_name, spec_o
         return value
         
     # Add string representation method
-    def __str__(cls):
-        return f"Complex argument type for {subcommand} {option_name}"
+    def to_string(cls, value):
+        return str(value)
         
-    # Add methods to the class
+    # Add methods to the complex type class
     setattr(complex_type, 'validate', classmethod(validate))
-    setattr(complex_type, '__str__', classmethod(__str__))
+    setattr(complex_type, 'to_string', classmethod(to_string))
+    
+    # Store metadata about the complex type
+    complex_type.subcommand = subcommand
+    complex_type.option_name = option_name
+    complex_type.specifications = spec_option
     
     return complex_type

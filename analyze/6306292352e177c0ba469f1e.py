@@ -7,32 +7,40 @@ def process_text_links(text):
     # Regular expression for finding URLs
     url_pattern = r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
     
-    # Find existing HTML links and add attributes
-    html_link_pattern = r'<a[^>]*?href=[\'"](.*?)[\'"][^>]*?>(.*?)<\/a>'
+    # Find all HTML links
+    html_link_pattern = r'<a[^>]*>(.*?)<\/a>'
     
-    def replace_html_link(match):
-        url = match.group(1)
-        text = match.group(2)
-        return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{text}</a>'
+    # Process existing HTML links - add target="_blank" and rel="noopener noreferrer"
+    def process_html_link(match):
+        link = match.group(0)
+        if 'target=' not in link:
+            link = link.replace('<a ', '<a target="_blank" ')
+        if 'rel=' not in link:
+            link = link.replace('<a ', '<a rel="noopener noreferrer" ')
+        return link
     
-    # First process existing HTML links
-    text = re.sub(html_link_pattern, replace_html_link, text)
-    
-    # Then find and convert plain text URLs to links
-    def replace_url(match):
+    # Process plain text URLs - convert to HTML links
+    def process_url(match):
         url = match.group(0)
         if not url.startswith(('http://', 'https://')):
-            url = 'https://' + url
+            url = 'http://' + url
         return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{match.group(0)}</a>'
     
-    # Only convert URLs that aren't already part of an HTML link
-    parts = re.split(html_link_pattern, text)
-    result = []
+    # First process existing HTML links
+    text = re.sub(html_link_pattern, process_html_link, text)
     
-    for i, part in enumerate(parts):
-        if i % 3 == 0:  # Not part of an existing link
-            result.append(re.sub(url_pattern, replace_url, part))
-        else:  # Part of an existing link, keep as is
-            result.append(part)
-            
-    return ''.join(result)
+    # Then find and process plain text URLs, but ignore URLs that are already part of an HTML link
+    processed_text = ''
+    last_end = 0
+    
+    for match in re.finditer(html_link_pattern, text):
+        # Add text before the HTML link
+        processed_text += re.sub(url_pattern, process_url, text[last_end:match.start()])
+        # Add the HTML link unchanged
+        processed_text += match.group(0)
+        last_end = match.end()
+    
+    # Process remaining text after last HTML link
+    processed_text += re.sub(url_pattern, process_url, text[last_end:])
+    
+    return processed_text

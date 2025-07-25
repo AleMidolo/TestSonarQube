@@ -12,11 +12,11 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
     :param ansible_args: dict of ansible-playbook arguments to plumb down
         directly to Ansible.
     """
-    import subprocess
-    import os
+    # Initialize command list with base ansible-playbook command
+    cmd = ['ansible-playbook']
 
-    # Build base command
-    cmd = ['ansible-playbook', playbook_path]
+    # Add playbook path
+    cmd.append(playbook_path)
 
     # Add verbosity if specified
     if verbose:
@@ -26,36 +26,31 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
     # Add extra vars if provided
     if extra_vars:
         extra_vars_arg = '--extra-vars'
-        for key, value in extra_vars.items():
-            cmd.extend([extra_vars_arg, f"{key}={value}"])
+        if isinstance(extra_vars, dict):
+            # Convert dict to JSON string
+            import json
+            extra_vars = json.dumps(extra_vars)
+        cmd.extend([extra_vars_arg, extra_vars])
 
     # Add any additional ansible arguments
     if ansible_args:
-        for arg, value in ansible_args.items():
+        for key, value in ansible_args.items():
             if value is True:
-                cmd.append(f"--{arg}")
+                # For flag arguments
+                cmd.append(f"--{key}")
             elif value:
-                cmd.extend([f"--{arg}", str(value)])
-
-    # Set environment variables from workspace
-    env = os.environ.copy()
-    if hasattr(ir_workspace, 'ansible_config'):
-        env['ANSIBLE_CONFIG'] = ir_workspace.ansible_config
-
-    # Set plugin-specific environment variables
-    if hasattr(ir_plugin, 'ansible_env'):
-        env.update(ir_plugin.ansible_env)
+                # For arguments with values
+                cmd.append(f"--{key}={value}")
 
     # Execute ansible-playbook command
+    import subprocess
     try:
         process = subprocess.Popen(
             cmd,
-            env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True
         )
-        
         stdout, stderr = process.communicate()
         
         if process.returncode != 0:

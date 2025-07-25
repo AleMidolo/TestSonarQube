@@ -18,10 +18,10 @@ def parse_arguments(*unparsed_arguments):
     # Add subparser for different commands
     run_parser = subparsers.add_parser('run')
     run_parser.add_argument('--input', type=str, required=True, help='Input file path')
-    run_parser.add_argument('--output', type=str, required=True, help='Output file path')
+    run_parser.add_argument('--output', type=str, help='Output file path')
     
-    test_parser = subparsers.add_parser('test')
-    test_parser.add_argument('--test-file', type=str, required=True, help='Test file path')
+    test_parser = subparsers.add_parser('test') 
+    test_parser.add_argument('--test-file', type=str, help='Test file to run')
     
     # Parse arguments
     args = parser.parse_args(unparsed_arguments if unparsed_arguments else None)
