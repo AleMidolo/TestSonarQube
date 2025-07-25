@@ -1,26 +1,24 @@
 def minimalBases(classes):
     """
-    Reduce a list of base classes to its ordered minimum equivalent
+    आधार कक्षाओं (base classes) की सूची को उसके क्रमबद्ध न्यूनतम समकक्ष (ordered minimum equivalent) में घटाएं।
     """
     from collections import defaultdict
 
-    class_graph = defaultdict(set)
+    def find_parent(class_name):
+        if class_name not in parent:
+            return class_name
+        root = find_parent(parent[class_name])
+        parent[class_name] = root  # Path compression
+        return root
+
+    parent = {}
     for cls in classes:
         for base in cls.__bases__:
-            class_graph[base].add(cls)
+            parent[base.__name__] = cls.__name__
 
-    def dfs(cls, visited):
-        if cls in visited:
-            return set()
-        visited.add(cls)
-        result = {cls}
-        for base in cls.__bases__:
-            result.update(dfs(base, visited))
-        return result
-
-    minimal_classes = set()
-    visited = set()
+    unique_bases = set()
     for cls in classes:
-        minimal_classes.update(dfs(cls, visited))
+        root = find_parent(cls.__name__)
+        unique_bases.add(root)
 
-    return sorted(minimal_classes, key=lambda x: x.__name__)
+    return list(unique_bases)

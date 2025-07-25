@@ -1,9 +1,10 @@
-def oneline(script, seperator=" && "):
+def oneline(script, separator=" && "):
     """
-    converts a script to one line command.
-    This is useful to run a single ssh command and pass a one line script.
+    एक स्क्रिप्ट को एक लाइन कमांड में बदलता है।
+    यह एकल SSH कमांड चलाने और एक लाइन स्क्रिप्ट पास करने के लिए उपयोगी है।
 
-    :param script: A multi-line string script to be converted to a one-liner.
-    :return: A single line string with commands separated by the specified separator.
+    :param script: str, स्क्रिप्ट जिसे एक लाइन में बदलना है।
+    :param separator: str, विभाजक जो कमांड्स के बीच उपयोग किया जाएगा। डिफ़ॉल्ट रूप से " && "।
+    :return: str, एक लाइन में परिवर्तित स्क्रिप्ट।
     """
-    return seperator.join(line.strip() for line in script.strip().splitlines() if line.strip())
+    return separator.join(line.strip() for line in script.strip().splitlines() if line.strip())

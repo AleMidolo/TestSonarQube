@@ -4,30 +4,31 @@ from functools import wraps
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     """
-    Decorator to wrap a function with a memoizing callable that saves
-    up to `maxsize` results based on a Least Recently Used (LRU)
-    algorithm with a per-item time-to-live (TTL) value.
+    एक डेकोरेटर जो एक फ़ंक्शन को एक मेमोराइज़िंग कॉलेबल के साथ रैप करता है,
+    जो `maxsize` तक के परिणामों को सेव करता है। यह एक Least Recently Used (LRU)
+    एल्गोरिदम पर आधारित होता है और प्रत्येक आइटम के लिए एक समय-सीमा (Time-To-Live, TTL) 
+    मान लागू करता है।
     """
     def decorator(func):
         cache = OrderedDict()
-        
+        timestamps = {}
+
         @wraps(func)
         def wrapper(*args, **kwargs):
-            key = args if not typed else (type(arg).__name__ for arg in args)
-            current_time = timer()
+            key = args if not typed else (type(arg) for arg in args)
             if key in cache:
-                value, timestamp = cache[key]
-                if current_time - timestamp < ttl:
-                    cache.move_to_end(key)
-                    return value
+                if timer() - timestamps[key] < ttl:
+                    return cache[key]
                 else:
                     del cache[key]
+                    del timestamps[key]
             result = func(*args, **kwargs)
-            cache[key] = (result, current_time)
+            cache[key] = result
+            timestamps[key] = timer()
             if len(cache) > maxsize:
                 cache.popitem(last=False)
             return result
-        
+
         return wrapper
-    
+
     return decorator

@@ -1,28 +1,32 @@
 def scale(self, other=None):
     """
-    Get or set the scale of the graph.
+    ग्राफ़ का स्केल प्राप्त करें या सेट करें।
 
-    If *other* is ``None``, return the scale of this graph.
+    यदि *other* ``None`` है, तो इस ग्राफ़ का स्केल लौटाएं।
 
-    If a numeric *other* is provided, rescale to that value.
-    If the graph has unknown or zero scale,
-    rescaling that will raise :exc:`~.LenaValueError`.
+    यदि *other* एक संख्यात्मक मान है, तो ग्राफ़ को उस मान पर पुनः स्केल करें।
+    यदि ग्राफ़ का स्केल अज्ञात है या शून्य है,
+    तो पुनः स्केल करने पर :exc:`~.LenaValueError` उत्पन्न होगा।
 
-    To get meaningful results, graph's fields are used.
-    Only the last coordinate is rescaled.
-    For example, if the graph has *x* and *y* coordinates,
-    then *y* will be rescaled, and for a 3-dimensional graph
-    *z* will be rescaled.
-    All errors are rescaled together with their coordinate.
+    सार्थक परिणाम प्राप्त करने के लिए, ग्राफ़ के फ़ील्ड्स का उपयोग किया जाता है।
+    केवल अंतिम निर्देशांक (coordinate) को पुनः स्केल किया जाता है।
+    उदाहरण के लिए, यदि ग्राफ़ में *x* और *y* निर्देशांक हैं,
+    तो *y* को पुनः स्केल किया जाएगा, और यदि ग्राफ़ 3-आयामी (3-dimensional) है,
+    तो *z* को पुनः स्केल किया जाएगा।
+    सभी त्रुटियों (errors) को उनके निर्देशांक के साथ पुनः स्केल किया जाता है।
     """
     if other is None:
-        return self.scale_value  # Assuming self.scale_value holds the current scale
+        return self.scale_value  # Assuming scale_value is an attribute of the class
+
+    if not isinstance(other, (int, float)):
+        raise ValueError("The scale value must be a numeric type.")
 
     if self.scale_value is None or self.scale_value == 0:
-        raise LenaValueError("Cannot rescale with unknown or zero scale.")
+        raise LenaValueError("Cannot rescale when the scale is unknown or zero.")
 
     # Assuming self.coordinates is a list of coordinates
-    # and we want to rescale the last coordinate
-    last_coordinate_index = -1
-    self.coordinates[last_coordinate_index] *= other / self.scale_value
-    self.scale_value = other  # Update the scale to the new value
+    for i in range(len(self.coordinates)):
+        if i == len(self.coordinates) - 1:  # Only scale the last coordinate
+            self.coordinates[i] *= other
+
+    return self.coordinates

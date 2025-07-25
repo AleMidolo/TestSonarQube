@@ -4,37 +4,31 @@ def format(
                 params: Union[Dict[Union[str, int], Any], Sequence[Any]],
         ) -> Tuple[AnyStr, Union[Dict[Union[str, int], Any], Sequence[Any]]]:
     """
-    Convert the SQL query to use the out-style parameters instead of
-    the in-style parameters.
+    SQL क्वेरी को "in-style" पैरामीटर्स के बजाय "out-style" पैरामीटर्स का उपयोग करने के लिए कन्वर्ट करें।
 
-    *sql* (:class:`str` or :class:`bytes`) is the SQL query.
+    *sql* (:class:`str` या :class:`bytes`) SQL क्वेरी है।
 
-    *params* (:class:`~collections.abc.Mapping` or :class:`~collections.abc.Sequence`)
-    contains the set of in-style parameters. It maps each parameter
-    (:class:`str` or :class:`int`) to value. If :attr:`.SQLParams.in_style`
-    is a named parameter style. then *params* must be a :class:`~collections.abc.Mapping`.
-    If :attr:`.SQLParams.in_style` is an ordinal parameter style, then
-    *params* must be a :class:`~collections.abc.Sequence`.
+    *params* (:class:`~collections.abc.Mapping` या :class:`~collections.abc.Sequence`)  
+    "in-style" पैरामीटर्स का सेट है। यह प्रत्येक पैरामीटर (:class:`str` या :class:`int`) को उसके मान से मैप करता है।  
+    यदि :attr:`.SQLParams.in_style` एक नामित पैरामीटर शैली है, तो *params* को :class:`~collections.abc.Mapping` होना चाहिए।  
+    यदि :attr:`.SQLParams.in_style` एक क्रमबद्ध पैरामीटर शैली है, तो *params* को :class:`~collections.abc.Sequence` होना चाहिए।
 
-    Returns a :class:`tuple` containing:
+    यह एक :class:`tuple` लौटाता है जिसमें शामिल हैं:
 
-    -       The formatted SQL query (:class:`str` or :class:`bytes`).
+    -       फॉर्मेट की गई SQL क्वेरी (:class:`str` या :class:`bytes`)।
 
-    -       The set of converted out-style parameters (:class:`dict` or
-            :class:`list`).
+    -       कन्वर्ट किए गए "out-style" पैरामीटर्स का सेट (:class:`dict` या :class:`list`)।
     """
-    # Determine if the SQL parameters are named or ordinal
+    # Implementation of the function
     if isinstance(params, dict):
         # Named parameters
         for key, value in params.items():
-            sql = sql.replace(f":{key}", "?")
-        out_params = list(params.values())
+            sql = sql.replace(f":{key}", str(value))
+        return sql, params
     elif isinstance(params, (list, tuple)):
-        # Ordinal parameters
-        out_params = list(params)
-        for index in range(len(out_params)):
-            sql = sql.replace(f"${index + 1}", "?")
+        # Positional parameters
+        for index, value in enumerate(params):
+            sql = sql.replace(f"${index + 1}", str(value))
+        return sql, list(params)
     else:
-        raise TypeError("params must be a dict or a sequence")
-
-    return sql, out_params
+        raise TypeError("params must be a dictionary or a sequence")

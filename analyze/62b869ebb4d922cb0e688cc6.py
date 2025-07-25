@@ -2,32 +2,21 @@ def update_last_applied_manifest_list_from_resp(
     last_applied_manifest, observer_schema, response
 ):
     """
-    Together with :func:``update_last_applied_manifest_dict_from_resp``, this
-    function is called recursively to update a partial ``last_applied_manifest``
-    from a partial Kubernetes response
+    साथ में :func:``update_last_applied_manifest_dict_from_resp``, यह फ़ंक्शन 
+    पुनरावृत्त रूप से कॉल किया जाता है ताकि आंशिक ``last_applied_manifest`` को 
+    आंशिक Kubernetes प्रतिक्रिया से अपडेट किया जा सके।
 
-    Args:
-        last_applied_manifest (list): partial ``last_applied_manifest`` being
-            updated
-        observer_schema (list): partial ``observer_schema``
-        response (list): partial response from the Kubernetes API.
+    आर्ग्युमेंट्स (Args):
+        last_applied_manifest (list): आंशिक ``last_applied_manifest`` जो 
+            अपडेट किया जा रहा है।
+        observer_schema (list): आंशिक ``observer_schema``।
+        response (list): Kubernetes API से प्राप्त आंशिक प्रतिक्रिया।
 
-    This function go through all observed fields, and initialized their value in
-    last_applied_manifest if they are not yet present
+    यह फ़ंक्शन सभी देखे गए फ़ील्ड्स (observed fields) के माध्यम से जाता है और 
+    यदि वे पहले से मौजूद नहीं हैं तो उनके मान को ``last_applied_manifest`` में 
+    आरंभ (initialize) करता है।
     """
-    for schema in observer_schema:
-        field = schema.get('field')
+    for field in observer_schema:
         if field not in last_applied_manifest:
             last_applied_manifest[field] = response.get(field, None)
-        
-        # If the schema has nested fields, we need to handle them recursively
-        if 'nested' in schema:
-            nested_schema = schema['nested']
-            nested_response = response.get(field, {})
-            if isinstance(last_applied_manifest[field], list):
-                for item in last_applied_manifest[field]:
-                    update_last_applied_manifest_list_from_resp(item, nested_schema, nested_response)
-            else:
-                update_last_applied_manifest_list_from_resp(last_applied_manifest[field], nested_schema, nested_response)
-    
     return last_applied_manifest

@@ -1,24 +1,22 @@
 def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     """
-    Fixes for the following issues on windows
-    - https://bugs.python.org/issue8557
-    - windows does not parse shebangs
+    विंडोज़ पर निम्नलिखित समस्याओं के समाधान:  
+    - https://bugs.python.org/issue8557  
+    - विंडोज़ शैबैंग (shebang) को पार्स नहीं करता है।  
 
-    This function also makes deep-path shebangs work just fine
+    यह फ़ंक्शन गहरे पथ (deep-path) वाले शैबैंग को भी सही तरीके से काम करने में सक्षम बनाता है।  
     """
-    import os
-    import sys
+    if not cmd:
+        return cmd
 
-    if sys.platform == "win32":
-        # Normalize the command for Windows
-        normalized_cmd = []
-        for part in cmd:
-            if part.startswith("#!"):
-                # Handle shebangs
-                shebang = part[2:]
-                normalized_cmd.append(shebang)
-            else:
-                # Normalize paths
-                normalized_cmd.append(os.path.normpath(part))
-        return tuple(normalized_cmd)
-    return cmd
+    # Normalize the command by handling shebang and deep paths
+    normalized_cmd = []
+    for part in cmd:
+        if part.startswith('#!'):
+            # Handle shebang
+            normalized_cmd.append(part)
+        else:
+            # Normalize the path
+            normalized_cmd.append(part.replace('\\', '/'))
+
+    return tuple(normalized_cmd)

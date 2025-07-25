@@ -1,13 +1,12 @@
 def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     """
-    Runs ansible cli with vars dict
+    Ansible CLI को vars_dict के साथ चलाता है।
 
-    :param vars_dict: dict, Will be passed as Ansible extra-vars
-    :param cli_args: the list  of command line arguments
-    :param ir_workspace: An Infrared Workspace object represents the active
-    workspace
-    :param ir_plugin: An InfraredPlugin object of the current plugin
-    :return: ansible results
+    :param vars_dict: dict, इसे Ansible extra-vars के रूप में पास किया जाएगा
+    :param cli_args: कमांड लाइन आर्ग्युमेंट्स की सूची
+    :param ir_workspace: एक Infrared Workspace ऑब्जेक्ट जो सक्रिय वर्कस्पेस को दर्शाता है
+    :param ir_plugin: वर्तमान प्लगइन का एक InfraredPlugin ऑब्जेक्ट
+    :return: ansible के परिणाम
     """
     import subprocess
     import json
@@ -26,5 +25,4 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     if result.returncode != 0:
         raise RuntimeError(f"Ansible playbook failed: {result.stderr}")
 
-    # Parse the results
-    return json.loads(result.stdout)
+    return result.stdout

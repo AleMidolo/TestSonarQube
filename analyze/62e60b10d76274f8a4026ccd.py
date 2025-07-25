@@ -1,27 +1,22 @@
 def data(self, *keys):
     """
-    Return the keys and values of this record as a dictionary,
-    optionally including only certain values by index or key. Keys
-    provided in the items that are not in the record will be
-    inserted with a value of :const:`None`; indexes provided
-    that are out of bounds will trigger an :exc:`IndexError`.
+    यह मेथड इस रिकॉर्ड की कुंजियों और मानों (keys and values) को एक डिक्शनरी (dictionary) के रूप में लौटाता है। आप वैकल्पिक रूप से केवल कुछ विशेष मानों को इंडेक्स (index) या कुंजी (key) के आधार पर शामिल कर सकते हैं। जो कुंजियाँ प्रदान की गई हैं लेकिन रिकॉर्ड में मौजूद नहीं हैं, उन्हें :const:`None` मान के साथ सम्मिलित किया जाएगा। यदि कोई इंडेक्स सीमा से बाहर है, तो :exc:`IndexError` उत्पन्न होगा।
 
-    :param keys: indexes or keys of the items to include; if none
-                  are provided, all values will be included
-    :return: dictionary of values, keyed by field name
-    :raises: :exc:`IndexError` if an out-of-bounds index is specified
+    पैरामीटर (Parameters): 
+    - keys: उन आइटम्स के इंडेक्स या कुंजियाँ जिन्हें शामिल करना है; यदि कोई कुंजी प्रदान नहीं की गई है, तो सभी मान शामिल किए जाएंगे।  
+
+    वापसी मान (Return): 
+    - मानों का शब्दकोश, फ़ील्ड नाम द्वारा कुंजीबद्ध
+
+    अपवाद (Raises): 
+    - :exc:`IndexError` यदि कोई सीमा से बाहर का इंडेक्स निर्दिष्ट किया गया है।
     """
     result = {}
-    if not keys:
-        # If no keys are provided, return all items
-        for key in self.record.keys():
+    for key in keys:
+        if isinstance(key, int):
+            if key < 0 or key >= len(self.record):
+                raise IndexError("Index out of range")
+            result[key] = self.record[key]
+        else:
             result[key] = self.record.get(key, None)
-    else:
-        for key in keys:
-            if isinstance(key, int):
-                if key < 0 or key >= len(self.record):
-                    raise IndexError("Index out of bounds")
-                result[self.record[key]] = self.record.get(self.record[key], None)
-            else:
-                result[key] = self.record.get(key, None)
     return result

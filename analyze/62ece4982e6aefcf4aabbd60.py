@@ -1,36 +1,37 @@
 def size_to_bytes(size: str) -> int:
     """
-    Convert human readable file size to bytes.
+    मानव-पठनीय फ़ाइल आकार को बाइट्स में परिवर्तित करें।
 
-    Resulting value is an approximation as input value is in most case rounded.
+    परिणामी मान एक अनुमान है क्योंकि इनपुट मान अधिकांश मामलों में राउंड किया गया होता है।
 
-    Args:
-        size: A string representing a human readable file size (eg: '500K')
+    तर्क (Args):
+        आकार (size): एक स्ट्रिंग जो मानव-पठनीय फ़ाइल आकार का प्रतिनिधित्व करती है (उदा: '500K')
 
-    Returns:
-        A decimal representation of file size
+    रिटर्न (Returns):
+        फ़ाइल आकार का दशमलव (decimal) प्रतिनिधित्व
 
-        Examples::
+    उदाहरण (Examples)::
 
-            >>> size_to_bytes("500")
-            500
-            >>> size_to_bytes("1K")
-            1000
+        >>> size_to_bytes("500")
+        500
+        >>> size_to_bytes("1K")
+        1000
     """
     size = size.strip().upper()
     multipliers = {
-        'B': 1,
         'K': 1000,
-        'M': 1000000,
-        'G': 1000000000,
-        'T': 1000000000000,
+        'M': 1000**2,
+        'G': 1000**3,
+        'T': 1000**4,
+        'P': 1000**5,
+        'E': 1000**6,
     }
     
-    if size[-1] in multipliers:
-        number = float(size[:-1])
-        unit = size[-1]
-    else:
-        number = float(size)
-        unit = 'B'
+    if size.isdigit():
+        return int(size)
     
-    return int(number * multipliers[unit])
+    for suffix, multiplier in multipliers.items():
+        if size.endswith(suffix):
+            return int(float(size[:-1]) * multiplier)
+    
+    raise ValueError("Invalid size format")

@@ -2,11 +2,11 @@ from datetime import timedelta
 
 def dehydrate_timedelta(value):
     """
-    Dehydrator for `timedelta` values.
+    `timedelta` मानों के लिए डिहाइड्रेटर।  
 
-    :param value: A timedelta object to be dehydrated
-    :type value: timedelta
-    :return: A dictionary representation of the timedelta
+    :param value:  
+    :type value: timedelta  
+    :return:  
     """
     if not isinstance(value, timedelta):
         raise ValueError("Input must be a timedelta object.")

@@ -5,14 +5,14 @@ class ValidationError(Exception):
 
 def validate_value(value):
     """
-    Validate the given value against the corresponding regular expression.
+    दिए गए मान को संबंधित नियमित अभिव्यक्ति (Regular Expression) के अनुसार सत्यापित करें।
 
-    Args:
-        value: the string to validate
+    आर्ग्युमेंट्स (Args):
+        value: सत्यापन के लिए स्ट्रिंग
 
-    Raises:
-        ValidationError: if the given value is not conform to the regular expression.
+    त्रुटि (Raises):
+        ValidationError: यदि दिया गया मान नियमित अभिव्यक्ति के अनुरूप नहीं है।
     """
-    pattern = r'^[a-zA-Z0-9_]+$'  # Example regex pattern, adjust as needed
+    pattern = r'^[a-zA-Z0-9]+$'  # उदाहरण के लिए, केवल अल्फ़ान्यूमेरिक मानों की अनुमति
     if not re.match(pattern, value):
-        raise ValidationError(f"Value '{value}' does not conform to the required format.")
+        raise ValidationError(f"'{value}' मान नियमित अभिव्यक्ति के अनुरूप नहीं है।")

@@ -2,28 +2,21 @@ def update_last_applied_manifest_dict_from_resp(
     last_applied_manifest, observer_schema, response
 ):
     """
-    Together with :func:``update_last_applied_manifest_list_from_resp``, this
-    function is called recursively to update a partial ``last_applied_manifest``
-    from a partial Kubernetes response
+    :func:``update_last_applied_manifest_list_from_resp`` के साथ मिलकर, यह फ़ंक्शन आंशिक ``last_applied_manifest`` को आंशिक Kubernetes प्रतिक्रिया से अपडेट करने के लिए पुनरावृत्त रूप से कॉल किया जाता है।
 
-    Args:
-        last_applied_manifest (dict): partial ``last_applied_manifest`` being
-            updated
-        observer_schema (dict): partial ``observer_schema``
-        response (dict): partial response from the Kubernetes API.
+    आर्ग्युमेंट्स (Args):
+        last_applied_manifest (dict): आंशिक ``last_applied_manifest`` जिसे अपडेट किया जा रहा है।
+        observer_schema (dict): आंशिक ``observer_schema``।
+        response (dict): Kubernetes API से प्राप्त आंशिक प्रतिक्रिया।
 
-    Raises:
-        KeyError: If the observed field is not present in the Kubernetes response
+    त्रुटि (Raises):
+        KeyError: यदि देखे गए फ़ील्ड Kubernetes प्रतिक्रिया में मौजूद नहीं हैं।
 
-    This function go through all observed fields, and initialized their value in
-    last_applied_manifest if they are not yet present
+    यह फ़ंक्शन सभी देखे गए फ़ील्ड्स के माध्यम से जाता है और यदि वे पहले से ``last_applied_manifest`` में मौजूद नहीं हैं, तो उनके मान को इनिशियलाइज़ करता है।
     """
-    for key, value in observer_schema.items():
+    for key in observer_schema:
         if key not in last_applied_manifest:
             if key not in response:
-                raise KeyError(f"Observed field '{key}' is not present in the response")
+                raise KeyError(f"Key '{key}' not found in response.")
             last_applied_manifest[key] = response[key]
-        if isinstance(value, dict):
-            update_last_applied_manifest_dict_from_resp(
-                last_applied_manifest[key], value, response[key]
-            )
+    return last_applied_manifest

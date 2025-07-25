@@ -1,10 +1,12 @@
+from datetime import datetime
+
 def default_tzinfo(dt, tzinfo):
     """
-    Sets the ``tzinfo`` parameter on naive datetimes only
+    केवल उन naive datetime पर ``tzinfo`` पैरामीटर सेट करता है।
 
-    This is useful for example when you are provided a datetime that may have
-    either an implicit or explicit time zone, such as when parsing a time zone
-    string.
+    यह उपयोगी है, उदाहरण के लिए, जब आपको एक datetime प्रदान किया जाता है 
+    जिसमें या तो एक implicit या explicit time zone हो सकता है, जैसे कि 
+    जब आप एक time zone string को पार्स कर रहे हों।
 
     .. doctest::
 
@@ -18,14 +20,14 @@ def default_tzinfo(dt, tzinfo):
         2014-01-01 12:30:00-05:00
 
     :param dt:
-        The datetime on which to replace the time zone
+        वह datetime जिस पर time zone को बदलना है।
 
     :param tzinfo:
-        The :py:class:`datetime.tzinfo` subclass instance to assign to
-        ``dt`` if (and only if) it is naive.
+        :py:class:`datetime.tzinfo` सबक्लास का उदाहरण, जिसे ``dt`` पर 
+        असाइन किया जाएगा यदि (और केवल यदि) यह naive है।
 
     :return:
-        Returns an aware :py:class:`datetime.datetime`.
+        एक aware :py:class:`datetime.datetime` लौटाता है।
     """
     if dt.tzinfo is None:
         return dt.replace(tzinfo=tzinfo)

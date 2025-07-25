@@ -1,10 +1,10 @@
 def dehydrate_point(value):
     """
-    Dehydrator for Point data.
+    पॉइंट डेटा के लिए डिहाइड्रेटर।
 
-    :param value: A Point object to be dehydrated.
-    :type value: Point
-    :return: A dictionary representation of the Point object.
+    :param value: Point object to dehydrate
+    :type value: Point  
+    :return: A dictionary representation of the Point
     """
     if not isinstance(value, Point):
         raise ValueError("Expected a Point instance")
@@ -12,5 +12,5 @@ def dehydrate_point(value):
     return {
         'x': value.x,
         'y': value.y,
-        'z': value.z
+        'z': value.z if hasattr(value, 'z') else None
     }

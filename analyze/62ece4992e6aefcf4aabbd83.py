@@ -3,31 +3,20 @@ import os
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Call the given command(s).
+    दिए गए कमांड(s) को कॉल करें।
     """
-    if isinstance(commands, str):
-        commands = [commands]
+    if cwd is None:
+        cwd = os.getcwd()
     
-    results = []
-    for command in commands:
-        full_command = [command] + args
-        if verbose:
-            print(f"Running command: {' '.join(full_command)}")
-        
-        process = subprocess.Popen(
-            full_command,
-            cwd=cwd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE if not hide_stderr else subprocess.DEVNULL,
-            env=env
-        )
-        
-        stdout, stderr = process.communicate()
-        results.append({
-            'command': command,
-            'returncode': process.returncode,
-            'stdout': stdout.decode('utf-8'),
-            'stderr': stderr.decode('utf-8') if not hide_stderr else None
-        })
+    if env is None:
+        env = os.environ.copy()
     
-    return results
+    command = [commands] + args
+    stderr = subprocess.DEVNULL if hide_stderr else None
+    
+    if verbose:
+        print(f"Running command: {' '.join(command)} in {cwd}")
+    
+    result = subprocess.run(command, cwd=cwd, env=env, stderr=stderr)
+    
+    return result.returncode

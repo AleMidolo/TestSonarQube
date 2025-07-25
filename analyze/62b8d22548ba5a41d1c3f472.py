@@ -1,26 +1,28 @@
 def cachedmethod(cache, key=hashkey, lock=None):
     """
-    Decorator to wrap a class or instance method with a memoizing
-    callable that saves results in a cache.
+    यह डेकोरेटर एक क्लास या इंस्टेंस मेथड को एक मेमोराइज़िंग कॉल करने योग्य फ़ंक्शन के साथ रैप करता है, जो परिणामों को कैश में सहेजता है।
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            # Create a unique cache key based on the method and its arguments
-            cache_key = key(func, *args, **kwargs)
+            # Generate the cache key
+            cache_key = key(*args, **kwargs)
+            # Check if the result is in the cache
             if cache_key in cache:
                 return cache[cache_key]
-            with (lock if lock else dummy_lock):
-                if cache_key not in cache:  # Double-check in case another thread computed it
+            # Acquire lock if provided
+            if lock:
+                with lock:
+                    # Check again in case another thread has computed it
+                    if cache_key in cache:
+                        return cache[cache_key]
+                    # Call the function and cache the result
                     result = func(*args, **kwargs)
                     cache[cache_key] = result
-                return cache[cache_key]
+                    return result
+            else:
+                # Call the function and cache the result
+                result = func(*args, **kwargs)
+                cache[cache_key] = result
+                return result
         return wrapper
     return decorator
-
-# Dummy lock for cases where no lock is provided
-class dummy_lock:
-    def __enter__(self):
-        pass
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        pass

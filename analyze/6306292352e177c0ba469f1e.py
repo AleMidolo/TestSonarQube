@@ -1,18 +1,18 @@
 def process_text_links(text):
     """
-    Process links in text, adding some attributes and linkifying textual links.
+    टेक्स्ट में लिंक को प्रोसेस करें, कुछ विशेषताएँ जोड़ें और टेक्स्ट में मौजूद लिंक को हाइपरलिंक में बदलें।
     """
     import re
 
-    # Function to convert plain text URLs into HTML links
-    def linkify(match):
-        url = match.group(0)
-        return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
-
-    # Regular expression to find URLs in the text
-    url_pattern = r'(https?://[^\s]+|www\.[^\s]+)'
+    # Regex pattern to find URLs
+    url_pattern = r'(https?://[^\s]+)'
     
-    # Replace plain text URLs with HTML links
-    processed_text = re.sub(url_pattern, linkify, text)
-
+    # Function to replace found URLs with HTML hyperlinks
+    def replace_with_hyperlink(match):
+        url = match.group(0)
+        return f'<a href="{url}" target="_blank">{url}</a>'
+    
+    # Substitute URLs in the text with hyperlinks
+    processed_text = re.sub(url_pattern, replace_with_hyperlink, text)
+    
     return processed_text

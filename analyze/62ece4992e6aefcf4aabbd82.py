@@ -1,14 +1,9 @@
+import re
+
 def get_pattern(pattern, strip=True):
     """
-    This method converts the given string to regex pattern
+    यह मेथड दी गई स्ट्रिंग को रेगुलर एक्सप्रेशन (Regex) पैटर्न में बदलता है।
     """
-    import re
-    
     if strip:
         pattern = pattern.strip()
-    
-    # Escape special characters in the pattern
-    escaped_pattern = re.escape(pattern)
-    
-    # Return the regex pattern
-    return f"^{escaped_pattern}$"
+    return re.compile(pattern)

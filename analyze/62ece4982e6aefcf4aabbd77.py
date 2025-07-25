@@ -1,45 +1,38 @@
 import datetime
+import re
 
 def parse_frequency(frequency):
     """
-    Given a frequency string with a number and a unit of time, return a corresponding
-    datetime.timedelta instance or None if the frequency is None or "always".
+    एक संख्या और समय की इकाई के साथ एक आवृत्ति स्ट्रिंग दी गई है, एक संगत
+    datetime.timedelta इंस्टेंस लौटाएँ या यदि आवृत्ति None या "हमेशा" है, तो None लौटाएँ।
 
-    For instance, given "3 weeks", return datetime.timedelta(weeks=3)
+    उदाहरण के लिए, "3 सप्ताह" दिया गया है, datetime.timedelta(weeks=3) लौटाएँ
 
-    Raise ValueError if the given frequency cannot be parsed.
+    यदि दी गई आवृत्ति को पार्स नहीं किया जा सकता है, तो ValueError उठाएँ।
     """
-    if frequency is None or frequency.lower() == "always":
+    if frequency is None or frequency.lower() == "हमेशा":
         return None
-    
-    units = {
-        'seconds': 'seconds',
-        'second': 'seconds',
-        'minutes': 'minutes',
-        'minute': 'minutes',
-        'hours': 'hours',
-        'hour': 'hours',
-        'days': 'days',
-        'day': 'days',
-        'weeks': 'weeks',
-        'week': 'weeks',
-        'months': 'days',  # Approximation: 1 month = 30 days
-        'month': 'days',    # Approximation: 1 month = 30 days
-        'years': 'days',    # Approximation: 1 year = 365 days
-        'year': 'days'      # Approximation: 1 year = 365 days
-    }
-    
-    parts = frequency.split()
-    if len(parts) != 2:
-        raise ValueError("Frequency must be in the format '<number> <unit>'")
-    
-    try:
-        value = int(parts[0])
-    except ValueError:
-        raise ValueError("The first part of the frequency must be an integer")
-    
-    unit = parts[1].lower()
-    if unit not in units:
-        raise ValueError(f"Unknown time unit: {unit}")
-    
-    return datetime.timedelta(**{units[unit]: value})
+
+    match = re.match(r'(\d+)\s*(\w+)', frequency)
+    if not match:
+        raise ValueError("Invalid frequency format")
+
+    value, unit = match.groups()
+    value = int(value)
+
+    if unit in ['सेकंड', 'सेकंड', 's']:
+        return datetime.timedelta(seconds=value)
+    elif unit in ['मिनट', 'मिनट', 'm']:
+        return datetime.timedelta(minutes=value)
+    elif unit in ['घंटा', 'घंटे', 'h']:
+        return datetime.timedelta(hours=value)
+    elif unit in ['दिन', 'दिन', 'd']:
+        return datetime.timedelta(days=value)
+    elif unit in ['सप्ताह', 'सप्ताह', 'w']:
+        return datetime.timedelta(weeks=value)
+    elif unit in ['महीना', 'महीने', 'mo']:
+        return datetime.timedelta(days=value * 30)  # Approximation
+    elif unit in ['साल', 'साल', 'y']:
+        return datetime.timedelta(days=value * 365)  # Approximation
+    else:
+        raise ValueError("Unknown time unit")

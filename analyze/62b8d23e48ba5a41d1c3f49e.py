@@ -1,15 +1,10 @@
-import random
-
-class CustomDict:
-    def __init__(self):
-        self.data = {}
-
-    def popitem(self):
-        """
-        Remove and return a random `(key, value)` pair.
-        """
-        if not self.data:
-            raise KeyError("popitem(): dictionary is empty")
-        key = random.choice(list(self.data.keys()))
-        value = self.data.pop(key)
-        return key, value
+def popitem(self):
+    """
+    एक यादृच्छिक `(कुंजी, मान)` जोड़ी को हटाएं और लौटाएं।
+    """
+    if not self.data:
+        raise KeyError("popitem(): dictionary is empty")
+    key = next(iter(self.data))
+    value = self.data[key]
+    del self.data[key]
+    return key, value

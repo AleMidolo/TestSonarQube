@@ -1,36 +1,28 @@
-import subprocess
-import os
-import sys
-import multiprocessing
-
 def subprocess_run_helper(func, *args, timeout, extra_env=None):
     """
-    Run a function in a sub-process.
+    एक सब-प्रोसेस में एक फ़ंक्शन चलाएँ।
 
-    Parameters
-    ----------
+    पैरामीटर (Parameters)
+    ---------------------
     func : function
-        The function to be run.  It must be in a module that is importable.
+        वह फ़ंक्शन जिसे चलाना है। यह किसी ऐसे मॉड्यूल में होना चाहिए जिसे आयात (import) किया जा सके।
     *args : str
-        Any additional command line arguments to be passed in
-        the first argument to ``subprocess.run``.
+        कोई भी अतिरिक्त कमांड लाइन तर्क जो ``subprocess.run`` के पहले तर्क में पास किए जाने हैं।
     extra_env : dict[str, str]
-        Any additional environment variables to be set for the subprocess.
+        सब-प्रोसेस के लिए सेट किए जाने वाले कोई भी अतिरिक्त पर्यावरण वेरिएबल।
     """
-    def target():
-        if extra_env:
-            os.environ.update(extra_env)
-        # Call the function with the provided arguments
-        return func(*args)
+    import subprocess
+    import os
 
-    # Create a process
-    process = multiprocessing.Process(target=target)
-    process.start()
-    process.join(timeout)
+    # Prepare the environment
+    env = os.environ.copy()
+    if extra_env:
+        env.update(extra_env)
 
-    if process.is_alive():
-        process.terminate()
-        process.join()
-        raise TimeoutError("The function call timed out.")
+    # Prepare the command to run
+    command = [func] + list(args)
 
-    return process.exitcode
+    # Run the subprocess
+    result = subprocess.run(command, env=env, timeout=timeout)
+
+    return result

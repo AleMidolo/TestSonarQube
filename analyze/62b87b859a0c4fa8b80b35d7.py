@@ -1,20 +1,31 @@
 def to_csv(self, separator=",", header=None):
     """
-    .. deprecated:: 0.5 in Lena 0.5 to_csv is not used.
-          Iterables are converted to tables.
+    .. deprecated:: 0.5 Lena 0.5 में to_csv का उपयोग नहीं किया जाता है।
+          Iterables को तालिकाओं (tables) में परिवर्तित किया जाता है।
 
-    Convert graph's points to CSV.
+    ग्राफ़ के बिंदुओं (points) को CSV में परिवर्तित करें।
 
-    *separator* delimits values, the default is comma.
+    *separator* मानों को अलग करता है, डिफ़ॉल्ट रूप से यह कॉमा (comma) है।
 
-    *header*, if not ``None``, is the first string of the output
-    (new line is added automatically).
+    *header*, यदि ``None`` नहीं है, तो यह आउटपुट की पहली स्ट्रिंग होगी
+    (नई पंक्ति स्वचालित रूप से जोड़ी जाती है)।
 
-    Since a graph can be multidimensional,
-    for each point first its coordinate is converted to string
-    (separated by *separator*), then each part of its value.
+    चूंकि एक ग्राफ़ बहुआयामी (multidimensional) हो सकता है,
+    प्रत्येक बिंदु के लिए पहले उसके निर्देशांक (coordinate) को स्ट्रिंग में परिवर्तित किया जाता है
+    (*separator* द्वारा अलग किया गया), और फिर उसके मान (value) के प्रत्येक भाग को।
 
-    To convert :class:`Graph` to CSV inside a Lena sequence,
-    use :class:`lena.output.ToCSV`.
+    :class:`Graph` को CSV में परिवर्तित करने के लिए, Lena अनुक्रम (sequence) के अंदर
+    :class:`lena.output.ToCSV` का उपयोग करें।
     """
-    raise NotImplementedError("This method is deprecated and not used.")
+    # Assuming self.points is a list of tuples representing the graph points
+    output = []
+    
+    if header is not None:
+        output.append(header)
+    
+    for point in self.points:
+        # Convert the point coordinates to string and join with the separator
+        point_str = separator.join(map(str, point))
+        output.append(point_str)
+    
+    return "\n".join(output)

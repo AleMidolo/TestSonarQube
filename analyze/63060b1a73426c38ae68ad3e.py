@@ -3,38 +3,23 @@ import json
 
 def get_plugin_spec_flatten_dict(plugin_dir):
     """
-    Creates a flat dict from the plugin spec
+    प्लगइन स्पेसिफिकेशन से एक फ्लैट डिक्शनरी बनाता है।
 
-    :param plugin_dir: A path to the plugin's dir
-    :return: A flatten dictionary contains the plugin's properties
+    :param plugin_dir: प्लगइन की डायरेक्टरी का पथ
+    :return: एक फ्लैट डिक्शनरी जो प्लगइन की प्रॉपर्टीज़ को समाहित करती है
     """
-    flatten_dict = {}
+    flat_dict = {}
 
     for root, _, files in os.walk(plugin_dir):
         for file in files:
             if file.endswith('.json'):
                 file_path = os.path.join(root, file)
-                with open(file_path, 'r') as f:
+                with open(file_path, 'r', encoding='utf-8') as f:
                     try:
                         data = json.load(f)
-                        flatten_dict.update(flatten_json(data))
+                        for key, value in data.items():
+                            flat_dict[key] = value
                     except json.JSONDecodeError:
                         continue
 
-    return flatten_dict
-
-def flatten_json(y):
-    out = {}
-
-    def flatten(x, name=''):
-        if type(x) is dict:
-            for a in x:
-                flatten(x[a], name + a + '_')
-        elif type(x) is list:
-            for i, a in enumerate(x):
-                flatten(a, name + str(i) + '_')
-        else:
-            out[name[:-1]] = x
-
-    flatten(y)
-    return out
+    return flat_dict

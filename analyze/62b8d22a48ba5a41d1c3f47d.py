@@ -1,7 +1,9 @@
 def pop(self, key, default=__marker):
     """
-    D.pop(k[,d]) -> v, remove specified key and return the corresponding value.
-    If key is not found, d is returned if given, otherwise KeyError is raised.
+    D.pop(k[, d]) -> v
+    निर्दिष्ट कुंजी (key) को हटाएं और संबंधित मान (value) लौटाएं।
+    यदि कुंजी नहीं मिलती है, तो यदि 'd' दिया गया है तो उसे लौटाया जाएगा, 
+    अन्यथा KeyError उत्पन्न किया जाएगा।
     """
     if key in self:
         value = self[key]

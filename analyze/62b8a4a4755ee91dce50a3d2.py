@@ -1,35 +1,21 @@
 def _fromutc(self, dt):
     """
-    Given a timezone-aware datetime in a given timezone, calculates a
-    timezone-aware datetime in a new timezone.
+    यह वह स्थिति है जब हमें *पक्का* पता होता है कि हमारे पास एक अस्पष्टता रहित (unambiguous) डेटटाइम ऑब्जेक्ट है। इस मौके का उपयोग करते हुए, हम यह निर्धारित करते हैं कि क्या यह डेटटाइम अस्पष्ट (ambiguous) है और "फोल्ड" स्थिति में है (उदाहरण के लिए, यदि यह अस्पष्ट डेटटाइम का पहला कालानुक्रमिक (chronological) उदाहरण है)।
 
-    Since this is the one time that we *know* we have an unambiguous
-    datetime object, we take this opportunity to determine whether the
-    datetime is ambiguous and in a "fold" state (e.g. if it's the first
-    occurrence, chronologically, of the ambiguous datetime).
-
-    :param dt:
-        A timezone-aware :class:`datetime.datetime` object.
+    पैरामीटर:
+    - `dt`:  
+      एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
     """
     if dt.tzinfo is None:
         raise ValueError("dt must be timezone-aware")
-
-    # Get the UTC offset for the given datetime
-    utc_offset = dt.utcoffset()
     
-    # Convert the datetime to UTC
-    utc_dt = dt - utc_offset
+    # Check if the datetime is ambiguous
+    if dt.dst() is not None and dt.dst() != timedelta(0):
+        # If the datetime has a non-zero DST offset, it is ambiguous
+        raise ValueError("Ambiguous datetime")
     
-    # Now convert the UTC datetime to the new timezone
-    new_dt = utc_dt.astimezone(self)
-
-    # Check for ambiguity in the new timezone
-    if new_dt.dst() != timedelta(0) and new_dt.fold == 0:
-        # If the datetime is ambiguous, we need to determine the correct fold
-        ambiguous_dt = new_dt.replace(fold=1)
-        if self.utcoffset(new_dt) == self.utcoffset(ambiguous_dt):
-            return new_dt
-        else:
-            return ambiguous_dt
-
-    return new_dt
+    # Determine if the datetime is in the fold
+    if dt < self.utcoffset() + self.dst():
+        return dt - self.utcoffset()
+    else:
+        return dt - self.utcoffset() - self.dst()

@@ -1,42 +1,32 @@
 def validate_hierarchy(self, validate_objects=True, check_digests=True, show_warnings=False):
     """
-    Validate storage root hierarchy.
+    स्टोरेज रूट हाइरार्की को मान्य करें।
 
-    Returns:
-        num_objects - number of objects checked
-        good_objects - number of objects checked that were found to be valid
+    रिटर्न करता है:
+        num_objects - जांचे गए ऑब्जेक्ट्स की संख्या
+        good_objects - जांचे गए ऑब्जेक्ट्स की संख्या जो मान्य पाए गए
     """
     num_objects = 0
     good_objects = 0
 
-    # Assuming self.storage_root is a list of objects to validate
-    for obj in self.storage_root:
+    # Assuming we have a method to get all objects in the hierarchy
+    objects = self.get_all_objects()
+
+    for obj in objects:
         num_objects += 1
-        is_valid = True  # Placeholder for actual validation logic
+        is_valid = True
 
         if validate_objects:
-            # Perform object validation
-            if not self.validate_object(obj):
-                is_valid = False
-                if show_warnings:
-                    print(f"Warning: Object {obj} is invalid.")
+            is_valid = self.validate_object(obj)
+            if not is_valid and show_warnings:
+                print(f"Warning: Object {obj} is invalid.")
 
-        if check_digests:
-            # Perform digest check
-            if not self.check_digest(obj):
-                is_valid = False
-                if show_warnings:
-                    print(f"Warning: Digest for object {obj} is invalid.")
+        if check_digests and is_valid:
+            is_valid = self.check_object_digest(obj)
+            if not is_valid and show_warnings:
+                print(f"Warning: Object {obj} has an invalid digest.")
 
         if is_valid:
             good_objects += 1
 
     return num_objects, good_objects
-
-def validate_object(self, obj):
-    # Placeholder for object validation logic
-    return True
-
-def check_digest(self, obj):
-    # Placeholder for digest checking logic
-    return True

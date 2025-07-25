@@ -1,7 +1,10 @@
 def amend_bzparams(self, params, bug_ids):
     """
-    Amend the Bugzilla params
+    बगज़िला पैरामीटर्स को संशोधित करें
     """
     for bug_id in bug_ids:
-        params[f'bug_id_{bug_id}'] = bug_id
+        if bug_id in params:
+            params[bug_id] += 1  # Example modification, incrementing the value
+        else:
+            params[bug_id] = 1  # Initialize if not present
     return params

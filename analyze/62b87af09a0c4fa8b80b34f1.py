@@ -1,10 +1,9 @@
 def fill(self, coord, weight=1):
     """
-    Fill histogram at *coord* with the given *weight*.
+    *coord* पर दिए गए *weight* के साथ हिस्टोग्राम को भरें।
 
-    Coordinates outside the histogram edges are ignored.
+    यदि *coord* हिस्टोग्राम की सीमाओं के बाहर है, तो उसे अनदेखा कर दिया जाएगा।
     """
     if not self.is_within_bounds(coord):
         return
-    
     self.histogram[coord] += weight

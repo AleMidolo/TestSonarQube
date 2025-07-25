@@ -1,22 +1,13 @@
 def validate_as_prior_version(self, prior):
     """
-    Check that prior is a valid prior version of the current inventory object.
+    वर्तमान इन्वेंटरी ऑब्जेक्ट के लिए यह जांचें कि prior एक मान्य पूर्व संस्करण है।
 
-    The input variable prior is also expected to be an InventoryValidator object
-    and both self and prior inventories are assumed to have been checked for
-    internal consistency.
+    इनपुट वैरिएबल प्रायर को भी एक इन्वेंटरी वैलिडेटर ऑब्जेक्ट माना जाता है और माना जाता है कि स्व और प्रायर दोनों इन्वेंटरी को आंतरिक संगतता के लिए जाँच लिया गया है।
     """
+    # यहाँ पर लॉजिक जो यह निर्धारित करता है कि prior एक मान्य पूर्व संस्करण है
     if not isinstance(prior, InventoryValidator):
-        raise ValueError("The prior must be an instance of InventoryValidator.")
+        return False
     
-    # Assuming both inventories have a method to get their version
-    if self.version <= prior.version:
-        raise ValueError("The prior version must be older than the current version.")
-    
-    # Check if the current inventory has all items that were in the prior inventory
-    for item in prior.items:
-        if item not in self.items:
-            raise ValueError(f"Item {item} from prior version is missing in the current inventory.")
-    
-    # Additional checks can be added here as needed
-    return True
+    # उदाहरण के लिए, हम यह मान सकते हैं कि यदि prior का संस्करण संख्या 
+    # वर्तमान संस्करण संख्या से कम है, तो यह एक मान्य पूर्व संस्करण है
+    return self.version > prior.version

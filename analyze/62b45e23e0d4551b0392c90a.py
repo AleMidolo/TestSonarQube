@@ -1,35 +1,40 @@
 def validate_version_inventories(self, version_dirs):
     """
-    Each version SHOULD have an inventory up to that point.
+    प्रत्येक संस्करण के पास उस बिंदु तक एक इन्वेंटरी होनी चाहिए।
 
-    Also keep a record of any content digests different from those in the root inventory
-    so that we can also check them when validating the content.
+    साथ ही, किसी भी सामग्री डाइजेस्ट का रिकॉर्ड रखें जो रूट इन्वेंटरी में मौजूद डाइजेस्ट से अलग हो,
+    ताकि सामग्री को सत्यापित करते समय हम उन्हें भी जांच सकें।
 
-    version_dirs is an array of version directory names and is assumed to be in
-    version sequence (1, 2, 3...).
+    version_dirs एक संस्करण डायरेक्टरी नामों की सूची है और इसे संस्करण अनुक्रम (1, 2, 3...) में माना जाता है।
     """
-    root_inventory = self.load_inventory('root_inventory.json')
-    content_digests = {}
+    inventory_digests = set()
+    discrepancies = {}
 
     for version in version_dirs:
         inventory_path = f"{version}/inventory.json"
-        version_inventory = self.load_inventory(inventory_path)
+        
+        try:
+            with open(inventory_path, 'r') as file:
+                inventory = json.load(file)
+                
+                # Validate the inventory for the current version
+                if not self.validate_inventory(inventory):
+                    raise ValueError(f"Invalid inventory in version {version}")
 
-        # Validate that the version inventory matches the expected structure
-        if not self.validate_inventory_structure(version_inventory):
-            raise ValueError(f"Invalid inventory structure in {inventory_path}")
+                # Record the digests from the current inventory
+                current_digests = set(item['digest'] for item in inventory.get('items', []))
+                
+                # Check for discrepancies with the root inventory
+                new_digests = current_digests - inventory_digests
+                if new_digests:
+                    discrepancies[version] = new_digests
+                
+                # Update the recorded digests
+                inventory_digests.update(current_digests)
 
-        # Check for content digests that differ from the root inventory
-        for item, digest in version_inventory.items():
-            if item in root_inventory and root_inventory[item] != digest:
-                content_digests[item] = digest
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Inventory file not found for version {version}")
+        except json.JSONDecodeError:
+            raise ValueError(f"Error decoding JSON for inventory in version {version}")
 
-    return content_digests
-
-def load_inventory(self, path):
-    # Placeholder for loading inventory from a JSON file
-    pass
-
-def validate_inventory_structure(self, inventory):
-    # Placeholder for validating the structure of the inventory
-    pass
+    return discrepancies

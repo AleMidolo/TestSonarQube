@@ -1,27 +1,27 @@
 def get_nested_custom_and_control_args(self, args):
     """
-    Split input arguments to control nested and custom.
+    इनपुट आर्ग्युमेंट्स को नेस्टेड और कस्टम में विभाजित करें।
 
-    Controls arguments: control the IR behavior. These arguments
-        will not be put into the spec yml file
-    Nested arguments: are used by the Ansible playbooks and will be put
-        into the spec yml file.
-    Custom arguments: Custom ansible variables to be used instead of the
-        normal nested usage.
+    कंट्रोल आर्ग्युमेंट्स: IR (Intermediate Representation) व्यवहार को नियंत्रित करते हैं। 
+        ये आर्ग्युमेंट्स spec.yml फाइल में नहीं डाले जाएंगे।
+    नेस्टेड आर्ग्युमेंट्स: Ansible प्लेबुक्स द्वारा उपयोग किए जाते हैं और 
+        spec.yml फाइल में डाले जाएंगे।
+    कस्टम आर्ग्युमेंट्स: सामान्य नेस्टेड उपयोग के बजाय कस्टम Ansible वेरिएबल्स का उपयोग करने के लिए।
 
-    :param args: the collected list of args.
-    :return: (dict, dict): flat dicts (control_args, nested_args)
+    :param args: एकत्रित आर्ग्युमेंट्स की सूची।
+    :return: (dict, dict): फ्लैट डिक्शनरीज़ (control_args, nested_args)
     """
     control_args = {}
     nested_args = {}
-    
-    for key, value in args.items():
-        if key.startswith('control_'):
-            control_args[key] = value
-        elif key.startswith('nested_'):
-            nested_args[key] = value
+
+    for arg in args:
+        if isinstance(arg, dict):
+            if 'control' in arg:
+                control_args.update(arg)
+            else:
+                nested_args.update(arg)
         else:
-            # Assuming custom args do not have a specific prefix
-            nested_args[key] = value
+            # Assuming custom arguments are just strings or other types
+            nested_args[arg] = None
 
     return control_args, nested_args

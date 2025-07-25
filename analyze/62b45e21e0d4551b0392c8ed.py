@@ -1,14 +1,14 @@
 def find_path_type(path):
     """
-    Return a string indicating the type of thing at the given path.
+    दिए गए पथ पर मौजूद वस्तु के प्रकार को इंगित करने वाला एक स्ट्रिंग लौटाता है।
 
-    Return values:
-        'root' - looks like an OCFL Storage Root
-        'object' - looks like an OCFL Object
-        'file' - a file, might be an inventory
-        other string explains error description
+    लौटाए जाने वाले मान:
+        'root' - ऐसा लगता है कि यह OCFL स्टोरेज रूट है
+        'object' - ऐसा लगता है कि यह OCFL ऑब्जेक्ट है
+        'file' - यह एक फ़ाइल है, जो शायद एक इन्वेंटरी हो सकती है
+        अन्य स्ट्रिंग - त्रुटि विवरण को समझाती है
 
-    Looks only at "0=*" Namaste files to determine the directory type.
+    यह केवल "0=*" नमस्ते फ़ाइलों को देखकर निर्देशिका के प्रकार का निर्धारण करता है।
     """
     import os
 
@@ -16,12 +16,12 @@ def find_path_type(path):
         return "Path does not exist"
 
     if os.path.isdir(path):
-        # Check for OCFL Storage Root
         if any(file.startswith("0=") for file in os.listdir(path)):
             return 'root'
         else:
             return 'object'
-    elif os.path.isfile(path):
+    
+    if os.path.isfile(path):
         return 'file'
-    else:
-        return "Unknown type"
+    
+    return "Unknown type"

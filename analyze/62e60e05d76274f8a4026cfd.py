@@ -1,9 +1,9 @@
 def index(self, key):
-    """
-    Return the index of the given item.
+    """    
+    दिए गए आइटम का इंडेक्स (स्थान) लौटाता है।
 
-    :param key: a key
-    :return: index
+    :param key: एक कुंजी 
+    :return: इंडेक्स 
     :rtype: int
     """
     try:

@@ -1,14 +1,19 @@
 def get_config():
     """
-    Create, populate and return the VersioneerConfig() object.
+    # VersioneerConfig() ऑब्जेक्ट बनाएं, इसे डेटा से भरें और इसे लौटाएं।
     """
     class VersioneerConfig:
         def __init__(self):
-            self.version = "1.0.0"
-            self.description = "Versioneer configuration"
-            self.author = "Your Name"
-            self.license = "MIT"
+            self.data = {}
+
+        def fill_data(self):
+            # यहाँ डेटा भरने की प्रक्रिया को लागू करें
+            self.data = {
+                'version': '1.0.0',
+                'author': 'Your Name',
+                'email': 'your.email@example.com'
+            }
 
     config = VersioneerConfig()
-    # Populate the config object with additional settings if needed
+    config.fill_data()
     return config

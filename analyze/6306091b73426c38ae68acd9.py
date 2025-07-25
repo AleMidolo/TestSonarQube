@@ -1,5 +1,6 @@
 def workspace_manager(cls):
     """
-    Gets the workspace manager.
+    वर्कस्पेस मैनेजर प्राप्त करता है।
     """
-    return cls.workspace_manager if hasattr(cls, 'workspace_manager') else None
+    # Assuming cls is a class that has a method to manage workspace
+    return cls.get_workspace_manager()

@@ -5,14 +5,14 @@ class ValidationError(Exception):
 
 def validate_key(key):
     """
-    Validate the given key against the corresponding regular expression.
+    दिए गए कुंजी (key) को संबंधित नियमित अभिव्यक्ति (regular expression) के खिलाफ सत्यापित करें।
 
-    Args:
-        key: the string to validate
+    आर्ग्युमेंट्स (Args):
+        key: सत्यापन के लिए स्ट्रिंग (string)
 
-    Raises:
-        ValidationError: if the given key is not conform to the regular expression.
+    त्रुटि (Raises):
+        ValidationError: यदि दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।
     """
-    pattern = r'^[A-Za-z0-9]{10}$'  # Example pattern: 10 alphanumeric characters
+    pattern = r'^[A-Za-z0-9]{8,}$'  # Example pattern: at least 8 alphanumeric characters
     if not re.match(pattern, key):
-        raise ValidationError(f"Invalid key: {key}")
+        raise ValidationError("दी गई कुंजी नियमित अभिव्यक्ति के अनुरूप नहीं है।")

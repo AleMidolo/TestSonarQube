@@ -1,15 +1,13 @@
 def extend_cli(self, root_subparsers):
     """
-    Adds the spec cli options to the main entry point.
+    मुख्य एंट्री पॉइंट में स्पेक CLI विकल्प जोड़ता है।
 
-    :param subparser: the subparser object to extend.
+    :param subparser: वह सबपार्सर ऑब्जेक्ट जिसे विस्तारित करना है।
     """
-    # Example implementation: Adding a command to the subparser
-    parser = root_subparsers.add_parser('spec', help='Spec command options')
-    parser.add_argument('--option1', type=str, help='Description for option1')
-    parser.add_argument('--option2', type=int, help='Description for option2')
-    parser.set_defaults(func=self.spec_command)
-
-def spec_command(self, args):
-    # Example implementation of the command functionality
-    print(f"Option1: {args.option1}, Option2: {args.option2}")
+    # उदाहरण के लिए, एक नया सबपार्सर जोड़ें
+    parser = root_subparsers.add_parser('example', help='यह एक उदाहरण है')
+    
+    # विकल्प जोड़ें
+    parser.add_argument('--option', type=str, help='एक वैकल्पिक तर्क')
+    
+    # अन्य आवश्यकताएँ और लॉजिक यहाँ जोड़ें

@@ -1,18 +1,21 @@
-import argparse
-
 def make_parsers():
     """
-    Build a top-level parser and its subparsers and return them as a tuple.
+    शीर्ष-स्तरीय पार्सर और इसके उप-पार्सर बनाएं और उन्हें एक ट्यूपल के रूप में लौटाएं।
     """
-    parser = argparse.ArgumentParser(description="Top-level parser")
-    subparsers = parser.add_subparsers(dest='command')
+    import argparse
 
-    # Example subparser for a command 'foo'
-    parser_foo = subparsers.add_parser('foo', help='Foo command help')
-    parser_foo.add_argument('--bar', type=str, help='Bar argument for foo')
+    # मुख्य पार्सर बनाना
+    main_parser = argparse.ArgumentParser(description='मुख्य पार्सर')
+    
+    # उप-पार्सर बनाना
+    subparsers = main_parser.add_subparsers(dest='command', help='उप-पार्सर के लिए मदद')
 
-    # Example subparser for a command 'baz'
-    parser_baz = subparsers.add_parser('baz', help='Baz command help')
-    parser_baz.add_argument('--qux', type=int, help='Qux argument for baz')
+    # एक उप-पार्सर जोड़ना
+    sub_parser_a = subparsers.add_parser('command_a', help='कमांड A के लिए मदद')
+    sub_parser_a.add_argument('--option', type=str, help='कमांड A के लिए विकल्प')
 
-    return parser, subparsers
+    # एक और उप-पार्सर जोड़ना
+    sub_parser_b = subparsers.add_parser('command_b', help='कमांड B के लिए मदद')
+    sub_parser_b.add_argument('--flag', action='store_true', help='कमांड B के लिए फ्लैग')
+
+    return main_parser, subparsers

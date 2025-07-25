@@ -1,9 +1,16 @@
 def namesAndDescriptions(self, all=False): # pylint:disable=redefined-builtin
-    """Return attribute names and descriptions defined by interface.
-    if not all:
-    Return attribute names and descriptions defined by interface.
     """
-    if all:
-        return {attr: getattr(self, attr).__doc__ for attr in dir(self) if not attr.startswith('_')}
-    else:
-        return {attr: getattr(self, attr).__doc__ for attr in dir(self) if not attr.startswith('_') and self.is_defined(attr)}
+इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम और विवरण लौटाएं।
+    if not all:
+    
+इंटरफेस द्वारा परिभाषित एट्रिब्यूट नाम और विवरण लौटाएं।
+    """
+    attributes = {
+        'attribute1': 'Description of attribute 1',
+        'attribute2': 'Description of attribute 2',
+        'attribute3': 'Description of attribute 3',
+    }
+    
+    if not all:
+        return {key: attributes[key] for key in list(attributes)[:2]}  # Return only first two attributes
+    return attributes

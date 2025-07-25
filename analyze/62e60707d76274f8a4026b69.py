@@ -1,18 +1,21 @@
 def point_type(name, fields, srid_map):
     """
-    Dynamically create a Point subclass.
+    डायनामिक रूप से एक पॉइंट सबक्लास बनाएं।
     """
-    from collections import namedtuple
-
-    # Create a named tuple for the fields
-    PointFields = namedtuple(name, fields)
-
-    class Point(PointFields):
-        def __init__(self, *args):
-            super().__init__(*args)
-            self.srid = srid_map.get(name, None)
+    # Create a new class dynamically
+    class Point:
+        def __init__(self, **kwargs):
+            for field in fields:
+                setattr(self, field, kwargs.get(field, None))
 
         def __repr__(self):
-            return f"{self.__class__.__name__}({', '.join(map(str, self))})"
+            return f"{name}(" + ", ".join(f"{field}={getattr(self, field)}" for field in fields) + ")"
+
+    # Add a method to get the SRID
+    def get_srid(self):
+        return srid_map.get(name, None)
+
+    Point.get_srid = get_srid
+    Point.__name__ = name
 
     return Point

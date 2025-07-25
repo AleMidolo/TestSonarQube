@@ -1,9 +1,8 @@
 def _c_optimizations_required():
     """
-    Return a true value if the C optimizations are required.
+    C अनुकूलन (optimizations) की आवश्यकता है या नहीं, यह सत्य मान (true value) लौटाता है।
 
-    This uses the ``PURE_PYTHON`` variable as documented in `_use_c_impl`.
+    यह `_use_c_impl` में दस्तावेज़ित `PURE_PYTHON` वेरिएबल का उपयोग करता है।
     """
-    from some_module import PURE_PYTHON  # Replace 'some_module' with the actual module name
-
-    return not PURE_PYTHON
+    from some_module import _use_c_impl  # Assuming _use_c_impl is defined in some_module
+    return not _use_c_impl.PURE_PYTHON

@@ -1,8 +1,8 @@
 def validate_requires_args(self, args):
     """
-    Check if all the required arguments have been provided.
+    जांचें कि क्या सभी आवश्यक तर्क प्रदान किए गए हैं।
     """
-    required_args = self.get_required_args()  # Assuming there's a method to get required args
+    required_args = self.get_required_args()  # Assuming this method exists to get required arguments
     missing_args = [arg for arg in required_args if arg not in args]
     
     if missing_args:

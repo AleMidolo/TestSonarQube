@@ -1,36 +1,34 @@
-def load_configurations(config_filenames, overrides=None, resolve_env=True):
-    import logging
-    import json
-    import os
+import logging
+import json
+import os
 
+def load_configurations(config_filenames, overrides=None, resolve_env=True):
+    """
+    कॉनफिगरेशन फाइलों के अनुक्रम को दिया गया है, प्रत्येक कॉनफिगरेशन फाइल को लोड और सत्यापित करें। 
+    परिणाम को निम्नलिखित के रूप में ट्यूपल में लौटाएं:
+    1. कॉनफिगरेशन फाइल नाम और उसके संबंधित पार्स किए गए कॉनफिगरेशन का डिक्शनरी।
+    2. किसी भी पार्स त्रुटियों को शामिल करने वाले `logging.LogRecord` इंस्टेंस का अनुक्रम।
+    """
     configurations = {}
     log_records = []
-    logger = logging.getLogger(__name__)
-
-    if overrides is None:
-        overrides = {}
 
     for filename in config_filenames:
         try:
             with open(filename, 'r') as file:
                 config = json.load(file)
-
-            if resolve_env:
-                config = {k: os.path.expandvars(v) for k, v in config.items()}
-
-            # Apply overrides
-            config.update(overrides)
-
-            configurations[filename] = config
-
-        except json.JSONDecodeError as e:
-            log_record = logger.error(f"Error parsing {filename}: {e}")
-            log_records.append(log_record)
-        except FileNotFoundError as e:
-            log_record = logger.error(f"File not found: {filename}: {e}")
-            log_records.append(log_record)
+                if resolve_env:
+                    config = {k: os.path.expandvars(v) for k, v in config.items()}
+                configurations[filename] = config
         except Exception as e:
-            log_record = logger.error(f"Unexpected error with {filename}: {e}")
+            log_record = logging.LogRecord(
+                name='config_loader',
+                level=logging.ERROR,
+                pathname=filename,
+                lineno=0,
+                msg=str(e),
+                args=None,
+                exc_info=True
+            )
             log_records.append(log_record)
 
     return configurations, log_records

@@ -1,14 +1,15 @@
-import os
-
 def _resolve_string(matcher):
     """
-    Get the value from environment given a matcher containing a name and an optional default value.
-    If the variable is not defined in environment and no default value is provided, an Error is raised.
+    पर्यावरण से मान प्राप्त करें, जिसमें एक मैचर होता है जो एक नाम और वैकल्पिक डिफ़ॉल्ट मान को शामिल करता है।  
+    यदि पर्यावरण में चर परिभाषित नहीं है और कोई डिफ़ॉल्ट मान प्रदान नहीं किया गया है, तो एक त्रुटि उत्पन्न की जाती है।
     """
-    name, default_value = matcher.get('name'), matcher.get('default')
-    
+    import os
+
+    name = matcher.get('name')
+    default_value = matcher.get('default')
+
     value = os.getenv(name)
-    
+
     if value is None:
         if default_value is not None:
             return default_value

@@ -3,23 +3,25 @@ def deep_merge_nodes(nodes):
 
     merged = {}
 
-    for key, value in nodes:
-        key_value = key.value
-        if key_value not in merged:
-            merged[key_value] = value
+    for key_node, value_node in nodes:
+        key = key_node.value
+        if key not in merged:
+            merged[key] = value_node
         else:
-            existing_value = merged[key_value]
-            if isinstance(existing_value, MappingNode) and isinstance(value, MappingNode):
-                # Deep merge the MappingNodes
-                for sub_key, sub_value in value.value:
-                    existing_value.value.append((sub_key, sub_value))
-                # Remove duplicates in the merged MappingNode
-                unique_mapping = {}
-                for sub_key, sub_value in existing_value.value:
-                    unique_mapping[sub_key.value] = sub_value
-                existing_value.value = list(unique_mapping.items())
+            existing_value = merged[key]
+            if isinstance(existing_value, MappingNode) and isinstance(value_node, MappingNode):
+                for sub_key_node, sub_value_node in value_node.value:
+                    sub_key = sub_key_node.value
+                    merged_value = existing_value.value.get(sub_key)
+                    if merged_value is not None:
+                        existing_value.value[sub_key] = sub_value_node
+                    else:
+                        existing_value.value[sub_key] = sub_value_node
             else:
-                # If they are not both MappingNodes, the last one wins
-                merged[key_value] = value
+                merged[key] = value_node
 
-    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged.items()]
+    result = []
+    for key, value in merged.items():
+        result.append((ScalarNode(tag='tag:yaml.org,2002:str', value=key), value))
+
+    return result

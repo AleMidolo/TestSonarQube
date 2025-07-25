@@ -1,7 +1,6 @@
 def force_string(obj):
     """
-    This function returns the bytes object corresponding to ``obj``
-    in case it is a string using UTF-8. 
+    यह फ़ंक्शन UTF-8 का उपयोग करके `obj` के लिए संबंधित बाइट्स ऑब्जेक्ट लौटाता है, यदि `obj` एक स्ट्रिंग है।
     """
     if isinstance(obj, str):
         return obj.encode('utf-8')

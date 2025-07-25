@@ -1,28 +1,26 @@
 def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
                      extra_vars=None, ansible_args=None):
     """
-    Wraps the 'ansible-playbook' CLI.
+    'ansible-playbook' CLI को रैप करता है।
 
-    :param ir_workspace: An Infrared Workspace object represents the active
-    workspace
-    :param ir_plugin: An InfraredPlugin object of the current plugin
-    :param playbook_path: the playbook to invoke
-    :param verbose: Ansible verbosity level
-    :param extra_vars: dict. Passed to Ansible as extra-vars
-    :param ansible_args: dict of ansible-playbook arguments to plumb down
-        directly to Ansible.
+    :param ir_workspace: एक Infrared Workspace ऑब्जेक्ट जो सक्रिय वर्कस्पेस को दर्शाता है।
+    :param ir_plugin: वर्तमान प्लगइन का एक InfraredPlugin ऑब्जेक्ट।
+    :param playbook_path: वह प्लेबुक जिसे निष्पादित करना है।
+    :param verbose: Ansible की वर्बोसिटी स्तर।
+    :param extra_vars: dict। इसे Ansible को अतिरिक्त वेरिएबल्स (extra-vars) के रूप में पास किया जाता है।
+    :param ansible_args: ansible-playbook के तर्कों का एक dict, जिसे सीधे Ansible तक पहुँचाने के लिए उपयोग किया जाता है।
     """
     import subprocess
     import json
 
     command = ['ansible-playbook', playbook_path]
 
-    if verbose:
-        command.append(f'-v' * verbose)
+    if verbose is not None:
+        command += ['-v'] * verbose
 
     if extra_vars:
-        extra_vars_str = ' '.join(f'--extra-vars="{k}={v}"' for k, v in extra_vars.items())
-        command.append(extra_vars_str)
+        extra_vars_str = ' '.join(f"{key}={value}" for key, value in extra_vars.items())
+        command += ['--extra-vars', extra_vars_str]
 
     if ansible_args:
         for key, value in ansible_args.items():
@@ -30,7 +28,7 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
             if value is not None:
                 command.append(str(value))
 
-    result = subprocess.run(command, capture_output=True, text=True)
+    result = subprocess.run(command, cwd=ir_workspace.path, capture_output=True, text=True)
 
     if result.returncode != 0:
         raise RuntimeError(f"Ansible playbook failed: {result.stderr}")

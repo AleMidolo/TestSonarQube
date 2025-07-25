@@ -1,14 +1,19 @@
 def get_spec_defaults(self):
     """
-    Resolve arguments' values from spec and other sources.
+    स्पेक और अन्य स्रोतों से तर्कों के डिफ़ॉल्ट मान प्राप्त करें।
     """
     defaults = {}
-    # Assuming 'self.spec' contains the specifications
-    for key, value in self.spec.items():
-        if isinstance(value, dict) and 'default' in value:
-            defaults[key] = value['default']
-        elif isinstance(value, list) and value:
-            defaults[key] = value[0]  # Taking the first value as default
-        else:
-            defaults[key] = None  # No default found
+    # Assuming 'self.spec' contains the specifications from which to extract defaults
+    if hasattr(self, 'spec'):
+        for arg in self.spec.get('args', []):
+            if 'default' in arg:
+                defaults[arg['name']] = arg['default']
+    
+    # Assuming 'self.sources' contains other sources to extract defaults
+    if hasattr(self, 'sources'):
+        for source in self.sources:
+            for arg in source.get('args', []):
+                if 'default' in arg and arg['name'] not in defaults:
+                    defaults[arg['name']] = arg['default']
+    
     return defaults

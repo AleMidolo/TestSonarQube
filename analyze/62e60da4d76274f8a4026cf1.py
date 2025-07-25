@@ -1,14 +1,16 @@
 def values(self, *keys):
     """
-    Return the values of the record, optionally filtering to
-    include only certain values by index or key.
+    रिकॉर्ड के मान (values) लौटाता है, और वैकल्पिक रूप से केवल कुछ विशिष्ट मानों को शामिल करने के लिए इंडेक्स या कुंजी द्वारा फ़िल्टर करता है।
 
-    :param keys: indexes or keys of the items to include; if none
-                 are provided, all values will be included
-    :return: list of values
-    :rtype: list
+    पैरामीटर (Parameters): 
+    - keys: उन आइटम्स के इंडेक्स या कुंजियाँ (keys) जिन्हें शामिल करना है; यदि कोई कुंजी प्रदान नहीं की जाती है, तो सभी मान (values) शामिल किए जाएंगे।  
+
+    वापसी (Return):
+    - मानों (values) की सूची।  
+
+    वापसी प्रकार (Return Type):
+    - सूची (list)
     """
     if not keys:
-        return list(self.record.values())
-    
-    return [self.record[key] for key in keys if key in self.record]
+        return list(self.data.values())
+    return [self.data[key] for key in keys if key in self.data]

@@ -1,8 +1,9 @@
+import os
+
 def is_gitbash():
     """
-    returns True if you run in a Windows gitbash
+    यदि आप Windows के Gitbash में प्रोग्राम चला रहे हैं तो True रिटर्न करता है।
 
-    :return: True if gitbash
+    :return: यदि Gitbash है तो True
     """
-    import os
-    return 'GIT_BASH' in os.environ.get('TERM', '')
+    return os.environ.get('TERM', '').startswith('bash') and os.path.basename(os.environ.get('SHELL', '')) == 'bash'

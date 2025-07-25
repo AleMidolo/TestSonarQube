@@ -3,33 +3,34 @@ import functools
 
 def lfu_cache(maxsize=128, typed=False):
     """
-    Decorator to wrap a function with a memoizing callable that saves
-    up to `maxsize` results based on a Least Frequently Used (LFU)
-    algorithm.
+    एक डेकोरेटर जो एक फ़ंक्शन को एक मेमोराइज़िंग कॉल करने योग्य (memoizing callable) के साथ रैप करता है,
+    जो `maxsize` तक के परिणामों को Least Frequently Used (LFU) एल्गोरिदम के आधार पर सहेजता है।
     """
     def decorator(func):
         cache = {}
         frequency = defaultdict(int)
         order = OrderedDict()
-        
+
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            key = args if not typed else (args, frozenset(kwargs.items()))
+            key = (args, frozenset(kwargs.items())) if typed else args
             if key in cache:
                 frequency[key] += 1
                 order.move_to_end(key)
                 return cache[key]
             result = func(*args, **kwargs)
-            if len(cache) >= maxsize:
-                lfu_key = min(order, key=lambda k: frequency[k])
-                cache.pop(lfu_key)
-                frequency.pop(lfu_key)
-                order.pop(lfu_key)
             cache[key] = result
-            frequency[key] = 1
-            order[key] = None
+            frequency[key] += 1
+            order[key] = frequency[key]
+
+            if len(cache) > maxsize:
+                lfu_key = min(order, key=order.get)
+                del cache[lfu_key]
+                del frequency[lfu_key]
+                del order[lfu_key]
+
             return result
-        
+
         return wrapper
-    
+
     return decorator

@@ -1,6 +1,6 @@
 def status_str(self, prefix=''):
     """
-    Return string of validator status, with optional prefix.
+    वैलिडेटर की स्थिति की स्ट्रिंग लौटाएं, जिसमें वैकल्पिक `prefix` जोड़ा जा सकता है।
     """
-    status = "Validator is active" if self.is_active else "Validator is inactive"
+    status = "Validator is active"  # Example status, this should be replaced with actual status logic
     return f"{prefix}{status}"

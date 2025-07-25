@@ -1,21 +1,23 @@
+from datetime import datetime, timedelta, timezone
+
 def hydrate_time(nanoseconds, tz=None):
     """
-    Hydrator for `Time` and `LocalTime` values.
+    `Time` और `LocalTime` मानों के लिए हाइड्रेटर।  
 
-    :param nanoseconds: The time in nanoseconds to be converted.
-    :param tz: Optional timezone information.
-    :return: Time
+    पैरामीटर (Parameters):
+    - nanoseconds: 
+    - tz: 
+
+    वापसी मान:
+    - समय 
     """
-    from datetime import datetime, timezone, timedelta
-
     # Convert nanoseconds to seconds
     seconds = nanoseconds / 1_000_000_000
-
-    # Create a UTC datetime object
-    utc_time = datetime.fromtimestamp(seconds, tz=timezone.utc)
-
+    # Create a datetime object from the epoch
+    time = datetime(1970, 1, 1, tzinfo=timezone.utc) + timedelta(seconds=seconds)
+    
+    # If a timezone is provided, convert the time to that timezone
     if tz is not None:
-        # Convert to the specified timezone
-        local_time = utc_time.astimezone(tz)
-        return local_time
-    return utc_time
+        time = time.astimezone(tz)
+    
+    return time

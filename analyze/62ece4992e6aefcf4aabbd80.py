@@ -2,30 +2,30 @@ import os
 
 def remove_ending_os_sep(input_list):
     """
-    Iterate over a string list and remove trailing os seperator characters.
+    विवरण:
+    एक स्ट्रिंग सूची पर पुनरावृत्ति करें और अंतिम OS विभाजक वर्णों को हटा दें।  
+    प्रत्येक स्ट्रिंग की जांच की जाती है कि उसकी लंबाई एक से अधिक है और क्या उसका अंतिम वर्ण पथनाम विभाजक है।  
+    यदि ऐसा है, तो पथनाम विभाजक वर्ण को हटा दिया जाता है।  
 
-    Each string is tested if its length is greater than one and if the last
-    character is the pathname seperator. If so, the pathname seperator character
-    is removed.
+    तर्क (Arguments):
+    - `input_list`: स्ट्रिंग्स की सूची।  
 
-    Args:
-        input_list: list of strings
+    रिटर्न (Returns):
+    - प्रोसेस की गई स्ट्रिंग्स की सूची।  
 
-    Returns:
-        Processed list of strings
-
-    Raises:
-        TypeError
+    त्रुटि (Raises):
+    - `TypeError`: यदि इनपुट सूची का प्रकार सही नहीं है।  
     """
     if not isinstance(input_list, list):
-        raise TypeError("input_list must be a list of strings")
+        raise TypeError("Input must be a list.")
     
-    os_sep = os.path.sep
     processed_list = []
-    
     for item in input_list:
-        if isinstance(item, str) and len(item) > 1 and item.endswith(os_sep):
-            processed_list.append(item[:-1])
+        if isinstance(item, str) and len(item) > 0:
+            if item.endswith(os.sep):
+                processed_list.append(item[:-1])
+            else:
+                processed_list.append(item)
         else:
             processed_list.append(item)
     

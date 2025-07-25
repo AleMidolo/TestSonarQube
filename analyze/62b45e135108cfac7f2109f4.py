@@ -1,5 +1,5 @@
-def is_valid(self, identifier): 
-    """
-    Return True if identifier is valid, always True in this base implementation.
+def is_valid(self, identifier):
+    """ 
+    पहचानकर्ता मान्य है तो सत्य लौटाएं। इस बेस इम्प्लीमेंटेशन में, हमेशा सत्य लौटाया जाता है।
     """
     return True
