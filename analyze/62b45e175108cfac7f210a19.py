@@ -16,5 +16,7 @@ def validate_fixity(self, fixity, manifest_files):
     for file, checksum in fixity['checksums'].items():
         if file not in manifest_files:
             return self.error(f"File {file} is not listed in the manifest.")
+        if not isinstance(checksum, str):
+            return self.error(f"Checksum for {file} must be a string.")
 
     return True

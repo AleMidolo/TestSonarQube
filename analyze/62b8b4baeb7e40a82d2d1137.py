@@ -39,14 +39,16 @@ def verifyObject(iface, candidate, tentative=False):
         
         # Check method signature
         iface_method = iface[method_name]
-        try:
-            sig_iface = signature(iface_method)
-            sig_candidate = signature(method)
-            if len(sig_candidate.parameters) < len(sig_iface.parameters):
-                errors.append(f"{method_name} in {candidate} has insufficient parameters")
-            # Additional checks can be added here for parameter types if needed
-        except ValueError:
-            errors.append(f"Could not get signature for {method_name} in {candidate}")
+        iface_sig = signature(iface_method)
+        candidate_sig = signature(method)
+
+        if len(iface_sig.parameters) != len(candidate_sig.parameters):
+            errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
+            continue
+
+        for param in iface_sig.parameters.values():
+            if param.default is Parameter.empty and param.name not in candidate_sig.parameters:
+                errors.append(f"{method_name} in {candidate} is missing required parameter {param.name}")
 
     required_attributes = iface.names()
     for attr_name in required_attributes:
@@ -56,7 +58,6 @@ def verifyObject(iface, candidate, tentative=False):
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
-        else:
-            raise Invalid(errors)
+        raise Invalid(errors)
 
     return True

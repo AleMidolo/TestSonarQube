@@ -33,7 +33,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left", field_names=("x"
         elif get_coordinate == "middle":
             coordinate = bin_.center
         else:
-            raise ValueError("Invalid value for get_coordinate. Must be 'left', 'right', or 'middle'.")
+            raise ValueError("Invalid value for get_coordinate. Choose from 'left', 'right', or 'middle'.")
 
         value = make_value(bin_)
         coordinates.append((coordinate, *value))

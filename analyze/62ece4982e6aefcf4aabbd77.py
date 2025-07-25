@@ -23,7 +23,7 @@ def parse_frequency(frequency):
     if frequency is None or frequency.lower() == "always":
         return None
 
-    units = {
+    time_units = {
         "seconds": "seconds",
         "second": "seconds",
         "minutes": "minutes",
@@ -34,6 +34,7 @@ def parse_frequency(frequency):
         "day": "days",
         "weeks": "weeks",
         "week": "weeks",
+        "months": "days",  # Approximation: 1 month = 30 days
         "months": "days",  # Approximation: 1 month = 30 days
         "years": "days"    # Approximation: 1 year = 365 days
     }
@@ -48,8 +49,8 @@ def parse_frequency(frequency):
         raise ValueError("Invalid number in frequency")
 
     unit = parts[1].lower()
-    if unit not in units:
+    if unit not in time_units:
         raise ValueError("Invalid time unit in frequency")
 
-    kwargs = {units[unit]: value}
+    kwargs = {time_units[unit]: value}
     return datetime.timedelta(**kwargs)
