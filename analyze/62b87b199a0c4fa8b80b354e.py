@@ -9,13 +9,7 @@ def is_fill_request_seq(seq):
     if not seq:
         return False
     
-    # Check if the sequence is a Source sequence
-    if isinstance(seq, Source):
-        return False
-    
-    # Check if the sequence contains at least one FillRequest element
-    for element in seq:
-        if isinstance(element, FillRequest):
-            return True
-            
-    return False
+    is_fill_request = any(isinstance(item, FillRequest) for item in seq)
+    is_source_sequence = isinstance(seq, Source)
+
+    return is_fill_request and not is_source_sequence

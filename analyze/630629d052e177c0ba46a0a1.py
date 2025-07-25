@@ -13,7 +13,7 @@ def verify_relayable_signature(public_key, doc, signature):
     ctx = SignatureContext()
 
     # Load the public key
-    key = Key.from_string(public_key, KeyData.PEM)
+    key = Key.from_string(public_key, KeyData.KeyFormat.PEM)
     ctx.key = key
 
     # Find the signature node in the XML document
@@ -27,5 +27,5 @@ def verify_relayable_signature(public_key, doc, signature):
         verify(signature_node, ctx)
         return True
     except Exception as e:
-        print(f"Verification failed: {e}")
+        print(f"Signature verification failed: {e}")
         return False

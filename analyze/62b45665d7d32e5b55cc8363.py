@@ -9,10 +9,10 @@ def make_parsers():
 
     # Example subparser for a command 'foo'
     parser_foo = subparsers.add_parser('foo', help='Foo command help')
-    parser_foo.add_argument('--option', type=str, help='An option for foo')
+    parser_foo.add_argument('--option', type=str, help='Option for foo command')
 
     # Example subparser for a command 'bar'
     parser_bar = subparsers.add_parser('bar', help='Bar command help')
-    parser_bar.add_argument('--flag', action='store_true', help='A flag for bar')
+    parser_bar.add_argument('--flag', action='store_true', help='Flag for bar command')
 
     return parser, subparsers

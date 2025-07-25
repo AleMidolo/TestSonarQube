@@ -16,7 +16,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 config = json.load(file)
 
             if resolve_env:
-                config = {key: os.path.expandvars(value) for key, value in config.items()}
+                config = {k: os.path.expandvars(v) for k, v in config.items()}
 
             # Apply overrides
             config.update(overrides)

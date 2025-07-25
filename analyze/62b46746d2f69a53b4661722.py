@@ -20,15 +20,15 @@ def absorb(self, args):
             if operator == '&':
                 if op1 == op2 or (op1 == f'~{op2}' or op2 == f'~{op1}'):
                     result.append(op1)
-                elif op1.startswith('~') and op2.startswith('~'):
-                    result.append(expr)
+                elif op1 == f'({op1} | {op2})':
+                    result.append(op1)
                 else:
                     result.append(expr)
             elif operator == '|':
                 if op1 == op2 or (op1 == f'~{op2}' or op2 == f'~{op1}'):
                     result.append(op1)
-                elif op1.startswith('~') and op2.startswith('~'):
-                    result.append(expr)
+                elif op1 == f'({op1} & {op2})':
+                    result.append(op1)
                 else:
                     result.append(expr)
         else:

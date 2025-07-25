@@ -12,7 +12,7 @@ def validate_from_file(cls, yaml_file=None):
     required_fields = ['field1', 'field2', 'field3']  # Example required fields
 
     if yaml_file is None or not os.path.isfile(yaml_file):
-        raise FileNotFoundError("The specified YAML file does not exist.")
+        raise FileNotFoundError("YAML file not found.")
 
     with open(yaml_file, 'r') as file:
         data = yaml.safe_load(file)

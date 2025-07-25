@@ -30,32 +30,45 @@ def verifyObject(iface, candidate, tentative=False):
         alone, like before.
     """
     from zope.interface import providedBy, Invalid
-    from inspect import signature, Signature
+    from inspect import signature, Parameter
 
     errors = []
 
     if not tentative and not providedBy(candidate, iface):
         errors.append(f"{candidate} does not provide {iface}")
 
-    required_methods = iface.names()  # Assuming iface has a method to get required methods
+    required_methods = iface.names()
     for method_name in required_methods:
         if not hasattr(candidate, method_name):
             errors.append(f"{candidate} is missing method {method_name}")
             continue
         
         method = getattr(candidate, method_name)
-        expected_signature = iface.methodSignature(method_name)  # Assuming iface has a way to get expected signature
-        actual_signature = signature(method)
+        if not callable(method):
+            errors.append(f"{method_name} in {candidate} is not callable")
+            continue
+        
+        # Check method signature
+        iface_method = iface[method_name]
+        iface_sig = signature(iface_method)
+        method_sig = signature(method)
 
-        if expected_signature != actual_signature:
-            errors.append(f"Method {method_name} in {candidate} has incorrect signature: expected {expected_signature}, got {actual_signature}")
+        if len(method_sig.parameters) < len(iface_sig.parameters):
+            errors.append(f"{method_name} in {candidate} has fewer parameters than required")
+        else:
+            for param in iface_sig.parameters:
+                if param.name not in method_sig.parameters:
+                    errors.append(f"{method_name} in {candidate} is missing parameter {param.name}")
 
-    required_attributes = iface.attributes()  # Assuming iface has a method to get required attributes
+    required_attributes = iface.attributes()
     for attr_name in required_attributes:
         if not hasattr(candidate, attr_name):
             errors.append(f"{candidate} is missing attribute {attr_name}")
 
     if errors:
-        raise Invalid(errors)
+        if len(errors) == 1:
+            raise Invalid(errors[0])
+        else:
+            raise Invalid(errors)
 
     return True
