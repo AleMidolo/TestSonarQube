@@ -21,7 +21,7 @@ def _legacy_mergeOrderings(orderings):
     # Create a graph to represent the orderings
     graph = defaultdict(list)
     in_degree = defaultdict(int)
-    
+
     # Build the graph and in-degree count
     for ordering in orderings:
         for i in range(len(ordering)):

@@ -7,7 +7,14 @@ def cached(cache, key=hashkey, lock=None):
         def wrapper(*args, **kwargs):
             # Create a unique cache key based on the function arguments
             cache_key = key(*args, **kwargs)
-            with (lock if lock else dummy_lock):
+            if lock:
+                with lock:
+                    if cache_key in cache:
+                        return cache[cache_key]
+                    result = func(*args, **kwargs)
+                    cache[cache_key] = result
+                    return result
+            else:
                 if cache_key in cache:
                     return cache[cache_key]
                 result = func(*args, **kwargs)

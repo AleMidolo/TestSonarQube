@@ -8,27 +8,21 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     if isinstance(commands, str):
         commands = [commands]
     
-    results = []
+    if env is None:
+        env = os.environ.copy()
+    
     for command in commands:
         full_command = [command] + args
         if verbose:
             print(f"Running command: {' '.join(full_command)}")
         
-        process = subprocess.Popen(
-            full_command,
-            cwd=cwd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE if not hide_stderr else subprocess.DEVNULL,
-            env=env
-        )
-        
-        stdout, stderr = process.communicate()
-        result = {
-            'command': command,
-            'returncode': process.returncode,
-            'stdout': stdout.decode('utf-8'),
-            'stderr': stderr.decode('utf-8') if not hide_stderr else None
-        }
-        results.append(result)
-    
-    return results
+        with subprocess.Popen(full_command, cwd=cwd, env=env, 
+                              stdout=subprocess.PIPE, 
+                              stderr=subprocess.PIPE if not hide_stderr else subprocess.DEVNULL) as process:
+            stdout, stderr = process.communicate()
+            if process.returncode != 0:
+                raise subprocess.CalledProcessError(process.returncode, full_command, output=stdout, stderr=stderr)
+            if verbose and stdout:
+                print(stdout.decode())
+            if not hide_stderr and stderr:
+                print(stderr.decode())

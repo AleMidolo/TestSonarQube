@@ -16,12 +16,11 @@ def data(self, *keys):
         if isinstance(key, int):
             if key < 0 or key >= len(self):
                 raise IndexError("Index out of bounds")
-            record_dict[self[key]] = self[key]
+            record_dict[self.keys()[key]] = self.values()[key]
         else:
             record_dict[key] = self.get(key, None)
     
     if not keys:
-        for key in self:
-            record_dict[key] = self[key]
+        return dict(zip(self.keys(), self.values()))
     
     return record_dict
