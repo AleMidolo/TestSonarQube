@@ -10,10 +10,10 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
     :param verbose: If True, print the command and its output (optional).
     :param hide_stderr: If True, suppress stderr output (optional).
     :param env: Environment variables to pass to the command (optional).
-    :return: The output of the command.
+    :return: The return code of the command.
     """
     full_command = commands + args
-    stderr = subprocess.PIPE if hide_stderr else None
+    stderr = subprocess.DEVNULL if hide_stderr else None
     
     if verbose:
         print(f"Running command: {' '.join(full_command)}")
@@ -27,7 +27,7 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
         text=True
     )
     
-    if verbose:
-        print(f"Command output: {result.stdout}")
+    if verbose and result.stdout:
+        print(result.stdout)
     
-    return result.stdout
+    return result.returncode

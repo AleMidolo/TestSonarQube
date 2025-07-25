@@ -1,13 +1,6 @@
 from datetime import time, timedelta, tzinfo
 
-class Time:
-    def __init__(self, hour, minute, second, microsecond, tzinfo=None):
-        self._hour = hour
-        self._minute = minute
-        self._second = second
-        self._microsecond = microsecond
-        self._tzinfo = tzinfo
-
+class Time(time):
     @classmethod
     def from_ticks(cls, ticks, tz=None):
         """
@@ -26,20 +19,11 @@ class Time:
         if not (0 <= ticks < 86400000000000):
             raise ValueError("ticks must be between 0 and 86400000000000")
 
-        nanoseconds_per_hour = 3600 * 10**9
-        nanoseconds_per_minute = 60 * 10**9
-        nanoseconds_per_second = 10**9
-        nanoseconds_per_microsecond = 10**3
+        nanoseconds = ticks % 1000
+        microseconds = (ticks // 1000) % 1000
+        milliseconds = (ticks // 1000000) % 1000
+        seconds = (ticks // 1000000000) % 60
+        minutes = (ticks // 60000000000) % 60
+        hours = (ticks // 3600000000000) % 24
 
-        hours = ticks // nanoseconds_per_hour
-        ticks %= nanoseconds_per_hour
-
-        minutes = ticks // nanoseconds_per_minute
-        ticks %= nanoseconds_per_minute
-
-        seconds = ticks // nanoseconds_per_second
-        ticks %= nanoseconds_per_second
-
-        microseconds = ticks // nanoseconds_per_microsecond
-
-        return cls(hours, minutes, seconds, microseconds, tz)
+        return cls(hours, minutes, seconds, milliseconds * 1000 + microseconds, tzinfo=tz)

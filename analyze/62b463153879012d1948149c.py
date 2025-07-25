@@ -1,5 +1,3 @@
-import os
-
 def select_filenames_by_prefix(prefix, files):
     """
     Get files which belongs to a document package.
@@ -17,4 +15,5 @@ def select_filenames_by_prefix(prefix, files):
     list
         files paths which basename files matches to prefix
     """
+    import os
     return [file for file in files if os.path.basename(file).startswith(prefix)]

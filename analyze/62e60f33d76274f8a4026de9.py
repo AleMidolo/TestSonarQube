@@ -7,8 +7,9 @@ def dehydrate_point(value):
     :return: A dictionary representation of the Point object.
     :rtype: dict
     """
-    if not value:
-        return None
+    if not isinstance(value, Point):
+        raise TypeError("Expected a Point object")
+    
     return {
         'x': value.x,
         'y': value.y,

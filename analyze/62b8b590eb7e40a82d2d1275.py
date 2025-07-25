@@ -47,4 +47,8 @@ def _legacy_mergeOrderings(orderings):
             if in_degree[v] == 0:
                 queue.append(v)
 
+    # Check for cycles (if any node still has in-degree > 0)
+    if len(result) != len(all_nodes):
+        raise ValueError("Input orderings contain a cycle or conflict")
+
     return result

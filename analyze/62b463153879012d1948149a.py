@@ -19,13 +19,13 @@ def _group_files_by_xml_filename(source, xmls, files):
     -------
     dict
         key: name of the XML files
-        value: Package
+        value: list of files associated with the XML file
     """
     grouped_files = {}
     
     for xml in xmls:
         xml_basename = os.path.splitext(xml)[0]
-        matching_files = [file for file in files if file.startswith(xml_basename)]
-        grouped_files[xml] = matching_files
+        associated_files = [file for file in files if file.startswith(xml_basename)]
+        grouped_files[xml] = associated_files
     
     return grouped_files

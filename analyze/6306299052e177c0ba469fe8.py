@@ -7,10 +7,10 @@ def check_sender_and_entity_handle_match(sender_handle, entity_handle):
     AND the object. We must ensure they're the same.
 
     Args:
-        sender_handle (str): The handle of the sender from the payload headers.
-        entity_handle (str): The handle of the entity from the payload object.
+        sender_handle (str): The handle of the sender.
+        entity_handle (str): The handle of the entity in the payload.
 
     Returns:
-        bool: True if the sender and entity handles match, False otherwise.
+        bool: True if the handles match, False otherwise.
     """
     return sender_handle == entity_handle

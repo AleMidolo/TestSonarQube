@@ -8,24 +8,23 @@ def verify_relayable_signature(public_key, doc, signature):
     """
     Verify the signed XML elements to have confidence that the claimed
     author did actually generate this message.
+    
+    :param public_key: The public key used for verification.
+    :param doc: The XML document to verify.
+    :param signature: The signature to verify against the document.
+    :return: True if the signature is valid, False otherwise.
     """
     try:
         # Parse the XML document
         root = ET.fromstring(doc)
         
-        # Extract the signed elements
-        signed_elements = root.findall('.//*[@signed="true"]')
+        # Serialize the XML document to bytes
+        doc_bytes = ET.tostring(root, encoding='utf-8')
         
-        # Concatenate the signed elements to form the message
-        message = ''.join([ET.tostring(element, encoding='unicode') for element in signed_elements])
-        
-        # Load the public key
-        pub_key = serialization.load_pem_public_key(public_key.encode())
-        
-        # Verify the signature
-        pub_key.verify(
+        # Verify the signature using the public key
+        public_key.verify(
             signature,
-            message.encode(),
+            doc_bytes,
             padding.PSS(
                 mgf=padding.MGF1(hashes.SHA256()),
                 salt_length=padding.PSS.MAX_LENGTH

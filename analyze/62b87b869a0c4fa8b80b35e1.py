@@ -32,52 +32,37 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     Return the resulting graph.
     """
-    from collections import namedtuple
     import numpy as np
+
+    if make_value is None:
+        make_value = lambda bin_: bin_
+
+    if scale is True:
+        scale = hist.scale
 
     # Determine the coordinate for each bin
     if get_coordinate == "left":
-        coordinates = hist.bin_edges[:-1]
+        coordinates = hist.bins.left
     elif get_coordinate == "right":
-        coordinates = hist.bin_edges[1:]
+        coordinates = hist.bins.right
     elif get_coordinate == "middle":
-        coordinates = (hist.bin_edges[:-1] + hist.bin_edges[1:]) / 2
+        coordinates = (hist.bins.left + hist.bins.right) / 2
     else:
         raise ValueError("get_coordinate must be 'left', 'right', or 'middle'")
 
-    # Default make_value function if not provided
-    if make_value is None:
-        make_value = lambda bin_content: bin_content
+    # Apply make_value to each bin
+    values = [make_value(bin_) for bin_ in hist.bins]
 
-    # Extract values from histogram bins
-    values = [make_value(bin_content) for bin_content in hist.bin_contents]
+    # Ensure values are in a consistent format (e.g., tuple or list)
+    if not isinstance(values[0], (tuple, list)):
+        values = [(v,) for v in values]
 
-    # Determine the number of fields required
-    if isinstance(values[0], (tuple, list)):
-        num_fields = len(values[0]) + 1  # +1 for the x-coordinate
-    else:
-        num_fields = 2  # x and y
+    # Combine coordinates and values into a structured array
+    dtype = [(field_names[0], float)] + [(field_names[i], float) for i in range(1, len(values[0]) + 1)]
+    graph_data = np.array([(coord,) + tuple(val) for coord, val in zip(coordinates, values)], dtype=dtype)
 
-    # Ensure field_names has the correct length
-    if len(field_names) != num_fields:
-        raise ValueError(f"field_names must have {num_fields} elements")
+    # Create the graph
+    from graph import Graph
+    graph = Graph(graph_data, scale=scale)
 
-    # Create the graph data structure
-    GraphPoint = namedtuple('GraphPoint', field_names)
-    graph_data = []
-
-    for coord, value in zip(coordinates, values):
-        if isinstance(value, (tuple, list)):
-            graph_data.append(GraphPoint(coord, *value))
-        else:
-            graph_data.append(GraphPoint(coord, value))
-
-    # Determine the scale
-    if scale is True:
-        scale = hist.scale
-    elif scale is None:
-        scale = "unknown"
-
-    # Create and return the graph
-    Graph = namedtuple('Graph', ['data', 'scale'])
-    return Graph(data=graph_data, scale=scale)
+    return graph

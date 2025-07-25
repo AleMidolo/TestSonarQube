@@ -21,7 +21,7 @@ def find_path_type(path):
     namaste_files = [f for f in os.listdir(path) if f.startswith('0=')]
     
     if not namaste_files:
-        return 'file' if os.path.isfile(path) else 'unknown'
+        return f"No Namaste file found in {path}"
     
     namaste_file = namaste_files[0]
     with open(os.path.join(path, namaste_file), 'r') as f:

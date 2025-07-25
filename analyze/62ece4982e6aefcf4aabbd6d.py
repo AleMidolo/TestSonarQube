@@ -7,8 +7,8 @@ def string_to_int(string: str, alphabet: List[str]) -> int:
     The input is assumed to have the most significant digit first.
     """
     base = len(alphabet)
+    char_to_value = {char: idx for idx, char in enumerate(alphabet)}
     result = 0
-    for i, char in enumerate(string):
-        value = alphabet.index(char)
-        result = result * base + value
+    for char in string:
+        result = result * base + char_to_value[char]
     return result

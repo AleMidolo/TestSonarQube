@@ -25,4 +25,4 @@ def split(s, platform='this'):
     else:
         raise ValueError("Invalid platform value")
     
-    return [match.group(0) for match in regex.finditer(s)]
+    return regex.findall(s)
