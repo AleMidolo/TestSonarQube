@@ -2,12 +2,12 @@ def dehydrate_point(value):
     """
     Deshidratador para datos de tipo `Point`.  
 
-    :param value: Un objeto de tipo Point que se desea deshidratar.
+    :param value:  
     :type value: Point  
-    :return: Un diccionario con las coordenadas del punto.
+    :return:  
     """
     if not isinstance(value, Point):
-        raise ValueError("El valor debe ser una instancia de Point.")
+        raise ValueError("Expected a Point instance")
     
     return {
         'x': value.x,

@@ -20,12 +20,10 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     
     with open(tar_gz_path, 'wb') as f:
         f.write(response.content)
-
+    
     # Extraer el archivo .tar.gz
     with tarfile.open(tar_gz_path, 'r:gz') as tar:
         tar.extractall(path=destination_path)
-
-    # Eliminar el archivo .tar.gz después de la extracción
-    tar_gz_path.unlink()
-
+    
+    # Retornar el directorio donde se ha extraído el archivo
     return destination_path
