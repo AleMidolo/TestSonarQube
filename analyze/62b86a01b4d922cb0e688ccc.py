@@ -13,12 +13,12 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
         if isinstance(value, dict):
             observer_schema[key] = generate_default_observer_schema_dict(value)
             
-        # Recursively process lists    
+        # Recursively process lists
         elif isinstance(value, list):
             from generate_default_observer_schema_list import generate_default_observer_schema_list
             observer_schema[key] = generate_default_observer_schema_list(value)
             
-        # Set all other values to None    
+        # Set all other values to None
         else:
             observer_schema[key] = None
             

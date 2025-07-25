@@ -13,16 +13,16 @@ def difference(d1, d2, level=-1):
     
     # Iterate through all keys in d1
     for key in d1:
-        # If key not in d2, include it in result
+        # If key not in d2, include the entire value from d1
         if key not in d2:
             result[key] = d1[key]
-        # If key in d2 but we can still recurse
+        # If we haven't reached max recursion level and both values are dicts
         elif level != 0 and isinstance(d1[key], dict) and isinstance(d2[key], dict):
-            # Recursively find differences in nested dictionaries
-            diff = difference(d1[key], d2[key], level - 1 if level > 0 else -1)
-            if diff:
-                result[key] = diff
-        # If values are different at level 1 or above
+            # Recursively get difference of nested dicts
+            nested_diff = difference(d1[key], d2[key], level - 1 if level > 0 else -1)
+            if nested_diff:
+                result[key] = nested_diff
+        # If values are different at this level
         elif d1[key] != d2[key]:
             result[key] = d1[key]
             

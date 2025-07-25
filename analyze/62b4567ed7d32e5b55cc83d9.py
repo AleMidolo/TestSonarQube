@@ -44,9 +44,8 @@ def deep_merge_nodes(nodes):
             )
             result[key] = (key_node, merged_value)
             
+        # Si no son MappingNodes o son de diferente tipo, el último valor prevalece
         else:
-            # Si no son MappingNodes o son de diferentes tipos,
-            # el último valor prevalece
             result[key] = (key_node, value_node)
     
     # Convertir el diccionario resultante de vuelta a una lista de tuplas

@@ -9,16 +9,16 @@ def make_parsers():
     subparsers = parser.add_subparsers(dest='command', help='Comandos disponibles')
 
     # Crear subanalizador para el comando 'add'
-    parser_add = subparsers.add_parser('add', help='Agregar un nuevo elemento')
-    parser_add.add_argument('name', help='Nombre del elemento')
-    parser_add.add_argument('--value', '-v', help='Valor del elemento')
+    add_parser = subparsers.add_parser('add', help='Agregar un elemento')
+    add_parser.add_argument('item', help='Elemento a agregar')
+    add_parser.add_argument('--priority', type=int, default=1, help='Prioridad del elemento')
 
     # Crear subanalizador para el comando 'list' 
-    parser_list = subparsers.add_parser('list', help='Listar elementos')
-    parser_list.add_argument('--filter', '-f', help='Filtrar resultados')
+    list_parser = subparsers.add_parser('list', help='Listar elementos')
+    list_parser.add_argument('--sort', choices=['asc', 'desc'], help='Ordenar elementos')
 
-    # Crear subanalizador para el comando 'delete'
-    parser_delete = subparsers.add_parser('delete', help='Eliminar un elemento')
-    parser_delete.add_argument('id', help='ID del elemento a eliminar')
+    # Crear subanalizador para el comando 'remove'
+    remove_parser = subparsers.add_parser('remove', help='Eliminar un elemento')
+    remove_parser.add_argument('id', type=int, help='ID del elemento a eliminar')
 
-    return (parser, parser_add, parser_list, parser_delete)
+    return parser, add_parser, list_parser, remove_parser

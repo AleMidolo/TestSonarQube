@@ -11,11 +11,13 @@ def determineMetaclass(bases, explicit_mc=None):
     # Obtener metaclases de las clases base
     for base in bases:
         if hasattr(base, '__class__'):
-            metaclasses.append(type(base))
+            metaclass = type(base)
+            if metaclass not in metaclasses:
+                metaclasses.append(metaclass)
     
     if not metaclasses:
         return type
-        
+    
     # Si solo hay una metaclase, retornarla
     if len(metaclasses) == 1:
         return metaclasses[0]

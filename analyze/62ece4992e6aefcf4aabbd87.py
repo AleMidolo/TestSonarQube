@@ -18,12 +18,12 @@ def build_app_logger(name='app', logfile='app.log', debug=True):
     # Set logging level based on debug parameter
     logger.setLevel(logging.DEBUG if debug else logging.INFO)
     
-    # Create file handler
+    # Create handlers
     file_handler = logging.FileHandler(logfile)
-    file_handler.setLevel(logging.DEBUG if debug else logging.INFO)
-    
-    # Create console handler
     console_handler = logging.StreamHandler()
+    
+    # Set handler levels
+    file_handler.setLevel(logging.DEBUG if debug else logging.INFO)
     console_handler.setLevel(logging.DEBUG if debug else logging.INFO)
     
     # Create formatter

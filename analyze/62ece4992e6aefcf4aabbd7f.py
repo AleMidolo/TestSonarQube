@@ -8,31 +8,33 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
     from urllib.parse import urlparse
     
+    # Validar que el href no esté vacío
     if not image_href:
-        raise ValueError("El enlace de la imagen está vacío")
+        raise ValueError("El href de la imagen no puede estar vacío")
         
     try:
-        # Analizar la URL
+        # Parsear la URL
         parsed_url = urlparse(image_href)
         
-        # Verificar el esquema
-        if parsed_url.scheme not in ['http', 'https']:
-            raise ValueError("Esquema de URL no válido")
+        # Validar que tenga un esquema y netloc
+        if not parsed_url.scheme or not parsed_url.netloc:
+            raise ValueError("URL inválida: debe contener esquema y dominio")
             
         # Obtener el netloc
         netloc = parsed_url.netloc
-        if not netloc:
-            raise ValueError("URL sin dominio válido")
-            
+        
         # Determinar si usa SSL
-        use_ssl = parsed_url.scheme == 'https'
+        use_ssl = parsed_url.scheme.lower() == 'https'
         
-        # Obtener el ID de la imagen del path
-        path_parts = parsed_url.path.strip('/').split('/')
-        if not path_parts[-1]:
-            raise ValueError("URL sin ID de imagen válido")
-        image_id = path_parts[-1]
+        # Obtener el image_id del path
+        # Asumimos que el último segmento del path es el id
+        path_segments = parsed_url.path.split('/')
+        image_id = path_segments[-1]
         
+        # Validar que se obtuvo un image_id
+        if not image_id:
+            raise ValueError("No se pudo extraer el ID de la imagen de la URL")
+            
         return (image_id, netloc, use_ssl)
         
     except Exception as e:

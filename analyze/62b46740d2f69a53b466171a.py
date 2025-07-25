@@ -28,5 +28,5 @@ def pretty(self, indent=0, debug=False):
     # Para objetos simples
     else:
         result += str(self)
-    
+        
     return result

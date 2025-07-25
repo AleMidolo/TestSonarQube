@@ -19,5 +19,7 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
 
     # Write the configuration file with specified mode
     with open(config_filename, 'w') as f:
-        os.chmod(config_filename, mode)
         f.write(rendered_config)
+    
+    # Set file permissions
+    os.chmod(config_filename, mode)

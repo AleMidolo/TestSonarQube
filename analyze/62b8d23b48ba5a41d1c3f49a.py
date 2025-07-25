@@ -4,44 +4,43 @@ def mru_cache(maxsize=128, typed=False):
     basados en un algoritmo de Más Recientemente Usado (MRU).
     """
     def decorator(func):
-        # Diccionario para almacenar los resultados cacheados
+        # Diccionario para almacenar el caché
         cache = {}
         # Lista para mantener el orden de uso
         order = []
         
-        def make_key(*args, **kwargs):
-            # Crear una clave única para los argumentos
-            key = args
-            if kwargs:
-                key += tuple(sorted(kwargs.items()))
-            if typed:
-                # Incluir los tipos si typed=True
-                key += tuple(type(arg) for arg in args)
-                key += tuple(type(v) for v in kwargs.values())
-            return hash(key)
-
         def wrapper(*args, **kwargs):
-            key = make_key(*args, **kwargs)
-            
-            try:
-                # Si el resultado está en caché, moverlo al final (más reciente)
-                result = cache[key]
+            # Crear clave para el caché
+            if typed:
+                key = (args, tuple(sorted(kwargs.items())), tuple(type(arg) for arg in args))
+            else:
+                key = (args, tuple(sorted(kwargs.items())))
+                
+            # Verificar si el resultado está en caché
+            if key in cache:
+                # Actualizar orden de uso
                 order.remove(key)
                 order.append(key)
-                return result
-            except KeyError:
-                # Calcular nuevo resultado
-                result = func(*args, **kwargs)
+                return cache[key]
                 
-                # Si alcanzamos el tamaño máximo, eliminar el más reciente
-                if len(cache) >= maxsize:
-                    oldest = order.pop()
-                    del cache[oldest]
+            # Calcular resultado
+            result = func(*args, **kwargs)
+            
+            # Si el caché está lleno, eliminar el elemento más recientemente usado
+            if len(cache) >= maxsize:
+                oldest_key = order.pop()
+                del cache[oldest_key]
                 
-                # Almacenar nuevo resultado
-                cache[key] = result
-                order.append(key)
-                return result
-                
+            # Almacenar nuevo resultado
+            cache[key] = result
+            order.append(key)
+            
+            return result
+            
+        # Agregar atributos para acceder al caché
+        wrapper.cache_info = lambda: {'hits': len(order), 'maxsize': maxsize, 'currsize': len(cache)}
+        wrapper.cache_clear = lambda: (cache.clear(), order.clear())
+        
         return wrapper
+        
     return decorator

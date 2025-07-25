@@ -37,7 +37,9 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     
     # Crear y enviar el mensaje BEGIN
     message = ("BEGIN", extras)
-    self._append(message, Response(**handlers))
     
-    # Devolver el objeto Response
-    return self._get_last()
+    # Crear y retornar el objeto Response con los handlers proporcionados
+    response = Response(self, message, **handlers)
+    self._append(message, response)
+    
+    return response

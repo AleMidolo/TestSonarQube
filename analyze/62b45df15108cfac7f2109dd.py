@@ -3,15 +3,17 @@ def status_str(self, prefix=''):
     Devuelve la representación en forma de cadena del registro de validación, con un prefijo opcional.
     """
     result = []
-    if hasattr(self, 'validation_errors') and self.validation_errors:
-        for error in self.validation_errors:
-            result.append(f"{prefix}Error: {error}")
-            
-    if hasattr(self, 'validation_warnings') and self.validation_warnings:
-        for warning in self.validation_warnings:
-            result.append(f"{prefix}Warning: {warning}")
+    if self.errors:
+        result.append(f"{prefix}Errores:")
+        for error in self.errors:
+            result.append(f"{prefix}  {error}")
+    
+    if self.warnings:
+        result.append(f"{prefix}Advertencias:")
+        for warning in self.warnings:
+            result.append(f"{prefix}  {warning}")
             
     if not result:
-        result.append(f"{prefix}Valid")
+        result.append(f"{prefix}Sin errores ni advertencias")
         
     return "\n".join(result)
