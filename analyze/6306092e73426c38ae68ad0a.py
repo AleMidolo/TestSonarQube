@@ -5,8 +5,8 @@ def validate_choices_args(self, args):
     :param args: Gli argomenti ricevuti.  
     """
     for arg_name, arg_value in args.items():
-        if hasattr(self, f'_{arg_name}_choices'):
-            choices = getattr(self, f'_{arg_name}_choices')
-            if arg_value not in choices:
-                raise ValueError(f"Invalid value '{arg_value}' for argument '{arg_name}'. "
-                               f"Valid choices are: {choices}")
+        if hasattr(self, 'choices') and arg_name in self.choices:
+            valid_choices = self.choices[arg_name]
+            if arg_value not in valid_choices:
+                raise ValueError(f"Invalid choice for argument '{arg_name}'. "
+                               f"Must be one of: {valid_choices}")

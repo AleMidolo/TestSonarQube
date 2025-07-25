@@ -8,66 +8,64 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     # Check if candidate claims to provide interface
     if not tentative and not iface.providedBy(candidate):
         errors['provide'].append(
-            f"{candidate!r} does not provide interface {iface!r}"
+            f"{candidate} does not provide interface {iface.__name__}"
         )
 
-    # Check methods
-    for name, desc in iface.namesAndDescriptions(all=True):
-        if not isinstance(desc, Method):
-            # Skip non-method attributes for now
-            continue
-            
-        # Check if method exists
-        try:
-            meth = getattr(candidate, name)
-        except AttributeError:
-            errors['methods'].append(
-                f"The {name!r} method was not provided"
-            )
-            continue
-
-        # Verify method signature if possible
-        if hasattr(desc, 'getSignatureInfo'):
-            sig_info = desc.getSignatureInfo()
-            try:
-                candidate_sig = desc.getSignatureInfo(meth)
-                
-                # Compare signatures
-                if sig_info['positional'] != candidate_sig['positional'] or \
-                   sig_info['required'] != candidate_sig['required'] or \
-                   sig_info['optional'] != candidate_sig['optional'] or \
-                   sig_info['varargs'] != candidate_sig['varargs'] or \
-                   sig_info['kwargs'] != candidate_sig['kwargs']:
-                    errors['signatures'].append(
-                        f"The {name!r} method has incorrect signature"
-                    )
-            except (TypeError, ValueError):
-                errors['signatures'].append(
-                    f"Could not verify signature of {name!r} method"
-                )
-
-    # Check attributes
+    # Check methods and attributes
     for name, desc in iface.namesAndDescriptions(all=True):
         if isinstance(desc, Method):
-            continue
-            
-        if not hasattr(candidate, name):
-            errors['attributes'].append(
-                f"The {name!r} attribute was not provided" 
-            )
+            # Check if method exists
+            if not hasattr(candidate, name):
+                errors['methods'].append(
+                    f"Method {name} not provided by {candidate}"
+                )
+                continue
 
-    # If we have errors, raise them
+            method = getattr(candidate, name)
+            if not callable(method):
+                errors['methods'].append(
+                    f"{name} is not callable on {candidate}"
+                )
+                continue
+
+            # Check method signature
+            try:
+                from inspect import signature
+                impl_sig = signature(method)
+                iface_sig = signature(desc)
+                
+                if impl_sig.parameters != iface_sig.parameters:
+                    errors['signatures'].append(
+                        f"Method {name} has wrong signature: {impl_sig} != {iface_sig}"
+                    )
+            except ValueError:
+                # Can't get signature, skip check
+                pass
+
+        else:
+            # Check if attribute exists
+            if not hasattr(candidate, name):
+                errors['attributes'].append(
+                    f"Attribute {name} not provided by {candidate}"
+                )
+
+    # If no errors, return True
+    if not errors:
+        return True
+
+    # If single error, raise it directly
+    total_errors = sum(len(errs) for errs in errors.values())
+    if total_errors == 1:
+        for error_list in errors.values():
+            if error_list:
+                raise Invalid(error_list[0])
+
+    # Multiple errors - raise all of them
     if errors:
-        if sum(len(v) for v in errors.values()) == 1:
-            # Special case: single error
-            msg = next(err for errs in errors.values() for err in errs)
-            raise Invalid(msg)
-        
-        # Multiple errors
-        msgs = []
-        for category, errs in errors.items():
-            if errs:
-                msgs.extend(errs)
-        raise Invalid('\n'.join(msgs))
+        error_msg = []
+        for category, msgs in errors.items():
+            if msgs:
+                error_msg.extend(msgs)
+        raise Invalid("\n".join(error_msg))
 
     return True

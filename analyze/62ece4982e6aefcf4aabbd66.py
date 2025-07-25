@@ -25,7 +25,7 @@ def was_processed(processed, path_name, verbose):
         if verbose:
             print(f"Warning: {path_name} è già stato elaborato")
         return True
-    
-    # Aggiungi il percorso al set dei percorsi elaborati
+        
+    # Aggiungi il nuovo percorso al set
     processed.add(abs_path)
     return False

@@ -20,37 +20,36 @@ def isoparse(self, dt_str):
     if 'T' in dt_str:
         date_str, time_str = dt_str.split('T')
     else:
-        if any(c in dt_str for c in ':.,+-Z'):  # Contains time components
-            date_str, time_str = dt_str.split(' ', 1)
+        if any(c in dt_str for c in ':.-+Z'):  # Contains time components
+            date_str, time_str = dt_str.split(' ', 1) if ' ' in dt_str else ('', dt_str)
         else:
             date_str, time_str = dt_str, ''
 
     # Parse date
     date_parts = None
     for pattern_name, pattern in DATE_PATTERNS.items():
-        match = re.match(pattern, date_str)
+        match = re.match(pattern + '$', date_str)
         if match:
             date_parts = match.groupdict()
             break
-    
-    if not date_parts:
-        raise ValueError("Invalid ISO format")
 
-    # Convert year-week format to year-month-day if necessary
+    if not date_parts:
+        raise ValueError(f"Invalid ISO format date '{date_str}'")
+
+    # Convert date parts to integers
+    year = int(date_parts['year'])
+    
     if 'week' in date_parts:
-        from datetime import date
-        year = int(date_parts['year'])
+        # Handle ISO week date format
         week = int(date_parts['week'])
         weekday = int(date_parts.get('weekday', '1'))
-        temp_date = datetime.strptime(f"{year}-W{week}-{weekday}", "%Y-W%W-%w").date()
-        date_parts = {'year': temp_date.year, 'month': temp_date.month, 'day': temp_date.day}
+        date_ord = datetime.strptime(f"{year}-W{week}-{weekday}", "%Y-W%W-%w").date()
+        month, day = date_ord.month, date_ord.day
+    else:
+        month = int(date_parts.get('month', '1'))
+        day = int(date_parts.get('day', '1'))
 
-    # Set default values for date parts
-    year = int(date_parts['year'])
-    month = int(date_parts.get('month', 1))
-    day = int(date_parts.get('day', 1))
-
-    # Default time values
+    # Initialize time components
     hour = minute = second = microsecond = 0
     tz = None
 
@@ -58,25 +57,24 @@ def isoparse(self, dt_str):
     if time_str:
         time_match = re.match(TIME_PATTERN + TIMEZONE_PATTERN, time_str)
         if not time_match:
-            raise ValueError("Invalid time format")
-        
+            raise ValueError(f"Invalid ISO format time '{time_str}'")
+
         time_parts = time_match.groupdict()
         
         # Parse time components
         if time_parts.get('hour'):
             hour = int(time_parts['hour'])
-            if hour == 24:  # Handle special case of 24:00
+            if hour == 24:  # Special case for midnight
                 hour = 0
-                day += 1
+            
+            if time_parts.get('minute'):
+                minute = int(time_parts['minute'])
                 
-        if time_parts.get('minute'):
-            minute = int(time_parts['minute'])
-            
-        if time_parts.get('second'):
-            second = int(time_parts['second'])
-            
-        if time_parts.get('microsecond'):
-            microsecond = int(time_parts['microsecond'].ljust(6, '0'))
+                if time_parts.get('second'):
+                    second = int(time_parts['second'])
+                    
+                    if time_parts.get('microsecond'):
+                        microsecond = int(time_parts['microsecond'].ljust(6, '0'))
 
         # Parse timezone
         if time_parts.get('tzname'):
@@ -85,15 +83,12 @@ def isoparse(self, dt_str):
             else:
                 tzsign = 1 if time_parts['tzsign'] == '+' else -1
                 tzhour = int(time_parts['tzhour'])
-                tzminute = int(time_parts.get('tzminute', 0))
-                offset = tzsign * (tzhour * 60 + tzminute) * 60
+                tzminute = int(time_parts.get('tzminute', '0'))
                 
+                offset = tzsign * (tzhour * 60 + tzminute) * 60
                 if offset == 0:
                     tz = tzutc()
                 else:
                     tz = tzoffset(None, offset)
 
-    try:
-        return datetime(year, month, day, hour, minute, second, microsecond, tzinfo=tz)
-    except ValueError as e:
-        raise ValueError(f"Invalid date/time components: {str(e)}")
+    return datetime(year, month, day, hour, minute, second, microsecond, tz)

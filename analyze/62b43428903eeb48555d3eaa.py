@@ -3,22 +3,20 @@ def formatmany(
     sql: AnyStr,
     many_params: Union[Iterable[Dict[Union[str, int], Any]], Iterable[Sequence[Any]]],
 ) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
-    # Convert each params set to out-style
+    
+    # Convert each params set to out style
     out_params = []
     for params in many_params:
-        # Format SQL and convert params for first iteration only
-        if not out_params:
-            sql, _ = self.format(sql, params)
-        # Convert params to out-style
-        if isinstance(params, Mapping):
-            # Named parameters
-            out_param_dict = {}
-            for key, value in params.items():
-                out_key = self._convert_param_name(key)
-                out_param_dict[out_key] = value
-            out_params.append(out_param_dict)
-        else:
-            # Ordinal parameters 
-            out_params.append(list(params))
-            
-    return sql, out_params
+        # Format single params set
+        _, converted_params = self.format(sql, params)
+        out_params.append(converted_params)
+        
+    # Format SQL once using first params set
+    try:
+        first_params = next(iter(many_params))
+    except StopIteration:
+        first_params = {}
+        
+    formatted_sql, _ = self.format(sql, first_params)
+    
+    return formatted_sql, out_params

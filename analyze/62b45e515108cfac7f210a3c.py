@@ -16,7 +16,7 @@ def initialize(self):
         "description": "OCFL Storage Root",
         "layout": {
             "type": "flat",
-            "digestAlgorithm": "sha512"
+            "digest-algorithm": "sha512"
         }
     }
     
@@ -24,7 +24,7 @@ def initialize(self):
     with open(layout_path, "w") as f:
         json.dump(layout, f, indent=2)
         
-    # Create storage directory
-    storage_path = os.path.join(self.root_path, "storage")
-    if not os.path.exists(storage_path):
-        os.makedirs(storage_path)
+    # Create extensions directory
+    extensions_dir = os.path.join(self.root_path, "extensions")
+    if not os.path.exists(extensions_dir):
+        os.makedirs(extensions_dir)

@@ -29,8 +29,10 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
                     # Remove expired entry
                     del cache[key]
                     
-            # Call function and cache result
+            # Compute new result
             result = func(*args, **kwargs)
+            
+            # Add to cache
             cache[key] = (result, now)
             
             # Remove oldest entries if cache is too large
@@ -39,8 +41,11 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
                 
             return result
             
-        # Add cache clear method
-        wrapper.cache_clear = cache.clear
-        
+        # Add clear method to wrapper
+        def clear_cache():
+            cache.clear()
+            
+        wrapper.clear_cache = clear_cache
         return wrapper
+        
     return decorator

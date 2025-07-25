@@ -22,8 +22,6 @@ def cached(cache, key=hashkey, lock=None):
                     
             return result
             
-        wrapper.__doc__ = function.__doc__
-        wrapper.__name__ = function.__name__
         return wrapper
         
     return decorator

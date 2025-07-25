@@ -12,7 +12,7 @@ def mru_cache(maxsize=128, typed=False):
         def wrapper(*args, **kwargs):
             # Crea una chiave per la cache basata sugli argomenti
             if typed:
-                key = (*args, *kwargs.items(), *[type(arg) for arg in args])
+                key = (*args, *kwargs.items(), *(type(arg) for arg in args))
             else:
                 key = (*args, *kwargs.items())
                 
@@ -38,19 +38,5 @@ def mru_cache(maxsize=128, typed=False):
                 order.append(key)
                 return result
                 
-        wrapper.cache_info = lambda: {
-            'maxsize': maxsize,
-            'currsize': len(cache),
-            'cache': cache,
-            'order': order
-        }
-        
-        wrapper.cache_clear = lambda: (cache.clear(), order.clear())
-        
         return wrapper
-    
-    # Se maxsize è None, non usare la cache
-    if maxsize is None:
-        return lambda func: func
-        
     return decorator

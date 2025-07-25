@@ -5,25 +5,20 @@ def get_versions():
     try:
         import sys
         import platform
+        import django
         
         versions = {
             'python': sys.version.split()[0],
             'platform': platform.platform(),
-            'machine': platform.machine(),
-            'processor': platform.processor(),
-            'system': platform.system(),
-            'release': platform.release()
+            'django': django.get_version()
         }
         
         return versions
         
     except Exception:
-        # Return default values if version info cannot be obtained
+        # Return default values if unable to get version info
         return {
             'python': 'unknown',
-            'platform': 'unknown',
-            'machine': 'unknown', 
-            'processor': 'unknown',
-            'system': 'unknown',
-            'release': 'unknown'
+            'platform': 'unknown', 
+            'django': 'unknown'
         }

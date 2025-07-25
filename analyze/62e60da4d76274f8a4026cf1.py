@@ -23,5 +23,5 @@ def values(self, *keys):
                 result.append(self._values[index])
             except ValueError:
                 pass
-    
+                
     return result
