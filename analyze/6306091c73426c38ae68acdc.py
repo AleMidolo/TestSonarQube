@@ -15,7 +15,7 @@ def validate_from_content(cls, spec_content=None):
     try:
         data = yaml.safe_load(spec_content)
     except yaml.YAMLError as e:
-        raise ValueError("Invalid YAML content") from e
+        raise ValueError(f"YAML parsing error: {e}")
 
     missing_fields = [field for field in required_fields if field not in data]
     if missing_fields:

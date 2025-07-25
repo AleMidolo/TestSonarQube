@@ -19,9 +19,9 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
     
     for key, value in manifest_dict.items():
         if isinstance(value, dict):
-            observer_schema[key] = generate_default_observer_schema_dict(value, first_level=False)
+            observer_schema[key] = generate_default_observer_schema_dict(value, first_level)
         elif isinstance(value, list):
-            observer_schema[key] = [generate_default_observer_schema_dict(item, first_level=False) if isinstance(item, dict) else None for item in value]
+            observer_schema[key] = [generate_default_observer_schema_dict(item, first_level) if isinstance(item, dict) else None for item in value]
         else:
             if first_level and key in ['apiVersion', 'kind', 'metadata']:
                 observer_schema[key] = value

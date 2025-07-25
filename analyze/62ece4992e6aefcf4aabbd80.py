@@ -32,11 +32,8 @@ def remove_ending_os_sep(input_list):
 
     result = []
     for item in input_list:
-        if isinstance(item, str) and len(item) > 1:
-            if item[-1] == os.sep:
-                result.append(item[:-1])
-            else:
-                result.append(item)
+        if isinstance(item, str) and len(item) > 1 and item[-1] == os.sep:
+            result.append(item[:-1])
         else:
             result.append(item)
 

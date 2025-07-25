@@ -7,7 +7,7 @@ def validate(self, path):
     """
     # 假设我们有一个方法来检查 OCFL 对象的有效性
     def is_ocfl_object_valid(path):
-        # 这里应该是验证 OCFL 对象的逻辑
+        # 这里应该有实际的验证逻辑
         # 例如，检查文件是否存在，格式是否正确等
         return True  # 这是一个占位符，实际逻辑应返回布尔值
 

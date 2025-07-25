@@ -19,7 +19,7 @@ def verifyObject(iface, candidate, tentative=False):
       如果有多个方法或属性无效，将收集并报告所有这些错误。之前的行为是仅报告第一个错误。作为一个特殊情况，如果只有一个错误，则像之前一样单独抛出该错误。
     """
     from zope.interface import providedBy, Invalid
-    from inspect import signature, Signature
+    from inspect import signature, Parameter
 
     errors = []
 
@@ -37,13 +37,15 @@ def verifyObject(iface, candidate, tentative=False):
             errors.append(f"{method_name} in {candidate} is not callable")
             continue
         
-        expected_signature = iface.method(method_name).signature
-        actual_signature = signature(method)
-        
-        if not is_signature_compatible(expected_signature, actual_signature):
-            errors.append(f"{method_name} in {candidate} has an invalid signature")
+        # Check method signature
+        iface_method = iface.get(method_name)
+        if iface_method is not None:
+            iface_signature = signature(iface_method)
+            candidate_signature = signature(method)
+            if len(candidate_signature.parameters) < len(iface_signature.parameters):
+                errors.append(f"{method_name} in {candidate} has incorrect signature")
 
-    required_attributes = iface.attributes()
+    required_attributes = iface.names()
     for attr_name in required_attributes:
         if not hasattr(candidate, attr_name):
             errors.append(f"{candidate} is missing attribute {attr_name}")
@@ -54,11 +56,4 @@ def verifyObject(iface, candidate, tentative=False):
         else:
             raise Invalid(errors)
 
-    return True
-
-def is_signature_compatible(expected, actual):
-    # This function checks if the actual signature is compatible with the expected signature
-    # This is a simplified version and may need to be expanded based on specific requirements
-    if len(actual.parameters) < len(expected.parameters):
-        return False
     return True

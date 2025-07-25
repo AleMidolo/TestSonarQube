@@ -8,6 +8,6 @@ def values(self, *keys):
     :rtype: list
     """
     if not keys:
-        return [self.index[key] for key in self.index]
+        return list(self.index.values())
     
     return [self.index[key] for key in keys if key in self.index]
