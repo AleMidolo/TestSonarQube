@@ -13,8 +13,8 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
     # Convertir número a la base del alfabeto
     n = abs(number)
     while n:
-        n, remainder = divmod(n, base)
-        result = alphabet[remainder] + result
+        result = alphabet[n % base] + result
+        n //= base
         
     # Agregar signo negativo si es necesario
     if number < 0:

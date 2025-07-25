@@ -75,10 +75,10 @@ def xargs(
         return 0, b''
     
     with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
-        results = list(executor.map(_run_chunk, chunks))
-        
-    for retcode, output in results:
-        if retcode != 0:
-            return retcode, output
-            
+        futures = [executor.submit(_run_chunk, chunk) for chunk in chunks]
+        for future in futures:
+            retcode, output = future.result()
+            if retcode != 0:
+                return retcode, output
+                
     return 0, b''

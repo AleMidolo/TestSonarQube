@@ -35,7 +35,7 @@ def normalized(self):
     # Create new relativedelta with normalized values
     return self.__class__(
         years=self.years,
-        months=self.months,
+        months=self.months, 
         days=days,
         hours=hours,
         minutes=minutes,

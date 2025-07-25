@@ -28,10 +28,10 @@ def find_path_type(path):
             return "root"
             
         # Check content for OCFL object
-        elif "object" in content.lower():
+        elif content.startswith("ocfl_object"):
             return "object"
             
     except Exception as e:
         return f"Error reading Namaste file: {str(e)}"
         
-    return "Error: Unknown Namaste file type"
+    return "Error: Unknown OCFL type"

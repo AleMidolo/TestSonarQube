@@ -35,7 +35,7 @@ def isoparse(self, dt_str):
             break
     
     if not date_parts:
-        raise ValueError(f"Invalid ISO format date: {date_str}")
+        raise ValueError(f"Invalid ISO format date string: {date_str}")
 
     # Convertir fecha
     if 'week' in date_parts:
@@ -49,23 +49,23 @@ def isoparse(self, dt_str):
         day = int(date_parts.get('day', '1'))
         dt = datetime(year, month, day)
 
-    # Si no hay tiempo, retornar
+    # Si no hay tiempo, retornar datetime con tiempo 00:00:00
     if not time_str:
         return dt
 
     # Analizar tiempo y zona horaria
     time_match = re.match(TIME_PATTERN + TZ_PATTERN, time_str)
     if not time_match:
-        raise ValueError(f"Invalid ISO format time: {time_str}")
-    
+        raise ValueError(f"Invalid ISO format time string: {time_str}")
+
     time_parts = time_match.groupdict()
     
     # Convertir tiempo
     hour = int(time_parts.get('hour', '0'))
-    if hour == 24:  # Manejar caso especial de medianoche
+    if hour == 24:  # Convertir 24:00 a 00:00 del día siguiente
         hour = 0
         dt = dt + timedelta(days=1)
-        
+    
     minute = int(time_parts.get('minute', '0'))
     second = int(time_parts.get('second', '0'))
     

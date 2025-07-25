@@ -20,47 +20,32 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
     
     if not isinstance(timestr, str):
-        raise TypeError("Parser must be called with string argument")
+        raise TypeError("Parser must be given a string or character stream, not %r" % type(timestr))
         
     # Preprocesar la cadena de entrada
     timestr = timestr.strip()
     
-    # Usar el parser interno
-    res, tokens = self._parse(timestr, **kwargs)
-    
-    if res is None:
-        raise ParserError("Unknown string format")
+    try:
+        # Parsear la cadena usando el método interno _parse
+        res, tokens = self._parse(timestr, **kwargs)
         
-    # Aplicar el default si existe
-    if default is not None:
-        for attr in ["year", "month", "day", "hour", "minute", 
-                    "second", "microsecond"]:
-            value = getattr(res, attr)
-            if value is None:
-                setattr(res, attr, getattr(default, attr))
-                
-    # Manejar zona horaria
-    if not ignoretz:
-        if res.tzinfo is None and tzinfos is not None:
-            # Intentar obtener tzinfo del diccionario/función tzinfos
-            if isinstance(tzinfos, dict):
-                if res.tzname in tzinfos:
-                    tzinfo = tzinfos[res.tzname]
-                    if isinstance(tzinfo, int):
-                        from datetime import timedelta
-                        tzinfo = self.tzoffset(res.tzname, timedelta(seconds=tzinfo))
-                    res = res.replace(tzinfo=tzinfo)
-            else:
-                # tzinfos es una función
-                try:
-                    res = res.replace(tzinfo=tzinfos(res.tzname, res.tzoffset))
-                except:
-                    pass
-    else:
-        res = res.replace(tzinfo=None)
-        
-    # Devolver resultado
-    if kwargs.get('fuzzy_with_tokens', False):
-        return res, tokens
-    else:
+        if res is None:
+            raise ParserError("Unknown string format: %s" % timestr)
+            
+        # Si hay un default, combinar con el resultado
+        if default is not None:
+            res = self._combine_with_default(res, default)
+            
+        # Manejar zonas horarias
+        if not ignoretz:
+            res = self._add_timezone(res, tzinfos)
+            
+        # Devolver resultado según fuzzy_with_tokens
+        if kwargs.get('fuzzy_with_tokens', False):
+            return res, tuple(tokens)
         return res
+        
+    except ValueError as e:
+        raise ParserError(str(e))
+    except OverflowError:
+        raise OverflowError("Date exceeds the maximum value supported on this system")

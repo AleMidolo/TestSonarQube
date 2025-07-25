@@ -15,7 +15,7 @@ def _validate_labels(labels):
     # Iterar sobre cada par clave-valor en las etiquetas
     for key, value in labels.items():
         
-        # Validar que la clave sea una cadena
+        # Validar que la clave sea string
         if not isinstance(key, (str, bytes)):
             errors.append({
                 str(key): 'se esperaba un objeto de tipo cadena o bytes'
@@ -23,12 +23,12 @@ def _validate_labels(labels):
             continue
             
         # Validar que la clave coincida con la expresión regular
-        if not re.match(KEY_REGEX, str(key)):
+        if not re.match(KEY_REGEX, key):
             errors.append({
-                str(key): f"La clave de la etiqueta '{key}' no coincide con la expresión regular {KEY_REGEX}"
+                key: f"La clave de la etiqueta '{key}' no coincide con la expresión regular {KEY_REGEX}"
             })
             
-        # Validar que el valor sea una cadena
+        # Validar que el valor sea string
         if not isinstance(value, (str, bytes)):
             errors.append({
                 str(value): 'se esperaba un objeto de tipo cadena o bytes'

@@ -8,22 +8,23 @@ def popitem(self):
     # Encontrar la frecuencia mínima
     min_freq = min(self.freq_list.keys())
     
-    # Obtener la lista de claves con esa frecuencia
-    lru_list = self.freq_list[min_freq]
+    # Obtener la lista de elementos con esa frecuencia
+    lru_items = self.freq_list[min_freq]
     
-    # Obtener la clave menos usada recientemente (la última de la lista)
-    lru_key = lru_list[-1]
+    # Obtener el elemento menos usado recientemente (el último de la lista)
+    key = lru_items.pop()
     
-    # Obtener el valor asociado
-    lru_value = self.cache[lru_key].value
-    
-    # Eliminar la clave del cache y de la lista de frecuencias
-    del self.cache[lru_key]
-    lru_list.remove(lru_key)
-    
-    # Si la lista de frecuencia queda vacía, eliminarla
-    if not lru_list:
+    # Si la lista queda vacía, eliminar la frecuencia
+    if not lru_items:
         del self.freq_list[min_freq]
         
-    # Devolver el par (clave, valor)
-    return (lru_key, lru_value)
+    # Obtener el valor asociado a la clave
+    value = self.cache[key]
+    
+    # Eliminar la clave del cache
+    del self.cache[key]
+    
+    # Eliminar la clave del mapeo de frecuencias
+    del self.key_freq[key]
+    
+    return key, value

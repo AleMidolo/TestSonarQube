@@ -4,15 +4,17 @@ def directlyProvidedBy(object):  # pylint:disable=redefined-builtin
 
     El valor devuelto es un `~zope.interface.interfaces.IDeclaration`.
     """
+    from zope.interface.declarations import Provides
+    from zope.interface.interface import InterfaceClass
+    
     provides = getattr(object, "__provides__", None)
+    
     if provides is None:
-        return _empty
+        return Provides(InterfaceClass("Empty"))
         
-    # Podríamos haber obtenido la especificación de implementación como una optimización
-    # Si es así, es como tener solo una base que eliminamos para excluir 
-    # declaraciones proporcionadas por la clase
-    spec = provides
-    if spec.isImplementation():
-        return _empty
+    # Si provides es una implementación de clase, retornar una declaración vacía
+    if len(provides.__bases__) == 1:
+        return Provides(InterfaceClass("Empty")) 
         
+    # Retornar las interfaces directamente proporcionadas
     return provides

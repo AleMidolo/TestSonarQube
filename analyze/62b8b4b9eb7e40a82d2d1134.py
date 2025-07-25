@@ -9,3 +9,9 @@ def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
     for name, attr in self.namesAndDescriptions_impl(all):
         attrs[name] = attr
     return attrs
+
+def namesAndDescriptions_impl(self, all=False):
+    """Helper method that implements the actual attribute gathering logic"""
+    for name, attr in self._InterfaceClass__attrs.items():
+        if all or not attr.queryTaggedValue('_hidden', False):
+            yield name, attr.getDoc()

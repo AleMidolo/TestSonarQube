@@ -3,16 +3,15 @@ def files_list_from_zipfile(zip_path):
     Devuelve los archivos en `zip_path`.
     
     Args:
-        zip_path: Path al archivo zip
+        zip_path (str): Path to zip file
         
     Returns:
-        list: Lista de nombres de archivos contenidos en el zip
+        list: List of files in the zip archive
     """
     import zipfile
     
-    files_list = []
-    
+    files = []
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        files_list = zip_ref.namelist()
-        
-    return files_list
+        files = zip_ref.namelist()
+    
+    return files

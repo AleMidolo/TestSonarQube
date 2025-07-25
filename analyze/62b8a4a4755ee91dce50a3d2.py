@@ -27,7 +27,7 @@ def _fromutc(self, dt):
     timestamps = []
     
     # Probar offsets antes y después
-    for offset in [local_offset, local_offset + timedelta(hours=1)]:
+    for offset in [local_offset, local_offset + datetime.timedelta(hours=1)]:
         local_ts = (local_dt - offset).timestamp()
         timestamps.append(local_ts)
     

@@ -5,58 +5,45 @@ def generate_default_observer_schema(app):
     if not hasattr(app, 'spec') or not hasattr(app.spec, 'manifest'):
         return default_schema
 
-    # Iterate through resources in manifest
+    # Iterate through each resource in manifest
     for resource in app.spec.manifest:
         # Skip if resource already has custom observer schema
-        if resource.get('metadata', {}).get('name') in getattr(app.spec, 'observer_schema', {}):
+        if resource.get('observer_schema'):
             continue
             
-        # Get resource kind and name
-        kind = resource.get('kind')
-        name = resource.get('metadata', {}).get('name')
+        # Get resource kind and API version
+        kind = resource.get('kind', '')
+        api_version = resource.get('apiVersion', '')
         
-        if not kind or not name:
-            continue
-            
-        # Generate default schema for this resource
-        resource_schema = {
-            'conditions': [{
-                'type': 'Ready',
-                'status': 'True'
-            }],
-            'metrics': {}
-        }
-        
-        # Add schema for common resource types
+        # Generate default schema based on resource kind
         if kind.lower() in ['deployment', 'statefulset', 'daemonset']:
-            resource_schema['metrics'].update({
-                'replicas': {
-                    'path': '.status.replicas',
+            default_schema[f"{api_version}/{kind}"] = {
+                'ready': {
+                    'path': '.status.readyReplicas',
                     'type': 'integer'
                 },
-                'ready_replicas': {
-                    'path': '.status.readyReplicas', 
+                'total': {
+                    'path': '.status.replicas', 
                     'type': 'integer'
                 }
-            })
-            
-        elif kind.lower() == 'service':
-            resource_schema['metrics'].update({
-                'cluster_ip': {
-                    'path': '.spec.clusterIP',
-                    'type': 'string'
-                }
-            })
-            
+            }
         elif kind.lower() == 'pod':
-            resource_schema['metrics'].update({
+            default_schema[f"{api_version}/{kind}"] = {
+                'ready': {
+                    'path': '.status.containerStatuses[*].ready',
+                    'type': 'boolean'
+                },
                 'phase': {
                     'path': '.status.phase',
                     'type': 'string'
                 }
-            })
+            }
+        elif kind.lower() == 'service':
+            default_schema[f"{api_version}/{kind}"] = {
+                'ready': {
+                    'path': '.spec.clusterIP',
+                    'type': 'string'
+                }
+            }
             
-        # Add schema to default_schema dict
-        default_schema[name] = resource_schema
-
     return default_schema

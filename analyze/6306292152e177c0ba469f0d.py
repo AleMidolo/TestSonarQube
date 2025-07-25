@@ -6,13 +6,21 @@ def identify_request(request: RequestType) -> bool:
     if request is None:
         return False
         
-    # Verificar si tiene los campos típicos de una solicitud Matrix
-    matrix_indicators = [
-        hasattr(request, 'event_type'),
-        hasattr(request, 'room_id'), 
-        hasattr(request, 'sender'),
-        hasattr(request, 'content')
-    ]
-    
-    # Si tiene al menos 3 de los 4 indicadores, consideramos que es una solicitud Matrix
-    return sum(matrix_indicators) >= 3
+    # Verificar si tiene los atributos típicos de una solicitud Matrix
+    try:
+        # Verificar si tiene el formato correcto de una solicitud Matrix
+        if hasattr(request, 'type') and hasattr(request, 'content'):
+            # Verificar si el tipo de solicitud es válido para Matrix
+            valid_types = ['m.room.message', 'm.room.member', 'm.room.create']
+            if request.type in valid_types:
+                return True
+                
+        # Verificar si tiene el formato de URL Matrix
+        if hasattr(request, 'url'):
+            if '/_matrix/' in request.url:
+                return True
+                
+        return False
+        
+    except AttributeError:
+        return False
