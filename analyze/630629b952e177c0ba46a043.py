@@ -17,15 +17,16 @@ def get_nodeinfo_well_known_document(url, document_path=None):
 
     # Remove trailing slash from URL if present
     base_url = url.rstrip('/')
-
-    # Create the well-known document
-    well_known = {
-        "links": [
-            {
-                "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
-                "href": f"{base_url}{document_path}"
-            }
-        ]
+    
+    # Create the links list with supported NodeInfo versions
+    links = [
+        {
+            "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
+            "href": f"{base_url}{document_path}"
+        }
+    ]
+    
+    # Return the well-known document format
+    return {
+        "links": links
     }
-
-    return well_known

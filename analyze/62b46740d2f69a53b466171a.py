@@ -9,24 +9,31 @@ def pretty(self, indent=0, debug=False):
     result = f"{indent_str}{self.__class__.__name__}("
     
     # Get all attributes that don't start with underscore
-    attrs = [attr for attr in vars(self) if not attr.startswith('_')]
+    attrs = [attr for attr in dir(self) if not attr.startswith('_')]
     
-    # If in debug mode, include all attributes including private ones
-    if debug:
-        attrs = list(vars(self).keys())
+    # Build pretty string representation of attributes
+    attr_strings = []
+    for attr in attrs:
+        value = getattr(self, attr)
+        
+        # Handle nested objects that may have pretty() method
+        if hasattr(value, 'pretty'):
+            attr_val = value.pretty(indent + 2, debug)
+        else:
+            attr_val = repr(value)
+            
+        attr_strings.append(f"{attr}={attr_val}")
     
-    # Build the string representation
-    if attrs:
+    # Join attributes with commas and newlines
+    if attr_strings:
         result += "\n"
-        for attr in attrs:
-            value = getattr(self, attr)
-            # Handle nested objects that may have pretty() method
-            if hasattr(value, 'pretty'):
-                attr_str = value.pretty(indent + 2, debug)
-            else:
-                attr_str = repr(value)
-            result += f"{indent_str}  {attr}={attr_str},\n"
-        result += indent_str
-    
+        result += ",\n".join(f"{indent_str}  {s}" for s in attr_strings)
+        result += "\n" + indent_str
+        
     result += ")"
+    
+    # Add debug info if requested
+    if debug:
+        result += f" at {hex(id(self))}"
+        
     return result

@@ -19,7 +19,9 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
                 key += tuple(type(arg) for arg in args)
             if kwargs:
                 key += tuple(sorted(kwargs.items()))
-                
+                if typed:
+                    key += tuple(type(v) for v in kwargs.values())
+            
             # Get current time
             now = timer()
             
@@ -27,25 +29,24 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
             if key in cache:
                 result, timestamp = cache[key]
                 if now - timestamp <= ttl:
-                    # Move to end of LRU
+                    # Move key to end of LRU
                     lru.move_to_end(key)
                     return result
                 else:
                     # Remove expired entry
                     del cache[key]
                     del lru[key]
-                    
+            
             # Call function and cache result
             result = func(*args, **kwargs)
             
             # Remove oldest entry if cache full
             if maxsize and len(cache) >= maxsize:
-                # Remove oldest from LRU and cache
                 oldest = next(iter(lru))
                 del cache[oldest]
                 del lru[oldest]
                 
-            # Add new result to cache with timestamp
+            # Add new result to cache
             cache[key] = (result, now)
             lru[key] = None
             

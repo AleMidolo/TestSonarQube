@@ -24,7 +24,7 @@ def determineMetaclass(bases, explicit_mc=None):
             # Incompatible metaclasses
             raise TypeError("Incompatible metaclasses found")
             
-    # If no metaclass found, use type
+    # Default to type if no metaclass found
     if metaclass is None:
         metaclass = type
         

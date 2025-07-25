@@ -14,7 +14,7 @@ def _extract_number_and_supplment_from_issue_element(issue):
             parts = issue.lower().split('suppl')
             if parts[0]:
                 number = parts[0].strip()
-            if len(parts) > 1:
+            if len(parts) > 1 and parts[1]:
                 suppl = parts[1].strip()
         else:
             # If no supplement, treat entire string as number

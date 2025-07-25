@@ -4,4 +4,4 @@ def keys(self):
 
     :return: कुंजी नामों (key names) की सूची (list)।
     """
-    return list(self._data.keys())
+    return list(self.__dict__.keys())

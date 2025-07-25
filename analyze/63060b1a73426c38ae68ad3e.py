@@ -18,19 +18,25 @@ def get_plugin_spec_flatten_dict(plugin_dir):
                 
     try:
         # Try to read plugin specification file
-        spec_file = f"{plugin_dir}/plugin.json"
-        with open(spec_file, 'r') as f:
-            import json
-            plugin_spec = json.load(f)
+        spec_file = os.path.join(plugin_dir, 'plugin.json')
+        if not os.path.exists(spec_file):
+            spec_file = os.path.join(plugin_dir, 'plugin.yaml')
             
-        # Flatten the dictionary
-        flatten_dict(plugin_spec)
-        
-    except FileNotFoundError:
-        print(f"Plugin specification file not found in {plugin_dir}")
-    except json.JSONDecodeError:
-        print(f"Invalid JSON format in plugin specification file")
+        if os.path.exists(spec_file):
+            # Read the specification file
+            with open(spec_file, 'r', encoding='utf-8') as f:
+                if spec_file.endswith('.json'):
+                    import json
+                    spec = json.load(f)
+                else:
+                    import yaml
+                    spec = yaml.safe_load(f)
+                    
+            # Flatten the dictionary
+            flatten_dict(spec)
+            
     except Exception as e:
-        print(f"Error processing plugin specification: {str(e)}")
+        print(f"Error reading plugin specification: {str(e)}")
+        return {}
         
     return flattened_dict

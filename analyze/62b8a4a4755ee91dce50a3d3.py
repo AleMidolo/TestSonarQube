@@ -8,21 +8,17 @@ def fromutc(self, dt):
         return dt
     
     # Convert UTC to local time
-    dtoff = dt.replace(tzinfo=None) + utc_offset
+    dtoff = dt + utc_offset
     
     # Check if we're in a fold
-    dst_offset = self.dst(dtoff)
-    if dst_offset is None:
-        return dtoff.replace(tzinfo=self)
+    dst = self.dst(dtoff) 
+    if dst is None:
+        return dtoff
         
-    # If standard offset and DST offset are the same, no fold
-    std_offset = self.utcoffset(dtoff) - dst_offset
-    if std_offset == utc_offset:
-        return dtoff.replace(tzinfo=self)
+    # If dtoff occurs during DST transition, determine if it's ambiguous
+    dtdst = dtoff - dst
+    if self.dst(dtdst) != dst:
+        # We're in a fold - return first occurrence 
+        return dtdst
         
-    # We're in a fold - check if this is the first occurrence
-    dtdst = dtoff - dst_offset
-    if self.dst(dtdst) is None:
-        return dtdst.replace(tzinfo=self)
-        
-    return dtoff.replace(tzinfo=self)
+    return dtoff

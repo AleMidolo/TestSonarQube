@@ -32,7 +32,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     from graph import Graph
     dimensions = len(points[0])
     
-    # Validate field names match dimensions
+    # Verify field_names matches dimensions
     if len(field_names) != dimensions:
         raise ValueError(f"Number of field names ({len(field_names)}) must match "
                         f"number of dimensions ({dimensions})")

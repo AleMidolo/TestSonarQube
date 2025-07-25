@@ -13,7 +13,7 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
         parsed = urlparse(image_href)
         
         # Check if scheme is http or https
-        if parsed.scheme not in ('http', 'https'):
+        if parsed.scheme not in ['http', 'https']:
             raise ValueError("Invalid URL scheme")
             
         # Determine if SSL is used
@@ -24,8 +24,9 @@ def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
         
         # Extract image ID from path
         path_parts = parsed.path.strip('/').split('/')
-        if not path_parts[-1]:  # Handle trailing slash
+        if not path_parts or not path_parts[-1]:
             raise ValueError("Invalid image path")
+            
         image_id = path_parts[-1]
         
         return (image_id, netloc, use_ssl)

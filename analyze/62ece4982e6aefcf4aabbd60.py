@@ -16,11 +16,11 @@ def size_to_bytes(size: str) -> int:
 
     size = size.strip()
     
-    # Handle case with no unit (just bytes)
+    # If just a number is provided with no units
     if size.isdigit():
         return int(size)
         
-    # Extract numeric value and unit
+    # Extract the numeric part and unit
     for unit in sorted(units.keys(), key=len, reverse=True):
         if size.endswith(unit):
             try:

@@ -14,7 +14,7 @@ def protocol_handlers(cls, protocol_version=None):
     if protocol_version is None:
         return handlers
 
-    # Type check for protocol_version
+    # Validate protocol_version is a tuple
     if not isinstance(protocol_version, tuple):
         raise TypeError("Protocol version must be a tuple")
 

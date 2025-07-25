@@ -7,36 +7,43 @@ def split(s, platform='this'):
         platform = 0 if sys.platform.startswith('win') else 1
     
     if platform == 1:  # POSIX style
-        # Match either:
-        # - Quoted string with escaped quotes allowed
-        # - Unquoted string with no whitespace
-        pattern = r'''(?:[^\s'"]*(?:'[^']*'|"[^"]*")[^\s'"]*)+|[^\s'"]+'''
+        # Handle escaped quotes and spaces
+        s = s.replace('\\"', '\x00').replace("\\'", '\x01')
         
-        # Split and clean up quotes
-        parts = re.findall(pattern, s)
-        result = []
-        for part in parts:
-            # Remove outer quotes if present
-            if (part.startswith('"') and part.endswith('"')) or \
-               (part.startswith("'") and part.endswith("'")):
-                part = part[1:-1]
-            # Unescape inner quotes
-            part = part.replace('\\"', '"').replace("\\'", "'")
-            result.append(part)
-            
-    else:  # Windows/CMD style
-        # Match either:
-        # - Quoted string (no escaped quotes in Windows)
-        # - Unquoted string with no whitespace
-        pattern = r'"[^"]*"|[^\s"]+'
+        # Split on spaces while preserving quoted strings
+        pattern = r'''(?:[^\s"'\\]|\\.|"(?:\\.|[^"])*"|'(?:\\.|[^'])*')+'''
+        tokens = re.findall(pattern, s)
         
-        # Split and clean up quotes
-        parts = re.findall(pattern, s)
+        # Remove surrounding quotes and restore escaped characters
         result = []
-        for part in parts:
-            # Remove outer quotes if present
-            if part.startswith('"') and part.endswith('"'):
-                part = part[1:-1]
-            result.append(part)
+        for token in tokens:
+            if (token.startswith('"') and token.endswith('"')) or \
+               (token.startswith("'") and token.endswith("'")):
+                token = token[1:-1]
+            token = token.replace('\x00', '"').replace('\x01', "'")
+            token = token.replace('\\\\', '\\').replace('\\ ', ' ')
+            result.append(token)
             
-    return result
+        return result
+        
+    elif platform == 0:  # Windows/CMD style
+        # Handle escaped quotes
+        s = s.replace('\\"', '\x00')
+        
+        # Split on spaces while preserving quoted strings
+        pattern = r'''(?:[^\s"]|"(?:\\.|[^"])*")+'''
+        tokens = re.findall(pattern, s)
+        
+        # Remove surrounding quotes and restore escaped characters
+        result = []
+        for token in tokens:
+            if token.startswith('"') and token.endswith('"'):
+                token = token[1:-1]
+            token = token.replace('\x00', '"')
+            token = token.replace('\\\\', '\\')
+            result.append(token)
+            
+        return result
+        
+    else:
+        raise ValueError("Invalid platform value")

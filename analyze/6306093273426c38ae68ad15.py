@@ -11,45 +11,44 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     import os
     import json
     import subprocess
-    from ansible.cli import CLI
-    from ansible.parsing.dataloader import DataLoader
-    from ansible.inventory.manager import InventoryManager
-    from ansible.vars.manager import VariableManager
-    from ansible.playbook.play import Play
-    from ansible.executor.playbook_executor import PlaybookExecutor
-    
-    # Ansible के लिए आवश्यक डायरेक्टरी पथ सेट करें
-    playbook_path = os.path.join(ir_plugin.path, 'playbooks')
-    inventory_path = os.path.join(ir_workspace.path, 'hosts')
-    
-    # एक्स्ट्रा वेरिएबल्स को JSON में कन्वर्ट करें
-    extra_vars = json.dumps(vars_dict)
-    
-    # Ansible CLI कमांड तैयार करें
-    ansible_cmd = ['ansible-playbook']
-    ansible_cmd.extend(cli_args)
-    ansible_cmd.extend(['-i', inventory_path])
-    ansible_cmd.extend(['--extra-vars', extra_vars])
-    
-    # Ansible के लिए आवश्यक ऑब्जेक्ट्स इनिशियलाइज़ करें
-    loader = DataLoader()
-    inventory = InventoryManager(loader=loader, sources=inventory_path)
-    variable_manager = VariableManager(loader=loader, inventory=inventory)
-    
-    # प्लेबुक एग्जीक्यूटर सेटअप करें
-    playbook = PlaybookExecutor(
-        playbooks=[playbook_path],
-        inventory=inventory,
-        variable_manager=variable_manager,
-        loader=loader,
-        options=CLI.base_parser().parse_args(ansible_cmd[1:]),
-        passwords={}
-    )
-    
+    from tempfile import NamedTemporaryFile
+
+    # Create temporary file for vars
+    with NamedTemporaryFile(suffix='.json', mode='w', delete=False) as vars_file:
+        json.dump(vars_dict, vars_file)
+        vars_file_path = vars_file.name
+
     try:
-        # प्लेबुक चलाएं और परिणाम रिटर्न करें
-        result = playbook.run()
+        # Build ansible-playbook command
+        cmd = ['ansible-playbook']
+        
+        # Add any CLI arguments
+        if cli_args:
+            cmd.extend(cli_args)
+
+        # Add workspace inventory if exists
+        if ir_workspace and hasattr(ir_workspace, 'inventory'):
+            cmd.extend(['-i', ir_workspace.inventory])
+
+        # Add plugin playbook path if exists  
+        if ir_plugin and hasattr(ir_plugin, 'playbook_path'):
+            cmd.append(ir_plugin.playbook_path)
+
+        # Add vars file
+        cmd.extend(['--extra-vars', f'@{vars_file_path}'])
+
+        # Execute ansible-playbook
+        result = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
+            check=True
+        )
+
         return result
-    except Exception as e:
-        print(f"Error running playbook: {str(e)}")
-        return 1
+
+    finally:
+        # Cleanup temp file
+        if os.path.exists(vars_file_path):
+            os.unlink(vars_file_path)

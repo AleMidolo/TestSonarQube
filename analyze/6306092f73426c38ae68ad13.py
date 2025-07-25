@@ -30,24 +30,29 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
                 cmd.extend(['--extra-vars', f'{key}={value}'])
                 
     # Add inventory file from workspace if it exists
-    if hasattr(ir_workspace, 'inventory') and os.path.exists(ir_workspace.inventory):
+    if hasattr(ir_workspace, 'inventory'):
         cmd.extend(['-i', ir_workspace.inventory])
         
     # Add any additional Ansible arguments
     if ansible_args:
-        for key, value in ansible_args.items():
-            if value is True:
-                cmd.append(f'--{key}')
-            elif value is not False:
-                cmd.extend([f'--{key}', str(value)])
-                
-    # Execute the ansible-playbook command
+        if isinstance(ansible_args, dict):
+            for key, value in ansible_args.items():
+                if len(key) == 1:
+                    cmd.append(f'-{key}')
+                else:
+                    cmd.append(f'--{key}')
+                if value is not None:
+                    cmd.append(str(value))
+                    
+    # Execute the command
     try:
-        result = subprocess.run(cmd, 
-                              check=True,
-                              stdout=subprocess.PIPE,
-                              stderr=subprocess.PIPE,
-                              universal_newlines=True)
+        result = subprocess.run(
+            cmd,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True
+        )
         return result
     except subprocess.CalledProcessError as e:
         raise Exception(f"Ansible playbook execution failed: {e.stderr}")

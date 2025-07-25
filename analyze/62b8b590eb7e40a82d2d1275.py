@@ -7,51 +7,52 @@ def _legacy_mergeOrderings(orderings):
     
     # Process each ordering list
     for ordering in orderings:
-        # Track position of each item in this ordering
+        # Track position of each item in current ordering
         for i, item in enumerate(ordering):
-            if item not in item_positions:
-                item_positions[item] = []
-            item_positions[item].append(i)
+            # If item seen before, verify suffix matches
+            if item in item_positions:
+                # Get suffix from current ordering
+                curr_suffix = ordering[i:]
+                
+                # Get suffix from previous ordering
+                for prev_ordering in orderings:
+                    if item in prev_ordering:
+                        prev_i = prev_ordering.index(item)
+                        prev_suffix = prev_ordering[prev_i:]
+                        
+                        # Suffixes must match
+                        if curr_suffix != prev_suffix:
+                            raise ValueError("Inconsistent orderings")
             
             # Add dependencies - each item must come after previous items
             if i > 0:
                 prev = ordering[i-1]
-                if prev not in dependencies:
-                    dependencies[prev] = set()
-                dependencies[prev].add(item)
+                if item not in dependencies:
+                    dependencies[item] = set()
+                dependencies[item].add(prev)
                 
-    # Get all unique items
-    all_items = set()
-    for ordering in orderings:
-        all_items.update(ordering)
-        
-    # Build result list
+            # Update position
+            item_positions[item] = i
+            
+    # Build result by processing items with no dependencies first
     result = []
-    used = set()
+    processed = set()
     
-    while len(result) < len(all_items):
-        # Find items with no remaining dependencies
-        available = set()
-        for item in all_items:
-            if item not in used:
-                has_deps = False
-                for deps in dependencies.values():
-                    if item in deps:
-                        has_deps = True
-                        break
-                if not has_deps:
-                    available.add(item)
-                    
+    while item_positions:
+        # Find items with no unprocessed dependencies
+        available = []
+        for item in item_positions:
+            if item not in dependencies or \
+               all(dep in processed for dep in dependencies[item]):
+                available.append(item)
+                
         if not available:
-            raise ValueError("Circular dependency detected")
+            raise ValueError("Circular dependency")
             
-        # Add the first available item
-        item = next(iter(available))
-        result.append(item)
-        used.add(item)
+        # Add item with lowest position
+        next_item = min(available, key=lambda x: item_positions[x])
+        result.append(next_item)
+        processed.add(next_item)
+        del item_positions[next_item]
         
-        # Remove this item from dependencies
-        if item in dependencies:
-            del dependencies[item]
-            
     return result

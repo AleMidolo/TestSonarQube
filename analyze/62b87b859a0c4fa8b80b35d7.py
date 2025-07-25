@@ -12,11 +12,11 @@ def to_csv(self, separator=",", header=None):
         coord_str = separator.join(str(x) for x in point.coord)
         
         # Convert values to string, separated by separator 
-        if hasattr(point, 'value'):
-            if isinstance(point.value, (list, tuple)):
-                val_str = separator.join(str(x) for x in point.value)
+        if hasattr(point, 'values'):
+            if isinstance(point.values, (list, tuple)):
+                val_str = separator.join(str(x) for x in point.values)
             else:
-                val_str = str(point.value)
+                val_str = str(point.values)
             
             # Combine coordinates and values
             point_str = coord_str + separator + val_str
@@ -26,4 +26,4 @@ def to_csv(self, separator=",", header=None):
         result.append(point_str)
         
     # Join all lines with newlines
-    return '\n'.join(result)
+    return "\n".join(result)

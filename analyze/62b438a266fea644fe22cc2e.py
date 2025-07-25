@@ -11,26 +11,30 @@ def parse_arguments(*unparsed_arguments):
     parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose output')
     parser.add_argument('--config', '-c', help='Path to config file')
     
-    # Create "run" subparser
-    run_parser = subparsers.add_parser('run', help='Run the application')
-    run_parser.add_argument('--input', '-i', required=True, help='Input file path')
-    run_parser.add_argument('--output', '-o', required=True, help='Output file path')
+    # Create "add" subparser
+    add_parser = subparsers.add_parser('add', help='Add something')
+    add_parser.add_argument('item', help='Item to add')
+    add_parser.add_argument('--priority', type=int, default=1, help='Priority level')
     
-    # Create "test" subparser  
-    test_parser = subparsers.add_parser('test', help='Run tests')
-    test_parser.add_argument('--test-dir', '-t', required=True, help='Test directory path')
+    # Create "remove" subparser  
+    remove_parser = subparsers.add_parser('remove', help='Remove something')
+    remove_parser.add_argument('item', help='Item to remove')
+    
+    # Create "list" subparser
+    list_parser = subparsers.add_parser('list', help='List items')
+    list_parser.add_argument('--sort', choices=['asc', 'desc'], help='Sort order')
     
     # Parse arguments
-    args = parser.parse_args(unparsed_arguments if unparsed_arguments else None)
+    args = parser.parse_args(unparsed_arguments)
     
     # Create dictionary to store parsed arguments
     parsed_args = {}
     
     if args.command:
-        # Store subparser arguments
+        # Store subparser arguments under command name
         parsed_args[args.command] = args
     else:
-        # Store global arguments
+        # Store global arguments under "global"
         parsed_args['global'] = args
         
     return parsed_args
