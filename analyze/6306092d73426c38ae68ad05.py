@@ -11,9 +11,10 @@ def get_option_spec(self, command_name, argument_name):
     # Retrieve the command specification
     command_spec = command_specs.get(command_name)
     
-    if command_spec is not None:
-        # Retrieve the option specification
-        option_spec = command_spec.get(argument_name)
-        return option_spec
+    if command_spec is None:
+        return None  # Command not found
     
-    return None
+    # Retrieve the option specification
+    option_spec = command_spec.get(argument_name)
+    
+    return option_spec  # Return the option specification or None if not found

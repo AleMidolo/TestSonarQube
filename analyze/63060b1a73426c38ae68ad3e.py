@@ -17,9 +17,24 @@ def get_plugin_spec_flatten_dict(plugin_dir):
                 with open(file_path, 'r') as f:
                     try:
                         data = json.load(f)
-                        for key, value in data.items():
-                            flatten_dict[key] = value
+                        flatten_dict.update(flatten_json(data))
                     except json.JSONDecodeError:
                         continue
 
     return flatten_dict
+
+def flatten_json(y):
+    out = {}
+
+    def flatten(x, name=''):
+        if type(x) is dict:
+            for a in x:
+                flatten(x[a], name + a + '_')
+        elif type(x) is list:
+            for i, a in enumerate(x):
+                flatten(a, name + str(i) + '_')
+        else:
+            out[name[:-1]] = x
+
+    flatten(y)
+    return out

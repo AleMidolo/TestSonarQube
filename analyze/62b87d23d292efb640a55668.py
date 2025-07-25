@@ -8,7 +8,7 @@ def get_config():
             self.description = "Versioneer configuration"
             self.author = "Your Name"
             self.license = "MIT"
-    
+
     config = VersioneerConfig()
-    # Populate the config with additional settings if needed
+    # Populate the config object with additional settings if needed
     return config

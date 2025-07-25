@@ -13,7 +13,7 @@ def formatmany(
     else:
         raise ValueError("Invalid parameter style. Must be a mapping or a sequence of sequences.")
 
-    # Prepare the formatted SQL and the converted parameters
+    # Prepare the formatted SQL and the list of converted parameters
     formatted_sql = sql
     converted_params = []
 

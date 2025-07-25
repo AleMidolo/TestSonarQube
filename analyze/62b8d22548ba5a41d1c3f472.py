@@ -7,12 +7,13 @@ def cachedmethod(cache, key=hashkey, lock=None):
         def wrapper(*args, **kwargs):
             # Create a unique cache key based on the method and its arguments
             cache_key = key(func, *args, **kwargs)
+            if cache_key in cache:
+                return cache[cache_key]
             with (lock if lock else dummy_lock):
-                if cache_key in cache:
-                    return cache[cache_key]
-                result = func(*args, **kwargs)
-                cache[cache_key] = result
-                return result
+                if cache_key not in cache:  # Double-check in case another thread computed it
+                    result = func(*args, **kwargs)
+                    cache[cache_key] = result
+                return cache[cache_key]
         return wrapper
     return decorator
 
