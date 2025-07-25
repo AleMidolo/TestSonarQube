@@ -27,9 +27,9 @@ def find_path_type(path):
     with open(os.path.join(path, namaste_file), 'r') as f:
         content = f.read().strip()
     
-    if content == "ocfl_1.0":
-        return "root"
-    elif content == "ocfl_object_1.0":
+    if content == "ocfl_object_1.0":
         return "object"
+    elif content == "ocfl_1.0":
+        return "root"
     else:
         return f"Unknown Namaste content: {content}"

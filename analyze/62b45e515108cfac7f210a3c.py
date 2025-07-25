@@ -13,22 +13,10 @@ def initialize(self):
 
     # Create the OCFL inventory file
     with open(os.path.join(self.root_path, "inventory.json"), "w") as f:
-        f.write("""{
-    "id": "urn:uuid:12345678-1234-5678-1234-567812345678",
-    "type": "Object",
-    "digestAlgorithm": "sha512",
-    "head": "v1",
-    "versions": {
-        "v1": {
-            "created": "2023-10-01T00:00:00Z",
-            "state": {},
-            "message": "Initial version"
-        }
-    }
-}""")
+        f.write('{"id": "ocfl_1.0", "type": "Object", "head": "v1", "versions": {}}\n')
 
-    # Create the OCFL object directory
-    os.makedirs(os.path.join(self.root_path, "objects"), exist_ok=True)
+    # Create the OCFL version directory
+    os.makedirs(os.path.join(self.root_path, "v1"), exist_ok=True)
 
-    # Create the OCFL extensions directory
-    os.makedirs(os.path.join(self.root_path, "extensions"), exist_ok=True)
+    # Create the OCFL content directory
+    os.makedirs(os.path.join(self.root_path, "v1", "content"), exist_ok=True)

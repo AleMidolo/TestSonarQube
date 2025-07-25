@@ -14,9 +14,10 @@ def protocol_handlers(cls, protocol_version=None):
     """
     # Example implementation assuming some predefined handlers
     available_handlers = {
-        (3, 5): "BoltV3_5Handler",
-        (4, 0): "BoltV4_0Handler",
-        (4, 1): "BoltV4_1Handler",
+        (3, 0): cls.HandlerV3_0,
+        (3, 5): cls.HandlerV3_5,
+        (4, 0): cls.HandlerV4_0,
+        (4, 1): cls.HandlerV4_1,
     }
 
     if protocol_version is not None:

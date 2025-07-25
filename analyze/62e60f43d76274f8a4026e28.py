@@ -27,8 +27,8 @@ def hydrate_time(nanoseconds, tz=None):
     time_obj = time(hour=hours, minute=minutes, second=seconds, microsecond=microseconds)
     
     # If a timezone is provided, localize the time
-    if tz is not None:
-        tz = pytz.timezone(tz)
-        time_obj = tz.localize(time_obj)
+    if tz:
+        tz_obj = pytz.timezone(tz)
+        time_obj = tz_obj.localize(time_obj)
     
     return time_obj

@@ -1,8 +1,5 @@
 def to_csv(self, separator=",", header=None):
     """
-    .. deprecated:: 0.5 in Lena 0.5 to_csv is not used.
-          Iterables are converted to tables.
-
     Convert graph's points to CSV.
 
     *separator* delimits values, the default is comma.

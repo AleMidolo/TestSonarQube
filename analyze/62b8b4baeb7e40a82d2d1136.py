@@ -32,27 +32,15 @@ def _verify(iface, candidate, tentative=False, vtype=None):
         As a special case, if only one such error is present, it is raised
         alone, like before.
     """
-    errors = []
+    if not tentative and not iface.providedBy(candidate):
+        raise Invalid(f"The candidate does not provide the interface {iface}.")
 
-    # Step 1: Verify that the candidate claims to provide the interface
-    if not tentative:
-        if not iface.providedBy(candidate):
-            errors.append(f"{candidate} does not claim to provide {iface}")
-
-    # Step 2: Verify that the candidate defines all necessary methods and attributes
-    try:
-        if vtype == 'class':
-            verifyClass(iface, candidate)
-        else:
-            verifyObject(iface, candidate)
-    except Invalid as e:
-        errors.append(str(e))
-
-    # Step 3: Handle errors
-    if errors:
-        if len(errors) == 1:
-            raise Invalid(errors[0])
-        else:
-            raise Invalid("\n".join(errors))
+    if vtype == 'object':
+        verifyObject(iface, candidate)
+    elif vtype == 'class':
+        verifyClass(iface, candidate)
+    else:
+        verifyObject(iface, candidate)
+        verifyClass(iface, candidate.__class__)
 
     return True

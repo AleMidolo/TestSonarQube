@@ -15,18 +15,17 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
     
     result = []
     while number > 0:
-        remainder = number % base
+        number, remainder = divmod(number, base)
         result.append(alphabet[remainder])
-        number = number // base
     
     if not result:
         result.append(alphabet[0])
     
-    result.reverse()
+    result_str = ''.join(reversed(result))
     
     if padding is not None:
-        if padding < len(result):
+        if padding < len(result_str):
             raise ValueError("Padding must be greater than or equal to the length of the result.")
-        result = [alphabet[0]] * (padding - len(result)) + result
+        result_str = result_str.rjust(padding, alphabet[0])
     
-    return ''.join(result)
+    return result_str

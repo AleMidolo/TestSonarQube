@@ -8,28 +8,24 @@ def validate_version_inventories(self, version_dirs):
     version_dirs is an array of version directory names and is assumed to be in
     version sequence (1, 2, 3...).
     """
-    root_inventory = self.get_root_inventory()
-    discrepancies = {}
-
+    inventory_records = {}
     for version_dir in version_dirs:
-        version_inventory = self.get_version_inventory(version_dir)
-        
-        if not version_inventory:
+        inventory_path = os.path.join(version_dir, "inventory.json")
+        if not os.path.exists(inventory_path):
             raise ValueError(f"Inventory missing for version: {version_dir}")
         
-        for content_id, digest in version_inventory.items():
-            if content_id in root_inventory:
-                if root_inventory[content_id] != digest:
-                    discrepancies[content_id] = {
-                        'root_digest': root_inventory[content_id],
-                        'version_digest': digest,
-                        'version': version_dir
-                    }
-            else:
-                discrepancies[content_id] = {
-                    'root_digest': None,
-                    'version_digest': digest,
-                    'version': version_dir
-                }
+        with open(inventory_path, 'r') as f:
+            inventory = json.load(f)
+        
+        # Compare with root inventory if exists
+        if inventory_records:
+            root_inventory = inventory_records.get("root")
+            if root_inventory:
+                for key, value in inventory.items():
+                    if key in root_inventory and value != root_inventory[key]:
+                        inventory_records[key] = value
+        
+        # Record the inventory for this version
+        inventory_records[version_dir] = inventory
     
-    return discrepancies
+    return inventory_records

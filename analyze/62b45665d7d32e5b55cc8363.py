@@ -7,7 +7,7 @@ def make_parsers():
     # Create the top-level parser
     parser = argparse.ArgumentParser(description="Top-level parser")
     
-    # Create subparsers for the top-level parser
+    # Create subparsers
     subparsers = parser.add_subparsers(dest="command", help="Sub-command help")
     
     # Example subparser 1

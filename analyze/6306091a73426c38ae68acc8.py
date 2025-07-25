@@ -3,11 +3,11 @@ def list_of_file_names(settings_dirs, spec_option):
     Create a new IniType complex type.
 
     Args:
-        settings_dirs (list): List of directories to search for files.
-        spec_option (str): Specification option to filter files.
+        settings_dirs (list): A list of directories to search for files.
+        spec_option (str): A specification option to filter files.
 
     Returns:
-        list: List of file names that match the specification.
+        list: A list of file names that match the specification option.
     """
     import os
 

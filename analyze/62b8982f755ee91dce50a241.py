@@ -10,35 +10,35 @@ def normalized(self):
         Returns a :class:`dateutil.relativedelta.relativedelta` object.
     """
     from dateutil.relativedelta import relativedelta
+    import math
 
-    # Convert all attributes to integers
+    # Convert days to integer and handle the fractional part
     days = int(self.days)
-    hours = int(self.hours)
-    minutes = int(self.minutes)
-    seconds = int(self.seconds)
-    microseconds = int(self.microseconds)
-
-    # Handle fractional parts
     fractional_days = self.days - days
-    fractional_hours = self.hours - hours
-    fractional_minutes = self.minutes - minutes
-    fractional_seconds = self.seconds - seconds
-    fractional_microseconds = self.microseconds - microseconds
+    hours = self.hours + fractional_days * 24
 
-    # Convert fractional parts to lower units
-    hours += int(fractional_days * 24)
-    minutes += int(fractional_hours * 60)
-    seconds += int(fractional_minutes * 60)
-    microseconds += int(fractional_seconds * 1e6)
+    # Convert hours to integer and handle the fractional part
+    hours = int(hours)
+    fractional_hours = hours - int(hours)
+    minutes = self.minutes + fractional_hours * 60
 
-    # Normalize the time components
-    seconds += microseconds // 1_000_000
-    microseconds = microseconds % 1_000_000
-    minutes += seconds // 60
-    seconds = seconds % 60
-    hours += minutes // 60
-    minutes = minutes % 60
-    days += hours // 24
-    hours = hours % 24
+    # Convert minutes to integer and handle the fractional part
+    minutes = int(minutes)
+    fractional_minutes = minutes - int(minutes)
+    seconds = self.seconds + fractional_minutes * 60
 
-    return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds, microseconds=microseconds)
+    # Convert seconds to integer and handle the fractional part
+    seconds = int(seconds)
+    fractional_seconds = seconds - int(seconds)
+    microseconds = self.microseconds + fractional_seconds * 1e6
+
+    # Create a new relativedelta object with integer values
+    return relativedelta(
+        years=self.years,
+        months=self.months,
+        days=days,
+        hours=hours,
+        minutes=minutes,
+        seconds=seconds,
+        microseconds=int(microseconds)
+    )
