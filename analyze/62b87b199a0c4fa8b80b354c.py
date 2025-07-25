@@ -4,7 +4,7 @@ def _get_seq_with_type(seq, bufsize=None):
     Sequence is derived from *seq*
     (or is *seq*, if that is of a sequence type).
     """
-    if isinstance(seq, (list, tuple, str, bytes, bytearray)):
+    if isinstance(seq, (list, tuple, str, bytes)):
         return seq, type(seq)
     else:
         return list(seq), list

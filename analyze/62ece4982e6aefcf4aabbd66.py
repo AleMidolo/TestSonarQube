@@ -16,7 +16,6 @@ def was_processed(processed, path_name, verbose):
     Returns:
         True if it's already in the set. False if not.
     """
-    import os
     abs_path = os.path.abspath(path_name)
     if abs_path in processed:
         if verbose:

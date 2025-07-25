@@ -8,11 +8,14 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     abort before writing anything.
     """
     if os.path.exists(config_filename) and not overwrite:
-        return
+        raise FileExistsError(f"File {config_filename} already exists and overwrite is False.")
     
+    # Create the directory if it doesn't exist
     os.makedirs(os.path.dirname(config_filename), exist_ok=True)
     
+    # Write the rendered config to the file
     with open(config_filename, 'w') as f:
         yaml.dump(rendered_config, f)
     
+    # Set the file permissions
     os.chmod(config_filename, mode)

@@ -15,15 +15,15 @@ def scale(self, other=None, recompute=False):
     Histograms with scale equal to zero can't be rescaled.
     :exc:`.LenaValueError` is raised if one tries to do that.
     """
-    if not hasattr(self, '_scale') or recompute:
-        # Compute the scale as the integral of the histogram
-        self._scale = sum(bin_content for bin_content in self.bins)
-    
     if other is None:
+        if not hasattr(self, '_scale') or recompute:
+            self._scale = self.integral()
         return self._scale
     else:
+        if not hasattr(self, '_scale') or recompute:
+            self._scale = self.integral()
         if self._scale == 0:
             raise LenaValueError("Cannot rescale a histogram with scale equal to zero.")
         scale_factor = other / self._scale
-        self.bins = [bin_content * scale_factor for bin_content in self.bins]
         self._scale = other
+        self.rescale(scale_factor)

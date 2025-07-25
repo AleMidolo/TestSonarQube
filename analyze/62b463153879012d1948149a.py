@@ -9,17 +9,17 @@ def _group_files_by_xml_filename(source, xmls, files):
     Parameters
     ----------
     source : str
-        The source directory or zipfile.
+        The source directory or zipfile path
     xmls : list
-        List of XML filenames.
+        List of XML filenames
     files : list
-        List of files in the folder or zipfile.
+        List of files in the folder or zipfile
 
     Returns
     -------
     dict
         key: name of the XML files
-        value: List of files associated with the XML file
+        value: list of files associated with the XML file
     """
     grouped_files = {}
     

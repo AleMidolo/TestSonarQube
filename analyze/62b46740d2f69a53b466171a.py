@@ -9,7 +9,10 @@ def pretty(self, indent=0, debug=False):
         if debug:
             result += f"{indent_str}  {key}: {repr(value)}\n"
         else:
-            result += f"{indent_str}  {key}: {value}\n"
+            if isinstance(value, (list, dict, set)):
+                result += f"{indent_str}  {key}: {value}\n"
+            else:
+                result += f"{indent_str}  {key}: {value}\n"
     
     result += f"{indent_str})"
     return result

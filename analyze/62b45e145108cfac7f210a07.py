@@ -9,23 +9,27 @@ def validate(self, inventory, extract_spec_version=False):
     if extract_spec_version:
         if 'type' in inventory:
             type_value = inventory['type']
-            if isinstance(type_value, str) and type_value.startswith("stix"):
-                spec_version = type_value.split("-")[-1]
-                if spec_version in ["2.0", "2.1"]:
+            if isinstance(type_value, str) and type_value.startswith("spec_version_"):
+                spec_version = type_value.split("_")[-1]
+                try:
+                    spec_version = float(spec_version)
                     self.spec_version = spec_version
-                else:
-                    print("Invalid type value for spec version extraction.")
-            else:
-                print("Type value is not valid for spec version extraction.")
+                except ValueError:
+                    pass  # Invalid version format, use self.spec_version
         else:
-            print("No type value found in inventory for spec version extraction.")
+            # No type value, use self.spec_version
+            pass
     
     # Perform validation based on self.spec_version
-    if self.spec_version == "2.0":
-        # Validation logic for STIX 2.0
+    # Placeholder for actual validation logic
+    if self.spec_version == 1.0:
+        # Validate for spec version 1.0
         pass
-    elif self.spec_version == "2.1":
-        # Validation logic for STIX 2.1
+    elif self.spec_version == 2.0:
+        # Validate for spec version 2.0
         pass
     else:
-        print("Unsupported specification version.")
+        # Handle unsupported or invalid spec versions
+        raise ValueError(f"Unsupported specification version: {self.spec_version}")
+    
+    return True  # Placeholder for successful validation

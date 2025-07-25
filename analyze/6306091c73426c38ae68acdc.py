@@ -1,6 +1,6 @@
 def validate_from_content(cls, spec_content=None):
     """
-    Validates that spec (YAML) content has all required fields
+    Validates that spec (YAML) content has all required fields.
 
     :param spec_content: content of spec file
     :raise IRValidatorException: when mandatory data is missing in spec file
@@ -10,7 +10,7 @@ def validate_from_content(cls, spec_content=None):
     from yaml import YAMLError
 
     if spec_content is None:
-        raise cls.IRValidatorException("Spec content cannot be None")
+        raise cls.IRValidatorException("Spec content cannot be None.")
 
     try:
         spec_data = yaml.safe_load(spec_content)

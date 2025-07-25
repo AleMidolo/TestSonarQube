@@ -31,5 +31,3 @@ def update_last_applied_manifest_list_from_resp(
         else:
             if i >= len(last_applied_manifest):
                 last_applied_manifest.append(resp_item)
-            else:
-                last_applied_manifest[i] = resp_item

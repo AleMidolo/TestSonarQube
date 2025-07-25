@@ -52,14 +52,19 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
         your system.
     """
     try:
+        if not isinstance(timestr, str):
+            raise TypeError("Input must be a string or character stream.")
+
         if default is not None and not isinstance(default, datetime):
-            raise TypeError("default must be a datetime object or None")
+            raise TypeError("Default must be a datetime object or None.")
+
+        if ignoretz:
+            tzinfos = None
 
         result = dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
         return result
+
     except ParserError as e:
-        raise ParserError(f"Failed to parse date/time string: {e}")
-    except TypeError as e:
-        raise TypeError(f"Invalid input type: {e}")
+        raise ParserError(f"Failed to parse date string: {e}")
     except OverflowError as e:
-        raise OverflowError(f"Date exceeds maximum valid value: {e}")
+        raise OverflowError(f"Parsed date exceeds the largest valid C integer: {e}")

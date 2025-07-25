@@ -56,14 +56,17 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     # Ensure values are in a consistent format (e.g., tuple)
     if not isinstance(values[0], (tuple, list)):
-        values = [(value,) for value in values]
+        values = [(v,) for v in values]
 
-    # Create the graph data structure
-    GraphPoint = namedtuple('GraphPoint', field_names)
-    graph_data = [GraphPoint(coord, *val) for coord, val in zip(coordinates, values)]
+    # Create the graph data
+    graph_data = np.column_stack([coordinates] + list(zip(*values)))
 
-    # Create the graph object
-    Graph = namedtuple('Graph', ['data', 'scale'])
-    graph = Graph(data=graph_data, scale=scale)
+    # Create the graph
+    Graph = namedtuple('Graph', field_names)
+    graph = Graph._make(graph_data.T)
+
+    # Set the scale if provided
+    if scale is not None:
+        graph.scale = scale
 
     return graph

@@ -20,21 +20,20 @@ def lfu_cache(maxsize=128, typed=False):
                 freq = frequency[key]
                 frequency[key] += 1
                 del frequency_list[freq][key]
-                if not frequency_list[freq]:
-                    del frequency_list[freq]
-                    if freq == min_freq:
-                        min_freq += 1
                 frequency_list[freq + 1][key] = None
+                if freq == min_freq and not frequency_list[freq]:
+                    min_freq += 1
                 return cache[key]
 
-            # If cache is full, evict the least frequently used item
+            result = func(*args, **kwargs)
+
             if len(cache) >= maxsize:
+                # Evict the least frequently used item
                 evict_key, _ = frequency_list[min_freq].popitem(last=False)
                 del cache[evict_key]
                 del frequency[evict_key]
 
             # Add new item to cache
-            result = func(*args, **kwargs)
             cache[key] = result
             frequency[key] = 1
             frequency_list[1][key] = None

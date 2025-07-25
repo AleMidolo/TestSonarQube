@@ -12,23 +12,27 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     if not cmd:
         return cmd
 
-    # Handle shebang lines on Windows
-    if os.name == 'nt':
-        first_arg = cmd[0]
-        if first_arg.startswith('#!'):
-            # Extract the interpreter path from the shebang
-            interpreter_path = first_arg[2:].strip()
-            # Normalize the path to handle deep-path shebangs
-            interpreter_path = os.path.normpath(interpreter_path)
-            # Replace the shebang with the interpreter path
-            cmd = (interpreter_path,) + cmd[1:]
+    # Handle shebang lines
+    if cmd[0].startswith('#!'):
+        # Extract the interpreter path from the shebang
+        interpreter = cmd[0][2:].strip()
+        # Split the interpreter path into parts
+        interpreter_parts = interpreter.split()
+        # The first part is the interpreter path
+        interpreter_path = interpreter_parts[0]
+        # The rest are arguments to the interpreter
+        interpreter_args = interpreter_parts[1:]
+        # Normalize the interpreter path
+        interpreter_path = os.path.normpath(interpreter_path)
+        # Reconstruct the command
+        cmd = (interpreter_path,) + tuple(interpreter_args) + cmd[1:]
 
-    # Handle the issue where Windows does not parse shebangs
-    if os.name == 'nt' and len(cmd) > 1:
-        first_arg = cmd[0]
-        if first_arg.endswith('.py') or first_arg.endswith('.pyw'):
-            # Prepend the Python interpreter if the first argument is a Python script
-            python_executable = sys.executable
-            cmd = (python_executable,) + cmd
+    # Normalize paths in the command
+    normalized_cmd = []
+    for part in cmd:
+        if os.path.exists(part):
+            normalized_cmd.append(os.path.normpath(part))
+        else:
+            normalized_cmd.append(part)
 
-    return cmd
+    return tuple(normalized_cmd)

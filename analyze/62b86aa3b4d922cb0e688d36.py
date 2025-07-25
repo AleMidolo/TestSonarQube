@@ -6,7 +6,7 @@ class ValidationError(Exception):
         self.messages = messages
         super().__init__(str(messages))
 
-def _validate_labels(labels: Dict[Union[str, bool], Union[str, List[str], bool]]):
+def _validate_labels(labels: Dict[Union[str, bool], Union[str, List, bool]]):
     """
     Check that keys and values in the given labels match against their corresponding
     regular expressions.
@@ -21,29 +21,10 @@ def _validate_labels(labels: Dict[Union[str, bool], Union[str, List[str], bool]]
             one key-value pair:
             - key: the label key or label value for which an error occurred as string.
             - value: the error message.
-
-            .. code:: python
-
-                # Example:
-                labels = {
-                    "key1": "valid",
-                    "key2": ["invalid"],
-                    "$$": "invalid",
-                    True: True,
-                }
-                try:
-                    _validate_labels(labels)
-                except ValidationError as err:
-                    assert err.messages == [
-                        {"['invalid']": 'expected string or bytes-like object'},
-                        {'$$': "Label key '$$' does not match the regex [...]"},
-                        {'True': 'expected string or bytes-like object'},
-                        {'True': 'expected string or bytes-like object'},
-                    ]
     """
     errors = []
-    key_regex = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')
-    value_regex = re.compile(r'^[a-zA-Z0-9_]*$')
+    key_regex = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')  # Example regex for keys
+    value_regex = re.compile(r'^[a-zA-Z0-9_]+$')  # Example regex for values
 
     for key, value in labels.items():
         # Validate key

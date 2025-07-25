@@ -22,10 +22,4 @@ def round_half_to_even(n):
     :param n: The number to round.
     :return: The rounded integer.
     """
-    if n % 1 == 0.5:
-        if int(n) % 2 == 0:
-            return int(n)
-        else:
-            return int(n) + 1
-    else:
-        return round(n)
+    return round(n * 2) / 2 if n % 1 == 0.5 else round(n)

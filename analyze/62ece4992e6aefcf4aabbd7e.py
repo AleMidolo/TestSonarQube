@@ -8,10 +8,7 @@ def _resolve_string(matcher):
     name = matcher.get('name')
     default_value = matcher.get('default', None)
     
-    if name not in os.environ:
-        if default_value is not None:
-            return default_value
-        else:
-            raise ValueError(f"Environment variable '{name}' is not defined and no default value is provided.")
+    if name not in os.environ and default_value is None:
+        raise ValueError(f"Environment variable '{name}' is not defined and no default value is provided.")
     
-    return os.environ[name]
+    return os.environ.get(name, default_value)

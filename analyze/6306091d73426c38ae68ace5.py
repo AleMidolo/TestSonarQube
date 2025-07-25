@@ -4,7 +4,7 @@ def _include_groups(self, parser_dict):
     """
     if 'include' not in parser_dict:
         return parser_dict
-
+    
     include_dict = parser_dict['include']
     for key, value in include_dict.items():
         if key in parser_dict:
@@ -16,6 +16,6 @@ def _include_groups(self, parser_dict):
                 parser_dict[key] = value
         else:
             parser_dict[key] = value
-
+    
     del parser_dict['include']
     return parser_dict
