@@ -1,20 +1,22 @@
 def validate_fixity(self, fixity, manifest_files):
     """
-    验证库存（inventory）中的校验（fixity）块。检查校验块的结构，并保证仅引用了清单中列出的文件。在类中返回`error()`。
+    Validate fixity block in inventory.
+
+    Check the structure of the fixity block and makes sure that only files
+    listed in the manifest are referenced.
     """
+    # Check if fixity is a dictionary
     if not isinstance(fixity, dict):
-        return self.error("Fixity must be a dictionary.")
+        raise ValueError("Fixity must be a dictionary.")
 
-    required_keys = ['checksum', 'algorithm', 'files']
-    for key in required_keys:
-        if key not in fixity:
-            return self.error(f"Missing required key: {key}")
+    # Check if manifest_files is a set for faster lookup
+    manifest_set = set(manifest_files)
 
-    if not isinstance(fixity['files'], list):
-        return self.error("Files must be a list.")
-
-    for file in fixity['files']:
-        if file not in manifest_files:
-            return self.error(f"File {file} is not in the manifest.")
+    # Validate each file in the fixity block
+    for file, checksum in fixity.items():
+        if file not in manifest_set:
+            raise ValueError(f"File '{file}' in fixity block is not in the manifest.")
+        if not isinstance(checksum, str):
+            raise ValueError(f"Checksum for file '{file}' must be a string.")
 
     return True

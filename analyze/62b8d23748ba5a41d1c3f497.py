@@ -1,12 +1,19 @@
 def popitem(self):
     """
-    移除并返回最少使用的键值对。
+    Remove and return the `(key, value)` pair least frequently used.
     """
-    if not self.cache:
-        raise KeyError("popitem(): cache is empty")
+    if not self.freq_map:
+        raise KeyError("popitem(): dictionary is empty")
     
-    # Find the least recently used item
-    lru_key = min(self.cache, key=self.cache.get)
-    lru_value = self.cache.pop(lru_key)
+    # Find the least frequently used key
+    least_freq = min(self.freq_map.values())
+    least_freq_keys = [key for key, freq in self.freq_map.items() if freq == least_freq]
     
-    return lru_key, lru_value
+    # If there are multiple keys with the same frequency, we can choose one
+    key_to_remove = least_freq_keys[0]
+    
+    # Remove the key from the frequency map and the main dictionary
+    value = self.data.pop(key_to_remove)
+    del self.freq_map[key_to_remove]
+    
+    return key_to_remove, value

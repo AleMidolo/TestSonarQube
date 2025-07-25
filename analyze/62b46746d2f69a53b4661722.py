@@ -1,38 +1,36 @@
 def absorb(self, args):
     """
-    对于给定的表达式序列 `args`，返回一个应用吸收律的新表达式列表。
+    Given an `args` sequence of expressions, return a new list of expression
+    applying absorption and negative absorption.
 
-    对于给定的表达式序列 `args`，返回一个应用吸收律和负吸收律的新表达式列表。
+    See https://en.wikipedia.org/wiki/Absorption_law
 
-    参考：https://en.wikipedia.org/wiki/Absorption_law
+    Absorption::
 
-    吸收律（Absorption）::
+        A & (A | B) = A, A | (A & B) = A
 
-      A & (A | B) = A, A | (A & B) = A
+    Negative absorption::
 
-    负吸收律（Negative Absorption）::
-
-      A & (~A | B) = A & B, A | (~A & B) = A | B
+        A & (~A | B) = A & B, A | (~A & B) = A | B
     """
-    new_args = []
+    result = []
     for expr in args:
-        # Apply Absorption Law
         if isinstance(expr, tuple) and len(expr) == 3:
-            op1, operator, op2 = expr
-            if operator == '&':
-                if op1 == op2 or (op1 == '|' and op2 == 'B'):
-                    new_args.append(op1)
-                elif op1 == '~' + op2:
-                    new_args.append((op1, '&', 'B'))
+            a, op, b = expr
+            if op == '&':
+                if (a == b) or (b == ('|', a)):
+                    result.append(a)
+                elif (a == ('~', b)) or (b == ('|', ('~', a))):
+                    result.append(('&', a, b))
                 else:
-                    new_args.append(expr)
-            elif operator == '|':
-                if op1 == op2 or (op1 == '&' and op2 == 'B'):
-                    new_args.append(op1)
-                elif op1 == '~' + op2:
-                    new_args.append((op1, '|', 'B'))
+                    result.append(expr)
+            elif op == '|':
+                if (a == b) or (b == ('&', a)):
+                    result.append(a)
+                elif (a == ('~', b)) or (b == ('&', ('~', a))):
+                    result.append(('|', a, b))
                 else:
-                    new_args.append(expr)
+                    result.append(expr)
         else:
-            new_args.append(expr)
-    return new_args
+            result.append(expr)
+    return result

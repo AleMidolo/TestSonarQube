@@ -2,11 +2,12 @@ import re
 
 def _get_resource_name_regex():
     """
-    返回用于验证 Krake 资源名称的正则表达式  
-    构建或返回用于验证 Krake 资源名称的正则表达式。
+    Build or return the regular expressions that are used to validate
+    the name of the Krake resources.
 
-    返回值：  
-        (re.Pattern)：编译后的正则表达式，用于验证资源名称。
+    Returns:
+        (re.Pattern): the compiled regular expressions, to validate
+        the resource name.
     """
-    pattern = r'^[a-zA-Z0-9-_]+$'  # 示例正则表达式，允许字母、数字、连字符和下划线
-    return re.compile(pattern)
+    resource_name_pattern = r'^[a-zA-Z0-9-_]+$'
+    return re.compile(resource_name_pattern)

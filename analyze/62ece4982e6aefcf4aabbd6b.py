@@ -1,13 +1,5 @@
 def subclasses(cls):
     """
-    递归地返回一个类的所有子类。
+    Return all subclasses of a class, recursively
     """
-    all_subclasses = set()
-
-    def find_subclasses(c):
-        for subclass in c.__subclasses__():
-            all_subclasses.add(subclass)
-            find_subclasses(subclass)
-
-    find_subclasses(cls)
-    return all_subclasses
+    return cls.__subclasses__() + [s for c in cls.__subclasses__() for s in subclasses(c)]

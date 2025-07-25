@@ -1,11 +1,13 @@
 def _legacy_mergeOrderings(orderings):
     """
-    将多个列表按出现顺序合并为一个不包含重复元素的列表。
-    合并多个排序列表（orderings），同时保留每个排序列表中的顺序。
+    Merge multiple orderings so that within-ordering order is preserved
 
-    这些排序列表受到以下约束：如果某个对象出现在两个或多个排序列表中，那么以该对象为起点的后缀部分必须在所有相关的排序列表中一致。
+    Orderings are constrained in such a way that if an object appears
+    in two or more orderings, then the suffix that begins with the
+    object must be in both orderings.
 
-    例如：
+    For example:
+
     >>> _mergeOrderings([
     ... ['x', 'y', 'z'],
     ... ['q', 'z'],
@@ -14,16 +16,32 @@ def _legacy_mergeOrderings(orderings):
     ... ])
     ['x', 'y', 'q', 1, 3, 5, 'z']
     """
-    seen = set()
-    result = []
+    from collections import defaultdict, deque
 
-    def add_ordering(ordering):
-        for item in ordering:
-            if item not in seen:
-                seen.add(item)
-                result.append(item)
+    # Create a graph and a count of incoming edges
+    graph = defaultdict(set)
+    in_degree = defaultdict(int)
+    orderings_set = set()
 
     for ordering in orderings:
-        add_ordering(ordering)
+        for i in range(len(ordering)):
+            orderings_set.add(ordering[i])
+            if i > 0:
+                if ordering[i] not in graph[ordering[i - 1]]:
+                    graph[ordering[i - 1]].add(ordering[i])
+                    in_degree[ordering[i]] += 1
 
-    return result
+    # Initialize the queue with nodes that have no incoming edges
+    queue = deque([item for item in orderings_set if in_degree[item] == 0])
+    merged_order = []
+
+    while queue:
+        current = queue.popleft()
+        merged_order.append(current)
+
+        for neighbor in graph[current]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+
+    return merged_order

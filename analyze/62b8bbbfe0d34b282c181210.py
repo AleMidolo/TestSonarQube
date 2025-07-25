@@ -1,19 +1,17 @@
 def append_text_to_file(file_name, text_buffer, encoding, overwrite=False):
     """
-    将文本缓冲区中的数据写入文件
-    将提供的文本缓冲区写入指定的文件名。  
-    如果文件不存在，则创建文件。  
-
-    :param file_name: 文件名。  
-    :type filename: str
-    :text_buffer: 要写入的文本缓冲。  
+    Write to the specified filename, the provided binary buffer
+    Create the file if required.
+    :param file_name:  File name.
+    :type file_name: str
+    :param text_buffer: Text buffer to write.
     :type text_buffer: str
-    :encoding: 使用的编码格式。  
+    :param encoding: The encoding to use.
     :type encoding: str
-    :overwrite: 如果为真，则覆盖文件内容。  
+    :param overwrite: If true, file is overwritten.
     :type overwrite: bool
-    :return: 写入的字节数。如果发生错误，则返回小于 0 的值。  
-    :rtype: int
+    :return: The number of bytes written or lt 0 if error.
+    :rtype int
     """
     try:
         mode = 'w' if overwrite else 'a'

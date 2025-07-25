@@ -1,17 +1,14 @@
-import re
-
 def get_pattern(pattern, strip=True):
     """
-    将字符串转换为正则表达式模式对象
-
-    参数:
-        pattern: 字符串或正则表达式模式对象
-        strip: 布尔值，是否去除字符串开头和结尾的空格
-    返回值:
-        正则表达式模式对象
-
-    此方法将给定的字符串转换为正则表达式模式。
+    This method converts the given string to regex pattern
     """
-    if strip and isinstance(pattern, str):
+    import re
+    
+    if strip:
         pattern = pattern.strip()
-    return re.compile(pattern) if isinstance(pattern, str) else pattern
+    
+    # Escape special characters in the pattern
+    escaped_pattern = re.escape(pattern)
+    
+    # Return the regex pattern
+    return escaped_pattern

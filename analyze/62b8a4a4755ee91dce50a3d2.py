@@ -1,27 +1,28 @@
 def _fromutc(self, dt):
     """
-    给定一个特定时区的日期时间，计算在新时区的日期时间。
+    Given a timezone-aware datetime in a given timezone, calculates a
+    timezone-aware datetime in a new timezone.
 
-    给定一个带有时区信息的日期时间对象，计算在新时区的带有时区信息的日期时间。
+    Since this is the one time that we *know* we have an unambiguous
+    datetime object, we take this opportunity to determine whether the
+    datetime is ambiguous and in a "fold" state (e.g. if it's the first
+    occurrence, chronologically, of the ambiguous datetime).
 
-    由于这是我们*明确知道*日期时间对象没有歧义的唯一时刻，我们利用这个机会来判断该日期时间是否存在歧义，并且是否处于“折叠”状态（例如，如果这是歧义日期时间的第一个按时间顺序出现的实例）。
-
-    :param dt: 一个带有时区信息的 :class:`datetime.datetime` 对象。
+    :param dt:
+        A timezone-aware :class:`datetime.datetime` object.
     """
-    # 检查输入的日期时间对象是否带有时区信息
     if dt.tzinfo is None:
-        raise ValueError("dt must be a timezone-aware datetime object")
+        raise ValueError("dt must be a timezone-aware datetime")
 
-    # 将输入的日期时间转换为 UTC 时间
+    # Convert the datetime to UTC
     utc_dt = dt.astimezone(self.utc)
 
-    # 计算在新时区的日期时间
-    new_dt = utc_dt.astimezone(self)
-
-    # 检查是否存在歧义
-    if new_dt.dst() != timedelta(0):
-        # 如果存在歧义，判断是否处于“折叠”状态
-        if new_dt < self.fold_start:
-            raise ValueError("Ambiguous datetime in the new timezone")
-
-    return new_dt
+    # Check if the datetime is ambiguous
+    if self.is_ambiguous(utc_dt):
+        # Determine if it's in the first or second fold
+        if self.fold == 0:
+            return utc_dt.replace(fold=0)
+        else:
+            return utc_dt.replace(fold=1)
+    
+    return utc_dt

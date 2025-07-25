@@ -1,21 +1,23 @@
-def update_last_applied_manifest_list_from_resp(last_applied_manifest, observer_schema, response):
+def update_last_applied_manifest_list_from_resp(
+    last_applied_manifest, observer_schema, response
+):
     """
-    与函数 :func:``update_last_applied_manifest_dict_from_resp`` 一起，该函数被递归调用，来从部分 Kubernetes 响应中更新部分 ``last_applied_manifest``。
+    Together with :func:``update_last_applied_manifest_dict_from_resp``, this
+    function is called recursively to update a partial ``last_applied_manifest``
+    from a partial Kubernetes response
 
-    参数:
-      last_applied_manifest (list): 正在更新的部分 ``last_applied_manifest``。
-      observer_schema (list): 部分 ``observer_schema``。
-      response (list): 来自 Kubernetes API 的部分响应。
+    Args:
+        last_applied_manifest (list): partial ``last_applied_manifest`` being
+            updated
+        observer_schema (list): partial ``observer_schema``
+        response (list): partial response from the Kubernetes API.
 
-    此函数会遍历所有观察到的字段，如果它们尚未在 `last_applied_manifest` 中初始化，则会为其初始化值。
+    This function go through all observed fields, and initialized their value in
+    last_applied_manifest if they are not yet present
     """
     for schema in observer_schema:
         field = schema.get('field')
         if field not in last_applied_manifest:
-            last_applied_manifest[field] = None  # Initialize with None or appropriate default
-
-        # If the field is a list, we need to update it with the response
-        if isinstance(last_applied_manifest[field], list):
-            last_applied_manifest[field] = response.get(field, [])
-
+            last_applied_manifest[field] = response.get(field, None)
+    
     return last_applied_manifest

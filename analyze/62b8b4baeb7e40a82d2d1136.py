@@ -1,29 +1,40 @@
 def _verify(iface, candidate, tentative=False, vtype=None):
     """
-    验证 *candidate* 是否能够正确地提供 *iface*。
+    Verify that *candidate* might correctly provide *iface*.
 
-    这个过程包括以下步骤：
+    This involves:
 
-    - 确保候选对象声明其提供了接口，通过调用 ``iface.providedBy`` （如果 *tentative* 为真，则跳过此步骤）。这意味着候选对象的类必须声明 `implements <zope.interface.implementer>` 该接口，或者候选对象自身声明 `provides <zope.interface.provider>` 该接口。
+    - Making sure the candidate claims that it provides the
+      interface using ``iface.providedBy`` (unless *tentative* is `True`,
+      in which case this step is skipped). This means that the candidate's class
+      declares that it `implements <zope.interface.implementer>` the interface,
+      or the candidate itself declares that it `provides <zope.interface.provider>`
+      the interface
 
-    - 确保候选对象定义了所有必要的方法。
+    - Making sure the candidate defines all the necessary methods
 
-    - 确保这些方法具有正确的签名（在可能的范围内进行检查）。
+    - Making sure the methods have the correct signature (to the
+      extent possible)
 
-    - 确保候选对象定义了所有必要的属性。
+    - Making sure the candidate defines all the necessary attributes
 
-    :return bool: 如果所有可以检查的条件都通过，则返回真。
-    :raises zope.interface.Invalid: 如果上述任何条件不满足
+    :return bool: Returns a true value if everything that could be
+       checked passed.
+    :raises zope.interface.Invalid: If any of the previous
+       conditions does not hold.
 
     .. versionchanged:: 5.0
-      如果有多个方法或属性无效，将收集并报告所有这些错误。之前的行为是仅报告第一个错误。作为一个特殊情况，如果只有一个错误，则像之前一样单独抛出该错误。
+        If multiple methods or attributes are invalid, all such errors
+        are collected and reported. Previously, only the first error was reported.
+        As a special case, if only one such error is present, it is raised
+        alone, like before.
     """
     from zope.interface import providedBy, Invalid
     from inspect import signature, Parameter
 
     errors = []
 
-    if not tentative and not providedBy(candidate).isOrExtends(iface):
+    if not tentative and not providedBy(candidate, iface):
         errors.append(f"{candidate} does not provide {iface}")
 
     required_methods = iface.names()
@@ -37,25 +48,27 @@ def _verify(iface, candidate, tentative=False, vtype=None):
             errors.append(f"{method_name} in {candidate} is not callable")
             continue
         
-        if vtype is not None:
-            sig = signature(method)
-            if len(sig.parameters) != len(vtype):
-                errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
-                continue
-            
-            for param_name, param_type in zip(sig.parameters.keys(), vtype):
-                if sig.parameters[param_name].annotation != param_type:
-                    errors.append(f"{method_name} in {candidate} has incorrect parameter type for {param_name}")
+        # Check method signature
+        iface_method = iface[method_name]
+        iface_sig = signature(iface_method)
+        candidate_sig = signature(method)
 
-    required_attributes = iface.names()
-    for attr_name in required_attributes:
-        if not hasattr(candidate, attr_name):
-            errors.append(f"{candidate} is missing attribute {attr_name}")
+        if len(iface_sig.parameters) != len(candidate_sig.parameters):
+            errors.append(f"{method_name} in {candidate} has incorrect number of parameters")
+            continue
+
+        for param in iface_sig.parameters.values():
+            if param.default is Parameter.empty and param.name not in candidate_sig.parameters:
+                errors.append(f"{method_name} in {candidate} is missing required parameter {param.name}")
+
+    required_attributes = [attr for attr in iface.names() if not callable(getattr(iface, attr))]
+    for attr in required_attributes:
+        if not hasattr(candidate, attr):
+            errors.append(f"{candidate} is missing attribute {attr}")
 
     if errors:
         if len(errors) == 1:
             raise Invalid(errors[0])
-        else:
-            raise Invalid(errors)
+        raise Invalid(errors)
 
     return True

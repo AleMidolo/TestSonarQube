@@ -1,8 +1,7 @@
 def parse_arguments(*unparsed_arguments):
     """
-    解析参数并将其作为字典映射返回
-
-    给定调用该脚本时使用的命令行参数，解析这些参数并返回一个字典，该字典将子解析器名称（或 "global"）映射到相应的 argparse.Namespace 实例。
+    Given command-line arguments with which this script was invoked, parse the arguments and return
+    them as a dict mapping from subparser name (or "global") to an argparse.Namespace instance.
     """
     import argparse
 
@@ -20,5 +19,13 @@ def parse_arguments(*unparsed_arguments):
     # Parse the arguments
     args = parser.parse_args(unparsed_arguments)
 
-    # Return as a dictionary mapping subparser names to their respective Namespace
-    return {args.subparser_name: args} if args.subparser_name else {'global': args}
+    # Create a dictionary to hold the results
+    result = {}
+    
+    # Store the parsed arguments in the result dictionary
+    if args.subparser_name is None:
+        result['global'] = args
+    else:
+        result[args.subparser_name] = args
+
+    return result

@@ -1,13 +1,19 @@
 def _include_groups(self, parser_dict):
     """
-    解析规范文件中的 include dict 指令。
+    Resolves the include dict directive in the spec files.
     """
-    if 'include' not in parser_dict:
-        return
-    
-    includes = parser_dict['include']
-    for include in includes:
-        if isinstance(include, dict):
-            self._include_groups(include)
+    if not isinstance(parser_dict, dict):
+        raise ValueError("parser_dict must be a dictionary")
+
+    included_groups = {}
+    for key, value in parser_dict.items():
+        if isinstance(value, dict) and 'include' in value:
+            include_key = value['include']
+            if include_key in parser_dict:
+                included_groups[key] = parser_dict[include_key]
+            else:
+                raise KeyError(f"Included key '{include_key}' not found in parser_dict")
         else:
-            self._process_include(include)
+            included_groups[key] = value
+
+    return included_groups

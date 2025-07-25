@@ -1,17 +1,18 @@
 def point_type(name, fields, srid_map):
     """
-    动态创建一个 Point 子类。
+    Dynamically create a Point subclass.
     """
-    from types import new_class
+    from collections import namedtuple
 
-    def init(self, **kwargs):
-        for field in fields:
-            setattr(self, field, kwargs.get(field))
+    # Create a named tuple for the fields
+    PointFields = namedtuple(name, fields)
 
-    attrs = {'__init__': init}
-    point_class = new_class(name, (object,), attrs)
+    class Point(PointFields):
+        def __init__(self, *args):
+            super().__init__(*args)
+            self.srid = srid_map.get(name, None)
 
-    for srid, field in srid_map.items():
-        setattr(point_class, f'srid_{srid}', field)
+        def __repr__(self):
+            return f"{self.__class__.__name__}({', '.join(map(str, self))}, srid={self.srid})"
 
-    return point_class
+    return Point

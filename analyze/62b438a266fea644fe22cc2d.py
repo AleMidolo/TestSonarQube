@@ -1,21 +1,24 @@
 def parse_subparser_arguments(unparsed_arguments, subparsers):
     """
-    给定一个参数序列和一个从子解析器名称到 argparse.ArgumentParser 实例的字典，让每个请求的操作的子解析器尝试解析所有参数。这允许共享常见参数（例如 --repository）给多个子解析器。
+    Given a sequence of arguments and a dict from subparser name to argparse.ArgumentParser
+    instance, give each requested action's subparser a shot at parsing all arguments. This allows
+    common arguments like "--repository" to be shared across multiple subparsers.
 
-    将结果作为一个元组返回，其中包含一个将子解析器名称映射到其解析后的 argparse.Namespace 实例的字典和一个包含未被任何子解析器认领的剩余参数的列表。
+    Return the result as a tuple of (a dict mapping from subparser name to a parsed namespace of
+    arguments, a list of remaining arguments not claimed by any subparser).
     """
     import argparse
 
-    results = {}
-    remaining_args = unparsed_arguments[:]
+    parsed_results = {}
+    remaining_arguments = unparsed_arguments[:]
     
     for name, parser in subparsers.items():
         try:
-            # Try to parse the arguments for the current subparser
-            parsed_args, remaining_args = parser.parse_known_args(remaining_args)
-            results[name] = parsed_args
+            # Attempt to parse the arguments for this subparser
+            parsed_args, remaining_arguments = parser.parse_known_args(remaining_arguments)
+            parsed_results[name] = parsed_args
         except SystemExit:
             # If parsing fails, we can skip this subparser
             continue
 
-    return results, remaining_args
+    return parsed_results, remaining_arguments

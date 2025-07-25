@@ -1,24 +1,22 @@
 def generate_default_observer_schema(app):
     """
-    为 ``spec.manifest`` 中的每个 Kubernetes 资源生成默认的观察者模式（observer schema），前提是尚未为其指定自定义的观察者模式。
+    Generate the default observer schema for each Kubernetes resource present in
+    ``spec.manifest`` for which a custom observer schema hasn't been specified.
 
-    参数：
-        app (krake.data.kubernetes.Application): 需要为其生成默认观察者模式的应用程序。
+    Args:
+        app (krake.data.kubernetes.Application): The application for which to generate a
+            default observer schema
     """
     default_schema = {}
-    
     for resource in app.spec.manifest:
-        if 'observer' not in resource:
-            default_schema[resource['kind']] = {
-                'apiVersion': resource['apiVersion'],
-                'kind': resource['kind'],
+        resource_type = resource.get('kind')
+        if resource_type not in app.custom_observer_schemas:
+            default_schema[resource_type] = {
+                'apiVersion': resource.get('apiVersion'),
                 'metadata': {
-                    'name': resource['metadata']['name'],
-                    'namespace': resource['metadata'].get('namespace', 'default')
+                    'name': resource.get('metadata', {}).get('name'),
+                    'namespace': resource.get('metadata', {}).get('namespace')
                 },
-                'spec': {
-                    # Add default spec fields as necessary
-                }
+                'spec': resource.get('spec', {})
             }
-    
     return default_schema

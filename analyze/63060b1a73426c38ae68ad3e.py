@@ -1,27 +1,40 @@
 import os
-import yaml
+import json
 
 def get_plugin_spec_flatten_dict(plugin_dir):
     """
-    使用 YAML 来读取 `plugin_dir` 中的各种信息，并以字典形式将其返回。
-    从插件规范创建一个扁平化的字典
+    Creates a flat dict from the plugin spec
 
-    :param plugin_dir: 插件目录的路径
-    :return: 一个包含插件属性的扁平化字典
+    :param plugin_dir: A path to the plugin's dir
+    :return: A flatten dictionary contains the plugin's properties
     """
     flatten_dict = {}
 
     for root, _, files in os.walk(plugin_dir):
         for file in files:
-            if file.endswith('.yaml') or file.endswith('.yml'):
+            if file.endswith('.json'):
                 file_path = os.path.join(root, file)
-                with open(file_path, 'r', encoding='utf-8') as f:
+                with open(file_path, 'r') as f:
                     try:
-                        content = yaml.safe_load(f)
-                        if isinstance(content, dict):
-                            for key, value in content.items():
-                                flatten_dict[key] = value
-                    except yaml.YAMLError as e:
-                        print(f"Error reading {file_path}: {e}")
+                        data = json.load(f)
+                        flatten_dict.update(flatten_json(data))
+                    except json.JSONDecodeError:
+                        continue
 
     return flatten_dict
+
+def flatten_json(y):
+    out = {}
+
+    def flatten(x, name=''):
+        if type(x) is dict:
+            for a in x:
+                flatten(x[a], name + a + '_')
+        elif type(x) is list:
+            for i, a in enumerate(x):
+                flatten(a, name + str(i) + '_')
+        else:
+            out[name[:-1]] = x
+
+    flatten(y)
+    return out

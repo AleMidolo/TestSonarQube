@@ -1,32 +1,42 @@
 def validate_hierarchy(self, validate_objects=True, check_digests=True, show_warnings=False):
     """
-    验证存储根层次结构。
+    Validate storage root hierarchy.
 
-    返回:
-          num_objects (int): 检查的对象数量。
-          good_objects (int): 检查后被认为有效的对象数量。
+    Returns:
+        num_objects - number of objects checked
+        good_objects - number of objects checked that were found to be valid
     """
     num_objects = 0
     good_objects = 0
 
-    # 假设我们有一个方法来获取所有对象
-    objects = self.get_all_objects()
-
-    for obj in objects:
+    # Assuming self.storage_root is a list of objects to validate
+    for obj in self.storage_root:
         num_objects += 1
-        is_valid = True
+        is_valid = True  # Placeholder for actual validation logic
 
         if validate_objects:
-            is_valid = self.validate_object(obj)
-            if not is_valid and show_warnings:
-                print(f"Warning: Object {obj} is invalid.")
+            # Perform object validation
+            if not self.validate_object(obj):
+                is_valid = False
+                if show_warnings:
+                    print(f"Warning: Object {obj} is invalid.")
 
         if check_digests:
-            is_valid = is_valid and self.check_digest(obj)
-            if not is_valid and show_warnings:
-                print(f"Warning: Digest for object {obj} is invalid.")
+            # Perform digest check
+            if not self.check_digest(obj):
+                is_valid = False
+                if show_warnings:
+                    print(f"Warning: Digest for object {obj} is invalid.")
 
         if is_valid:
             good_objects += 1
 
     return num_objects, good_objects
+
+def validate_object(self, obj):
+    # Placeholder for actual object validation logic
+    return True
+
+def check_digest(self, obj):
+    # Placeholder for actual digest checking logic
+    return True

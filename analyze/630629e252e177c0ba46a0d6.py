@@ -1,9 +1,9 @@
 def retrieve_diaspora_host_meta(host):
     """
-    检索远程 Diaspora 的 host-meta 文档。
+    Retrieve a remote Diaspora host-meta document.
 
-    :arg host: 要检索的主机
-    :returns: ``XRD`` 实例
+    :arg host: Host to retrieve from
+    :returns: ``XRD`` instance
     """
     import requests
     from lxml import etree
@@ -17,7 +17,7 @@ def retrieve_diaspora_host_meta(host):
     # Check if the request was successful
     if response.status_code == 200:
         # Parse the response content as XML
-        xrd_content = etree.fromstring(response.content)
-        return xrd_content
+        xrd = etree.fromstring(response.content)
+        return xrd
     else:
         response.raise_for_status()

@@ -1,19 +1,26 @@
 def minimalBases(classes):
     """
-    以列表格式返回所有没有子类的类。
-    将基类列表简化为其有序的最小等价集合。
+    Reduce a list of base classes to its ordered minimum equivalent
     """
-    # 创建一个集合来存储所有类
-    all_classes = set(classes)
-    # 创建一个集合来存储没有子类的类
-    no_subclass_classes = set(all_classes)
+    from collections import defaultdict
 
-    # 遍历所有类，找出有子类的类
-    for cls in all_classes:
-        for potential_subclass in all_classes:
-            if cls != potential_subclass and issubclass(potential_subclass, cls):
-                no_subclass_classes.discard(cls)
-                break
+    class_graph = defaultdict(set)
+    for cls in classes:
+        for base in cls.__bases__:
+            class_graph[base].add(cls)
 
-    # 返回没有子类的类的有序列表
-    return sorted(no_subclass_classes)
+    def dfs(cls, visited):
+        if cls in visited:
+            return set()
+        visited.add(cls)
+        result = {cls}
+        for base in cls.__bases__:
+            result.update(dfs(base, visited))
+        return result
+
+    minimal_classes = set()
+    visited = set()
+    for cls in classes:
+        minimal_classes.update(dfs(cls, visited))
+
+    return sorted(minimal_classes, key=lambda x: x.__name__)

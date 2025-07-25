@@ -2,55 +2,44 @@ import datetime
 
 def parse_frequency(frequency):
     """
-    给定一个包含数字和时间单位的频率字符串，返回一个对应的 `datetime.timedelta` 实例。
+    Given a frequency string with a number and a unit of time, return a corresponding
+    datetime.timedelta instance or None if the frequency is None or "always".
 
-    如果频率为 `None` 或 `"always"`，则返回 `None`。
+    For instance, given "3 weeks", return datetime.timedelta(weeks=3)
 
-    如果给定的频率无法解析，则抛出 `ValueError` 异常。
-
-    例如，给定 `"3 timeunit"`，返回 `datetime.timedelta(timeunit=3)`。
-
-    @param frequency : 一个频率字符串，格式为 `"数字 时间单位"`
-
-    @return str, 对应的 `datetime.timedelta` 实例或 `None`
-
-    给定一个包含数字和时间单位的频率字符串，返回一个对应的 `datetime.timedelta` 实例，在频率为 `None` 或 `"always"` 时返回 `None`。
-
-    例如，给定 `"3 weeks"`，返回 `datetime.timedelta(weeks=3)`。
-
-    如果给定的频率无法解析，则抛出 `ValueError` 异常。
+    Raise ValueError if the given frequency cannot be parsed.
     """
     if frequency is None or frequency.lower() == "always":
         return None
-
-    time_units = {
-        "seconds": "seconds",
-        "second": "seconds",
-        "minutes": "minutes",
-        "minute": "minutes",
-        "hours": "hours",
-        "hour": "hours",
-        "days": "days",
-        "day": "days",
-        "weeks": "weeks",
-        "week": "weeks",
-        "months": "days",  # Approximation, as timedelta does not support months
-        "months": "days",  # Approximation, as timedelta does not support months
-        "years": "days"    # Approximation, as timedelta does not support years
+    
+    units = {
+        'seconds': 'seconds',
+        'second': 'seconds',
+        'minutes': 'minutes',
+        'minute': 'minutes',
+        'hours': 'hours',
+        'hour': 'hours',
+        'days': 'days',
+        'day': 'days',
+        'weeks': 'weeks',
+        'week': 'weeks',
+        'months': 'days',  # Approximation: 1 month = 30 days
+        'month': 'days',    # Approximation: 1 month = 30 days
+        'years': 'days',    # Approximation: 1 year = 365 days
+        'year': 'days'      # Approximation: 1 year = 365 days
     }
-
+    
     parts = frequency.split()
     if len(parts) != 2:
-        raise ValueError("Invalid frequency format")
-
+        raise ValueError(f"Cannot parse frequency: {frequency}")
+    
     try:
         value = int(parts[0])
     except ValueError:
-        raise ValueError("Invalid number in frequency")
-
+        raise ValueError(f"Cannot parse frequency: {frequency}")
+    
     unit = parts[1].lower()
-    if unit not in time_units:
-        raise ValueError("Invalid time unit in frequency")
-
-    kwargs = {time_units[unit]: value}
-    return datetime.timedelta(**kwargs)
+    if unit not in units:
+        raise ValueError(f"Cannot parse frequency: {frequency}")
+    
+    return datetime.timedelta(**{units[unit]: value})

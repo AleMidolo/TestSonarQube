@@ -1,13 +1,15 @@
 def _c_optimizations_available():
     """
-    如果可用，则返回 C 优化模块，否则返回一个假值。
+    Return the C optimization module, if available, otherwise
+    a false value.
 
-    如果需要优化模块但不可用，则会引发 `ImportError` 异常。
+    If the optimizations are required but not available, this
+    raises the ImportError.
 
-    此函数并不决定是否应该使用这些优化模块。
+    This does not say whether they should be used or not.
     """
     try:
-        import some_c_optimization_module  # 假设这是 C 优化模块的名称
-        return some_c_optimization_module
+        import c_optimizations  # Assuming the module is named c_optimizations
+        return c_optimizations
     except ImportError:
-        return False
+        raise ImportError("C optimizations are required but not available.")

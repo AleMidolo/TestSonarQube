@@ -1,17 +1,27 @@
-def create_complex_argument_type(self, subcommand, type_name, option_name, spec_option):
+def create_complex_argumet_type(self, subcommand, type_name, option_name,
+                                    spec_option):
     """
-    根据 `type_name` 返回 `COMPLEX_TYPES` 中对应的函数，并在输入 `(self.vars, self.defaults, self.plugin_path), subcommand, spec_option)` 后，通过 `complex_action` 返回结果。
+    Build the complex argument type
 
-    构建复杂参数类型
-
-    :param subcommand: 命令名称
-    :param type_name: 复杂类型名称
-    :param option_name: 选项名称
-    :param spec_option: 选项的具体规范
-    :return: 复杂类型实例
+    :param subcommand: the command name
+    :param type_name: the complex type name
+    :param option_name: the option name
+    :param spec_option: option's specifications
+    :return: the complex type instance
     """
-    complex_action = COMPLEX_TYPES.get(type_name)
-    if complex_action is None:
-        raise ValueError(f"Unknown complex type: {type_name}")
+    # Assuming we have a registry of complex types
+    complex_type_registry = {
+        'type1': ComplexType1,
+        'type2': ComplexType2,
+        # Add more complex types as needed
+    }
 
-    return complex_action((self.vars, self.defaults, self.plugin_path), subcommand, spec_option)
+    if type_name not in complex_type_registry:
+        raise ValueError(f"Unknown type name: {type_name}")
+
+    complex_type_class = complex_type_registry[type_name]
+    complex_type_instance = complex_type_class(option_name, spec_option)
+
+    # Additional logic can be added here based on subcommand if needed
+
+    return complex_type_instance

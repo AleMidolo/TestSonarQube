@@ -1,16 +1,14 @@
 def send_document(url, data, timeout=10, method="post", *args, **kwargs):
     """
-    通过POST方法发送包含数据的响应。
+    Helper method to send a document via POST.
 
-    用于通过POST方法发送文档的辅助方法。
+    Additional ``*args`` and ``**kwargs`` will be passed on to ``requests.post``.
 
-    额外的``*args``和``**kwargs``参数将会传递给``requests.post``。
-
-    :arg url: 完整的目标URL，包括协议
-    :arg data: 要在请求体中发送的数据，可以是字典（将会被表单编码）、字节数据或类似文件的对象。
-    :arg timeout: 等待响应的超时时间（以秒为单位，默认为10秒）。
-    :arg method: 使用的HTTP方法，默认为POST。
-    :return: 返回一个元组，包含状态码（整数或None）和错误信息（异常类实例或None）。
+    :arg url: Full url to send to, including protocol
+    :arg data: Dictionary (will be form-encoded), bytes, or file-like object to send in the body
+    :arg timeout: Seconds to wait for response (defaults to 10)
+    :arg method: Method to use, defaults to post
+    :returns: Tuple of status code (int or None) and error (exception class instance or None)
     """
     import requests
 

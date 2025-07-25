@@ -1,43 +1,36 @@
 import subprocess
 import os
 import sys
-import pickle
+import multiprocessing
 
 def subprocess_run_helper(func, *args, timeout, extra_env=None):
     """
-    在子进程中运行一个函数
+    Run a function in a sub-process.
 
-    参数：
-      `func`: function，需要运行的函数。该函数必须位于可导入的模块中。
-      `*args`: str。任何额外的命令行参数，这些参数将作为 subprocess.run 的第一个参数传递。
-      `extra_env`: dict[str, str]。为子进程设置的额外环境变量。
-    返回值：
-      `CompletedProcess` 实例。
-
-    在子进程中运行一个函数。
-
-    参数
+    Parameters
     ----------
-     `func`: function，需要运行的函数。该函数必须位于可导入的模块中。
-      `*args`: str。任何额外的命令行参数，这些参数将作为 subprocess.run 的第一个参数传递。
-      `extra_env`: dict[str, str]。为子进程设置的额外环境变量。
+    func : function
+        The function to be run.  It must be in a module that is importable.
+    *args : str
+        Any additional command line arguments to be passed in
+        the first argument to ``subprocess.run``.
+    extra_env : dict[str, str]
+        Any additional environment variables to be set for the subprocess.
     """
-    # Serialize the function and its arguments
-    func_name = func.__module__ + '.' + func.__qualname__
-    args = pickle.dumps(args)
+    def target():
+        if extra_env:
+            os.environ.update(extra_env)
+        # Call the function with the provided arguments
+        return func(*args)
 
-    # Prepare the command to run
-    command = [sys.executable, '-c', f'import pickle; import {func.__module__}; '
-                                      f'func = {func_name}; '
-                                      f'args = pickle.loads({args}); '
-                                      f'func(*args)']
+    # Create a process
+    process = multiprocessing.Process(target=target)
+    process.start()
+    process.join(timeout)
 
-    # Set up the environment
-    env = os.environ.copy()
-    if extra_env:
-        env.update(extra_env)
+    if process.is_alive():
+        process.terminate()
+        process.join()
+        raise TimeoutError("The function call timed out.")
 
-    # Run the subprocess
-    result = subprocess.run(command, env=env, timeout=timeout, capture_output=True)
-
-    return result
+    return process.exitcode

@@ -1,4 +1,6 @@
 import os
+import shutil
+import tarfile
 import zipfile
 from pathlib import Path
 from typing import Optional, Union
@@ -9,36 +11,29 @@ def prepare_repository_from_archive(
     tmp_path: Union[Path, str] = "/tmp",
 ) -> str:
     """
-    给定一个已存在的 `archive_path`，解压该文件。
-    返回一个可以用作源 URL 的文件仓库 URL。
+    Given an existing archive_path, uncompress it.
+    Returns a file repo url which can be used as origin url.
 
-    此函数不处理传入的归档文件不存在的情况。
-
-    @param archive_path : 归档文件路径  
-    @param filename: 文件名  
-    @param tmp_path: 临时文件路径  
-    @return 仓库 URL
+    This does not deal with the case where the archive passed along does not exist.
     """
-    # Ensure tmp_path is a Path object
     tmp_path = Path(tmp_path)
-    
-    # Create temporary directory if it doesn't exist
     tmp_path.mkdir(parents=True, exist_ok=True)
-    
-    # Define the extraction path
-    extraction_path = tmp_path / Path(archive_path).stem
-    
-    # Create extraction directory
-    extraction_path.mkdir(exist_ok=True)
-    
-    # Extract the archive
-    with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-        zip_ref.extractall(extraction_path)
-    
-    # If a filename is provided, return the URL to that file
-    if filename:
-        file_path = extraction_path / filename
-        return f"file://{file_path.resolve()}"
-    
-    # Otherwise, return the URL to the extraction directory
-    return f"file://{extraction_path.resolve()}"
+
+    if archive_path.endswith('.zip'):
+        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
+            zip_ref.extractall(tmp_path)
+    elif archive_path.endswith(('.tar', '.tar.gz', '.tgz')):
+        with tarfile.open(archive_path, 'r:*') as tar_ref:
+            tar_ref.extractall(tmp_path)
+    else:
+        raise ValueError("Unsupported archive format")
+
+    if filename is None:
+        extracted_files = list(tmp_path.glob('*'))
+        if extracted_files:
+            filename = extracted_files[0].name
+        else:
+            raise ValueError("No files extracted from the archive")
+
+    repo_path = tmp_path / filename
+    return f'file://{repo_path.resolve()}'

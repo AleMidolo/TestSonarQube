@@ -1,12 +1,13 @@
 def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     """
-    使用 `vars` 字典运行 Ansible CLI。
+    Runs ansible cli with vars dict
 
-    :param vars_dict: dict, 将作为 Ansible 的 extra-vars 传递
-    :param cli_args: list, 命令行参数列表
-    :param ir_workspace: 一个表示当前活动的工作区的Infrared Workspace 对象
-    :param ir_plugin: 一个表示当前插件的InfraredPlugin 对象
-    :return: ansible 的结果
+    :param vars_dict: dict, Will be passed as Ansible extra-vars
+    :param cli_args: the list  of command line arguments
+    :param ir_workspace: An Infrared Workspace object represents the active
+    workspace
+    :param ir_plugin: An InfraredPlugin object of the current plugin
+    :return: ansible results
     """
     import subprocess
     import json
@@ -14,13 +15,16 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     # Prepare the command
     command = ['ansible-playbook'] + cli_args
     if vars_dict:
-        command += ['--extra-vars', json.dumps(vars_dict)]
+        extra_vars = json.dumps(vars_dict)
+        command += ['--extra-vars', extra_vars]
 
-    # Run the command
-    result = subprocess.run(command, capture_output=True, text=True)
+    # Set the working directory to the Infrared workspace
+    workspace_path = ir_workspace.path
+    result = subprocess.run(command, cwd=workspace_path, capture_output=True, text=True)
 
     # Check for errors
     if result.returncode != 0:
         raise RuntimeError(f"Ansible playbook failed: {result.stderr}")
 
-    return result.stdout
+    # Parse the results
+    return json.loads(result.stdout)

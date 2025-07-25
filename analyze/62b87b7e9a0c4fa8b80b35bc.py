@@ -1,21 +1,44 @@
 def _update_context(self, context):
     """
-    更新 *context*，使其包含此图的属性。
+    Update *context* with the properties of this graph.
 
-    *context.error* 会附加错误的索引。
-    例如，对于一个具有字段 "E, t, error_E_low" 的图，其子上下文可能为：
-    {"error": {"x_low": {"index": 2}}}
-    请注意，错误名称被称为 "x"、"y" 和 "z"（这对应于前三个坐标，如果它们存在的话），这使得绘图更加简化。
-    现有的值不会从 *context.value* 及其子上下文中移除。
+    *context.error* is appended with indices of errors.
+    Example subcontext for a graph with fields "E,t,error_E_low":
+    {"error": {"x_low": {"index": 2}}}.
+    Note that error names are called "x", "y" and "z"
+    (this corresponds to first three coordinates,
+    if they are present), which allows to simplify plotting.
+    Existing values are not removed
+    from *context.value* and its subcontexts.
 
-    此方法在图的“销毁”过程中被调用（例如，在 :class:`.ToCSV` 中）。
-    这里的“销毁”是指在流程中将图转换为另一种结构（如文本）。
-    在此过程中，图对象实际上并未被真正销毁。
+    Called on "destruction" of the graph (for example,
+    in :class:`.ToCSV`). By destruction we mean conversion
+    to another structure (like text) in the flow.
+    The graph object is not really destroyed in this process.
     """
-    # 假设 self 有属性 error_indices 和 coordinates
+    # Assuming self.graph_data contains the properties of the graph
     if not hasattr(context, 'error'):
         context.error = {}
-
-    for i, coord in enumerate(self.coordinates):
-        if coord in self.error_indices:
-            context.error[f"{coord}_low"] = {"index": i}
+    
+    # Example of how to append error indices
+    for index, error in enumerate(self.graph_data.get('errors', [])):
+        if error:
+            context.error[f"x_{index}"] = {"index": index}
+    
+    # Assuming context.value is a dictionary that holds the graph's values
+    if not hasattr(context, 'value'):
+        context.value = {}
+    
+    # Update context.value with graph properties
+    for key, value in self.graph_data.items():
+        if key not in context.value:
+            context.value[key] = value
+        else:
+            # If the key already exists, we can choose to merge or append
+            if isinstance(context.value[key], list) and isinstance(value, list):
+                context.value[key].extend(value)
+            elif isinstance(context.value[key], dict) and isinstance(value, dict):
+                context.value[key].update(value)
+            else:
+                # If types are different, we can choose to keep the existing value
+                pass

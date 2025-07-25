@@ -2,21 +2,17 @@ import argparse
 
 def make_parsers():
     """
-    构建一个解析器及其子解析器，并将它们作为一个元组返回。
-
-    构建一个顶级解析器及其子解析器，并将它们作为一个元组返回。
+    Build a top-level parser and its subparsers and return them as a tuple.
     """
-    # 创建顶级解析器
-    top_parser = argparse.ArgumentParser(prog='top_parser')
-    
-    # 创建子解析器
-    subparsers = top_parser.add_subparsers(dest='command', required=True)
-    
-    # 添加子解析器
-    sub_parser_a = subparsers.add_parser('command_a', help='Help for command_a')
-    sub_parser_a.add_argument('--option_a', type=str, help='Option for command_a')
-    
-    sub_parser_b = subparsers.add_parser('command_b', help='Help for command_b')
-    sub_parser_b.add_argument('--option_b', type=int, help='Option for command_b')
-    
-    return top_parser, subparsers
+    parser = argparse.ArgumentParser(description="Top-level parser")
+    subparsers = parser.add_subparsers(dest='command', required=True)
+
+    # Example subparser for a command 'foo'
+    parser_foo = subparsers.add_parser('foo', help='Foo command help')
+    parser_foo.add_argument('--option', type=str, help='Option for foo command')
+
+    # Example subparser for a command 'bar'
+    parser_bar = subparsers.add_parser('bar', help='Bar command help')
+    parser_bar.add_argument('--flag', action='store_true', help='Flag for bar command')
+
+    return parser, subparsers

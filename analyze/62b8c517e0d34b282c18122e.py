@@ -1,29 +1,29 @@
 def extostr(cls, e, max_level=30, max_path_level=5):
     """
-    将异常格式化为字符串
-    格式化异常信息。
-
-    :param e: 任意异常实例。
+    Format an exception.
+    :param e: Any exception instance.
     :type e: Exception
-    :param max_level: 最大调用堆栈层级（默认值为30）
+    :param max_level: Maximum call stack level (default 30)
     :type max_level: int
-    :param max_path_level: 最大路径层级（默认值为5）
+    :param max_path_level: Maximum path level (default 5)
     :type max_path_level: int
-    :return: 可读的异常字符串
+    :return: The exception readable string
     :rtype: str
     """
     import traceback
 
     def format_exception(exc, level, path_level):
-        if level <= 0 or path_level <= 0:
-            return "..."  # Limit reached
+        if level > max_level or path_level > max_path_level:
+            return f"{exc.__class__.__name__}: {str(exc)}"
+        
         tb = traceback.extract_tb(exc.__traceback__)
         formatted_tb = []
-        for frame in tb[:max_level]:
+        for frame in tb:
             formatted_tb.append(f"File \"{frame.filename}\", line {frame.lineno}, in {frame.name}")
+        
         return "\n".join(formatted_tb)
 
-    exception_message = str(e)
-    formatted_traceback = format_exception(e, max_level, max_path_level)
+    exception_message = f"{cls.__name__}: {str(e)}"
+    formatted_traceback = format_exception(e, 0, 0)
     
     return f"{exception_message}\nTraceback (most recent call last):\n{formatted_traceback}"

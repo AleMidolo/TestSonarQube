@@ -1,18 +1,13 @@
 def _dump_string(obj, dumper=None):
     """
-    给定一个 Python 对象并将其序列化为 YAML 流
-
-    参数：
-      obj：Python 对象
-
-    返回值：
-      YAML 流
-
-    将对象转储为 Python 2 的 Unicode 字符串或 Python 3 的字符串。
+    Dump to a py2-unicode or py3-string
     """
-    import yaml
-
     if dumper is None:
-        dumper = yaml.Dumper
+        dumper = str  # Default to str if no dumper is provided
 
-    return yaml.dump(obj, Dumper=dumper, allow_unicode=True)
+    if isinstance(obj, str):
+        return dumper(obj)
+    elif isinstance(obj, bytes):
+        return dumper(obj.decode('utf-8', errors='replace'))
+    else:
+        return dumper(str(obj))

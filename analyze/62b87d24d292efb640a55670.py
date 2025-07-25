@@ -1,11 +1,11 @@
 def get_versions():
     """
-    获取版本信息。如果无法获取版本信息，则返回默认值。
-    获取版本信息或在无法获取时返回默认值
+    Get version information or return default if unable to do so.
     """
+    import pkg_resources
+
     try:
-        import pkg_resources
         versions = {pkg.project_name: pkg.version for pkg in pkg_resources.working_set}
         return versions
     except Exception:
-        return {"default": "1.0.0"}
+        return {"default": "unknown"}

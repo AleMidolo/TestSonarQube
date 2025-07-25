@@ -1,21 +1,16 @@
 def size_to_bytes(size: str) -> int:
     """
-    将人类可读的文件大小转换为字节。
+    Convert human readable file size to bytes.
 
-    参数:
-          size: str，一个表示人类可读的文件大小的字符串 (例如: '500K')
-    返回值:
-          int: 文件大小的字节数
+    Resulting value is an approximation as input value is in most case rounded.
 
-    结果值是一个近似值，因为输入值在大多数情况下是四舍五入的。
+    Args:
+        size: A string representing a human readable file size (eg: '500K')
 
-    参数:
-          size: 一个表示人类可读文件大小的字符串 (例如: '500K')
+    Returns:
+        A decimal representation of file size
 
-    返回值:
-          文件大小的十进制表示
-
-        示例::
+        Examples::
 
             >>> size_to_bytes("500")
             500
@@ -24,23 +19,18 @@ def size_to_bytes(size: str) -> int:
     """
     size = size.strip().upper()
     multipliers = {
+        'B': 1,
         'K': 1000,
-        'M': 1000**2,
-        'G': 1000**3,
-        'T': 1000**4,
-        'P': 1000**5,
-        'E': 1000**6,
+        'M': 1000000,
+        'G': 1000000000,
+        'T': 1000000000000,
     }
     
-    if size.isdigit():
-        return int(size)
+    if size[-1] in multipliers:
+        number = float(size[:-1])
+        unit = size[-1]
+    else:
+        number = float(size)
+        unit = 'B'
     
-    for suffix, multiplier in multipliers.items():
-        if size.endswith(suffix):
-            number_part = size[:-1]
-            if number_part.isdigit():
-                return int(number_part) * multiplier
-            else:
-                return int(float(number_part) * multiplier)
-    
-    raise ValueError("Invalid size format")
+    return int(number * multipliers[unit])

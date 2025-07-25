@@ -1,17 +1,21 @@
 def validate_as_prior_version(self, prior):
     """
-    检查 `prior` 是否是当前库存（inventory）对象的有效先前版本。
+    Check that prior is a valid prior version of the current inventory object.
 
-    输入变量 `prior` 也应是一个 `InventoryValidator` 对象，并且假定 `self` 和 `prior` 的库存对象都已经过内部一致性检查。在类中返回 `error()`。
+    The input variable prior is also expected to be an InventoryValidator object
+    and both self and prior inventories are assumed to have been checked for
+    internal consistency.
     """
     if not isinstance(prior, InventoryValidator):
-        return self.error("The prior version must be an instance of InventoryValidator.")
+        raise ValueError("The prior must be an instance of InventoryValidator.")
 
-    # Assuming both self and prior have a method to get their inventory data
-    if self.inventory_data == prior.inventory_data:
-        return self.error("The prior version is the same as the current version.")
+    # Assuming both inventories have a method to get their version
+    if self.version <= prior.version:
+        raise ValueError("The prior version must be older than the current version.")
 
-    # Additional checks can be added here to validate the prior version
-    # For example, checking timestamps, version numbers, etc.
+    # Check if the inventories have the same structure
+    if self.structure != prior.structure:
+        raise ValueError("The structure of the current inventory does not match the prior version.")
 
-    return True  # If all checks pass, return True indicating valid prior version
+    # Additional checks can be added here based on the specific requirements of the inventory
+    return True
