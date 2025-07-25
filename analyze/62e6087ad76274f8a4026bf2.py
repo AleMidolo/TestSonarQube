@@ -20,7 +20,7 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **
         "fields": message_params
     }
     
-    # 应用dehydration hooks（如果有）
+    # 应用dehydration钩子
     if dehydration_hooks:
         for type_, hook in dehydration_hooks.items():
             if isinstance(message_params, type_):

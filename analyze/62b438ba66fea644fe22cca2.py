@@ -39,5 +39,5 @@ def deep_merge_nodes(nodes):
         else:
             merged[key] = (key_node, value_node)
     
-    # Convert merged dict back to list of tuples
+    # Return list of merged tuples
     return list(merged.values())

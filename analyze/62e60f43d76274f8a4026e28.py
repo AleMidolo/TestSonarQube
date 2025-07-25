@@ -28,12 +28,13 @@ def hydrate_time(nanoseconds, tz=None):
                 raise ValueError("Invalid timezone format")
         dt = dt.astimezone(tz)
     
-    # 格式化输出,包含纳秒
-    microseconds = int((nanoseconds % 1e9) / 1e3)
-    time_str = dt.strftime('%H:%M:%S.{:06d}'.format(microseconds))
+    # 格式化输出,包含微秒
+    time_str = dt.strftime('%H:%M:%S.%f')[:-3]
     
+    # 如果有时区信息,添加时区偏移
     if tz is not None:
-        # 添加时区信息
-        time_str += dt.strftime('%z')
-        
+        offset = dt.strftime('%z')
+        if offset:
+            time_str += f" {offset[:3]}:{offset[3:]}"
+            
     return time_str

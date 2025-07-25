@@ -20,6 +20,6 @@ def addignored(ignored):
             filename = line[3:].strip()  # 去掉!!和空格
             ignored_files.append(filename)
             
-    # 排序并合并为逗号分隔的字符串
+    # 排序并用逗号连接
     ignored_files.sort()
     return ','.join(ignored_files)

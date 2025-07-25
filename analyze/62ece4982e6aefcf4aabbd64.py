@@ -24,6 +24,6 @@ def strip_root(path, root):
     
     # 如果结果为空,抛出异常
     if not stripped_path:
-        raise ValueError(f"Stripping root '{root}' from path '{path}' results in empty path")
+        raise ValueError("Resulting path is empty after stripping root")
         
     return stripped_path

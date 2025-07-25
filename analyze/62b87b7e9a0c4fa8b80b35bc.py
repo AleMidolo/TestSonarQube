@@ -2,41 +2,39 @@ def _update_context(self, context):
     # Get field names from the graph
     fields = self.fields()
     
-    # Initialize error dict if not exists
+    # Initialize error context if not exists
     if not hasattr(context, 'error'):
         context.error = {}
         
     # Map coordinate names to x,y,z
-    coord_map = {0:'x', 1:'y', 2:'z'}
+    coord_map = {0: 'x', 1: 'y', 2: 'z'}
     
-    # Look for error fields
+    # Look for error fields in format error_<coord>_low/high
     for field in fields:
-        if 'error' in field.lower():
-            # Extract base coordinate name and error type
+        if field.startswith('error_'):
+            # Parse error field name
             parts = field.split('_')
-            if len(parts) >= 3 and parts[-2] == 'error':
-                coord = parts[0]
-                error_type = parts[-1]  # low/high
+            if len(parts) == 3:  # error_<coord>_<direction>
+                coord = parts[1]
+                direction = parts[2]  # low or high
                 
-                # Find index of this field
+                # Find index of this error field
                 try:
-                    idx = fields.index(field)
-                    
-                    # Map coordinate name to x,y,z if possible
-                    try:
-                        coord_idx = fields.index(coord)
-                        if coord_idx <= 2:  # Only map first 3 coordinates
-                            coord = coord_map[coord_idx]
-                    except ValueError:
-                        pass
-                        
-                    # Update context
-                    error_key = f"{coord}_{error_type}"
-                    if error_key not in context.error:
-                        context.error[error_key] = {}
-                    context.error[error_key]['index'] = idx
-                        
+                    field_idx = fields.index(field)
                 except ValueError:
                     continue
                     
+                # Map coordinate name if it's one of first 3
+                try:
+                    coord_idx = fields.index(coord)
+                    if coord_idx < 3:
+                        coord = coord_map[coord_idx]
+                except ValueError:
+                    pass
+                
+                # Update context with error index
+                if coord not in context.error:
+                    context.error[coord] = {}
+                context.error[coord][direction] = {"index": field_idx}
+                
     return context

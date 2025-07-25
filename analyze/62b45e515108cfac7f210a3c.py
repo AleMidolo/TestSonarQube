@@ -16,13 +16,14 @@ def initialize(self):
         "extension": "000",
         "description": "OCFL Storage Root",
         "layout": {
-            "type": "flat" 
+            "type": "flat",
+            "pattern": "{object-id}"
         }
     }
     
     with open(layout_file, "w") as f:
         json.dump(layout_content, f, indent=2)
         
-    # 创建存储对象目录
-    objects_dir = os.path.join(self.root_path, "objects")
-    os.makedirs(objects_dir, exist_ok=True)
+    # 创建 extensions 目录
+    extensions_dir = os.path.join(self.root_path, "extensions")
+    os.makedirs(extensions_dir, exist_ok=True)

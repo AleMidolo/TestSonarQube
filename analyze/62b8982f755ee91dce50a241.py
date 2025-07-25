@@ -41,9 +41,9 @@ def normalized(self):
     result.month = self.month
     result.day = self.day
     result.weekday = self.weekday
-    result.microseconds = int(self.microseconds)
-    result.leapdays = self.leapdays
-    result.yearday = self.yearday
-    result.nlyearday = self.nlyearday
+    result.hour = self.hour
+    result.minute = self.minute
+    result.second = self.second
+    result.microsecond = self.microsecond
     
     return result

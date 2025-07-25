@@ -9,15 +9,15 @@ def make_parsers():
     # 创建顶级解析器
     parser = argparse.ArgumentParser(description='命令行工具')
     subparsers = parser.add_subparsers(dest='command', help='可用命令')
-
+    
     # 创建子解析器
-    parser_a = subparsers.add_parser('a', help='命令 a')
-    parser_a.add_argument('--foo', type=str, help='foo 参数')
+    # 示例子命令1
+    parser_a = subparsers.add_parser('command-a', help='命令A的帮助信息')
+    parser_a.add_argument('--arg1', help='参数1的帮助信息')
     
-    parser_b = subparsers.add_parser('b', help='命令 b') 
-    parser_b.add_argument('--bar', type=int, help='bar 参数')
+    # 示例子命令2 
+    parser_b = subparsers.add_parser('command-b', help='命令B的帮助信息')
+    parser_b.add_argument('--arg2', help='参数2的帮助信息')
     
-    parser_c = subparsers.add_parser('c', help='命令 c')
-    parser_c.add_argument('--baz', type=float, help='baz 参数')
-
+    # 返回解析器元组
     return parser, subparsers

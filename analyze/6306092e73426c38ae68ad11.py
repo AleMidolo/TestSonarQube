@@ -23,11 +23,9 @@ def merge_extra_vars(vars_dict, extra_vars=None):
         try:
             # Try to evaluate as literal Python expression
             parsed_value = eval(value)
-            if isinstance(parsed_value, (int, float, bool, list, dict)):
-                value = parsed_value
+            vars_dict[key] = parsed_value
         except:
-            pass
+            # If eval fails, keep as string
+            vars_dict[key] = value
             
-        vars_dict[key] = value
-        
     return vars_dict

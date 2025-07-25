@@ -10,11 +10,11 @@ def get_config():
             self.tag_prefix = ''  # 标签前缀
             self.parentdir_prefix = ''  # 父目录前缀
             self.versionfile_source = ''  # 版本文件源
-            self.verbose = False  # 是否详细输出
+            self.versionfile_build = ''  # 版本文件构建
+            self.tag_regex = r'^v?(\d+\.\d+\.\d+)$'  # 标签正则表达式
+            self.verbose = False  # 是否输出详细信息
             self.update_files = True  # 是否更新文件
-            self.tag_version_pattern = r'^v?(\d+\.\d+\.\d+)$'  # 标签版本模式
-            self.git_describe_pattern = r'^v?(?P<prefix>.*)-(?P<num>\d+)-g(?P<hash>[a-f0-9]+)$'  # git describe模式
-            self.parentdir_pattern = r'^(?P<prefix>.*?)-(?P<version>[^-]+)(-(?P<suffix>.*))?$'  # 父目录模式
-            
+            self.git_describe_command = 'git describe --tags --long --dirty --always'  # git describe 命令
+
     cfg = VersioneerConfig()
     return cfg

@@ -9,30 +9,20 @@ def fromutc(self, dt):
     if dt.tzinfo is not self:
         dt = dt.replace(tzinfo=self)
 
-    utc_offset = self.utcoffset(dt)
-    if utc_offset is None:
-        return dt
+    utc = dt.replace(tzinfo=None)
 
     # 计算本地时间
-    local_dt = dt + utc_offset
+    local = utc + self.utcoffset(utc)
 
     # 检查是否在DST转换期间
-    dst_offset = self.dst(local_dt)
-    if dst_offset is None:
-        return local_dt
+    if self.dst(local) != self.dst(utc):
+        # 在DST转换期间,重新计算本地时间
+        local = utc + self.utcoffset(local)
+        
+        # 再次检查DST状态
+        if self.dst(local) != self.dst(utc):
+            # 如果仍然不匹配,使用第一次计算的结果
+            local = utc + self.utcoffset(utc)
 
-    # 检查是否存在歧义时间
-    utc_offset_alt = self.utcoffset(local_dt - dst_offset)
-    if utc_offset_alt is None:
-        return local_dt
-
-    if utc_offset != utc_offset_alt:
-        # 存在歧义时间
-        # 如果是向前跳转(spring forward)，返回第一个有效时间
-        if utc_offset < utc_offset_alt:
-            return local_dt + dst_offset
-        # 如果是向后跳转(fall back)，返回第一个出现的时间
-        else:
-            return local_dt
-
-    return local_dt
+    # 设置正确的时区信息
+    return local.replace(tzinfo=self)
