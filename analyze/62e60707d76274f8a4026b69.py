@@ -2,16 +2,17 @@ def point_type(name, fields, srid_map):
     """
     Crear dinámicamente una subclase de 'Point'.
     """
-    class DynamicPoint(Point):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            for field in fields:
-                setattr(self, field, kwargs.get(field))
-            self.srid = srid_map.get(name, 4326)  # Default SRID is 4326 (WGS84)
+    from collections import namedtuple
 
-        def __repr__(self):
-            fields_str = ', '.join(f"{field}={getattr(self, field)}" for field in fields)
-            return f"{name}({fields_str}, srid={self.srid})"
+    # Crear una subclase de namedtuple con los campos dados
+    PointSubclass = namedtuple(name, fields)
 
-    DynamicPoint.__name__ = name
-    return DynamicPoint
+    # Agregar el atributo SRID basado en el mapa SRID proporcionado
+    def __init__(self, *args, **kwargs):
+        super(PointSubclass, self).__init__(*args, **kwargs)
+        self.srid = srid_map.get(name, None)
+
+    # Asignar el nuevo __init__ a la subclase
+    PointSubclass.__init__ = __init__
+
+    return PointSubclass

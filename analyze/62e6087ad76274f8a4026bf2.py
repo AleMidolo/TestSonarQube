@@ -10,7 +10,7 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         de deshidratación). Las funciones de deshidratación reciben el valor y devuelven un objeto de un tipo entendido por 'packstream'.
     :param hydration_hooks:
         Ganchos para hidratar tipos (mapeo de tipo (clase) a función de
-        hidratación). Las funciones de hidratación reciben el valor de un tipo
+     hidratación). Las funciones de hidratación reciben el valor de un tipo
         entendido por 'packstream' y son libres de devolver cualquier cosa.
     :param handlers: funciones manejadoras pasadas al objeto 'Response' devuelto
     """
@@ -21,11 +21,9 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
         "qid": qid
     }
 
-    # Aplicar los ganchos de deshidratación si están presentes
+    # Añadir los ganchos de deshidratación e hidratación si están presentes
     if dehydration_hooks:
         discard_message["dehydration_hooks"] = dehydration_hooks
-
-    # Aplicar los ganchos de hidratación si están presentes
     if hydration_hooks:
         discard_message["hydration_hooks"] = hydration_hooks
 
@@ -35,5 +33,5 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None,
     # Añadir el mensaje a la cola de salida
     self.output_queue.append(discard_message)
 
-    # Devolver la respuesta con los manejadores
-    return self.Response(handlers)
+    # Devolver el objeto Response con los manejadores
+    return Response(handlers=handlers)

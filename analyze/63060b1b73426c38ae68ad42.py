@@ -6,4 +6,4 @@ def inject_config(self):
     """
     config_path = os.getenv('CONFIG_PATH')
     if config_path is None:
-        os.environ['CONFIG_PATH'] = '/ruta/por/defecto/config'
+        os.environ['CONFIG_PATH'] = '/ruta/por/defecto/config.json'

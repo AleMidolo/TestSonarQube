@@ -17,13 +17,13 @@ def _explore_zipfile(zip_path):
     dict  
         Diccionario que agrupa los archivos por el nombre base de su archivo XML.
     """
-    grouped_files = defaultdict(list)
+    data = defaultdict(list)
     
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         for file_name in zip_ref.namelist():
-            base_name = os.path.basename(file_name)
-            if base_name.endswith('.xml'):
-                base_name_without_ext = os.path.splitext(base_name)[0]
-                grouped_files[base_name_without_ext].append(file_name)
+            base_name = os.path.splitext(file_name)[0]
+            if file_name.endswith('.xml'):
+                with zip_ref.open(file_name) as file:
+                    data[base_name].append(file.read())
     
-    return dict(grouped_files)
+    return dict(data)

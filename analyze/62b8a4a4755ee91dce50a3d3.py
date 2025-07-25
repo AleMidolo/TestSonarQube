@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 def fromutc(self, dt):
     """
     Dado un objeto "datetime" que contiene información de la zona horaria al que pertenece, calcula un objeto "datetime" para una zona horaria diferente, que contenga información de la nueva zona horaria al que pertenece.
@@ -13,14 +15,13 @@ def fromutc(self, dt):
     # Convertir el datetime a UTC
     dt_utc = dt.astimezone(self.utc)
     
-    # Convertir el datetime UTC a la nueva zona horaria
-    dt_new = dt_utc.astimezone(self)
+    # Calcular el offset para la nueva zona horaria
+    offset = self.utcoffset(dt_utc)
     
-    # Verificar si el datetime es ambiguo en la nueva zona horaria
-    if self.is_ambiguous(dt_new):
-        # Si es ambiguo, determinar si está en el "pliegue"
-        if self.is_folded(dt_new):
-            # Si está en el pliegue, ajustar el datetime
-            dt_new = self.resolve_ambiguity(dt_new, fold=1)
+    # Aplicar el offset al datetime UTC
+    dt_new = dt_utc + offset
+    
+    # Asegurarse de que el nuevo datetime tenga la zona horaria correcta
+    dt_new = dt_new.replace(tzinfo=self)
     
     return dt_new

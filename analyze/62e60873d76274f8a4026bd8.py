@@ -8,10 +8,10 @@ def protocol_handlers(cls, protocol_version=None):
     """
     # Supongamos que tenemos un diccionario de controladores disponibles
     available_handlers = {
-        (3, 5): "HandlerV3_5",
-        (4, 0): "HandlerV4_0",
-        (4, 1): "HandlerV4_1",
-        (4, 2): "HandlerV4_2",
+        (3, 5): "HandlerForV3_5",
+        (4, 0): "HandlerForV4_0",
+        (4, 1): "HandlerForV4_1",
+        # Agrega más versiones y controladores según sea necesario
     }
 
     if protocol_version is not None:

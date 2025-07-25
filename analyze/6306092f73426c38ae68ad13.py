@@ -14,22 +14,22 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
     # Construir el comando base
     command = ['ansible-playbook', playbook_path]
 
-    # Agregar verbosidad si se especifica
-    if verbose is not None:
+    # Añadir verbosidad si se especifica
+    if verbose:
         command.extend(['-' + 'v' * verbose])
 
-    # Agregar extra_vars si se especifica
-    if extra_vars is not None:
-        extra_vars_str = ' '.join([f"{k}={v}" for k, v in extra_vars.items()])
+    # Añadir extra_vars si se especifica
+    if extra_vars:
+        extra_vars_str = ' '.join([f"{key}={value}" for key, value in extra_vars.items()])
         command.extend(['--extra-vars', extra_vars_str])
 
-    # Agregar argumentos adicionales de Ansible si se especifica
-    if ansible_args is not None:
+    # Añadir argumentos adicionales de Ansible si se especifica
+    if ansible_args:
         for key, value in ansible_args.items():
             command.extend([f"--{key}", str(value)])
 
     # Ejecutar el comando
     result = subprocess.run(command, capture_output=True, text=True)
 
-    # Devolver la salida y el código de salida
+    # Devolver la salida y el código de retorno
     return result.stdout, result.stderr, result.returncode

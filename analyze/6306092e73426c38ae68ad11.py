@@ -6,7 +6,7 @@ def merge_extra_vars(vars_dict, extra_vars=None):
     :param extra_vars: Lista de extra-vars
     """
     if extra_vars is None:
-        return vars_dict
+        extra_vars = []
     
     for var in extra_vars:
         if '=' in var:

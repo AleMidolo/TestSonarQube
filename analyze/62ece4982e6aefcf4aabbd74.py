@@ -3,8 +3,7 @@ import shutil
 import tempfile
 from pathlib import Path
 from typing import Optional, Union
-from zipfile import ZipFile
-from tarfile import TarFile
+from urllib.parse import urljoin
 
 def prepare_repository_from_archive(
     archive_path: str,
@@ -15,30 +14,31 @@ def prepare_repository_from_archive(
     if isinstance(tmp_path, str):
         tmp_path = Path(tmp_path)
     
+    # Ensure the tmp_path exists
+    tmp_path.mkdir(parents=True, exist_ok=True)
+    
     # Create a temporary directory within tmp_path
-    temp_dir = tempfile.mkdtemp(dir=tmp_path)
+    with tempfile.TemporaryDirectory(dir=tmp_path) as temp_dir:
+        # Extract the archive to the temporary directory
+        shutil.unpack_archive(archive_path, temp_dir)
+        
+        # Determine the repository path
+        if filename:
+            repo_path = Path(temp_dir) / filename
+        else:
+            # If no filename is provided, assume the archive contains a single directory
+            extracted_items = list(Path(temp_dir).iterdir())
+            if len(extracted_items) == 1 and extracted_items[0].is_dir():
+                repo_path = extracted_items[0]
+            else:
+                repo_path = Path(temp_dir)
+        
+        # Move the repository to a permanent location
+        repo_name = repo_path.name
+        final_repo_path = tmp_path / repo_name
+        if final_repo_path.exists():
+            shutil.rmtree(final_repo_path)
+        shutil.move(str(repo_path), str(final_repo_path))
     
-    # Determine the archive type based on the file extension
-    if archive_path.endswith('.zip'):
-        with ZipFile(archive_path, 'r') as zip_ref:
-            zip_ref.extractall(temp_dir)
-    elif archive_path.endswith('.tar.gz') or archive_path.endswith('.tgz'):
-        with TarFile.open(archive_path, 'r:gz') as tar_ref:
-            tar_ref.extractall(temp_dir)
-    elif archive_path.endswith('.tar.bz2') or archive_path.endswith('.tbz2'):
-        with TarFile.open(archive_path, 'r:bz2') as tar_ref:
-            tar_ref.extractall(temp_dir)
-    elif archive_path.endswith('.tar'):
-        with TarFile.open(archive_path, 'r:') as tar_ref:
-            tar_ref.extractall(temp_dir)
-    else:
-        raise ValueError("Unsupported archive format")
-    
-    # If a specific filename is provided, ensure it exists in the extracted files
-    if filename:
-        extracted_path = os.path.join(temp_dir, filename)
-        if not os.path.exists(extracted_path):
-            raise FileNotFoundError(f"The file {filename} was not found in the archive")
-    
-    # Return the path to the extracted repository
-    return temp_dir
+    # Return the URL of the repository
+    return urljoin("file://", str(final_repo_path))

@@ -4,16 +4,30 @@ def get_versions():
     """
     import sys
     import platform
+    import subprocess
 
     try:
-        version_info = {
-            "python_version": sys.version,
-            "platform": platform.platform(),
-            "system": platform.system(),
-            "release": platform.release(),
-            "machine": platform.machine(),
-            "processor": platform.processor(),
+        # Obtener la versión de Python
+        python_version = sys.version.split()[0]
+
+        # Obtener la versión del sistema operativo
+        os_version = platform.platform()
+
+        # Obtener la versión de pip (si está instalado)
+        try:
+            pip_version = subprocess.check_output([sys.executable, '-m', 'pip', '--version']).decode().split()[1]
+        except Exception:
+            pip_version = "No disponible"
+
+        return {
+            "python_version": python_version,
+            "os_version": os_version,
+            "pip_version": pip_version
         }
-        return version_info
     except Exception as e:
-        return {"error": str(e), "default_version": "1.0.0"}
+        # En caso de error, devolver un valor predeterminado
+        return {
+            "python_version": "No disponible",
+            "os_version": "No disponible",
+            "pip_version": "No disponible"
+        }

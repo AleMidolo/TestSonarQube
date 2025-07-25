@@ -15,22 +15,23 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     extra_env : dict[str, str]
         Cualquier variable de entorno adicional que se establecerá para el subproceso.
     """
-    # Crear un entorno modificado si se proporciona extra_env
-    env = os.environ.copy()
-    if extra_env is not None:
-        env.update(extra_env)
-
-    # Construir el comando para ejecutar la función en un subproceso
+    # Obtener el nombre del módulo y la función
     module_name = func.__module__
     func_name = func.__name__
+
+    # Crear el comando para ejecutar la función
     command = [sys.executable, '-c', f'from {module_name} import {func_name}; {func_name}()']
 
-    # Agregar argumentos adicionales si los hay
-    if args:
-        command.extend(args)
+    # Agregar argumentos adicionales
+    command.extend(args)
 
-    # Ejecutar el comando en un subproceso
+    # Preparar el entorno
+    env = os.environ.copy()
+    if extra_env:
+        env.update(extra_env)
+
+    # Ejecutar el subproceso
     result = subprocess.run(command, env=env, timeout=timeout, capture_output=True, text=True)
 
-    # Devolver el resultado del subproceso
+    # Devolver el resultado
     return result

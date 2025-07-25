@@ -8,6 +8,6 @@ def _get_seq_with_type(seq, bufsize=None):
         return seq, type(seq)
     else:
         try:
-            return list(seq), type(seq)
+            return list(seq), list
         except TypeError:
             return seq, type(seq)

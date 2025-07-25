@@ -7,16 +7,11 @@ def validate_as_prior_version(self, prior):
     verificados para garantizar su consistencia interna.
     """
     if not isinstance(prior, type(self)):
-        raise TypeError("El objeto `prior` debe ser del mismo tipo que el inventario actual.")
+        return False
     
-    # Aquí puedes agregar lógica adicional para validar que `prior` es una versión previa válida.
-    # Por ejemplo, podrías comparar fechas, versiones, o cualquier otro atributo relevante.
+    # Comparar los atributos relevantes para determinar si `prior` es una versión previa válida
+    # Aquí se asume que el inventario tiene un atributo `version` que es un número entero
+    if not hasattr(self, 'version') or not hasattr(prior, 'version'):
+        return False
     
-    # Ejemplo de validación básica:
-    if not hasattr(prior, 'version') or not hasattr(self, 'version'):
-        raise AttributeError("Ambos objetos deben tener un atributo 'version'.")
-    
-    if prior.version >= self.version:
-        raise ValueError("El objeto `prior` debe tener una versión anterior al inventario actual.")
-    
-    return True
+    return prior.version < self.version
