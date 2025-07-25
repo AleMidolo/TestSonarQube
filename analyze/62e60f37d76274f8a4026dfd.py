@@ -1,14 +1,10 @@
-from datetime import time
-
 def dehydrate_time(value):
     """
     `time` मानों के लिए डिहाइड्रेटर।  
 
-    :param value:  
-    :type value: Time  
-    :return:  
+    :param value: समय का मान
+    :type value: datetime.time
+    :return: समय को स्ट्रिंग के रूप में (HH:MM:SS)
+    :rtype: str
     """
-    if isinstance(value, time):
-        return value.isoformat()
-    else:
-        raise TypeError("Expected a datetime.time object")
+    return value.strftime("%H:%M:%S")

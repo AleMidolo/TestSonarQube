@@ -13,6 +13,5 @@ def retrieve_diaspora_host_meta(host):
     response.raise_for_status()
     
     # Parse the XML response
-    xml_tree = etree.fromstring(response.content)
-    
-    return xml_tree
+    xml_data = etree.fromstring(response.content)
+    return xml_data

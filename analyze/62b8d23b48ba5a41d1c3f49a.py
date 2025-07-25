@@ -18,7 +18,5 @@ def mru_cache(maxsize=128, typed=False):
                 # Remove the least recently used item
                 cache.popitem(last=False)
             return result
-        
         return wrapper
-    
     return decorator

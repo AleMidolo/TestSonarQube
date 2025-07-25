@@ -24,12 +24,8 @@ def find_path_type(path):
             return "root"
         
         # Check if it's an OCFL object
-        if os.path.exists(os.path.join(path, "0=ocfl_object_1.0")):
-            return "object"
-        
-        # Check for any "0=*" file
-        for filename in os.listdir(path):
-            if filename.startswith("0="):
+        for root, dirs, files in os.walk(path):
+            if "inventory.json" in files:
                 return "object"
         
         return "त्रुटि: पथ OCFL रूट या ऑब्जेक्ट नहीं है"

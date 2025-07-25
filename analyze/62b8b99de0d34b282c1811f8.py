@@ -1,8 +1,6 @@
 def _reset_logging(cls):
     """
-    रीसेट
+    Reset logging configuration to default settings.
     """
     import logging
-    logging.shutdown()
-    logging.root.handlers = []
-    logging.basicConfig()
+    logging.basicConfig(level=logging.WARNING)

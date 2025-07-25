@@ -7,9 +7,11 @@ def validate_as_prior_version(self, prior):
     if not isinstance(prior, type(self)):
         return False
     
-    # Assuming that the inventory has a version attribute
-    if not hasattr(self, 'version') or not hasattr(prior, 'version'):
+    # Check if the prior version is indeed a previous version
+    if prior.version >= self.version:
         return False
     
-    # Check if the prior version is indeed a prior version
-    return prior.version < self.version
+    # Additional checks can be added here based on specific requirements
+    # For example, checking if the prior version's data is a subset of the current version's data
+    
+    return True

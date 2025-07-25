@@ -15,6 +15,6 @@ def _fromutc(self, dt):
     # Check if the local time is ambiguous
     if self._is_ambiguous(local_dt):
         # If it's ambiguous, return the first occurrence
-        return self._from_local(local_dt, first=True)
-    else:
-        return local_dt
+        return self._resolve_ambiguous_time(local_dt, first=True)
+    
+    return local_dt

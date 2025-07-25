@@ -7,4 +7,4 @@ def popitem(self):
     key = next(reversed(self))
     value = self[key]
     del self[key]
-    return key, value
+    return (key, value)

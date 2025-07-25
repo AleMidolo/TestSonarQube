@@ -23,15 +23,18 @@ def extostr(cls, e, max_level=30, max_path_level=5):
     if len(tb_list) > max_level:
         tb_list = tb_list[:max_level]
     
-    # Format the traceback
-    formatted_traceback = []
-    for i, tb in enumerate(tb_list):
-        if i >= max_path_level:
-            break
-        formatted_traceback.append(tb.strip())
+    # Format the traceback paths
+    formatted_tb = []
+    for tb in tb_list:
+        lines = tb.splitlines()
+        if len(lines) > max_path_level:
+            lines = lines[:max_path_level]
+        formatted_tb.append("\n".join(lines))
     
-    # Combine the exception type, message, and traceback
-    formatted_exception = f"{exception_type}: {exception_message}\n"
-    formatted_exception += "\n".join(formatted_traceback)
+    # Combine the formatted traceback
+    formatted_traceback = "\n".join(formatted_tb)
+    
+    # Construct the final formatted exception string
+    formatted_exception = f"{exception_type}: {exception_message}\n{formatted_traceback}"
     
     return formatted_exception

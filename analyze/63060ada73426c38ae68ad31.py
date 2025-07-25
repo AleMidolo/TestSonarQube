@@ -24,7 +24,7 @@ def _convert_non_cli_args(self, parser_name, values_dict):
                 pass
             
             # Try to convert to boolean
-            if value.lower() in ('true', 'false'):
+            if value.lower() in ['true', 'false']:
                 values_dict[key] = value.lower() == 'true'
                 continue
             

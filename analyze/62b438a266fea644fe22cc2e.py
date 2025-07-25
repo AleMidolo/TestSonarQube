@@ -9,8 +9,8 @@ def parse_arguments(*unparsed_arguments):
 
     # Add subparsers here as needed
     # Example:
-    # subparser1 = subparsers.add_parser('subparser1', help='subparser1 help')
-    # subparser1.add_argument('--arg1', type=int, help='arg1 help')
+    # subparser_example = subparsers.add_parser('example', help='Example subparser')
+    # subparser_example.add_argument('--example_arg', type=str, help='Example argument')
 
     # Parse the arguments
     args = parser.parse_args(unparsed_arguments)

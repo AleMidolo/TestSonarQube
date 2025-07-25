@@ -26,9 +26,5 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
             if value is not None:
                 command.append(str(value))
 
-    try:
-        result = subprocess.run(command, check=True, capture_output=True, text=True)
-        print(result.stdout)
-    except subprocess.CalledProcessError as e:
-        print(f"Error: {e.stderr}")
-        raise
+    result = subprocess.run(command, capture_output=True, text=True)
+    return result

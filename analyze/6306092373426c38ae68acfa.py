@@ -2,8 +2,16 @@ def get_spec_defaults(self):
     """
     स्पेक और अन्य स्रोतों से तर्कों के डिफ़ॉल्ट मान प्राप्त करें।
     """
-    # Assuming self.spec is a dictionary or similar structure that holds the default values
+    defaults = {}
+    # Assuming self.spec is a dictionary or object that contains the default values
     if hasattr(self, 'spec'):
-        return self.spec.get('defaults', {})
-    else:
-        return {}
+        if isinstance(self.spec, dict):
+            defaults.update(self.spec)
+        else:
+            # If spec is an object, try to get its attributes
+            defaults.update({attr: getattr(self.spec, attr) for attr in dir(self.spec) if not attr.startswith('_')})
+    
+    # Add other sources if needed
+    # Example: defaults.update(self.other_source)
+    
+    return defaults

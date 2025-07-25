@@ -1,9 +1,10 @@
 import yaml
+from typing import Dict, Any
 
 class IRValidatorException(Exception):
     pass
 
-def validate_from_content(cls, spec_content=None):
+def validate_from_content(cls, spec_content=None) -> Dict[str, Any]:
     """
     यह फ़ंक्शन सत्यापित करता है कि spec (YAML) सामग्री में सभी आवश्यक फ़ील्ड्स मौजूद हैं।
 
@@ -19,7 +20,8 @@ def validate_from_content(cls, spec_content=None):
     except yaml.YAMLError as e:
         raise IRValidatorException(f"Invalid YAML content: {e}")
     
-    required_fields = ['name', 'version', 'description']
+    required_fields = ['field1', 'field2', 'field3']  # Replace with actual required fields
+    
     for field in required_fields:
         if field not in spec_data:
             raise IRValidatorException(f"Required field '{field}' is missing in the spec content.")

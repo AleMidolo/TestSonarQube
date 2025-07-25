@@ -8,6 +8,7 @@ def fetch_content_type(url: str) -> Optional[str]:
     try:
         response = requests.head(url, allow_redirects=True)
         response.raise_for_status()
-        return response.headers.get('Content-Type')
+        content_type = response.headers.get('Content-Type')
+        return content_type
     except requests.RequestException:
         return None

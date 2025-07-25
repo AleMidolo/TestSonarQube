@@ -5,20 +5,21 @@ def initialize(self):
     import os
     import json
 
-    # OCFL storage root directory structure
-    ocfl_structure = {
-        "0=ocfl_1.0": "",
-        "ocfl_layout.json": json.dumps({"type": "https://ocfl.io/1.0/spec/#layout-hierarchical"})
+    # OCFL रूट डायरेक्टरी बनाएँ
+    if not os.path.exists('ocfl_root'):
+        os.makedirs('ocfl_root')
+
+    # OCFL संस्करण फ़ाइल बनाएँ
+    ocfl_version = {
+        "type": "https://ocfl.io/1.0/spec/#inventory",
+        "digestAlgorithm": "sha512",
+        "head": None,
+        "versions": {},
+        "manifest": {},
+        "id": "urn:uuid:12345678-1234-5678-1234-567812345678"
     }
 
-    # Create the OCFL storage root directory
-    if not os.path.exists(self.root):
-        os.makedirs(self.root)
+    with open('ocfl_root/ocfl_version.json', 'w') as f:
+        json.dump(ocfl_version, f, indent=4)
 
-    # Create the required files and directories
-    for filename, content in ocfl_structure.items():
-        filepath = os.path.join(self.root, filename)
-        with open(filepath, 'w') as f:
-            f.write(content)
-
-    print(f"OCFL storage root initialized at {self.root}")
+    print("OCFL स्टोरेज रूट सफलतापूर्वक प्रारंभ किया गया।")

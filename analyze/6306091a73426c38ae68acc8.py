@@ -5,7 +5,7 @@ def list_of_file_names(settings_dirs, spec_option):
     import os
     file_names = []
     for directory in settings_dirs:
-        if os.path.exists(directory):
+        if os.path.isdir(directory):
             for root, dirs, files in os.walk(directory):
                 for file in files:
                     if spec_option in file:

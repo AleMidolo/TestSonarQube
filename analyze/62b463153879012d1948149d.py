@@ -1,6 +1,5 @@
 import os
 import xml.etree.ElementTree as ET
-from collections import defaultdict
 
 def _explore_folder(folder):
     """
@@ -15,18 +14,19 @@ def _explore_folder(folder):
     रिटर्न्स  
     dict
     """
-    data_dict = defaultdict(list)
+    data_dict = {}
     
     for root, dirs, files in os.walk(folder):
         for file in files:
             if file.endswith('.xml'):
                 file_path = os.path.join(root, file)
+                base_name = os.path.splitext(file)[0]
+                
                 try:
                     tree = ET.parse(file_path)
                     root_element = tree.getroot()
-                    base_name = os.path.splitext(file)[0]
-                    data_dict[base_name].append(root_element)
+                    data_dict[base_name] = root_element
                 except ET.ParseError as e:
                     print(f"Error parsing {file_path}: {e}")
     
-    return dict(data_dict)
+    return data_dict
