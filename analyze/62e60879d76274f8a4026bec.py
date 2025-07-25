@@ -23,7 +23,7 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     :param handlers: handler functions passed into the returned Response object
     :return: Response object
     """
-    # Construct the BEGIN message
+    # Prepare the BEGIN message
     begin_message = {
         "mode": mode,
         "bookmarks": bookmarks,
@@ -35,9 +35,9 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
         "hydration_hooks": hydration_hooks,
         **handlers
     }
-    
+
     # Append the BEGIN message to the output queue
     self.output_queue.append(begin_message)
-    
+
     # Return a Response object with the provided handlers
     return Response(handlers=handlers)

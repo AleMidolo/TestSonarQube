@@ -8,7 +8,7 @@ def mru_cache(maxsize=128, typed=False):
         @wraps(func)
         def wrapper(*args, **kwargs):
             if typed:
-                key = (args, tuple((k, type(v)) for k, v in sorted(kwargs.items())))
+                key = (args, tuple((k, type(v)) for k, v in sorted(kwargs.items()))
             else:
                 key = (args, tuple(sorted(kwargs.items())))
             

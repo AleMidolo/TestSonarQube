@@ -21,7 +21,7 @@ def protocol_handlers(cls, protocol_version=None):
 
     if protocol_version is not None:
         if not isinstance(protocol_version, tuple):
-            raise TypeError("Protocol version must be a tuple.")
+            raise TypeError("protocol_version must be a tuple")
         if protocol_version in available_handlers:
             return {protocol_version: available_handlers[protocol_version]}
         else:

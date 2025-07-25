@@ -11,30 +11,20 @@ def data(self, *keys):
     :return: dictionary of values, keyed by field name
     :raises: :exc:`IndexError` if an out-of-bounds index is specified
     """
-    # Assuming self._fields contains the field names and self._values contains the corresponding values
-    if not hasattr(self, '_fields') or not hasattr(self, '_values'):
-        raise AttributeError("Record does not have '_fields' or '_values' attributes.")
+    # Assuming self._fields contains the field names and self._values contains the values
+    if not keys:
+        return dict(zip(self._fields, self._values))
     
     result = {}
-    if not keys:
-        # If no keys are provided, return all fields and values
-        for field, value in zip(self._fields, self._values):
-            result[field] = value
-    else:
-        for key in keys:
-            if isinstance(key, int):
-                # Handle index-based access
-                if key < 0 or key >= len(self._fields):
-                    raise IndexError(f"Index {key} is out of bounds.")
-                field = self._fields[key]
-                value = self._values[key]
-                result[field] = value
+    for key in keys:
+        if isinstance(key, int):
+            if key < 0 or key >= len(self._values):
+                raise IndexError("Index out of bounds")
+            result[self._fields[key]] = self._values[key]
+        else:
+            if key in self._fields:
+                index = self._fields.index(key)
+                result[key] = self._values[index]
             else:
-                # Handle key-based access
-                if key in self._fields:
-                    index = self._fields.index(key)
-                    result[key] = self._values[index]
-                else:
-                    # Insert None for keys not in the record
-                    result[key] = None
+                result[key] = None
     return result

@@ -23,26 +23,26 @@ def xargs(
         master, slave = pty.openpty()
         kwargs['stdout'] = slave
         kwargs['stderr'] = slave
-        kwargs['stdin'] = subprocess.PIPE
 
     processes = []
     for i in range(0, len(varargs), target_concurrency):
         chunk = varargs[i:i + target_concurrency]
-        full_cmd = cmd + tuple(chunk)
+        full_cmd = list(cmd) + list(chunk)
         process = subprocess.Popen(full_cmd, **kwargs)
         processes.append(process)
 
-    output = b""
+    exit_codes = []
+    outputs = []
     for process in processes:
-        process.wait()
-        if color and sys.platform != "win32":
-            os.close(slave)
-            output += os.read(master, 1024)
-            os.close(master)
-        else:
-            output += process.communicate()[0]
+        stdout, stderr = process.communicate()
+        exit_codes.append(process.returncode)
+        outputs.append(stdout if stdout else stderr)
 
-    return (process.returncode, output)
+    if color and sys.platform != "win32":
+        os.close(master)
+        os.close(slave)
+
+    return max(exit_codes), b''.join(outputs)
 
 def _get_platform_max_length() -> int:
     if sys.platform == "win32":

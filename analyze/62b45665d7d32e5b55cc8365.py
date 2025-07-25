@@ -20,7 +20,7 @@ def parse_arguments(*unparsed_arguments):
 
     # Organize parsed arguments into a dictionary
     args_dict = {}
-    if parsed_args.subparser_name:
+    if hasattr(parsed_args, "subparser_name"):
         args_dict[parsed_args.subparser_name] = parsed_args
     else:
         args_dict["global"] = parsed_args

@@ -12,15 +12,15 @@ def _extract_number_and_supplment_from_issue_element(issue):
     number = None
     suppl = None
     
-    # Split the issue string by spaces to separate potential number and supplement
-    parts = issue.split()
+    # Split the issue string into parts based on common delimiters
+    parts = issue.replace('(', ' ').replace(')', ' ').replace(',', ' ').split()
     
     for part in parts:
-        # Check if the part is a number
         if part.isdigit():
             number = int(part)
-        # Check if the part is a supplement (e.g., 'Suppl', 'S', 'Supplement')
-        elif part.lower() in ['suppl', 's', 'supplement']:
-            suppl = part
+        elif part.lower().startswith('suppl'):
+            suppl = part.lower().replace('suppl', '').strip()
+            if suppl.isdigit():
+                suppl = int(suppl)
     
     return number, suppl

@@ -16,12 +16,19 @@ def hydrate_time(nanoseconds, tz=None):
     # Create a timedelta object to represent the time
     delta = timedelta(seconds=seconds, microseconds=microseconds)
     
-    # Create a time object from the timedelta
-    time_obj = (time.min + delta).time()
+    # Extract hours, minutes, seconds, and microseconds from the timedelta
+    total_seconds = delta.total_seconds()
+    hours = int(total_seconds // 3600)
+    minutes = int((total_seconds % 3600) // 60)
+    seconds = int(total_seconds % 60)
+    microseconds = int((total_seconds - int(total_seconds)) * 1_000_000)
+    
+    # Create a time object
+    time_obj = time(hour=hours, minute=minutes, second=seconds, microsecond=microseconds)
     
     # If a timezone is provided, localize the time
-    if tz is not None:
-        tz = pytz.timezone(tz)
-        time_obj = tz.localize(time_obj)
+    if tz:
+        tz_obj = pytz.timezone(tz)
+        time_obj = tz_obj.localize(time_obj)
     
     return time_obj

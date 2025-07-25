@@ -13,14 +13,14 @@ def find_roots(graph: Graph, prop: URIRef, roots: Optional[Set[Node]] = None) ->
     """
     if roots is None:
         roots = set()
-    
+
     # Get all nodes that appear as subjects in the graph with the given property
-    candidates = set(graph.subjects(predicate=prop))
-    
+    subjects = set(graph.subjects(prop, None))
+
     # Get all nodes that appear as objects in the graph with the given property
-    parents = set(graph.objects(predicate=prop))
-    
-    # Roots are candidates that are not in parents
-    roots.update(candidates - parents)
-    
+    objects = set(graph.objects(None, prop))
+
+    # Roots are nodes that are subjects but not objects
+    roots.update(subjects - objects)
+
     return roots

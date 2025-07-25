@@ -9,6 +9,8 @@ def validate_from_content(cls, spec_content=None):
     import yaml
     from yaml import YAMLError
 
+    required_fields = ['field1', 'field2', 'field3']  # Example required fields
+
     if spec_content is None:
         raise cls.IRValidatorException("Spec content cannot be None.")
 
@@ -17,9 +19,8 @@ def validate_from_content(cls, spec_content=None):
     except YAMLError as e:
         raise cls.IRValidatorException(f"Invalid YAML content: {e}")
 
-    required_fields = ['field1', 'field2', 'field3']  # Example required fields
-    for field in required_fields:
-        if field not in spec_data:
-            raise cls.IRValidatorException(f"Missing mandatory field: {field}")
+    missing_fields = [field for field in required_fields if field not in spec_data]
+    if missing_fields:
+        raise cls.IRValidatorException(f"Missing mandatory fields: {', '.join(missing_fields)}")
 
     return spec_data

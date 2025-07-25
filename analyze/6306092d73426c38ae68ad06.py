@@ -7,6 +7,6 @@ def get_silent_args(self, args):
     """
     silenced_args = []
     for arg in args:
-        if arg.startswith('--silent-'):
-            silenced_args.append(arg[len('--silent-'):])
+        if arg.startswith('_'):
+            silenced_args.append(arg)
     return silenced_args

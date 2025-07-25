@@ -1,5 +1,5 @@
-import re
 from typing import Set, Tuple, Callable
+import re
 
 def find_tags(text: str, replacer: Callable = None) -> Tuple[Set, str]:
     """

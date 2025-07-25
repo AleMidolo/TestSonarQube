@@ -2,7 +2,7 @@ def _normalizeargs(sequence, output=None):
     """
     Normalize declaration arguments
 
-    Normalization arguments might contain Declarions, tuples, or single
+    Normalization arguments might contain Declarations, tuples, or single
     interfaces.
 
     Anything but individual interfaces or implements specs will be expanded.

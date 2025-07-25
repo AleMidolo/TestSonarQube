@@ -14,4 +14,4 @@ def validate_value(value):
     pattern = r'^(?=.*[A-Za-z])[A-Za-z0-9]+$'
     
     if not re.match(pattern, value):
-        raise ValidationError(f"Value '{value}' does not conform to the required pattern.")
+        raise ValidationError(f"Value '{value}' does not match the required pattern.")

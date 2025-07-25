@@ -7,14 +7,13 @@ def validate_as_prior_version(self, prior):
     internal consistency.
     """
     if not isinstance(prior, type(self)):
-        raise TypeError("prior must be an instance of the same InventoryValidator class")
+        raise TypeError("prior must be an instance of the same InventoryValidator class.")
     
-    # Check that the prior version is indeed older than the current version
+    # Example validation logic (customize based on actual requirements)
     if prior.version >= self.version:
-        raise ValueError("prior version must be older than the current version")
+        raise ValueError("prior version must be older than the current version.")
     
-    # Additional checks can be added here depending on the specific requirements
-    # For example, ensuring that the prior inventory is a subset of the current inventory
-    # or that certain fields have been updated correctly.
+    # Additional checks can be added here based on specific inventory validation rules
+    # For example, ensuring that certain fields in prior are consistent with self
     
     return True

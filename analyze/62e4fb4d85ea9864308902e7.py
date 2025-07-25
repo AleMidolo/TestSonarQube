@@ -12,23 +12,18 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
     if not cmd:
         return cmd
 
-    if sys.platform != 'win32':
-        return cmd
+    # Handle shebang on Windows
+    if os.name == 'nt':
+        first_arg = cmd[0]
+        if first_arg.startswith('#!'):
+            # Extract the interpreter path from the shebang
+            interpreter = first_arg[2:].strip()
+            # Normalize the interpreter path
+            interpreter = os.path.normpath(interpreter)
+            # Replace the shebang with the interpreter
+            cmd = (interpreter,) + cmd[1:]
 
-    first_arg = cmd[0]
-    if not first_arg.endswith('.exe'):
-        first_arg += '.exe'
+    # Normalize the command path
+    cmd = tuple(os.path.normpath(arg) if os.path.isabs(arg) else arg for arg in cmd)
 
-    # Check if the first argument is a shebang
-    if first_arg.startswith('#!'):
-        # Extract the interpreter path from the shebang
-        interpreter_path = first_arg[2:].strip()
-        if os.path.exists(interpreter_path):
-            # Replace the shebang with the interpreter path
-            return (interpreter_path,) + cmd[1:]
-        else:
-            # If the interpreter path doesn't exist, return the original command
-            return cmd
-
-    # If the first argument is not a shebang, ensure it has the .exe extension
-    return (first_arg,) + cmd[1:]
+    return cmd

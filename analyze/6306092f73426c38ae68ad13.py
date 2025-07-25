@@ -18,26 +18,29 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
     command = ['ansible-playbook', playbook_path]
 
     # Add verbosity if specified
-    if verbose is not None:
+    if verbose:
         command.extend(['-' + 'v' * verbose])
 
-    # Add extra variables if specified
-    if extra_vars is not None:
-        for key, value in extra_vars.items():
-            command.extend(['-e', f"{key}={value}"])
+    # Add extra_vars if specified
+    if extra_vars:
+        extra_vars_str = ' '.join([f"{k}={v}" for k, v in extra_vars.items()])
+        command.extend(['--extra-vars', extra_vars_str])
 
-    # Add additional ansible arguments if specified
-    if ansible_args is not None:
-        for key, value in ansible_args.items():
+    # Add ansible_args if specified
+    if ansible_args:
+        for arg, value in ansible_args.items():
             if value is True:
-                command.append(f"--{key}")
-            elif value is False:
-                continue
+                command.append(f"--{arg}")
             else:
-                command.extend([f"--{key}", str(value)])
+                command.extend([f"--{arg}", str(value)])
 
     # Execute the command
     result = subprocess.run(command, capture_output=True, text=True)
 
-    # Return the result
-    return result
+    # Print the output
+    if result.returncode == 0:
+        print(result.stdout)
+    else:
+        print(result.stderr)
+
+    return result.returncode

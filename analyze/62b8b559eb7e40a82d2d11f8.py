@@ -8,8 +8,24 @@ def minimalBases(classes):
     Returns:
         list: A list of base classes that is the minimal equivalent of the input list.
     """
-    minimal = []
+    if not classes:
+        return []
+    
+    # Remove duplicates while preserving order
+    unique_classes = []
     for cls in classes:
-        if not any(issubclass(cls, base) for base in minimal):
-            minimal.append(cls)
-    return minimal
+        if cls not in unique_classes:
+            unique_classes.append(cls)
+    
+    # Remove classes that are already in the MRO of other classes
+    minimal_classes = []
+    for i, cls in enumerate(unique_classes):
+        is_minimal = True
+        for other_cls in unique_classes[i+1:]:
+            if issubclass(other_cls, cls):
+                is_minimal = False
+                break
+        if is_minimal:
+            minimal_classes.append(cls)
+    
+    return minimal_classes

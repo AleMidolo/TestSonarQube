@@ -1,6 +1,6 @@
-from datetime import time, timedelta, tzinfo
+from datetime import time, timedelta
 
-class Time(time):
+class Time:
     @classmethod
     def from_ticks(cls, ticks, tz=None):
         """
@@ -17,13 +17,17 @@ class Time(time):
             (0 <= ticks < 86400000000000)
         """
         if not (0 <= ticks < 86400000000000):
-            raise ValueError("ticks must be between 0 and 86400000000000")
-
-        nanoseconds = ticks % 1000
-        microseconds = (ticks // 1000) % 1000
-        milliseconds = (ticks // 1000000) % 1000
-        seconds = (ticks // 1000000000) % 60
-        minutes = (ticks // 60000000000) % 60
-        hours = (ticks // 3600000000000) % 24
-
-        return cls(hours, minutes, seconds, milliseconds * 1000 + microseconds, tzinfo=tz)
+            raise ValueError("ticks must be between 0 and 86400000000000 nanoseconds")
+        
+        # Convert ticks to seconds and microseconds
+        seconds, nanoseconds = divmod(ticks, 1_000_000_000)
+        microseconds = nanoseconds // 1_000
+        
+        # Create a timedelta representing the time since midnight
+        delta = timedelta(seconds=seconds, microseconds=microseconds)
+        
+        # Create a time object from the timedelta
+        midnight = time(0, 0, 0)
+        time_obj = (datetime.combine(datetime.min, midnight) + delta).time()
+        
+        return time_obj

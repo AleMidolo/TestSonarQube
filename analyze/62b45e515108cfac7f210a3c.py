@@ -3,29 +3,42 @@ def initialize(self):
     Create and initialize a new OCFL storage root.
     """
     import os
+    import json
 
-    # Define the required directories and files
-    required_dirs = ['0=ocfl_1.1', 'extensions', 'logs']
-    required_files = ['0=ocfl_1.1/namaste', 'ocfl_layout.json']
+    # Define the directory structure for the OCFL storage root
+    directories = [
+        "0=ocfl_1.1",
+        "extensions",
+        "logs",
+        "objects"
+    ]
 
-    # Create the storage root directory if it doesn't exist
-    if not os.path.exists(self.storage_root):
-        os.makedirs(self.storage_root)
+    # Create the directories
+    for directory in directories:
+        os.makedirs(directory, exist_ok=True)
 
-    # Create required directories
-    for dir_name in required_dirs:
-        dir_path = os.path.join(self.storage_root, dir_name)
-        if not os.path.exists(dir_path):
-            os.makedirs(dir_path)
+    # Create the OCFL namaste file
+    with open("0=ocfl_1.1", "w") as f:
+        f.write("ocfl_1.1\n")
 
-    # Create required files
-    for file_name in required_files:
-        file_path = os.path.join(self.storage_root, file_name)
-        if not os.path.exists(file_path):
-            with open(file_path, 'w') as f:
-                if file_name == '0=ocfl_1.1/namaste':
-                    f.write('ocfl_1.1\n')
-                elif file_name == 'ocfl_layout.json':
-                    f.write('{"type": "https://ocfl.io/1.1/spec/#layout-hierarchical"}\n')
+    # Create the OCFL inventory file
+    inventory = {
+        "id": "urn:uuid:12345678-1234-5678-1234-567812345678",
+        "type": "Object",
+        "digestAlgorithm": "sha512",
+        "head": "v1",
+        "versions": {
+            "v1": {
+                "created": "2023-10-01T00:00:00Z",
+                "state": {},
+                "message": "Initial version"
+            }
+        }
+    }
 
-    print(f"OCFL storage root initialized at {self.storage_root}")
+    with open("inventory.json", "w") as f:
+        json.dump(inventory, f, indent=4)
+
+    # Create the OCFL inventory signature file
+    with open("inventory.json.sha512", "w") as f:
+        f.write("sha512:...")  # Placeholder for actual hash

@@ -6,53 +6,60 @@ def bash_completion():
     Return a bash completion script for the borgmatic command. Produce this by introspecting
     borgmatic's command-line argument parsers.
     """
-    parser = argparse.ArgumentParser(description='Generate bash completion script for borgmatic.')
-    parser.add_argument('--generate-bash-completion', action='store_true', help='Generate bash completion script.')
-    
-    # Simulate borgmatic's argument parsers
-    subparsers = parser.add_subparsers(dest='command')
-    
-    # Example subcommands
-    init_parser = subparsers.add_parser('init', help='Initialize a new repository.')
-    init_parser.add_argument('repository', help='Path to the repository.')
-    
-    create_parser = subparsers.add_parser('create', help='Create a new archive.')
-    create_parser.add_argument('repository', help='Path to the repository.')
-    create_parser.add_argument('--compression', help='Compression algorithm to use.')
-    
-    list_parser = subparsers.add_parser('list', help='List archives in a repository.')
-    list_parser.add_argument('repository', help='Path to the repository.')
-    
+    parser = argparse.ArgumentParser(description='Borgmatic command-line tool.')
+    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+
+    # Add subcommands and their arguments
+    init_parser = subparsers.add_parser('init', help='Initialize a new borgmatic repository')
+    init_parser.add_argument('--encryption', choices=['repokey', 'keyfile'], help='Encryption type')
+    init_parser.add_argument('--append-only', action='store_true', help='Enable append-only mode')
+
+    create_parser = subparsers.add_parser('create', help='Create a new backup')
+    create_parser.add_argument('--exclude', action='append', help='Exclude patterns')
+    create_parser.add_argument('--compression', choices=['lz4', 'zstd'], help='Compression type')
+
+    prune_parser = subparsers.add_parser('prune', help='Prune old backups')
+    prune_parser.add_argument('--keep-daily', type=int, help='Number of daily backups to keep')
+    prune_parser.add_argument('--keep-weekly', type=int, help='Number of weekly backups to keep')
+
+    check_parser = subparsers.add_parser('check', help='Check the integrity of backups')
+    check_parser.add_argument('--repair', action='store_true', help='Repair any found issues')
+
     # Generate bash completion script
-    if '--generate-bash-completion' in sys.argv:
-        script = """
-_borgmatic_completion() {
-    local cur prev opts
-    COMPREPLY=()
-    cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="init create list --help --version"
-        
-    if [[ ${cur} == -* ]]; then
-        COMPREPLY=( $(compgen -W "--help --version" -- ${cur}) )
-    else
-        case "${prev}" in
-            init|create|list)
-                COMPREPLY=( $(compgen -f -- ${cur}) )
-                ;;
-            *)
-                COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-                ;;
-        esac
-    fi
-}
+    script = """
+    #!/bin/bash
+    _borgmatic_completion() {
+        local cur prev commands
+        COMPREPLY=()
+        cur="${COMP_WORDS[COMP_CWORD]}"
+        prev="${COMP_WORDS[COMP_CWORD-1]}"
+        commands="init create prune check"
 
-complete -F _borgmatic_completion borgmatic
-"""
-        return script
-    else:
-        return "Run with --generate-bash-completion to generate the bash completion script."
+        if [[ ${cur} == -* ]]; then
+            local opts=""
+            case "${prev}" in
+                init)
+                    opts="--encryption --append-only"
+                    ;;
+                create)
+                    opts="--exclude --compression"
+                    ;;
+                prune)
+                    opts="--keep-daily --keep-weekly"
+                    ;;
+                check)
+                    opts="--repair"
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+        fi
 
-# Example usage
-if __name__ == "__main__":
-    print(bash_completion())
+        if [[ ${prev} == "borgmatic" ]]; then
+            COMPREPLY=( $(compgen -W "${commands}" -- ${cur}) )
+            return 0
+        fi
+    }
+    complete -F _borgmatic_completion borgmatic
+    """
+    return script
