@@ -1,5 +1,4 @@
 import os
-from collections import defaultdict
 
 def _explore_folder(folder):
     """
@@ -24,25 +23,28 @@ def _explore_folder(folder):
 
         参数
         ----------
-        files: `list`  
-            文件列表
+        files: `list`
+            文件夹中的所有文件
 
         返回值
         -------
         dict
         """
-        grouped_files = defaultdict(list)
+        grouped_files = {}
         for file in files:
             if file.endswith('.xml'):
                 base_name = os.path.splitext(file)[0]
-                grouped_files[base_name].append(file)
+                grouped_files[base_name] = [file]
             else:
                 base_name = os.path.splitext(file)[0]
-                grouped_files[base_name].append(file)
+                if base_name in grouped_files:
+                    grouped_files[base_name].append(file)
+                else:
+                    grouped_files[base_name] = [file]
         return grouped_files
 
     if not os.path.isdir(folder):
         raise ValueError(f"The folder {folder} does not exist.")
 
-    files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
+    files = os.listdir(folder)
     return _group_files_by_xml_filename(files)

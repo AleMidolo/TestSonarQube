@@ -8,6 +8,4 @@ def dehydrate_time(value):
     :return: 包含 ticks 的字典
     :rtype: dict
     """
-    if value is None:
-        return None
-    return {'ticks': value.ticks}
+    return {'ticks': value.ticks()}

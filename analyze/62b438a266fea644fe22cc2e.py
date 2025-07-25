@@ -8,27 +8,27 @@ def parse_arguments(*unparsed_arguments):
     parser = argparse.ArgumentParser(description="Parse command line arguments.")
     
     # Add global arguments
-    parser.add_argument('--global-arg', type=str, help='A global argument')
+    parser.add_argument('--global-arg', type=str, help='A global argument.')
     
     # Create subparsers
     subparsers = parser.add_subparsers(dest='subparser_name', help='Sub-command help')
     
     # Subparser for command 'foo'
     parser_foo = subparsers.add_parser('foo', help='foo help')
-    parser_foo.add_argument('--foo-arg', type=str, help='foo argument')
+    parser_foo.add_argument('--foo-arg', type=int, help='foo argument')
     
     # Subparser for command 'bar'
     parser_bar = subparsers.add_parser('bar', help='bar help')
-    parser_bar.add_argument('--bar-arg', type=int, help='bar argument')
+    parser_bar.add_argument('--bar-arg', type=float, help='bar argument')
     
     # Parse the arguments
     args = parser.parse_args(unparsed_arguments)
     
     # Organize the parsed arguments into a dictionary
-    parsed_arguments = {}
-    if args.subparser_name:
-        parsed_arguments[args.subparser_name] = args
+    parsed_args = {}
+    if hasattr(args, 'subparser_name'):
+        parsed_args[args.subparser_name] = args
     else:
-        parsed_arguments['global'] = args
+        parsed_args['global'] = args
     
-    return parsed_arguments
+    return parsed_args

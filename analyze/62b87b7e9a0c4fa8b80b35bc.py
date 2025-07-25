@@ -20,17 +20,9 @@ def _update_context(self, context):
         if field.startswith('error_'):
             # 提取错误类型，例如 "x_low" 从 "error_x_low"
             error_type = field[len('error_'):]
-            # 将错误类型映射到 "x", "y", "z"
-            if error_type.startswith('x'):
-                error_key = 'x'
-            elif error_type.startswith('y'):
-                error_key = 'y'
-            elif error_type.startswith('z'):
-                error_key = 'z'
-            else:
-                error_key = error_type
-
+            # 确定错误名称（x, y, z）
+            error_name = ['x', 'y', 'z'][i % 3]  # 循环使用 x, y, z
             # 更新 context.error
-            if error_key not in context.error:
-                context.error[error_key] = {}
-            context.error[error_key][error_type] = {'index': i}
+            if error_name not in context.error:
+                context.error[error_name] = {}
+            context.error[error_name][error_type] = {'index': i}

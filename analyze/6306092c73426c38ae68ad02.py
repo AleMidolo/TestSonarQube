@@ -6,5 +6,9 @@ def validate_arg_deprecation(self, cli_args, answer_file_args):
     :param answer_file_args: 来自文件的参数字典
     """
     deprecated_args = set(cli_args.keys()).intersection(answer_file_args.keys())
-    for arg in deprecated_args:
-        print(f"警告: 参数 '{arg}' 已被弃用，建议使用来自文件的参数。")
+    if deprecated_args:
+        print("以下参数已被弃用，请更新您的配置或命令行参数：")
+        for arg in deprecated_args:
+            print(f"- {arg}")
+    else:
+        print("没有检测到已弃用的参数。")

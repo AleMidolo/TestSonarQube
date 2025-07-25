@@ -12,7 +12,7 @@ def strip_root(path, root):
     
     stripped_path = path[len(root):]
     
-    # Remove any leading slashes or backslashes
-    stripped_path = stripped_path.lstrip('/\\')
+    # Remove any leading slashes
+    stripped_path = stripped_path.lstrip('/')
     
     return stripped_path

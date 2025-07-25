@@ -17,7 +17,7 @@ def was_processed(processed, path_name, verbose):
     abs_path = os.path.abspath(path_name)
     if abs_path in processed:
         if verbose:
-            print(f"Path {abs_path} has already been processed.")
+            print(f"路径 {abs_path} 已被处理过。")
         return True
     else:
         processed.add(abs_path)

@@ -6,7 +6,7 @@ def generate_default_observer_schema(app):
       app (krake.data.kubernetes.Application): 需要为其生成默认观察者模式的应用程序。
     """
     for resource in app.spec.manifest:
-        if not hasattr(resource, 'observer_schema'):
+        if not hasattr(resource, 'observer_schema') or resource.observer_schema is None:
             # 生成默认的观察者模式
             resource.observer_schema = {
                 "type": "object",
@@ -21,14 +21,16 @@ def generate_default_observer_schema(app):
                                     "properties": {
                                         "type": {"type": "string"},
                                         "status": {"type": "string"},
-                                        "lastTransitionTime": {"type": "string"},
+                                        "lastTransitionTime": {"type": "string", "format": "date-time"},
                                         "reason": {"type": "string"},
                                         "message": {"type": "string"}
-                                    }
+                                    },
+                                    "required": ["type", "status"]
                                 }
                             }
                         }
                     }
-                }
+                },
+                "required": ["status"]
             }
     return app

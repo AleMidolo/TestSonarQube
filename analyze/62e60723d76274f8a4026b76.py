@@ -1,4 +1,4 @@
-from datetime import time, timedelta
+from datetime import time, timedelta, tzinfo
 
 class Time:
     def __init__(self, hour, minute, second, microsecond, tzinfo=None):

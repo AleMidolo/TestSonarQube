@@ -1,4 +1,5 @@
 import yaml
+from yaml import YAMLError
 
 class IRValidatorException(Exception):
     pass
@@ -16,7 +17,7 @@ def validate_from_content(cls, spec_content=None):
     
     try:
         data = yaml.safe_load(spec_content)
-    except yaml.YAMLError as e:
+    except YAMLError as e:
         raise IRValidatorException(f"Invalid YAML content: {e}")
     
     required_fields = ['field1', 'field2', 'field3']  # Replace with actual required fields

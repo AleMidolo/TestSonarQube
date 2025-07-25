@@ -1,4 +1,5 @@
-from zope.interface import Invalid, providedBy, implementer, provider
+from zope.interface import Invalid, providedBy, implementedBy
+from inspect import ismethod, isfunction, signature
 
 def _verify(iface, candidate, tentative=False, vtype=None):
     """
@@ -33,12 +34,21 @@ def _verify(iface, candidate, tentative=False, vtype=None):
         if not hasattr(candidate, name):
             errors.append(f"{candidate} is missing required method {name}")
         else:
-            # Step 3: Verify method signatures (if possible)
-            # This is a simplified check; in practice, you might need to inspect the signature
-            # using the `inspect` module or similar.
-            method = getattr(candidate, name)
-            if not callable(method):
-                errors.append(f"{name} is not callable on {candidate}")
+            attr = getattr(candidate, name)
+            if not (ismethod(attr) or isfunction(attr)):
+                errors.append(f"{name} is not a method or function in {candidate}")
+
+    # Step 3: Verify that the methods have the correct signatures
+    for name, desc in required_methods:
+        if hasattr(candidate, name):
+            try:
+                sig = signature(getattr(candidate, name))
+                iface_sig = signature(desc.getSignature())
+                if sig != iface_sig:
+                    errors.append(f"Signature mismatch for method {name} in {candidate}")
+            except ValueError:
+                # Skip if signature cannot be determined
+                pass
 
     # Step 4: Verify that the candidate defines all required attributes
     required_attrs = iface.namesAndDescriptions(all=True)

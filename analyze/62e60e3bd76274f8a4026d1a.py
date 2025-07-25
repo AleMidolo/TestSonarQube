@@ -7,10 +7,8 @@ def from_raw_values(cls, values):
     :param values: ASCII 字符串值（原始书签）
     :type values: Iterable[str]
     """
-    # Assuming the Bookmarks class is defined elsewhere
     bookmarks = cls()
     for value in values:
-        # Process each raw value and add it to the Bookmarks object
-        # This is a placeholder for the actual processing logic
-        bookmarks.add(value)
+        # Assuming the Bookmarks class has a method to add a bookmark from a raw value
+        bookmarks.add_bookmark_from_raw(value)
     return bookmarks
