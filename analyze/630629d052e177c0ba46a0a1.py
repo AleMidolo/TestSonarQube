@@ -17,6 +17,7 @@ def verificar_firma_reenviable(clave_publica, documento, firma):
 
     # Buscar la firma en el documento
     signature_node = doc.find('.//{http://www.w3.org/2000/09/xmldsig#}Signature')
+
     if signature_node is None:
         raise ValueError("No se encontró la firma en el documento.")
 

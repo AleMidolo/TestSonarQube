@@ -11,5 +11,5 @@ def get_spec_defaults(self):
     defaults['arg1'] = self.spec.get('arg1', 'default_value1')
     defaults['arg2'] = self.spec.get('arg2', 'default_value2')
     
-    # Agregar lógica adicional según sea necesario
+    # Agregar lógica adicional según sea necesario para resolver otros valores
     return defaults

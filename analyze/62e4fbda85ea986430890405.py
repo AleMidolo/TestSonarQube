@@ -15,6 +15,7 @@ def xargs(
     """
     import subprocess
     from multiprocessing import Pool
+    from typing import Sequence, Any
 
     def run_command(args):
         return subprocess.run(cmd + args, capture_output=True)
@@ -26,16 +27,16 @@ def xargs(
     if color:
         # Create a pseudo-terminal if supported
         import pty
+        import os
         master_fd, slave_fd = pty.openpty()
-        process = subprocess.Popen(cmd, stdin=slave_fd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output, error = process.communicate()
-        return process.returncode, output + error
+        os.setsid()
+        os.close(slave_fd)
 
     with Pool(processes=target_concurrency) as pool:
         results = pool.map(run_command, chunks)
 
     # Combine results
-    return_code = max(result.returncode for result in results)
-    combined_output = b''.join(result.stdout + result.stderr for result in results)
+    return_code = sum(result.returncode for result in results)
+    combined_output = b''.join(result.stdout for result in results)
 
     return return_code, combined_output

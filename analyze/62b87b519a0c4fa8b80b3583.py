@@ -16,26 +16,15 @@ def scale(self, other=None):
     Todos los errores se reajustan junto con su coordenada.
     """
     if other is None:
-        return self.scale_value  # Assuming scale_value is an attribute of the class
+        return self.current_scale  # Devuelve la escala actual del gráfico
 
     if not isinstance(other, (int, float)):
         raise ValueError("El valor de 'other' debe ser un número.")
 
-    if self.scale_value is None or self.scale_value == 0:
+    if self.current_scale is None or self.current_scale == 0:
         raise LenaValueError("La escala es desconocida o igual a cero.")
 
-    # Assuming we are adjusting the last coordinate, which is y for 2D or z for 3D
-    if hasattr(self, 'coordinates'):
-        if len(self.coordinates) == 2:  # 2D
-            self.coordinates[1] = other  # Adjust y
-        elif len(self.coordinates) == 3:  # 3D
-            self.coordinates[2] = other  # Adjust z
-        else:
-            raise ValueError("Número de coordenadas no soportado.")
-    
-    # Adjust errors if they exist
-    if hasattr(self, 'errors'):
-        for error in self.errors:
-            error.adjust(other)  # Assuming errors have an adjust method
-
-    self.scale_value = other  # Update the scale value
+    # Suponiendo que self.coordinates es una lista de coordenadas
+    # y que la última coordenada es la que se debe reajustar
+    self.coordinates[-1] *= other / self.current_scale
+    self.current_scale = other  # Actualiza la escala actual

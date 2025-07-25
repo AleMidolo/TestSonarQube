@@ -17,23 +17,11 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
     for filename in config_filenames:
         try:
             with open(filename, 'r') as file:
-                if filename.endswith('.json'):
-                    config = json.load(file)
-                else:
-                    raise ValueError(f"Unsupported file format for {filename}")
-                
+                config = json.load(file)
                 if overrides:
                     config.update(overrides)
-                
-                if resolve_env:
-                    for key, value in config.items():
-                        if isinstance(value, str) and value.startswith('$'):
-                            env_var = value[1:]
-                            config[key] = os.getenv(env_var, value)
-                
                 configurations[filename] = config
-        
-        except Exception as e:
+        except (IOError, json.JSONDecodeError) as e:
             log_record = logging.LogRecord(
                 name='config_loader',
                 level=logging.ERROR,
@@ -41,7 +29,7 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                 lineno=0,
                 msg=str(e),
                 args=None,
-                exc_info=True
+                exc_info=None
             )
             log_records.append(log_record)
             logging.error(f"Error loading configuration from {filename}: {e}")
