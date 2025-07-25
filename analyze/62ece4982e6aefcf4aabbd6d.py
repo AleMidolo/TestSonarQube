@@ -2,7 +2,7 @@ from typing import List
 
 def string_to_int(string: str, alphabet: List[str]) -> int:
     """
-    Convertir una cadena a un número, utilizando el alfabeto dado.
+    Convertir una cadena a un número, utilizando el alfabeto dado.  
 
     Se asume que la entrada tiene el dígito más significativo primero.
     """

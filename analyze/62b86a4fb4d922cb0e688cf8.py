@@ -10,14 +10,14 @@ def validate_value(value):
     Excepciones:
         ValidationError: si el valor proporcionado no cumple con la expresión regular.
     """
-    # Expresión regular para validar que el valor sea alfanumérico
-    regex = re.compile(r'^[a-zA-Z0-9]+$')
+    # Expresión regular para validar un valor (por ejemplo, un correo electrónico)
+    regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
     
-    if not regex.match(value):
+    if not re.match(regex, value):
         raise ValidationError("El valor proporcionado no cumple con la expresión regular.")
     
     return True
 
 class ValidationError(Exception):
-    """Excepción lanzada cuando la validación falla."""
+    """Excepción personalizada para errores de validación."""
     pass

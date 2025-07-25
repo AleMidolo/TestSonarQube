@@ -29,7 +29,7 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     if args:
         command.extend(args)
 
-    # Ejecutar el subproceso
+    # Ejecutar el comando en un subproceso
     result = subprocess.run(command, env=env, timeout=timeout, capture_output=True, text=True)
 
     # Devolver el resultado del subproceso

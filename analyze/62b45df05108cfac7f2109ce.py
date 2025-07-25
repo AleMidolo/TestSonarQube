@@ -4,47 +4,23 @@ def validate(self, path):
 
     Devuelve True si es válido (se permiten advertencias), False en caso contrario.
     """
+    # Aquí se implementaría la lógica de validación del objeto OCFL
+    # Por ejemplo, se podrían verificar los archivos y directorios necesarios,
+    # la estructura del objeto, y otros requisitos específicos de OCFL.
+    
+    # Este es un ejemplo simplificado:
     import os
-    import json
 
-    # Verificar si el path existe
     if not os.path.exists(path):
         return False
 
-    # Verificar si es un directorio
-    if not os.path.isdir(path):
-        return False
-
-    # Verificar la existencia del archivo 'inventory.json'
-    inventory_path = os.path.join(path, 'inventory.json')
-    if not os.path.isfile(inventory_path):
-        return False
-
-    # Intentar cargar el archivo 'inventory.json'
-    try:
-        with open(inventory_path, 'r') as f:
-            inventory = json.load(f)
-    except json.JSONDecodeError:
-        return False
-
-    # Verificar la estructura básica del inventario
-    required_keys = {'id', 'type', 'digestAlgorithm', 'head', 'manifest', 'versions'}
-    if not required_keys.issubset(inventory.keys()):
-        return False
-
-    # Verificar que el 'digestAlgorithm' sea soportado
-    supported_algorithms = {'sha256', 'sha512'}
-    if inventory['digestAlgorithm'] not in supported_algorithms:
-        return False
-
-    # Verificar que 'head' apunte a una versión válida
-    if inventory['head'] not in inventory['versions']:
-        return False
-
-    # Verificar que todas las versiones tengan un 'created' y 'state'
-    for version, details in inventory['versions'].items():
-        if 'created' not in details or 'state' not in details:
+    # Verificar la existencia de archivos/directorios necesarios
+    required_files = ['inventory.json', 'inventory.json.sha512']
+    for file in required_files:
+        if not os.path.exists(os.path.join(path, file)):
             return False
 
-    # Si todas las verificaciones pasan, el objeto es válido
+    # Aquí se podrían agregar más validaciones específicas de OCFL
+
+    # Si todas las validaciones pasan, retornar True
     return True

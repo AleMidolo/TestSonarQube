@@ -10,28 +10,12 @@ def normalized(self):
     :return:
         Devuelve un objeto de la clase :class:`dateutil.relativedelta.relativedelta`.
     """
-    # Convertir todos los atributos a enteros
-    days = int(self.days)
-    hours = int(self.hours)
-    minutes = int(self.minutes)
-    seconds = int(self.seconds)
-    microseconds = int(self.microseconds)
-    months = int(self.months)
-    years = int(self.years)
-
-    # Ajustar los valores fraccionarios
-    extra_hours = int((self.days - days) * 24)
-    hours += extra_hours
-
-    extra_minutes = int((self.hours - int(self.hours)) * 60)
-    minutes += extra_minutes
-
-    extra_seconds = int((self.minutes - int(self.minutes)) * 60)
-    seconds += extra_seconds
-
-    extra_microseconds = int((self.seconds - int(self.seconds)) * 1e6)
-    microseconds += extra_microseconds
-
-    # Crear y devolver el nuevo objeto relativedelta
-    return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds,
-                         microseconds=microseconds, months=months, years=years)
+    total_seconds = self.days * 86400 + self.hours * 3600 + self.minutes * 60 + self.seconds
+    days = int(total_seconds // 86400)
+    remaining_seconds = total_seconds % 86400
+    hours = int(remaining_seconds // 3600)
+    remaining_seconds %= 3600
+    minutes = int(remaining_seconds // 60)
+    seconds = int(remaining_seconds % 60)
+    
+    return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)

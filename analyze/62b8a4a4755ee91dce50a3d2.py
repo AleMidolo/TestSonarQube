@@ -7,8 +7,8 @@ def _fromutc(self, dt):
     :param dt:  
         Un objeto :class:`datetime.datetime` consciente de la zona horaria.
     """
-    if dt.tzinfo is not self:
-        raise ValueError("El objeto datetime no está en la zona horaria correcta.")
+    if dt.tzinfo is None:
+        raise ValueError("El objeto datetime debe ser consciente de la zona horaria.")
     
     # Convertir el datetime a UTC
     utc_dt = dt.astimezone(self.utc)
@@ -18,7 +18,7 @@ def _fromutc(self, dt):
     
     # Verificar si el datetime es ambiguo en la nueva zona horaria
     if self.is_ambiguous(new_dt):
-        # Si es ambiguo, determinar si está en el estado de "pliegue"
+        # Si es ambiguo, determinar si está en el "pliegue"
         if self._fold:
             new_dt = self._fold_ambiguous(new_dt)
     

@@ -37,14 +37,14 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
     bins = hist.bins
     bin_edges = hist.bin_edges
-    bin_widths = np.diff(bin_edges)
+    bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
 
     if get_coordinate == "left":
         x_coords = bin_edges[:-1]
     elif get_coordinate == "right":
         x_coords = bin_edges[1:]
     elif get_coordinate == "middle":
-        x_coords = (bin_edges[:-1] + bin_edges[1:]) / 2
+        x_coords = bin_centers
     else:
         raise ValueError("get_coordinate debe ser 'left', 'right' o 'middle'")
 
@@ -54,9 +54,9 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         scale = hist.scale
 
     graph_data = {field_names[0]: x_coords}
-    if isinstance(values[0], (tuple, list, np.ndarray)):
-        for i in range(len(values[0])):
-            graph_data[field_names[i + 1]] = [v[i] for v in values]
+    if len(field_names) > 1:
+        for i, field in enumerate(field_names[1:]):
+            graph_data[field] = [value[i] for value in values]
     else:
         graph_data[field_names[1]] = values
 

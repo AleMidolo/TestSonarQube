@@ -9,9 +9,12 @@ def write_configuration(config_filename, rendered_config, mode=0o600, overwrite=
     if os.path.exists(config_filename) and not overwrite:
         return
     
+    # Crear directorios si no existen
     os.makedirs(os.path.dirname(config_filename), exist_ok=True)
     
+    # Escribir el archivo de configuración
     with open(config_filename, 'w') as config_file:
         yaml.dump(rendered_config, config_file, default_flow_style=False)
     
+    # Cambiar los permisos del archivo
     os.chmod(config_filename, mode)

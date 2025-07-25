@@ -12,6 +12,7 @@ def _explore_zipfile(zip_path):
     ----------
     zip_path: str  
         Ruta del archivo zip.
+    
     Retorna
     -------
     dict  
@@ -23,6 +24,7 @@ def _explore_zipfile(zip_path):
         for file_name in zip_ref.namelist():
             base_name = os.path.splitext(os.path.basename(file_name))[0]
             with zip_ref.open(file_name) as file:
-                data[base_name].append(file.read())
+                content = file.read()
+                data[base_name].append(content)
     
     return dict(data)

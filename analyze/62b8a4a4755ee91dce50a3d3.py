@@ -16,8 +16,8 @@ def fromutc(self, dt):
     # Verificar si el datetime es ambiguo en la nueva zona horaria
     if self.is_ambiguous(new_dt):
         # Si es ambiguo, determinar si está en el "pliegue"
-        if self._fold and self._fold == 1:
-            # Si está en el "pliegue", ajustar el datetime
-            new_dt = new_dt.replace(fold=1)
+        if self.is_folded(new_dt):
+            # Si está en el pliegue, ajustar el datetime para que sea la primera ocurrencia
+            new_dt = new_dt.replace(fold=0)
     
     return new_dt

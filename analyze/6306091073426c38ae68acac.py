@@ -13,7 +13,7 @@ def dict_insert(dic, val, key, *keys):
     :param keys: subllaves en la cadena de llaves.
     """
     current = dic
-    for k in (key,) + keys[:-1]:
+    for k in keys[:-1]:
         if k not in current:
             current[k] = {}
         current = current[k]

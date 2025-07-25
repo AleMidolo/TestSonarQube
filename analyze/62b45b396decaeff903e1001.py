@@ -2,18 +2,11 @@ def amend_bzparams(self, params, bug_ids):
     """
     Modificar los parámetros de Bugzilla
     """
-    if not isinstance(params, dict):
-        raise ValueError("params must be a dictionary")
-    if not isinstance(bug_ids, (list, int)):
-        raise ValueError("bug_ids must be a list or an integer")
-    
-    if isinstance(bug_ids, int):
-        bug_ids = [bug_ids]
+    # Assuming params is a dictionary of parameters to be updated
+    # and bug_ids is a list of bug IDs to which the parameters should be applied.
     
     for bug_id in bug_ids:
-        if not isinstance(bug_id, int):
-            raise ValueError("bug_ids must contain integers only")
-    
-    # Assuming self.bz is the Bugzilla client object
-    for bug_id in bug_ids:
-        self.bz.update_bugs(bug_id, params)
+        # Here you would typically make an API call to Bugzilla to update the parameters
+        # for each bug_id. This is a placeholder for that logic.
+        # Example: self.bzapi.update_bug(bug_id, params)
+        pass
