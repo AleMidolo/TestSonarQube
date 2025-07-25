@@ -3,27 +3,24 @@ from rdflib import Graph, URIRef, Node
 
 def find_roots(graph: Graph, prop: URIRef, roots: Optional[Set[Node]] = None) -> Set[Node]:
     """
-    在某种传递层级结构中查找根节点。
-    `find_roots(graph, rdflib.RDFS.subClassOf)` 将返回子类层级结构中所有根节点的集合。
-    假设三元组的形式为 `(child, prop, parent)`，例如 `RDFS.subClassOf` 或 `SKOS.broader` 的方向。
+    Find the roots in some sort of transitive hierarchy.
 
-    参数：
-      graph: 图类对象
-      prop: URIRef 类对象
-      roots: 可选参数，类型为集合（set）
+    find_roots(graph, rdflib.RDFS.subClassOf)
+    will return a set of all roots of the sub-class hierarchy
 
-    返回值：
-      roots: 包含节点的集合
+    Assumes triple of the form (child, prop, parent), i.e. the direction of
+    RDFS.subClassOf or SKOS.broader
     """
     if roots is None:
         roots = set()
-    
-    # 获取所有可能的根节点
-    candidates = set(graph.subjects(prop, None))
-    
-    # 过滤掉那些作为其他节点的子节点的候选节点
-    for candidate in candidates:
-        if not any(graph.triples((None, prop, candidate))):
-            roots.add(candidate)
-    
+
+    # Get all nodes that appear as children in the graph
+    children = set(graph.subjects(prop, None))
+
+    # Get all nodes that appear as parents in the graph
+    parents = set(graph.objects(None, prop))
+
+    # Roots are nodes that are parents but not children
+    roots.update(parents - children)
+
     return roots

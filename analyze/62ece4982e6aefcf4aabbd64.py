@@ -1,18 +1,18 @@
 def strip_root(path, root):
     """
-    从路径中移除根目录。如果失败，则抛出异常。
+    Remove root from path, throw exception on failure.
 
-    返回值:
-        一个不包含根目录的路径
+    Args:
+        path (str): The full path from which to remove the root.
+        root (str): The root part of the path to be removed.
 
-    从路径中移除根目录。失败时抛出异常。
+    Returns:
+        str: A path without the root.
+
+    Raises:
+        ValueError: If the root is not found at the beginning of the path.
     """
     if not path.startswith(root):
-        raise ValueError(f"Path '{path}' does not start with root '{root}'")
+        raise ValueError(f"Root '{root}' not found at the beginning of path '{path}'")
     
-    stripped_path = path[len(root):]
-    
-    # Remove any leading slashes
-    stripped_path = stripped_path.lstrip('/')
-    
-    return stripped_path
+    return path[len(root):]

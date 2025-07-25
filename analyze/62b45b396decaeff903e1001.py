@@ -1,10 +1,14 @@
 def amend_bzparams(self, params, bug_ids):
     """
-    修改 Bugzilla 参数
+    Amend the Bugzilla params
     """
-    # 假设这是一个与 Bugzilla API 交互的函数
-    # 这里我们只是模拟修改参数的过程
-    for bug_id in bug_ids:
-        print(f"Updating parameters for bug {bug_id}: {params}")
-        # 在实际应用中，这里可能会调用 Bugzilla API 来更新参数
-        # 例如: self.bzapi.update_bug(bug_id, params)
+    if not isinstance(params, dict):
+        raise ValueError("params must be a dictionary")
+    if not isinstance(bug_ids, (list, int)):
+        raise ValueError("bug_ids must be a list or an integer")
+    
+    if isinstance(bug_ids, int):
+        bug_ids = [bug_ids]
+    
+    params['id'] = bug_ids
+    return params

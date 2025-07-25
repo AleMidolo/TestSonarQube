@@ -1,11 +1,13 @@
 def _legacy_mergeOrderings(orderings):
     """
-    将多个列表按出现顺序合并为一个不包含重复元素的列表。
-    合并多个排序列表（orderings），同时保留每个排序列表中的顺序。
+    Merge multiple orderings so that within-ordering order is preserved
 
-    这些排序列表受到以下约束：如果某个对象出现在两个或多个排序列表中，那么以该对象为起点的后缀部分必须在所有相关的排序列表中一致。
+    Orderings are constrained in such a way that if an object appears
+    in two or more orderings, then the suffix that begins with the
+    object must be in both orderings.
 
-    例如：
+    For example:
+
     >>> _mergeOrderings([
     ... ['x', 'y', 'z'],
     ... ['q', 'z'],
@@ -16,7 +18,7 @@ def _legacy_mergeOrderings(orderings):
     """
     from collections import defaultdict, deque
 
-    # 构建图
+    # Build a graph and in-degree count
     graph = defaultdict(set)
     in_degree = defaultdict(int)
     all_nodes = set()
@@ -29,14 +31,12 @@ def _legacy_mergeOrderings(orderings):
                 in_degree[v] += 1
             all_nodes.add(u)
             all_nodes.add(v)
-        if ordering:
-            all_nodes.add(ordering[-1])
 
-    # 初始化队列
+    # Initialize queue with nodes having zero in-degree
     queue = deque([node for node in all_nodes if in_degree[node] == 0])
     result = []
 
-    # 拓扑排序
+    # Perform topological sort
     while queue:
         u = queue.popleft()
         result.append(u)

@@ -1,9 +1,14 @@
 def names(self, all=False):  # pylint:disable=redefined-builtin
-    """
-    返回当前类的属性名称。
-    如果all为假，则返回接口定义的属性名称。
+    """Return the attribute names defined by the interface.
+    
+    Args:
+        all (bool): If True, return all attribute names, including private ones.
+                   If False, return only public attribute names.
+    
+    Returns:
+        list: A list of attribute names.
     """
     if all:
-        return [attr for attr in dir(self) if not callable(getattr(self, attr)) and not attr.startswith("__")]
+        return [name for name in dir(self) if not name.startswith('__')]
     else:
-        return [attr for attr in self.__dict__.keys() if not callable(getattr(self, attr)) and not attr.startswith("__")]
+        return [name for name in dir(self) if not name.startswith('_')]

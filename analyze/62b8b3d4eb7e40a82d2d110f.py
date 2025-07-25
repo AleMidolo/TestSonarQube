@@ -1,18 +1,18 @@
 import os
+import platform
 
 def _should_attempt_c_optimizations():
     """
-    如果我们使用 C 优化，则返回一个真值。
+    Return a true value if we should attempt to use the C optimizations.
 
-    如果我们应该尝试使用 C 优化，则返回一个真值。
-
-    这会考虑我们是否运行在 PyPy 上，以及 `_use_c_impl` 中定义的 ``PURE_PYTHON`` 环境变量的值。
+    This takes into account whether we're on PyPy and the value of the
+    ``PURE_PYTHON`` environment variable, as defined in `_use_c_impl`.
     """
-    # 检查是否运行在 PyPy 上
-    is_pypy = hasattr(sys, 'pypy_version_info')
+    # Check if we're running on PyPy
+    is_pypy = platform.python_implementation() == "PyPy"
     
-    # 检查 PURE_PYTHON 环境变量是否设置为真值
-    pure_python = os.getenv('PURE_PYTHON', '').lower() in ('true', '1', 't')
+    # Check the PURE_PYTHON environment variable
+    pure_python = os.getenv("PURE_PYTHON", "").lower() in ("1", "true", "yes")
     
-    # 如果不在 PyPy 上且 PURE_PYTHON 未设置为真值，则尝试 C 优化
+    # Attempt C optimizations if not on PyPy and PURE_PYTHON is not set to True
     return not is_pypy and not pure_python

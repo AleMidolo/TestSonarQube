@@ -1,10 +1,11 @@
 def _normalizeargs(sequence, output=None):
     """
-    规范化声明参数
+    Normalize declaration arguments
 
-    规范化的参数可能包含声明、元组或单个接口。
+    Normalization arguments might contain Declarions, tuples, or single
+    interfaces.
 
-    除了单个接口或实现规范之外的任何内容都将被展开。
+    Anything but individual interfaces or implements specs will be expanded.
     """
     if output is None:
         output = []

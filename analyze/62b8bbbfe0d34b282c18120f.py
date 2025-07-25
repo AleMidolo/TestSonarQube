@@ -1,14 +1,13 @@
 def file_to_textbuffer(file_name, encoding):
     """
-    将文件加载到文本缓冲区（UTF-8），在读取时使用指定的编码。
-    注意：此操作会将整个文件加载到内存中。
-
-    :param file_name: 文件名。
+    Load a file toward a text buffer (UTF-8), using the specify encoding while reading.
+    CAUTION : This will read the whole file IN MEMORY.
+    :param file_name: File name.
     :type file_name: str
-    :param encoding: 要使用的编码。
+    :param encoding: Encoding to use.
     :type encoding: str
-    :return: 文本缓冲区，若发生错误则返回 None。
-    :rtype: str
+    :return: A text buffer or None in case of error.
+    :rtype str
     """
     try:
         with open(file_name, 'r', encoding=encoding) as file:

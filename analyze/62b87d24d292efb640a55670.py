@@ -1,13 +1,24 @@
 def get_versions():
     """
-    获取版本信息。如果无法获取版本信息，则返回默认值。
-    获取版本信息或在无法获取时返回默认值
+    Get version information or return default if unable to do so.
     """
     try:
-        # 假设版本信息是从某个地方获取的，这里用模拟数据代替
-        version_info = "1.0.0"
-        return version_info
+        import sys
+        import platform
+        import importlib.metadata
+
+        versions = {
+            "python": sys.version,
+            "platform": platform.platform(),
+            "packages": {}
+        }
+
+        # Example: Get version of a package (e.g., 'requests')
+        try:
+            versions["packages"]["requests"] = importlib.metadata.version("requests")
+        except importlib.metadata.PackageNotFoundError:
+            versions["packages"]["requests"] = "Not installed"
+
+        return versions
     except Exception as e:
-        # 如果获取版本信息失败，返回默认值
-        default_version = "0.0.0"
-        return default_version
+        return {"error": str(e), "default": "Unable to retrieve version information"}

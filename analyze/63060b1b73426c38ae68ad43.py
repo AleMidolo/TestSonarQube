@@ -1,14 +1,11 @@
 def extend_cli(self, root_subparsers):
     """
-    将规范 CLI 选项添加到主入口点。
+    Adds the spec cli options to the main entry point.
 
-    :param root_subparsers: 要扩展的子解析器对象。
+    :param root_subparsers: the subparser object to extend.
     """
-    # 添加一个子命令
-    subparser = root_subparsers.add_parser('extend', help='扩展 CLI 选项')
-    
-    # 添加一个选项
-    subparser.add_argument('--option', type=str, help='这是一个示例选项')
-    
-    # 添加另一个选项
-    subparser.add_argument('--flag', action='store_true', help='这是一个标志选项')
+    spec_parser = root_subparsers.add_parser('spec', help='Manage spec configurations')
+    spec_parser.add_argument('--list', action='store_true', help='List all available specs')
+    spec_parser.add_argument('--add', type=str, help='Add a new spec')
+    spec_parser.add_argument('--remove', type=str, help='Remove an existing spec')
+    spec_parser.add_argument('--update', type=str, help='Update an existing spec')

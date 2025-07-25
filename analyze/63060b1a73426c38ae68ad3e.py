@@ -1,34 +1,40 @@
 import os
-import yaml
+import json
 
 def get_plugin_spec_flatten_dict(plugin_dir):
     """
-    使用 YAML 来读取 `plugin_dir` 中的各种信息，并以字典形式将其返回。
-    从插件规范创建一个扁平化的字典
+    Creates a flat dict from the plugin spec
 
-    :param plugin_dir: 插件目录的路径
-    :return: 一个包含插件属性的扁平化字典
+    :param plugin_dir: A path to the plugin's dir
+    :return: A flatten dictionary contains the plugin's properties
     """
-    flattened_dict = {}
+    flatten_dict = {}
     
-    # 遍历插件目录中的所有 YAML 文件
-    for root, dirs, files in os.walk(plugin_dir):
-        for file in files:
-            if file.endswith('.yaml') or file.endswith('.yml'):
-                file_path = os.path.join(root, file)
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    yaml_data = yaml.safe_load(f)
-                    if yaml_data:
-                        # 将 YAML 数据扁平化并合并到主字典中
-                        for key, value in yaml_data.items():
-                            if key in flattened_dict:
-                                if isinstance(flattened_dict[key], list):
-                                    flattened_dict[key].extend(value)
-                                elif isinstance(flattened_dict[key], dict):
-                                    flattened_dict[key].update(value)
-                                else:
-                                    flattened_dict[key] = value
-                            else:
-                                flattened_dict[key] = value
+    # Check if the directory exists
+    if not os.path.exists(plugin_dir):
+        return flatten_dict
     
-    return flattened_dict
+    # Look for a plugin spec file (e.g., plugin.json)
+    spec_file = os.path.join(plugin_dir, "plugin.json")
+    
+    if not os.path.isfile(spec_file):
+        return flatten_dict
+    
+    # Load the plugin spec file
+    with open(spec_file, 'r') as file:
+        plugin_spec = json.load(file)
+    
+    # Flatten the dictionary
+    def flatten(d, parent_key='', sep='.'):
+        items = []
+        for k, v in d.items():
+            new_key = f"{parent_key}{sep}{k}" if parent_key else k
+            if isinstance(v, dict):
+                items.extend(flatten(v, new_key, sep=sep).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
+    
+    flatten_dict = flatten(plugin_spec)
+    
+    return flatten_dict

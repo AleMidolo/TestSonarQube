@@ -2,16 +2,17 @@ import re
 
 def process_text_links(text):
     """
-    处理文本中的链接，添加一些属性并将文本链接转换为可点击的超链接。
+    Process links in text, adding some attributes and linkifying textual links.
     """
-    # 正则表达式匹配URL
+    # Regular expression to match URLs
     url_pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
     
-    def replace_with_link(match):
+    # Function to replace matched URLs with a link
+    def replace_url(match):
         url = match.group(0)
         return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
     
-    # 使用正则表达式替换文本中的URL为超链接
-    processed_text = url_pattern.sub(replace_with_link, text)
+    # Replace URLs in the text with the linkified version
+    processed_text = url_pattern.sub(replace_url, text)
     
     return processed_text

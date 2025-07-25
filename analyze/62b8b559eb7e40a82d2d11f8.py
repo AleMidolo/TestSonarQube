@@ -1,10 +1,15 @@
 def minimalBases(classes):
     """
-    以列表格式返回所有没有子类的类。
-    将基类列表简化为其有序的最小等价集合。
+    Reduce a list of base classes to its ordered minimum equivalent.
+    
+    Args:
+        classes (list): A list of base classes.
+    
+    Returns:
+        list: A list of base classes that is the minimal equivalent of the input list.
     """
     minimal = []
     for cls in classes:
-        if not any(issubclass(other, cls) for other in classes if other != cls):
+        if not any(issubclass(cls, base) for base in minimal):
             minimal.append(cls)
     return minimal

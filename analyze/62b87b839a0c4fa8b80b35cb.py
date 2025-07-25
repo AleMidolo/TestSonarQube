@@ -1,10 +1,17 @@
 def _get_err_indices(self, coord_name):
     """
-    查找与 `coord_name` 对应的所有错误索引。
-    获取与某个坐标对应的错误索引。
+    Get error indices corresponding to a coordinate.
+    
+    Args:
+        coord_name (str): The name of the coordinate for which to retrieve error indices.
+    
+    Returns:
+        list: A list of indices where errors are present for the specified coordinate.
     """
-    err_indices = []
-    for i, coord in enumerate(self.coords):
-        if coord == coord_name and self.errors[i]:
-            err_indices.append(i)
-    return err_indices
+    if not hasattr(self, 'errors'):
+        return []
+    
+    if coord_name not in self.errors:
+        return []
+    
+    return [i for i, val in enumerate(self.errors[coord_name]) if val is not None]

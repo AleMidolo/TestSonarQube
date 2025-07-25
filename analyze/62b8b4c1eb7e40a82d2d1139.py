@@ -1,16 +1,16 @@
 def verifyClass(iface, candidate, tentative=False):
     """
-    验证 *candidate* 是否可能正确地提供 *iface*。
+    Verify that the *candidate* might correctly provide *iface*.
     """
-    if not hasattr(candidate, '__bases__'):
+    if not isinstance(candidate, type):
         return False
     
-    if iface in candidate.__bases__:
-        return True
-    
     if tentative:
-        for base in candidate.__bases__:
-            if verifyClass(iface, base, tentative):
-                return True
-    
-    return False
+        # Check if the candidate has all the methods of the interface
+        for method in dir(iface):
+            if callable(getattr(iface, method)) and not hasattr(candidate, method):
+                return False
+        return True
+    else:
+        # Check if the candidate is a subclass of the interface
+        return issubclass(candidate, iface)

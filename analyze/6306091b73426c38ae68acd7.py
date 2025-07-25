@@ -1,6 +1,8 @@
 def ansible_config_manager(cls):
     """
-    通过 `cls._get_service()` 中的 `ServiceName.ANSIBLE_CONFIG_MANAGER` 获取 Ansible 配置管理器。
-    获取 Ansible 配置管理器。
+    Gets the ansible config manager.
     """
-    return cls._get_service(ServiceName.ANSIBLE_CONFIG_MANAGER)
+    # Assuming the config manager is a class method or static method
+    # that returns an instance or configuration object.
+    # This is a placeholder implementation.
+    return cls._config_manager if hasattr(cls, '_config_manager') else None

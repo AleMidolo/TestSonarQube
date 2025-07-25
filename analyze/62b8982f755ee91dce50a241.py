@@ -1,17 +1,15 @@
 def normalized(self):
     """
-    将所有时间单位标准化为整数。
-
-    返回一个完全使用整数值表示相对属性的对象版本。
+    Return a version of this object represented entirely using integer
+    values for the relative attributes.
 
     >>> relativedelta(days=1.5, hours=2).normalized()
     relativedelta(days=+1, hours=+14)
 
     :return:
-      返回一个 :class:`dateutil.relativedelta.relativedelta` 对象。
+        Returns a :class:`dateutil.relativedelta.relativedelta` object.
     """
     from dateutil.relativedelta import relativedelta
-    import math
 
     # Convert all attributes to integers
     days = int(self.days)
@@ -22,24 +20,25 @@ def normalized(self):
 
     # Handle fractional parts
     fractional_days = self.days - days
-    if fractional_days != 0:
-        hours += int(fractional_days * 24)
-        fractional_hours = (fractional_days * 24) - int(fractional_days * 24)
-        if fractional_hours != 0:
-            minutes += int(fractional_hours * 60)
-            fractional_minutes = (fractional_hours * 60) - int(fractional_hours * 60)
-            if fractional_minutes != 0:
-                seconds += int(fractional_minutes * 60)
-                fractional_seconds = (fractional_minutes * 60) - int(fractional_minutes * 60)
-                if fractional_seconds != 0:
-                    microseconds += int(fractional_seconds * 1e6)
+    fractional_hours = self.hours - hours
+    fractional_minutes = self.minutes - minutes
+    fractional_seconds = self.seconds - seconds
+    fractional_microseconds = self.microseconds - microseconds
 
-    # Normalize the time units
-    carry, seconds = divmod(seconds, 60)
-    minutes += carry
-    carry, minutes = divmod(minutes, 60)
-    hours += carry
-    carry, hours = divmod(hours, 24)
-    days += carry
+    # Convert fractional parts to lower units
+    hours += int(fractional_days * 24)
+    minutes += int(fractional_hours * 60)
+    seconds += int(fractional_minutes * 60)
+    microseconds += int(fractional_seconds * 1e6)
+
+    # Normalize the time components
+    seconds += microseconds // 1_000_000
+    microseconds = microseconds % 1_000_000
+    minutes += seconds // 60
+    seconds = seconds % 60
+    hours += minutes // 60
+    minutes = minutes % 60
+    days += hours // 24
+    hours = hours % 24
 
     return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds, microseconds=microseconds)

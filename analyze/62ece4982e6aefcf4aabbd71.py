@@ -2,27 +2,29 @@ import re
 
 def regex_dict(item):
     """
-    将 *.cpp 键转换为正则表达式键
+    Convert *.cpp keys to regex keys
 
-    给定一个字典，其中的键是带有通配符的文件名，仅将这些键转换为等效的正则表达式，同时保持值不变。
+    Given a dict where the keys are all filenames with wildcards, convert only
+    the keys into equivalent regexes and leave the values intact.
 
-    参数：
-      item：需要转换的字典
-    返回值：
-      一个键已转换为正则表达式的字典
+    Example:
 
-    示例：
     rules = {
-      '*.cpp':
-          {'a': 'arf', 'b': 'bark', 'c': 'coo'},
-      '*.h':
-          {'h': 'help'}
+        '*.cpp':
+            {'a': 'arf', 'b': 'bark', 'c': 'coo'},
+        '*.h':
+            {'h': 'help'}
     }
     regex_keys = regex_dict(rules)
+
+    Args:
+        item: dict to convert
+    Returns:
+        dict with keys converted to regexes
     """
     regex_dict = {}
     for key, value in item.items():
-        # 将通配符 * 替换为正则表达式 .*
-        regex_key = re.escape(key).replace(r'\*', '.*')
-        regex_dict[regex_key] = value
+        # Convert the wildcard pattern to a regex pattern
+        regex_pattern = re.escape(key).replace(r'\*', '.*')
+        regex_dict[re.compile(regex_pattern)] = value
     return regex_dict

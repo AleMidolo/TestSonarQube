@@ -1,13 +1,13 @@
 def integral(bins, edges):
     """
-    计算整体图形的面积
-    计算积分（直方图的缩放比例）。
+    Compute integral (scale for a histogram).
 
-    *`bins`* 包含数值，*`edges`* 构成积分的网格。  
-    在 :class:`.histogram` 的描述中定义了它们的格式。
+    *bins* contain values, and *edges* form the mesh
+    for the integration.
+    Their format is defined in :class:`.histogram` description.
     """
-    area = 0.0
+    integral_value = 0.0
     for i in range(len(bins)):
-        width = edges[i+1] - edges[i]
-        area += bins[i] * width
-    return area
+        bin_width = edges[i+1] - edges[i]
+        integral_value += bins[i] * bin_width
+    return integral_value

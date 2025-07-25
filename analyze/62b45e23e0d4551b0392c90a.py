@@ -1,37 +1,35 @@
 def validate_version_inventories(self, version_dirs):
     """
-    每个版本**应当**包含截至该版本的完整清单。  
+    Each version SHOULD have an inventory up to that point.
 
-    同时，记录所有与根清单不同的内容摘要，以便在验证内容时能够检查这些差异。  
+    Also keep a record of any content digests different from those in the root inventory
+    so that we can also check them when validating the content.
 
-    `version_dirs` 是一个包含版本目录名称的数组，并假定按照版本顺序排列（1, 2, 3...）。
+    version_dirs is an array of version directory names and is assumed to be in
+    version sequence (1, 2, 3...).
     """
-    root_inventory = self._get_root_inventory()  # 假设有一个方法获取根清单
-    differences = {}
+    root_inventory = self.get_root_inventory()
+    discrepancies = {}
 
     for version_dir in version_dirs:
-        version_inventory = self._get_version_inventory(version_dir)  # 假设有一个方法获取版本清单
-        if not self._is_complete_inventory(version_inventory, root_inventory):
-            raise ValueError(f"Version {version_dir} does not contain a complete inventory.")
-
-        diff = self._compare_inventories(root_inventory, version_inventory)
-        if diff:
-            differences[version_dir] = diff
-
-    return differences
-
-def _get_root_inventory(self):
-    # 实现获取根清单的逻辑
-    pass
-
-def _get_version_inventory(self, version_dir):
-    # 实现获取版本清单的逻辑
-    pass
-
-def _is_complete_inventory(self, version_inventory, root_inventory):
-    # 实现检查版本清单是否完整的逻辑
-    pass
-
-def _compare_inventories(self, root_inventory, version_inventory):
-    # 实现比较两个清单并返回差异的逻辑
-    pass
+        version_inventory = self.get_version_inventory(version_dir)
+        
+        if not version_inventory:
+            raise ValueError(f"Inventory missing for version: {version_dir}")
+        
+        for content_id, digest in version_inventory.items():
+            if content_id in root_inventory:
+                if root_inventory[content_id] != digest:
+                    discrepancies[content_id] = {
+                        'root_digest': root_inventory[content_id],
+                        'version_digest': digest,
+                        'version': version_dir
+                    }
+            else:
+                discrepancies[content_id] = {
+                    'root_digest': None,
+                    'version_digest': digest,
+                    'version': version_dir
+                }
+    
+    return discrepancies

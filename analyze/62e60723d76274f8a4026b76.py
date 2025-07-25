@@ -1,33 +1,37 @@
 from datetime import time, timedelta
 
 class Time:
-    def __init__(self, hour, minute, second, microsecond, tzinfo=None):
-        self._time = time(hour, minute, second, microsecond, tzinfo)
-
     @classmethod
     def from_ticks(cls, ticks, tz=None):
         """
-        根据时间戳（自午夜以来的纳秒数）创建一个时间对象。
+        Create a time from ticks (nanoseconds since midnight).
 
-        :param ticks: 自午夜以来的纳秒数
+        :param ticks: nanoseconds since midnight
         :type ticks: int
-        :param tz: 可选的时区信息
+        :param tz: optional timezone
         :type tz: datetime.tzinfo
+
         :rtype: Time
-        :raises ValueError: 如果时间戳超出范围(0 <= ticks < 86400000000000)
+
+        :raises ValueError: if ticks is out of bounds
+            (0 <= ticks < 86400000000000)
         """
         if not (0 <= ticks < 86400000000000):
-            raise ValueError("时间戳超出范围(0 <= ticks < 86400000000000)")
-
-        # Convert ticks to microseconds
+            raise ValueError("ticks must be between 0 and 86400000000000")
+        
+        nanoseconds_per_second = 1_000_000_000
+        nanoseconds_per_minute = 60 * nanoseconds_per_second
+        nanoseconds_per_hour = 60 * nanoseconds_per_minute
+        
+        hours = ticks // nanoseconds_per_hour
+        ticks %= nanoseconds_per_hour
+        
+        minutes = ticks // nanoseconds_per_minute
+        ticks %= nanoseconds_per_minute
+        
+        seconds = ticks // nanoseconds_per_second
+        ticks %= nanoseconds_per_second
+        
         microseconds = ticks // 1000
-
-        # Create a timedelta representing the time since midnight
-        delta = timedelta(microseconds=microseconds)
-
-        # Extract hours, minutes, seconds, and microseconds from the timedelta
-        hours, remainder = divmod(delta.seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        microseconds = delta.microseconds
-
-        return cls(hours, minutes, seconds, microseconds, tz)
+        
+        return time(hour=hours, minute=minutes, second=seconds, microsecond=microseconds, tzinfo=tz)

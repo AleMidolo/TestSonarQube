@@ -1,14 +1,13 @@
 def on(self, hook):
     """
-    返回一个装饰器函数，用于向类中的注册表中的 "hook" 添加一个新的处理器。
+    Decorator function to add a new handler to the registry.
 
-    该装饰器函数用于向注册表中添加一个新的处理器。
+    Args:
+        hook (HookType): Hook attribute for which to register the handler.
 
-    参数：
-      hook (HookType): 要为其注册处理器的 Hook 属性。
-
-    返回值：
-      callable: 用于为指定的 hook 注册监听器的装饰器。
+    Returns:
+        callable: Decorator for registering listeners for the specified
+        hook.
     """
     def decorator(func):
         if not hasattr(self, '_registry'):

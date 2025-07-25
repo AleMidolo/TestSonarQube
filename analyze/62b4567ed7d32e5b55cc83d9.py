@@ -1,15 +1,6 @@
+from ruamel.yaml.nodes import ScalarNode, MappingNode
+
 def deep_merge_nodes(nodes):
-    """
-    合并任何与重复键对应的节点值并返回结果。如果存在具有非 `MappingNode` 值的冲突键，则保留最后一个值。
-
-    给定一个嵌套的 borgmatic 配置数据结构，其形式为一个元组列表：
-    (
-          ruamel.yaml.nodes.ScalarNode as a key,
-          ruamel.yaml.nodes.MappingNode or other Node as a value,
-    ),
-
-    对任何与重复键对应的节点值进行深度合并，并返回合并后的结果。如果存在具有非 `MappingNode` 值（例如整数或字符串）的冲突键，则以最后一个值为准。
-    """
     merged_nodes = {}
     
     for key_node, value_node in nodes:
@@ -18,23 +9,29 @@ def deep_merge_nodes(nodes):
         if key in merged_nodes:
             existing_value_node = merged_nodes[key]
             
-            if isinstance(existing_value_node, type(value_node)) and isinstance(existing_value_node, ruamel.yaml.nodes.MappingNode):
-                # 如果两个值都是 MappingNode，则递归合并
-                merged_value = deep_merge_nodes(existing_value_node.value + value_node.value)
-                merged_nodes[key] = ruamel.yaml.nodes.MappingNode(
-                    tag='tag:yaml.org,2002:map',
-                    value=merged_value
-                )
+            if isinstance(existing_value_node, MappingNode) and isinstance(value_node, MappingNode):
+                # Deep merge the MappingNodes
+                existing_value = existing_value_node.value
+                new_value = value_node.value
+                
+                # Create a dictionary to hold the merged key-value pairs
+                merged_dict = {}
+                for k_node, v_node in existing_value:
+                    merged_dict[k_node.value] = v_node
+                
+                for k_node, v_node in new_value:
+                    merged_dict[k_node.value] = v_node
+                
+                # Convert the merged dictionary back to a list of tuples
+                merged_value = [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged_dict.items()]
+                merged_nodes[key] = MappingNode(tag='tag:yaml.org,2002:map', value=merged_value)
             else:
-                # 如果值不是 MappingNode，则保留最后一个值
+                # If either value is not a MappingNode, the last value wins
                 merged_nodes[key] = value_node
         else:
+            # If the key is not in the merged_nodes, just add it
             merged_nodes[key] = value_node
     
-    # 将合并后的节点转换回元组列表形式
-    result = [
-        (ruamel.yaml.nodes.ScalarNode(tag='tag:yaml.org,2002:str', value=key), value_node)
-        for key, value_node in merged_nodes.items()
-    ]
-    
+    # Convert the merged_nodes dictionary back to a list of tuples
+    result = [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged_nodes.items()]
     return result

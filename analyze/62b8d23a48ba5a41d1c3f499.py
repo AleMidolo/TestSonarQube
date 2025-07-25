@@ -1,6 +1,6 @@
 def popitem(self):
     """
-    移除并返回最久未使用的键值对。
+    Remove and return the `(key, value)` pair least recently used.
     """
     if not self:
         raise KeyError("popitem(): dictionary is empty")

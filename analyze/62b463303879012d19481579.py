@@ -1,21 +1,25 @@
 def _extract_number_and_supplment_from_issue_element(issue):
     """
-    从 issue 的内容中返回 number 和 sup 的可能值。
-    从 issue 的内容中提取 number 和 suppl 的可能值。
+    Extract the possible values of number and suppl from the contents of issue.
+    
+    Args:
+        issue (str): The issue string to extract number and suppl from.
+    
+    Returns:
+        tuple: A tuple containing the extracted number and suppl values.
+              If no number or suppl is found, returns (None, None).
     """
     number = None
     suppl = None
     
-    # 假设 issue 是一个字符串，包含数字和可能的补充信息
-    # 例如: "123 Suppl 2" 或 "456"
-    parts = issue.split()
-    
-    if parts:
-        # 提取第一个部分作为 number
-        number = parts[0]
-        
-        # 检查是否有补充信息
-        if len(parts) > 1 and parts[1].lower() == 'suppl':
-            suppl = parts[2] if len(parts) > 2 else None
+    # Example logic to extract number and suppl
+    # This is a placeholder and should be replaced with actual logic
+    if issue:
+        parts = issue.split()
+        for part in parts:
+            if part.isdigit():
+                number = int(part)
+            elif part.lower().startswith('suppl'):
+                suppl = part
     
     return number, suppl
