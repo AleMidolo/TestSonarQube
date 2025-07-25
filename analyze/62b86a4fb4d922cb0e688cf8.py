@@ -11,7 +11,7 @@ def validate_value(value):
     import re
 
     # Regular expression pattern for validation
-    pattern = r'^[A-Za-z0-9\s\-_]+$'
+    pattern = r'^[A-Za-z0-9_-]+$'
 
     # Check if value is a string
     if not isinstance(value, str):
@@ -19,7 +19,7 @@ def validate_value(value):
 
     # Check if value matches pattern
     if not re.match(pattern, value):
-        raise ValidationError("Value contains invalid characters")
+        raise ValidationError("Value contains invalid characters. Only alphanumeric characters, underscores and hyphens are allowed.")
 
 class ValidationError(Exception):
     """Custom exception for validation errors"""

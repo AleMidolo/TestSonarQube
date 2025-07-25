@@ -17,7 +17,7 @@ def _normalizeargs(sequence, output=None):
             # If arg is a Declaration, expand its interfaces
             _normalizeargs(arg.interfaces, output)
         else:
-            # Individual interface or implements spec
+            # Single interface or implements spec
             if arg not in output:
                 output.append(arg)
                 

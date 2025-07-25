@@ -36,29 +36,24 @@ def _legacy_mergeOrderings(orderings):
         has_pred.update(succ_set)
     no_pred = all_elements - has_pred
     
-    # Build the merged ordering
+    # Build result list by repeatedly taking elements with no predecessors
     result = []
-    used = set()
-    
     while no_pred:
         # Take any element with no predecessors
-        curr = no_pred.pop()
-        if curr not in used:
-            result.append(curr)
-            used.add(curr)
-            
-            # Update elements with no predecessors
-            succs = successors[curr]
-            for succ in succs:
-                # Check if all predecessors of succ are used
-                all_preds_used = True
-                for ordering in orderings:
-                    if succ in ordering:
-                        idx = ordering.index(succ)
-                        if idx > 0 and ordering[idx-1] not in used:
-                            all_preds_used = False
-                            break
-                if all_preds_used:
-                    no_pred.add(succ)
-                    
+        elem = no_pred.pop()
+        result.append(elem)
+        
+        # Remove this element from successor sets and update no_pred
+        succs = successors[elem]
+        del successors[elem]
+        
+        # Check if removing elem as predecessor creates new elements with no predecessors
+        for other_succs in successors.values():
+            if elem in other_succs:
+                other_succs.remove(elem)
+                
+        for e in succs:
+            if not any(e in s for s in successors.values()):
+                no_pred.add(e)
+                
     return result

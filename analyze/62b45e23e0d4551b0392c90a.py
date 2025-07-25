@@ -14,7 +14,7 @@ def validate_version_inventories(self, version_dirs):
     # Get root inventory for comparison
     root_inventory = self.get_inventory()
     if not root_inventory:
-        raise ValueError("Root inventory not found")
+        raise ValueError("No root inventory found")
         
     # Check each version directory
     for version_dir in version_dirs:

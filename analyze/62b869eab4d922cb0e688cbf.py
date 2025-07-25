@@ -16,7 +16,7 @@ def generate_default_observer_schema(app):
         # Get resource kind from manifest
         kind = manifest.get('kind')
         
-        # Skip if kind is not present
+        # Skip if kind not found
         if not kind:
             continue
             
@@ -30,10 +30,12 @@ def generate_default_observer_schema(app):
                 'type': 'Available',
                 'status': 'True'
             }],
-            'resources': [{
-                'kind': kind,
-                'name': manifest.get('metadata', {}).get('name', '*')
-            }]
+            'state': {
+                'ready': {
+                    'path': 'status.phase',
+                    'value': 'Running'
+                }
+            }
         }
         
         # Add default schema to observer

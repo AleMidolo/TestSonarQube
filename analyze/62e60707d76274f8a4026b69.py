@@ -32,17 +32,13 @@ def point_type(name, fields, srid_map):
         args = [f"{field}={getattr(self, field)!r}" for field in fields]
         return f"{name}({', '.join(args)})"
 
-    def __eq__(self, other):
-        if not isinstance(other, type(self)):
-            return NotImplemented
-        return all(getattr(self, field) == getattr(other, field) for field in fields)
-
-    def __hash__(self):
-        return hash(tuple(getattr(self, field) for field in fields))
+    def transform(self, srid):
+        if srid not in self._srid_map:
+            raise ValueError(f"Unknown SRID: {srid}")
+        return self._srid_map[srid](self)
 
     class_attrs['__init__'] = __init__
     class_attrs['__repr__'] = __repr__
-    class_attrs['__eq__'] = __eq__
-    class_attrs['__hash__'] = __hash__
+    class_attrs['transform'] = transform
 
-    return type(name, (object,), class_attrs)
+    return type(name, (), class_attrs)

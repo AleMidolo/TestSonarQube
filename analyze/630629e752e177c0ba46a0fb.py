@@ -25,12 +25,12 @@ def send_document(url, data, timeout=10, method="post", *args, **kwargs):
             **kwargs
         )
         
-        # Return status code and None for error
+        # Return status code and no error
         return response.status_code, None
         
     except requests.exceptions.RequestException as e:
-        # Return None for status code and the exception for error
+        # Return no status code and the error
         return None, e
     except Exception as e:
-        # Handle any other unexpected errors
+        # Return no status code and the error for any other exceptions
         return None, e

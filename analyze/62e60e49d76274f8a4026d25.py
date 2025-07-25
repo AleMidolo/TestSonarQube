@@ -9,7 +9,6 @@ def unit_of_work(metadata=None, timeout=None):
         # Copy over function metadata
         wrapper.__name__ = f.__name__
         wrapper.__doc__ = f.__doc__
-        wrapper.__module__ = f.__module__
         
         return wrapper
         

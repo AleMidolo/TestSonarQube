@@ -15,27 +15,8 @@ def xargs(
         **kwargs: Any,
 ) -> tuple[int, bytes]:
     
-    def _chunk_args(args: Sequence[str], max_len: int) -> list[tuple[str, ...]]:
-        chunks = []
-        current_chunk = []
-        current_len = 0
-        
-        for arg in args:
-            arg_len = len(arg) + 1  # Add 1 for space
-            if current_len + arg_len > max_len and current_chunk:
-                chunks.append(tuple(current_chunk))
-                current_chunk = []
-                current_len = 0
-            current_chunk.append(arg)
-            current_len += arg_len
-            
-        if current_chunk:
-            chunks.append(tuple(current_chunk))
-            
-        return chunks
-
-    def _run_chunk(chunk: tuple[str, ...]) -> tuple[int, bytes]:
-        full_cmd = cmd + chunk
+    def _run_chunk(chunk: list[str]) -> tuple[int, bytes]:
+        full_cmd = list(cmd) + chunk
         
         if color and sys.platform != 'win32':
             master, slave = pty.openpty()
@@ -50,10 +31,10 @@ def xargs(
             output = b''
             while True:
                 try:
-                    data = os.read(master, 1024)
-                    if not data:
+                    chunk = os.read(master, 1024)
+                    if not chunk:
                         break
-                    output += data
+                    output += chunk
                 except OSError:
                     break
                     
@@ -72,15 +53,29 @@ def xargs(
             
         return returncode, output
 
-    # Split arguments into chunks based on max length
-    chunks = _chunk_args(varargs, _max_length)
+    # Split varargs into chunks that fit within max length
+    chunks: list[list[str]] = [[]]
+    current_length = 0
     
-    # Run chunks in parallel using ThreadPoolExecutor
+    for arg in varargs:
+        arg_length = len(arg) + 1  # +1 for space
+        if current_length + arg_length > _max_length:
+            chunks.append([])
+            current_length = 0
+        chunks[-1].append(arg)
+        current_length += arg_length
+
+    # Run chunks concurrently
     with ThreadPoolExecutor(max_workers=target_concurrency) as executor:
         results = list(executor.map(_run_chunk, chunks))
-    
+
     # Combine results
-    final_returncode = max((rc for rc, _ in results), default=0)
-    final_output = b''.join(output for _, output in results)
+    final_returncode = 0
+    final_output = b''
     
+    for returncode, output in results:
+        if returncode != 0:
+            final_returncode = returncode
+        final_output += output
+
     return final_returncode, final_output

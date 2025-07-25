@@ -20,7 +20,7 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
                 # Update remaining args to only those that weren't parsed
                 remaining_args = unknown
         except:
-            # If parsing fails for this subparser, continue to next one
+            # If parsing fails, continue to next subparser
             continue
             
     return parsed_args, remaining_args
