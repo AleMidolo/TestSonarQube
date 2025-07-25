@@ -42,23 +42,21 @@ def begin(self, mode=None, bookmarks=None, metadata=None, timeout=None,
     if mode:
         extra["mode"] = mode
         
-    # Gestisce il database target se presente
+    # Gestisce il database se specificato
     if db:
         extra["db"] = db
         
-    # Gestisce l'impersonazione utente se presente
+    # Gestisce l'impersonazione utente se specificata
     if imp_user:
         extra["imp_user"] = imp_user
 
-    # Configura gli hook di serializzazione/deserializzazione
+    # Gestisce gli hook di disidratazione
     if dehydration_hooks:
-        self.dehydration_hooks.update(dehydration_hooks)
+        self._dehydration_hooks.update(dehydration_hooks)
+        
+    # Gestisce gli hook di idratazione
     if hydration_hooks:
-        self.hydration_hooks.update(hydration_hooks)
+        self._hydration_hooks.update(hydration_hooks)
 
-    # Crea e restituisce la Response con il messaggio BEGIN
-    return self._append(
-        "BEGIN",
-        extra,
-        response=Response(self, **handlers)
-    )
+    # Crea e restituisce la risposta con il messaggio BEGIN
+    return self._append(b"\x11", extra, response=Response(**handlers))

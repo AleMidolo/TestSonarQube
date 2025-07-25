@@ -31,7 +31,7 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         scale = hist.scale
             
     # Create field names based on y value dimensions
-    if len(points) > 0 and len(points[0]) > 2:
+    if len(points[0]) > 2:
         # Extend field names if y returns multiple values
         base_names = list(field_names)
         while len(base_names) < len(points[0]):

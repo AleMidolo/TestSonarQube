@@ -28,18 +28,19 @@ def _verify(iface, candidate, tentative=False, vtype=None):
                 )
                 continue
 
-            # Check method signature if possible
+            # Check method signature
             try:
-                import inspect
-                expected_sig = inspect.signature(desc)
-                actual_sig = inspect.signature(method)
+                from inspect import signature
+                impl_sig = signature(method)
+                iface_sig = signature(desc)
                 
-                if expected_sig.parameters != actual_sig.parameters:
+                if impl_sig.parameters != iface_sig.parameters:
                     errors['signatures'].append(
-                        f"Method {name} has wrong signature: expected {expected_sig}, got {actual_sig}"
+                        f"Method {name} has wrong signature: {impl_sig} != {iface_sig}"
                     )
             except ValueError:
-                pass  # Skip signature check if not possible
+                # Can't get signature, skip check
+                pass
 
         else:
             # Check if attribute exists
@@ -52,17 +53,19 @@ def _verify(iface, candidate, tentative=False, vtype=None):
     if not errors:
         return True
 
-    # Collect all error messages
-    error_msgs = []
-    for category, msgs in errors.items():
-        error_msgs.extend(msgs)
-
     # If single error, raise it directly
-    if len(error_msgs) == 1:
-        raise Invalid(error_msgs[0])
+    total_errors = sum(len(errs) for errs in errors.values())
+    if total_errors == 1:
+        for err_list in errors.values():
+            if err_list:
+                raise Invalid(err_list[0])
 
-    # If multiple errors, raise them all together
-    if error_msgs:
-        raise Invalid("\n".join(error_msgs))
+    # Multiple errors - raise all of them
+    if errors:
+        error_msg = []
+        for category, err_list in errors.items():
+            if err_list:
+                error_msg.extend(err_list)
+        raise Invalid("\n".join(error_msg))
 
     return True

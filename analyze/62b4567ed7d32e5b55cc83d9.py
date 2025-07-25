@@ -27,15 +27,13 @@ def deep_merge_nodes(nodes):
                 
             # Convert back to list of tuples
             merged_value = [(k, existing_dict[k.value]) 
-                          for k in sorted(existing_dict.keys(), 
-                                        key=lambda x: x)]
+                          for k in sorted(existing_dict.keys(), key=lambda x: x)]
             
             # Create new mapping node with merged values
             merged_node = type(value_node)(
                 tag=value_node.tag,
                 value=merged_value
             )
-            
             merged[key] = (key_node, merged_node)
             
         # For non-mapping nodes, latest value wins
@@ -43,5 +41,4 @@ def deep_merge_nodes(nodes):
             merged[key] = (key_node, value_node)
             
     # Convert merged dict back to list of tuples
-    return [(k, v[1]) for k,v in sorted(merged.items(), 
-                                      key=lambda x: x[0])]
+    return list(merged.values())

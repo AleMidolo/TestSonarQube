@@ -15,8 +15,10 @@ def formatmany(
     try:
         first_params = next(iter(many_params))
     except StopIteration:
-        first_params = {}
+        # No params, just format SQL
+        formatted_sql, _ = self.format(sql, {})
+    else:
+        # Format with first params set
+        formatted_sql, _ = self.format(sql, first_params)
         
-    formatted_sql, _ = self.format(sql, first_params)
-    
     return formatted_sql, out_params

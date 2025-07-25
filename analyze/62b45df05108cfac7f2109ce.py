@@ -6,12 +6,12 @@ def validate(self, path):
     if not self.fs.exists(path):
         raise ValueError(f"Il percorso {path} non esiste")
 
-    # Verifica la presenza del file namaste 0=ocfl_object
-    namaste_path = self.fs.join_path(path, "0=ocfl_object") 
+    # Verifica la presenza del file namaste 
+    namaste_path = self.fs.join_path(path, "0=ocfl_object_1.0")
     if not self.fs.exists(namaste_path):
         raise ValueError(f"File namaste mancante in {path}")
 
-    # Verifica la presenza dell'inventory
+    # Verifica la presenza della directory inventory
     inventory_path = self.fs.join_path(path, "inventory.json")
     if not self.fs.exists(inventory_path):
         raise ValueError(f"File inventory.json mancante in {path}")
@@ -26,19 +26,19 @@ def validate(self, path):
         if field not in inventory:
             raise ValueError(f"Campo {field} mancante nell'inventory")
 
-    # Verifica che l'algoritmo di digest sia valido
-    valid_algorithms = ["sha256", "sha512", "sha1"]
-    if inventory["digestAlgorithm"].lower() not in valid_algorithms:
-        raise ValueError(f"Algoritmo digest non valido: {inventory['digestAlgorithm']}")
+    # Verifica che l'algoritmo di digest sia supportato
+    if inventory["digestAlgorithm"] not in ["sha256", "sha512"]:
+        raise ValueError(f"Algoritmo digest {inventory['digestAlgorithm']} non supportato")
 
-    # Verifica la presenza di tutte le versioni dichiarate
+    # Verifica la presenza delle versioni
+    versions_path = self.fs.join_path(path, "versions")
+    if not self.fs.exists(versions_path):
+        raise ValueError(f"Directory versions mancante in {path}")
+
+    # Verifica che ogni versione dichiarata nell'inventory esista
     for version in inventory["versions"]:
-        version_path = self.fs.join_path(path, f"v{version}")
+        version_path = self.fs.join_path(versions_path, version)
         if not self.fs.exists(version_path):
             raise ValueError(f"Versione {version} mancante in {path}")
-
-    # Verifica che head punti a una versione valida
-    if inventory["head"] not in inventory["versions"]:
-        raise ValueError(f"Head {inventory['head']} non corrisponde a una versione valida")
 
     return True

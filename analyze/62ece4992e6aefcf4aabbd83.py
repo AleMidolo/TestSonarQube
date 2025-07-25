@@ -46,7 +46,7 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=
                 
             return stdout.strip() if stdout else ""
             
-        except (subprocess.CalledProcessError, OSError) as e:
+        except (OSError, subprocess.CalledProcessError) as e:
             if verbose:
                 print(f"Error executing command: {str(e)}")
             raise

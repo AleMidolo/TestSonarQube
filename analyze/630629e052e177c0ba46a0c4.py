@@ -40,16 +40,11 @@ def parse_diaspora_webfinger(document: str) -> Dict:
             root = ET.fromstring(document)
             
             result = {
-                'subject': root.findtext('Subject', ''),
-                'aliases': [],
+                'subject': root.find('Subject').text if root.find('Subject') is not None else '',
+                'aliases': [alias.text for alias in root.findall('Alias')],
                 'links': []
             }
             
-            # Parse aliases
-            for alias in root.findall('Alias'):
-                if alias.text:
-                    result['aliases'].append(alias.text)
-                    
             # Parse links
             for link in root.findall('Link'):
                 link_data = {

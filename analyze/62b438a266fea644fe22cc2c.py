@@ -13,12 +13,12 @@ def make_parsers():
     add_parser.add_argument('name', help='Name of the item')
     add_parser.add_argument('--quantity', type=int, default=1, help='Quantity to add')
 
-    # Create "list" subparser 
-    list_parser = subparsers.add_parser('list', help='List all items')
-    list_parser.add_argument('--sort', choices=['name', 'date'], default='name', help='Sort order')
-
-    # Create "remove" subparser
+    # Create "remove" subparser  
     remove_parser = subparsers.add_parser('remove', help='Remove an item')
-    remove_parser.add_argument('name', help='Name of item to remove')
+    remove_parser.add_argument('name', help='Name of the item to remove')
 
-    return (parser, add_parser, list_parser, remove_parser)
+    # Create "list" subparser
+    list_parser = subparsers.add_parser('list', help='List all items')
+    list_parser.add_argument('--sort', choices=['name', 'quantity'], help='Sort output by field')
+
+    return (parser, add_parser, remove_parser, list_parser)

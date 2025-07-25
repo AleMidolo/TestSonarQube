@@ -34,5 +34,5 @@ def _convert_non_cli_args(self, parser_name, values_dict):
             elif arg_type == list and isinstance(value, str):
                 values_dict[arg_name] = value.split(',')
         except (ValueError, TypeError):
-            # Keep original value if conversion fails
+            # If conversion fails, keep original string value
             continue

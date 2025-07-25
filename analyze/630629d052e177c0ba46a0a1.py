@@ -3,7 +3,7 @@ def verify_relayable_signature(public_key, doc, signature):
     Verifica gli elementi XML firmati per avere la certezza che l'autore dichiarato abbia effettivamente generato questo messaggio.
     """
     try:
-        # Import required libraries
+        # Import required crypto libraries
         from cryptography.hazmat.primitives import hashes
         from cryptography.hazmat.primitives.asymmetric import padding
         from cryptography.hazmat.primitives.serialization import load_pem_public_key
@@ -17,10 +17,9 @@ def verify_relayable_signature(public_key, doc, signature):
         if isinstance(public_key, str):
             public_key = load_pem_public_key(public_key.encode())
             
-        # Convert signature from base64 if needed
-        import base64
+        # Convert signature to bytes if needed
         if isinstance(signature, str):
-            signature = base64.b64decode(signature)
+            signature = bytes.fromhex(signature)
             
         # Verify the signature
         try:
@@ -38,6 +37,5 @@ def verify_relayable_signature(public_key, doc, signature):
             return False
             
     except Exception as e:
-        # Log error if needed
-        print(f"Error verifying signature: {str(e)}")
+        # Return False for any other errors during verification
         return False

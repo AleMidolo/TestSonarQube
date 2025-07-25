@@ -13,19 +13,13 @@ def hydrate_time(nanoseconds, tz=None):
     microseconds = (nanoseconds % 1_000_000_000) // 1000
 
     # Create base datetime at epoch
-    base_dt = datetime(1970, 1, 1)
+    dt = datetime.fromtimestamp(seconds, tz or timezone.utc)
+    
+    # Add microseconds
+    dt = dt.replace(microsecond=microseconds)
 
-    # Add the time delta
-    dt = base_dt + timedelta(seconds=seconds, microseconds=microseconds)
-
-    # Handle timezone if provided
-    if tz is not None:
-        if isinstance(tz, str):
-            from datetime import tzinfo
-            import pytz
-            tz = pytz.timezone(tz)
-        elif isinstance(tz, int):
-            tz = timezone(timedelta(hours=tz))
-        dt = dt.replace(tzinfo=tz)
+    # If no timezone specified, return naive time
+    if tz is None:
+        dt = dt.replace(tzinfo=None)
 
     return dt.time()

@@ -4,39 +4,24 @@ def _legacy_mergeOrderings(orderings):
     for ordering in orderings:
         for i, element in enumerate(ordering):
             if element in position:
-                # If element already seen, verify suffix constraint
-                old_pos = position[element]
-                old_ordering = next(ord for ord in orderings if element in ord and ord.index(element) == old_pos)
-                new_ordering = ordering
-                
-                old_suffix = old_ordering[old_pos:]
-                new_suffix = new_ordering[i:]
-                
-                if old_suffix != new_suffix:
-                    raise ValueError("Suffix constraint violated")
+                # Check if suffixes match when element appears in multiple orderings
+                suffix1 = ordering[i:]
+                suffix2 = orderings[position[element][0]][position[element][1]:]
+                if suffix1 != suffix2:
+                    raise ValueError(f"Inconsistent orderings for element {element}")
             else:
-                position[element] = i
-
+                position[element] = (orderings.index(ordering), i)
+    
     # Create result list by merging orderings
     result = []
     used = set()
     
-    # Keep going until we've used all elements
-    while len(used) < sum(len(ord) for ord in orderings):
-        # Find next unused element that has no unused predecessors
-        for ordering in orderings:
-            for element in ordering:
-                if element in used:
-                    continue
-                    
-                # Check if all predecessors in this ordering are used
-                predecessors = ordering[:ordering.index(element)]
-                if all(p in used for p in predecessors):
-                    result.append(element)
-                    used.add(element)
-                    break
-            else:
-                continue
-            break
-            
+    # Process each ordering
+    for ordering in orderings:
+        # Add elements from this ordering that haven't been used yet
+        for element in ordering:
+            if element not in used:
+                result.append(element)
+                used.add(element)
+                
     return result

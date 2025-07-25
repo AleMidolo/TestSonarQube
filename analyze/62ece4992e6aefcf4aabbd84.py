@@ -22,7 +22,7 @@ def is_ipv4(target):
         # Convert to integer
         num = int(octet)
         
-        # Check range 0-255
+        # Check range (0-255)
         if num < 0 or num > 255:
             return False
             
