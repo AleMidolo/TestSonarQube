@@ -1,6 +1,6 @@
 def files_list(path):
     """
-    Restituisce i file nel percorso `path`.
+    Devuelve los archivos en `path`.
     """
     import os
     

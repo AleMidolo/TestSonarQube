@@ -1,13 +1,12 @@
-def validate_requires_args(self, args):
+def validar_argumentos_requeridos(self, args):
     """
-    Verifica se sono stati forniti tutti gli argomenti richiesti.
+    Verifica si se han proporcionado todos los argumentos requeridos.
     """
     if not args:
         return False
         
-    required_args = [arg for arg in self.required_args if arg not in args]
-    
-    if required_args:
-        return False
-        
+    for arg in args:
+        if arg is None or (isinstance(arg, str) and not arg.strip()):
+            return False
+            
     return True

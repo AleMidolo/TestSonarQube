@@ -1,12 +1,11 @@
 def get_config():
     """
-    Crea, popola e restituisci l'oggetto VersioneerConfig()
+    Crea, completa y devuelve el objeto VersioneerConfig().
     """
     from versioneer import VersioneerConfig
     
     config = VersioneerConfig()
     
-    # Populate config settings
     config.VCS = "git"
     config.style = "pep440"
     config.tag_prefix = ""

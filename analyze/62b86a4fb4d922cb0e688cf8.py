@@ -1,32 +1,32 @@
 def validate_value(value):
     """
-    Convalida il valore fornito rispetto alla corrispondente espressione regolare.
+    Validar el valor proporcionado contra la expresión regular correspondiente.
 
-    Argomenti:
-        value: la stringa da convalidare
+    Argumentos:
+        value: la cadena de texto a validar
 
-    Eccezioni:
-        ValidationError: se il valore fornito non è conforme all'espressione regolare.
+    Excepciones:
+        ValidationError: si el valor proporcionado no cumple con la expresión regular.
     """
     import re
 
-    # Pattern per validare che la stringa contenga solo lettere, numeri e underscore
-    pattern = r'^[a-zA-Z0-9_]+$'
-    
-    # Verifica se il valore è una stringa
-    if not isinstance(value, str):
-        raise ValidationError("Il valore deve essere una stringa")
-        
-    # Verifica se la stringa è vuota
+    # Expresión regular para validar que el valor solo contenga letras, números y espacios
+    pattern = r'^[a-zA-Z0-9\s]+$'
+
+    # Validar que el valor no esté vacío
     if not value:
-        raise ValidationError("Il valore non può essere vuoto")
-        
-    # Verifica se la stringa corrisponde al pattern
+        raise ValidationError("El valor no puede estar vacío")
+
+    # Validar que el valor sea una cadena de texto
+    if not isinstance(value, str):
+        raise ValidationError("El valor debe ser una cadena de texto")
+
+    # Validar que el valor cumpla con la expresión regular
     if not re.match(pattern, value):
-        raise ValidationError("Il valore contiene caratteri non validi")
-        
+        raise ValidationError("El valor solo puede contener letras, números y espacios")
+
     return True
 
 class ValidationError(Exception):
-    """Eccezione sollevata per errori di validazione"""
+    """Excepción personalizada para errores de validación"""
     pass

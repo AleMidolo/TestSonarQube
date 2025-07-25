@@ -1,6 +1,6 @@
 def verifyClass(iface, candidate, tentative=False):
     """
-    Verifica che il *candidate* possa fornire correttamente *iface*.
+    Verifica que el *candidate* pueda proporcionar correctamente *iface*.
     """
     # Get all attributes defined in the interface
     required_attrs = dir(iface)
@@ -20,19 +20,21 @@ def verifyClass(iface, candidate, tentative=False):
         iface_attr = getattr(iface, attr)
         candidate_attr = getattr(candidate, attr)
         
-        # Check if attributes are callable (methods)
+        # If attribute is a method, verify signature matches
         if callable(iface_attr):
             if not callable(candidate_attr):
                 if tentative:
                     return False
                 raise TypeError(f"'{attr}' must be callable")
                 
-            # Check method signature matches
-            iface_sig = str(iface_attr.__code__.co_varnames)
-            candidate_sig = str(candidate_attr.__code__.co_varnames)
-            if iface_sig != candidate_sig:
+            # Compare number of arguments
+            from inspect import signature
+            iface_sig = signature(iface_attr)
+            candidate_sig = signature(candidate_attr)
+            
+            if len(iface_sig.parameters) != len(candidate_sig.parameters):
                 if tentative:
                     return False
-                raise TypeError(f"Method signature mismatch for '{attr}'")
-    
+                raise TypeError(f"'{attr}' has incorrect number of parameters")
+                
     return True

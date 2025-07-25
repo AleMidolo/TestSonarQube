@@ -1,45 +1,39 @@
 def normalized(self):
     """
-    Restituisce una versione di questo oggetto rappresentata interamente utilizzando valori interi per gli attributi relativi.
+    Devuelve una versión de este objeto representada completamente utilizando valores enteros para los atributos relativos.
 
     >>> relativedelta(days=1.5, hours=2).normalized()
     relativedelta(days=+1, hours=+14)
 
     :return:
-        Restituisce un oggetto di tipo :class:`dateutil.relativedelta.relativedelta`.
+        Devuelve un objeto de la clase :class:`dateutil.relativedelta.relativedelta`.
     """
-    # Convert fractional days to hours
+    # Convertir días fraccionarios a horas
     days = int(self.days)
-    hours = int((self.days - days) * 24 + self.hours)
+    hours_from_days = (self.days - days) * 24
+    total_hours = self.hours + hours_from_days
     
-    # Convert fractional hours to minutes
-    extra_hours = int(hours)
-    minutes = int((hours - extra_hours) * 60 + self.minutes)
+    # Convertir horas fraccionarias a minutos
+    hours = int(total_hours)
+    minutes_from_hours = (total_hours - hours) * 60
+    total_minutes = self.minutes + minutes_from_hours
     
-    # Convert fractional minutes to seconds
-    extra_minutes = int(minutes) 
-    seconds = int((minutes - extra_minutes) * 60 + self.seconds)
+    # Convertir minutos fraccionarios a segundos
+    minutes = int(total_minutes)
+    seconds_from_minutes = (total_minutes - minutes) * 60
+    total_seconds = self.seconds + seconds_from_minutes
     
-    # Convert fractional seconds to microseconds
-    extra_seconds = int(seconds)
-    microseconds = int((seconds - extra_seconds) * 1000000 + self.microseconds)
-
-    # Create new relativedelta with normalized values
-    return type(self)(
-        years=self.years,
-        months=self.months,
-        days=days,
-        hours=extra_hours,
-        minutes=extra_minutes,
-        seconds=extra_seconds,
-        microseconds=microseconds,
-        leapdays=self.leapdays,
-        year=self.year,
-        month=self.month,
-        day=self.day,
-        weekday=self.weekday,
-        hour=self.hour,
-        minute=self.minute,
-        second=self.second,
-        microsecond=self.microsecond
-    )
+    # Convertir segundos fraccionarios a microsegundos
+    seconds = int(total_seconds)
+    microseconds = int((total_seconds - seconds) * 1000000) + self.microseconds
+    
+    # Crear nuevo objeto relativedelta con valores normalizados
+    return self.__class__(years=self.years, months=self.months,
+                         days=days, hours=hours,
+                         minutes=minutes, seconds=seconds,
+                         microseconds=microseconds,
+                         leapdays=self.leapdays,
+                         year=self.year, month=self.month,
+                         day=self.day, weekday=self.weekday,
+                         hour=self.hour, minute=self.minute,
+                         second=self.second, microsecond=self.microsecond)

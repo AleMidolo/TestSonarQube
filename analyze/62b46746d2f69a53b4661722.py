@@ -1,46 +1,54 @@
 def absorb(self, args):
+    # Convert args to list to allow modifications
     result = list(args)
-    changed = True
+    modified = True
     
-    while changed:
-        changed = False
-        n = len(result)
+    # Keep iterating while changes are being made
+    while modified:
+        modified = False
         
-        for i in range(n):
-            for j in range(n):
-                if i == j:
-                    continue
+        # Check each pair of expressions
+        for i in range(len(result)):
+            for j in range(len(result)):
+                if i != j:
+                    # Get expressions to compare
+                    expr1 = result[i]
+                    expr2 = result[j]
                     
-                # Assorbimento A & (A | B) = A
-                if (isinstance(result[i], And) and 
-                    isinstance(result[j], Or) and
-                    result[i].args[0] in result[j].args):
-                    result[j] = result[i]
-                    changed = True
-                
-                # Assorbimento A | (A & B) = A 
-                if (isinstance(result[i], Or) and
-                    isinstance(result[j], And) and 
-                    result[i].args[0] in result[j].args):
-                    result[j] = result[i]
-                    changed = True
+                    # Check absorption cases
                     
-                # Assorbimento negativo A & (~A | B) = A & B
-                if (isinstance(result[i], And) and
-                    isinstance(result[j], Or) and
-                    Not(result[i].args[0]) in result[j].args):
-                    new_args = [arg for arg in result[j].args 
-                              if arg != Not(result[i].args[0])]
-                    result[j] = And(result[i].args[0], *new_args)
-                    changed = True
-                
-                # Assorbimento negativo A | (~A & B) = A | B
-                if (isinstance(result[i], Or) and
-                    isinstance(result[j], And) and
-                    Not(result[i].args[0]) in result[j].args):
-                    new_args = [arg for arg in result[j].args
-                              if arg != Not(result[i].args[0])]
-                    result[j] = Or(result[i].args[0], *new_args)
-                    changed = True
-                    
+                    # A & (A | B) = A
+                    if (isinstance(expr1, str) and isinstance(expr2, tuple) and 
+                        len(expr2) == 3 and expr2[1] == '|' and
+                        expr1 == expr2[0]):
+                        result[j] = expr1
+                        modified = True
+                        
+                    # A | (A & B) = A    
+                    elif (isinstance(expr1, str) and isinstance(expr2, tuple) and
+                          len(expr2) == 3 and expr2[1] == '&' and
+                          expr1 == expr2[0]):
+                        result[j] = expr1
+                        modified = True
+                        
+                    # A & (~A | B) = A & B
+                    elif (isinstance(expr1, str) and isinstance(expr2, tuple) and
+                          len(expr2) == 3 and expr2[1] == '|' and
+                          isinstance(expr2[0], tuple) and len(expr2[0]) == 2 and
+                          expr2[0][0] == '~' and expr2[0][1] == expr1):
+                        result[j] = (expr1, '&', expr2[2])
+                        modified = True
+                        
+                    # A | (~A & B) = A | B
+                    elif (isinstance(expr1, str) and isinstance(expr2, tuple) and
+                          len(expr2) == 3 and expr2[1] == '&' and
+                          isinstance(expr2[0], tuple) and len(expr2[0]) == 2 and
+                          expr2[0][0] == '~' and expr2[0][1] == expr1):
+                        result[j] = (expr1, '|', expr2[2])
+                        modified = True
+                        
+        # Remove duplicates while preserving order
+        seen = set()
+        result = [x for x in result if not (x in seen or seen.add(x))]
+                        
     return result

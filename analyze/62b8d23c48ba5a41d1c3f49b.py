@@ -1,19 +1,19 @@
 def popitem(self):
     """
-    Rimuove e restituisce la coppia `(chiave, valore)` utilizzata più di recente.
+    Eliminar y devolver el par (clave, valor) más recientemente utilizado.
     """
-    if not self._data:
-        raise KeyError('Dictionary is empty')
+    if not self.cache:  # Si el cache está vacío
+        raise KeyError("Cache is empty")
         
-    # Get the most recently used key from the end of the order list
-    key = self._order[-1]
+    # Obtener la clave más recientemente utilizada (última en el orden)
+    key = next(reversed(self.order))
     
-    # Get the value associated with the key
-    value = self._data[key]
+    # Obtener el valor asociado
+    value = self.cache[key]
     
-    # Remove the key from both the data dict and order list
-    del self._data[key]
-    self._order.pop()
+    # Eliminar la clave del cache y del orden
+    del self.cache[key]
+    self.order.remove(key)
     
-    # Return the key-value pair as a tuple
+    # Devolver el par (clave, valor)
     return (key, value)

@@ -1,38 +1,39 @@
 def _convert_non_cli_args(self, parser_name, values_dict):
     """
-    Converte gli argomenti nei tipi corretti modificando il parametro values_dict.
+    Convierte los argumentos a los tipos correctos modificando el parámetro values_dict.
 
-    Per impostazione predefinita, tutti i valori sono stringhe.
+    Por defecto, todos los valores son cadenas de texto (strings).
 
-    :param parser_name: Il nome del comando, ad esempio main, virsh, ospd, ecc.
-    :param values_dict: Il dizionario con gli argomenti
+    :param parser_name: El nombre del comando, por ejemplo: main, virsh, ospd, etc.
+    :param values_dict: El diccionario con los argumentos.
     """
-    if not values_dict:
-        return
-
-    # Get parser configuration for this command
-    parser_config = self.parsers.get(parser_name, {})
+    # Obtener la configuración del parser
+    parser_config = self.parsers_config.get(parser_name, {})
     
-    # Iterate through all arguments in values_dict
+    # Iterar sobre los argumentos y convertirlos según su tipo
     for arg_name, value in values_dict.items():
-        # Skip if value is None
+        # Obtener la configuración del argumento específico
+        arg_config = parser_config.get(arg_name, {})
+        arg_type = arg_config.get('type', str)  # Por defecto es string
+        
+        # Saltar si el valor es None
         if value is None:
             continue
             
-        # Get argument type from parser config
-        arg_type = parser_config.get(arg_name, {}).get('type', str)
-        
         try:
-            # Convert boolean strings
-            if arg_type == bool:
+            # Convertir listas
+            if isinstance(value, list):
+                values_dict[arg_name] = [arg_type(item) for item in value]
+            # Convertir valores booleanos
+            elif arg_type == bool:
                 if isinstance(value, str):
                     values_dict[arg_name] = value.lower() in ('true', 't', 'yes', 'y', '1')
-            # Convert numbers
-            elif arg_type in (int, float):
+                else:
+                    values_dict[arg_name] = bool(value)
+            # Convertir otros tipos
+            else:
                 values_dict[arg_name] = arg_type(value)
-            # Convert lists
-            elif arg_type == list and isinstance(value, str):
-                values_dict[arg_name] = value.split(',')
+                
         except (ValueError, TypeError):
-            # Keep original value if conversion fails
+            # Si hay error en la conversión, mantener el valor original
             continue

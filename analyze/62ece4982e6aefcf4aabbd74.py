@@ -4,9 +4,9 @@ def prepare_repository_from_archive(
     tmp_path: Union[PosixPath, str] = "/tmp",
 ) -> str:
     import os
-    import tempfile
     import tarfile
     import zipfile
+    import tempfile
     from pathlib import Path
 
     # Create temporary directory
@@ -17,16 +17,17 @@ def prepare_repository_from_archive(
         filename = os.path.basename(archive_path)
     
     # Handle different archive types
-    if tarfile.is_tarfile(archive_path):
-        with tarfile.open(archive_path) as tar:
-            tar.extractall(path=temp_dir)
-    elif zipfile.is_zipfile(archive_path):
-        with zipfile.ZipFile(archive_path) as zip_file:
-            zip_file.extractall(path=temp_dir)
-    else:
-        raise ValueError("Unsupported archive format")
-
-    # Convert temp directory path to file URL
+    if archive_path.endswith(('.tar.gz', '.tgz')):
+        with tarfile.open(archive_path, 'r:gz') as tar:
+            tar.extractall(temp_dir)
+    elif archive_path.endswith('.zip'):
+        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
+            zip_ref.extractall(temp_dir)
+    elif archive_path.endswith('.tar'):
+        with tarfile.open(archive_path, 'r') as tar:
+            tar.extractall(temp_dir)
+    
+    # Convert temp directory path to file URL format
     repo_url = Path(temp_dir).as_uri()
     
     return repo_url

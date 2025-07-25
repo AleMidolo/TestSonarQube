@@ -1,69 +1,46 @@
 def verifyObject(iface, candidate, tentative=False):
     from zope.interface.exceptions import Invalid, DoesNotImplement, BrokenImplementation, BrokenMethodImplementation
     from zope.interface.interface import Method
-    from collections import defaultdict
+    
+    errors = []
 
+    # Verify interface is provided
     if not tentative and not iface.providedBy(candidate):
-        raise DoesNotImplement(iface)
+        errors.append(DoesNotImplement(iface))
 
-    errors = defaultdict(list)
-
-    # Verifica metodi
+    # Verify methods and attributes
     for name, desc in iface.namesAndDescriptions(1):
+        try:
+            attr = getattr(candidate, name)
+        except AttributeError:
+            errors.append(BrokenImplementation(iface, name))
+            continue
+
+        # Verify methods
         if isinstance(desc, Method):
-            # Verifica che il metodo esista
-            try:
-                attr = getattr(candidate, name)
-            except AttributeError:
-                errors['missing_methods'].append(name)
-                continue
-
-            # Verifica che sia chiamabile
             if not callable(attr):
-                errors['not_callable'].append(name)
+                errors.append(BrokenMethodImplementation(name, "Not callable"))
                 continue
-
-            # Verifica la firma del metodo
+                
+            # Verify method signature
             try:
                 from inspect import signature
-                impl_sig = signature(attr)
-                desc_sig = signature(desc)
+                method_sig = signature(attr)
+                interface_sig = signature(desc)
                 
-                if impl_sig != desc_sig:
-                    errors['wrong_signature'].append((name, str(desc_sig), str(impl_sig)))
+                if len(method_sig.parameters) != len(interface_sig.parameters):
+                    errors.append(BrokenMethodImplementation(
+                        name,
+                        f"Incorrect number of arguments: expected {len(interface_sig.parameters)}, got {len(method_sig.parameters)}"
+                    ))
             except ValueError:
-                # Non è possibile ottenere la firma
+                # Can't verify signature, skip
                 pass
 
-        else:
-            # Verifica attributi
-            if not hasattr(candidate, name):
-                errors['missing_attributes'].append(name)
+    # Handle errors
+    if len(errors) == 1:
+        raise errors[0]
+    elif errors:
+        raise Invalid(errors)
 
-    # Gestione errori
-    if not errors:
-        return True
-
-    # Crea messaggi di errore
-    error_messages = []
-    
-    if errors['missing_methods']:
-        error_messages.append(f"Metodi mancanti: {', '.join(errors['missing_methods'])}")
-    
-    if errors['not_callable']:
-        error_messages.append(f"Attributi non chiamabili: {', '.join(errors['not_callable'])}")
-    
-    if errors['wrong_signature']:
-        sig_errors = [f"{name} (atteso: {exp}, trovato: {got})" 
-                     for name, exp, got in errors['wrong_signature']]
-        error_messages.append(f"Firme errate: {', '.join(sig_errors)}")
-    
-    if errors['missing_attributes']:
-        error_messages.append(f"Attributi mancanti: {', '.join(errors['missing_attributes'])}")
-
-    # Se c'è un solo errore, solleva direttamente quello
-    if len(error_messages) == 1:
-        raise BrokenImplementation(iface, error_messages[0])
-
-    # Altrimenti solleva tutti gli errori insieme
-    raise Invalid("\n".join(error_messages))
+    return True

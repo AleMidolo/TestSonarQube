@@ -1,38 +1,29 @@
 def split(s, platform='this'):
     import re
+    import os
     import sys
-    
-    # Determine platform
+
+    # Determinar plataforma
     if platform == 'this':
-        platform = 1 if sys.platform != 'win32' else 0
+        platform = 1 if os.name == 'posix' else 0
+    
+    if platform == 1:  # POSIX
+        # Patrón para dividir argumentos estilo POSIX/bash
+        pattern = r'''((?:[^ "']\S*|"[^"]*"|'[^']*')+)'''
+    else:  # Windows/CMD
+        # Patrón para dividir argumentos estilo Windows CMD 
+        pattern = r'''((?:[^ "]\S*|"[^"]*")+)'''
+    
+    # Dividir la cadena usando el patrón apropiado
+    args = re.findall(pattern, s)
+    
+    # Procesar cada argumento
+    processed_args = []
+    for arg in args:
+        # Eliminar comillas externas si existen
+        if (arg.startswith('"') and arg.endswith('"')) or \
+           (arg.startswith("'") and arg.endswith("'")):
+            arg = arg[1:-1]
+        processed_args.append(arg)
         
-    if platform == 1:  # POSIX style
-        # Match either a non-whitespace sequence, or a quoted string with possible escaped quotes
-        pattern = r'''(?:[^\s"']|"(?:\\.|[^"])*"|'(?:\\.|[^'])*')+'''
-        
-        # Split and handle quotes/escapes
-        tokens = re.findall(pattern, s)
-        result = []
-        for token in tokens:
-            if (token.startswith('"') and token.endswith('"')) or \
-               (token.startswith("'") and token.endswith("'")):
-                # Remove quotes and unescape
-                token = token[1:-1].replace('\\"', '"').replace("\\'", "'")
-            result.append(token)
-        return result
-        
-    elif platform == 0:  # Windows/CMD style
-        # Windows doesn't interpret escapes, just quotes
-        pattern = r'''(?:[^\s"]|"[^"]*")+'''
-        
-        # Split and handle quotes
-        tokens = re.findall(pattern, s)
-        result = []
-        for token in tokens:
-            if token.startswith('"') and token.endswith('"'):
-                token = token[1:-1]  # Remove quotes
-            result.append(token)
-        return result
-        
-    else:
-        raise ValueError("Invalid platform value")
+    return processed_args

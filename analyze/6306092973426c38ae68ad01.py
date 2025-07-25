@@ -1,17 +1,12 @@
 def get_deprecated_args(self):
     """
-    Restituzione di un dizionario con opzioni che deprecano altre.
+    Devolviendo un diccionario con opciones que deprecian a otras.
     """
-    deprecated_args = {
+    return {
         'username': 'user',
         'passwd': 'password',
-        'verbose': 'debug',
-        'force': 'no_prompt',
-        'quiet': 'silent',
-        'file': 'filename',
-        'dir': 'directory',
-        'dest': 'destination',
-        'src': 'source',
-        'old': 'legacy'
+        'hostname': 'host',
+        'dbname': 'database',
+        'db': 'database',
+        'pass': 'password'
     }
-    return deprecated_args

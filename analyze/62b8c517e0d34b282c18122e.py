@@ -1,36 +1,37 @@
 def extostr(cls, e, max_level=30, max_path_level=5):
     """
-    Formatta un'eccezione.
-    :param e: Qualsiasi istanza di eccezione.
-    :type e: Exception
-    :param max_level: Livello massimo dello stack delle chiamate (predefinito 30)
-    :type max_level: int
-    :param max_path_level: Livello massimo del percorso (predefinito 5)
-    :type max_path_level: int
-    :return: La stringa leggibile dell'eccezione
-    :rtype: str
+    Formatear una excepción.  
+    :param e: Cualquier instancia de excepción.  
+    :type e: Exception  
+    :param max_level: Nivel máximo de la pila de llamadas (por defecto 30).  
+    :type max_level: int  
+    :param max_path_level: Nivel máximo de la ruta (por defecto 5).  
+    :type max_path_level: int  
+    :return: La cadena legible de la excepción.  
+    :rtype: str  
     """
     import traceback
     import os
     
-    # Get the full traceback
-    tb_list = traceback.extract_tb(e.__traceback__)
+    # Obtener el traceback como lista de strings
+    tb_list = traceback.format_exception(type(e), e, e.__traceback__, limit=max_level)
     
-    # Limit stack trace to max_level
-    if len(tb_list) > max_level:
-        tb_list = tb_list[-max_level:]
-        
-    formatted = []
-    formatted.append(f"{e.__class__.__name__}: {str(e)}\n")
+    # Procesar cada línea del traceback
+    processed_lines = []
+    for line in tb_list:
+        # Acortar rutas largas
+        if 'File "' in line:
+            parts = line.split('File "')
+            path = parts[1].split('"')[0]
+            path_parts = path.split(os.sep)
+            
+            if len(path_parts) > max_path_level:
+                shortened_path = os.sep.join(['...'] + path_parts[-max_path_level:])
+                line = parts[0] + 'File "' + shortened_path + '"' + '"'.join(parts[1].split('"')[1:])
+                
+        processed_lines.append(line)
     
-    for filename, line, func, text in tb_list:
-        # Shorten path if needed
-        path_parts = filename.split(os.sep)
-        if len(path_parts) > max_path_level:
-            filename = os.sep.join(['...'] + path_parts[-max_path_level:])
-            
-        formatted.append(f"  File \"{filename}\", line {line}, in {func}")
-        if text:
-            formatted.append(f"    {text}")
-            
-    return '\n'.join(formatted)
+    # Unir las líneas procesadas
+    formatted_exception = ''.join(processed_lines)
+    
+    return formatted_exception.strip()

@@ -1,19 +1,21 @@
 def parse_subparser_arguments(unparsed_arguments, subparsers):
     """
-    Dato un insieme di argomenti e un dizionario che associa il nome di un sottoparser a un'istanza di `argparse.ArgumentParser`, consente a ciascun sottoparser richiesto di tentare di analizzare tutti gli argomenti. Questo permette di condividere argomenti comuni, come "--repository", tra più sottoparser.
+    Dada una secuencia de argumentos y un diccionario que mapea el nombre de un subparser a una instancia de `argparse.ArgumentParser`, permite que cada subparser solicitado intente analizar todos los argumentos. Esto permite que argumentos comunes como `--repository` sean compartidos entre múltiples subparsers.
 
-    Restituisce il risultato come una tupla composta da (un dizionario che associa il nome del sottoparser a uno spazio dei nomi di argomenti analizzati, una lista di argomenti rimanenti non gestiti da alcun sottoparser).
+    Devuelve el resultado como una tupla que contiene: 
+    - Un diccionario que mapea el nombre del subparser a un espacio de nombres (`namespace`) de argumentos analizados.
+    - Una lista de argumentos restantes que no fueron reclamados por ningún subparser.
     """
     parsed_args = {}
-    remaining_args = unparsed_arguments.copy()
+    remaining_args = list(unparsed_arguments)
     
-    # Try each subparser
+    # Iterate through each subparser
     for name, subparser in subparsers.items():
         try:
-            # Parse known args, allowing unknown
-            parsed, unknown = subparser.parse_known_args(remaining_args)
-            parsed_args[name] = parsed
-            remaining_args = unknown
+            # Try to parse all remaining arguments with current subparser
+            namespace, leftover = subparser.parse_known_args(remaining_args)
+            parsed_args[name] = namespace
+            remaining_args = leftover
         except:
             # If parsing fails, skip this subparser
             continue

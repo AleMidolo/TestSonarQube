@@ -1,55 +1,55 @@
 def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     """
-    Esegue il comando Ansible CLI con un dizionario di variabili.
+    Ejecuta el CLI de Ansible con un diccionario de variables.
 
-    :param vars_dict: dict, Sarà passato come extra-vars ad Ansible
-    :param cli_args: la lista di argomenti della riga di comando
-    :param ir_workspace: Un oggetto Infrared Workspace che rappresenta
-                         lo spazio di lavoro attivo
-    :param ir_plugin: Un oggetto InfraredPlugin del plugin corrente
-    :return: risultati di Ansible
+    :param vars_dict: dict, Será pasado como extra-vars de Ansible.
+    :param cli_args: la lista de argumentos de línea de comandos.
+    :param ir_workspace: Un objeto Infrared Workspace que representa el 
+    espacio de trabajo activo.
+    :param ir_plugin: Un objeto InfraredPlugin del plugin actual.
+    :return: resultados de Ansible.
     """
-    import os
-    import json
-    from ansible.cli.playbook import PlaybookCLI
-    from ansible.parsing.dataloader import DataLoader
-    from ansible.inventory.manager import InventoryManager
-    from ansible.vars.manager import VariableManager
+    # Configurar argumentos de Ansible
+    ansible_args = []
     
-    # Crea un file temporaneo per le extra vars
-    extra_vars_file = os.path.join(ir_workspace.path, 'extra_vars.json')
-    with open(extra_vars_file, 'w') as f:
-        json.dump(vars_dict, f)
+    # Agregar playbook path
+    playbook_path = os.path.join(ir_plugin.path, 'main.yml')
+    ansible_args.append(playbook_path)
 
-    # Costruisci gli argomenti per Ansible
-    ansible_args = ['ansible-playbook']
-    ansible_args.extend(cli_args)
-    ansible_args.extend(['--extra-vars', '@' + extra_vars_file])
-    
-    # Aggiungi l'inventory se specificato nel workspace
+    # Agregar inventory si existe en workspace
     if ir_workspace.inventory:
         ansible_args.extend(['-i', ir_workspace.inventory])
-    
-    # Configura Ansible
-    loader = DataLoader()
-    inventory = InventoryManager(loader=loader)
-    variable_manager = VariableManager(loader=loader, inventory=inventory)
-    
-    # Esegui il playbook
-    playbook = PlaybookCLI(ansible_args)
-    playbook.parse()
-    
+
+    # Agregar variables extra como JSON
+    if vars_dict:
+        extra_vars = json.dumps(vars_dict)
+        ansible_args.extend(['--extra-vars', extra_vars])
+
+    # Agregar argumentos CLI adicionales
+    if cli_args:
+        ansible_args.extend(cli_args)
+
     try:
-        result = playbook.run()
+        # Configurar entorno
+        os.environ['ANSIBLE_CONFIG'] = os.path.join(ir_plugin.path, 'ansible.cfg')
         
-        # Pulisci il file temporaneo
-        if os.path.exists(extra_vars_file):
-            os.remove(extra_vars_file)
-            
-        return result
+        # Ejecutar ansible-playbook
+        ansible = ansible_playbook.AnsiblePlaybook(
+            playbook=playbook_path,
+            inventory=ir_workspace.inventory,
+            extra_vars=vars_dict,
+            verbosity=1
+        )
         
+        # Ejecutar y obtener resultados
+        results = ansible.run()
+        
+        return results
+
     except Exception as e:
-        # Pulisci il file temporaneo anche in caso di errore
-        if os.path.exists(extra_vars_file):
-            os.remove(extra_vars_file)
-        raise Exception(f"Errore durante l'esecuzione del playbook: {str(e)}")
+        raise Exception(f"Error ejecutando playbook: {str(e)}")
+    
+    finally:
+        # Limpiar variables de entorno
+        if 'ANSIBLE_CONFIG' in os.environ:
+            del os.environ['ANSIBLE_CONFIG']

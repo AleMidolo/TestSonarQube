@@ -1,16 +1,16 @@
 def make_find_paths(find_paths):
-    result = []
+    transformed_paths = []
+    
     for path in find_paths:
-        # Skip if it's already a pattern (contains :)
+        # Skip patterns that already have a prefix (e.g. pp:)
         if ':' in path:
-            result.append(path)
+            transformed_paths.append(path)
             continue
             
-        # Convert regular path to glob pattern
-        # Add ** before and after to match anywhere in path
-        # Add * before and after filename to match partial names
-        filename = path.split('/')[-1]
-        pattern = f"sh:**/*{filename}*/**"
-        result.append(pattern)
+        # Transform regular paths into glob patterns
+        # Add **/* prefix and */** suffix to match files anywhere in directory tree
+        # that contain the original filename
+        glob_pattern = f"sh:**/*{path}*/**"
+        transformed_paths.append(glob_pattern)
         
-    return result
+    return transformed_paths

@@ -4,56 +4,51 @@ import time
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     def decorator(func):
-        # Cache che memorizza i risultati e i timestamp
+        # Cache para almacenar resultados con timestamps
         cache = OrderedDict()
-        # Cache per i timestamp di scadenza
-        expires = OrderedDict()
         
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # Crea la chiave della cache
-            key = (*args, *(kwargs.items()))
+            # Crear clave para el cache
+            key = str(args)
+            if kwargs:
+                key += str(sorted(kwargs.items()))
             if typed:
-                key += tuple(type(arg) for arg in args)
-                key += tuple(type(val) for val in kwargs.values())
+                key += str(tuple(type(arg) for arg in args))
+                if kwargs:
+                    key += str(tuple(type(v) for v in kwargs.values()))
+                    
+            # Obtener tiempo actual
+            current_time = timer()
             
-            # Verifica se la chiave è nella cache e non è scaduta
-            now = timer()
-            try:
-                result = cache[key]
-                if now < expires[key]:
-                    # Sposta l'elemento in fondo (LRU)
+            # Verificar si la clave existe y no ha expirado
+            if key in cache:
+                result, timestamp = cache[key]
+                if current_time - timestamp <= ttl:
+                    # Mover el item al final (más recientemente usado)
                     cache.move_to_end(key)
-                    expires.move_to_end(key)
                     return result
                 else:
-                    # Rimuove l'elemento scaduto
+                    # Eliminar entrada expirada
                     del cache[key]
-                    del expires[key]
-            except KeyError:
-                pass
             
-            # Calcola il nuovo risultato
+            # Calcular nuevo resultado
             result = func(*args, **kwargs)
             
-            # Aggiunge il risultato alla cache
-            cache[key] = result
-            expires[key] = now + ttl
+            # Agregar al cache
+            cache[key] = (result, current_time)
             
-            # Rimuove gli elementi più vecchi se si supera maxsize
+            # Mantener el tamaño máximo del cache
             while len(cache) > maxsize:
                 cache.popitem(last=False)
-                expires.popitem(last=False)
                 
             return result
             
-        # Aggiunge metodi per gestire la cache
-        wrapper.cache_info = lambda: {
-            'maxsize': maxsize,
-            'ttl': ttl,
-            'current_size': len(cache)
-        }
-        wrapper.cache_clear = lambda: (cache.clear(), expires.clear())
+        # Agregar método para limpiar el cache
+        wrapper.cache_clear = lambda: cache.clear()
+        
+        # Agregar método para obtener el tamaño del cache
+        wrapper.cache_info = lambda: len(cache)
         
         return wrapper
     return decorator

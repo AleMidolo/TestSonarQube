@@ -3,25 +3,22 @@ def to_csv(self, separator=",", header=None):
     
     # Add header if provided
     if header is not None:
-        result.append(header)
-        
+        result.append(str(header))
+    
     # Convert each point to CSV format
     for point in self:
-        # Convert coordinates to strings separated by separator
+        # Convert coordinates to string, separated by separator
         coord_str = separator.join(str(x) for x in point.coords)
         
-        # Convert values to strings separated by separator 
-        if hasattr(point.value, '__iter__'):
-            val_str = separator.join(str(x) for x in point.value)
+        # Convert values to string, separated by separator 
+        if hasattr(point, 'values'):
+            values_str = separator.join(str(x) for x in point.values)
+            # Combine coordinates and values
+            point_str = separator.join([coord_str, values_str])
         else:
-            val_str = str(point.value)
+            point_str = coord_str
             
-        # Combine coordinates and values
-        row = coord_str
-        if val_str:
-            row += separator + val_str
-            
-        result.append(row)
-        
-    # Join rows with newlines
-    return '\n'.join(result)
+        result.append(point_str)
+    
+    # Join all lines with newlines
+    return "\n".join(result)

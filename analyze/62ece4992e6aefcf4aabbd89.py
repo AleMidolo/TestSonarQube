@@ -1,14 +1,10 @@
 def gaussian(x):
     """
-    Questa funzione calcola il valore della distribuzione gaussiana per un dato `x`, con una media `u` pari a 0.2 e una deviazione standard `sigma` pari a 0.1.
+    Calcular la Gaussiana centrada en u = 0.2 y sigma = 0.1.
     """
-    import math
+    import numpy as np
     
     u = 0.2  # media
-    sigma = 0.1  # deviazione standard
+    sigma = 0.1  # desviación estándar
     
-    # Formula della distribuzione gaussiana
-    exponent = -((x - u) ** 2) / (2 * sigma ** 2)
-    coefficient = 1 / (sigma * math.sqrt(2 * math.pi))
-    
-    return coefficient * math.exp(exponent)
+    return (1/(sigma * np.sqrt(2*np.pi))) * np.exp(-0.5 * ((x-u)/sigma)**2)

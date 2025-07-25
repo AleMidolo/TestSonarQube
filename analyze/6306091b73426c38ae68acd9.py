@@ -1,6 +1,6 @@
 def workspace_manager(cls):
     """
-    Ottiene il gestore dello spazio di lavoro.
+    Obtiene el gestor de espacios de trabajo.
     """
     if not hasattr(cls, '_workspace_manager'):
         from workspace.manager import WorkspaceManager

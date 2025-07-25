@@ -1,39 +1,20 @@
 def get_parser_option_specs(self, command_name):
     """
-    Ottiene tutte le opzioni per il comando specificato
+    Obtiene todas las opciones para el comando especificado.
 
-    :param command_name: il nome del comando (main, virsh, ospd, ecc...)
-    :return: la lista di tutte le opzioni del comando
+    :param command_name: el nombre del comando (main, virsh, ospd, etc...)
+    :return: la lista de todas las opciones del comando
     """
-    # Initialize empty list to store options
+    # Verificar que el comando existe
+    if command_name not in self.parser_options:
+        return []
+        
+    # Obtener todas las opciones para el comando
     options = []
     
-    # Get the parser for the specified command
-    parser = self.parsers.get(command_name)
-    
-    if parser is None:
-        return options
-        
-    # Iterate through all options in the parser
-    for action in parser._actions:
-        # Skip help action
-        if isinstance(action, argparse._HelpAction):
-            continue
-            
-        # Get option names (both short and long forms)
-        option_names = action.option_strings
-        
-        # Get option details
-        option_spec = {
-            'names': option_names,
-            'help': action.help,
-            'required': action.required,
-            'default': action.default,
-            'type': str(action.type.__name__) if action.type else None,
-            'choices': action.choices,
-            'dest': action.dest
-        }
-        
-        options.append(option_spec)
+    # Iterar sobre las opciones del comando
+    for option in self.parser_options[command_name]:
+        # Agregar cada opción a la lista
+        options.append(option)
         
     return options

@@ -1,35 +1,39 @@
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
-    Analizza un href di un'immagine in parti composite.
+    Analizar un enlace (href) de una imagen en partes compuestas.
 
-    :param image_href: href di un'immagine 
-    :returns: una tupla nella forma (image_id, netloc, use_ssl)
-    :raises ValueError:
+    :param image_href: href de una imagen
+    :returns: una tupla con el formato (image_id, netloc, use_ssl)
+    :raises ValueError: Si el enlace no es valido o no puede ser analizado correctamente
     """
     from urllib.parse import urlparse
     
     if not image_href:
-        raise ValueError("Image href cannot be empty")
+        raise ValueError("El enlace de la imagen está vacío")
         
-    # Parse the URL
-    parsed = urlparse(image_href)
-    
-    # Check if scheme is valid
-    if parsed.scheme not in ['http', 'https']:
-        raise ValueError(f"Invalid URL scheme: {parsed.scheme}")
+    try:
+        # Analizar la URL
+        parsed_url = urlparse(image_href)
         
-    # Get the netloc (hostname)
-    netloc = parsed.netloc
-    if not netloc:
-        raise ValueError("Invalid URL: missing hostname")
+        # Verificar el esquema
+        if parsed_url.scheme not in ['http', 'https']:
+            raise ValueError("Esquema de URL no válido")
+            
+        # Obtener el netloc
+        netloc = parsed_url.netloc
+        if not netloc:
+            raise ValueError("URL sin dominio válido")
+            
+        # Determinar si usa SSL
+        use_ssl = parsed_url.scheme == 'https'
         
-    # Extract image ID from path
-    path_parts = parsed.path.strip('/').split('/')
-    if not path_parts or not path_parts[-1]:
-        raise ValueError("Invalid URL: missing image ID")
-    image_id = path_parts[-1]
-    
-    # Determine if SSL is used
-    use_ssl = parsed.scheme == 'https'
-    
-    return (image_id, netloc, use_ssl)
+        # Obtener el ID de la imagen del path
+        path_parts = parsed_url.path.strip('/').split('/')
+        if not path_parts[-1]:
+            raise ValueError("URL sin ID de imagen válido")
+        image_id = path_parts[-1]
+        
+        return (image_id, netloc, use_ssl)
+        
+    except Exception as e:
+        raise ValueError(f"Error al analizar la URL de la imagen: {str(e)}")

@@ -1,5 +1,14 @@
-def names(self, all=False): # pylint:disable=redefined-builtin
-    """Restituisce i nomi degli attributi definiti dall'interfaccia."""
+def names(self, all=False):  # pylint:disable=redefined-builtin
+    """
+    Devuelve los nombres de los atributos definidos por la interfaz.
     if not all:
-        return [name for name in self.__dict__ if not name.startswith('_')]
-    return list(self.__dict__.keys())
+
+    Devuelve los nombres de los atributos definidos por la interfaz.
+    """
+    if all:
+        # Return all attribute names including inherited ones
+        return list(self.__dict__.keys())
+    else:
+        # Return only directly defined attribute names
+        return [name for name in self.__dict__.keys() 
+                if not name.startswith('_')]

@@ -1,9 +1,9 @@
 def index(self, key):
     """
-    Restituisce l'indice dell'elemento specificato.
-    
-    :param key: una chiave
-    :return: indice
+    Devuelve el índice del elemento dado.
+
+    :param key: una clave  
+    :return: index  
     :rtype: int
     """
     for i in range(len(self)):

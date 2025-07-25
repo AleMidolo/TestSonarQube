@@ -1,52 +1,42 @@
 def _explore_zipfile(zip_path):
     """
-    Ottiene i dati dei pacchetti dal percorso zip fornito.
+    Obtiene los datos de los paquetes desde `zip_path`.
     
-    Raggruppa i file in base al nome base dei loro file XML e restituisce i dati in formato dizionario.
+    Agrupa los archivos por el nombre base de su archivo XML y devuelve los datos en formato de diccionario.
     
-    Parametri
+    Parámetros
     ----------
-    zip_path : str  
-        Percorso del file zip.
-    
-    Restituisce
+    zip_path: str  
+        Ruta del archivo zip.
+    Retorna
     -------
-    dict
+    dict  
     """
     import zipfile
     import os
     from collections import defaultdict
     
-    # Dizionario per raggruppare i file per nome base
+    # Diccionario para almacenar los archivos agrupados
     grouped_files = defaultdict(list)
     
-    # Apre il file zip
+    # Abrir el archivo zip
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        # Itera su tutti i file nel zip
-        for file_name in zip_ref.namelist():
-            # Ignora le directory
-            if file_name.endswith('/'):
-                continue
-                
-            # Ottiene il nome base del file (senza estensione)
-            base_name = os.path.splitext(os.path.basename(file_name))[0]
+        # Iterar sobre todos los archivos en el zip
+        for filename in zip_ref.namelist():
+            # Obtener el nombre base del archivo (sin extensión)
+            base_name = os.path.splitext(os.path.basename(filename))[0]
             
-            # Se il file è un XML, usa il suo nome come chiave
-            if file_name.endswith('.xml'):
-                base_name = base_name
+            # Si el archivo termina en .xml
+            if filename.lower().endswith('.xml'):
+                # Usar el nombre base como clave
+                key = base_name
             else:
-                # Per altri file, cerca di trovare il nome base corrispondente
-                # rimuovendo eventuali suffissi comuni
-                for xml_base in grouped_files.keys():
-                    if base_name.startswith(xml_base):
-                        base_name = xml_base
-                        break
+                # Para otros archivos, buscar el nombre base del XML relacionado
+                # Asumiendo que los archivos relacionados comparten el mismo nombre base
+                key = base_name.split('_')[0]  # Ajustar según el patrón de nombres
             
-            # Aggiunge il file al gruppo appropriato
-            grouped_files[base_name].append({
-                'name': file_name,
-                'content': zip_ref.read(file_name)
-            })
+            # Agregar el archivo al grupo correspondiente
+            grouped_files[key].append(filename)
     
-    # Converte defaultdict in dict normale
+    # Convertir defaultdict a dict regular
     return dict(grouped_files)

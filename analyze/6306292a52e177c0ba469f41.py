@@ -1,21 +1,22 @@
 def test_tag(tag: str) -> bool:
     """
-    Verifica se una parola può essere accettata come tag.
+    Prueba una palabra para determinar si puede ser aceptada como una etiqueta.
     """
-    # Check if tag is empty or contains only whitespace
-    if not tag or tag.isspace():
+    # Verificar que no esté vacía
+    if not tag:
         return False
         
-    # Check if tag contains only alphanumeric chars and underscores
-    if not tag.replace('_','').isalnum():
+    # Verificar que solo contenga caracteres alfanuméricos y guiones bajos
+    valid_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_')
+    if not all(char in valid_chars for char in tag):
         return False
         
-    # Check if tag starts with a letter
-    if not tag[0].isalpha():
+    # Verificar que no empiece con número
+    if tag[0].isdigit():
         return False
         
-    # Check if tag is all lowercase
-    if not tag.islower():
+    # Verificar longitud mínima
+    if len(tag) < 2:
         return False
         
     return True

@@ -1,14 +1,22 @@
 def send_document(url, data, timeout=10, method="post", *args, **kwargs):
+    """
+    Método auxiliar para enviar un documento mediante POST.
+
+    Los parámetros adicionales ``*args`` y ``**kwargs`` se pasarán a ``requests.post``.
+
+    :arg url: URL completa a la que se enviará, incluyendo el protocolo  
+    :arg data: Diccionario (se codificará como formulario), bytes o un objeto similar a un archivo que se enviará en el cuerpo  
+    :arg timeout: Segundos a esperar por la respuesta (por defecto 10)  
+    :arg method: Método a utilizar, por defecto es POST  
+    :returns: Tupla que contiene el código de estado (int o None) y el error (instancia de la clase de excepción o None)  
+    """
     import requests
     
-    status_code = None
-    error = None
-    
     try:
-        # Prepare request method
+        # Get the appropriate request method
         request_method = getattr(requests, method.lower())
         
-        # Send request
+        # Make the request
         response = request_method(
             url,
             data=data,
@@ -17,18 +25,12 @@ def send_document(url, data, timeout=10, method="post", *args, **kwargs):
             **kwargs
         )
         
-        # Get status code
-        status_code = response.status_code
+        # Return status code and None for error
+        return response.status_code, None
         
-        # Raise for bad status codes
-        response.raise_for_status()
-            
     except requests.exceptions.RequestException as e:
-        error = e
-        if status_code is None and hasattr(e.response, 'status_code'):
-            status_code = e.response.status_code
-            
+        # Return None for status code and the exception
+        return None, e
     except Exception as e:
-        error = e
-        
-    return status_code, error
+        # Return None for status code and the exception for any other errors
+        return None, e

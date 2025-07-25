@@ -1,31 +1,13 @@
 def was_processed(processed, path_name, verbose):
-    """
-    Verifica se un file o una directory è già stato elaborato.
-
-    Per prevenire la ricorsione, espandi il nome del percorso a un percorso assoluto
-    e chiama questa funzione con un set che memorizzerà tutte le voci e la voce da testare.
-    Se la voce è già presente nel set, segnala il problema e restituisci ``True``.
-    Altrimenti, aggiungi la voce al set e restituisci ``False`` per consentire l'elaborazione del percorso.
-
-    Args:
-        processed: Set per memorizzare i percorsi già elaborati
-        path_name: Percorso di una directory o di un file
-        verbose: True se è richiesta un'uscita dettagliata
-
-    Returns:
-        True se il percorso è già presente nel set. False altrimenti.
-    """
-    import os
-    
-    # Converti il percorso in percorso assoluto
+    # Expandir el nombre de la ruta a una ruta absoluta
     abs_path = os.path.abspath(path_name)
     
-    # Verifica se il percorso è già stato elaborato
+    # Verificar si la ruta ya está en el conjunto
     if abs_path in processed:
         if verbose:
-            print(f"Warning: {path_name} è già stato elaborato")
+            print(f"Advertencia: {path_name} ya fue procesado anteriormente")
         return True
         
-    # Aggiungi il nuovo percorso al set
+    # Si no está en el conjunto, agregarlo
     processed.add(abs_path)
     return False

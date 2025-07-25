@@ -1,37 +1,25 @@
 def get_spec_defaults(self):
     """
-    Risolvere i valori degli argomenti dal file di specifica e da altre fonti.
+    Resolver los valores de los argumentos desde la especificación y otras fuentes.
     """
-    spec_defaults = {}
+    defaults = {}
     
-    # Check if specification file exists
-    if hasattr(self, 'spec_file') and self.spec_file:
-        try:
-            # Read specification file
-            with open(self.spec_file, 'r') as f:
-                spec_data = f.read()
+    if hasattr(self, 'spec') and self.spec:
+        # Obtener valores por defecto de la especificación
+        for param_name, param in self.spec.parameters.items():
+            if hasattr(param, 'default'):
+                defaults[param_name] = param.default
                 
-            # Parse specification data
-            for line in spec_data.splitlines():
-                line = line.strip()
-                if line and not line.startswith('#'):
-                    try:
-                        key, value = line.split('=', 1)
-                        key = key.strip()
-                        value = value.strip()
-                        spec_defaults[key] = value
-                    except ValueError:
-                        continue
-                        
-        except (IOError, OSError):
-            # Handle file read errors
-            pass
-            
-    # Add any other sources of default values
-    if hasattr(self, 'env_defaults'):
-        spec_defaults.update(self.env_defaults)
-        
-    if hasattr(self, 'config_defaults'):
-        spec_defaults.update(self.config_defaults)
-        
-    return spec_defaults
+        # Obtener valores de la configuración global si existe
+        if hasattr(self, 'config') and self.config:
+            for key, value in self.config.items():
+                if key in self.spec.parameters:
+                    defaults[key] = value
+                    
+        # Obtener valores de variables de entorno
+        for param_name in self.spec.parameters:
+            env_value = os.environ.get(param_name.upper())
+            if env_value is not None:
+                defaults[param_name] = env_value
+                
+    return defaults

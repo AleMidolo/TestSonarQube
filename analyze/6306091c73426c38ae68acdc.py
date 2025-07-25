@@ -1,40 +1,30 @@
 def validate_from_content(cls, spec_content=None):
     """
-    Valida che il contenuto dello spec (YAML) contenga tutti i campi richiesti.
+    Valida que el contenido del archivo spec (YAML) tenga todos los campos requeridos.
 
-    :param spec_content: contenuto del file spec
-    :raise IRValidatorException: quando i dati obbligatori
-    sono mancanti nel file spec
-    :return: Dizionario con i dati caricati da un file spec (YAML)
+    :param spec_content: contenido del archivo spec
+    :raise IRValidatorException: cuando faltan datos obligatorios
+    en el archivo spec
+    :return: Diccionario con los datos cargados desde un archivo spec (YAML)
     """
     if spec_content is None:
-        raise IRValidatorException("Spec content cannot be empty")
-        
-    required_fields = ['name', 'version', 'description']
+        raise IRValidatorException("El contenido del archivo spec no puede estar vacío")
+
+    required_fields = ['name', 'version', 'description', 'author']
     
-    # Check if spec_content is a dictionary
-    if not isinstance(spec_content, dict):
-        raise IRValidatorException("Spec content must be a dictionary")
-    
-    # Validate required fields
-    missing_fields = []
     for field in required_fields:
         if field not in spec_content:
-            missing_fields.append(field)
+            raise IRValidatorException(f"Campo requerido '{field}' no encontrado en el archivo spec")
             
-    if missing_fields:
-        raise IRValidatorException(
-            f"Required fields missing in spec: {', '.join(missing_fields)}"
-        )
-            
-    # Validate field types
-    if not isinstance(spec_content.get('name'), str):
-        raise IRValidatorException("'name' field must be a string")
+    # Validaciones adicionales específicas
+    if not isinstance(spec_content['version'], (int, float, str)):
+        raise IRValidatorException("El campo 'version' debe ser un número o string")
         
-    if not isinstance(spec_content.get('version'), (str, int, float)):
-        raise IRValidatorException("'version' field must be a string, integer or float")
+    if not isinstance(spec_content['description'], str):
+        raise IRValidatorException("El campo 'description' debe ser un string")
         
-    if not isinstance(spec_content.get('description'), str):
-        raise IRValidatorException("'description' field must be a string")
+    if not isinstance(spec_content['author'], str):
+        raise IRValidatorException("El campo 'author' debe ser un string")
         
+    # Si todas las validaciones pasan, retornar el contenido validado
     return spec_content

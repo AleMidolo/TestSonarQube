@@ -1,28 +1,28 @@
 def validate_key(key):
     """
-    Valida la chiave fornita rispetto alla corrispondente espressione regolare.
+    Validar la clave proporcionada contra la expresión regular correspondiente.
 
-    Argomenti:
-        key: la stringa da validare
+    Argumentos:
+        key: la cadena de texto a validar.
 
-    Eccezioni:
-        ValidationError: se la chiave fornita non è conforme all'espressione regolare.
+    Excepciones:
+        ValidationError: si la clave proporcionada no cumple con la expresión regular.
     """
     import re
-
-    class ValidationError(Exception):
-        pass
-
-    # Pattern per validare la chiave:
-    # - Deve iniziare con una lettera
-    # - Può contenere lettere, numeri e underscore
-    # - Lunghezza minima 1 carattere
-    pattern = r'^[a-zA-Z][a-zA-Z0-9_]*$'
-
-    if not isinstance(key, str):
-        raise ValidationError("La chiave deve essere una stringa")
-        
+    
+    # Expresión regular para validar la clave
+    # Debe contener al menos:
+    # - 8 caracteres
+    # - 1 letra mayúscula
+    # - 1 letra minúscula  
+    # - 1 número
+    # - 1 caracter especial
+    pattern = r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+    
     if not re.match(pattern, key):
-        raise ValidationError("La chiave non è valida. Deve iniziare con una lettera e può contenere solo lettere, numeri e underscore")
-
+        raise ValidationError("La clave no cumple con los requisitos mínimos de seguridad")
+        
     return True
+
+class ValidationError(Exception):
+    pass

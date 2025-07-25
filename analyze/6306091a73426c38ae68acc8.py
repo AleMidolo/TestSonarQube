@@ -1,20 +1,21 @@
 def list_of_file_names(settings_dirs, spec_option):
     """
-    Crea un nuovo tipo complesso IniType
+    Crear un nuevo tipo complejo IniType
+
+    Crea un nuevo tipo complejo "IniType".
     """
     file_names = []
     
-    # Iterate through each directory path
+    # Iterate through each directory in settings_dirs
     for directory in settings_dirs:
-        # Check if directory exists and is a directory
-        if os.path.isdir(directory):
-            # Get list of files in directory
-            files = os.listdir(directory)
-            
-            # Filter files based on spec_option
-            for file in files:
-                if spec_option in file and file.endswith('.ini'):
-                    # Add full path to file_names list
-                    file_names.append(os.path.join(directory, file))
-                    
+        # Check if spec_option is a string
+        if isinstance(spec_option, str):
+            # Add the file name with .ini extension
+            file_names.append(f"{directory}/{spec_option}.ini")
+        # If spec_option is a list/tuple
+        elif isinstance(spec_option, (list, tuple)):
+            # Add each option as a separate file name
+            for option in spec_option:
+                file_names.append(f"{directory}/{option}.ini")
+                
     return file_names

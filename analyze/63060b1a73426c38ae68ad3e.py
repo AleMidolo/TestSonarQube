@@ -1,9 +1,9 @@
 def get_plugin_spec_flatten_dict(plugin_dir):
     """
-    Crea un dizionario non annidato a partire dalle specifiche del plugin.
+    Crea un diccionario plano a partir de la especificación del plugin.
 
-    :param plugin_dir: Un percorso alla directory del plugin  
-    :return: Un dizionario piatto che contiene le proprietà del plugin
+    :param plugin_dir: Una ruta al directorio del plugin  
+    :return: Un diccionario plano que contiene las propiedades del plugin
     """
     flattened = {}
     
@@ -16,24 +16,24 @@ def get_plugin_spec_flatten_dict(plugin_dir):
             else:
                 flattened[new_key] = value
                 
-    # Leggi il file delle specifiche
-    spec_file = os.path.join(plugin_dir, 'plugin.json')
-    if not os.path.exists(spec_file):
-        spec_file = os.path.join(plugin_dir, 'plugin.yaml')
+    try:
+        # Intenta leer el archivo spec.json del directorio del plugin
+        import json
+        import os
         
-    if not os.path.exists(spec_file):
-        raise FileNotFoundError(f"No plugin specification file found in {plugin_dir}")
+        spec_path = os.path.join(plugin_dir, 'spec.json')
         
-    # Carica le specifiche
-    with open(spec_file, 'r') as f:
-        if spec_file.endswith('.json'):
-            import json
-            specs = json.load(f)
-        else:
-            import yaml
-            specs = yaml.safe_load(f)
+        if not os.path.exists(spec_path):
+            return {}
             
-    # Appiattisci il dizionario
-    flatten_dict(specs)
-    
-    return flattened
+        with open(spec_path, 'r') as f:
+            spec = json.load(f)
+            
+        # Aplana el diccionario recursivamente
+        flatten_dict(spec)
+        
+        return flattened
+        
+    except Exception as e:
+        print(f"Error al procesar la especificación del plugin: {str(e)}")
+        return {}

@@ -1,20 +1,20 @@
 def point_type(name, fields, srid_map):
     """
-    Crea dinamicamente una sottoclasse di Point.
+    Crear dinámicamente una subclase de 'Point'.
     """
-    from shapely.geometry import Point
-    
-    # Create new class dictionary
-    class_dict = {}
-    
-    # Add fields as class attributes
-    for field in fields:
-        class_dict[field] = None
-        
-    # Add srid mapping
-    class_dict['srid_map'] = srid_map
-    
-    # Create new class dynamically
-    new_class = type(name, (Point,), class_dict)
-    
-    return new_class
+    class DynamicPoint(Point):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            for field in fields:
+                setattr(self, field, None)
+                
+        def __str__(self):
+            field_str = ', '.join(f'{field}={getattr(self, field)}' for field in fields)
+            return f"{name}({field_str}, srid={self.srid})"
+            
+        @property
+        def srid(self):
+            return srid_map.get(self.__class__.__name__, 4326)
+            
+    DynamicPoint.__name__ = name
+    return DynamicPoint

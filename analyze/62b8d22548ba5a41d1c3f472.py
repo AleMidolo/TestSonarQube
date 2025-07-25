@@ -1,35 +1,39 @@
 def cachedmethod(cache, key=hashkey, lock=None):
     """
-    Decorator per racchiudere un metodo di classe o di istanza con una funzione memoizzante 
-    che salva i risultati in una cache.
+    Decorador para envolver un método de clase o de instancia con una función memoizadora
+    que guarda los resultados en una caché.
     """
     def decorator(method):
         def wrapper(self, *args, **kwargs):
-            # Genera la chiave per la cache
-            k = key(method.__name__, args, kwargs)
+            # Obtener la caché específica de la instancia/clase
+            cache_attr = cache(self)
             
-            # Se è specificato un lock, lo acquisisce
-            if lock is not None:
-                lock.acquire()
+            if cache_attr is None:  # Si no hay caché, ejecutar método sin cachear
+                return method(self, *args, **kwargs)
                 
+            # Generar clave única para los argumentos
+            k = key(args, kwargs)
+            
             try:
-                # Prova a recuperare il risultato dalla cache
-                try:
-                    return cache[k]
-                except KeyError:
-                    pass
-                
-                # Se non presente in cache, calcola il risultato
+                # Intentar obtener resultado de caché
+                if lock is not None:
+                    with lock:
+                        return cache_attr[k]
+                else:
+                    return cache_attr[k]
+                    
+            except KeyError:
+                # Si no está en caché, calcular y guardar
                 result = method(self, *args, **kwargs)
                 
-                # Salva il risultato in cache
-                cache[k] = result
+                if lock is not None:
+                    with lock:
+                        cache_attr[k] = result
+                else:
+                    cache_attr[k] = result
+                    
                 return result
                 
-            finally:
-                # Rilascia il lock se presente
-                if lock is not None:
-                    lock.release()
-                    
         return wrapper
+        
     return decorator

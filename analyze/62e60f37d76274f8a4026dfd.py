@@ -1,10 +1,10 @@
 def dehydrate_time(value):
     """
-    Disidratatore per valori di tipo `time`.
+    Deshidratador para valores de tipo `time`.
 
-    :param value: 
-    :type value: Time
-    :return:
+    :param value:  
+    :type value: Time  
+    :return:  
     """
     if value is None:
         return None

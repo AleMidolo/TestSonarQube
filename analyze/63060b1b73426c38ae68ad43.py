@@ -1,30 +1,48 @@
 def extend_cli(self, root_subparsers):
     """
-    Aggiunge le opzioni CLI specifiche al punto di ingresso principale.
+    Agrega las opciones de línea de comandos (CLI) de especificación al punto de entrada principal.
 
-    :param subparser: l'oggetto subparser da estendere.
+    :param subparser: el objeto subparser que se va a extender.
     """
-    parser = root_subparsers.add_parser(
-        'run',
-        help='Run the application'
+    # Create specification subparser
+    spec_parser = root_subparsers.add_parser(
+        'spec',
+        help='Specification related commands'
     )
     
-    parser.add_argument(
-        '-c', '--config',
-        help='Path to configuration file',
-        default='config.yaml'
+    # Create subparsers for spec commands
+    spec_subparsers = spec_parser.add_subparsers(
+        title='Specification commands',
+        dest='spec_command'
     )
-    
-    parser.add_argument(
-        '-v', '--verbose',
-        help='Increase output verbosity',
-        action='store_true'
+
+    # Add validate command
+    validate_parser = spec_subparsers.add_parser(
+        'validate',
+        help='Validate a specification file'
     )
-    
-    parser.add_argument(
-        '--version',
-        action='version',
-        version='%(prog)s 1.0'
+    validate_parser.add_argument(
+        'spec_file',
+        help='Path to specification file'
     )
-    
-    parser.set_defaults(func=self.run)
+
+    # Add generate command  
+    generate_parser = spec_subparsers.add_parser(
+        'generate',
+        help='Generate code from specification'
+    )
+    generate_parser.add_argument(
+        'spec_file',
+        help='Path to specification file'
+    )
+    generate_parser.add_argument(
+        '-o', '--output',
+        help='Output directory for generated code',
+        default='.'
+    )
+
+    # Add list command
+    list_parser = spec_subparsers.add_parser(
+        'list',
+        help='List available specifications'
+    )

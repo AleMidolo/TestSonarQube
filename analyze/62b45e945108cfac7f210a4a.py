@@ -1,34 +1,36 @@
 def validate_hierarchy(self, validate_objects=True, check_digests=True, show_warnings=False):
     """
-    Valida la gerarchia di archiviazione.
+    Validar la jerarquía de la raíz de almacenamiento.
 
-    Restituisce:
-        num_objects - numero di oggetti verificati
-        good_objects - numero di oggetti verificati che sono risultati validi
+    Retorna:
+        num_objects - número de objetos verificados
+        good_objects - número de objetos verificados que se encontraron válidos
     """
     num_objects = 0
     good_objects = 0
-
-    # Attraversa ricorsivamente la gerarchia
+    
+    # Recorrer recursivamente la jerarquía
     for root, dirs, files in self.walk():
         for file in files:
             num_objects += 1
             
-            # Verifica l'oggetto se richiesto
-            if validate_objects:
-                try:
-                    # Verifica il digest se richiesto
+            try:
+                # Validar objeto si está habilitado
+                if validate_objects:
+                    obj = self.get_object(file)
+                    
+                    # Verificar digests si está habilitado
                     if check_digests:
-                        if self.verify_digest(file):
+                        if obj.verify_digest():
                             good_objects += 1
+                        elif show_warnings:
+                            print(f"Warning: Invalid digest for {file}")
                     else:
-                        # Se non verifichiamo i digest, consideriamo valido l'oggetto
                         good_objects += 1
-                except Exception as e:
-                    if show_warnings:
-                        print(f"Warning: Failed to validate {file}: {str(e)}")
-            else:
-                # Se non verifichiamo gli oggetti, li consideriamo tutti validi
-                good_objects += 1
-
+                        
+            except Exception as e:
+                if show_warnings:
+                    print(f"Warning: Error validating {file}: {str(e)}")
+                continue
+                
     return num_objects, good_objects

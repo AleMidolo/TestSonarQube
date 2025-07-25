@@ -1,39 +1,36 @@
 def _get_conditionally_required_args(self, command_name, options_spec, args):
     """
-    Elenca gli argomenti con la condizione ``required_when`` soddisfatta.
+    Lista los argumentos con la condición ``required_when`` que coincide.
 
-    :param command_name: il nome del comando.
-    :param options_spec: la lista delle opzioni specifiche del comando.
-    :param args: gli argomenti di input ricevuti.
-    :return: list, lista dei nomi degli argomenti con la condizione
-        ``required_when`` soddisfatta.
+    :param command_name: el nombre del comando.
+    :param options_spec: la lista de opciones de especificación del comando.
+    :param args: los argumentos de entrada recibidos.
+    :return: list, lista de nombres de argumentos que coinciden con la condición ``required_when``.
     """
     conditionally_required = []
     
     for option in options_spec:
         if 'required_when' in option:
-            condition = option['required_when']
+            required_condition = option['required_when']
             
-            # Evaluate the condition based on the args
-            if isinstance(condition, str):
-                # Simple condition checking if another arg exists
-                if condition in args and option['name'] not in args:
-                    conditionally_required.append(option['name'])
-                    
-            elif callable(condition):
-                # Complex condition using a function
-                if condition(args) and option['name'] not in args:
-                    conditionally_required.append(option['name'])
-                    
-            elif isinstance(condition, dict):
-                # Dictionary condition checking arg values
-                all_conditions_met = True
-                for arg_name, expected_value in condition.items():
-                    if arg_name not in args or args[arg_name] != expected_value:
-                        all_conditions_met = False
-                        break
-                        
-                if all_conditions_met and option['name'] not in args:
-                    conditionally_required.append(option['name'])
-    
+            # Evaluar la condición required_when
+            if isinstance(required_condition, str):
+                # Si es una cadena, evaluar como expresión
+                try:
+                    condition_met = eval(required_condition, {'args': args})
+                except:
+                    condition_met = False
+            elif callable(required_condition):
+                # Si es una función, llamarla con los argumentos
+                try:
+                    condition_met = required_condition(args)
+                except:
+                    condition_met = False
+            else:
+                condition_met = bool(required_condition)
+                
+            # Si la condición se cumple, agregar el argumento a la lista
+            if condition_met:
+                conditionally_required.append(option['name'])
+                
     return conditionally_required

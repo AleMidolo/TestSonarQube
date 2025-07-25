@@ -1,38 +1,35 @@
 def create_complex_argument_type(self, subcommand, type_name, option_name, spec_option):
     """
-    Crea il tipo di argomento complesso.
+    Construye el tipo de argumento complejo.
 
-    :param subcommand: il nome del comando
-    :param type_name: il nome del tipo complesso
-    :param option_name: il nome dell'opzione
-    :param spec_option: le specifiche dell'opzione
-    :return: l'istanza del tipo complesso
+    :param subcommand: el nombre del comando
+    :param type_name: el nombre del tipo complejo 
+    :param option_name: el nombre de la opción
+    :param spec_option: las especificaciones de la opción
+    :return: la instancia del tipo complejo
     """
-    # Create a custom argument type class
-    class ComplexArgumentType:
-        def __init__(self, spec):
-            self.spec = spec
-            
-        def __call__(self, value):
-            try:
-                # Try to parse the value according to spec
-                if 'choices' in self.spec:
-                    if value not in self.spec['choices']:
-                        raise ValueError(f"Value must be one of {self.spec['choices']}")
-                
-                if 'type' in self.spec:
-                    value = self.spec['type'](value)
-                    
-                if 'validator' in self.spec:
-                    if not self.spec['validator'](value):
-                        raise ValueError(f"Value {value} failed validation")
-                        
-                return value
-                
-            except Exception as e:
-                raise argparse.ArgumentTypeError(
-                    f"Invalid value for {option_name}: {str(e)}"
-                )
-                
-    # Create instance with the provided specs
-    return ComplexArgumentType(spec_option)
+    # Mapeo de tipos complejos conocidos
+    type_mapping = {
+        'json': JsonType,
+        'key-value': KeyValueType,
+        'list': ListType,
+        'dict': DictType
+    }
+
+    # Obtener la clase del tipo complejo
+    type_class = type_mapping.get(type_name.lower())
+    
+    if not type_class:
+        raise ValueError(f"Tipo complejo desconocido: {type_name}")
+
+    # Crear instancia del tipo con los parámetros necesarios
+    try:
+        type_instance = type_class(
+            subcommand=subcommand,
+            option_name=option_name,
+            spec=spec_option
+        )
+        return type_instance
+        
+    except Exception as e:
+        raise ValueError(f"Error al crear tipo complejo {type_name}: {str(e)}")

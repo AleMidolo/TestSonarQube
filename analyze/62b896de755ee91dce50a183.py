@@ -1,53 +1,66 @@
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     """
-    Parse a datetime string into a datetime.datetime object.
+    Convierte la cadena de fecha/hora en un objeto de la clase :class:`datetime.datetime`.
     
     Args:
-        timestr: Any datetime string using supported formats
-        default: Default datetime object. If this is a datetime object and not None,
-                elements specified in timestr replace elements in the default object
-        ignoretz: If True, time zones in parsed strings are ignored and a naive 
-                 datetime.datetime object is returned
-        tzinfos: Additional timezone names/aliases that may be present in the string.
-                This maps timezone names to actual timezones
-        **kwargs: Keyword args passed to _parse()
+        timestr: Cualquier fecha/hora en formato string que utilice los formatos compatibles.
+        default: El objeto datetime predeterminado. Si este es un objeto datetime y no es None, 
+                los elementos especificados en timestr reemplazan los elementos en el objeto predeterminado.
+        ignoretz: Si True, ignora zonas horarias y devuelve datetime sin info de zona horaria.
+        tzinfos: Diccionario o función para mapear nombres de zonas horarias a objetos tzinfo.
+        **kwargs: Argumentos adicionales pasados a _parse().
         
     Returns:
-        datetime.datetime object, or if fuzzy_with_tokens=True returns tuple of
-        (datetime.datetime, tuple of fuzzy tokens)
+        datetime.datetime o tupla (datetime, tokens) si fuzzy_with_tokens=True
         
     Raises:
-        ParserError: For invalid/unknown string formats or invalid tzinfo
-        TypeError: For non-string/character stream input
-        OverflowError: If parsed date exceeds system's largest C integer
+        ParserError: Para formatos inválidos o desconocidos
+        TypeError: Para entradas que no sean strings
+        OverflowError: Si la fecha excede el máximo entero C
     """
+    
     if not isinstance(timestr, str):
-        raise TypeError("Parser must be given a string or character stream, not %r"
-                      % type(timestr).__name__)
-
-    # Handle empty string case
-    if not timestr:
-        raise ParserError("String is empty")
+        raise TypeError("Parser must be called with string argument")
         
+    # Preprocesar la cadena de entrada
+    timestr = timestr.strip()
+    
+    # Usar el parser interno
+    res, tokens = self._parse(timestr, **kwargs)
+    
+    if res is None:
+        raise ParserError("Unknown string format")
+        
+    # Aplicar el default si existe
+    if default is not None:
+        for attr in ["year", "month", "day", "hour", "minute", 
+                    "second", "microsecond"]:
+            value = getattr(res, attr)
+            if value is None:
+                setattr(res, attr, getattr(default, attr))
+                
+    # Manejar zona horaria
+    if not ignoretz:
+        if res.tzname and tzinfos:
+            if callable(tzinfos):
+                tz = tzinfos(res.tzname, res.tzoffset)
+            else:
+                tz = tzinfos.get(res.tzname)
+            if tz is not None:
+                res = res.replace(tzinfo=tz)
+                
+    elif ignoretz:
+        res = res.replace(tzinfo=None)
+        
+    # Validar resultado
     try:
-        # Parse the string using internal _parse method
-        res, tokens = self._parse(timestr, **kwargs)
-            
-        if res is None:
-            raise ParserError("String does not contain a date.")
-            
-        # If default is provided, replace any unspecified items
-        if default is not None:
-            res = self._populate_defaut(res, default)
-            
-        # Create datetime object from parsed components
-        dt = self._build_datetime(res, ignoretz, tzinfos)
-        
-        # Return results based on fuzzy_with_tokens setting
-        if kwargs.get('fuzzy_with_tokens', False):
-            return dt, tokens
-        else:
-            return dt
-            
-    except (ValueError, OverflowError) as e:
+        res = datetime(res.year, res.month, res.day,
+                      res.hour, res.minute, res.second,
+                      res.microsecond, res.tzinfo)
+    except ValueError as e:
         raise ParserError(str(e))
+        
+    if kwargs.get('fuzzy_with_tokens', False):
+        return res, tokens
+    else:
+        return res

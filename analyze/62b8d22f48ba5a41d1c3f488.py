@@ -1,6 +1,6 @@
 def popitem(self):
     """
-    Rimuove e restituisce la coppia `(chiave, valore)` inserita per prima.
+    Eliminar y devolver el par `(clave, valor)` que fue insertado primero.
     """
     if not self:
         raise KeyError('Dictionary is empty')

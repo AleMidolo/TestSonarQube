@@ -1,21 +1,19 @@
 def match(filename):
     """
-    Verifica se il nome file è di un tipo supportato da questo modulo
+    Verificar si el nombre de archivo es un tipo que este módulo soporta
 
-    Argomenti:
-        filename: Nome file da confrontare
-    Ritorna:
-        False se non è una corrispondenza, True se è supportato
+    Argumentos:
+        filename: Nombre de archivo a verificar
+    Retorna:
+        'False' si no es compatible, 'True' si es soportado
     """
-    # Lista delle estensioni supportate
+    # Lista de extensiones soportadas
     supported_extensions = ['.txt', '.doc', '.docx', '.pdf', '.rtf']
     
-    # Converte il filename in minuscolo per un confronto case-insensitive
-    filename = filename.lower()
-    
-    # Controlla se il file termina con una delle estensioni supportate
-    for ext in supported_extensions:
-        if filename.endswith(ext):
-            return True
-            
-    return False
+    # Obtener la extensión del archivo en minúsculas
+    file_extension = filename.lower().split('.')[-1]
+    if not file_extension:
+        return False
+        
+    # Verificar si la extensión está en la lista de soportadas
+    return f'.{file_extension}' in supported_extensions

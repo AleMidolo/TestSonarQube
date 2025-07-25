@@ -1,14 +1,14 @@
 def validate_arg_deprecation(self, cli_args, answer_file_args):
     """
-    Valida e stampa gli argomenti deprecati.
+    Valida y muestra los argumentos obsoletos.
 
-    :param cli_args: il dizionario degli argomenti dalla CLI
-    :param answer_file_args: il dizionario degli argomenti dai file
+    :param cli_args: el diccionario de argumentos provenientes de la línea de comandos (CLI)
+    :param answer_file_args: el diccionario de argumentos provenientes de archivos
     """
     deprecated_args = {
-        'force': 'Use --yes instead',
-        'debug': 'Use --verbose instead',
-        'quiet': 'Use --silent instead'
+        'force': 'use --yes instead',
+        'debug': 'use --verbose instead',
+        'quiet': 'use --silent instead'
     }
 
     # Check CLI arguments

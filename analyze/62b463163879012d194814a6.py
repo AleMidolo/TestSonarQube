@@ -1,12 +1,12 @@
 def files_list_from_zipfile(zip_path):
     """
-    Restituisce i file presenti in `zip_path`.
+    Devuelve los archivos en `zip_path`.
     
     Args:
-        zip_path: Path del file zip
+        zip_path (str): Path to the zip file
         
     Returns:
-        list: Lista dei file contenuti nel file zip
+        list: List of files in the zip archive
     """
     import zipfile
     

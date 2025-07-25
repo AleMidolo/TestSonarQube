@@ -1,30 +1,33 @@
 def determineMetaclass(bases, explicit_mc=None):
     """
-    Determina la metaclasse a partire da una o più basi e da un'eventuale __metaclass__ esplicita.
+    Determina la metaclase a partir de una o más clases base y un __metaclass__ explícito opcional.
     """
-    # If there's an explicit metaclass, start with that
-    metaclass = explicit_mc
+    metaclasses = []
     
-    # If no explicit metaclass, look through the bases
-    if metaclass is None:
-        if bases:
-            # Get metaclasses from all base classes
-            metaclasses = [type(base) for base in bases]
-            # Find most derived metaclass
-            metaclass = metaclasses[0]
-            for mc in metaclasses[1:]:
-                if issubclass(mc, metaclass):
-                    metaclass = mc
-                elif not issubclass(metaclass, mc):
-                    raise TypeError("Incompatible metaclasses")
+    # Agregar metaclase explícita si existe
+    if explicit_mc is not None:
+        metaclasses.append(explicit_mc)
+    
+    # Obtener metaclases de las clases base
+    for base in bases:
+        if hasattr(base, '__class__'):
+            metaclasses.append(type(base))
+    
+    if not metaclasses:
+        return type
+        
+    # Si solo hay una metaclase, retornarla
+    if len(metaclasses) == 1:
+        return metaclasses[0]
+        
+    # Si hay múltiples metaclases, encontrar la más específica
+    candidate = metaclasses[0]
+    for mc in metaclasses[1:]:
+        if issubclass(candidate, mc):
+            continue
+        if issubclass(mc, candidate):
+            candidate = mc
         else:
-            # No bases and no explicit metaclass, use type
-            metaclass = type
+            raise TypeError("Conflicting metaclasses:", candidate, mc)
             
-    # If explicit metaclass was given, ensure it's compatible with base metaclasses
-    else:
-        for base in bases:
-            if not issubclass(metaclass, type(base)):
-                raise TypeError("Explicit metaclass not compatible with base metaclasses")
-                
-    return metaclass
+    return candidate

@@ -1,14 +1,14 @@
 def string_to_int(string: str, alphabet: List[str]) -> int:
     """
-    Convertire una stringa in un numero, utilizzando l'alfabeto fornito.  
+    Convertir una cadena a un número, utilizando el alfabeto dado.  
     
-    Si assume che l'input abbia la cifra più significativa per prima.
+    Se asume que la entrada tiene el dígito más significativo primero.
     """
     result = 0
     base = len(alphabet)
     
     for char in string:
-        # Moltiplica il risultato corrente per la base e aggiungi il valore della cifra corrente
+        # Multiplicar el resultado actual por la base y sumar el valor del nuevo dígito
         digit_value = alphabet.index(char)
         result = result * base + digit_value
         

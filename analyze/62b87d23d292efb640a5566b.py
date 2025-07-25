@@ -1,51 +1,29 @@
-def run_command(comandi, argomenti, cwd=None, verbose=False, nascondi_stderr=False, env=None):
+def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Esegui il comando specificato.
+    Llama al/los comando(s) dado(s).
     """
     import subprocess
     import sys
-
-    # Costruisci il comando completo
-    if isinstance(comandi, str):
-        cmd = [comandi]
-    else:
-        cmd = list(comandi)
+    
+    if isinstance(commands, str):
+        commands = [commands]
         
-    if argomenti:
-        if isinstance(argomenti, str):
-            cmd.append(argomenti)
-        else:
-            cmd.extend(argomenti)
-
-    # Imposta gli stream di output
-    stdout = subprocess.PIPE
-    stderr = subprocess.DEVNULL if nascondi_stderr else subprocess.PIPE
-
-    try:
-        # Esegui il comando
-        process = subprocess.Popen(
-            cmd,
-            stdout=stdout,
-            stderr=stderr,
-            cwd=cwd,
-            env=env,
-            universal_newlines=True
-        )
-
-        # Leggi l'output
-        out, err = process.communicate()
-        
-        # Stampa l'output se verbose è True
+    for cmd in commands:
+        cmd_list = [cmd]
+        if args:
+            if isinstance(args, str):
+                cmd_list.append(args)
+            else:
+                cmd_list.extend(args)
+                
         if verbose:
-            if out:
-                print(out)
-            if err and not nascondi_stderr:
-                print(err, file=sys.stderr)
-
-        # Restituisci il codice di uscita
-        return process.returncode
-
-    except Exception as e:
-        if verbose:
-            print(f"Errore nell'esecuzione del comando: {e}", file=sys.stderr)
-        return -1
+            print(' '.join(cmd_list))
+            
+        stderr = subprocess.DEVNULL if hide_stderr else None
+            
+        try:
+            subprocess.check_call(cmd_list, cwd=cwd, stderr=stderr, env=env)
+        except subprocess.CalledProcessError as e:
+            sys.exit(e.returncode)
+        except OSError as e:
+            sys.exit(e.errno)

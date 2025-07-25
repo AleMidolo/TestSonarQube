@@ -1,4 +1,5 @@
 def addignored(ignored):
+    # Import subprocess to run git commands
     import subprocess
     
     # Run git ls-files command to get all files

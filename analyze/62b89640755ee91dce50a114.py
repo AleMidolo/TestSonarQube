@@ -1,12 +1,14 @@
 def tzname_in_python2(namefunc):
     """
-    Modifica l'output unicode in stringhe di byte in Python 2
+    Cambiar la salida de unicode a cadenas de bytes en Python 2
 
-    L'API tzname() è cambiata in Python 3. In precedenza restituiva stringhe di byte, ma è stata modificata per restituire stringhe unicode.
+    La API tzname() cambió en Python 3. Solía devolver bytes, pero fue modificada
+    para devolver cadenas unicode.
     """
     def adjust_encoding(*args, **kwargs):
         name = namefunc(*args, **kwargs)
-        if name is not None and isinstance(name, unicode):
-            name = name.encode()
+        if name is not None:
+            name = name.encode('UTF-8')
         return name
+        
     return adjust_encoding

@@ -1,55 +1,51 @@
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    Recupera e analizza un documento webfinger remoto di Diaspora.
+    Recupera y analiza un documento "webfinger" remoto de Diaspora.
 
-    :arg handle: Handle remoto da recuperare  
+    :arg handle: Identificador remoto a recuperar 
     :returns: dict
     """
     import requests
     import json
     from urllib.parse import urlparse
 
-    # Estrai il dominio dall'handle
+    # Validar formato del handle
     if '@' not in handle:
-        raise ValueError("Handle non valido - deve contenere @")
+        raise ValueError("Handle debe tener formato usuario@dominio")
         
+    # Separar usuario y dominio
     username, domain = handle.split('@')
     
-    # Costruisci l'URL webfinger
+    # Construir URL webfinger
     webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
     
     try:
-        # Recupera il documento webfinger
+        # Hacer petición HTTP
         response = requests.get(webfinger_url, timeout=10)
         response.raise_for_status()
         
-        # Analizza il JSON
-        webfinger_data = response.json()
+        # Parsear respuesta JSON
+        data = response.json()
         
-        # Verifica che sia un documento webfinger valido
-        if 'subject' not in webfinger_data:
-            raise ValueError("Documento webfinger non valido")
+        # Validar formato de respuesta
+        if 'subject' not in data or not data.get('links'):
+            raise ValueError("Formato de respuesta webfinger inválido")
             
-        # Estrai i link e le proprietà rilevanti
+        # Construir diccionario de respuesta
         result = {
-            'subject': webfinger_data['subject'],
-            'aliases': webfinger_data.get('aliases', []),
-            'links': {},
-            'properties': {}
+            'subject': data['subject'],
+            'aliases': data.get('aliases', []),
+            'links': {}
         }
         
-        # Elabora i link
-        for link in webfinger_data.get('links', []):
+        # Procesar links
+        for link in data['links']:
             if 'rel' in link and 'href' in link:
                 result['links'][link['rel']] = link['href']
                 
-        # Elabora le proprietà
-        for key, value in webfinger_data.get('properties', {}).items():
-            result['properties'][key] = value
-            
         return result
         
     except requests.exceptions.RequestException as e:
-        raise ConnectionError(f"Impossibile recuperare il webfinger: {str(e)}")
+        raise ConnectionError(f"Error al recuperar webfinger: {str(e)}")
     except json.JSONDecodeError:
-        raise ValueError("Documento webfinger non è JSON valido")
+        raise ValueError("Respuesta webfinger no es JSON válido")

@@ -1,25 +1,25 @@
 def generate_default_observer_schema_dict(manifest_dict, first_level=False):
-    # Create new dictionary to store schema
-    schema_dict = {}
+    observer_schema = {}
     
-    # Iterate through key-value pairs in manifest
+    # Process each key-value pair in the manifest dictionary
     for key, value in manifest_dict.items():
         
-        # Handle nested dictionaries recursively
+        # Handle first level identifiers
+        if first_level and key in ['apiVersion', 'kind', 'metadata']:
+            observer_schema[key] = value
+            continue
+            
+        # Recursively process nested dictionaries
         if isinstance(value, dict):
-            schema_dict[key] = generate_default_observer_schema_dict(value)
+            observer_schema[key] = generate_default_observer_schema_dict(value)
             
-        # Handle nested lists recursively    
+        # Recursively process lists    
         elif isinstance(value, list):
-            from .utils import generate_default_observer_schema_list
-            schema_dict[key] = generate_default_observer_schema_list(value)
+            from generate_default_observer_schema_list import generate_default_observer_schema_list
+            observer_schema[key] = generate_default_observer_schema_list(value)
             
-        # For first level manifest, copy identifying fields
-        elif first_level and key in ['apiVersion', 'kind', 'metadata']:
-            schema_dict[key] = value
-            
-        # Set all other values to None
+        # Set all other values to None    
         else:
-            schema_dict[key] = None
+            observer_schema[key] = None
             
-    return schema_dict
+    return observer_schema

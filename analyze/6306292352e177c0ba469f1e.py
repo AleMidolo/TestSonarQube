@@ -1,22 +1,23 @@
 def process_text_links(text):
     """
-    Elabora i collegamenti nel testo, aggiungendo alcuni attributi e trasformando i collegamenti testuali in link cliccabili.
+    Procesa los enlaces en el texto, añadiendo algunos atributos y convirtiendo enlaces de texto en hipervínculos.
     """
     import re
+
+    # Patrón para detectar URLs
+    url_pattern = r'(https?://[^\s<>]+)'
     
-    # Pattern per trovare URL nel testo
-    url_pattern = r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
-    
-    # Funzione per sostituire gli URL con link HTML
-    def replace_with_link(match):
-        url = match.group(0)
-        # Se l'URL non inizia con http/https, aggiungi http://
-        if not url.startswith(('http://', 'https://')):
-            url = 'http://' + url
-        # Crea il link HTML con attributi target="_blank" e rel="noopener noreferrer"
-        return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{match.group(0)}</a>'
-    
-    # Sostituisci tutti gli URL trovati con i link HTML
-    processed_text = re.sub(url_pattern, replace_with_link, text)
-    
-    return processed_text
+    # Patrón para detectar enlaces de texto [texto](url)
+    text_link_pattern = r'\[([^\]]+)\]\(([^)]+)\)'
+
+    # Primero procesar los enlaces de texto
+    text = re.sub(text_link_pattern, 
+                  lambda m: f'<a href="{m.group(2)}" target="_blank" rel="noopener noreferrer">{m.group(1)}</a>', 
+                  text)
+
+    # Luego procesar las URLs directas
+    text = re.sub(url_pattern,
+                  lambda m: f'<a href="{m.group(1)}" target="_blank" rel="noopener noreferrer">{m.group(1)}</a>',
+                  text)
+
+    return text

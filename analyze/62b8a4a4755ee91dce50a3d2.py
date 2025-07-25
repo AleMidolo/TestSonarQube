@@ -1,29 +1,38 @@
 def _fromutc(self, dt):
-    """Convert aware datetime in UTC to this timezone."""
+    """
+    Dado un objeto 'datetime' consciente de la zona horaria en una zona horaria específica, calcula un objeto 'datetime' consciente de la zona horaria en una nueva zona horaria.
+
+    Dado que esta es la única ocasión en la que *sabemos* que tenemos un objeto 'datetime' no ambiguo, aprovechamos esta oportunidad para determinar si el 'datetime' es ambiguo y está en un estado de "pliegue" (por ejemplo, si es la primera ocurrencia, cronológicamente, del 'datetime' ambiguo).
+
+    :param dt:  
+        Un objeto :class:`datetime.datetime` consciente de la zona horaria.
+    """
     if dt.tzinfo is not self:
-        dt = dt.replace(tzinfo=self)
-    
-    utc_offset = self.utcoffset(dt)
+        dt = dt.astimezone(self)
+
+    utc_offset = dt.utcoffset()
     if utc_offset is None:
         return dt
+
+    # Convertir a timestamp UTC
+    utc_ts = (dt - utc_offset).timestamp()
     
-    # Convert to timestamp, add offset and create new datetime
-    ts = (dt.replace(tzinfo=None) - datetime.datetime(1970,1,1)).total_seconds()
-    ts += utc_offset.total_seconds()
+    # Obtener el offset local para este timestamp
+    local_offset = self.utcoffset(dt)
     
-    # Create local datetime from timestamp
-    local_dt = datetime.datetime.fromtimestamp(ts, self)
-    
-    # Check if datetime is ambiguous (in DST transition)
-    dst_before = self.dst(local_dt - datetime.timedelta(hours=1))
-    dst_after = self.dst(local_dt + datetime.timedelta(hours=1))
-    
-    if dst_before != dst_after:
-        # We're in a DST transition
-        fold = 0
-        if dst_before > dst_after:
-            # Transitioning out of DST
-            fold = 1
-        local_dt = local_dt.replace(fold=fold)
-        
-    return local_dt
+    # Calcular el datetime local
+    local_dt = dt + (local_offset - utc_offset)
+
+    # Verificar si el datetime es ambiguo (está en un "pliegue")
+    fold = 0
+    transition_times = self._get_transition_times()
+    if transition_times:
+        # Si el datetime está en un período de transición
+        for t_start, t_end in transition_times:
+            if t_start <= utc_ts <= t_end:
+                # Verificar si es la primera ocurrencia
+                fold = 1 if local_dt.timestamp() > utc_ts else 0
+                break
+
+    # Crear nuevo datetime con el fold calculado
+    return local_dt.replace(fold=fold)
