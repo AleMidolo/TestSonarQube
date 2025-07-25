@@ -7,8 +7,15 @@ def get_parser_option_specs(self, command_name):
     """
     # Assuming self.parser is an instance of argparse.ArgumentParser or similar
     if hasattr(self, 'parser') and hasattr(self.parser, '_actions'):
-        # Filter actions that are related to the specified command
-        options = [action for action in self.parser._actions if command_name in action.option_strings]
+        options = []
+        for action in self.parser._actions:
+            if action.dest != 'help':  # Exclude the help option
+                options.append({
+                    'name': action.dest,
+                    'help': action.help,
+                    'default': action.default,
+                    'required': action.required
+                })
         return options
     else:
         return []

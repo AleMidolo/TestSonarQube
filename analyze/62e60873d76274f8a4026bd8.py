@@ -13,7 +13,7 @@ def protocol_handlers(cls, protocol_version=None):
     :raise TypeError: यदि प्रोटोकॉल संस्करण ट्यूपल में पास नहीं किया गया है
     """
     # Example implementation of protocol handlers
-    available_handlers = {
+    supported_protocols = {
         (3, 5): "HandlerForV3_5",
         (4, 0): "HandlerForV4_0",
         (4, 1): "HandlerForV4_1",
@@ -22,9 +22,9 @@ def protocol_handlers(cls, protocol_version=None):
     if protocol_version is not None:
         if not isinstance(protocol_version, tuple):
             raise TypeError("Protocol version must be a tuple.")
-        if protocol_version in available_handlers:
-            return {protocol_version: available_handlers[protocol_version]}
+        if protocol_version in supported_protocols:
+            return {protocol_version: supported_protocols[protocol_version]}
         else:
             return {}
     else:
-        return available_handlers
+        return supported_protocols

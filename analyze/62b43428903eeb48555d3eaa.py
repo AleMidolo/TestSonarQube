@@ -8,12 +8,10 @@ def formatmany(
 
     for params in many_params:
         if isinstance(params, dict):
-            # Handle named parameters
+            # Named parameters
             formatted_params.append({k: v for k, v in params.items()})
-        elif isinstance(params, (list, tuple)):
-            # Handle ordinal parameters
-            formatted_params.append([v for v in params])
         else:
-            raise TypeError("Unsupported parameter type. Expected dict, list, or tuple.")
+            # Ordinal parameters
+            formatted_params.append([v for v in params])
 
     return formatted_sql, formatted_params

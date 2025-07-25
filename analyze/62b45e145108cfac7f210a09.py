@@ -4,12 +4,9 @@ def check_digests_present_and_used(self, manifest_files, digests_used):
     
     :param manifest_files: मैनिफेस्ट फाइलों की सूची
     :param digests_used: उपयोग किए गए डाइजेस्ट्स की सूची
-    :return: True यदि सभी डाइजेस्ट्स मौजूद हैं और उपयोग हो रहे हैं, अन्यथा False
+    :return: सभी डाइजेस्ट्स मौजूद और उपयोग हो रहे हैं तो True, अन्यथा False
     """
-    for manifest in manifest_files:
-        with open(manifest, 'r') as file:
-            content = file.read()
-            for digest in digests_used:
-                if digest not in content:
-                    return False
+    for digest in digests_used:
+        if digest not in manifest_files:
+            return False
     return True

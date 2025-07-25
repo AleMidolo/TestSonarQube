@@ -13,7 +13,7 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
     2. उन तर्कों की एक सूची जो किसी भी सबपार्सर द्वारा दावा नहीं किए गए हैं।
     """
     parsed_args = {}
-    remaining_args = list(unparsed_arguments)
+    remaining_args = unparsed_arguments.copy()
     
     for subparser_name, parser in subparsers.items():
         try:

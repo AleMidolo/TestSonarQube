@@ -1,5 +1,3 @@
-import re
-
 def make_find_paths(find_paths):
     """
     `--find` के लिए पास किए गए पथ खंडों (path fragments) या पैटर्न के अनुक्रम को लें और सभी पथ खंडों को ग्लोब पैटर्न में बदलें। मौजूदा पैटर्न को बिना बदले पास करें।
@@ -12,12 +10,10 @@ def make_find_paths(find_paths):
 
     ['sh:**/*foo.txt*/**', 'pp:root/somedir']
     """
-    result = []
+    modified_paths = []
     for path in find_paths:
-        if path.startswith('pp:'):
-            result.append(path)
+        if not path.startswith(('sh:', 'pp:')):
+            modified_paths.append(f'sh:**/*{path}*/**')
         else:
-            # Convert the path fragment to a glob pattern
-            glob_pattern = f'sh:**/*{path}*/**'
-            result.append(glob_pattern)
-    return result
+            modified_paths.append(path)
+    return modified_paths

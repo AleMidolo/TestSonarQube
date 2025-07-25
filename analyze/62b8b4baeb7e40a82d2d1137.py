@@ -1,39 +1,68 @@
-from zope.interface import Invalid, providedBy
-from zope.interface.verify import verifyObject as zope_verify_object
+from zope.interface import providedBy, verify
+from zope.interface.exceptions import Invalid
+from zope.interface.interface import Method, Attribute
 
 def verifyObject(iface, candidate, tentative=False):
     """
-    *iface* को सही ढंग से प्रदान करने के लिए *candidate* की पुष्टि करें।
+    Verify that the candidate correctly provides the interface.
 
-    इसमें निम्नलिखित शामिल हैं:
+    This includes:
 
-    - यह सुनिश्चित करना कि candidate यह दावा करता है कि वह इंटरफ़ेस प्रदान करता है, 
-      ``iface.providedBy`` का उपयोग करके (जब तक *tentative* `True` न हो, 
-      इस स्थिति में इस चरण को छोड़ दिया जाता है)। इसका मतलब है कि candidate की क्लास 
-      यह घोषित करती है कि वह इंटरफ़ेस को `implements <zope.interface.implementer>` करती है, 
-      या candidate स्वयं यह घोषित करता है कि वह इंटरफ़ेस को 
-      `provides <zope.interface.provider>` करता है।
+    - Ensuring that the candidate claims to provide the interface,
+      using ``iface.providedBy`` (unless *tentative* is `True`,
+      in which case this step is skipped). This means that the candidate's class
+      declares that it implements the interface with `implements <zope.interface.implementer>`,
+      or the candidate itself declares that it provides the interface
+      with `provides <zope.interface.provider>`.
 
-    - यह सुनिश्चित करना कि candidate सभी आवश्यक methods को परिभाषित करता है।
+    - Ensuring that the candidate defines all required methods.
 
-    - यह सुनिश्चित करना कि methods का signature सही है (जहां तक संभव हो)।
+    - Ensuring that the method signatures are correct (as far as possible).
 
-    - यह सुनिश्चित करना कि candidate सभी आवश्यक attributes को परिभाषित करता है।
+    - Ensuring that the candidate defines all required attributes.
 
-    :return bool: यदि सभी जांचें सफल होती हैं, तो एक सत्य मान लौटाता है।
-    :raises zope.interface.Invalid: यदि उपरोक्त में से कोई भी शर्त पूरी नहीं होती है।
+    :return bool: Returns a truth value if all checks succeed.
+    :raises zope.interface.Invalid: If any of the above conditions are not met.
 
     .. versionchanged:: 5.0
-        यदि कई methods या attributes अमान्य हैं, तो सभी त्रुटियों को एकत्रित और रिपोर्ट किया जाता है। 
-        पहले, केवल पहली त्रुटि रिपोर्ट की जाती थी। एक विशेष मामले में, यदि केवल एक त्रुटि मौजूद है, 
-        तो इसे पहले की तरह अकेले उठाया जाता है।
+        If multiple methods or attributes are invalid, all errors are collected and reported.
+        Previously, only the first error was reported. In a special case, if only one error exists,
+        it is raised alone as before.
     """
-    if not tentative and not providedBy(candidate, iface):
-        raise Invalid(f"The candidate does not provide the interface {iface}.")
+    errors = []
 
-    try:
-        zope_verify_object(iface, candidate)
-    except Invalid as e:
-        raise Invalid(f"Verification failed: {e}")
+    # Step 1: Verify that the candidate claims to provide the interface
+    if not tentative:
+        if not iface.providedBy(candidate):
+            errors.append(f"{candidate} does not claim to provide {iface}.")
 
+    # Step 2: Verify that all required methods are defined
+    for name, method in iface.namesAndDescriptions():
+        if isinstance(method, Method):
+            if not hasattr(candidate, name):
+                errors.append(f"Method '{name}' is required but not implemented by {candidate}.")
+            else:
+                # Step 3: Verify method signatures (as far as possible)
+                candidate_method = getattr(candidate, name)
+                if not callable(candidate_method):
+                    errors.append(f"'{name}' is not a callable method in {candidate}.")
+                else:
+                    # Basic signature check (number of arguments)
+                    expected_args = method.getSignatureInfo()['args']
+                    actual_args = candidate_method.__code__.co_argcount
+                    if actual_args < len(expected_args):
+                        errors.append(f"Method '{name}' in {candidate} has fewer arguments than required.")
+
+    # Step 4: Verify that all required attributes are defined
+    for name, attribute in iface.namesAndDescriptions():
+        if isinstance(attribute, Attribute):
+            if not hasattr(candidate, name):
+                errors.append(f"Attribute '{name}' is required but not defined by {candidate}.")
+
+    # Raise collected errors or return True if no errors
+    if errors:
+        if len(errors) == 1:
+            raise Invalid(errors[0])
+        else:
+            raise Invalid("\n".join(errors))
     return True

@@ -13,16 +13,13 @@ def next_version(version):
     # Increment the last part
     parts[-1] += 1
     
-    # Handle carry-over for parts other than the last one
+    # Handle carry-over if any part exceeds 9
     for i in range(len(parts) - 1, 0, -1):
         if parts[i] > 9:
             parts[i] = 0
             parts[i - 1] += 1
     
-    # Convert parts back to strings
-    parts = [str(part) for part in parts]
+    # Convert back to string
+    next_version_str = '.'.join(map(str, parts))
     
-    # Join the parts with '.' to form the new version string
-    new_version = '.'.join(parts)
-    
-    return new_version
+    return next_version_str

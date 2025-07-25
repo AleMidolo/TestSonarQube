@@ -5,27 +5,36 @@ def initialize(self):
     import os
     import json
 
-    # OCFL रूट डायरेक्टरी बनाएँ
-    if not os.path.exists('ocfl_root'):
-        os.makedirs('ocfl_root')
-
-    # OCFL संस्करण फ़ाइल बनाएँ
-    ocfl_version = {
-        "type": "https://ocfl.io/1.0/spec/#inventory",
-        "digestAlgorithm": "sha512",
-        "head": None,
-        "versions": {}
+    # OCFL storage root directory structure
+    ocfl_structure = {
+        "0=ocfl_1.1": "",
+        "ocfl_layout.json": json.dumps({
+            "type": "https://ocfl.io/1.1/spec/#layout-hierarchical",
+            "description": "Hierarchical OCFL storage layout"
+        }),
+        "inventory.json": json.dumps({
+            "id": "urn:uuid:new-ocfl-root",
+            "type": "Object",
+            "head": "v1",
+            "versions": {
+                "v1": {
+                    "created": "2023-10-01T00:00:00Z",
+                    "state": {}
+                }
+            }
+        }),
+        "v1": {
+            "content": {}
+        }
     }
 
-    with open(os.path.join('ocfl_root', 'ocfl_1.0.json'), 'w') as f:
-        json.dump(ocfl_version, f, indent=4)
-
-    # OCFL नामस्थान फ़ाइल बनाएँ
-    with open(os.path.join('ocfl_root', '0=ocfl_1.0'), 'w') as f:
-        f.write("ocfl_1.0\n")
-
-    # OCFL रूट में एक नामस्थान फ़ाइल बनाएँ
-    with open(os.path.join('ocfl_root', '0=ocfl_object_1.0'), 'w') as f:
-        f.write("ocfl_object_1.0\n")
-
-    print("OCFL स्टोरेज रूट सफलतापूर्वक प्रारंभ किया गया।")
+    # Create the OCFL storage root directory and files
+    for path, content in ocfl_structure.items():
+        if isinstance(content, dict):
+            os.makedirs(path, exist_ok=True)
+            for sub_path, sub_content in content.items():
+                with open(os.path.join(path, sub_path), 'w') as f:
+                    f.write(sub_content)
+        else:
+            with open(path, 'w') as f:
+                f.write(content)

@@ -4,21 +4,31 @@ def validate(self, path):
 
     यदि मान्य है (चेतावनियाँ स्वीकार्य हैं), तो True लौटाता है, अन्यथा False।
     """
-    # Placeholder implementation for OCFL validation
-    # This is a basic example and should be replaced with actual OCFL validation logic
-    
     import os
-    
+    import json
+
+    # Check if the path exists
     if not os.path.exists(path):
         return False
-    
-    # Check for required OCFL structure
+
+    # Check for the presence of required OCFL files
     required_files = ['inventory.json', 'inventory.json.sha512']
     for file in required_files:
-        if not os.path.exists(os.path.join(path, file)):
+        if not os.path.isfile(os.path.join(path, file)):
             return False
-    
-    # Additional validation logic can be added here
-    # For example, checking the contents of inventory.json
-    
+
+    # Validate the inventory.json file
+    try:
+        with open(os.path.join(path, 'inventory.json'), 'r') as f:
+            inventory = json.load(f)
+        
+        # Basic validation of the inventory structure
+        if 'id' not in inventory or 'type' not in inventory or 'digestAlgorithm' not in inventory:
+            return False
+        
+        # Additional validation logic can be added here as needed
+
+    except (json.JSONDecodeError, FileNotFoundError):
+        return False
+
     return True

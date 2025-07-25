@@ -6,43 +6,30 @@ def _fromutc(self, dt):
     - `dt`:  
       एक टाइमज़ोन-अवेयर :class:`datetime.datetime` ऑब्जेक्ट।
     """
-    if dt.tzinfo is not self:
-        raise ValueError("dt.tzinfo is not self")
+    if dt.tzinfo is None:
+        raise ValueError("The input datetime must be timezone-aware.")
     
-    # Convert to local time
+    # Convert the datetime to the local timezone
     local_dt = dt.astimezone(self)
     
-    # Check if the local time is ambiguous
+    # Check if the datetime is ambiguous
     if self._is_ambiguous(local_dt):
         # If it's ambiguous, return the first occurrence
-        return self._fold_first(local_dt)
-    else:
-        return local_dt
+        return self._resolve_ambiguous_time(local_dt, first=True)
+    
+    return local_dt
 
 def _is_ambiguous(self, dt):
     """
     Check if the given datetime is ambiguous in the current timezone.
-
-    Parameters:
-    - `dt`: A timezone-aware datetime object.
-
-    Returns:
-    - `bool`: True if the datetime is ambiguous, False otherwise.
     """
     # This is a placeholder implementation. The actual logic will depend on the timezone rules.
-    # For example, you might check if the datetime falls within a DST transition period.
+    # For example, in a timezone that observes DST, a datetime could be ambiguous during the fall transition.
     return False
 
-def _fold_first(self, dt):
+def _resolve_ambiguous_time(self, dt, first=True):
     """
-    Return the first occurrence of an ambiguous datetime.
-
-    Parameters:
-    - `dt`: A timezone-aware datetime object that is ambiguous.
-
-    Returns:
-    - `datetime`: The first occurrence of the ambiguous datetime.
+    Resolve an ambiguous datetime by choosing either the first or second occurrence.
     """
     # This is a placeholder implementation. The actual logic will depend on the timezone rules.
-    # For example, you might adjust the datetime to the first occurrence by setting fold=0.
-    return dt.replace(fold=0)
+    return dt

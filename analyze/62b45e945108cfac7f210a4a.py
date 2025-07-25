@@ -22,6 +22,6 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
     
     if show_warnings:
         # Simulate showing warnings
-        print("Warning: Some objects may not be valid.")
+        pass  # Add actual warning logic here
     
     return num_objects, good_objects

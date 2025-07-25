@@ -26,9 +26,12 @@ def generate_default_observer_schema_dict(manifest_dict, first_level=False):
                 else:
                     observer_schema[key].append(None)
         else:
-            if first_level and key in ['apiVersion', 'kind', 'metadata']:
-                observer_schema[key] = value
-            else:
-                observer_schema[key] = None
+            observer_schema[key] = None
+    
+    if first_level:
+        identifying_fields = ['apiVersion', 'kind', 'metadata']
+        for field in identifying_fields:
+            if field in manifest_dict:
+                observer_schema[field] = manifest_dict[field]
     
     return observer_schema

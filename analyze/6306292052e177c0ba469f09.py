@@ -1,6 +1,6 @@
 from typing import Union
 
-def identify_request(request: RequestType) -> bool:
+def identify_request(request: RequestType) -> Union[bool, str]:
     """
     यह फ़ंक्शन यह पहचानने की कोशिश करता है कि यह एक Diaspora अनुरोध है या नहीं।
 
@@ -8,17 +8,18 @@ def identify_request(request: RequestType) -> bool:
     फिर निजी संदेश (private message) की जांच करें। 
     अंत में यह जांचें कि क्या यह एक पुराना (legacy) payload है।
     """
+    
     # Check for public message
     if hasattr(request, 'public_message') and request.public_message:
-        return True
+        return "Public Message"
     
     # Check for private message
     if hasattr(request, 'private_message') and request.private_message:
-        return True
+        return "Private Message"
     
     # Check for legacy payload
     if hasattr(request, 'legacy_payload') and request.legacy_payload:
-        return True
+        return "Legacy Payload"
     
-    # If none of the above, it's not a Diaspora request
+    # If none of the above, return False
     return False

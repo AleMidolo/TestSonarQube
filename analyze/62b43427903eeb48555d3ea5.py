@@ -14,18 +14,16 @@ def format(
         formatted_sql = sql
         for key, value in params.items():
             if isinstance(key, str):
-                formatted_sql = formatted_sql.replace(f"%({key})s", f":{key}")
+                formatted_sql = formatted_sql.replace(f":{key}", "?")
             else:
-                formatted_sql = formatted_sql.replace(f"%s", f":{key}", 1)
+                formatted_sql = formatted_sql.replace(f":{key}", "?")
         return formatted_sql, out_params
     elif isinstance(params, (list, tuple)):
         # Convert positional parameters to out-style
-        out_params = {}
+        out_params = list(params)
         formatted_sql = sql
-        for i, value in enumerate(params):
-            param_name = f":param{i}"
-            out_params[param_name] = value
-            formatted_sql = formatted_sql.replace("%s", param_name, 1)
+        for i in range(len(params)):
+            formatted_sql = formatted_sql.replace(f":{i}", "?")
         return formatted_sql, out_params
     else:
         raise TypeError("params must be a dict, list, or tuple")

@@ -19,22 +19,18 @@ def _eval_file(prefix, file_path):
     import os
 
     # फ़ाइल प्रकार की पहचान करें
-    if "asset" in prefix.lower():
+    if prefix.startswith("asset"):
         file_type = "asset"
-    elif "rendition" in prefix.lower():
+    elif prefix.startswith("rendition"):
         file_type = "rendition"
     else:
         file_type = "unknown"
 
-    # फ़ाइल का नाम और फ़ोल्डर निकालें
-    file_name = os.path.basename(file_path)
-    file_folder = os.path.dirname(file_path)
+    # फ़ाइल का पूरा पथ
+    full_path = os.path.abspath(file_path)
 
     # रिटर्न डिक्शनरी
     return {
-        "prefix": prefix,
-        "file_name": file_name,
-        "file_folder": file_folder,
         "file_type": file_type,
-        "file_path": file_path
+        "file_path": full_path
     }

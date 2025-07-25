@@ -32,10 +32,9 @@ def generate_default_observer_schema(app):
         "required": ["status"]
     }
 
-    # Check if the app has a manifest and if it contains any resources
-    if hasattr(app.spec, 'manifest') and app.spec.manifest:
-        for resource in app.spec.manifest:
-            if not hasattr(resource, 'observer_schema'):
-                resource.observer_schema = default_schema
+    # Iterate over all resources in the manifest
+    for resource in app.spec.manifest:
+        if not hasattr(resource, 'observer_schema'):
+            resource.observer_schema = default_schema
 
     return app

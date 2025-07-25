@@ -3,8 +3,8 @@ def was_processed(processed, path_name, verbose):
     Check if the given path_name has already been processed.
 
     Args:
-        processed (set): A set containing the paths that have already been processed.
-        path_name (str): The path to check if it has been processed.
+        processed (set): A set of already processed path names.
+        path_name (str): The path name to check.
         verbose (bool): If True, print additional information.
 
     Returns:
