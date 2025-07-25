@@ -10,16 +10,13 @@ def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
         if '@' not in handle:
             return None
             
-        user, domain = handle.split('@', 1)
+        user, domain = handle.split('@')
         
         # Construct webfinger URL
-        webfinger_url = f"https://{domain}/.well-known/webfinger"
-        params = {
-            'resource': f'acct:{quote(user)}@{domain}'
-        }
+        webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{quote(user)}@{domain}"
         
         # Make request
-        response = requests.get(webfinger_url, params=params, timeout=10)
+        response = requests.get(webfinger_url, timeout=10)
         
         if response.status_code == 200:
             return response.text

@@ -26,21 +26,26 @@ def validate_hierarchy(self, validate_objects=True, check_digests=True, show_war
                         if show_warnings:
                             print(f"Warning: File {filepath} does not exist or is not accessible")
                     
-                    # Check file digests if requested
+                    # Validate checksum if requested
                     if check_digests and is_valid:
                         stored_digest = self._get_stored_digest(filepath)
-                        computed_digest = self._compute_file_digest(filepath)
+                        calculated_digest = self._calculate_digest(filepath)
                         
-                        if stored_digest != computed_digest:
+                        if stored_digest != calculated_digest:
                             is_valid = False
                             if show_warnings:
                                 print(f"Warning: Digest mismatch for {filepath}")
                     
                     if is_valid:
                         good_objects += 1
-
+                        
+                else:
+                    # If not validating objects, just count them as good
+                    good_objects += 1
+                    
             except Exception as e:
                 if show_warnings:
                     print(f"Warning: Error validating {filepath}: {str(e)}")
+                continue
 
     return num_objects, good_objects

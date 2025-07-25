@@ -9,14 +9,9 @@ def register_vcs_handler(vcs, method):  # decorator
         A decorator function that registers the handler
     """
     def decorate(f):
-        # Store the handler function in the registry
-        if not hasattr(decorate, '_registry'):
-            decorate._registry = {}
-            
-        if vcs not in decorate._registry:
-            decorate._registry[vcs] = {}
-            
-        decorate._registry[vcs][method] = f
+        # Store the handler in the function's attributes
+        if not hasattr(f, '_vcs_handlers'):
+            f._vcs_handlers = {}
+        f._vcs_handlers[(vcs, method)] = True
         return f
-        
     return decorate

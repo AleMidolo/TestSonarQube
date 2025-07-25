@@ -39,35 +39,38 @@ def xargs(
         
         if color and sys.platform != 'win32':
             master, slave = pty.openpty()
-            try:
-                proc = subprocess.Popen(
-                    full_cmd,
-                    stdout=slave,
-                    stderr=slave,
-                    **kwargs
-                )
-                os.close(slave)
-                output = b''
-                while True:
-                    try:
-                        chunk = os.read(master, 1024)
-                        if not chunk:
-                            break
-                        output += chunk
-                    except OSError:
-                        break
-                return proc.wait(), output
-            finally:
-                os.close(master)
-        else:
             proc = subprocess.Popen(
                 full_cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                stdout=slave,
+                stderr=slave,
                 **kwargs
             )
-            stdout, stderr = proc.communicate()
-            return proc.returncode, stdout + stderr
+            os.close(slave)
+            
+            output = b''
+            while True:
+                try:
+                    data = os.read(master, 1024)
+                    if not data:
+                        break
+                    output += data
+                except OSError:
+                    break
+                    
+            os.close(master)
+            returncode = proc.wait()
+            
+        else:
+            proc = subprocess.run(
+                full_cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                **kwargs
+            )
+            output = proc.stdout
+            returncode = proc.returncode
+            
+        return returncode, output
 
     # Split arguments into chunks based on max length
     chunks = _chunk_args(varargs, _max_length)
@@ -77,12 +80,7 @@ def xargs(
         results = list(executor.map(_run_chunk, chunks))
     
     # Combine results
-    final_returncode = 0
-    final_output = b''
+    final_returncode = max((rc for rc, _ in results), default=0)
+    final_output = b''.join(output for _, output in results)
     
-    for returncode, output in results:
-        if returncode != 0:
-            final_returncode = returncode
-        final_output += output
-        
     return final_returncode, final_output

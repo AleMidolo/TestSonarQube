@@ -53,12 +53,20 @@ def lfu_cache(maxsize=128, typed=False):
             freq_counter.clear()
             insertion_order.clear()
 
-        wrapper.clear_cache = clear_cache
+        wrapper.cache_clear = clear_cache
+        wrapper.cache_info = lambda: {
+            'hits': sum(freq_counter.values()) - len(freq_counter),
+            'misses': len(freq_counter),
+            'maxsize': maxsize,
+            'currsize': len(cache)
+        }
+
         return wrapper
 
+    # Handle no-argument case
     if callable(maxsize):
-        # Handle case where decorator is used without parameters
         func = maxsize
         maxsize = 128
         return decorator(func)
+    
     return decorator

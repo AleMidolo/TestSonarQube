@@ -13,7 +13,7 @@ def get_plugin_spec_flatten_dict(plugin_dir):
         if not os.path.exists(spec_file):
             return flattened_dict
             
-        with open(spec_file) as f:
+        with open(spec_file, 'r') as f:
             spec_data = yaml.safe_load(f)
             
         def flatten_dict(d, parent_key=''):
@@ -27,11 +27,10 @@ def get_plugin_spec_flatten_dict(plugin_dir):
                     items.append((new_key, v))
             return dict(items)
             
-        # Flatten the nested dictionary
         flattened_dict = flatten_dict(spec_data)
         
     except Exception as e:
         # Return empty dict if any error occurs
-        return {}
+        pass
         
     return flattened_dict

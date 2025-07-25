@@ -31,8 +31,10 @@ def hydrate_time(nanoseconds, tz=None):
             tz = timezone(timedelta(seconds=total_seconds))
 
     # Create and return time object
-    return time(hour=hours % 24, 
-                minute=minutes,
-                second=seconds,
-                microsecond=microseconds,
-                tzinfo=tz)
+    return time(
+        hour=hours % 24,
+        minute=minutes,
+        second=seconds,
+        microsecond=microseconds,
+        tzinfo=tz
+    )

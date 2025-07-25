@@ -8,4 +8,4 @@ def names(self, all=False): # pylint:disable=redefined-builtin
         return list(self._attributes.keys())
     else:
         return [name for name, attr in self._attributes.items() 
-                if not attr.is_hidden]
+                if not attr.is_hidden()]

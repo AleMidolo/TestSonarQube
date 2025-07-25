@@ -15,7 +15,7 @@ def is_ipv4(target):
         
     # Check each octet
     for octet in octets:
-        # Check if numeric
+        # Check if octet is numeric
         if not octet.isdigit():
             return False
             

@@ -8,25 +8,26 @@ def find_path_type(path):
 
     # Look for Namaste files matching 0=*
     namaste_files = glob.glob(os.path.join(path, "0=*"))
-
-    # If no Namaste files found
+    
     if not namaste_files:
         if os.path.isfile(path):
             return "file"
         return "No Namaste files found"
 
-    # Read contents of first Namaste file
+    # Read first Namaste file content
     try:
         with open(namaste_files[0], 'r') as f:
             content = f.read().strip()
             
-        # Check content for OCFL patterns
-        if "ocfl_object" in content.lower():
-            return "object"
-        elif "ocfl_" in content.lower():
+        # Check for OCFL Storage Root
+        if content.startswith("ocfl_"):
             return "root"
-        else:
-            return "Unknown Namaste file content"
+            
+        # Check for OCFL Object
+        elif content.startswith("ocfl"):
+            return "object"
             
     except Exception as e:
         return f"Error reading Namaste file: {str(e)}"
+        
+    return "Unknown Namaste file type"

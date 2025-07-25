@@ -7,31 +7,21 @@ def process_text_links(text):
     # Regular expression for finding URLs
     url_pattern = r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
     
-    # Find existing <a> tags
-    a_tag_pattern = r'<a[^>]*>.*?</a>'
+    # Find all HTML links in text
+    html_link_pattern = r'<a[^>]*>.*?</a>'
+    html_links = re.findall(html_link_pattern, text)
     
-    # Split text to preserve existing <a> tags
-    parts = re.split(a_tag_pattern, text)
-    links = re.findall(a_tag_pattern, text)
+    # Process existing HTML links - add target="_blank" and rel="noopener noreferrer"
+    for link in html_links:
+        new_link = link.replace('<a ', '<a target="_blank" rel="noopener noreferrer" ')
+        text = text.replace(link, new_link)
     
-    result = []
-    for i, part in enumerate(parts):
-        # Process plain text parts
-        processed_part = re.sub(
-            url_pattern,
-            lambda m: f'<a href="{m.group(0)}" target="_blank" rel="noopener noreferrer">{m.group(0)}</a>',
-            part
-        )
-        result.append(processed_part)
-        
-        # Add back preserved <a> tags
-        if i < len(links):
-            # Add target and rel attributes to existing links if they don't have them
-            link = links[i]
-            if 'target=' not in link:
-                link = link.replace('<a ', '<a target="_blank" ')
-            if 'rel=' not in link:
-                link = link.replace('<a ', '<a rel="noopener noreferrer" ')
-            result.append(link)
+    # Find all raw URLs that aren't already in HTML links
+    def replace_url(match):
+        url = match.group(0)
+        return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{url}</a>'
     
-    return ''.join(result)
+    # Replace raw URLs with HTML links
+    processed_text = re.sub(url_pattern, replace_url, text)
+    
+    return processed_text

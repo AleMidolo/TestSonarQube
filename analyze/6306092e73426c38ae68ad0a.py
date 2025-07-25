@@ -9,4 +9,4 @@ def validate_choices_args(self, args):
             valid_choices = self.choices[arg_name]
             if arg_value not in valid_choices:
                 raise ValueError(f"Invalid choice for argument '{arg_name}'. "
-                              f"Must be one of: {valid_choices}")
+                               f"Must be one of: {valid_choices}")

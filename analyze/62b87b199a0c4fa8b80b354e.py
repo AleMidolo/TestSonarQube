@@ -7,23 +7,22 @@ def is_fill_request_seq(seq):
     and it is not a Source sequence.
     """
     # Import needed for type checking
-    from collections.abc import Sequence
-    from typing import Any
-
-    # Helper function to check if item is a FillRequest
-    def is_fill_request(item: Any) -> bool:
-        return hasattr(item, 'fill_request') and callable(item.fill_request)
-
-    # Check if seq itself is a FillRequest
-    if is_fill_request(seq):
-        return True
-
-    # Check if seq is a Source sequence (which should return False)
-    if hasattr(seq, 'source'):
+    from typing import Sequence
+    from collections.abc import Sequence as SequenceType
+    
+    # Check if seq is a Source sequence
+    if hasattr(seq, 'is_source') and seq.is_source:
         return False
-
-    # If seq is a sequence, check if it contains any FillRequests
-    if isinstance(seq, Sequence):
-        return any(is_fill_request(item) for item in seq)
-
+        
+    # Check if seq itself is a FillRequest
+    if hasattr(seq, 'is_fill_request') and seq.is_fill_request:
+        return True
+        
+    # Check if seq is a sequence type
+    if isinstance(seq, SequenceType):
+        # Recursively check elements
+        for element in seq:
+            if is_fill_request_seq(element):
+                return True
+                
     return False

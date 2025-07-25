@@ -11,7 +11,6 @@ def directlyProvidedBy(object): # pylint:disable=redefined-builtin
     # If so, it's like having only one base, that we lop off to exclude 
     # class-supplied declarations
     if isinstance(provides, Implements):
-        return provides._implements
+        return provides.__bases__[0]
 
-    # We have a declaration
     return provides

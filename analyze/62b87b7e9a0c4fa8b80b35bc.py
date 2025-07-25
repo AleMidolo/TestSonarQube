@@ -21,15 +21,15 @@ def _update_context(self, context):
             base_field = parts[1]  # E.g. 'E' from 'error_E_low'
             bound = parts[-1]      # E.g. 'low' from 'error_E_low'
             
-            # Map base field to x/y/z if possible
+            # Map the base field to x/y/z if possible
             error_name = error_name_map.get(base_field, base_field)
             
-            # Create error subcontext if needed
+            # Create the error subcontext structure
             error_key = f"{error_name}_{bound}"
             if error_key not in context.error:
                 context.error[error_key] = {}
                 
-            # Store index of error field
+            # Store the index of this error field
             context.error[error_key]['index'] = field_names.index(field)
             
     return context
