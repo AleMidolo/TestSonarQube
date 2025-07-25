@@ -17,7 +17,7 @@ def _explore_folder(folder):
     import xml.etree.ElementTree as ET
     from collections import defaultdict
 
-    package_data = defaultdict(list)
+    data = defaultdict(list)
 
     for filename in os.listdir(folder):
         if filename.endswith('.xml'):
@@ -26,8 +26,8 @@ def _explore_folder(folder):
             try:
                 tree = ET.parse(file_path)
                 root = tree.getroot()
-                package_data[base_name].append(root)
+                data[base_name].append(root)
             except ET.ParseError as e:
                 print(f"Error parsing {file_path}: {e}")
 
-    return dict(package_data)
+    return dict(data)

@@ -26,7 +26,7 @@ def update_last_applied_manifest_dict_from_resp(
                 last_applied_manifest[key], value, response.get(key, {})
             )
         else:
-            # Check if the key exists in the response
+            # Check if the key is in the response and update last_applied_manifest
             if key not in last_applied_manifest:
                 if key not in response:
                     raise KeyError(f"Field '{key}' is not present in the Kubernetes response.")

@@ -5,9 +5,9 @@ def pop_u16(self):
     if len(self.data) < 2:
         raise ValueError("Non ci sono abbastanza byte per rimuovere.")
     
-    # Rimuovi gli ultimi due byte
+    # Rimuove gli ultimi due byte
     last_two_bytes = self.data[-2:]
     self.data = self.data[:-2]
     
-    # Converti i byte in un intero senza segno a 16 bit in formato big-endian
+    # Converte i byte in un intero senza segno a 16 bit in formato big-endian
     return (last_two_bytes[0] << 8) | last_two_bytes[1]

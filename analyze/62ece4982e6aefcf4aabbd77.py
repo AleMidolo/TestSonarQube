@@ -24,15 +24,13 @@ def parse_frequency(frequency):
         'h': 'hours',
         'days': 'days',
         'day': 'days',
-        'd': 'days',
+        'w': 'weeks',
         'weeks': 'weeks',
         'week': 'weeks',
-        'w': 'weeks',
-        'months': 'days',  # Approximation: 1 month = 30 days
-        'month': 'days',
-        'y': 'days',  # Approximation: 1 year = 365 days
-        'years': 'days',
-        'year': 'days'
+        'months': 'months',
+        'month': 'months',
+        'years': 'years',
+        'year': 'years'
     }
 
     parts = frequency.split()
@@ -42,7 +40,7 @@ def parse_frequency(frequency):
     try:
         value = int(parts[0])
     except ValueError:
-        raise ValueError("The number part of the frequency must be an integer")
+        raise ValueError("The first part of the frequency must be an integer")
 
     unit = parts[1].lower()
     if unit not in units:

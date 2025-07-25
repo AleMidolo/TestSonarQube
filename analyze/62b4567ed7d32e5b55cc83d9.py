@@ -59,23 +59,20 @@ def deep_merge_nodes(nodes):
     Lo scopo di una fusione profonda come questa è supportare, ad esempio, la fusione di un file di configurazione borgmatic in un altro per il riutilizzo, in modo che una sezione di configurazione ("retention", ecc.) non sostituisca completamente la sezione corrispondente in un file unito.
     """
     merged = {}
-
+    
     for key_node, value_node in nodes:
         key = key_node.value
+        
         if key not in merged:
             merged[key] = value_node
         else:
-            if isinstance(merged[key], MappingNode) and isinstance(value_node, MappingNode):
+            existing_value = merged[key]
+            if isinstance(existing_value, MappingNode) and isinstance(value_node, MappingNode):
                 # Deep merge the mapping nodes
                 for sub_key_node, sub_value_node in value_node.value:
-                    merged_value = merged[key].value
-                    merged_value_dict = {k.value: v for k, v in merged_value}
-                    merged_value_dict[sub_key_node.value] = sub_value_node
-                    merged[key] = MappingNode(tag='tag:yaml.org,2002:map', value=[
-                        (ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged_value_dict.items()
-                    ])
+                    existing_value.value.append((sub_key_node, sub_value_node))
             else:
                 # If there's a conflict, take the last value
                 merged[key] = value_node
 
-    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=k), v) for k, v in merged.items()]
+    return [(ScalarNode(tag='tag:yaml.org,2002:str', value=key), value) for key, value in merged.items()]
