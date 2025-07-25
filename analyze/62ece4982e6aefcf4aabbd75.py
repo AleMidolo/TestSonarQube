@@ -7,14 +7,14 @@ def addignored(ignored):
     # Esegui il comando git per ottenere i file ignorati
     result = subprocess.run(['git', 'check-ignore', '-n', '*'], stdout=subprocess.PIPE, text=True)
     
-    # Ottieni l'output e trasformalo in una lista di file
+    # Ottieni l'output e trasformalo in una lista
     ignored_files = result.stdout.strip().split('\n')
     
-    # Rimuovi eventuali spazi bianchi e filtra i file non vuoti
-    ignored_files = [file.strip() for file in ignored_files if file.strip()]
+    # Estrai solo i nomi dei file ignorati
+    ignored_files = [line.split(':')[1].strip() for line in ignored_files if line]
     
     # Ordina la lista di file ignorati
     ignored_files.sort()
     
-    # Restituisci i file come una singola stringa separata da virgole
+    # Restituisci i file come una stringa separata da virgole
     return ', '.join(ignored_files)

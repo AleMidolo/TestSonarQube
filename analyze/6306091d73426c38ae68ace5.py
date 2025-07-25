@@ -12,5 +12,5 @@ def _include_groups(self, parser_dict):
 
 def _parse_file(self, file):
     # Dummy implementation for parsing a file into a dictionary
-    # Replace with actual parsing logic
-    return {}  # Return an empty dictionary for now
+    # This should be replaced with actual parsing logic
+    return {}  # Replace with actual parsing logic

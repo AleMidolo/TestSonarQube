@@ -6,11 +6,10 @@ def find_roots(
     if roots is None:
         roots = set()
     
-    # Trova tutti i nodi che non hanno genitori
-    all_children = {s for s, p, o in graph.triples((None, prop, None))}
-    all_parents = {o for s, p, o in graph.triples((None, prop, None))}
+    all_nodes = {s for s, p, o in graph}
+    child_nodes = {o for s, p, o in graph if p == prop}
     
-    # Le radici sono i nodi che non sono genitori di nessun altro nodo
-    roots = all_children - all_parents
+    root_candidates = all_nodes - child_nodes
+    roots.update(root_candidates)
     
     return roots

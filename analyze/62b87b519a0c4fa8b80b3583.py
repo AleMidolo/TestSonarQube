@@ -16,14 +16,24 @@ def scale(self, other=None):
     Tutti gli errori associati vengono ridimensionati insieme alla loro coordinata.
     """
     if other is None:
-        return self.scale_value  # Assuming scale_value is an attribute of the class
+        return self.current_scale  # Restituisce la scala attuale del grafico
 
-    if not isinstance(other, (int, float)):
-        raise ValueError("Il valore di 'other' deve essere un numero.")
+    if not isinstance(other, (int, float)) or other <= 0:
+        raise LenaValueError("La scala deve essere un valore numerico positivo.")
 
-    if self.scale_value is None or self.scale_value == 0:
-        raise LenaValueError("La scala è sconosciuta o pari a zero.")
+    # Supponiamo che self.coordinates contenga le coordinate del grafico
+    if hasattr(self, 'coordinates'):
+        last_coordinate = self.coordinates[-1]  # Ottieni l'ultima coordinata
+        scale_factor = other / last_coordinate if last_coordinate != 0 else None
+        
+        if scale_factor is None:
+            raise LenaValueError("Impossibile ridimensionare con una scala sconosciuta o zero.")
 
-    # Assuming we have a method to resize the graph
-    self.resize_graph(other)
-    return other
+        # Ridimensiona l'ultima coordinata e gli errori associati
+        self.coordinates[-1] *= scale_factor
+        for error in self.errors:  # Supponendo che self.errors contenga errori associati
+            error.scale(scale_factor)  # Ridimensiona ogni errore
+
+        self.current_scale = other  # Aggiorna la scala attuale
+    else:
+        raise LenaValueError("Il grafico non ha coordinate valide.")
