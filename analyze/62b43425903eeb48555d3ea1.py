@@ -7,6 +7,4 @@ def _create_in_regex(self) -> Pattern:
     # Pattern for matching in-style parameter
     # Matches: in="value" or in='value'
     pattern = r'in\s*=\s*["\']([^"\']*)["\']'
-    
-    # Compile and return the regex pattern
     return re.compile(pattern)

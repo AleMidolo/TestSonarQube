@@ -13,7 +13,7 @@ def next_version(version):
         if nums[i] == 9:
             nums[i] = 0
             i -= 1
-        # Otherwise increment current digit and break
+        # Otherwise increment digit and break
         else:
             nums[i] += 1
             break

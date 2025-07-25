@@ -9,46 +9,47 @@ def create_complex_argument_type(self, subcommand, type_name, option_name, spec_
     :return: l'istanza del tipo complesso
     """
     # Create a custom type class dynamically
-    class ComplexType:
-        def __init__(self, value):
-            self.value = value
-            
-        def __str__(self):
-            return str(self.value)
-            
-        @staticmethod
-        def validate(value):
-            # Validate based on spec_option
-            if 'pattern' in spec_option:
-                import re
-                if not re.match(spec_option['pattern'], value):
-                    raise ValueError(f"Invalid format for {option_name}")
-                    
-            if 'choices' in spec_option:
-                if value not in spec_option['choices']:
-                    raise ValueError(f"Value must be one of: {spec_option['choices']}")
-                    
-            if 'min' in spec_option:
-                try:
-                    if float(value) < spec_option['min']:
-                        raise ValueError(f"Value must be >= {spec_option['min']}")
-                except ValueError:
-                    raise ValueError("Value must be a number")
-                    
-            if 'max' in spec_option:
-                try:
-                    if float(value) > spec_option['max']:
-                        raise ValueError(f"Value must be <= {spec_option['max']}")
-                except ValueError:
-                    raise ValueError("Value must be a number")
-                    
-            return value
+    class ComplexArgumentType:
+        def __init__(self, spec):
+            self.spec = spec
             
         def __call__(self, value):
-            validated_value = self.validate(value)
-            return ComplexType(validated_value)
-            
-    # Set the type name
-    ComplexType.__name__ = type_name
+            try:
+                # Try to parse the value according to spec_option format/rules
+                if 'format' in self.spec:
+                    # Handle specific format requirements
+                    if self.spec['format'] == 'key=value':
+                        key, value = value.split('=')
+                        return {key.strip(): value.strip()}
+                    elif self.spec['format'] == 'csv':
+                        return value.split(',')
+                
+                # Handle type conversion if specified
+                if 'type' in self.spec:
+                    if self.spec['type'] == 'int':
+                        return int(value)
+                    elif self.spec['type'] == 'float':
+                        return float(value)
+                    elif self.spec['type'] == 'bool':
+                        return value.lower() in ('true', 'yes', '1', 'on')
+                
+                # Handle validation
+                if 'choices' in self.spec:
+                    if value not in self.spec['choices']:
+                        raise ValueError(f"Value must be one of {self.spec['choices']}")
+                
+                if 'range' in self.spec:
+                    val = float(value)
+                    min_val, max_val = self.spec['range']
+                    if not (min_val <= val <= max_val):
+                        raise ValueError(f"Value must be between {min_val} and {max_val}")
+                
+                return value
+                
+            except Exception as e:
+                raise argparse.ArgumentTypeError(
+                    f"Invalid value for {option_name} in {subcommand}: {str(e)}"
+                )
     
-    return ComplexType
+    # Return an instance of the complex argument type
+    return ComplexArgumentType(spec_option)

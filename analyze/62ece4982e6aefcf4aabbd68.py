@@ -22,10 +22,6 @@ def int_to_string(number: int, alphabet: List[str], padding: Optional[int] = Non
         
     # Add padding if specified
     if padding:
-        if number < 0:
-            # Account for negative sign when padding
-            result = result[0] + result[1:].rjust(padding, alphabet[0])
-        else:
-            result = result.rjust(padding, alphabet[0])
-            
+        result = result.rjust(padding, alphabet[0])
+        
     return result

@@ -12,14 +12,14 @@ def mru_cache(maxsize=128, typed=False):
         def wrapper(*args, **kwargs):
             # Crea una chiave per la cache basata sugli argomenti
             if typed:
-                key = (*args, *kwargs.items(), *[type(arg) for arg in args])
+                key = (*args, *kwargs.items(), *(type(arg) for arg in args))
             else:
                 key = (*args, *kwargs.items())
                 
             try:
                 # Se il risultato è già in cache
                 result = cache[key]
-                # Aggiorna l'ordine di utilizzo
+                # Aggiorna l'ordine MRU
                 order.remove(key)
                 order.append(key)
                 return result
@@ -27,20 +27,16 @@ def mru_cache(maxsize=128, typed=False):
                 # Calcola il nuovo risultato
                 result = func(*args, **kwargs)
                 
-                # Se la cache è piena, rimuovi l'elemento usato più recentemente
+                # Se la cache è piena, rimuovi l'elemento usato meno recentemente
                 if len(cache) >= maxsize:
-                    oldest_key = order.pop()
-                    del cache[oldest_key]
-                    
+                    # Rimuovi l'elemento più vecchio
+                    oldest = order.pop(0)
+                    del cache[oldest]
+                
                 # Aggiungi il nuovo risultato alla cache
                 cache[key] = result
                 order.append(key)
                 return result
                 
-        # Mantieni i metadati della funzione originale
-        wrapper.__name__ = func.__name__
-        wrapper.__doc__ = func.__doc__
-        wrapper.__module__ = func.__module__
-        
         return wrapper
     return decorator

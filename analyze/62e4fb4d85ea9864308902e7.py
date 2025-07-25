@@ -12,11 +12,9 @@ def normalize_cmd(cmd: tuple[str, ...]) -> tuple[str, ...]:
             ext = os.path.splitext(cmd[0])[1].lower()
             
             if ext == '.py':
-                # Aggiungi python come interprete
-                return (sys.executable,) + cmd
+                return ('python',) + cmd
             elif ext == '.sh':
-                # Aggiungi bash come interprete
-                bash_path = 'bash'
-                return (bash_path,) + cmd
+                # Per script bash su Windows
+                return ('bash',) + cmd
                 
     return cmd

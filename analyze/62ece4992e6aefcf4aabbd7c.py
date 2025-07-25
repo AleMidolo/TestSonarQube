@@ -5,10 +5,10 @@ def oneline(script, separator=" && "):
 
     :param script: String containing multiline script
     :param separator: String to use as command separator (default: " && ")
-    :return: Single line string with commands separated by separator
+    :return: String with commands joined on a single line
     """
     # Split script into lines and remove empty lines
     lines = [line.strip() for line in script.split('\n') if line.strip()]
     
-    # Join lines with separator
+    # Join non-empty lines with the separator
     return separator.join(lines)

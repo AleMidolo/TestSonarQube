@@ -4,7 +4,7 @@ def find_roots(graph: "Graph", prop: "URIRef", roots: Optional[Set["Node"]] = No
         # Get all subjects that appear as objects in triples with the given property
         children = {s for s in graph.subjects(prop)}
         # Get all objects that appear in triples with the given property 
-        parents = {o for o in graph.objects(predicate=prop)}
+        parents = {o for o in graph.objects(None, prop)}
         # Roots are parents that are not children
         roots = parents - children
         

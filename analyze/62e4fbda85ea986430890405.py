@@ -10,77 +10,57 @@ def xargs(
     
     if not varargs:
         return _run_command(cmd, color=color, **kwargs)
-        
-    partitions = _partition_varargs(varargs, _max_length)
-    num_partitions = len(partitions)
     
-    if target_concurrency == 1 or num_partitions == 1:
-        # Run sequentially
-        output = b''
-        retcode = 0
-        for partition in partitions:
-            curr_retcode, curr_output = _run_command(
-                (*cmd, *partition),
-                color=color,
-                **kwargs
-            )
-            output += curr_output
-            if curr_retcode != 0:
-                retcode = curr_retcode
-        return retcode, output
-        
-    else:
-        # Run in parallel
-        with ThreadPoolExecutor(max_workers=min(target_concurrency, num_partitions)) as executor:
-            futures = []
-            for partition in partitions:
-                future = executor.submit(
-                    _run_command,
-                    (*cmd, *partition),
-                    color=color,
-                    **kwargs
-                )
-                futures.append(future)
-                
-            output = b''
-            retcode = 0
-            for future in futures:
-                curr_retcode, curr_output = future.result()
-                output += curr_output
-                if curr_retcode != 0:
-                    retcode = curr_retcode
-                    
-            return retcode, output
-
-def _partition_varargs(varargs: Sequence[str], max_length: int) -> list[tuple[str, ...]]:
-    """Split varargs into partitions that don't exceed max command line length"""
-    partitions = []
-    current_partition = []
+    # Split args into chunks that fit within max length
+    chunks = []
+    current_chunk = []
     current_length = 0
     
     for arg in varargs:
-        arg_length = len(arg)
-        if current_length + arg_length + 1 > max_length:
-            if current_partition:
-                partitions.append(tuple(current_partition))
-            current_partition = [arg]
+        arg_length = len(arg) + 1  # +1 for space
+        if current_length + arg_length > _max_length:
+            chunks.append(current_chunk)
+            current_chunk = [arg]
             current_length = arg_length
         else:
-            current_partition.append(arg)
-            current_length += arg_length + 1
+            current_chunk.append(arg)
+            current_length += arg_length
             
-    if current_partition:
-        partitions.append(tuple(current_partition))
+    if current_chunk:
+        chunks.append(current_chunk)
         
-    return partitions
-
-def _run_command(cmd: tuple[str, ...], *, color: bool = False, **kwargs: Any) -> tuple[int, bytes]:
-    """Run a single command and return (return_code, output)"""
-    if color and sys.platform != 'win32':
-        import pty
-        master_fd, slave_fd = pty.openpty()
-        kwargs.update({'stdout': slave_fd, 'stderr': slave_fd})
-        
-    proc = subprocess.Popen(cmd, **kwargs)
-    output, _ = proc.communicate()
-    return proc.returncode, output
+    # Determine number of concurrent processes
+    n_chunks = len(chunks)
+    concurrency = min(target_concurrency, n_chunks)
+    
+    # Run commands in parallel
+    if concurrency > 1:
+        with ThreadPoolExecutor(max_workers=concurrency) as executor:
+            futures = []
+            for chunk in chunks:
+                full_cmd = cmd + tuple(chunk)
+                futures.append(executor.submit(_run_command, full_cmd, color=color, **kwargs))
+                
+            # Get results
+            exit_code = 0
+            output = b''
+            for future in futures:
+                chunk_code, chunk_output = future.result()
+                if chunk_code != 0:
+                    exit_code = chunk_code
+                output += chunk_output
+                
+            return exit_code, output
+            
+    # Run sequentially
+    else:
+        exit_code = 0
+        output = b''
+        for chunk in chunks:
+            full_cmd = cmd + tuple(chunk)
+            chunk_code, chunk_output = _run_command(full_cmd, color=color, **kwargs)
+            if chunk_code != 0:
+                exit_code = chunk_code
+            output += chunk_output
+            
+        return exit_code, output

@@ -20,32 +20,27 @@ def _run_playbook(cli_args, vars_dict, ir_workspace, ir_plugin):
     # Create temporary file for extra vars
     with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as vars_file:
         json.dump(vars_dict, vars_file)
-        vars_file_path = vars_file.name
+        extra_vars_file = vars_file.name
 
     try:
-        # Construct Ansible CLI command
+        # Build ansible command
         ansible_args = ['ansible-playbook']
         ansible_args.extend(cli_args)
-        ansible_args.extend(['--extra-vars', '@' + vars_file_path])
+        ansible_args.extend(['--extra-vars', '@' + extra_vars_file])
 
-        # Set up Ansible environment
+        # Set up inventory
         loader = DataLoader()
-        inventory = InventoryManager(loader=loader)
+        inventory = InventoryManager(loader=loader, sources=ir_workspace.inventory)
         variable_manager = VariableManager(loader=loader, inventory=inventory)
 
         # Initialize PlaybookCLI
         pbcli = PlaybookCLI(ansible_args)
-        
-        # Set workspace and plugin specific environment variables
-        os.environ['IR_WORKSPACE'] = ir_workspace.path
-        os.environ['IR_PLUGIN'] = ir_plugin.name
+        pbcli.parse()
 
         # Run playbook
-        results = pbcli.run()
-
-        return results
+        return pbcli.run()
 
     finally:
-        # Clean up temporary vars file
-        if os.path.exists(vars_file_path):
-            os.unlink(vars_file_path)
+        # Cleanup temporary file
+        if os.path.exists(extra_vars_file):
+            os.unlink(extra_vars_file)

@@ -24,25 +24,34 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None,
     if ir_workspace and ir_workspace.inventory:
         cmd.extend(['-i', ir_workspace.inventory])
         
-    # Aggiungi le extra vars se specificate
+    # Gestisci le extra vars
     if extra_vars:
         for key, value in extra_vars.items():
-            cmd.extend(['-e', f'{key}={value}'])
+            cmd.extend(['--extra-vars', f'{key}={value}'])
             
     # Aggiungi gli argomenti ansible aggiuntivi
     if ansible_args:
         for arg, value in ansible_args.items():
             if value is True:
                 cmd.append(f'--{arg}')
-            elif value is not None:
+            elif value is not False:
                 cmd.extend([f'--{arg}', str(value)])
                 
     # Esegui il comando ansible-playbook
     import subprocess
     try:
-        result = subprocess.run(cmd, check=True, text=True, 
-                              stdout=subprocess.PIPE,
-                              stderr=subprocess.PIPE)
-        return result
-    except subprocess.CalledProcessError as e:
-        raise Exception(f"Errore nell'esecuzione di ansible-playbook: {e.stderr}")
+        process = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True
+        )
+        stdout, stderr = process.communicate()
+        
+        if process.returncode != 0:
+            raise Exception(f"Ansible playbook execution failed: {stderr}")
+            
+        return stdout
+        
+    except Exception as e:
+        raise Exception(f"Failed to execute ansible-playbook: {str(e)}")

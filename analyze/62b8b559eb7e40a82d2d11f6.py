@@ -21,7 +21,7 @@ def determineMetaclass(bases, explicit_mc=None):
             # No bases and no explicit metaclass, use type
             metaclass = type
             
-    # If explicit metaclass was given, ensure it's compatible with base metaclasses
+    # If explicit metaclass was provided, ensure it's compatible with base metaclasses
     else:
         for base in bases:
             if not issubclass(metaclass, type(base)):
