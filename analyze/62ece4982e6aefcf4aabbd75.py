@@ -12,4 +12,4 @@ def addignored(ignored):
     filtered_files = [file for file in ignored_files if file in ignored]
     
     # Restituisci i file come una stringa separata da virgole
-    return ','.join(filtered_files)
+    return ', '.join(filtered_files)

@@ -1,9 +1,7 @@
 from typing import Set, Optional
 from rdflib import Graph, URIRef, Node
 
-def find_roots(
-    graph: Graph, prop: URIRef, roots: Optional[Set[Node]] = None
-) -> Set[Node]:
+def find_roots(graph: Graph, prop: URIRef, roots: Optional[Set[Node]] = None) -> Set[Node]:
     """
     Trova le radici in una sorta di gerarchia transitiva.
 
@@ -17,14 +15,12 @@ def find_roots(
     if roots is None:
         roots = set()
 
-    # Trova tutti i nodi che non hanno genitori rispetto alla proprietà `prop`
-    for child, _, _ in graph.triples((None, prop, None)):
-        if child not in roots:
-            roots.add(child)
+    # Get all nodes that appear as subjects in the graph
+    all_nodes = set(graph.subjects())
 
-    # Rimuovi i nodi che hanno genitori
-    for child, _, parent in graph.triples((None, prop, None)):
-        if parent in roots:
-            roots.discard(parent)
+    # Iterate through all nodes to find those that are not objects of any triple with the given property
+    for node in all_nodes:
+        if not any(True for _ in graph.triples((None, prop, node))):
+            roots.add(node)
 
     return roots

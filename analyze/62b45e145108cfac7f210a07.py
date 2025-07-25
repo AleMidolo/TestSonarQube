@@ -17,13 +17,13 @@ def validate(self, inventory, extract_spec_version=False):
         else:
             print("Tipo non presente. Utilizzo della versione specificata in self.spec_version.")
     
-    # Esegui la validazione basata sulla versione specificata
+    # Esegui i test di validazione basati sulla versione specificata
     if self.spec_version == "v1":
         self._validate_v1(inventory)
     elif self.spec_version == "v2":
         self._validate_v2(inventory)
     else:
-        raise ValueError(f"Versione della specifica non supportata: {self.spec_version}")
+        raise ValueError(f"Versione specifica non supportata: {self.spec_version}")
 
 def _validate_v1(self, inventory):
     """

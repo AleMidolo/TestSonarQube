@@ -5,14 +5,8 @@ def merge_extra_vars(vars_dict, extra_vars=None):
     :param vars_dict: Dizionario in cui unire le extra-vars
     :param extra_vars: Lista di extra-vars
     """
-    if extra_vars is None:
-        extra_vars = []
-    
-    for var in extra_vars:
-        if '=' in var:
+    if extra_vars is not None:
+        for var in extra_vars:
             key, value = var.split('=', 1)
             vars_dict[key] = value
-        else:
-            vars_dict[var] = None
-    
     return vars_dict

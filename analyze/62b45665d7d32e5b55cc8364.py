@@ -13,6 +13,7 @@ def parse_subparser_arguments(unparsed_arguments, subparsers):
             parsed_args[subparser_name] = args
             remaining_args = remaining
         except SystemExit:
+            # Ignore SystemExit exceptions raised by argparse when parsing fails
             continue
     
     return parsed_args, remaining_args

@@ -4,7 +4,7 @@ def match_pubdate(node, pubdate_xpaths):
 
     :param node: L'elemento XML/HTML da cui cercare.
     :param pubdate_xpaths: Lista di XPath per cercare la data di pubblicazione.
-    :return: La prima corrispondenza trovata, o None se nessuna corrispondenza è trovata.
+    :return: La prima corrispondenza trovata, o None se nessuna corrispondenza è stata trovata.
     """
     for xpath in pubdate_xpaths:
         result = node.xpath(xpath)

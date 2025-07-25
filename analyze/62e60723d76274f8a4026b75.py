@@ -20,16 +20,10 @@ def round_half_to_even(n):
     >>> round_half_to_even(4.7)
     5
     """
-    integer_part = int(n)
-    fractional_part = n - integer_part
-    
-    if fractional_part < 0.5:
-        return integer_part
-    elif fractional_part > 0.5:
-        return integer_part + 1
-    else:
-        # If the fractional part is exactly 0.5, round to the nearest even integer
-        if integer_part % 2 == 0:
-            return integer_part
+    if n % 1 == 0.5:
+        if int(n) % 2 == 0:
+            return int(n)
         else:
-            return integer_part + 1
+            return int(n) + 1
+    else:
+        return round(n)

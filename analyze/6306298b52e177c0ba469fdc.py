@@ -11,7 +11,7 @@ def xml_children_as_dict(node):
             if isinstance(result[tag], list):
                 result[tag].append(child.text)
             else:
-                result[tag] = [result[tag], child.text]
+                result[tag] = [result[tag], child.text
         else:
             result[tag] = child.text
     return result

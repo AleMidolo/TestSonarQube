@@ -5,7 +5,7 @@ def to_csv(self, separator=",", header=None):
     Args:
         separator (str): Delimiter for the values, default is a comma.
         header (str, optional): If not None, this string is the first line of the output 
-                               (a newline is automatically added).
+                                (a newline is automatically added).
 
     Returns:
         str: The CSV representation of the graph.
@@ -16,11 +16,11 @@ def to_csv(self, separator=",", header=None):
         csv_lines.append(header)
     
     for point in self.points:
-        # Convert coordinates to string
-        coords_str = separator.join(map(str, point.coords))
-        # Convert value parts to string
+        # Convert coordinates to string, separated by the separator
+        coords_str = separator.join(map(str, point.coordinates))
+        # Convert each part of the value to string
         value_str = separator.join(map(str, point.value))
-        # Combine coordinates and value
+        # Combine coordinates and value into a single line
         csv_line = f"{coords_str}{separator}{value_str}"
         csv_lines.append(csv_line)
     

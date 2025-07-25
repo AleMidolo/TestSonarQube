@@ -7,7 +7,7 @@ def reset(self):
     o con *make_bins()* (a seconda dell'inizializzazione).
     """
     self.context = {}
-    if hasattr(self, 'valore_iniziale'):
-        self.bins = [self.valore_iniziale] * len(self.bins)
-    elif hasattr(self, 'make_bins'):
+    if hasattr(self, 'initial_value'):
+        self.bins = [self.initial_value] * len(self.bins)
+    else:
         self.bins = self.make_bins()

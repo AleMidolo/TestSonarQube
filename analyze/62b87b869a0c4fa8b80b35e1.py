@@ -33,10 +33,11 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
     if make_value is None:
         make_value = lambda bin_: bin_
 
-    if scale is None:
-        scale = hist.scale if hasattr(hist, 'scale') else None
+    if scale is True:
+        scale = hist.scale
 
     graph = []
+
     for bin_ in hist.bins:
         if get_coordinate == "left":
             x = bin_.left
@@ -49,10 +50,10 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
 
         value = make_value(bin_.content)
         if isinstance(value, tuple):
-            graph_point = (x,) + value
+            point = (x,) + value
         else:
-            graph_point = (x, value)
+            point = (x, value)
 
-        graph.append(graph_point)
+        graph.append(point)
 
     return graph

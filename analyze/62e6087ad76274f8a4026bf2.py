@@ -1,4 +1,5 @@
-def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **handlers):
+def discard(self, n=-1, qid=-1, dehydration_hooks=None,
+            hydration_hooks=None, **handlers):
     """
     Aggiunge un messaggio DISCARD alla coda di output.
 
@@ -14,18 +15,14 @@ def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **
         e possono restituire qualsiasi cosa.
     :param handlers: funzioni gestore passate all'oggetto Response restituito
     """
-    # Creazione del messaggio DISCARD
+    # Implementazione della funzione discard
     discard_message = {
         "type": "DISCARD",
         "n": n,
         "qid": qid,
-        "dehydration_hooks": dehydration_hooks if dehydration_hooks else {},
-        "hydration_hooks": hydration_hooks if hydration_hooks else {},
-        "handlers": handlers
+        "dehydration_hooks": dehydration_hooks,
+        "hydration_hooks": hydration_hooks,
+        **handlers
     }
-
-    # Aggiunta del messaggio alla coda di output
     self.output_queue.append(discard_message)
-
-    # Restituzione di un oggetto Response con i gestori specificati
-    return Response(handlers=handlers)
+    return discard_message

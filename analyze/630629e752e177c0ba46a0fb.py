@@ -23,5 +23,6 @@ def send_document(url, data, timeout=10, method="post", *args, **kwargs):
             raise ValueError(f"Metodo non supportato: {method}")
         
         return response.status_code, None
+    
     except requests.exceptions.RequestException as e:
         return None, e

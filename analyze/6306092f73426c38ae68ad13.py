@@ -37,7 +37,7 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
         print("Playbook eseguito con successo!")
         print(result.stdout)
     else:
-        print("Errore durante l'esecuzione del playbook!")
+        print("Errore durante l'esecuzione del playbook:")
         print(result.stderr)
 
     return result.returncode

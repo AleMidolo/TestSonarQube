@@ -13,15 +13,31 @@ def scale(self, other=None, recompute=False):
     """
     if other is None:
         if not hasattr(self, '_scale') or recompute:
-            self._scale = sum(self.bins)
+            self._scale = self._compute_scale()
         return self._scale
     elif isinstance(other, float):
-        if not hasattr(self, '_scale') or recompute:
-            self._scale = sum(self.bins)
         if self._scale == 0:
-            raise LenaValueError("Cannot scale a histogram with zero scale.")
+            raise LenaValueError("Cannot rescale a histogram with zero scale.")
         scale_factor = other / self._scale
-        self.bins = [bin_value * scale_factor for bin_value in self.bins]
+        self._rescale(scale_factor)
         self._scale = other
     else:
         raise TypeError("Expected a float or None for 'other'.")
+
+def _compute_scale(self):
+    """
+    Calcola la scala dell'istogramma come l'integrale dei bin.
+    """
+    return sum(bin_content for bin_content in self.bins)
+
+def _rescale(self, scale_factor):
+    """
+    Riscalare i contenuti dei bin per un fattore di scala dato.
+    """
+    self.bins = [bin_content * scale_factor for bin_content in self.bins]
+
+class LenaValueError(Exception):
+    """
+    Eccezione sollevata quando si tenta di riscalare un istogramma con scala zero.
+    """
+    pass

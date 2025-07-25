@@ -18,7 +18,7 @@ def ansible_config_manager(cls):
             print(f"{host.get_name()}: {result._result}")
 
     loader = DataLoader()
-    inventory = InventoryManager(loader=loader, sources='localhost,')
+    inventory = InventoryManager(loader=loader, sources=['localhost,'])
     variable_manager = VariableManager(loader=loader, inventory=inventory)
     callback = ResultCallback()
 

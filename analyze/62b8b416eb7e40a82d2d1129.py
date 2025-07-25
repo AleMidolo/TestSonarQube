@@ -3,4 +3,4 @@ def names(self, all=False):  # pylint:disable=redefined-builtin
     if not all:
         return [name for name in dir(self) if not name.startswith('_')]
     else:
-        return dir(self)
+        return [name for name in dir(self)]

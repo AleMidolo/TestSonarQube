@@ -19,7 +19,7 @@ def _eval_file(prefix, file_path):
     """
     import os
 
-    # Estrai il nome del file e la cartella dal percorso completo
+    # Estrai il nome del file e la cartella dal percorso
     filename = os.path.basename(file_path)
     file_folder = os.path.dirname(file_path)
 
@@ -31,7 +31,7 @@ def _eval_file(prefix, file_path):
     else:
         file_type = "unknown"
 
-    # Crea il dizionario di ritorno
+    # Crea il dizionario da restituire
     result = {
         "type": file_type,
         "file_path": file_path,

@@ -5,8 +5,8 @@ from typing import Sequence, Any
 
 def _get_platform_max_length() -> int:
     # This is a placeholder function to simulate getting the platform's max command length.
-    # On most Unix-like systems, you can use `getconf ARG_MAX` to get the maximum length.
-    return 131072  # Default value for many Unix systems
+    # On most Unix-like systems, you can get this value using `getconf ARG_MAX`.
+    return 131072  # Default value for many Unix-like systems
 
 def xargs(
         cmd: tuple[str, ...],
@@ -60,7 +60,7 @@ def xargs(
                 p.wait()
             processes = []
 
-    # Wait for remaining processes
+    # Wait for any remaining processes
     for p in processes:
         p.wait()
 

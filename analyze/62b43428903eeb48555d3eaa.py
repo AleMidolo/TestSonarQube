@@ -5,7 +5,7 @@ def formatmany(
 ) -> Tuple[AnyStr, Union[List[Dict[Union[str, int], Any]], List[Sequence[Any]]]]:
     formatted_sql = sql
     formatted_params = []
-    
+
     for params in many_params:
         if isinstance(params, dict):
             # Convert named parameters to out style
@@ -16,6 +16,6 @@ def formatmany(
             out_params = [f"out_{i}" for i in range(len(params))]
             formatted_params.append(out_params)
         else:
-            raise TypeError("params must be either a Mapping or a Sequence")
-    
+            raise TypeError("params must be a Mapping or Sequence")
+
     return formatted_sql, formatted_params

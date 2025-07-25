@@ -9,35 +9,14 @@ def _convert_non_cli_args(self, parser_name, values_dict):
     """
     for key, value in values_dict.items():
         if isinstance(value, str):
-            # Try to convert to int
-            try:
+            if value.lower() == 'true':
+                values_dict[key] = True
+            elif value.lower() == 'false':
+                values_dict[key] = False
+            elif value.isdigit():
                 values_dict[key] = int(value)
-                continue
-            except ValueError:
-                pass
-            
-            # Try to convert to float
-            try:
+            elif value.replace('.', '', 1).isdigit():
                 values_dict[key] = float(value)
-                continue
-            except ValueError:
-                pass
-            
-            # Try to convert to boolean
-            if value.lower() in ['true', 'false']:
-                values_dict[key] = value.lower() == 'true'
-                continue
-            
-            # Try to convert to list if the value is a comma-separated string
-            if ',' in value:
-                values_dict[key] = value.split(',')
-                continue
-            
-            # Try to convert to dict if the value is a JSON-like string
-            if value.startswith('{') and value.endswith('}'):
-                try:
-                    import json
-                    values_dict[key] = json.loads(value)
-                    continue
-                except json.JSONDecodeError:
-                    pass
+            elif value.lower() == 'none':
+                values_dict[key] = None
+    return values_dict

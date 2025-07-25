@@ -16,6 +16,6 @@ def make_find_paths(find_paths):
             # Se il percorso è già un pattern (inizia con un prefisso come 'pp:'), lo lascia invariato
             transformed_paths.append(path)
         else:
-            # Trasforma il percorso frammentato in un pattern glob
+            # Altrimenti, trasforma il percorso frammentato in un pattern glob
             transformed_paths.append(f'sh:**/*{path}*/**')
     return transformed_paths

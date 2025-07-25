@@ -6,7 +6,6 @@ def get_repo_archive(url: str, destination_path: Path) -> Path:
     """
     Dato un URL e un percorso di destinazione, recupera e decomprimi un archivio .tar.gz che contiene il file 'desc' per ogni pacchetto.  
     Ogni archivio .tar.gz corrisponde a un repository di Arch Linux ('core', 'extra', 'community').
-    
     Args:
         url: URL dell'archivio .tar.gz da scaricare
         destination_path: il percorso sul disco dove estrarre l'archivio
