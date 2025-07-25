@@ -9,16 +9,24 @@ def bash_completion():
     # Create the parser
     parser = argparse.ArgumentParser(prog='borgmatic')
 
-    # Add commands and options
-    parser.add_argument('command', choices=['init', 'config', 'run', 'list', 'check', 'prune'], help='Command to execute')
-    parser.add_argument('--config', help='Path to the configuration file')
-    parser.add_argument('--verbosity', choices=['0', '1', '2', '3'], help='Set the verbosity level')
+    # Add subcommands
+    subparsers = parser.add_subparsers(dest='command')
 
-    # Generate completion script
+    # Example subcommand: init
+    init_parser = subparsers.add_parser('init', help='Initialize a new configuration')
+    
+    # Example subcommand: config
+    config_parser = subparsers.add_parser('config', help='Manage configuration')
+    config_parser.add_argument('--list', action='store_true', help='List configurations')
+    config_parser.add_argument('--edit', help='Edit a specific configuration')
+
+    # Example subcommand: run
+    run_parser = subparsers.add_parser('run', help='Run the backup')
+
+    # Generate the completion script
     if len(sys.argv) > 1 and sys.argv[1] == 'completion':
-        commands = ['init', 'config', 'run', 'list', 'check', 'prune']
-        print(' '.join(commands))
+        print('complete -o default -o nospace -F _borgmatic_completion borgmatic')
         return
 
-    # Print help if no command is provided
+    # Print the help message for the parser
     parser.print_help()

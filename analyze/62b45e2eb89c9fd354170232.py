@@ -10,5 +10,11 @@ def next_version(version):
     # Convert the last part to an integer and increment it
     parts[-1] = str(int(parts[-1]) + 1)
     
-    # Join the parts back together to form the new version
+    # Handle carry over if the last part was 10
+    for i in range(len(parts) - 1, 0, -1):
+        if int(parts[i]) == 10:
+            parts[i] = '0'
+            parts[i - 1] = str(int(parts[i - 1]) + 1)
+    
+    # Join the parts back together
     return '.'.join(parts)

@@ -27,11 +27,11 @@ def _verify(iface, candidate, tentative=False, vtype=None):
         एक विशेष मामले में, यदि केवल एक त्रुटि मौजूद है, तो इसे पहले की तरह अकेले उठाया जाता है।
     """
     from zope.interface import providedBy, Invalid
-    from inspect import signature, Signature
+    from inspect import signature
 
     errors = []
 
-    if not tentative and not providedBy(candidate).isImplementedBy(iface):
+    if not tentative and not providedBy(candidate, iface):
         errors.append(f"{candidate} does not provide {iface}")
 
     required_methods = iface.requiredMethods()

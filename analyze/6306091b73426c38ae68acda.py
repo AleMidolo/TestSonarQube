@@ -6,10 +6,13 @@ def plugins_manager(cls):
         def __init__(self):
             self.plugins = []
 
-        def register_plugin(self, plugin):
+        def load_plugin(self, plugin):
             self.plugins.append(plugin)
 
-        def get_plugins(self):
+        def unload_plugin(self, plugin):
+            self.plugins.remove(plugin)
+
+        def list_plugins(self):
             return self.plugins
 
     cls.plugin_manager = PluginManager()

@@ -22,12 +22,21 @@ def format(
     if isinstance(params, dict):
         # Named parameters
         for key, value in params.items():
-            sql = sql.replace(f":{key}", str(value))
+            sql = sql.replace(f":{key}", self._format_value(value))
         return sql, list(params.values())
     elif isinstance(params, (list, tuple)):
         # Positional parameters
         for index, value in enumerate(params):
-            sql = sql.replace(f"?{index}", str(value))
+            sql = sql.replace(f"?{index}", self._format_value(value))
         return sql, params
     else:
-        raise TypeError("params must be a dictionary or a sequence")
+        raise ValueError("params must be a dictionary or a sequence")
+
+def _format_value(self, value: Any) -> str:
+    # Convert the value to a string representation for SQL
+    if isinstance(value, str):
+        return f"'{value}'"
+    elif value is None:
+        return "NULL"
+    else:
+        return str(value)

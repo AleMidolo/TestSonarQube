@@ -6,11 +6,9 @@ def _normalizeargs(sequence, output=None):
 
     व्यक्तिगत इंटरफेस या लागू विनिर्देशों को छोड़कर अन्य सभी का विस्तार किया जाएगा।
     """
-    if isinstance(sequence, (list, tuple)):
-        return [(_normalizeargs(item, output) if isinstance(item, (list, tuple)) else item) for item in sequence]
-    elif isinstance(sequence, dict):
-        return {key: _normalizeargs(value, output) for key, value in sequence.items()}
-    elif hasattr(sequence, '__iter__') and not isinstance(sequence, str):
-        return list(map(lambda x: _normalizeargs(x, output), sequence))
+    if isinstance(sequence, tuple):
+        return [seq for seq in sequence]
+    elif hasattr(sequence, '__iter__'):
+        return list(sequence)
     else:
-        return sequence
+        return [sequence]

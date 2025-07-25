@@ -7,7 +7,7 @@ def get_option_spec(self, command_name):
     # उदाहरण के लिए, हम मान लेते हैं कि हम कुछ पूर्वनिर्धारित विकल्पों को वापस कर रहे हैं
     if command_name == "example_command":
         option_spec = {
-            "option1": "विवरण 1",
-            "option2": "विवरण 2",
+            "option1": "Description for option 1",
+            "option2": "Description for option 2",
         }
     return option_spec

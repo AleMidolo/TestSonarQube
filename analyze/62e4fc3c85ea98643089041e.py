@@ -5,12 +5,12 @@ def _inline_r_setup(code: str) -> str:
     इन्हें यहां सेट किया गया है।
     """
     # R विकल्पों को सेट करने के लिए आवश्यक कोड
-    options = {
+    r_options = {
         "stringsAsFactors": "FALSE",
-        "warn": "1",
-        "max.print": "1000"
+        "max.print": "1000",
+        "warn": "1"
     }
     
-    setup_code = "\n".join(f"options({key} = {value})" for key, value in options.items())
+    setup_code = "\n".join(f"options({key} = {value})" for key, value in r_options.items())
     
     return f"{setup_code}\n{code}"

@@ -5,8 +5,5 @@ def get_silent_args(self, args):
     :param args: प्राप्त तर्क (arguments)।
     :return: list, मौन (साइलेंट) तर्कों के नाम।
     """
-    silent_args = []
-    for arg in args:
-        if isinstance(arg, str) and arg.startswith('_'):
-            silent_args.append(arg)
+    silent_args = [arg for arg in args if arg.startswith('_')]
     return silent_args
