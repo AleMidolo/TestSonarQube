@@ -19,8 +19,8 @@ def validate_from_file(cls, yaml_file=None):
     except yaml.YAMLError as e:
         raise ValueError(f"Error al cargar el archivo YAML: {e}")
     
-    # Aquí puedes agregar la lógica de validación específica para los campos requeridos
-    # Por ejemplo, si hay campos obligatorios como 'name' y 'age':
+    # Aquí puedes agregar la lógica de validación de campos obligatorios
+    # Por ejemplo, si los campos obligatorios son 'name' y 'age':
     required_fields = ['name', 'age']
     for field in required_fields:
         if field not in data:
@@ -29,5 +29,4 @@ def validate_from_file(cls, yaml_file=None):
     return data
 
 class IRValidatorException(Exception):
-    """Excepción personalizada para errores de validación."""
     pass

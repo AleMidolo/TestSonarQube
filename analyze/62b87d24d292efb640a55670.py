@@ -13,30 +13,21 @@ def get_versions():
         # Obtener la versión del sistema operativo
         os_version = platform.platform()
 
-        # Obtener la versión de pip (si está instalado)
+        # Obtener la versión de Git si está instalado
         try:
-            pip_version = subprocess.check_output([sys.executable, '-m', 'pip', '--version']).decode().split()[1]
-        except Exception:
-            pip_version = "No disponible"
-
-        # Obtener la versión de setuptools (si está instalado)
-        try:
-            setuptools_version = subprocess.check_output([sys.executable, '-m', 'pip', 'show', 'setuptools']).decode().split('\n')[1].split()[1]
-        except Exception:
-            setuptools_version = "No disponible"
+            git_version = subprocess.check_output(['git', '--version']).decode().strip()
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            git_version = "Git no está instalado o no se pudo obtener la versión."
 
         return {
-            "Python": python_version,
-            "Sistema Operativo": os_version,
-            "Pip": pip_version,
-            "Setuptools": setuptools_version
+            "python_version": python_version,
+            "os_version": os_version,
+            "git_version": git_version
         }
-
     except Exception as e:
         # En caso de error, devolver un valor predeterminado
         return {
-            "Python": "No disponible",
-            "Sistema Operativo": "No disponible",
-            "Pip": "No disponible",
-            "Setuptools": "No disponible"
+            "python_version": "Desconocido",
+            "os_version": "Desconocido",
+            "git_version": "Desconocido"
         }

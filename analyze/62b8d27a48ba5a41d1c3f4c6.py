@@ -15,12 +15,11 @@ def cached(cache, key=hashkey, lock=None):
                         return cache[cache_key]
                     result = func(*args, **kwargs)
                     cache[cache_key] = result
-                    return result
             else:
                 if cache_key in cache:
                     return cache[cache_key]
                 result = func(*args, **kwargs)
                 cache[cache_key] = result
-                return result
+            return result
         return wrapper
     return decorator

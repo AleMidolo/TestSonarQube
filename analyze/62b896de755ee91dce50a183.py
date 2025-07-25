@@ -1,6 +1,5 @@
 from datetime import datetime
-from dateutil.parser import parse as dateutil_parse
-from dateutil.tz import tzoffset
+from dateutil import parser
 from dateutil.tz import gettz
 
 def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
@@ -20,6 +19,8 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     :param tzinfos:
         Nombres/alias de zonas horarias adicionales que pueden estar presentes en la cadena. Este argumento mapea nombres de zonas horarias (y opcionalmente desplazamientos de esas zonas horarias) a zonas horarias. Este parámetro puede ser un diccionario con alias de zonas horarias que mapean nombres de zonas horarias a zonas horarias, o una función que tome dos parámetros (``tzname`` y ``tzoffset``) y devuelva una zona horaria.
 
+        Las zonas horarias a las que se mapean los nombres pueden ser un desplazamiento entero desde UTC en segundos o un objeto :class:`tzinfo`.
+
     :param \*\*kwargs:
         Argumentos de palabras clave que se pasan a ``_parse()``.
 
@@ -36,15 +37,13 @@ def parse(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs):
     :raises OverflowError:
         Se lanza si la fecha analizada excede el entero C más grande válido en tu sistema.
     """
-    if default is not None and not isinstance(default, datetime):
-        raise TypeError("default debe ser un objeto datetime o None")
-
     if ignoretz:
         tzinfos = None
 
-    try:
-        dt = dateutil_parse(timestr, default=default, ignoretz=ignoretz, tzinfos=tzinfos, **kwargs)
-    except Exception as e:
-        raise type(e)(f"Error al analizar la cadena de fecha/hora: {e}")
+    if default is not None and isinstance(default, datetime):
+        kwargs['default'] = default
 
-    return dt
+    if tzinfos is not None:
+        kwargs['tzinfos'] = tzinfos
+
+    return parser.parse(timestr, **kwargs)

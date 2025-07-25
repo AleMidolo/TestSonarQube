@@ -22,7 +22,7 @@ def verifyObject(iface, candidate, tentative=False):
         Si múltiples métodos o atributos son inválidos, todos esos errores se recopilan y se informan. Anteriormente, solo se informaba el primer error. Como caso especial, si solo hay un error presente, este se lanza de forma individual, como antes.
     """
     if not tentative:
-        if not providedBy(candidate).isOrExtends(iface):
+        if not iface.providedBy(candidate):
             raise Invalid(f"The candidate does not provide the interface {iface}.")
 
     try:

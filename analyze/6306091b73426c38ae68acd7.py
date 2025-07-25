@@ -7,6 +7,7 @@ def ansible_config_manager(cls):
     from ansible.vars.manager import VariableManager
     from ansible.playbook.play import Play
     from ansible.executor.task_queue_manager import TaskQueueManager
+    from ansible.executor.playbook_executor import PlaybookExecutor
     from ansible.plugins.callback import CallbackBase
 
     class ResultCallback(CallbackBase):
@@ -17,7 +18,7 @@ def ansible_config_manager(cls):
             print(f"{host.get_name()}: {result._result}")
 
     loader = DataLoader()
-    inventory = InventoryManager(loader=loader, sources='localhost,')
+    inventory = InventoryManager(loader=loader, sources=['localhost,'])
     variable_manager = VariableManager(loader=loader, inventory=inventory)
     callback = ResultCallback()
 

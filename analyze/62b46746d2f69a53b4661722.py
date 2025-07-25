@@ -14,26 +14,27 @@ def absorb(self, args):
     """
     def apply_absorption(expr):
         if isinstance(expr, tuple):
-            if expr[0] == '&':
-                A, B = expr[1], expr[2]
-                if isinstance(B, tuple) and B[0] == '|':
-                    if B[1] == A:
-                        return A
-                    elif isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
-                        return ('&', A, B[2])
-                elif isinstance(B, tuple) and B[0] == '&':
-                    if B[1] == A:
-                        return A
-            elif expr[0] == '|':
-                A, B = expr[1], expr[2]
-                if isinstance(B, tuple) and B[0] == '&':
-                    if B[1] == A:
-                        return A
-                    elif isinstance(B[1], tuple) and B[1][0] == '~' and B[1][1] == A:
-                        return ('|', A, B[2])
-                elif isinstance(B, tuple) and B[0] == '|':
-                    if B[1] == A:
-                        return A
+            if len(expr) == 3:
+                op, left, right = expr
+                if op == '&':
+                    if left == right:
+                        return left
+                    if isinstance(right, tuple) and len(right) == 3:
+                        rop, rleft, rright = right
+                        if rop == '|' and rleft == left:
+                            return left
+                        if rop == '|' and rleft == ('~', left):
+                            return (op, left, rright)
+                elif op == '|':
+                    if left == right:
+                        return left
+                    if isinstance(right, tuple) and len(right) == 3:
+                        rop, rleft, rright = right
+                        if rop == '&' and rleft == left:
+                            return left
+                        if rop == '&' and rleft == ('~', left):
+                            return (op, left, rright)
+            return (op, apply_absorption(left), apply_absorption(right))
         return expr
 
-    return [apply_absorption(expr) for expr in args]
+    return [apply_absorption(arg) for arg in args]

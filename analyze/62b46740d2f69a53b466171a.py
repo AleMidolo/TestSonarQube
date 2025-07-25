@@ -2,14 +2,20 @@ def pretty(self, indent=0, debug=False):
     """
     Devuelve una representación formateada de manera legible de 'self'.
     """
-    indent_str = ' ' * indent
-    result = f"{indent_str}{self.__class__.__name__}(\n"
+    if debug:
+        print(f"Debug: Indent level = {indent}")
     
-    for key, value in self.__dict__.items():
-        if debug:
-            result += f"{indent_str}  {key}: {repr(value)}\n"
-        else:
-            result += f"{indent_str}  {key}: {value}\n"
-    
-    result += f"{indent_str})"
-    return result
+    # Assuming self is a dictionary-like object for this example
+    if isinstance(self, dict):
+        result = "{\n"
+        for key, value in self.items():
+            result += " " * (indent + 4) + f"{key}: "
+            if isinstance(value, dict):
+                result += value.pretty(indent + 4, debug) if hasattr(value, 'pretty') else str(value)
+            else:
+                result += str(value)
+            result += ",\n"
+        result = result.rstrip(",\n") + "\n" + " " * indent + "}"
+        return result
+    else:
+        return str(self)

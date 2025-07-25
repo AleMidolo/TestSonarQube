@@ -1,13 +1,16 @@
 def get_option_spec(self, command_name, argument_name):
     """
     Obtiene la especificación para el nombre de opción especificado.
-    
-    :param command_name: Nombre del comando.
-    :param argument_name: Nombre del argumento.
-    :return: La especificación de la opción.
+
+    Args:
+        command_name (str): El nombre del comando.
+        argument_name (str): El nombre del argumento.
+
+    Returns:
+        dict: La especificación de la opción si se encuentra, None en caso contrario.
     """
-    # Asumiendo que self.options es un diccionario que contiene las especificaciones de las opciones
-    if command_name in self.options and argument_name in self.options[command_name]:
-        return self.options[command_name][argument_name]
-    else:
-        return None
+    if hasattr(self, 'options_spec'):
+        for option in self.options_spec:
+            if option.get('command') == command_name and option.get('argument') == argument_name:
+                return option
+    return None

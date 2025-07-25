@@ -19,4 +19,9 @@ def select_filenames_by_prefix(prefix, files):
     list  
     Lista de rutas de archivos cuyos nombres base coinciden con el prefijo `prefix`.
     """
-    return [file for file in files if os.path.basename(file).startswith(prefix)]
+    selected_files = []
+    for file_path in files:
+        file_name = os.path.basename(file_path)
+        if file_name.startswith(prefix):
+            selected_files.append(file_path)
+    return selected_files

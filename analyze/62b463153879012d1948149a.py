@@ -21,7 +21,7 @@ def _group_files_by_xml_filename(source, xmls, files):
     grouped_files = {}
     
     for xml in xmls:
-        xml_base = xml.split('.')[0]  # Obtener el nombre base del archivo XML
+        xml_base = xml.split('.')[0]  # Obtener el nombre base sin la extensión
         grouped_files[xml_base] = []
         
         for file in files:

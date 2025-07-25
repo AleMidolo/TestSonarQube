@@ -15,15 +15,14 @@ def _explore_folder(folder):
     Retorna
     -------
     dict
-        Diccionario que agrupa los archivos por el nombre base de su archivo XML.
+        Diccionario con los archivos agrupados por el nombre base del archivo XML.
     """
-    file_groups = defaultdict(list)
+    files_dict = defaultdict(list)
     
     for root, dirs, files in os.walk(folder):
         for file in files:
             if file.endswith('.xml'):
                 base_name = os.path.splitext(file)[0]
-                file_path = os.path.join(root, file)
-                file_groups[base_name].append(file_path)
+                files_dict[base_name].append(os.path.join(root, file))
     
-    return dict(file_groups)
+    return dict(files_dict)

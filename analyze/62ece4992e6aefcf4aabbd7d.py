@@ -20,7 +20,7 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     if extra_env is not None:
         env.update(extra_env)
 
-    # Construir el comando para ejecutar la función en un subproceso
+    # Convertir la función a un comando ejecutable
     module_name = func.__module__
     func_name = func.__name__
     command = [sys.executable, '-c', f'from {module_name} import {func_name}; {func_name}()']
@@ -29,7 +29,7 @@ def subprocess_run_helper(func, *args, timeout, extra_env=None):
     if args:
         command.extend(args)
 
-    # Ejecutar el comando en un subproceso
+    # Ejecutar el subproceso
     result = subprocess.run(command, env=env, timeout=timeout, capture_output=True, text=True)
 
     # Devolver el resultado del subproceso
