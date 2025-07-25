@@ -1,9 +1,10 @@
 def popitem(self):
     """
-    Eliminar y devolver el par `(clave, valor)` que fue insertado primero.
+    删除与第一个插入的键对应的值，并以元组 `(key, value)` 的格式返回。
+    删除并返回第一个插入的 `(key, value)` 键值对。
     """
     if not self:
-        raise KeyError("El diccionario está vacío.")
+        raise KeyError("popitem(): dictionary is empty")
     key = next(iter(self))
     value = self.pop(key)
     return (key, value)

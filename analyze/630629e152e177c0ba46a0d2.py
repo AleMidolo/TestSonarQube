@@ -1,23 +1,44 @@
 import requests
-from urllib.parse import urlparse
+from lxml import etree
 
 def retrieve_and_parse_diaspora_webfinger(handle):
     """
-    Recupera y analiza un documento "webfinger" remoto de Diaspora.
+    检索并解析远程 Diaspora WebFinger 文档。
 
-    :arg handle: Identificador remoto a recuperar
-    :returns: dict
+    :arg handle: 要检索的远程句柄
+    :returns: 字典
     """
-    # Parse the handle to extract the username and domain
-    if '@' not in handle:
-        raise ValueError("Invalid handle format. Expected format: user@domain")
-
-    username, domain = handle.split('@')
-    webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{username}@{domain}"
-
+    # 构造 WebFinger URL
+    webfinger_url = f"https://{handle.split('@')[1]}/.well-known/webfinger?resource=acct:{handle}"
+    
     try:
+        # 发送 GET 请求获取 WebFinger 文档
         response = requests.get(webfinger_url)
         response.raise_for_status()
-        return response.json()
+        
+        # 解析 XML 文档
+        root = etree.fromstring(response.content)
+        
+        # 提取所需信息
+        result = {
+            "subject": root.find(".//{http://webfinger.net/rel/profile-page}subject").text,
+            "aliases": [alias.text for alias in root.findall(".//{http://webfinger.net/rel/profile-page}alias")],
+            "links": []
+        }
+        
+        for link in root.findall(".//{http://webfinger.net/rel/profile-page}link"):
+            link_info = {
+                "rel": link.get("rel"),
+                "type": link.get("type"),
+                "href": link.get("href")
+            }
+            result["links"].append(link_info)
+        
+        return result
+    
     except requests.exceptions.RequestException as e:
-        raise Exception(f"Failed to retrieve webfinger document: {e}")
+        print(f"请求失败: {e}")
+        return {}
+    except etree.XMLSyntaxError as e:
+        print(f"XML 解析失败: {e}")
+        return {}

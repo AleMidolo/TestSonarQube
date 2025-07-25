@@ -3,27 +3,27 @@ import sys
 
 def split(s, platform='this'):
     """
-    Variante multiplataforma de `shlex.split()` para dividir cadenas de línea de comandos.  
-    Diseñado para su uso con `subprocess`, inyección de argumentos (`argv`), etc. Utiliza expresiones regulares rápidas.
-
-    platform:  'this'= detección automática de la plataforma actual;  
-      1= POSIX;  
-      0=Windows/CMD  
-      (otros valores están reservados).
+    在给定的平台下拆分输入字符串，返回拆分结果。  
+    如果 `platform` 等于 `'this'`，则自动检测当前平台。  
+    如果 `platform` 等于 `1`，使用 POSIX 风格。  
+    如果 `platform` 等于 `0`，使用 Windows/CMD 风格。  
+    参数：
+      s：输入的字符串。  
+      platform：  
+        `'this'`：根据当前平台自动检测；`1`：使用 POSIX 风格；`0`：使用 Windows/CMD 风格。  
+    返回值：
+      一个拆分后的字符串列表。
     """
     if platform == 'this':
         platform = 1 if sys.platform != 'win32' else 0
     
-    if platform == 1:  # POSIX
-        pattern = re.compile(r"""
-            (?:[^\s"']+|"[^"]*"|'[^']*')+
-        """, re.VERBOSE)
-    elif platform == 0:  # Windows/CMD
-        pattern = re.compile(r"""
-            (?:[^\s"]+|"[^"]*")+
-        """, re.VERBOSE)
+    if platform == 1:
+        # POSIX style
+        pattern = re.compile(r"""((?:[^\s"']|"[^"]*"|'[^']*')+)""")
+    elif platform == 0:
+        # Windows/CMD style
+        pattern = re.compile(r"""((?:[^\s"]|"[^"]*")+)""")
     else:
         raise ValueError("Invalid platform value. Use 'this', 1 (POSIX), or 0 (Windows/CMD).")
     
-    matches = pattern.findall(s)
-    return [match.strip('"\'') for match in matches]
+    return pattern.findall(s)

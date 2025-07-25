@@ -1,5 +1,6 @@
 def is_valid(self, identifier):
     """
-    Devuelve True si el identificador es válido. En esta implementación base, siempre devuelve True.
+    如果标识符有效，则返回真。在此基础实现中，始终返回真。 (D)
+    如果标识符有效，则返回真。在此基础实现中，始终返回真。
     """
     return True

@@ -2,22 +2,23 @@ import re
 
 def validate_value(value):
     """
-    Validar el valor proporcionado contra la expresión regular correspondiente.
+    根据对应的正则表达式验证给定的值。
 
-    Argumentos:
-        value: la cadena de texto a validar
+    参数:
+        value: 要验证的字符串
 
-    Excepciones:
-        ValidationError: si el valor proporcionado no cumple con la expresión regular.
+    异常:
+        ValidationError: 如果给定的值不符合正则表达式，将抛出此异常。
     """
-    # Define la expresión regular que debe cumplir el valor
-    regex_pattern = r'^[A-Za-z0-9_]+$'  # Ejemplo: solo letras, números y guiones bajos
+    # 假设我们使用一个简单的正则表达式来验证值
+    # 例如，验证值是否为一个有效的电子邮件地址
+    regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
     
-    if not re.match(regex_pattern, value):
-        raise ValidationError(f"El valor '{value}' no cumple con la expresión regular.")
+    if not re.match(regex, value):
+        raise ValidationError("The value does not match the required pattern.")
     
     return True
 
 class ValidationError(Exception):
-    """Excepción personalizada para errores de validación."""
+    """自定义异常类，用于表示验证失败的情况。"""
     pass

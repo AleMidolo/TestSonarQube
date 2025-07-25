@@ -1,13 +1,11 @@
 def _include_groups(self, parser_dict):
     """
-    Resuelve la directiva de inclusión del diccionario en los archivos de especificación.
+    解析规范文件中的 include dict 指令。
     """
-    # Implementation goes here
-    # Example placeholder logic:
-    for key, value in parser_dict.items():
-        if key == "include":
-            # Process the include directive
-            print(f"Including groups from: {value}")
-        else:
-            # Handle other keys in the parser_dict
-            print(f"Processing key: {key} with value: {value}")
+    if 'include' in parser_dict:
+        for group in parser_dict['include']:
+            if group in parser_dict:
+                parser_dict.update(parser_dict[group])
+            else:
+                raise ValueError(f"Group '{group}' not found in parser_dict")
+    return parser_dict

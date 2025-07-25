@@ -1,28 +1,20 @@
 def fromutc(self, dt):
     """
-    Dado un objeto "datetime" que contiene información de la zona horaria al que pertenece, calcula un objeto "datetime" para una zona horaria diferente, que contenga información de la nueva zona horaria al que pertenece.
+    给定一个在给定时区中带有时区信息的日期时间对象，计算在新时区的带有时区信息的日期时间。
 
-    Dado que esta es la única ocasión en la que *sabemos* que tenemos un objeto datetime no ambiguo, aprovechamos esta oportunidad para determinar si el datetime es ambiguo y está en un estado de "pliegue" (por ejemplo, si es la primera ocurrencia, cronológicamente, del datetime ambiguo).
+    由于这是我们*明确知道*日期时间对象没有歧义的唯一时刻，我们利用这个机会来判断该日期时间是否存在歧义，并且是否处于“折叠”状态（例如，如果这是歧义日期时间的第一个按时间顺序出现的实例）。
 
-    :param dt:
-        Un objeto :class:`datetime.datetime` con conocimiento de zona horaria.
+    :param dt: 一个带有时区信息的 :class:`datetime.datetime` 对象。
     """
     if dt.tzinfo is None:
         raise ValueError("fromutc() requires a timezone-aware datetime")
     
-    # Convertir el datetime a UTC
-    dt_utc = dt.astimezone(self.utc)
+    # Convert the datetime to the local timezone
+    local_dt = dt.astimezone(self)
     
-    # Convertir el datetime UTC a la nueva zona horaria
-    dt_local = dt_utc.astimezone(self)
-    
-    # Verificar si el datetime es ambiguo en la nueva zona horaria
-    if self.is_ambiguous(dt_local):
-        # Si es ambiguo, determinar si está en el "pliegue"
-        if self.is_folded(dt_local):
-            # Si está en el pliegue, ajustar el datetime
-            dt_local = self.resolve_ambiguous(dt_local, fold=1)
-        else:
-            dt_local = self.resolve_ambiguous(dt_local, fold=0)
-    
-    return dt_local
+    # Check if the local datetime is ambiguous
+    if self.is_ambiguous(local_dt):
+        # If ambiguous, return the first occurrence
+        return local_dt.replace(fold=0)
+    else:
+        return local_dt

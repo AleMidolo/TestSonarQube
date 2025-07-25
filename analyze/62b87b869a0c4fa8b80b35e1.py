@@ -1,43 +1,39 @@
-def hist_to_graph(hist, make_value=None, get_coordinate="left",
-                  field_names=("x", "y"), scale=None):
+def hist_to_graph(hist, make_value=None, get_coordinate="left", field_names=("x", "y"), scale=None):
     """
-    Convierte un :class:`.histogram` en un :class:`.graph`.
+    将一个 :class:`.histogram` 转换为一个 :class:`.graph`。
 
-    *make_value* es una función para establecer el valor de un punto en el gráfico.
-    Por defecto, este valor es el contenido del bin.
-    *make_value* acepta un único valor (el contenido del bin) sin contexto.
+    *make_value* 是一个函数，用于设置图形点的值。
+    默认情况下，它是直方图的 bin 内容。
+    *make_value* 接受一个单一值（bin 内容），不需要上下文。
 
-    Esta opción puede ser utilizada para crear barras de error en el gráfico.
-    Por ejemplo, para crear un gráfico con errores a partir de un histograma
-    donde los bins contienen una tupla nombrada con los campos *mean*, *mean_error* y un contexto,
-    se podría usar:
-
+    此选项可以用于创建图形的误差条。
+    例如，要从一个包含名为 *mean*、*mean_error* 字段和上下文的 bin 的直方图中创建带误差的图形，可以使用以下代码：
     >>> make_value = lambda bin_: (bin_.mean, bin_.mean_error)
 
-    *get_coordinate* define cuál será la coordenada de un punto en el gráfico
-    creado a partir de un bin del histograma. Puede ser "left" (por defecto), "right" o "middle".
+    *get_coordinate* 定义了从直方图 bin 创建的图表点的坐标位置，可选值包括 "left"（默认）、"right" 和 "middle"。
 
-    *field_names* establece los nombres de los campos del gráfico. Su número
-    debe coincidir con la dimensión del resultado.
-    Para un *make_value* como el anterior, los nombres serían
-    *("x", "y_mean", "y_mean_error")*.
+    *field_names* 设置图形的字段名称。字段名称的数量必须与结果的维度相同。对于上述的 *make_value*，字段名称可以是 *("x", "y_mean", "y_mean_error")*。
 
-    *scale* define la escala del gráfico (desconocida por defecto).
-    Si es ``True``, utiliza la escala del histograma.
+    *scale* 设置图形的比例（默认情况下未知）。
+    如果设置为真，则使用直方图的比例。
 
-    *hist* debe contener únicamente bins numéricos (sin contexto)
-    o *make_value* debe eliminar el contexto al crear un gráfico numérico.
+    *hist* 必须仅包含数值型 bin（没有上下文），或者 *make_value* 在创建数值型图形时必须移除上下文。
 
-    Devuelve el gráfico resultante.
+    返回生成的图形。
     """
+    import numpy as np
+
     if make_value is None:
         make_value = lambda bin_: bin_
 
-    if scale is True:
-        scale = hist.scale
+    if scale is None:
+        scale = hist.scale if hasattr(hist, 'scale') else None
 
-    graph_data = []
-    for bin_ in hist.bins:
+    bins = hist.bins
+    x_coords = []
+    y_values = []
+
+    for i, bin_ in enumerate(bins):
         if get_coordinate == "left":
             x = bin_.left
         elif get_coordinate == "right":
@@ -45,16 +41,25 @@ def hist_to_graph(hist, make_value=None, get_coordinate="left",
         elif get_coordinate == "middle":
             x = (bin_.left + bin_.right) / 2
         else:
-            raise ValueError("get_coordinate debe ser 'left', 'right' o 'middle'")
+            raise ValueError("Invalid get_coordinate value. Must be 'left', 'right', or 'middle'.")
 
-        value = make_value(bin_.content)
-        if isinstance(value, tuple):
-            graph_data.append((x,) + value)
-        else:
-            graph_data.append((x, value))
+        y = make_value(bin_)
 
-    return type('Graph', (), {
-        'data': graph_data,
-        'field_names': field_names,
-        'scale': scale
-    })
+        x_coords.append(x)
+        y_values.append(y)
+
+    x_coords = np.array(x_coords)
+    y_values = np.array(y_values)
+
+    if len(field_names) != y_values.shape[1] + 1:
+        raise ValueError("Number of field_names must match the dimensionality of the y_values.")
+
+    graph = {
+        field_names[0]: x_coords,
+        **{field_names[i+1]: y_values[:, i] for i in range(y_values.shape[1])}
+    }
+
+    if scale is not None:
+        graph['scale'] = scale
+
+    return graph

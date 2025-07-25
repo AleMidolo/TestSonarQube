@@ -1,8 +1,8 @@
-def validar_argumentos_requeridos(self, args):
+def validate_requires_args(self, args):
     """
-    Verifica si se han proporcionado todos los argumentos requeridos.
+    检查是否提供了所有必需的参数。
     """
-    required_args = self.get_required_args()  # Assuming this method exists to get required arguments
+    required_args = self.required_args  # Assuming required_args is a list of required argument names
     missing_args = [arg for arg in required_args if arg not in args]
     
     if missing_args:

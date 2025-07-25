@@ -1,15 +1,13 @@
-from datetime import time
-
 def dehydrate_time(value):
     """
-    Deshidratador para valores de tipo `time`.
+    在 Time 类中使用 ticks 来生成 Structure 类。
+    用于 `time` 值的转换器。
 
-    :param value: Valor de tipo `time` a deshidratar.
-    :type value: time
-    :return: Representación en cadena del tiempo en formato HH:MM:SS.
-    :rtype: str
+    :param value: Time 对象
+    :type value: Time
+    :return: 包含 ticks 的字典
+    :rtype: dict
     """
-    if not isinstance(value, time):
-        raise TypeError("El valor debe ser de tipo `time`.")
-    
-    return value.strftime("%H:%M:%S")
+    if value is None:
+        return None
+    return {'ticks': value.ticks()}

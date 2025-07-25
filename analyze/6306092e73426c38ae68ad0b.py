@@ -1,15 +1,14 @@
 def validate_min_max_args(self, args):
     """
-    Verifica si el valor de los argumentos está entre los valores mínimo y máximo.
+    检查给定参数的值是否在最小值和最大值之间
 
-    :param args: Los argumentos recibidos.
+    检查参数的值是否在最小值和最大值之间
+    :param args: 接收到的参数。
     """
-    min_value = getattr(self, 'min_value', None)
-    max_value = getattr(self, 'max_value', None)
+    if not hasattr(self, 'min_value') or not hasattr(self, 'max_value'):
+        raise ValueError("min_value and max_value must be defined in the class.")
     
-    if min_value is not None and max_value is not None:
-        for arg in args:
-            if not (min_value <= arg <= max_value):
-                raise ValueError(f"El valor {arg} no está entre {min_value} y {max_value}.")
-    else:
-        raise AttributeError("Los atributos 'min_value' y 'max_value' no están definidos.")
+    for arg in args:
+        if not (self.min_value <= arg <= self.max_value):
+            return False
+    return True

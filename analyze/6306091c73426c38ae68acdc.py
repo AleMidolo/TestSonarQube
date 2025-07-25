@@ -1,29 +1,26 @@
-import yaml
-from typing import Dict, Any
-
-class IRValidatorException(Exception):
-    pass
-
-def validate_from_content(cls, spec_content=None) -> Dict[str, Any]:
+def validate_from_content(cls, spec_content=None):
     """
-    Valida que el contenido del archivo spec (YAML) tenga todos los campos requeridos.
+    验证规范（YAML）内容是否包含所有必需字段。
 
-    :param spec_content: contenido del archivo spec
-    :raise IRValidatorException: cuando faltan datos obligatorios en el archivo spec
-    :return: Diccionario con los datos cargados desde un archivo spec (YAML)
+    :param spec_content: 规范文件的内容
+    :raise IRValidatorException: 当规范文件中缺少必需数据时抛出异常
+    :return: 从规范（YAML）文件加载的数据字典
     """
+    import yaml
+    from yaml import YAMLError
+
     if spec_content is None:
-        raise IRValidatorException("El contenido del archivo spec no puede ser nulo.")
-    
+        raise ValueError("spec_content cannot be None")
+
     try:
-        spec_data = yaml.safe_load(spec_content)
-    except yaml.YAMLError as e:
-        raise IRValidatorException(f"Error al cargar el contenido YAML: {e}")
-    
-    required_fields = ["field1", "field2", "field3"]  # Ejemplo de campos requeridos
-    
+        data = yaml.safe_load(spec_content)
+    except YAMLError as e:
+        raise IRValidatorException(f"Invalid YAML content: {e}")
+
+    required_fields = ['field1', 'field2', 'field3']  # Replace with actual required fields
+
     for field in required_fields:
-        if field not in spec_data:
-            raise IRValidatorException(f"Falta el campo obligatorio: {field}")
-    
-    return spec_data
+        if field not in data:
+            raise IRValidatorException(f"Missing required field: {field}")
+
+    return data

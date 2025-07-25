@@ -2,28 +2,26 @@ import subprocess
 
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None):
     """
-    Llama al/los comando(s) dado(s).
-    
-    :param commands: Lista de comandos a ejecutar.
-    :param args: Lista de argumentos para los comandos.
-    :param cwd: Directorio de trabajo actual (opcional).
-    :param verbose: Si es True, imprime el comando ejecutado (opcional).
-    :param hide_stderr: Si es True, oculta la salida de error estándar (opcional).
-    :param env: Diccionario de variables de entorno (opcional).
-    :return: El código de retorno del comando ejecutado.
+    提供了一组命令。使用子进程运行给定的命令及其参数。返回运行结果（标准输出和返回码）。
+
+    调用给定的命令。
     """
-    full_command = commands + args
-    if verbose:
-        print(f"Ejecutando: {' '.join(full_command)}")
-    
-    stderr = subprocess.DEVNULL if hide_stderr else None
-    
+    command = commands + args
+    stderr = subprocess.PIPE if hide_stderr else None
     process = subprocess.Popen(
-        full_command,
+        command,
         cwd=cwd,
+        stdout=subprocess.PIPE,
+        stderr=stderr,
         env=env,
-        stderr=stderr
+        text=True
     )
+    stdout, stderr = process.communicate()
     
-    process.communicate()
-    return process.returncode
+    if verbose:
+        print(f"Command: {' '.join(command)}")
+        print(f"Stdout: {stdout}")
+        if stderr:
+            print(f"Stderr: {stderr}")
+    
+    return stdout, process.returncode

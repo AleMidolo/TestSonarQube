@@ -1,17 +1,17 @@
 def match(filename):
     """
-    Verificar si el nombre de archivo es un tipo que este módulo soporta
+    检查给定文件名的类型是否为 'doxyfile'
 
-    Argumentos:
-        filename: Nombre de archivo a verificar
-    Retorna:
-        'False' si no es compatible, 'True' si es soportado
+    参数：
+      filename: 要检查的文件名
+    返回值：
+      如果给定文件名的类型（小写形式）是 'doxyfile'，则返回真
+
+    检查文件名是否为此模块支持的类型
+
+    参数：
+      filename: 要匹配的文件名
+    返回值：
+      如果不匹配，返回假；如果支持，返回真
     """
-    # Lista de extensiones soportadas
-    supported_extensions = ['.txt', '.csv', '.json', '.xml']
-    
-    # Verificar si el archivo tiene una extensión soportada
-    for ext in supported_extensions:
-        if filename.endswith(ext):
-            return True
-    return False
+    return filename.lower() == 'doxyfile'

@@ -1,28 +1,28 @@
 import json
-from xml.etree import ElementTree as ET
 from typing import Dict
 
 def parse_diaspora_webfinger(document: str) -> Dict:
     """
-    Analiza el webfinger de Diaspora, que puede estar en formato JSON (nuevo) o en formato XRD (antiguo).
+    通过读取 JSON 格式的文档获取 Webfinger，Webfinger 中的 `hcard_url` 值是文档中 `links` 的 `href` 值。
 
-    [https://diaspora.github.io/diaspora_federation/discovery/webfinger.html](https://diaspora.github.io/diaspora_federation/discovery/webfinger.html)
+    解析 Diaspora 的 Webfinger，该 Webfinger 可以是 JSON 格式（新格式）或 XRD 格式（旧格式）。
+
+    https://diaspora.github.io/diaspora_federation/discovery/webfinger.html
     """
     try:
-        # Intentar parsear como JSON
         data = json.loads(document)
-        return data
+        if isinstance(data, dict):
+            if 'links' in data:
+                for link in data['links']:
+                    if isinstance(link, dict) and 'rel' in link and link['rel'] == 'http://microformats.org/profile/hcard':
+                        return {'hcard_url': link.get('href')}
+            elif 'subject' in data:
+                # Handle XRD format
+                for link in data.get('links', []):
+                    if isinstance(link, dict) and 'rel' in link and link['rel'] == 'http://microformats.org/profile/hcard':
+                        return {'hcard_url': link.get('href')}
+        return {}
     except json.JSONDecodeError:
-        # Si falla, intentar parsear como XML/XRD
-        try:
-            root = ET.fromstring(document)
-            result = {}
-            for link in root.findall('{http://docs.oasis-open.org/ns/xri/xrd-1.0}Link'):
-                rel = link.get('rel')
-                href = link.get('href')
-                if rel and href:
-                    result[rel] = href
-            return result
-        except ET.ParseError:
-            # Si ambos fallan, devolver un diccionario vacío
-            return {}
+        # Handle non-JSON format (e.g., XRD format)
+        # This is a simplified approach, as XRD parsing would require more complex handling
+        return {}

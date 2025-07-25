@@ -1,40 +1,36 @@
 def generate_default_observer_schema(app):
     """
-    Generar el esquema de observador predeterminado para cada recurso de Kubernetes presente en  
-    ``spec.manifest`` para el cual no se haya especificado un esquema de observador personalizado.
+    为 ``spec.manifest`` 中的每个 Kubernetes 资源生成默认的观察者模式（observer schema），前提是尚未为其指定自定义的观察者模式。
 
-    Argumentos:
-    app(krake.data.kubernetes.Application): La aplicación para la cual se generará un esquema de observador predeterminado.
+    参数：
+      app (krake.data.kubernetes.Application): 需要为其生成默认观察者模式的应用程序。
     """
-    default_schema = {
-        "type": "object",
-        "properties": {
-            "status": {
+    for resource in app.spec.manifest:
+        if not hasattr(resource, 'observer_schema'):
+            # 生成默认的观察者模式
+            resource.observer_schema = {
                 "type": "object",
                 "properties": {
-                    "conditions": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "type": {"type": "string"},
-                                "status": {"type": "string"},
-                                "lastTransitionTime": {"type": "string"},
-                                "reason": {"type": "string"},
-                                "message": {"type": "string"}
-                            },
-                            "required": ["type", "status"]
+                    "status": {
+                        "type": "object",
+                        "properties": {
+                            "conditions": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {"type": "string"},
+                                        "status": {"type": "string"},
+                                        "lastTransitionTime": {"type": "string"},
+                                        "reason": {"type": "string"},
+                                        "message": {"type": "string"}
+                                    },
+                                    "required": ["type", "status"]
+                                }
+                            }
                         }
                     }
                 },
-                "required": ["conditions"]
+                "required": ["status"]
             }
-        },
-        "required": ["status"]
-    }
-
-    for resource in app.spec.manifest:
-        if not hasattr(resource, 'observer_schema'):
-            resource.observer_schema = default_schema
-
     return app

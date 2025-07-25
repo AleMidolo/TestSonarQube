@@ -1,27 +1,29 @@
 def point_type(name, fields, srid_map):
     """
-    Crear dinámicamente una subclase de 'Point'.
-    """
-    from collections import namedtuple
+    动态创建一个 Point 子类。
 
-    # Crear una clase base Point
+    :param name: 类的名称
+    :param fields: 类的字段，通常是一个字典，键为字段名，值为字段类型
+    :param srid_map: SRID 映射，通常是一个字典，键为字段名，值为 SRID
+    :return: 动态创建的 Point 子类
+    """
     class Point:
-        def __init__(self, x, y, srid=None):
-            self.x = x
-            self.y = y
-            self.srid = srid
+        def __init__(self, **kwargs):
+            for field, value in kwargs.items():
+                setattr(self, field, value)
 
         def __repr__(self):
-            return f"Point(x={self.x}, y={self.y}, srid={self.srid})"
+            fields_str = ', '.join(f"{field}={getattr(self, field)}" for field in self.__dict__)
+            return f"{name}({fields_str})"
 
-    # Crear una subclase dinámica de Point
-    DynamicPoint = type(name, (Point,), {})
+        def to_wkt(self):
+            coords = []
+            for field in fields:
+                if field in srid_map:
+                    coords.append(f"{getattr(self, field)} {srid_map[field]}")
+                else:
+                    coords.append(str(getattr(self, field)))
+            return f"POINT({', '.join(coords)})"
 
-    # Agregar campos adicionales a la subclase
-    for field_name, field_type in fields.items():
-        setattr(DynamicPoint, field_name, field_type)
-
-    # Agregar el mapeo SRID
-    DynamicPoint.srid_map = srid_map
-
-    return DynamicPoint
+    Point.__name__ = name
+    return Point

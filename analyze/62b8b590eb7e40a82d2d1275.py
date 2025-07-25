@@ -1,11 +1,11 @@
 def _legacy_mergeOrderings(orderings):
     """
-    Combinar múltiples ordenamientos de manera que se preserve el orden dentro de cada uno.
+    将多个列表按出现顺序合并为一个不包含重复元素的列表。
+    合并多个排序列表（orderings），同时保留每个排序列表中的顺序。
 
-    Los ordenamientos están restringidos de tal forma que, si un objeto aparece en dos o más ordenamientos, entonces el sufijo que comienza con dicho objeto debe estar presente en ambos ordenamientos.
+    这些排序列表受到以下约束：如果某个对象出现在两个或多个排序列表中，那么以该对象为起点的后缀部分必须在所有相关的排序列表中一致。
 
-    Por ejemplo:
-
+    例如：
     >>> _mergeOrderings([
     ... ['x', 'y', 'z'],
     ... ['q', 'z'],
@@ -16,7 +16,7 @@ def _legacy_mergeOrderings(orderings):
     """
     from collections import defaultdict, deque
 
-    # Build a graph and in-degree count
+    # 构建图
     graph = defaultdict(set)
     in_degree = defaultdict(int)
     all_nodes = set()
@@ -29,12 +29,14 @@ def _legacy_mergeOrderings(orderings):
                 in_degree[v] += 1
             all_nodes.add(u)
             all_nodes.add(v)
+        if ordering:
+            all_nodes.add(ordering[-1])
 
-    # Initialize the queue with nodes having zero in-degree
+    # 初始化队列
     queue = deque([node for node in all_nodes if in_degree[node] == 0])
     result = []
 
-    # Perform topological sort
+    # 拓扑排序
     while queue:
         u = queue.popleft()
         result.append(u)

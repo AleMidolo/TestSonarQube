@@ -1,16 +1,21 @@
 def size_to_bytes(size: str) -> int:
     """
-    Convertir tamaño de archivo legible por humanos a bytes.
+    将人类可读的文件大小转换为字节。
 
-    El valor resultante es una aproximación, ya que el valor de entrada en la mayoría de los casos está redondeado.
+    参数:
+        size: str，一个表示人类可读的文件大小的字符串 (例如: '500K')
+    返回值:
+        int: 文件大小的字节数
 
-    Args:
-        size: Una cadena que representa un tamaño de archivo legible por humanos (por ejemplo: '500K')
+    结果值是一个近似值，因为输入值在大多数情况下是四舍五入的。
 
-    Returns:
-        Una representación decimal del tamaño del archivo
+    参数:
+        size: 一个表示人类可读文件大小的字符串 (例如: '500K')
 
-    Ejemplos::
+    返回值:
+        文件大小的十进制表示
+
+    示例::
 
         >>> size_to_bytes("500")
         500

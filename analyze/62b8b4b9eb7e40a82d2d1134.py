@@ -1,19 +1,13 @@
 def namesAndDescriptions(self, all=False):  # pylint:disable=redefined-builtin
     """
-    Devuelve los nombres y descripciones de los atributos definidos por la interfaz.
-    
-    Args:
-        all (bool): Si es True, devuelve todos los atributos. Si es False, devuelve solo los atributos definidos por la interfaz.
-    
-    Returns:
-        dict: Un diccionario donde las claves son los nombres de los atributos y los valores son las descripciones.
+    返回当前类属性的名称和描述。
+    如果all为假，则返回由接口定义的属性名称和描述。
     """
-    attributes = self.__dict__
-    if not all:
-        attributes = {k: v for k, v in attributes.items() if not k.startswith('_')}
-    
-    descriptions = {}
-    for name, value in attributes.items():
-        descriptions[name] = value.__doc__ if hasattr(value, '__doc__') else "No description available"
-    
-    return descriptions
+    attributes = {}
+    for name, value in self.__class__.__dict__.items():
+        if not name.startswith('__'):
+            if not all and not hasattr(value, '__isinterface__'):
+                continue
+            description = value.__doc__ if value.__doc__ else "No description available."
+            attributes[name] = description
+    return attributes

@@ -1,13 +1,13 @@
 def get_nested_custom_and_control_args(self, args):
     """
-    Divide los argumentos de entrada en controlados, anidados y personalizados.
+    将输入参数分为控制，嵌套和自定义参数。
 
-    Argumentos de control: controlan el comportamiento de IR. Estos argumentos no se incluirán en el archivo spec yml.
-    Argumentos anidados: son utilizados por los playbooks de Ansible y se incluirán en el archivo spec yml.
-    Argumentos personalizados: Variables personalizadas de Ansible que se usarán en lugar del uso normal de argumentos anidados.
+    控制参数：用于控制中间表示的行为。这些参数不会被写入到规范yml文件中。  
+    嵌套参数：用于Ansible playbooks，并会被写入到规范yml文件中。  
+    自定义参数：自定义的Ansible变量，用于替代常规的嵌套参数使用。
 
-    :param args: la lista recopilada de argumentos.
-    :return: (dict, dict): diccionarios planos (control_args, nested_args)
+    :param args: 收集到的参数列表。
+    :return: (dict, dict): 扁平化的字典（control_args, nested_args）
     """
     control_args = {}
     nested_args = {}

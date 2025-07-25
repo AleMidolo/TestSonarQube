@@ -1,16 +1,8 @@
 def amend_bzparams(self, params, bug_ids):
     """
-    Modificar los parámetros de Bugzilla
+    修改 Bugzilla 参数
     """
-    if not isinstance(params, dict):
-        raise ValueError("params must be a dictionary")
-    if not isinstance(bug_ids, (list, tuple)):
-        raise ValueError("bug_ids must be a list or tuple")
-    
+    # 假设我们有一个 Bugzilla API 客户端实例 self.bz_client
+    # 使用提供的参数和 bug_ids 来更新 Bugzilla 中的 bug
     for bug_id in bug_ids:
-        if not isinstance(bug_id, int):
-            raise ValueError("bug_ids must contain integers")
-    
-    # Assuming self.bz is the Bugzilla client instance
-    for bug_id in bug_ids:
-        self.bz.update_bugs(bug_id, params)
+        self.bz_client.update_bug(bug_id, params)

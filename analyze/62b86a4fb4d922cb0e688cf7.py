@@ -2,22 +2,16 @@ import re
 
 def validate_key(key):
     """
-    Validar la clave proporcionada contra la expresión regular correspondiente.
+    根据对应的正则表达式验证给定的键。
 
-    Argumentos:
-        key: la cadena de texto a validar.
+    参数:
+        key: 要验证的字符串
 
-    Excepciones:
-        ValidationError: si la clave proporcionada no cumple con la expresión regular.
+    异常:
+        ValidationError: 如果给定的键不符合正则表达式，则抛出此异常。
     """
-    # Expresión regular para validar la clave
-    regex = r'^[A-Za-z0-9]{8,16}$'  # Ejemplo: clave alfanumérica de 8 a 16 caracteres
+    # 定义正则表达式，假设键只能包含字母、数字和下划线，且长度为1到50
+    pattern = r'^[a-zA-Z0-9_]{1,50}$'
     
-    if not re.match(regex, key):
-        raise ValidationError("La clave no cumple con el formato requerido.")
-    
-    return True
-
-class ValidationError(Exception):
-    """Excepción personalizada para errores de validación."""
-    pass
+    if not re.match(pattern, key):
+        raise ValidationError(f"Invalid key: {key} does not match the required pattern.")

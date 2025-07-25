@@ -3,8 +3,9 @@ from functools import lru_cache, wraps
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     """
-    Decorador para envolver una función con una llamada que memoriza y guarda
-    hasta `maxsize` resultados, utilizando un algoritmo de "Menos Usado Recientemente" (Least Recently Used, LRU) con un valor de tiempo de vida (TTL, Time-To-Live) por elemento.
+    一个用于将函数包装为一个带有缓存功能的可调用对象的装饰器。
+    该缓存基于最近最少使用（LRU）算法，最多保存 `maxsize` 个结果，
+    并为每个缓存项设置一个生存时间（TTL，单位为秒）。
     """
     def decorator(func):
         @lru_cache(maxsize=maxsize, typed=typed)
@@ -18,9 +19,9 @@ def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
                 value, timestamp = wrapper._cache[key]
                 if timer() - timestamp < ttl:
                     return value
-            value = cached_func(*args, **kwargs)
-            wrapper._cache[key] = (value, timer())
-            return value
+            result = cached_func(*args, **kwargs)
+            wrapper._cache[key] = (result, timer())
+            return result
 
         wrapper._cache = {}
         return wrapper

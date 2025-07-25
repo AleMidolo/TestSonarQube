@@ -1,60 +1,51 @@
 def normalized(self):
     """
-    Devuelve una versión de este objeto representada completamente utilizando valores enteros para los atributos relativos.
+    将所有时间单位标准化为整数。
+
+    返回一个完全使用整数值表示相对属性的对象版本。
 
     >>> relativedelta(days=1.5, hours=2).normalized()
     relativedelta(days=+1, hours=+14)
 
     :return:
-        Devuelve un objeto de la clase :class:`dateutil.relativedelta.relativedelta`.
+      返回一个 :class:`dateutil.relativedelta.relativedelta` 对象。
     """
     from dateutil.relativedelta import relativedelta
-    import math
 
-    # Convertir días fraccionarios a horas
-    days_fractional, days_integer = math.modf(self.days)
-    hours_from_days = days_fractional * 24
+    # 将小数部分转换为整数
+    days = int(self.days)
+    hours = int(self.hours)
+    minutes = int(self.minutes)
+    seconds = int(self.seconds)
+    microseconds = int(self.microseconds)
 
-    # Sumar las horas fraccionarias de los días a las horas existentes
-    total_hours = self.hours + hours_from_days
+    # 处理小数部分
+    extra_hours = int((self.days - days) * 24)
+    extra_minutes = int((self.hours - hours) * 60)
+    extra_seconds = int((self.minutes - minutes) * 60)
+    extra_microseconds = int((self.seconds - seconds) * 1e6)
 
-    # Convertir horas fraccionarias a minutos
-    hours_fractional, hours_integer = math.modf(total_hours)
-    minutes_from_hours = hours_fractional * 60
+    # 累加额外的时间
+    hours += extra_hours
+    minutes += extra_minutes
+    seconds += extra_seconds
+    microseconds += extra_microseconds
 
-    # Sumar los minutos fraccionarios de las horas a los minutos existentes
-    total_minutes = self.minutes + minutes_from_hours
+    # 处理进位
+    if microseconds >= 1e6:
+        seconds += microseconds // 1e6
+        microseconds = microseconds % 1e6
 
-    # Convertir minutos fraccionarios a segundos
-    minutes_fractional, minutes_integer = math.modf(total_minutes)
-    seconds_from_minutes = minutes_fractional * 60
+    if seconds >= 60:
+        minutes += seconds // 60
+        seconds = seconds % 60
 
-    # Sumar los segundos fraccionarios de los minutos a los segundos existentes
-    total_seconds = self.seconds + seconds_from_minutes
+    if minutes >= 60:
+        hours += minutes // 60
+        minutes = minutes % 60
 
-    # Convertir segundos fraccionarios a microsegundos
-    seconds_fractional, seconds_integer = math.modf(total_seconds)
-    microseconds_from_seconds = seconds_fractional * 1e6
+    if hours >= 24:
+        days += hours // 24
+        hours = hours % 24
 
-    # Sumar los microsegundos fraccionarios de los segundos a los microsegundos existentes
-    total_microseconds = self.microseconds + microseconds_from_seconds
-
-    # Crear un nuevo relativedelta con valores enteros
-    return relativedelta(
-        years=self.years,
-        months=self.months,
-        days=int(days_integer),
-        hours=int(hours_integer),
-        minutes=int(minutes_integer),
-        seconds=int(seconds_integer),
-        microseconds=int(total_microseconds),
-        leapdays=self.leapdays,
-        year=self.year,
-        month=self.month,
-        day=self.day,
-        weekday=self.weekday,
-        hour=self.hour,
-        minute=self.minute,
-        second=self.second,
-        microsecond=self.microsecond
-    )
+    return relativedelta(days=days, hours=hours, minutes=minutes, seconds=seconds, microseconds=microseconds)

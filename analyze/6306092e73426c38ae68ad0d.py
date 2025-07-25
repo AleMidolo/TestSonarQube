@@ -1,20 +1,19 @@
 def create_complex_argument_type(self, subcommand, type_name, option_name, spec_option):
     """
-    Construye el tipo de argumento complejo.
+    根据 `type_name` 返回 `COMPLEX_TYPES` 中对应的函数，并在输入 `(self.vars, self.defaults, self.plugin_path), subcommand, spec_option)` 后，通过 `complex_action` 返回结果。
 
-    :param subcommand: el nombre del comando
-    :param type_name: el nombre del tipo complejo
-    :param option_name: el nombre de la opción
-    :param spec_option: las especificaciones de la opción
-    :return: la instancia del tipo complejo
+    构建复杂参数类型
+
+    :param subcommand: 命令名称
+    :param type_name: 复杂类型名称
+    :param option_name: 选项名称
+    :param spec_option: 选项的具体规范
+    :return: 复杂类型实例
     """
-    # Aquí se implementaría la lógica para crear el tipo de argumento complejo
-    # Por ejemplo, se podría crear una clase dinámica o un objeto que represente el tipo complejo
-    # Este es un ejemplo básico que devuelve un diccionario con la información proporcionada
-    complex_type = {
-        "subcommand": subcommand,
-        "type_name": type_name,
-        "option_name": option_name,
-        "spec_option": spec_option
-    }
-    return complex_type
+    # 假设 COMPLEX_TYPES 是一个字典，存储了复杂类型名称与对应函数的映射
+    if type_name in self.COMPLEX_TYPES:
+        complex_func = self.COMPLEX_TYPES[type_name]
+        # 调用复杂类型函数，传入参数并返回结果
+        return complex_func((self.vars, self.defaults, self.plugin_path), subcommand, spec_option)
+    else:
+        raise ValueError(f"Unknown complex type: {type_name}")

@@ -1,6 +1,6 @@
 def popitem(self):
     """
-    Eliminar y devolver el par (clave, valor) más recientemente utilizado.
+    移除并返回最近使用的键值对。
     """
     if not self:
         raise KeyError("popitem(): dictionary is empty")

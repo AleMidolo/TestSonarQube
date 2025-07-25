@@ -1,14 +1,11 @@
 def validate_arg_deprecation(self, cli_args, answer_file_args):
     """
-    Valida y muestra los argumentos obsoletos.
+    验证并打印已弃用的参数。
 
-    :param cli_args: el diccionario de argumentos provenientes de la línea de comandos (CLI)
-    :param answer_file_args: el diccionario de argumentos provenientes de archivos
+
+    :param cli_args: 来自命令行的参数字典
+    :param answer_file_args: 来自文件的参数字典
     """
     deprecated_args = set(cli_args.keys()).intersection(answer_file_args.keys())
-    if deprecated_args:
-        print("Advertencia: Los siguientes argumentos están obsoletos y no deben usarse:")
-        for arg in deprecated_args:
-            print(f"- {arg}")
-    else:
-        print("No se encontraron argumentos obsoletos.")
+    for arg in deprecated_args:
+        print(f"警告: 参数 '{arg}' 已被弃用，建议使用来自文件的参数。")

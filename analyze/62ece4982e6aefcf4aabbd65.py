@@ -1,6 +1,12 @@
 def parser_flags(parser):
     """
-    Dado una instancia de 'argparse.ArgumentParser', devuelve sus banderas de argumentos en una cadena separada por espacios.
+    给定一个 `argparse.ArgumentParser` 实例，返回其参数标志（argument flags）组成的以空格分隔的字符串。
+
+    参数：
+      parser：`argparse.ArgumentParser` 实例
+
+    返回值：
+      参数标志组成的以空格分隔的字符串
     """
     flags = []
     for action in parser._actions:

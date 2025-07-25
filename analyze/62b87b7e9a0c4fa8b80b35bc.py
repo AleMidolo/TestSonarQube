@@ -1,28 +1,29 @@
 def _update_context(self, context):
     """
-    Actualiza *context* con las propiedades de este grafo.
+    更新 *context*，使其包含此图的属性。
 
-    *context.error* se amplía con los índices de los errores.  
-    Ejemplo de subcontexto para un grafo con los campos "E,t,error_E_low":  
-    `{"error": {"x_low": {"index": 2}}}`.  
-    Ten en cuenta que los nombres de los errores se denominan "x", "y" y "z"  
-    (esto corresponde a las primeras tres coordenadas, si están presentes),  
-    lo que permite simplificar la representación gráfica.  
-    Los valores existentes no se eliminan de *context.value* ni de sus subcontextos.
+    *context.error* 会附加错误的索引。
+    例如，对于一个具有字段 "E, t, error_E_low" 的图，其子上下文可能为：
+    {"error": {"x_low": {"index": 2}}}
+    请注意，错误名称被称为 "x"、"y" 和 "z"（这对应于前三个坐标，如果它们存在的话），这使得绘图更加简化。
+    现有的值不会从 *context.value* 及其子上下文中移除。
 
-    Se llama durante la "destrucción" del grafo (por ejemplo,  
-    en :class:`.ToCSV`). Por destrucción nos referimos a la conversión  
-    a otra estructura (como texto) en el flujo.  
-    El objeto grafo no se destruye realmente en este proceso.
+    此方法在图的“销毁”过程中被调用（例如，在 :class:`.ToCSV` 中）。
+    这里的“销毁”是指在流程中将图转换为另一种结构（如文本）。
+    在此过程中，图对象实际上并未被真正销毁。
     """
     if not hasattr(context, 'error'):
         context.error = {}
 
-    # Supongamos que el grafo tiene una propiedad `error_indices` que contiene los índices de los errores
-    if hasattr(self, 'error_indices'):
-        for i, error_index in enumerate(self.error_indices):
-            error_name = ['x', 'y', 'z'][i] if i < 3 else f'error_{i}'
-            context.error[f'{error_name}_low'] = {'index': error_index}
-
-    # No se eliminan los valores existentes en context.value o sus subcontextos
-    return context
+    # 假设 self.fields 是图的字段列表
+    for i, field in enumerate(self.fields):
+        if field.startswith('error_'):
+            # 提取错误类型，例如 'x_low' 从 'error_x_low'
+            error_type = field[len('error_'):]
+            # 确定错误名称（x, y, z）
+            error_name = 'x' if i == 0 else 'y' if i == 1 else 'z' if i == 2 else None
+            if error_name:
+                # 更新 context.error
+                if error_name not in context.error:
+                    context.error[error_name] = {}
+                context.error[error_name][error_type] = {'index': i}

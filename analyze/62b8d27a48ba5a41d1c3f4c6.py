@@ -1,12 +1,9 @@
-from functools import wraps
-
 def cached(cache, key=hashkey, lock=None):
     """
-    Decorador para envolver una función con una llamada que memoriza y guarda  
-    los resultados en una caché.
+    返回一个装饰器函数，将结果保存到缓存中
+    一个用于包装一个函数，通过一个支持记忆功能的可调用对象将结果保存到缓存中的装饰器。
     """
     def decorator(func):
-        @wraps(func)
         def wrapper(*args, **kwargs):
             cache_key = key(*args, **kwargs)
             if lock:

@@ -1,36 +1,32 @@
 def validate_hierarchy(self, validate_objects=True, check_digests=True, show_warnings=False):
     """
-    Validar la jerarquía de la raíz de almacenamiento.
+    验证存储根层次结构。
 
-    Retorna:
-        num_objects - número de objetos verificados
-        good_objects - número de objetos verificados que se encontraron válidos
+    返回:
+        num_objects (int): 检查的对象数量。
+        good_objects (int): 检查后被认为有效的对象数量。
     """
     num_objects = 0
     good_objects = 0
     
-    # Simulate validation logic
-    if validate_objects:
-        # Example: Iterate through objects and validate them
-        for obj in self.get_objects():
-            num_objects += 1
-            if self.is_valid(obj, check_digests):
-                good_objects += 1
-            elif show_warnings:
-                print(f"Warning: Object {obj} is invalid.")
+    # 假设我们有一个存储根层次结构的列表
+    hierarchy = self.get_hierarchy()  # 假设这个方法返回存储根层次结构的列表
+    
+    for obj in hierarchy:
+        num_objects += 1
+        
+        if validate_objects:
+            if not self.validate_object(obj):
+                if show_warnings:
+                    print(f"Warning: Object {obj} is invalid.")
+                continue
+        
+        if check_digests:
+            if not self.check_digest(obj):
+                if show_warnings:
+                    print(f"Warning: Digest for object {obj} is invalid.")
+                continue
+        
+        good_objects += 1
     
     return num_objects, good_objects
-
-def get_objects(self):
-    """
-    Simulate retrieving objects from the storage hierarchy.
-    """
-    # Placeholder for actual object retrieval logic
-    return []
-
-def is_valid(self, obj, check_digests):
-    """
-    Simulate validation of an object.
-    """
-    # Placeholder for actual validation logic
-    return True

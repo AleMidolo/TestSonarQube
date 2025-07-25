@@ -2,20 +2,20 @@ import argparse
 
 def make_parsers():
     """
-    Crear un analizador de nivel superior y sus subanalizadores, y devolverlos como una tupla.
+    创建一个顶级解析器及其子解析器，并将它们作为元组返回。
     """
-    # Crear el analizador de nivel superior
-    parser = argparse.ArgumentParser(description='Analizador de nivel superior')
+    # 创建顶级解析器
+    parser = argparse.ArgumentParser(description="顶级解析器")
     
-    # Crear subanalizadores
-    subparsers = parser.add_subparsers(dest='command', help='Subcomandos')
+    # 创建子解析器
+    subparsers = parser.add_subparsers(title="子命令", dest="subcommand")
     
-    # Subanalizador 1
-    parser_a = subparsers.add_parser('comando_a', help='Descripción del comando A')
-    parser_a.add_argument('arg1', type=str, help='Argumento 1 del comando A')
+    # 添加第一个子解析器
+    parser_a = subparsers.add_parser('command_a', help='命令A的帮助信息')
+    parser_a.add_argument('--arg1', type=int, help='参数1的帮助信息')
     
-    # Subanalizador 2
-    parser_b = subparsers.add_parser('comando_b', help='Descripción del comando B')
-    parser_b.add_argument('arg2', type=int, help='Argumento 2 del comando B')
+    # 添加第二个子解析器
+    parser_b = subparsers.add_parser('command_b', help='命令B的帮助信息')
+    parser_b.add_argument('--arg2', type=str, help='参数2的帮助信息')
     
     return parser, subparsers

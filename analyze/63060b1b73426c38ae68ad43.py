@@ -1,22 +1,23 @@
 def extend_cli(self, root_subparsers):
     """
-    Agrega las opciones de línea de comandos (CLI) de especificación al punto de entrada principal.
+    将规范 CLI 选项添加到主入口点。
 
-    :param root_subparsers: el objeto subparser que se va a extender.
+    :param root_subparsers: 要扩展的子解析器对象。
     """
-    # Ejemplo de cómo agregar un subparser para un comando específico
-    spec_parser = root_subparsers.add_parser('especificacion', help='Comandos relacionados con la especificación')
-    spec_parser.add_argument('--opcion1', type=str, help='Descripción de la opción 1')
-    spec_parser.add_argument('--opcion2', type=int, help='Descripción de la opción 2')
-    spec_parser.set_defaults(func=self.handle_especificacion)
+    # 添加一个子命令 '规范'
+    parser = root_subparsers.add_parser('规范', help='规范相关操作')
+    
+    # 添加子命令 '规范' 的子命令
+    subparsers = parser.add_subparsers(dest='规范操作', help='规范操作')
 
-def handle_especificacion(self, args):
-    """
-    Maneja el comando de especificación.
+    # 添加子命令 '添加'
+    add_parser = subparsers.add_parser('添加', help='添加规范')
+    add_parser.add_argument('名称', type=str, help='规范名称')
+    add_parser.add_argument('描述', type=str, help='规范描述')
 
-    :param args: Argumentos pasados desde la línea de comandos.
-    """
-    if args.opcion1:
-        print(f"Opción 1 seleccionada: {args.opcion1}")
-    if args.opcion2:
-        print(f"Opción 2 seleccionada: {args.opcion2}")
+    # 添加子命令 '删除'
+    delete_parser = subparsers.add_parser('删除', help='删除规范')
+    delete_parser.add_argument('名称', type=str, help='规范名称')
+
+    # 添加子命令 '列表'
+    list_parser = subparsers.add_parser('列表', help='列出所有规范')

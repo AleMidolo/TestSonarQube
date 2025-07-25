@@ -1,12 +1,5 @@
 def parse_version(s: str) -> tuple[int, ...]:
     """
-    Comparación de versiones rudimentaria.
-    Convierte una cadena de versión en una tupla de enteros para facilitar la comparación.
-    
-    Args:
-        s (str): Cadena que representa la versión (e.g., "1.2.3").
-    
-    Returns:
-        tuple[int, ...]: Tupla de enteros representando la versión (e.g., (1, 2, 3)).
+    将由点连接的字符串转换为由整数组成的元组。
     """
     return tuple(map(int, s.split('.')))

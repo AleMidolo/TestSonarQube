@@ -1,26 +1,16 @@
-from typing import Optional
 import requests
+from typing import Optional
 
 def try_retrieve_webfinger_document(handle: str) -> Optional[str]:
     """
-    Intenta recuperar un documento webfinger conforme a RFC7033. 
-    No genera una excepción si falla.
+    尝试检索一个符合RFC7033标准的WebFinger文档。如果失败，不会抛出异常。
     """
     try:
-        # Parse the handle to extract the domain
-        if '@' not in handle:
-            return None
-        username, domain = handle.split('@', 1)
-        
-        # Construct the webfinger URL
+        # 假设handle是类似"user@example.com"的格式
+        domain = handle.split('@')[-1]
         webfinger_url = f"https://{domain}/.well-known/webfinger?resource=acct:{handle}"
-        
-        # Make the request
         response = requests.get(webfinger_url, timeout=5)
         response.raise_for_status()
-        
-        # Return the response content if successful
         return response.text
     except (requests.RequestException, ValueError):
-        # Return None if any error occurs
         return None

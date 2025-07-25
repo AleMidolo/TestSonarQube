@@ -1,5 +1,6 @@
 def workspace_manager(cls):
     """
-    Obtiene el gestor de espacios de trabajo.
+    通过 `cls._get_service(ServiceName.WORKSPACE_MANAGER)` 获取工作区管理器
+    获取工作区管理器。
     """
-    return cls._workspace_manager
+    return cls._get_service(ServiceName.WORKSPACE_MANAGER)

@@ -1,15 +1,12 @@
 def test_tag(tag: str) -> bool:
     """
-    Prueba una palabra para determinar si puede ser aceptada como una etiqueta.
-    
-    Args:
-        tag (str): La palabra que se desea probar como etiqueta.
-    
-    Returns:
-        bool: True si la palabra es válida como etiqueta, False en caso contrario.
+    检查 `LEGAL_TAG_CHARS` 中的每个字符是否属于标签。如果有任何字符属于标签，则返回假。否则，返回真。
+
+    测试一个单词是否可以被接受为标签。
     """
-    # Definir reglas para una etiqueta válida
-    # Por ejemplo, la etiqueta debe tener al menos 3 caracteres y no contener espacios
-    if len(tag) >= 3 and ' ' not in tag:
-        return True
-    return False
+    LEGAL_TAG_CHARS = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_")
+    
+    for char in tag:
+        if char not in LEGAL_TAG_CHARS:
+            return False
+    return True

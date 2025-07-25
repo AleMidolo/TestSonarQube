@@ -1,24 +1,17 @@
 def next_version(version):
     """
-    El identificador de la siguiente versión debe seguir el patrón existente.
+    根据现有模式生成下一个版本标识符
 
-    Debe manejar tanto versiones con prefijo de ceros como versiones sin prefijo de ceros.
+    遵循现有格式的下一个版本标识符
+    必须能够处理以零开头和非零开头的两种情况。
     """
-    # Split the version into parts
-    parts = version.split('.')
+    # 将版本字符串转换为整数
+    version_num = int(version)
     
-    # Increment the last part
-    last_part = int(parts[-1]) + 1
+    # 增加版本号
+    next_version_num = version_num + 1
     
-    # Handle leading zeros if any
-    if parts[-1].startswith('0'):
-        # Preserve the number of digits
-        last_part_str = f"{last_part:0{len(parts[-1])}d}"
-    else:
-        last_part_str = str(last_part)
+    # 将整数转换回字符串，并保持原有长度
+    next_version_str = str(next_version_num).zfill(len(version))
     
-    # Update the last part
-    parts[-1] = last_part_str
-    
-    # Join the parts back together
-    return '.'.join(parts)
+    return next_version_str

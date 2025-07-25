@@ -1,45 +1,62 @@
+import os
+import mimetypes
+
 def _eval_file(prefix, file_path):
     """
-    Identifica el tipo de archivo del paquete: `asset` o `rendition`.
+    识别给定文件的类型。如果文件与给定的前缀不匹配，或者文件类型是 XML，则返回 `None`。  
+    如果文件类型是 "pdf"，返回一个包含键 `component_id` 和 `file_path` 的字典。  
+    如果文件类型不是 "pdf"，返回一个包含键 `component_id`、`file_path`、`ftype` 和 `file_path` 的字典。
 
-    Identifica el tipo de archivo del paquete y actualiza `packages` con el tipo y
-    la ruta del archivo en análisis.
+    识别包中的文件类型：`asset` 或 `rendition`。
 
-    Parámetros
+    识别包中的文件类型，并使用文件的类型和路径更新 `packages`。
+
+    参数
     ----------
-    prefix : str
-        nombre del archivo XML sin extensión
-    file_path : str
-        ruta completa del archivo
+    prefix: `str`  
+      XML 文件的名称（不带扩展名）。
 
-    Retorna
-    -------
-    dict
-        Diccionario con el tipo de archivo y la ruta del archivo.
+    filename: `str`  
+      文件名。
+
+    file_folder: `str`  
+      文件所在的文件夹。
+
+    返回值
+    ----------
+    dict  
     """
-    import os
+    # 获取文件名和扩展名
+    file_name = os.path.basename(file_path)
+    file_ext = os.path.splitext(file_name)[1].lower()
 
-    # Extraer el nombre del archivo y la carpeta
-    filename = os.path.basename(file_path)
-    file_folder = os.path.dirname(file_path)
+    # 如果文件扩展名是 .xml，返回 None
+    if file_ext == '.xml':
+        return None
 
-    # Determinar el tipo de archivo basado en el prefijo
-    if prefix in filename:
-        if "asset" in filename.lower():
-            file_type = "asset"
-        elif "rendition" in filename.lower():
-            file_type = "rendition"
-        else:
-            file_type = "unknown"
+    # 获取文件类型
+    mime_type, _ = mimetypes.guess_type(file_path)
+    if mime_type is None:
+        return None
+
+    # 如果文件类型是 PDF
+    if mime_type == 'application/pdf':
+        return {
+            'component_id': prefix,
+            'file_path': file_path
+        }
     else:
-        file_type = "unknown"
+        # 识别文件类型是 asset 还是 rendition
+        if 'asset' in file_name.lower():
+            ftype = 'asset'
+        elif 'rendition' in file_name.lower():
+            ftype = 'rendition'
+        else:
+            ftype = 'unknown'
 
-    # Crear el diccionario de retorno
-    result = {
-        "type": file_type,
-        "path": file_path,
-        "filename": filename,
-        "folder": file_folder
-    }
-
-    return result
+        return {
+            'component_id': prefix,
+            'file_path': file_path,
+            'ftype': ftype,
+            'mime_type': mime_type
+        }

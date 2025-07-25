@@ -1,21 +1,21 @@
 def is_fill_request_seq(seq):
     """
-    Comprueba si *seq* puede convertirse en un FillRequestSeq.
+    检查 seq 是否可以转换为 FillRequestSeq，并返回布尔值。
+    测试 *seq* 是否可以转换为 FillRequestSeq。
 
-    Devuelve `True` solo si es un elemento de tipo FillRequest  
-    o contiene al menos uno de ellos,  
-    y no es una secuencia de tipo Source.
+    仅当以下条件时返回真：
+    - 它是一个 FillRequest 元素，或者包含至少一个 FillRequest 元素；
+    - 它不是一个 Source 序列。
     """
-    # Assuming FillRequest and Source are classes or types defined elsewhere
-    from typing import Sequence, Any
+    # 假设 FillRequest 和 Source 是自定义类
+    from collections.abc import Sequence
 
-    def is_fill_request(item: Any) -> bool:
-        return isinstance(item, FillRequest)
+    # 检查是否是 FillRequest 元素
+    if isinstance(seq, FillRequest):
+        return True
 
-    def is_source(item: Any) -> bool:
-        return isinstance(item, Source)
+    # 检查是否是序列且包含至少一个 FillRequest 元素
+    if isinstance(seq, Sequence) and not isinstance(seq, Source):
+        return any(isinstance(item, FillRequest) for item in seq)
 
-    if isinstance(seq, Sequence):
-        return any(is_fill_request(item) for item in seq) and not is_source(seq)
-    else:
-        return is_fill_request(seq) and not is_source(seq)
+    return False

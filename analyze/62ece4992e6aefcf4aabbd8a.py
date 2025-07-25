@@ -4,7 +4,8 @@ import yaml
 
 def load_configurations(config_filenames, overrides=None, resolve_env=True):
     """
-    Dada una secuencia de nombres de archivo de configuración, carga y valida cada archivo de configuración. Si el archivo de configuración no puede ser leído debido a permisos insuficientes o errores al analizar el archivo de configuración, se registrará el error en el log. De lo contrario, devuelve los resultados como una tupla que contiene: un diccionario que asocia el nombre del archivo de configuración con su configuración analizada correspondiente, y una secuencia de instancias de `logging.LogRecord` que contienen cualquier error de análisis.
+    根据一系列配置文件名，加载并验证每个配置文件。如果由于权限不足或解析配置文件出错导致无法读取配置文件，将记录错误日志。否则，将结果以一个元组的形式返回，包含一个将配置文件名映射到相应的解析后的配置的字典和一个包含所有解析错误的 `logging.LogRecord` 实例序列。
+    根据一系列配置文件名，加载并验证每个配置文件。将结果以一个元组的形式返回，包含一个将配置文件名映射到相应的解析后的配置的字典和一个包含所有解析错误的 `logging.LogRecord` 实例序列。
     """
     configs = {}
     errors = []
@@ -26,36 +27,36 @@ def load_configurations(config_filenames, overrides=None, resolve_env=True):
                             config[key] = value
                 
                 configs[filename] = config
-        except PermissionError as e:
-            logging.error(f"Permission denied when reading configuration file: {filename}")
+        except PermissionError:
+            logging.error(f"Permission denied when trying to read {filename}")
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=f"Permission denied: {e}",
+                msg=f"Permission denied when trying to read {filename}",
                 args=None,
                 exc_info=None
             ))
         except yaml.YAMLError as e:
-            logging.error(f"Error parsing configuration file: {filename}")
+            logging.error(f"Error parsing YAML in {filename}: {e}")
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=f"YAML parsing error: {e}",
+                msg=f"Error parsing YAML in {filename}: {e}",
                 args=None,
                 exc_info=None
             ))
         except Exception as e:
-            logging.error(f"Unexpected error reading configuration file: {filename}")
+            logging.error(f"Unexpected error reading {filename}: {e}")
             errors.append(logging.LogRecord(
                 name=__name__,
                 level=logging.ERROR,
                 pathname=filename,
                 lineno=0,
-                msg=f"Unexpected error: {e}",
+                msg=f"Unexpected error reading {filename}: {e}",
                 args=None,
                 exc_info=None
             ))

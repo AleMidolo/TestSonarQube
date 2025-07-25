@@ -1,29 +1,48 @@
 import os
-from collections import defaultdict
 
 def _explore_folder(folder):
     """
-    Obtiene los datos de los paquetes desde la carpeta.
+    通过使用 _group_files_by_xml_filename 将给定组中的文件进行分组。
 
-    Agrupa los archivos por el nombre base de su archivo XML y devuelve los datos en formato de diccionario.
+    从文件夹中获取包的数据
 
-    Parámetros
+    根据 XML 文件的文件名对文件进行分组，并以字典格式返回数据。
+
+    参数
     ----------
-    folder : str
-        Carpeta del paquete
+    folder: `str`  
+        包所在的文件夹
 
-    Retorna
+    返回值
     -------
     dict
-        Diccionario que agrupa los archivos por el nombre base de su archivo XML.
     """
-    file_groups = defaultdict(list)
-    
-    for root, dirs, files in os.walk(folder):
+    def _group_files_by_xml_filename(files):
+        """
+        根据 XML 文件的文件名对文件进行分组。
+
+        参数
+        ----------
+        files: `list`  
+            文件列表
+
+        返回值
+        -------
+        dict
+        """
+        grouped_files = {}
         for file in files:
             if file.endswith('.xml'):
                 base_name = os.path.splitext(file)[0]
-                file_path = os.path.join(root, file)
-                file_groups[base_name].append(file_path)
-    
-    return dict(file_groups)
+                grouped_files[base_name] = []
+        for file in files:
+            base_name = os.path.splitext(file)[0]
+            if base_name in grouped_files:
+                grouped_files[base_name].append(file)
+        return grouped_files
+
+    if not os.path.isdir(folder):
+        raise ValueError(f"The folder '{folder}' does not exist.")
+
+    files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
+    return _group_files_by_xml_filename(files)

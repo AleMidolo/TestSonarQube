@@ -1,25 +1,30 @@
 def difference(d1, d2, level=-1):
     """
-    Devuelve un diccionario con los elementos de *d1* que no están contenidos en *d2*.
+    返回一个字典，其中包含 *d1* 中不在 *d2* 中的项。
 
-    El parámetro *level* establece la profundidad máxima de recursión. Para recursión infinita, configúralo en -1. Para un nivel 1, si una clave está presente tanto en *d1* como en *d2* pero tiene valores diferentes, se incluye en la diferencia. Consulta :func:`intersection` para más detalles.
+    参数 *level* 用于设置递归的最大深度。对于无限递归，则将其设置为-1。如果设置为 1，当某个键同时存在于 *d1* 和 *d2* 中但其值不同，则该键值对会包含在差异结果中。
+    有关更多详细信息，请参阅 :func:`intersection`。
 
-    *d1* y *d2* permanecen sin cambios. Sin embargo, *d1* o algunos de sus subdiccionarios pueden ser devueltos directamente. Realiza una copia profunda del resultado cuando sea apropiado.
+    *d1* 和 *d2* 本身不会被修改。然而，*d1* 或其某些子字典可能会直接作为返回值。如果需要，请对结果进行深拷贝。
 
-    .. versionadded:: 0.5  
-       Agrega el argumento de palabra clave *level*.
+    .. 版本新增:: 0.5  
+      添加了关键字参数 *level*。
     """
-    if level == 0:
-        return {k: v for k, v in d1.items() if k not in d2 or d2[k] != v}
-    
-    diff = {}
-    for k, v in d1.items():
-        if k not in d2:
-            diff[k] = v
-        elif isinstance(v, dict) and isinstance(d2[k], dict) and level != 0:
-            nested_diff = difference(v, d2[k], level - 1 if level > 0 else -1)
-            if nested_diff:
-                diff[k] = nested_diff
-        elif v != d2[k]:
-            diff[k] = v
-    return diff
+    def _diff(d1, d2, current_level):
+        if current_level == 0:
+            return {}
+        
+        diff_dict = {}
+        for key in d1:
+            if key not in d2:
+                diff_dict[key] = d1[key]
+            else:
+                if isinstance(d1[key], dict) and isinstance(d2[key], dict):
+                    nested_diff = _diff(d1[key], d2[key], current_level - 1 if current_level != -1 else -1)
+                    if nested_diff:
+                        diff_dict[key] = nested_diff
+                elif d1[key] != d2[key]:
+                    diff_dict[key] = d1[key]
+        return diff_dict
+
+    return _diff(d1, d2, level)

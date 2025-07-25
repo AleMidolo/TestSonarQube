@@ -1,19 +1,13 @@
 def get_versions():
     """
-    Obtén la información de la versión o devuelve el valor predeterminado si no es posible obtenerla.
+    获取版本信息。如果无法获取版本信息，则返回默认值。
+    获取版本信息或在无法获取时返回默认值
     """
-    import sys
-    import platform
-
     try:
-        version_info = {
-            "python_version": sys.version,
-            "platform": platform.platform(),
-            "system": platform.system(),
-            "release": platform.release(),
-            "machine": platform.machine(),
-            "processor": platform.processor(),
-        }
+        # 假设版本信息是从某个地方获取的，这里用模拟数据代替
+        version_info = "1.0.0"
         return version_info
     except Exception as e:
-        return {"error": str(e), "default_version": "1.0.0"}
+        # 如果获取版本信息失败，返回默认值
+        default_version = "0.0.0"
+        return default_version

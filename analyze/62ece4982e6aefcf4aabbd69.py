@@ -1,14 +1,16 @@
 def _replace_register(flow_params, register_number, register_value):
     """
-    Reemplazar el valor de los flujos al número de registro dado
+    将 `flow_params[register_number]` 的值替换为 `flow_params[register_value]`，并删除 `flow_params[register_value]`。
+    
+    将流中的值替换为指定的寄存器编号。
 
-    La clave 'register_value' en el diccionario será reemplazada por el número de registro proporcionado por 'register_number'
+    在字典中，用 register_number 指定的寄存器号替换 register_value 键的值。
 
-    :param flow_params: Diccionario que contiene los flujos definidos  
-    :param register_number: El número del registro donde se almacenará el valor  
-    :param register_value: Clave que será reemplazada por el número de registro  
+    :flow_params: 包含已定义流的字典
+    :register_number: 用于存储值的寄存器编号
+    :register_value: 将被寄存器编号替换的键
     """
-    if flow_params and isinstance(flow_params, dict):
-        if register_value in flow_params:
-            flow_params[register_value] = register_number
+    if register_value in flow_params:
+        flow_params[register_number] = flow_params[register_value]
+        del flow_params[register_value]
     return flow_params

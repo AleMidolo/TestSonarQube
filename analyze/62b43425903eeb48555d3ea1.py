@@ -2,8 +2,9 @@ import re
 
 def _create_in_regex(self) -> Pattern:
     """
-    Crea la expresión regular del parámetro "in-style".
+    创建 in-style 参数的正则表达式。
 
-    Devuelve la expresión regular para el parámetro "in-style" (:class:`re.Pattern`).
+    返回 in-style 参数的正则表达式 (:class:`re.Pattern`).
     """
-    return re.compile(r'\b(in|inside|within)\b', re.IGNORECASE)
+    # 假设 in-style 参数的形式为 "in:value1,value2,value3"
+    return re.compile(r'in:([^,]+(?:,[^,]+)*)')

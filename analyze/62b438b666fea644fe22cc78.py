@@ -2,15 +2,14 @@ import argparse
 
 def parse_arguments(*arguments):
     """
-    Dado los argumentos de línea de comandos con los que se invocó este script, analiza los argumentos y los devuelve como una instancia de 'ArgumentParser'.
+    根据调用此脚本时提供的命令行参数，解析这些参数并将其作为一个 `ArgumentParser` 实例返回。
     """
-    parser = argparse.ArgumentParser(description="Analiza los argumentos de línea de comandos.")
+    parser = argparse.ArgumentParser(description="Parse command line arguments.")
     
-    # Aquí puedes agregar los argumentos que esperas recibir
-    # Ejemplo:
-    # parser.add_argument('-f', '--file', type=str, help='Archivo de entrada')
+    # 添加一个示例参数
+    parser.add_argument('--example', type=str, help='An example argument')
     
-    # Parsear los argumentos
+    # 解析传入的参数
     args = parser.parse_args(arguments)
     
     return args

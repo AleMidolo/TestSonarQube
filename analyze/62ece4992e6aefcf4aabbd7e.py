@@ -2,10 +2,15 @@ import os
 
 def _resolve_string(matcher):
     """
-    Obtener el valor del entorno dado un matcher que contiene un nombre y un valor predeterminado opcional.  
-    Si la variable no está definida en el entorno y no se proporciona un valor predeterminado, se genera un Error.
+    给定一个包含一个名称和一个可选的默认值（位于其分组字典中）的匹配器，从环境中获取值。
+    如果环境中未定义该变量且未提供默认值，则会引发错误。
+
+    给定一个包含一个名称和一个可选的默认值的匹配器，从环境中获取值。
+    如果环境中未定义该变量且未提供默认值，则会引发错误。
     """
-    name, default = matcher.group(1), matcher.group(2)
+    name = matcher.group(1)
+    default = matcher.group(2) if matcher.group(2) else None
+    
     value = os.getenv(name)
     
     if value is not None:

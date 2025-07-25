@@ -1,27 +1,24 @@
-from datetime import time, timedelta
-import pytz
+from datetime import datetime, timedelta, timezone
 
 def hydrate_time(nanoseconds, tz=None):
     """
-    Hidratador para valores de `Time` y `LocalTime`.
+    将纳秒转换为固定格式的时间。
+    用于处理 `Time` 和 `LocalTime` 值的转换器。
 
-    :param nanoseconds: El número de nanosegundos desde la medianoche.
-    :param tz: La zona horaria (opcional).
-    :return: Un objeto `time` o `datetime.time` con la zona horaria aplicada si se proporciona.
+    :param nanoseconds: 纳秒时间戳
+    :param tz: 时区信息，默认为None
+    :return: 格式化后的时间字符串
     """
-    # Convert nanoseconds to seconds and microseconds
-    seconds = nanoseconds // 1_000_000_000
-    microseconds = (nanoseconds % 1_000_000_000) // 1000
+    # 将纳秒转换为秒
+    seconds = nanoseconds / 1e9
+    # 创建一个基于UTC的时间对象
+    dt = datetime(1970, 1, 1, tzinfo=timezone.utc) + timedelta(seconds=seconds)
     
-    # Create a timedelta to represent the time since midnight
-    delta = timedelta(seconds=seconds, microseconds=microseconds)
-    
-    # Create a time object from the timedelta
-    t = (time.min + delta).time()
-    
-    # Apply timezone if provided
+    # 如果提供了时区信息，转换为该时区
     if tz is not None:
-        tz = pytz.timezone(tz)
-        t = tz.localize(t)
+        dt = dt.astimezone(tz)
     
-    return t
+    # 格式化时间为固定格式
+    formatted_time = dt.strftime('%Y-%m-%d %H:%M:%S.%f')
+    
+    return formatted_time

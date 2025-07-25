@@ -3,21 +3,18 @@ from typing import Tuple
 
 def _parse_image_ref(image_href: str) -> Tuple[str, str, bool]:
     """
-    Analizar un enlace (href) de una imagen en partes compuestas.
-
-    :param image_href: href de una imagen
-    :returns: una tupla con el formato (image_id, netloc, use_ssl)
-    :raises ValueError: Si el enlace no es válido o no puede ser analizado correctamente.
+    将图像的 href 解析为多个组成部分，导入 urllib。
+    
+    :param image_href: 图像的 href
+    :returns: 一个元组，格式为 (image_id, netloc, use_ssl)
+    :raises ValueError: 如果 image_href 无法解析
     """
-    try:
-        parsed_url = urlparse(image_href)
-        if not parsed_url.netloc or not parsed_url.path:
-            raise ValueError("El enlace no es válido o no puede ser analizado correctamente.")
-        
-        image_id = parsed_url.path.split('/')[-1]
-        netloc = parsed_url.netloc
-        use_ssl = parsed_url.scheme == 'https'
-        
-        return image_id, netloc, use_ssl
-    except Exception as e:
-        raise ValueError(f"Error al analizar el enlace: {e}")
+    parsed_url = urlparse(image_href)
+    if not parsed_url.netloc:
+        raise ValueError("Invalid image href: no netloc found")
+    
+    image_id = parsed_url.path.lstrip('/')
+    netloc = parsed_url.netloc
+    use_ssl = parsed_url.scheme == 'https'
+    
+    return image_id, netloc, use_ssl

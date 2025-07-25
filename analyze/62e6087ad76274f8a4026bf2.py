@@ -1,37 +1,25 @@
-def discard(self, n=-1, qid=-1, dehydration_hooks=None,
-            hydration_hooks=None, **handlers):
+def discard(self, n=-1, qid=-1, dehydration_hooks=None, hydration_hooks=None, **handlers):
     """
-    Añade un mensaje 'DISCARD' a la cola de salida.
+    将一个DISCARD消息添加到输出队列。
 
-    :param n: número de registros a descartar, por defecto = -1 (TODOS)
-    :param qid: ID de consulta para descartar, por defecto = -1 (última consulta)
-    :param dehydration_hooks:
-        Ganchos para deshidratar tipos (diccionario de tipo (clase) a función
-        de deshidratación). Las funciones de deshidratación reciben el valor y devuelven un objeto de un tipo entendido por 'packstream'.
-    :param hydration_hooks:
-        Ganchos para hidratar tipos (mapeo de tipo (clase) a función de
-     hidratación). Las funciones de hidratación reciben el valor de un tipo
-        entendido por 'packstream' y son libres de devolver cualquier cosa.
-    :param handlers: funciones manejadoras pasadas al objeto 'Response' devuelto
+    :param n: 要丢弃的记录数量，默认值为 -1（全部丢弃）
+    :param qid: 要丢弃的查询ID，默认值为 -1（最后一个查询）
+    :param dehydration_hooks: 用于处理类型dehydration的钩子（字典，键为类型（类），值为dehydration函数）。dehydration函数接收一个值，并返回一个 PackStream 可识别的对象。
+    :param hydration_hooks: 用于处理类型hydration的钩子（映射，键为类型（类），值为hydration函数）。hydration函数接收一个 PackStream 可识别的值，并可以返回任意对象。
+    :param handlers: 传递给返回的Response对象的处理函数
     """
-    # Crear el mensaje DISCARD
+    # 创建DISCARD消息
     discard_message = {
-        "name": "DISCARD",
+        "type": "DISCARD",
         "n": n,
-        "qid": qid
+        "qid": qid,
+        "dehydration_hooks": dehydration_hooks if dehydration_hooks else {},
+        "hydration_hooks": hydration_hooks if hydration_hooks else {},
+        **handlers
     }
-
-    # Añadir los ganchos de deshidratación e hidratación si están presentes
-    if dehydration_hooks is not None:
-        discard_message["dehydration_hooks"] = dehydration_hooks
-    if hydration_hooks is not None:
-        discard_message["hydration_hooks"] = hydration_hooks
-
-    # Añadir los manejadores adicionales
-    discard_message.update(handlers)
-
-    # Añadir el mensaje a la cola de salida
+    
+    # 将消息添加到输出队列
     self.output_queue.append(discard_message)
-
-    # Devolver el objeto Response con los manejadores
+    
+    # 返回一个Response对象
     return Response(handlers=handlers)

@@ -2,27 +2,27 @@ import re
 
 def regex_dict(item):
     """
-    Convertir claves `*.cpp` a claves de expresiones regulares.
+    将 *.cpp 键转换为正则表达式键
 
-    Dado un diccionario donde las claves son nombres de archivo con comodines, convierte únicamente las claves en expresiones regulares equivalentes y deja los valores intactos.
+    给定一个字典，其中的键是带有通配符的文件名，仅将这些键转换为等效的正则表达式，同时保持值不变。
 
-    Ejemplo
+    参数：
+      item：需要转换的字典
+    返回值：
+      一个键已转换为正则表达式的字典
+
+    示例：
     rules = {
-        '*.cpp': {'a': 'arf', 'b': 'bark', 'c': 'coo'},
-        '*.h': {'h': 'help'}
+      '*.cpp':
+          {'a': 'arf', 'b': 'bark', 'c': 'coo'},
+      '*.h':
+          {'h': 'help'}
     }
-
     regex_keys = regex_dict(rules)
-
-    Argumentos:
-        item (dict): Diccionario a convertir.
-
-    Retorno:
-        dict: Diccionario con claves convertidas a expresiones regulares.
     """
     regex_dict = {}
     for key, value in item.items():
-        # Convertir el comodín * a .* en la expresión regular
+        # 将通配符 * 替换为正则表达式 .*
         regex_key = re.escape(key).replace(r'\*', '.*')
         regex_dict[regex_key] = value
     return regex_dict

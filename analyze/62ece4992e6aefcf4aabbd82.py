@@ -2,15 +2,21 @@ import re
 
 def get_pattern(pattern, strip=True):
     """
-    Este método convierte la cadena proporcionada en un objeto de patrón regex.
-    
-    Args:
-        pattern (str): La cadena que se convertirá en un patrón regex.
-        strip (bool): Si es True, elimina los espacios en blanco al principio y al final de la cadena.
-    
-    Returns:
-        re.Pattern: El objeto de patrón regex compilado.
+    将字符串转换为正则表达式模式对象
+
+    参数:
+      pattern: 字符串或正则表达式模式对象
+      strip: 布尔值，是否去除字符串开头和结尾的空格
+    返回值:
+      正则表达式模式对象
+
+    此方法将给定的字符串转换为正则表达式模式。
     """
-    if strip:
-        pattern = pattern.strip()
-    return re.compile(pattern)
+    if isinstance(pattern, str):
+        if strip:
+            pattern = pattern.strip()
+        return re.compile(pattern)
+    elif isinstance(pattern, re.Pattern):
+        return pattern
+    else:
+        raise TypeError("pattern must be a string or a compiled regex pattern")

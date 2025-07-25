@@ -1,13 +1,9 @@
 def get_option_spec(self, command_name, argument_name):
     """
-    Obtiene la especificación para el nombre de opción especificado.
-
-    :param command_name: Nombre del comando.
-    :param argument_name: Nombre del argumento.
-    :return: Especificación de la opción.
+    获取指定选项名称的规范。通过 `self.get_parser_option_specs()` 获取给定 `command_name` 的选项。
+    获取指定选项名称的规范。
     """
-    # Asumiendo que self.options es un diccionario que contiene las especificaciones de las opciones
-    if command_name in self.options and argument_name in self.options[command_name]:
-        return self.options[command_name][argument_name]
-    else:
-        return None
+    option_specs = self.get_parser_option_specs(command_name)
+    if option_specs and argument_name in option_specs:
+        return option_specs[argument_name]
+    return None

@@ -1,27 +1,30 @@
 def validate_version_inventories(self, version_dirs):
     """
-    Cada versión DEBE tener un inventario hasta ese punto.
+    每个版本**应当**包含截至该版本的完整清单。  
 
-    También se debe mantener un registro de cualquier resumen de contenido (digest) 
-    que sea diferente de los que están en el inventario raíz, 
-    para que también podamos verificarlos al validar el contenido.
+    同时，记录所有与根清单不同的内容摘要，以便在验证内容时能够检查这些差异。  
 
-    'version_dirs' es un arreglo de nombres de directorios de versiones 
-    y se asume que están en secuencia de versiones (1, 2, 3...).
+    `version_dirs` 是一个包含版本目录名称的数组，并假定按照版本顺序排列（1, 2, 3...）。
     """
+    root_inventory = set()  # 根清单
+    differences = {}  # 记录每个版本与根清单的差异
+
     for version_dir in version_dirs:
-        inventory_path = os.path.join(version_dir, "inventory.json")
-        if not os.path.exists(inventory_path):
-            raise FileNotFoundError(f"Inventory not found for version: {version_dir}")
-        
-        with open(inventory_path, 'r') as f:
-            inventory = json.load(f)
-        
-        # Check for any digests that differ from the root inventory
-        root_inventory_path = os.path.join(version_dirs[0], "inventory.json")
-        with open(root_inventory_path, 'r') as f:
-            root_inventory = json.load(f)
-        
-        for key, value in inventory.items():
-            if key in root_inventory and value != root_inventory[key]:
-                print(f"Digest mismatch for {key} in version {version_dir}")
+        # 假设每个版本目录下有一个名为 'inventory.txt' 的文件，包含该版本的清单
+        with open(f"{version_dir}/inventory.txt", 'r') as file:
+            current_inventory = set(line.strip() for line in file)
+
+        # 如果是第一个版本，将其作为根清单
+        if not root_inventory:
+            root_inventory = current_inventory
+            differences[version_dir] = "Root inventory"
+            continue
+
+        # 计算当前版本与根清单的差异
+        diff = current_inventory - root_inventory
+        if diff:
+            differences[version_dir] = diff
+        else:
+            differences[version_dir] = "No differences"
+
+    return differences

@@ -2,36 +2,34 @@ import os
 
 def find_path_type(path):
     """
-    Devuelve una cadena que indica el tipo de elemento en la ruta proporcionada.
+    返回一个字符串，指示给定路径的类型。
 
-    Valores de retorno:
-        'root' - parece ser una Raíz de Almacenamiento OCFL
-        'object' - parece ser un Objeto OCFL
-        'file' - un archivo, podría ser un inventario
-        otra cadena explica la descripción del error
+    返回值：
+      'root' - 看起来像是一个 OCFL 存储根目录
+      'object' - 看起来像是一个 OCFL 对象
+      'file' - 一个文件，可能是一个清单文件
+      其他字符串解释错误描述
 
-    Solo examina los archivos "0=*" Namaste para determinar el tipo de directorio.
+    仅通过查看 "0=*" Namaste 文件来确定目录类型。
     """
     if not os.path.exists(path):
-        return "La ruta no existe."
+        return "路径不存在"
     
     if os.path.isfile(path):
         return "file"
     
-    if os.path.isdir(path):
-        namaste_files = [f for f in os.listdir(path) if f.startswith("0=")]
-        
-        if not namaste_files:
-            return "No se encontraron archivos Namaste en la ruta."
-        
-        for namaste_file in namaste_files:
-            with open(os.path.join(path, namaste_file), 'r') as f:
-                content = f.read().strip()
-                if content == "ocfl_object_1.0":
-                    return "object"
-                elif content == "ocfl_1.0":
-                    return "root"
-        
-        return "No se pudo determinar el tipo de directorio basado en los archivos Namaste."
+    namaste_files = [f for f in os.listdir(path) if f.startswith('0=')]
     
-    return "La ruta no es un archivo ni un directorio."
+    if not namaste_files:
+        return "路径不包含 Namaste 文件"
+    
+    namaste_file = namaste_files[0]
+    with open(os.path.join(path, namaste_file), 'r') as f:
+        content = f.read().strip()
+    
+    if content == "ocfl_1.0":
+        return "root"
+    elif content.startswith("ocfl_object_"):
+        return "object"
+    else:
+        return "未知的 Namaste 文件内容"

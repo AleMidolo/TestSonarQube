@@ -1,23 +1,36 @@
 def bash_completion():
     """
-    Devuelve un script de autocompletado para bash para el comando de borgmatic. Esto se genera mediante la introspección de los analizadores de argumentos de línea de comandos de borgmatic.
+    通过检查 borgmatic 的命令行参数解析器生成 borgmatic 命令。
+
+    返回一个用于 borgmatic 命令的 bash 补全脚本。通过检查 borgmatic 的命令行参数解析器生成此脚本。
     """
+    import argparse
     import subprocess
-    import sys
 
-    # Comando para generar el script de autocompletado de borgmatic
-    command = ["borgmatic", "--bash-completion"]
+    # 创建参数解析器
+    parser = argparse.ArgumentParser(description='Generate bash completion script for borgmatic.')
+    parser.add_argument('--generate-bash-completion', action='store_true', help='Generate bash completion script.')
 
-    try:
-        # Ejecutar el comando y capturar la salida
-        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        
-        # Verificar si el comando se ejecutó correctamente
-        if result.returncode == 0:
-            return result.stdout
-        else:
-            print(f"Error al generar el script de autocompletado: {result.stderr}", file=sys.stderr)
-            return None
-    except Exception as e:
-        print(f"Excepción al ejecutar el comando: {e}", file=sys.stderr)
-        return None
+    # 解析命令行参数
+    args = parser.parse_args()
+
+    if args.generate_bash_completion:
+        # 生成 bash 补全脚本
+        completion_script = """
+        _borgmatic_completion() {
+            local cur prev opts
+            COMPREPLY=()
+            cur="${COMP_WORDS[COMP_CWORD]}"
+            prev="${COMP_WORDS[COMP_CWORD-1]}"
+            opts=$(borgmatic --help | grep -oP '--\\K\\w+')
+
+            if [[ ${cur} == -* ]]; then
+                COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+                return 0
+            fi
+        }
+        complete -F _borgmatic_completion borgmatic
+        """
+        return completion_script
+    else:
+        return "Usage: borgmatic --generate-bash-completion"

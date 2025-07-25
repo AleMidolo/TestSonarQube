@@ -1,19 +1,19 @@
 def parse_subparser_arguments(unparsed_arguments, subparsers):
     """
-    Dada una secuencia de argumentos y un diccionario que mapea el nombre de un subparser a una instancia de `argparse.ArgumentParser`, permite que cada subparser solicitado intente analizar todos los argumentos. Esto permite que argumentos comunes como "--repository" sean compartidos entre múltiples subparsers.
+    给定一个参数序列和一个从子解析器名称到 argparse.ArgumentParser 实例的字典，让每个请求的操作的子解析器尝试解析所有参数。这允许共享常见参数（例如 --repository）给多个子解析器。
 
-    Devuelve el resultado como una tupla que contiene: (un diccionario que mapea el nombre del subparser a un espacio de nombres (`namespace`) de argumentos analizados, una lista de argumentos restantes que no fueron reclamados por ningún subparser).
+    将结果作为一个元组返回，其中包含一个将子解析器名称映射到其解析后的 argparse.Namespace 实例的字典和一个包含未被任何子解析器认领的剩余参数的列表。
     """
-    parsed_args = {}
+    parsed_results = {}
     remaining_args = list(unparsed_arguments)
     
-    for subparser_name, subparser in subparsers.items():
+    for subparser_name, parser in subparsers.items():
         try:
-            args, remaining = subparser.parse_known_args(unparsed_arguments)
-            parsed_args[subparser_name] = args
+            parsed_args, remaining = parser.parse_known_args(unparsed_arguments)
+            parsed_results[subparser_name] = parsed_args
             remaining_args = remaining
         except SystemExit:
-            # Ignorar errores de análisis para permitir que otros subparsers intenten analizar los argumentos
+            # Ignore SystemExit exceptions raised by argparse when parsing fails
             continue
     
-    return parsed_args, remaining_args
+    return parsed_results, remaining_args
