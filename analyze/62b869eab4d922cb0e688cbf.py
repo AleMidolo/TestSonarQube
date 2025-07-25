@@ -12,11 +12,11 @@ def generate_default_observer_schema(app):
         resource_type = resource.get('kind')
         if resource_type not in app.custom_observer_schemas:
             default_schema[resource_type] = {
-                'apiVersion': resource.get('apiVersion'),
-                'metadata': {
-                    'name': resource.get('metadata', {}).get('name'),
-                    'namespace': resource.get('metadata', {}).get('namespace')
+                "apiVersion": resource.get('apiVersion'),
+                "metadata": {
+                    "name": resource.get('metadata', {}).get('name'),
+                    "namespace": resource.get('metadata', {}).get('namespace')
                 },
-                'spec': resource.get('spec', {})
+                "spec": resource.get('spec', {})
             }
     return default_schema

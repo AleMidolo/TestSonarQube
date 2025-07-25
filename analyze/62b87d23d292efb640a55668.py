@@ -5,10 +5,10 @@ def get_config():
     class VersioneerConfig:
         def __init__(self):
             self.version = "1.0.0"
+            self.description = "Versioneer configuration"
             self.author = "Your Name"
-            self.email = "your.email@example.com"
             self.license = "MIT"
-            self.description = "A sample project using Versioneer"
     
     config = VersioneerConfig()
+    # Populate the config with additional settings if needed
     return config

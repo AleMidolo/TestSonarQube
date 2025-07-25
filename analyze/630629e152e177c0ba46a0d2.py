@@ -10,10 +10,10 @@ def retrieve_and_parse_diaspora_webfinger(handle):
     # Construct the webfinger URL
     webfinger_url = f"https://{handle}/.well-known/webfinger?resource=acct:{handle}"
     
-    # Send a GET request to the webfinger URL
+    # Make a GET request to retrieve the webfinger document
     response = requests.get(webfinger_url)
     
-    # Check if the response is successful
+    # Check if the request was successful
     if response.status_code == 200:
         # Parse the JSON response
         return response.json()

@@ -19,14 +19,9 @@ def find_path_type(path):
         # Check for OCFL Storage Root
         if any(file.startswith("0=") for file in os.listdir(path)):
             return 'root'
-        
-        # Check for OCFL Object
-        if any(file.endswith('.json') for file in os.listdir(path)):
+        else:
             return 'object'
-        
-        return "Directory does not match OCFL criteria"
-
     elif os.path.isfile(path):
         return 'file'
-    
-    return "Unknown path type"
+    else:
+        return "Unknown type"

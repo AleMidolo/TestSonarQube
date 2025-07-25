@@ -13,14 +13,11 @@ def _validate_labels(labels):
         if not isinstance(key, str) or not re.match(key_regex, key):
             errors.append({key: f"Label key '{key}' does not match the regex [{key_regex}]"})
         
-        if isinstance(value, str):
-            if not re.match(value_regex, value):
-                errors.append({value: 'expected string or bytes-like object'})
-        elif isinstance(value, list):
+        if isinstance(value, list):
             for item in value:
                 if not isinstance(item, str) or not re.match(value_regex, item):
                     errors.append({str(item): 'expected string or bytes-like object'})
-        else:
+        elif not isinstance(value, str) or not re.match(value_regex, value):
             errors.append({str(value): 'expected string or bytes-like object'})
 
     if errors:
