@@ -13,9 +13,9 @@ def make_find_paths(find_paths):
     transformed_paths = []
     for path in find_paths:
         if re.match(r'^[a-zA-Z]+:', path):
-            # If the path is already a pattern (e.g., 'pp:root/somedir'), leave it unchanged
+            # Se il percorso inizia con un prefisso (es. 'pp:'), lo lascia invariato
             transformed_paths.append(path)
         else:
-            # If the path is a fragment, transform it into a glob pattern
+            # Altrimenti, trasforma il percorso in un pattern glob
             transformed_paths.append(f'sh:**/*{path}*/**')
     return transformed_paths

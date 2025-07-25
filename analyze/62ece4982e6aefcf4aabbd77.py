@@ -1,3 +1,4 @@
+import re
 from datetime import timedelta
 
 def parse_frequency(frequency):
@@ -12,26 +13,28 @@ def parse_frequency(frequency):
     if frequency is None or frequency.lower() == "always":
         return None
     
-    try:
-        num, unit = frequency.strip().split()
-        num = int(num)
-    except ValueError:
-        raise ValueError(f"Invalid frequency format: {frequency}")
+    pattern = re.compile(r'^(\d+)\s*(second|minute|hour|day|week|month|year)s?$', re.IGNORECASE)
+    match = pattern.match(frequency)
     
-    unit = unit.lower()
-    if unit in ["second", "seconds", "sec", "s"]:
-        return timedelta(seconds=num)
-    elif unit in ["minute", "minutes", "min", "m"]:
-        return timedelta(minutes=num)
-    elif unit in ["hour", "hours", "hr", "h"]:
-        return timedelta(hours=num)
-    elif unit in ["day", "days", "d"]:
-        return timedelta(days=num)
-    elif unit in ["week", "weeks", "w"]:
-        return timedelta(weeks=num)
-    elif unit in ["month", "months", "mon"]:
-        return timedelta(days=num * 30)  # Approximate month as 30 days
-    elif unit in ["year", "years", "y"]:
-        return timedelta(days=num * 365)  # Approximate year as 365 days
+    if not match:
+        raise ValueError(f"Frequenza non valida: {frequency}")
+    
+    value = int(match.group(1))
+    unit = match.group(2).lower()
+    
+    if unit == "second":
+        return timedelta(seconds=value)
+    elif unit == "minute":
+        return timedelta(minutes=value)
+    elif unit == "hour":
+        return timedelta(hours=value)
+    elif unit == "day":
+        return timedelta(days=value)
+    elif unit == "week":
+        return timedelta(weeks=value)
+    elif unit == "month":
+        return timedelta(days=value * 30)  # Approximazione di un mese come 30 giorni
+    elif unit == "year":
+        return timedelta(days=value * 365)  # Approximazione di un anno come 365 giorni
     else:
-        raise ValueError(f"Unsupported time unit: {unit}")
+        raise ValueError(f"Unità di tempo non riconosciuta: {unit}")

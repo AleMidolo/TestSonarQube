@@ -1,6 +1,6 @@
 def _reset_logging(cls):
     """
-    Reimposta la configurazione del logging alla sua configurazione iniziale.
+    Reimposta la configurazione del logging al suo stato iniziale.
     """
     import logging
     logging.shutdown()

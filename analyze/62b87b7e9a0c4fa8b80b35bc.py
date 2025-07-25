@@ -19,18 +19,15 @@ def _update_context(self, context):
     if not hasattr(context, 'error'):
         context.error = {}
 
-    # Aggiorna gli errori con gli indici corrispondenti
-    for i, field in enumerate(self.fields):
-        if field.startswith('error_'):
-            error_type = field.split('_')[1]
-            error_name = field.split('_')[2]
-            if error_type not in context.error:
-                context.error[error_type] = {}
-            context.error[error_type][error_name] = {'index': i}
+    # Aggiorna il contesto con gli errori del grafo
+    for i, error in enumerate(self.errors):
+        error_name = ['x', 'y', 'z'][i] if i < 3 else f'error_{i}'
+        context.error[f'{error_name}_low'] = {'index': i}
 
-    # Mantieni i valori esistenti in context.value
+    # Mantieni i valori esistenti nel contesto
     if not hasattr(context, 'value'):
         context.value = {}
+    # Non rimuovere i valori esistenti, solo aggiungere nuovi
     for key, value in self.values.items():
         if key not in context.value:
             context.value[key] = value

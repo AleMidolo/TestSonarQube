@@ -26,11 +26,23 @@ def ansible_playbook(ir_workspace, ir_plugin, playbook_path, verbose=None, extra
 
     # Add additional ansible arguments if specified
     if ansible_args:
-        for arg, value in ansible_args.items():
-            command.extend([f"--{arg}", str(value)])
+        for key, value in ansible_args.items():
+            if len(key) == 1:
+                command.append(f'-{key}')
+            else:
+                command.append(f'--{key}')
+            if value is not None:
+                command.append(str(value))
 
     # Execute the command
     result = subprocess.run(command, capture_output=True, text=True)
 
-    # Return the result
-    return result
+    # Print the output
+    if result.returncode == 0:
+        print("Playbook executed successfully.")
+        print(result.stdout)
+    else:
+        print("Playbook execution failed.")
+        print(result.stderr)
+
+    return result.returncode

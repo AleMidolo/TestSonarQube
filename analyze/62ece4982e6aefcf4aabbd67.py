@@ -11,7 +11,6 @@ def vertex3tuple(vertices):
     n = len(vertices)
     result = []
     for i in range(n):
-        # Get the previous, current, and next vertices
         prev = vertices[(i - 1) % n]
         curr = vertices[i]
         next_ = vertices[(i + 1) % n]

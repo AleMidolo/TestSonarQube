@@ -34,6 +34,6 @@ class Time:
         
         # Create a datetime object at midnight and add the timedelta
         midnight = datetime.datetime(1, 1, 1, tzinfo=tz)
-        time_obj = midnight + delta
+        dt = midnight + delta
         
-        return cls(time_obj.hour, time_obj.minute, time_obj.second, time_obj.microsecond, tz)
+        return cls(dt.hour, dt.minute, dt.second, dt.microsecond, tz)

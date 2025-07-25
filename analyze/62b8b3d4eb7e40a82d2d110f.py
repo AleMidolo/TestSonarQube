@@ -14,5 +14,5 @@ def _should_attempt_c_optimizations():
     # Controlla la variabile di ambiente PURE_PYTHON
     pure_python = os.getenv("PURE_PYTHON", "").lower() in ("1", "true", "yes")
 
-    # Tentiamo le ottimizzazioni in C solo se non siamo su PyPy e PURE_PYTHON non è attivo
+    # Tentiamo le ottimizzazioni in C solo se non siamo su PyPy e PURE_PYTHON non è impostato
     return not is_pypy and not pure_python
