@@ -11,16 +11,16 @@ class UrlPath:
 
     def parse(self, path, charset):
         if path:
-            self.set_end_tag(path)
+            self._set_end_tag(path)
             path = self.fix_path(path)
             if path:
-                self.decode_segments(path, charset)
+                self._decode_segments(path, charset)
 
-    def set_end_tag(self, path):
+    def _set_end_tag(self, path):
         if path.endswith('/'):
             self.with_end_tag = True
 
-    def decode_segments(self, path, charset):
+    def _decode_segments(self, path, charset):
         split = path.split('/')
         for seg in split:
             decoded_seg = urllib.parse.unquote(seg, encoding=charset)

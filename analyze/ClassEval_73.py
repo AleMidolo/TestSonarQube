@@ -1,9 +1,10 @@
 class RPGCharacter:
     MAX_HP = 100
     EXP_PER_LEVEL = 100
-    HP_INCREASE_ON_LEVEL_UP = 20
-    ATTACK_POWER_INCREASE_ON_LEVEL_UP = 5
-    DEFENSE_INCREASE_ON_LEVEL_UP = 5
+    HP_INCREASE_PER_LEVEL = 20
+    ATTACK_POWER_INCREASE_PER_LEVEL = 5
+    DEFENSE_INCREASE_PER_LEVEL = 5
+    MIN_DAMAGE = 1
 
     def __init__(self, name, hp, attack_power, defense, level=1):
         self.name = name
@@ -18,7 +19,7 @@ class RPGCharacter:
         other_character.hp -= damage
 
     def calculate_damage(self, other_character):
-        return max(self.attack_power - other_character.defense, 1)
+        return max(self.attack_power - other_character.defense, self.MIN_DAMAGE)
 
     def heal(self):
         self.hp = min(self.hp + 10, self.MAX_HP)
@@ -40,9 +41,9 @@ class RPGCharacter:
         if self.level < 100:
             self.level += 1
             self.exp = 0
-            self.hp += self.HP_INCREASE_ON_LEVEL_UP
-            self.attack_power += self.ATTACK_POWER_INCREASE_ON_LEVEL_UP
-            self.defense += self.DEFENSE_INCREASE_ON_LEVEL_UP
+            self.hp += self.HP_INCREASE_PER_LEVEL
+            self.attack_power += self.ATTACK_POWER_INCREASE_PER_LEVEL
+            self.defense += self.DEFENSE_INCREASE_PER_LEVEL
         return self.level, self.hp, self.attack_power, self.defense
 
     def is_alive(self):

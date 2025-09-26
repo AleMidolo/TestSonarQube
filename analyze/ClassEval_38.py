@@ -47,12 +47,12 @@ class ExcelProcessor:
     def _process_data(self, data, N):
         new_data = []
         for row in data:
-            new_row = list(row)
-            new_row.append(self._transform_value(row[N]))
+            new_row = list(row[:])
+            new_row.append(self._process_cell_value(row[N]))
             new_data.append(new_row)
         return new_data
 
-    def _transform_value(self, value):
+    def _process_cell_value(self, value):
         return str(value).upper() if not str(value).isdigit() else value
 
     def _generate_new_file_name(self, original_file_name):

@@ -23,7 +23,7 @@ class Snake:
         if self.is_collision(new_position):
             self.reset()
         else:
-            self.update_positions(new_position)
+            self.update_position(new_position)
 
     def calculate_new_position(self, direction):
         cur = self.positions[0]
@@ -36,7 +36,7 @@ class Snake:
     def is_collision(self, new_position):
         return len(self.positions) > 2 and new_position in self.positions[2:]
 
-    def update_positions(self, new_position):
+    def update_position(self, new_position):
         self.positions.insert(0, new_position)
         if len(self.positions) > self.length:
             self.positions.pop()

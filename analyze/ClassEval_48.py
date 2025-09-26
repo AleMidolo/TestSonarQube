@@ -22,7 +22,6 @@ class IpUtil:
     @staticmethod
     def get_hostname(ip_address):
         try:
-            hostname = socket.gethostbyaddr(ip_address)[0]
-            return hostname
+            return socket.gethostbyaddr(ip_address)[0]
         except socket.herror:
             return None

@@ -25,14 +25,14 @@ class ZipFileProcessor:
 
     def _extract_zip(self, output_path):
         with self._open_zip_file('r') as zip_file:
-            if zip_file is not None:
+            if zip_file:
                 zip_file.extractall(output_path)
                 return True
         return False
 
     def _extract_specific_file(self, file_name, output_path):
         with self._open_zip_file('r') as zip_file:
-            if zip_file is not None:
+            if zip_file:
                 zip_file.extract(file_name, output_path)
                 return True
         return False

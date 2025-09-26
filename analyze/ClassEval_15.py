@@ -27,6 +27,6 @@ class BoyerMooreSearch:
                 i = self.update_position(i, mismatch_index)
         return positions
 
-    def update_position(self, currentPos, mismatch_index):
+    def update_position(self, current_position, mismatch_index):
         match_index = self.match_in_pattern(self.text[mismatch_index])
-        return mismatch_index - match_index
+        return (mismatch_index - match_index)

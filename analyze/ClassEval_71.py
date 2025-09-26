@@ -13,9 +13,9 @@ class PushBoxGame:
     def init_game(self):
         for row in range(len(self.map)):
             for col in range(len(self.map[row])):
-                self._initialize_game_elements(row, col)
+                self._initialize_player_and_targets(row, col)
 
-    def _initialize_game_elements(self, row, col):
+    def _initialize_player_and_targets(self, row, col):
         if self.map[row][col] == "O":
             self.player_row = row
             self.player_col = col
@@ -26,18 +26,14 @@ class PushBoxGame:
             self.boxes.append((row, col))
 
     def check_win(self):
-        box_on_target_count = self._count_boxes_on_targets()
-        if box_on_target_count == self.target_count:
-            self.is_game_over = True
+        box_on_target_count = sum(1 for box in self.boxes if box in self.targets)
+        self.is_game_over = box_on_target_count == self.target_count
         return self.is_game_over
-
-    def _count_boxes_on_targets(self):
-        return sum(1 for box in self.boxes if box in self.targets)
 
     def move(self, direction):
         new_player_row, new_player_col = self._calculate_new_position(direction)
 
-        if self._is_move_valid(new_player_row, new_player_col):
+        if self._is_valid_move(new_player_row, new_player_col):
             if (new_player_row, new_player_col) in self.boxes:
                 self._move_box(new_player_row, new_player_col)
             self.player_row = new_player_row
@@ -60,7 +56,7 @@ class PushBoxGame:
 
         return new_player_row, new_player_col
 
-    def _is_move_valid(self, new_player_row, new_player_col):
+    def _is_valid_move(self, new_player_row, new_player_col):
         return self.map[new_player_row][new_player_col] != "#"
 
     def _move_box(self, new_player_row, new_player_col):

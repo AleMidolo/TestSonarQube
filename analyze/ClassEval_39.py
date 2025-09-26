@@ -26,6 +26,9 @@ class ExpressionCalculator:
 
         return float(eval("*".join(result_stack)))
 
+    def normalize_value(self, value):
+        return value.replace("~", "-")
+
     def prepare(self, expression):
         op_stack = deque([','])
         arr = list(expression)
@@ -106,7 +109,3 @@ class ExpressionCalculator:
             return "0" + "".join(arr)
         else:
             return "".join(arr)
-
-    @staticmethod
-    def normalize_value(value):
-        return value.replace("~", "-")

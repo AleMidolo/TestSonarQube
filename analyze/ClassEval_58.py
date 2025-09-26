@@ -43,9 +43,12 @@ class MinesweeperGame:
     def sweep(self, x, y):
         if self.is_mine(x, y):
             return False
-        self.player_map[x][y] = self.minesweeper_map[x][y]
-        self.score += 1
+        self.reveal_cell(x, y)
         return self.check_won()
 
     def is_mine(self, x, y):
         return self.minesweeper_map[x][y] == 'X'
+
+    def reveal_cell(self, x, y):
+        self.player_map[x][y] = self.minesweeper_map[x][y]
+        self.score += 1

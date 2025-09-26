@@ -12,20 +12,18 @@ class ComplexCalculator:
 
     @staticmethod
     def multiply(c1, c2):
-        return ComplexCalculator._calculate(c1, c2, lambda r1, r2, i1, i2: (r1 * r2 - i1 * i2, r1 * i2 + i1 * r2))
+        real = c1.real * c2.real - c1.imag * c2.imag
+        imaginary = c1.real * c2.imag + c1.imag * c2.real
+        return complex(real, imaginary)
 
     @staticmethod
     def divide(c1, c2):
         denominator = c2.real**2 + c2.imag**2
-        return ComplexCalculator._calculate(c1, c2, lambda r1, r2, i1, i2: (
-            (r1 * r2 + i1 * i2) / denominator,
-            (i1 * r2 - r1 * i2) / denominator
-        ))
+        real = (c1.real * c2.real + c1.imag * c2.imag) / denominator
+        imaginary = (c1.imag * c2.real - c1.real * c2.imag) / denominator
+        return complex(real, imaginary)
 
     @staticmethod
     def _calculate(c1, c2, operation):
-        real = c1.real
-        imaginary = c1.imag
-        real2 = c2.real
-        imaginary2 = c2.imag
-        return complex(*operation(real, real2, imaginary, imaginary2))
+        real_result, imaginary_result = operation(c1.real, c2.real, c1.imag, c2.imag)
+        return complex(real_result, imaginary_result)

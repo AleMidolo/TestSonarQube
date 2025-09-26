@@ -19,19 +19,15 @@ class AutomaticGuitarSimulator:
         return not self.play_text.strip()
 
     def extract_chord_and_value(self, play_seg):
-        pos = self.find_chord_length(play_seg)
-        play_chord = play_seg[0:pos]
-        play_value = play_seg[pos:]
-        return play_chord, play_value
-
-    def find_chord_length(self, play_seg):
         pos = 0
         for ele in play_seg:
             if ele.isalpha():
                 pos += 1
                 continue
             break
-        return pos
+        play_chord = play_seg[0:pos]
+        play_value = play_seg[pos:]
+        return play_chord, play_value
 
     def display(self, key, value):
         return "Normal Guitar Playing -- Chord: %s, Play Tune: %s" % (key, value)
