@@ -14,8 +14,8 @@ class WeatherSystem:
         
         if self.is_temperature_unit_different(tmp_units):
             return self.convert_temperature(tmp_units), self.weather
-        
-        return self.temperature, self.weather
+        else:
+            return self.temperature, self.weather
     
     def city_in_weather_list(self):
         return self.city in self.weather_list

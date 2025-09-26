@@ -2,6 +2,8 @@ import math
 from typing import List
 
 class CombinationCalculator:
+    MAX_N = 63
+
     def __init__(self, datas: List[str]):
         self.datas = datas
 
@@ -13,9 +15,9 @@ class CombinationCalculator:
 
     @staticmethod
     def count_all(n: int) -> int:
-        if n < 0 or n > 63:
+        if n < 0 or n > CombinationCalculator.MAX_N:
             return False
-        return (1 << n) - 1 if n != 63 else float("inf")
+        return (1 << n) - 1 if n != CombinationCalculator.MAX_N else float("inf")
 
     def select(self, m: int) -> List[List[str]]:
         result = []

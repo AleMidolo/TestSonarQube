@@ -6,21 +6,23 @@ class Order:
         self.sales = {}
 
     def add_dish(self, dish):
-        menu_dish = self.find_menu_dish(dish["dish"])
-        if menu_dish and self.is_dish_available(menu_dish, dish["count"]):
-            menu_dish["count"] -= dish["count"]
-            self.selected_dishes.append(dish)
-            return True
+        if not self.is_dish_available(dish):
+            return False
+        self.update_menu_count(dish)
+        self.selected_dishes.append(dish)
+        return True
+
+    def is_dish_available(self, dish):
+        for menu_dish in self.menu:
+            if dish["dish"] == menu_dish["dish"]:
+                return menu_dish["count"] >= dish["count"]
         return False
 
-    def find_menu_dish(self, dish_name):
+    def update_menu_count(self, dish):
         for menu_dish in self.menu:
-            if menu_dish["dish"] == dish_name:
-                return menu_dish
-        return None
-
-    def is_dish_available(self, menu_dish, count):
-        return menu_dish["count"] >= count
+            if dish["dish"] == menu_dish["dish"]:
+                menu_dish["count"] -= dish["count"]
+                break
 
     def calculate_total(self):
         return sum(dish["price"] * dish["count"] * self.sales[dish["dish"]] for dish in self.selected_dishes)

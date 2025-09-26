@@ -15,13 +15,23 @@ class MahjongConnect:
             return False
         if pos1 == pos2:
             return False
-        if self.board[pos1[0]][pos1[1]] != self.board[pos2[0]][pos2[1]]:
+        if not self.icons_match(pos1, pos2):
             return False
-        return self.has_path(pos1, pos2)
+        if not self.has_path(pos1, pos2):
+            return False
+        return True
 
     def are_positions_valid(self, pos1, pos2):
-        return (0 <= pos1[0] < self.board_size[0] and 0 <= pos1[1] < self.board_size[1] and
-                0 <= pos2[0] < self.board_size[0] and 0 <= pos2[1] < self.board_size[1])
+        return (self.is_within_bounds(pos1) and self.is_within_bounds(pos2))
+
+    def is_within_bounds(self, pos):
+        x, y = pos
+        return 0 <= x < self.board_size[0] and 0 <= y < self.board_size[1]
+
+    def icons_match(self, pos1, pos2):
+        x1, y1 = pos1
+        x2, y2 = pos2
+        return self.board[x1][y1] == self.board[x2][y2]
 
     def has_path(self, pos1, pos2):
         visited = set()
@@ -42,8 +52,7 @@ class MahjongConnect:
         x, y = current_pos
         for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
             new_x, new_y = x + dx, y + dy
-            if (0 <= new_x < self.board_size[0] and 0 <= new_y < self.board_size[1] and
-                    (new_x, new_y) not in visited and self.board[new_x][new_y] == self.board[x][y]):
+            if self.is_within_bounds((new_x, new_y)) and (new_x, new_y) not in visited and self.board[new_x][new_y] == self.board[x][y]:
                 stack.append((new_x, new_y))
 
     def remove_icons(self, pos1, pos2):

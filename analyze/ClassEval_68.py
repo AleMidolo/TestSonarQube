@@ -24,14 +24,6 @@ class PageUtil:
 
         return self.build_page_info(page_number, page_data)
 
-    def is_valid_page_number(self, page_number):
-        return 1 <= page_number <= self.total_pages
-
-    def calculate_page_indices(self, page_number):
-        start_index = (page_number - 1) * self.page_size
-        end_index = min(start_index + self.page_size, self.total_items)
-        return start_index, end_index
-
     def build_page_info(self, page_number, page_data):
         return {
             "current_page": page_number,
@@ -42,6 +34,14 @@ class PageUtil:
             "has_next": page_number < self.total_pages,
             "data": page_data
         }
+
+    def is_valid_page_number(self, page_number):
+        return 1 <= page_number <= self.total_pages
+
+    def calculate_page_indices(self, page_number):
+        start_index = (page_number - 1) * self.page_size
+        end_index = min(start_index + self.page_size, self.total_items)
+        return start_index, end_index
 
     def search(self, keyword):
         results = self.perform_search(keyword)

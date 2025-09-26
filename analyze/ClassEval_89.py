@@ -17,27 +17,27 @@ class TwentyFourPointGame:
         if expression == 'pass':
             return self.get_my_cards()
         
-        statistic = self._count_used_numbers(expression)
+        statistic = self._count_digits_in_expression(expression)
 
-        if not self._are_numbers_available(statistic):
+        if not self._are_numbers_used_correctly(statistic):
             return False
 
         return self._is_expression_valid(expression)
 
-    def _count_used_numbers(self, expression):
+    def _count_digits_in_expression(self, expression):
         statistic = {}
         for c in expression:
             if c.isdigit() and int(c) in self.nums:
                 statistic[c] = statistic.get(c, 0) + 1
         return statistic
 
-    def _are_numbers_available(self, nums_used):
+    def _are_numbers_used_correctly(self, nums_used):
         for num in self.nums:
             if nums_used.get(str(num), -100) != -100 and nums_used[str(num)] > 0:
                 nums_used[str(num)] -= 1
             else:
                 return False
-        return True
+        return all(count == 0 for count in nums_used.values())
 
     def _is_expression_valid(self, expression):
         try:

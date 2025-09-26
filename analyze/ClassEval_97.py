@@ -35,11 +35,11 @@ class Words2Numbers:
             else:
                 word = self._replace_ordinal_ending(word)
                 if word not in self.numwords:
-                    curstring = self._handle_invalid_word(word, curstring, result, current, onnumber)
+                    curstring = self._handle_non_numword(word, curstring, result, current, onnumber)
                     result, current, onnumber = 0, 0, False
                 else:
                     current = self._process_numword(word, current)
-                    if self.numwords[word][0] > 100:
+                    if self._is_scale(word):
                         result += current
                         current = 0
                     onnumber = True
@@ -59,25 +59,25 @@ class Words2Numbers:
                 return "%s%s" % (word[:-len(ending)], replacement)
         return word
 
-    def _handle_invalid_word(self, word, curstring, result, current, onnumber):
+    def _handle_non_numword(self, word, curstring, result, current, onnumber):
         if onnumber:
             curstring += repr(result + current) + " "
-        curstring += word + " "
-        return curstring
+        return curstring + word + " "
 
     def _process_numword(self, word, current):
         scale, increment = self.numwords[word]
         return current * scale + increment
 
+    def _is_scale(self, word):
+        return self.numwords[word][0] > 100
+
     def is_valid_input(self, textnum):
         textnum = textnum.replace('-', ' ')
         for word in textnum.split():
-            if not self._is_valid_word(word):
-                return False
+            if word in self.ordinal_words:
+                continue
+            else:
+                word = self._replace_ordinal_ending(word)
+                if word not in self.numwords:
+                    return False
         return True
-
-    def _is_valid_word(self, word):
-        if word in self.ordinal_words:
-            return True
-        word = self._replace_ordinal_ending(word)
-        return word in self.numwords

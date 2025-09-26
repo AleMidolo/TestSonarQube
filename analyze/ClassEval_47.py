@@ -16,9 +16,7 @@ class IPAddress:
         return self._get_octets() if self.is_valid() else []
 
     def get_binary(self):
-        if self.is_valid():
-            return '.'.join(self._to_binary(octet) for octet in self.get_octets())
-        return ''
+        return self._get_binary() if self.is_valid() else ''
 
-    def _to_binary(self, octet):
-        return format(int(octet), '08b')
+    def _get_binary(self):
+        return '.'.join(format(int(octet), '08b') for octet in self.get_octets())

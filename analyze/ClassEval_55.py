@@ -17,14 +17,14 @@ class Manacher:
         return self.extract_palindrome(new_input_string, start, max_length)
 
     def prepare_input_string(self):
-        return "|".join(self.input_string) + "|"
+        return "|".join(self.input_string) + "|"  # Add separator between characters
 
-    def find_longest_palindrome(self, string):
+    def find_longest_palindrome(self, new_input_string):
         max_length = 0
         start = 0
 
-        for i in range(len(string)):
-            length = self.palindromic_length(i, 1, string)
+        for i in range(len(new_input_string)):
+            length = self.palindromic_length(i, 1, new_input_string)
 
             if max_length < length:
                 max_length = length
@@ -32,9 +32,9 @@ class Manacher:
 
         return max_length, start
 
-    def extract_palindrome(self, string, start, max_length):
+    def extract_palindrome(self, new_input_string, start, max_length):
         output_string = ""
-        for i in string[start - max_length:start + max_length + 1]:
+        for i in new_input_string[start - max_length:start + max_length + 1]:
             if i != "|":
                 output_string += i
         return output_string

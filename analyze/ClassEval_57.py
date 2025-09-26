@@ -42,19 +42,22 @@ class MetricsCalculator2:
         sub_list = np.array(sub_list)
         if total_num == 0:
             return 0.0, [0.0]
-
-        ranking_array = 1.0 / (np.arange(len(sub_list)) + 1)
-        mr_np = sub_list * ranking_array
-
-        mr = MetricsCalculator2._first_positive(mr_np)
-        return mr, [mr]
+        else:
+            ranking_array = 1.0 / (np.arange(len(sub_list)) + 1)
+            mr_np = sub_list * ranking_array
+            return MetricsCalculator2._get_first_positive(mr_np)
 
     @staticmethod
     def _calculate_mrr_for_list(data):
         separate_result = []
         for (sub_list, total_num) in data:
             sub_list = np.array(sub_list)
-            mr = 0.0 if total_num == 0 else MetricsCalculator2._calculate_mrr_for_tuple((sub_list, total_num))[0]
+            if total_num == 0:
+                mr = 0.0
+            else:
+                ranking_array = 1.0 / (np.arange(len(sub_list)) + 1)
+                mr_np = sub_list * ranking_array
+                mr = MetricsCalculator2._get_first_positive(mr_np)
             separate_result.append(mr)
         return np.mean(separate_result), separate_result
 
@@ -64,24 +67,35 @@ class MetricsCalculator2:
         sub_list = np.array(sub_list)
         if total_num == 0:
             return 0.0, [0.0]
-
-        ranking_array = 1.0 / (np.arange(len(sub_list)) + 1)
-        right_ranking_list = MetricsCalculator2._calculate_right_ranking(sub_list)
-
-        ap = np.sum(np.array(right_ranking_list) * ranking_array) / total_num
-        return ap, [ap]
+        else:
+            ranking_array = 1.0 / (np.arange(len(sub_list)) + 1)
+            right_ranking_list = MetricsCalculator2._get_right_ranking_list(sub_list)
+            ap = np.sum(np.array(right_ranking_list) * ranking_array) / total_num
+            return ap, [ap]
 
     @staticmethod
     def _calculate_map_for_list(data):
         separate_result = []
         for (sub_list, total_num) in data:
             sub_list = np.array(sub_list)
-            ap = 0.0 if total_num == 0 else MetricsCalculator2._calculate_map_for_tuple((sub_list, total_num))[0]
+            if total_num == 0:
+                ap = 0.0
+            else:
+                ranking_array = 1.0 / (np.arange(len(sub_list)) + 1)
+                right_ranking_list = MetricsCalculator2._get_right_ranking_list(sub_list)
+                ap = np.sum(np.array(right_ranking_list) * ranking_array) / total_num
             separate_result.append(ap)
         return np.mean(separate_result), separate_result
 
     @staticmethod
-    def _calculate_right_ranking(sub_list):
+    def _get_first_positive(mr_np):
+        for team in mr_np:
+            if team > 0:
+                return team, [team]
+        return 0.0, [0.0]
+
+    @staticmethod
+    def _get_right_ranking_list(sub_list):
         right_ranking_list = []
         count = 1
         for t in sub_list:
@@ -91,10 +105,3 @@ class MetricsCalculator2:
                 right_ranking_list.append(count)
                 count += 1
         return right_ranking_list
-
-    @staticmethod
-    def _first_positive(mr_np):
-        for team in mr_np:
-            if team > 0:
-                return team
-        return 0.0

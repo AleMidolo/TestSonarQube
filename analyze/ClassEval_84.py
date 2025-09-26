@@ -15,10 +15,10 @@ class TextFileProcessor:
         self._write_file(content)
 
     def process_file(self):
-        content = self.read_file()
-        processed_content = self._remove_non_alpha(content)
-        self.write_file(processed_content)
-        return processed_content
+        content = self._read_file()
+        content = self._filter_non_alpha(content)
+        self._write_file(content)
+        return content
 
     def _read_file_with_json(self):
         with open(self.file_path, 'r') as file:
@@ -32,5 +32,5 @@ class TextFileProcessor:
         with open(self.file_path, 'w') as file:
             file.write(content)
 
-    def _remove_non_alpha(self, content):
+    def _filter_non_alpha(self, content):
         return ''.join(char for char in content if char.isalpha())

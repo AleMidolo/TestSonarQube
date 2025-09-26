@@ -4,9 +4,9 @@ import PyPDF2
 class PDFHandler:
     def __init__(self, filepaths):
         self.filepaths = filepaths
-        self.readers = self._create_pdf_readers(filepaths)
+        self.readers = self._initialize_readers(filepaths)
 
-    def _create_pdf_readers(self, filepaths):
+    def _initialize_readers(self, filepaths):
         return [PyPDF2.PdfReader(fp) for fp in filepaths]
 
     def merge_pdfs(self, output_filepath):

@@ -13,35 +13,43 @@ class NumberWordFormatter:
     def format_string(self, x):
         lstr, rstr = self.split_number_string(x)
         lstrrev = lstr[::-1]
-        lstrrev = self.pad_left(lstrrev)
+        lstrrev = self.pad_number_string(lstrrev)
 
-        lm = self.process_left_string(lstrrev)
-        xs = f"AND CENTS {self.trans_two(rstr)} " if rstr else ""
-        
-        return "ZERO ONLY" if not lm.strip() else f"{lm.strip()} {xs}ONLY"
+        lm = self.convert_integer_part(lstrrev)
+        xs = self.format_cents(rstr)
+
+        return self.construct_final_string(lm, xs)
 
     def split_number_string(self, x):
         return (x.split('.') + [''])[:2]
 
-    def pad_left(self, lstrrev):
+    def pad_number_string(self, lstrrev):
         if len(lstrrev) % 3 == 1:
             return lstrrev + "00"
         elif len(lstrrev) % 3 == 2:
             return lstrrev + "0"
         return lstrrev
 
-    def process_left_string(self, lstrrev):
+    def convert_integer_part(self, lstrrev):
         a = [''] * 5
         lm = ""
         for i in range(len(lstrrev) // 3):
             a[i] = lstrrev[3 * i:3 * i + 3][::-1]
-            lm = self.append_transformed(a[i], lm, i)
+            lm = self.append_translated_part(a[i], lm, i)
         return lm
 
-    def append_transformed(self, segment, lm, index):
-        if segment != "000":
-            return self.trans_three(segment) + " " + self.parse_more(index) + " " + lm
-        return lm + self.trans_three(segment)
+    def append_translated_part(self, part, lm, index):
+        if part != "000":
+            return self.trans_three(part) + " " + self.parse_more(index) + " " + lm
+        return lm + self.trans_three(part)
+
+    def format_cents(self, rstr):
+        return f"AND CENTS {self.trans_two(rstr)} " if rstr else ""
+
+    def construct_final_string(self, lm, xs):
+        if not lm.strip():
+            return "ZERO ONLY"
+        return f"{lm.strip()} {xs}ONLY"
 
     def trans_two(self, s):
         s = s.zfill(2)

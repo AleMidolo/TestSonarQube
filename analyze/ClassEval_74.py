@@ -6,29 +6,29 @@ class Server:
         self.receive_struct = {}
 
     def add_white_list(self, addr):
-        if self._is_addr_in_white_list(addr):
+        if self._is_in_white_list(addr):
             return False
         self.white_list.append(addr)
         return self.white_list
 
     def del_white_list(self, addr):
-        if not self._is_addr_in_white_list(addr):
+        if not self._is_in_white_list(addr):
             return False
         self.white_list.remove(addr)
         return self.white_list
 
     def recv(self, info):
-        if not self._is_info_valid(info):
+        if not self._is_valid_info(info):
             return -1
         addr = info["addr"]
         content = info["content"]
-        if not self._is_addr_in_white_list(addr):
+        if not self._is_in_white_list(addr):
             return False
         self.receive_struct = {"addr": addr, "content": content}
         return self.receive_struct["content"]
 
     def send(self, info):
-        if not self._is_info_valid(info):
+        if not self._is_valid_info(info):
             return "info structure is not correct"
         self.send_struct = {"addr": info["addr"], "content": info["content"]}
 
@@ -39,8 +39,8 @@ class Server:
             return self.receive_struct
         return False
 
-    def _is_addr_in_white_list(self, addr):
+    def _is_in_white_list(self, addr):
         return addr in self.white_list
 
-    def _is_info_valid(self, info):
+    def _is_valid_info(self, info):
         return isinstance(info, dict) and "addr" in info and "content" in info

@@ -25,28 +25,25 @@ class Hotel:
             self.decrease_booked_room_number(room_type, name, room_number)
 
     def check_out(self, room_type, room_number):
-        if room_type in self.available_rooms:
-            self.available_rooms[room_type] += room_number
-        else:
-            self.available_rooms[room_type] = room_number
+        self.available_rooms[room_type] = self.available_rooms.get(room_type, 0) + room_number
 
     def get_available_rooms(self, room_type):
-        return self.available_rooms[room_type]
+        return self.available_rooms.get(room_type, 0)
 
     def is_room_type_available(self, room_type):
-        return room_type in self.available_rooms.keys()
+        return room_type in self.available_rooms
 
     def is_room_available(self, room_type, room_number):
         return room_number <= self.available_rooms[room_type]
 
     def add_booking(self, room_type, room_number, name):
-        if room_type not in self.booked_rooms.keys():
+        if room_type not in self.booked_rooms:
             self.booked_rooms[room_type] = {}
         self.booked_rooms[room_type][name] = room_number
         self.available_rooms[room_type] -= room_number
 
     def is_room_booked(self, room_type, name):
-        return room_type in self.booked_rooms.keys() and name in self.booked_rooms[room_type]
+        return room_type in self.booked_rooms and name in self.booked_rooms[room_type]
 
     def is_correct_room_number(self, room_type, name, room_number):
         return room_number == self.booked_rooms[room_type][name]

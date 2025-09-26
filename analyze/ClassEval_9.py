@@ -2,10 +2,11 @@ class BigNumCalculator:
     @staticmethod
     def add(num1, num2):
         num1, num2 = BigNumCalculator._pad_numbers(num1, num2)
-        carry, result = 0, []
+        carry = 0
+        result = []
 
         for i in range(len(num1) - 1, -1, -1):
-            digit_sum, carry = BigNumCalculator._calculate_sum(int(num1[i]), int(num2[i]), carry)
+            digit_sum, carry = BigNumCalculator._calculate_digit_sum(num1[i], num2[i], carry)
             result.insert(0, str(digit_sum))
 
         if carry > 0:
@@ -17,10 +18,11 @@ class BigNumCalculator:
     def subtract(num1, num2):
         num1, num2, negative = BigNumCalculator._prepare_subtraction(num1, num2)
         num1, num2 = BigNumCalculator._pad_numbers(num1, num2)
-        borrow, result = 0, []
+        borrow = 0
+        result = []
 
         for i in range(len(num1) - 1, -1, -1):
-            digit_diff, borrow = BigNumCalculator._calculate_difference(int(num1[i]), int(num2[i]), borrow)
+            digit_diff, borrow = BigNumCalculator._calculate_digit_difference(num1[i], num2[i], borrow)
             result.insert(0, str(digit_diff))
 
         BigNumCalculator._remove_leading_zeros(result)
@@ -56,8 +58,8 @@ class BigNumCalculator:
         return num1.zfill(max_length), num2.zfill(max_length)
 
     @staticmethod
-    def _calculate_sum(digit1, digit2, carry):
-        digit_sum = digit1 + digit2 + carry
+    def _calculate_digit_sum(digit1, digit2, carry):
+        digit_sum = int(digit1) + int(digit2) + carry
         return digit_sum % 10, digit_sum // 10
 
     @staticmethod
@@ -68,8 +70,8 @@ class BigNumCalculator:
         return num1, num2, False
 
     @staticmethod
-    def _calculate_difference(digit1, digit2, borrow):
-        digit_diff = digit1 - digit2 - borrow
+    def _calculate_digit_difference(digit1, digit2, borrow):
+        digit_diff = int(digit1) - int(digit2) - borrow
         if digit_diff < 0:
             digit_diff += 10
             borrow = 1

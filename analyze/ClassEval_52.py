@@ -16,7 +16,8 @@ class Lemmatization:
         sentence = self.remove_punctuation(sentence)
         words = word_tokenize(sentence)
         tagged_words = pos_tag(words)
-        return [self.lemmatize_word(word, tag) for word, tag in tagged_words]
+        lemmatized_words = [self.lemmatize_word(word, tag) for word, tag in tagged_words]
+        return lemmatized_words
 
     def lemmatize_word(self, word, tag):
         if tag.startswith('V'):
@@ -25,7 +26,8 @@ class Lemmatization:
             return self.lemmatizer.lemmatize(word, pos='a')
         elif tag.startswith('R'):
             return self.lemmatizer.lemmatize(word, pos='r')
-        return self.lemmatizer.lemmatize(word)
+        else:
+            return self.lemmatizer.lemmatize(word)
 
     def get_pos_tag(self, sentence):
         sentence = self.remove_punctuation(sentence)

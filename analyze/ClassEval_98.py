@@ -22,16 +22,15 @@ class XMLProcessor:
         except Exception:
             return False
 
-    def process_xml_data(self, file_name):
-        self.uppercase_item_texts()
-        return self.write_xml(file_name)
+    def process_xml_data(self, output_file_name):
+        self._convert_items_to_uppercase()
+        return self.write_xml(output_file_name)
 
-    def uppercase_item_texts(self):
+    def _convert_items_to_uppercase(self):
         for element in self.root.iter('item'):
-            element.text = self.uppercase_text(element.text)
+            element.text = self._to_uppercase(element.text)
 
-    @staticmethod
-    def uppercase_text(text):
+    def _to_uppercase(self, text):
         return text.upper() if text else text
 
     def find_element(self, element_name):

@@ -1,7 +1,11 @@
 class TicTacToe:
     def __init__(self, N=3):
-        self.board = [[' ' for _ in range(N)] for _ in range(N)]
+        self.N = N
+        self.board = self.create_board()
         self.current_player = 'X'
+
+    def create_board(self):
+        return [[' ' for _ in range(self.N)] for _ in range(self.N)]
 
     def make_move(self, row, col):
         if self.is_valid_move(row, col):
@@ -27,7 +31,7 @@ class TicTacToe:
         return None
 
     def check_columns(self):
-        for col in range(len(self.board)):
+        for col in range(self.N):
             if self.board[0][col] == self.board[1][col] == self.board[2][col] != ' ':
                 return self.board[0][col]
         return None
