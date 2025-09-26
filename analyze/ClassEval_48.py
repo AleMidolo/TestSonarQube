@@ -12,16 +12,16 @@ class IpUtil:
         return IpUtil._is_valid_ip(ip_address, socket.AF_INET6)
 
     @staticmethod
-    def get_hostname(ip_address):
-        try:
-            return socket.gethostbyaddr(ip_address)[0]
-        except socket.herror:
-            return None
-
-    @staticmethod
     def _is_valid_ip(ip_address, family):
         try:
             socket.inet_pton(family, ip_address)
             return True
         except socket.error:
             return False
+
+    @staticmethod
+    def get_hostname(ip_address):
+        try:
+            return socket.gethostbyaddr(ip_address)[0]
+        except socket.herror:
+            return None

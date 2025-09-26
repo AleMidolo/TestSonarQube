@@ -12,7 +12,7 @@ class EightPuzzle:
 
     def move(self, state, direction):
         i, j = self.find_blank(state)
-        new_state = self._create_new_state(state)
+        new_state = [row[:] for row in state]
 
         if direction == 'up':
             self._swap(new_state, i, j, i - 1, j)
@@ -24,9 +24,6 @@ class EightPuzzle:
             self._swap(new_state, i, j, i, j + 1)
 
         return new_state
-
-    def _create_new_state(self, state):
-        return [row[:] for row in state]
 
     def _swap(self, state, i1, j1, i2, j2):
         state[i1][j1], state[i2][j2] = state[i2][j2], state[i1][j1]

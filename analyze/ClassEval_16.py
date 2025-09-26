@@ -25,7 +25,7 @@ class Calculator:
                 num_buffer += char
             else:
                 if num_buffer:
-                    operand_stack.append(float(num_buffer))
+                    self.push_operand(operand_stack, num_buffer)
                     num_buffer = ''
 
                 if char in self.operators:
@@ -33,18 +33,21 @@ class Calculator:
                 elif char == '(':
                     operator_stack.append(char)
                 elif char == ')':
-                    self.process_parenthesis(operand_stack, operator_stack)
+                    self.process_closing_parenthesis(operand_stack, operator_stack)
 
         if num_buffer:
-            operand_stack.append(float(num_buffer))
+            self.push_operand(operand_stack, num_buffer)
 
         while operator_stack:
-            operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
+            self.apply_operator(operand_stack, operator_stack)
 
         return operand_stack[-1] if operand_stack else None
 
     def is_number(self, char):
         return char.isdigit() or char == '.'
+
+    def push_operand(self, operand_stack, num_buffer):
+        operand_stack.append(float(num_buffer))
 
     def process_operator(self, char, operand_stack, operator_stack):
         while (
@@ -52,13 +55,14 @@ class Calculator:
                 operator_stack[-1] != '(' and
                 self.precedence(operator_stack[-1]) >= self.precedence(char)
         ):
-            operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
+            self.apply_operator(operand_stack, operator_stack)
 
         operator_stack.append(char)
 
-    def process_parenthesis(self, operand_stack, operator_stack):
+    def process_closing_parenthesis(self, operand_stack, operator_stack):
         while operator_stack and operator_stack[-1] != '(':
-            operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
+            self.apply_operator(operand_stack, operator_stack)
+
         operator_stack.pop()
 
     def precedence(self, operator):
@@ -70,4 +74,3 @@ class Calculator:
         operand1 = operand_stack.pop()
         result = self.operators[operator](operand1, operand2)
         operand_stack.append(result)
-        return operand_stack, operator_stack

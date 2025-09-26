@@ -32,7 +32,8 @@ class CalendarUtil:
 
     def get_upcoming_events(self, num_events):
         now = datetime.now()
-        return [event for event in self.events if event['start_time'] >= now][:num_events]
+        upcoming_events = [event for event in self.events if event['start_time'] >= now]
+        return upcoming_events[:num_events]
 
     def _start_of_day(self, date):
         return datetime(date.year, date.month, date.day, 0, 0)

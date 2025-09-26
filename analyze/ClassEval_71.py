@@ -1,9 +1,4 @@
 class PushBoxGame:
-    WALL = "#"
-    PLAYER_SYMBOL = "O"
-    TARGET_SYMBOL = "G"
-    BOX_SYMBOL = "X"
-
     def __init__(self, game_map):
         self.map = game_map
         self.player_row = 0
@@ -18,16 +13,16 @@ class PushBoxGame:
     def init_game(self):
         for row in range(len(self.map)):
             for col in range(len(self.map[row])):
-                self._initialize_game_elements(row, col)
+                self._initialize_player_and_targets(row, col)
 
-    def _initialize_game_elements(self, row, col):
-        if self.map[row][col] == self.PLAYER_SYMBOL:
+    def _initialize_player_and_targets(self, row, col):
+        if self.map[row][col] == "O":
             self.player_row = row
             self.player_col = col
-        elif self.map[row][col] == self.TARGET_SYMBOL:
+        elif self.map[row][col] == "G":
             self.targets.append((row, col))
             self.target_count += 1
-        elif self.map[row][col] == self.BOX_SYMBOL:
+        elif self.map[row][col] == "X":
             self.boxes.append((row, col))
 
     def check_win(self):
@@ -38,11 +33,12 @@ class PushBoxGame:
     def move(self, direction):
         new_player_row, new_player_col = self._calculate_new_position(direction)
 
-        if self._is_move_valid(new_player_row, new_player_col):
+        if self._is_valid_move(new_player_row, new_player_col):
             if (new_player_row, new_player_col) in self.boxes:
                 self._move_box(new_player_row, new_player_col)
-            self.player_row = new_player_row
-            self.player_col = new_player_col
+            else:
+                self.player_row = new_player_row
+                self.player_col = new_player_col
 
         return self.check_win()
 
@@ -61,13 +57,15 @@ class PushBoxGame:
 
         return new_player_row, new_player_col
 
-    def _is_move_valid(self, new_player_row, new_player_col):
-        return self.map[new_player_row][new_player_col] != self.WALL
+    def _is_valid_move(self, new_player_row, new_player_col):
+        return self.map[new_player_row][new_player_col] != "#"
 
     def _move_box(self, new_player_row, new_player_col):
         new_box_row = new_player_row + (new_player_row - self.player_row)
         new_box_col = new_player_col + (new_player_col - self.player_col)
 
-        if self.map[new_box_row][new_box_col] != self.WALL:
+        if self.map[new_box_row][new_box_col] != "#":
             self.boxes.remove((new_player_row, new_player_col))
             self.boxes.append((new_box_row, new_box_col))
+            self.player_row = new_player_row
+            self.player_col = new_player_col

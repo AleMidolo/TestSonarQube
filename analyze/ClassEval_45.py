@@ -13,23 +13,23 @@ class ImageProcessor:
             self._image.save(save_path)
 
     def resize_image(self, width, height):
-        self._resize(self._image, width, height)
+        self._resize_image((width, height))
 
     def rotate_image(self, degrees):
-        self._rotate(self._image, degrees)
+        self._rotate_image(degrees)
 
     def adjust_brightness(self, factor):
-        self._adjust_brightness(self._image, factor)
+        self._adjust_brightness(factor)
 
-    def _resize(self, image, width, height):
-        if image:
-            self._image = image.resize((width, height))
+    def _resize_image(self, size):
+        if self._image:
+            self._image = self._image.resize(size)
 
-    def _rotate(self, image, degrees):
-        if image:
-            self._image = image.rotate(degrees)
+    def _rotate_image(self, degrees):
+        if self._image:
+            self._image = self._image.rotate(degrees)
 
-    def _adjust_brightness(self, image, factor):
-        if image:
-            enhancer = ImageEnhance.Brightness(image)
+    def _adjust_brightness(self, factor):
+        if self._image:
+            enhancer = ImageEnhance.Brightness(self._image)
             self._image = enhancer.enhance(factor)

@@ -4,6 +4,7 @@ class BigNumCalculator:
         num1, num2 = BigNumCalculator._pad_numbers(num1, num2)
         carry = 0
         result = []
+
         for i in range(len(num1) - 1, -1, -1):
             digit_sum, carry = BigNumCalculator._calculate_digit_sum(num1[i], num2[i], carry)
             result.insert(0, str(digit_sum))
@@ -17,9 +18,9 @@ class BigNumCalculator:
     def subtract(num1, num2):
         num1, num2, negative = BigNumCalculator._prepare_subtraction(num1, num2)
         num1, num2 = BigNumCalculator._pad_numbers(num1, num2)
-
         borrow = 0
         result = []
+
         for i in range(len(num1) - 1, -1, -1):
             digit_diff, borrow = BigNumCalculator._calculate_digit_diff(num1[i], num2[i], borrow)
             result.insert(0, str(digit_diff))
@@ -64,8 +65,7 @@ class BigNumCalculator:
     @staticmethod
     def _prepare_subtraction(num1, num2):
         if len(num1) < len(num2) or (len(num1) == len(num2) and num1 < num2):
-            num1, num2 = num2, num1
-            return num1, num2, True
+            return num2, num1, True
         return num1, num2, False
 
     @staticmethod

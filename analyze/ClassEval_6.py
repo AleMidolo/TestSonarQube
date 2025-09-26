@@ -4,24 +4,27 @@ class AvgPartition:
         self.limit = limit
 
     def setNum(self):
-        return self.calculate_size_and_remainder()
-
-    def calculate_size_and_remainder(self):
-        size = len(self.lst) // self.limit
-        remainder = len(self.lst) % self.limit
+        size = self.calculateSize()
+        remainder = self.calculateRemainder()
         return size, remainder
+
+    def calculateSize(self):
+        return len(self.lst) // self.limit
+
+    def calculateRemainder(self):
+        return len(self.lst) % self.limit
 
     def get(self, index):
         size, remainder = self.setNum()
-        start = self.calculate_start_index(index, size, remainder)
-        end = self.calculate_end_index(index, start, size, remainder)
+        start = self.calculateStart(index, size, remainder)
+        end = self.calculateEnd(index, size, remainder)
         return self.lst[start:end]
 
-    def calculate_start_index(self, index, size, remainder):
+    def calculateStart(self, index, size, remainder):
         return index * size + min(index, remainder)
 
-    def calculate_end_index(self, index, start, size, remainder):
-        end = start + size
+    def calculateEnd(self, index, size, remainder):
+        end = (index * size) + min(index, remainder) + size
         if index + 1 <= remainder:
             end += 1
         return end

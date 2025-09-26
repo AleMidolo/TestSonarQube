@@ -8,7 +8,7 @@ class NumericEntityUnescaper:
         length = len(string)
 
         while pos < length - 2:
-            if self.is_numeric_entity(string, pos, length):
+            if self.is_entity_start(string, pos):
                 entity_value, end = self.extract_entity_value(string, pos, length)
                 if entity_value is not None:
                     out.append(chr(entity_value))
@@ -20,13 +20,13 @@ class NumericEntityUnescaper:
 
         return ''.join(out)
 
-    def is_numeric_entity(self, string, pos, length):
-        return string[pos] == '&' and string[pos + 1] == '#' and pos + 2 < length
+    def is_entity_start(self, string, pos):
+        return string[pos] == '&' and string[pos + 1] == '#'
 
     def extract_entity_value(self, string, pos, length):
         start = pos + 2
         is_hex = False
-        first_char = string[start]
+        first_char = string[start] if start < length else None
 
         if first_char in ('x', 'X'):
             start += 1

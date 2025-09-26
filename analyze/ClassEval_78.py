@@ -7,11 +7,10 @@ class SplitSentence:
         return re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s', sentences_string)
 
     def count_words(self, sentence):
-        cleaned_sentence = self._remove_non_alpha(sentence)
-        words = cleaned_sentence.split()
-        return len(words)
+        cleaned_sentence = self._clean_sentence(sentence)
+        return len(cleaned_sentence.split())
 
-    def _remove_non_alpha(self, sentence):
+    def _clean_sentence(self, sentence):
         return re.sub(r'[^a-zA-Z\s]', '', sentence)
 
     def process_text_file(self, sentences_string):
@@ -19,9 +18,4 @@ class SplitSentence:
         return self._find_max_word_count(sentences)
 
     def _find_max_word_count(self, sentences):
-        max_count = 0
-        for sentence in sentences:
-            count = self.count_words(sentence)
-            if count > max_count:
-                max_count = count
-        return max_count
+        return max(self.count_words(sentence) for sentence in sentences)

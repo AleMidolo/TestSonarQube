@@ -22,13 +22,13 @@ class BlackjackGame:
         num_aces = 0
         for card in hand:
             rank = self.get_card_rank(card)
-            value, num_aces = self.update_hand_value(value, rank, num_aces)
+            value, num_aces = self.update_hand_value(value, num_aces, rank)
         return self.adjust_for_aces(value, num_aces)
 
     def get_card_rank(self, card):
         return card[:-1]
 
-    def update_hand_value(self, value, rank, num_aces):
+    def update_hand_value(self, value, num_aces, rank):
         if rank.isdigit():
             value += int(rank)
         elif rank in ['J', 'Q', 'K']:
@@ -51,7 +51,7 @@ class BlackjackGame:
 
     def determine_winner(self, player_value, dealer_value):
         if player_value > 21 and dealer_value > 21:
-            return 'Dealer wins' if player_value <= dealer_value else 'Player wins'
+            return 'Player wins' if player_value <= dealer_value else 'Dealer wins'
         elif player_value > 21:
             return 'Dealer wins'
         elif dealer_value > 21:

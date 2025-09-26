@@ -25,7 +25,10 @@ class TriCalculator:
         result = 1
         for k in range(1, n):
             term = (x_rad ** (2 * k)) / self.factorial(2 * k)
-            result += term if k % 2 == 0 else -term
+            if k % 2 == 1:
+                result -= term
+            else:
+                result += term
         return result
 
     def sin(self, x):

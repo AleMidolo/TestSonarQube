@@ -20,7 +20,8 @@ class MahjongConnect:
         return self.has_path(pos1, pos2)
 
     def are_positions_valid(self, pos1, pos2):
-        return all(0 <= x < size for x, size in zip(pos1 + pos2, self.board_size * 2))
+        return (0 <= pos1[0] < self.board_size[0] and 0 <= pos1[1] < self.board_size[1] and
+                0 <= pos2[0] < self.board_size[0] and 0 <= pos2[1] < self.board_size[1])
 
     def has_path(self, pos1, pos2):
         visited = set()
@@ -33,11 +34,11 @@ class MahjongConnect:
             if current_pos in visited:
                 continue
             visited.add(current_pos)
-            self.add_adjacent_positions_to_stack(current_pos, stack, visited)
+            self.add_adjacent_positions_to_stack(current_pos, visited, stack)
 
         return False
 
-    def add_adjacent_positions_to_stack(self, current_pos, stack, visited):
+    def add_adjacent_positions_to_stack(self, current_pos, visited, stack):
         x, y = current_pos
         for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
             new_x, new_y = x + dx, y + dy

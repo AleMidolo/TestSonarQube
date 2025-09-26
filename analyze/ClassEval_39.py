@@ -26,9 +26,6 @@ class ExpressionCalculator:
 
         return float(eval("*".join(result_stack)))
 
-    def normalize_value(self, value):
-        return value.replace("~", "-")
-
     def prepare(self, expression):
         op_stack = deque([','])
         arr = list(expression)
@@ -39,17 +36,7 @@ class ExpressionCalculator:
             if self.is_operator(current_op):
                 if count > 0:
                     self.postfix_stack.append("".join(arr[current_index: current_index + count]))
-                peek_op = op_stack[-1]
-                if current_op == ')':
-                    while op_stack[-1] != '(':
-                        self.postfix_stack.append(str(op_stack.pop()))
-                    op_stack.pop()
-                else:
-                    while current_op != '(' and peek_op != ',' and self.compare(current_op, peek_op):
-                        self.postfix_stack.append(str(op_stack.pop()))
-                        peek_op = op_stack[-1]
-                    op_stack.append(current_op)
-
+                self.process_operator(current_op, op_stack)
                 count = 0
                 current_index = i + 1
             else:
@@ -60,6 +47,18 @@ class ExpressionCalculator:
 
         while op_stack[-1] != ',':
             self.postfix_stack.append(str(op_stack.pop()))
+
+    def process_operator(self, current_op, op_stack):
+        peek_op = op_stack[-1]
+        if current_op == ')':
+            while op_stack[-1] != '(':
+                self.postfix_stack.append(str(op_stack.pop()))
+            op_stack.pop()
+        else:
+            while current_op != '(' and peek_op != ',' and self.compare(current_op, peek_op):
+                self.postfix_stack.append(str(op_stack.pop()))
+                peek_op = op_stack[-1]
+            op_stack.append(current_op)
 
     @staticmethod
     def is_operator(c):
@@ -107,3 +106,7 @@ class ExpressionCalculator:
             return "0" + "".join(arr)
         else:
             return "".join(arr)
+
+    @staticmethod
+    def normalize_value(value):
+        return value.replace("~", "-")

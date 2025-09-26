@@ -11,7 +11,7 @@ class MovieBookingSystem:
             'price': price,
             'start_time': self._parse_time(start_time),
             'end_time': self._parse_time(end_time),
-            'seats': self._initialize_seats(n)
+            'seats': np.zeros((n, n))
         }
         self.movies.append(movie)
 
@@ -30,9 +30,6 @@ class MovieBookingSystem:
 
     def _parse_time(self, time_str):
         return datetime.strptime(time_str, '%H:%M')
-
-    def _initialize_seats(self, n):
-        return np.zeros((n, n))
 
     def _find_movie(self, name):
         for movie in self.movies:
