@@ -23,17 +23,17 @@ class StockPortfolioTracker:
         if self.is_purchase_exceeding_cash(stock):
             return False
         self.add_stock(stock)
-        self.cash_balance -= self.calculate_total_cost(stock)
+        self.cash_balance -= stock['price'] * stock['quantity']
         return True
 
     def sell_stock(self, stock):
         if not self.remove_stock(stock):
             return False
-        self.cash_balance += self.calculate_total_cost(stock)
+        self.cash_balance += stock['price'] * stock['quantity']
         return True
 
     def calculate_portfolio_value(self):
-        total_value = self.cash_balance + self.calculate_total_stocks_value()
+        total_value = self.cash_balance + self.calculate_stocks_value()
         return total_value
 
     def get_portfolio_summary(self):
@@ -50,8 +50,5 @@ class StockPortfolioTracker:
     def is_purchase_exceeding_cash(self, stock):
         return stock['price'] * stock['quantity'] > self.cash_balance
 
-    def calculate_total_cost(self, stock):
-        return stock['price'] * stock['quantity']
-
-    def calculate_total_stocks_value(self):
+    def calculate_stocks_value(self):
         return sum(stock['price'] * stock['quantity'] for stock in self.portfolio)

@@ -1,18 +1,11 @@
 class Calculator:
     def __init__(self):
         self.operators = {
-            '+': lambda x, y: x + y,
-            '-': lambda x, y: x - y,
-            '*': lambda x, y: x * y,
-            '/': lambda x, y: x / y,
-            '^': lambda x, y: x ** y
-        }
-        self.precedences = {
-            '+': 1,
-            '-': 1,
-            '*': 2,
-            '/': 2,
-            '^': 3
+            '+': self.add,
+            '-': self.subtract,
+            '*': self.multiply,
+            '/': self.divide,
+            '^': self.power
         }
 
     def calculate(self, expression):
@@ -28,7 +21,7 @@ class Calculator:
                     self.push_operand(operand_stack, num_buffer)
                     num_buffer = ''
 
-                if char in self.operators:
+                if self.is_operator(char):
                     self.process_operator(char, operand_stack, operator_stack)
                 elif char == '(':
                     operator_stack.append(char)
@@ -43,8 +36,28 @@ class Calculator:
 
         return operand_stack[-1] if operand_stack else None
 
+    def precedence(self, operator):
+        precedences = {
+            '+': 1,
+            '-': 1,
+            '*': 2,
+            '/': 2,
+            '^': 3
+        }
+        return precedences.get(operator, 0)
+
+    def apply_operator(self, operand_stack, operator_stack):
+        operator = operator_stack.pop()
+        operand2 = operand_stack.pop()
+        operand1 = operand_stack.pop()
+        result = self.operators[operator](operand1, operand2)
+        operand_stack.append(result)
+
     def is_number(self, char):
         return char.isdigit() or char == '.'
+
+    def is_operator(self, char):
+        return char in self.operators
 
     def push_operand(self, operand_stack, num_buffer):
         operand_stack.append(float(num_buffer))
@@ -56,7 +69,6 @@ class Calculator:
                 self.precedence(operator_stack[-1]) >= self.precedence(char)
         ):
             self.apply_operator(operand_stack, operator_stack)
-
         operator_stack.append(char)
 
     def process_parenthesis(self, operand_stack, operator_stack):
@@ -64,12 +76,17 @@ class Calculator:
             self.apply_operator(operand_stack, operator_stack)
         operator_stack.pop()
 
-    def precedence(self, operator):
-        return self.precedences.get(operator, 0)
+    def add(self, x, y):
+        return x + y
 
-    def apply_operator(self, operand_stack, operator_stack):
-        operator = operator_stack.pop()
-        operand2 = operand_stack.pop()
-        operand1 = operand_stack.pop()
-        result = self.operators[operator](operand1, operand2)
-        operand_stack.append(result)
+    def subtract(self, x, y):
+        return x - y
+
+    def multiply(self, x, y):
+        return x * y
+
+    def divide(self, x, y):
+        return x / y
+
+    def power(self, x, y):
+        return x ** y

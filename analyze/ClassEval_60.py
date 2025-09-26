@@ -20,9 +20,9 @@ class MovieTicketDB:
         self.connection.commit()
 
     def insert_ticket(self, movie_name, theater_name, seat_number, customer_name):
-        self._execute_insert(movie_name, theater_name, seat_number, customer_name)
+        self._execute_insert_ticket(movie_name, theater_name, seat_number, customer_name)
 
-    def _execute_insert(self, movie_name, theater_name, seat_number, customer_name):
+    def _execute_insert_ticket(self, movie_name, theater_name, seat_number, customer_name):
         self.cursor.execute('''
             INSERT INTO tickets (movie_name, theater_name, seat_number, customer_name)
             VALUES (?, ?, ?, ?)
@@ -39,9 +39,9 @@ class MovieTicketDB:
         return self.cursor.fetchall()
 
     def delete_ticket(self, ticket_id):
-        self._execute_delete(ticket_id)
+        self._execute_delete_ticket(ticket_id)
 
-    def _execute_delete(self, ticket_id):
+    def _execute_delete_ticket(self, ticket_id):
         self.cursor.execute('''
             DELETE FROM tickets WHERE id = ?
         ''', (ticket_id,))

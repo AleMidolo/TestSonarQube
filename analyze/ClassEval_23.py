@@ -31,13 +31,12 @@ class CombinationCalculator:
         return result
 
     def _select(self, dataIndex: int, resultList: List[str], resultIndex: int, result: List[List[str]]):
-        if self._is_result_complete(resultIndex, len(resultList)):
+        resultLen = len(resultList)
+        resultCount = resultIndex + 1
+        if resultCount > resultLen:
             result.append(resultList.copy())
             return
 
-        for i in range(dataIndex, len(self.datas) + resultIndex + 1 - len(resultList)):
+        for i in range(dataIndex, len(self.datas) + resultCount - resultLen):
             resultList[resultIndex] = self.datas[i]
             self._select(i + 1, resultList, resultIndex + 1, result)
-
-    def _is_result_complete(self, resultIndex: int, resultLen: int) -> bool:
-        return resultIndex + 1 > resultLen

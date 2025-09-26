@@ -22,13 +22,13 @@ class BlackjackGame:
         num_aces = 0
         for card in hand:
             rank = self.get_card_rank(card)
-            value, num_aces = self.update_hand_value(value, num_aces, rank)
+            value, num_aces = self.update_hand_value(value, rank, num_aces)
         return self.adjust_for_aces(value, num_aces)
 
     def get_card_rank(self, card):
         return card[:-1]
 
-    def update_hand_value(self, value, num_aces, rank):
+    def update_hand_value(self, value, rank, num_aces):
         if rank.isdigit():
             value += int(rank)
         elif rank in ['J', 'Q', 'K']:

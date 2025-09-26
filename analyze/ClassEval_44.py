@@ -27,8 +27,8 @@ class HtmlUtil:
         soup = BeautifulSoup(html_text, 'lxml')
 
         self.__replace_code_tags(soup)
-        self.__format_list_items(soup)
-        self.__format_paragraphs(soup)
+        self.__replace_list_items(soup)
+        self.__replace_paragraphs(soup)
 
         clean_text = gensim.utils.decode_htmlentities(soup.get_text())
         return self.__format_line_feed(clean_text)
@@ -38,7 +38,7 @@ class HtmlUtil:
         for tag in code_tags:
             tag.string = self.CODE_MARK
 
-    def __format_list_items(self, soup):
+    def __replace_list_items(self, soup):
         ul_ol_group = soup.find_all(name=['ul', 'ol'])
         for ul_ol_item in ul_ol_group:
             li_group = ul_ol_item.find_all('li')
@@ -52,7 +52,7 @@ class HtmlUtil:
             return '[{0}]{1}'.format('-', li_item_text)
         return '[{0}]{1}.'.format('-', li_item_text)
 
-    def __format_paragraphs(self, soup):
+    def __replace_paragraphs(self, soup):
         p_group = soup.find_all(name=['p'])
         for p_item in p_group:
             p_item_text = p_item.get_text().strip()
@@ -73,10 +73,9 @@ class HtmlUtil:
         if self.CODE_MARK not in text_with_code_tag:
             return []
 
-        return self.__extract_codes(html_text, text_with_code_tag)
+        return self.__extract_codes(html_text)
 
-    def __extract_codes(self, html_text, text_with_code_tag):
+    def __extract_codes(self, html_text):
         soup = BeautifulSoup(html_text, 'lxml')
         code_tags = soup.find_all(name=['pre', 'blockquote'])
-        code_count = text_with_code_tag.count(self.CODE_MARK)
-        return [code_tags[i].get_text() for i in range(code_count) if code_tags[i].get_text()]
+        return [code.get_text() for code in code_tags if code.get_text()]

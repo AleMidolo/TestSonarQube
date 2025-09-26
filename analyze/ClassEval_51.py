@@ -30,8 +30,9 @@ class KappaCalculator:
         dataMat = np.mat(testData, float)
         oneMat = np.ones((k, 1))
         P0 = KappaCalculator.calculate_fleiss_P0(dataMat, N, k, n)
-        Pe = KappaCalculator.calculate_fleiss_Pe(dataMat, oneMat)
-        return (P0 - Pe) / (1 - Pe)
+        Pe = KappaCalculator.calculate_fleiss_Pe(dataMat, k)
+        ans = (P0 - Pe) / (1 - Pe)
+        return ans[0, 0]
 
     @staticmethod
     def calculate_fleiss_P0(dataMat, N, k, n):
@@ -50,9 +51,9 @@ class KappaCalculator:
         return temp / ((n - 1) * n)
 
     @staticmethod
-    def calculate_fleiss_Pe(dataMat, oneMat):
+    def calculate_fleiss_Pe(dataMat, k):
         total_sum = np.sum(dataMat)
         ysum = np.sum(dataMat, axis=0)
-        for i in range(len(ysum)):
+        for i in range(k):
             ysum[0, i] = (ysum[0, i] / total_sum) ** 2
-        return ysum * oneMat
+        return ysum * np.ones((k, 1))

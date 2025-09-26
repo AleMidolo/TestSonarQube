@@ -4,7 +4,7 @@ from math import pi, fabs
 class TriCalculator:
 
     MAX_ITERATIONS = 50
-    TOLERANCE = 1e-15
+    EPSILON = 1e-15
 
     def __init__(self):
         pass
@@ -34,7 +34,7 @@ class TriCalculator:
         t = x_rad
         n = 1
 
-        while fabs(t) >= self.TOLERANCE:
+        while fabs(t) >= self.EPSILON:
             g += t
             n += 1
             t = -t * x_rad * x_rad / (2 * n - 1) / (2 * n - 2)
@@ -45,7 +45,8 @@ class TriCalculator:
         if cos_value != 0:
             result = self.sin(x) / cos_value
             return round(result, 10)
-        return False
+        else:
+            return False
 
-    def to_radians(self, x):
-        return x / 180 * pi
+    def to_radians(self, degrees):
+        return degrees / 180 * pi

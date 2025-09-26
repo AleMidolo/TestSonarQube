@@ -1,7 +1,8 @@
 class EightPuzzle:
+    GOAL_STATE = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+
     def __init__(self, initial_state):
         self.initial_state = initial_state
-        self.goal_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
 
     def find_blank(self, state):
         for i in range(3):
@@ -53,7 +54,7 @@ class EightPuzzle:
             current_state, path = open_list.pop(0)
             closed_list.append(current_state)
 
-            if current_state == self.goal_state:
+            if current_state == self.GOAL_STATE:
                 return path
 
             for move in self.get_possible_moves(current_state):

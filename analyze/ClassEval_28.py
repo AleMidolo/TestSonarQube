@@ -17,7 +17,7 @@ class DatabaseProcessor:
         with self._connect() as conn:
             cursor = conn.cursor()
             for item in data:
-                self._insert_query(cursor, table_name, item)
+                self._insert_item(cursor, table_name, item)
 
     def search_database(self, table_name, name):
         with self._connect() as conn:
@@ -39,6 +39,6 @@ class DatabaseProcessor:
     def _create_table_query(self, table_name, key1, key2):
         return f"CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY, {key1} TEXT, {key2} INTEGER)"
 
-    def _insert_query(self, cursor, table_name, item):
+    def _insert_item(self, cursor, table_name, item):
         insert_query = f"INSERT INTO {table_name} (name, age) VALUES (?, ?)"
         cursor.execute(insert_query, (item['name'], item['age']))

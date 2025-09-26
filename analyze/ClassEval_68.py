@@ -22,17 +22,9 @@ class PageUtil:
         start_index, end_index = self.calculate_page_indices(page_number)
         page_data = self.data[start_index:end_index]
 
-        return self.build_page_info(page_number, page_data)
+        return self.create_page_info(page_number, page_data)
 
-    def is_valid_page_number(self, page_number):
-        return 1 <= page_number <= self.total_pages
-
-    def calculate_page_indices(self, page_number):
-        start_index = (page_number - 1) * self.page_size
-        end_index = min(start_index + self.page_size, self.total_items)
-        return start_index, end_index
-
-    def build_page_info(self, page_number, page_data):
+    def create_page_info(self, page_number, page_data):
         return {
             "current_page": page_number,
             "per_page": self.page_size,
@@ -43,17 +35,25 @@ class PageUtil:
             "data": page_data
         }
 
+    def is_valid_page_number(self, page_number):
+        return 1 <= page_number <= self.total_pages
+
+    def calculate_page_indices(self, page_number):
+        start_index = (page_number - 1) * self.page_size
+        end_index = min(start_index + self.page_size, self.total_items)
+        return start_index, end_index
+
     def search(self, keyword):
         results = self.perform_search(keyword)
-        num_results = len(results)
-        num_pages = (num_results + self.page_size - 1) // self.page_size
-
-        return self.build_search_info(keyword, num_results, num_pages, results)
+        return self.create_search_info(keyword, results)
 
     def perform_search(self, keyword):
         return [item for item in self.data if keyword in str(item)]
 
-    def build_search_info(self, keyword, num_results, num_pages, results):
+    def create_search_info(self, keyword, results):
+        num_results = len(results)
+        num_pages = (num_results + self.page_size - 1) // self.page_size
+
         return {
             "keyword": keyword,
             "total_results": num_results,

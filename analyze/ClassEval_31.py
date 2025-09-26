@@ -24,7 +24,7 @@ class DataStatistics4:
     @staticmethod
     def calculate_denominator(data1, data2, mean1, mean2, n):
         return math.sqrt(sum((data1[i] - mean1) ** 2 for i in range(n))) * \
-                         math.sqrt(sum((data2[i] - mean2) ** 2 for i in range(n)))
+               math.sqrt(sum((data2[i] - mean2) ** 2 for i in range(n)))
 
     @staticmethod
     def skewness(data):

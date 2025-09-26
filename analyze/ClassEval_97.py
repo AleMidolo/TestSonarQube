@@ -62,7 +62,8 @@ class Words2Numbers:
     def _handle_invalid_word(self, word, curstring, result, current, onnumber):
         if onnumber:
             curstring += repr(result + current) + " "
-        return curstring + word + " "
+        curstring += word + " "
+        return curstring
 
     def _process_numword(self, word, current):
         scale, increment = self.numwords[word]

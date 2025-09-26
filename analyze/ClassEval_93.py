@@ -45,9 +45,9 @@ class VectorUtil:
         return np.log((total_num + 1) / (count_array + 1))
 
     @staticmethod
-    def _create_idf_dict(weights, index_2_key_map):
+    def _create_idf_dict(a, index_2_key_map):
         result = {}
-        for index, w in enumerate(weights):
+        for index, w in enumerate(a):
             key = index_2_key_map[index]
             result[key] = w
         return result

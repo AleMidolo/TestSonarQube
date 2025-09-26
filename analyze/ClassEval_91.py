@@ -11,25 +11,22 @@ class UrlPath:
 
     def parse(self, path, charset):
         if path:
-            self._set_end_tag(path)
-            path = self.fix_path(path)
-            if path:
-                self._decode_segments(path, charset)
+            self.with_end_tag = path.endswith('/')
+            self.process_path(path, charset)
 
-    def _set_end_tag(self, path):
-        if path.endswith('/'):
-            self.with_end_tag = True
+    def process_path(self, path, charset):
+        path = self.fix_path(path)
+        if path:
+            split = path.split('/')
+            for seg in split:
+                decoded_seg = self.decode_segment(seg, charset)
+                self.segments.append(decoded_seg)
 
-    def _decode_segments(self, path, charset):
-        split = path.split('/')
-        for seg in split:
-            decoded_seg = urllib.parse.unquote(seg, encoding=charset)
-            self.segments.append(decoded_seg)
+    def decode_segment(self, seg, charset):
+        return urllib.parse.unquote(seg, encoding=charset)
 
     @staticmethod
     def fix_path(path):
         if not path:
             return ''
-
-        segment_str = path.strip('/')
-        return segment_str
+        return path.strip('/')

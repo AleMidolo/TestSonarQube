@@ -10,8 +10,8 @@ class SQLGenerator:
         return sql + ";"
 
     def insert(self, data):
-        fields = self._get_fields(data.keys())
-        values = self._get_values(data.values())
+        fields = self._get_fields_from_data(data)
+        values = self._get_values_from_data(data)
         sql = f"INSERT INTO {self.table_name} ({fields}) VALUES ({values})"
         return sql + ";"
 
@@ -35,8 +35,11 @@ class SQLGenerator:
     def _get_fields(self, fields):
         return "*" if fields is None else ", ".join(fields)
 
-    def _get_values(self, values):
-        return ", ".join([f"'{value}'" for value in values])
+    def _get_fields_from_data(self, data):
+        return ", ".join(data.keys())
+
+    def _get_values_from_data(self, data):
+        return ", ".join([f"'{value}'" for value in data.values()])
 
     def _get_set_clause(self, data):
         return ", ".join([f"{field} = '{value}'" for field, value in data.items()])
