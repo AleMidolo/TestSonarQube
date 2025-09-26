@@ -41,10 +41,10 @@ class DocFileHandler:
             for j, cell_value in enumerate(row):
                 table.cell(i, j).text = str(cell_value)
 
-    def _modify_document(self, modify_function):
+    def _modify_document(self, modify_func):
         try:
             doc = Document(self.file_path)
-            modify_function(doc)
+            modify_func(doc)
             doc.save(self.file_path)
             return True
         except Exception:

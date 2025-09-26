@@ -13,7 +13,7 @@ class Manacher:
 
     def palindromic_string(self):
         max_length = 0
-        new_input_string = self.create_new_input_string()
+        new_input_string = self.prepare_input_string()
         start = 0
 
         for i in range(len(new_input_string)):
@@ -25,8 +25,8 @@ class Manacher:
 
         return self.extract_palindrome(new_input_string, start, max_length)
 
-    def create_new_input_string(self):
-        return "|".join(self.input_string) + "|"  # Create new input string with separators
+    def prepare_input_string(self):
+        return "|".join(self.input_string) + "|"  # Prepare the input string with separators
 
     def extract_palindrome(self, new_input_string, start, max_length):
         output_string = ""

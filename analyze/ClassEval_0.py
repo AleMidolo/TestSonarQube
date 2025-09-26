@@ -16,11 +16,14 @@ class AccessGatewayFilter:
 
         try:
             token = self.get_jwt_user(request)
-            if token and self.is_user_level_valid(token):
-                self.set_current_user_info_and_log(token['user'])
+            if token is None:
+                return False
+            user = token['user']
+            if self.is_user_level_valid(user):
+                self.set_current_user_info_and_log(user)
                 return True
         except Exception as e:
-            logging.error(f"Error filtering request: {e}")
+            logging.error(f"Error processing request: {e}")
             return False
 
     def is_start_with(self, request_uri):
@@ -36,8 +39,8 @@ class AccessGatewayFilter:
                 return None
         return token
 
-    def is_user_level_valid(self, token):
-        return token['user']['level'] > 2
+    def is_user_level_valid(self, user):
+        return user['level'] > 2
 
     def set_current_user_info_and_log(self, user):
         host = user['address']

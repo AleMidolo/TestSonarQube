@@ -1,9 +1,6 @@
 import sqlite3
 
 class BookManagementDB:
-    AVAILABLE = 1
-    UNAVAILABLE = 0
-
     def __init__(self, db_name):
         self.connection = sqlite3.connect(db_name)
         self.cursor = self.connection.cursor()
@@ -24,7 +21,7 @@ class BookManagementDB:
         self._execute_query('''
             INSERT INTO books (title, author, available)
             VALUES (?, ?, ?)
-        ''', (title, author, self.AVAILABLE))
+        ''', (title, author, 1))
 
     def remove_book(self, book_id):
         self._execute_query('''
@@ -32,21 +29,20 @@ class BookManagementDB:
         ''', (book_id,))
 
     def borrow_book(self, book_id):
-        self._update_availability(book_id, self.UNAVAILABLE)
+        self._execute_query('''
+            UPDATE books SET available = ? WHERE id = ?
+        ''', (0, book_id))
 
     def return_book(self, book_id):
-        self._update_availability(book_id, self.AVAILABLE)
+        self._execute_query('''
+            UPDATE books SET available = ? WHERE id = ?
+        ''', (1, book_id))
 
     def search_books(self):
         self.cursor.execute('''
             SELECT * FROM books
         ''')
         return self.cursor.fetchall()
-
-    def _update_availability(self, book_id, availability):
-        self._execute_query('''
-            UPDATE books SET available = ? WHERE id = ?
-        ''', (availability, book_id))
 
     def _execute_query(self, query, params):
         self.cursor.execute(query, params)

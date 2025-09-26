@@ -38,8 +38,8 @@ class Words2Numbers:
                     curstring = self._handle_invalid_word(word, curstring, result, current, onnumber)
                     result, current, onnumber = 0, 0, False
                 else:
-                    current = self._process_numword(word, current)
-                    if self._is_scale(word):
+                    current = self._process_number_word(word, current)
+                    if self.numwords[word][0] > 100:
                         result += current
                         current = 0
                     onnumber = True
@@ -65,12 +65,9 @@ class Words2Numbers:
         curstring += word + " "
         return curstring
 
-    def _process_numword(self, word, current):
+    def _process_number_word(self, word, current):
         scale, increment = self.numwords[word]
         return current * scale + increment
-
-    def _is_scale(self, word):
-        return self.numwords[word][0] > 100
 
     def is_valid_input(self, textnum):
         textnum = textnum.replace('-', ' ')

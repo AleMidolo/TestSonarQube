@@ -27,10 +27,10 @@ class CSVProcessor:
 
     def process_csv_data(self, column_index, save_file_name):
         title, data = self.read_csv(save_file_name)
-        processed_data = self.process_column_data(data, column_index, title)
+        processed_data = self.get_processed_column_data(data, title, column_index)
         return self.write_csv(processed_data, self.get_processed_file_name(save_file_name))
 
-    def process_column_data(self, data, column_index, title):
+    def get_processed_column_data(self, data, title, column_index):
         column_data = [row[column_index].upper() for row in data]
         return [title, column_data]
 

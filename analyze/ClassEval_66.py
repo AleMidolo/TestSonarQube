@@ -21,7 +21,7 @@ class NumericEntityUnescaper:
         return ''.join(out)
 
     def is_numeric_entity(self, string, pos, length):
-        return string[pos] == '&' and string[pos + 1] == '#' and (pos + 2 < length)
+        return string[pos] == '&' and string[pos + 1] == '#' and pos + 2 < length
 
     def extract_entity_value(self, string, pos, length):
         start = pos + 2

@@ -30,7 +30,6 @@ class StudentDatabaseProcessor:
             cursor = conn.cursor()
             delete_query = "DELETE FROM students WHERE name = ?"
             cursor.execute(delete_query, (name,))
-            conn.commit()
 
     def _connect(self):
         return sqlite3.connect(self.database_name)

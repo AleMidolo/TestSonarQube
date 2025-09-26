@@ -32,7 +32,7 @@ class ClassRegistrationSystem:
         return self.get_most_common_class(class_list)
 
     def get_classes_by_major(self, major):
-        return [class_name for student in self.students if student["major"] == major for class_name in self.students_registration_classes[student["name"]]]
+        return [self.students_registration_classes[student["name"]] for student in self.students if student["major"] == major]
 
     def get_most_common_class(self, class_list):
         return max(set(class_list), key=class_list.count)

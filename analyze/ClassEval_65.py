@@ -11,11 +11,17 @@ class NumberWordFormatter:
         return self.format_string(str(x)) if x is not None else ""
 
     def format_string(self, x):
-        lstr, rstr = (x.split('.') + [''])[:2]
-        lstrrev = self.pad_left(lstr[::-1])
-        lm = self.convert_integer_part(lstrrev)
+        lstr, rstr = self.split_number_string(x)
+        lstrrev = lstr[::-1]
+        lstrrev = self.pad_left(lstrrev)
+
+        lm = self.convert_left_string(lstrrev)
         xs = f"AND CENTS {self.trans_two(rstr)} " if rstr else ""
+        
         return "ZERO ONLY" if not lm.strip() else f"{lm.strip()} {xs}ONLY"
+
+    def split_number_string(self, x):
+        return (x.split('.') + [''])[:2]
 
     def pad_left(self, lstrrev):
         if len(lstrrev) % 3 == 1:
@@ -24,14 +30,14 @@ class NumberWordFormatter:
             return lstrrev + "0"
         return lstrrev
 
-    def convert_integer_part(self, lstrrev):
+    def convert_left_string(self, lstrrev):
         lm = ""
         for i in range(len(lstrrev) // 3):
-            part = lstrrev[3 * i:3 * i + 3][::-1]
-            if part != "000":
-                lm = self.trans_three(part) + " " + self.parse_more(i) + " " + lm
+            segment = lstrrev[3 * i:3 * i + 3][::-1]
+            if segment != "000":
+                lm = self.trans_three(segment) + " " + self.parse_more(i) + " " + lm
             else:
-                lm += self.trans_three(part)
+                lm += self.trans_three(segment)
         return lm
 
     def trans_two(self, s):

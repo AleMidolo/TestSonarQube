@@ -24,7 +24,7 @@ class MovieBookingSystem:
         self.movies.append(movie)
 
     def book_ticket(self, name, seats_to_book):
-        movie = self._find_movie_by_name(name)
+        movie = self.find_movie(name)
         if not movie:
             return "Movie not found."
         
@@ -37,13 +37,13 @@ class MovieBookingSystem:
         start_time = datetime.strptime(start_time, '%H:%M')
         end_time = datetime.strptime(end_time, '%H:%M')
 
-        return [movie.name for movie in self.movies if self._is_movie_available(movie, start_time, end_time)]
+        return [movie.name for movie in self.movies if self.is_movie_available(movie, start_time, end_time)]
 
-    def _find_movie_by_name(self, name):
+    def find_movie(self, name):
         for movie in self.movies:
             if movie.name == name:
                 return movie
         return None
 
-    def _is_movie_available(self, movie, start_time, end_time):
+    def is_movie_available(self, movie, start_time, end_time):
         return start_time <= movie.start_time and movie.end_time <= end_time

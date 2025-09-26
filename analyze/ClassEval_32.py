@@ -10,7 +10,7 @@ class DecryptionUtils:
             ascii_offset = 65 if char.isupper() else 97
             return chr((ord(char) - ascii_offset - shift) % 26 + ascii_offset)
         return char
-    
+
     def vigenere_decipher(self, ciphertext):
         decrypted_text = ""
         key_index = 0
@@ -23,18 +23,18 @@ class DecryptionUtils:
             else:
                 decrypted_text += char
         return decrypted_text
-    
+
     def _get_vigenere_shift(self, key_index):
         return ord(self.key[key_index % len(self.key)].lower()) - ord('a')
-    
+
     def _vigenere_decipher_char(self, char, shift):
         decrypted_char = chr((ord(char.lower()) - ord('a') - shift) % 26 + ord('a'))
         return decrypted_char.upper() if char.isupper() else decrypted_char
-    
+
     def rail_fence_decipher(self, encrypted_text, rails):
         fence = self._create_fence(encrypted_text, rails)
         return self._read_fence(fence, encrypted_text, rails)
-    
+
     def _create_fence(self, encrypted_text, rails):
         fence = [['\n' for _ in range(len(encrypted_text))] for _ in range(rails)]
         direction = -1
@@ -55,7 +55,7 @@ class DecryptionUtils:
                     fence[i][j] = encrypted_text[index]
                     index += 1
         return fence
-    
+
     def _read_fence(self, fence, encrypted_text, rails):
         plain_text = ''
         direction = -1

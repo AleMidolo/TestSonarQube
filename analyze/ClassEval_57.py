@@ -46,7 +46,7 @@ class MetricsCalculator2:
         ranking_array = 1.0 / (np.arange(len(sub_list)) + 1)
         mr_np = sub_list * ranking_array
 
-        mr = MetricsCalculator2._get_first_positive(mr_np)
+        mr = MetricsCalculator2._first_positive(mr_np)
         return mr, [mr]
 
     @staticmethod
@@ -66,7 +66,7 @@ class MetricsCalculator2:
             return 0.0, [0.0]
 
         ranking_array = 1.0 / (np.arange(len(sub_list)) + 1)
-        right_ranking_list = MetricsCalculator2._get_right_ranking_list(sub_list)
+        right_ranking_list = MetricsCalculator2._calculate_right_ranking(sub_list)
 
         ap = np.sum(np.array(right_ranking_list) * ranking_array) / total_num
         return ap, [ap]
@@ -81,14 +81,14 @@ class MetricsCalculator2:
         return np.mean(separate_result), separate_result
 
     @staticmethod
-    def _get_first_positive(mr_np):
-        for team in mr_np:
-            if team > 0:
-                return team
+    def _first_positive(array):
+        for value in array:
+            if value > 0:
+                return value
         return 0.0
 
     @staticmethod
-    def _get_right_ranking_list(sub_list):
+    def _calculate_right_ranking(sub_list):
         right_ranking_list = []
         count = 1
         for t in sub_list:

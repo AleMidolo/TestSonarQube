@@ -6,15 +6,12 @@ class ExcelProcessor:
         pass
 
     def read_excel(self, file_name):
-        data = []
         try:
             workbook = openpyxl.load_workbook(file_name)
-            sheet = workbook.active
-            data = self._extract_data_from_sheet(sheet)
+            data = self._extract_data_from_sheet(workbook.active)
             workbook.close()
             return data
-        except Exception as e:
-            print(f"Error reading Excel file: {e}")
+        except Exception:
             return None
 
     def _extract_data_from_sheet(self, sheet):
@@ -28,8 +25,7 @@ class ExcelProcessor:
             workbook.save(file_name)
             workbook.close()
             return 1
-        except Exception as e:
-            print(f"Error writing Excel file: {e}")
+        except Exception:
             return 0
 
     def _append_data_to_sheet(self, sheet, data):
@@ -51,12 +47,12 @@ class ExcelProcessor:
     def _process_data(self, data, N):
         new_data = []
         for row in data:
-            new_row = list(row[:])
-            new_row.append(self._process_cell_value(row[N]))
+            new_row = list(row)
+            new_row.append(self._transform_value(row[N]))
             new_data.append(new_row)
         return new_data
 
-    def _process_cell_value(self, value):
+    def _transform_value(self, value):
         return str(value).upper() if not str(value).isdigit() else value
 
     def _generate_new_file_name(self, original_file_name):

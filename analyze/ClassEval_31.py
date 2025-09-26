@@ -32,7 +32,7 @@ class DataStatistics4:
         mean = DataStatistics4.calculate_mean(data, n)
         std_deviation = DataStatistics4.calculate_std_deviation(data, mean, n)
 
-        skewness = sum((x - mean) ** 3 for x in data) * n / ((n - 1) * (n - 2) * std_deviation ** 3) if std_deviation != 0 else 0
+        skewness = DataStatistics4.calculate_skewness(data, mean, n, std_deviation)
 
         return skewness
 
@@ -40,6 +40,10 @@ class DataStatistics4:
     def calculate_std_deviation(data, mean, n):
         variance = sum((x - mean) ** 2 for x in data) / n
         return math.sqrt(variance)
+
+    @staticmethod
+    def calculate_skewness(data, mean, n, std_deviation):
+        return sum((x - mean) ** 3 for x in data) * n / ((n - 1) * (n - 2) * std_deviation ** 3) if std_deviation != 0 else 0
 
     @staticmethod
     def kurtosis(data):

@@ -13,9 +13,9 @@ class PushBoxGame:
     def init_game(self):
         for row in range(len(self.map)):
             for col in range(len(self.map[row])):
-                self._initialize_player_and_targets(row, col)
+                self._initialize_position(row, col)
 
-    def _initialize_player_and_targets(self, row, col):
+    def _initialize_position(self, row, col):
         if self.map[row][col] == "O":
             self.player_row = row
             self.player_col = col

@@ -58,8 +58,14 @@ class Statistics3:
         return matrix
 
     @staticmethod
-    def _correlation_row(data, i):
-        return [Statistics3.correlation([row[i] for row in data], [row[j] for row in data]) for j in range(len(data[0]))]
+    def _correlation_row(data, index):
+        row = []
+        for j in range(len(data[0])):
+            column1 = [row[index] for row in data]
+            column2 = [row[j] for row in data]
+            correlation = Statistics3.correlation(column1, column2)
+            row.append(correlation)
+        return row
 
     @staticmethod
     def standard_deviation(data):

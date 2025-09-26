@@ -22,7 +22,7 @@ class BigNumCalculator:
         result = []
 
         for i in range(len(num1) - 1, -1, -1):
-            digit_diff, borrow = BigNumCalculator._calculate_digit_difference(num1[i], num2[i], borrow)
+            digit_diff, borrow = BigNumCalculator._calculate_digit_diff(num1[i], num2[i], borrow)
             result.insert(0, str(digit_diff))
 
         result = BigNumCalculator._remove_leading_zeros(result)
@@ -70,7 +70,7 @@ class BigNumCalculator:
         return num1, num2, False
 
     @staticmethod
-    def _calculate_digit_difference(digit1, digit2, borrow):
+    def _calculate_digit_diff(digit1, digit2, borrow):
         digit_diff = int(digit1) - int(digit2) - borrow
         if digit_diff < 0:
             digit_diff += 10

@@ -20,13 +20,12 @@ class MusicPlayer:
             self.stop()
 
     def play(self):
-        if self.playlist:
-            if self.current_song:
-                return self.current_song
-            else:
-                self.current_song = self.playlist[0]
-                return self.current_song
+        if self._has_songs():
+            return self.playlist[0]
         return False
+
+    def _has_songs(self):
+        return bool(self.playlist) and self.current_song is not None
 
     def stop(self):
         if self.current_song:
@@ -51,13 +50,10 @@ class MusicPlayer:
         return False
 
     def set_volume(self, volume):
-        if self._is_volume_valid(volume):
+        if self.MIN_VOLUME <= volume <= self.MAX_VOLUME:
             self.volume = volume
             return True
         return False
-
-    def _is_volume_valid(self, volume):
-        return self.MIN_VOLUME <= volume <= self.MAX_VOLUME
 
     def shuffle(self):
         if self.playlist:
@@ -65,3 +61,6 @@ class MusicPlayer:
             random.shuffle(self.playlist)
             return True
         return False
+
+    def _is_playlist_empty(self):
+        return not self.playlist

@@ -25,10 +25,7 @@ class Order:
                 break
 
     def calculate_total(self):
-        return sum(self.calculate_dish_total(dish) for dish in self.selected_dishes)
-
-    def calculate_dish_total(self, dish):
-        return dish["price"] * dish["count"] * self.sales[dish["dish"]]
+        return sum(dish["price"] * dish["count"] * self.sales[dish["dish"]] for dish in self.selected_dishes)
 
     def checkout(self):
         if not self.selected_dishes:
