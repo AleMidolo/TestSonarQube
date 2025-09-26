@@ -33,7 +33,7 @@ class Calculator:
                 elif char == '(':
                     operator_stack.append(char)
                 elif char == ')':
-                    self.process_parenthesis(operand_stack, operator_stack)
+                    self.process_closing_parenthesis(operand_stack, operator_stack)
 
         if num_buffer:
             self.push_operand(operand_stack, num_buffer)
@@ -59,7 +59,7 @@ class Calculator:
 
         operator_stack.append(char)
 
-    def process_parenthesis(self, operand_stack, operator_stack):
+    def process_closing_parenthesis(self, operand_stack, operator_stack):
         while operator_stack and operator_stack[-1] != '(':
             self.apply_operator(operand_stack, operator_stack)
         operator_stack.pop()

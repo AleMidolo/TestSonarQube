@@ -36,7 +36,7 @@ class ExcelProcessor:
         data = self.read_excel(save_file_name)
         if self._is_invalid_data(data, N):
             return 0
-        new_data = self._process_data(data, N)
+        new_data = self._transform_data(data, N)
         new_file_name = self._generate_new_file_name(save_file_name)
         success = self.write_excel(new_data, new_file_name)
         return success, new_file_name
@@ -44,7 +44,7 @@ class ExcelProcessor:
     def _is_invalid_data(self, data, N):
         return data is None or N >= len(data[0])
 
-    def _process_data(self, data, N):
+    def _transform_data(self, data, N):
         new_data = []
         for row in data:
             new_row = list(row)

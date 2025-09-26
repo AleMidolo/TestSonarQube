@@ -17,15 +17,6 @@ class WeatherSystem:
         
         return self.temperature, self.weather
     
-    def set_city(self, city):
-        self.city = city
-
-    def celsius_to_fahrenheit(self):
-        return (self.temperature * 9/5) + 32
-
-    def fahrenheit_to_celsius(self):
-        return (self.temperature - 32) * 5/9
-
     def city_in_weather_list(self):
         return self.city in self.weather_list
 
@@ -41,3 +32,12 @@ class WeatherSystem:
             return self.fahrenheit_to_celsius()
         elif tmp_units == 'fahrenheit':
             return self.celsius_to_fahrenheit()
+
+    def set_city(self, city):
+        self.city = city
+
+    def celsius_to_fahrenheit(self):
+        return (self.temperature * 9/5) + 32
+
+    def fahrenheit_to_celsius(self):
+        return (self.temperature - 32) * 5/9

@@ -32,6 +32,10 @@ class EncryptionUtils:
         return encrypted_char.upper() if char.isupper() else encrypted_char
 
     def rail_fence_cipher(self, plain_text, rails):
+        fence = self._create_fence(plain_text, rails)
+        return self._read_fence(fence, rails)
+
+    def _create_fence(self, plain_text, rails):
         fence = [['\n' for _ in range(len(plain_text))] for _ in range(rails)]
         direction = -1
         row, col = 0, 0
@@ -44,12 +48,12 @@ class EncryptionUtils:
             col += 1
             row += direction
 
-        return self._construct_rail_fence_output(fence, rails, len(plain_text))
+        return fence
 
-    def _construct_rail_fence_output(self, fence, rails, length):
+    def _read_fence(self, fence, rails):
         encrypted_text = ''
         for i in range(rails):
-            for j in range(length):
+            for j in range(len(fence[i])):
                 if fence[i][j] != '\n':
                     encrypted_text += fence[i][j]
         return encrypted_text

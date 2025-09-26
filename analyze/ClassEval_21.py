@@ -22,14 +22,17 @@ class Classroom:
         new_start_time = self._parse_time(new_course['start_time'])
         new_end_time = self._parse_time(new_course['end_time'])
 
-        return not any(self._is_time_conflicted(course, new_start_time, new_end_time) for course in self.courses)
+        return any(self._is_time_conflicted(course, new_start_time, new_end_time) for course in self.courses)
 
     def _parse_time(self, time_str):
         return datetime.strptime(time_str, '%H:%M')
 
-    def _is_time_conflicted(self, course, check_time_start, check_time_end=None):
+    def _is_time_conflicted(self, course, check_time):
         start_time = self._parse_time(course['start_time'])
         end_time = self._parse_time(course['end_time'])
-        if check_time_end is None:
-            return start_time <= check_time <= end_time
-        return (start_time <= check_time_start <= end_time) or (start_time <= check_time_end <= end_time)
+        return start_time <= check_time <= end_time
+
+    def _is_time_conflicted(self, course, new_start_time, new_end_time):
+        start_time = self._parse_time(course['start_time'])
+        end_time = self._parse_time(course['end_time'])
+        return (start_time <= new_start_time <= end_time) or (start_time <= new_end_time <= end_time)

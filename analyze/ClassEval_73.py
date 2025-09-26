@@ -27,7 +27,7 @@ class RPGCharacter:
     def gain_exp(self, amount):
         while amount != 0:
             if self.has_level_up(amount):
-                amount -= self.level_up_exp_needed()
+                amount -= self.level_up_exp_cost()
                 self.level_up()
             else:
                 self.exp += amount
@@ -36,17 +36,14 @@ class RPGCharacter:
     def has_level_up(self, amount):
         return self.exp + amount >= self.level * self.EXP_PER_LEVEL
 
-    def level_up_exp_needed(self):
+    def level_up_exp_cost(self):
         return self.level * self.EXP_PER_LEVEL - self.exp
 
     def level_up(self):
         if self.level < 100:
             self.level += 1
-            self.reset_exp()
+            self.exp = 0
             self.increase_stats()
-
-    def reset_exp(self):
-        self.exp = 0
 
     def increase_stats(self):
         self.hp += self.HP_INCREASE_PER_LEVEL

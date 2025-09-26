@@ -13,10 +13,10 @@ class VectorUtil:
         norm = np.linalg.norm(vector_1)
         all_norms = np.linalg.norm(vectors_all, axis=1)
         dot_products = dot(vectors_all, vector_1)
-        return VectorUtil._calculate_similarities(norm, all_norms, dot_products)
+        return VectorUtil._calculate_similarities(dot_products, norm, all_norms)
 
     @staticmethod
-    def _calculate_similarities(norm, all_norms, dot_products):
+    def _calculate_similarities(dot_products, norm, all_norms):
         return dot_products / (norm * all_norms)
 
     @staticmethod
@@ -46,4 +46,8 @@ class VectorUtil:
 
     @staticmethod
     def _create_idf_dict(a, index_2_key_map):
-        return {index_2_key_map[index]: w for index, w in enumerate(a)}
+        result = {}
+        for index, w in enumerate(a):
+            key = index_2_key_map[index]
+            result[key] = w
+        return result

@@ -15,7 +15,7 @@ class NumberWordFormatter:
         lstrrev = lstr[::-1]
         lstrrev = self.pad_left(lstrrev)
 
-        lm = self.convert_left_string(lstrrev)
+        lm = self.process_left_string(lstrrev)
         xs = f"AND CENTS {self.trans_two(rstr)} " if rstr else ""
         
         return "ZERO ONLY" if not lm.strip() else f"{lm.strip()} {xs}ONLY"
@@ -30,15 +30,18 @@ class NumberWordFormatter:
             return lstrrev + "0"
         return lstrrev
 
-    def convert_left_string(self, lstrrev):
+    def process_left_string(self, lstrrev):
+        a = [''] * 5
         lm = ""
         for i in range(len(lstrrev) // 3):
-            segment = lstrrev[3 * i:3 * i + 3][::-1]
-            if segment != "000":
-                lm = self.trans_three(segment) + " " + self.parse_more(i) + " " + lm
-            else:
-                lm += self.trans_three(segment)
+            a[i] = lstrrev[3 * i:3 * i + 3][::-1]
+            lm = self.append_transformed(a[i], lm, i)
         return lm
+
+    def append_transformed(self, segment, lm, index):
+        if segment != "000":
+            return self.trans_three(segment) + " " + self.parse_more(index) + " " + lm
+        return lm + self.trans_three(segment)
 
     def trans_two(self, s):
         s = s.zfill(2)

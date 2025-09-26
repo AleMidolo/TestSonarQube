@@ -34,7 +34,7 @@ class Chat:
         return username in self.users
 
     def _users_exist(self, sender, receiver):
-        return sender in self.users and receiver in self.users
+        return self._user_exists(sender) and self._user_exists(receiver)
 
     def _create_message_info(self, sender, receiver, message):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

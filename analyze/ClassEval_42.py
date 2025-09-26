@@ -34,19 +34,19 @@ class Hotel:
         return self.available_rooms[room_type]
 
     def is_room_type_available(self, room_type):
-        return room_type in self.available_rooms
+        return room_type in self.available_rooms.keys()
 
     def is_room_available(self, room_type, room_number):
         return room_number <= self.available_rooms[room_type]
 
     def add_booking(self, room_type, room_number, name):
-        if room_type not in self.booked_rooms:
+        if room_type not in self.booked_rooms.keys():
             self.booked_rooms[room_type] = {}
         self.booked_rooms[room_type][name] = room_number
         self.available_rooms[room_type] -= room_number
 
     def is_room_booked(self, room_type, name):
-        return room_type in self.booked_rooms and name in self.booked_rooms[room_type]
+        return room_type in self.booked_rooms.keys() and name in self.booked_rooms[room_type]
 
     def is_correct_room_number(self, room_type, name, room_number):
         return room_number == self.booked_rooms[room_type][name]

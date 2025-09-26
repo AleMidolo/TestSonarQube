@@ -12,11 +12,11 @@ class BookManagement:
         if self.inventory[title] == 0:
             del self.inventory[title]
 
+    def _can_remove_book(self, title, quantity):
+        return title in self.inventory and self.inventory[title] >= quantity
+
     def view_inventory(self):
         return self.inventory
 
     def view_book_quantity(self, title):
         return self.inventory.get(title, 0)
-
-    def _can_remove_book(self, title, quantity):
-        return title in self.inventory and self.inventory[title] >= quantity

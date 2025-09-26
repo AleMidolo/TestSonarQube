@@ -10,13 +10,13 @@ class SQLGenerator:
         return sql + ";"
 
     def insert(self, data):
-        fields = self._get_fields_from_data(data)
-        values = self._get_values_from_data(data)
+        fields = ", ".join(data.keys())
+        values = self._format_values(data.values())
         sql = f"INSERT INTO {self.table_name} ({fields}) VALUES ({values})"
         return sql + ";"
 
     def update(self, data, condition):
-        set_clause = self._get_set_clause(data)
+        set_clause = self._format_set_clause(data)
         sql = f"UPDATE {self.table_name} SET {set_clause} WHERE {condition}"
         return sql + ";"
 
@@ -35,13 +35,10 @@ class SQLGenerator:
     def _get_fields(self, fields):
         return "*" if fields is None else ", ".join(fields)
 
-    def _get_fields_from_data(self, data):
-        return ", ".join(data.keys())
+    def _format_values(self, values):
+        return ", ".join([f"'{value}'" for value in values])
 
-    def _get_values_from_data(self, data):
-        return ", ".join([f"'{value}'" for value in data.values()])
-
-    def _get_set_clause(self, data):
+    def _format_set_clause(self, data):
         return ", ".join([f"{field} = '{value}'" for field, value in data.items()])
 
     def _get_female_under_age_condition(self, age):

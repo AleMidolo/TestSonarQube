@@ -8,7 +8,7 @@ class ChandrasekharSieve:
             return []
 
         sieve = self.initialize_sieve()
-        self.perform_sieve(sieve)
+        self.populate_sieve(sieve)
 
         return self.extract_primes(sieve)
 
@@ -17,7 +17,7 @@ class ChandrasekharSieve:
         sieve[0] = sieve[1] = False
         return sieve
 
-    def perform_sieve(self, sieve):
+    def populate_sieve(self, sieve):
         p = 2
         while p * p <= self.n:
             if sieve[p]:

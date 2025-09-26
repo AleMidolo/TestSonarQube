@@ -25,7 +25,8 @@ class TriCalculator:
         if cos_value != 0:
             result = self.sin(x) / cos_value
             return round(result, 10)
-        return False
+        else:
+            return False
 
     def _calculate_factorial(self, a):
         b = 1
