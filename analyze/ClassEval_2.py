@@ -5,7 +5,7 @@ class ArgumentParser:
         self.types = {}
 
     def parse_arguments(self, command_string):
-        args = self._split_command_string(command_string)
+        args = self._extract_args(command_string)
         for i in range(len(args)):
             arg = args[i]
             if self._is_long_option(arg):
@@ -14,7 +14,7 @@ class ArgumentParser:
                 self._parse_short_option(arg, i, args)
         return self._check_missing_arguments()
 
-    def _split_command_string(self, command_string):
+    def _extract_args(self, command_string):
         return command_string.split()[1:]
 
     def _is_long_option(self, arg):

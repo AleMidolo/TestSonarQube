@@ -25,8 +25,7 @@ class FitnessTracker:
             return 1  # too fat
         elif BMI < BMI_range[0]:
             return -1  # too thin
-        else:
-            return 0  # normal
+        return 0  # normal
 
     def calculate_calorie_intake(self):
         BMR = self.calculate_BMR()
@@ -35,8 +34,7 @@ class FitnessTracker:
     def calculate_BMR(self):
         if self.sex == "male":
             return (10 * self.weight + 6.25 * self.height - 5 * self.age + self.MALE_BMR_CONSTANT)
-        else:
-            return (10 * self.weight + 6.25 * self.height - 5 * self.age - self.FEMALE_BMR_CONSTANT)
+        return (10 * self.weight + 6.25 * self.height - 5 * self.age - self.FEMALE_BMR_CONSTANT)
 
     def calculate_calorie_multiplier(self, BMR):
         condition = self.condition_judge()
@@ -44,5 +42,4 @@ class FitnessTracker:
             return BMR * self.SEDENTARY_MULTIPLIER
         elif condition == -1:
             return BMR * self.ACTIVE_MULTIPLIER
-        else:
-            return BMR * self.MODERATE_MULTIPLIER
+        return BMR * self.MODERATE_MULTIPLIER

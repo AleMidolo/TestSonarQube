@@ -37,9 +37,9 @@ class Thermostat:
 
     def simulate_operation(self):
         self.auto_set_mode()
-        return self.perform_operation()
+        return self.run_simulation()
 
-    def perform_operation(self):
+    def run_simulation(self):
         use_time = 0
         if self.mode == 'heat':
             while self.current_temperature < self.target_temperature:

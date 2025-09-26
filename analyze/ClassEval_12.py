@@ -51,7 +51,7 @@ class BlackjackGame:
 
     def determine_winner(self, player_value, dealer_value):
         if player_value > 21 and dealer_value > 21:
-            return 'Dealer wins' if player_value > dealer_value else 'Player wins'
+            return 'Player wins' if player_value <= dealer_value else 'Dealer wins'
         elif player_value > 21:
             return 'Dealer wins'
         elif dealer_value > 21:

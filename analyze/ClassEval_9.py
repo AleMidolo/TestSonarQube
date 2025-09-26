@@ -25,7 +25,7 @@ class BigNumCalculator:
             digit_diff, borrow = BigNumCalculator._calculate_digit_diff(num1[i], num2[i], borrow)
             result.insert(0, str(digit_diff))
 
-        result = BigNumCalculator._remove_leading_zeros(result)
+        BigNumCalculator._remove_leading_zeros(result)
 
         if negative:
             result.insert(0, '-')
@@ -83,4 +83,3 @@ class BigNumCalculator:
     def _remove_leading_zeros(result):
         while len(result) > 1 and result[0] == '0':
             result.pop(0)
-        return result

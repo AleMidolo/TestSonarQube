@@ -73,9 +73,9 @@ class HtmlUtil:
         if self.CODE_MARK not in text_with_code_tag:
             return []
 
-        return self.__get_code_list(html_text, text_with_code_tag)
+        return self.__extract_codes(html_text, text_with_code_tag)
 
-    def __get_code_list(self, html_text, text_with_code_tag):
+    def __extract_codes(self, html_text, text_with_code_tag):
         soup = BeautifulSoup(html_text, 'lxml')
         code_tags = soup.find_all(name=['pre', 'blockquote'])
         code_count = text_with_code_tag.count(self.CODE_MARK)

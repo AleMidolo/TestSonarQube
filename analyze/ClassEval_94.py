@@ -43,6 +43,5 @@ class VendingMachine:
         return self.format_items()
 
     def format_items(self):
-        items = [f"{item_name} - ${item_info['price']} [{item_info['quantity']}]" 
-                 for item_name, item_info in self.inventory.items()]
-        return "\n".join(items)
+        return "\n".join(f"{item_name} - ${item_info['price']} [{item_info['quantity']}]" 
+                         for item_name, item_info in self.inventory.items())

@@ -26,7 +26,7 @@ class Manacher:
         return self.extract_palindrome(new_input_string, start, max_length)
 
     def prepare_input_string(self):
-        return "|".join(self.input_string) + "|"
+        return "|".join(self.input_string) + "|"  # Prepare the input string with separators
 
     def extract_palindrome(self, new_input_string, start, max_length):
         output_string = ""

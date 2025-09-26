@@ -39,8 +39,8 @@ class MetricsCalculator:
 
     def f1_score(self, predicted_labels, true_labels):
         self.update(predicted_labels, true_labels)
-        precision = self._calculate_precision()
-        recall = self._calculate_recall()
+        precision = self.precision(predicted_labels, true_labels)
+        recall = self.recall(predicted_labels, true_labels)
         return self._calculate_f1_score(precision, recall)
 
     def _calculate_f1_score(self, precision, recall):

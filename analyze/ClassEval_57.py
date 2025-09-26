@@ -81,6 +81,13 @@ class MetricsCalculator2:
         return np.mean(separate_result), separate_result
 
     @staticmethod
+    def _first_positive(array):
+        for value in array:
+            if value > 0:
+                return value
+        return 0.0
+
+    @staticmethod
     def _calculate_right_ranking(sub_list):
         right_ranking_list = []
         count = 1
@@ -91,10 +98,3 @@ class MetricsCalculator2:
                 right_ranking_list.append(count)
                 count += 1
         return right_ranking_list
-
-    @staticmethod
-    def _first_positive(array):
-        for value in array:
-            if value > 0:
-                return value
-        return 0.0

@@ -59,9 +59,5 @@ class DataStatistics4:
 
     @staticmethod
     def pdf(data, mu, sigma):
-        pdf_values = [DataStatistics4.calculate_pdf_value(x, mu, sigma) for x in data]
+        pdf_values = [1 / (sigma * math.sqrt(2 * math.pi)) * math.exp(-0.5 * ((x - mu) / sigma) ** 2) for x in data]
         return pdf_values
-
-    @staticmethod
-    def calculate_pdf_value(x, mu, sigma):
-        return 1 / (sigma * math.sqrt(2 * math.pi)) * math.exp(-0.5 * ((x - mu) / sigma) ** 2)

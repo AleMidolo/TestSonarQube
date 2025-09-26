@@ -39,7 +39,17 @@ class ExpressionCalculator:
             if self.is_operator(current_op):
                 if count > 0:
                     self.postfix_stack.append("".join(arr[current_index: current_index + count]))
-                self.process_operator(current_op, op_stack)
+                peek_op = op_stack[-1]
+                if current_op == ')':
+                    while op_stack[-1] != '(':
+                        self.postfix_stack.append(str(op_stack.pop()))
+                    op_stack.pop()
+                else:
+                    while current_op != '(' and peek_op != ',' and self.compare(current_op, peek_op):
+                        self.postfix_stack.append(str(op_stack.pop()))
+                        peek_op = op_stack[-1]
+                    op_stack.append(current_op)
+
                 count = 0
                 current_index = i + 1
             else:
@@ -50,18 +60,6 @@ class ExpressionCalculator:
 
         while op_stack[-1] != ',':
             self.postfix_stack.append(str(op_stack.pop()))
-
-    def process_operator(self, current_op, op_stack):
-        peek_op = op_stack[-1]
-        if current_op == ')':
-            while op_stack[-1] != '(':
-                self.postfix_stack.append(str(op_stack.pop()))
-            op_stack.pop()
-        else:
-            while current_op != '(' and peek_op != ',' and self.compare(current_op, peek_op):
-                self.postfix_stack.append(str(op_stack.pop()))
-                peek_op = op_stack[-1]
-            op_stack.append(current_op)
 
     @staticmethod
     def is_operator(c):

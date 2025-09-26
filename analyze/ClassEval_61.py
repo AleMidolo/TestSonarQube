@@ -13,11 +13,10 @@ class MusicPlayer:
     def remove_song(self, song):
         if song in self.playlist:
             self.playlist.remove(song)
-            if self.current_song == song:
-                self.stop()
+            self._stop_if_current_song(song)
 
     def play(self):
-        if self.has_songs():
+        if self._has_songs():
             return self.playlist[0]
         return False
 
@@ -44,20 +43,24 @@ class MusicPlayer:
         return False
 
     def set_volume(self, volume):
-        if self.is_valid_volume(volume):
+        if self._is_valid_volume(volume):
             self.volume = volume
             return True
         return False
 
     def shuffle(self):
-        if self.has_songs():
+        if self.playlist:
             import random
             random.shuffle(self.playlist)
             return True
         return False
 
-    def has_songs(self):
+    def _stop_if_current_song(self, song):
+        if self.current_song == song:
+            self.stop()
+
+    def _has_songs(self):
         return bool(self.playlist)
 
-    def is_valid_volume(self, volume):
+    def _is_valid_volume(self, volume):
         return self.MIN_VOLUME <= volume <= self.MAX_VOLUME
