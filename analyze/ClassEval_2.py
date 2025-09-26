@@ -5,29 +5,34 @@ class ArgumentParser:
         self.types = {}
 
     def parse_arguments(self, command_string):
-        args = command_string.split()[1:]
+        args = self._extract_args(command_string)
         for i in range(len(args)):
             arg = args[i]
-            if arg.startswith('--'):
-                self._parse_long_argument(arg)
-            elif arg.startswith('-'):
-                self._parse_short_argument(args, i, arg)
-
+            if self._is_long_option(arg):
+                self._parse_long_option(arg)
+            elif self._is_short_option(arg, i, args):
+                self._parse_short_option(arg, i, args)
         return self._check_missing_arguments()
 
-    def _parse_long_argument(self, arg):
+    def _extract_args(self, command_string):
+        return command_string.split()[1:]
+
+    def _is_long_option(self, arg):
+        return arg.startswith('--')
+
+    def _parse_long_option(self, arg):
         key_value = arg[2:].split('=')
         if len(key_value) == 2:
             self.arguments[key_value[0]] = self._convert_type(key_value[0], key_value[1])
         else:
             self.arguments[key_value[0]] = True
 
-    def _parse_short_argument(self, args, i, arg):
+    def _is_short_option(self, arg, i, args):
+        return arg.startswith('-') and (i + 1 < len(args) and not args[i + 1].startswith('-'))
+
+    def _parse_short_option(self, arg, i, args):
         key = arg[1:]
-        if i + 1 < len(args) and not args[i + 1].startswith('-'):
-            self.arguments[key] = self._convert_type(key, args[i + 1])
-        else:
-            self.arguments[key] = True
+        self.arguments[key] = self._convert_type(key, args[i + 1])
 
     def _check_missing_arguments(self):
         missing_args = self.required - set(self.arguments.keys())

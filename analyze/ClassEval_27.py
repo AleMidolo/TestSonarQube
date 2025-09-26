@@ -1,6 +1,6 @@
 class CurrencyConverter:
     def __init__(self):
-        self.rates = {
+        self._rates = {
             'USD': 1.0,
             'EUR': 0.85,
             'GBP': 0.72,
@@ -11,37 +11,35 @@ class CurrencyConverter:
         }
 
     def convert(self, amount, from_currency, to_currency):
-        if self._is_same_currency(from_currency, to_currency):
+        if from_currency == to_currency:
             return amount
 
-        if not self._are_currencies_supported(from_currency, to_currency):
+        if not self._is_currency_supported(from_currency) or not self._is_currency_supported(to_currency):
             return False
 
-        return self._convert_amount(amount, from_currency, to_currency)
+        from_rate = self._get_currency_rate(from_currency)
+        to_rate = self._get_currency_rate(to_currency)
+
+        return self._calculate_converted_amount(amount, from_rate, to_rate)
 
     def get_supported_currencies(self):
-        return list(self.rates.keys())
+        return list(self._rates.keys())
 
     def add_currency_rate(self, currency, rate):
-        if self._is_currency_exists(currency):
+        if self._is_currency_supported(currency):
             return False
-        self.rates[currency] = rate
+        self._rates[currency] = rate
 
     def update_currency_rate(self, currency, new_rate):
-        if not self._is_currency_exists(currency):
+        if not self._is_currency_supported(currency):
             return False
-        self.rates[currency] = new_rate
+        self._rates[currency] = new_rate
 
-    def _is_same_currency(self, from_currency, to_currency):
-        return from_currency == to_currency
+    def _is_currency_supported(self, currency):
+        return currency in self._rates
 
-    def _are_currencies_supported(self, from_currency, to_currency):
-        return from_currency in self.rates and to_currency in self.rates
+    def _get_currency_rate(self, currency):
+        return self._rates[currency]
 
-    def _convert_amount(self, amount, from_currency, to_currency):
-        from_rate = self.rates[from_currency]
-        to_rate = self.rates[to_currency]
+    def _calculate_converted_amount(self, amount, from_rate, to_rate):
         return (amount / from_rate) * to_rate
-
-    def _is_currency_exists(self, currency):
-        return currency in self.rates

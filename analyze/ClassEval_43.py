@@ -27,7 +27,7 @@ class HRManagementSystem:
         return self.employees.get(employee_id, False)
 
     def list_employees(self):
-        return {employee_id: self._format_employee_details(employee_id, employee_info)
+        return {employee_id: self._format_employee_details(employee_id, employee_info) 
                 for employee_id, employee_info in self.employees.items()}
 
     def _employee_exists(self, employee_id):

@@ -18,7 +18,8 @@ class Statistics3:
     def mode(data):
         counts = Statistics3._count_values(data)
         max_count = max(counts.values())
-        return [value for value, count in counts.items() if count == max_count]
+        mode_values = [value for value, count in counts.items() if count == max_count]
+        return mode_values
 
     @staticmethod
     def _count_values(data):
@@ -57,8 +58,8 @@ class Statistics3:
         return matrix
 
     @staticmethod
-    def _correlation_row(data, index):
-        return [Statistics3.correlation([row[index] for row in data], [row[j] for row in data]) for j in range(len(data[0]))]
+    def _correlation_row(data, i):
+        return [Statistics3.correlation([row[i] for row in data], [row[j] for row in data]) for j in range(len(data[0]))]
 
     @staticmethod
     def standard_deviation(data):

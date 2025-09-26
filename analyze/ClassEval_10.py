@@ -20,12 +20,12 @@ class BinaryDataProcessor:
         return count / total if total > 0 else 0
 
     def convert_to_ascii(self):
-        return self.convert_to_text('ascii')
+        return self.convert_to_encoding('ascii')
 
     def convert_to_utf8(self):
-        return self.convert_to_text('utf-8')
+        return self.convert_to_encoding('utf-8')
 
-    def convert_to_text(self, encoding):
+    def convert_to_encoding(self, encoding):
         byte_array = bytearray()
         for i in range(0, len(self.binary_string), 8):
             byte = self.binary_string[i:i+8]

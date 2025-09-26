@@ -8,7 +8,7 @@ class Manacher:
         return 1 + self.palindromic_length(center, diff + 1, string)
 
     def is_palindrome_boundary(self, center, diff, string):
-        return (center - diff == -1 or center + diff == len(string) or
+        return (center - diff == -1 or center + diff == len(string) or 
                 string[center - diff] != string[center + diff])
 
     def palindromic_string(self):
@@ -17,7 +17,7 @@ class Manacher:
         return self.extract_palindrome(new_input_string, start, max_length)
 
     def prepare_input_string(self):
-        return "|".join(self.input_string) + "|"
+        return "|".join(self.input_string) + "|"  # Add separator between characters
 
     def find_longest_palindrome(self, new_input_string):
         max_length = 0
@@ -33,8 +33,4 @@ class Manacher:
         return max_length, start
 
     def extract_palindrome(self, new_input_string, start, max_length):
-        output_string = ""
-        for i in new_input_string[start - max_length:start + max_length + 1]:
-            if i != "|":
-                output_string += i
-        return output_string
+        return ''.join(i for i in new_input_string[start - max_length:start + max_length + 1] if i != "|")

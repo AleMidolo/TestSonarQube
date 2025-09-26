@@ -25,17 +25,14 @@ class NumberWordFormatter:
         return lstrrev
 
     def convert_integer_part(self, lstrrev):
-        a = [''] * 5
         lm = ""
         for i in range(len(lstrrev) // 3):
-            a[i] = lstrrev[3 * i:3 * i + 3][::-1]
-            lm = self.append_transformed(a[i], lm, i)
+            part = lstrrev[3 * i:3 * i + 3][::-1]
+            if part != "000":
+                lm = self.trans_three(part) + " " + self.parse_more(i) + " " + lm
+            else:
+                lm += self.trans_three(part)
         return lm
-
-    def append_transformed(self, segment, lm, index):
-        if segment != "000":
-            return self.trans_three(segment) + " " + self.parse_more(index) + " " + lm
-        return lm + self.trans_three(segment)
 
     def trans_two(self, s):
         s = s.zfill(2)

@@ -19,15 +19,11 @@ class AccessGatewayFilter:
 
         try:
             token = self.get_jwt_user(request)
-            if token is None:
-                return False
-            
-            user = token['user']
-            if self.is_user_authorized(user):
-                self.set_current_user_info_and_log(user)
+            if token and self.is_user_authorized(token):
+                self.set_current_user_info_and_log(token['user'])
                 return True
         except Exception as e:
-            logging.error(f"Error processing request: {e}")
+            logging.error(f"Error in filter: {e}")
             return False
 
     def is_start_with(self, request_uri):
@@ -39,15 +35,12 @@ class AccessGatewayFilter:
         if token['jwt'].startswith(user['name']):
             jwt_str_date = token['jwt'].split(user['name'])[1]
             jwt_date = datetime.datetime.strptime(jwt_str_date, "%Y-%m-%d")
-            if self.is_jwt_expired(jwt_date):
+            if datetime.datetime.today() - jwt_date >= datetime.timedelta(days=self.JWT_EXPIRATION_DAYS):
                 return None
         return token
 
-    def is_jwt_expired(self, jwt_date):
-        return datetime.datetime.today() - jwt_date >= datetime.timedelta(days=self.JWT_EXPIRATION_DAYS)
-
-    def is_user_authorized(self, user):
-        return user['level'] > 2
+    def is_user_authorized(self, token):
+        return token['user']['level'] > 2
 
     def set_current_user_info_and_log(self, user):
         host = user['address']

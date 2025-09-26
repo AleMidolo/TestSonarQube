@@ -31,8 +31,14 @@ class Order:
         return dish["price"] * dish["count"] * self.sales[dish["dish"]]
 
     def checkout(self):
-        if not self.selected_dishes:
+        if self.is_empty_order():
             return False
         total = self.calculate_total()
-        self.selected_dishes.clear()
+        self.clear_selected_dishes()
         return total
+
+    def is_empty_order(self):
+        return len(self.selected_dishes) == 0
+
+    def clear_selected_dishes(self):
+        self.selected_dishes = []

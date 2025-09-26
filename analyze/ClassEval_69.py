@@ -12,7 +12,7 @@ class PDFHandler:
     def merge_pdfs(self, output_filepath):
         pdf_writer = PyPDF2.PdfWriter()
         self._add_pages_to_writer(pdf_writer)
-        self._write_pdf(pdf_writer, output_filepath)
+        self._write_merged_pdf(pdf_writer, output_filepath)
         return f"Merged PDFs saved at {output_filepath}"
 
     def _add_pages_to_writer(self, pdf_writer):
@@ -20,7 +20,7 @@ class PDFHandler:
             for page in reader.pages:
                 pdf_writer.add_page(page)
 
-    def _write_pdf(self, pdf_writer, output_filepath):
+    def _write_merged_pdf(self, pdf_writer, output_filepath):
         with open(output_filepath, 'wb') as out:
             pdf_writer.write(out)
 
