@@ -27,12 +27,12 @@ class CSVProcessor:
 
     def process_csv_data(self, column_index, save_file_name):
         title, data = self.read_csv(save_file_name)
-        processed_data = self.get_processed_column_data(data, title, column_index)
-        return self.write_csv(processed_data, self.get_processed_file_name(save_file_name))
+        processed_data = self.get_processed_column_data(data, column_index)
+        new_data = [title, processed_data]
+        return self.write_csv(new_data, self.get_processed_file_name(save_file_name))
 
-    def get_processed_column_data(self, data, title, column_index):
-        column_data = [row[column_index].upper() for row in data]
-        return [title, column_data]
+    def get_processed_column_data(self, data, column_index):
+        return [row[column_index].upper() for row in data]
 
     def get_processed_file_name(self, original_file_name):
         return f"{original_file_name.split('.')[0]}_process.csv"

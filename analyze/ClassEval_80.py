@@ -11,7 +11,7 @@ class SQLQueryBuilder:
     @staticmethod
     def insert(table, data):
         keys = ', '.join(data.keys())
-        values = ', '.join(SQLQueryBuilder._format_values(data.values()))
+        values = SQLQueryBuilder._format_values(data.values())
         return f"INSERT INTO {table} ({keys}) VALUES ({values})"
 
     @staticmethod
@@ -34,9 +34,9 @@ class SQLQueryBuilder:
         return ', '.join(columns) if columns != '*' else '*'
 
     @staticmethod
-    def _format_where(where):
-        return " WHERE " + ' AND '.join(f"{k}='{v}'" for k, v in where.items())
+    def _format_values(values):
+        return ', '.join(f"'{v}'" for v in values)
 
     @staticmethod
-    def _format_values(values):
-        return [f"'{v}'" for v in values]
+    def _format_where(where):
+        return " WHERE " + ' AND '.join(f"{k}='{v}'" for k, v in where.items())

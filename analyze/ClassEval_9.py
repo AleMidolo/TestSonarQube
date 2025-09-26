@@ -1,12 +1,10 @@
 class BigNumCalculator:
     @staticmethod
     def add(num1, num2):
-        max_length = max(len(num1), len(num2))
-        num1, num2 = BigNumCalculator._pad_numbers(num1, num2, max_length)
+        num1, num2 = BigNumCalculator._pad_numbers(num1, num2)
+        carry, result = 0, []
 
-        carry = 0
-        result = []
-        for i in range(max_length - 1, -1, -1):
+        for i in range(len(num1) - 1, -1, -1):
             digit_sum, carry = BigNumCalculator._calculate_digit_sum(num1[i], num2[i], carry)
             result.insert(0, str(digit_sum))
 
@@ -18,17 +16,14 @@ class BigNumCalculator:
     @staticmethod
     def subtract(num1, num2):
         num1, num2, negative = BigNumCalculator._prepare_subtraction(num1, num2)
+        num1, num2 = BigNumCalculator._pad_numbers(num1, num2)
+        borrow, result = 0, []
 
-        max_length = max(len(num1), len(num2))
-        num1, num2 = BigNumCalculator._pad_numbers(num1, num2, max_length)
-
-        borrow = 0
-        result = []
-        for i in range(max_length - 1, -1, -1):
+        for i in range(len(num1) - 1, -1, -1):
             digit_diff, borrow = BigNumCalculator._calculate_digit_diff(num1[i], num2[i], borrow)
             result.insert(0, str(digit_diff))
 
-        result = BigNumCalculator._remove_leading_zeros(result)
+        BigNumCalculator._remove_leading_zeros(result)
 
         if negative:
             result.insert(0, '-')
@@ -56,7 +51,8 @@ class BigNumCalculator:
         return ''.join(map(str, result[start:]))
 
     @staticmethod
-    def _pad_numbers(num1, num2, max_length):
+    def _pad_numbers(num1, num2):
+        max_length = max(len(num1), len(num2))
         return num1.zfill(max_length), num2.zfill(max_length)
 
     @staticmethod
@@ -85,4 +81,3 @@ class BigNumCalculator:
     def _remove_leading_zeros(result):
         while len(result) > 1 and result[0] == '0':
             result.pop(0)
-        return result

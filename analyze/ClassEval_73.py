@@ -1,9 +1,9 @@
 class RPGCharacter:
     MAX_HP = 100
     EXP_PER_LEVEL = 100
-    HP_INCREASE_PER_LEVEL = 20
-    ATTACK_POWER_INCREASE_PER_LEVEL = 5
-    DEFENSE_INCREASE_PER_LEVEL = 5
+    HP_INCREASE_ON_LEVEL_UP = 20
+    ATTACK_POWER_INCREASE_ON_LEVEL_UP = 5
+    DEFENSE_INCREASE_ON_LEVEL_UP = 5
 
     def __init__(self, name, hp, attack_power, defense, level=1):
         self.name = name
@@ -27,7 +27,7 @@ class RPGCharacter:
     def gain_exp(self, amount):
         while amount != 0:
             if self.has_level_up(amount):
-                amount -= self.level_up_exp_cost()
+                amount -= (self.level * self.EXP_PER_LEVEL - self.exp)
                 self.level_up()
             else:
                 self.exp += amount
@@ -36,19 +36,14 @@ class RPGCharacter:
     def has_level_up(self, amount):
         return self.exp + amount >= self.level * self.EXP_PER_LEVEL
 
-    def level_up_exp_cost(self):
-        return self.level * self.EXP_PER_LEVEL - self.exp
-
     def level_up(self):
         if self.level < 100:
             self.level += 1
             self.exp = 0
-            self.increase_stats()
-
-    def increase_stats(self):
-        self.hp += self.HP_INCREASE_PER_LEVEL
-        self.attack_power += self.ATTACK_POWER_INCREASE_PER_LEVEL
-        self.defense += self.DEFENSE_INCREASE_PER_LEVEL
+            self.hp += self.HP_INCREASE_ON_LEVEL_UP
+            self.attack_power += self.ATTACK_POWER_INCREASE_ON_LEVEL_UP
+            self.defense += self.DEFENSE_INCREASE_ON_LEVEL_UP
+        return self.level, self.hp, self.attack_power, self.defense
 
     def is_alive(self):
         return self.hp > 0

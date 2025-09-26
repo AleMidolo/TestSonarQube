@@ -1,7 +1,8 @@
 class EightPuzzle:
+    GOAL_STATE = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+
     def __init__(self, initial_state):
         self.initial_state = initial_state
-        self.goal_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
 
     def find_blank(self, state):
         for i in range(3):
@@ -11,24 +12,19 @@ class EightPuzzle:
 
     def move(self, state, direction):
         i, j = self.find_blank(state)
-        new_state = self._create_new_state(state)
-
-        if direction == 'up':
-            self._swap(new_state, i, j, i - 1, j)
-        elif direction == 'down':
-            self._swap(new_state, i, j, i + 1, j)
-        elif direction == 'left':
-            self._swap(new_state, i, j, i, j - 1)
-        elif direction == 'right':
-            self._swap(new_state, i, j, i, j + 1)
-
+        new_state = [row[:] for row in state]
+        self._apply_move(new_state, i, j, direction)
         return new_state
 
-    def _create_new_state(self, state):
-        return [row[:] for row in state]
-
-    def _swap(self, state, i1, j1, i2, j2):
-        state[i1][j1], state[i2][j2] = state[i2][j2], state[i1][j1]
+    def _apply_move(self, new_state, i, j, direction):
+        if direction == 'up':
+            new_state[i][j], new_state[i - 1][j] = new_state[i - 1][j], new_state[i][j]
+        elif direction == 'down':
+            new_state[i][j], new_state[i + 1][j] = new_state[i + 1][j], new_state[i][j]
+        elif direction == 'left':
+            new_state[i][j], new_state[i][j - 1] = new_state[i][j - 1], new_state[i][j]
+        elif direction == 'right':
+            new_state[i][j], new_state[i][j + 1] = new_state[i][j + 1], new_state[i][j]
 
     def get_possible_moves(self, state):
         moves = []
@@ -53,7 +49,7 @@ class EightPuzzle:
             current_state, path = open_list.pop(0)
             closed_list.append(current_state)
 
-            if current_state == self.goal_state:
+            if current_state == self.GOAL_STATE:
                 return path
 
             for move in self.get_possible_moves(current_state):

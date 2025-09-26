@@ -11,12 +11,12 @@ class MovieBookingSystem:
             'price': price,
             'start_time': self._parse_time(start_time),
             'end_time': self._parse_time(end_time),
-            'seats': self._initialize_seats(n)
+            'seats': np.zeros((n, n))
         }
         self.movies.append(movie)
 
     def book_ticket(self, name, seats_to_book):
-        movie = self._find_movie_by_name(name)
+        movie = self._find_movie(name)
         if not movie:
             return "Movie not found."
         
@@ -31,10 +31,7 @@ class MovieBookingSystem:
     def _parse_time(self, time_str):
         return datetime.strptime(time_str, '%H:%M')
 
-    def _initialize_seats(self, n):
-        return np.zeros((n, n))
-
-    def _find_movie_by_name(self, name):
+    def _find_movie(self, name):
         for movie in self.movies:
             if movie['name'] == name:
                 return movie

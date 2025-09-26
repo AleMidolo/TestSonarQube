@@ -26,17 +26,14 @@ class FitnessTracker:
         else:
             return 0  # normal
 
-    def calculate_calorie_intake(self):
-        BMR = self.calculate_BMR()
-        return self.calculate_calorie_based_on_condition(BMR)
-
     def calculate_BMR(self):
         if self.sex == "male":
             return 10 * self.weight + 6.25 * self.height - 5 * self.age + 5
         else:
             return 10 * self.weight + 6.25 * self.height - 5 * self.age - 161
 
-    def calculate_calorie_based_on_condition(self, BMR):
+    def calculate_calorie_intake(self):
+        BMR = self.calculate_BMR()
         condition = self.condition_judge()
         if condition == 1:
             return BMR * 1.2  # Sedentary lifestyle

@@ -45,15 +45,15 @@ class PageUtil:
 
     def search(self, keyword):
         results = self.perform_search(keyword)
-        return self.build_search_info(keyword, results)
+        num_results = len(results)
+        num_pages = (num_results + self.page_size - 1) // self.page_size
+
+        return self.build_search_info(keyword, num_results, num_pages, results)
 
     def perform_search(self, keyword):
         return [item for item in self.data if keyword in str(item)]
 
-    def build_search_info(self, keyword, results):
-        num_results = len(results)
-        num_pages = (num_results + self.page_size - 1) // self.page_size
-
+    def build_search_info(self, keyword, num_results, num_pages, results):
         return {
             "keyword": keyword,
             "total_results": num_results,

@@ -1,6 +1,6 @@
 class PushBoxGame:
-    def __init__(self, map):
-        self.map = map
+    def __init__(self, game_map):
+        self.map = game_map
         self.player_row = 0
         self.player_col = 0
         self.targets = []
@@ -35,7 +35,7 @@ class PushBoxGame:
         return sum(1 for box in self.boxes if box in self.targets)
 
     def move(self, direction):
-        new_player_row, new_player_col = self._calculate_new_player_position(direction)
+        new_player_row, new_player_col = self._calculate_new_position(direction)
 
         if self._is_move_valid(new_player_row, new_player_col):
             if (new_player_row, new_player_col) in self.boxes:
@@ -45,7 +45,7 @@ class PushBoxGame:
 
         return self.check_win()
 
-    def _calculate_new_player_position(self, direction):
+    def _calculate_new_position(self, direction):
         new_player_row = self.player_row
         new_player_col = self.player_col
 

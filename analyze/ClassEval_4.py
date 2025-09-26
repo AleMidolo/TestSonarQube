@@ -51,7 +51,7 @@ class AssessmentSystem:
     def _find_top_student(self):
         top_student = None
         top_gpa = 0
-        for name, student in self.students.items():
+        for name in self.students:
             gpa = self.get_gpa(name)
             if gpa is not None and gpa > top_gpa:
                 top_gpa = gpa

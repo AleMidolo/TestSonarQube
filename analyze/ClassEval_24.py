@@ -24,5 +24,8 @@ class ComplexCalculator:
 
     @staticmethod
     def _calculate(c1, c2, operation):
-        real = operation(c1.real, c2.real, c1.imag, c2.imag)
-        return complex(real[0], real[1])
+        real = c1.real
+        imaginary = c1.imag
+        real2 = c2.real
+        imaginary2 = c2.imag
+        return complex(*operation(real, real2, imaginary, imaginary2))

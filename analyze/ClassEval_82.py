@@ -10,6 +10,12 @@ class StockPortfolioTracker:
         else:
             self.portfolio.append(stock)
 
+    def find_stock(self, stock_name):
+        for pf in self.portfolio:
+            if pf['name'] == stock_name:
+                return pf
+        return None
+
     def remove_stock(self, stock):
         existing_stock = self.find_stock(stock['name'])
         if existing_stock and existing_stock['quantity'] >= stock['quantity']:
@@ -26,6 +32,9 @@ class StockPortfolioTracker:
         self.cash_balance -= stock['price'] * stock['quantity']
         return True
 
+    def is_purchase_exceeding_cash(self, stock):
+        return stock['price'] * stock['quantity'] > self.cash_balance
+
     def sell_stock(self, stock):
         if not self.remove_stock(stock):
             return False
@@ -36,6 +45,9 @@ class StockPortfolioTracker:
         total_value = self.cash_balance + self.calculate_stocks_value()
         return total_value
 
+    def calculate_stocks_value(self):
+        return sum(stock['price'] * stock['quantity'] for stock in self.portfolio)
+
     def get_portfolio_summary(self):
         summary = [{"name": stock["name"], "value": self.get_stock_value(stock)} for stock in self.portfolio]
         portfolio_value = self.calculate_portfolio_value()
@@ -43,12 +55,3 @@ class StockPortfolioTracker:
 
     def get_stock_value(self, stock):
         return stock['price'] * stock['quantity']
-
-    def find_stock(self, stock_name):
-        return next((pf for pf in self.portfolio if pf['name'] == stock_name), None)
-
-    def is_purchase_exceeding_cash(self, stock):
-        return stock['price'] * stock['quantity'] > self.cash_balance
-
-    def calculate_stocks_value(self):
-        return sum(stock['price'] * stock['quantity'] for stock in self.portfolio)

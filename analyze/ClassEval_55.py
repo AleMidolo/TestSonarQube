@@ -33,4 +33,8 @@ class Manacher:
         return max_length, start
 
     def extract_palindrome(self, new_input_string, start, max_length):
-        return ''.join(i for i in new_input_string[start - max_length:start + max_length + 1] if i != "|")
+        output_string = ""
+        for i in new_input_string[start - max_length:start + max_length + 1]:
+            if i != "|":
+                output_string += i
+        return output_string

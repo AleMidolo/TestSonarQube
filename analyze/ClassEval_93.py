@@ -13,10 +13,10 @@ class VectorUtil:
         norm = np.linalg.norm(vector_1)
         all_norms = np.linalg.norm(vectors_all, axis=1)
         dot_products = dot(vectors_all, vector_1)
-        return VectorUtil._calculate_similarities(norm, all_norms, dot_products)
+        return VectorUtil._calculate_similarities(dot_products, norm, all_norms)
 
     @staticmethod
-    def _calculate_similarities(norm, all_norms, dot_products):
+    def _calculate_similarities(dot_products, norm, all_norms):
         return dot_products / (norm * all_norms)
 
     @staticmethod
@@ -37,11 +37,11 @@ class VectorUtil:
             count_list.append(count)
 
         a = np.array(count_list)
-        a = VectorUtil._smooth_idf(total_num, a)
+        a = VectorUtil._smooth_idf(a, total_num)
         return VectorUtil._create_idf_dict(a, index_2_key_map)
 
     @staticmethod
-    def _smooth_idf(total_num, count_array):
+    def _smooth_idf(count_array, total_num):
         return np.log((total_num + 1) / (count_array + 1))
 
     @staticmethod

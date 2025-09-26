@@ -8,26 +8,22 @@ class KappaCalculator:
         dataMat = np.mat(testData)
         P0 = KappaCalculator.calculate_P0(dataMat, k)
         Pe = KappaCalculator.calculate_Pe(dataMat)
-        cohens_coefficient = KappaCalculator.calculate_cohens_coefficient(P0, Pe)
+        cohens_coefficient = (P0 - Pe) / (1 - Pe)
         return cohens_coefficient
 
     @staticmethod
     def calculate_P0(dataMat, k):
         P0 = 0.0
         for i in range(k):
-            P0 += dataMat[i, i] * 1.0
-        return float(P0)
+            P0 += dataMat[i, i]
+        return P0 / np.sum(dataMat)
 
     @staticmethod
     def calculate_Pe(dataMat):
         xsum = np.sum(dataMat, axis=1)
         ysum = np.sum(dataMat, axis=0)
         total_sum = np.sum(dataMat)
-        return float(ysum * xsum) / total_sum / total_sum
-
-    @staticmethod
-    def calculate_cohens_coefficient(P0, Pe):
-        return float((P0 - Pe) / (1 - Pe))
+        return float(ysum * xsum) / (total_sum ** 2)
 
     @staticmethod
     def fleiss_kappa(testData, N, k, n):
@@ -44,13 +40,13 @@ class KappaCalculator:
         for i in range(N):
             temp = KappaCalculator.calculate_temp(dataMat, i, k, n)
             P0 += temp
-        return 1.0 * P0 / N
+        return P0 / N
 
     @staticmethod
     def calculate_temp(dataMat, i, k, n):
         temp = 0.0
         for j in range(k):
-            temp += 1.0 * dataMat[i, j] ** 2
+            temp += dataMat[i, j] ** 2
         temp -= n
         return temp / ((n - 1) * n)
 
@@ -60,4 +56,4 @@ class KappaCalculator:
         ysum = np.sum(dataMat, axis=0)
         for i in range(k):
             ysum[0, i] = (ysum[0, i] / total_sum) ** 2
-        return ysum * np.ones((k, 1)) * 1.0
+        return ysum * np.ones((k, 1))

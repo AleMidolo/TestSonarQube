@@ -12,7 +12,6 @@ class Words2Numbers:
 
         self.numwords["and"] = (1, 0)
         self._initialize_numwords()
-
         self.ordinal_words = {'first': 1, 'second': 2, 'third': 3, 'fifth': 5, 'eighth': 8, 'ninth': 9, 'twelfth': 12}
         self.ordinal_endings = [('ieth', 'y'), ('th', '')]
 
@@ -74,12 +73,10 @@ class Words2Numbers:
     def is_valid_input(self, textnum):
         textnum = textnum.replace('-', ' ')
         for word in textnum.split():
-            if not self._is_valid_word(word):
-                return False
+            if word in self.ordinal_words:
+                continue
+            else:
+                word = self._replace_ordinal_ending(word)
+                if word not in self.numwords:
+                    return False
         return True
-
-    def _is_valid_word(self, word):
-        if word in self.ordinal_words:
-            return True
-        word = self._replace_ordinal_ending(word)
-        return word in self.numwords

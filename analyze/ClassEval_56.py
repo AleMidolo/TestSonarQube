@@ -7,9 +7,9 @@ class MetricsCalculator:
 
     def update(self, predicted_labels, true_labels):
         for predicted, true in zip(predicted_labels, true_labels):
-            self._update_metrics(predicted, true)
+            self._update_counts(predicted, true)
 
-    def _update_metrics(self, predicted, true):
+    def _update_counts(self, predicted, true):
         if predicted == 1 and true == 1:
             self.true_positives += 1
         elif predicted == 1 and true == 0:

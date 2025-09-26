@@ -24,9 +24,9 @@ class BoyerMooreSearch:
             if mismatch_index == -1:
                 positions.append(i)
             else:
-                i = self.update_index(i, mismatch_index)
+                i = self.update_position(i, mismatch_index)
         return positions
 
-    def update_index(self, current_index, mismatch_index):
+    def update_position(self, currentPos, mismatch_index):
         match_index = self.match_in_pattern(self.text[mismatch_index])
-        return (mismatch_index - match_index)
+        return mismatch_index - match_index
