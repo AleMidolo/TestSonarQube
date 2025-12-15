@@ -1,3 +1,5 @@
+import random
+
 class TwentyFourPointGame: 
     def __init__(self) -> None:
         self.nums = []
@@ -67,5 +69,4 @@ class TwentyFourPointGame:
         >>> game = TwentyFourPointGame()
         >>> game.get_my_cards()
         """
-        self._generate_cards()
         return self.nums

@@ -1,5 +1,3 @@
-import itertools
-
 class ArrangementCalculator: 
     def __init__(self, datas):
         """
@@ -17,7 +15,9 @@ class ArrangementCalculator:
         :return: int, the count of arrangements.
         >>> ArrangementCalculator.count(5, 3)
         60
+    
         """
+    
         if m is None or n == m:
             return ArrangementCalculator.factorial(n)
         else:
@@ -26,12 +26,14 @@ class ArrangementCalculator:
     @staticmethod
     def count_all(n):
         """
-        Counts the total number of all possible arrangements by choosing at least 1 item and at most n items from n items.
-        :param n: int, the total number of items.
-        :return: int, the count of all arrangements.
-        >>> ArrangementCalculator.count_all(4)
-        64
-        """
+            Counts the total number of all possible arrangements by choosing at least 1 item and at most n items from n items.
+            :param n: int, the total number of items.
+            :return: int, the count of all arrangements.
+            >>> ArrangementCalculator.count_all(4)
+            64
+    
+            """
+    
         total = 0
         for i in range(1, n + 1):
             total += ArrangementCalculator.count(n, i)
@@ -44,7 +46,9 @@ class ArrangementCalculator:
         >>> ac = ArrangementCalculator([1, 2, 3])
         >>> ac.select_all()
         [[1], [2], [3], [1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2], [1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
+    
         """
+    
         result = []
         for i in range(1, len(self.datas) + 1):
             result.extend(self.select(i))
@@ -53,12 +57,14 @@ class ArrangementCalculator:
     @staticmethod
     def factorial(n):
         """
-        Calculates the factorial of a given number.
-        :param n: int, the number to calculate the factorial.
-        :return: int, the factorial of the given number.
-        >>> ArrangementCalculator.factorial(4)
-        24
-        """
+            Calculates the factorial of a given number.
+            :param n: int, the number to calculate the factorial.
+            :return: int, the factorial of the given number.
+            >>> ArrangementCalculator.factorial(4)
+            24
+    
+            """
+    
         result = 1
         for i in range(2, n + 1):
             result *= i
@@ -73,7 +79,8 @@ class ArrangementCalculator:
         >>> ac = ArrangementCalculator([1, 2, 3, 4])
         >>> ac.select(2)
         [[1, 2], [1, 3], [1, 4], [2, 1], [2, 3], [2, 4], [3, 1], [3, 2], [3, 4], [4, 1], [4, 2], [4, 3]]
+
         """
         if m is None:
             m = len(self.datas)
-        return [list(p) for p in itertools.permutations(self.datas, m)]
+        return list(itertools.permutations(self.datas, m))

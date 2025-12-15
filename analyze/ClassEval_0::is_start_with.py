@@ -70,4 +70,5 @@ class AccessGatewayFilter:
         >>> filter.is_start_with('/api/data')
         True
         """
-        return request_uri.startswith(('/api', '/login'))
+        prefixes = ["/api", "/login"]
+        return any(request_uri.startswith(prefix) for prefix in prefixes)

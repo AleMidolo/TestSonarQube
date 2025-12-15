@@ -21,12 +21,11 @@ class MinesweeperGame:
         >>> minesweeper_game.generate_mine_sweeper_map()
         [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
         """
-    
         arr = [[0 for row in range(self.n)] for column in range(self.n)]
         for num in range(self.k):
             x = random.randint(0, self.n-1)
             y = random.randint(0, self.n-1)
-            while arr[y][x] == 'X':  # Ensure we don't place a mine on an existing mine
+            while arr[y][x] == 'X':  # Ensure we don't place a mine on an already occupied cell
                 x = random.randint(0, self.n-1)
                 y = random.randint(0, self.n-1)
             arr[y][x] = 'X'
@@ -44,7 +43,6 @@ class MinesweeperGame:
         >>> minesweeper_game.generate_playerMap()
         [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
         """
-    
         arr = [['-' for row in range(self.n)] for column in range(self.n)]
         return arr
     
@@ -60,7 +58,6 @@ class MinesweeperGame:
         >>> minesweeper_game.sweep(1, 1)
         [['-', '-', '-'], ['-', 1, '-'], ['-', '-', '-']]
         """
-    
         if (self.minesweeper_map[x][y] == 'X'):
             return False
         else:

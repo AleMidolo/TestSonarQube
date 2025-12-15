@@ -10,9 +10,7 @@ class AccessGatewayFilter:
         >>> filter = AccessGatewayFilter()
         >>> filter.filter({'path': '/login', 'method': 'POST'})
         True
-    
         """
-    
         request_uri = request['path']
         method = request['method']
     
@@ -37,9 +35,7 @@ class AccessGatewayFilter:
         >>> filter = AccessGatewayFilter()
         >>> filter.is_start_with('/api/data')
         True
-    
         """
-    
         start_with = ["/api", '/login']
         for s in start_with:
             if request_uri.startswith(s):
@@ -54,9 +50,7 @@ class AccessGatewayFilter:
         >>> filter = AccessGatewayFilter()
         >>> filter.get_jwt_user({'headers': {'Authorization': {'user': {'name': 'user1'}, 'jwt': 'user1'+str(datetime.date.today())}}})
         {'user': {'name': 'user1'}
-    
         """
-    
         token = request['headers']['Authorization']
         user = token['user']
         if token['jwt'].startswith(user['name']):
@@ -74,6 +68,5 @@ class AccessGatewayFilter:
         >>> filter = AccessGatewayFilter()
         >>> user = {'name': 'user1', 'address': '127.0.0.1'}
         >>> filter.set_current_user_info_and_log(user)
-
         """
         logging.info(f"User info set: {user}")

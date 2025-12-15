@@ -72,8 +72,7 @@ class ArrangementCalculator:
             result *= i
         return result
 
-    @staticmethod
-    def count(n, m=None):
+def count(n, m=None):
         """
         n आइटम में से m आइटम चुनकर व्यवस्थाओं की संख्या गिनता है (परम्यूटेशन)।
         यदि m प्रदान नहीं किया गया है या n, m के बराबर है, तो factorial(n) लौटाता है।

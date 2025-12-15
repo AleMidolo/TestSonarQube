@@ -62,6 +62,6 @@ class JSONProcessor:
         if data == 0 or remove_key not in data:
             return 0
         
-        del data[remove_key]
+        data.pop(remove_key)
         self.write_json(data, file_path)
         return 1

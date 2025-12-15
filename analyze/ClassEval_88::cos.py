@@ -81,4 +81,4 @@ class TriCalculator:
         0.5
         """
         x = x / 180 * pi
-        return self.taylor(x * 180 / pi, 50)  # Using Taylor expansion for cosine
+        return round(self.taylor(x * 180 / pi, 50), 10)

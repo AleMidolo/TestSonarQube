@@ -9,51 +9,35 @@ def rail_fence_decipher(self, encrypted_text, rails):
     'Hello, World!'
     """
     
-    # Create a matrix to hold the characters
-    rail = [['\n' for i in range(len(encrypted_text))]
-            for j in range(rails)]
+    if rails <= 0:
+        return ""
     
-    dir_down = None
+    # Create a list to hold the characters in the rail fence pattern
+    rail = [['\n' for _ in range(len(encrypted_text))] for _ in range(rails)]
+    
+    # Fill the rail matrix
+    direction_down = False
     row, col = 0, 0
     
-    # Mark the positions of the characters in the rail matrix
-    for i in range(len(encrypted_text)):
+    for char in encrypted_text:
         if row == 0:
-            dir_down = True
+            direction_down = True
         if row == rails - 1:
-            dir_down = False
+            direction_down = False
         
-        rail[row][col] = '*'
+        rail[row][col] = char
         col += 1
         
-        if dir_down:
+        if direction_down:
             row += 1
         else:
             row -= 1
     
-    index = 0
-    for i in range(rails):
-        for j in range(len(encrypted_text)):
-            if (rail[i][j] == '*' and index < len(encrypted_text)):
-                rail[i][j] = encrypted_text[index]
-                index += 1
-    
+    # Read the characters from the rail matrix
     result = []
-    row, col = 0, 0
-    
-    for i in range(len(encrypted_text)):
-        if row == 0:
-            dir_down = True
-        if row == rails - 1:
-            dir_down = False
-        
-        if rail[row][col] != '\n':
-            result.append(rail[row][col])
-            col += 1
-        
-        if dir_down:
-            row += 1
-        else:
-            row -= 1
+    for r in range(rails):
+        for c in range(len(encrypted_text)):
+            if rail[r][c] != '\n':
+                result.append(rail[r][c])
     
     return ''.join(result)

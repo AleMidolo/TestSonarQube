@@ -49,4 +49,4 @@ class NLPDataProcessor2:
         word_count = Counter(flat_list)
         # Sort by frequency and get the top 5
         sorted_word_count = dict(sorted(word_count.items(), key=lambda item: item[1], reverse=True))
-        return dict(list(sorted_word_count.items())[:5])
+        return sorted_word_count

@@ -102,9 +102,6 @@ class NumberWordFormatter:
         """
         s = s.zfill(3)
         if s[0] != "0":
-            result = self.NUMBER[int(s[0])] + " HUNDRED"
-            if s[1:] != "00":
-                result += " AND " + self.trans_two(s[1:])
-            return result
+            return self.NUMBER[int(s[0])] + " HUNDRED" + (" AND " + self.trans_two(s[1:]) if s[1:] != "00" else "")
         else:
             return self.trans_two(s[1:])
