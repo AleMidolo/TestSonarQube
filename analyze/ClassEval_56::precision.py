@@ -18,6 +18,7 @@ class MetricsCalculator:
         >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])
         (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)
         """
+    
         for predicted, true in zip(predicted_labels, true_labels):
             if predicted == 1 and true == 1:
                 self.true_positives += 1
@@ -38,6 +39,7 @@ class MetricsCalculator:
         >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])
         0.5
         """
+    
         self.update(predicted_labels, true_labels)
         if self.true_positives + self.false_negatives == 0:
             return 0.0
@@ -53,6 +55,7 @@ class MetricsCalculator:
         >>> mc.f1_score([1, 1, 0, 0], [1, 0, 0, 1])
         0.5
         """
+    
         self.update(predicted_labels, true_labels)
         precision = self.precision(predicted_labels, true_labels)
         recall = self.recall(predicted_labels, true_labels)
@@ -67,9 +70,10 @@ class MetricsCalculator:
         :param true_labels: list, true labels
         :return: float
         >>> mc = MetricsCalculator()
-        >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])
+        >>>mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])
         0.5
         """
+    
         self.update(predicted_labels, true_labels)
         total = self.true_positives + self.true_negatives + \
             self.false_positives + self.false_negatives

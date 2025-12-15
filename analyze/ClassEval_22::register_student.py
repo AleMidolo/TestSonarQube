@@ -83,5 +83,6 @@ class ClassRegistrationSystem:
         """
         if any(s["name"] == student["name"] for s in self.students):
             return 0
-        self.students.append(student)
-        return 1
+        else:
+            self.students.append(student)
+            return 1

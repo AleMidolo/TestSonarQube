@@ -32,6 +32,7 @@ class CookiesUtil:
         try:
             with open(self.cookies_file, 'r') as file:
                 cookies_data = json.load(file)
+                self.cookies = cookies_data
                 return cookies_data
         except FileNotFoundError:
             return {}
@@ -48,6 +49,6 @@ class CookiesUtil:
         try:
             with open(self.cookies_file, 'w') as file:
                 json.dump(self.cookies, file)
-            return True
+                return True
         except Exception:
             return False

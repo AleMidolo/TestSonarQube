@@ -76,8 +76,9 @@ class Words2Numbers:
         >>> w2n.is_valid_input("thirty-two")
         False
         """
-        words = textnum.replace('-', ' ').split()
-        for word in words:
-            if word not in self.numwords and word not in self.ordinal_words:
+        valid_words = set(self.numwords.keys()).union(set(self.ordinal_words.keys()))
+        textnum = textnum.replace('-', ' ')
+        for word in textnum.split():
+            if word not in valid_words:
                 return False
         return True

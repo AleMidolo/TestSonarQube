@@ -70,7 +70,7 @@ class Words2Numbers:
                     current *= scale
                     result += current
                     current = 0
-            elif word == "and":
-                continue
+            elif word in self.ordinal_words:
+                result += self.ordinal_words[word]
         
         return str(result + current)

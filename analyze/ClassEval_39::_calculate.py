@@ -14,11 +14,14 @@ class ExpressionCalculator:
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.calculate("2 + 3 * 4")
         14.0
+    
         """
+    
         self.prepare(self.transform(expression))
+    
         result_stack = deque()
         self.postfix_stack.reverse()
-
+    
         while self.postfix_stack:
             current_op = self.postfix_stack.pop()
             if not self.is_operator(current_op):
@@ -27,30 +30,36 @@ class ExpressionCalculator:
             else:
                 second_value = result_stack.pop()
                 first_value = result_stack.pop()
+    
                 first_value = first_value.replace("~", "-")
                 second_value = second_value.replace("~", "-")
-                temp_result = self._calculate(first_value, second_value, current_op)
+    
+                temp_result = self._calculate(
+                        first_value, second_value, current_op)
                 result_stack.append(str(temp_result))
-
+    
         return float(eval("*".join(result_stack)))
-
+    
     def prepare(self, expression):
         """
         Prepare the infix expression for conversion to postfix notation
         :param expression: string, the infix expression to be prepared
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.prepare("2+3*4")
+    
         expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
         """
+    
         op_stack = deque([','])
         arr = list(expression)
         current_index = 0
         count = 0
-
+    
         for i, current_op in enumerate(arr):
             if self.is_operator(current_op):
                 if count > 0:
-                    self.postfix_stack.append("".join(arr[current_index: current_index + count]))
+                    self.postfix_stack.append(
+                            "".join(arr[current_index: current_index + count]))
                 peek_op = op_stack[-1]
                 if current_op == ')':
                     while op_stack[-1] != '(':
@@ -61,18 +70,19 @@ class ExpressionCalculator:
                         self.postfix_stack.append(str(op_stack.pop()))
                         peek_op = op_stack[-1]
                     op_stack.append(current_op)
-
+    
                 count = 0
                 current_index = i + 1
             else:
                 count += 1
-
+    
         if count > 1 or (count == 1 and not self.is_operator(arr[current_index])):
-            self.postfix_stack.append("".join(arr[current_index: current_index + count]))
-
+            self.postfix_stack.append(
+                    "".join(arr[current_index: current_index + count]))
+    
         while op_stack[-1] != ',':
             self.postfix_stack.append(str(op_stack.pop()))
-
+    
     @staticmethod
     def is_operator(c):
         """
@@ -82,9 +92,11 @@ class ExpressionCalculator:
             >>> expression_calculator = ExpressionCalculator()
             >>> expression_calculator.is_operator("+")
             True
-        """
+    
+            """
+    
         return c in {'+', '-', '*', '\/', '(', ')', '%'}
-
+    
     def compare(self, cur, peek):
         """
         Compare the precedence of two operators
@@ -94,13 +106,15 @@ class ExpressionCalculator:
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.compare("+", "-")
         True
+    
         """
+    
         if cur == '%':
             cur = '\/'
         if peek == '%':
             peek = '\/'
         return self.operat_priority[ord(peek) - 40] >= self.operat_priority[ord(cur) - 40]
-
+    
     @staticmethod
     def transform(expression):
         """
@@ -110,7 +124,9 @@ class ExpressionCalculator:
             >>> expression_calculator = ExpressionCalculator()
             >>> expression_calculator.transform("2 + 3 * 4")
             "2+3*4"
-        """
+    
+            """
+    
         expression = re.sub(r"\\s+", "", expression)
         expression = re.sub(r"=$", "", expression)
         arr = list(expression)
@@ -129,7 +145,7 @@ class ExpressionCalculator:
             return "0" + "".join(arr)
         else:
             return "".join(arr)
-
+    
     @staticmethod
     def _calculate(first_value, second_value, current_op):
         """
@@ -141,6 +157,7 @@ class ExpressionCalculator:
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator._calculate("2", "3", "+")
         5.0
+
         """
         if current_op == '+':
             return Decimal(first_value) + Decimal(second_value)

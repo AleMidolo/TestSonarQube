@@ -99,12 +99,6 @@ class BigNumCalculator:
                 borrow = 0
         
         # Remove leading zeros and reverse the result
-        while result and result[-1] == '0':
-            result.pop()
+        result = ''.join(result[::-1]).lstrip('0')
         
-        if not result:
-            return '0'
-        
-        result.reverse()
-        
-        return ('-' if negative else '') + ''.join(result)
+        return '-' + result if negative else result

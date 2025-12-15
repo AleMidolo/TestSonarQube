@@ -38,7 +38,7 @@ class BankAccount:
         """
         self.withdraw(amount)
         other_account.deposit(amount)
-
+    
     def deposit(self, amount):
         """
         Deposita un certo importo nel conto, aumentando il saldo del conto, restituisce il saldo attuale del conto.

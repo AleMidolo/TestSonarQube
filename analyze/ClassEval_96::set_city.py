@@ -19,6 +19,7 @@ class WeatherSystem:
         >>> weatherSystem.query(weather_list)
         (27, 'sunny')
         """
+    
         self.weather_list = weather_list
         if self.city not in weather_list:
             return False
@@ -42,6 +43,7 @@ class WeatherSystem:
         >>> weatherSystem.celsius_to_fahrenheit()
         80.6
         """
+    
         return (self.temperature * 9/5) + 32
     
     def fahrenheit_to_celsius(self):
@@ -53,8 +55,9 @@ class WeatherSystem:
         >>> weatherSystem.fahrenheit_to_celsius()
         26.999999999999996
         """
-        return (self.temperature - 32) * 5/9
     
+        return (self.temperature - 32) * 5/9
+
     def set_city(self, city):
         """
         Imposta la città del sistema meteorologico.

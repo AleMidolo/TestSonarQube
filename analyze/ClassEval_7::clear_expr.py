@@ -35,7 +35,7 @@ class BalancedBrackets:
 
     def clear_expr(self):
         """
-        Pulisce l'espressione da tutti i caratteri che non sono parentesi.
+        Cleans the expression of all characters that are not brackets.
         >>> b = BalancedBrackets("a(b)c")
         >>> b.clear_expr()
         >>> b.expr

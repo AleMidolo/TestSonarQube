@@ -28,6 +28,7 @@ class MovieBookingSystem:
             [0., 0., 0.],
             [0., 0., 0.]])}]
         """
+    
         movie = {
             'name': name,
             'price': price,
@@ -36,7 +37,7 @@ class MovieBookingSystem:
             'seats': np.zeros((n, n))
         }
         self.movies.append(movie)
-
+    
     def available_movies(self, start_time, end_time):
         """
         Get a list of available movies within the specified time range
@@ -47,16 +48,17 @@ class MovieBookingSystem:
         >>> system.available_movies('12:00', '22:00')
         ['Batman']
         """
+    
         start_time = datetime.strptime(start_time, '%H:%M')
         end_time = datetime.strptime(end_time, '%H:%M')
-
+    
         available_movies = []
         for movie in self.movies:
             if start_time <= movie['start_time'] and movie['end_time'] <= end_time:
                 available_movies.append(movie['name'])
-
+    
         return available_movies
-
+    
     def book_ticket(self, name, seats_to_book):
         """
         Prenota i biglietti per un film. Cambia il valore dei posti in self.movies se la prenotazione ha successo.
@@ -76,8 +78,8 @@ class MovieBookingSystem:
             if movie['name'].lower() == name.lower():
                 for seat in seats_to_book:
                     row, col = seat
-                    if movie['seats'][row, col] == 0:
-                        movie['seats'][row, col] = 1  # Mark seat as booked
+                    if movie['seats'][row][col] == 0:
+                        movie['seats'][row][col] = 1  # Mark seat as booked
                     else:
                         return 'Prenotazione fallita.'
                 return 'Prenotazione riuscita.'

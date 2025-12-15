@@ -54,9 +54,9 @@ class KappaCalculator:
         >>> KappaCalculator.kappa([[2, 1, 1], [1, 2, 1], [1, 1, 2]], 3)
         0.25
         """
-        n = len(testData)
-        p0 = np.sum(np.array(testData) == np.max(testData, axis=1, keepdims=True), axis=1) / n
-        p1 = np.sum(np.array(testData) / np.sum(testData, axis=1, keepdims=True), axis=0) ** 2
-        p1 = np.sum(p1)
-        kappa_value = (p0 - p1) / (1 - p1)
+        n = np.sum(testData)
+        p = np.sum(testData, axis=0) / n
+        p0 = np.sum(np.diag(testData)) / n
+        pe = np.sum(p ** 2)
+        kappa_value = (p0 - pe) / (1 - pe)
         return kappa_value

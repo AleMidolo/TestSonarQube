@@ -62,7 +62,7 @@ class DecryptionUtils:
         >>> d.rail_fence_decipher('Hoo!el,Wrdl l', 3)
         'Hello, World!'
         """
-        # Create the rail fence structure
+        # Create the rail fence pattern
         rail = [['\n' for i in range(len(encrypted_text))]
                 for j in range(rails)]
         dir_down = None
@@ -92,14 +92,14 @@ class DecryptionUtils:
         result = []
         row, col = 0, 0
 
-        for char in encrypted_text:
+        for i in range(len(encrypted_text)):
             if row == 0:
                 dir_down = True
             if row == rails - 1:
                 dir_down = False
 
-            if (rail[row][col] == '*'):
-                result.append(char)
+            if rail[row][col] != '*':
+                result.append(rail[row][col])
                 col += 1
 
             if dir_down:

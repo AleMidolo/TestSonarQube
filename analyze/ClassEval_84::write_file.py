@@ -1,5 +1,3 @@
-import json
-
 class TextFileProcessor: 
     def __init__(self, file_path):
         """

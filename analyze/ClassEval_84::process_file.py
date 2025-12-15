@@ -8,7 +8,6 @@ def process_file(self):
     >>> textFileProcessor.process_file()
     'nametestage'
     """
-    
     content = self.read_file()
     filtered_content = ''.join(filter(str.isalpha, content))
     self.write_file(filtered_content)

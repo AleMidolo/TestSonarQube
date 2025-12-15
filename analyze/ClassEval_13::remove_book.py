@@ -54,7 +54,7 @@ class BookManagement:
         if quantity <= 0:
             raise ValueError("Quantity must be greater than zero.")
         if self.inventory[title] < quantity:
-            raise ValueError("Not enough quantity to remove.")
+            raise ValueError("Not enough copies to remove.")
         
         self.inventory[title] -= quantity
         if self.inventory[title] == 0:

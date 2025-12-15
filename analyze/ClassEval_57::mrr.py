@@ -91,11 +91,10 @@ class MetricsCalculator2:
         """
         if type(data) != list and type(data) != tuple:
             raise Exception(
-                "the input must be a tuple([0,...,1,...],int) or a iteration of list of tuple")
+                    "the input must be a tuple([0,...,1,...],int) or a iteration of list of tuple")
 
         if len(data) == 0:
             return 0.0, [0.0]
-
         if type(data) == tuple:
             (sub_list, total_num) = data
             sub_list = np.array(sub_list)
@@ -106,7 +105,7 @@ class MetricsCalculator2:
                 if len(rank) == 0:
                     return 0.0, [0.0]
                 else:
-                    mrr_value = 1.0 / (rank[0] + 1)
+                    mrr_value = np.mean(1.0 / (rank + 1))
                     return mrr_value, [mrr_value]
 
         if type(data) == list:
@@ -121,7 +120,7 @@ class MetricsCalculator2:
                     if len(rank) == 0:
                         mrr_value = 0.0
                     else:
-                        mrr_value = 1.0 / (rank[0] + 1)
+                        mrr_value = np.mean(1.0 / (rank + 1))
 
                 separate_result.append(mrr_value)
             return np.mean(separate_result), separate_result

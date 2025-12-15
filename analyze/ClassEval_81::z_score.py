@@ -14,4 +14,5 @@ def z_score(data):
     std_dev = Statistics3.standard_deviation(data)
     if std_dev is None:
         return None
-    return [(x - mean_value) / std_dev for x in data]
+    z_scores = [(x - mean_value) / std_dev for x in data]
+    return z_scores

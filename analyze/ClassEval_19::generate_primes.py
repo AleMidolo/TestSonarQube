@@ -25,6 +25,9 @@ class ChandrasekharSieve:
         >>> cs.generate_primes()
         [2, 3, 5, 7, 11, 13, 17, 19]
         """
+        if self.n < 2:
+            return []
+        
         sieve = [True] * (self.n + 1)
         sieve[0] = sieve[1] = False  # 0 and 1 are not prime numbers
         for start in range(2, int(self.n**0.5) + 1):

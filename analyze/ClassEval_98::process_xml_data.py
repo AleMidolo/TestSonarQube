@@ -10,14 +10,11 @@ def process_xml_data(self, file_name):
         True
         """
         try:
-            # Example modification: append a new element to the root
-            new_element = ET.Element('new_item')
-            new_element.text = 'new_value'
-            self.root.append(new_element)
-
+            # Example modification: change the text of all 'item' elements
+            for item in self.find_element('item'):
+                item.text = item.text.upper()  # Modify the text to uppercase
+            
             # Write the modified XML to the new file
-            tree = ET.ElementTree(self.root)
-            tree.write(file_name)
-            return True
+            return self.write_xml(file_name)
         except:
             return False
