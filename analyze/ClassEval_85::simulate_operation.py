@@ -87,7 +87,7 @@ class Thermostat:
             else:
                 self.auto_set_mode()
                 return False
-    
+
     def simulate_operation(self):
         """
         模拟恒温器的操作。它将自动启动 auto_set_mode 方法以设置操作模式，
@@ -102,11 +102,11 @@ class Thermostat:
         
         while abs(self.current_temperature - self.target_temperature) > 0.1:
             if self.mode == 'heat':
-                self.current_temperature += 1  # Heating up
+                self.current_temperature += 1  # Simulate heating
             else:
-                self.current_temperature -= 1  # Cooling down
+                self.current_temperature -= 1  # Simulate cooling
             
-            time.sleep(0.1)  # Simulate time passing
             time_taken += 1
+            time.sleep(0.1)  # Simulate time passing
         
         return time_taken

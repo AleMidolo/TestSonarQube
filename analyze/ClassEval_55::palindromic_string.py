@@ -30,30 +30,30 @@ class Manacher:
         >>> manacher.palindromic_string()
         'ababa'
         """
-        # Transform the input string to avoid even/odd length issues
-        transformed = '|'.join(f'^{self.input_string}$')
-        n = len(transformed)
-        p = [0] * n
-        center = right = 0
+        # Transform the input string to avoid even-length palindrome issues
+        transformed_string = '|'.join(f'^{self.input_string}$')
+        n = len(transformed_string)
+        L = [0] * n
+        C = R = 0
         
         for i in range(1, n - 1):
-            mirror = 2 * center - i
+            mirror = 2 * C - i
             
-            if i < right:
-                p[i] = min(right - i, p[mirror])
+            if R > i:
+                L[i] = min(R - i, L[mirror])
             
             # Attempt to expand the palindrome centered at i
-            while transformed[i + p[i] + 1] == transformed[i - p[i] - 1]:
-                p[i] += 1
+            while transformed_string[i + L[i] + 1] == transformed_string[i - L[i] - 1]:
+                L[i] += 1
             
-            # If the palindrome expanded past the right edge, adjust the center and right edge
-            if i + p[i] > right:
-                center, right = i, i + p[i]
+            # If the palindrome expanded past R, adjust the center and R
+            if i + L[i] > R:
+                C, R = i, i + L[i]
         
-        # Find the maximum element in p
-        max_length = max(p)
-        center_index = p.index(max_length)
+        # Find the maximum length palindrome
+        max_len = max(L)
+        center_index = L.index(max_len)
         
         # Extract the longest palindromic substring
-        start = (center_index - max_length) // 2
-        return self.input_string[start:start + max_length]
+        start = (center_index - max_len) // 2
+        return self.input_string[start:start + max_len]

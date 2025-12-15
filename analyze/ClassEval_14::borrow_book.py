@@ -5,7 +5,6 @@ def borrow_book(self, book_id):
     >>> book_db = BookManagementDB("test.db")
     >>> book_db.borrow_book(1)
     """
-    
     self.cursor.execute('''
             UPDATE books SET available = 0 WHERE id = ?
         ''', (book_id,))

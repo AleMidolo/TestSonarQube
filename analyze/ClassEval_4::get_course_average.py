@@ -22,8 +22,8 @@ class AssessmentSystem:
         """
         Add score of specific course for student in self.students
         :param name: str, student name
-        :param cource: str, cource name
-        :param score: int, cource score
+        :param course: str, course name
+        :param score: int, course score
         >>> system.add_student('student 1', 3, 'SE')
         >>> system.add_course_score('student 1', 'math', 94)
         >>> system.students
@@ -51,8 +51,8 @@ class AssessmentSystem:
     
     def get_all_students_with_fail_course(self):
         """
-        Get all students who have any score blow 60
-        :return: list of str ,student name
+        Get all students who have any score below 60
+        :return: list of str, student name
         >>> system.add_course_score('student 1', 'Society', 59)
         >>> system.get_all_students_with_fail_course()
         ['student 1']

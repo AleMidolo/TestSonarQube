@@ -11,18 +11,18 @@
         5.0
 
         """
-        first_value = Decimal(first_value)
-        second_value = Decimal(second_value)
+        first_num = Decimal(first_value)
+        second_num = Decimal(second_value)
 
         if current_op == '+':
-            return first_value + second_value
+            return first_num + second_num
         elif current_op == '-':
-            return first_value - second_value
+            return first_num - second_num
         elif current_op == '*':
-            return first_value * second_value
+            return first_num * second_num
         elif current_op == '\/':
-            return first_value / second_value
+            return first_num / second_num
         elif current_op == '%':
-            return first_value % second_value
+            return first_num % second_num
         else:
             raise ValueError(f"Unknown operator: {current_op}")

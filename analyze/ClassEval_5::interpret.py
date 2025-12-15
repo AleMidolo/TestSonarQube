@@ -6,7 +6,6 @@ class AutomaticGuitarSimulator:
         """
         self.play_text = text
 
-
     def display(self, key, value):
         """
         Print out chord and play tune with following format: Normal Guitar Playing -- Chord: %s, Play Tune: %s
@@ -16,10 +15,8 @@ class AutomaticGuitarSimulator:
         >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
         >>> context.display("C", "53231323")
         Normal Guitar Playing -- Chord: C, Play Tune: 53231323
-    
         """
         return "Normal Guitar Playing -- Chord: %s, Play Tune: %s" % (key, value)
-    
 
     def interpret(self, display=False):
         """
@@ -29,21 +26,18 @@ class AutomaticGuitarSimulator:
         >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
         >>> play_list = context.interpret(display = False)
         [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]
-
         """
         if not self.play_text.strip():
             return []
         
-        chords_and_tunes = []
-        parts = self.play_text.split()
+        chords = self.play_text.split()
+        result = []
         
-        for part in parts:
-            chord = ''.join(filter(str.isalpha, part))
-            tune = ''.join(filter(str.isdigit, part))
-            chords_and_tunes.append({'Chord': chord, 'Tune': tune})
+        for chord in chords:
+            key = ''.join(filter(str.isalpha, chord))
+            value = ''.join(filter(str.isdigit, chord))
+            result.append({'Chord': key, 'Tune': value})
+            if display:
+                print(self.display(key, value))
         
-        if display:
-            for item in chords_and_tunes:
-                print(self.display(item['Chord'], item['Tune']))
-        
-        return chords_and_tunes
+        return result

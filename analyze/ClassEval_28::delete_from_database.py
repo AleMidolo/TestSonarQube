@@ -5,11 +5,12 @@ def delete_from_database(self, table_name, name):
         :param name: str，要匹配以进行删除的名称。
         >>> db.delete_from_database('user', 'John')
         """
+        
         conn = sqlite3.connect(self.database_name)
         cursor = conn.cursor()
-
+        
         delete_query = f"DELETE FROM {table_name} WHERE name = ?"
         cursor.execute(delete_query, (name,))
-
+        
         conn.commit()
         conn.close()

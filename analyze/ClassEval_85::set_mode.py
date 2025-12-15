@@ -9,4 +9,4 @@ def set_mode(self, mode):
         if mode in ['heat', 'cool']:
             self.mode = mode
         else:
-            raise ValueError("Mode must be either 'heat' or 'cool'")
+            raise ValueError("Mode must be 'heat' or 'cool'.")

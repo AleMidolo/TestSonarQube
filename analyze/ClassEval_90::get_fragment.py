@@ -62,7 +62,7 @@ class URLHandler:
         query_start = self.url.find("?")
         fragment_start = self.url.find("#")
         if query_start != -1:
-            query_string = self.url[query_start + 1:fragment_start] if fragment_start != -1 else self.url[query_start + 1:]
+            query_string = self.url[query_start + 1:fragment_start if fragment_start != -1 else None]
             params = {}
             if len(query_string) > 0:
                 param_pairs = query_string.split("&")

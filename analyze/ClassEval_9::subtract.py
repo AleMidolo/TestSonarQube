@@ -10,10 +10,11 @@ class BigNumCalculator:
         >>> bigNum.add("12345678901234567890", "98765432109876543210")
         '111111111011111111100'
         """
+    
         max_length = max(len(num1), len(num2))
         num1 = num1.zfill(max_length)
         num2 = num2.zfill(max_length)
-
+    
         carry = 0
         result = []
         for i in range(max_length - 1, -1, -1):
@@ -21,12 +22,12 @@ class BigNumCalculator:
             carry = digit_sum // 10
             digit = digit_sum % 10
             result.insert(0, str(digit))
-
+    
         if carry > 0:
             result.insert(0, str(carry))
-
+    
         return ''.join(result)
-
+    
     @staticmethod
     def multiply(num1, num2):
         """
@@ -38,6 +39,7 @@ class BigNumCalculator:
             >>> bigNum.multiply("12345678901234567890", "98765432109876543210")
             '1219326311370217952237463801111263526900'
         """
+    
         len1, len2 = len(num1), len(num2)
         result = [0] * (len1 + len2)
 
@@ -55,7 +57,7 @@ class BigNumCalculator:
             start += 1
 
         return ''.join(map(str, result[start:]))
-
+    
     @staticmethod
     def subtract(num1, num2):
         """
@@ -76,7 +78,7 @@ class BigNumCalculator:
         if num1 < num2:
             num1, num2 = num2, num1
             negative = True
-
+        
         max_length = max(len(num1), len(num2))
         num1 = num1.zfill(max_length)
         num2 = num2.zfill(max_length)

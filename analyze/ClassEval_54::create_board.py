@@ -145,8 +145,5 @@ class MahjongConnect:
         total_tiles = self.BOARD_SIZE[0] * self.BOARD_SIZE[1]
         icons_to_place = (self.ICONS * (total_tiles // num_icons)) + self.ICONS[:total_tiles % num_icons]
         random.shuffle(icons_to_place)
-        board = []
-        for i in range(self.BOARD_SIZE[0]):
-            row = icons_to_place[i * self.BOARD_SIZE[1]:(i + 1) * self.BOARD_SIZE[1]]
-            board.append(row)
+        board = [icons_to_place[i:i + self.BOARD_SIZE[1]] for i in range(0, total_tiles, self.BOARD_SIZE[1])]
         return board

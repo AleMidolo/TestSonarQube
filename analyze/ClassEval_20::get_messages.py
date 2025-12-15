@@ -71,7 +71,7 @@ class Chat:
         self.users[sender].append(message_info)
         self.users[receiver].append(message_info)
         return True
-
+    
     def get_messages(self, username):
         """
         获取用户在聊天中的所有消息。
@@ -84,6 +84,6 @@ class Chat:
         >>> chat.get_messages('Mary')
         []
         """
-        if username not in self.users:
-            return []
-        return self.users[username]
+        if username in self.users:
+            return self.users[username]
+        return []

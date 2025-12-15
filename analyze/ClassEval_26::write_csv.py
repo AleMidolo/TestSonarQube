@@ -57,5 +57,5 @@ class CSVProcessor:
                 writer = csv.writer(file)
                 writer.writerows(data)
             return 1
-        except Exception:
+        except Exception as e:
             return 0

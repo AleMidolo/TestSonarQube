@@ -15,7 +15,7 @@ def compare(self, cur, peek):
         """
         获取运算符的优先级索引
         :param operator: 字符串，运算符
-        :return: int, 运算符的优先级索引
+        :return: int，运算符的优先级索引
         """
         operators = {'+': 0, '-': 1, '*': 2, '\/': 3, '%': 4, '(': 5, ')': 6}
         return operators.get(operator, -1)

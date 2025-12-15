@@ -27,11 +27,11 @@ class LongestWord:
         >>> longestWord.find_longest_word('I am a student.')
         'a'
         """
-        # Remove punctuation and split the sentence into words
-        words = re.findall(r'\b\w+\b', sentence)
-        
         if not self.word_list:
             return ''
+        
+        # Remove punctuation and split the sentence into words
+        words = re.findall(r'\b\w+\b', sentence)
         
         longest = ''
         for word in words:

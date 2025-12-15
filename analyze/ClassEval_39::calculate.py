@@ -11,9 +11,9 @@ def calculate(self, expression):
         self.postfix_stack.clear()
         expression = self.transform(expression)
         self.prepare(expression)
-        
+
         op_stack = deque()
-        
+
         for token in self.postfix_stack:
             if not self.is_operator(token):
                 op_stack.append(token)
@@ -22,5 +22,5 @@ def calculate(self, expression):
                 first_value = op_stack.pop()
                 result = self._calculate(first_value, second_value, token)
                 op_stack.append(result)
-        
+
         return float(op_stack.pop())

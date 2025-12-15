@@ -74,5 +74,6 @@ class TriCalculator:
         x = x / 180 * pi
         result = 0
         for i in range(n):
-            result += ((-1) ** i) * (x ** (2 * i)) / self.factorial(2 * i)
+            term = ((-1) ** i) * (x ** (2 * i)) / self.factorial(2 * i)
+            result += term
         return result

@@ -32,8 +32,17 @@ class HtmlUtil:
         :param html_text: string, html text
         :return: the list of code
         >>>htmlutil = HtmlUtil()
-        >>>htmlutil.extract_code_from_html_text('<html><body><h1>Title</h1><p>This is a paragraph.</p><pre>print(\'Hello, world!\')</pre><p>Another paragraph.</p><pre><code>for i in range(5):\n    print(i)</code></pre></body></html>')
-        ["print('Hello, world!')", 'for i in range(5):\n    print(i)']
+        >>>htmlutil.extract_code_from_html_text(<html>
+        >>> <body>
+        >>>    <h1>Title</h1>
+        >>>    <p>This is a paragraph.</p>
+        >>>    <pre>print('Hello, world!')</pre>
+        >>>    <p>Another paragraph.</p>
+        >>>    <pre><code>for i in range(5):
+        >>>    print(i)</code></pre>
+        >>>    </body>
+        >>>    </html>)
+        ["print('Hello, world!')", 'for i in range(5):\n                print(i)']
         """
         text_with_code_tag = self.format_line_html_text(html_text)
 
@@ -57,8 +66,21 @@ class HtmlUtil:
         :param html_text:string
         :return:string
         >>>htmlutil = HtmlUtil()
-        >>>htmlutil.format_line_html_text('<html><body><h1>标题</h1><p>这是一个段落。</p><pre>print(\'Hello, world!\')</pre><p>另一个段落。</p><pre><code>for i in range(5):\n    print(i)</code></pre></body></html>')
-        '标题\n这是一个段落。\n-CODE-\n另一个段落。\n-CODE-\n'
+        >>>htmlutil.format_line_html_text(<html>
+        >>> <body>
+        >>>    <h1>标题</h1>
+        >>>    <p>这是一个段落。</p>
+        >>>    <pre>print('Hello, world!')</pre>
+        >>>    <p>另一个段落。</p>
+        >>>    <pre><code>for i in range(5):
+        >>>    print(i)</code></pre>
+        >>>    </body>
+        >>>    </html>)
+        标题
+        这是一个段落。
+        -CODE-
+        另一个段落。
+        -CODE-
         """
         soup = BeautifulSoup(html_text, 'lxml')
         for code in soup.find_all(['pre', 'code']):

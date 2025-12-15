@@ -24,10 +24,10 @@ def move(self, direction):
     True
     """
     direction_map = {
-        'w': (-1, 0),
-        's': (1, 0),
-        'a': (0, -1),
-        'd': (0, 1)
+        'w': (-1, 0),  # up
+        's': (1, 0),   # down
+        'a': (0, -1),  # left
+        'd': (0, 1)    # right
     }
     
     if direction not in direction_map:
@@ -45,19 +45,20 @@ def move(self, direction):
         self.player_row = new_player_row
         self.player_col = new_player_col
     elif self.map[new_player_row][new_player_col] == 'X':
-        # Check if the box can be moved
-        box_new_row = new_player_row + delta_row
-        box_new_col = new_player_col + delta_col
+        # Check if the box can be pushed
+        new_box_row = new_player_row + delta_row
+        new_box_col = new_player_col + delta_col
         
-        if self.map[box_new_row][box_new_col] in [' ', 'G']:
-            # Move the box
+        if self.map[new_box_row][new_box_col] == ' ' or self.map[new_box_row][new_box_col] == 'G':
+            # Move box
             self.boxes.remove((new_player_row, new_player_col))
-            if self.map[box_new_row][box_new_col] == 'G':
-                self.boxes.append((box_new_row, box_new_col))
-            else:
-                self.boxes.append((box_new_row, box_new_col))
-            # Move the player
+            self.boxes.append((new_box_row, new_box_col))
             self.player_row = new_player_row
             self.player_col = new_player_col
-
+            if self.map[new_box_row][new_box_col] == 'G':
+                self.map[new_box_row][new_box_col] = 'X'
+            else:
+                self.map[new_box_row][new_box_col] = 'X'
+            self.map[new_player_row][new_player_col] = ' '
+    
     return self.check_win()

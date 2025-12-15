@@ -66,8 +66,8 @@ class AssessmentSystem:
     
     def get_top_student(self):
         """
-        Calculate every student's gpa with get_gpa method, and find the student with highest gpa
-        :return: str, name of student whose gpa is highest
+        Calculate every student's GPA with get_gpa method, and find the student with highest GPA
+        :return: str, name of student whose GPA is highest
         >>> system.add_student('student 1', 3, 'SE')
         >>> system.add_student('student 2', 2, 'SE')
         >>> system.add_course_score('student 1', 'Computer Network', 92)
@@ -86,18 +86,18 @@ class AssessmentSystem:
     
     def get_gpa(self, name):
         """
-        获取一个学生的平均成绩。
-        :param name: 字符串, 学生姓名
-        :return: 如果姓名在学生列表中并且该学生有课程成绩，返回平均成绩（浮点数），
-                    否则返回 None
+        Get a student's average score.
+        :param name: str, student name
+        :return: If the name is in the student list and the student has course scores, return the average score (float),
+                 otherwise return None
         >>> system.add_student('student 1', 3, 'SE')
         >>> system.add_course_score('student 1', 'math', 94)
         >>> system.add_course_score('student 1', 'Computer Network', 92)
         >>> system.get_gpa('student 1')
         93.0
         """
-        if name in self.students:
-            courses = self.students[name]['courses']
-            if courses:
-                return sum(courses.values()) / len(courses)
+        if name in self.students and self.students[name]['courses']:
+            total_score = sum(self.students[name]['courses'].values())
+            count = len(self.students[name]['courses'])
+            return total_score / count
         return None

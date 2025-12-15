@@ -2,7 +2,7 @@ class RPGCharacter:
     def __init__(self, name, hp, attack_power, defense, level=1):
         """
         Initialize an RPG character object.
-        :param name: str, the name of the character.
+        :param name: strm, the name of the character.
         :param hp: int, The health points of the character.
         :param attack_power: int, the attack power of the character.
         :param defense: int, the defense points of the character.
@@ -18,7 +18,7 @@ class RPGCharacter:
     def attack(self, other_character):
         """
         Attack another character. The damage caused needs to offset the defense value.
-        :param other_character: RPGCharacter, The character being attacked.
+        :param other_character: str, The character being attacked.
         >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
         >>> player_2 = RPGCharacter('player 2', 100, 7, 2)
         >>> player_1.attack(player_2)
@@ -27,7 +27,7 @@ class RPGCharacter:
         """
         damage = max(self.attack_power - other_character.defense, 1)
         other_character.hp -= damage
-
+    
     def heal(self):
         """
         Heal the character with 10 hp and the max hp is 100.
@@ -40,11 +40,11 @@ class RPGCharacter:
         if self.hp > 100:
             self.hp = 100
         return self.hp
-
+    
     def gain_exp(self, amount):
         """
         Gain experience points for the character and level_up when the exp has reached the values that is 100 times the current level
-        The experience that overflows should be used to calculate the next leve up until exhausts
+        The experience that overflows should be used to calculate the next leve up untill exhausts
         :param amount: int, the amount of experience points to gain.
         >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
         >>> player_1.gain_exp(1100)
@@ -60,7 +60,7 @@ class RPGCharacter:
             else:
                 self.exp += amount
                 amount = 0
-
+    
     def is_alive(self):
         """
         Check if player is alive.
@@ -70,7 +70,7 @@ class RPGCharacter:
         True
         """
         return self.hp > 0
-
+    
     def level_up(self):
         """
         升级角色并将经验值重置为零，生命值增加20点，攻击力和防御力各增加5点。

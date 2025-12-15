@@ -91,7 +91,6 @@ class DecryptionUtils:
 
         result = []
         row, col = 0, 0
-
         for i in range(len(encrypted_text)):
             if row == 0:
                 dir_down = True
