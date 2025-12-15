@@ -1,3 +1,7 @@
+import numpy as np
+from gensim import matutils
+from numpy import dot, array
+
 class VectorUtil: 
 
     def similarity(vector_1, vector_2):
@@ -44,9 +48,7 @@ class VectorUtil:
             {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}
             """
         index_2_key_map = {}
-    
         index = 0
-
         count_list = []
         for key, count in number_dict.items():
             index_2_key_map[index] = key

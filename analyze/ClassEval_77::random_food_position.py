@@ -27,25 +27,24 @@ class Snake:
         self.positions = [(51, 51), (50, 50)]
         self.score = 10
         """
-    
         cur = self.positions[0]
         x, y = direction
-    
+
         new = (
             ((cur[0] + (x * self.BLOCK_SIZE)) % self.SCREEN_WIDTH),
             (cur[1] + (y * self.BLOCK_SIZE)) % self.SCREEN_HEIGHT,
         )
-    
+
         if new == self.food_position:
             self.eat_food()
-    
+
         if len(self.positions) > 2 and new in self.positions[2:]:
             self.reset()
         else:
             self.positions.insert(0, new)
             if len(self.positions) > self.length:
                 self.positions.pop()
-    
+
     def reset(self):
         """
         Reset the snake to its initial state. Set the length to 1, the snake head position to ((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)), the score to 0, and randomly generate new food position.
@@ -57,12 +56,11 @@ class Snake:
         self.score = 0
         self.random_food_position()
         """
-    
         self.length = 1
         self.positions = [((self.SCREEN_WIDTH / 2), (self.SCREEN_HEIGHT / 2))]
         self.score = 0
         self.random_food_position()
-    
+
     def eat_food(self):
         """
         Increase the length of the snake by 1 and increase the score by 100. Randomly generate a new food position, but
@@ -74,11 +72,10 @@ class Snake:
         self.length = 2
         self.score = 10
         """
-    
         self.length += 1
         self.score += 100
         self.random_food_position()
-    
+
     def random_food_position(self):
         """
         随机生成一个新的食物位置，但不要放在蛇身上。

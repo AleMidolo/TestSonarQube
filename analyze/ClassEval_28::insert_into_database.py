@@ -10,10 +10,10 @@ def insert_into_database(self, table_name, data):
         """
         conn = sqlite3.connect(self.database_name)
         cursor = conn.cursor()
-
+        
         for entry in data:
             insert_query = f"INSERT INTO {table_name} ({', '.join(entry.keys())}) VALUES ({', '.join(['?' for _ in entry.values()])})"
             cursor.execute(insert_query, tuple(entry.values()))
-
+        
         conn.commit()
         conn.close()

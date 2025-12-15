@@ -101,4 +101,4 @@ class BigNumCalculator:
                 result[i + j] += product // 10
 
         result_str = ''.join(map(str, result)).lstrip('0')
-        return result_str if result_str else "0"
+        return result_str if result_str else '0'

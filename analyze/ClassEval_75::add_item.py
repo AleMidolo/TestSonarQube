@@ -33,7 +33,7 @@ class ShoppingCart:
         {"apple":{"price":1, "quantity":2}}
         """
         return self.items
-    
+
     def total_price(self) -> float:
         """
         Calculate the total price of all items in the shopping list, which is the quantity of each item multiplied by the price
@@ -45,7 +45,7 @@ class ShoppingCart:
         11.0
         """
         return sum([item['quantity'] * item['price'] for item in self.items.values()])
-    
+
     def add_item(self, item, price, quantity=1):
         """
         将商品信息添加到购物清单中，包括价格和数量。默认数量为1

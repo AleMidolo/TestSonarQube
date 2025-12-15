@@ -45,7 +45,6 @@ class ArrangementCalculator:
             result.append(list(permutation))
         return result
 
-
     def select_all(self):
         """
         Generates a list of all arrangements by selecting at least 1 item and at most the number of internal datas.
@@ -59,7 +58,6 @@ class ArrangementCalculator:
         for i in range(1, len(self.datas) + 1):
             result.extend(self.select(i))
         return result
-
 
     @staticmethod
     def factorial(n):
@@ -86,7 +84,4 @@ class ArrangementCalculator:
         64
 
         """
-        total_count = 0
-        for m in range(1, n + 1):
-            total_count += ArrangementCalculator.count(n, m)
-        return total_count
+        return sum(ArrangementCalculator.count(n, m) for m in range(1, n + 1))

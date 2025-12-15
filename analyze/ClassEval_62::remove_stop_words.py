@@ -31,9 +31,9 @@ class NLPDataProcessor:
         >>> NLPDataProcessor.process(['This is a test.'])
         [['This', 'is', 'test.']]
         """
-        words_list = []
+        words_without_stop_words = []
         for string in string_list:
             words = string.split()
             filtered_words = [word for word in words if word.lower() not in stop_word_list]
-            words_list.append(filtered_words)
-        return words_list
+            words_without_stop_words.append(filtered_words)
+        return words_without_stop_words

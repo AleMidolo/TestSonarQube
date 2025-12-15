@@ -1,12 +1,13 @@
 def update_currency_rate(self, currency, new_rate):
     """
-    更新某种货币的汇率
-    :param currency: 字符串
-    :param new_rate: 浮点数
-    :return: 如果成功，返回 None；如果不成功，返回 False
+    Update the exchange rate of a given currency
+    :param currency: string, the currency type to be updated
+    :param new_rate: float, the new exchange rate for this currency
+    :return: If successful, returns None; if unsuccessful, returns False
     >>> cc = CurrencyConverter()
     >>> cc.update_currency_rate('CNY', 7.18)
-    self.rates['CNY'] = 7.18
+    >>> cc.rates['CNY']
+    7.18
     """
     
     if currency not in self.rates:

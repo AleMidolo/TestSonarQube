@@ -35,7 +35,7 @@ class BankAccount:
         """
         self.withdraw(amount)
         other_account.deposit(amount)
-    
+
     def withdraw(self, amount):
         """
         从账户中提取一定金额，减少账户余额，返回当前账户余额。

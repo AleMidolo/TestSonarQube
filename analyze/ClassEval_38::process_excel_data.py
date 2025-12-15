@@ -15,7 +15,7 @@ def process_excel_data(self, N, save_file_name):
     for i in range(len(data)):
         if len(data[i]) > N:
             data[i] = list(data[i])  # Convert tuple to list to modify
-            data[i][N] = data[i][N].upper()  # Convert the specified column to uppercase
+            data[i][N] = data[i][N].upper()  # Convert specified column to uppercase
             data[i] = tuple(data[i])  # Convert back to tuple
     
     success = self.write_excel(data, save_file_name)

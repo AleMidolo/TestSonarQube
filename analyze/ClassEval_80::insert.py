@@ -66,5 +66,4 @@ class SQLQueryBuilder:
         """
         columns = ', '.join(data.keys())
         values = ', '.join(f"'{v}'" for v in data.values())
-        query = f"INSERT INTO {table} ({columns}) VALUES ({values})"
-        return query
+        return f"INSERT INTO {table} ({columns}) VALUES ({values})"

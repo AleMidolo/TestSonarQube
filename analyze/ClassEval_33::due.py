@@ -77,7 +77,7 @@ class DiscountStrategy:
     
             """
         return order.total() * 0.07 if len({item['product'] for item in order.cart}) >= 10 else 0
-
+    
     def due(self):
         """
         计算应用折扣后的最终支付金额。
@@ -90,5 +90,6 @@ class DiscountStrategy:
 
         """
         total = self.total()
-        discount = self.promotion(self) if self.promotion else 0
-        return total - discount
+        if self.promotion:
+            total -= self.promotion(self)
+        return total

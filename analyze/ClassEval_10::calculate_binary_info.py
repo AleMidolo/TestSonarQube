@@ -58,11 +58,11 @@ class BinaryDataProcessor:
         if total_length == 0:
             return {'Zeroes': 0.0, 'Ones': 0.0, 'Bit length': 0}
 
-        zeroes = self.binary_string.count('0')
-        ones = self.binary_string.count('1')
-        
+        count_zeroes = self.binary_string.count('0')
+        count_ones = self.binary_string.count('1')
+
         return {
-            'Zeroes': zeroes / total_length,
-            'Ones': ones / total_length,
+            'Zeroes': count_zeroes / total_length,
+            'Ones': count_ones / total_length,
             'Bit length': total_length
         }

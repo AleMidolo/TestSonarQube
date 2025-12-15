@@ -41,7 +41,7 @@ class BookManagement:
         if title not in self.inventory:
             return 0
         return self.inventory[title]
-
+    
     def remove_book(self, title, quantity):
         """
         从按书名排序的库存中移除一本或多本书籍。
@@ -53,6 +53,7 @@ class BookManagement:
             raise ValueError("Book not found in inventory.")
         if quantity > self.inventory[title]:
             raise ValueError("Not enough quantity to remove.")
+        
         self.inventory[title] -= quantity
         if self.inventory[title] == 0:
             del self.inventory[title]

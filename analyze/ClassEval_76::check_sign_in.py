@@ -84,6 +84,6 @@ class SignInSystem:
         >>> signInSystem.check_sign_in("jack")
         True
         """
-        if username not in self.users or not self.users[username]:
-            return False
-        return True
+        if username in self.users and self.users[username]:
+            return True
+        return False

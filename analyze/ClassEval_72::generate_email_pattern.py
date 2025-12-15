@@ -12,10 +12,7 @@ class RegexUtils:
         True
         """
         ans = re.match(pattern, text)
-        if ans:
-            return True
-        else:
-            return False
+        return ans is not None
     
     def findall(self, pattern, text):
         """

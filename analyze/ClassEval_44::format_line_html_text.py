@@ -62,7 +62,6 @@ class HtmlUtil:
         """
         soup = BeautifulSoup(html_text, 'lxml')
         for code in soup.find_all(['pre', 'code']):
-            code.insert_before(self.CODE_MARK)
-            code.insert_after('\n')
-            code.unwrap()
+            code.insert_before('\n' + self.CODE_MARK + '\n')
+            code.insert_after('\n' + self.CODE_MARK + '\n')
         return self.__format_line_feed(soup.get_text())
