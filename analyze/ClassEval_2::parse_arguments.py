@@ -79,22 +79,20 @@ class ArgumentParser:
         # Split the command string into parts
         parts = re.split(r'\s+', command_string)
         # Remove the script name
-        parts = parts[2:]  # Assuming the first two parts are 'python' and 'script.py'
+        parts = parts[2:]  # Assuming the first two parts are "python script.py"
         
         for part in parts:
             if '=' in part:
                 key, value = part.split('=', 1)
+                key = key.lstrip('-')
+                self.arguments[key] = self._convert_type(key, value)
             else:
-                key = part
-                value = True  # For flags
-            
-            # Normalize the key
-            key = key.lstrip('-')
-            # Convert the type if necessary
-            if key in self.types:
-                value = self._convert_type(key, value)
-            self.arguments[key] = value
-        
+                key = part.lstrip('-')
+                if key in self.types:
+                    self.arguments[key] = True  # Flag for options
+                else:
+                    self.arguments[key] = True  # Treat as a boolean flag
+
         # Check for missing required arguments
         missing_args = self.required - self.arguments.keys()
         if missing_args:

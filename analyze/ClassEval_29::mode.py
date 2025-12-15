@@ -41,6 +41,5 @@ class DataStatistics:
         [2, 3]
         """
         count = Counter(data)
-        max_freq = max(count.values())
-        modes = [key for key, freq in count.items() if freq == max_freq]
-        return modes
+        max_count = max(count.values())
+        return [key for key, value in count.items() if value == max_count]

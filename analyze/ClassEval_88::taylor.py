@@ -68,6 +68,7 @@ class TriCalculator:
         :param x: int
         :param n: int
         :return: float
+        >>> tricalculator = TriCalculator()
         >>> tricalculator.taylor(60, 50)
         0.5000000000000001
         """

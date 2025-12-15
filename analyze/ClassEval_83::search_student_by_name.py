@@ -13,7 +13,6 @@ def search_student_by_name(self, name):
         
         search_query = "SELECT * FROM students WHERE name = ?"
         cursor.execute(search_query, (name,))
-        
         results = cursor.fetchall()
         
         conn.close()

@@ -11,7 +11,9 @@ def validate_user_login(self, username, password):
         True
         """
         self.cursor.execute('''
-                SELECT * FROM users WHERE username = ? AND password = ?
-            ''', (username, password))
-        user = self.cursor.fetchone()
-        return user is not None
+                SELECT password FROM users WHERE username = ?
+            ''', (username,))
+        result = self.cursor.fetchone()
+        if result is None:
+            return False
+        return result[0] == password

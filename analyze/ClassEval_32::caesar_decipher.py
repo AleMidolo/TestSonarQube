@@ -85,9 +85,10 @@ class DecryptionUtils:
             if char.isalpha():
                 shift_amount = shift % 26
                 if char.islower():
-                    decrypted_text += chr((ord(char) - ord('a') - shift_amount) % 26 + ord('a'))
+                    decrypted_char = chr((ord(char) - ord('a') - shift_amount) % 26 + ord('a'))
                 else:
-                    decrypted_text += chr((ord(char) - ord('A') - shift_amount) % 26 + ord('A'))
+                    decrypted_char = chr((ord(char) - ord('A') - shift_amount) % 26 + ord('A'))
+                decrypted_text += decrypted_char
             else:
                 decrypted_text += char
         return decrypted_text

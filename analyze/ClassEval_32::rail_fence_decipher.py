@@ -69,8 +69,7 @@ class DecryptionUtils:
         dir_down = None
         row, col = 0, 0
         
-        # Mark the positions of the characters in the rail matrix
-        for char in encrypted_text:
+        for i in range(len(encrypted_text)):
             if row == 0:
                 dir_down = True
             if row == rails - 1:
@@ -87,7 +86,7 @@ class DecryptionUtils:
         index = 0
         for i in range(rails):
             for j in range(len(encrypted_text)):
-                if (rail[i][j] == '*' and index < len(encrypted_text)):
+                if ((rail[i][j] == '*') and (index < len(encrypted_text))):
                     rail[i][j] = encrypted_text[index]
                     index += 1
         

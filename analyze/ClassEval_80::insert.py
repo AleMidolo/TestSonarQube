@@ -64,6 +64,7 @@ class SQLQueryBuilder:
         >>> SQLQueryBuilder.insert('table1', {'name': 'Test', 'age': 14})
         "INSERT INTO table1 (name, age) VALUES ('Test', '14')"
         """
+        
         columns = ', '.join(data.keys())
         values = ', '.join(f"'{v}'" for v in data.values())
         query = f"INSERT INTO {table} ({columns}) VALUES ({values})"

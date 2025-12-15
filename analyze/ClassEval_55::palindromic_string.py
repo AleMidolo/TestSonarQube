@@ -45,15 +45,12 @@ class Manacher:
             while transformed_string[i + P[i] + 1] == transformed_string[i - P[i] - 1]:
                 P[i] += 1
 
-            # If the palindrome expanded past the right edge, adjust the center and right edge
+            # If the palindrome centered at i expands past right, adjust center and right
             if i + P[i] > right:
-                center = i
-                right = i + P[i]
+                center, right = i, i + P[i]
 
         # Find the maximum element in P
         max_length = max(P)
         center_index = P.index(max_length)
-
-        # Extract the longest palindromic substring
-        start = (center_index - max_length) // 2
+        start = (center_index - max_length) // 2  # Adjust for the transformed string
         return self.input_string[start:start + max_length]

@@ -13,7 +13,7 @@ def prepare(self, expression):
             c = expression[i]
             if c.isdigit() or c == '~':
                 num = c
-                while i + 1 < len(expression) and (expression[i + 1].isdigit() or expression[i + 1] == '.'):
+                while (i + 1 < len(expression) and (expression[i + 1].isdigit() or expression[i + 1] == '.')):
                     i += 1
                     num += expression[i]
                 self.postfix_stack.append(num)

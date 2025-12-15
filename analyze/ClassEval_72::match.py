@@ -116,4 +116,4 @@ class RegexUtils:
         >>> ru.match(r'\b\d{3}-\d{3}-\d{4}\b', "123-456-7890")
         True
         """
-        return bool(re.match(pattern, text))
+        return re.match(pattern, text) is not None

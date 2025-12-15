@@ -45,7 +45,7 @@ class ShoppingCart:
         11.0
         """
         return sum([item['quantity'] * item['price'] for item in self.items.values()])
-    
+
     def add_item(self, item, price, quantity=1):
         """
         Add item information to the shopping list items, including price and quantity. The default quantity is 1

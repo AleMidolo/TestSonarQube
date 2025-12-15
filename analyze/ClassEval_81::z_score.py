@@ -118,7 +118,7 @@ class Statistics3:
         mean_value = Statistics3.mean(data)
         variance = sum((x - mean_value) ** 2 for x in data) / (n - 1)
         return math.sqrt(variance)
-    
+
     @staticmethod
     def z_score(data):
         """
@@ -130,6 +130,7 @@ class Statistics3:
         [-1.161895003862225, -0.3872983346207417, 0.3872983346207417, 1.161895003862225]
 
         """
+        
         mean_value = Statistics3.mean(data)
         std_dev = Statistics3.standard_deviation(data)
         if std_dev is None:

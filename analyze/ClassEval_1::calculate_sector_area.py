@@ -7,4 +7,4 @@ def calculate_sector_area(self, angle):
         >>> areaCalculator.calculate_sector_area(math.pi)
         6.283185307179586
         """
-        return 0.5 * self.radius ** 2 * angle
+        return (angle / (2 * math.pi)) * self.calculate_circle_area()
