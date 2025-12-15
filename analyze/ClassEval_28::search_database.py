@@ -9,11 +9,10 @@ def search_database(self, table_name, name):
         """
         conn = sqlite3.connect(self.database_name)
         cursor = conn.cursor()
-        
+
         search_query = f"SELECT * FROM {table_name} WHERE name = ?"
         cursor.execute(search_query, (name,))
         results = cursor.fetchall()
-        
+
         conn.close()
-        
         return results if results else None

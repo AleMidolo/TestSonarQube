@@ -97,11 +97,10 @@ class Calculator:
         >>> calculator.precedence('^')
         3
         """
-        precedence_dict = {
-            '+': 1,
-            '-': 1,
-            '*': 2,
-            '/': 2,
-            '^': 3
-        }
-        return precedence_dict.get(operator, 0)
+        if operator == '^':
+            return 3
+        elif operator in '*/':
+            return 2
+        elif operator in '+-':
+            return 1
+        return 0

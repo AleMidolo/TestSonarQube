@@ -70,7 +70,7 @@ class Words2Numbers:
                     current *= scale
                     result += current
                     current = 0
-            else:
-                raise ValueError(f"Word '{word}' not recognized")
+            elif word == "and":
+                continue
         
         return str(result + current)

@@ -91,7 +91,9 @@ class EightPuzzle:
             if current_state == self.goal_state:
                 return path
 
-            for move_direction in self.get_possible_moves(current_state):
+            possible_moves = self.get_possible_moves(current_state)
+
+            for move_direction in possible_moves:
                 new_state = self.move(current_state, move_direction)
                 new_state_tuple = tuple(map(tuple, new_state))
 

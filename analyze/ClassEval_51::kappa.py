@@ -56,6 +56,6 @@ class KappaCalculator:
         n = len(testData)
         total = sum(sum(row) for row in testData)
         p0 = sum((sum(row) ** 2 for row in testData)) / (total ** 2)
-        pe = sum((sum(testData[i][j] for i in range(n)) ** 2 for j in range(k))) / (total ** 2)
+        pe = sum((sum(testData[:, j]) ** 2 for j in range(k))) / (total ** 2)
         kappa_value = (p0 - pe) / (1 - pe) if (1 - pe) != 0 else 0
         return kappa_value

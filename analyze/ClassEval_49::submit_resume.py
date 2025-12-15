@@ -14,12 +14,11 @@ class JobMarketplace:
         >>> jobMarketplace.post_job("Software Engineer", "ABC Company", ['requirement1', 'requirement2'])
         >>> jobMarketplace.job_listings
         [{'job_title': 'Software Engineer', 'company': 'ABC Company', 'requirements': ['requirement1', 'requirement2']}]
-    
         """
         job = {"job_title": job_title, "company": company,
                "requirements": requirements}
         self.job_listings.append(job)
-    
+
     def remove_job(self, job):
         """
         This function is used to remove positions,and remove the position information from the job_listings list.
@@ -30,10 +29,9 @@ class JobMarketplace:
         >>> jobMarketplace.remove_job(jobMarketplace.job_listings[0])
         >>> jobMarketplace.job_listings
         []
-    
         """
         self.job_listings.remove(job)
-    
+
     def withdraw_resume(self, resume):
         """
         This function is used to withdraw resumes,and remove the resume information from the resumes list.
@@ -44,10 +42,9 @@ class JobMarketplace:
         >>> jobMarketplace.withdraw_resume(jobMarketplace.resumes[0])
         >>> jobMarketplace.resumes
         []
-    
         """
         self.resumes.remove(resume)
-    
+
     def search_jobs(self, criteria):
         """
         This function is used to search for positions,and return the position information that meets the requirements.
@@ -57,14 +54,13 @@ class JobMarketplace:
         >>> jobMarketplace.job_listings = [{"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill1', 'skill2']}]
         >>> jobMarketplace.search_jobs("skill1")
         [{'job_title': 'Software Engineer', 'company': 'ABC Company', 'requirements': ['skill1', 'skill2']}]
-    
         """
         matching_jobs = []
         for job_listing in self.job_listings:
             if criteria.lower() in job_listing["job_title"].lower() or criteria.lower() in [r.lower() for r in job_listing["requirements"]]:
                 matching_jobs.append(job_listing)
         return matching_jobs
-    
+
     def get_job_applicants(self, job):
         """
         This function is used to obtain candidate information,and return the candidate information that meets the requirements by calling the matches_requirements function.
@@ -75,14 +71,13 @@ class JobMarketplace:
         >>> jobMarketplace.job_listings = [{"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill1', 'skill2']}]
         >>> jobMarketplace.get_job_applicants(jobMarketplace.job_listings[0])
         [{'name': 'Tom', 'skills': ['skill1', 'skill2'], 'experience': 'experience'}]
-    
         """
         applicants = []
         for resume in self.resumes:
             if self.matches_requirements(resume, job["requirements"]):
                 applicants.append(resume)
         return applicants
-    
+
     def submit_resume(self, name, skills, experience):
         """
         此函数用于提交简历，并将简历信息添加到简历列表中。
@@ -94,7 +89,6 @@ class JobMarketplace:
         >>> jobMarketplace.submit_resume("Tom", ['skill1', 'skill2'], "experience")
         >>> jobMarketplace.resumes
         [{'name': 'Tom', 'skills': ['skill1', 'skill2'], 'experience': 'experience'}]
-
         """
         resume = {"name": name, "skills": skills, "experience": experience}
         self.resumes.append(resume)

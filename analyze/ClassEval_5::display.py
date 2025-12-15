@@ -6,6 +6,7 @@ class AutomaticGuitarSimulator:
         """
         self.play_text = text
 
+
     def interpret(self, display=False):
         """
         Interpret the music score to be played
@@ -35,6 +36,7 @@ class AutomaticGuitarSimulator:
                 if display:
                     self.display(play_chord, play_value)
             return play_list
+    
 
     def display(self, key, value):
         """

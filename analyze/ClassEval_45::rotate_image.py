@@ -7,6 +7,5 @@ def rotate_image(self, degrees):
         >>> processor.image.size
         (4096, 3072)
         """
-        
         if self.image:
             self.image = self.image.rotate(degrees, expand=True)

@@ -71,4 +71,5 @@ class Classroom:
         """
         if not self.check_course_conflict(course):
             return
-        self.courses.append(course)
+        if course not in self.courses:
+            self.courses.append(course)

@@ -28,6 +28,7 @@ class MovieBookingSystem:
         >>> system.book_ticket('batman', [(0, 0)])
         'Movie not found.'
         """
+    
         for movie in self.movies:
             if movie['name'] == name:
                 for seat in seats_to_book:
@@ -48,6 +49,7 @@ class MovieBookingSystem:
         >>> system.available_movies('12:00', '22:00')
         ['Batman']
         """
+    
         start_time = datetime.strptime(start_time, '%H:%M')
         end_time = datetime.strptime(end_time, '%H:%M')
     

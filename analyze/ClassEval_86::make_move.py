@@ -43,6 +43,7 @@ class TicTacToe:
                 return False
         return True
     
+
     def make_move(self, row, col):
         """
         在棋盘上指定位置放置当前玩家的标记并切换标记。

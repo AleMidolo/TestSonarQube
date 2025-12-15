@@ -53,7 +53,6 @@ class BookManagement:
             raise ValueError("Book not found in inventory.")
         if quantity > self.inventory[title]:
             raise ValueError("Not enough quantity to remove.")
-        
         self.inventory[title] -= quantity
         if self.inventory[title] == 0:
             del self.inventory[title]

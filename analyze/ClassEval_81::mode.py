@@ -129,12 +129,8 @@ class Statistics3:
 
         """
         from collections import Counter
-        
         if not data:
             return []
-        
         count = Counter(data)
         max_count = max(count.values())
-        modes = [key for key, value in count.items() if value == max_count]
-        
-        return modes
+        return [num for num, cnt in count.items() if cnt == max_count]

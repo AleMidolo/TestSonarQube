@@ -1,3 +1,5 @@
+import re
+
 class SplitSentence: 
 
     def count_words(self, sentence):

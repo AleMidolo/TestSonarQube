@@ -36,14 +36,10 @@ class Manacher:
         center = right = 0
         
         for i in range(1, n - 1):
-            mirror = 2 * center - i
-            
-            if right > i:
-                P[i] = min(right - i, P[mirror])
-            
+            if i < right:
+                P[i] = min(right - i, P[2 * center - i])
             while transformed_string[i + P[i] + 1] == transformed_string[i - P[i] - 1]:
                 P[i] += 1
-            
             if i + P[i] > right:
                 center, right = i, i + P[i]
         

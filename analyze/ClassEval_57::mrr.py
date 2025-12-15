@@ -90,27 +90,37 @@ class MetricsCalculator2:
         """
         if type(data) != list and type(data) != tuple:
             raise Exception(
-                "the input must be a tuple([0,...,1,...],int) or a iteration of list of tuple")
+                    "the input must be a tuple([0,...,1,...],int) or a iteration of list of tuple")
 
         if len(data) == 0:
             return 0.0, [0.0]
-
+        
         if type(data) == tuple:
             (sub_list, total_num) = data
-            rank = np.where(np.array(sub_list) == 1)[0]
-            if len(rank) == 0:
+            sub_list = np.array(sub_list)
+            if total_num == 0:
                 return 0.0, [0.0]
             else:
-                mrr_value = 1.0 / (rank[0] + 1)
-                return mrr_value, [mrr_value]
+                first_correct_index = np.where(sub_list == 1)[0]
+                if len(first_correct_index) == 0:
+                    return 0.0, [0.0]
+                else:
+                    mrr_value = 1.0 / (first_correct_index[0] + 1)
+                    return mrr_value, [mrr_value]
 
         if type(data) == list:
-            mrr_values = []
+            separate_result = []
             for (sub_list, total_num) in data:
-                rank = np.where(np.array(sub_list) == 1)[0]
-                if len(rank) == 0:
+                sub_list = np.array(sub_list)
+
+                if total_num == 0:
                     mrr_value = 0.0
                 else:
-                    mrr_value = 1.0 / (rank[0] + 1)
-                mrr_values.append(mrr_value)
-            return np.mean(mrr_values), mrr_values
+                    first_correct_index = np.where(sub_list == 1)[0]
+                    if len(first_correct_index) == 0:
+                        mrr_value = 0.0
+                    else:
+                        mrr_value = 1.0 / (first_correct_index[0] + 1)
+
+                separate_result.append(mrr_value)
+            return np.mean(separate_result), separate_result

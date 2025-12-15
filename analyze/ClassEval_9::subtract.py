@@ -101,4 +101,7 @@ class BigNumCalculator:
         # Remove leading zeros
         result_str = ''.join(result).lstrip('0')
         
-        return ('-' + result_str) if negative else result_str or '0'
+        if negative:
+            return '-' + result_str
+        
+        return result_str if result_str else '0'

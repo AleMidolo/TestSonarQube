@@ -16,7 +16,7 @@ class NLPDataProcessor:
         :param string_list: a list of strings
         :param stop_word_list: a list of stop words
         :return: a list of words without stop words
-        >>> NLPDataProcessor.remove_stop_words(['This is a test.'], ['a', 'an', 'the'])
+        >>> NLPDataProcessor.process(['This is a test.'])
         [['This', 'is', 'test.']]
         """
         answer = []
@@ -28,8 +28,7 @@ class NLPDataProcessor:
             answer.append(string_split)
         return answer
     
-    @classmethod
-    def process(cls, string_list):
+    def process(self, string_list):
         """
         构建一个包含 'a', 'an', 'the' 的停用词列表，并从字符串列表中移除所有停用词。
         :param string_list: 字符串列表
@@ -37,5 +36,5 @@ class NLPDataProcessor:
         >>> NLPDataProcessor.process(['This is a test.'])
         [['This', 'is', 'test.']]
         """
-        stop_word_list = cls.construct_stop_word_list(cls)
-        return cls.remove_stop_words(cls, string_list, stop_word_list)
+        stop_word_list = self.construct_stop_word_list()
+        return self.remove_stop_words(string_list, stop_word_list)

@@ -15,11 +15,11 @@ def generate_mine_sweeper_map(self):
         while mines_placed < self.k:
             x = random.randint(0, self.n - 1)
             y = random.randint(0, self.n - 1)
-            if minesweeper_map[x][y] != 'X':  # Ensure we don't place a mine on an existing mine
+            if minesweeper_map[x][y] != 'X':  # Ensure we don't place a mine on an already occupied cell
                 minesweeper_map[x][y] = 'X'
                 mines_placed += 1
                 
-                # Update the surrounding numbers
+                # Update the surrounding cells
                 for i in range(max(0, x - 1), min(self.n, x + 2)):
                     for j in range(max(0, y - 1), min(self.n, y + 2)):
                         if minesweeper_map[i][j] != 'X':
