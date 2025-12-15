@@ -1,3 +1,5 @@
+import re
+
 class SplitSentence: 
 
     def count_words(self, sentence):
@@ -26,6 +28,7 @@ class SplitSentence:
             count = self.count_words(sentence)
             if count > max_count:
                 max_count = count
+    
         return max_count
     
     def split_sentences(self, sentences_string):

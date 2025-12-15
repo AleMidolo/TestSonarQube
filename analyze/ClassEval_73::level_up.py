@@ -86,4 +86,6 @@ class RPGCharacter:
             self.hp += 20
             self.attack_power += 5
             self.defense += 5
+            if self.hp > 100:
+                self.hp = 100
         return (self.level, self.hp, self.attack_power, self.defense)

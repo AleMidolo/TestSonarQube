@@ -11,37 +11,40 @@ def mrr(data):
     1.0, [1.0]
     0.75, [1.0, 0.5]
     """
+    
     if type(data) != list and type(data) != tuple:
         raise Exception(
-            "the input must be a tuple([0,...,1,...],int) or a iteration of list of tuple")
+                "the input must be a tuple([0,...,1,...],int) or a iteration of list of tuple")
 
     if len(data) == 0:
         return 0.0, [0.0]
-
+    
     if type(data) == tuple:
         (sub_list, total_num) = data
-        sub_list = np.array(sub_list)
         if total_num == 0:
             return 0.0, [0.0]
-        else:
-            rank_sum = 0
-            for idx, value in enumerate(sub_list):
-                if value == 1:
-                    rank_sum += 1 / (idx + 1)
-            mrr_value = rank_sum / total_num
-            return mrr_value, [mrr_value]
+        
+        rank_sum = 0
+        for idx, value in enumerate(sub_list):
+            if value == 1:
+                rank_sum += 1 / (idx + 1)
+        
+        mrr_value = rank_sum / total_num
+        return mrr_value, [mrr_value]
 
     if type(data) == list:
         separate_result = []
         for (sub_list, total_num) in data:
-            sub_list = np.array(sub_list)
-            rank_sum = 0
             if total_num == 0:
                 mrr_value = 0.0
             else:
+                rank_sum = 0
                 for idx, value in enumerate(sub_list):
                     if value == 1:
                         rank_sum += 1 / (idx + 1)
+                
                 mrr_value = rank_sum / total_num
+            
             separate_result.append(mrr_value)
+        
         return np.mean(separate_result), separate_result

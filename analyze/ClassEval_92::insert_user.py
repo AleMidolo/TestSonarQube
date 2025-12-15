@@ -25,7 +25,7 @@ class UserLoginDB:
             ''', (username,))
         user = self.cursor.fetchall()
         return user
-    
+
     def delete_user_by_username(self, username):
         """
         Deletes a user from the "users" table by username.
@@ -40,7 +40,7 @@ class UserLoginDB:
                 DELETE FROM users WHERE username = ?
             ''', (username,))
         self.connection.commit()
-    
+
     def validate_user_login(self, username, password):
         """
         Determine whether the user can log in, that is, the user is in the database and the password is correct
@@ -57,7 +57,7 @@ class UserLoginDB:
         if user and user[0][1] == password:
             return True
         return False
-    
+
     def insert_user(self, username, password):
         """
         将新用户插入到 "users" 表中。

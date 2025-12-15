@@ -90,6 +90,5 @@ class DiscountStrategy:
 
         """
         total = self.total()
-        if self.promotion:
-            total -= self.promotion(self)
-        return total
+        discount = self.promotion(self) if self.promotion else 0
+        return total - discount

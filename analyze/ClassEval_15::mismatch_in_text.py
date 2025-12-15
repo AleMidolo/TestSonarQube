@@ -49,7 +49,7 @@ class BoyerMooreSearch:
         >>> boyerMooreSearch.mismatch_in_text(0)
         2
         """
-        for i in range(self.patLen):
-            if currentPos + i >= self.textLen or self.text[currentPos + i] != self.pattern[i]:
-                return i
+        for j in range(self.patLen - 1, -1, -1):
+            if currentPos + j >= self.textLen or self.text[currentPos + j] != self.pattern[j]:
+                return j
         return -1

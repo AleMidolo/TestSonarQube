@@ -9,13 +9,19 @@ def prepare(self, expression):
         """
         operator_stack = []
         for char in expression:
-            if not self.is_operator(char):
+            if char.isdigit() or char == '~':
                 self.postfix_stack.append(char)
-            else:
-                while (operator_stack and 
+            elif self.is_operator(char):
+                while (operator_stack and operator_stack[-1] != '(' and
                        self.compare(char, operator_stack[-1])):
                     self.postfix_stack.append(operator_stack.pop())
                 operator_stack.append(char)
-
+            elif char == '(':
+                operator_stack.append(char)
+            elif char == ')':
+                while operator_stack and operator_stack[-1] != '(':
+                    self.postfix_stack.append(operator_stack.pop())
+                operator_stack.pop()  # pop the '('
+        
         while operator_stack:
             self.postfix_stack.append(operator_stack.pop())

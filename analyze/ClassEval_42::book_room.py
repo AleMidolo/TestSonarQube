@@ -95,18 +95,19 @@ class Hotel:
         >>> hotel.book_room('triple', 1, '客人 1')
         False
         """
-        if room_type not in self.available_rooms or self.available_rooms[room_type] < room_number:
-            if room_type in self.available_rooms:
-                return self.available_rooms[room_type]
+        if room_type not in self.available_rooms:
             return False
-        
-        if room_type not in self.booked_rooms:
-            self.booked_rooms[room_type] = {}
-        
-        if name in self.booked_rooms[room_type]:
-            self.booked_rooms[room_type][name] += room_number
+        if self.available_rooms[room_type] >= room_number:
+            if room_type not in self.booked_rooms:
+                self.booked_rooms[room_type] = {}
+            if name in self.booked_rooms[room_type]:
+                self.booked_rooms[room_type][name] += room_number
+            else:
+                self.booked_rooms[room_type][name] = room_number
+            self.available_rooms[room_type] -= room_number
+            return 'Success!'
         else:
-            self.booked_rooms[room_type][name] = room_number
-        
-        self.available_rooms[room_type] -= room_number
-        return 'Success!'
+            remaining = self.available_rooms[room_type]
+            if remaining > 0:
+                return remaining
+            return False

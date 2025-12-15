@@ -10,12 +10,11 @@ def process_xml_data(self, file_name):
     True
     """
     try:
-        # Example modification: Change text of all 'item' elements
-        items = self.find_element('item')
-        for item in items:
+        # Example modification: Change the text of all 'item' elements
+        for item in self.find_element('item'):
             item.text = 'modified_' + item.text
         
         # Write the modified XML to the new file
         return self.write_xml(file_name)
-    except:
+    except Exception as e:
         return False

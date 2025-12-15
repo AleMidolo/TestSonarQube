@@ -2,6 +2,7 @@ import numpy as np
 
 class KappaCalculator: 
 
+    @staticmethod
     def kappa(testData, k):
         """
         Calculate the cohens kappa value of a k-dimensional matrix
@@ -18,12 +19,12 @@ class KappaCalculator:
             P0 += dataMat[i, i] * 1.0
         xsum = np.sum(dataMat, axis=1)
         ysum = np.sum(dataMat, axis=0)
-        sum = np.sum(dataMat)
-        Pe = float(ysum * xsum) / sum / sum
-        P0 = float(P0 / sum * 1.0)
+        total_sum = np.sum(dataMat)
+        Pe = float(ysum * xsum) / total_sum / total_sum
+        P0 = float(P0 / total_sum * 1.0)
         cohens_coefficient = float((P0 - Pe) / (1 - Pe))
         return cohens_coefficient
-    
+
     @staticmethod
     def fleiss_kappa(testData, N, k, n):
         """
@@ -45,13 +46,13 @@ class KappaCalculator:
         >>>                              [0, 2, 2, 3, 7]], 10, 5, 14)
         0.20993070442195522
         """
-        # Calculate the proportion of agreement
+        # Calculate the proportion of agreement for each category
         p = np.sum(testData, axis=0) / (N * n)
         P = np.sum(p**2)
         
-        # Calculate the expected agreement
-        Pe = np.sum((np.sum(testData, axis=1) / (N * n))**2)
+        # Calculate the overall agreement
+        P_bar = np.mean(np.sum(testData**2, axis=1) / (n**2))
         
         # Calculate Fleiss' Kappa
-        kappa_value = (P - Pe) / (1 - Pe)
+        kappa_value = (P_bar - P) / (1 - P)
         return kappa_value

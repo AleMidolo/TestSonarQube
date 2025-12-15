@@ -93,7 +93,6 @@ class DiscountStrategy:
         0.0
 
         """
-        discount = 0
         if len(order.cart) >= 10:
-            discount = order.total() * 0.07
-        return discount
+            return order.total() * 0.07
+        return 0

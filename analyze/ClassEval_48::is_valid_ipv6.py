@@ -22,7 +22,7 @@ class IpUtil:
     def get_hostname(ip_address):
         """
         Get the hostname associated with the given IP address.
-        :param ip_address:string, the IP address to get the hostname for
+        :param ip_address: string, the IP address to get the hostname for
         :return: string, the hostname associated with the IP address
         >>> IpUtil.get_hostname('110.242.68.3')
         'www.baidu.com'
@@ -38,8 +38,8 @@ class IpUtil:
     def is_valid_ipv6(ip_address):
         """
         检查给定的 IP 地址是否是有效的 IPv6 地址。
-        :param ip_address:字符串, 要检查的 IP 地址
-        :return:布尔值, 如果 IP 地址有效则返回 True，否则返回 False
+        :param ip_address: 字符串, 要检查的 IP 地址
+        :return: 布尔值, 如果 IP 地址有效则返回 True，否则返回 False
         >>> IpUtil.is_valid_ipv6('2001:0db8:85a3:0000:0000:8a2e:0370:7334')
         True
         >>> IpUtil.is_valid_ipv6('2001:0db8:85a3:::8a2e:0370:7334')

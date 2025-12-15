@@ -81,20 +81,13 @@ class DecryptionUtils:
         >>> d.vigenere_decipher('ifmmp')
         'ybocl'
         """
-        key = self.key
-        key_length = len(key)
-        plaintext = ""
-        key_index = 0
+        key_length = len(self.key)
+        key_as_int = [ord(i) for i in self.key]
+        ciphertext_int = [ord(i) for i in ciphertext]
+        plaintext = ''
         
-        for char in ciphertext:
-            if char.isalpha():
-                shift = ord(key[key_index % key_length].lower()) - ord('a')
-                if char.isupper():
-                    plaintext += chr((ord(char) - shift - 65) % 26 + 65)
-                else:
-                    plaintext += chr((ord(char) - shift - 97) % 26 + 97)
-                key_index += 1
-            else:
-                plaintext += char
+        for i in range(len(ciphertext_int)):
+            value = (ciphertext_int[i] - key_as_int[i % key_length]) % 26
+            plaintext += chr(value + 97)  # Assuming the ciphertext is lowercase
         
         return plaintext

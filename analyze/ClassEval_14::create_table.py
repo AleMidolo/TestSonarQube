@@ -11,22 +11,6 @@ class BookManagementDB:
         self.cursor = self.connection.cursor()
         self.create_table()
 
-    def create_table(self):
-        """
-        如果书籍表在数据库中尚不存在，则创建该表。
-        >>> book_db = BookManagementDB("test.db")
-        >>> book_db.create_table()
-        """
-        self.cursor.execute('''
-            CREATE TABLE IF NOT EXISTS books (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT NOT NULL,
-                author TEXT NOT NULL,
-                available INTEGER NOT NULL
-            )
-        ''')
-        self.connection.commit()
-
     def add_book(self, title, author):
         """
         Adds a book to the database with the specified title and author, 
@@ -91,3 +75,19 @@ class BookManagementDB:
             ''')
         books = self.cursor.fetchall()
         return books
+    
+    def create_table(self):
+        """
+        如果书籍表在数据库中尚不存在，则创建该表。
+        >>> book_db = BookManagementDB("test.db")
+        >>> book_db.create_table()
+        """
+        self.cursor.execute('''
+            CREATE TABLE IF NOT EXISTS books (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                author TEXT NOT NULL,
+                available INTEGER NOT NULL
+            )
+        ''')
+        self.connection.commit()

@@ -1,5 +1,3 @@
-import random
-
 class MinesweeperGame: 
     def __init__(self, n, k) -> None:
         """

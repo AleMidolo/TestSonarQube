@@ -11,7 +11,6 @@ class NLPDataProcessor2:
         >>> NLPDataProcessor2().process_data(['This is a test.'])
         [['this', 'is', 'a', 'test']]
         """
-    
         words_list = []
         for string in string_list:
             # Remove non-English letters and convert to lowercase
@@ -29,7 +28,6 @@ class NLPDataProcessor2:
         >>> NLPDataProcessor2().process(['This is a test.', 'This is another test.'])
         {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}
         """
-    
         words_list = self.process_data(string_list)
         word_frequency_dict = self.calculate_word_frequency(words_list)
         return word_frequency_dict
@@ -42,11 +40,6 @@ class NLPDataProcessor2:
         >>> NLPDataProcessor2().calculate_word_frequency([['this', 'is', 'a', 'test'], ['this', 'is', 'another', 'test']])
         {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}
         """
-        
-        # Flatten the list of words
         flat_list = [word for sublist in words_list for word in sublist]
-        # Calculate word frequency
         word_count = Counter(flat_list)
-        # Sort by frequency and get the top 5
-        sorted_word_count = dict(sorted(word_count.items(), key=lambda item: item[1], reverse=True))
-        return dict(list(sorted_word_count.items())[:5])
+        return dict(word_count.most_common(5))
