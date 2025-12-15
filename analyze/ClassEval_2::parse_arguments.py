@@ -81,27 +81,22 @@ class ArgumentParser:
         # Remove the script name
         parts = parts[2:]  # Assuming the first two parts are "python script.py"
         
-        missing_args = set()
-        
         for part in parts:
             if '=' in part:
-                # Handle --arg=value format
                 key, value = part.split('=', 1)
-                key = key.lstrip('-')
             else:
-                # Handle -arg value format
-                key = part.lstrip('-')
-                value = True  # Boolean flag for options
+                key = part
+                value = True  # For flags
             
+            # Normalize the key
+            key = key.lstrip('-')
             # Convert the type if necessary
             if key in self.types:
                 value = self._convert_type(key, value)
-            
             self.arguments[key] = value
         
         # Check for missing required arguments
         missing_args = self.required - self.arguments.keys()
-        
         if missing_args:
             return (False, missing_args)
         

@@ -16,9 +16,10 @@ class AssessmentSystem:
         >>> system.students
         {'student 1': {'name': 'student 1', 'grade': 3, 'major': 'SE', 'courses': {'math': 94}}}
         """
+    
         if name in self.students:
             self.students[name]['courses'][course] = score
-
+    
     def get_gpa(self, name):
         """
         Get average grade of one student.
@@ -31,11 +32,12 @@ class AssessmentSystem:
         >>> system.get_gpa('student 1')
         93.0
         """
+    
         if name in self.students and self.students[name]['courses']:
             return sum(self.students[name]['courses'].values()) / len(self.students[name]['courses'])
         else:
             return None
-
+    
     def get_all_students_with_fail_course(self):
         """
         Get all students who have any score below 60
@@ -44,6 +46,7 @@ class AssessmentSystem:
         >>> system.get_all_students_with_fail_course()
         ['student 1']
         """
+    
         students = []
         for name, student in self.students.items():
             for course, score in student['courses'].items():
@@ -51,13 +54,14 @@ class AssessmentSystem:
                     students.append(name)
                     break
         return students
-
+    
     def get_course_average(self, course):
         """
         Get the average score of a specific course.
         :param course: str, course name
         :return: float, average scores of this course if anyone have score of this course, or None if nobody have records.
         """
+    
         total = 0
         count = 0
         for student in self.students.values():
@@ -67,7 +71,7 @@ class AssessmentSystem:
                     total += score
                     count += 1
         return total / count if count > 0 else None
-
+    
     def get_top_student(self):
         """
         Calculate every student's gpa with get_gpa method, and find the student with highest gpa
@@ -79,6 +83,7 @@ class AssessmentSystem:
         >>> system.get_top_student()
         'student 2'
         """
+    
         top_student = None
         top_gpa = 0
         for name, student in self.students.items():
@@ -87,7 +92,7 @@ class AssessmentSystem:
                 top_gpa = gpa
                 top_student = name
         return top_student
-
+    
     def add_student(self, name, grade, major):
         """
         Add a new student into self.students dict

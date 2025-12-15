@@ -16,7 +16,6 @@ class Manacher:
         >>> manacher = Manacher('ababa')
         >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')
         2
-    
         """
         if (center - diff == -1 or center + diff == len(string)
                 or string[center - diff] != string[center + diff]):
@@ -30,28 +29,30 @@ class Manacher:
         >>> manacher = Manacher('ababaxse')
         >>> manacher.palindromic_string()
         'ababa'
-
         """
+        # Transform the input string to avoid even/odd length issues
         transformed_string = '|'.join(f'^{self.input_string}$')
         n = len(transformed_string)
-        L = [0] * n
-        C = R = 0
+        p = [0] * n
+        center = right = 0
 
         for i in range(1, n - 1):
-            mirror = 2 * C - i
-            if R > i:
-                L[i] = min(R - i, L[mirror])
+            mirror = 2 * center - i
+            if right > i:
+                p[i] = min(right - i, p[mirror])
 
-            a, b = i + (1 + L[i]), i - (1 + L[i])
-            while a < n - 1 and b > 0 and transformed_string[a] == transformed_string[b]:
-                L[i] += 1
-                a += 1
-                b -= 1
+            # Attempt to expand the palindrome centered at i
+            while transformed_string[i + p[i] + 1] == transformed_string[i - p[i] - 1]:
+                p[i] += 1
 
-            if i + L[i] > R:
-                C, R = i, i + L[i]
+            # If the palindrome expanded past the right edge, adjust the center and right edge
+            if i + p[i] > right:
+                center, right = i, i + p[i]
 
-        max_len = max(L)
-        center_index = L.index(max_len)
-        start = (center_index - max_len) // 2
-        return self.input_string[start:start + max_len]
+        # Find the maximum element in p
+        max_length = max(p)
+        center_index = p.index(max_length)
+
+        # Extract the longest palindromic substring
+        start = (center_index - max_length) // 2
+        return self.input_string[start:start + max_length]

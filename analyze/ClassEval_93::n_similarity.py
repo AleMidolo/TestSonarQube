@@ -76,6 +76,5 @@ class VectorUtil:
         similarities = []
         for vec1 in vector_list_1:
             for vec2 in vector_list_2:
-                sim = VectorUtil.similarity(vec1, vec2)
-                similarities.append(sim)
+                similarities.append(VectorUtil.similarity(vec1, vec2))
         return np.array(similarities)

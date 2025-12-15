@@ -24,11 +24,11 @@ class DataStatistics4:
     @staticmethod
     def skewness(data):
         """
-        Calculate the skewness of a set of data.
-        :param data: The input data list, list.
-        :return: The skewness, float.
-        >>> DataStatistics4.skewness([1, 2, 5])
-        2.3760224064818463
+            Calculate the skewness of a set of data.
+            :param data: The input data list, list.
+            :return: The skewness, float.
+            >>> DataStatistics4.skewness([1, 2, 5])
+            2.3760224064818463
         """
     
         n = len(data)
@@ -43,13 +43,13 @@ class DataStatistics4:
     @staticmethod
     def pdf(data, mu, sigma):
         """
-        Calculate the probability density function (PDF) of a set of data under a normal distribution.
-        :param data: The input data list, list.
-        :param mu: The mean of the normal distribution, float.
-        :param sigma: The standard deviation of the normal distribution, float.
-        :return: The probability density function (PDF), list.
-        >>> DataStatistics4.pdf([1, 2, 3], 1, 1)
-        [0.3989422804014327, 0.24197072451914337, 0.05399096651318806]
+            Calculate the probability density function (PDF) of a set of data under a normal distribution.
+            :param data: The input data list, list.
+            :param mu: The mean of the normal distribution, float.
+            :param sigma: The standard deviation of the normal distribution, float.
+            :return: The probability density function (PDF), list.
+            >>> DataStatistics4.pdf([1, 2, 3], 1, 1)
+            [0.3989422804014327, 0.24197072451914337, 0.05399096651318806]
         """
     
         pdf_values = [1 / (sigma * math.sqrt(2 * math.pi)) * math.exp(-0.5 * ((x - mu) / sigma) ** 2) for x in data]
@@ -61,7 +61,7 @@ class DataStatistics4:
         Calculate the kurtosis of a set of data.
         :param data: The input data list, list.
         :return: The kurtosis, float.
-        >>> DataStatistics4.kurtosis([1, 20, 100])
+        >>> DataStatistics4.kurtosis([1, 20,100])
         -1.5000000000000007
         """
         

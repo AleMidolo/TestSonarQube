@@ -81,7 +81,6 @@ class SQLGenerator:
         condition = f"age BETWEEN {min_age} AND {max_age}"
         return self.select(condition=condition)
     
-
     def delete(self, condition):
         """
         Generates a DELETE SQL statement based on the given condition.

@@ -22,8 +22,7 @@ class PDFHandler:
         pdf_writer = PyPDF2.PdfWriter()
     
         for reader in self.readers:
-            for page_num in range(len(reader.pages)):
-                page = reader.pages[page_num]
+            for page in reader.pages:
                 pdf_writer.add_page(page)
     
         with open(output_filepath, 'wb') as out:
@@ -40,8 +39,8 @@ class PDFHandler:
         """
         pdf_texts = []
         for reader in self.readers:
-            text = ''
+            text = ""
             for page in reader.pages:
-                text += page.extract_text() or ''
+                text += page.extract_text() or ""
             pdf_texts.append(text)
         return pdf_texts

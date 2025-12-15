@@ -58,6 +58,6 @@ class ShoppingCart:
         11.0
         """
         total = 0.0
-        for item in self.items.values():
-            total += item['price'] * item['quantity']
+        for item, details in self.items.items():
+            total += details['price'] * details['quantity']
         return total

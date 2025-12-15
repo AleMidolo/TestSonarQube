@@ -6,6 +6,7 @@ class TicTacToe:
         self.board = [[' ' for _ in range(N)] for _ in range(3)]
         self.current_player = 'X'
 
+
     def make_move(self, row, col):
         """
         Place the current player's mark at the specified position on the board and switch the mark.
@@ -18,6 +19,7 @@ class TicTacToe:
         >>> ttt.current_player
         'O'
         """
+    
         if self.board[row][col] == ' ':
             self.board[row][col] = self.current_player
             self.current_player = 'O' if self.current_player == 'X' else 'X'
@@ -32,6 +34,7 @@ class TicTacToe:
         >>> ttt.is_board_full()
         False
         """
+    
         for row in self.board:
             if ' ' in row:
                 return False

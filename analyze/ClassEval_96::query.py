@@ -49,7 +49,8 @@ class WeatherSystem:
         :param tmp_units: the temperature units to convert to, str.
         :return: the temperature and weather of the city, tuple.
         >>> weatherSystem = WeatherSystem('New York')
-        >>> weather_list = {'New York': {'weather': 'sunny', 'temperature': 27, 'temperature units': 'celsius'}, 'Beijing': {'weather': 'cloudy', 'temperature': 23, 'temperature units': 'celsius'}}
+        >>> weather_list = {'New York': {'weather': 'sunny', 'temperature': 27, 'temperature units': 'celsius'},
+        ...                 'Beijing': {'weather': 'cloudy', 'temperature': 23, 'temperature units': 'celsius'}}
         >>> weatherSystem.query(weather_list)
         (27, 'sunny')
         """

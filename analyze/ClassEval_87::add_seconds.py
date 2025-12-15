@@ -7,5 +7,6 @@ def add_seconds(self, seconds):
     >>> timeutils.add_seconds(600)
     "19:29:22"
     """
+    
     new_time = self.datetime + datetime.timedelta(seconds=seconds)
     return new_time.strftime("%H:%M:%S")

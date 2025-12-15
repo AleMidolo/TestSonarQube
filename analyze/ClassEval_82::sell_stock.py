@@ -11,6 +11,7 @@ def sell_stock(self, stock):
         >>> tracker.portfolio
         []
         """
+        
         for pf in self.portfolio:
             if pf['name'] == stock['name'] and pf['quantity'] >= stock['quantity']:
                 pf['quantity'] -= stock['quantity']

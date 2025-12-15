@@ -29,7 +29,7 @@ class EncryptionUtils:
             else:
                 ciphertext += char
         return ciphertext
-    
+
     def vigenere_cipher(self, plaintext):
         """
         Encrypts the plaintext using the Vigenere cipher.
@@ -51,7 +51,7 @@ class EncryptionUtils:
             else:
                 encrypted_text += char
         return encrypted_text
-    
+
     def rail_fence_cipher(self, plain_text, rails):
         """
         Encrypts the plaintext using the Rail Fence cipher.
@@ -80,9 +80,9 @@ class EncryptionUtils:
             else:
                 row -= 1
 
-        ciphertext = ""
+        result = []
         for i in range(rails):
             for j in range(len(plain_text)):
                 if rail[i][j] != '\n':
-                    ciphertext += rail[i][j]
-        return ciphertext
+                    result.append(rail[i][j])
+        return "".join(result)
