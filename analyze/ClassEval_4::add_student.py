@@ -103,4 +103,9 @@ class AssessmentSystem:
         >>> system.students
         {'student 1': {'name': 'student 1', 'grade': 3, 'major': 'SE', 'courses': {}}}
         """
-        self.students[name] = {'name': name, 'grade': grade, 'major': major, 'courses': {}}
+        self.students[name] = {
+            'name': name,
+            'grade': grade,
+            'major': major,
+            'courses': {}
+        }

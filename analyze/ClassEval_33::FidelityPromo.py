@@ -83,9 +83,9 @@ class DiscountStrategy:
     @staticmethod
     def FidelityPromo(order):
         """
-        Calcola lo sconto basato sui punti fedeltà del cliente. I clienti con oltre 1000 punti possono godere di uno sconto del 5% sull'intero ordine.
-        :param order: oggetto, l'ordine a cui applicare lo sconto
-        :return: float, importo dello sconto
+        根据客户的忠诚度积分计算折扣。积分超过1000的客户可以享受整个订单5%的折扣。
+        :param order: object, 要应用折扣的订单
+        :return: float, 折扣金额
         >>> customer = {'name': 'John Doe', 'fidelity': 1200}
         >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]
         >>> order = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)
@@ -93,4 +93,4 @@ class DiscountStrategy:
         16.45
 
         """
-        return order.total() * 0.05 if order.customer['fidelity'] > 1000 else 0
+        return order.total() * 0.05 if order.customer['fidelity'] >= 1000 else 0

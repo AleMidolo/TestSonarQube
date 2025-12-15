@@ -1,24 +1,22 @@
 def process_excel_data(self, N, save_file_name):
     """
-    Cambia la colonna specificata nel file Excel in maiuscolo
-    :param N: int, Il numero seriale della colonna che si desidera cambiare
-    :param save_file_name: str, nome del file sorgente
-    :return:(int, str), Il primo è il valore di ritorno di write_excel, mentre il secondo è il nome del file salvato dei dati elaborati
+    将Excel文件中指定列的内容转换为大写
+    :param N: int, 要更改的列的序号
+    :param save_file_name: str, 源文件名
+    :return:(int, str), 前者是write_excel的返回值，而后者是处理后数据的保存文件名
     >>> processor = ExcelProcessor()
     >>> success, output_file = processor.process_excel_data(1, 'test_data.xlsx')
     """
     
     data = self.read_excel(save_file_name)
-    if data is None or N < 1 or N > len(data[0]):
+    if data is None:
         return 0, save_file_name
     
-    # Convert the specified column to uppercase
     for i in range(len(data)):
-        row = list(data[i])
-        row[N - 1] = str(row[N - 1]).upper()  # Convert to uppercase
-        data[i] = tuple(row)
+        if len(data[i]) > N:
+            data[i] = list(data[i])
+            data[i][N] = str(data[i][N]).upper()
+            data[i] = tuple(data[i])
     
-    output_file_name = f"processed_{save_file_name}"
-    success = self.write_excel(data, output_file_name)
-    
-    return success, output_file_name
+    write_success = self.write_excel(data, save_file_name)
+    return write_success, save_file_name

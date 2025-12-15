@@ -37,8 +37,8 @@ class ChandrasekharSieve:
 
     def get_primes(self):
         """
-        Ottieni l'elenco dei numeri primi generati.
-        :return: list, un elenco di numeri primi
+        获取生成的质数列表。
+        :return: list, 一个质数列表
         >>> cs = ChandrasekharSieve(20)
         >>> cs.get_primes()
         [2, 3, 5, 7, 11, 13, 17, 19]

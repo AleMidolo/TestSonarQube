@@ -9,6 +9,7 @@ class NumberConverter:
             >>> NumberConverter.binary_to_decimal('1010010110110111')
             42423
             """
+    
         decimal_num = int(binary_num, 2)
         return decimal_num
     
@@ -21,6 +22,7 @@ class NumberConverter:
             >>> NumberConverter.decimal_to_octal(42423)
             '122667'
             """
+    
         octal_num = oct(decimal_num)[2:]
         return octal_num
     
@@ -33,6 +35,7 @@ class NumberConverter:
             >>> NumberConverter.octal_to_decimal('122667')
             42423
             """
+    
         decimal_num = int(octal_num, 8)
         return decimal_num
     
@@ -45,6 +48,7 @@ class NumberConverter:
             >>> NumberConverter.decimal_to_hex(42423)
             'a5b7'
             """
+    
         hex_num = hex(decimal_num)[2:]
         return hex_num
     
@@ -57,15 +61,17 @@ class NumberConverter:
             >>> NumberConverter.hex_to_decimal('a5b7')
             42423
             """
+    
         decimal_num = int(hex_num, 16)
         return decimal_num
     
+
     @staticmethod
     def decimal_to_binary(decimal_num):
         """
-        Converti un numero dal formato decimale al formato binario.
-        :param decimal_num: int, numero decimale
-        :return: str, la rappresentazione binaria di un intero.
+        将一个数字从十进制格式转换为二进制格式。
+        :param decimal_num: int, 十进制数字
+        :return: str, 整数的二进制表示。
         >>> NumberConverter.decimal_to_binary(42423)
         '1010010110110111'
         """

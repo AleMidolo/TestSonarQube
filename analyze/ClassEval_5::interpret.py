@@ -6,6 +6,7 @@ class AutomaticGuitarSimulator:
         """
         self.play_text = text
 
+
     def display(self, key, value):
         """
         Print out chord and play tune with following format: Normal Guitar Playing -- Chord: %s, Play Tune: %s
@@ -15,17 +16,20 @@ class AutomaticGuitarSimulator:
         >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
         >>> context.display("C", "53231323")
         Normal Guitar Playing -- Chord: C, Play Tune: 53231323
+    
         """
         return "Normal Guitar Playing -- Chord: %s, Play Tune: %s" % (key, value)
+    
 
     def interpret(self, display=False):
         """
-        Interpreta il punteggio musicale da suonare
-        :param display: Bool, che rappresenta se stampare il punteggio interpretato
-        :return: lista di dict, Il dict include due campi, Chord e Tune, che sono lettere e numeri, rispettivamente. Se l'input è vuoto o contiene solo spazi bianchi, viene restituita una lista vuota.
+        解析要演奏的乐谱
+        :param display: Bool，表示是否打印解析后的乐谱
+        :return: dict 的列表，字典包括两个字段，Chord 和 Tune，分别是字母和数字。如果输入为空或仅包含空格，则返回一个空列表。
         >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
         >>> play_list = context.interpret(display = False)
         [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]
+
         """
         if not self.play_text.strip():
             return []

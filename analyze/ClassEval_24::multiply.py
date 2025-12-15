@@ -51,10 +51,10 @@ class ComplexCalculator:
     @staticmethod
     def multiply(c1, c2):
         """
-        Moltiplica due numeri complessi.
-        :param c1: Il primo numero complesso, complex.
-        :param c2: Il secondo numero complesso, complex.
-        :return: Il prodotto dei due numeri complessi, complex.
+        把两个复数相乘。
+        :param c1: 第一个复数，complex。
+        :param c2: 第二个复数，complex。
+        :return: 两个复数的乘积，complex。
         >>> complexCalculator = ComplexCalculator()
         >>> complexCalculator.multiply(1+2j, 3+4j)
         (-5+10j)

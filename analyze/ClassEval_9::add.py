@@ -10,8 +10,7 @@ class BigNumCalculator:
             >>> bigNum = BigNumCalculator()
             >>> bigNum.subtract("12345678901234567890", "98765432109876543210")
             '-86419753208641975320'
-    
-            """
+        """
 
         if len(num1) < len(num2):
             num1, num2 = num2, num1
@@ -60,8 +59,7 @@ class BigNumCalculator:
             >>> bigNum = BigNumCalculator()
             >>> bigNum.multiply("12345678901234567890", "98765432109876543210")
             '1219326311370217952237463801111263526900'
-    
-            """
+        """
     
         len1, len2 = len(num1), len(num2)
         result = [0] * (len1 + len2)
@@ -84,14 +82,13 @@ class BigNumCalculator:
     @staticmethod
     def add(num1, num2):
         """
-        Aggiunge due grandi numeri.
-        :param num1: Il primo numero da aggiungere, str.
-        :param num2: Il secondo numero da aggiungere, str.
-        :return: La somma dei due numeri, str.
+        把两个大数字相加。
+        :param num1: 要相加的第一个数字，字符串。
+        :param num2: 要相加的第二个数字，字符串。
+        :return: 两个数字的和，字符串。
         >>> bigNum = BigNumCalculator()
         >>> bigNum.add("12345678901234567890", "98765432109876543210")
         '111111111011111111100'
-
         """
         max_length = max(len(num1), len(num2))
         num1 = num1.zfill(max_length)

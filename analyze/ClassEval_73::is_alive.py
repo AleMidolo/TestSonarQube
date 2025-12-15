@@ -63,13 +63,13 @@ class RPGCharacter:
     
     def level_up(self):
         """
-        Level up the character and return to zero experience points, increase hp by 20 points, attack power and defense points by 5 points.
-        max level is 100
-        :return: tuple[int, int, int, int], the new level, health points, attack power, and defense points after leveling up.
-        >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
-        >>> player_1.level_up()
-        (2, 120, 15, 8)
-        """
+       Level up the character and return to zero experience points, increase hp by 20 points, attack power and defense points by 5 points.
+       max level is 100
+       :return: tuple[int, int, int, int], the new level, health points, attack power, and defense points after leveling up.
+       >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
+       >>> player_1.level_up()
+       (2, 120, 15, 8)
+       """
         if self.level < 100:
             self.level += 1
             self.exp = 0
@@ -80,9 +80,9 @@ class RPGCharacter:
     
     def is_alive(self):
         """
-        Controlla se il giocatore è vivo.
-        :return: True se i punti vita (hp) sono maggiori di 0, altrimenti False.
-        >>> player_1 = RPGCharacter('giocatore 1', 100, 10, 3)
+        检查玩家是否存活。
+        :return: 如果生命值大于0则返回True，否则返回False。
+        >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
         >>> player_1.is_alive()
         True
         """

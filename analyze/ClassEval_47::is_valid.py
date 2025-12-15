@@ -18,7 +18,7 @@ class IPAddress:
             return self.ip_address.split('.')
         else:
             return []
-
+    
     def get_binary(self):
         """
         If the IP address is valid, return the binary form of the IP address; otherwise, return ''
@@ -37,7 +37,7 @@ class IPAddress:
     
     def is_valid(self):
         """
-        Giudica se l'indirizzo IP è valido, cioè se l'indirizzo IP è composto da quattro cifre decimali separate da '.'. Ogni cifra è maggiore o uguale a 0 e minore o uguale a 255.
+        判断IP地址是否有效，即IP地址是否由四个十进制数字组成，并且用'.'分隔。每个数字大于等于0且小于等于255。
         :return: bool
         >>> ipaddress = IPAddress("10.10.10.10")
         >>> ipaddress.is_valid()

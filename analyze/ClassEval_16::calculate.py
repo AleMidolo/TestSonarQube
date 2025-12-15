@@ -56,9 +56,9 @@ class Calculator:
 
     def calculate(self, expression):
         """
-        Calcola il valore di un'espressione data
-        :param expression: stringa, espressione fornita
-        :return: Se ha successo, restituisce il valore dell'espressione; altrimenti, restituisce None
+        计算给定表达式的值
+        :param expression: 字符串，给定的表达式
+        :return: 如果成功，返回表达式的值；否则，返回 None
         >>> calculator = Calculator()
         >>> calculator.calculate('1+2-3')
         0.0
@@ -67,18 +67,19 @@ class Calculator:
         operator_stack = []
         i = 0
         while i < len(expression):
-            if expression[i].isdigit():
+            char = expression[i]
+            if char.isdigit():
                 num = 0
                 while i < len(expression) and expression[i].isdigit():
                     num = num * 10 + int(expression[i])
                     i += 1
                 operand_stack.append(num)
                 continue
-            elif expression[i] in self.operators:
+            elif char in self.operators:
                 while (operator_stack and 
-                       self.precedence(operator_stack[-1]) >= self.precedence(expression[i])):
+                       self.precedence(operator_stack[-1]) >= self.precedence(char)):
                     operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
-                operator_stack.append(expression[i])
+                operator_stack.append(char)
             i += 1
         
         while operator_stack:

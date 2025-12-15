@@ -24,33 +24,36 @@ class Manacher:
 
     def palindromic_string(self):
         """
-        Trova la sottostringa palindromica più lunga nella stringa fornita.
-        :return: La sottostringa palindromica più lunga, str.
+        在给定的字符串中找到最长的回文子串。
+        :return: 最长的回文子串，str。
         >>> manacher = Manacher('ababaxse')
         >>> manacher.palindromic_string()
         'ababa'
         """
         # Transform the input string to avoid even/odd length issues
-        transformed_string = '|'.join(f'^{self.input_string}$')
-        n = len(transformed_string)
-        P = [0] * n
+        transformed = '|'.join(f'^{self.input_string}$')
+        n = len(transformed)
+        p = [0] * n
         center = right = 0
-
+        
         for i in range(1, n - 1):
             mirror = 2 * center - i
-            if right > i:
-                P[i] = min(right - i, P[mirror])
-
+            
+            if i < right:
+                p[i] = min(right - i, p[mirror])
+            
             # Attempt to expand the palindrome centered at i
-            while transformed_string[i + P[i] + 1] == transformed_string[i - P[i] - 1]:
-                P[i] += 1
-
-            # If the palindrome centered at i expands past right, adjust center and right
-            if i + P[i] > right:
-                center, right = i, i + P[i]
-
-        # Find the maximum element in P
-        max_length = max(P)
-        center_index = P.index(max_length)
-        start = (center_index - max_length) // 2  # Adjust for the transformed string
+            while transformed[i + p[i] + 1] == transformed[i - p[i] - 1]:
+                p[i] += 1
+            
+            # If the palindrome expanded past the right edge, adjust the center and right edge
+            if i + p[i] > right:
+                center, right = i, i + p[i]
+        
+        # Find the maximum element in p
+        max_length = max(p)
+        center_index = p.index(max_length)
+        
+        # Extract the longest palindromic substring
+        start = (center_index - max_length) // 2
         return self.input_string[start:start + max_length]

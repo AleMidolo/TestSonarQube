@@ -84,7 +84,7 @@ class CamelCaseMap:
     
     def __delitem__(self, key):
         """
-        Elimina il valore corrispondente alla chiave
+        删除与键对应的值
         :param key:str
         :return:None
         >>> camelize_map = CamelCaseMap()

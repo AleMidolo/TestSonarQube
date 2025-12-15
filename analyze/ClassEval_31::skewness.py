@@ -1,5 +1,3 @@
-import math
-
 class DataStatistics4: 
 
     def correlation_coefficient(data1, data2):
@@ -64,9 +62,9 @@ class DataStatistics4:
     @staticmethod
     def skewness(data):
         """
-        Calcola la asimmetria di un insieme di dati.
-        :param data: La lista di dati in ingresso, list.
-        :return: L'asimmetria, float.
+        计算一组数据的偏度。
+        :param data: 输入数据列表，list。
+        :return: 偏度，float。
         >>> DataStatistics4.skewness([1, 2, 5])
         2.3760224064818463
         """
@@ -80,6 +78,6 @@ class DataStatistics4:
         centered_data = [(x - mean) for x in data]
         third_moment = sum(x ** 3 for x in centered_data) / n
 
-        skewness_value = (third_moment / std_dev ** 3)
+        skewness_value = third_moment / (std_dev ** 3)
 
         return skewness_value

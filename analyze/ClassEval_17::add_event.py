@@ -77,8 +77,7 @@ class CalendarUtil:
     def get_upcoming_events(self, num_events):
         """
         Get the next n upcoming events from a given date.
-        :param date: The date to get upcoming events from,datetime.
-        :param n: The number of upcoming events to get,int.
+        :param num_events: The number of upcoming events to get,int.
         :return: A list of the next n upcoming events from the given date,list.
         >>> calendar = CalendarUtil()
         >>> calendar.events = [{'date': datetime(2023, 1, 1, 0, 0), 'start_time': datetime(2023, 1, 1, 0, 0), 'end_time': datetime(2023, 1, 1, 23, 0), 'description': 'New Year'},{'date': datetime(2023, 1, 2, 0, 0),'end_time': datetime(2023, 1, 2, 1, 0), 'description': 'New Year 2'}]
@@ -96,11 +95,11 @@ class CalendarUtil:
 
     def add_event(self, event):
         """
-        Aggiungi un evento al calendario.
-        :param event: L'evento da aggiungere al calendario, dict.
+        将事件添加到日历中。
+        :param event: 要添加到日历中的事件，字典。
         >>> calendar = CalendarUtil()
-        >>> calendar.add_event({'date': datetime(2023, 1, 1, 0, 0), 'start_time': datetime(2023, 1, 1, 0, 0), 'end_time': datetime(2023, 1, 1, 1, 0), 'description': 'Capodanno'})
+        >>> calendar.add_event({'date': datetime(2023, 1, 1, 0, 0), 'start_time': datetime(2023, 1, 1, 0, 0), 'end_time': datetime(2023, 1, 1, 1, 0), 'description': '新年'})
         >>> calendar.events
-        [{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 1, 0), 'description': 'Capodanno'}]
+        [{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 1, 0), 'description': '新年'}]
         """
         self.events.append(event)

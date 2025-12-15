@@ -106,10 +106,10 @@ class Statistics3:
     @staticmethod
     def correlation(x, y):
         """
-        calcola la correlazione della lista fornita.
-        :param x: la lista fornita, lista.
-        :param y: la lista fornita, lista.
-        :return: la correlazione della lista fornita, float.
+        计算给定列表的相关性。
+        :param x: 给定列表，list。
+        :param y: 给定列表，list。
+        :return: 给定列表的相关性，float。
         >>> statistics3 = Statistics3()
         >>> statistics3.correlation([1, 2, 3], [4, 5, 6])
         1.0
@@ -122,5 +122,5 @@ class Statistics3:
         std_x = Statistics3.standard_deviation(x)
         std_y = Statistics3.standard_deviation(y)
         if std_x == 0 or std_y == 0:
-            return None
+            return 0
         return covariance / ((len(x) - 1) * std_x * std_y)

@@ -69,16 +69,16 @@ class ClassRegistrationSystem:
     
     def get_most_popular_class_in_major(self, major):
         """
-        ottiene la classe con il maggior numero di iscrizioni nel corso di studio.
-        :return  una stringa della classe più popolare in questo corso di studio
+        获取该专业中注册人数最多的课程。
+        :return  一个字符串，表示该专业中最受欢迎课程
         >>> registration_system = ClassRegistrationSystem()
-        >>> registration_system.students = [{"name": "John", "major": "Computer Science"},
-                                             {"name": "Bob", "major": "Computer Science"},
-                                             {"name": "Alice", "major": "Computer Science"}]
-        >>> registration_system.students_registration_classes = {"John": ["Algorithms", "Data Structures"],
-                                            "Bob": ["Operating Systems", "Data Structures", "Algorithms"]}
-        >>> registration_system.get_most_popular_class_in_major("Computer Science")
-        "Data Structures"
+        >>> registration_system.students = [{"name": "John", "major": "计算机科学"},
+                                             {"name": "Bob", "major": "计算机科学"},
+                                             {"name": "Alice", "major": "计算机科学"}]
+        >>> registration_system.students_registration_classes = {"John": ["算法", "数据结构"],
+                                            "Bob": ["操作系统", "数据结构", "算法"]}
+        >>> registration_system.get_most_popular_class_in_major("计算机科学")
+        "数据结构"
         """
         class_count = {}
         for student in self.students:
@@ -89,9 +89,6 @@ class ClassRegistrationSystem:
                         class_count[class_name] += 1
                     else:
                         class_count[class_name] = 1
-        
         if not class_count:
-            return None
-        
-        most_popular_class = max(class_count, key=class_count.get)
-        return most_popular_class
+            return ""
+        return max(class_count, key=class_count.get)

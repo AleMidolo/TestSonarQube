@@ -63,9 +63,9 @@ class PageUtil:
     
     def search(self, keyword):
         """
-        Cerca gli elementi nei dati che contengono la parola chiave fornita.
-        :param keyword: str, la parola chiave da cercare
-        :return: dict, contenente informazioni sulla ricerca come risultati totali e elementi corrispondenti
+        在数据中搜索包含给定关键字的项目。
+        :param keyword: str, 要搜索的关键字
+        :return: dict, 包含搜索信息，如总结果和匹配的项目
         >>> page_util = PageUtil([1, 2, 3, 4], 1)
         >>> page_util.search("1")
         >>> search_info = {

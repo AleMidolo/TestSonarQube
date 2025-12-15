@@ -72,10 +72,10 @@ class ClassRegistrationSystem:
     
     def register_class(self, student_name, class_name):
         """
-        registra una classe per lo studente.
+        将课程注册给学生。
         :param student_name: str
         :param class_name: str
-        :return una lista di nomi di classi a cui lo studente si è registrato
+        :return 学生已注册的课程名称列表
         >>> registration_system = ClassRegistrationSystem()
         >>> registration_system.register_class(student_name="John", class_name="CS101")
         >>> registration_system.register_class(student_name="John", class_name="CS102")

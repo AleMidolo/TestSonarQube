@@ -73,11 +73,12 @@ class TriCalculator:
     
     def cos(self, x):
         """
-        Calcola il valore del coseno dell'angolo in gradi x
+        计算 x 度角的余弦值
         :param x: float
         :return: float
         >>> tricalculator = TriCalculator()
         >>> tricalculator.cos(60)
         0.5
         """
-        return self.taylor(x, 50)  # Using Taylor series for cosine
+        x = x / 180 * pi
+        return round(self.taylor(x * 180 / pi, 50), 10)

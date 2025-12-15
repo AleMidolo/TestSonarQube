@@ -35,12 +35,12 @@ class UrlPath:
 
         segment_str = path.strip('\/')
         return segment_str
-
+    
     def parse(self, path, charset):
         """
-        Analizza una data stringa di percorso e popola la lista dei segmenti in UrlPath.
-        :param path: str, la stringa di percorso da analizzare.
-        :param charset: str, la codifica dei caratteri della stringa di percorso.
+        解析给定的路径字符串并填充 UrlPath 中的段列表。
+        :param path: str，要解析的路径字符串。
+        :param charset: str，路径字符串的字符编码。
         >>> url_path = UrlPath()
         >>> url_path.parse('/foo/bar/', 'utf-8')
 

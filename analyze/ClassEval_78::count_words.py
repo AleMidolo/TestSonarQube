@@ -1,5 +1,3 @@
-import re
-
 class SplitSentence: 
 
     def split_sentences(self, sentences_string):
@@ -11,6 +9,7 @@ class SplitSentence:
         >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
+    
         sentences = re.split(
             r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s', sentences_string)
         return sentences
@@ -20,10 +19,10 @@ class SplitSentence:
         Given a text, return the number of words in the longest sentence
         :param sentences_string: string, undivided long sentence
         :return:int, the number of words in the longest sentence
-        >>> ss = SplitSentence()
         >>> ss.process_text_file("aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?")
         4
         """
+    
         sentences = self.split_sentences(sentences_string)
         max_count = 0
         for sentence in sentences:
@@ -35,11 +34,11 @@ class SplitSentence:
     
     def count_words(self, sentence):
         """
-        Conta il numero di parole in una frase. Nota che le parole sono separate da spazi e che i segni di punteggiatura e i numeri non sono conteggiati come parole.
-        :param sentence:string, frase da contare, dove le parole sono separate da spazi
-        :return:int, numero di parole nella frase
-        >>> ss = SplitSentence()
+        计算句子中的单词数量。注意，单词由空格分隔，标点符号和数字不算作单词。
+        :param sentence:字符串, 要计算的句子，单词由空格分隔
+        :return:int, 句子中的单词数量
         >>> ss.count_words("abc def")
         2
         """
-        return len([word for word in sentence.split() if word.isalpha()])
+        words = sentence.split()
+        return len([word for word in words if word.isalpha()])

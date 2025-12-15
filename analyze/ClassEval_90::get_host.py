@@ -1,7 +1,79 @@
-def get_host(self):
+class URLHandler: 
+    def __init__(self, url):
         """
-        Ottieni la seconda parte dell'URL, che è il nome di dominio host
-        :return: stringa, Se ha successo, restituisce il nome di dominio host dell'URL
+        Initialize URLHandler's URL
+        """
+        self.url = url
+
+    def get_scheme(self):
+        """
+        get the scheme of the URL
+        :return: string, If successful, return the scheme of the URL
+        >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
+        >>> urlhandler.get_scheme()
+        "https"
+        """
+        scheme_end = self.url.find("://")
+        if scheme_end != -1:
+            return self.url[:scheme_end]
+        return None
+    
+    def get_path(self):
+        """
+        Get the third part of the URL, which is the address of the resource
+        :return: string, If successful, return the address of the resource of the URL
+        >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
+        >>> urlhandler.get_path()
+        "/s?wd=aaa&rsv_spt=1#page"
+        """
+        scheme_end = self.url.find("://")
+        if scheme_end != -1:
+            url_without_scheme = self.url[scheme_end + 3:]
+            host_end = url_without_scheme.find("/")
+            if host_end != -1:
+                return url_without_scheme[host_end:]
+        return None
+    
+    def get_query_params(self):
+        """
+        Get the request parameters for the URL
+        :return: dict, If successful, return the request parameters of the URL
+        >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
+        >>> urlhandler.get_query_params()
+        {"wd": "aaa", "rsv_spt": "1"}
+        """
+        query_start = self.url.find("?")
+        fragment_start = self.url.find("#")
+        if query_start != -1:
+            query_string = self.url[query_start + 1:fragment_start]
+            params = {}
+            if len(query_string) > 0:
+                param_pairs = query_string.split("&")
+                for pair in param_pairs:
+                    key_value = pair.split("=")
+                    if len(key_value) == 2:
+                        key, value = key_value
+                        params[key] = value
+            return params
+        return None
+    
+    def get_fragment(self):
+        """
+        Get the fragment after '#' in the URL
+        :return: string, If successful, return the fragment after '#' of the URL
+        >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
+        >>> urlhandler.get_fragment()
+        "page"
+        """
+        fragment_start = self.url.find("#")
+        if fragment_start != -1:
+            return self.url[fragment_start + 1:]
+        return None
+    
+    def get_host(self):
+        """
+        获取 URL 的第二部分，即主机域名
+        :return: 字符串，如果成功，返回 URL 的主机域名
         >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
         >>> urlhandler.get_host()
         "www.baidu.com"

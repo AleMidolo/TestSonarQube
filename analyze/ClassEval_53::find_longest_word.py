@@ -17,10 +17,10 @@ class LongestWord:
     
     def find_longest_word(self, sentence):
         """
-        Rimuove i segni di punteggiatura e suddivide una frase in un elenco di parole. Trova la parola suddivisa più lunga che si trova in self.word_list.
-        Le parole sono strettamente sensibili al maiuscolo/minuscolo.
-        :param sentence: una frase str
-        :return str: la parola suddivisa più lunga che si trova in self.word_list. restituisce '' se self.word_list è vuota.
+        移除标点符号并将句子拆分为单词列表。找到在 self.word_list 中的最长拆分单词。
+        单词严格区分大小写。
+        :param sentence: 一个句子 str
+        :return str: 在 self.word_list 中的最长拆分单词。如果 self.word_list 为空，则返回 ''。
         >>> longestWord = LongestWord()
         >>> longestWord.add_word('A')
         >>> longestWord.add_word('aM')

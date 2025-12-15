@@ -38,14 +38,14 @@ class BankAccount:
         """
         self.withdraw(amount)
         other_account.deposit(amount)
-    
+
     def deposit(self, amount):
         """
-        Deposita un certo importo nel conto, aumentando il saldo del conto, restituisce il saldo attuale del conto.
-        Se l'importo è negativo, solleva un ValueError("Importo non valido").
+        将一定金额存入账户，增加账户余额，返回当前账户余额。
+        如果金额为负，则引发 ValueError("Invalid amount")。
         :param amount: int
         """
         if amount < 0:
-            raise ValueError("Importo non valido")
+            raise ValueError("Invalid amount")
         self.balance += amount
         return self.balance

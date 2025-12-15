@@ -76,8 +76,8 @@ class URLHandler:
     
     def get_fragment(self):
         """
-        Ottieni il frammento dopo '#' nell'URL
-        :return: stringa, Se ha successo, restituisce il frammento dopo '#' dell'URL
+        获取URL中'#'后面的片段
+        :return: 字符串，如果成功，返回URL中'#'后的片段
         >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
         >>> urlhandler.get_fragment()
         "page"

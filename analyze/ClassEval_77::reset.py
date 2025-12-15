@@ -72,7 +72,7 @@ class Snake:
     
     def reset(self):
         """
-        Ripristina il serpente al suo stato iniziale. Imposta la lunghezza a 1, la posizione della testa del serpente a ((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)), il punteggio a 0 e genera casualmente una nuova posizione per il cibo.
+        Reset the snake's state to the initial state. Set length to 1, snake head position to ((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)), score to 0, and randomly generate a new food position.
         :return: None
         >>> snake = Snake(100, 100, 1, (51, 51))
         >>> snake.reset()

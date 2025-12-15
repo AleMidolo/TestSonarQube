@@ -50,8 +50,8 @@ class ShoppingCart:
 
     def view_items(self) -> dict:
         """
-        Restituisce gli articoli attualmente presenti nella lista della spesa.
-        :return: dict, gli attuali articoli della lista della spesa
+        返回当前购物清单项目
+        :return: dict，当前购物清单项目
         >>> shoppingcart.add_item("apple", 1, 5)
         >>> shoppingcart.remove_item("apple", 3)
         >>> shoppingcart.view_items()

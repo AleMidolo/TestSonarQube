@@ -22,8 +22,8 @@ class BalancedBrackets:
 
     def check_balanced_brackets(self):
         """
-        Controlla se l'espressione ha parentesi bilanciate.
-        :return: True se l'espressione ha parentesi bilanciate, False altrimenti.
+        检查表达式是否有平衡的括号。
+        :return: 如果表达式有平衡的括号则返回 True，否则返回 False。
         >>> b = BalancedBrackets("a(b)c")
         >>> b.check_balanced_brackets()
         True

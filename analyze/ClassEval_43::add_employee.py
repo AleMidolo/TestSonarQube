@@ -1,12 +1,12 @@
 def add_employee(self, employee_id, name, position, department, salary):
         """
-        Aggiungi un nuovo dipendente al HRManagementSystem.
-        :param employee_id: L'id del dipendente, int.
-        :param name: Il nome del dipendente, str.
-        :param position: La posizione del dipendente, str.
-        :param department: Il dipartimento del dipendente, str.
-        :param salary: Lo stipendio del dipendente, int.
-        :return: Se il dipendente è già nel HRManagementSystem, restituisce False, altrimenti restituisce True.
+        将新员工添加到HRManagementSystem中。
+        :param employee_id: 员工的ID，int。
+        :param name: 员工的姓名，str。
+        :param position: 员工的职位，str。
+        :param department: 员工的部门，str。
+        :param salary: 员工的薪资，int。
+        :return: 如果员工已经在HRManagementSystem中，返回False，否则返回True。
         >>> hrManagementSystem = HRManagementSystem()
         >>> hrManagementSystem.add_employee(1, 'John', 'Manager', 'Sales', 100000)
         True

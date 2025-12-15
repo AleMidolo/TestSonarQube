@@ -43,13 +43,13 @@ class RPGCharacter:
     
     def level_up(self):
         """
-        Level up the character and return to zero experience points, increase hp by 20 points, attack power and defense points by 5 points.
-        max level is 100
-        :return: tuple[int, int, int, int], the new level, health points, attack power, and defense points after leveling up.
-        >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
-        >>> player_1.level_up()
-        (2, 120, 15, 8)
-        """
+       Level up the character and return to zero experience points, increase hp by 20 points, attack power and defense points by 5 points.
+       max level is 100
+       :return: tuple[int, int, int, int], the new level, health points, attack power, and defense points after leveling up.
+       >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
+       >>> player_1.level_up()
+       (2, 120, 15, 8)
+       """
         if self.level < 100:
             self.level += 1
             self.exp = 0
@@ -70,9 +70,9 @@ class RPGCharacter:
     
     def gain_exp(self, amount):
         """
-        Guadagna punti esperienza per il personaggio e aumenta di livello quando l'esperienza ha raggiunto i valori che sono 100 volte il livello attuale.
-        L'esperienza in eccesso dovrebbe essere utilizzata per calcolare il prossimo aumento di livello fino a esaurirsi.
-        :param amount: int, la quantità di punti esperienza da guadagnare.
+        为角色获得经验值，当经验值达到当前等级的100倍时升级。
+        溢出的经验值应用于计算下一个升级，直到耗尽。
+        :param amount: int，获得的经验值数量。
         >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
         >>> player_1.gain_exp(1100)
         >>> player_1.exp
@@ -81,6 +81,6 @@ class RPGCharacter:
         5
         """
         self.exp += amount
-        while self.exp >= 100 * self.level:
-            self.exp -= 100 * self.level
+        while self.exp >= self.level * 100 and self.level < 100:
+            self.exp -= self.level * 100
             self.level_up()

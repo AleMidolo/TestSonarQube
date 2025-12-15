@@ -54,8 +54,8 @@ class ImageProcessor:
 
     def adjust_brightness(self, factor):
         """
-        Regola la luminosità dell'immagine se l'immagine è stata aperta.
-        :param factor: float, luminosità di un'immagine. Un fattore di 0.0 produce un'immagine nera. Un fattore di 1.0 produce l'immagine originale.
+        如果图像已打开，调整图像的亮度。
+        :param factor: float，图像的亮度。因子为0.0时生成黑色图像。因子为1.0时生成原始图像。
         >>> processor.load_image('test.jpg')
         >>> processor.adjust_brightness(0.5)
         """

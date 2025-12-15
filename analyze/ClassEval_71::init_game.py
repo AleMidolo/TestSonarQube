@@ -91,7 +91,7 @@ class PushBoxGame:
     
     def init_game(self):
         """
-        Inizializza il gioco impostando le posizioni del giocatore, degli obiettivi e delle scatole in base alla mappa.
+        通过根据地图设置玩家、目标和箱子的位置来初始化游戏。
         >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"]) 
         >>> game.targets
         [(3, 3)]

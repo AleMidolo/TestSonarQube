@@ -1,30 +1,35 @@
 def prepare(self, expression):
         """
-        Prepara un'espressione in notazione infissa per la conversione in notazione postfissa.
-        :param expression: stringa, l'espressione infissa da preparare
+        准备中缀表达式以便转换为后缀表示法
+        :param expression: 字符串，要准备的中缀表达式
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.prepare("2+3*4")
 
         expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
         """
-        output = []
-        operator_stack = []
-        for char in expression:
-            if char.isdigit() or char == '~':
-                output.append(char)
-            elif self.is_operator(char):
-                while (operator_stack and operator_stack[-1] != '(' and
-                       self.compare(char, operator_stack[-1])):
-                    output.append(operator_stack.pop())
-                operator_stack.append(char)
-            elif char == '(':
-                operator_stack.append(char)
-            elif char == ')':
-                while operator_stack and operator_stack[-1] != '(':
-                    output.append(operator_stack.pop())
-                operator_stack.pop()  # pop the '('
+        operator_stack = deque()
+        i = 0
+        while i < len(expression):
+            c = expression[i]
+            if c.isdigit() or c == '~':
+                num = c
+                while i + 1 < len(expression) and (expression[i + 1].isdigit() or expression[i + 1] == '.'):
+                    i += 1
+                    num += expression[i]
+                self.postfix_stack.append(num)
+            elif c in {'+', '-', '*', '\/', '%', '(', ')'}:
+                if c == '(':
+                    operator_stack.append(c)
+                elif c == ')':
+                    while operator_stack and operator_stack[-1] != '(':
+                        self.postfix_stack.append(operator_stack.pop())
+                    operator_stack.pop()  # pop the '('
+                else:
+                    while (operator_stack and operator_stack[-1] != '(' and
+                           self.compare(c, operator_stack[-1])):
+                        self.postfix_stack.append(operator_stack.pop())
+                    operator_stack.append(c)
+            i += 1
 
         while operator_stack:
-            output.append(operator_stack.pop())
-
-        self.postfix_stack = output
+            self.postfix_stack.append(operator_stack.pop())

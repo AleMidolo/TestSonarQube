@@ -22,8 +22,8 @@ class AssessmentSystem:
         """
         Add score of specific course for student in self.students
         :param name: str, student name
-        :param course: str, course name
-        :param score: int, course score
+        :param cource: str, cource name
+        :param score: int, cource score
         >>> system.add_student('student 1', 3, 'SE')
         >>> system.add_course_score('student 1', 'math', 94)
         >>> system.students
@@ -51,8 +51,8 @@ class AssessmentSystem:
     
     def get_all_students_with_fail_course(self):
         """
-        Get all students who have any score below 60
-        :return: list of str, student name
+        Get all students who have any score blow 60
+        :return: list of str ,student name
         >>> system.add_course_score('student 1', 'Society', 59)
         >>> system.get_all_students_with_fail_course()
         ['student 1']
@@ -87,9 +87,9 @@ class AssessmentSystem:
     
     def get_course_average(self, course):
         """
-        Get the average score of a specific course.
-        :param course: str, course name
-        :return: float, average scores of this course if someone has a score for this course, or None if no one has records.
+        获取特定课程的平均分数。
+        :param course: 字符串，课程名称
+        :return: float，如果有人有该课程的分数，则返回该课程的平均分数；如果没有人有记录，则返回 None。
         """
         total_score = 0
         count = 0
@@ -97,4 +97,6 @@ class AssessmentSystem:
             if course in student['courses']:
                 total_score += student['courses'][course]
                 count += 1
-        return total_score / count if count > 0 else None
+        if count == 0:
+            return None
+        return total_score / count

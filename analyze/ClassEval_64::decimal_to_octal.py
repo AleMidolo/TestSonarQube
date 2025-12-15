@@ -62,9 +62,9 @@ class NumberConverter:
     @staticmethod
     def decimal_to_octal(decimal_num):
         """
-        Convertire un numero dal formato decimale al formato ottale.
-        :param decimal_num: int, numero decimale
-        :return: str, la rappresentazione ottale di un intero.
+        将十进制数字转换为八进制格式。
+        :param decimal_num: int, 十进制数字
+        :return: str, 整数的八进制表示。
         >>> NumberConverter.decimal_to_octal(42423)
         '122667'
         """

@@ -77,11 +77,11 @@ class DiscountStrategy:
     
             """
         return order.total() * 0.07 if len({item['product'] for item in order.cart}) >= 10 else 0
-
+    
     def due(self):
         """
-        Calcola l'importo finale da pagare dopo aver applicato lo sconto.
-        :return: float, importo finale da pagare
+        计算应用折扣后的最终支付金额。
+        :return: float，最终支付金额
         >>> customer = {'name': 'John Doe', 'fidelity': 1200}
         >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]
         >>> ds = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)
@@ -90,5 +90,6 @@ class DiscountStrategy:
 
         """
         total = self.total()
-        discount = self.promotion(self) if self.promotion else 0
-        return total - discount
+        if self.promotion:
+            total -= self.promotion(self)
+        return total

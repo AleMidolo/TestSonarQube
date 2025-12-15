@@ -64,11 +64,11 @@ class ArgumentParser:
     
     def parse_arguments(self, command_string):
         """
-        Analizza la stringa di argomenti della riga di comando fornita e invoca _convert_type per memorizzare il risultato analizzato in un tipo specifico nel dizionario degli argomenti.
-        Controlla la presenza di argomenti richiesti mancanti, se presenti, e restituisce False con i nomi degli argomenti mancanti, altrimenti restituisce True.
-        :param command_string: str, stringa di argomenti della riga di comando, formattata come "python script.py --arg1=value1 -arg2 value2 --option1 -option2"
-        :return tuple: (True, None) se l'analisi ha successo, (False, missing_args) se l'analisi fallisce,
-            dove missing_args è un insieme dei nomi degli argomenti mancanti che sono str.
+        解析给定的命令行参数字符串，并调用 _convert_type 将解析结果存储在参数字典中的特定类型中。
+        检查是否缺少必需的参数，如果有，则返回 False 和缺失的参数名称，否则返回 True。
+        :param command_string: str, 命令行参数字符串，格式为 "python script.py --arg1=value1 -arg2 value2 --option1 -option2"
+        :return tuple: (True, None) 如果解析成功，(False, missing_args) 如果解析失败，
+            其中 missing_args 是缺失参数名称的集合，类型为字符串。
         >>> parser.parse_arguments("python script.py --arg1=value1 -arg2 value2 --option1 -option2")
         (True, None)
         >>> parser.arguments
@@ -77,12 +77,12 @@ class ArgumentParser:
         args = command_string.split()
         for arg in args[1:]:
             if '=' in arg:
-                key, value = arg.split('=')
-                key = key.lstrip('--')
+                key, value = arg.split('=', 1)
             else:
-                key = arg.lstrip('-')
+                key = arg
                 value = True
             
+            key = key.lstrip('-')
             if key in self.types:
                 self.arguments[key] = self._convert_type(key, value)
             else:

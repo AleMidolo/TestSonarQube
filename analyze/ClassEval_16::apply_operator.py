@@ -85,10 +85,10 @@ class Calculator:
     
     def apply_operator(self, operand_stack, operator_stack):
         """
-        Utilizes the operator on top of the operator stack to perform the operation on the two numbers on top of the operand stack, and stores the results on top of the operand stack
+        使用操作符栈顶部的操作符对操作数栈顶部的两个数字执行操作，并将结果存储在操作数栈顶部
         :param operand_stack:list
         :param operator_stack:list
-        :return: the updated operand stack and operator stack
+        :return: 更新后的 operand_stack 和 operator_stack
         >>> calculator = Calculator()
         >>> calculator.apply_operator([1, 2, 3], ['+', '-'])
         ([1, -1], ['-'])

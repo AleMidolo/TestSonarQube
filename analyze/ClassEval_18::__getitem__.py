@@ -85,9 +85,9 @@ class CamelCaseMap:
     
     def __getitem__(self, key):
         """
-        Restituisce il valore corrispondente alla chiave
+        返回与键对应的值
         :param key:str
-        :return:str, il valore corrispondente alla chiave
+        :return:str, 与键对应的值
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map['first_name'] = 'John'
         >>> camelize_map.__getitem__('first_name')

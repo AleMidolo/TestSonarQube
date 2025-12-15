@@ -1,5 +1,3 @@
-import random
-
 class Snake: 
     def __init__(self, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_SIZE, food_position):
         """
@@ -81,8 +79,8 @@ class Snake:
     
     def random_food_position(self):
         """
-        Genera casualmente una nuova posizione per il cibo, ma non posizionarla sul serpente.
-        :return: None, Cambia la posizione del cibo
+        随机生成一个新的食物位置，但不要放在蛇身上。
+        :return: None，改变食物位置
         """
         while True:
             x = random.randint(0, (self.SCREEN_WIDTH // self.BLOCK_SIZE) - 1) * self.BLOCK_SIZE

@@ -25,7 +25,7 @@ class HtmlUtil:
         :return:string, replaced text with single line break
         """
         return re.sub(re.compile(r'\n+'), '\n', text)
-    
+
     def extract_code_from_html_text(self, html_text):
         """
         extract codes from the html body
@@ -36,10 +36,10 @@ class HtmlUtil:
         ["print('Hello, world!')", 'for i in range(5):\n    print(i)']
         """
         text_with_code_tag = self.format_line_html_text(html_text)
-    
+
         if self.CODE_MARK not in text_with_code_tag:
             return []
-    
+
         code_index_start = 0
         soup = BeautifulSoup(html_text, 'lxml')
         code_tag = soup.find_all(name=['pre', 'blockquote'])
@@ -50,21 +50,18 @@ class HtmlUtil:
             if code:
                 code_list.append(code)
         return code_list
-    
+
     def format_line_html_text(self, html_text):
         """
-        ottiene il testo html senza il codice e aggiunge il tag di codice -CODE- dove si trova il codice
+        获取不包含代码的 HTML 文本，并在代码所在的位置添加 -CODE- 标签
         :param html_text:string
         :return:string
         >>>htmlutil = HtmlUtil()
-        >>>htmlutil.format_line_html_text('<html><body><h1>Titolo</h1><p>Questo è un paragrafo.</p><pre>print(\'Ciao, mondo!\')</pre><p>Un altro paragrafo.</p><pre><code>for i in range(5):\n    print(i)</code></pre></body></html>')
-        'Titolo\nQuesto è un paragrafo.\n-CODE-\nUn altro paragrafo.\n-CODE-\n'
+        >>>htmlutil.format_line_html_text('<html><body><h1>标题</h1><p>这是一个段落。</p><pre>print(\'Hello, world!\')</pre><p>另一个段落。</p><pre><code>for i in range(5):\n    print(i)</code></pre></body></html>')
+        '标题\n这是一个段落。\n-CODE-\n另一个段落。\n-CODE-\n'
         """
         soup = BeautifulSoup(html_text, 'lxml')
-        text_parts = []
-        for element in soup.body.find_all(True):  # Find all tags
-            if element.name in ['pre', 'code']:
-                text_parts.append(self.CODE_MARK)
-            else:
-                text_parts.append(element.get_text())
-        return self.__format_line_feed('\n'.join(text_parts))
+        for code in soup.find_all(['pre', 'code']):
+            code.insert_before(self.CODE_MARK)
+            code.insert_after(self.CODE_MARK)
+        return self.__format_line_feed(soup.get_text())

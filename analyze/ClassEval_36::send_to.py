@@ -78,11 +78,11 @@ class EmailClient:
 
     def send_to(self, recv, content, size):
         """
-        Invia un'email all'indirizzo email fornito.
-        :param recv: L'indirizzo email del destinatario, str.
-        :param content: Il contenuto dell'email, str.
-        :param size: La dimensione dell'email, float.
-        :return: True se l'email è stata inviata con successo, False se la casella di posta del destinatario è piena.
+        发送电子邮件到给定的电子邮件地址。
+        :param recv: 接收者的电子邮件地址，str。
+        :param content: 电子邮件的内容，str。
+        :param size: 电子邮件的大小，float。
+        :return: 如果电子邮件成功发送则返回 True，如果接收者的邮箱已满则返回 False。
         >>> sender = EmailClient('sender@example.com', 100)
         >>> receiver = EmailClient('receiver@example.com', 50)
         >>> sender.send_to(receiver, 'Hello', 10)

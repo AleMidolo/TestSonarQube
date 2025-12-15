@@ -1,9 +1,9 @@
 def sweep(self, x, y):
         """
-        Scopre la posizione data.
-        :param x: La coordinata x della posizione, int.
-        :param y: La coordinata y della posizione, int.
-        :return: True se il giocatore ha vinto il gioco, False altrimenti; se il gioco continua, restituisce la mappa del giocatore, list.
+        扫描给定的位置。
+        :param x: 位置的 x 坐标，int。
+        :param y: 位置的 y 坐标，int。
+        :return: 如果玩家赢得了游戏则返回 True，其他情况返回 False，如果游戏仍在继续，返回玩家地图，list。
         >>> minesweeper_game = MinesweeperGame(3, 1)
         >>> minesweeper_game.minesweeper_map = [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
         >>> minesweeper_game.player_map = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
@@ -11,8 +11,11 @@ def sweep(self, x, y):
         [['-', '-', '-'], ['-', 1, '-'], ['-', '-', '-']]
         """
         if self.minesweeper_map[y][x] == 'X':
-            return False  # Hit a mine, game over
+            return False  # Game over, hit a mine
+        
         self.player_map[y][x] = self.minesweeper_map[y][x]
+        
         if self.check_won(self.player_map):
             return True  # Player has won
-        return self.player_map  # Game continues
+        
+        return self.player_map

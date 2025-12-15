@@ -54,9 +54,10 @@ class EncryptionUtils:
     
     def rail_fence_cipher(self, plain_text, rails):
         """
-        Cripta il testo in chiaro utilizzando il cifrario Rail Fence.
-        :param plain_text: Il testo in chiaro da criptare, str.
-        :return: Il testo cifrato, str.
+        使用铁路栅栏密码加密明文。
+        :param plain_text: 要加密的明文，str。
+        :param rails: 使用的栅栏数量，int。
+        :return: 密文，str。
         >>> e = EncryptionUtils("key")
         >>> e.rail_fence_cipher("abc", 2)
         'acb'

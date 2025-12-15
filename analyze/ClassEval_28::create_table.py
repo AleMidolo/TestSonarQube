@@ -1,18 +1,18 @@
 def create_table(self, table_name, key1, key2):
         """
-        Crea una nuova tabella nel database se non esiste.
-        E imposta id (INTEGER) come CHIAVE PRIMARIA, imposta key1 come TEXT, key2 come INTEGER
-        :param table_name: str, il nome della tabella da creare.
-        :param key1: str, il nome della prima colonna nella tabella.
-        :param key2: str, il nome della seconda colonna nella tabella.
+        如果数据库中不存在，则创建一个新表。
+        并将 id (INTEGER) 设为主键，将 key1 设为 TEXT，将 key2 设为 INTEGER
+        :param table_name: str, 要创建的表的名称。
+        :param key1: str, 表中第一列的名称。
+        :param key2: str, 表中第二列的名称。
         >>> db.create_table('user', 'name', 'age')
         """
         conn = sqlite3.connect(self.database_name)
         cursor = conn.cursor()
-
+        
         create_table_query = f"""
         CREATE TABLE IF NOT EXISTS {table_name} (
-            id INTEGER PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             {key1} TEXT,
             {key2} INTEGER
         )

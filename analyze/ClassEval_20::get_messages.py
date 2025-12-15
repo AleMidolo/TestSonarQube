@@ -71,19 +71,19 @@ class Chat:
         self.users[sender].append(message_info)
         self.users[receiver].append(message_info)
         return True
-    
+
     def get_messages(self, username):
         """
-        Ottieni tutti i messaggi di un utente dalla Chat.
-        :param username: Il nome dell'utente, str.
-        :return: Una lista di messaggi, ogni messaggio è un dizionario con le chiavi 'sender', 'receiver', 'message', 'timestamp'.
+        获取用户在聊天中的所有消息。
+        :param username: 用户名，str。
+        :return: 消息列表，每条消息是一个字典，包含键 'sender', 'receiver', 'message', 'timestamp'。
         >>> chat = Chat()
-        >>> chat.users = {'John': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Ciao', 'timestamp': '2023-01-01 00:00:00'}]}
+        >>> chat.users = {'John': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2023-01-01 00:00:00'}]}
         >>> chat.get_messages('John')
-        [{'sender': 'John', 'receiver': 'Mary', 'message': 'Ciao', 'timestamp': '2023-01-01 00:00:00'}]
+        [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2023-01-01 00:00:00'}]
         >>> chat.get_messages('Mary')
         []
         """
-        if username in self.users:
-            return self.users[username]
-        return []
+        if username not in self.users:
+            return []
+        return self.users[username]

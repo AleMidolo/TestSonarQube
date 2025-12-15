@@ -1,12 +1,11 @@
 def get_pos_tag(self, sentence):
         """
-        Rimuove la punteggiatura dalla frase e tokenizza la frase di input, contrassegnando il tag della parte del discorso di ogni parola.
-        :param sentence: una stringa di frase
-        :return: lista, tag della parte del discorso di ogni parola nella frase.
+        移除句子中的标点符号并对输入句子进行分词，为每个单词标记词性标签。
+        :param sentence: 一个句子，str
+        :return: list，句子中每个单词的词性标签。
         >>> lemmatization = Lemmatization()
         >>> lemmatization.get_pos_tag("I am running in a race.")
         ['PRP', 'VBP', 'VBG', 'IN', 'DT', 'NN']
-
         """
         sentence = self.remove_punctuation(sentence)
         words = word_tokenize(sentence)

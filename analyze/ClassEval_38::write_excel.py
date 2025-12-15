@@ -45,17 +45,17 @@ class ExcelProcessor:
 
     def write_excel(self, data, file_name):
         """
-        Scrivi i dati nel file Excel specificato
-        :param data: list, Dati da scrivere
-        :param file_name: str, Nome del file Excel in cui scrivere
-        :return: 0 o 1, 1 rappresenta una scrittura riuscita, 0 rappresenta una scrittura fallita
+        将数据写入指定的Excel文件
+        :param data: list, 要写入的数据
+        :param file_name: str, 要写入的Excel文件名
+        :return: 0或1, 1表示写入成功，0表示写入失败
         >>> processor = ExcelProcessor()
         >>> new_data = [
-        >>>     ('Nome', 'Età', 'Paese'),
-        >>>     ('John', 25, 'USA'),
-        >>>     ('Alice', 30, 'Canada'),
-        >>>     ('Bob', 35, 'Australia'),
-        >>>     ('Julia', 28, 'Germania')
+        >>>     ('姓名', '年龄', '国家'),
+        >>>     ('约翰', 25, '美国'),
+        >>>     ('爱丽丝', 30, '加拿大'),
+        >>>     ('鲍勃', 35, '澳大利亚'),
+        >>>     ('朱莉亚', 28, '德国')
         >>> ]
         >>> data = processor.write_excel(new_data, 'test_data.xlsx')
         """

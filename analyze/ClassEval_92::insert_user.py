@@ -1,8 +1,8 @@
 def insert_user(self, username, password):
         """
-        Inserisce un nuovo utente nella tabella "users".
-        :param username: str, il nome utente dell'utente.
-        :param password: str, la password dell'utente.
+        将新用户插入到 "users" 表中。
+        :param username: str, 用户名。
+        :param password: str, 用户的密码。
         :return: None
         >>> user_db = UserLoginDB("user_database.db")
         >>> user_db.create_table()

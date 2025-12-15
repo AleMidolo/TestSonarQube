@@ -11,6 +11,7 @@ class NLPDataProcessor2:
         >>> NLPDataProcessor2().calculate_word_frequency([['this', 'is', 'a', 'test'], ['this', 'is', 'another', 'test']])
         {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}
         """
+    
         word_frequency = Counter()
         for words in words_list:
             word_frequency.update(words)
@@ -27,15 +28,16 @@ class NLPDataProcessor2:
         >>> NLPDataProcessor2().process(['This is a test.', 'This is another test.'])
         {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}
         """
+    
         words_list = self.process_data(string_list)
         word_frequency_dict = self.calculate_word_frequency(words_list)
         return word_frequency_dict
     
     def process_data(self, string_list):
         """
-        mantiene solo le lettere inglesi e gli spazi nella stringa, quindi converte la stringa in minuscolo e poi divide la stringa in una lista di parole.
-        :param string_list: una lista di stringhe
-        :return: words_list: una lista di liste di parole
+        仅保留字符串中的英文字母和空格，然后将字符串转换为小写，再将字符串拆分为单词列表。
+        :param string_list: 字符串列表
+        :return: words_list: 单词列表的列表
         >>> NLPDataProcessor2().process_data(['This is a test.'])
         [['this', 'is', 'a', 'test']]
         """

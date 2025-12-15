@@ -15,7 +15,7 @@ class BookManagement:
             self.inventory[title] += quantity
         else:
             self.inventory[title] = quantity
-    
+
     def view_inventory(self):
         """
         Get the inventory of the Book Management.
@@ -27,7 +27,7 @@ class BookManagement:
         {'book1': 1, 'book2': 1}
         """
         return self.inventory
-    
+
     def view_book_quantity(self, title):
         """
         Get the quantity of a book.
@@ -41,21 +41,18 @@ class BookManagement:
         if title not in self.inventory:
             return 0
         return self.inventory[title]
-    
+
     def remove_book(self, title, quantity):
         """
-        Rimuovi uno o più libri dall'inventario che è ordinato per titolo del libro.
-        Solleva un'eccezione in caso di input non valido.
-        :param title: str, il titolo del libro
+        从按书名排序的库存中移除一本或多本书籍。
+        如果输入无效则引发错误。
+        :param title: str，书名
         :param quantity: int
         """
         if title not in self.inventory:
             raise ValueError("Book not found in inventory.")
-        if quantity <= 0:
-            raise ValueError("Quantity must be greater than zero.")
-        if self.inventory[title] < quantity:
+        if quantity > self.inventory[title]:
             raise ValueError("Not enough quantity to remove.")
-        
         self.inventory[title] -= quantity
         if self.inventory[title] == 0:
             del self.inventory[title]

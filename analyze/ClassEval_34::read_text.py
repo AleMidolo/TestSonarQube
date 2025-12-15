@@ -1,7 +1,7 @@
 def read_text(self):
         """
-        Legge il contenuto di un documento Word e lo restituisce come stringa.
-        :return: str, il contenuto del documento Word.
+        读取Word文档的内容并将其作为字符串返回。
+        :return: str，Word文档的内容。
         """
         try:
             doc = Document(self.file_path)

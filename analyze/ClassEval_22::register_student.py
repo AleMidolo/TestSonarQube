@@ -79,10 +79,10 @@ class ClassRegistrationSystem:
     
     def register_student(self, student):
         """
-        registra uno studente nel sistema, aggiunge lo studente alla lista degli studenti, se lo studente è già registrato, restituisce 0, altrimenti restituisce 1
+        将学生注册到系统中，将学生添加到学生列表中，如果学生已经注册，则返回0，否则返回1
         """
-        for existing_student in self.students:
-            if existing_student["name"] == student["name"]:
-                return 0
-        self.students.append(student)
-        return 1
+        if student in self.students:
+            return 0
+        else:
+            self.students.append(student)
+            return 1

@@ -1,8 +1,8 @@
 def add_table(self, data):
     """
-    Aggiunge una tabella al documento Word con i dati specificati.
-    :param data: lista di liste, i dati per popolare la tabella.
-    :return: bool, True se la tabella è stata aggiunta con successo, False altrimenti.
+    将指定数据添加到Word文档中作为表格。
+    :param data: 列表的列表，用于填充表格的数据。
+    :return: bool，如果表格成功添加则返回True，否则返回False。
     """
     try:
         doc = Document(self.file_path)

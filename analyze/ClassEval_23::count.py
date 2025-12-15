@@ -1,13 +1,13 @@
 def count(n: int, m: int) -> int:
     """
-    Calcola il numero di combinazioni per un conteggio specifico.
-    :param n: Il numero totale di elementi, int.
-    :param m: Il numero di elementi in ogni combinazione, int.
-    :return: Il numero di combinazioni, int.
+    计算特定计数的组合数。
+    :param n: 元素的总数，int。
+    :param m: 每个组合中的元素数量，int。
+    :return: 组合的数量，int。
     >>> CombinationCalculator.count(4, 2)
     6
     """
-    if m > n or m < 0 or n < 0:
+    if m < 0 or m > n:
         return 0
     if m == 0 or m == n:
         return 1

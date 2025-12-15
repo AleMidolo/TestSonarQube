@@ -1,10 +1,10 @@
 def move(self, direction):
     """
-    Muovi il giocatore in base alla direzione specificata e controlla se il gioco è vinto.
-    :param direction: str, la direzione del movimento del giocatore. 
-        Può essere 'w', 's', 'a' o 'd' che rappresentano rispettivamente su, giù, sinistra o destra.
+    根据指定方向移动玩家并检查游戏是否获胜。
+    :param direction: str，玩家移动的方向。
+        它可以是 'w'、's'、'a' 或 'd'，分别表示上、下、左或右。
 
-    :return: True se il gioco è vinto, False altrimenti.
+    :return: 如果游戏获胜则返回 True，否则返回 False。
     >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"])       
     >>> game.print_map()
     # # # # # 
@@ -24,30 +24,30 @@ def move(self, direction):
     True
     """
     direction_map = {
-        'w': (-1, 0),  # up
-        's': (1, 0),   # down
-        'a': (0, -1),  # left
-        'd': (0, 1)    # right
+        'w': (-1, 0),
+        's': (1, 0),
+        'a': (0, -1),
+        'd': (0, 1)
     }
     
     if direction not in direction_map:
         return False
 
-    move_row, move_col = direction_map[direction]
-    new_player_row = self.player_row + move_row
-    new_player_col = self.player_col + move_col
+    delta_row, delta_col = direction_map[direction]
+    new_player_row = self.player_row + delta_row
+    new_player_col = self.player_col + delta_col
 
     if self.map[new_player_row][new_player_col] == '#':
         return False  # Wall collision
 
-    if self.map[new_player_row][new_player_col] == ' ':
-        # Move player to empty space
+    if self.map[new_player_row][new_player_col] == ' ' or self.map[new_player_row][new_player_col] == 'G':
+        # Move player
         self.player_row = new_player_row
         self.player_col = new_player_col
     elif self.map[new_player_row][new_player_col] == 'X':
         # Check if the box can be moved
-        box_new_row = new_player_row + move_row
-        box_new_col = new_player_col + move_col
+        box_new_row = new_player_row + delta_row
+        box_new_col = new_player_col + delta_col
         
         if self.map[box_new_row][box_new_col] in [' ', 'G']:
             # Move the box
@@ -56,8 +56,8 @@ def move(self, direction):
                 self.boxes.append((box_new_row, box_new_col))
             else:
                 self.boxes.append((box_new_row, box_new_col))
+            # Move the player
             self.player_row = new_player_row
             self.player_col = new_player_col
 
-    # Check for win condition
     return self.check_win()

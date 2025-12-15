@@ -1,10 +1,9 @@
 def search_database(self, table_name, name):
         """
-        Cerca nella tabella indicata del database righe con un nome corrispondente.
-        :param table_name: str, il nome della tabella da cercare.
-        :param name: str, il nome da cercare.
-        :return: list, una lista di tuple che rappresentano le righe con nome corrispondente, se presenti;
-                    altrimenti, restituisce None.
+        在数据库中搜索指定表中具有匹配名称的行。
+        :param table_name: str，要搜索的表的名称。
+        :param name: str，要搜索的名称。
+        :return: list, 一个元组列表，表示具有匹配名称的行（如果有的话）；否则返回 None。
         >>> db.search_database('user', 'John')
         [(1, 'John', 25)]
         """

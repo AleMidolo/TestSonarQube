@@ -47,22 +47,22 @@ class EightPuzzle:
 
     def get_possible_moves(self, state):
         """
-        Secondo lo stato attuale, trova tutte le direzioni di movimento possibili. Ha solo 4 direzioni: 'su', 'giù', 'sinistra', 'destra'.
-        :param state: una lista di interi di dimensione 3*3, memorizza lo stato attuale.
-        :return moves: una lista di str, memorizza tutte le direzioni di movimento possibili secondo lo stato attuale.
+        根据当前状态，找到所有可能的移动方向。只有4个方向：'上'，'下'，'左'，'右'。
+        :param state: 一个3*3大小的整数列表，存储当前状态。
+        :return moves: 一个字符串列表，存储根据当前状态所有可能的移动方向。
         >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])
-        ['su', 'sinistra', 'destra']
+        ['上', '左', '右']
         """
         moves = []
         i, j = self.find_blank(state)
 
-        if i > 0:  # can move up
+        if i > 0:  # Up
             moves.append('up')
-        if i < 2:  # can move down
+        if i < 2:  # Down
             moves.append('down')
-        if j > 0:  # can move left
+        if j > 0:  # Left
             moves.append('left')
-        if j < 2:  # can move right
+        if j < 2:  # Right
             moves.append('right')
 
         return moves

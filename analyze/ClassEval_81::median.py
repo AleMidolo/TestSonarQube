@@ -1,8 +1,8 @@
 def median(data):
         """
-        calcola la mediana della lista fornita.
-        :param data: la lista fornita, lista.
-        :return: la mediana della lista fornita, float.
+        计算给定列表的中位数。
+        :param data: 给定的列表，list。
+        :return: 给定列表的中位数，float。
         >>> statistics3 = Statistics3()
         >>> statistics3.median([1, 2, 3, 4])
         2.5

@@ -37,17 +37,16 @@ class Manacher:
 
     def palindromic_length(self, center, diff, string):
         """
-        Calcola ricorsivamente la lunghezza della sottostringa palindromica basata su un centro dato, un valore di differenza e una stringa di input.
-        :param center: Il centro della sottostringa palindromica, int.
-        :param diff: La differenza tra il centro e la posizione attuale, int.
-        :param string: La stringa da cercare, str.
-        :return: La lunghezza della sottostringa palindromica, int.
+        递归计算基于给定中心、差值和输入字符串的回文子串的长度。
+        :param center: 回文子串的中心，int。
+        :param diff: 中心与当前位之间的差值，int。
+        :param string: 要搜索的字符串，str。
+        :return: 回文子串的长度，int。
         >>> manacher = Manacher('ababa')
         >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')
         2
         """
-        if center - diff < 0 or center + diff >= len(string):
-            return diff - 1
-        if string[center - diff] == string[center + diff]:
-            return self.palindromic_length(center, diff + 1, string)
+        while (center - diff >= 0 and center + diff < len(string) and 
+               string[center - diff] == string[center + diff]):
+            diff += 1
         return diff - 1

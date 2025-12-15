@@ -84,8 +84,8 @@ class CamelCaseMap:
     
     def __iter__(self):
         """
-        Restituisce oggetti iterabili con dati propri
-        :return: Iterator
+        返回自己数据的可迭代对象
+        :return: 迭代器
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map['first_name'] = 'John'
         >>> camelize_map['last_name'] = 'Doe'

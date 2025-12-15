@@ -10,8 +10,8 @@ class LongestWord:
 
     def add_word(self, word):
         """
-        aggiunge la parola di input nella self.word_list
-        :param word: str, parola di input
+        将输入的单词添加到 self.word_list 中
+        :param word: str，输入的单词
         """
         self.word_list.append(word)
 

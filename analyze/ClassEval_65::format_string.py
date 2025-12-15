@@ -77,9 +77,9 @@ class NumberWordFormatter:
     
     def format_string(self, x):
         """
-        Converte una rappresentazione stringa di un numero nella sua rappresentazione in parole.
-        :param x: str, la rappresentazione stringa di un numero
-        :return: str, il numero nel formato parole
+        将数字的字符串表示转换为单词格式
+        :param x: str，数字的字符串表示
+        :return: str，数字的单词格式
         >>> formatter = NumberWordFormatter()
         >>> formatter.format_string("123456")
         "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
@@ -87,23 +87,29 @@ class NumberWordFormatter:
         if not x.isdigit():
             return ""
         
-        x = int(x)
-        if x == 0:
-            return "ZERO ONLY"
+        x = x.split(".")
+        whole_part = x[0]
+        decimal_part = x[1] if len(x) > 1 else ""
         
         words = []
-        if x < 0:
-            words.append("MINUS")
-            x = -x
+        length = len(whole_part)
         
-        thousands = x // 1000
-        if thousands > 0:
-            words.append(self.trans_three(str(thousands)))
-            words.append(self.parse_more(1))
+        if length == 0:
+            return "ZERO ONLY"
         
-        hundreds = (x % 1000)
-        if hundreds > 0:
-            words.append(self.trans_three(str(hundreds)))
+        # Process each group of three digits
+        for i in range(length, 0, -3):
+            group = whole_part[max(0, i-3):i]
+            if group:
+                group_words = self.trans_three(group)
+                if i // 3 > 0:
+                    group_words += " " + self.parse_more(i // 3 - 1)
+                words.append(group_words)
         
-        words.append("ONLY")
-        return " ".join(words).strip()
+        words.reverse()
+        result = " AND ".join(words).strip()
+        
+        if decimal_part:
+            result += " POINT " + " ".join(self.NUMBER[int(digit)] for digit in decimal_part)
+        
+        return result + " ONLY"

@@ -11,7 +11,9 @@ class IpUtil:
         True
         >>> IpUtil.is_valid_ipv4('256.0.0.0')
         False
+    
         """
+    
         try:
             socket.inet_pton(socket.AF_INET, ip_address)
             return True
@@ -21,13 +23,15 @@ class IpUtil:
     @staticmethod
     def get_hostname(ip_address):
         """
-        Get the hostname associated with the given IP address.
-        :param ip_address:string, the IP address to get the hostname for
-        :return: string, the hostname associated with the IP address
-        >>> IpUtil.get_hostname('110.242.68.3')
-        'www.baidu.com'
-        >>> IpUtil.get_hostname('10.0.0.1')
-        """
+            Get the hostname associated with the given IP address.
+            :param ip_address:string, the IP address to get the hostname for
+            :return: string, the hostname associated with the IP address
+            >>> IpUtil.get_hostname('110.242.68.3')
+            'www.baidu.com'
+            >>> IpUtil.get_hostname('10.0.0.1')
+    
+            """
+    
         try:
             hostname = socket.gethostbyaddr(ip_address)[0]
             return hostname
@@ -37,13 +41,14 @@ class IpUtil:
     @staticmethod
     def is_valid_ipv6(ip_address):
         """
-        Controlla se l'indirizzo IP fornito è un indirizzo IPv6 valido.
-        :param ip_address:string, l'indirizzo IP da controllare
-        :return:bool, True se l'indirizzo IP è valido, False altrimenti
+        检查给定的 IP 地址是否是有效的 IPv6 地址。
+        :param ip_address:字符串, 要检查的 IP 地址
+        :return:布尔值, 如果 IP 地址有效则返回 True，否则返回 False
         >>> IpUtil.is_valid_ipv6('2001:0db8:85a3:0000:0000:8a2e:0370:7334')
         True
         >>> IpUtil.is_valid_ipv6('2001:0db8:85a3:::8a2e:0370:7334')
         False
+
         """
         try:
             socket.inet_pton(socket.AF_INET6, ip_address)

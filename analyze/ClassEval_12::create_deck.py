@@ -23,7 +23,6 @@ class BlackjackGame:
         >>> black_jack_game.calculate_hand_value(['QD', '9D', 'JC', 'QH', 'AS'])
         40
         """
-    
         value = 0
         num_aces = 0
         for card in hand:
@@ -52,7 +51,6 @@ class BlackjackGame:
         >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])
         'Player wins'
         """
-    
         player_value = self.calculate_hand_value(player_hand)
         dealer_value = self.calculate_hand_value(dealer_hand)
         if player_value > 21 and dealer_value > 21:
@@ -72,8 +70,8 @@ class BlackjackGame:
     
     def create_deck(self):
         """
-        Crea un mazzo di 52 carte, che memorizza 52 poker in ordine casuale con i jolly rimossi.
-        :return: una lista di 52 poker in ordine casuale con i jolly rimossi, il formato è ['AS', '2S', ...].
+        创建一副52张牌的牌组，包含除了小丑牌以外的52张随机顺序的扑克牌。
+        :return: 一个包含52张随机顺序的扑克牌的列表，格式为 ['AS', '2S', ...]。
         >>> black_jack_game = BlackjackGame()
         >>> black_jack_game.create_deck()
         ['QD', '9D', 'JC', 'QH', '2S', 'JH', '7D', '6H', '9S', '5C', '7H', 'QS', '5H',
@@ -82,7 +80,7 @@ class BlackjackGame:
         '2H', '10D', 'KS', '4D', 'AC', '10S', '2C', 'KD', '5S', 'JD', '8S', 'AS', '8D']
         """
         suits = ['H', 'D', 'C', 'S']
-        ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+        ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
         deck = [rank + suit for suit in suits for rank in ranks]
         random.shuffle(deck)
         return deck

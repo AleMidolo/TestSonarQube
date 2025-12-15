@@ -84,9 +84,9 @@ class CamelCaseMap:
     
     def _convert_key(self, key):
         """
-        converte la stringa della key in camel case
+        将键字符串转换为驼峰式
         :param key:str
-        :return:str, stringa della chiave convertita
+        :return:str, 转换后的键字符串
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map._convert_key('first_name')
         'firstName'

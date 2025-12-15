@@ -23,24 +23,20 @@ class PDFHandler:
                 page = reader.pages[page_num]
                 pdf_texts.append(page.extract_text())
         return pdf_texts
-    
+
     def merge_pdfs(self, output_filepath):
         """
-        Legge i file in self.readers che memorizza i riferimenti a più file PDF.
-        Unisce questi file in un unico PDF e aggiorna il numero di pagina, quindi salva su disco.
-        :param output_filepath: str, percorso del file di output in cui salvare
-        :return: str, "PDF uniti salvati in {output_filepath}" se uniti con successo
+        读取存储多个 PDF 文件句柄的 self.readers 中的文件。
+        将它们合并为一个 PDF 并更新页码，然后保存到磁盘。
+        :param output_filepath: str, 输出文件的保存路径
+        :return: str, 如果成功合并则为"Merged PDFs saved at {output_filepath}" 
         >>> handler = PDFHandler(['a.pdf', 'b.pdf'])
         >>> handler.merge_pdfs('out.pdf')
-        PDF uniti salvati in out.pdf
+        Merged PDFs saved at out.pdf
         """
-        pdf_writer = PyPDF2.PdfFileWriter()
+        merger = PyPDF2.PdfFileMerger()
         for reader in self.readers:
-            for page_num in range(len(reader.pages)):
-                page = reader.pages[page_num]
-                pdf_writer.add_page(page)
-        
-        with open(output_filepath, 'wb') as out_file:
-            pdf_writer.write(out_file)
-        
-        return f"PDF uniti salvati in {output_filepath}"
+            merger.append(reader)
+        merger.write(output_filepath)
+        merger.close()
+        return f"Merged PDFs saved at {output_filepath}"

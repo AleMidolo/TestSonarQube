@@ -71,19 +71,20 @@ class TriCalculator:
         >>> tricalculator.sin(30)
         0.5
         """
-        x = x / 180 * pi
         return round(self.taylor_sin(x, 50), 10)
 
     def taylor_sin(self, x, n):
         """
-        Finding the n-order Taylor expansion value of sin (x)
-        :param x: float
+        Finding the n-order Taylor expansion value of sin (x/180 * pi)
+        :param x: int
         :param n: int
         :return: float
-        >>> tricalculator.taylor_sin(pi/6, 50)
+        >>> tricalculator.taylor_sin(30, 50)
         0.49999999999999994
         """
         a = 0
+        x = x / 180 * pi
         for k in range(n):
-            a += ((-1) ** k) * (x ** (2 * k + 1)) / self.factorial(2 * k + 1)
+            term = ((-1) ** k) * (x ** (2 * k + 1)) / self.factorial(2 * k + 1)
+            a += term
         return a

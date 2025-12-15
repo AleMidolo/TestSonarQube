@@ -27,7 +27,7 @@ class RPGCharacter:
         """
         damage = max(self.attack_power - other_character.defense, 1)
         other_character.hp -= damage
-    
+
     def heal(self):
         """
         Heal the character with 10 hp and the max hp is 100.
@@ -40,7 +40,7 @@ class RPGCharacter:
         if self.hp > 100:
             self.hp = 100
         return self.hp
-    
+
     def gain_exp(self, amount):
         """
         Gain experience points for the character and level_up when the exp has reached the values that is 100 times the current level
@@ -60,7 +60,7 @@ class RPGCharacter:
             else:
                 self.exp += amount
                 amount = 0
-    
+
     def is_alive(self):
         """
         Check if player is alive.
@@ -70,12 +70,12 @@ class RPGCharacter:
         True
         """
         return self.hp > 0
-    
+
     def level_up(self):
         """
-        Increase the character's level, reset experience points to zero, increase health points by 20, attack power and defense points by 5.
-        The maximum level is 100.
-        :return: tuple[int, int, int, int], the new level, health points, attack power, and defense points after leveling up.
+        升级角色并将经验值重置为零，生命值增加20点，攻击力和防御力各增加5点。
+        最大等级为100
+        :return: tuple[int, int, int, int]，升级后的新等级、生命值、攻击力和防御力。
         >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
         >>> player_1.level_up()
         (2, 120, 15, 8)
@@ -86,6 +86,4 @@ class RPGCharacter:
             self.hp += 20
             self.attack_power += 5
             self.defense += 5
-            if self.hp > 100:
-                self.hp = 100
         return (self.level, self.hp, self.attack_power, self.defense)

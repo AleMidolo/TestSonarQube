@@ -75,9 +75,9 @@ class Server:
     
     def add_white_list(self, addr):
         """
-        Aggiungi un indirizzo alla whitelist e non fare nulla se esiste già
-        :param addr: int, indirizzo da aggiungere
-        :return: nuova whitelist, restituisce False se l'indirizzo esiste già
+        将地址添加到白名单，如果已存在则不做任何操作
+        :param addr: int, 要添加的地址
+        :return: 新的白名单，如果地址已存在则返回 False
         >>> server = Server()
         >>> server.add_white_list(88)
         [88]

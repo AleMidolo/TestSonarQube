@@ -108,10 +108,10 @@ class RegexUtils:
     
     def match(self, pattern, text):
         """
-        Controlla se il testo corrisponde all'espressione regolare
-        :param pattern: stringa, Modello di espressione regolare
-        :param text: stringa, Testo da abbinare
-        :return: True o False, che rappresenta se il testo corrisponde o meno all'espressione regolare
+        检查文本是否与正则表达式匹配
+        :param pattern: 字符串，正则表达式模式
+        :param text: 字符串，要匹配的文本
+        :return: True 或 False，表示文本是否与正则表达式匹配
         >>> ru = RegexUtils()
         >>> ru.match(r'\b\d{3}-\d{3}-\d{4}\b', "123-456-7890")
         True

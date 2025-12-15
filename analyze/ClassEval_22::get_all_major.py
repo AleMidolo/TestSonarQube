@@ -74,11 +74,12 @@ class ClassRegistrationSystem:
     
     def get_all_major(self):
         """
-        ottieni tutte le specializzazioni nel sistema
-        :return una lista di specializzazioni
+        获取系统中的所有专业
+        :return 返回专业列表
         >>> registration_system = ClassRegistrationSystem()
-        >>> registration_system.students = [{"name": "John", "major": "Computer Science"}]
-        >>> registration_system.get_all_major()
-        ["Computer Science"]
+        >>> registration_system.students = [{"name": "John", "major": "计算机科学"}],
+        >>> registration_system.get_all_major(student1)
+        ["计算机科学"]
         """
-        return list(set(student["major"] for student in self.students))
+        major_set = {student["major"] for student in self.students}
+        return list(major_set)

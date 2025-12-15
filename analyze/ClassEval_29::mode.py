@@ -33,9 +33,9 @@ class DataStatistics:
 
     def mode(self, data):
         """
-        Calcola la moda di un insieme di dati
-        :param data: list, lista dei dati
-        :return: float, la moda
+        计算一组数据的众数
+        :param data:list, 数据列表
+        :return:float, 众数
         >>> ds = DataStatistics()
         >>> ds.mode([2, 2, 3, 3, 4])
         [2, 3]

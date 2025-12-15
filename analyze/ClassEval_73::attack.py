@@ -77,10 +77,10 @@ class RPGCharacter:
     
     def attack(self, other_character):
         """
-        Attacca un altro personaggio. Il danno causato deve compensare il valore di difesa.
-        :param other_character: str, Il personaggio che viene attaccato.
-        >>> player_1 = RPGCharacter('giocatore 1', 100, 10, 3)
-        >>> player_2 = RPGCharacter('giocatore 2', 100, 7, 2)
+        攻击另一个角色。造成的伤害需要扣除防御值。
+        :param other_character: str, 被攻击的角色。
+        >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
+        >>> player_2 = RPGCharacter('player 2', 100, 7, 2)
         >>> player_1.attack(player_2)
         >>> player_2.hp
         92

@@ -70,7 +70,7 @@ class TriCalculator:
     
     def factorial(self, a):
         """
-        Calcola il fattoriale di a
+        计算 a 的阶乘
         :param a: int
         :return: int
         >>> tricalculator.factorial(5)

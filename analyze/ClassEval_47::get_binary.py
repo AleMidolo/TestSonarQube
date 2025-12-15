@@ -37,13 +37,13 @@ class IPAddress:
     
     def get_binary(self):
         """
-        Se l'indirizzo IP è valido, restituisce la forma binaria dell'indirizzo IP; altrimenti, restituisce ''
-        :return: stringa
+        如果IP地址有效，返回IP地址的二进制形式；否则，返回''
+        :return: 字符串
         >>> ipaddress = IPAddress("10.10.10.10")
         >>> ipaddress.get_binary()
         "00001010.00001010.00001010.00001010"
         """
         if self.is_valid():
-            return '.'.join(format(int(octet), '08b') for octet in self.get_octets())
+            return '.'.join(format(int(octet), '08b') for octet in self.ip_address.split('.'))
         else:
             return ''

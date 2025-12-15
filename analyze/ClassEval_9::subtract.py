@@ -10,11 +10,10 @@ class BigNumCalculator:
         >>> bigNum.add("12345678901234567890", "98765432109876543210")
         '111111111011111111100'
         """
-    
         max_length = max(len(num1), len(num2))
         num1 = num1.zfill(max_length)
         num2 = num2.zfill(max_length)
-    
+
         carry = 0
         result = []
         for i in range(max_length - 1, -1, -1):
@@ -22,12 +21,12 @@ class BigNumCalculator:
             carry = digit_sum // 10
             digit = digit_sum % 10
             result.insert(0, str(digit))
-    
+
         if carry > 0:
             result.insert(0, str(carry))
-    
+
         return ''.join(result)
-    
+
     @staticmethod
     def multiply(num1, num2):
         """
@@ -39,7 +38,6 @@ class BigNumCalculator:
             >>> bigNum.multiply("12345678901234567890", "98765432109876543210")
             '1219326311370217952237463801111263526900'
         """
-    
         len1, len2 = len(num1), len(num2)
         result = [0] * (len1 + len2)
 
@@ -57,19 +55,18 @@ class BigNumCalculator:
             start += 1
 
         return ''.join(map(str, result[start:]))
-    
+
     @staticmethod
     def subtract(num1, num2):
         """
-        Sottrae due grandi numeri.
-        :param num1: Il primo numero da sottrarre, str.
-        :param num2: Il secondo numero da sottrarre, str.
-        :return: La differenza dei due numeri, str.
+        把两个大数字相减。
+        :param num1: 第一个要被减去的数字，字符串。
+        :param num2: 第二个要减去的数字，字符串。
+        :return: 两个数字的差，字符串。
         >>> bigNum = BigNumCalculator()
         >>> bigNum.subtract("12345678901234567890", "98765432109876543210")
         '-86419753208641975320'
         """
-        
         # Ensure num1 is greater than num2 for simplicity
         if num1 == num2:
             return '0'
@@ -79,30 +76,24 @@ class BigNumCalculator:
         if num1 < num2:
             num1, num2 = num2, num1
             negative = True
-        
-        # Prepare for subtraction
-        num1 = num1[::-1]
-        num2 = num2[::-1]
+
+        max_length = max(len(num1), len(num2))
+        num1 = num1.zfill(max_length)
+        num2 = num2.zfill(max_length)
+
         result = []
         borrow = 0
-        
-        for i in range(len(num1)):
-            digit1 = int(num1[i])
-            digit2 = int(num2[i]) if i < len(num2) else 0
-            
-            if digit1 < digit2 + borrow:
-                digit1 += 10
-                result.append(str(digit1 - digit2 - borrow))
+        for i in range(max_length - 1, -1, -1):
+            digit_sub = int(num1[i]) - int(num2[i]) - borrow
+            if digit_sub < 0:
+                digit_sub += 10
                 borrow = 1
             else:
-                result.append(str(digit1 - digit2 - borrow))
                 borrow = 0
-        
-        # Remove leading zeros and reverse the result
-        while result and result[-1] == '0':
-            result.pop()
-        
-        if negative:
-            result.append('-')
-        
-        return ''.join(result[::-1]) if result else '0'
+            result.insert(0, str(digit_sub))
+
+        # Remove leading zeros
+        while len(result) > 1 and result[0] == '0':
+            result.pop(0)
+
+        return ('-' if negative else '') + ''.join(result)

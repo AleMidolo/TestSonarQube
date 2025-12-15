@@ -71,9 +71,9 @@ class ArrangementCalculator:
     @staticmethod
     def factorial(n):
         """
-        Calcola il fattoriale di un numero dato.
-        :param n: int, il numero di cui calcolare il fattoriale.
-        :return: int, il fattoriale del numero dato.
+        计算给定数字的阶乘。
+        :param n: int，要计算阶乘的数字。
+        :return: int，给定数字的阶乘。
         >>> ArrangementCalculator.factorial(4)
         24
         """

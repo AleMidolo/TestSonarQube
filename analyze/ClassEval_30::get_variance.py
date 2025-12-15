@@ -1,6 +1,6 @@
 def get_variance(self):
         """
-        Calcola la varianza, con una precisione di due cifre  decimali
+        计算方差，精确到小数点后两位
         :return: float
         >>> ds2 = DataStatistics2([1, 2, 3, 4])
         >>> ds2.get_variance()

@@ -81,16 +81,16 @@ class MetricsCalculator:
     
     def accuracy(self, predicted_labels, true_labels):
         """
-        Calcola l'accuratezza
-        :param predicted_labels: lista, risultati previsti
-        :param true_labels: lista, etichette vere
+        计算准确率
+        :param predicted_labels: list, 预测结果
+        :param true_labels: list, 真实标签
         :return: float
         >>> mc = MetricsCalculator()
         >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])
         0.5
         """
-        correct_predictions = self.true_positives + self.true_negatives
-        total_predictions = len(predicted_labels)
-        if total_predictions == 0:
+        self.update(predicted_labels, true_labels)
+        total = self.true_positives + self.false_positives + self.false_negatives + self.true_negatives
+        if total == 0:
             return 0.0
-        return correct_predictions / total_predictions
+        return (self.true_positives + self.true_negatives) / total

@@ -1,5 +1,4 @@
 import numpy as np
-
 class KappaCalculator: 
 
     @staticmethod
@@ -47,15 +46,16 @@ class KappaCalculator:
     @staticmethod
     def kappa(testData, k):
         """
-        Calcola il valore di Cohen kappa di una matrice k-dimensionale
-        :param testData: La matrice k-dimensionale di cui calcolare il valore di kappa di Cohen
-        :param k: int, Dimensione della matrice
-        :return: float, il valore di kappa di Cohen della matrice
+        计算k维矩阵的Cohen's kappa值
+        :param testData: 需要计算Cohen's kappa值的k维矩阵
+        :param k: int, 矩阵维度
+        :return: float, 矩阵的Cohen's kappa值
         >>> KappaCalculator.kappa([[2, 1, 1], [1, 2, 1], [1, 1, 2]], 3)
         0.25
         """
         n = len(testData)
-        p0 = np.sum(np.array(testData) == np.array(testData).T) / (n * (n - 1))
-        pe = np.sum(np.sum(testData, axis=0) ** 2) / (n ** 2)
-        kappa_value = (p0 - pe) / (1 - pe)
+        total = sum(sum(row) for row in testData)
+        p0 = sum((sum(row) ** 2 for row in testData)) / (total ** 2)
+        pe = sum((sum(testData[:, j]) ** 2 for j in range(k))) / (total ** 2)
+        kappa_value = (p0 - pe) / (1 - pe) if (1 - pe) != 0 else 0
         return kappa_value

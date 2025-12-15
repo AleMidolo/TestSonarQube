@@ -1,12 +1,12 @@
 def rotate_image(self, degrees):
-    """
-    ruota l'immagine se l'immagine è stata aperta
-    :param degrees: float, i gradi con cui l'immagine verrà ruotata
-    >>> processor.load_image('test.jpg')
-    >>> processor.rotate_image(90)
-    >>> processor.image.size
-    (4096, 3072)
-    """
-    
-    if self.image:
-        self.image = self.image.rotate(degrees, expand=True)
+        """
+        如果图像已打开，则旋转图像
+        :param degrees: float，图像将旋转的角度
+        >>> processor.load_image('test.jpg')
+        >>> processor.rotate_image(90)
+        >>> processor.image.size
+        (4096, 3072)  # Example output, actual size will depend on the original image
+        """
+        
+        if self.image:
+            self.image = self.image.rotate(degrees, expand=True)
