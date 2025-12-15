@@ -97,12 +97,15 @@ class Thermostat:
         >>> thermostat.simulate_operation()
         18
         """
-        self.auto_set_mode()
         start_time = time.time()
-        while abs(self.current_temperature - self.target_temperature) > 0.1:
+        self.auto_set_mode()
+        
+        while self.current_temperature != self.target_temperature:
             if self.mode == 'heat':
-                self.current_temperature += 1  # Simulate heating
+                self.current_temperature += 1
             else:
-                self.current_temperature -= 1  # Simulate cooling
-            time.sleep(1)  # Simulate time passing
+                self.current_temperature -= 1
+            
+            time.sleep(0.1)  # Simulate time taken to change temperature
+        
         return int(time.time() - start_time)

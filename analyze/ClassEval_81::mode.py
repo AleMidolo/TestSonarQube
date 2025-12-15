@@ -129,8 +129,6 @@ class Statistics3:
 
         """
         from collections import Counter
-        if not data:
-            return []
         count = Counter(data)
         max_count = max(count.values())
-        return [num for num, cnt in count.items() if cnt == max_count]
+        return [x for x, freq in count.items() if freq == max_count]

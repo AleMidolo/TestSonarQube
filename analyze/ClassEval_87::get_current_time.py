@@ -6,5 +6,4 @@ def get_current_time(self):
         >>> timeutils.get_current_time()
         "19:19:22"
         """
-        format = "%H:%M:%S"
-        return self.datetime.strftime(format)
+        return self.datetime.strftime('%H:%M:%S')

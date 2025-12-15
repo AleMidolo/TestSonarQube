@@ -10,8 +10,8 @@ def get_available_slots(self, date):
         """
         
         slots = []
-        start_of_day = datetime(date.year, date.month, date.day, 0, 0)
-        end_of_day = datetime(date.year, date.month, date.day, 23, 59, 59)
+        start_of_day = datetime.combine(date.date(), datetime.min.time())
+        end_of_day = datetime.combine(date.date(), datetime.max.time())
         
         last_end_time = start_of_day
         

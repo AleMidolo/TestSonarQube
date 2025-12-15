@@ -82,15 +82,18 @@ class DecryptionUtils:
         'ybocl'
         """
         key_length = len(self.key)
-        plaintext = []
-        for i, char in enumerate(ciphertext):
+        plaintext = ""
+        key_index = 0
+        
+        for char in ciphertext:
             if char.isalpha():
-                shift = ord(self.key[i % key_length].lower()) - ord('a')
+                shift = ord(self.key[key_index % key_length].lower()) - ord('a')
                 if char.isupper():
-                    plain_char = chr((ord(char) - shift - 65) % 26 + 65)
+                    plaintext += chr((ord(char) - shift - 65) % 26 + 65)
                 else:
-                    plain_char = chr((ord(char) - shift - 97) % 26 + 97)
-                plaintext.append(plain_char)
+                    plaintext += chr((ord(char) - shift - 97) % 26 + 97)
+                key_index += 1
             else:
-                plaintext.append(char)
-        return ''.join(plaintext)
+                plaintext += char
+        
+        return plaintext

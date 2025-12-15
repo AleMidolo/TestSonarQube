@@ -1,6 +1,3 @@
-import logging
-import datetime
-
 class AccessGatewayFilter: 
     def __init__(self):
         pass

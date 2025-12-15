@@ -41,7 +41,7 @@ class BookManagement:
         if title not in self.inventory:
             return 0
         return self.inventory[title]
-    
+
     def remove_book(self, title, quantity):
         """
         Remove one or several books from inventory which is sorted by book title.

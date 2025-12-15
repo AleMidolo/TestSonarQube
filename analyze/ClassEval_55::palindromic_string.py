@@ -47,7 +47,8 @@ class Manacher:
 
             # If the palindrome expanded past the right edge, adjust the center and right edge
             if i + P[i] > right:
-                center, right = i, i + P[i]
+                center = i
+                right = i + P[i]
 
         # Find the maximum element in P
         max_length = max(P)

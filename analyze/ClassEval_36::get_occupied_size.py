@@ -90,7 +90,7 @@ class EmailClient:
             email = self.inbox[0]
             freed_space += email['size']
             del self.inbox[0]
-    
+
     def get_occupied_size(self):
         """
         Gets the total size of the emails in the email box.

@@ -43,7 +43,7 @@ class BankAccount:
         """
         self.withdraw(amount)
         other_account.deposit(amount)
-    
+
     def view_balance(self):
         """
         Return the account balance.
