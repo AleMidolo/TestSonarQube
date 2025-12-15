@@ -1,0 +1,81 @@
+import numpy as np
+from gensim import matutils
+from numpy import dot, array
+
+class VectorUtil: 
+
+    def similarity(vector_1, vector_2):
+        """
+        Compute the cosine similarity between one vector and another vector.
+        :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).
+        :param vector_2: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).
+        :return: numpy.ndarray, Contains cosine distance between `vector_1` and `vector_2`
+        >>> vector_1 = np.array([1, 1])
+        >>> vector_2 = np.array([1, 0])
+        >>> VectorUtil.similarity(vector_1, vector_2)
+        0.7071067811865475
+        """
+        return dot(matutils.unitvec(vector_1), matutils.unitvec(vector_2))
+    
+    @staticmethod
+    def n_similarity(vector_list_1, vector_list_2):
+        """
+            Compute cosine similarity between two sets of vectors.
+            :param vector_list_1: list of numpy vector
+            :param vector_list_2: list of numpy vector
+            :return: numpy.ndarray, Similarities between vector_list_1 and vector_list_2.
+            >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]
+            >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]
+            >>> VectorUtil.n_similarity(vector_list1, vector_list2)
+            0.9897287473881233
+            """
+        if not (len(vector_list_1) and len(vector_list_2)):
+            raise ZeroDivisionError(
+                    'At least one of the passed list is empty.')
+
+        return dot(matutils.unitvec(array(vector_list_1).mean(axis=0)),
+                    matutils.unitvec(array(vector_list_2).mean(axis=0)))
+    
+    @staticmethod
+    def compute_idf_weight_dict(total_num, number_dict):
+        """
+            Calculate log(total_num+1/count+1) for each count in number_dict
+            :param total_num: int
+            :param number_dict: dict
+            :return: dict
+            >>> num_dict = {'key1':0.1, 'key2':0.5}
+            >>> VectorUtil.compute_idf_weight_dict(2, num_dict)
+            {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}
+            """
+        index_2_key_map = {}
+        index = 0
+        count_list = []
+        for key, count in number_dict.items():
+            index_2_key_map[index] = key
+            count_list.append(count)
+            index = index + 1
+
+        a = np.array(count_list)
+        # smooth, in case the divide by zero error
+        a = np.log((total_num + 1) / (a + 1))
+        result = {}
+
+        for index, w in enumerate(a):
+            key = index_2_key_map[index]
+            result[key] = w
+
+        return result
+    
+    @staticmethod
+    def cosine_similarities(vector_1, vectors_all):
+        """
+        Calcola le somiglianze coseno tra un vettore e un insieme di altri vettori.
+        :param vector_1: numpy.ndarray, Vettore da cui si devono calcolare le somiglianze, forma attesa (dim,).
+        :param vectors_all: lista di numpy.ndarray, Per ogni riga in vectors_all, viene calcolata la distanza da vector_1, forma attesa (num_vectors, dim).
+        :return: numpy.ndarray, Contiene la distanza coseno tra `vector_1` e ogni riga in `vectors_all`, forma (num_vectors,).
+        >>> vector1 = np.array([1, 2, 3])
+        >>> vectors_all = [np.array([4, 5, 6]), np.array([7, 8, 9])]
+        >>> VectorUtil.cosine_similarities(vector1, vectors_all)
+        [0.97463185 0.95941195]
+        """
+        return np.array([VectorUtil.similarity(vector_1, vector) for vector in vectors_all])
