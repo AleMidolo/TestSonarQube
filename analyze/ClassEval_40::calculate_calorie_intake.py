@@ -66,9 +66,9 @@ class FitnessTracker:
             BMR = 10 * self.weight + 6.25 * self.height * 100 - 5 * self.age - 161
         
         condition = self.condition_judge()
-        if condition == 1:  # too fat
-            return BMR * 1.2
-        elif condition == -1:  # too thin
-            return BMR * 1.6
-        else:  # normal
-            return BMR * 1.4
+        if condition == 1:
+            return BMR * 1.2  # too fat
+        elif condition == -1:
+            return BMR * 1.6  # too thin
+        else:
+            return BMR * 1.4  # normal

@@ -18,7 +18,7 @@ class IPAddress:
             return self.ip_address.split('.')
         else:
             return []
-
+    
     def get_binary(self):
         """
         If the IP address is valid, return the binary form of the IP address; otherwise, return ''
@@ -43,7 +43,7 @@ class IPAddress:
         >>> ipaddress.is_valid()
         True
         """
-        octets = self.ip_address.split('.')
+        octets = self.get_octets()
         if len(octets) != 4:
             return False
         for octet in octets:

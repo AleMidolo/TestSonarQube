@@ -77,9 +77,9 @@ class Server:
         >>> server.show("send")
         {"addr":66,"content":"ABC"}
         """
-        if type == 'send':
+        if type == "send":
             return self.send_struct
-        elif type == 'receive':
+        elif type == "receive":
             return self.receive_struct
         else:
             return False

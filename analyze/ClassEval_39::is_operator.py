@@ -18,7 +18,7 @@ class ExpressionCalculator:
         self.prepare(self.transform(expression))
         result_stack = deque()
         self.postfix_stack.reverse()
-
+    
         while self.postfix_stack:
             current_op = self.postfix_stack.pop()
             if not self.is_operator(current_op):
@@ -31,9 +31,9 @@ class ExpressionCalculator:
                 second_value = second_value.replace("~", "-")
                 temp_result = self._calculate(first_value, second_value, current_op)
                 result_stack.append(str(temp_result))
-
+    
         return float(eval("*".join(result_stack)))
-
+    
     def prepare(self, expression):
         """
         Prepare the infix expression for conversion to postfix notation
@@ -46,7 +46,7 @@ class ExpressionCalculator:
         arr = list(expression)
         current_index = 0
         count = 0
-
+    
         for i, current_op in enumerate(arr):
             if self.is_operator(current_op):
                 if count > 0:
@@ -61,18 +61,17 @@ class ExpressionCalculator:
                         self.postfix_stack.append(str(op_stack.pop()))
                         peek_op = op_stack[-1]
                     op_stack.append(current_op)
-
                 count = 0
                 current_index = i + 1
             else:
                 count += 1
-
+    
         if count > 1 or (count == 1 and not self.is_operator(arr[current_index])):
             self.postfix_stack.append("".join(arr[current_index: current_index + count]))
-
+    
         while op_stack[-1] != ',':
             self.postfix_stack.append(str(op_stack.pop()))
-
+    
     def compare(self, cur, peek):
         """
         Compare the precedence of two operators
@@ -88,18 +87,18 @@ class ExpressionCalculator:
         if peek == '%':
             peek = '\/'
         return self.operat_priority[ord(peek) - 40] >= self.operat_priority[ord(cur) - 40]
-
+    
     @staticmethod
     def _calculate(first_value, second_value, current_op):
         """
-            Perform the mathematical calculation based on the given operands and operator
-            :param first_value: string, the first operand
-            :param second_value: string, the second operand
-            :param current_op: string, the operator
-            :return: decimal.Decimal, the calculated result
-            >>> expression_calculator = ExpressionCalculator()
-            >>> expression_calculator._calculate("2", "3", "+")
-            5.0
+        Perform the mathematical calculation based on the given operands and operator
+        :param first_value: string, the first operand
+        :param second_value: string, the second operand
+        :param current_op: string, the operator
+        :return: decimal.Decimal, the calculated result
+        >>> expression_calculator = ExpressionCalculator()
+        >>> expression_calculator._calculate("2", "3", "+")
+        5.0
         """
         if current_op == '+':
             return Decimal(first_value) + Decimal(second_value)
@@ -113,16 +112,16 @@ class ExpressionCalculator:
             return Decimal(first_value) % Decimal(second_value)
         else:
             raise ValueError("Unexpected operator: {}".format(current_op))
-
+    
     @staticmethod
     def transform(expression):
         """
-            Transform the infix expression to a format suitable for conversion
-            :param expression: string, the infix expression to be transformed
-            :return: string, the transformed expression
-            >>> expression_calculator = ExpressionCalculator()
-            >>> expression_calculator.transform("2 + 3 * 4")
-            "2+3*4"
+        Transform the infix expression to a format suitable for conversion
+        :param expression: string, the infix expression to be transformed
+        :return: string, the transformed expression
+        >>> expression_calculator = ExpressionCalculator()
+        >>> expression_calculator.transform("2 + 3 * 4")
+        "2+3*4"
         """
         expression = re.sub(r"\\s+", "", expression)
         expression = re.sub(r"=$", "", expression)

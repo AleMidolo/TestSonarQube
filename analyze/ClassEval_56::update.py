@@ -77,7 +77,7 @@ class MetricsCalculator:
         Update the number of all four samples (true_positives, false_positives, false_negatives, true_negatives)
         :param predicted_labels: list, predicted results
         :param true_labels: list, true labels
-        :return: None, modifies the count of corresponding samples
+        :return: None, modifies the count of the corresponding samples
         >>> mc = MetricsCalculator()
         >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])
         (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)

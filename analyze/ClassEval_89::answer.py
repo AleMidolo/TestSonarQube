@@ -9,4 +9,5 @@ def answer(self, expression):
     >>> ret = game.answer(ans)
     True
     """
+    
     return self.evaluate_expression(expression)

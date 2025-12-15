@@ -10,7 +10,7 @@ def process_xml_data(self, file_name):
         True
         """
         try:
-            # Example modification: append a new element
+            # Example modification: append a new element to the root
             new_element = ET.Element('new_item')
             new_element.text = 'new_value'
             self.root.append(new_element)

@@ -22,10 +22,10 @@ def calculate_hand_value(self, hand):
             aces += 1
         else:
             value += int(rank)
-
-    # Adjust for aces if value exceeds 21
+    
+    # Adjust for Aces if value exceeds 21
     while value > 21 and aces:
         value -= 10
         aces -= 1
-
+    
     return value

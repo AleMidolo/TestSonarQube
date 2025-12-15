@@ -43,7 +43,7 @@ class KappaCalculator:
         Pe = ysum * oneMat * 1.0
         ans = (P0 - Pe) / (1 - Pe)
         return ans[0, 0]
-
+    
     @staticmethod
     def kappa(testData, k):
         """
@@ -55,8 +55,8 @@ class KappaCalculator:
         0.25
         """
         n = len(testData)
-        total = sum(sum(row) for row in testData)
-        p0 = sum((sum(row) * (sum(row) - 1)) for row in testData) / (n * (total * (total - 1)))
-        pe = sum((sum(testData[:, j]) * sum(testData[:, j]) for j in range(k))) / (n * (total * (total - 1)))
-        kappa_value = (p0 - pe) / (1 - pe) if (1 - pe) != 0 else 0
+        p0 = np.sum(np.array(testData) == np.max(testData, axis=1, keepdims=True), axis=1) / n
+        p1 = np.sum(np.array(testData) / np.sum(testData, axis=1, keepdims=True), axis=0) ** 2
+        p1 = np.sum(p1)
+        kappa_value = (p0.mean() - p1) / (1 - p1)
         return kappa_value

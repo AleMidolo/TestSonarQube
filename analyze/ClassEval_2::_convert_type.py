@@ -80,7 +80,7 @@ class ArgumentParser:
         if required:
             self.required.add(arg)
         self.types[arg] = arg_type
-    
+
     def _convert_type(self, arg, value):
         """
         Prova a convertire il tipo del valore di input cercando in self.types.

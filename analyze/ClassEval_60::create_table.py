@@ -12,9 +12,7 @@ class MovieTicketDB:
 
     def create_table(self):
         """
-        Creates a "tickets" table in the database if it does not already exist. 
-        The fields include ID of type int, movie name of type str, theater name of type str, 
-        seat number of type str, and customer name of type str.
+        Creates a "tickets" table in the database if it does not already exist. The fields include ID of type int, movie name of type str, theater name of type str, seat number of type str, and customer name of type str.
         :return: None
         """
         self.cursor.execute('''
@@ -38,9 +36,9 @@ class MovieTicketDB:
         :return: None
         """
         self.cursor.execute('''
-            INSERT INTO tickets (movie_name, theater_name, seat_number, customer_name)
-            VALUES (?, ?, ?, ?)
-        ''', (movie_name, theater_name, seat_number, customer_name))
+                INSERT INTO tickets (movie_name, theater_name, seat_number, customer_name)
+                VALUES (?, ?, ?, ?)
+            ''', (movie_name, theater_name, seat_number, customer_name))
         self.connection.commit()
     
     def search_tickets_by_customer(self, customer_name):
@@ -55,8 +53,8 @@ class MovieTicketDB:
         len(result) = 1
         """
         self.cursor.execute('''
-            SELECT * FROM tickets WHERE customer_name = ?
-        ''', (customer_name,))
+                SELECT * FROM tickets WHERE customer_name = ?
+            ''', (customer_name,))
         tickets = self.cursor.fetchall()
         return tickets
     
@@ -67,6 +65,6 @@ class MovieTicketDB:
         :return: None
         """
         self.cursor.execute('''
-            DELETE FROM tickets WHERE id = ?
-        ''', (ticket_id,))
+                DELETE FROM tickets WHERE id = ?
+            ''', (ticket_id,))
         self.connection.commit()

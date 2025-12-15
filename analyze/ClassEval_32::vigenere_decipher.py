@@ -89,9 +89,9 @@ class DecryptionUtils:
             if char.isalpha():
                 shift = ord(self.key[key_index % key_length].lower()) - ord('a')
                 if char.isupper():
-                    plaintext += chr((ord(char) - shift - 65) % 26 + 65)
+                    plaintext += chr((ord(char) - shift - ord('A')) % 26 + ord('A'))
                 else:
-                    plaintext += chr((ord(char) - shift - 97) % 26 + 97)
+                    plaintext += chr((ord(char) - shift - ord('a')) % 26 + ord('a'))
                 key_index += 1
             else:
                 plaintext += char

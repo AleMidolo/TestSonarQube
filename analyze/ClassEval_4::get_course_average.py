@@ -17,13 +17,13 @@ class AssessmentSystem:
         """
         self.students[name] = {'name': name,
                                'grade': grade, 'major': major, 'courses': {}}
-
+    
     def add_course_score(self, name, course, score):
         """
         Add score of specific course for student in self.students
         :param name: str, student name
-        :param cource: str, cource name
-        :param score: int, cource score
+        :param course: str, course name
+        :param score: int, course score
         >>> system.add_student('student 1', 3, 'SE')
         >>> system.add_course_score('student 1', 'math', 94)
         >>> system.students
@@ -31,7 +31,7 @@ class AssessmentSystem:
         """
         if name in self.students:
             self.students[name]['courses'][course] = score
-
+    
     def get_gpa(self, name):
         """
         Get average grade of one student.
@@ -48,11 +48,11 @@ class AssessmentSystem:
             return sum(self.students[name]['courses'].values()) / len(self.students[name]['courses'])
         else:
             return None
-
+    
     def get_all_students_with_fail_course(self):
         """
-        Get all students who have any score blow 60
-        :return: list of str ,student name
+        Get all students who have any score below 60
+        :return: list of str, student name
         >>> system.add_course_score('student 1', 'Society', 59)
         >>> system.get_all_students_with_fail_course()
         ['student 1']
@@ -64,7 +64,7 @@ class AssessmentSystem:
                     students.append(name)
                     break
         return students
-
+    
     def get_top_student(self):
         """
         Calculate every student's gpa with get_gpa method, and find the student with highest gpa
@@ -84,12 +84,12 @@ class AssessmentSystem:
                 top_gpa = gpa
                 top_student = name
         return top_student
-
+    
     def get_course_average(self, course):
         """
-        Ottieni il punteggio medio di un corso specifico.
-        :param course: str, nome del corso
-        :return: float, punteggi medi di questo corso se qualcuno ha un punteggio di questo corso, o None se nessuno ha registrazioni.
+        Get the average score of a specific course.
+        :param course: str, course name
+        :return: float, average scores of this course if someone has a score for this course, or None if no one has records.
         """
         total_score = 0
         count = 0

@@ -94,7 +94,7 @@ class EmailClient:
             email = self.inbox[0]
             freed_space += email['size']
             del self.inbox[0]
-
+    
     def get_occupied_size(self):
         """
         Ottiene la dimensione totale delle email nella casella di posta.
@@ -105,5 +105,4 @@ class EmailClient:
         >>> sender.get_occupied_size()
         10
         """
-        
         return sum(email['size'] for email in self.inbox)

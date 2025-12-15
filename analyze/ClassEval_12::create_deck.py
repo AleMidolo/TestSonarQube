@@ -23,7 +23,6 @@ class BlackjackGame:
         >>> black_jack_game.calculate_hand_value(['QD', '9D', 'JC', 'QH', 'AS'])
         40
         """
-    
         value = 0
         num_aces = 0
         for card in hand:
@@ -52,7 +51,6 @@ class BlackjackGame:
         >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])
         'Player wins'
         """
-    
         player_value = self.calculate_hand_value(player_hand)
         dealer_value = self.calculate_hand_value(dealer_hand)
         if player_value > 21 and dealer_value > 21:
@@ -82,7 +80,7 @@ class BlackjackGame:
         '2H', '10D', 'KS', '4D', 'AC', '10S', '2C', 'KD', '5S', 'JD', '8S', 'AS', '8D']
         """
         suits = ['H', 'D', 'C', 'S']
-        ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+        ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
         deck = [rank + suit for suit in suits for rank in ranks]
         random.shuffle(deck)
         return deck

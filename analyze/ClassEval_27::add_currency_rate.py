@@ -54,7 +54,6 @@ class CurrencyConverter:
         :return:If successful, returns None; if unsuccessful, returns False
         >>> cc = CurrencyConverter()
         >>> cc.update_currency_rate('CNY', 7.18)
-        self.rates['CNY'] = 7.18
         """
         if currency not in self.rates:
             return False
@@ -68,7 +67,6 @@ class CurrencyConverter:
         :return:Se ha successo, restituisce None; se non ha successo, restituisce False
         >>> cc = CurrencyConverter()
         >>> cc.add_currency_rate('KRW', 1308.84)
-        self.rates['KRW'] = 1308.84
         """
         if currency in self.rates:
             return False

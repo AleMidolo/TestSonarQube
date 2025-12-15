@@ -8,6 +8,5 @@ def remove_course(self, course):
     >>> classroom.courses
     []
     """
-    
     if course in self.courses:
         self.courses.remove(course)

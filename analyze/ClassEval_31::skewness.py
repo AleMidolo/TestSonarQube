@@ -1,5 +1,4 @@
 import math
-
 class DataStatistics4: 
 
     def correlation_coefficient(data1, data2):
@@ -10,6 +9,7 @@ class DataStatistics4:
         :return: The correlation coefficient, float.
         >>> DataStatistics4.correlation_coefficient([1, 2, 3], [4, 5, 6])
         0.9999999999999998
+    
         """
     
         n = len(data1)
@@ -17,7 +17,8 @@ class DataStatistics4:
         mean2 = sum(data2) / n
     
         numerator = sum((data1[i] - mean1) * (data2[i] - mean2) for i in range(n))
-        denominator = math.sqrt(sum((data1[i] - mean1) ** 2 for i in range(n))) * math.sqrt(sum((data2[i] - mean2) ** 2 for i in range(n)))
+        denominator = math.sqrt(sum((data1[i] - mean1) ** 2 for i in range(
+                n))) * math.sqrt(sum((data2[i] - mean2) ** 2 for i in range(n)))
     
         return numerator / denominator if denominator != 0 else 0
     
@@ -29,7 +30,9 @@ class DataStatistics4:
             :return: The kurtosis, float.
             >>> DataStatistics4.kurtosis([1, 20,100])
             -1.5000000000000007
-        """
+    
+            """
+    
     
         n = len(data)
         mean = sum(data) / n
@@ -55,7 +58,8 @@ class DataStatistics4:
             :return: The probability density function (PDF), list.
             >>> DataStatistics4.pdf([1, 2, 3], 1, 1)
             [0.3989422804014327, 0.24197072451914337, 0.05399096651318806]
-        """
+    
+            """
     
         pdf_values = [1 / (sigma * math.sqrt(2 * math.pi)) *
                       math.exp(-0.5 * ((x - mu) / sigma) ** 2) for x in data]
@@ -69,6 +73,7 @@ class DataStatistics4:
         :return: L'asimmetria, float.
         >>> DataStatistics4.skewness([1, 2, 5])
         2.3760224064818463
+
         """
         n = len(data)
         mean = sum(data) / n
@@ -80,6 +85,6 @@ class DataStatistics4:
         centered_data = [(x - mean) for x in data]
         third_moment = sum(x ** 3 for x in centered_data) / n
 
-        skewness_value = (third_moment / std_dev ** 3)
+        skewness_value = third_moment / (std_dev ** 3)
 
         return skewness_value

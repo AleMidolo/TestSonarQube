@@ -11,6 +11,7 @@ class SplitSentence:
         >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
+    
         sentences = re.split(
             r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s', sentences_string)
         return sentences
@@ -24,6 +25,7 @@ class SplitSentence:
         >>> ss.process_text_file("aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?")
         4
         """
+    
         sentences = self.split_sentences(sentences_string)
         max_count = 0
         for sentence in sentences:
