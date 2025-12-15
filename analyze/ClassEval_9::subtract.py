@@ -69,7 +69,6 @@ class BigNumCalculator:
         >>> bigNum.subtract("12345678901234567890", "98765432109876543210")
         '-86419753208641975320'
         """
-        
         # Ensure num1 is greater than num2 for simplicity
         if num1 == num2:
             return '0'

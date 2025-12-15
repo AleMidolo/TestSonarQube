@@ -65,6 +65,6 @@ class AccessGatewayFilter:
         {'user': {'name': 'user1'}}
         """
         auth_header = request.get('headers', {}).get('Authorization', {})
-        if 'user' in auth_header:
-            return auth_header
+        if 'jwt' in auth_header:
+            return auth_header['user']
         return None

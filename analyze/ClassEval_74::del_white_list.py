@@ -8,6 +8,7 @@ def del_white_list(self, addr):
     >>> server.del_white_list(88)
     []
     """
+    
     if addr not in self.white_list:
         return False
     else:

@@ -7,5 +7,6 @@ def split_sentences(self, text):
         >>> ru.split_sentences("Aaa. Bbbb? Ccc!")
         ['Aaa', 'Bbbb', 'Ccc!']
         """
-        sentences = re.split(r'[.!?]', text)
-        return [sentence.strip() for sentence in sentences if sentence.strip()][: -1] + [text.split('.')[-1].strip()]
+        pattern = r'[.!?][\s]+'
+        sentences = re.split(pattern, text)
+        return [sentence.strip() for sentence in sentences if sentence]  # Remove leading/trailing spaces

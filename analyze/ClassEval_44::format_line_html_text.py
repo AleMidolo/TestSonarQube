@@ -25,7 +25,7 @@ class HtmlUtil:
         :return:string, replaced text with single line break
         """
         return re.sub(re.compile(r'\n+'), '\n', text)
-    
+
     def extract_code_from_html_text(self, html_text):
         """
         extract codes from the html body
@@ -36,10 +36,10 @@ class HtmlUtil:
         ["print('Hello, world!')", 'for i in range(5):\n    print(i)']
         """
         text_with_code_tag = self.format_line_html_text(html_text)
-    
+
         if self.CODE_MARK not in text_with_code_tag:
             return []
-    
+
         code_index_start = 0
         soup = BeautifulSoup(html_text, 'lxml')
         code_tag = soup.find_all(name=['pre', 'blockquote'])
@@ -50,7 +50,7 @@ class HtmlUtil:
             if code:
                 code_list.append(code)
         return code_list
-    
+
     def format_line_html_text(self, html_text):
         """
         get the html text without the code, and add the code tag -CODE- where the code is

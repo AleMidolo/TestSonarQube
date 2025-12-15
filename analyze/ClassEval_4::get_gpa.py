@@ -17,7 +17,7 @@ class AssessmentSystem:
         """
         self.students[name] = {'name': name,
                                'grade': grade, 'major': major, 'courses': {}}
-    
+
     def add_course_score(self, name, course, score):
         """
         Add score of specific course for student in self.students
@@ -31,7 +31,7 @@ class AssessmentSystem:
         """
         if name in self.students:
             self.students[name]['courses'][course] = score
-    
+
     def get_all_students_with_fail_course(self):
         """
         Get all students who have any score below 60
@@ -47,7 +47,7 @@ class AssessmentSystem:
                     students.append(name)
                     break
         return students
-    
+
     def get_course_average(self, course):
         """
         Get the average score of a specific course.
@@ -63,7 +63,7 @@ class AssessmentSystem:
                     total += score
                     count += 1
         return total / count if count > 0 else None
-    
+
     def get_top_student(self):
         """
         Calculate every student's GPA with get_gpa method, and find the student with highest GPA
@@ -83,7 +83,7 @@ class AssessmentSystem:
                 top_gpa = gpa
                 top_student = name
         return top_student
-    
+
     def get_gpa(self, name):
         """
         Get average grade of one student.

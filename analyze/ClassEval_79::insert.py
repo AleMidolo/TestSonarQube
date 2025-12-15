@@ -6,7 +6,6 @@ class SQLGenerator:
         """
         self.table_name = table_name
 
-
     def select(self, fields=None, condition=None):
         """
         Generates a SELECT SQL statement based on the specified fields and conditions.
@@ -78,7 +77,7 @@ class SQLGenerator:
     
         condition = f"age BETWEEN {min_age} AND {max_age}"
         return self.select(condition=condition)
-    
+
     def insert(self, data):
         """
         Generates an INSERT SQL statement based on the given data.
@@ -88,5 +87,5 @@ class SQLGenerator:
         "INSERT INTO table1 (key1, key2) VALUES ('value1', 'value2');"
         """
         columns = ", ".join(data.keys())
-        values = ", ".join(f"'{value}'" for value in data.values())
+        values = ", ".join([f"'{value}'" for value in data.values()])
         return f"INSERT INTO {self.table_name} ({columns}) VALUES ({values});"

@@ -86,10 +86,11 @@ class ArgumentParser:
             arg_name = match[0].lstrip('-')
             value = match[2] if match[2] else match[3] if match[3] else True
             
+            # Convert type if necessary
             if arg_name in self.types:
-                self.arguments[arg_name] = self._convert_type(arg_name, value)
-            else:
-                self.arguments[arg_name] = value
+                value = self._convert_type(arg_name, value)
+            
+            self.arguments[arg_name] = value
         
         # Check for missing required arguments
         missing_args = self.required - self.arguments.keys()

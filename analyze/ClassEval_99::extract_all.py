@@ -6,6 +6,7 @@ def extract_all(self, output_path):
     >>> zfp = ZipFileProcessor("aaa.zip")
     >>> zfp.extract_all("result/aaa")
     """
+    
     try:
         with zipfile.ZipFile(self.file_name, 'r') as zip_file:
             zip_file.extractall(output_path)

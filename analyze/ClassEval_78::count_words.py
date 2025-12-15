@@ -42,5 +42,5 @@ class SplitSentence:
         >>> ss.count_words("abc def")
         2
         """
-        words = re.findall(r'\b[a-zA-Z]+\b', sentence)
+        words = re.findall(r'\b\w+\b', sentence)
         return len(words)

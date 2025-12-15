@@ -24,10 +24,10 @@ def move(self, direction):
     True
     """
     direction_map = {
-        'w': (-1, 0),  # up
-        's': (1, 0),   # down
-        'a': (0, -1),  # left
-        'd': (0, 1)    # right
+        'w': (-1, 0),
+        's': (1, 0),
+        'a': (0, -1),
+        'd': (0, 1)
     }
     
     if direction not in direction_map:
@@ -44,7 +44,8 @@ def move(self, direction):
         new_box_row = new_player_row + delta_row
         new_box_col = new_player_col + delta_col
         if self.map[new_box_row][new_box_col] == '#' or (new_box_row, new_box_col) in self.boxes:
-            return False  # Wall collision or another box collision
+            return False  # Wall or another box collision
+
         # Move the box
         box_index = self.boxes.index((new_player_row, new_player_col))
         self.boxes[box_index] = (new_box_row, new_box_col)

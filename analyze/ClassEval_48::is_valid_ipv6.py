@@ -48,7 +48,6 @@ class IpUtil:
         False
 
         """
-        
         try:
             socket.inet_pton(socket.AF_INET6, ip_address)
             return True

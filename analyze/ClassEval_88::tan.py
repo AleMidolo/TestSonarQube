@@ -67,7 +67,7 @@ class TriCalculator:
             n += 1
             t = -t * x * x / (2 * n - 1) / (2 * n - 2)
         return round(g, 10)
-
+    
     def tan(self, x):
         """
         Calculate the tan value of the x-degree angle

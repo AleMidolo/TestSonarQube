@@ -80,9 +80,9 @@ class EncryptionUtils:
             else:
                 row -= 1
 
-        ciphertext = ""
+        result = []
         for i in range(rails):
             for j in range(len(plain_text)):
                 if rail[i][j] != '\n':
-                    ciphertext += rail[i][j]
-        return ciphertext
+                    result.append(rail[i][j])
+        return "".join(result)

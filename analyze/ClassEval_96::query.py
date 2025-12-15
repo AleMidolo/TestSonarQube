@@ -57,6 +57,6 @@ class WeatherSystem:
             self.weather = weather_list[self.city]['weather']
             self.temperature = weather_list[self.city]['temperature']
             if tmp_units == 'fahrenheit':
-                return (self.celsius_to_fahrenheit(), self.weather)
-            return (self.temperature, self.weather)
+                return self.celsius_to_fahrenheit(), self.weather
+            return self.temperature, self.weather
         return None

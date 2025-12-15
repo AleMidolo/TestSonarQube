@@ -83,7 +83,7 @@ class EightPuzzle:
         [[2, 3, 4], [5, 8, 1], [0, 6, 7]]
         """
         i, j = self.find_blank(state)
-        new_state = [row[:] for row in state]  # Create a copy of the state
+        new_state = [row[:] for row in state]  # Create a copy of the current state
 
         if direction == 'up':
             new_state[i][j], new_state[i - 1][j] = new_state[i - 1][j], new_state[i][j]
