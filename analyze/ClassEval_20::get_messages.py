@@ -71,7 +71,7 @@ class Chat:
         self.users[sender].append(message_info)
         self.users[receiver].append(message_info)
         return True
-    
+
     def get_messages(self, username):
         """
         Ottieni tutti i messaggi di un utente dalla Chat.
@@ -84,6 +84,6 @@ class Chat:
         >>> chat.get_messages('Mary')
         []
         """
-        if username in self.users:
-            return self.users[username]
-        return []
+        if username not in self.users:
+            return []
+        return self.users[username]

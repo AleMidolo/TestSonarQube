@@ -45,6 +45,28 @@ class EightPuzzle:
 
         return new_state
 
+    def get_possible_moves(self, state):
+        """
+        Secondo lo stato attuale, trova tutte le direzioni di movimento possibili. Ha solo 4 direzioni: 'su', 'giù', 'sinistra', 'destra'.
+        :param state: una lista di interi di dimensione 3*3, memorizza lo stato attuale.
+        :return moves: una lista di str, memorizza tutte le direzioni di movimento possibili secondo lo stato attuale.
+        >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])
+        ['su', 'sinistra', 'destra']
+        """
+        moves = []
+        i, j = self.find_blank(state)
+
+        if i > 0:  # can move up
+            moves.append('up')
+        if i < 2:  # can move down
+            moves.append('down')
+        if j > 0:  # can move left
+            moves.append('left')
+        if j < 2:  # can move right
+            moves.append('right')
+
+        return moves
+
     def solve(self):
         """
         Use BFS algorithm to find the path solution which makes the initial state to the goal method.
@@ -73,25 +95,3 @@ class EightPuzzle:
                     open_list.append((new_state, path + [move]))
 
         return None
-
-    def get_possible_moves(self, state):
-        """
-        Secondo lo stato attuale, trova tutte le direzioni di movimento possibili. Ha solo 4 direzioni: 'su', 'giù', 'sinistra', 'destra'.
-        :param state: una lista di interi di dimensione 3*3, memorizza lo stato attuale.
-        :return moves: una lista di str, memorizza tutte le direzioni di movimento possibili secondo lo stato attuale.
-        >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])
-        ['su', 'sinistra', 'destra']
-        """
-        moves = []
-        i, j = self.find_blank(state)
-
-        if i > 0:  # can move up
-            moves.append('up')
-        if i < 2:  # can move down
-            moves.append('down')
-        if j > 0:  # can move left
-            moves.append('left')
-        if j < 2:  # can move right
-            moves.append('right')
-
-        return moves

@@ -65,26 +65,15 @@ class TriCalculator:
     
     def sin(self, x):
         """
-        Calculate the sin value of the x-degree angle
+        Calcola il valore del seno dell'angolo di x gradi
         :param x: float
         :return: float
         >>> tricalculator.sin(30)
         0.5
         """
-        return round(self.taylor_sin(x, 50), 10)
-
-    def taylor_sin(self, x, n):
-        """
-        Finding the n-order Taylor expansion value of sin (x/180 * pi)
-        :param x: int
-        :param n: int
-        :return: float
-        >>> tricalculator.taylor_sin(30, 50)
-        0.49999999999999994
-        """
-        a = 0
-        x = x / 180 * pi
-        for k in range(n):
-            term = ((-1) ** k) * (x ** (2 * k + 1)) / self.factorial(2 * k + 1)
-            a += term
-        return a
+        a = x / 180 * pi
+        result = 0
+        for n in range(50):
+            term = ((-1) ** n) * (a ** (2 * n + 1)) / self.factorial(2 * n + 1)
+            result += term
+        return round(result, 10)

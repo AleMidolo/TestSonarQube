@@ -6,4 +6,7 @@ def set_mode(self, mode):
         >>> thermostat.mode
         'cool'
         """
-        self.mode = mode
+        if mode in ['heat', 'cool']:
+            self.mode = mode
+        else:
+            raise ValueError("Mode must be 'heat' or 'cool'")

@@ -64,7 +64,7 @@ class NumberConverter:
         """
         Convert a number from binary format to decimal format.
         :param binary_num: str, binary number
-        :return: int, the decimal representation of binary number str.
+        :return: int, the decimal representation of the binary number str.
         >>> NumberConverter.binary_to_decimal('1010010110110111')
         42423
         """

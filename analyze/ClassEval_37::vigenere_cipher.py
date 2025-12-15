@@ -75,9 +75,9 @@ class EncryptionUtils:
                 key_char = self.key[i % key_length]
                 shift = ord(key_char.lower()) - ord('a')
                 if char.isupper():
-                    shifted_char = chr((ord(char) - 65 + shift) % 26 + 65)
+                    shifted_char = chr((ord(char) - ord('A') + shift) % 26 + ord('A'))
                 else:
-                    shifted_char = chr((ord(char) - 97 + shift) % 26 + 97)
+                    shifted_char = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
                 ciphertext.append(shifted_char)
             else:
                 ciphertext.append(char)

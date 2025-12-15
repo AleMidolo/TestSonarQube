@@ -89,9 +89,6 @@ class ClassRegistrationSystem:
                         class_count[class_name] += 1
                     else:
                         class_count[class_name] = 1
-        
         if not class_count:
-            return None
-        
-        most_popular_class = max(class_count, key=class_count.get)
-        return most_popular_class
+            return ""
+        return max(class_count, key=class_count.get)

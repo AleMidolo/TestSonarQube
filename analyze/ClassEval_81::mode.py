@@ -133,4 +133,4 @@ class Statistics3:
             return []
         count = Counter(data)
         max_count = max(count.values())
-        return [num for num, freq in count.items() if freq == max_count]
+        return [num for num, cnt in count.items() if cnt == max_count]

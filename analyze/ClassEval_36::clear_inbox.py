@@ -25,7 +25,6 @@ class EmailClient:
         >>> receiver.inbox
         {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10, 'time': '2023-07-13 11:36:40', 'state': 'unread'}
         """
-    
         if not recv.is_full_with_one_more_email(size):
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             email = {
@@ -41,7 +40,7 @@ class EmailClient:
         else:
             self.clear_inbox(size)
             return False
-    
+
     def fetch(self):
         """
         Retrieves the first unread email in the email box and marks it as read.
@@ -52,7 +51,6 @@ class EmailClient:
         >>> receiver.fetch()
         {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10, 'time': '2023-07-13 11:36:40', 'state': 'read'}
         """
-    
         if len(self.inbox) == 0:
             return None
         for i in range(len(self.inbox)):
@@ -60,7 +58,7 @@ class EmailClient:
                 self.inbox[i]['state'] = "read"
                 return self.inbox[i]
         return None
-    
+
     def is_full_with_one_more_email(self, size):
         """
         Determines whether the email box is full after adding an email of the given size.
@@ -71,10 +69,9 @@ class EmailClient:
         >>> receiver.is_full_with_one_more_email(10)
         False
         """
-    
         occupied_size = self.get_occupied_size()
         return True if occupied_size + size > self.capacity else False
-    
+
     def get_occupied_size(self):
         """
         Gets the total size of the emails in the email box.
@@ -85,12 +82,11 @@ class EmailClient:
         >>> sender.get_occupied_size()
         10
         """
-    
         occupied_size = 0
         for email in self.inbox:
             occupied_size += email["size"]
         return occupied_size
-    
+
     def clear_inbox(self, size):
         """
         Pulisce la casella di posta eliminando le email più vecchie fino a quando la casella di posta ha spazio sufficiente per accogliere la dimensione data.

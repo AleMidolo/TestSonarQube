@@ -91,6 +91,7 @@ class MetricsCalculator:
         >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])
         0.5
         """
+        
         self.update(predicted_labels, true_labels)
         if self.true_positives + self.false_negatives == 0:
             return 0.0

@@ -8,6 +8,21 @@ class UserLoginDB:
         """
         self.connection = sqlite3.connect(db_name)
         self.cursor = self.connection.cursor()
+        self.create_table()
+
+    def create_table(self):
+        """
+        Creates the "users" table if it does not exist.
+        :return: None
+        """
+        self.cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL
+            )
+        ''')
+        self.connection.commit()
 
     def insert_user(self, username, password):
         """
@@ -69,6 +84,6 @@ class UserLoginDB:
         len(result) = 1
         """
         self.cursor.execute('''
-                SELECT * FROM users WHERE username = ?
-            ''', (username,))
+            SELECT * FROM users WHERE username = ?
+        ''', (username,))
         return self.cursor.fetchall()

@@ -40,6 +40,6 @@ class PersonRequest:
         :param sex: str, the sex to validate
         :return: str, the validated sex or None if invalid
         """
-        if sex not in ['Male', 'Female', 'UGM']:
+        if sex not in ["Male", "Female", "UGM"]:
             return None
         return sex

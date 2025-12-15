@@ -89,4 +89,4 @@ class VendingMachine:
         """
         if not self.inventory:
             return False
-        return ', '.join(f"{item} - ${data['price']} [{data['quantity']}]" for item, data in self.inventory.items())
+        return ' '.join(f"{item} - ${data['price']} [{data['quantity']}]" for item, data in self.inventory.items())

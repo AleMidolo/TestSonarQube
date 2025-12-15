@@ -8,7 +8,7 @@ class CombinationCalculator:
         """
         self.datas = datas
 
-    def count(self, n: int, m: int) -> int:
+    def count(n: int, m: int) -> int:
         """
         Calculate the number of combinations for a specific count.
         :param n: The total number of elements,int.

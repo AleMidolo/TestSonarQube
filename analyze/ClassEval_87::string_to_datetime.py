@@ -82,7 +82,7 @@ class TimeUtils:
         """
         Convert the time string into a datetime instance
         :param string: string, string before format conversion
-        :return: instance of datetime
+        :return: datetime instance
         >>> timeutils.string_to_datetime("2001-7-18 1:1:1")
         2001-07-18 01:01:01
         """

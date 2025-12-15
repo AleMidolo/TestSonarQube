@@ -77,7 +77,7 @@ class SQLGenerator:
     
         condition = f"age BETWEEN {min_age} AND {max_age}"
         return self.select(condition=condition)
-
+    
     def insert(self, data):
         """
         Genera un'istruzione SQL INSERT basata sui dati forniti.

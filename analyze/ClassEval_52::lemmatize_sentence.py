@@ -10,15 +10,16 @@ def lemmatize_sentence(self, sentence):
 
         """
         pos_tags = self.get_pos_tag(sentence)
-        words = word_tokenize(self.remove_punctuation(sentence))
+        sentence = self.remove_punctuation(sentence)
+        words = word_tokenize(sentence)
         lemmatized_words = []
 
         for word, pos in zip(words, pos_tags):
-            if pos.startswith('V'):
+            if pos.startswith('VB'):
                 lemmatized_word = self.lemmatizer.lemmatize(word, pos='v')
-            elif pos.startswith('N'):
+            elif pos.startswith('NN'):
                 lemmatized_word = self.lemmatizer.lemmatize(word, pos='n')
-            elif pos.startswith('J'):
+            elif pos.startswith('JJ'):
                 lemmatized_word = self.lemmatizer.lemmatize(word, pos='a')
             else:
                 lemmatized_word = self.lemmatizer.lemmatize(word)
