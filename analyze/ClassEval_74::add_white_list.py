@@ -31,7 +31,7 @@ class Server:
         >>> server = Server()
         >>> server.add_white_list(88)
         >>> server.recv({"addr":88,"content":"abc"})
-        'abc'
+        abc
         """
         if not isinstance(info, dict) or "addr" not in info or "content" not in info:
             return -1

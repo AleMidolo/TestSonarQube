@@ -104,10 +104,10 @@ class Hotel:
         if room_type not in self.booked_rooms or name not in self.booked_rooms[room_type]:
             return False
         
-        if room_number > self.booked_rooms[room_type][name]:
+        if self.booked_rooms[room_type][name] < room_number:
             return False
         
-        if room_number == self.booked_rooms[room_type][name]:
+        if self.booked_rooms[room_type][name] == room_number:
             del self.booked_rooms[room_type][name]
         else:
             self.booked_rooms[room_type][name] -= room_number

@@ -87,4 +87,4 @@ class HtmlUtil:
         code_tags = soup.find_all(['pre', 'code'])
         for tag in code_tags:
             text = text.replace(tag.get_text(), self.CODE_MARK)
-        return text.strip()
+        return self.__format_line_feed(text)

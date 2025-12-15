@@ -1,115 +1,58 @@
-class PushBoxGame: 
-    def __init__(self, map):
-        """
-        Initialize the push box game with the map and various attributes.
-        :param map: list[str], the map of the push box game, represented as a list of strings. 
-            Each character on the map represents a different element, including the following:
-            - '#' represents a wall that neither the player nor the box can pass through;
-            - 'O' represents the initial position of the player;
-            - 'G' represents the target position;
-            - 'X' represents the initial position of the box.
-        >>> map = ["#####", "#O  #", "# X #", "#  G#", "#####"]   
-        >>> game = PushBoxGame(map)                
-        """
-        self.map = map
-        self.player_row = 0
-        self.player_col = 0
-        self.targets = []
-        self.boxes = []
-        self.target_count = 0
-        self.is_game_over = False
-        self.init_game()
+def move(self, direction):
+    """
+    Muovi il giocatore in base alla direzione specificata e controlla se il gioco è vinto.
+    :param direction: str, la direzione del movimento del giocatore. 
+        Può essere 'w', 's', 'a' o 'd' che rappresentano rispettivamente su, giù, sinistra o destra.
 
-    def init_game(self):
-        """
-        Initialize the game by setting the positions of the player, targets, and boxes based on the map.
-        >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"]) 
-        >>> game.targets
-        [(3, 3)]
-        >>> game.boxes
-        [(2, 2)]
-        >>> game.player_row
-        1
-        >>> game.player_col
-        1
-        """
-        for row in range(len(self.map)):
-            for col in range(len(self.map[row])):
-                if self.map[row][col] == "O":
-                    self.player_row = row
-                    self.player_col = col
-                elif self.map[row][col] == "G":
-                    self.targets.append((row, col))
-                    self.target_count += 1
-                elif self.map[row][col] == "X":
-                    self.boxes.append((row, col))
-
-    def check_win(self):
-        """
-        Check if the game is won. The game is won when all the boxes are placed on target positions.
-        And update the value of self.is_game_over.
-        :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.
-        >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"]) 
-        >>> game.check_win()
-        """
-        box_on_target_count = 0
-        for box in self.boxes:
-            if box in self.targets:
-                box_on_target_count += 1
-        if box_on_target_count == self.target_count:
-            self.is_game_over = True
-        return self.is_game_over
+    :return: True se il gioco è vinto, False altrimenti.
+    >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"])       
+    >>> game.print_map()
+    # # # # # 
+    # O     #
+    #   X   #
+    #     G #
+    # # # # #
+    >>> game.move('d')
+    False
+    >>> game.move('s')   
+    False
+    >>> game.move('a')   
+    False
+    >>> game.move('s') 
+    False
+    >>> game.move('d') 
+    True
+    """
+    direction_map = {
+        'w': (-1, 0),  # up
+        's': (1, 0),   # down
+        'a': (0, -1),  # left
+        'd': (0, 1)    # right
+    }
     
-    def move(self, direction):
-        """
-        Muovi il giocatore in base alla direzione specificata e controlla se il gioco è vinto.
-        :param direction: str, la direzione del movimento del giocatore. 
-            Può essere 'w', 's', 'a' o 'd' che rappresentano rispettivamente su, giù, sinistra o destra.
+    if direction not in direction_map:
+        return False
 
-        :return: True se il gioco è vinto, False altrimenti.
-        >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"])       
-        >>> game.print_map()
-        # # # # # 
-        # O     #
-        #   X   #
-        #     G #
-        # # # # #
-        >>> game.move('d')
-        False
-        >>> game.move('s')   
-        False
-        >>> game.move('a')   
-        False
-        >>> game.move('s') 
-        False
-        >>> game.move('d') 
-        True
-        """
-        direction_map = {
-            'w': (-1, 0),
-            's': (1, 0),
-            'a': (0, -1),
-            'd': (0, 1)
-        }
-        
-        if direction not in direction_map:
-            return False
-        
-        new_player_row = self.player_row + direction_map[direction][0]
-        new_player_col = self.player_col + direction_map[direction][1]
-        
-        if self.map[new_player_row][new_player_col] == '#':
-            return False
-        
-        if (new_player_row, new_player_col) in self.boxes:
-            new_box_row = new_player_row + direction_map[direction][0]
-            new_box_col = new_player_col + direction_map[direction][1]
-            if self.map[new_box_row][new_box_col] == '#' or (new_box_row, new_box_col) in self.boxes:
-                return False
-            self.boxes.remove((new_player_row, new_player_col))
-            self.boxes.append((new_box_row, new_box_col))
-        
-        self.player_row = new_player_row
-        self.player_col = new_player_col
-        
-        return self.check_win()
+    move_row, move_col = direction_map[direction]
+    new_player_row = self.player_row + move_row
+    new_player_col = self.player_col + move_col
+
+    if self.map[new_player_row][new_player_col] == '#':
+        return False  # Wall
+
+    if (new_player_row, new_player_col) in self.boxes:
+        new_box_row = new_player_row + move_row
+        new_box_col = new_player_col + move_col
+        if self.map[new_box_row][new_box_col] == '#' or (new_box_row, new_box_col) in self.boxes:
+            return False  # Wall or another box
+
+        # Move the box
+        box_index = self.boxes.index((new_player_row, new_player_col))
+        self.boxes[box_index] = (new_box_row, new_box_col)
+
+    # Move the player
+    self.player_row = new_player_row
+    self.player_col = new_player_col
+
+    # Check for win condition
+    return self.check_win()

@@ -118,5 +118,5 @@ class MahjongConnect:
         >>> mc.is_valid_move((0, 0), (1, 0))
         True
         """
-        # Implement pathfinding logic here
+        # Implementation of pathfinding logic goes here
         pass

@@ -68,17 +68,19 @@ class EncryptionUtils:
         >>> e.vigenere_cipher("abc")
         'kfa'
         """
-        ciphertext = []
-        key_length = len(self.key)
+        key = self.key
+        key_length = len(key)
+        ciphertext = ""
+        
         for i, char in enumerate(plaintext):
             if char.isalpha():
-                key_char = self.key[i % key_length]
-                shift = ord(key_char.lower()) - ord('a')
+                shift = ord(key[i % key_length].lower()) - ord('a')
                 if char.isupper():
                     shifted_char = chr((ord(char) - ord('A') + shift) % 26 + ord('A'))
                 else:
                     shifted_char = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
-                ciphertext.append(shifted_char)
+                ciphertext += shifted_char
             else:
-                ciphertext.append(char)
-        return ''.join(ciphertext)
+                ciphertext += char
+        
+        return ciphertext

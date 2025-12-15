@@ -25,6 +25,7 @@ class EmailClient:
         >>> receiver.inbox
         {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10, 'time': '2023-07-13 11:36:40', 'state': 'unread'}
         """
+    
         if not recv.is_full_with_one_more_email(size):
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             email = {
@@ -51,6 +52,7 @@ class EmailClient:
         >>> receiver.fetch()
         {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10, 'time': '2023-07-13 11:36:40', 'state': 'read'}
         """
+    
         if len(self.inbox) == 0:
             return None
         for i in range(len(self.inbox)):
@@ -69,6 +71,7 @@ class EmailClient:
         >>> sender.get_occupied_size()
         10
         """
+    
         occupied_size = 0
         for email in self.inbox:
             occupied_size += email["size"]
@@ -85,6 +88,7 @@ class EmailClient:
         >>> receiver.inbox
         [{'size': 15}]
         """
+    
         if len(self.addr) == 0:
             return
         freed_space = 0

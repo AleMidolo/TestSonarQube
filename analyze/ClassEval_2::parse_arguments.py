@@ -76,24 +76,26 @@ class ArgumentParser:
         """
         args = command_string.split()[1:]  # Skip the script name
         missing_args = set()
-        
+
         for arg in args:
             if '=' in arg:
                 key, value = arg.split('=', 1)
             else:
                 key = arg
-                value = True  # Default value for flags
-            
+                value = True  # For flags
+
             # Normalize the key
             key = key.lstrip('-')
-            self.arguments[key] = self._convert_type(key, value)
-        
+
+            # Convert the type if necessary
+            if key in self.types:
+                self.arguments[key] = self._convert_type(key, value)
+            else:
+                self.arguments[key] = value
+
         # Check for missing required arguments
-        for req in self.required:
-            if req not in self.arguments:
-                missing_args.add(req)
-        
+        missing_args = self.required - self.arguments.keys()
+
         if missing_args:
             return (False, missing_args)
-        
         return (True, None)

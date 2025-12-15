@@ -1,6 +1,6 @@
 def process_csv_data(self, N, save_file_name):
-        """
-       Legge un file CSV e ne carica titolo e dati.
+    """
+    Legge un file CSV e ne carica titolo e dati.
     Mantiene solo la colonna N (a partire da 0), ne converte i valori in maiuscolo
     e salva titolo e nuovi dati in un nuovo file CSV.
     Al nome del file originale viene aggiunto il suffisso '_process'.
@@ -14,12 +14,12 @@ def process_csv_data(self, N, save_file_name):
         1
         >>> csvProcessor.read_csv('read_test_process.csv')
         (['a', 'b', 'c', 'd'], [['HELLO']])
-        """
-        try:
-            title, data = self.read_csv(save_file_name)
-            new_data = [[row[N].upper()] for row in data]
-            new_file_name = save_file_name.replace('.csv', '_process.csv')
-            self.write_csv([title] + new_data, new_file_name)
-            return 1
-        except Exception as e:
-            return 0
+    """
+    try:
+        title, data = self.read_csv(save_file_name)
+        new_data = [[row[N].upper()] for row in data]
+        new_file_name = save_file_name.replace('.csv', '_process.csv')
+        self.write_csv([title] + new_data, new_file_name)
+        return 1
+    except Exception as e:
+        return 0

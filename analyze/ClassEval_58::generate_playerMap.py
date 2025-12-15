@@ -93,7 +93,7 @@ class MinesweeperGame:
             if self.check_won(self.player_map) == True:
                 return True
             return self.player_map
-    
+
     def generate_playerMap(self):
         """
         Genera una mappa del giocatore con la dimensione data del tabellone, il parametro n è la dimensione del tabellone, la dimensione del tabellone è n*n, il parametro k è il numero di mine, '-' rappresenta la posizione sconosciuta.

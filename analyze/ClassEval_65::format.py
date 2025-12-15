@@ -93,7 +93,6 @@ class NumberWordFormatter:
     
         return self.NUMBER_MORE[i]
     
-
     def format(self, x):
         """
         Converte un numero nella sua rappresentazione in parole.
@@ -103,8 +102,9 @@ class NumberWordFormatter:
         >>> formatter.format(123456)
         "CENTO VENTITRE MILA QUATTROCENTO CINQUANTA SEI SOLO"
         """
-        if isinstance(x, float):
-            x = str(x)
+        if isinstance(x, int):
+            return self.format_string(str(x))
+        elif isinstance(x, float):
+            return self.format_string(f"{x:.2f}")
         else:
-            x = str(int(x))
-        return self.format_string(x)
+            raise ValueError("Input must be an integer or float.")

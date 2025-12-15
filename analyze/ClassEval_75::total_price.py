@@ -46,7 +46,7 @@ class ShoppingCart:
         {"apple":{"price":1, "quantity":2}}
         """
         return self.items
-
+    
     def total_price(self) -> float:
         """
         Calcola il prezzo totale di tutti gli articoli nella lista della spesa, che è la quantità di ciascun articolo moltiplicata per il prezzo

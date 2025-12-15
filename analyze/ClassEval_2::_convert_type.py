@@ -92,8 +92,9 @@ class ArgumentParser:
         21
         """
         if arg in self.types:
+            arg_type = self.types[arg]
             try:
-                return self.types[arg](value)
+                return arg_type(value)
             except ValueError:
                 return value
         return value

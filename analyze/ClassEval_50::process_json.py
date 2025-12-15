@@ -57,9 +57,11 @@ class JSONProcessor:
         >>> json.read_json('test.json')
         {'key2': 'value2'}
         """
+        
         data = self.read_json(file_path)
         if data == 0 or remove_key not in data:
             return 0
-        data.pop(remove_key)
+        
+        del data[remove_key]
         self.write_json(data, file_path)
         return 1

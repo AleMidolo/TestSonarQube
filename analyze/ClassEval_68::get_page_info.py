@@ -72,13 +72,16 @@ class PageUtil:
         if page_number < 1 or page_number > self.total_pages:
             return {}
         
+        has_previous = page_number > 1
+        has_next = page_number < self.total_pages
         data = self.get_page(page_number)
+        
         return {
             "current_page": page_number,
             "per_page": self.page_size,
             "total_pages": self.total_pages,
             "total_items": self.total_items,
-            "has_previous": page_number > 1,
-            "has_next": page_number < self.total_pages,
+            "has_previous": has_previous,
+            "has_next": has_next,
             "data": data
         }

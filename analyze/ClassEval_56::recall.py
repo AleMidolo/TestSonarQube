@@ -83,9 +83,9 @@ class MetricsCalculator:
     
     def recall(self, predicted_labels, true_labels):
         """
-        Calcola il richiamo
-        :param predicted_labels: lista, risultati previsti
-        :param true_labels: lista, etichette vere
+        Calculate recall
+        :param predicted_labels: list, predicted results
+        :param true_labels: list, true labels
         :return: float
         >>> mc = MetricsCalculator()
         >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])

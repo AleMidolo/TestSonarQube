@@ -79,5 +79,7 @@ class URLHandler:
             for param in query_string.split("&"):
                 key_value = param.split("=")
                 if len(key_value) == 2:
-                    query_params[key_value[0]] = key_value[1]
+                    key = key_value[0]
+                    value = key_value[1]
+                    query_params[key] = value
         return query_params

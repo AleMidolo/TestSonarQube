@@ -65,22 +65,22 @@ class Calculator:
         """
         operand_stack = []
         operator_stack = []
-        num = ''
-        
-        for char in expression:
-            if char.isdigit() or char == '.':
-                num += char
-            else:
-                if num:
-                    operand_stack.append(float(num))
-                    num = ''
+        i = 0
+        while i < len(expression):
+            char = expression[i]
+            if char.isdigit():
+                num = 0
+                while i < len(expression) and expression[i].isdigit():
+                    num = num * 10 + int(expression[i])
+                    i += 1
+                operand_stack.append(num)
+                continue
+            elif char in self.operators:
                 while (operator_stack and 
                        self.precedence(operator_stack[-1]) >= self.precedence(char)):
                     operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
                 operator_stack.append(char)
-        
-        if num:
-            operand_stack.append(float(num))
+            i += 1
         
         while operator_stack:
             operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)

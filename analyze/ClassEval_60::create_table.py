@@ -10,6 +10,24 @@ class MovieTicketDB:
         self.cursor = self.connection.cursor()
         self.create_table()
 
+    def create_table(self):
+        """
+        Creates a "tickets" table in the database if it does not already exist. 
+        The fields include ID of type int, movie name of type str, theater name of type str, 
+        seat number of type str, and customer name of type str.
+        :return: None
+        """
+        self.cursor.execute('''
+            CREATE TABLE IF NOT EXISTS tickets (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                movie_name TEXT NOT NULL,
+                theater_name TEXT NOT NULL,
+                seat_number TEXT NOT NULL,
+                customer_name TEXT NOT NULL
+            )
+        ''')
+        self.connection.commit()
+
     def insert_ticket(self, movie_name, theater_name, seat_number, customer_name):
         """
         Inserts a new ticket into the "tickets" table.
@@ -51,20 +69,4 @@ class MovieTicketDB:
         self.cursor.execute('''
                 DELETE FROM tickets WHERE id = ?
             ''', (ticket_id,))
-        self.connection.commit()
-    
-    def create_table(self):
-        """
-        Crea una tabella "tickets" nel database se non esiste già. I campi includono ID di tipo int, nome del film di tipo str, nome del teatro di tipo str, numero del posto di tipo str e nome del cliente di tipo str.
-        :return: None
-        """
-        self.cursor.execute('''
-            CREATE TABLE IF NOT EXISTS tickets (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                movie_name TEXT NOT NULL,
-                theater_name TEXT NOT NULL,
-                seat_number TEXT NOT NULL,
-                customer_name TEXT NOT NULL
-            )
-        ''')
         self.connection.commit()

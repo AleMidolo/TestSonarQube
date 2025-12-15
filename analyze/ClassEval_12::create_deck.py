@@ -23,6 +23,7 @@ class BlackjackGame:
         >>> black_jack_game.calculate_hand_value(['QD', '9D', 'JC', 'QH', 'AS'])
         40
         """
+    
         value = 0
         num_aces = 0
         for card in hand:
@@ -51,6 +52,7 @@ class BlackjackGame:
         >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])
         'Player wins'
         """
+    
         player_value = self.calculate_hand_value(player_hand)
         dealer_value = self.calculate_hand_value(dealer_hand)
         if player_value > 21 and dealer_value > 21:

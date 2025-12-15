@@ -8,7 +8,7 @@ class NLPDataProcessor2:
         keep only English letters and spaces in the string, then convert the string to lower case, and then split the string into a list of words.
         :param string_list: a list of strings
         :return: words_list: a list of words lists
-        >>> NLPDataProcessor2().process_data(['This is a test.'])
+        >>> NLPDataProcessor2.process_data(['This is a test.'])
         [['this', 'is', 'a', 'test']]
         """
     
@@ -26,7 +26,7 @@ class NLPDataProcessor2:
         Calculate the word frequency of each word in the list of words list, and sort the word frequency dictionary by value in descending order.
         :param words_list: a list of words lists
         :return: top 5 word frequency dictionary, a dictionary of word frequency, key is word, value is frequency
-        >>> NLPDataProcessor2().calculate_word_frequency([['this', 'is', 'a', 'test'], ['this', 'is', 'another', 'test']])
+        >>> NLPDataProcessor2.calculate_word_frequency([['this', 'is', 'a', 'test'], ['this', 'is', 'another', 'test']])
         {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}
         """
     
@@ -38,12 +38,13 @@ class NLPDataProcessor2:
         top_5_word_frequency = dict(list(sorted_word_frequency.items())[:5])
         return top_5_word_frequency
     
+
     def process(self, string_list):
         """
         mantiene solo le lettere inglesi e gli spazi nella stringa, quindi converte la stringa in minuscolo, e poi divide la stringa in una lista di parole. Calcola la frequenza delle parole di ciascuna parola nella lista di parole e ordina il dizionario della frequenza delle parole per valore in ordine decrescente.
         :param string_list: una lista di stringhe
         :return: dizionario della frequenza delle parole top 5, un dizionario della frequenza delle parole, la chiave è la parola, il valore è la frequenza
-        >>> NLPDataProcessor2().process(['This is a test.', 'This is another test.'])
+        >>> NLPDataProcessor2.process(['This is a test.', 'This is another test.'])
         {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}
         """
         words_list = self.process_data(string_list)

@@ -110,4 +110,4 @@ class NumberWordFormatter:
             idx += 1
         
         words.reverse()
-        return " AND ".join(words) + " ONLY"
+        return " AND ".join(words).strip() + " ONLY"

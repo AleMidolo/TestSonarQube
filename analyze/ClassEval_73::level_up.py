@@ -44,7 +44,7 @@ class RPGCharacter:
     def gain_exp(self, amount):
         """
         Gain experience points for the character and level_up when the exp has reached the values that is 100 times the current level
-        The experience that overflows should be used to calculate the next leve up untill exhausts
+        The experience that overflows should be used to calculate the next leve up until exhausts
         :param amount: int, the amount of experience points to gain.
         >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
         >>> player_1.gain_exp(1100)

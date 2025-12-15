@@ -15,7 +15,8 @@ class Chat:
         >>> chat = Chat()
         >>> chat.add_user('John')
         True
-        self.users = {'John': []}
+        >>> chat.users
+        {'John': []}
         >>> chat.add_user('John')
         False
         """

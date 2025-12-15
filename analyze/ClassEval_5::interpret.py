@@ -30,13 +30,16 @@ class AutomaticGuitarSimulator:
         if not self.play_text.strip():
             return []
         
-        chords_and_tunes = []
-        import re
-        matches = re.findall(r'([A-G][#b]?m?)(\d+)', self.play_text)
+        chords = []
+        parts = self.play_text.split()
         
-        for chord, tune in matches:
-            chords_and_tunes.append({'Chord': chord, 'Tune': tune})
-            if display:
-                print(self.display(chord, tune))
+        for part in parts:
+            chord = ''.join(filter(str.isalpha, part))
+            tune = ''.join(filter(str.isdigit, part))
+            chords.append({'Chord': chord, 'Tune': tune})
         
-        return chords_and_tunes
+        if display:
+            for chord in chords:
+                print(self.display(chord['Chord'], chord['Tune']))
+        
+        return chords
