@@ -26,7 +26,7 @@ class StudentDatabaseProcessor:
                 gender TEXT,
                 grade INTEGER
             )
-            """
+        """
         cursor.execute(create_table_query)
     
         conn.commit()

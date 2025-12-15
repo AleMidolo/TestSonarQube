@@ -38,7 +38,7 @@ class BankAccount:
     
     def transfer(self, other_account, amount):
         """
-        Trasferisce una certa somma dal conto corrente a un altro conto.
+        Transfers a certain amount from the current account to another account.
         :param other_account: BankAccount
         :param amount: int
         >>> account1 = BankAccount()

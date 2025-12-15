@@ -65,6 +65,6 @@ class HtmlUtil:
         for element in soup.find_all(['h1', 'p']):
             text_parts.append(element.get_text())
         code_tags = soup.find_all(['pre', 'code'])
-        for _ in code_tags:
+        for code in code_tags:
             text_parts.append(self.CODE_MARK)
         return '\n'.join(text_parts)

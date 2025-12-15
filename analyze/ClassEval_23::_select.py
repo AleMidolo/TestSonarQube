@@ -77,7 +77,6 @@ class CombinationCalculator:
         if resultIndex == len(resultList):
             result.append(resultList.copy())
             return
-        
         for i in range(dataIndex, len(self.datas)):
             resultList[resultIndex] = self.datas[i]
             self._select(i + 1, resultList, resultIndex + 1, result)

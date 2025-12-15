@@ -77,5 +77,8 @@ class VectorUtil:
         >>> VectorUtil.n_similarity(vector_list1, vector_list2)
         0.9897287473881233
         """
-        similarities = [VectorUtil.similarity(v1, v2) for v1 in vector_list_1 for v2 in vector_list_2]
+        similarities = []
+        for vec1 in vector_list_1:
+            for vec2 in vector_list_2:
+                similarities.append(VectorUtil.similarity(vec1, vec2))
         return np.mean(similarities)

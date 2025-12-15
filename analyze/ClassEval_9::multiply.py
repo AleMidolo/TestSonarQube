@@ -92,14 +92,18 @@ class BigNumCalculator:
         if num1 == "0" or num2 == "0":
             return "0"
         
-        len1, len2 = len(num1), len(num2)
-        result = [0] * (len1 + len2)
+        num1 = num1[::-1]
+        num2 = num2[::-1]
+        result = [0] * (len(num1) + len(num2))
         
-        for i in range(len1 - 1, -1, -1):
-            for j in range(len2 - 1, -1, -1):
-                product = (int(num1[i]) * int(num2[j])) + result[i + j + 1]
-                result[i + j + 1] = product % 10
-                result[i + j] += product // 10
+        for i in range(len(num1)):
+            for j in range(len(num2)):
+                product = int(num1[i]) * int(num2[j])
+                result[i + j] += product
+                result[i + j + 1] += result[i + j] // 10
+                result[i + j] %= 10
         
-        result_str = ''.join(map(str, result)).lstrip('0')
-        return result_str if result_str else '0'
+        while len(result) > 1 and result[-1] == 0:
+            result.pop()
+        
+        return ''.join(map(str, result[::-1]))

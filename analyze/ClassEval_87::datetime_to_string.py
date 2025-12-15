@@ -6,5 +6,4 @@ def datetime_to_string(self, datetime):
     >>> timeutils.datetime_to_string(timeutils.datetime)
     "2023-06-14 19:30:03"
     """
-    format = "%Y-%m-%d %H:%M:%S"
-    return datetime.strftime(format)
+    return datetime.strftime("%Y-%m-%d %H:%M:%S")

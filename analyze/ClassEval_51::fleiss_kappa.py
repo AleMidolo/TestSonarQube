@@ -54,6 +54,6 @@ class KappaCalculator:
         # Calculate the expected agreement
         Pe = np.sum(p ** 2)
         
-        # Calculate Fleiss' kappa
+        # Calculate Fleiss' Kappa
         kappa_value = (P - Pe) / (1 - Pe)
         return kappa_value

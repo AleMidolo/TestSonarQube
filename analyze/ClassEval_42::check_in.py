@@ -38,10 +38,12 @@ class Hotel:
         >>> hotel.book_room('triple', 1, 'guest 1')
         False
         """
+        # Check if there are any rooms of the specified type available
         if room_type not in self.available_rooms.keys():
             return False
-
+    
         if room_number <= self.available_rooms[room_type]:
+            # Book the room by adding it to the booked_rooms dictionary
             if room_type not in self.booked_rooms.keys():
                 self.booked_rooms[room_type] = {}
             self.booked_rooms[room_type][name] = room_number
@@ -51,7 +53,7 @@ class Hotel:
             return self.available_rooms[room_type]
         else:
             return False
-
+    
     def check_out(self, room_type, room_number):
         """
         Check out rooms, add number for specific type in available_rooms.
@@ -70,7 +72,7 @@ class Hotel:
             self.available_rooms[room_type] += room_number
         else:
             self.available_rooms[room_type] = room_number
-
+    
     def get_available_rooms(self, room_type):
         """
         Get the number of specific type of available rooms.
@@ -81,7 +83,7 @@ class Hotel:
         5
         """
         return self.available_rooms[room_type]
-
+    
     def check_in(self, room_type, room_number, name):
         """
         Controlla se la stanza del tipo e numero specificati è prenotata dalla persona di nome name.

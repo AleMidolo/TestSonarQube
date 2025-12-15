@@ -40,7 +40,7 @@ class CSVProcessor:
         title, data = self.read_csv(save_file_name)
         column_data = [row[N] for row in data]
         column_data = [row.upper() for row in column_data]
-        new_data = [title] + [column_data]
+        new_data = [title, column_data]
         return self.write_csv(new_data, save_file_name.split('.')[0] + '_process.csv')
     
     def write_csv(self, data, file_name):

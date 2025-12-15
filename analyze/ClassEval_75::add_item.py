@@ -45,7 +45,7 @@ class ShoppingCart:
         11.0
         """
         return sum([item['quantity'] * item['price'] for item in self.items.values()])
-
+    
     def add_item(self, item, price, quantity=1):
         """
         Aggiungi informazioni sull'oggetto alla lista della spesa, inclusi prezzo e quantità. La quantità predefinita è 1

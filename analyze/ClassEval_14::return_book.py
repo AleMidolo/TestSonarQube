@@ -5,6 +5,7 @@ def return_book(self, book_id):
     >>> book_db = BookManagementDB("test.db")
     >>> book_db.return_book(1)
     """
+    
     self.cursor.execute('''
             UPDATE books SET available = 1 WHERE id = ?
         ''', (book_id,))

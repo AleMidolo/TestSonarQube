@@ -106,12 +106,12 @@ class MetricsCalculator2:
                 return mrr_value, [mrr_value]
 
         if type(data) == list:
-            mrr_results = []
+            mrr_values = []
             for (sub_list, total_num) in data:
                 rank = np.where(np.array(sub_list) == 1)[0]
                 if len(rank) == 0:
                     mrr_value = 0.0
                 else:
                     mrr_value = 1.0 / (rank[0] + 1)
-                mrr_results.append(mrr_value)
-            return np.mean(mrr_results), mrr_results
+                mrr_values.append(mrr_value)
+            return np.mean(mrr_values), mrr_values

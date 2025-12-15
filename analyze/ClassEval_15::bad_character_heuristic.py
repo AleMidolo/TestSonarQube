@@ -45,16 +45,16 @@ class BoyerMooreSearch:
         [0, 3]
         """
         positions = []
-        currentPos = 0
+        shift = 0
         
-        while currentPos <= self.textLen - self.patLen:
-            mismatchPos = self.mismatch_in_text(currentPos)
-            if mismatchPos == -1:
-                positions.append(currentPos)
-                currentPos += 1
+        while shift <= self.textLen - self.patLen:
+            mismatch_index = self.mismatch_in_text(shift)
+            if mismatch_index == -1:
+                positions.append(shift)
+                shift += 1
             else:
-                badCharIndex = self.match_in_pattern(self.text[mismatchPos])
-                shift = max(1, mismatchPos - (currentPos + badCharIndex))
-                currentPos += shift
+                char = self.text[mismatch_index]
+                bad_char_index = self.match_in_pattern(char)
+                shift += max(1, mismatch_index - (shift + bad_char_index))
         
         return positions

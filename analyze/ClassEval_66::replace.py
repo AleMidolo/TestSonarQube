@@ -12,7 +12,7 @@ class NumericEntityUnescaper:
             True
         """
         return char.isdigit() or ('a' <= char.lower() <= 'f')
-
+    
     def replace(self, string):
         """
         Sostituisce i riferimenti ai caratteri numerici (entità HTML) nella stringa di input con i loro corrispondenti caratteri Unicode.
@@ -23,9 +23,9 @@ class NumericEntityUnescaper:
         'ABC'
         """
         import re
-
+        
         def replace_entity(match):
             code = int(match.group(1))
             return chr(code)
-
+        
         return re.sub(r'&#(\d+);', replace_entity, string)

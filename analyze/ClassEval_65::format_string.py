@@ -84,15 +84,30 @@ class NumberWordFormatter:
         >>> formatter.format_string("123456")
         "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
         """
-        # Split the number into groups of three digits
-        x = x[::-1]
-        groups = [x[i:i+3][::-1] for i in range(0, len(x), 3)]
-        words = []
+        if not x.isdigit():
+            return ""
         
-        for i, group in enumerate(groups):
-            if group != "000":
-                words.append(self.trans_three(group) + (" " + self.parse_more(i) if i > 0 else ""))
+        x = int(x)
+        if x == 0:
+            return "ZERO ONLY"
+        
+        words = []
+        if x < 0:
+            words.append("MINUS")
+            x = -x
+        
+        thousands = ["", "THOUSAND", "MILLION", "BILLION"]
+        index = 0
+        
+        while x > 0:
+            part = x % 1000
+            if part > 0:
+                words_part = self.trans_three(str(part).zfill(3))
+                if thousands[index]:
+                    words_part += " " + thousands[index]
+                words.append(words_part)
+            x //= 1000
+            index += 1
         
         words.reverse()
-        result = " AND ".join(words).strip()
-        return result + " ONLY"
+        return " AND ".join(words).strip() + " ONLY"
