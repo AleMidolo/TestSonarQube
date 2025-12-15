@@ -1,19 +1,27 @@
 def vigenere_cipher(self, plaintext):
         """
-        Encrypts the plaintext using the Vigenere cipher.
-        :param plaintext: The plaintext to encrypt, str.
-        :return: The ciphertext, str.
+        प्लेनटेक्स्ट को विजेनेरे सिफर का उपयोग करके एन्क्रिप्ट करता है।
+        :param plaintext: एन्क्रिप्ट करने के लिए प्लेनटेक्स्ट, str.
+        :return: ciphertext, str.
         >>> e = EncryptionUtils("key")
         >>> e.vigenere_cipher("abc")
         'kfa'
         """
+        key = self.key
+        key_length = len(key)
+        plaintext_length = len(plaintext)
         ciphertext = ""
-        key_length = len(self.key)
-        key_as_int = [ord(i) - ord('a') for i in self.key.lower()]
-        plaintext_int = [ord(i) - ord('a') for i in plaintext.lower()]
-        
-        for i in range(len(plaintext_int)):
-            value = (plaintext_int[i] + key_as_int[i % key_length]) % 26
-            ciphertext += chr(value + ord('a'))
-        
+
+        for i in range(plaintext_length):
+            if plaintext[i].isalpha():
+                shift = ord(key[i % key_length].lower()) - ord('a')
+                if plaintext[i].isupper():
+                    base = ord('A')
+                else:
+                    base = ord('a')
+                encrypted_char = chr((ord(plaintext[i]) - base + shift) % 26 + base)
+                ciphertext += encrypted_char
+            else:
+                ciphertext += plaintext[i]
+
         return ciphertext

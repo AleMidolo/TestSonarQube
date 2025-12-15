@@ -36,12 +36,12 @@ class AutomaticGuitarSimulator:
 
     def display(self, key, value):
         """
-        Print out chord and play tune with following format: Normal Guitar Playing -- Chord: %s, Play Tune: %s
-        :param key:str, chord
-        :param value:str, play tune
+        निम्नलिखित प्रारूप के साथ कॉर्ड प्रिंट करें और धुन बजाएं: सामान्य गिटार खेलने का तरीका -- कॉर्ड: %s, धुन बजाएं: %s
+        :param key:str, कॉर्ड
+        :param value:str, धुन बजाएं
         :return: str
         >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
         >>> context.display("C", "53231323")
-        Normal Guitar Playing -- Chord: C, Play Tune: 53231323
+        सामान्य गिटार खेलने का तरीका -- कॉर्ड: C, धुन बजाएं: 53231323
         """
-        print(f"Normal Guitar Playing -- Chord: {key}, Play Tune: {value}")
+        print("सामान्य गिटार खेलने का तरीका -- कॉर्ड: %s, धुन बजाएं: %s" % (key, value))

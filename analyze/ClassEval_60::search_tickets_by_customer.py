@@ -1,8 +1,8 @@
 def search_tickets_by_customer(self, customer_name):
     """
-    Searches for tickets in the "tickets" table by customer name.
-    :param customer_name: str, the name of the customer to search for.
-    :return: list of tuples, the rows from the "tickets" table that match the search criteria.
+    "tickets" तालिका में ग्राहक के नाम द्वारा टिकटों की खोज करता है।
+    :param customer_name: str, ग्राहक का नाम जिसे खोजा जाना है।
+    :return: ट्यूपल की सूची, "tickets" तालिका की वे पंक्तियाँ जो खोज मानदंड से मेल खाती हैं।
     >>> ticket_db = MovieTicketDB("ticket_database.db")
     >>> ticket_db.create_table()
     >>> ticket_db.insert_ticket("Movie A", "Theater 1", "A1", "John Doe")

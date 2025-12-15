@@ -73,7 +73,7 @@ class StudentDatabaseProcessor:
     
     def create_student_table(self):
         """
-        Creates a "students" table in the database if it does not exist already. Fields include ID of type int, name of type str, age of type int, gender of type str, and grade of type int.
+        यदि "students" तालिका पहले से मौजूद नहीं है, तो डेटाबेस में "students" तालिका बनाता है। फ़ील्ड में int प्रकार का ID, str प्रकार का नाम, int प्रकार की उम्र, str प्रकार का लिंग, और int प्रकार का ग्रेड शामिल हैं।
         :return: None
         >>> processor = StudentDatabaseProcessor("students.db")
         >>> processor.create_student_table()

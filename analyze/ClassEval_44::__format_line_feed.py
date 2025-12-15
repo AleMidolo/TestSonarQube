@@ -1,7 +1,7 @@
 def __format_line_feed(text):
         """
-        Replace consecutive line breaks with a single line break
-        :param text: string with consecutive line breaks
-        :return:string, replaced text with single line break
+        लगातार लाइन ब्रेक को एकल लाइन ब्रेक से बदलें
+        :param text: लगातार लाइन ब्रेक के साथ स्ट्रिंग
+        :return: स्ट्रिंग, एकल लाइन ब्रेक के साथ बदला हुआ टेक्स्ट
         """
         return re.sub(r'\n+', '\n', text).strip()

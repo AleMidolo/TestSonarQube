@@ -51,10 +51,10 @@ class ComplexCalculator:
     @staticmethod
     def multiply(c1, c2):
         """
-        Multiplies two complex numbers.
-        :param c1: The first complex number,complex.
-        :param c2: The second complex number,complex.
-        :return: The product of the two complex numbers,complex.
+        दो जटिल संख्याओं को गुणा करता है।
+        :param c1: पहली जटिल संख्या, complex.
+        :param c2: दूसरी जटिल संख्या, complex.
+        :return: दो जटिल संख्याओं का गुणनफल, complex.
         >>> complexCalculator = ComplexCalculator()
         >>> complexCalculator.multiply(1+2j, 3+4j)
         (-5+10j)

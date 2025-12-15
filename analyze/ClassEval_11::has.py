@@ -50,12 +50,14 @@ class BitStatusUtil:
     @staticmethod
     def has(states, stat):
         """
-        Check if the current status contains the specified status,and check the parameters wheather they are legal.
-        :param states: Current status,int.
-        :param stat: Specified status,int.
-        :return: True if the current status contains the specified status,otherwise False,bool.
+        चेक करता है कि अभी के स्टेटस में बताया गया स्टेटस है या नहीं, और चेक करता है कि पैरामीटर वैलिड हैं या नहीं।
+
+        :param states: अभी का स्टेटस, int
+        :param stat: बताया गया स्टेटस, int
+        :return: अगर अभी के स्टेटस में बताया गया स्टेटस है तो True, नहीं तो False, bool
+
         >>> bit_status_util = BitStatusUtil()
-        >>> bit_status_util.has(6,2)
+        >>> bit_status_util.has(6, 2)
         True
         """
         BitStatusUtil.check([states, stat])

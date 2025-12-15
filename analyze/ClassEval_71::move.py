@@ -1,10 +1,10 @@
 def move(self, direction):
     """
-    Move the player based on the specified direction and check if the game is won.
-    :param direction: str, the direction of the player's movement. 
-        It can be 'w', 's', 'a', or 'd' representing up, down, left, or right respectively.
+    निर्दिष्ट दिशा के आधार पर खिलाड़ी को स्थानांतरित करें और जांचें कि खेल जीता गया है या नहीं।
+    :param direction: str, खिलाड़ी की गति की दिशा। 
+        यह 'w', 's', 'a', या 'd' हो सकता है जो क्रमशः ऊपर, नीचे, बाएं, या दाएं का प्रतिनिधित्व करता है।
 
-    :return: True if the game is won, False otherwise.
+    :return: यदि खेल जीता गया है तो True, अन्यथा False।
     >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"])       
     >>> game.print_map()
     # # # # # 
@@ -24,10 +24,10 @@ def move(self, direction):
     True
     """
     direction_map = {
-        'w': (-1, 0),
-        's': (1, 0),
-        'a': (0, -1),
-        'd': (0, 1)
+        'w': (-1, 0),  # Up
+        's': (1, 0),   # Down
+        'a': (0, -1),  # Left
+        'd': (0, 1)    # Right
     }
     
     if direction not in direction_map:
@@ -38,13 +38,14 @@ def move(self, direction):
     new_player_col = self.player_col + move_col
 
     if self.map[new_player_row][new_player_col] == '#':
-        return False  # Wall collision
+        return False  # Wall
 
     if (new_player_row, new_player_col) in self.boxes:
         new_box_row = new_player_row + move_row
         new_box_col = new_player_col + move_col
         if self.map[new_box_row][new_box_col] == '#' or (new_box_row, new_box_col) in self.boxes:
-            return False  # Wall or another box collision
+            return False  # Wall or another box
+
         # Move the box
         box_index = self.boxes.index((new_player_row, new_player_col))
         self.boxes[box_index] = (new_box_row, new_box_col)

@@ -1,5 +1,3 @@
-import random
-
 class Snake: 
     def __init__(self, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_SIZE, food_position):
         """
@@ -75,8 +73,7 @@ class Snake:
     
     def eat_food(self):
         """
-        Increase the length of the snake by 1 and increase the score by 100. Randomly generate a new food position, but
-        don't place it on the snake.
+        Increase the length of the snake by 1 and increase the score by 100. Randomly generate a new food position, but do not place it on the snake.
         :return: None
         >>> snake = Snake(100, 100, 1, (51, 51))
         >>> snake.move((1,1))

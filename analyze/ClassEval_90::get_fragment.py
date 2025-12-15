@@ -62,7 +62,7 @@ class URLHandler:
         query_start = self.url.find("?")
         fragment_start = self.url.find("#")
         if query_start != -1:
-            query_string = self.url[query_start + 1:fragment_start if fragment_start != -1 else None]
+            query_string = self.url[query_start + 1:fragment_start] if fragment_start != -1 else self.url[query_start + 1:]
             params = {}
             if len(query_string) > 0:
                 param_pairs = query_string.split("&")
@@ -76,8 +76,8 @@ class URLHandler:
     
     def get_fragment(self):
         """
-        Get the fragment after '#' in the URL
-        :return: string, If successful, return the fragment after '#' of the URL
+        URL में '#' के बाद का फ्रैगमेंट प्राप्त करें
+        :return: स्ट्रिंग, यदि सफल हो, तो URL के '#' के बाद का फ्रैगमेंट लौटाएं
         >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
         >>> urlhandler.get_fragment()
         "page"

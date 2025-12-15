@@ -45,7 +45,6 @@ class ArrangementCalculator:
             result.append(list(permutation))
         return result
 
-
     def select_all(self):
         """
         Generates a list of all arrangements by selecting at least 1 item and at most the number of internal datas.
@@ -59,7 +58,6 @@ class ArrangementCalculator:
         for i in range(1, len(self.datas) + 1):
             result.extend(self.select(i))
         return result
-
 
     @staticmethod
     def factorial(n):
@@ -79,14 +77,11 @@ class ArrangementCalculator:
     @staticmethod
     def count_all(n):
         """
-        Counts the total number of all possible arrangements by choosing at least 1 item and at most n items from n items.
-        :param n: int, the total number of items.
-        :return: int, the count of all arrangements.
+        सभी संभावित व्यवस्थाओं की कुल संख्या की गणना करता है, जिसमें कम से कम 1 आइटम और अधिकतम n आइटम n आइटम से चुने जाते हैं।
+        :param n: int, आइटम की कुल संख्या।
+        :return: int, सभी व्यवस्थाओं की संख्या।
         >>> ArrangementCalculator.count_all(4)
         64
 
         """
-        total_count = 0
-        for m in range(1, n + 1):
-            total_count += ArrangementCalculator.count(n, m)
-        return total_count
+        return sum(ArrangementCalculator.count(n, m) for m in range(1, n + 1))

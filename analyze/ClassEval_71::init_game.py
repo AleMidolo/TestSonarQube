@@ -91,7 +91,7 @@ class PushBoxGame:
     
     def init_game(self):
         """
-        Initialize the game by setting the positions of the player, targets, and boxes based on the map.
+        खेल को प्रारंभ करें खिलाड़ी, लक्ष्यों और बक्सों की स्थिति को मानचित्र के आधार पर सेट करके।
         >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"]) 
         >>> game.targets
         [(3, 3)]

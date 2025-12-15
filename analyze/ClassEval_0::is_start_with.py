@@ -1,3 +1,6 @@
+import logging
+import datetime
+
 class AccessGatewayFilter: 
     def __init__(self):
         pass
@@ -59,10 +62,10 @@ class AccessGatewayFilter:
 
     def is_start_with(self, request_uri):
         """
-        Check if the request URI starts with certain prefixes.
-        Currently, the prefixes being checked are "/api" and "/login".
-        :param request_uri: str, the URI of the request
-        :return: bool, True if the URI starts with certain prefixes, False otherwise
+        जांचें कि क्या अनुरोध URI कुछ उपसर्गों से शुरू होता है।
+        वर्तमान में, जांचे जा रहे उपसर्ग "/api" और "/login" हैं।
+        :param request_uri: str, अनुरोध का URI
+        :return: bool, यदि URI कुछ उपसर्गों से शुरू होता है तो True, अन्यथा False
         >>> filter = AccessGatewayFilter()
         >>> filter.is_start_with('/api/data')
         True

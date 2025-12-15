@@ -1,14 +1,13 @@
 def remove_stock(self, stock):
         """
-        Remove a stock from the portfolio.
-        :param stock: a dictionary with keys "name", "price", and "quantity"
+        पोर्टफोलियो से एक स्टॉक हटाएं।
+        :param stock: एक शब्दकोश जिसमें "name", "price", और "quantity" कुंजी हैं
         >>> tracker = StockPortfolioTracker(10000.0)
         >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
         >>> tracker.remove_stock({"name": "AAPL", "price": 150.0, "quantity": 10})
         True
         >>> tracker.portfolio
         []
-
         """
         for pf in self.portfolio:
             if pf['name'] == stock['name']:

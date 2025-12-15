@@ -47,16 +47,16 @@ class FitnessTracker:
     
     def calculate_calorie_intake(self):
         """
-        Calculate the calorie intake based on the user's condition and BMR (Basal Metabolic Rate), BMR is calculated based on the user's height, weight, age, and sex, male is 10 * self.weight + 6.25 * self.height - 5 * self.age + 5, female is 10 * self.weight + 6.25 * self.height - 5 * self.age - 161, and the calorie intake is calculated based on the BMR and the user's condition, if the user is too fat, the calorie intake is BMR * 1.2, if the user is too thin, the calorie intake is BMR * 1.6, if the user is normal, the calorie intake is BMR * 1.4.
-        :return: calorie intake, float.
+        उपयोगकर्ता की स्थिति और BMR (बेसल मेटाबॉलिक रेट) के आधार पर कैलोरी सेवन की गणना करें। BMR उपयोगकर्ता की ऊँचाई, वजन, उम्र और लिंग के आधार पर गणना की जाती है, पुरुष के लिए BMR है 10 * self.weight + 6.25 * self.height - 5 * self.age + 5, महिला के लिए BMR है 10 * self.weight + 6.25 * self.height - 5 * self.age - 161, और कैलोरी सेवन BMR और उपयोगकर्ता की स्थिति के आधार पर गणना की जाती है, यदि उपयोगकर्ता बहुत मोटा है, तो कैलोरी सेवन BMR * 1.2 है, यदि उपयोगकर्ता बहुत पतला है, तो कैलोरी सेवन BMR * 1.6 है, यदि उपयोगकर्ता सामान्य है, तो कैलोरी सेवन BMR * 1.4 है।
+        :return: कैलोरी सेवन, float.
         >>> fitnessTracker = FitnessTracker(1.8, 70, 20, "male")
         >>> fitnessTracker.calculate_calorie_intake()
         986.0
         """
         if self.sex == "male":
-            BMR = 10 * self.weight + 6.25 * self.height * 100 - 5 * self.age + 5
+            BMR = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5
         else:
-            BMR = 10 * self.weight + 6.25 * self.height * 100 - 5 * self.age - 161
+            BMR = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161
         
         condition = self.condition_judge()
         if condition == 1:  # too fat

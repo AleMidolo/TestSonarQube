@@ -44,11 +44,11 @@ class UrlPath:
     @staticmethod
     def fix_path(path):
         """
-        Fixes the given path string by removing leading and trailing slashes.
-        :param path: str, the path string to fix.
-        :return: str, the fixed path string.
+        दिए गए पथ स्ट्रिंग को ठीक करता है, अग्रणी और अनुक्रमणिका स्लैश को हटाकर।
+        :param path: str, ठीक करने के लिए पथ स्ट्रिंग।
+        :return: str, ठीक की गई पथ स्ट्रिंग।
         >>> url_path = UrlPath()
         >>> url_path.fix_path('/foo/bar/')
         'foo/bar'
         """
-        return path.strip('/')
+        return path.strip('/').replace('//', '/')

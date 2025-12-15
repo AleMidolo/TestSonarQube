@@ -18,42 +18,49 @@ class KappaCalculator:
             P0 += dataMat[i, i] * 1.0
         xsum = np.sum(dataMat, axis=1)
         ysum = np.sum(dataMat, axis=0)
-        total_sum = np.sum(dataMat)
-        Pe = float(ysum * xsum) / total_sum / total_sum
-        P0 = float(P0 / total_sum * 1.0)
+        sum = np.sum(dataMat)
+        Pe = float(ysum * xsum) / sum / sum
+        P0 = float(P0 / sum * 1.0)
         cohens_coefficient = float((P0 - Pe) / (1 - Pe))
         return cohens_coefficient
     
     @staticmethod
     def fleiss_kappa(testData, N, k, n):
         """
-        Calculate the fliss kappa value of an N * k matrix
-        :param testData: Input data matrix, N * k
-        :param N: int, Number of samples
-        :param k: int, Number of categories
-        :param n: int, Number of raters
-        :return: float, fleiss kappa value
-        >>> KappaCalculator.fleiss_kappa([[0, 0, 0, 0, 14],
-        >>>                              [0, 2, 6, 4, 2],
-        >>>                              [0, 0, 3, 5, 6],
-        >>>                              [0, 3, 9, 2, 0],
-        >>>                              [2, 2, 8, 1, 1],
-        >>>                              [7, 7, 0, 0, 0],
-        >>>                              [3, 2, 6, 3, 0],
-        >>>                              [2, 5, 3, 2, 2],
-        >>>                              [6, 5, 2, 1, 0],
-        >>>                              [0, 2, 2, 3, 7]], 10, 5, 14)
+        N × k मैट्रिक्स की Fleiss' kappa वैल्यू कैलकुलेट करें।
+
+        :param testData: इनपुट डेटा मैट्रिक्स (N × k)
+        :param N: int, सैंपल की संख्या
+        :param k: int, कैटेगरी की संख्या
+        :param n: int, रेट करने वालों की संख्या
+        :return: float, Fleiss' kappa वैल्यू
+
+        >>> KappaCalculator.fleiss_kappa(
+        ...     [
+        ...         [0, 0, 0, 0, 14],
+        ...         [0, 2, 6, 4, 2],
+        ...         [0, 0, 3, 5, 6],
+        ...         [0, 3, 9, 2, 0],
+        ...         [2, 2, 8, 1, 1],
+        ...         [7, 7, 0, 0, 0],
+        ...         [3, 2, 6, 3, 0],
+        ...         [2, 5, 3, 2, 2],
+        ...         [6, 5, 2, 1, 0],
+        ...         [0, 2, 2, 3, 7]
+        ...     ],
+        ...     10, 5, 14
+        ... )
         0.20993070442195522
         """
         # Calculate the proportion of ratings for each category
         p = np.sum(testData, axis=0) / (N * n)
         
         # Calculate the overall agreement
-        P = np.sum(np.square(np.sum(testData, axis=1) / n)) / N
+        P = np.sum((np.sum(testData, axis=1) * (np.sum(testData, axis=1) - 1))) / (N * n * (n - 1))
         
         # Calculate the expected agreement
-        Pe = np.sum(np.square(p))
+        Pe = np.sum(p ** 2)
         
-        # Calculate Fleiss' Kappa
+        # Calculate Fleiss' kappa
         kappa_value = (P - Pe) / (1 - Pe)
         return kappa_value

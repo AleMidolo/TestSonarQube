@@ -66,13 +66,12 @@ class MetricsCalculator2:
     @staticmethod
     def map(data):
         """
-        compute the MAP of the input data. MAP is a widely used evaluation index. It is the mean of AP (average precision).
-        :param data: the data must be a tuple, list 0,1,eg.([1,0,...],5).  In each tuple (actual result,ground truth num),ground truth num is the total ground num.
-         ([1,0,...],5),
-        or list of tuple eg. [([1,0,1,...],5),([1,0,...],6),([0,0,...],5)].
-        1 stands for a correct answer, 0 stands for a wrong answer.
-        :return: if input data is list, return the recall of this list. if the input data is list of list, return the
-        average recall on all list. The second return value is a list of precision for each input.
+        इनपुट डेटा का MAP गणना करें। MAP एक व्यापक रूप से उपयोग किया जाने वाला मूल्यांकन सूचकांक है। यह AP (औसत सटीकता) का औसत है।
+        :param data: डेटा एक ट्यूपल, सूची 0,1 होना चाहिए, जैसे कि ([1,0,...],5)। प्रत्येक ट्यूपल में (वास्तविक परिणाम, ग्राउंड ट्रुथ संख्या), ग्राउंड ट्रुथ संख्या कुल ग्राउंड संख्या है।
+        ([1,0,...],5),
+        या ट्यूपल की सूची जैसे कि [([1,0,1,...],5),([1,0,...],6),([0,0,...],5)]।
+        1 एक सही उत्तर के लिए है, 0 एक गलत उत्तर के लिए है।
+        :return: यदि इनपुट डेटा सूची है, तो इस सूची की पुनः प्राप्ति लौटाएं। यदि इनपुट डेटा सूची की सूची है, तो सभी सूचियों पर औसत पुनः प्राप्ति लौटाएं। दूसरा लौटने वाला मान प्रत्येक इनपुट के लिए सटीकता की एक सूची है।
         >>> MetricsCalculator2.map(([1, 0, 1, 0], 4))
         >>> MetricsCalculator2.map([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)])
         0.41666666666666663, [0.41666666666666663]
@@ -97,7 +96,7 @@ class MetricsCalculator2:
                     if value == 1:
                         correct_count += 1
                         precision_sum += correct_count / (i + 1)
-                ap = precision_sum / total_num if total_num > 0 else 0.0
+                ap = precision_sum / min(correct_count, total_num) if correct_count > 0 else 0.0
                 return ap, [ap]
         
         if type(data) == list:
@@ -110,6 +109,6 @@ class MetricsCalculator2:
                     if value == 1:
                         correct_count += 1
                         precision_sum += correct_count / (i + 1)
-                ap = precision_sum / total_num if total_num > 0 else 0.0
+                ap = precision_sum / min(correct_count, total_num) if correct_count > 0 else 0.0
                 separate_result.append(ap)
             return np.mean(separate_result), separate_result

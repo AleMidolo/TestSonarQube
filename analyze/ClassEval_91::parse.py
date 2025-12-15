@@ -38,9 +38,9 @@ class UrlPath:
     
     def parse(self, path, charset):
         """
-        Parses a given path string and populates the list of segments in the UrlPath.
-        :param path: str, the path string to parse.
-        :param charset: str, the character encoding of the path string.
+        दिए गए पथ स्ट्रिंग को पार्स करता है और UrlPath में खंडों की सूची को भरता है।
+        :param path: str, पार्स करने के लिए पथ स्ट्रिंग।
+        :param charset: str, पथ स्ट्रिंग का वर्णनात्मक एन्कोडिंग।
         >>> url_path = UrlPath()
         >>> url_path.parse('/foo/bar/', 'utf-8')
 

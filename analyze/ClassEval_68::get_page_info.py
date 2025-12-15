@@ -54,9 +54,9 @@ class PageUtil:
     
     def get_page_info(self, page_number):
         """
-        Retrieve information about a specific page.
-        :param page_number: int, the page number to fetch information about
-        :return: dict, containing page information such as current page number, total pages, etc.
+        एक विशेष पृष्ठ के बारे में जानकारी प्राप्त करें।
+        :param page_number: int, उस पृष्ठ का नंबर जिसके बारे में जानकारी प्राप्त करनी है
+        :return: dict, जिसमें पृष्ठ की जानकारी जैसे वर्तमान पृष्ठ संख्या, कुल पृष्ठ, आदि शामिल हैं।
         >>> page_util = PageUtil([1, 2, 3, 4], 1)
         >>> page_util.get_page_info(1)
         >>> {

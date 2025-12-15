@@ -62,8 +62,8 @@ class XMLProcessor:
     
     def read_xml(self):
         """
-        Reads the XML file and returns the root element.
-        :return: Element, the root element of the XML file.
+        XML फ़ाइल को पढ़ता है और रूट तत्व लौटाता है।
+        :return: Element, XML फ़ाइल का रूट तत्व।
         >>> xml_processor = XMLProcessor('test.xml')
         >>> root_element = xml_processor.read_xml()
         >>> print(root_element)

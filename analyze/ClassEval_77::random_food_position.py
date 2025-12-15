@@ -81,8 +81,8 @@ class Snake:
     
     def random_food_position(self):
         """
-        Randomly generate a new food position, but don't place it on the snake.
-        :return: None, Change the food position
+        यादृच्छिक रूप से एक नया खाद्य स्थान उत्पन्न करें, लेकिन इसे सांप पर न रखें।
+        :return: कुछ नहीं, खाद्य स्थान बदलें
         """
         while True:
             x = random.randint(0, (self.SCREEN_WIDTH // self.BLOCK_SIZE) - 1) * self.BLOCK_SIZE

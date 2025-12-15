@@ -70,8 +70,8 @@ class SignInSystem:
     
     def all_not_signed_in(self):
         """
-        Get a list of usernames that are not signed in.
-        :return: list[str], a list of usernames that are not signed in.
+        उन उपयोगकर्ता नामों की सूची प्राप्त करें जो साइन इन नहीं हैं।
+        :return: list[str], उन उपयोगकर्ता नामों की सूची जो साइन इन नहीं हैं।
         >>> signInSystem = SignInSystem()
         >>> signInSystem.add_user("a")
         True

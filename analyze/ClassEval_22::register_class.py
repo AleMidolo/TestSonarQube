@@ -72,10 +72,10 @@ class ClassRegistrationSystem:
     
     def register_class(self, student_name, class_name):
         """
-        register a class to the student.
+        छात्र के लिए एक कक्षा पंजीकृत करें।
         :param student_name: str
         :param class_name: str
-        :return a list of class names that the student has registered
+        :return छात्र द्वारा पंजीकृत कक्षाओं के नामों की सूची
         >>> registration_system = ClassRegistrationSystem()
         >>> registration_system.register_class(student_name="John", class_name="CS101")
         >>> registration_system.register_class(student_name="John", class_name="CS102")

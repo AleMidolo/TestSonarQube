@@ -9,8 +9,8 @@ class ImageProcessor:
 
     def load_image(self, image_path):
         """
-        Use Image util in PIL to open a image
-        :param image_path: str, path of image that is to be
+        PIL में इमेज उपयोग का उपयोग करके एक इमेज खोलें
+        :param image_path: str, इमेज का पथ जो खोला जाना है
         >>> processor.load_image('test.jpg')
         >>> processor.image
         <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=3072x4096 at 0x194F2412A48>
@@ -29,7 +29,7 @@ class ImageProcessor:
 
     def resize_image(self, width, height):
         """
-        Resize the image if image has opened.
+        Risize the image if image has opened.
         :param width: int, the target width of image
         :param height: int, the target height of image
         >>> processor.load_image('test.jpg')
@@ -44,7 +44,7 @@ class ImageProcessor:
 
     def rotate_image(self, degrees):
         """
-        Rotate image if image has opened
+        rotate image if image has opened
         :param degrees: float, the degrees that the image will be rotated
         >>> processor.load_image('test.jpg')
         >>> processor.rotate_image(90)

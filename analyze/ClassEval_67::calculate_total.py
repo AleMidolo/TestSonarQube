@@ -55,8 +55,8 @@ class Order:
     
     def calculate_total(self):
         """
-        Calculate the total price of dishes that have been ordered. Multiply the count, price and sales.
-        :return total: float, the final total price.
+        उन व्यंजनों की कुल कीमत की गणना करें जो ऑर्डर किए गए हैं। गिनती, कीमत और बिक्री को गुणा करें।
+        :return total: float, अंतिम कुल कीमत।
         >>> order = Order()
         >>> order.menu.append({"dish": "dish1", "price": 10, "count": 5})
         >>> order.sales = {"dish1": 0.8}
@@ -70,6 +70,5 @@ class Order:
             dish_name = selected["dish"]
             count = selected["count"]
             price = selected["price"]
-            sales = self.sales.get(dish_name, 1)  # Default sales to 1 if not found
-            total += count * price * sales
+            total += count * price * self.sales.get(dish_name, 1)
         return total

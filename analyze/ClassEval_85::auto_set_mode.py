@@ -10,7 +10,6 @@ class Thermostat:
         self.target_temperature = target_temperature
         self.mode = mode
 
-
     def get_target_temperature(self):
         """
         Get the target temperature of an instance of the Thermostat class.
@@ -18,7 +17,6 @@ class Thermostat:
         >>> thermostat.get_target_temperature()
         37.5
         """
-    
         return self.target_temperature
     
     def set_target_temperature(self, temperature):
@@ -29,7 +27,6 @@ class Thermostat:
         >>> thermostat.target_temperature
         37.6
         """
-    
         self.target_temperature = temperature
     
     def get_mode(self):
@@ -37,7 +34,6 @@ class Thermostat:
         Get the current work mode
         :return mode: str, working mode. only ['heat', 'cool']
         """
-    
         return self.mode
     
     def set_mode(self, mode):
@@ -48,7 +44,6 @@ class Thermostat:
         >>> thermostat.mode
         'cool'
         """
-    
         if mode in ['heat', 'cool']:
             self.mode = mode
         else:
@@ -65,7 +60,6 @@ class Thermostat:
         >>> thermostat.mode
         'heat'
         """
-    
         if self.current_temperature > self.target_temperature:
             if self.mode == 'cool':
                 return True
@@ -88,7 +82,6 @@ class Thermostat:
         >>> thermostat.simulate_operation()
         18
         """
-    
         self.auto_set_mode()
         use_time = 0
         if self.mode == 'heat':
@@ -103,7 +96,7 @@ class Thermostat:
     
     def auto_set_mode(self):
         """
-        Automatically set the operating mode by comparing with the current temperature and target temperature. If the current temperature is lower than the target temperature, the operating mode is set to 'heat', otherwise it is set to 'cool'.
+        वर्तमान तापमान और लक्षित तापमान की तुलना करके स्वचालित रूप से संचालन मोड सेट करें। यदि वर्तमान तापमान लक्षित तापमान से कम है, तो संचालन मोड 'heat' पर सेट किया जाता है, अन्यथा इसे 'cool' पर सेट किया जाता है।
         >>> thermostat = Thermostat(20.4, 37.5, 'cool')
         >>> thermostat.auto_set_mode()
         >>> thermostat.mode

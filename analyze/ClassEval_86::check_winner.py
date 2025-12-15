@@ -39,8 +39,8 @@ class TicTacToe:
     
     def check_winner(self):
         """
-        Check if there is a winner on the board in rows, columns and diagonals three directions
-        :return: str or None, the mark of the winner ('X' or 'O'), or None if there is no winner yet
+        Check for a winner on the board, in three directions: rows, columns, and diagonals.
+        :return: str or None, the symbol of the winner ('X' or 'O'), or None if there is no winner yet
         >>> moves = [(1, 0), (2, 0), (1, 1), (2, 1), (1, 2)]
         >>> for move in moves:
         ...     ttt.make_move(move[0], move[1])

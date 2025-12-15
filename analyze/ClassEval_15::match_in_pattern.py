@@ -42,9 +42,9 @@ class BoyerMooreSearch:
     
     def match_in_pattern(self, char):
         """
-        Finds the rightmost occurrence of a character in the pattern.
-        :param char: The character to be searched for, str.
-        :return: The index of the rightmost occurrence of the character in the pattern, int.
+        पैटर्न में किसी वर्ण की सबसे दाईं उपस्थिति को खोजता है।
+        :param char: खोजा जाने वाला वर्ण, str.
+        :return: पैटर्न में वर्ण की सबसे दाईं उपस्थिति का अनुक्रमांक, int.
         >>> boyerMooreSearch = BoyerMooreSearch("ABAABA", "AB")
         >>> boyerMooreSearch.match_in_pattern("A")
         0

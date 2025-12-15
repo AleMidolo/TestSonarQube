@@ -70,7 +70,7 @@ class TriCalculator:
     
     def factorial(self, a):
         """
-        Calculate the factorial of a
+        a का फैक्टोरियल निकालें
         :param a: int
         :return: int
         >>> tricalculator.factorial(5)

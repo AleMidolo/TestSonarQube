@@ -32,8 +32,8 @@ class NLPDataProcessor:
     
     def construct_stop_word_list(self):
         """
-        Construct a stop word list including 'a', 'an', 'the'.
-        :return: a list of stop words
+        'a', 'an', 'the' सहित एक स्टॉप वर्ड सूची बनाएं।
+        :return: स्टॉप वर्ड की एक सूची
         >>> NLPDataProcessor().construct_stop_word_list()
         ['a', 'an', 'the']
         """

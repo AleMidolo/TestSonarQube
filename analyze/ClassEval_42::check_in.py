@@ -81,15 +81,15 @@ class Hotel:
         5
         """
         return self.available_rooms[room_type]
-    
+
     def check_in(self, room_type, room_number, name):
         """
-        Check if the room of the specified type and number is booked by the person named name.
-        Remove this name when check in successfuly(room_number is equal to specific person's booked_rooms. When the actual check in quantity (room_number) is less than the booked quantity, number in booked_rooms will be booked quantity minus actual quantity
-        :param room_type: str, check in room type
-        :param room_number: int, check in room number
-        :param name: str, person name
-        :return False: only if the room_type is not in the booked_rooms or room_number is higher than quantity in booked rooms.
+        निर्दिष्ट प्रकार और संख्या का कमरा क्या उस व्यक्ति द्वारा बुक किया गया है जिसका नाम name है, यह जांचें।
+        जब चेक-इन सफल हो (room_number उस विशेष व्यक्ति के booked_rooms के बराबर हो) तो इस नाम को हटा दें। जब वास्तविक चेक-इन मात्रा (room_number) बुक की गई मात्रा से कम हो, तो booked_rooms में संख्या बुक की गई मात्रा से वास्तविक मात्रा घटा दी जाएगी।
+        :param room_type: str, चेक-इन कमरे का प्रकार
+        :param room_number: int, चेक-इन कमरे की संख्या
+        :param name: str, व्यक्ति का नाम
+        :return False: केवल तभी जब room_type booked_rooms में न हो या room_number बुक किए गए कमरों की मात्रा से अधिक हो।
         >>> hotel = Hotel('peace hotel', {'single': 5, 'double': 3})
         >>> hotel.book_room('single', 1, 'guest 1')
         'Success!'
@@ -99,10 +99,7 @@ class Hotel:
         >>> hotel.booked_rooms
         {'single': {}}
         """
-        if room_type not in self.booked_rooms or name not in self.booked_rooms[room_type]:
-            return False
-        
-        if room_number > self.booked_rooms[room_type][name]:
+        if room_type not in self.booked_rooms or name not in self.booked_rooms[room_type] or room_number > self.booked_rooms[room_type][name]:
             return False
         
         if room_number == self.booked_rooms[room_type][name]:

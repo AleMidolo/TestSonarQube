@@ -80,10 +80,10 @@ class BigNumCalculator:
     @staticmethod
     def multiply(num1, num2):
         """
-        Multiplies two big numbers.
-        :param num1: The first number to multiply,str.
-        :param num2: The second number to multiply,str.
-        :return: The product of the two numbers,str.
+        दो बड़े संख्याओं को गुणा करता है।
+        :param num1: गुणा करने के लिए पहला संख्या, str.
+        :param num2: गुणा करने के लिए दूसरा संख्या, str.
+        :return: दोनों संख्याओं का गुणनफल, str.
         >>> bigNum = BigNumCalculator()
         >>> bigNum.multiply("12345678901234567890", "98765432109876543210")
         '1219326311370217952237463801111263526900'
@@ -92,12 +92,12 @@ class BigNumCalculator:
             return "0"
 
         result = "0"
-        num1_len = len(num1)
         num2_len = len(num2)
-
+        
         for i in range(num2_len):
-            current_digit = int(num2[num2_len - 1 - i])
-            current_product = BigNumCalculator.add(num1 + "0" * i, "0" * (current_digit * int(num1)))
-            result = BigNumCalculator.add(result, current_product)
+            digit = int(num2[num2_len - 1 - i])
+            if digit != 0:
+                partial_product = BigNumCalculator.add(num1 + '0' * i, '0' * (len(num1) + i - 1))
+                result = BigNumCalculator.add(result, partial_product)
 
         return result

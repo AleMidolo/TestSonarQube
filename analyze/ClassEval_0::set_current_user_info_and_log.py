@@ -1,6 +1,3 @@
-import logging
-import datetime
-
 class AccessGatewayFilter: 
     def __init__(self):
         pass
@@ -65,11 +62,11 @@ class AccessGatewayFilter:
     
     def set_current_user_info_and_log(self, user):
         """
-        Set the current user information and log the access.
-        :param user: dict, the user information
+        वर्तमान उपयोगकर्ता की जानकारी सेट करें और पहुंच को लॉग करें।
+        :param user: dict, उपयोगकर्ता की जानकारी
         :return: None
         >>> filter = AccessGatewayFilter()
         >>> user = {'name': 'user1', 'address': '127.0.0.1'}
         >>> filter.set_current_user_info_and_log(user)
         """
-        logging.info(f"User {user['name']} accessed the system from {user['address']}.")
+        logging.info(f"User info set: {user}")

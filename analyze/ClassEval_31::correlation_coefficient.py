@@ -1,15 +1,15 @@
 def correlation_coefficient(data1, data2):
     """
-    Calculate the correlation coefficient of two sets of data.
-    :param data1: The first set of data,list.
-    :param data2: The second set of data,list.
-    :return: The correlation coefficient, float.
+    दो डेटा सेटों का सहसंबंध गुणांक निकालें।
+    :param data1: पहला डेटा सेट, सूची।
+    :param data2: दूसरा डेटा सेट, सूची।
+    :return: सहसंबंध गुणांक, फ्लोट।
     >>> correlation_coefficient([1, 2, 3], [4, 5, 6])
     0.9999999999999998
 
     """
     if len(data1) != len(data2):
-        raise ValueError("Data sets must have the same length.")
+        raise ValueError("Both data sets must have the same length.")
 
     n = len(data1)
     mean1 = sum(data1) / n
@@ -22,5 +22,4 @@ def correlation_coefficient(data1, data2):
     if denominator1 == 0 or denominator2 == 0:
         return 0.0
 
-    correlation = numerator / (denominator1 * denominator2)
-    return correlation
+    return numerator / (denominator1 * denominator2)

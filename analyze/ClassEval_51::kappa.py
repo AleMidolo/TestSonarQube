@@ -1,5 +1,4 @@
 import numpy as np
-
 class KappaCalculator: 
 
     @staticmethod
@@ -47,15 +46,16 @@ class KappaCalculator:
     @staticmethod
     def kappa(testData, k):
         """
-        Calculate the cohens kappa value of a k-dimensional matrix
-        :param testData: The k-dimensional matrix that needs to calculate the cohens kappa value
-        :param k: int, Matrix dimension
-        :return:float, the cohens kappa value of the matrix
+        कोहेन का काप्पा मान एक k-आयामी मैट्रिक्स का गणना करें
+        :param testData: वह k-आयामी मैट्रिक्स जिसके लिए कोहेन का काप्पा मान निकालना है
+        :param k: int, मैट्रिक्स का आयाम
+        :return: float, मैट्रिक्स का कोहेन का काप्पा मान
         >>> KappaCalculator.kappa([[2, 1, 1], [1, 2, 1], [1, 1, 2]], 3)
         0.25
         """
         n = np.sum(testData)
-        p0 = np.sum(np.diag(testData)) / n
-        pe = np.sum(np.sum(testData, axis=0) ** 2) / (n ** 2)
-        kappa_value = (p0 - pe) / (1 - pe) if (1 - pe) != 0 else 0
+        p = np.array(testData) / n
+        p0 = np.sum(np.square(np.sum(testData, axis=1) / n))
+        pe = np.sum(np.square(np.sum(testData, axis=0) / n))
+        kappa_value = (p0 - pe) / (1 - pe)
         return kappa_value

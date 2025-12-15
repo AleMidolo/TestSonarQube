@@ -84,9 +84,9 @@ class CamelCaseMap:
     
     def _convert_key(self, key):
         """
-        convert key string into camel case
+        कुंजी स्ट्रिंग को कैमेल केस में परिवर्तित करें
         :param key:str
-        :return:str, converted key string
+        :return:str, परिवर्तित कुंजी स्ट्रिंग
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map._convert_key('first_name')
         'firstName'

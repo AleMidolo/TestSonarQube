@@ -44,24 +44,24 @@ class FitnessTracker:
     
     def condition_judge(self):
         """
-        Judge the condition of the user based on the BMI standard.
-        :return: 1 if the user is too fat, -1 if the user is too thin, 0 if the user is normal, int.
+        उपयोगकर्ता की स्थिति का निर्णय BMI मानक के आधार पर करें।
+        :return: यदि उपयोगकर्ता बहुत मोटा है तो 1, यदि उपयोगकर्ता बहुत पतला है तो -1, यदि उपयोगकर्ता सामान्य है तो 0, int।
         >>> fitnessTracker = FitnessTracker(1.8, 70, 20, "male")
         >>> fitnessTracker.condition_judge()
         -1
         """
         bmi = self.get_BMI()
         if self.sex == "male":
-            if bmi < 20:
-                return -1  # too thin
-            elif bmi > 25:
-                return 1   # too fat
+            if bmi < self.BMI_std[0]["male"][0]:
+                return -1  # Too thin
+            elif bmi > self.BMI_std[0]["male"][1]:
+                return 1  # Too fat
             else:
-                return 0   # normal
+                return 0  # Normal
         else:
-            if bmi < 19:
-                return -1  # too thin
-            elif bmi > 24:
-                return 1   # too fat
+            if bmi < self.BMI_std[1]["female"][0]:
+                return -1  # Too thin
+            elif bmi > self.BMI_std[1]["female"][1]:
+                return 1  # Too fat
             else:
-                return 0   # normal
+                return 0  # Normal

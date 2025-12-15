@@ -92,8 +92,8 @@ class HRManagementSystem:
 
     def list_employees(self):
         """
-        List all employees' information in the HRManagementSystem.
-        :return: A list of all employees' information, dict.
+        HRManagementSystem में सभी कर्मचारियों की जानकारी सूचीबद्ध करें।
+        :return: सभी कर्मचारियों की जानकारी की एक सूची, dict।
         >>> hrManagementSystem = HRManagementSystem()
         >>> hrManagementSystem.employees = {1: {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}}
         >>> hrManagementSystem.list_employees()

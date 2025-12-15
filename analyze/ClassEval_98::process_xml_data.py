@@ -1,8 +1,8 @@
 def process_xml_data(self, file_name):
     """
-    Modifies the data in XML elements and writes the updated XML data to a new file.
-    :param file_name: string, the name of the file to write the modified XML data.
-    :return: bool, True if the write operation is successful, False otherwise.
+    XML तत्वों में डेटा को संशोधित करता है और अपडेटेड XML डेटा को एक नए फ़ाइल में लिखता है।
+    :param file_name: स्ट्रिंग, संशोधित XML डेटा को लिखने के लिए फ़ाइल का नाम।
+    :return: बूल, यदि लिखने का कार्य सफल होता है तो True, अन्यथा False।
     >>> xml_processor = XMLProcessor('test.xml')
     >>> root = xml_processor.read_xml()
     >>> success = xml_processor.process_xml_data('processed.xml')
@@ -10,11 +10,13 @@ def process_xml_data(self, file_name):
     True
     """
     try:
-        # Example modification: change the text of all 'item' elements
-        for item in self.find_element('item'):
-            item.text = item.text.upper()  # Modify the text to uppercase
+        # Example modification: Change the text of all 'item' elements
+        for item in self.root.findall('item'):
+            item.text = 'modified_' + item.text
         
         # Write the modified XML to the new file
-        return self.write_xml(file_name)
+        tree = ET.ElementTree(self.root)
+        tree.write(file_name)
+        return True
     except:
         return False

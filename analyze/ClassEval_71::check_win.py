@@ -43,13 +43,13 @@ class PushBoxGame:
                     self.target_count += 1
                 elif self.map[row][col] == "X":
                     self.boxes.append((row, col))
-    
+
     def move(self, direction):
         """
         Move the player based on the specified direction and check if the game is won.
         :param direction: str, the direction of the player's movement. 
             It can be 'w', 's', 'a', or 'd' representing up, down, left, or right respectively.
-    
+
         :return: True if the game is won, False otherwise.
         >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"])       
         >>> game.print_map()
@@ -71,7 +71,7 @@ class PushBoxGame:
         """
         new_player_row = self.player_row
         new_player_col = self.player_col
-    
+
         if direction == "w":
             new_player_row -= 1
         elif direction == "s":
@@ -80,12 +80,12 @@ class PushBoxGame:
             new_player_col -= 1
         elif direction == "d":
             new_player_col += 1
-    
+
         if self.map[new_player_row][new_player_col] != "#":
             if (new_player_row, new_player_col) in self.boxes:
                 new_box_row = new_player_row + (new_player_row - self.player_row)
                 new_box_col = new_player_col + (new_player_col - self.player_col)
-    
+
                 if self.map[new_box_row][new_box_col] != "#":
                     self.boxes.remove((new_player_row, new_player_col))
                     self.boxes.append((new_box_row, new_box_col))
@@ -94,14 +94,14 @@ class PushBoxGame:
             else:
                 self.player_row = new_player_row
                 self.player_col = new_player_col
-    
+
         return self.check_win()
-    
+
     def check_win(self):
         """
-        Check if the game is won. The game is won when all the boxes are placed on target positions.
-        And update the value of self.is_game_over.
-        :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.
+        खेल जीतने की जांच करें। खेल तब जीता जाता है जब सभी बॉक्स लक्षित स्थानों पर रखे जाते हैं।
+        और self.is_game_over का मान अपडेट करें।
+        :return self.is_game_over: यदि सभी बॉक्स लक्षित स्थानों पर रखे गए हैं, तो True, अन्यथा False।
         >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"]) 
         >>> game.check_win()
         """

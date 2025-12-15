@@ -63,9 +63,9 @@ class PageUtil:
     
     def search(self, keyword):
         """
-        Search for items in the data that contain the given keyword.
-        :param keyword: str, the keyword to search for
-        :return: dict, containing search information such as total results and matching items
+        डेटा में उन आइटमों की खोज करें जो दिए गए कीवर्ड को शामिल करते हैं।
+        :param keyword: str, खोजने के लिए कीवर्ड
+        :return: dict, खोज की जानकारी जैसे कुल परिणाम और मिलते-जुलते आइटम
         >>> page_util = PageUtil([1, 2, 3, 4], 1)
         >>> page_util.search("1")
         >>> search_info = {

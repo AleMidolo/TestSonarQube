@@ -46,9 +46,9 @@ class ShoppingCart:
 
     def remove_item(self, item, quantity=1):
         """
-        Subtract the specified quantity of item from the shopping list items
-        :param item:string, Item to be subtracted in quantity
-        :param quantity:int, Quantity to be subtracted
+        निर्दिष्ट मात्रा को खरीदारी सूची से आइटम से घटाएं
+        :param item:string, घटाने के लिए आइटम
+        :param quantity:int, घटाने के लिए मात्रा
         :return:None
         >>> shoppingcart.add_item("apple", 1, 5)
         >>> shoppingcart.remove_item("apple", 3)

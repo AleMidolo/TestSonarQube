@@ -1,7 +1,7 @@
 def clear_inbox(self, size):
         """
-        Clears the email box by deleting the oldest emails until the email box has enough space to accommodate the given size.
-        :param size: The size of the email, float.
+        ईमेल बॉक्स को साफ करता है, सबसे पुराने ईमेल को हटाकर जब तक ईमेल बॉक्स में दिए गए आकार के लिए पर्याप्त स्थान नहीं हो जाता।
+        :param size: ईमेल का आकार, फ्लोट।
         >>> sender = EmailClient('sender@example.com', 100)
         >>> receiver = EmailClient('receiver@example.com', 50)
         >>> receiver.inbox = [{'size': 10},{'size': 20},{'size': 15}]
@@ -9,8 +9,5 @@ def clear_inbox(self, size):
         >>> receiver.inbox
         [{'size': 15}]
         """
-        while self.is_full_with_one_more_email(size):
-            if self.inbox:
-                self.inbox.pop(0)  # Remove the oldest email
-            else:
-                break
+        while self.get_occupied_size() + size > self.capacity and self.inbox:
+            self.inbox.pop(0)

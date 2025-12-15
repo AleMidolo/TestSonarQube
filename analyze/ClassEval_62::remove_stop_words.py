@@ -24,11 +24,11 @@ class NLPDataProcessor:
     
     def remove_stop_words(self, string_list, stop_word_list):
         """
-        Remove all the stop words from the list of strings.
-        :param string_list: a list of strings
-        :param stop_word_list: a list of stop words
-        :return: a list of words without stop words
-        >>> NLPDataProcessor().remove_stop_words(['This is a test.'], ['a', 'an', 'the'])
+        सूची से सभी स्टॉप शब्दों को हटा दें।
+        :param string_list: स्ट्रिंग्स की एक सूची
+        :param stop_word_list: स्टॉप शब्दों की एक सूची
+        :return: बिना स्टॉप शब्दों के शब्दों की एक सूची
+        >>> NLPDataProcessor.process(['This is a test.'])
         [['This', 'is', 'test.']]
         """
         processed_list = []

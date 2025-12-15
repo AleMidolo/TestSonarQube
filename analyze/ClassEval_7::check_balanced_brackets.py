@@ -22,8 +22,8 @@ class BalancedBrackets:
 
     def check_balanced_brackets(self):
         """
-        Checks if the expression has balanced brackets.
-        :return: True if the expression has balanced brackets, False otherwise.
+        जांचता है कि अभिव्यक्ति में संतुलित ब्रैकेट हैं या नहीं।
+        :return: यदि अभिव्यक्ति में संतुलित ब्रैकेट हैं, तो True, अन्यथा False।
         >>> b = BalancedBrackets("a(b)c")
         >>> b.check_balanced_brackets()
         True

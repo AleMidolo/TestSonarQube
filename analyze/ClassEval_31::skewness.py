@@ -64,9 +64,9 @@ class DataStatistics4:
     @staticmethod
     def skewness(data):
         """
-        Calculate the skewness of a set of data.
-        :param data: The input data list, list.
-        :return: The skewness, float.
+        डेटा के एक सेट का स्क्यूनेस (skewness) निकालें।
+        :param data: इनपुट डेटा सूची, सूची।
+        :return: स्क्यूनेस, फ्लोट।
         >>> DataStatistics4.skewness([1, 2, 5])
         2.3760224064818463
         """
@@ -80,6 +80,6 @@ class DataStatistics4:
         centered_data = [(x - mean) for x in data]
         third_moment = sum(x ** 3 for x in centered_data) / n
 
-        skewness_value = third_moment / (std_dev ** 3)
+        skewness_value = (third_moment / std_dev ** 3)
 
         return skewness_value

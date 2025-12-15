@@ -1,5 +1,3 @@
-import datetime
-
 class TimeUtils: 
     def __init__(self):
         """
@@ -80,9 +78,9 @@ class TimeUtils:
     
     def string_to_datetime(self, string):
         """
-        Convert the time string to a datetime instance
-        :param string: string, string before converting format
-        :return: datetime instance
+        समय स्ट्रिंग को datetime उदाहरण में परिवर्तित करें
+        :param string: स्ट्रिंग, प्रारूप परिवर्तित करने से पहले की स्ट्रिंग
+        :return: datetime उदाहरण
         >>> timeutils.string_to_datetime("2001-7-18 1:1:1")
         2001-07-18 01:01:01
         """

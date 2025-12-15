@@ -28,6 +28,7 @@ class ArgumentParser:
         >>> parser.arguments
         {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
         """
+    
         args = command_string.split()[1:]
         for i in range(len(args)):
             arg = args[i]
@@ -60,6 +61,7 @@ class ArgumentParser:
         >>> parser.get_argument('arg2')
         'value2'
         """
+    
         return self.arguments.get(key)
     
     def _convert_type(self, arg, value):
@@ -72,6 +74,7 @@ class ArgumentParser:
         >>> parser._convert_type('arg1', '21')
         21
         """
+    
         try:
             return self.types[arg](value)
         except (ValueError, KeyError):
@@ -79,13 +82,13 @@ class ArgumentParser:
     
     def add_argument(self, arg, required=False, arg_type=str):
         """
-        Adds an argument to self.types and self.required.
-        Check if it is a required argument and store the argument type.
-        If the argument is set as required, it wull be added to the required set.
-        The argument type and name are stored in the types dictionary as key-value pairs.
-        :param arg: str, argument name
-        :param required: bool, whether the argument is required, default is False
-        :param arg_type:str, Argument type, default is str
+        self.types और self.required में एक तर्क जोड़ता है।
+        यह जांचता है कि क्या यह एक आवश्यक तर्क है और तर्क प्रकार को संग्रहीत करता है।
+        यदि तर्क को आवश्यक के रूप में सेट किया गया है, तो इसे आवश्यक सेट में जोड़ा जाएगा।
+        तर्क प्रकार और नाम को types शब्दकोश में कुंजी-मूल्य जोड़ों के रूप में संग्रहीत किया जाता है।
+        :param arg: str, तर्क का नाम
+        :param required: bool, क्या तर्क आवश्यक है, डिफ़ॉल्ट False है
+        :param arg_type:str, तर्क प्रकार, डिफ़ॉल्ट str है
         >>> parser.add_argument('arg1', True, 'int')
         >>> parser.required
         {'arg1'}

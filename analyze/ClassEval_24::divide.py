@@ -50,10 +50,10 @@ class ComplexCalculator:
     @staticmethod
     def divide(c1, c2):
         """
-        Divides two complex numbers.
-        :param c1: The first complex number,complex.
-        :param c2: The second complex number,complex.
-        :return: The quotient of the two complex numbers,complex.
+        दो जटिल संख्याओं को विभाजित करता है।
+        :param c1: पहली जटिल संख्या, complex.
+        :param c2: दूसरी जटिल संख्या, complex.
+        :return: दो जटिल संख्याओं का भागफल, complex.
         >>> complexCalculator = ComplexCalculator()
         >>> complexCalculator.divide(1+2j, 3+4j)
         (0.44+0.08j)

@@ -38,9 +38,9 @@ class BankAccount:
     
     def withdraw(self, amount):
         """
-        Withdraws a certain amount from the account, decreasing the account balance, return the current account balance.
-        If amount is negative, raise a ValueError("Invalid amount").
-        If the withdrawal amount is greater than the account balance, raise a ValueError("Insufficient balance.").
+        Withdraws a certain amount from the account, decreasing the account balance, returns the current account balance.
+        If amount is negative, raise ValueError("Invalid amount").
+        If withdrawal amount exceeds account balance, raise ValueError("Insufficient balance.").
         :param amount: int
         """
         if amount < 0:

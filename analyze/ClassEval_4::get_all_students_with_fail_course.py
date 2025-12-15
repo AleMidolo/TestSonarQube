@@ -17,7 +17,7 @@ class AssessmentSystem:
         """
         self.students[name] = {'name': name,
                                'grade': grade, 'major': major, 'courses': {}}
-
+    
     def add_course_score(self, name, course, score):
         """
         Add score of specific course for student in self.students
@@ -31,7 +31,7 @@ class AssessmentSystem:
         """
         if name in self.students:
             self.students[name]['courses'][course] = score
-
+    
     def get_gpa(self, name):
         """
         Get average grade of one student.
@@ -48,7 +48,7 @@ class AssessmentSystem:
             return sum(self.students[name]['courses'].values()) / len(self.students[name]['courses'])
         else:
             return None
-
+    
     def get_course_average(self, course):
         """
         Get the average score of a specific course.
@@ -64,7 +64,7 @@ class AssessmentSystem:
                     total += score
                     count += 1
         return total / count if count > 0 else None
-
+    
     def get_top_student(self):
         """
         Calculate every student's gpa with get_gpa method, and find the student with highest gpa
@@ -84,19 +84,17 @@ class AssessmentSystem:
                 top_gpa = gpa
                 top_student = name
         return top_student
-
+    
     def get_all_students_with_fail_course(self):
         """
-        Get all students who have any score below 60
-        :return: list of str, student name
+        उन सभी छात्रों को प्राप्त करें जिनका कोई भी स्कोर 60 से कम है
+        :return: str की सूची, छात्र का नाम
         >>> system.add_course_score('student 1', 'Society', 59)
         >>> system.get_all_students_with_fail_course()
         ['student 1']
         """
-        failing_students = []
+        failed_students = []
         for name, student in self.students.items():
-            for score in student['courses'].values():
-                if score < 60:
-                    failing_students.append(name)
-                    break
-        return failing_students
+            if any(score < 60 for score in student['courses'].values()):
+                failed_students.append(name)
+        return failed_students

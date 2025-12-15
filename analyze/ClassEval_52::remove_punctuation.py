@@ -1,3 +1,8 @@
+import nltk
+from nltk.stem import WordNetLemmatizer
+from nltk import pos_tag, word_tokenize
+import string
+
 class Lemmatization: 
     def __init__(self):
         """
@@ -14,9 +19,7 @@ class Lemmatization:
         >>> lemmatization = Lemmatization()
         >>> lemmatization.lemmatize_sentence("I am running in a race.")
         ['I', 'be', 'run', 'in', 'a', 'race']
-    
         """
-    
         lemmatized_words = []
         sentence = self.remove_punctuation(sentence)
         words = word_tokenize(sentence)
@@ -41,9 +44,7 @@ class Lemmatization:
         >>> lemmatization = Lemmatization()
         >>> lemmatization.get_pos_tag("I am running in a race.")
         ['PRP', 'VBP', 'VBG', 'IN', 'DT', 'NN']
-    
         """
-    
         pos_tags = []
         sentence = self.remove_punctuation(sentence)
         words = word_tokenize(sentence)
@@ -54,12 +55,11 @@ class Lemmatization:
     
     def remove_punctuation(self, sentence):
         """
-        Removes punctuation from the input text.
-        :param sentence: a sentence str
-        :return: str, sentence without any punctuation
+        इनपुट टेक्स्ट से विराम चिह्न हटाता है।
+        :param sentence: एक वाक्य str
+        :return: str, बिना किसी विराम चिह्न के वाक्य
         >>> lemmatization = Lemmatization()
         >>> lemmatization.remove_punctuation("I am running in a race.")
         'I am running in a race'
-
         """
         return sentence.translate(str.maketrans('', '', string.punctuation))

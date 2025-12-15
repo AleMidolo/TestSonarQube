@@ -25,13 +25,13 @@ class Interpolation:
     @staticmethod
     def interpolate_2d(x, y, z, x_interp, y_interp):
         """
-        Linear interpolation of two-dimensional data
-        :param x: The x-coordinate of the data point, list.
-        :param y: The y-coordinate of the data point, list.
-        :param z: The z-coordinate of the data point, list.
-        :param x_interp: The x-coordinate of the interpolation point, list.
-        :param y_interp: The y-coordinate of the interpolation point, list.
-        :return: The z-coordinate of the interpolation point, list.
+        दो-आयामी डेटा का रैखिक अंतर्संवेदन
+        :param x: डेटा बिंदु का x-निर्देशांक, सूची।
+        :param y: डेटा बिंदु का y-निर्देशांक, सूची।
+        :param z: डेटा बिंदु का z-निर्देशांक, सूची।
+        :param x_interp: अंतर्संवेदन बिंदु का x-निर्देशांक, सूची।
+        :param y_interp: अंतर्संवेदन बिंदु का y-निर्देशांक, सूची।
+        :return: अंतर्संवेदन बिंदु का z-निर्देशांक, सूची।
         >>> interpolation = Interpolation()
         >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])
         [3.0, 7.0]
@@ -53,6 +53,7 @@ class Interpolation:
                              z12 * (x[i + 1] - xi) * (yi - y[j]) +
                              z22 * (xi - x[i]) * (yi - y[j])) /
                             ((x[i + 1] - x[i]) * (y[j + 1] - y[j]))
+                        )
                         )
                         break
         return z_interp

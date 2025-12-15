@@ -1,8 +1,8 @@
 def trans_two(self, s):
         """
-        Converts a two-digit number into words format
-        :param s: str, the two-digit number
-        :return: str, the number in words format
+        दो अंकों की संख्या को शब्दों के प्रारूप में परिवर्तित करता है
+        :param s: str, दो अंकों की संख्या
+        :return: str, संख्या शब्दों के प्रारूप में
         >>> formatter = NumberWordFormatter()
         >>> formatter.trans_two("23")
         "TWENTY THREE"
@@ -12,4 +12,4 @@ def trans_two(self, s):
         elif s[0] == "0":
             return self.NUMBER[int(s[1])]
         else:
-            return f"{self.NUMBER_TEN[int(s[0]) - 1]} {self.NUMBER[int(s[1])}".strip()
+            return f"{self.NUMBER_TEN[int(s[0]) - 1]} {self.NUMBER[int(s[1])]}"

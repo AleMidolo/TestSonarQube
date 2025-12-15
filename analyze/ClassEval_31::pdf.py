@@ -1,3 +1,5 @@
+import math
+
 class DataStatistics4: 
 
     def correlation_coefficient(data1, data2):
@@ -65,11 +67,11 @@ class DataStatistics4:
     @staticmethod
     def pdf(data, mu, sigma):
         """
-        Calculate the probability density function (PDF) of a set of data under a normal distribution.
-        :param data: The input data list, list.
-        :param mu: The mean of the normal distribution, float.
-        :param sigma: The standard deviation of the normal distribution, float.
-        :return: The probability density function (PDF), list.
+        सामान्य वितरण के तहत डेटा के एक सेट का संभाव्यता घनत्व फ़ंक्शन (PDF) की गणना करें।
+        :param data: इनपुट डेटा सूची, सूची।
+        :param mu: सामान्य वितरण का औसत, फ्लोट।
+        :param sigma: सामान्य वितरण का मानक विचलन, फ्लोट।
+        :return: संभाव्यता घनत्व फ़ंक्शन (PDF), सूची।
         >>> DataStatistics4.pdf([1, 2, 3], 1, 1)
         [0.3989422804014327, 0.24197072451914337, 0.05399096651318806]
         """

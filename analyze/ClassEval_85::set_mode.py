@@ -1,7 +1,7 @@
 def set_mode(self, mode):
         """
-        Get the current work mode
-        :param mode: str, working mode. only ['heat', 'cool']
+        वर्तमान कार्य मोड प्राप्त करें
+        :param mode: str, कार्य मोड. केवल ['heat', 'cool']
         >>> thermostat.set_mode('cool')
         >>> thermostat.mode
         'cool'
@@ -9,4 +9,4 @@ def set_mode(self, mode):
         if mode in ['heat', 'cool']:
             self.mode = mode
         else:
-            raise ValueError("Mode must be 'heat' or 'cool'")
+            raise ValueError("Mode must be either 'heat' or 'cool'")

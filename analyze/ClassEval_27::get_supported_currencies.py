@@ -66,8 +66,8 @@ class CurrencyConverter:
 
     def get_supported_currencies(self):
         """
-        Returns a list of supported currency types
-        :return:list, All supported currency types
+        समर्थित मुद्रा प्रकारों की सूची लौटाता है
+        :return:list, सभी समर्थित मुद्रा प्रकार
         >>> cc = CurrencyConverter()
         >>> cc.get_supported_currencies()
         ['USD','EUR','GBP','JPY','CAD','AUD','CNY']

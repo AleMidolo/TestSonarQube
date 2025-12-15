@@ -1,10 +1,10 @@
 def write_text(self, content, font_size=12, alignment='left'):
     """
-    Writes the specified content to a Word document.
-    :param content: str, the text content to write.
-    :param font_size: int, optional, the font size of the text (default is 12).
-    :param alignment: str, optional, the alignment of the text ('left', 'center', or 'right'; default is 'left').
-    :return: bool, True if the write operation is successful, False otherwise.
+    निर्दिष्ट सामग्री को एक Word दस्तावेज़ में लिखता है।
+    :param content: str, लिखने के लिए पाठ सामग्री।
+    :param font_size: int, वैकल्पिक, पाठ का फ़ॉन्ट आकार (डिफ़ॉल्ट 12 है)।
+    :param alignment: str, वैकल्पिक, पाठ की संरेखण ('left', 'center', या 'right'; डिफ़ॉल्ट 'left' है)।
+    :return: bool, यदि लिखने का कार्य सफल होता है तो True, अन्यथा False।
     """
     
     try:

@@ -1,9 +1,9 @@
 def post_job(self, job_title, company, requirements):
         """
-        This function is used to publish positions,and add the position information to the job_listings list.
-        :param job_title: The title of the position,str.
-        :param company: The company of the position,str.
-        :param requirements: The requirements of the position,list.
+        यह फ़ंक्शन पदों को प्रकाशित करने के लिए उपयोग किया जाता है, और पद की जानकारी को job_listings सूची में जोड़ता है।
+        :param job_title: पद का शीर्षक, str.
+        :param company: पद का कंपनी, str.
+        :param requirements: पद की आवश्यकताएँ, list.
         :return: None
         >>> jobMarketplace = JobMarketplace()
         >>> jobMarketplace.post_job("Software Engineer", "ABC Company", ['requirement1', 'requirement2'])

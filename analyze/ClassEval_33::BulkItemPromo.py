@@ -79,7 +79,7 @@ class DiscountStrategy:
     @staticmethod
     def BulkItemPromo(order):
         """
-        Calculate the discount based on bulk item quantity in the order.In the same order, if the quantity of a single item reaches 20 or more, each item will enjoy a 10% discount.
+        Calculate the discount based on the quantity of bulk items in the order. If the quantity of a single item reaches 20 or more, a 10% discount will be applied to each item.
         :param order: object, the order to apply the discount to
         :return: float, discount amount
         >>> customer = {'name': 'John Doe', 'fidelity': 1200}
@@ -89,4 +89,8 @@ class DiscountStrategy:
         47.0
 
         """
-        return sum(item['quantity'] * item['price'] * 0.10 for item in order.cart if item['quantity'] >= 20)
+        discount = 0
+        for item in order.cart:
+            if item['quantity'] >= 20:
+                discount += item['quantity'] * item['price'] * 0.10
+        return discount

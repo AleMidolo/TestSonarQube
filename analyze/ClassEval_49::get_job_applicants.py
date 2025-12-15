@@ -1,8 +1,8 @@
 def get_job_applicants(self, job):
         """
-        This function is used to obtain candidate information,and return the candidate information that meets the requirements by calling the matches_requirements function.
-        :param job: The position information,dict.
-        :return: The candidate information that meets the requirements,list.
+        यह फ़ंक्शन उम्मीदवार की जानकारी प्राप्त करने के लिए उपयोग किया जाता है, और matches_requirements फ़ंक्शन को कॉल करके उन उम्मीदवारों की जानकारी लौटाता है जो आवश्यकताओं को पूरा करते हैं।
+        :param job: पद की जानकारी, dict.
+        :return: उन उम्मीदवारों की जानकारी जो आवश्यकताओं को पूरा करते हैं, list.
         >>> jobMarketplace = JobMarketplace()
         >>> jobMarketplace.resumes = [{"name": "Tom", "skills": ['skill1', 'skill2'], "experience": "experience"}]
         >>> jobMarketplace.job_listings = [{"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill1', 'skill2']}]
@@ -12,15 +12,6 @@ def get_job_applicants(self, job):
         """
         applicants = []
         for resume in self.resumes:
-            if self.matches_requirements(resume, job):
+            if all(skill in resume['skills'] for skill in job['requirements']):
                 applicants.append(resume)
         return applicants
-
-def matches_requirements(self, resume, job):
-        """
-        This function checks if a resume meets the job requirements.
-        :param resume: The resume information,dict.
-        :param job: The position information,dict.
-        :return: True if the resume meets the requirements, otherwise False.
-        """
-        return all(skill in resume['skills'] for skill in job['requirements'])

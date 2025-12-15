@@ -1,7 +1,7 @@
 def shuffle(self):
         """
-        Shuffles the playlist.
-        :return: True if the playlist was shuffled, False if the playlist was empty.
+        प्लेलिस्ट को शफल करता है।
+        :return: यदि प्लेलिस्ट शफल की गई है तो True, यदि प्लेलिस्ट खाली है तो False।
         >>> musicPlayer = MusicPlayer()
         >>> musicPlayer.playlist = ["song1", "song2"]
         >>> musicPlayer.shuffle()

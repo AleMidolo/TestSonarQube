@@ -32,15 +32,14 @@ class CookiesUtil:
         try:
             with open(self.cookies_file, 'r') as file:
                 cookies_data = json.load(file)
-                self.cookies = cookies_data
                 return cookies_data
         except FileNotFoundError:
             return {}
 
     def _save_cookies(self):
         """
-        Saves the cookies to the cookies_file, and returns True if successful, False otherwise.
-        :return: True if successful, False otherwise.
+        कुकीज़ को cookies_file में सहेजता है, और यदि सफल होता है तो True लौटाता है, अन्यथा False।
+        :return: यदि सफल हो तो True, अन्यथा False।
         >>> cookies_util = CookiesUtil('cookies.json')
         >>> cookies_util.cookies = {'key1': 'value1', 'key2': 'value2'}
         >>> cookies_util._save_cookies()

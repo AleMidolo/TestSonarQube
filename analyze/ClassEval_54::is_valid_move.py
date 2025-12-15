@@ -1,9 +1,9 @@
 def is_valid_move(self, pos1, pos2):
         """
-        check if the move of two icons is valid (i.e. positions are within the game board range, the two positions are not the same, the two positions have the same icon, and there is a valid path between the two positions)
+        check if the move of two icons is valid (i.e., the positions are within the game board limits, both positions are not the same, both positions have the same icon, and there is a valid path between the two positions)
         :param pos1: position tuple(x, y) of the first icon
         :param pos2: position tuple(x, y) of the second icon
-        :return:True or False ,representing whether the move of two icons is valid
+        :return: True or False, representing whether the move of the two icons is valid or not
         >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
         mc.board = [['a', 'b', 'c', 'a'],
                     ['a', 'b', 'c', 'a'],

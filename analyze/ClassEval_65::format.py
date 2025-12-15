@@ -93,11 +93,12 @@ class NumberWordFormatter:
     
         return self.NUMBER_MORE[i]
     
+
     def format(self, x):
         """
-        Converts a number into words format
-        :param x: int or float, the number to be converted into words format
-        :return: str, the number in words format
+        एक संख्या को शब्दों के प्रारूप में परिवर्तित करता है
+        :param x: int या float, वह संख्या जिसे शब्दों के प्रारूप में परिवर्तित किया जाना है
+        :return: str, संख्या शब्दों के प्रारूप में
         >>> formatter = NumberWordFormatter()
         >>> formatter.format(123456)
         "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"

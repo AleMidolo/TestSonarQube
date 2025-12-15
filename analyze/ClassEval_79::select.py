@@ -69,8 +69,8 @@ class SQLGenerator:
     
     def select(self, fields=None, condition=None):
         """
-        Generates a SELECT SQL statement based on the specified fields and conditions.
-        :param fields: list, optional. Default is None. The list of fields to be queried.
+        Generates a SELECT SQL statement based on specified fields and conditions.
+        :param fields: list, optional. Default is None. A list of fields to be queried.
         :param condition: str, optional. Default is None. The condition expression for the query.
         :return: str. The generated SQL statement.
         >>> sql = SQLGenerator('table1')

@@ -1,8 +1,8 @@
 def find_element(self, element_name):
         """
-        Finds the XML elements with the specified name.
-        :param element_name: string, the name of the elements to find.
-        :return: list, a list of found elements with the specified name.
+        निर्दिष्ट नाम के साथ XML तत्वों को खोजता है।
+        :param element_name: स्ट्रिंग, खोजने के लिए तत्वों का नाम।
+        :return: सूची, निर्दिष्ट नाम के साथ पाए गए तत्वों की सूची।
         >>> xml_processor = XMLProcessor('test.xml')
         >>> root = xml_processor.read_xml()
         >>> items = xml_processor.find_element('item')

@@ -69,17 +69,17 @@ class Server:
     
     def show(self, type):
         """
-        Returns struct of the specified type
-        :param type: string, the type of struct to be returned, which can be 'send' or 'receive'
-        :return: if type is equal to 'send' or 'receive', return the corresponding struct; otherwise, return False
+        निर्दिष्ट प्रकार की संरचना लौटाता है
+        :param type: स्ट्रिंग, वह संरचना का प्रकार जो लौटाया जाएगा, जो 'send' या 'receive' हो सकता है
+        :return: यदि type 'send' या 'receive' के बराबर है, तो संबंधित संरचना लौटाएं; अन्यथा, False लौटाएं
         >>> server.recv({"addr":88,"content":"abc"})
         >>> server.send({"addr":66,"content":"ABC"})
         >>> server.show("send")
         {"addr":66,"content":"ABC"}
         """
-        if type == 'send':
+        if type == "send":
             return self.send_struct
-        elif type == 'receive':
+        elif type == "receive":
             return self.receive_struct
         else:
             return False

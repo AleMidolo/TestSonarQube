@@ -38,12 +38,10 @@ class Hotel:
         >>> hotel.book_room('triple', 1, 'guest 1')
         False
         """
-        # Check if there are any rooms of the specified type available
         if room_type not in self.available_rooms.keys():
             return False
-    
+
         if room_number <= self.available_rooms[room_type]:
-            # Book the room by adding it to the booked_rooms dictionary
             if room_type not in self.booked_rooms.keys():
                 self.booked_rooms[room_type] = {}
             self.booked_rooms[room_type][name] = room_number
@@ -53,7 +51,7 @@ class Hotel:
             return self.available_rooms[room_type]
         else:
             return False
-    
+
     def check_in(self, room_type, room_number, name):
         """
         Check if the room of the specified type and number is booked by the person named name.
@@ -71,18 +69,16 @@ class Hotel:
         >>> hotel.booked_rooms
         {'single': {}}
         """
-        # Check if the room of the specified type and number is booked
         if room_type not in self.booked_rooms.keys():
             return False
         if name in self.booked_rooms[room_type]:
             if room_number > self.booked_rooms[room_type][name]:
                 return False
             elif room_number == self.booked_rooms[room_type][name]:
-                # Check in the room by removing it from the booked_rooms dictionary
                 self.booked_rooms[room_type].pop(name)
             else:
                 self.booked_rooms[room_type][name] -= room_number
-    
+
     def get_available_rooms(self, room_type):
         """
         Get the number of specific type of available rooms.
@@ -93,13 +89,13 @@ class Hotel:
         5
         """
         return self.available_rooms[room_type]
-    
+
     def check_out(self, room_type, room_number):
         """
-        Check out rooms, add number for specific type in available_rooms.
-        If room_type is new, add new type in available_rooms.
-        :param room_type: str, check out room type
-        :param room_number: int, check out room number
+        कमरों की चेक आउट करें, उपलब्ध कमरों में विशेष प्रकार के लिए संख्या जोड़ें।
+        यदि room_type नया है, तो उपलब्ध_rooms में नया प्रकार जोड़ें।
+        :param room_type: str, चेक आउट कमरे का प्रकार
+        :param room_number: int, चेक आउट कमरे का नंबर
         >>> hotel = Hotel('peace hotel', {'single': 5, 'double': 3})
         >>> hotel.check_out('single', 2)
         >>> hotel.available_rooms

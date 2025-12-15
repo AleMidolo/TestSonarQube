@@ -52,7 +52,7 @@ class AssessmentSystem:
         """
         Get the average score of a specific course.
         :param course: str, course name
-        :return: float, average scores of this course if anyone has score of this course, or None if nobody has records.
+        :return: float, average scores of this course if anyone have score of this course, or None if nobody have records.
         """
         total = 0
         count = 0
@@ -66,8 +66,8 @@ class AssessmentSystem:
 
     def get_top_student(self):
         """
-        Calculate every student's GPA with get_gpa method, and find the student with highest GPA
-        :return: str, name of student whose GPA is highest
+        Calculate every student's gpa with get_gpa method, and find the student with highest gpa
+        :return: str, name of student whose gpa is highest
         >>> system.add_student('student 1', 3, 'SE')
         >>> system.add_student('student 2', 2, 'SE')
         >>> system.add_course_score('student 1', 'Computer Network', 92)
@@ -86,10 +86,10 @@ class AssessmentSystem:
 
     def get_gpa(self, name):
         """
-        Get average grade of one student.
-        :param name: str, student name
-        :return: if name is in students and this student has courses grade, return average grade(float)
-                    or None otherwise
+        एक छात्र का औसत ग्रेड प्राप्त करें।
+        :param name: str, छात्र का नाम
+        :return: यदि नाम छात्रों में है और इस छात्र के पास पाठ्यक्रम का ग्रेड है, तो औसत ग्रेड (float) लौटाएं
+                    अन्यथा None लौटाएं
         >>> system.add_student('student 1', 3, 'SE')
         >>> system.add_course_score('student 1', 'math', 94)
         >>> system.add_course_score('student 1', 'Computer Network', 92)
@@ -97,7 +97,7 @@ class AssessmentSystem:
         93.0
         """
         if name in self.students:
-            student = self.students[name]
-            if student['courses']:
-                return sum(student['courses'].values()) / len(student['courses'])
+            courses = self.students[name]['courses']
+            if courses:
+                return sum(courses.values()) / len(courses)
         return None

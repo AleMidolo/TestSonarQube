@@ -1,9 +1,9 @@
 def sell_stock(self, stock):
         """
-        Sell a stock and remove it from the portfolio and add the cash to the cash balance.
-        :param stock: a dictionary with keys "name", "price", and "quantity"
-        :param quantity: the quantity of the stock to sell,int.
-        :return: True if the stock was sold successfully, False if the quantity of the stock is not enough.
+        एक स्टॉक बेचें और इसे पोर्टफोलियो से हटा दें और नकद को नकद बैलेंस में जोड़ें।
+        :param stock: एक शब्दकोश जिसमें कुंजी "name", "price", और "quantity" हैं
+        :param quantity: बेचे जाने वाले स्टॉक की मात्रा, int.
+        :return: True यदि स्टॉक सफलतापूर्वक बेचा गया, False यदि स्टॉक की मात्रा पर्याप्त नहीं है।
         >>> tracker = StockPortfolioTracker(10000.0)
         >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
         >>> tracker.sell_stock({"name": "AAPL", "price": 150.0, "quantity": 10})
@@ -11,7 +11,6 @@ def sell_stock(self, stock):
         >>> tracker.portfolio
         []
         """
-        
         for pf in self.portfolio:
             if pf['name'] == stock['name'] and pf['quantity'] >= stock['quantity']:
                 pf['quantity'] -= stock['quantity']

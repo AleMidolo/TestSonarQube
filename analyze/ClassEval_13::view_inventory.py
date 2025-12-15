@@ -45,8 +45,8 @@ class BookManagement:
     
     def view_inventory(self):
         """
-        Get the inventory of the Book Management.
-        :return self.inventory: dictionary, {title(str): quantity(int), ...}
+        पुस्तक प्रबंधन का इन्वेंटरी प्राप्त करें।
+        :return self.inventory: शब्दकोश, {शीर्षक(str): मात्रा(int), ...}
         >>> bookManagement = BookManagement()
         >>> bookManagement.add_book("book1", 1)
         >>> bookManagement.add_book("book2", 1)

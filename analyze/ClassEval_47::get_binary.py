@@ -37,8 +37,8 @@ class IPAddress:
     
     def get_binary(self):
         """
-        If the IP address is valid, return the binary form of the IP address; otherwise, return ''
-        :return: string
+        यदि IP पता मान्य है, तो IP पते का बाइनरी रूप लौटाएं; अन्यथा, '' लौटाएं
+        :return: स्ट्रिंग
         >>> ipaddress = IPAddress("10.10.10.10")
         >>> ipaddress.get_binary()
         "00001010.00001010.00001010.00001010"

@@ -1,3 +1,5 @@
+import math
+
 class DataStatistics4: 
 
     def correlation_coefficient(data1, data2):
@@ -8,7 +10,6 @@ class DataStatistics4:
         :return: The correlation coefficient, float.
         >>> DataStatistics4.correlation_coefficient([1, 2, 3], [4, 5, 6])
         0.9999999999999998
-    
         """
     
         n = len(data1)
@@ -16,64 +17,59 @@ class DataStatistics4:
         mean2 = sum(data2) / n
     
         numerator = sum((data1[i] - mean1) * (data2[i] - mean2) for i in range(n))
-        denominator = math.sqrt(sum((data1[i] - mean1) ** 2 for i in range(
-            n))) * math.sqrt(sum((data2[i] - mean2) ** 2 for i in range(n)))
+        denominator = math.sqrt(sum((data1[i] - mean1) ** 2 for i in range(n))) * math.sqrt(sum((data2[i] - mean2) ** 2 for i in range(n)))
     
         return numerator / denominator if denominator != 0 else 0
     
     @staticmethod
     def skewness(data):
         """
-            Calculate the skewness of a set of data.
-            :param data: The input data list, list.
-            :return: The skewness, float.
-            >>> DataStatistics4.skewness([1, 2, 5])
-            2.3760224064818463
-    
-            """
+        Calculate the skewness of a set of data.
+        :param data: The input data list, list.
+        :return: The skewness, float.
+        >>> DataStatistics4.skewness([1, 2, 5])
+        2.3760224064818463
+        """
     
         n = len(data)
         mean = sum(data) / n
         variance = sum((x - mean) ** 2 for x in data) / n
         std_deviation = math.sqrt(variance)
     
-        skewness = sum((x - mean) ** 3 for x in data) * n / ((n - 1)
-                                                             * (n - 2) * std_deviation ** 3) if std_deviation != 0 else 0
+        skewness = sum((x - mean) ** 3 for x in data) * n / ((n - 1) * (n - 2) * std_deviation ** 3) if std_deviation != 0 else 0
     
         return skewness
     
     @staticmethod
     def pdf(data, mu, sigma):
         """
-            Calculate the probability density function (PDF) of a set of data under a normal distribution.
-            :param data: The input data list, list.
-            :param mu: The mean of the normal distribution, float.
-            :param sigma: The standard deviation of the normal distribution, float.
-            :return: The probability density function (PDF), list.
-            >>> DataStatistics4.pdf([1, 2, 3], 1, 1)
-            [0.3989422804014327, 0.24197072451914337, 0.05399096651318806]
+        Calculate the probability density function (PDF) of a set of data under a normal distribution.
+        :param data: The input data list, list.
+        :param mu: The mean of the normal distribution, float.
+        :param sigma: The standard deviation of the normal distribution, float.
+        :return: The probability density function (PDF), list.
+        >>> DataStatistics4.pdf([1, 2, 3], 1, 1)
+        [0.3989422804014327, 0.24197072451914337, 0.05399096651318806]
+        """
     
-            """
-    
-        pdf_values = [1 / (sigma * math.sqrt(2 * math.pi)) *
-                      math.exp(-0.5 * ((x - mu) / sigma) ** 2) for x in data]
+        pdf_values = [1 / (sigma * math.sqrt(2 * math.pi)) * math.exp(-0.5 * ((x - mu) / sigma) ** 2) for x in data]
         return pdf_values
     
     @staticmethod
     def kurtosis(data):
         """
-        Calculate the kurtosis of a set of data.
-        :param data: The input data list, list.
-        :return: The kurtosis, float.
+        डेटा के एक सेट का कर्टोसिस निकालें।
+        :param data: इनपुट डेटा सूची, सूची।
+        :return: कर्टोसिस, फ्लोट।
         >>> DataStatistics4.kurtosis([1, 20,100])
         -1.5000000000000007
-
         """
+        
         n = len(data)
         mean = sum(data) / n
         variance = sum((x - mean) ** 2 for x in data) / n
         std_deviation = math.sqrt(variance)
-
-        kurtosis = (sum((x - mean) ** 4 for x in data) * n / ((n - 1) * (n - 2) * (n - 3) * std_deviation ** 4) - 3) if std_deviation != 0 else 0
-
+        
+        kurtosis = (sum((x - mean) ** 4 for x in data) / n) / (std_deviation ** 4) - 3 if std_deviation != 0 else 0
+        
         return kurtosis
