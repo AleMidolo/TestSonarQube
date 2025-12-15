@@ -20,5 +20,7 @@ def check_winner(self, player_hand, dealer_hand):
         
         if player_value > dealer_value:
             return 'Player wins'
-        else:
+        elif dealer_value > player_value:
             return 'Dealer wins'
+        else:
+            return 'Dealer wins'  # In case of a tie, dealer wins

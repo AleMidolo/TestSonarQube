@@ -85,8 +85,9 @@ class EightPuzzle:
         >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])
         ['ऊपर', 'बाएँ', 'दाएँ']
         """
-        i, j = self.find_blank(state)
         moves = []
+        i, j = self.find_blank(state)
+
         if i > 0:  # Up
             moves.append('up')
         if i < 2:  # Down
@@ -95,4 +96,5 @@ class EightPuzzle:
             moves.append('left')
         if j < 2:  # Right
             moves.append('right')
+
         return moves

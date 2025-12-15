@@ -1,3 +1,5 @@
+import itertools
+
 class ArrangementCalculator: 
     def __init__(self, datas):
         """
@@ -6,7 +8,6 @@ class ArrangementCalculator:
         """
         self.datas = datas
 
-    @staticmethod
     def count(n, m=None):
         """
         Counts the number of arrangements by choosing m items from n items (permutations).
@@ -75,4 +76,4 @@ class ArrangementCalculator:
         """
         if m is None:
             m = len(self.datas)
-        return list(itertools.permutations(self.datas, m))
+        return [list(p) for p in itertools.permutations(self.datas, m)]

@@ -9,7 +9,9 @@ class BitStatusUtil:
         >>> bit_status_util = BitStatusUtil()
         >>> bit_status_util.add(2,4)
         6
+    
         """
+    
         BitStatusUtil.check([states, stat])
         return states | stat
     
@@ -23,7 +25,9 @@ class BitStatusUtil:
             >>> bit_status_util = BitStatusUtil()
             >>> bit_status_util.remove(6,2)
             4
-        """
+    
+            """
+    
         BitStatusUtil.check([states, stat])
         if BitStatusUtil.has(states, stat):
             return states ^ stat
@@ -40,7 +44,8 @@ class BitStatusUtil:
             Traceback (most recent call last):
             ...
             ValueError: 3 not even
-        """
+            """
+    
         for arg in args:
             if arg < 0:
                 raise ValueError(f"{arg} must be greater than or equal to 0")

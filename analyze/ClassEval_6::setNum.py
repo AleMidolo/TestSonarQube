@@ -34,4 +34,4 @@ class AvgPartition:
         """
         size = len(self.lst) // self.limit
         remainder = len(self.lst) % self.limit
-        return (size, remainder)
+        return size, remainder

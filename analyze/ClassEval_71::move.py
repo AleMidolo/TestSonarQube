@@ -54,4 +54,5 @@ def move(self, direction):
     self.player_row = new_player_row
     self.player_col = new_player_col
 
+    # Check for win condition
     return self.check_win()

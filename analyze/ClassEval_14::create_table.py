@@ -78,7 +78,7 @@ class BookManagementDB:
     
     def create_table(self):
         """
-        Creates the book table in the database if it does not already exist.
+        यदि पुस्तक तालिका पहले से मौजूद नहीं है, तो डेटाबेस में पुस्तक तालिका बनाता है।
         >>> book_db = BookManagementDB("test.db")
         >>> book_db.create_table()
         """

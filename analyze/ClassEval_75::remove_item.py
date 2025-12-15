@@ -57,5 +57,5 @@ class ShoppingCart:
         if item in self.items:
             if self.items[item]['quantity'] > quantity:
                 self.items[item]['quantity'] -= quantity
-            else:
+            elif self.items[item]['quantity'] == quantity:
                 del self.items[item]

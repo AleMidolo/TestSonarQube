@@ -91,13 +91,14 @@ class BigNumCalculator:
         if num1 == "0" or num2 == "0":
             return "0"
 
-        result = "0"
-        num2_len = len(num2)
-        
-        for i in range(num2_len):
-            digit = int(num2[num2_len - 1 - i])
-            if digit != 0:
-                partial_product = BigNumCalculator.add(num1 + '0' * i, '0' * (len(num1) + i - 1))
-                result = BigNumCalculator.add(result, partial_product)
+        len1, len2 = len(num1), len(num2)
+        result = [0] * (len1 + len2)
 
-        return result
+        for i in range(len1 - 1, -1, -1):
+            for j in range(len2 - 1, -1, -1):
+                product = (int(num1[i]) * int(num2[j])) + result[i + j + 1]
+                result[i + j + 1] = product % 10
+                result[i + j] += product // 10
+
+        result_str = ''.join(map(str, result)).lstrip('0')
+        return result_str if result_str else '0'

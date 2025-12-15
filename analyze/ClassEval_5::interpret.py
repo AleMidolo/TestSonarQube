@@ -17,7 +17,7 @@ class AutomaticGuitarSimulator:
         Normal Guitar Playing -- Chord: C, Play Tune: 53231323
         """
         return "Normal Guitar Playing -- Chord: %s, Play Tune: %s" % (key, value)
-    
+
     def interpret(self, display=False):
         """
         संगीत स्कोर को व्याख्या करें जिसे खेला जाना है
@@ -30,16 +30,16 @@ class AutomaticGuitarSimulator:
         if not self.play_text.strip():
             return []
         
-        chords = []
+        chords_and_tunes = []
         parts = self.play_text.split()
         
         for part in parts:
             chord = ''.join(filter(str.isalpha, part))
             tune = ''.join(filter(str.isdigit, part))
-            chords.append({'Chord': chord, 'Tune': tune})
+            chords_and_tunes.append({'Chord': chord, 'Tune': tune})
         
         if display:
-            for chord in chords:
-                print(self.display(chord['Chord'], chord['Tune']))
+            for item in chords_and_tunes:
+                print(self.display(item['Chord'], item['Tune']))
         
-        return chords
+        return chords_and_tunes

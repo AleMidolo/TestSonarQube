@@ -33,7 +33,6 @@ class Hotel:
         >>> hotel.booked_rooms
         {'single': {}}
         """
-    
         # Check if the room of the specified type and number is booked
         if room_type not in self.booked_rooms.keys():
             return False
@@ -45,7 +44,7 @@ class Hotel:
                 self.booked_rooms[room_type].pop(name)
             else:
                 self.booked_rooms[room_type][name] -= room_number
-    
+
     def check_out(self, room_type, room_number):
         """
         Check out rooms, add number for specific type in available_rooms.
@@ -60,12 +59,11 @@ class Hotel:
         >>> hotel.available_rooms
         {'single': 7, 'double': 3, 'triple': 2}
         """
-    
         if room_type in self.available_rooms:
             self.available_rooms[room_type] += room_number
         else:
             self.available_rooms[room_type] = room_number
-    
+
     def get_available_rooms(self, room_type):
         """
         Get the number of specific type of available rooms.
@@ -75,7 +73,6 @@ class Hotel:
         >>> hotel.get_available_rooms('single')
         5
         """
-    
         return self.available_rooms[room_type]
     
     def book_room(self, room_type, room_number, name):
@@ -100,18 +97,18 @@ class Hotel:
         >>> hotel.book_room('triple', 1, 'guest 1')
         False
         """
-        if room_type not in self.available_rooms or self.available_rooms[room_type] < room_number:
-            if room_type not in self.available_rooms or self.available_rooms[room_type] == 0:
-                return False
+        if room_type not in self.available_rooms:
+            return False
+        if self.available_rooms[room_type] >= room_number:
+            self.available_rooms[room_type] -= room_number
+            if room_type not in self.booked_rooms:
+                self.booked_rooms[room_type] = {}
+            if name in self.booked_rooms[room_type]:
+                self.booked_rooms[room_type][name] += room_number
+            else:
+                self.booked_rooms[room_type][name] = room_number
+            return 'Success!'
+        elif self.available_rooms[room_type] > 0:
             return self.available_rooms[room_type]
-        
-        if room_type not in self.booked_rooms:
-            self.booked_rooms[room_type] = {}
-        
-        if name in self.booked_rooms[room_type]:
-            self.booked_rooms[room_type][name] += room_number
         else:
-            self.booked_rooms[room_type][name] = room_number
-        
-        self.available_rooms[room_type] -= room_number
-        return 'Success!'
+            return False

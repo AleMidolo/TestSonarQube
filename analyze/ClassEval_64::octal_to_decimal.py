@@ -73,6 +73,6 @@ class NumberConverter:
         >>> NumberConverter.octal_to_decimal('122667')
         42423
         """
-    
+        
         decimal_num = int(octal_num, 8)
         return decimal_num

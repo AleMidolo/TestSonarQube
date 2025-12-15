@@ -1,3 +1,5 @@
+import math
+
 class Statistics3: 
 
     def median(data):
@@ -8,9 +10,7 @@ class Statistics3:
         >>> statistics3 = Statistics3()
         >>> statistics3.median([1, 2, 3, 4])
         2.5
-    
         """
-    
         sorted_data = sorted(data)
         n = len(sorted_data)
         if n % 2 == 1:
@@ -27,15 +27,12 @@ class Statistics3:
             >>> statistics3 = Statistics3()
             >>> statistics3.mode([1, 2, 3, 3])
             [3]
-    
-            """
-    
+        """
         counts = {}
         for value in data:
             counts[value] = counts.get(value, 0) + 1
         max_count = max(counts.values())
-        mode_values = [value for value,
-                        count in counts.items() if count == max_count]
+        mode_values = [value for value, count in counts.items() if count == max_count]
         return mode_values
     
     @staticmethod
@@ -48,9 +45,7 @@ class Statistics3:
             >>> statistics3 = Statistics3()
             >>> statistics3.correlation([1, 2, 3], [4, 5, 6])
             1.0
-    
-            """
-    
+        """
         n = len(x)
         mean_x = sum(x) / n
         mean_y = sum(y) / n
@@ -70,9 +65,7 @@ class Statistics3:
             >>> statistics3 = Statistics3()
             >>> statistics3.mean([1, 2, 3])
             2.0
-    
-            """
-    
+        """
         if len(data) == 0:
             return None
         return sum(data) / len(data)
@@ -86,9 +79,7 @@ class Statistics3:
             >>> statistics3 = Statistics3()
             >>> statistics3.standard_deviation([1, 2, 3])
             1.0
-    
-            """
-    
+        """
         n = len(data)
         if n < 2:
             return None
@@ -105,9 +96,7 @@ class Statistics3:
             >>> statistics3 = Statistics3()
             >>> statistics3.z_score([1, 2, 3, 4])
             [-1.161895003862225, -0.3872983346207417, 0.3872983346207417, 1.161895003862225]
-    
-            """
-    
+        """
         mean = Statistics3.mean(data)
         std_deviation = Statistics3.standard_deviation(data)
         if std_deviation is None or std_deviation == 0:
@@ -123,9 +112,6 @@ class Statistics3:
         >>> statistics3 = Statistics3()
         >>> statistics3.correlation_matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
         [[1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]]
-
         """
         import numpy as np
-        
-        data = np.array(data)
         return np.corrcoef(data)

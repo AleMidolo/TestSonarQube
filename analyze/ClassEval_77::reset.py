@@ -1,5 +1,3 @@
-import random
-
 class Snake: 
     def __init__(self, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_SIZE, food_position):
         """

@@ -87,7 +87,7 @@ class Thermostat:
             else:
                 self.auto_set_mode()
                 return False
-    
+
     def simulate_operation(self):
         """
         थर्मोस्टेट के संचालन का अनुकरण करें। यह स्वचालित रूप से संचालन मोड सेट करने के लिए auto_set_mode विधि शुरू करेगा,
@@ -98,14 +98,11 @@ class Thermostat:
         18
         """
         start_time = time.time()
-        self.auto_set_mode()
-        
         while abs(self.current_temperature - self.target_temperature) > 0.1:
+            self.auto_set_mode()
             if self.mode == 'heat':
                 self.current_temperature += 1  # Simulate heating
             else:
                 self.current_temperature -= 1  # Simulate cooling
-            
             time.sleep(1)  # Simulate time passing
-        
         return int(time.time() - start_time)

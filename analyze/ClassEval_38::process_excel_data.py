@@ -16,9 +16,9 @@ def process_excel_data(self, N, save_file_name):
     for i in range(len(data)):
         if len(data[i]) > N:
             data[i] = list(data[i])  # Convert tuple to list to modify
-            data[i][N] = data[i][N].upper()  # Change to uppercase
-            data[i] = tuple(data[i])  # Convert back to tuple
+            data[i][N] = str(data[i][N]).upper()  # Change to uppercase
     
+    # Write the modified data to a new file
     output_file_name = 'processed_' + save_file_name
     success = self.write_excel(data, output_file_name)
     

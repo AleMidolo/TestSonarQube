@@ -46,6 +46,6 @@ class BankAccount:
         :param amount: int
         """
         if amount < 0:
-            raise ValueError("अमान्य राशि")
+            raise ValueError("Invalid amount")
         self.balance += amount
         return self.balance

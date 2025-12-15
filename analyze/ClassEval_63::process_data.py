@@ -41,7 +41,6 @@ class NLPDataProcessor2:
         >>> NLPDataProcessor2().process_data(['This is a test.'])
         [['this', 'is', 'a', 'test']]
         """
-        
         words_list = []
         for string in string_list:
             cleaned_string = re.sub(r'[^a-zA-Z\s]', '', string).lower()

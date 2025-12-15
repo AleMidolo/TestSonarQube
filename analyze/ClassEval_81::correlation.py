@@ -106,11 +106,11 @@ class Statistics3:
     @staticmethod
     def correlation(x, y):
         """
-        दो दी गई लिस्ट का कोरिलेशन कैलकुलेट करता है।
+        calculates the correlation of the two given lists.
 
-        :param x: list, पहली लिस्ट
-        :param y: list, दूसरी लिस्ट
-        :return: float, दोनों लिस्ट का कोरिलेशन
+        :param x: list, first list
+        :param y: list, second list
+        :return: float, correlation of both lists
 
         >>> statistics3 = Statistics3()
         >>> statistics3.correlation([1, 2, 3], [4, 5, 6])
@@ -121,8 +121,7 @@ class Statistics3:
         mean_x = Statistics3.mean(x)
         mean_y = Statistics3.mean(y)
         numerator = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(len(x)))
-        denominator = math.sqrt(sum((x[i] - mean_x) ** 2 for i in range(len(x))) * 
-                                 sum((y[i] - mean_y) ** 2 for i in range(len(y))))
+        denominator = math.sqrt(sum((x[i] - mean_x) ** 2 for i in range(len(x))) * sum((y[i] - mean_y) ** 2 for i in range(len(y))))
         if denominator == 0:
             return 0
         return numerator / denominator
