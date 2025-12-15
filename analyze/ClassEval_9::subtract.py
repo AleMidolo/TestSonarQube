@@ -103,6 +103,6 @@ class BigNumCalculator:
             result.pop()
         
         if negative:
-            result.append('-')
+            return '-' + ''.join(result[::-1])
         
         return ''.join(result[::-1]) if result else '0'

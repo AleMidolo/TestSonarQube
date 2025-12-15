@@ -106,7 +106,7 @@ class Thermostat:
             else:
                 self.current_temperature -= 1  # Simulate cooling
             
-            time.sleep(0.1)  # Simulate time passing
+            time.sleep(1)  # Simulate time passing
             time_taken += 1
         
         return time_taken

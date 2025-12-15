@@ -18,7 +18,7 @@ class RPGCharacter:
     def attack(self, other_character):
         """
         Attack another character. The damage caused needs to offset the defense value.
-        :param other_character: RPGCharacter, The character being attacked.
+        :param other_character: str, The character being attacked.
         >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
         >>> player_2 = RPGCharacter('player 2', 100, 7, 2)
         >>> player_1.attack(player_2)
@@ -44,7 +44,7 @@ class RPGCharacter:
     def gain_exp(self, amount):
         """
         Gain experience points for the character and level_up when the exp has reached the values that is 100 times the current level
-        The experience that overflows should be used to calculate the next leve up until exhausts
+        The experience that overflows should be used to calculate the next leve up untill exhausts
         :param amount: int, the amount of experience points to gain.
         >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
         >>> player_1.gain_exp(1100)
@@ -73,10 +73,10 @@ class RPGCharacter:
     
     def level_up(self):
         """
-        Increase the character's level, reset experience points to zero, increase health points by 20, attack power and defense points by 5.
-        The maximum level is 100.
-        :return: tuple[int, int, int, int], the new level, health points, attack power, and defense points after leveling up.
-        >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
+        Aumenta di livello il personaggio e riporta a zero i punti esperienza, aumenta i punti vita di 20, la potenza d'attacco e i punti difesa di 5.
+        Il livello massimo è 100.
+        :return: tuple[int, int, int, int], il nuovo livello, i punti vita, la potenza d'attacco e i punti difesa dopo l'aumento di livello.
+        >>> player_1 = RPGCharacter('giocatore 1', 100, 10, 3)
         >>> player_1.level_up()
         (2, 120, 15, 8)
         """

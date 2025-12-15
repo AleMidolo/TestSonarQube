@@ -32,7 +32,7 @@ class WeatherSystem:
                 return self.celsius_to_fahrenheit(), self.weather
         else:
             return self.temperature, self.weather
-    
+
     def set_city(self, city):
         """
         Set the city of the weather system.
@@ -44,7 +44,7 @@ class WeatherSystem:
         'Beijing'
         """
         self.city = city
-    
+
     def celsius_to_fahrenheit(self):
         """
         Convert the temperature from Celsius to Fahrenheit.
@@ -55,7 +55,7 @@ class WeatherSystem:
         80.6
         """
         return (self.temperature * 9/5) + 32
-    
+
     def fahrenheit_to_celsius(self):
         """
         Convert the temperature from Fahrenheit to Celsius.

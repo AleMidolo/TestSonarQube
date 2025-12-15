@@ -1,5 +1,4 @@
 import datetime
-import time
 
 class TimeUtils: 
     def __init__(self):
@@ -83,7 +82,7 @@ class TimeUtils:
         """
         Convert the time string into a datetime instance
         :param string: string, string before format conversion
-        :return: datetime instance
+        :return: instance of datetime
         >>> timeutils.string_to_datetime("2001-7-18 1:1:1")
         2001-07-18 01:01:01
         """

@@ -58,7 +58,7 @@ class FitnessTracker:
                 return 1   # too fat
             else:
                 return 0   # normal
-        else:
+        else:  # female
             if bmi < 19:
                 return -1  # too thin
             elif bmi > 24:

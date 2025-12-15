@@ -9,7 +9,6 @@ def submit_resume(self, name, skills, experience):
         >>> jobMarketplace.submit_resume("Tom", ['skill1', 'skill2'], "experience")
         >>> jobMarketplace.resumes
         [{'name': 'Tom', 'skills': ['skill1', 'skill2'], 'experience': 'experience'}]
-
         """
         resume = {"name": name, "skills": skills, "experience": experience}
         self.resumes.append(resume)

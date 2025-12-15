@@ -33,7 +33,6 @@ class LongestWord:
         if not self.word_list:
             return ''
         
-        # Find the longest word in self.word_list that is in the words from the sentence
         longest = ''
         for word in words:
             if word in self.word_list and len(word) > len(longest):

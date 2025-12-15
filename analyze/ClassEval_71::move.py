@@ -59,7 +59,7 @@ class PushBoxGame:
         if box_on_target_count == self.target_count:
             self.is_game_over = True
         return self.is_game_over
-
+    
     def move(self, direction):
         """
         Muovi il giocatore in base alla direzione specificata e controlla se il gioco è vinto.
@@ -95,20 +95,25 @@ class PushBoxGame:
         if direction not in direction_map:
             return False
         
-        new_player_row = self.player_row + direction_map[direction][0]
-        new_player_col = self.player_col + direction_map[direction][1]
+        delta_row, delta_col = direction_map[direction]
+        new_player_row = self.player_row + delta_row
+        new_player_col = self.player_col + delta_col
         
         if self.map[new_player_row][new_player_col] == '#':
             return False
         
         if (new_player_row, new_player_col) in self.boxes:
-            new_box_row = new_player_row + direction_map[direction][0]
-            new_box_col = new_player_col + direction_map[direction][1]
+            new_box_row = new_player_row + delta_row
+            new_box_col = new_player_col + delta_col
+            
             if self.map[new_box_row][new_box_col] == '#' or (new_box_row, new_box_col) in self.boxes:
                 return False
+            
+            # Move the box
             self.boxes.remove((new_player_row, new_player_col))
             self.boxes.append((new_box_row, new_box_col))
         
+        # Move the player
         self.player_row = new_player_row
         self.player_col = new_player_col
         
