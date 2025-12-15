@@ -45,6 +45,28 @@ class EightPuzzle:
 
         return new_state
 
+    def get_possible_moves(self, state):
+        """
+        根据当前状态，找到所有可能的移动方向。只有4个方向：'上'，'下'，'左'，'右'。
+        :param state: 一个3*3大小的整数列表，存储当前状态。
+        :return moves: 一个字符串列表，存储根据当前状态所有可能的移动方向。
+        >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])
+        ['上', '左', '右']
+        """
+        moves = []
+        i, j = self.find_blank(state)
+
+        if i > 0:  # can move up
+            moves.append('up')
+        if i < 2:  # can move down
+            moves.append('down')
+        if j > 0:  # can move left
+            moves.append('left')
+        if j < 2:  # can move right
+            moves.append('right')
+
+        return moves
+
     def solve(self):
         """
         Use BFS algorithm to find the path solution which makes the initial state to the goal method.
@@ -73,25 +95,3 @@ class EightPuzzle:
                     open_list.append((new_state, path + [move]))
 
         return None
-
-    def get_possible_moves(self, state):
-        """
-        根据当前状态，找到所有可能的移动方向。只有4个方向：'上'，'下'，'左'，'右'。
-        :param state: 一个3*3大小的整数列表，存储当前状态。
-        :return moves: 一个字符串列表，存储根据当前状态所有可能的移动方向。
-        >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])
-        ['上', '左', '右']
-        """
-        moves = []
-        i, j = self.find_blank(state)
-
-        if i > 0:  # Up
-            moves.append('up')
-        if i < 2:  # Down
-            moves.append('down')
-        if j > 0:  # Left
-            moves.append('left')
-        if j < 2:  # Right
-            moves.append('right')
-
-        return moves

@@ -20,9 +20,9 @@ class AvgPartition:
     
     def get(self, index):
         """
-        Calculate the size of each block and the remainder of the division, and calculate the corresponding start and end positions based on the partition index.
-        :param index: partition index, int.
-        :return: corresponding block, list.
+        计算每个块的大小和除法的余数，并根据分区的索引计算相应的起始和结束位置。
+        :param index: 分区的索引，int。
+        :return: 相应的块，list。
         >>> a = AvgPartition([1, 2, 3, 4], 2)
         >>> a.get(0)
         [1, 2]

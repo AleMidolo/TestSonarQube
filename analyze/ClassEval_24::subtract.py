@@ -47,7 +47,7 @@ class ComplexCalculator:
         real = (c1.real * c2.real + c1.imag * c2.imag) / denominator
         imaginary = (c1.imag * c2.real - c1.real * c2.imag) / denominator
         return complex(real, imaginary)
-    
+
     @staticmethod
     def subtract(c1, c2):
         """

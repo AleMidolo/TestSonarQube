@@ -10,7 +10,9 @@ class AccessGatewayFilter:
         >>> filter = AccessGatewayFilter()
         >>> filter.filter({'path': '/login', 'method': 'POST'})
         True
+    
         """
+    
         request_uri = request['path']
         method = request['method']
     
@@ -34,7 +36,9 @@ class AccessGatewayFilter:
         >>> filter = AccessGatewayFilter()
         >>> filter.get_jwt_user({'headers': {'Authorization': {'user': {'name': 'user1'}, 'jwt': 'user1'+str(datetime.date.today())}}})
         {'user': {'name': 'user1'}
+    
         """
+    
         token = request['headers']['Authorization']
         user = token['user']
         if token['jwt'].startswith(user['name']):
@@ -52,11 +56,13 @@ class AccessGatewayFilter:
         >>> filter = AccessGatewayFilter()
         >>> user = {'name': 'user1', 'address': '127.0.0.1'}
         >>> filter.set_current_user_info_and_log(user)
+    
         """
+    
         host = user['address']
         logging.log(msg=user['name'] + host +
                     str(datetime.datetime.now()), level=1)
-
+    
     def is_start_with(self, request_uri):
         """
         检查请求 URI 是否以某些前缀开头。
@@ -66,5 +72,6 @@ class AccessGatewayFilter:
         >>> filter = AccessGatewayFilter()
         >>> filter.is_start_with('/api/data')
         True
+
         """
         return request_uri.startswith(('/api', '/login'))

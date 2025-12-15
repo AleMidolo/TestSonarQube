@@ -77,7 +77,8 @@ class CalendarUtil:
     def get_upcoming_events(self, num_events):
         """
         Get the next n upcoming events from a given date.
-        :param num_events: The number of upcoming events to get,int.
+        :param date: The date to get upcoming events from,datetime.
+        :param n: The number of upcoming events to get,int.
         :return: A list of the next n upcoming events from the given date,list.
         >>> calendar = CalendarUtil()
         >>> calendar.events = [{'date': datetime(2023, 1, 1, 0, 0), 'start_time': datetime(2023, 1, 1, 0, 0), 'end_time': datetime(2023, 1, 1, 23, 0), 'description': 'New Year'},{'date': datetime(2023, 1, 2, 0, 0),'end_time': datetime(2023, 1, 2, 1, 0), 'description': 'New Year 2'}]

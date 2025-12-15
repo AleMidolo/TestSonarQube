@@ -13,8 +13,7 @@ class MovieTicketDB:
     def create_table(self):
         """
         Creates a "tickets" table if it does not exist in the database. 
-        The fields include an ID of type int, movie_name of type str, theater_name of type str, 
-        seat_number of type str, and customer_name of type str.
+        The table includes fields for an ID (int), movie name (str), theater name (str), seat number (str), and customer name (str).
         :return: None
         """
         self.cursor.execute('''

@@ -11,7 +11,6 @@ class MinesweeperGame:
         self.player_map = self.generate_playerMap()
         self.score = 0
 
-
     def generate_mine_sweeper_map(self):
         """
         Generates a minesweeper map with the given size of the board and the number of mines,the given parameter n is the size of the board,the size of the board is n*n,the parameter k is the number of mines,'X' represents the mine,other numbers represent the number of mines around the position.
@@ -19,7 +18,6 @@ class MinesweeperGame:
         >>> minesweeper_game = MinesweeperGame(3, 1)
         >>> minesweeper_game.generate_mine_sweeper_map()
         [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
-    
         """
     
         arr = [[0 for row in range(self.n)] for column in range(self.n)]
@@ -62,7 +60,6 @@ class MinesweeperGame:
         >>> minesweeper_game = MinesweeperGame(3, 1)
         >>> minesweeper_game.generate_playerMap()
         [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
-    
         """
     
         arr = [['-' for row in range(self.n)] for column in range(self.n)]
@@ -79,9 +76,7 @@ class MinesweeperGame:
         >>> minesweeper_game.player_map = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
         >>> minesweeper_game.sweep(1, 1)
         [['-', '-', '-'], ['-', 1, '-'], ['-', '-', '-']]
-    
         """
-    
     
         if (self.minesweeper_map[x][y] == 'X'):
             return False
@@ -101,7 +96,6 @@ class MinesweeperGame:
         >>> minesweeper_game.player_map = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
         >>> minesweeper_game.check_won(minesweeper_game.player_map)
         False
-
         """
         for row in range(self.n):
             for col in range(self.n):

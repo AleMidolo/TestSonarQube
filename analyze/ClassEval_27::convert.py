@@ -67,7 +67,7 @@ class CurrencyConverter:
         
         # Convert amount to USD first
         amount_in_usd = amount / self.rates[from_currency]
-        # Convert USD to the target currency
+        # Convert USD to target currency
         converted_amount = amount_in_usd * self.rates[to_currency]
         
         return converted_amount

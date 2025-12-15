@@ -126,7 +126,4 @@ class Statistics3:
 
         """
         import numpy as np
-        
-        data_array = np.array(data)
-        correlation_matrix = np.corrcoef(data_array)
-        return correlation_matrix.tolist()
+        return np.corrcoef(data)

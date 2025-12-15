@@ -94,22 +94,22 @@ class NumberWordFormatter:
         words = []
         length = len(whole_part)
         
-        if length == 0:
-            return "ZERO ONLY"
+        if length > 0:
+            for i in range(length):
+                if length - i > 3:
+                    words.append(self.trans_three(whole_part[i:i+3]))
+                    if (length - i - 3) // 3 >= 0:
+                        words.append(self.parse_more((length - i - 3) // 3))
+                elif length - i == 3:
+                    words.append(self.trans_three(whole_part[i:i+3]))
+                elif length - i == 2:
+                    words.append(self.trans_two(whole_part[i:i+2]))
+                elif length - i == 1:
+                    words.append(self.NUMBER[int(whole_part[i])])
         
-        # Process each group of three digits
-        for i in range(length, 0, -3):
-            group = whole_part[max(0, i-3):i]
-            if group:
-                group_words = self.trans_three(group)
-                if i // 3 > 0:
-                    group_words += " " + self.parse_more(i // 3 - 1)
-                words.append(group_words)
-        
-        words.reverse()
-        result = " AND ".join(words).strip()
+        result = " AND ".join(filter(None, words)).strip()
         
         if decimal_part:
-            result += " POINT " + " ".join(self.NUMBER[int(digit)] for digit in decimal_part)
+            result += " POINT " + " ".join(self.NUMBER[int(digit)] for digit in decimal_part if digit.isdigit())
         
-        return result + " ONLY"
+        return result + " ONLY" if result else ""

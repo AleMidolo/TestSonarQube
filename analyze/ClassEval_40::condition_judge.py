@@ -15,7 +15,7 @@ class FitnessTracker:
     def get_BMI(self):
         """
         Calculate the BMI based on the height and weight.
-        :return: BMI,which is the weight divide by the square of height, float.
+        :return: BMI, which is the weight divide by the square of height, float.
         >>> fitnessTracker = FitnessTracker(1.8, 70, 20, "male")
         >>> fitnessTracker.get_BMI()
         21.604938271604937
@@ -24,7 +24,7 @@ class FitnessTracker:
     
     def calculate_calorie_intake(self):
         """
-        Calculate the calorie intake based on the user's condition and BMR (Basal Metabolic Rate),BMR is calculated based on the user's height, weight, age, and sex,male is10 * self.weight + 6.25 * self.height - 5 * self.age + 5,female is 10 * self.weight + 6.25 * self.height - 5 * self.age - 161, and the calorie intake is calculated based on the BMR and the user's condition,if the user is too fat, the calorie intake is BMR * 1.2, if the user is too thin, the calorie intake is BMR * 1.6, if the user is normal, the calorie intake is BMR * 1.4.
+        Calculate the calorie intake based on the user's condition and BMR (Basal Metabolic Rate), BMR is calculated based on the user's height, weight, age, and sex, male is 10 * self.weight + 6.25 * self.height - 5 * self.age + 5, female is 10 * self.weight + 6.25 * self.height - 5 * self.age - 161, and the calorie intake is calculated based on the BMR and the user's condition, if the user is too fat, the calorie intake is BMR * 1.2, if the user is too thin, the calorie intake is BMR * 1.6, if the user is normal, the calorie intake is BMR * 1.4.
         :return: calorie intake, float.
         >>> fitnessTracker = FitnessTracker(1.8, 70, 20, "male")
         >>> fitnessTracker.calculate_calorie_intake()
@@ -34,12 +34,14 @@ class FitnessTracker:
             BMR = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5
         else:
             BMR = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161
+        
         if self.condition_judge() == 1:
             calorie_intake = BMR * 1.2  # Sedentary lifestyle
         elif self.condition_judge() == -1:
             calorie_intake = BMR * 1.6  # Active lifestyle
         else:
             calorie_intake = BMR * 1.4  # Moderate lifestyle
+        
         return calorie_intake
     
     def condition_judge(self):
@@ -52,16 +54,16 @@ class FitnessTracker:
         """
         bmi = self.get_BMI()
         if self.sex == "male":
-            if bmi < 20:
+            if bmi < self.BMI_std[0]["male"][0]:
                 return -1  # too thin
-            elif bmi > 25:
-                return 1   # too fat
+            elif bmi > self.BMI_std[0]["male"][1]:
+                return 1  # too fat
             else:
-                return 0   # normal
+                return 0  # normal
         else:
-            if bmi < 19:
+            if bmi < self.BMI_std[1]["female"][0]:
                 return -1  # too thin
-            elif bmi > 24:
-                return 1   # too fat
+            elif bmi > self.BMI_std[1]["female"][1]:
+                return 1  # too fat
             else:
-                return 0   # normal
+                return 0  # normal

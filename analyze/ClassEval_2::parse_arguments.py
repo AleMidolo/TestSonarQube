@@ -77,7 +77,7 @@ class ArgumentParser:
         args = command_string.split()
         for arg in args[1:]:
             if '=' in arg:
-                key, value = arg.split('=', 1)
+                key, value = arg.split('=')
                 key = key.lstrip('--')
             else:
                 key = arg.lstrip('-')
@@ -90,5 +90,5 @@ class ArgumentParser:
         
         missing_args = self.required - self.arguments.keys()
         if missing_args:
-            return False, missing_args
-        return True, None
+            return (False, missing_args)
+        return (True, None)

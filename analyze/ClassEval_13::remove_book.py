@@ -15,7 +15,7 @@ class BookManagement:
             self.inventory[title] += quantity
         else:
             self.inventory[title] = quantity
-    
+
     def view_inventory(self):
         """
         Get the inventory of the Book Management.
@@ -27,7 +27,7 @@ class BookManagement:
         {'book1': 1, 'book2': 1}
         """
         return self.inventory
-    
+
     def view_book_quantity(self, title):
         """
         Get the quantity of a book.
@@ -41,7 +41,7 @@ class BookManagement:
         if title not in self.inventory:
             return 0
         return self.inventory[title]
-    
+
     def remove_book(self, title, quantity):
         """
         从按书名排序的库存中移除一本或多本书籍。

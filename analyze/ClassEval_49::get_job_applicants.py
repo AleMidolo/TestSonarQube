@@ -12,6 +12,6 @@ def get_job_applicants(self, job):
         """
         applicants = []
         for resume in self.resumes:
-            if all(skill in resume["skills"] for skill in job["requirements"]):
+            if all(skill in resume['skills'] for skill in job['requirements']):
                 applicants.append(resume)
         return applicants

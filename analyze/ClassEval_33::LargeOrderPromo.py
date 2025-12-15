@@ -93,6 +93,4 @@ class DiscountStrategy:
         0.0
 
         """
-        if len(order.cart) >= 10:
-            return order.total() * 0.07
-        return 0
+        return order.total() * 0.07 if len(order.cart) >= 10 else 0

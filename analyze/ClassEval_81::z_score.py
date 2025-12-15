@@ -1,3 +1,4 @@
+import math
 class Statistics3: 
 
     def median(data):

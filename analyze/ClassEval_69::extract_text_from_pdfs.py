@@ -29,7 +29,7 @@ class PDFHandler:
         with open(output_filepath, 'wb') as out:
             pdf_writer.write(out)
         return f"Merged PDFs saved at {output_filepath}"
-
+    
     def extract_text_from_pdfs(self):
         """
         从 self.readers 中的 pdf 文件提取文本
@@ -40,8 +40,8 @@ class PDFHandler:
         """
         pdf_texts = []
         for reader in self.readers:
-            text = ''
+            text = ""
             for page in reader.pages:
-                text += page.extract_text() or ''
+                text += page.extract_text() or ""
             pdf_texts.append(text)
         return pdf_texts

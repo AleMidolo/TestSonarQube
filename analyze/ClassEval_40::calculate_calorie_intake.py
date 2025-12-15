@@ -8,9 +8,9 @@ def calculate_calorie_intake(self):
 
         """
         if self.sex == "male":
-            BMR = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5
+            BMR = 10 * self.weight + 6.25 * self.height * 100 - 5 * self.age + 5
         else:
-            BMR = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161
+            BMR = 10 * self.weight + 6.25 * self.height * 100 - 5 * self.age - 161
         
         condition = self.condition_judge()
         if condition == 1:  # too fat

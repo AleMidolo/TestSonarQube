@@ -1,3 +1,5 @@
+import random
+
 class MinesweeperGame: 
     def __init__(self, n, k) -> None:
         """
@@ -91,7 +93,7 @@ class MinesweeperGame:
             if self.check_won(self.player_map) == True:
                 return True
             return self.player_map
-    
+
     def generate_playerMap(self):
         """
         生成一个玩家地图，给定的参数 n 是棋盘的大小，棋盘的大小为 n*n，参数 k 是地雷的数量，'-' 表示未知位置。

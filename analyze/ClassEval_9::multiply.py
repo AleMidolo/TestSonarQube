@@ -10,11 +10,10 @@ class BigNumCalculator:
         >>> bigNum.add("12345678901234567890", "98765432109876543210")
         '111111111011111111100'
         """
-    
         max_length = max(len(num1), len(num2))
         num1 = num1.zfill(max_length)
         num2 = num2.zfill(max_length)
-    
+
         carry = 0
         result = []
         for i in range(max_length - 1, -1, -1):
@@ -22,12 +21,12 @@ class BigNumCalculator:
             carry = digit_sum // 10
             digit = digit_sum % 10
             result.insert(0, str(digit))
-    
+
         if carry > 0:
             result.insert(0, str(carry))
-    
+
         return ''.join(result)
-    
+
     @staticmethod
     def subtract(num1, num2):
         """
@@ -39,7 +38,6 @@ class BigNumCalculator:
             >>> bigNum.subtract("12345678901234567890", "98765432109876543210")
             '-86419753208641975320'
         """
-    
         if len(num1) < len(num2):
             num1, num2 = num2, num1
             negative = True
