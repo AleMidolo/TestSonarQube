@@ -76,22 +76,29 @@ class ArgumentParser:
         """
         import re
         
-        # Split the command string into parts
-        parts = re.split(r'\s+', command_string)
-        for part in parts:
-            if '=' in part:
-                key, value = part.split('=', 1)
-                key = key.lstrip('-')
-                self.arguments[key] = self._convert_type(key, value)
-            elif part.startswith('-'):
-                key = part.lstrip('-')
-                self.arguments[key] = True
+        # Split the command string into arguments
+        args = re.findall(r'--\w+=\w+|-\w+|\w+', command_string)
+        missing_args = set()
+
+        for arg in args:
+            if '=' in arg:
+                key, value = arg.split('=')
             else:
-                continue
-        
+                key = arg
+                value = True  # Default value for flags
+
+            # Remove leading dashes
+            key = key.lstrip('-')
+
+            # Convert type if necessary
+            if key in self.types:
+                value = self._convert_type(key, value)
+
+            self.arguments[key] = value
+
         # Check for missing required arguments
         missing_args = self.required - self.arguments.keys()
         if missing_args:
-            return (False, missing_args)
-        
-        return (True, None)
+            return False, missing_args
+
+        return True, None

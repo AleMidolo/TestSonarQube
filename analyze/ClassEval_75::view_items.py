@@ -46,13 +46,12 @@ class ShoppingCart:
         >>> shoppingcart.total_price()
         11.0
         """
-        return sum(item['quantity'] * item['price'] for item in self.items.values())
+        return sum([item['quantity'] * item['price'] for item in self.items.values()])
 
     def view_items(self) -> dict:
         """
         वर्तमान शॉपिंग लिस्ट आइटम लौटाएं
         :return: dict, वर्तमान शॉपिंग लिस्ट आइटम
-        >>> shoppingcart = ShoppingCart()
         >>> shoppingcart.add_item("apple", 1, 5)
         >>> shoppingcart.remove_item("apple", 3)
         >>> shoppingcart.view_items()

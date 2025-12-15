@@ -7,7 +7,6 @@ def rail_fence_cipher(self, plain_text, rails):
     >>> e.rail_fence_cipher("abc", 2)
     'acb'
     """
-    
     if rails <= 0:
         return ""
     
@@ -30,9 +29,9 @@ def rail_fence_cipher(self, plain_text, rails):
             row -= 1
 
     ciphertext = ""
-    for r in rail:
-        for c in r:
-            if c != '\n':
-                ciphertext += c
+    for r in range(rails):
+        for c in range(len(plain_text)):
+            if rail[r][c] != '\n':
+                ciphertext += rail[r][c]
 
     return ciphertext

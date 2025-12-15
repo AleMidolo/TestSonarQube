@@ -84,4 +84,4 @@ class SignInSystem:
         >>> signInSystem.all_signed_in()
         True
         """
-        return all(signed_in for signed_in in self.users.values())
+        return all(self.users.values())

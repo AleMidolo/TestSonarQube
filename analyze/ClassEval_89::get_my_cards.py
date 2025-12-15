@@ -1,5 +1,3 @@
-import random
-
 class TwentyFourPointGame: 
     def __init__(self) -> None:
         self.nums = []

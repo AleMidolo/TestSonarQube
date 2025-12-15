@@ -9,7 +9,10 @@ def rail_fence_decipher(self, encrypted_text, rails):
     'Hello, World!'
     """
     
-    # Create a matrix to hold the characters
+    if rails <= 0:
+        return ""
+    
+    # Create a list to hold the characters in the rail fence pattern
     rail = [['\n' for i in range(len(encrypted_text))]
             for j in range(rails)]
     
@@ -39,16 +42,17 @@ def rail_fence_decipher(self, encrypted_text, rails):
                 rail[i][j] = encrypted_text[index]
                 index += 1
     
-    # Now we read the matrix in a zig-zag manner to get the decrypted text
+    # Now we read the matrix in zig-zag manner to construct the decrypted text
     result = []
     row, col = 0, 0
-    for i in range(len(encrypted_text)):
+    
+    for char in encrypted_text:
         if row == 0:
             dir_down = True
         if row == rails - 1:
             dir_down = False
         
-        if rail[row][col] != '\n':
+        if rail[row][col] != '*':
             result.append(rail[row][col])
             col += 1
         

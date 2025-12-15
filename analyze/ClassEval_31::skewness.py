@@ -29,7 +29,7 @@ class DataStatistics4:
             :return: The kurtosis, float.
             >>> DataStatistics4.kurtosis([1, 20,100])
             -1.5000000000000007
-        """
+            """
     
         n = len(data)
         mean = sum(data) / n
@@ -55,7 +55,7 @@ class DataStatistics4:
             :return: The probability density function (PDF), list.
             >>> DataStatistics4.pdf([1, 2, 3], 1, 1)
             [0.3989422804014327, 0.24197072451914337, 0.05399096651318806]
-        """
+            """
     
         pdf_values = [1 / (sigma * math.sqrt(2 * math.pi)) *
                       math.exp(-0.5 * ((x - mu) / sigma) ** 2) for x in data]

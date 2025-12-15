@@ -28,22 +28,22 @@ def mrr(data):
     if len(data) == 0:
         return 0.0, [0.0]
 
-    def calculate_mrr(sub_list, total_num):
-        if total_num == 0:
-            return 0.0
-        for idx, value in enumerate(sub_list):
-            if value == 1:
-                return 1.0 / (idx + 1)
-        return 0.0
-
     if type(data) == tuple:
         (sub_list, total_num) = data
-        mrr_value = calculate_mrr(sub_list, total_num)
-        return mrr_value, [mrr_value]
+        reciprocal_rank = 0.0
+        for idx, value in enumerate(sub_list):
+            if value == 1:
+                reciprocal_rank = 1.0 / (idx + 1)
+                break
+        return reciprocal_rank, [reciprocal_rank]
 
     if type(data) == list:
-        mrr_values = []
+        separate_result = []
         for (sub_list, total_num) in data:
-            mrr_value = calculate_mrr(sub_list, total_num)
-            mrr_values.append(mrr_value)
-        return np.mean(mrr_values), mrr_values
+            reciprocal_rank = 0.0
+            for idx, value in enumerate(sub_list):
+                if value == 1:
+                    reciprocal_rank = 1.0 / (idx + 1)
+                    break
+            separate_result.append(reciprocal_rank)
+        return np.mean(separate_result), separate_result

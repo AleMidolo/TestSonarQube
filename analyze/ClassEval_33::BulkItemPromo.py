@@ -75,7 +75,7 @@ class DiscountStrategy:
     
             """
         return order.total() * 0.07 if len({item['product'] for item in order.cart}) >= 10 else 0
-
+    
     @staticmethod
     def BulkItemPromo(order):
         """

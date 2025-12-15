@@ -42,7 +42,7 @@ class BitStatusUtil:
         if BitStatusUtil.has(states, stat):
             return states ^ stat
         return states
-    
+
     @staticmethod
     def check(args):
         """

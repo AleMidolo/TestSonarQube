@@ -48,5 +48,7 @@ class UrlPath:
         """
         # Decode the path using the specified charset
         decoded_path = urllib.parse.unquote(path, encoding=charset)
-        # Split the path into segments and filter out empty segments
-        self.segments = [self.fix_path(segment) for segment in decoded_path.split('/') if segment]
+        # Split the path into segments and add them
+        for segment in decoded_path.split('/'):
+            if segment:  # Avoid adding empty segments
+                self.add(segment)

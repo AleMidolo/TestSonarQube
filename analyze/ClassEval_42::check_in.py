@@ -81,7 +81,7 @@ class Hotel:
         5
         """
         return self.available_rooms[room_type]
-
+    
     def check_in(self, room_type, room_number, name):
         """
         निर्दिष्ट प्रकार और संख्या का कमरा क्या उस व्यक्ति द्वारा बुक किया गया है जिसका नाम name है, यह जांचें।
@@ -99,10 +99,14 @@ class Hotel:
         >>> hotel.booked_rooms
         {'single': {}}
         """
-        if room_type not in self.booked_rooms or name not in self.booked_rooms[room_type] or room_number > self.booked_rooms[room_type][name]:
+        if room_type not in self.booked_rooms or name not in self.booked_rooms[room_type]:
             return False
         
-        if room_number == self.booked_rooms[room_type][name]:
+        booked_quantity = self.booked_rooms[room_type][name]
+        
+        if room_number > booked_quantity:
+            return False
+        elif room_number == booked_quantity:
             del self.booked_rooms[room_type][name]
         else:
             self.booked_rooms[room_type][name] -= room_number

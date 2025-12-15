@@ -91,7 +91,7 @@ class MetricsCalculator2:
                 return 0.0, [0.0]
             else:
                 precision = np.cumsum(sub_list) / (np.arange(1, len(sub_list) + 1))
-                ap = np.sum(precision * sub_list) / np.sum(sub_list)
+                ap = np.sum(precision * sub_list) / np.sum(sub_list) if np.sum(sub_list) > 0 else 0.0
                 return ap, [ap]
         
         if type(data) == list:
@@ -102,6 +102,6 @@ class MetricsCalculator2:
                     ap = 0.0
                 else:
                     precision = np.cumsum(sub_list) / (np.arange(1, len(sub_list) + 1))
-                    ap = np.sum(precision * sub_list) / np.sum(sub_list)
+                    ap = np.sum(precision * sub_list) / np.sum(sub_list) if np.sum(sub_list) > 0 else 0.0
                 separate_result.append(ap)
             return np.mean(separate_result), separate_result

@@ -44,17 +44,17 @@ class BoyerMooreSearch:
         >>> boyerMooreSearch.bad_character_heuristic()
         [0, 3]
         """
-        occurrences = []
-        skip = 0
+        positions = []
+        currentPos = 0
         
-        while skip <= self.textLen - self.patLen:
-            mismatch_index = self.mismatch_in_text(skip)
-            if mismatch_index == -1:
-                occurrences.append(skip)
-                skip += 1
+        while currentPos <= self.textLen - self.patLen:
+            mismatchPos = self.mismatch_in_text(currentPos)
+            if mismatchPos == -1:
+                positions.append(currentPos)
+                currentPos += 1
             else:
-                char = self.text[mismatch_index]
-                pattern_index = self.match_in_pattern(char)
-                skip += max(1, mismatch_index - (skip + pattern_index))
+                badCharIndex = self.match_in_pattern(self.text[mismatchPos])
+                shift = max(1, mismatchPos - (currentPos + badCharIndex))
+                currentPos += shift
         
-        return occurrences
+        return positions

@@ -10,6 +10,6 @@ def get_course_average(self, course):
             if course in student['courses']:
                 total_score += student['courses'][course]
                 count += 1
-        if count == 0:
-            return None
-        return total_score / count
+        if count > 0:
+            return total_score / count
+        return None
