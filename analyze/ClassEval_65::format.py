@@ -93,6 +93,7 @@ class NumberWordFormatter:
     
         return self.NUMBER_MORE[i]
     
+
     def format(self, x):
         """
         एक संख्या को शब्दों के प्रारूप में परिवर्तित करता है

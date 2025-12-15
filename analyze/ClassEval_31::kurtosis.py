@@ -58,10 +58,10 @@ class DataStatistics4:
     @staticmethod
     def kurtosis(data):
         """
-        डेटा के एक सेट का कर्टोसिस निकालें।
-        :param data: इनपुट डेटा सूची, सूची।
-        :return: कर्टोसिस, फ्लोट।
-        >>> DataStatistics4.kurtosis([1, 20,100])
+        Calculate the kurtosis of a set of data.
+        :param data: The input data list, list.
+        :return: The kurtosis, float.
+        >>> DataStatistics4.kurtosis([1, 20, 100])
         -1.5000000000000007
         """
         

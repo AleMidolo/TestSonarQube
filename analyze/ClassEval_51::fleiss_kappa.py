@@ -23,7 +23,7 @@ class KappaCalculator:
         P0 = float(P0 / sum * 1.0)
         cohens_coefficient = float((P0 - Pe) / (1 - Pe))
         return cohens_coefficient
-    
+
     @staticmethod
     def fleiss_kappa(testData, N, k, n):
         """
@@ -59,7 +59,7 @@ class KappaCalculator:
         P = np.sum((np.sum(testData, axis=1) * (np.sum(testData, axis=1) - 1))) / (N * n * (n - 1))
         
         # Calculate the expected agreement
-        Pe = np.sum(p**2)
+        Pe = np.sum(p ** 2)
         
         # Calculate Fleiss' kappa
         kappa_value = (P - Pe) / (1 - Pe)

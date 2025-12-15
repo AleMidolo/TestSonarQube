@@ -1,15 +1,15 @@
 def calculate_portfolio_value(self):
     """
-    पोर्टफोलियो की कुल वैल्यू कैलकुलेट करें।
+    Calculate the total value of the portfolio.
 
-    :return: float, पोर्टफोलियो की कुल वैल्यू
+    :return: float, total value of the portfolio
 
-    >>> ट्रैकर = StockPortfolioTracker(10000.0)
-    >>> ट्रैकर.पोर्टफोलियो = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
-    >>> ट्रैकर.calculate_portfolio_value()
-    11500.0
+    >>> tracker = StockPortfolioTracker(10000.0)
+    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+    >>> tracker.calculate_portfolio_value()
+    1500.0
     """
-    total_value = self.cash_balance
+    total_value = 0.0
     for stock in self.portfolio:
         total_value += self.get_stock_value(stock)
-    return total_value
+    return total_value + self.cash_balance

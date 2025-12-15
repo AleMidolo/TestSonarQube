@@ -81,7 +81,7 @@ class Hotel:
         5
         """
         return self.available_rooms[room_type]
-
+    
     def check_in(self, room_type, room_number, name):
         """
         निर्दिष्ट प्रकार और संख्या का कमरा क्या उस व्यक्ति द्वारा बुक किया गया है जिसका नाम name है, यह जांचें।

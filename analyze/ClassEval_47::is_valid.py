@@ -18,7 +18,7 @@ class IPAddress:
             return self.ip_address.split('.')
         else:
             return []
-
+    
     def get_binary(self):
         """
         If the IP address is valid, return the binary form of the IP address; otherwise, return ''

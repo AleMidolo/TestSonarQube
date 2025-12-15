@@ -11,6 +11,7 @@ class DataStatistics:
         >>> ds.median([2, 5, 1, 3, 4])
         3.00
         """
+    
         sorted_data = sorted(data)
         n = len(sorted_data)
         if n % 2 == 0:
@@ -19,7 +20,7 @@ class DataStatistics:
         else:
             middle = n // 2
             return round(sorted_data[middle], 2)
-
+    
     def mode(self, data):
         """
         Calculate the mode of a set of data
@@ -29,11 +30,12 @@ class DataStatistics:
         >>> ds.mode([2, 2, 3, 3, 4])
         [2, 3]
         """
+    
         counter = Counter(data)
         mode_count = max(counter.values())
         mode = [x for x, count in counter.items() if count == mode_count]
         return mode
-
+    
     def mean(self, data):
         """
         डेटा के ग्रुप की एवरेज वैल्यू कैलकुलेट करें, जो डेसिमल सेपरेटर के बाद दो डिजिट तक एक्यूरेट हो।

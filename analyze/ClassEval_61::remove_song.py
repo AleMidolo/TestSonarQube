@@ -11,3 +11,5 @@ def remove_song(self, song):
         """
         if song in self.playlist:
             self.playlist.remove(song)
+            return True
+        return False

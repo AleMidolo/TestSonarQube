@@ -73,13 +73,12 @@ class BigNumCalculator:
         if num1 == num2:
             return '0'
         
-        # Determine the sign of the result
-        negative_result = False
+        # Determine if the result will be negative
+        negative = False
         if num1 < num2:
             num1, num2 = num2, num1
-            negative_result = True
+            negative = True
         
-        # Prepare for subtraction
         max_length = max(len(num1), len(num2))
         num1 = num1.zfill(max_length)
         num2 = num2.zfill(max_length)
@@ -102,7 +101,4 @@ class BigNumCalculator:
         # Remove leading zeros
         result_str = ''.join(result).lstrip('0')
         
-        if negative_result:
-            return '-' + result_str
-        
-        return result_str if result_str else '0'
+        return ('-' + result_str) if negative else result_str

@@ -69,7 +69,7 @@ class DecryptionUtils:
             row += direction
     
         return plain_text
-    
+
     def caesar_decipher(self, ciphertext, shift):
         """
         सीज़र साइफ़र का इस्तेमाल करके दिए गए साइफ़रटेक्स्ट को डिक्रिप्ट करता है।

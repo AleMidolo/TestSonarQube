@@ -13,10 +13,10 @@ def cosine_similarities(vector_1, vectors_all):
     
     vector_1_normalized = matutils.unitvec(vector_1)
     similarities = []
-    
+
     for vector in vectors_all:
         vector_normalized = matutils.unitvec(vector)
         similarity = dot(vector_1_normalized, vector_normalized)
         similarities.append(similarity)
-    
+
     return np.array(similarities)

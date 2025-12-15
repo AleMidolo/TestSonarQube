@@ -54,7 +54,4 @@ class Interpolation:
                                           ((x[i + 1] - x[i]) * (y[j + 1] - y[j]))
                         z_interp.append(z_interp_value)
                         break
-                else:
-                    continue
-                break
         return z_interp

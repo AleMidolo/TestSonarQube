@@ -68,7 +68,7 @@ class Chat:
         if username not in self.users:
             return []
         return self.users[username]
-    
+
     def add_user(self, username):
         """
         चैट में एक नया उपयोगकर्ता जोड़ें।
