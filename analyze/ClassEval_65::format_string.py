@@ -98,21 +98,25 @@ class NumberWordFormatter:
             if length - i - 1 > 2:
                 # Handle thousands, millions, billions
                 part = whole_part[max(0, length - i - 3):length - i]
-                if part != "000":
+                if part:
                     words.append(self.trans_three(part) + " " + self.parse_more((length - i - 1) // 3))
             elif length - i - 1 == 2:
                 # Handle hundreds
                 part = whole_part[max(0, length - i - 3):length - i]
-                words.append(self.trans_three(part))
+                if part:
+                    words.append(self.trans_three(part))
             elif length - i - 1 == 1:
                 # Handle tens and units
                 part = whole_part[max(0, length - i - 2):length - i]
-                words.append(self.trans_two(part))
+                if part:
+                    words.append(self.trans_two(part))
+            elif length - i - 1 == 0:
+                # Handle the last digit
+                part = whole_part[max(0, length - i - 1):length - i]
+                if part:
+                    words.append(self.NUMBER[int(part)])
         
-        if decimal_part:
-            words.append("AND")
-            words.append(self.trans_two(decimal_part))
+        result = " AND ".join(words).strip()
+        result += " ONLY"
         
-        words.append("ONLY")
-        
-        return " ".join(words).strip()
+        return result

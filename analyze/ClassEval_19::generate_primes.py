@@ -30,10 +30,8 @@ class ChandrasekharSieve:
         
         sieve = [True] * (self.n + 1)
         sieve[0] = sieve[1] = False  # 0 and 1 are not prime numbers
-        
         for start in range(2, int(self.n**0.5) + 1):
             if sieve[start]:
                 for multiple in range(start*start, self.n + 1, start):
                     sieve[multiple] = False
-        
         return [num for num, is_prime in enumerate(sieve) if is_prime]

@@ -43,7 +43,7 @@ class IPAddress:
         >>> ipaddress.is_valid()
         True
         """
-        octets = self.ip_address.split('.')
+        octets = self.get_octets()
         if len(octets) != 4:
             return False
         for octet in octets:

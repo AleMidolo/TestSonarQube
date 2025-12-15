@@ -35,7 +35,7 @@ class BankAccount:
         """
         self.withdraw(amount)
         other_account.deposit(amount)
-
+    
     def withdraw(self, amount):
         """
         Withdraws a certain amount from the account, decreasing the account balance, return the current account balance.

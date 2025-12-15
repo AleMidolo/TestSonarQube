@@ -100,4 +100,7 @@ class BigNumCalculator:
         while len(result) > 1 and result[0] == '0':
             result.pop(0)
         
-        return ('-' if negative else '') + ''.join(result)
+        if negative:
+            return '-' + ''.join(result)
+        
+        return ''.join(result)

@@ -54,6 +54,5 @@ class Interpolation:
                              z22 * (xi - x[i]) * (yi - y[j])) /
                             ((x[i + 1] - x[i]) * (y[j + 1] - y[j]))
                         )
-                        )
                         break
         return z_interp

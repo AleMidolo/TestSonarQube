@@ -5,6 +5,7 @@ def get_minutes(self, string_time1, string_time2):
     >>> timeutils.get_minutes("2001-7-18 1:1:1", "2001-7-18 2:1:1")
     60
     """
+    
     datetime1 = self.string_to_datetime(string_time1)
     datetime2 = self.string_to_datetime(string_time2)
     delta = datetime2 - datetime1

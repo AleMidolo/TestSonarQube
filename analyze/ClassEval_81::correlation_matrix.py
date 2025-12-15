@@ -128,10 +128,10 @@ class Statistics3:
         n = len(data)
         if n == 0:
             return []
-        m = len(data[0])
-        correlation_matrix = [[0] * m for _ in range(m)]
-        for i in range(m):
-            for j in range(m):
-                correlation_matrix[i][j] = Statistics3.correlation(
-                    [row[i] for row in data], [row[j] for row in data])
+        correlation_matrix = []
+        for i in range(n):
+            row = []
+            for j in range(n):
+                row.append(Statistics3.correlation(data[i], data[j]))
+            correlation_matrix.append(row)
         return correlation_matrix

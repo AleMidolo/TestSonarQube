@@ -76,28 +76,26 @@ class ArgumentParser:
         """
         import re
         
-        # Split the command string into parts
-        parts = re.split(r'\s+', command_string)
-        # Remove the script name
-        parts = parts[2:]  # Assuming the first two parts are "python script.py"
+        # Regex to match arguments
+        pattern = r'(--\w+|-\w+)(=([^ ]+)|\s+([^ ]+))?'
+        matches = re.findall(pattern, command_string)
         
         missing_args = set()
         
-        for part in parts:
-            if '=' in part:
-                key, value = part.split('=', 1)
-            else:
-                key = part
-                value = True  # For flags
+        for match in matches:
+            arg_name = match[0].lstrip('-')
+            if match[2]:  # If there's a value after '='
+                value = match[2]
+            elif match[3]:  # If there's a value after space
+                value = match[3]
+            else:  # No value, it's a flag
+                value = True
             
-            # Normalize the key
-            key = key.lstrip('-')
+            # Convert type if necessary
+            if arg_name in self.types:
+                value = self._convert_type(arg_name, value)
             
-            # Convert the type if necessary
-            if key in self.types:
-                value = self._convert_type(key, value)
-            
-            self.arguments[key] = value
+            self.arguments[arg_name] = value
         
         # Check for missing required arguments
         missing_args = self.required - self.arguments.keys()

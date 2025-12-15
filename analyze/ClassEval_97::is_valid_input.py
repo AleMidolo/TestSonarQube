@@ -77,7 +77,8 @@ class Words2Numbers:
         False
         """
         valid_words = set(self.numwords.keys()).union(set(self.ordinal_words.keys()))
-        for word in textnum.replace('-', ' ').split():
+        textnum = textnum.replace('-', ' ')
+        for word in textnum.split():
             if word not in valid_words:
                 return False
         return True

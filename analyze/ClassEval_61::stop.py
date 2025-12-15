@@ -114,7 +114,6 @@ class MusicPlayer:
         True
         """
         if self.playlist:
-            import random
             random.shuffle(self.playlist)
             return True
         else:

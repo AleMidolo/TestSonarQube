@@ -75,13 +75,14 @@ class PageUtil:
         >>>     "results": [1]
         >>> }
         """
-        results = [item for item in self.data if str(item).find(keyword) != -1]
+        results = [item for item in self.data if str(item) == keyword]
         total_results = len(results)
         total_pages = (total_results + self.page_size - 1) // self.page_size
         
-        return {
+        search_info = {
             "keyword": keyword,
             "total_results": total_results,
             "total_pages": total_pages,
             "results": results
         }
+        return search_info

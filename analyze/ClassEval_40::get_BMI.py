@@ -19,9 +19,7 @@ class FitnessTracker:
         >>> fitnessTracker = FitnessTracker(1.8, 70, 20, "male")
         >>> fitnessTracker.condition_judge()
         -1
-    
         """
-    
         BMI = self.get_BMI()
         if self.sex == "male":
             BMI_range = self.BMI_std[0]["male"]
@@ -44,9 +42,7 @@ class FitnessTracker:
         >>> fitnessTracker = FitnessTracker(1.8, 70, 20, "male")
         >>> fitnessTracker.calculate_calorie_intake()
         986.0
-    
         """
-    
         if self.sex == "male":
             BMR = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5
         else:
@@ -66,6 +62,5 @@ class FitnessTracker:
         >>> fitnessTracker = FitnessTracker(1.8, 70, 20, "male")
         >>> fitnessTracker.get_BMI()
         21.604938271604937
-
         """
         return self.weight / (self.height ** 2)

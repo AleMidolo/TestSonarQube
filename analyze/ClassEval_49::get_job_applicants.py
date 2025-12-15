@@ -20,7 +20,7 @@ def matches_requirements(self, resume, job):
     """
     This function checks if a resume meets the job requirements.
     :param resume: The resume information,dict.
-    :param job: The position information,dict.
-    :return: True if the resume meets the requirements, otherwise False.
+    :param job: The job information,dict.
+    :return: True if the resume meets the job requirements, otherwise False.
     """
     return all(skill in resume['skills'] for skill in job['requirements'])
