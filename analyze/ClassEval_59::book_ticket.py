@@ -20,6 +20,6 @@ def book_ticket(self, name, seats_to_book):
                     if movie['seats'][row][col] == 0:
                         movie['seats'][row][col] = 1  # Mark seat as booked
                     else:
-                        return 'बुकिंग विफल।'  # Seat already booked
+                        return 'बुकिंग विफल।'
                 return 'बुकिंग सफल।'
         return 'फिल्म नहीं मिली।'

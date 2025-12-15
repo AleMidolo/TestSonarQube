@@ -53,7 +53,7 @@ class TwentyFourPointGame:
             return self.evaluate_expression(expression)
         else:
             return False
-
+    
     def evaluate_expression(self, expression):
         """
         एक गणितीय अभिव्यक्ति का मूल्यांकन करें और जांचें कि क्या परिणाम 24 है।

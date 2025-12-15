@@ -20,7 +20,7 @@ class BinaryDataProcessor:
     def convert_to_ascii(self):
         """
         Convert the binary string to ascii string.
-        >>> bdp = BinaryDataProcessor("0110100001100101011011000110110001101111")
+        >>> bdp = BinaryDataProcessor("0110100001100101011011000110110001101110")
         >>> bdp.convert_to_ascii()
         'hello'
         """
@@ -35,7 +35,7 @@ class BinaryDataProcessor:
     def convert_to_utf8(self):
         """
         Convert the binary string to utf-8 string.
-        >>> bdp = BinaryDataProcessor("0110100001100101011011000110110001101111")
+        >>> bdp = BinaryDataProcessor("0110100001100101011011000110110001101110")
         >>> bdp.convert_to_utf8()
         'hello'
         """
@@ -56,13 +56,13 @@ class BinaryDataProcessor:
         """
         total_length = len(self.binary_string)
         if total_length == 0:
-            return {'Zeroes': 0, 'Ones': 0, 'Bit length': 0}
-        
-        count_zeroes = self.binary_string.count('0')
-        count_ones = self.binary_string.count('1')
+            return {'Zeroes': 0.0, 'Ones': 0.0, 'Bit length': 0}
+
+        zeroes = self.binary_string.count('0')
+        ones = self.binary_string.count('1')
         
         return {
-            'Zeroes': count_zeroes / total_length,
-            'Ones': count_ones / total_length,
+            'Zeroes': zeroes / total_length,
+            'Ones': ones / total_length,
             'Bit length': total_length
         }

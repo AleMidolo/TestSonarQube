@@ -29,7 +29,7 @@ class UrlPath:
                 for seg in split:
                     decoded_seg = urllib.parse.unquote(seg, encoding=charset)
                     self.segments.append(decoded_seg)
-
+    
     @staticmethod
     def fix_path(path):
         """

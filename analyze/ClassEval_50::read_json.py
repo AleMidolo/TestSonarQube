@@ -58,10 +58,10 @@ class JSONProcessor:
         >>> json.read_json('test.json')
         {'name': 'test', 'age': 14}
         """
-        if not os.path.exists(file_path):
-            return 0
         try:
             with open(file_path, 'r') as file:
                 return json.load(file)
+        except FileNotFoundError:
+            return 0
         except:
             return -1

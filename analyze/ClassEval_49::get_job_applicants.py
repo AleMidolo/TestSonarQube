@@ -8,10 +8,9 @@ def get_job_applicants(self, job):
         >>> jobMarketplace.job_listings = [{"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill1', 'skill2']}]
         >>> jobMarketplace.get_job_applicants(jobMarketplace.job_listings[0])
         [{'name': 'Tom', 'skills': ['skill1', 'skill2'], 'experience': 'experience'}]
-
         """
         applicants = []
         for resume in self.resumes:
-            if all(req in resume['skills'] for req in job['requirements']):
+            if all(skill in resume['skills'] for skill in job['requirements']):
                 applicants.append(resume)
         return applicants

@@ -13,52 +13,31 @@ def rail_fence_decipher(self, encrypted_text, rails):
         return ""
     
     # Create a list to hold the characters in the rail fence pattern
-    rail = [['\n' for i in range(len(encrypted_text))]
-            for j in range(rails)]
+    rail = [['\n' for _ in range(len(encrypted_text))] for _ in range(rails)]
     
     # Fill the rail matrix
-    dir_down = None
+    direction_down = False
     row, col = 0, 0
     
     for char in encrypted_text:
         if row == 0:
-            dir_down = True
+            direction_down = True
         if row == rails - 1:
-            dir_down = False
+            direction_down = False
         
-        rail[row][col] = '*'
+        rail[row][col] = char
         col += 1
         
-        if dir_down:
+        if direction_down:
             row += 1
         else:
             row -= 1
     
-    # Now we fill the rail matrix with the characters of the encrypted text
-    index = 0
-    for i in range(rails):
-        for j in range(len(encrypted_text)):
-            if (rail[i][j] == '*' and index < len(encrypted_text)):
-                rail[i][j] = encrypted_text[index]
-                index += 1
-    
-    # Now we read the matrix in zig-zag manner to construct the decrypted text
+    # Read the characters from the rail matrix
     result = []
-    row, col = 0, 0
-    
-    for char in encrypted_text:
-        if row == 0:
-            dir_down = True
-        if row == rails - 1:
-            dir_down = False
-        
-        if rail[row][col] != '*':
-            result.append(rail[row][col])
-            col += 1
-        
-        if dir_down:
-            row += 1
-        else:
-            row -= 1
+    for r in range(rails):
+        for c in range(len(encrypted_text)):
+            if rail[r][c] != '\n':
+                result.append(rail[r][c])
     
     return ''.join(result)

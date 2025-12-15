@@ -23,7 +23,7 @@ def prepare(self, expression):
             elif char == ')':
                 while operator_stack and operator_stack[-1] != '(':
                     output.append(operator_stack.pop())
-                operator_stack.pop()  # pop the '('
+                operator_stack.pop()  # Pop the '('
 
         while operator_stack:
             output.append(operator_stack.pop())

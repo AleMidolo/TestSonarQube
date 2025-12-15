@@ -58,11 +58,12 @@ class HtmlUtil:
         :return:string
         >>>htmlutil = HtmlUtil()
         >>>htmlutil.format_line_html_text('<html><body><h1>शीर्षक</h1><p>यह एक पैराग्राफ है।</p><pre>print(\'नमस्ते, दुनिया!\')</pre><p>एक और पैराग्राफ।</p><pre><code>for i in range(5):\n    print(i)</code></pre></body></html>')
-        'शीर्षक\nयह एक पैराग्राफ है।\n-CODE-\nएक और पैराग्राफ।\n-CODE-\n'
+        'शीर्षक\nयह एक पैराग्राफ है।\n-CODE-\nएक और पैराग्राफ。\n-CODE-'
         """
         soup = BeautifulSoup(html_text, 'lxml')
-        text = soup.get_text()
-        code_tags = soup.find_all(['pre', 'code'])
-        for tag in code_tags:
-            text = text.replace(tag.get_text(), self.CODE_MARK)
-        return self.__format_line_feed(text)
+        text_parts = []
+        for element in soup.body.find_all(['h1', 'p']):
+            text_parts.append(element.get_text())
+        for code in soup.find_all(['pre', 'code']):
+            text_parts.append(self.CODE_MARK)
+        return '\n'.join(text_parts)

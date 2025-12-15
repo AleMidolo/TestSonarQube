@@ -79,22 +79,32 @@ class BigNumCalculator:
             num1, num2 = num2, num1
             negative = True
         
-        max_length = max(len(num1), len(num2))
-        num1 = num1.zfill(max_length)
-        num2 = num2.zfill(max_length)
-
+        # Prepare for subtraction
+        num1 = num1[::-1]
+        num2 = num2[::-1]
+        
         result = []
         borrow = 0
-        for i in range(max_length - 1, -1, -1):
-            digit1 = int(num1[i]) - borrow
-            digit2 = int(num2[i])
-            if digit1 < digit2:
+        
+        for i in range(len(num1)):
+            digit1 = int(num1[i])
+            digit2 = int(num2[i]) if i < len(num2) else 0
+            
+            if digit1 < digit2 + borrow:
                 digit1 += 10
+                result.append(str(digit1 - digit2 - borrow))
                 borrow = 1
             else:
+                result.append(str(digit1 - digit2 - borrow))
                 borrow = 0
-            result.insert(0, str(digit1 - digit2))
-
-        # Remove leading zeros
-        result_str = ''.join(result).lstrip('0')
-        return ('-' + result_str) if negative else result_str
+        
+        # Remove leading zeros and reverse the result
+        while result and result[-1] == '0':
+            result.pop()
+        
+        if not result:
+            return '0'
+        
+        result.reverse()
+        
+        return ('-' if negative else '') + ''.join(result)

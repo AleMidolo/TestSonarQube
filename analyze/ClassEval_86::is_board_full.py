@@ -57,7 +57,4 @@ class TicTacToe:
         >>> ttt.is_board_full()
         False
         """
-        for row in self.board:
-            if ' ' in row:
-                return False
-        return True
+        return all(cell != ' ' for row in self.board for cell in row)

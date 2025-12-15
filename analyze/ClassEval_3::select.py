@@ -83,4 +83,4 @@ class ArrangementCalculator:
         """
         if m is None:
             m = len(self.datas)
-        return list(itertools.permutations(self.datas, m))
+        return [list(p) for p in itertools.permutations(self.datas, m)]

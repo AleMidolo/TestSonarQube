@@ -18,7 +18,7 @@ def generate_mine_sweeper_map(self):
         while mines_placed < self.k:
             x = random.randint(0, self.n - 1)
             y = random.randint(0, self.n - 1)
-            if minesweeper_map[x][y] != 'X':  # Ensure no duplicate mines
+            if minesweeper_map[x][y] != 'X':
                 minesweeper_map[x][y] = 'X'
                 mines_placed += 1
                 

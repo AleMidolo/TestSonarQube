@@ -85,7 +85,7 @@ class ArgumentParser:
                 key, value = arg.split('=')
             else:
                 key = arg
-                value = True  # Default value for flags
+                value = True  # For flags
 
             # Remove leading dashes
             key = key.lstrip('-')
@@ -98,7 +98,8 @@ class ArgumentParser:
 
         # Check for missing required arguments
         missing_args = self.required - self.arguments.keys()
+        
         if missing_args:
-            return False, missing_args
-
-        return True, None
+            return (False, missing_args)
+        
+        return (True, None)

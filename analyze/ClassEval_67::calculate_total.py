@@ -70,8 +70,5 @@ class Order:
             dish_name = selected["dish"]
             count = selected["count"]
             price = selected["price"]
-            if dish_name in self.sales:
-                total += count * price * self.sales[dish_name]
-            else:
-                total += count * price
+            total += count * price * self.sales.get(dish_name, 1)
         return total

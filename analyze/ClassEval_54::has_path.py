@@ -14,26 +14,24 @@ def has_path(self, pos1, pos2):
         """
         from collections import deque
 
-        def is_within_bounds(x, y):
-            return 0 <= x < self.BOARD_SIZE[0] and 0 <= y < self.BOARD_SIZE[1]
+        def is_valid(x, y):
+            return 0 <= x < self.BOARD_SIZE[0] and 0 <= y < self.BOARD_SIZE[1] and self.board[x][y] != ' '
 
-        def bfs(start, end):
-            queue = deque([start])
-            visited = set()
-            visited.add(start)
+        queue = deque([pos1])
+        visited = set()
+        visited.add(pos1)
 
-            while queue:
-                current = queue.popleft()
-                if current == end:
-                    return True
+        while queue:
+            current = queue.popleft()
+            if current == pos2:
+                return True
 
-                x, y = current
-                for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                    neighbor = (x + dx, y + dy)
-                    if is_within_bounds(neighbor[0], neighbor[1]) and neighbor not in visited and self.board[neighbor[0]][neighbor[1]] == self.board[x][y]:
-                        visited.add(neighbor)
-                        queue.append(neighbor)
+            x, y = current
+            # Check all four possible directions
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                nx, ny = x + dx, y + dy
+                if is_valid(nx, ny) and (nx, ny) not in visited:
+                    visited.add((nx, ny))
+                    queue.append((nx, ny))
 
-            return False
-
-        return bfs(pos1, pos2)
+        return False

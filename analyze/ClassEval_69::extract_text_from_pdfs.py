@@ -29,7 +29,7 @@ class PDFHandler:
         with open(output_filepath, 'wb') as out:
             pdf_writer.write(out)
         return f"Merged PDFs saved at {output_filepath}"
-
+    
     def extract_text_from_pdfs(self):
         """
         self.readers में pdf फ़ाइलों से पाठ निकालें

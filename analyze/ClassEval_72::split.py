@@ -1,4 +1,3 @@
-import re
 class RegexUtils: 
 
     def match(self, pattern, text):
@@ -12,7 +11,10 @@ class RegexUtils:
         True
         """
         ans = re.match(pattern, text)
-        return ans is not None
+        if ans:
+            return True
+        else:
+            return False
     
     def findall(self, pattern, text):
         """
@@ -82,7 +84,7 @@ class RegexUtils:
         ['Aaa', 'Bbbb', 'Ccc!']
         """
         pattern = self.generate_split_sentences_pattern()
-        return re.split(pattern, text)
+        return self.split(pattern, text)
     
     def validate_phone_number(self, phone_number):
         """
@@ -110,10 +112,10 @@ class RegexUtils:
     
     def split(self, pattern, text):
         """
-        Split the text based on the regular expression pattern and return a list of substrings
-        :param pattern: string, Regular expression pattern
-        :param text: string, Text to split
-        :return: list of string, List of substrings after splitting
+        नियमित अभिव्यक्ति पैटर्न के आधार पर पाठ को विभाजित करें और उपस्ट्रिंग्स की एक सूची लौटाएं
+        :param pattern: स्ट्रिंग, नियमित अभिव्यक्ति पैटर्न
+        :param text: स्ट्रिंग, विभाजित करने के लिए पाठ
+        :return: स्ट्रिंग की सूची, विभाजन के बाद उपस्ट्रिंग्स की सूची
         >>> ru = RegexUtils()
         >>> ru.split(r'\b\d{3}-\d{3}-\d{4}\b', "123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767")
         ['', ' abiguygusu ', ' kjgufwycs ', '']

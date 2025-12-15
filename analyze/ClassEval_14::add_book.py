@@ -11,5 +11,5 @@ def add_book(self, title, author):
     
     self.cursor.execute('''
             INSERT INTO books (title, author, available) VALUES (?, ?, 1)
-        ''', (title, author))
+        ''', (title, author,))
     self.connection.commit()

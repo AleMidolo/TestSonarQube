@@ -45,31 +45,6 @@ class EightPuzzle:
 
         return new_state
 
-    def get_possible_moves(self, state):
-        """
-        अभी की स्थिति के आधार पर सभी संभावित चलने की दिशाएँ पाएँ।
-        केवल चार दिशाएँ हैं: 'ऊपर', 'नीचे', 'बाएँ', 'दाएँ'।
-
-        :param state: इंटीजर की एक 3×3 लिस्ट, जो अभी की स्थिति को स्टोर करती है
-        :return moves: str की एक लिस्ट, जो अभी की स्थिति के आधार पर सभी संभावित चलने की दिशाएँ स्टोर करती है
-
-        >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])
-        ['ऊपर', 'बाएँ', 'दाएँ']
-        """
-        moves = []
-        i, j = self.find_blank(state)
-
-        if i > 0:  # Up
-            moves.append('up')
-        if i < 2:  # Down
-            moves.append('down')
-        if j > 0:  # Left
-            moves.append('left')
-        if j < 2:  # Right
-            moves.append('right')
-
-        return moves
-
     def solve(self):
         """
         Use BFS algorithm to find the path solution which makes the initial state to the goal method.
@@ -98,3 +73,28 @@ class EightPuzzle:
                     open_list.append((new_state, path + [move]))
 
         return None
+
+    def get_possible_moves(self, state):
+        """
+        अभी की स्थिति के आधार पर सभी संभावित चलने की दिशाएँ पाएँ।
+        केवल चार दिशाएँ हैं: 'ऊपर', 'नीचे', 'बाएँ', 'दाएँ'।
+
+        :param state: इंटीजर की एक 3×3 लिस्ट, जो अभी की स्थिति को स्टोर करती है
+        :return moves: str की एक लिस्ट, जो अभी की स्थिति के आधार पर सभी संभावित चलने की दिशाएँ स्टोर करती है
+
+        >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])
+        ['ऊपर', 'बाएँ', 'दाएँ']
+        """
+        moves = []
+        i, j = self.find_blank(state)
+
+        if i > 0:  # Up
+            moves.append('up')
+        if i < 2:  # Down
+            moves.append('down')
+        if j > 0:  # Left
+            moves.append('left')
+        if j < 2:  # Right
+            moves.append('right')
+
+        return moves

@@ -10,18 +10,16 @@ def calculate(self, expression):
     14.0
     """
     
-    self.postfix_stack.clear()
-    self.prepare(expression)
-    
     op_stack = deque()
+    tokens = expression.split()
     
-    for token in self.postfix_stack:
+    for token in tokens:
         if not self.is_operator(token):
             op_stack.append(token)
         else:
             second_value = op_stack.pop()
             first_value = op_stack.pop()
             result = self._calculate(first_value, second_value, token)
-            op_stack.append(result)
+            op_stack.append(str(result))
     
     return float(op_stack.pop())
