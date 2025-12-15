@@ -15,7 +15,8 @@ class Chat:
         >>> chat = Chat()
         >>> chat.add_user('John')
         True
-        self.users = {'John': []}
+        >>> chat.users
+        {'John': []}
         >>> chat.add_user('John')
         False
         """
@@ -83,6 +84,6 @@ class Chat:
         >>> chat.get_messages('Mary')
         []
         """
-        if username in self.users:
-            return self.users[username]
-        return []
+        if username not in self.users:
+            return []
+        return self.users[username]

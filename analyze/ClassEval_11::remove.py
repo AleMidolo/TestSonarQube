@@ -62,6 +62,5 @@ class BitStatusUtil:
         4
 
         """
-        
         BitStatusUtil.check([states, stat])
         return states & ~stat

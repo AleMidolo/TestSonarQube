@@ -61,7 +61,6 @@ class SQLQueryBuilder:
         >>> SQLQueryBuilder.update('table1', {'name': 'Test2', 'age': 15}, where = {'name':'Test'})
         "UPDATE table1 SET name='Test2', age='15' WHERE name='Test'"
         """
-        
         set_clause = ', '.join(f"{k}='{v}'" for k, v in data.items())
         query = f"UPDATE {table} SET {set_clause}"
         if where:

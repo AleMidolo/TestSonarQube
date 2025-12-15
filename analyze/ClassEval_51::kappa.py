@@ -1,5 +1,4 @@
 import numpy as np
-
 class KappaCalculator: 
 
     @staticmethod
@@ -43,7 +42,7 @@ class KappaCalculator:
         Pe = ysum * oneMat * 1.0
         ans = (P0 - Pe) / (1 - Pe)
         return ans[0, 0]
-
+    
     @staticmethod
     def kappa(testData, k):
         """
@@ -54,9 +53,8 @@ class KappaCalculator:
         >>> KappaCalculator.kappa([[2, 1, 1], [1, 2, 1], [1, 1, 2]], 3)
         0.25
         """
-        dataMat = np.array(testData)
-        total = np.sum(dataMat)
-        p0 = np.sum(np.diag(dataMat)) / total
-        pe = np.sum((np.sum(dataMat, axis=0) / total) * (np.sum(dataMat, axis=1) / total))
+        n = np.sum(testData)
+        p0 = np.sum(np.diag(testData)) / n
+        pe = np.sum(np.sum(testData, axis=0) ** 2) / (n ** 2)
         kappa_value = (p0 - pe) / (1 - pe) if (1 - pe) != 0 else 0
         return kappa_value

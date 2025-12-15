@@ -52,7 +52,7 @@ class ExcelProcessor:
         new_file_name = save_file_name.split('.')[0] + '_process.xlsx'
         success = self.write_excel(new_data, new_file_name)
         return success, new_file_name
-    
+
     def read_excel(self, file_name):
         """
         Reading data from Excel files

@@ -69,7 +69,6 @@ class BigNumCalculator:
         >>> bigNum.subtract("12345678901234567890", "98765432109876543210")
         '-86419753208641975320'
         """
-        
         # Ensure num1 is greater than num2 for simplicity
         if num1 == num2:
             return '0'
@@ -88,16 +87,18 @@ class BigNumCalculator:
         borrow = 0
         
         for i in range(max_length - 1, -1, -1):
-            sub = int(num1[i]) - int(num2[i]) - borrow
-            if sub < 0:
-                sub += 10
+            digit1 = int(num1[i]) - borrow
+            digit2 = int(num2[i])
+            
+            if digit1 < digit2:
+                digit1 += 10
                 borrow = 1
             else:
                 borrow = 0
-            result.insert(0, str(sub))
+            
+            result.insert(0, str(digit1 - digit2))
         
         # Remove leading zeros
-        while len(result) > 1 and result[0] == '0':
-            result.pop(0)
+        result_str = ''.join(result).lstrip('0')
         
-        return ('-' if negative else '') + ''.join(result)
+        return ('-' + result_str) if negative else result_str

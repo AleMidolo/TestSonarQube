@@ -5,8 +5,6 @@ class AvgPartition:
         """
         self.lst = lst
         self.limit = limit
-        if limit <= 0:
-            raise ValueError("Limit must be greater than 0.")
 
     def get(self, index):
         """
@@ -32,7 +30,6 @@ class AvgPartition:
         >>> a.setNum()
         (2, 0)
         """
-        total_length = len(self.lst)
-        size = total_length // self.limit
-        remainder = total_length % self.limit
+        size = len(self.lst) // self.limit
+        remainder = len(self.lst) % self.limit
         return size, remainder

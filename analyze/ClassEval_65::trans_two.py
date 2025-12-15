@@ -7,7 +7,6 @@ def trans_two(self, s):
     >>> formatter.trans_two("23")
     "TWENTY THREE"
     """
-    
     if s[0] == "1":
         return self.NUMBER_TEEN[int(s[1])]
     elif s[0] == "0":

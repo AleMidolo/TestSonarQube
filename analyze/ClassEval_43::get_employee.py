@@ -107,5 +107,4 @@ class HRManagementSystem:
         """
         if employee_id in self.employees:
             return self.employees[employee_id]
-        else:
-            return False
+        return False

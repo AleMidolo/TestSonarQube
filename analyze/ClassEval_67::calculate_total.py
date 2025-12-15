@@ -70,6 +70,6 @@ class Order:
             dish_name = selected["dish"]
             count = selected["count"]
             price = selected["price"]
-            sales = self.sales.get(dish_name, 1)  # Default sales to 1 if not found
-            total += count * price * sales
+            sales_multiplier = self.sales.get(dish_name, 1)
+            total += count * price * sales_multiplier
         return total

@@ -10,6 +10,5 @@ def resize_image(self, width, height):
         >>> processor.image.height
         300
         """
-        
         if self.image:
             self.image = self.image.resize((width, height))

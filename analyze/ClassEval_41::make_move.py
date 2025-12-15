@@ -2,12 +2,11 @@ class GomokuGame:
     def __init__(self, board_size):
         """
         Initializes the game with a given board size.
-        It initializes the board with empty spaces and sets the current player symble as 'X'.
+        It initializes the board with empty spaces and sets the current player symbol as 'X'.
         """
         self.board_size = board_size
         self.board = [[' ' for _ in range(board_size)] for _ in range(board_size)]
         self.current_player = 'X'
-
 
     def check_winner(self):
         """
@@ -36,7 +35,7 @@ class GomokuGame:
         Counts the number of consecutive symbols in that direction starting from the given cell,
         :param row: int, row of the given cell
         :param col: int, column of the given cell
-        :param direction: tuple, (int, int), named as (dx, dy). Row and col will plus several dx and dy repectively.
+        :param direction: tuple, (int, int), named as (dx, dy). Row and col will plus several dx and dy respectively.
         :return: True if there are five consecutive symbols of the same player, and False otherwise.
         >>> gomokuGame = GomokuGame(10)
         >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]
@@ -60,7 +59,7 @@ class GomokuGame:
                 return False
             count += 1
         return count == 5
-    
+
     def make_move(self, row, col):
         """
         Makes a move at the given row and column.

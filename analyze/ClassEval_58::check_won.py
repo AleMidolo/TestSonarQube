@@ -26,7 +26,7 @@ class MinesweeperGame:
         for num in range(self.k):
             x = random.randint(0, self.n-1)
             y = random.randint(0, self.n-1)
-            while arr[y][x] == 'X':  # Ensure we don't place a mine on an existing mine
+            while arr[y][x] == 'X':  # Ensure we don't place a mine on an already occupied cell
                 x = random.randint(0, self.n-1)
                 y = random.randint(0, self.n-1)
             arr[y][x] = 'X'
@@ -69,7 +69,7 @@ class MinesweeperGame:
             if self.check_won(self.player_map):
                 return True
             return self.player_map
-
+    
     def check_won(self, map):
         """
         Checks whether the player has won the game,if there are just mines in the player map,return True,otherwise return False.
@@ -80,6 +80,8 @@ class MinesweeperGame:
         >>> minesweeper_game.check_won(minesweeper_game.player_map)
         False
         """
-        total_cells = self.n * self.n
-        revealed_cells = sum(row.count('-') for row in map)
-        return revealed_cells == self.k
+        for row in range(self.n):
+            for col in range(self.n):
+                if self.player_map[row][col] == '-' and self.minesweeper_map[row][col] != 'X':
+                    return False
+        return True

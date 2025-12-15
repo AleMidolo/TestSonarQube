@@ -1,7 +1,3 @@
-import numpy as np
-from gensim import matutils
-from numpy import dot, array
-
 class VectorUtil: 
 
     def similarity(vector_1, vector_2):

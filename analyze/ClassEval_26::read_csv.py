@@ -53,7 +53,7 @@ class CSVProcessor:
         (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])
         """
         try:
-            with open(file_name, 'r') as file:
+            with open(file_name, 'r', newline='') as file:
                 reader = csv.reader(file)
                 title = next(reader)
                 data = [row for row in reader]

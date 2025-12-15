@@ -94,25 +94,19 @@ class NumberWordFormatter:
         words = []
         length = len(whole_part)
         
-        for i in range(length):
-            if length - i > 3:
-                part = whole_part[max(0, length - i - 3):length - i]
+        if length > 3:
+            for i in range(length, 0, -3):
+                part = whole_part[max(0, i-3):i]
                 if part != "000":
-                    words.append(self.trans_three(part) + " " + self.parse_more((length - i - 1) // 3))
-            elif length - i == 3:
-                part = whole_part[length - i - 3:length - i]
-                words.append(self.trans_three(part))
-            elif length - i == 2:
-                part = whole_part[length - i - 2:length - i]
-                words.append(self.trans_two(part))
-            elif length - i == 1:
-                part = whole_part[length - i - 1:length - i]
-                words.append(self.NUMBER[int(part)])
+                    words.append(self.trans_three(part) + " " + self.parse_more((length - i) // 3))
         
+        if not words:
+            words.append("ZERO")
+        
+        words.reverse()
         result = " AND ".join(words).strip()
-        result += " ONLY"
         
         if decimal_part:
-            result += " " + " ".join(self.NUMBER[int(digit)] for digit in decimal_part if digit.isdigit())
+            result += " POINT " + " ".join(self.NUMBER[int(digit)] for digit in decimal_part)
         
-        return result.strip()
+        return result + " ONLY"

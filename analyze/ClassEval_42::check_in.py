@@ -81,7 +81,7 @@ class Hotel:
         5
         """
         return self.available_rooms[room_type]
-
+    
     def check_in(self, room_type, room_number, name):
         """
         Check if the room of the specified type and number is booked by the person named name.

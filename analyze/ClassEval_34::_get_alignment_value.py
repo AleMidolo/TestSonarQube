@@ -12,6 +12,7 @@ class DocFileHandler:
         Reads the content of a Word document and returns it as a string.
         :return: str, the content of the Word document.
         """
+    
         doc = Document(self.file_path)
         text = []
         for paragraph in doc.paragraphs:
@@ -26,6 +27,7 @@ class DocFileHandler:
         :param alignment: str, optional, the alignment of the text ('left', 'center', or 'right'; default is 'left').
         :return: bool, True if the write operation is successful, False otherwise.
         """
+    
         try:
             doc = Document()
             paragraph = doc.add_paragraph()
@@ -46,6 +48,7 @@ class DocFileHandler:
         :param level: int, optional, the level of the heading (1, 2, 3, etc.; default is 1).
         :return: bool, True if the heading is successfully added, False otherwise.
         """
+    
         try:
             doc = Document(self.file_path)
             doc.add_heading(heading, level)
@@ -60,6 +63,7 @@ class DocFileHandler:
         :param data: list of lists, the data to populate the table.
         :return: bool, True if the table is successfully added, False otherwise.
         """
+    
         try:
             doc = Document(self.file_path)
             table = doc.add_table(rows=len(data), cols=len(data[0]))
@@ -71,15 +75,18 @@ class DocFileHandler:
         except:
             return False
     
+
     def _get_alignment_value(self, alignment):
         """
         Returns the alignment value corresponding to the given alignment string.
         :param alignment: str, the alignment string ('left', 'center', or 'right').
         :return: int, the alignment value.
         """
-        if alignment == 'center':
+        if alignment == 'left':
+            return WD_PARAGRAPH_ALIGNMENT.LEFT
+        elif alignment == 'center':
             return WD_PARAGRAPH_ALIGNMENT.CENTER
         elif alignment == 'right':
             return WD_PARAGRAPH_ALIGNMENT.RIGHT
         else:
-            return WD_PARAGRAPH_ALIGNMENT.LEFT
+            raise ValueError("Invalid alignment value. Use 'left', 'center', or 'right'.")

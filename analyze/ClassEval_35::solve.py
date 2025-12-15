@@ -93,10 +93,10 @@ class EightPuzzle:
 
             for move_direction in self.get_possible_moves(current_state):
                 new_state = self.move(current_state, move_direction)
-                new_path = path + [move_direction]
+                new_state_tuple = tuple(map(tuple, new_state))
 
-                if tuple(map(tuple, new_state)) not in visited:
-                    visited.add(tuple(map(tuple, new_state)))
-                    open_list.append((new_state, new_path))
+                if new_state_tuple not in visited:
+                    visited.add(new_state_tuple)
+                    open_list.append((new_state, path + [move_direction]))
 
         return []
