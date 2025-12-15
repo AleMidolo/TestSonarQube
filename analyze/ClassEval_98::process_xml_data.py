@@ -15,8 +15,7 @@ def process_xml_data(self, file_name):
             item.text = 'modified_' + item.text
         
         # Write the modified XML to the new file
-        tree = ET.ElementTree(self.root)
-        tree.write(file_name)
+        self.write_xml(file_name)
         return True
     except:
         return False

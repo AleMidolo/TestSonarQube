@@ -26,9 +26,8 @@ class StudentDatabaseProcessor:
                 gender TEXT,
                 grade INTEGER
             )
-            """
+        """
         cursor.execute(create_table_query)
-    
         conn.commit()
         conn.close()
     
@@ -47,7 +46,6 @@ class StudentDatabaseProcessor:
         select_query = "SELECT * FROM students WHERE name = ?"
         cursor.execute(select_query, (name,))
         result = cursor.fetchall()
-    
         conn.close()
     
         return result
@@ -68,7 +66,6 @@ class StudentDatabaseProcessor:
     
         delete_query = "DELETE FROM students WHERE name = ?"
         cursor.execute(delete_query, (name,))
-    
         conn.commit()
         conn.close()
     
@@ -87,6 +84,5 @@ class StudentDatabaseProcessor:
     
         insert_query = "INSERT INTO students (name, age, gender, grade) VALUES (?, ?, ?, ?)"
         cursor.execute(insert_query, (student_data['name'], student_data['age'], student_data['gender'], student_data['grade']))
-    
         conn.commit()
         conn.close()

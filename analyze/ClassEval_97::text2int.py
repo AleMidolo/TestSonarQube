@@ -60,17 +60,17 @@ class Words2Numbers:
             raise ValueError("Invalid input")
         
         textnum = textnum.replace('-', ' ')
-        current = 0
-        total = 0
+        current = result = 0
+        
         for word in textnum.split():
             if word in self.numwords:
                 scale, increment = self.numwords[word]
                 current += increment
                 if scale > 1:
-                    total += current * scale
+                    current *= scale
+                    result += current
                     current = 0
-            elif word in self.ordinal_words:
-                total += self.ordinal_words[word]
-                current = 0
+            elif word == "and":
+                continue
         
-        return str(total + current)
+        return str(result + current)

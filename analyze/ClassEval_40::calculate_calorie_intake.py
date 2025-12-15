@@ -15,7 +15,7 @@ class FitnessTracker:
     def get_BMI(self):
         """
         Calculate the BMI based on the height and weight.
-        :return: BMI, which is the weight divide by the square of height, float.
+        :return: BMI,which is the weight divide by the square of height, float.
         >>> fitnessTracker = FitnessTracker(1.8, 70, 20, "male")
         >>> fitnessTracker.get_BMI()
         21.604938271604937
@@ -59,11 +59,11 @@ class FitnessTracker:
             BMR = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161
         
         condition = self.condition_judge()
-        if condition == 1:  # too fat
-            calorie_intake = BMR * 1.2
-        elif condition == -1:  # too thin
-            calorie_intake = BMR * 1.6
-        else:  # normal
-            calorie_intake = BMR * 1.4
+        if condition == 1:
+            calorie_intake = BMR * 1.2  # too fat
+        elif condition == -1:
+            calorie_intake = BMR * 1.6  # too thin
+        else:
+            calorie_intake = BMR * 1.4  # normal
         
         return calorie_intake

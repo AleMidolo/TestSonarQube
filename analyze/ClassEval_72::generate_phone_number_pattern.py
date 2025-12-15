@@ -6,5 +6,4 @@ def generate_phone_number_pattern(self):
         >>> ru.generate_phone_number_pattern()
         '\b\d{3}-\d{3}-\d{4}\b'
         """
-        pattern = r'\b\d{3}-\d{3}-\d{4}\b'
-        return pattern
+        return r'\b\d{3}-\d{3}-\d{4}\b'

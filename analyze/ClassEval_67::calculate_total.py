@@ -67,6 +67,6 @@ class Order:
         """
         total = 0.0
         for dish in self.selected_dishes:
-            price = dish["price"] * self.sales[dish["dish"]]
+            price = dish["price"] * self.sales.get(dish["dish"], 1)
             total += price * dish["count"]
         return total

@@ -1,6 +1,3 @@
-import logging
-import datetime
-
 class AccessGatewayFilter: 
     def __init__(self):
         pass
@@ -70,6 +67,8 @@ class AccessGatewayFilter:
         auth_header = request.get('headers', {}).get('Authorization', {})
         jwt = auth_header.get('jwt')
         if jwt:
-            user_info = auth_header.get('user')
+            # Simulating token validation and user extraction
+            user_info = auth_header.get('user', {})
+            user_info['level'] = 3  # Assuming a level for demonstration
             return {'user': user_info}
         return None

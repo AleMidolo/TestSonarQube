@@ -1,6 +1,6 @@
 def borrow_book(self, book_id):
         """
-        दिए गए पुस्तक आईडी के आधार पर डेटाबेस में एक पुस्तक को उधार लिया गया के रूप में चिह्नित करता है।
+        Marks a book as borrowed in the database based on the given book ID.
         :param book_id: int
         >>> book_db = BookManagementDB("test.db")
         >>> book_db.borrow_book(1)

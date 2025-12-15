@@ -89,7 +89,6 @@ class MetricsCalculator:
         >>> mc.f1_score([1, 1, 0, 0], [1, 0, 0, 1])
         0.5
         """
-        
         precision = self.precision(predicted_labels, true_labels)
         recall = self.recall(predicted_labels, true_labels)
         if precision + recall == 0:

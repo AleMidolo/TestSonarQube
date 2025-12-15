@@ -18,12 +18,12 @@ class KappaCalculator:
             P0 += dataMat[i, i] * 1.0
         xsum = np.sum(dataMat, axis=1)
         ysum = np.sum(dataMat, axis=0)
-        total_sum = np.sum(dataMat)
-        Pe = float(ysum * xsum) / total_sum / total_sum
-        P0 = float(P0 / total_sum * 1.0)
+        sum = np.sum(dataMat)
+        Pe = float(ysum * xsum) / sum / sum
+        P0 = float(P0 / sum * 1.0)
         cohens_coefficient = float((P0 - Pe) / (1 - Pe))
         return cohens_coefficient
-
+    
     @staticmethod
     def fleiss_kappa(testData, N, k, n):
         """

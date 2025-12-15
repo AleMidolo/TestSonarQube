@@ -38,7 +38,6 @@ class NLPDataProcessor2:
         top_5_word_frequency = dict(list(sorted_word_frequency.items())[:5])
         return top_5_word_frequency
     
-
     def process(self, string_list):
         """
         स्ट्रिंग में केवल अंग्रेजी अक्षर और स्पेस रखें, फिर स्ट्रिंग को लोअर केस में बदलें, और फिर स्ट्रिंग को शब्दों की सूची में विभाजित करें। शब्दों की सूची में प्रत्येक शब्द की शब्द आवृत्ति की गणना करें, और शब्द आवृत्ति शब्दकोश को मान के अनुसार अवरोही क्रम में सॉर्ट करें।

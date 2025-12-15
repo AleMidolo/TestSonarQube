@@ -48,7 +48,9 @@ class VectorUtil:
             {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}
             """
         index_2_key_map = {}
+    
         index = 0
+
         count_list = []
         for key, count in number_dict.items():
             index_2_key_map[index] = key
@@ -78,4 +80,8 @@ class VectorUtil:
         >>> VectorUtil.cosine_similarities(vector1, vectors_all)
         [0.97463185 0.95941195]
         """
-        return np.array([VectorUtil.similarity(vector_1, vector) for vector in vectors_all])
+        if len(vectors_all) == 0:
+            raise ValueError("The list of vectors cannot be empty.")
+        
+        similarities = np.array([VectorUtil.similarity(vector_1, vector) for vector in vectors_all])
+        return similarities

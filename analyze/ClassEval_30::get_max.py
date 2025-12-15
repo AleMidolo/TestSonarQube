@@ -1,3 +1,5 @@
+import numpy as np
+
 class DataStatistics2: 
     def __init__(self, data):
         """

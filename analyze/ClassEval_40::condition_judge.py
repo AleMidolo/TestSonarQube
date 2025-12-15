@@ -52,16 +52,16 @@ class FitnessTracker:
         """
         bmi = self.get_BMI()
         if self.sex == "male":
-            if bmi < 20:
+            if bmi < self.BMI_std[0]["male"][0]:
                 return -1  # Too thin
-            elif bmi > 25:
-                return 1   # Too fat
+            elif bmi > self.BMI_std[0]["male"][1]:
+                return 1  # Too fat
             else:
-                return 0   # Normal
+                return 0  # Normal
         else:
-            if bmi < 19:
+            if bmi < self.BMI_std[1]["female"][0]:
                 return -1  # Too thin
-            elif bmi > 24:
-                return 1   # Too fat
+            elif bmi > self.BMI_std[1]["female"][1]:
+                return 1  # Too fat
             else:
-                return 0   # Normal
+                return 0  # Normal

@@ -20,7 +20,7 @@ class ShoppingCart:
             self.items[item]['quantity'] += quantity
         else:
             self.items[item] = {'price': price, 'quantity': quantity}
-
+    
     def remove_item(self, item, quantity=1):
         """
         Subtract the specified quantity of item from the shopping list items
@@ -35,7 +35,7 @@ class ShoppingCart:
             self.items[item]['quantity'] -= quantity
             if self.items[item]['quantity'] <= 0:
                 del self.items[item]
-
+    
     def view_items(self) -> dict:
         """
         Return the current shopping list items
@@ -46,7 +46,7 @@ class ShoppingCart:
         {"apple":{"price":1, "quantity":2}}
         """
         return self.items
-
+    
     def total_price(self) -> float:
         """
         खरीदारी सूची में सभी वस्तुओं की कुल कीमत की गणना करें, जो प्रत्येक वस्तु की मात्रा को उसकी कीमत से गुणा करके प्राप्त होती है

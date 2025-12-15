@@ -10,15 +10,13 @@ def process_excel_data(self, N, save_file_name):
     
     data = self.read_excel(save_file_name)
     if data is None:
-        return 0, save_file_name
+        return 0, None
     
-    # Convert the specified column to uppercase
     for i in range(len(data)):
         if len(data[i]) > N:
-            data[i] = list(data[i])  # Convert tuple to list to modify
-            data[i][N] = str(data[i][N]).upper()  # Change to uppercase
+            data[i] = list(data[i])
+            data[i][N] = str(data[i][N]).upper()
     
-    # Write the modified data to a new file
     output_file_name = 'processed_' + save_file_name
     success = self.write_excel(data, output_file_name)
     

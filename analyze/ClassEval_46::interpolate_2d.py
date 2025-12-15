@@ -38,7 +38,7 @@ class Interpolation:
         """
         z_interp = []
         for xi, yi in zip(x_interp, y_interp):
-            # Find the right cell for interpolation
+            # Find the surrounding points
             for i in range(len(x) - 1):
                 for j in range(len(y) - 1):
                     if x[i] <= xi <= x[i + 1] and y[j] <= yi <= y[j + 1]:
@@ -47,11 +47,13 @@ class Interpolation:
                         z12 = z[i][j + 1]
                         z21 = z[i + 1][j]
                         z22 = z[i + 1][j + 1]
-                        z_interp_value = (z11 * (x[i + 1] - xi) * (y[j + 1] - yi) +
-                                          z21 * (xi - x[i]) * (y[j + 1] - yi) +
-                                          z12 * (x[i + 1] - xi) * (yi - y[j]) +
-                                          z22 * (xi - x[i]) * (yi - y[j])) / \
-                                          ((x[i + 1] - x[i]) * (y[j + 1] - y[j]))
-                        z_interp.append(z_interp_value)
+                        z_interp.append(
+                            (z11 * (x[i + 1] - xi) * (y[j + 1] - yi) +
+                             z21 * (xi - x[i]) * (y[j + 1] - yi) +
+                             z12 * (x[i + 1] - xi) * (yi - y[j]) +
+                             z22 * (xi - x[i]) * (yi - y[j])) /
+                            ((x[i + 1] - x[i]) * (y[j + 1] - y[j]))
+                        )
+                        )
                         break
         return z_interp
