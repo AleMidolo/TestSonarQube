@@ -1,3 +1,6 @@
+import logging
+import datetime
+
 class AccessGatewayFilter: 
     def __init__(self):
         pass
@@ -25,7 +28,7 @@ class AccessGatewayFilter:
                 return True
         except:
             return False
-    
+
     def is_start_with(self, request_uri):
         """
         Check if the request URI starts with certain prefixes.
@@ -41,7 +44,7 @@ class AccessGatewayFilter:
             if request_uri.startswith(s):
                 return True
         return False
-    
+
     def get_jwt_user(self, request):
         """
         Get the user information from the JWT token in the request.
@@ -59,7 +62,7 @@ class AccessGatewayFilter:
             if datetime.datetime.today() - jwt_date >= datetime.timedelta(days=3):
                 return None
         return token
-    
+
     def set_current_user_info_and_log(self, user):
         """
         Set the current user information and log the access.

@@ -60,7 +60,7 @@ class ImageProcessor:
         >>> processor.load_image('test.jpg')
         >>> processor.rotate_image(90)
         >>> processor.image.size
-        (height, width) after rotation
+        (4096, 3072)
         """
         if self.image:
             self.image = self.image.rotate(degrees)

@@ -104,9 +104,10 @@ class NumberWordFormatter:
             words.append("ZERO")
         
         words.reverse()
-        result = " AND ".join(words).strip()
+        result = " ".join(words).strip()
         
         if decimal_part:
-            result += " POINT " + " ".join(self.NUMBER[int(digit)] for digit in decimal_part)
+            decimal_words = " ".join(self.NUMBER[int(digit)] for digit in decimal_part)
+            result += " POINT " + decimal_words
         
         return result + " ONLY"

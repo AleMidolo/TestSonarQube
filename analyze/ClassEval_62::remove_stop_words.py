@@ -28,7 +28,7 @@ class NLPDataProcessor:
         :param string_list: a list of strings
         :param stop_word_list: a list of stop words
         :return: a list of words without stop words
-        >>> NLPDataProcessor().remove_stop_words(['This is a test.'], ['a', 'an', 'the'])
+        >>> NLPDataProcessor.process(['This is a test.'])
         [['This', 'is', 'test.']]
         """
         words_without_stop_words = []

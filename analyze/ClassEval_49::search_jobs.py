@@ -8,9 +8,8 @@ def search_jobs(self, criteria):
         >>> jobMarketplace.search_jobs("skill1")
         [{'job_title': 'Software Engineer', 'company': 'ABC Company', 'requirements': ['skill1', 'skill2']}]
         """
-        
         matching_jobs = []
         for job in self.job_listings:
-            if any(skill in job["requirements"] for skill in criteria.split()):
+            if criteria in job["requirements"]:
                 matching_jobs.append(job)
         return matching_jobs

@@ -73,7 +73,7 @@ class URLHandler:
                         params[key] = value
             return params
         return None
-
+    
     def get_fragment(self):
         """
         Get the fragment after '#' in the URL

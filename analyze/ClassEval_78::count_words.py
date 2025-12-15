@@ -11,7 +11,6 @@ class SplitSentence:
         >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
-    
         sentences = re.split(
             r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s', sentences_string)
         return sentences
@@ -25,7 +24,6 @@ class SplitSentence:
         >>> ss.process_text_file("aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?")
         4
         """
-    
         sentences = self.split_sentences(sentences_string)
         max_count = 0
         for sentence in sentences:
@@ -44,4 +42,5 @@ class SplitSentence:
         >>> ss.count_words("abc def")
         2
         """
-        return len([word for word in sentence.split() if word.isalpha()])
+        words = re.findall(r'\b[a-zA-Z]+\b', sentence)
+        return len(words)

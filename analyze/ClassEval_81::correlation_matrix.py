@@ -132,5 +132,6 @@ class Statistics3:
         correlation_matrix = [[0] * m for _ in range(m)]
         for i in range(m):
             for j in range(m):
-                correlation_matrix[i][j] = Statistics3.correlation([row[i] for row in data], [row[j] for row in data])
+                correlation_matrix[i][j] = Statistics3.correlation(
+                    [row[i] for row in data], [row[j] for row in data])
         return correlation_matrix

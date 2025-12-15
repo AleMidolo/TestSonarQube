@@ -91,25 +91,28 @@ class MetricsCalculator2:
             if total_num == 0:
                 return 0.0, [0.0]
             else:
-                precision_sum = 0.0
+                ap = 0.0
                 correct_count = 0
                 for i, value in enumerate(sub_list):
                     if value == 1:
                         correct_count += 1
-                        precision_sum += correct_count / (i + 1)
-                ap = precision_sum / total_num if total_num > 0 else 0.0
+                        ap += correct_count / (i + 1)
+                ap /= min(total_num, correct_count) if correct_count > 0 else 1
                 return ap, [ap]
         
         if type(data) == list:
             separate_result = []
             for (sub_list, total_num) in data:
                 sub_list = np.array(sub_list)
-                precision_sum = 0.0
-                correct_count = 0
-                for i, value in enumerate(sub_list):
-                    if value == 1:
-                        correct_count += 1
-                        precision_sum += correct_count / (i + 1)
-                ap = precision_sum / total_num if total_num > 0 else 0.0
+                if total_num == 0:
+                    ap = 0.0
+                else:
+                    ap = 0.0
+                    correct_count = 0
+                    for i, value in enumerate(sub_list):
+                        if value == 1:
+                            correct_count += 1
+                            ap += correct_count / (i + 1)
+                    ap /= min(total_num, correct_count) if correct_count > 0 else 1
                 separate_result.append(ap)
             return np.mean(separate_result), separate_result

@@ -65,6 +65,7 @@ class NumberConverter:
         decimal_num = int(hex_num, 16)
         return decimal_num
     
+
     @staticmethod
     def decimal_to_binary(decimal_num):
         """
@@ -74,6 +75,5 @@ class NumberConverter:
         >>> NumberConverter.decimal_to_binary(42423)
         '1010010110110111'
         """
-        
         binary_num = bin(decimal_num)[2:]
         return binary_num

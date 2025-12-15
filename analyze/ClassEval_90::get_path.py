@@ -6,6 +6,7 @@ def get_path(self):
         >>> urlhandler.get_path()
         "/s?wd=aaa&rsv_spt=1#page"
         """
+        
         scheme_end = self.url.find("://")
         if scheme_end != -1:
             url_without_scheme = self.url[scheme_end + 3:]
