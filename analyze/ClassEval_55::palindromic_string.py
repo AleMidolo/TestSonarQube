@@ -16,6 +16,7 @@ class Manacher:
         >>> manacher = Manacher('ababa')
         >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')
         2
+    
         """
         if (center - diff == -1 or center + diff == len(string)
                 or string[center - diff] != string[center + diff]):
@@ -29,30 +30,29 @@ class Manacher:
         >>> manacher = Manacher('ababaxse')
         >>> manacher.palindromic_string()
         'ababa'
+
         """
         # Transform the input string to avoid even/odd length issues
         transformed_string = '|'.join(f'^{self.input_string}$')
         n = len(transformed_string)
-        p = [0] * n
+        L = [0] * n
         center = right = 0
 
         for i in range(1, n - 1):
             mirror = 2 * center - i
             if right > i:
-                p[i] = min(right - i, p[mirror])
+                L[i] = min(right - i, L[mirror])
 
             # Attempt to expand the palindrome centered at i
-            while transformed_string[i + p[i] + 1] == transformed_string[i - p[i] - 1]:
-                p[i] += 1
+            while transformed_string[i + L[i] + 1] == transformed_string[i - L[i] - 1]:
+                L[i] += 1
 
             # If the palindrome expanded past the right edge, adjust the center and right edge
-            if i + p[i] > right:
-                center, right = i, i + p[i]
+            if i + L[i] > right:
+                center, right = i, i + L[i]
 
-        # Find the maximum element in p
-        max_length = max(p)
-        center_index = p.index(max_length)
-
-        # Extract the longest palindromic substring
-        start = (center_index - max_length) // 2
+        # Find the maximum length palindrome
+        max_length = max(L)
+        center_index = L.index(max_length)
+        start = (center_index - max_length) // 2  # Adjust for the transformed string
         return self.input_string[start:start + max_length]

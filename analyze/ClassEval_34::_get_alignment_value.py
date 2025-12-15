@@ -77,9 +77,11 @@ class DocFileHandler:
         :param alignment: str, the alignment string ('left', 'center', or 'right').
         :return: int, the alignment value.
         """
-        if alignment == 'center':
+        if alignment == 'left':
+            return WD_PARAGRAPH_ALIGNMENT.LEFT
+        elif alignment == 'center':
             return WD_PARAGRAPH_ALIGNMENT.CENTER
         elif alignment == 'right':
             return WD_PARAGRAPH_ALIGNMENT.RIGHT
         else:
-            return WD_PARAGRAPH_ALIGNMENT.LEFT
+            raise ValueError("Invalid alignment value. Use 'left', 'center', or 'right'.")

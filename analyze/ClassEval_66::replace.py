@@ -25,10 +25,7 @@ class NumericEntityUnescaper:
         import re
 
         def replace_entity(match):
-            num = match.group(1)
-            if num.startswith('x'):
-                return chr(int(num[1:], 16))
-            else:
-                return chr(int(num))
+            code = int(match.group(1))
+            return chr(code)
 
-        return re.sub(r'&#(x?[0-9a-fA-F]+);', replace_entity, string)
+        return re.sub(r'&#(\d+);', replace_entity, string)

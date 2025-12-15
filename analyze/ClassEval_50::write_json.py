@@ -60,6 +60,7 @@ class JSONProcessor:
         >>> json.read_json('test.json')
         {'key1': 'value1', 'key2': 'value2'}
         """
+        
         try:
             with open(file_path, 'w') as file:
                 json.dump(data, file)

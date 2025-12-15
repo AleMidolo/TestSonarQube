@@ -105,4 +105,3 @@ class Warehouse:
         if product_id not in self.inventory or self.inventory[product_id]['quantity'] < quantity:
             return False
         self.orders[order_id] = {'product_id': product_id, 'quantity': quantity, 'status': 'Shipped'}
-        self.inventory[product_id]['quantity'] -= quantity

@@ -111,8 +111,14 @@ class NumberWordFormatter:
                 part = whole_part[max(0, length - i - 2):length - i]
                 if part:
                     words.append(self.trans_two(part))
+            elif length - i - 1 == 0:
+                # Handle the last digit
+                part = whole_part[max(0, length - i - 1):length - i]
+                if part:
+                    words.append(self.NUMBER[int(part)])
         
         result = " AND ".join(words).strip()
-        result += " ONLY"
+        if decimal_part:
+            result += " POINT " + " ".join(self.NUMBER[int(digit)] for digit in decimal_part)
         
-        return result
+        return result + " ONLY" if result else ""

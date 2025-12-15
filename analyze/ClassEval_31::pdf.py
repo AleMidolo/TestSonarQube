@@ -1,5 +1,3 @@
-import math
-
 class DataStatistics4: 
 
     def correlation_coefficient(data1, data2):

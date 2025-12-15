@@ -1,6 +1,3 @@
-import logging
-import datetime
-
 class AccessGatewayFilter: 
     def __init__(self):
         pass
@@ -72,4 +69,4 @@ class AccessGatewayFilter:
         >>> user = {'name': 'user1', 'address': '127.0.0.1'}
         >>> filter.set_current_user_info_and_log(user)
         """
-        logging.info(f"User accessed: {user['name']} from {user['address']}")
+        logging.info(f"User {user['name']} accessed the system from {user['address']}.")

@@ -17,7 +17,7 @@ class ClassRegistrationSystem:
         else:
             self.students.append(student)
             return 1
-
+    
     def register_class(self, student_name, class_name):
         """
         register a class to the student.
@@ -34,7 +34,7 @@ class ClassRegistrationSystem:
         else:
             self.students_registration_classes[student_name] = [class_name]
         return self.students_registration_classes[student_name]
-
+    
     def get_students_by_major(self, major):
         """
         get all students in the major
@@ -51,7 +51,7 @@ class ClassRegistrationSystem:
             if student["major"] == major:
                 student_list.append(student["name"])
         return student_list
-
+    
     def get_all_major(self):
         """
         get all majors in the system
@@ -66,7 +66,7 @@ class ClassRegistrationSystem:
             if student["major"] not in major_list:
                 major_list.append(student["major"])
         return major_list
-
+    
     def get_most_popular_class_in_major(self, major):
         """
         get the class with the highest enrollment in the major.

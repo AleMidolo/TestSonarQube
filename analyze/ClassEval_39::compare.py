@@ -17,5 +17,5 @@ def get_operator_index(self, operator):
     :param operator: string, the operator to find the index for
     :return: int, the index of the operator
     """
-    operators = {'+': 0, '-': 1, '*': 2, '\/': 3, '%': 4, '(': 5, ')': 6}
-    return operators.get(operator, -1)
+    operators = ['+', '-', '*', '\/', '(', ')', '%']
+    return operators.index(operator) if operator in operators else -1

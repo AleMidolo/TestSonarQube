@@ -76,4 +76,7 @@ class VectorUtil:
         >>> VectorUtil.cosine_similarities(vector1, vectors_all)
         [0.97463185 0.95941195]
         """
+        if len(vectors_all) == 0:
+            raise ValueError("The list of vectors cannot be empty.")
+        
         return np.array([VectorUtil.similarity(vector_1, vector) for vector in vectors_all])

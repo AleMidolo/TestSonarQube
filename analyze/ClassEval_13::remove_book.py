@@ -41,7 +41,7 @@ class BookManagement:
         if title not in self.inventory:
             return 0
         return self.inventory[title]
-    
+
     def remove_book(self, title, quantity):
         """
         Remove one or several books from inventory which is sorted by book title.
@@ -50,7 +50,7 @@ class BookManagement:
         :param quantity: int
         """
         if title not in self.inventory or quantity <= 0:
-            raise ValueError("Invalid input: book title does not exist or quantity is invalid.")
+            raise ValueError("Invalid input: book not found or quantity is non-positive.")
         
         if self.inventory[title] < quantity:
             raise ValueError("Invalid input: not enough books to remove.")

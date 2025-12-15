@@ -18,12 +18,12 @@ class KappaCalculator:
             P0 += dataMat[i, i] * 1.0
         xsum = np.sum(dataMat, axis=1)
         ysum = np.sum(dataMat, axis=0)
-        sum = np.sum(dataMat)
-        Pe = float(ysum * xsum) / sum / sum
-        P0 = float(P0 / sum * 1.0)
+        total_sum = np.sum(dataMat)
+        Pe = float(ysum * xsum) / total_sum / total_sum
+        P0 = float(P0 / total_sum * 1.0)
         cohens_coefficient = float((P0 - Pe) / (1 - Pe))
         return cohens_coefficient
-    
+
     @staticmethod
     def fleiss_kappa(testData, N, k, n):
         """
@@ -45,15 +45,11 @@ class KappaCalculator:
         >>>                              [0, 2, 2, 3, 7]], 10, 5, 14)
         0.20993070442195522
         """
-        # Calculate the proportion of ratings for each category
-        p = np.sum(testData, axis=0) / (N * n)
-        
-        # Calculate the overall agreement
-        P = np.sum(np.square(np.sum(testData, axis=1) / n)) / N
-        
-        # Calculate the expected agreement
-        Pe = np.sum(np.square(p))
-        
-        # Calculate Fleiss' Kappa
-        kappa_value = (P - Pe) / (1 - Pe)
-        return kappa_value
+        dataMat = np.array(testData)
+        P = np.sum(dataMat, axis=0) / (N * n)
+        Pbar = np.sum(P**2)
+        Pbar_r = np.sum(dataMat, axis=1) / n
+        Pbar_r_squared = np.sum(Pbar_r**2)
+        Pbar_r_mean = np.mean(Pbar_r_squared)
+        fleiss_kappa_value = (Pbar - Pbar_r_mean) / (1 - Pbar_r_mean)
+        return fleiss_kappa_value

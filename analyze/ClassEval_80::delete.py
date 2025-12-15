@@ -62,6 +62,7 @@ class SQLQueryBuilder:
         >>> SQLQueryBuilder.delete('table1', {'name': 'Test', 'age': 14})
         "DELETE FROM table1 WHERE name='Test' AND age='14'"
         """
+        
         query = f"DELETE FROM {table}"
         if where:
             query += " WHERE " + \
