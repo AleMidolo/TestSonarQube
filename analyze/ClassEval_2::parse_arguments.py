@@ -77,7 +77,7 @@ class ArgumentParser:
         args = command_string.split()
         for arg in args[1:]:
             if '=' in arg:
-                key, value = arg.split('=')
+                key, value = arg.split('=', 1)
                 key = key.lstrip('--')
             else:
                 key = arg.lstrip('-')

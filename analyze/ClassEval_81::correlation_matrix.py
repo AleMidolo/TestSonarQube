@@ -126,4 +126,5 @@ class Statistics3:
 
         """
         import numpy as np
+        
         return np.corrcoef(data)

@@ -32,6 +32,7 @@ class CookiesUtil:
         try:
             with open(self.cookies_file, 'r') as file:
                 cookies_data = json.load(file)
+                self.cookies = cookies_data
                 return cookies_data
         except FileNotFoundError:
             return {}

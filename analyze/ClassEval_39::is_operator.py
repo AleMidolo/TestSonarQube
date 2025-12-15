@@ -158,7 +158,7 @@ class ExpressionCalculator:
             return "0" + "".join(arr)
         else:
             return "".join(arr)
-    
+
     @staticmethod
     def is_operator(c):
         """

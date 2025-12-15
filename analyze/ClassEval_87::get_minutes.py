@@ -6,8 +6,7 @@ def get_minutes(self, string_time1, string_time2):
     60
     """
     
-    datetime1 = datetime.datetime.strptime(string_time1, "%Y-%m-%d %H:%M:%S")
-    datetime2 = datetime.datetime.strptime(string_time2, "%Y-%m-%d %H:%M:%S")
-    delta = datetime2 - datetime1
-    minutes = delta.total_seconds() / 60
-    return round(minutes)
+    datetime1 = self.string_to_datetime(string_time1)
+    datetime2 = self.string_to_datetime(string_time2)
+    delta = (datetime2 - datetime1).total_seconds() / 60
+    return round(delta)

@@ -46,15 +46,13 @@ class KappaCalculator:
                                          [0, 2, 2, 3, 7]], 10, 5, 14)
         0.20993070442195522
         """
-        # Calculate the proportion of agreement for each category
+        # Calculate the proportion of agreement
         p = np.sum(testData, axis=0) / (N * n)
-        
-        # Calculate the overall proportion of agreement
         P = np.sum(p**2)
         
         # Calculate the expected agreement
-        Pe = np.sum((np.sum(testData, axis=1) / (N * n))**2)
+        Pe = np.sum((np.sum(testData, axis=1) / (n * N))**2)
         
-        # Calculate Fleiss' kappa
-        fleiss_kappa_value = (P - Pe) / (1 - Pe)
-        return fleiss_kappa_value
+        # Calculate Fleiss' Kappa
+        kappa_value = (P - Pe) / (1 - Pe)
+        return kappa_value

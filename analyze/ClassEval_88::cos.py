@@ -73,7 +73,7 @@ class TriCalculator:
     
     def cos(self, x):
         """
-        Calculate the cos value of the x-degree angle
+        计算 x 度角的余弦值
         :param x: float
         :return: float
         >>> tricalculator = TriCalculator()

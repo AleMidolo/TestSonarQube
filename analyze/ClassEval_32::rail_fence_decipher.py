@@ -86,7 +86,7 @@ class DecryptionUtils:
         index = 0
         for i in range(rails):
             for j in range(len(encrypted_text)):
-                if ((rail[i][j] == '*') and (index < len(encrypted_text))):
+                if (rail[i][j] == '*' and index < len(encrypted_text)):
                     rail[i][j] = encrypted_text[index]
                     index += 1
         

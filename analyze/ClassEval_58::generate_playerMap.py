@@ -21,7 +21,6 @@ class MinesweeperGame:
         >>> minesweeper_game.generate_mine_sweeper_map()
         [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
         """
-    
         arr = [[0 for row in range(self.n)] for column in range(self.n)]
         for num in range(self.k):
             x = random.randint(0, self.n-1)
@@ -36,14 +35,12 @@ class MinesweeperGame:
             if (x >= 1 and x <= self.n-1) and (y >= 1 and y <= self.n-1):
                 if arr[y-1][x-1] != 'X':
                     arr[y-1][x-1] += 1
-    
             if (x >= 0 and x <= self.n-2) and (y >= 1 and y <= self.n-1):
                 if arr[y-1][x+1] != 'X':
                     arr[y-1][x+1] += 1
             if (x >= 0 and x <= self.n-1) and (y >= 1 and y <= self.n-1):
                 if arr[y-1][x] != 'X':
                     arr[y-1][x] += 1
-    
             if (x >= 0 and x <= self.n-2) and (y >= 0 and y <= self.n-2):
                 if arr[y+1][x+1] != 'X':
                     arr[y+1][x+1] += 1
@@ -65,7 +62,6 @@ class MinesweeperGame:
         >>> minesweeper_game.check_won(minesweeper_game.player_map)
         False
         """
-    
         for i in range(self.n):
             for j in range(self.n):
                 if map[i][j] == '-' and self.minesweeper_map[i][j] != 'X':
@@ -84,7 +80,6 @@ class MinesweeperGame:
         >>> minesweeper_game.sweep(1, 1)
         [['-', '-', '-'], ['-', 1, '-'], ['-', '-', '-']]
         """
-    
         if (self.minesweeper_map[x][y] == 'X'):
             return False
         else:
