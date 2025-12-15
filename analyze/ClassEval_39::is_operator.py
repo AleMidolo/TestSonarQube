@@ -96,14 +96,14 @@ class ExpressionCalculator:
     @staticmethod
     def _calculate(first_value, second_value, current_op):
         """
-            Perform the mathematical calculation based on the given operands and operator
-            :param first_value: string, the first operand
-            :param second_value: string, the second operand
-            :param current_op: string, the operator
-            :return: decimal.Decimal, the calculated result
-            >>> expression_calculator = ExpressionCalculator()
-            >>> expression_calculator._calculate("2", "3", "+")
-            5.0
+        Perform the mathematical calculation based on the given operands and operator
+        :param first_value: string, the first operand
+        :param second_value: string, the second operand
+        :param current_op: string, the operator
+        :return: decimal.Decimal, the calculated result
+        >>> expression_calculator = ExpressionCalculator()
+        >>> expression_calculator._calculate("2", "3", "+")
+        5.0
         """
         if current_op == '+':
             return Decimal(first_value) + Decimal(second_value)
@@ -121,12 +121,12 @@ class ExpressionCalculator:
     @staticmethod
     def transform(expression):
         """
-            Transform the infix expression to a format suitable for conversion
-            :param expression: string, the infix expression to be transformed
-            :return: string, the transformed expression
-            >>> expression_calculator = ExpressionCalculator()
-            >>> expression_calculator.transform("2 + 3 * 4")
-            "2+3*4"
+        Transform the infix expression to a format suitable for conversion
+        :param expression: string, the infix expression to be transformed
+        :return: string, the transformed expression
+        >>> expression_calculator = ExpressionCalculator()
+        >>> expression_calculator.transform("2 + 3 * 4")
+        "2+3*4"
         """
         expression = re.sub(r"\\s+", "", expression)
         expression = re.sub(r"=$", "", expression)
@@ -150,7 +150,7 @@ class ExpressionCalculator:
     @staticmethod
     def is_operator(c):
         """
-        Check if a character is an operator {'+', '-', '*', '/', '(', ')', '%'}
+        Check if a character is an operator in {'+', '-', '*', '/', '(', ')', '%'}
         :param c: string, the character to check
         :return: bool, True if the character is an operator, False otherwise
         >>> expression_calculator = ExpressionCalculator()

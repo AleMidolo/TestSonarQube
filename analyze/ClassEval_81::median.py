@@ -9,6 +9,7 @@ def median(data):
     >>> statistics3.median([1, 2, 3, 4])
     2.5
     """
+    
     n = len(data)
     if n == 0:
         return None

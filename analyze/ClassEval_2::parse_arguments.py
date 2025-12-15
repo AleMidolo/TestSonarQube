@@ -74,32 +74,19 @@ class ArgumentParser:
         >>> parser.arguments
         {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
         """
-        import re
-        
-        # Split the command string into arguments
-        args = re.findall(r'--\w+=\w+|-\w+|\w+', command_string)
-        missing_args = set()
-
-        for arg in args:
+        args = command_string.split()
+        for arg in args[1:]:
             if '=' in arg:
-                key, value = arg.split('=')
+                key, value = arg.split('=', 1)
             else:
                 key = arg
-                value = True  # For flags
-
-            # Remove leading dashes
+                value = True
+            
             key = key.lstrip('-')
-
-            # Convert type if necessary
             if key in self.types:
-                value = self._convert_type(key, value)
-
-            self.arguments[key] = value
-
-        # Check for missing required arguments
-        missing_args = self.required - self.arguments.keys()
+                self.arguments[key] = self._convert_type(key, value)
+            else:
+                self.arguments[key] = value
         
-        if missing_args:
-            return (False, missing_args)
-        
-        return (True, None)
+        missing_args = {arg for arg in self.required if arg not in self.arguments}
+        return (len(missing_args) == 0, missing_args if missing_args else None)

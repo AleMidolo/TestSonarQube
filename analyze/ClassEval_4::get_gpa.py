@@ -52,7 +52,7 @@ class AssessmentSystem:
         """
         Get the average score of a specific course.
         :param course: str, course name
-        :return: float, average scores of this course if anyone have score of this course, or None if nobody have records.
+        :return: float, average scores of this course if anyone has score of this course, or None if nobody has records.
         """
         total = 0
         count = 0

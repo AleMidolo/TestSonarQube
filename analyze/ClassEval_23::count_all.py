@@ -80,7 +80,5 @@ class CombinationCalculator:
         >>> CombinationCalculator.count_all(4)
         15
         """
-        if n < 0:
-            return 0
         total_combinations = (1 << n) - 1  # 2^n - 1
         return total_combinations if total_combinations <= (2**63 - 1) else float("inf")

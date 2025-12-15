@@ -32,21 +32,19 @@ class Manacher:
         """
         transformed_string = '|'.join(f'^{self.input_string}$')
         n = len(transformed_string)
-        lps = [0] * n
+        L = [0] * n
         center = right = 0
-
+        
         for i in range(1, n - 1):
             mirror = 2 * center - i
             if right > i:
-                lps[i] = min(right - i, lps[mirror])
-
-            while transformed_string[i + lps[i] + 1] == transformed_string[i - lps[i] - 1]:
-                lps[i] += 1
-
-            if i + lps[i] > right:
-                center, right = i, i + lps[i]
-
-        max_length = max(lps)
-        center_index = lps.index(max_length)
-        start = (center_index - max_length) // 2
-        return self.input_string[start:start + max_length]
+                L[i] = min(right - i, L[mirror])
+            while transformed_string[i + L[i] + 1] == transformed_string[i - L[i] - 1]:
+                L[i] += 1
+            if i + L[i] > right:
+                center, right = i, i + L[i]
+        
+        max_len = max(L)
+        center_index = L.index(max_len)
+        start = (center_index - max_len) // 2
+        return self.input_string[start:start + max_len]

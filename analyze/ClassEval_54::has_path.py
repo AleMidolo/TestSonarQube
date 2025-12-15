@@ -27,11 +27,11 @@ def has_path(self, pos1, pos2):
                 return True
 
             x, y = current
-            # Check all four possible directions
+            # Check adjacent positions (up, down, left, right)
             for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                nx, ny = x + dx, y + dy
-                if is_valid(nx, ny) and (nx, ny) not in visited:
-                    visited.add((nx, ny))
-                    queue.append((nx, ny))
+                next_pos = (x + dx, y + dy)
+                if is_valid(*next_pos) and next_pos not in visited:
+                    visited.add(next_pos)
+                    queue.append(next_pos)
 
         return False

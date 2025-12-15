@@ -28,7 +28,6 @@ class ArgumentParser:
         >>> parser.arguments
         {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
         """
-    
         args = command_string.split()[1:]
         for i in range(len(args)):
             arg = args[i]
@@ -66,7 +65,6 @@ class ArgumentParser:
         >>> parser.types
         {'arg1': 'int'}
         """
-    
         if required:
             self.required.add(arg)
         self.types[arg] = arg_type
@@ -81,7 +79,6 @@ class ArgumentParser:
         >>> parser._convert_type('arg1', '21')
         21
         """
-    
         try:
             return self.types[arg](value)
         except (ValueError, KeyError):

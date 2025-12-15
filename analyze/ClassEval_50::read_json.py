@@ -63,5 +63,5 @@ class JSONProcessor:
                 return json.load(file)
         except FileNotFoundError:
             return 0
-        except:
+        except Exception:
             return -1

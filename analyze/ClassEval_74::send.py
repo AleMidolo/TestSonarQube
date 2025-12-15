@@ -81,5 +81,7 @@ class Server:
         self.send_struct = {"addr":66,"content":"ABC"}
         """
         if not isinstance(info, dict) or "addr" not in info or "content" not in info:
-            return "Invalid info format"
-        self.send_struct = {"addr": info["addr"], "content": info["content"]}
+            return "Error: Invalid input"
+        addr = info["addr"]
+        content = info["content"]
+        self.send_struct = {"addr": addr, "content": content}

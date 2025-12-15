@@ -40,5 +40,4 @@ class SplitSentence:
         >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
-        sentences = re.split(r'(?<!Mr)(?<![A-Z][a-z])[\.\?]\s+', sentences_string.strip())
-        return [sentence.strip() for sentence in sentences if sentence]
+        return re.split(r'(?<!Mr)(?<![A-Z][a-z])\. |\? ', sentences_string)

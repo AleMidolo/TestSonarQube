@@ -12,27 +12,27 @@ def rail_fence_cipher(self, plain_text, rails):
         return ""
     
     rail = [['\n' for _ in range(len(plain_text))] for _ in range(rails)]
-    dir_down = None
+    direction_down = False
     row, col = 0, 0
 
     for char in plain_text:
         if row == 0:
-            dir_down = True
+            direction_down = True
         if row == rails - 1:
-            dir_down = False
+            direction_down = False
 
         rail[row][col] = char
         col += 1
 
-        if dir_down:
+        if direction_down:
             row += 1
         else:
             row -= 1
 
     ciphertext = ""
     for r in rail:
-        for c in r:
-            if c != '\n':
-                ciphertext += c
+        for char in r:
+            if char != '\n':
+                ciphertext += char
 
     return ciphertext

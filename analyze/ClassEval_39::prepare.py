@@ -7,8 +7,8 @@ def prepare(self, expression):
 
         expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
         """
-        operator_stack = deque()
         output = []
+        operator_stack = deque()
 
         for char in expression:
             if char.isdigit() or char == '~':
@@ -23,7 +23,7 @@ def prepare(self, expression):
             elif char == ')':
                 while operator_stack and operator_stack[-1] != '(':
                     output.append(operator_stack.pop())
-                operator_stack.pop()  # Pop the '('
+                operator_stack.pop()  # pop the '('
 
         while operator_stack:
             output.append(operator_stack.pop())

@@ -10,11 +10,14 @@ def process_xml_data(self, file_name):
     True
     """
     try:
-        # Example modification: Change the text of all 'item' elements
-        for item in self.find_element('item'):
-            item.text = 'modified_' + item.text
-        
+        # Example modification: Add a new element
+        new_element = ET.Element('new_item')
+        new_element.text = 'new_value'
+        self.root.append(new_element)
+
         # Write the modified XML to the new file
-        return self.write_xml(file_name)
-    except Exception as e:
+        tree = ET.ElementTree(self.root)
+        tree.write(file_name)
+        return True
+    except:
         return False

@@ -8,7 +8,6 @@ class ArrangementCalculator:
         """
         self.datas = datas
 
-    @staticmethod
     def count(n, m=None):
         """
         Counts the number of arrangements by choosing m items from n items (permutations).

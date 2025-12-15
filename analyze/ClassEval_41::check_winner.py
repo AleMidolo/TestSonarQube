@@ -9,11 +9,13 @@ def check_winner(self):
         >>> gomokuGame.check_winner()
         'X'
         """
-        directions = [(0, 1), (1, 0), (1, 1), (1, -1)]
         for row in range(self.board_size):
             for col in range(self.board_size):
                 if self.board[row][col] != ' ':
+                    current_symbol = self.board[row][col]
+                    # Check all directions: horizontal, vertical, diagonal \
+                    directions = [(0, 1), (1, 0), (1, 1), (1, -1)]
                     for direction in directions:
                         if self._check_five_in_a_row(row, col, direction):
-                            return self.board[row][col]
+                            return current_symbol
         return None

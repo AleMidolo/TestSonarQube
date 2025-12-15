@@ -13,8 +13,6 @@ def get_upcoming_events(self, num_events):
         upcoming_events = []
         current_time = datetime.now()
         for event in self.events:
-            if event['start_time'] >= current_time:
+            if event['start_time'] > current_time:
                 upcoming_events.append(event)
-                if len(upcoming_events) == num_events:
-                    break
-        return upcoming_events
+        return upcoming_events[:num_events]

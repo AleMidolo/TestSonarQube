@@ -6,5 +6,5 @@ def add_course(self, course):
     >>> classroom.add_course({'name': 'math', 'start_time': '8:00', 'end_time': '9:40'})
     """
     if not self.check_course_conflict(course):
-        return
+        return  # Do not add the course if there is a conflict
     self.courses.append(course)

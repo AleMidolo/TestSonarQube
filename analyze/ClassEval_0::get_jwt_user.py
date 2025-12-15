@@ -67,6 +67,7 @@ class AccessGatewayFilter:
         auth_header = request.get('headers', {}).get('Authorization', {})
         jwt = auth_header.get('jwt')
         if jwt:
-            # Here we would normally validate the JWT and extract user info
-            return auth_header['user']
+            # Simulating token validation and user extraction
+            user_info = auth_header.get('user')
+            return {'user': user_info}
         return None
