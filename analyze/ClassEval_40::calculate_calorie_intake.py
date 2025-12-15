@@ -13,11 +13,11 @@ def calculate_calorie_intake(self):
             BMR = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161
         
         condition = self.condition_judge()
-        if condition == 1:  # too fat
-            calorie_intake = BMR * 1.2
-        elif condition == -1:  # too thin
-            calorie_intake = BMR * 1.6
-        else:  # normal
-            calorie_intake = BMR * 1.4
+        if condition == 1:
+            calorie_intake = BMR * 1.2  # too fat
+        elif condition == -1:
+            calorie_intake = BMR * 1.6  # too thin
+        else:
+            calorie_intake = BMR * 1.4  # normal
         
         return calorie_intake

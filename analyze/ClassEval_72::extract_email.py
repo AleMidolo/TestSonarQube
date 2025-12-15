@@ -59,7 +59,7 @@ class RegexUtils:
         :return: string, regular expression patterns that match email addresses
         >>> ru = RegexUtils()
         >>> ru.generate_email_pattern()
-        '\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        '\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b'
         """
         pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         return pattern
@@ -70,7 +70,7 @@ class RegexUtils:
         :return: string, regular expression patterns that match phone numbers
         >>> ru = RegexUtils()
         >>> ru.generate_phone_number_pattern()
-        '\b\d{3}-\d{3}-\d{4}\b'
+        '\\b\\d{3}-\\d{3}-\\d{4}\\b'
         """
         pattern = r'\b\d{3}-\d{3}-\d{4}\b'
         return pattern
@@ -81,7 +81,7 @@ class RegexUtils:
         :return: string, regular expression patterns that match the middle characters of two sentences
         >>> ru = RegexUtils()
         >>> ru.generate_split_sentences_pattern()
-        '[.!?][\s]{1,2}(?=[A-Z])'
+        '[.!?][\\s]{1,2}(?=[A-Z])'
         """
         pattern = r'[.!?][\s]{1,2}(?=[A-Z])'
         return pattern

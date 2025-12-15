@@ -105,4 +105,5 @@ class EmailClient:
         >>> sender.get_occupied_size()
         10
         """
+        
         return sum(email['size'] for email in self.inbox)

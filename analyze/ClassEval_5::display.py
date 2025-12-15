@@ -6,7 +6,6 @@ class AutomaticGuitarSimulator:
         """
         self.play_text = text
 
-
     def interpret(self, display=False):
         """
         Interpret the music score to be played
@@ -15,9 +14,7 @@ class AutomaticGuitarSimulator:
         >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
         >>> play_list = context.interpret(display = False)
         [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]
-    
         """
-    
         if not self.play_text.strip():
             return []
         else:
@@ -36,7 +33,6 @@ class AutomaticGuitarSimulator:
                 if display:
                     self.display(play_chord, play_value)
             return play_list
-    
 
     def display(self, key, value):
         """
@@ -47,6 +43,5 @@ class AutomaticGuitarSimulator:
         >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
         >>> context.display("C", "53231323")
         正常吉他演奏 -- 和弦: C, 播放旋律: 53231323
-
         """
         print(f"正常吉他演奏 -- 和弦: {key}, 播放旋律: {value}")

@@ -103,7 +103,7 @@ class NumberWordFormatter:
             if group:
                 group_words = self.trans_three(group)
                 if i // 3 > 0:
-                    group_words += " " + self.parse_more(i // 3 - 1)
+                    group_words += " " + self.parse_more(i // 3)
                 words.append(group_words)
         
         words.reverse()

@@ -82,26 +82,20 @@ class BigNumCalculator:
         max_length = max(len(num1), len(num2))
         num1 = num1.zfill(max_length)
         num2 = num2.zfill(max_length)
-        
+
         result = []
         borrow = 0
-        
         for i in range(max_length - 1, -1, -1):
-            digit1 = int(num1[i]) - borrow
-            digit2 = int(num2[i])
-            
-            if digit1 < digit2:
-                digit1 += 10
+            digit_sub = int(num1[i]) - int(num2[i]) - borrow
+            if digit_sub < 0:
+                digit_sub += 10
                 borrow = 1
             else:
                 borrow = 0
-            
-            result.insert(0, str(digit1 - digit2))
-        
+            result.insert(0, str(digit_sub))
+
         # Remove leading zeros
-        result_str = ''.join(result).lstrip('0')
-        
-        if negative:
-            return '-' + result_str
-        
-        return result_str if result_str else '0'
+        while len(result) > 1 and result[0] == '0':
+            result.pop(0)
+
+        return ('-' if negative else '') + ''.join(result)

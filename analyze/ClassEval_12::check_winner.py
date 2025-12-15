@@ -10,10 +10,9 @@ def check_winner(self, player_hand, dealer_hand):
     >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])
     'Player wins'
     """
-    
     player_value = self.calculate_hand_value(player_hand)
     dealer_value = self.calculate_hand_value(dealer_hand)
-    
+
     if player_value > 21:
         return 'Dealer wins'
     elif dealer_value > 21:

@@ -134,4 +134,4 @@ class Statistics3:
         2.0
 
         """
-        return sum(data) / len(data) if data else None
+        return sum(data) / len(data)

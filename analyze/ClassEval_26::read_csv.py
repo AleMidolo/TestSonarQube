@@ -20,7 +20,7 @@ class CSVProcessor:
             return 1
         except:
             return 0
-    
+
     def process_csv_data(self, N, save_file_name):
         """
         Read a csv file into variable title and data.
@@ -42,7 +42,7 @@ class CSVProcessor:
         column_data = [row.upper() for row in column_data]
         new_data = [title, column_data]
         return self.write_csv(new_data, save_file_name.split('.')[0] + '_process.csv')
-    
+
     def read_csv(self, file_name):
         """
         通过 file_name 读取csv文件，从中获取标题和数据

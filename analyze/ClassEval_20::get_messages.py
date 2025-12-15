@@ -1,4 +1,77 @@
-def get_messages(self, username):
+from datetime import datetime
+
+class Chat: 
+    def __init__(self):
+        """
+        Initialize the Chat with an attribute users, which is an empty dictionary.
+        """
+        self.users = {}
+
+    def add_user(self, username):
+        """
+        Add a new user to the Chat.
+        :param username: The user's name, str.
+        :return: If the user is already in the Chat, returns False, otherwise, returns True.
+        >>> chat = Chat()
+        >>> chat.add_user('John')
+        True
+        self.users = {'John': []}
+        >>> chat.add_user('John')
+        False
+        """
+        if username in self.users:
+            return False
+        else:
+            self.users[username] = []
+            return True
+    
+    def remove_user(self, username):
+        """
+        Remove a user from the Chat.
+        :param username: The user's name, str.
+        :return: If the user is already in the Chat, returns True, otherwise, returns False.
+        >>> chat = Chat()
+        >>> chat.users = {'John': []}
+        >>> chat.remove_user('John')
+        True
+        >>> chat.remove_user('John')
+        False
+        """
+        if username in self.users:
+            del self.users[username]
+            return True
+        else:
+            return False
+    
+    def send_message(self, sender, receiver, message):
+        """
+        Send a message from a user to another user.
+        :param sender: The sender's name, str.
+        :param receiver: The receiver's name, str.
+        :param message: The message, str.
+        :return: If the sender or the receiver is not in the Chat, returns False, otherwise, returns True.
+        >>> chat = Chat()
+        >>> chat.users = {'John': [], 'Mary': []}
+        >>> chat.send_message('John', 'Mary', 'Hello')
+        True
+        >>> chat.send_message('John', 'Tom', 'Hello')
+        False
+        """
+        if sender not in self.users or receiver not in self.users:
+            return False
+
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        message_info = {
+            'sender': sender,
+            'receiver': receiver,
+            'message': message,
+            'timestamp': timestamp
+        }
+        self.users[sender].append(message_info)
+        self.users[receiver].append(message_info)
+        return True
+    
+    def get_messages(self, username):
         """
         获取用户在聊天中的所有消息。
         :param username: 用户名，str。

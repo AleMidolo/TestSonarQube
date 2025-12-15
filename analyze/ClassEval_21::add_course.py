@@ -33,7 +33,6 @@ class Classroom:
         False
         """
         check_time = datetime.strptime(check_time, '%H:%M')
-
         for course in self.courses:
             if datetime.strptime(course['start_time'], '%H:%M') <= check_time <= datetime.strptime(course['end_time'], '%H:%M'):
                 return False
@@ -51,7 +50,6 @@ class Classroom:
         """
         new_start_time = datetime.strptime(new_course['start_time'], '%H:%M')
         new_end_time = datetime.strptime(new_course['end_time'], '%H:%M')
-
         flag = True
         for course in self.courses:
             start_time = datetime.strptime(course['start_time'], '%H:%M')
@@ -71,5 +69,4 @@ class Classroom:
         """
         if not self.check_course_conflict(course):
             return
-        if course not in self.courses:
-            self.courses.append(course)
+        self.courses.append(course)
