@@ -11,6 +11,7 @@ class NLPDataProcessor2:
         >>> NLPDataProcessor2().calculate_word_frequency([['this', 'is', 'a', 'test'], ['this', 'is', 'another', 'test']])
         {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}
         """
+    
         word_frequency = Counter()
         for words in words_list:
             word_frequency.update(words)
@@ -27,6 +28,7 @@ class NLPDataProcessor2:
         >>> NLPDataProcessor2().process(['This is a test.', 'This is another test.'])
         {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}
         """
+    
         words_list = self.process_data(string_list)
         word_frequency_dict = self.calculate_word_frequency(words_list)
         return word_frequency_dict

@@ -7,6 +7,7 @@ def update(self, data, condition):
         >>> sql.update({'field1': 'new_value1', 'field2': 'new_value2'}, "field3 = value1")
         "UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2' WHERE field3 = value1;"
         """
+        
         set_clause = ", ".join([f"{key} = '{value}'" for key, value in data.items()])
         sql = f"UPDATE {self.table_name} SET {set_clause} WHERE {condition}"
         return sql + ";"

@@ -78,7 +78,7 @@ class MetricsCalculator:
         if precision + recall == 0.0:
             return 0.0
         return (2 * precision * recall) / (precision + recall)
-    
+
     def accuracy(self, predicted_labels, true_labels):
         """
         Calcola l'accuratezza

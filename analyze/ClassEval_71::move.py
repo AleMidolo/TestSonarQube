@@ -59,7 +59,7 @@ class PushBoxGame:
         if box_on_target_count == self.target_count:
             self.is_game_over = True
         return self.is_game_over
-    
+
     def move(self, direction):
         """
         Muovi il giocatore in base alla direzione specificata e controlla se il gioco è vinto.

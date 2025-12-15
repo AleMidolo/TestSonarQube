@@ -85,5 +85,5 @@ class Snake:
         self.score = 10
         """
         self.length += 1
-        self.score += 100
+        self.score += 10
         self.random_food_position()

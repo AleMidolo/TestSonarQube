@@ -10,6 +10,7 @@ class PageUtil:
         self.total_items = len(data)
         self.total_pages = (self.total_items + page_size - 1) // page_size
 
+
     def get_page_info(self, page_number):
         """
         Retrieve information about a specific page.
@@ -26,6 +27,7 @@ class PageUtil:
         >>>     "has_next": True,
         >>>     "data": [1]
         >>> }
+    
         """
     
         if page_number < 1 or page_number > self.total_pages:
@@ -73,6 +75,7 @@ class PageUtil:
         }
         return search_info
     
+
     def get_page(self, page_number):
         """
         Recupera una pagina specifica di dati.
@@ -81,6 +84,7 @@ class PageUtil:
         >>> page_util = PageUtil([1, 2, 3, 4], 1)
         >>> page_util.get_page(1)
         [1]
+
         """
         if page_number < 1 or page_number > self.total_pages:
             return []

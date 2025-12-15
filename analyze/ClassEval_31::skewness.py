@@ -80,6 +80,6 @@ class DataStatistics4:
         centered_data = [(x - mean) for x in data]
         third_moment = sum(x ** 3 for x in centered_data) / n
 
-        skewness_value = third_moment / (std_dev ** 3)
+        skewness_value = (third_moment / std_dev ** 3)
 
         return skewness_value

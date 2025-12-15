@@ -56,7 +56,7 @@ class BinaryDataProcessor:
         """
         total_bits = len(self.binary_string)
         if total_bits == 0:
-            return {'Zeroes': 0.0, 'Ones': 0.0, 'Bit length': 0}
+            return {'Zeroes': 0, 'Ones': 0, 'Bit length': 0}
         
         count_zeroes = self.binary_string.count('0')
         count_ones = self.binary_string.count('1')

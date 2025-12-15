@@ -93,4 +93,4 @@ class DiscountStrategy:
         16.45
 
         """
-        return order.total() * 0.05 if order.customer['fidelity'] >= 1000 else 0
+        return order.total() * 0.05 if order.customer['fidelity'] > 1000 else 0

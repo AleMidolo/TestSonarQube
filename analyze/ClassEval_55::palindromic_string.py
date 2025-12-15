@@ -30,29 +30,29 @@ class Manacher:
         >>> manacher.palindromic_string()
         'ababa'
         """
+        # Transform the input string to avoid even/odd length issues
         transformed_string = '|'.join(f'^{self.input_string}$')
         n = len(transformed_string)
-        max_len = 0
-        center = 0
-        right = 0
-        lengths = [0] * n
+        P = [0] * n
+        center = right = 0
 
         for i in range(1, n - 1):
             mirror = 2 * center - i
-            if i < right:
-                lengths[i] = min(right - i, lengths[mirror])
+            if right > i:
+                P[i] = min(right - i, P[mirror])
 
-            a, b = i + (1 + lengths[i]), i - (1 + lengths[i])
-            while a < n - 1 and b > 0 and transformed_string[a] == transformed_string[b]:
-                lengths[i] += 1
-                a += 1
-                b -= 1
+            # Attempt to expand the palindrome centered at i
+            while transformed_string[i + P[i] + 1] == transformed_string[i - P[i] - 1]:
+                P[i] += 1
 
-            if i + lengths[i] > right:
-                center, right = i, i + lengths[i]
+            # If the palindrome centered at i expands past right, adjust center and right
+            if i + P[i] > right:
+                center, right = i, i + P[i]
 
-            if lengths[i] > max_len:
-                max_len = lengths[i]
+        # Find the maximum element in P
+        max_length = max(P)
+        center_index = P.index(max_length)
 
-        start = (max_len * 2) // 2
-        return self.input_string[start - max_len:start + max_len + 1]
+        # Extract the longest palindromic substring
+        start = (center_index - max_length) // 2
+        return self.input_string[start:start + max_length]

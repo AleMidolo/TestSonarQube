@@ -102,8 +102,7 @@ class BigNumCalculator:
         while result and result[-1] == '0':
             result.pop()
         
-        if not result:
-            return '0'
+        if negative:
+            result.append('-')
         
-        result.reverse()
-        return ('-' if negative else '') + ''.join(result)
+        return ''.join(result[::-1]) if result else '0'

@@ -74,35 +74,27 @@ class ArgumentParser:
         >>> parser.arguments
         {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
         """
-        import re
-        
-        # Split the command string into parts
-        parts = re.split(r'\s+', command_string)
-        # Remove the script name
-        parts = parts[2:]  # Assuming the first two parts are 'python' and 'script.py'
-        
+        args = command_string.split()[1:]  # Skip the script name
         missing_args = set()
-        
-        for part in parts:
-            if '=' in part:
-                key, value = part.split('=', 1)
+
+        for arg in args:
+            if '=' in arg:
+                key, value = arg.split('=', 1)
             else:
-                key = part
+                key = arg
                 value = True  # Default value for flags
-            
-            # Normalize the key
+
+            # Normalize the argument key
             key = key.lstrip('-')
-            
-            # Convert the type if necessary
+
             if key in self.types:
-                value = self._convert_type(key, value)
-            
-            self.arguments[key] = value
-        
+                self.arguments[key] = self._convert_type(key, value)
+            else:
+                self.arguments[key] = value
+
         # Check for missing required arguments
         missing_args = self.required - self.arguments.keys()
-        
         if missing_args:
             return (False, missing_args)
-        
+
         return (True, None)

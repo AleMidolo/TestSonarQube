@@ -34,9 +34,13 @@ class PDFHandler:
         >>> handler.merge_pdfs('out.pdf')
         PDF uniti salvati in out.pdf
         """
-        merger = PyPDF2.PdfFileMerger()
+        pdf_writer = PyPDF2.PdfFileWriter()
         for reader in self.readers:
-            merger.append(reader)
-        merger.write(output_filepath)
-        merger.close()
+            for page_num in range(len(reader.pages)):
+                page = reader.pages[page_num]
+                pdf_writer.add_page(page)
+        
+        with open(output_filepath, 'wb') as out_file:
+            pdf_writer.write(out_file)
+        
         return f"PDF uniti salvati in {output_filepath}"

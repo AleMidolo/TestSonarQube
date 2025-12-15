@@ -12,10 +12,8 @@ def sweep(self, x, y):
         """
         if self.minesweeper_map[y][x] == 'X':
             return False  # Hit a mine, game over
-        
-        self.player_map[y][x] = self.minesweeper_map[y][x]
-        
-        if self.check_won(self.player_map):
-            return True  # Player has won
-        
-        return self.player_map  # Game continues
+        else:
+            self.player_map[y][x] = self.minesweeper_map[y][x]
+            if self.check_won(self.player_map):
+                return True  # Player has won
+            return self.player_map  # Game continues

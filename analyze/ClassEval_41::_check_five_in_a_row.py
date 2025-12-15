@@ -72,11 +72,10 @@ class GomokuGame:
         count = 0
         dx, dy = direction
         player_symbol = self.board[row][col]
-        
+
         for i in range(5):
             new_row = row + i * dx
             new_col = col + i * dy
-            
             if 0 <= new_row < self.board_size and 0 <= new_col < self.board_size:
                 if self.board[new_row][new_col] == player_symbol:
                     count += 1
@@ -84,5 +83,5 @@ class GomokuGame:
                     break
             else:
                 break
-        
+
         return count == 5

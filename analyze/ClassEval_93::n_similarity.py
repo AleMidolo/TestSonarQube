@@ -15,6 +15,7 @@ class VectorUtil:
         >>> VectorUtil.similarity(vector_1, vector_2)
         0.7071067811865475
         """
+    
         return dot(matutils.unitvec(vector_1), matutils.unitvec(vector_2))
     
     @staticmethod
@@ -29,6 +30,7 @@ class VectorUtil:
             >>> VectorUtil.cosine_similarities(vector1, vectors_all)
             [0.97463185 0.95941195]
             """
+    
         norm = np.linalg.norm(vector_1)
         all_norms = np.linalg.norm(vectors_all, axis=1)
         dot_products = dot(vectors_all, vector_1)
@@ -46,8 +48,11 @@ class VectorUtil:
             >>> VectorUtil.compute_idf_weight_dict(2, num_dict)
             {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}
             """
+    
         index_2_key_map = {}
+    
         index = 0
+
         count_list = []
         for key, count in number_dict.items():
             index_2_key_map[index] = key
@@ -77,5 +82,12 @@ class VectorUtil:
         >>> VectorUtil.n_similarity(vector_list1, vector_list2)
         0.9897287473881233
         """
-        similarities = [VectorUtil.similarity(v1, v2) for v1 in vector_list_1 for v2 in vector_list_2]
+        if len(vector_list_1) != len(vector_list_2):
+            raise ValueError("Both vector lists must have the same length.")
+        
+        similarities = []
+        for vec1, vec2 in zip(vector_list_1, vector_list_2):
+            sim = VectorUtil.similarity(vec1, vec2)
+            similarities.append(sim)
+        
         return np.mean(similarities)

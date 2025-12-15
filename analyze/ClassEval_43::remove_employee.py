@@ -94,9 +94,9 @@ class HRManagementSystem:
 
     def remove_employee(self, employee_id):
         """
-        Remove an employee from the HRManagementSystem.
-        :param employee_id: The employee's id, int.
-        :return: If the employee is already in the HRManagementSystem, returns True, otherwise returns False.
+        Rimuovi un dipendente dal HRManagementSystem.
+        :param employee_id: L'id del dipendente, int.
+        :return: Se il dipendente è già nel HRManagementSystem, restituisce True, altrimenti restituisce False.
         >>> hrManagementSystem = HRManagementSystem()
         >>> hrManagementSystem.employees = {1: {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}}
         >>> hrManagementSystem.remove_employee(1)

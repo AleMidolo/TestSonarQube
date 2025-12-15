@@ -9,7 +9,7 @@ def create_table(self, table_name, key1, key2):
         """
         conn = sqlite3.connect(self.database_name)
         cursor = conn.cursor()
-        
+
         create_table_query = f"""
         CREATE TABLE IF NOT EXISTS {table_name} (
             id INTEGER PRIMARY KEY,

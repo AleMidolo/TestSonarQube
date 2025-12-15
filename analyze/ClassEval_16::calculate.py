@@ -53,7 +53,7 @@ class Calculator:
             result = self.operators[operator](operand1, operand2)
             operand_stack.append(result)
         return operand_stack, operator_stack
-    
+
     def calculate(self, expression):
         """
         Calcola il valore di un'espressione data

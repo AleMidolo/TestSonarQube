@@ -87,7 +87,7 @@ class Thermostat:
             else:
                 self.auto_set_mode()
                 return False
-    
+
     def simulate_operation(self):
         """
         simula l'operazione del Termostato. Avvierà automaticamente il metodo auto_set_mode per impostare la modalità operativa,
@@ -102,11 +102,11 @@ class Thermostat:
         
         while abs(self.current_temperature - self.target_temperature) > 0.1:
             if self.mode == 'heat':
-                self.current_temperature += 1  # Heating up
+                self.current_temperature += 1  # Simulate heating
             else:
-                self.current_temperature -= 1  # Cooling down
+                self.current_temperature -= 1  # Simulate cooling
             
-            time.sleep(1)  # Simulate time passing
+            time.sleep(0.1)  # Simulate time passing
             time_taken += 1
         
         return time_taken

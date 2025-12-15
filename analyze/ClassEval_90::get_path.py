@@ -46,7 +46,7 @@ class URLHandler:
         query_start = self.url.find("?")
         fragment_start = self.url.find("#")
         if query_start != -1:
-            query_string = self.url[query_start + 1:fragment_start if fragment_start != -1 else None]
+            query_string = self.url[query_start + 1:fragment_start] if fragment_start != -1 else self.url[query_start + 1:]
             params = {}
             if len(query_string) > 0:
                 param_pairs = query_string.split("&")
@@ -80,7 +80,7 @@ class URLHandler:
         "/s?wd=aaa&rsv_spt=1#page"
         """
         scheme_end = self.url.find("://")
-        path_start = self.url.find("/", scheme_end + 3)
+        path_start = self.url.find("/", scheme_end + 3) if scheme_end != -1 else self.url.find("/")
         if path_start != -1:
             return self.url[path_start:]
         return None
