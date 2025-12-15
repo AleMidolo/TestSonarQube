@@ -38,20 +38,18 @@ class Interpolation:
         """
         z_interp = []
         for xi, yi in zip(x_interp, y_interp):
-            # Find the right cell for interpolation
+            x1, x2 = None, None
+            y1, y2 = None, None
+            
             for i in range(len(x) - 1):
-                for j in range(len(y) - 1):
-                    if x[i] <= xi <= x[i + 1] and y[j] <= yi <= y[j + 1]:
-                        # Perform bilinear interpolation
-                        z11 = z[i][j]
-                        z12 = z[i][j + 1]
-                        z21 = z[i + 1][j]
-                        z22 = z[i + 1][j + 1]
-                        z_interp_value = (z11 * (x[i + 1] - xi) * (y[j + 1] - yi) +
-                                          z21 * (xi - x[i]) * (y[j + 1] - yi) +
-                                          z12 * (x[i + 1] - xi) * (yi - y[j]) +
-                                          z22 * (xi - x[i]) * (yi - y[j])) / \
-                                          ((x[i + 1] - x[i]) * (y[j + 1] - y[j]))
-                        z_interp.append(z_interp_value)
-                        break
+                if x[i] <= xi <= x[i + 1]:
+                    x1, x2 = x[i], x[i + 1]
+                    y1, y2 = y[i], y[i + 1]
+                    break
+            
+            if x1 is not None and x2 is not None:
+                z1 = z[y.index(y1)][x.index(x1)] + (z[y.index(y1)][x.index(x2)] - z[y.index(y1)][x.index(x1)]) * (xi - x1) / (x2 - x1)
+                z2 = z[y.index(y2)][x.index(x1)] + (z[y.index(y2)][x.index(x2)] - z[y.index(y2)][x.index(x1)]) * (xi - x1) / (x2 - x1)
+                z_interp.append(z1 + (z2 - z1) * (yi - y1) / (y2 - y1))
+        
         return z_interp

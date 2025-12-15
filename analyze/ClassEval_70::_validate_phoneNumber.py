@@ -38,6 +38,6 @@ class PersonRequest:
         :param phoneNumber: str, the phone number to validate
         :return: str, the validated phone number or None if invalid
         """
-        if not phoneNumber or not phoneNumber.isdigit() or len(phoneNumber) != 11:
+        if not phoneNumber or len(phoneNumber) != 11 or not phoneNumber.isdigit():
             return None
         return phoneNumber

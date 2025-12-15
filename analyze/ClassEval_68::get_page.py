@@ -87,4 +87,4 @@ class PageUtil:
         
         start_index = (page_number - 1) * self.page_size
         end_index = min(start_index + self.page_size, self.total_items)
-        return self.data[start_index:end_index]
+        return self.data[start_index:end_index

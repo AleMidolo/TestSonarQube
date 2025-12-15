@@ -54,6 +54,7 @@ class Interpolation:
         for xi in x_interp:
             for i in range(len(x) - 1):
                 if x[i] <= xi <= x[i + 1]:
+                    # Linear interpolation formula
                     yi = (y[i] * (x[i + 1] - xi) + y[i + 1] * (xi - x[i])) / (x[i + 1] - x[i])
                     y_interp.append(yi)
                     break

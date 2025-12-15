@@ -26,14 +26,33 @@ class MinesweeperGame:
         for num in range(self.k):
             x = random.randint(0, self.n-1)
             y = random.randint(0, self.n-1)
-            while arr[y][x] == 'X':  # Ensure we don't place a mine on an existing mine
-                x = random.randint(0, self.n-1)
-                y = random.randint(0, self.n-1)
             arr[y][x] = 'X'
-            for i in range(max(0, y-1), min(self.n, y+2)):
-                for j in range(max(0, x-1), min(self.n, x+2)):
-                    if arr[i][j] != 'X':
-                        arr[i][j] += 1
+            if (x >= 0 and x <= self.n-2) and (y >= 0 and y <= self.n-1):
+                if arr[y][x+1] != 'X':
+                    arr[y][x+1] += 1
+            if (x >= 1 and x <= self.n-1) and (y >= 0 and y <= self.n-1):
+                if arr[y][x-1] != 'X':
+                    arr[y][x-1] += 1
+            if (x >= 1 and x <= self.n-1) and (y >= 1 and y <= self.n-1):
+                if arr[y-1][x-1] != 'X':
+                    arr[y-1][x-1] += 1
+    
+            if (x >= 0 and x <= self.n-2) and (y >= 1 and y <= self.n-1):
+                if arr[y-1][x+1] != 'X':
+                    arr[y-1][x+1] += 1
+            if (x >= 0 and x <= self.n-1) and (y >= 1 and y <= self.n-1):
+                if arr[y-1][x] != 'X':
+                    arr[y-1][x] += 1
+    
+            if (x >= 0 and x <= self.n-2) and (y >= 0 and y <= self.n-2):
+                if arr[y+1][x+1] != 'X':
+                    arr[y+1][x+1] += 1
+            if (x >= 1 and x <= self.n-1) and (y >= 0 and y <= self.n-2):
+                if arr[y+1][x-1] != 'X':
+                    arr[y+1][x-1] += 1
+            if (x >= 0 and x <= self.n-1) and (y >= 0 and y <= self.n-2):
+                if arr[y+1][x] != 'X':
+                    arr[y+1][x] += 1
         return arr
     
     def generate_playerMap(self):
@@ -66,13 +85,13 @@ class MinesweeperGame:
         else:
             self.player_map[x][y] = self.minesweeper_map[x][y]
             self.score += 1
-            if self.check_won(self.player_map):
+            if self.check_won(self.player_map) == True:
                 return True
             return self.player_map
-
+    
     def check_won(self, map):
         """
-        Checks if the player has won the game, returns True if the player's map contains only mines, otherwise False.
+        Checks if the player has won the game, returns True if the player's map contains only mines, otherwise returns False.
         :return: True if the player has won the game, otherwise False.
         >>> minesweeper_game = MinesweeperGame(3, 1)
         >>> minesweeper_game.minesweeper_map = [['X', 1, 0], [1, 1, 0], [0, 0, 0]]

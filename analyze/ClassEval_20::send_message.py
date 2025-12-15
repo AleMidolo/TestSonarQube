@@ -23,5 +23,4 @@ def send_message(self, sender, receiver, message):
             'timestamp': timestamp
         }
         self.users[sender].append(message_data)
-        self.users[receiver].append(message_data)
         return True

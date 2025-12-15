@@ -99,6 +99,5 @@ class AssessmentSystem:
         if name in self.students:
             courses = self.students[name]['courses']
             if courses:
-                total_score = sum(courses.values())
-                return total_score / len(courses)
+                return sum(courses.values()) / len(courses)
         return None

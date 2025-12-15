@@ -23,7 +23,7 @@ class KappaCalculator:
         P0 = float(P0 / sum * 1.0)
         cohens_coefficient = float((P0 - Pe) / (1 - Pe))
         return cohens_coefficient
-
+    
     @staticmethod
     def fleiss_kappa(testData, N, k, n):
         """

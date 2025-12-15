@@ -89,6 +89,6 @@ class ClassRegistrationSystem:
                         class_count[class_name] += 1
                     else:
                         class_count[class_name] = 1
-        if not class_count:
-            return None
-        return max(class_count, key=class_count.get)
+        if class_count:
+            return max(class_count, key=class_count.get)
+        return None

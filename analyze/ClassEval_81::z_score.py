@@ -131,9 +131,8 @@ class Statistics3:
         [-1.161895003862225, -0.3872983346207417, 0.3872983346207417, 1.161895003862225]
 
         """
-        
         mean_value = Statistics3.mean(data)
         std_dev = Statistics3.standard_deviation(data)
-        if std_dev is None or std_dev == 0:
-            return [0] * len(data)
+        if std_dev is None:
+            return None
         return [(x - mean_value) / std_dev for x in data]

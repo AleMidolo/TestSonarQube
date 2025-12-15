@@ -31,7 +31,7 @@ class BalancedBrackets:
                     return False
                 if Current_Brkt == "[" and Brkt != "]":
                     return False
-        return len(self.stack) == 0
+        return not self.stack
 
     def clear_expr(self):
         """

@@ -54,15 +54,15 @@ class BinaryDataProcessor:
         >>> bdp.calculate_binary_info()
         {'Zeroes': 0.475, 'Ones': 0.525, 'Bit length': 40}
         """
-        total_length = len(self.binary_string)
-        if total_length == 0:
-            return {'Zeroes': 0.0, 'Ones': 0.0, 'Bit length': 0}
-
-        zeroes = self.binary_string.count('0')
-        ones = self.binary_string.count('1')
+        total_bits = len(self.binary_string)
+        if total_bits == 0:
+            return {'Zeroes': 0, 'Ones': 0, 'Bit length': 0}
+        
+        count_zeroes = self.binary_string.count('0')
+        count_ones = self.binary_string.count('1')
         
         return {
-            'Zeroes': zeroes / total_length,
-            'Ones': ones / total_length,
-            'Bit length': total_length
+            'Zeroes': count_zeroes / total_bits,
+            'Ones': count_ones / total_bits,
+            'Bit length': total_bits
         }

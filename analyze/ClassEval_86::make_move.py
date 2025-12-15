@@ -6,6 +6,7 @@ class TicTacToe:
         self.board = [[' ' for _ in range(N)] for _ in range(3)]
         self.current_player = 'X'
 
+
     def check_winner(self):
         """
         Check if there is a winner on the board in rows, columns and diagonals three directions
@@ -16,6 +17,7 @@ class TicTacToe:
         >>> ttt.check_winner()
         'X'
         """
+    
         for row in self.board:
             if row[0] == row[1] == row[2] != ' ':
                 return row[0]
@@ -35,11 +37,13 @@ class TicTacToe:
         >>> ttt.is_board_full()
         False
         """
+    
         for row in self.board:
             if ' ' in row:
                 return False
         return True
     
+
     def make_move(self, row, col):
         """
         वर्तमान खिलाड़ी का निशान निर्दिष्ट स्थिति पर बोर्ड पर रखें और निशान को बदलें।

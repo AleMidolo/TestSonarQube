@@ -55,8 +55,8 @@ class KappaCalculator:
         0.25
         """
         n = np.sum(testData)
-        p = np.sum(testData, axis=0) / n
-        p0 = np.sum(np.diag(np.dot(testData, testData.T))) / (n * (n - 1))
-        pe = np.sum(p ** 2)
+        p = np.array(np.sum(testData, axis=0)) / n
+        p0 = np.sum(np.square(np.sum(testData, axis=1) / n))
+        pe = np.sum(np.square(p))
         kappa_value = (p0 - pe) / (1 - pe)
         return kappa_value

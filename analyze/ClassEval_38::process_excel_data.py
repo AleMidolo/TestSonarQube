@@ -13,9 +13,10 @@ def process_excel_data(self, N, save_file_name):
         return 0, None
     
     for i in range(len(data)):
-        if len(data[i]) > N:
-            data[i] = list(data[i])  # Convert tuple to list for modification
-            data[i][N] = str(data[i][N]).upper()  # Convert to uppercase
+        row = list(data[i])
+        if N < len(row):
+            row[N] = str(row[N]).upper()
+        data[i] = tuple(row)
     
     output_file_name = 'processed_' + save_file_name
     success = self.write_excel(data, output_file_name)

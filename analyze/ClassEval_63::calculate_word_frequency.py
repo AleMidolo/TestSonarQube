@@ -43,10 +43,7 @@ class NLPDataProcessor2:
         {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}
         """
         
-        # Flatten the list of words
         flat_list = [word for sublist in words_list for word in sublist]
-        # Calculate word frequency
         word_count = Counter(flat_list)
-        # Sort by frequency and get the top 5
         sorted_word_count = dict(sorted(word_count.items(), key=lambda item: item[1], reverse=True))
         return dict(list(sorted_word_count.items())[:5])

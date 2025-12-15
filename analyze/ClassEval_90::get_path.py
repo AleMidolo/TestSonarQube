@@ -12,5 +12,4 @@ def get_path(self):
             path_start = url_without_scheme.find("/")
             if path_start != -1:
                 return url_without_scheme[path_start:]
-            return "/"
         return None
