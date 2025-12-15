@@ -26,7 +26,6 @@ class DiscountStrategy:
         312.55
     
         """
-    
         if self.promotion is None:
             discount = 0
         else:
@@ -46,7 +45,6 @@ class DiscountStrategy:
             16.45
     
             """
-    
         return order.total() * 0.05 if order.customer['fidelity'] >= 1000 else 0
     
     @staticmethod
@@ -62,7 +60,6 @@ class DiscountStrategy:
             47.0
     
             """
-    
         discount = 0
         for item in order.cart:
             if item['quantity'] >= 20:
@@ -82,13 +79,12 @@ class DiscountStrategy:
             0.0
     
             """
-    
         return order.total() * 0.07 if len({item['product'] for item in order.cart}) >= 10 else 0
     
     def total(self):
         """
-        计算购物车中商品的总价格。
-        :return: float，商品的总价格
+        Calculate the total cost of items in the cart.
+        :return: float, total cost of items
         >>> customer = {'name': 'John Doe', 'fidelity': 1200}
         >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]
         >>> ds = DiscountStrategy(customer, cart)

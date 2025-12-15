@@ -69,9 +69,9 @@ class NumberConverter:
     @staticmethod
     def decimal_to_binary(decimal_num):
         """
-        将一个数字从十进制格式转换为二进制格式。
-        :param decimal_num: int, 十进制数字
-        :return: str, 整数的二进制表示。
+        Convert a number from decimal format to binary format.
+        :param decimal_num: int, decimal number
+        :return: str, the binary representation of an integer.
         >>> NumberConverter.decimal_to_binary(42423)
         '1010010110110111'
         """

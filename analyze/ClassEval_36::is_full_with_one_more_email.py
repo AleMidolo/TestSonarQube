@@ -1,8 +1,8 @@
 def is_full_with_one_more_email(self, size):
         """
-        确定在添加一个给定大小的电子邮件后，邮箱是否已满。
-        :param size: 电子邮件的大小，浮点数。
-        :return: 如果邮箱已满则返回 True，否则返回 False。
+        Determines whether the email box is full after adding an email of the given size.
+        :param size: The size of the email, float.
+        :return: True if the email box is full, False otherwise.
         >>> sender = EmailClient('sender@example.com', 100)
         >>> receiver = EmailClient('receiver@example.com', 50)
         >>> receiver.is_full_with_one_more_email(10)

@@ -40,9 +40,9 @@ class NLPDataProcessor2:
     
     def process(self, string_list):
         """
-        仅保留字符串中的英文字母和空格，然后将字符串转换为小写，再将字符串拆分为单词列表。计算单词列表中每个单词的词频，并按值降序对词频字典进行排序。
-        :param string_list: 字符串列表
-        :return: 前5个词频字典，词频字典，键是单词，值是频率
+        keep only English letters and spaces in the string, then convert the string to lower case, and then split the string into a list of words. Calculate the word frequency of each word in the list of words list, and sort the word frequency dictionary by value in descending order.
+        :param string_list: a list of strings
+        :return: top 5 word frequency dictionary, a dictionary of word frequency, key is word, value is frequency
         >>> NLPDataProcessor2.process(['This is a test.', 'This is another test.'])
         {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}
         """

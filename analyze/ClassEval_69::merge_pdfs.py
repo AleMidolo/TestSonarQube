@@ -23,13 +23,13 @@ class PDFHandler:
                 page = reader.pages[page_num]
                 pdf_texts.append(page.extract_text())
         return pdf_texts
-
+    
     def merge_pdfs(self, output_filepath):
         """
-        读取存储多个 PDF 文件句柄的 self.readers 中的文件。
-        将它们合并为一个 PDF 并更新页码，然后保存到磁盘。
-        :param output_filepath: str, 输出文件的保存路径
-        :return: str, 如果成功合并则为"Merged PDFs saved at {output_filepath}" 
+        Read files in self.readers which stores handles to multiple PDF files.
+        Merge them to one pdf and update the page number, then save in disk.
+        :param output_filepath: str, ouput file path to save to
+        :return: str, "Merged PDFs saved at {output_filepath}" if successfully merged
         >>> handler = PDFHandler(['a.pdf', 'b.pdf'])
         >>> handler.merge_pdfs('out.pdf')
         Merged PDFs saved at out.pdf

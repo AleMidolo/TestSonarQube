@@ -19,12 +19,15 @@ class ChandrasekharSieve:
     
     def generate_primes(self):
         """
-        使用钱德拉塞卡筛法生成指定限制内的素数。
-        :return: list, 一个素数列表
+        Generate prime numbers up to the specified limit using the Chandrasekhar sieve algorithm.
+        :return: list, a list of prime numbers
         >>> cs = ChandrasekharSieve(20)
         >>> cs.generate_primes()
         [2, 3, 5, 7, 11, 13, 17, 19]
         """
+        if self.n < 2:
+            return []
+        
         sieve = [True] * (self.n + 1)
         sieve[0] = sieve[1] = False  # 0 and 1 are not prime numbers
         for start in range(2, int(self.n**0.5) + 1):

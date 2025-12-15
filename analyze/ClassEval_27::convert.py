@@ -53,11 +53,11 @@ class CurrencyConverter:
     
     def convert(self, amount, from_currency, to_currency):
         """
-        将给定货币的值转换为另一种货币类型
-        :param amount: 浮点数, 给定货币的值
-        :param from_currency: 字符串, 源货币类型
-        :param to_currency: 字符串, 目标货币类型
-        :return: 浮点数, 转换为另一种货币类型的值
+        Convert the value of a given currency to another currency type
+        :param amount: float, The value of a given currency
+        :param from_currency: string, source currency type
+        :param to_currency: string, target currency type
+        :return: float, value converted to another currency type
         >>> cc = CurrencyConverter()
         >>> cc.convert(64, 'CNY','USD')
         10.0
@@ -67,7 +67,7 @@ class CurrencyConverter:
         
         # Convert amount to USD first
         amount_in_usd = amount / self.rates[from_currency]
-        # Convert USD to the target currency
+        # Convert USD to target currency
         converted_amount = amount_in_usd * self.rates[to_currency]
         
         return converted_amount

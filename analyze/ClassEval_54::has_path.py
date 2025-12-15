@@ -106,10 +106,10 @@ class MahjongConnect:
     
     def has_path(self, pos1, pos2):
         """
-        检查两个图标之间是否存在路径
-        :param pos1: 第一个图标的位置元组(x, y)
-        :param pos2: 第二个图标的位置元组(x, y)
-        :return: True 或 False，表示两个图标之间是否存在路径
+        check if there is a path between two icons
+        :param pos1: position tuple(x, y) of the first icon
+        :param pos2: position tuple(x, y) of the second icon
+        :return: True or False ,representing whether there is a path between two icons
         >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
         mc.board = [['a', 'b', 'c', 'a'],
                     ['a', 'b', 'c', 'a'],

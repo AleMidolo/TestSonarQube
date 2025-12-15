@@ -1,7 +1,7 @@
 def get_path(self):
         """
-        获取 URL 的第三部分，即资源的地址
-        :return: 字符串，如果成功，返回 URL 的资源地址
+        Get the third part of the URL, which is the address of the resource
+        :return: string, If successful, return the address of the resource of the URL
         >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
         >>> urlhandler.get_path()
         "/s?wd=aaa&rsv_spt=1#page"

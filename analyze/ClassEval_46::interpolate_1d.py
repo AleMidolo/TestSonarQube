@@ -40,11 +40,11 @@ class Interpolation:
     @staticmethod
     def interpolate_1d(x, y, x_interp):
         """
-        一维数据的线性插值
-        :param x: 数据点的 x 坐标，列表。
-        :param y: 数据点的 y 坐标，列表。
-        :param x_interp: 插值点的 x 坐标，列表。
-        :return: 插值点的 y 坐标，列表。
+        Linear interpolation of one-dimensional data
+        :param x: The x-coordinate of the data point, list.
+        :param y: The y-coordinate of the data point, list.
+        :param x_interp: The x-coordinate of the interpolation point, list.
+        :return: The y-coordinate of the interpolation point, list.
         >>> interpolation = Interpolation()
         >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])
         [1.5, 2.5]

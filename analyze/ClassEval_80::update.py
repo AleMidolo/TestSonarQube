@@ -54,10 +54,10 @@ class SQLQueryBuilder:
     @staticmethod
     def update(table, data, where=None):
         """
-        从给定的参数生成 UPDATE SQL 语句。
-        :param table: str，将在数据库中执行 UPDATE 操作的表
-        :param data: dict，SQL 更新语句中的键和值
-        :param where: dict，{key1: value1, key2: value2 ...}。查询条件。
+        Generate the UPDATE SQL statement from the given parameters.
+        :param table: str, the table that will be excuted with UPDATE operation in database
+        :param data: dict, the key and value in SQL update statement
+        :param where: dict, {key1: value1, key2: value2 ...}. The query condition.
         >>> SQLQueryBuilder.update('table1', {'name': 'Test2', 'age': 15}, where = {'name':'Test'})
         "UPDATE table1 SET name='Test2', age='15' WHERE name='Test'"
         """

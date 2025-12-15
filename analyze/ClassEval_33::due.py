@@ -80,8 +80,8 @@ class DiscountStrategy:
     
     def due(self):
         """
-        计算应用折扣后的最终支付金额。
-        :return: float，最终支付金额
+        Calculate the final amount to be paid after applying the discount.
+        :return: float, final amount to be paid
         >>> customer = {'name': 'John Doe', 'fidelity': 1200}
         >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]
         >>> ds = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)

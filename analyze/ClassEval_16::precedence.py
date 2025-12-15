@@ -88,9 +88,9 @@ class Calculator:
     
     def precedence(self, operator):
         """
-        返回指定运算符的优先级，优先级越高，赋值越大。'^' 的优先级高于 '/' 和 '*'，而 '/' 和 '*' 的优先级高于 '+' 和 '-'
-        :param operator: 字符串，给定的运算符
-        :return: int，给定运算符的优先级，否则返回 0
+        Returns the priority of the specified operator, where the higher the priority, the greater the assignment. The priority of '^' is greater than '/' and '*', and the priority of '/' and '*' is greater than '+' and '-'
+        :param operator: string, given operator
+        :return: int, the priority of the given operator, otherwise return 0
         >>> calculator = Calculator()
         >>> calculator.precedence('+')
         1

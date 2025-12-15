@@ -35,7 +35,7 @@ class BalancedBrackets:
 
     def clear_expr(self):
         """
-        清除表达式中所有不是括号的字符。
+        Clears the expression of all characters that are not brackets.
         >>> b = BalancedBrackets("a(b)c")
         >>> b.clear_expr()
         >>> b.expr

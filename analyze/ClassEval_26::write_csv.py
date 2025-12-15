@@ -45,9 +45,9 @@ class CSVProcessor:
     
     def write_csv(self, data, file_name):
         """
-        将数据写入csv文件。
-        :param file_name: str, csv文件的名称
-        :return:int, 如果成功返回1，否则返回0
+        Write data into a csv file.
+        :param file_name: str, name of the csv file
+        :return:int, if success return 1, or 0 otherwise
         >>> csvProcessor = CSVProcessor()
         >>> csvProcessor.write_csv([['a', 'b', 'c', 'd'], ['1', '2', '3', '4']], 'write_test.csv')
         1

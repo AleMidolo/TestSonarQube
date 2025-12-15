@@ -1,8 +1,8 @@
 def insert_into_database(self, table_name, data):
         """
-        将数据插入到数据库中指定的表。
-        :param table_name: str, 要插入数据的表的名称。
-        :param data: list, 一个字典列表，其中每个字典代表一行数据。
+        Insert data into the specified table in the database.
+        :param table_name: str, the name of the table to insert data into.
+        :param data: list, a list of dictionaries where each dictionary represents a row of data.
         >>> db.insert_into_database('user', [
                 {'name': 'John', 'age': 25},
                 {'name': 'Alice', 'age': 30}
@@ -11,9 +11,9 @@ def insert_into_database(self, table_name, data):
         conn = sqlite3.connect(self.database_name)
         cursor = conn.cursor()
 
-        for entry in data:
-            insert_query = f"INSERT INTO {table_name} ({', '.join(entry.keys())}) VALUES ({', '.join(['?' for _ in entry.values()])})"
-            cursor.execute(insert_query, tuple(entry.values()))
+        for row in data:
+            insert_query = f"INSERT INTO {table_name} ({', '.join(row.keys())}) VALUES ({', '.join(['?' for _ in row.values()])})"
+            cursor.execute(insert_query, tuple(row.values()))
 
         conn.commit()
         conn.close()

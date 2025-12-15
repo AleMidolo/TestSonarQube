@@ -29,11 +29,11 @@ class PDFHandler:
         with open(output_filepath, 'wb') as out:
             pdf_writer.write(out)
         return f"Merged PDFs saved at {output_filepath}"
-
+    
     def extract_text_from_pdfs(self):
         """
-        从 self.readers 中的 pdf 文件提取文本
-        :return pdf_texts: str 列表，每个元素是一个 pdf 文件的文本
+        Extract text from pdf files in self.readers
+        :return pdf_texts: list of str, each element is the text of one pdf file
         >>> handler = PDFHandler(['a.pdf', 'b.pdf'])
         >>> handler.extract_text_from_pdfs()
         ['Test a.pdf', 'Test b.pdf']

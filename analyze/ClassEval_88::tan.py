@@ -70,9 +70,9 @@ class TriCalculator:
     
     def tan(self, x):
         """
-        计算 x 度角的正切值
-        :param x: 浮点数
-        :return: 浮点数
+        Calculate the tan value of the x-degree angle
+        :param x: float
+        :return: float
         >>> tricalculator.tan(45)
         1.0
         """

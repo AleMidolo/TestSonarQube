@@ -54,9 +54,9 @@ class PageUtil:
     
     def get_page_info(self, page_number):
         """
-        获取特定页面的信息。
-        :param page_number: int, 要获取信息的页面编号
-        :return: dict, 包含页面信息，如当前页面编号、总页面数等。
+        Retrieve information about a specific page.
+        :param page_number: int, the page number to fetch information about
+        :return: dict, containing page information such as current page number, total pages, etc.
         >>> page_util = PageUtil([1, 2, 3, 4], 1)
         >>> page_util.get_page_info(1)
         >>> {

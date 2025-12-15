@@ -87,9 +87,9 @@ class AssessmentSystem:
     
     def get_course_average(self, course):
         """
-        获取特定课程的平均分数。
-        :param course: 字符串，课程名称
-        :return: float，如果有人有该课程的分数，则返回该课程的平均分数；如果没有人有记录，则返回 None。
+        Get the average score of a specific course.
+        :param course: str, course name
+        :return: float, average scores of this course if anyone have score of this course, or None if nobody have records.
         """
         total_score = 0
         count = 0
@@ -97,6 +97,4 @@ class AssessmentSystem:
             if course in student['courses']:
                 total_score += student['courses'][course]
                 count += 1
-        if count == 0:
-            return None
-        return total_score / count
+        return total_score / count if count > 0 else None

@@ -72,8 +72,8 @@ class URLHandler:
     
     def get_host(self):
         """
-        获取 URL 的第二部分，即主机域名
-        :return: 字符串，如果成功，返回 URL 的主机域名
+        Get the second part of the URL, which is the host domain name
+        :return: string, If successful, return the host domain name of the URL
         >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
         >>> urlhandler.get_host()
         "www.baidu.com"

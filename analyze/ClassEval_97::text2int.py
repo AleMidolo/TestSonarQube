@@ -49,9 +49,9 @@ class Words2Numbers:
 
     def text2int(self, textnum):
         """
-        将单词字符串转换为相应的整数字符串
-        :param textnum: 字符串，要转换的单词字符串
-        :return: 字符串，最终转换的整数字符串
+        Convert the word string to the corresponding integer string
+        :param textnum: string, the word string to be converted
+        :return: string, the final converted integer string
         >>> w2n = Words2Numbers()
         >>> w2n.text2int("thirty-two")
         "32"
@@ -70,7 +70,7 @@ class Words2Numbers:
                     current *= scale
                     result += current
                     current = 0
-            elif word == "and":
-                continue
+            else:
+                raise ValueError(f"Word '{word}' not recognized")
         
         return str(result + current)

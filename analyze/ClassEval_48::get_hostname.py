@@ -38,9 +38,9 @@ class IpUtil:
     @staticmethod
     def get_hostname(ip_address):
         """
-        获取与给定IP地址关联的主机名。
-        :param ip_address: 字符串，要获取主机名的IP地址
-        :return: 字符串，与IP地址关联的主机名
+        Get the hostname associated with the given IP address.
+        :param ip_address:string, the IP address to get the hostname for
+        :return: string, the hostname associated with the IP address
         >>> IpUtil.get_hostname('110.242.68.3')
         'www.baidu.com'
         >>> IpUtil.get_hostname('10.0.0.1')

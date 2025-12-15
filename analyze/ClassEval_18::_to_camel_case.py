@@ -85,9 +85,9 @@ class CamelCaseMap:
     @staticmethod
     def _to_camel_case(key):
         """
-        将键字符串转换为驼峰式
+        convert key string into camel case
         :param key:str
-        :return:str, 转换后的键字符串
+        :return:str, converted key string
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map._to_camel_case('first_name')
         'firstName'

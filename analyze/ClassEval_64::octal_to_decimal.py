@@ -8,6 +8,7 @@ class NumberConverter:
         >>> NumberConverter.decimal_to_binary(42423)
         '1010010110110111'
         """
+    
         binary_num = bin(decimal_num)[2:]
         return binary_num
     
@@ -20,6 +21,7 @@ class NumberConverter:
             >>> NumberConverter.binary_to_decimal('1010010110110111')
             42423
             """
+    
         decimal_num = int(binary_num, 2)
         return decimal_num
     
@@ -32,6 +34,7 @@ class NumberConverter:
             >>> NumberConverter.decimal_to_octal(42423)
             '122667'
             """
+    
         octal_num = oct(decimal_num)[2:]
         return octal_num
     
@@ -44,6 +47,7 @@ class NumberConverter:
             >>> NumberConverter.decimal_to_hex(42423)
             'a5b7'
             """
+    
         hex_num = hex(decimal_num)[2:]
         return hex_num
     
@@ -56,17 +60,19 @@ class NumberConverter:
             >>> NumberConverter.hex_to_decimal('a5b7')
             42423
             """
+    
         decimal_num = int(hex_num, 16)
         return decimal_num
     
     @staticmethod
     def octal_to_decimal(octal_num):
         """
-        将一个八进制数字转换为十进制格式。
-        :param octal_num: str, 八进制数字
-        :return: int, 八进制数字的十进制表示。
+        Convert a number from octal format to decimal format.
+        :param octal_num: str, octal num
+        :return: int, the decimal representation of octal number str.
         >>> NumberConverter.octal_to_decimal('122667')
         42423
         """
+    
         decimal_num = int(octal_num, 8)
         return decimal_num

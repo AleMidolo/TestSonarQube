@@ -59,10 +59,10 @@ class EncryptionUtils:
     
     def caesar_cipher(self, plaintext, shift):
         """
-        使用凯撒密码加密明文。
-        :param plaintext: 要加密的明文，str。
-        :param shift: 每个字符在明文中移动的字符数，int。
-        :return: 密文，str。
+        Encrypts the plaintext using the Caesar cipher.
+        :param plaintext: The plaintext to encrypt, str.
+        :param shift: The number of characters to shift each character in the plaintext, int.
+        :return: The ciphertext, str.
         >>> e = EncryptionUtils("key")
         >>> e.caesar_cipher("abc", 1)
         'bcd'

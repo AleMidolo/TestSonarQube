@@ -51,10 +51,10 @@ class ComplexCalculator:
     @staticmethod
     def subtract(c1, c2):
         """
-        把两个复数相减。
-        :param c1: 第一个复数，complex。
-        :param c2: 第二个复数，complex。
-        :return: 两个复数的差，complex。
+        Subtracts two complex numbers.
+        :param c1: The first complex number,complex.
+        :param c2: The second complex number,complex.
+        :return: The difference of the two complex numbers,complex.
         >>> complexCalculator = ComplexCalculator()
         >>> complexCalculator.subtract(1+2j, 3+4j)
         (-2-2j)

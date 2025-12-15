@@ -68,9 +68,9 @@ class Server:
     
     def recv(self, info):
         """
-        接收包含地址和内容的信息。如果地址在白名单上，则接收内容；否则，不接收
-        :param info: dict，包含地址和内容的信息字典
-        :return: 如果成功接收，返回信息的内容；否则，返回 False
+        Receive information containing address and content. If the address is on the whitelist, receive the content; otherwise, do not receive it
+        :param info: dict, information dictionary containing address and content
+        :return: if successfully received, return the content of the information; otherwise, return False
         >>> server.recv({"addr":88,"content":"abc"})
         abc
         """

@@ -1,7 +1,7 @@
 def calculate_portfolio_value(self):
         """
-        计算投资组合的总价值。
-        :return: 投资组合的总价值，浮点数。
+        Calculate the total value of the portfolio.
+        :return: the total value of the portfolio, float.
         >>> tracker = StockPortfolioTracker(10000.0)
         >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
         >>> tracker.calculate_portfolio_value()

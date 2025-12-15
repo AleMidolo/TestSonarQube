@@ -55,8 +55,8 @@ class ImageProcessor:
 
     def save_image(self, save_path):
         """
-        如果图像已打开，则将图像保存到指定路径
-        :param save_path: str，图像将被保存的路径
+        Save image to a path if image has opened
+        :param save_path: str, the path that the image will be saved
         >>> processor.load_image('test.jpg')
         >>> processor.save_image('test2.jpg')
         """

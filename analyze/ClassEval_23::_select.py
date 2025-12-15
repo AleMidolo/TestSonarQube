@@ -62,12 +62,12 @@ class CombinationCalculator:
     
     def _select(self, dataIndex: int, resultList: List[str], resultIndex: int, result: List[List[str]]):
         """
-        通过递归生成具有指定元素数量的组合。
-        :param dataIndex: 要选择的数据的索引，int。
-        :param resultList: 组合中元素的列表，List[str]。
-        :param resultIndex: 组合中元素的索引，int。
-        :param result: 组合的列表，List[List[str]]。
-        :return: None。
+        Generate combinations with a specified number of elements by recursion.
+        :param dataIndex: The index of the data to be selected,int.
+        :param resultList: The list of elements in the combination,List[str].
+        :param resultIndex: The index of the element in the combination,int.
+        :param result: The list of combinations,List[List[str]].
+        :return: None.
         >>> calc = CombinationCalculator(["A", "B", "C", "D"])
         >>> result = []
         >>> calc._select(0, [None] * 2, 0, result)

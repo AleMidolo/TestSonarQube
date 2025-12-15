@@ -1,4 +1,3 @@
-import math
 class Statistics3: 
 
     def median(data):
@@ -123,9 +122,9 @@ class Statistics3:
     @staticmethod
     def z_score(data):
         """
-        计算给定列表的 z-score。
-        :param data: 给定的列表，list。
-        :return: 给定列表的 z-score，list。
+        calculates the z-score of the given list.
+        :param data: the given list, list.
+        :return: the z-score of the given list, list.
         >>> statistics3 = Statistics3()
         >>> statistics3.z_score([1, 2, 3, 4])
         [-1.161895003862225, -0.3872983346207417, 0.3872983346207417, 1.161895003862225]

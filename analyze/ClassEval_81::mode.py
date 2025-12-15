@@ -120,9 +120,9 @@ class Statistics3:
     @staticmethod
     def mode(data):
         """
-        计算给定列表的众数。
-        :param data: 给定的列表，list。
-        :return: 给定列表的众数，list。
+        calculates the mode of the given list.
+        :param data: the given list, list.
+        :return: the mode of the given list, list.
         >>> statistics3 = Statistics3()
         >>> statistics3.mode([1, 2, 3, 3])
         [3]
@@ -130,7 +130,7 @@ class Statistics3:
         """
         from collections import Counter
         if not data:
-            return []
+            return None
         count = Counter(data)
         max_count = max(count.values())
-        return [num for num, cnt in count.items() if cnt == max_count]
+        return [x for x, freq in count.items() if freq == max_count]

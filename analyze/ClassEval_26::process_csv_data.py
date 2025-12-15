@@ -1,11 +1,11 @@
 def process_csv_data(self, N, save_file_name):
     """
-    读取一个csv文件到变量title和data中。
-    仅保留第N列（从0开始）的数据并将其大写，将标题和新数据存储到一个新的csv文件中。
-    在旧文件名后添加'_process'后缀，作为新文件名。
-    :param N: int，第N列（从0开始）
-    :param save_file_name: 需要处理的文件名。
-    :return: int，如果成功返回1，否则返回0
+    Read a csv file into variable title and data.
+    Only remain the N th (from 0) column data and Capitalize them, store the title and new data into a new csv file.
+    Add '_process' suffix after old file name, as a new file name.
+    :param N: int, the N th column(from 0)
+    :param save_file_name, the name of file that needs to be processed.
+    :return:int, if success return 1, or 0 otherwise
     >>> csvProcessor = CSVProcessor()
     >>> csvProcessor.read_csv('read_test.csv')
     (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])
@@ -17,9 +17,10 @@ def process_csv_data(self, N, save_file_name):
     
     try:
         title, data = self.read_csv(save_file_name)
-        processed_data = [[row[N].upper()] for row in data if len(row) > N]
+        new_data = [[row[N].upper()] for row in data if len(row) > N]
         new_file_name = save_file_name.replace('.csv', '_process.csv')
-        self.write_csv([title] + processed_data, new_file_name)
+        self.write_csv([title], new_file_name)
+        self.write_csv(new_data, new_file_name)
         return 1
     except Exception as e:
         return 0

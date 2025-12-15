@@ -48,11 +48,11 @@ class ShoppingCart:
 
     def add_item(self, item, price, quantity=1):
         """
-        将商品信息添加到购物清单中，包括价格和数量。默认数量为1
-        :param item: string, 要添加的商品
-        :param price: float, 商品的价格
-        :param quantity:int, 商品的数量，默认为1
-        :return: None
+        Add item information to the shopping list items, including price and quantity. The default quantity is 1
+        :param item: string, Item to be added
+        :param price: float, The price of the item
+        :param quantity:int, The number of items, defaults to 1
+        :return:None
         >>> shoppingcart = ShoppingCart()
         >>> shoppingcart.add_item("apple", 1, 5)
         >>> shoppingcart.view_items()

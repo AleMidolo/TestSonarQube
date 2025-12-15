@@ -55,9 +55,9 @@ class Classroom:
 
     def is_free_at(self, check_time):
         """
-        将时间格式更改为 '%H:%M' 并检查教室在该时间是否空闲。
-        :param check_time: str, 需要检查的时间
-        :return: 如果 check_time 与所有课程时间没有冲突，则返回 True，否则返回 False。
+        change the time format as '%H:%M' and check the time is free or not in the classroom.
+        :param check_time: str, the time need to be checked
+        :return: True if the check_time does not conflict with every course time, or False otherwise.
         >>> classroom = Classroom(1)
         >>> classroom.add_course({'name': 'math', 'start_time': '8:00', 'end_time': '9:40'})
         >>> classroom.is_free_at('10:00')

@@ -84,22 +84,25 @@ class Hotel:
 
     def check_in(self, room_type, room_number, name):
         """
-        检查指定类型和号码的房间是否被名为 name 的人预订。
-        当成功入住时（room_number 等于特定人的 booked_rooms），移除此名称。当实际入住数量（room_number）少于预订数量时，booked_rooms 中的数量将是预订数量减去实际数量。
-        :param room_type: str, 入住房间类型
-        :param room_number: int, 入住房间号码
-        :param name: str, 人名
-        :return False: 仅当 room_type 不在 booked_rooms 中或 room_number 高于 booked_rooms 中的数量时。
-        >>> hotel = Hotel('和平酒店', {'single': 5, 'double': 3})
-        >>> hotel.book_room('single', 1, '客人 1')
-        '成功！'
-        >>> hotel.check_in('single', 2, '客人 1')
+        Check if the room of the specified type and number is booked by the person named name.
+        Remove this name when check in successfuly(room_number is equal to specific person's booked_rooms. When the actual check in quantity (room_number) is less than the booked quantity, number in booked_rooms will be booked quantity minus actual quantity
+        :param room_type: str, check in room type
+        :param room_number: int, check in room number
+        :param name: str, person name
+        :return False: only if the room_type is not in the booked_rooms or room_number is higher than quantity in booked rooms.
+        >>> hotel = Hotel('peace hotel', {'single': 5, 'double': 3})
+        >>> hotel.book_room('single', 1, 'guest 1')
+        'Success!'
+        >>> hotel.check_in('single', 2, 'guest 1')
         False
-        >>> hotel.check_in('single', 1, '客人 1')
+        >>> hotel.check_in('single', 1, 'guest 1')
         >>> hotel.booked_rooms
         {'single': {}}
         """
-        if room_type not in self.booked_rooms or name not in self.booked_rooms[room_type] or room_number > self.booked_rooms[room_type][name]:
+        if room_type not in self.booked_rooms or name not in self.booked_rooms[room_type]:
+            return False
+        
+        if room_number > self.booked_rooms[room_type][name]:
             return False
         
         if room_number == self.booked_rooms[room_type][name]:

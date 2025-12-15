@@ -99,9 +99,9 @@ class PushBoxGame:
     
     def check_win(self):
         """
-        检查游戏是否获胜。当所有箱子都放置在目标位置时，游戏获胜。
-        并更新 self.is_game_over 的值。
-        :return self.is_game_over: 如果所有箱子都放置在目标位置，则返回 True，否则返回 False。
+        Check if the game is won. The game is won when all the boxes are placed on target positions.
+        And update the value of self.is_game_over.
+        :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.
         >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"]) 
         >>> game.check_win()
         """

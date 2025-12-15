@@ -82,10 +82,10 @@ class BigNumCalculator:
     @staticmethod
     def add(num1, num2):
         """
-        把两个大数字相加。
-        :param num1: 要相加的第一个数字，字符串。
-        :param num2: 要相加的第二个数字，字符串。
-        :return: 两个数字的和，字符串。
+        Adds two big numbers.
+        :param num1: The first number to add,str.
+        :param num2: The second number to add,str.
+        :return: The sum of the two numbers,str.
         >>> bigNum = BigNumCalculator()
         >>> bigNum.add("12345678901234567890", "98765432109876543210")
         '111111111011111111100'

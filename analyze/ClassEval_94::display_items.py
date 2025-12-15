@@ -78,8 +78,8 @@ class VendingMachine:
 
     def display_items(self):
         """
-        显示自动售货机中的产品。
-        :return: 如果自动售货机为空，则返回 False；否则，返回自动售货机中的产品列表，str。
+        Displays the products in the vending machine.
+        :return: If the vending machine is empty, returns False, otherwise, returns a list of the products in the vending machine, str.
         >>> vendingMachine = VendingMachine()
         >>> vendingMachine.display_items()
         False

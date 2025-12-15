@@ -1,9 +1,9 @@
 def sell_stock(self, stock):
         """
-        卖出股票并将其从投资组合中移除，并将现金添加到现金余额中。
-        :param stock: 一个字典，包含键 "name"、"price" 和 "quantity"
-        :param quantity: 要出售的股票数量，int。
-        :return: 如果股票成功出售则返回 True，如果股票数量不足则返回 False。
+        Sell a stock and remove it from the portfolio and add the cash to the cash balance.
+        :param stock: a dictionary with keys "name", "price", and "quantity"
+        :param quantity: the quantity of the stock to sell,int.
+        :return: True if the stock was sold successfully, False if the quantity of the stock is not enough.
         >>> tracker = StockPortfolioTracker(10000.0)
         >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
         >>> tracker.sell_stock({"name": "AAPL", "price": 150.0, "quantity": 10})
@@ -11,6 +11,7 @@ def sell_stock(self, stock):
         >>> tracker.portfolio
         []
         """
+        
         for pf in self.portfolio:
             if pf['name'] == stock['name'] and pf['quantity'] >= stock['quantity']:
                 pf['quantity'] -= stock['quantity']

@@ -67,6 +67,6 @@ class TwentyFourPointGame:
     
     def _generate_cards(self):
         """
-        为卡片生成1到9之间的随机数字。
+        Generate random numbers between 1 and 9 for the cards.
         """
         self.nums = random.sample(range(1, 10), 4)

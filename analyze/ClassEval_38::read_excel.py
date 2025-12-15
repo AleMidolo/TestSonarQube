@@ -52,12 +52,12 @@ class ExcelProcessor:
         new_file_name = save_file_name.split('.')[0] + '_process.xlsx'
         success = self.write_excel(new_data, new_file_name)
         return success, new_file_name
-
+    
     def read_excel(self, file_name):
         """
-        从Excel文件读取数据
-        :param file_name:str, 要读取的Excel文件名
-        :return:list of data, Excel中的数据
+        Reading data from Excel files
+        :param file_name:str, Excel file name to read
+        :return:list of data, Data in Excel
         """
         try:
             workbook = openpyxl.load_workbook(file_name)

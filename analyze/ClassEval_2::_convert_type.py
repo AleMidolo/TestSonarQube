@@ -83,9 +83,9 @@ class ArgumentParser:
     
     def _convert_type(self, arg, value):
         """
-        尝试通过在 self.types 中查找来转换输入值的类型。
-        :param value: 字符串, 命令行中的输入值
-        :return: 如果成功转换，则返回 self.types 中对应的值，否则返回输入值
+        Try to convert the type of input value by searching in self.types.
+        :param value: str, the input value in command line
+        :return: return corresponding value in self.types if convert successfully, or the input value oherwise
         >>> parser.types
         {'arg1': int}
         >>> parser._convert_type('arg1', '21')
@@ -93,8 +93,10 @@ class ArgumentParser:
         """
         if arg in self.types:
             arg_type = self.types[arg]
-            try:
-                return arg_type(value)
-            except ValueError:
-                return value
+            if arg_type == int:
+                return int(value)
+            elif arg_type == float:
+                return float(value)
+            elif arg_type == bool:
+                return value.lower() in ('true', '1', 'yes')
         return value

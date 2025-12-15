@@ -64,31 +64,37 @@ class ArgumentParser:
     
     def parse_arguments(self, command_string):
         """
-        解析给定的命令行参数字符串，并调用 _convert_type 将解析结果存储在参数字典中的特定类型中。
-        检查是否缺少必需的参数，如果有，则返回 False 和缺失的参数名称，否则返回 True。
-        :param command_string: str, 命令行参数字符串，格式为 "python script.py --arg1=value1 -arg2 value2 --option1 -option2"
-        :return tuple: (True, None) 如果解析成功，(False, missing_args) 如果解析失败，
-            其中 missing_args 是缺失参数名称的集合，类型为字符串。
+        Parses the given command line argument string and invoke _convert_type to stores the parsed result in specific type in the arguments dictionary.
+        Checks for missing required arguments, if any, and returns False with the missing argument names, otherwise returns True.
+        :param command_string: str, command line argument string, formatted like "python script.py --arg1=value1 -arg2 value2 --option1 -option2"
+        :return tuple: (True, None) if parsing is successful, (False, missing_args) if parsing fails,
+            where missing_args is a set of the missing argument names which are str.
         >>> parser.parse_arguments("python script.py --arg1=value1 -arg2 value2 --option1 -option2")
         (True, None)
         >>> parser.arguments
         {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
         """
-        args = command_string.split()
-        for arg in args[1:]:
-            if '=' in arg:
-                key, value = arg.split('=')
-                key = key.lstrip('--')
-            else:
-                key = arg.lstrip('-')
-                value = True
-            
-            if key in self.types:
-                self.arguments[key] = self._convert_type(key, value)
-            else:
-                self.arguments[key] = value
+        import re
         
+        # Regex to match arguments
+        pattern = r'(--\w+|-\w+)(=([^ ]+)|\s+([^ ]+))?'
+        matches = re.findall(pattern, command_string)
+        
+        missing_args = set()
+        
+        for match in matches:
+            arg_name = match[0].lstrip('-')
+            value = match[2] if match[2] else match[3] if match[3] else True
+            
+            if arg_name in self.types:
+                self.arguments[arg_name] = self._convert_type(arg_name, value)
+            else:
+                self.arguments[arg_name] = value
+        
+        # Check for missing required arguments
         missing_args = self.required - self.arguments.keys()
+        
         if missing_args:
             return (False, missing_args)
+        
         return (True, None)

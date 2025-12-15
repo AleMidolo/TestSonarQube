@@ -44,9 +44,9 @@ class UrlPath:
     @staticmethod
     def fix_path(path):
         """
-        修复给定的路径字符串，通过去除前导和尾随的斜杠。
-        :param path: str，要修复的路径字符串。
-        :return: str，修复后的路径字符串。
+        Fixes the given path string by removing leading and trailing slashes.
+        :param path: str, the path string to fix.
+        :return: str, the fixed path string.
         >>> url_path = UrlPath()
         >>> url_path.fix_path('/foo/bar/')
         'foo/bar'

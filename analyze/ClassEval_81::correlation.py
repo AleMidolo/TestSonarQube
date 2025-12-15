@@ -10,9 +10,7 @@ class Statistics3:
         >>> statistics3 = Statistics3()
         >>> statistics3.median([1, 2, 3, 4])
         2.5
-    
         """
-    
         sorted_data = sorted(data)
         n = len(sorted_data)
         if n % 2 == 1:
@@ -29,15 +27,12 @@ class Statistics3:
             >>> statistics3 = Statistics3()
             >>> statistics3.mode([1, 2, 3, 3])
             [3]
-    
-            """
-    
+        """
         counts = {}
         for value in data:
             counts[value] = counts.get(value, 0) + 1
         max_count = max(counts.values())
-        mode_values = [value for value,
-                        count in counts.items() if count == max_count]
+        mode_values = [value for value, count in counts.items() if count == max_count]
         return mode_values
     
     @staticmethod
@@ -49,9 +44,7 @@ class Statistics3:
             >>> statistics3 = Statistics3()
             >>> statistics3.mean([1, 2, 3])
             2.0
-    
-            """
-    
+        """
         if len(data) == 0:
             return None
         return sum(data) / len(data)
@@ -65,9 +58,7 @@ class Statistics3:
             >>> statistics3 = Statistics3()
             >>> statistics3.correlation_matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
             [[1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]]
-    
-            """
-    
+        """
         matrix = []
         for i in range(len(data[0])):
             row = []
@@ -88,9 +79,7 @@ class Statistics3:
             >>> statistics3 = Statistics3()
             >>> statistics3.standard_deviation([1, 2, 3])
             1.0
-    
-            """
-    
+        """
         n = len(data)
         if n < 2:
             return None
@@ -107,9 +96,7 @@ class Statistics3:
             >>> statistics3 = Statistics3()
             >>> statistics3.z_score([1, 2, 3, 4])
             [-1.161895003862225, -0.3872983346207417, 0.3872983346207417, 1.161895003862225]
-    
-            """
-    
+        """
         mean = Statistics3.mean(data)
         std_deviation = Statistics3.standard_deviation(data)
         if std_deviation is None or std_deviation == 0:
@@ -119,22 +106,20 @@ class Statistics3:
     @staticmethod
     def correlation(x, y):
         """
-        计算给定列表的相关性。
-        :param x: 给定列表，list。
-        :param y: 给定列表，list。
-        :return: 给定列表的相关性，float。
+        calculates the correlation of the given list.
+        :param x: the given list, list.
+        :param y: the given list, list.
+        :return: the correlation of the given list, float.
         >>> statistics3 = Statistics3()
         >>> statistics3.correlation([1, 2, 3], [4, 5, 6])
         1.0
-
         """
-        if len(x) != len(y):
+        n = len(x)
+        if n != len(y):
             raise ValueError("Lists must be of the same length.")
         mean_x = Statistics3.mean(x)
         mean_y = Statistics3.mean(y)
-        covariance = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(len(x)))
+        covariance = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n)) / (n - 1)
         std_x = Statistics3.standard_deviation(x)
         std_y = Statistics3.standard_deviation(y)
-        if std_x == 0 or std_y == 0:
-            return 0
-        return covariance / ((len(x) - 1) * std_x * std_y)
+        return covariance / (std_x * std_y) if std_x and std_y else None

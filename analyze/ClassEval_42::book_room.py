@@ -33,12 +33,14 @@ class Hotel:
         >>> hotel.booked_rooms
         {'single': {}}
         """
+        # Check if the room of the specified type and number is booked
         if room_type not in self.booked_rooms.keys():
             return False
         if name in self.booked_rooms[room_type]:
             if room_number > self.booked_rooms[room_type][name]:
                 return False
             elif room_number == self.booked_rooms[room_type][name]:
+                # Check in the room by removing it from the booked_rooms dictionary
                 self.booked_rooms[room_type].pop(name)
             else:
                 self.booked_rooms[room_type][name] -= room_number
@@ -75,36 +77,38 @@ class Hotel:
     
     def book_room(self, room_type, room_number, name):
         """
-        检查是否有任何指定类型的房间可用。
-        如果房间数量足够，修改 available_rooms 和 booked_rooms 并完成预订，否则预订失败。
+        Check if there are any rooms of the specified type available.
+        if rooms are adequate, modify available_rooms and booked_rooms and finish booking, or fail to book otherwise.
         :param room_type: str
-        :param room_number: int，预期预订的指定类型房间的数量
-        :param name: str，客人姓名
-        :return: 如果即将预订的房间数量不超过剩余房间，返回 str 'Success!'
-                如果超过但可用房间数量不为零，返回 int（该房间类型的剩余数量）。
-                如果超过且数量为零或 room_type 不在 available_room 中，返回 False。
-        >>> hotel = Hotel('和平酒店', {'single': 5, 'double': 3})
-        >>> hotel.book_room('single', 1, '客人 1')
+        :param room_number: int, the expected number of specified type rooms to be booked
+        :param name: str, guest name
+        :return: if number of rooms about to be booked doesn't exceed the remaining rooms, return str 'Success!'
+                if exceeds but quantity of available rooms is not equal to zero, return int(the remaining quantity of this room type).
+                if exceeds and quantity is zero or the room_type isn't in available_room, return False.
+        >>> hotel = Hotel('peace hotel', {'single': 5, 'double': 3})
+        >>> hotel.book_room('single', 1, 'guest 1')
         'Success!'
-        >>> hotel.book_room('single', 5, '客人 1')
+        >>> hotel.book_room('single', 5, 'guest 1')
         4
-        >>> hotel.book_room('single', 4, '客人 1')
+        >>> hotel.book_room('single', 4, 'guest 1')
         'Success!'
-        >>> hotel.book_room('single', 1, '客人 1')
+        >>> hotel.book_room('single', 1, 'guest 1')
         False
-        >>> hotel.book_room('triple', 1, '客人 1')
+        >>> hotel.book_room('triple', 1, 'guest 1')
         False
         """
-        if room_type not in self.available_rooms or self.available_rooms[room_type] < room_number:
+        if room_type not in self.available_rooms:
             return False
         if self.available_rooms[room_type] >= room_number:
+            self.available_rooms[room_type] -= room_number
             if room_type not in self.booked_rooms:
                 self.booked_rooms[room_type] = {}
             if name in self.booked_rooms[room_type]:
                 self.booked_rooms[room_type][name] += room_number
             else:
                 self.booked_rooms[room_type][name] = room_number
-            self.available_rooms[room_type] -= room_number
             return 'Success!'
-        remaining = self.available_rooms[room_type]
-        return remaining if remaining > 0 else False
+        elif self.available_rooms[room_type] > 0:
+            return self.available_rooms[room_type]
+        else:
+            return False

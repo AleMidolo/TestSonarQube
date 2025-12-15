@@ -1,11 +1,12 @@
 def extract_all(self, output_path):
     """
-    提取所有 zip 文件并将其放置在指定路径中
-    :param output_path: 字符串，提取文件的位置
-    :return: True 或 False，表示提取操作是否成功
+    Extract all zip files and place them in the specified path
+    :param output_path: string, The location of the extracted file
+    :return: True or False, representing whether the extraction operation was successful
     >>> zfp = ZipFileProcessor("aaa.zip")
     >>> zfp.extract_all("result/aaa")
     """
+    
     try:
         with zipfile.ZipFile(self.file_name, 'r') as zip_file:
             zip_file.extractall(output_path)

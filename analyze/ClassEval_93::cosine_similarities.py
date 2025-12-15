@@ -1,7 +1,3 @@
-import numpy as np
-from gensim import matutils
-from numpy import dot, array
-
 class VectorUtil: 
 
     def similarity(vector_1, vector_2):
@@ -69,10 +65,10 @@ class VectorUtil:
     @staticmethod
     def cosine_similarities(vector_1, vectors_all):
         """
-        计算一个向量与一组其他向量之间的余弦相似度。
-        :param vector_1: numpy.ndarray, 用于计算相似度的向量，预期形状为 (dim,).
-        :param vectors_all: numpy.ndarray的列表, 对于 vectors_all 中的每一行，计算与 vector_1 的距离，预期形状为 (num_vectors, dim).
-        :return: numpy.ndarray, 包含 `vector_1` 与 `vectors_all` 中每一行之间的余弦距离，形状为 (num_vectors,).
+        Compute cosine similarities between one vector and a set of other vectors.
+        :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).
+        :param vectors_all: list of numpy.ndarray, For each row in vectors_all, distance from vector_1 is computed, expected shape (num_vectors, dim).
+        :return: numpy.ndarray, Contains cosine distance between `vector_1` and each row in `vectors_all`, shape (num_vectors,).
         >>> vector1 = np.array([1, 2, 3])
         >>> vectors_all = [np.array([4, 5, 6]), np.array([7, 8, 9])]
         >>> VectorUtil.cosine_similarities(vector1, vectors_all)

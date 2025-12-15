@@ -15,9 +15,9 @@ class NumericEntityUnescaper:
 
     def replace(self, string):
         """
-        将输入字符串中的数字字符引用（HTML 实体）替换为相应的 Unicode 字符。
-        :param string: str，包含数字字符引用的输入字符串。
-        :return: str，输入字符串，其中的数字字符引用已被相应的 Unicode 字符替换。
+        Replaces numeric character references (HTML entities) in the input string with their corresponding Unicode characters.
+        :param string: str, the input string containing numeric character references.
+        :return: str, the input string with numeric character references replaced with their corresponding Unicode characters.
         >>> unescaper = NumericEntityUnescaper()
         >>> unescaper.replace("&#65;&#66;&#67;")
         'ABC'

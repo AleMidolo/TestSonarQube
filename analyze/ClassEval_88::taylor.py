@@ -64,7 +64,7 @@ class TriCalculator:
     
     def taylor(self, x, n):
         """
-        计算 cos (x/180 * pi) 的 n 阶泰勒展开值
+        Finding the n-order Taylor expansion value of cos (x/180 * pi)
         :param x: int
         :param n: int
         :return: float

@@ -37,7 +37,7 @@ class IPAddress:
 
     def is_valid(self):
         """
-        判断IP地址是否有效，即IP地址是否由四个十进制数字组成，并且用'.'分隔。每个数字大于等于0且小于等于255。
+        Judge whether the IP address is valid, that is, whether the IP address is composed of four Decimal digits separated by '.'. Each digit is greater than or equal to 0 and less than or equal to 255
         :return: bool
         >>> ipaddress = IPAddress("10.10.10.10")
         >>> ipaddress.is_valid()

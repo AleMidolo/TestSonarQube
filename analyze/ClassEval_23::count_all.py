@@ -74,9 +74,9 @@ class CombinationCalculator:
     @staticmethod
     def count_all(n: int) -> int:
         """
-        计算所有可能组合的数量。
-        :param n: 元素的总数，int。
-        :return: 所有可能组合的数量，int。如果组合数量大于 2^63-1，则返回 float("inf")。
+        Calculate the number of all possible combinations.
+        :param n: The total number of elements,int.
+        :return: The number of all possible combinations,int,if the number of combinations is greater than 2^63-1,return float("inf").
         >>> CombinationCalculator.count_all(4)
         15
         """

@@ -43,9 +43,9 @@ class BankAccount:
         """
         self.withdraw(amount)
         other_account.deposit(amount)
-
+    
     def view_balance(self):
         """
-        返回账户余额。
+        Return the account balance.
         """
         return self.balance

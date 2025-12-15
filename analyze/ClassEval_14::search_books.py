@@ -81,12 +81,11 @@ class BookManagementDB:
     
     def search_books(self):
         """
-        从数据库中检索所有书籍并返回其信息。
-        :return books: list[tuple], 数据库中所有书籍的信息
+        Retrieves all books from the database and returns their information.
+        :return books: list[tuple], the information of all books in database
         >>> book_db = BookManagementDB("test.db")
         >>> book_db.search_books()
         [(1, 'book1', 'author', 1)]
         """
         self.cursor.execute('SELECT * FROM books')
-        books = self.cursor.fetchall()
-        return books
+        return self.cursor.fetchall()

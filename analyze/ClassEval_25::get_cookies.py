@@ -1,7 +1,7 @@
 def get_cookies(self, response):
     """
-    从指定的响应中获取 cookies，并将其保存到 cookies_file。
-    :param response: 要从中获取 cookies 的响应，dict。
+    Gets the cookies from the specified response, and save it to cookies_file.
+    :param response: The response to get cookies from, dict.
     >>> cookies_util = CookiesUtil('cookies.json')
     >>> cookies_util.get_cookies({'cookies': {'key1': 'value1', 'key2': 'value2'}})
     >>> cookies_util.cookies

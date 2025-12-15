@@ -1,3 +1,5 @@
+import math
+
 class DataStatistics4: 
 
     def correlation_coefficient(data1, data2):
@@ -62,9 +64,9 @@ class DataStatistics4:
     @staticmethod
     def skewness(data):
         """
-        计算一组数据的偏度。
-        :param data: 输入数据列表，list。
-        :return: 偏度，float。
+        Calculate the skewness of a set of data.
+        :param data: The input data list, list.
+        :return: The skewness, float.
         >>> DataStatistics4.skewness([1, 2, 5])
         2.3760224064818463
         """

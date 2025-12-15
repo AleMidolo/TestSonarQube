@@ -38,23 +38,21 @@ class BoyerMooreSearch:
     
     def bad_character_heuristic(self):
         """
-        在文本中查找模式的所有出现位置。
-        :return: 模式在文本中的所有位置的列表，列表。
+        Finds all occurrences of the pattern in the text.
+        :return: A list of all positions of the pattern in the text, list.
         >>> boyerMooreSearch = BoyerMooreSearch("ABAABA", "AB")
         >>> boyerMooreSearch.bad_character_heuristic()
         [0, 3]
         """
         positions = []
-        currentPos = 0
+        skip = 0
         
-        while currentPos <= self.textLen - self.patLen:
-            mismatchPos = self.mismatch_in_text(currentPos)
-            if mismatchPos == -1:
-                positions.append(currentPos)
-                currentPos += 1
+        while skip <= self.textLen - self.patLen:
+            mismatch_index = self.mismatch_in_text(skip)
+            if mismatch_index == -1:
+                positions.append(skip)
+                skip += self.patLen - self.match_in_pattern(self.text[skip + self.patLen - 1])
             else:
-                badCharIndex = self.match_in_pattern(self.text[mismatchPos])
-                shift = max(1, mismatchPos - (currentPos + badCharIndex))
-                currentPos += shift
+                skip += max(1, mismatch_index - skip - self.match_in_pattern(self.text[mismatch_index]))
         
         return positions

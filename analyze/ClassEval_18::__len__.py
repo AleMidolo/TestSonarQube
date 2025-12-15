@@ -84,8 +84,8 @@ class CamelCaseMap:
     
     def __len__(self):
         """
-        返回自身数据的长度
-        :return:int，数据的长度
+        Returns the length of the own data
+        :return:int, length of data
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map['first_name'] = 'John'
         >>> camelize_map['last_name'] = 'Doe'

@@ -73,7 +73,7 @@ class StudentDatabaseProcessor:
     
     def create_student_table(self):
         """
-        如果数据库中尚不存在，则创建一个“students”表。字段包括类型为int的ID，类型为str的姓名，类型为int的年龄，类型为str的性别，以及类型为int的年级。
+        Creates a "students" table in the database if it does not exist already. Fields include ID of type int, name of type str, age of type int, gender of type str, and grade of type int.
         :return: None
         >>> processor = StudentDatabaseProcessor("students.db")
         >>> processor.create_student_table()

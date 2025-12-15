@@ -6,7 +6,6 @@ class TicTacToe:
         self.board = [[' ' for _ in range(N)] for _ in range(3)]
         self.current_player = 'X'
 
-
     def check_winner(self):
         """
         Check if there is a winner on the board in rows, columns and diagonals three directions
@@ -17,7 +16,6 @@ class TicTacToe:
         >>> ttt.check_winner()
         'X'
         """
-    
         for row in self.board:
             if row[0] == row[1] == row[2] != ' ':
                 return row[0]
@@ -37,7 +35,6 @@ class TicTacToe:
         >>> ttt.is_board_full()
         False
         """
-    
         for row in self.board:
             if ' ' in row:
                 return False
@@ -45,10 +42,10 @@ class TicTacToe:
     
     def make_move(self, row, col):
         """
-        在棋盘上指定位置放置当前玩家的标记并切换标记。
-        :param row: int, 位置的行索引
-        :param col: int, 位置的列索引
-        :return: bool, 表示移动是否成功
+        Place the current player's mark at the specified position on the board and switch the mark.
+        :param row: int, the row index of the position
+        :param col: int, the column index of the position
+        :return: bool, indicating whether the move was successful or not
         >>> ttt.current_player
         'X'
         >>> ttt.make_move(1, 1)

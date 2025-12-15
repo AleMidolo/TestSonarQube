@@ -1,6 +1,6 @@
 def borrow_book(self, book_id):
     """
-    根据给定的书籍ID在数据库中标记一本书为已借出。
+    Marks a book as borrowed in the database based on the given book ID.
     :param book_id: int
     >>> book_db = BookManagementDB("test.db")
     >>> book_db.borrow_book(1)

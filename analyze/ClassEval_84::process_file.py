@@ -1,14 +1,14 @@
 def process_file(self):
-    """
-    读取 self.file_path 文件，并从内容字符串中过滤掉非字母字符。
-    将处理后的数据覆盖写入同一个 self.file_path 文件。
-    >>> textFileProcessor = TextFileProcessor('test.json')
-    >>> textFileProcessor.read_file()
-    '{\n    "name": "test",\n    "age": 12\n}'
-    >>> textFileProcessor.process_file()
-    'nametestage'
-    """
-    content = self.read_file()
-    filtered_content = ''.join(filter(str.isalpha, content))
-    self.write_file(filtered_content)
-    return filtered_content
+        """
+        Read the self.file_path file and filter out non-alphabetic characters from the content string.
+        Overwrite the after-processed data into the same self.file_path file.
+        >>> textFileProcessor = TextFileProcessor('test.json')
+        >>> textFileProcessor.read_file()
+        '{\n    "name": "test",\n    "age": 12\n}'
+        >>> textFileProcessor.process_file()
+        'nametestage'
+        """
+        content = self.read_file()
+        filtered_content = ''.join(filter(str.isalpha, content))
+        self.write_file(filtered_content)
+        return filtered_content

@@ -1,10 +1,10 @@
 def move(self, direction):
     """
-    根据指定方向移动玩家并检查游戏是否获胜。
-    :param direction: str，玩家移动的方向。
-        它可以是 'w'、's'、'a' 或 'd'，分别表示上、下、左或右。
+    Move the player based on the specified direction and check if the game is won.
+    :param direction: str, the direction of the player's movement. 
+        It can be 'w', 's', 'a', or 'd' representing up, down, left, or right respectively.
 
-    :return: 如果游戏获胜则返回 True，否则返回 False。
+    :return: True if the game is won, False otherwise.
     >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"])       
     >>> game.print_map()
     # # # # # 
@@ -45,7 +45,6 @@ def move(self, direction):
         new_box_col = new_player_col + delta_col
         if self.map[new_box_row][new_box_col] == '#' or (new_box_row, new_box_col) in self.boxes:
             return False  # Wall or another box collision
-
         # Move the box
         box_index = self.boxes.index((new_player_row, new_player_col))
         self.boxes[box_index] = (new_box_row, new_box_col)
@@ -54,5 +53,4 @@ def move(self, direction):
     self.player_row = new_player_row
     self.player_col = new_player_col
 
-    # Check for win condition
     return self.check_win()

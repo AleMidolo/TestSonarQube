@@ -45,6 +45,7 @@ class ArrangementCalculator:
             result.append(list(permutation))
         return result
 
+
     def select_all(self):
         """
         Generates a list of all arrangements by selecting at least 1 item and at most the number of internal datas.
@@ -58,6 +59,7 @@ class ArrangementCalculator:
         for i in range(1, len(self.datas) + 1):
             result.extend(self.select(i))
         return result
+
 
     @staticmethod
     def factorial(n):
@@ -77,9 +79,9 @@ class ArrangementCalculator:
     @staticmethod
     def count_all(n):
         """
-        计算从 n 个元素中选择至少 1 个元素，至多 n 个元素的所有可能排列的总数。
-        :param n: int，总元素数量。
-        :return: int，所有排列的数量。
+        Counts the total number of all possible arrangements by choosing at least 1 item and at most n items from n items.
+        :param n: int, the total number of items.
+        :return: int, the count of all arrangements.
         >>> ArrangementCalculator.count_all(4)
         64
 

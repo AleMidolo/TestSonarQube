@@ -1,6 +1,6 @@
 def remove_book(self, book_id):
         """
-        根据给定的书籍ID从数据库中移除一本书。
+        Removes a book from the database based on the given book ID.
         :param book_id: int
         >>> book_db = BookManagementDB("test.db")
         >>> book_db.remove_book(1)

@@ -56,9 +56,9 @@ class Calculator:
     
     def calculate(self, expression):
         """
-        计算给定表达式的值
-        :param expression: 字符串，给定的表达式
-        :return: 如果成功，返回表达式的值；否则，返回 None
+        Calculate the value of a given expression
+        :param expression: string, given expression
+        :return:If successful, returns the value of the expression; otherwise, returns None
         >>> calculator = Calculator()
         >>> calculator.calculate('1+2-3')
         0.0

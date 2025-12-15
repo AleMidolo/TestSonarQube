@@ -1,3 +1,5 @@
+import re
+
 class SplitSentence: 
 
     def split_sentences(self, sentences_string):
@@ -19,6 +21,7 @@ class SplitSentence:
         Given a text, return the number of words in the longest sentence
         :param sentences_string: string, undivided long sentence
         :return:int, the number of words in the longest sentence
+        >>> ss = SplitSentence()
         >>> ss.process_text_file("aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?")
         4
         """
@@ -34,11 +37,11 @@ class SplitSentence:
     
     def count_words(self, sentence):
         """
-        计算句子中的单词数量。注意，单词由空格分隔，标点符号和数字不算作单词。
-        :param sentence:字符串, 要计算的句子，单词由空格分隔
-        :return:int, 句子中的单词数量
+        Count the number of words in a sentence. Note that words are separated by spaces and that punctuation marks and numbers are not counted as words.
+        :param sentence:string, sentence to be counted, where words are separated by spaces
+        :return:int, number of words in the sentence
+        >>> ss = SplitSentence()
         >>> ss.count_words("abc def")
         2
         """
-        words = sentence.split()
-        return len([word for word in words if word.isalpha()])
+        return len([word for word in sentence.split() if word.isalpha()])

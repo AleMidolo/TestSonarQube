@@ -1,8 +1,8 @@
 def write_xml(self, file_name):
         """
-        将XML数据写入指定的文件。
-        :param file_name: 字符串，要写入XML数据的文件名。
-        :return: 布尔值，如果写入操作成功则返回True，否则返回False。
+        Writes the XML data to the specified file.
+        :param file_name: string, the name of the file to write the XML data.
+        :return: bool, True if the write operation is successful, False otherwise.
         >>> xml_processor = XMLProcessor('test.xml')
         >>> root = xml_processor.read_xml()
         >>> success = xml_processor.write_xml('output.xml')
@@ -11,7 +11,7 @@ def write_xml(self, file_name):
         """
         try:
             tree = ET.ElementTree(self.root)
-            tree.write(file_name, encoding='utf-8', xml_declaration=True)
+            tree.write(file_name)
             return True
         except Exception as e:
             return False

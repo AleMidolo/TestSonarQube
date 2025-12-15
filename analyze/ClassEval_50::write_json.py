@@ -50,11 +50,11 @@ class JSONProcessor:
     
     def write_json(self, data, file_path):
         """
-        将数据写入 JSON 文件并保存到给定路径。
+        Write data to a JSON file and save it to the given path.
 
-        :param data: dict，要写入 JSON 文件的数据。
-        :param file_path: str，JSON 文件的路径。
-        :return: 如果写入过程成功则返回 1，若在写入过程中发生错误则返回 -1。
+        :param data: dict, the data to be written to the JSON file.
+        :param file_path: str, the path of the JSON file.
+        :return: 1 if the writing process is successful, or -1, if an error occurs during the writing process.
         >>> json.write_json({'key1': 'value1', 'key2': 'value2'}, 'test.json')
         1
         >>> json.read_json('test.json')

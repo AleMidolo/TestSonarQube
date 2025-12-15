@@ -1,7 +1,7 @@
 def delete_user_by_username(self, username):
         """
-        根据用户名从“users”表中删除用户。
-        :param username: str，要删除的用户的用户名。
+        Deletes a user from the "users" table by username.
+        :param username: str, the username of the user to delete.
         :return: None
         >>> user_db = UserLoginDB("user_database.db")
         >>> user_db.create_table()

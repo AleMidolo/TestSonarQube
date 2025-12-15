@@ -1,5 +1,4 @@
 import re
-
 class SplitSentence: 
 
     def split_sentences(self, sentences_string):
@@ -31,16 +30,12 @@ class SplitSentence:
     
     def process_text_file(self, sentences_string):
         """
-        给定一段文本，返回最长句子中的单词数量
-        :param sentences_string: 字符串，未分割的长句子
-        :return: int，最长句子中的单词数量
+        Given a text, return the number of words in the longest sentence
+        :param sentences_string: string, undivided long sentence
+        :return:int, the number of words in the longest sentence
         >>> ss.process_text_file("aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?")
         4
         """
         sentences = self.split_sentences(sentences_string)
-        max_word_count = 0
-        for sentence in sentences:
-            word_count = self.count_words(sentence)
-            if word_count > max_word_count:
-                max_word_count = word_count
-        return max_word_count
+        longest_sentence_length = max(self.count_words(sentence) for sentence in sentences)
+        return longest_sentence_length

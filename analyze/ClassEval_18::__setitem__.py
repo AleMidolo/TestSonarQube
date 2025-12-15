@@ -84,9 +84,9 @@ class CamelCaseMap:
     
     def __setitem__(self, key, value):
         """
-        将与键对应的值设置为指定的值
+        Set the value corresponding to the key to the specified value
         :param key:str
-        :param value:str，指定的值
+        :param value:str, the specified value
         :return:None
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map['first_name'] = 'John'

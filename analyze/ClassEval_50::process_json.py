@@ -44,12 +44,12 @@ class JSONProcessor:
     
     def process_json(self, file_path, remove_key):
         """
-        读取一个 JSON 文件，并通过移除指定的键来处理数据，并将修改后的数据重新写回文件。
+        read a JSON file and process the data by removing a specified key and rewrite the modified data back to the file.
 
-        :param file_path: str，JSON 文件的路径。
-        :param remove_key: str，要移除的键。
-        :return: 1，如果成功移除指定的键并将数据写回。
-                    0，如果文件不存在或指定的键在数据中不存在。
+        :param file_path: str, the path of the JSON file.
+        :param remove_key: str, the key to be removed.
+        :return: 1, if the specified key is successfully removed and the data is written back.
+                    0, if the file does not exist or the specified key does not exist in the data.
         >>> json.read_json('test.json')
         {'key1': 'value1', 'key2': 'value2'}
         >>> json.process_json('test.json', 'key1')
@@ -57,9 +57,10 @@ class JSONProcessor:
         >>> json.read_json('test.json')
         {'key2': 'value2'}
         """
+        
         data = self.read_json(file_path)
         if data == 0 or remove_key not in data:
             return 0
-        data.pop(remove_key)
-        self.write_json(data, file_path)
-        return 1
+        
+        del data[remove_key]
+        return self.write_json(data, file_path)
