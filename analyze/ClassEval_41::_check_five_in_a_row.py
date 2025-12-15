@@ -69,8 +69,8 @@ class GomokuGame:
         >>> gomokuGame._check_five_in_a_row(5, 1, (1, 1))
         False
         """
-        dx, dy = direction
         count = 0
+        dx, dy = direction
         player_symbol = self.board[row][col]
         
         for i in range(5):

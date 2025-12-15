@@ -66,10 +66,7 @@ class Order:
         32.0
         """
         total = 0.0
-        for selected in self.selected_dishes:
-            dish_name = selected["dish"]
-            count = selected["count"]
-            price = selected["price"]
-            sale = self.sales.get(dish_name, 1)  # Default sale is 1 if not found
-            total += count * price * sale
+        for dish in self.selected_dishes:
+            price = dish["price"] * self.sales.get(dish["dish"], 1)
+            total += price * dish["count"]
         return total

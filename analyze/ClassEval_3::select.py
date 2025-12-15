@@ -62,7 +62,7 @@ class ArrangementCalculator:
         for i in range(2, n + 1):
             result *= i
         return result
-    
+
     def select(self, m=None):
         """
         Genera un elenco di disposizioni selezionando m elementi dai dati interni.

@@ -11,7 +11,7 @@ def sweep(self, x, y):
         [['-', '-', '-'], ['-', 1, '-'], ['-', '-', '-']]
         """
         if self.minesweeper_map[y][x] == 'X':
-            return False  # Game over, hit a mine
+            return False  # Hit a mine, game over
         
         self.player_map[y][x] = self.minesweeper_map[y][x]
         

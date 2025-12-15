@@ -63,7 +63,7 @@ class CurrencyConverter:
         10.0
         """
         if from_currency not in self.rates or to_currency not in self.rates:
-            raise ValueError("Unsupported currency type")
+            raise ValueError("Unsupported currency")
         
         # Convert amount to USD first
         amount_in_usd = amount / self.rates[from_currency]

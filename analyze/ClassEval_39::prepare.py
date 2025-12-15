@@ -8,7 +8,7 @@ def prepare(self, expression):
         expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
         """
         output = []
-        operator_stack = deque()
+        operator_stack = []
         for char in expression:
             if char.isdigit() or char == '~':
                 output.append(char)

@@ -64,8 +64,7 @@ class SignInSystem:
         >>> signInSystem.all_not_signed_in()
         ['a', 'b']
         """
-        not_signed_in_users = [username for username, signed_in in self.users.items() if not signed_in]
-        return not_signed_in_users
+        return [username for username, signed_in in self.users.items() if not signed_in]
     
     def sign_in(self, username):
         """

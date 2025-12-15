@@ -16,7 +16,7 @@ class BinaryDataProcessor:
         """
         self.binary_string = ''.join(
             filter(lambda x: x in '01', self.binary_string))
-    
+
     def calculate_binary_info(self):
         """
         Calculate the binary string information, including the percentage of 0 and 1, and the total length of the binary string.
@@ -27,16 +27,16 @@ class BinaryDataProcessor:
         zeroes_count = self.binary_string.count('0')
         ones_count = self.binary_string.count('1')
         total_length = len(self.binary_string)
-    
+
         zeroes_percentage = (zeroes_count / total_length)
         ones_percentage = (ones_count / total_length)
-    
+
         return {
             'Zeroes': zeroes_percentage,
             'Ones': ones_percentage,
             'Bit length': total_length
         }
-    
+
     def convert_to_ascii(self):
         """
         Convert the binary string to ascii string.
@@ -49,9 +49,9 @@ class BinaryDataProcessor:
             byte = self.binary_string[i:i+8]
             decimal = int(byte, 2)
             byte_array.append(decimal)
-    
+
         return byte_array.decode('ascii')
-    
+
     def convert_to_utf8(self):
         """
         Converte la stringa binaria in una stringa utf-8.
@@ -64,5 +64,5 @@ class BinaryDataProcessor:
             byte = self.binary_string[i:i+8]
             decimal = int(byte, 2)
             byte_array.append(decimal)
-    
+
         return byte_array.decode('utf-8')

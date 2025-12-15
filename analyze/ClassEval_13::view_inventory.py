@@ -42,7 +42,7 @@ class BookManagement:
         if title not in self.inventory:
             return 0
         return self.inventory[title]
-
+    
     def view_inventory(self):
         """
         Ottieni l'inventario della Gestione Libri.

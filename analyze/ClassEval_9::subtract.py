@@ -83,7 +83,6 @@ class BigNumCalculator:
         # Prepare for subtraction
         num1 = num1[::-1]
         num2 = num2[::-1]
-        
         result = []
         borrow = 0
         
@@ -107,5 +106,4 @@ class BigNumCalculator:
             return '0'
         
         result.reverse()
-        
         return ('-' if negative else '') + ''.join(result)

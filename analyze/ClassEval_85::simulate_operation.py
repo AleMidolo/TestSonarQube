@@ -102,9 +102,9 @@ class Thermostat:
         
         while abs(self.current_temperature - self.target_temperature) > 0.1:
             if self.mode == 'heat':
-                self.current_temperature += 1  # Simulate heating
+                self.current_temperature += 1  # Heating up
             else:
-                self.current_temperature -= 1  # Simulate cooling
+                self.current_temperature -= 1  # Cooling down
             
             time.sleep(1)  # Simulate time passing
             time_taken += 1

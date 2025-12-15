@@ -12,7 +12,6 @@ class JSONProcessor:
         >>> json.read_json('test.json')
         {'name': 'test', 'age': 14}
         """
-    
         if not os.path.exists(file_path):
             return 0
         try:
@@ -37,7 +36,6 @@ class JSONProcessor:
         >>> json.read_json('test.json')
         {'key2': 'value2'}
         """
-    
         data = self.read_json(file_path)
         if data == 0 or data == -1:
             return 0
@@ -60,7 +58,6 @@ class JSONProcessor:
         >>> json.read_json('test.json')
         {'key1': 'value1', 'key2': 'value2'}
         """
-        
         try:
             with open(file_path, 'w') as file:
                 json.dump(data, file)

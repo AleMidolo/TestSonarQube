@@ -13,10 +13,9 @@ def process_excel_data(self, N, save_file_name):
         return 0, save_file_name
     
     # Convert the specified column to uppercase
-    column_index = N - 1
     for i in range(len(data)):
         row = list(data[i])
-        row[column_index] = str(row[column_index]).upper()
+        row[N - 1] = str(row[N - 1]).upper()  # Convert to uppercase
         data[i] = tuple(row)
     
     output_file_name = f"processed_{save_file_name}"

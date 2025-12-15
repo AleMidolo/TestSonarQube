@@ -2,7 +2,7 @@ class RPGCharacter:
     def __init__(self, name, hp, attack_power, defense, level=1):
         """
         Initialize an RPG character object.
-        :param name: str, the name of the character.
+        :param name: strm, the name of the character.
         :param hp: int, The health points of the character.
         :param attack_power: int, the attack power of the character.
         :param defense: int, the defense points of the character.
@@ -18,7 +18,7 @@ class RPGCharacter:
     def attack(self, other_character):
         """
         Attack another character. The damage caused needs to offset the defense value.
-        :param other_character: RPGCharacter, The character being attacked.
+        :param other_character: str, The character being attacked.
         >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
         >>> player_2 = RPGCharacter('player 2', 100, 7, 2)
         >>> player_1.attack(player_2)

@@ -102,5 +102,6 @@ class EmailClient:
         >>> receiver.inbox
         [{'size': 15}]
         """
+        
         while self.get_occupied_size() + size > self.capacity and self.inbox:
             self.inbox.pop(0)
