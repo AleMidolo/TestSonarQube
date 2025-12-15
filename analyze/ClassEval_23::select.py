@@ -17,7 +17,6 @@ class CombinationCalculator:
         >>> CombinationCalculator.count(4, 2)
         6
         """
-    
         if m == 0 or n == m:
             return 1
         return math.factorial(n) // (math.factorial(n - m) * math.factorial(m))
@@ -31,21 +30,18 @@ class CombinationCalculator:
             >>> CombinationCalculator.count_all(4)
             15
             """
-
         if n < 0 or n > 63:
             return False
         return (1 << n) - 1 if n != 63 else float("inf")
     
     def select_all(self) -> List[List[str]]:
         """
-        Generate all possible combinations of  selecting elements from the given data list,and it uses the select method.
+        Generate all possible combinations of selecting elements from the given data list,and it uses the select method.
         :return: A list of combinations,List[List[str]].
         >>> calc = CombinationCalculator(["A", "B", "C", "D"])
         >>> calc.select_all()
         [['A'], ['B'], ['C'], ['D'], ['A', 'B'], ['A', 'C'], ['A', 'D'], ['B', 'C'], ['B', 'D'], ['C', 'D'], ['A', 'B', 'C'], ['A', 'B', 'D'], ['A', 'C', 'D'], ['B', 'C', 'D'], ['A', 'B', 'C', 'D']]
-    
         """
-    
         result = []
         for i in range(1, len(self.datas) + 1):
             result.extend(self.select(i))
@@ -64,9 +60,7 @@ class CombinationCalculator:
         >>> calc._select(0, [None] * 2, 0, result)
         >>> result
         [['A', 'B'], ['A', 'C'], ['A', 'D'], ['B', 'C'], ['B', 'D'], ['C', 'D']]
-    
         """
-    
         resultLen = len(resultList)
         resultCount = resultIndex + 1
         if resultCount > resultLen:

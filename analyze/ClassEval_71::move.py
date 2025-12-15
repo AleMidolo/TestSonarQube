@@ -24,10 +24,10 @@ def move(self, direction):
     True
     """
     direction_map = {
-        'w': (-1, 0),  # up
-        's': (1, 0),   # down
-        'a': (0, -1),  # left
-        'd': (0, 1)    # right
+        'w': (-1, 0),  # Up
+        's': (1, 0),   # Down
+        'a': (0, -1),  # Left
+        'd': (0, 1)    # Right
     }
     
     if direction not in direction_map:

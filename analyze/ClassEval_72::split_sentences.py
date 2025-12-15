@@ -9,4 +9,4 @@ def split_sentences(self, text):
         """
         pattern = self.generate_split_sentences_pattern()
         sentences = re.split(pattern, text)
-        return [sentence.strip() for sentence in sentences if sentence]
+        return [sentence.strip() for sentence in sentences if sentence.strip()]

@@ -75,15 +75,14 @@ class ArgumentParser:
         {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
         """
         args = command_string.split()
-        for arg in args[2:]:  # Skip the first two elements (script name)
+        for arg in args[1:]:
             if '=' in arg:
-                key, value = arg.split('=', 1)
+                key, value = arg.split('=')
+                key = key.lstrip('--')
             else:
-                key = arg
-                value = True  # Default to True if no value is provided
+                key = arg.lstrip('-')
+                value = True
             
-            # Remove leading dashes
-            key = key.lstrip('-')
             if key in self.types:
                 self.arguments[key] = self._convert_type(key, value)
             else:

@@ -15,7 +15,7 @@ class BookManagement:
             self.inventory[title] += quantity
         else:
             self.inventory[title] = quantity
-    
+
     def view_inventory(self):
         """
         Get the inventory of the Book Management.
@@ -27,7 +27,7 @@ class BookManagement:
         {'book1': 1, 'book2': 1}
         """
         return self.inventory
-    
+
     def view_book_quantity(self, title):
         """
         Get the quantity of a book.
@@ -44,19 +44,16 @@ class BookManagement:
     
     def remove_book(self, title, quantity):
         """
-        इन्वेंटरी से एक या कई किताबें हटाएं जो किताब के शीर्षक द्वारा क्रमबद्ध है।
-        अमान्य इनपुट मिलने पर झूठा उठाएं।
-        :param title: str, किताब का शीर्षक
+        Remove one or several books from inventory which is sorted by book title.
+        Raise an error on invalid input.
+        :param title: str, the book title
         :param quantity: int
         """
-        if title not in self.inventory:
-            raise ValueError("Invalid input: book does not exist in inventory.")
-        
-        if quantity <= 0:
-            raise ValueError("Invalid input: quantity must be greater than zero.")
+        if title not in self.inventory or quantity <= 0:
+            raise ValueError("Invalid input")
         
         if self.inventory[title] < quantity:
-            raise ValueError("Invalid input: not enough quantity to remove.")
+            raise ValueError("Not enough books in inventory")
         
         self.inventory[title] -= quantity
         

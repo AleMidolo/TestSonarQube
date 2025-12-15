@@ -31,7 +31,7 @@ class ShoppingCart:
         {"apple":{"price":1, "quantity":2}}
         """
         return self.items
-    
+
     def total_price(self) -> float:
         """
         Calculate the total price of all items in the shopping list, which is the quantity of each item multiplied by the price
@@ -43,7 +43,7 @@ class ShoppingCart:
         11.0
         """
         return sum(item['quantity'] * item['price'] for item in self.items.values())
-    
+
     def remove_item(self, item, quantity=1):
         """
         Reduce the specified quantity from the item in the shopping list
@@ -57,5 +57,5 @@ class ShoppingCart:
         if item in self.items:
             if self.items[item]['quantity'] > quantity:
                 self.items[item]['quantity'] -= quantity
-            else:
+            elif self.items[item]['quantity'] == quantity:
                 del self.items[item]

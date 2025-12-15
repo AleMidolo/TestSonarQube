@@ -45,4 +45,5 @@ class NLPDataProcessor2:
         
         flat_list = [word for sublist in words_list for word in sublist]
         word_count = Counter(flat_list)
-        return dict(word_count.most_common(5))
+        sorted_word_count = dict(sorted(word_count.items(), key=lambda item: item[1], reverse=True))
+        return dict(list(sorted_word_count.items())[:5])

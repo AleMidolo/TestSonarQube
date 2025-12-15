@@ -59,7 +59,7 @@ class KappaCalculator:
         P = np.sum((np.sum(testData, axis=1) * (np.sum(testData, axis=1) - 1))) / (N * n * (n - 1))
         
         # Calculate the expected agreement
-        Pe = np.sum(p ** 2)
+        Pe = np.sum(p**2)
         
         # Calculate Fleiss' kappa
         kappa_value = (P - Pe) / (1 - Pe)

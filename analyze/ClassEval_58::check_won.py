@@ -104,8 +104,8 @@ class MinesweeperGame:
         False
 
         """
-        for row in range(self.n):
-            for col in range(self.n):
-                if self.player_map[row][col] != 'X' and self.player_map[row][col] == '-':
+        for row in map:
+            for cell in row:
+                if cell != 'X' and cell != '-':
                     return False
         return True

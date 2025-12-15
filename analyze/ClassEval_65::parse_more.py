@@ -107,4 +107,4 @@ class NumberWordFormatter:
         >>> formatter.parse_more(1)
         "THOUSAND"
         """
-        return self.NUMBER_MORE[i]
+        return self.NUMBER_MORE[i] if i < len(self.NUMBER_MORE) else ""

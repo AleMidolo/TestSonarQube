@@ -82,5 +82,5 @@ class CombinationCalculator:
         result = []
         n = len(self.datas)
         for m in range(1, n + 1):
-            self._select(0, [None] * m, 0, result)
+            result.extend(self.select(m))
         return result
