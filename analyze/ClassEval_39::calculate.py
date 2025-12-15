@@ -8,19 +8,16 @@ def calculate(self, expression):
         14.0
 
         """
-        self.postfix_stack.clear()
-        expression = self.transform(expression)
         self.prepare(expression)
-
-        op_stack = deque()
+        stack = deque()
 
         for token in self.postfix_stack:
             if not self.is_operator(token):
-                op_stack.append(token)
+                stack.append(token)
             else:
-                second_value = op_stack.pop()
-                first_value = op_stack.pop()
+                second_value = stack.pop()
+                first_value = stack.pop()
                 result = self._calculate(first_value, second_value, token)
-                op_stack.append(result)
+                stack.append(result)
 
-        return float(op_stack.pop())
+        return float(stack.pop())

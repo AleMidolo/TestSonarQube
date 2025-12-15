@@ -9,7 +9,7 @@ class SQLQueryBuilder:
             :return query: str, the SQL insert statement.
             >>> SQLQueryBuilder.insert('table1', {'name': 'Test', 'age': 14})
             "INSERT INTO table1 (name, age) VALUES ('Test', '14')"
-        """
+            """
     
         keys = ', '.join(data.keys())
         values = ', '.join(f"'{v}'" for v in data.values())
@@ -24,7 +24,7 @@ class SQLQueryBuilder:
             :return query: str, the SQL delete statement.
             >>> SQLQueryBuilder.delete('table1', {'name': 'Test', 'age': 14})
             "DELETE FROM table1 WHERE name='Test' AND age='14'"
-        """
+            """
     
         query = f"DELETE FROM {table}"
         if where:
@@ -41,7 +41,7 @@ class SQLQueryBuilder:
             :param where: dict, {key1: value1, key2: value2 ...}. The query condition.
             >>> SQLQueryBuilder.update('table1', {'name': 'Test2', 'age': 15}, where = {'name':'Test'})
             "UPDATE table1 SET name='Test2', age='15' WHERE name='Test'"
-        """
+            """
     
         update_str = ', '.join(f"{k}='{v}'" for k, v in data.items())
         query = f"UPDATE {table} SET {update_str}"

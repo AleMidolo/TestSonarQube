@@ -1,5 +1,4 @@
 import re
-
 class SplitSentence: 
 
     def split_sentences(self, sentences_string):

@@ -27,7 +27,7 @@ class Server:
         """
         Receive information containing address and content. If the address is on the whitelist, receive the content; otherwise, do not receive it
         :param info: dict, information dictionary containing address and content
-        :return: if successfully received, return the content of the infomation; otherwise, return False
+        :return: if successfully received, return the content of the information; otherwise, return False
         >>> server = Server()
         >>> server.add_white_list(88)
         >>> server.recv({"addr":88,"content":"abc"})

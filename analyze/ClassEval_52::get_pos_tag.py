@@ -1,8 +1,8 @@
 def get_pos_tag(self, sentence):
         """
-        Remove punctuations of the sentence and tokenizes the input sentence, mark the part of speech tag of each word.
-        :param sentence: a sentence str
-        :return: list, the part of speech tags for each word in the sentence.
+        移除句子中的标点符号并对输入句子进行分词，为每个单词标记词性标签。
+        :param sentence: 一个句子，str
+        :return: list，句子中每个单词的词性标签。
         >>> lemmatization = Lemmatization()
         >>> lemmatization.get_pos_tag("I am running in a race.")
         ['PRP', 'VBP', 'VBG', 'IN', 'DT', 'NN']

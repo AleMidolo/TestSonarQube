@@ -94,14 +94,7 @@ class ArgumentParser:
         if arg in self.types:
             arg_type = self.types[arg]
             try:
-                if arg_type == int:
-                    return int(value)
-                elif arg_type == float:
-                    return float(value)
-                elif arg_type == bool:
-                    return value.lower() in ('true', '1', 't', 'y', 'yes')
-                else:
-                    return value
+                return arg_type(value)
             except ValueError:
                 return value
         return value

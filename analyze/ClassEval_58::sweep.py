@@ -18,4 +18,4 @@ def sweep(self, x, y):
         if self.check_won(self.player_map):
             return True  # Player has won
         
-        return self.player_map
+        return self.player_map  # Game continues

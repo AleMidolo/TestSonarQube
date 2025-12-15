@@ -40,7 +40,7 @@ class Hotel:
         """
         if room_type not in self.available_rooms.keys():
             return False
-    
+
         if room_number <= self.available_rooms[room_type]:
             if room_type not in self.booked_rooms.keys():
                 self.booked_rooms[room_type] = {}
@@ -51,7 +51,7 @@ class Hotel:
             return self.available_rooms[room_type]
         else:
             return False
-    
+
     def check_in(self, room_type, room_number, name):
         """
         Check if the room of the specified type and number is booked by the person named name.
@@ -78,7 +78,7 @@ class Hotel:
                 self.booked_rooms[room_type].pop(name)
             else:
                 self.booked_rooms[room_type][name] -= room_number
-    
+
     def check_out(self, room_type, room_number):
         """
         Check out rooms, add number for specific type in available_rooms.

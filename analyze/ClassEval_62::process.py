@@ -22,7 +22,7 @@ class NLPDataProcessor:
         answer = []
         for string in string_list:
             string_split = string.split()
-            for word in string_split[:]:  # Iterate over a copy of the list
+            for word in string_split:
                 if word in stop_word_list:
                     string_split.remove(word)
             answer.append(string_split)

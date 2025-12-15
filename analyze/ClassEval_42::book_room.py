@@ -33,12 +33,14 @@ class Hotel:
         >>> hotel.booked_rooms
         {'single': {}}
         """
+        # Check if the room of the specified type and number is booked
         if room_type not in self.booked_rooms.keys():
             return False
         if name in self.booked_rooms[room_type]:
             if room_number > self.booked_rooms[room_type][name]:
                 return False
             elif room_number == self.booked_rooms[room_type][name]:
+                # Check in the room by removing it from the booked_rooms dictionary
                 self.booked_rooms[room_type].pop(name)
             else:
                 self.booked_rooms[room_type][name] -= room_number
@@ -95,7 +97,7 @@ class Hotel:
         >>> hotel.book_room('triple', 1, '客人 1')
         False
         """
-        if room_type not in self.available_rooms or self.available_rooms[room_type] < room_number:
+        if room_type not in self.available_rooms:
             return False
         if self.available_rooms[room_type] >= room_number:
             if room_type not in self.booked_rooms:
@@ -106,5 +108,8 @@ class Hotel:
                 self.booked_rooms[room_type][name] = room_number
             self.available_rooms[room_type] -= room_number
             return 'Success!'
-        remaining = self.available_rooms[room_type]
-        return remaining if remaining > 0 else False
+        else:
+            remaining = self.available_rooms[room_type]
+            if remaining > 0:
+                return remaining
+            return False

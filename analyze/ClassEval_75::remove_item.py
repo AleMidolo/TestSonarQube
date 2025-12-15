@@ -50,7 +50,6 @@ class ShoppingCart:
         :param item:string, 要减去数量的物品
         :param quantity:int, 要减去的数量
         :return:None
-        >>> shoppingcart = ShoppingCart()
         >>> shoppingcart.add_item("apple", 1, 5)
         >>> shoppingcart.remove_item("apple", 3)
         self.items = {"apple":{"price":1, "quantity":2}}

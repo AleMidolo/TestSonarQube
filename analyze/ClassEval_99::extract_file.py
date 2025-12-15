@@ -1,9 +1,9 @@
 def extract_file(self, file_name, output_path):
     """
-    从zip文件中提取指定名称的文件，并将其放置在指定路径中
-    :param file_name:字符串, 要解压缩的文件名
-    :param output_path:字符串, 解压后文件的位置
-    :return: True或False，表示提取操作是否成功
+    Extract a specified file from the zip file and place it in the specified path
+    :param file_name: string, The name of the file to extract
+    :param output_path: string, The location where the extracted file will be placed
+    :return: True or False, representing whether the extraction operation was successful
     >>> zfp = ZipFileProcessor("aaa.zip")
     >>> zfp.extract_file("bbb.txt", "result/aaa")
     """

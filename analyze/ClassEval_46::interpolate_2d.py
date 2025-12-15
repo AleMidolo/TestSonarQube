@@ -41,22 +41,17 @@ class Interpolation:
             # Find the surrounding points
             for i in range(len(x) - 1):
                 for j in range(len(y) - 1):
-                    if x[i] <= xi <= x[i + 1] and y[j] <= yi <= y[j + 1]:
+                    if x[i] <= xi <= x[i+1] and y[j] <= yi <= y[j+1]:
                         # Perform bilinear interpolation
                         z11 = z[i][j]
-                        z12 = z[i][j + 1]
-                        z21 = z[i + 1][j]
-                        z22 = z[i + 1][j + 1]
-                        z_interp.append(
-                            (z11 * (x[i + 1] - xi) * (y[j + 1] - yi) +
-                             z21 * (xi - x[i]) * (y[j + 1] - yi) +
-                             z12 * (x[i + 1] - xi) * (yi - y[j]) +
-                             z22 * (xi - x[i]) * (yi - y[j])) /
-                            ((x[i + 1] - x[i]) * (y[j + 1] - y[j]))
-                        )
-                        )
+                        z12 = z[i][j+1]
+                        z21 = z[i+1][j]
+                        z22 = z[i+1][j+1]
+                        z_interp_value = (z11 * (x[i+1] - xi) * (y[j+1] - yi) +
+                                          z21 * (xi - x[i]) * (y[j+1] - yi) +
+                                          z12 * (x[i+1] - xi) * (yi - y[j]) +
+                                          z22 * (xi - x[i]) * (yi - y[j])) / \
+                                          ((x[i+1] - x[i]) * (y[j+1] - y[j]))
+                        z_interp.append(z_interp_value)
                         break
-                else:
-                    continue
-                break
         return z_interp
