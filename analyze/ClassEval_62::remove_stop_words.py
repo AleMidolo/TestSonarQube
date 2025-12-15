@@ -28,7 +28,7 @@ class NLPDataProcessor:
         :param string_list: 字符串列表
         :param stop_word_list: 停用词列表
         :return: 不包含停用词的单词列表
-        >>> NLPDataProcessor().remove_stop_words(['This is a test.'], ['a', 'an', 'the'])
+        >>> NLPDataProcessor.process(['This is a test.'])
         [['This', 'is', 'test.']]
         """
         words_list = []

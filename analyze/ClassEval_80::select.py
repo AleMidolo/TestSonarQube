@@ -49,7 +49,7 @@ class SQLQueryBuilder:
             query += " WHERE " + \
                     ' AND '.join(f"{k}='{v}'" for k, v in where.items())
         return query
-    
+
     @staticmethod
     def select(table, columns='*', where=None):
         """

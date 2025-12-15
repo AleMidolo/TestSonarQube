@@ -45,6 +45,7 @@ def move(self, direction):
         new_box_col = new_player_col + delta_col
         if self.map[new_box_row][new_box_col] == '#' or (new_box_row, new_box_col) in self.boxes:
             return False  # Wall or another box collision
+
         # Move the box
         box_index = self.boxes.index((new_player_row, new_player_col))
         self.boxes[box_index] = (new_box_row, new_box_col)

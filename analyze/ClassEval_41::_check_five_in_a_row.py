@@ -69,16 +69,16 @@ class GomokuGame:
         >>> gomokuGame._check_five_in_a_row(5, 1, (1, 1))
         False
         """
-        count = 0
         dx, dy = direction
-        for step in range(-4, 1):
-            r = row + step * dx
-            c = col + step * dy
-            if 0 <= r < self.board_size and 0 <= c < self.board_size and self.board[r][c] == self.board[row][col]:
-                count += 1
+        count = 0
+        for step in range(5):
+            new_row = row + step * dx
+            new_col = col + step * dy
+            if 0 <= new_row < self.board_size and 0 <= new_col < self.board_size:
+                if self.board[new_row][new_col] == self.board[row][col]:
+                    count += 1
+                else:
+                    break
             else:
-                count = 0
-            
-            if count == 5:
-                return True
-        return False
+                break
+        return count == 5

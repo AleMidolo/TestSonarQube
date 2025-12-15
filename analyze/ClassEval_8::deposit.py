@@ -38,7 +38,7 @@ class BankAccount:
         """
         self.withdraw(amount)
         other_account.deposit(amount)
-    
+
     def deposit(self, amount):
         """
         将一定金额存入账户，增加账户余额，返回当前账户余额。

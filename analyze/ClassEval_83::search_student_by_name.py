@@ -7,12 +7,13 @@ def search_student_by_name(self, name):
         >>> processor.create_student_table()
         >>> result = processor.search_student_by_name("John")
         """
+        
         conn = sqlite3.connect(self.database_name)
         cursor = conn.cursor()
-
+        
         search_query = "SELECT * FROM students WHERE name = ?"
         cursor.execute(search_query, (name,))
         results = cursor.fetchall()
-
+        
         conn.close()
         return results

@@ -6,6 +6,7 @@ def vigenere_cipher(self, plaintext):
         >>> e = EncryptionUtils("key")
         >>> e.vigenere_cipher("abc")
         'kfa'
+
         """
         ciphertext = []
         key_length = len(self.key)

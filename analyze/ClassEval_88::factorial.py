@@ -21,6 +21,7 @@ class TriCalculator:
         :param x: int
         :param n: int
         :return: float
+        >>> tricalculator = TriCalculator()
         >>> tricalculator.taylor(60, 50)
         0.5000000000000001
         """
@@ -40,6 +41,7 @@ class TriCalculator:
         Calculate the sin value of the x-degree angle
         :param x: float
         :return: float
+        >>> tricalculator = TriCalculator()
         >>> tricalculator.sin(30)
         0.5
         """
@@ -59,6 +61,7 @@ class TriCalculator:
         Calculate the tan value of the x-degree angle
         :param x: float
         :return: float
+        >>> tricalculator = TriCalculator()
         >>> tricalculator.tan(45)
         1.0
         """
@@ -73,10 +76,13 @@ class TriCalculator:
         计算 a 的阶乘
         :param a: int
         :return: int
+        >>> tricalculator = TriCalculator()
         >>> tricalculator.factorial(5)
         120
         """
-        if a == 0 or a == 1:
+        if a == 0:
             return 1
-        else:
-            return a * self.factorial(a - 1)
+        result = 1
+        for i in range(1, a + 1):
+            result *= i
+        return result

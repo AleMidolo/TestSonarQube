@@ -61,9 +61,8 @@ class Order:
         True
         """
         for menu_item in self.menu:
-            if menu_item["dish"] == dish["dish"]:
-                if menu_item["count"] >= dish["count"]:
-                    self.selected_dishes.append(dish)
-                    menu_item["count"] -= dish["count"]
-                    return True
+            if menu_item["dish"] == dish["dish"] and menu_item["count"] >= dish["count"]:
+                self.selected_dishes.append(dish)
+                menu_item["count"] -= dish["count"]
+                return True
         return False

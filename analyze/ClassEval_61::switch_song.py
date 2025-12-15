@@ -16,5 +16,8 @@ def switch_song(self):
                 return True
             else:
                 return False
+        elif self.playlist:
+            self.current_song = self.playlist[0]
+            return True
         else:
             return False

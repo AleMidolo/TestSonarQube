@@ -86,4 +86,7 @@ class ArrangementCalculator:
         64
 
         """
-        return sum(ArrangementCalculator.count(n, m) for m in range(1, n + 1))
+        total_count = 0
+        for m in range(1, n + 1):
+            total_count += ArrangementCalculator.count(n, m)
+        return total_count

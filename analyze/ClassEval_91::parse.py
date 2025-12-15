@@ -35,7 +35,7 @@ class UrlPath:
 
         segment_str = path.strip('\/')
         return segment_str
-
+    
     def parse(self, path, charset):
         """
         解析给定的路径字符串并填充 UrlPath 中的段列表。

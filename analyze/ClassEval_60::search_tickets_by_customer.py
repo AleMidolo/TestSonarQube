@@ -7,7 +7,7 @@ def search_tickets_by_customer(self, customer_name):
     >>> ticket_db.create_table()
     >>> ticket_db.insert_ticket("Movie A", "Theater 1", "A1", "John Doe")
     >>> result = ticket_db.search_tickets_by_customer("John Doe")
-    len(result) == 1
+    len(result) = 1
     """
     
     self.cursor.execute('''

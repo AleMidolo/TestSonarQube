@@ -12,6 +12,7 @@ class KappaCalculator:
         >>> KappaCalculator.kappa([[2, 1, 1], [1, 2, 1], [1, 1, 2]], 3)
         0.25
         """
+    
         dataMat = np.mat(testData)
         P0 = 0.0
         for i in range(k):
@@ -34,23 +35,24 @@ class KappaCalculator:
         :param n: int, 评分者数量
         :return: float, Fleiss kappa 值
         >>> KappaCalculator.fleiss_kappa([[0, 0, 0, 0, 14],
-                                         [0, 2, 6, 4, 2],
-                                         [0, 0, 3, 5, 6],
-                                         [0, 3, 9, 2, 0],
-                                         [2, 2, 8, 1, 1],
-                                         [7, 7, 0, 0, 0],
-                                         [3, 2, 6, 3, 0],
-                                         [2, 5, 3, 2, 2],
-                                         [6, 5, 2, 1, 0],
-                                         [0, 2, 2, 3, 7]], 10, 5, 14)
+        >>>                              [0, 2, 6, 4, 2],
+        >>>                              [0, 0, 3, 5, 6],
+        >>>                              [0, 3, 9, 2, 0],
+        >>>                              [2, 2, 8, 1, 1],
+        >>>                              [7, 7, 0, 0, 0],
+        >>>                              [3, 2, 6, 3, 0],
+        >>>                              [2, 5, 3, 2, 2],
+        >>>                              [6, 5, 2, 1, 0],
+        >>>                              [0, 2, 2, 3, 7]], 10, 5, 14)
         0.20993070442195522
         """
-        # Calculate the proportion of ratings for each category
+        # Calculate the proportion of agreement for each category
         p = np.sum(testData, axis=0) / (N * n)
+        P = np.sum(p**2)
+        
         # Calculate the overall agreement
-        P = np.sum((np.sum(testData, axis=1) * (np.sum(testData, axis=1) - 1))) / (N * n * (n - 1))
-        # Calculate the expected agreement
-        Pe = np.sum(p ** 2)
+        P_bar = np.mean(np.sum(testData**2, axis=1) / (n**2))
+        
         # Calculate Fleiss' Kappa
-        kappa_value = (P - Pe) / (1 - Pe)
+        kappa_value = (P_bar - P) / (1 - P)
         return kappa_value

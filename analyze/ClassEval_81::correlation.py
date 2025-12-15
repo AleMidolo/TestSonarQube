@@ -12,6 +12,7 @@ class Statistics3:
         2.5
     
         """
+    
         sorted_data = sorted(data)
         n = len(sorted_data)
         if n % 2 == 1:
@@ -30,11 +31,13 @@ class Statistics3:
             [3]
     
             """
+    
         counts = {}
         for value in data:
             counts[value] = counts.get(value, 0) + 1
         max_count = max(counts.values())
-        mode_values = [value for value, count in counts.items() if count == max_count]
+        mode_values = [value for value,
+                        count in counts.items() if count == max_count]
         return mode_values
     
     @staticmethod
@@ -48,6 +51,7 @@ class Statistics3:
             2.0
     
             """
+    
         if len(data) == 0:
             return None
         return sum(data) / len(data)
@@ -63,6 +67,7 @@ class Statistics3:
             [[1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]]
     
             """
+    
         matrix = []
         for i in range(len(data[0])):
             row = []
@@ -85,6 +90,7 @@ class Statistics3:
             1.0
     
             """
+    
         n = len(data)
         if n < 2:
             return None
@@ -103,6 +109,7 @@ class Statistics3:
             [-1.161895003862225, -0.3872983346207417, 0.3872983346207417, 1.161895003862225]
     
             """
+    
         mean = Statistics3.mean(data)
         std_deviation = Statistics3.standard_deviation(data)
         if std_deviation is None or std_deviation == 0:
@@ -122,7 +129,7 @@ class Statistics3:
 
         """
         if len(x) != len(y):
-            raise ValueError("Lists must have the same length.")
+            raise ValueError("Lists must be of the same length.")
         mean_x = Statistics3.mean(x)
         mean_y = Statistics3.mean(y)
         covariance = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(len(x)))

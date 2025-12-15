@@ -87,33 +87,28 @@ class NumberWordFormatter:
         if not x.isdigit():
             return ""
         
-        x = x.split('.')
-        whole_part = x[0]
-        decimal_part = x[1] if len(x) > 1 else ''
+        x = x.split(".")[0]  # Ignore decimal part for this implementation
+        n = len(x)
+        if n == 0:
+            return "ZERO ONLY"
         
         words = []
-        length = len(whole_part)
+        index = 0
         
-        for i in range(length):
-            if length - i - 1 > 2:
-                # Handle thousands, millions, billions
-                part = whole_part[max(0, length - i - 3):length - i]
-                if part:
-                    words.append(self.trans_three(part))
-                    words.append(self.parse_more((length - i - 1) // 3))
-            elif length - i - 1 == 2:
-                # Handle hundreds
-                part = whole_part[max(0, length - i - 3):length - i]
-                if part:
-                    words.append(self.trans_three(part))
-            elif length - i - 1 == 1:
-                # Handle tens and units
-                part = whole_part[max(0, length - i - 2):length - i]
-                if part:
-                    words.append(self.trans_two(part))
+        while n > 0:
+            n_part = x[max(0, n - 3):n]
+            if n_part:
+                if index > 0:
+                    words.append(self.parse_more(index))
+                if len(n_part) == 3:
+                    words.append(self.trans_three(n_part))
+                elif len(n_part) == 2:
+                    words.append(self.trans_two(n_part))
+                elif len(n_part) == 1:
+                    words.append(self.NUMBER[int(n_part)])
+            n -= 3
+            index += 1
         
+        words.reverse()
         result = " AND ".join(words).strip()
-        if decimal_part:
-            result += " POINT " + " ".join(self.NUMBER[int(digit)] for digit in decimal_part)
-        
-        return result + " ONLY" if result else ""
+        return result + " ONLY"
