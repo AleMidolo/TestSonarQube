@@ -34,7 +34,7 @@ class IPAddress:
             return '.'.join(binary_octets)
         else:
             return ''
-    
+
     def is_valid(self):
         """
         Judge whether the IP address is valid, that is, whether the IP address is composed of four Decimal digits separated by '.'. Each digit is greater than or equal to 0 and less than or equal to 255

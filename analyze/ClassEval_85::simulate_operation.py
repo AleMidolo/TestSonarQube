@@ -104,5 +104,5 @@ class Thermostat:
                 self.current_temperature += 1  # Simulate heating
             else:
                 self.current_temperature -= 1  # Simulate cooling
-            time.sleep(0.1)  # Simulate time passing
+            time.sleep(0.5)  # Simulate time taken to change temperature
         return int(time.time() - start_time)

@@ -83,7 +83,8 @@ class TriCalculator:
         >>> tricalculator.taylor_sin(pi/6, 50)
         0.49999999999999994
         """
-        a = 0
-        for k in range(n):
-            a += ((-1) ** k) * (x ** (2 * k + 1)) / self.factorial(2 * k + 1)
+        a = x
+        for k in range(1, n):
+            term = ((-1) ** k) * (x ** (2 * k + 1)) / self.factorial(2 * k + 1)
+            a += term
         return a

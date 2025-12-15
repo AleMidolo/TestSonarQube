@@ -20,7 +20,7 @@ def calculate_hand_value(self, hand):
             value += 10
         elif rank == 'A':
             aces += 1
-            value += 11  # Initially count Aces as 11
+            value += 11  # Initially count Ace as 11
         else:
             value += int(rank)  # Add the numeric value of the card
     

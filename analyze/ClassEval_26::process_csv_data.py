@@ -14,7 +14,6 @@ def process_csv_data(self, N, save_file_name):
     >>> csvProcessor.read_csv('read_test_process.csv')
     (['a', 'b', 'c', 'd'], [['HELLO']])
     """
-    
     try:
         title, data = self.read_csv(save_file_name)
         new_data = [[row[N].upper()] for row in data if len(row) > N]

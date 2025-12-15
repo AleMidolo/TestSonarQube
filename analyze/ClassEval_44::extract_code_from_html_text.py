@@ -16,6 +16,7 @@ def extract_code_from_html_text(self, html_text):
     >>>    </html>)
     ["print('Hello, world!')", 'for i in range(5):\n                print(i)']
     """
+    
     if html_text is None or len(html_text) == 0:
         return []
     

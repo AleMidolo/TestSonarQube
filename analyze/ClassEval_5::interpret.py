@@ -6,6 +6,7 @@ class AutomaticGuitarSimulator:
         """
         self.play_text = text
 
+
     def display(self, key, value):
         """
         Print out chord and play tune with following format: Normal Guitar Playing -- Chord: %s, Play Tune: %s
@@ -15,8 +16,11 @@ class AutomaticGuitarSimulator:
         >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
         >>> context.display("C", "53231323")
         Normal Guitar Playing -- Chord: C, Play Tune: 53231323
+    
         """
+    
         return "Normal Guitar Playing -- Chord: %s, Play Tune: %s" % (key, value)
+    
 
     def interpret(self, display=False):
         """
@@ -26,6 +30,7 @@ class AutomaticGuitarSimulator:
         >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
         >>> play_list = context.interpret(display = False)
         [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]
+
         """
         if not self.play_text.strip():
             return []

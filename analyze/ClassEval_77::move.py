@@ -8,9 +8,10 @@ def move(self, direction):
         self.positions = [(51, 51), (50, 50)]
         self.score = 10
         """
+        
         new_head = (self.positions[0][0] + direction[0] * self.BLOCK_SIZE, 
                      self.positions[0][1] + direction[1] * self.BLOCK_SIZE)
-
+        
         if new_head == self.food_position:
             self.eat_food()
         elif new_head in self.positions:

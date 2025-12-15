@@ -83,15 +83,13 @@ class ClassRegistrationSystem:
         class_enrollment = {}
         for student in self.students:
             if student["major"] == major:
-                student_classes = self.students_registration_classes.get(student["name"], [])
-                for class_name in student_classes:
-                    if class_name in class_enrollment:
-                        class_enrollment[class_name] += 1
-                    else:
-                        class_enrollment[class_name] = 1
-        
+                name = student["name"]
+                if name in self.students_registration_classes:
+                    for class_name in self.students_registration_classes[name]:
+                        if class_name in class_enrollment:
+                            class_enrollment[class_name] += 1
+                        else:
+                            class_enrollment[class_name] = 1
         if not class_enrollment:
             return None
-        
-        most_popular_class = max(class_enrollment, key=class_enrollment.get)
-        return most_popular_class
+        return max(class_enrollment, key=class_enrollment.get)

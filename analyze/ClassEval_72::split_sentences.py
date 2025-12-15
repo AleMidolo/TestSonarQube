@@ -9,4 +9,4 @@ def split_sentences(self, text):
         """
         pattern = r'[.!?][\s]+'
         sentences = re.split(pattern, text)
-        return [sentence.strip() for sentence in sentences if sentence]  # Remove leading/trailing spaces
+        return [sentence.rstrip(' .!?') for sentence in sentences if sentence]

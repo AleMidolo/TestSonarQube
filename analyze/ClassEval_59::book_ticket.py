@@ -76,8 +76,8 @@ class MovieBookingSystem:
             if movie['name'].lower() == name.lower():
                 for seat in seats_to_book:
                     row, col = seat
-                    if movie['seats'][row][col] == 0:
-                        movie['seats'][row][col] = 1  # Mark seat as booked
+                    if movie['seats'][row, col] == 0:
+                        movie['seats'][row, col] = 1  # Mark seat as booked
                     else:
                         return 'Booking failed.'
                 return 'Booking success.'

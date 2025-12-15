@@ -8,7 +8,6 @@ class GomokuGame:
         self.board = [[' ' for _ in range(board_size)] for _ in range(board_size)]
         self.current_player = 'X'
 
-
     def check_winner(self):
         """
         Checks if there is a winner by looking for five in a row in all directions (horizontal, vertical, diagonal).
@@ -60,7 +59,7 @@ class GomokuGame:
                 return False
             count += 1
         return count == 5
-    
+
     def make_move(self, row, col):
         """
         Makes a move at the given row and column.

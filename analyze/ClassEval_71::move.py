@@ -33,19 +33,18 @@ def move(self, direction):
     if direction not in direction_map:
         return False
 
-    delta_row, delta_col = direction_map[direction]
-    new_player_row = self.player_row + delta_row
-    new_player_col = self.player_col + delta_col
+    move_row, move_col = direction_map[direction]
+    new_player_row = self.player_row + move_row
+    new_player_col = self.player_col + move_col
 
     if self.map[new_player_row][new_player_col] == '#':
         return False  # Wall collision
 
     if (new_player_row, new_player_col) in self.boxes:
-        new_box_row = new_player_row + delta_row
-        new_box_col = new_player_col + delta_col
+        new_box_row = new_player_row + move_row
+        new_box_col = new_player_col + move_col
         if self.map[new_box_row][new_box_col] == '#' or (new_box_row, new_box_col) in self.boxes:
             return False  # Wall or another box collision
-
         # Move the box
         box_index = self.boxes.index((new_player_row, new_player_col))
         self.boxes[box_index] = (new_box_row, new_box_col)

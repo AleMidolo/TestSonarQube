@@ -42,7 +42,7 @@ class ExcelProcessor:
         new_file_name = save_file_name.split('.')[0] + '_process.xlsx'
         success = self.write_excel(new_data, new_file_name)
         return success, new_file_name
-
+    
     def write_excel(self, data, file_name):
         """
         Write data to the specified Excel file
