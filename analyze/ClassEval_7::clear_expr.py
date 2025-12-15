@@ -41,4 +41,4 @@ class BalancedBrackets:
         >>> b.expr
         '()'
         """
-        self.expr = ''.join([ch for ch in self.expr if ch in self.left_brackets + self.right_brackets])
+        self.expr = ''.join([char for char in self.expr if char in self.left_brackets + self.right_brackets])

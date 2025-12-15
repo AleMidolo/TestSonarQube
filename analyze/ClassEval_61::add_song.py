@@ -7,5 +7,4 @@ def add_song(self, song):
     >>> musicPlayer.playlist
     ['song1']
     """
-    
     self.playlist.append(song)

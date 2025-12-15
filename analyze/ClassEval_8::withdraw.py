@@ -35,7 +35,7 @@ class BankAccount:
         """
         self.withdraw(amount)
         other_account.deposit(amount)
-    
+
     def withdraw(self, amount):
         """
         Preleva un certo importo dal conto, diminuendo il saldo del conto, restituisce il saldo attuale del conto.

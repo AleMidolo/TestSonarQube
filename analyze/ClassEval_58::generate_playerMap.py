@@ -26,33 +26,14 @@ class MinesweeperGame:
         for num in range(self.k):
             x = random.randint(0, self.n-1)
             y = random.randint(0, self.n-1)
+            while arr[y][x] == 'X':  # Ensure we don't place a mine on an existing mine
+                x = random.randint(0, self.n-1)
+                y = random.randint(0, self.n-1)
             arr[y][x] = 'X'
-            if (x >= 0 and x <= self.n-2) and (y >= 0 and y <= self.n-1):
-                if arr[y][x+1] != 'X':
-                    arr[y][x+1] += 1
-            if (x >= 1 and x <= self.n-1) and (y >= 0 and y <= self.n-1):
-                if arr[y][x-1] != 'X':
-                    arr[y][x-1] += 1
-            if (x >= 1 and x <= self.n-1) and (y >= 1 and y <= self.n-1):
-                if arr[y-1][x-1] != 'X':
-                    arr[y-1][x-1] += 1
-    
-            if (x >= 0 and x <= self.n-2) and (y >= 1 and y <= self.n-1):
-                if arr[y-1][x+1] != 'X':
-                    arr[y-1][x+1] += 1
-            if (x >= 0 and x <= self.n-1) and (y >= 1 and y <= self.n-1):
-                if arr[y-1][x] != 'X':
-                    arr[y-1][x] += 1
-    
-            if (x >= 0 and x <= self.n-2) and (y >= 0 and y <= self.n-2):
-                if arr[y+1][x+1] != 'X':
-                    arr[y+1][x+1] += 1
-            if (x >= 1 and x <= self.n-1) and (y >= 0 and y <= self.n-2):
-                if arr[y+1][x-1] != 'X':
-                    arr[y+1][x-1] += 1
-            if (x >= 0 and x <= self.n-1) and (y >= 0 and y <= self.n-2):
-                if arr[y+1][x] != 'X':
-                    arr[y+1][x] += 1
+            for i in range(max(0, y-1), min(self.n, y+2)):
+                for j in range(max(0, x-1), min(self.n, x+2)):
+                    if arr[i][j] != 'X':
+                        arr[i][j] += 1
         return arr
     
     def check_won(self, map):

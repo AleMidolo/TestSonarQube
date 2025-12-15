@@ -35,7 +35,7 @@ class UrlPath:
 
         segment_str = path.strip('\/')
         return segment_str
-    
+
     def parse(self, path, charset):
         """
         Analizza una data stringa di percorso e popola la lista dei segmenti in UrlPath.
@@ -47,5 +47,4 @@ class UrlPath:
         url_path.segments = ['foo', 'bar']
         """
         decoded_path = urllib.parse.unquote(path, encoding=charset)
-        segments = decoded_path.strip('/').split('/')
-        self.segments = [self.fix_path(segment) for segment in segments if segment]
+        self.segments = [self.fix_path(segment) for segment in decoded_path.split('/') if segment]

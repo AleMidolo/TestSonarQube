@@ -53,7 +53,7 @@ class Calculator:
             result = self.operators[operator](operand1, operand2)
             operand_stack.append(result)
         return operand_stack, operator_stack
-    
+
     def calculate(self, expression):
         """
         Calcola il valore di un'espressione data
@@ -67,19 +67,18 @@ class Calculator:
         operator_stack = []
         i = 0
         while i < len(expression):
-            char = expression[i]
-            if char.isdigit():
+            if expression[i].isdigit():
                 num = 0
                 while i < len(expression) and expression[i].isdigit():
                     num = num * 10 + int(expression[i])
                     i += 1
                 operand_stack.append(num)
                 continue
-            elif char in self.operators:
+            elif expression[i] in self.operators:
                 while (operator_stack and 
-                       self.precedence(operator_stack[-1]) >= self.precedence(char)):
+                       self.precedence(operator_stack[-1]) >= self.precedence(expression[i])):
                     operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
-                operator_stack.append(char)
+                operator_stack.append(expression[i])
             i += 1
         
         while operator_stack:

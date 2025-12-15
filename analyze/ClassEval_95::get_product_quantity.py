@@ -10,7 +10,4 @@ def get_product_quantity(self, product_id):
         >>> warehouse.get_product_quantity(2)
         False
         """
-        if product_id in self.inventory:
-            return self.inventory[product_id]['quantity']
-        else:
-            return False
+        return self.inventory[product_id]['quantity'] if product_id in self.inventory else False

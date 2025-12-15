@@ -50,7 +50,6 @@ class ShoppingCart:
         :param item:string, Elemento da sottrarre in quantità
         :param quantity:int, Quantità da sottrarre
         :return:None
-        >>> shoppingcart = ShoppingCart()
         >>> shoppingcart.add_item("apple", 1, 5)
         >>> shoppingcart.remove_item("apple", 3)
         self.items = {"apple":{"price":1, "quantity":2}}

@@ -95,9 +95,9 @@ class AssessmentSystem:
         ['student 1']
         """
         failed_students = []
-        for name, student in self.students.items():
+        for student in self.students.values():
             for score in student['courses'].values():
                 if score < 60:
-                    failed_students.append(name)
+                    failed_students.append(student['name'])
                     break
         return failed_students

@@ -77,12 +77,11 @@ class SQLGenerator:
         >>> sql.select(['field1', 'field2'], 'filed3 = value1')
         'SELECT field1, field2 FROM table1 WHERE filed3 = value1;'
         """
-        if fields is None:
-            fields = '*'
+        if fields:
+            fields_clause = ", ".join(fields)
+            sql = f"SELECT {fields_clause} FROM {self.table_name}"
         else:
-            fields = ', '.join(fields)
-        
-        sql = f"SELECT {fields} FROM {self.table_name}"
+            sql = f"SELECT * FROM {self.table_name}"
         
         if condition:
             sql += f" WHERE {condition}"

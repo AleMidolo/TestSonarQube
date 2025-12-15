@@ -4,7 +4,6 @@ def add_table(self, data):
     :param data: lista di liste, i dati per popolare la tabella.
     :return: bool, True se la tabella è stata aggiunta con successo, False altrimenti.
     """
-    
     try:
         doc = Document(self.file_path)
         table = doc.add_table(rows=len(data), cols=len(data[0]))

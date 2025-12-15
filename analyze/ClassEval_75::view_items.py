@@ -46,7 +46,7 @@ class ShoppingCart:
         >>> shoppingcart.total_price()
         11.0
         """
-        return sum([item['quantity'] * item['price'] for item in self.items.values()])
+        return sum(item['quantity'] * item['price'] for item in self.items.values())
 
     def view_items(self) -> dict:
         """

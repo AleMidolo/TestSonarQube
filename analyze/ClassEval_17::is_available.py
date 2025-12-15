@@ -100,6 +100,6 @@ class CalendarUtil:
         False
         """
         for event in self.events:
-            if (start_time < event['end_time'] and end_time > event['start_time']):
+            if not (end_time <= event['start_time'] or start_time >= event['end_time']):
                 return False
         return True

@@ -76,7 +76,7 @@ class PageUtil:
         has_next = page_number < self.total_pages
         data = self.get_page(page_number)
         
-        return {
+        page_info = {
             "current_page": page_number,
             "per_page": self.page_size,
             "total_pages": self.total_pages,
@@ -85,3 +85,4 @@ class PageUtil:
             "has_next": has_next,
             "data": data
         }
+        return page_info

@@ -96,18 +96,14 @@ class NumberWordFormatter:
             words.append("MINUS")
             x = -x
         
-        thousands = ["", "THOUSAND", "MILLION", "BILLION"]
-        idx = 0
+        thousands = x // 1000
+        if thousands > 0:
+            words.append(self.trans_three(str(thousands)))
+            words.append(self.parse_more(1))
         
-        while x > 0:
-            part = x % 1000
-            if part > 0:
-                words_part = self.trans_three(str(part).zfill(3))
-                if thousands[idx]:
-                    words_part += " " + thousands[idx]
-                words.append(words_part)
-            x //= 1000
-            idx += 1
+        hundreds = (x % 1000)
+        if hundreds > 0:
+            words.append(self.trans_three(str(hundreds)))
         
-        words.reverse()
-        return " AND ".join(words).strip() + " ONLY"
+        words.append("ONLY")
+        return " ".join(words).strip()

@@ -32,17 +32,8 @@ class HtmlUtil:
         :param html_text: string, html text
         :return: the list of code
         >>>htmlutil = HtmlUtil()
-        >>>htmlutil.extract_code_from_html_text(<html>
-        >>> <body>
-        >>>    <h1>Title</h1>
-        >>>    <p>This is a paragraph.</p>
-        >>>    <pre>print('Hello, world!')</pre>
-        >>>    <p>Another paragraph.</p>
-        >>>    <pre><code>for i in range(5):
-        >>>    print(i)</code></pre>
-        >>>    </body>
-        >>>    </html>)
-        ["print('Hello, world!')", 'for i in range(5):\n                print(i)']
+        >>>htmlutil.extract_code_from_html_text('<html><body><h1>Title</h1><p>This is a paragraph.</p><pre>print(\'Hello, world!\')</pre><p>Another paragraph.</p><pre><code>for i in range(5):\n    print(i)</code></pre></body></html>')
+        ["print('Hello, world!')", 'for i in range(5):\n    print(i)']
         """
         text_with_code_tag = self.format_line_html_text(html_text)
     
@@ -66,25 +57,14 @@ class HtmlUtil:
         :param html_text:string
         :return:string
         >>>htmlutil = HtmlUtil()
-        >>>htmlutil.format_line_html_text(<html>
-        >>> <body>
-        >>>    <h1>Titolo</h1>
-        >>>    <p>Questo è un paragrafo.</p>
-        >>>    <pre>print('Ciao, mondo!')</pre>
-        >>>    <p>Un altro paragrafo.</p>
-        >>>    <pre><code>for i in range(5):
-        >>>    print(i)</code></pre>
-        >>>    </body>
-        >>>    </html>)
-        Titolo
-        Questo è un paragrafo.
-        -CODE-
-        Un altro paragrafo.
-        -CODE-
+        >>>htmlutil.format_line_html_text('<html><body><h1>Titolo</h1><p>Questo è un paragrafo.</p><pre>print(\'Ciao, mondo!\')</pre><p>Un altro paragrafo.</p><pre><code>for i in range(5):\n    print(i)</code></pre></body></html>')
+        'Titolo\nQuesto è un paragrafo.\n-CODE-\nUn altro paragrafo.\n-CODE-\n'
         """
         soup = BeautifulSoup(html_text, 'lxml')
-        text = soup.get_text()
-        code_tags = soup.find_all(['pre', 'code'])
-        for tag in code_tags:
-            text = text.replace(tag.get_text(), self.CODE_MARK)
-        return self.__format_line_feed(text)
+        text_parts = []
+        for element in soup.body.find_all(True):  # Find all tags
+            if element.name in ['pre', 'code']:
+                text_parts.append(self.CODE_MARK)
+            else:
+                text_parts.append(element.get_text())
+        return self.__format_line_feed('\n'.join(text_parts))

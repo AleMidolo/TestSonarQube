@@ -38,21 +38,26 @@ def move(self, direction):
     new_player_col = self.player_col + move_col
 
     if self.map[new_player_row][new_player_col] == '#':
-        return False  # Wall
+        return False  # Wall collision
 
-    if (new_player_row, new_player_col) in self.boxes:
-        new_box_row = new_player_row + move_row
-        new_box_col = new_player_col + move_col
-        if self.map[new_box_row][new_box_col] == '#' or (new_box_row, new_box_col) in self.boxes:
-            return False  # Wall or another box
-
-        # Move the box
-        box_index = self.boxes.index((new_player_row, new_player_col))
-        self.boxes[box_index] = (new_box_row, new_box_col)
-
-    # Move the player
-    self.player_row = new_player_row
-    self.player_col = new_player_col
+    if self.map[new_player_row][new_player_col] == ' ':
+        # Move player to empty space
+        self.player_row = new_player_row
+        self.player_col = new_player_col
+    elif self.map[new_player_row][new_player_col] == 'X':
+        # Check if the box can be moved
+        box_new_row = new_player_row + move_row
+        box_new_col = new_player_col + move_col
+        
+        if self.map[box_new_row][box_new_col] in [' ', 'G']:
+            # Move the box
+            self.boxes.remove((new_player_row, new_player_col))
+            if self.map[box_new_row][box_new_col] == 'G':
+                self.boxes.append((box_new_row, box_new_col))
+            else:
+                self.boxes.append((box_new_row, box_new_col))
+            self.player_row = new_player_row
+            self.player_col = new_player_col
 
     # Check for win condition
     return self.check_win()

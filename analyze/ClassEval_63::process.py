@@ -38,7 +38,6 @@ class NLPDataProcessor2:
         top_5_word_frequency = dict(list(sorted_word_frequency.items())[:5])
         return top_5_word_frequency
     
-
     def process(self, string_list):
         """
         mantiene solo le lettere inglesi e gli spazi nella stringa, quindi converte la stringa in minuscolo, e poi divide la stringa in una lista di parole. Calcola la frequenza delle parole di ciascuna parola nella lista di parole e ordina il dizionario della frequenza delle parole per valore in ordine decrescente.

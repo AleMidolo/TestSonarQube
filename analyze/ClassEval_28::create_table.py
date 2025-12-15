@@ -12,7 +12,7 @@ def create_table(self, table_name, key1, key2):
 
         create_table_query = f"""
         CREATE TABLE IF NOT EXISTS {table_name} (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY,
             {key1} TEXT,
             {key2} INTEGER
         )

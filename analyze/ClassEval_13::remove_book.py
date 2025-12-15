@@ -15,7 +15,7 @@ class BookManagement:
             self.inventory[title] += quantity
         else:
             self.inventory[title] = quantity
-
+    
     def view_inventory(self):
         """
         Get the inventory of the Book Management.
@@ -27,7 +27,7 @@ class BookManagement:
         {'book1': 1, 'book2': 1}
         """
         return self.inventory
-
+    
     def view_book_quantity(self, title):
         """
         Get the quantity of a book.
@@ -54,7 +54,7 @@ class BookManagement:
         if quantity <= 0:
             raise ValueError("Quantity must be greater than zero.")
         if self.inventory[title] < quantity:
-            raise ValueError("Not enough copies to remove.")
+            raise ValueError("Not enough quantity to remove.")
         
         self.inventory[title] -= quantity
         if self.inventory[title] == 0:

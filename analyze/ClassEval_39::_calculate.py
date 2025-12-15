@@ -159,13 +159,15 @@ class ExpressionCalculator:
         5.0
 
         """
+        first_value = Decimal(first_value)
+        second_value = Decimal(second_value)
         if current_op == '+':
-            return Decimal(first_value) + Decimal(second_value)
+            return first_value + second_value
         elif current_op == '-':
-            return Decimal(first_value) - Decimal(second_value)
+            return first_value - second_value
         elif current_op == '*':
-            return Decimal(first_value) * Decimal(second_value)
+            return first_value * second_value
         elif current_op == '\/':
-            return Decimal(first_value) / Decimal(second_value)
+            return first_value / second_value
         elif current_op == '%':
-            return Decimal(first_value) % Decimal(second_value)
+            return first_value % second_value
