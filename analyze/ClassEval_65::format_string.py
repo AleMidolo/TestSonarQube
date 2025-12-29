@@ -17,11 +17,16 @@ def format_string(self, x):
         words.append('MINUS')
         x = -x
     thousands = ['', 'THOUSAND', 'MILLION', 'BILLION']
-    i = 0
+    index = 0
     while x > 0:
-        if x % 1000 != 0:
-            words.append(self.trans_three(str(x % 1000).zfill(3)) + (' ' + thousands[i] if thousands[i] else ''))
+        part = x % 1000
+        if part > 0:
+            if part < 100:
+                words.append(self.trans_two(str(part).zfill(2)))
+            else:
+                words.append(self.trans_three(str(part).zfill(3)))
+            words.append(thousands[index])
         x //= 1000
-        i += 1
+        index += 1
     words.reverse()
     return ' '.join(words).strip() + ' ONLY'

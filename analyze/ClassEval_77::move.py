@@ -1,6 +1,6 @@
 def move(self, direction):
     """
-        Move the snake in the specified direction. If the new position of the snake's head is equal to the food position, then eat the food; if the position of the snake's head is equal to the position of its body, then reset; otherwise, increase its length by one.
+        Move the snake in the specified direction. If the new head position of the snake is equal to the food position, then eat the food; if the head position is equal to the position of its body, then reset; otherwise, increase its length by one.
         :param direction: tuple, representing the direction of movement (x, y).
         :return: None
         >>> snake = Snake(100, 100, 1, (51, 51))

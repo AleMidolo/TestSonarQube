@@ -14,9 +14,7 @@ def palindromic_string(self):
         mirror = 2 * C - i
         if R > i:
             L[i] = min(R - i, L[mirror])
-        else:
-            L[i] = 0
-        while transformed_string[i + 1 + L[i]] == transformed_string[i - 1 - L[i]]:
+        while transformed_string[i + L[i] + 1] == transformed_string[i - L[i] - 1]:
             L[i] += 1
         if i + L[i] > R:
             C, R = (i, i + L[i])
