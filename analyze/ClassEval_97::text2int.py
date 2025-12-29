@@ -10,15 +10,15 @@ def text2int(self, textnum):
     if not self.is_valid_input(textnum):
         raise ValueError('Invalid input')
     textnum = textnum.replace('-', ' ')
-    current = result = 0
+    current = 0
+    total = 0
     for word in textnum.split():
         if word in self.numwords:
             scale, increment = self.numwords[word]
             current += increment
             if scale > 1:
-                current *= scale
-                result += current
+                total += current * scale
                 current = 0
-        elif word == 'and':
-            continue
-    return str(result + current)
+        else:
+            raise ValueError(f"Word '{word}' not recognized")
+    return str(total + current)
