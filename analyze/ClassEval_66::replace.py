@@ -8,8 +8,6 @@ def replace(self, string):
         'ABC'
 
         """
-    if not string:
-        return string
     result = []
     i = 0
     n = len(string)
@@ -35,7 +33,7 @@ def replace(self, string):
                             result.append(chr(code_point))
                             i = j + 1
                             continue
-                    except (ValueError, OverflowError):
+                    except ValueError:
                         pass
         result.append(string[i])
         i += 1

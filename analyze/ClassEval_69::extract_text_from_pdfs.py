@@ -9,10 +9,7 @@ def extract_text_from_pdfs(self):
     pdf_texts = []
     for reader in self.readers:
         text = ''
-        for page_num in range(len(reader.pages)):
-            page = reader.pages[page_num]
-            page_text = page.extract_text()
-            if page_text:
-                text += page_text + '\n'
-        pdf_texts.append(text.strip())
+        for page in reader.pages:
+            text += page.extract_text()
+        pdf_texts.append(text)
     return pdf_texts

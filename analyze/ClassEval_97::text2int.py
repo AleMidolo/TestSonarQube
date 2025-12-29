@@ -8,11 +8,11 @@ def text2int(self, textnum):
         "32"
         """
     if not self.is_valid_input(textnum):
-        return textnum
-    current = 0
-    result = 0
+        return None
     textnum = textnum.lower().replace('-', ' ')
     words = textnum.split()
+    current = 0
+    result = 0
     for word in words:
         if word in self.ordinal_words:
             current += self.ordinal_words[word]

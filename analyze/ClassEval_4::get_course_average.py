@@ -4,11 +4,12 @@ def get_course_average(self, course):
         :param course: str, nome del corso
         :return: float, punteggi medi di questo corso se qualcuno ha un punteggio di questo corso, o None se nessuno ha registrazioni.
         """
-    scores = []
+    total_score = 0
+    count = 0
     for student in self.students.values():
         if course in student['courses']:
-            scores.append(student['courses'][course])
-    if scores:
-        return sum(scores) / len(scores)
-    else:
+            total_score += student['courses'][course]
+            count += 1
+    if count == 0:
         return None
+    return total_score / count
