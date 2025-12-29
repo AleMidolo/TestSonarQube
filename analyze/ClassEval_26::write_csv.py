@@ -2,7 +2,7 @@ def write_csv(self, data, file_name):
     """
         Write data to a csv file.
         :param file_name: str, name of the csv file
-        :return:int, if success return 1, or 0 otherwise
+        :return:int, return 1 if successful, otherwise 0
         >>> csvProcessor = CSVProcessor()
         >>> csvProcessor.write_csv([['a', 'b', 'c', 'd'], ['1', '2', '3', '4']], 'write_test.csv')
         1

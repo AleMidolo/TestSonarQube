@@ -11,4 +11,4 @@ def correlation_matrix(data):
         """
     import numpy as np
     data = np.array(data)
-    return np.corrcoef(data)
+    return np.corrcoef(data).tolist()

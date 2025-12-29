@@ -13,6 +13,7 @@ def median(self, data):
     n = len(sorted_data)
     mid = n // 2
     if n % 2 == 0:
-        return round((sorted_data[mid - 1] + sorted_data[mid]) / 2, 2)
+        median_value = (sorted_data[mid - 1] + sorted_data[mid]) / 2
     else:
-        return round(sorted_data[mid], 2)
+        median_value = sorted_data[mid]
+    return round(median_value, 2)
