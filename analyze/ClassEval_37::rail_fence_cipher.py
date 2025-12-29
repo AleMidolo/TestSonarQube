@@ -9,7 +9,7 @@ def rail_fence_cipher(self, plaintext, rails):
         'acb'
 
         """
-    if rails == 1:
+    if rails <= 1:
         return plaintext
     fence = [[] for _ in range(rails)]
     rail = 0

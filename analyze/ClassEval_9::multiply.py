@@ -19,29 +19,18 @@ def multiply(num1, num2):
     if num2[0] == '-':
         negative = not negative
         num2 = num2[1:]
-    num1 = num1.lstrip('0')
-    num2 = num2.lstrip('0')
-    if num1 == '':
-        num1 = '0'
-    if num2 == '':
-        num2 = '0'
-    len1 = len(num1)
-    len2 = len(num2)
-    result = [0] * (len1 + len2)
-    for i in range(len1 - 1, -1, -1):
-        carry = 0
-        n1 = int(num1[i])
-        for j in range(len2 - 1, -1, -1):
-            n2 = int(num2[j])
-            temp_sum = n1 * n2 + result[i + j + 1] + carry
-            carry = temp_sum // 10
-            result[i + j + 1] = temp_sum % 10
-        if carry > 0:
-            result[i] += carry
-    result_str = ''.join((str(digit) for digit in result))
-    result_str = result_str.lstrip('0')
-    if result_str == '':
-        result_str = '0'
-    if negative and result_str != '0':
+    num1 = num1[::-1]
+    num2 = num2[::-1]
+    result = [0] * (len(num1) + len(num2))
+    for i in range(len(num1)):
+        for j in range(len(num2)):
+            product = int(num1[i]) * int(num2[j])
+            result[i + j] += product
+            result[i + j + 1] += result[i + j] // 10
+            result[i + j] %= 10
+    while len(result) > 1 and result[-1] == 0:
+        result.pop()
+    result_str = ''.join((str(digit) for digit in reversed(result)))
+    if negative:
         result_str = '-' + result_str
     return result_str

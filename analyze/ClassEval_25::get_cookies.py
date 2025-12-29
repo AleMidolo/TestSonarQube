@@ -12,4 +12,4 @@ def get_cookies(self, response):
         self.cookies = response['cookies']
         self._save_cookies()
     else:
-        self.cookies = {}
+        self.cookies = None

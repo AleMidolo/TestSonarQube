@@ -13,12 +13,12 @@ def add_dish(self, dish):
     requested_count = dish['count']
     price = dish['price']
     for menu_item in self.menu:
-        if menu_item['dish'] == dish_name:
+        if menu_item['dish'] == dish_name and menu_item['price'] == price:
             if menu_item['count'] >= requested_count:
                 menu_item['count'] -= requested_count
                 found = False
                 for selected in self.selected_dishes:
-                    if selected['dish'] == dish_name:
+                    if selected['dish'] == dish_name and selected['price'] == price:
                         selected['count'] += requested_count
                         found = True
                         break
