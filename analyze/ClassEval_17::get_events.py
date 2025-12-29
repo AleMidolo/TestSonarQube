@@ -10,7 +10,6 @@ def get_events(self, date):
         """
     events_on_date = []
     for event in self.events:
-        event_date = event['date']
-        if event_date.year == date.year and event_date.month == date.month and (event_date.day == date.day):
+        if event['date'].date() == date.date():
             events_on_date.append(event)
     return events_on_date

@@ -13,31 +13,28 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         [3.0, 7.0]
 
         """
-
-    def find_index(arr, value):
-        """在有序数组arr中找到value所在的区间索引"""
-        for i in range(len(arr) - 1):
-            if arr[i] <= value <= arr[i + 1]:
-                return i
-        if value <= arr[0]:
-            return 0
-        else:
-            return len(arr) - 2
-
-    def bilinear_interpolation(x1, x2, y1, y2, z11, z12, z21, z22, x, y):
-        """在矩形区域内进行双线性插值"""
-        z_x1 = z11 + (z21 - z11) * (x - x1) / (x2 - x1)
-        z_x2 = z12 + (z22 - z12) * (x - x1) / (x2 - x1)
-        z_interp = z_x1 + (z_x2 - z_x1) * (y - y1) / (y2 - y1)
-        return z_interp
-    z_interp = []
+    import numpy as np
+    x = np.array(x)
+    y = np.array(y)
+    z = np.array(z)
+    x_interp = np.array(x_interp)
+    y_interp = np.array(y_interp)
+    if z.shape != (len(x), len(y)):
+        raise ValueError('z must be a 2D array with shape (len(x), len(y))')
+    results = []
     for xi, yi in zip(x_interp, y_interp):
-        i = find_index(x, xi)
-        j = find_index(y, yi)
+        i = np.searchsorted(x, xi) - 1
+        j = np.searchsorted(y, yi) - 1
+        i = max(0, min(i, len(x) - 2))
+        j = max(0, min(j, len(y) - 2))
         x1, x2 = (x[i], x[i + 1])
         y1, y2 = (y[j], y[j + 1])
-        z11, z12 = (z[j][i], z[j][i + 1])
-        z21, z22 = (z[j + 1][i], z[j + 1][i + 1])
-        zi = bilinear_interpolation(x1, x2, y1, y2, z11, z12, z21, z22, xi, yi)
-        z_interp.append(zi)
-    return z_interp
+        z11 = z[i, j]
+        z12 = z[i, j + 1]
+        z21 = z[i + 1, j]
+        z22 = z[i + 1, j + 1]
+        z_y1 = z11 + (z21 - z11) * (xi - x1) / (x2 - x1)
+        z_y2 = z12 + (z22 - z12) * (xi - x1) / (x2 - x1)
+        z_interp = z_y1 + (z_y2 - z_y1) * (yi - y1) / (y2 - y1)
+        results.append(float(z_interp))
+    return results

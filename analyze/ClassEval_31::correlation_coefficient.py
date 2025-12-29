@@ -9,9 +9,11 @@ def correlation_coefficient(data1, data2):
         0.9999999999999998
 
         """
+    if len(data1) != len(data2):
+        raise ValueError('两组数据的长度必须相同')
     n = len(data1)
-    if n != len(data2) or n < 2:
-        raise ValueError('两组数据长度必须相同且至少包含2个元素')
+    if n < 2:
+        raise ValueError('数据长度必须至少为2')
     mean1 = sum(data1) / n
     mean2 = sum(data2) / n
     numerator = sum(((data1[i] - mean1) * (data2[i] - mean2) for i in range(n)))

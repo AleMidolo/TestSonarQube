@@ -6,6 +6,7 @@ def filter(self, request):
         >>> filter = AccessGatewayFilter()
         >>> filter.filter({'path': '/login', 'method': 'POST'})
         True
+
         """
     if self.is_start_with(request.get('path', '')):
         return True

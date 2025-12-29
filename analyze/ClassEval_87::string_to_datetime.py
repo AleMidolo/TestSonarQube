@@ -13,14 +13,24 @@ def string_to_datetime(self, string):
         except ValueError:
             continue
     normalized = string.strip()
-    normalized = normalized.replace('/', '-').replace('.', '-')
     try:
-        return datetime.datetime.strptime(normalized, '%Y-%m-%d %H:%M:%S')
-    except ValueError:
-        try:
-            return datetime.datetime.strptime(normalized, '%Y-%m-%d %H:%M')
-        except ValueError:
+        from dateutil import parser
+        return parser.parse(normalized)
+    except ImportError:
+        parts = normalized.replace('-', ' ').replace(':', ' ').replace('/', ' ').replace('.', ' ').split()
+        if len(parts) >= 3:
             try:
-                return datetime.datetime.strptime(normalized, '%Y-%m-%d')
-            except ValueError:
-                raise ValueError(f'Unable to parse time string: {string}')
+                year = int(parts[0])
+                month = int(parts[1])
+                day = int(parts[2])
+                hour = minute = second = 0
+                if len(parts) >= 4:
+                    hour = int(parts[3])
+                if len(parts) >= 5:
+                    minute = int(parts[4])
+                if len(parts) >= 6:
+                    second = int(parts[5])
+                return datetime.datetime(year, month, day, hour, minute, second)
+            except (ValueError, IndexError):
+                pass
+        raise ValueError(f'Unable to parse time string: {string}')

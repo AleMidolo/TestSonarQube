@@ -16,5 +16,7 @@ def skewness(data):
     if variance == 0:
         return math.nan
     std_dev = math.sqrt(variance)
-    skewness_value = sum(((x - mean) ** 3 for x in data)) / n / std_dev ** 3
+    centered_data = [x - mean for x in data]
+    third_moment = sum((x ** 3 for x in centered_data)) / n
+    skewness_value = third_moment / std_dev ** 3
     return skewness_value

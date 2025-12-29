@@ -25,15 +25,13 @@ def move(self, direction):
         """
     if self.is_game_over:
         return True
-    direction_map = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
-    if direction not in direction_map:
+    dir_map = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
+    if direction not in dir_map:
         return False
-    dr, dc = direction_map[direction]
+    dr, dc = dir_map[direction]
     new_row = self.player_row + dr
     new_col = self.player_col + dc
-    if new_row < 0 or new_row >= len(self.map) or new_col < 0 or (new_col >= len(self.map[0])):
-        return False
-    if self.map[new_row][new_col] == '#':
+    if new_row < 0 or new_row >= len(self.map) or new_col < 0 or (new_col >= len(self.map[0])) or (self.map[new_row][new_col] == '#'):
         return False
     box_index = -1
     for i, box in enumerate(self.boxes):
@@ -43,11 +41,7 @@ def move(self, direction):
     if box_index != -1:
         box_new_row = new_row + dr
         box_new_col = new_col + dc
-        if box_new_row < 0 or box_new_row >= len(self.map) or box_new_col < 0 or (box_new_col >= len(self.map[0])):
-            return False
-        if self.map[box_new_row][box_new_col] == '#':
-            return False
-        if (box_new_row, box_new_col) in self.boxes:
+        if box_new_row < 0 or box_new_row >= len(self.map) or box_new_col < 0 or (box_new_col >= len(self.map[0])) or (self.map[box_new_row][box_new_col] == '#') or ((box_new_row, box_new_col) in self.boxes):
             return False
         self.boxes[box_index] = (box_new_row, box_new_col)
     self.player_row = new_row
