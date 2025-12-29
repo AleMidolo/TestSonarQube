@@ -10,6 +10,6 @@ def extract_text_from_pdfs(self):
     for reader in self.readers:
         text = ''
         for page in reader.pages:
-            text += page.extract_text() or ''
+            text += page.extract_text()
         pdf_texts.append(text)
     return pdf_texts

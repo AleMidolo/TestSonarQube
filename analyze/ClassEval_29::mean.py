@@ -7,4 +7,6 @@ def mean(self, data):
         >>> ds.mean([1, 2, 3, 4, 5])
         3.00
         """
+    if not data:
+        return 0.0
     return round(sum(data) / len(data), 2)

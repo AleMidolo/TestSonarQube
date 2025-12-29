@@ -7,6 +7,10 @@ def get_events(self, date):
         >>> calendar.events = [{'date': datetime(2023, 1, 1, 0, 0), 'start_time': datetime(2023, 1, 1, 0, 0), 'end_time': datetime(2023, 1, 1, 1, 0), 'description': '新年'}]
         >>> calendar.get_events(datetime(2023, 1, 1, 0, 0))
         [{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 1, 0), 'description': '新年'}]
-
         """
-    return [event for event in self.events if event['date'].date() == date.date()]
+    events_on_date = []
+    for event in self.events:
+        event_date = event['date']
+        if event_date.year == date.year and event_date.month == date.month and (event_date.day == date.day):
+            events_on_date.append(event)
+    return events_on_date

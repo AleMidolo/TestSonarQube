@@ -11,4 +11,5 @@ def recv(self, info):
     if info['addr'] in self.white_list:
         self.receive_struct = {'addr': info['addr'], 'content': info['content']}
         return info['content']
-    return False
+    else:
+        return False

@@ -1,3 +1,4 @@
+@staticmethod
 def similarity(vector_1, vector_2):
     """
         计算一个向量与另一个向量之间的余弦相似度。
@@ -6,10 +7,13 @@ def similarity(vector_1, vector_2):
         :return: numpy.ndarray, 包含 `vector_1` 和 `vector_2` 之间的余弦距离
         >>> vector_1 = np.array([1, 1])
         >>> vector_2 = np.array([1, 0])
-        >>> similarity(vector_1, vector_2)
+        >>> VectorUtil.similarity(vector_1, vector_2)
         0.7071067811865475
         """
-    norm_1 = np.linalg.norm(vector_1)
-    norm_2 = np.linalg.norm(vector_2)
+    norm1 = np.linalg.norm(vector_1)
+    norm2 = np.linalg.norm(vector_2)
+    if norm1 == 0 or norm2 == 0:
+        return 0.0
     dot_product = np.dot(vector_1, vector_2)
-    return dot_product / (norm_1 * norm_2)
+    similarity = dot_product / (norm1 * norm2)
+    return similarity

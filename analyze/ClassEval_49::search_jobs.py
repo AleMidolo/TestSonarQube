@@ -7,6 +7,7 @@ def search_jobs(self, criteria):
         >>> jobMarketplace.job_listings = [{"job_title": "软件工程师", "company": "ABC 公司", "requirements": ['技能1', '技能2']}]
         >>> jobMarketplace.search_jobs("技能1")
         [{'job_title': '软件工程师', 'company': 'ABC 公司', 'requirements': ['技能1', '技能2']}]
+
         """
     matching_jobs = []
     for job in self.job_listings:

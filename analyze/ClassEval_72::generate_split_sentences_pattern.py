@@ -6,4 +6,5 @@ def generate_split_sentences_pattern(self):
         >>> ru.generate_split_sentences_pattern()
         '[.!?][\\s]{1,2}(?=[A-Z])'
         """
-    return '[.!?][\\s]{1,2}(?=[A-Z])'
+    pattern = '[.!?][\\s]{1,2}(?=[A-Z])'
+    return pattern

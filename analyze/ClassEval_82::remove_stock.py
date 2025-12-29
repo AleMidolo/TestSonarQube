@@ -8,14 +8,14 @@ def remove_stock(self, stock):
         True
         >>> tracker.portfolio
         []
+
         """
     for pf in self.portfolio:
         if pf['name'] == stock['name']:
             if pf['quantity'] < stock['quantity']:
                 return False
-            elif pf['quantity'] == stock['quantity']:
+            pf['quantity'] -= stock['quantity']
+            if pf['quantity'] == 0:
                 self.portfolio.remove(pf)
-            else:
-                pf['quantity'] -= stock['quantity']
             return True
     return False

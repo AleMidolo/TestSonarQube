@@ -4,7 +4,7 @@ def _validate_sex(self, sex: str) -> str:
         :param sex: str，要验证的性别
         :return: str，验证后的性别，如果无效则返回None
         """
-    valid_sexes = ['男', '女', 'UGM']
+    valid_sexes = {'男', '女', 'UGM'}
     if sex in valid_sexes:
         return sex
     return None

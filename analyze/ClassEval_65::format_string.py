@@ -7,24 +7,22 @@ def format_string(self, x):
         >>> formatter.format_string("123456")
         "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
         """
-    if not x.isdigit():
-        return ''
-    x = x.split('.')
-    whole_part = x[0]
-    decimal_part = x[1] if len(x) > 1 else ''
-    words = []
-    length = len(whole_part)
-    if length == 0:
-        return 'ZERO ONLY'
-    for i in range(length, 0, -3):
-        group = whole_part[max(0, i - 3):i]
-        if group:
-            group_words = self.trans_three(group)
-            if i // 3 > 0:
-                group_words += ' ' + self.parse_more(i // 3)
-            words.append(group_words)
-    words.reverse()
-    result = ' AND '.join(words).strip()
+    is_negative = False
+    if x.startswith('-'):
+        is_negative = True
+        x = x[1:]
+    parts = x.split('.')
+    integer_part = parts[0]
+    decimal_part = parts[1] if len(parts) > 1 else ''
+    integer_part = integer_part.lstrip('0')
+    if integer_part == '':
+        integer_part = '0'
+    integer_words = self._format_integer_part(integer_part)
     if decimal_part:
-        result += ' POINT ' + ' '.join((self.NUMBER[int(digit)] for digit in decimal_part))
-    return result + ' ONLY'
+        decimal_words = self._format_decimal_part(decimal_part)
+        result = f'{integer_words} AND {decimal_words} ONLY'
+    else:
+        result = f'{integer_words} ONLY'
+    if is_negative:
+        result = f'NEGATIVE {result}'
+    return result

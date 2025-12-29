@@ -11,4 +11,8 @@ def BulkItemPromo(order):
         47.0
 
         """
-    return sum((item['quantity'] * item['price'] * 0.1 for item in order.cart if item['quantity'] >= 20))
+    discount = 0
+    for item in order.cart:
+        if item['quantity'] >= 20:
+            discount += item['quantity'] * item['price'] * 0.1
+    return discount

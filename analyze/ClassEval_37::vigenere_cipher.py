@@ -8,11 +8,21 @@ def vigenere_cipher(self, plaintext):
         'kfa'
 
         """
-    ciphertext = []
+    ciphertext = ''
     key_length = len(self.key)
-    key_as_int = [ord(i) - ord('a') for i in self.key]
-    plaintext_int = [ord(i) - ord('a') for i in plaintext]
-    for i in range(len(plaintext_int)):
-        value = (plaintext_int[i] + key_as_int[i % key_length]) % 26
-        ciphertext.append(chr(value + ord('a')))
-    return ''.join(ciphertext)
+    key_index = 0
+    for char in plaintext:
+        if char.isalpha():
+            if char.isupper():
+                ascii_offset = 65
+                key_char = self.key[key_index % key_length].upper()
+            else:
+                ascii_offset = 97
+                key_char = self.key[key_index % key_length].lower()
+            key_shift = ord(key_char) - ascii_offset
+            shifted_char = chr((ord(char) - ascii_offset + key_shift) % 26 + ascii_offset)
+            ciphertext += shifted_char
+            key_index += 1
+        else:
+            ciphertext += char
+    return ciphertext

@@ -1,13 +1,14 @@
 def clear_inbox(self, size):
     """
-        Clears the inbox by removing the oldest emails until there is enough space to accommodate the given size.
-        :param size: The size of the email, float.
+        通过删除最旧的电子邮件来清空邮箱，直到邮箱有足够的空间来容纳给定的大小。
+        :param size: 电子邮件的大小，浮点数。
         >>> sender = EmailClient('sender@example.com', 100)
         >>> receiver = EmailClient('receiver@example.com', 50)
         >>> receiver.inbox = [{'size': 10},{'size': 20},{'size': 15}]
         >>> receiver.clear_inbox(30)
         >>> receiver.inbox
         [{'size': 15}]
+
         """
-    while self.get_occupied_size() + size > self.capacity and self.inbox:
+    while self.inbox and self.get_occupied_size() + size > self.capacity:
         self.inbox.pop(0)

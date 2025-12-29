@@ -8,9 +8,18 @@ def apply_operator(self, operand_stack, operator_stack):
         >>> calculator.apply_operator([1, 2, 3], ['+', '-'])
         ([1, -1], ['-'])
         """
+    if len(operand_stack) < 2 or not operator_stack:
+        return (operand_stack, operator_stack)
     operator = operator_stack.pop()
-    right_operand = operand_stack.pop()
-    left_operand = operand_stack.pop()
-    result = self.operators[operator](left_operand, right_operand)
-    operand_stack.append(result)
+    b = operand_stack.pop()
+    a = operand_stack.pop()
+    try:
+        result = self.operators[operator](a, b)
+        operand_stack.append(result)
+    except ZeroDivisionError:
+        operand_stack.append(float('inf') if a > 0 else float('-inf'))
+    except Exception:
+        operand_stack.append(a)
+        operand_stack.append(b)
+        operator_stack.append(operator)
     return (operand_stack, operator_stack)
