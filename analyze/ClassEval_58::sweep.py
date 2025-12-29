@@ -12,7 +12,7 @@ def sweep(self, x, y):
 
         """
     if x < 0 or x >= self.n or y < 0 or (y >= self.n):
-        return False
+        return self.player_map
     if self.player_map[y][x] != '-':
         return self.player_map
     if self.minesweeper_map[y][x] == 'X':

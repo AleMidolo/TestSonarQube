@@ -24,7 +24,7 @@ def parse_arguments(self, command_string):
             arg_name = token[2:]
             self.arguments[arg_name] = True
             i += 1
-        elif token.startswith('-') and len(token) > 1 and (not token[1].isdigit()):
+        elif token.startswith('-') and len(token) > 1 and (not token.startswith('--')):
             arg_name = token[1:]
             if i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
                 arg_value = tokens[i + 1]
@@ -35,10 +35,7 @@ def parse_arguments(self, command_string):
                 i += 1
         else:
             i += 1
-    missing_args = set()
-    for req_arg in self.required:
-        if req_arg not in self.arguments:
-            missing_args.add(req_arg)
+    missing_args = self.required - set(self.arguments.keys())
     if missing_args:
         return (False, missing_args)
     else:

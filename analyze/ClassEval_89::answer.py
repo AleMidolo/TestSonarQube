@@ -13,10 +13,16 @@ def answer(self, expression):
         return False
     import re
     numbers_in_expr = re.findall('-?\\d+\\.?\\d*', expression)
-    try:
-        expr_nums = [int(round(float(num))) for num in numbers_in_expr]
-    except ValueError:
-        return False
-    expr_counter = Counter(expr_nums)
+    numbers_in_expr = [float(num) for num in numbers_in_expr]
+    numbers_in_expr = [int(num) if num.is_integer() else num for num in numbers_in_expr]
+    expr_counter = Counter(numbers_in_expr)
     nums_counter = Counter(self.nums)
-    return expr_counter == nums_counter
+    for num, count in expr_counter.items():
+        if nums_counter[num] < count:
+            return False
+    total_used = sum(expr_counter.values())
+    if total_used != 4:
+        return False
+    if expr_counter != nums_counter:
+        return False
+    return True

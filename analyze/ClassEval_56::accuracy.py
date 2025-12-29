@@ -9,8 +9,7 @@ def accuracy(self, predicted_labels, true_labels):
         0.5
         """
     self.update(predicted_labels, true_labels)
-    total_correct = self.true_positives + self.true_negatives
-    total_samples = self.true_positives + self.false_positives + self.false_negatives + self.true_negatives
-    if total_samples == 0:
+    total = self.true_positives + self.false_positives + self.false_negatives + self.true_negatives
+    if total == 0:
         return 0.0
-    return total_correct / total_samples
+    return (self.true_positives + self.true_negatives) / total

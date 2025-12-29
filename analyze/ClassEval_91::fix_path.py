@@ -13,11 +13,11 @@ def fix_path(path):
     while path.startswith('/') or path.startswith('\\/'):
         if path.startswith('/'):
             path = path[1:]
-        else:
+        elif path.startswith('\\/'):
             path = path[2:]
     while path.endswith('/') or path.endswith('\\/'):
         if path.endswith('/'):
             path = path[:-1]
-        else:
+        elif path.endswith('\\/'):
             path = path[:-2]
     return path
