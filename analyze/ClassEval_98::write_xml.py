@@ -13,5 +13,5 @@ def write_xml(self, file_name):
         tree = ET.ElementTree(self.root)
         tree.write(file_name)
         return True
-    except Exception as e:
+    except:
         return False
