@@ -7,18 +7,22 @@ def transform(expression):
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.transform("2 + 3 * 4")
         "2+3*4"
+
         """
     expression = re.sub('\\s+', '', expression)
     transformed = []
     i = 0
-    while i < len(expression):
-        c = expression[i]
-        if c == '-':
-            if i == 0 or expression[i - 1] in {'+', '-', '*', '/', '(', '%'}:
+    length = len(expression)
+    while i < length:
+        char = expression[i]
+        if char == '-':
+            if i == 0:
+                transformed.append('~')
+            elif expression[i - 1] in {'+', '-', '*', '\\/', '(', '%'}:
                 transformed.append('~')
             else:
-                transformed.append(c)
+                transformed.append(char)
         else:
-            transformed.append(c)
+            transformed.append(char)
         i += 1
     return ''.join(transformed)

@@ -8,8 +8,10 @@ def recv(self, info):
         """
     if not isinstance(info, dict) or 'addr' not in info or 'content' not in info:
         return False
-    if info['addr'] in self.white_list:
-        self.receive_struct = {'addr': info['addr'], 'content': info['content']}
-        return info['content']
+    addr = info['addr']
+    content = info['content']
+    if addr in self.white_list:
+        self.receive_struct = {'addr': addr, 'content': content}
+        return content
     else:
         return False

@@ -12,9 +12,6 @@ def count(n, m=None):
         """
     if m is None or n == m:
         return ArrangementCalculator.factorial(n)
-    if m > n:
+    if m > n or m < 0:
         return 0
-    result = 1
-    for i in range(n, n - m, -1):
-        result *= i
-    return result
+    return ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)

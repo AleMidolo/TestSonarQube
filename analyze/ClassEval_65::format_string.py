@@ -7,40 +7,49 @@ def format_string(self, x):
         >>> formatter.format_string("123456")
         "एक सौ और तेईस हजार चार सौ और छप्पन केवल"
         """
+    if not x:
+        return ''
+    is_negative = False
+    if x[0] == '-':
+        is_negative = True
+        x = x[1:]
+    integer_part = x
+    decimal_part = ''
     if '.' in x:
         integer_part, decimal_part = x.split('.')
+        decimal_part = decimal_part.rstrip('0')
+    if integer_part == '0':
+        result = 'ZERO'
     else:
-        integer_part = x
-        decimal_part = ''
-    integer_part = integer_part.lstrip('0')
-    if integer_part == '':
-        integer_part = '0'
-    result_parts = []
-    integer_part_len = len(integer_part)
-    if integer_part_len == 1 and integer_part[0] == '0':
-        result_parts.append('ZERO')
-    else:
+        integer_part = integer_part.lstrip('0')
+        if not integer_part:
+            integer_part = '0'
         groups = []
-        for i in range(integer_part_len, 0, -3):
-            start = max(0, i - 3)
-            groups.append(integer_part[start:i])
+        while integer_part:
+            groups.append(integer_part[-3:])
+            integer_part = integer_part[:-3]
         groups.reverse()
+        words = []
         for i, group in enumerate(groups):
-            group_index = len(groups) - 1 - i
-            if group != '000':
-                words = self.trans_three(group.zfill(3))
-                if words:
-                    suffix = self.parse_more(group_index)
-                    if suffix:
-                        words += ' ' + suffix
-                    result_parts.append(words)
-    result = ' '.join(result_parts).strip()
+            if group == '000':
+                continue
+            group_words = self.trans_three(group.zfill(3))
+            magnitude = len(groups) - i - 1
+            if magnitude > 0 and group_words:
+                group_words += ' ' + self.parse_more(magnitude)
+            if group_words:
+                words.append(group_words)
+        result = ' '.join(words)
     if decimal_part:
-        decimal_part = decimal_part[:2]
-        if decimal_part:
-            decimal_words = self.trans_two(decimal_part.zfill(2))
-            if decimal_words:
-                result += ' AND CENTS ' + decimal_words
+        decimal_words = []
+        for digit in decimal_part:
+            if digit == '0':
+                decimal_words.append('ZERO')
+            else:
+                decimal_words.append(self.NUMBER[int(digit)])
+        result += ' POINT ' + ' '.join(decimal_words)
+    if is_negative:
+        result = 'MINUS ' + result
     if result:
         result += ' ONLY'
     return result
