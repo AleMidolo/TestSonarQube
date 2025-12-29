@@ -21,9 +21,9 @@ def book_ticket(self, name, seats_to_book):
     if movie_found is None:
         return 'Movie not found.'
     seats = movie_found['seats']
-    n = seats.shape[0]
+    n_rows, n_cols = seats.shape
     for row, col in seats_to_book:
-        if row < 0 or row >= n or col < 0 or (col >= n):
+        if row < 0 or row >= n_rows or col < 0 or (col >= n_cols):
             return 'Booking failed.'
         if seats[row, col] != 0:
             return 'Booking failed.'
