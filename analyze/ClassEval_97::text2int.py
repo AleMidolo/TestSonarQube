@@ -22,6 +22,7 @@ def text2int(self, textnum):
         processed_words.append(word)
     current = 0
     result = 0
+    scale_stack = []
     for word in processed_words:
         if word.isdigit():
             current += int(word)
@@ -31,9 +32,14 @@ def text2int(self, textnum):
             continue
         else:
             scale, increment = self.numwords[word]
-            current = current * scale + increment
             if scale > 100:
-                result += current
+                if current == 0:
+                    current = 1
+                result += current * scale
                 current = 0
+            else:
+                current = current * scale + increment
+                if scale > current:
+                    current = scale + increment
     result += current
     return str(result)

@@ -13,15 +13,14 @@ def interpret(self, display=False):
     result = []
     items = self.play_text.split()
     for item in items:
-        chord = ''
-        tune = ''
-        i = 0
-        while i < len(item) and (not item[i].isdigit()):
-            chord += item[i]
-            i += 1
-        tune = item[i:]
-        if chord and tune:
-            result.append({'Chord': chord, 'Tune': tune})
-            if display:
-                print(self.display(chord, tune))
+        chord_end = 0
+        for i, char in enumerate(item):
+            if char.isdigit():
+                chord_end = i
+                break
+        chord = item[:chord_end]
+        tune = item[chord_end:]
+        result.append({'Chord': chord, 'Tune': tune})
+        if display:
+            print(self.display(chord, tune))
     return result

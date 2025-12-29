@@ -6,10 +6,8 @@ def tan(self, x):
         >>> tricalculator.tan(45)
         1.0
         """
-    if abs(x - 90) < 1e-10:
-        raise ValueError('tan(90) is undefined')
-    sin_val = self.sin(x)
     cos_val = self.cos(x)
-    if abs(cos_val) < 1e-15:
+    if abs(cos_val) < 1e-10:
         raise ValueError(f'tan({x}) is undefined (cos({x}) = 0)')
+    sin_val = self.sin(x)
     return round(sin_val / cos_val, 10)

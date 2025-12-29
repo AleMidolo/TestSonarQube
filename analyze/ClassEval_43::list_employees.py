@@ -8,6 +8,6 @@ def list_employees(self):
         {1: {'employee_ID': 1, 'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}}
         """
     result = {}
-    for employee_id, employee_data in self.employees.items():
-        result[employee_id] = {'employee_ID': employee_id, **employee_data}
+    for employee_id, info in self.employees.items():
+        result[employee_id] = {'employee_ID': employee_id, **info}
     return result

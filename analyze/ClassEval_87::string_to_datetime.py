@@ -6,7 +6,7 @@ def string_to_datetime(self, string):
         >>> timeutils.string_to_datetime("2001-7-18 1:1:1")
         2001-07-18 01:01:01
         """
-    formats_to_try = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d', '%Y/%m/%d %H:%M:%S', '%Y/%m/%d %H:%M', '%Y/%m/%d', '%Y.%m.%d %H:%M:%S', '%Y.%m.%d %H:%M', '%Y.%m.%d', '%d-%m-%Y %H:%M:%S', '%d-%m-%Y %H:%M', '%d-%m-%Y', '%d/%m/%Y %H:%M:%S', '%d/%m/%Y %H:%M', '%d/%m/%Y', '%d.%m.%Y %H:%M:%S', '%d.%m.%Y %H:%M', '%d.%m.%Y', '%Y-%m-%d %I:%M:%S %p', '%Y-%m-%d %I:%M %p', '%Y/%m/%d %I:%M:%S %p', '%Y/%m/%d %I:%M %p', '%Y.%m.%d %I:%M:%S %p', '%Y.%m.%d %I:%M %p', '%d-%m-%Y %I:%M:%S %p', '%d-%m-%Y %I:%M %p', '%d/%m/%Y %I:%M:%S %p', '%d/%m/%Y %I:%M %p', '%d.%m.%Y %I:%M:%S %p', '%d.%m.%Y %I:%M %p']
+    formats_to_try = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d', '%Y/%m/%d %H:%M:%S', '%Y/%m/%d %H:%M', '%Y/%m/%d', '%Y.%m.%d %H:%M:%S', '%Y.%m.%d %H:%M', '%Y.%m.%d', '%d-%m-%Y %H:%M:%S', '%d-%m-%Y %H:%M', '%d-%m-%Y', '%d/%m/%Y %H:%M:%S', '%d/%m/%Y %H:%M', '%d/%m/%Y', '%d.%m.%Y %H:%M:%S', '%d.%m.%Y %H:%M', '%d.%m.%Y', '%Y-%m-%d %I:%M:%S %p', '%Y-%m-%d %I:%M %p', '%Y/%m/%d %I:%M:%S %p', '%Y/%m/%d %I:%M %p', '%d-%m-%Y %I:%M:%S %p', '%d-%m-%Y %I:%M %p', '%d/%m/%Y %I:%M:%S %p', '%d/%m/%Y %I:%M %p']
     for fmt in formats_to_try:
         try:
             return datetime.datetime.strptime(string, fmt)

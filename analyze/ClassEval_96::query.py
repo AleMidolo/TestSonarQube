@@ -16,15 +16,12 @@ def query(self, weather_list, tmp_units='celsius'):
     self.weather = city_data['weather']
     temperature = city_data['temperature']
     current_units = city_data['temperature units']
-    if tmp_units == current_units:
+    if tmp_units.lower() == 'fahrenheit' and current_units.lower() == 'celsius':
         self.temperature = temperature
-        return (temperature, self.weather)
-    if tmp_units == 'celsius' and current_units == 'fahrenheit':
-        self.temperature = (temperature - 32) * 5 / 9
-        return (self.temperature, self.weather)
-    elif tmp_units == 'fahrenheit' and current_units == 'celsius':
-        self.temperature = temperature * 9 / 5 + 32
-        return (self.temperature, self.weather)
+        temperature = self.celsius_to_fahrenheit()
+    elif tmp_units.lower() == 'celsius' and current_units.lower() == 'fahrenheit':
+        self.temperature = temperature
+        temperature = self.fahrenheit_to_celsius()
     else:
         self.temperature = temperature
-        return (temperature, self.weather)
+    return (temperature, self.weather)

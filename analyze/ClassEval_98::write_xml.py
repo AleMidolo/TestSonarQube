@@ -7,13 +7,10 @@ def write_xml(self, file_name):
         >>> root = xml_processor.read_xml()
         >>> success = xml_processor.write_xml('output.xml')
         >>> print(success)
-        True
         """
     try:
-        if self.root is None:
-            return False
         tree = ET.ElementTree(self.root)
         tree.write(file_name, encoding='utf-8', xml_declaration=True)
         return True
-    except Exception as e:
+    except:
         return False
