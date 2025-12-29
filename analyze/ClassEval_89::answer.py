@@ -14,6 +14,7 @@ def answer(self, expression):
     import re
     numbers_in_expr = re.findall('\\d+', expression)
     numbers_in_expr = [int(num) for num in numbers_in_expr]
-    if Counter(numbers_in_expr) != Counter(self.nums):
+    if sorted(numbers_in_expr) == sorted(self.nums):
+        return True
+    else:
         return False
-    return True

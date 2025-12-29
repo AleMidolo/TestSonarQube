@@ -20,7 +20,10 @@ def check_winner(self, player_hand, dealer_hand):
         else:
             return 'Dealer wins'
     elif player_value > 21 and dealer_value > 21:
-        return 'Dealer wins'
+        if player_value < dealer_value:
+            return 'Player wins'
+        else:
+            return 'Dealer wins'
     elif player_value > 21:
         return 'Dealer wins'
     else:

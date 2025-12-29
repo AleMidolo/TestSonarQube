@@ -26,17 +26,14 @@ def has_path(self, pos1, pos2):
             return True
         for dx, dy in directions:
             new_x, new_y = (x + dx, y + dy)
-            if not (0 <= new_x < self.BOARD_SIZE[0] and 0 <= new_y < self.BOARD_SIZE[1]):
-                continue
-            if (new_x, new_y) != (end_x, end_y) and self.board[new_x][new_y] != ' ':
-                continue
-            new_turns = turns
-            if (dx, dy) != direction:
-                new_turns += 1
-            if new_turns > 2:
-                continue
-            state = (new_x, new_y, new_turns, (dx, dy))
-            if state not in visited:
-                visited.add(state)
-                queue.append(state)
+            if 0 <= new_x < self.BOARD_SIZE[0] and 0 <= new_y < self.BOARD_SIZE[1]:
+                if (new_x, new_y) == (end_x, end_y) or self.board[new_x][new_y] == ' ':
+                    new_turns = turns
+                    if (dx, dy) != direction:
+                        new_turns += 1
+                    if new_turns <= 2:
+                        state = (new_x, new_y, new_turns, (dx, dy))
+                        if state not in visited:
+                            visited.add(state)
+                            queue.append(state)
     return False

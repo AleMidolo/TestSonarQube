@@ -13,10 +13,8 @@ def process_excel_data(self, N, save_file_name):
     processed_data = []
     for row in data:
         new_row = list(row)
-        if N >= 0 and N < len(new_row):
-            cell_value = new_row[N]
-            if isinstance(cell_value, str):
-                new_row[N] = cell_value.upper()
+        if N < len(new_row) and isinstance(new_row[N], str):
+            new_row[N] = new_row[N].upper()
         processed_data.append(tuple(new_row))
     output_file = f'processed_{save_file_name}'
     result = self.write_excel(processed_data, output_file)

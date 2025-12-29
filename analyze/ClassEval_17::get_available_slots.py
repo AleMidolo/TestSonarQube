@@ -11,7 +11,7 @@ def get_available_slots(self, date):
     day_events = self.get_events(date)
     day_events.sort(key=lambda x: x['start_time'])
     day_start = datetime.combine(date.date(), datetime.min.time())
-    day_end = datetime.combine(date.date(), datetime.max.time())
+    day_end = day_start + timedelta(days=1)
     available_slots = []
     current_time = day_start
     for event in day_events:

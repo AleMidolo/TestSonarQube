@@ -12,10 +12,10 @@ def pdf(data, mu, sigma):
         """
     if sigma <= 0:
         raise ValueError('Sigma must be positive')
-    result = []
+    pdf_values = []
     constant = 1 / (sigma * math.sqrt(2 * math.pi))
     for x in data:
         exponent = -(x - mu) ** 2 / (2 * sigma ** 2)
         pdf_value = constant * math.exp(exponent)
-        result.append(pdf_value)
-    return result
+        pdf_values.append(pdf_value)
+    return pdf_values

@@ -21,22 +21,25 @@ def mrr(data):
         sub_list = np.array(sub_list)
         if total_num == 0:
             return (0.0, [0.0])
-        for i, val in enumerate(sub_list):
-            if val == 1:
-                mrr_score = 1.0 / (i + 1)
-                return (mrr_score, [mrr_score])
-        return (0.0, [0.0])
+        positions = np.where(sub_list == 1)[0]
+        if len(positions) == 0:
+            mrr_value = 0.0
+        else:
+            first_pos = positions[0] + 1
+            mrr_value = 1.0 / first_pos
+        return (mrr_value, [mrr_value])
     if type(data) == list:
         separate_result = []
         for sub_list, total_num in data:
             sub_list = np.array(sub_list)
             if total_num == 0:
-                mrr_score = 0.0
+                mrr_value = 0.0
             else:
-                mrr_score = 0.0
-                for i, val in enumerate(sub_list):
-                    if val == 1:
-                        mrr_score = 1.0 / (i + 1)
-                        break
-            separate_result.append(mrr_score)
+                positions = np.where(sub_list == 1)[0]
+                if len(positions) == 0:
+                    mrr_value = 0.0
+                else:
+                    first_pos = positions[0] + 1
+                    mrr_value = 1.0 / first_pos
+            separate_result.append(mrr_value)
         return (np.mean(separate_result), separate_result)

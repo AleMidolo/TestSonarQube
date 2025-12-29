@@ -11,6 +11,10 @@ def get(self, index):
     if index < 0 or index >= self.limit:
         raise IndexError('Partition index out of range')
     size, remainder = self.setNum()
-    start = index * size + min(index, remainder)
-    end = start + size + (1 if index < remainder else 0)
+    if index < remainder:
+        start = index * (size + 1)
+        end = start + (size + 1)
+    else:
+        start = remainder * (size + 1) + (index - remainder) * size
+        end = start + size
     return self.lst[start:end]

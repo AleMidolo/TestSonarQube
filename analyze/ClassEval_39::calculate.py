@@ -9,34 +9,24 @@ def calculate(self, expression):
 
         """
     self.postfix_stack.clear()
-    transformed_expr = self.transform(expression)
-    self.prepare(transformed_expr)
-    calc_stack = deque(self.postfix_stack.copy())
+    transformed_expression = self.transform(expression)
+    self.prepare(transformed_expression)
     result_stack = deque()
-    while calc_stack:
-        token = calc_stack.popleft()
-        if self.is_operator(token):
-            if token in {'+', '-', '*', '\\/', '%'}:
-                if len(result_stack) < 2:
-                    raise ValueError('Invalid expression: insufficient operands for operator {}'.format(token))
-                second_value = result_stack.pop()
-                first_value = result_stack.pop()
-                if token == '-' and first_value == '~':
-                    result = -Decimal(second_value)
-                    result_stack.append(str(result))
-                else:
-                    result = self._calculate(first_value, second_value, token)
-                    result_stack.append(str(result))
-            elif token == '~':
-                if len(result_stack) < 1:
-                    raise ValueError('Invalid expression: insufficient operand for unary minus')
-                value = result_stack.pop()
-                result = -Decimal(value)
-                result_stack.append(str(result))
-            else:
-                raise ValueError('Unexpected operator in postfix expression: {}'.format(token))
+    for item in self.postfix_stack:
+        if self.is_operator(item):
+            if item == '~':
+                if result_stack:
+                    operand = result_stack.pop()
+                    result_stack.append(Decimal(0) - Decimal(operand))
+            elif len(result_stack) >= 2:
+                second = result_stack.pop()
+                first = result_stack.pop()
+                result = self._calculate(first, second, item)
+                result_stack.append(result)
         else:
-            result_stack.append(token)
-    if len(result_stack) != 1:
-        raise ValueError('Invalid expression: too many operands remaining')
-    return float(Decimal(result_stack.pop()))
+            result_stack.append(item)
+    if result_stack:
+        result = float(result_stack.pop())
+        return result
+    else:
+        return 0.0
