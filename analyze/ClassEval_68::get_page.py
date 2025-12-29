@@ -6,6 +6,7 @@ def get_page(self, page_number):
         >>> page_util = PageUtil([1, 2, 3, 4], 1)
         >>> page_util.get_page(1)
         [1]
+
         """
     if page_number < 1 or page_number > self.total_pages:
         return []
