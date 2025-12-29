@@ -14,13 +14,15 @@ def transform(expression):
     i = 0
     length = len(expression)
     while i < length:
-        c = expression[i]
-        if c == '-':
-            if i == 0 or expression[i - 1] in {'+', '-', '*', '/', '(', '%'}:
+        char = expression[i]
+        if char == '-':
+            if i == 0:
+                transformed.append('~')
+            elif expression[i - 1] in '+-*/%(':
                 transformed.append('~')
             else:
-                transformed.append(c)
+                transformed.append(char)
         else:
-            transformed.append(c)
+            transformed.append(char)
         i += 1
     return ''.join(transformed)

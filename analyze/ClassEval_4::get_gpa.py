@@ -13,8 +13,7 @@ def get_gpa(self, name):
         """
     if name not in self.students:
         return None
-    student = self.students[name]
-    courses = student['courses']
+    courses = self.students[name]['courses']
     if not courses:
         return None
     total = sum(courses.values())

@@ -10,20 +10,20 @@ def add_dish(self, dish):
         True
         """
     dish_name = dish['dish']
-    requested_count = dish['count']
-    price = dish['price']
+    dish_count = dish['count']
+    dish_price = dish['price']
     for menu_item in self.menu:
         if menu_item['dish'] == dish_name:
-            if menu_item['count'] >= requested_count:
-                menu_item['count'] -= requested_count
+            if menu_item['count'] >= dish_count:
+                menu_item['count'] -= dish_count
                 found = False
                 for selected_dish in self.selected_dishes:
                     if selected_dish['dish'] == dish_name:
-                        selected_dish['count'] += requested_count
+                        selected_dish['count'] += dish_count
                         found = True
                         break
                 if not found:
-                    self.selected_dishes.append({'dish': dish_name, 'count': requested_count, 'price': price})
+                    self.selected_dishes.append({'dish': dish_name, 'count': dish_count, 'price': dish_price})
                 return True
             else:
                 return False

@@ -23,8 +23,9 @@ def format_line_html_text(self, html_text):
     soup = BeautifulSoup(html_text, 'lxml')
     for script in soup(['script', 'style']):
         script.decompose()
-    for code_tag in soup.find_all(['pre', 'blockquote']):
-        code_tag.replace_with(self.CODE_MARK)
+    code_tags = soup.find_all(['pre', 'blockquote'])
+    for tag in code_tags:
+        tag.replace_with(self.CODE_MARK)
     text = soup.get_text()
     lines = (line.strip() for line in text.splitlines())
     chunks = (phrase.strip() for line in lines for phrase in line.split('  '))

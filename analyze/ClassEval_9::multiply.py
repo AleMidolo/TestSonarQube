@@ -33,8 +33,8 @@ def multiply(num1, num2):
         for j in range(len(num2)):
             digit2 = int(num2[j])
             product = digit1 * digit2 + result[i + j] + carry
-            carry = product // 10
             result[i + j] = product % 10
+            carry = product // 10
         if carry > 0:
             result[i + len(num2)] += carry
     result_str = ''.join((str(digit) for digit in result[::-1]))

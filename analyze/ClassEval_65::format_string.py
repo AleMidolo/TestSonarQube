@@ -11,43 +11,43 @@ def format_string(self, x):
     if x.startswith('-'):
         is_negative = True
         x = x[1:]
-    integer_part = x
-    decimal_part = ''
-    if '.' in x:
-        integer_part, decimal_part = x.split('.')
-        decimal_part = decimal_part.rstrip('0')
+    parts = x.split('.')
+    integer_part = parts[0]
+    decimal_part = parts[1] if len(parts) > 1 else ''
+    integer_part = integer_part.lstrip('0')
+    if integer_part == '':
+        integer_part = '0'
+    result_parts = []
     if integer_part == '0':
-        result = 'ZERO'
+        result_parts.append('ZERO')
     else:
-        integer_part = integer_part.lstrip('0')
-        if not integer_part:
-            integer_part = '0'
         groups = []
         temp = integer_part
         while len(temp) > 3:
             groups.insert(0, temp[-3:])
             temp = temp[:-3]
-        groups.insert(0, temp)
-        group_words = []
+        if temp:
+            groups.insert(0, temp)
         for i, group in enumerate(groups):
-            if group != '000':
-                group_word = self.trans_three(group.zfill(3))
+            group_words = self.trans_three(group.zfill(3))
+            if group_words:
                 magnitude = len(groups) - i - 1
-                if magnitude > 0 and group_word:
-                    group_word += ' ' + self.parse_more(magnitude)
-                if group_word:
-                    group_words.append(group_word)
-        result = ' '.join(group_words)
+                if magnitude > 0 and group_words != '':
+                    group_words += ' ' + self.parse_more(magnitude)
+                result_parts.append(group_words)
+    result = ' '.join(result_parts)
     if decimal_part:
-        decimal_words = []
-        for digit in decimal_part:
-            if digit == '0':
-                decimal_words.append('ZERO')
-            else:
-                decimal_words.append(self.NUMBER[int(digit)])
-        result += ' POINT ' + ' '.join(decimal_words)
+        decimal_part = decimal_part.rstrip('0')
+        if decimal_part:
+            decimal_words = []
+            for digit in decimal_part:
+                if digit != '0':
+                    decimal_words.append(self.NUMBER[int(digit)])
+                else:
+                    decimal_words.append('ZERO')
+            result += ' AND ' + ' '.join(decimal_words) + ' CENTS'
     if is_negative:
         result = 'MINUS ' + result
-    if not decimal_part:
+    if result:
         result += ' ONLY'
     return result
