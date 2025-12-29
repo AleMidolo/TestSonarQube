@@ -6,5 +6,4 @@ def sin(self, x):
         >>> tricalculator.sin(30)
         0.5
         """
-    x = x / 180 * pi
     return round(self.taylor_sin(x, 50), 10)

@@ -14,12 +14,13 @@ def get_most_popular_class_in_major(self, major):
     class_enrollment = {}
     for student in self.students:
         if student['major'] == major:
-            student_classes = self.students_registration_classes.get(student['name'], [])
-            for class_name in student_classes:
-                if class_name in class_enrollment:
-                    class_enrollment[class_name] += 1
-                else:
-                    class_enrollment[class_name] = 1
+            student_name = student['name']
+            if student_name in self.students_registration_classes:
+                for class_name in self.students_registration_classes[student_name]:
+                    if class_name in class_enrollment:
+                        class_enrollment[class_name] += 1
+                    else:
+                        class_enrollment[class_name] = 1
     if not class_enrollment:
         return None
     most_popular_class = max(class_enrollment, key=class_enrollment.get)
