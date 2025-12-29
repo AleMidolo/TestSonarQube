@@ -8,4 +8,5 @@ def remove_punctuation(self, sentence):
         'I am running in a race'
 
         """
-    return sentence.translate(str.maketrans('', '', string.punctuation))
+    translator = str.maketrans('', '', string.punctuation)
+    return sentence.translate(translator)

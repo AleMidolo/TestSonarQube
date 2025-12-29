@@ -10,10 +10,11 @@ def mode(data):
         >>> statistics3.mode([1, 2, 3, 3])
         [3]
         """
-    from collections import Counter
     if not data:
-        return []
-    count = Counter(data)
-    max_count = max(count.values())
-    modes = [key for key, value in count.items() if value == max_count]
-    return modes
+        return None
+    count_dict = Counter(data)
+    max_count = max(count_dict.values())
+    if max_count == 1:
+        return list(count_dict.keys())
+    modes = [item for item, count in count_dict.items() if count == max_count]
+    return sorted(modes)

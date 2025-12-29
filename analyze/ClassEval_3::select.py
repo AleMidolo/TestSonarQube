@@ -11,4 +11,7 @@ def select(self, m=None):
         """
     if m is None:
         m = len(self.datas)
-    return list(itertools.permutations(self.datas, m))
+    result = []
+    for perm in itertools.permutations(self.datas, m):
+        result.append(list(perm))
+    return result

@@ -11,12 +11,10 @@ def calculate_total(self):
         32.0
         """
     total = 0.0
-    for selected in self.selected_dishes:
-        dish_name = selected['dish']
-        count = selected['count']
-        price = selected['price']
-        if dish_name in self.sales:
-            total += count * price * self.sales[dish_name]
-        else:
-            total += count * price
+    for dish in self.selected_dishes:
+        dish_name = dish['dish']
+        price = dish['price']
+        count = dish['count']
+        discount = self.sales.get(dish_name, 1.0)
+        total += price * count * discount
     return total

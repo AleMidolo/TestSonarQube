@@ -6,19 +6,22 @@ def vigenere_decipher(self, ciphertext):
         >>> d = DecryptionUtils('key')
         >>> d.vigenere_decipher('ifmmp')
         'ybocl'
+
         """
-    key = self.key
-    key_length = len(key)
     plaintext = ''
-    key_index = 0
-    for char in ciphertext:
+    key_length = len(self.key)
+    for i, char in enumerate(ciphertext):
         if char.isalpha():
-            shift = ord(key[key_index % key_length].lower()) - ord('a')
+            key_char = self.key[i % key_length]
+            key_shift = ord(key_char.lower()) - ord('a')
             if char.isupper():
-                plaintext += chr((ord(char) - shift - 65) % 26 + 65)
+                ascii_offset = 65
+                base_char = key_char.upper()
             else:
-                plaintext += chr((ord(char) - shift - 97) % 26 + 97)
-            key_index += 1
+                ascii_offset = 97
+                base_char = key_char.lower()
+            shifted_char = chr((ord(char) - ascii_offset - key_shift) % 26 + ascii_offset)
+            plaintext += shifted_char
         else:
             plaintext += char
     return plaintext

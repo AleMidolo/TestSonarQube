@@ -7,9 +7,9 @@ def remove_stop_words(self, string_list, stop_word_list):
         >>> NLPDataProcessor.process(['This is a test.'])
         [['This', 'is', 'test.']]
         """
-    words_without_stop_words = []
-    for string in string_list:
-        words = string.split()
+    result = []
+    for text in string_list:
+        words = text.split()
         filtered_words = [word for word in words if word.lower() not in stop_word_list]
-        words_without_stop_words.append(filtered_words)
-    return words_without_stop_words
+        result.append(filtered_words)
+    return result

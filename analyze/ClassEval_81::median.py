@@ -1,20 +1,22 @@
+@staticmethod
 def median(data):
     """
-    दी गई लिस्ट का मीडियन कैलकुलेट करता है।
+        दी गई लिस्ट का मीडियन कैलकुलेट करता है।
 
-    :param data: list, दी गई लिस्ट
-    :return: float, दी गई लिस्ट का मीडियन
+        :param data: list, दी गई लिस्ट
+        :return: float, दी गई लिस्ट का मीडियन
 
-    >>> statistics3 = Statistics3()
-    >>> statistics3.median([1, 2, 3, 4])
-    2.5
-    """
-    n = len(data)
-    if n == 0:
+        >>> statistics3 = Statistics3()
+        >>> statistics3.median([1, 2, 3, 4])
+        2.5
+        """
+    if not data:
         return None
     sorted_data = sorted(data)
-    mid = n // 2
-    if n % 2 == 0:
-        return (sorted_data[mid - 1] + sorted_data[mid]) / 2.0
+    n = len(sorted_data)
+    if n % 2 == 1:
+        return float(sorted_data[n // 2])
     else:
-        return sorted_data[mid]
+        mid1 = sorted_data[n // 2 - 1]
+        mid2 = sorted_data[n // 2]
+        return (mid1 + mid2) / 2.0

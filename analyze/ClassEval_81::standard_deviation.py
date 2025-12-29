@@ -1,16 +1,18 @@
 @staticmethod
 def standard_deviation(data):
     """
-        calculates the standard deviation of the given list.
-        :param data: the given list, list.
-        :return: the standard deviation of the given list, float.
+        दिए गए सूची का मानक विचलन की गणना करता है।
+        :param data: दी गई सूची, सूची।
+        :return: दी गई सूची का मानक विचलन, फ्लोट।
         >>> statistics3 = Statistics3()
         >>> statistics3.standard_deviation([1, 2, 3])
         1.0
 
         """
-    mean_value = Statistics3.mean(data)
-    if mean_value is None:
+    if len(data) == 0:
         return None
-    variance = sum(((x - mean_value) ** 2 for x in data)) / len(data)
+    mean_val = Statistics3.mean(data)
+    if mean_val is None:
+        return None
+    variance = sum(((x - mean_val) ** 2 for x in data)) / len(data)
     return math.sqrt(variance)

@@ -5,12 +5,12 @@ def read_excel(self, file_name):
         :return:list of data, एक्सेल में डेटा
         """
     try:
-        workbook = openpyxl.load_workbook(file_name)
+        workbook = openpyxl.load_workbook(file_name, data_only=True)
         sheet = workbook.active
         data = []
         for row in sheet.iter_rows(values_only=True):
             data.append(row)
         workbook.close()
         return data
-    except:
+    except Exception as e:
         return None

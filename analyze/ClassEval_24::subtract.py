@@ -8,6 +8,7 @@ def subtract(c1, c2):
         >>> complexCalculator = ComplexCalculator()
         >>> complexCalculator.subtract(1+2j, 3+4j)
         (-2-2j)
+
         """
     real = c1.real - c2.real
     imaginary = c1.imag - c2.imag

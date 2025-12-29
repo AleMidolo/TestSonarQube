@@ -1,8 +1,8 @@
 def write_csv(self, data, file_name):
     """
-        Write data to a csv file.
-        :param file_name: str, name of the csv file
-        :return:int, return 1 if successful, otherwise 0
+        डेटा को एक csv फ़ाइल में लिखें।
+        :param file_name: str, csv फ़ाइल का नाम
+        :return:int, यदि सफल हो तो 1 लौटाएं, अन्यथा 0
         >>> csvProcessor = CSVProcessor()
         >>> csvProcessor.write_csv([['a', 'b', 'c', 'd'], ['1', '2', '3', '4']], 'write_test.csv')
         1
@@ -13,4 +13,5 @@ def write_csv(self, data, file_name):
             writer.writerows(data)
         return 1
     except Exception as e:
+        print(f'Error writing CSV file: {e}')
         return 0
