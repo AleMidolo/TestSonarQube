@@ -9,6 +9,10 @@ def palindromic_length(self, center, diff, string):
         >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')
         2
         """
-    while center - diff >= 0 and center + diff < len(string) and (string[center - diff] == string[center + diff]):
+    left = center - diff
+    right = center + diff
+    while left >= 0 and right < len(string) and (string[left] == string[right]):
         diff += 1
+        left -= 1
+        right += 1
     return diff - 1
