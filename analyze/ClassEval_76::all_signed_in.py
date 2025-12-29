@@ -8,4 +8,4 @@ def all_signed_in(self):
         >>> signInSystem.all_signed_in()
         True
         """
-    return all(self.users.values())
+    return all((signed_in for signed_in in self.users.values()))

@@ -9,9 +9,8 @@ def level_up(self):
         """
     if self.level < 100:
         self.level += 1
-        self.exp = 0
         self.hp += 20
         self.attack_power += 5
         self.defense += 5
-        return (self.level, self.hp, self.attack_power, self.defense)
+        self.exp = 0
     return (self.level, self.hp, self.attack_power, self.defense)

@@ -11,7 +11,7 @@ def read_csv(self, file_name):
         with open(file_name, 'r') as file:
             reader = csv.reader(file)
             title = next(reader)
-            data = list(reader)
+            data = [row for row in reader]
         return (title, data)
     except:
         return ([], [])

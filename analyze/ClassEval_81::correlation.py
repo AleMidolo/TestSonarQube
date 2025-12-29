@@ -1,11 +1,11 @@
 @staticmethod
 def correlation(x, y):
     """
-        दो दी गई लिस्ट का कोरिलेशन कैलकुलेट करता है।
+        calculates the correlation of the two given lists.
 
-        :param x: list, पहली लिस्ट
-        :param y: list, दूसरी लिस्ट
-        :return: float, दोनों लिस्ट का कोरिलेशन
+        :param x: list, first list
+        :param y: list, second list
+        :return: float, correlation of both lists
 
         >>> statistics3 = Statistics3()
         >>> statistics3.correlation([1, 2, 3], [4, 5, 6])
