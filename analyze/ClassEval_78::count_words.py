@@ -7,5 +7,5 @@ def count_words(self, sentence):
         >>> ss.count_words("abc def")
         2
         """
-    words = re.findall('\\b\\w+\\b', sentence)
+    words = sentence.split()
     return len(words)

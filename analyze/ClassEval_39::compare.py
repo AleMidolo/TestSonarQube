@@ -17,5 +17,5 @@ def compare(self, cur, peek):
         :param operator: स्ट्रिंग, ऑपरेटर
         :return: int, ऑपरेटर का इंडेक्स
         """
-        operators = ['+', '-', '*', '\/', '(', ')', '%']
-        return operators.index(operator) if operator in operators else -1
+        operators = {'+': 0, '-': 1, '*': 2, '\/': 3, '%': 4, '(': 5, ')': 6}
+        return operators.get(operator, -1)

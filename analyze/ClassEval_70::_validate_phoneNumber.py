@@ -4,6 +4,6 @@ def _validate_phoneNumber(self, phoneNumber: str) -> str:
         :param phoneNumber: str, the phone number to validate
         :return: str, the validated phone number or None if invalid
         """
-    if not phoneNumber or len(phoneNumber) != 11 or (not phoneNumber.isdigit()):
+    if not phoneNumber or not phoneNumber.isdigit() or len(phoneNumber) != 11:
         return None
     return phoneNumber
