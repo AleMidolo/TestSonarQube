@@ -18,5 +18,4 @@ def send_message(self, sender, receiver, message):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     message_data = {'sender': sender, 'receiver': receiver, 'message': message, 'timestamp': timestamp}
     self.users[sender].append(message_data)
-    self.users[receiver].append(message_data)
     return True
