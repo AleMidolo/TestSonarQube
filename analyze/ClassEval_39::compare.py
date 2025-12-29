@@ -9,4 +9,4 @@ def compare(self, cur, peek):
     True
 
     """
-    return self.operat_priority[self.get_operator_index(cur)] >= self.operat_priority[self.get_operator_index(peek)]
+    return self.operat_priority[{'(': 0, '+': 1, '-': 1, '*': 2, '\\/': 2, '%': 2}.get(cur, -1)] >= self.operat_priority[{'(': 0, '+': 1, '-': 1, '*': 2, '\\/': 2, '%': 2}.get(peek, -1)]

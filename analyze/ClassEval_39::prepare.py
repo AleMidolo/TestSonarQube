@@ -4,6 +4,7 @@ def prepare(self, expression):
         :param expression: 字符串，要准备的中缀表达式
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.prepare("2+3*4")
+
         expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
         """
     operator_stack = deque()
@@ -12,7 +13,7 @@ def prepare(self, expression):
         c = expression[i]
         if c.isdigit() or c == '~':
             num = c
-            while i + 1 < len(expression) and (expression[i + 1].isdigit() or expression[i + 1] == '~'):
+            while i + 1 < len(expression) and (expression[i + 1].isdigit() or expression[i + 1] == '.'):
                 i += 1
                 num += expression[i]
             self.postfix_stack.append(num)
