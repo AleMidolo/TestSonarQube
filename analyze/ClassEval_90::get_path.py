@@ -1,7 +1,7 @@
 def get_path(self):
     """
-        Ottieni la terza parte dell'URL, che è l'indirizzo della risorsa
-        :return: stringa, Se ha successo, restituisce l'indirizzo della risorsa dell'URL
+        Get the third part of the URL, which is the resource address
+        :return: string, If successful, return the resource address of the URL
         >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
         >>> urlhandler.get_path()
         "/s?wd=aaa&rsv_spt=1#page"
