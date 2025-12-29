@@ -14,16 +14,20 @@ def format_string(self, x):
     decimal_part = x[1] if len(x) > 1 else ''
     words = []
     length = len(whole_part)
-    if length > 3:
-        for i in range(length, 0, -3):
-            part = whole_part[max(0, i - 3):i]
-            if part != '000':
-                words.append(self.trans_three(part) + ' ' + self.parse_more((length - i) // 3))
-    if not words:
-        words.append('ZERO')
-    words.reverse()
-    result = ' '.join(words).strip()
-    if decimal_part:
-        decimal_words = ' '.join((self.NUMBER[int(digit)] for digit in decimal_part))
-        result += ' POINT ' + decimal_words
-    return result + ' ONLY'
+    for i in range(length):
+        if length - i - 1 > 2:
+            part = whole_part[max(0, length - i - 3):length - i]
+            if part:
+                words.append(self.trans_three(part))
+                words.append(self.parse_more((length - i - 1) // 3))
+        elif length - i - 1 == 2:
+            part = whole_part[max(0, length - i - 3):length - i]
+            if part:
+                words.append(self.trans_three(part))
+        elif length - i - 1 == 1:
+            part = whole_part[max(0, length - i - 2):length - i]
+            if part:
+                words.append(self.trans_two(part))
+    result = ' AND '.join(words).strip()
+    result += ' ONLY'
+    return result
