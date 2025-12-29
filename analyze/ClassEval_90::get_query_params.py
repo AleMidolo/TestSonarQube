@@ -12,7 +12,8 @@ def get_query_params(self):
         query_string = self.url[query_start + 1:query_end if query_end != -1 else None]
         query_params = {}
         for param in query_string.split('&'):
-            key, value = param.split('=')
-            query_params[key] = value
+            key_value = param.split('=')
+            if len(key_value) == 2:
+                query_params[key_value[0]] = key_value[1]
         return query_params
     return {}

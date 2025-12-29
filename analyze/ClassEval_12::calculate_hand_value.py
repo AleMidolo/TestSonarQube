@@ -21,7 +21,7 @@ def calculate_hand_value(self, hand):
             aces += 1
         else:
             value += int(rank)
-    while value > 21 and aces > 0:
+    while value > 21 and aces:
         value -= 10
         aces -= 1
     return value
