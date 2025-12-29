@@ -20,12 +20,13 @@ def book_ticket(self, name, seats_to_book):
             break
     if movie is None:
         return 'Film non trovato.'
+    seats = movie['seats']
+    n_rows, n_cols = seats.shape
     for row, col in seats_to_book:
-        n_rows, n_cols = movie['seats'].shape
         if row < 0 or row >= n_rows or col < 0 or (col >= n_cols):
             return 'Prenotazione fallita.'
-        if movie['seats'][row, col] != 0:
+        if seats[row, col] != 0:
             return 'Prenotazione fallita.'
     for row, col in seats_to_book:
-        movie['seats'][row, col] = 1
+        seats[row, col] = 1
     return 'Prenotazione riuscita.'

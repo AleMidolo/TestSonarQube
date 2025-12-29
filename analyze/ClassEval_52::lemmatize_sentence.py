@@ -24,11 +24,6 @@ def lemmatize_sentence(self, sentence):
             pos = 'r'
         else:
             pos = 'n'
-        if tag == 'PRP' or tag == 'PRP$':
-            lemmatized_words.append(word.lower() if word.lower() == 'i' else word)
-        else:
-            lemmatized_word = self.lemmatizer.lemmatize(word, pos=pos)
-            if word.lower() == 'am' or word.lower() == 'are' or word.lower() == 'is' or (word.lower() == 'was') or (word.lower() == 'were') or (word.lower() == 'be') or (word.lower() == 'being') or (word.lower() == 'been'):
-                lemmatized_word = 'be'
-            lemmatized_words.append(lemmatized_word)
+        lemmatized_word = self.lemmatizer.lemmatize(word, pos=pos)
+        lemmatized_words.append(lemmatized_word)
     return lemmatized_words

@@ -7,17 +7,32 @@ def split_sentences(self, sentences_string):
         >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
-    pattern = '(?<!Mr)(?<!Mrs)(?<!Ms)(?<!Dr)\\.\\s+|\\?\\s+'
-    parts = re.split(pattern, sentences_string)
-    sentences = []
-    for i, part in enumerate(parts):
-        if i < len(parts) - 1:
-            match = re.search(pattern, sentences_string)
-            if match:
-                delimiter = match.group(0).strip()
-                sentences.append(part + delimiter)
-                sentences_string = sentences_string[match.end():]
-    if parts[-1] and (parts[-1].endswith('.') or parts[-1].endswith('?')):
-        sentences.append(parts[-1])
+    pattern = '(?<!\\bMr)(?<!\\bMrs)(?<!\\bMs)(?<!\\bDr)(?<!\\bProf)(?<!\\bRev)(?<!\\bHon)\\.\\s+|\\?\\s+'
+    sentences = re.split(pattern, sentences_string)
     sentences = [s.strip() for s in sentences if s.strip()]
-    return sentences
+    result = []
+    for i, sentence in enumerate(sentences):
+        if i < len(sentences) - 1:
+            start_pos = sentences_string.find(sentence)
+            if start_pos != -1:
+                end_pos = start_pos + len(sentence)
+                if end_pos < len(sentences_string):
+                    if sentences_string[end_pos:end_pos + 2] == '. ':
+                        result.append(sentence + '.')
+                    elif sentences_string[end_pos:end_pos + 2] == '? ':
+                        result.append(sentence + '?')
+                    else:
+                        result.append(sentence)
+        elif sentence and (sentence.endswith('.') or sentence.endswith('?')):
+            result.append(sentence)
+        elif sentences_string.strip().endswith(('.', '?')):
+            last_dot = sentences_string.rfind('.')
+            last_question = sentences_string.rfind('?')
+            last_punct = max(last_dot, last_question)
+            if last_punct != -1:
+                result.append(sentences_string[:last_punct + 1].strip())
+            else:
+                result.append(sentence)
+        else:
+            result.append(sentence)
+    return result

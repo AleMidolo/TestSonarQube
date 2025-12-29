@@ -11,7 +11,7 @@ def n_similarity(vector_list_1, vector_list_2):
         0.9897287473881233
         """
     if not vector_list_1 or not vector_list_2:
-        return 0.0
+        return np.array(0.0)
     v1_array = np.array(vector_list_1)
     v2_array = np.array(vector_list_2)
     mean_v1 = np.mean(v1_array, axis=0)
@@ -19,6 +19,6 @@ def n_similarity(vector_list_1, vector_list_2):
     norm_v1 = np.linalg.norm(mean_v1)
     norm_v2 = np.linalg.norm(mean_v2)
     if norm_v1 == 0 or norm_v2 == 0:
-        return 0.0
+        return np.array(0.0)
     similarity = np.dot(mean_v1, mean_v2) / (norm_v1 * norm_v2)
     return similarity

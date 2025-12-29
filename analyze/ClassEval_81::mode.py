@@ -13,5 +13,7 @@ def mode(data):
         return None
     count = Counter(data)
     max_count = max(count.values())
-    modes = [value for value, freq in count.items() if freq == max_count]
+    if max_count == 1:
+        return list(set(data))
+    modes = [item for item, freq in count.items() if freq == max_count]
     return sorted(modes)

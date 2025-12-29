@@ -13,8 +13,6 @@ def transfer(self, other_account, amount):
         raise ValueError('Invalid amount')
     if amount > self.balance:
         raise ValueError('Insufficient balance.')
-    if not isinstance(other_account, BankAccount):
-        raise TypeError('other_account must be a BankAccount instance')
     self.balance -= amount
     other_account.balance += amount
     return self.balance

@@ -22,6 +22,7 @@ def bad_character_heuristic(self):
             if rightmost_pos == -1:
                 s = mismatch_pos + 1
             else:
-                shift = mismatch_pos - (s + rightmost_pos)
-                s += max(1, shift)
+                pattern_pos = mismatch_pos - s
+                shift = max(1, pattern_pos - rightmost_pos)
+                s += shift
     return positions

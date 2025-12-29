@@ -13,7 +13,7 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         [3.0, 7.0]
 
         """
-    result = []
+    z_interp = []
     for xi, yi in zip(x_interp, y_interp):
         x_idx = None
         for i in range(len(x) - 1):
@@ -27,12 +27,21 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
                 break
         if x_idx is None or y_idx is None:
             raise ValueError('Interpolation point outside data range')
-        z11 = z[x_idx][y_idx]
-        z12 = z[x_idx][y_idx + 1]
-        z21 = z[x_idx + 1][y_idx]
-        z22 = z[x_idx + 1][y_idx + 1]
-        z1 = z11 + (z12 - z11) * (yi - y[y_idx]) / (y[y_idx + 1] - y[y_idx])
-        z2 = z21 + (z22 - z21) * (yi - y[y_idx]) / (y[y_idx + 1] - y[y_idx])
-        zi = z1 + (z2 - z1) * (xi - x[x_idx]) / (x[x_idx + 1] - x[x_idx])
-        result.append(zi)
-    return result
+        z11 = z[y_idx][x_idx]
+        z12 = z[y_idx][x_idx + 1]
+        z21 = z[y_idx + 1][x_idx]
+        z22 = z[y_idx + 1][x_idx + 1]
+        if x[x_idx + 1] != x[x_idx]:
+            rx = (xi - x[x_idx]) / (x[x_idx + 1] - x[x_idx])
+            z1 = z11 + (z12 - z11) * rx
+            z2 = z21 + (z22 - z21) * rx
+        else:
+            z1 = z11
+            z2 = z21
+        if y[y_idx + 1] != y[y_idx]:
+            ry = (yi - y[y_idx]) / (y[y_idx + 1] - y[y_idx])
+            zi = z1 + (z2 - z1) * ry
+        else:
+            zi = z1
+        z_interp.append(zi)
+    return z_interp

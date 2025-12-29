@@ -16,11 +16,10 @@ def vigenere_decipher(self, ciphertext):
             key_shift = ord(key_char.lower()) - ord('a')
             if char.isupper():
                 ascii_offset = 65
-                base_char = key_char.upper()
+                plain_char = chr((ord(char) - ascii_offset - key_shift) % 26 + ascii_offset)
             else:
                 ascii_offset = 97
-                base_char = key_char.lower()
-            plain_char = chr((ord(char) - ascii_offset - key_shift) % 26 + ascii_offset)
+                plain_char = chr((ord(char) - ascii_offset - key_shift) % 26 + ascii_offset)
             plaintext += plain_char
         else:
             plaintext += char

@@ -15,8 +15,10 @@ def purchase_item(self, item_name):
         return False
     item = self.inventory[item_name]
     if item['quantity'] <= 0:
+        print('Acquisto non riuscito: prodotto esaurito')
         return False
     if self.balance < item['price']:
+        print('Acquisto non riuscito: saldo insufficiente')
         return False
     self.balance -= item['price']
     item['quantity'] -= 1
