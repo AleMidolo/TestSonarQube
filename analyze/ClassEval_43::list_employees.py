@@ -7,4 +7,4 @@ def list_employees(self):
         >>> hrManagementSystem.list_employees()
         {1: {'employee_ID': 1, 'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}}
         """
-    return {employee_id: {**{'employee_ID': employee_id}, **info} for employee_id, info in self.employees.items()}
+    return {employee_id: {**info, 'employee_ID': employee_id} for employee_id, info in self.employees.items()}

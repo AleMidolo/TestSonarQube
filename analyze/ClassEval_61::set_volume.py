@@ -7,6 +7,7 @@ def set_volume(self, volume):
     >>> musicPlayer.set_volume(50)
     >>> musicPlayer.volume
     50
+
     """
     if 0 <= volume <= 100:
         self.volume = volume

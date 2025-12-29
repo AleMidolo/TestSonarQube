@@ -8,6 +8,7 @@ def clear_inbox(self, size):
         >>> receiver.clear_inbox(30)
         >>> receiver.inbox
         [{'size': 15}]
+
         """
     while self.is_full_with_one_more_email(size):
         if self.inbox:
