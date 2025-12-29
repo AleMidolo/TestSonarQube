@@ -8,6 +8,7 @@ def has(states, stat):
         >>> bit_status_util = BitStatusUtil()
         >>> bit_status_util.has(6,2)
         True
+
         """
     BitStatusUtil.check([states, stat])
     return states & stat == stat

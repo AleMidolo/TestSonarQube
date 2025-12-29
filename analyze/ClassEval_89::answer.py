@@ -13,10 +13,11 @@ def answer(self, expression):
         return False
     try:
         import re
-        numbers_in_expr = re.findall('\\d+', expression)
-        numbers_in_expr = [int(num) for num in numbers_in_expr]
-        if len(numbers_in_expr) != 4:
+        expr_numbers = re.findall('\\d+', expression)
+        expr_numbers = [int(num) for num in expr_numbers]
+        if sorted(expr_numbers) == sorted(self.nums):
+            return True
+        else:
             return False
-        return sorted(numbers_in_expr) == sorted(self.nums)
-    except:
+    except Exception as e:
         return False

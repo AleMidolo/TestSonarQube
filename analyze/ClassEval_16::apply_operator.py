@@ -13,10 +13,11 @@ def apply_operator(self, operand_stack, operator_stack):
     operator = operator_stack.pop()
     b = operand_stack.pop()
     a = operand_stack.pop()
-    if operator in self.operators:
-        try:
-            result = self.operators[operator](a, b)
-            operand_stack.append(result)
-        except ZeroDivisionError:
-            operand_stack.append(float('inf'))
+    try:
+        result = self.operators[operator](a, b)
+        operand_stack.append(result)
+    except ZeroDivisionError:
+        operand_stack.append(float('inf'))
+    except Exception:
+        operand_stack.append(float('nan'))
     return (operand_stack, operator_stack)

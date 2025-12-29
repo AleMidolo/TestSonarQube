@@ -10,8 +10,15 @@ def get_job_applicants(self, job):
         [{'name': 'Tom', 'skills': ['skill1', 'skill2'], 'experience': 'esperienza'}]
 
         """
+
+    def matches_requirements(resume, job_requirements):
+        """Helper function to check if resume matches job requirements."""
+        resume_skills = set((skill.lower() for skill in resume['skills']))
+        job_reqs = set((req.lower() for req in job_requirements))
+        return job_reqs.issubset(resume_skills)
     matching_applicants = []
+    job_requirements = job.get('requirements', [])
     for resume in self.resumes:
-        if self.matches_requirements(resume, job):
+        if matches_requirements(resume, job_requirements):
             matching_applicants.append(resume)
     return matching_applicants

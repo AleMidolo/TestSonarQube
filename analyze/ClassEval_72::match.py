@@ -9,4 +9,4 @@ def match(self, pattern, text):
         True
         """
     match_obj = re.match(pattern, text)
-    return match_obj is not None
+    return match_obj is not None and match_obj.group() == text
