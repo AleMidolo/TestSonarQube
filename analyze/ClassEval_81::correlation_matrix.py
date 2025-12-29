@@ -10,12 +10,6 @@ def correlation_matrix(data):
 
         """
     n = len(data)
-    if n == 0:
-        return []
-    first_len = len(data[0])
-    for i in range(1, n):
-        if len(data[i]) != first_len:
-            raise ValueError('All sublists must have the same length')
     matrix = [[0.0] * n for _ in range(n)]
     for i in range(n):
         for j in range(n):

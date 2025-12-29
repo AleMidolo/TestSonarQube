@@ -8,9 +8,9 @@ def text2int(self, textnum):
         "32"
         """
     if not self.is_valid_input(textnum):
-        return ''
-    textnum = textnum.replace('-', ' ')
-    words = textnum.lower().split()
+        return None
+    textnum = textnum.lower().replace('-', ' ')
+    words = textnum.split()
     current = 0
     result = 0
     for word in words:
@@ -19,7 +19,7 @@ def text2int(self, textnum):
         else:
             for ending, replacement in self.ordinal_endings:
                 if word.endswith(ending):
-                    word = '%s%s' % (word[:-len(ending)], replacement)
+                    word = word[:-len(ending)] + replacement
                     break
             if word not in self.numwords:
                 continue

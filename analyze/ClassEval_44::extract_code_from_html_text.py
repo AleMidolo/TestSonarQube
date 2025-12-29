@@ -21,9 +21,9 @@ def extract_code_from_html_text(self, html_text):
         return []
     soup = BeautifulSoup(html_text, 'lxml')
     code_elements = soup.find_all(['pre', 'code'])
-    extracted_code = []
+    code_list = []
     for element in code_elements:
         code_text = element.get_text(strip=False)
         if code_text:
-            extracted_code.append(code_text)
-    return extracted_code
+            code_list.append(code_text)
+    return code_list

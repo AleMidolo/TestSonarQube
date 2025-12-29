@@ -6,7 +6,7 @@ def string_to_datetime(self, string):
         >>> timeutils.string_to_datetime("2001-7-18 1:1:1")
         2001-07-18 01:01:01
         """
-    formats = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d', '%Y/%m/%d %H:%M:%S', '%Y/%m/%d %H:%M', '%Y/%m/%d', '%Y.%m.%d %H:%M:%S', '%Y.%m.%d %H:%M', '%Y.%m.%d', '%d-%m-%Y %H:%M:%S', '%d-%m-%Y %H:%M', '%d-%m-%Y', '%d/%m/%Y %H:%M:%S', '%d/%m/%Y %H:%M', '%d/%m/%Y', '%d.%m.%Y %H:%M:%S', '%d.%m.%Y %H:%M', '%d.%m.%Y']
+    formats = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M:%S', '%Y/%m/%d %H:%M', '%Y.%m.%d %H:%M:%S', '%Y.%m.%d %H:%M', '%Y-%m-%d', '%Y/%m/%d', '%Y.%m.%d']
     for fmt in formats:
         try:
             return datetime.datetime.strptime(string, fmt)
@@ -19,29 +19,25 @@ def string_to_datetime(self, string):
         from dateutil import parser
         return parser.parse(normalized)
     except ImportError:
-        parts = normalized.split(' ')
+        parts = normalized.split()
         date_part = parts[0]
         time_part = parts[1] if len(parts) > 1 else '00:00:00'
-        for sep in ['-', '/', '.']:
-            date_part = date_part.replace(sep, '-')
-        date_parts = date_part.split('-')
-        if len(date_parts) == 3:
-            year, month, day = date_parts
-            year = int(year)
-            month = int(month)
-            day = int(day)
+        date_formats = ['%Y-%m-%d', '%Y/%m/%d', '%Y.%m.%d', '%m/%d/%Y', '%d/%m/%Y']
+        for fmt in date_formats:
+            try:
+                date_obj = datetime.datetime.strptime(date_part, fmt).date()
+                break
+            except ValueError:
+                continue
         else:
             raise ValueError(f'Unable to parse date string: {string}')
-        time_parts = time_part.split(':')
-        if len(time_parts) == 3:
-            hour, minute, second = map(int, time_parts)
-        elif len(time_parts) == 2:
-            hour, minute = map(int, time_parts)
-            second = 0
-        elif len(time_parts) == 1:
-            hour = int(time_parts[0])
-            minute = 0
-            second = 0
+        time_formats = ['%H:%M:%S', '%H:%M', '%H.%M.%S', '%H.%M']
+        for fmt in time_formats:
+            try:
+                time_obj = datetime.datetime.strptime(time_part, fmt).time()
+                break
+            except ValueError:
+                continue
         else:
-            hour = minute = second = 0
-        return datetime.datetime(year, month, day, hour, minute, second)
+            time_obj = datetime.time(0, 0, 0)
+        return datetime.datetime.combine(date_obj, time_obj)

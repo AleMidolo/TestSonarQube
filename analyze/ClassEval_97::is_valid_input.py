@@ -7,20 +7,21 @@ def is_valid_input(self, textnum):
         >>> w2n.is_valid_input("thirty-two")
         False
         """
-    words = textnum.replace('-', ' ').split()
+    textnum = textnum.replace('-', ' ')
+    words = textnum.split()
     if not words:
         return False
     for word in words:
         if word in self.ordinal_words:
             continue
-        found_ordinal = False
+        converted = False
         for ending, replacement in self.ordinal_endings:
             if word.endswith(ending):
                 base_word = word[:-len(ending)] + replacement
                 if base_word in self.numwords:
-                    found_ordinal = True
+                    converted = True
                     break
-        if found_ordinal:
+        if converted:
             continue
         if word not in self.numwords:
             return False

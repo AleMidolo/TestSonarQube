@@ -12,11 +12,14 @@ def interpolate_1d(self, x, y, x_interp):
         """
     y_interp = []
     for xi in x_interp:
-        if xi < x[0] or xi > x[-1]:
-            raise ValueError(f'插值点 {xi} 超出数据范围 [{x[0]}, {x[-1]}]')
         for i in range(len(x) - 1):
             if x[i] <= xi <= x[i + 1]:
                 yi = y[i] + (y[i + 1] - y[i]) * (xi - x[i]) / (x[i + 1] - x[i])
                 y_interp.append(yi)
                 break
+        else:
+            if xi <= x[0]:
+                y_interp.append(y[0])
+            else:
+                y_interp.append(y[-1])
     return y_interp
