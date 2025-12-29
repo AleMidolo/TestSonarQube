@@ -10,17 +10,17 @@ def parse_arguments(self, command_string):
         >>> parser.arguments
         {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
         """
-    import re
-    parts = re.split('\\s+', command_string)
-    for part in parts:
-        if '=' in part:
-            key, value = part.split('=', 1)
-            key = key.lstrip('-')
+    args = command_string.split()
+    for arg in args[2:]:
+        if '=' in arg:
+            key, value = arg.split('=', 1)
+        else:
+            key = arg
+            value = True
+        key = key.lstrip('-')
+        if key in self.types:
             self.arguments[key] = self._convert_type(key, value)
-        elif part.startswith('-'):
-            key = part.lstrip('-')
-            self.arguments[key] = True
+        else:
+            self.arguments[key] = value
     missing_args = {arg for arg in self.required if arg not in self.arguments}
-    if missing_args:
-        return (False, missing_args)
-    return (True, None)
+    return (len(missing_args) == 0, missing_args if missing_args else None)

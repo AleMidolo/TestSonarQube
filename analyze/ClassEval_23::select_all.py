@@ -9,5 +9,5 @@ def select_all(self) -> List[List[str]]:
     result = []
     n = len(self.datas)
     for m in range(1, n + 1):
-        result.extend(self.select(m))
+        self._select(0, [None] * m, 0, result)
     return result

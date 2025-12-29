@@ -9,7 +9,7 @@ def process_excel_data(self, N, save_file_name):
     """
     data = self.read_excel(save_file_name)
     if data is None:
-        return (0, save_file_name)
+        return (0, None)
     for i in range(len(data)):
         if len(data[i]) > N:
             data[i] = list(data[i])
