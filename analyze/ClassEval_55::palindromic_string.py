@@ -9,15 +9,30 @@ def palindromic_string(self):
         """
     if not self.input_string:
         return ''
-    transformed = '|'.join(self.input_string)
-    transformed = '|' + transformed + '|'
-    max_length = 0
-    max_center = 0
-    for center in range(len(transformed)):
-        length = self.palindromic_length(center, 1, transformed)
-        if length > max_length:
-            max_length = length
-            max_center = center
-    start = (max_center - max_length) // 2
-    end = start + max_length
+    transformed = '|' + '|'.join(self.input_string) + '|'
+    n = len(transformed)
+    p = [0] * n
+    center = 0
+    right = 0
+    for i in range(n):
+        mirror = 2 * center - i
+        if i < right:
+            p[i] = min(right - i, p[mirror])
+        left_idx = i - (1 + p[i])
+        right_idx = i + (1 + p[i])
+        while left_idx >= 0 and right_idx < n and (transformed[left_idx] == transformed[right_idx]):
+            p[i] += 1
+            left_idx -= 1
+            right_idx += 1
+        if i + p[i] > right:
+            center = i
+            right = i + p[i]
+    max_len = 0
+    center_idx = 0
+    for i in range(n):
+        if p[i] > max_len:
+            max_len = p[i]
+            center_idx = i
+    start = (center_idx - max_len) // 2
+    end = start + max_len
     return self.input_string[start:end]

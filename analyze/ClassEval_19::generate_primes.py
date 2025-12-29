@@ -11,9 +11,10 @@ def generate_primes(self):
         return []
     is_prime = [True] * (self.n + 1)
     is_prime[0] = is_prime[1] = False
-    for i in range(2, int(self.n ** 0.5) + 1):
+    primes = []
+    for i in range(2, self.n + 1):
         if is_prime[i]:
+            primes.append(i)
             for j in range(i * i, self.n + 1, i):
                 is_prime[j] = False
-    primes = [i for i in range(2, self.n + 1) if is_prime[i]]
     return primes

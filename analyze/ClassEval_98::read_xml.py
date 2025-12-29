@@ -11,6 +11,5 @@ def read_xml(self):
         tree = ET.parse(self.file_name)
         self.root = tree.getroot()
         return self.root
-    except Exception as e:
-        print(f'Error reading XML file: {e}')
+    except:
         return None

@@ -15,21 +15,17 @@ def string_to_datetime(self, string):
     import re
     normalized = re.sub('[/.-]', '-', string)
     date_time_parts = normalized.split()
-    date_part = date_time_parts[0]
-    time_part = date_time_parts[1] if len(date_time_parts) > 1 else '00:00:00'
-    date_components = date_part.split('-')
-    if len(date_components) == 3:
-        year, month, day = date_components
-        if len(year) == 2:
-            year = '20' + year if int(year) < 50 else '19' + year
-    else:
-        raise ValueError(f'Unable to parse date from string: {string}')
-    time_components = time_part.split(':')
-    if len(time_components) == 3:
-        hour, minute, second = time_components
-    elif len(time_components) == 2:
-        hour, minute = time_components
-        second = '00'
-    else:
-        hour, minute, second = ('00', '00', '00')
-    return datetime.datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
+    if len(date_time_parts) == 1:
+        date_parts = date_time_parts[0].split('-')
+        if len(date_parts) == 3:
+            year, month, day = map(int, date_parts)
+            return datetime.datetime(year, month, day)
+    elif len(date_time_parts) == 2:
+        date_parts = date_time_parts[0].split('-')
+        time_parts = date_time_parts[1].split(':')
+        if len(date_parts) == 3 and len(time_parts) >= 2:
+            year, month, day = map(int, date_parts)
+            hour, minute = map(int, time_parts[:2])
+            second = int(time_parts[2]) if len(time_parts) > 2 else 0
+            return datetime.datetime(year, month, day, hour, minute, second)
+    raise ValueError(f'Unable to parse time string: {string}')

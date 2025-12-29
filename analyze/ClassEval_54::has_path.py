@@ -14,25 +14,31 @@ def has_path(self, pos1, pos2):
         """
     x1, y1 = pos1
     x2, y2 = pos2
-    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-    queue = deque()
+    if abs(x1 - x2) + abs(y1 - y2) == 1:
+        return True
     visited = set()
-    queue.append((x1, y1, 0, None))
-    visited.add((x1, y1))
+    queue = deque()
+    queue.append((x1, y1, 0, 0, 0))
+    visited.add((x1, y1, 0, 0, 0))
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
     while queue:
-        x, y, turns, prev_dir = queue.popleft()
+        x, y, dir_x, dir_y, turns = queue.popleft()
         if (x, y) == (x2, y2):
             return True
-        if turns >= 2:
-            continue
         for dx, dy in directions:
-            nx, ny = (x + dx, y + dy)
-            if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
-                if self.board[nx][ny] == ' ' or (nx, ny) == (x2, y2):
-                    new_turns = turns
-                    if prev_dir is not None and (dx, dy) != prev_dir:
-                        new_turns += 1
-                    if (nx, ny, new_turns, (dx, dy)) not in visited and new_turns <= 2:
-                        queue.append((nx, ny, new_turns, (dx, dy)))
-                        visited.add((nx, ny, new_turns, (dx, dy)))
+            new_x, new_y = (x + dx, y + dy)
+            if not (0 <= new_x < self.BOARD_SIZE[0] and 0 <= new_y < self.BOARD_SIZE[1]):
+                continue
+            if (new_x, new_y) != (x2, y2) and self.board[new_x][new_y] != ' ':
+                continue
+            new_dir_x, new_dir_y = (dx, dy)
+            new_turns = turns
+            if (dir_x, dir_y) != (0, 0) and (dir_x, dir_y) != (new_dir_x, new_dir_y):
+                new_turns += 1
+            if new_turns > 2:
+                continue
+            state = (new_x, new_y, new_dir_x, new_dir_y, new_turns)
+            if state not in visited:
+                visited.add(state)
+                queue.append(state)
     return False

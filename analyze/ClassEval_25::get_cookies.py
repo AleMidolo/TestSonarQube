@@ -8,7 +8,7 @@ def get_cookies(self, response):
         {'key1': 'value1', 'key2': 'value2'}
 
         """
-    if 'cookies' in response:
+    if isinstance(response, dict) and 'cookies' in response:
         self.cookies = response['cookies']
         self._save_cookies()
     else:

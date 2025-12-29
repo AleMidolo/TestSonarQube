@@ -21,10 +21,12 @@ def format_line_html_text(self, html_text):
         -CODE-
         """
     soup = BeautifulSoup(html_text, 'lxml')
-    code_elements = soup.find_all(['pre', 'blockquote'])
-    for element in code_elements:
-        element.replace_with(self.CODE_MARK)
-    text = soup.get_text(separator='\n', strip=False)
-    text = re.sub('\\n\\s*\\n', '\n', text)
+    for script in soup(['script', 'style']):
+        script.decompose()
+    for tag in soup.find_all(['pre', 'blockquote']):
+        tag.replace_with(self.CODE_MARK)
+    text = soup.get_text()
+    text = re.sub('\\s+', ' ', text)
+    text = self.__format_line_feed(text)
     text = text.strip()
     return text
