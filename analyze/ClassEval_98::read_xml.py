@@ -1,7 +1,7 @@
 def read_xml(self):
     """
-        读取 XML 文件并返回根元素。
-        :return: Element，XML 文件的根元素。
+        Reads the XML file and returns the root element.
+        :return: Element, the root element of the XML file.
         >>> xml_processor = XMLProcessor('test.xml')
         >>> root_element = xml_processor.read_xml()
         >>> print(root_element)
@@ -11,6 +11,7 @@ def read_xml(self):
         tree = ET.parse(self.file_name)
         self.root = tree.getroot()
         return self.root
-    except Exception as e:
-        print(f'Error reading XML file: {e}')
+    except ET.ParseError:
+        return None
+    except FileNotFoundError:
         return None

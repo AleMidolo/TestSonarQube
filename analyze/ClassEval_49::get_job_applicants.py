@@ -1,8 +1,8 @@
 def get_job_applicants(self, job):
     """
-        此函数用于获取候选人信息，并通过调用 matches_requirements 函数返回符合要求的候选人信息。
-        :param job: 职位信息，dict。
-        :return: 符合要求的候选人信息，list。
+        This function is used to obtain candidate information,and return the candidate information that meets the requirements by calling the matches_requirements function.
+        :param job: The position information,dict.
+        :return: The candidate information that meets the requirements,list.
         >>> jobMarketplace = JobMarketplace()
         >>> jobMarketplace.resumes = [{"name": "Tom", "skills": ['skill1', 'skill2'], "experience": "experience"}]
         >>> jobMarketplace.job_listings = [{"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill1', 'skill2']}]
@@ -10,8 +10,8 @@ def get_job_applicants(self, job):
         [{'name': 'Tom', 'skills': ['skill1', 'skill2'], 'experience': 'experience'}]
 
         """
-    matching_applicants = []
+    applicants = []
     for resume in self.resumes:
         if self.matches_requirements(resume, job):
-            matching_applicants.append(resume)
-    return matching_applicants
+            applicants.append(resume)
+    return applicants

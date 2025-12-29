@@ -1,23 +1,18 @@
 def buy_stock(self, stock):
     """
-        购买股票并将其添加到投资组合中。
-        :param stock: 一个字典，包含键 "name"、"price" 和 "quantity"
-        :param quantity: 要购买的股票数量，int。
-        :return: 如果股票成功购买则返回 True，如果现金余额不足则返回 False。
+        Buy a stock and add it to the portfolio.
+        :param stock: a dictionary with keys "name", "price", and "quantity"
+        :param quantity: the quantity of the stock to buy,int.
+        :return: True if the stock was bought successfully, False if the cash balance is not enough.
         >>> tracker = StockPortfolioTracker(10000.0)
         >>> tracker.buy_stock({"name": "AAPL", "price": 150.0, "quantity": 10})
         True
         >>> tracker.portfolio
         [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
-
         """
-    cost = stock['price'] * stock['quantity']
-    if cost > self.cash_balance:
+    total_cost = stock['price'] * stock['quantity']
+    if total_cost > self.cash_balance:
         return False
-    self.cash_balance -= cost
-    for pf in self.portfolio:
-        if pf['name'] == stock['name']:
-            pf['quantity'] += stock['quantity']
-            return True
-    self.portfolio.append(stock)
+    self.cash_balance -= total_cost
+    self.add_stock(stock)
     return True

@@ -1,9 +1,9 @@
 def add_item(self, item_name, price, quantity):
     """
-        将产品添加到自动售货机的库存中。
-        :param item_name: 要添加的产品名称，str。
-        :param price: 要添加的产品价格，float。
-        :param quantity: 要添加的产品数量，int。
+        Adds a product to the vending machine's inventory.
+        :param item_name: The name of the product to be added, str.
+        :param price: The price of the product to be added, float.
+        :param quantity: The quantity of the product to be added, int.
         :return: None
         >>> vendingMachine = VendingMachine()
         >>> vendingMachine.add_item('Coke', 1.25, 10)

@@ -1,13 +1,22 @@
 def compare(self, cur, peek):
-    """
-        比较两个运算符的优先级
-        :param cur: 字符串，当前运算符
-        :param peek: 字符串，运算符栈顶部的运算符
-        :return: 布尔值，如果当前运算符具有更高或相等的优先级，则为 True，否则为 False
+        """
+        Compare the precedence of two operators
+        :param cur: string, the current operator
+        :param peek: string, the operator at the top of the operator stack
+        :return: bool, True if the current operator has higher or equal precedence, False otherwise
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.compare("+", "-")
         True
+
         """
-    index1 = self.get_priority_index(cur)
-    index2 = self.get_priority_index(peek)
-    return self.operat_priority[index1] <= self.operat_priority[index2]
+        return self.operat_priority[self.get_operator_index(cur)] >= self.operat_priority[self.get_operator_index(peek)]
+
+    @staticmethod
+    def get_operator_index(op):
+        """
+        Get the index of the operator in the operator priority list
+        :param op: string, the operator
+        :return: int, the index of the operator
+        """
+        operators = {'+': 0, '-': 1, '*': 2, '\/': 3, '%': 4, '(': 5, ')': 6}
+        return operators.get(op, -1)

@@ -1,11 +1,10 @@
 def calculate_calorie_intake(self):
     """
-        根据用户的状况和基础代谢率（BMR）计算卡路里摄入量。BMR是根据用户的身高、体重、年龄和性别计算的，男性的计算公式为10 * self.weight + 6.25 * self.height - 5 * self.age + 5，女性的计算公式为10 * self.weight + 6.25 * self.height - 5 * self.age - 161。卡路里摄入量是基于BMR和用户的状况计算的，如果用户过于肥胖，卡路里摄入量为BMR * 1.2；如果用户过于瘦，卡路里摄入量为BMR * 1.6；如果用户正常，卡路里摄入量为BMR * 1.4。
-        :return: 卡路里摄入量，浮点数。
+        Calculate the calorie intake based on the user's condition and BMR (Basal Metabolic Rate), BMR is calculated based on the user's height, weight, age, and sex, male is 10 * self.weight + 6.25 * self.height - 5 * self.age + 5, female is 10 * self.weight + 6.25 * self.height - 5 * self.age - 161, and the calorie intake is calculated based on the BMR and the user's condition, if the user is too fat, the calorie intake is BMR * 1.2, if the user is too thin, the calorie intake is BMR * 1.6, if the user is normal, the calorie intake is BMR * 1.4.
+        :return: calorie intake, float.
         >>> fitnessTracker = FitnessTracker(1.8, 70, 20, "male")
         >>> fitnessTracker.calculate_calorie_intake()
         986.0
-
         """
     if self.sex == 'male':
         BMR = 10 * self.weight + 6.25 * self.height * 100 - 5 * self.age + 5

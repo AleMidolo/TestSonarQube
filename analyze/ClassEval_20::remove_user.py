@@ -1,8 +1,8 @@
 def remove_user(self, username):
     """
-        从聊天中移除用户。
-        :param username: 用户的名称，字符串。
-        :return: 如果用户已经在聊天中，返回 True；否则，返回 False。
+        Remove a user from the Chat.
+        :param username: The user's name, str.
+        :return: If the user is already in the Chat, returns True, otherwise, returns False.
         >>> chat = Chat()
         >>> chat.users = {'John': []}
         >>> chat.remove_user('John')

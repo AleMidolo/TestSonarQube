@@ -1,10 +1,10 @@
 def book_ticket(self, name, seats_to_book):
     """
-        预订电影票。如果成功预订，则在self.movies中更改座位值。
-        :param name: str, 电影名称
-        :param seats_to_book: 元组列表, 表示要预订的座位 [(row1, col1), (row2, col2), ...]
-        :return: str, 预订状态消息。 "Movie not found." 表示没有该电影。
-                "Booking success." 表示成功预订，或 "Booking failed." 表示其他情况
+        Book tickets for a movie. Change the seats value in self.movies if book successfully.
+        :param name: str, movie name
+        :param seats_to_book: list of tuples, representing seats to book [(row1, col1), (row2, col2), ...]
+        :return: str, booking status message. "Movie not found." for no such movie.
+                "Booking success." for successfully booking, or "Booking failed." otherwise
         >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)
         >>> system.book_ticket('Batman', [(0, 0), (0, 1)])
         'Booking success.'
@@ -13,20 +13,13 @@ def book_ticket(self, name, seats_to_book):
         >>> system.book_ticket('batman', [(0, 0)])
         'Movie not found.'
         """
-    movie_found = None
     for movie in self.movies:
-        if movie['name'] == name:
-            movie_found = movie
-            break
-    if movie_found is None:
-        return 'Movie not found.'
-    seats = movie_found['seats']
-    n = seats.shape[0]
-    for row, col in seats_to_book:
-        if row < 0 or row >= n or col < 0 or (col >= n):
-            return 'Booking failed.'
-        if seats[row, col] != 0:
-            return 'Booking failed.'
-    for row, col in seats_to_book:
-        seats[row, col] = 1
-    return 'Booking success.'
+        if movie['name'].lower() == name.lower():
+            for seat in seats_to_book:
+                row, col = seat
+                if movie['seats'][row][col] == 0:
+                    movie['seats'][row][col] = 1
+                else:
+                    return 'Booking failed.'
+            return 'Booking success.'
+    return 'Movie not found.'

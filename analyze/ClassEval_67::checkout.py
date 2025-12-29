@@ -1,7 +1,8 @@
 def checkout(self):
     """
-        结账所点的菜品。如果 self.selected_dishes 不为空，调用 calculate_total 方法进行结账。
-        :return 如果 self.selected_dishes 为空则返回 False，否则返回总金额（calculate_total 的返回值）。
+        Check out the dished ordered. IF the self.selected_dishes is not empty, invoke the calculate_total
+        method to check out.
+        :return Flase if the self.selected_dishes is empty, or total(return value of calculate_total) otherwise.
         >>> order = Order()
         >>> order.menu.append({"dish": "dish1", "price": 10, "count": 5})
         >>> order.sales = {"dish1": 0.8}

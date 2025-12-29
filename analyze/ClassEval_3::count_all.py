@@ -1,14 +1,14 @@
 @staticmethod
 def count_all(n):
     """
-        计算从 n 个元素中选择至少 1 个元素，至多 n 个元素的所有可能排列的总数。
-        :param n: int，总元素数量。
-        :return: int，所有排列的数量。
+        Counts the total number of all possible arrangements by choosing at least 1 item and at most n items from n items.
+        :param n: int, the total number of items.
+        :return: int, the count of all arrangements.
         >>> ArrangementCalculator.count_all(4)
         64
 
         """
-    total = 0
-    for i in range(1, n + 1):
-        total += ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - i)
-    return total
+    total_count = 0
+    for m in range(1, n + 1):
+        total_count += ArrangementCalculator.count(n, m)
+    return total_count

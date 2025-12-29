@@ -1,8 +1,8 @@
 def select_female_under_age(self, age):
     """
-        生成一个 SQL 语句以选择指定年龄以下的女性。
-        :param age: int. 指定的年龄。
-        :return: str. 生成的 SQL 语句。
+        Generates a SQL statement to select females under a specified age.
+        :param age: int. The specified age.
+        :return: str. The generated SQL statement.
         >>> sql.select_female_under_age(30)
         "SELECT * FROM table1 WHERE age < 30 AND gender = 'female';"
         """

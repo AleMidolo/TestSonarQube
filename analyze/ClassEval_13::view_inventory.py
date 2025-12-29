@@ -1,7 +1,7 @@
 def view_inventory(self):
     """
-        获取图书管理系统的库存。
-        :return self.inventory: 字典, {标题(str): 数量(int), ...}
+        Get the inventory of the Book Management.
+        :return self.inventory: dictionary, {title(str): quantity(int), ...}
         >>> bookManagement = BookManagement()
         >>> bookManagement.add_book("book1", 1)
         >>> bookManagement.add_book("book2", 1)

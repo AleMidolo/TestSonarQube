@@ -1,8 +1,8 @@
 def search_user_by_username(self, username):
     """
-        根据用户名在"users"表中搜索用户。
-        :param username: str，要搜索的用户的用户名。
-        :return: 元组的列表，符合搜索条件的"users"表中的行。
+        Searches for users in the "users" table by username.
+        :param username: str, the username of the user to search for.
+        :return:list of tuples, the rows from the "users" table that match the search criteria.
         >>> user_db = UserLoginDB("user_database.db")
         >>> user_db.create_table()
         >>> user_db.insert_user('user1', 'pass1')

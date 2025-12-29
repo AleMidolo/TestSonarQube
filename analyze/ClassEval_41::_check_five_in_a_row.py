@@ -1,11 +1,11 @@
 def _check_five_in_a_row(self, row, col, direction):
     """
-        检查从给定单元格开始，在给定方向（水平、垂直、对角线）上是否有五个连续的同一玩家的符号。
-        计算从给定单元格开始在该方向上的连续符号数量。
-        :param row: int, 给定单元格的行
-        :param col: int, 给定单元格的列
-        :param direction: tuple, (int, int)，命名为 (dx, dy)。行和列将分别加上若干 dx 和 dy。
-        :return: 如果有五个连续的同一玩家的符号则返回 True，否则返回 False。
+        checks if there are five consecutive symbols of the same player in a row starting from a given cell in a given direction (horizontal, vertical, diagonal).
+        Counts the number of consecutive symbols in that direction starting from the given cell,
+        :param row: int, row of the given cell
+        :param col: int, column of the given cell
+        :param direction: tuple, (int, int), named as (dx, dy). Row and col will plus several dx and dy repectively.
+        :return: True if there are five consecutive symbols of the same player, and False otherwise.
         >>> gomokuGame = GomokuGame(10)
         >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]
         >>> for move in moves:
@@ -16,20 +16,16 @@ def _check_five_in_a_row(self, row, col, direction):
         False
         """
     dx, dy = direction
-    player = self.board[row][col]
-    count = 1
-    for i in range(1, 5):
-        new_row = row + i * dx
-        new_col = col + i * dy
-        if 0 <= new_row < self.board_size and 0 <= new_col < self.board_size and (self.board[new_row][new_col] == player):
-            count += 1
+    count = 0
+    player_symbol = self.board[row][col]
+    for step in range(5):
+        new_row = row + step * dx
+        new_col = col + step * dy
+        if 0 <= new_row < self.board_size and 0 <= new_col < self.board_size:
+            if self.board[new_row][new_col] == player_symbol:
+                count += 1
+            else:
+                break
         else:
             break
-    for i in range(1, 5):
-        new_row = row - i * dx
-        new_col = col - i * dy
-        if 0 <= new_row < self.board_size and 0 <= new_col < self.board_size and (self.board[new_row][new_col] == player):
-            count += 1
-        else:
-            break
-    return count >= 5
+    return count == 5

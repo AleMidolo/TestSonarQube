@@ -1,7 +1,7 @@
 def display_items(self):
     """
-        显示自动售货机中的产品。
-        :return: 如果自动售货机为空，则返回 False；否则，返回自动售货机中的产品列表，str。
+        Displays the products in the vending machine.
+        :return: If the vending machine is empty, returns False, otherwise, returns a list of the products in the vending machine, str.
         >>> vendingMachine = VendingMachine()
         >>> vendingMachine.display_items()
         False
@@ -11,9 +11,4 @@ def display_items(self):
         """
     if not self.inventory:
         return False
-    items_display = []
-    for item_name, details in self.inventory.items():
-        price = details['price']
-        quantity = details['quantity']
-        items_display.append(f'{item_name} - ${price:.2f} [{quantity}]')
-    return '\n'.join(items_display)
+    return ', '.join((f"{item} - ${data['price']} [{data['quantity']}]" for item, data in self.inventory.items()))

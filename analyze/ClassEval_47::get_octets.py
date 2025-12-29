@@ -1,6 +1,6 @@
 def get_octets(self):
     """
-        如果IP地址有效，则返回由“.”分隔的四个十进制数字组成的列表；否则，返回一个空列表
+        If the IP address is valid, the list of four decimal numbers separated by "." constituting the IP address is returned; otherwise, an empty list is returned
         :return: list
         >>> ipaddress = IPAddress("10.10.10.10")
         >>> ipaddress.get_octets()

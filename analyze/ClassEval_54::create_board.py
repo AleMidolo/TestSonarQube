@@ -1,7 +1,7 @@
 def create_board(self):
     """
-        创建具有给定大小和图标的游戏棋盘
-        :return: 二维列表，游戏棋盘
+        create the game board with the given board size and icons
+        :return: 2-dimensional list, the game board
         >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
         >>> mc.create_board()
         mc.board = [['a', 'b', 'c', 'a'],
@@ -9,28 +9,9 @@ def create_board(self):
                     ['a', 'b', 'c', 'a'],
                     ['a', 'b', 'c', 'a']]
         """
-    rows, cols = self.BOARD_SIZE
-    total_cells = rows * cols
-    if len(self.ICONS) == 0:
-        raise ValueError('ICONS list cannot be empty')
-    icon_count = len(self.ICONS)
-    pairs_per_icon = total_cells // 2 // icon_count
-    remaining_pairs = total_cells // 2 % icon_count
-    icon_list = []
-    for icon in self.ICONS:
-        icon_list.extend([icon] * (pairs_per_icon * 2))
-    if remaining_pairs > 0:
-        remaining_icons = random.sample(self.ICONS, remaining_pairs)
-        for icon in remaining_icons:
-            icon_list.extend([icon] * 2)
-    if len(icon_list) < total_cells:
-        icon_list.append(random.choice(self.ICONS))
-        icon_list.append(icon_list[-1])
-    random.shuffle(icon_list)
-    board = []
-    for i in range(rows):
-        row = []
-        for j in range(cols):
-            row.append(icon_list[i * cols + j])
-        board.append(row)
+    num_icons = len(self.ICONS)
+    total_cells = self.BOARD_SIZE[0] * self.BOARD_SIZE[1]
+    icons_to_place = (self.ICONS * (total_cells // num_icons + 1))[:total_cells]
+    random.shuffle(icons_to_place)
+    board = [icons_to_place[i:i + self.BOARD_SIZE[1]] for i in range(0, total_cells, self.BOARD_SIZE[1])]
     return board

@@ -1,38 +1,29 @@
 def palindromic_string(self):
     """
-        在给定的字符串中找到最长的回文子串。
-        :return: 最长的回文子串，str。
+        Finds the longest palindromic substring in the given string.
+        :return: The longest palindromic substring, str.
         >>> manacher = Manacher('ababaxse')
         >>> manacher.palindromic_string()
         'ababa'
 
         """
-    if not self.input_string:
-        return ''
-    transformed = '|' + '|'.join(self.input_string) + '|'
-    n = len(transformed)
-    p = [0] * n
+    transformed_string = '|'.join(f'^{self.input_string}$')
+    n = len(transformed_string)
+    max_len = 0
     center = 0
     right = 0
-    for i in range(n):
+    p = [0] * n
+    for i in range(1, n - 1):
         mirror = 2 * center - i
         if i < right:
             p[i] = min(right - i, p[mirror])
-        left_idx = i - (1 + p[i])
-        right_idx = i + (1 + p[i])
-        while left_idx >= 0 and right_idx < n and (transformed[left_idx] == transformed[right_idx]):
+        a, b = (i + (1 + p[i]), i - (1 + p[i]))
+        while a < n - 1 and b > 0 and (transformed_string[a] == transformed_string[b]):
             p[i] += 1
-            left_idx -= 1
-            right_idx += 1
+            a += 1
+            b -= 1
         if i + p[i] > right:
-            center = i
-            right = i + p[i]
-    max_len = 0
-    center_idx = 0
-    for i in range(n):
-        if p[i] > max_len:
-            max_len = p[i]
-            center_idx = i
-    start = (center_idx - max_len) // 2
-    end = start + max_len
-    return self.input_string[start:end]
+            center, right = (i, i + p[i])
+        max_len = max(max_len, p[i])
+    start = max_len * 2 // 2
+    return self.input_string[start - max_len:start + max_len].replace('|', '')

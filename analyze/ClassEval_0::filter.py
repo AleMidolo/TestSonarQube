@@ -1,19 +1,16 @@
 def filter(self, request):
     """
-        根据某些规则和条件过滤传入的请求。
-        :param request: dict，传入请求的详细信息
-        :return: bool，如果请求被允许则返回 True，否则返回 False
-        >>> filter = AccessGatewayFilter()
-        >>> filter.filter({'path': '/login', 'method': 'POST'})
-        True
-        """
-    if self.is_start_with(request.get('path', '')):
-        return True
-    try:
+    Filter the incoming request based on certain rules and conditions.
+    :param request: dict, the incoming request details
+    :return: bool, True if the request is allowed, False otherwise
+    >>> filter = AccessGatewayFilter()
+    >>> filter.filter({'path': '/login', 'method': 'POST'})
+    True
+
+    """
+    if self.is_start_with(request['path']):
         user_info = self.get_jwt_user(request)
-        if user_info is not None:
-            self.set_current_user_info_and_log(user_info.get('user', {}))
+        if user_info:
+            self.set_current_user_info_and_log(user_info['user'])
             return True
-    except (KeyError, ValueError, TypeError):
-        pass
     return False

@@ -1,27 +1,23 @@
 def vigenere_decipher(self, ciphertext):
     """
-        使用维吉尼亚密码解密给定的密文
-        :param ciphertext: 要解密的密文，str。
-        :return: 解密后的明文，str。
+        Deciphers the given ciphertext using the Vigenere cipher
+        :param ciphertext: The ciphertext to decipher,str.
+        :return: The deciphered plaintext,str.
         >>> d = DecryptionUtils('key')
         >>> d.vigenere_decipher('ifmmp')
         'ybocl'
-
         """
-    plaintext = ''
     key_length = len(self.key)
-    for i, char in enumerate(ciphertext):
+    plaintext = ''
+    key_index = 0
+    for char in ciphertext:
         if char.isalpha():
-            key_char = self.key[i % key_length]
-            key_shift = ord(key_char.lower()) - ord('a')
+            shift = ord(self.key[key_index % key_length].lower()) - ord('a')
             if char.isupper():
-                ascii_offset = 65
-                base_key = ord('A')
+                plaintext += chr((ord(char) - shift - ord('A')) % 26 + ord('A'))
             else:
-                ascii_offset = 97
-                base_key = ord('a')
-            plain_char = chr((ord(char) - ascii_offset - (ord(key_char.lower()) - ord('a'))) % 26 + ascii_offset)
-            plaintext += plain_char
+                plaintext += chr((ord(char) - shift - ord('a')) % 26 + ord('a'))
+            key_index += 1
         else:
             plaintext += char
     return plaintext

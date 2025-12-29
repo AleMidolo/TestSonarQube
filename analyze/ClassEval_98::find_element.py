@@ -1,8 +1,8 @@
 def find_element(self, element_name):
     """
-        查找具有指定名称的 XML 元素。
-        :param element_name: 字符串，要查找的元素名称。
-        :return: 列表，具有指定名称的找到的元素列表。
+        Finds the XML elements with the specified name.
+        :param element_name: string, the name of the elements to find.
+        :return: list, a list of found elements with the specified name.
         >>> xml_processor = XMLProcessor('test.xml')
         >>> root = xml_processor.read_xml()
         >>> items = xml_processor.find_element('item')
@@ -12,9 +12,4 @@ def find_element(self, element_name):
         banana
         orange
         """
-    if self.root is None:
-        return []
-    found_elements = []
-    for element in self.root.iter(element_name):
-        found_elements.append(element)
-    return found_elements
+    return self.root.findall(element_name)

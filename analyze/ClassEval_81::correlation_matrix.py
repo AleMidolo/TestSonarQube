@@ -1,21 +1,20 @@
 @staticmethod
 def correlation_matrix(data):
     """
-        计算给定列表的相关性矩阵。
-        :param data: 给定的列表，列表。
-        :return: 给定列表的相关性矩阵，列表。
+        calculates the correlation matrix of the given list.
+        :param data: the given list, list.
+        :return: the correlation matrix of the given list, list.
         >>> statistics3 = Statistics3()
         >>> statistics3.correlation_matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
         [[1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]]
 
         """
     n = len(data)
-    matrix = [[0.0] * n for _ in range(n)]
-    for i in range(n):
-        for j in range(n):
-            if i == j:
-                matrix[i][j] = 1.0
-            else:
-                corr = Statistics3.correlation(data[i], data[j])
-                matrix[i][j] = corr if corr is not None else 0.0
-    return matrix
+    if n == 0:
+        return []
+    m = len(data[0])
+    correlation_matrix = [[0] * m for _ in range(m)]
+    for i in range(m):
+        for j in range(m):
+            correlation_matrix[i][j] = Statistics3.correlation([row[i] for row in data], [row[j] for row in data])
+    return correlation_matrix

@@ -1,9 +1,9 @@
 def change_order_status(self, order_id, status):
     """
-        如果输入的 order_id 在 self.orders 中，则更改订单状态。
+        Change the status of order if the input order_id is in self.orders.
         :param order_id: int
-        :param status: str, 要更改为的状态
-        :return False: 仅当 order_id 不在 self.orders 中时
+        :param status: str, the state that is going to change to
+        :return False: only if the order_id is not in self.orders
         >>> warehouse.add_product(1, "product1", 3)
         >>> warehouse.create_order(1, 1, 2)
         >>> warehouse.change_order_status(1, "done")
