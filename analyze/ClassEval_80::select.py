@@ -1,4 +1,3 @@
-@staticmethod
 def select(table, columns='*', where=None):
     """
         दिए गए पैरामीटर से SELECT SQL कथन उत्पन्न करें।

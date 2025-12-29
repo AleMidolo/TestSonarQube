@@ -8,4 +8,4 @@ def rotate_image(self, degrees):
         (4096, 3072)
         """
     if self.image:
-        self.image = self.image.rotate(degrees)
+        self.image = self.image.rotate(degrees, expand=True)

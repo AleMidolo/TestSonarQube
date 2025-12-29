@@ -7,8 +7,6 @@ def get_binary(self):
         "00001010.00001010.00001010.00001010"
         """
     if self.is_valid():
-        octets = self.get_octets()
-        binary_octets = [format(int(octet), '08b') for octet in octets]
-        return '.'.join(binary_octets)
+        return '.'.join((format(int(octet), '08b') for octet in self.get_octets()))
     else:
         return ''

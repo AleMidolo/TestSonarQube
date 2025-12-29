@@ -7,7 +7,9 @@ def remove_book(self, title, quantity):
         """
     if title not in self.inventory:
         raise ValueError('Invalid input: book does not exist in inventory.')
-    if quantity > self.inventory[title]:
+    if quantity <= 0:
+        raise ValueError('Invalid input: quantity must be greater than zero.')
+    if self.inventory[title] < quantity:
         raise ValueError('Invalid input: not enough quantity to remove.')
     self.inventory[title] -= quantity
     if self.inventory[title] == 0:

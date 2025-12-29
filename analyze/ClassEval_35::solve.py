@@ -29,8 +29,8 @@ def solve(self):
         possible_moves = self.get_possible_moves(current_state)
         for move_direction in possible_moves:
             new_state = self.move(current_state, move_direction)
-            new_path = path + [move_direction]
-            if tuple(map(tuple, new_state)) not in visited:
-                visited.add(tuple(map(tuple, new_state)))
-                open_list.append((new_state, new_path))
+            new_state_tuple = tuple(map(tuple, new_state))
+            if new_state_tuple not in visited:
+                visited.add(new_state_tuple)
+                open_list.append((new_state, path + [move_direction]))
     return []
