@@ -9,6 +9,7 @@ def _calculate(first_value, second_value, current_op):
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator._calculate("2", "3", "+")
         5.0
+
         """
     first = Decimal(first_value)
     second = Decimal(second_value)
@@ -19,11 +20,11 @@ def _calculate(first_value, second_value, current_op):
     elif current_op == '*':
         return first * second
     elif current_op == '/':
-        if second == 0:
+        if second == Decimal(0):
             raise ZeroDivisionError('Division by zero')
         return first / second
     elif current_op == '%':
-        if second == 0:
+        if second == Decimal(0):
             raise ZeroDivisionError('Modulo by zero')
         return first % second
     else:

@@ -10,11 +10,11 @@ def kappa(testData, k):
         """
     matrix = np.array(testData, dtype=float)
     total = np.sum(matrix)
-    Po = np.trace(matrix) / total
+    observed_agreement = np.trace(matrix) / total
     row_sums = np.sum(matrix, axis=1)
     col_sums = np.sum(matrix, axis=0)
-    Pe = np.sum(row_sums * col_sums) / (total * total)
-    if Pe == 1:
-        return 1.0 if Po == 1 else 0.0
-    kappa_value = (Po - Pe) / (1 - Pe)
+    expected_agreement = np.sum(row_sums * col_sums) / (total * total)
+    if expected_agreement == 1:
+        return 1.0 if observed_agreement == 1 else 0.0
+    kappa_value = (observed_agreement - expected_agreement) / (1 - expected_agreement)
     return float(kappa_value)

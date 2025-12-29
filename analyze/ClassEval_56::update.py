@@ -8,8 +8,6 @@ def update(self, predicted_labels, true_labels):
         >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])
         (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)
         """
-    if len(predicted_labels) != len(true_labels):
-        raise ValueError('predicted_labels and true_labels must have the same length')
     tp = fp = fn = tn = 0
     for pred, true in zip(predicted_labels, true_labels):
         if pred == 1 and true == 1:

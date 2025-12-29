@@ -16,7 +16,7 @@ def find_longest_word(self, sentence):
     cleaned_sentence = sentence.translate(translator)
     words = cleaned_sentence.split()
     longest_word = ''
-    for word in self.word_list:
-        if word in words and len(word) > len(longest_word):
+    for word in words:
+        if word in self.word_list and len(word) > len(longest_word):
             longest_word = word
     return longest_word

@@ -24,5 +24,5 @@ def get_query_params(self):
                 key, value = pair.split('=', 1)
                 params[key] = value
             else:
-                params[pair] = ''
+                params[pair] = None
     return params

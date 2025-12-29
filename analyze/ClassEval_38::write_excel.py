@@ -17,9 +17,9 @@ def write_excel(self, data, file_name):
     try:
         workbook = openpyxl.Workbook()
         sheet = workbook.active
-        for row_idx, row in enumerate(data, start=1):
-            for col_idx, value in enumerate(row, start=1):
-                sheet.cell(row=row_idx, column=col_idx, value=value)
+        for row_idx, row_data in enumerate(data, start=1):
+            for col_idx, cell_value in enumerate(row_data, start=1):
+                sheet.cell(row=row_idx, column=col_idx, value=cell_value)
         workbook.save(file_name)
         workbook.close()
         return 1

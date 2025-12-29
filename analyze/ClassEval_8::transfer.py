@@ -13,6 +13,6 @@ def transfer(self, other_account, amount):
         raise ValueError('Invalid amount')
     if amount > self.balance:
         raise ValueError('Insufficient balance.')
-    self.withdraw(amount)
-    other_account.deposit(amount)
+    self.balance -= amount
+    other_account.balance += amount
     return self.balance

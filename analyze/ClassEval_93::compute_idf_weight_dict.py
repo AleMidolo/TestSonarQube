@@ -9,8 +9,8 @@ def compute_idf_weight_dict(total_num, number_dict):
         >>> VectorUtil.compute_idf_weight_dict(2, num_dict)
         {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}
         """
-    result_dict = {}
+    result = {}
     for key, count in number_dict.items():
         weight = math.log((total_num + 1) / (count + 1))
-        result_dict[key] = weight
-    return result_dict
+        result[key] = weight
+    return result

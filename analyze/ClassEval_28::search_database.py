@@ -10,8 +10,19 @@ def search_database(self, table_name, name):
         """
     conn = sqlite3.connect(self.database_name)
     cursor = conn.cursor()
-    search_query = f'SELECT * FROM {table_name} WHERE name = ?'
-    cursor.execute(search_query, (name,))
-    results = cursor.fetchall()
-    conn.close()
-    return results if results else None
+    cursor.execute(f'PRAGMA table_info({table_name})')
+    columns_info = cursor.fetchall()
+    text_column = None
+    for col_info in columns_info:
+        if col_info[2] == 'TEXT' and col_info[1] != 'id':
+            text_column = col_info[1]
+            break
+    if text_column:
+        search_query = f'SELECT * FROM {table_name} WHERE {text_column} = ?'
+        cursor.execute(search_query, (name,))
+        results = cursor.fetchall()
+        conn.close()
+        return results if results else None
+    else:
+        conn.close()
+        return None
