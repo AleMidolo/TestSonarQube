@@ -10,6 +10,9 @@ def replace(self, string):
     import re
 
     def replace_entity(match):
-        code = int(match.group(1))
-        return chr(code)
-    return re.sub('&#(\\d+);', replace_entity, string)
+        num = match.group(1)
+        if num.startswith('x'):
+            return chr(int(num[1:], 16))
+        else:
+            return chr(int(num))
+    return re.sub('&#(x?[0-9a-fA-F]+);', replace_entity, string)

@@ -4,7 +4,8 @@ def format_line_html_text(self, html_text):
         :param html_text:string
         :return:string
         >>>htmlutil = HtmlUtil()
-        >>>htmlutil.format_line_html_text('<html><body><h1>Title</h1><p>This is a paragraph.</p><pre>print('Hello, world!')</pre><p>Another paragraph.</p><pre><code>for i in range(5):<br>    print(i)</code></pre></body></html>')
+        >>>htmlutil.format_line_html_text('<html><body><h1>Title</h1><p>This is a paragraph.</p><pre>print('Hello, world!')</pre><p>Another paragraph.</p><pre><code>for i in range(5):
+    print(i)</code></pre></body></html>')
         'Title
 This is a paragraph.
 -CODE-

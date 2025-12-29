@@ -8,12 +8,12 @@ def simulate_operation(self):
         18
         """
     self.auto_set_mode()
-    time_taken = 0
+    start_time = time.time()
     while abs(self.current_temperature - self.target_temperature) > 0.1:
         if self.mode == 'heat':
             self.current_temperature += 1
         else:
             self.current_temperature -= 1
-        time.sleep(1)
-        time_taken += 1
-    return time_taken
+        time.sleep(0.5)
+    end_time = time.time()
+    return int(end_time - start_time)

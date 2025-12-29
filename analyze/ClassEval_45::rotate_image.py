@@ -5,7 +5,7 @@ def rotate_image(self, degrees):
         >>> processor.load_image('test.jpg')
         >>> processor.rotate_image(90)
         >>> processor.image.size
-        (4096, 3072)
+        (height, width) after rotation
         """
     if self.image:
         self.image = self.image.rotate(degrees)
