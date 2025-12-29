@@ -10,6 +10,7 @@ def palindromic_length(self, center, diff, string):
         2
 
         """
-    if center - diff == -1 or center + diff == len(string) or string[center - diff] != string[center + diff]:
+    if center - diff >= 0 and center + diff < len(string) and (string[center - diff] == string[center + diff]):
+        return 1 + self.palindromic_length(center, diff + 1, string)
+    else:
         return 0
-    return 1 + self.palindromic_length(center, diff + 1, string)

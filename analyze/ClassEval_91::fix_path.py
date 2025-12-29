@@ -7,18 +7,11 @@ def fix_path(path):
         >>> url_path = UrlPath()
         >>> url_path.fix_path('/foo/bar/')
         'foo/bar'
-
         """
     if not path:
         return ''
     while path.startswith('/') or path.startswith('\\/'):
-        if path.startswith('/'):
-            path = path[1:]
-        else:
-            path = path[2:]
+        path = path[1:]
     while path.endswith('/') or path.endswith('\\/'):
-        if path.endswith('/'):
-            path = path[:-1]
-        else:
-            path = path[:-2]
+        path = path[:-1]
     return path

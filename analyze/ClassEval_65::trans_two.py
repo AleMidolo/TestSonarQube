@@ -9,19 +9,15 @@ def trans_two(self, s):
         """
     if not s or s == '00':
         return ''
-    if len(s) == 1:
-        s = '0' + s
-    num = int(s)
-    if num == 0:
-        return ''
-    elif num < 10:
-        return self.NUMBER[num]
-    elif num < 20:
-        return self.NUMBER_TEEN[num - 10]
+    s = s.zfill(2)
+    if s[0] == '0':
+        return self.NUMBER[int(s[1])]
+    elif s[0] == '1':
+        return self.NUMBER_TEEN[int(s[1])]
     else:
-        tens_digit = int(s[0])
-        ones_digit = int(s[1])
-        if ones_digit == 0:
-            return self.NUMBER_TEN[tens_digit - 1]
+        ten_part = self.NUMBER_TEN[int(s[0]) - 1]
+        if s[1] == '0':
+            return ten_part
         else:
-            return f'{self.NUMBER_TEN[tens_digit - 1]} {self.NUMBER[ones_digit]}'
+            unit_part = self.NUMBER[int(s[1])]
+            return f'{ten_part} {unit_part}'
