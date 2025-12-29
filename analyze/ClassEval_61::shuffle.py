@@ -6,12 +6,9 @@ def shuffle(self):
         >>> musicPlayer.playlist = ["song1", "song2"]
         >>> musicPlayer.shuffle()
         True
-
         """
-    if not self.playlist:
+    if self.playlist:
+        random.shuffle(self.playlist)
+        return True
+    else:
         return False
-    current_song_before_shuffle = self.current_song
-    random.shuffle(self.playlist)
-    if current_song_before_shuffle and current_song_before_shuffle in self.playlist:
-        self.current_song = current_song_before_shuffle
-    return True

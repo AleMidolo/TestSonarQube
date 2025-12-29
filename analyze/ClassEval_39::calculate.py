@@ -8,27 +8,28 @@ def calculate(self, expression):
         14.0
 
         """
-    transformed_expression = self.transform(expression)
     self.postfix_stack.clear()
+    transformed_expression = self.transform(expression)
     self.prepare(transformed_expression)
-    calc_stack = deque(self.postfix_stack.copy())
-    result_stack = deque()
-    while calc_stack:
-        token = calc_stack.popleft()
+    calc_stack = deque()
+    for token in self.postfix_stack:
         if self.is_operator(token):
-            if len(result_stack) < 2:
-                raise ValueError('Invalid expression: insufficient operands')
-            second_value = result_stack.pop()
-            first_value = result_stack.pop()
             if token == '~':
-                result_stack.append(first_value)
-                result = -Decimal(second_value)
-                result_stack.append(str(result))
+                if not calc_stack:
+                    raise ValueError('Invalid expression: missing operand for unary minus')
+                operand = calc_stack.pop()
+                result = Decimal(0) - Decimal(operand)
+                calc_stack.append(str(result))
             else:
+                if len(calc_stack) < 2:
+                    raise ValueError("Invalid expression: insufficient operands for operator '{}'".format(token))
+                second_value = calc_stack.pop()
+                first_value = calc_stack.pop()
                 result = self._calculate(first_value, second_value, token)
-                result_stack.append(str(result))
+                calc_stack.append(str(result))
         else:
-            result_stack.append(token)
-    if len(result_stack) != 1:
-        raise ValueError('Invalid expression: too many values in result stack')
-    return float(Decimal(result_stack.pop()))
+            calc_stack.append(token)
+    if len(calc_stack) != 1:
+        raise ValueError('Invalid expression: could not resolve to single result')
+    result_decimal = Decimal(calc_stack.pop())
+    return float(result_decimal)
