@@ -11,7 +11,4 @@ def shuffle(self):
     if not self.playlist:
         return False
     random.shuffle(self.playlist)
-    if self.current_song and self.current_song in self.playlist:
-        current_index = self.playlist.index(self.current_song)
-        self.current_song = self.playlist[current_index]
     return True

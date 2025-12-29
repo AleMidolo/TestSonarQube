@@ -6,6 +6,6 @@ def count_words(self, sentence):
         >>> ss.count_words("abc def")
         2
         """
-    cleaned = re.sub('[^\\w\\s]', '', sentence)
+    cleaned = sentence.rstrip('.?!')
     words = [word for word in cleaned.split() if word]
     return len(words)

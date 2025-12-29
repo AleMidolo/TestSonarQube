@@ -11,6 +11,9 @@ def move(self, direction):
     head_x, head_y = self.positions[0]
     dx, dy = direction
     new_head = (head_x + dx * self.BLOCK_SIZE, head_y + dy * self.BLOCK_SIZE)
+    if new_head[0] < 0 or new_head[0] >= self.SCREEN_WIDTH or new_head[1] < 0 or (new_head[1] >= self.SCREEN_HEIGHT):
+        self.reset()
+        return
     if new_head in self.positions:
         self.reset()
         return

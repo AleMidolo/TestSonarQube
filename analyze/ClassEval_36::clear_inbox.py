@@ -10,5 +10,7 @@ def clear_inbox(self, size):
         [{'size': 15}]
 
         """
-    while self.inbox and self.get_occupied_size() + size > self.capacity:
-        self.inbox.pop(0)
+    current_size = self.get_occupied_size()
+    while self.inbox and current_size + size > self.capacity:
+        removed_email = self.inbox.pop(0)
+        current_size -= removed_email['size']

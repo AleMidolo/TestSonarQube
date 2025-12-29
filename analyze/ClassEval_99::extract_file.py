@@ -12,13 +12,6 @@ def extract_file(self, file_name, output_path):
             if file_name not in zip_file.namelist():
                 return False
             zip_file.extract(file_name, output_path)
-            extracted_path = os.path.join(output_path, file_name)
-            if os.path.exists(extracted_path):
-                return True
-            else:
-                for root, dirs, files in os.walk(output_path):
-                    if os.path.basename(file_name) in files:
-                        return True
-                return False
+            return True
     except:
         return False

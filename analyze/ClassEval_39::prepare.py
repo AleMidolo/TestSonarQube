@@ -9,40 +9,39 @@ def prepare(self, expression):
         """
     op_stack = deque()
     arr = list(expression)
-    current_index = 0
-    count = len(arr)
-    while current_index < count:
-        current_char = arr[current_index]
-        if self.is_operator(current_char):
-            if current_char == '(':
-                op_stack.append(current_char)
-            elif current_char == ')':
+    current = ''
+    i = 0
+    while i < len(arr):
+        c = arr[i]
+        if c.isdigit() or c == '.' or c == '~' or (c in 'Ee' and i > 0 and (arr[i - 1].isdigit() or arr[i - 1] == '.')):
+            if c == '~':
+                current += '-'
+            else:
+                current += c
+            if i + 1 < len(arr):
+                next_c = arr[i + 1]
+                if next_c.isdigit() or next_c == '.' or next_c in 'Ee' or (next_c in '+-' and arr[i] in 'Ee'):
+                    i += 1
+                    continue
+            self.postfix_stack.append(current)
+            current = ''
+        else:
+            if current:
+                self.postfix_stack.append(current)
+                current = ''
+            if c == '(':
+                op_stack.append(c)
+            elif c == ')':
                 while op_stack and op_stack[-1] != '(':
                     self.postfix_stack.append(op_stack.pop())
-                op_stack.pop()
-            else:
-                while op_stack and op_stack[-1] != '(' and self.compare(current_char, op_stack[-1]):
+                if op_stack:
+                    op_stack.pop()
+            elif self.is_operator(c):
+                while op_stack and op_stack[-1] != '(' and self.compare(c, op_stack[-1]):
                     self.postfix_stack.append(op_stack.pop())
-                op_stack.append(current_char)
-            current_index += 1
-        else:
-            sb = []
-            is_negative = False
-            if current_char == '~':
-                is_negative = True
-                current_index += 1
-                if current_index < count:
-                    current_char = arr[current_index]
-            while current_index < count:
-                current_char = arr[current_index]
-                if not self.is_operator(current_char):
-                    sb.append(current_char)
-                    current_index += 1
-                else:
-                    break
-            number_str = ''.join(sb)
-            if is_negative:
-                number_str = '~' + number_str
-            self.postfix_stack.append(number_str)
+                op_stack.append(c)
+        i += 1
+    if current:
+        self.postfix_stack.append(current)
     while op_stack:
         self.postfix_stack.append(op_stack.pop())
