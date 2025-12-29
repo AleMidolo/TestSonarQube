@@ -2,6 +2,7 @@ def get_minutes(self, string_time1, string_time2):
     """
     Calcola quanti minuti sono passati tra due orari e arrotonda il risultato al numero intero più vicino.
     :return: int, il numero di minuti tra due orari, arrotondato
+    >>> timeutils = TimeUtils()
     >>> timeutils.get_minutes("2001-7-18 1:1:1", "2001-7-18 2:1:1")
     60
     """

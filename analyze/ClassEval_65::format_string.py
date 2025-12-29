@@ -28,4 +28,4 @@ def format_string(self, x):
         x //= 1000
         idx += 1
     words.reverse()
-    return ' AND '.join(words) + ' ONLY'
+    return ' AND '.join(words).strip() + ' ONLY'

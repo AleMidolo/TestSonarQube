@@ -1,6 +1,6 @@
 def clear_expr(self):
     """
-        Cleans the expression of all characters that are not brackets.
+        Pulisce l'espressione da tutti i caratteri che non sono parentesi.
         >>> b = BalancedBrackets("a(b)c")
         >>> b.clear_expr()
         >>> b.expr

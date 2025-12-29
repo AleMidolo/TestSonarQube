@@ -19,10 +19,11 @@ def parse_arguments(self, command_string):
             key = arg
             value = True
         key = key.lstrip('-')
-        self.arguments[key] = self._convert_type(key, value)
-    for req in self.required:
-        if req not in self.arguments:
-            missing_args.add(req)
+        if key in self.types:
+            self.arguments[key] = self._convert_type(key, value)
+        else:
+            self.arguments[key] = value
+    missing_args = self.required - self.arguments.keys()
     if missing_args:
         return (False, missing_args)
     return (True, None)
