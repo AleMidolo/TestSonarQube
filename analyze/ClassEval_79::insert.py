@@ -6,6 +6,6 @@ def insert(self, data):
         >>> sql.insert({'key1': 'value1', 'key2': 'value2'})
         "INSERT INTO table1 (key1, key2) VALUES ('value1', 'value2');"
         """
-    fields = ', '.join(data.keys())
+    columns = ', '.join(data.keys())
     values = ', '.join((f"'{value}'" for value in data.values()))
-    return f'INSERT INTO {self.table_name} ({fields}) VALUES ({values});'
+    return f'INSERT INTO {self.table_name} ({columns}) VALUES ({values});'

@@ -9,8 +9,8 @@ def kappa(testData, k):
         0.25
         """
     dataMat = np.array(testData)
-    n = dataMat.shape[0]
-    p0 = np.sum(np.diag(dataMat)) / n
-    pe = np.sum(np.sum(dataMat, axis=0) * np.sum(dataMat, axis=1)) / n ** 2
+    total = np.sum(dataMat)
+    p0 = np.sum(np.diag(dataMat)) / total
+    pe = np.sum(np.sum(dataMat, axis=0) * np.sum(dataMat, axis=1)) / total ** 2
     kappa_value = (p0 - pe) / (1 - pe) if 1 - pe != 0 else 0
     return kappa_value
