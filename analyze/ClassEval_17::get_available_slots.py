@@ -18,5 +18,5 @@ def get_available_slots(self, date):
                 available_slots.append((last_end_time, event['start_time']))
             last_end_time = max(last_end_time, event['end_time'])
     if last_end_time < end_of_day:
-        available_slots.append((last_end_time, end_of_day))
+        available_slots.append((last_end_time, end_of_day + timedelta(seconds=1)))
     return available_slots

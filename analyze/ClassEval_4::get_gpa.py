@@ -12,6 +12,6 @@ def get_gpa(self, name):
         """
     if name in self.students and self.students[name]['courses']:
         total_score = sum(self.students[name]['courses'].values())
-        count = len(self.students[name]['courses'])
-        return total_score / count
+        count_courses = len(self.students[name]['courses'])
+        return total_score / count_courses
     return None
