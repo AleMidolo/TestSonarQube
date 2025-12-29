@@ -17,4 +17,5 @@ def parse(self, path, charset):
             fixed_segment = self.fix_path(segment)
             if fixed_segment:
                 self.segments.append(fixed_segment)
-    self.with_end_tag = decoded_path.endswith('/')
+    if path.endswith('/'):
+        self.with_end_tag = True

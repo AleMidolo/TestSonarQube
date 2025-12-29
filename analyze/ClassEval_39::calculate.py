@@ -22,9 +22,9 @@ def calculate(self, expression):
             else:
                 if len(result_stack) < 2:
                     raise ValueError('Invalid expression: insufficient operands')
-                second = result_stack.pop()
-                first = result_stack.pop()
-                result = self._calculate(first, second, item)
+                second_value = result_stack.pop()
+                first_value = result_stack.pop()
+                result = self._calculate(first_value, second_value, item)
                 result_stack.append(result)
         else:
             result_stack.append(item)

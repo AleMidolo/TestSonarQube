@@ -5,6 +5,6 @@ def search_books(self):
         >>> book_db.search_books()
         [(1, 'book1', 'author', 1)]
         """
-    self.cursor.execute('SELECT * FROM books')
+    self.cursor.execute('\n            SELECT * FROM books\n        ')
     books = self.cursor.fetchall()
     return books

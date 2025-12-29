@@ -10,18 +10,19 @@ def vigenere_cipher(self, plaintext):
         """
     ciphertext = ''
     key_length = len(self.key)
-    for i, char in enumerate(plaintext):
+    key_index = 0
+    for char in plaintext:
         if char.isalpha():
-            key_char = self.key[i % key_length]
-            key_shift = ord(key_char.lower()) - ord('a')
             if char.isupper():
                 ascii_offset = 65
-                base_char = char
+                key_char = self.key[key_index % key_length].upper()
             else:
                 ascii_offset = 97
-                base_char = char
-            shifted_char = chr((ord(base_char) - ascii_offset + key_shift) % 26 + ascii_offset)
+                key_char = self.key[key_index % key_length].lower()
+            shift = ord(key_char) - ascii_offset
+            shifted_char = chr((ord(char) - ascii_offset + shift) % 26 + ascii_offset)
             ciphertext += shifted_char
+            key_index += 1
         else:
             ciphertext += char
     return ciphertext
