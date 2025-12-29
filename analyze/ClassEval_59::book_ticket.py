@@ -1,32 +1,25 @@
 def book_ticket(self, name, seats_to_book):
     """
-        Prenota i biglietti per un film. Cambia il valore dei posti in self.movies se la prenotazione ha successo.
-        :param name: str, nome del film
-        :param seats_to_book: lista di tuple, che rappresentano i posti da prenotare [(riga1, colonna1), (riga2, colonna2), ...]
-        :return: str, messaggio di stato della prenotazione. "Film non trovato." se non esiste un film del genere.
-                "Prenotazione riuscita." per una prenotazione avvenuta con successo, o "Prenotazione fallita." altrimenti
-        >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)
-        >>> system.book_ticket('Batman', [(0, 0), (0, 1)])
-        'Prenotazione riuscita.'
-        >>> system.book_ticket('Batman', [(0, 0)])
-        'Prenotazione fallita.'
-        >>> system.book_ticket('batman', [(0, 0)])
-        'Film non trovato.'
-        """
-    movie_found = None
+    预订电影票。如果成功预订，则在self.movies中更改座位值。
+    :param name: str, 电影名称
+    :param seats_to_book: 元组列表, 表示要预订的座位 [(row1, col1), (row2, col2), ...]
+    :return: str, 预订状态消息。 "Movie not found." 表示没有该电影。
+            "Booking success." 表示成功预订，或 "Booking failed." 表示其他情况
+    >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)
+    >>> system.book_ticket('Batman', [(0, 0), (0, 1)])
+    'Booking success.'
+    >>> system.book_ticket('Batman', [(0, 0)])
+    'Booking failed.'
+    >>> system.book_ticket('batman', [(0, 0)])
+    'Movie not found.'
+    """
     for movie in self.movies:
-        if movie['name'] == name:
-            movie_found = movie
-            break
-    if movie_found is None:
-        return 'Film non trovato.'
-    seats = movie_found['seats']
-    n_rows, n_cols = seats.shape
-    for row, col in seats_to_book:
-        if row < 0 or row >= n_rows or col < 0 or (col >= n_cols):
-            return 'Prenotazione fallita.'
-        if seats[row, col] != 0:
-            return 'Prenotazione fallita.'
-    for row, col in seats_to_book:
-        seats[row, col] = 1
-    return 'Prenotazione riuscita.'
+        if movie['name'].lower() == name.lower():
+            for seat in seats_to_book:
+                row, col = seat
+                if movie['seats'][row, col] == 0:
+                    movie['seats'][row, col] = 1
+                else:
+                    return 'Booking failed.'
+            return 'Booking success.'
+    return 'Movie not found.'

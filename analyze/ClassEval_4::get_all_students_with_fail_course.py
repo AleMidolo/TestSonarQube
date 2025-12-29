@@ -1,15 +1,15 @@
 def get_all_students_with_fail_course(self):
     """
-        Ottieni tutti gli studenti che hanno un punteggio inferiore a 60
-        :return: lista di str, nome dello studente
-        >>> system.add_course_score('studente 1', 'Società', 59)
+        获取所有有任何分数低于60的学生
+        :return: 字符串的列表，学生姓名
+        >>> system.add_course_score('student 1', 'Society', 59)
         >>> system.get_all_students_with_fail_course()
-        ['studente 1']
+        ['student 1']
         """
-    failing_students = []
+    failed_students = []
     for name, student in self.students.items():
-        for course, score in student['courses'].items():
+        for score in student['courses'].values():
             if score < 60:
-                failing_students.append(name)
+                failed_students.append(name)
                 break
-    return failing_students
+    return failed_students

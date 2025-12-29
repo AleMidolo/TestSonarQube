@@ -1,20 +1,14 @@
 def remove_book(self, title, quantity):
     """
-        Rimuovi uno o più libri dall'inventario che è ordinato per titolo del libro.
-        Solleva un'eccezione in caso di input non valido.
-        :param title: str, il titolo del libro
+        从按书名排序的库存中移除一本或多本书籍。
+        如果输入无效则引发错误。
+        :param title: str，书名
         :param quantity: int
         """
-    if not isinstance(title, str):
-        raise TypeError('Il titolo deve essere una stringa')
-    if not isinstance(quantity, int):
-        raise TypeError('La quantità deve essere un intero')
-    if quantity <= 0:
-        raise ValueError('La quantità deve essere positiva')
     if title not in self.inventory:
-        raise ValueError(f"Il libro '{title}' non è presente nell'inventario")
-    if self.inventory[title] < quantity:
-        raise ValueError(f"Quantità insufficiente. Disponibili solo {self.inventory[title]} copie di '{title}'")
+        raise ValueError('Book not found in inventory.')
+    if quantity > self.inventory[title]:
+        raise ValueError('Not enough quantity to remove.')
     self.inventory[title] -= quantity
     if self.inventory[title] == 0:
         del self.inventory[title]

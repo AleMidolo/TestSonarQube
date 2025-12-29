@@ -1,44 +1,27 @@
 @staticmethod
 def interpolate_2d(x, y, z, x_interp, y_interp):
-    """ 
-        Interpolazione lineare di dati bidimensionali
-        :param x: La coordinata x del punto dati, lista.
-        :param y: La coordinata y del punto dati, lista.
-        :param z: La coordinata z del punto dati, lista.
-        :param x_interp: La coordinata x del punto di interpolazione, lista.
-        :param y_interp: La coordinata y del punto di interpolazione, lista.
-        :return: La coordinata z del punto di interpolazione, lista.
+    """
+        二维数据的线性插值
+        :param x: 数据点的 x 坐标，列表。
+        :param y: 数据点的 y 坐标，列表。
+        :param z: 数据点的 z 坐标，列表。
+        :param x_interp: 插值点的 x 坐标，列表。
+        :param y_interp: 插值点的 y 坐标，列表。
+        :return: 插值点的 z 坐标，列表。
         >>> interpolation = Interpolation()
         >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])
         [3.0, 7.0]
-
         """
     z_interp = []
     for xi, yi in zip(x_interp, y_interp):
-        x_idx = None
         for i in range(len(x) - 1):
-            if x[i] <= xi <= x[i + 1]:
-                x_idx = i
-                break
-        y_idx = None
-        for j in range(len(y) - 1):
-            if y[j] <= yi <= y[j + 1]:
-                y_idx = j
-                break
-        if x_idx is None or y_idx is None:
-            raise ValueError('Interpolation point outside data range')
-        z11 = z[x_idx][y_idx]
-        z12 = z[x_idx][y_idx + 1]
-        z21 = z[x_idx + 1][y_idx]
-        z22 = z[x_idx + 1][y_idx + 1]
-        dx = x[x_idx + 1] - x[x_idx]
-        dy = y[y_idx + 1] - y[y_idx]
-        if dx == 0 or dy == 0:
-            raise ValueError('Division by zero in interpolation')
-        tx = (xi - x[x_idx]) / dx
-        ty = (yi - y[y_idx]) / dy
-        z_interp_y1 = z11 + (z21 - z11) * tx
-        z_interp_y2 = z12 + (z22 - z12) * tx
-        z_interp_val = z_interp_y1 + (z_interp_y2 - z_interp_y1) * ty
-        z_interp.append(z_interp_val)
+            for j in range(len(y) - 1):
+                if x[i] <= xi <= x[i + 1] and y[j] <= yi <= y[j + 1]:
+                    z11 = z[i][j]
+                    z12 = z[i][j + 1]
+                    z21 = z[i + 1][j]
+                    z22 = z[i + 1][j + 1]
+                    z_interp_value = (z11 * (x[i + 1] - xi) * (y[j + 1] - yi) + z21 * (xi - x[i]) * (y[j + 1] - yi) + z12 * (x[i + 1] - xi) * (yi - y[j]) + z22 * (xi - x[i]) * (yi - y[j])) / ((x[i + 1] - x[i]) * (y[j + 1] - y[j]))
+                    z_interp.append(z_interp_value)
+                    break
     return z_interp

@@ -1,19 +1,17 @@
 def available_movies(self, start_time, end_time):
     """
-        Ottieni un elenco di film disponibili all'interno dell'intervallo di tempo specificato
-        :param start_time: str, ora di inizio nel formato HH:MM
-        :param end_time: str, ora di fine nel formato HH:MM
-        :return: lista di str, nomi dei film disponibili
+        获取指定时间范围内可用电影的列表
+        :param start_time: str, 开始时间，格式为 HH:MM
+        :param end_time: str, 结束时间，格式为 HH:MM
+        :return: list of str, 可用电影的名称
         >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)
         >>> system.available_movies('12:00', '22:00')
         ['Batman']
         """
-    start = datetime.strptime(start_time, '%H:%M')
-    end = datetime.strptime(end_time, '%H:%M')
     available = []
+    start_time = datetime.strptime(start_time, '%H:%M')
+    end_time = datetime.strptime(end_time, '%H:%M')
     for movie in self.movies:
-        movie_start = movie['start_time']
-        movie_end = movie['end_time']
-        if movie_start >= start and movie_end <= end:
+        if movie['start_time'] >= start_time and movie['end_time'] <= end_time:
             available.append(movie['name'])
     return available

@@ -1,16 +1,15 @@
 def get_jwt_user(self, request):
     """
-        Ottieni le informazioni dell'utente dal token JWT nella richiesta.
-        :param request: dict, i dettagli della richiesta in arrivo
-        :return: dict o None, le informazioni dell'utente se il token è valido, None altrimenti
+        从请求中的JWT令牌获取用户信息。
+        :param request: dict，传入的请求详情
+        :return: dict或None，如果令牌有效则返回用户信息，否则返回None
         >>> filter = AccessGatewayFilter()
         >>> filter.get_jwt_user({'headers': {'Authorization': {'user': {'name': 'user1'}, 'jwt': 'user1'+str(datetime.date.today())}}})
         {'user': {'name': 'user1'}}
         """
-    try:
-        auth_header = request.get('headers', {}).get('Authorization', {})
-        if isinstance(auth_header, dict) and 'user' in auth_header:
-            return {'user': auth_header['user']}
-        return None
-    except:
-        return None
+    auth_header = request.get('headers', {}).get('Authorization', {})
+    jwt = auth_header.get('jwt')
+    if jwt:
+        user_info = auth_header.get('user', {})
+        return {'user': user_info}
+    return None

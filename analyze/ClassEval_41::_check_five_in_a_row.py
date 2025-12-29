@@ -1,11 +1,11 @@
 def _check_five_in_a_row(self, row, col, direction):
     """
-        controlla se ci sono cinque simboli consecutivi dello stesso giocatore in una riga a partire da una cella data in una direzione data (orizzontale, verticale, diagonale).
-        Conta il numero di simboli consecutivi in quella direzione a partire dalla cella data,
-        :param row: int, riga della cella data
-        :param col: int, colonna della cella data
-        :param direction: tuple, (int, int), denominato come (dx, dy). La riga e la colonna verranno aumentate di diversi dx e dy rispettivamente.
-        :return: True se ci sono cinque simboli consecutivi dello stesso giocatore, e False altrimenti.
+        检查从给定单元格开始，在给定方向（水平、垂直、对角线）上是否有五个连续的同一玩家的符号。
+        计算从给定单元格开始在该方向上的连续符号数量。
+        :param row: int, 给定单元格的行
+        :param col: int, 给定单元格的列
+        :param direction: tuple, (int, int)，命名为 (dx, dy)。行和列将分别加上若干 dx 和 dy。
+        :return: 如果有五个连续的同一玩家的符号则返回 True，否则返回 False。
         >>> gomokuGame = GomokuGame(10)
         >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]
         >>> for move in moves:
@@ -16,16 +16,15 @@ def _check_five_in_a_row(self, row, col, direction):
         False
         """
     dx, dy = direction
-    player = self.board[row][col]
-    count = 1
-    r, c = (row + dx, col + dy)
-    while 0 <= r < self.board_size and 0 <= c < self.board_size and (self.board[r][c] == player):
-        count += 1
-        r += dx
-        c += dy
-    r, c = (row - dx, col - dy)
-    while 0 <= r < self.board_size and 0 <= c < self.board_size and (self.board[r][c] == player):
-        count += 1
-        r -= dx
-        c -= dy
-    return count >= 5
+    count = 0
+    for i in range(5):
+        new_row = row + i * dx
+        new_col = col + i * dy
+        if 0 <= new_row < self.board_size and 0 <= new_col < self.board_size:
+            if self.board[new_row][new_col] == self.board[row][col]:
+                count += 1
+            else:
+                break
+        else:
+            break
+    return count == 5

@@ -1,9 +1,9 @@
 def level_up(self):
     """
-        Aumenta di livello il personaggio e riporta a zero i punti esperienza, aumenta i punti vita di 20, la potenza d'attacco e i punti difesa di 5.
-        Il livello massimo è 100.
-        :return: tuple[int, int, int, int], il nuovo livello, i punti vita, la potenza d'attacco e i punti difesa dopo l'aumento di livello.
-        >>> player_1 = RPGCharacter('giocatore 1', 100, 10, 3)
+        升级角色并将经验值重置为零，生命值增加20点，攻击力和防御力各增加5点。
+        最大等级为100
+        :return: tuple[int, int, int, int]，升级后的新等级、生命值、攻击力和防御力。
+        >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
         >>> player_1.level_up()
         (2, 120, 15, 8)
         """

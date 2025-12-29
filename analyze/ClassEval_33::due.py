@@ -1,7 +1,7 @@
 def due(self):
     """
-        Calcola l'importo finale da pagare dopo aver applicato lo sconto.
-        :return: float, importo finale da pagare
+        计算应用折扣后的最终支付金额。
+        :return: float，最终支付金额
         >>> customer = {'name': 'John Doe', 'fidelity': 1200}
         >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]
         >>> ds = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)
@@ -9,7 +9,7 @@ def due(self):
         312.55
 
         """
+    total = self.total()
     if self.promotion:
-        discount = self.promotion(self)
-        return self.total() - discount
-    return self.total()
+        total -= self.promotion(self)
+    return total

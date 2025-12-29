@@ -1,18 +1,14 @@
 def trans_three(self, s):
     """
-        Converte un numero di tre cifre nella sua rappresentazione in parole.
-        :param s: str, il numero di tre cifre
-        :return: str, il numero in formato parole
+        将三位数转换为单词格式
+        :param s: str，三位数
+        :return: str，数字的单词格式
         >>> formatter = NumberWordFormatter()
         >>> formatter.trans_three("123")
-        "UNO CENTO E VENTI TRE"
+        "ONE HUNDRED AND TWENTY THREE"
         """
     s = s.zfill(3)
-    result = ''
     if s[0] != '0':
-        result += self.NUMBER[int(s[0])] + ' HUNDRED'
-        if s[1:] != '00':
-            result += ' AND '
-    if s[1:] != '00':
-        result += self.trans_two(s[1:])
-    return result.strip()
+        return self.NUMBER[int(s[0])] + ' HUNDRED' + (' AND ' + self.trans_two(s[1:]) if s[1:] != '00' else '')
+    else:
+        return self.trans_two(s[1:])

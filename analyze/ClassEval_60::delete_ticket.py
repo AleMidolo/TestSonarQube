@@ -1,7 +1,7 @@
 def delete_ticket(self, ticket_id):
     """
-        Elimina un ticket dalla tabella "tickets" in base all'ID del ticket.
-        :param ticket_id: int, l'ID del ticket da eliminare.
+        根据票据 ID 从 "tickets" 表中删除票据。
+        :param ticket_id: int, 要删除的票据的 ID。
         :return: None
         """
     self.cursor.execute('\n                DELETE FROM tickets WHERE id = ?\n            ', (ticket_id,))

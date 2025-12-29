@@ -1,23 +1,11 @@
 @staticmethod
 def fix_path(path):
     """
-        Corregge la stringa del percorso fornita rimuovendo le barre iniziali e finali.
-        :param path: str, la stringa del percorso da correggere.
-        :return: str, la stringa del percorso corretta.
+        修复给定的路径字符串，通过去除前导和尾随的斜杠。
+        :param path: str，要修复的路径字符串。
+        :return: str，修复后的路径字符串。
         >>> url_path = UrlPath()
         >>> url_path.fix_path('/foo/bar/')
         'foo/bar'
         """
-    if not path:
-        return ''
-    while path.startswith('/') or path.startswith('\\/'):
-        if path.startswith('\\/'):
-            path = path[2:]
-        else:
-            path = path[1:]
-    while path.endswith('/') or path.endswith('\\/'):
-        if path.endswith('\\/'):
-            path = path[:-2]
-        else:
-            path = path[:-1]
-    return path
+    return path.strip('/')

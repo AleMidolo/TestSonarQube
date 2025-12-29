@@ -1,7 +1,7 @@
 def create_board(self):
     """
-        crea la tavola di gioco con la dimensione della tavola e le icone date
-        :return: lista bidimensionale, la tavola di gioco
+        创建具有给定大小和图标的游戏棋盘
+        :return: 二维列表，游戏棋盘
         >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
         >>> mc.create_board()
         mc.board = [['a', 'b', 'c', 'a'],
@@ -9,18 +9,12 @@ def create_board(self):
                     ['a', 'b', 'c', 'a'],
                     ['a', 'b', 'c', 'a']]
         """
-    rows, cols = self.BOARD_SIZE
-    total_cells = rows * cols
-    icon_pairs = []
-    for icon in self.ICONS:
-        icon_pairs.extend([icon, icon])
-    while len(icon_pairs) < total_cells:
-        icon_pairs.append(random.choice(self.ICONS))
-    random.shuffle(icon_pairs)
+    num_icons = len(self.ICONS)
+    total_tiles = self.BOARD_SIZE[0] * self.BOARD_SIZE[1]
+    icons_to_place = self.ICONS * (total_tiles // num_icons) + self.ICONS[:total_tiles % num_icons]
+    random.shuffle(icons_to_place)
     board = []
-    for i in range(rows):
-        row = []
-        for j in range(cols):
-            row.append(icon_pairs[i * cols + j])
+    for i in range(self.BOARD_SIZE[0]):
+        row = icons_to_place[i * self.BOARD_SIZE[1]:(i + 1) * self.BOARD_SIZE[1]]
         board.append(row)
     return board

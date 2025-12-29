@@ -1,10 +1,10 @@
 def add_heading(self, heading, level=1):
     """
-        Aggiunge un'intestazione al documento Word.
-        :param heading: str, il testo dell'intestazione.
-        :param level: int, opzionale, il livello dell'intestazione (1, 2, 3, ecc.; predefinito è 1).
-        :return: bool, True se l'intestazione è stata aggiunta con successo, False altrimenti.
-        """
+    向Word文档添加标题。
+    :param heading: str，标题的文本。
+    :param level: int，可选，标题的级别（1, 2, 3等；默认为1）。
+    :return: bool，如果标题成功添加则返回True，否则返回False。
+    """
     try:
         doc = Document(self.file_path)
         doc.add_heading(heading, level=level)

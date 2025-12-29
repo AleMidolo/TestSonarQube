@@ -1,50 +1,30 @@
 def format_string(self, x):
     """
-        Converte una rappresentazione stringa di un numero nella sua rappresentazione in parole.
-        :param x: str, la rappresentazione stringa di un numero
-        :return: str, il numero nel formato parole
+        将数字的字符串表示转换为单词格式
+        :param x: str，数字的字符串表示
+        :return: str，数字的单词格式
         >>> formatter = NumberWordFormatter()
         >>> formatter.format_string("123456")
-        "UNO CENTO E VENTITRE MILA QUATTROCENTO E CINQUANTA SEI SOLO"
+        "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
         """
-    is_negative = False
-    if x.startswith('-'):
-        is_negative = True
-        x = x[1:]
-    decimal_part = ''
-    if '.' in x:
-        integer_part, decimal_part = x.split('.')
-        decimal_part = decimal_part.rstrip('0')
-        if decimal_part:
-            decimal_part = ' POINT ' + ' '.join((self.NUMBER[int(digit)] for digit in decimal_part))
-        else:
-            decimal_part = ''
-    else:
-        integer_part = x
-    integer_part = integer_part.lstrip('0')
-    if integer_part == '':
-        integer_part = '0'
-    if integer_part == '0':
-        return 'ZERO ONLY'
-    groups = []
-    while integer_part:
-        groups.append(integer_part[-3:])
-        integer_part = integer_part[:-3]
-    groups.reverse()
+    if not x.isdigit():
+        return ''
+    x = x.split('.')
+    whole_part = x[0]
+    decimal_part = x[1] if len(x) > 1 else ''
     words = []
-    num_groups = len(groups)
-    for i, group in enumerate(groups):
-        if group == '000':
-            continue
-        group_words = self.trans_three(group.zfill(3))
-        magnitude = num_groups - i - 1
-        if magnitude > 0 and group_words:
-            group_words += ' ' + self.parse_more(magnitude)
-        words.append(group_words)
-    result = ' '.join(words)
-    if is_negative:
-        result = 'MINUS ' + result
+    length = len(whole_part)
+    if length == 0:
+        return 'ZERO ONLY'
+    for i in range(length, 0, -3):
+        group = whole_part[max(0, i - 3):i]
+        if group:
+            group_words = self.trans_three(group)
+            if i // 3 > 0:
+                group_words += ' ' + self.parse_more(i // 3 - 1)
+            words.append(group_words)
+    words.reverse()
+    result = ' AND '.join(words).strip()
     if decimal_part:
-        result += decimal_part
-    result += ' ONLY'
-    return result
+        result += ' POINT ' + ' '.join((self.NUMBER[int(digit)] for digit in decimal_part))
+    return result + ' ONLY'

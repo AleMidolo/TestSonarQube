@@ -1,40 +1,15 @@
 def replace(self, string):
     """
-        Sostituisce i riferimenti ai caratteri numerici (entità HTML) nella stringa di input con i loro corrispondenti caratteri Unicode.
-        :param string: str, la stringa di input contenente riferimenti ai caratteri numerici.
-        :return: str, la stringa di input con i riferimenti ai caratteri numerici sostituiti con i loro corrispondenti caratteri Unicode.
+        将输入字符串中的数字字符引用（HTML 实体）替换为相应的 Unicode 字符。
+        :param string: str，包含数字字符引用的输入字符串。
+        :return: str，输入字符串，其中的数字字符引用已被相应的 Unicode 字符替换。
         >>> unescaper = NumericEntityUnescaper()
         >>> unescaper.replace("&#65;&#66;&#67;")
         'ABC'
-
         """
-    result = []
-    i = 0
-    n = len(string)
-    while i < n:
-        if string[i:i + 2] == '&#':
-            j = i + 2
-            is_hex = False
-            if j < n and string[j] == 'x':
-                is_hex = True
-                j += 1
-            start = j
-            while j < n and self.is_hex_char(string[j]):
-                j += 1
-            if j < n and string[j] == ';':
-                num_str = string[start:j]
-                if num_str:
-                    try:
-                        if is_hex:
-                            code_point = int(num_str, 16)
-                        else:
-                            code_point = int(num_str)
-                        if 0 <= code_point <= 1114111:
-                            result.append(chr(code_point))
-                            i = j + 1
-                            continue
-                    except ValueError:
-                        pass
-        result.append(string[i])
-        i += 1
-    return ''.join(result)
+    import re
+
+    def replace_entity(match):
+        code = int(match.group(1))
+        return chr(code)
+    return re.sub('&#(\\d+);', replace_entity, string)

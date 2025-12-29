@@ -1,7 +1,7 @@
 def total(self):
     """
-        Calcola il costo totale degli articoli nel carrello.
-        :return: float, costo totale degli articoli
+        计算购物车中商品的总价格。
+        :return: float，商品的总价格
         >>> customer = {'name': 'John Doe', 'fidelity': 1200}
         >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]
         >>> ds = DiscountStrategy(customer, cart)
@@ -9,7 +9,4 @@ def total(self):
         329.0
 
         """
-    total_cost = 0
-    for item in self.cart:
-        total_cost += item['quantity'] * item['price']
-    return total_cost
+    return sum((item['quantity'] * item['price'] for item in self.cart))

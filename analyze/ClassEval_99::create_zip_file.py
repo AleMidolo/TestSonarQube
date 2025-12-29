@@ -1,22 +1,16 @@
 def create_zip_file(self, files, output_file_name):
     """
-        Comprimi l'elenco di file specificato in un file zip e lo salva nel percorso specificato
-        :param files: lista di stringhe, Elenco dei file da comprimere
-        :param output_file_name: stringa, Percorso di output specificato
-        :return: True o False, che rappresenta se l'operazione di compressione è stata riuscita
-        >>> zfp = ZipFileProcessor("aaa.zip")
-        >>> zfp.create_zip_file(["bbb.txt", "ccc.txt", "ddd.txt"], "output/bcd")
-        """
+    将指定的文件列表压缩成一个zip文件，并放置在指定路径中
+    :param files: 字符串列表, 要压缩的文件列表
+    :param output_file_name: 字符串, 指定的输出路径
+    :return: True或False，表示压缩操作是否成功
+    >>> zfp = ZipFileProcessor("aaa.zip")
+    >>> zfp.create_zip_file(["bbb.txt", "ccc.txt", "ddd.txt"], "output/bcd")
+    """
     try:
-        output_dir = os.path.dirname(output_file_name)
-        if output_dir and (not os.path.exists(output_dir)):
-            os.makedirs(output_dir)
-        with zipfile.ZipFile(output_file_name, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        with zipfile.ZipFile(output_file_name, 'w') as zip_file:
             for file in files:
-                if os.path.exists(file):
-                    zipf.write(file, os.path.basename(file))
-                else:
-                    return False
+                zip_file.write(file)
         return True
     except:
         return False

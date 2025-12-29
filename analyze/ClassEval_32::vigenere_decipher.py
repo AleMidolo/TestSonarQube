@@ -1,26 +1,24 @@
 def vigenere_decipher(self, ciphertext):
     """
-        Decifra il testo cifrato fornito utilizzando il cifrario di Vigenere
-        :param ciphertext: Il testo cifrato da decifrare, str.
-        :return: Il testo in chiaro decifrato, str.
+        使用维吉尼亚密码解密给定的密文
+        :param ciphertext: 要解密的密文，str。
+        :return: 解密后的明文，str。
         >>> d = DecryptionUtils('key')
         >>> d.vigenere_decipher('ifmmp')
         'ybocl'
-
         """
-    plaintext = ''
     key_length = len(self.key)
-    for i, char in enumerate(ciphertext):
+    plaintext = []
+    key_index = 0
+    for char in ciphertext:
         if char.isalpha():
-            key_char = self.key[i % key_length]
-            key_shift = ord(key_char.lower()) - ord('a')
+            shift = ord(self.key[key_index % key_length].lower()) - ord('a')
             if char.isupper():
-                ascii_offset = 65
-                plain_char = chr((ord(char) - ascii_offset - key_shift) % 26 + ascii_offset)
+                decrypted_char = chr((ord(char) - shift - 65) % 26 + 65)
             else:
-                ascii_offset = 97
-                plain_char = chr((ord(char) - ascii_offset - key_shift) % 26 + ascii_offset)
-            plaintext += plain_char
+                decrypted_char = chr((ord(char) - shift - 97) % 26 + 97)
+            plaintext.append(decrypted_char)
+            key_index += 1
         else:
-            plaintext += char
-    return plaintext
+            plaintext.append(char)
+    return ''.join(plaintext)

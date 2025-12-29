@@ -1,15 +1,10 @@
 def format(self, x):
     """
-        Converte un numero nella sua rappresentazione in parole.
-        :param x: int o float, il numero da convertire in formato parole
-        :return: str, il numero in formato parole
-        >>> formatter = NumberWordFormatter()
-        >>> formatter.format(123456)
-        "CENTO VENTITRE MILA QUATTROCENTO CINQUANTA SEI SOLO"
-        """
-    if isinstance(x, int):
-        return self.format_string(str(x))
-    elif isinstance(x, float):
-        return self.format_string(str(x))
-    else:
-        raise TypeError('Input must be int or float')
+    将数字转换为单词格式
+    :param x: int 或 float，要转换为单词格式的数字
+    :return: str，数字的单词格式
+    >>> formatter = NumberWordFormatter()
+    >>> formatter.format(123456)
+    "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
+    """
+    return self.format_string(str(int(x))) if isinstance(x, int) else self.format_string(str(x))

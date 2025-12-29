@@ -1,6 +1,6 @@
 def get_max(self):
     """
-        Calcola il valore massimo nei dati
+        计算数据中的最大值
         :return: float
         >>> ds2 = DataStatistics2([1, 2, 3, 4])
         >>> ds2.get_max()

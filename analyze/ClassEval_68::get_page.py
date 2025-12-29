@@ -1,12 +1,11 @@
 def get_page(self, page_number):
     """
-        Recupera una pagina specifica di dati.
-        :param page_number: int, il numero della pagina da recuperare
-        :return: list, i dati sulla pagina specificata
+        获取特定页面的数据。
+        :param page_number: int, 要获取的页面编号
+        :return: list, 指定页面上的数据
         >>> page_util = PageUtil([1, 2, 3, 4], 1)
         >>> page_util.get_page(1)
         [1]
-
         """
     if page_number < 1 or page_number > self.total_pages:
         return []

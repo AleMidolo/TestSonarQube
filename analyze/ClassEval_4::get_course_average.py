@@ -1,8 +1,8 @@
 def get_course_average(self, course):
     """
-        Ottieni il punteggio medio di un corso specifico.
-        :param course: str, nome del corso
-        :return: float, punteggi medi di questo corso se qualcuno ha un punteggio di questo corso, o None se nessuno ha registrazioni.
+        获取特定课程的平均分数。
+        :param course: 字符串，课程名称
+        :return: float，如果有人有该课程的分数，则返回该课程的平均分数；如果没有人有记录，则返回 None。
         """
     total_score = 0
     count = 0

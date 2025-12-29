@@ -1,8 +1,8 @@
 def search_student_by_name(self, name):
     """
-        Cerca uno studente nella tabella "students" in base al nome.
-        :param name: str, il nome dello studente da cercare.
-        :return: lista di tuple, le righe dalla tabella "students" che corrispondono ai criteri di ricerca.
+        根据学生的姓名在“students”表中搜索学生。
+        :param name: str，要搜索的学生姓名。
+        :return: list of tuples，符合搜索条件的“students”表中的行。
         >>> processor = StudentDatabaseProcessor("students.db")
         >>> processor.create_student_table()
         >>> result = processor.search_student_by_name("John")

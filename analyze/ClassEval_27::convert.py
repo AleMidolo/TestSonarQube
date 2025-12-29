@@ -1,10 +1,10 @@
 def convert(self, amount, from_currency, to_currency):
     """
-        Convertire il valore di una valuta data in un altro tipo di valuta
-        :param amount: float, Il valore di una valuta data
-        :param from_currency: string, tipo di valuta di origine
-        :param to_currency: string, tipo di valuta di destinazione
-        :return: float, valore convertito in un altro tipo di valuta
+        将给定货币的值转换为另一种货币类型
+        :param amount: 浮点数, 给定货币的值
+        :param from_currency: 字符串, 源货币类型
+        :param to_currency: 字符串, 目标货币类型
+        :return: 浮点数, 转换为另一种货币类型的值
         >>> cc = CurrencyConverter()
         >>> cc.convert(64, 'CNY','USD')
         10.0

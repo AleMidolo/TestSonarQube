@@ -1,7 +1,7 @@
 def set_mode(self, mode):
     """
-        Ottieni l'attuale modalità di lavoro
-        :param mode: str, modalità di lavoro. solo ['heat', 'cool']
+        获取当前工作模式
+        :param mode: str, 工作模式。仅限 ['heat', 'cool']
         >>> thermostat.set_mode('cool')
         >>> thermostat.mode
         'cool'

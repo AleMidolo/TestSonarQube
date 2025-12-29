@@ -1,6 +1,6 @@
 def get_sum(self):
     """
-        Calcola la somma dei dati
+        计算数据的总和
         :return: float
         >>> ds2 = DataStatistics2([1, 2, 3, 4])
         >>> ds2.get_sum()

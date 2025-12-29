@@ -1,34 +1,23 @@
 def calculate(self, expression):
     """
-        Calcola il risultato dell'espressione postfix fornita
-        :param expression: stringa, l'espressione postfix da calcolare
-        :return: float, il risultato calcolato
+        计算给定后缀表达式的结果
+        :param expression: 字符串，要计算的后缀表达式
+        :return: 浮点数，计算结果
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.calculate("2 + 3 * 4")
         14.0
 
         """
     self.postfix_stack.clear()
-    transformed_expr = self.transform(expression)
-    self.prepare(transformed_expr)
-    result_stack = deque()
+    expression = self.transform(expression)
+    self.prepare(expression)
+    op_stack = deque()
     for token in self.postfix_stack:
-        if self.is_operator(token):
-            if token == '~':
-                if not result_stack:
-                    raise ValueError('Invalid expression: unary minus without operand')
-                operand = result_stack.pop()
-                result_stack.append(-Decimal(operand))
-            else:
-                if len(result_stack) < 2:
-                    raise ValueError('Invalid expression: insufficient operands for operator')
-                second_value = result_stack.pop()
-                first_value = result_stack.pop()
-                result = self._calculate(first_value, second_value, token)
-                result_stack.append(result)
+        if not self.is_operator(token):
+            op_stack.append(token)
         else:
-            result_stack.append(token)
-    if len(result_stack) != 1:
-        raise ValueError('Invalid expression: could not compute final result')
-    result = result_stack.pop()
-    return float(result)
+            second_value = op_stack.pop()
+            first_value = op_stack.pop()
+            result = self._calculate(first_value, second_value, token)
+            op_stack.append(result)
+    return float(op_stack.pop())

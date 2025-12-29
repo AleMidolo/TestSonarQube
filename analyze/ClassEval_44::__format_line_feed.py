@@ -1,9 +1,7 @@
-def __format_line_feed(self, text):
+def __format_line_feed(text):
     """
-        Sostituisce i ritorni a capo consecutivi con un singolo ritorno a capo
-        :param text: stringa con ritorni a capo consecutivi
-        :return: stringa, testo sostituito con un singolo ritorno a capo
+        用单个换行符替换连续的换行符
+        :param text: 包含连续换行符的字符串
+        :return: string, 替换后的文本，包含单个换行符
         """
-    if not text:
-        return text
-    return re.sub('\\n+', '\n', text.strip())
+    return re.sub('\\n+', '\n', text).strip()
