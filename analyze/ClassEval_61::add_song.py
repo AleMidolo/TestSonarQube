@@ -7,5 +7,4 @@ def add_song(self, song):
         >>> musicPlayer.playlist
         ['song1']
         """
-    if song and song not in self.playlist:
-        self.playlist.append(song)
+    self.playlist.append(song)

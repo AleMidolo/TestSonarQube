@@ -8,10 +8,10 @@ def write_text(self, content, font_size=12, alignment='left'):
         """
     try:
         doc = Document(self.file_path)
-        paragraph = doc.add_paragraph()
-        run = paragraph.add_run(content)
-        run.font.size = Pt(font_size)
+        paragraph = doc.add_paragraph(content)
         paragraph.alignment = self._get_alignment_value(alignment)
+        for run in paragraph.runs:
+            run.font.size = Pt(font_size)
         doc.save(self.file_path)
         return True
     except:

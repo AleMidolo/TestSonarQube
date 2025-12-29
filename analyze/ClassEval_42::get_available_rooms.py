@@ -7,7 +7,4 @@ def get_available_rooms(self, room_type):
         >>> hotel.get_available_rooms('单人间')
         5
         """
-    if room_type in self.available_rooms:
-        return self.available_rooms[room_type]
-    else:
-        return 0
+    return self.available_rooms.get(room_type, 0)

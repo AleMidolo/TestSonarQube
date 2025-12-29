@@ -16,6 +16,11 @@ def extract_file(self, file_name, output_path):
             if os.path.exists(extracted_path):
                 return True
             else:
+                for name in zip_file.namelist():
+                    if name.endswith(file_name) or os.path.basename(name) == file_name:
+                        actual_extracted = os.path.join(output_path, name)
+                        if os.path.exists(actual_extracted):
+                            return True
                 return False
     except:
         return False
