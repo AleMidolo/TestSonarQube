@@ -14,5 +14,5 @@ def count(n: int, m: int) -> int:
         m = n - m
     result = 1
     for i in range(1, m + 1):
-        result = result * (n - i + 1) // i
+        result = result * (n - m + i) // i
     return result

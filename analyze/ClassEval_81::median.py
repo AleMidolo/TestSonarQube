@@ -15,6 +15,6 @@ def median(data):
     n = len(sorted_data)
     mid = n // 2
     if n % 2 == 0:
-        return (sorted_data[mid - 1] + sorted_data[mid]) / 2.0
+        return (sorted_data[mid - 1] + sorted_data[mid]) / 2
     else:
-        return float(sorted_data[mid])
+        return sorted_data[mid]

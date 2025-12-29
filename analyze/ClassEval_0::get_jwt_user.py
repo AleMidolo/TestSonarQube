@@ -9,11 +9,8 @@ def get_jwt_user(self, request):
         """
     try:
         auth_header = request.get('headers', {}).get('Authorization', {})
-        jwt_token = auth_header.get('jwt', '')
-        expected_token = auth_header.get('user', {}).get('name', '') + str(datetime.date.today())
-        if jwt_token == expected_token:
-            return {'user': auth_header.get('user', {})}
-        else:
-            return None
+        if 'jwt' in auth_header and 'user' in auth_header:
+            return {'user': auth_header['user']}
     except:
-        return None
+        pass
+    return None

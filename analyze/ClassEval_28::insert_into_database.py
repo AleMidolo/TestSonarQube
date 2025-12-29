@@ -12,7 +12,7 @@ def insert_into_database(self, table_name, data):
     cursor = conn.cursor()
     for row in data:
         columns = ', '.join(row.keys())
-        placeholders = ', '.join(['?' for _ in row])
+        placeholders = ', '.join(['?'] * len(row))
         values = tuple(row.values())
         insert_query = f'INSERT INTO {table_name} ({columns}) VALUES ({placeholders})'
         cursor.execute(insert_query, values)

@@ -8,27 +8,27 @@ def calculate(self, expression):
         14.0
 
         """
-    self.postfix_stack.clear()
     transformed_expression = self.transform(expression)
-    self.prepare(transformed_expression)
-    calc_stack = deque()
-    for token in self.postfix_stack:
-        if self.is_operator(token):
-            if token == '~':
-                if calc_stack:
-                    operand = calc_stack.pop()
-                    calc_stack.append(str(-Decimal(operand)))
-            else:
-                if len(calc_stack) < 2:
-                    raise ValueError('Invalid expression: insufficient operands')
-                second = calc_stack.pop()
-                first = calc_stack.pop()
-                result = self._calculate(first, second, token)
-                calc_stack.append(str(result))
-        else:
-            calc_stack.append(token)
-    if not calc_stack:
-        raise ValueError('Invalid expression: no result')
-    result = Decimal(calc_stack.pop())
     self.postfix_stack.clear()
-    return float(result)
+    self.prepare(transformed_expression)
+    calc_stack = deque(self.postfix_stack.copy())
+    result_stack = deque()
+    while calc_stack:
+        token = calc_stack.popleft()
+        if self.is_operator(token):
+            if len(result_stack) < 2:
+                raise ValueError('Invalid expression: insufficient operands')
+            second_value = result_stack.pop()
+            first_value = result_stack.pop()
+            if token == '~':
+                result_stack.append(first_value)
+                result = -Decimal(second_value)
+                result_stack.append(str(result))
+            else:
+                result = self._calculate(first_value, second_value, token)
+                result_stack.append(str(result))
+        else:
+            result_stack.append(token)
+    if len(result_stack) != 1:
+        raise ValueError('Invalid expression: too many values in result stack')
+    return float(Decimal(result_stack.pop()))
