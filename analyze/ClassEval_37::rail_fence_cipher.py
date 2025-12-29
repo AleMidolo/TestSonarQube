@@ -1,14 +1,13 @@
 def rail_fence_cipher(self, plain_text, rails):
     """
-    使用铁路栅栏密码加密明文。
-    :param plain_text: 要加密的明文，str。
-    :return: 密文，str。
-    >>> e = EncryptionUtils("key")
-    >>> e.rail_fence_cipher("abc", 2)
-    'acb'
-    """
-    if rails <= 0:
-        return ''
+        使用铁路栅栏密码加密明文。
+        :param plain_text: 要加密的明文，str。
+        :param rails: 使用的栅栏数量，int。
+        :return: 密文，str。
+        >>> e = EncryptionUtils("key")
+        >>> e.rail_fence_cipher("abc", 2)
+        'acb'
+        """
     rail = [['\n' for i in range(len(plain_text))] for j in range(rails)]
     dir_down = None
     row, col = (0, 0)

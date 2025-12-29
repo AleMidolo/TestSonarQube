@@ -7,6 +7,6 @@ def is_valid_input(self, textnum):
         >>> w2n.is_valid_input("thirty-two")
         False
         """
-    valid_words = set(self.numwords.keys()).union(set(self.ordinal_words.keys()))
+    valid_words = set(self.numwords.keys()).union(self.ordinal_words.keys())
     words = textnum.replace('-', ' ').split()
     return all((word in valid_words for word in words))

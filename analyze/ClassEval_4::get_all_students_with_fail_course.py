@@ -8,6 +8,8 @@ def get_all_students_with_fail_course(self):
         """
     failed_students = []
     for name, student in self.students.items():
-        if any((score < 60 for score in student['courses'].values())):
-            failed_students.append(name)
+        for score in student['courses'].values():
+            if score < 60:
+                failed_students.append(name)
+                break
     return failed_students
