@@ -11,24 +11,31 @@ def calculate(self, expression):
     self.postfix_stack.clear()
     transformed_expression = self.transform(expression)
     self.prepare(transformed_expression)
-    eval_stack = deque()
-    for token in self.postfix_stack:
+    calc_stack = deque(self.postfix_stack.copy())
+    result_stack = deque()
+    while calc_stack:
+        token = calc_stack.popleft()
         if self.is_operator(token):
             if token == '~':
-                if not eval_stack:
-                    raise ValueError('Invalid expression: missing operand for unary minus')
-                operand = eval_stack.pop()
-                result = Decimal(0) - Decimal(operand)
-                eval_stack.append(str(result))
+                if result_stack:
+                    operand = result_stack.pop()
+                    result_stack.append(str(-Decimal(operand)))
             else:
-                if len(eval_stack) < 2:
-                    raise ValueError('Invalid expression: insufficient operands for operator {}'.format(token))
-                second_value = eval_stack.pop()
-                first_value = eval_stack.pop()
+                if len(result_stack) < 2:
+                    raise ValueError('Invalid expression: insufficient operands')
+                second_value = result_stack.pop()
+                first_value = result_stack.pop()
+                if first_value.startswith('~'):
+                    first_value = '-' + first_value[1:]
+                if second_value.startswith('~'):
+                    second_value = '-' + second_value[1:]
                 result = self._calculate(first_value, second_value, token)
-                eval_stack.append(str(result))
+                result_stack.append(str(result))
         else:
-            eval_stack.append(token)
-    if len(eval_stack) != 1:
-        raise ValueError('Invalid expression: evaluation stack has {} elements instead of 1'.format(len(eval_stack)))
-    return float(eval_stack.pop())
+            if token.startswith('~'):
+                token = '-' + token[1:]
+            result_stack.append(token)
+    if len(result_stack) != 1:
+        raise ValueError('Invalid expression: could not compute final result')
+    result = Decimal(result_stack.pop())
+    return float(result)

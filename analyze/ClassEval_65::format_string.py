@@ -7,10 +7,8 @@ def format_string(self, x):
         >>> formatter.format_string("123456")
         "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
         """
-    is_negative = False
     if x.startswith('-'):
-        is_negative = True
-        x = x[1:]
+        return 'MINUS ' + self.format_string(x[1:])
     parts = x.split('.')
     integer_part = parts[0]
     decimal_part = parts[1] if len(parts) > 1 else ''
@@ -18,16 +16,8 @@ def format_string(self, x):
     if integer_part == '':
         integer_part = '0'
     integer_words = self._format_integer(integer_part)
-    decimal_words = ''
     if decimal_part:
-        decimal_part = decimal_part.rstrip('0')
-        if decimal_part:
-            decimal_words = self._format_decimal(decimal_part)
-    result = ''
-    if is_negative:
-        result += 'MINUS '
-    result += integer_words
-    if decimal_words:
-        result += ' AND ' + decimal_words
-    result += ' ONLY'
-    return result
+        decimal_words = self._format_decimal(decimal_part)
+        return f'{integer_words} AND {decimal_words} ONLY'
+    else:
+        return f'{integer_words} ONLY'

@@ -15,7 +15,10 @@ def send_to(self, recv, content, size):
         """
     if recv.is_full_with_one_more_email(size):
         return False
-    recv.clear_inbox(size)
+    occupied = recv.get_occupied_size()
+    if occupied + size > recv.capacity:
+        space_needed = occupied + size - recv.capacity
+        recv.clear_inbox(space_needed)
     email = {'sender': self.addr, 'receiver': recv.addr, 'content': content, 'size': size, 'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'state': 'unread'}
     recv.inbox.append(email)
     return True
