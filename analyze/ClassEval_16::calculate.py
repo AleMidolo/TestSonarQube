@@ -16,41 +16,34 @@ def calculate(self, expression):
     i = 0
     n = len(expression)
     while i < n:
-        if expression[i].isdigit() or expression[i] == '.':
+        char = expression[i]
+        if char.isdigit() or char == '.':
             j = i
             while j < n and (expression[j].isdigit() or expression[j] == '.'):
                 j += 1
             try:
-                operand_stack.append(float(expression[i:j]))
+                num = float(expression[i:j])
             except ValueError:
                 return None
+            operand_stack.append(num)
             i = j
-        elif expression[i] in self.operators:
-            if expression[i] == '-' and (i == 0 or expression[i - 1] in self.operators or expression[i - 1] == '('):
-                j = i + 1
-                while j < n and (expression[j].isdigit() or expression[j] == '.'):
-                    j += 1
-                try:
-                    operand_stack.append(-float(expression[i + 1:j]))
-                except ValueError:
-                    return None
-                i = j
-            else:
-                while operator_stack and operator_stack[-1] != '(' and (self.precedence(operator_stack[-1]) >= self.precedence(expression[i])):
-                    operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
-                operator_stack.append(expression[i])
-                i += 1
-        elif expression[i] == '(':
-            operator_stack.append(expression[i])
+        elif char in self.operators:
+            while operator_stack and self.precedence(operator_stack[-1]) >= self.precedence(char):
+                operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
+            operator_stack.append(char)
             i += 1
-        elif expression[i] == ')':
+        elif char == '(':
+            operator_stack.append(char)
+            i += 1
+        elif char == ')':
             while operator_stack and operator_stack[-1] != '(':
                 operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
-            if not operator_stack or operator_stack[-1] != '(':
+            if operator_stack and operator_stack[-1] == '(':
+                operator_stack.pop()
+            else:
                 return None
-            operator_stack.pop()
             i += 1
-        elif expression[i].isspace():
+        elif char.isspace():
             i += 1
         else:
             return None
@@ -58,6 +51,7 @@ def calculate(self, expression):
         if operator_stack[-1] == '(':
             return None
         operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
-    if len(operand_stack) != 1 or operator_stack:
+    if len(operand_stack) == 1 and (not operator_stack):
+        return operand_stack[0]
+    else:
         return None
-    return operand_stack[0]

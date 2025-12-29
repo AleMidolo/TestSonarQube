@@ -12,18 +12,23 @@ def calculate(self, expression):
     self.postfix_stack.clear()
     transformed_expression = self.transform(expression)
     self.prepare(transformed_expression)
-    calc_stack = deque()
+    result_stack = deque()
     for item in self.postfix_stack:
-        if not self.is_operator(item):
-            if item.startswith('~'):
-                calc_stack.append(str(-Decimal(item[1:])))
+        if self.is_operator(item):
+            if item == '~':
+                if result_stack:
+                    operand = result_stack.pop()
+                    result_stack.append(Decimal(0) - Decimal(operand))
             else:
-                calc_stack.append(item)
+                if len(result_stack) < 2:
+                    raise ValueError('Invalid expression: insufficient operands')
+                second = result_stack.pop()
+                first = result_stack.pop()
+                result = self._calculate(first, second, item)
+                result_stack.append(result)
         else:
-            second_value = calc_stack.pop()
-            first_value = calc_stack.pop()
-            result = self._calculate(first_value, second_value, item)
-            calc_stack.append(str(result))
-    if len(calc_stack) != 1:
-        raise ValueError('Invalid expression: calculation stack has more than one item')
-    return float(calc_stack.pop())
+            result_stack.append(item)
+    if len(result_stack) != 1:
+        raise ValueError('Invalid expression: could not compute final result')
+    result = float(result_stack.pop())
+    return result

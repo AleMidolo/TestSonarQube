@@ -12,15 +12,24 @@ def split_sentences(self, sentences_string):
     pattern = '(?<!Mr)(?<!Mrs)(?<!Ms)(?<!Dr)(?<!Prof)(?<!Sr)(?<!Jr)\\.\\s+|\\?\\s+'
     sentences = re.split(pattern, sentences_string)
     sentences = [s.strip() for s in sentences if s.strip()]
-    matches = list(re.finditer(pattern, sentences_string))
     result = []
     for i, sentence in enumerate(sentences):
-        if i < len(matches):
-            punct_match = matches[i].group()
-            punct = punct_match[0]
-            result.append(sentence + punct)
-        elif sentence.endswith('.') or sentence.endswith('?'):
-            result.append(sentence)
+        if i < len(sentences) - 1:
+            start_pos = sentences_string.find(sentence)
+            if start_pos != -1:
+                end_pos = start_pos + len(sentence)
+                if end_pos < len(sentences_string):
+                    if sentences_string[end_pos:end_pos + 2] == '. ':
+                        result.append(sentence + '.')
+                    elif sentences_string[end_pos:end_pos + 2] == '? ':
+                        result.append(sentence + '?')
+                    else:
+                        result.append(sentence)
+        elif sentences_string.strip().endswith('.') or sentences_string.strip().endswith('?'):
+            if sentences_string.strip().endswith('.'):
+                result.append(sentence + '.')
+            else:
+                result.append(sentence + '?')
         else:
             result.append(sentence)
     return result

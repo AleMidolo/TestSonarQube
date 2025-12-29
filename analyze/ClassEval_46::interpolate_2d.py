@@ -15,7 +15,7 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         """
 
     def find_segment(coord, value, coords):
-        """Find the segment index where value lies between coords[i] and coords[i+1]"""
+        """Find the segment index for interpolation in 1D"""
         for i in range(len(coords) - 1):
             if coords[i] <= value <= coords[i + 1]:
                 return i
@@ -23,6 +23,13 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
             return 0
         else:
             return len(coords) - 2
+
+    def bilinear_interpolation(x_val, y_val, x1, x2, y1, y2, z11, z12, z21, z22):
+        """Perform bilinear interpolation within a grid cell"""
+        z_x1 = z11 + (z21 - z11) * (x_val - x1) / (x2 - x1)
+        z_x2 = z12 + (z22 - z12) * (x_val - x1) / (x2 - x1)
+        z_interp = z_x1 + (z_x2 - z_x1) * (y_val - y1) / (y2 - y1)
+        return z_interp
     z_interp = []
     for xi, yi in zip(x_interp, y_interp):
         i = find_segment('x', xi, x)
@@ -30,11 +37,9 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         x1, x2 = (x[i], x[i + 1])
         y1, y2 = (y[j], y[j + 1])
         z11 = z[j][i]
-        z12 = z[j][i + 1]
-        z21 = z[j + 1][i]
+        z12 = z[j + 1][i]
+        z21 = z[j][i + 1]
         z22 = z[j + 1][i + 1]
-        z_y1 = z11 + (z12 - z11) * (xi - x1) / (x2 - x1)
-        z_y2 = z21 + (z22 - z21) * (xi - x1) / (x2 - x1)
-        zi = z_y1 + (z_y2 - z_y1) * (yi - y1) / (y2 - y1)
+        zi = bilinear_interpolation(xi, yi, x1, x2, y1, y2, z11, z12, z21, z22)
         z_interp.append(zi)
     return z_interp

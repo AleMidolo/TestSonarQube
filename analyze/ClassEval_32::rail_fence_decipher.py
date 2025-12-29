@@ -11,27 +11,38 @@ def rail_fence_decipher(self, encrypted_text, rails):
         """
     if rails == 1:
         return encrypted_text
-    fence = [[] for _ in range(rails)]
-    pattern = []
-    direction = 1
-    current_rail = 0
+    rail = [['' for _ in range(len(encrypted_text))] for _ in range(rails)]
+    dir_down = None
+    row, col = (0, 0)
     for i in range(len(encrypted_text)):
-        pattern.append(current_rail)
-        current_rail += direction
-        if current_rail == rails - 1 or current_rail == 0:
-            direction *= -1
-    sorted_pattern = sorted(range(len(pattern)), key=lambda k: pattern[k])
-    for i, char in enumerate(encrypted_text):
-        rail_idx = pattern[sorted_pattern[i]]
-        fence[rail_idx].append(char)
+        if row == 0:
+            dir_down = True
+        if row == rails - 1:
+            dir_down = False
+        rail[row][col] = '*'
+        col += 1
+        if dir_down:
+            row += 1
+        else:
+            row -= 1
+    index = 0
+    for i in range(rails):
+        for j in range(len(encrypted_text)):
+            if rail[i][j] == '*' and index < len(encrypted_text):
+                rail[i][j] = encrypted_text[index]
+                index += 1
     result = []
-    current_rail = 0
-    direction = 1
-    rail_indices = [0] * rails
-    for _ in range(len(encrypted_text)):
-        result.append(fence[current_rail][rail_indices[current_rail]])
-        rail_indices[current_rail] += 1
-        current_rail += direction
-        if current_rail == rails - 1 or current_rail == 0:
-            direction *= -1
+    row, col = (0, 0)
+    for i in range(len(encrypted_text)):
+        if row == 0:
+            dir_down = True
+        if row == rails - 1:
+            dir_down = False
+        if rail[row][col] != '':
+            result.append(rail[row][col])
+            col += 1
+        if dir_down:
+            row += 1
+        else:
+            row -= 1
     return ''.join(result)

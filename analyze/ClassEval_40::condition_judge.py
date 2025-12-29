@@ -14,10 +14,11 @@ def condition_judge(self):
             bmi_std_range = std[self.sex]
             break
     if bmi_std_range is None:
-        bmi_std_range = [20, 25]
-    if bmi < bmi_std_range[0]:
-        return -1
-    elif bmi > bmi_std_range[1]:
+        return 0
+    lower, upper = bmi_std_range
+    if bmi > upper:
         return 1
+    elif bmi < lower:
+        return -1
     else:
         return 0
