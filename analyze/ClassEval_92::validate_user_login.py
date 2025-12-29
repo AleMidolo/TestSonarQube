@@ -13,5 +13,4 @@ def validate_user_login(self, username, password):
     user = self.search_user_by_username(username)
     if user is None:
         return False
-    stored_password = user[2]
-    return stored_password == password
+    return user[2] == password

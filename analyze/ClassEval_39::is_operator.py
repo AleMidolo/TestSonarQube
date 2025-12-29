@@ -7,5 +7,6 @@ def is_operator(c):
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.is_operator("+")
         True
+
         """
     return c in {'+', '-', '*', '\\/', '(', ')', '%'}
