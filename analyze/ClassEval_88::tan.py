@@ -1,8 +1,8 @@
 def tan(self, x):
     """
-        x-डिग्री कोण का टैन मान निकालें
-        :param x: फ्लोट
-        :return: फ्लोट
+        Calculate the tan value of the x-degree angle
+        :param x: float
+        :return: float
         >>> tricalculator.tan(45)
         1.0
         """

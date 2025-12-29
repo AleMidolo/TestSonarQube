@@ -9,10 +9,10 @@ def get_query_params(self):
     query_start = self.url.find('?')
     if query_start != -1:
         query_string = self.url[query_start + 1:]
-        query_params = {}
+        params = {}
         for param in query_string.split('&'):
             key_value = param.split('=')
             if len(key_value) == 2:
-                query_params[key_value[0]] = key_value[1]
-        return query_params
+                params[key_value[0]] = key_value[1]
+        return params
     return {}

@@ -5,6 +5,6 @@ def deposit(self, amount):
         :param amount: int
         """
     if amount < 0:
-        raise ValueError('Invalid amount')
+        raise ValueError('अमान्य राशि')
     self.balance += amount
     return self.balance

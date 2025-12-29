@@ -23,6 +23,6 @@ def lemmatize_sentence(self, sentence):
         elif pos.startswith('JJ'):
             lemmatized_word = self.lemmatizer.lemmatize(word, pos='a')
         else:
-            lemmatized_word = self.lemmatizer.lemmatize(word)
+            lemmatized_word = word
         lemmatized_words.append(lemmatized_word)
     return lemmatized_words

@@ -10,4 +10,6 @@ def get_messages(self, username):
         >>> chat.get_messages('Mary')
         []
         """
-    return self.users.get(username, [])
+    if username in self.users:
+        return self.users[username]
+    return []
