@@ -8,4 +8,4 @@ def view_inventory(self):
         >>> bookManagement.view_inventory()
         {'book1': 1, 'book2': 1}
         """
-    return self.inventory.copy()
+    return self.inventory

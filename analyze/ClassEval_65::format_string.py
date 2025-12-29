@@ -11,44 +11,24 @@ def format_string(self, x):
         return ''
     is_negative = False
     if x[0] == '-':
-        is_negative = True
+        is_negative = x[0] == '-'
         x = x[1:]
-    decimal_part = ''
-    if '.' in x:
-        integer_part, decimal_part = x.split('.')
-        decimal_part = decimal_part.rstrip('0')
-        if decimal_part:
-            decimal_part = decimal_part.ljust(2, '0')[:2]
-    else:
-        integer_part = x
+    parts = x.split('.')
+    integer_part = parts[0]
+    decimal_part = parts[1] if len(parts) > 1 else ''
     integer_part = integer_part.lstrip('0')
     if integer_part == '':
         integer_part = '0'
-    if integer_part == '0':
-        words = 'ZERO'
-    else:
-        groups = []
-        temp = integer_part
-        while len(temp) > 3:
-            groups.append(temp[-3:])
-            temp = temp[:-3]
-        groups.append(temp)
-        groups.reverse()
-        group_words = []
-        for i, group in enumerate(groups):
-            if group != '000':
-                group_num = int(group)
-                if group_num > 0:
-                    word = self.trans_three(group.zfill(3))
-                    magnitude = len(groups) - i - 1
-                    if magnitude > 0:
-                        word += ' ' + self.parse_more(magnitude)
-                    group_words.append(word)
-        words = ' '.join(group_words)
-    if decimal_part and decimal_part != '00':
-        decimal_words = self.trans_two(decimal_part.zfill(2))
-        words += f' AND {decimal_words} CENTS'
+    integer_words = self._convert_integer_part(integer_part)
+    decimal_words = ''
+    if decimal_part:
+        decimal_words = self._convert_decimal_part(decimal_part)
+    result = ''
     if is_negative:
-        words = 'MINUS ' + words
-    words += ' ONLY'
-    return words
+        result += 'MINUS '
+    result += integer_words
+    if decimal_words:
+        result += ' AND ' + decimal_words + ' CENTS'
+    else:
+        result += ' ONLY'
+    return result.strip()

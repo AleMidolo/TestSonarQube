@@ -12,9 +12,9 @@ def display_items(self):
         """
     if not self.inventory:
         return False
-    result = []
+    items_display = []
     for item_name, details in self.inventory.items():
         price = details['price']
         quantity = details['quantity']
-        result.append(f'{item_name} - ${price} [{quantity}]')
-    return '\n'.join(result)
+        items_display.append(f'{item_name} - ${price} [{quantity}]')
+    return '\n'.join(items_display)

@@ -9,7 +9,6 @@ def _calculate(first_value, second_value, current_op):
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator._calculate("2", "3", "+")
         5.0
-
         """
     first = Decimal(first_value)
     second = Decimal(second_value)

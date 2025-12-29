@@ -20,5 +20,4 @@ def n_similarity(vector_list_1, vector_list_2):
     norm_v2 = np.linalg.norm(mean_v2)
     if norm_v1 == 0 or norm_v2 == 0:
         return 0.0
-    similarity = np.dot(mean_v1, mean_v2) / (norm_v1 * norm_v2)
-    return similarity
+    return np.dot(mean_v1, mean_v2) / (norm_v1 * norm_v2)

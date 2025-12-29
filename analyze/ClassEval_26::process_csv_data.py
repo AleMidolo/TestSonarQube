@@ -32,9 +32,11 @@ def process_csv_data(self, N, save_file_name):
         else:
             output_title = ['']
         output_data = [output_title] + processed_data
-        base_name = save_file_name.rsplit('.', 1)[0]
-        extension = save_file_name.rsplit('.', 1)[1] if '.' in save_file_name else 'csv'
-        new_file_name = f'{base_name}_process.{extension}'
+        if save_file_name.endswith('.csv'):
+            base_name = save_file_name[:-4]
+            new_file_name = f'{base_name}_process.csv'
+        else:
+            new_file_name = f'{save_file_name}_process.csv'
         return self.write_csv(output_data, new_file_name)
     except Exception as e:
         return 0
