@@ -9,24 +9,22 @@ def format_string(self, x):
         """
     if not x.isdigit():
         return ''
-    x = x.split('.')[0]
-    n = len(x)
-    if n == 0:
-        return 'ZERO ONLY'
+    x = x.split('.')
+    whole_part = x[0]
+    decimal_part = x[1] if len(x) > 1 else ''
     words = []
-    index = 0
-    while n > 0:
-        part = x[max(0, n - 3):n]
-        if part:
-            if index > 0:
-                words.append(self.parse_more(index))
-            if len(part) == 3:
-                words.append(self.trans_three(part))
-            elif len(part) == 2:
-                words.append(self.trans_two(part))
-            elif len(part) == 1:
-                words.append(self.NUMBER[int(part)])
-        n -= 3
-        index += 1
-    result = ' AND '.join(reversed(words)).strip()
+    length = len(whole_part)
+    if length == 0:
+        return 'ZERO ONLY'
+    for i in range(length, 0, -3):
+        group = whole_part[max(0, i - 3):i]
+        if group:
+            group_words = self.trans_three(group)
+            if i // 3 > 0:
+                group_words += ' ' + self.parse_more(i // 3 - 1)
+            words.append(group_words)
+    words.reverse()
+    result = ' AND '.join(words).strip()
+    if decimal_part:
+        result += ' POINT ' + ' '.join((self.NUMBER[int(digit)] for digit in decimal_part))
     return result + ' ONLY'

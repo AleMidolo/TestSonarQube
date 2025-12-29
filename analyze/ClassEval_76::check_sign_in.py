@@ -11,6 +11,6 @@ def check_sign_in(self, username):
         >>> signInSystem.check_sign_in("jack")
         True
         """
-    if username in self.users and self.users[username]:
-        return True
-    return False
+    if username not in self.users or not self.users[username]:
+        return False
+    return True
