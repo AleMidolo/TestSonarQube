@@ -9,15 +9,13 @@ def move(self, direction):
         self.score = 10
         """
     head_x, head_y = self.positions[0]
-    new_x = head_x + direction[0] * self.BLOCK_SIZE
-    new_y = head_y + direction[1] * self.BLOCK_SIZE
-    new_head = (new_x, new_y)
+    dx, dy = direction
+    new_head = (head_x + dx * self.BLOCK_SIZE, head_y + dy * self.BLOCK_SIZE)
+    if new_head in self.positions:
+        self.reset()
+        return
+    self.positions.insert(0, new_head)
     if new_head == self.food_position:
         self.eat_food()
-        self.positions.insert(0, new_head)
-    elif new_head in self.positions:
-        self.reset()
-    else:
-        self.positions.insert(0, new_head)
-        if len(self.positions) > self.length:
-            self.positions.pop()
+    elif len(self.positions) > self.length:
+        self.positions.pop()

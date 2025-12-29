@@ -27,14 +27,14 @@ def process_csv_data(self, N, save_file_name):
                 processed_data.append([row[N].upper()])
             else:
                 processed_data.append([''])
+        if N < len(title):
+            output_title = [title[N]]
+        else:
+            output_title = ['']
+        output_data = [output_title] + processed_data
         base_name = save_file_name.rsplit('.', 1)[0]
         extension = save_file_name.rsplit('.', 1)[1] if '.' in save_file_name else 'csv'
         new_file_name = f'{base_name}_process.{extension}'
-        if N < len(title):
-            new_title = [title[N]]
-        else:
-            new_title = ['']
-        data_to_write = [new_title] + processed_data
-        return self.write_csv(data_to_write, new_file_name)
+        return self.write_csv(output_data, new_file_name)
     except Exception as e:
         return 0

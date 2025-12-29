@@ -10,12 +10,11 @@ def cosine_similarities(vector_1, vectors_all):
         >>> VectorUtil.cosine_similarities(vector1, vectors_all)
         [0.97463185 0.95941195]
         """
-    if not isinstance(vectors_all, list):
-        vectors_all = [vectors_all]
-    vector_1 = matutils.unitvec(vector_1)
-    similarities = []
-    for vec in vectors_all:
-        vec_normalized = matutils.unitvec(vec)
-        sim = dot(vector_1, vec_normalized)
-        similarities.append(sim)
-    return np.array(similarities)
+    if not isinstance(vectors_all, np.ndarray):
+        vectors_all = np.array(vectors_all)
+    if not isinstance(vector_1, np.ndarray):
+        vector_1 = np.array(vector_1)
+    vector_1_norm = matutils.unitvec(vector_1)
+    vectors_all_norm = np.array([matutils.unitvec(v) for v in vectors_all])
+    similarities = np.dot(vectors_all_norm, vector_1_norm)
+    return similarities

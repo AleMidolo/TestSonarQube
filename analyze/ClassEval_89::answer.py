@@ -12,10 +12,9 @@ def answer(self, expression):
     if not self.evaluate_expression(expression):
         return False
     import re
-    numbers_in_expr = re.findall('\\d+\\.?\\d*', expression)
-    numbers_in_expr = [float(num) for num in numbers_in_expr]
-    if len(numbers_in_expr) != 4:
+    numbers_in_expression = re.findall('\\d+', expression)
+    numbers_in_expression = [int(num) for num in numbers_in_expression]
+    if sorted(numbers_in_expression) == sorted(self.nums):
+        return True
+    else:
         return False
-    numbers_in_expr_sorted = sorted(numbers_in_expr)
-    nums_sorted = sorted(self.nums)
-    return numbers_in_expr_sorted == nums_sorted

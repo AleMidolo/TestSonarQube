@@ -11,7 +11,9 @@ def filter(self, request):
     if not self.is_start_with(request.get('path', '')):
         return False
     if request.get('path', '').startswith('/login'):
-        return request.get('method') == 'POST'
+        if request.get('method') == 'POST':
+            return True
+        return False
     if request.get('path', '').startswith('/api'):
         if 'headers' not in request or 'Authorization' not in request['headers']:
             return False

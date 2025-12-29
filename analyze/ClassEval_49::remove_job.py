@@ -10,4 +10,5 @@ def remove_job(self, job):
         []
 
         """
-    self.job_listings.remove(job)
+    if job in self.job_listings:
+        self.job_listings.remove(job)

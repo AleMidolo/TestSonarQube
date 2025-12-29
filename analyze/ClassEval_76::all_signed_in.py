@@ -9,7 +9,7 @@ def all_signed_in(self):
         True
         """
     if not self.users:
-        return False
+        return True
     for signed_in in self.users.values():
         if not signed_in:
             return False

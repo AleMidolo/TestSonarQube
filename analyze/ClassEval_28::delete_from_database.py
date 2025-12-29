@@ -17,9 +17,7 @@ def delete_from_database(self, table_name, name):
     if name_column:
         delete_query = f'DELETE FROM {table_name} WHERE {name_column} = ?'
         cursor.execute(delete_query, (name,))
-    elif len(columns_info) > 1:
-        name_column = columns_info[1][1]
-        delete_query = f'DELETE FROM {table_name} WHERE {name_column} = ?'
-        cursor.execute(delete_query, (name,))
+    else:
+        print(f"No TEXT column found in table {table_name} to match name '{name}'")
     conn.commit()
     conn.close()
