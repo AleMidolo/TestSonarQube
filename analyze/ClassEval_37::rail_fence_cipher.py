@@ -21,9 +21,9 @@ def rail_fence_cipher(self, plain_text, rails):
             row += 1
         else:
             row -= 1
-    result = []
+    ciphertext = ''
     for i in range(rails):
         for j in range(len(plain_text)):
             if rail[i][j] != '\n':
-                result.append(rail[i][j])
-    return ''.join(result)
+                ciphertext += rail[i][j]
+    return ciphertext

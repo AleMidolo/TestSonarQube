@@ -28,6 +28,11 @@ def format_string(self, x):
             part = whole_part[max(0, length - i - 2):length - i]
             if part:
                 words.append(self.trans_two(part))
+        elif length - i - 1 == 0:
+            part = whole_part[max(0, length - i - 1):length - i]
+            if part:
+                words.append(self.NUMBER[int(part)])
     result = ' AND '.join(words).strip()
-    result += ' ONLY'
-    return result
+    if decimal_part:
+        result += ' POINT ' + ' '.join((self.NUMBER[int(digit)] for digit in decimal_part))
+    return result + ' ONLY' if result else ''
