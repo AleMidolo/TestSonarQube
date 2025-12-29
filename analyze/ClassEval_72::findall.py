@@ -1,9 +1,9 @@
 def findall(self, pattern, text):
     """
-        Find all substrings that match and return a list of all matching substrings
-        :param pattern: string, Regular expression pattern
-        :param text: string, Text to match
-        :return: list of string, List of all matching substrings
+        Trova tutte le sottostringhe corrispondenti e restituisce un elenco di tutte le sottostringhe corrispondenti
+        :param pattern: stringa, Modello di espressione regolare
+        :param text: stringa, Testo da abbinare
+        :return: elenco di stringhe, Elenco di tutte le sottostringhe corrispondenti
         >>> ru = RegexUtils()
         >>> ru.findall(r'\x08\\d{3}-\\d{3}-\\d{4}\x08', "123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767")
         ['123-456-7890', '876-286-9876', '987-762-9767']

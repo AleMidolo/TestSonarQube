@@ -1,13 +1,17 @@
 def update(self, predicted_labels, true_labels):
     """
-        Update the number of all four samples (true_positives, false_positives, false_negatives, true_negatives)
-        :param predicted_labels: list, predicted results
-        :param true_labels: list, true labels
-        :return: None, modifies the count of the corresponding samples
+        Aggiorna il numero di tutti e quattro i campioni (veri_positivi, falsi_positivi, falsi_negativi, veri_negativi)
+        :param predicted_labels: lista, risultati previsti
+        :param true_labels: lista, etichette vere
+        :return: None, modifica il numero dei campioni corrispondenti
         >>> mc = MetricsCalculator()
         >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])
         (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)
         """
+    self.true_positives = 0
+    self.false_positives = 0
+    self.false_negatives = 0
+    self.true_negatives = 0
     for pred, true in zip(predicted_labels, true_labels):
         if pred == 1 and true == 1:
             self.true_positives += 1

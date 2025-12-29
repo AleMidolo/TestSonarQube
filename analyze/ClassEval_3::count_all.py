@@ -8,4 +8,7 @@ def count_all(n):
         64
 
         """
-    return sum((ArrangementCalculator.count(n, m) for m in range(1, n + 1)))
+    total = 0
+    for i in range(1, n + 1):
+        total += ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - i)
+    return total

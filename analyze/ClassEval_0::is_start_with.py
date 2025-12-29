@@ -8,4 +8,4 @@ def is_start_with(self, request_uri):
         >>> filter.is_start_with('/api/data')
         True
         """
-    return request_uri.startswith(('/api', '/login'))
+    return request_uri.startswith('/api') or request_uri.startswith('/login')

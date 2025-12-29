@@ -9,9 +9,13 @@ def process_xml_data(self, file_name):
         >>> print(success)
         True
         """
+    if self.root is None:
+        return False
     try:
-        for item in self.find_element('item'):
-            item.text = item.text.upper()
-        return self.write_xml(file_name)
+        for elem in self.root.iter():
+            elem.set('processed', 'true')
+        tree = ET.ElementTree(self.root)
+        tree.write(file_name)
+        return True
     except:
         return False

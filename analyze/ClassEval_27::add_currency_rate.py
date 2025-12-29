@@ -6,6 +6,7 @@ def add_currency_rate(self, currency, rate):
         :return:Se ha successo, restituisce None; se non ha successo, restituisce False
         >>> cc = CurrencyConverter()
         >>> cc.add_currency_rate('KRW', 1308.84)
+        self.rates['KRW'] = 1308.84
         """
     if currency in self.rates:
         return False

@@ -7,5 +7,9 @@ def get_correlation(self):
         1.0
         """
     if len(self.data) < 2:
-        return float('nan')
-    return np.corrcoef(self.data)[0, 1]
+        return 0.0
+    indices = np.arange(len(self.data))
+    correlation = np.corrcoef(self.data, indices)[0, 1]
+    if np.isnan(correlation):
+        return 1.0 if len(np.unique(self.data)) == 1 else 0.0
+    return round(correlation, 2)

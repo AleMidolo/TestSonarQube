@@ -14,8 +14,12 @@ def process_json(self, file_path, remove_key):
         {'key2': 'value2'}
         """
     data = self.read_json(file_path)
-    if data == 0 or remove_key not in data:
+    if data == 0 or data == -1:
         return 0
-    data.pop(remove_key)
-    self.write_json(data, file_path)
+    if remove_key not in data:
+        return 0
+    del data[remove_key]
+    result = self.write_json(data, file_path)
+    if result == -1:
+        return 0
     return 1

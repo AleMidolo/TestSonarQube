@@ -11,5 +11,6 @@ def register_class(self, student_name, class_name):
         """
     if student_name not in self.students_registration_classes:
         self.students_registration_classes[student_name] = []
-    self.students_registration_classes[student_name].append(class_name)
+    if class_name not in self.students_registration_classes[student_name]:
+        self.students_registration_classes[student_name].append(class_name)
     return self.students_registration_classes[student_name]

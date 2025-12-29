@@ -10,8 +10,8 @@ def get_job_applicants(self, job):
         [{'name': 'Tom', 'skills': ['skill1', 'skill2'], 'experience': 'esperienza'}]
 
         """
-    applicants = []
+    matching_applicants = []
     for resume in self.resumes:
-        if all((skill in resume['skills'] for skill in job['requirements'])):
-            applicants.append(resume)
-    return applicants
+        if self.matches_requirements(resume, job):
+            matching_applicants.append(resume)
+    return matching_applicants

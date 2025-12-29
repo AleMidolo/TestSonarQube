@@ -7,8 +7,10 @@ def get_hostname(ip_address):
         >>> IpUtil.get_hostname('110.242.68.3')
         'www.baidu.com'
         >>> IpUtil.get_hostname('10.0.0.1')
+
         """
     try:
-        return socket.gethostbyaddr(ip_address)[0]
-    except socket.herror:
+        hostname, _, _ = socket.gethostbyaddr(ip_address)
+        return hostname
+    except (socket.herror, socket.gaierror, OSError):
         return None
