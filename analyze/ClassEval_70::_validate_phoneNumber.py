@@ -6,8 +6,6 @@ def _validate_phoneNumber(self, phoneNumber: str) -> str:
         """
     if not phoneNumber:
         return None
-    if not phoneNumber.isdigit():
-        return None
-    if len(phoneNumber) != 11:
+    if not phoneNumber.isdigit() or len(phoneNumber) != 11:
         return None
     return phoneNumber

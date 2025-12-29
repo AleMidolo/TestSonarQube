@@ -6,14 +6,21 @@ def string_to_datetime(self, string):
         >>> timeutils.string_to_datetime("2001-7-18 1:1:1")
         2001-07-18 01:01:01
         """
-    formats_to_try = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d', '%Y/%m/%d %H:%M:%S', '%Y/%m/%d %H:%M', '%Y/%m/%d', '%Y.%m.%d %H:%M:%S', '%Y.%m.%d %H:%M', '%Y.%m.%d', '%d-%m-%Y %H:%M:%S', '%d-%m-%Y %H:%M', '%d-%m-%Y', '%d/%m/%Y %H:%M:%S', '%d/%m/%Y %H:%M', '%d/%m/%Y', '%d.%m.%Y %H:%M:%S', '%d.%m.%Y %H:%M', '%d.%m.%Y', '%Y-%m-%d %I:%M:%S %p', '%Y-%m-%d %I:%M %p', '%Y/%m/%d %I:%M:%S %p', '%Y/%m/%d %I:%M %p', '%d-%m-%Y %I:%M:%S %p', '%d-%m-%Y %I:%M %p', '%d/%m/%Y %I:%M:%S %p', '%d/%m/%Y %I:%M %p']
+    formats_to_try = ['%Y-%m-%d %H:%M:%S', '%Y/%m/%d %H:%M:%S', '%Y.%m.%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M', '%Y.%m.%d %H:%M', '%Y-%m-%d', '%Y/%m/%d', '%Y.%m.%d', '%Y-%m-%d %H:%M:%S.%f']
     for fmt in formats_to_try:
         try:
             return datetime.datetime.strptime(string, fmt)
         except ValueError:
             continue
-    try:
-        from dateutil import parser
-        return parser.parse(string)
-    except ImportError:
-        raise ValueError(f'Unable to parse date string: {string}')
+    import re
+    pattern = '\\b(\\d{1})\\b'
+
+    def pad_single_digit(match):
+        return f'0{match.group(1)}'
+    padded_string = re.sub(pattern, pad_single_digit, string)
+    for fmt in formats_to_try:
+        try:
+            return datetime.datetime.strptime(padded_string, fmt)
+        except ValueError:
+            continue
+    raise ValueError(f'Unable to parse time string: {string}')

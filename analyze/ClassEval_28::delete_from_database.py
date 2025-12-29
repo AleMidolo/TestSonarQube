@@ -11,13 +11,19 @@ def delete_from_database(self, table_name, name):
     columns_info = cursor.fetchall()
     name_column = None
     for col_info in columns_info:
-        if col_info[2] == 'TEXT':
+        col_name = col_info[1].lower()
+        if 'name' in col_name and col_info[2].upper() == 'TEXT':
             name_column = col_info[1]
             break
-    if name_column is None:
-        conn.close()
-        return
-    delete_query = f'DELETE FROM {table_name} WHERE {name_column} = ?'
-    cursor.execute(delete_query, (name,))
+    if not name_column:
+        for col_info in columns_info:
+            if col_info[2].upper() == 'TEXT':
+                name_column = col_info[1]
+                break
+    if not name_column and len(columns_info) > 1:
+        name_column = columns_info[1][1]
+    if name_column:
+        delete_query = f'DELETE FROM {table_name} WHERE {name_column} = ?'
+        cursor.execute(delete_query, (name,))
     conn.commit()
     conn.close()

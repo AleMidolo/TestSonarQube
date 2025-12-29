@@ -11,5 +11,5 @@ def mode(self, data):
         return []
     counter = Counter(data)
     max_count = max(counter.values())
-    modes = [item for item, count in counter.items() if count == max_count]
+    modes = [value for value, count in counter.items() if count == max_count]
     return sorted(modes)
