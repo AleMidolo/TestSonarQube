@@ -22,15 +22,16 @@ def map(data):
         sub_list = np.array(sub_list)
         if total_num == 0:
             return (0.0, [0.0])
-        ap = 0.0
-        correct_count = 0
-        for i, val in enumerate(sub_list):
-            if val == 1:
-                correct_count += 1
-                precision_at_i = correct_count / (i + 1)
-                ap += precision_at_i
-        if correct_count > 0:
-            ap /= correct_count
+        relevant_count = 0
+        precision_at_k = []
+        for i, result in enumerate(sub_list):
+            if result == 1:
+                relevant_count += 1
+                precision_at_k.append(relevant_count / (i + 1))
+        if relevant_count == 0:
+            ap = 0.0
+        else:
+            ap = sum(precision_at_k) / relevant_count
         return (ap, [ap])
     if type(data) == list:
         separate_result = []
@@ -39,16 +40,16 @@ def map(data):
             if total_num == 0:
                 ap = 0.0
             else:
-                ap = 0.0
-                correct_count = 0
-                for i, val in enumerate(sub_list):
-                    if val == 1:
-                        correct_count += 1
-                        precision_at_i = correct_count / (i + 1)
-                        ap += precision_at_i
-                if correct_count > 0:
-                    ap /= correct_count
-                else:
+                relevant_count = 0
+                precision_at_k = []
+                for i, result in enumerate(sub_list):
+                    if result == 1:
+                        relevant_count += 1
+                        precision_at_k.append(relevant_count / (i + 1))
+                if relevant_count == 0:
                     ap = 0.0
+                else:
+                    ap = sum(precision_at_k) / relevant_count
             separate_result.append(ap)
-        return (np.mean(separate_result), separate_result)
+        map_score = np.mean(separate_result)
+        return (map_score, separate_result)

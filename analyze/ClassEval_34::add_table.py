@@ -6,22 +6,18 @@ def add_table(self, data):
         """
     try:
         doc = Document(self.file_path)
-        if not data or not isinstance(data, list):
+        if not data:
             return False
-        num_rows = len(data)
-        if num_rows == 0:
+        rows = len(data)
+        cols = len(data[0]) if rows > 0 else 0
+        if rows == 0 or cols == 0:
             return False
-        num_cols = len(data[0]) if isinstance(data[0], list) else 1
-        table = doc.add_table(rows=num_rows, cols=num_cols)
+        table = doc.add_table(rows=rows, cols=cols)
         for i, row_data in enumerate(data):
-            if i >= num_rows:
-                break
-            if isinstance(row_data, list):
-                for j, cell_data in enumerate(row_data):
-                    if j < num_cols:
-                        table.cell(i, j).text = str(cell_data)
-            else:
-                table.cell(i, 0).text = str(row_data)
+            row_cells = table.rows[i].cells
+            for j, cell_data in enumerate(row_data):
+                if j < len(row_cells):
+                    row_cells[j].text = str(cell_data)
         doc.save(self.file_path)
         return True
     except:

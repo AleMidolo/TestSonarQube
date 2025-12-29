@@ -7,6 +7,8 @@ def palindromic_string(self):
         'ababa'
 
         """
+    if not self.input_string:
+        return ''
     transformed = '|'.join(self.input_string)
     p = [0] * len(transformed)
     center = 0

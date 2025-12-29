@@ -20,8 +20,8 @@ def is_valid_move(self, pos1, pos2):
         return False
     if pos1 == pos2:
         return False
-    if self.board[x1][y1] == ' ' or self.board[x2][y2] == ' ':
-        return False
     if self.board[x1][y1] != self.board[x2][y2]:
         return False
-    return self.has_path(pos1, pos2)
+    if not self.has_path(pos1, pos2):
+        return False
+    return True
