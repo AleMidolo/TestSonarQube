@@ -1,8 +1,8 @@
 def check_sign_in(self, username):
     """
-        Check if a user is signed in.
-        :param username: str, the username to be checked.
-        :return: bool, True if the user is signed in, False if the user does not exist or is not signed in.
+        जांचें कि क्या एक उपयोगकर्ता साइन इन है।
+        :param username: str, जांचने के लिए उपयोगकर्ता नाम।
+        :return: bool, True यदि उपयोगकर्ता साइन इन है, False यदि उपयोगकर्ता मौजूद नहीं है या साइन इन नहीं है।
         >>> signInSystem.check_sign_in("jack")
         False
         >>> signInSystem.add_user("jack")
@@ -11,6 +11,6 @@ def check_sign_in(self, username):
         >>> signInSystem.check_sign_in("jack")
         True
         """
-    if username not in self.users:
+    if username not in self.users or not self.users[username]:
         return False
-    return self.users[username]
+    return True

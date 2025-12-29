@@ -1,19 +1,18 @@
 def buy_stock(self, stock):
     """
-        Buy a stock and add it to the portfolio.
-        :param stock: a dictionary with keys "name", "price", and "quantity"
-        :param quantity: the quantity of the stock to buy,int.
-        :return: True if the stock was bought successfully, False if the cash balance is not enough.
+        एक स्टॉक खरीदें और इसे पोर्टफोलियो में जोड़ें।
+        :param stock: एक डिक्शनरी जिसमें "name", "price", और "quantity" की कुंजी हैं
+        :param quantity: खरीदने के लिए स्टॉक की मात्रा, int.
+        :return: यदि स्टॉक सफलतापूर्वक खरीदा गया तो True, यदि नकद बैलेंस पर्याप्त नहीं है तो False.
         >>> tracker = StockPortfolioTracker(10000.0)
         >>> tracker.buy_stock({"name": "AAPL", "price": 150.0, "quantity": 10})
         True
         >>> tracker.portfolio
         [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
-
         """
-    cost = stock['price'] * stock['quantity']
-    if cost > self.cash_balance:
+    total_cost = stock['price'] * stock['quantity']
+    if total_cost > self.cash_balance:
         return False
-    self.cash_balance -= cost
+    self.cash_balance -= total_cost
     self.add_stock(stock)
     return True

@@ -1,8 +1,8 @@
 def write_xml(self, file_name):
     """
-        Writes the XML data to the specified file.
-        :param file_name: string, the name of the file to write the XML data.
-        :return: bool, True if the write operation is successful, False otherwise.
+        निर्दिष्ट फ़ाइल में XML डेटा लिखता है।
+        :param file_name: स्ट्रिंग, XML डेटा लिखने के लिए फ़ाइल का नाम।
+        :return: बूल, यदि लिखने का कार्य सफल होता है तो True, अन्यथा False।
         >>> xml_processor = XMLProcessor('test.xml')
         >>> root = xml_processor.read_xml()
         >>> success = xml_processor.write_xml('output.xml')
@@ -11,7 +11,7 @@ def write_xml(self, file_name):
         """
     try:
         tree = ET.ElementTree(self.root)
-        tree.write(file_name, encoding='utf-8', xml_declaration=True)
+        tree.write(file_name)
         return True
-    except:
+    except Exception as e:
         return False

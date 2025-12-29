@@ -1,6 +1,6 @@
 def init_game(self):
     """
-        Initialize the game by setting the positions of the player, targets, and boxes based on the map.
+        खेल को प्रारंभ करें खिलाड़ी, लक्ष्यों और बक्सों की स्थिति को मानचित्र के आधार पर सेट करके।
         >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"]) 
         >>> game.targets
         [(3, 3)]
@@ -11,13 +11,12 @@ def init_game(self):
         >>> game.player_col
         1
         """
-    for row_idx, row in enumerate(self.map):
-        for col_idx, char in enumerate(row):
-            if char == 'O':
-                self.player_row = row_idx
-                self.player_col = col_idx
-            elif char == 'G':
-                self.targets.append((row_idx, col_idx))
+    for r in range(len(self.map)):
+        for c in range(len(self.map[r])):
+            if self.map[r][c] == 'O':
+                self.player_row, self.player_col = (r, c)
+            elif self.map[r][c] == 'G':
+                self.targets.append((r, c))
                 self.target_count += 1
-            elif char == 'X':
-                self.boxes.append((row_idx, col_idx))
+            elif self.map[r][c] == 'X':
+                self.boxes.append((r, c))

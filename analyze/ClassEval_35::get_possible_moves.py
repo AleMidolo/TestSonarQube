@@ -1,10 +1,13 @@
 def get_possible_moves(self, state):
     """
-        According the current state, find all the possible moving directions. Only has 4 direction 'up', 'down', 'left', 'right'.
-        :param state: a 3*3 size list of Integer, stores the current state.
-        :return moves: a list of str, store all the possible moving directions according to the current state.
+        अभी की स्थिति के आधार पर सभी संभावित चलने की दिशाएँ पाएँ।
+        केवल चार दिशाएँ हैं: 'ऊपर', 'नीचे', 'बाएँ', 'दाएँ'।
+
+        :param state: इंटीजर की एक 3×3 लिस्ट, जो अभी की स्थिति को स्टोर करती है
+        :return moves: str की एक लिस्ट, जो अभी की स्थिति के आधार पर सभी संभावित चलने की दिशाएँ स्टोर करती है
+
         >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])
-        ['up', 'left', 'right']
+        ['ऊपर', 'बाएँ', 'दाएँ']
         """
     i, j = self.find_blank(state)
     moves = []

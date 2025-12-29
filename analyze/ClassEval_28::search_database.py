@@ -1,10 +1,10 @@
 def search_database(self, table_name, name):
     """
-        Search the specified table in the database for rows with a matching name.
-        :param table_name: str, the name of the table to search.
-        :param name: str, the name to search for.
-        :return: list, a list of tuples representing the rows with matching name, if any;
-                    otherwise, returns None.
+        निर्दिष्ट तालिका को डेटाबेस में उन पंक्तियों के लिए खोजें जिनका नाम मेल खाता है।
+        :param table_name: str, खोजने के लिए तालिका का नाम।
+        :param name: str, खोजने के लिए नाम।
+        :return: list, मेल खाते नाम वाली पंक्तियों का प्रतिनिधित्व करने वाले ट्यूपल की सूची, यदि कोई हो;
+                    अन्यथा, None लौटाता है।
         >>> db.search_database('user', 'John')
         [(1, 'John', 25)]
         """

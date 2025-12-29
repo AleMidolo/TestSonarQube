@@ -1,10 +1,10 @@
 def sub(self, pattern, replacement, text):
     """
-        Replace the substring matched by a regular expression with the specified string
-        :param pattern: string, Regular expression pattern
-        :param replacement: Text to replace with
-        :param text: string, Text to be replaced
-        :return: string, Text after replacement
+        नियमित अभिव्यक्ति द्वारा मेल खाती उपस्ट्रिंग को निर्दिष्ट स्ट्रिंग से बदलें
+        :param pattern: स्ट्रिंग, नियमित अभिव्यक्ति पैटर्न
+        :param replacement: बदलने के लिए पाठ
+        :param text: स्ट्रिंग, जिसे बदला जाना है
+        :return: स्ट्रिंग, प्रतिस्थापन के बाद का पाठ
         >>> ru = RegexUtils()
         >>> ru.sub(r'\x08\\d{3}-\\d{3}-\\d{4}\x08', 'phone num',  "123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767")
         'phone num abiguygusu phone num kjgufwycs phone num'

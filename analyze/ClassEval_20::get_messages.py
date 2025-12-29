@@ -1,8 +1,8 @@
 def get_messages(self, username):
     """
-        Get all the messages of a user from the Chat.
-        :param username: The user's name, str.
-        :return: A list of messages, each message is a dictionary with keys 'sender', 'receiver', 'message', 'timestamp'.
+        एक उपयोगकर्ता के सभी संदेशों को चैट से प्राप्त करें।
+        :param username: उपयोगकर्ता का नाम, str.
+        :return: संदेशों की एक सूची, प्रत्येक संदेश एक शब्दकोश है जिसमें 'sender', 'receiver', 'message', 'timestamp' कुंजी हैं।
         >>> chat = Chat()
         >>> chat.users = {'John': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2023-01-01 00:00:00'}]}
         >>> chat.get_messages('John')
@@ -11,6 +11,4 @@ def get_messages(self, username):
         []
 
         """
-    if username not in self.users:
-        return []
-    return self.users[username]
+    return self.users.get(username, [])

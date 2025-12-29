@@ -1,31 +1,25 @@
 def book_ticket(self, name, seats_to_book):
     """
-        Book tickets for a movie. Change the seats value in self.movies if book successfully.
-        :param name: str, movie name
-        :param seats_to_book: list of tuples, representing seats to book [(row1, col1), (row2, col2), ...]
-        :return: str, booking status message. "Movie not found." for no such movie.
-                "Booking success." for successfully booking, or "Booking failed." otherwise
+        एक फिल्म के लिए टिकट बुक करें। यदि सफलतापूर्वक बुक किया गया हो तो self.movies में सीटों का मान बदलें।
+        :param name: str, फिल्म का नाम
+        :param seats_to_book: टपल की सूची, बुक करने के लिए सीटों का प्रतिनिधित्व करती है [(row1, col1), (row2, col2), ...]
+        :return: str, बुकिंग स्थिति संदेश। "फिल्म नहीं मिली।" यदि ऐसी कोई फिल्म नहीं है।
+                "बुकिंग सफल।" यदि सफलतापूर्वक बुक किया गया, या "बुकिंग विफल।" अन्यथा
         >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)
         >>> system.book_ticket('Batman', [(0, 0), (0, 1)])
-        'Booking success.'
+        'बुकिंग सफल।'
         >>> system.book_ticket('Batman', [(0, 0)])
-        'Booking failed.'
+        'बुकिंग विफल।'
         >>> system.book_ticket('batman', [(0, 0)])
-        'Movie not found.'
+        'फिल्म नहीं मिली।'
         """
-    movie = None
-    for m in self.movies:
-        if m['name'] == name:
-            movie = m
-            break
-    if movie is None:
-        return 'Movie not found.'
-    n = movie['seats'].shape[0]
-    for row, col in seats_to_book:
-        if row < 0 or row >= n or col < 0 or (col >= n):
-            return 'Booking failed.'
-        if movie['seats'][row, col] != 0:
-            return 'Booking failed.'
-    for row, col in seats_to_book:
-        movie['seats'][row, col] = 1
-    return 'Booking success.'
+    for movie in self.movies:
+        if movie['name'].lower() == name.lower():
+            for seat in seats_to_book:
+                row, col = seat
+                if movie['seats'][row][col] == 0:
+                    movie['seats'][row][col] = 1
+                else:
+                    return 'बुकिंग विफल।'
+            return 'बुकिंग सफल।'
+    return 'फिल्म नहीं मिली।'

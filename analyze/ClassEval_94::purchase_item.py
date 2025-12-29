@@ -1,8 +1,8 @@
 def purchase_item(self, item_name):
     """
-        Purchases a product from the vending machine and returns the balance after the purchase and display purchase unsuccessful if the product is out of stock.
-        :param item_name: The name of the product to be purchased, str.
-        :return: If successful, returns the balance of the vending machine after the product is purchased, float,otherwise,returns False.
+        वेंडिंग मशीन से एक उत्पाद खरीदता है और खरीद के बाद शेष राशि लौटाता है और यदि उत्पाद स्टॉक में नहीं है तो खरीद असफल होने का संदेश दिखाता है।
+        :param item_name: खरीदने के लिए उत्पाद का नाम, str.
+        :return: यदि सफल, तो उत्पाद खरीदने के बाद वेंडिंग मशीन की शेष राशि लौटाता है, float, अन्यथा, False लौटाता है।
         >>> vendingMachine = VendingMachine()
         >>> vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}
         >>> vendingMachine.balance = 1.25
@@ -10,17 +10,16 @@ def purchase_item(self, item_name):
         0.0
         >>> vendingMachine.purchase_item('Pizza')
         False
+
         """
     if item_name not in self.inventory:
-        print('Purchase unsuccessful')
         return False
     item = self.inventory[item_name]
     if item['quantity'] <= 0:
-        print('Purchase unsuccessful')
         return False
-    if self.balance < item['price']:
-        print('Purchase unsuccessful')
+    if self.balance >= item['price']:
+        self.balance -= item['price']
+        item['quantity'] -= 1
+        return self.balance
+    else:
         return False
-    self.balance -= item['price']
-    item['quantity'] -= 1
-    return self.balance

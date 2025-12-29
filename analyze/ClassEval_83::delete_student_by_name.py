@@ -1,7 +1,7 @@
 def delete_student_by_name(self, name):
     """
-        Deletes a student from the "students" table by their name.
-        :param name: str, the name of the student to delete.
+        "students" तालिका से छात्र को उनके नाम द्वारा हटाता है।
+        :param name: str, हटाने के लिए छात्र का नाम।
         :return: None
         >>> processor = StudentDatabaseProcessor("students.db")
         >>> processor.create_student_table()

@@ -1,9 +1,9 @@
 @staticmethod
 def FidelityPromo(order):
     """
-        Calculate the discount based on the fidelity points of the customer.Customers with over 1000 points can enjoy a 5% discount on the entire order.
-        :param order: object, the order to apply the discount to
-        :return: float, discount amount
+        ग्राहक के निष्ठा अंकों के आधार पर छूट की गणना करें। 1000 अंकों से अधिक वाले ग्राहकों को पूरे आदेश पर 5% छूट का आनंद मिल सकता है।
+        :param order: object, वह आदेश जिस पर छूट लागू करनी है
+        :return: float, छूट की राशि
         >>> customer = {'name': 'John Doe', 'fidelity': 1200}
         >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]
         >>> order = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)
@@ -11,6 +11,4 @@ def FidelityPromo(order):
         16.45
 
         """
-    if order.customer.get('fidelity', 0) > 1000:
-        return order.total() * 0.05
-    return 0
+    return order.total() * 0.05 if order.customer['fidelity'] > 1000 else 0

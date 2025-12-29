@@ -1,7 +1,7 @@
 def get_current_time(self):
     """
-        Return the current time in the format of '%H:%M:%S'
-        :return: string
+        वर्तमान समय को '%H:%M:%S' के प्रारूप में लौटाएं
+        :return: स्ट्रिंग
         >>> timeutils = TimeUtils()
         >>> timeutils.get_current_time()
         "19:19:22"

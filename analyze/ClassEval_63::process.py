@@ -1,11 +1,10 @@
 def process(self, string_list):
     """
-        keep only English letters and spaces in the string, then convert the string to lower case, and then split the string into a list of words. Calculate the word frequency of each word in the list of words list, and sort the word frequency dictionary by value in descending order.
-        :param string_list: a list of strings
-        :return: top 5 word frequency dictionary, a dictionary of word frequency, key is word, value is frequency
-        >>> NLPDataProcessor.process(['This is a test.', 'This is another test.'])
+        स्ट्रिंग में केवल अंग्रेजी अक्षर और स्पेस रखें, फिर स्ट्रिंग को लोअर केस में बदलें, और फिर स्ट्रिंग को शब्दों की सूची में विभाजित करें। शब्दों की सूची में प्रत्येक शब्द की शब्द आवृत्ति की गणना करें, और शब्द आवृत्ति शब्दकोश को मान के अनुसार अवरोही क्रम में सॉर्ट करें।
+        :param string_list: स्ट्रिंग की एक सूची
+        :return: शीर्ष 5 शब्द आवृत्ति शब्दकोश, शब्द आवृत्ति का एक शब्दकोश, कुंजी शब्द है, मान आवृत्ति है
+        >>> NLPDataProcessor2.process(['This is a test.', 'This is another test.'])
         {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}
         """
     words_list = self.process_data(string_list)
-    top_5_word_frequency = self.calculate_word_frequency(words_list)
-    return top_5_word_frequency
+    return self.calculate_word_frequency(words_list)

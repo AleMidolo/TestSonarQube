@@ -1,18 +1,18 @@
-@staticmethod
 def count(n: int, m: int) -> int:
     """
-        Calculate the number of combinations for a specific count.
-        :param n: The total number of elements,int.
-        :param m: The number of elements in each combination,int.
-        :return: The number of combinations,int.
-        >>> CombinationCalculator.count(4, 2)
-        6
-        """
-    if m < 0 or m > n:
+    किसी तय गिनती के लिए कॉम्बिनेशन की संख्या कैलकुलेट करें।
+
+    :param n: एलिमेंट की कुल संख्या, int
+    :param m: हर कॉम्बिनेशन में एलिमेंट की संख्या, int
+    :return: कॉम्बिनेशन की संख्या, int
+
+    >>> CombinationCalculator.count(4, 2)
+    6
+    """
+    if m > n or m < 0 or n < 0:
         return 0
-    if m > n - m:
-        m = n - m
-    result = 1
-    for i in range(1, m + 1):
-        result = result * (n - i + 1) // i
-    return result
+    if m == 0 or m == n:
+        return 1
+    numerator = math.factorial(n)
+    denominator = math.factorial(m) * math.factorial(n - m)
+    return numerator // denominator

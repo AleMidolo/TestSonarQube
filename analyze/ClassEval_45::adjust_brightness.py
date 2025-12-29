@@ -1,7 +1,7 @@
 def adjust_brightness(self, factor):
     """
-        Adjust the brightness of image if image has opened.
-        :param factor: float, brightness of an image. A factor of 0.0 gives a black image. A factor of 1.0 gives the original image.
+        यदि छवि खोली गई है तो छवि की चमक को समायोजित करें।
+        :param factor: float, एक छवि की चमक। 0.0 का एक कारक एक काली छवि देता है। 1.0 का एक कारक मूल छवि देता है।
         >>> processor.load_image('test.jpg')
         >>> processor.adjust_brightness(0.5)
         """

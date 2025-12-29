@@ -1,12 +1,11 @@
 def insert_coin(self, amount):
     """
-        Inserts coins into the vending machine.
-        :param amount: The amount of coins to be inserted, float.
-        :return: The balance of the vending machine after the coins are inserted, float.
+        वेंडिंग मशीन में सिक्के डालता है।
+        :param amount: डालने के लिए सिक्कों की राशि, फ्लोट।
+        :return: सिक्के डालने के बाद वेंडिंग मशीन का बैलेंस, फ्लोट।
         >>> vendingMachine = VendingMachine()
         >>> vendingMachine.insert_coin(1.25)
         1.25
-
         """
     self.balance += amount
     return self.balance

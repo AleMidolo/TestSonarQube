@@ -1,8 +1,8 @@
 def __setitem__(self, key, value):
     """
-        Set the value corresponding to the key to the specified value
+        कुंजी के लिए संबंधित मान को निर्दिष्ट मान पर सेट करें
         :param key:str
-        :param value:str, the specified value
+        :param value:str, निर्दिष्ट मान
         :return:None
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map['first_name'] = 'John'

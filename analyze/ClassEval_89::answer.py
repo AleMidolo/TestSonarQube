@@ -1,19 +1,12 @@
 def answer(self, expression):
     """
-        Check if a given mathematical expression using the cards can evaluate to 24.
-        :param expression: string, mathematical expression using the cards
-        :return: bool, True if the expression evaluates to 24, False otherwise
-        >>> game = TwentyFourPointGame()
-        >>> game.nums = [4, 3, 6, 6]
-        >>> ans = "4*3+6+6"
-        >>> ret = game.answer(ans)
-        True
-        """
-    if not self.nums:
-        return False
-    import re
-    numbers_in_expr = re.findall('\\d+', expression)
-    numbers_in_expr = [int(num) for num in numbers_in_expr]
-    if sorted(numbers_in_expr) != sorted(self.nums):
-        return False
+    दिए गए गणितीय अभिव्यक्ति की जांच करें जो कार्ड का उपयोग करके 24 तक पहुंच सकती है।
+    :param expression: स्ट्रिंग, कार्ड का उपयोग करके गणितीय अभिव्यक्ति
+    :return: बूल, यदि अभिव्यक्ति 24 तक पहुंचती है तो True, अन्यथा False
+    >>> game = TwentyFourPointGame()
+    >>> game.nums = [4, 3, 6, 6]
+    >>> ans = "4*3+6+6"
+    >>> ret = game.answer(ans)
+    True
+    """
     return self.evaluate_expression(expression)

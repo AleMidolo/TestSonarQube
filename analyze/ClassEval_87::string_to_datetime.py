@@ -1,26 +1,9 @@
 def string_to_datetime(self, string):
     """
-        Convert the time string to a datetime instance
-        :param string: string, string before converting format
-        :return: datetime instance
+        समय स्ट्रिंग को datetime उदाहरण में परिवर्तित करें
+        :param string: स्ट्रिंग, प्रारूप परिवर्तित करने से पहले की स्ट्रिंग
+        :return: datetime उदाहरण
         >>> timeutils.string_to_datetime("2001-7-18 1:1:1")
         2001-07-18 01:01:01
         """
-    formats_to_try = ['%Y-%m-%d %H:%M:%S', '%Y/%m/%d %H:%M:%S', '%Y.%m.%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M', '%Y.%m.%d %H:%M', '%Y-%m-%d', '%Y/%m/%d', '%Y.%m.%d', '%Y-%m-%d %H:%M:%S.%f']
-    for fmt in formats_to_try:
-        try:
-            return datetime.datetime.strptime(string, fmt)
-        except ValueError:
-            continue
-    import re
-    pattern = '\\b(\\d{1})\\b'
-
-    def pad_single_digit(match):
-        return f'0{match.group(1)}'
-    padded_string = re.sub(pattern, pad_single_digit, string)
-    for fmt in formats_to_try:
-        try:
-            return datetime.datetime.strptime(padded_string, fmt)
-        except ValueError:
-            continue
-    raise ValueError(f'Unable to parse time string: {string}')
+    return datetime.datetime.strptime(string, '%Y-%m-%d %H:%M:%S')

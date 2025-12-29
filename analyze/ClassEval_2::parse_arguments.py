@@ -1,36 +1,26 @@
 def parse_arguments(self, command_string):
     """
-        Parses the given command line argument string and invoke _convert_type to stores the parsed result in specific type in the arguments dictionary.
-        Checks for missing required arguments, if any, and returns False with the missing argument names, otherwise returns True.
-        :param command_string: str, command line argument string, formatted like "python script.py --arg1=value1 -arg2 value2 --option1 -option2"
-        :return tuple: (True, None) if parsing is successful, (False, missing_args) if parsing fails,
-            where missing_args is a set of the missing argument names which are str.
+        दिए गए कमांड लाइन तर्क स्ट्रिंग का विश्लेषण करता है और _convert_type को कॉल करता है ताकि विश्लेषित परिणाम को तर्कों की शब्दकोश में विशिष्ट प्रकार में संग्रहीत किया जा सके।
+        यदि कोई आवश्यक तर्क गायब है, तो इसकी जांच करता है और गायब तर्क नामों के साथ False लौटाता है, अन्यथा True लौटाता है।
+        :param command_string: str, कमांड लाइन तर्क स्ट्रिंग, इस तरह से स्वरूपित "python script.py --arg1=value1 -arg2 value2 --option1 -option2"
+        :return tuple: (True, None) यदि विश्लेषण सफल है, (False, missing_args) यदि विश्लेषण विफल होता है,
+            जहाँ missing_args गायब तर्क नामों का एक सेट है जो str हैं।
         >>> parser.parse_arguments("python script.py --arg1=value1 -arg2 value2 --option1 -option2")
         (True, None)
         >>> parser.arguments
         {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
         """
-    self.arguments = {}
-    tokens = command_string.split()
-    i = 0
-    while i < len(tokens):
-        token = tokens[i]
-        if token.startswith('-'):
-            arg_name = token.lstrip('-')
-            if '=' in arg_name:
-                arg_name, value = arg_name.split('=', 1)
-                converted_value = self._convert_type(arg_name, value)
-                self.arguments[arg_name] = converted_value
-            elif i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
-                value = tokens[i + 1]
-                converted_value = self._convert_type(arg_name, value)
-                self.arguments[arg_name] = converted_value
-                i += 1
-            else:
-                self.arguments[arg_name] = True
-        i += 1
-    missing_args = self.required - set(self.arguments.keys())
+    import re
+    parts = re.split('\\s+', command_string)
+    for part in parts:
+        if '=' in part:
+            key, value = part.split('=', 1)
+            key = key.lstrip('-')
+            self.arguments[key] = self._convert_type(key, value)
+        elif part.startswith('-'):
+            key = part.lstrip('-')
+            self.arguments[key] = True
+    missing_args = {arg for arg in self.required if arg not in self.arguments}
     if missing_args:
         return (False, missing_args)
-    else:
-        return (True, None)
+    return (True, None)

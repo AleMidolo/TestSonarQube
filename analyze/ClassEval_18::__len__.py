@@ -1,7 +1,7 @@
 def __len__(self):
     """
-        Returns the length of the own data
-        :return:int, length of data
+        अपने डेटा की लंबाई लौटाता है
+        :return:int, डेटा की लंबाई
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map['first_name'] = 'John'
         >>> camelize_map['last_name'] = 'Doe'

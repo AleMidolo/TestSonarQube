@@ -1,8 +1,8 @@
 def process(self, string_list):
     """
-        Construct a stop word list including 'a', 'an', 'the', and remove all the stop words from the list of strings.
-        :param string_list: a list of strings
-        :return: a list of words without stop words
+        'a', 'an', 'the' सहित एक स्टॉप वर्ड सूची बनाएं, और स्ट्रिंग्स की सूची से सभी स्टॉप वर्ड हटा दें।
+        :param string_list: स्ट्रिंग्स की एक सूची
+        :return: बिना स्टॉप वर्ड के शब्दों की एक सूची
         >>> NLPDataProcessor.process(['This is a test.'])
         [['This', 'is', 'test.']]
         """

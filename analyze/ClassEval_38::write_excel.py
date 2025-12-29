@@ -1,27 +1,26 @@
 def write_excel(self, data, file_name):
     """
-        Write data to the specified Excel file
-        :param data: list, Data to be written
-        :param file_name: str, Excel file name to write to
-        :return: 0 or 1, 1 represents successful writing, 0 represents failed writing
+        निर्दिष्ट Excel फ़ाइल में डेटा लिखें
+        :param data: सूची, लिखने के लिए डेटा
+        :param file_name: स्ट्रिंग, लिखने के लिए Excel फ़ाइल का नाम
+        :return: 0 या 1, 1 सफल लेखन का प्रतिनिधित्व करता है, 0 असफल लेखन का प्रतिनिधित्व करता है
         >>> processor = ExcelProcessor()
         >>> new_data = [
-        >>>     ('Name', 'Age', 'Country'),
-        >>>     ('John', 25, 'USA'),
-        >>>     ('Alice', 30, 'Canada'),
-        >>>     ('Bob', 35, 'Australia'),
-        >>>     ('Julia', 28, 'Germany')
+        >>>     ('नाम', 'उम्र', 'देश'),
+        >>>     ('जॉन', 25, 'यूएसए'),
+        >>>     ('ऐलिस', 30, 'कनाडा'),
+        >>>     ('बॉब', 35, 'ऑस्ट्रेलिया'),
+        >>>     ('जूलिया', 28, 'जर्मनी')
         >>> ]
         >>> data = processor.write_excel(new_data, 'test_data.xlsx')
         """
     try:
         workbook = openpyxl.Workbook()
         sheet = workbook.active
-        for row_idx, row in enumerate(data, start=1):
-            for col_idx, value in enumerate(row, start=1):
-                sheet.cell(row=row_idx, column=col_idx, value=value)
+        for row in data:
+            sheet.append(row)
         workbook.save(file_name)
         workbook.close()
         return 1
-    except Exception as e:
+    except:
         return 0

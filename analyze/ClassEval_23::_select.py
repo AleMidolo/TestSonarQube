@@ -1,11 +1,11 @@
 def _select(self, dataIndex: int, resultList: List[str], resultIndex: int, result: List[List[str]]):
     """
-        Generate combinations with a specified number of elements by recursion.
-        :param dataIndex: The index of the data to be selected,int.
-        :param resultList: The list of elements in the combination,List[str].
-        :param resultIndex: The index of the element in the combination,int.
-        :param result: The list of combinations,List[List[str]].
-        :return: None.
+        पुनरावृत्ति द्वारा निर्दिष्ट संख्या के तत्वों के साथ संयोजन उत्पन्न करें।
+        :param dataIndex: चयनित डेटा का अनुक्रमांक, int.
+        :param resultList: संयोजन में तत्वों की सूची, List[str].
+        :param resultIndex: संयोजन में तत्व का अनुक्रमांक, int.
+        :param result: संयोजनों की सूची, List[List[str]].
+        :return: कुछ नहीं।
         >>> calc = CombinationCalculator(["A", "B", "C", "D"])
         >>> result = []
         >>> calc._select(0, [None] * 2, 0, result)
@@ -15,8 +15,6 @@ def _select(self, dataIndex: int, resultList: List[str], resultIndex: int, resul
     if resultIndex == len(resultList):
         result.append(resultList.copy())
         return
-    if dataIndex >= len(self.datas):
-        return
-    resultList[resultIndex] = self.datas[dataIndex]
-    self._select(dataIndex + 1, resultList, resultIndex + 1, result)
-    self._select(dataIndex + 1, resultList, resultIndex, result)
+    for i in range(dataIndex, len(self.datas)):
+        resultList[resultIndex] = self.datas[i]
+        self._select(i + 1, resultList, resultIndex + 1, result)

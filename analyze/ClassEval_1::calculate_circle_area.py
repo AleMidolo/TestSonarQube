@@ -1,7 +1,7 @@
 def calculate_circle_area(self):
     """
-        calculate the area of circle based on self.radius
-        :return: area of circle, float
+        self.radius के आधार पर वृत्त का क्षेत्रफल निकालें
+        :return: वृत्त का क्षेत्रफल, float
         >>> areaCalculator = AreaCalculator(2)
         >>> areaCalculator.calculate_circle_area()
         12.566370614359172
