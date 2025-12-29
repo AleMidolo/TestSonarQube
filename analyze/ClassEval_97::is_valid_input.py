@@ -9,8 +9,6 @@ def is_valid_input(self, textnum):
         """
     textnum = textnum.replace('-', ' ')
     words = textnum.split()
-    if not words:
-        return False
     for word in words:
         if word in self.ordinal_words:
             continue

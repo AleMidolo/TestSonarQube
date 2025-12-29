@@ -8,5 +8,4 @@ def add(self, segment):
 
         url_path.segments = ['foo', 'bar']
         """
-    if segment:
-        self.segments.append(segment)
+    self.segments.append(segment)

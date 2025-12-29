@@ -11,4 +11,5 @@ def get_pos_tag(self, sentence):
     sentence = self.remove_punctuation(sentence)
     words = word_tokenize(sentence)
     tagged_words = pos_tag(words)
-    return [tag for word, tag in tagged_words]
+    pos_tags = [tag for word, tag in tagged_words]
+    return pos_tags

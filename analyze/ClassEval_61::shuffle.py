@@ -6,7 +6,6 @@ def shuffle(self):
         >>> musicPlayer.playlist = ["song1", "song2"]
         >>> musicPlayer.shuffle()
         True
-
         """
     if self.playlist:
         random.shuffle(self.playlist)

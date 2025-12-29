@@ -8,16 +8,12 @@ def filter(self, request):
         True
 
         """
-    try:
-        if not self.is_start_with(request.get('path', '')):
-            return False
-        if request.get('path', '').startswith('/login'):
-            return True
-        user_info = self.get_jwt_user(request)
-        if user_info is None:
-            return False
-        self.set_current_user_info_and_log(user_info.get('user', {}))
-        return True
-    except Exception as e:
-        logging.error(f'Error in filter: {e}')
+    if 'path' not in request or 'method' not in request:
         return False
+    if self.is_start_with(request['path']):
+        return True
+    user_info = self.get_jwt_user(request)
+    if user_info is not None:
+        self.set_current_user_info_and_log(user_info['user'])
+        return True
+    return False

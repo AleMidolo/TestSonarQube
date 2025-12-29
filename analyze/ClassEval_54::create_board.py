@@ -11,29 +11,17 @@ def create_board(self):
         """
     rows, cols = self.BOARD_SIZE
     total_cells = rows * cols
-    icon_count = len(self.ICONS)
     if total_cells % 2 != 0:
-        pairs_needed = total_cells // 2
-        icon_pairs = []
-        for i in range(pairs_needed):
-            icon_pairs.append(self.ICONS[i % icon_count])
-            icon_pairs.append(self.ICONS[i % icon_count])
-        if total_cells % 2 == 1:
-            icon_pairs.append(self.ICONS[0])
-        icons = icon_pairs
-    else:
-        pairs_needed = total_cells // 2
-        icons = []
-        for i in range(pairs_needed):
-            icon = self.ICONS[i % icon_count]
-            icons.extend([icon, icon])
-    random.shuffle(icons)
+        raise ValueError('Board must have an even number of cells')
+    icon_pairs = []
+    for icon in self.ICONS:
+        icon_pairs.extend([icon, icon])
+    while len(icon_pairs) < total_cells:
+        icon_pairs.extend(icon_pairs[:2])
+    icon_list = icon_pairs[:total_cells]
+    random.shuffle(icon_list)
     board = []
-    index = 0
     for i in range(rows):
-        row = []
-        for j in range(cols):
-            row.append(icons[index])
-            index += 1
+        row = icon_list[i * cols:(i + 1) * cols]
         board.append(row)
     return board

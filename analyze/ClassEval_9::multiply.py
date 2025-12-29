@@ -8,7 +8,6 @@ def multiply(num1, num2):
         >>> bigNum = BigNumCalculator()
         >>> bigNum.multiply("12345678901234567890", "98765432109876543210")
         '1219326311370217952237463801111263526900'
-
         """
     if num1 == '0' or num2 == '0':
         return '0'
@@ -19,20 +18,27 @@ def multiply(num1, num2):
     if num2[0] == '-':
         negative = not negative
         num2 = num2[1:]
-    num1 = num1.lstrip('0') or '0'
-    num2 = num2.lstrip('0') or '0'
-    len1, len2 = (len(num1), len(num2))
-    result = [0] * (len1 + len2)
-    for i in range(len1 - 1, -1, -1):
+    num1 = num1.lstrip('0')
+    num2 = num2.lstrip('0')
+    if not num1 or not num2:
+        return '0'
+    num1 = num1[::-1]
+    num2 = num2[::-1]
+    result = [0] * (len(num1) + len(num2))
+    for i in range(len(num1)):
         carry = 0
-        n1 = int(num1[i])
-        for j in range(len2 - 1, -1, -1):
-            n2 = int(num2[j])
-            temp_sum = n1 * n2 + result[i + j + 1] + carry
+        digit1 = int(num1[i])
+        for j in range(len(num2)):
+            digit2 = int(num2[j])
+            temp_sum = result[i + j] + digit1 * digit2 + carry
+            result[i + j] = temp_sum % 10
             carry = temp_sum // 10
-            result[i + j + 1] = temp_sum % 10
-        result[i] += carry
-    result_str = ''.join(map(str, result)).lstrip('0')
-    if negative and result_str != '0':
+        if carry > 0:
+            result[i + len(num2)] += carry
+    result_str = ''.join((str(digit) for digit in result[::-1]))
+    result_str = result_str.lstrip('0')
+    if not result_str:
+        return '0'
+    if negative:
         result_str = '-' + result_str
     return result_str

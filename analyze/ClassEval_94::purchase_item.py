@@ -12,6 +12,7 @@ def purchase_item(self, item_name):
         False
         """
     if item_name not in self.inventory:
+        print('Purchase unsuccessful')
         return False
     item = self.inventory[item_name]
     if item['quantity'] <= 0:
