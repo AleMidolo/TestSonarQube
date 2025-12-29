@@ -20,29 +20,21 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
     x_interp = np.array(x_interp)
     y_interp = np.array(y_interp)
     if z.shape != (len(x), len(y)):
-        raise ValueError(f'z must have shape ({len(x)}, {len(y)}), but has shape {z.shape}')
+        raise ValueError('z must be a 2D array with shape (len(x), len(y))')
     results = []
     for xi, yi in zip(x_interp, y_interp):
-        x_idx = None
-        for i in range(len(x) - 1):
-            if x[i] <= xi <= x[i + 1]:
-                x_idx = i
-                break
-        y_idx = None
-        for j in range(len(y) - 1):
-            if y[j] <= yi <= y[j + 1]:
-                y_idx = j
-                break
-        if x_idx is None or y_idx is None:
-            raise ValueError(f'Interpolation point ({xi}, {yi}) is outside the data range')
-        x1, x2 = (x[x_idx], x[x_idx + 1])
-        y1, y2 = (y[y_idx], y[y_idx + 1])
-        Q11 = z[x_idx, y_idx]
-        Q12 = z[x_idx, y_idx + 1]
-        Q21 = z[x_idx + 1, y_idx]
-        Q22 = z[x_idx + 1, y_idx + 1]
-        R1 = Q11 + (Q21 - Q11) * (xi - x1) / (x2 - x1)
-        R2 = Q12 + (Q22 - Q12) * (xi - x1) / (x2 - x1)
-        result = R1 + (R2 - R1) * (yi - y1) / (y2 - y1)
-        results.append(float(result))
+        i = np.searchsorted(x, xi) - 1
+        i = max(0, min(i, len(x) - 2))
+        j = np.searchsorted(y, yi) - 1
+        j = max(0, min(j, len(y) - 2))
+        x1, x2 = (x[i], x[i + 1])
+        y1, y2 = (y[j], y[j + 1])
+        z11 = z[i, j]
+        z12 = z[i, j + 1]
+        z21 = z[i + 1, j]
+        z22 = z[i + 1, j + 1]
+        z_y1 = z11 + (z21 - z11) * (xi - x1) / (x2 - x1)
+        z_y2 = z12 + (z22 - z12) * (xi - x1) / (x2 - x1)
+        z_interp = z_y1 + (z_y2 - z_y1) * (yi - y1) / (y2 - y1)
+        results.append(float(z_interp))
     return results

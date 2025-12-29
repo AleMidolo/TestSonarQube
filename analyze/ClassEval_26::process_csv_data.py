@@ -19,7 +19,6 @@ def process_csv_data(self, N, save_file_name):
         title, data = self.read_csv(save_file_name)
         if N < 0 or N >= len(title):
             return 0
-        new_title = [title[N]]
         new_data = []
         for row in data:
             if N < len(row):
@@ -27,7 +26,7 @@ def process_csv_data(self, N, save_file_name):
             else:
                 new_data.append([''])
         output_file_name = save_file_name.replace('.csv', '_process.csv')
-        output_data = [new_title] + new_data
+        output_data = [[title[N]]] + new_data
         return self.write_csv(output_data, output_file_name)
-    except:
+    except Exception as e:
         return 0

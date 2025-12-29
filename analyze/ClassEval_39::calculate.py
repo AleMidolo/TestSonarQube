@@ -9,22 +9,26 @@ def calculate(self, expression):
 
         """
     self.postfix_stack.clear()
-    transformed_expression = self.transform(expression)
-    self.prepare(transformed_expression)
-    calc_stack = deque()
-    for item in self.postfix_stack:
-        if not self.is_operator(item):
-            if item.startswith('~'):
-                calc_stack.append(str(-Decimal(item[1:])))
+    transformed_expr = self.transform(expression)
+    self.prepare(transformed_expr)
+    result_stack = deque()
+    for token in self.postfix_stack:
+        if self.is_operator(token):
+            if token == '~':
+                if len(result_stack) < 1:
+                    raise ValueError('Invalid expression: insufficient operands for unary minus')
+                operand = result_stack.pop()
+                result_stack.append(-Decimal(operand))
             else:
-                calc_stack.append(item)
+                if len(result_stack) < 2:
+                    raise ValueError('Invalid expression: insufficient operands for binary operator')
+                second_value = result_stack.pop()
+                first_value = result_stack.pop()
+                result = self._calculate(first_value, second_value, token)
+                result_stack.append(result)
         else:
-            if len(calc_stack) < 2:
-                raise ValueError('Invalid expression: insufficient operands')
-            second_value = calc_stack.pop()
-            first_value = calc_stack.pop()
-            result = self._calculate(first_value, second_value, item)
-            calc_stack.append(str(result))
-    if len(calc_stack) != 1:
-        raise ValueError('Invalid expression: too many operands')
-    return float(calc_stack.pop())
+            result_stack.append(token)
+    if len(result_stack) != 1:
+        raise ValueError('Invalid expression: could not compute final result')
+    result = float(result_stack.pop())
+    return result

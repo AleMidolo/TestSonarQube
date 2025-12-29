@@ -8,8 +8,9 @@ def get_correlation(self):
         """
     if len(self.data) < 2:
         return 0.0
-    indices = np.arange(len(self.data))
-    correlation = np.corrcoef(self.data, indices)[0, 1]
+    x = np.arange(len(self.data))
+    y = self.data
+    correlation = np.corrcoef(x, y)[0, 1]
     if np.isnan(correlation):
-        return 1.0 if len(np.unique(self.data)) == 1 else 0.0
+        return 0.0
     return round(correlation, 2)

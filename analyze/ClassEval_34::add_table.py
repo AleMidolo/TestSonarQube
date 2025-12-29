@@ -6,7 +6,7 @@ def add_table(self, data):
         """
     try:
         doc = Document(self.file_path)
-        if not data or not isinstance(data, list):
+        if not data:
             return False
         rows = len(data)
         cols = len(data[0]) if rows > 0 else 0

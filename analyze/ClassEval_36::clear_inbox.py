@@ -10,14 +10,6 @@ def clear_inbox(self, size):
         [{'size': 15}]
 
         """
-    for email in self.inbox:
-        if 'time' in email and isinstance(email['time'], str):
-            email['time_dt'] = datetime.strptime(email['time'], '%Y-%m-%d %H:%M:%S')
-        else:
-            email['time_dt'] = datetime.min
-    self.inbox.sort(key=lambda x: x['time_dt'])
-    for email in self.inbox:
-        if 'time_dt' in email:
-            del email['time_dt']
-    while self.is_full_with_one_more_email(size) and len(self.inbox) > 0:
+    self.inbox.sort(key=lambda x: x.get('time', ''))
+    while self.inbox and self.is_full_with_one_more_email(size):
         self.inbox.pop(0)

@@ -10,11 +10,11 @@ def remove_book(self, title, quantity):
     if not isinstance(quantity, int):
         raise TypeError('La quantità deve essere un intero')
     if quantity <= 0:
-        raise ValueError('La quantità deve essere positiva')
+        raise ValueError('La quantità deve essere maggiore di 0')
     if title not in self.inventory:
         raise ValueError(f"Il libro '{title}' non è presente nell'inventario")
     if self.inventory[title] < quantity:
-        raise ValueError(f'Quantità insufficiente. Disponibili: {self.inventory[title]}, Richieste: {quantity}')
+        raise ValueError(f"Quantità insufficiente. Disponibili solo {self.inventory[title]} copie di '{title}'")
     self.inventory[title] -= quantity
     if self.inventory[title] == 0:
         del self.inventory[title]

@@ -23,15 +23,12 @@ def format_line_html_text(self, html_text):
     soup = BeautifulSoup(html_text, 'lxml')
     for script in soup(['script', 'style']):
         script.decompose()
-    result_lines = []
-    for element in soup.body.descendants if soup.body else soup.descendants:
-        if isinstance(element, str) and element.parent.name not in ['pre', 'code', 'blockquote']:
-            stripped = element.strip()
-            if stripped:
-                result_lines.append(stripped)
-        elif element.name in ['pre', 'code', 'blockquote']:
-            parent = element.parent
-            if parent.name not in ['pre', 'code', 'blockquote']:
-                result_lines.append(self.CODE_MARK)
-    result = '\n'.join(result_lines)
-    return self.__format_line_feed(result)
+    code_tags = soup.find_all(['pre', 'blockquote'])
+    for tag in code_tags:
+        tag.replace_with(self.CODE_MARK)
+    text = soup.get_text(separator='\n')
+    lines = (line.strip() for line in text.splitlines())
+    chunks = (phrase.strip() for line in lines for phrase in line.split('  '))
+    text = '\n'.join((chunk for chunk in chunks if chunk))
+    text = self.__format_line_feed(text)
+    return text

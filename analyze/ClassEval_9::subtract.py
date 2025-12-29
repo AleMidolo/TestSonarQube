@@ -25,19 +25,18 @@ def subtract(num1, num2):
     max_length = max(len(num1), len(num2))
     num1 = num1.zfill(max_length)
     num2 = num2.zfill(max_length)
-    result = []
     borrow = 0
+    result = []
     for i in range(max_length - 1, -1, -1):
         digit1 = int(num1[i])
         digit2 = int(num2[i])
         digit1 -= borrow
+        borrow = 0
         if digit1 < digit2:
             digit1 += 10
             borrow = 1
-        else:
-            borrow = 0
-        diff = digit1 - digit2
-        result.insert(0, str(diff))
+        digit_diff = digit1 - digit2
+        result.insert(0, str(digit_diff))
     while len(result) > 1 and result[0] == '0':
         result.pop(0)
     if negative:
