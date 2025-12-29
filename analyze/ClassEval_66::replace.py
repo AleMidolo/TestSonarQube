@@ -18,11 +18,11 @@ def replace(self, string):
             if j < n and string[j] == 'x':
                 is_hex = True
                 j += 1
-            start_num = j
-            while j < n and string[j] != ';':
+            start = j
+            while j < n and self.is_hex_char(string[j]):
                 j += 1
             if j < n and string[j] == ';':
-                num_str = string[start_num:j]
+                num_str = string[start:j]
                 if num_str:
                     try:
                         if is_hex:
@@ -31,14 +31,10 @@ def replace(self, string):
                             code_point = int(num_str)
                         if 0 <= code_point <= 1114111:
                             result.append(chr(code_point))
-                        else:
-                            result.append(string[i:j + 1])
+                            i = j + 1
+                            continue
                     except ValueError:
-                        result.append(string[i:j + 1])
-                else:
-                    result.append(string[i:j + 1])
-                i = j + 1
-                continue
+                        pass
         result.append(string[i])
         i += 1
     return ''.join(result)

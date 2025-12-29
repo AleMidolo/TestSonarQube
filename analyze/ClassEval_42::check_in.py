@@ -19,12 +19,16 @@ def check_in(self, room_type, room_number, name):
         return False
     if name not in self.booked_rooms[room_type]:
         return False
-    booked_number = self.booked_rooms[room_type][name]
-    if room_number > booked_number:
+    booked_quantity = self.booked_rooms[room_type][name]
+    if room_number > booked_quantity:
         return False
-    if room_number == booked_number:
+    if room_number == booked_quantity:
         del self.booked_rooms[room_type][name]
         if not self.booked_rooms[room_type]:
             del self.booked_rooms[room_type]
     else:
         self.booked_rooms[room_type][name] -= room_number
+    if room_type in self.available_rooms:
+        self.available_rooms[room_type] += room_number
+    else:
+        self.available_rooms[room_type] = room_number

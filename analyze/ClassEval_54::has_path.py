@@ -1,9 +1,9 @@
 def has_path(self, pos1, pos2):
     """
-        Check if there is a path between two icons
-        :param pos1: position tuple(x, y) of the first icon
-        :param pos2: position tuple(x, y) of the second icon
-        :return: True or False, representing whether there is a path between two icons
+        दो आइकनों के बीच एक पथ है या नहीं, यह जांचें
+        :param pos1: पहले आइकन की स्थिति ट्यूपल(x, y)
+        :param pos2: दूसरे आइकन की स्थिति ट्यूपल(x, y)
+        :return: True या False, जो दर्शाता है कि दो आइकनों के बीच एक पथ है या नहीं
         >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
         mc.board = [['a', 'b', 'c', 'a'],
                     ['a', 'b', 'c', 'a'],
@@ -16,28 +16,30 @@ def has_path(self, pos1, pos2):
     x2, y2 = pos2
     if abs(x1 - x2) + abs(y1 - y2) == 1:
         return True
-    visited = set()
-    queue = deque()
-    queue.append((x1, y1, 0, 0, 0))
-    visited.add((x1, y1, 0, 0, 0))
+    rows, cols = (self.BOARD_SIZE[0], self.BOARD_SIZE[1])
+    visited = [[False for _ in range(cols)] for _ in range(rows)]
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    queue = deque()
+    visited[x1][y1] = True
+    for dx, dy in directions:
+        nx, ny = (x1 + dx, y1 + dy)
+        if 0 <= nx < rows and 0 <= ny < cols and (self.board[nx][ny] == ' '):
+            queue.append((nx, ny, (dx, dy), 0))
+            visited[nx][ny] = True
     while queue:
-        x, y, turns, dx, dy = queue.popleft()
-        for ndx, ndy in directions:
-            nx, ny = (x + ndx, y + ndy)
-            if not (0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]):
-                continue
-            if (nx, ny) != (x2, y2) and self.board[nx][ny] != ' ':
-                continue
-            new_turns = turns
-            if (dx, dy) != (0, 0) and (ndx, ndy) != (dx, dy):
-                new_turns += 1
-            if new_turns > 2:
-                continue
-            if (nx, ny) == (x2, y2):
-                return True
-            state = (nx, ny, new_turns, ndx, ndy)
-            if state not in visited:
-                visited.add(state)
-                queue.append(state)
+        x, y, dir, turns = queue.popleft()
+        if (x, y) == (x2, y2):
+            return True
+        nx, ny = (x + dir[0], y + dir[1])
+        if 0 <= nx < rows and 0 <= ny < cols and (not visited[nx][ny]) and (self.board[nx][ny] == ' '):
+            queue.append((nx, ny, dir, turns))
+            visited[nx][ny] = True
+        if turns < 2:
+            for dx, dy in directions:
+                if (dx, dy) == dir or (dx, dy) == (-dir[0], -dir[1]):
+                    continue
+                nx, ny = (x + dx, y + dy)
+                if 0 <= nx < rows and 0 <= ny < cols and (not visited[nx][ny]) and (self.board[nx][ny] == ' '):
+                    queue.append((nx, ny, (dx, dy), turns + 1))
+                    visited[nx][ny] = True
     return False

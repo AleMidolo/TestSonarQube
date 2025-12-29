@@ -8,7 +8,8 @@ def sign_in(self, username):
         >>> signInSystem.sign_in("mik")
         False
         """
-    if username not in self.users:
+    if username in self.users:
+        self.users[username] = True
+        return True
+    else:
         return False
-    self.users[username] = True
-    return True

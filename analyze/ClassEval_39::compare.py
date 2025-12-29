@@ -11,8 +11,9 @@ def compare(self, cur, peek):
         """
     if cur == '(':
         return False
-    index_cur = self.get_priority_index(cur)
-    index_peek = self.get_priority_index(peek)
-    if index_cur != -1 and index_peek != -1:
-        return self.operat_priority[index_cur] <= self.operat_priority[index_peek]
+    operators = {'+': 0, '-': 1, '*': 2, '/': 3, '(': 4, ')': 5, '%': 6, ',': 7}
+    cur_index = operators.get(cur, -1)
+    peek_index = operators.get(peek, -1)
+    if cur_index >= 0 and peek_index >= 0 and (cur_index < len(self.operat_priority)) and (peek_index < len(self.operat_priority)):
+        return self.operat_priority[cur_index] <= self.operat_priority[peek_index]
     return False

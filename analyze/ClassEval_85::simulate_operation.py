@@ -16,6 +16,8 @@ def simulate_operation(self):
             self.current_temperature -= 1.0
         time.sleep(1)
         time_taken += 1
-        if self.mode == 'heat' and self.current_temperature > self.target_temperature or (self.mode == 'cool' and self.current_temperature < self.target_temperature):
-            self.current_temperature = self.target_temperature
+        if self.auto_check_conflict():
+            pass
+        else:
+            continue
     return time_taken

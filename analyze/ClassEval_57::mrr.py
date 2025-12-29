@@ -22,32 +22,36 @@ def mrr(data):
     0.75, [1.0, 0.5]
     """
     if not isinstance(data, (list, tuple)):
-        raise Exception('Input must be a tuple or a list of tuples')
-    if len(data) == 0:
-        return (0.0, [0.0])
+        raise Exception('the input must be a tuple([0,...,1,...],int) or a list of tuples')
     if isinstance(data, tuple):
+        if len(data) != 2:
+            raise Exception('tuple must have format ([binary_list], ground_truth_count)')
         sub_list, total_num = data
         sub_list = np.array(sub_list)
         if total_num == 0:
             return (0.0, [0.0])
-        first_correct_idx = np.where(sub_list == 1)[0]
-        if len(first_correct_idx) == 0:
+        indices = np.where(sub_list == 1)[0]
+        if len(indices) == 0:
             rr = 0.0
         else:
-            rr = 1.0 / (first_correct_idx[0] + 1)
+            first_correct_rank = indices[0] + 1
+            rr = 1.0 / first_correct_rank
         return (rr, [rr])
-    if isinstance(data, list):
+    elif isinstance(data, list):
+        if len(data) == 0:
+            return (0.0, [0.0])
         separate_result = []
-        for sub_list, total_num in data:
+        for item in data:
+            if not isinstance(item, tuple) or len(item) != 2:
+                raise Exception('each item in list must be a tuple([binary_list], ground_truth_count)')
+            sub_list, total_num = item
             sub_list = np.array(sub_list)
-            if total_num == 0:
+            indices = np.where(sub_list == 1)[0]
+            if len(indices) == 0:
                 rr = 0.0
             else:
-                first_correct_idx = np.where(sub_list == 1)[0]
-                if len(first_correct_idx) == 0:
-                    rr = 0.0
-                else:
-                    rr = 1.0 / (first_correct_idx[0] + 1)
+                first_correct_rank = indices[0] + 1
+                rr = 1.0 / first_correct_rank
             separate_result.append(rr)
-        mean_rr = np.mean(separate_result) if separate_result else 0.0
+        mean_rr = np.mean(separate_result)
         return (mean_rr, separate_result)
