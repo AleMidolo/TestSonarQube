@@ -9,7 +9,6 @@ def sin(self, x):
     x_rad = x / 180 * pi
     result = 0
     for n in range(50):
-        numerator = (-1) ** n * x_rad ** (2 * n + 1)
-        denominator = self.factorial(2 * n + 1)
-        result += numerator / denominator
+        term = (-1) ** n * x_rad ** (2 * n + 1) / self.factorial(2 * n + 1)
+        result += term
     return round(result, 10)

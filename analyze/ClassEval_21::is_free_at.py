@@ -10,10 +10,10 @@ def is_free_at(self, check_time):
         >>> classroom.is_free_at('9:00')
         False
         """
-    check_time_dt = datetime.strptime(check_time, '%H:%M')
+    check_datetime = datetime.strptime(check_time, '%H:%M')
     for course in self.courses:
         start_time = datetime.strptime(course['start_time'], '%H:%M')
         end_time = datetime.strptime(course['end_time'], '%H:%M')
-        if start_time <= check_time_dt < end_time:
+        if start_time <= check_datetime < end_time:
             return False
     return True

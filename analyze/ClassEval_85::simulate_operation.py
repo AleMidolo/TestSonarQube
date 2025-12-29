@@ -11,9 +11,9 @@ def simulate_operation(self):
     time_taken = 0
     while abs(self.current_temperature - self.target_temperature) > 0.1:
         if self.mode == 'heat':
-            self.current_temperature += 1.0
+            self.current_temperature += 0.1
         else:
-            self.current_temperature -= 1.0
+            self.current_temperature -= 0.1
         time_taken += 1
         time.sleep(0.01)
     return time_taken

@@ -10,6 +10,5 @@ def select(self, m: int) -> List[List[str]]:
     if m <= 0 or m > len(self.datas):
         return []
     result = []
-    result_list = [None] * m
-    self._select(0, result_list, 0, result)
+    self._select(0, [None] * m, 0, result)
     return result

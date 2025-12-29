@@ -4,40 +4,37 @@ def prepare(self, expression):
         :param expression: stringa, l'espressione infissa da preparare
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.prepare("2+3*4")
-
         expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
         """
-    operator_stack = deque()
-    self.postfix_stack.clear()
+    op_stack = deque()
+    arr = list(expression)
+    current = ''
     i = 0
-    while i < len(expression):
-        c = expression[i]
-        if c.isdigit() or c == '.' or c == '~':
-            num_str = ''
+    while i < len(arr):
+        c = arr[i]
+        if not self.is_operator(c):
             if c == '~':
-                num_str += '-'
-                i += 1
-                if i < len(expression):
-                    c = expression[i]
-            while i < len(expression) and (c.isdigit() or c == '.'):
-                num_str += c
-                i += 1
-                if i < len(expression):
-                    c = expression[i]
-            self.postfix_stack.append(num_str)
-            continue
-        elif self.is_operator(c):
+                if i == 0 or self.is_operator(arr[i - 1]):
+                    current += '-'
+                    i += 1
+                    continue
+            current += c
+        else:
+            if len(current) > 0:
+                self.postfix_stack.append(current)
+                current = ''
             if c == '(':
-                operator_stack.append(c)
+                op_stack.append(c)
             elif c == ')':
-                while operator_stack and operator_stack[-1] != '(':
-                    self.postfix_stack.append(operator_stack.pop())
-                if operator_stack:
-                    operator_stack.pop()
+                while op_stack and op_stack[-1] != '(':
+                    self.postfix_stack.append(op_stack.pop())
+                op_stack.pop()
             else:
-                while operator_stack and operator_stack[-1] != '(' and self.compare(c, operator_stack[-1]):
-                    self.postfix_stack.append(operator_stack.pop())
-                operator_stack.append(c)
+                while op_stack and op_stack[-1] != '(' and self.compare(c, op_stack[-1]):
+                    self.postfix_stack.append(op_stack.pop())
+                op_stack.append(c)
         i += 1
-    while operator_stack:
-        self.postfix_stack.append(operator_stack.pop())
+    if len(current) > 0:
+        self.postfix_stack.append(current)
+    while op_stack:
+        self.postfix_stack.append(op_stack.pop())

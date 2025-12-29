@@ -8,7 +8,7 @@ def rail_fence_cipher(self, plain_text, rails):
         'acb'
 
         """
-    if rails == 1:
+    if rails <= 1:
         return plain_text
     fence = [[] for _ in range(rails)]
     rail = 0
@@ -17,6 +17,6 @@ def rail_fence_cipher(self, plain_text, rails):
         fence[rail].append(char)
         rail += direction
         if rail == rails - 1 or rail == 0:
-            direction *= -1
+            direction = -direction
     ciphertext = ''.join([''.join(rail) for rail in fence])
     return ciphertext

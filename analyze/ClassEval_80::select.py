@@ -11,8 +11,10 @@ def select(table, columns='*', where=None):
         """
     if columns == '*':
         columns_str = '*'
-    else:
+    elif isinstance(columns, list):
         columns_str = ', '.join(columns)
+    else:
+        columns_str = str(columns)
     query = f'SELECT {columns_str} FROM {table}'
     if where:
         where_clause = ' AND '.join((f"{k}='{v}'" for k, v in where.items()))

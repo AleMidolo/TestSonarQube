@@ -13,7 +13,7 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         [3.0, 7.0]
 
         """
-    z_interp = []
+    result = []
     for xi, yi in zip(x_interp, y_interp):
         x_idx = None
         for i in range(len(x) - 1):
@@ -34,5 +34,5 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         z1 = z11 + (z21 - z11) * (xi - x[x_idx]) / (x[x_idx + 1] - x[x_idx])
         z2 = z12 + (z22 - z12) * (xi - x[x_idx]) / (x[x_idx + 1] - x[x_idx])
         zi = z1 + (z2 - z1) * (yi - y[y_idx]) / (y[y_idx + 1] - y[y_idx])
-        z_interp.append(zi)
-    return z_interp
+        result.append(zi)
+    return result

@@ -12,32 +12,30 @@ def has_path(self, pos1, pos2):
         >>> mc.is_valid_move((0, 0), (1, 0))
         True
         """
-    x1, y1 = pos1
-    x2, y2 = pos2
-    if abs(x1 - x2) + abs(y1 - y2) == 1:
-        return True
-    visited = set()
-    queue = deque()
-    queue.append((x1, y1, 0, 0, 0))
-    visited.add((x1, y1, 0, 0, 0))
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    queue = deque()
+    visited = set()
+    start_x, start_y = pos1
+    end_x, end_y = pos2
+    for dx, dy in directions:
+        queue.append((start_x, start_y, 0, (dx, dy)))
+        visited.add((start_x, start_y, 0, (dx, dy)))
     while queue:
-        x, y, dir_x, dir_y, turns = queue.popleft()
-        if (x, y) == (x2, y2):
+        x, y, turns, direction = queue.popleft()
+        if (x, y) == (end_x, end_y):
             return True
         for dx, dy in directions:
             new_x, new_y = (x + dx, y + dy)
             if not (0 <= new_x < self.BOARD_SIZE[0] and 0 <= new_y < self.BOARD_SIZE[1]):
                 continue
-            if (new_x, new_y) != (x2, y2) and self.board[new_x][new_y] != ' ':
+            if (new_x, new_y) != (end_x, end_y) and self.board[new_x][new_y] != ' ':
                 continue
-            new_dir_x, new_dir_y = (dx, dy)
             new_turns = turns
-            if (dir_x, dir_y) != (0, 0) and (dir_x, dir_y) != (new_dir_x, new_dir_y):
+            if (dx, dy) != direction:
                 new_turns += 1
             if new_turns > 2:
                 continue
-            state = (new_x, new_y, new_dir_x, new_dir_y, new_turns)
+            state = (new_x, new_y, new_turns, (dx, dy))
             if state not in visited:
                 visited.add(state)
                 queue.append(state)
