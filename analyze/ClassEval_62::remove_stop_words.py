@@ -4,12 +4,12 @@ def remove_stop_words(self, string_list, stop_word_list):
         :param string_list: 字符串列表
         :param stop_word_list: 停用词列表
         :return: 不包含停用词的单词列表
-        >>> NLPDataProcessor().remove_stop_words(['This is a test.'], ['a', 'an', 'the'])
+        >>> NLPDataProcessor.process(['This is a test.'])
         [['This', 'is', 'test.']]
         """
-    words_list = []
+    words_without_stop_words = []
     for string in string_list:
         words = string.split()
         filtered_words = [word for word in words if word.lower() not in stop_word_list]
-        words_list.append(filtered_words)
-    return words_list
+        words_without_stop_words.append(filtered_words)
+    return words_without_stop_words

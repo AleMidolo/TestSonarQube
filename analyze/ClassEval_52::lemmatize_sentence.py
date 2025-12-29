@@ -1,8 +1,7 @@
 def lemmatize_sentence(self, sentence):
     """
-    Remove punctuations of the sentence and tokenizes the input sentence, 
-    lemmatizes each word based on its part of speech tag, and stores the 
-    results in a list.
+    Remove punctuations of the sentence and tokenizes the input sentence, mark the part of speech tag of each word,
+    lemmatizes the words based on their part of speech tags, and stores the results in a list.
     :param sentence: a sentence str
     :return: list, a list of lemmatized words.
     >>> lemmatization = Lemmatization()
