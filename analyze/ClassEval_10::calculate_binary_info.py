@@ -7,7 +7,7 @@ def calculate_binary_info(self):
         """
     total_length = len(self.binary_string)
     if total_length == 0:
-        return {'Zeroes': 0, 'Ones': 0, 'Bit length': 0}
+        return {'Zeroes': 0.0, 'Ones': 0.0, 'Bit length': 0}
     count_ones = self.binary_string.count('1')
     count_zeroes = total_length - count_ones
-    return {'Zeroes': round(count_zeroes / total_length, 3), 'Ones': round(count_ones / total_length, 3), 'Bit length': total_length}
+    return {'Zeroes': count_zeroes / total_length, 'Ones': count_ones / total_length, 'Bit length': total_length}

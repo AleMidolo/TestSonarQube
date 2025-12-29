@@ -13,13 +13,14 @@ def parse_arguments(self, command_string):
     import re
     parts = re.split('\\s+', command_string)
     parts = parts[2:]
+    missing_args = set()
     for part in parts:
         if '=' in part:
             key, value = part.split('=', 1)
+            key = key.lstrip('-')
         else:
-            key = part
+            key = part.lstrip('-')
             value = True
-        key = key.lstrip('-')
         if key in self.types:
             value = self._convert_type(key, value)
         self.arguments[key] = value

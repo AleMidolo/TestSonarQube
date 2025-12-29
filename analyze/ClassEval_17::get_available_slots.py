@@ -12,7 +12,7 @@ def get_available_slots(self, date):
     end_of_day = datetime(date.year, date.month, date.day, 23, 59, 59)
     available_slots = []
     last_end_time = start_of_day
-    for event in self.events:
+    for event in sorted(self.events, key=lambda x: x['start_time']):
         if event['date'].date() == date.date():
             if last_end_time < event['start_time']:
                 available_slots.append((last_end_time, event['start_time']))

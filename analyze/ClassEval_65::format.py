@@ -7,4 +7,4 @@ def format(self, x):
         >>> formatter.format(123456)
         "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
         """
-    return self.format_string(str(int(x))) if isinstance(x, int) else self.format_string(str(x))
+    return self.format_string(str(x))

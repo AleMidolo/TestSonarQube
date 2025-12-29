@@ -6,6 +6,5 @@ def celsius_to_fahrenheit(self):
         >>> weatherSystem.temperature = 27
         >>> weatherSystem.celsius_to_fahrenheit()
         80.6
-
         """
     return self.temperature * 9 / 5 + 32
