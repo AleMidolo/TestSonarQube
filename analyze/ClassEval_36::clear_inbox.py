@@ -13,7 +13,6 @@ def clear_inbox(self, size):
     current_size = self.get_occupied_size()
     if current_size + size <= self.capacity:
         return
-    space_needed = current_size + size - self.capacity
-    freed_space = 0
-    while self.inbox and freed_space < space_needed:
-        freed_space += self.inbox.pop(0)['size']
+    while self.inbox and current_size + size > self.capacity:
+        removed_email = self.inbox.pop(0)
+        current_size -= removed_email['size']

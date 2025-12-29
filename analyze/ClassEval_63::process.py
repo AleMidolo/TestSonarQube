@@ -7,5 +7,5 @@ def process(self, string_list):
         {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}
         """
     words_list = self.process_data(string_list)
-    top_5_freq = self.calculate_word_frequency(words_list)
-    return top_5_freq
+    top_5_word_frequency = self.calculate_word_frequency(words_list)
+    return top_5_word_frequency

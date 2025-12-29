@@ -11,12 +11,15 @@ def create_board(self):
         """
     rows, cols = self.BOARD_SIZE
     total_cells = rows * cols
-    icon_count = len(self.ICONS)
+    if total_cells % 2 != 0:
+        total_cells += 1
     icon_pairs = []
-    for icon in self.ICONS:
-        icon_pairs.extend([icon, icon])
     while len(icon_pairs) < total_cells:
-        icon_pairs.extend(icon_pairs[:total_cells - len(icon_pairs)])
+        for icon in self.ICONS:
+            icon_pairs.extend([icon, icon])
+            if len(icon_pairs) >= total_cells:
+                break
+    icon_pairs = icon_pairs[:total_cells]
     random.shuffle(icon_pairs)
     board = []
     for i in range(rows):

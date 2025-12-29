@@ -13,8 +13,8 @@ def process_xml_data(self, file_name):
         return False
     try:
         for elem in self.root.iter():
-            if elem.text is not None and elem.text.strip():
-                elem.text = elem.text.upper()
+            if elem.text and elem.text.strip():
+                elem.text = elem.text.strip() + '_modified'
         tree = ET.ElementTree(self.root)
         tree.write(file_name)
         return True

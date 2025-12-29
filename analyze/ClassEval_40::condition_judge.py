@@ -14,7 +14,7 @@ def condition_judge(self):
             bmi_std = std[self.sex]
             break
     if bmi_std is None:
-        return 0
+        raise ValueError(f'Invalid sex: {self.sex}')
     if bmi < bmi_std[0]:
         return -1
     elif bmi > bmi_std[1]:

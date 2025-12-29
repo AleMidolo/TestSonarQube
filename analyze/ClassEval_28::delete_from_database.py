@@ -18,6 +18,6 @@ def delete_from_database(self, table_name, name):
         delete_query = f'DELETE FROM {table_name} WHERE {text_column} = ?'
         cursor.execute(delete_query, (name,))
     else:
-        print(f'No TEXT column found in table {table_name}')
+        pass
     conn.commit()
     conn.close()

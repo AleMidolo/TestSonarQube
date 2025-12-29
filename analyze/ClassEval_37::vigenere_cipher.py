@@ -13,11 +13,11 @@ def vigenere_cipher(self, plaintext):
     for i, char in enumerate(plaintext):
         if char.isalpha():
             plaintext_offset = ord('A') if char.isupper() else ord('a')
-            key_char = key_repeated[i % len(key_repeated)]
+            key_char = key_repeated[i]
             key_offset = ord('A') if key_char.isupper() else ord('a')
             key_shift = ord(key_char) - key_offset
-            shifted_char = chr((ord(char) - plaintext_offset + key_shift) % 26 + plaintext_offset)
-            ciphertext += shifted_char
+            encrypted_char = chr((ord(char) - plaintext_offset + key_shift) % 26 + plaintext_offset)
+            ciphertext += encrypted_char
         else:
             ciphertext += char
     return ciphertext

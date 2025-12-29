@@ -5,6 +5,5 @@ def generate_playerMap(self):
         >>> minesweeper_game = MinesweeperGame(3, 1)
         >>> minesweeper_game.generate_playerMap()
         [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
-
         """
     return [['-' for _ in range(self.n)] for _ in range(self.n)]
