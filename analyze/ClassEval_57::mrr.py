@@ -22,23 +22,25 @@ def mrr(data):
         sub_list = np.array(sub_list)
         if total_num == 0:
             return (0.0, [0.0])
-        else:
-            for idx, value in enumerate(sub_list):
-                if value == 1:
-                    return (1.0 / (idx + 1), [1.0 / (idx + 1)])
-            return (0.0, [0.0])
+        for i, val in enumerate(sub_list):
+            if val == 1:
+                rr = 1.0 / (i + 1)
+                return (rr, [rr])
+        return (0.0, [0.0])
     if type(data) == list:
         separate_result = []
         for sub_list, total_num in data:
             sub_list = np.array(sub_list)
             if total_num == 0:
-                mrr = 0.0
+                rr = 0.0
             else:
-                for idx, value in enumerate(sub_list):
-                    if value == 1:
-                        mrr = 1.0 / (idx + 1)
+                found = False
+                for i, val in enumerate(sub_list):
+                    if val == 1:
+                        rr = 1.0 / (i + 1)
+                        separate_result.append(rr)
+                        found = True
                         break
-                else:
-                    mrr = 0.0
-            separate_result.append(mrr)
+                if not found:
+                    separate_result.append(0.0)
         return (np.mean(separate_result), separate_result)

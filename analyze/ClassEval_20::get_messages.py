@@ -9,6 +9,7 @@ def get_messages(self, username):
         [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2023-01-01 00:00:00'}]
         >>> chat.get_messages('Mary')
         []
+
         """
     if username not in self.users:
         return []

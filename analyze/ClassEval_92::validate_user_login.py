@@ -10,8 +10,8 @@ def validate_user_login(self, username, password):
         >>> user_db.validate_user_login('user1', 'pass1')
         True
         """
-    self.cursor.execute('\n                SELECT password FROM users WHERE username = ?\n            ', (username,))
-    result = self.cursor.fetchone()
-    if result is None:
+    user = self.search_user_by_username(username)
+    if user is None:
         return False
-    return result[0] == password
+    stored_password = user[2]
+    return stored_password == password

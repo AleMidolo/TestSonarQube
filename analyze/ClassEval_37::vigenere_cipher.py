@@ -6,12 +6,19 @@ def vigenere_cipher(self, plaintext):
         >>> e = EncryptionUtils("key")
         >>> e.vigenere_cipher("abc")
         'kfa'
+
         """
     ciphertext = ''
     key_length = len(self.key)
-    key_as_int = [ord(i) - ord('a') for i in self.key.lower()]
-    plaintext_int = [ord(i) - ord('a') for i in plaintext.lower()]
-    for i in range(len(plaintext_int)):
-        value = (plaintext_int[i] + key_as_int[i % key_length]) % 26
-        ciphertext += chr(value + ord('a'))
+    for i, char in enumerate(plaintext):
+        if char.isalpha():
+            shift = ord(self.key[i % key_length].lower()) - 97
+            if char.isupper():
+                ascii_offset = 65
+            else:
+                ascii_offset = 97
+            shifted_char = chr((ord(char) - ascii_offset + shift) % 26 + ascii_offset)
+            ciphertext += shifted_char
+        else:
+            ciphertext += char
     return ciphertext

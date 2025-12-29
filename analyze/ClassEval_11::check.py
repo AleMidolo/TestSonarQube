@@ -11,5 +11,9 @@ def check(args):
         ValueError: 3 not even
         """
     for arg in args:
-        if arg < 0 or arg % 2 != 0:
+        if not isinstance(arg, int):
+            raise ValueError(f'{arg} not int')
+        if arg < 0:
+            raise ValueError(f'{arg} less than 0')
+        if arg % 2 != 0:
             raise ValueError(f'{arg} not even')

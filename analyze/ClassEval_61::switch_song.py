@@ -7,7 +7,6 @@ def switch_song(self):
         >>> musicPlayer.current_song = "song1"
         >>> musicPlayer.switch_song()
         True
-
         """
     if self.current_song:
         current_index = self.playlist.index(self.current_song)
@@ -16,8 +15,5 @@ def switch_song(self):
             return True
         else:
             return False
-    elif self.playlist:
-        self.current_song = self.playlist[0]
-        return True
     else:
         return False

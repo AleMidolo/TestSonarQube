@@ -7,27 +7,32 @@ def prepare(self, expression):
 
         expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
         """
-    operator_stack = deque()
+    op_stack = deque()
+    arr = list(expression)
+    current_index = 0
+    count = 0
     i = 0
-    while i < len(expression):
-        c = expression[i]
-        if c.isdigit() or c == '~':
-            num = c
-            while i + 1 < len(expression) and (expression[i + 1].isdigit() or expression[i + 1] == '.'):
-                i += 1
-                num += expression[i]
-            self.postfix_stack.append(num)
-        elif c in {'+', '-', '*', '\\/', '%', '(', ')'}:
-            if c == '(':
-                operator_stack.append(c)
-            elif c == ')':
-                while operator_stack and operator_stack[-1] != '(':
-                    self.postfix_stack.append(operator_stack.pop())
-                operator_stack.pop()
+    while i < len(arr):
+        current_char = arr[i]
+        if self.is_operator(current_char):
+            if count > 0:
+                self.postfix_stack.append(''.join(arr[current_index:current_index + count]))
+                count = 0
+            if current_char == '(':
+                op_stack.append(current_char)
+            elif current_char == ')':
+                while op_stack and op_stack[-1] != '(':
+                    self.postfix_stack.append(op_stack.pop())
+                op_stack.pop()
             else:
-                while operator_stack and operator_stack[-1] != '(' and self.compare(c, operator_stack[-1]):
-                    self.postfix_stack.append(operator_stack.pop())
-                operator_stack.append(c)
+                while op_stack and op_stack[-1] != '(' and self.compare(current_char, op_stack[-1]):
+                    self.postfix_stack.append(op_stack.pop())
+                op_stack.append(current_char)
+            current_index = i + 1
+        else:
+            count += 1
         i += 1
-    while operator_stack:
-        self.postfix_stack.append(operator_stack.pop())
+    if count > 0:
+        self.postfix_stack.append(''.join(arr[current_index:current_index + count]))
+    while op_stack:
+        self.postfix_stack.append(op_stack.pop())

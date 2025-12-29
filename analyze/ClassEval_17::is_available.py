@@ -10,6 +10,8 @@ def is_available(self, start_time, end_time):
         False
         """
     for event in self.events:
-        if not (end_time <= event['start_time'] or start_time >= event['end_time']):
+        event_start = event['start_time']
+        event_end = event['end_time']
+        if not (end_time <= event_start or start_time >= event_end):
             return False
     return True

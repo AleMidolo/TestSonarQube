@@ -8,4 +8,5 @@ def add_student(self, name, grade, major):
         >>> system.students
         {'student 1': {'name': 'student 1', 'grade': 3, 'major': 'SE', 'courses': {}}}
         """
-    self.students[name] = {'name': name, 'grade': grade, 'major': major, 'courses': {}}
+    if name not in self.students:
+        self.students[name] = {'name': name, 'grade': grade, 'major': major, 'courses': {}}

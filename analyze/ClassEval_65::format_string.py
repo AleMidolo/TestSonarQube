@@ -7,28 +7,27 @@ def format_string(self, x):
         >>> formatter.format_string("123456")
         "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
         """
-    if not x.isdigit():
-        return ''
-    x = x.split('.')
-    whole_part = x[0]
-    decimal_part = x[1] if len(x) > 1 else ''
-    words = []
-    length = len(whole_part)
-    for i in range(length):
-        if length - i - 1 > 2:
-            part = whole_part[max(0, length - i - 3):length - i]
-            if part:
-                words.append(self.trans_three(part))
-                words.append(self.parse_more((length - i - 1) // 3))
-        elif length - i - 1 == 2:
-            part = whole_part[max(0, length - i - 3):length - i]
-            if part:
-                words.append(self.trans_three(part))
-        elif length - i - 1 == 1:
-            part = whole_part[max(0, length - i - 2):length - i]
-            if part:
-                words.append(self.trans_two(part))
-    result = ' AND '.join(words).strip()
+    is_negative = False
+    if x.startswith('-'):
+        is_negative = True
+        x = x[1:]
+    parts = x.split('.')
+    integer_part = parts[0]
+    decimal_part = parts[1] if len(parts) > 1 else ''
+    integer_part = integer_part.lstrip('0')
+    if integer_part == '':
+        integer_part = '0'
+    integer_words = self._format_integer(integer_part)
+    decimal_words = ''
     if decimal_part:
-        result += ' POINT ' + ' '.join((self.NUMBER[int(digit)] for digit in decimal_part))
-    return result + ' ONLY' if result else ''
+        decimal_part = decimal_part.rstrip('0')
+        if decimal_part:
+            decimal_words = self._format_decimal(decimal_part)
+    result = ''
+    if is_negative:
+        result += 'MINUS '
+    result += integer_words
+    if decimal_words:
+        result += ' AND ' + decimal_words
+    result += ' ONLY'
+    return result

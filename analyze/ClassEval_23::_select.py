@@ -15,6 +15,8 @@ def _select(self, dataIndex: int, resultList: List[str], resultIndex: int, resul
     if resultIndex == len(resultList):
         result.append(resultList.copy())
         return
-    for i in range(dataIndex, len(self.datas)):
-        resultList[resultIndex] = self.datas[i]
-        self._select(i + 1, resultList, resultIndex + 1, result)
+    if dataIndex >= len(self.datas):
+        return
+    resultList[resultIndex] = self.datas[dataIndex]
+    self._select(dataIndex + 1, resultList, resultIndex + 1, result)
+    self._select(dataIndex + 1, resultList, resultIndex, result)

@@ -8,5 +8,5 @@ def delete_user_by_username(self, username):
         >>> user_db.insert_user('user1', 'pass1')
         >>> user_db.delete_user_by_username('user1')
         """
-    self.cursor.execute('\n                DELETE FROM users WHERE username = ?\n            ', (username,))
+    self.cursor.execute('\n            DELETE FROM users WHERE username = ?\n        ', (username,))
     self.connection.commit()
