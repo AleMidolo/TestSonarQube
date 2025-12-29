@@ -11,5 +11,5 @@ def load_cookies(self):
         with open(self.cookies_file, 'r') as file:
             self.cookies = json.load(file)
         return self.cookies
-    except:
+    except (FileNotFoundError, json.JSONDecodeError):
         return None

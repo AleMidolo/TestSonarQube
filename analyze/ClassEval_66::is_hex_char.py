@@ -6,6 +6,5 @@ def is_hex_char(char):
         :return: bool, True if the character is a hexadecimal digit, False otherwise.
         >>> NumericEntityUnescaper.is_hex_char('a')
         True
-
         """
     return '0' <= char <= '9' or 'a' <= char <= 'f' or 'A' <= char <= 'F'

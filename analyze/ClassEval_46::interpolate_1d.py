@@ -17,4 +17,9 @@ def interpolate_1d(self, x, y, x_interp):
                 yi = y[i] + (y[i + 1] - y[i]) * (xi - x[i]) / (x[i + 1] - x[i])
                 y_interp.append(yi)
                 break
+        else:
+            if xi <= x[0]:
+                y_interp.append(y[0])
+            else:
+                y_interp.append(y[-1])
     return y_interp
