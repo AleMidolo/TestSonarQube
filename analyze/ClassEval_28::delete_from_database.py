@@ -9,15 +9,16 @@ def delete_from_database(self, table_name, name):
     cursor = conn.cursor()
     cursor.execute(f'PRAGMA table_info({table_name})')
     columns_info = cursor.fetchall()
-    text_column = None
-    for col in columns_info:
-        if col[2] == 'TEXT':
-            text_column = col[1]
+    name_column = None
+    for col_info in columns_info:
+        if col_info[2] == 'TEXT':
+            name_column = col_info[1]
             break
-    if text_column is None:
-        conn.close()
-        return
-    delete_query = f'DELETE FROM {table_name} WHERE {text_column} = ?'
-    cursor.execute(delete_query, (name,))
+    if name_column:
+        delete_query = f'DELETE FROM {table_name} WHERE {name_column} = ?'
+        cursor.execute(delete_query, (name,))
+    else:
+        delete_query = f'DELETE FROM {table_name} WHERE {columns_info[1][1]} = ?'
+        cursor.execute(delete_query, (name,))
     conn.commit()
     conn.close()

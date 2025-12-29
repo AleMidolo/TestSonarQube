@@ -21,10 +21,10 @@ def process_excel_data(self, N, save_file_name):
             processed_data.append(tuple(processed_row))
         if '.' in save_file_name:
             name_parts = save_file_name.rsplit('.', 1)
-            output_file = f'{name_parts[0]}_processed.{name_parts[1]}'
+            output_file_name = f'{name_parts[0]}_processed.{name_parts[1]}'
         else:
-            output_file = f'{save_file_name}_processed.xlsx'
-        result = self.write_excel(processed_data, output_file)
-        return (result, output_file if result == 1 else '')
+            output_file_name = f'{save_file_name}_processed.xlsx'
+        result = self.write_excel(processed_data, output_file_name)
+        return (result, output_file_name)
     except Exception:
         return (0, '')

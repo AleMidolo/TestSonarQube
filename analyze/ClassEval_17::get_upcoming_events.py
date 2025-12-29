@@ -8,14 +8,6 @@ def get_upcoming_events(self, num_events):
         >>> calendar.events = [{'date': datetime(2023, 1, 1, 0, 0), 'start_time': datetime(2023, 1, 1, 0, 0), 'end_time': datetime(2023, 1, 1, 23, 0), 'description': 'Capodanno'},{'date': datetime(2023, 1, 2, 0, 0),'end_time': datetime(2023, 1, 2, 1, 0), 'description': 'Capodanno 2'}]
         >>> calendar.get_upcoming_events(1)
         [{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 23, 0), 'description': 'Capodanno'}, {'date': datetime.datetime(2023, 1, 2, 0, 0), 'end_time': datetime.datetime(2023, 1, 2, 1, 0), 'description': 'Capodanno 2'}]
-
         """
-    now = datetime.now()
-    upcoming_events = []
-    for event in self.events:
-        if 'start_time' in event and event['start_time'] >= now:
-            upcoming_events.append(event)
-        elif 'date' in event and event['date'] >= now:
-            upcoming_events.append(event)
-    upcoming_events.sort(key=lambda x: x.get('start_time', x.get('date')))
-    return upcoming_events[:num_events]
+    sorted_events = sorted(self.events, key=lambda x: x['start_time'] if 'start_time' in x else x['date'])
+    return sorted_events[:num_events]
