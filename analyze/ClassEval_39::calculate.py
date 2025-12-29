@@ -9,14 +9,14 @@ def calculate(self, expression):
     >>> expression_calculator.calculate("2 + 3 * 4")
     14.0
     """
-    op_stack = deque()
+    self.postfix_stack.clear()
     tokens = expression.split()
     for token in tokens:
-        if not self.is_operator(token):
-            op_stack.append(token)
-        else:
-            second_value = op_stack.pop()
-            first_value = op_stack.pop()
+        if self.is_operator(token):
+            second_value = self.postfix_stack.pop()
+            first_value = self.postfix_stack.pop()
             result = self._calculate(first_value, second_value, token)
-            op_stack.append(str(result))
-    return float(op_stack.pop())
+            self.postfix_stack.append(result)
+        else:
+            self.postfix_stack.append(token)
+    return float(self.postfix_stack.pop())
