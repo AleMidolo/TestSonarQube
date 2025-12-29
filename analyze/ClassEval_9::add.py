@@ -17,8 +17,8 @@ def add(num1, num2):
     result = []
     for i in range(max_length - 1, -1, -1):
         digit_sum = int(num1[i]) + int(num2[i]) + carry
-        carry = digit_sum // 10
         result.insert(0, str(digit_sum % 10))
+        carry = digit_sum // 10
     if carry:
         result.insert(0, str(carry))
     return ''.join(result)
