@@ -22,7 +22,7 @@ def mrr(data):
     0.75, [1.0, 0.5]
     """
     if not isinstance(data, (list, tuple)):
-        raise Exception('इनपुट एक टपल या टपल की लिस्ट होनी चाहिए')
+        raise Exception('the input must be a tuple([0,...,1,...],int) or a list of tuples')
     if len(data) == 0:
         return (0.0, [0.0])
     if isinstance(data, tuple):
@@ -32,22 +32,24 @@ def mrr(data):
             return (0.0, [0.0])
         first_correct_idx = np.where(sub_list == 1)[0]
         if len(first_correct_idx) == 0:
-            mrr_value = 0.0
+            reciprocal_rank = 0.0
         else:
-            mrr_value = 1.0 / (first_correct_idx[0] + 1)
-        return (mrr_value, [mrr_value])
+            rank = first_correct_idx[0] + 1
+            reciprocal_rank = 1.0 / rank
+        return (reciprocal_rank, [reciprocal_rank])
     if isinstance(data, list):
         separate_result = []
         for sub_list, total_num in data:
             sub_list = np.array(sub_list)
             if total_num == 0:
-                mrr_value = 0.0
+                reciprocal_rank = 0.0
             else:
                 first_correct_idx = np.where(sub_list == 1)[0]
                 if len(first_correct_idx) == 0:
-                    mrr_value = 0.0
+                    reciprocal_rank = 0.0
                 else:
-                    mrr_value = 1.0 / (first_correct_idx[0] + 1)
-            separate_result.append(mrr_value)
+                    rank = first_correct_idx[0] + 1
+                    reciprocal_rank = 1.0 / rank
+            separate_result.append(reciprocal_rank)
         mean_mrr = np.mean(separate_result) if separate_result else 0.0
         return (mean_mrr, separate_result)

@@ -8,12 +8,10 @@ def get_jwt_user(self, request):
         {'user': {'name': 'user1'}}
         """
     try:
-        auth_header = request.get('headers', {}).get('Authorization', {})
-        jwt_token = auth_header.get('jwt', '')
-        user_info = auth_header.get('user', {})
-        if jwt_token and user_info:
-            return {'user': user_info}
-        else:
-            return None
+        if 'headers' in request and 'Authorization' in request['headers']:
+            auth_data = request['headers']['Authorization']
+            if isinstance(auth_data, dict) and 'user' in auth_data:
+                return {'user': auth_data['user']}
     except:
         return None
+    return None

@@ -18,15 +18,13 @@ def parse_arguments(self, command_string):
         if part.startswith('--') and '=' in part:
             arg_name = part[2:].split('=')[0]
             arg_value = part.split('=', 1)[1]
-            converted_value = self._convert_type(arg_name, arg_value)
-            self.arguments[arg_name] = converted_value
+            self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
             i += 1
         elif part.startswith('--'):
             arg_name = part[2:]
             if i + 1 < len(parts) and (not parts[i + 1].startswith('-')):
                 arg_value = parts[i + 1]
-                converted_value = self._convert_type(arg_name, arg_value)
-                self.arguments[arg_name] = converted_value
+                self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
                 i += 2
             else:
                 self.arguments[arg_name] = True
@@ -35,8 +33,7 @@ def parse_arguments(self, command_string):
             arg_name = part[1:]
             if i + 1 < len(parts) and (not parts[i + 1].startswith('-')):
                 arg_value = parts[i + 1]
-                converted_value = self._convert_type(arg_name, arg_value)
-                self.arguments[arg_name] = converted_value
+                self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
                 i += 2
             else:
                 self.arguments[arg_name] = True

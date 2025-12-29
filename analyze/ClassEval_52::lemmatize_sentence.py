@@ -33,6 +33,5 @@ def lemmatize_sentence(self, sentence):
             lemmatized_word = self.lemmatizer.lemmatize(word, pos='n')
             lemmatized_words.append(lemmatized_word)
         else:
-            lemmatized_word = self.lemmatizer.lemmatize(word)
-            lemmatized_words.append(lemmatized_word)
+            lemmatized_words.append(word)
     return lemmatized_words

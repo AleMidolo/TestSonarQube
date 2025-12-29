@@ -13,24 +13,28 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         [3.0, 7.0]
 
         """
+
+    def find_segment(coord, value, coords):
+        for i in range(len(coords) - 1):
+            if coords[i] <= value <= coords[i + 1]:
+                return (i, i + 1)
+        return (None, None)
     z_interp = []
     for xi, yi in zip(x_interp, y_interp):
-        i = 0
-        while i < len(x) - 1 and x[i + 1] < xi:
-            i += 1
-        j = 0
-        while j < len(y) - 1 and y[j + 1] < yi:
-            j += 1
-        i = min(i, len(x) - 2)
-        j = min(j, len(y) - 2)
-        x1, x2 = (x[i], x[i + 1])
-        y1, y2 = (y[j], y[j + 1])
-        z11 = z[j][i]
-        z12 = z[j][i + 1]
-        z21 = z[j + 1][i]
-        z22 = z[j + 1][i + 1]
-        z_y1 = z11 + (z12 - z11) * (xi - x1) / (x2 - x1)
-        z_y2 = z21 + (z22 - z21) * (xi - x1) / (x2 - x1)
-        z_interp_val = z_y1 + (z_y2 - z_y1) * (yi - y1) / (y2 - y1)
-        z_interp.append(z_interp_val)
+        x_idx1, x_idx2 = find_segment('x', xi, x)
+        y_idx1, y_idx2 = find_segment('y', yi, y)
+        if x_idx1 is None or y_idx1 is None:
+            raise ValueError(f'Interpolation point ({xi}, {yi}) is outside the data range')
+        dx = x[x_idx2] - x[x_idx1]
+        dy = y[y_idx2] - y[y_idx1]
+        tx = (xi - x[x_idx1]) / dx if dx != 0 else 0
+        ty = (yi - y[y_idx1]) / dy if dy != 0 else 0
+        z11 = z[y_idx1][x_idx1]
+        z12 = z[y_idx1][x_idx2]
+        z21 = z[y_idx2][x_idx1]
+        z22 = z[y_idx2][x_idx2]
+        z_interp_y1 = z11 + (z12 - z11) * tx
+        z_interp_y2 = z21 + (z22 - z21) * tx
+        zi = z_interp_y1 + (z_interp_y2 - z_interp_y1) * ty
+        z_interp.append(zi)
     return z_interp

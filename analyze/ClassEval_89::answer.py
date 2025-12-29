@@ -13,7 +13,9 @@ def answer(self, expression):
         return False
     import re
     numbers_in_expr = re.findall('\\d+\\.?\\d*', expression)
-    numbers_in_expr = [int(float(num)) for num in numbers_in_expr]
-    if sorted(numbers_in_expr) != sorted(self.nums):
+    numbers_in_expr = [float(num) for num in numbers_in_expr]
+    if len(numbers_in_expr) != 4:
         return False
-    return True
+    numbers_in_expr_sorted = sorted(numbers_in_expr)
+    nums_sorted = sorted(self.nums)
+    return numbers_in_expr_sorted == nums_sorted
