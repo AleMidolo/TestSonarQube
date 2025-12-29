@@ -12,4 +12,4 @@ def f1_score(self, predicted_labels, true_labels):
     rec = self.recall(predicted_labels, true_labels)
     if prec + rec == 0:
         return 0.0
-    return 2 * (prec * rec) / (prec + rec)
+    return 2 * prec * rec / (prec + rec)

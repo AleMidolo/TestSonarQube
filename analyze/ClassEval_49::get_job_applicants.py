@@ -8,21 +8,9 @@ def get_job_applicants(self, job):
         >>> jobMarketplace.job_listings = [{"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill1', 'skill2']}]
         >>> jobMarketplace.get_job_applicants(jobMarketplace.job_listings[0])
         [{'name': 'Tom', 'skills': ['skill1', 'skill2'], 'experience': 'experience'}]
-
         """
-
-    def matches_requirements(resume, job_requirements):
-        """
-            检查简历是否满足职位要求。
-            :param resume: 简历信息，dict。
-            :param job_requirements: 职位要求，list。
-            :return: 是否满足要求，bool。
-            """
-        resume_skills = set((skill.lower() for skill in resume['skills']))
-        job_reqs = set((req.lower() for req in job_requirements))
-        return job_reqs.issubset(resume_skills)
-    qualified_applicants = []
+    matching_resumes = []
     for resume in self.resumes:
-        if matches_requirements(resume, job['requirements']):
-            qualified_applicants.append(resume)
-    return qualified_applicants
+        if self.matches_requirements(resume, job):
+            matching_resumes.append(resume)
+    return matching_resumes

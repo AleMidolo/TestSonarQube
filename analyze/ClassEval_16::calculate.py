@@ -34,11 +34,14 @@ def calculate(self, expression):
                     while j < n and (expression[j].isdigit() or expression[j] == '.'):
                         j += 1
                     try:
-                        num = float(expression[i + 1:j])
+                        num = float(expression[i:j])
                     except ValueError:
                         return None
-                    operand_stack.append(-num)
+                    operand_stack.append(num)
                     i = j
+                    continue
+                elif expression[i] == '+':
+                    i += 1
                     continue
                 else:
                     return None

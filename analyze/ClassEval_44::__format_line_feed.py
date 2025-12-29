@@ -4,6 +4,6 @@ def __format_line_feed(self, text):
         :param text: 包含连续换行符的字符串
         :return: string, 替换后的文本，包含单个换行符
         """
-    if not text:
-        return text
+    if text is None:
+        return ''
     return re.sub('\\n+', '\n', text)
