@@ -8,8 +8,8 @@ def check_won(self, map):
         >>> minesweeper_game.check_won(minesweeper_game.player_map)
         False
         """
-    for row in range(self.n):
-        for col in range(self.n):
-            if self.minesweeper_map[row][col] != 'X' and self.player_map[row][col] == '-':
+    for row in map:
+        for cell in row:
+            if cell == '-':
                 return False
     return True

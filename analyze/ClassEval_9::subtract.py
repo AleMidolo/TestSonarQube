@@ -29,9 +29,5 @@ def subtract(num1, num2):
         else:
             result.append(str(digit1 - digit2 - borrow))
             borrow = 0
-    while result and result[-1] == '0':
-        result.pop()
-    if not result:
-        return '0'
-    result.reverse()
-    return ('-' if negative else '') + ''.join(result)
+    result = ''.join(result[::-1]).lstrip('0')
+    return '-' + result if negative else result

@@ -3,7 +3,7 @@ def get_all_students_with_fail_course(self):
         Get all students who have a score lower than 60
         :return: list of str, names of students
         >>> system.add_student('student 1', 3, 'SE')
-        >>> system.add_course_score('student 1', 'math', 59)
+        >>> system.add_course_score('student 1', 'Society', 59)
         >>> system.get_all_students_with_fail_course()
         ['student 1']
         """
