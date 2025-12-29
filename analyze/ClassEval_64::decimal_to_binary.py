@@ -1,9 +1,9 @@
 @staticmethod
 def decimal_to_binary(decimal_num):
     """
-        Converti un numero dal formato decimale al formato binario.
-        :param decimal_num: int, numero decimale
-        :return: str, la rappresentazione binaria di un intero.
+        Convert a number from decimal format to binary format.
+        :param decimal_num: int, decimal number
+        :return: str, the binary representation of an integer.
         >>> NumberConverter.decimal_to_binary(42423)
         '1010010110110111'
         """

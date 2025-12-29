@@ -11,12 +11,12 @@ def vigenere_cipher(self, plaintext):
     key_length = len(self.key)
     for i, char in enumerate(plaintext):
         if char.isalpha():
-            key_char = self.key[i % key_length].lower()
-            shift = ord(key_char) - ord('a')
+            key_char = self.key[i % key_length]
+            shift = ord(key_char.lower()) - ord('a')
             if char.isupper():
-                shifted_char = chr((ord(char) - ord('A') + shift) % 26 + ord('A'))
+                shifted_char = chr((ord(char) - 65 + shift) % 26 + 65)
             else:
-                shifted_char = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
+                shifted_char = chr((ord(char) - 97 + shift) % 26 + 97)
             ciphertext.append(shifted_char)
         else:
             ciphertext.append(char)
