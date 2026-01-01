@@ -9,7 +9,13 @@ def extract_file(self, file_name, output_path):
         """
     try:
         with zipfile.ZipFile(self.file_name, 'r') as zip_file:
+            if file_name not in zip_file.namelist():
+                return False
             zip_file.extract(file_name, output_path)
-        return True
+            extracted_path = os.path.join(output_path, file_name)
+            if os.path.exists(extracted_path):
+                return True
+            else:
+                return False
     except:
         return False

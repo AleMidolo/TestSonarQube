@@ -8,6 +8,7 @@ def setNum(self):
         >>> a.setNum()
         (2, 0)
         """
-    size = len(self.lst) // self.limit
-    remainder = len(self.lst) % self.limit
+    n = len(self.lst)
+    size = n // self.limit
+    remainder = n % self.limit
     return (size, remainder)

@@ -7,7 +7,4 @@ def set_current_user_info_and_log(self, user):
         >>> user = {'name': 'user1', 'address': '127.0.0.1'}
         >>> filter.set_current_user_info_and_log(user)
         """
-    try:
-        logging.info(f"User {user.get('name', 'unknown')} from {user.get('address', 'unknown')} accessed the system")
-    except Exception as e:
-        logging.error(f'Failed to set user info and log: {e}')
+    logging.info(f"User {user.get('name', 'unknown')} from {user.get('address', 'unknown')} accessed the system")

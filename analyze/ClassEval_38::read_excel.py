@@ -13,5 +13,4 @@ def read_excel(self, file_name):
         workbook.close()
         return data
     except Exception as e:
-        print(f'Error reading Excel file: {e}')
         return None

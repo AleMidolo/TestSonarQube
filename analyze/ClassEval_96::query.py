@@ -15,7 +15,7 @@ def query(self, weather_list, tmp_units='celsius'):
     city_data = weather_list[self.city]
     self.weather = city_data['weather']
     self.temperature = city_data['temperature']
-    current_units = city_data['temperature units']
+    current_units = city_data.get('temperature units', 'celsius')
     if tmp_units.lower() == 'fahrenheit' and current_units.lower() == 'celsius':
         self.temperature = self.celsius_to_fahrenheit()
     elif tmp_units.lower() == 'celsius' and current_units.lower() == 'fahrenheit':

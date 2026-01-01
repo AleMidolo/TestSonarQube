@@ -13,5 +13,4 @@ def write_csv(self, data, file_name):
             writer.writerows(data)
         return 1
     except Exception as e:
-        print(f'Error writing CSV file: {e}')
         return 0

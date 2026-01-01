@@ -8,7 +8,6 @@ def generate_mine_sweeper_map(self):
         >>> minesweeper_game = MinesweeperGame(3, 1)
         >>> minesweeper_game.generate_mine_sweeper_map()
         [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
-
         """
     board = [[0 for _ in range(self.n)] for _ in range(self.n)]
     mines_placed = 0
@@ -18,8 +17,16 @@ def generate_mine_sweeper_map(self):
         if board[x][y] != 'X':
             board[x][y] = 'X'
             mines_placed += 1
-            for i in range(max(0, x - 1), min(self.n, x + 2)):
-                for j in range(max(0, y - 1), min(self.n, y + 2)):
-                    if board[i][j] != 'X':
-                        board[i][j] += 1
+    directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+    for i in range(self.n):
+        for j in range(self.n):
+            if board[i][j] == 'X':
+                continue
+            mine_count = 0
+            for dx, dy in directions:
+                ni, nj = (i + dx, j + dy)
+                if 0 <= ni < self.n and 0 <= nj < self.n:
+                    if board[ni][nj] == 'X':
+                        mine_count += 1
+            board[i][j] = mine_count
     return board
