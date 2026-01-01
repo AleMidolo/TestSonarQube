@@ -1,7 +1,7 @@
 @staticmethod
 def is_operator(c):
     """
-        Check if a character is an operator {'+', '-', '*', '/', '(', ')', '%'}
+        Check if a character is an operator in {'+', '-', '*', '/', '(', ')', '%'}
         :param c: string, the character to check
         :return: bool, True if the character is an operator, False otherwise
         >>> expression_calculator = ExpressionCalculator()

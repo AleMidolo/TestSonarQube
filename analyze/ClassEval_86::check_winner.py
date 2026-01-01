@@ -1,7 +1,7 @@
 def check_winner(self):
     """
-        बोर्ड पर विजेता की जांच करें, पंक्तियों, स्तंभों और तिरछी तीन दिशाओं में
-        :return: str या None, विजेता का चिह्न ('X' या 'O'), या None यदि अभी तक कोई विजेता नहीं है
+        Check for a winner on the board, in three directions: rows, columns, and diagonals.
+        :return: str or None, the symbol of the winner ('X' or 'O'), or None if there is no winner yet
         >>> moves = [(1, 0), (2, 0), (1, 1), (2, 1), (1, 2)]
         >>> for move in moves:
         ...     ttt.make_move(move[0], move[1])

@@ -13,7 +13,9 @@ def query(self, weather_list, tmp_units='celsius'):
         weather_info = weather_list[self.city]
         self.weather = weather_info['weather']
         self.temperature = weather_info['temperature']
-        if tmp_units == 'fahrenheit' and weather_info['temperature units'] == 'celsius':
+        if weather_info['temperature units'] == 'celsius' and tmp_units == 'fahrenheit':
             self.temperature = self.celsius_to_fahrenheit()
+        elif weather_info['temperature units'] == 'fahrenheit' and tmp_units == 'celsius':
+            self.temperature = self.fahrenheit_to_celsius()
         return (self.temperature, self.weather)
     return None

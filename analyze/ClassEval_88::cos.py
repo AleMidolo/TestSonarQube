@@ -8,4 +8,4 @@ def cos(self, x):
         0.5
         """
     x = x / 180 * pi
-    return round(self.taylor(x * 180 / pi, 50), 10)
+    return self.taylor(x * 180 / pi, 50)
