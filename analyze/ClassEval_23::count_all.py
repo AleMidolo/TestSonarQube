@@ -9,13 +9,10 @@ def count_all(n: int) -> int:
         """
     if n < 0:
         return 0
-    try:
-        if n >= 63:
-            result = 2 ** n - 1
-            if result > 2 ** 63 - 1:
-                return float('inf')
-            return int(result)
-        else:
-            return 2 ** n - 1
-    except OverflowError:
-        return float('inf')
+    total = 0
+    for i in range(1, n + 1):
+        comb = CombinationCalculator.count(n, i)
+        if total > 2 ** 63 - 1 - comb:
+            return float('inf')
+        total += comb
+    return total

@@ -29,7 +29,7 @@ def move(self, direction):
     dr, dc = dir_map[direction]
     new_row = self.player_row + dr
     new_col = self.player_col + dc
-    if not (0 <= new_row < len(self.map) and 0 <= new_col < len(self.map[0])):
+    if new_row < 0 or new_row >= len(self.map) or new_col < 0 or (new_col >= len(self.map[0])):
         return self.is_game_over
     if self.map[new_row][new_col] == '#':
         return self.is_game_over
@@ -41,9 +41,7 @@ def move(self, direction):
     if box_index != -1:
         box_new_row = new_row + dr
         box_new_col = new_col + dc
-        if not (0 <= box_new_row < len(self.map) and 0 <= box_new_col < len(self.map[0])):
-            return self.is_game_over
-        if self.map[box_new_row][box_new_col] == '#':
+        if box_new_row < 0 or box_new_row >= len(self.map) or box_new_col < 0 or (box_new_col >= len(self.map[0])) or (self.map[box_new_row][box_new_col] == '#'):
             return self.is_game_over
         if (box_new_row, box_new_col) in self.boxes:
             return self.is_game_over

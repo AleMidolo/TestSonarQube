@@ -6,4 +6,7 @@ def __format_line_feed(self, text):
         """
     if not text:
         return text
-    return re.sub('\\n\\s*\\n+', '\n', text)
+    formatted_text = re.sub('\\n\\s*\\n', '\n', text)
+    while '\n\n' in formatted_text:
+        formatted_text = formatted_text.replace('\n\n', '\n')
+    return formatted_text.strip()

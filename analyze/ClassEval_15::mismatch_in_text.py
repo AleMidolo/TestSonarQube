@@ -9,6 +9,6 @@ def mismatch_in_text(self, currentPos):
 
         """
     for i in range(self.patLen - 1, -1, -1):
-        if self.text[currentPos + i] != self.pattern[i]:
+        if self.pattern[i] != self.text[currentPos + i]:
             return i
     return -1

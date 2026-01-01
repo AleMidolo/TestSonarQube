@@ -9,7 +9,9 @@ def move(self, direction):
         self.score = 10
         """
     head_x, head_y = self.positions[0]
-    new_head = (head_x + direction[0] * self.BLOCK_SIZE, head_y + direction[1] * self.BLOCK_SIZE)
+    new_x = head_x + direction[0] * self.BLOCK_SIZE
+    new_y = head_y + direction[1] * self.BLOCK_SIZE
+    new_head = (new_x, new_y)
     if new_head in self.positions:
         self.reset()
         return
