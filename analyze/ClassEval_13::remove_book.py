@@ -14,7 +14,7 @@ def remove_book(self, title, quantity):
     if title not in self.inventory:
         raise ValueError(f"Book '{title}' not found in inventory")
     if self.inventory[title] < quantity:
-        raise ValueError(f"Cannot remove {quantity} copies of '{title}'. Only {self.inventory[title]} available")
+        raise ValueError(f"Not enough copies of '{title}' to remove. Available: {self.inventory[title]}, Requested: {quantity}")
     self.inventory[title] -= quantity
     if self.inventory[title] == 0:
         del self.inventory[title]

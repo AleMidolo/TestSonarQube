@@ -4,7 +4,7 @@ def evaluate_expression(self, expression):
         :param expression: stringa, espressione matematica
         :return: bool, True se l'espressione si valuta a 24, False altrimenti
         >>> game = TwentyFourPointGame()
-        >>> game.nums = [4, 3, 6, 6]
+        >>> nums = [4, 3, 6, 6]
         >>> ans = "4*3+6+6"
         >>> ret = game.evaluate_expression(ans)
         True
@@ -12,5 +12,5 @@ def evaluate_expression(self, expression):
     try:
         result = eval(expression, {'__builtins__': {}}, {})
         return abs(result - 24) < 1e-10
-    except (SyntaxError, ZeroDivisionError, TypeError, NameError):
+    except:
         return False

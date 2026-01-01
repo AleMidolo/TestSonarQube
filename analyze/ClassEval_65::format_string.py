@@ -7,28 +7,48 @@ def format_string(self, x):
         >>> formatter.format_string("123456")
         "UNO CENTO E VENTITRE MILA QUATTROCENTO E CINQUANTA SEI SOLO"
         """
-    if not x:
-        return ''
     is_negative = False
-    if x[0] == '-':
+    if x.startswith('-'):
         is_negative = True
         x = x[1:]
-    parts = x.split('.')
-    integer_part = parts[0]
-    decimal_part = parts[1] if len(parts) > 1 else ''
+    integer_part = x
+    decimal_part = ''
+    if '.' in x:
+        integer_part, decimal_part = x.split('.')
+        decimal_part = decimal_part.rstrip('0')
     integer_part = integer_part.lstrip('0')
     if integer_part == '':
         integer_part = '0'
-    integer_words = self._convert_integer_part(integer_part)
+    if integer_part == '0':
+        integer_words = 'ZERO'
+    else:
+        groups = []
+        while len(integer_part) > 0:
+            groups.append(integer_part[-3:])
+            integer_part = integer_part[:-3]
+        groups.reverse()
+        group_words = []
+        for i, group in enumerate(groups):
+            if group != '000':
+                group_num = int(group)
+                if group_num > 0:
+                    words = self.trans_three(group.zfill(3))
+                    magnitude = self.parse_more(len(groups) - i - 1)
+                    if magnitude:
+                        words += ' ' + magnitude
+                    group_words.append(words)
+        integer_words = ' '.join(group_words)
     decimal_words = ''
     if decimal_part:
-        decimal_words = self._convert_decimal_part(decimal_part)
+        decimal_words = ' AND '
+        if len(decimal_part) == 1:
+            decimal_part += '0'
+        decimal_words += self.trans_two(decimal_part.zfill(2))
+        decimal_words += ' CENTS'
     result = ''
     if is_negative:
         result += 'MINUS '
     result += integer_words
-    if decimal_words:
-        result += ' AND ' + decimal_words + ' CENTS'
-    else:
-        result += ' ONLY'
+    result += decimal_words
+    result += ' ONLY'
     return result

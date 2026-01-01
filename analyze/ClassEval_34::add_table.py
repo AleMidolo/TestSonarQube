@@ -6,12 +6,10 @@ def add_table(self, data):
         """
     try:
         doc = Document(self.file_path)
-        if not data:
+        if not data or not isinstance(data, list):
             return False
         rows = len(data)
         cols = len(data[0]) if rows > 0 else 0
-        if rows == 0 or cols == 0:
-            return False
         table = doc.add_table(rows=rows, cols=cols)
         for i, row_data in enumerate(data):
             row_cells = table.rows[i].cells
