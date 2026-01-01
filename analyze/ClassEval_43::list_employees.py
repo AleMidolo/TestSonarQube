@@ -10,5 +10,6 @@ def list_employees(self):
         """
     result = {}
     for employee_id, employee_data in self.employees.items():
-        result[employee_id] = {'employee_ID': employee_id, 'name': employee_data['name'], 'position': employee_data['position'], 'department': employee_data['department'], 'salary': employee_data['salary']}
+        result[employee_id] = {'employee_ID': employee_id}
+        result[employee_id].update(employee_data)
     return result

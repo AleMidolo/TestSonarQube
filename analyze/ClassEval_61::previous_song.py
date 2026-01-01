@@ -7,7 +7,6 @@ def previous_song(self):
         >>> musicPlayer.current_song = "canzone2"
         >>> musicPlayer.previous_song()
         True
-
         """
     if self.current_song:
         current_index = self.playlist.index(self.current_song)

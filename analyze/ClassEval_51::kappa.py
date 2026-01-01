@@ -16,5 +16,6 @@ def kappa(testData, k):
     expected_agreement = np.sum(row_sums * col_sums) / (total * total)
     if expected_agreement == 1:
         return 1.0 if observed_agreement == 1 else 0.0
-    kappa_value = (observed_agreement - expected_agreement) / (1 - expected_agreement)
-    return float(kappa_value)
+    else:
+        kappa_value = (observed_agreement - expected_agreement) / (1 - expected_agreement)
+        return float(kappa_value)
