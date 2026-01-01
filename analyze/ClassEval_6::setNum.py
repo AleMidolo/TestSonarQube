@@ -5,7 +5,6 @@ def setNum(self):
         >>> a = AvgPartition([1, 2, 3, 4], 2)
         >>> a.setNum()
         (2, 0)
-
         """
     size = len(self.lst) // self.limit
     remainder = len(self.lst) % self.limit

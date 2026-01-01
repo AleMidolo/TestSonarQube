@@ -10,5 +10,5 @@ def calculate_portfolio_value(self):
         """
     total_value = self.cash_balance
     for stock in self.portfolio:
-        total_value += stock['price'] * stock['quantity']
+        total_value += self.get_stock_value(stock)
     return total_value

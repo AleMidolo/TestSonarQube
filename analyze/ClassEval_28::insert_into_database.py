@@ -8,12 +8,15 @@ def insert_into_database(self, table_name, data):
                 {'name': 'Alice', 'age': 30}
             ])
         """
+    if not data:
+        return
     conn = sqlite3.connect(self.database_name)
     cursor = conn.cursor()
-    for row in data:
-        name = row.get('name')
-        age = row.get('age')
-        insert_query = f'INSERT INTO {table_name} (name, age) VALUES (?, ?)'
-        cursor.execute(insert_query, (name, age))
+    columns = list(data[0].keys())
+    placeholders = ', '.join(['?'] * len(columns))
+    column_names = ', '.join(columns)
+    insert_query = f'INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})'
+    values_list = [tuple((row[col] for col in columns)) for row in data]
+    cursor.executemany(insert_query, values_list)
     conn.commit()
     conn.close()

@@ -9,4 +9,15 @@ def answer(self, expression):
         >>> ret = game.answer(ans)
         True
         """
-    return self.evaluate_expression(expression)
+    if not self.nums:
+        return False
+    import re
+    numbers_in_expr = re.findall('\\d+', expression)
+    numbers_in_expr = [int(num) for num in numbers_in_expr]
+    if Counter(numbers_in_expr) != Counter(self.nums):
+        return False
+    try:
+        result = eval(expression)
+        return abs(result - 24) < 1e-10
+    except:
+        return False

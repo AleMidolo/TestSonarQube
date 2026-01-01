@@ -7,25 +7,7 @@ def delete_from_database(self, table_name, name):
         """
     conn = sqlite3.connect(self.database_name)
     cursor = conn.cursor()
-    cursor.execute(f'PRAGMA table_info({table_name})')
-    columns_info = cursor.fetchall()
-    name_column = None
-    for col_info in columns_info:
-        col_name = col_info[1]
-        col_type = col_info[2].upper()
-        if col_type == 'TEXT' and ('name' in col_name.lower() or col_name == 'name'):
-            name_column = col_name
-            break
-    if not name_column:
-        for col_info in columns_info:
-            col_name = col_info[1]
-            col_type = col_info[2].upper()
-            if col_type == 'TEXT':
-                name_column = col_name
-                break
-    if not name_column and len(columns_info) > 1:
-        name_column = columns_info[1][1]
-    delete_query = f'DELETE FROM {table_name} WHERE {name_column} = ?'
+    delete_query = f'DELETE FROM {table_name} WHERE name = ?'
     cursor.execute(delete_query, (name,))
     conn.commit()
     conn.close()

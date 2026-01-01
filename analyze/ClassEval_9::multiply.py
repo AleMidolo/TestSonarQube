@@ -35,8 +35,9 @@ def multiply(num1, num2):
             temp_sum = n1 * n2 + result[i + j + 1] + carry
             carry = temp_sum // 10
             result[i + j + 1] = temp_sum % 10
-        result[i] += carry
-    result_str = ''.join((str(digit) for digit in result))
+        if carry > 0:
+            result[i] += carry
+    result_str = ''.join(map(str, result))
     result_str = result_str.lstrip('0')
     if result_str == '':
         result_str = '0'

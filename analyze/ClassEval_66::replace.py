@@ -20,24 +20,23 @@ def replace(self, string):
             if j < length and (string[j] == 'x' or string[j] == 'X'):
                 is_hex = True
                 j += 1
-            start = j
+            start_num = j
             while j < length and string[j] != ';':
-                if not (string[j].isdigit() or (is_hex and self.is_hex_char(string[j]))):
-                    break
                 j += 1
-            if j < length and string[j] == ';' and (j > start):
-                num_str = string[start:j]
-                try:
-                    if is_hex:
-                        code_point = int(num_str, 16)
-                    else:
-                        code_point = int(num_str)
-                    if 0 <= code_point <= 1114111:
-                        result.append(chr(code_point))
-                        i = j + 1
-                        continue
-                except (ValueError, OverflowError):
-                    pass
+            if j < length and string[j] == ';':
+                num_str = string[start_num:j]
+                if num_str:
+                    try:
+                        if is_hex:
+                            code_point = int(num_str, 16)
+                        else:
+                            code_point = int(num_str)
+                        if 0 <= code_point <= 1114111:
+                            result.append(chr(code_point))
+                            i = j + 1
+                            continue
+                    except (ValueError, OverflowError):
+                        pass
         result.append(string[i])
         i += 1
     return ''.join(result)
