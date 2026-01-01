@@ -15,6 +15,6 @@ def pdf(data, mu, sigma):
     constant = 1 / (sigma * math.sqrt(2 * math.pi))
     for x in data:
         exponent = -(x - mu) ** 2 / (2 * sigma ** 2)
-        pdf_val = constant * math.exp(exponent)
-        pdf_values.append(pdf_val)
+        pdf_value = constant * math.exp(exponent)
+        pdf_values.append(pdf_value)
     return pdf_values

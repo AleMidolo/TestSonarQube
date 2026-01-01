@@ -9,12 +9,16 @@ def format_string(self, x):
         """
     if x.startswith('-'):
         return 'MINUS ' + self.format_string(x[1:])
-    parts = x.split('.')
-    integer_part = parts[0]
-    decimal_part = parts[1] if len(parts) > 1 else ''
-    integer_words = self._format_integer_part(integer_part)
-    if decimal_part:
+    if '.' in x:
+        integer_part, decimal_part = x.split('.')
+        integer_words = self._format_integer_part(integer_part)
         decimal_words = self._format_decimal_part(decimal_part)
-        return f'{integer_words} AND {decimal_words} ONLY'
-    else:
+        if integer_words:
+            return f'{integer_words} AND {decimal_words} ONLY'
+        else:
+            return f'{decimal_words} ONLY'
+    integer_words = self._format_integer_part(x)
+    if integer_words:
         return f'{integer_words} ONLY'
+    else:
+        return 'ZERO ONLY'

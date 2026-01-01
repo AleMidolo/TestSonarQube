@@ -7,7 +7,6 @@ def get_events(self, date):
         >>> calendar.events = [{'date': datetime(2023, 1, 1, 0, 0), 'start_time': datetime(2023, 1, 1, 0, 0), 'end_time': datetime(2023, 1, 1, 1, 0), 'description': 'New Year'}]
         >>> calendar.get_events(datetime(2023, 1, 1, 0, 0))
         [{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 1, 0), 'description': 'New Year'}]
-
         """
     events_on_date = []
     for event in self.events:

@@ -11,9 +11,9 @@ def precedence(self, operator):
         """
     if operator == '^':
         return 3
-    elif operator in ('*', '/'):
+    elif operator in ['*', '/']:
         return 2
-    elif operator in ('+', '-'):
+    elif operator in ['+', '-']:
         return 1
     else:
         return 0

@@ -9,8 +9,10 @@ def z_score(data):
         [-1.161895003862225, -0.3872983346207417, 0.3872983346207417, 1.161895003862225]
 
         """
+    if len(data) < 2:
+        return None
     mean_val = Statistics3.mean(data)
     std_dev = Statistics3.standard_deviation(data)
-    if mean_val is None or std_dev is None or std_dev == 0:
+    if std_dev is None or std_dev == 0:
         return None
     return [(x - mean_val) / std_dev for x in data]

@@ -16,7 +16,7 @@ def correlation_coefficient(data1, data2):
         raise ValueError('Data sets must have at least 2 elements')
     mean1 = sum(data1) / n
     mean2 = sum(data2) / n
-    numerator = sum(((data1[i] - mean1) * (data2[i] - mean2) for i in range(n)))
+    numerator = sum(((x - mean1) * (y - mean2) for x, y in zip(data1, data2)))
     denominator = math.sqrt(sum(((x - mean1) ** 2 for x in data1)) * sum(((y - mean2) ** 2 for y in data2)))
     if denominator == 0:
         return math.nan

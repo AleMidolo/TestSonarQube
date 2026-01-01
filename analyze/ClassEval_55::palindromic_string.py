@@ -23,12 +23,8 @@ def palindromic_string(self):
         if i + p[i] > right:
             center = i
             right = i + p[i]
-    max_len = 0
-    center_index = 0
-    for i in range(n):
-        if p[i] > max_len:
-            max_len = p[i]
-            center_index = i
-    start = (center_index - max_len) // 2
+    max_len = max(p)
+    max_center = p.index(max_len)
+    start = (max_center - max_len) // 2
     end = start + max_len
     return self.input_string[start:end]

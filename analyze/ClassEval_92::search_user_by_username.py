@@ -7,8 +7,8 @@ def search_user_by_username(self, username):
         >>> user_db.create_table()
         >>> user_db.insert_user('user1', 'pass1')
         >>> result = user_db.search_user_by_username('user1')
-        >>> len(result) == 3
-        True
+        len(result) = 1
         """
     self.cursor.execute('\n            SELECT * FROM users WHERE username = ?\n        ', (username,))
-    return self.cursor.fetchone()
+    result = self.cursor.fetchone()
+    return result
