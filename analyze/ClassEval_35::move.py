@@ -7,8 +7,8 @@ def move(self, state, direction):
         >>> eightPuzzle.move([[2, 3, 4], [5, 8, 1], [6, 0, 7]], 'left')
         [[2, 3, 4], [5, 8, 1], [0, 6, 7]]
         """
-    i, j = self.find_blank(state)
     new_state = [row[:] for row in state]
+    i, j = self.find_blank(state)
     if direction == 'up':
         new_state[i][j], new_state[i - 1][j] = (new_state[i - 1][j], new_state[i][j])
     elif direction == 'down':
