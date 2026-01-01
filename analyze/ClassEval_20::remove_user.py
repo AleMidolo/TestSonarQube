@@ -9,7 +9,6 @@ def remove_user(self, username):
         True
         >>> chat.remove_user('John')
         False
-
         """
     if username in self.users:
         del self.users[username]

@@ -9,6 +9,13 @@ def correlation_matrix(data):
         [[1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]]
 
         """
-    import numpy as np
-    data = np.array(data)
-    return np.corrcoef(data).tolist()
+    n = len(data)
+    if n == 0:
+        return []
+    correlation_matrix = []
+    for i in range(n):
+        row = []
+        for j in range(n):
+            row.append(Statistics3.correlation(data[i], data[j]))
+        correlation_matrix.append(row)
+    return correlation_matrix
