@@ -3,7 +3,7 @@ def octal_to_decimal(octal_num):
     """
         Convert a number from octal format to decimal format.
         :param octal_num: str, octal number
-        :return: int, the decimal representation of octal number str.
+        :return: int, the decimal representation of the octal number str.
         >>> NumberConverter.octal_to_decimal('122667')
         42423
         """

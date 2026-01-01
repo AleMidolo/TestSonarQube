@@ -7,7 +7,7 @@ def get_path(self):
         "/s?wd=aaa&rsv_spt=1#page"
         """
     scheme_end = self.url.find('://')
-    path_start = self.url.find('/', scheme_end + 3)
+    path_start = self.url.find('/', scheme_end + 3) if scheme_end != -1 else self.url.find('/')
     if path_start != -1:
         return self.url[path_start:]
     return None
