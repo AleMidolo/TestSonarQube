@@ -12,7 +12,7 @@ def make_move(self, row, col):
         >>> gomokuGame.make_move(5, 5)
         False
         """
-    if self.board[row][col] == ' ':
+    if 0 <= row < self.board_size and 0 <= col < self.board_size and (self.board[row][col] == ' '):
         self.board[row][col] = self.current_player
         self.current_player = 'O' if self.current_player == 'X' else 'X'
         return True

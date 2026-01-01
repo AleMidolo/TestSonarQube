@@ -1,8 +1,8 @@
 def precision(self, predicted_labels, true_labels):
     """
-        Calcular precisión
-        :param predicted_labels: lista, resultados predichos
-        :param true_labels: lista, etiquetas verdaderas
+        Calculate precision
+        :param predicted_labels: list, predicted results
+        :param true_labels: list, true labels
         :return: float
         >>> mc = MetricsCalculator()
         >>> mc.precision([1, 1, 0, 0], [1, 0, 0, 1])

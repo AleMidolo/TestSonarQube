@@ -11,7 +11,5 @@ def evaluate_expression(self, expression):
         """
     try:
         return eval(expression) == 24
-    except ZeroDivisionError:
-        return False
     except Exception:
         return False

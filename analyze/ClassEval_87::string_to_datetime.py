@@ -1,6 +1,6 @@
 def string_to_datetime(self, string):
     """
-        Convert a string time to a datetime instance
+        Convert the time string to a datetime instance
         :param string: string, the string to convert
         :return: datetime instance
         >>> timeutils.string_to_datetime("2001-7-18 1:1:1")

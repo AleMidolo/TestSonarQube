@@ -7,5 +7,5 @@ def process(cls, string_list):
         >>> NLPDataProcessor.process(['This is a test.'])
         [['This', 'is', 'test.']]
         """
-    stop_word_list = cls.construct_stop_word_list(cls)
-    return cls.remove_stop_words(cls, string_list, stop_word_list)
+    stop_word_list = cls.construct_stop_word_list()
+    return cls.remove_stop_words(string_list, stop_word_list)

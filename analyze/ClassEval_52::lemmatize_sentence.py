@@ -13,11 +13,11 @@ def lemmatize_sentence(self, sentence):
     words = self.remove_punctuation(sentence).split()
     lemmatized_words = []
     for word, pos in zip(words, pos_tags):
-        if pos.startswith('V'):
+        if pos.startswith('VB'):
             lemmatized_word = self.lemmatizer.lemmatize(word, pos='v')
-        elif pos.startswith('N'):
+        elif pos.startswith('NN'):
             lemmatized_word = self.lemmatizer.lemmatize(word, pos='n')
-        elif pos.startswith('J'):
+        elif pos.startswith('JJ'):
             lemmatized_word = self.lemmatizer.lemmatize(word, pos='a')
         else:
             lemmatized_word = self.lemmatizer.lemmatize(word)

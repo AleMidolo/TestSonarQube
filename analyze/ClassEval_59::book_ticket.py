@@ -17,9 +17,8 @@ def book_ticket(self, name, seats_to_book):
         if movie['name'].lower() == name.lower():
             for seat in seats_to_book:
                 row, col = seat
-                if movie['seats'][row, col] == 0:
-                    movie['seats'][row, col] = 1
-                else:
+                if movie['seats'][row, col] == 1:
                     return 'Reserva fallida.'
+                movie['seats'][row, col] = 1
             return 'Reserva exitosa.'
     return 'Película no encontrada.'

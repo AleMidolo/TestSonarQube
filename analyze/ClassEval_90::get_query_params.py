@@ -7,8 +7,9 @@ def get_query_params(self):
         {"wd": "aaa", "rsv_spt": "1"}
         """
     query_start = self.url.find('?')
+    query_end = self.url.find('#')
     if query_start != -1:
-        query_string = self.url[query_start + 1:]
+        query_string = self.url[query_start + 1:query_end if query_end != -1 else None]
         params = {}
         for param in query_string.split('&'):
             key_value = param.split('=')
