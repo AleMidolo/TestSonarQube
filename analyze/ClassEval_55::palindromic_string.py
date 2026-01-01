@@ -6,15 +6,15 @@ def palindromic_string(self):
         >>> manacher.palindromic_string()
         'ababa'
         """
-    transformed_string = '|'.join(f'^{self.input_string}$')
-    n = len(transformed_string)
+    transformed = '|'.join(f'^{self.input_string}$')
+    n = len(transformed)
     L = [0] * n
     C = R = 0
     for i in range(1, n - 1):
         mirror = 2 * C - i
         if R > i:
             L[i] = min(R - i, L[mirror])
-        while transformed_string[i + L[i] + 1] == transformed_string[i - L[i] - 1]:
+        while transformed[i + L[i] + 1] == transformed[i - L[i] - 1]:
             L[i] += 1
         if i + L[i] > R:
             C, R = (i, i + L[i])

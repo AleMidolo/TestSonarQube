@@ -6,6 +6,7 @@ def add_stock(self, stock):
         >>> tracker.add_stock({"name": "AAPL", "price": 150.0, "quantity": 10})
         >>> tracker.portfolio
         [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+
         """
     for pf in self.portfolio:
         if pf['name'] == stock['name']:

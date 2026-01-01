@@ -9,13 +9,13 @@ def interpret(self, display=False):
         """
     if not self.play_text.strip():
         return []
-    chords = []
-    parts = self.play_text.split()
-    for part in parts:
-        chord = ''.join(filter(str.isalpha, part))
-        melody = ''.join(filter(str.isdigit, part))
-        chords.append({'Acorde': chord, 'Melodía': melody})
+    chords = self.play_text.split()
+    result = []
+    for chord in chords:
+        key = ''.join(filter(str.isalpha, chord))
+        value = ''.join(filter(str.isdigit, chord))
+        result.append({'Acorde': key, 'Melodía': value})
     if display:
-        for chord in chords:
-            print(self.display(chord['Acorde'], chord['Melodía']))
-    return chords
+        for item in result:
+            print(self.display(item['Acorde'], item['Melodía']))
+    return result

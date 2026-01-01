@@ -1,5 +1,4 @@
-@classmethod
-def process(cls, string_list):
+def process(self, string_list):
     """
         Construye una lista de palabras vacías que incluye 'a', 'an', 'the', y elimina todas las palabras vacías de la lista de cadenas.
         :param string_list: una lista de cadenas
@@ -7,5 +6,5 @@ def process(cls, string_list):
         >>> NLPDataProcessor.process(['This is a test.'])
         [['This', 'is', 'test.']]
         """
-    stop_word_list = cls.construct_stop_word_list(cls)
-    return cls.remove_stop_words(cls, string_list, stop_word_list)
+    stop_word_list = self.construct_stop_word_list()
+    return self.remove_stop_words(string_list, stop_word_list)

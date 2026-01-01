@@ -13,6 +13,22 @@ def format(self, x):
         x = str(x)
     else:
         raise ValueError('Input must be an integer or float.')
-    words = self.format_string(x)
-    spanish_words = words.replace('ONE', 'UNO').replace('TWO', 'DOS').replace('THREE', 'TRES').replace('FOUR', 'CUATRO').replace('FIVE', 'CINCO').replace('SIX', 'SEIS').replace('SEVEN', 'SIETE').replace('EIGHT', 'OCHO').replace('NINE', 'NUEVE').replace('TEN', 'DIEZ').replace('ELEVEN', 'ONCE').replace('TWELVE', 'DOCE').replace('THIRTEEN', 'TRECE').replace('FOURTEEN', 'CATORCE').replace('FIFTEEN', 'QUINCE').replace('SIXTEEN', 'DIECISEIS').replace('SEVENTEEN', 'DIECISIETE').replace('EIGHTEEN', 'DIECIOCHO').replace('NINETEEN', 'DIECINUEVE').replace('TWENTY', 'VEINTE').replace('THIRTY', 'TREINTA').replace('FORTY', 'CUARENTA').replace('FIFTY', 'CINCUENTA').replace('SIXTY', 'SESENTA').replace('SEVENTY', 'SETENTA').replace('EIGHTY', 'OCHENTA').replace('NINETY', 'NOVENTA').replace('HUNDRED', 'CIENTO').replace('THOUSAND', 'MIL').replace('MILLION', 'MILLÓN').replace('BILLION', 'MIL MILLONES').replace('ONLY', 'SOLAMENTE').replace('AND', 'Y').strip()
-    return spanish_words
+    lstr, rstr = (x.split('.') + [''])[:2]
+    lstrrev = lstr[::-1]
+    a = [''] * 5
+    if len(lstrrev) % 3 == 1:
+        lstrrev += '00'
+    elif len(lstrrev) % 3 == 2:
+        lstrrev += '0'
+    lm = ''
+    for i in range(len(lstrrev) // 3):
+        a[i] = lstrrev[3 * i:3 * i + 3][::-1]
+        if a[i] != '000':
+            lm = self.trans_three_spanish(a[i]) + ' ' + self.parse_more_spanish(i) + ' ' + lm
+        else:
+            lm += self.trans_three_spanish(a[i])
+    xs = f'Y CENTAVOS {self.trans_two_spanish(rstr)} ' if rstr else ''
+    if not lm.strip():
+        return 'CERO SOLAMENTE'
+    else:
+        return f'{lm.strip()} {xs}SOLAMENTE'

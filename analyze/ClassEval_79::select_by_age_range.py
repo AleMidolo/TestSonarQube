@@ -1,11 +1,11 @@
 def select_by_age_range(self, min_age, max_age):
     """
-    Genera una declaración SQL para seleccionar registros dentro de un rango de edad especificado.
-    :param min_age: int. La edad mínima.
-    :param max_age: int. La edad máxima.
-    :return: str. La declaración SQL generada.
-    >>> sql.select_by_age_range(20, 30)
-    'SELECT * FROM table1 WHERE age BETWEEN 20 AND 30;'
-    """
+        Genera una declaración SQL para seleccionar registros dentro de un rango de edad especificado.
+        :param min_age: int. La edad mínima.
+        :param max_age: int. La edad máxima.
+        :return: str. La declaración SQL generada.
+        >>> sql.select_by_age_range(20, 30)
+        'SELECT * FROM table1 WHERE age BETWEEN 20 AND 30;'
+        """
     condition = f'age BETWEEN {min_age} AND {max_age}'
     return self.select(condition=condition)
