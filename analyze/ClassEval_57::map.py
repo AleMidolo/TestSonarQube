@@ -29,7 +29,7 @@ def map(data):
                 if value == 1:
                     correct_count += 1
                     precision_sum += correct_count / (i + 1)
-            ap = precision_sum / min(total_num, len(sub_list))
+            ap = precision_sum / min(correct_count, total_num) if correct_count > 0 else 0.0
             return (ap, [ap])
     if type(data) == list:
         separate_result = []
@@ -41,6 +41,6 @@ def map(data):
                 if value == 1:
                     correct_count += 1
                     precision_sum += correct_count / (i + 1)
-            ap = precision_sum / min(total_num, len(sub_list))
+            ap = precision_sum / min(correct_count, total_num) if correct_count > 0 else 0.0
             separate_result.append(ap)
         return (np.mean(separate_result), separate_result)

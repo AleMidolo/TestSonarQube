@@ -1,9 +1,9 @@
 def add_item(self, item, price, quantity=1):
     """
-        Agrega información del artículo a los elementos de la lista de compras, incluyendo precio y cantidad. La cantidad predeterminada es 1
-        :param item: string, Artículo a ser agregado
-        :param price: float, El precio del artículo
-        :param quantity:int, El número de artículos, predeterminado a 1
+        Add item information to the shopping list items, including price and quantity. The default quantity is 1
+        :param item: string, Item to be added
+        :param price: float, The price of the item
+        :param quantity:int, The number of items, defaulting to 1
         :return:None
         >>> shoppingcart = ShoppingCart()
         >>> shoppingcart.add_item("apple", 1, 5)

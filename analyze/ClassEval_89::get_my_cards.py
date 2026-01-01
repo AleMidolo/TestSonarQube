@@ -5,5 +5,6 @@ def get_my_cards(self):
         >>> juego = TwentyFourPointGame()
         >>> juego.get_my_cards()
         """
+    self.nums = []
     self._generate_cards()
     return self.nums
