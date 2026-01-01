@@ -12,11 +12,10 @@ def insert_into_database(self, table_name, data):
     cursor = conn.cursor()
     if data and len(data) > 0:
         columns = list(data[0].keys())
-        placeholders = ', '.join(['?' for _ in columns])
+        placeholders = ', '.join(['?'] * len(columns))
         column_names = ', '.join(columns)
         insert_query = f'INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})'
-        for row in data:
-            values = [row[col] for col in columns]
-            cursor.execute(insert_query, values)
+        values_list = [tuple((row[col] for col in columns)) for row in data]
+        cursor.executemany(insert_query, values_list)
         conn.commit()
     conn.close()

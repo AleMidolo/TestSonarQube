@@ -12,13 +12,15 @@ def correlation(x, y):
         """
     if len(x) != len(y):
         return None
-    n = len(x)
-    if n < 2:
+    if len(x) < 2:
         return None
     mean_x = Statistics3.mean(x)
     mean_y = Statistics3.mean(y)
-    numerator = sum(((x[i] - mean_x) * (y[i] - mean_y) for i in range(n)))
-    denominator = math.sqrt(sum(((x[i] - mean_x) ** 2 for i in range(n))) * sum(((y[i] - mean_y) ** 2 for i in range(n))))
-    if denominator == 0:
+    std_x = Statistics3.standard_deviation(x)
+    std_y = Statistics3.standard_deviation(y)
+    if std_x is None or std_y is None or std_x == 0 or (std_y == 0):
         return None
+    n = len(x)
+    numerator = sum(((x[i] - mean_x) * (y[i] - mean_y) for i in range(n)))
+    denominator = (n - 1) * std_x * std_y
     return numerator / denominator

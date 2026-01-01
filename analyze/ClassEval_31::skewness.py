@@ -9,16 +9,12 @@ def skewness(data):
 
         """
     n = len(data)
-    if n < 3:
+    if n < 2:
         return math.nan
     mean = sum(data) / n
     variance = sum(((x - mean) ** 2 for x in data)) / n
     if variance == 0:
-        return math.nan
+        return 0.0
     std_dev = math.sqrt(variance)
     third_moment = sum((((x - mean) / std_dev) ** 3 for x in data)) / n
-    if n > 3:
-        correction = math.sqrt(n * (n - 1)) / (n - 2)
-        return third_moment * correction
-    else:
-        return third_moment
+    return third_moment
