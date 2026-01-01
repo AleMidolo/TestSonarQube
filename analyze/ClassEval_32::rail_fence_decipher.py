@@ -9,13 +9,13 @@ def rail_fence_decipher(self, encrypted_text, rails):
         'Hello, World!'
 
         """
-    if rails <= 1:
+    if rails == 1:
         return encrypted_text
     fence = [['' for _ in range(len(encrypted_text))] for _ in range(rails)]
     rail = 0
     direction = 1
-    for i in range(len(encrypted_text)):
-        fence[rail][i] = '*'
+    for col in range(len(encrypted_text)):
+        fence[rail][col] = '*'
         rail += direction
         if rail == rails - 1 or rail == 0:
             direction = -direction
@@ -25,12 +25,12 @@ def rail_fence_decipher(self, encrypted_text, rails):
             if fence[i][j] == '*':
                 fence[i][j] = encrypted_text[index]
                 index += 1
-    plaintext = []
+    result = []
     rail = 0
     direction = 1
-    for i in range(len(encrypted_text)):
-        plaintext.append(fence[rail][i])
+    for col in range(len(encrypted_text)):
+        result.append(fence[rail][col])
         rail += direction
         if rail == rails - 1 or rail == 0:
             direction = -direction
-    return ''.join(plaintext)
+    return ''.join(result)

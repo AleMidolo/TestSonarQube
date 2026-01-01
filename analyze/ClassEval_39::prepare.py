@@ -8,38 +8,30 @@ def prepare(self, expression):
         """
     op_stack = deque()
     arr = list(expression)
-    current_index = 0
-    count = 0
-    current_token = ''
-    while current_index < len(arr):
-        c = arr[current_index]
-        current_index += 1
+    current = ''
+    i = 0
+    while i < len(arr):
+        c = arr[i]
         if not self.is_operator(c):
-            if c != '~' and (not c.isdigit()) and (c != '.'):
-                raise ValueError('Invalid character in expression: {}'.format(c))
-            current_token += c
-            if current_index >= len(arr):
-                self.postfix_stack.append(current_token)
-            else:
-                next_char = arr[current_index]
-                if self.is_operator(next_char) or next_char == '~':
-                    self.postfix_stack.append(current_token)
-                    current_token = ''
+            current = c
+            i += 1
+            while i < len(arr) and (not self.is_operator(arr[i])):
+                current += arr[i]
+                i += 1
+            if current[0] == '.':
+                current = '0' + current
+            self.postfix_stack.append(current)
+            continue
+        if c == '(':
+            op_stack.append(c)
+        elif c == ')':
+            while op_stack and op_stack[-1] != '(':
+                self.postfix_stack.append(op_stack.pop())
+            op_stack.pop()
         else:
-            if len(current_token) > 0:
-                self.postfix_stack.append(current_token)
-                current_token = ''
-            if c == '(':
-                op_stack.append(c)
-            elif c == ')':
-                while op_stack and op_stack[-1] != '(':
-                    self.postfix_stack.append(op_stack.pop())
-                op_stack.pop()
-            else:
-                while op_stack and op_stack[-1] != '(' and self.compare(c, op_stack[-1]):
-                    self.postfix_stack.append(op_stack.pop())
-                op_stack.append(c)
-    if len(current_token) > 0:
-        self.postfix_stack.append(current_token)
+            while op_stack and op_stack[-1] != '(' and self.compare(c, op_stack[-1]):
+                self.postfix_stack.append(op_stack.pop())
+            op_stack.append(c)
+        i += 1
     while op_stack:
         self.postfix_stack.append(op_stack.pop())

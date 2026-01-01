@@ -35,7 +35,7 @@ def replace(self, string):
                             result.append(chr(code_point))
                             i = j + 1
                             continue
-                    except ValueError:
+                    except (ValueError, OverflowError):
                         pass
         result.append(string[i])
         i += 1

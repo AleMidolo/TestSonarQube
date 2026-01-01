@@ -11,7 +11,9 @@ def process_file(self):
         >>> textFileProcessor.process_file()
         'nametestage'
         """
-    content = self.read_file()
+    with open(self.file_path, 'r') as file:
+        content = file.read()
     filtered_content = re.sub('[^a-zA-Z]', '', content)
-    self.write_file(filtered_content)
+    with open(self.file_path, 'w') as file:
+        file.write(filtered_content)
     return filtered_content
