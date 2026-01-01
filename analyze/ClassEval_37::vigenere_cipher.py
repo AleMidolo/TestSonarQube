@@ -6,12 +6,22 @@ def vigenere_cipher(self, plaintext):
         >>> e = EncryptionUtils("key")
         >>> e.vigenere_cipher("abc")
         'kfa'
+
         """
-    ciphertext = []
-    key_length = len(self.key)
-    key_as_int = [ord(i) - ord('a') for i in self.key.lower()]
-    plaintext_int = [ord(i) - ord('a') for i in plaintext.lower()]
-    for i in range(len(plaintext_int)):
-        value = (plaintext_int[i] + key_as_int[i % key_length]) % 26
-        ciphertext.append(chr(value + ord('a')))
-    return ''.join(ciphertext)
+    ciphertext = ''
+    key_repeated = (self.key * (len(plaintext) // len(self.key) + 1))[:len(plaintext)]
+    for i, char in enumerate(plaintext):
+        if char.isalpha():
+            key_char = key_repeated[i]
+            key_shift = ord(key_char.lower()) - 97
+            if char.isupper():
+                ascii_offset = 65
+                base_char = char
+            else:
+                ascii_offset = 97
+                base_char = char
+            shifted_char = chr((ord(base_char) - ascii_offset + key_shift) % 26 + ascii_offset)
+            ciphertext += shifted_char
+        else:
+            ciphertext += char
+    return ciphertext

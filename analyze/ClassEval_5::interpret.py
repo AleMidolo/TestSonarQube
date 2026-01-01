@@ -6,16 +6,23 @@ def interpret(self, display=False):
         >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
         >>> play_list = context.interpret(display = False)
         [{'Acorde': 'C', 'Melodía': '53231323'}, {'Acorde': 'Em', 'Melodía': '43231323'}, {'Acorde': 'F', 'Melodía': '43231323'}, {'Acorde': 'G', 'Melodía': '63231323'}]
+
         """
-    if not self.play_text.strip():
+    if not self.play_text or self.play_text.isspace():
         return []
-    chords = self.play_text.split()
     result = []
-    for chord in chords:
-        key = ''.join(filter(str.isalpha, chord))
-        value = ''.join(filter(str.isdigit, chord))
-        result.append({'Acorde': key, 'Melodía': value})
-    if display:
-        for item in result:
-            print(self.display(item['Acorde'], item['Melodía']))
+    items = self.play_text.split()
+    for item in items:
+        chord = ''
+        melody = ''
+        split_index = 0
+        for i, char in enumerate(item):
+            if char.isdigit():
+                split_index = i
+                break
+        chord = item[:split_index]
+        melody = item[split_index:]
+        result.append({'Acorde': chord, 'Melodía': melody})
+        if display:
+            print(self.display(chord, melody))
     return result

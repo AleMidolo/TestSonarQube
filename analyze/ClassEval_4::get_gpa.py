@@ -9,9 +9,14 @@ def get_gpa(self, name):
         >>> system.add_course_score('student 1', 'Computer Network', 92)
         >>> system.get_gpa('student 1')
         93.0
+
         """
-    if name in self.students:
-        scores = self.students[name]['courses'].values()
-        if scores:
-            return sum(scores) / len(scores)
-    return None
+    if name not in self.students:
+        return None
+    student = self.students[name]
+    courses = student['courses']
+    if not courses:
+        return None
+    total = sum(courses.values())
+    count = len(courses)
+    return total / count

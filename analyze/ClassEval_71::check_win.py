@@ -6,5 +6,9 @@ def check_win(self):
         >>> juego = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"]) 
         >>> juego.check_win()
         """
-    self.is_game_over = all((box in self.targets for box in self.boxes))
+    for box in self.boxes:
+        if box not in self.targets:
+            self.is_game_over = False
+            return self.is_game_over
+    self.is_game_over = True
     return self.is_game_over

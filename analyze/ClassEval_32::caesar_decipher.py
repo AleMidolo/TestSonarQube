@@ -7,16 +7,13 @@ def caesar_decipher(self, ciphertext, shift):
         >>> d = DecryptionUtils('key')
         >>> d.caesar_decipher('ifmmp', 1)
         'hello'
+
         """
-    decrypted_text = ''
+    plaintext = ''
     for char in ciphertext:
         if char.isalpha():
-            shift_amount = shift % 26
-            if char.islower():
-                decrypted_char = chr((ord(char) - ord('a') - shift_amount) % 26 + ord('a'))
-            else:
-                decrypted_char = chr((ord(char) - ord('A') - shift_amount) % 26 + ord('A'))
-            decrypted_text += decrypted_char
+            base = ord('a') if char.islower() else ord('A')
+            plaintext += chr((ord(char) - base - shift) % 26 + base)
         else:
-            decrypted_text += char
-    return decrypted_text
+            plaintext += char
+    return plaintext

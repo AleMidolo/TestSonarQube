@@ -7,8 +7,9 @@ def taylor(self, x, n):
         >>> tricalculator.taylor(60, 50)
         0.5000000000000001
         """
-    x = x / 180 * pi
-    cos_value = 0
+    x_rad = x / 180 * pi
+    result = 0
     for i in range(n):
-        cos_value += (-1) ** i * x ** (2 * i) / self.factorial(2 * i)
-    return cos_value
+        term = (-1) ** i * x_rad ** (2 * i) / self.factorial(2 * i)
+        result += term
+    return result

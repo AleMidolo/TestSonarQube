@@ -5,24 +5,26 @@ def format_string(self, x):
         :return: str, el número en formato de palabras
         >>> formatter = NumberWordFormatter()
         >>> formatter.format_string("123456")
-        "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
+        "UNO CIENTO VEINTITRÉS MIL CUATROCIENTOS CINCUENTA Y SEIS SOLAMENTE"
         """
-    if not x.isdigit():
+    if not x:
         return ''
-    n = int(x)
-    if n == 0:
-        return 'ZERO ONLY'
-    words = []
-    if n < 0:
-        words.append('MINUS')
-        n = -n
-    chunks = []
-    while n > 0:
-        chunks.append(n % 1000)
-        n //= 1000
-    for i in range(len(chunks)):
-        if chunks[i] > 0:
-            words.append(self.trans_three(str(chunks[i]).zfill(3)))
-            if i > 0:
-                words.append(self.parse_more(i))
-    return ' '.join(reversed(words)) + ' ONLY'
+    is_negative = False
+    if x[0] == '-':
+        is_negative = True
+        x = x[1:]
+    parts = x.split('.')
+    integer_part = parts[0]
+    decimal_part = parts[1] if len(parts) > 1 else ''
+    integer_words = self._format_integer_part(integer_part)
+    decimal_words = ''
+    if decimal_part:
+        decimal_words = self._format_decimal_part(decimal_part)
+    result = ''
+    if is_negative:
+        result += 'MINUS '
+    result += integer_words
+    if decimal_words:
+        result += ' AND ' + decimal_words
+    result += ' ONLY'
+    return result.strip()

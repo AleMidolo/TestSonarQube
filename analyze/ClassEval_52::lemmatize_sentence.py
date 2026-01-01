@@ -9,17 +9,21 @@ def lemmatize_sentence(self, sentence):
         ['I', 'be', 'run', 'in', 'a', 'race']
 
         """
-    pos_tags = self.get_pos_tag(sentence)
-    words = self.remove_punctuation(sentence).split()
+    sentence = self.remove_punctuation(sentence)
+    words = word_tokenize(sentence)
+    tagged_words = pos_tag(words)
     lemmatized_words = []
-    for word, pos in zip(words, pos_tags):
-        if pos.startswith('V'):
-            lemmatized_word = self.lemmatizer.lemmatize(word, pos='v')
-        elif pos.startswith('N'):
-            lemmatized_word = self.lemmatizer.lemmatize(word, pos='n')
-        elif pos.startswith('J'):
-            lemmatized_word = self.lemmatizer.lemmatize(word, pos='a')
+    for word, tag in tagged_words:
+        if tag.startswith('J'):
+            pos = 'a'
+        elif tag.startswith('V'):
+            pos = 'v'
+        elif tag.startswith('N'):
+            pos = 'n'
+        elif tag.startswith('R'):
+            pos = 'r'
         else:
-            lemmatized_word = self.lemmatizer.lemmatize(word)
+            pos = 'n'
+        lemmatized_word = self.lemmatizer.lemmatize(word, pos=pos)
         lemmatized_words.append(lemmatized_word)
     return lemmatized_words

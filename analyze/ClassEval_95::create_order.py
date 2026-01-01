@@ -14,6 +14,10 @@ def create_order(self, order_id, product_id, quantity):
         >>> warehouse.create_order(1, 2, 2)
         False
         """
-    if product_id not in self.inventory or self.inventory[product_id]['quantity'] < quantity:
+    if product_id not in self.inventory:
+        return False
+    if quantity <= 0 or quantity > self.inventory[product_id]['quantity']:
         return False
     self.orders[order_id] = {'product_id': product_id, 'quantity': quantity, 'status': 'Shipped'}
+    self.inventory[product_id]['quantity'] -= quantity
+    return True

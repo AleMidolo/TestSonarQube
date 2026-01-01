@@ -11,6 +11,7 @@ def is_game_over(self):
         True
         """
     for row in self.board:
-        if any((icon != ' ' for icon in row)):
-            return False
+        for cell in row:
+            if cell != ' ':
+                return False
     return True

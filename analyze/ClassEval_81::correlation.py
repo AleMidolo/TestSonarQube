@@ -8,13 +8,17 @@ def correlation(x, y):
         >>> statistics3 = Statistics3()
         >>> statistics3.correlation([1, 2, 3], [4, 5, 6])
         1.0
+
         """
     if len(x) != len(y):
-        raise ValueError('Lists must be of the same length.')
+        return None
+    n = len(x)
+    if n < 2:
+        return None
     mean_x = Statistics3.mean(x)
     mean_y = Statistics3.mean(y)
-    numerator = sum(((x[i] - mean_x) * (y[i] - mean_y) for i in range(len(x))))
-    denominator = math.sqrt(sum(((x[i] - mean_x) ** 2 for i in range(len(x)))) * sum(((y[i] - mean_y) ** 2 for i in range(len(y)))))
+    numerator = sum(((x[i] - mean_x) * (y[i] - mean_y) for i in range(n)))
+    denominator = math.sqrt(sum(((x[i] - mean_x) ** 2 for i in range(n))) * sum(((y[i] - mean_y) ** 2 for i in range(n))))
     if denominator == 0:
-        return 0
+        return None
     return numerator / denominator

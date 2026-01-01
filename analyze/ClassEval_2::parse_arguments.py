@@ -10,23 +10,34 @@ def parse_arguments(self, command_string):
         >>> parser.arguments
         {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
         """
-    args = command_string.split()[1:]
+    self.arguments.clear()
+    parts = command_string.split()
+    i = 0
+    while i < len(parts):
+        part = parts[i]
+        if part.startswith('--'):
+            if '=' in part:
+                arg_name, arg_value = part[2:].split('=', 1)
+                converted_value = self._convert_type(arg_name, arg_value)
+                self.arguments[arg_name] = converted_value
+            else:
+                arg_name = part[2:]
+                self.arguments[arg_name] = True
+        elif part.startswith('-') and (not part.startswith('--')):
+            arg_name = part[1:]
+            if i + 1 < len(parts) and (not parts[i + 1].startswith('-')):
+                arg_value = parts[i + 1]
+                converted_value = self._convert_type(arg_name, arg_value)
+                self.arguments[arg_name] = converted_value
+                i += 1
+            else:
+                self.arguments[arg_name] = True
+        i += 1
     missing_args = set()
-    for arg in args:
-        if '=' in arg:
-            key, value = arg.split('=', 1)
-        else:
-            key = arg
-            value = True
-        if key.startswith('--'):
-            key = key[2:]
-        elif key.startswith('-'):
-            key = key[1:]
-        if key in self.types:
-            self.arguments[key] = self._convert_type(key, value)
-        else:
-            self.arguments[key] = value
     for req_arg in self.required:
         if req_arg not in self.arguments:
             missing_args.add(req_arg)
-    return (len(missing_args) == 0, missing_args if missing_args else None)
+    if missing_args:
+        return (False, missing_args)
+    else:
+        return (True, None)

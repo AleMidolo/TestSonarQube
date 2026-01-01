@@ -8,4 +8,11 @@ def cos(self, x):
         0.5
         """
     x = x / 180 * pi
-    return round(self.taylor(x * 180 / pi, 50), 10)
+    g = 0
+    t = 1
+    n = 0
+    while fabs(t) >= 1e-15:
+        g += t
+        n += 1
+        t = -t * x * x / (2 * n - 1) / (2 * n)
+    return round(g, 10)

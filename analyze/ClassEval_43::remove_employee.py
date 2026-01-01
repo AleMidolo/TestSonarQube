@@ -9,6 +9,7 @@ def remove_employee(self, employee_id):
         True
         >>> hrManagementSystem.remove_employee(2)
         False
+
         """
     if employee_id in self.employees:
         del self.employees[employee_id]

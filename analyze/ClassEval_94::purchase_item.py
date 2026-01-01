@@ -11,12 +11,16 @@ def purchase_item(self, item_name):
         >>> vendingMachine.purchase_item('Pizza')
         False
         """
-    if item_name in self.inventory and self.inventory[item_name]['quantity'] > 0:
-        if self.balance >= self.inventory[item_name]['price']:
-            self.balance -= self.inventory[item_name]['price']
-            self.inventory[item_name]['quantity'] -= 1
-            return self.balance
-        else:
-            return False
-    else:
+    if item_name not in self.inventory:
+        print('compra no exitosa')
         return False
+    item = self.inventory[item_name]
+    if item['quantity'] <= 0:
+        print('compra no exitosa')
+        return False
+    if self.balance < item['price']:
+        print('compra no exitosa')
+        return False
+    self.balance -= item['price']
+    item['quantity'] -= 1
+    return self.balance

@@ -1,8 +1,8 @@
 def recall(self, predicted_labels, true_labels):
     """
-        Calculate recall
-        :param predicted_labels: list, predicted results
-        :param true_labels: list, true labels
+        Calcular la recuperación
+        :param predicted_labels: lista, resultados predichos
+        :param true_labels: lista, etiquetas verdaderas
         :return: float
         >>> mc = MetricsCalculator()
         >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])

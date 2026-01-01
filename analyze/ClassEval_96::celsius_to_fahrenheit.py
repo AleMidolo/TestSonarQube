@@ -1,10 +1,11 @@
 def celsius_to_fahrenheit(self):
     """
-        Convert the temperature from Celsius to Fahrenheit.
-        :return: the temperature in Fahrenheit, float.
-        >>> weatherSystem = WeatherSystem('New York')
+        Convierte la temperatura de Celsius a Fahrenheit.
+        :return: la temperatura en Fahrenheit, float.
+        >>> weatherSystem = WeatherSystem('Nueva York')
         >>> weatherSystem.temperature = 27
         >>> weatherSystem.celsius_to_fahrenheit()
         80.6
+
         """
     return self.temperature * 9 / 5 + 32

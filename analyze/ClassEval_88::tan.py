@@ -6,4 +6,9 @@ def tan(self, x):
         >>> tricalculator.tan(45)
         1.0
         """
-    return round(self.sin(x) / self.cos(x), 10)
+    sin_val = self.sin(x)
+    cos_val = self.cos(x)
+    if abs(cos_val) < 1e-10:
+        raise ValueError(f'Tangent is undefined for angle {x} degrees (cos({x}) = 0)')
+    tan_val = sin_val / cos_val
+    return round(tan_val, 10)
