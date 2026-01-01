@@ -16,6 +16,6 @@ def format_line_html_text(self, html_text):
     soup = BeautifulSoup(html_text, 'lxml')
     for code in soup.find_all(['pre', 'code']):
         code.insert_before(self.CODE_MARK)
-        code.insert_after(self.CODE_MARK)
+        code.insert_after('\n')
         code.unwrap()
     return self.__format_line_feed(soup.get_text())

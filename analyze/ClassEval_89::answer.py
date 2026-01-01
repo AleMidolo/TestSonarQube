@@ -9,10 +9,4 @@ def answer(self, expression):
     >>> ret = game.answer(ans)
     True
     """
-    try:
-        if eval(expression) == 24:
-            return True
-        else:
-            return False
-    except Exception as e:
-        return False
+    return self.evaluate_expression(expression)
