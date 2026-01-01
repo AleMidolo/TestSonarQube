@@ -15,7 +15,7 @@ def has_path(self, pos1, pos2):
     from collections import deque
 
     def is_valid(x, y):
-        return 0 <= x < self.BOARD_SIZE[0] and 0 <= y < self.BOARD_SIZE[1] and (self.board[x][y] != ' ')
+        return 0 <= x < self.BOARD_SIZE[0] and 0 <= y < self.BOARD_SIZE[1] and (self.board[x][y] == self.board[pos1[0]][pos1[1]])
     queue = deque([pos1])
     visited = set()
     visited.add(pos1)
@@ -25,8 +25,8 @@ def has_path(self, pos1, pos2):
             return True
         x, y = current
         for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-            next_pos = (x + dx, y + dy)
-            if is_valid(*next_pos) and next_pos not in visited:
-                visited.add(next_pos)
-                queue.append(next_pos)
+            nx, ny = (x + dx, y + dy)
+            if is_valid(nx, ny) and (nx, ny) not in visited:
+                visited.add((nx, ny))
+                queue.append((nx, ny))
     return False

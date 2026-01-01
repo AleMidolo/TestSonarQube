@@ -17,5 +17,5 @@ def get_page_info(self, page_number):
         """
     if page_number < 1 or page_number > self.total_pages:
         return {}
-    current_page_data = self.get_page(page_number)
-    return {'current_page': page_number, 'per_page': self.page_size, 'total_pages': self.total_pages, 'total_items': self.total_items, 'has_previous': page_number > 1, 'has_next': page_number < self.total_pages, 'data': current_page_data}
+    data = self.get_page(page_number)
+    return {'current_page': page_number, 'per_page': self.page_size, 'total_pages': self.total_pages, 'total_items': self.total_items, 'has_previous': page_number > 1, 'has_next': page_number < self.total_pages, 'data': data}
