@@ -27,7 +27,11 @@ def process_csv_data(self, N, save_file_name):
             new_file_name = f'{name_parts[0]}_process.{name_parts[1]}'
         else:
             new_file_name = f'{save_file_name}_process'
-        output_data = [title] + new_data
-        return self.write_csv(output_data, new_file_name)
-    except Exception as e:
+        if N < len(title):
+            new_title = [title[N]]
+        else:
+            new_title = ['']
+        write_data = [new_title] + new_data
+        return self.write_csv(write_data, new_file_name)
+    except:
         return 0

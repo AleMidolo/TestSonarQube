@@ -10,10 +10,10 @@ def clear_inbox(self, size):
         [{'size': 15}]
 
         """
-    current_occupied = self.get_occupied_size()
-    if current_occupied + size <= self.capacity:
+    current_size = self.get_occupied_size()
+    if current_size + size <= self.capacity:
         return
-    space_needed = current_occupied + size - self.capacity
+    space_needed = current_size + size - self.capacity
     freed_space = 0
     while self.inbox and freed_space < space_needed:
         freed_space += self.inbox[0]['size']

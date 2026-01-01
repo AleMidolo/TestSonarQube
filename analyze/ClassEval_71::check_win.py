@@ -9,6 +9,6 @@ def check_win(self):
     for box in self.boxes:
         if box not in self.targets:
             self.is_game_over = False
-            return False
+            return self.is_game_over
     self.is_game_over = True
-    return True
+    return self.is_game_over

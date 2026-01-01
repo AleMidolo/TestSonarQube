@@ -17,7 +17,5 @@ def apply_operator(self, operand_stack, operator_stack):
         result = self.operators[operator](a, b)
         operand_stack.append(result)
     except ZeroDivisionError:
-        operand_stack.append(float('inf') if a > 0 else float('-inf'))
-    except Exception:
-        return (operand_stack, operator_stack)
+        operand_stack.append(float('inf'))
     return (operand_stack, operator_stack)
