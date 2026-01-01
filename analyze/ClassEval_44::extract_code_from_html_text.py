@@ -25,5 +25,7 @@ def extract_code_from_html_text(self, html_text):
     for element in code_elements:
         code_text = element.get_text().strip()
         if code_text:
+            code_text = re.sub('\\r\\n', '\n', code_text)
+            code_text = re.sub('\\n\\s*\\n', '\n', code_text)
             extracted_code.append(code_text)
     return extracted_code

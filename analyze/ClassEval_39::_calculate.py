@@ -1,11 +1,11 @@
 @staticmethod
 def _calculate(first_value, second_value, current_op):
     """
-        दिए गए ऑपरेटर और ऑपरेनड के आधार पर गणितीय गणना करें
-        :param first_value: string, पहला ऑपरेनड
-        :param second_value: string, दूसरा ऑपरेनड
-        :param current_op: string, ऑपरेटर
-        :return: decimal.Decimal, गणना किया गया परिणाम
+        Perform mathematical calculation based on given operator and operands
+        :param first_value: string, first operand
+        :param second_value: string, second operand
+        :param current_op: string, operator
+        :return: decimal.Decimal, calculated result
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator._calculate("2", "3", "+")
         5.0
@@ -19,11 +19,11 @@ def _calculate(first_value, second_value, current_op):
     elif current_op == '*':
         return first * second
     elif current_op == '/':
-        if second == Decimal(0):
+        if second == 0:
             raise ZeroDivisionError('Division by zero')
         return first / second
     elif current_op == '%':
-        if second == Decimal(0):
+        if second == 0:
             raise ZeroDivisionError('Modulo by zero')
         return first % second
     else:

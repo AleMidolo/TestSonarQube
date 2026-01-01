@@ -6,10 +6,5 @@ def count_words(self, sentence):
         >>> ss.count_words("abc def")
         2
         """
-    tokens = sentence.split()
-    word_count = 0
-    for token in tokens:
-        cleaned_token = re.sub('[^\\w\\s]', '', token)
-        if re.search('[a-zA-Z]', cleaned_token):
-            word_count += 1
-    return word_count
+    words = re.findall('\\b[a-zA-Z]+\\b', sentence)
+    return len(words)

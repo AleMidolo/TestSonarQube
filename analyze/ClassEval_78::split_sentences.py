@@ -9,21 +9,38 @@ def split_sentences(self, sentences_string):
         """
     if not sentences_string:
         return []
-    pattern = '(?<!Mr)(?<!Mrs)(?<!Ms)(?<!Dr)(?<!Prof)(?<!Sr)(?<!Jr)\\.\\s+|\\?\\s+'
+    pattern = '(?<!\\bMr)(?<!\\bMrs)(?<!\\bDr)(?<!\\bMs)(?<!\\bProf)\\.\\s+|\\?\\s+'
     sentences = re.split(pattern, sentences_string)
     sentences = [s.strip() for s in sentences if s.strip()]
-    matches = list(re.finditer(pattern, sentences_string))
     result = []
     for i, sentence in enumerate(sentences):
-        if i < len(matches):
-            match_text = matches[i].group()
-            punctuation = match_text[0]
-            result.append(sentence + punctuation)
-        elif sentences_string.strip().endswith('.') or sentences_string.strip().endswith('?'):
-            if sentences_string.strip().endswith('.'):
-                result.append(sentence + '.')
+        if i < len(sentences) - 1:
+            start_pos = sentences_string.find(sentence)
+            if start_pos != -1:
+                end_pos = start_pos + len(sentence)
+                if end_pos < len(sentences_string):
+                    next_char = sentences_string[end_pos]
+                    if next_char in '.?':
+                        result.append(sentence + next_char)
+                    else:
+                        result.append(sentence)
             else:
-                result.append(sentence + '?')
+                result.append(sentence)
+        elif sentences_string.endswith(sentence):
+            if sentence and sentence[-1] in '.?':
+                result.append(sentence)
+            else:
+                result.append(sentence)
         else:
-            result.append(sentence)
+            start_pos = sentences_string.find(sentence)
+            if start_pos != -1:
+                end_pos = start_pos + len(sentence)
+                if end_pos < len(sentences_string):
+                    next_char = sentences_string[end_pos]
+                    if next_char in '.?':
+                        result.append(sentence + next_char)
+                    else:
+                        result.append(sentence)
+            else:
+                result.append(sentence)
     return result

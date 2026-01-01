@@ -28,5 +28,5 @@ def format_line_html_text(self, html_text):
     text = soup.get_text(separator='\n')
     lines = [line.strip() for line in text.split('\n') if line.strip()]
     text = '\n'.join(lines)
-    text = re.sub(f'{re.escape(self.CODE_MARK)}(\\s*{re.escape(self.CODE_MARK)})+', self.CODE_MARK, text)
+    text = self.__format_line_feed(text)
     return text

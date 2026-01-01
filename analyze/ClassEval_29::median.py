@@ -14,5 +14,7 @@ def median(self, data):
     if n % 2 == 1:
         median_value = sorted_data[n // 2]
     else:
-        median_value = (sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2
+        mid1 = sorted_data[n // 2 - 1]
+        mid2 = sorted_data[n // 2]
+        median_value = (mid1 + mid2) / 2
     return round(median_value, 2)

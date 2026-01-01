@@ -11,52 +11,42 @@ def evaluate_expression(self, expression):
         """
     try:
         precedence = {'+': 1, '-': 1, '*': 2, '/': 2}
-
-        def apply_operator(operators, values):
-            operator = operators.pop()
-            right = values.pop()
-            left = values.pop()
-            if operator == '+':
-                values.append(left + right)
-            elif operator == '-':
-                values.append(left - right)
-            elif operator == '*':
-                values.append(left * right)
-            elif operator == '/':
-                if right == 0:
+        tokens = []
+        i = 0
+        while i < len(expression):
+            if expression[i].isdigit():
+                j = i
+                while j < len(expression) and expression[j].isdigit():
+                    j += 1
+                tokens.append(int(expression[i:j]))
+                i = j
+            else:
+                if expression[i] in '+-*/':
+                    tokens.append(expression[i])
+                i += 1
+        output = []
+        operators = []
+        for token in tokens:
+            if isinstance(token, int):
+                output.append(token)
+            elif token in '+-*/':
+                while operators and operators[-1] in '+-*/' and (precedence[operators[-1]] >= precedence[token]):
+                    output.append(operators.pop())
+                operators.append(token)
+        while operators:
+            output.append(operators.pop())
+        stack = []
+        ops = {'+': operator.add, '-': operator.sub, '*': operator.mul, '/': operator.truediv}
+        for token in output:
+            if isinstance(token, int):
+                stack.append(float(token))
+            else:
+                b = stack.pop()
+                a = stack.pop()
+                if token == '/' and b == 0:
                     return False
-                values.append(left / right)
-
-        def evaluate(tokens):
-            values = []
-            operators = []
-            i = 0
-            while i < len(tokens):
-                if tokens[i].isdigit():
-                    j = i
-                    while j < len(tokens) and tokens[j].isdigit():
-                        j += 1
-                    values.append(int(tokens[i:j]))
-                    i = j
-                elif tokens[i] in '+-*/':
-                    while operators and operators[-1] in '+-*/' and (precedence[operators[-1]] >= precedence[tokens[i]]):
-                        apply_operator(operators, values)
-                    operators.append(tokens[i])
-                    i += 1
-                elif tokens[i] == '(':
-                    operators.append(tokens[i])
-                    i += 1
-                elif tokens[i] == ')':
-                    while operators and operators[-1] != '(':
-                        apply_operator(operators, values)
-                    operators.pop()
-                    i += 1
-                else:
-                    i += 1
-            while operators:
-                apply_operator(operators, values)
-            return values[0] if values else None
-        result = evaluate(expression)
+                stack.append(ops[token](a, b))
+        result = stack[0]
         return abs(result - 24) < 1e-10
-    except (ZeroDivisionError, IndexError, ValueError):
+    except Exception:
         return False

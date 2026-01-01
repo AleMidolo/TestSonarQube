@@ -11,7 +11,7 @@ def rail_fence_decipher(self, encrypted_text, rails):
         """
     if rails == 1:
         return encrypted_text
-    rail = [['' for _ in range(len(encrypted_text))] for _ in range(rails)]
+    rail_matrix = [['' for _ in range(len(encrypted_text))] for _ in range(rails)]
     dir_down = None
     row, col = (0, 0)
     for i in range(len(encrypted_text)):
@@ -19,7 +19,7 @@ def rail_fence_decipher(self, encrypted_text, rails):
             dir_down = True
         if row == rails - 1:
             dir_down = False
-        rail[row][col] = '*'
+        rail_matrix[row][col] = '*'
         col += 1
         if dir_down:
             row += 1
@@ -28,8 +28,8 @@ def rail_fence_decipher(self, encrypted_text, rails):
     index = 0
     for i in range(rails):
         for j in range(len(encrypted_text)):
-            if rail[i][j] == '*' and index < len(encrypted_text):
-                rail[i][j] = encrypted_text[index]
+            if rail_matrix[i][j] == '*' and index < len(encrypted_text):
+                rail_matrix[i][j] = encrypted_text[index]
                 index += 1
     result = []
     row, col = (0, 0)
@@ -38,8 +38,8 @@ def rail_fence_decipher(self, encrypted_text, rails):
             dir_down = True
         if row == rails - 1:
             dir_down = False
-        if rail[row][col] != '':
-            result.append(rail[row][col])
+        if rail_matrix[row][col] != '':
+            result.append(rail_matrix[row][col])
             col += 1
         if dir_down:
             row += 1
