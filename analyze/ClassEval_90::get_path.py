@@ -8,9 +8,6 @@ def get_path(self):
         """
     scheme_end = self.url.find('://')
     path_start = self.url.find('/', scheme_end + 3)
-    fragment_start = self.url.find('#')
     if path_start != -1:
-        if fragment_start != -1:
-            return self.url[path_start:fragment_start]
         return self.url[path_start:]
     return None

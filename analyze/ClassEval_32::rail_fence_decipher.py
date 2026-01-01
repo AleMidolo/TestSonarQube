@@ -30,13 +30,13 @@ def rail_fence_decipher(self, encrypted_text, rails):
                 index += 1
     result = []
     row, col = (0, 0)
-    for char in encrypted_text:
+    for i in range(len(encrypted_text)):
         if row == 0:
             dir_down = True
         if row == rails - 1:
             dir_down = False
-        if rail[row][col] == '*':
-            result.append(char)
+        if rail[row][col] != '*':
+            result.append(rail[row][col])
             col += 1
         if dir_down:
             row += 1

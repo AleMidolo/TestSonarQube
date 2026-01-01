@@ -9,20 +9,19 @@ def calculate(self, expression):
         """
     operand_stack = []
     operator_stack = []
-    i = 0
-    while i < len(expression):
-        if expression[i].isdigit():
-            num = 0
-            while i < len(expression) and expression[i].isdigit():
-                num = num * 10 + int(expression[i])
-                i += 1
-            operand_stack.append(num)
-            continue
-        elif expression[i] in self.operators:
-            while operator_stack and self.precedence(operator_stack[-1]) >= self.precedence(expression[i]):
+    num = ''
+    for char in expression:
+        if char.isdigit() or char == '.':
+            num += char
+        else:
+            if num:
+                operand_stack.append(float(num))
+                num = ''
+            while operator_stack and self.precedence(operator_stack[-1]) >= self.precedence(char):
                 operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
-            operator_stack.append(expression[i])
-        i += 1
+            operator_stack.append(char)
+    if num:
+        operand_stack.append(float(num))
     while operator_stack:
         operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
     return operand_stack[0] if operand_stack else None
