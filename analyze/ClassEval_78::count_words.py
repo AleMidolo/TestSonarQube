@@ -8,8 +8,5 @@ def count_words(self, sentence):
         """
     cleaned = re.sub('[^\\w\\s]', '', sentence)
     words = cleaned.split()
-    word_count = 0
-    for word in words:
-        if not word.isdigit():
-            word_count += 1
+    word_count = sum((1 for word in words if not word.isdigit()))
     return word_count

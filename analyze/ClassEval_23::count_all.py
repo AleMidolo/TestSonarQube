@@ -10,9 +10,10 @@ def count_all(n: int) -> int:
     if n < 0:
         return 0
     total = 0
-    for i in range(1, n + 1):
-        comb = CombinationCalculator.count(n, i)
-        if total > 2 ** 63 - 1 - comb:
+    max_int = 2 ** 63 - 1
+    for m in range(1, n + 1):
+        comb = CombinationCalculator.count(n, m)
+        if total > max_int - comb:
             return float('inf')
         total += comb
     return total

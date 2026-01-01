@@ -15,16 +15,11 @@ def rail_fence_decipher(self, encrypted_text, rails):
     row, col = (0, 0)
     down = False
     for i in range(len(encrypted_text)):
-        if row == 0:
-            down = True
-        elif row == rails - 1:
-            down = False
+        if row == 0 or row == rails - 1:
+            down = not down
         fence[row][col] = '*'
         col += 1
-        if down:
-            row += 1
-        else:
-            row -= 1
+        row = row + 1 if down else row - 1
     index = 0
     for i in range(rails):
         for j in range(len(encrypted_text)):
@@ -35,15 +30,9 @@ def rail_fence_decipher(self, encrypted_text, rails):
     row, col = (0, 0)
     down = False
     for i in range(len(encrypted_text)):
-        if row == 0:
-            down = True
-        elif row == rails - 1:
-            down = False
-        if fence[row][col] != '':
-            result.append(fence[row][col])
-            col += 1
-        if down:
-            row += 1
-        else:
-            row -= 1
+        if row == 0 or row == rails - 1:
+            down = not down
+        result.append(fence[row][col])
+        col += 1
+        row = row + 1 if down else row - 1
     return ''.join(result)

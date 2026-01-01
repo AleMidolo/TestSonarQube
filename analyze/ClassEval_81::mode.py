@@ -11,9 +11,7 @@ def mode(data):
         """
     if not data:
         return None
-    frequency = {}
-    for value in data:
-        frequency[value] = frequency.get(value, 0) + 1
-    max_freq = max(frequency.values())
-    modes = [key for key, value in frequency.items() if value == max_freq]
+    count_dict = Counter(data)
+    max_count = max(count_dict.values())
+    modes = [value for value, count in count_dict.items() if count == max_count]
     return sorted(modes)

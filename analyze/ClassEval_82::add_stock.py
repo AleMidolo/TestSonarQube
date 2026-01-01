@@ -9,6 +9,9 @@ def add_stock(self, stock):
         """
     for existing_stock in self.portfolio:
         if existing_stock['name'] == stock['name']:
-            existing_stock['quantity'] += stock['quantity']
+            if existing_stock['price'] == stock['price']:
+                existing_stock['quantity'] += stock['quantity']
+            else:
+                self.portfolio.append(stock.copy())
             return
     self.portfolio.append(stock.copy())

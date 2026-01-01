@@ -5,5 +5,4 @@ def get_current_date(self):
         >>> timeutils.get_current_date()
         "2023-06-14"
         """
-    format = '%Y-%m-%d'
-    return self.datetime.strftime(format)
+    return self.datetime.strftime('%Y-%m-%d')

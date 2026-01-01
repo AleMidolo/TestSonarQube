@@ -15,31 +15,32 @@ def has_path(self, pos1, pos2):
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
     queue = deque()
     visited = set()
-    start_x, start_y = pos1
-    end_x, end_y = pos2
+    x1, y1 = pos1
+    x2, y2 = pos2
     for dx, dy in directions:
-        nx, ny = (start_x + dx, start_y + dy)
+        nx, ny = (x1 + dx, y1 + dy)
         if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
-            if self.board[nx][ny] == ' ' or (nx == end_x and ny == end_y):
+            if (nx, ny) == (x2, y2):
+                return True
+            if self.board[nx][ny] == ' ':
                 queue.append((nx, ny, 0, (dx, dy)))
                 visited.add((nx, ny, 0, (dx, dy)))
+    queue.append((x1, y1, 0, (0, 0)))
+    visited.add((x1, y1, 0, (0, 0)))
     while queue:
         x, y, turns, direction = queue.popleft()
-        if x == end_x and y == end_y:
-            return True
-        if turns >= 2:
-            continue
-        dx, dy = direction
-        nx, ny = (x + dx, y + dy)
-        if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
-            if (self.board[nx][ny] == ' ' or (nx == end_x and ny == end_y)) and (nx, ny, turns, direction) not in visited:
-                queue.append((nx, ny, turns, direction))
-                visited.add((nx, ny, turns, direction))
-        for new_dx, new_dy in directions:
-            if (new_dx, new_dy) != direction and (new_dx, new_dy) != (-dx, -dy):
-                nx, ny = (x + new_dx, y + new_dy)
-                if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
-                    if (self.board[nx][ny] == ' ' or (nx == end_x and ny == end_y)) and (nx, ny, turns + 1, (new_dx, new_dy)) not in visited:
-                        queue.append((nx, ny, turns + 1, (new_dx, new_dy)))
-                        visited.add((nx, ny, turns + 1, (new_dx, new_dy)))
+        for dx, dy in directions:
+            nx, ny = (x + dx, y + dy)
+            if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
+                if (nx, ny) == (x2, y2):
+                    return True
+                if self.board[nx][ny] == ' ':
+                    new_turns = turns
+                    if direction != (0, 0) and (dx, dy) != direction:
+                        new_turns += 1
+                    if new_turns <= 2:
+                        state = (nx, ny, new_turns, (dx, dy))
+                        if state not in visited:
+                            visited.add(state)
+                            queue.append(state)
     return False

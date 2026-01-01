@@ -13,31 +13,36 @@ def parse_arguments(self, command_string):
     self.arguments = {}
     tokens = command_string.split()
     i = 0
+    while i < len(tokens) and (not tokens[i].startswith('-')):
+        i += 1
     while i < len(tokens):
         token = tokens[i]
         if token.startswith('--'):
             if '=' in token:
-                key, value = token[2:].split('=', 1)
-                converted_value = self._convert_type(key, value)
-                self.arguments[key] = converted_value
-            else:
-                key = token[2:]
-                self.arguments[key] = True
-        elif token.startswith('-') and (not token.startswith('--')):
-            key = token[1:]
-            if i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
-                value = tokens[i + 1]
-                converted_value = self._convert_type(key, value)
-                self.arguments[key] = converted_value
+                arg_name, arg_value = token[2:].split('=', 1)
+                self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
                 i += 1
             else:
-                self.arguments[key] = True
-        i += 1
-    missing_args = set()
-    for req_arg in self.required:
-        if req_arg not in self.arguments:
-            missing_args.add(req_arg)
+                arg_name = token[2:]
+                if i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
+                    arg_value = tokens[i + 1]
+                    self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
+                    i += 2
+                else:
+                    self.arguments[arg_name] = True
+                    i += 1
+        elif token.startswith('-'):
+            arg_name = token[1:]
+            if i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
+                arg_value = tokens[i + 1]
+                self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
+                i += 2
+            else:
+                self.arguments[arg_name] = True
+                i += 1
+        else:
+            i += 1
+    missing_args = self.required - set(self.arguments.keys())
     if missing_args:
         return (False, missing_args)
-    else:
-        return (True, None)
+    return (True, None)

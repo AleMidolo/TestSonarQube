@@ -14,34 +14,23 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
 
         """
     z_interp = []
-    for xi, yi in zip(x_interp, y_interp):
-        x_idx = -1
-        for i in range(len(x) - 1):
-            if x[i] <= xi <= x[i + 1]:
-                x_idx = i
-                break
-        y_idx = -1
-        for j in range(len(y) - 1):
-            if y[j] <= yi <= y[j + 1]:
-                y_idx = j
-                break
-        if x_idx == -1 or y_idx == -1:
-            continue
-        z11 = z[x_idx][y_idx]
-        z12 = z[x_idx][y_idx + 1]
-        z21 = z[x_idx + 1][y_idx]
-        z22 = z[x_idx + 1][y_idx + 1]
-        if x[x_idx + 1] != x[x_idx]:
-            rx = (xi - x[x_idx]) / (x[x_idx + 1] - x[x_idx])
-            z_y1 = z11 + (z21 - z11) * rx
-            z_y2 = z12 + (z22 - z12) * rx
-        else:
-            z_y1 = z11
-            z_y2 = z12
-        if y[y_idx + 1] != y[y_idx]:
-            ry = (yi - y[y_idx]) / (y[y_idx + 1] - y[y_idx])
-            zi = z_y1 + (z_y2 - z_y1) * ry
-        else:
-            zi = z_y1
-        z_interp.append(zi)
+    for xp, yp in zip(x_interp, y_interp):
+        i = 0
+        while i < len(x) - 1 and x[i + 1] < xp:
+            i += 1
+        j = 0
+        while j < len(y) - 1 and y[j + 1] < yp:
+            j += 1
+        i = min(i, len(x) - 2)
+        j = min(j, len(y) - 2)
+        x1, x2 = (x[i], x[i + 1])
+        y1, y2 = (y[j], y[j + 1])
+        z11 = z[j][i]
+        z12 = z[j][i + 1]
+        z21 = z[j + 1][i]
+        z22 = z[j + 1][i + 1]
+        z_y1 = z11 + (z12 - z11) * (xp - x1) / (x2 - x1)
+        z_y2 = z21 + (z22 - z21) * (xp - x1) / (x2 - x1)
+        z_interp_val = z_y1 + (z_y2 - z_y1) * (yp - y1) / (y2 - y1)
+        z_interp.append(z_interp_val)
     return z_interp

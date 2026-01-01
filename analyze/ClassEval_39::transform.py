@@ -8,17 +8,18 @@ def transform(expression):
         >>> expression_calculator.transform("2 + 3 * 4")
         "2+3*4"
         """
+    if not expression:
+        return expression
     expression = re.sub('\\s+', '', expression)
-    result = []
-    i = 0
-    while i < len(expression):
-        c = expression[i]
-        if c == '-':
-            if i == 0 or expression[i - 1] in {'+', '-', '*', '/', '(', '%'}:
-                result.append('~')
-            else:
-                result.append(c)
-        else:
-            result.append(c)
-        i += 1
-    return ''.join(result)
+    arr = list(expression)
+    for i in range(len(arr)):
+        if arr[i] == '-':
+            if i == 0:
+                arr[i] = '~'
+            elif arr[i - 1] == '+' or arr[i - 1] == '-' or arr[i - 1] == '*' or (arr[i - 1] == '/') or (arr[i - 1] == '(') or (arr[i - 1] == '%'):
+                arr[i] = '~'
+    if arr[0] == '~' and (len(arr) > 1 and arr[1] == '('):
+        arr[0] = '-'
+        return '0' + ''.join(arr)
+    else:
+        return ''.join(arr).replace('~', '-')

@@ -11,23 +11,22 @@ def process_excel_data(self, N, save_file_name):
         data = self.read_excel(save_file_name)
         if data is None:
             return (0, '')
-        col_index = N - 1
         processed_data = []
         for row in data:
             if row is None:
                 processed_data.append(row)
                 continue
             row_list = list(row)
-            if col_index < len(row_list):
-                if isinstance(row_list[col_index], str):
-                    row_list[col_index] = row_list[col_index].upper()
+            if 0 <= N - 1 < len(row_list):
+                if isinstance(row_list[N - 1], str):
+                    row_list[N - 1] = row_list[N - 1].upper()
             processed_data.append(tuple(row_list))
         if '.' in save_file_name:
             name_parts = save_file_name.rsplit('.', 1)
-            output_file = f'{name_parts[0]}_processed.{name_parts[1]}'
+            output_file_name = f'{name_parts[0]}_processed.{name_parts[1]}'
         else:
-            output_file = f'{save_file_name}_processed.xlsx'
-        result = self.write_excel(processed_data, output_file)
-        return (result, output_file)
+            output_file_name = f'{save_file_name}_processed.xlsx'
+        result = self.write_excel(processed_data, output_file_name)
+        return (result, output_file_name)
     except Exception as e:
         return (0, '')

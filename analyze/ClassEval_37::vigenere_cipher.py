@@ -12,14 +12,16 @@ def vigenere_cipher(self, plaintext):
     key_repeated = (self.key * (len(plaintext) // len(self.key) + 1))[:len(plaintext)]
     for i, char in enumerate(plaintext):
         if char.isalpha():
-            is_upper = char.isupper()
-            plain_char_num = ord(char.lower()) - ord('a')
-            key_char_num = ord(key_repeated[i].lower()) - ord('a')
-            encrypted_num = (plain_char_num + key_char_num) % 26
-            encrypted_char = chr(encrypted_num + ord('a'))
-            if is_upper:
-                encrypted_char = encrypted_char.upper()
-            ciphertext += encrypted_char
+            key_char = key_repeated[i]
+            key_shift = ord(key_char.lower()) - 97
+            if char.isupper():
+                ascii_offset = 65
+                base_char = char
+            else:
+                ascii_offset = 97
+                base_char = char
+            shifted_char = chr((ord(base_char) - ascii_offset + key_shift) % 26 + ascii_offset)
+            ciphertext += shifted_char
         else:
             ciphertext += char
     return ciphertext
