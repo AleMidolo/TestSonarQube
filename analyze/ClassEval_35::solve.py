@@ -37,4 +37,4 @@ def solve(self):
                 visited.add(state_tuple)
                 new_path = path + [direction]
                 queue.append((new_state, new_path))
-    return None
+    return []

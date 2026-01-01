@@ -12,7 +12,7 @@ def split_sentences(self, text):
     result = []
     for i, part in enumerate(parts):
         if i < len(parts) - 1:
-            result.append(part.strip())
+            result.append(part.rstrip('.!?'))
         else:
             result.append(part)
     return result
