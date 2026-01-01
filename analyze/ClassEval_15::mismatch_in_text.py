@@ -6,8 +6,9 @@ def mismatch_in_text(self, currentPos):
         >>> boyerMooreSearch = BoyerMooreSearch("ABAABA", "ABC")
         >>> boyerMooreSearch.mismatch_in_text(0)
         2
+
         """
-    for i in range(self.patLen):
-        if currentPos + i >= self.textLen or self.text[currentPos + i] != self.pattern[i]:
+    for i in range(self.patLen - 1, -1, -1):
+        if self.pattern[i] != self.text[currentPos + i]:
             return i
     return -1

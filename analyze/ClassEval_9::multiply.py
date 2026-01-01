@@ -14,9 +14,14 @@ def multiply(num1, num2):
     len1, len2 = (len(num1), len(num2))
     result = [0] * (len1 + len2)
     for i in range(len1 - 1, -1, -1):
+        carry = 0
+        n1 = int(num1[i])
         for j in range(len2 - 1, -1, -1):
-            product = int(num1[i]) * int(num2[j]) + result[i + j + 1]
-            result[i + j + 1] = product % 10
-            result[i + j] += product // 10
-    result_str = ''.join(map(str, result)).lstrip('0')
+            n2 = int(num2[j])
+            temp_sum = n1 * n2 + result[i + j + 1] + carry
+            carry = temp_sum // 10
+            result[i + j + 1] = temp_sum % 10
+        result[i] += carry
+    result_str = ''.join(map(str, result))
+    result_str = result_str.lstrip('0')
     return result_str if result_str else '0'

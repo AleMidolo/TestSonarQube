@@ -5,15 +5,23 @@ def bad_character_heuristic(self):
         >>> boyerMooreSearch = BoyerMooreSearch("ABAABA", "AB")
         >>> boyerMooreSearch.bad_character_heuristic()
         [0, 3]
+
         """
+    if self.patLen == 0 or self.textLen < self.patLen:
+        return []
     positions = []
-    shift = 0
-    while shift <= self.textLen - self.patLen:
-        mismatch_index = self.mismatch_in_text(shift)
-        if mismatch_index == -1:
-            positions.append(shift)
-            shift += 1
+    s = 0
+    while s <= self.textLen - self.patLen:
+        mismatch_pos = self.mismatch_in_text(s)
+        if mismatch_pos == -1:
+            positions.append(s)
+            s += 1
         else:
-            bad_char_index = self.match_in_pattern(self.text[mismatch_index])
-            shift += max(1, mismatch_index - (shift + bad_char_index))
+            bad_char = self.text[mismatch_pos]
+            rightmost_pos = self.match_in_pattern(bad_char)
+            if rightmost_pos == -1:
+                s = mismatch_pos + 1
+            else:
+                shift = mismatch_pos - (s + rightmost_pos)
+                s += max(1, shift)
     return positions

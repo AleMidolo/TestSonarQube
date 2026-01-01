@@ -19,11 +19,37 @@ def map(data):
         return (0.0, [0.0])
     if type(data) == tuple:
         sub_list, total_num = data
-        precision = MetricsCalculator2._average_precision(sub_list, total_num)
-        return (precision, [precision])
+        sub_list = np.array(sub_list)
+        if total_num == 0:
+            return (0.0, [0.0])
+        relevant_count = 0
+        precision_at_k = []
+        for i, val in enumerate(sub_list):
+            if val == 1:
+                relevant_count += 1
+                precision_at_k.append(relevant_count / (i + 1))
+        if relevant_count == 0:
+            ap = 0.0
+        else:
+            ap = sum(precision_at_k) / relevant_count
+        return (ap, [ap])
     if type(data) == list:
-        precisions = []
+        separate_result = []
         for sub_list, total_num in data:
-            precision = MetricsCalculator2._average_precision(sub_list, total_num)
-            precisions.append(precision)
-        return (np.mean(precisions), precisions)
+            sub_list = np.array(sub_list)
+            if total_num == 0:
+                ap = 0.0
+            else:
+                relevant_count = 0
+                precision_at_k = []
+                for i, val in enumerate(sub_list):
+                    if val == 1:
+                        relevant_count += 1
+                        precision_at_k.append(relevant_count / (i + 1))
+                if relevant_count == 0:
+                    ap = 0.0
+                else:
+                    ap = sum(precision_at_k) / relevant_count
+            separate_result.append(ap)
+        map_score = np.mean(separate_result)
+        return (map_score, separate_result)

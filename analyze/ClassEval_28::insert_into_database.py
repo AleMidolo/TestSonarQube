@@ -10,8 +10,13 @@ def insert_into_database(self, table_name, data):
         """
     conn = sqlite3.connect(self.database_name)
     cursor = conn.cursor()
-    for entry in data:
-        insert_query = f"INSERT INTO {table_name} ({', '.join(entry.keys())}) VALUES ({', '.join(['?' for _ in entry.values()])})"
-        cursor.execute(insert_query, tuple(entry.values()))
+    if data and isinstance(data, list) and isinstance(data[0], dict):
+        columns = list(data[0].keys())
+        placeholders = ', '.join(['?' for _ in columns])
+        column_names = ', '.join(columns)
+        insert_query = f'INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})'
+        for row in data:
+            values = [row[col] for col in columns]
+            cursor.execute(insert_query, values)
     conn.commit()
     conn.close()

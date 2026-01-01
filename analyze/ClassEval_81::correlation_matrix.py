@@ -10,8 +10,18 @@ def correlation_matrix(data):
 
         """
     n = len(data)
-    correlation_matrix = [[0] * n for _ in range(n)]
+    if n == 0:
+        return []
+    row_length = len(data[0])
+    for row in data:
+        if len(row) != row_length:
+            raise ValueError('All rows must have the same length')
+    corr_matrix = [[0.0] * n for _ in range(n)]
     for i in range(n):
         for j in range(n):
-            correlation_matrix[i][j] = Statistics3.correlation(data[i], data[j])
-    return correlation_matrix
+            if i == j:
+                corr_matrix[i][j] = 1.0
+            else:
+                corr = Statistics3.correlation(data[i], data[j])
+                corr_matrix[i][j] = corr if corr is not None else 0.0
+    return corr_matrix

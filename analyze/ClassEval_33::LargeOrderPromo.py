@@ -11,4 +11,5 @@ def LargeOrderPromo(order):
         0.0
 
         """
-    return order.total() * 0.07 if len(order.cart) >= 10 else 0
+    unique_products = len({item['product'] for item in order.cart})
+    return order.total() * 0.07 if unique_products >= 10 else 0

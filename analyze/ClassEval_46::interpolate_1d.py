@@ -1,5 +1,4 @@
-@staticmethod
-def interpolate_1d(x, y, x_interp):
+def interpolate_1d(self, x, y, x_interp):
     """
         Interpolazione lineare di dati unidimensionali
         :param x: La coordinata x del punto dati, lista.
@@ -15,7 +14,8 @@ def interpolate_1d(x, y, x_interp):
     for xi in x_interp:
         for i in range(len(x) - 1):
             if x[i] <= xi <= x[i + 1]:
-                yi = (y[i] * (x[i + 1] - xi) + y[i + 1] * (xi - x[i])) / (x[i + 1] - x[i])
+                t = (xi - x[i]) / (x[i + 1] - x[i])
+                yi = y[i] + t * (y[i + 1] - y[i])
                 y_interp.append(yi)
                 break
     return y_interp

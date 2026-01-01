@@ -7,4 +7,4 @@ def is_hex_char(char):
         >>> NumericEntityUnescaper.is_hex_char('a')
         True
         """
-    return char in '0123456789abcdefABCDEF'
+    return '0' <= char <= '9' or 'a' <= char <= 'f' or 'A' <= char <= 'F'

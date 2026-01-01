@@ -12,8 +12,9 @@ def update_employee(self, employee_id: int, employee_info: dict):
         False
 
         """
-    if employee_id in self.employees:
-        self.employees[employee_id].update(employee_info)
-        return True
-    else:
+    if employee_id not in self.employees:
         return False
+    for key, value in employee_info.items():
+        if key in self.employees[employee_id]:
+            self.employees[employee_id][key] = value
+    return True
