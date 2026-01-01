@@ -5,4 +5,7 @@ def is_board_full(self):
         >>> ttt.is_board_full()
         False
         """
-    return all((cell != ' ' for row in self.board for cell in row))
+    for row in self.board:
+        if ' ' in row:
+            return False
+    return True

@@ -26,7 +26,7 @@ def parse_arguments(self, command_string):
             self.arguments[key] = self._convert_type(key, value)
         else:
             self.arguments[key] = value
-    missing_args = self.required - self.arguments.keys()
-    if missing_args:
-        return (False, missing_args)
-    return (True, None)
+    for req in self.required:
+        if req not in self.arguments:
+            missing_args.add(req)
+    return (len(missing_args) == 0, missing_args if missing_args else None)

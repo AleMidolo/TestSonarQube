@@ -18,8 +18,7 @@ def solve(self):
         current_state, path = open_list.popleft()
         if current_state == self.goal_state:
             return path
-        possible_moves = self.get_possible_moves(current_state)
-        for move_direction in possible_moves:
+        for move_direction in self.get_possible_moves(current_state):
             new_state = self.move(current_state, move_direction)
             new_path = path + [move_direction]
             if tuple(map(tuple, new_state)) not in visited:

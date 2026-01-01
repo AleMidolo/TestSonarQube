@@ -11,6 +11,4 @@ def convert(self, amount, from_currency, to_currency):
         """
     if from_currency not in self.rates or to_currency not in self.rates:
         raise ValueError('Unsupported currency')
-    amount_in_usd = amount / self.rates[from_currency]
-    converted_amount = amount_in_usd * self.rates[to_currency]
-    return converted_amount
+    return amount / self.rates[from_currency] * self.rates[to_currency]

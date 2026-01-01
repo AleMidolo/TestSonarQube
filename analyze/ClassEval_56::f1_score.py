@@ -8,7 +8,6 @@ def f1_score(self, predicted_labels, true_labels):
         >>> mc.f1_score([1, 1, 0, 0], [1, 0, 0, 1])
         0.5
         """
-    self.update(predicted_labels, true_labels)
     precision = self.precision(predicted_labels, true_labels)
     recall = self.recall(predicted_labels, true_labels)
     if precision + recall == 0:

@@ -1,13 +1,13 @@
 def calculate(self, expression):
     """
-        Calcular el resultado de la expresión en notación postfija dada
-        :param expression: cadena, la expresión en notación postfija a calcular
-        :return: float, el resultado calculado
-        >>> expression_calculator = ExpressionCalculator()
-        >>> expression_calculator.calculate("2 + 3 * 4")
-        14.0
+    Calcular el resultado de la expresión en notación postfija dada
+    :param expression: cadena, la expresión en notación postfija a calcular
+    :return: float, el resultado calculado
+    >>> expression_calculator = ExpressionCalculator()
+    >>> expression_calculator.calculate("2 + 3 * 4")
+    14.0
 
-        """
+    """
     self.postfix_stack.clear()
     prepared_expression = self.transform(expression)
     self.prepare(prepared_expression)

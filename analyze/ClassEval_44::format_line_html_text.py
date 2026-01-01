@@ -14,7 +14,8 @@ Otro párrafo.
 '
         """
     soup = BeautifulSoup(html_text, 'lxml')
-    for code in soup.find_all(['pre', 'code']):
-        code.insert_before('\n' + self.CODE_MARK + '\n')
-        code.insert_after('\n' + self.CODE_MARK + '\n')
-    return self.__format_line_feed(soup.get_text())
+    text = soup.get_text()
+    code_tags = soup.find_all(['pre', 'code'])
+    for tag in code_tags:
+        text = text.replace(tag.get_text(), self.CODE_MARK)
+    return self.__format_line_feed(text)
