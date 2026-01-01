@@ -15,19 +15,19 @@ def subtract(num1, num2):
     if num1 < num2:
         num1, num2 = (num2, num1)
         negative = True
-    num1 = num1[::-1]
-    num2 = num2[::-1]
+    num1 = list(num1)
+    num2 = list(num2.zfill(len(num1)))
     result = []
     borrow = 0
-    for i in range(len(num1)):
-        digit1 = int(num1[i])
-        digit2 = int(num2[i]) if i < len(num2) else 0
-        if digit1 < digit2 + borrow:
-            digit1 += 10
-            result.append(str(digit1 - digit2 - borrow))
+    for i in range(len(num1) - 1, -1, -1):
+        sub = int(num1[i]) - int(num2[i]) - borrow
+        if sub < 0:
+            sub += 10
             borrow = 1
         else:
-            result.append(str(digit1 - digit2 - borrow))
             borrow = 0
+        result.append(str(sub))
     result = ''.join(result[::-1]).lstrip('0')
-    return '-' + result if negative else result
+    if negative:
+        result = '-' + result
+    return result if result else '0'

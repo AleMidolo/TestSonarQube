@@ -6,7 +6,7 @@ def is_valid(self):
         >>> ipaddress.is_valid()
         True
         """
-    octets = self.get_octets()
+    octets = self.ip_address.split('.')
     if len(octets) != 4:
         return False
     for octet in octets:
