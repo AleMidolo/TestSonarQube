@@ -7,5 +7,6 @@ def mean(data):
         >>> statistics3 = Statistics3()
         >>> statistics3.mean([1, 2, 3])
         2.0
+
         """
-    return sum(data) / len(data)
+    return sum(data) / len(data) if data else None
