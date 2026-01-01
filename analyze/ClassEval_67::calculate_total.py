@@ -15,7 +15,6 @@ def calculate_total(self):
         dish_name = dish['dish']
         dish_price = dish['price']
         dish_count = dish['count']
-        sales_multiplier = self.sales.get(dish_name, 1.0)
-        dish_total = dish_count * dish_price * sales_multiplier
-        total += dish_total
+        discount = self.sales.get(dish_name, 1.0)
+        total += dish_price * dish_count * discount
     return total

@@ -14,7 +14,8 @@ def insert_into_database(self, table_name, data):
     columns_info = cursor.fetchall()
     column_names = [col[1] for col in columns_info if col[1] != 'id']
     placeholders = ', '.join(['?' for _ in column_names])
-    insert_query = f"INSERT INTO {table_name} ({', '.join(column_names)}) VALUES ({placeholders})"
+    column_names_str = ', '.join(column_names)
+    insert_query = f'INSERT INTO {table_name} ({column_names_str}) VALUES ({placeholders})'
     for row in data:
         values = [row.get(col) for col in column_names]
         cursor.execute(insert_query, values)

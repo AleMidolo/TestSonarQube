@@ -16,11 +16,8 @@ def get_most_popular_class_in_major(self, major):
     for student_name in students_in_major:
         if student_name in self.students_registration_classes:
             for class_name in self.students_registration_classes[student_name]:
-                if class_name in class_counts:
-                    class_counts[class_name] += 1
-                else:
-                    class_counts[class_name] = 1
+                class_counts[class_name] = class_counts.get(class_name, 0) + 1
     if not class_counts:
         return ''
-    most_popular_class = max(class_counts, key=class_counts.get)
-    return most_popular_class
+    most_popular_class = max(class_counts.items(), key=lambda x: x[1])
+    return most_popular_class[0]
