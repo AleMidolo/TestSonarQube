@@ -10,7 +10,6 @@ def restock_item(self, item_name, quantity):
         True
         >>> vendingMachine.restock_item('Pizza', 10)
         False
-
         """
     if item_name in self.inventory:
         self.inventory[item_name]['quantity'] += quantity

@@ -16,19 +16,19 @@ def calculate(self, expression):
     for item in self.postfix_stack:
         if self.is_operator(item):
             if item == '~':
-                if len(result_stack) < 1:
-                    raise ValueError('Invalid expression: insufficient operands for unary minus')
-                operand = result_stack.pop()
-                result_stack.append(-Decimal(operand))
+                if result_stack:
+                    operand = result_stack.pop()
+                    result_stack.append(Decimal(0) - Decimal(operand))
             else:
                 if len(result_stack) < 2:
-                    raise ValueError('Invalid expression: insufficient operands for operator {}'.format(item))
-                second_value = result_stack.pop()
-                first_value = result_stack.pop()
-                result = self._calculate(first_value, second_value, item)
+                    raise ValueError('Invalid expression: insufficient operands')
+                second = result_stack.pop()
+                first = result_stack.pop()
+                result = self._calculate(first, second, item)
                 result_stack.append(result)
         else:
             result_stack.append(item)
     if len(result_stack) != 1:
         raise ValueError('Invalid expression: could not compute final result')
-    return float(result_stack.pop())
+    result = float(result_stack.pop())
+    return result

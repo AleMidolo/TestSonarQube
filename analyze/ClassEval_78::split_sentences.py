@@ -9,19 +9,18 @@ def split_sentences(self, sentences_string):
         """
     if not sentences_string:
         return []
-    pattern = '(?<!Mr)(?<!Mrs)(?<!Dr)(?<!Prof)(?<!Sr)(?<!Jr)\\.\\s|\\?\\s'
+    pattern = '(?<!Mr)(?<!Mrs)(?<!Ms)(?<!Dr)(?<!Prof)(?<!Sr)(?<!Jr)\\.\\s|\\?\\s'
     parts = re.split(f'({pattern})', sentences_string)
     sentences = []
     current_sentence = ''
-    for i in range(0, len(parts), 2):
-        if i < len(parts):
-            current_sentence += parts[i]
-            if i + 1 < len(parts):
-                delimiter = parts[i + 1]
-                current_sentence += delimiter.rstrip()
-                sentences.append(current_sentence.strip())
-                current_sentence = ''
-    if current_sentence:
-        sentences.append(current_sentence.strip())
-    sentences = [s for s in sentences if s]
+    for i in range(0, len(parts) - 1, 2):
+        if i + 1 < len(parts):
+            current_sentence += parts[i] + parts[i + 1]
+            sentence = current_sentence.rstrip()
+            sentences.append(sentence)
+            current_sentence = ''
+    if len(parts) % 2 == 1:
+        remaining = parts[-1]
+        if remaining.strip():
+            sentences.append(remaining.strip())
     return sentences

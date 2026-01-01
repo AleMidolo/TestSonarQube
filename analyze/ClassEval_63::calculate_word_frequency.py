@@ -9,6 +9,7 @@ def calculate_word_frequency(self, words_list):
     all_words = []
     for sublist in words_list:
         all_words.extend(sublist)
-    word_counter = Counter(all_words)
-    top_5 = dict(word_counter.most_common(5))
+    word_counts = Counter(all_words)
+    sorted_items = sorted(word_counts.items(), key=lambda x: x[1], reverse=True)
+    top_5 = dict(sorted_items[:5])
     return top_5

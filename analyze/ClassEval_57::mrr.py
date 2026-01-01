@@ -32,24 +32,21 @@ def mrr(data):
             return (0.0, [0.0])
         first_correct_idx = np.where(sub_list == 1)[0]
         if len(first_correct_idx) == 0:
-            reciprocal_rank = 0.0
+            rr = 0.0
         else:
-            rank = first_correct_idx[0] + 1
-            reciprocal_rank = 1.0 / rank
-        return (reciprocal_rank, [reciprocal_rank])
+            rr = 1.0 / (first_correct_idx[0] + 1)
+        return (rr, [rr])
     if isinstance(data, list):
         separate_result = []
         for sub_list, total_num in data:
             sub_list = np.array(sub_list)
             if total_num == 0:
-                reciprocal_rank = 0.0
+                rr = 0.0
             else:
                 first_correct_idx = np.where(sub_list == 1)[0]
                 if len(first_correct_idx) == 0:
-                    reciprocal_rank = 0.0
+                    rr = 0.0
                 else:
-                    rank = first_correct_idx[0] + 1
-                    reciprocal_rank = 1.0 / rank
-            separate_result.append(reciprocal_rank)
-        mean_mrr = np.mean(separate_result) if separate_result else 0.0
-        return (mean_mrr, separate_result)
+                    rr = 1.0 / (first_correct_idx[0] + 1)
+            separate_result.append(rr)
+        return (np.mean(separate_result), separate_result)

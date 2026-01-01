@@ -11,5 +11,6 @@ def process_data(self, string_list):
         cleaned_string = re.sub('[^a-zA-Z\\s]', '', string)
         lower_string = cleaned_string.lower()
         words = [word for word in lower_string.split() if word]
-        words_list.append(words)
+        if words:
+            words_list.append(words)
     return words_list

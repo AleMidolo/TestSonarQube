@@ -10,7 +10,27 @@ def evaluate_expression(self, expression):
         True
         """
     try:
-        result = eval(expression, {'__builtins__': None}, {})
+        node = ast.parse(expression, mode='eval')
+        operators = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv, ast.Pow: operator.pow, ast.USub: operator.neg, ast.UAdd: operator.pos}
+
+        def eval_node(node):
+            if isinstance(node, ast.Num):
+                return float(node.n)
+            elif isinstance(node, ast.BinOp):
+                left = eval_node(node.left)
+                right = eval_node(node.right)
+                op = operators[type(node.op)]
+                try:
+                    return op(left, right)
+                except ZeroDivisionError:
+                    return float('inf')
+            elif isinstance(node, ast.UnaryOp):
+                operand = eval_node(node.operand)
+                op = operators[type(node.op)]
+                return op(operand)
+            else:
+                raise TypeError(f'Unsupported operation: {type(node)}')
+        result = eval_node(node.body)
         return abs(result - 24) < 1e-10
-    except:
+    except Exception as e:
         return False
