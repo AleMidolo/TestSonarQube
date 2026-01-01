@@ -21,4 +21,5 @@ def auto_check_conflict(self):
             return False
         else:
             return True
-    return False
+    else:
+        return False

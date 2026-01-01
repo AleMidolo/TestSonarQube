@@ -34,13 +34,10 @@ def mrr(data):
             if total_num == 0:
                 rr = 0.0
             else:
-                found = False
+                rr = 0.0
                 for i, val in enumerate(sub_list):
                     if val == 1:
                         rr = 1.0 / (i + 1)
-                        separate_result.append(rr)
-                        found = True
                         break
-                if not found:
-                    separate_result.append(0.0)
+            separate_result.append(rr)
         return (np.mean(separate_result), separate_result)
