@@ -10,8 +10,9 @@ def process_xml_data(self, file_name):
     True
     """
     try:
-        for item in self.find_element('item'):
+        items = self.find_element('item')
+        for item in items:
             item.text = item.text.upper()
         return self.write_xml(file_name)
-    except Exception as e:
+    except:
         return False

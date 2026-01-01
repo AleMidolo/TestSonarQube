@@ -8,20 +8,19 @@ def fleiss_kappa(testData, N, k, n):
         :param n: int, Número de evaluadores
         :return: float, valor de kappa de Fleiss
         >>> KappaCalculator.fleiss_kappa([[0, 0, 0, 0, 14],
-        >>>                              [0, 2, 6, 4, 2],
-        >>>                              [0, 0, 3, 5, 6],
-        >>>                              [0, 3, 9, 2, 0],
-        >>>                              [2, 2, 8, 1, 1],
-        >>>                              [7, 7, 0, 0, 0],
-        >>>                              [3, 2, 6, 3, 0],
-        >>>                              [2, 5, 3, 2, 2],
-        >>>                              [6, 5, 2, 1, 0],
-        >>>                              [0, 2, 2, 3, 7]], 10, 5, 14)
+                                     [0, 2, 6, 4, 2],
+                                     [0, 0, 3, 5, 6],
+                                     [0, 3, 9, 2, 0],
+                                     [2, 2, 8, 1, 1],
+                                     [7, 7, 0, 0, 0],
+                                     [3, 2, 6, 3, 0],
+                                     [2, 5, 3, 2, 2],
+                                     [6, 5, 2, 1, 0],
+                                     [0, 2, 2, 3, 7]], 10, 5, 14)
         0.20993070442195522
         """
-    dataMat = np.array(testData)
-    p = np.sum(dataMat, axis=0) / (N * n)
-    P = np.sum((np.sum(dataMat ** 2, axis=1) - n) / (n * (n - 1))) / N
-    Pe = np.sum(p ** 2)
-    fleiss_kappa_value = (P - Pe) / (1 - Pe)
-    return fleiss_kappa_value
+    p = np.sum(testData, axis=1) / (n * k)
+    P_bar = np.mean(p)
+    P_e = np.sum(p ** 2)
+    kappa_value = (P_bar - P_e) / (1 - P_e)
+    return kappa_value

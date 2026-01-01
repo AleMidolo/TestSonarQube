@@ -18,25 +18,23 @@ def mrr(data):
         return (0.0, [0.0])
     if type(data) == tuple:
         sub_list, total_num = data
-        if total_num == 0:
-            return (0.0, [0.0])
-        else:
-            reciprocal_ranks = []
-            for idx, value in enumerate(sub_list):
-                if value == 1:
-                    reciprocal_ranks.append(1 / (idx + 1))
-            mrr = np.mean(reciprocal_ranks) if reciprocal_ranks else 0.0
-            return (mrr, [mrr])
+        rank = 1
+        reciprocal_ranks = []
+        for result in sub_list:
+            if result == 1:
+                reciprocal_ranks.append(1.0 / rank)
+            rank += 1
+        mrr_value = np.mean(reciprocal_ranks) if reciprocal_ranks else 0.0
+        return (mrr_value, [mrr_value])
     if type(data) == list:
-        separate_result = []
+        mrr_values = []
         for sub_list, total_num in data:
-            if total_num == 0:
-                mrr = 0.0
-            else:
-                reciprocal_ranks = []
-                for idx, value in enumerate(sub_list):
-                    if value == 1:
-                        reciprocal_ranks.append(1 / (idx + 1))
-                mrr = np.mean(reciprocal_ranks) if reciprocal_ranks else 0.0
-            separate_result.append(mrr)
-        return (np.mean(separate_result), separate_result)
+            rank = 1
+            reciprocal_ranks = []
+            for result in sub_list:
+                if result == 1:
+                    reciprocal_ranks.append(1.0 / rank)
+                rank += 1
+            mrr_value = np.mean(reciprocal_ranks) if reciprocal_ranks else 0.0
+            mrr_values.append(mrr_value)
+        return (np.mean(mrr_values), mrr_values)
