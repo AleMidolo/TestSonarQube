@@ -7,52 +7,28 @@ def format_string(self, x):
         >>> formatter.format_string("123456")
         "UNO CENTO E VENTITRE MILA QUATTROCENTO E CINQUANTA SEI SOLO"
         """
+    if not x:
+        return ''
     is_negative = False
-    if x.startswith('-'):
+    if x[0] == '-':
         is_negative = True
         x = x[1:]
-    integer_part = x
-    decimal_part = ''
-    if '.' in x:
-        integer_part, decimal_part = x.split('.')
-        decimal_part = decimal_part.rstrip('0')
+    parts = x.split('.')
+    integer_part = parts[0]
+    decimal_part = parts[1] if len(parts) > 1 else ''
     integer_part = integer_part.lstrip('0')
     if integer_part == '':
         integer_part = '0'
-    if integer_part == '0':
-        integer_words = 'ZERO'
-    else:
-        groups = []
-        temp = integer_part
-        while len(temp) > 3:
-            groups.insert(0, temp[-3:])
-            temp = temp[:-3]
-        groups.insert(0, temp)
-        integer_words_parts = []
-        for i, group in enumerate(reversed(groups)):
-            group_words = self.trans_three(group.zfill(3))
-            if group_words and group_words != '' and (group != '000'):
-                if i > 0:
-                    suffix = self.parse_more(i)
-                    if suffix:
-                        group_words += ' ' + suffix
-                integer_words_parts.insert(0, group_words)
-        integer_words = ' '.join(integer_words_parts)
+    integer_words = self._convert_integer_part(integer_part)
     decimal_words = ''
     if decimal_part:
-        decimal_words = ' AND '
-        if len(decimal_part) == 1:
-            decimal_words += self.trans_two(decimal_part + '0')
-        else:
-            decimal_words += self.trans_two(decimal_part[:2].zfill(2))
-        if len(decimal_part) > 2:
-            decimal_words += ' ' + ' '.join([self.NUMBER[int(d)] for d in decimal_part[2:] if d != '0'])
-        decimal_words += ' CENTS'
+        decimal_words = self._convert_decimal_part(decimal_part)
     result = ''
     if is_negative:
         result += 'MINUS '
     result += integer_words
     if decimal_words:
-        result += decimal_words
-    result += ' ONLY'
+        result += ' AND ' + decimal_words + ' CENTS'
+    else:
+        result += ' ONLY'
     return result

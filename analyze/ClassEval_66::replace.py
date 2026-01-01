@@ -21,22 +21,21 @@ def replace(self, string):
                 is_hex = True
                 j += 1
             start_num = j
-            while j < length and string[j] != ';':
+            while j < length and (string[j].isdigit() or (is_hex and self.is_hex_char(string[j]))):
                 j += 1
-            if j < length and string[j] == ';':
+            if j < length and string[j] == ';' and (j > start_num):
                 num_str = string[start_num:j]
-                if num_str:
-                    try:
-                        if is_hex:
-                            code_point = int(num_str, 16)
-                        else:
-                            code_point = int(num_str)
-                        if 0 <= code_point <= 1114111:
-                            result.append(chr(code_point))
-                            i = j + 1
-                            continue
-                    except (ValueError, OverflowError):
-                        pass
+                try:
+                    if is_hex:
+                        code_point = int(num_str, 16)
+                    else:
+                        code_point = int(num_str)
+                    if 0 <= code_point <= 1114111:
+                        result.append(chr(code_point))
+                        i = j + 1
+                        continue
+                except (ValueError, OverflowError):
+                    pass
         result.append(string[i])
         i += 1
     return ''.join(result)

@@ -9,8 +9,8 @@ def calculate(self, expression):
 
         """
     self.postfix_stack.clear()
-    transformed_expr = self.transform(expression)
-    self.prepare(transformed_expr)
+    transformed_expression = self.transform(expression)
+    self.prepare(transformed_expression)
     calc_stack = deque()
     for token in self.postfix_stack:
         if self.is_operator(token):
@@ -22,16 +22,14 @@ def calculate(self, expression):
                 calc_stack.append(str(result))
             else:
                 if len(calc_stack) < 2:
-                    raise ValueError(f"Invalid expression: insufficient operands for operator '{token}'")
+                    raise ValueError('Invalid expression: insufficient operands for operator {}'.format(token))
                 second_value = calc_stack.pop()
                 first_value = calc_stack.pop()
-                if token == '\\/' and Decimal(second_value) == 0:
-                    raise ZeroDivisionError('Division by zero')
                 result = self._calculate(first_value, second_value, token)
                 calc_stack.append(str(result))
         else:
             calc_stack.append(token)
     if len(calc_stack) != 1:
-        raise ValueError('Invalid expression: malformed postfix notation')
+        raise ValueError('Invalid expression: multiple values remaining in calculation stack')
     result_decimal = Decimal(calc_stack.pop())
     return float(result_decimal)

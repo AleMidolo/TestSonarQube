@@ -12,9 +12,10 @@ def correlation_matrix(data):
     n = len(data)
     if n == 0:
         return []
-    row_lengths = [len(row) for row in data]
-    if len(set(row_lengths)) != 1:
-        raise ValueError('All rows must have the same length')
+    row_length = len(data[0])
+    for row in data:
+        if len(row) != row_length:
+            raise ValueError('All rows must have the same length')
     corr_matrix = [[0.0] * n for _ in range(n)]
     for i in range(n):
         for j in range(n):

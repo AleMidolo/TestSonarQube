@@ -13,7 +13,13 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         [3.0, 7.0]
 
         """
-    result = []
+    import numpy as np
+    x = np.array(x, dtype=float)
+    y = np.array(y, dtype=float)
+    z = np.array(z, dtype=float)
+    if z.shape != (len(y), len(x)):
+        raise ValueError(f'z must have shape ({len(y)}, {len(x)}), but has shape {z.shape}')
+    z_interp = []
     for xi, yi in zip(x_interp, y_interp):
         x_idx = None
         for i in range(len(x) - 1):
@@ -26,13 +32,15 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
                 y_idx = j
                 break
         if x_idx is None or y_idx is None:
-            raise ValueError('Interpolation point outside data range')
-        z11 = z[x_idx][y_idx]
-        z12 = z[x_idx][y_idx + 1]
-        z21 = z[x_idx + 1][y_idx]
-        z22 = z[x_idx + 1][y_idx + 1]
-        z1 = z11 + (z21 - z11) * (xi - x[x_idx]) / (x[x_idx + 1] - x[x_idx])
-        z2 = z12 + (z22 - z12) * (xi - x[x_idx]) / (x[x_idx + 1] - x[x_idx])
-        zi = z1 + (z2 - z1) * (yi - y[y_idx]) / (y[y_idx + 1] - y[y_idx])
-        result.append(zi)
-    return result
+            raise ValueError(f'Point ({xi}, {yi}) is outside the interpolation grid')
+        x1, x2 = (x[x_idx], x[x_idx + 1])
+        y1, y2 = (y[y_idx], y[y_idx + 1])
+        z11 = z[y_idx, x_idx]
+        z12 = z[y_idx, x_idx + 1]
+        z21 = z[y_idx + 1, x_idx]
+        z22 = z[y_idx + 1, x_idx + 1]
+        wx = (xi - x1) / (x2 - x1)
+        wy = (yi - y1) / (y2 - y1)
+        z_interp_val = (1 - wx) * (1 - wy) * z11 + wx * (1 - wy) * z12 + (1 - wx) * wy * z21 + wx * wy * z22
+        z_interp.append(float(z_interp_val))
+    return z_interp
