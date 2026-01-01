@@ -7,37 +7,24 @@ def text2int(self, textnum):
         >>> w2n.text2int("thirty-two")
         "32"
         """
-    if textnum in self.ordinal_words:
-        return str(self.ordinal_words[textnum])
-    textnum = textnum.replace('-', ' ')
-    words = textnum.lower().split()
-    processed_words = []
-    for word in words:
-        if word in self.ordinal_words:
-            processed_words.append(str(self.ordinal_words[word]))
-            continue
-        found = False
-        for ending, replacement in self.ordinal_endings:
-            if word.endswith(ending):
-                base_word = word[:-len(ending)] + replacement
-                if base_word in self.numwords:
-                    processed_words.append(base_word)
-                    found = True
-                    break
-        if not found:
-            processed_words.append(word)
+    textnum = textnum.lower().replace('-', ' ')
+    words = textnum.split()
     current = 0
     result = 0
-    for word in processed_words:
-        if word.isdigit():
-            current += int(word)
-        elif word in self.numwords:
+    for word in words:
+        if word in self.ordinal_words:
+            current += self.ordinal_words[word]
+        else:
+            for ending, replacement in self.ordinal_endings:
+                if word.endswith(ending):
+                    word = word[:-len(ending)] + replacement
+                    break
+            if word not in self.numwords:
+                continue
             scale, increment = self.numwords[word]
             current = current * scale + increment
             if scale > 100:
                 result += current
                 current = 0
-        elif word == 'and':
-            continue
     result += current
     return str(result)

@@ -1,6 +1,6 @@
 def resize_image(self, width, height):
     """
-        Resize the image if image has opened.
+        Risize the image if image has opened.
         :param width: int, the target width of image
         :param height: int, the target height of image
         >>> processor.load_image('test.jpg')

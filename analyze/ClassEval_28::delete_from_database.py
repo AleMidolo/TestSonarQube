@@ -14,7 +14,11 @@ def delete_from_database(self, table_name, name):
         if col_info[2] == 'TEXT':
             name_column = col_info[1]
             break
-    if name_column is not None:
+    if name_column:
+        delete_query = f'DELETE FROM {table_name} WHERE {name_column} = ?'
+        cursor.execute(delete_query, (name,))
+    elif len(columns_info) > 1:
+        name_column = columns_info[1][1]
         delete_query = f'DELETE FROM {table_name} WHERE {name_column} = ?'
         cursor.execute(delete_query, (name,))
     conn.commit()
