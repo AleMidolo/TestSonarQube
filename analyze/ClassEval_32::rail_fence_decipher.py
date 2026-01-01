@@ -9,7 +9,7 @@ def rail_fence_decipher(self, encrypted_text, rails):
         'Hello, World!'
 
         """
-    if rails == 1:
+    if rails <= 1:
         return encrypted_text
     fence = [['' for _ in range(len(encrypted_text))] for _ in range(rails)]
     row, col = (0, 0)

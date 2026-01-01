@@ -12,30 +12,29 @@ def parse_arguments(self, command_string):
         """
     self.arguments = {}
     tokens = command_string.split()
-    i = 0
-    while i < len(tokens) and (not tokens[i].startswith('-')):
-        i += 1
+    i = 1
     while i < len(tokens):
         token = tokens[i]
-        if token.startswith('--'):
-            if '=' in token:
-                arg_name, arg_value = token[2:].split('=', 1)
-                self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
-                i += 1
+        if token.startswith('--') and '=' in token:
+            arg_part, value_part = token[2:].split('=', 1)
+            arg_name = arg_part
+            value = value_part
+            self.arguments[arg_name] = self._convert_type(arg_name, value)
+            i += 1
+        elif token.startswith('--'):
+            arg_name = token[2:]
+            if i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
+                value = tokens[i + 1]
+                self.arguments[arg_name] = self._convert_type(arg_name, value)
+                i += 2
             else:
-                arg_name = token[2:]
-                if i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
-                    arg_value = tokens[i + 1]
-                    self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
-                    i += 2
-                else:
-                    self.arguments[arg_name] = True
-                    i += 1
-        elif token.startswith('-'):
+                self.arguments[arg_name] = True
+                i += 1
+        elif token.startswith('-') and (not token.startswith('--')):
             arg_name = token[1:]
             if i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
-                arg_value = tokens[i + 1]
-                self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
+                value = tokens[i + 1]
+                self.arguments[arg_name] = self._convert_type(arg_name, value)
                 i += 2
             else:
                 self.arguments[arg_name] = True

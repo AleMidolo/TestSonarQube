@@ -12,8 +12,7 @@ def write_text(self, content, font_size=12, alignment='left'):
         run = paragraph.add_run(content)
         font = run.font
         font.size = Pt(font_size)
-        alignment_value = self._get_alignment_value(alignment)
-        paragraph.alignment = alignment_value
+        paragraph.alignment = self._get_alignment_value(alignment)
         doc.save(self.file_path)
         return True
     except:

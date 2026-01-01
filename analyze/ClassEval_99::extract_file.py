@@ -10,6 +10,7 @@ def extract_file(self, file_name, output_path):
     try:
         with zipfile.ZipFile(self.file_name, 'r') as zip_file:
             if file_name in zip_file.namelist():
+                os.makedirs(output_path, exist_ok=True)
                 zip_file.extract(file_name, output_path)
                 return True
             else:

@@ -9,10 +9,12 @@ def select(table, columns='*', where=None):
         >>> SQLQueryBuilder.select('table1', columns = ["col1","col2"], where = {"age": 15})
         "SELECT col1, col2 FROM table1 WHERE age='15'"
         """
-    if columns != '*':
+    if columns == '*':
+        columns_str = '*'
+    elif isinstance(columns, list):
         columns_str = ', '.join(columns)
     else:
-        columns_str = '*'
+        columns_str = str(columns)
     query = f'SELECT {columns_str} FROM {table}'
     if where:
         where_clause = ' AND '.join((f"{k}='{v}'" for k, v in where.items()))
