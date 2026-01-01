@@ -9,5 +9,6 @@ def select_all(self):
         """
     result = []
     for i in range(1, len(self.datas) + 1):
-        result.extend(self.select(i))
+        for permutation in itertools.permutations(self.datas, i):
+            result.append(list(permutation))
     return result

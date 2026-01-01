@@ -1,3 +1,4 @@
+@staticmethod
 def add(c1, c2):
     """
         把两个复数相加。
@@ -9,4 +10,6 @@ def add(c1, c2):
         (4+6j)
 
         """
-    return complex(c1.real + c2.real, c1.imag + c2.imag)
+    real = c1.real + c2.real
+    imaginary = c1.imag + c2.imag
+    return complex(real, imaginary)

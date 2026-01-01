@@ -9,8 +9,8 @@ def check_won(self, map):
         False
 
         """
-    for row in range(self.n):
-        for col in range(self.n):
-            if self.player_map[row][col] == '-' and self.minesweeper_map[row][col] != 'X':
+    for i in range(self.n):
+        for j in range(self.n):
+            if map[i][j] == '-' and self.minesweeper_map[i][j] != 'X':
                 return False
     return True

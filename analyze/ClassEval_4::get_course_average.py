@@ -4,12 +4,11 @@ def get_course_average(self, course):
         :param course: 字符串，课程名称
         :return: float，如果有人有该课程的分数，则返回该课程的平均分数；如果没有人有记录，则返回 None。
         """
-    total_score = 0
-    count = 0
+    scores = []
     for student in self.students.values():
         if course in student['courses']:
-            total_score += student['courses'][course]
-            count += 1
-    if count == 0:
+            scores.append(student['courses'][course])
+    if scores:
+        return sum(scores) / len(scores)
+    else:
         return None
-    return total_score / count

@@ -4,11 +4,5 @@ def _get_alignment_value(self, alignment):
         :param alignment: str，对齐字符串（'left', 'center', 或 'right'）。
         :return: int，对齐值。
         """
-    if alignment == 'left':
-        return WD_PARAGRAPH_ALIGNMENT.LEFT
-    elif alignment == 'center':
-        return WD_PARAGRAPH_ALIGNMENT.CENTER
-    elif alignment == 'right':
-        return WD_PARAGRAPH_ALIGNMENT.RIGHT
-    else:
-        raise ValueError("Invalid alignment value. Use 'left', 'center', or 'right'.")
+    alignment_mapping = {'left': WD_PARAGRAPH_ALIGNMENT.LEFT, 'center': WD_PARAGRAPH_ALIGNMENT.CENTER, 'right': WD_PARAGRAPH_ALIGNMENT.RIGHT}
+    return alignment_mapping.get(alignment.lower(), WD_PARAGRAPH_ALIGNMENT.LEFT)

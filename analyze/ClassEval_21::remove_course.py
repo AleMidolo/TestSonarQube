@@ -4,7 +4,7 @@ def remove_course(self, course):
         :param course: dict，课程的信息，包括 'start_time'，'end_time' 和 'name'
         >>> classroom = Classroom(1)
         >>> classroom.add_course({'name': 'math', 'start_time': '8:00', 'end_time': '9:40'})
-        >>> classroom.remove_course({'name': 'math', 'start_time': '8:00', 'end_time': '9:40'})
+        >>> classroom.add_course({'name': 'math', 'start_time': '8:00', 'end_time': '9:40'})
         """
     if course in self.courses:
         self.courses.remove(course)

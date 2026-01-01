@@ -7,13 +7,13 @@ def simulate_operation(self):
         >>> thermostat.simulate_operation()
         18
         """
-    time_taken = 0
+    self.auto_set_mode()
+    time_elapsed = 0
     while abs(self.current_temperature - self.target_temperature) > 0.1:
-        self.auto_set_mode()
         if self.mode == 'heat':
-            self.current_temperature += 1
+            self.current_temperature += 1.0
         else:
-            self.current_temperature -= 1
-        time.sleep(0.1)
-        time_taken += 1
-    return time_taken
+            self.current_temperature -= 1.0
+        time_elapsed += 1
+        time.sleep(0.01)
+    return time_elapsed

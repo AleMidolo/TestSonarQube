@@ -8,7 +8,9 @@ def trans_three(self, s):
         "ONE HUNDRED AND TWENTY THREE"
         """
     s = s.zfill(3)
-    if s[0] != '0':
-        return self.NUMBER[int(s[0])] + ' HUNDRED' + (' AND ' + self.trans_two(s[1:]) if s[1:] != '00' else '')
-    else:
+    if s[0] == '0':
         return self.trans_two(s[1:])
+    elif s[1:] == '00':
+        return self.NUMBER[int(s[0])] + ' HUNDRED'
+    else:
+        return self.NUMBER[int(s[0])] + ' HUNDRED AND ' + self.trans_two(s[1:])

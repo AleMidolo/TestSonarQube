@@ -9,4 +9,10 @@ def split_sentences(self, text):
         """
     pattern = self.generate_split_sentences_pattern()
     sentences = re.split(pattern, text)
-    return [sentence.strip(' ') for sentence in sentences if sentence]
+    result = []
+    for i, sentence in enumerate(sentences):
+        if i < len(sentences) - 1:
+            result.append(sentence.rstrip('.!?'))
+        else:
+            result.append(sentence)
+    return result

@@ -12,5 +12,6 @@ def get_host(self):
         host_end = url_without_scheme.find('/')
         if host_end != -1:
             return url_without_scheme[:host_end]
-        return url_without_scheme
+        else:
+            return url_without_scheme
     return None

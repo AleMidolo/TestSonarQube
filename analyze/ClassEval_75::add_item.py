@@ -7,8 +7,7 @@ def add_item(self, item, price, quantity=1):
         :return: None
         >>> shoppingcart = ShoppingCart()
         >>> shoppingcart.add_item("apple", 1, 5)
-        >>> shoppingcart.view_items()
-        {"apple":{"price":1, "quantity":5}}
+        self.items = {"apple":{"price":1, "quantity":5}}
         """
     if item in self.items:
         self.items[item]['quantity'] += quantity

@@ -10,8 +10,19 @@ def get_job_applicants(self, job):
         [{'name': 'Tom', 'skills': ['skill1', 'skill2'], 'experience': 'experience'}]
 
         """
-    applicants = []
+
+    def matches_requirements(resume, job_requirements):
+        """
+            Helper function to check if a resume matches job requirements.
+            :param resume: Resume information, dict.
+            :param job_requirements: Job requirements, list.
+            :return: True if resume matches requirements, False otherwise.
+            """
+        resume_skills = set((skill.lower() for skill in resume['skills']))
+        job_reqs = set((req.lower() for req in job_requirements))
+        return job_reqs.issubset(resume_skills)
+    matching_applicants = []
     for resume in self.resumes:
-        if all((skill in resume['skills'] for skill in job['requirements'])):
-            applicants.append(resume)
-    return applicants
+        if matches_requirements(resume, job['requirements']):
+            matching_applicants.append(resume)
+    return matching_applicants
