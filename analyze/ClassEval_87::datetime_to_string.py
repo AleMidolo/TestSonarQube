@@ -1,10 +1,9 @@
 def datetime_to_string(self, datetime):
     """
-        एक datetime उदाहरण को एक स्ट्रिंग में परिवर्तित करें
-        :param datetime: परिवर्तित करने के लिए datetime उदाहरण
-        :return: स्ट्रिंग, परिवर्तित समय स्ट्रिंग
+        Convierte una instancia de datetime a una cadena
+        :param datetime: la instancia de datetime a convertir
+        :return: cadena, cadena de tiempo convertida
         >>> timeutils.datetime_to_string(timeutils.datetime)
         "2023-06-14 19:30:03"
         """
-    format = '%Y-%m-%d %H:%M:%S'
-    return datetime.strftime(format)
+    return datetime.strftime('%Y-%m-%d %H:%M:%S')

@@ -1,10 +1,9 @@
 def get_my_cards(self):
     """
-        1 से 9 के बीच चार यादृच्छिक संख्याओं की एक सूची प्राप्त करें जो खिलाड़ी के कार्ड का प्रतिनिधित्व करती हैं।
-        :return: पूर्णांकों की सूची, जो खिलाड़ी के कार्ड का प्रतिनिधित्व करती है
-        >>> game = TwentyFourPointGame()
-        >>> game.get_my_cards()
+        Obtiene una lista de cuatro números aleatorios entre 1 y 9 que representan las cartas del jugador.
+        :return: lista de enteros, que representan las cartas del jugador
+        >>> juego = TwentyFourPointGame()
+        >>> juego.get_my_cards()
         """
-    if not self.nums:
-        self._generate_cards()
+    self._generate_cards()
     return self.nums

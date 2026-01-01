@@ -1,7 +1,7 @@
 def get_host(self):
     """
-        URL का दूसरा भाग प्राप्त करें, जो होस्ट डोमेन नाम है
-        :return: स्ट्रिंग, यदि सफल हो, तो URL का होस्ट डोमेन नाम लौटाएं
+        Obtiene la segunda parte de la URL, que es el nombre de dominio del host
+        :return: cadena, Si tiene éxito, devuelve el nombre de dominio del host de la URL
         >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
         >>> urlhandler.get_host()
         "www.baidu.com"
@@ -12,6 +12,5 @@ def get_host(self):
         host_end = url_without_scheme.find('/')
         if host_end != -1:
             return url_without_scheme[:host_end]
-        else:
-            return url_without_scheme
+        return url_without_scheme
     return None

@@ -1,6 +1,6 @@
 def return_book(self, book_id):
     """
-        दिए गए पुस्तक आईडी के आधार पर डेटाबेस में एक पुस्तक को वापस किया गया के रूप में चिह्नित करता है।
+        Marca un libro como devuelto en la base de datos según el ID del libro dado.
         :param book_id: int
         >>> book_db = BookManagementDB("test.db")
         >>> book_db.return_book(1)

@@ -1,7 +1,7 @@
 def all_not_signed_in(self):
     """
-        उन उपयोगकर्ता नामों की सूची प्राप्त करें जो साइन इन नहीं हैं।
-        :return: list[str], उन उपयोगकर्ता नामों की सूची जो साइन इन नहीं हैं।
+        Obtiene una lista de nombres de usuario que no han iniciado sesión.
+        :return: list[str], una lista de nombres de usuario que no han iniciado sesión.
         >>> signInSystem = SignInSystem()
         >>> signInSystem.add_user("a")
         True

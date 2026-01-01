@@ -1,8 +1,8 @@
 def get_BMI(self):
     """
-        ऊँचाई और वजन के आधार पर BMI की गणना करें।
-        :return: BMI, जो वजन को ऊँचाई के वर्ग से विभाजित करता है, float।
-        >>> fitnessTracker = FitnessTracker(1.8, 70, 20, "male")
+        Calcular el IMC basado en la altura y el peso.
+        :return: IMC, que es el peso dividido por el cuadrado de la altura, float.
+        >>> fitnessTracker = FitnessTracker(1.8, 70, 20, "masculino")
         >>> fitnessTracker.get_BMI()
         21.604938271604937
 

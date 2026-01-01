@@ -1,38 +1,27 @@
 def solve(self):
     """
-        BFS एल्गोरिदम का इस्तेमाल करके एक पाथ सॉल्यूशन ढूंढें जो गोल स्टेट तक पहुँचने के लिए
-        शुरुआती स्टेट से चलने का रास्ता बताता है।
-
-        open_list नाम की एक लिस्ट को क्यू के तौर पर बनाए रखें और शुरुआती स्टेट जोड़ें।
-        हमेशा 0वें इंडेक्स एलिमेंट को पॉप करें और सभी संभावित डायरेक्शन ढूंढने के लिए
-        get_possible_moves मेथड को इनवोक करें।
-
-        possible_moves लिस्ट को ट्रैवर्स करें और कई नए स्टेट पाने के लिए move मेथड को इनवोक करें।
-        फिर इन स्टेट्स को open_list में जोड़ें।
-
-        ऊपर दिए गए स्टेप्स को तब तक दोहराएं जब तक open_list खाली न हो जाए या स्टेट गोल स्टेट में बदल न जाए।
-
-        :return path: str की एक लिस्ट, जो गोल स्टेट तक पहुँचने का समाधान (path) दिखाती है।
-
+        Utiliza el algoritmo BFS para encontrar la solución del camino que lleva el estado inicial al estado objetivo.
+        Mantiene una lista como una cola, llamada open_list, y agrega el estado inicial.
+        Siempre visita y elimina el elemento en el índice 0, invoca el método get_possible_moves para encontrar todas las direcciones posibles.
+        Recorre la lista possible_moves e invoca el método move para obtener varios nuevos estados. Luego los agrega.
+        Repite los pasos anteriores hasta que open_list esté vacía o el estado haya cambiado al estado objetivo.
+        :return path: lista de str, la solución al estado objetivo.
         >>> eightPuzzle = EightPuzzle([[1, 2, 3], [4, 5, 6], [7, 0, 8]])
         >>> eightPuzzle.solve()
-        ['right']
+        ['derecha']
         """
     from collections import deque
-    open_list = deque()
-    open_list.append((self.initial_state, []))
+    open_list = deque([(self.initial_state, [])])
     visited = set()
-    visited.add(tuple((tuple(row) for row in self.initial_state)))
+    visited.add(tuple(map(tuple, self.initial_state)))
     while open_list:
-        current_state, current_path = open_list.popleft()
+        current_state, path = open_list.popleft()
         if current_state == self.goal_state:
-            return current_path
-        possible_moves = self.get_possible_moves(current_state)
-        for direction in possible_moves:
-            new_state = self.move(current_state, direction)
-            state_tuple = tuple((tuple(row) for row in new_state))
-            if state_tuple not in visited:
-                visited.add(state_tuple)
-                new_path = current_path + [direction]
+            return path
+        for move_direction in self.get_possible_moves(current_state):
+            new_state = self.move(current_state, move_direction)
+            new_path = path + [move_direction]
+            if tuple(map(tuple, new_state)) not in visited:
+                visited.add(tuple(map(tuple, new_state)))
                 open_list.append((new_state, new_path))
     return []

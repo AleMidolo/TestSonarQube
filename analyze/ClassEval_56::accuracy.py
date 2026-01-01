@@ -1,9 +1,9 @@
 def accuracy(self, predicted_labels, true_labels):
     """
-        सटीकता की गणना करें
-        :param predicted_labels: सूची, पूर्वानुमानित परिणाम
-        :param true_labels: सूची, सही लेबल
-        :return: फ्लोट
+        Calcular la precisión
+        :param predicted_labels: lista, resultados predichos
+        :param true_labels: lista, etiquetas verdaderas
+        :return: float
         >>> mc = MetricsCalculator()
         >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])
         0.5

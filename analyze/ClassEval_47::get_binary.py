@@ -1,16 +1,12 @@
 def get_binary(self):
     """
-        यदि IP पता मान्य है, तो IP पते का बाइनरी रूप लौटाएं; अन्यथा, '' लौटाएं
-        :return: स्ट्रिंग
+        Si la dirección IP es válida, devuelve la forma binaria de la dirección IP; de lo contrario, devuelve ''
+        :return: cadena
         >>> ipaddress = IPAddress("10.10.10.10")
         >>> ipaddress.get_binary()
         "00001010.00001010.00001010.00001010"
         """
-    if not self.is_valid():
+    if self.is_valid():
+        return '.'.join((format(int(octet), '08b') for octet in self.ip_address.split('.')))
+    else:
         return ''
-    octets = self.get_octets()
-    binary_octets = []
-    for octet in octets:
-        binary = bin(int(octet))[2:]
-        binary_octets.append(binary.zfill(8))
-    return '.'.join(binary_octets)

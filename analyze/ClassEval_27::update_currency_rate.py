@@ -1,9 +1,9 @@
 def update_currency_rate(self, currency, new_rate):
     """
-        एक निश्चित मुद्रा के लिए विनिमय दर को अपडेट करें
+        Actualiza el tipo de cambio para una cierta moneda
         :param currency:string
         :param new_rate:float
-        :return:यदि सफल, तो None लौटाता है; यदि असफल, तो False लौटाता है
+        :return:Si es exitoso, devuelve None; si no es exitoso, devuelve False
         >>> cc = CurrencyConverter()
         >>> cc.update_currency_rate('CNY', 7.18)
         self.rates['CNY'] = 7.18

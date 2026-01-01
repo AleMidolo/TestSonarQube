@@ -1,7 +1,7 @@
 def total(self):
     """
-        कार्ट में आइटम्स की कुल लागत की गणना करें।
-        :return: float, आइटम्स की कुल लागत
+        Calcular el costo total de los artículos en el carrito.
+        :return: float, costo total de los artículos
         >>> customer = {'name': 'John Doe', 'fidelity': 1200}
         >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]
         >>> ds = DiscountStrategy(customer, cart)

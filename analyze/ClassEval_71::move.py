@@ -1,10 +1,10 @@
 def move(self, direction):
     """
-        निर्दिष्ट दिशा के आधार पर खिलाड़ी को स्थानांतरित करें और जांचें कि खेल जीता गया है या नहीं।
-        :param direction: str, खिलाड़ी की गति की दिशा। 
-            यह 'w', 's', 'a', या 'd' हो सकता है जो क्रमशः ऊपर, नीचे, बाएं, या दाएं का प्रतिनिधित्व करता है।
+        Mueve al jugador según la dirección especificada y verifica si el juego ha sido ganado.
+        :param direction: str, la dirección del movimiento del jugador. 
+            Puede ser 'w', 's', 'a' o 'd' que representan arriba, abajo, izquierda o derecha respectivamente.
 
-        :return: यदि खेल जीता गया है तो True, अन्यथा False।
+        :return: True si el juego ha sido ganado, False en caso contrario.
         >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"])       
         >>> game.print_map()
         # # # # # 
@@ -23,28 +23,20 @@ def move(self, direction):
         >>> game.move('d') 
         True
         """
-    dir_map = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
-    if direction not in dir_map:
-        return self.is_game_over
-    dr, dc = dir_map[direction]
-    new_row = self.player_row + dr
-    new_col = self.player_col + dc
-    if new_row < 0 or new_row >= len(self.map) or new_col < 0 or (new_col >= len(self.map[0])):
-        return self.is_game_over
-    if self.map[new_row][new_col] == '#':
-        return self.is_game_over
-    box_index = -1
-    for i, box in enumerate(self.boxes):
-        if box == (new_row, new_col):
-            box_index = i
-            break
-    if box_index != -1:
-        box_new_row = new_row + dr
-        box_new_col = new_col + dc
-        if box_new_row < 0 or box_new_row >= len(self.map) or box_new_col < 0 or (box_new_col >= len(self.map[0])) or (self.map[box_new_row][box_new_col] == '#') or ((box_new_row, box_new_col) in self.boxes):
-            return self.is_game_over
-        self.boxes[box_index] = (box_new_row, box_new_col)
-    self.player_row = new_row
-    self.player_col = new_col
-    self.check_win()
-    return self.is_game_over
+    direction_map = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
+    if direction not in direction_map:
+        return False
+    new_player_row = self.player_row + direction_map[direction][0]
+    new_player_col = self.player_col + direction_map[direction][1]
+    if self.map[new_player_row][new_player_col] == '#':
+        return False
+    if (new_player_row, new_player_col) in self.boxes:
+        new_box_row = new_player_row + direction_map[direction][0]
+        new_box_col = new_player_col + direction_map[direction][1]
+        if self.map[new_box_row][new_box_col] == '#' or (new_box_row, new_box_col) in self.boxes:
+            return False
+        self.boxes.remove((new_player_row, new_player_col))
+        self.boxes.append((new_box_row, new_box_col))
+    self.player_row = new_player_row
+    self.player_col = new_player_col
+    return self.check_win()

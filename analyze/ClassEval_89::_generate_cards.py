@@ -1,5 +1,5 @@
 def _generate_cards(self):
     """
-        कार्डों के लिए 1 और 9 के बीच यादृच्छिक संख्याएँ उत्पन्न करें।
+        Generar números aleatorios entre 1 y 9 para las cartas.
         """
-    self.nums = [random.randint(1, 9) for _ in range(4)]
+    self.nums = random.sample(range(1, 10), 4)

@@ -1,15 +1,14 @@
 def remove_user(self, username):
     """
-        चैट से एक उपयोगकर्ता को हटाएं।
-        :param username: उपयोगकर्ता का नाम, str.
-        :return: यदि उपयोगकर्ता पहले से चैट में है, तो True लौटाता है, अन्यथा, False लौटाता है।
+        Eliminar un usuario del Chat.
+        :param username: El nombre del usuario, str.
+        :return: Si el usuario ya está en el Chat, devuelve True, de lo contrario, devuelve False.
         >>> chat = Chat()
         >>> chat.users = {'John': []}
         >>> chat.remove_user('John')
         True
         >>> chat.remove_user('John')
         False
-
         """
     if username in self.users:
         del self.users[username]

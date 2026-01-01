@@ -1,10 +1,10 @@
 def convert(self, amount, from_currency, to_currency):
     """
-        एक दिए गए मुद्रा के मूल्य को दूसरे मुद्रा प्रकार में परिवर्तित करें
-        :param amount: float, एक दिए गए मुद्रा का मूल्य
-        :param from_currency: string, स्रोत मुद्रा प्रकार
-        :param to_currency: string, लक्ष्य मुद्रा प्रकार
-        :return: float, दूसरे मुद्रा प्रकार में परिवर्तित मूल्य
+        Convierte el valor de una moneda dada a otro tipo de moneda
+        :param amount: float, El valor de una moneda dada
+        :param from_currency: string, tipo de moneda de origen
+        :param to_currency: string, tipo de moneda de destino
+        :return: float, valor convertido a otro tipo de moneda
         >>> cc = CurrencyConverter()
         >>> cc.convert(64, 'CNY','USD')
         10.0

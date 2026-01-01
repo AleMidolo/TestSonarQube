@@ -1,8 +1,14 @@
 def _get_alignment_value(self, alignment):
     """
-        दिए गए संरेखण स्ट्रिंग के अनुसार संरेखण मान लौटाता है।
-        :param alignment: str, संरेखण स्ट्रिंग ('left', 'center', या 'right')।
-        :return: int, संरेखण मान।
+        Devuelve el valor de alineación correspondiente a la cadena de alineación dada.
+        :param alignment: str, la cadena de alineación ('izquierda', 'centro' o 'derecha').
+        :return: int, el valor de alineación.
         """
-    alignment_mapping = {'left': WD_PARAGRAPH_ALIGNMENT.LEFT, 'center': WD_PARAGRAPH_ALIGNMENT.CENTER, 'right': WD_PARAGRAPH_ALIGNMENT.RIGHT}
-    return alignment_mapping.get(alignment.lower(), WD_PARAGRAPH_ALIGNMENT.LEFT)
+    if alignment == 'left':
+        return WD_PARAGRAPH_ALIGNMENT.LEFT
+    elif alignment == 'center':
+        return WD_PARAGRAPH_ALIGNMENT.CENTER
+    elif alignment == 'right':
+        return WD_PARAGRAPH_ALIGNMENT.RIGHT
+    else:
+        return WD_PARAGRAPH_ALIGNMENT.LEFT

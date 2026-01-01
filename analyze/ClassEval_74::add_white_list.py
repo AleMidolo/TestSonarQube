@@ -1,8 +1,8 @@
 def add_white_list(self, addr):
     """
-        एक पते को व्हाइटलिस्ट में जोड़ें और यदि यह पहले से मौजूद है तो कुछ न करें
-        :param addr: int, जो पता जोड़ा जाना है
-        :return: नई व्हाइटलिस्ट, यदि पता पहले से मौजूद है तो False लौटाएं
+        Agrega una dirección a la lista blanca y no hace nada si ya existe
+        :param addr: int, dirección a ser agregada
+        :return: nueva lista blanca, devuelve False si la dirección ya existe
         >>> server = Server()
         >>> server.add_white_list(88)
         [88]

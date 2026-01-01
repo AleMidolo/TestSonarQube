@@ -1,7 +1,7 @@
 def get_all_students_with_fail_course(self):
     """
-        उन सभी छात्रों को प्राप्त करें जिनका कोई भी स्कोर 60 से कम है
-        :return: str की सूची, छात्र का नाम
+        Obtener todos los estudiantes que tienen alguna calificación por debajo de 60
+        :return: lista de str, nombre del estudiante
         >>> system.add_course_score('student 1', 'Society', 59)
         >>> system.get_all_students_with_fail_course()
         ['student 1']

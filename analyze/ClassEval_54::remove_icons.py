@@ -1,8 +1,8 @@
 def remove_icons(self, pos1, pos2):
     """
-        खेल के बोर्ड पर जुड़े हुए आइकनों को हटाएं
-        :param pos1: पहले आइकन को हटाने की स्थिति ट्यूपल(x, y)
-        :param pos2: दूसरे आइकन को हटाने की स्थिति ट्यूपल(x, y)
+        elimina los íconos conectados en el tablero de juego
+        :param pos1: tupla de posición (x, y) del primer ícono a eliminar
+        :param pos2: tupla de posición (x, y) del segundo ícono a eliminar
         :return: None
         >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
         mc.board = [['a', 'b', 'c', 'a'],

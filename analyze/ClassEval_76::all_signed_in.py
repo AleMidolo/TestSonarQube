@@ -1,16 +1,11 @@
 def all_signed_in(self):
     """
-        सभी उपयोगकर्ताओं के साइन इन होने की जांच करें।
-        :return: bool, यदि सभी उपयोगकर्ता साइन इन हैं तो True, अन्यथा False।
+        Verifica si todos los usuarios han iniciado sesión.
+        :return: bool, True si todos los usuarios han iniciado sesión, False en caso contrario.
         >>> signInSystem.add_user("jack")
         True
         >>> signInSystem.sign_in("jack")
         >>> signInSystem.all_signed_in()
         True
         """
-    if not self.users:
-        return True
-    for signed_in in self.users.values():
-        if not signed_in:
-            return False
-    return True
+    return all((signed_in for signed_in in self.users.values()))

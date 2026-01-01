@@ -1,7 +1,7 @@
 def delete_ticket(self, ticket_id):
     """
-        "tickets" तालिका से टिकट ID द्वारा एक टिकट हटाता है।
-        :param ticket_id: int, हटाने के लिए टिकट की ID।
+        Elimina un ticket de la tabla "tickets" por ID de ticket.
+        :param ticket_id: int, el ID del ticket a eliminar.
         :return: None
         """
     self.cursor.execute('\n                DELETE FROM tickets WHERE id = ?\n            ', (ticket_id,))

@@ -1,34 +1,24 @@
 def palindromic_string(self):
     """
-        दिए गए स्ट्रिंग में सबसे लंबा पलिंड्रोमिक उपस्ट्रिंग खोजता है।
-        :return: सबसे लंबा पलिंड्रोमिक उपस्ट्रिंग, str.
+        Encuentra la subcadena palindrómica más larga en la cadena dada.
+        :return: La subcadena palindrómica más larga, str.
         >>> manacher = Manacher('ababaxse')
         >>> manacher.palindromic_string()
         'ababa'
-
         """
-    if not self.input_string:
-        return ''
-    transformed = '|' + '|'.join(self.input_string) + '|'
-    n = len(transformed)
-    p = [0] * n
-    center = 0
-    right = 0
-    for i in range(n):
-        mirror = 2 * center - i
-        if i < right:
-            p[i] = min(right - i, p[mirror])
-        while i - p[i] - 1 >= 0 and i + p[i] + 1 < n and (transformed[i - p[i] - 1] == transformed[i + p[i] + 1]):
-            p[i] += 1
-        if i + p[i] > right:
-            center = i
-            right = i + p[i]
-    max_len = 0
-    center_index = 0
-    for i in range(n):
-        if p[i] > max_len:
-            max_len = p[i]
-            center_index = i
+    transformed_string = '|'.join(f'^{self.input_string}$')
+    n = len(transformed_string)
+    L = [0] * n
+    C = R = 0
+    for i in range(1, n - 1):
+        mirror = 2 * C - i
+        if R > i:
+            L[i] = min(R - i, L[mirror])
+        while transformed_string[i + L[i] + 1] == transformed_string[i - L[i] - 1]:
+            L[i] += 1
+        if i + L[i] > R:
+            C, R = (i, i + L[i])
+    max_len = max(L)
+    center_index = L.index(max_len)
     start = (center_index - max_len) // 2
-    end = start + max_len
-    return self.input_string[start:end]
+    return self.input_string[start:start + max_len]

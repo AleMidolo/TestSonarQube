@@ -1,9 +1,7 @@
 def setNum(self):
     """
-        हर ब्लॉक का साइज़ और डिवीज़न का बचा हुआ हिस्सा कैलकुलेट करें।
-
-        :return: एक टपल जिसमें हर ब्लॉक का साइज़ और डिवीज़न का बचा हुआ हिस्सा हो।
-
+        Calcula el tamaño de cada bloque y el resto de la división.
+        :return: el tamaño de cada bloque y el resto de la división, tupla.
         >>> a = AvgPartition([1, 2, 3, 4], 2)
         >>> a.setNum()
         (2, 0)

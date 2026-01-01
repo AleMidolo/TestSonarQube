@@ -1,8 +1,8 @@
 def sign_in(self, username):
     """
-        यदि उपयोगकर्ता self.users में है तो उपयोगकर्ता को साइन इन करें और स्थिति को True में बदलें।
-        :param username: str, साइन इन करने के लिए उपयोगकर्ता नाम।
-        :return: bool, यदि उपयोगकर्ता सफलतापूर्वक साइन इन होता है तो True, यदि उपयोगकर्ता मौजूद नहीं है तो False।
+        Iniciar sesión de un usuario si el usuario está en self.users y cambiar el estado a True.
+        :param username: str, el nombre de usuario que se va a iniciar sesión.
+        :return: bool, True si el usuario ha iniciado sesión con éxito, False si el usuario no existe.
         >>> signInSystem.sign_in("mike")
         True
         >>> signInSystem.sign_in("mik")
@@ -11,5 +11,4 @@ def sign_in(self, username):
     if username in self.users:
         self.users[username] = True
         return True
-    else:
-        return False
+    return False

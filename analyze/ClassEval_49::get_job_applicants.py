@@ -1,8 +1,8 @@
 def get_job_applicants(self, job):
     """
-        यह फ़ंक्शन उम्मीदवार की जानकारी प्राप्त करने के लिए उपयोग किया जाता है, और matches_requirements फ़ंक्शन को कॉल करके उन उम्मीदवारों की जानकारी लौटाता है जो आवश्यकताओं को पूरा करते हैं।
-        :param job: पद की जानकारी, dict.
-        :return: उन उम्मीदवारों की जानकारी जो आवश्यकताओं को पूरा करते हैं, list.
+        Esta función se utiliza para obtener información de los candidatos y devolver la información de los candidatos que cumplen con los requisitos llamando a la función matches_requirements.
+        :param job: La información del puesto, dict.
+        :return: La información de los candidatos que cumplen con los requisitos, list.
         >>> jobMarketplace = JobMarketplace()
         >>> jobMarketplace.resumes = [{"name": "Tom", "skills": ['skill1', 'skill2'], "experience": "experience"}]
         >>> jobMarketplace.job_listings = [{"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill1', 'skill2']}]
@@ -10,8 +10,8 @@ def get_job_applicants(self, job):
         [{'name': 'Tom', 'skills': ['skill1', 'skill2'], 'experience': 'experience'}]
 
         """
-    matching_applicants = []
+    applicants = []
     for resume in self.resumes:
-        if self.matches_requirements(resume, job):
-            matching_applicants.append(resume)
-    return matching_applicants
+        if self.matches_requirements(resume['skills'], job['requirements']):
+            applicants.append(resume)
+    return applicants

@@ -1,7 +1,7 @@
 def get_path(self):
     """
-        URL का तीसरा भाग प्राप्त करें, जो संसाधन का पता है
-        :return: स्ट्रिंग, यदि सफल हो, तो URL के संसाधन का पता लौटाएं
+        Obtiene la tercera parte de la URL, que es la dirección del recurso
+        :return: cadena, Si tiene éxito, devuelve la dirección del recurso de la URL
         >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
         >>> urlhandler.get_path()
         "/s?wd=aaa&rsv_spt=1#page"

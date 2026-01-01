@@ -1,8 +1,8 @@
 def is_alive(self):
     """
-        जांचें कि खिलाड़ी जीवित है या नहीं।
-        :return: यदि hp 0 से बड़ा है तो True, अन्यथा False।
-        >>> player_1 = RPGCharacter('player 1', 100, 10, 3)
+        Verifica si el jugador está vivo.
+        :return: True si los hp son mayores que 0, o False en caso contrario.
+        >>> player_1 = RPGCharacter('jugador 1', 100, 10, 3)
         >>> player_1.is_alive()
         True
         """

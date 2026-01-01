@@ -1,15 +1,15 @@
-@staticmethod
 def is_valid_ipv4(ip_address):
     """
-        दिए गए IP पते की वैधता की जांच करें कि यह एक वैध IPv4 पता है या नहीं।
-        :param ip_address: स्ट्रिंग, जांचने के लिए IP पता
-        :return: बूल, यदि IP पता वैध है तो True, अन्यथा False
-        >>> IpUtil.is_valid_ipv4('192.168.0.123')
-        True
-        >>> IpUtil.is_valid_ipv4('256.0.0.0')
-        False
+    Verifica si la dirección IP dada es una dirección IPv4 válida.
+    :param ip_address: cadena, la dirección IP a verificar
+    :return: bool, True si la dirección IP es válida, False en caso contrario
+    >>> is_valid_ipv4('192.168.0.123')
+    True
+    >>> is_valid_ipv4('256.0.0.0')
+    False
 
-        """
+    """
+    import socket
     try:
         socket.inet_pton(socket.AF_INET, ip_address)
         return True

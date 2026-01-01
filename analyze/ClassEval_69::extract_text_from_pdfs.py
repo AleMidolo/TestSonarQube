@@ -1,7 +1,7 @@
 def extract_text_from_pdfs(self):
     """
-        self.readers में pdf फ़ाइलों से पाठ निकालें
-        :return pdf_texts: str की सूची, प्रत्येक तत्व एक pdf फ़ाइल के पाठ है
+        Extraer texto de archivos pdf en self.readers
+        :return pdf_texts: lista de str, cada elemento es el texto de un archivo pdf
         >>> handler = PDFHandler(['a.pdf', 'b.pdf'])
         >>> handler.extract_text_from_pdfs()
         ['Test a.pdf', 'Test b.pdf']
@@ -10,6 +10,6 @@ def extract_text_from_pdfs(self):
     for reader in self.readers:
         text = ''
         for page in reader.pages:
-            text += page.extract_text()
+            text += page.extract_text() or ''
         pdf_texts.append(text)
     return pdf_texts

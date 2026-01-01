@@ -1,36 +1,34 @@
 def prepare(self, expression):
     """
-        इनफिक्स अभिव्यक्ति को पोस्टफिक्स नोटेशन में रूपांतरित करने के लिए तैयार करें
-        :param expression: स्ट्रिंग, तैयार की जाने वाली इनफिक्स अभिव्यक्ति
+        Prepara la expresión en notación infija para su conversión a notación postfija
+        :param expression: cadena, la expresión infija que se va a preparar
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.prepare("2+3*4")
 
         expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
         """
-    op_stack = deque()
-    arr = list(expression)
+    output = []
+    operator_stack = []
     i = 0
-    while i < len(arr):
-        if not self.is_operator(arr[i]):
-            start = i
-            if arr[i] == '~':
+    while i < len(expression):
+        c = expression[i]
+        if c.isdigit() or c == '~':
+            num = c
+            while i + 1 < len(expression) and (expression[i + 1].isdigit() or expression[i + 1] == '.'):
                 i += 1
-            while i < len(arr) and (not self.is_operator(arr[i])):
-                i += 1
-            number = ''.join(arr[start:i])
-            self.postfix_stack.append(number)
-            continue
-        else:
-            if arr[i] == '(':
-                op_stack.append(arr[i])
-            elif arr[i] == ')':
-                while op_stack and op_stack[-1] != '(':
-                    self.postfix_stack.append(op_stack.pop())
-                op_stack.pop()
-            else:
-                while op_stack and op_stack[-1] != '(' and self.compare(arr[i], op_stack[-1]):
-                    self.postfix_stack.append(op_stack.pop())
-                op_stack.append(arr[i])
-            i += 1
-    while op_stack:
-        self.postfix_stack.append(op_stack.pop())
+                num += expression[i]
+            output.append(num)
+        elif self.is_operator(c):
+            while operator_stack and operator_stack[-1] != '(' and self.compare(c, operator_stack[-1]):
+                output.append(operator_stack.pop())
+            operator_stack.append(c)
+        elif c == '(':
+            operator_stack.append(c)
+        elif c == ')':
+            while operator_stack and operator_stack[-1] != '(':
+                output.append(operator_stack.pop())
+            operator_stack.pop()
+        i += 1
+    while operator_stack:
+        output.append(operator_stack.pop())
+    self.postfix_stack = output

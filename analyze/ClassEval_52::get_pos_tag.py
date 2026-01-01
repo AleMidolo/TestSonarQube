@@ -1,14 +1,12 @@
 def get_pos_tag(self, sentence):
     """
-        वाक्य से पंक्चुएशन हटाएँ और इनपुट वाक्य को टोकनाइज़ करें,
-        फिर हर शब्द के लिए पार्ट-ऑफ़-स्पीच (POS) टैग को मार्क करें।
-
-        :param sentence: str, एक वाक्य
-        :return: list, वाक्य में हर शब्द के लिए POS टैग
-
+        Elimina la puntuación de la oración y tokeniza la oración de entrada, marcando la etiqueta de la parte del discurso de cada palabra.
+        :param sentence: una oración str
+        :return: lista, etiqueta de la parte del discurso de cada palabra en la oración.
         >>> lemmatization = Lemmatization()
-        >>> lemmatization.get_pos_tag("मैं एक रेस में दौड़ रहा हूँ।")
+        >>> lemmatization.get_pos_tag("I am running in a race.")
         ['PRP', 'VBP', 'VBG', 'IN', 'DT', 'NN']
+
         """
     sentence = self.remove_punctuation(sentence)
     words = word_tokenize(sentence)

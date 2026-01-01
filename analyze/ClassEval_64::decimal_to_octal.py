@@ -1,9 +1,9 @@
 @staticmethod
 def decimal_to_octal(decimal_num):
     """
-        एक संख्या को दशमलव प्रारूप से ऑक्टल प्रारूप में परिवर्तित करें।
-        :param decimal_num: int, दशमलव संख्या
-        :return: str, एक पूर्णांक का ऑक्टल प्रतिनिधित्व।
+        Convertir un número del formato decimal al formato octal.
+        :param decimal_num: int, número decimal
+        :return: str, la representación octal de un entero.
         >>> NumberConverter.decimal_to_octal(42423)
         '122667'
         """

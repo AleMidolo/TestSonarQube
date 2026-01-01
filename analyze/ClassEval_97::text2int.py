@@ -1,37 +1,24 @@
 def text2int(self, textnum):
     """
-        शब्द स्ट्रिंग को संबंधित पूर्णांक स्ट्रिंग में परिवर्तित करें
-        :param textnum: स्ट्रिंग, परिवर्तित करने के लिए शब्द स्ट्रिंग
-        :return: स्ट्रिंग, अंतिम परिवर्तित पूर्णांक स्ट्रिंग
+        Convierte la cadena de palabras en la cadena de número entero correspondiente
+        :param textnum: cadena, la cadena de palabras a ser convertida
+        :return: cadena, la cadena de número entero final convertida
         >>> w2n = Words2Numbers()
         >>> w2n.text2int("thirty-two")
         "32"
         """
-    textnum = textnum.lower().replace('-', ' ')
-    words = textnum.split()
-    current = 0
-    result = 0
-    for word in words:
-        if word in self.ordinal_words:
-            value = self.ordinal_words[word]
-            current += value
-        else:
-            for ending, replacement in self.ordinal_endings:
-                if word.endswith(ending):
-                    word = '%s%s' % (word[:-len(ending)], replacement)
-                    break
-            if word not in self.numwords:
-                continue
+    if not self.is_valid_input(textnum):
+        raise ValueError('Invalid input')
+    textnum = textnum.replace('-', ' ')
+    current = result = 0
+    for word in textnum.split():
+        if word in self.numwords:
             scale, increment = self.numwords[word]
-            if scale > 100:
-                if current == 0:
-                    current = 1
-                result += current * scale
+            current += increment
+            if scale > 1:
+                current *= scale
+                result += current
                 current = 0
-            else:
-                current = current * scale + increment
-                if scale > 90:
-                    result += current
-                    current = 0
-    result += current
-    return str(result)
+        else:
+            raise ValueError(f"Word '{word}' is not recognized")
+    return str(result + current)

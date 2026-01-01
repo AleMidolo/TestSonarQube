@@ -1,27 +1,21 @@
 def interpret(self, display=False):
     """
-        संगीत स्कोर को व्याख्या करें जिसे खेला जाना है
-        :param display: Bool, यह दर्शाता है कि व्याख्यायित स्कोर को प्रिंट करना है या नहीं
-        :return: dict की सूची, dict में दो फ़ील्ड होते हैं, Chord और Tune, जो क्रमशः अक्षर और संख्या हैं। यदि इनपुट खाली है या केवल whitespace है, तो एक खाली सूची लौटाई जाती है।
+        Interpreta la partitura musical que se va a tocar
+        :param display: Bool, que representa si se debe imprimir la partitura interpretada
+        :return: lista de dict, El dict incluye dos campos, Acorde y Melodía, que son letras y números, respectivamente. Si la entrada está vacía o contiene solo espacios en blanco, se devuelve una lista vacía.
         >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
         >>> play_list = context.interpret(display = False)
-        [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]
-
+        [{'Acorde': 'C', 'Melodía': '53231323'}, {'Acorde': 'Em', 'Melodía': '43231323'}, {'Acorde': 'F', 'Melodía': '43231323'}, {'Acorde': 'G', 'Melodía': '63231323'}]
         """
-    if not self.play_text or self.play_text.isspace():
+    if not self.play_text.strip():
         return []
-    result = []
-    items = self.play_text.split()
-    for item in items:
-        chord = ''
-        tune = ''
-        i = 0
-        while i < len(item) and (not item[i].isdigit()):
-            chord += item[i]
-            i += 1
-        tune = item[i:]
-        if chord and tune:
-            result.append({'Chord': chord, 'Tune': tune})
-            if display:
-                print(self.display(chord, tune))
-    return result
+    chords = []
+    parts = self.play_text.split()
+    for part in parts:
+        chord = ''.join(filter(str.isalpha, part))
+        melody = ''.join(filter(str.isdigit, part))
+        chords.append({'Acorde': chord, 'Melodía': melody})
+    if display:
+        for chord in chords:
+            print(self.display(chord['Acorde'], chord['Melodía']))
+    return chords

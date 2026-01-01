@@ -1,35 +1,23 @@
 def calculate(self, expression):
     """
-        दिए गए पोस्टफ़िक्स एक्सप्रेशन का रिज़ल्ट कैलकुलेट करें।
+    Calcular el resultado de la expresión en notación postfija dada
+    :param expression: cadena, la expresión en notación postfija a calcular
+    :return: float, el resultado calculado
+    >>> expression_calculator = ExpressionCalculator()
+    >>> expression_calculator.calculate("2 + 3 * 4")
+    14.0
 
-        :param expression: string, कैलकुलेट करने के लिए पोस्टफ़िक्स एक्सप्रेशन
-        :return: float, कैलकुलेट किया गया रिज़ल्ट
-
-        >>> expression_calculator = ExpressionCalculator()
-        >>> expression_calculator.calculate("2 + 3 * 4")
-        14.0
-        """
+    """
     self.postfix_stack.clear()
-    transformed_expression = self.transform(expression)
-    self.prepare(transformed_expression)
-    result_stack = deque()
-    for item in self.postfix_stack:
-        if self.is_operator(item):
-            if item == '~':
-                if result_stack:
-                    operand = result_stack.pop()
-                    result_stack.append(Decimal(0) - Decimal(operand))
-            else:
-                if len(result_stack) < 2:
-                    raise ValueError('Invalid expression: insufficient operands')
-                second_value = result_stack.pop()
-                first_value = result_stack.pop()
-                result = self._calculate(first_value, second_value, item)
-                result_stack.append(result)
+    prepared_expression = self.transform(expression)
+    self.prepare(prepared_expression)
+    op_stack = deque()
+    for token in self.postfix_stack:
+        if not self.is_operator(token):
+            op_stack.append(token)
         else:
-            result_stack.append(item)
-    if not result_stack:
-        raise ValueError('Invalid expression: no result')
-    result = float(result_stack.pop())
-    self.postfix_stack.clear()
-    return result
+            second_value = op_stack.pop()
+            first_value = op_stack.pop()
+            result = self._calculate(first_value, second_value, token)
+            op_stack.append(result)
+    return float(op_stack.pop())

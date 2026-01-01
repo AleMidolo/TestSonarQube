@@ -1,7 +1,7 @@
 def get_octets(self):
     """
-        यदि IP पता मान्य है, तो IP पते का निर्माण करने वाले चार दशमलव संख्याओं की सूची जो "." द्वारा अलग की गई है, लौटाई जाती है; अन्यथा, एक खाली सूची लौटाई जाती है
-        :return: सूची
+        Si la dirección IP es válida, se devuelve la lista de cuatro números decimales separados por "." que constituyen la dirección IP; de lo contrario, se devuelve una lista vacía.
+        :return: list
         >>> ipaddress = IPAddress("10.10.10.10")
         >>> ipaddress.get_octets()
         ["10", "10", "10", "10"]

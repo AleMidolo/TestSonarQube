@@ -1,12 +1,11 @@
 def add(self, segment):
     """
-        UrlPath में सेगमेंट की सूची में एक सेगमेंट जोड़ता है।
-        :param segment: str, जोड़ने के लिए सेगमेंट।
-        >>> url_path = UrlPath()
-        >>> url_path.add('foo')
-        >>> url_path.add('bar')
+    Agrega un segmento a la lista de segmentos en el UrlPath.
+    :param segment: str, el segmento a agregar.
+    >>> url_path = UrlPath()
+    >>> url_path.add('foo')
+    >>> url_path.add('bar')
 
-        url_path.segments = ['foo', 'bar']
-        """
-    if segment:
-        self.segments.append(segment)
+    url_path.segments = ['foo', 'bar']
+    """
+    self.segments.append(segment)

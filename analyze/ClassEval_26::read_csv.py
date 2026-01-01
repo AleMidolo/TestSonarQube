@@ -1,8 +1,8 @@
 def read_csv(self, file_name):
     """
-        csv फ़ाइल को file_name द्वारा पढ़ें, शीर्षक और डेटा प्राप्त करें
-        :param file_name: str, csv फ़ाइल का नाम
-        :return title, data: (list, list), पहली पंक्ति शीर्षक है, बाकी डेटा है
+        Lee el archivo csv por file_name, obtiene el título y los datos de él
+        :param file_name: str, nombre del archivo csv
+        :return title, data: (list, list), la primera fila es el título, el resto son datos
         >>> csvProcessor = CSVProcessor()
         >>> csvProcessor.read_csv('read_test.csv')
         (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])
@@ -11,7 +11,7 @@ def read_csv(self, file_name):
         with open(file_name, 'r', newline='') as file:
             reader = csv.reader(file)
             title = next(reader)
-            data = [row for row in reader]
+            data = list(reader)
         return (title, data)
     except:
         return ([], [])

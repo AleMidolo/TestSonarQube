@@ -1,8 +1,8 @@
 def calculate_cylinder_area(self, height):
     """
-        सिलेंडर का क्षेत्रफल self.radius और height के आधार पर गणना करें
-        :param height: सिलेंडर की ऊँचाई, फ्लोट
-        :return: सिलेंडर का क्षेत्रफल, फ्लोट
+        calcula el área del cilindro basado en self.radius y height
+        :param height: altura del cilindro, float
+        :return: área del cilindro, float
         >>> areaCalculator = AreaCalculator(2)
         >>> areaCalculator.calculate_cylinder_area(3)
         62.83185307179586

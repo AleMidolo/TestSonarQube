@@ -1,6 +1,6 @@
 def transfer(self, other_account, amount):
     """
-        वर्तमान खाते से दूसरे खाते में एक निश्चित राशि स्थानांतरित करता है।
+        Transfiere una cierta cantidad de la cuenta actual a otra cuenta.
         :param other_account: BankAccount
         :param amount: int
         >>> account1 = BankAccount()
@@ -13,6 +13,5 @@ def transfer(self, other_account, amount):
         raise ValueError('Invalid amount')
     if amount > self.balance:
         raise ValueError('Insufficient balance.')
-    self.balance -= amount
-    other_account.balance += amount
-    return self.balance
+    self.withdraw(amount)
+    other_account.deposit(amount)

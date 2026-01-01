@@ -1,16 +1,11 @@
 def is_start_with(self, request_uri):
     """
-        जांचें कि क्या अनुरोध URI कुछ उपसर्गों से शुरू होता है।
-        वर्तमान में, जांचे जा रहे उपसर्ग "/api" और "/login" हैं।
-        :param request_uri: str, अनुरोध का URI
-        :return: bool, यदि URI कुछ उपसर्गों से शुरू होता है तो True, अन्यथा False
+        Verifica si la URI de la solicitud comienza con ciertos prefijos.
+        Actualmente, los prefijos que se están verificando son "/api" y "/login".
+        :param request_uri: str, la URI de la solicitud
+        :return: bool, True si la URI comienza con ciertos prefijos, False en caso contrario
         >>> filter = AccessGatewayFilter()
         >>> filter.is_start_with('/api/data')
         True
-
         """
-    prefixes = ['/api', '/login']
-    for prefix in prefixes:
-        if request_uri.startswith(prefix):
-            return True
-    return False
+    return request_uri.startswith(('/api', '/login'))

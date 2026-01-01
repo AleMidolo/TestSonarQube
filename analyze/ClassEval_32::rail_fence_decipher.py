@@ -1,17 +1,14 @@
 def rail_fence_decipher(self, encrypted_text, rails):
     """
-        दिए गए ciphertext को Rail Fence cipher का उपयोग करके डिकोड करता है
-        :param encrypted_text: डिकोड करने के लिए ciphertext, str.
-        :param rails: डिक्रिप्शन के लिए उपयोग करने के लिए रेल की संख्या, int.
-        :return: डिकोड किया गया plaintext, str.
+        Descifra el texto cifrado dado utilizando el cifrado Rail Fence
+        :param encrypted_text: El texto cifrado a descifrar, str.
+        :param rails: El número de rieles a utilizar para la descifrado, int.
+        :return: El texto plano descifrado, str.
         >>> d = DecryptionUtils('key')
         >>> d.rail_fence_decipher('Hoo!el,Wrdl l', 3)
         'Hello, World!'
-
         """
-    if rails == 1:
-        return encrypted_text
-    rail_matrix = [['' for _ in range(len(encrypted_text))] for _ in range(rails)]
+    rail = [['\n' for i in range(len(encrypted_text))] for j in range(rails)]
     dir_down = None
     row, col = (0, 0)
     for i in range(len(encrypted_text)):
@@ -19,7 +16,7 @@ def rail_fence_decipher(self, encrypted_text, rails):
             dir_down = True
         if row == rails - 1:
             dir_down = False
-        rail_matrix[row][col] = '*'
+        rail[row][col] = '*'
         col += 1
         if dir_down:
             row += 1
@@ -28,8 +25,8 @@ def rail_fence_decipher(self, encrypted_text, rails):
     index = 0
     for i in range(rails):
         for j in range(len(encrypted_text)):
-            if rail_matrix[i][j] == '*' and index < len(encrypted_text):
-                rail_matrix[i][j] = encrypted_text[index]
+            if rail[i][j] == '*' and index < len(encrypted_text):
+                rail[i][j] = encrypted_text[index]
                 index += 1
     result = []
     row, col = (0, 0)
@@ -38,8 +35,8 @@ def rail_fence_decipher(self, encrypted_text, rails):
             dir_down = True
         if row == rails - 1:
             dir_down = False
-        if rail_matrix[row][col] != '':
-            result.append(rail_matrix[row][col])
+        if rail[row][col] != '*':
+            result.append(rail[row][col])
             col += 1
         if dir_down:
             row += 1

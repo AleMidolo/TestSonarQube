@@ -1,8 +1,8 @@
 def get_page_info(self, page_number):
     """
-        एक विशेष पृष्ठ के बारे में जानकारी प्राप्त करें।
-        :param page_number: int, उस पृष्ठ का नंबर जिसके बारे में जानकारी प्राप्त करनी है
-        :return: dict, जिसमें पृष्ठ की जानकारी जैसे वर्तमान पृष्ठ संख्या, कुल पृष्ठ, आदि शामिल हैं।
+        Recuperar información sobre una página específica.
+        :param page_number: int, el número de página para obtener información
+        :return: dict, que contiene información de la página como el número de página actual, total de páginas, etc.
         >>> page_util = PageUtil([1, 2, 3, 4], 1)
         >>> page_util.get_page_info(1)
         >>> {
@@ -14,9 +14,8 @@ def get_page_info(self, page_number):
         >>>     "has_next": True,
         >>>     "data": [1]
         >>> }
-
         """
     if page_number < 1 or page_number > self.total_pages:
-        return {'current_page': page_number, 'per_page': self.page_size, 'total_pages': self.total_pages, 'total_items': self.total_items, 'has_previous': False, 'has_next': False, 'data': []}
-    page_data = self.get_page(page_number)
-    return {'current_page': page_number, 'per_page': self.page_size, 'total_pages': self.total_pages, 'total_items': self.total_items, 'has_previous': page_number > 1, 'has_next': page_number < self.total_pages, 'data': page_data}
+        return {}
+    data = self.get_page(page_number)
+    return {'current_page': page_number, 'per_page': self.page_size, 'total_pages': self.total_pages, 'total_items': self.total_items, 'has_previous': page_number > 1, 'has_next': page_number < self.total_pages, 'data': data}

@@ -1,7 +1,7 @@
 def generate_phone_number_pattern(self):
     """
-        फोन नंबरों से मेल खाने वाले नियमित अभिव्यक्ति पैटर्न उत्पन्न करें
-        :return: स्ट्रिंग, फोन नंबरों से मेल खाने वाले नियमित अभिव्यक्ति पैटर्न
+        Genera patrones de expresiones regulares que coinciden con números de teléfono
+        :return: cadena, patrones de expresiones regulares que coinciden con números de teléfono
         >>> ru = RegexUtils()
         >>> ru.generate_phone_number_pattern()
         '\x08\\d{3}-\\d{3}-\\d{4}\x08'

@@ -1,10 +1,10 @@
 def insert_ticket(self, movie_name, theater_name, seat_number, customer_name):
     """
-        "tickets" तालिका में एक नया टिकट डालता है।
-        :param movie_name: str, फिल्म का नाम।
-        :param theater_name: str, थिएटर का नाम।
-        :param seat_number: str, सीट नंबर।
-        :param customer_name: str, ग्राहक का नाम।
+        Inserta un nuevo ticket en la tabla "tickets".
+        :param movie_name: str, el nombre de la película.
+        :param theater_name: str, el nombre del teatro.
+        :param seat_number: str, el número de asiento.
+        :param customer_name: str, el nombre del cliente.
         :return: None
         """
     self.cursor.execute('\n                INSERT INTO tickets (movie_name, theater_name, seat_number, customer_name)\n                VALUES (?, ?, ?, ?)\n            ', (movie_name, theater_name, seat_number, customer_name))

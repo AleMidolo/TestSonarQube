@@ -1,13 +1,12 @@
 def search_jobs(self, criteria):
     """
-        यह फ़ंक्शन पदों की खोज करने के लिए उपयोग किया जाता है, और उन पदों की जानकारी लौटाता है जो आवश्यकताओं को पूरा करते हैं।
-        :param criteria: पद की आवश्यकताएँ, str.
-        :return: उन पदों की जानकारी जो आवश्यकताओं को पूरा करते हैं, list.
+        Esta función se utiliza para buscar posiciones y devolver la información de las posiciones que cumplen con los requisitos.
+        :param criteria: Los requisitos de la posición, str.
+        :return: La información de la posición que cumple con los requisitos, list.
         >>> jobMarketplace = JobMarketplace()
-        >>> jobMarketplace.job_listings = [{"job_title": "सॉफ़्टवेयर इंजीनियर", "company": "एबीसी कंपनी", "requirements": ['skill1', 'skill2']}]
-        >>> jobMarketplace.search_jobs("skill1")
-        [{'job_title': 'सॉफ़्टवेयर इंजीनियर', 'company': 'एबीसी कंपनी', 'requirements': ['skill1', 'skill2']}]
-
+        >>> jobMarketplace.job_listings = [{"job_title": "Ingeniero de Software", "company": "Compañía ABC", "requirements": ['habilidad1', 'habilidad2']}]
+        >>> jobMarketplace.search_jobs("habilidad1")
+        [{'job_title': 'Ingeniero de Software', 'company': 'Compañía ABC', 'requirements': ['habilidad1', 'habilidad2']}]
         """
     matching_jobs = []
     for job in self.job_listings:

@@ -1,18 +1,16 @@
 def filter(self, request):
     """
-        कुछ नियमों और शर्तों के आधार पर आने वाले अनुरोध को फ़िल्टर करें।
-        :param request: dict, आने वाले अनुरोध का विवरण
-        :return: bool, यदि अनुरोध की अनुमति है तो True, अन्यथा False
-        >>> filter = AccessGatewayFilter()
-        >>> filter.filter({'path': '/login', 'method': 'POST'})
-        True
+    Filtra la solicitud entrante en función de ciertas reglas y condiciones.
+    :param request: dict, los detalles de la solicitud entrante
+    :return: bool, True si la solicitud está permitida, False en caso contrario
+    >>> filter = AccessGatewayFilter()
+    >>> filter.filter({'path': '/login', 'method': 'POST'})
+    True
 
-        """
-    if not self.is_start_with(request.get('path', '')):
-        return False
-    if request.get('path', '').startswith('/api'):
+    """
+    if self.is_start_with(request['path']):
         user_info = self.get_jwt_user(request)
-        if user_info is None:
-            return False
-        self.set_current_user_info_and_log(user_info.get('user', {}))
-    return True
+        if user_info:
+            self.set_current_user_info_and_log(user_info['user'])
+            return True
+    return False

@@ -1,10 +1,10 @@
 def previous_song(self):
     """
-        प्लेलिस्ट में पिछले गाने पर स्विच करता है।
-        :return: यदि पिछले गाने पर स्विच किया गया है तो True, यदि कोई पिछला गाना नहीं था तो False।
+        Cambia a la canción anterior en la lista de reproducción.
+        :return: True si se cambió a la canción anterior, False si no había canción anterior.
         >>> musicPlayer = MusicPlayer()
-        >>> musicPlayer.playlist = ["song1", "song2"]
-        >>> musicPlayer.current_song = "song2"
+        >>> musicPlayer.playlist = ["canción1", "canción2"]
+        >>> musicPlayer.current_song = "canción2"
         >>> musicPlayer.previous_song()
         True
 

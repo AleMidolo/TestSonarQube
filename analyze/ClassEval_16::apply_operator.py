@@ -1,22 +1,16 @@
 def apply_operator(self, operand_stack, operator_stack):
     """
-        ऑपरेटर स्टैक के शीर्ष पर मौजूद ऑपरेटर का उपयोग करके ऑपरेशन को ऑपरेटर स्टैक के शीर्ष पर मौजूद दो संख्याओं पर लागू करें, और परिणामों को ऑपरेटर स्टैक के शीर्ष पर स्टोर करें
+        Utiliza el operador en la parte superior de la pila de operadores para realizar la operación en los dos números en la parte superior de la pila de operandos, y almacena los resultados en la parte superior de la pila de operandos.
         :param operand_stack:list
         :param operator_stack:list
-        :return: अपडेटेड operand_stack और operator_stack
+        :return: la pila de operandos y la pila de operadores actualizadas
         >>> calculator = Calculator()
         >>> calculator.apply_operator([1, 2, 3], ['+', '-'])
         ([1, -1], ['-'])
         """
-    if len(operand_stack) < 2 or not operator_stack:
-        return (operand_stack, operator_stack)
     operator = operator_stack.pop()
-    b = operand_stack.pop()
-    a = operand_stack.pop()
-    if operator in self.operators:
-        try:
-            result = self.operators[operator](a, b)
-            operand_stack.append(result)
-        except ZeroDivisionError:
-            operand_stack.append(float('inf'))
+    right_operand = operand_stack.pop()
+    left_operand = operand_stack.pop()
+    result = self.operators[operator](left_operand, right_operand)
+    operand_stack.append(result)
     return (operand_stack, operator_stack)

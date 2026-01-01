@@ -1,7 +1,7 @@
 def due(self):
     """
-        छूट लागू करने के बाद भुगतान करने के लिए अंतिम राशि की गणना करें।
-        :return: float, भुगतान करने के लिए अंतिम राशि
+        Calcular el monto final a pagar después de aplicar el descuento.
+        :return: float, monto final a pagar
         >>> customer = {'name': 'John Doe', 'fidelity': 1200}
         >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]
         >>> ds = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)
@@ -9,8 +9,6 @@ def due(self):
         312.55
 
         """
-    total_amount = self.total()
-    if self.promotion:
-        discount = self.promotion(self)
-        total_amount -= discount
-    return total_amount
+    total = self.total()
+    discount = self.promotion(self) if self.promotion else 0
+    return total - discount

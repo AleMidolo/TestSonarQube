@@ -1,9 +1,9 @@
 def change_order_status(self, order_id, status):
     """
-        यदि इनपुट order_id self.orders में है तो ऑर्डर का स्टेटस बदलें।
+        Cambia el estado del pedido si el order_id de entrada está en self.orders.
         :param order_id: int
-        :param status: str, वह स्थिति जिसमें परिवर्तन किया जाएगा
-        :return False: केवल तभी यदि order_id self.orders में नहीं है
+        :param status: str, el estado al que se va a cambiar
+        :return False: solo si el order_id no está en self.orders
         >>> warehouse.add_product(1, "product1", 3)
         >>> warehouse.create_order(1, 1, 2)
         >>> warehouse.change_order_status(1, "done")

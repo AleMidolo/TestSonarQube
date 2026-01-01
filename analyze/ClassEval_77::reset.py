@@ -1,6 +1,6 @@
 def reset(self):
     """
-        सांप को इसके प्रारंभिक स्थिति में रीसेट करें। लंबाई को 1 पर सेट करें, सांप के सिर की स्थिति को ((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)) पर सेट करें, स्कोर को 0 पर सेट करें, और नए खाद्य स्थिति को यादृच्छिक रूप से उत्पन्न करें।
+        Restablece la serpiente a su estado inicial. Establece la longitud en 1, la posición de la cabeza de la serpiente en ((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)), la puntuación en 0 y genera aleatoriamente una nueva posición de comida.
         :return: None
         >>> snake = Snake(100, 100, 1, (51, 51))
         >>> snake.reset()

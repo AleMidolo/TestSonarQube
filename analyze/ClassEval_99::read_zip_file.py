@@ -1,7 +1,7 @@
 def read_zip_file(self):
     """
-        खुला फ़ाइल ऑब्जेक्ट प्राप्त करें
-        :return: यदि सफल, तो खुला फ़ाइल ऑब्जेक्ट लौटाता है; अन्यथा, None लौटाता है
+        Obtener objeto de archivo abierto
+        :return: Si tiene éxito, devuelve el objeto de archivo abierto; de lo contrario, devuelve None
         >>> zfp = ZipFileProcessor("aaa.zip")
         >>> file = zfp.read_zip_file()
         """

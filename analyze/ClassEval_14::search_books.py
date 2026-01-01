@@ -1,10 +1,10 @@
 def search_books(self):
     """
-        डेटाबेस से सभी किताबों को प्राप्त करता है और उनकी जानकारी लौटाता है।
-        :return books: list[tuple], डेटाबेस में सभी किताबों की जानकारी
+        Recupera todos los libros de la base de datos y devuelve su información.
+        :return books: list[tuple], la información de todos los libros en la base de datos
         >>> book_db.search_books()
         [(1, 'book1', 'author', 1)]
         """
-    self.cursor.execute('\n            SELECT * FROM books\n        ')
+    self.cursor.execute('SELECT * FROM books')
     books = self.cursor.fetchall()
     return books

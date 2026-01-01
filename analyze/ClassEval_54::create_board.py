@@ -1,7 +1,7 @@
 def create_board(self):
     """
-        दिए गए बोर्ड आकार और आइकनों के साथ खेल का बोर्ड बनाएं
-        :return: 2-आयामी सूची, खेल का बोर्ड
+        crea el tablero de juego con el tamaño de tablero y los íconos dados
+        :return: lista bidimensional, el tablero de juego
         >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
         >>> mc.create_board()
         mc.board = [['a', 'b', 'c', 'a'],
@@ -9,20 +9,13 @@ def create_board(self):
                     ['a', 'b', 'c', 'a'],
                     ['a', 'b', 'c', 'a']]
         """
-    rows, cols = self.BOARD_SIZE
-    total_cells = rows * cols
-    if total_cells % 2 != 0:
-        raise ValueError('Board must have an even number of cells')
-    pairs_needed = total_cells // 2
-    icon_pairs = []
-    for i in range(pairs_needed):
-        icon = self.ICONS[i % len(self.ICONS)]
-        icon_pairs.extend([icon, icon])
-    random.shuffle(icon_pairs)
+    num_icons = len(self.ICONS)
+    total_cells = self.BOARD_SIZE[0] * self.BOARD_SIZE[1]
+    icons_to_place = total_cells // 2 * 2
+    icons = (self.ICONS * (icons_to_place // num_icons))[:icons_to_place]
+    random.shuffle(icons)
     board = []
-    for i in range(rows):
-        row = []
-        for j in range(cols):
-            row.append(icon_pairs[i * cols + j])
+    for i in range(self.BOARD_SIZE[0]):
+        row = icons[i * self.BOARD_SIZE[1]:(i + 1) * self.BOARD_SIZE[1]]
         board.append(row)
     return board

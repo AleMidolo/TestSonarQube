@@ -1,15 +1,12 @@
 def __delitem__(self, key):
     """
-        की से जुड़ी वैल्यू डिलीट करें।
-
-        :param key: str
-        :return: None
-
+        Elimina el valor correspondiente a la clave
+        :param key:str
+        :return:None
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map['first_name'] = 'John'
         >>> camelize_map.__delitem__('first_name')
         >>> flag = 'first_name' in camelize_map
-        >>> flag
-        False
+        flag = False
         """
     del self._data[self._convert_key(key)]

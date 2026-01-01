@@ -1,18 +1,15 @@
 def remove_book(self, title, quantity):
     """
-        इन्वेंटरी से एक या कई किताबें हटाएं जो किताब के शीर्षक द्वारा क्रमबद्ध है।
-        अमान्य इनपुट मिलने पर झूठा उठाएं।
-        :param title: str, किताब का शीर्षक
+        Eliminar uno o varios libros del inventario que está ordenado por título de libro.
+        Lanza falso si se recibe una entrada no válida.
+        :param title: str, el título del libro
         :param quantity: int
         """
-    if not isinstance(title, str) or not isinstance(quantity, int):
-        raise ValueError('Invalid input: title must be a string and quantity must be an integer')
-    if quantity <= 0:
-        raise ValueError('Invalid input: quantity must be positive')
-    if title not in self.inventory:
-        raise ValueError(f"Book '{title}' not found in inventory")
+    if title not in self.inventory or quantity <= 0:
+        return False
     if self.inventory[title] < quantity:
-        raise ValueError(f"Insufficient quantity. Only {self.inventory[title]} copies of '{title}' available")
+        return False
     self.inventory[title] -= quantity
     if self.inventory[title] == 0:
         del self.inventory[title]
+    return True

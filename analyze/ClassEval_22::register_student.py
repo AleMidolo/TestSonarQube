@@ -1,6 +1,6 @@
 def register_student(self, student):
     """
-        सिस्टम में एक छात्र को पंजीकृत करें, छात्र को छात्रों की सूची में जोड़ें, यदि छात्र पहले से पंजीकृत है, तो 0 लौटाएं, अन्यथा 1 लौटाएं
+        registrar un estudiante en el sistema, agregar el estudiante a la lista de estudiantes, si el estudiante ya está registrado, retornar 0, de lo contrario retornar 1
         """
     for existing_student in self.students:
         if existing_student['name'] == student['name']:
