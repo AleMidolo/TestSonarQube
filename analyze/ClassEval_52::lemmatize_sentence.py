@@ -15,12 +15,15 @@ def lemmatize_sentence(self, sentence):
     lemmatized_words = []
     for word, tag in tagged_words:
         if tag.startswith('V'):
-            lemmatized_word = self.lemmatizer.lemmatize(word, pos='v')
+            pos = 'v'
         elif tag.startswith('J'):
-            lemmatized_word = self.lemmatizer.lemmatize(word, pos='a')
+            pos = 'a'
         elif tag.startswith('R'):
-            lemmatized_word = self.lemmatizer.lemmatize(word, pos='r')
+            pos = 'r'
+        elif tag.startswith('N'):
+            pos = 'n'
         else:
-            lemmatized_word = self.lemmatizer.lemmatize(word, pos='n')
+            pos = 'n'
+        lemmatized_word = self.lemmatizer.lemmatize(word, pos=pos)
         lemmatized_words.append(lemmatized_word)
     return lemmatized_words

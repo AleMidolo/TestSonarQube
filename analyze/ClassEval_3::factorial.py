@@ -6,7 +6,6 @@ def factorial(n):
         :return: int, el factorial del número dado.
         >>> ArrangementCalculator.factorial(4)
         24
-
         """
     if n < 0:
         raise ValueError('Factorial is not defined for negative numbers')

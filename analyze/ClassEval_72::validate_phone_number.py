@@ -8,4 +8,4 @@ def validate_phone_number(self, phone_number):
         True
         """
     pattern = self.generate_phone_number_pattern()
-    return bool(re.fullmatch(pattern, phone_number))
+    return self.match(pattern, phone_number)

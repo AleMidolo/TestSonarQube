@@ -8,8 +8,6 @@ def calculate_binary_info(self):
     if not self.binary_string:
         return {'Ceros': 0.0, 'Unos': 0.0, 'Longitud de bits': 0}
     total_bits = len(self.binary_string)
-    zeros_count = self.binary_string.count('0')
-    ones_count = self.binary_string.count('1')
-    zeros_percentage = zeros_count / total_bits
-    ones_percentage = ones_count / total_bits
-    return {'Ceros': round(zeros_percentage, 3), 'Unos': round(ones_percentage, 3), 'Longitud de bits': total_bits}
+    count_zeros = self.binary_string.count('0')
+    count_ones = self.binary_string.count('1')
+    return {'Ceros': round(count_zeros / total_bits, 3), 'Unos': round(count_ones / total_bits, 3), 'Longitud de bits': total_bits}

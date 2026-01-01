@@ -24,20 +24,20 @@ def mrr(data):
             return (0.0, [0.0])
         for i, val in enumerate(sub_list):
             if val == 1:
-                mrr_score = 1.0 / (i + 1)
-                return (mrr_score, [mrr_score])
+                reciprocal_rank = 1.0 / (i + 1)
+                return (reciprocal_rank, [reciprocal_rank])
         return (0.0, [0.0])
     if type(data) == list:
         separate_result = []
         for sub_list, total_num in data:
             sub_list = np.array(sub_list)
             if total_num == 0:
-                mrr_score = 0.0
+                mrr_val = 0.0
             else:
-                mrr_score = 0.0
+                mrr_val = 0.0
                 for i, val in enumerate(sub_list):
                     if val == 1:
-                        mrr_score = 1.0 / (i + 1)
+                        mrr_val = 1.0 / (i + 1)
                         break
-            separate_result.append(mrr_score)
+            separate_result.append(mrr_val)
         return (np.mean(separate_result), separate_result)

@@ -12,6 +12,8 @@ def correlation_coefficient(data1, data2):
     if len(data1) != len(data2):
         raise ValueError('Las listas de datos deben tener la misma longitud')
     n = len(data1)
+    if n < 2:
+        raise ValueError('Se necesitan al menos 2 puntos de datos')
     mean1 = sum(data1) / n
     mean2 = sum(data2) / n
     numerator = sum(((data1[i] - mean1) * (data2[i] - mean2) for i in range(n)))

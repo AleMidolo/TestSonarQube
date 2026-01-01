@@ -20,22 +20,21 @@ def multiply(num1, num2):
         num2 = num2[1:]
     num1 = num1.lstrip('0') or '0'
     num2 = num2.lstrip('0') or '0'
-    num1 = num1[::-1]
-    num2 = num2[::-1]
+    num1_rev = num1[::-1]
+    num2_rev = num2[::-1]
     result = [0] * (len(num1) + len(num2))
-    for i in range(len(num1)):
-        digit1 = int(num1[i])
+    for i in range(len(num1_rev)):
         carry = 0
-        for j in range(len(num2)):
-            digit2 = int(num2[j])
+        digit1 = int(num1_rev[i])
+        for j in range(len(num2_rev)):
+            digit2 = int(num2_rev[j])
             product = digit1 * digit2 + result[i + j] + carry
-            result[i + j] = product % 10
             carry = product // 10
+            result[i + j] = product % 10
         if carry > 0:
-            result[i + len(num2)] += carry
-    result_str = ''.join((str(digit) for digit in result[::-1])).lstrip('0')
-    if not result_str:
-        return '0'
-    if negative:
+            result[i + len(num2_rev)] += carry
+    result_str = ''.join((str(digit) for digit in result[::-1]))
+    result_str = result_str.lstrip('0') or '0'
+    if negative and result_str != '0':
         result_str = '-' + result_str
     return result_str
