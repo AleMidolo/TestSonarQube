@@ -7,7 +7,5 @@ def send(self, info):
         self.send_struct = {"addr":66,"content":"ABC"}
         """
     if not isinstance(info, dict) or 'addr' not in info or 'content' not in info:
-        return 'Invalid information format'
-    addr = info['addr']
-    content = info['content']
-    self.send_struct = {'addr': addr, 'content': content}
+        return 'Invalid input'
+    self.send_struct = info

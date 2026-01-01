@@ -16,13 +16,14 @@ def parse_arguments(self, command_string):
     for part in parts:
         if '=' in part:
             key, value = part.split('=', 1)
+            key = key.lstrip('-')
+            self.arguments[key] = self._convert_type(key, value)
         else:
-            key = part
-            value = True
-        key = key.lstrip('-')
-        if key in self.types:
-            value = self._convert_type(key, value)
-        self.arguments[key] = value
+            key = part.lstrip('-')
+            if key in self.types:
+                self.arguments[key] = True
+            else:
+                self.arguments[key] = True
     missing_args = self.required - self.arguments.keys()
     if missing_args:
         return (False, missing_args)

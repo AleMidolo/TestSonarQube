@@ -11,5 +11,4 @@ def get_format_time(self, year, month, day, hour, minute, second):
     >>> timeutils.get_format_time(2001, 7, 18, 1, 1, 1)
     "2001-07-18 01:01:01"
     """
-    dt = datetime.datetime(year, month, day, hour, minute, second)
-    return dt.strftime('%Y-%m-%d %H:%M:%S')
+    return f'{year:04d}-{month:02d}-{day:02d} {hour:02d}:{minute:02d}:{second:02d}'

@@ -30,4 +30,6 @@ def subtract(num1, num2):
         result.insert(0, str(digit_sub))
     while len(result) > 1 and result[0] == '0':
         result.pop(0)
-    return ('-' if negative else '') + ''.join(result)
+    if negative:
+        return '-' + ''.join(result)
+    return ''.join(result)

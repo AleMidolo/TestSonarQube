@@ -20,7 +20,7 @@ def fleiss_kappa(testData, N, k, n):
         0.20993070442195522
         """
     p = np.sum(testData, axis=0) / (N * n)
-    Pbar = np.sum(p ** 2)
-    Pbar_e = np.sum(np.sum(testData, axis=1) ** 2) / (N * n) ** 2
-    fleiss_kappa_value = (Pbar - Pbar_e) / (1 - Pbar_e)
-    return fleiss_kappa_value
+    P = np.sum(np.square(np.sum(testData, axis=1) / n)) / N
+    Pe = np.sum(np.square(p))
+    kappa_value = (P - Pe) / (1 - Pe)
+    return kappa_value
