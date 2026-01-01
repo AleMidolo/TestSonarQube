@@ -17,7 +17,7 @@ def is_valid_input(self, textnum):
         is_ordinal = False
         for ending, replacement in self.ordinal_endings:
             if word.endswith(ending):
-                base_word = '%s%s' % (word[:-len(ending)], replacement)
+                base_word = word[:-len(ending)] + replacement
                 if base_word in self.numwords:
                     is_ordinal = True
                     break
