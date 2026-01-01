@@ -15,4 +15,6 @@ def get_upcoming_events(self, num_events):
     for event in self.events:
         if event['start_time'] >= current_time:
             upcoming_events.append(event)
-    return upcoming_events[:num_events]
+            if len(upcoming_events) == num_events:
+                break
+    return upcoming_events

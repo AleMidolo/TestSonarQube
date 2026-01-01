@@ -10,7 +10,7 @@ def kappa(testData, k):
         """
     n = len(testData)
     total = sum((sum(row) for row in testData))
-    p0 = sum((sum(row) ** 2 for row in testData)) / total ** 2
-    pe = sum((sum(testData[:, j]) ** 2 for j in range(k))) / total ** 2
+    p0 = sum(((row.count(1) / total) ** 2 for row in testData))
+    pe = sum(((sum((testData[i][j] for i in range(n))) / total) ** 2 for j in range(k)))
     kappa_value = (p0 - pe) / (1 - pe) if 1 - pe != 0 else 0
     return kappa_value

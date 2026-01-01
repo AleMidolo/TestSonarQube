@@ -8,7 +8,6 @@ def remove_stock(self, stock):
         True
         >>> tracker.portfolio
         []
-
         """
     for pf in self.portfolio:
         if pf['name'] == stock['name']:

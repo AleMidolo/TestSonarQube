@@ -9,4 +9,4 @@ def get_correlation(self):
     if len(self.data) < 2:
         return float('nan')
     correlation_matrix = np.corrcoef(self.data)
-    return correlation_matrix[0, 1]
+    return round(correlation_matrix[0, 1], 2)
