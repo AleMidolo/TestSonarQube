@@ -10,7 +10,7 @@ def get_query_params(self):
     if query_start == -1:
         return {}
     fragment_start = self.url.find('#')
-    if fragment_start != -1:
+    if fragment_start != -1 and fragment_start > query_start:
         query_string = self.url[query_start + 1:fragment_start]
     else:
         query_string = self.url[query_start + 1:]

@@ -1,6 +1,6 @@
 def set_mode(self, mode):
     """
-        Get the current work mode
+        Set the current work mode
         :param mode: str, working mode. only ['heat', 'cool']
         >>> thermostat.set_mode('cool')
         >>> thermostat.mode

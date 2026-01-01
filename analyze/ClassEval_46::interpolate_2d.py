@@ -14,8 +14,6 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
 
         """
     z_interp = []
-    if not isinstance(z[0], list):
-        raise ValueError('z should be a 2D list')
     for xp, yp in zip(x_interp, y_interp):
         x_idx = -1
         for i in range(len(x) - 1):
@@ -28,13 +26,13 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
                 y_idx = j
                 break
         if x_idx == -1 or y_idx == -1:
-            raise ValueError(f'Interpolation point ({xp}, {yp}) is outside the data range')
-        z11 = z[y_idx][x_idx]
-        z12 = z[y_idx][x_idx + 1]
-        z21 = z[y_idx + 1][x_idx]
-        z22 = z[y_idx + 1][x_idx + 1]
-        z1 = z11 + (z12 - z11) * (xp - x[x_idx]) / (x[x_idx + 1] - x[x_idx])
-        z2 = z21 + (z22 - z21) * (xp - x[x_idx]) / (x[x_idx + 1] - x[x_idx])
+            raise ValueError('Interpolation point outside data range')
+        z11 = z[x_idx][y_idx]
+        z12 = z[x_idx][y_idx + 1]
+        z21 = z[x_idx + 1][y_idx]
+        z22 = z[x_idx + 1][y_idx + 1]
+        z1 = z11 + (z21 - z11) * (xp - x[x_idx]) / (x[x_idx + 1] - x[x_idx])
+        z2 = z12 + (z22 - z12) * (xp - x[x_idx]) / (x[x_idx + 1] - x[x_idx])
         zp = z1 + (z2 - z1) * (yp - y[y_idx]) / (y[y_idx + 1] - y[y_idx])
         z_interp.append(zp)
     return z_interp

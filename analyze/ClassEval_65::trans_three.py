@@ -11,6 +11,6 @@ def trans_three(self, s):
     if s[0] == '0':
         return self.trans_two(s[1:])
     elif s[1:] == '00':
-        return f'{self.NUMBER[int(s[0])]} HUNDRED'
+        return self.NUMBER[int(s[0])] + ' HUNDRED'
     else:
-        return f'{self.NUMBER[int(s[0])]} HUNDRED AND {self.trans_two(s[1:])}'
+        return self.NUMBER[int(s[0])] + ' HUNDRED AND ' + self.trans_two(s[1:])

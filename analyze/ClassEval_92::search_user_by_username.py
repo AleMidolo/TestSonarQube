@@ -2,7 +2,7 @@ def search_user_by_username(self, username):
     """
         Searches for users in the "users" table by username.
         :param username: str, the username of the user to search for.
-        :return: tuple or None, the user record from the "users" table that matches the search criteria.
+        :return: tuple or None, the row from the "users" table that matches the search criteria, or None if not found.
         >>> user_db = UserLoginDB("user_database.db")
         >>> user_db.create_table()
         >>> user_db.insert_user('user1', 'pass1')

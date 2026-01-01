@@ -6,6 +6,7 @@ def skewness(data):
         :return: The skewness, float.
         >>> DataStatistics4.skewness([1, 2, 5])
         2.3760224064818463
+
         """
     n = len(data)
     if n < 3:

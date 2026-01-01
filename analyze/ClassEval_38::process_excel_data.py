@@ -14,11 +14,15 @@ def process_excel_data(self, N, save_file_name):
         col_index = N - 1
         processed_data = []
         for row in data:
-            processed_row = list(row)
-            if col_index < len(processed_row) and processed_row[col_index] is not None:
-                if isinstance(processed_row[col_index], str):
-                    processed_row[col_index] = processed_row[col_index].upper()
-            processed_data.append(tuple(processed_row))
+            if row is None:
+                processed_data.append(row)
+                continue
+            row_list = list(row)
+            if col_index < len(row_list):
+                cell_value = row_list[col_index]
+                if isinstance(cell_value, str):
+                    row_list[col_index] = cell_value.upper()
+            processed_data.append(tuple(row_list))
         if '.' in save_file_name:
             name_parts = save_file_name.rsplit('.', 1)
             output_file_name = f'{name_parts[0]}_processed.{name_parts[1]}'
