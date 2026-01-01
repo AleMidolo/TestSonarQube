@@ -7,5 +7,6 @@ def display(self, key, value):
         >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
         >>> context.display("C", "53231323")
         सामान्य गिटार खेलने का तरीका -- कॉर्ड: C, धुन बजाएं: 53231323
+
         """
     print(f'सामान्य गिटार खेलने का तरीका -- कॉर्ड: {key}, धुन बजाएं: {value}')

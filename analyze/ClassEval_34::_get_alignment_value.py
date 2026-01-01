@@ -4,9 +4,5 @@ def _get_alignment_value(self, alignment):
         :param alignment: str, संरेखण स्ट्रिंग ('left', 'center', या 'right')।
         :return: int, संरेखण मान।
         """
-    if alignment == 'center':
-        return WD_PARAGRAPH_ALIGNMENT.CENTER
-    elif alignment == 'right':
-        return WD_PARAGRAPH_ALIGNMENT.RIGHT
-    else:
-        return WD_PARAGRAPH_ALIGNMENT.LEFT
+    alignment_mapping = {'left': WD_PARAGRAPH_ALIGNMENT.LEFT, 'center': WD_PARAGRAPH_ALIGNMENT.CENTER, 'right': WD_PARAGRAPH_ALIGNMENT.RIGHT}
+    return alignment_mapping.get(alignment.lower(), WD_PARAGRAPH_ALIGNMENT.LEFT)

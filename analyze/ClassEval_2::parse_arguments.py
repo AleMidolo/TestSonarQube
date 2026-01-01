@@ -10,17 +10,41 @@ def parse_arguments(self, command_string):
         >>> parser.arguments
         {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
         """
-    args = command_string.split()
-    for arg in args[1:]:
-        if '=' in arg:
-            key, value = arg.split('=', 1)
+    self.arguments = {}
+    parts = command_string.split()
+    i = 0
+    while i < len(parts):
+        part = parts[i]
+        if part.startswith('--') and '=' in part:
+            arg_name = part[2:].split('=')[0]
+            arg_value = part.split('=')[1]
+            self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
+            i += 1
+        elif part.startswith('--'):
+            arg_name = part[2:]
+            if i + 1 < len(parts) and (not parts[i + 1].startswith('-')):
+                arg_value = parts[i + 1]
+                self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
+                i += 2
+            else:
+                self.arguments[arg_name] = True
+                i += 1
+        elif part.startswith('-') and (not part.startswith('--')):
+            arg_name = part[1:]
+            if i + 1 < len(parts) and (not parts[i + 1].startswith('-')):
+                arg_value = parts[i + 1]
+                self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
+                i += 2
+            else:
+                self.arguments[arg_name] = True
+                i += 1
         else:
-            key = arg
-            value = True
-        key = key.lstrip('-')
-        if key in self.types:
-            self.arguments[key] = self._convert_type(key, value)
-        else:
-            self.arguments[key] = value
-    missing_args = {arg for arg in self.required if arg not in self.arguments}
-    return (len(missing_args) == 0, missing_args if missing_args else None)
+            i += 1
+    missing_args = set()
+    for req_arg in self.required:
+        if req_arg not in self.arguments:
+            missing_args.add(req_arg)
+    if missing_args:
+        return (False, missing_args)
+    else:
+        return (True, None)

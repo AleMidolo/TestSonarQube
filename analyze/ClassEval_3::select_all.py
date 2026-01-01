@@ -8,7 +8,7 @@ def select_all(self):
 
         """
     result = []
-    n = len(self.datas)
-    for i in range(1, n + 1):
-        result.extend(self.select(i))
+    for i in range(1, len(self.datas) + 1):
+        for permutation in itertools.permutations(self.datas, i):
+            result.append(list(permutation))
     return result

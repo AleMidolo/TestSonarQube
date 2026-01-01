@@ -9,7 +9,7 @@ def create_table(self, table_name, key1, key2):
         """
     conn = sqlite3.connect(self.database_name)
     cursor = conn.cursor()
-    create_table_query = f'\n        CREATE TABLE IF NOT EXISTS {table_name} (\n            id INTEGER PRIMARY KEY,\n            {key1} TEXT,\n            {key2} INTEGER\n        )\n        '
-    cursor.execute(create_table_query)
+    create_query = f'\n        CREATE TABLE IF NOT EXISTS {table_name} (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            {key1} TEXT,\n            {key2} INTEGER\n        )\n        '
+    cursor.execute(create_query)
     conn.commit()
     conn.close()

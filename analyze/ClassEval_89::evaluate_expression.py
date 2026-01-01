@@ -10,6 +10,20 @@ def evaluate_expression(self, expression):
         True
         """
     try:
-        return eval(expression) == 24
-    except Exception:
+
+        class SafeEvaluator(ast.NodeVisitor):
+
+            def __init__(self):
+                self.allowed_nodes = {ast.Expression, ast.BinOp, ast.UnaryOp, ast.Constant, ast.Add, ast.Sub, ast.Mult, ast.Div, ast.USub, ast.UAdd}
+
+            def visit(self, node):
+                if type(node) not in self.allowed_nodes:
+                    raise ValueError(f'Disallowed node type: {type(node).__name__}')
+                return super().visit(node)
+        tree = ast.parse(expression, mode='eval')
+        validator = SafeEvaluator()
+        validator.visit(tree)
+        result = eval(compile(tree, '<string>', 'eval'))
+        return abs(result - 24) < 1e-10
+    except (SyntaxError, ValueError, ZeroDivisionError, TypeError):
         return False

@@ -9,8 +9,8 @@ def get_possible_moves(self, state):
         >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])
         ['ऊपर', 'बाएँ', 'दाएँ']
         """
-    moves = []
     i, j = self.find_blank(state)
+    moves = []
     if i > 0:
         moves.append('up')
     if i < 2:

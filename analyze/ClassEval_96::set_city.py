@@ -7,5 +7,6 @@ def set_city(self, city):
         >>> weatherSystem.set_city('Beijing')
         >>> weatherSystem.city
         'Beijing'
+
         """
     self.city = city
