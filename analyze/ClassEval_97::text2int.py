@@ -10,7 +10,8 @@ def text2int(self, textnum):
     if not self.is_valid_input(textnum):
         raise ValueError('Invalid input')
     textnum = textnum.replace('-', ' ')
-    current = result = 0
+    current = 0
+    result = 0
     for word in textnum.split():
         if word in self.numwords:
             scale, increment = self.numwords[word]
@@ -19,6 +20,4 @@ def text2int(self, textnum):
                 current *= scale
                 result += current
                 current = 0
-        elif word in self.ordinal_words:
-            result += self.ordinal_words[word]
     return str(result + current)
