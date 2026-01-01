@@ -6,4 +6,6 @@ def get_correlation(self):
         >>> ds2.get_correlation()
         1.0
         """
-    return np.corrcoef(self.data, self.data)[0, 1]
+    if len(self.data) < 2:
+        return float('nan')
+    return np.corrcoef(self.data)[0, 1]

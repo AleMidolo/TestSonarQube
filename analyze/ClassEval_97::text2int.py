@@ -19,6 +19,6 @@ def text2int(self, textnum):
                 current *= scale
                 result += current
                 current = 0
-        elif word in self.ordinal_words:
-            result += self.ordinal_words[word]
+        else:
+            raise ValueError(f"Word '{word}' not recognized")
     return str(result + current)

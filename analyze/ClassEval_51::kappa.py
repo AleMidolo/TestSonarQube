@@ -9,7 +9,8 @@ def kappa(testData, k):
         0.25
         """
     n = np.sum(testData)
+    p = np.sum(testData, axis=0) / n
     p0 = np.sum(np.diag(testData)) / n
-    pe = np.sum(np.sum(testData, axis=0) ** 2) / n ** 2
-    kappa_value = (p0 - pe) / (1 - pe) if 1 - pe != 0 else 0
+    pe = np.sum(p ** 2)
+    kappa_value = (p0 - pe) / (1 - pe)
     return kappa_value
