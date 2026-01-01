@@ -7,56 +7,60 @@ def format_string(self, x):
         >>> formatter.format_string("123456")
         "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
         """
-    if not x:
-        return ''
     is_negative = False
-    if x[0] == '-':
-        is_negative = True
+    if x.startswith('-'):
+        is_negative = x[0]
         x = x[1:]
-    integer_part = x
-    decimal_part = ''
-    if '.' in x:
-        integer_part, decimal_part = x.split('.')
-        decimal_part = decimal_part.rstrip('0')
+    parts = x.split('.')
+    integer_part = parts[0]
+    decimal_part = parts[1] if len(parts) > 1 else ''
+    integer_part = integer_part.lstrip('0')
+    if integer_part == '':
+        integer_part = '0'
+    integer_words = []
     if integer_part == '0':
-        result = 'ZERO'
+        integer_words.append('ZERO')
     else:
-        integer_part = integer_part.lstrip('0')
-        if not integer_part:
-            integer_part = '0'
         groups = []
-        for i in range(len(integer_part), 0, -3):
-            start = max(0, i - 3)
-            groups.append(integer_part[start:i])
-        groups.reverse()
-        group_words = []
+        temp = integer_part
+        while len(temp) > 3:
+            groups.insert(0, temp[-3:])
+            temp = temp[:-3]
+        groups.insert(0, temp)
         for i, group in enumerate(groups):
-            if group == '000':
-                continue
-            group_index = len(groups) - i - 1
-            if len(group) == 3:
-                words = self.trans_three(group)
-            elif len(group) == 2:
-                words = self.trans_two(group)
-            else:
-                words = self.trans_two('0' + group)
-            if words and group_index > 0:
-                suffix = self.parse_more(group_index)
-                if suffix:
-                    words += ' ' + suffix
-            if words:
-                group_words.append(words)
-        result = ' '.join(group_words)
+            group_words = self.trans_three(group.zfill(3))
+            if group_words.strip():
+                magnitude = len(groups) - i - 1
+                if magnitude > 0 and group != '000':
+                    integer_words.append(group_words + ' ' + self.parse_more(magnitude))
+                elif magnitude == 0:
+                    integer_words.append(group_words)
+    decimal_words = []
     if decimal_part:
-        decimal_words = []
-        for digit in decimal_part:
-            if digit == '0':
-                decimal_words.append('ZERO')
-            else:
-                decimal_words.append(self.NUMBER[int(digit)])
-        result += ' AND CENTS ' + ' '.join(decimal_words)
+        decimal_part = decimal_part.rstrip('0')
+        if decimal_part:
+            decimal_words.append('AND CENTS')
+            decimal_groups = []
+            temp = decimal_part
+            while len(temp) > 3:
+                decimal_groups.insert(0, temp[-3:])
+                temp = temp[:-3]
+            if temp:
+                decimal_groups.insert(0, temp)
+            for i, group in enumerate(decimal_groups):
+                group_words = self.trans_three(group.zfill(3))
+                if group_words.strip():
+                    magnitude = len(decimal_groups) - i - 1
+                    if magnitude > 0 and group != '000':
+                        decimal_words.append(group_words + ' ' + self.parse_more(magnitude))
+                    elif magnitude == 0:
+                        decimal_words.append(group_words)
+    result_parts = []
     if is_negative:
-        result = 'MINUS ' + result
-    if result:
-        result += ' ONLY'
+        result_parts.append('MINUS')
+    result_parts.extend(integer_words)
+    result_parts.extend(decimal_words)
+    result_parts.append('ONLY')
+    result = ' '.join(result_parts)
+    result = ' '.join(result.split())
     return result

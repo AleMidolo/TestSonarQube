@@ -17,7 +17,8 @@ def correlation_coefficient(data1, data2):
     mean1 = sum(data1) / n
     mean2 = sum(data2) / n
     numerator = sum(((data1[i] - mean1) * (data2[i] - mean2) for i in range(n)))
-    denominator = math.sqrt(sum(((x - mean1) ** 2 for x in data1)) * sum(((y - mean2) ** 2 for y in data2)))
-    if denominator == 0:
-        return math.nan
-    return numerator / denominator
+    denominator1 = math.sqrt(sum(((x - mean1) ** 2 for x in data1)))
+    denominator2 = math.sqrt(sum(((y - mean2) ** 2 for y in data2)))
+    if denominator1 == 0 or denominator2 == 0:
+        return 0.0
+    return numerator / (denominator1 * denominator2)

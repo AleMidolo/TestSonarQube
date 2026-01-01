@@ -8,7 +8,6 @@ def display_items(self):
         >>> vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10} }
         >>> vendingMachine.display_items()
         'Coke - $1.25 [10]'
-
         """
     if not self.inventory:
         return False
