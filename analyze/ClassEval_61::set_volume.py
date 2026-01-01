@@ -12,4 +12,5 @@ def set_volume(self, volume):
     if 0 <= volume <= 100:
         self.volume = volume
         return True
-    return False
+    else:
+        return False
