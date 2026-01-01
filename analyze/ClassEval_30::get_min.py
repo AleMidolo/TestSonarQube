@@ -1,6 +1,6 @@
 def get_min(self):
     """
-        Calculate the minimum value in the data
+        Calcola il valore minimo nei dati
         :return: float
         >>> ds2 = DataStatistics2([1, 2, 3, 4])
         >>> ds2.get_min()
