@@ -1,7 +1,7 @@
 def read_zip_file(self):
     """
-        Ottieni l'oggetto del file aperto
-        :return: Se ha successo, restituisce l'oggetto file aperto; altrimenti, restituisce None
+        获取打开的文件对象
+        :return: 如果成功，返回打开的文件对象；否则，返回 None
         >>> zfp = ZipFileProcessor("aaa.zip")
         >>> file = zfp.read_zip_file()
         """

@@ -1,7 +1,7 @@
 def __len__(self):
     """
-        Restituisce la lunghezza dei propri dati
-        :return:int, lunghezza dei dati
+        返回自身数据的长度
+        :return:int，数据的长度
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map['first_name'] = 'John'
         >>> camelize_map['last_name'] = 'Doe'

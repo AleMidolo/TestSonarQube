@@ -1,7 +1,7 @@
 def get_top_student(self):
     """
-        Calcola il GPA di ogni studente con il metodo get_gpa e trova lo studente con il GPA più alto
-        :return: str, nome dello studente il cui GPA è il più alto
+        用 get_gpa 方法来计算每个学生的 GPA，并找到 GPA 最高的学生
+        :return: str，GPA 最高的学生的姓名
         >>> system.add_student('student 1', 3, 'SE')
         >>> system.add_student('student 2', 2, 'SE')
         >>> system.add_course_score('student 1', 'Computer Network', 92)
@@ -10,10 +10,10 @@ def get_top_student(self):
         'student 2'
         """
     top_student = None
-    top_gpa = -1.0
+    highest_gpa = -1
     for name in self.students:
         gpa = self.get_gpa(name)
-        if gpa is not None and gpa > top_gpa:
-            top_gpa = gpa
+        if gpa is not None and gpa > highest_gpa:
+            highest_gpa = gpa
             top_student = name
     return top_student

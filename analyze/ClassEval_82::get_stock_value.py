@@ -1,8 +1,8 @@
 def get_stock_value(self, stock):
     """
-        Ottieni il valore di un'azione.
-        :param stock: un dizionario con le chiavi "name", "price" e "quantity"
-        :return: il valore dell'azione, float.
+        获取股票的价值。
+        :param stock: 一个字典，包含键 "name"、"price" 和 "quantity"
+        :return: 股票的价值，浮点数。
         >>> tracker = StockPortfolioTracker(10000.0)
         >>> tracker.get_stock_value({"name": "AAPL", "price": 150.0, "quantity": 10})
         1500.0

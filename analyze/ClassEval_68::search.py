@@ -1,8 +1,8 @@
 def search(self, keyword):
     """
-        Cerca gli elementi nei dati che contengono la parola chiave fornita.
-        :param keyword: str, la parola chiave da cercare
-        :return: dict, contenente informazioni sulla ricerca come risultati totali e elementi corrispondenti
+        在数据中搜索包含给定关键字的项目。
+        :param keyword: str, 要搜索的关键字
+        :return: dict, 包含搜索信息，如总结果和匹配的项目
         >>> page_util = PageUtil([1, 2, 3, 4], 1)
         >>> page_util.search("1")
         >>> search_info = {
@@ -12,12 +12,8 @@ def search(self, keyword):
         >>>     "results": [1]
         >>> }
         """
-    keyword_str = str(keyword)
-    results = []
-    for item in self.data:
-        if keyword_str in str(item):
-            results.append(item)
+    results = [item for item in self.data if str(item) == keyword]
     total_results = len(results)
-    total_pages = (total_results + self.page_size - 1) // self.page_size if total_results > 0 else 0
-    search_info = {'keyword': keyword_str, 'total_results': total_results, 'total_pages': total_pages, 'results': results}
+    total_pages = (total_results + self.page_size - 1) // self.page_size
+    search_info = {'keyword': keyword, 'total_results': total_results, 'total_pages': total_pages, 'results': results}
     return search_info

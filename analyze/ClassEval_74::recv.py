@@ -1,8 +1,8 @@
 def recv(self, info):
     """
-        Ricevi informazioni contenenti indirizzo e contenuto. Se l'indirizzo è nella whitelist, ricevi il contenuto; altrimenti, non riceverlo.
-        :param info: dict, dizionario delle informazioni contenente indirizzo e contenuto
-        :return: se ricevuto con successo, restituisci il contenuto delle informazioni; altrimenti, restituisci False
+        接收包含地址和内容的信息。如果地址在白名单上，则接收内容；否则，不接收
+        :param info: dict，包含地址和内容的信息字典
+        :return: 如果成功接收，返回信息的内容；否则，返回 False
         >>> server.recv({"addr":88,"content":"abc"})
         abc
         """
@@ -11,5 +11,4 @@ def recv(self, info):
     if info['addr'] in self.white_list:
         self.receive_struct = {'addr': info['addr'], 'content': info['content']}
         return info['content']
-    else:
-        return False
+    return False

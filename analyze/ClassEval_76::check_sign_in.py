@@ -1,8 +1,8 @@
 def check_sign_in(self, username):
     """
-        Controlla se un utente è connesso.
-        :param username: str, il nome utente da controllare.
-        :return: bool, True se l'utente è connesso, False se l'utente non esiste o non è connesso.
+        检查用户是否已登录。
+        :param username: str，要检查的用户名。
+        :return: bool，如果用户已登录则返回True，如果用户不存在或未登录则返回False。
         >>> signInSystem.check_sign_in("jack")
         False
         >>> signInSystem.add_user("jack")
@@ -11,6 +11,6 @@ def check_sign_in(self, username):
         >>> signInSystem.check_sign_in("jack")
         True
         """
-    if username not in self.users:
+    if username not in self.users or not self.users[username]:
         return False
-    return self.users[username]
+    return True

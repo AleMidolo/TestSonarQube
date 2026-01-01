@@ -1,7 +1,7 @@
 def get_path(self):
     """
-        Ottieni la terza parte dell'URL, che è l'indirizzo della risorsa
-        :return: stringa, Se ha successo, restituisce l'indirizzo della risorsa dell'URL
+        获取 URL 的第三部分，即资源的地址
+        :return: 字符串，如果成功，返回 URL 的资源地址
         >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
         >>> urlhandler.get_path()
         "/s?wd=aaa&rsv_spt=1#page"
@@ -9,8 +9,8 @@ def get_path(self):
     scheme_end = self.url.find('://')
     if scheme_end != -1:
         url_without_scheme = self.url[scheme_end + 3:]
-        host_end = url_without_scheme.find('/')
-        if host_end != -1:
-            return url_without_scheme[host_end:]
+        path_start = url_without_scheme.find('/')
+        if path_start != -1:
+            return url_without_scheme[path_start:]
         return '/'
     return None

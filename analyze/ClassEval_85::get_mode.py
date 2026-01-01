@@ -1,6 +1,6 @@
 def get_mode(self):
     """
-        Ottieni la modalità di lavoro attuale
-        :return mode: str, modalità di lavoro. solo ['heat', 'cool']
+        获取当前工作模式
+        :return mode: str, 工作模式。仅限 ['heat', 'cool']
         """
     return self.mode

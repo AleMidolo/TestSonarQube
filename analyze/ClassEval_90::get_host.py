@@ -1,7 +1,7 @@
 def get_host(self):
     """
-        Ottieni la seconda parte dell'URL, che è il nome di dominio host
-        :return: stringa, Se ha successo, restituisce il nome di dominio host dell'URL
+        获取 URL 的第二部分，即主机域名
+        :return: 字符串，如果成功，返回 URL 的主机域名
         >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
         >>> urlhandler.get_host()
         "www.baidu.com"
@@ -12,6 +12,5 @@ def get_host(self):
         host_end = url_without_scheme.find('/')
         if host_end != -1:
             return url_without_scheme[:host_end]
-        else:
-            return url_without_scheme
+        return url_without_scheme
     return None

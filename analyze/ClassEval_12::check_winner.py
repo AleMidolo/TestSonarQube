@@ -1,26 +1,22 @@
 def check_winner(self, player_hand, dealer_hand):
     """
-        Determina il vincitore di un gioco confrontando i valori delle mani del giocatore e del dealer.
-        regola:
-        Se entrambi i giocatori hanno valori delle mani che sono uguali o inferiori a 21, il vincitore è colui il cui valore della mano è più vicino a 21.
-        Altrimenti, il vincitore è colui che ha il valore della mano più basso.
-        :param player_hand: lista
-        :param dealer_hand: lista
-        :return: il risultato del gioco, solo due stringhe certe: 'Il dealer vince' o 'Il giocatore vince'
-        >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])
-        'Il giocatore vince'
-        """
+    通过比较玩家和庄家的手牌点数来确定游戏的赢家。
+    规则：
+    如果两个玩家的手牌点数都小于或等于21，则赢家是手牌点数更接近21的那一方。
+    否则，赢家是手牌点数较低的那一方。
+    :param player_hand: list
+    :param dealer_hand: list
+    :return: 游戏结果，只能是两种字符串：'Dealer wins' 或 'Player wins'
+    >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])
+    'Player wins'
+    """
     player_value = self.calculate_hand_value(player_hand)
     dealer_value = self.calculate_hand_value(dealer_hand)
-    if player_value > 21 and dealer_value > 21:
-        return 'Il dealer vince' if dealer_value <= player_value else 'Il giocatore vince'
     if player_value > 21:
-        return 'Il dealer vince'
-    if dealer_value > 21:
-        return 'Il giocatore vince'
-    if player_value > dealer_value:
-        return 'Il giocatore vince'
-    elif dealer_value > player_value:
-        return 'Il dealer vince'
+        return 'Dealer wins'
+    elif dealer_value > 21:
+        return 'Player wins'
+    elif player_value > dealer_value:
+        return 'Player wins'
     else:
-        return 'Il dealer vince'
+        return 'Dealer wins'

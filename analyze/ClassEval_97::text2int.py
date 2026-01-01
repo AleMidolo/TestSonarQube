@@ -1,32 +1,24 @@
 def text2int(self, textnum):
     """
-        Convertire la stringa di parole nel corrispondente numero intero
-        :param textnum: stringa, la stringa di parole da convertire
-        :return: stringa, la stringa finale convertita in numero intero
+        将单词字符串转换为相应的整数字符串
+        :param textnum: 字符串，要转换的单词字符串
+        :return: 字符串，最终转换的整数字符串
         >>> w2n = Words2Numbers()
         >>> w2n.text2int("thirty-two")
         "32"
         """
     if not self.is_valid_input(textnum):
-        return None
-    textnum = textnum.lower().replace('-', ' ')
-    words = textnum.split()
+        raise ValueError('Invalid input')
+    textnum = textnum.replace('-', ' ')
     current = 0
-    result = 0
-    for word in words:
-        if word in self.ordinal_words:
-            current += self.ordinal_words[word]
-        else:
-            for ending, replacement in self.ordinal_endings:
-                if word.endswith(ending):
-                    word = word[:-len(ending)] + replacement
-                    break
-            if word not in self.numwords:
-                continue
+    total = 0
+    for word in textnum.split():
+        if word in self.numwords:
             scale, increment = self.numwords[word]
-            current = current * scale + increment
-            if scale > 100:
-                result += current
+            current += increment
+            if scale > 1:
+                total += current * scale
                 current = 0
-    result += current
-    return str(result)
+        else:
+            raise ValueError(f"Word '{word}' is not recognized.")
+    return str(total + current)

@@ -1,10 +1,9 @@
 def convert_to_utf8(self):
     """
-        Converte la stringa binaria in una stringa utf-8.
+        将二进制字符串转换为utf-8字符串。
         >>> bdp = BinaryDataProcessor("0110100001100101011011000110110001101111")
         >>> bdp.convert_to_utf8()
         'hello'
-
         """
     byte_array = bytearray()
     for i in range(0, len(self.binary_string), 8):

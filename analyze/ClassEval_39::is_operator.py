@@ -1,11 +1,12 @@
 @staticmethod
 def is_operator(c):
     """
-        Controlla se un carattere è un operatore in {'+', '-', '*', '/', '(', ')', '%'}
-        :param c: stringa, il carattere da controllare
-        :return: bool, True se il carattere è un operatore, False altrimenti
+        检查一个字符是否是 {'+', '-', '*', '/', '(', ')', '%'} 中的运算符
+        :param c: 字符串，要检查的字符
+        :return: 布尔值，如果字符是运算符则返回 True，否则返回 False
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.is_operator("+")
         True
+
         """
     return c in {'+', '-', '*', '\\/', '(', ')', '%'}

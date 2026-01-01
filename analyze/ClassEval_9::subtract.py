@@ -1,44 +1,33 @@
 @staticmethod
 def subtract(num1, num2):
     """
-        Sottrae due grandi numeri.
-        :param num1: Il primo numero da sottrarre, str.
-        :param num2: Il secondo numero da sottrarre, str.
-        :return: La differenza dei due numeri, str.
+        把两个大数字相减。
+        :param num1: 第一个要被减去的数字，字符串。
+        :param num2: 第二个要减去的数字，字符串。
+        :return: 两个数字的差，字符串。
         >>> bigNum = BigNumCalculator()
         >>> bigNum.subtract("12345678901234567890", "98765432109876543210")
         '-86419753208641975320'
-
         """
+    if num1 == num2:
+        return '0'
     negative = False
-    if len(num1) < len(num2):
-        negative = True
-    elif len(num1) == len(num2):
-        for i in range(len(num1)):
-            if int(num1[i]) < int(num2[i]):
-                negative = True
-                break
-            elif int(num1[i]) > int(num2[i]):
-                break
-    if negative:
+    if num1 < num2:
         num1, num2 = (num2, num1)
+        negative = True
     max_length = max(len(num1), len(num2))
     num1 = num1.zfill(max_length)
     num2 = num2.zfill(max_length)
-    borrow = 0
     result = []
+    borrow = 0
     for i in range(max_length - 1, -1, -1):
-        digit1 = int(num1[i])
-        digit2 = int(num2[i])
-        digit1 -= borrow
-        borrow = 0
-        if digit1 < digit2:
-            digit1 += 10
+        digit_sub = int(num1[i]) - int(num2[i]) - borrow
+        if digit_sub < 0:
+            digit_sub += 10
             borrow = 1
-        digit_diff = digit1 - digit2
-        result.insert(0, str(digit_diff))
+        else:
+            borrow = 0
+        result.insert(0, str(digit_sub))
     while len(result) > 1 and result[0] == '0':
         result.pop(0)
-    if negative:
-        result.insert(0, '-')
-    return ''.join(result)
+    return ('-' if negative else '') + ''.join(result)

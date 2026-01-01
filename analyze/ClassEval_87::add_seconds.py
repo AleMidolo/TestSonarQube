@@ -1,8 +1,8 @@
 def add_seconds(self, seconds):
     """
-        Aggiungi il numero specificato di secondi all'ora corrente
-        :param seconds: int, numero di secondi da aggiungere
-        :return: stringa, ora dopo aver aggiunto il numero specificato di secondi nel formato '%H:%M:%S'
+        将指定的秒数添加到当前时间
+        :param seconds: int, 要添加的秒数
+        :return: string, 添加指定秒数后的时间，格式为 '%H:%M:%S'
         >>> timeutils.add_seconds(600)
         "19:29:22"
         """

@@ -1,6 +1,6 @@
 def get_std_deviation(self):
     """
-        Calcola la deviazione standard, con una precisione di due cifre  decimali
+        计算标准差，精确到小数点后两位
         :return: float
         >>> ds2 = DataStatistics2([1, 2, 3, 4])
         >>> ds2.get_std_deviation()

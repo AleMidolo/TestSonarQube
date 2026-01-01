@@ -1,8 +1,8 @@
 def process_text_file(self, sentences_string):
     """
-        Dato un testo, restituisce il numero di parole nella frase più lunga
-        :param sentences_string: stringa, frase lunga non divisa
-        :return:int, il numero di parole nella frase più lunga
+        给定一段文本，返回最长句子中的单词数量
+        :param sentences_string: 字符串，未分割的长句子
+        :return: int，最长句子中的单词数量
         >>> ss.process_text_file("aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?")
         4
         """

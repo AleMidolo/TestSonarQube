@@ -1,7 +1,7 @@
 def setNum(self):
     """
-        Calcola la dimensione di ciascun blocco e il resto della divisione.
-        :return: la dimensione di ciascun blocco e il resto della divisione, tupla.
+        计算每个块的大小和除法的余数。
+        :return: 每个块的大小和除法的余数，元组。
         >>> a = AvgPartition([1, 2, 3, 4], 2)
         >>> a.setNum()
         (2, 0)

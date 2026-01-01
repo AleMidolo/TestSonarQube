@@ -1,14 +1,18 @@
 def get_upcoming_events(self, num_events):
     """
-        Ottieni i prossimi n eventi in arrivo da una data specificata.
-        :param date: La data da cui ottenere gli eventi in arrivo, datetime.
-        :param n: Il numero di eventi in arrivo da ottenere, int.
-        :return: Una lista dei prossimi n eventi in arrivo dalla data specificata, list.
+        获取从给定日期开始的下一个 n 个即将发生的事件。
+        :param date: 获取即将发生事件的起始日期，datetime。
+        :param n: 要获取的即将发生事件的数量，int。
+        :return: 从给定日期开始的n 个即将发生事件的列表，list。
         >>> calendar = CalendarUtil()
-        >>> calendar.events = [{'date': datetime(2023, 1, 1, 0, 0), 'start_time': datetime(2023, 1, 1, 0, 0), 'end_time': datetime(2023, 1, 1, 23, 0), 'description': 'Capodanno'},{'date': datetime(2023, 1, 2, 0, 0),'end_time': datetime(2023, 1, 2, 1, 0), 'description': 'Capodanno 2'}]
+        >>> calendar.events = [{'date': datetime(2023, 1, 1, 0, 0), 'start_time': datetime(2023, 1, 1, 0, 0), 'end_time': datetime(2023, 1, 1, 23, 0), 'description': '新年'},{'date': datetime(2023, 1, 2, 0, 0),'end_time': datetime(2023, 1, 2, 1, 0), 'description': '新年 2'}]
         >>> calendar.get_upcoming_events(1)
-        [{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 23, 0), 'description': 'Capodanno'}, {'date': datetime.datetime(2023, 1, 2, 0, 0), 'end_time': datetime.datetime(2023, 1, 2, 1, 0), 'description': 'Capodanno 2'}]
+        [{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 23, 0), 'description': '新年'}, {'date': datetime.datetime(2023, 1, 2, 0, 0), 'end_time': datetime.datetime(2023, 1, 2, 1, 0), 'description': '新年 2'}]
 
         """
-    sorted_events = sorted(self.events, key=lambda x: x['start_time'] if 'start_time' in x else x['date'])
-    return sorted_events[:num_events]
+    upcoming_events = []
+    current_time = datetime.now()
+    for event in self.events:
+        if event['start_time'] >= current_time:
+            upcoming_events.append(event)
+    return upcoming_events[:num_events]

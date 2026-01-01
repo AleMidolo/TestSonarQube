@@ -1,6 +1,6 @@
 def update_product_quantity(self, product_id, quantity):
     """
-        Secondo product_id, aggiungi la quantità al prodotto corrispondente nell'inventario.
+        根据 product_id，将数量添加到库存中对应的产品。
         >>> warehouse.add_product(1, "product1", 3)
         >>> warehouse.update_product_quantity(1, -1)
         >>> warehouse.inventory

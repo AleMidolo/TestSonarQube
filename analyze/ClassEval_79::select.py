@@ -1,17 +1,16 @@
 def select(self, fields=None, condition=None):
     """
-        Genera un'istruzione SQL SELECT basata sui campi e le condizioni specificati.
-        :param fields: lista, opzionale. Il valore predefinito è None. La lista dei campi da interrogare.
-        :param condition: str, opzionale. Il valore predefinito è None. L'espressione di condizione per l'interrogazione.
-        :return: str. L'istruzione SQL generata.
+        根据指定的字段和条件生成一个 SELECT SQL 语句。
+        :param fields: list, 可选。默认为 None。要查询的字段列表。
+        :param condition: str, 可选。默认为 None。查询的条件表达式。
+        :return: str。生成的 SQL 语句。
         >>> sql = SQLGenerator('table1')
         >>> sql.select(['field1', 'field2'], 'filed3 = value1')
         'SELECT field1, field2 FROM table1 WHERE filed3 = value1;'
         """
     if fields is None:
-        fields_clause = '*'
-    else:
-        fields_clause = ', '.join(fields)
+        fields = ['*']
+    fields_clause = ', '.join(fields)
     sql = f'SELECT {fields_clause} FROM {self.table_name}'
     if condition:
         sql += f' WHERE {condition}'

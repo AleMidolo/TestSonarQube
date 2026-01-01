@@ -1,26 +1,28 @@
 @staticmethod
-def _calculate(first_value, second_value, current_op):
-    """
-        Esegue il calcolo matematico basato sugli operandi e sull'operatore forniti
-        :param first_value: stringa, il primo operando
-        :param second_value: stringa, il secondo operando
-        :param current_op: stringa, l'operatore
-        :return: decimal.Decimal, il risultato calcolato
+    def _calculate(first_value, second_value, current_op):
+        """
+        根据给定的操作数和运算符执行数学计算
+        :param first_value: 字符串, 第一个操作数
+        :param second_value: 字符串, 第二个操作数
+        :param current_op: 字符串, 运算符
+        :return: decimal.Decimal, 计算结果
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator._calculate("2", "3", "+")
         5.0
+
         """
-    first = Decimal(first_value)
-    second = Decimal(second_value)
-    if current_op == '+':
-        return first + second
-    elif current_op == '-':
-        return first - second
-    elif current_op == '*':
-        return first * second
-    elif current_op == '/':
-        return first / second
-    elif current_op == '%':
-        return first % second
-    else:
-        raise ValueError(f'Unsupported operator: {current_op}')
+        first_value = Decimal(first_value)
+        second_value = Decimal(second_value)
+
+        if current_op == '+':
+            return first_value + second_value
+        elif current_op == '-':
+            return first_value - second_value
+        elif current_op == '*':
+            return first_value * second_value
+        elif current_op == '\/':
+            return first_value / second_value
+        elif current_op == '%':
+            return first_value % second_value
+        else:
+            raise ValueError(f"Unknown operator: {current_op}")

@@ -1,22 +1,20 @@
 def send_message(self, sender, receiver, message):
     """
-        Invia un messaggio da un utente a un altro utente.
-        :param sender: Il nome del mittente, str.
-        :param receiver: Il nome del destinatario, str.
-        :param message: Il messaggio, str.
-        :return: Se il mittente o il destinatario non sono nel Chat, restituisce False, altrimenti restituisce True.
+        从一个用户发送消息到另一个用户。
+        :param sender: 发送者的名字，str。
+        :param receiver: 接收者的名字，str。
+        :param message: 消息内容，str。
+        :return: 如果发送者或接收者不在聊天中，返回 False；否则，返回 True。
         >>> chat = Chat()
         >>> chat.users = {'John': [], 'Mary': []}
-        >>> chat.send_message('John', 'Mary', 'Ciao')
+        >>> chat.send_message('John', 'Mary', 'Hello')
         True
-        >>> chat.send_message('John', 'Tom', 'Ciao')
+        >>> chat.send_message('John', 'Tom', 'Hello')
         False
-
         """
     if sender not in self.users or receiver not in self.users:
         return False
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    message_dict = {'sender': sender, 'receiver': receiver, 'message': message, 'timestamp': timestamp}
-    self.users[sender].append(message_dict)
-    self.users[receiver].append(message_dict)
+    message_data = {'sender': sender, 'receiver': receiver, 'message': message, 'timestamp': timestamp}
+    self.users[sender].append(message_data)
     return True

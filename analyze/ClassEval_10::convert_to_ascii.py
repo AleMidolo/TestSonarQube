@@ -1,10 +1,9 @@
 def convert_to_ascii(self):
     """
-        Converte la stringa binaria in una stringa ascii.
+        将二进制字符串转换为 ASCII 字符串。
         >>> bdp = BinaryDataProcessor("0110100001100101011011000110110001101111")
         >>> bdp.convert_to_ascii()
         'hello'
-
         """
     byte_array = bytearray()
     for i in range(0, len(self.binary_string), 8):

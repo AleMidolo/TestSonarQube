@@ -1,9 +1,9 @@
 def update(self, data, condition):
     """
-        Genera un'istruzione SQL UPDATE basata sui dati e sulla condizione forniti.
-        :param data: dict. I dati da aggiornare, in forma di dizionario dove le chiavi sono i nomi dei campi e i valori sono i nuovi valori dei campi.
-        :param condition: str. L'espressione di condizione per l'aggiornamento.
-        :return: str. L'istruzione SQL generata.
+        根据给定的数据和条件生成一个 UPDATE SQL 语句。
+        :param data: dict. 要更新的数据，以字典形式表示，其中键是字段名，值是新的字段值。
+        :param condition: str. 更新的条件表达式。
+        :return: str. 生成的 SQL 语句。
         >>> sql.update({'field1': 'new_value1', 'field2': 'new_value2'}, "field3 = value1")
         "UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2' WHERE field3 = value1;"
         """

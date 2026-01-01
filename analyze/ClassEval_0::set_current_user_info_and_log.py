@@ -1,11 +1,10 @@
 def set_current_user_info_and_log(self, user):
     """
-        Imposta le informazioni dell'utente corrente e registra l'accesso.
-        :param user: dict, le informazioni dell'utente
+        设置当前用户信息并记录访问日志。
+        :param user: dict，用户信息
         :return: None
         >>> filter = AccessGatewayFilter()
         >>> user = {'name': 'user1', 'address': '127.0.0.1'}
         >>> filter.set_current_user_info_and_log(user)
-
         """
-    logging.info(f"User {user['name']} accessed from {user.get('address', 'unknown')}")
+    logging.info(f'User info: {user}')

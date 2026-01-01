@@ -1,20 +1,16 @@
 @staticmethod
 def kappa(testData, k):
     """
-        Calcola il valore di Cohen kappa di una matrice k-dimensionale
-        :param testData: La matrice k-dimensionale di cui calcolare il valore di kappa di Cohen
-        :param k: int, Dimensione della matrice
-        :return: float, il valore di kappa di Cohen della matrice
+        计算k维矩阵的Cohen's kappa值
+        :param testData: 需要计算Cohen's kappa值的k维矩阵
+        :param k: int, 矩阵维度
+        :return: float, 矩阵的Cohen's kappa值
         >>> KappaCalculator.kappa([[2, 1, 1], [1, 2, 1], [1, 1, 2]], 3)
         0.25
         """
-    data = np.array(testData, dtype=float)
-    total = np.sum(data)
-    Po = np.trace(data) / total
-    row_sums = np.sum(data, axis=1)
-    col_sums = np.sum(data, axis=0)
-    Pe = np.sum(row_sums * col_sums) / total ** 2
-    if Pe == 1:
-        return 1.0 if Po == 1 else 0.0
-    kappa_value = (Po - Pe) / (1 - Pe)
-    return float(kappa_value)
+    n = len(testData)
+    total = sum((sum(row) for row in testData))
+    p0 = sum((sum(row) ** 2 for row in testData)) / total ** 2
+    pe = sum((sum(testData[:, j]) ** 2 for j in range(k))) / total ** 2
+    kappa_value = (p0 - pe) / (1 - pe) if 1 - pe != 0 else 0
+    return kappa_value

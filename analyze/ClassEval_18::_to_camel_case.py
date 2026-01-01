@@ -1,12 +1,12 @@
 @staticmethod
 def _to_camel_case(key):
     """
-        converte la stringa key in camel case
+        将键字符串转换为驼峰式
         :param key:str
-        :return:str, stringa key convertita
+        :return:str, 转换后的键字符串
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map._to_camel_case('first_name')
         'firstName'
         """
-    parts = key.split('_')
-    return parts[0] + ''.join((part.capitalize() for part in parts[1:]))
+    components = key.split('_')
+    return components[0] + ''.join((x.title() for x in components[1:]))
