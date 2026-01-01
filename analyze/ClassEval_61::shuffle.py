@@ -8,11 +8,8 @@ def shuffle(self):
         True
 
         """
-    if not self.playlist:
+    if self.playlist:
+        random.shuffle(self.playlist)
+        return True
+    else:
         return False
-    random.shuffle(self.playlist)
-    if self.current_song and self.current_song in self.playlist:
-        pass
-    elif self.current_song and self.current_song not in self.playlist:
-        self.current_song = None
-    return True

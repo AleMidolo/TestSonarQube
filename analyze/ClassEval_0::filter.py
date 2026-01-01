@@ -8,11 +8,13 @@ def filter(self, request):
         True
 
         """
-    if self.is_start_with(request.get('path', '')):
-        return True
-    if 'headers' in request and 'Authorization' in request['headers']:
+    if not self.is_start_with(request.get('path', '')):
+        return False
+    if request.get('path', '').startswith('/api'):
+        if 'headers' not in request or 'Authorization' not in request['headers']:
+            return False
         user_info = self.get_jwt_user(request)
-        if user_info is not None:
-            self.set_current_user_info_and_log(user_info.get('user', {}))
-            return True
-    return False
+        if user_info is None:
+            return False
+        self.set_current_user_info_and_log(user_info.get('user', {}))
+    return True

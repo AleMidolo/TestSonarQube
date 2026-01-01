@@ -27,10 +27,16 @@ def map(data):
             ap = 0.0
         else:
             precisions = []
-            for i, pos in enumerate(relevant_positions):
-                precision_at_k = (i + 1) / (pos + 1)
-                precisions.append(precision_at_k)
-            ap = np.mean(precisions)
+            for k in range(1, len(sub_list) + 1):
+                relevant_in_k = np.sum(sub_list[:k])
+                if relevant_in_k > 0:
+                    precision_at_k = relevant_in_k / k
+                    if sub_list[k - 1] == 1:
+                        precisions.append(precision_at_k)
+            if len(precisions) > 0:
+                ap = np.mean(precisions)
+            else:
+                ap = 0.0
         return (ap, [ap])
     if type(data) == list:
         separate_result = []
@@ -44,10 +50,15 @@ def map(data):
                     ap = 0.0
                 else:
                     precisions = []
-                    for i, pos in enumerate(relevant_positions):
-                        precision_at_k = (i + 1) / (pos + 1)
-                        precisions.append(precision_at_k)
-                    ap = np.mean(precisions)
+                    for k in range(1, len(sub_list) + 1):
+                        relevant_in_k = np.sum(sub_list[:k])
+                        if relevant_in_k > 0:
+                            precision_at_k = relevant_in_k / k
+                            if sub_list[k - 1] == 1:
+                                precisions.append(precision_at_k)
+                    if len(precisions) > 0:
+                        ap = np.mean(precisions)
+                    else:
+                        ap = 0.0
             separate_result.append(ap)
-        map_score = np.mean(separate_result)
-        return (map_score, separate_result)
+        return (np.mean(separate_result), separate_result)

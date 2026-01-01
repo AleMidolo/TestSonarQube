@@ -12,39 +12,39 @@ def prepare(self, expression):
     i = 0
     while i < len(expression):
         c = expression[i]
-        if c == '(':
-            operator_stack.append(c)
-        elif c == ')':
-            while operator_stack and operator_stack[-1] != '(':
-                self.postfix_stack.append(operator_stack.pop())
-            if operator_stack:
-                operator_stack.pop()
-        elif self.is_operator(c):
-            if c == '-' and (i == 0 or expression[i - 1] in '+-*/(\\~'):
-                c = '~'
+        if c.isdigit() or c == '.' or c == '~':
             if c == '~':
-                j = i + 1
-                if j < len(expression) and expression[j] == '(':
-                    self.postfix_stack.append('0')
-                    operator_stack.append('-')
+                i += 1
+                if i < len(expression) and expression[i].isdigit():
+                    num = '-'
+                    while i < len(expression) and (expression[i].isdigit() or expression[i] == '.'):
+                        num += expression[i]
+                        i += 1
+                    self.postfix_stack.append(num)
+                    continue
                 else:
-                    num_start = j
-                    while j < len(expression) and (expression[j].isdigit() or expression[j] == '.'):
-                        j += 1
-                    num = expression[num_start:j]
-                    self.postfix_stack.append('~' + num)
-                    i = j - 1
+                    i -= 1
+            else:
+                num = ''
+                while i < len(expression) and (expression[i].isdigit() or expression[i] == '.'):
+                    num += expression[i]
+                    i += 1
+                self.postfix_stack.append(num)
+                continue
+        elif self.is_operator(c):
+            if c == '(':
+                operator_stack.append(c)
+            elif c == ')':
+                while operator_stack and operator_stack[-1] != '(':
+                    self.postfix_stack.append(operator_stack.pop())
+                if operator_stack:
+                    operator_stack.pop()
             else:
                 while operator_stack and operator_stack[-1] != '(' and self.compare(c, operator_stack[-1]):
                     self.postfix_stack.append(operator_stack.pop())
                 operator_stack.append(c)
+            i += 1
         else:
-            j = i
-            while j < len(expression) and (expression[j].isdigit() or expression[j] == '.'):
-                j += 1
-            num = expression[i:j]
-            self.postfix_stack.append(num)
-            i = j - 1
-        i += 1
+            i += 1
     while operator_stack:
         self.postfix_stack.append(operator_stack.pop())

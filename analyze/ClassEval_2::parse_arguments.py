@@ -12,12 +12,12 @@ def parse_arguments(self, command_string):
         """
     self.arguments.clear()
     tokens = command_string.split()
-    i = 0
+    i = 1
     while i < len(tokens):
         token = tokens[i]
         if token.startswith('--') and '=' in token:
-            arg_name = token[2:].split('=')[0]
-            arg_value = token.split('=', 1)[1]
+            arg_name = token[2:token.index('=')]
+            arg_value = token[token.index('=') + 1:]
             self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
             i += 1
         elif token.startswith('--'):
@@ -40,10 +40,7 @@ def parse_arguments(self, command_string):
                 i += 1
         else:
             i += 1
-    missing_args = set()
-    for req_arg in self.required:
-        if req_arg not in self.arguments:
-            missing_args.add(req_arg)
+    missing_args = self.required - set(self.arguments.keys())
     if missing_args:
         return (False, missing_args)
     else:
