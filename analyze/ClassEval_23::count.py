@@ -10,7 +10,7 @@ def count(n: int, m: int) -> int:
         """
     if m < 0 or m > n:
         return 0
-    if m > n // 2:
+    if m > n - m:
         m = n - m
     result = 1
     for i in range(1, m + 1):

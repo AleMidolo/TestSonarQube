@@ -10,5 +10,5 @@ def search_user_by_username(self, username):
         len(result) = 1
         """
     self.cursor.execute('\n            SELECT * FROM users WHERE username = ?\n        ', (username,))
-    result = self.cursor.fetchall()
-    return result[0] if result else None
+    result = self.cursor.fetchone()
+    return result

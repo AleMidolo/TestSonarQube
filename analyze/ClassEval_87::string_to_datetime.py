@@ -13,42 +13,35 @@ def string_to_datetime(self, string):
         except ValueError:
             continue
     normalized = string.strip()
+    while '  ' in normalized:
+        normalized = normalized.replace('  ', ' ')
     try:
         from dateutil import parser
         return parser.parse(normalized)
     except ImportError:
-        try:
-            for sep in [' ', 'T']:
-                if sep in normalized:
-                    date_part, time_part = normalized.split(sep, 1)
-                    break
-            else:
-                date_part = normalized
-                time_part = '00:00:00'
-            for date_sep in ['-', '/', '.']:
-                if date_sep in date_part:
-                    date_parts = date_part.split(date_sep)
-                    if len(date_parts) == 3:
-                        try:
-                            year = int(date_parts[0])
-                            month = int(date_parts[1])
-                            day = int(date_parts[2])
-                            if year < 100:
-                                year += 2000 if year < 50 else 1900
-                        except ValueError:
-                            try:
-                                day = int(date_parts[0])
-                                month = int(date_parts[1])
-                                year = int(date_parts[2])
-                                if year < 100:
-                                    year += 2000 if year < 50 else 1900
-                            except ValueError:
-                                continue
-                        time_parts = time_part.split(':')
-                        hour = int(time_parts[0]) if len(time_parts) > 0 else 0
-                        minute = int(time_parts[1]) if len(time_parts) > 1 else 0
-                        second = int(time_parts[2]) if len(time_parts) > 2 else 0
-                        return datetime.datetime(year, month, day, hour, minute, second)
-        except (ValueError, IndexError):
-            pass
-    raise ValueError(f'Unable to parse time string: {string}')
+        parts = normalized.split(' ')
+        date_part = parts[0]
+        time_part = parts[1] if len(parts) > 1 else '00:00:00'
+        for sep in ['-', '/', '.']:
+            date_part = date_part.replace(sep, '-')
+        date_parts = date_part.split('-')
+        if len(date_parts) == 3:
+            year, month, day = date_parts
+            year = int(year)
+            month = int(month)
+            day = int(day)
+        else:
+            raise ValueError(f'Unable to parse date string: {string}')
+        time_parts = time_part.split(':')
+        if len(time_parts) == 3:
+            hour, minute, second = map(int, time_parts)
+        elif len(time_parts) == 2:
+            hour, minute = map(int, time_parts)
+            second = 0
+        elif len(time_parts) == 1:
+            hour = int(time_parts[0])
+            minute = 0
+            second = 0
+        else:
+            hour = minute = second = 0
+        return datetime.datetime(year, month, day, hour, minute, second)

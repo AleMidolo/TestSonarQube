@@ -11,6 +11,4 @@ def add(states, stat):
 
         """
     BitStatusUtil.check([states, stat])
-    if not BitStatusUtil.has(states, stat):
-        return states | stat
-    return states
+    return states | stat

@@ -12,8 +12,6 @@ def available_movies(self, start_time, end_time):
     end = datetime.strptime(end_time, '%H:%M')
     available = []
     for movie in self.movies:
-        movie_start = movie['start_time']
-        movie_end = movie['end_time']
-        if movie_start >= start and movie_end <= end:
+        if movie['start_time'] >= start and movie['end_time'] <= end:
             available.append(movie['name'])
     return available

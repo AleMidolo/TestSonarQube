@@ -15,14 +15,14 @@ def interpret(self, display=False):
     for item in items:
         chord = ''
         tune = ''
-        split_index = 0
         for i, char in enumerate(item):
             if char.isdigit():
-                split_index = i
+                chord = item[:i]
+                tune = item[i:]
                 break
-        chord = item[:split_index]
-        tune = item[split_index:]
-        result.append({'Chord': chord, 'Tune': tune})
-        if display:
-            print(self.display(chord, tune))
+        if chord and tune:
+            result.append({'Chord': chord, 'Tune': tune})
+    if display:
+        for entry in result:
+            print(self.display(entry['Chord'], entry['Tune']))
     return result

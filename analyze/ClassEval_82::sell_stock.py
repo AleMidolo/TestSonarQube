@@ -6,7 +6,7 @@ def sell_stock(self, stock):
         :return: 如果股票成功出售则返回 True，如果股票数量不足则返回 False。
         >>> tracker = StockPortfolioTracker(10000.0)
         >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
-        >>> tracker.sell_stock({"name": 'AAPL', "price": 150.0, "quantity": 10})
+        >>> tracker.sell_stock({"name": "AAPL", "price": 150.0, "quantity": 10})
         True
         >>> tracker.portfolio
         []

@@ -20,10 +20,8 @@ def multiply(num1, num2):
         num2 = num2[1:]
     num1 = num1.lstrip('0')
     num2 = num2.lstrip('0')
-    if num1 == '':
-        num1 = '0'
-    if num2 == '':
-        num2 = '0'
+    if not num1 or not num2:
+        return '0'
     num1 = num1[::-1]
     num2 = num2[::-1]
     result = [0] * (len(num1) + len(num2))
@@ -37,10 +35,7 @@ def multiply(num1, num2):
             carry = product // 10
         if carry > 0:
             result[i + len(num2)] += carry
-    result_str = ''.join((str(digit) for digit in result[::-1]))
-    result_str = result_str.lstrip('0')
-    if result_str == '':
-        result_str = '0'
+    result_str = ''.join((str(digit) for digit in result[::-1])).lstrip('0')
     if negative and result_str != '0':
         result_str = '-' + result_str
     return result_str
