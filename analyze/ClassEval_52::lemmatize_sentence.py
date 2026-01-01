@@ -1,17 +1,17 @@
 def lemmatize_sentence(self, sentence):
     """
-        Remove punctuations of the sentence and tokenizes the input sentence, mark the part of speech tag of each word,
-        lemmatizes the words with different parameters based on their parts of speech, and stores in a list.
-        :param sentence: a sentence str
-        :return: a list of words which have been lemmatized.
-        >>> lemmatization = Lemmatization()
-        >>> lemmatization.lemmatize_sentence("I am running in a race.")
-        ['I', 'be', 'run', 'in', 'a', 'race']
-        """
-    lemmatized_words = []
+    Remove punctuations of the sentence and tokenizes the input sentence, mark the part of speech tag of each word,
+    lemmatizes the words with different parameters based on their parts of speech, and stores in a list.
+    :param sentence: a sentence str
+    :return: a list of words which have been lemmatized.
+    >>> lemmatization = Lemmatization()
+    >>> lemmatization.lemmatize_sentence("I am running in a race.")
+    ['I', 'be', 'run', 'in', 'a', 'race']
+
+    """
     pos_tags = self.get_pos_tag(sentence)
-    sentence = self.remove_punctuation(sentence)
-    words = word_tokenize(sentence)
+    words = self.remove_punctuation(sentence).split()
+    lemmatized_words = []
     for word, pos in zip(words, pos_tags):
         if pos.startswith('VB'):
             lemmatized_word = self.lemmatizer.lemmatize(word, pos='v')

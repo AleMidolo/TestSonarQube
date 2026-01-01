@@ -9,4 +9,4 @@ def split_sentences(self, text):
         """
     pattern = '[.!?][\\s]+'
     sentences = re.split(pattern, text)
-    return [sentence.strip() for sentence in sentences if sentence]
+    return [sentence.rstrip(' .!?') for sentence in sentences if sentence]

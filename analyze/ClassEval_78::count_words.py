@@ -7,5 +7,4 @@ def count_words(self, sentence):
         >>> ss.count_words("abc def")
         2
         """
-    words = re.findall('\\b\\w+\\b', sentence)
-    return len(words)
+    return len([word for word in sentence.split() if word.isalpha()])
