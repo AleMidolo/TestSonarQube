@@ -12,21 +12,21 @@ def string_to_datetime(self, string):
             return datetime.datetime.strptime(string, fmt)
         except ValueError:
             continue
-    normalized_string = string.strip()
-    try:
-        from dateutil import parser
-        return parser.parse(normalized_string)
-    except ImportError:
-        try:
-            return datetime.datetime.fromisoformat(normalized_string)
-        except ValueError:
-            parts = normalized_string.replace('-', ' ').replace('/', ' ').replace(':', ' ').split()
-            if len(parts) >= 3:
-                year = int(parts[0]) if len(parts[0]) == 4 else int(parts[2])
-                month = int(parts[1])
-                day = int(parts[2]) if len(parts[0]) == 4 else int(parts[0])
-                hour = int(parts[3]) if len(parts) > 3 else 0
-                minute = int(parts[4]) if len(parts) > 4 else 0
-                second = int(parts[5]) if len(parts) > 5 else 0
-                return datetime.datetime(year, month, day, hour, minute, second)
-    raise ValueError(f'Unable to parse time string: {string}')
+    normalized = string.replace('/', '-').replace('\\', '-')
+    parts = normalized.split()
+    date_part = parts[0]
+    time_part = parts[1] if len(parts) > 1 else '00:00:00'
+    date_parts = date_part.split('-')
+    if len(date_parts) == 3:
+        year, month, day = map(int, date_parts)
+    else:
+        raise ValueError(f'Unable to parse date string: {string}')
+    time_parts = time_part.split(':')
+    if len(time_parts) == 3:
+        hour, minute, second = map(int, time_parts)
+    elif len(time_parts) == 2:
+        hour, minute = map(int, time_parts)
+        second = 0
+    else:
+        hour = minute = second = 0
+    return datetime.datetime(year, month, day, hour, minute, second)

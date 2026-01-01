@@ -10,5 +10,5 @@ def list_employees(self):
         """
     result = {}
     for emp_id, emp_info in self.employees.items():
-        result[emp_id] = {'employee_ID': emp_id, 'name': emp_info['name'], 'position': emp_info['position'], 'department': emp_info['department'], 'salary': emp_info['salary']}
+        result[emp_id] = {'employee_ID': emp_id, **emp_info}
     return result

@@ -21,9 +21,10 @@ def calculate(self, expression):
             while j < n and (expression[j].isdigit() or expression[j] == '.'):
                 j += 1
             try:
-                operand_stack.append(float(expression[i:j]))
+                num = float(expression[i:j])
             except ValueError:
                 return None
+            operand_stack.append(num)
             i = j
         elif expression[i] in self.operators:
             while operator_stack and self.precedence(operator_stack[-1]) >= self.precedence(expression[i]):

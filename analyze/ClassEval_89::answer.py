@@ -9,9 +9,11 @@ def answer(self, expression):
         >>> ret = game.answer(ans)
         True
         """
-    import re
-    numbers_in_expr = re.findall('\\d+', expression)
-    numbers_in_expr = [int(num) for num in numbers_in_expr]
-    if sorted(numbers_in_expr) != sorted(self.nums):
+    if not self.evaluate_expression(expression):
         return False
-    return self.evaluate_expression(expression)
+    import re
+    numbers_in_expression = re.findall('\\d+', expression)
+    numbers_in_expression = [int(num) for num in numbers_in_expression]
+    if sorted(numbers_in_expression) != sorted(self.nums):
+        return False
+    return True

@@ -11,5 +11,4 @@ def parse_more(self, i):
         """
     if i < len(self.NUMBER_MORE):
         return self.NUMBER_MORE[i]
-    else:
-        return ''
+    return ''

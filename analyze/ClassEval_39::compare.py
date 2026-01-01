@@ -1,14 +1,13 @@
 def compare(self, cur, peek):
     """
-        दो ऑपरेटरों की प्राथमिकता की तुलना करें
-        :param cur: स्ट्रिंग, वर्तमान ऑपरेटर
-        :param peek: स्ट्रिंग, ऑपरेटर स्टैक के शीर्ष पर मौजूद ऑपरेटर
-        :return: बूल, यदि वर्तमान ऑपरेटर की प्राथमिकता उच्च या समान है, तो True, अन्यथा False
+        Compare the priority of two operators
+        :param cur: string, current operator
+        :param peek: string, operator at the top of the operator stack
+        :return: bool, True if current operator has higher or equal priority, False otherwise
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.compare("+", "-")
         True
-
         """
-    cur_priority = self.get_priority(cur)
-    peek_priority = self.get_priority(peek)
-    return cur_priority <= peek_priority
+    cur_index = self._get_operator_index(cur)
+    peek_index = self._get_operator_index(peek)
+    return self.operat_priority[cur_index] <= self.operat_priority[peek_index]
