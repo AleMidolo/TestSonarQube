@@ -28,8 +28,8 @@ def map(data):
         else:
             precisions = []
             relevant_count = 0
-            for i, item in enumerate(sub_list):
-                if item == 1:
+            for i in range(len(sub_list)):
+                if sub_list[i] == 1:
                     relevant_count += 1
                     precision_at_i = relevant_count / (i + 1)
                     precisions.append(precision_at_i)
@@ -48,8 +48,8 @@ def map(data):
                 else:
                     precisions = []
                     relevant_count = 0
-                    for i, item in enumerate(sub_list):
-                        if item == 1:
+                    for i in range(len(sub_list)):
+                        if sub_list[i] == 1:
                             relevant_count += 1
                             precision_at_i = relevant_count / (i + 1)
                             precisions.append(precision_at_i)

@@ -6,11 +6,15 @@ def add_table(self, data):
         """
     try:
         doc = Document(self.file_path)
-        table = doc.add_table(rows=len(data), cols=len(data[0]) if data else 0)
+        if not data:
+            return False
+        rows = len(data)
+        cols = len(data[0]) if rows > 0 else 0
+        table = doc.add_table(rows=rows, cols=cols)
         for i, row_data in enumerate(data):
-            row = table.rows[i]
+            row_cells = table.rows[i].cells
             for j, cell_data in enumerate(row_data):
-                row.cells[j].text = str(cell_data)
+                row_cells[j].text = str(cell_data)
         doc.save(self.file_path)
         return True
     except:

@@ -11,8 +11,8 @@ def split_sentences(self, text):
     sentences = re.split(pattern, text)
     result = []
     for i, sentence in enumerate(sentences):
-        if i == len(sentences) - 1:
-            result.append(sentence)
-        else:
+        if i < len(sentences) - 1:
             result.append(sentence.rstrip('.!?'))
+        else:
+            result.append(sentence)
     return result

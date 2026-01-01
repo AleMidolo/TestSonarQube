@@ -11,9 +11,9 @@ def buy_stock(self, stock):
         [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
 
         """
-    cost = stock['price'] * stock['quantity']
-    if cost > self.cash_balance:
+    total_cost = stock['price'] * stock['quantity']
+    if total_cost > self.cash_balance:
         return False
-    self.cash_balance -= cost
+    self.cash_balance -= total_cost
     self.add_stock(stock)
     return True

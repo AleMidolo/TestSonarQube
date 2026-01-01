@@ -11,6 +11,6 @@ def search_jobs(self, criteria):
         """
     matching_jobs = []
     for job in self.job_listings:
-        if criteria in job['requirements']:
+        if criteria.lower() in job['job_title'].lower() or criteria.lower() in job['company'].lower() or any((criteria.lower() in str(req).lower() for req in job['requirements'])):
             matching_jobs.append(job)
     return matching_jobs
