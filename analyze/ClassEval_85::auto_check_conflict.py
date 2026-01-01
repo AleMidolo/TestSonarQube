@@ -10,16 +10,16 @@ def auto_check_conflict(self):
         'heat'
         """
     if self.current_temperature < self.target_temperature:
-        if self.mode == 'heat':
-            return True
-        else:
+        if self.mode != 'heat':
             self.mode = 'heat'
             return False
-    elif self.current_temperature > self.target_temperature:
-        if self.mode == 'cool':
-            return True
         else:
+            return True
+    elif self.current_temperature > self.target_temperature:
+        if self.mode != 'cool':
             self.mode = 'cool'
             return False
+        else:
+            return True
     else:
         return True

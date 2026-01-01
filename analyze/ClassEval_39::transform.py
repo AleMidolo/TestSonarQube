@@ -16,9 +16,7 @@ def transform(expression):
     while i < length:
         c = expression[i]
         if c == '-':
-            if i == 0:
-                transformed.append('~')
-            elif expression[i - 1] in '+-*/(%':
+            if i == 0 or expression[i - 1] in {'+', '-', '*', '\\/', '(', '%'}:
                 transformed.append('~')
             else:
                 transformed.append(c)

@@ -24,10 +24,11 @@ def lemmatize_sentence(self, sentence):
             pos = 'n'
         else:
             pos = 'n'
-        if word.lower() == 'am':
+        if word.lower() == 'am' and tag == 'VBP':
             lemmatized_words.append('be')
-        elif word.lower() == 'i':
+        elif word == 'I' and tag == 'PRP':
             lemmatized_words.append('I')
         else:
-            lemmatized_words.append(self.lemmatizer.lemmatize(word, pos=pos))
+            lemmatized_word = self.lemmatizer.lemmatize(word, pos=pos)
+            lemmatized_words.append(lemmatized_word)
     return lemmatized_words

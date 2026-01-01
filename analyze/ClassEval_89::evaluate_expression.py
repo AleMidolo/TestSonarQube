@@ -11,6 +11,6 @@ def evaluate_expression(self, expression):
         """
     try:
         result = eval(expression, {'__builtins__': {}}, {'math': math})
-        return abs(result - 24) < 1e-10
-    except (ZeroDivisionError, SyntaxError, NameError, TypeError):
+        return math.isclose(result, 24, rel_tol=1e-09)
+    except (ZeroDivisionError, SyntaxError, NameError, TypeError, ValueError):
         return False

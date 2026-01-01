@@ -7,17 +7,16 @@ def split_sentences(self, sentences_string):
         >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
-    pattern = '(?<!Sr)(?<!Sra)(?<!Dr)(?<!Prof)(?<!Mr)(?<!Mrs)(?<!Ms)(?<!St)\\.\\s|\\?\\s'
+    pattern = '(?<!\\bSr)(?<!\\bSra)(?<!\\bDr)(?<!\\bDra)(?<!\\bProf)(?<!\\bLic)\\.|\\?(?=\\s|$)'
     parts = re.split(f'({pattern})', sentences_string)
     sentences = []
     current_sentence = ''
-    for i in range(0, len(parts) - 1, 2):
+    for i in range(0, len(parts), 2):
         if i + 1 < len(parts):
-            current_sentence = parts[i] + parts[i + 1].rstrip()
+            current_sentence = parts[i] + parts[i + 1]
             sentences.append(current_sentence.strip())
-    if len(parts) % 2 == 1:
-        last_part = parts[-1].strip()
-        if last_part:
-            sentences.append(last_part)
+            current_sentence = ''
+        elif parts[i].strip():
+            sentences.append(parts[i].strip())
     sentences = [s for s in sentences if s]
     return sentences

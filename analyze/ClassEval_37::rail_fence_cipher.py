@@ -18,5 +18,5 @@ def rail_fence_cipher(self, plain_text, rails):
         rail += direction
         if rail == rails - 1 or rail == 0:
             direction *= -1
-    cipher_text = ''.join([''.join(rail) for rail in fence])
-    return cipher_text
+    ciphertext = ''.join([''.join(rail) for rail in fence])
+    return ciphertext

@@ -10,6 +10,5 @@ def list_employees(self):
         """
     result = {}
     for employee_id, employee_data in self.employees.items():
-        result[employee_id] = employee_data.copy()
-        result[employee_id]['employee_ID'] = employee_id
+        result[employee_id] = {'employee_ID': employee_id, **employee_data}
     return result

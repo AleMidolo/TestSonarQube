@@ -9,28 +9,26 @@ def calculate(self, expression):
 
         """
     self.postfix_stack.clear()
-    transformed_expression = self.transform(expression)
-    self.prepare(transformed_expression)
-    result_stack = deque()
+    transformed_expr = self.transform(expression)
+    self.prepare(transformed_expr)
+    calc_stack = deque()
     for token in self.postfix_stack:
         if self.is_operator(token):
             if token == '~':
-                if result_stack:
-                    operand = result_stack.pop()
-                    result_stack.append(Decimal(operand) * Decimal(-1))
+                if not calc_stack:
+                    raise ValueError('Invalid expression: missing operand for unary minus')
+                operand = calc_stack.pop()
+                result = Decimal(0) - Decimal(operand)
+                calc_stack.append(str(result))
             else:
-                if len(result_stack) < 2:
+                if len(calc_stack) < 2:
                     raise ValueError('Invalid expression: insufficient operands for operator {}'.format(token))
-                second_value = result_stack.pop()
-                first_value = result_stack.pop()
-                if token == '\\/' and Decimal(second_value) == 0:
-                    raise ZeroDivisionError('Division by zero')
+                second_value = calc_stack.pop()
+                first_value = calc_stack.pop()
                 result = self._calculate(first_value, second_value, token)
-                result_stack.append(result)
-        elif token.startswith('~'):
-            result_stack.append(Decimal(token[1:]) * Decimal(-1))
+                calc_stack.append(str(result))
         else:
-            result_stack.append(Decimal(token))
-    if len(result_stack) != 1:
-        raise ValueError('Invalid expression: too many operands or operators')
-    return float(result_stack.pop())
+            calc_stack.append(token)
+    if len(calc_stack) != 1:
+        raise ValueError('Invalid expression: could not resolve to a single result')
+    return float(calc_stack.pop())

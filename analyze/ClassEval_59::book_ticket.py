@@ -13,20 +13,19 @@ def book_ticket(self, name, seats_to_book):
         >>> system.book_ticket('batman', [(0, 0)])
         'Película no encontrada.'
         """
-    movie_found = None
-    for movie in self.movies:
-        if movie['name'] == name:
-            movie_found = movie
+    movie = None
+    for m in self.movies:
+        if m['name'] == name:
+            movie = m
             break
-    if movie_found is None:
+    if movie is None:
         return 'Película no encontrada.'
-    seats = movie_found['seats']
-    n_rows, n_cols = seats.shape
+    n = movie['seats'].shape[0]
     for row, col in seats_to_book:
-        if row < 0 or row >= n_rows or col < 0 or (col >= n_cols):
+        if row < 0 or row >= n or col < 0 or (col >= n):
             return 'Reserva fallida.'
-        if seats[row, col] != 0:
+        if movie['seats'][row, col] != 0:
             return 'Reserva fallida.'
     for row, col in seats_to_book:
-        seats[row, col] = 1
+        movie['seats'][row, col] = 1
     return 'Reserva exitosa.'

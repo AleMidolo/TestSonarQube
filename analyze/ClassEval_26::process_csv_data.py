@@ -27,5 +27,5 @@ def process_csv_data(self, N, save_file_name):
         new_file_name = f'{base_name}_process.{extension}' if extension else f'{base_name}_process'
         output_data = [title] + new_data
         return self.write_csv(output_data, new_file_name)
-    except Exception as e:
+    except:
         return 0

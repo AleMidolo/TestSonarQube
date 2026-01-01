@@ -7,7 +7,6 @@ def write_xml(self, file_name):
         >>> root = xml_processor.read_xml()
         >>> success = xml_processor.write_xml('output.xml')
         >>> print(success)
-        True
         """
     try:
         tree = ET.ElementTree(self.root)
