@@ -11,7 +11,7 @@ def format_string(self, x):
         return ''
     is_negative = False
     if x[0] == '-':
-        is_negative = x[0] == '-'
+        is_negative = True
         x = x[1:]
     parts = x.split('.')
     integer_part = parts[0]
@@ -28,6 +28,7 @@ def format_string(self, x):
         result += 'MINUS '
     result += integer_words
     if decimal_words:
-        result += ' AND ' + decimal_words
-    result += ' ONLY'
+        result += ' AND ' + decimal_words + ' CENTS'
+    else:
+        result += ' ONLY'
     return result

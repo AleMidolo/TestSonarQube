@@ -7,22 +7,32 @@ def solve(self):
         ['destra']
         """
     from collections import deque
-    if self.initial_state == self.goal_state:
-        return []
+    start = tuple((tuple(row) for row in self.initial_state))
+    goal = tuple((tuple(row) for row in self.goal_state))
     queue = deque()
-    queue.append((self.initial_state, []))
+    queue.append((start, []))
     visited = set()
-    visited.add(tuple((tuple(row) for row in self.initial_state)))
+    visited.add(start)
     while queue:
         current_state, path = queue.popleft()
-        if current_state == self.goal_state:
-            return path
-        possible_moves = self.get_possible_moves(current_state)
+        if current_state == goal:
+            italian_path = []
+            for direction in path:
+                if direction == 'right':
+                    italian_path.append('destra')
+                elif direction == 'left':
+                    italian_path.append('sinistra')
+                elif direction == 'up':
+                    italian_path.append('su')
+                elif direction == 'down':
+                    italian_path.append('giù')
+            return italian_path
+        current_state_list = [list(row) for row in current_state]
+        possible_moves = self.get_possible_moves(current_state_list)
         for move in possible_moves:
-            new_state = self.move(current_state, move)
-            state_tuple = tuple((tuple(row) for row in new_state))
-            if state_tuple not in visited:
-                visited.add(state_tuple)
-                new_path = path + [move]
-                queue.append((new_state, new_path))
-    return None
+            new_state_list = self.move(current_state_list, move)
+            new_state = tuple((tuple(row) for row in new_state_list))
+            if new_state not in visited:
+                visited.add(new_state)
+                queue.append((new_state, path + [move]))
+    return []

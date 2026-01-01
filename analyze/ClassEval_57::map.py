@@ -22,18 +22,16 @@ def map(data):
         sub_list = np.array(sub_list)
         if total_num == 0:
             return (0.0, [0.0])
-        relevant_positions = np.where(sub_list == 1)[0]
-        if len(relevant_positions) == 0:
+        relevant_count = 0
+        precision_at_k = []
+        for i, result in enumerate(sub_list):
+            if result == 1:
+                relevant_count += 1
+                precision_at_k.append(relevant_count / (i + 1))
+        if relevant_count == 0:
             ap = 0.0
         else:
-            precisions = []
-            relevant_count = 0
-            for i, item in enumerate(sub_list):
-                if item == 1:
-                    relevant_count += 1
-                    precision_at_i = relevant_count / (i + 1)
-                    precisions.append(precision_at_i)
-            ap = np.mean(precisions) if precisions else 0.0
+            ap = sum(precision_at_k) / relevant_count
         return (ap, [ap])
     if type(data) == list:
         separate_result = []
@@ -42,17 +40,16 @@ def map(data):
             if total_num == 0:
                 ap = 0.0
             else:
-                relevant_positions = np.where(sub_list == 1)[0]
-                if len(relevant_positions) == 0:
+                relevant_count = 0
+                precision_at_k = []
+                for i, result in enumerate(sub_list):
+                    if result == 1:
+                        relevant_count += 1
+                        precision_at_k.append(relevant_count / (i + 1))
+                if relevant_count == 0:
                     ap = 0.0
                 else:
-                    precisions = []
-                    relevant_count = 0
-                    for i, item in enumerate(sub_list):
-                        if item == 1:
-                            relevant_count += 1
-                            precision_at_i = relevant_count / (i + 1)
-                            precisions.append(precision_at_i)
-                    ap = np.mean(precisions) if precisions else 0.0
+                    ap = sum(precision_at_k) / relevant_count
             separate_result.append(ap)
-        return (np.mean(separate_result), separate_result)
+        map_score = np.mean(separate_result)
+        return (map_score, separate_result)
