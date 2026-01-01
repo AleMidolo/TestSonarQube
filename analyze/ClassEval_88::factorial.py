@@ -3,7 +3,6 @@ def factorial(self, a):
         计算 a 的阶乘
         :param a: int
         :return: int
-        >>> tricalculator = TriCalculator()
         >>> tricalculator.factorial(5)
         120
         """

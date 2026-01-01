@@ -5,7 +5,7 @@ def create_zip_file(self, files, output_file_name):
     :param output_file_name: 字符串, 指定的输出路径
     :return: True或False，表示压缩操作是否成功
     >>> zfp = ZipFileProcessor("aaa.zip")
-    >>> zfp.create_zip_file(["bbb.txt", "ccc.txt", "ddd.txt"], "output/bcd")
+    >>> zfp.create_zip_file(["bbb.txt", "ccc.txt", "ddd.txt"], "output/bcd.zip")
     """
     try:
         with zipfile.ZipFile(output_file_name, 'w') as zip_file:

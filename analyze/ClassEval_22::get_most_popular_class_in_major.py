@@ -12,14 +12,13 @@ def get_most_popular_class_in_major(self, major):
         "数据结构"
         """
     class_count = {}
-    for student in self.students:
-        if student['major'] == major:
-            student_classes = self.students_registration_classes.get(student['name'], [])
-            for class_name in student_classes:
-                if class_name in class_count:
-                    class_count[class_name] += 1
-                else:
-                    class_count[class_name] = 1
+    for student in self.get_students_by_major(major):
+        classes = self.students_registration_classes.get(student, [])
+        for cls in classes:
+            if cls in class_count:
+                class_count[cls] += 1
+            else:
+                class_count[cls] = 1
     if not class_count:
         return ''
     return max(class_count, key=class_count.get)

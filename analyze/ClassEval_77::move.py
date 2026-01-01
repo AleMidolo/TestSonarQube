@@ -3,6 +3,7 @@ def move(self, direction):
         以指定方向移动蛇。如果蛇头的新位置等于食物的位置，则吃掉食物；如果蛇头的位置等于其身体的位置，则重新开始，否则长度加一。
         :param direction: 元组，表示移动的方向 (x, y)。
         :return: None
+        >>> snake = Snake(100, 100, 1, (51, 51))
         >>> snake.move((1,1))
         self.length = 1
         self.positions = [(51, 51), (50, 50)]

@@ -4,17 +4,24 @@ def format_line_html_text(self, html_text):
         :param html_text:string
         :return:string
         >>>htmlutil = HtmlUtil()
-        >>>htmlutil.format_line_html_text('<html><body><h1>标题</h1><p>这是一个段落。</p><pre>print('Hello, world!')</pre><p>另一个段落。</p><pre><code>for i in range(5):
-    print(i)</code></pre></body></html>')
-        '标题
-这是一个段落。
--CODE-
-另一个段落。
--CODE-
-'
+        >>>htmlutil.format_line_html_text(<html>
+        >>> <body>
+        >>>    <h1>标题</h1>
+        >>>    <p>这是一个段落。</p>
+        >>>    <pre>print('Hello, world!')</pre>
+        >>>    <p>另一个段落。</p>
+        >>>    <pre><code>for i in range(5):
+        >>>    print(i)</code></pre>
+        >>>    </body>
+        >>>    </html>)
+        标题
+        这是一个段落。
+        -CODE-
+        另一个段落。
+        -CODE-
         """
     soup = BeautifulSoup(html_text, 'lxml')
     for code in soup.find_all(['pre', 'code']):
-        code.insert_before('\n' + self.CODE_MARK + '\n')
-        code.insert_after('\n' + self.CODE_MARK + '\n')
+        code.insert_before(self.CODE_MARK)
+        code.insert_after(self.CODE_MARK)
     return self.__format_line_feed(soup.get_text())

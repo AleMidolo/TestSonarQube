@@ -15,13 +15,14 @@ def _check_five_in_a_row(self, row, col, direction):
         >>> gomokuGame._check_five_in_a_row(5, 1, (1, 1))
         False
         """
-    dx, dy = direction
     count = 0
+    dx, dy = direction
+    player_symbol = self.board[row][col]
     for step in range(5):
         new_row = row + step * dx
         new_col = col + step * dy
         if 0 <= new_row < self.board_size and 0 <= new_col < self.board_size:
-            if self.board[new_row][new_col] == self.board[row][col]:
+            if self.board[new_row][new_col] == player_symbol:
                 count += 1
             else:
                 break

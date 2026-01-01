@@ -1,5 +1,4 @@
-@classmethod
-def process(cls, string_list):
+def process(self, string_list):
     """
         构建一个包含 'a', 'an', 'the' 的停用词列表，并从字符串列表中移除所有停用词。
         :param string_list: 字符串列表
@@ -7,5 +6,5 @@ def process(cls, string_list):
         >>> NLPDataProcessor.process(['This is a test.'])
         [['This', 'is', 'test.']]
         """
-    stop_word_list = cls.construct_stop_word_list(cls)
-    return cls.remove_stop_words(cls, string_list, stop_word_list)
+    stop_word_list = self.construct_stop_word_list()
+    return self.remove_stop_words(string_list, stop_word_list)
