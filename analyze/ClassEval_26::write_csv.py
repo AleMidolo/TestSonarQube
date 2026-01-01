@@ -12,5 +12,5 @@ def write_csv(self, data, file_name):
             writer = csv.writer(file)
             writer.writerows(data)
         return 1
-    except Exception:
+    except Exception as e:
         return 0

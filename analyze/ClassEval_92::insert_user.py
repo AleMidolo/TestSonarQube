@@ -1,12 +1,15 @@
 def insert_user(self, username, password):
     """
-        Inserta un nuevo usuario en la tabla "users".
-        :param username: str, el nombre de usuario del usuario.
-        :param password: str, la contraseña del usuario.
+        Inserts a new user into the "users" table.
+        :param username: str, the username of the user.
+        :param password: str, the password of the user.
         :return: None
         >>> user_db = UserLoginDB("user_database.db")
         >>> user_db.create_table()
         >>> user_db.insert_user('user1', 'pass1')
         """
-    self.cursor.execute('\n            INSERT INTO users (username, password) VALUES (?, ?)\n        ', (username, password))
-    self.connection.commit()
+    try:
+        self.cursor.execute('\n                INSERT INTO users (username, password) VALUES (?, ?)\n            ', (username, password))
+        self.connection.commit()
+    except sqlite3.IntegrityError:
+        pass

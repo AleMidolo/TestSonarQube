@@ -8,26 +8,29 @@ def calculate(self, expression):
         14.0
 
         """
-    transformed_expr = self.transform(expression)
     self.postfix_stack.clear()
-    self.prepare(transformed_expr)
+    transformed_expression = self.transform(expression)
+    self.prepare(transformed_expression)
     result_stack = deque()
     for token in self.postfix_stack:
         if self.is_operator(token):
             if token == '~':
-                if not result_stack:
-                    raise ValueError('Invalid expression: unary minus without operand')
-                operand = result_stack.pop()
-                result_stack.append(-Decimal(operand))
+                if result_stack:
+                    operand = result_stack.pop()
+                    result_stack.append(Decimal(operand) * Decimal(-1))
             else:
                 if len(result_stack) < 2:
-                    raise ValueError('Invalid expression: insufficient operands for operator')
+                    raise ValueError('Invalid expression: insufficient operands for operator {}'.format(token))
                 second_value = result_stack.pop()
                 first_value = result_stack.pop()
+                if token == '\\/' and Decimal(second_value) == 0:
+                    raise ZeroDivisionError('Division by zero')
                 result = self._calculate(first_value, second_value, token)
                 result_stack.append(result)
+        elif token.startswith('~'):
+            result_stack.append(Decimal(token[1:]) * Decimal(-1))
         else:
-            result_stack.append(token)
+            result_stack.append(Decimal(token))
     if len(result_stack) != 1:
-        raise ValueError('Invalid expression: could not compute final result')
+        raise ValueError('Invalid expression: too many operands or operators')
     return float(result_stack.pop())

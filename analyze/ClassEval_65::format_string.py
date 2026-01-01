@@ -7,24 +7,44 @@ def format_string(self, x):
         >>> formatter.format_string("123456")
         "UNO CIENTO VEINTITRÉS MIL CUATROCIENTOS CINCUENTA Y SEIS SOLAMENTE"
         """
-    if not x:
-        return ''
     is_negative = False
-    if x[0] == '-':
+    if x.startswith('-'):
         is_negative = True
         x = x[1:]
-    parts = x.split('.')
-    integer_part = parts[0]
-    decimal_part = parts[1] if len(parts) > 1 else ''
-    integer_words = self._format_integer_part(integer_part)
-    decimal_words = ''
+    integer_part = x
+    decimal_part = ''
+    if '.' in x:
+        integer_part, decimal_part = x.split('.')
+        decimal_part = decimal_part.rstrip('0')
+    if integer_part == '0':
+        result = 'ZERO'
+    else:
+        integer_part = integer_part.lstrip('0')
+        groups = []
+        while integer_part:
+            groups.append(integer_part[-3:])
+            integer_part = integer_part[:-3]
+        groups.reverse()
+        words = []
+        for i, group in enumerate(groups):
+            if group == '000':
+                continue
+            group_words = self.trans_three(group.zfill(3))
+            magnitude = self.parse_more(len(groups) - i - 1)
+            if group_words:
+                if magnitude:
+                    words.append(f'{group_words} {magnitude}')
+                else:
+                    words.append(group_words)
+        result = ' '.join(words)
     if decimal_part:
-        decimal_words = self._format_decimal_part(decimal_part)
-    result = ''
+        decimal_words = []
+        for digit in decimal_part:
+            if digit == '0':
+                decimal_words.append('ZERO')
+            else:
+                decimal_words.append(self.NUMBER[int(digit)])
+        result = f"{result} AND {' '.join(decimal_words)}"
     if is_negative:
-        result += 'MINUS '
-    result += integer_words
-    if decimal_words:
-        result += ' AND ' + decimal_words
-    result += ' ONLY'
-    return result.strip()
+        result = f'NEGATIVE {result}'
+    return f'{result} ONLY'

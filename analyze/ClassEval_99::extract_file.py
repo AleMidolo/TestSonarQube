@@ -9,19 +9,10 @@ def extract_file(self, file_name, output_path):
         """
     try:
         with zipfile.ZipFile(self.file_name, 'r') as zip_file:
-            if file_name not in zip_file.namelist():
+            if file_name in zip_file.namelist():
+                zip_file.extract(file_name, output_path)
+                return True
+            else:
                 return False
-            zip_file.extract(file_name, output_path)
-            extracted_path = os.path.join(output_path, file_name)
-            target_path = os.path.join(output_path, os.path.basename(file_name))
-            if extracted_path != target_path:
-                os.makedirs(os.path.dirname(target_path), exist_ok=True)
-                if os.path.exists(extracted_path):
-                    os.rename(extracted_path, target_path)
-                    dir_path = os.path.dirname(extracted_path)
-                    while dir_path != output_path and (not os.listdir(dir_path)):
-                        os.rmdir(dir_path)
-                        dir_path = os.path.dirname(dir_path)
-        return True
-    except Exception as e:
+    except:
         return False

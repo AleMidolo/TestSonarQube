@@ -7,4 +7,3 @@ def borrow_book(self, book_id):
         """
     self.cursor.execute('\n                UPDATE books SET available = 0 WHERE id = ? AND available = 1\n            ', (book_id,))
     self.connection.commit()
-    return self.cursor.rowcount > 0

@@ -16,15 +16,14 @@ def correlation_matrix(data):
     for row in data:
         if len(row) != row_length:
             raise ValueError('All rows must have the same length')
-    corr_matrix = [[0.0 for _ in range(n)] for _ in range(n)]
+    matrix = []
     for i in range(n):
-        corr_matrix[i][i] = 1.0
-        for j in range(i + 1, n):
-            corr = Statistics3.correlation(data[i], data[j])
-            if corr is None:
-                corr_matrix[i][j] = 0.0
-                corr_matrix[j][i] = 0.0
+        row = []
+        for j in range(n):
+            if i == j:
+                row.append(1.0)
             else:
-                corr_matrix[i][j] = corr
-                corr_matrix[j][i] = corr
-    return corr_matrix
+                corr = Statistics3.correlation(data[i], data[j])
+                row.append(corr if corr is not None else 0.0)
+        matrix.append(row)
+    return matrix

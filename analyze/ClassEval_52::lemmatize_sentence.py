@@ -29,6 +29,5 @@ def lemmatize_sentence(self, sentence):
         elif word.lower() == 'i':
             lemmatized_words.append('I')
         else:
-            lemmatized_word = self.lemmatizer.lemmatize(word, pos=pos)
-            lemmatized_words.append(lemmatized_word)
+            lemmatized_words.append(self.lemmatizer.lemmatize(word, pos=pos))
     return lemmatized_words

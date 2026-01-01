@@ -36,9 +36,10 @@ def calculate(self, expression):
         elif char == ')':
             while operator_stack and operator_stack[-1] != '(':
                 operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
-            if not operator_stack or operator_stack[-1] != '(':
+            if operator_stack and operator_stack[-1] == '(':
+                operator_stack.pop()
+            else:
                 return None
-            operator_stack.pop()
             i += 1
         elif char.isspace():
             i += 1
@@ -48,6 +49,7 @@ def calculate(self, expression):
         if operator_stack[-1] == '(':
             return None
         operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
-    if len(operand_stack) != 1 or operator_stack:
+    if len(operand_stack) == 1 and (not operator_stack):
+        return operand_stack[0]
+    else:
         return None
-    return operand_stack[0]
