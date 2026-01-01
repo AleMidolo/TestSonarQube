@@ -1,12 +1,11 @@
 def get_minutes(self, string_time1, string_time2):
     """
-        Calculate how many minutes have passed between two times, and round the results to the nearest
-        :return: int, the number of minutes between two times, rounded off
-        >>> timeutils.get_minutes("2001-7-18 1:1:1", "2001-7-18 2:1:1")
-        60
-        """
-    dt1 = self.string_to_datetime(string_time1)
-    dt2 = self.string_to_datetime(string_time2)
-    time_difference = abs(dt2 - dt1)
-    minutes = time_difference.total_seconds() / 60
-    return round(minutes)
+    दो समयों के बीच कितने मिनट बीत चुके हैं, इसकी गणना करें, और परिणामों को निकटतम पूर्णांक में गोल करें
+    :return: int, दो समयों के बीच मिनटों की संख्या, गोल किया हुआ
+    >>> timeutils.get_minutes("2001-7-18 1:1:1", "2001-7-18 2:1:1")
+    60
+    """
+    dt1 = datetime.datetime.strptime(string_time1, '%Y-%m-%d %H:%M:%S')
+    dt2 = datetime.datetime.strptime(string_time2, '%Y-%m-%d %H:%M:%S')
+    delta = dt2 - dt1
+    return round(delta.total_seconds() / 60)

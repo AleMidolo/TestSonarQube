@@ -1,8 +1,8 @@
 def extract_all(self, output_path):
     """
-        Extract all zip files and place them in the specified path
-        :param output_path: string, The location of the extracted file
-        :return: True or False, representing whether the extraction operation was successful
+        सभी ज़िप फ़ाइलों को निकालें और उन्हें निर्दिष्ट पथ में रखें
+        :param output_path: स्ट्रिंग, निकाली गई फ़ाइल का स्थान
+        :return: True या False, यह दर्शाता है कि निकासी प्रक्रिया सफल रही या नहीं
         >>> zfp = ZipFileProcessor("aaa.zip")
         >>> zfp.extract_all("result/aaa")
         """

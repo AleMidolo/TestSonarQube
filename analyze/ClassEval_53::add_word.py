@@ -1,6 +1,6 @@
 def add_word(self, word):
     """
-        append the input word into self.word_list
-        :param word: str, input word
+        इनपुट शब्द को self.word_list में जोड़ें
+        :param word: str, इनपुट शब्द
         """
     self.word_list.append(word)

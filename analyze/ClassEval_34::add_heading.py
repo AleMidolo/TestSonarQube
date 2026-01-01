@@ -1,9 +1,9 @@
 def add_heading(self, heading, level=1):
     """
-        Adds a heading to the Word document.
-        :param heading: str, the text of the heading.
-        :param level: int, optional, the level of the heading (1, 2, 3, etc.; default is 1).
-        :return: bool, True if the heading is successfully added, False otherwise.
+        वर्ड दस्तावेज़ में एक शीर्षक जोड़ता है।
+        :param heading: str, शीर्षक का पाठ।
+        :param level: int, वैकल्पिक, शीर्षक का स्तर (1, 2, 3, आदि; डिफ़ॉल्ट 1 है)।
+        :return: bool, यदि शीर्षक सफलतापूर्वक जोड़ा गया है तो True, अन्यथा False।
         """
     try:
         doc = Document(self.file_path)

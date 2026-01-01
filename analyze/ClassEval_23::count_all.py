@@ -1,18 +1,11 @@
 @staticmethod
 def count_all(n: int) -> int:
     """
-        Calculate the number of all possible combinations.
-        :param n: The total number of elements,int.
-        :return: The number of all possible combinations,int,if the number of combinations is greater than 2^63-1,return float("inf").
+        सभी संभावित संयोजनों की संख्या की गणना करें।
+        :param n: तत्वों की कुल संख्या, int.
+        :return: सभी संभावित संयोजनों की संख्या, int, यदि संयोजनों की संख्या 2^63-1 से अधिक है, तो float("inf") लौटाएं।
         >>> CombinationCalculator.count_all(4)
         15
         """
-    if n < 0:
-        return 0
-    total = 0
-    for i in range(1, n + 1):
-        comb = CombinationCalculator.count(n, i)
-        if total > 2 ** 63 - 1 - comb:
-            return float('inf')
-        total += comb
-    return total
+    total_combinations = (1 << n) - 1
+    return total_combinations if total_combinations <= 2 ** 63 - 1 else float('inf')

@@ -1,15 +1,18 @@
 def palindromic_length(self, center, diff, string):
     """
-        Recursively calculates the length of the palindromic substring based on a given center, difference value, and input string.
-        :param center: The center of the palindromic substring, int.
-        :param diff: The difference between the center and the current position, int.
-        :param string: The string to be searched, str.
-        :return: The length of the palindromic substring, int.
+        दिए गए केंद्र, अंतर मान, और इनपुट स्ट्रिंग के आधार पर पलिंड्रोमिक उपस्ट्रिंग की लंबाई को पुनरावृत्तिपूर्वक गणना करता है।
+        :param center: पलिंड्रोमिक उपस्ट्रिंग का केंद्र, int.
+        :param diff: केंद्र और वर्तमान स्थिति के बीच का अंतर, int.
+        :param string: खोजी जाने वाली स्ट्रिंग, str.
+        :return: पलिंड्रोमिक उपस्ट्रिंग की लंबाई, int.
         >>> manacher = Manacher('ababa')
         >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')
         2
-
         """
-    if center - diff == -1 or center + diff == len(string) or string[center - diff] != string[center + diff]:
-        return 0
-    return 1 + self.palindromic_length(center, diff + 1, string)
+    left = center - diff
+    right = center + diff
+    while left >= 0 and right < len(string) and (string[left] == string[right]):
+        diff += 1
+        left -= 1
+        right += 1
+    return diff - 1

@@ -1,12 +1,11 @@
 def is_board_full(self):
     """
-        Check if the game board is completely filled.
-        :return: bool, indicating whether the game board is full or not
+        जांचें कि खेल का बोर्ड पूरी तरह से भरा हुआ है या नहीं।
+        :return: bool, यह दर्शाता है कि खेल का बोर्ड भरा हुआ है या नहीं
         >>> ttt.is_board_full()
         False
         """
     for row in self.board:
-        for cell in row:
-            if cell == ' ':
-                return False
+        if ' ' in row:
+            return False
     return True

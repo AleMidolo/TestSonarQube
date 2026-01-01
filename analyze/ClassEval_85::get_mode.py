@@ -1,6 +1,6 @@
 def get_mode(self):
     """
-        Get the current work mode
-        :return mode: str, working mode. only ['heat', 'cool']
+        वर्तमान कार्य मोड प्राप्त करें
+        :return mode: str, कार्य मोड। केवल ['heat', 'cool']
         """
     return self.mode

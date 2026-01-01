@@ -1,20 +1,15 @@
-@staticmethod
 def select(table, columns='*', where=None):
     """
-        Generate the SELECT SQL statement from the given parameters.
-        :param table: str, the query table in database.
-        :param columns: list of str, ['col1', 'col2'].
-        :param where: dict, {key1: value1, key2: value2 ...}. The query condition.
-        return query: str, the SQL query statement.
-        >>> SQLQueryBuilder.select('table1', columns = ["col1","col2"], where = {"age": 15})
-        "SELECT col1, col2 FROM table1 WHERE age='15'"
-        """
-    if columns == '*':
-        columns_str = '*'
-    else:
-        columns_str = ', '.join(columns)
+    दिए गए पैरामीटर से SELECT SQL कथन उत्पन्न करें।
+    :param table: str, डेटाबेस में क्वेरी तालिका।
+    :param columns: str की सूची, ['col1', 'col2']।
+    :param where: dict, {key1: value1, key2: value2 ...}. क्वेरी की शर्त।
+    return query: str, SQL क्वेरी कथन।
+    >>> SQLQueryBuilder.select('table1', columns = ["col1","col2"], where = {"age": 15})
+    "SELECT col1, col2 FROM table1 WHERE age='15'"
+    """
+    columns_str = ', '.join(columns) if isinstance(columns, list) else columns
     query = f'SELECT {columns_str} FROM {table}'
     if where:
-        where_clause = ' AND '.join((f"{k}='{v}'" for k, v in where.items()))
-        query += f' WHERE {where_clause}'
+        query += ' WHERE ' + ' AND '.join((f"{k}='{v}'" for k, v in where.items()))
     return query

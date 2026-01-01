@@ -1,9 +1,9 @@
 def get_product_quantity(self, product_id):
     """
-        Get the quantity of specific product by product_id.
+        विशेष उत्पाद की मात्रा प्राप्त करें product_id द्वारा।
         :param product_id, int
-        :return: if the product_id is in inventory then return the corresponding quantity,
-                or False otherwise.
+        :return: यदि product_id इन्वेंटरी में है तो संबंधित मात्रा लौटाएं,
+                अन्यथा False लौटाएं।
         >>> warehouse.add_product(1, "product1", 3)
         >>> warehouse.get_product_quantity(1)
         3

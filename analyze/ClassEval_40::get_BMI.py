@@ -1,7 +1,7 @@
 def get_BMI(self):
     """
-        Calculate the BMI based on the height and weight.
-        :return: BMI,which is the weight divide by the square of height, float.
+        ऊँचाई और वजन के आधार पर BMI की गणना करें।
+        :return: BMI, जो वजन को ऊँचाई के वर्ग से विभाजित करता है, float।
         >>> fitnessTracker = FitnessTracker(1.8, 70, 20, "male")
         >>> fitnessTracker.get_BMI()
         21.604938271604937

@@ -12,5 +12,4 @@ def stop(self):
     if self.current_song:
         self.current_song = None
         return True
-    else:
-        return False
+    return False

@@ -1,8 +1,8 @@
 def search(self, keyword):
     """
-        Search for items in the data that contain the given keyword.
-        :param keyword: str, the keyword to search for
-        :return: dict, containing search information such as total results and matching items
+        डेटा में उन आइटमों की खोज करें जो दिए गए कीवर्ड को शामिल करते हैं।
+        :param keyword: str, खोजने के लिए कीवर्ड
+        :return: dict, खोज की जानकारी जैसे कुल परिणाम और मिलते-जुलते आइटम
         >>> page_util = PageUtil([1, 2, 3, 4], 1)
         >>> page_util.search("1")
         >>> search_info = {
@@ -12,13 +12,8 @@ def search(self, keyword):
         >>>     "results": [1]
         >>> }
         """
-    if not isinstance(keyword, str):
-        keyword = str(keyword)
-    results = []
-    for item in self.data:
-        if keyword in str(item):
-            results.append(item)
+    results = [item for item in self.data if str(item) == keyword]
     total_results = len(results)
-    total_pages = (total_results + self.page_size - 1) // self.page_size if total_results > 0 else 0
+    total_pages = (total_results + self.page_size - 1) // self.page_size
     search_info = {'keyword': keyword, 'total_results': total_results, 'total_pages': total_pages, 'results': results}
     return search_info

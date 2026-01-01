@@ -1,8 +1,8 @@
 def search_student_by_name(self, name):
     """
-        Searches for a student in the "students" table by their name.
-        :param name: str, the name of the student to search for.
-        :return: list of tuples, the rows from the "students" table that match the search criteria.
+        "students" तालिका में छात्र को उनके नाम से खोजता है।
+        :param name: str, खोजने के लिए छात्र का नाम।
+        :return: ट्यूपल की सूची, "students" तालिका की वे पंक्तियाँ जो खोज मानदंड से मेल खाती हैं।
         >>> processor = StudentDatabaseProcessor("students.db")
         >>> processor.create_student_table()
         >>> result = processor.search_student_by_name("John")

@@ -1,9 +1,9 @@
 @staticmethod
 def skewness(data):
     """
-        Calculate the skewness of a set of data.
-        :param data: The input data list, list.
-        :return: The skewness, float.
+        डेटा के एक सेट का स्क्यूनेस (skewness) निकालें।
+        :param data: इनपुट डेटा सूची, सूची।
+        :return: स्क्यूनेस, फ्लोट।
         >>> DataStatistics4.skewness([1, 2, 5])
         2.3760224064818463
         """

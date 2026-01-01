@@ -1,8 +1,8 @@
 def _convert_type(self, arg, value):
     """
-        Try to convert the type of input value by searching in self.types.
-        :param value: str, the input value in command line
-        :return: return corresponding value in self.types if convert successfully, or the input value oherwise
+        इनपुट मान के प्रकार को self.types में खोजकर परिवर्तित करने का प्रयास करें।
+        :param value: str, कमांड लाइन में इनपुट मान
+        :return: यदि सफलतापूर्वक परिवर्तित हो जाए तो self.types में संबंधित मान लौटाएं, अन्यथा इनपुट मान लौटाएं
         >>> parser.types
         {'arg1': int}
         >>> parser._convert_type('arg1', '21')
@@ -11,6 +11,6 @@ def _convert_type(self, arg, value):
     if arg in self.types:
         try:
             return self.types[arg](value)
-        except (ValueError, TypeError):
+        except ValueError:
             return value
     return value
