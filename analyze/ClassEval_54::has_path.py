@@ -12,4 +12,3 @@ def has_path(self, pos1, pos2):
         >>> mc.is_valid_move((0, 0), (1, 0))
         True
         """
-    pass
