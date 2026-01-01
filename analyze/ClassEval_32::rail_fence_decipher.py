@@ -12,25 +12,27 @@ def rail_fence_decipher(self, encrypted_text, rails):
     if rails <= 1:
         return encrypted_text
     fence = [['' for _ in range(len(encrypted_text))] for _ in range(rails)]
-    rail = 0
-    direction = 1
+    row, col = (0, 0)
+    down = False
     for i in range(len(encrypted_text)):
-        fence[rail][i] = '*'
-        rail += direction
-        if rail == rails - 1 or rail == 0:
-            direction = -direction
+        if row == 0 or row == rails - 1:
+            down = not down
+        fence[row][col] = '*'
+        col += 1
+        row = row + 1 if down else row - 1
     index = 0
     for i in range(rails):
         for j in range(len(encrypted_text)):
-            if fence[i][j] == '*':
+            if fence[i][j] == '*' and index < len(encrypted_text):
                 fence[i][j] = encrypted_text[index]
                 index += 1
     result = []
-    rail = 0
-    direction = 1
+    row, col = (0, 0)
+    down = False
     for i in range(len(encrypted_text)):
-        result.append(fence[rail][i])
-        rail += direction
-        if rail == rails - 1 or rail == 0:
-            direction = -direction
+        if row == 0 or row == rails - 1:
+            down = not down
+        result.append(fence[row][col])
+        col += 1
+        row = row + 1 if down else row - 1
     return ''.join(result)

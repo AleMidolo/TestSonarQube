@@ -11,4 +11,4 @@ def _to_camel_case(key):
     if not key:
         return key
     parts = key.split('_')
-    return parts[0] + ''.join((word.capitalize() for word in parts[1:]))
+    return parts[0] + ''.join((part.capitalize() for part in parts[1:]))

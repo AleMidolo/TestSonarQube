@@ -9,9 +9,9 @@ def condition_judge(self):
         """
     bmi = self.get_BMI()
     bmi_std = None
-    for item in self.BMI_std:
-        if self.sex in item:
-            bmi_std = item[self.sex]
+    for std in self.BMI_std:
+        if self.sex in std:
+            bmi_std = std[self.sex]
             break
     if bmi_std is None:
         return 0

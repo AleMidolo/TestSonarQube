@@ -23,8 +23,6 @@ def book_room(self, room_type, room_number, name):
     if room_type not in self.available_rooms:
         return False
     available = self.available_rooms[room_type]
-    if available == 0:
-        return False
     if room_number <= available:
         self.available_rooms[room_type] -= room_number
         if room_type not in self.booked_rooms:
@@ -34,5 +32,7 @@ def book_room(self, room_type, room_number, name):
         else:
             self.booked_rooms[room_type][name] = room_number
         return '¡Éxito!'
-    else:
+    elif available > 0:
         return available
+    else:
+        return False

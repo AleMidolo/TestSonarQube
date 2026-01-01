@@ -5,9 +5,11 @@ def remove_book(self, title, quantity):
         :param title: str, el título del libro
         :param quantity: int
         """
-    if title not in self.inventory:
+    if not isinstance(title, str) or not isinstance(quantity, int):
         return False
     if quantity <= 0:
+        return False
+    if title not in self.inventory:
         return False
     if self.inventory[title] < quantity:
         return False
