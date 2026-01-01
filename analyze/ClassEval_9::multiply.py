@@ -23,10 +23,8 @@ def multiply(num1, num2):
             temp_sum = n1 * n2 + result[i + j + 1] + carry
             carry = temp_sum // 10
             result[i + j + 1] = temp_sum % 10
-        result[i] += carry
-    start = 0
-    while start < len(result) and result[start] == 0:
-        start += 1
-    if start == len(result):
-        return '0'
-    return ''.join((str(x) for x in result[start:]))
+        if carry > 0:
+            result[i] += carry
+    result_str = ''.join(map(str, result))
+    result_str = result_str.lstrip('0')
+    return result_str if result_str else '0'

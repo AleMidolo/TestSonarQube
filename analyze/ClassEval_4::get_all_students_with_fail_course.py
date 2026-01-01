@@ -6,10 +6,10 @@ def get_all_students_with_fail_course(self):
         >>> system.get_all_students_with_fail_course()
         ['student 1']
         """
-    failed_students = []
+    failing_students = []
     for name, student in self.students.items():
         for score in student['courses'].values():
             if score < 60:
-                failed_students.append(name)
+                failing_students.append(name)
                 break
-    return failed_students
+    return failing_students

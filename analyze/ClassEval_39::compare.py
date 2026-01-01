@@ -12,8 +12,8 @@ def compare(self, cur, peek):
     if cur == '(':
         return False
     op_map = {'+': 0, '-': 1, '*': 2, '/': 3, '(': 4, ')': 5, '%': 6, ',': 7}
-    cur_idx = op_map.get(cur, -1)
-    peek_idx = op_map.get(peek, -1)
-    if cur_idx == -1 or peek_idx == -1:
+    cur_index = op_map.get(cur, -1)
+    peek_index = op_map.get(peek, -1)
+    if cur_index == -1 or peek_index == -1:
         return False
-    return self.operat_priority[cur_idx] <= self.operat_priority[peek_idx]
+    return self.operat_priority[cur_index] <= self.operat_priority[peek_index]

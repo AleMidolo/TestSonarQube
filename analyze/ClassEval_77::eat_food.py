@@ -10,5 +10,5 @@ def eat_food(self):
         self.score = 10
         """
     self.length += 1
-    self.score += 10
+    self.score += 100
     self.random_food_position()

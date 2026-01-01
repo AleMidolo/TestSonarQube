@@ -12,6 +12,6 @@ def process_file(self):
         'nametestage'
         """
     content = self.read_file()
-    processed_content = re.sub('[^a-zA-Z]', '', content)
-    self.write_file(processed_content)
-    return processed_content
+    filtered_content = re.sub('[^a-zA-Z]', '', content)
+    self.write_file(filtered_content)
+    return filtered_content

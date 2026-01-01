@@ -12,23 +12,25 @@ def calculate(self, expression):
     self.postfix_stack.clear()
     transformed_expression = self.transform(expression)
     self.prepare(transformed_expression)
-    result_stack = deque()
-    for item in self.postfix_stack:
-        if self.is_operator(item):
-            if item == '~':
-                if result_stack:
-                    operand = result_stack.pop()
-                    result_stack.append(Decimal(0) - Decimal(operand))
+    calc_stack = deque()
+    for token in self.postfix_stack:
+        if self.is_operator(token):
+            if token == '~':
+                if not calc_stack:
+                    raise ValueError('Invalid expression: missing operand for unary minus')
+                operand = calc_stack.pop()
+                result = Decimal(0) - Decimal(operand)
+                calc_stack.append(str(result))
             else:
-                if len(result_stack) < 2:
-                    raise ValueError('Invalid expression: insufficient operands')
-                second = result_stack.pop()
-                first = result_stack.pop()
-                result = self._calculate(first, second, item)
-                result_stack.append(result)
+                if len(calc_stack) < 2:
+                    raise ValueError(f"Invalid expression: insufficient operands for operator '{token}'")
+                second_value = calc_stack.pop()
+                first_value = calc_stack.pop()
+                result = self._calculate(first_value, second_value, token)
+                calc_stack.append(str(result))
         else:
-            result_stack.append(item)
-    if len(result_stack) != 1:
-        raise ValueError('Invalid expression: could not compute final result')
-    result = float(result_stack.pop())
-    return result
+            calc_stack.append(token)
+    if len(calc_stack) != 1:
+        raise ValueError(f'Invalid expression: calculation resulted in {len(calc_stack)} values instead of 1')
+    result_decimal = Decimal(calc_stack.pop())
+    return float(result_decimal)

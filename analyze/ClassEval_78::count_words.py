@@ -6,5 +6,5 @@ def count_words(self, sentence):
         >>> ss.count_words("abc def")
         2
         """
-    words = re.findall('[^\\W\\d_]+', sentence, re.UNICODE)
+    words = re.findall("\\b[a-zA-Z\\']+\\b", sentence)
     return len(words)

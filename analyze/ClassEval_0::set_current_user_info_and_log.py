@@ -6,6 +6,8 @@ def set_current_user_info_and_log(self, user):
         >>> filter = AccessGatewayFilter()
         >>> user = {'name': 'user1', 'address': '127.0.0.1'}
         >>> filter.set_current_user_info_and_log(user)
-
         """
-    logging.info(f"User {user['name']} from {user.get('address', 'unknown')} accessed the system")
+    try:
+        logging.info(f"User {user.get('name', 'unknown')} from {user.get('address', 'unknown')} accessed the system")
+    except Exception as e:
+        logging.error(f'Failed to set user info and log: {e}')

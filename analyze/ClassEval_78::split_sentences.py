@@ -9,27 +9,17 @@ def split_sentences(self, sentences_string):
         """
     if not sentences_string:
         return []
-    pattern = '(?<!Mr)(?<!Mrs)(?<!Ms)(?<!Dr)(?<!Prof)(?<!Sr)(?<!Jr)\\.\\s+|\\?\\s+'
-    sentences = re.split(pattern, sentences_string)
-    sentences = [s.strip() for s in sentences if s.strip()]
+    abbreviations = ['Mr', 'Mrs', 'Dr', 'Ms', 'Prof', 'St', 'Jr', 'Sr']
+    placeholder_map = {}
+    for i, abbr in enumerate(abbreviations):
+        pattern = f'{abbr}\\.'
+        placeholder = f'__ABBR{i}__'
+        placeholder_map[placeholder] = f'{abbr}.'
+        sentences_string = re.sub(pattern, placeholder, sentences_string)
+    sentences = re.split('(?<=[.?])\\s+', sentences_string.strip())
     result = []
-    for i, sentence in enumerate(sentences):
-        if i < len(sentences) - 1:
-            start_pos = sentences_string.find(sentence)
-            if start_pos != -1:
-                end_pos = start_pos + len(sentence)
-                if end_pos < len(sentences_string):
-                    if sentences_string[end_pos:end_pos + 2] == '. ':
-                        result.append(sentence + '.')
-                    elif sentences_string[end_pos:end_pos + 2] == '? ':
-                        result.append(sentence + '?')
-                    else:
-                        result.append(sentence)
-        elif sentences_string.strip().endswith('.') or sentences_string.strip().endswith('?'):
-            if sentences_string.strip().endswith('.'):
-                result.append(sentence + '.')
-            else:
-                result.append(sentence + '?')
-        else:
-            result.append(sentence)
+    for sentence in sentences:
+        for placeholder, original in placeholder_map.items():
+            sentence = sentence.replace(placeholder, original)
+        result.append(sentence)
     return result

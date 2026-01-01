@@ -14,31 +14,33 @@ def has_path(self, pos1, pos2):
         """
     x1, y1 = pos1
     x2, y2 = pos2
-    if pos1 == pos2 or self.board[x1][y1] != self.board[x2][y2]:
-        return False
-    visited = set()
-    queue = deque()
-    queue.append((x1, y1, None, 0))
-    visited.add((x1, y1, None, 0))
+    if abs(x1 - x2) + abs(y1 - y2) == 1:
+        return True
+    rows, cols = (self.BOARD_SIZE[0], self.BOARD_SIZE[1])
+    visited = [[False for _ in range(cols)] for _ in range(rows)]
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    queue = deque()
+    visited[x1][y1] = True
+    for dx, dy in directions:
+        nx, ny = (x1 + dx, y1 + dy)
+        if 0 <= nx < rows and 0 <= ny < cols and (self.board[nx][ny] == ' ' or (nx == x2 and ny == y2)):
+            queue.append((nx, ny, 0, (dx, dy)))
+            visited[nx][ny] = True
     while queue:
-        x, y, prev_dir, turns = queue.popleft()
-        if (x, y) == (x2, y2):
+        x, y, turns, dir = queue.popleft()
+        if x == x2 and y == y2:
             return True
+        if turns >= 2:
+            continue
+        nx, ny = (x + dir[0], y + dir[1])
+        if 0 <= nx < rows and 0 <= ny < cols and (not visited[nx][ny]) and (self.board[nx][ny] == ' ' or (nx == x2 and ny == y2)):
+            queue.append((nx, ny, turns, dir))
+            visited[nx][ny] = True
         for dx, dy in directions:
-            new_x, new_y = (x + dx, y + dy)
-            if not (0 <= new_x < self.BOARD_SIZE[0] and 0 <= new_y < self.BOARD_SIZE[1]):
+            if (dx, dy) == dir or (dx, dy) == (-dir[0], -dir[1]):
                 continue
-            if (new_x, new_y) != (x2, y2) and self.board[new_x][new_y] != ' ':
-                continue
-            new_dir = (dx, dy)
-            new_turns = turns
-            if prev_dir is not None and new_dir != prev_dir:
-                new_turns += 1
-            if new_turns > 2:
-                continue
-            state = (new_x, new_y, new_dir, new_turns)
-            if state not in visited:
-                visited.add(state)
-                queue.append(state)
+            nx, ny = (x + dx, y + dy)
+            if 0 <= nx < rows and 0 <= ny < cols and (not visited[nx][ny]) and (self.board[nx][ny] == ' ' or (nx == x2 and ny == y2)):
+                queue.append((nx, ny, turns + 1, (dx, dy)))
+                visited[nx][ny] = True
     return False
