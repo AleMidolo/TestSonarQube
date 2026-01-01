@@ -18,19 +18,29 @@ def map(data):
     if len(data) == 0:
         return (0.0, [0.0])
     if type(data) == tuple:
-        data = [data]
-    average_precisions = []
-    for sub_list, total_num in data:
+        sub_list, total_num = data
         sub_list = np.array(sub_list)
         if total_num == 0:
-            average_precisions.append(0.0)
-            continue
-        correct_count = 0
-        precision_sum = 0.0
-        for i, value in enumerate(sub_list):
-            if value == 1:
-                correct_count += 1
-                precision_sum += correct_count / (i + 1)
-        average_precision = precision_sum / min(correct_count, total_num)
-        average_precisions.append(average_precision)
-    return (np.mean(average_precisions), average_precisions)
+            return (0.0, [0.0])
+        else:
+            precision_sum = 0.0
+            correct_count = 0
+            for i, value in enumerate(sub_list):
+                if value == 1:
+                    correct_count += 1
+                    precision_sum += correct_count / (i + 1)
+            ap = precision_sum / min(correct_count, total_num) if correct_count > 0 else 0.0
+            return (ap, [ap])
+    if type(data) == list:
+        separate_result = []
+        for sub_list, total_num in data:
+            sub_list = np.array(sub_list)
+            precision_sum = 0.0
+            correct_count = 0
+            for i, value in enumerate(sub_list):
+                if value == 1:
+                    correct_count += 1
+                    precision_sum += correct_count / (i + 1)
+            ap = precision_sum / min(correct_count, total_num) if correct_count > 0 else 0.0
+            separate_result.append(ap)
+        return (np.mean(separate_result), separate_result)

@@ -11,7 +11,7 @@ def rail_fence_decipher(self, encrypted_text, rails):
     rail = [['\n' for i in range(len(encrypted_text))] for j in range(rails)]
     dir_down = None
     row, col = (0, 0)
-    for char in encrypted_text:
+    for i in range(len(encrypted_text)):
         if row == 0:
             dir_down = True
         if row == rails - 1:

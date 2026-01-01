@@ -10,6 +10,6 @@ def search_jobs(self, criteria):
         """
     matching_jobs = []
     for job in self.job_listings:
-        if criteria in job['requirements']:
+        if any((criterion in job['requirements'] for criterion in criteria.split())):
             matching_jobs.append(job)
     return matching_jobs

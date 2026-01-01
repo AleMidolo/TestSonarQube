@@ -10,7 +10,7 @@ def create_deck(self):
         '2H', '10D', 'KS', '4D', 'AC', '10S', '2C', 'KD', '5S', 'JD', '8S', 'AS', '8D']
         """
     suits = ['H', 'D', 'C', 'S']
-    ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+    ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
     deck = [rank + suit for suit in suits for rank in ranks]
     random.shuffle(deck)
     return deck

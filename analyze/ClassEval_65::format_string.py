@@ -9,22 +9,17 @@ def format_string(self, x):
         """
     if not x.isdigit():
         return ''
-    x = int(x)
-    if x == 0:
-        return 'ZERO ONLY'
+    x = x.split('.')
+    whole_part = x[0]
+    decimal_part = x[1] if len(x) > 1 else ''
     words = []
-    if x < 0:
-        words.append('MINUS')
-        x = -x
-    thousands = ['', 'THOUSAND', 'MILLION', 'BILLION']
-    index = 0
-    while x > 0:
-        part = x % 1000
-        if part > 0:
-            words_part = self.trans_three(str(part).zfill(3))
-            if thousands[index]:
-                words_part += ' ' + thousands[index]
-            words.append(words_part)
-        x //= 1000
-        index += 1
-    return ' AND '.join(reversed(words)).strip() + ' ONLY'
+    length = len(whole_part)
+    if length > 0:
+        for i in range(length, 0, -3):
+            part = whole_part[max(0, i - 3):i]
+            if part:
+                words.append(self.trans_three(part) + (' ' + self.parse_more((length - i) // 3) if (length - i) // 3 < len(self.NUMBER_MORE) else ''))
+    result = ' AND '.join(reversed(words)).strip()
+    if decimal_part:
+        result += ' POINT ' + ' '.join((self.NUMBER[int(digit)] for digit in decimal_part))
+    return result + ' ONLY'

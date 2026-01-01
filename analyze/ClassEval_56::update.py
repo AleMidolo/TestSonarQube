@@ -1,9 +1,9 @@
 def update(self, predicted_labels, true_labels):
     """
-        Update the number of the four samples (true_positives, false_positives, false_negatives, true_negatives)
-        :param predicted_labels: list, predicted results
-        :param true_labels: list, true labels
-        :return: None, updates the count of corresponding samples
+        Actualiza el número de las cuatro muestras (verdaderos_positivos, falsos_positivos, falsos_negativos, verdaderos_negativos)
+        :param predicted_labels: lista, resultados predichos
+        :param true_labels: lista, etiquetas verdaderas
+        :return: Ninguno, cambia el número de muestras correspondientes
         >>> mc = MetricsCalculator()
         >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])
         (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)

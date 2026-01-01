@@ -12,6 +12,4 @@ def find_element(self, element_name):
         banana
         orange
         """
-    if self.root is None:
-        return []
     return self.root.findall(element_name)

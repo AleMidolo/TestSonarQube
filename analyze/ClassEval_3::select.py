@@ -7,6 +7,7 @@ def select(self, m=None):
         >>> ac = ArrangementCalculator([1, 2, 3, 4])
         >>> ac.select(2)
         [[1, 2], [1, 3], [1, 4], [2, 1], [2, 3], [2, 4], [3, 1], [3, 2], [3, 4], [4, 1], [4, 2], [4, 3]]
+
         """
     if m is None:
         m = len(self.datas)

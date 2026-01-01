@@ -20,7 +20,5 @@ def check_winner(self, player_hand, dealer_hand):
         return 'El jugador gana'
     elif player_value > dealer_value:
         return 'El jugador gana'
-    elif dealer_value > player_value:
-        return 'El dealer gana'
     else:
         return 'El dealer gana'

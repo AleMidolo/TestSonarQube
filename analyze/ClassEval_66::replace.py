@@ -10,6 +10,6 @@ def replace(self, string):
     import re
 
     def replace_entity(match):
-        code = int(match.group(1))
-        return chr(code)
+        num = int(match.group(1))
+        return chr(num)
     return re.sub('&#(\\d+);', replace_entity, string)

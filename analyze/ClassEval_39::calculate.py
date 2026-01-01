@@ -9,8 +9,7 @@ def calculate(self, expression):
 
     """
     self.postfix_stack.clear()
-    prepared_expression = self.transform(expression)
-    self.prepare(prepared_expression)
+    self.prepare(self.transform(expression))
     op_stack = deque()
     for token in self.postfix_stack:
         if not self.is_operator(token):

@@ -13,4 +13,5 @@ def level_up(self):
         self.hp += 20
         self.attack_power += 5
         self.defense += 5
+        return (self.level, self.hp, self.attack_power, self.defense)
     return (self.level, self.hp, self.attack_power, self.defense)

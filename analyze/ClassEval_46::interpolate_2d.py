@@ -56,7 +56,4 @@ class Interpolation:
                         )
                         )
                         break
-                else:
-                    continue
-                break
         return z_interp
