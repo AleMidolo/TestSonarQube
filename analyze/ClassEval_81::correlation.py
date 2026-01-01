@@ -8,7 +8,6 @@ def correlation(x, y):
         >>> statistics3 = Statistics3()
         >>> statistics3.correlation([1, 2, 3], [4, 5, 6])
         1.0
-
         """
     if len(x) != len(y):
         raise ValueError('Lists must be of the same length.')

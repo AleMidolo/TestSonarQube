@@ -15,7 +15,7 @@ Un altro paragrafo.
         """
     soup = BeautifulSoup(html_text, 'lxml')
     text_parts = []
-    for element in soup.find_all(['h1', 'p']):
+    for element in soup.body.find_all(['h1', 'p']):
         text_parts.append(element.get_text())
     code_tags = soup.find_all(['pre', 'code'])
     for code in code_tags:

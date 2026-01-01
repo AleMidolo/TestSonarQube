@@ -10,6 +10,6 @@ def _save_cookies(self):
     try:
         with open(self.cookies_file, 'w') as file:
             json.dump(self.cookies, file)
-        return True
+            return True
     except Exception:
         return False

@@ -1,6 +1,6 @@
 def transfer(self, other_account, amount):
     """
-        Transfers a certain amount from the current account to another account.
+        Trasferisce una certa somma dal conto corrente a un altro conto.
         :param other_account: BankAccount
         :param amount: int
         >>> account1 = BankAccount()

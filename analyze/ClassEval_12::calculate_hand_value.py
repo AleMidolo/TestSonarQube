@@ -17,8 +17,8 @@ def calculate_hand_value(self, hand):
         if rank in ['J', 'Q', 'K']:
             value += 10
         elif rank == 'A':
-            aces += 1
             value += 11
+            aces += 1
         else:
             value += int(rank)
     while value > 21 and aces:
