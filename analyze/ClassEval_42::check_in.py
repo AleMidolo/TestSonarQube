@@ -28,3 +28,7 @@ def check_in(self, room_type, room_number, name):
             del self.booked_rooms[room_type]
     else:
         self.booked_rooms[room_type][name] -= room_number
+    if room_type in self.available_rooms:
+        self.available_rooms[room_type] += room_number
+    else:
+        self.available_rooms[room_type] = room_number

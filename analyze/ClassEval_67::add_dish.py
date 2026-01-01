@@ -13,11 +13,9 @@ def add_dish(self, dish):
     requested_count = dish['count']
     price = dish['price']
     for menu_item in self.menu:
-        if menu_item['dish'] == dish_name:
+        if menu_item['dish'] == dish_name and menu_item['price'] == price:
             if menu_item['count'] >= requested_count:
                 self.selected_dishes.append({'dish': dish_name, 'count': requested_count, 'price': price})
                 menu_item['count'] -= requested_count
                 return True
-            else:
-                return False
     return False

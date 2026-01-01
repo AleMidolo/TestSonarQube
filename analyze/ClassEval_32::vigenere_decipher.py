@@ -20,8 +20,8 @@ def vigenere_decipher(self, ciphertext):
             else:
                 ascii_offset = 97
                 base_char = key_char.lower()
-            shifted_char = chr((ord(char) - ascii_offset - key_shift) % 26 + ascii_offset)
-            plaintext += shifted_char
+            decrypted_char = chr((ord(char) - ascii_offset - (ord(base_char) - ascii_offset)) % 26 + ascii_offset)
+            plaintext += decrypted_char
         else:
             plaintext += char
     return plaintext

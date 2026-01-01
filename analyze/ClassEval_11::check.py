@@ -11,8 +11,6 @@ def check(args):
         ValueError: 3 सम नहीं है
         """
     for arg in args:
-        if not isinstance(arg, int):
-            raise ValueError(f'{arg} पूर्णांक नहीं है')
         if arg < 0:
             raise ValueError(f'{arg} 0 से कम है')
         if arg % 2 != 0:

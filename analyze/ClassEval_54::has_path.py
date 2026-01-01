@@ -12,33 +12,33 @@ def has_path(self, pos1, pos2):
         >>> mc.is_valid_move((0, 0), (1, 0))
         True
         """
-    if pos1 == pos2:
+    x1, y1 = pos1
+    x2, y2 = pos2
+    if pos1 == pos2 or self.board[x1][y1] != self.board[x2][y2]:
         return False
+    rows, cols = self.BOARD_SIZE
+    visited = [[False] * cols for _ in range(rows)]
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
     queue = deque()
-    visited = set()
-    start_x, start_y = pos1
-    queue.append((start_x, start_y, 0, -1))
-    visited.add((start_x, start_y, 0, -1))
-    target_x, target_y = pos2
+    visited[x1][y1] = True
+    for dx, dy in directions:
+        nx, ny = (x1 + dx, y1 + dy)
+        if 0 <= nx < rows and 0 <= ny < cols and (self.board[nx][ny] == ' ' or (nx == x2 and ny == y2)):
+            queue.append((nx, ny, 0, (dx, dy)))
     while queue:
-        x, y, turns, dir_idx = queue.popleft()
-        if (x, y) == (target_x, target_y):
+        x, y, turns, dir = queue.popleft()
+        if x == x2 and y == y2:
             return True
-        for new_dir_idx, (dx, dy) in enumerate(directions):
-            new_x, new_y = (x + dx, y + dy)
-            if not (0 <= new_x < self.BOARD_SIZE[0] and 0 <= new_y < self.BOARD_SIZE[1]):
-                continue
-            if self.board[new_x][new_y] != ' ' and (new_x, new_y) != (target_x, target_y) and ((new_x, new_y) != (start_x, start_y)):
-                continue
-            new_turns = turns
-            if dir_idx != -1 and new_dir_idx != dir_idx:
-                new_turns += 1
-            if new_turns > 2:
-                continue
-            state = (new_x, new_y, new_turns, new_dir_idx)
-            if state in visited:
-                continue
-            visited.add(state)
-            queue.append(state)
+        if turns >= 2:
+            continue
+        for dx, dy in directions:
+            nx, ny = (x + dx, y + dy)
+            if 0 <= nx < rows and 0 <= ny < cols:
+                if self.board[nx][ny] == ' ' or (nx == x2 and ny == y2):
+                    new_turns = turns
+                    if (dx, dy) != dir:
+                        new_turns = turns + 1
+                    if not visited[nx][ny] or new_turns < 2:
+                        visited[nx][ny] = True
+                        queue.append((nx, ny, new_turns, (dx, dy)))
     return False

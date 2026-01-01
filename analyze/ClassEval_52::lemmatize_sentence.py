@@ -29,7 +29,9 @@ def lemmatize_sentence(self, sentence):
         elif tag.startswith('R'):
             lemmatized_word = self.lemmatizer.lemmatize(word, pos='r')
             lemmatized_words.append(lemmatized_word)
-        else:
-            lemmatized_word = self.lemmatizer.lemmatize(word)
+        elif tag.startswith('N'):
+            lemmatized_word = self.lemmatizer.lemmatize(word, pos='n')
             lemmatized_words.append(lemmatized_word)
+        else:
+            lemmatized_words.append(word)
     return lemmatized_words

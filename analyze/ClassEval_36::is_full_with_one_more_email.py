@@ -9,5 +9,4 @@ def is_full_with_one_more_email(self, size):
         False
 
         """
-    current_occupied = self.get_occupied_size()
-    return current_occupied + size > self.capacity
+    return self.get_occupied_size() + size > self.capacity

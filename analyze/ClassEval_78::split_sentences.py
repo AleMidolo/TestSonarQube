@@ -16,8 +16,11 @@ def split_sentences(self, sentences_string):
     result = []
     for i, sentence in enumerate(sentences):
         if i < len(matches):
-            punct = matches[i].group().strip()
+            punct_match = matches[i].group()
+            punct = '.' if '.' in punct_match else '?'
             result.append(sentence + punct)
+        elif sentence and (sentence.endswith('.') or sentence.endswith('?')):
+            result.append(sentence)
         else:
             result.append(sentence)
     return result

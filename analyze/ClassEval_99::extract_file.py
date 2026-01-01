@@ -9,7 +9,18 @@ def extract_file(self, file_name, output_path):
         """
     try:
         with zipfile.ZipFile(self.file_name, 'r') as zip_file:
+            if file_name not in zip_file.namelist():
+                return False
             zip_file.extract(file_name, output_path)
-        return True
+            extracted_path = os.path.join(output_path, file_name)
+            if os.path.dirname(output_path) != output_path:
+                if not os.path.isdir(output_path):
+                    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+                    os.rename(extracted_path, output_path)
+                    try:
+                        os.rmdir(os.path.dirname(extracted_path))
+                    except OSError:
+                        pass
+            return True
     except:
         return False
