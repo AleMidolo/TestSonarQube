@@ -19,19 +19,27 @@ def mrr(data):
         return (0.0, [0.0])
     if type(data) == tuple:
         sub_list, total_num = data
-        rank = np.where(np.array(sub_list) == 1)[0]
-        if len(rank) == 0:
+        sub_list = np.array(sub_list)
+        if total_num == 0:
             return (0.0, [0.0])
         else:
-            mrr_value = 1.0 / (rank[0] + 1)
-            return (mrr_value, [mrr_value])
-    if type(data) == list:
-        mrr_values = []
-        for sub_list, total_num in data:
-            rank = np.where(np.array(sub_list) == 1)[0]
+            rank = np.where(sub_list == 1)[0]
             if len(rank) == 0:
-                mrr_values.append(0.0)
+                return (0.0, [0.0])
             else:
                 mrr_value = 1.0 / (rank[0] + 1)
-                mrr_values.append(mrr_value)
-        return (np.mean(mrr_values), mrr_values)
+                return (mrr_value, [mrr_value])
+    if type(data) == list:
+        separate_result = []
+        for sub_list, total_num in data:
+            sub_list = np.array(sub_list)
+            if total_num == 0:
+                mrr_value = 0.0
+            else:
+                rank = np.where(sub_list == 1)[0]
+                if len(rank) == 0:
+                    mrr_value = 0.0
+                else:
+                    mrr_value = 1.0 / (rank[0] + 1)
+            separate_result.append(mrr_value)
+        return (np.mean(separate_result), separate_result)

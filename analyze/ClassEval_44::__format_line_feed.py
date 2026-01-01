@@ -1,4 +1,4 @@
-def __format_line_feed(text):
+def __format_line_feed(self, text):
     """
         Sostituisce i ritorni a capo consecutivi con un singolo ritorno a capo
         :param text: stringa con ritorni a capo consecutivi

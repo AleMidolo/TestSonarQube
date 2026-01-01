@@ -10,14 +10,14 @@ def parse_arguments(self, command_string):
         >>> parser.arguments
         {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
         """
-    import re
-    args = re.findall('--\\w+=\\w+|-\\w+|\\w+=\\w+', command_string)
+    args = command_string.split()[1:]
     missing_args = set()
     for arg in args:
         if '=' in arg:
-            key, value = arg.split('=')
+            key, value = arg.split('=', 1)
         else:
-            key, value = (arg, True)
+            key = arg
+            value = True
         key = key.lstrip('-')
         if key in self.types:
             self.arguments[key] = self._convert_type(key, value)
