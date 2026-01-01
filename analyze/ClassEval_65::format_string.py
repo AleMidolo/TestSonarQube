@@ -11,47 +11,45 @@ def format_string(self, x):
     if x.startswith('-'):
         is_negative = True
         x = x[1:]
-    integer_part = x
-    decimal_part = ''
-    if '.' in x:
-        integer_part, decimal_part = x.split('.')
-        decimal_part = decimal_part.rstrip('0')
+    parts = x.split('.')
+    integer_part = parts[0]
+    decimal_part = parts[1] if len(parts) > 1 else ''
     integer_part = integer_part.lstrip('0')
     if integer_part == '':
         integer_part = '0'
+    integer_words = []
     if integer_part == '0':
-        integer_words = 'ZERO'
+        integer_words.append('ZERO')
     else:
         groups = []
         temp = integer_part
         while len(temp) > 3:
-            groups.append(temp[-3:])
+            groups.insert(0, temp[-3:])
             temp = temp[:-3]
-        groups.append(temp)
-        groups.reverse()
-        group_words = []
+        groups.insert(0, temp)
         for i, group in enumerate(groups):
-            if group != '000':
-                group_word = self.trans_three(group.zfill(3))
-                magnitude = self.parse_more(len(groups) - i - 1)
-                if magnitude:
-                    group_word += ' ' + magnitude
-                group_words.append(group_word)
-        integer_words = ' '.join(group_words)
-    decimal_words = ''
+            group_words = self.trans_three(group.zfill(3))
+            if group_words.strip():
+                magnitude_index = len(groups) - i - 1
+                magnitude_word = self.parse_more(magnitude_index)
+                if magnitude_word:
+                    integer_words.append(f'{group_words} {magnitude_word}')
+                else:
+                    integer_words.append(group_words)
+    decimal_words = []
     if decimal_part:
-        decimal_words = ' AND '
-        if len(decimal_part) == 1:
-            decimal_words += self.trans_two(decimal_part + '0')
-        else:
-            decimal_words += self.trans_two(decimal_part[:2].zfill(2))
-        if len(decimal_part) > 2:
-            decimal_words += ' ' + ' '.join([self.NUMBER[int(d)] for d in decimal_part[2:] if d != '0'])
-        decimal_words += ' CENTS'
-    result = ''
+        decimal_part = decimal_part.rstrip('0')
+        if decimal_part:
+            decimal_words.append('AND')
+            decimal_words.append(self.trans_two(decimal_part[:2].zfill(2)))
+            if len(decimal_part) > 2:
+                decimal_words.append('CENTS')
+    result_parts = []
     if is_negative:
-        result += 'MINUS '
-    result += integer_words
-    result += decimal_words
-    result += ' ONLY'
-    return result.strip()
+        result_parts.append('MINUS')
+    result_parts.extend(integer_words)
+    result_parts.extend(decimal_words)
+    result_parts.append('ONLY')
+    result = ' '.join(result_parts)
+    result = ' '.join(result.split())
+    return result

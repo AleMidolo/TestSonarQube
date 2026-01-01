@@ -11,7 +11,7 @@ def query(self, weather_list, tmp_units='celsius'):
 
         """
     if self.city not in weather_list:
-        return (None, None)
+        return None
     city_data = weather_list[self.city]
     self.weather = city_data['weather']
     self.temperature = city_data['temperature']

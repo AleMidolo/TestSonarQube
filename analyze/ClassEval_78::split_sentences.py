@@ -7,23 +7,17 @@ def split_sentences(self, sentences_string):
         >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
-    pattern = '(?<!Sr)(?<!Sra)(?<!Dr)(?<!Prof)(?<!Mr)(?<!Mrs)(?<!Ms)\\.\\s|\\?\\s'
-    sentences = re.split(pattern, sentences_string)
-    sentences = [s.strip() for s in sentences if s.strip()]
-    result = []
-    for i, sentence in enumerate(sentences):
-        if i < len(sentences) - 1:
-            start_pos = len(''.join(sentences[:i + 1])) + i
-            if start_pos < len(sentences_string):
-                if sentences_string[start_pos] == '.':
-                    result.append(sentence + '.')
-                elif sentences_string[start_pos] == '?':
-                    result.append(sentence + '?')
-        elif sentences_string.strip().endswith(('.', '?')):
-            if sentences_string.strip().endswith('.'):
-                result.append(sentence + '.')
-            elif sentences_string.strip().endswith('?'):
-                result.append(sentence + '?')
-        else:
-            result.append(sentence)
-    return result
+    pattern = '(?<!Sr)(?<!Sra)(?<!Dr)(?<!Prof)(?<!Mr)(?<!Mrs)(?<!Ms)(?<!St)\\.\\s|\\?\\s'
+    parts = re.split(f'({pattern})', sentences_string)
+    sentences = []
+    current_sentence = ''
+    for i in range(0, len(parts) - 1, 2):
+        if i + 1 < len(parts):
+            current_sentence = parts[i] + parts[i + 1].rstrip()
+            sentences.append(current_sentence.strip())
+    if len(parts) % 2 == 1:
+        last_part = parts[-1].strip()
+        if last_part:
+            sentences.append(last_part)
+    sentences = [s for s in sentences if s]
+    return sentences
