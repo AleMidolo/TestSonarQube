@@ -23,6 +23,8 @@ def move(self, direction):
         >>> game.move('d') 
         True
         """
+    if self.is_game_over:
+        return True
     dir_map = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
     if direction not in dir_map:
         return False

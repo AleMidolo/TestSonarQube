@@ -8,25 +8,27 @@ def calculate(self, expression):
         14.0
 
         """
-    transformed_expression = self.transform(expression)
     self.postfix_stack.clear()
+    transformed_expression = self.transform(expression)
     self.prepare(transformed_expression)
     calc_stack = deque()
-    for item in self.postfix_stack:
-        if self.is_operator(item):
-            if item == '~':
+    for token in self.postfix_stack:
+        if self.is_operator(token):
+            if token == '~':
                 if calc_stack:
                     operand = calc_stack.pop()
                     calc_stack.append(str(-Decimal(operand)))
-            elif len(calc_stack) >= 2:
+            else:
+                if len(calc_stack) < 2:
+                    raise ValueError('Invalid expression: insufficient operands')
                 second_value = calc_stack.pop()
                 first_value = calc_stack.pop()
-                result = self._calculate(first_value, second_value, item)
+                result = self._calculate(first_value, second_value, token)
                 calc_stack.append(str(result))
         else:
-            calc_stack.append(item)
-    if calc_stack:
-        result = Decimal(calc_stack.pop())
-        return float(result)
-    else:
-        return 0.0
+            calc_stack.append(token)
+    if not calc_stack:
+        raise ValueError('Invalid expression: no result')
+    result = float(Decimal(calc_stack.pop()))
+    self.postfix_stack.clear()
+    return result

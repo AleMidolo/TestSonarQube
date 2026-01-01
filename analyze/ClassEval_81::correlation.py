@@ -12,7 +12,8 @@ def correlation(x, y):
         """
     if len(x) != len(y):
         return None
-    if len(x) < 2:
+    n = len(x)
+    if n < 2:
         return None
     mean_x = Statistics3.mean(x)
     mean_y = Statistics3.mean(y)
@@ -20,7 +21,5 @@ def correlation(x, y):
     std_y = Statistics3.standard_deviation(y)
     if std_x is None or std_y is None or std_x == 0 or (std_y == 0):
         return None
-    n = len(x)
-    numerator = sum(((x[i] - mean_x) * (y[i] - mean_y) for i in range(n)))
-    denominator = (n - 1) * std_x * std_y
-    return numerator / denominator
+    covariance = sum(((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))) / (n - 1)
+    return covariance / (std_x * std_y)

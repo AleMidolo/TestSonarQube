@@ -12,5 +12,5 @@ def read_excel(self, file_name):
             data.append(row)
         workbook.close()
         return data
-    except Exception as e:
+    except:
         return None
