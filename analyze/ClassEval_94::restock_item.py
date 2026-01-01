@@ -14,5 +14,4 @@ def restock_item(self, item_name, quantity):
     if item_name in self.inventory:
         self.inventory[item_name]['quantity'] += quantity
         return True
-    else:
-        return False
+    return False

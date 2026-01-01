@@ -10,14 +10,12 @@ def remove_stock(self, stock):
         []
 
         """
-    for i, pf in enumerate(self.portfolio):
+    for pf in self.portfolio:
         if pf['name'] == stock['name']:
             if pf['quantity'] < stock['quantity']:
                 return False
-            elif pf['quantity'] == stock['quantity']:
-                self.portfolio.pop(i)
-                return True
-            else:
-                pf['quantity'] -= stock['quantity']
-                return True
+            pf['quantity'] -= stock['quantity']
+            if pf['quantity'] == 0:
+                self.portfolio.remove(pf)
+            return True
     return False

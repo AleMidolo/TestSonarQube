@@ -9,15 +9,16 @@ def condition_judge(self):
         """
     bmi = self.get_BMI()
     bmi_std = None
-    for std_dict in self.BMI_std:
-        if self.sex in std_dict:
-            bmi_std = std_dict[self.sex]
+    for std in self.BMI_std:
+        if self.sex in std:
+            bmi_std = std[self.sex]
             break
     if bmi_std is None:
-        return 0
-    if bmi < bmi_std[0]:
-        return -1
-    elif bmi > bmi_std[1]:
+        raise ValueError(f"Invalid sex: {self.sex}. Must be 'male' or 'female'.")
+    lower, upper = bmi_std
+    if bmi > upper:
         return 1
+    elif bmi < lower:
+        return -1
     else:
         return 0

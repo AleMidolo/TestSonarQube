@@ -15,20 +15,21 @@ def calculate(self, expression):
     for token in self.postfix_stack:
         if self.is_operator(token):
             if token == '~':
-                if calc_stack:
-                    operand = calc_stack.pop()
-                    calc_stack.append(str(-Decimal(operand)))
+                if not calc_stack:
+                    raise ValueError('Invalid expression: missing operand for unary minus')
+                operand = calc_stack.pop()
+                result = Decimal(0) - Decimal(operand)
+                calc_stack.append(str(result))
             else:
                 if len(calc_stack) < 2:
-                    raise ValueError('Invalid expression: insufficient operands')
-                second = calc_stack.pop()
-                first = calc_stack.pop()
-                result = self._calculate(first, second, token)
+                    raise ValueError('Invalid expression: insufficient operands for operator {}'.format(token))
+                second_value = calc_stack.pop()
+                first_value = calc_stack.pop()
+                result = self._calculate(first_value, second_value, token)
                 calc_stack.append(str(result))
         else:
             calc_stack.append(token)
-    if not calc_stack:
-        raise ValueError('Invalid expression: no result')
-    result = float(Decimal(calc_stack.pop()))
-    self.postfix_stack.clear()
-    return result
+    if len(calc_stack) != 1:
+        raise ValueError('Invalid expression: could not compute final result')
+    result_decimal = Decimal(calc_stack.pop())
+    return float(result_decimal)

@@ -6,7 +6,6 @@ def get_pos_tag(self, sentence):
         >>> lemmatization = Lemmatization()
         >>> lemmatization.get_pos_tag("I am running in a race.")
         ['PRP', 'VBP', 'VBG', 'IN', 'DT', 'NN']
-
         """
     sentence = self.remove_punctuation(sentence)
     words = word_tokenize(sentence)

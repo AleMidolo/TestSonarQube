@@ -9,13 +9,12 @@ def median(data):
         2.5
 
         """
-    if not data:
+    if len(data) == 0:
         return None
     sorted_data = sorted(data)
     n = len(sorted_data)
-    if n % 2 == 1:
-        return float(sorted_data[n // 2])
+    mid = n // 2
+    if n % 2 == 0:
+        return (sorted_data[mid - 1] + sorted_data[mid]) / 2
     else:
-        mid1 = sorted_data[n // 2 - 1]
-        mid2 = sorted_data[n // 2]
-        return (mid1 + mid2) / 2.0
+        return sorted_data[mid]

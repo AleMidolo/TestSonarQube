@@ -12,9 +12,9 @@ def create_zip_file(self, files, output_file_name):
         if output_dir and (not os.path.exists(output_dir)):
             os.makedirs(output_dir)
         with zipfile.ZipFile(output_file_name, 'w', zipfile.ZIP_DEFLATED) as zipf:
-            for file in files:
-                if os.path.exists(file):
-                    zipf.write(file, os.path.basename(file))
+            for file_path in files:
+                if os.path.exists(file_path):
+                    zipf.write(file_path, os.path.basename(file_path))
                 else:
                     continue
         return True
