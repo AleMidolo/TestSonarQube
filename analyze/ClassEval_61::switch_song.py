@@ -1,10 +1,10 @@
 def switch_song(self):
     """
-        प्लेलिस्ट में अगले गाने पर स्विच करता है।
-        :return: यदि अगले गाने पर स्विच किया गया, तो True, यदि कोई अगला गाना नहीं है, तो False।
+        Passa alla canzone successiva nella playlist.
+        :return: True se la canzone successiva è stata cambiata, False se non c'era una canzone successiva.
         >>> musicPlayer = MusicPlayer()
-        >>> musicPlayer.playlist = ["song1", "song2"]
-        >>> musicPlayer.current_song = "song1"
+        >>> musicPlayer.playlist = ["canzone1", "canzone2"]
+        >>> musicPlayer.current_song = "canzone1"
         >>> musicPlayer.switch_song()
         True
 

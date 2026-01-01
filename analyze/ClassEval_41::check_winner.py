@@ -1,7 +1,7 @@
 def check_winner(self):
     """
-        यह जांचता है कि क्या कोई विजेता है, सभी दिशाओं (क्षैतिज, ऊर्ध्वाधर, तिरछा) में पांच लगातार देखने के लिए।
-        लौटाता है: विजेता खिलाड़ी का प्रतीक (या तो 'X' या 'O') यदि कोई विजेता है, अन्यथा None।
+        Controlla se c'è un vincitore cercando cinque in fila in tutte le direzioni (orizzontale, verticale, diagonale).
+        return: il simbolo del giocatore vincente (o 'X' o 'O') se c'è un vincitore, altrimenti None.
         >>> gomokuGame = GomokuGame(10)
         >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]
         >>> for move in moves:

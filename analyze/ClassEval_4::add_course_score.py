@@ -1,13 +1,13 @@
 def add_course_score(self, name, course, score):
     """
-        विशेष पाठ्यक्रम के लिए छात्र का स्कोर self.students में जोड़ें
-        :param name: str, छात्र का नाम
-        :param course: str, पाठ्यक्रम का नाम
-        :param score: int, पाठ्यक्रम का स्कोर
-        >>> system.add_student('student 1', 3, 'SE')
-        >>> system.add_course_score('student 1', 'math', 94)
+        Aggiungi il punteggio di un corso specifico per lo studente in self.students
+        :param name: str, nome dello studente
+        :param course: str, nome del corso
+        :param score: int, punteggio del corso
+        >>> system.add_student('studente 1', 3, 'SE')
+        >>> system.add_course_score('studente 1', 'matematica', 94)
         >>> system.students
-        {'student 1': {'name': 'student 1', 'grade': 3, 'major': 'SE', 'courses': {'math': 94}}}
+        {'studente 1': {'name': 'studente 1', 'grade': 3, 'major': 'SE', 'courses': {'matematica': 94}}}
         """
     if name in self.students:
         self.students[name]['courses'][course] = score

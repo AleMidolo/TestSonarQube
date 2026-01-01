@@ -1,20 +1,16 @@
 @staticmethod
 def kappa(testData, k):
     """
-        कोहेन का काप्पा मान एक k-आयामी मैट्रिक्स का गणना करें
-        :param testData: वह k-आयामी मैट्रिक्स जिसके लिए कोहेन का काप्पा मान निकालना है
-        :param k: int, मैट्रिक्स का आयाम
-        :return: float, मैट्रिक्स का कोहेन का काप्पा मान
+        Calcola il valore di Cohen kappa di una matrice k-dimensionale
+        :param testData: La matrice k-dimensionale di cui calcolare il valore di kappa di Cohen
+        :param k: int, Dimensione della matrice
+        :return: float, il valore di kappa di Cohen della matrice
         >>> KappaCalculator.kappa([[2, 1, 1], [1, 2, 1], [1, 1, 2]], 3)
         0.25
         """
-    data = np.array(testData, dtype=float)
-    total = np.sum(data)
-    Po = np.trace(data) / total
-    row_sums = np.sum(data, axis=1)
-    col_sums = np.sum(data, axis=0)
-    Pe = np.sum(row_sums * col_sums) / (total * total)
-    if Pe == 1:
-        return 1.0 if Po == 1 else 0.0
-    kappa_value = (Po - Pe) / (1 - Pe)
-    return float(kappa_value)
+    n = len(testData)
+    total = sum((sum(row) for row in testData))
+    p0 = sum((sum(row) * (sum(row) - 1) for row in testData)) / (n * (total * (total - 1)))
+    pe = sum((sum(testData[:, j]) * sum(testData[:, j]) for j in range(k))) / (n * (total * (total - 1)))
+    kappa_value = (p0 - pe) / (1 - pe) if 1 - pe != 0 else 0
+    return kappa_value

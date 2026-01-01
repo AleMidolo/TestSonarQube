@@ -1,21 +1,12 @@
 def parse(self, path, charset):
     """
-        दिए गए पथ स्ट्रिंग को पार्स करता है और UrlPath में खंडों की सूची को भरता है।
-        :param path: str, पार्स करने के लिए पथ स्ट्रिंग।
-        :param charset: str, पथ स्ट्रिंग का वर्णनात्मक एन्कोडिंग।
+        Analizza una data stringa di percorso e popola la lista dei segmenti in UrlPath.
+        :param path: str, la stringa di percorso da analizzare.
+        :param charset: str, la codifica dei caratteri della stringa di percorso.
         >>> url_path = UrlPath()
         >>> url_path.parse('/foo/bar/', 'utf-8')
 
         url_path.segments = ['foo', 'bar']
         """
-    if not path:
-        return
     decoded_path = urllib.parse.unquote(path, encoding=charset)
-    path_segments = decoded_path.split('/')
-    for segment in path_segments:
-        if segment:
-            fixed_segment = self.fix_path(segment)
-            if fixed_segment:
-                self.segments.append(fixed_segment)
-    if path.endswith('/'):
-        self.with_end_tag = True
+    self.segments = [self.fix_path(segment) for segment in decoded_path.split('/') if segment]

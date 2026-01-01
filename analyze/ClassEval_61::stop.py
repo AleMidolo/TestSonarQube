@@ -1,10 +1,10 @@
 def stop(self):
     """
-        प्लेलिस्ट में वर्तमान गीत को रोकता है।
-        :return: यदि वर्तमान गीत रोका गया है तो True, यदि कोई वर्तमान गीत नहीं था तो False।
+        Interrompe la canzone attuale nella playlist.
+        :return: True se la canzone attuale è stata fermata, False se non c'era nessuna canzone attuale.
         >>> musicPlayer = MusicPlayer()
-        >>> musicPlayer.playlist = ["song1", "song2"]
-        >>> musicPlayer.current_song = "song1"
+        >>> musicPlayer.playlist = ["canzone1", "canzone2"]
+        >>> musicPlayer.current_song = "canzone1"
         >>> musicPlayer.stop()
         True
 
@@ -12,5 +12,4 @@ def stop(self):
     if self.current_song:
         self.current_song = None
         return True
-    else:
-        return False
+    return False

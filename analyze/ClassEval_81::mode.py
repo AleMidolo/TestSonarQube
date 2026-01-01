@@ -1,20 +1,17 @@
 @staticmethod
 def mode(data):
     """
-        दी गई लिस्ट का मोड कैलकुलेट करता है।
-
-        :param data: list, दी गई लिस्ट
-        :return: list, दी गई लिस्ट का मोड
-
+        calcola la moda della lista fornita.
+        :param data: la lista fornita, lista.
+        :return: la moda della lista fornita, lista.
         >>> statistics3 = Statistics3()
         >>> statistics3.mode([1, 2, 3, 3])
         [3]
+
         """
+    from collections import Counter
     if not data:
         return []
-    count_dict = Counter(data)
-    max_count = max(count_dict.values())
-    if max_count == 1:
-        return []
-    modes = [item for item, count in count_dict.items() if count == max_count]
-    return sorted(modes)
+    count = Counter(data)
+    max_count = max(count.values())
+    return [num for num, cnt in count.items() if cnt == max_count]

@@ -1,7 +1,7 @@
 def remove_song(self, song):
     """
-        प्लेलिस्ट से एक गाना हटाता है।
-        :param song: प्लेलिस्ट से हटाने के लिए गाना, str.
+        Rimuove una canzone dalla playlist.
+        :param song: La canzone da rimuovere dalla playlist, str.
         >>> musicPlayer = MusicPlayer()
         >>> musicPlayer.playlist = ["song1", "song2"]
         >>> musicPlayer.remove_song("song1")
@@ -11,5 +11,3 @@ def remove_song(self, song):
         """
     if song in self.playlist:
         self.playlist.remove(song)
-        if self.current_song == song:
-            self.current_song = None

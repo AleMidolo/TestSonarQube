@@ -1,10 +1,10 @@
 def add_heading(self, heading, level=1):
     """
-        वर्ड दस्तावेज़ में एक शीर्षक जोड़ता है।
-        :param heading: str, शीर्षक का पाठ।
-        :param level: int, वैकल्पिक, शीर्षक का स्तर (1, 2, 3, आदि; डिफ़ॉल्ट 1 है)।
-        :return: bool, यदि शीर्षक सफलतापूर्वक जोड़ा गया है तो True, अन्यथा False।
-        """
+    Aggiunge un'intestazione al documento Word.
+    :param heading: str, il testo dell'intestazione.
+    :param level: int, opzionale, il livello dell'intestazione (1, 2, 3, ecc.; predefinito è 1).
+    :return: bool, True se l'intestazione è stata aggiunta con successo, False altrimenti.
+    """
     try:
         doc = Document(self.file_path)
         doc.add_heading(heading, level=level)

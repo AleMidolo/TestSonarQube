@@ -1,8 +1,8 @@
 def add_book(self, title, quantity=1):
     """
-        एक या एक से अधिक किताबों को इन्वेंटरी में जोड़ें जो किताब के शीर्षक के अनुसार क्रमबद्ध है।
-        :param title: str, किताब का शीर्षक
-        :param quantity: int, डिफ़ॉल्ट मान 1 है।
+        Aggiungi uno o più libri all'inventario che è ordinato per titolo del libro.
+        :param title: str, il titolo del libro
+        :param quantity: int, il valore predefinito è 1.
         """
     if title in self.inventory:
         self.inventory[title] += quantity

@@ -1,8 +1,8 @@
 def show(self, type):
     """
-        निर्दिष्ट प्रकार की संरचना लौटाता है
-        :param type: स्ट्रिंग, वह संरचना का प्रकार जो लौटाया जाएगा, जो 'send' या 'receive' हो सकता है
-        :return: यदि type 'send' या 'receive' के बराबर है, तो संबंधित संरचना लौटाएं; अन्यथा, False लौटाएं
+        Restituisce la struttura del tipo specificato
+        :param type: stringa, il tipo di struttura da restituire, che può essere 'send' o 'receive'
+        :return: se type è uguale a 'send' o 'receive', restituisce la struttura corrispondente; altrimenti, restituisce False
         >>> server.recv({"addr":88,"content":"abc"})
         >>> server.send({"addr":66,"content":"ABC"})
         >>> server.show("send")

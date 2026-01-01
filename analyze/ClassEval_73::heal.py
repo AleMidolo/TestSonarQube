@@ -1,8 +1,8 @@
 def heal(self):
     """
-        पात्र को 10 एचपी से ठीक करें और अधिकतम एचपी 100 है।
-        :return: int, ठीक करने के बाद वर्तमान स्वास्थ्य अंक।
-        >>> player_1 = RPGCharacter('player 1', 93, 10, 3)
+        Guarisci il personaggio con 10 hp e i hp massimi sono 100.
+        :return: int, i punti salute attuali dopo la guarigione.
+        >>> player_1 = RPGCharacter('giocatore 1', 93, 10, 3)
         >>> player_1.heal()
         100
         """

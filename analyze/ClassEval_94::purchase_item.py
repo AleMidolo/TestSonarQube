@@ -1,8 +1,8 @@
 def purchase_item(self, item_name):
     """
-        वेंडिंग मशीन से एक उत्पाद खरीदता है और खरीद के बाद शेष राशि लौटाता है और यदि उत्पाद स्टॉक में नहीं है तो खरीद असफल होने का संदेश दिखाता है।
-        :param item_name: खरीदने के लिए उत्पाद का नाम, str.
-        :return: यदि सफल, तो उत्पाद खरीदने के बाद वेंडिंग मशीन की शेष राशि लौटाता है, float, अन्यथा, False लौटाता है।
+        Acquista un prodotto dal distributore automatico e restituisce il saldo dopo l'acquisto e visualizza acquisto non riuscito se il prodotto è esaurito.
+        :param item_name: Il nome del prodotto da acquistare, str.
+        :return: Se riuscito, restituisce il saldo del distributore automatico dopo l'acquisto del prodotto, float, altrimenti, restituisce False.
         >>> vendingMachine = VendingMachine()
         >>> vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}
         >>> vendingMachine.balance = 1.25
@@ -16,8 +16,9 @@ def purchase_item(self, item_name):
     item = self.inventory[item_name]
     if item['quantity'] <= 0:
         return False
-    if self.balance < item['price']:
+    if self.balance >= item['price']:
+        self.balance -= item['price']
+        item['quantity'] -= 1
+        return self.balance
+    else:
         return False
-    self.balance -= item['price']
-    item['quantity'] -= 1
-    return self.balance

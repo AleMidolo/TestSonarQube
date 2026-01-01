@@ -1,16 +1,16 @@
 def read_excel(self, file_name):
     """
-        एक्सेल फ़ाइलों से डेटा पढ़ना
-        :param file_name:str, पढ़ने के लिए एक्सेल फ़ाइल का नाम
-        :return:list of data, एक्सेल में डेटा
+        Lettura dei dati dai file Excel
+        :param file_name:str, nome del file Excel da leggere
+        :return:list di dati, Dati in Excel
         """
     try:
-        workbook = openpyxl.load_workbook(file_name, data_only=True)
+        workbook = openpyxl.load_workbook(file_name)
         sheet = workbook.active
         data = []
         for row in sheet.iter_rows(values_only=True):
             data.append(row)
         workbook.close()
         return data
-    except Exception as e:
+    except:
         return None

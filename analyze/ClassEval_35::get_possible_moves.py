@@ -1,16 +1,13 @@
 def get_possible_moves(self, state):
     """
-        अभी की स्थिति के आधार पर सभी संभावित चलने की दिशाएँ पाएँ।
-        केवल चार दिशाएँ हैं: 'ऊपर', 'नीचे', 'बाएँ', 'दाएँ'।
-
-        :param state: इंटीजर की एक 3×3 लिस्ट, जो अभी की स्थिति को स्टोर करती है
-        :return moves: str की एक लिस्ट, जो अभी की स्थिति के आधार पर सभी संभावित चलने की दिशाएँ स्टोर करती है
-
+        Secondo lo stato attuale, trova tutte le direzioni di movimento possibili. Ha solo 4 direzioni: 'su', 'giù', 'sinistra', 'destra'.
+        :param state: una lista di interi di dimensione 3*3, memorizza lo stato attuale.
+        :return moves: una lista di str, memorizza tutte le direzioni di movimento possibili secondo lo stato attuale.
         >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])
-        ['ऊपर', 'बाएँ', 'दाएँ']
+        ['su', 'sinistra', 'destra']
         """
-    i, j = self.find_blank(state)
     moves = []
+    i, j = self.find_blank(state)
     if i > 0:
         moves.append('up')
     if i < 2:

@@ -1,7 +1,7 @@
 def get_most_popular_class_in_major(self, major):
     """
-        उस मेजर में सबसे अधिक नामांकित कक्षा प्राप्त करें।
-        :return  इस मेजर में सबसे लोकप्रिय कक्षा का एक स्ट्रिंग
+        ottiene la classe con il maggior numero di iscrizioni nel corso di studio.
+        :return  una stringa della classe più popolare in questo corso di studio
         >>> registration_system = ClassRegistrationSystem()
         >>> registration_system.students = [{"name": "John", "major": "Computer Science"},
                                              {"name": "Bob", "major": "Computer Science"},
@@ -11,11 +11,15 @@ def get_most_popular_class_in_major(self, major):
         >>> registration_system.get_most_popular_class_in_major("Computer Science")
         "Data Structures"
         """
-    class_counts = {}
+    class_count = {}
     for student in self.students:
-        if student['major'] == major and student['name'] in self.students_registration_classes:
-            for class_name in self.students_registration_classes[student['name']]:
-                class_counts[class_name] = class_counts.get(class_name, 0) + 1
-    if not class_counts:
+        if student['major'] == major:
+            student_classes = self.students_registration_classes.get(student['name'], [])
+            for class_name in student_classes:
+                if class_name in class_count:
+                    class_count[class_name] += 1
+                else:
+                    class_count[class_name] = 1
+    if not class_count:
         return ''
-    return max(class_counts, key=class_counts.get)
+    return max(class_count, key=class_count.get)

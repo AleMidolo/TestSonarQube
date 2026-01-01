@@ -1,9 +1,9 @@
 def is_valid_move(self, pos1, pos2):
     """
-        दो आइकनों की चाल को मान्य है या नहीं, यह जांचें (यानी, स्थान खेल बोर्ड की सीमा के भीतर हैं, दोनों स्थान समान नहीं हैं, दोनों स्थानों में समान आइकन हैं, और दोनों स्थानों के बीच एक मान्य पथ है)
-        :param pos1: पहले आइकन की स्थिति ट्यूपल(x, y)
-        :param pos2: दूसरे आइकन की स्थिति ट्यूपल(x, y)
-        :return: True या False, जो दर्शाता है कि दो आइकनों की चाल मान्य है या नहीं
+        verifica se il movimento di due icone è valido (cioè le posizioni sono all'interno dell'intervallo della tavola da gioco, le due posizioni non sono le stesse, le due posizioni hanno la stessa icona e c'è un percorso valido tra le due posizioni)
+        :param pos1: tupla di posizione (x, y) della prima icona
+        :param pos2: tupla di posizione (x, y) della seconda icona
+        :return: True o False, che rappresenta se il movimento di due icone è valido
         >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
         mc.board = [['a', 'b', 'c', 'a'],
                     ['a', 'b', 'c', 'a'],
@@ -12,15 +12,13 @@ def is_valid_move(self, pos1, pos2):
         >>> mc.is_valid_move((0, 0), (1, 0))
         True
         """
+    if pos1 == pos2:
+        return False
     x1, y1 = pos1
     x2, y2 = pos2
     if not (0 <= x1 < self.BOARD_SIZE[0] and 0 <= y1 < self.BOARD_SIZE[1]):
         return False
     if not (0 <= x2 < self.BOARD_SIZE[0] and 0 <= y2 < self.BOARD_SIZE[1]):
-        return False
-    if pos1 == pos2:
-        return False
-    if self.board[x1][y1] == ' ' or self.board[x2][y2] == ' ':
         return False
     if self.board[x1][y1] != self.board[x2][y2]:
         return False

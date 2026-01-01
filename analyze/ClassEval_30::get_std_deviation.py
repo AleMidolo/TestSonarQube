@@ -1,7 +1,7 @@
 def get_std_deviation(self):
     """
-        मानक विचलन की गणना करें, दशमलव विभाजक के बाद दो अंकों तक सटीक
-        :return:float
+        Calcola la deviazione standard, con una precisione di due cifre  decimali
+        :return: float
         >>> ds2 = DataStatistics2([1, 2, 3, 4])
         >>> ds2.get_std_deviation()
         1.12

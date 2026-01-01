@@ -1,14 +1,11 @@
 @staticmethod
 def count_all(n):
     """
-        सभी संभावित व्यवस्थाओं की कुल संख्या की गणना करता है, जिसमें कम से कम 1 आइटम और अधिकतम n आइटम n आइटम से चुने जाते हैं।
-        :param n: int, आइटम की कुल संख्या।
-        :return: int, सभी व्यवस्थाओं की संख्या।
+        Conta il numero totale di tutti i possibili arrangiamenti scegliendo almeno 1 elemento e al massimo n elementi da n elementi.
+        :param n: int, il numero totale di elementi.
+        :return: int, il conteggio di tutti gli arrangiamenti.
         >>> ArrangementCalculator.count_all(4)
         64
 
         """
-    total = 0
-    for m in range(1, n + 1):
-        total += ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)
-    return total
+    return sum((ArrangementCalculator.count(n, m) for m in range(1, n + 1)))

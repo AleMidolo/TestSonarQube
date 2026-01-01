@@ -1,5 +1,5 @@
 def view_balance(self):
     """
-        खाता शेष लौटाएं।
+        Restituisce il saldo del conto.
         """
     return self.balance

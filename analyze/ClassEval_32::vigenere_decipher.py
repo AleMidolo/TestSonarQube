@@ -1,27 +1,23 @@
 def vigenere_decipher(self, ciphertext):
     """
-        दिए गए ciphertext को Vigenere cipher का उपयोग करके डिकोड करता है
-        :param ciphertext: डिकोड करने के लिए ciphertext, str.
-        :return: डिकोड किया गया plaintext, str.
+        Decifra il testo cifrato fornito utilizzando il cifrario di Vigenere
+        :param ciphertext: Il testo cifrato da decifrare, str.
+        :return: Il testo in chiaro decifrato, str.
         >>> d = DecryptionUtils('key')
         >>> d.vigenere_decipher('ifmmp')
         'ybocl'
-
         """
-    plaintext = ''
     key_length = len(self.key)
-    for i, char in enumerate(ciphertext):
+    plaintext = ''
+    key_index = 0
+    for char in ciphertext:
         if char.isalpha():
-            key_char = self.key[i % key_length]
-            key_shift = ord(key_char.lower()) - ord('a')
+            shift = ord(self.key[key_index % key_length].lower()) - ord('a')
             if char.isupper():
-                ascii_offset = 65
-                base_char = key_char.upper()
+                plaintext += chr((ord(char) - shift - 65) % 26 + 65)
             else:
-                ascii_offset = 97
-                base_char = key_char.lower()
-            decrypted_char = chr((ord(char) - ascii_offset - (ord(base_char) - ascii_offset)) % 26 + ascii_offset)
-            plaintext += decrypted_char
+                plaintext += chr((ord(char) - shift - 97) % 26 + 97)
+            key_index += 1
         else:
             plaintext += char
     return plaintext

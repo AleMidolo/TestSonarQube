@@ -1,7 +1,7 @@
 def get_fragment(self):
     """
-        URL में '#' के बाद का फ्रैगमेंट प्राप्त करें
-        :return: स्ट्रिंग, यदि सफल हो, तो URL के '#' के बाद का फ्रैगमेंट लौटाएं
+        Ottieni il frammento dopo '#' nell'URL
+        :return: stringa, Se ha successo, restituisce il frammento dopo '#' dell'URL
         >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
         >>> urlhandler.get_fragment()
         "page"

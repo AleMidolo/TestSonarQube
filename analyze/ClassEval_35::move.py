@@ -1,10 +1,10 @@
 def move(self, state, direction):
     """
-        खाली ब्लॉक को खोजें, फिर दिए गए दिशा में बोर्ड को आगे बढ़ाएं।
-        :param state: एक 3*3 आकार की Integer की सूची, जो चलने से पहले की स्थिति को संग्रहीत करती है।
-        :param direction: str, केवल 4 दिशाएँ 'up', 'down', 'left', 'right' हैं
-        :return new_state: एक 3*3 आकार की Integer की सूची, जो चलने के बाद की स्थिति को संग्रहीत करती है।
-        >>> eightPuzzle.move([[2, 3, 4], [5, 8, 1], [6, 0, 7]], 'left')
+        Trova il blocco vuoto, quindi sposta il tabellone nella direzione data.
+        :param state: una lista di interi di dimensione 3*3, memorizza lo stato prima del movimento.
+        :param direction: str, ha solo 4 direzioni 'su', 'giù', 'sinistra', 'destra'
+        :return new_state: una lista di interi di dimensione 3*3, memorizza lo stato dopo il movimento.
+        >>> eightPuzzle.move([[2, 3, 4], [5, 8, 1], [6, 0, 7]], 'sinistra')
         [[2, 3, 4], [5, 8, 1], [0, 6, 7]]
         """
     i, j = self.find_blank(state)

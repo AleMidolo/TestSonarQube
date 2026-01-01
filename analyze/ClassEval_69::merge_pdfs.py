@@ -1,16 +1,18 @@
 def merge_pdfs(self, output_filepath):
     """
-        self.readers में फ़ाइलें पढ़ें जो कई PDF फ़ाइलों के हैंडल को संग्रहीत करती हैं।
-        उन्हें एक PDF में मिलाएं और पृष्ठ संख्या को अपडेट करें, फिर डिस्क में सहेजें।
-        :param output_filepath: str, सहेजने के लिए आउटपुट फ़ाइल पथ
-        :return: str, "Merged PDFs saved at {output_filepath}" यदि सफलतापूर्वक मिलाया गया
+        Legge i file in self.readers che memorizza i riferimenti a più file PDF.
+        Unisce questi file in un unico PDF e aggiorna il numero di pagina, quindi salva su disco.
+        :param output_filepath: str, percorso del file di output in cui salvare
+        :return: str, "PDF uniti salvati in {output_filepath}" se uniti con successo
         >>> handler = PDFHandler(['a.pdf', 'b.pdf'])
         >>> handler.merge_pdfs('out.pdf')
-        Merged PDFs saved at out.pdf
+        PDF uniti salvati in out.pdf
         """
-    merger = PyPDF2.PdfFileMerger()
+    pdf_writer = PyPDF2.PdfFileWriter()
     for reader in self.readers:
-        merger.append(reader)
-    merger.write(output_filepath)
-    merger.close()
-    return f'Merged PDFs saved at {output_filepath}'
+        for page_num in range(len(reader.pages)):
+            page = reader.pages[page_num]
+            pdf_writer.add_page(page)
+    with open(output_filepath, 'wb') as out_file:
+        pdf_writer.write(out_file)
+    return f'PDF uniti salvati in {output_filepath}'

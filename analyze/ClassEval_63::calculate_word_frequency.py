@@ -1,14 +1,11 @@
 def calculate_word_frequency(self, words_list):
     """
-        शब्दों की सूची में प्रत्येक शब्द की शब्द आवृत्ति की गणना करें, और शब्द आवृत्ति शब्दकोश को मान के अनुसार अवरोही क्रम में क्रमबद्ध करें।
-        :param words_list: शब्दों की सूचियों की एक सूची
-        :return: शीर्ष 5 शब्द आवृत्ति शब्दकोश, एक शब्द आवृत्ति का शब्दकोश, कुंजी शब्द है, मान आवृत्ति है
-        >>> NLPDataProcessor.calculate_word_frequency([['this', 'is', 'a', 'test'], ['this', 'is', 'another', 'test']])
+        Calcola la frequenza delle parole di ciascuna parola nella lista di liste di parole e ordina il dizionario della frequenza delle parole per valore in ordine decrescente.
+        :param words_list: una lista di liste di parole
+        :return: dizionario della frequenza delle parole top 5, un dizionario della frequenza delle parole, la chiave è la parola, il valore è la frequenza
+        >>> NLPDataProcessor2.calculate_word_frequency([['this', 'is', 'a', 'test'], ['this', 'is', 'another', 'test']])
         {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}
         """
-    word_counter = Counter()
-    for words in words_list:
-        word_counter.update(words)
-    sorted_items = sorted(word_counter.items(), key=lambda x: x[1], reverse=True)
-    top_5_dict = dict(sorted_items[:5])
-    return top_5_dict
+    flat_list = [word for sublist in words_list for word in sublist]
+    word_count = Counter(flat_list)
+    return dict(word_count.most_common(5))

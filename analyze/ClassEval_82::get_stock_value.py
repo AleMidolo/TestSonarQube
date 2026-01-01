@@ -1,8 +1,8 @@
 def get_stock_value(self, stock):
     """
-        एक स्टॉक का मूल्य प्राप्त करें।
-        :param stock: एक डिक्शनरी जिसमें "name", "price", और "quantity" कुंजी हैं
-        :return: स्टॉक का मूल्य, फ्लोट।
+        Ottieni il valore di un'azione.
+        :param stock: un dizionario con le chiavi "name", "price" e "quantity"
+        :return: il valore dell'azione, float.
         >>> tracker = StockPortfolioTracker(10000.0)
         >>> tracker.get_stock_value({"name": "AAPL", "price": 150.0, "quantity": 10})
         1500.0

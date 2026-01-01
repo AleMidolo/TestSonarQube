@@ -1,12 +1,11 @@
 def add_student(self, name, grade, major):
     """
-        self.students dict में एक नया छात्र जोड़ें
-        :param name: str, छात्र का नाम
-        :param grade: int, छात्र का ग्रेड
-        :param major: str, छात्र का मेजर
+        Add a new student to the self.students dictionary
+        :param name: str, student name
+        :param grade: int, student grade
+        :param major: str, student major
         >>> system.add_student('student 1', 3, 'SE')
         >>> system.students
         {'student 1': {'name': 'student 1', 'grade': 3, 'major': 'SE', 'courses': {}}}
         """
-    if name not in self.students:
-        self.students[name] = {'name': name, 'grade': grade, 'major': major, 'courses': {}}
+    self.students[name] = {'name': name, 'grade': grade, 'major': major, 'courses': {}}

@@ -1,15 +1,14 @@
 def format(self, x):
     """
-        एक संख्या को शब्दों के प्रारूप में परिवर्तित करता है
-        :param x: int या float, वह संख्या जिसे शब्दों के प्रारूप में परिवर्तित किया जाना है
-        :return: str, संख्या शब्दों के प्रारूप में
+        Converte un numero nella sua rappresentazione in parole.
+        :param x: int o float, il numero da convertire in formato parole
+        :return: str, il numero in formato parole
         >>> formatter = NumberWordFormatter()
         >>> formatter.format(123456)
-        "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
+        "CENTO VENTITRE MILA QUATTROCENTO CINQUANTA SEI SOLO"
         """
-    if isinstance(x, int):
-        return self.format_string(str(x))
-    elif isinstance(x, float):
-        return self.format_string(str(x))
+    if isinstance(x, float):
+        x = str(x)
     else:
-        raise TypeError('Input must be int or float')
+        x = str(int(x))
+    return self.format_string(x)

@@ -1,9 +1,9 @@
 def check_out(self, room_type, room_number):
     """
-        कमरों की चेक आउट करें, उपलब्ध कमरों में विशेष प्रकार के लिए संख्या जोड़ें।
-        यदि room_type नया है, तो उपलब्ध_rooms में नया प्रकार जोड़ें।
-        :param room_type: str, चेक आउट कमरे का प्रकार
-        :param room_number: int, चेक आउट कमरे का नंबर
+        Effettua il check-out delle stanze, aggiungendo il numero per il tipo specifico in available_rooms.
+        Se room_type è nuovo, aggiungi un nuovo tipo in available_rooms.
+        :param room_type: str, tipo di stanza da effettuare il check-out
+        :param room_number: int, numero della stanza da effettuare il check-out
         >>> hotel = Hotel('peace hotel', {'single': 5, 'double': 3})
         >>> hotel.check_out('single', 2)
         >>> hotel.available_rooms

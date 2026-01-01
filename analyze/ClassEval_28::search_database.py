@@ -1,10 +1,10 @@
 def search_database(self, table_name, name):
     """
-        निर्दिष्ट तालिका को डेटाबेस में उन पंक्तियों के लिए खोजें जिनका नाम मेल खाता है।
-        :param table_name: str, खोजने के लिए तालिका का नाम।
-        :param name: str, खोजने के लिए नाम।
-        :return: list, मेल खाते नाम वाली पंक्तियों का प्रतिनिधित्व करने वाले ट्यूपल की सूची, यदि कोई हो;
-                    अन्यथा, None लौटाता है।
+        Cerca nella tabella indicata del database righe con un nome corrispondente.
+        :param table_name: str, il nome della tabella da cercare.
+        :param name: str, il nome da cercare.
+        :return: list, una lista di tuple che rappresentano le righe con nome corrispondente, se presenti;
+                    altrimenti, restituisce None.
         >>> db.search_database('user', 'John')
         [(1, 'John', 25)]
         """

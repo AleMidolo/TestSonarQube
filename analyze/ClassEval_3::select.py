@@ -1,17 +1,13 @@
 def select(self, m=None):
     """
-        आंतरिक डेटा से m आइटम चुनकर व्यवस्थाओं की एक सूची उत्पन्न करता है।
-        यदि m प्रदान नहीं किया गया है, तो सभी आइटम चुनता है।
-        :param m: int, चुने जाने वाले आइटम की संख्या (डिफ़ॉल्ट=None)।
-        :return: सूची, व्यवस्थाओं की एक सूची।
+        Genera un elenco di disposizioni selezionando m elementi dai dati interni.
+        Se m non è fornito, seleziona tutti gli elementi.
+        :param m: int, il numero di elementi da scegliere (default=None).
+        :return: List, un elenco di disposizioni.
         >>> ac = ArrangementCalculator([1, 2, 3, 4])
         >>> ac.select(2)
         [[1, 2], [1, 3], [1, 4], [2, 1], [2, 3], [2, 4], [3, 1], [3, 2], [3, 4], [4, 1], [4, 2], [4, 3]]
-
         """
     if m is None:
         m = len(self.datas)
-    result = []
-    for perm in itertools.permutations(self.datas, m):
-        result.append(list(perm))
-    return result
+    return list(itertools.permutations(self.datas, m))

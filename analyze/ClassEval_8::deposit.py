@@ -1,10 +1,10 @@
 def deposit(self, amount):
     """
-        खाते में एक निश्चित राशि जमा करता है, खाते के संतुलन को बढ़ाता है, वर्तमान खाते के संतुलन को लौटाता है।
-        यदि राशि नकारात्मक है, तो ValueError("अमान्य राशि") उठाएं।
+        Deposita un certo importo nel conto, aumentando il saldo del conto, restituisce il saldo attuale del conto.
+        Se l'importo è negativo, solleva un ValueError("Importo non valido").
         :param amount: int
         """
     if amount < 0:
-        raise ValueError('अमान्य राशि')
+        raise ValueError('Importo non valido')
     self.balance += amount
     return self.balance

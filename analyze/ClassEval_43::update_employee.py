@@ -1,9 +1,9 @@
 def update_employee(self, employee_id: int, employee_info: dict):
     """
-        एचआर प्रबंधन प्रणाली में एक कर्मचारी की जानकारी को अपडेट करें।
-        :param employee_id: कर्मचारी का आईडी, int।
-        :param employee_info: कर्मचारी की जानकारी, dict।
-        :return: यदि कर्मचारी पहले से एचआर प्रबंधन प्रणाली में है, तो True लौटाता है, अन्यथा False लौटाता है।
+        Aggiorna le informazioni di un dipendente nel sistema di gestione HR.
+        :param employee_id: L'id del dipendente, int.
+        :param employee_info: Le informazioni del dipendente, dict.
+        :return: Se il dipendente è già nel sistema di gestione HR, restituisce True, altrimenti restituisce False.
         >>> hrManagementSystem = HRManagementSystem()
         >>> hrManagementSystem.employees = {1: {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}}
         >>> hrManagementSystem.update_employee(1, {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 20000})
@@ -12,9 +12,8 @@ def update_employee(self, employee_id: int, employee_info: dict):
         False
 
         """
-    if employee_id not in self.employees:
+    if employee_id in self.employees:
+        self.employees[employee_id].update(employee_info)
+        return True
+    else:
         return False
-    for key, value in employee_info.items():
-        if key in self.employees[employee_id]:
-            self.employees[employee_id][key] = value
-    return True

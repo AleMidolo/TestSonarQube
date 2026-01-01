@@ -1,10 +1,8 @@
 def __getitem__(self, key):
     """
-        की से जुड़ी वैल्यू लौटाएँ।
-
-        :param key: str
-        :return: str, की से जुड़ी वैल्यू
-
+        Restituisce il valore corrispondente alla chiave
+        :param key:str
+        :return:str, il valore corrispondente alla chiave
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map['first_name'] = 'John'
         >>> camelize_map.__getitem__('first_name')

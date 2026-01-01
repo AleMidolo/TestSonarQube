@@ -1,12 +1,12 @@
 def track_order(self, order_id):
     """
-        विशिष्ट आदेश की स्थिति प्राप्त करें।
+        Ottieni lo stato di un ordine specifico.
         :param order_id: int
-        :return False: केवल तभी यदि order_id self.orders में नहीं है।
+        :return False: solo se l'order_id non è presente in self.orders.
         >>> warehouse.add_product(1, "product1", 3)
         >>> warehouse.create_order(1, 1, 2)
         >>> warehouse.track_order(1)
-        'Shipped'
+        'Spedito'
         """
     if order_id in self.orders:
         return self.orders[order_id]['status']

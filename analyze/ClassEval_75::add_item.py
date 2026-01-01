@@ -1,13 +1,14 @@
 def add_item(self, item, price, quantity=1):
     """
-        खरीदारी सूची में आइटम की जानकारी जोड़ें, जिसमें कीमत और मात्रा शामिल हैं। डिफ़ॉल्ट मात्रा 1 है
-        :param item: string, जोड़ा जाने वाला आइटम
-        :param price: float, आइटम की कीमत
-        :param quantity:int, आइटम की संख्या, डिफ़ॉल्ट 1 है
+        Aggiungi informazioni sull'oggetto alla lista della spesa, inclusi prezzo e quantità. La quantità predefinita è 1
+        :param item: stringa, Oggetto da aggiungere
+        :param price: float, Il prezzo dell'oggetto
+        :param quantity:int, Il numero di oggetti, predefinito a 1
         :return:None
         >>> shoppingcart = ShoppingCart()
         >>> shoppingcart.add_item("apple", 1, 5)
-        self.items = {"apple":{"price":1, "quantity":5}}
+        >>> shoppingcart.view_items()
+        {"apple":{"price":1, "quantity":5}}
         """
     if item in self.items:
         self.items[item]['quantity'] += quantity

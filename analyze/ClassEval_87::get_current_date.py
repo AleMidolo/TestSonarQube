@@ -1,7 +1,7 @@
 def get_current_date(self):
     """
-        वर्तमान तिथि को "%Y-%m-%d" प्रारूप में लौटाएं
-        :return: स्ट्रिंग
+        Restituisce la data corrente nel formato "%Y-%m-%d"
+        :return: stringa
         >>> timeutils.get_current_date()
         "2023-06-14"
         """

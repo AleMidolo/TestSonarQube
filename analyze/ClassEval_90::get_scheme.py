@@ -1,7 +1,7 @@
 def get_scheme(self):
     """
-        URL का स्कीम प्राप्त करें
-        :return: स्ट्रिंग, यदि सफल हो, तो URL का स्कीम लौटाएं
+        ottieni lo schema dell'URL
+        :return: stringa, Se ha successo, restituisce lo schema dell'URL
         >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
         >>> urlhandler.get_scheme()
         "https"

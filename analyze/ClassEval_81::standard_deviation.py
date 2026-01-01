@@ -1,9 +1,9 @@
 @staticmethod
 def standard_deviation(data):
     """
-        दिए गए सूची का मानक विचलन की गणना करता है।
-        :param data: दी गई सूची, सूची।
-        :return: दी गई सूची का मानक विचलन, फ्लोट।
+        calcola la deviazione standard della lista fornita.
+        :param data: la lista fornita, lista.
+        :return: la deviazione standard della lista fornita, float.
         >>> statistics3 = Statistics3()
         >>> statistics3.standard_deviation([1, 2, 3])
         1.0

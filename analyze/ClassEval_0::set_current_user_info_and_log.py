@@ -1,11 +1,10 @@
 def set_current_user_info_and_log(self, user):
     """
-        वर्तमान उपयोगकर्ता की जानकारी सेट करें और पहुंच को लॉग करें।
-        :param user: dict, उपयोगकर्ता की जानकारी
+        Imposta le informazioni dell'utente corrente e registra l'accesso.
+        :param user: dict, le informazioni dell'utente
         :return: None
         >>> filter = AccessGatewayFilter()
         >>> user = {'name': 'user1', 'address': '127.0.0.1'}
         >>> filter.set_current_user_info_and_log(user)
-
         """
-    logging.info(f"User {user['name']} from {user.get('address', 'unknown')} accessed the system")
+    logging.info(f"User {user['name']} accessed the system from {user['address']}.")

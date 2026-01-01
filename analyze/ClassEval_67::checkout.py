@@ -1,8 +1,8 @@
 def checkout(self):
     """
-        ऑर्डर किए गए व्यंजनों की चेकआउट करें। यदि self.selected_dishes खाली नहीं है, तो चेकआउट करने के लिए calculate_total
-        विधि को कॉल करें।
-        :return यदि self.selected_dishes खाली है तो Flase, अन्यथा total (calculate_total का लौटने वाला मान)।
+        Controlla i piatti ordinati. SE self.selected_dishes non è vuoto, invoca il metodo calculate_total
+        per procedere al checkout.
+        :return False se self.selected_dishes è vuoto, o il totale (valore di ritorno di calculate_total) altrimenti.
         >>> order = Order()
         >>> order.menu.append({"dish": "dish1", "price": 10, "count": 5})
         >>> order.sales = {"dish1": 0.8}

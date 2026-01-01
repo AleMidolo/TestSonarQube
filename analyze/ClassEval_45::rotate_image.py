@@ -1,9 +1,11 @@
 def rotate_image(self, degrees):
     """
-        यदि छवि खोली गई है तो छवि को घुमाएँ
-        :param degrees: float, वह डिग्री जिसमें छवि को घुमाया जाएगा
+        ruota l'immagine se l'immagine è stata aperta
+        :param degrees: float, i gradi con cui l'immagine verrà ruotata
         >>> processor.load_image('test.jpg')
-        >>> processor.resize_image(90)
+        >>> processor.rotate_image(90)
+        >>> processor.image.size
+        (4096, 3072)
         """
     if self.image:
         self.image = self.image.rotate(degrees, expand=True)

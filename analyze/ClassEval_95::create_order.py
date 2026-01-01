@@ -1,22 +1,21 @@
 def create_order(self, order_id, product_id, quantity):
     """
-        एक ऑर्डर बनाएं जिसमें उत्पाद की जानकारी शामिल हो, जैसे कि आईडी और मात्रा।
-        और नए ऑर्डर को self.orders में डालें।
-        स्थिति का डिफ़ॉल्ट मान 'Shipped' है।
+        Crea un ordine che include le informazioni del prodotto, come id e quantità.
+        E inserisce il nuovo ordine in self.orders.
+        Il valore predefinito dello stato è 'Spedito'.
         :param order_id: int
         :param product_id: int
-        :param quantity: चयनित उत्पाद की मात्रा।
-        :return False: केवल तभी यदि product_id इन्वेंटरी में नहीं है या मात्रा पर्याप्त नहीं है
+        :param quantity: la quantità di prodotto che è stata selezionata.
+        :return False: solo se product_id non è presente nell'inventario o la quantità non è adeguata
         >>> warehouse.add_product(1, "product1", 3)
         >>> warehouse.create_order(1, 1, 2)
         >>> warehouse.orders
-        {1: {'product_id': 1, 'quantity': 2, 'status': 'Shipped'}}
+        {1: {'product_id': 1, 'quantity': 2, 'status': 'Spedito'}}
         >>> warehouse.create_order(1, 2, 2)
         False
         """
-    if product_id not in self.inventory:
+    if product_id in self.inventory and self.inventory[product_id]['quantity'] >= quantity:
+        self.orders[order_id] = {'product_id': product_id, 'quantity': quantity, 'status': 'Spedito'}
+        self.inventory[product_id]['quantity'] -= quantity
+    else:
         return False
-    if self.inventory[product_id]['quantity'] < quantity:
-        return False
-    self.orders[order_id] = {'product_id': product_id, 'quantity': quantity, 'status': 'Shipped'}
-    self.inventory[product_id]['quantity'] -= quantity

@@ -1,9 +1,9 @@
 @staticmethod
 def decimal_to_binary(decimal_num):
     """
-        एक संख्या को दशमलव प्रारूप से बाइनरी प्रारूप में परिवर्तित करें।
-        :param decimal_num: int, दशमलव संख्या
-        :return: str, एक पूर्णांक का बाइनरी प्रतिनिधित्व।
+        Convert a number from decimal format to binary format.
+        :param decimal_num: int, decimal number
+        :return: str, the binary representation of an integer.
         >>> NumberConverter.decimal_to_binary(42423)
         '1010010110110111'
         """

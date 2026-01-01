@@ -1,9 +1,7 @@
-def __format_line_feed(self, text):
+def __format_line_feed(text):
     """
-        लगातार लाइन ब्रेक को एकल लाइन ब्रेक से बदलें
-        :param text: लगातार लाइन ब्रेक के साथ स्ट्रिंग
-        :return: स्ट्रिंग, एकल लाइन ब्रेक के साथ बदला हुआ टेक्स्ट
+        Sostituisce i ritorni a capo consecutivi con un singolo ritorno a capo
+        :param text: stringa con ritorni a capo consecutivi
+        :return: stringa, testo sostituito con un singolo ritorno a capo
         """
-    if not text:
-        return text
-    return re.sub('\\n\\s*\\n+', '\n', text.strip())
+    return re.sub('\\n+', '\n', text).strip()

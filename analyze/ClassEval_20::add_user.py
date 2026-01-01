@@ -1,17 +1,19 @@
 def add_user(self, username):
     """
-        चैट में एक नया उपयोगकर्ता जोड़ें।
-        :param username: उपयोगकर्ता का नाम, str.
-        :return: यदि उपयोगकर्ता पहले से चैट में है, तो False लौटाता है, अन्यथा, True लौटाता है।
-        >>> chat = Chat()
-        >>> chat.add_user('John')
-        True
-        self.users = {'John': []}
-        >>> chat.add_user('John')
-        False
+    Aggiungi un nuovo utente alla Chat.
+    :param username: Il nome dell'utente, str.
+    :return: Se l'utente è già nella Chat, restituisce False, altrimenti restituisce True.
+    >>> chat = Chat()
+    >>> chat.add_user('John')
+    True
+    >>> chat.users
+    {'John': []}
+    >>> chat.add_user('John')
+    False
 
-        """
+    """
     if username in self.users:
         return False
-    self.users[username] = []
-    return True
+    else:
+        self.users[username] = []
+        return True

@@ -1,7 +1,7 @@
 def __iter__(self):
     """
-        अपने डेटा के साथ इटरेबल ऑब्जेक्ट्स लौटाना
-        :return:Iterator
+        Restituisce oggetti iterabili con dati propri
+        :return: Iterator
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map['first_name'] = 'John'
         >>> camelize_map['last_name'] = 'Doe'

@@ -1,8 +1,8 @@
 def delete(self, condition):
     """
-        दिए गए शर्त के आधार पर एक DELETE SQL कथन उत्पन्न करता है।
-        :param condition: str. हटाने के लिए शर्त अभिव्यक्ति।
-        :return: str. उत्पन्न SQL कथन।
+        Genera un'istruzione SQL DELETE basata sulla condizione fornita.
+        :param condition: str. L'espressione di condizione per la cancellazione.
+        :return: str. L'istruzione SQL generata.
         >>> sql.delete("field1 = value1")
         'DELETE FROM table1 WHERE field1 = value1;'
         """

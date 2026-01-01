@@ -1,7 +1,7 @@
 def adjust_brightness(self, factor):
     """
-        यदि छवि खोली गई है तो छवि की चमक को समायोजित करें।
-        :param factor: float, एक छवि की चमक। 0.0 का एक कारक एक काली छवि देता है। 1.0 का एक कारक मूल छवि देता है।
+        Regola la luminosità dell'immagine se l'immagine è stata aperta.
+        :param factor: float, luminosità di un'immagine. Un fattore di 0.0 produce un'immagine nera. Un fattore di 1.0 produce l'immagine originale.
         >>> processor.load_image('test.jpg')
         >>> processor.adjust_brightness(0.5)
         """

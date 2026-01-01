@@ -1,7 +1,7 @@
 def save_image(self, save_path):
     """
-        यदि छवि खोली गई है तो छवि को एक पथ पर सहेजें
-        :param save_path: str, वह पथ जहाँ छवि सहेजी जाएगी
+        Salva l'immagine in un percorso se l'immagine è stata aperta
+        :param save_path: str, il percorso in cui l'immagine sarà salvata
         >>> processor.load_image('test.jpg')
         >>> processor.save_image('test2.jpg')
         """

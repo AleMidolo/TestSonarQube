@@ -1,10 +1,10 @@
 @staticmethod
 def insert(table, data):
     """
-        दिए गए पैरामीटर से INSERT SQL कथन उत्पन्न करें।
-        :param table: str, डेटाबेस में डाले जाने वाला तालिका।
-        :param data: dict, SQL INSERT कथन में कुंजी और मान
-        :return query: str, SQL INSERT कथन।
+        Genera l'istruzione SQL INSERT dai parametri forniti.
+        :param table: str, la tabella in cui inserire nel database.
+        :param data: dict, la chiave e il valore nell'istruzione SQL di inserimento
+        :return query: str, l'istruzione SQL di inserimento.
         >>> SQLQueryBuilder.insert('table1', {'name': 'Test', 'age': 14})
         "INSERT INTO table1 (name, age) VALUES ('Test', '14')"
         """

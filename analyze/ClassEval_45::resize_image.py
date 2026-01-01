@@ -1,8 +1,8 @@
 def resize_image(self, width, height):
     """
-        यदि छवि खोली गई है तो छवि का आकार बदलें।
-        :param width: int, छवि की लक्षित चौड़ाई
-        :param height: int, छवि की लक्षित ऊँचाई
+        Ridimensiona l'immagine se l'immagine è stata aperta.
+        :param width: int, la larghezza target dell'immagine
+        :param height: int, l'altezza target dell'immagine
         >>> processor.load_image('test.jpg')
         >>> processor.resize_image(300, 300)
         >>> processor.image.width

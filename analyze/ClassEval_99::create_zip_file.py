@@ -1,22 +1,16 @@
 def create_zip_file(self, files, output_file_name):
     """
-        निर्दिष्ट फ़ाइल सूची को एक ज़िप फ़ाइल में संकुचित करें और इसे निर्दिष्ट पथ में रखें
-        :param files: स्ट्रिंग की सूची, संकुचित करने के लिए फ़ाइलों की सूची
-        :param output_file_name: स्ट्रिंग, निर्दिष्ट आउटपुट पथ
-        :return: True या False, यह दर्शाता है कि संकुचन संचालन सफल था या नहीं
+        Comprimi l'elenco di file specificato in un file zip e lo salva nel percorso specificato
+        :param files: lista di stringhe, Elenco dei file da comprimere
+        :param output_file_name: stringa, Percorso di output specificato
+        :return: True o False, che rappresenta se l'operazione di compressione è stata riuscita
         >>> zfp = ZipFileProcessor("aaa.zip")
-        >>> zfp.create_zip_file(["bbb.txt", "ccc,txt", "ddd.txt"], "output/bcd")
+        >>> zfp.create_zip_file(["bbb.txt", "ccc.txt", "ddd.txt"], "output/bcd")
         """
     try:
-        output_dir = os.path.dirname(output_file_name)
-        if output_dir and (not os.path.exists(output_dir)):
-            os.makedirs(output_dir)
-        with zipfile.ZipFile(output_file_name, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        with zipfile.ZipFile(output_file_name, 'w') as zip_file:
             for file in files:
-                if os.path.exists(file):
-                    zipf.write(file, os.path.basename(file))
-                else:
-                    return False
+                zip_file.write(file)
         return True
     except:
         return False

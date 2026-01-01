@@ -1,25 +1,22 @@
 def get_available_slots(self, date):
     """
-        दिए गए दिनांक पर सभी उपलब्ध समय स्लॉट प्राप्त करें।
-        :param date: उपलब्ध समय स्लॉट प्राप्त करने के लिए दिनांक,datetime.
-        :return: दिए गए दिनांक पर उपलब्ध समय स्लॉट की एक सूची,list.
+        Ottieni tutti gli slot di tempo disponibili in una data specifica.
+        :param date: La data per cui ottenere gli slot di tempo disponibili, datetime.
+        :return: Un elenco di slot di tempo disponibili nella data specificata, list.
         >>> calendar = CalendarUtil()
-        >>> calendar.events = [{'date': datetime(2023, 1, 1, 0, 0), 'start_time': datetime(2023, 1, 1, 0, 0), 'end_time': datetime(2023, 1, 1, 23, 0), 'description': 'नया साल'}]
+        >>> calendar.events = [{'date': datetime(2023, 1, 1, 0, 0), 'start_time': datetime(2023, 1, 1, 0, 0), 'end_time': datetime(2023, 1, 1, 23, 0), 'description': 'Capodanno'}]
         >>> calendar.get_available_slots(datetime(2023, 1, 1))
         [(datetime.datetime(2023, 1, 1, 23, 0), datetime.datetime(2023, 1, 2, 0, 0))]
         """
-    day_events = self.get_events(date)
-    day_events.sort(key=lambda x: x['start_time'])
-    day_start = datetime.combine(date.date(), datetime.min.time())
-    day_end = day_start + timedelta(days=1)
-    available_slots = []
-    current_time = day_start
-    for event in day_events:
-        event_start = event['start_time']
-        event_end = event['end_time']
-        if current_time < event_start:
-            available_slots.append((current_time, event_start))
-        current_time = max(current_time, event_end)
-    if current_time < day_end:
-        available_slots.append((current_time, day_end))
-    return available_slots
+    slots = []
+    start_of_day = datetime(date.year, date.month, date.day, 0, 0)
+    end_of_day = datetime(date.year, date.month, date.day, 23, 59, 59)
+    last_end_time = start_of_day
+    for event in self.events:
+        if event['date'].date() == date.date():
+            if last_end_time < event['start_time']:
+                slots.append((last_end_time, event['start_time']))
+            last_end_time = max(last_end_time, event['end_time'])
+    if last_end_time < end_of_day:
+        slots.append((last_end_time, end_of_day))
+    return slots
