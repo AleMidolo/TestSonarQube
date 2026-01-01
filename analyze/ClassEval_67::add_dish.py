@@ -11,19 +11,18 @@ def add_dish(self, dish):
         """
     dish_name = dish['dish']
     requested_count = dish['count']
-    price = dish['price']
     for menu_item in self.menu:
-        if menu_item['dish'] == dish_name and menu_item['price'] == price:
+        if menu_item['dish'] == dish_name:
             if menu_item['count'] >= requested_count:
                 menu_item['count'] -= requested_count
                 found = False
                 for selected_item in self.selected_dishes:
-                    if selected_item['dish'] == dish_name and selected_item['price'] == price:
+                    if selected_item['dish'] == dish_name:
                         selected_item['count'] += requested_count
                         found = True
                         break
                 if not found:
-                    self.selected_dishes.append({'dish': dish_name, 'count': requested_count, 'price': price})
+                    self.selected_dishes.append({'dish': dish_name, 'count': requested_count, 'price': dish['price']})
                 return True
             else:
                 return False

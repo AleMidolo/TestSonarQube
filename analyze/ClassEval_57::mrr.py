@@ -49,5 +49,4 @@ def mrr(data):
                 else:
                     rr = 1.0 / (first_correct_idx[0] + 1)
             separate_result.append(rr)
-        mean_rr = np.mean(separate_result) if separate_result else 0.0
-        return (mean_rr, separate_result)
+        return (np.mean(separate_result), separate_result)

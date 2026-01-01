@@ -9,7 +9,7 @@ def get(self, index):
 
         """
     if index < 0 or index >= self.limit:
-        raise IndexError(f'Index {index} out of range for {self.limit} partitions')
+        raise IndexError('Partition index out of range')
     size, remainder = self.setNum()
     if index < remainder:
         start = index * (size + 1)

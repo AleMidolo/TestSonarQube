@@ -8,9 +8,6 @@ def create_zip_file(self, files, output_file_name):
         >>> zfp.create_zip_file(["bbb.txt", "ccc,txt", "ddd.txt"], "output/bcd")
         """
     try:
-        output_dir = os.path.dirname(output_file_name)
-        if output_dir and (not os.path.exists(output_dir)):
-            os.makedirs(output_dir)
         with zipfile.ZipFile(output_file_name, 'w', zipfile.ZIP_DEFLATED) as zipf:
             for file in files:
                 if os.path.exists(file):
@@ -18,5 +15,5 @@ def create_zip_file(self, files, output_file_name):
                 else:
                     return False
         return True
-    except Exception:
+    except:
         return False

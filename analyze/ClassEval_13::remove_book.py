@@ -5,10 +5,10 @@ def remove_book(self, title, quantity):
         :param title: str, किताब का शीर्षक
         :param quantity: int
         """
-    if not isinstance(title, str):
-        raise ValueError('Title must be a string')
-    if not isinstance(quantity, int) or quantity <= 0:
-        raise ValueError('Quantity must be a positive integer')
+    if not isinstance(title, str) or not isinstance(quantity, int):
+        raise ValueError('Invalid input: title must be a string and quantity must be an integer')
+    if quantity <= 0:
+        raise ValueError('Invalid input: quantity must be positive')
     if title not in self.inventory:
         raise ValueError(f"Book '{title}' not found in inventory")
     if self.inventory[title] < quantity:
