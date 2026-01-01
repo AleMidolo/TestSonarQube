@@ -1,9 +1,9 @@
 def sin(self, x):
     """
-        计算 x 度角的正弦值
+        Calculate the sin value of the x-degree angle
         :param x: float
         :return: float
         >>> tricalculator.sin(30)
         0.5
         """
-    return round(self.cos(90 - x), 10)
+    return round(self.taylor_sin(x, 50), 10)

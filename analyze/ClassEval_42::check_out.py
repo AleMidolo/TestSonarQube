@@ -1,10 +1,10 @@
 def check_out(self, room_type, room_number):
     """
-        退房，增加特定类型在 available_rooms 中的数量。
-        如果 room_type 是新的，则在 available_rooms 中添加新类型。
-        :param room_type: str, 退房房间类型
-        :param room_number: int, 退房房间号
-        >>> hotel = Hotel('和平酒店', {'single': 5, 'double': 3})
+        Check out rooms, add number for specific type in available_rooms.
+        If room_type is new, add new type in available_rooms.
+        :param room_type: str, check out room type
+        :param room_number: int, check out room number
+        >>> hotel = Hotel('peace hotel', {'single': 5, 'double': 3})
         >>> hotel.check_out('single', 2)
         >>> hotel.available_rooms
         {'single': 7, 'double': 3}

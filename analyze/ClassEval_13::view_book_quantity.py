@@ -1,8 +1,8 @@
 def view_book_quantity(self, title):
     """
-        获取一本书的数量。
-        :param title: str, 书名。
-        :return quantity: 该书的数量。当书名在 self.inventory 中不存在时返回 0。
+        Get the quantity of a book.
+        :param title: str, the title of the book.
+        :return quantity: the quantity of this book title. return 0 when the title does not exist in self.inventory
         >>> bookManagement = BookManagement()
         >>> bookManagement.add_book("book1", 1)
         >>> bookManagement.view_book_quantity("book3")

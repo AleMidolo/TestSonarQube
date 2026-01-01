@@ -1,12 +1,11 @@
 def display(self, key, value):
     """
-        打印和弦并播放旋律，格式如下：正常吉他演奏 -- 和弦: %s, 播放旋律: %s
-        :param key:字符串, 和弦
-        :param value:字符串, 播放旋律
+        Print out chord and play tune with following format: Normal Guitar Playing -- Chord: %s, Play Tune: %s
+        :param key:str, chord
+        :param value:str, play tune
         :return: str
         >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
         >>> context.display("C", "53231323")
-        正常吉他演奏 -- 和弦: C, 播放旋律: 53231323
-
+        Normal Guitar Playing -- Chord: C, Play Tune: 53231323
         """
-    print(f'正常吉他演奏 -- 和弦: {key}, 播放旋律: {value}')
+    print(f'Normal Guitar Playing -- Chord: {key}, Play Tune: {value}')

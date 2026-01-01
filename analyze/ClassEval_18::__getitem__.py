@@ -1,8 +1,8 @@
 def __getitem__(self, key):
     """
-        返回与键对应的值
+        Return the value corresponding to the key
         :param key:str
-        :return:str, 与键对应的值
+        :return:str,the value corresponding to the key
         >>> camelize_map = CamelCaseMap()
         >>> camelize_map['first_name'] = 'John'
         >>> camelize_map.__getitem__('first_name')

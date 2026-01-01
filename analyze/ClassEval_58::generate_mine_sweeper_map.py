@@ -1,7 +1,7 @@
 def generate_mine_sweeper_map(self):
     """
-        生成一个扫雷地图，给定棋盘的大小和地雷的数量，参数 n 是棋盘的大小，棋盘的大小为 n*n，参数 k 是地雷的数量，'X' 代表地雷，其他数字代表该位置周围的地雷数量。
-        :return: 扫雷地图，列表。
+        Generates a minesweeper map with the given size of the board and the number of mines,the given parameter n is the size of the board,the size of the board is n*n,the parameter k is the number of mines,'X' represents the mine,other numbers represent the number of mines around the position.
+        :return: The minesweeper map, list.
         >>> minesweeper_game = MinesweeperGame(3, 1)
         >>> minesweeper_game.generate_mine_sweeper_map()
         [['X', 1, 0], [1, 1, 0], [0, 0, 0]]

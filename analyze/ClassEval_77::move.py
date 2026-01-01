@@ -1,23 +1,19 @@
 def move(self, direction):
     """
-        以指定方向移动蛇。如果蛇头的新位置等于食物的位置，则吃掉食物；如果蛇头的位置等于其身体的位置，则重新开始，否则长度加一。
-        :param direction: 元组，表示移动的方向 (x, y)。
-        :return: None
-        >>> snake.move((1,1))
-        self.length = 1
-        self.positions = [(51, 51), (50, 50)]
-        self.score = 10
-        """
-    head_x, head_y = self.positions[0]
-    new_head = (head_x + direction[0] * self.BLOCK_SIZE, head_y + direction[1] * self.BLOCK_SIZE)
-    if new_head[0] < 0 or new_head[0] >= self.SCREEN_WIDTH or new_head[1] < 0 or (new_head[1] >= self.SCREEN_HEIGHT):
-        self.reset()
-        return
-    if new_head in self.positions:
-        self.reset()
-        return
-    self.positions.insert(0, new_head)
+    Move the snake in the specified direction. If the new position of the snake's head is equal to the position of the food, then eat the food; If the position of the snake's head is equal to the position of its body, then start over, otherwise its own length plus one.
+    :param direction: tuple, representing the direction of movement (x, y).
+    :return: None
+    >>> snake.move((1,1))
+    self.length = 1
+    self.positions = [(51, 51), (50, 50)]
+    self.score = 10
+    """
+    new_head = (self.positions[0][0] + direction[0] * self.BLOCK_SIZE, self.positions[0][1] + direction[1] * self.BLOCK_SIZE)
     if new_head == self.food_position:
         self.eat_food()
-    elif len(self.positions) > self.length:
-        self.positions.pop()
+    elif new_head in self.positions:
+        self.reset()
+    else:
+        self.positions.insert(0, new_head)
+        if len(self.positions) > self.length:
+            self.positions.pop()

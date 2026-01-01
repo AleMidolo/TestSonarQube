@@ -1,15 +1,14 @@
 def post_job(self, job_title, company, requirements):
     """
-        该函数用于发布职位，并将职位信息添加到 job_listings 列表中。
-        :param job_title: 职位的名称，str。
-        :param company: 职位所在的公司，str。
-        :param requirements: 职位的要求，list。
+        This function is used to publish positions,and add the position information to the job_listings list.
+        :param job_title: The title of the position,str.
+        :param company: The company of the position,str.
+        :param requirements: The requirements of the position,list.
         :return: None
         >>> jobMarketplace = JobMarketplace()
-        >>> jobMarketplace.post_job("软件工程师", "ABC 公司", ['要求1', '要求2'])
+        >>> jobMarketplace.post_job("Software Engineer", "ABC Company", ['requirement1', 'requirement2'])
         >>> jobMarketplace.job_listings
-        [{'job_title': '软件工程师', 'company': 'ABC 公司', 'requirements': ['要求1', '要求2']}]
-
+        [{'job_title': 'Software Engineer', 'company': 'ABC Company', 'requirements': ['requirement1', 'requirement2']}]
         """
     job = {'job_title': job_title, 'company': company, 'requirements': requirements}
     self.job_listings.append(job)

@@ -1,20 +1,19 @@
 def make_move(self, row, col):
     """
-        在给定的行和列上进行移动。
-        如果移动有效，它将在棋盘上放置当前玩家的符号，并将当前玩家更改为另一个玩家（如果当前玩家是 'X'，则变为 'O'，反之亦然）。
-        :param row: int，此移动的行索引
-        :param col: int，列索引
-        return: 如果移动有效则返回 True，否则返回 False。
+        Makes a move at the given row and column.
+        If the move is valid, it places the current player's symbol on the board
+        and changes the current player to the other player (if the current player is 'X', then it becomes 'O' and vice versa).
+        :param row: int, the row index of this move
+        :param col: int, the column index
+        return: True if the move is valid, or False otherwise.
         >>> gomokuGame = GomokuGame(10)
         >>> gomokuGame.make_move(5, 5)
         True
         >>> gomokuGame.make_move(5, 5)
         False
         """
-    if not (0 <= row < self.board_size and 0 <= col < self.board_size):
-        return False
-    if self.board[row][col] != ' ':
-        return False
-    self.board[row][col] = self.current_player
-    self.current_player = 'O' if self.current_player == 'X' else 'X'
-    return True
+    if self.board[row][col] == ' ':
+        self.board[row][col] = self.current_player
+        self.current_player = 'O' if self.current_player == 'X' else 'X'
+        return True
+    return False

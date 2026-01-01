@@ -1,7 +1,7 @@
 def generate_split_sentences_pattern(self):
     """
-        生成匹配两个句子中间字符的正则表达式模式
-        :return: 字符串，匹配两个句子中间字符的正则表达式模式
+        Generate regular expression patterns that match the middle characters of two sentences
+        :return: string, regular expression patterns that match the middle characters of two sentences
         >>> ru = RegexUtils()
         >>> ru.generate_split_sentences_pattern()
         '[.!?][\\s]{1,2}(?=[A-Z])'

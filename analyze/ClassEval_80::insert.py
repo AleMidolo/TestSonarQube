@@ -1,10 +1,10 @@
 @staticmethod
 def insert(table, data):
     """
-        从给定参数生成 INSERT SQL 语句。
-        :param table: str，要插入的数据库表。
-        :param data: dict，SQL 插入语句中的键和值
-        :return query: str，SQL 插入语句。
+        Generate the INSERT SQL statement from the given parameters.
+        :param table: str, the table to be inserted in database.
+        :param data: dict, the key and value in SQL insert statement
+        :return query: str, the SQL insert statement.
         >>> SQLQueryBuilder.insert('table1', {'name': 'Test', 'age': 14})
         "INSERT INTO table1 (name, age) VALUES ('Test', '14')"
         """

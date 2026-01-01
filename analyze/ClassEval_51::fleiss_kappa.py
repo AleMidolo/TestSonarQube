@@ -1,12 +1,12 @@
 @staticmethod
 def fleiss_kappa(testData, N, k, n):
     """
-        计算 N * k 矩阵的 Fleiss kappa 值
-        :param testData: 输入数据矩阵，N * k
-        :param N: int, 样本数量
-        :param k: int, 类别数量
-        :param n: int, 评分者数量
-        :return: float, Fleiss kappa 值
+        Calculate the fliss kappa value of an N * k matrix
+        :param testData: Input data matrix, N * k
+        :param N: int, Number of samples
+        :param k: int, Number of categories
+        :param n: int, Number of raters
+        :return: float, fleiss kappa value
         >>> KappaCalculator.fleiss_kappa([[0, 0, 0, 0, 14],
         >>>                              [0, 2, 6, 4, 2],
         >>>                              [0, 0, 3, 5, 6],
@@ -19,10 +19,9 @@ def fleiss_kappa(testData, N, k, n):
         >>>                              [0, 2, 2, 3, 7]], 10, 5, 14)
         0.20993070442195522
         """
-    data = np.array(testData)
-    p_j = np.sum(data, axis=0) / (N * n)
-    P_i = (np.sum(data * data, axis=1) - n) / (n * (n - 1))
-    P_bar = np.sum(P_i) / N
-    P_e = np.sum(p_j * p_j)
-    kappa = (P_bar - P_e) / (1 - P_e)
-    return float(kappa)
+    dataMat = np.array(testData)
+    P = np.sum(dataMat, axis=0) / (N * n)
+    Pbar = np.sum(dataMat ** 2, axis=0) / (N * n ** 2)
+    Pbar_total = np.mean(Pbar)
+    fleiss_kappa_value = (Pbar_total - np.mean(P ** 2)) / (1 - np.mean(P ** 2))
+    return fleiss_kappa_value

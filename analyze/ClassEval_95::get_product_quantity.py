@@ -1,9 +1,9 @@
 def get_product_quantity(self, product_id):
     """
-        根据 product_id 获取特定产品的数量。
+        Get the quantity of specific product by product_id.
         :param product_id, int
-        :return: 如果 product_id 在库存中，则返回相应的数量，
-                否则返回 False。
+        :return: if the product_id is in inventory then return the corresponding quantity,
+                or False otherwise.
         >>> warehouse.add_product(1, "product1", 3)
         >>> warehouse.get_product_quantity(1)
         3

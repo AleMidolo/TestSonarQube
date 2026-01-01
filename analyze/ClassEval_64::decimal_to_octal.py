@@ -1,9 +1,9 @@
 @staticmethod
 def decimal_to_octal(decimal_num):
     """
-        将十进制数字转换为八进制格式。
-        :param decimal_num: int, 十进制数字
-        :return: str, 整数的八进制表示。
+        Convert a number from decimal format to octal format.
+        :param decimal_num: int, decimal number
+        :return: str, the octal representation of an integer.
         >>> NumberConverter.decimal_to_octal(42423)
         '122667'
         """

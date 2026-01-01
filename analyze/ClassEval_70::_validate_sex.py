@@ -1,10 +1,9 @@
 def _validate_sex(self, sex: str) -> str:
     """
-        验证性别并返回。如果性别不是男、女或UGM，则设置为None。
-        :param sex: str，要验证的性别
-        :return: str，验证后的性别，如果无效则返回None
+        Validate the sex and return it. If sex is not Man, Woman, or UGM, set to None.
+        :param sex: str, the sex to validate
+        :return: str, the validated sex or None if invalid
         """
-    valid_sexes = {'男', '女', 'UGM'}
-    if sex in valid_sexes:
-        return sex
-    return None
+    if sex not in ['Man', 'Woman', 'UGM']:
+        return None
+    return sex

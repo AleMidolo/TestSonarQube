@@ -1,9 +1,9 @@
 @staticmethod
 def binary_to_decimal(binary_num):
     """
-        将一个数字从二进制格式转换为十进制格式。
-        :param binary_num: str, 二进制数字
-        :return: int, 二进制数字的十进制表示。
+        Convert a number from binary format to decimal format.
+        :param binary_num: str, binary number
+        :return: int, the decimal representation of binary number str.
         >>> NumberConverter.binary_to_decimal('1010010110110111')
         42423
         """

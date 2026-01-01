@@ -1,8 +1,8 @@
 def accuracy(self, predicted_labels, true_labels):
     """
-        计算准确率
-        :param predicted_labels: list, 预测结果
-        :param true_labels: list, 真实标签
+        Calculate accuracy
+        :param predicted_labels: list, predicted results
+        :param true_labels: list, true labels
         :return: float
         >>> mc = MetricsCalculator()
         >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])

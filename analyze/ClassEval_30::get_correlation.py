@@ -1,10 +1,9 @@
 def get_correlation(self):
     """
-        计算相关性
-        :return: float
+        Calculate correlation
+        :return:float
         >>> ds2 = DataStatistics2([1, 2, 3, 4])
         >>> ds2.get_correlation()
         1.0
         """
-    corr_matrix = np.corrcoef(self.data, self.data)
-    return round(corr_matrix[0, 1], 2)
+    return np.corrcoef(self.data)[0, 1]

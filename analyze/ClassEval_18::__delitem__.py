@@ -1,6 +1,6 @@
 def __delitem__(self, key):
     """
-        删除与键对应的值
+        Delete the value corresponding to the key
         :param key:str
         :return:None
         >>> camelize_map = CamelCaseMap()

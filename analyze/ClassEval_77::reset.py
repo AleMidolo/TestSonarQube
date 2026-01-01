@@ -1,6 +1,6 @@
 def reset(self):
     """
-        重置蛇的状态为初始状态。将长度设置为1，蛇头位置设置为((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2))，分数设置为0，并随机生成新的食物位置。
+        Reset the snake to its initial state. Set the length to 1, the snake head position to ((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)), the score to 0, and randomly generate new food position.
         :return: None
         >>> snake = Snake(100, 100, 1, (51, 51))
         >>> snake.reset()

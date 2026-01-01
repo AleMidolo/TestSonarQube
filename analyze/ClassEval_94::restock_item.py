@@ -1,9 +1,9 @@
 def restock_item(self, item_name, quantity):
     """
-        补充自动售货机中已存在产品的库存。
-        :param item_name: 要补充的产品名称，str。
-        :param quantity: 要补充的产品数量，int。
-        :return: 如果产品已经在自动售货机中，返回 True；否则，返回 False。
+        Replenishes the inventory of a product already in the vending machine.
+        :param item_name: The name of the product to be replenished, str.
+        :param quantity: The quantity of the product to be replenished, int.
+        :return: If the product is already in the vending machine, returns True, otherwise, returns False.
         >>> vendingMachine = VendingMachine()
         >>> vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}
         >>> vendingMachine.restock_item('Coke', 10)
@@ -14,5 +14,4 @@ def restock_item(self, item_name, quantity):
     if item_name in self.inventory:
         self.inventory[item_name]['quantity'] += quantity
         return True
-    else:
-        return False
+    return False

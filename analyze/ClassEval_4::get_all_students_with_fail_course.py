@@ -1,7 +1,7 @@
 def get_all_students_with_fail_course(self):
     """
-        获取所有有任何分数低于60的学生
-        :return: 字符串的列表，学生姓名
+        Get all students who have any score below 60
+        :return: list of str, student name
         >>> system.add_course_score('student 1', 'Society', 59)
         >>> system.get_all_students_with_fail_course()
         ['student 1']

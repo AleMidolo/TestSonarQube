@@ -1,7 +1,7 @@
 def all_not_signed_in(self):
     """
-        获取未登录的用户名列表。
-        :return: list[str]，未登录的用户名列表。
+        Get a list of usernames that are not signed in.
+        :return: list[str], a list of usernames that are not signed in.
         >>> signInSystem = SignInSystem()
         >>> signInSystem.add_user("a")
         True

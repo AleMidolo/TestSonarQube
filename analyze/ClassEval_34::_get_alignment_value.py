@@ -1,8 +1,12 @@
 def _get_alignment_value(self, alignment):
     """
-        返回与给定对齐字符串对应的对齐值。
-        :param alignment: str，对齐字符串（'left', 'center', 或 'right'）。
-        :return: int，对齐值。
+        Returns the alignment value corresponding to the given alignment string.
+        :param alignment: str, the alignment string ('left', 'center', or 'right').
+        :return: int, the alignment value.
         """
-    alignment_mapping = {'left': WD_PARAGRAPH_ALIGNMENT.LEFT, 'center': WD_PARAGRAPH_ALIGNMENT.CENTER, 'right': WD_PARAGRAPH_ALIGNMENT.RIGHT}
-    return alignment_mapping.get(alignment.lower(), WD_PARAGRAPH_ALIGNMENT.LEFT)
+    if alignment == 'center':
+        return WD_PARAGRAPH_ALIGNMENT.CENTER
+    elif alignment == 'right':
+        return WD_PARAGRAPH_ALIGNMENT.RIGHT
+    else:
+        return WD_PARAGRAPH_ALIGNMENT.LEFT

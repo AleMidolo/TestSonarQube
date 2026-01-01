@@ -1,17 +1,17 @@
 def write_text(self, content, font_size=12, alignment='left'):
     """
-        将指定的内容写入Word文档。
-        :param content: str，要写入的文本内容。
-        :param font_size: int，可选，文本的字体大小（默认为12）。
-        :param alignment: str，可选，文本的对齐方式（'left'、'center'或'right'; 默认为'left'）。
-        :return: bool，如果写入操作成功则返回True，否则返回False。
-        """
+    Writes the specified content to a Word document.
+    :param content: str, the text content to write.
+    :param font_size: int, optional, the font size of the text (default is 12).
+    :param alignment: str, optional, the alignment of the text ('left', 'center', or 'right'; default is 'left').
+    :return: bool, True if the write operation is successful, False otherwise.
+    """
     try:
         doc = Document(self.file_path)
         paragraph = doc.add_paragraph(content)
+        run = paragraph.runs[0]
+        run.font.size = Pt(font_size)
         paragraph.alignment = self._get_alignment_value(alignment)
-        for run in paragraph.runs:
-            run.font.size = Pt(font_size)
         doc.save(self.file_path)
         return True
     except:

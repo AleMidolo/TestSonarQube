@@ -1,21 +1,19 @@
 def process_excel_data(self, N, save_file_name):
     """
-        将Excel文件中指定列的内容转换为大写
-        :param N: int, 要更改的列的序号
-        :param save_file_name: str, 源文件名
-        :return:(int, str), 前者是write_excel的返回值，而后者是处理后数据的保存文件名
+        Change the specified column in the Excel file to uppercase
+        :param N: int, The serial number of the column that want to change
+        :param save_file_name: str, source file name
+        :return:(int, str), The former is the return value of write_excel, while the latter is the saved file name of the processed data
         >>> processor = ExcelProcessor()
         >>> success, output_file = processor.process_excel_data(1, 'test_data.xlsx')
         """
     data = self.read_excel(save_file_name)
-    if data is None:
-        return (0, '')
-    processed_data = []
-    for row in data:
-        new_row = list(row)
-        if N < len(new_row) and isinstance(new_row[N], str):
-            new_row[N] = new_row[N].upper()
-        processed_data.append(tuple(new_row))
-    output_file = f'processed_{save_file_name}'
-    result = self.write_excel(processed_data, output_file)
-    return (result, output_file)
+    if data is None or N < 1 or N > len(data[0]):
+        return (0, save_file_name)
+    for i in range(len(data)):
+        row = list(data[i])
+        row[N - 1] = row[N - 1].upper() if isinstance(row[N - 1], str) else row[N - 1]
+        data[i] = tuple(row)
+    output_file_name = f'processed_{save_file_name}'
+    success = self.write_excel(data, output_file_name)
+    return (success, output_file_name)

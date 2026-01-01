@@ -1,10 +1,10 @@
 def get_possible_moves(self, state):
     """
-        根据当前状态，找到所有可能的移动方向。只有4个方向：'上'，'下'，'左'，'右'。
-        :param state: 一个3*3大小的整数列表，存储当前状态。
-        :return moves: 一个字符串列表，存储根据当前状态所有可能的移动方向。
+        According the current state, find all the possible moving directions. Only has 4 direction 'up', 'down', 'left', 'right'.
+        :param state: a 3*3 size list of Integer, stores the current state.
+        :return moves: a list of str, store all the possible moving directions according to the current state.
         >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])
-        ['上', '左', '右']
+        ['up', 'left', 'right']
         """
     i, j = self.find_blank(state)
     moves = []

@@ -1,6 +1,6 @@
 def cos(self, x):
     """
-        计算 x 度角的余弦值
+        Calculate the cos value of the x-degree angle
         :param x: float
         :return: float
         >>> tricalculator = TriCalculator()
@@ -8,11 +8,4 @@ def cos(self, x):
         0.5
         """
     x = x / 180 * pi
-    g = 0
-    t = 1
-    n = 1
-    while fabs(t) >= 1e-15:
-        g += t
-        n += 1
-        t = -t * x * x / (2 * n - 1) / (2 * n - 2)
-    return round(g, 10)
+    return round(self.taylor(x * 180 / pi, 50), 10)

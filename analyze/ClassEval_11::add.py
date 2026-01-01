@@ -1,10 +1,10 @@
 @staticmethod
 def add(states, stat):
     """
-        将状态添加到当前状态，并检查参数是否合法。
-        :param states: 当前状态，int。
-        :param stat: 要添加的状态，int。
-        :return: 添加状态后的状态，int。
+        Add a status to the current status,and check the parameters wheather they are legal.
+        :param states: Current status,int.
+        :param stat: Status to be added,int.
+        :return: The status after adding the status,int.
         >>> bit_status_util = BitStatusUtil()
         >>> bit_status_util.add(2,4)
         6

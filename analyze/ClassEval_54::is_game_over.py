@@ -1,7 +1,7 @@
 def is_game_over(self):
     """
-        检查游戏是否结束（即，游戏板上是否没有更多图标）
-        :return: True 或 False，表示游戏是否结束
+        Check if the game is over (i.e., if there are no more icons on the game board)
+        :return: True or False ,representing whether the game is over
         >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
         >>> mc.board = [[' ', ' ', ' ', ' '],
         >>>         [' ', ' ', ' ', ' '],
@@ -11,7 +11,6 @@ def is_game_over(self):
         True
         """
     for row in self.board:
-        for cell in row:
-            if cell != ' ':
-                return False
+        if any((icon != ' ' for icon in row)):
+            return False
     return True

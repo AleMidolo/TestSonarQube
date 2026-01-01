@@ -1,7 +1,7 @@
 def transfer(self, other_account, amount):
     """
-        将一定金额从当前账户转移到另一个账户。
-        :param other_account: 银行账户
+        Transfers a certain amount from the current account to another account.
+        :param other_account: BankAccount
         :param amount: int
         >>> account1 = BankAccount()
         >>> account2 = BankAccount()
@@ -13,6 +13,5 @@ def transfer(self, other_account, amount):
         raise ValueError('Invalid amount')
     if amount > self.balance:
         raise ValueError('Insufficient balance.')
-    self.balance -= amount
-    other_account.balance += amount
-    return self.balance
+    self.withdraw(amount)
+    other_account.deposit(amount)

@@ -1,8 +1,8 @@
 def resize_image(self, width, height):
     """
-        如果图像已打开，则调整图像大小。
-        :param width: int, 图像的目标宽度
-        :param height: int, 图像的目标高度
+        Resize the image if image has opened.
+        :param width: int, the target width of image
+        :param height: int, the target height of image
         >>> processor.load_image('test.jpg')
         >>> processor.resize_image(300, 300)
         >>> processor.image.width

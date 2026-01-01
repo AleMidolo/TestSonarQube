@@ -1,7 +1,7 @@
 def previous_song(self):
     """
-        切换到播放列表中的上一首歌曲。
-        :return: 如果切换到了上一首歌曲则返回 True，如果没有上一首歌曲则返回 False。
+        Switches to the previous song in the playlist.
+        :return: True if the previous song was switched to, False if there was no previous song.
         >>> musicPlayer = MusicPlayer()
         >>> musicPlayer.playlist = ["song1", "song2"]
         >>> musicPlayer.current_song = "song2"

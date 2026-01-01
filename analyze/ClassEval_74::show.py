@@ -1,8 +1,8 @@
 def show(self, type):
     """
-        返回指定类型的结构体
-        :param type: 字符串，要返回的结构体类型，可以是 'send' 或 'receive'
-        :return: 如果 type 等于 'send' 或 'receive'，则返回相应的结构体；否则，返回 False
+        Returns struct of the specified type
+        :param type: string, the type of struct to be returned, which can be 'send' or 'receive'
+        :return: if type is equal to 'send' or 'receive', return the corresponding struct; otherwise, return False
         >>> server.recv({"addr":88,"content":"abc"})
         >>> server.send({"addr":66,"content":"ABC"})
         >>> server.show("send")

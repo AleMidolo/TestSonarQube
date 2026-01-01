@@ -1,20 +1,16 @@
 @staticmethod
 def kappa(testData, k):
     """
-        计算k维矩阵的Cohen's kappa值
-        :param testData: 需要计算Cohen's kappa值的k维矩阵
-        :param k: int, 矩阵维度
-        :return: float, 矩阵的Cohen's kappa值
+        Calculate the cohens kappa value of a k-dimensional matrix
+        :param testData: The k-dimensional matrix that needs to calculate the cohens kappa value
+        :param k: int, Matrix dimension
+        :return:float, the cohens kappa value of the matrix
         >>> KappaCalculator.kappa([[2, 1, 1], [1, 2, 1], [1, 1, 2]], 3)
         0.25
         """
-    data = np.array(testData, dtype=float)
-    total = np.sum(data)
-    Po = np.trace(data) / total
-    row_sums = np.sum(data, axis=1)
-    col_sums = np.sum(data, axis=0)
-    Pe = np.sum(row_sums * col_sums) / total ** 2
-    if Pe == 1:
-        return 1.0 if Po == 1 else 0.0
-    kappa_value = (Po - Pe) / (1 - Pe)
-    return float(kappa_value)
+    dataMat = np.array(testData)
+    total = np.sum(dataMat)
+    p0 = np.sum(np.diag(dataMat)) / total
+    pe = np.sum(np.sum(dataMat, axis=0) / total * (np.sum(dataMat, axis=1) / total))
+    kappa_value = (p0 - pe) / (1 - pe) if 1 - pe != 0 else 0
+    return kappa_value

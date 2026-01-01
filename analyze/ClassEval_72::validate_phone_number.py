@@ -1,8 +1,8 @@
 def validate_phone_number(self, phone_number):
     """
-        验证电话号码是否有效
-        :param phone_number: 待验证的电话号码
-        :return: True 或 False，表示电话号码是否有效
+        Verify if the phone number is valid
+        :param phone_number: Phone number to be verified
+        :return: True or False, indicating whether the phone number is valid
         >>> ru = RegexUtils()
         >>> ru.validate_phone_number("123-456-7890")
         True

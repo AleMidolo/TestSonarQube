@@ -1,18 +1,13 @@
 @staticmethod
 def count(n: int, m: int) -> int:
     """
-        计算特定计数的组合数。
-        :param n: 元素的总数，int。
-        :param m: 每个组合中的元素数量，int。
-        :return: 组合的数量，int。
+        Calculate the number of combinations for a specific count.
+        :param n: The total number of elements,int.
+        :param m: The number of elements in each combination,int.
+        :return: The number of combinations,int.
         >>> CombinationCalculator.count(4, 2)
         6
         """
-    if m < 0 or m > n:
+    if m > n or m < 0:
         return 0
-    if m > n - m:
-        m = n - m
-    result = 1
-    for i in range(1, m + 1):
-        result = result * (n - m + i) // i
-    return result
+    return math.comb(n, m)

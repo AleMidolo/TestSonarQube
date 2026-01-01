@@ -1,7 +1,7 @@
 def insert_student(self, student_data):
     """
-        将新学生插入到“students”表中。
-        :param student_data: dict，一个包含学生信息的字典（姓名、年龄、性别、年级）。
+        Inserts a new student into the "students" table.
+        :param student_data: dict, a dictionary containing the student's information (name, age, gender, grade).
         :return: None
         >>> processor = StudentDatabaseProcessor("students.db")
         >>> processor.create_student_table()
@@ -10,7 +10,7 @@ def insert_student(self, student_data):
         """
     conn = sqlite3.connect(self.database_name)
     cursor = conn.cursor()
-    insert_query = '\n            INSERT INTO students (name, age, gender, grade)\n            VALUES (?, ?, ?, ?)\n        '
+    insert_query = 'INSERT INTO students (name, age, gender, grade) VALUES (?, ?, ?, ?)'
     cursor.execute(insert_query, (student_data['name'], student_data['age'], student_data['gender'], student_data['grade']))
     conn.commit()
     conn.close()
