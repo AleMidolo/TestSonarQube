@@ -15,4 +15,4 @@ def n_similarity(vector_list_1, vector_list_2):
         for vec2 in vector_list_2:
             sim = VectorUtil.similarity(vec1, vec2)
             similarities.append(sim)
-    return np.array(similarities).mean()
+    return np.mean(similarities)

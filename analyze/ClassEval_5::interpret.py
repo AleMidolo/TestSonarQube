@@ -10,12 +10,11 @@ def interpret(self, display=False):
     if not self.play_text.strip():
         return []
     chords_and_tunes = []
-    parts = self.play_text.split()
-    for part in parts:
-        chord = ''.join(filter(str.isalpha, part))
-        tune = ''.join(filter(str.isdigit, part))
+    import re
+    pattern = '([A-G][#b]?m?)(\\d+)'
+    matches = re.findall(pattern, self.play_text)
+    for chord, tune in matches:
         chords_and_tunes.append({'Chord': chord, 'Tune': tune})
-    if display:
-        for item in chords_and_tunes:
-            print(self.display(item['Chord'], item['Tune']))
+        if display:
+            print(self.display(chord, tune))
     return chords_and_tunes

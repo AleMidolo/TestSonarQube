@@ -9,4 +9,4 @@ def parse_more(self, i):
         >>> formatter.parse_more(1)
         "THOUSAND"
         """
-    return self.NUMBER_MORE[i] if i < len(self.NUMBER_MORE) else ''
+    return self.NUMBER_MORE[i]

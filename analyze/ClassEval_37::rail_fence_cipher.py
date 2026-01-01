@@ -6,11 +6,10 @@ def rail_fence_cipher(self, plain_text, rails):
     >>> e = EncryptionUtils("key")
     >>> e.rail_fence_cipher("abc", 2)
     'acb'
-
     """
     if rails <= 0:
         return ''
-    rail = [['\n' for _ in range(len(plain_text))] for _ in range(rails)]
+    rail = [['\n' for i in range(len(plain_text))] for j in range(rails)]
     dir_down = None
     row, col = (0, 0)
     for char in plain_text:
@@ -25,8 +24,8 @@ def rail_fence_cipher(self, plain_text, rails):
         else:
             row -= 1
     ciphertext = ''
-    for r in rail:
-        for c in r:
-            if c != '\n':
-                ciphertext += c
+    for i in range(rails):
+        for j in range(len(plain_text)):
+            if rail[i][j] != '\n':
+                ciphertext += rail[i][j]
     return ciphertext
