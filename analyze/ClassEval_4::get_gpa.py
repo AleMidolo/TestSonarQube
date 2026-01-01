@@ -16,6 +16,5 @@ def get_gpa(self, name):
     courses = self.students[name]['courses']
     if not courses:
         return None
-    total = sum(courses.values())
-    count = len(courses)
-    return total / count
+    total_score = sum(courses.values())
+    return total_score / len(courses)

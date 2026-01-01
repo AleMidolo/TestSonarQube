@@ -15,8 +15,7 @@ def remove_icons(self, pos1, pos2):
                     ['a', 'b', 'c', 'a'],
                     ['a', 'b', 'c', 'a']]
         """
-    if self.is_valid_move(pos1, pos2):
-        x1, y1 = pos1
-        x2, y2 = pos2
-        self.board[x1][y1] = ' '
-        self.board[x2][y2] = ' '
+    x1, y1 = pos1
+    x2, y2 = pos2
+    self.board[x1][y1] = ' '
+    self.board[x2][y2] = ' '

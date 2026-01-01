@@ -10,8 +10,8 @@ def fix_path(path):
         """
     if not path:
         return ''
-    while path.startswith('/') or path.startswith('\\'):
-        path = path[1:]
-    while path.endswith('/') or path.endswith('\\'):
-        path = path[:-1]
+    while path.startswith('/') or path.startswith('\\/'):
+        path = path[1:] if path.startswith('/') else path[2:]
+    while path.endswith('/') or path.endswith('\\/'):
+        path = path[:-1] if path.endswith('/') else path[:-2]
     return path

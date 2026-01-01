@@ -9,7 +9,7 @@ def format_string(self, x):
         """
     is_negative = False
     if x.startswith('-'):
-        is_negative = x[0]
+        is_negative = True
         x = x[1:]
     parts = x.split('.')
     integer_part = parts[0]
@@ -32,35 +32,20 @@ def format_string(self, x):
             if group_words.strip():
                 magnitude = len(groups) - i - 1
                 if magnitude > 0 and group != '000':
-                    integer_words.append(group_words + ' ' + self.parse_more(magnitude))
-                elif magnitude == 0:
-                    integer_words.append(group_words)
+                    group_words += ' ' + self.parse_more(magnitude)
+                integer_words.append(group_words)
     decimal_words = []
     if decimal_part:
-        decimal_part = decimal_part.rstrip('0')
+        decimal_part = decimal_part[:2]
         if decimal_part:
-            decimal_words.append('AND CENTS')
-            decimal_groups = []
-            temp = decimal_part
-            while len(temp) > 3:
-                decimal_groups.insert(0, temp[-3:])
-                temp = temp[:-3]
-            if temp:
-                decimal_groups.insert(0, temp)
-            for i, group in enumerate(decimal_groups):
-                group_words = self.trans_three(group.zfill(3))
-                if group_words.strip():
-                    magnitude = len(decimal_groups) - i - 1
-                    if magnitude > 0 and group != '000':
-                        decimal_words.append(group_words + ' ' + self.parse_more(magnitude))
-                    elif magnitude == 0:
-                        decimal_words.append(group_words)
+            decimal_words.append('AND CENTS ' + self.trans_two(decimal_part.zfill(2)))
     result_parts = []
     if is_negative:
         result_parts.append('MINUS')
     result_parts.extend(integer_words)
     result_parts.extend(decimal_words)
-    result_parts.append('ONLY')
+    if not decimal_part:
+        result_parts.append('ONLY')
     result = ' '.join(result_parts)
     result = ' '.join(result.split())
     return result

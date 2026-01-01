@@ -15,5 +15,6 @@ def select(table, columns='*', where=None):
         columns_str = ', '.join(columns)
     query = f'SELECT {columns_str} FROM {table}'
     if where:
-        query += ' WHERE ' + ' AND '.join((f"{k}='{v}'" for k, v in where.items()))
+        where_clause = ' AND '.join((f"{k}='{v}'" for k, v in where.items()))
+        query += f' WHERE {where_clause}'
     return query
