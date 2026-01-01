@@ -19,5 +19,5 @@ def calculate(self, expression):
             second_value = op_stack.pop()
             first_value = op_stack.pop()
             result = self._calculate(first_value, second_value, token)
-            op_stack.append(result)
+            op_stack.append(str(result))
     return float(op_stack.pop())
