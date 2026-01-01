@@ -12,9 +12,10 @@ def gain_exp(self, amount):
         """
     remaining_exp = amount
     while remaining_exp > 0 and self.level < 100:
-        exp_needed = self.level * 100 - self.exp
-        if remaining_exp >= exp_needed:
-            remaining_exp -= exp_needed
+        exp_needed = self.level * 100
+        exp_to_next_level = exp_needed - self.exp
+        if remaining_exp >= exp_to_next_level:
+            remaining_exp -= exp_to_next_level
             self.level_up()
         else:
             self.exp += remaining_exp

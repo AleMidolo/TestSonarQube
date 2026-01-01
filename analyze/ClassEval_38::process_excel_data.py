@@ -12,12 +12,10 @@ def process_excel_data(self, N, save_file_name):
         return (0, '')
     processed_data = []
     for row in data:
-        processed_row = list(row)
-        if N >= 1 and N <= len(processed_row):
-            cell_value = processed_row[N - 1]
-            if isinstance(cell_value, str):
-                processed_row[N - 1] = cell_value.upper()
-        processed_data.append(tuple(processed_row))
+        new_row = list(row)
+        if N < len(new_row) and isinstance(new_row[N], str):
+            new_row[N] = new_row[N].upper()
+        processed_data.append(tuple(new_row))
     output_file = f'processed_{save_file_name}'
     result = self.write_excel(processed_data, output_file)
     return (result, output_file)

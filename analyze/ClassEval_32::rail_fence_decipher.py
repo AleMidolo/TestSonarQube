@@ -25,12 +25,12 @@ def rail_fence_decipher(self, encrypted_text, rails):
             if fence[i][j] == '*':
                 fence[i][j] = encrypted_text[index]
                 index += 1
-    plaintext = []
+    result = []
     rail = 0
     direction = 1
     for i in range(len(encrypted_text)):
-        plaintext.append(fence[rail][i])
+        result.append(fence[rail][i])
         rail += direction
         if rail == rails - 1 or rail == 0:
             direction = -direction
-    return ''.join(plaintext)
+    return ''.join(result)

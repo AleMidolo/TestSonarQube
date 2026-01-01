@@ -10,4 +10,5 @@ def read_file(self):
 }'
         """
     with open(self.file_path, 'r') as file:
-        return file.read()
+        content = file.read()
+    return content

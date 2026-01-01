@@ -9,23 +9,45 @@ def format_string(self, x):
         """
     is_negative = False
     if x.startswith('-'):
-        is_negative = x[0] == '-'
+        is_negative = True
         x = x[1:]
-    parts = x.split('.')
-    integer_part = parts[0]
-    decimal_part = parts[1] if len(parts) > 1 else ''
-    integer_part = integer_part.lstrip('0')
-    if integer_part == '':
-        integer_part = '0'
-    integer_words = self._format_integer_part(integer_part)
-    decimal_words = ''
+    integer_part = x
+    decimal_part = ''
+    if '.' in x:
+        integer_part, decimal_part = x.split('.')
+        decimal_part = decimal_part.rstrip('0')
+    if integer_part == '0':
+        result = 'ZERO'
+    else:
+        integer_part = integer_part.lstrip('0')
+        if not integer_part:
+            integer_part = '0'
+        groups = []
+        temp = integer_part
+        while len(temp) > 3:
+            groups.insert(0, temp[-3:])
+            temp = temp[:-3]
+        groups.insert(0, temp)
+        group_words = []
+        for i, group in enumerate(groups):
+            if group != '000':
+                group_word = self.trans_three(group.zfill(3))
+                magnitude = len(groups) - i - 1
+                if magnitude > 0 and group_word:
+                    group_word += ' ' + self.parse_more(magnitude)
+                if group_word:
+                    group_words.append(group_word)
+        result = ' '.join(group_words)
     if decimal_part:
-        decimal_words = self._format_decimal_part(decimal_part)
-    result = ''
+        decimal_words = []
+        for digit in decimal_part:
+            if digit == '0':
+                decimal_words.append('ZERO')
+            else:
+                decimal_words.append(self.NUMBER[int(digit)])
+        result += ' POINT ' + ' '.join(decimal_words)
     if is_negative:
-        result += 'MINUS '
-    result += integer_words
-    if decimal_words:
-        result += ' AND ' + decimal_words
-    result += ' ONLY'
+        result = 'MINUS ' + result
+    if not decimal_part:
+        result += ' ONLY'
     return result
