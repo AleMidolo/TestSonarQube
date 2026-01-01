@@ -8,15 +8,15 @@ def insert_into_database(self, table_name, data):
                 {'name': 'Alice', 'age': 30}
             ])
         """
+    if not data:
+        return
     conn = sqlite3.connect(self.database_name)
     cursor = conn.cursor()
-    cursor.execute(f'PRAGMA table_info({table_name})')
-    columns_info = cursor.fetchall()
-    column_names = [col[1] for col in columns_info if col[1] != 'id']
-    placeholders = ', '.join(['?' for _ in column_names])
-    insert_query = f"INSERT INTO {table_name} ({', '.join(column_names)}) VALUES ({placeholders})"
-    for row in data:
-        values = [row.get(col) for col in column_names]
-        cursor.execute(insert_query, values)
+    columns = list(data[0].keys())
+    placeholders = ', '.join(['?' for _ in columns])
+    column_names = ', '.join(columns)
+    insert_query = f'INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})'
+    values_list = [tuple((item[col] for col in columns)) for item in data]
+    cursor.executemany(insert_query, values_list)
     conn.commit()
     conn.close()

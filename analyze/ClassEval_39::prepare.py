@@ -13,25 +13,24 @@ def prepare(self, expression):
     while i < len(arr):
         c = arr[i]
         if not self.is_operator(c):
-            if c == '~':
-                current += '-'
-            else:
-                current += c
-            if i == len(arr) - 1 or self.is_operator(arr[i + 1]):
-                if current:
-                    self.postfix_stack.append(current)
-                    current = ''
-        elif c == '(':
-            op_stack.append(c)
-        elif c == ')':
-            while op_stack and op_stack[-1] != '(':
-                self.postfix_stack.append(op_stack.pop())
-            if op_stack:
-                op_stack.pop()
+            current += c
+            i += 1
+            if i >= len(arr) or self.is_operator(arr[i]):
+                if current[0] == '.':
+                    current = '0' + current
+                self.postfix_stack.append(current)
+                current = ''
         else:
-            while op_stack and op_stack[-1] != '(' and self.compare(c, op_stack[-1]):
-                self.postfix_stack.append(op_stack.pop())
-            op_stack.append(c)
-        i += 1
+            if c == '(':
+                op_stack.append(c)
+            elif c == ')':
+                while op_stack and op_stack[-1] != '(':
+                    self.postfix_stack.append(op_stack.pop())
+                op_stack.pop()
+            else:
+                while op_stack and op_stack[-1] != '(' and self.compare(c, op_stack[-1]):
+                    self.postfix_stack.append(op_stack.pop())
+                op_stack.append(c)
+            i += 1
     while op_stack:
         self.postfix_stack.append(op_stack.pop())

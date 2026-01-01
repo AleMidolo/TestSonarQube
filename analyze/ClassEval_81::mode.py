@@ -10,8 +10,8 @@ def mode(data):
 
         """
     if not data:
-        return None
-    count_dict = Counter(data)
-    max_count = max(count_dict.values())
-    modes = [value for value, count in count_dict.items() if count == max_count]
+        return []
+    count = Counter(data)
+    max_count = max(count.values())
+    modes = [value for value, freq in count.items() if freq == max_count]
     return sorted(modes)

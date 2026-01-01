@@ -27,7 +27,8 @@ def process_csv_data(self, N, save_file_name):
         base_name = save_file_name.rsplit('.', 1)[0]
         extension = save_file_name.rsplit('.', 1)[1] if '.' in save_file_name else 'csv'
         new_file_name = f'{base_name}_process.{extension}'
-        output_data = [title] + new_data
-        return self.write_csv(output_data, new_file_name)
+        new_title = [title[N]]
+        write_data = [new_title] + new_data
+        return self.write_csv(write_data, new_file_name)
     except Exception as e:
         return 0

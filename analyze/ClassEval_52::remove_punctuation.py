@@ -6,7 +6,6 @@ def remove_punctuation(self, sentence):
         >>> lemmatization = Lemmatization()
         >>> lemmatization.remove_punctuation("I am running in a race.")
         'I am running in a race'
-
         """
     translator = str.maketrans('', '', string.punctuation)
     return sentence.translate(translator)
