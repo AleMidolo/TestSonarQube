@@ -16,7 +16,9 @@ def _convert_type(self, arg, value):
             elif arg_type == float:
                 return float(value)
             elif arg_type == bool:
-                return value.lower() in ('true', '1', 'yes')
+                return value.lower() in ('true', '1', 't', 'y', 'yes')
+            else:
+                return value
         except ValueError:
-            pass
+            return value
     return value

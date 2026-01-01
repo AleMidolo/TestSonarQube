@@ -4,7 +4,6 @@ def convert_to_utf8(self):
         >>> bdp = BinaryDataProcessor("0110100001100101011011000110110001101111")
         >>> bdp.convert_to_utf8()
         'hello'
-
         """
     byte_array = bytearray()
     for i in range(0, len(self.binary_string), 8):

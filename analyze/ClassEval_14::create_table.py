@@ -1,6 +1,6 @@
 def create_table(self):
     """
-        Creates the book table in the database if it does not already exist.
+        如果书籍表在数据库中尚不存在，则创建该表。
         >>> book_db = BookManagementDB("test.db")
         >>> book_db.create_table()
         """

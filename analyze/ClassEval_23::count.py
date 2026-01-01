@@ -9,4 +9,8 @@ def count(n: int, m: int) -> int:
     """
     if m < 0 or m > n:
         return 0
-    return math.comb(n, m)
+    if m == 0 or m == n:
+        return 1
+    numerator = math.factorial(n)
+    denominator = math.factorial(m) * math.factorial(n - m)
+    return numerator // denominator

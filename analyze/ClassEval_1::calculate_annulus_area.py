@@ -4,7 +4,7 @@ def calculate_annulus_area(self, inner_radius, outer_radius):
         :param inner_radius: 扇形的内半径，浮点数
         :param outer_radius: 扇形的外半径，浮点数
         :return: 环形区域的面积，浮点数
-        >>> areaCalculator = AreaCalculator(0)  # radius is not used here
+        >>> areaCalculator = AreaCalculator(2)
         >>> areaCalculator.calculate_annulus_area(2, 3)
         15.707963267948966
         """
