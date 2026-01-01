@@ -1,8 +1,8 @@
 def get(self, index):
     """
-        Calculate the size of each block and the remainder of the division, and calculate the start and end positions based on the partition index.
-        :param index: the index of the partition, int.
-        :return: the corresponding block, list.
+        calcula el tamaño de cada bloque y el resto de la división, y calcula las posiciones de inicio y fin correspondientes basadas en el índice de la partición.
+        :param index: el índice de la partición, int.
+        :return: el bloque correspondiente, lista.
         >>> a = AvgPartition([1, 2, 3, 4], 2)
         >>> a.get(0)
         [1, 2]

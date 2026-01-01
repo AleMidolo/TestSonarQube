@@ -11,11 +11,7 @@ def create_board(self):
         """
     num_icons = len(self.ICONS)
     total_cells = self.BOARD_SIZE[0] * self.BOARD_SIZE[1]
-    icons_to_place = total_cells // 2 * 2
-    icons = (self.ICONS * (icons_to_place // num_icons))[:icons_to_place]
-    random.shuffle(icons)
-    board = []
-    for i in range(self.BOARD_SIZE[0]):
-        row = icons[i * self.BOARD_SIZE[1]:(i + 1) * self.BOARD_SIZE[1]]
-        board.append(row)
+    icons_to_place = (self.ICONS * (total_cells // num_icons + 1))[:total_cells]
+    random.shuffle(icons_to_place)
+    board = [icons_to_place[i:i + self.BOARD_SIZE[1]] for i in range(0, total_cells, self.BOARD_SIZE[1])]
     return board

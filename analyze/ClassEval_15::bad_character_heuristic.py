@@ -15,6 +15,6 @@ def bad_character_heuristic(self):
             currentPos += 1
         else:
             badCharIndex = self.match_in_pattern(self.text[mismatchPos])
-            shift = max(1, mismatchPos - currentPos - badCharIndex)
+            shift = max(1, mismatchPos - (currentPos + badCharIndex))
             currentPos += shift
     return positions

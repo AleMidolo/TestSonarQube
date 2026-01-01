@@ -12,6 +12,7 @@ def format_string(self, x):
     words = []
     for i, group in enumerate(groups):
         if group != '000':
-            words.append(self.trans_three(group) + (' ' + self.parse_more(i) if i > 0 else ''))
+            words.append(self.trans_three(group) + ' ' + self.parse_more(i))
     words.reverse()
-    return ' '.join(words).strip() + ' ONLY'
+    result = ' AND '.join(words).strip()
+    return result + ' ONLY'
