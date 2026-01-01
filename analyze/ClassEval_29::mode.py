@@ -8,5 +8,6 @@ def mode(self, data):
         [2, 3]
         """
     count = Counter(data)
-    max_count = max(count.values())
-    return [num for num, freq in count.items() if freq == max_count]
+    max_freq = max(count.values())
+    modes = [key for key, freq in count.items() if freq == max_freq]
+    return modes

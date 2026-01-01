@@ -9,8 +9,8 @@ def filter(self, request):
 
     """
     if self.is_start_with(request['path']):
-        user = self.get_jwt_user(request)
-        if user:
-            self.set_current_user_info_and_log(user)
+        user_info = self.get_jwt_user(request)
+        if user_info:
+            self.set_current_user_info_and_log(user_info['user'])
             return True
     return False

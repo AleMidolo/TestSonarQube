@@ -7,5 +7,6 @@ def display(self, key, value):
         >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
         >>> context.display("C", "53231323")
         正常吉他演奏 -- 和弦: C, 播放旋律: 53231323
+
         """
     print(f'正常吉他演奏 -- 和弦: {key}, 播放旋律: {value}')
