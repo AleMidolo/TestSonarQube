@@ -7,8 +7,6 @@ def count_all(n: int) -> int:
         >>> CombinationCalculator.count_all(4)
         15
         """
-    if n < 0:
-        return 0
     total = 0
     max_int = 2 ** 63 - 1
     for m in range(1, n + 1):

@@ -9,5 +9,5 @@ def search_tickets_by_customer(self, customer_name):
         >>> result = ticket_db.search_tickets_by_customer("John Doe")
         len(result) = 1
         """
-    self.cursor.execute('\n            SELECT * FROM tickets WHERE customer_name = ?\n        ', (customer_name,))
+    self.cursor.execute('\n                SELECT * FROM tickets WHERE customer_name = ?\n            ', (customer_name,))
     return self.cursor.fetchall()

@@ -17,8 +17,7 @@ def create_zip_file(self, files, output_file_name):
                     arcname = os.path.basename(file_path)
                     zipf.write(file_path, arcname)
                 else:
-                    continue
+                    return False
         return True
-    except Exception as e:
-        print(f'Error creating zip file: {e}')
+    except Exception:
         return False

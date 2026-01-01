@@ -12,3 +12,5 @@ def attack(self, other_character):
     if damage < 0:
         damage = 0
     other_character.hp -= damage
+    if other_character.hp < 0:
+        other_character.hp = 0

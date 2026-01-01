@@ -14,13 +14,13 @@ def calculate_hand_value(self, hand):
     aces = 0
     for card in hand:
         rank = card[:-1]
-        if rank.isdigit():
-            value += int(rank)
-        elif rank in ['J', 'Q', 'K']:
+        if rank in ['J', 'Q', 'K']:
             value += 10
         elif rank == 'A':
             value += 11
             aces += 1
+        else:
+            value += int(rank)
     while value > 21 and aces > 0:
         value -= 10
         aces -= 1

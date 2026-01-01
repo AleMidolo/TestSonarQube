@@ -10,8 +10,8 @@ def answer(self, expression):
         True
         """
     import re
-    numbers_in_expr = re.findall('\\d+\\.?\\d*', expression)
-    numbers_in_expr = [int(num) if '.' not in num else float(num) for num in numbers_in_expr]
+    numbers_in_expr = re.findall('\\d+', expression)
+    numbers_in_expr = [int(num) for num in numbers_in_expr]
     if sorted(numbers_in_expr) != sorted(self.nums):
         return False
     return self.evaluate_expression(expression)

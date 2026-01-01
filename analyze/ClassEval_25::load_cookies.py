@@ -12,4 +12,4 @@ def load_cookies(self):
             self.cookies = json.load(file)
         return self.cookies
     except (FileNotFoundError, json.JSONDecodeError):
-        return None
+        return {}
