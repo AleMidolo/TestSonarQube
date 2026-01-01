@@ -15,9 +15,9 @@ def calculate_calorie_intake(self):
 
         """
     if self.sex == 'male':
-        bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5
+        bmr = 10 * self.weight + 6.25 * self.height * 100 - 5 * self.age + 5
     else:
-        bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161
+        bmr = 10 * self.weight + 6.25 * self.height * 100 - 5 * self.age - 161
     condition = self.condition_judge()
     if condition == 1:
         calorie_intake = bmr * 1.2

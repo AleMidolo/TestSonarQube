@@ -18,11 +18,10 @@ def bad_character_heuristic(self):
             s += 1
         else:
             bad_char = self.text[mismatch_pos]
-            rightmost_pos = self.match_in_pattern(bad_char)
-            if rightmost_pos == -1:
+            bad_char_pos = self.match_in_pattern(bad_char)
+            if bad_char_pos == -1:
                 s = mismatch_pos + 1
             else:
-                pattern_pos = mismatch_pos - s
-                shift = max(1, pattern_pos - rightmost_pos)
-                s += shift
+                shift = mismatch_pos - (s + bad_char_pos)
+                s += max(1, shift)
     return positions

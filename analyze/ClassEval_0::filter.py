@@ -9,4 +9,9 @@ def filter(self, request):
         """
     if self.is_start_with(request['path']):
         return True
+    if 'headers' in request and 'Authorization' in request['headers']:
+        user_info = self.get_jwt_user(request)
+        if user_info is not None:
+            self.set_current_user_info_and_log(user_info['user'])
+            return True
     return False

@@ -9,6 +9,6 @@ def count_all(n):
 
         """
     total = 0
-    for i in range(1, n + 1):
-        total += ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - i)
+    for m in range(1, n + 1):
+        total += ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)
     return total

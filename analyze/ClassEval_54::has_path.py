@@ -12,28 +12,38 @@ def has_path(self, pos1, pos2):
         >>> mc.is_valid_move((0, 0), (1, 0))
         True
         """
-    x1, y1 = pos1
-    x2, y2 = pos2
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
     queue = deque()
     visited = set()
-    queue.append((x1, y1, 0, None))
-    visited.add((x1, y1))
+    start_x, start_y = pos1
+    end_x, end_y = pos2
+    for dx, dy in directions:
+        nx, ny = (start_x + dx, start_y + dy)
+        if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
+            if (nx, ny) == (end_x, end_y):
+                return True
+            if self.board[nx][ny] == ' ':
+                queue.append((nx, ny, 0, (dx, dy)))
+                visited.add((nx, ny, (dx, dy)))
     while queue:
-        x, y, turns, prev_dir = queue.popleft()
-        if (x, y) == (x2, y2):
-            return True
-        for dx, dy in directions:
-            nx, ny = (x + dx, y + dy)
-            if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
-                if self.board[nx][ny] == ' ' or (nx, ny) == (x2, y2):
-                    if prev_dir is None:
-                        new_turns = 0
-                    elif (dx, dy) != prev_dir:
-                        new_turns = turns + 1
-                    else:
-                        new_turns = turns
-                    if new_turns <= 2 and (nx, ny) not in visited:
-                        queue.append((nx, ny, new_turns, (dx, dy)))
-                        visited.add((nx, ny))
+        x, y, turns, direction = queue.popleft()
+        dx, dy = direction
+        nx, ny = (x + dx, y + dy)
+        if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
+            if (nx, ny) == (end_x, end_y):
+                return True
+            if self.board[nx][ny] == ' ' and (nx, ny, direction) not in visited:
+                queue.append((nx, ny, turns, direction))
+                visited.add((nx, ny, direction))
+        if turns < 2:
+            for new_dx, new_dy in directions:
+                if (new_dx, new_dy) == direction or (new_dx, new_dy) == (-dx, -dy):
+                    continue
+                nx, ny = (x + new_dx, y + new_dy)
+                if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
+                    if (nx, ny) == (end_x, end_y):
+                        return True
+                    if self.board[nx][ny] == ' ' and (nx, ny, (new_dx, new_dy)) not in visited:
+                        queue.append((nx, ny, turns + 1, (new_dx, new_dy)))
+                        visited.add((nx, ny, (new_dx, new_dy)))
     return False
