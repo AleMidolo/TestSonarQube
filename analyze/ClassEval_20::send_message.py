@@ -15,7 +15,7 @@ def send_message(self, sender, receiver, message):
         """
     if sender not in self.users or receiver not in self.users:
         return False
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    message_data = {'sender': sender, 'receiver': receiver, 'message': message, 'timestamp': timestamp}
+    message_data = {'sender': sender, 'receiver': receiver, 'message': message, 'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
     self.users[sender].append(message_data)
+    self.users[receiver].append(message_data)
     return True
