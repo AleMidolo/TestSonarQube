@@ -9,7 +9,7 @@ def correlation_coefficient(data1, data2):
 
         """
     if len(data1) != len(data2):
-        raise ValueError('Both data sets must have the same length.')
+        raise ValueError('Le due liste devono avere la stessa lunghezza.')
     n = len(data1)
     mean1 = sum(data1) / n
     mean2 = sum(data2) / n

@@ -7,7 +7,6 @@ def check_won(self, map):
         >>> minesweeper_game.player_map = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
         >>> minesweeper_game.check_won(minesweeper_game.player_map)
         False
-
         """
     for row in map:
         for cell in row:

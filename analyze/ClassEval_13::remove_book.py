@@ -10,7 +10,7 @@ def remove_book(self, title, quantity):
     if quantity <= 0:
         raise ValueError('Quantity must be greater than zero.')
     if self.inventory[title] < quantity:
-        raise ValueError('Not enough books in inventory to remove.')
+        raise ValueError('Not enough quantity to remove.')
     self.inventory[title] -= quantity
     if self.inventory[title] == 0:
         del self.inventory[title]
