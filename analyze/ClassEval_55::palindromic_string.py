@@ -24,7 +24,7 @@ def palindromic_string(self):
             center = i
             right = i + p[i]
     max_len = max(p)
-    max_center = p.index(max_len)
-    start = (max_center - max_len) // 2
+    center_index = p.index(max_len)
+    start = (center_index - max_len) // 2
     end = start + max_len
     return self.input_string[start:end]

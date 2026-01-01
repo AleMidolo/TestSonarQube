@@ -7,6 +7,8 @@ def bad_character_heuristic(self):
         [0, 3]
 
         """
+    if self.patLen == 0:
+        return []
     positions = []
     current_pos = 0
     while current_pos <= self.textLen - self.patLen:
@@ -20,7 +22,6 @@ def bad_character_heuristic(self):
             if rightmost_pos == -1:
                 current_pos = mismatch_pos + 1
             else:
-                pattern_pos = mismatch_pos - current_pos
-                shift = pattern_pos - rightmost_pos
+                shift = mismatch_pos - (current_pos + rightmost_pos)
                 current_pos += max(1, shift)
     return positions

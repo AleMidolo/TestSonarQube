@@ -7,5 +7,5 @@ def send(self, info):
         self.send_struct = {"addr":66,"content":"ABC"}
         """
     if not isinstance(info, dict) or 'addr' not in info or 'content' not in info:
-        return "Error: info must be a dictionary with 'addr' and 'content' keys"
+        return "Error: info must be a dictionary containing 'addr' and 'content' keys"
     self.send_struct = {'addr': info['addr'], 'content': info['content']}

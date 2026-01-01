@@ -9,8 +9,8 @@ def get_jwt_user(self, request):
         """
     try:
         auth_header = request.get('headers', {}).get('Authorization', {})
-        if 'jwt' in auth_header and 'user' in auth_header:
+        if isinstance(auth_header, dict) and 'user' in auth_header:
             return {'user': auth_header['user']}
+        return None
     except:
-        pass
-    return None
+        return None

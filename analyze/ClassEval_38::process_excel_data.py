@@ -7,17 +7,27 @@ def process_excel_data(self, N, save_file_name):
         >>> processor = ExcelProcessor()
         >>> success, output_file = processor.process_excel_data(1, 'test_data.xlsx')
         """
-    data = self.read_excel(save_file_name)
-    if data is None:
+    try:
+        data = self.read_excel(save_file_name)
+        if data is None:
+            return (0, '')
+        col_index = N - 1
+        processed_data = []
+        for row in data:
+            if row is None:
+                processed_data.append(row)
+                continue
+            row_list = list(row)
+            if col_index < len(row_list):
+                if isinstance(row_list[col_index], str):
+                    row_list[col_index] = row_list[col_index].upper()
+            processed_data.append(tuple(row_list))
+        if '.' in save_file_name:
+            name_parts = save_file_name.rsplit('.', 1)
+            output_file = f'{name_parts[0]}_processed.{name_parts[1]}'
+        else:
+            output_file = f'{save_file_name}_processed.xlsx'
+        result = self.write_excel(processed_data, output_file)
+        return (result, output_file)
+    except Exception as e:
         return (0, '')
-    processed_data = []
-    for row in data:
-        processed_row = list(row)
-        if N - 1 < len(processed_row) and processed_row[N - 1] is not None:
-            processed_row[N - 1] = str(processed_row[N - 1]).upper()
-        processed_data.append(tuple(processed_row))
-    output_file = save_file_name.replace('.xlsx', '_processed.xlsx')
-    if output_file == save_file_name:
-        output_file = save_file_name.replace('.xls', '_processed.xlsx')
-    success = self.write_excel(processed_data, output_file)
-    return (success, output_file)
