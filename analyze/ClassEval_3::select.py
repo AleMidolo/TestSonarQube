@@ -10,4 +10,4 @@ def select(self, m=None):
         """
     if m is None:
         m = len(self.datas)
-    return [list(p) for p in itertools.permutations(self.datas, m)]
+    return list(itertools.permutations(self.datas, m))

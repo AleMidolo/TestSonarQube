@@ -10,8 +10,7 @@ def add(num1, num2):
         '111111111011111111100'
 
         """
-    len1, len2 = (len(num1), len(num2))
-    max_length = max(len1, len2)
+    max_length = max(len(num1), len(num2))
     num1 = num1.zfill(max_length)
     num2 = num2.zfill(max_length)
     carry = 0

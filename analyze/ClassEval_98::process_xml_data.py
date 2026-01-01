@@ -12,8 +12,7 @@ def process_xml_data(self, file_name):
     try:
         for item in self.root.findall('item'):
             item.text = 'modified_' + item.text
-        tree = ET.ElementTree(self.root)
-        tree.write(file_name)
+        self.write_xml(file_name)
         return True
     except:
         return False

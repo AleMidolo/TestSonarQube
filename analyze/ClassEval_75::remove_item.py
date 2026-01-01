@@ -1,8 +1,8 @@
 def remove_item(self, item, quantity=1):
     """
-        निर्दिष्ट मात्रा को खरीदारी सूची से आइटम से घटाएं
-        :param item:string, घटाने के लिए आइटम
-        :param quantity:int, घटाने के लिए मात्रा
+        Reduce the specified quantity from the item in the shopping list
+        :param item:string, The item to reduce
+        :param quantity:int, The quantity to reduce
         :return:None
         >>> shoppingcart.add_item("apple", 1, 5)
         >>> shoppingcart.remove_item("apple", 3)
@@ -11,5 +11,5 @@ def remove_item(self, item, quantity=1):
     if item in self.items:
         if self.items[item]['quantity'] > quantity:
             self.items[item]['quantity'] -= quantity
-        elif self.items[item]['quantity'] == quantity:
+        else:
             del self.items[item]
