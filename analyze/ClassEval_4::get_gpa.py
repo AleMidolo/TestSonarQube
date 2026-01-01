@@ -9,7 +9,6 @@ def get_gpa(self, name):
         >>> system.add_course_score('student 1', 'Computer Network', 92)
         >>> system.get_gpa('student 1')
         93.0
-
         """
     if name not in self.students:
         return None

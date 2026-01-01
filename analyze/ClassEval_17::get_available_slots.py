@@ -8,8 +8,8 @@ def get_available_slots(self, date):
         >>> calendar.get_available_slots(datetime(2023, 1, 1))
         [(datetime.datetime(2023, 1, 1, 23, 0), datetime.datetime(2023, 1, 2, 0, 0))]
         """
-    events_on_date = self.get_events(date)
-    sorted_events = sorted(events_on_date, key=lambda x: x['start_time'])
+    day_events = self.get_events(date)
+    sorted_events = sorted(day_events, key=lambda x: x['start_time'])
     day_start = datetime.combine(date.date(), datetime.min.time())
     day_end = datetime.combine(date.date(), datetime.max.time())
     available_slots = []

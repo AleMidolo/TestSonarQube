@@ -1,10 +1,10 @@
 def _select(self, dataIndex: int, resultList: List[str], resultIndex: int, result: List[List[str]]):
     """
-        Genera combinazioni con un numero specificato di elementi tramite ricorsione.
-        :param dataIndex: L'indice dei dati da selezionare, int.
-        :param resultList: La lista degli elementi nella combinazione, List[str].
-        :param resultIndex: L'indice dell'elemento nella combinazione, int.
-        :param result: La lista delle combinazioni, List[List[str]].
+        Generate combinations with a specified number of elements via recursion.
+        :param dataIndex: The index of data to select, int.
+        :param resultList: The list of elements in the combination, List[str].
+        :param resultIndex: The index of element in the combination, int.
+        :param result: The list of combinations, List[List[str]].
         :return: None.
         >>> calc = CombinationCalculator(["A", "B", "C", "D"])
         >>> result = []

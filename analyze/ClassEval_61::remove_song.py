@@ -7,6 +7,7 @@ def remove_song(self, song):
         >>> musicPlayer.remove_song("song1")
         >>> musicPlayer.playlist
         ['song2']
+
         """
     if song in self.playlist:
         self.playlist.remove(song)

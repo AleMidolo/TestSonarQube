@@ -11,6 +11,8 @@ def check(args):
         ValueError: 3 non è pari
         """
     for arg in args:
+        if not isinstance(arg, int):
+            raise ValueError(f'{arg} non è un intero')
         if arg < 0:
             raise ValueError(f'{arg} non è maggiore o uguale a 0')
         if arg % 2 != 0:

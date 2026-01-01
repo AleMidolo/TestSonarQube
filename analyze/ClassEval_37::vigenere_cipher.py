@@ -19,8 +19,8 @@ def vigenere_cipher(self, plaintext):
             else:
                 ascii_offset = 97
                 key_char = self.key[key_index % key_length].lower()
-            shift = ord(key_char) - ascii_offset
-            shifted_char = chr((ord(char) - ascii_offset + shift) % 26 + ascii_offset)
+            key_shift = ord(key_char) - ascii_offset
+            shifted_char = chr((ord(char) - ascii_offset + key_shift) % 26 + ascii_offset)
             ciphertext += shifted_char
             key_index += 1
         else:

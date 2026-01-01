@@ -23,5 +23,5 @@ def write_excel(self, data, file_name):
         workbook.save(file_name)
         workbook.close()
         return 1
-    except Exception as e:
+    except:
         return 0
