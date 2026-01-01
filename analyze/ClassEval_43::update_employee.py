@@ -14,7 +14,8 @@ def update_employee(self, employee_id: int, employee_info: dict):
         """
     if employee_id not in self.employees:
         return False
+    valid_keys = ['name', 'position', 'department', 'salary']
     for key, value in employee_info.items():
-        if key in self.employees[employee_id]:
+        if key in valid_keys:
             self.employees[employee_id][key] = value
     return True
