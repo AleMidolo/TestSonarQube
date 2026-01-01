@@ -10,4 +10,9 @@ def cosine_similarities(vector_1, vectors_all):
         >>> VectorUtil.cosine_similarities(vector1, vectors_all)
         [0.97463185 0.95941195]
         """
-    return np.array([VectorUtil.similarity(vector_1, vector) for vector in vectors_all])
+    unit_vector_1 = matutils.unitvec(vector_1)
+    similarities = []
+    for vector in vectors_all:
+        similarity = dot(unit_vector_1, matutils.unitvec(vector))
+        similarities.append(similarity)
+    return np.array(similarities)

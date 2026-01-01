@@ -32,5 +32,5 @@ def subtract(num1, num2):
     while result and result[-1] == '0':
         result.pop()
     if negative:
-        result.append('-')
+        return '-' + ''.join(result[::-1])
     return ''.join(result[::-1]) if result else '0'

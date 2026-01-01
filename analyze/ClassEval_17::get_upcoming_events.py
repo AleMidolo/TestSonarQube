@@ -10,5 +10,9 @@ def get_upcoming_events(self, num_events):
         [{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 23, 0), 'description': 'Capodanno'}, {'date': datetime.datetime(2023, 1, 2, 0, 0), 'end_time': datetime.datetime(2023, 1, 2, 1, 0), 'description': 'Capodanno 2'}]
 
         """
-    upcoming_events = sorted(self.events, key=lambda x: x['start_time'])
+    upcoming_events = []
+    current_time = datetime.now()
+    for event in self.events:
+        if event['start_time'] >= current_time:
+            upcoming_events.append(event)
     return upcoming_events[:num_events]

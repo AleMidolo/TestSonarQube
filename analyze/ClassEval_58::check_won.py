@@ -7,7 +7,6 @@ def check_won(self, map):
         >>> minesweeper_game.player_map = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
         >>> minesweeper_game.check_won(minesweeper_game.player_map)
         False
-
         """
     total_cells = self.n * self.n
     revealed_cells = sum((row.count('-') for row in map))
