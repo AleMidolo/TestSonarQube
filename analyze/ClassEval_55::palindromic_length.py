@@ -8,11 +8,10 @@ def palindromic_length(self, center, diff, string):
         >>> manacher = Manacher('ababa')
         >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')
         2
+
         """
-    left = center - diff
-    right = center + diff
-    while left >= 0 and right < len(string) and (string[left] == string[right]):
-        diff += 1
-        left -= 1
-        right += 1
-    return diff - 1
+    if center - diff == -1 or center + diff == len(string):
+        return 0
+    if string[center - diff] != string[center + diff]:
+        return 0
+    return 1 + self.palindromic_length(center, diff + 1, string)

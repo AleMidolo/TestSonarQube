@@ -8,11 +8,17 @@ def skewness(data):
         2.3760224064818463
         """
     n = len(data)
-    mean = sum(data) / n
-    std_dev = math.sqrt(sum(((x - mean) ** 2 for x in data)) / n)
-    if std_dev == 0:
+    if n < 3:
         return math.nan
-    centered_data = [x - mean for x in data]
-    third_moment = sum((x ** 3 for x in centered_data)) / n
-    skewness_value = third_moment / std_dev ** 3
+    mean = sum(data) / n
+    variance = sum(((x - mean) ** 2 for x in data)) / n
+    if variance == 0:
+        return math.nan
+    std_dev = math.sqrt(variance)
+    third_moment = sum((((x - mean) / std_dev) ** 3 for x in data)) / n
+    if n > 3:
+        correction = math.sqrt(n * (n - 1)) / (n - 2)
+        skewness_value = third_moment * correction
+    else:
+        skewness_value = third_moment
     return skewness_value

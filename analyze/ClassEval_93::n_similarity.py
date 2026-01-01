@@ -10,9 +10,15 @@ def n_similarity(vector_list_1, vector_list_2):
         >>> VectorUtil.n_similarity(vector_list1, vector_list2)
         0.9897287473881233
         """
-    similarities = []
-    for vec1 in vector_list_1:
-        for vec2 in vector_list_2:
-            sim = VectorUtil.similarity(vec1, vec2)
-            similarities.append(sim)
-    return np.array(similarities)
+    if not vector_list_1 or not vector_list_2:
+        return np.array(0.0)
+    v1 = np.array(vector_list_1)
+    v2 = np.array(vector_list_2)
+    avg_v1 = np.mean(v1, axis=0)
+    avg_v2 = np.mean(v2, axis=0)
+    norm1 = np.linalg.norm(avg_v1)
+    norm2 = np.linalg.norm(avg_v2)
+    if norm1 == 0 or norm2 == 0:
+        return np.array(0.0)
+    similarity = np.dot(avg_v1, avg_v2) / (norm1 * norm2)
+    return similarity

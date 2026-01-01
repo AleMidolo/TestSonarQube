@@ -11,4 +11,5 @@ def shuffle(self):
     if self.playlist:
         random.shuffle(self.playlist)
         return True
-    return False
+    else:
+        return False

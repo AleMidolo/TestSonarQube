@@ -11,17 +11,22 @@ def solve(self):
         ['right']
         """
     from collections import deque
-    open_list = deque([(self.initial_state, [])])
+    start_state = tuple((tuple(row) for row in self.initial_state))
+    goal_state = tuple((tuple(row) for row in self.goal_state))
+    queue = deque()
+    queue.append((start_state, []))
     visited = set()
-    visited.add(tuple(map(tuple, self.initial_state)))
-    while open_list:
-        current_state, path = open_list.popleft()
-        if current_state == self.goal_state:
+    visited.add(start_state)
+    while queue:
+        current_state, path = queue.popleft()
+        if current_state == goal_state:
             return path
-        for move_direction in self.get_possible_moves(current_state):
-            new_state = self.move(current_state, move_direction)
-            new_state_tuple = tuple(map(tuple, new_state))
-            if new_state_tuple not in visited:
-                visited.add(new_state_tuple)
-                open_list.append((new_state, path + [move_direction]))
-    return []
+        current_state_list = [list(row) for row in current_state]
+        possible_moves = self.get_possible_moves(current_state_list)
+        for move in possible_moves:
+            new_state_list = self.move(current_state_list, move)
+            new_state = tuple((tuple(row) for row in new_state_list))
+            if new_state not in visited:
+                visited.add(new_state)
+                queue.append((new_state, path + [move]))
+    return None

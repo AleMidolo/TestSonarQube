@@ -4,12 +4,12 @@ def taylor(self, x, n):
         :param x: int
         :param n: int
         :return: float
-        >>> tricalculator = TriCalculator()
         >>> tricalculator.taylor(60, 50)
         0.5000000000000001
         """
-    x = x / 180 * pi
+    x_rad = x / 180 * pi
     result = 0
     for i in range(n):
-        result += (-1) ** i * x ** (2 * i) / self.factorial(2 * i)
+        term = (-1) ** i * x_rad ** (2 * i) / self.factorial(2 * i)
+        result += term
     return result

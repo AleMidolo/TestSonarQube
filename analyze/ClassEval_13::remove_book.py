@@ -5,10 +5,12 @@ def remove_book(self, title, quantity):
         :param title: str, the book title
         :param quantity: int
         """
-    if title not in self.inventory or quantity <= 0:
-        raise ValueError('Invalid input: book title does not exist or quantity is invalid.')
-    if self.inventory[title] < quantity:
-        raise ValueError('Invalid input: not enough books to remove.')
+    if title not in self.inventory:
+        raise ValueError(f"Book '{title}' not found in inventory")
+    if not isinstance(quantity, int) or quantity <= 0:
+        raise ValueError('Quantity must be a positive integer')
+    if quantity > self.inventory[title]:
+        raise ValueError(f"Cannot remove {quantity} copies of '{title}'. Only {self.inventory[title]} available")
     self.inventory[title] -= quantity
     if self.inventory[title] == 0:
         del self.inventory[title]

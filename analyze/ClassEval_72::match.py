@@ -8,4 +8,5 @@ def match(self, pattern, text):
         >>> ru.match(r'\x08\\d{3}-\\d{3}-\\d{4}\x08', "123-456-7890")
         True
         """
-    return re.match(pattern, text) is not None
+    match_obj = re.match(pattern, text)
+    return match_obj is not None and match_obj.group() == text

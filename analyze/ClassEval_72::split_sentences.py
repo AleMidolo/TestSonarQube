@@ -7,6 +7,12 @@ def split_sentences(self, text):
         >>> ru.split_sentences("Aaa. Bbbb? Ccc!")
         ['Aaa', 'Bbbb', 'Ccc!']
         """
-    pattern = '[.!?][\\s]+'
-    sentences = re.split(pattern, text)
-    return [sentence.rstrip(' .!?') for sentence in sentences if sentence]
+    pattern = self.generate_split_sentences_pattern()
+    parts = re.split(pattern, text)
+    result = []
+    for i, part in enumerate(parts):
+        if i < len(parts) - 1:
+            result.append(part.rstrip('.!?'))
+        else:
+            result.append(part)
+    return result

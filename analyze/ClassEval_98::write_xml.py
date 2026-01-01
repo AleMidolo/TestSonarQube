@@ -11,7 +11,7 @@ def write_xml(self, file_name):
         """
     try:
         tree = ET.ElementTree(self.root)
-        tree.write(file_name)
+        tree.write(file_name, encoding='utf-8', xml_declaration=True)
         return True
-    except Exception as e:
+    except:
         return False

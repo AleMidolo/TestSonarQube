@@ -5,9 +5,9 @@ def read_text(self):
         """
     try:
         doc = Document(self.file_path)
-        content = []
+        full_text = []
         for paragraph in doc.paragraphs:
-            content.append(paragraph.text)
-        return '\n'.join(content)
+            full_text.append(paragraph.text)
+        return '\n'.join(full_text)
     except:
         return ''

@@ -4,6 +4,7 @@ def _validate_sex(self, sex: str) -> str:
         :param sex: str, the sex to validate
         :return: str, the validated sex or None if invalid
         """
-    if sex not in ['Man', 'Woman', 'UGM']:
-        return None
-    return sex
+    valid_sexes = {'Man', 'Woman', 'UGM'}
+    if sex in valid_sexes:
+        return sex
+    return None

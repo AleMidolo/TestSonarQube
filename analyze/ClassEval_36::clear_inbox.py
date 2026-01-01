@@ -8,9 +8,13 @@ def clear_inbox(self, size):
         >>> receiver.clear_inbox(30)
         >>> receiver.inbox
         [{'size': 15}]
+
         """
-    while self.is_full_with_one_more_email(size):
-        if self.inbox:
-            self.inbox.pop(0)
-        else:
-            break
+    current_occupied = self.get_occupied_size()
+    if current_occupied + size <= self.capacity:
+        return
+    space_needed = current_occupied + size - self.capacity
+    freed_space = 0
+    while self.inbox and freed_space < space_needed:
+        freed_space += self.inbox[0]['size']
+        self.inbox.pop(0)
