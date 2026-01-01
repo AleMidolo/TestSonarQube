@@ -11,13 +11,13 @@ def init_game(self):
         >>> game.player_col
         1
         """
-    for row_idx, row in enumerate(self.map):
-        for col_idx, char in enumerate(row):
+    for i, row in enumerate(self.map):
+        for j, char in enumerate(row):
             if char == 'O':
-                self.player_row = row_idx
-                self.player_col = col_idx
+                self.player_row = i
+                self.player_col = j
             elif char == 'G':
-                self.targets.append((row_idx, col_idx))
+                self.targets.append((i, j))
                 self.target_count += 1
             elif char == 'X':
-                self.boxes.append((row_idx, col_idx))
+                self.boxes.append((i, j))

@@ -7,18 +7,23 @@ def split_sentences(self, sentences_string):
         >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
-    abbreviations = ['Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Prof.', 'St.', 'Ave.', 'Blvd.']
-    placeholder_map = {}
-    for i, abbr in enumerate(abbreviations):
-        placeholder = f'__ABBR{i}__'
-        placeholder_map[placeholder] = abbr
-        sentences_string = sentences_string.replace(abbr, placeholder)
-    sentence_pattern = '(?<=[.?])\\s+'
-    sentences = re.split(sentence_pattern, sentences_string)
-    result = []
-    for sentence in sentences:
-        if sentence:
-            for placeholder, abbr in placeholder_map.items():
-                sentence = sentence.replace(placeholder, abbr)
-            result.append(sentence.strip())
-    return result
+    if not sentences_string:
+        return []
+    pattern = '(?<!\\bMr)(?<!\\bMrs)(?<!\\bDr)(?<!\\bMs)(?<!\\bProf)(?<!\\bRev)(?<!\\bSt)\\.|\\?'
+    sentences = []
+    current_sentence = ''
+    i = 0
+    while i < len(sentences_string):
+        char = sentences_string[i]
+        current_sentence += char
+        if char in ['.', '?']:
+            if i == len(sentences_string) - 1 or sentences_string[i + 1] == ' ':
+                if not self._is_abbreviation(current_sentence):
+                    sentences.append(current_sentence.strip())
+                    current_sentence = ''
+                    if i + 1 < len(sentences_string) and sentences_string[i + 1] == ' ':
+                        i += 1
+        i += 1
+    if current_sentence.strip():
+        sentences.append(current_sentence.strip())
+    return sentences

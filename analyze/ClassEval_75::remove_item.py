@@ -9,6 +9,7 @@ def remove_item(self, item, quantity=1):
         self.items = {"apple":{"price":1, "quantity":2}}
         """
     if item in self.items:
-        self.items[item]['quantity'] -= quantity
-        if self.items[item]['quantity'] <= 0:
+        if self.items[item]['quantity'] <= quantity:
             del self.items[item]
+        else:
+            self.items[item]['quantity'] -= quantity

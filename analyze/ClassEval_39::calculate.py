@@ -9,39 +9,26 @@ def calculate(self, expression):
 
         """
     self.postfix_stack.clear()
-    transformed_expression = self.transform(expression)
-    self.prepare(transformed_expression)
-    calc_stack = deque()
+    transformed_expr = self.transform(expression)
+    self.prepare(transformed_expr)
+    result_stack = deque()
     for token in self.postfix_stack:
         if self.is_operator(token):
-            if token in {'+', '-', '*', '\\/', '%'}:
-                if len(calc_stack) < 2:
+            if token == '~':
+                if result_stack:
+                    operand = result_stack.pop()
+                    result_stack.append(-Decimal(operand))
+            else:
+                if len(result_stack) < 2:
                     raise ValueError('Invalid expression: insufficient operands')
-                second_value = calc_stack.pop()
-                first_value = calc_stack.pop()
-                if first_value == '~':
-                    first_value = '-0'
-                elif isinstance(first_value, str) and first_value.startswith('~'):
-                    first_value = '-' + first_value[1:]
-                if second_value == '~':
-                    second_value = '-0'
-                elif isinstance(second_value, str) and second_value.startswith('~'):
-                    second_value = '-' + second_value[1:]
-                result = self._calculate(first_value, second_value, token)
-                calc_stack.append(str(result))
-            elif token in {'(', ')'}:
-                continue
-        elif token == '~':
-            calc_stack.append('~')
-        elif isinstance(token, str) and token.startswith('~'):
-            calc_stack.append('-' + token[1:])
+                second = result_stack.pop()
+                first = result_stack.pop()
+                result = self._calculate(first, second, token)
+                result_stack.append(result)
         else:
-            calc_stack.append(token)
-    if len(calc_stack) != 1:
-        raise ValueError('Invalid expression: multiple values in result stack')
-    result = calc_stack.pop()
-    if result == '~':
-        result = '-0'
-    elif isinstance(result, str) and result.startswith('~'):
-        result = '-' + result[1:]
-    return float(Decimal(result))
+            result_stack.append(token)
+    if not result_stack:
+        raise ValueError('Invalid expression: no result')
+    result = float(result_stack.pop())
+    self.postfix_stack.clear()
+    return result

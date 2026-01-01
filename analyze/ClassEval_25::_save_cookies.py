@@ -6,7 +6,6 @@ def _save_cookies(self):
         >>> cookies_util.cookies = {'key1': 'value1', 'key2': 'value2'}
         >>> cookies_util._save_cookies()
         True
-
         """
     try:
         with open(self.cookies_file, 'w') as file:

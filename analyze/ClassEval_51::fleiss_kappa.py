@@ -21,8 +21,12 @@ def fleiss_kappa(testData, N, k, n):
         """
     data = np.array(testData)
     p_j = np.sum(data, axis=0) / (N * n)
-    P_i = (np.sum(data * data, axis=1) - n) / (n * (n - 1))
-    P_bar = np.sum(P_i) / N
+    P_i = np.zeros(N)
+    for i in range(N):
+        numerator = np.sum(data[i] * (data[i] - 1))
+        denominator = n * (n - 1)
+        P_i[i] = numerator / denominator
+    P_bar = np.mean(P_i)
     P_e = np.sum(p_j * p_j)
     kappa = (P_bar - P_e) / (1 - P_e)
     return float(kappa)

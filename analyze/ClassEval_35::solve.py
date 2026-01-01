@@ -11,8 +11,6 @@ def solve(self):
         ['right']
         """
     from collections import deque
-    if self.initial_state == self.goal_state:
-        return []
     queue = deque()
     queue.append((self.initial_state, []))
     visited = set()
@@ -28,4 +26,4 @@ def solve(self):
             if state_tuple not in visited:
                 visited.add(state_tuple)
                 queue.append((new_state, path + [direction]))
-    return None
+    return []

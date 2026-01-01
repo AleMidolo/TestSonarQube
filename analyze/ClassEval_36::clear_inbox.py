@@ -10,17 +10,5 @@ def clear_inbox(self, size):
         [{'size': 15}]
 
         """
-    current_size = self.get_occupied_size()
-    if current_size + size <= self.capacity:
-        return
-
-    def get_email_time(email):
-        if 'time' in email:
-            try:
-                return datetime.strptime(email['time'], '%Y-%m-%d %H:%M:%S')
-            except (ValueError, TypeError):
-                return datetime.min
-        return datetime.min
-    self.inbox.sort(key=get_email_time)
     while self.inbox and self.get_occupied_size() + size > self.capacity:
         self.inbox.pop(0)
