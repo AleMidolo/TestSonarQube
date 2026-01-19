@@ -14,6 +14,4 @@ def sweep(self, x, y):
         return False
     else:
         self.player_map[y][x] = self.minesweeper_map[y][x]
-        if self.check_won(self.player_map):
-            return True
-        return self.player_map
+        return self.check_won(self.player_map)

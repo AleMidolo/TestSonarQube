@@ -11,4 +11,4 @@ def display_items(self):
         """
     if not self.inventory:
         return False
-    return ' '.join((f"{item} - ${details['price']} [{details['quantity']}]" for item, details in self.inventory.items()))
+    return ' '.join((f"{item} - ${data['price']} [{data['quantity']}]" for item, data in self.inventory.items()))

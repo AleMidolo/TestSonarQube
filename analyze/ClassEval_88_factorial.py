@@ -3,6 +3,7 @@ def factorial(self, a):
         Calcular el factorial de a
         :param a: int
         :return: int
+        >>> tricalculator = TriCalculator()
         >>> tricalculator.factorial(5)
         120
         """

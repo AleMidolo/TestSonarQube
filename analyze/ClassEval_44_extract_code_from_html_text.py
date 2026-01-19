@@ -20,8 +20,6 @@ def extract_code_from_html_text(self, html_text):
     if html_text is None or len(html_text) == 0:
         return []
     soup = BeautifulSoup(html_text, 'lxml')
-    code_snippets = []
     code_tags = soup.find_all(name=['pre', 'code'])
-    for tag in code_tags:
-        code_snippets.append(tag.get_text())
-    return code_snippets
+    code_list = [tag.get_text() for tag in code_tags]
+    return code_list

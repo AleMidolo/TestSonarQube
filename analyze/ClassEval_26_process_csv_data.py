@@ -17,5 +17,5 @@ def process_csv_data(self, N, save_file_name):
     title, data = self.read_csv(save_file_name)
     processed_data = [[row[N].upper()] for row in data if len(row) > N]
     new_file_name = save_file_name.replace('.csv', '_process.csv')
-    success = self.write_csv([title, *processed_data], new_file_name)
-    return success
+    success = self.write_csv([title], new_file_name) and self.write_csv(processed_data, new_file_name)
+    return 1 if success else 0

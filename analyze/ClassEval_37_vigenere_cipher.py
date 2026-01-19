@@ -9,9 +9,9 @@ def vigenere_cipher(self, plaintext):
         """
     ciphertext = []
     key_length = len(self.key)
-    key_as_int = [ord(i) - 97 for i in self.key.lower()]
-    plaintext_int = [ord(i) - 97 for i in plaintext.lower()]
+    key_as_int = [ord(i) - ord('a') for i in self.key.lower()]
+    plaintext_int = [ord(i) - ord('a') for i in plaintext.lower()]
     for i in range(len(plaintext_int)):
         value = (plaintext_int[i] + key_as_int[i % key_length]) % 26
-        ciphertext.append(chr(value + 97))
+        ciphertext.append(chr(value + ord('a')))
     return ''.join(ciphertext)

@@ -4,7 +4,7 @@ def remove_stop_words(self, string_list, stop_word_list):
         :param string_list: una lista de cadenas
         :param stop_word_list: una lista de palabras vacías
         :return: una lista de palabras sin palabras vacías
-        >>> NLPDataProcessor().remove_stop_words(['This is a test.'], ['a', 'an', 'the'])
+        >>> NLPDataProcessor.process(['This is a test.'])
         [['This', 'is', 'test.']]
         """
     processed_list = []

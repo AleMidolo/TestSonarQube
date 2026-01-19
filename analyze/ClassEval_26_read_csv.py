@@ -8,7 +8,7 @@ def read_csv(self, file_name):
         (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])
         """
     try:
-        with open(file_name, 'r') as file:
+        with open(file_name, 'r', newline='') as file:
             reader = csv.reader(file)
             title = next(reader)
             data = list(reader)
