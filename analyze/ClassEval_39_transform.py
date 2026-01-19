@@ -12,10 +12,13 @@ def transform(expression):
     expression = re.sub('\\s+', '', expression)
     transformed = []
     i = 0
-    while i < len(expression):
+    n = len(expression)
+    while i < n:
         c = expression[i]
         if c == '-':
-            if i == 0 or expression[i - 1] in {'+', '-', '*', '\\/', '(', '%'}:
+            if i == 0:
+                transformed.append('~')
+            elif expression[i - 1] in '+-*/%(' or expression[i - 1] == '~':
                 transformed.append('~')
             else:
                 transformed.append(c)

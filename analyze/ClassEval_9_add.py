@@ -10,15 +10,13 @@ def add(num1, num2):
         '111111111011111111100'
 
         """
-    max_len = max(len(num1), len(num2))
-    num1 = num1.zfill(max_len)
-    num2 = num2.zfill(max_len)
-    carry = 0
-    result = []
-    for i in range(max_len - 1, -1, -1):
-        digit_sum = int(num1[i]) + int(num2[i]) + carry
-        carry = digit_sum // 10
-        result.insert(0, str(digit_sum % 10))
-    if carry:
-        result.insert(0, str(carry))
-    return ''.join(result)
+    num1_negative = num1.startswith('-')
+    num2_negative = num2.startswith('-')
+    if not num1_negative and (not num2_negative):
+        return BigNumCalculator._add_positive(num1, num2)
+    elif num1_negative and num2_negative:
+        return '-' + BigNumCalculator._add_positive(num1[1:], num2[1:])
+    elif num1_negative and (not num2_negative):
+        return BigNumCalculator.subtract(num2, num1[1:])
+    else:
+        return BigNumCalculator.subtract(num1, num2[1:])

@@ -9,8 +9,8 @@ def get_portfolio_summary(self):
 
         """
     total_value = self.calculate_portfolio_value()
-    stock_summary = []
+    stock_summaries = []
     for stock in self.portfolio:
         stock_value = stock['price'] * stock['quantity']
-        stock_summary.append({'name': stock['name'], 'value': stock_value})
-    return (total_value, stock_summary)
+        stock_summaries.append({'name': stock['name'], 'value': stock_value})
+    return (total_value, stock_summaries)

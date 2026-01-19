@@ -15,5 +15,9 @@ def buy_stock(self, stock):
     if cost > self.cash_balance:
         return False
     self.cash_balance -= cost
-    self.add_stock(stock)
+    for pf in self.portfolio:
+        if pf['name'] == stock['name']:
+            pf['quantity'] += stock['quantity']
+            return True
+    self.portfolio.append(stock)
     return True

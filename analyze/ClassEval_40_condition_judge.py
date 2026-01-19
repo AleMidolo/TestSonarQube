@@ -15,9 +15,9 @@ def condition_judge(self):
             break
     if bmi_std is None:
         return 0
-    if bmi > bmi_std[1]:
-        return 1
-    elif bmi < bmi_std[0]:
+    if bmi < bmi_std[0]:
         return -1
+    elif bmi > bmi_std[1]:
+        return 1
     else:
         return 0
