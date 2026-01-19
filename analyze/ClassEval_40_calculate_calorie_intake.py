@@ -15,33 +15,13 @@ def calculate_calorie_intake(self):
     
     # 根据用户状况计算卡路里摄入量
     # 需要先判断用户的状况（假设有一个方法或属性来获取状况）
-    # 假设有 self.status 或需要调用某个方法来获取状况
-    # 根据docstring，需要判断"过于肥胖"、"过于瘦"、"正常"
+    status = self.get_status()  # 假设有这个方法返回 "obese", "thin", "normal"
     
-    # 假设类中有获取状况的方法或属性
-    if hasattr(self, 'status'):
-        status = self.status
-    elif hasattr(self, 'get_status'):
-        status = self.get_status()
-    else:
-        # 如果没有明确的状况属性，可能需要根据BMI计算
-        # BMI = weight / (height_in_meters)^2
-        height_in_meters = self.height / 100  # 假设height是厘米
-        bmi = self.weight / (height_in_meters ** 2)
-        
-        if bmi > 28:  # 过于肥胖
-            status = "obese"
-        elif bmi < 18.5:  # 过于瘦
-            status = "underweight"
-        else:  # 正常
-            status = "normal"
-    
-    # 根据状况计算卡路里摄入量
-    if status in ["obese", "过于肥胖"]:
+    if status == "obese":
         calorie_intake = bmr * 1.2
-    elif status in ["underweight", "过于瘦"]:
+    elif status == "thin":
         calorie_intake = bmr * 1.6
-    else:  # normal, 正常
+    else:  # normal
         calorie_intake = bmr * 1.4
     
     return calorie_intake

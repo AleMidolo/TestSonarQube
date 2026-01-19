@@ -21,7 +21,7 @@ def has_path(self, pos1, pos2):
         return False
     
     # 检查两个位置的图标是否相同（且不为空）
-    if self.board[y1][x1] != self.board[y2][x2] or self.board[y1][x1] is None or self.board[y1][x1] == '':
+    if self.board[y1][x1] != self.board[y2][x2] or self.board[y1][x1] is None:
         return False
     
     # 连连看规则：最多转折2次（即最多3条线段）
@@ -30,11 +30,11 @@ def has_path(self, pos1, pos2):
         return True
     
     # 尝试一次转折
-    if self._check_one_corner(pos1, pos2):
+    if self._check_one_turn(pos1, pos2):
         return True
     
     # 尝试两次转折
-    if self._check_two_corners(pos1, pos2):
+    if self._check_two_turns(pos1, pos2):
         return True
     
     return False
@@ -48,7 +48,7 @@ def _check_straight_line(self, pos1, pos2):
     if y1 == y2:
         min_x, max_x = min(x1, x2), max(x1, x2)
         for x in range(min_x + 1, max_x):
-            if self.board[y1][x] is not None and self.board[y1][x] != '':
+            if self.board[y1][x] is not None:
                 return False
         return True
     
@@ -56,34 +56,30 @@ def _check_straight_line(self, pos1, pos2):
     if x1 == x2:
         min_y, max_y = min(y1, y2), max(y1, y2)
         for y in range(min_y + 1, max_y):
-            if self.board[y][x1] is not None and self.board[y][x1] != '':
+            if self.board[y][x1] is not None:
                 return False
         return True
     
     return False
 
-def _check_one_corner(self, pos1, pos2):
+def _check_one_turn(self, pos1, pos2):
     """检查两点之间是否可以通过一次转折连接"""
     x1, y1 = pos1
     x2, y2 = pos2
     
     # 转折点1: (x1, y2)
-    corner1 = (x1, y2)
-    if (corner1 == pos1 or corner1 == pos2 or 
-        self.board[y2][x1] is None or self.board[y2][x1] == ''):
-        if self._check_straight_line(pos1, corner1) and self._check_straight_line(corner1, pos2):
+    if (self.board[y2][x1] is None or (x1, y2) == pos1 or (x1, y2) == pos2):
+        if self._check_straight_line(pos1, (x1, y2)) and self._check_straight_line((x1, y2), pos2):
             return True
     
     # 转折点2: (x2, y1)
-    corner2 = (x2, y1)
-    if (corner2 == pos1 or corner2 == pos2 or 
-        self.board[y1][x2] is None or self.board[y1][x2] == ''):
-        if self._check_straight_line(pos1, corner2) and self._check_straight_line(corner2, pos2):
+    if (self.board[y1][x2] is None or (x2, y1) == pos1 or (x2, y1) == pos2):
+        if self._check_straight_line(pos1, (x2, y1)) and self._check_straight_line((x2, y1), pos2):
             return True
     
     return False
 
-def _check_two_corners(self, pos1, pos2):
+def _check_two_turns(self, pos1, pos2):
     """检查两点之间是否可以通过两次转折连接"""
     rows = len(self.board)
     cols = len(self.board[0]) if rows > 0 else 0
@@ -91,26 +87,22 @@ def _check_two_corners(self, pos1, pos2):
     x1, y1 = pos1
     x2, y2 = pos2
     
-    # 尝试水平方向的中间线
-    for x in range(cols):
-        mid1 = (x, y1)
-        mid2 = (x, y2)
-        if ((mid1 == pos1 or self.board[y1][x] is None or self.board[y1][x] == '') and
-            (mid2 == pos2 or self.board[y2][x] is None or self.board[y2][x] == '')):
-            if (self._check_straight_line(pos1, mid1) and 
-                self._check_straight_line(mid1, mid2) and 
-                self._check_straight_line(mid2, pos2)):
+    # 尝试水平扫描
+    for y in range(rows):
+        if (y == y1 or self.board[y][x1] is None or (x1, y) == pos1) and \
+           (y == y2 or self.board[y][x2] is None or (x2, y) == pos2):
+            if self._check_straight_line(pos1, (x1, y)) and \
+               self._check_straight_line((x1, y), (x2, y)) and \
+               self._check_straight_line((x2, y), pos2):
                 return True
     
-    # 尝试垂直方向的中间线
-    for y in range(rows):
-        mid1 = (x1, y)
-        mid2 = (x2, y)
-        if ((mid1 == pos1 or self.board[y][x1] is None or self.board[y][x1] == '') and
-            (mid2 == pos2 or self.board[y][x2] is None or self.board[y][x2] == '')):
-            if (self._check_straight_line(pos1, mid1) and 
-                self._check_straight_line(mid1, mid2) and 
-                self._check_straight_line(mid2, pos2)):
+    # 尝试垂直扫描
+    for x in range(cols):
+        if (x == x1 or self.board[y1][x] is None or (x, y1) == pos1) and \
+           (x == x2 or self.board[y2][x] is None or (x, y2) == pos2):
+            if self._check_straight_line(pos1, (x, y1)) and \
+               self._check_straight_line((x, y1), (x, y2)) and \
+               self._check_straight_line((x, y2), pos2):
                 return True
     
     return False
