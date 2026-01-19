@@ -19,15 +19,13 @@ def _check_five_in_a_row(self, row, col, direction):
     symbol = self.board[row][col]
     count = 1
     for i in range(1, 5):
-        new_row = row + i * dx
-        new_col = col + i * dy
+        new_row, new_col = (row + i * dx, col + i * dy)
         if 0 <= new_row < self.board_size and 0 <= new_col < self.board_size and (self.board[new_row][new_col] == symbol):
             count += 1
         else:
             break
     for i in range(1, 5):
-        new_row = row - i * dx
-        new_col = col - i * dy
+        new_row, new_col = (row - i * dx, col - i * dy)
         if 0 <= new_row < self.board_size and 0 <= new_col < self.board_size and (self.board[new_row][new_col] == symbol):
             count += 1
         else:

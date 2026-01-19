@@ -6,9 +6,9 @@ def shuffle(self):
         >>> musicPlayer.playlist = ["song1", "song2"]
         >>> musicPlayer.shuffle()
         True
-
         """
-    if not self.playlist:
+    if self.playlist:
+        random.shuffle(self.playlist)
+        return True
+    else:
         return False
-    random.shuffle(self.playlist)
-    return True

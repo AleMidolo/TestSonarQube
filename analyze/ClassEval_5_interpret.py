@@ -15,11 +15,11 @@ def interpret(self, display=False):
     for item in items:
         chord = ''
         tune = ''
-        i = 0
-        while i < len(item) and (not item[i].isdigit()):
-            chord += item[i]
-            i += 1
-        tune = item[i:]
+        for i, char in enumerate(item):
+            if char.isdigit():
+                chord = item[:i]
+                tune = item[i:]
+                break
         if chord and tune:
             result.append({'Chord': chord, 'Tune': tune})
             if display:
