@@ -28,7 +28,8 @@ def calculate(self, expression):
                 result_stack.append(result)
         else:
             result_stack.append(item)
-    if len(result_stack) != 1:
-        raise ValueError('Invalid expression: could not compute final result')
+    if not result_stack:
+        raise ValueError('Invalid expression: no result')
     result = float(result_stack.pop())
+    self.postfix_stack.clear()
     return result

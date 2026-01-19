@@ -10,21 +10,22 @@ def _convert_type(self, arg, value):
         """
     if arg in self.types:
         try:
-            if self.types[arg] == int:
+            arg_type = self.types[arg]
+            if arg_type == int:
                 return int(value)
-            elif self.types[arg] == float:
+            elif arg_type == float:
                 return float(value)
-            elif self.types[arg] == bool:
+            elif arg_type == bool:
                 if value.lower() in ('true', '1', 'yes'):
                     return True
                 elif value.lower() in ('false', '0', 'no'):
                     return False
                 else:
                     return bool(value)
-            elif self.types[arg] == str:
+            elif arg_type == str:
                 return str(value)
             else:
-                return value
+                return arg_type(value)
         except (ValueError, TypeError):
             return value
     return value

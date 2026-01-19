@@ -32,7 +32,7 @@ def book_room(self, room_type, room_number, name):
         else:
             self.booked_rooms[room_type][name] = room_number
         return 'Success!'
-    elif available > 0:
-        return available
-    else:
+    elif available == 0:
         return False
+    else:
+        return available

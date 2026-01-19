@@ -13,14 +13,12 @@ def extract_file(self, file_name, output_path):
                 return False
             zip_file.extract(file_name, output_path)
             extracted_path = os.path.join(output_path, file_name)
-            if os.path.isdir(output_path):
-                return True
-            else:
+            if os.path.dirname(output_path) and (not os.path.exists(os.path.dirname(output_path))):
                 os.makedirs(os.path.dirname(output_path), exist_ok=True)
-                os.rename(extracted_path, output_path)
-                extracted_dir = os.path.dirname(extracted_path)
-                if os.path.exists(extracted_dir) and (not os.listdir(extracted_dir)):
-                    os.rmdir(extracted_dir)
+            if not os.path.isdir(output_path):
+                os.makedirs(os.path.dirname(output_path), exist_ok=True)
+                if os.path.exists(extracted_path):
+                    os.rename(extracted_path, output_path)
         return True
     except:
         return False
