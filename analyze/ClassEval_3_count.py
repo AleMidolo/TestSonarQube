@@ -10,5 +10,4 @@ def count(n, m=None):
     """
     if m is None or n == m:
         return ArrangementCalculator.factorial(n)
-    else:
-        return ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)
+    return ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)

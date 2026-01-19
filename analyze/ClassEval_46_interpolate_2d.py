@@ -24,4 +24,7 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
                     z_interp_value = (z11 * (x[i + 1] - xi) * (y[j + 1] - yi) + z21 * (xi - x[i]) * (y[j + 1] - yi) + z12 * (x[i + 1] - xi) * (yi - y[j]) + z22 * (xi - x[i]) * (yi - y[j])) / ((x[i + 1] - x[i]) * (y[j + 1] - y[j]))
                     z_interp.append(z_interp_value)
                     break
+            else:
+                continue
+            break
     return z_interp
