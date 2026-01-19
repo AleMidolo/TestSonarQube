@@ -9,5 +9,5 @@ def read_text(self):
         for paragraph in doc.paragraphs:
             content.append(paragraph.text)
         return '\n'.join(content)
-    except:
-        return ''
+    except Exception as e:
+        return str(e)
