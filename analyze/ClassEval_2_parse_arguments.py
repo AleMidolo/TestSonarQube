@@ -40,7 +40,10 @@ def parse_arguments(self, command_string):
                 i += 1
         else:
             i += 1
-    missing_args = self.required - set(self.arguments.keys())
+    missing_args = set()
+    for req_arg in self.required:
+        if req_arg not in self.arguments:
+            missing_args.add(req_arg)
     if missing_args:
         return (False, missing_args)
     else:

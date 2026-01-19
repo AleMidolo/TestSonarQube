@@ -12,11 +12,8 @@ def answer(self, expression):
     if not self.evaluate_expression(expression):
         return False
     import re
-    numbers_in_expr = re.findall('-?\\d+\\.?\\d*', expression)
-    try:
-        expr_nums = [int(float(num)) for num in numbers_in_expr]
-    except ValueError:
-        return False
-    if Counter(expr_nums) != Counter(self.nums):
+    numbers_in_expr = re.findall('\\d+\\.?\\d*', expression)
+    numbers_in_expr = [int(float(num)) for num in numbers_in_expr]
+    if sorted(numbers_in_expr) != sorted(self.nums):
         return False
     return True

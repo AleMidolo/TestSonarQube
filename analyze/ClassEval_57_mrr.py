@@ -21,14 +21,13 @@ def mrr(data):
         sub_list = np.array(sub_list)
         if total_num == 0:
             return (0.0, [0.0])
+        positions = np.where(sub_list == 1)[0]
+        if len(positions) == 0:
+            mrr_val = 0.0
         else:
-            positions = np.where(sub_list == 1)[0]
-            if len(positions) == 0:
-                mrr_val = 0.0
-            else:
-                first_pos = positions[0] + 1
-                mrr_val = 1.0 / first_pos
-            return (mrr_val, [mrr_val])
+            first_pos = positions[0] + 1
+            mrr_val = 1.0 / first_pos
+        return (mrr_val, [mrr_val])
     if type(data) == list:
         separate_result = []
         for sub_list, total_num in data:

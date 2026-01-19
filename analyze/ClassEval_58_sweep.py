@@ -11,11 +11,24 @@ def sweep(self, x, y):
         [['-', '-', '-'], ['-', 1, '-'], ['-', '-', '-']]
 
         """
-    if self.minesweeper_map[y][x] == 'X':
-        self.player_map[y][x] = 'X'
+    if x < 0 or x >= self.n or y < 0 or (y >= self.n):
         return False
-    else:
-        self.player_map[y][x] = self.minesweeper_map[y][x]
-        if self.check_won(self.player_map):
-            return True
+    if self.player_map[y][x] != '-':
         return self.player_map
+    if self.minesweeper_map[y][x] == 'X':
+        for i in range(self.n):
+            for j in range(self.n):
+                if self.minesweeper_map[i][j] == 'X':
+                    self.player_map[i][j] = 'X'
+        return False
+    self.player_map[y][x] = self.minesweeper_map[y][x]
+    if self.minesweeper_map[y][x] == 0:
+        directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+        for dx, dy in directions:
+            new_x, new_y = (x + dx, y + dy)
+            if 0 <= new_x < self.n and 0 <= new_y < self.n:
+                if self.player_map[new_y][new_x] == '-':
+                    self.sweep(new_x, new_y)
+    if self.check_won(self.player_map):
+        return True
+    return self.player_map

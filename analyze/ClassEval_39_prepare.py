@@ -4,44 +4,42 @@ def prepare(self, expression):
         :param expression: 字符串，要准备的中缀表达式
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.prepare("2+3*4")
-
         expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
         """
     op_stack = deque()
     arr = list(expression)
-    current = ''
-    i = 0
-    while i < len(arr):
-        c = arr[i]
-        if c.isdigit() or c == '.' or c == '~' or (c in 'Ee' and i > 0 and (arr[i - 1].isdigit() or arr[i - 1] == '.')):
-            if c == '~':
-                current += '-'
+    current_index = 0
+    count = 0
+    current_token = ''
+    while current_index < len(arr):
+        c = arr[current_index]
+        current_index += 1
+        if not self.is_operator(c):
+            if c != '~' and (not c.isdigit()) and (c != '.'):
+                raise ValueError('Invalid character in expression: {}'.format(c))
+            current_token += c
+            if current_index >= len(arr):
+                self.postfix_stack.append(current_token)
             else:
-                current += c
-            if i + 1 < len(arr):
-                next_c = arr[i + 1]
-                if next_c.isdigit() or next_c == '.' or next_c in 'Ee' or (next_c in '+-' and arr[i] in 'Ee'):
-                    i += 1
-                    continue
-            self.postfix_stack.append(current)
-            current = ''
+                next_char = arr[current_index]
+                if self.is_operator(next_char) or next_char == '~':
+                    self.postfix_stack.append(current_token)
+                    current_token = ''
         else:
-            if current:
-                self.postfix_stack.append(current)
-                current = ''
+            if len(current_token) > 0:
+                self.postfix_stack.append(current_token)
+                current_token = ''
             if c == '(':
                 op_stack.append(c)
             elif c == ')':
                 while op_stack and op_stack[-1] != '(':
                     self.postfix_stack.append(op_stack.pop())
-                if op_stack:
-                    op_stack.pop()
-            elif self.is_operator(c):
+                op_stack.pop()
+            else:
                 while op_stack and op_stack[-1] != '(' and self.compare(c, op_stack[-1]):
                     self.postfix_stack.append(op_stack.pop())
                 op_stack.append(c)
-        i += 1
-    if current:
-        self.postfix_stack.append(current)
+    if len(current_token) > 0:
+        self.postfix_stack.append(current_token)
     while op_stack:
         self.postfix_stack.append(op_stack.pop())
