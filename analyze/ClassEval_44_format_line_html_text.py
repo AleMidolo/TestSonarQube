@@ -21,10 +21,8 @@ def format_line_html_text(self, html_text):
         -CODE-
         """
     soup = BeautifulSoup(html_text, 'lxml')
-    text_parts = []
-    for element in soup.body.find_all(['h1', 'p']):
-        text_parts.append(element.get_text())
-    code_parts = soup.find_all(['pre', 'code'])
-    for code in code_parts:
-        text_parts.append(self.CODE_MARK)
-    return '\n'.join(text_parts)
+    text = soup.get_text()
+    code_tags = soup.find_all(['pre', 'code'])
+    for tag in code_tags:
+        text = text.replace(tag.get_text(), self.CODE_MARK)
+    return text.strip()

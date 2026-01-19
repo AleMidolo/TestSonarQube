@@ -27,7 +27,7 @@ def mrr(data):
             if len(rank) == 0:
                 return (0.0, [0.0])
             else:
-                mrr_value = 1.0 / (rank[0] + 1)
+                mrr_value = np.mean(1.0 / (rank + 1))
                 return (mrr_value, [mrr_value])
     if type(data) == list:
         separate_result = []
@@ -40,6 +40,6 @@ def mrr(data):
                 if len(rank) == 0:
                     mrr_value = 0.0
                 else:
-                    mrr_value = 1.0 / (rank[0] + 1)
+                    mrr_value = np.mean(1.0 / (rank + 1))
             separate_result.append(mrr_value)
         return (np.mean(separate_result), separate_result)

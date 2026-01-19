@@ -10,8 +10,7 @@ def lemmatize_sentence(self, sentence):
 
         """
     pos_tags = self.get_pos_tag(sentence)
-    sentence = self.remove_punctuation(sentence)
-    words = word_tokenize(sentence)
+    words = word_tokenize(self.remove_punctuation(sentence))
     lemmatized_words = []
     for word, pos in zip(words, pos_tags):
         if pos.startswith('VB'):
