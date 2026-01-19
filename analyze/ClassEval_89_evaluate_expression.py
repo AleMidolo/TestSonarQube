@@ -9,33 +9,34 @@ def evaluate_expression(self, expression):
         >>> ret = game.evaluate_expression(ans)
         True
         """
+    safe_operators = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv, ast.Pow: operator.pow, ast.USub: operator.neg, ast.UAdd: operator.pos}
+
+    def safe_eval(node):
+        if isinstance(node, ast.Num):
+            return node.n
+        elif isinstance(node, ast.BinOp):
+            left = safe_eval(node.left)
+            right = safe_eval(node.right)
+            if node.op.__class__ in safe_operators:
+                op_func = safe_operators[node.op.__class__]
+                try:
+                    return op_func(left, right)
+                except ZeroDivisionError:
+                    raise ValueError('Division by zero')
+            else:
+                raise ValueError(f'Unsupported operator: {node.op.__class__}')
+        elif isinstance(node, ast.UnaryOp):
+            operand = safe_eval(node.operand)
+            if node.op.__class__ in safe_operators:
+                op_func = safe_operators[node.op.__class__]
+                return op_func(operand)
+            else:
+                raise ValueError(f'Unsupported unary operator: {node.op.__class__}')
+        else:
+            raise ValueError(f'Unsupported AST node: {node.__class__}')
     try:
         tree = ast.parse(expression, mode='eval')
-        safe_operators = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv, ast.Pow: operator.pow, ast.USub: operator.neg, ast.UAdd: operator.pos}
-
-        def eval_node(node):
-            if isinstance(node, ast.Num):
-                return node.n
-            elif isinstance(node, ast.BinOp):
-                left = eval_node(node.left)
-                right = eval_node(node.right)
-                op_type = type(node.op)
-                if op_type in safe_operators:
-                    if op_type == ast.Div and right == 0:
-                        raise ZeroDivisionError('Division by zero')
-                    return safe_operators[op_type](left, right)
-                else:
-                    raise ValueError(f'Unsupported operator: {op_type}')
-            elif isinstance(node, ast.UnaryOp):
-                operand = eval_node(node.operand)
-                op_type = type(node.op)
-                if op_type in safe_operators:
-                    return safe_operators[op_type](operand)
-                else:
-                    raise ValueError(f'Unsupported unary operator: {op_type}')
-            else:
-                raise ValueError(f'Unsupported node type: {type(node)}')
-        result = eval_node(tree.body)
+        result = safe_eval(tree.body)
         return result
-    except Exception as e:
-        return None
+    except:
+        raise ValueError('Invalid expression')

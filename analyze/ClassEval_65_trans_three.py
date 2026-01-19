@@ -11,8 +11,8 @@ def trans_three(self, s):
     result = ''
     if s[0] != '0':
         result += self.NUMBER[int(s[0])] + ' HUNDRED'
-        if s[1:] != '00':
+        if s[1] != '0' or s[2] != '0':
             result += ' AND '
-    if s[1:] != '00':
+    if s[1] != '0' or s[2] != '0':
         result += self.trans_two(s[1:])
     return result.strip()

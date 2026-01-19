@@ -12,7 +12,7 @@ def trans_two(self, s):
     if len(s) == 1:
         return self.NUMBER[int(s)]
     if s[0] == '0':
-        return self.NUMBER[int(s[1])] if s[1] != '0' else ''
+        return self.NUMBER[int(s[1])]
     if s[0] == '1':
         return self.NUMBER_TEEN[int(s[1])]
     if s[1] == '0':

@@ -9,10 +9,10 @@ def select(self, fields=None, condition=None):
         'SELECT field1, field2 FROM table1 WHERE filed3 = value1;'
         """
     if fields is None:
-        fields_clause = '*'
+        fields_str = '*'
     else:
-        fields_clause = ', '.join(fields)
-    sql = f'SELECT {fields_clause} FROM {self.table_name}'
+        fields_str = ', '.join(fields)
+    sql = f'SELECT {fields_str} FROM {self.table_name}'
     if condition:
         sql += f' WHERE {condition}'
     return sql + ';'
