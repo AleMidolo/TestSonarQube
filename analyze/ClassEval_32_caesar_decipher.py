@@ -1,20 +1,28 @@
 def caesar_decipher(self, ciphertext, shift):
     """
-        Descifra el texto cifrado dado utilizando el cifrado César.
-        :param ciphertext: El texto cifrado a descifrar, str.
-        :param shift: El desplazamiento a utilizar para la descifrado, int.
-        :return: El texto plano descifrado, str.
-        >>> d = DecryptionUtils('key')
-        >>> d.caesar_decipher('ifmmp', 1)
-        'hello'
+    Descifra el texto cifrado dado utilizando el cifrado César.
+    :param ciphertext: El texto cifrado a descifrar, str.
+    :param shift: El desplazamiento a utilizar para la descifrado, int.
+    :return: El texto plano descifrado, str.
+    >>> d = DecryptionUtils('key')
+    >>> d.caesar_decipher('ifmmp', 1)
+    'hello'
 
-        """
-    plaintext = ''
+    """
+    result = []
+    
     for char in ciphertext:
         if char.isalpha():
-            ascii_offset = ord('a') if char.islower() else ord('A')
-            decrypted_char = chr((ord(char) - ascii_offset - shift) % 26 + ascii_offset)
-            plaintext += decrypted_char
+            # Determinar si es mayúscula o minúscula
+            if char.isupper():
+                # Descifrar mayúscula
+                decrypted_char = chr((ord(char) - ord('A') - shift) % 26 + ord('A'))
+            else:
+                # Descifrar minúscula
+                decrypted_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
+            result.append(decrypted_char)
         else:
-            plaintext += char
-    return plaintext
+            # Mantener caracteres no alfabéticos sin cambios
+            result.append(char)
+    
+    return ''.join(result)

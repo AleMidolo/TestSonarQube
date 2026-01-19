@@ -1,26 +1,40 @@
 def vigenere_decipher(self, ciphertext):
     """
-        Descifra el texto cifrado dado utilizando el cifrado de Vigenere
-        :param ciphertext: El texto cifrado a descifrar, str.
-        :return: El texto plano descifrado, str.
-        >>> d = DecryptionUtils('key')
-        >>> d.vigenere_decipher('ifmmp')
-        'ybocl'
+    Descifra el texto cifrado dado utilizando el cifrado de Vigenere
+    :param ciphertext: El texto cifrado a descifrar, str.
+    :return: El texto plano descifrado, str.
+    >>> d = DecryptionUtils('key')
+    >>> d.vigenere_decipher('ifmmp')
+    'ybocl'
 
-        """
-    plaintext = ''
-    key_length = len(self.key)
-    for i, char in enumerate(ciphertext):
+    """
+    if not ciphertext:
+        return ''
+    
+    key = self.key.lower()
+    result = []
+    key_index = 0
+    
+    for char in ciphertext:
         if char.isalpha():
-            key_char = self.key[i % key_length]
-            key_shift = ord(key_char.lower()) - ord('a')
-            if char.isupper():
-                ascii_offset = 65
-                plain_char = chr((ord(char) - ascii_offset - key_shift) % 26 + ascii_offset)
-            else:
-                ascii_offset = 97
-                plain_char = chr((ord(char) - ascii_offset - key_shift) % 26 + ascii_offset)
-            plaintext += plain_char
+            # Determine if uppercase or lowercase
+            is_upper = char.isupper()
+            char = char.lower()
+            
+            # Get the shift value from the key
+            shift = ord(key[key_index % len(key)]) - ord('a')
+            
+            # Decrypt by subtracting the shift
+            decrypted_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
+            
+            # Restore case
+            if is_upper:
+                decrypted_char = decrypted_char.upper()
+            
+            result.append(decrypted_char)
+            key_index += 1
         else:
-            plaintext += char
-    return plaintext
+            # Non-alphabetic characters are not decrypted
+            result.append(char)
+    
+    return ''.join(result)

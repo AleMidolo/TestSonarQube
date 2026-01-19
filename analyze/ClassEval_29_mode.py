@@ -1,15 +1,27 @@
 def mode(self, data):
     """
-        Calcular la moda de un conjunto de datos
-        :param data: list, lista de datos
-        :return: float, la moda
-        >>> ds = DataStatistics()
-        >>> ds.mode([2, 2, 3, 3, 4])
-        [2, 3]
-        """
+    Calcular la moda de un conjunto de datos
+    :param data: list, lista de datos
+    :return: float, la moda
+    >>> ds = DataStatistics()
+    >>> ds.mode([2, 2, 3, 3, 4])
+    [2, 3]
+    """
     if not data:
         return []
-    counter = Counter(data)
-    max_count = max(counter.values())
-    modes = [value for value, count in counter.items() if count == max_count]
-    return sorted(modes)
+    
+    # Contar la frecuencia de cada elemento
+    frequency = {}
+    for value in data:
+        frequency[value] = frequency.get(value, 0) + 1
+    
+    # Encontrar la frecuencia máxima
+    max_frequency = max(frequency.values())
+    
+    # Obtener todos los valores con la frecuencia máxima
+    modes = [key for key, freq in frequency.items() if freq == max_frequency]
+    
+    # Ordenar los resultados
+    modes.sort()
+    
+    return modes

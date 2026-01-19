@@ -1,20 +1,30 @@
 def move(self, direction):
     """
-        Mueve la serpiente en la dirección especificada. Si la nueva posición de la cabeza de la serpiente es igual a la posición de la comida, entonces come la comida; Si la posición de la cabeza de la serpiente es igual a la posición de su cuerpo, entonces comienza de nuevo, de lo contrario, su propia longitud más uno.
-        :param direction: tupla, que representa la dirección del movimiento (x, y).
-        :return: Ninguno
-        >>> snake.move((1,1))
-        self.length = 1
-        self.positions = [(51, 51), (50, 50)]
-        self.score = 10
-        """
-    head_x, head_y = self.positions[0]
-    new_head = (head_x + direction[0] * self.BLOCK_SIZE, head_y + direction[1] * self.BLOCK_SIZE)
-    if new_head in self.positions:
-        self.reset()
-        return
-    self.positions.insert(0, new_head)
+    Mueve la serpiente en la dirección especificada. Si la nueva posición de la cabeza de la serpiente es igual a la posición de la comida, entonces come la comida; Si la posición de la cabeza de la serpiente es igual a la posición de su cuerpo, entonces comienza de nuevo, de lo contrario, su propia longitud más uno.
+    :param direction: tupla, que representa la dirección del movimiento (x, y).
+    :return: Ninguno
+    >>> snake.move((1,1))
+    self.length = 1
+    self.positions = [(51, 51), (50, 50)]
+    self.score = 10
+    """
+    # Calcular la nueva posición de la cabeza
+    current_head = self.positions[0]
+    new_head = (current_head[0] + direction[0], current_head[1] + direction[1])
+    
+    # Verificar si la nueva posición coincide con la comida
     if new_head == self.food_position:
-        self.eat_food()
-    elif len(self.positions) > self.length:
+        # Come la comida: aumenta longitud y puntuación
+        self.positions.insert(0, new_head)
+        self.length += 1
+        self.score += 10
+        # Generar nueva posición de comida
+        self.generate_food()
+    # Verificar si la nueva posición coincide con el cuerpo (colisión)
+    elif new_head in self.positions[1:]:
+        # Reiniciar el juego
+        self.reset()
+    else:
+        # Movimiento normal: agregar nueva cabeza y quitar la cola
+        self.positions.insert(0, new_head)
         self.positions.pop()

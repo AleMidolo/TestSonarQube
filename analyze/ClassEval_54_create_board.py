@@ -1,25 +1,47 @@
 def create_board(self):
     """
-        crea el tablero de juego con el tamaño de tablero y los íconos dados
-        :return: lista bidimensional, el tablero de juego
-        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
-        >>> mc.create_board()
-        mc.board = [['a', 'b', 'c', 'a'],
-                    ['a', 'b', 'c', 'a'],
-                    ['a', 'b', 'c', 'a'],
-                    ['a', 'b', 'c', 'a']]
-        """
-    rows, cols = self.BOARD_SIZE
+    crea el tablero de juego con el tamaño de tablero y los íconos dados
+    :return: lista bidimensional, el tablero de juego
+    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
+    >>> mc.create_board()
+    mc.board = [['a', 'b', 'c', 'a'],
+                ['a', 'b', 'c', 'a'],
+                ['a', 'b', 'c', 'a'],
+                ['a', 'b', 'c', 'a']]
+    """
+    import random
+    
+    rows, cols = self.board_size[0], self.board_size[1]
     total_cells = rows * cols
-    icon_count = len(self.ICONS)
-    icon_pairs = []
-    for icon in self.ICONS:
-        icon_pairs.extend([icon, icon])
-    while len(icon_pairs) < total_cells:
-        icon_pairs.extend(icon_pairs[:min(len(icon_pairs), total_cells - len(icon_pairs))])
-    random.shuffle(icon_pairs)
+    
+    # Necesitamos un número par de cada ícono
+    tiles = []
+    icons_count = len(self.icons)
+    
+    # Calcular cuántas parejas de cada ícono necesitamos
+    pairs_needed = total_cells // 2
+    pairs_per_icon = pairs_needed // icons_count
+    remaining_pairs = pairs_needed % icons_count
+    
+    # Crear las fichas (cada ícono aparece en pares)
+    for i, icon in enumerate(self.icons):
+        count = pairs_per_icon * 2
+        if i < remaining_pairs:
+            count += 2
+        tiles.extend([icon] * count)
+    
+    # Mezclar las fichas
+    random.shuffle(tiles)
+    
+    # Crear el tablero bidimensional
     board = []
+    index = 0
     for i in range(rows):
-        row = icon_pairs[i * cols:(i + 1) * cols]
+        row = []
+        for j in range(cols):
+            row.append(tiles[index])
+            index += 1
         board.append(row)
+    
+    self.board = board
     return board

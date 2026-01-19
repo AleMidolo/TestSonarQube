@@ -1,18 +1,15 @@
+import math
+
 def cos(self, x):
     """
-        Calcular el valor del coseno del ángulo en grados x
-        :param x: float
-        :return: float
-        >>> tricalculator = TriCalculator()
-        >>> tricalculator.cos(60)
-        0.5
-        """
-    x = x / 180 * pi
-    g = 0
-    t = 1
-    n = 1
-    while fabs(t) >= 1e-15:
-        g += t
-        n += 1
-        t = -t * x * x / (2 * n - 1) / (2 * n - 2)
-    return round(g, 10)
+    Calcular el valor del coseno del ángulo en grados x
+    :param x: float
+    :return: float
+    >>> tricalculator = TriCalculator()
+    >>> tricalculator.cos(60)
+    0.5
+    """
+    # Convertir grados a radianes
+    radianes = math.radians(x)
+    # Calcular el coseno
+    return math.cos(radianes)

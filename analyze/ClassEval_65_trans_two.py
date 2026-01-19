@@ -1,24 +1,60 @@
 def trans_two(self, s):
     """
-        Convierte un número de dos dígitos en formato de palabras
-        :param s: str, el número de dos dígitos
-        :return: str, el número en formato de palabras
-        >>> formatter = NumberWordFormatter()
-        >>> formatter.trans_two("23")
-        "VEINTITRÉS"
-        """
-    if not s or s == '00':
-        return ''
-    if len(s) == 1:
-        s = '0' + s
+    Convierte un número de dos dígitos en formato de palabras
+    :param s: str, el número de dos dígitos
+    :return: str, el número en formato de palabras
+    >>> formatter = NumberWordFormatter()
+    >>> formatter.trans_two("23")
+    "VEINTITRÉS"
+    """
     num = int(s)
-    if num < 10:
-        return self.NUMBER[num]
-    if 10 <= num <= 19:
-        return self.NUMBER_TEEN[num - 10]
-    tens_digit = int(s[0])
-    ones_digit = int(s[1])
-    if ones_digit == 0:
-        return self.NUMBER_TEN[tens_digit - 1]
+    
+    # Casos especiales del 10 al 15
+    especiales = {
+        10: "DIEZ",
+        11: "ONCE",
+        12: "DOCE",
+        13: "TRECE",
+        14: "CATORCE",
+        15: "QUINCE"
+    }
+    
+    if num in especiales:
+        return especiales[num]
+    
+    # Del 16 al 19
+    unidades = ["", "UNO", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"]
+    if 16 <= num <= 19:
+        return "DIECISÉIS" if num == 16 else "DIECI" + unidades[num % 10]
+    
+    # Del 20 al 29
+    if 20 <= num <= 29:
+        if num == 20:
+            return "VEINTE"
+        unidad = num % 10
+        if unidad == 0:
+            return "VEINTE"
+        veintitantos = {
+            1: "VEINTIUNO",
+            2: "VEINTIDÓS",
+            3: "VEINTITRÉS",
+            4: "VEINTICUATRO",
+            5: "VEINTICINCO",
+            6: "VEINTISÉIS",
+            7: "VEINTISIETE",
+            8: "VEINTIOCHO",
+            9: "VEINTINUEVE"
+        }
+        return veintitantos[unidad]
+    
+    # Del 30 en adelante
+    decenas = ["", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA", 
+               "SESENTA", "SETENTA", "OCHENTA", "NOVENTA"]
+    
+    decena = num // 10
+    unidad = num % 10
+    
+    if unidad == 0:
+        return decenas[decena]
     else:
-        return f'{self.NUMBER_TEN[tens_digit - 1]} {self.NUMBER[ones_digit]}'
+        return decenas[decena] + " Y " + unidades[unidad]

@@ -1,5 +1,6 @@
 def _generate_cards(self):
     """
-        Generar números aleatorios entre 1 y 9 para las cartas.
-        """
-    self.nums = [random.randint(1, 9) for _ in range(4)]
+    Generar números aleatorios entre 1 y 9 para las cartas.
+    """
+    import random
+    return [random.randint(1, 9) for _ in range(2)]

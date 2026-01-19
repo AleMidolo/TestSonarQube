@@ -1,26 +1,39 @@
 def process_excel_data(self, N, save_file_name):
     """
-        Cambia la columna especificada en el archivo de Excel a mayúsculas
-        :param N: int, El número de serie de la columna que se desea cambiar
-        :param save_file_name: str, nombre del archivo fuente
-        :return:(int, str), El primero es el valor de retorno de write_excel, mientras que el segundo es el nombre del archivo guardado de los datos procesados
-        >>> processor = ExcelProcessor()
-        >>> success, output_file = processor.process_excel_data(1, 'test_data.xlsx')
-        """
+    Cambia la columna especificada en el archivo de Excel a mayúsculas
+    :param N: int, El número de serie de la columna que se desea cambiar
+    :param save_file_name: str, nombre del archivo fuente
+    :return:(int, str), El primero es el valor de retorno de write_excel, mientras que el segundo es el nombre del archivo guardado de los datos procesados
+    >>> processor = ExcelProcessor()
+    >>> success, output_file = processor.process_excel_data(1, 'test_data.xlsx')
+    """
+    import openpyxl
+    import os
+    
+    # Leer el archivo Excel
     try:
-        data = self.read_excel(save_file_name)
-        if data is None:
-            return (0, '')
-        processed_data = []
-        for row in data:
-            processed_row = list(row)
-            if 0 <= N - 1 < len(processed_row):
-                cell_value = processed_row[N - 1]
-                if isinstance(cell_value, str):
-                    processed_row[N - 1] = cell_value.upper()
-            processed_data.append(tuple(processed_row))
-        output_file_name = f'processed_{save_file_name}'
-        result = self.write_excel(processed_data, output_file_name)
-        return (result, output_file_name)
-    except:
-        return (0, '')
+        workbook = openpyxl.load_workbook(save_file_name)
+        sheet = workbook.active
+        
+        # Convertir la columna N a mayúsculas
+        max_row = sheet.max_row
+        for row in range(1, max_row + 1):
+            cell = sheet.cell(row=row, column=N)
+            if cell.value is not None and isinstance(cell.value, str):
+                cell.value = cell.value.upper()
+        
+        # Generar nombre del archivo de salida
+        base_name = os.path.splitext(save_file_name)[0]
+        extension = os.path.splitext(save_file_name)[1]
+        output_file_name = f"{base_name}_processed{extension}"
+        
+        # Guardar el archivo
+        workbook.save(output_file_name)
+        workbook.close()
+        
+        # Retornar el resultado de write_excel (1 para éxito) y el nombre del archivo
+        return (1, output_file_name)
+        
+    except Exception as e:
+        # En caso de error, retornar 0 y el mensaje de error
+        return (0, str(e))

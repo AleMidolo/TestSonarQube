@@ -1,34 +1,64 @@
 @staticmethod
 def interpolate_2d(x, y, z, x_interp, y_interp):
     """ 
-        Interpolación lineal de datos bidimensionales
-        :param x: La coordenada x del punto de datos, lista.
-        :param y: La coordenada y del punto de datos, lista.
-        :param z: La coordenada z del punto de datos, lista.
-        :param x_interp: La coordenada x del punto de interpolación, lista.
-        :param y_interp: La coordenada y del punto de interpolación, lista.
-        :return: La coordenada z del punto de interpolación, lista.
-        >>> interpolation = Interpolation()
-        >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])
-        [3.0, 7.0]
+    Interpolación lineal de datos bidimensionales
+    :param x: La coordenada x del punto de datos, lista.
+    :param y: La coordenada y del punto de datos, lista.
+    :param z: La coordenada z del punto de datos, lista.
+    :param x_interp: La coordenada x del punto de interpolación, lista.
+    :param y_interp: La coordenada y del punto de interpolación, lista.
+    :return: La coordenada z del punto de interpolación, lista.
+    >>> interpolation = Interpolation()
+    >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])
+    [3.0, 7.0]
 
-        """
-    z_interp = []
+    """
+    result = []
+    
     for xi, yi in zip(x_interp, y_interp):
+        # Find the indices for interpolation
+        # Find x indices
+        x_idx = 0
         for i in range(len(x) - 1):
             if x[i] <= xi <= x[i + 1]:
-                for j in range(len(y) - 1):
-                    if y[j] <= yi <= y[j + 1]:
-                        x1, x2 = (x[i], x[i + 1])
-                        y1, y2 = (y[j], y[j + 1])
-                        q11 = z[j][i]
-                        q12 = z[j + 1][i]
-                        q21 = z[j][i + 1]
-                        q22 = z[j + 1][i + 1]
-                        f_y1 = q11 + (q21 - q11) * (xi - x1) / (x2 - x1)
-                        f_y2 = q12 + (q22 - q12) * (xi - x1) / (x2 - x1)
-                        zi = f_y1 + (f_y2 - f_y1) * (yi - y1) / (y2 - y1)
-                        z_interp.append(zi)
-                        break
+                x_idx = i
                 break
-    return z_interp
+        
+        # Find y indices
+        y_idx = 0
+        for i in range(len(y) - 1):
+            if y[i] <= yi <= y[i + 1]:
+                y_idx = i
+                break
+        
+        # Get the four corner points
+        x0, x1 = x[x_idx], x[x_idx + 1]
+        y0, y1 = y[y_idx], y[y_idx + 1]
+        
+        z00 = z[x_idx][y_idx]
+        z01 = z[x_idx][y_idx + 1]
+        z10 = z[x_idx + 1][y_idx]
+        z11 = z[x_idx + 1][y_idx + 1]
+        
+        # Bilinear interpolation
+        # Interpolate in x direction
+        if x1 - x0 != 0:
+            tx = (xi - x0) / (x1 - x0)
+        else:
+            tx = 0
+        
+        if y1 - y0 != 0:
+            ty = (yi - y0) / (y1 - y0)
+        else:
+            ty = 0
+        
+        # Interpolate along y at x0
+        z_y0 = z00 * (1 - ty) + z01 * ty
+        # Interpolate along y at x1
+        z_y1 = z10 * (1 - ty) + z11 * ty
+        # Interpolate along x
+        z_interp = z_y0 * (1 - tx) + z_y1 * tx
+        
+        result.append(z_interp)
+    
+    return result

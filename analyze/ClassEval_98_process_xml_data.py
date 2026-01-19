@@ -1,22 +1,40 @@
 def process_xml_data(self, file_name):
     """
-        Modifica los datos en los elementos XML y escribe los datos XML actualizados en un nuevo archivo.
-        :param file_name: cadena, el nombre del archivo para escribir los datos XML modificados.
-        :return: bool, True si la operación de escritura es exitosa, False en caso contrario.
-        >>> xml_processor = XMLProcessor('test.xml')
-        >>> root = xml_processor.read_xml()
-        >>> success = xml_processor.process_xml_data('processed.xml')
-        >>> print(success)
-        True
-        """
-    if self.root is None:
-        return False
+    Modifica los datos en los elementos XML y escribe los datos XML actualizados en un nuevo archivo.
+    :param file_name: cadena, el nombre del archivo para escribir los datos XML modificados.
+    :return: bool, True si la operación de escritura es exitosa, False en caso contrario.
+    >>> xml_processor = XMLProcessor('test.xml')
+    >>> root = xml_processor.read_xml()
+    >>> success = xml_processor.process_xml_data('processed.xml')
+    >>> print(success)
+    True
+    """
     try:
-        for elem in self.root.iter():
-            if elem.text and elem.text.strip():
-                elem.text = elem.text.strip() + '_modified'
+        import xml.etree.ElementTree as ET
+        
+        # Read the XML data if not already loaded
+        if not hasattr(self, 'root') or self.root is None:
+            self.root = self.read_xml()
+            if self.root is None:
+                return False
+        
+        # Process/modify the XML data (example modifications)
+        # This could involve updating text, attributes, or structure
+        for element in self.root.iter():
+            # Example: modify text content if it exists
+            if element.text and element.text.strip():
+                element.text = element.text.strip()
+            
+            # Example: process attributes
+            for attr_name, attr_value in element.attrib.items():
+                if isinstance(attr_value, str):
+                    element.attrib[attr_name] = attr_value.strip()
+        
+        # Create an ElementTree object and write to file
         tree = ET.ElementTree(self.root)
-        tree.write(file_name)
+        tree.write(file_name, encoding='utf-8', xml_declaration=True)
+        
         return True
-    except:
+        
+    except Exception as e:
         return False
