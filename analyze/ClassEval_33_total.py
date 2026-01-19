@@ -8,4 +8,4 @@ def total(self):
         >>> ds.total()
         329.0
         """
-    return self.__total
+    return sum((item['quantity'] * item['price'] for item in self.cart))

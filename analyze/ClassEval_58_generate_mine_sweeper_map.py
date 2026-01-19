@@ -15,18 +15,14 @@ def generate_mine_sweeper_map(self):
         if arr[x][y] != 'X':
             arr[x][y] = 'X'
             mines_placed += 1
+            for i in range(max(0, x - 1), min(self.n, x + 2)):
+                for j in range(max(0, y - 1), min(self.n, y + 2)):
+                    if arr[i][j] != 'X':
+                        arr[i][j] += 1
     for i in range(self.n):
         for j in range(self.n):
-            if arr[i][j] == 'X':
-                continue
-            mine_count = 0
-            for dx in [-1, 0, 1]:
-                for dy in [-1, 0, 1]:
-                    if dx == 0 and dy == 0:
-                        continue
-                    ni, nj = (i + dx, j + dy)
-                    if 0 <= ni < self.n and 0 <= nj < self.n:
-                        if arr[ni][nj] == 'X':
-                            mine_count += 1
-            arr[i][j] = mine_count
+            if arr[i][j] != 'X':
+                arr[i][j] = str(arr[i][j])
+            else:
+                arr[i][j] = 'X'
     return arr

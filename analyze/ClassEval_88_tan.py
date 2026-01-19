@@ -9,5 +9,6 @@ def tan(self, x):
     sin_val = self.sin(x)
     cos_val = self.cos(x)
     if fabs(cos_val) < 1e-10:
-        raise ValueError('tan is undefined for angles where cos(x) = 0')
-    return round(sin_val / cos_val, 10)
+        raise ValueError(f'tan({x}) is undefined (cos({x}) = 0)')
+    tan_val = sin_val / cos_val
+    return round(tan_val, 10)

@@ -9,7 +9,7 @@ def remove_book(self, title, quantity):
         raise ValueError(f"Book '{title}' not found in inventory")
     if not isinstance(quantity, int) or quantity <= 0:
         raise ValueError('Quantity must be a positive integer')
-    if self.inventory[title] < quantity:
+    if quantity > self.inventory[title]:
         raise ValueError(f"Cannot remove {quantity} copies of '{title}'. Only {self.inventory[title]} available")
     self.inventory[title] -= quantity
     if self.inventory[title] == 0:

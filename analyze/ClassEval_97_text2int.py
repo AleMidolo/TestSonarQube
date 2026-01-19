@@ -12,26 +12,19 @@ def text2int(self, textnum):
     processed_words = []
     for word in words:
         if word in self.ordinal_words:
-            processed_words.append(str(self.ordinal_words[word]))
-            continue
+            processed_words.append(self.units[self.ordinal_words[word]])
         else:
             for ending, replacement in self.ordinal_endings:
                 if word.endswith(ending):
                     word = '%s%s' % (word[:-len(ending)], replacement)
-                    break
             processed_words.append(word)
+    words = processed_words
     current = 0
     result = 0
-    for word in processed_words:
-        if word == 'and':
-            continue
+    for word in words:
         if word not in self.numwords:
-            try:
-                scale, increment = (1, int(word))
-            except ValueError:
-                continue
-        else:
-            scale, increment = self.numwords[word]
+            continue
+        scale, increment = self.numwords[word]
         current = current * scale + increment
         if scale > 100:
             result += current

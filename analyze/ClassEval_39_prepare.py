@@ -11,33 +11,32 @@ def prepare(self, expression):
     current_index = 0
     count = 0
     current_op = ''
-    while count < len(arr):
-        current_op = arr[count]
-        if self.is_operator(current_op):
-            if current_op == '(':
-                op_stack.append(current_op)
-            elif current_op == ')':
-                while op_stack and op_stack[-1] != '(':
-                    self.postfix_stack.append(op_stack.pop())
-                op_stack.pop()
+    while current_index < len(arr):
+        c = arr[current_index]
+        current_index += 1
+        if c.isdigit():
+            if count > 1:
+                current_op = self.postfix_stack.pop() + c
             else:
-                while op_stack and op_stack[-1] != '(' and self.compare(current_op, op_stack[-1]):
-                    self.postfix_stack.append(op_stack.pop())
-                op_stack.append(current_op)
-        elif current_op != '~':
-            current_index = count
-            if current_op.isdigit():
-                while count < len(arr) - 1 and (arr[count + 1].isdigit() or arr[count + 1] == '.'):
-                    count += 1
-                if count >= current_index:
-                    num_str = ''.join(arr[current_index:count + 1])
-                    self.postfix_stack.append(num_str)
+                current_op = c
+            self.postfix_stack.append(current_op)
+            count += 1
         else:
-            while count < len(arr) - 1 and (arr[count + 1].isdigit() or arr[count + 1] == '.' or arr[count + 1] == '~'):
-                count += 1
-            if count >= current_index:
-                num_str = ''.join(arr[current_index:count + 1])
-                self.postfix_stack.append(num_str)
-        count += 1
+            count = 0
+            if c == ')':
+                while op_stack:
+                    op = op_stack.pop()
+                    if op == '(':
+                        break
+                    else:
+                        self.postfix_stack.append(op)
+            elif not op_stack:
+                op_stack.append(c)
+            elif c == '(':
+                op_stack.append(c)
+            else:
+                while op_stack and op_stack[-1] != '(' and self.compare(c, op_stack[-1]):
+                    self.postfix_stack.append(op_stack.pop())
+                op_stack.append(c)
     while op_stack:
         self.postfix_stack.append(op_stack.pop())

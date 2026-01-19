@@ -12,7 +12,5 @@ def get_hostname(ip_address):
     try:
         hostname, _, _ = socket.gethostbyaddr(ip_address)
         return hostname
-    except socket.herror:
-        return None
-    except socket.gaierror:
+    except (socket.herror, socket.gaierror, ValueError):
         return None
