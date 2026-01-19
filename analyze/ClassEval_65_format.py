@@ -7,9 +7,10 @@ def format(self, x):
         >>> formatter.format(123456)
         "CIENTO VEINTITRÉS MIL CUATROCIENTOS CINCUENTA Y SEIS SOLAMENTE"
         """
-    if isinstance(x, int):
-        return self.format_string(str(x))
-    elif isinstance(x, float):
-        return self.format_string(str(x))
+    if isinstance(x, (int, float)):
+        x_str = str(x)
+        if isinstance(x, float):
+            x_str = str(x).rstrip('0').rstrip('.') if '.' in str(x) else str(x)
+        return self.format_string(x_str)
     else:
-        raise TypeError('x must be int or float')
+        raise TypeError('Input must be int or float')

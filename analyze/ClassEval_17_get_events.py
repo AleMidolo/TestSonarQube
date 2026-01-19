@@ -9,9 +9,7 @@ def get_events(self, date):
         [{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 1, 0), 'description': 'Año Nuevo'}]
         """
     events_on_date = []
-    target_date = date.date() if isinstance(date, datetime) else date
     for event in self.events:
-        event_date = event['date'].date() if isinstance(event['date'], datetime) else event['date']
-        if event_date == target_date:
+        if event['date'].date() == date.date():
             events_on_date.append(event)
     return events_on_date

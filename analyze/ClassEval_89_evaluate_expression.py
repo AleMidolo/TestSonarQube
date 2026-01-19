@@ -10,7 +10,7 @@ def evaluate_expression(self, expression):
         True
         """
     try:
-        result = eval(expression, {'__builtins__': {}}, {'math': math})
-        return math.isclose(result, 24, rel_tol=1e-09)
-    except (ZeroDivisionError, SyntaxError, NameError, TypeError, ValueError):
-        return False
+        result = eval(expression)
+        return result
+    except:
+        return None

@@ -16,7 +16,7 @@ def insert_into_database(self, table_name, data):
     placeholders = ', '.join(['?' for _ in columns])
     column_names = ', '.join(columns)
     insert_query = f'INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})'
-    values_list = [tuple((item[col] for col in columns)) for item in data]
+    values_list = [tuple((row[col] for col in columns)) for row in data]
     cursor.executemany(insert_query, values_list)
     conn.commit()
     conn.close()
