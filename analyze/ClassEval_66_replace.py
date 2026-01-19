@@ -1,39 +1,15 @@
 def replace(self, string):
     """
-    Sostituisce i riferimenti ai caratteri numerici (entità HTML) nella stringa di input con i loro corrispondenti caratteri Unicode.
-    :param string: str, la stringa di input contenente riferimenti ai caratteri numerici.
-    :return: str, la stringa di input con i riferimenti ai caratteri numerici sostituiti con i loro corrispondenti caratteri Unicode.
-    >>> unescaper = NumericEntityUnescaper()
-    >>> unescaper.replace("&#65;&#66;&#67;")
-    'ABC'
-
-    """
+        将输入字符串中的数字字符引用（HTML 实体）替换为相应的 Unicode 字符。
+        :param string: str，包含数字字符引用的输入字符串。
+        :return: str，输入字符串，其中的数字字符引用已被相应的 Unicode 字符替换。
+        >>> unescaper = NumericEntityUnescaper()
+        >>> unescaper.replace("&#65;&#66;&#67;")
+        'ABC'
+        """
     import re
-    
+
     def replace_entity(match):
-        entity = match.group(0)
-        # Remove &#, &#x, or &# prefix and ; suffix
-        if entity.startswith('&#x') or entity.startswith('&#X'):
-            # Hexadecimal entity
-            num_str = entity[3:-1]
-            try:
-                char_code = int(num_str, 16)
-                return chr(char_code)
-            except (ValueError, OverflowError):
-                return entity
-        elif entity.startswith('&#'):
-            # Decimal entity
-            num_str = entity[2:-1]
-            try:
-                char_code = int(num_str, 10)
-                return chr(char_code)
-            except (ValueError, OverflowError):
-                return entity
-        return entity
-    
-    # Pattern to match numeric character references
-    # Matches &#digits; or &#xhexdigits; or &#Xhexdigits;
-    pattern = r'&#[xX]?[0-9a-fA-F]+;'
-    
-    result = re.sub(pattern, replace_entity, string)
-    return result
+        code = int(match.group(1))
+        return chr(code)
+    return re.sub('&#(\\d+);', replace_entity, string)

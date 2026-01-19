@@ -1,15 +1,11 @@
 def insert_ticket(self, movie_name, theater_name, seat_number, customer_name):
     """
-    Inserisce un nuovo biglietto nella tabella "tickets".
-    :param movie_name: str, il nome del film.
-    :param theater_name: str, il nome del teatro.
-    :param seat_number: str, il numero del posto.
-    :param customer_name: str, il nome del cliente.
-    :return: None
-    """
-    query = """
-    INSERT INTO tickets (movie_name, theater_name, seat_number, customer_name)
-    VALUES (?, ?, ?, ?)
-    """
-    self.cursor.execute(query, (movie_name, theater_name, seat_number, customer_name))
+        将新票插入到“tickets”表中。
+        :param movie_name: str，电影名称。
+        :param theater_name: str，剧院名称。
+        :param seat_number: str，座位号。
+        :param customer_name: str，顾客名称。
+        :return: None
+        """
+    self.cursor.execute('\n                INSERT INTO tickets (movie_name, theater_name, seat_number, customer_name)\n                VALUES (?, ?, ?, ?)\n            ', (movie_name, theater_name, seat_number, customer_name))
     self.connection.commit()

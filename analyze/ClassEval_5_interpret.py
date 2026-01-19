@@ -1,42 +1,22 @@
 def interpret(self, display=False):
     """
-    Interpreta il punteggio musicale da suonare
-    :param display: Bool, che rappresenta se stampare il punteggio interpretato
-    :return: lista di dict, Il dict include due campi, Chord e Tune, che sono lettere e numeri, rispettivamente. Se l'input è vuoto o contiene solo spazi bianchi, viene restituita una lista vuota.
-    >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
-    >>> play_list = context.interpret(display = False)
-    [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]
+        解析要演奏的乐谱
+        :param display: Bool，表示是否打印解析后的乐谱
+        :return: dict 的列表，字典包括两个字段，Chord 和 Tune，分别是字母和数字。如果输入为空或仅包含空格，则返回一个空列表。
+        >>> context = AutomaticGuitarSimulator("C53231323 Em43231323 F43231323 G63231323")
+        >>> play_list = context.interpret(display = False)
+        [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]
 
-    """
-    # Check if the input is empty or contains only whitespace
-    if not hasattr(self, 'score') or not self.score or self.score.strip() == '':
+        """
+    if not self.play_text.strip():
         return []
-    
-    # Split the score by spaces
-    tokens = self.score.strip().split()
-    
-    play_list = []
-    
-    for token in tokens:
-        if not token:  # Skip empty tokens
-            continue
-        
-        # Separate chord (letters) from tune (numbers)
-        chord = ''
-        tune = ''
-        
-        for char in token:
-            if char.isalpha():
-                chord += char
-            elif char.isdigit():
-                tune += char
-        
-        # Only add to playlist if both chord and tune exist
-        if chord and tune:
-            play_list.append({'Chord': chord, 'Tune': tune})
-    
-    # Display if requested
+    chords_and_tunes = []
+    parts = self.play_text.split()
+    for part in parts:
+        chord = ''.join(filter(str.isalpha, part))
+        tune = ''.join(filter(str.isdigit, part))
+        chords_and_tunes.append({'Chord': chord, 'Tune': tune})
     if display:
-        print(play_list)
-    
-    return play_list
+        for item in chords_and_tunes:
+            print(self.display(item['Chord'], item['Tune']))
+    return chords_and_tunes

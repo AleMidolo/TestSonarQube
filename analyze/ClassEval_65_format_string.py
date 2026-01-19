@@ -1,69 +1,30 @@
 def format_string(self, x):
     """
-    Converte una rappresentazione stringa di un numero nella sua rappresentazione in parole.
-    :param x: str, la rappresentazione stringa di un numero
-    :return: str, il numero nel formato parole
-    >>> formatter = NumberWordFormatter()
-    >>> formatter.format_string("123456")
-    "UNO CENTO E VENTITRE MILA QUATTROCENTO E CINQUANTA SEI SOLO"
-    """
-    # Definizione delle parole per i numeri
-    unita = ["", "UNO", "DUE", "TRE", "QUATTRO", "CINQUE", "SEI", "SETTE", "OTTO", "NOVE"]
-    decine_speciali = ["DIECI", "UNDICI", "DODICI", "TREDICI", "QUATTORDICI", "QUINDICI", 
-                       "SEDICI", "DICIASSETTE", "DICIOTTO", "DICIANNOVE"]
-    decine = ["", "", "VENTI", "TRENTA", "QUARANTA", "CINQUANTA", "SESSANTA", "SETTANTA", "OTTANTA", "NOVANTA"]
-    
-    def converti_centinaia(num):
-        """Converte un numero di massimo 3 cifre in parole"""
-        if num == 0:
-            return ""
-        
-        risultato = []
-        
-        # Centinaia
-        centinaia = num // 100
-        if centinaia > 0:
-            risultato.append(unita[centinaia])
-            risultato.append("CENTO")
-        
-        # Decine e unità
-        resto = num % 100
-        if resto >= 10 and resto < 20:
-            if risultato:
-                risultato.append("E")
-            risultato.append(decine_speciali[resto - 10])
-        else:
-            dec = resto // 10
-            uni = resto % 10
-            
-            if dec > 0:
-                if risultato:
-                    risultato.append("E")
-                risultato.append(decine[dec])
-            
-            if uni > 0:
-                risultato.append(unita[uni])
-        
-        return " ".join(risultato)
-    
-    # Converti la stringa in intero
-    numero = int(x)
-    
-    if numero == 0:
-        return "ZERO SOLO"
-    
-    risultato = []
-    
-    # Gestione migliaia
-    migliaia = numero // 1000
-    if migliaia > 0:
-        risultato.append(converti_centinaia(migliaia))
-        risultato.append("MILA")
-    
-    # Gestione centinaia, decine e unità
-    resto = numero % 1000
-    if resto > 0:
-        risultato.append(converti_centinaia(resto))
-    
-    # Aggiungi "SOLO" alla fine
-    return " ".join(risultato) + " SOLO"
+        将数字的字符串表示转换为单词格式
+        :param x: str，数字的字符串表示
+        :return: str，数字的单词格式
+        >>> formatter = NumberWordFormatter()
+        >>> formatter.format_string("123456")
+        "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
+        """
+    if not x.isdigit():
+        return ''
+    x = x.split('.')
+    whole_part = x[0]
+    decimal_part = x[1] if len(x) > 1 else ''
+    words = []
+    length = len(whole_part)
+    if length == 0:
+        return 'ZERO ONLY'
+    for i in range(length, 0, -3):
+        group = whole_part[max(0, i - 3):i]
+        if group:
+            group_words = self.trans_three(group)
+            if i // 3 > 0:
+                group_words += ' ' + self.parse_more(i // 3 - 1)
+            words.append(group_words)
+    words.reverse()
+    result = ' AND '.join(words).strip()
+    if decimal_part:
+        result += ' POINT ' + ' '.join((self.NUMBER[int(digit)] for digit in decimal_part))
+    return result + ' ONLY'

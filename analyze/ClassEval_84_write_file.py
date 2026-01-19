@@ -1,11 +1,11 @@
 def write_file(self, content):
     """
-    Scrive il contenuto nel file self.file_path, sovrascrivendo se il file esiste già.
-    :param content: qualsiasi contenuto
-    >>> textFileProcessor = TextFileProcessor('test.json')
-    >>> textFileProcessor.write_file('Hello world!')
-    >>> textFileProcessor.read_file()
-    'Hello world!'
-    """
-    with open(self.file_path, 'w') as f:
-        f.write(str(content))
+        将内容写入 self.file_path 文件，如果文件已存在则覆盖。
+        :param content: 任何内容
+        >>> textFileProcessor = TextFileProcessor('test.json')
+        >>> textFileProcessor.write_file('Hello world!')
+        >>> textFileProcessor.read_file()
+        'Hello world!'
+        """
+    with open(self.file_path, 'w') as file:
+        file.write(content)

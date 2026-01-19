@@ -1,10 +1,9 @@
 def generate_playerMap(self):
     """
-    Genera una mappa del giocatore con la dimensione data del tabellone, il parametro n è la dimensione del tabellone, la dimensione del tabellone è n*n, il parametro k è il numero di mine, '-' rappresenta la posizione sconosciuta.
-    :return: La mappa del giocatore, lista.
-    >>> minesweeper_game = MinesweeperGame(3, 1)
-    >>> minesweeper_game.generate_playerMap()
-    [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
-
-    """
+        生成一个玩家地图，给定的参数 n 是棋盘的大小，棋盘的大小为 n*n，参数 k 是地雷的数量，'-' 表示未知位置。
+        :return: 玩家地图，列表。
+        >>> minesweeper_game = MinesweeperGame(3, 1)
+        >>> minesweeper_game.generate_playerMap()
+        [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
+        """
     return [['-' for _ in range(self.n)] for _ in range(self.n)]

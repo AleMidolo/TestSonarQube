@@ -1,12 +1,12 @@
 def add_user(self, username):
     """
-    Aggiungi un nuovo utente alla Chat.
-    :param username: Il nome dell'utente, str.
-    :return: Se l'utente è già nella Chat, restituisce False, altrimenti restituisce True.
+    向聊天中添加新用户。
+    :param username: 用户的名称，str。
+    :return: 如果用户已经在聊天中，则返回 False，否则返回 True。
     >>> chat = Chat()
     >>> chat.add_user('John')
     True
-    self.users = {'John': []}
+    >>> chat.users = {'John': []}
     >>> chat.add_user('John')
     False
 

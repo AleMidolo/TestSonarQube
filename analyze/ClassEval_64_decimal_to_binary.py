@@ -1,22 +1,11 @@
+@staticmethod
 def decimal_to_binary(decimal_num):
     """
-    Converti un numero dal formato decimale al formato binario.
-    :param decimal_num: int, numero decimale
-    :return: str, la rappresentazione binaria di un intero.
-    >>> NumberConverter.decimal_to_binary(42423)
-    '1010010110110111'
-    """
-    if decimal_num == 0:
-        return '0'
-    
-    binary = ''
-    num = abs(decimal_num)
-    
-    while num > 0:
-        binary = str(num % 2) + binary
-        num = num // 2
-    
-    if decimal_num < 0:
-        return '-' + binary
-    
-    return binary
+        将一个数字从十进制格式转换为二进制格式。
+        :param decimal_num: int, 十进制数字
+        :return: str, 整数的二进制表示。
+        >>> NumberConverter.decimal_to_binary(42423)
+        '1010010110110111'
+        """
+    binary_num = bin(decimal_num)[2:]
+    return binary_num

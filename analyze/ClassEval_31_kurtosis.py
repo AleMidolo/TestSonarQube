@@ -1,29 +1,15 @@
 @staticmethod
 def kurtosis(data):
     """
-    Calcola la curtosi di un insieme di dati.
-    :param data: La lista di dati in input, list.
-    :return: La curtosi, float.
-    >>> DataStatistics4.kurtosis([1, 20,100])
-    -1.5000000000000007
-
-    """
+        计算一组数据的峰度。
+        :param data: 输入数据列表，list。
+        :return: 峰度，float。
+        >>> DataStatistics4.kurtosis([1, 20,100])
+        -1.5000000000000007
+        """
     n = len(data)
-    if n < 4:
-        raise ValueError("Kurtosis requires at least 4 data points")
-    
-    # Calculate mean
     mean = sum(data) / n
-    
-    # Calculate standard deviation
-    variance = sum((x - mean) ** 2 for x in data) / n
-    std_dev = variance ** 0.5
-    
-    if std_dev == 0:
-        raise ValueError("Standard deviation is zero")
-    
-    # Calculate kurtosis (excess kurtosis)
-    fourth_moment = sum((x - mean) ** 4 for x in data) / n
-    kurtosis_value = (fourth_moment / (variance ** 2)) - 3
-    
-    return kurtosis_value
+    variance = sum(((x - mean) ** 2 for x in data)) / n
+    std_deviation = math.sqrt(variance)
+    kurtosis = sum(((x - mean) ** 4 for x in data)) * n / ((n - 1) * (n - 2) * (n - 3) * std_deviation ** 4) - 3 if std_deviation != 0 else 0
+    return kurtosis

@@ -1,31 +1,12 @@
 def answer(self, expression):
     """
-    Controlla se una data espressione matematica usando le carte può valutarsi a 24.
-    :param expression: stringa, espressione matematica usando le carte
-    :return: bool, True se l'espressione si valuta a 24, False altrimenti
+    检查给定的数学表达式是否可以使用这些牌计算出24。
+    :param expression: 字符串，使用牌的数学表达式
+    :return: 布尔值，如果表达式计算结果为24则返回True，否则返回False
     >>> game = TwentyFourPointGame()
     >>> game.nums = [4, 3, 6, 6]
     >>> ans = "4*3+6+6"
     >>> ret = game.answer(ans)
     True
     """
-    import re
-    
-    # Estrai tutti i numeri dall'espressione
-    numbers_in_expr = re.findall(r'\d+', expression)
-    numbers_in_expr = [int(n) for n in numbers_in_expr]
-    
-    # Verifica che i numeri usati corrispondano esattamente ai numeri disponibili
-    sorted_expr_nums = sorted(numbers_in_expr)
-    sorted_game_nums = sorted(self.nums)
-    
-    if sorted_expr_nums != sorted_game_nums:
-        return False
-    
-    # Valuta l'espressione
-    try:
-        result = eval(expression)
-        # Verifica se il risultato è 24 (con tolleranza per errori di floating point)
-        return abs(result - 24) < 1e-9
-    except:
-        return False
+    return self.evaluate_expression(expression)

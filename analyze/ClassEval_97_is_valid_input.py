@@ -1,34 +1,12 @@
 def is_valid_input(self, textnum):
     """
-    Controlla se il testo di input contiene solo parole valide che possono essere convertite in numeri.
-    :param textnum: Il testo di input contenente parole che rappresentano numeri.
-    :return: True se l'input è valido, False altrimenti.
-    >>> w2n = Words2Numbers()
-    >>> w2n.is_valid_input("thirty-two")
-    False
-    """
-    # Define valid number words
-    valid_words = {
-        'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
-        'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
-        'seventeen', 'eighteen', 'nineteen', 'twenty', 'thirty', 'forty', 'fifty',
-        'sixty', 'seventy', 'eighty', 'ninety', 'hundred', 'thousand', 'million',
-        'billion', 'trillion', 'and', 'cento', 'mila', 'milione', 'milioni',
-        'miliardo', 'miliardi', 'e'
-    }
-    
-    # Clean and normalize the input
-    textnum = textnum.strip().lower()
-    
-    if not textnum:
-        return False
-    
-    # Split by spaces and check each word
-    words = textnum.split()
-    
-    for word in words:
-        # Remove any hyphens and check if it's a valid word
-        if word not in valid_words:
-            return False
-    
-    return True
+        检查输入文本是否仅包含可以转换为数字的有效单词。
+        :param textnum: 包含表示数字的单词的输入文本。
+        :return: 如果输入有效则返回 True，否则返回 False。
+        >>> w2n = Words2Numbers()
+        >>> w2n.is_valid_input("thirty-two")
+        False
+        """
+    valid_words = set(self.numwords.keys()).union(set(self.ordinal_words.keys()))
+    words = textnum.replace('-', ' ').split()
+    return all((word in valid_words for word in words))

@@ -1,14 +1,9 @@
 def string_to_datetime(self, string):
     """
-    Converte la stringa di tempo in un'istanza di datetime
-    :param string: stringa, stringa prima della conversione del formato
-    :return: istanza di datetime
+    将时间字符串转换为 datetime 实例
+    :param string: 字符串, 转换格式之前的字符串
+    :return: datetime 实例
     >>> timeutils.string_to_datetime("2001-7-18 1:1:1")
-    2001-07-18 01:01:01
+    datetime.datetime(2001, 7, 18, 1, 1, 1)
     """
-    from datetime import datetime
-    
-    # Parse the string to datetime object
-    dt = datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
-    
-    return dt
+    return datetime.datetime.strptime(string, '%Y-%m-%d %H:%M:%S')

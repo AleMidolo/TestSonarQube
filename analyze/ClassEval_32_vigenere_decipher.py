@@ -1,43 +1,24 @@
 def vigenere_decipher(self, ciphertext):
     """
-    Decifra il testo cifrato fornito utilizzando il cifrario di Vigenere
-    :param ciphertext: Il testo cifrato da decifrare, str.
-    :return: Il testo in chiaro decifrato, str.
-    >>> d = DecryptionUtils('key')
-    >>> d.vigenere_decipher('ifmmp')
-    'ybocl'
-
-    """
-    if not ciphertext:
-        return ''
-    
-    key = self.key.lower()
+        使用维吉尼亚密码解密给定的密文
+        :param ciphertext: 要解密的密文，str。
+        :return: 解密后的明文，str。
+        >>> d = DecryptionUtils('key')
+        >>> d.vigenere_decipher('ifmmp')
+        'ybocl'
+        """
+    key_length = len(self.key)
     plaintext = []
     key_index = 0
-    
     for char in ciphertext:
         if char.isalpha():
-            # Determina se il carattere è maiuscolo o minuscolo
-            is_upper = char.isupper()
-            char = char.lower()
-            
-            # Ottieni il carattere della chiave corrente
-            key_char = key[key_index % len(key)]
-            
-            # Calcola lo shift dalla chiave
-            shift = ord(key_char) - ord('a')
-            
-            # Decifra sottraendo lo shift
-            decrypted_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
-            
-            # Ripristina il caso originale
-            if is_upper:
-                decrypted_char = decrypted_char.upper()
-            
+            shift = ord(self.key[key_index % key_length].lower()) - ord('a')
+            if char.isupper():
+                decrypted_char = chr((ord(char) - shift - 65) % 26 + 65)
+            else:
+                decrypted_char = chr((ord(char) - shift - 97) % 26 + 97)
             plaintext.append(decrypted_char)
             key_index += 1
         else:
-            # Mantieni i caratteri non alfabetici invariati
             plaintext.append(char)
-    
     return ''.join(plaintext)

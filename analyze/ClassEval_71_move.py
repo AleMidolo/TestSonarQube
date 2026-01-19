@@ -1,77 +1,48 @@
 def move(self, direction):
     """
-    Muovi il giocatore in base alla direzione specificata e controlla se il gioco è vinto.
-    :param direction: str, la direzione del movimento del giocatore. 
-        Può essere 'w', 's', 'a' o 'd' che rappresentano rispettivamente su, giù, sinistra o destra.
+    根据指定方向移动玩家并检查游戏是否获胜。
+    :param direction: str，玩家移动的方向。
+        它可以是 'w'、's'、'a' 或 'd'，分别表示上、下、左或右。
 
-    :return: True se il gioco è vinto, False altrimenti.
+    :return: 如果游戏获胜则返回 True，否则返回 False。
+    >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"])       
+    >>> game.print_map()
+    # # # # # 
+    # O     #
+    #   X   #
+    #     G #
+    # # # # #
+    >>> game.move('d')
+    False
+    >>> game.move('s')   
+    False
+    >>> game.move('a')   
+    False
+    >>> game.move('s') 
+    False
+    >>> game.move('d') 
+    True
     """
-    # Definisci i movimenti per ogni direzione
-    directions = {
-        'w': (-1, 0),  # su
-        's': (1, 0),   # giù
-        'a': (0, -1),  # sinistra
-        'd': (0, 1)    # destra
-    }
-    
-    if direction not in directions:
+    direction_map = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
+    if direction not in direction_map:
         return False
-    
-    dy, dx = directions[direction]
-    
-    # Trova la posizione corrente del giocatore (O)
-    player_y, player_x = None, None
-    for i in range(len(self.map)):
-        for j in range(len(self.map[i])):
-            if self.map[i][j] == 'O':
-                player_y, player_x = i, j
-                break
-        if player_y is not None:
-            break
-    
-    # Calcola la nuova posizione
-    new_y = player_y + dy
-    new_x = player_x + dx
-    
-    # Controlla se la nuova posizione è valida
-    if new_y < 0 or new_y >= len(self.map) or new_x < 0 or new_x >= len(self.map[0]):
+    delta_row, delta_col = direction_map[direction]
+    new_player_row = self.player_row + delta_row
+    new_player_col = self.player_col + delta_col
+    if self.map[new_player_row][new_player_col] == '#':
         return False
-    
-    next_cell = self.map[new_y][new_x]
-    
-    # Se c'è un muro, non muovere
-    if next_cell == '#':
-        return False
-    
-    # Se c'è una scatola (X)
-    if next_cell == 'X':
-        # Calcola la posizione dietro la scatola
-        box_new_y = new_y + dy
-        box_new_x = new_x + dx
-        
-        # Controlla se la scatola può essere spinta
-        if box_new_y < 0 or box_new_y >= len(self.map) or box_new_x < 0 or box_new_x >= len(self.map[0]):
-            return False
-        
-        behind_box = self.map[box_new_y][box_new_x]
-        
-        # La scatola può essere spinta solo su spazio vuoto o goal
-        if behind_box == ' ' or behind_box == 'G':
-            # Muovi la scatola
-            self.map[box_new_y] = self.map[box_new_y][:box_new_x] + 'X' + self.map[box_new_y][box_new_x + 1:]
-            # Muovi il giocatore nella posizione della scatola
-            self.map[new_y] = self.map[new_y][:new_x] + 'O' + self.map[new_y][new_x + 1:]
-            # Libera la posizione precedente del giocatore
-            self.map[player_y] = self.map[player_y][:player_x] + ' ' + self.map[player_y][player_x + 1:]
-            
-            # Controlla se la scatola è sul goal
-            if behind_box == 'G':
-                return True
-        else:
-            return False
-    else:
-        # Movimento normale (spazio vuoto o goal)
-        self.map[new_y] = self.map[new_y][:new_x] + 'O' + self.map[new_y][new_x + 1:]
-        self.map[player_y] = self.map[player_y][:player_x] + ' ' + self.map[player_y][player_x + 1:]
-    
-    return False
+    if self.map[new_player_row][new_player_col] == ' ' or self.map[new_player_row][new_player_col] == 'G':
+        self.player_row = new_player_row
+        self.player_col = new_player_col
+    elif self.map[new_player_row][new_player_col] == 'X':
+        box_new_row = new_player_row + delta_row
+        box_new_col = new_player_col + delta_col
+        if self.map[box_new_row][box_new_col] in [' ', 'G']:
+            self.boxes.remove((new_player_row, new_player_col))
+            if self.map[box_new_row][box_new_col] == 'G':
+                self.boxes.append((box_new_row, box_new_col))
+            else:
+                self.boxes.append((box_new_row, box_new_col))
+            self.player_row = new_player_row
+            self.player_col = new_player_col
+    return self.check_win()

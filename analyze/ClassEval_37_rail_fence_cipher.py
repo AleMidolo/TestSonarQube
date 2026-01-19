@@ -1,30 +1,30 @@
 def rail_fence_cipher(self, plain_text, rails):
     """
-    Cripta il testo in chiaro utilizzando il cifrario Rail Fence.
-    :param plain_text: Il testo in chiaro da criptare, str.
-    :return: Il testo cifrato, str.
-    >>> e = EncryptionUtils("key")
-    >>> e.rail_fence_cipher("abc", 2)
-    'acb'
-
-    """
-    if rails <= 0 or rails >= len(plain_text):
-        return plain_text
-    
-    # Create a list of strings for each rail
-    fence = [''] * rails
-    rail = 0
-    direction = 1  # 1 for down, -1 for up
-    
-    # Place each character on the appropriate rail
+        使用铁路栅栏密码加密明文。
+        :param plain_text: 要加密的明文，str。
+        :param rails: 使用的栅栏数量，int。
+        :return: 密文，str。
+        >>> e = EncryptionUtils("key")
+        >>> e.rail_fence_cipher("abc", 2)
+        'acb'
+        """
+    rail = [['\n' for i in range(len(plain_text))] for j in range(rails)]
+    dir_down = None
+    row, col = (0, 0)
     for char in plain_text:
-        fence[rail] += char
-        rail += direction
-        
-        # Change direction at the top or bottom rail
-        if rail == 0 or rail == rails - 1:
-            direction = -direction
-    
-    # Concatenate all rails to get the cipher text
-    cipher_text = ''.join(fence)
-    return cipher_text
+        if row == 0:
+            dir_down = True
+        if row == rails - 1:
+            dir_down = False
+        rail[row][col] = char
+        col += 1
+        if dir_down:
+            row += 1
+        else:
+            row -= 1
+    result = []
+    for i in range(rails):
+        for j in range(len(plain_text)):
+            if rail[i][j] != '\n':
+                result.append(rail[i][j])
+    return ''.join(result)

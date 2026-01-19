@@ -1,17 +1,14 @@
 def shuffle(self):
     """
-    Mescola l'ordine della playlist.
-    :return: True se la playlist è stata mescolata, False se la playlist era vuota.
+    随机打乱播放列表。
+    :return: 如果播放列表被打乱则返回 True，如果播放列表为空则返回 False。
     >>> musicPlayer = MusicPlayer()
-    >>> musicPlayer.playlist = ["canzone1", "canzone2"]
+    >>> musicPlayer.playlist = ["song1", "song2"]
     >>> musicPlayer.shuffle()
     True
 
     """
-    import random
-    
-    if not self.playlist:
-        return False
-    
-    random.shuffle(self.playlist)
-    return True
+    if self.playlist:
+        random.shuffle(self.playlist)
+        return True
+    return False

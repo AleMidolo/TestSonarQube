@@ -1,22 +1,13 @@
 def send(self, info):
     """
-    Invia informazioni contenenti indirizzo e contenuto
-    :param info: dict, dizionario delle informazioni contenente indirizzo e contenuto
-    :return: se inviato con successo, non restituisce nulla; altrimenti, restituisce una stringa che indica un messaggio di errore
-    >>> server.send({"addr":66,"content":"ABC"})
-    self.send_struct = {"addr":66,"content":"ABC"}
-    """
-    try:
-        if not isinstance(info, dict):
-            return "Errore: info deve essere un dizionario"
-        
-        if "addr" not in info:
-            return "Errore: indirizzo mancante"
-        
-        if "content" not in info:
-            return "Errore: contenuto mancante"
-        
-        self.send_struct = info
-        
-    except Exception as e:
-        return f"Errore durante l'invio: {str(e)}"
+        发送包含地址和内容的信息
+        :param info: dict，包含地址和内容的信息字典
+        :return: 如果成功发送，则返回无；否则，返回一个指示错误消息的字符串
+        >>> server.send({"addr":66,"content":"ABC"})
+        self.send_struct = {"addr":66,"content":"ABC"}
+        """
+    if not isinstance(info, dict) or 'addr' not in info or 'content' not in info:
+        return 'Invalid input'
+    addr = info['addr']
+    content = info['content']
+    self.send_struct = {'addr': addr, 'content': content}

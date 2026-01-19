@@ -1,90 +1,33 @@
 @staticmethod
 def subtract(num1, num2):
     """
-    Sottrae due grandi numeri.
-    :param num1: Il primo numero da sottrarre, str.
-    :param num2: Il secondo numero da sottrarre, str.
-    :return: La differenza dei due numeri, str.
-    >>> bigNum = BigNumCalculator()
-    >>> bigNum.subtract("12345678901234567890", "98765432109876543210")
-    '-86419753208641975320'
-
-    """
-    # Handle signs
-    negative1 = num1.startswith('-')
-    negative2 = num2.startswith('-')
-    
-    if negative1:
-        num1 = num1[1:]
-    if negative2:
-        num2 = num2[1:]
-    
-    # Convert subtraction to addition when dealing with negative numbers
-    # a - b = a + (-b)
-    # a - (-b) = a + b
-    # (-a) - b = -(a + b)
-    # (-a) - (-b) = b - a
-    
-    if negative1 and negative2:
-        # (-a) - (-b) = b - a
-        return BigNumCalculator.subtract(num2, num1)
-    elif negative1:
-        # (-a) - b = -(a + b)
-        result = BigNumCalculator.add(num1, num2)
-        return '-' + result if result != '0' else '0'
-    elif negative2:
-        # a - (-b) = a + b
-        return BigNumCalculator.add(num1, num2)
-    
-    # Both positive: perform actual subtraction
-    # Determine which number is larger
-    if len(num1) > len(num2):
-        larger = num1
-        smaller = num2
-        result_negative = False
-    elif len(num2) > len(num1):
-        larger = num2
-        smaller = num1
-        result_negative = True
-    else:
-        # Same length, compare digit by digit
-        if num1 >= num2:
-            larger = num1
-            smaller = num2
-            result_negative = False
-        else:
-            larger = num2
-            smaller = num1
-            result_negative = True
-    
-    # Perform subtraction
-    larger = larger[::-1]
-    smaller = smaller[::-1]
-    
+        把两个大数字相减。
+        :param num1: 第一个要被减去的数字，字符串。
+        :param num2: 第二个要减去的数字，字符串。
+        :return: 两个数字的差，字符串。
+        >>> bigNum = BigNumCalculator()
+        >>> bigNum.subtract("12345678901234567890", "98765432109876543210")
+        '-86419753208641975320'
+        """
+    if num1 == num2:
+        return '0'
+    negative = False
+    if num1 < num2:
+        num1, num2 = (num2, num1)
+        negative = True
+    max_length = max(len(num1), len(num2))
+    num1 = num1.zfill(max_length)
+    num2 = num2.zfill(max_length)
     result = []
     borrow = 0
-    
-    for i in range(len(larger)):
-        digit1 = int(larger[i])
-        digit2 = int(smaller[i]) if i < len(smaller) else 0
-        
-        diff = digit1 - digit2 - borrow
-        
-        if diff < 0:
-            diff += 10
+    for i in range(max_length - 1, -1, -1):
+        digit_sub = int(num1[i]) - int(num2[i]) - borrow
+        if digit_sub < 0:
+            digit_sub += 10
             borrow = 1
         else:
             borrow = 0
-        
-        result.append(str(diff))
-    
-    # Remove leading zeros
-    while len(result) > 1 and result[-1] == '0':
-        result.pop()
-    
-    result_str = ''.join(result[::-1])
-    
-    if result_str == '0':
-        return '0'
-    
-    return '-' + result_str if result_negative else result_str
+        result.insert(0, str(digit_sub))
+    while len(result) > 1 and result[0] == '0':
+        result.pop(0)
+    return ('-' if negative else '') + ''.join(result)

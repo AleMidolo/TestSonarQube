@@ -1,25 +1,22 @@
 def caesar_decipher(self, ciphertext, shift):
     """
-    Decifra il testo cifrato fornito utilizzando il cifrario di Cesare
-    :param ciphertext: Il testo cifrato da decifrare, str.
-    :param shift: Lo spostamento da utilizzare per la decrittazione, int.
-    :return: Il testo in chiaro decifrato, str.
-    >>> d = DecryptionUtils('key')
-    >>> d.caesar_decipher('ifmmp', 1)
-    'hello'
-
-    """
-    plaintext = ""
+        使用凯撒密码解密给定的密文
+        :param ciphertext: 要解密的密文，str。
+        :param shift: 用于解密的位移，int。
+        :return: 解密后的明文，str。
+        >>> d = DecryptionUtils('key')
+        >>> d.caesar_decipher('ifmmp', 1)
+        'hello'
+        """
+    decrypted_text = ''
     for char in ciphertext:
         if char.isalpha():
-            # Determina se il carattere è maiuscolo o minuscolo
-            if char.isupper():
-                # Decifra carattere maiuscolo
-                plaintext += chr((ord(char) - ord('A') - shift) % 26 + ord('A'))
+            shift_amount = shift % 26
+            if char.islower():
+                decrypted_char = chr((ord(char) - ord('a') - shift_amount) % 26 + ord('a'))
             else:
-                # Decifra carattere minuscolo
-                plaintext += chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
+                decrypted_char = chr((ord(char) - ord('A') - shift_amount) % 26 + ord('A'))
+            decrypted_text += decrypted_char
         else:
-            # Mantieni i caratteri non alfabetici invariati
-            plaintext += char
-    return plaintext
+            decrypted_text += char
+    return decrypted_text

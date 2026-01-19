@@ -1,15 +1,13 @@
 def del_white_list(self, addr):
     """
-    Rimuovi un indirizzo dalla whitelist e non fare nulla se non esiste
-    :param addr: int, indirizzo da eliminare
-    :return: nuova whitelist, restituisce False se l'indirizzo non esiste
+    从白名单中移除一个地址，如果该地址不存在则不执行任何操作
+    :param addr: int, 要删除的地址
+    :return: 新的白名单，如果地址不存在则返回 False
+    >>> server = Server()
     >>> server.add_white_list(88)
     >>> server.del_white_list(88)
     []
     """
-    if not hasattr(self, 'white_list'):
-        self.white_list = []
-    
     if addr in self.white_list:
         self.white_list.remove(addr)
         return self.white_list

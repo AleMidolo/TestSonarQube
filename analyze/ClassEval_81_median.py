@@ -1,19 +1,19 @@
 def median(data):
     """
-    calcola la mediana della lista fornita.
-    :param data: la lista fornita, lista.
-    :return: la mediana della lista fornita, float.
-    >>> statistics3 = Statistics3()
-    >>> statistics3.median([1, 2, 3, 4])
-    2.5
+        计算给定列表的中位数。
+        :param data: 给定的列表，list。
+        :return: 给定列表的中位数，float。
+        >>> statistics3 = Statistics3()
+        >>> statistics3.median([1, 2, 3, 4])
+        2.5
 
-    """
+        """
+    n = len(data)
+    if n == 0:
+        return None
     sorted_data = sorted(data)
-    n = len(sorted_data)
-    
+    mid = n // 2
     if n % 2 == 0:
-        # Se la lista ha un numero pari di elementi, la mediana è la media dei due elementi centrali
-        return (sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2.0
+        return (sorted_data[mid - 1] + sorted_data[mid]) / 2.0
     else:
-        # Se la lista ha un numero dispari di elementi, la mediana è l'elemento centrale
-        return float(sorted_data[n // 2])
+        return sorted_data[mid]

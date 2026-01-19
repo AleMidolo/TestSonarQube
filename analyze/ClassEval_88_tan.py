@@ -1,14 +1,9 @@
-import math
-
 def tan(self, x):
     """
-    Calcola il valore della tangente dell'angolo in gradi x
-    :param x: float
-    :return: float
-    >>> tricalculator.tan(45)
-    1.0
-    """
-    # Converti l'angolo da gradi a radianti
-    x_radianti = math.radians(x)
-    # Calcola e restituisci la tangente
-    return math.tan(x_radianti)
+        计算 x 度角的正切值
+        :param x: 浮点数
+        :return: 浮点数
+        >>> tricalculator.tan(45)
+        1.0
+        """
+    return round(self.sin(x) / self.cos(x), 10)

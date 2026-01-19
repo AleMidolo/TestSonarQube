@@ -1,19 +1,18 @@
 def add_argument(self, arg, required=False, arg_type=str):
     """
-    Aggiunge un argomento a self.types e self.required.
-    Controlla se si tratta di un argomento obbligatorio e memorizza il tipo di argomento.
-    Se l'argomento è impostato come obbligatorio, verrà aggiunto a "required".
-    Il tipo e il nome dell'argomento sono memorizzati nel dizionario types come coppie chiave-valore.
-    :param arg: str, nome dell'argomento
-    :param required: bool, se l'argomento è obbligatorio, il valore predefinito è False
-    :param arg_type: str, tipo di argomento, il valore predefinito è str
-    >>> parser.add_argument('arg1', True, 'int')
-    >>> parser.required
-    {'arg1'}
-    >>> parser.types
-    {'arg1': 'int'}
-    """
+        将参数添加到 self.types 和 self.required。
+        检查它是否是一个必需的参数并存储参数类型。
+        如果参数被设置为必需，它将被添加到必需集合中。
+        参数类型和名称作为键值对存储在 types 字典中。
+        :param arg: str, 参数名称
+        :param required: bool, 参数是否为必需，默认为 False
+        :param arg_type: str, 参数类型，默认为字符串
+        >>> parser.add_argument('arg1', True, 'int')
+        >>> parser.required
+        {'arg1'}
+        >>> parser.types
+        {'arg1': 'int'}
+        """
+    self.types[arg] = arg_type
     if required:
         self.required.add(arg)
-    
-    self.types[arg] = arg_type

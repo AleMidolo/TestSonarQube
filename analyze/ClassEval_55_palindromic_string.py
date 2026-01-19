@@ -1,53 +1,24 @@
 def palindromic_string(self):
     """
-    Trova la sottostringa palindromica più lunga nella stringa fornita.
-    :return: La sottostringa palindromica più lunga, str.
-    >>> manacher = Manacher('ababaxse')
-    >>> manacher.palindromic_string()
-    'ababa'
-
-    """
-    if not self.string:
-        return ""
-    
-    # Transform string to handle even-length palindromes
-    # Insert '#' between characters
-    transformed = '#'.join('^{}$'.format(self.string))
+        在给定的字符串中找到最长的回文子串。
+        :return: 最长的回文子串，str。
+        >>> manacher = Manacher('ababaxse')
+        >>> manacher.palindromic_string()
+        'ababa'
+        """
+    transformed = '|'.join(f'^{self.input_string}$')
     n = len(transformed)
-    
-    # Array to store palindrome radii
-    P = [0] * n
-    center = 0
-    right = 0
-    
-    max_len = 0
-    center_index = 0
-    
+    p = [0] * n
+    center = right = 0
     for i in range(1, n - 1):
-        # Mirror of i with respect to center
         mirror = 2 * center - i
-        
-        # If i is within right boundary, use previously computed values
         if i < right:
-            P[i] = min(right - i, P[mirror])
-        
-        # Attempt to expand palindrome centered at i
-        try:
-            while transformed[i + P[i] + 1] == transformed[i - P[i] - 1]:
-                P[i] += 1
-        except IndexError:
-            pass
-        
-        # If palindrome centered at i extends past right, adjust center
-        if i + P[i] > right:
-            center = i
-            right = i + P[i]
-        
-        # Track the longest palindrome
-        if P[i] > max_len:
-            max_len = P[i]
-            center_index = i
-    
-    # Extract the longest palindrome from original string
-    start = (center_index - max_len) // 2
-    return self.string[start:start + max_len]
+            p[i] = min(right - i, p[mirror])
+        while transformed[i + p[i] + 1] == transformed[i - p[i] - 1]:
+            p[i] += 1
+        if i + p[i] > right:
+            center, right = (i, i + p[i])
+    max_length = max(p)
+    center_index = p.index(max_length)
+    start = (center_index - max_length) // 2
+    return self.input_string[start:start + max_length]

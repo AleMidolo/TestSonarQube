@@ -1,19 +1,17 @@
 def write_xml(self, file_name):
     """
-    Scrive i dati XML nel file specificato.
-    :param file_name: stringa, il nome del file in cui scrivere i dati XML.
-    :return: bool, True se l'operazione di scrittura ha avuto successo, False altrimenti.
-    >>> xml_processor = XMLProcessor('test.xml')
-    >>> root = xml_processor.read_xml()
-    >>> success = xml_processor.write_xml('output.xml')
-    >>> print(success)
-    True
-    """
+        将XML数据写入指定的文件。
+        :param file_name: 字符串，要写入XML数据的文件名。
+        :return: 布尔值，如果写入操作成功则返回True，否则返回False。
+        >>> xml_processor = XMLProcessor('test.xml')
+        >>> root = xml_processor.read_xml()
+        >>> success = xml_processor.write_xml('output.xml')
+        >>> print(success)
+        True
+        """
     try:
-        if hasattr(self, 'tree') and self.tree is not None:
-            self.tree.write(file_name, encoding='utf-8', xml_declaration=True)
-            return True
-        else:
-            return False
-    except Exception:
+        tree = ET.ElementTree(self.root)
+        tree.write(file_name, encoding='utf-8', xml_declaration=True)
+        return True
+    except Exception as e:
         return False

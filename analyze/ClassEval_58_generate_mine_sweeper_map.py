@@ -1,39 +1,22 @@
 def generate_mine_sweeper_map(self):
     """
-    Genera una mappa di campo minato con la dimensione data della griglia e il numero di mine, il parametro dato n è la dimensione della griglia, la dimensione della griglia è n*n, il parametro k è il numero di mine, 'X' rappresenta la mina, altri numeri rappresentano il numero di mine attorno alla posizione.
-    :return: La mappa del campo minato, lista.
-    >>> minesweeper_game = MinesweeperGame(3, 1)
-    >>> minesweeper_game.generate_mine_sweeper_map()
-    [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
+        生成一个扫雷地图，给定棋盘的大小和地雷的数量，参数 n 是棋盘的大小，棋盘的大小为 n*n，参数 k 是地雷的数量，'X' 代表地雷，其他数字代表该位置周围的地雷数量。
+        :return: 扫雷地图，列表。
+        >>> minesweeper_game = MinesweeperGame(3, 1)
+        >>> minesweeper_game.generate_mine_sweeper_map()
+        [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
 
-    """
-    import random
-    
-    # Initialize the grid with zeros
-    grid = [[0 for _ in range(self.n)] for _ in range(self.n)]
-    
-    # Randomly place k mines
-    positions = [(i, j) for i in range(self.n) for j in range(self.n)]
-    mine_positions = random.sample(positions, self.k)
-    
-    # Place mines on the grid
-    for row, col in mine_positions:
-        grid[row][col] = 'X'
-    
-    # Calculate numbers for non-mine cells
-    for i in range(self.n):
-        for j in range(self.n):
-            if grid[i][j] != 'X':
-                # Count adjacent mines
-                count = 0
-                for di in [-1, 0, 1]:
-                    for dj in [-1, 0, 1]:
-                        if di == 0 and dj == 0:
-                            continue
-                        ni, nj = i + di, j + dj
-                        if 0 <= ni < self.n and 0 <= nj < self.n:
-                            if grid[ni][nj] == 'X':
-                                count += 1
-                grid[i][j] = count
-    
-    return grid
+        """
+    minesweeper_map = [[0 for _ in range(self.n)] for _ in range(self.n)]
+    mines_placed = 0
+    while mines_placed < self.k:
+        x = random.randint(0, self.n - 1)
+        y = random.randint(0, self.n - 1)
+        if minesweeper_map[x][y] != 'X':
+            minesweeper_map[x][y] = 'X'
+            mines_placed += 1
+            for i in range(max(0, x - 1), min(self.n, x + 2)):
+                for j in range(max(0, y - 1), min(self.n, y + 2)):
+                    if minesweeper_map[i][j] != 'X':
+                        minesweeper_map[i][j] += 1
+    return minesweeper_map

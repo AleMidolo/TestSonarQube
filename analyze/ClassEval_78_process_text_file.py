@@ -1,25 +1,15 @@
 def process_text_file(self, sentences_string):
     """
-    Dato un testo, restituisce il numero di parole nella frase più lunga
-    :param sentences_string: stringa, frase lunga non divisa
-    :return:int, il numero di parole nella frase più lunga
-    >>> ss.process_text_file("aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?")
-    4
-    """
-    import re
-    
-    # Split the text into sentences using punctuation marks (. ? !)
-    sentences = re.split(r'[.?!]+', sentences_string)
-    
+        给定一段文本，返回最长句子中的单词数量
+        :param sentences_string: 字符串，未分割的长句子
+        :return: int，最长句子中的单词数量
+        >>> ss.process_text_file("aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?")
+        4
+        """
+    sentences = self.split_sentences(sentences_string)
     max_word_count = 0
-    
     for sentence in sentences:
-        # Strip whitespace and split by spaces to get words
-        words = sentence.strip().split()
-        word_count = len(words)
-        
-        # Update max if current sentence has more words
+        word_count = self.count_words(sentence)
         if word_count > max_word_count:
             max_word_count = word_count
-    
     return max_word_count

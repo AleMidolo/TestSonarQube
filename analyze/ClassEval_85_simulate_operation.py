@@ -1,26 +1,19 @@
 def simulate_operation(self):
     """
-    simula l'operazione del Termostato. Avvierà automaticamente il metodo auto_set_mode per impostare la modalità operativa,
-    e poi regolerà automaticamente la temperatura attuale in base alla modalità operativa fino a raggiungere la temperatura target.
-    :return time: int, il tempo impiegato per completare la simulazione.
-    >>> thermostat = Thermostat(20.4, 37.5, 'cool')
-    >>> thermostat.simulate_operation()
-    18
-    """
-    # Imposta automaticamente la modalità operativa
+        模拟恒温器的操作。它将自动启动 auto_set_mode 方法以设置操作模式，
+        然后根据操作模式自动调整当前温度，直到达到目标温度。
+        :return time: int，完成模拟所需的时间。
+        >>> thermostat = Thermostat(20.4, 37.5, 'cool')
+        >>> thermostat.simulate_operation()
+        18
+        """
     self.auto_set_mode()
-    
-    time = 0
-    
-    # Continua a regolare la temperatura fino a raggiungere il target
-    while self.current_temp != self.target_temp:
+    time_taken = 0
+    while abs(self.current_temperature - self.target_temperature) > 0.1:
         if self.mode == 'heat':
-            # In modalità riscaldamento, aumenta la temperatura
-            self.current_temp += 1
-        elif self.mode == 'cool':
-            # In modalità raffreddamento, diminuisce la temperatura
-            self.current_temp -= 1
-        
-        time += 1
-    
-    return time
+            self.current_temperature += 1
+        else:
+            self.current_temperature -= 1
+        time.sleep(0.1)
+        time_taken += 1
+    return time_taken

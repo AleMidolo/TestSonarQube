@@ -1,15 +1,12 @@
 def insert_coin(self, amount):
     """
-    Inserisce monete nel distributore automatico.
-    :param amount: L'importo delle monete da inserire, float.
-    :return: Il saldo del distributore automatico dopo che le monete sono state inserite, float.
-    >>> vendingMachine = VendingMachine()
-    >>> vendingMachine.insert_coin(1.25)
-    1.25
+        将硬币插入自动售货机。
+        :param amount: 要插入的硬币数量，浮点数。
+        :return: 插入硬币后自动售货机的余额，浮点数。
+        >>> vendingMachine = VendingMachine()
+        >>> vendingMachine.insert_coin(1.25)
+        1.25
 
-    """
-    if not hasattr(self, 'balance'):
-        self.balance = 0.0
-    
+        """
     self.balance += amount
     return self.balance

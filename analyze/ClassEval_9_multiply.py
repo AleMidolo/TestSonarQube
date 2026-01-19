@@ -1,69 +1,22 @@
 @staticmethod
 def multiply(num1, num2):
     """
-    Moltiplica due grandi numeri.
-    :param num1: Il primo numero da moltiplicare, str.
-    :param num2: Il secondo numero da moltiplicare, str.
-    :return: Il prodotto dei due numeri, str.
-    >>> bigNum = BigNumCalculator()
-    >>> bigNum.multiply("12345678901234567890", "98765432109876543210")
-    '1219326311370217952237463801111263526900'
-
-    """
-    # Handle edge cases
-    if num1 == "0" or num2 == "0":
-        return "0"
-    
-    # Determine sign of result
-    negative = False
-    if num1[0] == '-':
-        negative = not negative
-        num1 = num1[1:]
-    if num2[0] == '-':
-        negative = not negative
-        num2 = num2[1:]
-    
-    # Reverse strings for easier manipulation (least significant digit first)
-    num1 = num1[::-1]
-    num2 = num2[::-1]
-    
-    # Initialize result array
-    result = [0] * (len(num1) + len(num2))
-    
-    # Multiply each digit of num1 with each digit of num2
-    for i in range(len(num1)):
-        for j in range(len(num2)):
-            digit1 = int(num1[i])
-            digit2 = int(num2[j])
-            
-            # Multiply digits and add to appropriate position
-            product = digit1 * digit2
-            result[i + j] += product
-            
-            # Handle carry
-            carry = result[i + j] // 10
-            result[i + j] %= 10
-            
-            # Propagate carry
-            k = i + j + 1
-            while carry > 0:
-                result[k] += carry
-                carry = result[k] // 10
-                result[k] %= 10
-                k += 1
-    
-    # Convert result array to string (reverse back)
-    result_str = ''.join(map(str, result[::-1]))
-    
-    # Remove leading zeros
-    result_str = result_str.lstrip('0')
-    
-    # Handle case where result is 0
-    if not result_str:
-        result_str = "0"
-    
-    # Add negative sign if needed
-    if negative and result_str != "0":
-        result_str = '-' + result_str
-    
-    return result_str
+        把两个大数字相乘。
+        :param num1: 第一个要相乘的数字，字符串。
+        :param num2: 第二个要相乘的数字，字符串。
+        :return: 两个数字的乘积，字符串。
+        >>> bigNum = BigNumCalculator()
+        >>> bigNum.multiply("12345678901234567890", "98765432109876543210")
+        '1219326311370217952237463801111263526900'
+        """
+    if num1 == '0' or num2 == '0':
+        return '0'
+    len1, len2 = (len(num1), len(num2))
+    result = [0] * (len1 + len2)
+    for i in range(len1 - 1, -1, -1):
+        for j in range(len2 - 1, -1, -1):
+            product = int(num1[i]) * int(num2[j]) + result[i + j + 1]
+            result[i + j + 1] = product % 10
+            result[i + j] += product // 10
+    result_str = ''.join(map(str, result)).lstrip('0')
+    return result_str if result_str else '0'

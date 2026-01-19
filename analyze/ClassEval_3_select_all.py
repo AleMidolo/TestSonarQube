@@ -1,21 +1,13 @@
 def select_all(self):
     """
-    Genera un elenco di tutti gli arrangiamenti selezionando almeno 1 elemento e al massimo il numero di dati interni.
-    :return: Lista, un elenco di tutti gli arrangiamenti.
-    >>> ac = ArrangementCalculator([1, 2, 3])
-    >>> ac.select_all()
-    [[1], [2], [3], [1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2], [1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
+        生成一个所有排列的列表，至少选择1个元素，最多选择内部数据的数量。
+        :return: List，所有排列的列表。
+        >>> ac = ArrangementCalculator([1, 2, 3])
+        >>> ac.select_all()
+        [[1], [2], [3], [1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2], [1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
 
-    """
-    from itertools import permutations
-    
+        """
     result = []
-    n = len(self.data)
-    
-    # Generate arrangements for each length from 1 to n
-    for r in range(1, n + 1):
-        # Get all permutations of length r
-        for perm in permutations(self.data, r):
-            result.append(list(perm))
-    
+    for i in range(1, len(self.datas) + 1):
+        result.extend(self.select(i))
     return result

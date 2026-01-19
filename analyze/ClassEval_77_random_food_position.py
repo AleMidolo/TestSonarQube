@@ -1,17 +1,11 @@
 def random_food_position(self):
     """
-    Genera casualmente una nuova posizione per il cibo, ma non posizionarla sul serpente.
-    :return: None, Cambia la posizione del cibo
-    """
-    import random
-    
+        随机生成一个新的食物位置，但不要放在蛇身上。
+        :return: None，改变食物位置
+        """
     while True:
-        # Genera una posizione casuale per il cibo
-        new_food_x = random.randint(0, self.width - 1)
-        new_food_y = random.randint(0, self.height - 1)
-        
-        # Verifica che la nuova posizione non sia occupata dal serpente
-        if (new_food_x, new_food_y) not in self.snake:
-            self.food_x = new_food_x
-            self.food_y = new_food_y
+        x = random.randint(0, self.SCREEN_WIDTH // self.BLOCK_SIZE - 1) * self.BLOCK_SIZE
+        y = random.randint(0, self.SCREEN_HEIGHT // self.BLOCK_SIZE - 1) * self.BLOCK_SIZE
+        self.food_position = (x, y)
+        if self.food_position not in self.positions:
             break

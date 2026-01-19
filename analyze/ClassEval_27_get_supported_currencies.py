@@ -1,9 +1,9 @@
 def get_supported_currencies(self):
     """
-    Restituisce un elenco dei tipi di valuta supportati
-    :return:list, Tutti i tipi di valuta supportati
-    >>> cc = CurrencyConverter()
-    >>> cc.get_supported_currencies()
-    ['USD','EUR','GBP','JPY','CAD','AUD','CNY']
-    """
-    return ['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CNY']
+        返回支持的货币类型列表
+        :return: list, 所有支持的货币类型
+        >>> cc = CurrencyConverter()
+        >>> cc.get_supported_currencies()
+        ['USD','EUR','GBP','JPY','CAD','AUD','CNY']
+        """
+    return list(self.rates.keys())

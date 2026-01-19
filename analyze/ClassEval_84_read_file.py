@@ -1,10 +1,13 @@
 def read_file(self):
     """
-    Leggi e restituisci il contenuto del file self.file_path.
-    :return: lo stesso valore restituito dal metodo read()
-    >>> textFileProcessor = TextFileProcessor('test.json')
-    >>> textFileProcessor.read_file()
-    '{\n    "name": "test",\n    "age": 12\n}'
-    """
+        读取并返回 self.file_path 文件的内容。
+        :return: 与 read() 方法相同的返回值
+        >>> textFileProcessor = TextFileProcessor('test.json')
+        >>> textFileProcessor.read_file()
+        '{
+    "name": "test",
+    "age": 12
+}'
+        """
     with open(self.file_path, 'r') as file:
         return file.read()

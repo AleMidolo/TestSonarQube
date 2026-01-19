@@ -1,64 +1,27 @@
 @staticmethod
 def interpolate_2d(x, y, z, x_interp, y_interp):
-    """ 
-    Interpolazione lineare di dati bidimensionali
-    :param x: La coordinata x del punto dati, lista.
-    :param y: La coordinata y del punto dati, lista.
-    :param z: La coordinata z del punto dati, lista.
-    :param x_interp: La coordinata x del punto di interpolazione, lista.
-    :param y_interp: La coordinata y del punto di interpolazione, lista.
-    :return: La coordinata z del punto di interpolazione, lista.
-    >>> interpolation = Interpolation()
-    >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])
-    [3.0, 7.0]
-
     """
-    result = []
-    
+        二维数据的线性插值
+        :param x: 数据点的 x 坐标，列表。
+        :param y: 数据点的 y 坐标，列表。
+        :param z: 数据点的 z 坐标，列表。
+        :param x_interp: 插值点的 x 坐标，列表。
+        :param y_interp: 插值点的 y 坐标，列表。
+        :return: 插值点的 z 坐标，列表。
+        >>> interpolation = Interpolation()
+        >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])
+        [3.0, 7.0]
+        """
+    z_interp = []
     for xi, yi in zip(x_interp, y_interp):
-        # Find the indices for interpolation
-        # Find x indices
-        x_idx = 0
         for i in range(len(x) - 1):
-            if x[i] <= xi <= x[i + 1]:
-                x_idx = i
-                break
-        
-        # Find y indices
-        y_idx = 0
-        for i in range(len(y) - 1):
-            if y[i] <= yi <= y[i + 1]:
-                y_idx = i
-                break
-        
-        # Get the four corner points
-        x0, x1 = x[x_idx], x[x_idx + 1]
-        y0, y1 = y[y_idx], y[y_idx + 1]
-        
-        z00 = z[x_idx][y_idx]
-        z01 = z[x_idx][y_idx + 1]
-        z10 = z[x_idx + 1][y_idx]
-        z11 = z[x_idx + 1][y_idx + 1]
-        
-        # Bilinear interpolation
-        # Interpolate in x direction
-        if x1 - x0 != 0:
-            tx = (xi - x0) / (x1 - x0)
-        else:
-            tx = 0
-        
-        if y1 - y0 != 0:
-            ty = (yi - y0) / (y1 - y0)
-        else:
-            ty = 0
-        
-        # Interpolate along y at x0 and x1
-        z_y0 = z00 * (1 - ty) + z01 * ty
-        z_y1 = z10 * (1 - ty) + z11 * ty
-        
-        # Interpolate along x
-        z_interp = z_y0 * (1 - tx) + z_y1 * tx
-        
-        result.append(z_interp)
-    
-    return result
+            for j in range(len(y) - 1):
+                if x[i] <= xi <= x[i + 1] and y[j] <= yi <= y[j + 1]:
+                    z11 = z[i][j]
+                    z12 = z[i][j + 1]
+                    z21 = z[i + 1][j]
+                    z22 = z[i + 1][j + 1]
+                    z_interp_value = (z11 * (x[i + 1] - xi) * (y[j + 1] - yi) + z21 * (xi - x[i]) * (y[j + 1] - yi) + z12 * (x[i + 1] - xi) * (yi - y[j]) + z22 * (xi - x[i]) * (yi - y[j])) / ((x[i + 1] - x[i]) * (y[j + 1] - y[j]))
+                    z_interp.append(z_interp_value)
+                    break
+    return z_interp

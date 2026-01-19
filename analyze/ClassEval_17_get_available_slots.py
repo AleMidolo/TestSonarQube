@@ -1,50 +1,22 @@
 def get_available_slots(self, date):
     """
-    Ottieni tutti gli slot di tempo disponibili in una data specifica.
-    :param date: La data per cui ottenere gli slot di tempo disponibili, datetime.
-    :return: Un elenco di slot di tempo disponibili nella data specificata, list.
-    >>> calendar = CalendarUtil()
-    >>> calendar.events = [{'date': datetime(2023, 1, 1, 0, 0), 'start_time': datetime(2023, 1, 1, 0, 0), 'end_time': datetime(2023, 1, 1, 23, 0), 'description': 'Capodanno'}]
-    >>> calendar.get_available_slots(datetime(2023, 1, 1))
-    [(datetime.datetime(2023, 1, 1, 23, 0), datetime.datetime(2023, 1, 2, 0, 0))]
-    """
-    from datetime import datetime, timedelta
-    
-    # Define the start and end of the day
-    day_start = datetime(date.year, date.month, date.day, 0, 0)
-    day_end = datetime(date.year, date.month, date.day, 23, 59, 59)
-    # Adjust to next day midnight for cleaner slots
-    day_end = datetime(date.year, date.month, date.day) + timedelta(days=1)
-    
-    # Get all events for the specified date
-    events_on_date = []
-    for event in self.events:
-        event_date = event['date']
-        # Check if event is on the specified date
-        if event_date.year == date.year and event_date.month == date.month and event_date.day == date.day:
-            events_on_date.append(event)
-    
-    # Sort events by start time
-    events_on_date.sort(key=lambda x: x['start_time'])
-    
-    # Find available slots
+        获取给定日期的所有可用时间段。
+        :param date: 要获取可用时间段的日期，datetime。
+        :return: 给定日期的可用时间段列表，list。
+        >>> calendar = CalendarUtil()
+        >>> calendar.events = [{'date': datetime(2023, 1, 1, 0, 0), 'start_time': datetime(2023, 1, 1, 0, 0), 'end_time': datetime(2023, 1, 1, 23, 0), 'description': '新年'}]
+        >>> calendar.get_available_slots(datetime(2023, 1, 1))
+        [(datetime.datetime(2023, 1, 1, 23, 0), datetime.datetime(2023, 1, 2, 0, 0))]
+        """
+    start_of_day = datetime(date.year, date.month, date.day, 0, 0)
+    end_of_day = datetime(date.year, date.month, date.day, 23, 59, 59)
     available_slots = []
-    current_time = day_start
-    
-    for event in events_on_date:
-        event_start = event['start_time']
-        event_end = event['end_time']
-        
-        # If there's a gap between current_time and event start, add it as available slot
-        if current_time < event_start:
-            available_slots.append((current_time, event_start))
-        
-        # Move current_time to the end of this event
-        if event_end > current_time:
-            current_time = event_end
-    
-    # Check if there's time left at the end of the day
-    if current_time < day_end:
-        available_slots.append((current_time, day_end))
-    
+    last_end_time = start_of_day
+    for event in self.events:
+        if event['date'].date() == date.date():
+            if last_end_time < event['start_time']:
+                available_slots.append((last_end_time, event['start_time']))
+            last_end_time = max(last_end_time, event['end_time'])
+    if last_end_time < end_of_day:
+        available_slots.append((last_end_time, end_of_day + timedelta(seconds=1)))
     return available_slots

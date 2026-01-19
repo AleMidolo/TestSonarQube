@@ -1,22 +1,12 @@
 def parse(self, path, charset):
     """
-    Analizza una data stringa di percorso e popola la lista dei segmenti in UrlPath.
-    :param path: str, la stringa di percorso da analizzare.
-    :param charset: str, la codifica dei caratteri della stringa di percorso.
-    >>> url_path = UrlPath()
-    >>> url_path.parse('/foo/bar/', 'utf-8')
+        解析给定的路径字符串并填充 UrlPath 中的段列表。
+        :param path: str，要解析的路径字符串。
+        :param charset: str，路径字符串的字符编码。
+        >>> url_path = UrlPath()
+        >>> url_path.parse('/foo/bar/', 'utf-8')
 
-    url_path.segments = ['foo', 'bar']
-    """
-    if not path:
-        self.segments = []
-        return
-    
-    # Remove leading and trailing slashes
-    path = path.strip('/')
-    
-    # Split by '/' and filter out empty segments
-    if path:
-        self.segments = [segment for segment in path.split('/') if segment]
-    else:
-        self.segments = []
+        url_path.segments = ['foo', 'bar']
+        """
+    decoded_path = urllib.parse.unquote(path, encoding=charset)
+    self.segments = [self.fix_path(segment) for segment in decoded_path.split('/') if segment]

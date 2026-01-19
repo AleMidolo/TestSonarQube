@@ -1,28 +1,15 @@
 def extract_file(self, file_name, output_path):
     """
-    Estrae il file con il nome specificato dall'archivio zip e lo salva nel percorso specificato
-    :param file_name:string, Il nome del file da decomprimere
-    :param output_path:string, La posizione del file estratto
-    :return: True o False, che rappresenta se l'operazione di estrazione è stata completata con successo
+    Extract a specified file from the zip file and place it in the specified path
+    :param file_name: string, The name of the file to extract
+    :param output_path: string, The location where the extracted file will be placed
+    :return: True or False, representing whether the extraction operation was successful
     >>> zfp = ZipFileProcessor("aaa.zip")
     >>> zfp.extract_file("bbb.txt", "result/aaa")
     """
-    import zipfile
-    import os
-    
     try:
-        # Crea la directory di output se non esiste
-        os.makedirs(output_path, exist_ok=True)
-        
-        # Apri l'archivio zip
-        with zipfile.ZipFile(self.zip_file, 'r') as zip_ref:
-            # Verifica se il file esiste nell'archivio
-            if file_name not in zip_ref.namelist():
-                return False
-            
-            # Estrai il file specifico
-            zip_ref.extract(file_name, output_path)
-            
+        with zipfile.ZipFile(self.file_name, 'r') as zip_file:
+            zip_file.extract(file_name, output_path)
         return True
-    except Exception:
+    except:
         return False

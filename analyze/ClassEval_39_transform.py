@@ -1,12 +1,12 @@
 @staticmethod
 def transform(expression):
     """
-    Trasforma l'espressione in notazione infissa in un formato adatto per la conversione
-    :param expression: stringa, l'espressione infissa da trasformare
-    :return: stringa, l'espressione trasformata
+    将中缀表达式转换为适合转换的格式
+    :param expression: 字符串，要转换的中缀表达式
+    :return: 字符串，转换后的表达式
     >>> expression_calculator = ExpressionCalculator()
     >>> expression_calculator.transform("2 + 3 * 4")
     "2+3*4"
 
     """
-    return expression.replace(" ", "")
+    return re.sub(r'\s+', '', expression)

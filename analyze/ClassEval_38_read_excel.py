@@ -1,17 +1,16 @@
 def read_excel(self, file_name):
     """
-    Lettura dei dati dai file Excel
-    :param file_name:str, nome del file Excel da leggere
-    :return:list di dati, Dati in Excel
-    """
-    import openpyxl
-    
-    workbook = openpyxl.load_workbook(file_name)
-    sheet = workbook.active
-    
-    data = []
-    for row in sheet.iter_rows(values_only=True):
-        data.append(list(row))
-    
-    workbook.close()
-    return data
+        从Excel文件读取数据
+        :param file_name:str, 要读取的Excel文件名
+        :return:list of data, Excel中的数据
+        """
+    try:
+        workbook = openpyxl.load_workbook(file_name)
+        sheet = workbook.active
+        data = []
+        for row in sheet.iter_rows(values_only=True):
+            data.append(row)
+        workbook.close()
+        return data
+    except:
+        return None

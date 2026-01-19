@@ -1,51 +1,19 @@
 def check_winner(self):
     """
-    Controlla se c'è un vincitore cercando cinque in fila in tutte le direzioni (orizzontale, verticale, diagonale).
-    return: il simbolo del giocatore vincente (o 'X' o 'O') se c'è un vincitore, altrimenti None.
-    >>> gomokuGame = GomokuGame(10)
-    >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]
-    >>> for move in moves:
-    ...     gomokuGame.make_move(move[0], move[1])
-    >>> gomokuGame.check_winner()
-    'X'
-    """
-    # Direzioni da controllare: orizzontale, verticale, diagonale (\), diagonale (/)
-    directions = [
-        (0, 1),   # orizzontale
-        (1, 0),   # verticale
-        (1, 1),   # diagonale \
-        (1, -1)   # diagonale /
-    ]
-    
-    # Itera su tutte le celle della board
-    for row in range(self.size):
-        for col in range(self.size):
-            # Salta celle vuote
-            if self.board[row][col] is None:
-                continue
-            
-            player = self.board[row][col]
-            
-            # Controlla in tutte le direzioni
-            for dr, dc in directions:
-                count = 1  # Conta la cella corrente
-                
-                # Controlla in avanti nella direzione
-                r, c = row + dr, col + dc
-                while 0 <= r < self.size and 0 <= c < self.size and self.board[r][c] == player:
-                    count += 1
-                    r += dr
-                    c += dc
-                
-                # Controlla all'indietro nella direzione opposta
-                r, c = row - dr, col - dc
-                while 0 <= r < self.size and 0 <= c < self.size and self.board[r][c] == player:
-                    count += 1
-                    r -= dr
-                    c -= dc
-                
-                # Se ci sono 5 o più in fila, abbiamo un vincitore
-                if count >= 5:
-                    return player
-    
+        通过检查所有方向（水平、垂直、对角线）中是否有五个连在一起的棋子来判断是否有赢家。
+        返回：如果有赢家，则返回获胜玩家的符号（'X' 或 'O'），否则返回 None。
+        >>> gomokuGame = GomokuGame(10)
+        >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]
+        >>> for move in moves:
+        ...     gomokuGame.make_move(move[0], move[1])
+        >>> gomokuGame.check_winner()
+        'X'
+        """
+    directions = [(0, 1), (1, 0), (1, 1), (1, -1)]
+    for row in range(self.board_size):
+        for col in range(self.board_size):
+            if self.board[row][col] != ' ':
+                for direction in directions:
+                    if self._check_five_in_a_row(row, col, direction):
+                        return self.board[row][col]
     return None

@@ -1,21 +1,17 @@
 def make_move(self, row, col):
     """
-    Posiziona il segno del giocatore corrente nella posizione specificata sulla tavola e cambia il segno.
-    :param row: int, l'indice di riga della posizione
-    :param col: int, l'indice di colonna della posizione
-    :return: bool, che indica se la mossa è stata effettuata con successo o meno
-    >>> ttt.current_player
-    'X'
-    >>> ttt.make_move(1, 1)
-    >>> ttt.current_player
-    'O'
-    """
-    # Verifica se la posizione è valida e vuota
-    if 0 <= row < len(self.board) and 0 <= col < len(self.board[0]):
-        if self.board[row][col] == ' ' or self.board[row][col] == '':
-            # Posiziona il segno del giocatore corrente
-            self.board[row][col] = self.current_player
-            # Cambia il giocatore corrente
-            self.current_player = 'O' if self.current_player == 'X' else 'X'
-            return True
+        在棋盘上指定位置放置当前玩家的标记并切换标记。
+        :param row: int, 位置的行索引
+        :param col: int, 位置的列索引
+        :return: bool, 表示移动是否成功
+        >>> ttt.current_player
+        'X'
+        >>> ttt.make_move(1, 1)
+        >>> ttt.current_player
+        'O'
+        """
+    if self.board[row][col] == ' ':
+        self.board[row][col] = self.current_player
+        self.current_player = 'O' if self.current_player == 'X' else 'X'
+        return True
     return False

@@ -1,20 +1,9 @@
 def return_book(self, book_id):
     """
-    Segna un libro come restituito nel database in base all'ID del libro fornito.
-    :param book_id: int
-    >>> book_db = BookManagementDB("test.db")
-    >>> book_db.return_book(1)
-    """
-    import sqlite3
-    
-    conn = sqlite3.connect(self.db_name)
-    cursor = conn.cursor()
-    
-    cursor.execute("""
-        UPDATE books 
-        SET borrowed = 0 
-        WHERE id = ?
-    """, (book_id,))
-    
-    conn.commit()
-    conn.close()
+        根据给定的书籍ID在数据库中标记书籍为已归还。
+        :param book_id: int
+        >>> book_db = BookManagementDB("test.db")
+        >>> book_db.return_book(1)
+        """
+    self.cursor.execute('\n                UPDATE books SET available = 1 WHERE id = ?\n            ', (book_id,))
+    self.connection.commit()

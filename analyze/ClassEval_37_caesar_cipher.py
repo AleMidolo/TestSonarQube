@@ -1,26 +1,22 @@
 def caesar_cipher(self, plaintext, shift):
     """
-    Cripta il testo in chiaro utilizzando il cifrario di Cesare.
-    :param plaintext: Il testo in chiaro da criptare, str.
-    :param shift: Il numero di caratteri da spostare per ogni carattere nel testo in chiaro, int.
-    :return: Il testo cifrato, str.
-    >>> e = EncryptionUtils("key")
-    >>> e.caesar_cipher("abc", 1)
-    'bcd'
-
-    """
-    ciphertext = ""
+        使用凯撒密码加密明文。
+        :param plaintext: 要加密的明文，str。
+        :param shift: 每个字符在明文中移动的字符数，int。
+        :return: 密文，str。
+        >>> e = EncryptionUtils("key")
+        >>> e.caesar_cipher("abc", 1)
+        'bcd'
+        """
+    encrypted_text = ''
     for char in plaintext:
         if char.isalpha():
-            # Determina se il carattere è maiuscolo o minuscolo
-            if char.isupper():
-                # Sposta il carattere maiuscolo
-                shifted = chr((ord(char) - ord('A') + shift) % 26 + ord('A'))
+            shift_amount = shift % 26
+            if char.islower():
+                encrypted_char = chr((ord(char) - ord('a') + shift_amount) % 26 + ord('a'))
             else:
-                # Sposta il carattere minuscolo
-                shifted = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
-            ciphertext += shifted
+                encrypted_char = chr((ord(char) - ord('A') + shift_amount) % 26 + ord('A'))
+            encrypted_text += encrypted_char
         else:
-            # Mantieni i caratteri non alfabetici invariati
-            ciphertext += char
-    return ciphertext
+            encrypted_text += char
+    return encrypted_text

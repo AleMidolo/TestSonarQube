@@ -1,19 +1,12 @@
 def read_zip_file(self):
     """
-    Ottieni l'oggetto del file aperto
-    :return: Se ha successo, restituisce l'oggetto file aperto; altrimenti, restituisce None
-    >>> zfp = ZipFileProcessor("aaa.zip")
-    >>> file = zfp.read_zip_file()
-    """
-    import zipfile
-    import os
-    
+        获取打开的文件对象
+        :return: 如果成功，返回打开的文件对象；否则，返回 None
+        >>> zfp = ZipFileProcessor("aaa.zip")
+        >>> file = zfp.read_zip_file()
+        """
     try:
-        # Check if the file exists and is a valid zip file
-        if hasattr(self, 'zip_file_path') and os.path.exists(self.zip_file_path):
-            # Open and return the ZipFile object
-            return zipfile.ZipFile(self.zip_file_path, 'r')
-        else:
-            return None
-    except (zipfile.BadZipFile, IOError, OSError):
+        zip_file = zipfile.ZipFile(self.file_name, 'r')
+        return zip_file
+    except:
         return None

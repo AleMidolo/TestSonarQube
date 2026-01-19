@@ -1,13 +1,14 @@
 def track_order(self, order_id):
     """
-    Ottieni lo stato di un ordine specifico.
+    获取特定订单的状态。
     :param order_id: int
-    :return False: solo se l'order_id non è presente in self.orders.
+    :return False: 仅当 order_id 不在 self.orders 中时。
     >>> warehouse.add_product(1, "product1", 3)
     >>> warehouse.create_order(1, 1, 2)
     >>> warehouse.track_order(1)
-    'Spedito'
+    'Shipped'
     """
-    if order_id not in self.orders:
+    if order_id in self.orders:
+        return self.orders[order_id]['status']
+    else:
         return False
-    return self.orders[order_id]['status']
