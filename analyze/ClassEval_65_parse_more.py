@@ -1,9 +1,9 @@
 def parse_more(self, i):
     """
-        इंडेक्स के आधार पर हज़ार/मिलियन/बिलियन सफ़िक्स को पार्स करता है।
+        Parses the thousand/million/billion suffix based on the index.
 
-        :param i: int, इंडेक्स जो मैग्नीट्यूड (हज़ार, मिलियन, बिलियन) को दर्शाता है
-        :return: str, मैग्नीट्यूड के लिए संबंधित सफ़िक्स
+        :param i: int, the index representing the magnitude (thousand, million, billion)
+        :return: str, the corresponding suffix for the magnitude
 
         >>> formatter = NumberWordFormatter()
         >>> formatter.parse_more(1)

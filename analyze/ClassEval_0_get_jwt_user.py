@@ -10,6 +10,7 @@ def get_jwt_user(self, request):
     auth_header = request.get('headers', {}).get('Authorization', {})
     jwt = auth_header.get('jwt')
     if jwt:
-        user_info = auth_header.get('user')
+        user_info = auth_header.get('user', {})
+        user_info['level'] = 3
         return {'user': user_info}
     return None

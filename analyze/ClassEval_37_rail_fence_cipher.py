@@ -10,16 +10,16 @@ def rail_fence_cipher(self, plain_text, rails):
     if rails <= 0:
         return ''
     rail = [['\n' for _ in range(len(plain_text))] for _ in range(rails)]
-    direction_down = False
+    dir_down = None
     row, col = (0, 0)
     for char in plain_text:
         if row == 0:
-            direction_down = True
+            dir_down = True
         if row == rails - 1:
-            direction_down = False
+            dir_down = False
         rail[row][col] = char
         col += 1
-        if direction_down:
+        if dir_down:
             row += 1
         else:
             row -= 1

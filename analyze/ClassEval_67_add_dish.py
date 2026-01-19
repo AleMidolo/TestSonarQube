@@ -9,9 +9,10 @@ def add_dish(self, dish):
         >>> order.add_dish({"dish": "dish1", "price": 10, "count": 3})
         True
         """
-    for item in self.menu:
-        if item['dish'] == dish['dish'] and item['count'] >= dish['count']:
-            self.selected_dishes.append(dish)
-            item['count'] -= dish['count']
-            return True
+    for menu_item in self.menu:
+        if menu_item['dish'] == dish['dish']:
+            if menu_item['count'] >= dish['count']:
+                self.selected_dishes.append(dish)
+                menu_item['count'] -= dish['count']
+                return True
     return False
