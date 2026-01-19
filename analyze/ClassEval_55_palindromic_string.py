@@ -17,8 +17,7 @@ def palindromic_string(self):
         while transformed_string[i + P[i] + 1] == transformed_string[i - P[i] - 1]:
             P[i] += 1
         if i + P[i] > right:
-            center = i
-            right = i + P[i]
+            center, right = (i, i + P[i])
     max_length = max(P)
     center_index = P.index(max_length)
     start = (center_index - max_length) // 2

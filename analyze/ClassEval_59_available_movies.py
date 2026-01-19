@@ -8,10 +8,10 @@ def available_movies(self, start_time, end_time):
         >>> system.available_movies('12:00', '22:00')
         ['Batman']
         """
-    start = datetime.strptime(start_time, '%H:%M')
-    end = datetime.strptime(end_time, '%H:%M')
     available = []
+    start_time = datetime.strptime(start_time, '%H:%M')
+    end_time = datetime.strptime(end_time, '%H:%M')
     for movie in self.movies:
-        if movie['start_time'] >= start and movie['end_time'] <= end:
+        if movie['start_time'] >= start_time and movie['end_time'] <= end_time:
             available.append(movie['name'])
     return available

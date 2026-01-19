@@ -16,5 +16,5 @@ def process_json(self, file_path, remove_key):
     data = self.read_json(file_path)
     if data == 0 or remove_key not in data:
         return 0
-    data.pop(remove_key)
+    del data[remove_key]
     return self.write_json(data, file_path)

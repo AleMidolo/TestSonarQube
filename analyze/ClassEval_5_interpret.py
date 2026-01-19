@@ -10,13 +10,12 @@ def interpret(self, display=False):
         """
     if not self.play_text.strip():
         return []
-    chords_and_tunes = []
+    chords = []
     parts = self.play_text.split()
     for part in parts:
         chord = ''.join(filter(str.isalpha, part))
         tune = ''.join(filter(str.isdigit, part))
-        chords_and_tunes.append({'Chord': chord, 'Tune': tune})
-    if display:
-        for item in chords_and_tunes:
-            print(self.display(item['Chord'], item['Tune']))
-    return chords_and_tunes
+        chords.append({'Chord': chord, 'Tune': tune})
+        if display:
+            print(self.display(chord, tune))
+    return chords
