@@ -11,3 +11,4 @@ def attack(self, other_character):
     damage = self.attack_power - other_character.defense
     if damage > 0:
         other_character.hp -= damage
+    return other_character.hp

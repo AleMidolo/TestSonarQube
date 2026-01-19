@@ -7,7 +7,8 @@ def add_heading(self, heading, level=1):
     """
     try:
         doc = Document(self.file_path)
-        doc.add_heading(heading, level=level)
+        heading_paragraph = doc.add_heading(level=level)
+        heading_paragraph.text = heading
         doc.save(self.file_path)
         return True
     except:

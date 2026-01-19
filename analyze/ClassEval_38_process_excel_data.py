@@ -12,10 +12,9 @@ def process_excel_data(self, N, save_file_name):
         if data is None:
             return (0, save_file_name)
         for i in range(len(data)):
-            row = list(data[i])
-            if N < len(row):
-                row[N] = str(row[N]).upper()
-            data[i] = tuple(row)
+            if len(data[i]) > N:
+                data[i] = list(data[i])
+                data[i][N] = str(data[i][N]).upper()
         output_file_name = 'processed_' + save_file_name
         success = self.write_excel(data, output_file_name)
         return (success, output_file_name)

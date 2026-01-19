@@ -21,13 +21,15 @@ def subtract(num1, num2):
     result = []
     borrow = 0
     for i in range(max_length - 1, -1, -1):
-        digit1 = int(num1[i]) - borrow
-        digit2 = int(num2[i])
-        if digit1 < digit2:
-            digit1 += 10
+        digit_sub = int(num1[i]) - int(num2[i]) - borrow
+        if digit_sub < 0:
+            digit_sub += 10
             borrow = 1
         else:
             borrow = 0
-        result.insert(0, str(digit1 - digit2))
-    result_str = ''.join(result).lstrip('0')
-    return '-' + result_str if negative else result_str
+        result.insert(0, str(digit_sub))
+    while len(result) > 1 and result[0] == '0':
+        result.pop(0)
+    if negative:
+        return '-' + ''.join(result)
+    return ''.join(result)
