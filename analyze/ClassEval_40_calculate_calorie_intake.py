@@ -12,8 +12,9 @@ def calculate_calorie_intake(self):
         BMR = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161
     condition = self.condition_judge()
     if condition == 1:
-        return BMR * 1.2
+        calorie_intake = BMR * 1.2
     elif condition == -1:
-        return BMR * 1.6
+        calorie_intake = BMR * 1.6
     else:
-        return BMR * 1.4
+        calorie_intake = BMR * 1.4
+    return calorie_intake

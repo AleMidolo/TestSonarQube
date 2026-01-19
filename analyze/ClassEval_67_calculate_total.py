@@ -15,8 +15,6 @@ def calculate_total(self):
         dish_name = selected['dish']
         count = selected['count']
         price = selected['price']
-        if dish_name in self.sales:
-            total += count * price * self.sales[dish_name]
-        else:
-            total += count * price
+        sales_multiplier = self.sales.get(dish_name, 1)
+        total += count * price * sales_multiplier
     return total
