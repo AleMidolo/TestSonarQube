@@ -12,17 +12,11 @@ def search_database(self, table_name, name):
     cursor = conn.cursor()
     cursor.execute(f'PRAGMA table_info({table_name})')
     columns_info = cursor.fetchall()
-    text_column = None
-    for col_info in columns_info:
-        if col_info[2] == 'TEXT' and col_info[1] != 'id':
-            text_column = col_info[1]
-            break
-    if text_column:
-        search_query = f'SELECT * FROM {table_name} WHERE {text_column} = ?'
+    text_columns = [col[1] for col in columns_info if col[2] == 'TEXT' and col[1] != 'id']
+    result = None
+    if text_columns:
+        search_query = f'SELECT * FROM {table_name} WHERE {text_columns[0]} = ?'
         cursor.execute(search_query, (name,))
-        results = cursor.fetchall()
-        conn.close()
-        return results if results else None
-    else:
-        conn.close()
-        return None
+        result = cursor.fetchall()
+    conn.close()
+    return result

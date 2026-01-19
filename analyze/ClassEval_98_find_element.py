@@ -14,7 +14,4 @@ def find_element(self, element_name):
         """
     if self.root is None:
         return []
-    found_elements = []
-    for element in self.root.iter(element_name):
-        found_elements.append(element)
-    return found_elements
+    return list(self.root.iter(element_name))

@@ -8,15 +8,16 @@ def condition_judge(self):
 
         """
     bmi = self.get_BMI()
-    for std_dict in self.BMI_std:
-        if self.sex in std_dict:
-            bmi_range = std_dict[self.sex]
+    bmi_std_range = None
+    for std in self.BMI_std:
+        if self.sex in std:
+            bmi_std_range = std[self.sex]
             break
-    else:
-        bmi_range = [20, 25]
-    if bmi > bmi_range[1]:
-        return 1
-    elif bmi < bmi_range[0]:
+    if bmi_std_range is None:
+        bmi_std_range = [20, 25]
+    if bmi < bmi_std_range[0]:
         return -1
+    elif bmi > bmi_std_range[1]:
+        return 1
     else:
         return 0

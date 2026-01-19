@@ -8,20 +8,10 @@ def get_jwt_user(self, request):
         {'user': {'name': 'user1'}}
         """
     try:
-        auth_header = request.get('headers', {}).get('Authorization', {})
-        if isinstance(auth_header, dict) and 'user' in auth_header:
-            return {'user': auth_header['user']}
-        elif isinstance(auth_header, str):
-            import json
-            import base64
-            parts = auth_header.split('.')
-            if len(parts) == 3:
-                payload = parts[1]
-                payload += '=' * (4 - len(payload) % 4)
-                decoded_payload = base64.b64decode(payload).decode('utf-8')
-                user_data = json.loads(decoded_payload)
-                if 'user' in user_data:
-                    return {'user': user_data['user']}
-    except Exception as e:
-        logging.debug(f'Failed to parse JWT: {e}')
+        if 'headers' in request and 'Authorization' in request['headers']:
+            auth_data = request['headers']['Authorization']
+            if isinstance(auth_data, dict) and 'user' in auth_data:
+                return {'user': auth_data['user']}
+    except:
+        return None
     return None

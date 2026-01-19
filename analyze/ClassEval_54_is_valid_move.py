@@ -12,14 +12,14 @@ def is_valid_move(self, pos1, pos2):
         >>> mc.is_valid_move((0, 0), (1, 0))
         True
         """
-    if not (0 <= pos1[0] < self.BOARD_SIZE[0] and 0 <= pos1[1] < self.BOARD_SIZE[1]):
-        return False
-    if not (0 <= pos2[0] < self.BOARD_SIZE[0] and 0 <= pos2[1] < self.BOARD_SIZE[1]):
+    x1, y1 = pos1
+    x2, y2 = pos2
+    if not (0 <= x1 < self.BOARD_SIZE[0] and 0 <= y1 < self.BOARD_SIZE[1] and (0 <= x2 < self.BOARD_SIZE[0]) and (0 <= y2 < self.BOARD_SIZE[1])):
         return False
     if pos1 == pos2:
         return False
-    if self.board[pos1[0]][pos1[1]] != self.board[pos2[0]][pos2[1]]:
+    if self.board[x1][y1] == ' ' or self.board[x2][y2] == ' ':
         return False
-    if self.board[pos1[0]][pos1[1]] == ' ' or self.board[pos2[0]][pos2[1]] == ' ':
+    if self.board[x1][y1] != self.board[x2][y2]:
         return False
     return self.has_path(pos1, pos2)

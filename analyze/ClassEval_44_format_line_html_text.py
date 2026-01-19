@@ -26,7 +26,10 @@ def format_line_html_text(self, html_text):
     for tag in soup.find_all(['pre', 'blockquote']):
         tag.replace_with(self.CODE_MARK)
     text = soup.get_text(separator='\n')
-    lines = [line.strip() for line in text.split('\n') if line.strip()]
+    lines = []
+    for line in text.split('\n'):
+        line = line.strip()
+        if line:
+            lines.append(line)
     result = '\n'.join(lines)
-    result = re.sub(f'({re.escape(self.CODE_MARK)}\\s*)+', f'{self.CODE_MARK}\n', result)
-    return result
+    return self.__format_line_feed(result)

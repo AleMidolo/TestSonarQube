@@ -9,7 +9,8 @@ def due(self):
         312.55
 
         """
+    total_amount = self.total()
     if self.promotion:
         discount = self.promotion(self)
-        return self.total() - discount
-    return self.total()
+        total_amount -= discount
+    return total_amount

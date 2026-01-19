@@ -11,28 +11,28 @@ def parse_arguments(self, command_string):
         {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
         """
     self.arguments = {}
-    parts = command_string.split()
+    tokens = command_string.split()
     i = 0
-    while i < len(parts):
-        part = parts[i]
-        if part.startswith('--') and '=' in part:
-            arg_name = part[2:].split('=')[0]
-            arg_value = part.split('=', 1)[1]
+    while i < len(tokens):
+        token = tokens[i]
+        if token.startswith('--') and '=' in token:
+            arg_name = token[2:].split('=')[0]
+            arg_value = token.split('=', 1)[1]
             self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
             i += 1
-        elif part.startswith('--'):
-            arg_name = part[2:]
-            if i + 1 < len(parts) and (not parts[i + 1].startswith('-')):
-                arg_value = parts[i + 1]
+        elif token.startswith('--'):
+            arg_name = token[2:]
+            if i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
+                arg_value = tokens[i + 1]
                 self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
                 i += 2
             else:
                 self.arguments[arg_name] = True
                 i += 1
-        elif part.startswith('-') and (not part.startswith('--')):
-            arg_name = part[1:]
-            if i + 1 < len(parts) and (not parts[i + 1].startswith('-')):
-                arg_value = parts[i + 1]
+        elif token.startswith('-') and (not token.startswith('--')):
+            arg_name = token[1:]
+            if i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
+                arg_value = tokens[i + 1]
                 self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
                 i += 2
             else:

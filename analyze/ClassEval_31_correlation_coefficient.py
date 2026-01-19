@@ -9,9 +9,11 @@ def correlation_coefficient(data1, data2):
         0.9999999999999998
 
         """
+    if len(data1) != len(data2):
+        raise ValueError('Both datasets must have the same length')
     n = len(data1)
-    if n != len(data2) or n < 2:
-        return math.nan
+    if n < 2:
+        raise ValueError('Datasets must have at least 2 elements')
     mean1 = sum(data1) / n
     mean2 = sum(data2) / n
     numerator = sum(((data1[i] - mean1) * (data2[i] - mean2) for i in range(n)))
