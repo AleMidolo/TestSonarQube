@@ -14,9 +14,8 @@ def process_excel_data(self, N, save_file_name):
         processed_data = []
         for row in data:
             processed_row = list(row)
-            if N < len(processed_row) and processed_row[N] is not None:
-                if isinstance(processed_row[N], str):
-                    processed_row[N] = processed_row[N].upper()
+            if N < len(processed_row) and isinstance(processed_row[N], str):
+                processed_row[N] = processed_row[N].upper()
             processed_data.append(tuple(processed_row))
         output_file = f'processed_{save_file_name}'
         result = self.write_excel(processed_data, output_file)

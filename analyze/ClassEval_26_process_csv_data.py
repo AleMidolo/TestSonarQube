@@ -28,13 +28,15 @@ def process_csv_data(self, N, save_file_name):
             else:
                 processed_data.append([''])
         if N < len(title):
-            new_title = [title[N]]
+            output_title = [title[N]]
         else:
-            new_title = ['']
-        output_data = [new_title] + processed_data
-        base_name = save_file_name.rsplit('.', 1)[0]
-        extension = save_file_name.rsplit('.', 1)[1] if '.' in save_file_name else 'csv'
-        new_file_name = f'{base_name}_process.{extension}'
+            output_title = ['']
+        output_data = [output_title] + processed_data
+        if '.' in save_file_name:
+            name_parts = save_file_name.rsplit('.', 1)
+            new_file_name = f'{name_parts[0]}_process.{name_parts[1]}'
+        else:
+            new_file_name = f'{save_file_name}_process'
         return self.write_csv(output_data, new_file_name)
-    except Exception as e:
+    except Exception:
         return 0

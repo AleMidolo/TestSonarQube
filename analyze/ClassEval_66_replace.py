@@ -8,6 +8,8 @@ def replace(self, string):
         'ABC'
 
         """
+    if not string:
+        return string
     result = []
     i = 0
     n = len(string)
@@ -18,11 +20,11 @@ def replace(self, string):
             if j < n and string[j] == 'x':
                 is_hex = True
                 j += 1
-            start = j
-            while j < n and self.is_hex_char(string[j]):
+            start_idx = j
+            while j < n and string[j] != ';':
                 j += 1
             if j < n and string[j] == ';':
-                entity = string[start:j]
+                entity = string[start_idx:j]
                 if entity:
                     try:
                         if is_hex:
@@ -31,10 +33,12 @@ def replace(self, string):
                             code_point = int(entity)
                         if 0 <= code_point <= 1114111:
                             result.append(chr(code_point))
-                            i = j + 1
-                            continue
-                    except ValueError:
-                        pass
+                        else:
+                            result.append(string[i:j + 1])
+                    except (ValueError, OverflowError):
+                        result.append(string[i:j + 1])
+                    i = j + 1
+                    continue
         result.append(string[i])
         i += 1
     return ''.join(result)
