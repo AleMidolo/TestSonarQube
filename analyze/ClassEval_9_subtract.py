@@ -11,10 +11,10 @@ def subtract(num1, num2):
         """
     if num1 == num2:
         return '0'
-    negative_result = False
+    negative = False
     if num1 < num2:
         num1, num2 = (num2, num1)
-        negative_result = True
+        negative = True
     max_length = max(len(num1), len(num2))
     num1 = num1.zfill(max_length)
     num2 = num2.zfill(max_length)
@@ -30,6 +30,4 @@ def subtract(num1, num2):
             borrow = 0
         result.insert(0, str(digit1 - digit2))
     result_str = ''.join(result).lstrip('0')
-    if negative_result:
-        return '-' + result_str
-    return result_str if result_str else '0'
+    return '-' + result_str if negative else result_str

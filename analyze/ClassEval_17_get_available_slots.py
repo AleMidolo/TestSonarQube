@@ -7,6 +7,7 @@ def get_available_slots(self, date):
         >>> calendar.events = [{'date': datetime(2023, 1, 1, 0, 0), 'start_time': datetime(2023, 1, 1, 0, 0), 'end_time': datetime(2023, 1, 1, 23, 0), 'description': 'नया साल'}]
         >>> calendar.get_available_slots(datetime(2023, 1, 1))
         [(datetime.datetime(2023, 1, 1, 23, 0), datetime.datetime(2023, 1, 2, 0, 0))]
+
         """
     slots = []
     start_of_day = datetime.combine(date.date(), datetime.min.time())

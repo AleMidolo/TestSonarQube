@@ -15,7 +15,7 @@ def has_path(self, pos1, pos2):
     from collections import deque
 
     def is_valid(x, y):
-        return 0 <= x < self.BOARD_SIZE[0] and 0 <= y < self.BOARD_SIZE[1] and (self.board[x][y] == self.board[pos1[0]][pos1[1]])
+        return 0 <= x < self.BOARD_SIZE[0] and 0 <= y < self.BOARD_SIZE[1] and (self.board[x][y] != ' ')
     queue = deque([pos1])
     visited = set()
     visited.add(pos1)
