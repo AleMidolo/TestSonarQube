@@ -1,8 +1,8 @@
 def apply_operator(self, operand_stack, operator_stack):
     """
         Utilizes the operator on top of the operator stack to perform the operation on the two numbers on top of the operand stack, and stores the results on top of the operand stack
-        :param operand_stack: list
-        :param operator_stack: list
+        :param operand_stack:list
+        :param operator_stack:list
         :return: the updated operand stack and operator stack
         >>> calculator = Calculator()
         >>> calculator.apply_operator([1, 2, 3], ['+', '-'])
