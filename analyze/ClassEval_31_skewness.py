@@ -9,7 +9,7 @@ def skewness(data):
 
         """
     n = len(data)
-    if n < 3:
+    if n < 2:
         return math.nan
     mean = sum(data) / n
     variance = sum(((x - mean) ** 2 for x in data)) / n

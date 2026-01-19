@@ -19,21 +19,22 @@ def text2int(self, textnum):
                 if word.endswith(ending):
                     word = '%s%s' % (word[:-len(ending)], replacement)
                     break
-        processed_words.append(word)
+            processed_words.append(word)
     current = 0
     result = 0
     for word in processed_words:
-        if word.isdigit():
-            current += int(word)
-        elif word == 'and':
+        if word == 'and':
             continue
-        elif word not in self.numwords:
-            continue
+        if word not in self.numwords:
+            try:
+                scale, increment = (1, int(word))
+            except ValueError:
+                continue
         else:
             scale, increment = self.numwords[word]
-            current = current * scale + increment
-            if scale > 100:
-                result += current
-                current = 0
+        current = current * scale + increment
+        if scale > 100:
+            result += current
+            current = 0
     result += current
     return str(result)

@@ -14,8 +14,7 @@ def kurtosis(data):
     mean = sum(data) / n
     variance = sum(((x - mean) ** 2 for x in data)) / n
     if variance == 0:
-        return -3.0
+        return 0
     m4 = sum(((x - mean) ** 4 for x in data)) / n
-    kurtosis_value = m4 / variance ** 2
-    excess_kurtosis = kurtosis_value - 3
-    return excess_kurtosis
+    kurt = m4 / variance ** 2 - 3
+    return kurt

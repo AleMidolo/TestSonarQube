@@ -8,18 +8,19 @@ def bad_character_heuristic(self):
 
         """
     positions = []
-    currentPos = 0
-    while currentPos <= self.textLen - self.patLen:
-        mismatchPos = self.mismatch_in_text(currentPos)
-        if mismatchPos == -1:
-            positions.append(currentPos)
-            currentPos += 1
+    current_pos = 0
+    while current_pos <= self.textLen - self.patLen:
+        mismatch_pos = self.mismatch_in_text(current_pos)
+        if mismatch_pos == -1:
+            positions.append(current_pos)
+            current_pos += 1
         else:
-            badChar = self.text[mismatchPos]
-            rightmostIndex = self.match_in_pattern(badChar)
-            if rightmostIndex == -1:
-                currentPos = mismatchPos + 1
+            bad_char = self.text[mismatch_pos]
+            rightmost_pos = self.match_in_pattern(bad_char)
+            if rightmost_pos == -1:
+                current_pos = mismatch_pos + 1
             else:
-                shift = mismatchPos - (currentPos + rightmostIndex)
-                currentPos += max(1, shift)
+                pattern_pos = mismatch_pos - current_pos
+                shift = pattern_pos - rightmost_pos
+                current_pos += max(1, shift)
     return positions

@@ -7,17 +7,18 @@ def split_sentences(self, sentences_string):
         >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
-    abbreviations = ['Mr', 'Mrs', 'Ms', 'Dr', 'Prof', 'St', 'Jr', 'Sr']
-    placeholder_map = {}
-    for i, abbr in enumerate(abbreviations):
-        pattern = f'\\b{abbr}\\.'
-        placeholder = f'__ABBR{i}__'
-        sentences_string = re.sub(pattern, placeholder, sentences_string)
-        placeholder_map[placeholder] = f'{abbr}.'
-    sentences = re.split('(?<=[.?])\\s+', sentences_string.strip())
-    result = []
-    for sentence in sentences:
-        for placeholder, original in placeholder_map.items():
-            sentence = sentence.replace(placeholder, original)
-        result.append(sentence)
-    return result
+    if not sentences_string:
+        return []
+    pattern = '(?<!\\bMr)(?<!\\bMrs)(?<!\\bMs)(?<!\\bDr)(?<!\\bProf)\\.|\\?(?=\\s|$)'
+    parts = re.split(f'({pattern})', sentences_string)
+    sentences = []
+    current_sentence = ''
+    for i in range(0, len(parts), 2):
+        if i + 1 < len(parts):
+            current_sentence = parts[i] + parts[i + 1]
+            sentences.append(current_sentence.strip())
+            current_sentence = ''
+        elif parts[i].strip():
+            sentences.append(parts[i].strip())
+    sentences = [s for s in sentences if s]
+    return sentences
