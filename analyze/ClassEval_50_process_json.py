@@ -22,8 +22,8 @@ def process_json(self, file_path, remove_key):
     
     try:
         # Read the JSON file
-        with open(file_path, 'r', encoding='utf-8') as file:
-            data = json.load(file)
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
         
         # Check if the key exists in the data
         if remove_key not in data:
@@ -33,10 +33,10 @@ def process_json(self, file_path, remove_key):
         del data[remove_key]
         
         # Write the modified data back to the file
-        with open(file_path, 'w', encoding='utf-8') as file:
-            json.dump(data, file, ensure_ascii=False, indent=4)
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
         
         return 1
     
-    except (json.JSONDecodeError, IOError):
+    except (json.JSONDecodeError, IOError, Exception):
         return 0

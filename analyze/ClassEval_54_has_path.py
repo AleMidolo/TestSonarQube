@@ -50,7 +50,7 @@ def has_path(self, pos1, pos2):
                 continue
             
             # Check if we reached the destination
-            if nx == x2 and ny == y2:
+            if (nx, ny) == (x2, y2):
                 return True
             
             # Check bounds (allow one step outside the board)

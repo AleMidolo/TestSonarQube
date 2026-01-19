@@ -18,7 +18,7 @@ def move(self, direction):
         self.positions.insert(0, new_head)
         self.length += 1
         self.score += 10
-        # Genera nuovo cibo (assumendo che esista un metodo per farlo)
+        # Genera nuovo cibo
         self.generate_food()
     # Controlla se la nuova posizione coincide con il corpo del serpente
     elif new_head in self.positions:

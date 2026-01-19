@@ -6,23 +6,22 @@ def get_binary(self):
     >>> ipaddress.get_binary()
     "00001010.00001010.00001010.00001010"
     """
-    # Assuming there's a method to check if IP is valid or the IP is stored in self
-    # Common pattern would be self.ip or self.address
-    if not hasattr(self, 'ip') or not self.ip:
+    # Assuming there's a method to check if IP is valid or an attribute storing the IP
+    # Common pattern would be self.ip_address or similar
+    if not hasattr(self, 'ip_address') or not self.ip_address:
         return ''
     
     try:
-        # Split the IP address by dots
-        octets = self.ip.split('.')
+        # Split the IP address into octets
+        octets = self.ip_address.split('.')
         
-        # Validate that we have exactly 4 octets
+        # Validate IP address format
         if len(octets) != 4:
             return ''
         
-        # Convert each octet to binary and validate range
         binary_octets = []
         for octet in octets:
-            # Convert to integer and check if it's in valid range (0-255)
+            # Convert to integer and validate range
             num = int(octet)
             if num < 0 or num > 255:
                 return ''

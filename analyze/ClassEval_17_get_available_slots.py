@@ -23,7 +23,7 @@ def get_available_slots(self, date):
         if event_date.year == date.year and event_date.month == date.month and event_date.day == date.day:
             events_on_date.append(event)
     
-    # Sort events by start time
+    # Sort events by start_time
     events_on_date.sort(key=lambda x: x['start_time'])
     
     # Find available slots
@@ -42,7 +42,7 @@ def get_available_slots(self, date):
         if event_end > current_time:
             current_time = event_end
     
-    # Check if there's time remaining until end of day
+    # Check if there's time remaining after the last event until midnight
     if current_time < next_day_start:
         available_slots.append((current_time, next_day_start))
     

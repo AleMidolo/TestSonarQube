@@ -7,16 +7,22 @@ def format_string(self, x):
     >>> formatter.format_string("123456")
     "UNO CENTO E VENTITRE MILA QUATTROCENTO E CINQUANTA SEI SOLO"
     """
-    # Definizione delle parole per i numeri
-    unita = ["", "UNO", "DUE", "TRE", "QUATTRO", "CINQUE", "SEI", "SETTE", "OTTO", "NOVE"]
-    decine_speciali = ["DIECI", "UNDICI", "DODICI", "TREDICI", "QUATTORDICI", "QUINDICI", 
-                       "SEDICI", "DICIASSETTE", "DICIOTTO", "DICIANNOVE"]
-    decine = ["", "", "VENTI", "TRENTA", "QUARANTA", "CINQUANTA", "SESSANTA", "SETTANTA", "OTTANTA", "NOVANTA"]
+    if not x or not x.isdigit():
+        return ""
+    
+    # Rimuovi zeri iniziali
+    x = x.lstrip('0') or '0'
+    
+    # Definizioni base
+    unita = ['', 'UNO', 'DUE', 'TRE', 'QUATTRO', 'CINQUE', 'SEI', 'SETTE', 'OTTO', 'NOVE']
+    decine_speciali = ['DIECI', 'UNDICI', 'DODICI', 'TREDICI', 'QUATTORDICI', 'QUINDICI', 
+                       'SEDICI', 'DICIASSETTE', 'DICIOTTO', 'DICIANNOVE']
+    decine = ['', '', 'VENTI', 'TRENTA', 'QUARANTA', 'CINQUANTA', 'SESSANTA', 'SETTANTA', 'OTTANTA', 'NOVANTA']
     
     def converti_centinaia(num):
         """Converte un numero da 0 a 999 in parole"""
         if num == 0:
-            return ""
+            return ''
         
         risultato = []
         
@@ -24,13 +30,13 @@ def format_string(self, x):
         centinaia = num // 100
         if centinaia > 0:
             risultato.append(unita[centinaia])
-            risultato.append("CENTO")
+            risultato.append('CENTO')
         
         # Decine e unità
         resto = num % 100
         if resto >= 10 and resto < 20:
             if risultato:
-                risultato.append("E")
+                risultato.append('E')
             risultato.append(decine_speciali[resto - 10])
         else:
             dec = resto // 10
@@ -38,34 +44,33 @@ def format_string(self, x):
             
             if dec > 0:
                 if risultato:
-                    risultato.append("E")
+                    risultato.append('E')
                 risultato.append(decine[dec])
             
             if uni > 0:
                 risultato.append(unita[uni])
         
-        return " ".join(risultato)
+        return ' '.join(risultato)
     
-    # Converti la stringa in intero
-    numero = int(x)
+    # Dividi il numero in gruppi di tre cifre da destra
+    num_int = int(x)
     
-    if numero == 0:
+    if num_int == 0:
         return "ZERO SOLO"
+    
+    # Gestisci migliaia e unità
+    migliaia = num_int // 1000
+    unita_parte = num_int % 1000
     
     risultato = []
     
-    # Gestione migliaia
-    migliaia = numero // 1000
     if migliaia > 0:
         risultato.append(converti_centinaia(migliaia))
-        risultato.append("MILA")
+        risultato.append('MILA')
     
-    # Gestione centinaia
-    centinaia = numero % 1000
-    if centinaia > 0:
-        risultato.append(converti_centinaia(centinaia))
+    if unita_parte > 0:
+        risultato.append(converti_centinaia(unita_parte))
     
-    # Aggiungi "SOLO" alla fine
-    risultato.append("SOLO")
+    risultato.append('SOLO')
     
-    return " ".join(risultato)
+    return ' '.join(risultato)

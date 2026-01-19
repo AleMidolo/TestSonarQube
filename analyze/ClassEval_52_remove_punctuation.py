@@ -1,5 +1,3 @@
-import string
-
 def remove_punctuation(self, sentence):
     """
     Rimuove la punteggiatura dal testo di input.
@@ -10,4 +8,5 @@ def remove_punctuation(self, sentence):
     'I am running in a race'
 
     """
+    import string
     return sentence.translate(str.maketrans('', '', string.punctuation))

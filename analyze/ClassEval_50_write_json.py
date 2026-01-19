@@ -13,8 +13,8 @@ def write_json(self, data, file_path):
     {'key1': 'value1', 'key2': 'value2'}
     """
     try:
-        with open(file_path, 'w', encoding='utf-8') as file:
-            json.dump(data, file, ensure_ascii=False, indent=4)
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
         return 1
     except Exception:
         return -1

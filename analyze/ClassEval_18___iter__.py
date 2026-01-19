@@ -9,4 +9,4 @@ def __iter__(self):
     >>> camelize_map.__iter__()
     <dict_keyiterator object at 0x0000026739977C20>
     """
-    return iter(self._data)
+    return iter(self.__dict__)

@@ -7,11 +7,9 @@ def extract_text_from_pdfs(self):
     ['Test a.pdf', 'Test b.pdf']
     """
     pdf_texts = []
-    
     for reader in self.readers:
         text = ""
         for page in reader.pages:
             text += page.extract_text()
         pdf_texts.append(text)
-    
     return pdf_texts

@@ -8,5 +8,7 @@ def calculate_portfolio_value(self):
     11500.0
 
     """
-    portfolio_value = sum(stock['price'] * stock['quantity'] for stock in self.portfolio)
-    return self.cash + portfolio_value
+    total_value = self.cash
+    for stock in self.portfolio:
+        total_value += stock['price'] * stock['quantity']
+    return total_value

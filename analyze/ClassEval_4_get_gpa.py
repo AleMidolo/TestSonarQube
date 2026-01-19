@@ -23,7 +23,10 @@ def get_gpa(self, name):
         return None
     
     # Calculate the average of all course scores
-    total = sum(student.courses.values())
-    count = len(student.courses)
+    total_score = sum(student.courses.values())
+    num_courses = len(student.courses)
     
-    return float(total / count)
+    if num_courses == 0:
+        return None
+    
+    return float(total_score / num_courses)

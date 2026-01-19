@@ -9,8 +9,6 @@ def delete_student_by_name(self, name):
     >>> processor.insert_student(student_data)
     >>> processor.delete_student_by_name("John")
     """
-    conn = sqlite3.connect(self.db_name)
-    cursor = conn.cursor()
+    cursor = self.connection.cursor()
     cursor.execute("DELETE FROM students WHERE name = ?", (name,))
-    conn.commit()
-    conn.close()
+    self.connection.commit()

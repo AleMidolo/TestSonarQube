@@ -19,6 +19,12 @@ def get_page_info(self, page_number):
     total_items = len(self.data)
     total_pages = (total_items + self.per_page - 1) // self.per_page
     
+    # Validate page_number
+    if page_number < 1:
+        page_number = 1
+    elif page_number > total_pages:
+        page_number = total_pages
+    
     # Calculate start and end indices for the current page
     start_index = (page_number - 1) * self.per_page
     end_index = start_index + self.per_page

@@ -9,6 +9,6 @@ def get_all_major(self):
     """
     majors = []
     for student in self.students:
-        if "major" in student and student["major"] not in majors:
+        if student.get("major") and student["major"] not in majors:
             majors.append(student["major"])
     return majors

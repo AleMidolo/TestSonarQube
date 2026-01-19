@@ -14,7 +14,7 @@ def extract_file(self, file_name, output_path):
         # Crea la directory di output se non esiste
         os.makedirs(output_path, exist_ok=True)
         
-        # Apri il file zip
+        # Apri l'archivio zip
         with zipfile.ZipFile(self.zip_file, 'r') as zip_ref:
             # Verifica se il file esiste nell'archivio
             if file_name not in zip_ref.namelist():
@@ -22,6 +22,7 @@ def extract_file(self, file_name, output_path):
             
             # Estrai il file specifico
             zip_ref.extract(file_name, output_path)
-            return True
+            
+        return True
     except Exception as e:
         return False

@@ -9,48 +9,47 @@ def trans_three(self, s):
     """
     # Definizione dei numeri in italiano
     ones = ["", "UNO", "DUE", "TRE", "QUATTRO", "CINQUE", "SEI", "SETTE", "OTTO", "NOVE"]
-    teens = ["DIECI", "UNDICI", "DODICI", "TREDICI", "QUATTORDICI", "QUINDICI", 
-             "SEDICI", "DICIASSETTE", "DICIOTTO", "DICIANNOVE"]
-    tens = ["", "", "VENTI", "TRENTA", "QUARANTA", "CINQUANTA", 
-            "SESSANTA", "SETTANTA", "OTTANTA", "NOVANTA"]
+    tens = ["", "", "VENTI", "TRENTA", "QUARANTA", "CINQUANTA", "SESSANTA", "SETTANTA", "OTTANTA", "NOVANTA"]
+    teens = ["DIECI", "UNDICI", "DODICI", "TREDICI", "QUATTORDICI", "QUINDICI", "SEDICI", "DICIASSETTE", "DICIOTTO", "DICIANNOVE"]
     
-    # Rimuovi zeri iniziali e converti in intero
-    num = int(s)
+    # Rimuovi zeri iniziali e gestisci il caso vuoto
+    s = s.lstrip('0')
+    if not s:
+        return ""
     
-    if num == 0:
-        return "ZERO"
+    # Pad con zeri a sinistra per avere 3 cifre
+    s = s.zfill(3)
     
     result = []
     
     # Centinaia
-    hundreds = num // 100
-    if hundreds > 0:
-        if hundreds == 1:
+    hundreds_digit = int(s[0])
+    if hundreds_digit > 0:
+        if hundreds_digit == 1:
             result.append("UNO CENTO")
         else:
-            result.append(ones[hundreds] + " CENTO")
+            result.append(ones[hundreds_digit] + " CENTO")
     
     # Decine e unità
-    remainder = num % 100
+    tens_digit = int(s[1])
+    ones_digit = int(s[2])
     
-    if remainder >= 10 and remainder < 20:
+    if tens_digit == 0 and ones_digit == 0:
+        pass  # Niente da aggiungere
+    elif tens_digit == 1:
         # Numeri da 10 a 19
         if result:
             result.append("E")
-        result.append(teens[remainder - 10])
+        result.append(teens[ones_digit])
+    elif tens_digit >= 2:
+        # Numeri da 20 in su
+        if result:
+            result.append("E")
+        result.append(tens[tens_digit] + (" " + ones[ones_digit] if ones_digit > 0 else ""))
     else:
-        # Decine
-        tens_digit = remainder // 10
-        ones_digit = remainder % 10
-        
-        if tens_digit > 0:
-            if result:
-                result.append("E")
-            result.append(tens[tens_digit])
-        
-        # Unità
+        # Solo unità (0-9)
         if ones_digit > 0:
-            if tens_digit == 0 and result:
+            if result:
                 result.append("E")
             result.append(ones[ones_digit])
     

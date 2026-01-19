@@ -9,22 +9,22 @@ def process(self, string_list):
     import re
     from collections import Counter
     
-    # Combina tutte le stringhe nella lista
-    combined_text = ' '.join(string_list)
+    # Combina tutte le stringhe in una sola
+    combined_string = ' '.join(string_list)
     
     # Mantiene solo lettere inglesi e spazi
-    cleaned_text = re.sub(r'[^a-zA-Z\s]', '', combined_text)
+    cleaned_string = re.sub(r'[^a-zA-Z\s]', '', combined_string)
     
     # Converte in minuscolo
-    lowercase_text = cleaned_text.lower()
+    lowercase_string = cleaned_string.lower()
     
     # Divide in parole
-    words = lowercase_text.split()
+    words = lowercase_string.split()
     
     # Calcola la frequenza delle parole
     word_freq = Counter(words)
     
-    # Ordina per frequenza in ordine decrescente e prende i top 5
+    # Ordina per valore in ordine decrescente e prende i top 5
     sorted_freq = dict(sorted(word_freq.items(), key=lambda x: x[1], reverse=True)[:5])
     
     return sorted_freq

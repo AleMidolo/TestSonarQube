@@ -17,9 +17,9 @@ def available_movies(self, start_time, end_time):
     
     available = []
     
-    for movie_name, movie_data in self.movies.items():
-        movie_start = time_to_minutes(movie_data['start_time'])
-        movie_end = time_to_minutes(movie_data['end_time'])
+    for movie_name, movie_info in self.movies.items():
+        movie_start = time_to_minutes(movie_info['start_time'])
+        movie_end = time_to_minutes(movie_info['end_time'])
         
         # Check if movie falls within the specified time range
         if movie_start >= start_minutes and movie_end <= end_minutes:
