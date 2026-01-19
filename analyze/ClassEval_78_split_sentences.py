@@ -7,15 +7,19 @@ def split_sentences(self, sentences_string):
         >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
-    pattern = '(?<!\\bMr)(?<!\\bMrs)(?<!\\bMs)(?<!\\bDr)(?<!\\bProf)(?<!\\bRev)(?<!\\bSt)\\.\\s|\\?\\s'
-    parts = re.split(pattern, sentences_string)
-    sentences = []
-    for i in range(len(parts) - 1):
-        if re.search('(?<!\\bMr)(?<!\\bMrs)(?<!\\bMs)(?<!\\bDr)(?<!\\bProf)(?<!\\bRev)(?<!\\bSt)\\.\\s', parts[i] + '. '):
-            sentences.append(parts[i] + '.')
-        else:
-            sentences.append(parts[i] + '?')
-    if parts[-1].strip():
-        sentences.append(parts[-1])
-    sentences = [s.strip() for s in sentences if s.strip()]
-    return sentences
+    if not sentences_string:
+        return []
+    pattern = '(?<!\\bMr)(?<!\\bMrs)(?<!\\bMs)(?<!\\bDr)(?<!\\bProf)\\.\\s|\\?\\s'
+    sentences = re.split(pattern, sentences_string)
+    result = []
+    for i in range(len(sentences)):
+        if i < len(sentences) - 1:
+            next_char = sentences_string[sentences_string.find(sentences[i]) + len(sentences[i])]
+            if next_char == '.':
+                result.append(sentences[i] + '.')
+            elif next_char == '?':
+                result.append(sentences[i] + '?')
+        elif sentences[i].strip():
+            result.append(sentences[i].strip())
+    result = [s.strip() for s in result if s.strip()]
+    return result

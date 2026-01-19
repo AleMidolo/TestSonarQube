@@ -12,36 +12,40 @@ def parse_arguments(self, command_string):
         """
     self.arguments = {}
     tokens = command_string.split()
-    i = 1
+    if len(tokens) > 0 and (tokens[0].endswith('.py') or tokens[0] == 'python'):
+        tokens = tokens[1:]
+    i = 0
     while i < len(tokens):
         token = tokens[i]
         if token.startswith('--') and '=' in token:
-            arg_part, value_part = token[2:].split('=', 1)
-            arg_name = arg_part
-            value = value_part
-            self.arguments[arg_name] = self._convert_type(arg_name, value)
-            i += 1
+            arg_name = token[2:token.index('=')]
+            arg_value = token[token.index('=') + 1:]
+            converted_value = self._convert_type(arg_name, arg_value)
+            self.arguments[arg_name] = converted_value
         elif token.startswith('--'):
             arg_name = token[2:]
             if i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
-                value = tokens[i + 1]
-                self.arguments[arg_name] = self._convert_type(arg_name, value)
-                i += 2
+                arg_value = tokens[i + 1]
+                converted_value = self._convert_type(arg_name, arg_value)
+                self.arguments[arg_name] = converted_value
+                i += 1
             else:
                 self.arguments[arg_name] = True
-                i += 1
         elif token.startswith('-') and (not token.startswith('--')):
             arg_name = token[1:]
             if i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
-                value = tokens[i + 1]
-                self.arguments[arg_name] = self._convert_type(arg_name, value)
-                i += 2
+                arg_value = tokens[i + 1]
+                converted_value = self._convert_type(arg_name, arg_value)
+                self.arguments[arg_name] = converted_value
+                i += 1
             else:
                 self.arguments[arg_name] = True
-                i += 1
-        else:
-            i += 1
-    missing_args = self.required - set(self.arguments.keys())
+        i += 1
+    missing_args = set()
+    for req_arg in self.required:
+        if req_arg not in self.arguments:
+            missing_args.add(req_arg)
     if missing_args:
         return (False, missing_args)
-    return (True, None)
+    else:
+        return (True, None)

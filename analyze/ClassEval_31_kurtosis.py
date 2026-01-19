@@ -6,11 +6,8 @@ def kurtosis(data):
         :return: The kurtosis, float.
         >>> DataStatistics4.kurtosis([1, 20, 100])
         -1.5000000000000007
-
         """
     n = len(data)
-    if n < 4:
-        raise ValueError('Data must have at least 4 elements to calculate kurtosis')
     mean = sum(data) / n
     variance = sum(((x - mean) ** 2 for x in data)) / n
     if variance == 0:

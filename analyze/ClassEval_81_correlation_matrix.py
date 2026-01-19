@@ -13,7 +13,7 @@ def correlation_matrix(data):
     if n == 0:
         return []
     row_length = len(data[0])
-    if any((len(row) != row_length for row in data)):
+    if not all((len(row) == row_length for row in data)):
         raise ValueError('All rows must have the same length')
     corr_matrix = [[0.0] * n for _ in range(n)]
     for i in range(n):

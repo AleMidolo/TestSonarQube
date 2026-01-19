@@ -14,4 +14,7 @@ def search_database(self, table_name, name):
     cursor.execute(search_query, (name,))
     results = cursor.fetchall()
     conn.close()
-    return results if results else None
+    if results:
+        return results
+    else:
+        return None

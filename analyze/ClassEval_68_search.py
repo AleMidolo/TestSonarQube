@@ -12,13 +12,12 @@ def search(self, keyword):
         >>>     "results": [1]
         >>> }
         """
-    if not isinstance(keyword, str):
-        keyword = str(keyword)
+    keyword_str = str(keyword)
     matching_items = []
     for item in self.data:
-        if keyword in str(item):
+        if keyword_str in str(item):
             matching_items.append(item)
     total_results = len(matching_items)
     total_pages = (total_results + self.page_size - 1) // self.page_size if total_results > 0 else 0
-    search_info = {'keyword': keyword, 'total_results': total_results, 'total_pages': total_pages, 'results': matching_items}
+    search_info = {'keyword': keyword_str, 'total_results': total_results, 'total_pages': total_pages, 'results': matching_items}
     return search_info

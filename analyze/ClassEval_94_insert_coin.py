@@ -6,7 +6,6 @@ def insert_coin(self, amount):
         >>> vendingMachine = VendingMachine()
         >>> vendingMachine.insert_coin(1.25)
         1.25
-
         """
     self.balance += amount
     return self.balance
