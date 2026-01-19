@@ -8,7 +8,7 @@ def interpret(self, display=False):
         [{'Acorde': 'C', 'Melodía': '53231323'}, {'Acorde': 'Em', 'Melodía': '43231323'}, {'Acorde': 'F', 'Melodía': '43231323'}, {'Acorde': 'G', 'Melodía': '63231323'}]
 
         """
-    if not self.play_text or self.play_text.isspace():
+    if not self.play_text or self.play_text.strip() == '':
         return []
     result = []
     items = self.play_text.split()

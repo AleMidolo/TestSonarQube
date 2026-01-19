@@ -14,13 +14,15 @@ def process_excel_data(self, N, save_file_name):
         processed_data = []
         for row in data:
             processed_row = list(row)
-            if 0 <= N - 1 < len(processed_row):
-                cell_value = processed_row[N - 1]
-                if isinstance(cell_value, str):
-                    processed_row[N - 1] = cell_value.upper()
+            if N - 1 < len(processed_row) and processed_row[N - 1] is not None:
+                processed_row[N - 1] = str(processed_row[N - 1]).upper()
             processed_data.append(tuple(processed_row))
-        output_file_name = f'processed_{save_file_name}'
+        if '.' in save_file_name:
+            name_parts = save_file_name.rsplit('.', 1)
+            output_file_name = f'{name_parts[0]}_processed.{name_parts[1]}'
+        else:
+            output_file_name = f'{save_file_name}_processed.xlsx'
         result = self.write_excel(processed_data, output_file_name)
-        return (result, output_file_name)
-    except:
+        return (result, output_file_name if result == 1 else '')
+    except Exception:
         return (0, '')

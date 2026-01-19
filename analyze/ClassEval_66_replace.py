@@ -14,31 +14,36 @@ def replace(self, string):
     i = 0
     length = len(string)
     while i < length:
-        if string[i:i + 2] == '&#':
+        if string[i] == '&' and i + 1 < length and (string[i + 1] == '#'):
             j = i + 2
             is_hex = False
-            if j < length and string[j] == 'x':
+            if j < length and (string[j] == 'x' or string[j] == 'X'):
                 is_hex = True
                 j += 1
             start_num = j
             while j < length and string[j] != ';':
+                if is_hex:
+                    if not self.is_hex_char(string[j]):
+                        break
+                elif not string[j].isdigit():
+                    break
                 j += 1
-            if j < length and string[j] == ';':
+            if j < length and string[j] == ';' and (j > start_num):
                 num_str = string[start_num:j]
-                if num_str:
-                    try:
-                        if is_hex:
-                            code_point = int(num_str, 16)
-                        else:
-                            code_point = int(num_str)
-                        if 0 <= code_point <= 1114111:
-                            result.append(chr(code_point))
-                        else:
-                            result.append(string[i:j + 1])
-                    except (ValueError, OverflowError):
-                        result.append(string[i:j + 1])
-                    i = j + 1
-                    continue
-        result.append(string[i])
-        i += 1
+                try:
+                    if is_hex:
+                        code_point = int(num_str, 16)
+                    else:
+                        code_point = int(num_str)
+                    if 0 <= code_point <= 1114111:
+                        result.append(chr(code_point))
+                        i = j + 1
+                        continue
+                except (ValueError, OverflowError):
+                    pass
+            result.append(string[i])
+            i += 1
+        else:
+            result.append(string[i])
+            i += 1
     return ''.join(result)

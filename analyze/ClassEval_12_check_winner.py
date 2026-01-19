@@ -13,12 +13,17 @@ def check_winner(self, player_hand, dealer_hand):
     player_value = self.calculate_hand_value(player_hand)
     dealer_value = self.calculate_hand_value(dealer_hand)
     if player_value > 21 and dealer_value > 21:
-        return 'El jugador gana' if player_value < dealer_value else 'El dealer gana'
+        if player_value <= dealer_value:
+            return 'El jugador gana'
+        else:
+            return 'El dealer gana'
     if player_value > 21:
         return 'El dealer gana'
     if dealer_value > 21:
         return 'El jugador gana'
     if player_value > dealer_value:
         return 'El jugador gana'
+    elif dealer_value > player_value:
+        return 'El dealer gana'
     else:
         return 'El dealer gana'

@@ -27,16 +27,27 @@ def calculate(self, expression):
             i = j
         elif char in self.operators:
             while operator_stack and self.precedence(operator_stack[-1]) >= self.precedence(char):
-                operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
+                self.apply_operator(operand_stack, operator_stack)
             operator_stack.append(char)
             i += 1
-        elif char == ' ':
+        elif char == '(':
+            operator_stack.append(char)
+            i += 1
+        elif char == ')':
+            while operator_stack and operator_stack[-1] != '(':
+                self.apply_operator(operand_stack, operator_stack)
+            if not operator_stack or operator_stack[-1] != '(':
+                return None
+            operator_stack.pop()
+            i += 1
+        elif char.isspace():
             i += 1
         else:
             return None
     while operator_stack:
-        operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
-    if len(operand_stack) == 1:
-        return operand_stack[0]
-    else:
+        if operator_stack[-1] == '(':
+            return None
+        self.apply_operator(operand_stack, operator_stack)
+    if len(operand_stack) != 1 or operator_stack:
         return None
+    return operand_stack[0]

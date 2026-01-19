@@ -25,9 +25,9 @@ def format_line_html_text(self, html_text):
         script.decompose()
     for tag in soup.find_all(['pre', 'blockquote']):
         tag.replace_with(self.CODE_MARK)
-    text = soup.get_text()
+    text = soup.get_text(separator='\n')
+    lines = (line.strip() for line in text.splitlines())
+    chunks = (phrase.strip() for line in lines for phrase in line.split('  '))
+    text = '\n'.join((chunk for chunk in chunks if chunk))
     text = self.__format_line_feed(text)
-    text = re.sub('\\s*' + re.escape(self.CODE_MARK) + '\\s*', '\n' + self.CODE_MARK + '\n', text)
-    text = text.strip()
-    text = re.sub('\\n\\s*\\n', '\n', text)
     return text

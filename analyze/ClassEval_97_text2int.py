@@ -15,11 +15,16 @@ def text2int(self, textnum):
             processed_words.append(str(self.ordinal_words[word]))
             continue
         else:
+            found = False
             for ending, replacement in self.ordinal_endings:
                 if word.endswith(ending):
-                    word = '%s%s' % (word[:-len(ending)], replacement)
-                    break
-            processed_words.append(word)
+                    base_word = '%s%s' % (word[:-len(ending)], replacement)
+                    if base_word in self.numwords:
+                        processed_words.append(base_word)
+                        found = True
+                        break
+            if not found:
+                processed_words.append(word)
     current = 0
     result = 0
     for word in processed_words:
@@ -29,13 +34,9 @@ def text2int(self, textnum):
             continue
         else:
             scale, increment = self.numwords[word]
-            if scale > 1:
-                current = max(1, current)
-                current *= scale
-                if scale > 100:
-                    result += current
-                    current = 0
-            else:
-                current += increment
+            current = current * scale + increment
+            if scale > 100:
+                result += current
+                current = 0
     result += current
     return str(result)
