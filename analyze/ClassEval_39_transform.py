@@ -9,3 +9,4 @@ def transform(expression):
     '2+3*4'
     """
     return re.sub(r'\s+', '', expression)
+

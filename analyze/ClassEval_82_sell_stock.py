@@ -2,7 +2,6 @@ def sell_stock(self, stock):
     """
         Vendi un'azione e rimuovila dal portafoglio e aggiungi il denaro al saldo di cassa.
         :param stock: un dizionario con le chiavi "name", "price" e "quantity"
-        :param quantity: la quantità dell'azione da vendere, int.
         :return: True se l'azione è stata venduta con successo, False se la quantità dell'azione non è sufficiente.
         >>> tracker = StockPortfolioTracker(10000.0)
         >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]

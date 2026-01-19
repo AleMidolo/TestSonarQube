@@ -7,7 +7,9 @@ def factorial(n):
         >>> ArrangementCalculator.factorial(4)
         24
         """
-    if n == 0 or n == 1:
+    if n == 0:
         return 1
-    else:
-        return n * ArrangementCalculator.factorial(n - 1)
+    result = 1
+    for i in range(1, n + 1):
+        result *= i
+    return result
