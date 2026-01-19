@@ -13,14 +13,13 @@ def is_valid_input(self, textnum):
         'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
         'seventeen', 'eighteen', 'nineteen', 'twenty', 'thirty', 'forty', 'fifty',
         'sixty', 'seventy', 'eighty', 'ninety', 'hundred', 'thousand', 'million',
-        'billion', 'trillion', 'and', 'cento', 'mila', 'milione', 'milioni',
-        'miliardo', 'miliardi', 'e'
+        'billion', 'trillion', 'and', 'punto', 'virgola', 'point'
     }
     
     # Clean and normalize the input
     textnum = textnum.lower().strip()
     
-    # Check if empty
+    # If empty, it's not valid
     if not textnum:
         return False
     
@@ -28,11 +27,15 @@ def is_valid_input(self, textnum):
     words = textnum.split()
     
     for word in words:
-        # Remove any hyphens and check if valid
+        # Remove any trailing/leading whitespace
+        word = word.strip()
+        
+        # Check if word contains hyphens (like "thirty-two")
+        # According to the doctest, hyphenated words should return False
         if '-' in word:
-            # If contains hyphen, it's invalid based on the doctest
             return False
         
+        # Check if the word is in the valid words set
         if word not in valid_words:
             return False
     

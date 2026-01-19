@@ -12,7 +12,7 @@ def search_student_by_name(self, name):
     conn = sqlite3.connect(self.db_name)
     cursor = conn.cursor()
     
-    cursor.execute("SELECT * FROM students WHERE name LIKE ?", ('%' + name + '%',))
+    cursor.execute("SELECT * FROM students WHERE name = ?", (name,))
     results = cursor.fetchall()
     
     conn.close()

@@ -31,7 +31,7 @@ def palindromic_string(self):
         if i < right:
             P[i] = min(right - i, P[mirror])
         
-        # Try to expand palindrome centered at i
+        # Attempt to expand palindrome centered at i
         try:
             while transformed[i + P[i] + 1] == transformed[i - P[i] - 1]:
                 P[i] += 1

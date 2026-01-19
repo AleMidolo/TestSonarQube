@@ -9,15 +9,17 @@ def count_all(n: int) -> int:
     """
     # Il numero totale di combinazioni è 2^n - 1 (escludendo l'insieme vuoto)
     # Per n=4: C(4,1) + C(4,2) + C(4,3) + C(4,4) = 4 + 6 + 4 + 1 = 15
-    # Oppure: 2^4 - 1 = 16 - 1 = 15
+    # Che equivale a 2^4 - 1 = 16 - 1 = 15
     
     max_value = 2**63 - 1
     
     # Calcola 2^n - 1
-    total_combinations = 2**n - 1
-    
-    # Controlla se supera 2^63 - 1
-    if total_combinations > max_value:
-        return float("inf")
-    
-    return total_combinations
+    if n >= 63:
+        # Se n >= 63, allora 2^n - 1 >= 2^63 - 1
+        # Dobbiamo verificare se supera il limite
+        result = 2**n - 1
+        if result > max_value:
+            return float("inf")
+        return result
+    else:
+        return 2**n - 1

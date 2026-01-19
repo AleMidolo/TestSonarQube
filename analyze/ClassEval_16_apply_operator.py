@@ -8,17 +8,17 @@ def apply_operator(self, operand_stack, operator_stack):
     >>> calculator.apply_operator([1, 2, 3], ['+', '-'])
     ([1, -1], ['-'])
     """
-    if len(operand_stack) < 2 or len(operator_stack) < 1:
+    if len(operand_stack) < 2 or len(operator_stack) == 0:
         return operand_stack, operator_stack
     
     # Pop the top operator
     operator = operator_stack.pop()
     
-    # Pop the top two operands (second operand is popped first)
+    # Pop the top two operands
     operand2 = operand_stack.pop()
     operand1 = operand_stack.pop()
     
-    # Perform the operation
+    # Apply the operator
     if operator == '+':
         result = operand1 + operand2
     elif operator == '-':
@@ -30,7 +30,7 @@ def apply_operator(self, operand_stack, operator_stack):
     else:
         result = 0
     
-    # Push the result back onto the operand stack
+    # Push the result back to operand stack
     operand_stack.append(result)
     
     return operand_stack, operator_stack

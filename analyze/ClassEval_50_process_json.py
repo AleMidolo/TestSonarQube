@@ -34,9 +34,9 @@ def process_json(self, file_path, remove_key):
         
         # Write the modified data back to the file
         with open(file_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+            json.dump(data, f, ensure_ascii=False, indent=4)
         
         return 1
     
-    except (json.JSONDecodeError, IOError, Exception):
+    except (json.JSONDecodeError, IOError):
         return 0

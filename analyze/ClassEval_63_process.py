@@ -24,7 +24,7 @@ def process(self, string_list):
     # Calcola la frequenza delle parole
     word_freq = Counter(words)
     
-    # Ordina per valore in ordine decrescente e prende i top 5
+    # Ordina per frequenza in ordine decrescente e prende i top 5
     sorted_freq = dict(sorted(word_freq.items(), key=lambda x: x[1], reverse=True)[:5])
     
     return sorted_freq

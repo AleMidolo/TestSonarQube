@@ -16,19 +16,18 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
     result = []
     
     for xi, yi in zip(x_interp, y_interp):
-        # Find the indices for bilinear interpolation
-        # Find x indices
+        # Find the bounding indices for x
         x_idx = 0
         for i in range(len(x) - 1):
             if x[i] <= xi <= x[i + 1]:
                 x_idx = i
                 break
         
-        # Find y indices
+        # Find the bounding indices for y
         y_idx = 0
-        for i in range(len(y) - 1):
-            if y[i] <= yi <= y[i + 1]:
-                y_idx = i
+        for j in range(len(y) - 1):
+            if y[j] <= yi <= y[j + 1]:
+                y_idx = j
                 break
         
         # Get the four corner points
@@ -41,7 +40,7 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         z22 = z[x_idx + 1][y_idx + 1]
         
         # Bilinear interpolation
-        # Interpolate in x direction
+        # First interpolate in x direction
         if x2 - x1 != 0:
             z_y1 = z11 + (z21 - z11) * (xi - x1) / (x2 - x1)
             z_y2 = z12 + (z22 - z12) * (xi - x1) / (x2 - x1)
@@ -49,7 +48,7 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
             z_y1 = z11
             z_y2 = z12
         
-        # Interpolate in y direction
+        # Then interpolate in y direction
         if y2 - y1 != 0:
             z_interp = z_y1 + (z_y2 - z_y1) * (yi - y1) / (y2 - y1)
         else:

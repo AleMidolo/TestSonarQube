@@ -13,24 +13,24 @@ def create_board(self):
     total_cells = rows * cols
     
     # Calculate how many pairs of each icon we need
-    tiles_per_icon = total_cells // len(self.icons)
+    pairs_needed = total_cells // 2
     
-    # Create a flat list of tiles
+    # Create a flat list with pairs of icons
     tiles = []
-    for icon in self.icons:
-        tiles.extend([icon] * tiles_per_icon)
+    icon_index = 0
+    for _ in range(pairs_needed):
+        icon = self.icons[icon_index % len(self.icons)]
+        tiles.extend([icon, icon])
+        icon_index += 1
     
-    # Fill remaining cells if total_cells is not evenly divisible
-    remaining = total_cells - len(tiles)
-    for i in range(remaining):
-        tiles.append(self.icons[i % len(self.icons)])
-    
-    # Create the board by reshaping the flat list into a 2D grid
+    # Create the board by distributing tiles row by row
     board = []
+    tile_index = 0
     for i in range(rows):
         row = []
         for j in range(cols):
-            row.append(tiles[i * cols + j])
+            row.append(tiles[tile_index])
+            tile_index += 1
         board.append(row)
     
     self.board = board

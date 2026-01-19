@@ -15,7 +15,7 @@ def select(self, fields=None, condition=None):
     
     sql = f'SELECT {fields_str} FROM {self.table_name}'
     
-    if condition is not None:
+    if condition:
         sql += f' WHERE {condition}'
     
     sql += ';'

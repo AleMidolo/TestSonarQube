@@ -8,7 +8,4 @@ def tan(self, x):
     >>> tricalculator.tan(45)
     1.0
     """
-    # Converti l'angolo da gradi a radianti
-    x_radianti = math.radians(x)
-    # Calcola e restituisci la tangente
-    return math.tan(x_radianti)
+    return math.tan(math.radians(x))

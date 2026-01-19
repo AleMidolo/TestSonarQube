@@ -8,36 +8,36 @@ def vigenere_decipher(self, ciphertext):
     'ybocl'
 
     """
-    if not ciphertext:
-        return ''
+    if not hasattr(self, 'key'):
+        raise AttributeError("Object must have a 'key' attribute")
     
-    key = self.key.lower()
+    key = self.key
     plaintext = []
     key_index = 0
     
     for char in ciphertext:
         if char.isalpha():
-            # Determina se il carattere è maiuscolo o minuscolo
+            # Determine if uppercase or lowercase
             is_upper = char.isupper()
             char = char.lower()
             
-            # Ottieni il carattere della chiave corrente
-            key_char = key[key_index % len(key)]
+            # Get the key character (cycling through the key)
+            key_char = key[key_index % len(key)].lower()
             
-            # Calcola lo shift dalla chiave
-            shift = ord(key_char) - ord('a')
+            # Decrypt: shift back by the key character's position
+            char_pos = ord(char) - ord('a')
+            key_pos = ord(key_char) - ord('a')
+            decrypted_pos = (char_pos - key_pos) % 26
+            decrypted_char = chr(decrypted_pos + ord('a'))
             
-            # Decifra sottraendo lo shift
-            decrypted_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
-            
-            # Ripristina il caso originale
+            # Restore case
             if is_upper:
                 decrypted_char = decrypted_char.upper()
             
             plaintext.append(decrypted_char)
             key_index += 1
         else:
-            # Mantieni i caratteri non alfabetici invariati
+            # Non-alphabetic characters are added as-is
             plaintext.append(char)
     
     return ''.join(plaintext)

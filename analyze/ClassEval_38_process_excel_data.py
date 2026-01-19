@@ -17,23 +17,23 @@ def process_excel_data(self, N, save_file_name):
         
         # Convert the specified column (N) to uppercase
         # N is 1-indexed (1 = column A, 2 = column B, etc.)
-        for row in sheet.iter_rows(min_row=1, min_col=N, max_col=N):
-            for cell in row:
-                if cell.value is not None and isinstance(cell.value, str):
-                    cell.value = cell.value.upper()
+        for row in range(1, sheet.max_row + 1):
+            cell = sheet.cell(row=row, column=N)
+            if cell.value is not None and isinstance(cell.value, str):
+                cell.value = cell.value.upper()
         
-        # Generate output file name
+        # Generate output filename
         base_name = os.path.splitext(save_file_name)[0]
         extension = os.path.splitext(save_file_name)[1]
         output_file_name = f"{base_name}_processed{extension}"
         
-        # Save the workbook
+        # Save the modified workbook
         workbook.save(output_file_name)
         workbook.close()
         
-        # Assuming write_excel returns 1 for success
+        # Return success code (1 for success) and output filename
         return (1, output_file_name)
         
     except Exception as e:
-        # Return 0 for failure
-        return (0, "")
+        # Return failure code (0 for failure) and error message
+        return (0, str(e))

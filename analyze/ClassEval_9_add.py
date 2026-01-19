@@ -35,5 +35,5 @@ def add(num1, num2):
     if carry:
         result.append(str(carry))
     
-    # Reverse the result and join into a string
+    # Reverse the result to get the correct order
     return ''.join(reversed(result))

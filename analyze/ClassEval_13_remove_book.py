@@ -5,17 +5,18 @@ def remove_book(self, title, quantity):
     :param title: str, il titolo del libro
     :param quantity: int
     """
+    # Validazione input
     if not isinstance(title, str):
         raise TypeError("Il titolo deve essere una stringa")
     
     if not isinstance(quantity, int):
         raise TypeError("La quantità deve essere un intero")
     
+    if not title or not title.strip():
+        raise ValueError("Il titolo non può essere vuoto")
+    
     if quantity <= 0:
         raise ValueError("La quantità deve essere maggiore di zero")
-    
-    if not title.strip():
-        raise ValueError("Il titolo non può essere vuoto")
     
     # Cerca il libro nell'inventario
     found = False
@@ -27,7 +28,7 @@ def remove_book(self, title, quantity):
             
             book['quantity'] -= quantity
             
-            # Se la quantità diventa 0, rimuovi il libro dall'inventario
+            # Rimuovi il libro dall'inventario se la quantità diventa 0
             if book['quantity'] == 0:
                 self.inventory.remove(book)
             

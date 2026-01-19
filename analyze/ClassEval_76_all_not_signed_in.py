@@ -10,4 +10,4 @@ def all_not_signed_in(self):
     >>> signInSystem.all_not_signed_in()
     ['a', 'b']
     """
-    return [username for username in self.users if username not in self.signed_in_users]
+    return [username for username, signed_in in self.users.items() if not signed_in]

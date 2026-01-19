@@ -28,7 +28,7 @@ def format_string(self, x):
         
         # Decine e unità
         resto = num % 100
-        if 10 <= resto <= 19:
+        if resto >= 10 and resto < 20:
             if risultato:
                 risultato.append("E")
             risultato.append(decine_speciali[resto - 10])
@@ -46,26 +46,26 @@ def format_string(self, x):
         
         return " ".join(risultato)
     
-    # Rimuovi spazi e converti in intero
-    x = x.strip()
+    # Converti la stringa in intero
     numero = int(x)
     
     if numero == 0:
         return "ZERO SOLO"
     
-    # Dividi in migliaia e resto
-    migliaia = numero // 1000
-    resto = numero % 1000
-    
     risultato = []
     
+    # Gestione migliaia
+    migliaia = numero // 1000
     if migliaia > 0:
         risultato.append(converti_centinaia(migliaia))
         risultato.append("MILA")
     
+    # Gestione centinaia, decine e unità
+    resto = numero % 1000
     if resto > 0:
         risultato.append(converti_centinaia(resto))
     
+    # Aggiungi "SOLO" alla fine
     risultato.append("SOLO")
     
     return " ".join(risultato)

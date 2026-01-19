@@ -8,7 +8,7 @@ def interpret(self, display=False):
     [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]
 
     """
-    # Check if the input is empty or contains only whitespace
+    # Check if input is empty or contains only whitespace
     if not hasattr(self, 'score') or not self.score or self.score.strip() == '':
         return []
     

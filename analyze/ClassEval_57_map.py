@@ -27,9 +27,6 @@ def map(data):
                 precision_at_k = correct_count / (i + 1)
                 precision_sum += precision_at_k
         
-        if correct_count == 0:
-            return 0.0
-        
         ap = precision_sum / ground_truth_count
         return ap
     

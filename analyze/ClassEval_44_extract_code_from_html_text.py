@@ -36,7 +36,9 @@ def extract_code_from_html_text(self, html_text):
         def handle_endtag(self, tag):
             if tag == 'pre':
                 if self.current_code:
-                    self.codes.append(''.join(self.current_code))
+                    code_text = ''.join(self.current_code).strip()
+                    if code_text:
+                        self.codes.append(code_text)
                 self.in_pre = False
                 self.in_code = False
                 self.current_code = []

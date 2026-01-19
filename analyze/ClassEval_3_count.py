@@ -11,7 +11,7 @@ def count(n, m=None):
     """
     import math
     
-    if m is None or n == m:
+    if m is None or m == n:
         return math.factorial(n)
     
     # Disposizioni: n! / (n-m)!

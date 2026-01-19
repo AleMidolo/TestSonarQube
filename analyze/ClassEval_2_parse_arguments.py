@@ -28,7 +28,7 @@ def parse_arguments(self, command_string):
             # Remove leading dashes
             arg_name = token.lstrip('-')
             
-            # Check if argument has = format (--arg=value)
+            # Check if it's in format --arg=value
             if '=' in arg_name:
                 parts = arg_name.split('=', 1)
                 arg_name = parts[0]
@@ -49,13 +49,13 @@ def parse_arguments(self, command_string):
             i += 1
     
     # Check for missing required arguments
-    missing_args = set()
-    if hasattr(self, 'required_args'):
+    if hasattr(self, 'required_args') and self.required_args:
+        missing_args = set()
         for req_arg in self.required_args:
             if req_arg not in self.arguments:
                 missing_args.add(req_arg)
+        
+        if missing_args:
+            return (False, missing_args)
     
-    if missing_args:
-        return (False, missing_args)
-    else:
-        return (True, None)
+    return (True, None)

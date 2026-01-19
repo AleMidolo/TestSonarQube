@@ -5,7 +5,7 @@ def read_text(self):
     """
     from docx import Document
     
-    doc = Document(self)
+    doc = Document(self.file_path)
     full_text = []
     
     for paragraph in doc.paragraphs:

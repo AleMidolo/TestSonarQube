@@ -20,17 +20,21 @@ def book_room(self, room_type, room_number, name):
     if available == 0:
         return False
     
-    # Se il numero richiesto non supera le camere disponibili
-    if room_number <= available:
-        # Aggiorna available_rooms
-        self.available_rooms[room_type] -= room_number
-        
-        # Aggiorna booked_rooms
-        if room_type not in self.booked_rooms:
-            self.booked_rooms[room_type] = []
-        self.booked_rooms[room_type].append({'name': name, 'rooms': room_number})
-        
-        return 'Successo!'
-    else:
-        # Se il numero richiesto supera le camere disponibili ma ce ne sono alcune
+    # Se il numero richiesto supera le camere disponibili
+    if room_number > available:
         return available
+    
+    # Se ci sono abbastanza camere disponibili
+    # Aggiorna available_rooms
+    self.available_rooms[room_type] -= room_number
+    
+    # Aggiorna booked_rooms
+    if room_type not in self.booked_rooms:
+        self.booked_rooms[room_type] = []
+    
+    self.booked_rooms[room_type].append({
+        'name': name,
+        'room_number': room_number
+    })
+    
+    return 'Successo!'

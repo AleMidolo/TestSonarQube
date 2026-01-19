@@ -21,9 +21,9 @@ def eat_food(self):
     while True:
         new_food_x = random.randint(0, self.width - 1)
         new_food_y = random.randint(0, self.height - 1)
-        new_food_pos = (new_food_x, new_food_y)
+        new_food_position = (new_food_x, new_food_y)
         
         # Verifica che la nuova posizione non sia sul corpo del serpente
-        if new_food_pos not in self.body:
-            self.food = new_food_pos
+        if new_food_position not in self.body:
+            self.food = new_food_position
             break

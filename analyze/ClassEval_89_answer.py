@@ -23,7 +23,7 @@ def answer(self, expression):
         # Valuta l'espressione
         result = eval(expression)
         
-        # Verifica se il risultato è 24 (con tolleranza per errori di floating point)
+        # Controlla se il risultato è 24 (con tolleranza per errori di floating point)
         return abs(result - 24) < 1e-9
         
     except:
