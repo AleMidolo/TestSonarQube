@@ -12,22 +12,28 @@ def text2int(self, textnum):
     processed_words = []
     for word in words:
         if word in self.ordinal_words:
-            processed_words.append(self.units[self.ordinal_words[word]])
+            processed_words.append(str(self.ordinal_words[word]))
+            continue
         else:
             for ending, replacement in self.ordinal_endings:
                 if word.endswith(ending):
                     word = '%s%s' % (word[:-len(ending)], replacement)
-            processed_words.append(word)
-    words = processed_words
+                    break
+        processed_words.append(word)
     current = 0
     result = 0
-    for word in words:
-        if word not in self.numwords:
+    for word in processed_words:
+        if word.isdigit():
+            current += int(word)
+        elif word == 'and':
             continue
-        scale, increment = self.numwords[word]
-        current = current * scale + increment
-        if scale > 100:
-            result += current
-            current = 0
+        elif word not in self.numwords:
+            continue
+        else:
+            scale, increment = self.numwords[word]
+            current = current * scale + increment
+            if scale > 100:
+                result += current
+                current = 0
     result += current
     return str(result)

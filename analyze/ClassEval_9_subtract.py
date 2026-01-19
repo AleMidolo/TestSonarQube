@@ -35,8 +35,8 @@ def subtract(num1, num2):
         if digit1 < digit2:
             digit1 += 10
             borrow = 1
-        digit_diff = digit1 - digit2
-        result.insert(0, str(digit_diff))
+        diff = digit1 - digit2
+        result.insert(0, str(diff))
     while len(result) > 1 and result[0] == '0':
         result.pop(0)
     if negative:

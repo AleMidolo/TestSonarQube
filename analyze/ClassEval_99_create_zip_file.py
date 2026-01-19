@@ -19,4 +19,5 @@ def create_zip_file(self, files, output_file_name):
                     continue
         return True
     except Exception as e:
+        print(f'Error creating zip file: {e}')
         return False

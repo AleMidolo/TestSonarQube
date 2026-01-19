@@ -9,12 +9,17 @@ def filter(self, request):
 
         """
     try:
-        if self.is_start_with(request['path']):
-            return True
-        user_info = self.get_jwt_user(request)
-        if user_info is not None:
-            self.set_current_user_info_and_log(user_info['user'])
-            return True
+        if not self.is_start_with(request.get('path', '')):
+            return False
+        if request.get('path', '').startswith('/login'):
+            return request.get('method') == 'POST'
+        if request.get('path', '').startswith('/api'):
+            user_info = self.get_jwt_user(request)
+            if user_info:
+                self.set_current_user_info_and_log(user_info['user'])
+                return True
+            return False
         return False
-    except KeyError:
+    except Exception as e:
+        logging.error(f'Error in filter: {e}')
         return False

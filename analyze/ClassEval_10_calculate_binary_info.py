@@ -4,6 +4,7 @@ def calculate_binary_info(self):
         >>> bdp = BinaryDataProcessor("0110100001100101011011000110110001101111")
         >>> bdp.calculate_binary_info()
         {'Zeroes': 0.475, 'Ones': 0.525, 'Bit length': 40}
+
         """
     if not self.binary_string:
         return {'Zeroes': 0.0, 'Ones': 0.0, 'Bit length': 0}

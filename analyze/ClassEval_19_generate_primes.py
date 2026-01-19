@@ -9,17 +9,21 @@ def generate_primes(self):
         """
     if self.n < 2:
         return []
-    is_prime = [True] * (self.n + 1)
-    is_prime[0] = is_prime[1] = False
-    if self.n >= 2:
-        for i in range(4, self.n + 1, 2):
-            is_prime[i] = False
-    p = 3
-    while p * p <= self.n:
-        if is_prime[p]:
-            for i in range(p * p, self.n + 1, 2 * p):
-                is_prime[i] = False
-        p += 2
-    primes = [2] if self.n >= 2 else []
-    primes.extend((i for i in range(3, self.n + 1, 2) if is_prime[i]))
+    numbers = list(range(2, self.n + 1))
+    primes = []
+    while numbers:
+        p = numbers[0]
+        primes.append(p)
+        numbers = [num for num in numbers if num != p]
+        i = 0
+        while i < len(numbers):
+            num = numbers[i]
+            if num % p == 0:
+                quotient = num // p
+                if quotient % 2 != 0 and quotient % 3 != 0:
+                    numbers.pop(i)
+                else:
+                    i += 1
+            else:
+                i += 1
     return primes
