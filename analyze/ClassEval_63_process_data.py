@@ -15,7 +15,7 @@ def process_data(self, string_list):
         # Convertir a minúsculas
         lowercase_string = filtered_string.lower()
         
-        # Dividir en palabras
+        # Dividir en palabras (elimina espacios extras automáticamente)
         words = lowercase_string.split()
         
         words_list.append(words)

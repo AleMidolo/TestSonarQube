@@ -13,12 +13,9 @@ def solve(self):
     from collections import deque
     
     # Inicializar la cola con el estado inicial
-    open_list = deque()
-    open_list.append((self.state, []))  # (estado_actual, camino_hasta_aquí)
-    
-    # Conjunto para rastrear estados visitados
+    open_list = deque([(self.state, [])])
     visited = set()
-    visited.add(str(self.state))
+    visited.add(tuple(map(tuple, self.state)))
     
     while open_list:
         # Visitar y eliminar el elemento en el índice 0
@@ -37,19 +34,20 @@ def solve(self):
         
         # Recorrer cada movimiento posible
         for direction in possible_moves:
-            # Realizar el movimiento para obtener el nuevo estado
+            # Obtener el nuevo estado después del movimiento
             new_state = self.move(direction)
             
-            # Verificar si el nuevo estado no ha sido visitado
-            state_str = str(new_state)
-            if state_str not in visited:
-                visited.add(state_str)
-                # Agregar el nuevo estado a la cola con el camino actualizado
+            # Convertir a tupla para poder usar en set
+            state_tuple = tuple(map(tuple, new_state))
+            
+            # Si no hemos visitado este estado, agregarlo a la cola
+            if state_tuple not in visited:
+                visited.add(state_tuple)
                 new_path = path + [direction]
                 open_list.append((new_state, new_path))
         
         # Restaurar el estado original
         self.state = original_state
     
-    # Si open_list está vacía y no se encontró solución
+    # Si no se encuentra solución, retornar lista vacía
     return []

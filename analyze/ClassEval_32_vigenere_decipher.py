@@ -11,8 +11,9 @@ def vigenere_decipher(self, ciphertext):
     if not ciphertext:
         return ''
     
+    # Assuming self.key exists as an instance variable
     key = self.key.lower()
-    result = []
+    plaintext = []
     key_index = 0
     
     for char in ciphertext:
@@ -24,17 +25,17 @@ def vigenere_decipher(self, ciphertext):
             # Get the shift value from the key
             shift = ord(key[key_index % len(key)]) - ord('a')
             
-            # Decrypt by subtracting the shift
+            # Decrypt by subtracting the shift (reverse of encryption)
             decrypted_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
             
             # Restore case
             if is_upper:
                 decrypted_char = decrypted_char.upper()
             
-            result.append(decrypted_char)
+            plaintext.append(decrypted_char)
             key_index += 1
         else:
             # Non-alphabetic characters are not decrypted
-            result.append(char)
+            plaintext.append(char)
     
-    return ''.join(result)
+    return ''.join(plaintext)

@@ -9,5 +9,5 @@ def extract_email(self, text):
     >>> ru.extract_email("abcdefg@163.com ygusyfysy@126.com wljduyuv@qq.com")
     ['abcdefg@163.com', 'ygusyfysy@126.com', 'wljduyuv@qq.com']
     """
-    email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+    email_pattern = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
     return re.findall(email_pattern, text)

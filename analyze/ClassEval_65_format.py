@@ -21,77 +21,70 @@ def format(self, x):
     
     # Definir palabras básicas
     unidades = ["", "UNO", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"]
-    decenas_especiales = ["DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE", "DIECISÉIS", 
-                          "DIECISIETE", "DIECIOCHO", "DIECINUEVE"]
+    diez_a_quince = ["DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE"]
+    veintis = ["", "", "VEINTI", "VEINTI", "VEINTI", "VEINTI", "VEINTI", "VEINTI", "VEINTI", "VEINTI"]
     decenas = ["", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA", "SESENTA", "SETENTA", "OCHENTA", "NOVENTA"]
-    centenas = ["", "CIENTO", "DOSCIENTOS", "TRESCIENTOS", "CUATROCIENTOS", "QUINIENTOS", 
-                "SEISCIENTOS", "SETECIENTOS", "OCHOCIENTOS", "NOVECIENTOS"]
+    centenas = ["", "CIENTO", "DOSCIENTOS", "TRESCIENTOS", "CUATROCIENTOS", "QUINIENTOS", "SEISCIENTOS", "SETECIENTOS", "OCHOCIENTOS", "NOVECIENTOS"]
     
     def convert_group(n):
-        """Convierte un grupo de hasta 3 dígitos"""
         if n == 0:
             return ""
         elif n == 100:
             return "CIEN"
-        
-        result = []
-        
-        # Centenas
-        c = n // 100
-        if c > 0:
-            result.append(centenas[c])
-        
-        # Decenas y unidades
-        resto = n % 100
-        if resto >= 10 and resto < 20:
-            result.append(decenas_especiales[resto - 10])
+        elif n < 10:
+            return unidades[n]
+        elif n < 16:
+            return diez_a_quince[n - 10]
+        elif n < 20:
+            return "DIECI" + unidades[n - 10]
+        elif n < 30:
+            if n == 20:
+                return "VEINTE"
+            else:
+                return veintis[2] + unidades[n - 20]
+        elif n < 100:
+            dec = n // 10
+            uni = n % 10
+            if uni == 0:
+                return decenas[dec]
+            else:
+                return decenas[dec] + " Y " + unidades[uni]
         else:
-            d = resto // 10
-            u = resto % 10
-            
-            if d == 2 and u > 0:
-                result.append("VEINTI" + unidades[u])
+            cen = n // 100
+            resto = n % 100
+            if resto == 0:
+                return centenas[cen]
             else:
-                if d > 0:
-                    result.append(decenas[d])
-                if u > 0:
-                    if d > 2:
-                        result.append("Y")
-                    result.append(unidades[u])
-        
-        return " ".join(result)
+                return centenas[cen] + " " + convert_group(resto)
     
-    # Convertir número entero
-    if integer_part == 0:
-        words = "CERO"
-    else:
-        groups = []
-        
-        # Millones
+    result = ""
+    
+    # Millones
+    if integer_part >= 1000000:
         millones = integer_part // 1000000
-        if millones > 0:
-            if millones == 1:
-                groups.append("UN MILLÓN")
-            else:
-                groups.append(convert_group(millones) + " MILLONES")
-        
-        # Miles
-        miles = (integer_part % 1000000) // 1000
-        if miles > 0:
-            if miles == 1:
-                groups.append("MIL")
-            else:
-                groups.append(convert_group(miles) + " MIL")
-        
-        # Unidades
-        unidades_num = integer_part % 1000
-        if unidades_num > 0:
-            groups.append(convert_group(unidades_num))
-        
-        words = " ".join(groups)
+        if millones == 1:
+            result += "UN MILLÓN"
+        else:
+            result += convert_group(millones) + " MILLONES"
+        integer_part %= 1000000
+        if integer_part > 0:
+            result += " "
     
-    # Agregar parte decimal si existe
-    if decimal_part:
-        words += " CON " + decimal_part + "/100"
+    # Miles
+    if integer_part >= 1000:
+        miles = integer_part // 1000
+        if miles == 1:
+            result += "MIL"
+        else:
+            result += convert_group(miles) + " MIL"
+        integer_part %= 1000
+        if integer_part > 0:
+            result += " "
     
-    return words + " SOLAMENTE"
+    # Unidades, decenas y centenas
+    if integer_part > 0:
+        result += convert_group(integer_part)
+    
+    result += " SOLAMENTE"
+    
+    return result.strip()

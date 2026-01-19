@@ -20,7 +20,7 @@ def calculate(self, expression):
         if not all(c in valid_chars for c in expression):
             return None
         
-        # Evaluate the expression safely
+        # Evaluate the expression
         result = eval(expression)
         
         # Return as float

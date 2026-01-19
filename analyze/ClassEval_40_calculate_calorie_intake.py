@@ -21,7 +21,7 @@ def calculate_calorie_intake(self):
     # Calculate calorie intake based on condition
     if condition == "overweight" or condition == "Overweight":
         calorie_intake = bmr * 1.2
-    elif condition == "underweight" or condition == "Underweight":
+    elif condition == "underweight" or condition == "Underweight" or condition == "too thin":
         calorie_intake = bmr * 1.6
     else:  # normal
         calorie_intake = bmr * 1.4

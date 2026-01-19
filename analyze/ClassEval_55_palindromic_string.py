@@ -33,12 +33,12 @@ def palindromic_string(self):
         
         # Attempt to expand palindrome centered at i
         try:
-            while transformed[i + 1 + P[i]] == transformed[i - 1 - P[i]]:
+            while transformed[i + P[i] + 1] == transformed[i - P[i] - 1]:
                 P[i] += 1
         except IndexError:
             pass
         
-        # If palindrome centered at i extends past right, adjust center and right
+        # If palindrome centered at i extends past right, adjust center
         if i + P[i] > right:
             center = i
             right = i + P[i]

@@ -8,4 +8,4 @@ def celsius_to_fahrenheit(self):
     80.6
 
     """
-    return self.temperature * 9/5 + 32
+    return (self.temperature * 9/5) + 32

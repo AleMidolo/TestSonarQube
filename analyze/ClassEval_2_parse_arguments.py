@@ -17,8 +17,11 @@ def parse_arguments(self, command_string):
     if len(tokens) >= 2:
         tokens = tokens[2:]
     
-    # Initialize arguments dictionary
-    self.arguments = {}
+    # Initialize arguments dictionary if not exists
+    if not hasattr(self, 'arguments'):
+        self.arguments = {}
+    else:
+        self.arguments.clear()
     
     i = 0
     while i < len(tokens):
@@ -29,19 +32,24 @@ def parse_arguments(self, command_string):
             # Remove leading dashes
             arg_name = token.lstrip('-')
             
-            # Check if argument has = format (--arg=value)
+            # Check if it's in format --arg=value
             if '=' in arg_name:
                 parts = arg_name.split('=', 1)
                 arg_name = parts[0]
                 value = parts[1]
-                self.arguments[arg_name] = self._convert_type(value)
+                # Convert type if method exists
+                if hasattr(self, '_convert_type'):
+                    value = self._convert_type(arg_name, value)
+                self.arguments[arg_name] = value
                 i += 1
             else:
                 # Check if next token exists and is not an argument
                 if i + 1 < len(tokens) and not tokens[i + 1].startswith('-'):
-                    # Next token is the value
                     value = tokens[i + 1]
-                    self.arguments[arg_name] = self._convert_type(value)
+                    # Convert type if method exists
+                    if hasattr(self, '_convert_type'):
+                        value = self._convert_type(arg_name, value)
+                    self.arguments[arg_name] = value
                     i += 2
                 else:
                     # It's a flag/option (boolean)

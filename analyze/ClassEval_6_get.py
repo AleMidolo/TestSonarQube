@@ -15,14 +15,11 @@ def get(self, index):
     base_size = total_length // num_partitions
     remainder = total_length % num_partitions
     
-    # Los primeros 'remainder' bloques tendrán tamaño base_size + 1
-    # Los demás bloques tendrán tamaño base_size
+    # Las primeras 'remainder' particiones tendrán un elemento extra
     if index < remainder:
-        # Este bloque tiene tamaño base_size + 1
         start = index * (base_size + 1)
         end = start + base_size + 1
     else:
-        # Este bloque tiene tamaño base_size
         start = remainder * (base_size + 1) + (index - remainder) * base_size
         end = start + base_size
     

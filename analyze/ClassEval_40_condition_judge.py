@@ -10,14 +10,14 @@ def condition_judge(self):
     # Calculate BMI (Body Mass Index)
     bmi = self.weight / (self.height ** 2)
     
-    # Standard BMI ranges:
-    # Underweight: BMI < 18.5
-    # Normal: 18.5 <= BMI < 24
-    # Overweight: BMI >= 24
+    # Judge condition based on BMI standards
+    # BMI < 18.5: underweight (too thin)
+    # 18.5 <= BMI < 25: normal weight
+    # BMI >= 25: overweight (too fat)
     
     if bmi < 18.5:
-        return -1  # Too thin
-    elif bmi >= 24:
-        return 1   # Too fat
+        return -1  # too thin
+    elif bmi >= 25:
+        return 1   # too fat
     else:
-        return 0   # Normal
+        return 0   # normal

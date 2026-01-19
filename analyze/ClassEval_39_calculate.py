@@ -14,7 +14,7 @@ def calculate(self, expression):
 
 def _infix_to_postfix(self, expression):
     """Convert infix expression to postfix notation"""
-    precedence = {'+': 1, '-': 1, '*': 2, '/': 2}
+    precedence = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
     output = []
     stack = []
     tokens = expression.replace('(', ' ( ').replace(')', ' ) ').split()
@@ -46,17 +46,20 @@ def _evaluate_postfix(self, postfix):
     stack = []
     
     for token in postfix:
-        if token in ['+', '-', '*', '/']:
+        if token in ['+', '-', '*', '/', '^']:
             b = stack.pop()
             a = stack.pop()
             if token == '+':
-                stack.append(a + b)
+                result = a + b
             elif token == '-':
-                stack.append(a - b)
+                result = a - b
             elif token == '*':
-                stack.append(a * b)
+                result = a * b
             elif token == '/':
-                stack.append(a / b)
+                result = a / b
+            elif token == '^':
+                result = a ** b
+            stack.append(result)
         else:
             stack.append(float(token))
     

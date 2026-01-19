@@ -35,26 +35,21 @@ def trans_two(self, s):
         if unidad == 0:
             return "VEINTE"
         veintitantos = {
-            1: "VEINTIUNO",
-            2: "VEINTIDÓS",
-            3: "VEINTITRÉS",
-            4: "VEINTICUATRO",
-            5: "VEINTICINCO",
-            6: "VEINTISÉIS",
-            7: "VEINTISIETE",
-            8: "VEINTIOCHO",
-            9: "VEINTINUEVE"
+            1: "VEINTIUNO", 2: "VEINTIDÓS", 3: "VEINTITRÉS", 4: "VEINTICUATRO",
+            5: "VEINTICINCO", 6: "VEINTISÉIS", 7: "VEINTISIETE", 8: "VEINTIOCHO", 9: "VEINTINUEVE"
         }
         return veintitantos[unidad]
     
     # Del 30 en adelante
-    decenas = ["", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA", 
-               "SESENTA", "SETENTA", "OCHENTA", "NOVENTA"]
+    decenas = {
+        30: "TREINTA", 40: "CUARENTA", 50: "CINCUENTA",
+        60: "SESENTA", 70: "SETENTA", 80: "OCHENTA", 90: "NOVENTA"
+    }
     
-    decena = num // 10
+    decena = (num // 10) * 10
     unidad = num % 10
     
     if unidad == 0:
-        return decenas[decena]
+        return decenas.get(decena, "")
     else:
-        return decenas[decena] + " Y " + unidades[unidad]
+        return decenas.get(decena, "") + " Y " + unidades[unidad]

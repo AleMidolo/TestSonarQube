@@ -10,7 +10,7 @@ def get_correlation(self):
     
     n = len(self.data)
     
-    # Create x values as indices (0, 1, 2, 3, ...)
+    # Create x values (indices: 0, 1, 2, 3, ...)
     x = list(range(n))
     y = self.data
     
@@ -18,7 +18,7 @@ def get_correlation(self):
     mean_x = sum(x) / n
     mean_y = sum(y) / n
     
-    # Calculate correlation coefficient
+    # Calculate correlation coefficient (Pearson's r)
     numerator = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
     
     sum_sq_x = sum((x[i] - mean_x) ** 2 for i in range(n))

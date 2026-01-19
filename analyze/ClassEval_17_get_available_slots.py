@@ -22,7 +22,7 @@ def get_available_slots(self, date):
         if event_date.year == date.year and event_date.month == date.month and event_date.day == date.day:
             events_on_date.append(event)
     
-    # Ordena los eventos por hora de inicio
+    # Ordena eventos por hora de inicio
     events_on_date.sort(key=lambda x: x['start_time'])
     
     # Encuentra los intervalos disponibles

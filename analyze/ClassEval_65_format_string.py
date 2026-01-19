@@ -64,7 +64,7 @@ def format_string(self, x):
     
     if miles > 0:
         if miles == 1:
-            resultado.append("UN MIL")
+            resultado.append("MIL")
         else:
             resultado.append(convertir_centenas(miles) + " MIL")
     
