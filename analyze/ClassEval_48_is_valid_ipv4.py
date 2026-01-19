@@ -9,7 +9,6 @@ def is_valid_ipv4(ip_address):
     False
 
     """
-    import socket
     try:
         socket.inet_pton(socket.AF_INET, ip_address)
         return True

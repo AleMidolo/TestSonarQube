@@ -1,8 +1,8 @@
 def remove_item(self, item, quantity=1):
     """
-        Reduce the specified quantity of the item from the shopping list
-        :param item:string, Item to reduce
-        :param quantity:int, Quantity to reduce
+        Reduce the specified quantity from the item in the shopping list
+        :param item:string, item to reduce
+        :param quantity:int, quantity to reduce
         :return:None
         >>> shoppingcart.add_item("apple", 1, 5)
         >>> shoppingcart.remove_item("apple", 3)
@@ -11,5 +11,5 @@ def remove_item(self, item, quantity=1):
     if item in self.items:
         if self.items[item]['quantity'] > quantity:
             self.items[item]['quantity'] -= quantity
-        elif self.items[item]['quantity'] == quantity:
+        else:
             del self.items[item]

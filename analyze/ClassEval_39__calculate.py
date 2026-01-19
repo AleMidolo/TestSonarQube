@@ -11,18 +11,18 @@ def _calculate(first_value, second_value, current_op):
     5.0
 
     """
-    first = Decimal(first_value)
-    second = Decimal(second_value)
+    first_value = Decimal(first_value)
+    second_value = Decimal(second_value)
 
     if current_op == '+':
-        return first + second
+        return first_value + second_value
     elif current_op == '-':
-        return first - second
+        return first_value - second_value
     elif current_op == '*':
-        return first * second
+        return first_value * second_value
     elif current_op == '\/':
-        return first / second
+        return first_value / second_value
     elif current_op == '%':
-        return first % second
+        return first_value % second_value
     else:
         raise ValueError("Invalid operator")
