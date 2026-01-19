@@ -19,6 +19,6 @@ def text2int(self, textnum):
                 current *= scale
                 result += current
                 current = 0
-        elif word == 'and':
-            continue
+        else:
+            raise ValueError(f"Word '{word}' not recognized")
     return str(result + current)

@@ -10,7 +10,4 @@ def compute_idf_weight_dict(total_num, number_dict):
     {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}
     """
     from math import log
-    idf_dict = {}
-    for key, count in number_dict.items():
-        idf_dict[key] = log((total_num + 1) / (count + 1))
-    return idf_dict
+    return {key: log((total_num + 1) / (count + 1)) for key, count in number_dict.items()}

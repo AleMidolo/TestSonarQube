@@ -11,7 +11,7 @@ def correlation(x, y):
 
         """
     if len(x) != len(y):
-        raise ValueError('Lists must have the same length.')
+        raise ValueError('Lists must be of the same length.')
     mean_x = Statistics3.mean(x)
     mean_y = Statistics3.mean(y)
     covariance = sum(((x[i] - mean_x) * (y[i] - mean_y) for i in range(len(x))))
