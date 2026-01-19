@@ -9,11 +9,10 @@ def _convert_type(self, arg, value):
         21
         """
     if arg in self.types:
-        arg_type = self.types[arg]
-        if arg_type == int:
+        if self.types[arg] == int:
             return int(value)
-        elif arg_type == float:
+        elif self.types[arg] == float:
             return float(value)
-        elif arg_type == bool:
+        elif self.types[arg] == bool:
             return value.lower() in ('true', '1', 'yes')
     return value

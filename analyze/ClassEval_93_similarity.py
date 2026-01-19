@@ -13,4 +13,4 @@ def similarity(vector_1, vector_2):
     norm_2 = np.linalg.norm(vector_2)
     if norm_1 == 0 or norm_2 == 0:
         return 0.0
-    return dot(vector_1, vector_2) / (norm_1 * norm_2)
+    return np.dot(vector_1, vector_2) / (norm_1 * norm_2)
