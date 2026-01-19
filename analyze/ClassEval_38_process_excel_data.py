@@ -17,9 +17,8 @@ def process_excel_data(self, N, save_file_name):
                 processed_data.append(row)
                 continue
             row_list = list(row)
-            if 0 <= N - 1 < len(row_list):
-                if isinstance(row_list[N - 1], str):
-                    row_list[N - 1] = row_list[N - 1].upper()
+            if N - 1 < len(row_list) and row_list[N - 1] is not None:
+                row_list[N - 1] = str(row_list[N - 1]).upper()
             processed_data.append(tuple(row_list))
         if '.' in save_file_name:
             name_parts = save_file_name.rsplit('.', 1)

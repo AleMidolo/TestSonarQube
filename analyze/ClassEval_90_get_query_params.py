@@ -6,14 +6,16 @@ def get_query_params(self):
         >>> urlhandler.get_query_params()
         {"wd": "aaa", "rsv_spt": "1"}
         """
-    query_start = self.url.find('?')
+    path = self.get_path()
+    if not path:
+        return {}
+    query_start = path.find('?')
     if query_start == -1:
         return {}
-    fragment_start = self.url.find('#')
-    if fragment_start != -1 and fragment_start > query_start:
-        query_string = self.url[query_start + 1:fragment_start]
-    else:
-        query_string = self.url[query_start + 1:]
+    query_string = path[query_start + 1:]
+    fragment_start = query_string.find('#')
+    if fragment_start != -1:
+        query_string = query_string[:fragment_start]
     params = {}
     if query_string:
         pairs = query_string.split('&')

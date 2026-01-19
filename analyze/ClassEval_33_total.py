@@ -7,5 +7,6 @@ def total(self):
         >>> ds = DiscountStrategy(customer, cart)
         >>> ds.total()
         329.0
+
         """
     return sum((item['quantity'] * item['price'] for item in self.cart))

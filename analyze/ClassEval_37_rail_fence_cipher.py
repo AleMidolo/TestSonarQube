@@ -1,7 +1,7 @@
-def rail_fence_cipher(self, plaintext, rails):
+def rail_fence_cipher(self, plain_text, rails):
     """
         Encrypts the plaintext using the Rail Fence cipher.
-        :param plaintext: The plaintext to encrypt, str.
+        :param plain_text: The plaintext to encrypt, str.
         :param rails: The number of rails to use, int.
         :return: The ciphertext, str.
         >>> e = EncryptionUtils("key")
@@ -9,12 +9,12 @@ def rail_fence_cipher(self, plaintext, rails):
         'acb'
 
         """
-    if rails <= 1:
-        return plaintext
+    if rails == 1:
+        return plain_text
     fence = [[] for _ in range(rails)]
     rail = 0
     direction = 1
-    for char in plaintext:
+    for char in plain_text:
         fence[rail].append(char)
         rail += direction
         if rail == rails - 1 or rail == 0:

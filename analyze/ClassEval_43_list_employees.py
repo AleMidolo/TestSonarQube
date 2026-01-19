@@ -6,7 +6,6 @@ def list_employees(self):
         >>> hrManagementSystem.employees = {1: {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}}
         >>> hrManagementSystem.list_employees()
         {1: {'employee_ID': 1, 'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}}
-
         """
     result = {}
     for employee_id, employee_data in self.employees.items():

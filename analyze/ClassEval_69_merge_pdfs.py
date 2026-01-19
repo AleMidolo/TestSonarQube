@@ -8,9 +8,11 @@ def merge_pdfs(self, output_filepath):
         >>> handler.merge_pdfs('out.pdf')
         Merged PDFs saved at out.pdf
         """
-    merger = PyPDF2.PdfFileMerger()
+    pdf_writer = PyPDF2.PdfFileWriter()
     for reader in self.readers:
-        merger.append(reader)
+        for page_num in range(len(reader.pages)):
+            page = reader.pages[page_num]
+            pdf_writer.addPage(page)
     with open(output_filepath, 'wb') as output_file:
-        merger.write(output_file)
+        pdf_writer.write(output_file)
     return f'Merged PDFs saved at {output_filepath}'

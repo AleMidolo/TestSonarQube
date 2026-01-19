@@ -8,9 +8,10 @@ def get_correlation(self):
         """
     if len(self.data) < 2:
         return 0.0
-    x = np.arange(len(self.data))
-    y = self.data
-    correlation = np.corrcoef(x, y)[0, 1]
+    data_shifted = np.roll(self.data, 1)
+    if len(self.data) > 1:
+        data_shifted[0] = self.data[1]
+    correlation = np.corrcoef(self.data, data_shifted)[0, 1]
     if np.isnan(correlation):
         return 0.0
     return round(correlation, 2)

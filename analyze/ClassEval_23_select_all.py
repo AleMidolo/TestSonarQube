@@ -1,6 +1,6 @@
 def select_all(self) -> List[List[str]]:
     """
-        Generate all possible combinations of selecting elements from the given data list,and it uses the select method.
+        Generate all possible combinations of  selecting elements from the given data list,and it uses the select method.
         :return: A list of combinations,List[List[str]].
         >>> calc = CombinationCalculator(["A", "B", "C", "D"])
         >>> calc.select_all()

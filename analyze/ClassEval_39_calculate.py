@@ -8,30 +8,29 @@ def calculate(self, expression):
         14.0
 
         """
-    transformed_expression = self.transform(expression)
     self.postfix_stack.clear()
+    transformed_expression = self.transform(expression)
     self.prepare(transformed_expression)
-    calc_stack = deque(self.postfix_stack.copy())
-    result_stack = deque()
-    while calc_stack:
-        current = calc_stack.popleft()
-        if not self.is_operator(current):
-            if current.startswith('~'):
-                value = Decimal(current[1:]) * Decimal(-1)
-                result_stack.append(value)
+    calc_stack = deque()
+    for token in self.postfix_stack:
+        if self.is_operator(token):
+            if token == '~':
+                if not calc_stack:
+                    raise ValueError('Invalid expression: missing operand for unary minus')
+                operand = calc_stack.pop()
+                result = Decimal(0) - Decimal(operand)
+                calc_stack.append(str(result))
             else:
-                result_stack.append(Decimal(current))
+                if len(calc_stack) < 2:
+                    raise ValueError(f"Invalid expression: insufficient operands for operator '{token}'")
+                second_value = calc_stack.pop()
+                first_value = calc_stack.pop()
+                if token == '\\/' and Decimal(second_value) == 0:
+                    raise ZeroDivisionError('Division by zero')
+                result = self._calculate(first_value, second_value, token)
+                calc_stack.append(str(result))
         else:
-            if len(result_stack) < 2:
-                raise ValueError("Invalid expression: insufficient operands for operator '{}'".format(current))
-            second_value = result_stack.pop()
-            first_value = result_stack.pop()
-            if isinstance(first_value, str) and first_value.startswith('~'):
-                first_value = Decimal(first_value[1:]) * Decimal(-1)
-            if isinstance(second_value, str) and second_value.startswith('~'):
-                second_value = Decimal(second_value[1:]) * Decimal(-1)
-            result = self._calculate(str(first_value), str(second_value), current)
-            result_stack.append(result)
-    if len(result_stack) != 1:
-        raise ValueError('Invalid expression: could not compute final result')
-    return float(result_stack.pop())
+            calc_stack.append(token)
+    if len(calc_stack) != 1:
+        raise ValueError('Invalid expression: malformed postfix notation')
+    return float(calc_stack.pop())

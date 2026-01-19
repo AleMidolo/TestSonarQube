@@ -8,11 +8,11 @@ def split_sentences(self, text):
         ['Aaa', 'Bbbb', 'Ccc!']
         """
     pattern = self.generate_split_sentences_pattern()
-    parts = re.split(pattern, text)
+    sentences = re.split(pattern, text)
     result = []
-    for i, part in enumerate(parts):
-        if i < len(parts) - 1:
-            result.append(part.rstrip('.!?'))
+    for i, sentence in enumerate(sentences):
+        if i < len(sentences) - 1:
+            result.append(sentence.rstrip('.!?'))
         else:
-            result.append(part)
+            result.append(sentence)
     return result
