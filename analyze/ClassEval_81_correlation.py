@@ -24,7 +24,7 @@ def correlation(x, y):
     sum_sq_y = sum((y[i] - mean_y) ** 2 for i in range(n))
     denominator = (sum_sq_x * sum_sq_y) ** 0.5
     
-    # Return correlation coefficient
+    # Return Pearson correlation coefficient
     if denominator == 0:
         return 0.0
     return numerator / denominator

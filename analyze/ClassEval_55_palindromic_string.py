@@ -16,7 +16,7 @@ def palindromic_string(self):
     n = len(transformed)
     
     # Array to store the radius of palindrome at each position
-    p = [0] * n
+    P = [0] * n
     center = 0  # Center of the rightmost palindrome
     right = 0   # Right boundary of the rightmost palindrome
     
@@ -29,25 +29,25 @@ def palindromic_string(self):
         
         # If i is within the right boundary, we can use previously computed values
         if i < right:
-            p[i] = min(right - i, p[mirror])
+            P[i] = min(right - i, P[mirror])
         
-        # Attempt to expand palindrome centered at i
+        # Try to expand palindrome centered at i
         try:
-            while transformed[i + p[i] + 1] == transformed[i - p[i] - 1]:
-                p[i] += 1
+            while transformed[i + P[i] + 1] == transformed[i - P[i] - 1]:
+                P[i] += 1
         except IndexError:
             pass
         
         # If palindrome centered at i extends past right, adjust center and right
-        if i + p[i] > right:
+        if i + P[i] > right:
             center = i
-            right = i + p[i]
+            right = i + P[i]
         
         # Track the longest palindrome
-        if p[i] > max_len:
-            max_len = p[i]
+        if P[i] > max_len:
+            max_len = P[i]
             center_index = i
     
-    # Extract the longest palindrome from original string
+    # Extract the longest palindromic substring from original string
     start = (center_index - max_len) // 2
     return self.string[start:start + max_len]

@@ -14,5 +14,6 @@ def send(self, info):
             return "Error: info must contain 'addr' and 'content' keys"
         
         self.send_struct = info
+        
     except Exception as e:
         return f"Error: {str(e)}"

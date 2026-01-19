@@ -12,7 +12,6 @@ def standard_deviation(data):
     if not data:
         return 0.0
     
-    n = len(data)
-    mean = sum(data) / n
-    variance = sum((x - mean) ** 2 for x in data) / n
+    mean = sum(data) / len(data)
+    variance = sum((x - mean) ** 2 for x in data) / len(data)
     return variance ** 0.5

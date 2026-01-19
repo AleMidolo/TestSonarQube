@@ -7,22 +7,26 @@ def process_excel_data(self, N, save_file_name):
     >>> processor = ExcelProcessor()
     >>> success, output_file = processor.process_excel_data(1, 'test_data.xlsx')
     """
+    import openpyxl
+    
     # Read the Excel file
-    self.read_excel(save_file_name)
-    
-    # Convert the specified column (N) to uppercase
-    # N is 1-indexed, so we need to adjust for 0-indexed list
-    if self.data and len(self.data) > 0:
-        for row in self.data:
-            if len(row) >= N and N > 0:
-                # Convert the value at column N to uppercase if it's a string
-                if isinstance(row[N - 1], str):
-                    row[N - 1] = row[N - 1].upper()
-    
-    # Generate output filename
-    output_file_name = save_file_name.replace('.xlsx', '_processed.xlsx')
-    
-    # Write the processed data back to Excel
-    result = self.write_excel(output_file_name)
-    
-    return (result, output_file_name)
+    try:
+        workbook = openpyxl.load_workbook(save_file_name)
+        sheet = workbook.active
+        
+        # Process the specified column (N is 1-indexed)
+        for row in sheet.iter_rows(min_row=1, min_col=N, max_col=N):
+            for cell in row:
+                if cell.value is not None and isinstance(cell.value, str):
+                    cell.value = cell.value.upper()
+        
+        # Save the modified workbook
+        output_file_name = f"processed_{save_file_name}"
+        workbook.save(output_file_name)
+        workbook.close()
+        
+        # Assuming write_excel returns 1 for success
+        return (1, output_file_name)
+    except Exception as e:
+        # Return 0 for failure
+        return (0, save_file_name)

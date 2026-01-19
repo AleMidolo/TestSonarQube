@@ -9,19 +9,9 @@ def read_zip_file(self):
     import os
     
     try:
-        if hasattr(self, 'zip_file') and self.zip_file:
-            # If zip_file attribute exists and is already open, return it
-            return self.zip_file
-        
-        # Check if the file path exists
-        if not hasattr(self, 'file_path') or not self.file_path:
-            return None
-        
-        if not os.path.exists(self.file_path):
-            return None
-        
-        # Open the zip file
-        self.zip_file = zipfile.ZipFile(self.file_path, 'r')
-        return self.zip_file
-    except (zipfile.BadZipFile, IOError, OSError):
+        if hasattr(self, 'zip_file_path') and self.zip_file_path:
+            if os.path.exists(self.zip_file_path):
+                return zipfile.ZipFile(self.zip_file_path, 'r')
+        return None
+    except Exception:
         return None

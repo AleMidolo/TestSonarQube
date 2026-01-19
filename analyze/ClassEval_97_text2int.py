@@ -31,8 +31,11 @@ def text2int(self, textnum):
     textnum = textnum.lower().replace(" and ", " ").replace("-", " ")
     words = textnum.split()
     
-    result = 0
+    if len(words) == 1 and words[0] in ones:
+        return str(ones[words[0]])
+    
     current = 0
+    result = 0
     
     for word in words:
         if word in ones:

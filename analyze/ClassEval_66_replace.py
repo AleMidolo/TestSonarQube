@@ -12,18 +12,21 @@ def replace(self, string):
     
     def replace_entity(match):
         entity = match.group(0)
-        # Check if it's hexadecimal (&#xHHH; or &#XHHH;)
+        # Check if it's hexadecimal (&#xHHHH; or &#XHHHH;)
         if entity[2] in ('x', 'X'):
             code_point = int(entity[3:-1], 16)
         else:
-            # Decimal (&#DDD;)
+            # Decimal (&#DDDD;)
             code_point = int(entity[2:-1], 10)
         
-        return chr(code_point)
+        try:
+            return chr(code_point)
+        except (ValueError, OverflowError):
+            # If invalid code point, return original entity
+            return entity
     
-    # Pattern to match numeric character references
-    # &#digits; or &#xhex; or &#Xhex;
+    # Pattern matches &#DDDD; (decimal) or &#xHHHH; or &#XHHHH; (hexadecimal)
     pattern = r'&#[xX]?[0-9a-fA-F]+;'
-    
     result = re.sub(pattern, replace_entity, string)
+    
     return result

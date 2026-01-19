@@ -20,7 +20,7 @@ def get_binary(self):
     try:
         binary_parts = []
         for part in parts:
-            # Convert to integer and check if it's in valid range (0-255)
+            # Convert to integer and validate range
             num = int(part)
             if num < 0 or num > 255:
                 return ''
@@ -30,5 +30,4 @@ def get_binary(self):
         # Join with dots
         return '.'.join(binary_parts)
     except ValueError:
-        # If conversion to int fails, IP is invalid
         return ''

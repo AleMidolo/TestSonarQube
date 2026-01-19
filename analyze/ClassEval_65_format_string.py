@@ -7,75 +7,61 @@ def format_string(self, x):
     >>> formatter.format_string("123456")
     "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
     """
-    # Handle empty string or zero
-    if not x or int(x) == 0:
-        return "ZERO ONLY"
-    
-    # Remove leading zeros
-    x = x.lstrip('0')
-    if not x:
-        return "ZERO ONLY"
-    
     # Define word mappings
     ones = ["", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]
     teens = ["TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", 
              "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"]
     tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"]
     
-    def convert_hundreds(num):
-        """Convert a number less than 1000 to words"""
-        result = []
-        
-        # Hundreds place
-        hundreds_digit = num // 100
-        if hundreds_digit > 0:
-            result.append(ones[hundreds_digit])
-            result.append("HUNDRED")
-        
-        # Tens and ones place
-        remainder = num % 100
-        if remainder > 0:
-            if result:  # Add "AND" if we had hundreds
-                result.append("AND")
-            
-            if remainder < 10:
-                result.append(ones[remainder])
-            elif remainder < 20:
-                result.append(teens[remainder - 10])
-            else:
-                tens_digit = remainder // 10
-                ones_digit = remainder % 10
-                result.append(tens[tens_digit])
-                if ones_digit > 0:
-                    result.append(ones[ones_digit])
-        
-        return " ".join(result)
+    def convert_below_thousand(n):
+        """Convert numbers below 1000 to words"""
+        if n == 0:
+            return ""
+        elif n < 10:
+            return ones[n]
+        elif n < 20:
+            return teens[n - 10]
+        elif n < 100:
+            result = tens[n // 10]
+            if n % 10 != 0:
+                result += " " + ones[n % 10]
+            return result
+        else:
+            result = ones[n // 100] + " HUNDRED"
+            remainder = n % 100
+            if remainder != 0:
+                result += " AND " + convert_below_thousand(remainder)
+            return result
     
-    # Convert string to integer
+    # Handle zero case
     num = int(x)
+    if num == 0:
+        return "ZERO ONLY"
     
-    # Break number into groups of thousands
-    if num < 1000:
-        words = convert_hundreds(num)
-    elif num < 1000000:
-        thousands = num // 1000
-        remainder = num % 1000
-        
-        words = convert_hundreds(thousands) + " THOUSAND"
-        if remainder > 0:
-            words += " " + convert_hundreds(remainder)
-    else:
+    # Process the number in groups of thousands
+    result_parts = []
+    
+    # Billions
+    if num >= 1000000000:
+        billions = num // 1000000000
+        result_parts.append(convert_below_thousand(billions) + " BILLION")
+        num %= 1000000000
+    
+    # Millions
+    if num >= 1000000:
         millions = num // 1000000
-        remainder = num % 1000000
-        
-        words = convert_hundreds(millions) + " MILLION"
-        
-        if remainder >= 1000:
-            thousands = remainder // 1000
-            words += " " + convert_hundreds(thousands) + " THOUSAND"
-            remainder = remainder % 1000
-        
-        if remainder > 0:
-            words += " " + convert_hundreds(remainder)
+        result_parts.append(convert_below_thousand(millions) + " MILLION")
+        num %= 1000000
     
-    return words + " ONLY"
+    # Thousands
+    if num >= 1000:
+        thousands = num // 1000
+        result_parts.append(convert_below_thousand(thousands) + " THOUSAND")
+        num %= 1000
+    
+    # Hundreds, tens, ones
+    if num > 0:
+        result_parts.append(convert_below_thousand(num))
+    
+    result = " ".join(result_parts)
+    return result + " ONLY"

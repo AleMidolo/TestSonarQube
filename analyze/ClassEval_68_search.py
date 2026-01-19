@@ -18,16 +18,14 @@ def search(self, keyword):
     # Filter items that contain the keyword
     results = [item for item in self.data if keyword_str in str(item)]
     
-    # Calculate total results and pages
+    # Calculate total results and total pages
     total_results = len(results)
     total_pages = (total_results + self.page_size - 1) // self.page_size if total_results > 0 else 0
     
     # Return search information
-    search_info = {
+    return {
         "keyword": keyword,
         "total_results": total_results,
         "total_pages": total_pages,
         "results": results
     }
-    
-    return search_info

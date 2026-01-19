@@ -10,11 +10,10 @@ def convert(self, amount, from_currency, to_currency):
     10.0
     """
     # Based on the example: 64 CNY = 10 USD
-    # This implies CNY to USD rate is 10/64 = 0.15625
-    # Or USD to CNY rate is 64/10 = 6.4
+    # This means 1 USD = 6.4 CNY
     
     # Define exchange rates relative to USD as base currency
-    rates = {
+    exchange_rates = {
         'USD': 1.0,
         'CNY': 6.4,
         'EUR': 0.85,
@@ -25,11 +24,7 @@ def convert(self, amount, from_currency, to_currency):
     }
     
     # Convert from source currency to USD, then from USD to target currency
-    if from_currency not in rates or to_currency not in rates:
-        raise ValueError(f"Unsupported currency: {from_currency} or {to_currency}")
+    amount_in_usd = amount / exchange_rates[from_currency]
+    converted_amount = amount_in_usd * exchange_rates[to_currency]
     
-    # Convert to USD first, then to target currency
-    amount_in_usd = amount / rates[from_currency]
-    result = amount_in_usd * rates[to_currency]
-    
-    return result
+    return converted_amount

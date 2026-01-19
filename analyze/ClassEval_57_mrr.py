@@ -13,7 +13,7 @@ def mrr(data):
     0.75, [1.0, 0.5]
     """
     def calculate_rr(result_list):
-        """Calculate reciprocal rank for a single list"""
+        """Calculate reciprocal rank for a single result list"""
         for i, val in enumerate(result_list):
             if val == 1:
                 return 1.0 / (i + 1)

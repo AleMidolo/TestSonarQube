@@ -35,11 +35,11 @@ def correlation_matrix(data):
                     diff_i = data[i][k] - mean_i
                     diff_j = data[j][k] - mean_j
                     numerator += diff_i * diff_j
-                    sum_sq_i += diff_i ** 2
-                    sum_sq_j += diff_j ** 2
+                    sum_sq_i += diff_i * diff_i
+                    sum_sq_j += diff_j * diff_j
                 
                 # Calculate correlation coefficient
-                denominator = (sum_sq_i ** 0.5) * (sum_sq_j ** 0.5)
+                denominator = (sum_sq_i * sum_sq_j) ** 0.5
                 
                 if denominator == 0:
                     corr_matrix[i][j] = 0.0

@@ -23,5 +23,4 @@ def caesar_decipher(self, ciphertext, shift):
         else:
             # Non-alphabetic characters remain unchanged
             plaintext.append(char)
-    
     return ''.join(plaintext)

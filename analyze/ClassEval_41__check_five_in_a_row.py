@@ -15,11 +15,11 @@ def _check_five_in_a_row(self, row, col, direction):
     >>> gomokuGame._check_five_in_a_row(5, 1, (1, 1))
     False
     """
-    # Get the player symbol at the starting position
-    player = self.board[row][col]
+    # Get the symbol at the starting position
+    symbol = self.board[row][col]
     
     # If the cell is empty, there can't be five in a row
-    if player is None or player == 0 or player == '':
+    if symbol is None or symbol == 0 or symbol == '':
         return False
     
     dx, dy = direction
@@ -29,7 +29,7 @@ def _check_five_in_a_row(self, row, col, direction):
     current_row, current_col = row + dx, col + dy
     while (0 <= current_row < len(self.board) and 
            0 <= current_col < len(self.board[0]) and 
-           self.board[current_row][current_col] == player):
+           self.board[current_row][current_col] == symbol):
         count += 1
         current_row += dx
         current_col += dy
@@ -38,7 +38,7 @@ def _check_five_in_a_row(self, row, col, direction):
     current_row, current_col = row - dx, col - dy
     while (0 <= current_row < len(self.board) and 
            0 <= current_col < len(self.board[0]) and 
-           self.board[current_row][current_col] == player):
+           self.board[current_row][current_col] == symbol):
         count += 1
         current_row -= dx
         current_col -= dy

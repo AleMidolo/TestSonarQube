@@ -14,13 +14,13 @@ def correlation_coefficient(data1, data2):
     mean1 = sum(data1) / n
     mean2 = sum(data2) / n
     
-    # Calculate numerator (covariance)
+    # Calculate numerator: sum of (x - mean_x) * (y - mean_y)
     numerator = sum((data1[i] - mean1) * (data2[i] - mean2) for i in range(n))
     
-    # Calculate denominator (product of standard deviations)
-    sum_sq1 = sum((x - mean1) ** 2 for x in data1)
-    sum_sq2 = sum((x - mean2) ** 2 for x in data2)
-    denominator = (sum_sq1 * sum_sq2) ** 0.5
+    # Calculate denominator: sqrt(sum of (x - mean_x)^2) * sqrt(sum of (y - mean_y)^2)
+    sum_sq1 = sum((data1[i] - mean1) ** 2 for i in range(n))
+    sum_sq2 = sum((data2[i] - mean2) ** 2 for i in range(n))
+    denominator = (sum_sq1 ** 0.5) * (sum_sq2 ** 0.5)
     
     # Calculate correlation coefficient
     return numerator / denominator

@@ -14,42 +14,39 @@ def process_csv_data(self, N, save_file_name):
     >>> csvProcessor.read_csv('read_test_process.csv')
     (['a', 'b', 'c', 'd'], [['HELLO']])
     """
-    import csv
-    import os
-    
     try:
-        # Read the CSV file
-        with open(save_file_name, 'r', newline='', encoding='utf-8') as file:
-            reader = csv.reader(file)
-            rows = list(reader)
+        import csv
+        import os
         
-        if not rows:
+        # Read the CSV file
+        result = self.read_csv(save_file_name)
+        if result is None:
             return 0
         
-        # Extract title (header row)
-        title = rows[0]
+        title, data = result
         
         # Check if N is valid
         if N < 0 or N >= len(title):
             return 0
         
-        # Process data rows - keep only Nth column and capitalize
-        processed_data = []
-        for row in rows[1:]:
+        # Process data: keep only Nth column and capitalize
+        new_data = []
+        for row in data:
             if N < len(row):
-                processed_data.append([row[N].upper()])
+                new_data.append([row[N].upper()])
+            else:
+                return 0
         
-        # Create new file name with '_process' suffix
+        # Generate new file name with '_process' suffix
         base_name, ext = os.path.splitext(save_file_name)
         new_file_name = base_name + '_process' + ext
         
         # Write to new CSV file
-        with open(new_file_name, 'w', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            writer.writerow(title)  # Write original title
-            writer.writerows(processed_data)  # Write processed data
+        with open(new_file_name, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(title)  # Write header
+            writer.writerows(new_data)  # Write data
         
         return 1
-    
     except Exception as e:
         return 0

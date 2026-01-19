@@ -23,6 +23,7 @@ def extract_code_from_html_text(self, html_text):
             super().__init__()
             self.codes = []
             self.in_pre = False
+            self.in_code = False
             self.current_code = []
         
         def handle_starttag(self, tag, attrs):
@@ -30,15 +31,17 @@ def extract_code_from_html_text(self, html_text):
                 self.in_pre = True
                 self.current_code = []
             elif tag == 'code' and self.in_pre:
-                pass
+                self.in_code = True
         
         def handle_endtag(self, tag):
             if tag == 'pre':
                 if self.current_code:
-                    code_text = ''.join(self.current_code)
-                    self.codes.append(code_text)
+                    self.codes.append(''.join(self.current_code))
                 self.in_pre = False
+                self.in_code = False
                 self.current_code = []
+            elif tag == 'code':
+                self.in_code = False
         
         def handle_data(self, data):
             if self.in_pre:

@@ -8,21 +8,21 @@ def calculate_calorie_intake(self):
 
     """
     # Calculate BMR based on sex
-    if self.sex == "male":
+    if self.sex.lower() == "male":
         bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5
     else:  # female
         bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161
     
-    # Get user's condition (assuming there's a method to determine this)
-    # Based on the context, we need to determine if user is too fat, too thin, or normal
+    # Get user's condition (assuming there's a method or attribute for this)
+    # Based on the docstring, we need to determine if user is too fat, too thin, or normal
     # This likely uses BMI or similar metric
-    bmi = self.weight / ((self.height / 100) ** 2)
+    condition = self.get_state()  # Assuming this method exists based on typical fitness tracker patterns
     
-    # Determine condition based on BMI
-    if bmi < 18.5:  # too thin
-        calorie_intake = bmr * 1.6
-    elif bmi >= 25:  # too fat
+    # Calculate calorie intake based on condition
+    if condition == "too fat":
         calorie_intake = bmr * 1.2
+    elif condition == "too thin":
+        calorie_intake = bmr * 1.6
     else:  # normal
         calorie_intake = bmr * 1.4
     

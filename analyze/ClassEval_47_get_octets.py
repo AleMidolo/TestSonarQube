@@ -22,12 +22,12 @@ def get_octets(self):
             if len(part) > 1 and part[0] == '0':
                 return []
             
-            # Check if it's a valid integer
-            try:
-                num = int(part)
-                if num < 0 or num > 255:
-                    return []
-            except ValueError:
+            # Check if all characters are digits
+            if not part.isdigit():
+                return []
+            
+            # Check if number is in valid range (0-255)
+            if int(part) > 255:
                 return []
         
         return parts

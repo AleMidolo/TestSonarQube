@@ -42,4 +42,5 @@ def check_winner(self):
                 if count >= 5:
                     return current_symbol
     
+    # No winner found
     return None

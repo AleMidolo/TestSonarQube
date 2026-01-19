@@ -9,8 +9,8 @@ def get_students_by_major(self, major):
     >>> registration_system.get_students_by_major("Computer Science")
     ["John"]
     """
-    result = []
+    students_in_major = []
     for student in self.students:
         if student.get("major") == major:
-            result.append(student.get("name"))
-    return result
+            students_in_major.append(student.get("name"))
+    return students_in_major

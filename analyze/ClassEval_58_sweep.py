@@ -20,6 +20,7 @@ def sweep(self, x, y):
     
     # If the cell is 0, recursively reveal adjacent cells
     if self.minesweeper_map[x][y] == 0:
+        # Check all 8 adjacent cells
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
                 if dx == 0 and dy == 0:

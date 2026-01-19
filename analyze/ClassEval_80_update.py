@@ -8,11 +8,11 @@ def update(table, data, where=None):
     >>> SQLQueryBuilder.update('table1', {'name': 'Test2', 'age': 15}, where = {'name':'Test'})
     "UPDATE table1 SET name='Test2', age='15' WHERE name='Test'"
     """
-    set_clause = ', '.join([f"{key}='{value}'" for key, value in data.items()])
+    set_clause = ", ".join([f"{key}='{value}'" for key, value in data.items()])
     sql = f"UPDATE {table} SET {set_clause}"
     
     if where:
-        where_clause = ' AND '.join([f"{key}='{value}'" for key, value in where.items()])
+        where_clause = " AND ".join([f"{key}='{value}'" for key, value in where.items()])
         sql += f" WHERE {where_clause}"
     
     return sql
