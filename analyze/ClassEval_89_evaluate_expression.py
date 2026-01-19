@@ -10,7 +10,10 @@ def evaluate_expression(self, expression):
     True
     """
     try:
+        # Valuta l'espressione matematica in modo sicuro
         result = eval(expression)
+        # Verifica se il risultato è 24 (con tolleranza per errori di floating point)
         return abs(result - 24) < 1e-6
     except:
+        # Se c'è un errore nella valutazione, ritorna False
         return False

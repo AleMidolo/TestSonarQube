@@ -18,11 +18,11 @@ def check_winner(self):
         if self.board[0][col] == self.board[1][col] == self.board[2][col] and self.board[0][col] is not None:
             return self.board[0][col]
     
-    # Check diagonal (top-left to bottom-right)
+    # Check main diagonal (top-left to bottom-right)
     if self.board[0][0] == self.board[1][1] == self.board[2][2] and self.board[0][0] is not None:
         return self.board[0][0]
     
-    # Check diagonal (top-right to bottom-left)
+    # Check anti-diagonal (top-right to bottom-left)
     if self.board[0][2] == self.board[1][1] == self.board[2][0] and self.board[0][2] is not None:
         return self.board[0][2]
     

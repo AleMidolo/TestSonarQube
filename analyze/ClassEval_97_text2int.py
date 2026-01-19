@@ -28,7 +28,7 @@ def text2int(self, textnum):
         "trillion": 1000000000000
     }
     
-    textnum = textnum.lower().replace("-", " ").replace(" and ", " ")
+    textnum = textnum.lower().replace(" and ", " ").replace("-", " ")
     words = textnum.split()
     
     if len(words) == 1 and words[0] in ones:

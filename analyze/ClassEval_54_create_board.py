@@ -15,7 +15,7 @@ def create_board(self):
     # Calculate how many pairs of each icon we need
     tiles_per_icon = total_cells // len(self.icons)
     
-    # Create a flat list with all tiles
+    # Create a flat list of tiles
     tiles = []
     for icon in self.icons:
         tiles.extend([icon] * tiles_per_icon)

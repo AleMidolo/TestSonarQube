@@ -12,19 +12,24 @@ def replace(self, string):
     
     def replace_entity(match):
         entity = match.group(0)
-        # Remove &#, &#x or &# prefix and ; suffix
+        # Remove &#, &#x, or &# prefix and ; suffix
         if entity.startswith('&#x') or entity.startswith('&#X'):
             # Hexadecimal entity
             num_str = entity[3:-1]
-            char_code = int(num_str, 16)
+            try:
+                char_code = int(num_str, 16)
+                return chr(char_code)
+            except (ValueError, OverflowError):
+                return entity
         elif entity.startswith('&#'):
             # Decimal entity
             num_str = entity[2:-1]
-            char_code = int(num_str, 10)
-        else:
-            return entity
-        
-        return chr(char_code)
+            try:
+                char_code = int(num_str, 10)
+                return chr(char_code)
+            except (ValueError, OverflowError):
+                return entity
+        return entity
     
     # Pattern to match numeric character references
     # Matches &#digits; or &#xhexdigits; or &#Xhexdigits;

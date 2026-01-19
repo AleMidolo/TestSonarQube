@@ -12,18 +12,22 @@ def process_xml_data(self, file_name):
     try:
         import xml.etree.ElementTree as ET
         
-        # Leggi il file XML esistente
-        tree = ET.parse(self.file_name)
-        root = tree.getroot()
+        # Read the XML data if not already loaded
+        if not hasattr(self, 'tree') or self.tree is None:
+            self.read_xml()
         
-        # Processa/modifica i dati XML
-        # (Esempio generico di modifica - può essere personalizzato)
+        # Get the root element
+        root = self.tree.getroot()
+        
+        # Process/modify the XML data (example modifications)
+        # This could involve updating text, attributes, or structure
         for element in root.iter():
-            if element.text:
+            # Example: modify text content if it exists
+            if element.text and element.text.strip():
                 element.text = element.text.strip()
         
-        # Scrivi i dati XML modificati nel nuovo file
-        tree.write(file_name, encoding='utf-8', xml_declaration=True)
+        # Write the modified XML to the new file
+        self.tree.write(file_name, encoding='utf-8', xml_declaration=True)
         
         return True
     except Exception as e:

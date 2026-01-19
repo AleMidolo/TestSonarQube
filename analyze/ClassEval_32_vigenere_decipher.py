@@ -21,20 +21,16 @@ def vigenere_decipher(self, ciphertext):
             is_upper = char.isupper()
             char = char.lower()
             
-            # Ottieni il valore numerico del carattere (a=0, b=1, ..., z=25)
-            char_value = ord(char) - ord('a')
-            
-            # Ottieni il valore della chiave corrente
+            # Ottieni il carattere della chiave corrente
             key_char = key[key_index % len(key)]
-            key_value = ord(key_char) - ord('a')
             
-            # Decifra sottraendo il valore della chiave
-            decrypted_value = (char_value - key_value) % 26
+            # Calcola lo shift dalla chiave
+            shift = ord(key_char) - ord('a')
             
-            # Converti di nuovo in carattere
-            decrypted_char = chr(decrypted_value + ord('a'))
+            # Decifra sottraendo lo shift
+            decrypted_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
             
-            # Ripristina maiuscolo se necessario
+            # Ripristina il caso originale
             if is_upper:
                 decrypted_char = decrypted_char.upper()
             

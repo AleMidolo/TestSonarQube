@@ -10,14 +10,13 @@ def decimal_to_octal(decimal_num):
     if decimal_num == 0:
         return '0'
     
-    octal_digits = []
+    octal_str = ''
     num = abs(decimal_num)
     
     while num > 0:
-        octal_digits.append(str(num % 8))
-        num //= 8
-    
-    octal_str = ''.join(reversed(octal_digits))
+        remainder = num % 8
+        octal_str = str(remainder) + octal_str
+        num = num // 8
     
     if decimal_num < 0:
         octal_str = '-' + octal_str

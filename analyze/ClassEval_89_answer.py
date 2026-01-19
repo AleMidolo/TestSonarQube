@@ -16,14 +16,14 @@ def answer(self, expression):
         numbers_in_expr = re.findall(r'\d+', expression)
         numbers_in_expr = [int(n) for n in numbers_in_expr]
         
-        # Verifica che i numeri usati corrispondano esattamente a self.nums
+        # Verifica che i numeri usati corrispondano esattamente alle carte disponibili
         if sorted(numbers_in_expr) != sorted(self.nums):
             return False
         
         # Valuta l'espressione
         result = eval(expression)
         
-        # Controlla se il risultato è 24 (con tolleranza per errori di floating point)
+        # Verifica se il risultato è 24 (con tolleranza per errori di floating point)
         return abs(result - 24) < 1e-9
         
     except:

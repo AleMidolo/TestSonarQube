@@ -1,3 +1,6 @@
+import zipfile
+import os
+
 def create_zip_file(self, files, output_file_name):
     """
     Comprimi l'elenco di file specificato in un file zip e lo salva nel percorso specificato
@@ -7,9 +10,6 @@ def create_zip_file(self, files, output_file_name):
     >>> zfp = ZipFileProcessor("aaa.zip")
     >>> zfp.create_zip_file(["bbb.txt", "ccc.txt", "ddd.txt"], "output/bcd")
     """
-    import zipfile
-    import os
-    
     try:
         # Ensure the output directory exists
         output_dir = os.path.dirname(output_file_name)

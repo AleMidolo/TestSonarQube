@@ -11,4 +11,7 @@ def add_item(self, item_name, price, quantity):
     {'Coke': {'price': 1.25, 'quantity': 10}}
 
     """
+    if not hasattr(self, 'inventory'):
+        self.inventory = {}
+    
     self.inventory[item_name] = {'price': price, 'quantity': quantity}

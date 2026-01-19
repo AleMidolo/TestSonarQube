@@ -12,7 +12,7 @@ def count(n: int, m: int) -> int:
     if m == 0 or m == n:
         return 1
     
-    # Calculate C(n, m) = n! / (m! * (n - m)!)
+    # Calculate C(n, m) = n! / (m! * (n-m)!)
     # Optimize by using C(n, m) = C(n, n-m) and choosing the smaller value
     m = min(m, n - m)
     

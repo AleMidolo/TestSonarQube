@@ -10,5 +10,10 @@ def __getitem__(self, key):
     """
     # Convert snake_case key to camelCase
     camel_key = self._to_camel_case(key)
-    # Return the value from the internal dictionary
-    return self._data[camel_key]
+    
+    # Try to get the value using the camelCase key from internal storage
+    if hasattr(self, '_data'):
+        return self._data.get(camel_key)
+    
+    # Alternative: if using __dict__ directly
+    return self.__dict__.get(camel_key)

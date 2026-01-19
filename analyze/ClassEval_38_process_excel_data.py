@@ -8,6 +8,7 @@ def process_excel_data(self, N, save_file_name):
     >>> success, output_file = processor.process_excel_data(1, 'test_data.xlsx')
     """
     import openpyxl
+    import os
     
     # Read the Excel file
     try:
@@ -21,10 +22,12 @@ def process_excel_data(self, N, save_file_name):
                 if cell.value is not None and isinstance(cell.value, str):
                     cell.value = cell.value.upper()
         
-        # Generate output filename
-        output_file_name = save_file_name.replace('.xlsx', '_processed.xlsx')
+        # Generate output file name
+        base_name = os.path.splitext(save_file_name)[0]
+        extension = os.path.splitext(save_file_name)[1]
+        output_file_name = f"{base_name}_processed{extension}"
         
-        # Save the modified workbook
+        # Save the workbook
         workbook.save(output_file_name)
         workbook.close()
         
@@ -33,4 +36,4 @@ def process_excel_data(self, N, save_file_name):
         
     except Exception as e:
         # Return 0 for failure
-        return (0, str(e))
+        return (0, "")

@@ -11,11 +11,7 @@ def update(table, data, where=None):
     # Build the SET clause
     set_parts = []
     for key, value in data.items():
-        if isinstance(value, str):
-            set_parts.append(f"{key}='{value}'")
-        else:
-            set_parts.append(f"{key}='{value}'")
-    
+        set_parts.append(f"{key}='{value}'")
     set_clause = ", ".join(set_parts)
     
     # Build the base UPDATE statement
@@ -25,11 +21,7 @@ def update(table, data, where=None):
     if where:
         where_parts = []
         for key, value in where.items():
-            if isinstance(value, str):
-                where_parts.append(f"{key}='{value}'")
-            else:
-                where_parts.append(f"{key}='{value}'")
-        
+            where_parts.append(f"{key}='{value}'")
         where_clause = " AND ".join(where_parts)
         sql += f" WHERE {where_clause}"
     

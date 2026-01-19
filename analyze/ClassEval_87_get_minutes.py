@@ -7,14 +7,14 @@ def get_minutes(self, string_time1, string_time2):
     """
     from datetime import datetime
     
-    # Parse the time strings
+    # Parse the two time strings
     time1 = datetime.strptime(string_time1, "%Y-%m-%d %H:%M:%S")
     time2 = datetime.strptime(string_time2, "%Y-%m-%d %H:%M:%S")
     
-    # Calculate the difference in seconds
-    time_diff = abs((time2 - time1).total_seconds())
+    # Calculate the difference
+    time_diff = time2 - time1
     
     # Convert to minutes and round to nearest integer
-    minutes = round(time_diff / 60)
+    minutes = round(time_diff.total_seconds() / 60)
     
     return minutes

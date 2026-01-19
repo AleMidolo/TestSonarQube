@@ -8,7 +8,7 @@ def process_text_file(self, sentences_string):
     """
     import re
     
-    # Split the text into sentences using punctuation marks (. ? !)
+    # Split the text into sentences using . ? ! as delimiters
     sentences = re.split(r'[.?!]+', sentences_string)
     
     max_word_count = 0
@@ -18,7 +18,6 @@ def process_text_file(self, sentences_string):
         words = sentence.strip().split()
         word_count = len(words)
         
-        # Update max if current sentence has more words
         if word_count > max_word_count:
             max_word_count = word_count
     

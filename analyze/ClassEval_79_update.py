@@ -14,7 +14,7 @@ def update(self, data, condition):
         else:
             set_clauses.append(f"{field} = {value}")
     
-    set_part = ", ".join(set_clauses)
-    sql_query = f"UPDATE {self.table} SET {set_part} WHERE {condition};"
+    set_statement = ", ".join(set_clauses)
+    sql_query = f"UPDATE {self.table} SET {set_statement} WHERE {condition};"
     
     return sql_query

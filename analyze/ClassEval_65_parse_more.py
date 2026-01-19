@@ -7,9 +7,11 @@ def parse_more(self, i):
     >>> formatter.parse_more(1)
     "THOUSAND"
     """
-    suffixes = {
-        1: "THOUSAND",
-        2: "MILLION",
-        3: "BILLION"
-    }
-    return suffixes.get(i, "")
+    if i == 1:
+        return "THOUSAND"
+    elif i == 2:
+        return "MILLION"
+    elif i == 3:
+        return "BILLION"
+    else:
+        return ""

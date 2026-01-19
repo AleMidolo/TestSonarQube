@@ -37,7 +37,14 @@ def check_winner(self):
                     r += dr
                     c += dc
                 
-                # Se abbiamo trovato 5 in fila, abbiamo un vincitore
+                # Controlla all'indietro nella direzione opposta
+                r, c = row - dr, col - dc
+                while 0 <= r < self.size and 0 <= c < self.size and self.board[r][c] == player:
+                    count += 1
+                    r -= dr
+                    c -= dc
+                
+                # Se ci sono 5 o più in fila, abbiamo un vincitore
                 if count >= 5:
                     return player
     

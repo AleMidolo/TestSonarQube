@@ -17,4 +17,4 @@ def __setitem__(self, key, value):
     
     camel_key = snake_to_camel(key)
     # Store using the camelCase key in the underlying dictionary
-    self.__dict__[camel_key] = value
+    super().__setitem__(camel_key, value)

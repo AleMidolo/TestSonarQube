@@ -7,5 +7,3 @@ def rotate_image(self, degrees):
     """
     if self.image is not None:
         self.image = self.image.rotate(degrees, expand=True)
-    else:
-        raise ValueError("No image loaded. Please load an image first.")

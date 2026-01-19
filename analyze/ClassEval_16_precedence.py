@@ -9,9 +9,9 @@ def precedence(self, operator):
     >>> calculator.precedence('^')
     3
     """
-    if operator in ('+', '-'):
+    if operator in ['+', '-']:
         return 1
-    elif operator in ('*', '/'):
+    elif operator in ['*', '/']:
         return 2
     elif operator == '^':
         return 3
