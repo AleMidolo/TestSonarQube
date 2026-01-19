@@ -9,24 +9,21 @@ def get_primes(self):
     """
     if not hasattr(self, 'primes'):
         self.primes = []
+        if not hasattr(self, 'limit'):
+            return self.primes
+        
         if self.limit < 2:
             return self.primes
         
-        # Create a boolean array "is_prime[0..limit]" and initialize
-        # all entries as true
+        # Sieve of Eratosthenes implementation
         is_prime = [True] * (self.limit + 1)
         is_prime[0] = is_prime[1] = False
         
-        # Sieve of Eratosthenes
-        p = 2
-        while p * p <= self.limit:
-            if is_prime[p]:
-                # Mark all multiples of p as not prime
-                for i in range(p * p, self.limit + 1, p):
-                    is_prime[i] = False
-            p += 1
+        for i in range(2, int(self.limit ** 0.5) + 1):
+            if is_prime[i]:
+                for j in range(i * i, self.limit + 1, i):
+                    is_prime[j] = False
         
-        # Collect all prime numbers
         self.primes = [i for i in range(2, self.limit + 1) if is_prime[i]]
     
     return self.primes

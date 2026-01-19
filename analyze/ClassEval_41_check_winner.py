@@ -9,31 +9,43 @@ def check_winner(self):
     >>> gomokuGame.check_winner()
     'X'
     """
-    # Check all positions on the board
+    # 定义四个方向：水平、垂直、主对角线、副对角线
+    directions = [
+        (0, 1),   # 水平
+        (1, 0),   # 垂直
+        (1, 1),   # 主对角线（左上到右下）
+        (1, -1)   # 副对角线（右上到左下）
+    ]
+    
+    # 遍历棋盘上的每个位置
     for row in range(self.size):
         for col in range(self.size):
-            piece = self.board[row][col]
-            if piece is None:
+            # 如果当前位置为空，跳过
+            if self.board[row][col] is None:
                 continue
             
-            # Check horizontal (right)
-            if col + 4 < self.size:
-                if all(self.board[row][col + i] == piece for i in range(5)):
-                    return piece
+            current_player = self.board[row][col]
             
-            # Check vertical (down)
-            if row + 4 < self.size:
-                if all(self.board[row + i][col] == piece for i in range(5)):
-                    return piece
-            
-            # Check diagonal (down-right)
-            if row + 4 < self.size and col + 4 < self.size:
-                if all(self.board[row + i][col + i] == piece for i in range(5)):
-                    return piece
-            
-            # Check diagonal (down-left)
-            if row + 4 < self.size and col - 4 >= 0:
-                if all(self.board[row + i][col - i] == piece for i in range(5)):
-                    return piece
+            # 检查每个方向
+            for dr, dc in directions:
+                count = 1  # 当前位置已经有一个棋子
+                
+                # 向正方向检查
+                r, c = row + dr, col + dc
+                while 0 <= r < self.size and 0 <= c < self.size and self.board[r][c] == current_player:
+                    count += 1
+                    r += dr
+                    c += dc
+                
+                # 向反方向检查
+                r, c = row - dr, col - dc
+                while 0 <= r < self.size and 0 <= c < self.size and self.board[r][c] == current_player:
+                    count += 1
+                    r -= dr
+                    c -= dc
+                
+                # 如果连续五个或以上，返回获胜玩家
+                if count >= 5:
+                    return current_player
     
     return None

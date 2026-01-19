@@ -15,5 +15,5 @@ def evaluate_expression(self, expression):
         # 检查结果是否为24（考虑浮点数精度问题）
         return abs(result - 24) < 1e-6
     except:
-        # 如果表达式无效，返回False
+        # 如果表达式无效或评估出错，返回False
         return False

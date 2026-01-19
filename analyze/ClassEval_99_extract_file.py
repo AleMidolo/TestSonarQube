@@ -1,6 +1,3 @@
-import zipfile
-import os
-
 def extract_file(self, file_name, output_path):
     """
     从zip文件中提取指定名称的文件，并将其放置在指定路径中
@@ -10,6 +7,9 @@ def extract_file(self, file_name, output_path):
     >>> zfp = ZipFileProcessor("aaa.zip")
     >>> zfp.extract_file("bbb.txt", "result/aaa")
     """
+    import zipfile
+    import os
+    
     try:
         # 确保输出目录存在
         os.makedirs(output_path, exist_ok=True)
@@ -23,5 +23,6 @@ def extract_file(self, file_name, output_path):
             # 提取指定文件到输出路径
             zip_ref.extract(file_name, output_path)
             return True
-    except Exception as e:
+            
+    except (zipfile.BadZipFile, FileNotFoundError, PermissionError, Exception):
         return False

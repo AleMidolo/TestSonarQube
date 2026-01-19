@@ -23,5 +23,9 @@ def _calculate(first_value, second_value, current_op):
         return float(num1 * num2)
     elif current_op == '/':
         return float(num1 / num2)
-    else:
-        raise ValueError(f"Unsupported operator: {current_op}")
+    elif current_op == '//':
+        return float(num1 // num2)
+    elif current_op == '%':
+        return float(num1 % num2)
+    elif current_op == '**':
+        return float(num1 ** num2)

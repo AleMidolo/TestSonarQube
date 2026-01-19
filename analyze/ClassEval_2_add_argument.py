@@ -13,7 +13,7 @@ def add_argument(self, arg, required=False, arg_type=str):
     >>> parser.types
     {'arg1': 'int'}
     """
-    # 将参数类型存储到 types 字典中
+    # 将参数类型存储在 types 字典中
     self.types[arg] = arg_type
     
     # 如果参数是必需的，将其添加到 required 集合中

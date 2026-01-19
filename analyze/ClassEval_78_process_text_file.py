@@ -8,16 +8,15 @@ def process_text_file(self, sentences_string):
     """
     import re
     
-    # Split the text into sentences using punctuation marks (. ? !)
-    sentences = re.split(r'[.?!]', sentences_string)
+    # 按照句子分隔符（. ? !）分割文本
+    sentences = re.split(r'[.?!]+', sentences_string)
     
     max_word_count = 0
     
     for sentence in sentences:
-        # Strip whitespace and split by spaces to get words
+        # 去除首尾空格并分割单词
         words = sentence.strip().split()
-        # Count non-empty words
-        word_count = len([word for word in words if word])
-        max_word_count = max(max_word_count, word_count)
+        # 更新最大单词数
+        max_word_count = max(max_word_count, len(words))
     
     return max_word_count

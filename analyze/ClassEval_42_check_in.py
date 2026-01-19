@@ -34,5 +34,5 @@ def check_in(self, room_type, room_number, name):
     if room_number == booked_count:
         del self.booked_rooms[room_type][name]
     else:
-        # 如果 room_number 少于预订数量，更新预订数量
+        # 如果 room_number 少于预订数量，更新为预订数量减去实际数量
         self.booked_rooms[room_type][name] = booked_count - room_number

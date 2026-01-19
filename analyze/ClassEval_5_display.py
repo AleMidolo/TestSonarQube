@@ -1,6 +1,6 @@
 def display(self, key, value):
     """
-    打印和弦并播放旋律，格式如下：正常吉他演奏 -- 和弦: %s, 播放旋律: %s
+    打印和弦并播放旋律,格式如下:正常吉他演奏 -- 和弦: %s, 播放旋律: %s
     :param key:字符串, 和弦
     :param value:字符串, 播放旋律
     :return: str

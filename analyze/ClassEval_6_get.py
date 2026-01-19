@@ -8,7 +8,7 @@ def get(self, index):
     [1, 2]
 
     """
-    # Calculate the base size of each partition and remainder
+    # Assuming self.data is the list to partition and self.num_partitions is the number of partitions
     total_length = len(self.data)
     base_size = total_length // self.num_partitions
     remainder = total_length % self.num_partitions

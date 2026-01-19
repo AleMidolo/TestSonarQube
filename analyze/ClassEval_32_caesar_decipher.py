@@ -9,18 +9,17 @@ def caesar_decipher(self, ciphertext, shift):
     'hello'
 
     """
-    plaintext = []
+    plaintext = ""
     for char in ciphertext:
         if char.isalpha():
             # 判断是大写还是小写
             if char.isupper():
-                # 对大写字母进行解密
-                decrypted_char = chr((ord(char) - ord('A') - shift) % 26 + ord('A'))
+                # 解密：向后移动shift位，相当于向前移动shift位
+                plaintext += chr((ord(char) - ord('A') - shift) % 26 + ord('A'))
             else:
-                # 对小写字母进行解密
-                decrypted_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
-            plaintext.append(decrypted_char)
+                # 解密：向后移动shift位，相当于向前移动shift位
+                plaintext += chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
         else:
             # 非字母字符保持不变
-            plaintext.append(char)
-    return ''.join(plaintext)
+            plaintext += char
+    return plaintext

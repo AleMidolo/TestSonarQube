@@ -9,22 +9,23 @@ def auto_check_conflict(self):
     >>> thermostat.mode
     'heat'
     """
-    # Check if current temperature is less than target temperature
+    # 检查是否存在冲突
+    # 如果当前温度 < 目标温度，应该使用 'heat' 模式
+    # 如果当前温度 > 目标温度，应该使用 'cool' 模式
+    # 如果当前温度 == 目标温度，任何模式都可以
+    
     if self.current_temperature < self.target_temperature:
-        # Need heating, but mode is 'cool' - conflict exists
+        # 需要加热
         if self.mode == 'cool':
+            # 冲突：温度低但模式是制冷
             self.mode = 'heat'
             return False
-        # Mode is already 'heat' - no conflict
-        return True
-    # Check if current temperature is greater than target temperature
     elif self.current_temperature > self.target_temperature:
-        # Need cooling, but mode is 'heat' - conflict exists
+        # 需要制冷
         if self.mode == 'heat':
+            # 冲突：温度高但模式是加热
             self.mode = 'cool'
             return False
-        # Mode is already 'cool' - no conflict
-        return True
-    else:
-        # Current temperature equals target temperature - no conflict
-        return True
+    
+    # 没有冲突
+    return True

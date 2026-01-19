@@ -8,17 +8,9 @@ def precision(self, predicted_labels, true_labels):
     >>> mc.precision([1, 1, 0, 0], [1, 0, 0, 1])
     0.5
     """
-    if len(predicted_labels) != len(true_labels):
-        raise ValueError("predicted_labels and true_labels must have the same length")
+    true_positives = sum(1 for pred, true in zip(predicted_labels, true_labels) if pred == 1 and true == 1)
+    predicted_positives = sum(1 for pred in predicted_labels if pred == 1)
     
-    # Calculate True Positives (TP)
-    true_positives = sum(1 for pred, true in zip(predicted_labels, true_labels) 
-                        if pred == 1 and true == 1)
-    
-    # Calculate all Positive predictions (TP + FP)
-    predicted_positives = sum(predicted_labels)
-    
-    # Precision = TP / (TP + FP)
     if predicted_positives == 0:
         return 0.0
     

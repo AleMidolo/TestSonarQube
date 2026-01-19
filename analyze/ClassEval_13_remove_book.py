@@ -12,10 +12,10 @@ def remove_book(self, title, quantity):
         raise ValueError("数量必须是正整数")
     
     if not hasattr(self, 'inventory'):
-        self.inventory = {}
+        raise AttributeError("库存不存在")
     
     if title not in self.inventory:
-        raise ValueError(f"书籍 '{title}' 不存在于库存中")
+        raise KeyError(f"书籍 '{title}' 不在库存中")
     
     if self.inventory[title] < quantity:
         raise ValueError(f"库存不足：'{title}' 当前库存为 {self.inventory[title]}，无法移除 {quantity} 本")

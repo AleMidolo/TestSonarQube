@@ -7,6 +7,5 @@ def get_host(self):
     "www.baidu.com"
     """
     from urllib.parse import urlparse
-    
     parsed_url = urlparse(self.url)
     return parsed_url.netloc

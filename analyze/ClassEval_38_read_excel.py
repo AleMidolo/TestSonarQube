@@ -6,18 +6,12 @@ def read_excel(self, file_name):
     """
     import openpyxl
     
-    # 加载工作簿
     workbook = openpyxl.load_workbook(file_name)
-    
-    # 获取活动工作表
     sheet = workbook.active
     
-    # 读取所有数据
     data = []
     for row in sheet.iter_rows(values_only=True):
         data.append(list(row))
     
-    # 关闭工作簿
     workbook.close()
-    
     return data

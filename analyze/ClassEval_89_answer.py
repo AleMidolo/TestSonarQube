@@ -9,23 +9,26 @@ def answer(self, expression):
     >>> ret = game.answer(ans)
     True
     """
-    import re
-    
     try:
-        # 提取表达式中的所有数字
-        numbers_in_expr = re.findall(r'\d+', expression)
-        numbers_in_expr = [int(num) for num in numbers_in_expr]
+        # Extract numbers from the expression
+        import re
+        numbers_in_expr = []
+        for char in expression:
+            if char.isdigit():
+                numbers_in_expr.append(int(char))
         
-        # 检查表达式中的数字是否与self.nums匹配（数量和值都要相同）
-        if sorted(numbers_in_expr) != sorted(self.nums):
+        # Sort both lists to compare
+        numbers_in_expr_sorted = sorted(numbers_in_expr)
+        nums_sorted = sorted(self.nums)
+        
+        # Check if the numbers used match the available numbers
+        if numbers_in_expr_sorted != nums_sorted:
             return False
         
-        # 计算表达式的结果
+        # Evaluate the expression
         result = eval(expression)
         
-        # 检查结果是否为24（考虑浮点数精度问题）
+        # Check if result equals 24 (with floating point tolerance)
         return abs(result - 24) < 1e-6
-        
     except:
-        # 如果表达式无效或计算出错，返回False
         return False

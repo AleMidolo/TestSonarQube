@@ -6,6 +6,4 @@ def get_min(self):
     >>> ds2.get_min()
     1
     """
-    if not self.data:
-        return None
     return min(self.data)

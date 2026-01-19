@@ -1,3 +1,5 @@
+import re
+
 def findall(self, pattern, text):
     """
     查找所有匹配的子字符串并返回所有匹配子字符串的列表

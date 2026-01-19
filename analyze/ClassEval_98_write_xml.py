@@ -1,8 +1,22 @@
-def __init__(self, file_name):
+def write_xml(self, file_name):
     """
-    初始化XMLProcessor对象
-    :param file_name: 字符串，XML文件名
+    将XML数据写入指定的文件。
+    :param file_name: 字符串，要写入XML数据的文件名。
+    :return: 布尔值，如果写入操作成功则返回True，否则返回False。
+    >>> xml_processor = XMLProcessor('test.xml')
+    >>> root = xml_processor.read_xml()
+    >>> success = xml_processor.write_xml('output.xml')
+    >>> print(success)
+    True
     """
-    self.file_name = file_name
-    self.tree = None
-    self.root = None
+    try:
+        import xml.etree.ElementTree as ET
+        
+        if not hasattr(self, 'root') or self.root is None:
+            return False
+        
+        tree = ET.ElementTree(self.root)
+        tree.write(file_name, encoding='utf-8', xml_declaration=True)
+        return True
+    except Exception as e:
+        return False

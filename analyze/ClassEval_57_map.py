@@ -13,25 +13,22 @@ def map(data):
     0.3333333333333333, [0.41666666666666663, 0.25]
     """
     def calculate_ap(predictions, total_relevant):
-        """
-        计算单个查询的平均精度(AP)
-        :param predictions: 预测结果列表，1表示相关，0表示不相关
-        :param total_relevant: 真实相关文档的总数
-        :return: 平均精度
-        """
+        """计算单个查询的平均精度(AP)"""
         if total_relevant == 0:
             return 0.0
         
-        ap_sum = 0.0
-        relevant_count = 0
+        ap = 0.0
+        num_correct = 0
         
         for i, pred in enumerate(predictions):
             if pred == 1:
-                relevant_count += 1
-                precision_at_i = relevant_count / (i + 1)
-                ap_sum += precision_at_i
+                num_correct += 1
+                precision_at_i = num_correct / (i + 1)
+                ap += precision_at_i
         
-        ap = ap_sum / total_relevant
+        if total_relevant > 0:
+            ap /= total_relevant
+        
         return ap
     
     # 检查输入是单个元组还是元组列表

@@ -1,3 +1,6 @@
+import json
+import os
+
 def process_json(self, file_path, remove_key):
     """
     读取一个 JSON 文件，并通过移除指定的键来处理数据，并将修改后的数据重新写回文件。
@@ -13,27 +16,27 @@ def process_json(self, file_path, remove_key):
     >>> json.read_json('test.json')
     {'key2': 'value2'}
     """
-    # Check if file exists
+    # 检查文件是否存在
     if not os.path.exists(file_path):
         return 0
-
+    
     try:
-        # Read the JSON file
+        # 读取 JSON 文件
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
-
-        # Check if the key exists in the data
+        
+        # 检查指定的键是否存在
         if remove_key not in data:
             return 0
-
-        # Remove the specified key
+        
+        # 移除指定的键
         del data[remove_key]
-
-        # Write the modified data back to the file
+        
+        # 将修改后的数据写回文件
         with open(file_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
-
+        
         return 1
-
+    
     except (json.JSONDecodeError, IOError, Exception):
         return 0

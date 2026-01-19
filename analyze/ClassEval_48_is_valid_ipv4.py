@@ -12,16 +12,14 @@ def is_valid_ipv4(ip_address):
     if not isinstance(ip_address, str):
         return False
     
-    # 按点分割
     parts = ip_address.split('.')
     
     # IPv4 地址必须有 4 个部分
     if len(parts) != 4:
         return False
     
-    # 检查每个部分
     for part in parts:
-        # 检查是否为空
+        # 检查是否为空字符串
         if not part:
             return False
         
@@ -33,7 +31,7 @@ def is_valid_ipv4(ip_address):
         if not part.isdigit():
             return False
         
-        # 转换为整数并检查范围
+        # 检查数字范围是否在 0-255 之间
         num = int(part)
         if num < 0 or num > 255:
             return False

@@ -20,7 +20,7 @@ def select(table, columns='*', where=None):
     query = f"SELECT {columns_str} FROM {table}"
     
     # Handle WHERE clause
-    if where:
+    if where is not None and len(where) > 0:
         conditions = []
         for key, value in where.items():
             conditions.append(f"{key}='{value}'")

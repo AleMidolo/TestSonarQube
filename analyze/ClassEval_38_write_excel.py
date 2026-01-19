@@ -15,20 +15,19 @@ def write_excel(self, data, file_name):
     >>> data = processor.write_excel(new_data, 'test_data.xlsx')
     """
     try:
+        import openpyxl
+        
         # 创建一个新的工作簿
-        workbook = Workbook()
-        # 获取活动工作表
+        workbook = openpyxl.Workbook()
         sheet = workbook.active
-
-        # 遍历数据并写入工作表
+        
+        # 将数据写入工作表
         for row_data in data:
             sheet.append(row_data)
-
+        
         # 保存工作簿到指定文件
         workbook.save(file_name)
-
-        # 返回1表示写入成功
+        
         return 1
     except Exception as e:
-        # 如果发生任何异常，返回0表示写入失败
         return 0

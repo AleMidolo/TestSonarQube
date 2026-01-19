@@ -11,6 +11,6 @@ def read_file_as_json(self):
     >>> type(textFileProcessor.read_file_as_json())
     <class 'dict'>
     """
-    with open(self.file_path, 'r', encoding='utf-8') as file:
-        data = json.load(file)
+    with open(self.file_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
     return data

@@ -1,3 +1,5 @@
+import re
+
 def extract_email(self, text):
     """
     从文本中提取所有电子邮件地址

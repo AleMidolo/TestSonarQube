@@ -1,7 +1,7 @@
 def check_balanced_brackets(self):
     """
     检查表达式是否有平衡的括号。
-    :return: 如果表达式有平衡的括号则返回 True，否则返回 False。
+    :return: 如果表达式有平衡的括号则返回 True,否则返回 False。
     >>> b = BalancedBrackets("a(b)c")
     >>> b.check_balanced_brackets()
     True

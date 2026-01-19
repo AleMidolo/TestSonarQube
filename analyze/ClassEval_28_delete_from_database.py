@@ -5,16 +5,8 @@ def delete_from_database(self, table_name, name):
     :param name: str，要匹配以进行删除的名称。
     >>> db.delete_from_database('user', 'John')
     """
-    import sqlite3
-    
-    if not hasattr(self, 'connection') or self.connection is None:
-        raise Exception("Database connection not established")
-    
     cursor = self.connection.cursor()
-    
-    # 使用参数化查询防止SQL注入
     query = f"DELETE FROM {table_name} WHERE name = ?"
     cursor.execute(query, (name,))
-    
     self.connection.commit()
     cursor.close()

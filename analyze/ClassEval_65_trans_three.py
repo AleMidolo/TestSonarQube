@@ -15,10 +15,11 @@ def trans_three(self, s):
     # Remove leading zeros and pad to ensure we can process
     s = s.lstrip('0') or '0'
     
+    # If the number is 0, return empty string (based on typical usage)
     if s == '0':
         return ""
     
-    # Pad to 3 digits for easier processing
+    # Pad with leading zeros to make it 3 digits
     s = s.zfill(3)
     
     result = []
@@ -29,18 +30,19 @@ def trans_three(self, s):
         result.append("HUNDRED")
     
     # Tens and ones place
-    tens_ones = int(s[1:])
-    
-    if tens_ones > 0:
-        if result:  # If we have hundreds, add "AND"
+    if s[1] == '1':  # Teens (10-19)
+        if result:
             result.append("AND")
+        result.append(teens[int(s[2])])
+    else:
+        if s[1] != '0':  # Tens place
+            if result:
+                result.append("AND")
+            result.append(tens[int(s[1])])
         
-        if 10 <= tens_ones <= 19:
-            result.append(teens[tens_ones - 10])
-        else:
-            if s[1] != '0':
-                result.append(tens[int(s[1])])
-            if s[2] != '0':
-                result.append(ones[int(s[2])])
+        if s[2] != '0':  # Ones place
+            if result and s[1] == '0':  # Only add AND if we have hundreds but no tens
+                result.append("AND")
+            result.append(ones[int(s[2])])
     
     return " ".join(result)

@@ -10,58 +10,48 @@ def parse_arguments(self, command_string):
     >>> parser.arguments
     {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
     """
-    # Initialize arguments dictionary if not exists
-    if not hasattr(self, 'arguments'):
-        self.arguments = {}
+    # 初始化参数字典
+    self.arguments = {}
     
-    # Split the command string into tokens
+    # 分割命令字符串为tokens
     tokens = command_string.split()
     
-    # Skip the first two tokens (python script.py)
-    if len(tokens) >= 2:
-        tokens = tokens[2:]
-    
+    # 跳过 "python script.py" 部分
     i = 0
+    while i < len(tokens) and not tokens[i].startswith('-'):
+        i += 1
+    
+    # 解析参数
     while i < len(tokens):
         token = tokens[i]
         
-        # Check if token starts with -- or -
-        if token.startswith('--') or token.startswith('-'):
-            # Remove leading dashes
-            arg_name = token.lstrip('-')
-            
-            # Check if it's in format --arg=value
-            if '=' in arg_name:
-                parts = arg_name.split('=', 1)
-                arg_name = parts[0]
-                value = parts[1]
-                # Convert type if _convert_type method exists
-                if hasattr(self, '_convert_type'):
-                    value = self._convert_type(arg_name, value)
-                self.arguments[arg_name] = value
-                i += 1
-            else:
-                # Check if next token exists and is not an argument
-                if i + 1 < len(tokens) and not tokens[i + 1].startswith('-'):
-                    value = tokens[i + 1]
-                    # Convert type if _convert_type method exists
-                    if hasattr(self, '_convert_type'):
-                        value = self._convert_type(arg_name, value)
-                    self.arguments[arg_name] = value
-                    i += 2
-                else:
-                    # It's a flag/option (boolean)
-                    self.arguments[arg_name] = True
-                    i += 1
-        else:
+        # 移除前导的 - 或 --
+        arg_name = token.lstrip('-')
+        
+        # 检查是否是 --arg=value 格式
+        if '=' in arg_name:
+            parts = arg_name.split('=', 1)
+            arg_name = parts[0]
+            value = parts[1]
+            self.arguments[arg_name] = self._convert_type(arg_name, value)
             i += 1
+        else:
+            # 检查下一个token是否是值（不以-开头）
+            if i + 1 < len(tokens) and not tokens[i + 1].startswith('-'):
+                value = tokens[i + 1]
+                self.arguments[arg_name] = self._convert_type(arg_name, value)
+                i += 2
+            else:
+                # 这是一个布尔标志
+                self.arguments[arg_name] = True
+                i += 1
     
-    # Check for missing required arguments
+    # 检查必需参数
     if hasattr(self, 'required_args'):
         missing_args = set()
-        for req_arg in self.required_args:
-            if req_arg not in self.arguments:
-                missing_args.add(req_arg)
+        for required_arg in self.required_args:
+            if required_arg not in self.arguments:
+                missing_args.add(required_arg)
         
         if missing_args:
             return (False, missing_args)

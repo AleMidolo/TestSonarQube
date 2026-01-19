@@ -8,27 +8,28 @@ def check_course_conflict(self, new_course):
     >>> classroom.check_course_conflict({'name': 'SE', 'start_time': '9:40', 'end_time': '10:40'})
     False
     """
-    def time_to_minutes(time_str):
-        """将时间字符串转换为分钟数"""
-        hours, minutes = map(int, time_str.split(':'))
-        return hours * 60 + minutes
-    
-    new_start = time_to_minutes(new_course['start_time'])
-    new_end = time_to_minutes(new_course['end_time'])
+    new_start = new_course['start_time']
+    new_end = new_course['end_time']
     
     # 检查是否有courses属性，如果没有则返回True（没有冲突）
     if not hasattr(self, 'courses'):
         return True
     
-    # 检查与现有课程的冲突
+    # 遍历所有已存在的课程
     for course in self.courses:
-        existing_start = time_to_minutes(course['start_time'])
-        existing_end = time_to_minutes(course['end_time'])
+        existing_start = course['start_time']
+        existing_end = course['end_time']
         
-        # 检查时间冲突（包括边界时间相同的情况）
-        # 如果新课程的开始时间在现有课程的时间范围内（包括边界）
-        # 或者新课程的结束时间在现有课程的时间范围内（包括边界）
-        # 或者新课程完全包含现有课程
+        # 检查时间冲突
+        # 两个时间段冲突的条件：
+        # 1. 新课程开始时间在已有课程时间范围内（包括边界）
+        # 2. 新课程结束时间在已有课程时间范围内（包括边界）
+        # 3. 新课程完全包含已有课程
+        # 简化判断：如果两个时间段不重叠，则满足以下条件之一：
+        # - 新课程结束时间 <= 已有课程开始时间
+        # - 新课程开始时间 >= 已有课程结束时间
+        # 因此，如果不满足上述条件，则存在冲突
+        
         if not (new_end <= existing_start or new_start >= existing_end):
             return False
     

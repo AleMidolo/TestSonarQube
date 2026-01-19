@@ -12,11 +12,11 @@ def n_similarity(vector_list_1, vector_list_2):
     >>> VectorUtil.n_similarity(vector_list1, vector_list2)
     0.9897287473881233
     """
-    # 计算两个向量集合的平均向量
+    # Calculate the mean vector for each list
     mean_vector_1 = np.mean(vector_list_1, axis=0)
     mean_vector_2 = np.mean(vector_list_2, axis=0)
     
-    # 计算余弦相似度
+    # Calculate cosine similarity between the two mean vectors
     dot_product = np.dot(mean_vector_1, mean_vector_2)
     norm_1 = np.linalg.norm(mean_vector_1)
     norm_2 = np.linalg.norm(mean_vector_2)

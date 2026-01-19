@@ -27,13 +27,8 @@ def apply_operator(self, operand_stack, operator_stack):
         result = left_operand * right_operand
     elif operator == '/':
         result = left_operand / right_operand
-    elif operator == '//':
-        result = left_operand // right_operand
-    elif operator == '%':
-        result = left_operand % right_operand
-    elif operator == '**':
-        result = left_operand ** right_operand
     else:
+        # 如果遇到未知操作符，可以选择抛出异常或返回原栈
         result = 0
     
     # 将结果压入操作数栈

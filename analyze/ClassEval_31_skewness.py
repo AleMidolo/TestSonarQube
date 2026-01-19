@@ -9,21 +9,13 @@ def skewness(data):
 
     """
     n = len(data)
-    if n < 3:
-        return 0.0
-    
-    # Calculate mean
     mean = sum(data) / n
     
-    # Calculate standard deviation
+    # Calculate the standard deviation
     variance = sum((x - mean) ** 2 for x in data) / n
     std_dev = variance ** 0.5
     
-    if std_dev == 0:
-        return 0.0
+    # Calculate skewness using the formula: E[((X - μ) / σ)^3]
+    skewness_value = sum(((x - mean) / std_dev) ** 3 for x in data) / n
     
-    # Calculate skewness using the formula:
-    # skewness = (1/n) * Σ((x - mean) / std_dev)^3
-    skew = sum(((x - mean) / std_dev) ** 3 for x in data) / n
-    
-    return skew
+    return skewness_value

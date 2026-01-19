@@ -10,13 +10,8 @@ def extract_text_from_pdfs(self):
     
     for reader in self.readers:
         text = ""
-        # 遍历 PDF 的每一页
         for page in reader.pages:
-            # 提取页面文本
-            page_text = page.extract_text()
-            if page_text:
-                text += page_text
-        
+            text += page.extract_text()
         pdf_texts.append(text)
     
     return pdf_texts

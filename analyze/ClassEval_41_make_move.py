@@ -11,18 +11,18 @@ def make_move(self, row, col):
     >>> gomokuGame.make_move(5, 5)
     False
     """
-    # Check if the position is within bounds
+    # 检查行和列是否在有效范围内
     if row < 0 or row >= len(self.board) or col < 0 or col >= len(self.board[0]):
         return False
     
-    # Check if the position is already occupied
-    if self.board[row][col] != ' ':
+    # 检查该位置是否已经被占用
+    if self.board[row][col] is not None and self.board[row][col] != '':
         return False
     
-    # Place the current player's symbol on the board
+    # 放置当前玩家的符号
     self.board[row][col] = self.current_player
     
-    # Switch to the other player
+    # 切换玩家
     if self.current_player == 'X':
         self.current_player = 'O'
     else:

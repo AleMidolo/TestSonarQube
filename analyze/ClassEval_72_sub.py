@@ -1,3 +1,5 @@
+import re
+
 def sub(self, pattern, replacement, text):
     """
     用指定的字符串替换正则表达式匹配的子字符串

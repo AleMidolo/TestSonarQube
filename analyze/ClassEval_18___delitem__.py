@@ -13,10 +13,3 @@ def __delitem__(self, key):
     camel_key = self._to_camel_case(key)
     # Delete the item from the internal dictionary
     del self._data[camel_key]
-
-def _to_camel_case(self, snake_str):
-    """
-    Convert snake_case string to camelCase
-    """
-    components = snake_str.split('_')
-    return components[0] + ''.join(x.title() for x in components[1:])

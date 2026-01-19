@@ -7,10 +7,17 @@ def level_up(self):
     >>> player_1.level_up()
     (2, 120, 15, 8)
     """
+    # 升级，但不超过最大等级100
     if self.level < 100:
         self.level += 1
+    
+    # 重置经验值为0
     self.experience = 0
+    
+    # 增加属性
     self.health += 20
     self.attack += 5
     self.defense += 5
+    
+    # 返回升级后的属性
     return (self.level, self.health, self.attack, self.defense)

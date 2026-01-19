@@ -26,5 +26,6 @@ def insert_into_database(self, table_name, data):
         values_list.append(values)
     
     # 执行批量插入
-    self.cursor.executemany(sql, values_list)
+    cursor = self.connection.cursor()
+    cursor.executemany(sql, values_list)
     self.connection.commit()

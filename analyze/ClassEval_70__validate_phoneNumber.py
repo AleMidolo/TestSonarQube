@@ -4,14 +4,6 @@ def _validate_phoneNumber(self, phoneNumber: str) -> str:
     :param phoneNumber: str，要验证的电话号码
     :return: str，验证后的电话号码，如果无效则返回 None
     """
-    if not phoneNumber or not isinstance(phoneNumber, str):
+    if not phoneNumber or len(phoneNumber) != 11 or not phoneNumber.isdigit():
         return None
-    
-    # 去除空格
-    phoneNumber = phoneNumber.strip()
-    
-    # 检查是否为11位数字
-    if len(phoneNumber) == 11 and phoneNumber.isdigit():
-        return phoneNumber
-    
-    return None
+    return phoneNumber

@@ -1,5 +1,3 @@
-import datetime
-
 def get_jwt_user(self, request):
     """
     从请求中的JWT令牌获取用户信息。
@@ -10,30 +8,28 @@ def get_jwt_user(self, request):
     {'user': {'name': 'user1'}
 
     """
-    try:
-        # 从请求中获取headers
-        headers = request.get('headers', {})
+    import datetime
+    
+    if not request or 'headers' not in request:
+        return None
+    
+    headers = request.get('headers', {})
+    authorization = headers.get('Authorization')
+    
+    if not authorization:
+        return None
+    
+    # 如果Authorization是字典类型
+    if isinstance(authorization, dict):
+        jwt_token = authorization.get('jwt')
+        user_info = authorization.get('user')
         
-        # 从headers中获取Authorization
-        authorization = headers.get('Authorization', {})
-        
-        # 检查authorization是否为字典类型
-        if not isinstance(authorization, dict):
-            return None
-        
-        # 获取JWT令牌和用户信息
-        jwt_token = authorization.get('jwt', '')
-        user_info = authorization.get('user', {})
-        
-        # 验证JWT令牌
-        # 根据docstring示例，JWT格式为: username + today's date
-        if user_info and 'name' in user_info:
-            expected_jwt = user_info['name'] + str(datetime.date.today())
+        if jwt_token and user_info:
+            # 验证JWT令牌（根据示例，令牌格式为 username + 今天的日期）
+            username = user_info.get('name', '')
+            expected_token = username + str(datetime.date.today())
             
-            # 如果JWT令牌有效，返回用户信息
-            if jwt_token == expected_jwt:
+            if jwt_token == expected_token:
                 return {'user': user_info}
-        
-        return None
-    except Exception:
-        return None
+    
+    return None

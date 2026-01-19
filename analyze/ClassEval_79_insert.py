@@ -28,7 +28,7 @@ def insert(self, data):
     
     values = ', '.join(formatted_values)
     
-    # Assuming self.table_name exists based on the example
+    # Assuming self has a table_name attribute
     table_name = getattr(self, 'table_name', 'table1')
     
     return f"INSERT INTO {table_name} ({columns}) VALUES ({values});"

@@ -7,17 +7,11 @@ def condition_judge(self):
     -1
 
     """
-    # Calculate BMI: weight (kg) / height (m)^2
     bmi = self.weight / (self.height ** 2)
     
-    # BMI standards:
-    # Underweight: BMI < 18.5
-    # Normal: 18.5 <= BMI < 24
-    # Overweight/Obese: BMI >= 24
-    
     if bmi < 18.5:
-        return -1  # 过瘦
-    elif bmi >= 24:
-        return 1   # 过胖
+        return -1
+    elif bmi >= 25:
+        return 1
     else:
-        return 0   # 正常
+        return 0

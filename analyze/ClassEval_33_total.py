@@ -9,7 +9,4 @@ def total(self):
     329.0
 
     """
-    total_price = 0.0
-    for item in self.cart:
-        total_price += item['quantity'] * item['price']
-    return total_price
+    return sum(item['quantity'] * item['price'] for item in self.cart)

@@ -6,14 +6,6 @@ def recv(self, info):
     >>> server.recv({"addr":88,"content":"abc"})
     abc
     """
-    if not isinstance(info, dict):
-        return False
-    
-    addr = info.get("addr")
-    content = info.get("content")
-    
-    # Check if address is in whitelist
-    if hasattr(self, 'whitelist') and addr in self.whitelist:
-        return content
-    
+    if hasattr(self, 'whitelist') and info.get('addr') in self.whitelist:
+        return info.get('content')
     return False

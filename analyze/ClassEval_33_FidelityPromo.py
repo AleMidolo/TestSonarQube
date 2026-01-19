@@ -13,4 +13,4 @@ def FidelityPromo(order):
     """
     if order.customer['fidelity'] > 1000:
         return order.total() * 0.05
-    return 0.0
+    return 0

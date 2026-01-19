@@ -7,7 +7,7 @@ def factorial(self, a):
     120
     """
     if a < 0:
-        raise ValueError("阶乘不支持负数")
+        raise ValueError("Factorial is not defined for negative numbers")
     if a == 0 or a == 1:
         return 1
     result = 1

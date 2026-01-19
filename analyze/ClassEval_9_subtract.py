@@ -33,7 +33,7 @@ def subtract(num1, num2):
     result = []
     borrow = 0
     
-    # Pad num2 with leading zeros to match length
+    # Pad num2 with leading zeros
     num2 = num2.zfill(len(num1))
     
     # Subtract from right to left
@@ -57,7 +57,7 @@ def subtract(num1, num2):
     # Remove leading zeros
     result_str = ''.join(result).lstrip('0')
     
-    # Handle case where result is zero
+    # Handle case where result is 0
     if not result_str:
         result_str = '0'
     

@@ -9,4 +9,4 @@ def is_full_with_one_more_email(self, size):
     False
 
     """
-    return self.current_size + size > self.capacity
+    return self.current_size + size >= self.capacity

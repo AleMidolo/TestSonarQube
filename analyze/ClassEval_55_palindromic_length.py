@@ -10,14 +10,17 @@ def palindromic_length(self, center, diff, string):
     2
 
     """
-    # Base case: check if indices are within bounds
-    if center - diff < 0 or center + diff >= len(string):
+    # 检查边界条件
+    left = center - diff
+    right = center + diff
+    
+    # 如果超出边界，返回0
+    if left < 0 or right >= len(string):
         return 0
     
-    # Check if characters at center-diff and center+diff are equal
-    if string[center - diff] == string[center + diff]:
-        # If they match, recursively check the next pair and add 2 to the length
-        return 2 + self.palindromic_length(center, diff + 1, string)
-    else:
-        # If they don't match, return 0 (no more palindrome extension)
+    # 如果左右字符不相等，返回0
+    if string[left] != string[right]:
         return 0
+    
+    # 如果字符相等，递归检查下一层，并加上当前这一对字符的贡献
+    return 2 + self.palindromic_length(center, diff + 1, string)

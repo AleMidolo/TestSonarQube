@@ -5,24 +5,20 @@ def add_table(self, data):
     :return: bool，如果表格成功添加则返回True，否则返回False。
     """
     try:
-        # 验证数据是否为空
-        if not data or len(data) == 0:
+        if not data or not isinstance(data, list):
             return False
         
-        # 验证数据格式是否正确（列表的列表）
-        if not isinstance(data, list):
+        # 检查数据是否为有效的二维列表
+        if not all(isinstance(row, list) for row in data):
             return False
         
         # 获取行数和列数
         rows = len(data)
-        cols = len(data[0]) if rows > 0 else 0
+        if rows == 0:
+            return False
         
-        # 验证所有行的列数是否一致
-        for row in data:
-            if not isinstance(row, list) or len(row) != cols:
-                return False
-        
-        if rows == 0 or cols == 0:
+        cols = len(data[0]) if data[0] else 0
+        if cols == 0:
             return False
         
         # 创建表格
@@ -33,9 +29,9 @@ def add_table(self, data):
         for i, row_data in enumerate(data):
             row_cells = table.rows[i].cells
             for j, cell_data in enumerate(row_data):
-                row_cells[j].text = str(cell_data)
+                if j < cols:
+                    row_cells[j].text = str(cell_data) if cell_data is not None else ''
         
         return True
-        
     except Exception as e:
         return False

@@ -9,23 +9,13 @@ def count(n, m=None):
     60
 
     """
-    def factorial(num):
-        if num <= 1:
-            return 1
-        result = 1
-        for i in range(2, num + 1):
-            result *= i
-        return result
+    import math
     
     if m is None or n == m:
-        return factorial(n)
+        return math.factorial(n)
     
     if m > n or m < 0 or n < 0:
         return 0
     
     # 排列公式: P(n, m) = n! / (n - m)!
-    result = 1
-    for i in range(n, n - m, -1):
-        result *= i
-    
-    return result
+    return math.factorial(n) // math.factorial(n - m)

@@ -8,19 +8,10 @@ def recall(self, predicted_labels, true_labels):
     >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])
     0.5
     """
-    if len(predicted_labels) != len(true_labels):
-        raise ValueError("predicted_labels and true_labels must have the same length")
+    true_positives = sum(1 for pred, true in zip(predicted_labels, true_labels) if pred == 1 and true == 1)
+    false_negatives = sum(1 for pred, true in zip(predicted_labels, true_labels) if pred == 0 and true == 1)
     
-    true_positives = 0
-    actual_positives = 0
-    
-    for pred, true in zip(predicted_labels, true_labels):
-        if true == 1:
-            actual_positives += 1
-            if pred == 1:
-                true_positives += 1
-    
-    if actual_positives == 0:
+    if true_positives + false_negatives == 0:
         return 0.0
     
-    return true_positives / actual_positives
+    return true_positives / (true_positives + false_negatives)

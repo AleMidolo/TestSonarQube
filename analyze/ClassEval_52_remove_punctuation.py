@@ -1,5 +1,3 @@
-import string
-
 def remove_punctuation(self, sentence):
     """
     从输入文本中移除标点符号。
@@ -9,4 +7,5 @@ def remove_punctuation(self, sentence):
     >>> lemmatization.remove_punctuation("I am running in a race.")
     'I am running in a race'
     """
+    import string
     return sentence.translate(str.maketrans('', '', string.punctuation))

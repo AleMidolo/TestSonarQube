@@ -11,11 +11,11 @@ def palindromic_string(self):
         return ""
     
     # Transform string to avoid even/odd length issues
-    # Insert '#' between characters: "abc" -> "#a#b#c#"
+    # Insert '#' between characters
     transformed = '#'.join('^{}$'.format(self.s))
     n = len(transformed)
     
-    # Array to store the radius of palindrome at each position
+    # Array to store radius of palindrome at each position
     p = [0] * n
     center = 0  # Center of the rightmost palindrome
     right = 0   # Right boundary of the rightmost palindrome
@@ -27,7 +27,7 @@ def palindromic_string(self):
         # Mirror of i with respect to center
         mirror = 2 * center - i
         
-        # If i is within the right boundary, we can use previously computed values
+        # If i is within right boundary, we can use previously computed values
         if i < right:
             p[i] = min(right - i, p[mirror])
         

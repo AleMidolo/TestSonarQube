@@ -7,42 +7,29 @@ def split_sentences(self, sentences_string):
     >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
     ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
     """
-    if not sentences_string:
-        return []
+    import re
     
+    # 使用正则表达式匹配句子
+    # 匹配以 . 或 ? 结尾且后面跟空格的模式，但排除 Mr. 这种情况
+    # 负向前瞻确保 . 前面不是 Mr
+    # 使用 (?<!Mr)\. 来排除 Mr. 的情况
+    pattern = r'(?<!Mr)[.?](?=\s|$)'
+    
+    # 先找到所有分割点
     sentences = []
-    current_sentence = ""
-    i = 0
+    last_end = 0
     
-    while i < len(sentences_string):
-        current_sentence += sentences_string[i]
-        
-        # 检查是否是句子结束符 (. 或 ?)
-        if sentences_string[i] in '.?':
-            # 检查是否后面有空格（或者是字符串末尾）
-            if i + 1 < len(sentences_string) and sentences_string[i + 1] == ' ':
-                # 检查是否是 Mr. 的情况
-                # Mr. 的特征：. 前面是 Mr
-                if sentences_string[i] == '.':
-                    # 检查当前句子是否以 Mr. 结尾
-                    if len(current_sentence) >= 3 and current_sentence[-3:] == 'Mr.':
-                        i += 1
-                        continue
-                
-                # 这是一个句子的结束
-                sentences.append(current_sentence.strip())
-                current_sentence = ""
-                i += 1  # 跳过空格
-                continue
-            elif i + 1 == len(sentences_string):
-                # 字符串末尾
-                sentences.append(current_sentence.strip())
-                current_sentence = ""
-        
-        i += 1
+    for match in re.finditer(pattern, sentences_string):
+        end_pos = match.end()
+        sentence = sentences_string[last_end:end_pos].strip()
+        if sentence:
+            sentences.append(sentence)
+        last_end = end_pos
     
-    # 如果还有剩余内容
-    if current_sentence.strip():
-        sentences.append(current_sentence.strip())
+    # 处理最后一个句子（如果没有以空格结尾）
+    if last_end < len(sentences_string):
+        last_sentence = sentences_string[last_end:].strip()
+        if last_sentence:
+            sentences.append(last_sentence)
     
     return sentences

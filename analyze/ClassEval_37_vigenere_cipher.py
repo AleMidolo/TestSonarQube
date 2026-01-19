@@ -11,7 +11,7 @@ def vigenere_cipher(self, plaintext):
     if not plaintext:
         return ""
     
-    # Assume self.key is the encryption key
+    # Assume self.key exists as the encryption key
     key = self.key.lower()
     plaintext_lower = plaintext.lower()
     ciphertext = []
@@ -19,7 +19,7 @@ def vigenere_cipher(self, plaintext):
     
     for char in plaintext_lower:
         if char.isalpha():
-            # Get the shift value from the key
+            # Get the shift amount from the key
             shift = ord(key[key_index % len(key)]) - ord('a')
             # Encrypt the character
             encrypted_char = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))

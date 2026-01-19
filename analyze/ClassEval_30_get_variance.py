@@ -6,14 +6,9 @@ def get_variance(self):
     >>> ds2.get_variance()
     1.25
     """
-    if not self.data or len(self.data) == 0:
+    if not self or len(self) == 0:
         return 0.0
     
-    # 计算平均值
-    mean = sum(self.data) / len(self.data)
-    
-    # 计算方差：每个数据点与平均值差的平方和除以数据点个数
-    variance = sum((x - mean) ** 2 for x in self.data) / len(self.data)
-    
-    # 精确到小数点后两位
+    mean = sum(self) / len(self)
+    variance = sum((x - mean) ** 2 for x in self) / len(self)
     return round(variance, 2)

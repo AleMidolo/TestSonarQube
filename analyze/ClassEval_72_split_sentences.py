@@ -7,28 +7,31 @@ def split_sentences(self, text):
     >>> ru.split_sentences("Aaa. Bbbb? Ccc!")
     ['Aaa', 'Bbbb', 'Ccc!']
     """
-    if not text:
-        return []
-
-    # 使用正则表达式按句子结束标点符号分割
-    # 匹配句子结束符号（. ? !）后面跟着空格或字符串结束
-    sentences = re.split(r'([.?!])\s+', text)
-
+    import re
+    
+    # 按句子结束标点符号分割
+    sentences = re.split(r'([.!?]+)', text)
+    
+    # 过滤空字符串并去除空白
     result = []
     i = 0
-
     while i < len(sentences):
-        if sentences[i]:  # 跳过空字符串
-            # 如果这是最后一个非空元素
-            if i == len(sentences) - 1:
-                result.append(sentences[i])
-            # 如果下一个元素是标点符号
-            elif i + 1 < len(sentences) and sentences[i + 1] in '.?!':
-                # 对于非最后的句子，只保留文本部分，不加标点
-                result.append(sentences[i])
-                i += 1  # 跳过标点符号
+        sentence = sentences[i].strip()
+        if sentence:
+            # 如果是最后一个非空句子，保留标点
+            if i + 1 < len(sentences) and sentences[i + 1].strip() in ['.', '!', '?', '..', '!!', '??']:
+                # 对于非最后的句子，不添加标点
+                if i + 2 < len(sentences) and any(sentences[j].strip() for j in range(i + 2, len(sentences))):
+                    result.append(sentence)
+                    i += 2
+                else:
+                    # 这是最后一个句子，保留标点
+                    result.append(sentence + sentences[i + 1].strip())
+                    i += 2
             else:
-                result.append(sentences[i])
-        i += 1
-
+                result.append(sentence)
+                i += 1
+        else:
+            i += 1
+    
     return result

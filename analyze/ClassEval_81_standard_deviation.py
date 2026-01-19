@@ -9,9 +9,6 @@ def standard_deviation(data):
     1.0
 
     """
-    if not data:
-        return 0.0
-    
     n = len(data)
     mean = sum(data) / n
     variance = sum((x - mean) ** 2 for x in data) / n

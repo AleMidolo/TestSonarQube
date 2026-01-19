@@ -22,7 +22,7 @@ def get_gpa(self, name):
     if not hasattr(student, 'courses') or not student.courses:
         return None
     
-    # Calculate average of all course scores
+    # Calculate average score
     total_score = sum(student.courses.values())
     num_courses = len(student.courses)
     

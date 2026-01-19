@@ -1,4 +1,14 @@
-def __init__(self, customer, cart, promotion):
-    self.customer = customer
-    self.cart = cart
-    self.promotion = promotion
+def due(self):
+    """
+    计算应用折扣后的最终支付金额。
+    :return: float，最终支付金额
+    >>> customer = {'name': 'John Doe', 'fidelity': 1200}
+    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]
+    >>> ds = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)
+    >>> ds.due()
+    312.55
+
+    """
+    total = sum(item['quantity'] * item['price'] for item in self.cart)
+    discount = self.promotion(self)
+    return total - discount

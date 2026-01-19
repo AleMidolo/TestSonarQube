@@ -16,22 +16,37 @@ def extract_code_from_html_text(self, html_text):
     >>>    </html>)
     ["print('Hello, world!')", 'for i in range(5):\n                print(i)']
     """
-    soup = BeautifulSoup(html_text, 'html.parser')
-    code_list = []
-
-    # 查找所有的 <pre> 标签
-    pre_tags = soup.find_all('pre')
-
-    for pre_tag in pre_tags:
-        # 检查 <pre> 标签内是否有 <code> 标签
-        code_tag = pre_tag.find('code')
-        if code_tag:
-            # 如果有 <code> 标签，提取其文本内容
-            code_text = code_tag.get_text()
-        else:
-            # 如果没有 <code> 标签，直接提取 <pre> 标签的文本内容
-            code_text = pre_tag.get_text()
-
-        code_list.append(code_text)
-
-    return code_list
+    from html.parser import HTMLParser
+    
+    class CodeExtractor(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.code_blocks = []
+            self.current_code = []
+            self.in_pre = False
+            self.in_code = False
+        
+        def handle_starttag(self, tag, attrs):
+            if tag == 'pre':
+                self.in_pre = True
+                self.current_code = []
+            elif tag == 'code' and self.in_pre:
+                self.in_code = True
+        
+        def handle_endtag(self, tag):
+            if tag == 'pre':
+                if self.current_code:
+                    code_text = ''.join(self.current_code)
+                    self.code_blocks.append(code_text)
+                self.in_pre = False
+                self.current_code = []
+            elif tag == 'code':
+                self.in_code = False
+        
+        def handle_data(self, data):
+            if self.in_pre:
+                self.current_code.append(data)
+    
+    parser = CodeExtractor()
+    parser.feed(html_text)
+    return parser.code_blocks

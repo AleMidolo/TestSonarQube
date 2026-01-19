@@ -13,17 +13,17 @@ def is_valid_move(self, pos1, pos2):
     if pos1 == pos2:
         return False
     
-    # 检查两个位置是否都有图标（不为空）
+    # 检查两个位置的图标是否相同
     x1, y1 = pos1
     x2, y2 = pos2
-    if self.board[y1][x1] is None or self.board[y2][x2] is None:
-        return False
-    
-    # 检查两个位置的图标是否相同
     if self.board[y1][x1] != self.board[y2][x2]:
         return False
     
-    # 检查是否有有效路径（最多两个转角）
+    # 检查两个位置的图标是否都不为空
+    if self.board[y1][x1] is None or self.board[y2][x2] is None:
+        return False
+    
+    # 检查是否存在有效路径
     return self._has_valid_path(pos1, pos2)
 
 def _is_in_bounds(self, pos):
@@ -32,23 +32,23 @@ def _is_in_bounds(self, pos):
     return 0 <= y < len(self.board) and 0 <= x < len(self.board[0])
 
 def _has_valid_path(self, pos1, pos2):
-    """检查两个位置之间是否有有效路径（0个、1个或2个转角）"""
-    # 0个转角：直线连接
-    if self._has_straight_path(pos1, pos2):
+    """检查两个位置之间是否有有效路径（最多转折2次）"""
+    # 尝试0次转折（直线连接）
+    if self._can_connect_straight(pos1, pos2):
         return True
     
-    # 1个转角：L形路径
-    if self._has_one_turn_path(pos1, pos2):
+    # 尝试1次转折
+    if self._can_connect_one_turn(pos1, pos2):
         return True
     
-    # 2个转角：Z形路径
-    if self._has_two_turn_path(pos1, pos2):
+    # 尝试2次转折
+    if self._can_connect_two_turns(pos1, pos2):
         return True
     
     return False
 
-def _has_straight_path(self, pos1, pos2):
-    """检查是否有直线路径"""
+def _can_connect_straight(self, pos1, pos2):
+    """检查是否可以直线连接"""
     x1, y1 = pos1
     x2, y2 = pos2
     
@@ -70,55 +70,65 @@ def _has_straight_path(self, pos1, pos2):
     
     return False
 
-def _has_one_turn_path(self, pos1, pos2):
-    """检查是否有一个转角的路径"""
+def _can_connect_one_turn(self, pos1, pos2):
+    """检查是否可以通过一次转折连接"""
     x1, y1 = pos1
     x2, y2 = pos2
     
-    # 转角点1: (x1, y2)
+    # 尝试转折点 (x1, y2)
     corner1 = (x1, y2)
-    if self._is_empty_or_endpoint(corner1, pos1, pos2):
-        if self._has_straight_path(pos1, corner1) and self._has_straight_path(corner1, pos2):
-            return True
+    if (corner1 != pos1 and corner1 != pos2 and 
+        (self.board[y2][x1] is None or corner1 == pos2) and
+        self._can_connect_straight(pos1, corner1) and 
+        self._can_connect_straight(corner1, pos2)):
+        return True
     
-    # 转角点2: (x2, y1)
+    # 尝试转折点 (x2, y1)
     corner2 = (x2, y1)
-    if self._is_empty_or_endpoint(corner2, pos1, pos2):
-        if self._has_straight_path(pos1, corner2) and self._has_straight_path(corner2, pos2):
-            return True
+    if (corner2 != pos1 and corner2 != pos2 and
+        (self.board[y1][x2] is None or corner2 == pos2) and
+        self._can_connect_straight(pos1, corner2) and 
+        self._can_connect_straight(corner2, pos2)):
+        return True
     
     return False
 
-def _has_two_turn_path(self, pos1, pos2):
-    """检查是否有两个转角的路径"""
+def _can_connect_two_turns(self, pos1, pos2):
+    """检查是否可以通过两次转折连接"""
     x1, y1 = pos1
     x2, y2 = pos2
     
-    # 尝试水平方向的中间线
+    # 尝试水平方向延伸
     for x in range(len(self.board[0])):
+        if x == x1:
+            continue
         mid1 = (x, y1)
         mid2 = (x, y2)
-        if self._is_empty_or_endpoint(mid1, pos1, pos2) and self._is_empty_or_endpoint(mid2, pos1, pos2):
-            if (self._has_straight_path(pos1, mid1) and 
-                self._has_straight_path(mid1, mid2) and 
-                self._has_straight_path(mid2, pos2)):
-                return True
+        if (self._is_valid_intermediate(mid1, pos1, pos2) and
+            self._is_valid_intermediate(mid2, pos1, pos2) and
+            self._can_connect_straight(pos1, mid1) and
+            self._can_connect_straight(mid1, mid2) and
+            self._can_connect_straight(mid2, pos2)):
+            return True
     
-    # 尝试垂直方向的中间线
+    # 尝试垂直方向延伸
     for y in range(len(self.board)):
+        if y == y1:
+            continue
         mid1 = (x1, y)
         mid2 = (x2, y)
-        if self._is_empty_or_endpoint(mid1, pos1, pos2) and self._is_empty_or_endpoint(mid2, pos1, pos2):
-            if (self._has_straight_path(pos1, mid1) and 
-                self._has_straight_path(mid1, mid2) and 
-                self._has_straight_path(mid2, pos2)):
-                return True
+        if (self._is_valid_intermediate(mid1, pos1, pos2) and
+            self._is_valid_intermediate(mid2, pos1, pos2) and
+            self._can_connect_straight(pos1, mid1) and
+            self._can_connect_straight(mid1, mid2) and
+            self._can_connect_straight(mid2, pos2)):
+            return True
     
     return False
 
-def _is_empty_or_endpoint(self, pos, pos1, pos2):
-    """检查位置是否为空或是端点之一"""
+def _is_valid_intermediate(self, pos, pos1, pos2):
+    """检查中间点是否有效"""
     if pos == pos1 or pos == pos2:
         return True
     x, y = pos
-    return self.board[y][x] is None
+    return self._is_in_bounds(pos) and self.board[y][x] is None

@@ -8,24 +8,22 @@ def correlation_coefficient(data1, data2):
     0.9999999999999998
 
     """
-    if len(data1) != len(data2) or len(data1) == 0:
-        return 0
-    
     n = len(data1)
     
     # 计算均值
     mean1 = sum(data1) / n
     mean2 = sum(data2) / n
     
-    # 计算协方差的分子
+    # 计算协方差的分子部分
     numerator = sum((data1[i] - mean1) * (data2[i] - mean2) for i in range(n))
     
-    # 计算标准差的分母
+    # 计算标准差的分母部分
     sum_sq1 = sum((x - mean1) ** 2 for x in data1)
     sum_sq2 = sum((x - mean2) ** 2 for x in data2)
     
     denominator = (sum_sq1 * sum_sq2) ** 0.5
     
+    # 计算相关系数
     if denominator == 0:
         return 0
     

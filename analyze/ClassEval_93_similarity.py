@@ -11,15 +11,15 @@ def similarity(vector_1, vector_2):
     >>> VectorUtil.similarity(vector_1, vector_2)
     0.7071067811865475
     """
-    # 计算向量的点积
+    # Calculate dot product
     dot_product = np.dot(vector_1, vector_2)
     
-    # 计算向量的范数（模）
+    # Calculate norms (magnitudes) of both vectors
     norm_1 = np.linalg.norm(vector_1)
     norm_2 = np.linalg.norm(vector_2)
     
-    # 计算余弦相似度
-    # 避免除以零的情况
+    # Calculate cosine similarity
+    # Handle division by zero case
     if norm_1 == 0 or norm_2 == 0:
         return 0.0
     

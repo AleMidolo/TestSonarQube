@@ -17,62 +17,63 @@ def move(self, direction):
     if direction not in directions:
         return False
     
+    # 获取方向偏移量
+    dy, dx = directions[direction]
+    
     # 找到玩家当前位置
-    player_row, player_col = None, None
+    player_y, player_x = None, None
     for i in range(len(self.map)):
         for j in range(len(self.map[i])):
             if self.map[i][j] == 'O':
-                player_row, player_col = i, j
+                player_y, player_x = i, j
                 break
-        if player_row is not None:
+        if player_y is not None:
             break
     
     # 计算新位置
-    dr, dc = directions[direction]
-    new_row = player_row + dr
-    new_col = player_col + dc
+    new_y = player_y + dy
+    new_x = player_x + dx
     
-    # 检查新位置是否有效
-    if new_row < 0 or new_row >= len(self.map) or new_col < 0 or new_col >= len(self.map[0]):
+    # 检查新位置是否越界
+    if new_y < 0 or new_y >= len(self.map) or new_x < 0 or new_x >= len(self.map[0]):
         return False
     
-    next_cell = self.map[new_row][new_col]
+    # 检查新位置的内容
+    target = self.map[new_y][new_x]
     
     # 如果是墙，不能移动
-    if next_cell == '#':
+    if target == '#':
         return False
     
     # 如果是空地或目标点，直接移动
-    if next_cell == ' ' or next_cell == 'G':
-        self.map[player_row] = self.map[player_row][:player_col] + ' ' + self.map[player_row][player_col + 1:]
-        self.map[new_row] = self.map[new_row][:new_col] + 'O' + self.map[new_row][new_col + 1:]
-        
-        # 检查是否获胜（玩家到达目标点）
-        if next_cell == 'G':
-            return True
+    if target == ' ' or target == 'G':
+        self.map[player_y] = self.map[player_y][:player_x] + ' ' + self.map[player_y][player_x + 1:]
+        self.map[new_y] = self.map[new_y][:new_x] + 'O' + self.map[new_y][new_x + 1:]
+        return False
     
     # 如果是箱子，尝试推动箱子
-    elif next_cell == 'X':
-        box_new_row = new_row + dr
-        box_new_col = new_col + dc
+    if target == 'X':
+        # 计算箱子的新位置
+        box_new_y = new_y + dy
+        box_new_x = new_x + dx
         
-        # 检查箱子的新位置是否有效
-        if box_new_row < 0 or box_new_row >= len(self.map) or box_new_col < 0 or box_new_col >= len(self.map[0]):
+        # 检查箱子新位置是否越界
+        if box_new_y < 0 or box_new_y >= len(self.map) or box_new_x < 0 or box_new_x >= len(self.map[0]):
             return False
         
-        box_next_cell = self.map[box_new_row][box_new_col]
+        box_target = self.map[box_new_y][box_new_x]
         
         # 箱子只能推到空地或目标点
-        if box_next_cell == ' ' or box_next_cell == 'G':
-            # 移动箱子
-            self.map[box_new_row] = self.map[box_new_row][:box_new_col] + 'X' + self.map[box_new_row][box_new_col + 1:]
-            # 移动玩家到箱子原来的位置
-            self.map[new_row] = self.map[new_row][:new_col] + 'O' + self.map[new_row][new_col + 1:]
-            # 清空玩家原来的位置
-            self.map[player_row] = self.map[player_row][:player_col] + ' ' + self.map[player_row][player_col + 1:]
+        if box_target == ' ' or box_target == 'G':
+            # 移动玩家
+            self.map[player_y] = self.map[player_y][:player_x] + ' ' + self.map[player_y][player_x + 1:]
+            self.map[new_y] = self.map[new_y][:new_x] + 'O' + self.map[new_y][new_x + 1:]
             
-            # 检查是否获胜（箱子到达目标点）
-            if box_next_cell == 'G':
+            # 移动箱子
+            self.map[box_new_y] = self.map[box_new_y][:box_new_x] + 'X' + self.map[box_new_y][box_new_x + 1:]
+            
+            # 检查是否获胜（箱子是否在目标点上）
+            if box_target == 'G':
                 return True
         else:
             return False

@@ -10,7 +10,7 @@ def move(self, state, direction):
     # 创建状态的深拷贝
     new_state = [row[:] for row in state]
     
-    # 找到空白块（0）的位置
+    # 找到空白块(0)的位置
     zero_row, zero_col = 0, 0
     for i in range(3):
         for j in range(3):

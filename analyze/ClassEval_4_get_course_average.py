@@ -7,7 +7,7 @@ def get_course_average(self, course):
     total_score = 0
     count = 0
     
-    for student in self.students.values():
+    for student in self.students:
         if course in student.grades:
             total_score += student.grades[course]
             count += 1

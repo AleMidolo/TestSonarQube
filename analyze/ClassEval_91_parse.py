@@ -12,13 +12,16 @@ def parse(self, path, charset):
         self.segments = []
         return
     
-    # Remove leading and trailing slashes
+    # 移除开头和结尾的斜杠
     path = path.strip('/')
     
-    # If path is empty after stripping, set segments to empty list
+    # 如果路径为空（原始路径只包含斜杠），设置为空列表
     if not path:
         self.segments = []
         return
     
-    # Split by '/' and filter out empty strings
-    self.segments = [segment for segment in path.split('/') if segment]
+    # 按斜杠分割路径
+    segments = path.split('/')
+    
+    # 过滤掉空字符串段
+    self.segments = [segment for segment in segments if segment]

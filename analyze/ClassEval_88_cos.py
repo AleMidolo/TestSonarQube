@@ -7,7 +7,5 @@ def cos(self, x):
     >>> tricalculator.cos(60)
     0.5
     """
-    # 将角度转换为弧度
-    radians = math.radians(x)
-    # 计算余弦值
-    return math.cos(radians)
+    import math
+    return math.cos(math.radians(x))

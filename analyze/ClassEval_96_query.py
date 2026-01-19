@@ -1,4 +1,4 @@
-def query(self, weather_list, tmp_units='celsius'):
+def query(self, weather_list, tmp_units = 'celsius'):
     """
     查询天气系统以获取城市的天气和温度，并根据输入参数转换温度单位。
     :param weather_list: 不同城市天气信息的字典，dict。
@@ -10,7 +10,7 @@ def query(self, weather_list, tmp_units='celsius'):
     (27, 'sunny')
 
     """
-    # Get the city's weather information from the weather_list
+    # Get the city's weather information
     if self.city not in weather_list:
         return None
     

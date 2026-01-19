@@ -17,9 +17,9 @@ def rail_fence_cipher(self, plain_text, rails):
     # Create a list of strings for each rail
     fence = ['' for _ in range(rails)]
     
-    # Direction: 1 for down, -1 for up
+    # Track current rail and direction
     rail = 0
-    direction = 1
+    direction = 1  # 1 for down, -1 for up
     
     # Place each character on the appropriate rail
     for char in plain_text:
@@ -33,7 +33,7 @@ def rail_fence_cipher(self, plain_text, rails):
         
         rail += direction
     
-    # Concatenate all rails to get the cipher text
+    # Concatenate all rails to form the cipher text
     cipher_text = ''.join(fence)
     
     return cipher_text

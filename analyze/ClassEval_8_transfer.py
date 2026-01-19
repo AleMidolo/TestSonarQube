@@ -9,9 +9,6 @@ def transfer(self, other_account, amount):
     >>> account1.transfer(account2, 300)
     account1.balance = 700 account2.balance = 300
     """
-    if amount <= 0:
-        return
-    
     if self.balance >= amount:
         self.balance -= amount
         other_account.balance += amount

@@ -11,4 +11,3 @@ def find_blank(self, state):
         for j in range(len(state[i])):
             if state[i][j] == 0:
                 return (i, j)
-    return None

@@ -8,6 +8,6 @@ def remove_icons(self, pos1, pos2):
     x1, y1 = pos1
     x2, y2 = pos2
     
-    # Remove the icons by replacing them with empty spaces
+    # 将指定位置的图标替换为空格
     self.board[y1][x1] = ' '
     self.board[y2][x2] = ' '

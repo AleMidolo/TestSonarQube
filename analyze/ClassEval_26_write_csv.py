@@ -1,19 +1,18 @@
-import csv
-
 def write_csv(self, data, file_name):
     """
     将数据写入csv文件。
-    :param data: list, 要写入的数据
     :param file_name: str, csv文件的名称
-    :return:int, 如果成功返回1，否则返回0
+    :return:int, 如果成功返回1,否则返回0
     >>> csvProcessor = CSVProcessor()
     >>> csvProcessor.write_csv([['a', 'b', 'c', 'd'], ['1', '2', '3', '4']], 'write_test.csv')
     1
     """
+    import csv
+    
     try:
         with open(file_name, 'w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerows(data)
         return 1
-    except:
+    except Exception:
         return 0

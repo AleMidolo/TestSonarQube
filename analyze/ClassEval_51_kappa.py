@@ -7,18 +7,15 @@ def kappa(testData, k):
     >>> KappaCalculator.kappa([[2, 1, 1], [1, 2, 1], [1, 1, 2]], 3)
     0.25
     """
-    # Convert to list if needed
-    matrix = testData
-    
-    # Calculate total number of observations
-    n = sum(sum(row) for row in matrix)
+    # Calculate the total number of observations
+    n = sum(sum(row) for row in testData)
     
     # Calculate observed agreement (Po)
-    po = sum(matrix[i][i] for i in range(k)) / n
+    po = sum(testData[i][i] for i in range(k)) / n
     
     # Calculate expected agreement (Pe)
-    row_sums = [sum(matrix[i]) for i in range(k)]
-    col_sums = [sum(matrix[i][j] for i in range(k)) for j in range(k)]
+    row_sums = [sum(testData[i]) for i in range(k)]
+    col_sums = [sum(testData[i][j] for i in range(k)) for j in range(k)]
     
     pe = sum(row_sums[i] * col_sums[i] for i in range(k)) / (n * n)
     

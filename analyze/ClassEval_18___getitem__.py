@@ -9,14 +9,9 @@ def __getitem__(self, key):
     'John'
     """
     # Convert snake_case key to camelCase
-    camel_key = self._to_camel_case(key)
-    # Try to get the value using the camelCase key from internal storage
-    return self._data[camel_key]
-
-def _to_camel_case(self, snake_str):
-    """
-    Convert snake_case string to camelCase
-    """
-    components = snake_str.split('_')
-    # Keep the first component as is, capitalize the rest
-    return components[0] + ''.join(x.title() for x in components[1:])
+    def snake_to_camel(snake_str):
+        components = snake_str.split('_')
+        return components[0] + ''.join(x.title() for x in components[1:])
+    
+    camel_key = snake_to_camel(key)
+    return self.__dict__[camel_key]

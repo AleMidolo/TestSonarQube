@@ -13,20 +13,9 @@ def buy_stock(self, stock):
     """
     total_cost = stock["price"] * stock["quantity"]
     
-    # Check if we have enough cash
-    if self.cash < total_cost:
+    if self.cash_balance >= total_cost:
+        self.cash_balance -= total_cost
+        self.portfolio.append(stock)
+        return True
+    else:
         return False
-    
-    # Deduct the cost from cash
-    self.cash -= total_cost
-    
-    # Check if stock already exists in portfolio
-    for existing_stock in self.portfolio:
-        if existing_stock["name"] == stock["name"]:
-            # Update existing stock quantity and average price
-            existing_stock["quantity"] += stock["quantity"]
-            return True
-    
-    # Add new stock to portfolio
-    self.portfolio.append(stock.copy())
-    return True

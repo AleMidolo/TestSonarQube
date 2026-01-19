@@ -13,5 +13,5 @@ def find_element(self, element_name):
     orange
     """
     if hasattr(self, 'root') and self.root is not None:
-        return self.root.findall('.//' + element_name)
+        return self.root.findall(f".//{element_name}")
     return []

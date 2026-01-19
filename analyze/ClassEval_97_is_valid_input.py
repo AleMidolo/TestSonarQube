@@ -7,33 +7,27 @@ def is_valid_input(self, textnum):
     >>> w2n.is_valid_input("thirty-two")
     False
     """
-    # Define valid number words
+    # 定义有效的数字单词集合
     valid_words = {
         'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
         'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
         'seventeen', 'eighteen', 'nineteen', 'twenty', 'thirty', 'forty', 'fifty',
         'sixty', 'seventy', 'eighty', 'ninety', 'hundred', 'thousand', 'million',
-        'billion', 'trillion', 'and', 'point'
+        'billion', 'trillion', 'point', 'and'
     }
     
-    # Convert to lowercase and split by spaces
-    textnum = textnum.lower().strip()
+    # 将输入文本转换为小写并分割成单词
+    textnum = textnum.strip().lower()
     
-    # If empty, return False
+    # 如果输入为空，返回 False
     if not textnum:
         return False
     
-    # Split by spaces to get individual words
-    words = textnum.split()
+    # 替换连字符为空格，然后分割
+    words = textnum.replace('-', ' ').split()
     
-    # Check each word
+    # 检查每个单词是否在有效单词集合中
     for word in words:
-        # Remove any hyphens and check each part
-        # If word contains hyphen, it's invalid based on the doctest
-        if '-' in word:
-            return False
-        
-        # Check if word is in valid words
         if word not in valid_words:
             return False
     

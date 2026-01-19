@@ -1,5 +1,3 @@
-import random
-
 def shuffle(self):
     """
     随机打乱播放列表。
@@ -10,6 +8,8 @@ def shuffle(self):
     True
 
     """
+    import random
+    
     if not self.playlist:
         return False
     

@@ -19,6 +19,6 @@ def update(self, data, condition):
     set_clause = ", ".join(set_clauses)
     
     # Build the complete UPDATE statement
-    sql_statement = f"UPDATE {self.table_name} SET {set_clause} WHERE {condition};"
+    sql_statement = f"UPDATE {self.table} SET {set_clause} WHERE {condition};"
     
     return sql_statement

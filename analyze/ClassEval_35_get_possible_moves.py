@@ -7,31 +7,33 @@ def get_possible_moves(self, state):
     ['上', '左', '右']
     """
     # 找到空格(0)的位置
-    zero_row, zero_col = None, None
+    zero_row, zero_col = 0, 0
     for i in range(3):
         for j in range(3):
             if state[i][j] == 0:
                 zero_row, zero_col = i, j
                 break
-        if zero_row is not None:
-            break
     
     moves = []
     
-    # 检查是否可以向上移动（空格向上移动，即下面的数字向上移动到空格位置）
-    if zero_row < 2:  # 空格不在最底行，可以向上移动
+    # 上：空格向上移动，即下面的数字向上移动到空格位置
+    # 只有当空格不在第一行时才能向上移动
+    if zero_row > 0:
         moves.append('上')
     
-    # 检查是否可以向下移动（空格向下移动，即上面的数字向下移动到空格位置）
-    if zero_row > 0:  # 空格不在最顶行，可以向下移动
+    # 下：空格向下移动，即上面的数字向下移动到空格位置
+    # 只有当空格不在最后一行时才能向下移动
+    if zero_row < 2:
         moves.append('下')
     
-    # 检查是否可以向左移动（空格向左移动，即右边的数字向左移动到空格位置）
-    if zero_col < 2:  # 空格不在最右列，可以向左移动
+    # 左：空格向左移动，即右边的数字向左移动到空格位置
+    # 只有当空格不在第一列时才能向左移动
+    if zero_col > 0:
         moves.append('左')
     
-    # 检查是否可以向右移动（空格向右移动，即左边的数字向右移动到空格位置）
-    if zero_col > 0:  # 空格不在最左列，可以向右移动
+    # 右：空格向右移动，即左边的数字向右移动到空格位置
+    # 只有当空格不在最后一列时才能向右移动
+    if zero_col < 2:
         moves.append('右')
     
     return moves

@@ -9,14 +9,14 @@ def get_path(self):
     from urllib.parse import urlparse
     
     parsed = urlparse(self.url)
+    path = parsed.path
     
-    # 构建路径部分：path + query + fragment
-    path = parsed.path if parsed.path else "/"
-    
+    # 添加查询参数
     if parsed.query:
-        path += "?" + parsed.query
+        path += '?' + parsed.query
     
+    # 添加片段标识符
     if parsed.fragment:
-        path += "#" + parsed.fragment
+        path += '#' + parsed.fragment
     
-    return path
+    return path if path else "/"

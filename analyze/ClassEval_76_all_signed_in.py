@@ -12,7 +12,7 @@ def all_signed_in(self):
         return True
     
     for user in self.users:
-        if user not in self.signed_in_users:
+        if user not in self.sign_in_data or not self.sign_in_data[user]:
             return False
     
     return True

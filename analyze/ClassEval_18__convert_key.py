@@ -8,5 +8,4 @@ def _convert_key(self, key):
     'firstName'
     """
     components = key.split('_')
-    # 第一个组件保持小写,其余组件首字母大写
     return components[0] + ''.join(word.capitalize() for word in components[1:])

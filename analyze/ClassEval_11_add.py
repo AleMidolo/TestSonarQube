@@ -11,8 +11,7 @@ def add(states, stat):
     """
     if not isinstance(states, int) or not isinstance(stat, int):
         raise TypeError("Both states and stat must be integers")
-    
     if states < 0 or stat < 0:
-        raise ValueError("Both states and stat must be non-negative integers")
+        raise ValueError("Both states and stat must be non-negative")
     
     return states | stat

@@ -1,5 +1,3 @@
-import random
-
 def get_my_cards(self):
     """
     获取一个包含四个介于1到9之间的随机数字的列表，代表玩家的牌。
@@ -7,4 +5,5 @@ def get_my_cards(self):
     >>> game = TwentyFourPointGame()
     >>> game.get_my_cards()
     """
+    import random
     return [random.randint(1, 9) for _ in range(4)]

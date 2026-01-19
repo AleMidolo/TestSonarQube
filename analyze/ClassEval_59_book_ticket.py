@@ -17,20 +17,20 @@ def book_ticket(self, name, seats_to_book):
     if name not in self.movies:
         return "Movie not found."
     
-    movie = self.movies[name]
-    seats = movie['seats']
+    # Get the movie's seating arrangement
+    seats = self.movies[name]['seats']
     
-    # Check if all seats are available (value is 0)
+    # First, check if all requested seats are available (value is 0)
     for row, col in seats_to_book:
-        # Check if seat coordinates are valid
+        # Check if indices are valid
         if row < 0 or row >= len(seats) or col < 0 or col >= len(seats[0]):
             return "Booking failed."
         # Check if seat is already booked (not 0)
         if seats[row][col] != 0:
             return "Booking failed."
     
-    # All seats are available, proceed with booking
+    # If all seats are available, book them (set to 1)
     for row, col in seats_to_book:
-        seats[row][col] = 1  # Mark seat as booked
+        seats[row][col] = 1
     
     return "Booking success."

@@ -6,6 +6,4 @@ def get_max(self):
     >>> ds2.get_max()
     4
     """
-    if not self.data:
-        return None
     return max(self.data)

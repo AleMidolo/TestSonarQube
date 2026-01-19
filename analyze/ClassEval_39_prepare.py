@@ -14,15 +14,12 @@ def prepare(self, expression):
     output = []
     operator_stack = []
     
-    # 解析表达式，提取数字和运算符
+    # 移除空格
+    expression = expression.replace(' ', '')
+    
     i = 0
     while i < len(expression):
         char = expression[i]
-        
-        # 跳过空格
-        if char == ' ':
-            i += 1
-            continue
         
         # 如果是数字（包括多位数和小数）
         if char.isdigit() or char == '.':
@@ -42,12 +39,12 @@ def prepare(self, expression):
             while operator_stack and operator_stack[-1] != '(':
                 output.append(operator_stack.pop())
             if operator_stack:
-                operator_stack.pop()  # 弹出左括号
+                operator_stack.pop()  # 移除左括号
         
         # 如果是运算符
         elif char in precedence:
             while (operator_stack and 
-                   operator_stack[-1] != '(' and 
+                   operator_stack[-1] != '(' and
                    operator_stack[-1] in precedence and
                    precedence[operator_stack[-1]] >= precedence[char]):
                 output.append(operator_stack.pop())
@@ -55,9 +52,9 @@ def prepare(self, expression):
         
         i += 1
     
-    # 将剩余的运算符弹出到输出列表
+    # 将剩余的运算符弹出
     while operator_stack:
         output.append(operator_stack.pop())
     
-    # 将结果存储到实例变量
+    # 将结果存储到实例变量中
     self.postfix_stack = output

@@ -1,3 +1,4 @@
+@staticmethod
 def interpolate_2d(x, y, z, x_interp, y_interp):
     """
     二维数据的线性插值
@@ -12,28 +13,65 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
     [3.0, 7.0]
 
     """
-    # Convert z to numpy array and flatten it
-    z_array = np.array(z)
-
-    # Create grid points from x and y
-    points = []
-    values = []
-
-    for i, xi in enumerate(x):
-        for j, yj in enumerate(y):
-            points.append([xi, yj])
-            values.append(z_array[i][j])
-
-    points = np.array(points)
-    values = np.array(values)
-
-    # Create interpolator
-    interpolator = LinearNDInterpolator(points, values)
-
-    # Interpolate at the given points
     result = []
+    
     for xi, yi in zip(x_interp, y_interp):
-        z_val = interpolator(xi, yi)
-        result.append(float(z_val))
-
+        # Find the indices for bilinear interpolation
+        # Find x indices
+        x_idx = None
+        for i in range(len(x) - 1):
+            if x[i] <= xi <= x[i + 1]:
+                x_idx = i
+                break
+        
+        # Find y indices
+        y_idx = None
+        for j in range(len(y) - 1):
+            if y[j] <= yi <= y[j + 1]:
+                y_idx = j
+                break
+        
+        # If point is outside the grid, handle edge cases
+        if x_idx is None:
+            if xi <= x[0]:
+                x_idx = 0
+            else:
+                x_idx = len(x) - 2
+        
+        if y_idx is None:
+            if yi <= y[0]:
+                y_idx = 0
+            else:
+                y_idx = len(y) - 2
+        
+        # Get the four corner points
+        x1, x2 = x[x_idx], x[x_idx + 1]
+        y1, y2 = y[y_idx], y[y_idx + 1]
+        
+        z11 = z[x_idx][y_idx]
+        z12 = z[x_idx][y_idx + 1]
+        z21 = z[x_idx + 1][y_idx]
+        z22 = z[x_idx + 1][y_idx + 1]
+        
+        # Bilinear interpolation
+        # Normalize coordinates
+        if x2 - x1 != 0:
+            tx = (xi - x1) / (x2 - x1)
+        else:
+            tx = 0
+        
+        if y2 - y1 != 0:
+            ty = (yi - y1) / (y2 - y1)
+        else:
+            ty = 0
+        
+        # Interpolate along x for both y values
+        z_y1 = z11 * (1 - tx) + z21 * tx
+        z_y2 = z12 * (1 - tx) + z22 * tx
+        
+        # Interpolate along y
+        z_interp = z_y1 * (1 - ty) + z_y2 * ty
+        
+        result.append(z_interp)
+    
     return result

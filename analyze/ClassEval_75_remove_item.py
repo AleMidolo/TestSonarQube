@@ -10,5 +10,6 @@ def remove_item(self, item, quantity=1):
     """
     if item in self.items:
         self.items[item]["quantity"] -= quantity
+        # 如果数量减到0或以下，从字典中移除该物品
         if self.items[item]["quantity"] <= 0:
             del self.items[item]

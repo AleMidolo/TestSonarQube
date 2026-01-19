@@ -9,15 +9,12 @@ def get_top_student(self):
     >>> system.get_top_student()
     'student 2'
     """
-    if not self.students:
-        return None
-    
     top_student = None
     highest_gpa = -1
     
     for student_name in self.students:
         gpa = self.get_gpa(student_name)
-        if gpa is not None and gpa > highest_gpa:
+        if gpa > highest_gpa:
             highest_gpa = gpa
             top_student = student_name
     

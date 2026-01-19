@@ -8,16 +8,10 @@ def get_page(self, page_number):
     [1]
 
     """
-    if not hasattr(self, 'data') or not hasattr(self, 'page_size'):
-        return []
-    
     if page_number < 1:
         return []
     
     start_index = (page_number - 1) * self.page_size
     end_index = start_index + self.page_size
-    
-    if start_index >= len(self.data):
-        return []
     
     return self.data[start_index:end_index]

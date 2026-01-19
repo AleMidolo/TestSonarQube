@@ -8,6 +8,7 @@ def remove_job(self, job):
     >>> jobMarketplace.remove_job(jobMarketplace.job_listings[0])
     >>> jobMarketplace.job_listings
     []
+
     """
     if job in self.job_listings:
         self.job_listings.remove(job)

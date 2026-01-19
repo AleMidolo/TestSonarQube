@@ -1,34 +1,25 @@
 def format_line_html_text(self, html_text):
     """
-    获取不包含代码的 HTML 文本，并在代码所在的位置添加 -CODE- 标签
+    获取不包含代码的 HTML 文本,并在代码所在的位置添加 -CODE- 标签
     :param html_text:string
     :return:string
     """
     from bs4 import BeautifulSoup
     
-    # Parse the HTML
+    # 解析 HTML
     soup = BeautifulSoup(html_text, 'html.parser')
     
-    # Find all <pre> and <code> tags and replace them with -CODE- placeholder
+    # 找到所有的 <pre> 和 <code> 标签,替换为 -CODE-
     for tag in soup.find_all(['pre', 'code']):
-        # Replace the tag with a special marker
+        # 如果是 pre 标签内的 code,只替换 pre
+        if tag.name == 'code' and tag.parent and tag.parent.name == 'pre':
+            continue
         tag.replace_with('-CODE-')
     
-    # Get the text content
+    # 获取纯文本
     text = soup.get_text()
     
-    # Clean up the text: remove extra whitespace and normalize line breaks
-    lines = []
-    for line in text.split('\n'):
-        stripped = line.strip()
-        if stripped:
-            lines.append(stripped)
+    # 清理多余的空行,保持格式整洁
+    lines = [line.strip() for line in text.split('\n') if line.strip()]
     
-    # Join lines and handle multiple consecutive -CODE- markers
-    result = '\n'.join(lines)
-    
-    # Remove duplicate -CODE- markers that might appear consecutively
-    while '-CODE-\n-CODE-' in result:
-        result = result.replace('-CODE-\n-CODE-', '-CODE-')
-    
-    return result
+    return '\n'.join(lines)

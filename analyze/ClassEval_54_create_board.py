@@ -1,5 +1,3 @@
-import random
-
 def create_board(self):
     """
     创建具有给定大小和图标的游戏棋盘
@@ -14,30 +12,29 @@ def create_board(self):
     rows, cols = self.size[0], self.size[1]
     total_cells = rows * cols
     
-    # 确保总单元格数是偶数（麻将连连看需要成对）
-    if total_cells % 2 != 0:
-        raise ValueError("Board size must have an even number of cells")
-    
-    # 创建图标列表，每个图标出现偶数次
-    icons_list = []
+    # 计算每个图标需要出现的次数（必须是偶数才能配对）
+    num_icons = len(self.icons)
     pairs_needed = total_cells // 2
     
-    # 循环使用图标直到填满棋盘
-    icon_index = 0
-    for _ in range(pairs_needed):
-        icons_list.append(self.icons[icon_index % len(self.icons)])
-        icons_list.append(self.icons[icon_index % len(self.icons)])
-        icon_index += 1
+    # 创建图标列表，确保每个图标出现偶数次
+    tiles = []
+    for i in range(pairs_needed):
+        icon = self.icons[i % num_icons]
+        tiles.append(icon)
+        tiles.append(icon)
     
-    # 打乱图标列表
-    random.shuffle(icons_list)
+    # 如果总格子数是奇数，添加一个额外的图标
+    if total_cells % 2 == 1:
+        tiles.append(self.icons[0])
     
-    # 创建二维棋盘
+    # 创建棋盘并填充
     board = []
+    tile_index = 0
     for i in range(rows):
         row = []
         for j in range(cols):
-            row.append(icons_list[i * cols + j])
+            row.append(tiles[tile_index])
+            tile_index += 1
         board.append(row)
     
     self.board = board

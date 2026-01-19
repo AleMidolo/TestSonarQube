@@ -6,13 +6,14 @@ def convert_to_ascii(self):
     'hello'
 
     """
-    result = []
-    # 将二进制字符串按每8位分组
-    for i in range(0, len(self.data), 8):
-        # 提取8位二进制
-        byte = self.data[i:i+8]
-        # 将二进制转换为整数，再转换为ASCII字符
-        if len(byte) == 8:  # 确保是完整的8位
-            result.append(chr(int(byte, 2)))
+    binary_str = self.data
+    ascii_str = ""
     
-    return ''.join(result)
+    # 将二进制字符串按每8位分组
+    for i in range(0, len(binary_str), 8):
+        # 获取8位二进制
+        byte = binary_str[i:i+8]
+        # 转换为十进制，再转换为ASCII字符
+        ascii_str += chr(int(byte, 2))
+    
+    return ascii_str

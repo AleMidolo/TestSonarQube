@@ -8,15 +8,12 @@ def median(data):
     2.5
 
     """
-    if not data:
-        return None
-    
     sorted_data = sorted(data)
     n = len(sorted_data)
     
     if n % 2 == 0:
         # 偶数个元素，取中间两个数的平均值
-        return (sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2.0
+        return (sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2
     else:
         # 奇数个元素，取中间的数
         return float(sorted_data[n // 2])

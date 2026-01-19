@@ -8,11 +8,18 @@ def get_correlation(self):
     """
     import numpy as np
     
-    # Create indices as x values (0, 1, 2, 3, ...)
-    x = np.arange(len(self.data))
-    y = np.array(self.data)
+    # Assuming self.data is the data attribute
+    data = self.data if hasattr(self, 'data') else []
     
-    # Calculate Pearson correlation coefficient
+    # Create indices as x values (0, 1, 2, 3, ...)
+    n = len(data)
+    x = np.arange(n)
+    y = np.array(data)
+    
+    # Calculate correlation coefficient between indices and values
+    if n < 2:
+        return 1.0
+    
     correlation = np.corrcoef(x, y)[0, 1]
     
-    return correlation
+    return float(correlation)
