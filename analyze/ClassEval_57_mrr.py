@@ -25,24 +25,18 @@ def mrr(data):
             for idx, value in enumerate(sub_list):
                 if value == 1:
                     reciprocal_ranks.append(1 / (idx + 1))
-                    break
-            else:
-                reciprocal_ranks.append(0)
-            mrr_value = np.mean(reciprocal_ranks)
-            return (mrr_value, [mrr_value])
+            mrr = np.mean(reciprocal_ranks) if reciprocal_ranks else 0.0
+            return (mrr, [mrr])
     if type(data) == list:
         separate_result = []
         for sub_list, total_num in data:
             if total_num == 0:
-                mrr_value = 0.0
+                mrr = 0.0
             else:
                 reciprocal_ranks = []
                 for idx, value in enumerate(sub_list):
                     if value == 1:
                         reciprocal_ranks.append(1 / (idx + 1))
-                        break
-                else:
-                    reciprocal_ranks.append(0)
-                mrr_value = np.mean(reciprocal_ranks)
-            separate_result.append(mrr_value)
+                mrr = np.mean(reciprocal_ranks) if reciprocal_ranks else 0.0
+            separate_result.append(mrr)
         return (np.mean(separate_result), separate_result)

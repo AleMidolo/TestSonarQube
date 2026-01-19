@@ -8,6 +8,7 @@ def select_all(self):
 
         """
     result = []
-    for i in range(1, len(self.datas) + 1):
+    n = len(self.datas)
+    for i in range(1, n + 1):
         result.extend(self.select(i))
     return result

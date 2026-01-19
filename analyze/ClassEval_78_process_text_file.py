@@ -3,6 +3,7 @@ def process_text_file(self, sentences_string):
         Dada un texto, devuelve el número de palabras en la oración más larga
         :param sentences_string: cadena, oración larga no dividida
         :return:int, el número de palabras en la oración más larga
+        >>> ss = SplitSentence()
         >>> ss.process_text_file("aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?")
         4
         """

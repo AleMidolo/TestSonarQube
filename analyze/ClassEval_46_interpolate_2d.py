@@ -1,4 +1,3 @@
-@staticmethod
 def interpolate_2d(x, y, z, x_interp, y_interp):
     """ 
     Interpolación lineal de datos bidimensionales
