@@ -14,24 +14,22 @@ def is_valid_ipv4(ip_address):
     
     parts = ip_address.split('.')
     
-    # Must have exactly 4 parts
     if len(parts) != 4:
         return False
     
     for part in parts:
-        # Each part must not be empty
         if not part:
             return False
         
-        # Each part must contain only digits
+        # Check if part contains only digits
         if not part.isdigit():
             return False
         
-        # No leading zeros allowed (except for '0' itself)
+        # Check for leading zeros (except for '0' itself)
         if len(part) > 1 and part[0] == '0':
             return False
         
-        # Each part must be in range 0-255
+        # Convert to integer and check range
         num = int(part)
         if num < 0 or num > 255:
             return False

@@ -7,12 +7,12 @@ def format_string(self, x):
     >>> formatter.format_string("123456")
     "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
     """
-    # Handle edge cases
-    if not x or x == "0":
+    # Handle empty string or zero
+    if not x or int(x) == 0:
         return "ZERO ONLY"
     
     # Remove leading zeros
-    x = x.lstrip("0")
+    x = x.lstrip('0')
     if not x:
         return "ZERO ONLY"
     
@@ -22,61 +22,60 @@ def format_string(self, x):
              "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"]
     tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"]
     
-    def convert_below_thousand(num):
-        """Convert a number below 1000 to words"""
-        if num == 0:
-            return ""
-        elif num < 10:
-            return ones[num]
-        elif num < 20:
-            return teens[num - 10]
-        elif num < 100:
-            result = tens[num // 10]
-            if num % 10 != 0:
-                result += " " + ones[num % 10]
-            return result
-        else:
-            result = ones[num // 100] + " HUNDRED"
-            remainder = num % 100
-            if remainder != 0:
-                result += " AND " + convert_below_thousand(remainder)
-            return result
+    def convert_hundreds(num):
+        """Convert a number less than 1000 to words"""
+        result = []
+        
+        # Hundreds place
+        hundreds_digit = num // 100
+        if hundreds_digit > 0:
+            result.append(ones[hundreds_digit])
+            result.append("HUNDRED")
+        
+        # Tens and ones place
+        remainder = num % 100
+        if remainder > 0:
+            if result:  # Add "AND" if we had hundreds
+                result.append("AND")
+            
+            if remainder < 10:
+                result.append(ones[remainder])
+            elif remainder < 20:
+                result.append(teens[remainder - 10])
+            else:
+                tens_digit = remainder // 10
+                ones_digit = remainder % 10
+                result.append(tens[tens_digit])
+                if ones_digit > 0:
+                    result.append(ones[ones_digit])
+        
+        return " ".join(result)
     
-    # Split number into groups of three from right
-    num_int = int(x)
+    # Convert string to integer
+    num = int(x)
     
-    if num_int < 1000:
-        return convert_below_thousand(num_int) + " ONLY"
-    elif num_int < 1000000:
-        thousands = num_int // 1000
-        remainder = num_int % 1000
-        result = convert_below_thousand(thousands) + " THOUSAND"
-        if remainder != 0:
-            result += " " + convert_below_thousand(remainder)
-        return result + " ONLY"
-    elif num_int < 1000000000:
-        millions = num_int // 1000000
-        remainder = num_int % 1000000
-        result = convert_below_thousand(millions) + " MILLION"
-        if remainder >= 1000:
-            thousands = remainder // 1000
-            result += " " + convert_below_thousand(thousands) + " THOUSAND"
-            remainder = remainder % 1000
-        if remainder != 0:
-            result += " " + convert_below_thousand(remainder)
-        return result + " ONLY"
+    # Break number into groups of thousands
+    if num < 1000:
+        words = convert_hundreds(num)
+    elif num < 1000000:
+        thousands = num // 1000
+        remainder = num % 1000
+        
+        words = convert_hundreds(thousands) + " THOUSAND"
+        if remainder > 0:
+            words += " " + convert_hundreds(remainder)
     else:
-        billions = num_int // 1000000000
-        remainder = num_int % 1000000000
-        result = convert_below_thousand(billions) + " BILLION"
-        if remainder >= 1000000:
-            millions = remainder // 1000000
-            result += " " + convert_below_thousand(millions) + " MILLION"
-            remainder = remainder % 1000000
+        millions = num // 1000000
+        remainder = num % 1000000
+        
+        words = convert_hundreds(millions) + " MILLION"
+        
         if remainder >= 1000:
             thousands = remainder // 1000
-            result += " " + convert_below_thousand(thousands) + " THOUSAND"
+            words += " " + convert_hundreds(thousands) + " THOUSAND"
             remainder = remainder % 1000
-        if remainder != 0:
-            result += " " + convert_below_thousand(remainder)
-        return result + " ONLY"
+        
+        if remainder > 0:
+            words += " " + convert_hundreds(remainder)
+    
+    return words + " ONLY"

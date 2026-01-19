@@ -8,19 +8,21 @@ def process_excel_data(self, N, save_file_name):
     >>> success, output_file = processor.process_excel_data(1, 'test_data.xlsx')
     """
     # Read the Excel file
-    data = self.read_excel()
-    
-    if data is None or len(data) == 0:
-        return (0, save_file_name)
+    self.read_excel(save_file_name)
     
     # Convert the specified column (N) to uppercase
-    # N is 1-indexed, so we need to use N-1 for 0-indexed list
-    for row in data:
-        if len(row) >= N and row[N-1] is not None:
-            # Convert to string and then to uppercase
-            row[N-1] = str(row[N-1]).upper()
+    # N is 1-indexed, so we need to adjust for 0-indexed list
+    if self.data and len(self.data) > 0:
+        for row in self.data:
+            if len(row) >= N and N > 0:
+                # Convert the value at column N to uppercase if it's a string
+                if isinstance(row[N - 1], str):
+                    row[N - 1] = row[N - 1].upper()
     
-    # Write the modified data to the Excel file
-    result = self.write_excel(data, save_file_name)
+    # Generate output filename
+    output_file_name = save_file_name.replace('.xlsx', '_processed.xlsx')
     
-    return (result, save_file_name)
+    # Write the processed data back to Excel
+    result = self.write_excel(output_file_name)
+    
+    return (result, output_file_name)

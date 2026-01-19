@@ -18,6 +18,7 @@ def available_movies(self, start_time, end_time):
     
     available = []
     
+    # Iterate through all movies in the system
     for movie_name, movie_info in self.movies.items():
         movie_start = time_to_minutes(movie_info['start_time'])
         movie_end = time_to_minutes(movie_info['end_time'])

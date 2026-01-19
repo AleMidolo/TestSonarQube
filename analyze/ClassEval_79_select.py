@@ -13,11 +13,11 @@ def select(self, fields=None, condition=None):
     else:
         field_str = ', '.join(fields)
     
-    sql = f'SELECT {field_str} FROM {self.table_name}'
+    sql = f"SELECT {field_str} FROM {self.table_name}"
     
     if condition is not None:
-        sql += f' WHERE {condition}'
+        sql += f" WHERE {condition}"
     
-    sql += ';'
+    sql += ";"
     
     return sql

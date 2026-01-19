@@ -23,4 +23,4 @@ def apply_operator(self, operand_stack, operator_stack):
     
     operand_stack.append(result)
     
-    return (operand_stack, operator_stack)
+    return operand_stack, operator_stack

@@ -13,37 +13,39 @@ def get_available_slots(self, date):
     
     # Define the start and end of the day
     day_start = datetime(date.year, date.month, date.day, 0, 0)
-    day_end = datetime(date.year, date.month, date.day, 23, 59, 59)
-    next_day_start = day_start + timedelta(days=1)
+    day_end = datetime(date.year, date.month, date.day, 0, 0) + timedelta(days=1)
     
-    # Filter events that occur on the given date
+    # Get all events on the given date
     events_on_date = []
     for event in self.events:
         event_start = event['start_time']
         event_end = event['end_time']
         
         # Check if event overlaps with the given date
-        if event_start.date() == date.date() or event_end.date() == date.date():
-            events_on_date.append((event_start, event_end))
+        if event_start.date() == date.date() or event_end.date() == date.date() or \
+           (event_start.date() < date.date() < event_end.date()):
+            events_on_date.append(event)
     
     # Sort events by start time
-    events_on_date.sort(key=lambda x: x[0])
+    events_on_date.sort(key=lambda x: x['start_time'])
     
     # Find available slots
     available_slots = []
     current_time = day_start
     
-    for event_start, event_end in events_on_date:
-        # If there's a gap between current_time and event_start
+    for event in events_on_date:
+        event_start = max(event['start_time'], day_start)
+        event_end = min(event['end_time'], day_end)
+        
+        # If there's a gap before this event
         if current_time < event_start:
             available_slots.append((current_time, event_start))
         
         # Move current_time to the end of this event
-        if event_end > current_time:
-            current_time = event_end
+        current_time = max(current_time, event_end)
     
-    # Check if there's time left at the end of the day
-    if current_time < next_day_start:
-        available_slots.append((current_time, next_day_start))
+    # Check if there's time remaining at the end of the day
+    if current_time < day_end:
+        available_slots.append((current_time, day_end))
     
     return available_slots

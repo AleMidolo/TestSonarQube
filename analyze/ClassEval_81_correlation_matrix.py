@@ -10,32 +10,40 @@ def correlation_matrix(data):
 
     """
     n = len(data)
-    
-    # Calculate means for each row
-    means = []
-    for row in data:
-        means.append(sum(row) / len(row))
-    
-    # Calculate standard deviations for each row
-    std_devs = []
-    for i, row in enumerate(data):
-        variance = sum((x - means[i]) ** 2 for x in row) / len(row)
-        std_devs.append(variance ** 0.5)
+    if n == 0:
+        return []
     
     # Initialize correlation matrix
     corr_matrix = [[0.0 for _ in range(n)] for _ in range(n)]
     
-    # Calculate correlation coefficients
+    # Calculate correlation for each pair of rows
     for i in range(n):
         for j in range(n):
-            if std_devs[i] == 0 or std_devs[j] == 0:
-                # If standard deviation is 0, correlation is 1 (perfect correlation with itself)
+            if i == j:
                 corr_matrix[i][j] = 1.0
             else:
-                # Calculate covariance
-                covariance = sum((data[i][k] - means[i]) * (data[j][k] - means[j]) 
-                               for k in range(len(data[i]))) / len(data[i])
+                # Calculate means
+                mean_i = sum(data[i]) / len(data[i])
+                mean_j = sum(data[j]) / len(data[j])
+                
+                # Calculate numerator (covariance) and denominators (standard deviations)
+                numerator = 0.0
+                sum_sq_i = 0.0
+                sum_sq_j = 0.0
+                
+                for k in range(len(data[i])):
+                    diff_i = data[i][k] - mean_i
+                    diff_j = data[j][k] - mean_j
+                    numerator += diff_i * diff_j
+                    sum_sq_i += diff_i ** 2
+                    sum_sq_j += diff_j ** 2
+                
                 # Calculate correlation coefficient
-                corr_matrix[i][j] = covariance / (std_devs[i] * std_devs[j])
+                denominator = (sum_sq_i ** 0.5) * (sum_sq_j ** 0.5)
+                
+                if denominator == 0:
+                    corr_matrix[i][j] = 0.0
+                else:
+                    corr_matrix[i][j] = numerator / denominator
     
     return corr_matrix

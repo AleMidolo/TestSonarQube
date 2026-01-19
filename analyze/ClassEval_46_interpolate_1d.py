@@ -10,15 +10,15 @@ def interpolate_1d(x, y, x_interp):
     [1.5, 2.5]
 
     """
-    y_interp = []
+    result = []
     
     for xi in x_interp:
         # Handle edge cases
         if xi <= x[0]:
-            y_interp.append(y[0])
+            result.append(y[0])
             continue
         if xi >= x[-1]:
-            y_interp.append(y[-1])
+            result.append(y[-1])
             continue
         
         # Find the two points that bracket xi
@@ -28,7 +28,7 @@ def interpolate_1d(x, y, x_interp):
                 x1, x2 = x[i], x[i + 1]
                 y1, y2 = y[i], y[i + 1]
                 yi = y1 + (y2 - y1) * (xi - x1) / (x2 - x1)
-                y_interp.append(yi)
+                result.append(yi)
                 break
     
-    return y_interp
+    return result

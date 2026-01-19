@@ -8,14 +8,9 @@ def get_cookies(self, reponse):
     {'key1': 'value1', 'key2': 'value2'}
 
     """
-    import json
-    
-    # Extract cookies from the response dictionary
     if 'cookies' in reponse:
         self.cookies = reponse['cookies']
-    else:
-        self.cookies = {}
-    
-    # Save cookies to the cookies_file
-    with open(self.cookies_file, 'w') as f:
-        json.dump(self.cookies, f)
+        # Save cookies to file
+        import json
+        with open(self.cookies_file, 'w') as f:
+            json.dump(self.cookies, f)

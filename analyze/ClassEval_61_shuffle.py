@@ -8,9 +8,10 @@ def shuffle(self):
     True
 
     """
+    import random
+    
     if not self.playlist:
         return False
     
-    import random
     random.shuffle(self.playlist)
     return True

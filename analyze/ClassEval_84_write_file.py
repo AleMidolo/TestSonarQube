@@ -7,5 +7,5 @@ def write_file(self, content):
     >>> textFileProcessor.read_file()
     'Hello world!'
     """
-    with open(self.file_path, 'w') as file:
-        file.write(content)
+    with open(self.file_path, 'w') as f:
+        f.write(content)

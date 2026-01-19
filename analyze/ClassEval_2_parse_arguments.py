@@ -14,8 +14,12 @@ def parse_arguments(self, command_string):
     tokens = command_string.split()
     
     # Skip the first two tokens (python script.py)
-    i = 2
+    tokens = tokens[2:] if len(tokens) > 2 else []
     
+    # Initialize arguments dictionary
+    self.arguments = {}
+    
+    i = 0
     while i < len(tokens):
         token = tokens[i]
         
@@ -24,25 +28,19 @@ def parse_arguments(self, command_string):
             # Remove leading dashes
             arg_name = token.lstrip('-')
             
-            # Check if it's in format --arg=value
+            # Check if argument has = sign (e.g., --arg1=value1)
             if '=' in arg_name:
                 parts = arg_name.split('=', 1)
                 arg_name = parts[0]
                 value = parts[1]
-                # Convert type if _convert_type method exists
-                if hasattr(self, '_convert_type'):
-                    value = self._convert_type(arg_name, value)
-                self.arguments[arg_name] = value
+                self.arguments[arg_name] = self._convert_type(arg_name, value)
                 i += 1
             else:
                 # Check if next token exists and is not an argument
                 if i + 1 < len(tokens) and not tokens[i + 1].startswith('-'):
-                    # It's a key-value pair
+                    # Next token is the value
                     value = tokens[i + 1]
-                    # Convert type if _convert_type method exists
-                    if hasattr(self, '_convert_type'):
-                        value = self._convert_type(arg_name, value)
-                    self.arguments[arg_name] = value
+                    self.arguments[arg_name] = self._convert_type(arg_name, value)
                     i += 2
                 else:
                     # It's a flag/option (boolean)
@@ -52,13 +50,13 @@ def parse_arguments(self, command_string):
             i += 1
     
     # Check for missing required arguments
+    missing_args = set()
     if hasattr(self, 'required_args'):
-        missing_args = set()
         for req_arg in self.required_args:
             if req_arg not in self.arguments:
                 missing_args.add(req_arg)
-        
-        if missing_args:
-            return (False, missing_args)
     
-    return (True, None)
+    if missing_args:
+        return (False, missing_args)
+    else:
+        return (True, None)

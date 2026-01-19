@@ -20,12 +20,14 @@ def get_page_info(self, page_number):
     total_items = len(self.data)
     total_pages = (total_items + self.per_page - 1) // self.per_page if self.per_page > 0 else 0
     
-    # Get the data for the current page
+    # Calculate start and end indices for the current page
     start_index = (page_number - 1) * self.per_page
     end_index = start_index + self.per_page
+    
+    # Get the data for the current page
     page_data = self.data[start_index:end_index]
     
-    # Determine if there are previous/next pages
+    # Determine if there are previous and next pages
     has_previous = page_number > 1
     has_next = page_number < total_pages
     

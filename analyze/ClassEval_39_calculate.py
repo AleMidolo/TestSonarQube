@@ -41,7 +41,7 @@ def calculate(self, expression):
             i += 1
             continue
         
-        # If current character is a digit or decimal point
+        # If current character is a number
         if expression[i].isdigit() or expression[i] == '.':
             num_str = ''
             while i < len(expression) and (expression[i].isdigit() or expression[i] == '.'):

@@ -19,11 +19,11 @@ def process_xml_data(self, file_name):
                 return False
         
         # Process/modify the XML data
-        # Iterate through all elements and modify them (example: add a processed attribute)
-        for elem in self.root.iter():
-            # Example modification: you can customize this based on requirements
-            if elem.text and elem.text.strip():
-                elem.text = elem.text.strip()
+        # Iterate through all elements and modify them as needed
+        for element in self.root.iter():
+            if element.text and element.text.strip():
+                # Example modification: you can customize this based on requirements
+                element.text = element.text.strip()
         
         # Create an ElementTree object and write to file
         tree = ET.ElementTree(self.root)

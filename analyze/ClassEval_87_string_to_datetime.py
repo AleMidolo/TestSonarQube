@@ -44,5 +44,9 @@ def string_to_datetime(self, string):
         
         return datetime(year, month, day, hour, minute, second)
     
-    # Fallback: try to parse as date only
-    return datetime.strptime(string, "%Y-%m-%d")
+    # Fallback to dateutil parser if available
+    try:
+        from dateutil import parser
+        return parser.parse(string)
+    except:
+        raise ValueError(f"Unable to parse datetime string: {string}")

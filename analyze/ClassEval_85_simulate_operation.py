@@ -7,22 +7,19 @@ def simulate_operation(self):
     >>> thermostat.simulate_operation()
     18
     """
-    time = 0
+    # Set the operating mode automatically
     self.auto_set_mode()
     
+    time = 0
+    
+    # Continue adjusting temperature until target is reached
     while self.current_temp != self.target_temp:
-        if self.mode == 'cool':
-            if self.current_temp > self.target_temp:
-                self.current_temp -= 0.5
-            else:
-                break
-        elif self.mode == 'heat':
-            if self.current_temp < self.target_temp:
-                self.current_temp += 0.5
-            else:
-                break
-        else:  # mode == 'idle'
-            break
+        if self.mode == 'heat':
+            # Heating increases temperature
+            self.current_temp += 1
+        elif self.mode == 'cool':
+            # Cooling decreases temperature
+            self.current_temp -= 1
         
         time += 1
     

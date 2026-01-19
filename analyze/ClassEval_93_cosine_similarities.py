@@ -13,8 +13,7 @@ def cosine_similarities(vector_1, vectors_all):
     import numpy as np
     
     # Convert list to numpy array if needed
-    if isinstance(vectors_all, list):
-        vectors_all = np.array(vectors_all)
+    vectors_all = np.array(vectors_all)
     
     # Compute dot products between vector_1 and all vectors
     dot_products = np.dot(vectors_all, vector_1)

@@ -1,3 +1,5 @@
+import csv
+
 def write_csv(self, data, file_name):
     """
     Write data into a csv file.
@@ -8,7 +10,6 @@ def write_csv(self, data, file_name):
     1
     """
     try:
-        import csv
         with open(file_name, 'w', newline='') as file:
             writer = csv.writer(file)
             writer.writerows(data)

@@ -31,10 +31,9 @@ def bad_character_heuristic(self):
         while j >= 0 and pattern[j] == text[s + j]:
             j -= 1
         
-        # If pattern is found at current shift
+        # If pattern is found
         if j < 0:
             results.append(s)
-            # Shift pattern to align with next possible match
             s += 1
         else:
             # Shift pattern based on bad character heuristic

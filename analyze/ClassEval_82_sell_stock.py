@@ -12,25 +12,25 @@ def sell_stock(self, stock):
     []
 
     """
-    name = stock["name"]
-    price = stock["price"]
-    quantity = stock["quantity"]
+    name = stock['name']
+    price = stock['price']
+    quantity = stock['quantity']
     
     # Find the stock in the portfolio
     for portfolio_stock in self.portfolio:
-        if portfolio_stock["name"] == name:
+        if portfolio_stock['name'] == name:
             # Check if we have enough quantity to sell
-            if portfolio_stock["quantity"] < quantity:
+            if portfolio_stock['quantity'] < quantity:
                 return False
             
             # Update cash balance
             self.cash_balance += price * quantity
             
             # Update or remove the stock from portfolio
-            portfolio_stock["quantity"] -= quantity
+            portfolio_stock['quantity'] -= quantity
             
             # Remove the stock if quantity becomes 0
-            if portfolio_stock["quantity"] == 0:
+            if portfolio_stock['quantity'] == 0:
                 self.portfolio.remove(portfolio_stock)
             
             return True

@@ -14,40 +14,42 @@ def process_csv_data(self, N, save_file_name):
     >>> csvProcessor.read_csv('read_test_process.csv')
     (['a', 'b', 'c', 'd'], [['HELLO']])
     """
+    import csv
+    import os
+    
     try:
-        import csv
-        
         # Read the CSV file
-        result = self.read_csv(save_file_name)
-        if result is None:
+        with open(save_file_name, 'r', newline='', encoding='utf-8') as file:
+            reader = csv.reader(file)
+            rows = list(reader)
+        
+        if not rows:
             return 0
         
-        title, data = result
+        # Extract title (header row)
+        title = rows[0]
         
         # Check if N is valid
         if N < 0 or N >= len(title):
             return 0
         
-        # Process data: keep only Nth column and capitalize
-        new_data = []
-        for row in data:
+        # Process data rows - keep only Nth column and capitalize
+        processed_data = []
+        for row in rows[1:]:
             if N < len(row):
-                new_data.append([row[N].upper()])
-            else:
-                return 0
+                processed_data.append([row[N].upper()])
         
-        # Generate new file name with '_process' suffix
-        if save_file_name.endswith('.csv'):
-            new_file_name = save_file_name[:-4] + '_process.csv'
-        else:
-            new_file_name = save_file_name + '_process'
+        # Create new file name with '_process' suffix
+        base_name, ext = os.path.splitext(save_file_name)
+        new_file_name = base_name + '_process' + ext
         
         # Write to new CSV file
-        with open(new_file_name, 'w', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow(title)
-            writer.writerows(new_data)
+        with open(new_file_name, 'w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(title)  # Write original title
+            writer.writerows(processed_data)  # Write processed data
         
         return 1
-    except Exception:
+    
+    except Exception as e:
         return 0

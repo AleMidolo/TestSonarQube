@@ -8,6 +8,6 @@ def read_xml(self):
     <Element 'root' at 0x7f8e3b7eb180>
     """
     import xml.etree.ElementTree as ET
-    tree = ET.parse(self.filename)
+    tree = ET.parse(self.file_path)
     root = tree.getroot()
     return root

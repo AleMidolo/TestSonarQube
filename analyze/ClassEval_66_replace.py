@@ -12,11 +12,11 @@ def replace(self, string):
     
     def replace_entity(match):
         entity = match.group(0)
-        # Check if it's hexadecimal (&#xHHHH; or &#XHHHH;)
+        # Check if it's hexadecimal (&#xHHH; or &#XHHH;)
         if entity[2] in ('x', 'X'):
             code_point = int(entity[3:-1], 16)
         else:
-            # Decimal (&#DDDD;)
+            # Decimal (&#DDD;)
             code_point = int(entity[2:-1], 10)
         
         return chr(code_point)

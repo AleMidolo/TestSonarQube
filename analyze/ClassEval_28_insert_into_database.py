@@ -22,10 +22,9 @@ def insert_into_database(self, table_name, data):
     # Extract values from each dictionary in the same order as columns
     values_list = []
     for row in data:
-        values = [row[col] for col in columns]
-        values_list.append(tuple(values))
+        values = tuple(row[col] for col in columns)
+        values_list.append(values)
     
-    # Execute the insert statement
-    cursor = self.connection.cursor()
-    cursor.executemany(sql, values_list)
+    # Execute the insert statement for all rows
+    self.cursor.executemany(sql, values_list)
     self.connection.commit()
