@@ -10,7 +10,12 @@ def evaluate_expression(self, expression):
         True
         """
     try:
-        result = eval(expression)
-        return result
+        allowed_names = {'abs': abs, 'round': round, 'min': min, 'max': max, 'pow': pow, 'math': math}
+        code = compile(expression, '<string>', 'eval')
+        for name in code.co_names:
+            if name not in allowed_names:
+                raise NameError(f'Use of {name} not allowed')
+        result = eval(expression, {'__builtins__': {}}, allowed_names)
+        return float(result)
     except:
-        return None
+        return float('inf')

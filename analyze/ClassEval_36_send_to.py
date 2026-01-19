@@ -11,7 +11,6 @@ def send_to(self, recv, content, size):
         True
         >>> receiver.inbox
         [{'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10, 'time': '2023-07-13 11:36:40', 'state': 'unread'}]
-
         """
     if recv.is_full_with_one_more_email(size):
         return False

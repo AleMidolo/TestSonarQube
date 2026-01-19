@@ -10,14 +10,14 @@ def parse_arguments(self, command_string):
         >>> parser.arguments
         {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
         """
-    self.arguments = {}
+    self.arguments.clear()
     tokens = command_string.split()
     i = 0
     while i < len(tokens):
         token = tokens[i]
         if token.startswith('--') and '=' in token:
             arg_name = token[2:].split('=')[0]
-            arg_value = token.split('=')[1]
+            arg_value = token.split('=', 1)[1]
             self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
             i += 1
         elif token.startswith('--'):

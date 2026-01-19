@@ -11,5 +11,6 @@ def compute_idf_weight_dict(total_num, number_dict):
         """
     result = {}
     for key, count in number_dict.items():
-        result[key] = np.log((total_num + 1) / (count + 1))
+        weight = np.log((total_num + 1) / (count + 1))
+        result[key] = weight
     return result
