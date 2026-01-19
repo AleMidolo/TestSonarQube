@@ -10,7 +10,7 @@ def insert_student(self, student_data):
     """
     import sqlite3
     
-    conn = sqlite3.connect(self.db_name)
+    conn = sqlite3.connect(self.database)
     cursor = conn.cursor()
     
     cursor.execute('''

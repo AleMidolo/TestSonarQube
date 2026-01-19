@@ -15,24 +15,7 @@ def buy_stock(self, stock):
     
     if self.cash_balance >= total_cost:
         self.cash_balance -= total_cost
-        
-        # 检查投资组合中是否已存在该股票
-        existing_stock = None
-        for s in self.portfolio:
-            if s["name"] == stock["name"]:
-                existing_stock = s
-                break
-        
-        if existing_stock:
-            # 更新现有股票的数量和平均价格
-            total_quantity = existing_stock["quantity"] + stock["quantity"]
-            total_value = existing_stock["price"] * existing_stock["quantity"] + total_cost
-            existing_stock["price"] = total_value / total_quantity
-            existing_stock["quantity"] = total_quantity
-        else:
-            # 添加新股票到投资组合
-            self.portfolio.append(stock.copy())
-        
+        self.portfolio.append(stock)
         return True
     else:
         return False

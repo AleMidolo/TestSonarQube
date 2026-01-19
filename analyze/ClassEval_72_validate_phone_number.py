@@ -18,6 +18,9 @@ def validate_phone_number(self, phone_number):
         r'^\+?1?\s?\d{3}[\s.-]?\d{3}[\s.-]?\d{4}$',  # +1 123-456-7890, 1 123 456 7890, etc.
     ]
     
+    if not phone_number:
+        return False
+    
     for pattern in patterns:
         if re.match(pattern, phone_number):
             return True

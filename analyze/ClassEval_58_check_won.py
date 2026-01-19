@@ -13,9 +13,9 @@ def check_won(self, map):
         for j in range(len(map[i])):
             # 如果玩家地图上还有未揭开的格子（'-'）
             if map[i][j] == '-':
-                # 检查对应位置在雷区地图上是否是地雷
+                # 检查对应的扫雷地图位置是否不是地雷
                 if self.minesweeper_map[i][j] != 'X':
-                    # 如果不是地雷，说明还有非地雷格子未揭开，游戏未赢
+                    # 如果有非地雷的格子未揭开，则游戏未赢
                     return False
     # 所有未揭开的格子都是地雷，玩家赢得游戏
     return True

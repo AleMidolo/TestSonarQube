@@ -8,14 +8,14 @@ def select(self, fields=None, condition=None):
     >>> sql.select(['field1', 'field2'], 'filed3 = value1')
     'SELECT field1, field2 FROM table1 WHERE filed3 = value1;'
     """
-    if fields is None or len(fields) == 0:
+    if fields is None:
         field_str = '*'
     else:
         field_str = ', '.join(fields)
     
     sql = f'SELECT {field_str} FROM {self.table_name}'
     
-    if condition is not None and condition != '':
+    if condition is not None:
         sql += f' WHERE {condition}'
     
     sql += ';'

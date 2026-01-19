@@ -9,10 +9,10 @@ def generate_mine_sweeper_map(self):
     """
     import random
     
-    # 初始化 n*n 的棋盘,全部设为 0
+    # 初始化棋盘,全部设为0
     board = [[0 for _ in range(self.n)] for _ in range(self.n)]
     
-    # 随机放置 k 个地雷
+    # 随机放置地雷
     positions = [(i, j) for i in range(self.n) for j in range(self.n)]
     mine_positions = random.sample(positions, self.k)
     

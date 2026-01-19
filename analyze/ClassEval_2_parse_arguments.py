@@ -10,43 +10,46 @@ def parse_arguments(self, command_string):
     >>> parser.arguments
     {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
     """
-    # 初始化参数字典
-    self.arguments = {}
+    # Initialize arguments dictionary if not exists
+    if not hasattr(self, 'arguments'):
+        self.arguments = {}
     
-    # 分割命令字符串为tokens
+    # Split command string into tokens
     tokens = command_string.split()
     
-    # 跳过 "python script.py" 部分
+    # Skip "python script.py" part
     i = 0
     while i < len(tokens) and not tokens[i].startswith('-'):
         i += 1
     
-    # 解析参数
+    # Parse arguments
     while i < len(tokens):
         token = tokens[i]
         
-        # 移除前导的 - 或 --
+        # Remove leading dashes
         arg_name = token.lstrip('-')
         
-        # 检查是否是 --arg=value 格式
+        # Check if it's in format --arg=value
         if '=' in arg_name:
             parts = arg_name.split('=', 1)
-            arg_name = parts[0]
+            key = parts[0]
             value = parts[1]
-            self.arguments[arg_name] = self._convert_type(arg_name, value)
+            self.arguments[key] = self._convert_type(value)
             i += 1
         else:
-            # 检查下一个token是否是值（不以-开头）
+            # Check if next token exists and is not an argument
             if i + 1 < len(tokens) and not tokens[i + 1].startswith('-'):
+                # It's a key-value pair
+                key = arg_name
                 value = tokens[i + 1]
-                self.arguments[arg_name] = self._convert_type(arg_name, value)
+                self.arguments[key] = self._convert_type(value)
                 i += 2
             else:
-                # 这是一个布尔标志
+                # It's a boolean flag
                 self.arguments[arg_name] = True
                 i += 1
     
-    # 检查必需参数
+    # Check for missing required arguments
     if hasattr(self, 'required_args'):
         missing_args = set()
         for required_arg in self.required_args:

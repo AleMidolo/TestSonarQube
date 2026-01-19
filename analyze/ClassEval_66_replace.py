@@ -1,5 +1,3 @@
-import re
-
 def replace(self, string):
     """
     将输入字符串中的数字字符引用（HTML 实体）替换为相应的 Unicode 字符。
@@ -10,24 +8,25 @@ def replace(self, string):
     'ABC'
 
     """
+    import re
+    
     def replace_entity(match):
         entity = match.group(0)
-        # 处理十六进制格式 &#xHHHH; 或 &#XHHHH;
-        if entity[2] in ('x', 'X'):
-            code_point = int(entity[3:-1], 16)
-        # 处理十进制格式 &#DDDD;
+        # 提取数字部分
+        if entity.startswith('&#x') or entity.startswith('&#X'):
+            # 十六进制格式 &#xHHH; 或 &#XHHH;
+            num_str = entity[3:-1]
+            code_point = int(num_str, 16)
         else:
-            code_point = int(entity[2:-1], 10)
+            # 十进制格式 &#DDD;
+            num_str = entity[2:-1]
+            code_point = int(num_str, 10)
         
-        # 将数字转换为对应的 Unicode 字符
-        try:
-            return chr(code_point)
-        except (ValueError, OverflowError):
-            # 如果代码点无效，返回原始实体
-            return entity
+        return chr(code_point)
     
     # 匹配十进制和十六进制的数字字符引用
     # &#数字; 或 &#x十六进制数字; 或 &#X十六进制数字;
-    pattern = r'&#[xX]?[0-9a-fA-F]+;'
+    pattern = r'&#[xX][0-9a-fA-F]+;|&#\d+;'
+    result = re.sub(pattern, replace_entity, string)
     
-    return re.sub(pattern, replace_entity, string)
+    return result

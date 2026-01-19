@@ -10,13 +10,10 @@ def send(self, info):
         if not isinstance(info, dict):
             return "错误: 参数必须是字典类型"
         
-        if "addr" not in info:
-            return "错误: 缺少地址(addr)字段"
-        
-        if "content" not in info:
-            return "错误: 缺少内容(content)字段"
+        if "addr" not in info or "content" not in info:
+            return "错误: 信息字典必须包含'addr'和'content'键"
         
         self.send_struct = info
-        return None
+        
     except Exception as e:
         return f"错误: {str(e)}"

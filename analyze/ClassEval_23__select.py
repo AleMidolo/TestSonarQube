@@ -13,13 +13,23 @@ def _select(self, dataIndex: int, resultList: List[str], resultIndex: int, resul
     [['A', 'B'], ['A', 'C'], ['A', 'D'], ['B', 'C'], ['B', 'D'], ['C', 'D']]
 
     """
-    # 如果已经选择了足够的元素，将当前组合添加到结果中
+    # 如果已经选择了足够的元素（resultIndex达到resultList的长度）
     if resultIndex == len(resultList):
+        # 将当前组合添加到结果列表中
         result.append(resultList[:])
         return
     
     # 如果数据索引超出范围，返回
     if dataIndex >= len(self.data):
+        return
+    
+    # 计算还需要选择的元素数量
+    remaining = len(resultList) - resultIndex
+    # 计算剩余可用的元素数量
+    available = len(self.data) - dataIndex
+    
+    # 如果剩余可用元素不足，返回
+    if available < remaining:
         return
     
     # 选择当前元素

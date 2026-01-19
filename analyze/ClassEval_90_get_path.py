@@ -11,11 +11,11 @@ def get_path(self):
     parsed = urlparse(self.url)
     path = parsed.path
     
-    # 添加查询参数
+    # Add query string if present
     if parsed.query:
         path += '?' + parsed.query
     
-    # 添加片段标识符
+    # Add fragment if present
     if parsed.fragment:
         path += '#' + parsed.fragment
     

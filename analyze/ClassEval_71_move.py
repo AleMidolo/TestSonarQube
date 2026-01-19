@@ -35,7 +35,7 @@ def move(self, direction):
     new_x = player_x + dx
     
     # 检查新位置是否越界
-    if new_y < 0 or new_y >= len(self.map) or new_x < 0 or new_x >= len(self.map[0]):
+    if new_y < 0 or new_y >= len(self.map) or new_x < 0 or new_x >= len(self.map[new_y]):
         return False
     
     # 检查新位置的内容
@@ -58,9 +58,10 @@ def move(self, direction):
         box_new_x = new_x + dx
         
         # 检查箱子新位置是否越界
-        if box_new_y < 0 or box_new_y >= len(self.map) or box_new_x < 0 or box_new_x >= len(self.map[0]):
+        if box_new_y < 0 or box_new_y >= len(self.map) or box_new_x < 0 or box_new_x >= len(self.map[box_new_y]):
             return False
         
+        # 检查箱子新位置的内容
         box_target = self.map[box_new_y][box_new_x]
         
         # 箱子只能推到空地或目标点

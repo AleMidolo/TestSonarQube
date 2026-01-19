@@ -5,6 +5,8 @@ def create_student_table(self):
     >>> processor = StudentDatabaseProcessor("students.db")
     >>> processor.create_student_table()
     """
+    import sqlite3
+    
     cursor = self.connection.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS students (

@@ -9,13 +9,13 @@ def add(num1, num2):
     '111111111011111111100'
 
     """
-    # 处理空字符串和负号
+    # 处理空字符串和符号
     if not num1:
-        return num2
+        num1 = "0"
     if not num2:
-        return num1
+        num2 = "0"
     
-    # 反转字符串，从低位开始相加
+    # 反转字符串以便从低位开始相加
     num1 = num1[::-1]
     num2 = num2[::-1]
     

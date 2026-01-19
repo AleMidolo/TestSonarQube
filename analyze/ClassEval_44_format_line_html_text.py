@@ -4,22 +4,41 @@ def format_line_html_text(self, html_text):
     :param html_text:string
     :return:string
     """
-    from bs4 import BeautifulSoup
+    from html.parser import HTMLParser
     
-    # 解析 HTML
-    soup = BeautifulSoup(html_text, 'html.parser')
+    class CodeReplacementParser(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.result = []
+            self.in_code_block = False
+            self.code_tags = {'pre', 'code'}
+            self.tag_stack = []
+        
+        def handle_starttag(self, tag, attrs):
+            self.tag_stack.append(tag)
+            if tag in self.code_tags:
+                self.in_code_block = True
+        
+        def handle_endtag(self, tag):
+            if self.tag_stack and self.tag_stack[-1] == tag:
+                self.tag_stack.pop()
+            
+            if tag in self.code_tags:
+                # Check if we're still in a code block
+                self.in_code_block = any(t in self.code_tags for t in self.tag_stack)
+                
+                # Add -CODE- marker when exiting code block
+                if not self.in_code_block:
+                    self.result.append('-CODE-')
+        
+        def handle_data(self, data):
+            if not self.in_code_block:
+                # Only add non-empty text
+                stripped = data.strip()
+                if stripped:
+                    self.result.append(stripped)
     
-    # 找到所有的 <pre> 和 <code> 标签,替换为 -CODE-
-    for tag in soup.find_all(['pre', 'code']):
-        # 如果是 pre 标签内的 code,只替换 pre
-        if tag.name == 'code' and tag.parent and tag.parent.name == 'pre':
-            continue
-        tag.replace_with('-CODE-')
+    parser = CodeReplacementParser()
+    parser.feed(html_text)
     
-    # 获取纯文本
-    text = soup.get_text()
-    
-    # 清理多余的空行,保持格式整洁
-    lines = [line.strip() for line in text.split('\n') if line.strip()]
-    
-    return '\n'.join(lines)
+    return '\n'.join(parser.result)

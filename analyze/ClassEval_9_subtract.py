@@ -29,15 +29,16 @@ def subtract(num1, num2):
         num1, num2 = num2, num1
         is_negative = True
     
-    # Perform subtraction
+    # Perform subtraction from right to left
     result = []
     borrow = 0
     
-    # Pad num2 with leading zeros
-    num2 = num2.zfill(len(num1))
+    # Pad the shorter number with zeros on the left
+    max_len = max(len(num1), len(num2))
+    num1 = num1.zfill(max_len)
+    num2 = num2.zfill(max_len)
     
-    # Subtract from right to left
-    for i in range(len(num1) - 1, -1, -1):
+    for i in range(max_len - 1, -1, -1):
         digit1 = int(num1[i])
         digit2 = int(num2[i])
         
@@ -51,13 +52,10 @@ def subtract(num1, num2):
         
         result.append(str(diff))
     
-    # Reverse the result
-    result.reverse()
+    # Reverse the result and remove leading zeros
+    result_str = ''.join(reversed(result)).lstrip('0')
     
-    # Remove leading zeros
-    result_str = ''.join(result).lstrip('0')
-    
-    # Handle case where result is 0
+    # Handle the case where result is zero
     if not result_str:
         result_str = '0'
     

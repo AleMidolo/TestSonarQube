@@ -12,16 +12,12 @@ def process_xml_data(self, file_name):
     try:
         import xml.etree.ElementTree as ET
         
-        # Check if we have a root element (from read_xml)
-        if not hasattr(self, 'root') or self.root is None:
+        # 假设self.tree或self.root已经在read_xml()中被设置
+        if not hasattr(self, 'tree') or self.tree is None:
             return False
         
-        # Create an ElementTree from the root
-        tree = ET.ElementTree(self.root)
-        
-        # Write the XML data to the new file
-        tree.write(file_name, encoding='utf-8', xml_declaration=True)
-        
+        # 将修改后的XML树写入新文件
+        self.tree.write(file_name, encoding='utf-8', xml_declaration=True)
         return True
     except Exception as e:
         return False

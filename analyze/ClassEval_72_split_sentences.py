@@ -9,29 +9,22 @@ def split_sentences(self, text):
     """
     import re
     
-    # 按句子结束标点符号分割
-    sentences = re.split(r'([.!?]+)', text)
+    # Split by sentence-ending punctuation (., ?, !)
+    sentences = re.split(r'([.?!])', text)
     
-    # 过滤空字符串并去除空白
+    # Reconstruct sentences by pairing text with punctuation
     result = []
     i = 0
     while i < len(sentences):
         sentence = sentences[i].strip()
-        if sentence:
-            # 检查下一个元素是否是标点符号
-            if i + 1 < len(sentences) and re.match(r'^[.!?]+$', sentences[i + 1]):
-                # 如果不是最后一组，不添加标点
-                # 需要检查是否还有后续内容
-                has_more = False
-                for j in range(i + 2, len(sentences)):
-                    if sentences[j].strip():
-                        has_more = True
-                        break
-                
-                if has_more:
+        if sentence:  # Skip empty strings
+            # Check if there's a punctuation mark following
+            if i + 1 < len(sentences) and sentences[i + 1] in '.?!':
+                # Not the last sentence - don't include punctuation
+                if i + 2 < len(sentences):
                     result.append(sentence)
                 else:
-                    # 这是最后一个句子，保留标点
+                    # This is the last sentence - include punctuation
                     result.append(sentence + sentences[i + 1])
                 i += 2
             else:

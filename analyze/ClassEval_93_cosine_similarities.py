@@ -12,8 +12,9 @@ def cosine_similarities(vector_1, vectors_all):
     >>> VectorUtil.cosine_similarities(vector1, vectors_all)
     [0.97463185 0.95941195]
     """
-    # Convert list of vectors to a 2D numpy array
-    vectors_all = np.array(vectors_all)
+    # Convert list of vectors to numpy array if needed
+    if isinstance(vectors_all, list):
+        vectors_all = np.array(vectors_all)
     
     # Compute dot products between vector_1 and all vectors
     dot_products = np.dot(vectors_all, vector_1)

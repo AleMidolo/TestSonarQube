@@ -9,11 +9,9 @@ def read_zip_file(self):
     import os
     
     try:
-        # Check if the file path exists
-        if hasattr(self, 'file_path') and self.file_path:
-            if os.path.exists(self.file_path):
-                # Open and return the ZipFile object
-                return zipfile.ZipFile(self.file_path, 'r')
+        if hasattr(self, 'zip_file_path') and self.zip_file_path:
+            if os.path.exists(self.zip_file_path):
+                return zipfile.ZipFile(self.zip_file_path, 'r')
         return None
     except Exception:
         return None

@@ -38,10 +38,7 @@ def book_room(self, room_type, room_number, name):
         # 更新 booked_rooms
         if room_type not in self.booked_rooms:
             self.booked_rooms[room_type] = []
-        self.booked_rooms[room_type].append({
-            'name': name,
-            'room_number': room_number
-        })
+        self.booked_rooms[room_type].append((name, room_number))
         
         return 'Success!'
     else:

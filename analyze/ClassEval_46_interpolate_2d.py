@@ -32,30 +32,44 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         
         # If point is outside bounds, handle edge cases
         if x_idx is None:
-            x_idx = 0 if xi < x[0] else len(x) - 2
+            if xi <= x[0]:
+                x_idx = 0
+            else:
+                x_idx = len(x) - 2
+        
         if y_idx is None:
-            y_idx = 0 if yi < y[0] else len(y) - 2
+            if yi <= y[0]:
+                y_idx = 0
+            else:
+                y_idx = len(y) - 2
         
         # Get the four corner points
-        x0, x1 = x[x_idx], x[x_idx + 1]
-        y0, y1 = y[y_idx], y[y_idx + 1]
+        x1, x2 = x[x_idx], x[x_idx + 1]
+        y1, y2 = y[y_idx], y[y_idx + 1]
         
-        z00 = z[x_idx][y_idx]
-        z01 = z[x_idx][y_idx + 1]
-        z10 = z[x_idx + 1][y_idx]
-        z11 = z[x_idx + 1][y_idx + 1]
+        z11 = z[x_idx][y_idx]
+        z12 = z[x_idx][y_idx + 1]
+        z21 = z[x_idx + 1][y_idx]
+        z22 = z[x_idx + 1][y_idx + 1]
         
         # Bilinear interpolation
-        # Normalize coordinates
-        tx = (xi - x0) / (x1 - x0) if x1 != x0 else 0
-        ty = (yi - y0) / (y1 - y0) if y1 != y0 else 0
+        # First interpolate in x direction
+        if x2 - x1 != 0:
+            tx = (xi - x1) / (x2 - x1)
+        else:
+            tx = 0
         
-        # Interpolate along x for both y values
-        z_y0 = z00 * (1 - tx) + z10 * tx
-        z_y1 = z01 * (1 - tx) + z11 * tx
+        if y2 - y1 != 0:
+            ty = (yi - y1) / (y2 - y1)
+        else:
+            ty = 0
         
-        # Interpolate along y
-        z_interp = z_y0 * (1 - ty) + z_y1 * ty
+        # Interpolate along y at x1
+        z_y1 = z11 * (1 - ty) + z12 * ty
+        # Interpolate along y at x2
+        z_y2 = z21 * (1 - ty) + z22 * ty
+        # Interpolate along x
+        z_interp = z_y1 * (1 - tx) + z_y2 * tx
         
         result.append(z_interp)
     

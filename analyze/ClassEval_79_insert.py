@@ -11,24 +11,12 @@ def insert(self, data):
     
     # Extract column names and values
     columns = ', '.join(data.keys())
+    values = ', '.join(f"'{value}'" if isinstance(value, str) else str(value) for value in data.values())
     
-    # Format values - wrap strings in single quotes
-    formatted_values = []
-    for value in data.values():
-        if isinstance(value, str):
-            # Escape single quotes in strings
-            escaped_value = value.replace("'", "''")
-            formatted_values.append(f"'{escaped_value}'")
-        elif value is None:
-            formatted_values.append('NULL')
-        elif isinstance(value, bool):
-            formatted_values.append('TRUE' if value else 'FALSE')
-        else:
-            formatted_values.append(str(value))
-    
-    values = ', '.join(formatted_values)
-    
-    # Assuming self has a table_name attribute
+    # Assuming self has a table_name attribute based on the example
     table_name = getattr(self, 'table_name', 'table1')
     
-    return f"INSERT INTO {table_name} ({columns}) VALUES ({values});"
+    # Generate the INSERT statement
+    sql_statement = f"INSERT INTO {table_name} ({columns}) VALUES ({values});"
+    
+    return sql_statement

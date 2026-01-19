@@ -12,10 +12,7 @@ def set_current_user_info_and_log(self, user):
     self.current_user = user
     
     # 记录访问日志
-    import logging
-    logger = logging.getLogger(__name__)
-    
-    user_name = user.get('name', 'Unknown')
-    user_address = user.get('address', 'Unknown')
-    
-    logger.info(f"User access logged - Name: {user_name}, Address: {user_address}")
+    if user:
+        user_name = user.get('name', 'Unknown')
+        user_address = user.get('address', 'Unknown')
+        print(f"Access log: User '{user_name}' accessed from {user_address}")

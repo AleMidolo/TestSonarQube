@@ -11,7 +11,7 @@ def create_deck(self):
     '4H', 'JS', '6S', '8H', '8C', '4S', '3H', '10H', '7S', '6D', '3C', 'KC', '3S',
     '2H', '10D', 'KS', '4D', 'AC', '10S', '2C', 'KD', '5S', 'JD', '8S', 'AS', '8D']
     """
-    # 定义花色和牌面值
+    # 定义花色和点数
     suits = ['S', 'H', 'D', 'C']  # Spades, Hearts, Diamonds, Clubs
     ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
     

@@ -12,24 +12,30 @@ def split_sentences(self, sentences_string):
     # 使用正则表达式匹配句子
     # 匹配以 . 或 ? 结尾且后面跟空格的模式，但排除 Mr. 这种情况
     # 负向前瞻确保 . 前面不是 Mr
-    # 使用 (?<!Mr)\. 来排除 Mr. 的情况
-    pattern = r'(?<!Mr)[.?](?=\s|$)'
+    pattern = r'(?<!Mr)[\.\?](?=\s|$)'
     
-    # 先找到所有分割点
+    # 先按模式分割
+    parts = re.split(pattern, sentences_string)
+    
+    # 重新组合句子，添加回分隔符
     sentences = []
-    last_end = 0
+    matches = re.finditer(pattern, sentences_string)
+    match_positions = [(m.start(), m.group()) for m in matches]
     
-    for match in re.finditer(pattern, sentences_string):
-        end_pos = match.end()
-        sentence = sentences_string[last_end:end_pos].strip()
+    if not match_positions:
+        return [sentences_string.strip()] if sentences_string.strip() else []
+    
+    start = 0
+    for i, (pos, delimiter) in enumerate(match_positions):
+        sentence = sentences_string[start:pos + 1].strip()
         if sentence:
             sentences.append(sentence)
-        last_end = end_pos
+        start = pos + 1
     
-    # 处理最后一个句子（如果没有以空格结尾）
-    if last_end < len(sentences_string):
-        last_sentence = sentences_string[last_end:].strip()
-        if last_sentence:
-            sentences.append(last_sentence)
+    # 处理最后剩余的部分
+    if start < len(sentences_string):
+        remaining = sentences_string[start:].strip()
+        if remaining:
+            sentences.append(remaining)
     
     return sentences

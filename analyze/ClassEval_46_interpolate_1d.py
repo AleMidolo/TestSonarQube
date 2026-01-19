@@ -13,18 +13,18 @@ def interpolate_1d(x, y, x_interp):
     result = []
     
     for xi in x_interp:
-        # Find the two points that bracket xi
+        # 找到 xi 所在的区间
         if xi <= x[0]:
-            # Extrapolate using first two points
+            # 如果 xi 小于等于最小的 x，使用第一个点的 y 值
             result.append(y[0])
         elif xi >= x[-1]:
-            # Extrapolate using last two points
+            # 如果 xi 大于等于最大的 x，使用最后一个点的 y 值
             result.append(y[-1])
         else:
-            # Find the interval containing xi
+            # 找到 xi 所在的区间 [x[i], x[i+1]]
             for i in range(len(x) - 1):
                 if x[i] <= xi <= x[i + 1]:
-                    # Linear interpolation formula
+                    # 线性插值公式: y = y0 + (y1 - y0) * (x - x0) / (x1 - x0)
                     x0, x1 = x[i], x[i + 1]
                     y0, y1 = y[i], y[i + 1]
                     yi = y0 + (y1 - y0) * (xi - x0) / (x1 - x0)
