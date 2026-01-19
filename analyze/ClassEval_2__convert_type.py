@@ -9,16 +9,16 @@ def _convert_type(self, arg, value):
         21
         """
     if arg in self.types:
-        arg_type = self.types[arg]
         try:
+            arg_type = self.types[arg]
             if arg_type == int:
                 return int(value)
             elif arg_type == float:
                 return float(value)
             elif arg_type == bool:
-                if value.lower() in ('true', '1', 'yes'):
+                if value.lower() in ('true', 't', 'yes', 'y', '1'):
                     return True
-                elif value.lower() in ('false', '0', 'no'):
+                elif value.lower() in ('false', 'f', 'no', 'n', '0'):
                     return False
                 else:
                     return bool(value)

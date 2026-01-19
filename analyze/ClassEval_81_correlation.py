@@ -12,7 +12,7 @@ def correlation(x, y):
         1.0
         """
     if len(x) != len(y):
-        return None
+        raise ValueError('Lists must have the same length')
     n = len(x)
     if n < 2:
         return None

@@ -23,11 +23,17 @@ def format_line_html_text(self, html_text):
     soup = BeautifulSoup(html_text, 'lxml')
     for script in soup(['script', 'style']):
         script.decompose()
-    for tag in soup.find_all(['pre', 'blockquote']):
-        tag.replace_with(self.CODE_MARK)
-    text = soup.get_text(separator='\n')
-    text = re.sub('\\n\\s*\\n', '\n', text)
-    text = re.sub('[ \\t]+', ' ', text)
-    text = text.strip()
-    text = self.__format_line_feed(text)
-    return text
+    result_lines = []
+    for element in soup.find_all(recursive=True):
+        if element.name in ['pre', 'blockquote']:
+            result_lines.append(self.CODE_MARK)
+        elif element.string:
+            text = element.string.strip()
+            if text:
+                result_lines.append(text)
+        elif element.get_text(strip=True):
+            text = element.get_text(strip=True)
+            if text:
+                result_lines.append(text)
+    result = '\n'.join(result_lines)
+    return self.__format_line_feed(result)

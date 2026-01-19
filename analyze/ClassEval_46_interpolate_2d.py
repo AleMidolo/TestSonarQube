@@ -19,22 +19,19 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
             if coords[i] <= value <= coords[i + 1]:
                 return (i, i + 1)
         return (None, None)
+
+    def bilinear_interpolation(x_val, y_val, x1, x2, y1, y2, q11, q12, q21, q22):
+        return (q11 * (x2 - x_val) * (y2 - y_val) + q21 * (x_val - x1) * (y2 - y_val) + q12 * (x2 - x_val) * (y_val - y1) + q22 * (x_val - x1) * (y_val - y1)) / ((x2 - x1) * (y2 - y1))
     z_interp = []
     for xi, yi in zip(x_interp, y_interp):
         x_idx1, x_idx2 = find_segment('x', xi, x)
         y_idx1, y_idx2 = find_segment('y', yi, y)
         if x_idx1 is None or y_idx1 is None:
             raise ValueError(f'Interpolation point ({xi}, {yi}) is outside the data range')
-        dx = x[x_idx2] - x[x_idx1]
-        dy = y[y_idx2] - y[y_idx1]
-        tx = (xi - x[x_idx1]) / dx if dx != 0 else 0
-        ty = (yi - y[y_idx1]) / dy if dy != 0 else 0
-        z11 = z[y_idx1][x_idx1]
-        z12 = z[y_idx1][x_idx2]
-        z21 = z[y_idx2][x_idx1]
-        z22 = z[y_idx2][x_idx2]
-        z_interp_y1 = z11 + (z12 - z11) * tx
-        z_interp_y2 = z21 + (z22 - z21) * tx
-        zi = z_interp_y1 + (z_interp_y2 - z_interp_y1) * ty
+        q11 = z[y_idx1][x_idx1]
+        q12 = z[y_idx2][x_idx1]
+        q21 = z[y_idx1][x_idx2]
+        q22 = z[y_idx2][x_idx2]
+        zi = bilinear_interpolation(xi, yi, x[x_idx1], x[x_idx2], y[y_idx1], y[y_idx2], q11, q12, q21, q22)
         z_interp.append(zi)
     return z_interp

@@ -10,8 +10,11 @@ def read_csv(self, file_name):
     try:
         with open(file_name, 'r', newline='') as file:
             reader = csv.reader(file)
-            title = next(reader)
-            data = [row for row in reader]
-        return (title, data)
+            rows = list(reader)
+            if not rows:
+                return ([], [])
+            title = rows[0]
+            data = rows[1:]
+            return (title, data)
     except:
         return ([], [])

@@ -11,7 +11,7 @@ def mode(self, data):
         """
     if not data:
         return []
-    count_dict = Counter(data)
-    max_count = max(count_dict.values())
-    modes = [key for key, value in count_dict.items() if value == max_count]
+    count = Counter(data)
+    max_count = max(count.values())
+    modes = [key for key, value in count.items() if value == max_count]
     return sorted(modes)
