@@ -8,16 +8,17 @@ def vigenere_decipher(self, ciphertext):
         'ybocl'
         """
     key_length = len(self.key)
-    plaintext = ''
+    plaintext = []
     key_index = 0
     for char in ciphertext:
         if char.isalpha():
             shift = ord(self.key[key_index % key_length].lower()) - ord('a')
             if char.isupper():
-                plaintext += chr((ord(char) - shift - ord('A')) % 26 + ord('A'))
+                plain_char = chr((ord(char) - shift - 65) % 26 + 65)
             else:
-                plaintext += chr((ord(char) - shift - ord('a')) % 26 + ord('a'))
+                plain_char = chr((ord(char) - shift - 97) % 26 + 97)
+            plaintext.append(plain_char)
             key_index += 1
         else:
-            plaintext += char
-    return plaintext
+            plaintext.append(char)
+    return ''.join(plaintext)
