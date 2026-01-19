@@ -1,6 +1,6 @@
 def create_student_table(self):
     """
-        Crea una tabella "students" nel database se non esiste già. I campi includono ID di tipo int, nome di tipo str, età di tipo int, genere di tipo str e voto di tipo int.
+        Creates a "students" table in the database if it does not already exist. The fields include ID of type int, name of type str, age of type int, gender of type str, and grade of type int.
         :return: None
         >>> processor = StudentDatabaseProcessor("students.db")
         >>> processor.create_student_table()

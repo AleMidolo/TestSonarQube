@@ -4,20 +4,27 @@ def format_line_html_text(self, html_text):
         :param html_text:string
         :return:string
         >>>htmlutil = HtmlUtil()
-        >>>htmlutil.format_line_html_text('<html><body><h1>Titolo</h1><p>Questo è un paragrafo.</p><pre>print('Ciao, mondo!')</pre><p>Un altro paragrafo.</p><pre><code>for i in range(5):
-    print(i)</code></pre></body></html>')
-        'Titolo
-Questo è un paragrafo.
--CODE-
-Un altro paragrafo.
--CODE-
-'
+        >>>htmlutil.format_line_html_text(<html>
+        >>> <body>
+        >>>    <h1>Titolo</h1>
+        >>>    <p>Questo è un paragrafo.</p>
+        >>>    <pre>print('Ciao, mondo!')</pre>
+        >>>    <p>Un altro paragrafo.</p>
+        >>>    <pre><code>for i in range(5):
+        >>>    print(i)</code></pre>
+        >>>    </body>
+        >>>    </html>)
+        Titolo
+        Questo è un paragrafo.
+        -CODE-
+        Un altro paragrafo.
+        -CODE-
         """
     soup = BeautifulSoup(html_text, 'lxml')
     text_parts = []
     for element in soup.body.find_all(['h1', 'p']):
         text_parts.append(element.get_text())
-    code_tags = soup.find_all(['pre', 'code'])
-    for code in code_tags:
+    code_parts = soup.find_all(['pre', 'code'])
+    for code in code_parts:
         text_parts.append(self.CODE_MARK)
     return '\n'.join(text_parts)
