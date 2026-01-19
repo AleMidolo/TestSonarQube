@@ -18,28 +18,26 @@ def create_board(self):
     if total_cells % 2 != 0:
         raise ValueError("Board size must have an even number of cells")
     
-    # 计算每个图标需要的数量
+    # 创建图标列表，每个图标出现偶数次
+    icons_list = []
     pairs_needed = total_cells // 2
-    icons_count = len(self.icons)
     
-    # 创建图标列表，确保每个图标出现偶数次
-    tiles = []
-    for i in range(pairs_needed):
-        icon = self.icons[i % icons_count]
-        tiles.append(icon)
-        tiles.append(icon)
+    # 循环使用图标直到填满棋盘
+    icon_index = 0
+    for _ in range(pairs_needed):
+        icons_list.append(self.icons[icon_index % len(self.icons)])
+        icons_list.append(self.icons[icon_index % len(self.icons)])
+        icon_index += 1
     
-    # 打乱图标顺序
-    random.shuffle(tiles)
+    # 打乱图标列表
+    random.shuffle(icons_list)
     
     # 创建二维棋盘
     board = []
-    index = 0
     for i in range(rows):
         row = []
         for j in range(cols):
-            row.append(tiles[index])
-            index += 1
+            row.append(icons_list[i * cols + j])
         board.append(row)
     
     self.board = board

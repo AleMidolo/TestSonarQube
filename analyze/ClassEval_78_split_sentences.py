@@ -19,31 +19,29 @@ def split_sentences(self, sentences_string):
         
         # 检查是否是句子结束符 (. 或 ?)
         if sentences_string[i] in '.?':
-            # 检查是否是字符串末尾或后面跟着空格
-            if i == len(sentences_string) - 1:
-                # 字符串末尾，添加当前句子
+            # 检查是否后面有空格（或者是字符串末尾）
+            if i + 1 < len(sentences_string) and sentences_string[i + 1] == ' ':
+                # 检查是否是 Mr. 的情况
+                # Mr. 的特征：. 前面是 Mr
+                if sentences_string[i] == '.':
+                    # 检查当前句子是否以 Mr. 结尾
+                    if len(current_sentence) >= 3 and current_sentence[-3:] == 'Mr.':
+                        i += 1
+                        continue
+                
+                # 这是一个句子的结束
                 sentences.append(current_sentence.strip())
                 current_sentence = ""
-            elif i + 1 < len(sentences_string) and sentences_string[i + 1] == ' ':
-                # 检查是否是 Mr. 的情况
-                # Mr. 的特征：. 前面是 "Mr"
-                if sentences_string[i] == '.' and current_sentence.strip().endswith('Mr.'):
-                    # 这是 Mr.，不是句子结束，继续
-                    i += 1
-                    continue
-                else:
-                    # 这是句子结束
-                    sentences.append(current_sentence.strip())
-                    current_sentence = ""
-                    # 跳过后面的空格
-                    i += 1
-                    while i < len(sentences_string) and sentences_string[i] == ' ':
-                        i += 1
-                    continue
+                i += 1  # 跳过空格
+                continue
+            elif i + 1 == len(sentences_string):
+                # 字符串末尾
+                sentences.append(current_sentence.strip())
+                current_sentence = ""
         
         i += 1
     
-    # 处理剩余的内容
+    # 如果还有剩余内容
     if current_sentence.strip():
         sentences.append(current_sentence.strip())
     

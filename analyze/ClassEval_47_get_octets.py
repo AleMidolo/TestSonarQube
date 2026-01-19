@@ -9,29 +9,26 @@ def get_octets(self):
     if not hasattr(self, 'ip_address') or not self.ip_address:
         return []
     
-    # Split by dot
-    parts = self.ip_address.split('.')
+    # Split the IP address by "."
+    parts = self.ip_address.split(".")
     
-    # Check if we have exactly 4 parts
+    # Validate that we have exactly 4 parts
     if len(parts) != 4:
         return []
     
-    # Validate each octet
+    # Validate each part
     for part in parts:
-        # Check if empty
-        if not part:
+        # Check if part is empty or not a valid number
+        if not part or not part.isdigit():
             return []
         
-        # Check if all characters are digits
-        if not part.isdigit():
+        # Check if the number is in valid range (0-255)
+        num = int(part)
+        if num < 0 or num > 255:
             return []
         
-        # Check if there are leading zeros (except for "0" itself)
+        # Check for leading zeros (except for "0" itself)
         if len(part) > 1 and part[0] == '0':
-            return []
-        
-        # Check if value is in valid range (0-255)
-        if int(part) > 255:
             return []
     
     return parts

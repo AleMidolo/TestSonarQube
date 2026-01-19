@@ -17,22 +17,18 @@ def split_sentences(self, text):
     result = []
     i = 0
 
-    # 处理分割后的列表
     while i < len(sentences):
         if sentences[i]:  # 跳过空字符串
-            # 如果是句子内容
-            if i + 1 < len(sentences) and sentences[i + 1] in '.?!':
-                # 当前是句子内容，下一个是标点
+            # 如果这是最后一个非空元素
+            if i == len(sentences) - 1:
                 result.append(sentences[i])
-                i += 2
-            elif i == len(sentences) - 1:
-                # 最后一个元素，保留标点
+            # 如果下一个元素是标点符号
+            elif i + 1 < len(sentences) and sentences[i + 1] in '.?!':
+                # 对于非最后的句子，只保留文本部分，不加标点
                 result.append(sentences[i])
-                i += 1
+                i += 1  # 跳过标点符号
             else:
                 result.append(sentences[i])
-                i += 1
-        else:
-            i += 1
+        i += 1
 
     return result

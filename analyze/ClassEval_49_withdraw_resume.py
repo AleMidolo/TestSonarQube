@@ -8,7 +8,6 @@ def withdraw_resume(self, resume):
     >>> jobMarketplace.withdraw_resume(jobMarketplace.resumes[0])
     >>> jobMarketplace.resumes
     []
-
     """
     if resume in self.resumes:
         self.resumes.remove(resume)

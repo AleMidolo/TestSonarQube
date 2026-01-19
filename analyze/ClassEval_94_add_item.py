@@ -9,6 +9,7 @@ def add_item(self, item_name, price, quantity):
     >>> vendingMachine.add_item('Coke', 1.25, 10)
     >>> vendingMachine.inventory
     {'Coke': {'price': 1.25, 'quantity': 10}}
+
     """
     if item_name in self.inventory:
         self.inventory[item_name]['quantity'] += quantity

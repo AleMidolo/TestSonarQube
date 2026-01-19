@@ -21,7 +21,7 @@ def solve(self):
         # 弹出队列首元素
         current_state, path = open_list.pop(0)
         
-        # 检查是否到达目标状态
+        # 检查是否达到目标状态
         if current_state == self.goal_state:
             return path
         
@@ -37,19 +37,19 @@ def solve(self):
             # 执行移动获取新状态
             new_state = self.move(direction)
             
-            # 将新状态转换为可哈希的元组形式
+            # 将状态转换为可哈希的元组以检查是否访问过
             state_tuple = self._state_to_tuple(new_state)
             
-            # 如果新状态未被访问过
+            # 如果新状态未被访问过，加入队列
             if state_tuple not in visited:
                 visited.add(state_tuple)
-                # 将新状态和路径添加到队列
-                open_list.append((new_state, path + [direction]))
+                new_path = path + [direction]
+                open_list.append((new_state, new_path))
         
         # 恢复原始状态
         self.state = original_state
     
-    # 如果没有找到解决方案
+    # 如果队列为空仍未找到解，返回空列表
     return []
 
 def _state_to_tuple(self, state):

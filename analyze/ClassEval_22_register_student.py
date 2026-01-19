@@ -10,6 +10,6 @@ def register_student(self, student):
         if existing_student == student:
             return 0
     
-    # 如果学生未注册，则添加到列表中
+    # 添加学生到列表
     self.students.append(student)
     return 1

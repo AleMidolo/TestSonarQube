@@ -8,11 +8,15 @@ def search_database(self, table_name, name):
     [(1, 'John', 25)]
     """
     cursor = self.connection.cursor()
-    cursor.execute(f"SELECT * FROM {table_name} WHERE name = ?", (name,))
-    result = cursor.fetchall()
-    cursor.close()
     
-    if result:
-        return result
+    # 使用参数化查询防止SQL注入
+    # 假设name字段是表中的第二列（常见的数据库设计）
+    query = f"SELECT * FROM {table_name} WHERE name = ?"
+    
+    cursor.execute(query, (name,))
+    results = cursor.fetchall()
+    
+    if results:
+        return results
     else:
         return None

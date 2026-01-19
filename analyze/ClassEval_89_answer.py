@@ -12,22 +12,20 @@ def answer(self, expression):
     import re
     
     try:
-        # Extract all numbers from the expression
+        # 提取表达式中的所有数字
         numbers_in_expr = re.findall(r'\d+', expression)
         numbers_in_expr = [int(num) for num in numbers_in_expr]
         
-        # Check if the numbers used match the available numbers
-        available_nums = sorted(self.nums)
-        used_nums = sorted(numbers_in_expr)
-        
-        if available_nums != used_nums:
+        # 检查表达式中的数字是否与self.nums匹配（数量和值都要相同）
+        if sorted(numbers_in_expr) != sorted(self.nums):
             return False
         
-        # Evaluate the expression
+        # 计算表达式的结果
         result = eval(expression)
         
-        # Check if result is 24 (with floating point tolerance)
-        return abs(result - 24) < 1e-9
+        # 检查结果是否为24（考虑浮点数精度问题）
+        return abs(result - 24) < 1e-6
         
     except:
+        # 如果表达式无效或计算出错，返回False
         return False

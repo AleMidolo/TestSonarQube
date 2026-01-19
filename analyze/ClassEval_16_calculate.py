@@ -25,6 +25,7 @@ def calculate(self, expression):
 
         # 返回浮点数结果
         return float(result)
-    except:
-        # 如果发生任何错误，返回None
+
+    except (SyntaxError, ZeroDivisionError, NameError, TypeError, ValueError):
+        # 如果出现任何错误，返回None
         return None

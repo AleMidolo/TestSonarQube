@@ -7,7 +7,7 @@ def move(self, state, direction):
     >>> eightPuzzle.move([[2, 3, 4], [5, 8, 1], [6, 0, 7]], 'left')
     [[2, 3, 4], [5, 8, 1], [0, 6, 7]]
     """
-    # 创建状态的深拷贝以避免修改原始状态
+    # 创建状态的深拷贝
     new_state = [row[:] for row in state]
     
     # 找到空白块（0）的位置

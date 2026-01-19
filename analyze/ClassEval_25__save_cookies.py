@@ -15,7 +15,7 @@ def _save_cookies(self):
         # 确保目录存在
         directory = os.path.dirname(self.cookies_file)
         if directory and not os.path.exists(directory):
-            os.makedirs(directory)
+            os.makedirs(directory, exist_ok=True)
         
         # 将 cookies 保存到文件
         with open(self.cookies_file, 'w', encoding='utf-8') as f:

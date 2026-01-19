@@ -11,28 +11,28 @@ def mrr(data):
     1.0, [1.0]
     0.75, [1.0, 0.5]
     """
-    def calculate_single_mrr(result_list, total_relevant):
-        # Find the position of the first 1 (first relevant result)
+    def calculate_single_mrr(result_list, total_true):
+        # Find the position of the first 1 (correct answer)
         for i, val in enumerate(result_list):
             if val == 1:
-                # Return reciprocal rank (position is 1-indexed)
+                # Return reciprocal rank (1-indexed position)
                 return 1.0 / (i + 1)
-        # If no relevant result found, return 0
+        # If no correct answer found, return 0
         return 0.0
     
     # Check if data is a single tuple or a list of tuples
     if isinstance(data, tuple):
-        # Single query case
-        result_list, total_relevant = data
-        mrr_value = calculate_single_mrr(result_list, total_relevant)
+        # Single tuple case
+        result_list, total_true = data
+        mrr_value = calculate_single_mrr(result_list, total_true)
         return mrr_value, [mrr_value]
     else:
-        # Multiple queries case
-        mrr_list = []
-        for result_list, total_relevant in data:
-            mrr_value = calculate_single_mrr(result_list, total_relevant)
-            mrr_list.append(mrr_value)
+        # List of tuples case
+        mrr_values = []
+        for result_list, total_true in data:
+            mrr_value = calculate_single_mrr(result_list, total_true)
+            mrr_values.append(mrr_value)
         
         # Calculate average MRR
-        avg_mrr = sum(mrr_list) / len(mrr_list) if mrr_list else 0.0
-        return avg_mrr, mrr_list
+        avg_mrr = sum(mrr_values) / len(mrr_values) if mrr_values else 0.0
+        return avg_mrr, mrr_values

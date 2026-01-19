@@ -11,7 +11,7 @@ def make_move(self, row, col):
     >>> gomokuGame.make_move(5, 5)
     False
     """
-    # Check if the move is within bounds
+    # Check if the position is within bounds
     if row < 0 or row >= len(self.board) or col < 0 or col >= len(self.board[0]):
         return False
     

@@ -18,14 +18,15 @@ def available_movies(self, start_time, end_time):
     
     available = []
     
-    # 假设 self.movies 是一个字典，存储电影信息
-    # 键为电影名称，值为包含电影信息的字典（包括 start_time 和 end_time）
-    for movie_name, movie_info in self.movies.items():
-        movie_start = time_to_minutes(movie_info['start_time'])
-        movie_end = time_to_minutes(movie_info['end_time'])
-        
-        # 检查电影的放映时间是否在指定的时间范围内
-        if movie_start >= start_minutes and movie_end <= end_minutes:
-            available.append(movie_name)
+    # 假设 self.movies 是存储电影信息的字典或列表
+    # 电影信息包含: name, price, start_time, end_time, seats
+    if hasattr(self, 'movies'):
+        for movie_name, movie_info in self.movies.items():
+            movie_start = time_to_minutes(movie_info['start_time'])
+            movie_end = time_to_minutes(movie_info['end_time'])
+            
+            # 检查电影的放映时间是否在指定时间范围内
+            if movie_start >= start_minutes and movie_end <= end_minutes:
+                available.append(movie_name)
     
     return available

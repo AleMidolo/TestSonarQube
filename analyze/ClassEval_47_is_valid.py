@@ -20,7 +20,7 @@ def is_valid(self):
         if not part:
             return False
         
-        # 检查是否只包含数字
+        # 检查是否全为数字
         if not part.isdigit():
             return False
         

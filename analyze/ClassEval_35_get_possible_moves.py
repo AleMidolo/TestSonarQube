@@ -19,19 +19,19 @@ def get_possible_moves(self, state):
     moves = []
     
     # 检查是否可以向上移动（空格向上移动，即下面的数字向上移动到空格位置）
-    if zero_row < 2:  # 空格不在最下面一行
+    if zero_row < 2:  # 空格不在最底行，可以向上移动
         moves.append('上')
     
     # 检查是否可以向下移动（空格向下移动，即上面的数字向下移动到空格位置）
-    if zero_row > 0:  # 空格不在最上面一行
+    if zero_row > 0:  # 空格不在最顶行，可以向下移动
         moves.append('下')
     
     # 检查是否可以向左移动（空格向左移动，即右边的数字向左移动到空格位置）
-    if zero_col < 2:  # 空格不在最右边一列
+    if zero_col < 2:  # 空格不在最右列，可以向左移动
         moves.append('左')
     
     # 检查是否可以向右移动（空格向右移动，即左边的数字向右移动到空格位置）
-    if zero_col > 0:  # 空格不在最左边一列
+    if zero_col > 0:  # 空格不在最左列，可以向右移动
         moves.append('右')
     
     return moves

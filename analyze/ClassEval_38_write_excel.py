@@ -27,6 +27,7 @@ def write_excel(self, data, file_name):
         # 保存工作簿到指定文件
         workbook.save(file_name)
 
+        # 返回1表示写入成功
         return 1
     except Exception as e:
         # 如果发生任何异常，返回0表示写入失败

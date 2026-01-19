@@ -19,6 +19,7 @@ def is_valid_ipv4(ip_address):
     if len(parts) != 4:
         return False
     
+    # 检查每个部分
     for part in parts:
         # 检查是否为空
         if not part:

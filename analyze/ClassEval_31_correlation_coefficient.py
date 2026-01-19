@@ -17,18 +17,16 @@ def correlation_coefficient(data1, data2):
     mean1 = sum(data1) / n
     mean2 = sum(data2) / n
     
-    # 计算协方差和标准差
-    covariance = sum((data1[i] - mean1) * (data2[i] - mean2) for i in range(n))
+    # 计算协方差的分子
+    numerator = sum((data1[i] - mean1) * (data2[i] - mean2) for i in range(n))
     
-    # 计算标准差
-    std1 = (sum((x - mean1) ** 2 for x in data1)) ** 0.5
-    std2 = (sum((x - mean2) ** 2 for x in data2)) ** 0.5
+    # 计算标准差的分母
+    sum_sq1 = sum((x - mean1) ** 2 for x in data1)
+    sum_sq2 = sum((x - mean2) ** 2 for x in data2)
     
-    # 避免除以零
-    if std1 == 0 or std2 == 0:
+    denominator = (sum_sq1 * sum_sq2) ** 0.5
+    
+    if denominator == 0:
         return 0
     
-    # 计算相关系数
-    correlation = covariance / (std1 * std2)
-    
-    return correlation
+    return numerator / denominator

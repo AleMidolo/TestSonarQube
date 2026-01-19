@@ -7,21 +7,15 @@ def count_all(n: int) -> int:
     >>> CombinationCalculator.count_all(4)
     15
     """
-    # 所有可能的组合数量是 2^n - 1 (排除空集)
+    # 所有可能组合的数量是 2^n - 1 (排除空集)
     # C(n,0) + C(n,1) + C(n,2) + ... + C(n,n) = 2^n
     # 减去空集 C(n,0) = 1，得到 2^n - 1
     
     max_value = 2**63 - 1
     
     # 检查 2^n - 1 是否超过 2^63 - 1
-    if n >= 63:
-        # 当 n >= 63 时，2^n - 1 >= 2^63 - 1
-        # 实际上当 n > 63 时，2^n - 1 > 2^63 - 1
-        if n > 63:
-            return float("inf")
-        # 当 n == 63 时，2^63 - 1 正好等于 max_value
-        else:
-            return max_value
+    # 即检查 2^n > 2^63，也就是 n > 63
+    if n > 63:
+        return float("inf")
     
-    result = (1 << n) - 1  # 2^n - 1
-    return result
+    return 2**n - 1

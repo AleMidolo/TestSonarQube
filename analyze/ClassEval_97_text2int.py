@@ -33,7 +33,7 @@ def text2int(self, textnum):
     if textnum in ones:
         return str(ones[textnum])
     
-    words = textnum.replace("-", " ").split()
+    words = textnum.replace("-", " ").replace(" and ", " ").split()
     
     current = 0
     result = 0

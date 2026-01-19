@@ -9,14 +9,14 @@ def process_file(self):
     'nametestage'
     """
     # Read the file content
-    with open(self.file_path, 'r', encoding='utf-8') as f:
-        content = f.read()
+    with open(self.file_path, 'r', encoding='utf-8') as file:
+        content = file.read()
     
     # Filter out non-alphabetic characters
     processed_content = ''.join(char for char in content if char.isalpha())
     
     # Write the processed content back to the same file
-    with open(self.file_path, 'w', encoding='utf-8') as f:
-        f.write(processed_content)
+    with open(self.file_path, 'w', encoding='utf-8') as file:
+        file.write(processed_content)
     
     return processed_content

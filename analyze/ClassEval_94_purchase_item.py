@@ -16,19 +16,19 @@ def purchase_item(self, item_name):
     if item_name not in self.inventory:
         return False
     
+    # Get item details
+    item = self.inventory[item_name]
+    
     # Check if item is in stock
-    if self.inventory[item_name]['quantity'] <= 0:
+    if item['quantity'] <= 0:
         return False
     
-    # Get item price
-    item_price = self.inventory[item_name]['price']
-    
     # Check if balance is sufficient
-    if self.balance < item_price:
+    if self.balance < item['price']:
         return False
     
     # Process purchase
-    self.balance -= item_price
-    self.inventory[item_name]['quantity'] -= 1
+    self.balance -= item['price']
+    item['quantity'] -= 1
     
     return self.balance

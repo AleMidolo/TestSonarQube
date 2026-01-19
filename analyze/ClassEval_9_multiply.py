@@ -10,11 +10,11 @@ def multiply(num1, num2):
     '1219326311370217952237463801111263526900'
 
     """
-    # Handle edge cases
+    # 处理特殊情况
     if num1 == "0" or num2 == "0":
         return "0"
     
-    # Determine sign of result
+    # 处理负号
     negative = False
     if num1[0] == '-':
         negative = not negative
@@ -23,29 +23,33 @@ def multiply(num1, num2):
         negative = not negative
         num2 = num2[1:]
     
-    # Initialize result array
-    len1, len2 = len(num1), len(num2)
-    result = [0] * (len1 + len2)
-    
-    # Reverse the strings for easier calculation
+    # 反转字符串，方便从低位开始计算
     num1 = num1[::-1]
     num2 = num2[::-1]
     
-    # Multiply each digit
-    for i in range(len1):
-        for j in range(len2):
-            digit1 = int(num1[i])
-            digit2 = int(num2[j])
-            result[i + j] += digit1 * digit2
-            
-            # Handle carry
+    # 结果数组，最多 len(num1) + len(num2) 位
+    result = [0] * (len(num1) + len(num2))
+    
+    # 逐位相乘
+    for i in range(len(num1)):
+        for j in range(len(num2)):
+            # 当前位相乘
+            product = int(num1[i]) * int(num2[j])
+            # 加到对应位置
+            result[i + j] += product
+            # 处理进位
             result[i + j + 1] += result[i + j] // 10
             result[i + j] %= 10
     
-    # Convert result array to string
+    # 移除前导零
     while len(result) > 1 and result[-1] == 0:
         result.pop()
     
+    # 反转结果并转换为字符串
     result_str = ''.join(map(str, result[::-1]))
     
-    return ('-' + result_str) if negative else result_str
+    # 添加负号（如果需要）
+    if negative:
+        result_str = '-' + result_str
+    
+    return result_str

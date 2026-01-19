@@ -12,7 +12,7 @@ def recv(self, info):
     addr = info.get("addr")
     content = info.get("content")
     
-    # Check if the address is in the whitelist
+    # Check if address is in whitelist
     if hasattr(self, 'whitelist') and addr in self.whitelist:
         return content
     

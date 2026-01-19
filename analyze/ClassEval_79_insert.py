@@ -12,7 +12,7 @@ def insert(self, data):
     # Extract column names and values
     columns = ', '.join(data.keys())
     
-    # Format values - wrap strings in quotes, handle other types
+    # Format values - wrap strings in single quotes
     formatted_values = []
     for value in data.values():
         if isinstance(value, str):

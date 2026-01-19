@@ -1,6 +1,6 @@
 def create_order(self, order_id, product_id, quantity):
     """
-    创建一个订单，其中包含产品的信息，如ID和数量。
+    创建一个订单,其中包含产品的信息,如ID和数量。
     并将新订单放入self.orders中。
     状态的默认值为'Shipped'。
     :param order_id: int
@@ -29,5 +29,5 @@ def create_order(self, order_id, product_id, quantity):
         'status': 'Shipped'
     }
     
-    # Deduct the quantity from inventory
+    # Reduce the inventory quantity
     self.inventory[product_id]['quantity'] -= quantity

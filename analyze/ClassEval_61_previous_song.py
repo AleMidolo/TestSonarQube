@@ -9,7 +9,10 @@ def previous_song(self):
     True
 
     """
-    if not self.playlist or self.current_song is None:
+    if not hasattr(self, 'playlist') or not self.playlist:
+        return False
+    
+    if not hasattr(self, 'current_song') or self.current_song is None:
         return False
     
     try:
@@ -20,5 +23,4 @@ def previous_song(self):
         else:
             return False
     except ValueError:
-        # current_song not in playlist
         return False

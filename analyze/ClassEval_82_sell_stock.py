@@ -23,8 +23,9 @@ def sell_stock(self, stock):
             if portfolio_stock['quantity'] < quantity:
                 return False
             
-            # 更新现金余额
-            self.cash += price * quantity
+            # 计算出售金额并添加到现金余额
+            sale_amount = price * quantity
+            self.cash_balance += sale_amount
             
             # 更新或移除股票
             if portfolio_stock['quantity'] == quantity:

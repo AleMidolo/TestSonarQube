@@ -11,7 +11,7 @@ def apply_operator(self, operand_stack, operator_stack):
     if len(operand_stack) < 2 or len(operator_stack) == 0:
         return operand_stack, operator_stack
     
-    # 从操作符栈弹出操作符
+    # 从操作符栈弹出顶部操作符
     operator = operator_stack.pop()
     
     # 从操作数栈弹出两个操作数（注意顺序：后弹出的是左操作数）

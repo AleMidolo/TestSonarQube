@@ -9,14 +9,15 @@ def read_csv(self, file_name):
     >>> csvProcessor.read_csv('read_test.csv')
     (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])
     """
-    with open(file_name, 'r', encoding='utf-8') as f:
-        reader = csv.reader(f)
-        rows = list(reader)
+    title = []
+    data = []
+    
+    with open(file_name, 'r', encoding='utf-8') as file:
+        csv_reader = csv.reader(file)
+        rows = list(csv_reader)
         
-        if len(rows) == 0:
-            return [], []
-        
-        title = rows[0]
-        data = rows[1:]
-        
-        return title, data
+        if rows:
+            title = rows[0]
+            data = rows[1:]
+    
+    return title, data

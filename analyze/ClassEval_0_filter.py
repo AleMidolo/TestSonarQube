@@ -3,15 +3,15 @@ def __init__(self):
     # 定义允许的路径和方法组合
     self.allowed_rules = {
         '/login': ['POST', 'GET'],
+        '/logout': ['POST'],
         '/register': ['POST'],
         '/home': ['GET'],
         '/api/data': ['GET', 'POST', 'PUT', 'DELETE'],
-        '/logout': ['POST', 'GET'],
-        '/public': ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+        '/public': ['GET'],
     }
 
-    # 定义公共路径前缀（无需验证）
-    self.public_prefixes = ['/public', '/static', '/assets']
+    # 定义公开路径（不需要验证）
+    self.public_paths = ['/login', '/register', '/public']
 
     # 定义黑名单路径
-    self.blacklist_paths = ['/admin/delete', '/system/shutdown']
+    self.blacklist_paths = ['/admin/delete', '/system/config']
