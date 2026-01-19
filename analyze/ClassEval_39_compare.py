@@ -10,3 +10,12 @@ def compare(self, cur, peek):
 
     """
     return self.operat_priority[self.get_operator_index(cur)] >= self.operat_priority[self.get_operator_index(peek)]
+
+def get_operator_index(self, operator):
+    """
+    Restituisce l'indice di un operatore nella lista delle priorità
+    :param operator: stringa, l'operatore di cui si desidera ottenere l'indice
+    :return: int, l'indice dell'operatore
+    """
+    operators = ['+', '-', '*', '\/', '(', ')', '%']
+    return operators.index(operator) if operator in operators else -1

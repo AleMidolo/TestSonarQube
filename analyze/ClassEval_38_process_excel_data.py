@@ -10,9 +10,10 @@ def process_excel_data(self, N, save_file_name):
     data = self.read_excel(save_file_name)
     if data is None or N < 1 or N > len(data[0]):
         return (0, save_file_name)
+    column_index = N - 1
     for i in range(len(data)):
         row = list(data[i])
-        row[N - 1] = row[N - 1].upper() if isinstance(row[N - 1], str) else row[N - 1]
+        row[column_index] = str(row[column_index]).upper()
         data[i] = tuple(row)
     output_file_name = f'processed_{save_file_name}'
     success = self.write_excel(data, output_file_name)
