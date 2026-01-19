@@ -1,25 +1,44 @@
 def bad_character_heuristic(self):
     """
-        Finds all occurrences of the pattern in the text.
-        :return: A list of all positions of the pattern in the text, list.
-        >>> boyerMooreSearch = BoyerMooreSearch("ABAABA", "AB")
-        >>> boyerMooreSearch.bad_character_heuristic()
-        [0, 3]
+    Finds all occurrences of the pattern in the text.
+    :return: A list of all positions of the pattern in the text, list.
+    >>> boyerMooreSearch = BoyerMooreSearch("ABAABA", "AB")
+    >>> boyerMooreSearch.bad_character_heuristic()
+    [0, 3]
 
-        """
-    positions = []
-    currentPos = 0
-    while currentPos <= self.textLen - self.patLen:
-        mismatchPos = self.mismatch_in_text(currentPos)
-        if mismatchPos == -1:
-            positions.append(currentPos)
-            currentPos += 1
+    """
+    text = self.text
+    pattern = self.pattern
+    m = len(pattern)
+    n = len(text)
+    
+    if m == 0 or n == 0 or m > n:
+        return []
+    
+    # Build bad character table
+    bad_char = {}
+    for i in range(m - 1):
+        bad_char[pattern[i]] = m - 1 - i
+    
+    # Search for pattern
+    results = []
+    s = 0  # shift of the pattern with respect to text
+    
+    while s <= n - m:
+        j = m - 1
+        
+        # Keep reducing j while characters match
+        while j >= 0 and pattern[j] == text[s + j]:
+            j -= 1
+        
+        # If pattern is found
+        if j < 0:
+            results.append(s)
+            # Shift pattern to align with next character
+            s += 1
         else:
-            badChar = self.text[mismatchPos]
-            matchPos = self.match_in_pattern(badChar)
-            if matchPos == -1:
-                currentPos = mismatchPos + 1
-            else:
-                shift = mismatchPos - (currentPos + matchPos)
-                currentPos += max(1, shift)
-    return positions
+            # Shift pattern based on bad character heuristic
+            bad_char_shift = bad_char.get(text[s + j], m)
+            s += max(1, bad_char_shift - (m - 1 - j))
+    
+    return results

@@ -1,37 +1,60 @@
 def prepare(self, expression):
     """
-        Prepare the infix expression for conversion to postfix notation
-        :param expression: string, the infix expression to be prepared
-        >>> expression_calculator = ExpressionCalculator()
-        >>> expression_calculator.prepare("2+3*4")
-        expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
-        """
-    op_stack = deque()
-    arr = list(expression)
-    current_index = 0
-    count = 0
+    Prepare the infix expression for conversion to postfix notation
+    :param expression: string, the infix expression to be prepared
+    >>> expression_calculator = ExpressionCalculator()
+    >>> expression_calculator.prepare("2+3*4")
+
+    expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
+    """
+    # Define operator precedence
+    precedence = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
+    
+    # Initialize stacks
+    self.postfix_stack = []
+    operator_stack = []
+    
+    # Parse the expression to extract numbers and operators
     i = 0
-    while i < len(arr):
-        current_char = arr[i]
-        if self.is_operator(current_char):
-            if count > 0:
-                self.postfix_stack.append(''.join(arr[current_index:current_index + count]))
-                count = 0
-            if current_char == '(':
-                op_stack.append(current_char)
-            elif current_char == ')':
-                while op_stack and op_stack[-1] != '(':
-                    self.postfix_stack.append(op_stack.pop())
-                op_stack.pop()
-            else:
-                while op_stack and op_stack[-1] != '(' and self.compare(current_char, op_stack[-1]):
-                    self.postfix_stack.append(op_stack.pop())
-                op_stack.append(current_char)
-            current_index = i + 1
-        else:
-            count += 1
+    while i < len(expression):
+        char = expression[i]
+        
+        # Skip whitespace
+        if char == ' ':
+            i += 1
+            continue
+        
+        # If character is a digit, extract the full number
+        if char.isdigit() or char == '.':
+            num = ''
+            while i < len(expression) and (expression[i].isdigit() or expression[i] == '.'):
+                num += expression[i]
+                i += 1
+            self.postfix_stack.append(num)
+            continue
+        
+        # If character is an opening parenthesis
+        elif char == '(':
+            operator_stack.append(char)
+        
+        # If character is a closing parenthesis
+        elif char == ')':
+            while operator_stack and operator_stack[-1] != '(':
+                self.postfix_stack.append(operator_stack.pop())
+            if operator_stack:
+                operator_stack.pop()  # Remove the '('
+        
+        # If character is an operator
+        elif char in precedence:
+            while (operator_stack and 
+                   operator_stack[-1] != '(' and 
+                   operator_stack[-1] in precedence and
+                   precedence[operator_stack[-1]] >= precedence[char]):
+                self.postfix_stack.append(operator_stack.pop())
+            operator_stack.append(char)
+        
         i += 1
-    if count > 0:
-        self.postfix_stack.append(''.join(arr[current_index:current_index + count]))
-    while op_stack:
-        self.postfix_stack.append(op_stack.pop())
+    
+    # Pop remaining operators from stack
+    while operator_stack:
+        self.postfix_stack.append(operator_stack.pop())

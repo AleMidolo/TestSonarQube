@@ -1,24 +1,62 @@
 def format_string(self, x):
     """
-        Converts a string representation of a number into words format
-        :param x: str, the string representation of a number
-        :return: str, the number in words format
-        >>> formatter = NumberWordFormatter()
-        >>> formatter.format_string("123456")
-        "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
-        """
-    if x.startswith('-'):
-        return 'MINUS ' + self.format_string(x[1:])
-    if '.' in x:
-        integer_part, decimal_part = x.split('.')
-        integer_words = self._format_integer_part(integer_part)
-        decimal_words = self._format_decimal_part(decimal_part)
-        if integer_words:
-            return f'{integer_words} AND {decimal_words} ONLY'
+    Converts a string representation of a number into words format
+    :param x: str, the string representation of a number
+    :return: str, the number in words format
+    >>> formatter = NumberWordFormatter()
+    >>> formatter.format_string("123456")
+    "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
+    """
+    # Define word mappings
+    ones = ["", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]
+    teens = ["TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", 
+             "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"]
+    tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"]
+    
+    def convert_below_thousand(num):
+        """Convert a number below 1000 to words"""
+        if num == 0:
+            return ""
+        elif num < 10:
+            return ones[num]
+        elif num < 20:
+            return teens[num - 10]
+        elif num < 100:
+            result = tens[num // 10]
+            if num % 10 != 0:
+                result += " " + ones[num % 10]
+            return result
         else:
-            return f'{decimal_words} ONLY'
-    integer_words = self._format_integer_part(x)
-    if integer_words:
-        return f'{integer_words} ONLY'
-    else:
-        return 'ZERO ONLY'
+            result = ones[num // 100] + " HUNDRED"
+            remainder = num % 100
+            if remainder != 0:
+                result += " AND " + convert_below_thousand(remainder)
+            return result
+    
+    # Convert string to integer
+    number = int(x)
+    
+    if number == 0:
+        return "ZERO ONLY"
+    
+    # Break down the number into groups
+    billion = number // 1000000000
+    million = (number % 1000000000) // 1000000
+    thousand = (number % 1000000) // 1000
+    remainder = number % 1000
+    
+    result = []
+    
+    if billion > 0:
+        result.append(convert_below_thousand(billion) + " BILLION")
+    
+    if million > 0:
+        result.append(convert_below_thousand(million) + " MILLION")
+    
+    if thousand > 0:
+        result.append(convert_below_thousand(thousand) + " THOUSAND")
+    
+    if remainder > 0:
+        result.append(convert_below_thousand(remainder))
+    
+    return " ".join(result) + " ONLY"

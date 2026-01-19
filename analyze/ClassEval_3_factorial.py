@@ -1,15 +1,17 @@
 @staticmethod
 def factorial(n):
     """
-        Calculates the factorial of a given number.
-        :param n: int, the number to calculate the factorial.
-        :return: int, the factorial of the given number.
-        >>> ArrangementCalculator.factorial(4)
-        24
+    Calculates the factorial of a given number.
+    :param n: int, the number to calculate the factorial.
+    :return: int, the factorial of the given number.
+    >>> ArrangementCalculator.factorial(4)
+    24
 
-        """
+    """
     if n < 0:
-        raise ValueError('Factorial is not defined for negative numbers')
+        raise ValueError("Factorial is not defined for negative numbers")
+    if n == 0 or n == 1:
+        return 1
     result = 1
     for i in range(2, n + 1):
         result *= i

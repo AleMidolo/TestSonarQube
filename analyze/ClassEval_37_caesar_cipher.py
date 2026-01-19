@@ -1,20 +1,26 @@
 def caesar_cipher(self, plaintext, shift):
     """
-        Encrypts the plaintext using the Caesar cipher.
-        :param plaintext: The plaintext to encrypt, str.
-        :param shift: The number of characters to shift each character in the plaintext, int.
-        :return: The ciphertext, str.
-        >>> e = EncryptionUtils("key")
-        >>> e.caesar_cipher("abc", 1)
-        'bcd'
+    Encrypts the plaintext using the Caesar cipher.
+    :param plaintext: The plaintext to encrypt, str.
+    :param shift: The number of characters to shift each character in the plaintext, int.
+    :return: The ciphertext, str.
+    >>> e = EncryptionUtils("key")
+    >>> e.caesar_cipher("abc", 1)
+    'bcd'
 
-        """
-    encrypted_text = ''
+    """
+    ciphertext = ""
     for char in plaintext:
         if char.isalpha():
-            base = ord('A') if char.isupper() else ord('a')
-            encrypted_char = chr((ord(char) - base + shift) % 26 + base)
-            encrypted_text += encrypted_char
+            # Determine if uppercase or lowercase
+            if char.isupper():
+                # Shift within uppercase letters (A-Z)
+                shifted = chr((ord(char) - ord('A') + shift) % 26 + ord('A'))
+            else:
+                # Shift within lowercase letters (a-z)
+                shifted = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
+            ciphertext += shifted
         else:
-            encrypted_text += char
-    return encrypted_text
+            # Non-alphabetic characters remain unchanged
+            ciphertext += char
+    return ciphertext

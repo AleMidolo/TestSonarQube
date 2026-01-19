@@ -1,19 +1,27 @@
 def is_free_at(self, check_time):
     """
-        change the time format as '%H:%M' and check the time is free or not in the classroom.
-        :param check_time: str, the time need to be checked
-        :return: True if the check_time does not conflict with every course time, or False otherwise.
-        >>> classroom = Classroom(1)
-        >>> classroom.add_course({'name': 'math', 'start_time': '8:00', 'end_time': '9:40'})
-        >>> classroom.is_free_at('10:00')
-        True
-        >>> classroom.is_free_at('9:00')
-        False
-        """
-    check_time_dt = datetime.strptime(check_time, '%H:%M')
+    change the time format as '%H:%M' and check the time is free or not in the classroom.
+    :param check_time: str, the time need to be checked
+    :return: True if the check_time does not conflict with every course time, or False otherwise.
+    >>> classroom = Classroom(1)
+    >>> classroom.add_course({'name': 'math', 'start_time': '8:00', 'end_time': '9:40'})
+    >>> classroom.is_free_at('10:00')
+    True
+    >>> classroom.is_free_at('9:00')
+    False
+    """
+    from datetime import datetime
+    
+    # Parse the check_time
+    check_dt = datetime.strptime(check_time, '%H:%M')
+    
+    # Check against all courses in the classroom
     for course in self.courses:
-        start_time = datetime.strptime(course['start_time'], '%H:%M')
-        end_time = datetime.strptime(course['end_time'], '%H:%M')
-        if start_time <= check_time_dt <= end_time:
+        start_dt = datetime.strptime(course['start_time'], '%H:%M')
+        end_dt = datetime.strptime(course['end_time'], '%H:%M')
+        
+        # Check if check_time falls within the course time range
+        if start_dt <= check_dt < end_dt:
             return False
+    
     return True

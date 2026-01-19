@@ -1,20 +1,19 @@
-@staticmethod
 def median(data):
     """
-        calculates the median of the given list.
-        :param data: the given list, list.
-        :return: the median of the given list, float.
-        >>> statistics3 = Statistics3()
-        >>> statistics3.median([1, 2, 3, 4])
-        2.5
+    calculates the median of the given list.
+    :param data: the given list, list.
+    :return: the median of the given list, float.
+    >>> statistics3 = Statistics3()
+    >>> statistics3.median([1, 2, 3, 4])
+    2.5
 
-        """
-    if len(data) == 0:
-        return None
+    """
     sorted_data = sorted(data)
     n = len(sorted_data)
-    mid = n // 2
+    
     if n % 2 == 0:
-        return (sorted_data[mid - 1] + sorted_data[mid]) / 2
+        # Even number of elements: average of two middle elements
+        return (sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2
     else:
-        return sorted_data[mid]
+        # Odd number of elements: middle element
+        return float(sorted_data[n // 2])

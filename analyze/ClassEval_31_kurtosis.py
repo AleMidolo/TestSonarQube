@@ -1,17 +1,29 @@
 @staticmethod
 def kurtosis(data):
     """
-        Calculate the kurtosis of a set of data.
-        :param data: The input data list, list.
-        :return: The kurtosis, float.
-        >>> DataStatistics4.kurtosis([1, 20, 100])
-        -1.5000000000000007
-        """
+    Calculate the kurtosis of a set of data.
+    :param data: The input data list, list.
+    :return: The kurtosis, float.
+    >>> DataStatistics4.kurtosis([1, 20,100])
+    -1.5000000000000007
+
+    """
     n = len(data)
+    if n < 2:
+        return 0.0
+    
+    # Calculate mean
     mean = sum(data) / n
-    variance = sum(((x - mean) ** 2 for x in data)) / n
-    if variance == 0:
-        return 0
-    m4 = sum(((x - mean) ** 4 for x in data)) / n
-    kurt = m4 / variance ** 2 - 3
-    return kurt
+    
+    # Calculate standard deviation
+    variance = sum((x - mean) ** 2 for x in data) / n
+    std_dev = variance ** 0.5
+    
+    if std_dev == 0:
+        return 0.0
+    
+    # Calculate fourth moment and kurtosis (excess kurtosis)
+    fourth_moment = sum((x - mean) ** 4 for x in data) / n
+    kurtosis_value = (fourth_moment / (variance ** 2)) - 3
+    
+    return kurtosis_value

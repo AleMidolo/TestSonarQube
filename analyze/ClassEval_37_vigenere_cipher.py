@@ -1,25 +1,32 @@
 def vigenere_cipher(self, plaintext):
     """
-        Encrypts the plaintext using the Vigenere cipher.
-        :param plaintext: The plaintext to encrypt, str.
-        :return: The ciphertext, str.
-        >>> e = EncryptionUtils("key")
-        >>> e.vigenere_cipher("abc")
-        'kfa'
+    Encrypts the plaintext using the Vigenere cipher.
+    :param plaintext: The plaintext to encrypt, str.
+    :return: The ciphertext, str.
+    >>> e = EncryptionUtils("key")
+    >>> e.vigenere_cipher("abc")
+    'kfa'
 
-        """
-    ciphertext = ''
-    key_repeated = (self.key * (len(plaintext) // len(self.key) + 1))[:len(plaintext)]
-    for i, char in enumerate(plaintext):
+    """
+    if not plaintext:
+        return ""
+    
+    # Assuming self.key exists as an instance variable
+    key = self.key.lower()
+    plaintext_lower = plaintext.lower()
+    ciphertext = []
+    key_index = 0
+    
+    for char in plaintext_lower:
         if char.isalpha():
-            key_char = key_repeated[i]
-            key_shift = ord(key_char.lower()) - 97
-            if char.isupper():
-                ascii_offset = 65
-            else:
-                ascii_offset = 97
-            shifted_char = chr((ord(char) - ascii_offset + key_shift) % 26 + ascii_offset)
-            ciphertext += shifted_char
+            # Get the shift value from the key
+            shift = ord(key[key_index % len(key)]) - ord('a')
+            # Encrypt the character
+            encrypted_char = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
+            ciphertext.append(encrypted_char)
+            key_index += 1
         else:
-            ciphertext += char
-    return ciphertext
+            # Non-alphabetic characters are not encrypted
+            ciphertext.append(char)
+    
+    return ''.join(ciphertext)
