@@ -9,8 +9,8 @@ def standard_deviation(data):
         1.0
 
         """
-    mean_value = Statistics3.mean(data)
-    if mean_value is None:
+    if len(data) == 0:
         return None
-    variance = sum(((x - mean_value) ** 2 for x in data)) / len(data)
+    mean = Statistics3.mean(data)
+    variance = sum(((x - mean) ** 2 for x in data)) / len(data)
     return math.sqrt(variance)

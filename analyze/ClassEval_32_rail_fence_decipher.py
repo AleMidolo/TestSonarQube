@@ -8,6 +8,8 @@ def rail_fence_decipher(self, encrypted_text, rails):
     >>> d.rail_fence_decipher('Hoo!el,Wrdl l', 3)
     'Hello, World!'
     """
+    if rails <= 0:
+        return ''
     rail = [['\n' for i in range(len(encrypted_text))] for j in range(rails)]
     dir_down = None
     row, col = (0, 0)
@@ -30,12 +32,12 @@ def rail_fence_decipher(self, encrypted_text, rails):
                 index += 1
     result = []
     row, col = (0, 0)
-    for i in range(len(encrypted_text)):
+    for char in encrypted_text:
         if row == 0:
             dir_down = True
         if row == rails - 1:
             dir_down = False
-        if rail[row][col] != '\n':
+        if rail[row][col] != '*':
             result.append(rail[row][col])
             col += 1
         if dir_down:
