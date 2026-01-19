@@ -12,7 +12,7 @@ def process_excel_data(self, N, save_file_name):
         return (0, save_file_name)
     for i in range(len(data)):
         row = list(data[i])
-        row[N - 1] = str(row[N - 1]).upper()
+        row[N - 1] = row[N - 1].upper() if isinstance(row[N - 1], str) else row[N - 1]
         data[i] = tuple(row)
     output_file_name = f'processed_{save_file_name}'
     success = self.write_excel(data, output_file_name)

@@ -31,7 +31,6 @@ def subtract(num1, num2):
             borrow = 0
     while result and result[-1] == '0':
         result.pop()
-    if not result:
-        return '0'
-    result.reverse()
-    return ('-' if negative else '') + ''.join(result)
+    if negative:
+        result.append('-')
+    return ''.join(result[::-1]) if result else '0'

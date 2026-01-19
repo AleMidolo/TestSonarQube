@@ -9,15 +9,16 @@ def _calculate(first_value, second_value, current_op):
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator._calculate("2", "3", "+")
         5.0
-
         """
+    first_value = Decimal(first_value)
+    second_value = Decimal(second_value)
     if current_op == '+':
-        return Decimal(first_value) + Decimal(second_value)
+        return first_value + second_value
     elif current_op == '-':
-        return Decimal(first_value) - Decimal(second_value)
+        return first_value - second_value
     elif current_op == '*':
-        return Decimal(first_value) * Decimal(second_value)
+        return first_value * second_value
     elif current_op == '\\/':
-        return Decimal(first_value) / Decimal(second_value)
+        return first_value / second_value
     elif current_op == '%':
-        return Decimal(first_value) % Decimal(second_value)
+        return first_value % second_value
