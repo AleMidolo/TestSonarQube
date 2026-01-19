@@ -13,23 +13,25 @@ def interpret(self, display=False):
         return []
     
     # 分割乐谱字符串
-    parts = self.score.split()
+    parts = self.score.strip().split()
     
     result = []
     
     for part in parts:
-        if not part:  # 跳过空字符串
-            continue
-        
-        # 分离和弦（字母）和音调（数字）
+        # 找到字母和数字的分界点
         chord = ''
         tune = ''
         
-        for char in part:
-            if char.isalpha():
-                chord += char
-            elif char.isdigit():
-                tune += char
+        i = 0
+        # 提取和弦部分（字母）
+        while i < len(part) and (part[i].isalpha() or part[i] == '#' or part[i] == 'b'):
+            chord += part[i]
+            i += 1
+        
+        # 提取音调部分（数字）
+        while i < len(part) and part[i].isdigit():
+            tune += part[i]
+            i += 1
         
         # 只有当和弦和音调都存在时才添加到结果中
         if chord and tune:

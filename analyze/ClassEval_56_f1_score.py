@@ -17,7 +17,7 @@ def f1_score(self, predicted_labels, true_labels):
     precision = tp / (tp + fp) if (tp + fp) > 0 else 0
     recall = tp / (tp + fn) if (tp + fn) > 0 else 0
     
-    # Calculate F1 score
+    # Calculate F1 score (harmonic mean of precision and recall)
     if precision + recall == 0:
         return 0.0
     

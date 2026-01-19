@@ -24,5 +24,5 @@ def is_free_at(self, check_time):
         if start_time_obj <= check_time_obj < end_time_obj:
             return False
     
-    # 如果没有冲突,则该时间空闲
+    # 如果没有冲突,则空闲
     return True

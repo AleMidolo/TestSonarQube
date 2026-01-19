@@ -6,7 +6,7 @@ def delete_from_database(self, table_name, name):
     >>> db.delete_from_database('user', 'John')
     """
     cursor = self.connection.cursor()
-    delete_query = f"DELETE FROM {table_name} WHERE name = ?"
-    cursor.execute(delete_query, (name,))
+    query = f"DELETE FROM {table_name} WHERE name = ?"
+    cursor.execute(query, (name,))
     self.connection.commit()
     cursor.close()

@@ -16,10 +16,10 @@ def calculate_total(self):
         price = item["price"]
         count = item["count"]
         
-        # 获取折扣率，如果没有则默认为1.0（无折扣）
+        # 获取销售折扣,如果没有则默认为1.0(无折扣)
         discount = self.sales.get(dish_name, 1.0)
         
-        # 计算该菜品的总价：数量 * 价格 * 折扣率
+        # 计算该菜品的总价: 数量 * 价格 * 折扣
         total += count * price * discount
     
     return total

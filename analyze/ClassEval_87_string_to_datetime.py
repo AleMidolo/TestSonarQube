@@ -25,29 +25,36 @@ def string_to_datetime(self, string):
     
     # 如果标准格式失败，尝试处理不带前导零的格式（如示例中的 "2001-7-18 1:1:1"）
     # 将字符串标准化，添加前导零
-    parts = string.split()
-    if len(parts) == 2:
+    import re
+    
+    # 分离日期和时间部分
+    parts = string.strip().split()
+    if len(parts) >= 1:
         date_part = parts[0]
-        time_part = parts[1]
+        time_part = parts[1] if len(parts) > 1 else "0:0:0"
         
-        # 处理日期部分
-        date_components = date_part.replace('/', '-').split('-')
+        # 处理日期部分（支持 - 或 / 分隔符）
+        if '-' in date_part:
+            date_components = date_part.split('-')
+            separator = '-'
+        else:
+            date_components = date_part.split('/')
+            separator = '/'
+        
+        # 补齐日期部分的前导零
         if len(date_components) == 3:
             year, month, day = date_components
-            date_part = f"{year}-{month.zfill(2)}-{day.zfill(2)}"
+            date_part = f"{year.zfill(4)}{separator}{month.zfill(2)}{separator}{day.zfill(2)}"
         
         # 处理时间部分
         time_components = time_part.split(':')
-        if len(time_components) == 3:
-            hour, minute, second = time_components
-            time_part = f"{hour.zfill(2)}:{minute.zfill(2)}:{second.zfill(2)}"
+        if len(time_components) >= 2:
+            hour = time_components[0].zfill(2)
+            minute = time_components[1].zfill(2)
+            second = time_components[2].zfill(2) if len(time_components) > 2 else "00"
+            time_part = f"{hour}:{minute}:{second}"
         
         normalized_string = f"{date_part} {time_part}"
-        return datetime.strptime(normalized_string, "%Y-%m-%d %H:%M:%S")
+        return datetime.strptime(normalized_string, "%Y{0}%m{0}%d %H:%M:%S".format(separator))
     
-    # 如果所有尝试都失败，使用dateutil作为后备
-    try:
-        from dateutil import parser
-        return parser.parse(string)
-    except:
-        raise ValueError(f"无法解析时间字符串: {string}")
+    raise ValueError(f"Unable to parse datetime string: {string}")

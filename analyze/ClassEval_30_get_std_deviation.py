@@ -6,7 +6,7 @@ def get_std_deviation(self):
     >>> ds2.get_std_deviation()
     1.12
     """
-    if not self.data:
+    if not self.data or len(self.data) == 0:
         return 0.0
     
     # 计算平均值

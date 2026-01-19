@@ -12,15 +12,15 @@ def rail_fence_decipher(self, encrypted_text, rails):
     if rails <= 1 or len(encrypted_text) <= 1:
         return encrypted_text
     
-    # 创建栅栏结构来标记字符位置
+    # Create a matrix to mark positions
     fence = [[None for _ in range(len(encrypted_text))] for _ in range(rails)]
     
-    # 标记字符应该放置的位置（使用zigzag模式）
+    # Mark the positions in zigzag pattern
     rail = 0
-    direction = 1  # 1表示向下，-1表示向上
+    direction = 1  # 1 for down, -1 for up
     
     for col in range(len(encrypted_text)):
-        fence[rail][col] = True
+        fence[rail][col] = '*'
         
         if rail == 0:
             direction = 1
@@ -29,15 +29,15 @@ def rail_fence_decipher(self, encrypted_text, rails):
         
         rail += direction
     
-    # 将加密文本按照标记的位置填充到栅栏中
+    # Fill the fence with encrypted text characters
     index = 0
     for row in range(rails):
         for col in range(len(encrypted_text)):
-            if fence[row][col] is True:
+            if fence[row][col] == '*':
                 fence[row][col] = encrypted_text[index]
                 index += 1
     
-    # 按照zigzag模式读取字符
+    # Read the fence in zigzag pattern to get decrypted text
     result = []
     rail = 0
     direction = 1

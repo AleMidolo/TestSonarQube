@@ -16,21 +16,22 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
     result = []
     
     for xi, yi in zip(x_interp, y_interp):
-        # Find the bounding indices for x
+        # Find the indices for bilinear interpolation
+        # Find x indices
         x_idx = None
         for i in range(len(x) - 1):
             if x[i] <= xi <= x[i + 1]:
                 x_idx = i
                 break
         
-        # Find the bounding indices for y
+        # Find y indices
         y_idx = None
         for j in range(len(y) - 1):
             if y[j] <= yi <= y[j + 1]:
                 y_idx = j
                 break
         
-        # If point is outside bounds, handle edge cases
+        # If point is outside the grid, handle edge cases
         if x_idx is None:
             if xi <= x[0]:
                 x_idx = 0
@@ -53,7 +54,7 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         z22 = z[x_idx + 1][y_idx + 1]
         
         # Bilinear interpolation
-        # First interpolate in x direction
+        # Normalize coordinates
         if x2 - x1 != 0:
             tx = (xi - x1) / (x2 - x1)
         else:
@@ -64,12 +65,12 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         else:
             ty = 0
         
-        # Interpolate along y at x1
-        z_y1 = z11 * (1 - ty) + z12 * ty
-        # Interpolate along y at x2
-        z_y2 = z21 * (1 - ty) + z22 * ty
-        # Interpolate along x
-        z_interp = z_y1 * (1 - tx) + z_y2 * tx
+        # Interpolate along x for both y values
+        z_y1 = z11 * (1 - tx) + z21 * tx
+        z_y2 = z12 * (1 - tx) + z22 * tx
+        
+        # Interpolate along y
+        z_interp = z_y1 * (1 - ty) + z_y2 * ty
         
         result.append(z_interp)
     

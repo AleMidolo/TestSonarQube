@@ -15,7 +15,7 @@ def mrr(data):
         # Find the position of the first 1 (correct answer)
         for i, val in enumerate(result_list):
             if val == 1:
-                # Reciprocal rank is 1/(position+1) since positions are 0-indexed
+                # Return reciprocal rank (1-indexed position)
                 return 1.0 / (i + 1)
         # If no correct answer found, return 0
         return 0.0

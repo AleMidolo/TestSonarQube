@@ -6,33 +6,31 @@ def is_valid(self):
     >>> ipaddress.is_valid()
     True
     """
-    try:
-        # 按'.'分割IP地址
-        parts = self.ip.split('.')
-        
-        # 检查是否恰好有4个部分
-        if len(parts) != 4:
+    if not hasattr(self, 'ip') and not hasattr(self, 'address'):
+        return False
+    
+    ip_str = self.ip if hasattr(self, 'ip') else self.address
+    
+    if not isinstance(ip_str, str):
+        return False
+    
+    parts = ip_str.split('.')
+    
+    if len(parts) != 4:
+        return False
+    
+    for part in parts:
+        if not part:
             return False
         
-        # 检查每个部分
-        for part in parts:
-            # 检查是否为空
-            if not part:
-                return False
-            
-            # 检查是否有前导零（除了"0"本身）
-            if len(part) > 1 and part[0] == '0':
-                return False
-            
-            # 检查是否全为数字
-            if not part.isdigit():
-                return False
-            
-            # 转换为整数并检查范围
-            num = int(part)
-            if num < 0 or num > 255:
-                return False
+        if not part.isdigit():
+            return False
         
-        return True
-    except:
-        return False
+        if part[0] == '0' and len(part) > 1:
+            return False
+        
+        num = int(part)
+        if num < 0 or num > 255:
+            return False
+    
+    return True

@@ -12,16 +12,18 @@ def auto_check_conflict(self):
     # 检查是否存在冲突
     # 如果当前温度 < 目标温度，应该使用 'heat' 模式
     # 如果当前温度 > 目标温度，应该使用 'cool' 模式
-    # 如果当前温度 == 目标温度，没有冲突
+    # 如果当前温度 == 目标温度，任何模式都可以
     
     if self.current_temperature < self.target_temperature:
         # 需要加热
-        if self.mode != 'heat':
+        if self.mode == 'cool':
+            # 冲突：温度低但模式是制冷
             self.mode = 'heat'
             return False
     elif self.current_temperature > self.target_temperature:
         # 需要制冷
-        if self.mode != 'cool':
+        if self.mode == 'heat':
+            # 冲突：温度高但模式是加热
             self.mode = 'cool'
             return False
     

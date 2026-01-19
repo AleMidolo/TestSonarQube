@@ -18,10 +18,13 @@ def correlation_coefficient(data1, data2):
     numerator = sum((data1[i] - mean1) * (data2[i] - mean2) for i in range(n))
     
     # 计算标准差的分母部分
-    std1 = sum((x - mean1) ** 2 for x in data1) ** 0.5
-    std2 = sum((x - mean2) ** 2 for x in data2) ** 0.5
+    sum_sq1 = sum((x - mean1) ** 2 for x in data1)
+    sum_sq2 = sum((x - mean2) ** 2 for x in data2)
+    
+    denominator = (sum_sq1 * sum_sq2) ** 0.5
     
     # 计算相关系数
-    correlation = numerator / (std1 * std2)
+    if denominator == 0:
+        return 0
     
-    return correlation
+    return numerator / denominator

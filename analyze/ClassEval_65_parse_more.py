@@ -10,10 +10,6 @@ def parse_more(self, i):
     magnitude_map = {
         1: "THOUSAND",
         2: "MILLION",
-        3: "BILLION",
-        4: "TRILLION",
-        5: "QUADRILLION",
-        6: "QUINTILLION"
+        3: "BILLION"
     }
-    
     return magnitude_map.get(i, "")

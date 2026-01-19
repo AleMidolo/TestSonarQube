@@ -20,22 +20,33 @@ def split_sentences(self, sentences_string):
     # 重新组合句子，添加回分隔符
     sentences = []
     matches = re.finditer(pattern, sentences_string)
-    match_positions = [(m.start(), m.group()) for m in matches]
+    match_list = list(matches)
     
-    if not match_positions:
+    if not match_list:
         return [sentences_string.strip()] if sentences_string.strip() else []
     
+    # 使用另一种方法：找到所有分割点
+    split_positions = []
+    i = 0
+    while i < len(sentences_string):
+        if sentences_string[i] in '.?':
+            # 检查是否是 Mr.
+            if sentences_string[i] == '.' and i >= 2 and sentences_string[i-2:i] == 'Mr':
+                i += 1
+                continue
+            # 检查后面是否有空格或是字符串末尾
+            if i + 1 < len(sentences_string) and sentences_string[i + 1] == ' ':
+                split_positions.append(i + 1)
+            elif i + 1 == len(sentences_string):
+                split_positions.append(i + 1)
+        i += 1
+    
+    # 根据分割位置提取句子
     start = 0
-    for i, (pos, delimiter) in enumerate(match_positions):
-        sentence = sentences_string[start:pos + 1].strip()
+    for pos in split_positions:
+        sentence = sentences_string[start:pos].strip()
         if sentence:
             sentences.append(sentence)
-        start = pos + 1
-    
-    # 处理最后剩余的部分
-    if start < len(sentences_string):
-        remaining = sentences_string[start:].strip()
-        if remaining:
-            sentences.append(remaining)
+        start = pos
     
     return sentences

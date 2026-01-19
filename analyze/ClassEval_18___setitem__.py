@@ -16,4 +16,5 @@ def __setitem__(self, key, value):
         return components[0] + ''.join(x.title() for x in components[1:])
     
     camel_key = to_camel_case(key)
+    # Store the value using the camelCase key in the internal dictionary
     self.__dict__[camel_key] = value

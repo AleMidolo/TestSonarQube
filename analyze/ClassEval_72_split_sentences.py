@@ -20,11 +20,11 @@ def split_sentences(self, text):
         if sentence:  # Skip empty strings
             # Check if there's a punctuation mark following
             if i + 1 < len(sentences) and sentences[i + 1] in '.?!':
-                # Not the last sentence - don't include punctuation
+                # Not the last sentence - add without punctuation
                 if i + 2 < len(sentences):
                     result.append(sentence)
                 else:
-                    # This is the last sentence - include punctuation
+                    # This is the last sentence - keep punctuation
                     result.append(sentence + sentences[i + 1])
                 i += 2
             else:

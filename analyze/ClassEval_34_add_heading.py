@@ -11,5 +11,5 @@ def add_heading(self, heading, level=1):
             return True
         else:
             return False
-    except Exception as e:
+    except Exception:
         return False

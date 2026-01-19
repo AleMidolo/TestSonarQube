@@ -15,14 +15,13 @@ def lemmatize_sentence(self, sentence):
     from nltk.stem import WordNetLemmatizer
     
     # 移除标点符号
-    translator = str.maketrans('', '', string.punctuation)
-    sentence_no_punct = sentence.translate(translator)
+    sentence = sentence.translate(str.maketrans('', '', string.punctuation))
     
     # 分词
-    tokens = word_tokenize(sentence_no_punct)
+    words = word_tokenize(sentence)
     
     # 词性标注
-    pos_tags = pos_tag(tokens)
+    pos_tags = pos_tag(words)
     
     # 初始化词形还原器
     lemmatizer = WordNetLemmatizer()

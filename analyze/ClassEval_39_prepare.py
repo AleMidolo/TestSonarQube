@@ -39,7 +39,7 @@ def prepare(self, expression):
             while operator_stack and operator_stack[-1] != '(':
                 output.append(operator_stack.pop())
             if operator_stack:
-                operator_stack.pop()  # 移除左括号
+                operator_stack.pop()  # 弹出左括号
         
         # 如果是运算符
         elif char in precedence:
@@ -56,5 +56,5 @@ def prepare(self, expression):
     while operator_stack:
         output.append(operator_stack.pop())
     
-    # 将结果存储到实例变量中
+    # 将结果存储到实例变量
     self.postfix_stack = output

@@ -15,7 +15,7 @@ def calculate(self, expression):
         if not expression:
             return None
         
-        # 检查表达式是否只包含有效字符
+        # 检查表达式是否只包含合法字符
         valid_chars = set('0123456789+-*/(). ')
         if not all(c in valid_chars for c in expression):
             return None

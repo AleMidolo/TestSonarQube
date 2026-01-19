@@ -19,31 +19,28 @@ def fleiss_kappa(testData, N, k, n):
     >>>                              [0, 2, 2, 3, 7]], 10, 5, 14)
     0.20993070442195522
     """
-    # Step 1: Calculate P_i (proportion of agreement for each subject)
+    # Calculate P_i for each subject (observed agreement for each subject)
     P_i_sum = 0.0
     for i in range(N):
-        sum_squares = 0.0
+        sum_sq = 0.0
         for j in range(k):
-            sum_squares += testData[i][j] ** 2
-        P_i = (sum_squares - n) / (n * (n - 1))
+            sum_sq += testData[i][j] ** 2
+        P_i = (sum_sq - n) / (n * (n - 1))
         P_i_sum += P_i
     
-    # Step 2: Calculate P_bar (mean of P_i values)
+    # Calculate P_bar (mean observed agreement)
     P_bar = P_i_sum / N
     
-    # Step 3: Calculate P_j (proportion of ratings in each category)
-    P_j_sum = 0.0
+    # Calculate P_e (expected agreement by chance)
+    P_e = 0.0
     for j in range(k):
-        category_sum = 0.0
+        sum_col = 0.0
         for i in range(N):
-            category_sum += testData[i][j]
-        P_j = category_sum / (N * n)
-        P_j_sum += P_j ** 2
+            sum_col += testData[i][j]
+        p_j = sum_col / (N * n)
+        P_e += p_j ** 2
     
-    # Step 4: Calculate P_e_bar (expected agreement by chance)
-    P_e_bar = P_j_sum
-    
-    # Step 5: Calculate Fleiss' kappa
-    kappa = (P_bar - P_e_bar) / (1 - P_e_bar)
+    # Calculate Fleiss' kappa
+    kappa = (P_bar - P_e) / (1 - P_e)
     
     return kappa

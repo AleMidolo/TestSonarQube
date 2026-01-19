@@ -25,7 +25,7 @@ def write_excel(self, data, file_name):
         for row_data in data:
             sheet.append(row_data)
         
-        # 保存文件
+        # 保存工作簿到指定文件
         workbook.save(file_name)
         
         return 1

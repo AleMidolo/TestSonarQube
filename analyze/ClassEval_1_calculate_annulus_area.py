@@ -9,7 +9,4 @@ def calculate_annulus_area(self, inner_radius, outer_radius):
     >>> areaCalculator.calculate_annulus_area(2, 3)
     15.707963267948966
     """
-    outer_area = math.pi * outer_radius ** 2
-    inner_area = math.pi * inner_radius ** 2
-    annulus_area = outer_area - inner_area
-    return annulus_area
+    return math.pi * (outer_radius ** 2 - inner_radius ** 2)

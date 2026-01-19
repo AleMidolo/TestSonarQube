@@ -15,7 +15,7 @@ def move(self, direction):
     # 检查新位置是否撞到自己的身体
     if new_head in self.positions[1:]:
         # 重新开始游戏
-        self.reset()  # 假设有reset方法来重新初始化
+        self.reset()
         return
     
     # 将新头部添加到positions列表的开头
