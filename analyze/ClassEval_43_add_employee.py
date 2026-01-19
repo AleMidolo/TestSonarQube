@@ -14,6 +14,9 @@ def add_employee(self, employee_id, name, position, department, salary):
     False
 
     """
+    if not hasattr(self, 'employees'):
+        self.employees = {}
+    
     if employee_id in self.employees:
         return False
     

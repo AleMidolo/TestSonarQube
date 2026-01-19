@@ -17,23 +17,21 @@ def remove_book(self, title, quantity):
     if not title.strip():
         raise ValueError("Il titolo non può essere vuoto")
     
-    # Cerca il libro nell'inventario (assumendo che self.inventory sia una lista o dizionario)
+    # Cerca il libro nell'inventario
     found = False
-    
-    # Assumendo che self.inventory sia un dizionario con titolo come chiave
-    if hasattr(self, 'inventory'):
-        if title in self.inventory:
-            if self.inventory[title] < quantity:
-                raise ValueError(f"Quantità insufficiente. Disponibili: {self.inventory[title]}, richiesti: {quantity}")
-            
-            self.inventory[title] -= quantity
-            
-            # Rimuovi completamente il libro se la quantità diventa 0
-            if self.inventory[title] == 0:
-                del self.inventory[title]
-            
+    for book in self.inventory:
+        if book['title'] == title:
             found = True
-        else:
-            raise KeyError(f"Il libro '{title}' non è presente nell'inventario")
-    else:
-        raise AttributeError("L'inventario non è stato inizializzato")
+            if book['quantity'] < quantity:
+                raise ValueError(f"Quantità insufficiente. Disponibili: {book['quantity']}, richiesti: {quantity}")
+            
+            book['quantity'] -= quantity
+            
+            # Se la quantità diventa 0, rimuovi il libro dall'inventario
+            if book['quantity'] == 0:
+                self.inventory.remove(book)
+            
+            break
+    
+    if not found:
+        raise ValueError(f"Libro '{title}' non trovato nell'inventario")

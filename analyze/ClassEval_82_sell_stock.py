@@ -17,21 +17,22 @@ def sell_stock(self, stock):
     quantity = stock['quantity']
     
     # Cerca l'azione nel portafoglio
-    for item in self.portfolio:
-        if item['name'] == name:
+    for i, portfolio_stock in enumerate(self.portfolio):
+        if portfolio_stock['name'] == name:
             # Verifica se la quantità è sufficiente
-            if item['quantity'] < quantity:
+            if portfolio_stock['quantity'] < quantity:
                 return False
             
             # Aggiungi il denaro al saldo di cassa
             self.cash_balance += price * quantity
             
-            # Riduci la quantità dell'azione
-            item['quantity'] -= quantity
-            
-            # Se la quantità diventa 0, rimuovi l'azione dal portafoglio
-            if item['quantity'] == 0:
-                self.portfolio.remove(item)
+            # Riduci la quantità o rimuovi l'azione dal portafoglio
+            if portfolio_stock['quantity'] == quantity:
+                # Rimuovi completamente l'azione
+                self.portfolio.pop(i)
+            else:
+                # Riduci la quantità
+                portfolio_stock['quantity'] -= quantity
             
             return True
     

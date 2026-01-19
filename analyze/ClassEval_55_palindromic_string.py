@@ -15,7 +15,7 @@ def palindromic_string(self):
     transformed = '#'.join('^{}$'.format(self.string))
     n = len(transformed)
     
-    # Array to store palindrome radii
+    # Array to store palindrome lengths
     P = [0] * n
     center = 0
     right = 0
@@ -27,7 +27,7 @@ def palindromic_string(self):
         # Mirror of i with respect to center
         mirror = 2 * center - i
         
-        # If i is within the right boundary, use previously computed values
+        # If i is within right boundary, use previously computed values
         if i < right:
             P[i] = min(right - i, P[mirror])
         

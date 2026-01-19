@@ -22,5 +22,6 @@ def add_dish(self, dish):
             else:
                 # Conteggio non valido (non abbastanza disponibile)
                 return False
+    
     # Piatto non trovato nel menu
     return False

@@ -9,12 +9,12 @@ def is_valid(self):
     if not hasattr(self, 'ip') and not hasattr(self, 'address'):
         return False
     
-    ip_string = self.ip if hasattr(self, 'ip') else self.address
+    ip_str = self.ip if hasattr(self, 'ip') else self.address
     
-    if not isinstance(ip_string, str):
+    if not isinstance(ip_str, str):
         return False
     
-    parts = ip_string.split('.')
+    parts = ip_str.split('.')
     
     if len(parts) != 4:
         return False

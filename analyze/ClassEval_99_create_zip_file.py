@@ -1,6 +1,3 @@
-import zipfile
-import os
-
 def create_zip_file(self, files, output_file_name):
     """
     Comprimi l'elenco di file specificato in un file zip e lo salva nel percorso specificato
@@ -10,27 +7,29 @@ def create_zip_file(self, files, output_file_name):
     >>> zfp = ZipFileProcessor("aaa.zip")
     >>> zfp.create_zip_file(["bbb.txt", "ccc.txt", "ddd.txt"], "output/bcd")
     """
+    import zipfile
+    import os
+    
     try:
-        # Ensure the output file has .zip extension
-        if not output_file_name.endswith('.zip'):
-            output_file_name += '.zip'
-        
-        # Create output directory if it doesn't exist
+        # Ensure the output directory exists
         output_dir = os.path.dirname(output_file_name)
         if output_dir and not os.path.exists(output_dir):
             os.makedirs(output_dir)
         
-        # Create zip file
+        # Add .zip extension if not present
+        if not output_file_name.endswith('.zip'):
+            output_file_name += '.zip'
+        
+        # Create the zip file
         with zipfile.ZipFile(output_file_name, 'w', zipfile.ZIP_DEFLATED) as zipf:
             for file in files:
-                # Check if file exists
                 if os.path.exists(file):
-                    # Add file to zip, using just the filename (not full path) as arcname
+                    # Add file to zip, using just the filename as the archive name
                     zipf.write(file, os.path.basename(file))
                 else:
                     # If any file doesn't exist, return False
                     return False
         
         return True
-    except Exception as e:
+    except Exception:
         return False

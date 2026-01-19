@@ -10,14 +10,14 @@ def palindromic_length(self, center, diff, string):
     2
 
     """
-    # Base case: check if indices are within bounds
+    # Base case: se gli indici sono fuori dai limiti della stringa
     if center - diff < 0 or center + diff >= len(string):
         return 0
     
-    # Check if characters at symmetric positions match
+    # Se i caratteri alle posizioni simmetriche rispetto al centro sono uguali
     if string[center - diff] == string[center + diff]:
-        # Recursively expand and add 2 (one for each matching character)
-        return 2 + self.palindromic_length(center, diff + 1, string)
+        # Incrementa la lunghezza e continua ricorsivamente
+        return 1 + self.palindromic_length(center, diff + 1, string)
     else:
-        # Characters don't match, stop expansion
+        # Se non sono uguali, termina la ricorsione
         return 0

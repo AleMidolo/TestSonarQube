@@ -24,9 +24,9 @@ def calculate_calorie_intake(self):
     condition = self.get_condition()
     
     # Calculate calorie intake based on condition
-    if condition == "overweight":
+    if condition == "overweight":  # troppo grasso
         calorie_intake = bmr * 1.2
-    elif condition == "underweight":
+    elif condition == "underweight":  # troppo magro
         calorie_intake = bmr * 1.6
     else:  # normal
         calorie_intake = bmr * 1.4

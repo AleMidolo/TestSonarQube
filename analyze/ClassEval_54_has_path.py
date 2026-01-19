@@ -11,7 +11,7 @@ def has_path(self, pos1, pos2):
     if pos1 == pos2:
         return False
     
-    # Check if the tiles match
+    # Check if the tiles have the same value
     x1, y1 = pos1
     x2, y2 = pos2
     
@@ -23,29 +23,30 @@ def has_path(self, pos1, pos2):
     cols = len(self.board[0]) if rows > 0 else 0
     
     # Queue stores: (x, y, direction, turns)
-    # direction: 0=horizontal, 1=vertical, -1=start
+    # direction: 0=right, 1=down, 2=left, 3=up, -1=start
     queue = deque([(x1, y1, -1, 0)])
-    visited = {}
-    visited[(x1, y1, -1)] = 0
+    visited = set()
+    visited.add((x1, y1, -1))
     
-    directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]  # down, up, right, left
+    directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]  # right, down, left, up
     
     while queue:
         x, y, prev_dir, turns = queue.popleft()
         
         # Try all 4 directions
-        for i, (dx, dy) in enumerate(directions):
+        for dir_idx, (dx, dy) in enumerate(directions):
             nx, ny = x + dx, y + dy
             
-            # Determine current direction (0=horizontal for left/right, 1=vertical for up/down)
-            curr_dir = 0 if i >= 2 else 1
+            # Check bounds (allow one step outside the board)
+            if nx < -1 or nx > cols or ny < -1 or ny > rows:
+                continue
             
-            # Calculate new turn count
+            # Calculate number of turns
             new_turns = turns
-            if prev_dir != -1 and prev_dir != curr_dir:
+            if prev_dir != -1 and prev_dir != dir_idx:
                 new_turns += 1
             
-            # Can't have more than 2 turns
+            # Maximum 2 turns allowed
             if new_turns > 2:
                 continue
             
@@ -53,21 +54,17 @@ def has_path(self, pos1, pos2):
             if (nx, ny) == (x2, y2):
                 return True
             
-            # Check bounds (allow one step outside the board)
-            if nx < -1 or nx > cols or ny < -1 or ny > rows:
-                continue
-            
-            # Check if cell is empty or outside board
+            # Check if position is valid (empty or outside board)
             if 0 <= nx < cols and 0 <= ny < rows:
                 if self.board[ny][nx] is not None and (nx, ny) != (x2, y2):
                     continue
             
-            # Check if we've visited this state with fewer or equal turns
-            state = (nx, ny, curr_dir)
-            if state in visited and visited[state] <= new_turns:
+            # Avoid revisiting same state
+            state = (nx, ny, dir_idx)
+            if state in visited:
                 continue
             
-            visited[state] = new_turns
-            queue.append((nx, ny, curr_dir, new_turns))
+            visited.add(state)
+            queue.append((nx, ny, dir_idx, new_turns))
     
     return False

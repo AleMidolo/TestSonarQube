@@ -27,7 +27,7 @@ def multiply(num1, num2):
     len1, len2 = len(num1), len(num2)
     result = [0] * (len1 + len2)
     
-    # Reverse the numbers for easier processing (least significant digit first)
+    # Reverse the strings for easier processing (least significant digit first)
     num1 = num1[::-1]
     num2 = num2[::-1]
     
@@ -47,7 +47,7 @@ def multiply(num1, num2):
     while len(result) > 1 and result[-1] == 0:
         result.pop()
     
-    # Reverse to get correct order
+    # Reverse to get the correct order
     result_str = ''.join(map(str, result[::-1]))
     
     # Add negative sign if needed

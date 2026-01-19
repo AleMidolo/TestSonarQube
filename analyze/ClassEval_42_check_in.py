@@ -15,24 +15,24 @@ def check_in(self, room_type, room_number, name):
     >>> hotel.booked_rooms
     {'single': {}}
     """
-    # Controlla se il room_type esiste nelle booked_rooms
+    # Verifica se il room_type esiste nelle booked_rooms
     if room_type not in self.booked_rooms:
         return False
     
-    # Controlla se il nome esiste nelle prenotazioni per questo tipo di stanza
+    # Verifica se il nome esiste nelle prenotazioni per questo tipo di stanza
     if name not in self.booked_rooms[room_type]:
         return False
     
     # Ottieni il numero di stanze prenotate da questa persona
-    booked_number = self.booked_rooms[room_type][name]
+    booked_count = self.booked_rooms[room_type][name]
     
-    # Controlla se room_number è superiore alla quantità prenotata
-    if room_number > booked_number:
+    # Verifica se room_number è superiore alla quantità prenotata
+    if room_number > booked_count:
         return False
     
     # Se room_number è uguale alla quantità prenotata, rimuovi completamente la prenotazione
-    if room_number == booked_number:
+    if room_number == booked_count:
         del self.booked_rooms[room_type][name]
     else:
-        # Se room_number è inferiore, aggiorna la quantità prenotata
-        self.booked_rooms[room_type][name] = booked_number - room_number
+        # Altrimenti, riduci la quantità prenotata
+        self.booked_rooms[room_type][name] = booked_count - room_number

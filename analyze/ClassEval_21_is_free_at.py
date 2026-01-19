@@ -12,17 +12,16 @@ def is_free_at(self, check_time):
     """
     from datetime import datetime
     
-    # Converti check_time in formato datetime per il confronto
+    # Converti check_time in formato datetime
     check_time_obj = datetime.strptime(check_time, '%H:%M')
     
-    # Verifica se l'orario confligge con qualsiasi corso
+    # Verifica se l'orario confligge con qualche corso
     for course in self.courses:
         start_time_obj = datetime.strptime(course['start_time'], '%H:%M')
         end_time_obj = datetime.strptime(course['end_time'], '%H:%M')
         
-        # Se check_time è tra start_time (incluso) e end_time (escluso), non è libero
+        # Se check_time è tra start_time e end_time (escluso end_time), c'è conflitto
         if start_time_obj <= check_time_obj < end_time_obj:
             return False
     
-    # Se non ci sono conflitti, l'orario è libero
     return True

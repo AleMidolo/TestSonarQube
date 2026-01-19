@@ -8,31 +8,29 @@ def get_jwt_user(self, request):
     {'user': {'name': 'user1'}
 
     """
-    import datetime
+    try:
+        # Verifica che la richiesta contenga headers
+        if not request or 'headers' not in request:
+            return None
+        
+        headers = request['headers']
+        
+        # Verifica che ci sia l'header Authorization
+        if 'Authorization' not in headers:
+            return None
+        
+        auth_data = headers['Authorization']
+        
+        # Verifica che Authorization contenga i dati dell'utente
+        if not isinstance(auth_data, dict):
+            return None
+        
+        # Verifica che ci sia il campo 'user'
+        if 'user' not in auth_data:
+            return None
+        
+        # Restituisce le informazioni dell'utente
+        return {'user': auth_data['user']}
     
-    if not request or 'headers' not in request:
+    except (KeyError, TypeError, AttributeError):
         return None
-    
-    headers = request.get('headers', {})
-    authorization = headers.get('Authorization')
-    
-    if not authorization:
-        return None
-    
-    # Verifica se l'authorization contiene le informazioni necessarie
-    if not isinstance(authorization, dict):
-        return None
-    
-    jwt_token = authorization.get('jwt')
-    user_info = authorization.get('user')
-    
-    if not jwt_token or not user_info:
-        return None
-    
-    # Verifica che il token JWT sia valido (contiene il nome utente e la data odierna)
-    if 'name' in user_info:
-        expected_token = user_info['name'] + str(datetime.date.today())
-        if jwt_token == expected_token:
-            return {'user': user_info}
-    
-    return None

@@ -12,25 +12,23 @@ def purchase_item(self, item_name):
     False
 
     """
-    # Verifica se il prodotto esiste nell'inventario
+    # Check if item exists in inventory
     if item_name not in self.inventory:
         return False
     
-    # Ottieni le informazioni del prodotto
+    # Get item details
     item = self.inventory[item_name]
-    price = item['price']
-    quantity = item['quantity']
     
-    # Verifica se il prodotto è disponibile (quantità > 0)
-    if quantity <= 0:
+    # Check if item is in stock
+    if item['quantity'] <= 0:
         return False
     
-    # Verifica se il saldo è sufficiente per l'acquisto
-    if self.balance < price:
+    # Check if balance is sufficient
+    if self.balance < item['price']:
         return False
     
-    # Effettua l'acquisto
-    self.balance -= price
+    # Process purchase
+    self.balance -= item['price']
     self.inventory[item_name]['quantity'] -= 1
     
     return self.balance

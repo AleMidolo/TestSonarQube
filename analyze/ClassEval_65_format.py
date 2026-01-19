@@ -7,22 +7,27 @@ def format(self, x):
     >>> formatter.format(123456)
     "CENTO VENTITRE MILA QUATTROCENTO CINQUANTA SEI SOLO"
     """
-    if isinstance(x, float):
-        int_part = int(x)
-        decimal_part = round((x - int_part) * 100)
-        if decimal_part == 0:
-            return self.format(int_part)
-        else:
-            return f"{self.format(int_part)[:-5]}/{self.format(decimal_part)[:-5]}"
-    
     if x == 0:
         return "ZERO SOLO"
     
+    # Separate integer and decimal parts
+    if isinstance(x, float):
+        parts = str(x).split('.')
+        integer_part = int(parts[0])
+        decimal_part = parts[1] if len(parts) > 1 else None
+    else:
+        integer_part = abs(int(x))
+        decimal_part = None
+    
+    # Handle negative numbers
+    is_negative = x < 0
+    
+    # Units, tens, and special numbers
     units = ["", "UNO", "DUE", "TRE", "QUATTRO", "CINQUE", "SEI", "SETTE", "OTTO", "NOVE"]
     teens = ["DIECI", "UNDICI", "DODICI", "TREDICI", "QUATTORDICI", "QUINDICI", "SEDICI", "DICIASSETTE", "DICIOTTO", "DICIANNOVE"]
     tens = ["", "", "VENTI", "TRENTA", "QUARANTA", "CINQUANTA", "SESSANTA", "SETTANTA", "OTTANTA", "NOVANTA"]
     
-    def convert_below_thousand(n):
+    def convert_hundreds(n):
         if n == 0:
             return ""
         elif n < 10:
@@ -32,10 +37,14 @@ def format(self, x):
         elif n < 100:
             ten = n // 10
             unit = n % 10
-            if unit in [1, 8]:
-                return tens[ten][:-1] + units[unit]
-            else:
-                return tens[ten] + units[unit]
+            result = tens[ten]
+            if unit > 0:
+                # Handle vowel elision
+                if unit == 1 or unit == 8:
+                    result = result[:-1] + units[unit]
+                else:
+                    result = result + units[unit]
+            return result
         else:
             hundred = n // 100
             remainder = n % 100
@@ -43,45 +52,49 @@ def format(self, x):
                 result = "CENTO"
             else:
                 result = units[hundred] + "CENTO"
-            
             if remainder > 0:
-                result += " " + convert_below_thousand(remainder)
-            
+                result += " " + convert_hundreds(remainder)
             return result
     
-    if x < 1000:
-        return convert_below_thousand(x).strip() + " SOLO"
-    elif x < 1000000:
-        thousands = x // 1000
-        remainder = x % 1000
+    def convert_integer(n):
+        if n == 0:
+            return ""
         
-        if thousands == 1:
-            result = "MILLE"
-        else:
-            result = convert_below_thousand(thousands) + " MILA"
-        
-        if remainder > 0:
-            result += " " + convert_below_thousand(remainder)
-        
-        return result.strip() + " SOLO"
-    else:
-        millions = x // 1000000
-        remainder = x % 1000000
-        
-        if millions == 1:
-            result = "UN MILIONE"
-        else:
-            result = convert_below_thousand(millions) + " MILIONI"
-        
-        if remainder >= 1000:
-            thousands = remainder // 1000
+        # Split into groups of thousands
+        if n < 1000:
+            return convert_hundreds(n)
+        elif n < 1000000:
+            thousands = n // 1000
+            remainder = n % 1000
             if thousands == 1:
-                result += " MILLE"
+                result = "MILLE"
             else:
-                result += " " + convert_below_thousand(thousands) + " MILA"
-            remainder = remainder % 1000
-        
-        if remainder > 0:
-            result += " " + convert_below_thousand(remainder)
-        
-        return result.strip() + " SOLO"
+                result = convert_hundreds(thousands) + " MILA"
+            if remainder > 0:
+                result += " " + convert_hundreds(remainder)
+            return result
+        else:
+            millions = n // 1000000
+            remainder = n % 1000000
+            if millions == 1:
+                result = "UN MILIONE"
+            else:
+                result = convert_hundreds(millions) + " MILIONI"
+            if remainder > 0:
+                result += " " + convert_integer(remainder)
+            return result
+    
+    result = ""
+    if is_negative:
+        result = "MENO "
+    
+    result += convert_integer(integer_part)
+    
+    if decimal_part:
+        result += " VIRGOLA"
+        for digit in decimal_part:
+            result += " " + units[int(digit)]
+    else:
+        result += " SOLO"
+    
+    return result.strip()

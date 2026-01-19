@@ -9,9 +9,12 @@ def __setitem__(self, key, value):
     >>> camelize_map.__setitem__('first_name', 'new name')
     camelize_map['first_name'] = 'new name'
     """
+    # Convert snake_case key to camelCase
     def snake_to_camel(snake_str):
         components = snake_str.split('_')
+        # Keep the first component as is, capitalize the rest
         return components[0] + ''.join(x.title() for x in components[1:])
     
     camel_key = snake_to_camel(key)
+    # Store using the camelCase key in the underlying dictionary
     self.__dict__[camel_key] = value

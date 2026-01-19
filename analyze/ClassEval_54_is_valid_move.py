@@ -21,67 +21,81 @@ def is_valid_move(self, pos1, pos2):
     
     # Verifica che ci sia un percorso valido tra le due posizioni
     # Nel Mahjong Connect, un percorso valido può avere al massimo 2 svolte (3 segmenti di linea)
-    return self._has_valid_path(pos1, pos2)
+    return self.has_valid_path(pos1, pos2)
 
-def _has_valid_path(self, pos1, pos2):
+
+def has_valid_path(self, pos1, pos2):
     """
     Verifica se esiste un percorso valido tra due posizioni con al massimo 2 svolte
     """
-    # Prova percorso diretto (0 svolte)
-    if self._is_direct_path(pos1, pos2):
+    # Percorso diretto (0 svolte)
+    if self.is_direct_path(pos1, pos2):
         return True
     
-    # Prova percorso con 1 svolta
-    if self._is_one_turn_path(pos1, pos2):
-        return True
+    # Percorso con 1 svolta
+    # Prova il punto intermedio (pos1[0], pos2[1])
+    mid1 = (pos1[0], pos2[1])
+    if self.is_empty_or_target(mid1, pos1, pos2):
+        if self.is_direct_path(pos1, mid1) and self.is_direct_path(mid1, pos2):
+            return True
     
-    # Prova percorso con 2 svolte
-    if self._is_two_turn_path(pos1, pos2):
-        return True
+    # Prova il punto intermedio (pos2[0], pos1[1])
+    mid2 = (pos2[0], pos1[1])
+    if self.is_empty_or_target(mid2, pos1, pos2):
+        if self.is_direct_path(pos1, mid2) and self.is_direct_path(mid2, pos2):
+            return True
+    
+    # Percorso con 2 svolte - esplora tutte le possibili posizioni intermedie
+    for y in range(-1, len(self.board) + 1):
+        for x in range(-1, len(self.board[0]) + 1):
+            mid = (x, y)
+            if self.is_empty_or_target(mid, pos1, pos2):
+                # Controlla se possiamo andare da pos1 a mid con 1 svolta
+                if self.has_one_turn_path(pos1, mid, pos1, pos2) and self.is_direct_path(mid, pos2):
+                    return True
+                if self.is_direct_path(pos1, mid) and self.has_one_turn_path(mid, pos2, pos1, pos2):
+                    return True
     
     return False
 
-def _is_direct_path(self, pos1, pos2):
-    """Verifica se c'è un percorso diretto (orizzontale o verticale) tra due posizioni"""
-    if pos1[0] == pos2[0]:  # Stessa colonna (verticale)
+
+def is_empty_or_target(self, pos, pos1, pos2):
+    """Verifica se una posizione è vuota o è una delle posizioni target"""
+    if pos == pos1 or pos == pos2:
+        return True
+    x, y = pos
+    if x < 0 or x >= len(self.board[0]) or y < 0 or y >= len(self.board):
+        return True  # Fuori dalla tavola è considerato vuoto
+    return self.board[y][x] == '' or self.board[y][x] is None
+
+
+def has_one_turn_path(self, pos1, pos2, target1, target2):
+    """Verifica se esiste un percorso con esattamente 1 svolta"""
+    mid1 = (pos1[0], pos2[1])
+    if self.is_empty_or_target(mid1, target1, target2):
+        if self.is_direct_path(pos1, mid1) and self.is_direct_path(mid1, pos2):
+            return True
+    
+    mid2 = (pos2[0], pos1[1])
+    if self.is_empty_or_target(mid2, target1, target2):
+        if self.is_direct_path(pos1, mid2) and self.is_direct_path(mid2, pos2):
+            return True
+    
+    return False
+
+
+def is_direct_path(self, pos1, pos2):
+    """Verifica se esiste un percorso diretto (orizzontale o verticale) tra due posizioni"""
+    if pos1[0] == pos2[0]:  # Stesso x, percorso verticale
         y_min, y_max = min(pos1[1], pos2[1]), max(pos1[1], pos2[1])
         for y in range(y_min + 1, y_max):
-            if self.board[y][pos1[0]] is not None and self.board[y][pos1[0]] != '':
+            if not self.is_empty_or_target((pos1[0], y), pos1, pos2):
                 return False
         return True
-    elif pos1[1] == pos2[1]:  # Stessa riga (orizzontale)
+    elif pos1[1] == pos2[1]:  # Stesso y, percorso orizzontale
         x_min, x_max = min(pos1[0], pos2[0]), max(pos1[0], pos2[0])
         for x in range(x_min + 1, x_max):
-            if self.board[pos1[1]][x] is not None and self.board[pos1[1]][x] != '':
+            if not self.is_empty_or_target((x, pos1[1]), pos1, pos2):
                 return False
         return True
-    return False
-
-def _is_one_turn_path(self, pos1, pos2):
-    """Verifica se c'è un percorso con una svolta tra due posizioni"""
-    # Prova svolta nel punto (pos1[0], pos2[1])
-    corner1 = (pos1[0], pos2[1])
-    if (self.board[corner1[1]][corner1[0]] is None or self.board[corner1[1]][corner1[0]] == ''):
-        if self._is_direct_path(pos1, corner1) and self._is_direct_path(corner1, pos2):
-            return True
-    
-    # Prova svolta nel punto (pos2[0], pos1[1])
-    corner2 = (pos2[0], pos1[1])
-    if (self.board[corner2[1]][corner2[0]] is None or self.board[corner2[1]][corner2[0]] == ''):
-        if self._is_direct_path(pos1, corner2) and self._is_direct_path(corner2, pos2):
-            return True
-    
-    return False
-
-def _is_two_turn_path(self, pos1, pos2):
-    """Verifica se c'è un percorso con due svolte tra due posizioni"""
-    # Prova tutti i possibili punti intermedi
-    for y in range(len(self.board)):
-        for x in range(len(self.board[0])):
-            if (self.board[y][x] is None or self.board[y][x] == ''):
-                mid = (x, y)
-                if self._is_one_turn_path(pos1, mid) and self._is_direct_path(mid, pos2):
-                    return True
-                if self._is_direct_path(pos1, mid) and self._is_one_turn_path(mid, pos2):
-                    return True
     return False

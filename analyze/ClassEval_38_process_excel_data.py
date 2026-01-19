@@ -8,7 +8,6 @@ def process_excel_data(self, N, save_file_name):
     >>> success, output_file = processor.process_excel_data(1, 'test_data.xlsx')
     """
     import openpyxl
-    import os
     
     # Read the Excel file
     try:
@@ -17,23 +16,21 @@ def process_excel_data(self, N, save_file_name):
         
         # Convert the specified column (N) to uppercase
         # N is 1-indexed (1 = column A, 2 = column B, etc.)
-        for row in range(1, sheet.max_row + 1):
-            cell = sheet.cell(row=row, column=N)
-            if cell.value is not None and isinstance(cell.value, str):
-                cell.value = cell.value.upper()
+        for row in sheet.iter_rows(min_row=1, min_col=N, max_col=N):
+            for cell in row:
+                if cell.value is not None and isinstance(cell.value, str):
+                    cell.value = cell.value.upper()
         
         # Generate output filename
-        base_name = os.path.splitext(save_file_name)[0]
-        extension = os.path.splitext(save_file_name)[1]
-        output_file_name = f"{base_name}_processed{extension}"
+        output_file_name = save_file_name.replace('.xlsx', '_processed.xlsx')
         
         # Save the modified workbook
         workbook.save(output_file_name)
         workbook.close()
         
-        # Return success code (1 for success) and output filename
+        # Assuming write_excel returns 1 for success
         return (1, output_file_name)
         
     except Exception as e:
-        # Return failure code (0 for failure) and error message
+        # Return 0 for failure
         return (0, str(e))

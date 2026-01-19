@@ -49,7 +49,7 @@ def parse_arguments(self, command_string):
             i += 1
     
     # Check for missing required arguments
-    if hasattr(self, 'required_args') and self.required_args:
+    if hasattr(self, 'required_args'):
         missing_args = set()
         for req_arg in self.required_args:
             if req_arg not in self.arguments:

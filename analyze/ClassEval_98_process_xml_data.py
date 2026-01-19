@@ -19,8 +19,7 @@ def process_xml_data(self, file_name):
         # Processa/modifica i dati XML
         # (Esempio generico di modifica - può essere personalizzato)
         for element in root.iter():
-            if element.text and element.text.strip():
-                # Esempio: modifica il testo degli elementi
+            if element.text:
                 element.text = element.text.strip()
         
         # Scrivi i dati XML modificati nel nuovo file

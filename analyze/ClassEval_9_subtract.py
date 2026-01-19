@@ -19,41 +19,45 @@ def subtract(num1, num2):
     if negative2:
         num2 = num2[1:]
     
-    # Convert subtraction to addition when dealing with negative numbers
+    # Convert subtraction to addition if needed
     # a - b = a + (-b)
     # a - (-b) = a + b
-    # (-a) - b = -(a + b)
-    # (-a) - (-b) = b - a
+    # -a - b = -(a + b)
+    # -a - (-b) = -a + b = b - a
     
     if negative1 and negative2:
-        # (-a) - (-b) = b - a
+        # -a - (-b) = b - a
         return BigNumCalculator.subtract(num2, num1)
     elif negative1:
-        # (-a) - b = -(a + b)
+        # -a - b = -(a + b)
         result = BigNumCalculator.add(num1, num2)
         return '-' + result if result != '0' else '0'
     elif negative2:
         # a - (-b) = a + b
         return BigNumCalculator.add(num1, num2)
     
-    # Both positive: perform actual subtraction
-    # Determine which number is larger
+    # Both positive: num1 - num2
+    # Determine which is larger
     if len(num1) > len(num2):
-        larger, smaller = num1, num2
+        larger = num1
+        smaller = num2
         result_negative = False
     elif len(num2) > len(num1):
-        larger, smaller = num2, num1
+        larger = num2
+        smaller = num1
         result_negative = True
     else:
         # Same length, compare digit by digit
         if num1 >= num2:
-            larger, smaller = num1, num2
+            larger = num1
+            smaller = num2
             result_negative = False
         else:
-            larger, smaller = num2, num1
+            larger = num2
+            smaller = num1
             result_negative = True
     
-    # Perform subtraction
+    # Perform subtraction: larger - smaller
     larger = larger[::-1]
     smaller = smaller[::-1]
     
