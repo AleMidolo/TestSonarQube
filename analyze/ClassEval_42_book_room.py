@@ -22,11 +22,14 @@ def book_room(self, room_type, room_number, name):
         """
     if room_type not in self.available_rooms or self.available_rooms[room_type] < room_number:
         return False
-    self.available_rooms[room_type] -= room_number
-    if room_type not in self.booked_rooms:
-        self.booked_rooms[room_type] = {}
-    if name in self.booked_rooms[room_type]:
-        self.booked_rooms[room_type][name] += room_number
+    if room_number <= self.available_rooms[room_type]:
+        if room_type not in self.booked_rooms:
+            self.booked_rooms[room_type] = {}
+        if name in self.booked_rooms[room_type]:
+            self.booked_rooms[room_type][name] += room_number
+        else:
+            self.booked_rooms[room_type][name] = room_number
+        self.available_rooms[room_type] -= room_number
+        return 'Success!'
     else:
-        self.booked_rooms[room_type][name] = room_number
-    return 'Success!' if self.available_rooms[room_type] >= 0 else self.available_rooms[room_type]
+        return self.available_rooms[room_type]

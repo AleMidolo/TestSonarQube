@@ -9,5 +9,5 @@ def get_jwt_user(self, request):
         """
     auth_header = request.get('headers', {}).get('Authorization', {})
     if 'jwt' in auth_header:
-        return auth_header
+        return auth_header['user']
     return None

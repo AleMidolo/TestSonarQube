@@ -10,10 +10,8 @@ def correlation_matrix(data):
 
         """
     n = len(data)
-    correlation_matrix = []
+    correlation_matrix = [[0] * n for _ in range(n)]
     for i in range(n):
-        row = []
         for j in range(n):
-            row.append(Statistics3.correlation(data[i], data[j]))
-        correlation_matrix.append(row)
+            correlation_matrix[i][j] = Statistics3.correlation(data[i], data[j])
     return correlation_matrix

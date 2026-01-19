@@ -1,9 +1,14 @@
 def sin(self, x):
     """
-        Calculate the sin value of the x-degree angle
+        Calcola il valore del seno dell'angolo di x gradi
         :param x: float
         :return: float
         >>> tricalculator.sin(30)
         0.5
         """
-    return round(self.taylor_sin(x, 50), 10)
+    a = x / 180 * pi
+    result = 0
+    for n in range(50):
+        term = (-1) ** n * a ** (2 * n + 1) / self.factorial(2 * n + 1)
+        result += term
+    return round(result, 10)
