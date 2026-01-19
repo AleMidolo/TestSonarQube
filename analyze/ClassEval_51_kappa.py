@@ -14,11 +14,12 @@ def kappa(testData, k):
     po = sum(testData[i][i] for i in range(k)) / n
     
     # Calculate expected agreement (Pe)
-    # Sum of row totals * column totals / n^2
-    row_totals = [sum(testData[i]) for i in range(k)]
-    col_totals = [sum(testData[i][j] for i in range(k)) for j in range(k)]
-    
-    pe = sum(row_totals[i] * col_totals[i] for i in range(k)) / (n * n)
+    # Sum of products of marginal proportions
+    pe = 0
+    for i in range(k):
+        row_sum = sum(testData[i][j] for j in range(k))
+        col_sum = sum(testData[j][i] for j in range(k))
+        pe += (row_sum * col_sum) / (n * n)
     
     # Calculate Cohen's kappa
     if pe == 1:

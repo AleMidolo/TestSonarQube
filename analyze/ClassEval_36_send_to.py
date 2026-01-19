@@ -15,25 +15,25 @@ def send_to(self, recv, content, size):
     """
     from datetime import datetime
     
-    # Check if receiver's mailbox has enough space
-    current_size = sum(email.get('size', 0) for email in (recv.inbox if isinstance(recv.inbox, list) else [recv.inbox]) if email)
-    
-    # If inbox is a dict (single email), convert to list for checking
-    if isinstance(recv.inbox, dict) and recv.inbox:
-        current_size = recv.inbox.get('size', 0)
-    elif isinstance(recv.inbox, list):
-        current_size = sum(email.get('size', 0) for email in recv.inbox if email)
-    else:
+    # Check if receiver's inbox has enough space
+    if hasattr(recv, 'capacity') and hasattr(recv, 'inbox'):
+        # Calculate current inbox size
         current_size = 0
-    
-    # Check if there's enough space (assuming recv has a capacity attribute)
-    if hasattr(recv, 'capacity') and current_size + size > recv.capacity:
-        return False
+        if isinstance(recv.inbox, list):
+            for email in recv.inbox:
+                if isinstance(email, dict) and 'size' in email:
+                    current_size += email['size']
+        elif isinstance(recv.inbox, dict) and 'size' in recv.inbox:
+            current_size = recv.inbox.get('size', 0)
+        
+        # Check if there's enough space
+        if current_size + size > recv.capacity:
+            return False
     
     # Create email object
     email = {
-        'sender': self.email,
-        'receiver': recv.email,
+        'sender': self.email if hasattr(self, 'email') else str(self),
+        'receiver': recv.email if hasattr(recv, 'email') else str(recv),
         'content': content,
         'size': size,
         'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -41,6 +41,10 @@ def send_to(self, recv, content, size):
     }
     
     # Add email to receiver's inbox
-    recv.inbox = email
+    if hasattr(recv, 'inbox'):
+        if isinstance(recv.inbox, list):
+            recv.inbox.append(email)
+        else:
+            recv.inbox = email
     
     return True

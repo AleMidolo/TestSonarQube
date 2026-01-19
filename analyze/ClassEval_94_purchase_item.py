@@ -18,17 +18,19 @@ def purchase_item(self, item_name):
     
     # Ottieni le informazioni del prodotto
     item = self.inventory[item_name]
+    price = item['price']
+    quantity = item['quantity']
     
     # Verifica se il prodotto è disponibile (quantità > 0)
-    if item['quantity'] <= 0:
+    if quantity <= 0:
         return False
     
-    # Verifica se il saldo è sufficiente
-    if self.balance < item['price']:
+    # Verifica se il saldo è sufficiente per l'acquisto
+    if self.balance < price:
         return False
     
     # Effettua l'acquisto
-    self.balance -= item['price']
-    item['quantity'] -= 1
+    self.balance -= price
+    self.inventory[item_name]['quantity'] -= 1
     
     return self.balance

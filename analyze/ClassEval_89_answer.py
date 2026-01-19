@@ -16,7 +16,7 @@ def answer(self, expression):
         numbers_in_expr = re.findall(r'\d+', expression)
         numbers_in_expr = [int(n) for n in numbers_in_expr]
         
-        # Verifica che i numeri usati corrispondano esattamente a self.nums
+        # Verifica che i numeri usati corrispondano esattamente alle carte disponibili
         if sorted(numbers_in_expr) != sorted(self.nums):
             return False
         

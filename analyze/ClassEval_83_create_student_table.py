@@ -6,13 +6,13 @@ def create_student_table(self):
     >>> processor.create_student_table()
     """
     cursor = self.connection.cursor()
-    cursor.execute("""
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS students (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            age INTEGER NOT NULL,
-            gender TEXT NOT NULL,
-            grade INTEGER NOT NULL
+            id INTEGER,
+            name TEXT,
+            age INTEGER,
+            gender TEXT,
+            grade INTEGER
         )
-    """)
+    ''')
     self.connection.commit()

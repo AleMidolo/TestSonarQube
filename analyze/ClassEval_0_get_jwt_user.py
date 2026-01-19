@@ -8,6 +8,8 @@ def get_jwt_user(self, request):
     {'user': {'name': 'user1'}
 
     """
+    import datetime
+    
     if not request or 'headers' not in request:
         return None
     
@@ -17,7 +19,20 @@ def get_jwt_user(self, request):
     if not authorization:
         return None
     
-    if isinstance(authorization, dict) and 'user' in authorization:
-        return {'user': authorization['user']}
+    # Verifica se l'authorization contiene le informazioni necessarie
+    if not isinstance(authorization, dict):
+        return None
+    
+    jwt_token = authorization.get('jwt')
+    user_info = authorization.get('user')
+    
+    if not jwt_token or not user_info:
+        return None
+    
+    # Verifica che il token JWT sia valido (contiene il nome utente e la data odierna)
+    if 'name' in user_info:
+        expected_token = user_info['name'] + str(datetime.date.today())
+        if jwt_token == expected_token:
+            return {'user': user_info}
     
     return None

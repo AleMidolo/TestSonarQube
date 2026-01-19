@@ -11,3 +11,4 @@ def transfer(self, other_account, amount):
     """
     self.withdraw(amount)
     other_account.deposit(amount)
+    print(f"account1.balance = {self.balance} account2.balance = {other_account.balance}")

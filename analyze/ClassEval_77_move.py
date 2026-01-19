@@ -12,22 +12,19 @@ def move(self, direction):
     current_head = self.positions[0]
     new_head = (current_head[0] + direction[0], current_head[1] + direction[1])
     
-    # Controlla se la nuova testa collide con il corpo
-    if new_head in self.positions[1:]:
-        # Ricomincia il gioco
-        self.reset()
-        return
-    
-    # Aggiungi la nuova testa all'inizio della lista
-    self.positions.insert(0, new_head)
-    
-    # Controlla se il serpente ha mangiato il cibo
+    # Controlla se la nuova posizione coincide con il cibo
     if new_head == self.food:
         # Mangia il cibo: aumenta lunghezza e punteggio
+        self.positions.insert(0, new_head)
         self.length += 1
         self.score += 10
         # Genera nuovo cibo
         self.generate_food()
+    # Controlla se la nuova posizione coincide con il corpo del serpente
+    elif new_head in self.positions:
+        # Ricomincia il gioco
+        self.reset()
     else:
-        # Non ha mangiato: rimuovi l'ultima posizione per mantenere la lunghezza
+        # Movimento normale: aggiungi nuova testa e rimuovi la coda
+        self.positions.insert(0, new_head)
         self.positions.pop()

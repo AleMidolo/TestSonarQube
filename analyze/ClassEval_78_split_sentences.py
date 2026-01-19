@@ -9,7 +9,7 @@ def split_sentences(self, sentences_string):
     """
     import re
     
-    # Pattern che identifica . o ? seguiti da uno spazio (ma non Mr.)
+    # Pattern che identifica . o ? seguiti da uno spazio, ma non Mr.
     # Usa lookahead negativo per evitare di splittare su "Mr."
     pattern = r'(?<!Mr)([.?])\s+'
     
@@ -24,10 +24,13 @@ def split_sentences(self, sentences_string):
             # Combina il testo con il suo delimitatore
             sentences.append(parts[i] + parts[i + 1])
             i += 2
-        elif parts[i].strip():  # Se c'è testo rimanente
-            sentences.append(parts[i].strip())
+        elif parts[i].strip():  # Aggiungi solo se non è vuoto
+            sentences.append(parts[i])
             i += 1
         else:
             i += 1
+    
+    # Rimuovi eventuali stringhe vuote
+    sentences = [s.strip() for s in sentences if s.strip()]
     
     return sentences

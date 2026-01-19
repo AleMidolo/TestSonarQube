@@ -9,7 +9,6 @@ def count(n: int, m: int) -> int:
     """
     if m > n or m < 0 or n < 0:
         return 0
-    
     if m == 0 or m == n:
         return 1
     

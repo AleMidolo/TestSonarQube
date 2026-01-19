@@ -13,5 +13,5 @@ def get_upcoming_events(self, num_events):
     # Sort events by date
     sorted_events = sorted(self.events, key=lambda x: x['date'])
     
-    # Return all events (based on the example, it returns all events regardless of num_events parameter)
-    return sorted_events
+    # Return the first num_events events
+    return sorted_events[:num_events]

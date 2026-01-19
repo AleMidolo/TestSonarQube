@@ -10,15 +10,9 @@ def validate_user_login(self, username, password):
     >>> user_db.validate_user_login('user1', 'pass1')
     True
     """
-    import sqlite3
-    
-    conn = sqlite3.connect(self.db_name)
-    cursor = conn.cursor()
-    
+    cursor = self.connection.cursor()
     cursor.execute("SELECT password FROM users WHERE username = ?", (username,))
     result = cursor.fetchone()
-    
-    conn.close()
     
     if result is None:
         return False

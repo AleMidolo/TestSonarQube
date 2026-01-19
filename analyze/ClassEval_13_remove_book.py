@@ -5,34 +5,35 @@ def remove_book(self, title, quantity):
     :param title: str, il titolo del libro
     :param quantity: int
     """
-    # Validazione input
     if not isinstance(title, str):
         raise TypeError("Il titolo deve essere una stringa")
     
     if not isinstance(quantity, int):
         raise TypeError("La quantità deve essere un intero")
     
-    if not title or not title.strip():
-        raise ValueError("Il titolo non può essere vuoto")
-    
     if quantity <= 0:
         raise ValueError("La quantità deve essere maggiore di zero")
     
-    # Cerca il libro nell'inventario
-    found = False
-    for book in self.inventory:
-        if book['title'] == title:
-            found = True
-            if book['quantity'] < quantity:
-                raise ValueError(f"Quantità insufficiente. Disponibili: {book['quantity']}, richiesti: {quantity}")
-            
-            book['quantity'] -= quantity
-            
-            # Rimuovi il libro dall'inventario se la quantità diventa 0
-            if book['quantity'] == 0:
-                self.inventory.remove(book)
-            
-            break
+    if not title.strip():
+        raise ValueError("Il titolo non può essere vuoto")
     
-    if not found:
-        raise ValueError(f"Libro '{title}' non trovato nell'inventario")
+    # Cerca il libro nell'inventario (assumendo che self.inventory sia una lista o dizionario)
+    found = False
+    
+    # Assumendo che self.inventory sia un dizionario con titolo come chiave
+    if hasattr(self, 'inventory'):
+        if title in self.inventory:
+            if self.inventory[title] < quantity:
+                raise ValueError(f"Quantità insufficiente. Disponibili: {self.inventory[title]}, richiesti: {quantity}")
+            
+            self.inventory[title] -= quantity
+            
+            # Rimuovi completamente il libro se la quantità diventa 0
+            if self.inventory[title] == 0:
+                del self.inventory[title]
+            
+            found = True
+        else:
+            raise KeyError(f"Il libro '{title}' non è presente nell'inventario")
+    else:
+        raise AttributeError("L'inventario non è stato inizializzato")

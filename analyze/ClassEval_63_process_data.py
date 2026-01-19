@@ -9,7 +9,7 @@ def process_data(self, string_list):
     words_list = []
     for string in string_list:
         # Mantiene solo lettere inglesi e spazi
-        filtered_string = ''.join(char for char in string if char.isalpha() or char.isspace())
+        filtered_string = ''.join(char if char.isalpha() or char.isspace() else '' for char in string)
         # Converte in minuscolo
         lowercase_string = filtered_string.lower()
         # Divide in parole

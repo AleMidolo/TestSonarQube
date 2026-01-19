@@ -9,14 +9,13 @@ def read_csv(self, file_name):
     """
     import csv
     
+    title = []
+    data = []
+    
     with open(file_name, 'r', encoding='utf-8') as file:
         csv_reader = csv.reader(file)
-        rows = list(csv_reader)
-        
-        if len(rows) == 0:
-            return [], []
-        
-        title = rows[0]
-        data = rows[1:]
-        
-        return title, data
+        title = next(csv_reader)
+        for row in csv_reader:
+            data.append(row)
+    
+    return title, data

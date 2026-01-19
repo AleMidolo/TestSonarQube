@@ -9,7 +9,7 @@ def get_correlation(self):
     import math
     
     # Assuming this is a method of a class that stores data
-    # and that we're calculating correlation between indices and values
+    # and we're calculating correlation between indices and values
     data = self if isinstance(self, list) else getattr(self, 'data', [])
     
     n = len(data)
@@ -24,7 +24,7 @@ def get_correlation(self):
     mean_x = sum(x) / n
     mean_y = sum(y) / n
     
-    # Calculate correlation coefficient
+    # Calculate correlation coefficient (Pearson)
     numerator = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
     
     sum_sq_x = sum((x[i] - mean_x) ** 2 for i in range(n))
@@ -35,4 +35,6 @@ def get_correlation(self):
     if denominator == 0:
         return 0.0
     
-    return numerator / denominator
+    correlation = numerator / denominator
+    
+    return correlation

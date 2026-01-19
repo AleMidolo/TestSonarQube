@@ -21,12 +21,15 @@ def is_valid_ipv4(ip_address):
         if not part:
             return False
         
+        # Check if part contains only digits
         if not part.isdigit():
             return False
         
-        if part[0] == '0' and len(part) > 1:
+        # Check for leading zeros (except for '0' itself)
+        if len(part) > 1 and part[0] == '0':
             return False
         
+        # Convert to integer and check range
         num = int(part)
         if num < 0 or num > 255:
             return False

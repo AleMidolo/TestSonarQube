@@ -19,7 +19,7 @@ def move(self, direction):
     
     dy, dx = directions[direction]
     
-    # Trova la posizione corrente del giocatore
+    # Trova la posizione corrente del giocatore (O)
     player_y, player_x = None, None
     for i in range(len(self.map)):
         for j in range(len(self.map[i])):
@@ -43,7 +43,7 @@ def move(self, direction):
     if target_cell == '#':
         return False
     
-    # Se c'è una cassa
+    # Se c'è una cassa (X)
     if target_cell == 'X':
         # Calcola la posizione dietro la cassa
         box_new_y = new_y + dy
@@ -59,17 +59,16 @@ def move(self, direction):
         if box_target != ' ' and box_target != 'G':
             return False
         
-        # Sposta la cassa
+        # Muovi la cassa
         self.map[box_new_y] = self.map[box_new_y][:box_new_x] + 'X' + self.map[box_new_y][box_new_x + 1:]
     
     # Muovi il giocatore
     self.map[player_y] = self.map[player_y][:player_x] + ' ' + self.map[player_y][player_x + 1:]
     self.map[new_y] = self.map[new_y][:new_x] + 'O' + self.map[new_y][new_x + 1:]
     
-    # Controlla se il gioco è vinto (la cassa è sul goal)
+    # Controlla se il gioco è vinto (la cassa X è sulla posizione G)
     for i in range(len(self.map)):
         if 'G' in self.map[i]:
-            # Se c'è ancora un goal visibile, il gioco non è vinto
             return False
     
     return True

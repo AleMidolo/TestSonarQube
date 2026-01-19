@@ -12,28 +12,22 @@ def replace(self, string):
     
     def replace_entity(match):
         entity = match.group(0)
-        # Remove &#, &#x, or &# prefix and ; suffix
+        # Remove &#, &#x or &# prefix and ; suffix
         if entity.startswith('&#x') or entity.startswith('&#X'):
             # Hexadecimal entity
             num_str = entity[3:-1]
-            try:
-                char_code = int(num_str, 16)
-                return chr(char_code)
-            except (ValueError, OverflowError):
-                return entity
+            char_code = int(num_str, 16)
         elif entity.startswith('&#'):
             # Decimal entity
             num_str = entity[2:-1]
-            try:
-                char_code = int(num_str, 10)
-                return chr(char_code)
-            except (ValueError, OverflowError):
-                return entity
-        return entity
+            char_code = int(num_str, 10)
+        else:
+            return entity
+        
+        return chr(char_code)
     
-    # Pattern to match numeric character references
-    # Matches &#digits; or &#xhexdigits; or &#Xhexdigits;
+    # Pattern to match numeric entities: &#digits; or &#xhexdigits;
     pattern = r'&#[xX]?[0-9a-fA-F]+;'
-    
     result = re.sub(pattern, replace_entity, string)
+    
     return result

@@ -27,13 +27,13 @@ def palindromic_string(self):
         # Mirror of i with respect to center
         mirror = 2 * center - i
         
-        # If i is within right boundary, use previously computed values
+        # If i is within the right boundary, use previously computed values
         if i < right:
             P[i] = min(right - i, P[mirror])
         
         # Attempt to expand palindrome centered at i
         try:
-            while transformed[i + P[i] + 1] == transformed[i - P[i] - 1]:
+            while transformed[i + 1 + P[i]] == transformed[i - 1 - P[i]]:
                 P[i] += 1
         except IndexError:
             pass
