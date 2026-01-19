@@ -16,8 +16,8 @@ def insert_into_database(self, table_name, data):
     column_names = ', '.join(columns)
     placeholders = ', '.join(['?' for _ in columns])
     
-    # Prepare the SQL INSERT statement
-    sql = f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})"
+    # Create the INSERT SQL query
+    query = f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})"
     
     # Prepare the values for each row
     values_list = []
@@ -25,7 +25,7 @@ def insert_into_database(self, table_name, data):
         values = tuple(row[col] for col in columns)
         values_list.append(values)
     
-    # Execute the insert operation
+    # Execute the query for all rows
     cursor = self.connection.cursor()
-    cursor.executemany(sql, values_list)
+    cursor.executemany(query, values_list)
     self.connection.commit()

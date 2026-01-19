@@ -6,18 +6,20 @@ def calculate_binary_info(self):
     {'Zeroes': 0.475, 'Ones': 0.525, 'Bit length': 40}
 
     """
-    if not hasattr(self, 'binary_string') or not self.binary_string:
+    binary_string = self.binary_string
+    total_length = len(binary_string)
+    
+    if total_length == 0:
         return {'Zeroes': 0.0, 'Ones': 0.0, 'Bit length': 0}
     
-    total_length = len(self.binary_string)
-    count_zeros = self.binary_string.count('0')
-    count_ones = self.binary_string.count('1')
+    count_zeroes = binary_string.count('0')
+    count_ones = binary_string.count('1')
     
-    percentage_zeros = count_zeros / total_length if total_length > 0 else 0.0
-    percentage_ones = count_ones / total_length if total_length > 0 else 0.0
+    percentage_zeroes = count_zeroes / total_length
+    percentage_ones = count_ones / total_length
     
     return {
-        'Zeroes': percentage_zeros,
+        'Zeroes': percentage_zeroes,
         'Ones': percentage_ones,
         'Bit length': total_length
     }

@@ -15,14 +15,15 @@ def calculate_calorie_intake(self):
     
     # Get user's status (assuming there's a method or attribute for this)
     # Based on the context, we need to determine if user is overweight, underweight, or normal
-    status = self.get_status() if hasattr(self, 'get_status') else self.status
+    # This likely uses BMI or another status indicator
+    status = self.get_status() if hasattr(self, 'get_status') else self.status if hasattr(self, 'status') else 'normal'
     
     # Calculate calorie intake based on status
-    if status == "बहुत मोटा" or status == "overweight":
+    if status == 'overweight' or status == 'बहुत मोटा':
         calorie_intake = bmr * 1.2
-    elif status == "बहुत पतला" or status == "underweight":
+    elif status == 'underweight' or status == 'बहुत पतला':
         calorie_intake = bmr * 1.6
-    else:  # normal
+    else:  # normal or 'सामान्य'
         calorie_intake = bmr * 1.4
     
     return calorie_intake

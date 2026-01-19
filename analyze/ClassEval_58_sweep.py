@@ -25,14 +25,15 @@ def sweep(self, x, y):
                 if dx == 0 and dy == 0:
                     continue
                 nx, ny = x + dx, y + dy
-                if 0 <= nx < len(self.minesweeper_map) and 0 <= ny < len(self.minesweeper_map[0]):
-                    if self.player_map[nx][ny] == '-':
-                        self.sweep(nx, ny)
+                if (0 <= nx < len(self.minesweeper_map) and 
+                    0 <= ny < len(self.minesweeper_map[0]) and 
+                    self.player_map[nx][ny] == '-'):
+                    self.sweep(nx, ny)
     
-    # Check if the player has won (all non-mine cells revealed)
-    for i in range(len(self.minesweeper_map)):
-        for j in range(len(self.minesweeper_map[0])):
-            if self.minesweeper_map[i][j] != 'X' and self.player_map[i][j] == '-':
+    # Check if the player has won
+    for i in range(len(self.player_map)):
+        for j in range(len(self.player_map[0])):
+            if self.player_map[i][j] == '-' and self.minesweeper_map[i][j] != 'X':
                 return self.player_map
     
     return True

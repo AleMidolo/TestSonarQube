@@ -18,8 +18,8 @@ def correlation_matrix(data):
     
     # Calculate standard deviations for each row
     std_devs = []
-    for i, row in enumerate(data):
-        variance = sum((x - means[i]) ** 2 for x in row) / len(row)
+    for i in range(n):
+        variance = sum((x - means[i]) ** 2 for x in data[i]) / len(data[i])
         std_devs.append(variance ** 0.5)
     
     # Initialize correlation matrix
@@ -29,12 +29,12 @@ def correlation_matrix(data):
     for i in range(n):
         for j in range(n):
             if std_devs[i] == 0 or std_devs[j] == 0:
-                # If standard deviation is 0, correlation is 1 (perfect correlation)
+                # If standard deviation is 0, correlation is 1 (constant values)
                 corr_matrix[i][j] = 1.0
             else:
                 # Calculate covariance
                 covariance = sum((data[i][k] - means[i]) * (data[j][k] - means[j]) 
-                               for k in range(len(data[i]))) / len(data[i])
+                                for k in range(len(data[i]))) / len(data[i])
                 # Calculate correlation coefficient
                 corr_matrix[i][j] = covariance / (std_devs[i] * std_devs[j])
     

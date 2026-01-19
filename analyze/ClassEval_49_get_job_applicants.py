@@ -11,7 +11,9 @@ def get_job_applicants(self, job):
 
     """
     qualified_applicants = []
+    
     for resume in self.resumes:
         if self.matches_requirements(resume, job):
             qualified_applicants.append(resume)
+    
     return qualified_applicants

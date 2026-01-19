@@ -19,7 +19,7 @@ def move(self, direction):
     
     # जांचें कि क्या सांप ने भोजन खा लिया
     if hasattr(self, 'food_position') and new_head == self.food_position:
-        # भोजन खाया गया - लंबाई बढ़ाएं और स्कोर अपडेट करें
+        # भोजन खा लिया - लंबाई बढ़ाएं और स्कोर बढ़ाएं
         self.length += 1
         self.score += 10
         # नया भोजन उत्पन्न करें (यदि food generation method है)

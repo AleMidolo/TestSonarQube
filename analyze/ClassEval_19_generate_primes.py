@@ -10,14 +10,13 @@ def generate_primes(self):
     if self.limit < 2:
         return []
     
-    # Create a boolean array "is_prime" and initialize all entries as true
+    # Create a boolean array "is_prime" and initialize all entries as True
     is_prime = [True] * (self.limit + 1)
     is_prime[0] = is_prime[1] = False
     
-    # Start with the smallest prime number, 2
+    # Sieve of Eratosthenes algorithm
     p = 2
     while p * p <= self.limit:
-        # If is_prime[p] is not changed, then it is a prime
         if is_prime[p]:
             # Mark all multiples of p as not prime
             for i in range(p * p, self.limit + 1, p):
@@ -26,4 +25,5 @@ def generate_primes(self):
     
     # Collect all numbers that are still marked as prime
     primes = [num for num in range(2, self.limit + 1) if is_prime[num]]
+    
     return primes

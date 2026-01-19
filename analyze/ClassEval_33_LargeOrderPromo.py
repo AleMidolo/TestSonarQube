@@ -16,6 +16,7 @@ def LargeOrderPromo(order):
     
     # If there are 10 or more distinct products, apply 7% discount
     if distinct_products >= 10:
+        # Calculate total order amount
         total = sum(item['quantity'] * item['price'] for item in order.cart)
         return total * 0.07
     

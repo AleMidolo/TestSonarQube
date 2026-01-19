@@ -12,30 +12,29 @@ def sell_stock(self, stock):
     []
 
     """
-    stock_name = stock['name']
-    sell_quantity = stock['quantity']
-    sell_price = stock['price']
+    name = stock['name']
+    price = stock['price']
+    quantity = stock['quantity']
     
     # Find the stock in portfolio
     for i, portfolio_stock in enumerate(self.portfolio):
-        if portfolio_stock['name'] == stock_name:
+        if portfolio_stock['name'] == name:
             # Check if we have enough quantity to sell
-            if portfolio_stock['quantity'] < sell_quantity:
-                return False
-            
-            # Calculate cash to add
-            cash_to_add = sell_price * sell_quantity
-            self.cash_balance += cash_to_add
-            
-            # Update or remove stock from portfolio
-            if portfolio_stock['quantity'] == sell_quantity:
-                # Remove stock completely
-                self.portfolio.pop(i)
+            if portfolio_stock['quantity'] >= quantity:
+                # Add cash from sale
+                self.cash_balance += price * quantity
+                
+                # Update or remove stock from portfolio
+                portfolio_stock['quantity'] -= quantity
+                
+                # If quantity becomes 0, remove from portfolio
+                if portfolio_stock['quantity'] == 0:
+                    self.portfolio.pop(i)
+                
+                return True
             else:
-                # Reduce quantity
-                portfolio_stock['quantity'] -= sell_quantity
-            
-            return True
+                # Not enough quantity to sell
+                return False
     
     # Stock not found in portfolio
     return False

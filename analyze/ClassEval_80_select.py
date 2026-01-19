@@ -8,7 +8,7 @@ def select(table, columns='*', where=None):
     >>> SQLQueryBuilder.select('table1', columns = ["col1","col2"], where = {"age": 15})
     "SELECT col1, col2 FROM table1 WHERE age='15'"
     """
-    # Handle columns parameter
+    # Handle columns
     if columns == '*':
         columns_str = '*'
     elif isinstance(columns, list):
@@ -19,12 +19,12 @@ def select(table, columns='*', where=None):
     # Build base query
     query = f"SELECT {columns_str} FROM {table}"
     
-    # Handle where clause
-    if where is not None and isinstance(where, dict) and len(where) > 0:
-        where_clauses = []
+    # Handle WHERE clause
+    if where:
+        conditions = []
         for key, value in where.items():
-            where_clauses.append(f"{key}='{value}'")
-        where_str = ' AND '.join(where_clauses)
-        query += f" WHERE {where_str}"
+            conditions.append(f"{key}='{value}'")
+        where_clause = ' AND '.join(conditions)
+        query += f" WHERE {where_clause}"
     
     return query

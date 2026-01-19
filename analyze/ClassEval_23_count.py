@@ -15,7 +15,7 @@ def count(n: int, m: int) -> int:
     if m == 0 or m == n:
         return 1
     
-    # Calculate factorial helper
+    # Calculate factorial
     def factorial(num):
         if num <= 1:
             return 1
@@ -25,15 +25,4 @@ def count(n: int, m: int) -> int:
         return result
     
     # Combination formula: C(n, m) = n! / (m! * (n - m)!)
-    # Optimize by using the smaller factorial in denominator
-    m = min(m, n - m)
-    
-    # Calculate using the optimized formula
-    numerator = 1
-    denominator = 1
-    
-    for i in range(m):
-        numerator *= (n - i)
-        denominator *= (i + 1)
-    
-    return numerator // denominator
+    return factorial(n) // (factorial(m) * factorial(n - m))

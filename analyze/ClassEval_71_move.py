@@ -6,12 +6,12 @@ def move(self, direction):
 
     :return: यदि खेल जीता गया है तो True, अन्यथा False।
     """
-    # Direction mappings: w=up, s=down, a=left, d=right
+    # Direction mappings
     directions = {
-        'w': (-1, 0),  # up
-        's': (1, 0),   # down
-        'a': (0, -1),  # left
-        'd': (0, 1)    # right
+        'w': (-1, 0),  # ऊपर (up)
+        's': (1, 0),   # नीचे (down)
+        'a': (0, -1),  # बाएं (left)
+        'd': (0, 1)    # दाएं (right)
     }
     
     if direction not in directions:
@@ -19,59 +19,56 @@ def move(self, direction):
     
     dy, dx = directions[direction]
     
-    # Find current player position
-    player_y, player_x = None, None
-    for i in range(len(self.map)):
-        for j in range(len(self.map[i])):
-            if self.map[i][j] == 'O':
-                player_y, player_x = i, j
-                break
-        if player_y is not None:
-            break
+    # Current player position
+    player_y, player_x = self.player_pos
     
-    # Calculate new position
+    # New position for player
     new_y = player_y + dy
     new_x = player_x + dx
     
-    # Check if new position is valid
+    # Check if new position is within bounds
     if new_y < 0 or new_y >= len(self.map) or new_x < 0 or new_x >= len(self.map[0]):
         return False
     
+    # Check what's at the new position
     target_cell = self.map[new_y][new_x]
     
-    # If wall, can't move
+    # If it's a wall, can't move
     if target_cell == '#':
         return False
     
-    # If empty space or goal, just move
+    # If it's empty space or goal, just move
     if target_cell == ' ' or target_cell == 'G':
-        self.map[player_y] = self.map[player_y][:player_x] + ' ' + self.map[player_y][player_x+1:]
-        self.map[new_y] = self.map[new_y][:new_x] + 'O' + self.map[new_y][new_x+1:]
+        self.map[player_y][player_x] = ' '
+        self.map[new_y][new_x] = 'O'
+        self.player_pos = (new_y, new_x)
     
-    # If box, try to push it
+    # If it's a box, try to push it
     elif target_cell == 'X':
+        # Position where box would move to
         box_new_y = new_y + dy
         box_new_x = new_x + dx
         
-        # Check if box can be pushed
+        # Check if box's new position is valid
         if box_new_y < 0 or box_new_y >= len(self.map) or box_new_x < 0 or box_new_x >= len(self.map[0]):
             return False
         
-        box_target = self.map[box_new_y][box_new_x]
+        box_target_cell = self.map[box_new_y][box_new_x]
         
         # Box can only be pushed to empty space or goal
-        if box_target != ' ' and box_target != 'G':
+        if box_target_cell == ' ' or box_target_cell == 'G':
+            # Move the box
+            self.map[box_new_y][box_new_x] = 'X'
+            # Move the player
+            self.map[player_y][player_x] = ' '
+            self.map[new_y][new_x] = 'O'
+            self.player_pos = (new_y, new_x)
+            
+            # Check if box is on goal
+            if box_target_cell == 'G':
+                return True
+        else:
+            # Can't push box (blocked by wall or another box)
             return False
-        
-        # Move box
-        self.map[box_new_y] = self.map[box_new_y][:box_new_x] + 'X' + self.map[box_new_y][box_new_x+1:]
-        
-        # Move player
-        self.map[player_y] = self.map[player_y][:player_x] + ' ' + self.map[player_y][player_x+1:]
-        self.map[new_y] = self.map[new_y][:new_x] + 'O' + self.map[new_y][new_x+1:]
-        
-        # Check if box is on goal
-        if box_target == 'G':
-            return True
     
     return False

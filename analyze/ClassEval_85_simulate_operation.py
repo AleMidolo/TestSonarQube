@@ -7,20 +7,20 @@ def simulate_operation(self):
     >>> thermostat.simulate_operation()
     18
     """
-    # पहले auto_set_mode को कॉल करें ताकि सही मोड सेट हो जाए
+    # First, automatically set the mode based on current and target temperature
     self.auto_set_mode()
     
     time = 0
     
-    # जब तक वर्तमान तापमान लक्षित तापमान तक नहीं पहुँच जाता
+    # Continue adjusting temperature until target is reached
     while self.current_temp != self.target_temp:
         if self.mode == 'heat':
-            # हीटिंग मोड में तापमान बढ़ाएं
+            # Heating mode: increase temperature
             self.current_temp += 1
         elif self.mode == 'cool':
-            # कूलिंग मोड में तापमान घटाएं
+            # Cooling mode: decrease temperature
             self.current_temp -= 1
-        # 'off' मोड में कुछ नहीं होता
+        # If mode is 'off', temperature doesn't change
         
         time += 1
     

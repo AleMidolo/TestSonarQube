@@ -23,4 +23,8 @@ def skewness(data):
     m3 = sum((x - mean) ** 3 for x in data) / n
     skewness = m3 / (std_dev ** 3)
     
+    # Apply sample correction factor
+    if n > 2:
+        skewness = skewness * ((n * (n - 1)) ** 0.5) / (n - 2)
+    
     return skewness

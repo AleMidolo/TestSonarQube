@@ -15,7 +15,7 @@ def create_deck(self):
      '3C', 'KC', '3S', '2H', '10D', 'KS', '4D', 'AC', '10S', '2C', 'KD', '5S',
      'JD', '8S', 'AS', '8D']
     """
-    # Define ranks and suits
+    # Define the ranks and suits
     ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
     suits = ['S', 'H', 'D', 'C']  # Spades, Hearts, Diamonds, Clubs
     

@@ -9,6 +9,4 @@ def cos(self, x):
     >>> tricalculator.cos(60)
     0.5
     """
-    # Convert degrees to radians and calculate cosine
-    radians = math.radians(x)
-    return math.cos(radians)
+    return math.cos(math.radians(x))

@@ -7,16 +7,15 @@ def palindromic_string(self):
     'ababa'
 
     """
-    if not self.s:
+    if not hasattr(self, 's') or not self.s:
         return ""
     
-    # Transform string to handle even-length palindromes
-    # Add '#' between characters: "abc" -> "#a#b#c#"
-    transformed = '#'.join('^{}$'.format(self.s))
-    n = len(transformed)
-    
-    # Array to store palindrome radii
-    p = [0] * n
+    s = self.s
+    # Transform string to avoid even/odd length issues
+    # Insert '#' between characters
+    t = '#'.join('^{}$'.format(s))
+    n = len(t)
+    p = [0] * n  # Array to store palindrome radii
     center = 0
     right = 0
     
@@ -33,7 +32,7 @@ def palindromic_string(self):
         
         # Attempt to expand palindrome centered at i
         try:
-            while transformed[i + p[i] + 1] == transformed[i - p[i] - 1]:
+            while t[i + (1 + p[i])] == t[i - (1 + p[i])]:
                 p[i] += 1
         except IndexError:
             pass
@@ -50,4 +49,4 @@ def palindromic_string(self):
     
     # Extract the longest palindrome from original string
     start = (center_index - max_len) // 2
-    return self.s[start:start + max_len]
+    return s[start:start + max_len]

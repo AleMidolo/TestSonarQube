@@ -11,12 +11,15 @@ def count_all(n: int) -> int:
     # (excluding the empty set)
     
     # Check if 2^n - 1 exceeds 2^63 - 1
+    max_value = 2**63 - 1
+    
+    # If n >= 63, then 2^n - 1 >= 2^63 - 1
     if n >= 63:
-        return float("inf")
+        # Check if 2^n - 1 > 2^63 - 1
+        if n > 63:
+            return float("inf")
+        else:  # n == 63
+            # 2^63 - 1 == 2^63 - 1, so it's equal, not greater
+            return 2**n - 1
     
-    result = (2 ** n) - 1
-    
-    if result > (2 ** 63 - 1):
-        return float("inf")
-    
-    return result
+    return 2**n - 1

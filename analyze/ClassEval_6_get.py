@@ -8,18 +8,18 @@ def get(self, index):
     [1, 2]
 
     """
-    # Calculate the base block size and remainder
+    # Calculate the size of each block and remainder
     total_length = len(self.data)
-    base_size = total_length // self.num_partitions
+    block_size = total_length // self.num_partitions
     remainder = total_length % self.num_partitions
     
-    # Calculate start position for the given index
+    # Calculate start and end positions based on index
     # First 'remainder' blocks get one extra element
     if index < remainder:
-        start = index * (base_size + 1)
-        end = start + base_size + 1
+        start = index * (block_size + 1)
+        end = start + block_size + 1
     else:
-        start = remainder * (base_size + 1) + (index - remainder) * base_size
-        end = start + base_size
+        start = remainder * (block_size + 1) + (index - remainder) * block_size
+        end = start + block_size
     
     return self.data[start:end]

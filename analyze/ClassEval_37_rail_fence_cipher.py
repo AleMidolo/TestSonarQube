@@ -19,7 +19,7 @@ def rail_fence_cipher(self, plain_text, rails):
     
     # Direction: 0 = down, 1 = up
     rail = 0
-    direction = 0  # Start going down
+    direction = 1  # Start going down
     
     # Place each character on the appropriate rail
     for char in plain_text:
@@ -27,17 +27,13 @@ def rail_fence_cipher(self, plain_text, rails):
         
         # Change direction at the top or bottom rail
         if rail == 0:
-            direction = 0  # Go down
+            direction = 1  # Go down
         elif rail == rails - 1:
-            direction = 1  # Go up
+            direction = -1  # Go up
         
-        # Move to next rail
-        if direction == 0:
-            rail += 1
-        else:
-            rail -= 1
+        rail += direction
     
-    # Read off the rails to create ciphertext
-    ciphertext = ''.join([''.join(rail) for rail in fence])
+    # Read off the rails to create the ciphertext
+    ciphertext = ''.join([''.join(rail_chars) for rail_chars in fence])
     
     return ciphertext

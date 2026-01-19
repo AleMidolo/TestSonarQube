@@ -8,6 +8,5 @@ def attack(self, other_character):
     >>> player_2.hp
     92
     """
-    damage = self.attack_power - other_character.defense
-    if damage > 0:
-        other_character.hp -= damage
+    damage = max(0, self.attack_power - other_character.defense)
+    other_character.hp -= damage

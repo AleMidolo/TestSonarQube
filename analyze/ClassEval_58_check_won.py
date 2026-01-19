@@ -11,10 +11,11 @@ def check_won(self, map):
     """
     for i in range(len(map)):
         for j in range(len(map[i])):
-            # यदि player_map में '-' है, तो जांचें कि क्या यह minesweeper_map में खदान नहीं है
+            # यदि player_map में कोई अनावरित सेल ('-') है
             if map[i][j] == '-':
-                # यदि यह स्थान खदान नहीं है, तो खेल अभी जीता नहीं गया है
+                # जांचें कि क्या यह minesweeper_map में खदान है
                 if self.minesweeper_map[i][j] != 'X':
+                    # यदि यह खदान नहीं है, तो खेल अभी जीता नहीं गया
                     return False
-    # यदि सभी '-' केवल खदानों पर हैं, तो खेल जीत लिया गया है
+    # यदि सभी अनावरित सेल खदानें हैं, तो खेल जीत लिया गया है
     return True

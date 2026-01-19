@@ -12,21 +12,24 @@ def is_valid_move(self, pos1, pos2):
     >>> mc.is_valid_move((0, 0), (1, 0))
     True
     """
-    # Check if positions are within board boundaries
-    if not (0 <= pos1[0] < len(self.board[0]) and 0 <= pos1[1] < len(self.board)):
-        return False
-    if not (0 <= pos2[0] < len(self.board[0]) and 0 <= pos2[1] < len(self.board)):
-        return False
-    
-    # Check if positions are different
+    # Check if positions are the same
     if pos1 == pos2:
         return False
     
-    # Check if both positions have the same icon
-    icon1 = self.board[pos1[1]][pos1[0]]
-    icon2 = self.board[pos2[1]][pos2[0]]
+    # Check if positions are within board boundaries
+    rows = len(self.board)
+    cols = len(self.board[0]) if rows > 0 else 0
     
-    if icon1 != icon2 or icon1 is None or icon2 is None:
+    x1, y1 = pos1
+    x2, y2 = pos2
+    
+    if not (0 <= x1 < cols and 0 <= y1 < rows):
+        return False
+    if not (0 <= x2 < cols and 0 <= y2 < rows):
+        return False
+    
+    # Check if both positions have the same icon
+    if self.board[y1][x1] != self.board[y2][x2]:
         return False
     
     # Check if there's a valid path between the two positions
@@ -35,13 +38,16 @@ def is_valid_move(self, pos1, pos2):
 
 def _has_valid_path(self, pos1, pos2):
     """Helper method to check if there's a valid path with at most 2 turns"""
+    x1, y1 = pos1
+    x2, y2 = pos2
+    
     # Try direct line (0 turns)
     if self._is_clear_line(pos1, pos2):
         return True
     
-    # Try 1 turn (L-shaped path)
-    corner1 = (pos1[0], pos2[1])
-    corner2 = (pos2[0], pos1[1])
+    # Try 1 turn (L-shape)
+    corner1 = (x1, y2)
+    corner2 = (x2, y1)
     
     if self._is_empty_or_target(corner1, pos1, pos2):
         if self._is_clear_line(pos1, corner1) and self._is_clear_line(corner1, pos2):
@@ -51,36 +57,26 @@ def _has_valid_path(self, pos1, pos2):
         if self._is_clear_line(pos1, corner2) and self._is_clear_line(corner2, pos2):
             return True
     
-    # Try 2 turns (Z-shaped path)
-    for y in range(len(self.board)):
-        for x in range(len(self.board[0])):
-            mid = (x, y)
-            if self._is_empty_or_target(mid, pos1, pos2):
-                if (self._is_clear_line(pos1, mid) and self._is_clear_line(mid, pos2)):
-                    return True
+    # Try 2 turns (Z-shape)
+    # Horizontal then vertical then horizontal
+    for x in range(-1, len(self.board[0]) + 1):
+        mid1 = (x, y1)
+        mid2 = (x, y2)
+        if self._is_empty_or_target(mid1, pos1, pos2) and self._is_empty_or_target(mid2, pos1, pos2):
+            if (self._is_clear_line(pos1, mid1) and 
+                self._is_clear_line(mid1, mid2) and 
+                self._is_clear_line(mid2, pos2)):
+                return True
     
-    return False
-
-def _is_clear_line(self, pos1, pos2):
-    """Check if there's a clear straight line between two positions"""
-    x1, y1 = pos1
-    x2, y2 = pos2
-    
-    # Horizontal line
-    if y1 == y2:
-        start, end = min(x1, x2), max(x1, x2)
-        for x in range(start + 1, end):
-            if self.board[y1][x] is not None:
-                return False
-        return True
-    
-    # Vertical line
-    if x1 == x2:
-        start, end = min(y1, y2), max(y1, y2)
-        for y in range(start + 1, end):
-            if self.board[y][x1] is not None:
-                return False
-        return True
+    # Vertical then horizontal then vertical
+    for y in range(-1, len(self.board) + 1):
+        mid1 = (x1, y)
+        mid2 = (x2, y)
+        if self._is_empty_or_target(mid1, pos1, pos2) and self._is_empty_or_target(mid2, pos1, pos2):
+            if (self._is_clear_line(pos1, mid1) and 
+                self._is_clear_line(mid1, mid2) and 
+                self._is_clear_line(mid2, pos2)):
+                return True
     
     return False
 
@@ -88,6 +84,36 @@ def _is_empty_or_target(self, pos, pos1, pos2):
     """Check if position is empty or one of the target positions"""
     if pos == pos1 or pos == pos2:
         return True
-    if 0 <= pos[0] < len(self.board[0]) and 0 <= pos[1] < len(self.board):
-        return self.board[pos[1]][pos[0]] is None
+    x, y = pos
+    if x < 0 or x >= len(self.board[0]) or y < 0 or y >= len(self.board):
+        return True  # Outside board is considered passable
+    return self.board[y][x] == '' or self.board[y][x] is None
+
+def _is_clear_line(self, pos1, pos2):
+    """Check if there's a clear straight line between two positions"""
+    x1, y1 = pos1
+    x2, y2 = pos2
+    
+    # Must be horizontal or vertical line
+    if x1 != x2 and y1 != y2:
+        return False
+    
+    # Horizontal line
+    if y1 == y2:
+        start_x = min(x1, x2)
+        end_x = max(x1, x2)
+        for x in range(start_x, end_x + 1):
+            if not self._is_empty_or_target((x, y1), pos1, pos2):
+                return False
+        return True
+    
+    # Vertical line
+    if x1 == x2:
+        start_y = min(y1, y2)
+        end_y = max(y1, y2)
+        for y in range(start_y, end_y + 1):
+            if not self._is_empty_or_target((x1, y), pos1, pos2):
+                return False
+        return True
+    
     return False

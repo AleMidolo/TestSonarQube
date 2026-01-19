@@ -23,7 +23,7 @@ def string_to_datetime(self, string):
         except ValueError:
             continue
     
-    # If standard formats don't work, try parsing flexible format
+    # If standard formats don't work, try parsing with flexible format
     # Handle cases like "2001-7-18 1:1:1" where single digits aren't zero-padded
     try:
         parts = string.split()
@@ -31,11 +31,12 @@ def string_to_datetime(self, string):
         time_part = parts[1] if len(parts) > 1 else "0:0:0"
         
         date_components = date_part.replace('/', '-').split('-')
-        year = int(date_components[0])
-        month = int(date_components[1])
-        day = int(date_components[2])
-        
         time_components = time_part.split(':')
+        
+        year = int(date_components[0])
+        month = int(date_components[1]) if len(date_components) > 1 else 1
+        day = int(date_components[2]) if len(date_components) > 2 else 1
+        
         hour = int(time_components[0]) if len(time_components) > 0 else 0
         minute = int(time_components[1]) if len(time_components) > 1 else 0
         second = int(time_components[2]) if len(time_components) > 2 else 0

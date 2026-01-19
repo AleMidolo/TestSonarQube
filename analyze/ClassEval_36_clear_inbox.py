@@ -24,6 +24,7 @@ def clear_inbox(self, size):
     space_needed = size - available_space
     
     # Remove oldest emails (from the beginning) until we have enough space
-    while self.inbox and space_needed > 0:
+    freed_space = 0
+    while freed_space < space_needed and self.inbox:
         removed_email = self.inbox.pop(0)
-        space_needed -= removed_email['size']
+        freed_space += removed_email['size']

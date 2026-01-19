@@ -11,7 +11,7 @@ def condition_judge(self):
     
     if bmi < 18.5:
         return -1
-    elif bmi >= 25:
+    elif bmi > 25:
         return 1
     else:
         return 0

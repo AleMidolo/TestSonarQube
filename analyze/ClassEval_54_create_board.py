@@ -15,27 +15,18 @@ def create_board(self):
     total_cells = rows * cols
     
     # Create a flat list with pairs of icons
-    # Each icon should appear an even number of times for matching
     tiles = []
-    icons_count = len(self.icons)
+    icon_index = 0
     
-    # Calculate how many of each icon we need
     # We need total_cells tiles, and each icon should appear in pairs
-    tiles_per_icon = total_cells // icons_count
-    
-    # Create tiles with each icon appearing the required number of times
-    for icon in self.icons:
-        tiles.extend([icon] * tiles_per_icon)
-    
-    # If there are remaining cells, fill them with icons from the start
-    remaining = total_cells - len(tiles)
-    for i in range(remaining):
-        tiles.append(self.icons[i % icons_count])
+    for i in range(total_cells):
+        tiles.append(self.icons[icon_index % len(self.icons)])
+        icon_index += 1
     
     # Shuffle the tiles
     random.shuffle(tiles)
     
-    # Create the 2D board
+    # Create 2D board from flat list
     board = []
     for i in range(rows):
         row = []

@@ -6,6 +6,7 @@ def get_fragment(self):
     >>> urlhandler.get_fragment()
     "page"
     """
-    if hasattr(self, 'url') and self.url and '#' in self.url:
-        return self.url.split('#', 1)[1]
+    if hasattr(self, 'url') and self.url:
+        if '#' in self.url:
+            return self.url.split('#', 1)[1]
     return None

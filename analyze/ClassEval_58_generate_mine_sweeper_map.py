@@ -17,25 +17,30 @@ def generate_mine_sweeper_map(self):
     
     # Place mines randomly
     mines_placed = 0
-    positions = [(i, j) for i in range(self.n) for j in range(self.n)]
-    random.shuffle(positions)
-    
-    for i in range(min(self.k, len(positions))):
-        row, col = positions[i]
-        board[row][col] = 'X'
-        mines_placed += 1
+    while mines_placed < self.k:
+        row = random.randint(0, self.n - 1)
+        col = random.randint(0, self.n - 1)
+        
+        # Only place mine if cell doesn't already have one
+        if board[row][col] != 'X':
+            board[row][col] = 'X'
+            mines_placed += 1
     
     # Calculate numbers for non-mine cells
-    directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
-    
     for i in range(self.n):
         for j in range(self.n):
             if board[i][j] != 'X':
+                # Count adjacent mines
                 mine_count = 0
-                for di, dj in directions:
-                    ni, nj = i + di, j + dj
-                    if 0 <= ni < self.n and 0 <= nj < self.n and board[ni][nj] == 'X':
-                        mine_count += 1
+                # Check all 8 adjacent cells
+                for di in [-1, 0, 1]:
+                    for dj in [-1, 0, 1]:
+                        if di == 0 and dj == 0:
+                            continue
+                        ni, nj = i + di, j + dj
+                        if 0 <= ni < self.n and 0 <= nj < self.n:
+                            if board[ni][nj] == 'X':
+                                mine_count += 1
                 board[i][j] = mine_count
     
     return board
