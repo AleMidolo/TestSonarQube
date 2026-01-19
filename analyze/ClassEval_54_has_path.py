@@ -17,25 +17,25 @@ def has_path(self, pos1, pos2):
     visited = set()
     start_x, start_y = pos1
     end_x, end_y = pos2
-    for i, (dx, dy) in enumerate(directions):
-        queue.append((start_x, start_y, 0, i))
-        visited.add((start_x, start_y, 0, i))
+    for dx, dy in directions:
+        queue.append((start_x, start_y, 0, (dx, dy)))
+        visited.add((start_x, start_y, 0, (dx, dy)))
     while queue:
-        x, y, turns, dir_idx = queue.popleft()
+        x, y, turns, direction = queue.popleft()
         if (x, y) == (end_x, end_y):
             return True
-        for new_dir_idx, (dx, dy) in enumerate(directions):
+        for dx, dy in directions:
             new_x, new_y = (x + dx, y + dy)
             if not (0 <= new_x < self.BOARD_SIZE[0] and 0 <= new_y < self.BOARD_SIZE[1]):
                 continue
             if (new_x, new_y) != (end_x, end_y) and self.board[new_x][new_y] != ' ':
                 continue
             new_turns = turns
-            if dir_idx != -1 and new_dir_idx != dir_idx:
+            if (dx, dy) != direction:
                 new_turns += 1
             if new_turns > 2:
                 continue
-            state = (new_x, new_y, new_turns, new_dir_idx)
+            state = (new_x, new_y, new_turns, (dx, dy))
             if state not in visited:
                 visited.add(state)
                 queue.append(state)

@@ -9,41 +9,28 @@ def rail_fence_decipher(self, encrypted_text, rails):
         'Hello, World!'
 
         """
-    if rails <= 1:
+    if rails == 1:
         return encrypted_text
-    n = len(encrypted_text)
-    fence = [['' for _ in range(n)] for _ in range(rails)]
-    dir_down = None
-    row, col = (0, 0)
-    for i in range(n):
-        if row == 0:
-            dir_down = True
-        elif row == rails - 1:
-            dir_down = False
-        fence[row][col] = '*'
-        col += 1
-        if dir_down:
-            row += 1
-        else:
-            row -= 1
+    fence = [['' for _ in range(len(encrypted_text))] for _ in range(rails)]
+    rail = 0
+    direction = 1
+    for col in range(len(encrypted_text)):
+        fence[rail][col] = '*'
+        rail += direction
+        if rail == rails - 1 or rail == 0:
+            direction = -direction
     index = 0
     for i in range(rails):
-        for j in range(n):
-            if fence[i][j] == '*' and index < n:
+        for j in range(len(encrypted_text)):
+            if fence[i][j] == '*':
                 fence[i][j] = encrypted_text[index]
                 index += 1
     result = []
-    row, col = (0, 0)
-    for i in range(n):
-        if row == 0:
-            dir_down = True
-        elif row == rails - 1:
-            dir_down = False
-        if fence[row][col] != '':
-            result.append(fence[row][col])
-            col += 1
-        if dir_down:
-            row += 1
-        else:
-            row -= 1
+    rail = 0
+    direction = 1
+    for col in range(len(encrypted_text)):
+        result.append(fence[rail][col])
+        rail += direction
+        if rail == rails - 1 or rail == 0:
+            direction = -direction
     return ''.join(result)

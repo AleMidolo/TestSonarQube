@@ -12,8 +12,8 @@ def transform(expression):
     expression = re.sub('\\s+', '', expression)
     transformed = []
     i = 0
-    length = len(expression)
-    while i < length:
+    n = len(expression)
+    while i < n:
         c = expression[i]
         if c == '-':
             if i == 0:

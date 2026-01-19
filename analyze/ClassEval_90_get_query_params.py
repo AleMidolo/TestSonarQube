@@ -16,11 +16,11 @@ def get_query_params(self):
             if fragment_start != -1:
                 query_string = query_string[:fragment_start]
             if query_string:
-                pairs = query_string.split('&')
-                for pair in pairs:
-                    if '=' in pair:
-                        key, value = pair.split('=', 1)
+                params = query_string.split('&')
+                for param in params:
+                    if '=' in param:
+                        key, value = param.split('=', 1)
                         query_params[key] = value
-                    elif pair:
-                        query_params[pair] = ''
+                    else:
+                        query_params[param] = None
     return query_params

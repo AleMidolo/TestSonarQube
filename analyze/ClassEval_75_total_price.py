@@ -9,6 +9,6 @@ def total_price(self) -> float:
         11.0
         """
     total = 0.0
-    for item in self.items.values():
-        total += item['price'] * item['quantity']
+    for item_info in self.items.values():
+        total += item_info['price'] * item_info['quantity']
     return total
