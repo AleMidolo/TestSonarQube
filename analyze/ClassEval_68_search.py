@@ -24,7 +24,7 @@ def search(self, keyword):
     
     # Return search information
     return {
-        "keyword": keyword,
+        "keyword": keyword_str,
         "total_results": total_results,
         "total_pages": total_pages,
         "results": results

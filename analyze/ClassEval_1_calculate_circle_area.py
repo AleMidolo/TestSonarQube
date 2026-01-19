@@ -1,3 +1,5 @@
+import math
+
 def calculate_circle_area(self):
     """
     calculate the area of circle based on self.radius
@@ -6,5 +8,4 @@ def calculate_circle_area(self):
     >>> areaCalculator.calculate_circle_area()
     12.566370614359172
     """
-    import math
     return math.pi * self.radius ** 2

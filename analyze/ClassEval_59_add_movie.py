@@ -16,7 +16,7 @@ def add_movie(self, name, price, start_time, end_time, n):
         [0., 0., 0.],
         [0., 0., 0.]])}]
     """
-    # Parse time strings to datetime objects
+    # Parse start_time and end_time strings to datetime objects
     start_dt = datetime.strptime(start_time, '%H:%M').replace(year=1900, month=1, day=1)
     end_dt = datetime.strptime(end_time, '%H:%M').replace(year=1900, month=1, day=1)
     
@@ -32,5 +32,5 @@ def add_movie(self, name, price, start_time, end_time, n):
         'seats': seats
     }
     
-    # Add movie to self.movies
+    # Add movie to self.movies list
     self.movies.append(movie)

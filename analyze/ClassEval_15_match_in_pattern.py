@@ -12,5 +12,5 @@ def match_in_pattern(self, char):
     for i in range(len(self.pattern) - 1, -1, -1):
         if self.pattern[i] == char:
             return i
-    # Return -1 if character is not found in pattern
+    # If character not found, return -1
     return -1

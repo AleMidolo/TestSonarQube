@@ -44,7 +44,7 @@ def get_available_slots(self, date):
         # Move current_time to the end of this event
         current_time = max(current_time, event_end)
     
-    # Check if there's time remaining at the end of the day
+    # Check if there's time left at the end of the day
     if current_time < day_end:
         available_slots.append((current_time, day_end))
     

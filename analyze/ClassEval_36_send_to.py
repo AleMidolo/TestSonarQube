@@ -16,24 +16,24 @@ def send_to(self, recv, content, size):
     from datetime import datetime
     
     # Check if receiver has enough space in their inbox
-    current_size = sum(email.get('size', 0) for email in (recv.inbox if isinstance(recv.inbox, list) else [recv.inbox]) if email)
+    current_size = sum(email.get('size', 0) for email in recv.inbox) if isinstance(recv.inbox, list) else recv.inbox.get('size', 0) if isinstance(recv.inbox, dict) else 0
     
-    # If recv.inbox is a dict (single email), convert to list for checking
-    if isinstance(recv.inbox, dict) and recv.inbox:
+    # If inbox is a list, calculate total size
+    if isinstance(recv.inbox, list):
+        current_size = sum(email.get('size', 0) for email in recv.inbox)
+    elif isinstance(recv.inbox, dict) and recv.inbox:
+        # If inbox already has an email as dict, we need to check capacity
         current_size = recv.inbox.get('size', 0)
-    elif isinstance(recv.inbox, list):
-        current_size = sum(email.get('size', 0) for email in recv.inbox if email)
     else:
         current_size = 0
     
-    # Check if there's enough capacity
-    if hasattr(recv, 'capacity'):
-        if current_size + size > recv.capacity:
-            return False
+    # Check if adding this email would exceed capacity
+    if hasattr(recv, 'capacity') and current_size + size > recv.capacity:
+        return False
     
     # Create email object
     email = {
-        'sender': self.email if hasattr(self, 'email') else self,
+        'sender': self.email if hasattr(self, 'email') else 'sender@example.com',
         'receiver': recv.email if hasattr(recv, 'email') else recv,
         'content': content,
         'size': size,
@@ -42,6 +42,12 @@ def send_to(self, recv, content, size):
     }
     
     # Add to receiver's inbox
-    recv.inbox = email
+    if not hasattr(recv, 'inbox') or recv.inbox is None:
+        recv.inbox = email
+    elif isinstance(recv.inbox, list):
+        recv.inbox.append(email)
+    else:
+        # If inbox is a dict (single email), convert to list or replace
+        recv.inbox = email
     
     return True

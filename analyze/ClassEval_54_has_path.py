@@ -7,67 +7,64 @@ def has_path(self, pos1, pos2):
     """
     from collections import deque
     
-    # If positions are the same, no valid path
+    # If positions are the same, no path needed
     if pos1 == pos2:
         return False
     
-    # Check if both positions are valid and have the same icon
-    rows, cols = len(self.board), len(self.board[0]) if self.board else 0
-    x1, y1 = pos1
-    x2, y2 = pos2
+    # Check if both positions have the same icon (required for Mahjong Connect)
+    y1, x1 = pos1
+    y2, x2 = pos2
     
-    if not (0 <= x1 < cols and 0 <= y1 < rows and 0 <= x2 < cols and 0 <= y2 < rows):
+    # Boundary checks
+    if not (0 <= y1 < len(self.board) and 0 <= x1 < len(self.board[0])):
+        return False
+    if not (0 <= y2 < len(self.board) and 0 <= x2 < len(self.board[0])):
         return False
     
+    # Check if icons match (if they exist)
     if self.board[y1][x1] != self.board[y2][x2]:
         return False
     
-    # If either position is empty, no path
-    if self.board[y1][x1] is None or self.board[y2][x2] is None:
-        return False
-    
     # BFS to find path with at most 2 turns (3 line segments)
-    # State: (x, y, direction, turns)
+    # State: (y, x, direction, turns)
     # direction: 0=start, 1=horizontal, 2=vertical
-    queue = deque([(x1, y1, 0, 0)])
+    queue = deque([(y1, x1, 0, 0)])
     visited = set()
-    visited.add((x1, y1, 0))
+    visited.add((y1, x1, 0))
     
     while queue:
-        x, y, direction, turns = queue.popleft()
+        y, x, direction, turns = queue.popleft()
         
-        # Try all 4 directions
-        for dx, dy, new_dir in [(0, 1, 2), (0, -1, 2), (1, 0, 1), (-1, 0, 1)]:
-            nx, ny = x + dx, y + dy
+        # Try all four directions
+        for dy, dx, new_dir in [(0, 1, 1), (0, -1, 1), (1, 0, 2), (-1, 0, 2)]:
+            ny, nx = y + dy, x + dx
             
-            # Check bounds (allow one step outside the board)
-            if nx < -1 or nx > cols or ny < -1 or ny > rows:
+            # Check boundaries (allow one step outside the board)
+            if ny < -1 or ny > len(self.board) or nx < -1 or nx > len(self.board[0]):
                 continue
             
-            # Calculate number of turns
+            # Calculate new turn count
             new_turns = turns
             if direction != 0 and direction != new_dir:
                 new_turns += 1
             
-            # Maximum 2 turns allowed
+            # Maximum 2 turns allowed (3 line segments)
             if new_turns > 2:
                 continue
             
             # Check if we reached the destination
-            if nx == x2 and ny == y2:
+            if (ny, nx) == (y2, x2):
                 return True
             
-            # Check if cell is empty or out of bounds (can pass through)
-            can_pass = False
-            if nx < 0 or nx >= cols or ny < 0 or ny >= rows:
-                can_pass = True
-            elif self.board[ny][nx] is None:
-                can_pass = True
+            # Check if cell is empty or outside board
+            if 0 <= ny < len(self.board) and 0 <= nx < len(self.board[0]):
+                if self.board[ny][nx] is not None and (ny, nx) != (y2, x2):
+                    continue
             
-            if can_pass:
-                state = (nx, ny, new_dir)
-                if state not in visited:
-                    visited.add(state)
-                    queue.append((nx, ny, new_dir, new_turns))
+            # Add to queue if not visited with this state
+            state = (ny, nx, new_dir)
+            if state not in visited:
+                visited.add(state)
+                queue.append((ny, nx, new_dir, new_turns))
     
     return False

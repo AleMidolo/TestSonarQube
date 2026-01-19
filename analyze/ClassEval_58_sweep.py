@@ -33,9 +33,9 @@ def sweep(self, x, y):
                         self.sweep(nx, ny)
     
     # Check if the player has won (all non-mine cells revealed)
-    for i in range(len(self.minesweeper_map)):
-        for j in range(len(self.minesweeper_map[0])):
-            if self.minesweeper_map[i][j] != 'X' and self.player_map[i][j] == '-':
+    for i in range(len(self.player_map)):
+        for j in range(len(self.player_map[0])):
+            if self.player_map[i][j] == '-' and self.minesweeper_map[i][j] != 'X':
                 return self.player_map
     
     return True

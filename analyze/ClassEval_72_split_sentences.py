@@ -15,15 +15,17 @@ def split_sentences(self, text):
     # Filter out empty strings
     sentences = [s.strip() for s in sentences if s.strip()]
     
-    # Find the last punctuation in the original text
-    last_punct = ''
-    for char in reversed(text):
-        if char in '.?!':
-            last_punct = char
-            break
-    
-    # Add the last punctuation back to the last sentence
-    if sentences and last_punct:
-        sentences[-1] = sentences[-1] + last_punct
+    # If there are sentences, we need to add back the punctuation to the last one
+    if sentences and text:
+        # Find the last punctuation mark in the original text
+        last_punct = ''
+        for char in reversed(text):
+            if char in '.?!':
+                last_punct = char
+                break
+        
+        # Add the punctuation back to the last sentence
+        if last_punct:
+            sentences[-1] = sentences[-1] + last_punct
     
     return sentences

@@ -8,31 +8,31 @@ def get_possible_moves(self, state):
     """
     moves = []
     
-    # Find the position of 0 (empty tile)
-    zero_row, zero_col = None, None
+    # Find the position of the empty tile (0)
+    empty_row, empty_col = None, None
     for i in range(3):
         for j in range(3):
             if state[i][j] == 0:
-                zero_row, zero_col = i, j
+                empty_row, empty_col = i, j
                 break
-        if zero_row is not None:
+        if empty_row is not None:
             break
     
-    # Check each direction
-    # 'up' means moving a tile up into the empty space (empty space moves down)
-    if zero_row < 2:  # Can move down (tile from below moves up)
+    # Check each possible direction
+    # 'up' means moving a tile up into the empty space (empty tile moves down)
+    if empty_row < 2:  # Can move up if empty tile is not in the bottom row
         moves.append('up')
     
-    # 'down' means moving a tile down into the empty space (empty space moves up)
-    if zero_row > 0:  # Can move up (tile from above moves down)
+    # 'down' means moving a tile down into the empty space (empty tile moves up)
+    if empty_row > 0:  # Can move down if empty tile is not in the top row
         moves.append('down')
     
-    # 'left' means moving a tile left into the empty space (empty space moves right)
-    if zero_col < 2:  # Can move right (tile from right moves left)
+    # 'left' means moving a tile left into the empty space (empty tile moves right)
+    if empty_col < 2:  # Can move left if empty tile is not in the rightmost column
         moves.append('left')
     
-    # 'right' means moving a tile right into the empty space (empty space moves left)
-    if zero_col > 0:  # Can move left (tile from left moves right)
+    # 'right' means moving a tile right into the empty space (empty tile moves left)
+    if empty_col > 0:  # Can move right if empty tile is not in the leftmost column
         moves.append('right')
     
     return moves

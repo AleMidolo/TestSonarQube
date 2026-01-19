@@ -32,28 +32,28 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
                 break
         
         # Get the four corner points
-        x0, x1 = x[x_idx], x[x_idx + 1]
-        y0, y1 = y[y_idx], y[y_idx + 1]
+        x1, x2 = x[x_idx], x[x_idx + 1]
+        y1, y2 = y[y_idx], y[y_idx + 1]
         
-        z00 = z[x_idx][y_idx]
-        z01 = z[x_idx][y_idx + 1]
-        z10 = z[x_idx + 1][y_idx]
-        z11 = z[x_idx + 1][y_idx + 1]
+        z11 = z[x_idx][y_idx]
+        z12 = z[x_idx][y_idx + 1]
+        z21 = z[x_idx + 1][y_idx]
+        z22 = z[x_idx + 1][y_idx + 1]
         
         # Bilinear interpolation
         # Interpolate in x direction
-        if x1 - x0 != 0:
-            z_y0 = z00 + (z10 - z00) * (xi - x0) / (x1 - x0)
-            z_y1 = z01 + (z11 - z01) * (xi - x0) / (x1 - x0)
+        if x2 - x1 != 0:
+            z_y1 = z11 + (z21 - z11) * (xi - x1) / (x2 - x1)
+            z_y2 = z12 + (z22 - z12) * (xi - x1) / (x2 - x1)
         else:
-            z_y0 = z00
-            z_y1 = z01
+            z_y1 = z11
+            z_y2 = z12
         
         # Interpolate in y direction
-        if y1 - y0 != 0:
-            z_interp = z_y0 + (z_y1 - z_y0) * (yi - y0) / (y1 - y0)
+        if y2 - y1 != 0:
+            z_interp = z_y1 + (z_y2 - z_y1) * (yi - y1) / (y2 - y1)
         else:
-            z_interp = z_y0
+            z_interp = z_y1
         
         result.append(z_interp)
     

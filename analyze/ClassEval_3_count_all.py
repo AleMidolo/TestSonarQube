@@ -13,7 +13,8 @@ def count_all(n):
     total = 0
     # For each possible number of items to choose (from 1 to n)
     for k in range(1, n + 1):
-        # Calculate the number of permutations: P(n, k) = n! / (n-k)!
-        total += math.factorial(n) // math.factorial(n - k)
+        # Calculate the number of arrangements: P(n, k) = n! / (n-k)!
+        arrangements = math.factorial(n) // math.factorial(n - k)
+        total += arrangements
     
     return total

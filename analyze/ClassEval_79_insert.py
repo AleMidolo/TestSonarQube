@@ -11,9 +11,21 @@ def insert(self, data):
     
     # Extract column names and values
     columns = ', '.join(data.keys())
-    values = ', '.join(f"'{value}'" for value in data.values())
     
-    # Generate the INSERT statement
+    # Format values - wrap strings in single quotes
+    formatted_values = []
+    for value in data.values():
+        if isinstance(value, str):
+            formatted_values.append(f"'{value}'")
+        elif value is None:
+            formatted_values.append('NULL')
+        else:
+            formatted_values.append(str(value))
+    
+    values = ', '.join(formatted_values)
+    
+    # Construct the INSERT statement
+    # Assuming self has a table_name attribute (e.g., self.table_name = 'table1')
     sql_statement = f"INSERT INTO {self.table_name} ({columns}) VALUES ({values});"
     
     return sql_statement

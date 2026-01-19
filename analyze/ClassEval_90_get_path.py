@@ -7,9 +7,9 @@ def get_path(self):
     "/s?wd=aaa&rsv_spt=1#page"
     """
     # Assuming self.url contains the full URL
-    # Find the position after the domain (after the third slash for http/https URLs)
+    # Find the position after the domain (third slash for http/https URLs)
     
-    # First, check if there's a protocol
+    # First, check if URL has a protocol
     if "://" in self.url:
         # Split by "://" to separate protocol from the rest
         after_protocol = self.url.split("://", 1)[1]
@@ -24,9 +24,8 @@ def get_path(self):
             # No path found, return empty string or "/"
             return ""
     else:
-        # No protocol, look for the first "/"
+        # No protocol, try to find path directly
         slash_index = self.url.find("/")
         if slash_index != -1:
             return self.url[slash_index:]
-        else:
-            return ""
+        return ""

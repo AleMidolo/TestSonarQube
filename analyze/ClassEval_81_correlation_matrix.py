@@ -19,31 +19,24 @@ def correlation_matrix(data):
     # Calculate correlation for each pair of rows
     for i in range(n):
         for j in range(n):
-            if i == j:
-                corr_matrix[i][j] = 1.0
+            # Calculate means
+            mean_i = sum(data[i]) / len(data[i])
+            mean_j = sum(data[j]) / len(data[j])
+            
+            # Calculate numerator (covariance)
+            numerator = sum((data[i][k] - mean_i) * (data[j][k] - mean_j) 
+                          for k in range(len(data[i])))
+            
+            # Calculate denominator (product of standard deviations)
+            sum_sq_i = sum((data[i][k] - mean_i) ** 2 for k in range(len(data[i])))
+            sum_sq_j = sum((data[j][k] - mean_j) ** 2 for k in range(len(data[j])))
+            
+            denominator = (sum_sq_i * sum_sq_j) ** 0.5
+            
+            # Calculate correlation coefficient
+            if denominator == 0:
+                corr_matrix[i][j] = 1.0 if i == j else 0.0
             else:
-                # Calculate means
-                mean_i = sum(data[i]) / len(data[i])
-                mean_j = sum(data[j]) / len(data[j])
-                
-                # Calculate numerator (covariance) and denominators (standard deviations)
-                numerator = 0.0
-                sum_sq_i = 0.0
-                sum_sq_j = 0.0
-                
-                for k in range(len(data[i])):
-                    diff_i = data[i][k] - mean_i
-                    diff_j = data[j][k] - mean_j
-                    numerator += diff_i * diff_j
-                    sum_sq_i += diff_i * diff_i
-                    sum_sq_j += diff_j * diff_j
-                
-                # Calculate correlation coefficient
-                denominator = (sum_sq_i * sum_sq_j) ** 0.5
-                
-                if denominator == 0:
-                    corr_matrix[i][j] = 0.0
-                else:
-                    corr_matrix[i][j] = numerator / denominator
+                corr_matrix[i][j] = numerator / denominator
     
     return corr_matrix

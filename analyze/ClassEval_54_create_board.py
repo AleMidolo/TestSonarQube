@@ -17,23 +17,25 @@ def create_board(self):
     # Calculate how many pairs we need
     num_pairs = total_cells // 2
     
-    # Create a flat list with pairs of icons
-    flat_board = []
+    # Create a list of icons, repeating them to fill the board
+    icons_list = []
     icon_index = 0
     for _ in range(num_pairs):
-        icon = self.icons[icon_index % len(self.icons)]
-        flat_board.extend([icon, icon])
+        icons_list.append(self.icons[icon_index % len(self.icons)])
+        icons_list.append(self.icons[icon_index % len(self.icons)])
         icon_index += 1
     
-    # Shuffle the flat list
-    random.shuffle(flat_board)
+    # Shuffle the icons
+    random.shuffle(icons_list)
     
-    # Convert to 2D board
+    # Create the 2D board
     board = []
+    index = 0
     for i in range(rows):
         row = []
         for j in range(cols):
-            row.append(flat_board[i * cols + j])
+            row.append(icons_list[index])
+            index += 1
         board.append(row)
     
     self.board = board

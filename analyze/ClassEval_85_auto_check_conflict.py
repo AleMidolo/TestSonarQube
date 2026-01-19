@@ -23,5 +23,5 @@ def auto_check_conflict(self):
             self.mode = 'cool'
             return False
     
-    # No conflict (mode matches the temperature relationship, or temps are equal)
+    # No conflict detected
     return True

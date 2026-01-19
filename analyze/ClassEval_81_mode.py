@@ -13,11 +13,10 @@ def mode(data):
         return []
     
     frequency = {}
-    for value in data:
-        frequency[value] = frequency.get(value, 0) + 1
+    for item in data:
+        frequency[item] = frequency.get(item, 0) + 1
     
-    max_frequency = max(frequency.values())
-    
-    modes = [key for key, freq in frequency.items() if freq == max_frequency]
+    max_freq = max(frequency.values())
+    modes = [key for key, value in frequency.items() if value == max_freq]
     
     return modes

@@ -10,4 +10,7 @@ def get_cookies(self, reponse):
     """
     if 'cookies' in reponse:
         self.cookies = reponse['cookies']
-        self._save_cookies()
+        # Save cookies to file
+        import json
+        with open(self.cookies_file, 'w') as f:
+            json.dump(self.cookies, f)

@@ -19,11 +19,11 @@ def is_valid(self):
             if not part.isdigit():
                 return False
             
-            num = int(part)
-            if num < 0 or num > 255:
+            if part[0] == '0' and len(part) > 1:
                 return False
             
-            if len(part) > 1 and part[0] == '0':
+            num = int(part)
+            if num < 0 or num > 255:
                 return False
         
         return True
