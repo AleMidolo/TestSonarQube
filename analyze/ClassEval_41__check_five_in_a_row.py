@@ -16,16 +16,20 @@ def _check_five_in_a_row(self, row, col, direction):
         False
         """
     dx, dy = direction
-    symbol = self.board[row][col]
+    player = self.board[row][col]
     count = 1
     r, c = (row + dx, col + dy)
-    while 0 <= r < self.board_size and 0 <= c < self.board_size and (self.board[r][c] == symbol):
+    while 0 <= r < self.board_size and 0 <= c < self.board_size and (self.board[r][c] == player):
         count += 1
+        if count == 5:
+            return True
         r += dx
         c += dy
     r, c = (row - dx, col - dy)
-    while 0 <= r < self.board_size and 0 <= c < self.board_size and (self.board[r][c] == symbol):
+    while 0 <= r < self.board_size and 0 <= c < self.board_size and (self.board[r][c] == player):
         count += 1
+        if count == 5:
+            return True
         r -= dx
         c -= dy
-    return count >= 5
+    return False

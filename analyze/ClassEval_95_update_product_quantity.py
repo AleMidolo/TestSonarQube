@@ -8,5 +8,3 @@ def update_product_quantity(self, product_id, quantity):
         """
     if product_id in self.inventory:
         self.inventory[product_id]['quantity'] += quantity
-        if self.inventory[product_id]['quantity'] < 0:
-            self.inventory[product_id]['quantity'] = 0

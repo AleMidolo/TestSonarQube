@@ -10,12 +10,14 @@ def parse(self, path, charset):
         """
     if not path:
         return
-    decoded_path = urllib.parse.unquote(path, encoding=charset)
-    path_segments = decoded_path.split('/')
-    for segment in path_segments:
+    cleaned_path = path.strip('/')
+    if not cleaned_path:
+        return
+    raw_segments = cleaned_path.split('/')
+    for segment in raw_segments:
         if segment:
-            fixed_segment = self.fix_path(segment)
-            if fixed_segment:
-                self.segments.append(fixed_segment)
-    if path.endswith('/'):
-        self.with_end_tag = True
+            try:
+                decoded_segment = urllib.parse.unquote(segment, encoding=charset)
+                self.segments.append(decoded_segment)
+            except (UnicodeDecodeError, LookupError):
+                self.segments.append(segment)

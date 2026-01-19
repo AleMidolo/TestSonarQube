@@ -35,6 +35,5 @@ def solve(self):
             state_tuple = tuple((tuple(row) for row in new_state))
             if state_tuple not in visited:
                 visited.add(state_tuple)
-                new_path = path + [direction]
-                queue.append((new_state, new_path))
-    return None
+                queue.append((new_state, path + [direction]))
+    return []

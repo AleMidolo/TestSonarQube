@@ -12,7 +12,5 @@ def standard_deviation(data):
     if len(data) == 0:
         return None
     mean = Statistics3.mean(data)
-    if mean is None:
-        return None
     variance = sum(((x - mean) ** 2 for x in data)) / len(data)
     return math.sqrt(variance)

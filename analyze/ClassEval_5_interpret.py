@@ -16,7 +16,7 @@ def interpret(self, display=False):
         chord = ''
         tune = ''
         i = 0
-        while i < len(item) and (not item[i].isdigit()):
+        while i < len(item) and item[i].isalpha():
             chord += item[i]
             i += 1
         tune = item[i:]

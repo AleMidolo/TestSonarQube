@@ -9,17 +9,19 @@ def split_sentences(self, sentences_string):
         """
     if not sentences_string:
         return []
-    abbreviations = ['Mr', 'Mrs', 'Dr', 'Ms', 'Prof', 'St', 'Jr', 'Sr']
-    placeholder_map = {}
-    for i, abbr in enumerate(abbreviations):
-        pattern = f'{abbr}\\.'
-        placeholder = f'__ABBR{i}__'
-        placeholder_map[placeholder] = f'{abbr}.'
-        sentences_string = re.sub(pattern, placeholder, sentences_string)
-    sentences = re.split('(?<=[.?])\\s+', sentences_string.strip())
-    result = []
-    for sentence in sentences:
-        for placeholder, original in placeholder_map.items():
-            sentence = sentence.replace(placeholder, original)
-        result.append(sentence)
-    return result
+    pattern = '(?<!Mr)(?<!Mrs)(?<!Dr)(?<!Prof)(?<!Sr)(?<!Jr)\\.\\s|\\?\\s'
+    parts = re.split(f'({pattern})', sentences_string)
+    sentences = []
+    current_sentence = ''
+    for i in range(0, len(parts), 2):
+        if i < len(parts):
+            current_sentence += parts[i]
+            if i + 1 < len(parts):
+                delimiter = parts[i + 1]
+                current_sentence += delimiter.rstrip()
+                sentences.append(current_sentence.strip())
+                current_sentence = ''
+    if current_sentence:
+        sentences.append(current_sentence.strip())
+    sentences = [s for s in sentences if s]
+    return sentences

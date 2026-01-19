@@ -8,7 +8,6 @@ def subtract(num1, num2):
         >>> bigNum = BigNumCalculator()
         >>> bigNum.subtract("12345678901234567890", "98765432109876543210")
         '-86419753208641975320'
-
         """
     negative = False
     if len(num1) < len(num2):

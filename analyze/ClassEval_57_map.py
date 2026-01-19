@@ -21,15 +21,13 @@ def map(data):
         sub_list = np.array(sub_list)
         if total_num == 0:
             return (0.0, [0.0])
-        relevant_positions = np.where(sub_list == 1)[0]
-        if len(relevant_positions) == 0:
+        correct_positions = np.where(sub_list == 1)[0]
+        if len(correct_positions) == 0:
             return (0.0, [0.0])
         precisions = []
-        for i, pos in enumerate(relevant_positions):
-            k = pos + 1
-            relevant_in_top_k = i + 1
-            precision_at_k = relevant_in_top_k / k
-            precisions.append(precision_at_k)
+        for i, pos in enumerate(correct_positions):
+            precision = (i + 1) / (pos + 1)
+            precisions.append(precision)
         ap = np.mean(precisions) if len(precisions) > 0 else 0.0
         return (ap, [ap])
     if type(data) == list:
@@ -39,16 +37,15 @@ def map(data):
             if total_num == 0:
                 ap = 0.0
             else:
-                relevant_positions = np.where(sub_list == 1)[0]
-                if len(relevant_positions) == 0:
+                correct_positions = np.where(sub_list == 1)[0]
+                if len(correct_positions) == 0:
                     ap = 0.0
                 else:
                     precisions = []
-                    for i, pos in enumerate(relevant_positions):
-                        k = pos + 1
-                        relevant_in_top_k = i + 1
-                        precision_at_k = relevant_in_top_k / k
-                        precisions.append(precision_at_k)
+                    for i, pos in enumerate(correct_positions):
+                        precision = (i + 1) / (pos + 1)
+                        precisions.append(precision)
                     ap = np.mean(precisions) if len(precisions) > 0 else 0.0
             separate_result.append(ap)
-        return (np.mean(separate_result), separate_result)
+        map_score = np.mean(separate_result) if len(separate_result) > 0 else 0.0
+        return (map_score, separate_result)

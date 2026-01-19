@@ -12,6 +12,4 @@ def LargeOrderPromo(order):
 
         """
     unique_products = len(set((item['product'] for item in order.cart)))
-    if unique_products >= 10:
-        return order.total() * 0.07
-    return 0.0
+    return order.total() * 0.07 if unique_products >= 10 else 0
