@@ -1,4 +1,3 @@
-@staticmethod
 def _calculate(first_value, second_value, current_op):
     """
     दिए गए ऑपरेटर और ऑपरेनड के आधार पर गणितीय गणना करें
@@ -11,18 +10,17 @@ def _calculate(first_value, second_value, current_op):
     5.0
 
     """
-    first_value = Decimal(first_value)
-    second_value = Decimal(second_value)
-
+    first = Decimal(first_value)
+    second = Decimal(second_value)
     if current_op == '+':
-        return first_value + second_value
+        return first + second
     elif current_op == '-':
-        return first_value - second_value
+        return first - second
     elif current_op == '*':
-        return first_value * second_value
-    elif current_op == '\/':
-        return first_value / second_value
+        return first * second
+    elif current_op == '\\/':
+        return first / second
     elif current_op == '%':
-        return first_value % second_value
+        return first % second
     else:
-        raise ValueError("Invalid operator")
+        raise ValueError('Invalid operator')

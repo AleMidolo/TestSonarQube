@@ -1,9 +1,9 @@
 def validate_user_login(self, username, password):
     """
-        Determines if the user can log in, i.e., if the user is in the database and the password is correct.
-        :param username: str, the username of the user to validate.
-        :param password: str, the password of the user to validate.
-        :return: bool, indicating whether the user can log in successfully.
+        निर्धारित करें कि क्या उपयोगकर्ता लॉग इन कर सकता है, अर्थात्, उपयोगकर्ता डेटाबेस में है और पासवर्ड सही है
+        :param username:str, उपयोगकर्ता का उपयोगकर्ता नाम जिसे मान्य करना है।
+        :param password:str, उपयोगकर्ता का पासवर्ड जिसे मान्य करना है।
+        :return:bool, यह दर्शाता है कि क्या उपयोगकर्ता सही तरीके से लॉग इन कर सकता है
         >>> user_db = UserLoginDB("user_database.db")
         >>> user_db.create_table()
         >>> user_db.insert_user('user1', 'pass1')

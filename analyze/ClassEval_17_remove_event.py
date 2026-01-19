@@ -8,5 +8,4 @@ def remove_event(self, event):
         >>> calendar.events
         []
         """
-    if event in self.events:
-        self.events.remove(event)
+    self.events = [e for e in self.events if e != event]

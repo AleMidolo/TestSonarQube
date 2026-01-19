@@ -7,6 +7,5 @@ def get_occupied_size(self):
         >>> sender.inbox = [{'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10, 'time': datetime.now, 'state': 'unread'}]
         >>> sender.get_occupied_size()
         10
-
         """
     return sum((email['size'] for email in self.inbox))
