@@ -16,7 +16,9 @@ def create_order(self, order_id, product_id, quantity):
         """
     if product_id not in self.inventory:
         return False
-    if self.inventory[product_id]['quantity'] < quantity:
+    current_quantity = self.inventory[product_id]['quantity']
+    if quantity > current_quantity:
         return False
     self.orders[order_id] = {'product_id': product_id, 'quantity': quantity, 'status': 'Spedito'}
     self.inventory[product_id]['quantity'] -= quantity
+    return True

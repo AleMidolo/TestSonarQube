@@ -9,12 +9,12 @@ def condition_judge(self):
         """
     bmi = self.get_BMI()
     if self.sex == 'male':
-        bmi_std = self.BMI_std[0]['male']
+        bmi_min, bmi_max = (20, 25)
     else:
-        bmi_std = self.BMI_std[1]['female']
-    if bmi < bmi_std[0]:
-        return -1
-    elif bmi > bmi_std[1]:
+        bmi_min, bmi_max = (19, 24)
+    if bmi > bmi_max:
         return 1
+    elif bmi < bmi_min:
+        return -1
     else:
         return 0

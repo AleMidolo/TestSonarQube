@@ -19,18 +19,14 @@ def text2int(self, textnum):
         else:
             for ending, replacement in self.ordinal_endings:
                 if word.endswith(ending):
-                    word = '%s%s' % (word[:-len(ending)], replacement)
+                    word = word[:-len(ending)] + replacement
                     break
             if word not in self.numwords:
                 continue
             scale, increment = self.numwords[word]
-            if scale > 1:
-                current = max(1, current)
-                current *= scale
-                if scale > 100:
-                    result += current
-                    current = 0
-            else:
-                current += increment
+            current = current * scale + increment
+            if scale > 100:
+                result += current
+                current = 0
     result += current
     return str(result)
