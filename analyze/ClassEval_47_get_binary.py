@@ -1,34 +1,12 @@
 def get_binary(self):
     """
-    If the IP address is valid, return the binary form of the IP address; otherwise, return ''
-    :return: string
-    >>> ipaddress = IPAddress("10.10.10.10")
-    >>> ipaddress.get_binary()
-    "00001010.00001010.00001010.00001010"
-    """
-    # Check if the IP address is valid
-    if not hasattr(self, 'ip') or not self.ip:
-        return ''
-    
-    # Split the IP address into octets
-    parts = self.ip.split('.')
-    
-    # Validate IP address format
-    if len(parts) != 4:
-        return ''
-    
-    try:
-        binary_parts = []
-        for part in parts:
-            # Convert to integer and check if it's in valid range (0-255)
-            num = int(part)
-            if num < 0 or num > 255:
-                return ''
-            # Convert to binary (remove '0b' prefix) and pad to 8 bits
-            binary_parts.append(format(num, '08b'))
-        
-        # Join with dots
-        return '.'.join(binary_parts)
-    except ValueError:
-        # If conversion to int fails, IP is invalid
+        यदि IP पता मान्य है, तो IP पते का बाइनरी रूप लौटाएं; अन्यथा, '' लौटाएं
+        :return: स्ट्रिंग
+        >>> ipaddress = IPAddress("10.10.10.10")
+        >>> ipaddress.get_binary()
+        "00001010.00001010.00001010.00001010"
+        """
+    if self.is_valid():
+        return '.'.join((format(int(octet), '08b') for octet in self.get_octets()))
+    else:
         return ''

@@ -1,56 +1,36 @@
 def solve(self):
     """
-    Use BFS algorithm to find the path solution which makes the initial state to the goal method.
-    Maintain a list as a queue, named as open_list, append the initial state.
-    Always visit and pop the 0 index element, invoke get_possible_moves method find all the possible directions.
-    Traversal the possible_moves list and invoke move method to get several new states.Then append them.
-    redo the above steps until the open_list is empty or the state has changed to the goal state.
-    :return path: list of str, the solution to the goal state.
-    >>> eightPuzzle = EightPuzzle([[1, 2, 3], [4, 5, 6], [7, 0, 8]])
-    >>> eightPuzzle.solve()
-    ['right']
-    """
+        BFS एल्गोरिदम का इस्तेमाल करके एक पाथ सॉल्यूशन ढूंढें जो गोल स्टेट तक पहुँचने के लिए
+        शुरुआती स्टेट से चलने का रास्ता बताता है।
+
+        open_list नाम की एक लिस्ट को क्यू के तौर पर बनाए रखें और शुरुआती स्टेट जोड़ें।
+        हमेशा 0वें इंडेक्स एलिमेंट को पॉप करें और सभी संभावित डायरेक्शन ढूंढने के लिए
+        get_possible_moves मेथड को इनवोक करें।
+
+        possible_moves लिस्ट को ट्रैवर्स करें और कई नए स्टेट पाने के लिए move मेथड को इनवोक करें।
+        फिर इन स्टेट्स को open_list में जोड़ें।
+
+        ऊपर दिए गए स्टेप्स को तब तक दोहराएं जब तक open_list खाली न हो जाए या स्टेट गोल स्टेट में बदल न जाए।
+
+        :return path: str की एक लिस्ट, जो गोल स्टेट तक पहुँचने का समाधान (path) दिखाती है।
+
+        >>> eightPuzzle = EightPuzzle([[1, 2, 3], [4, 5, 6], [7, 0, 8]])
+        >>> eightPuzzle.solve()
+        ['right']
+        """
     from collections import deque
-    
-    # Initialize the queue with the initial state and empty path
-    open_list = deque([(self.state, [])])
-    
-    # Keep track of visited states to avoid cycles
+    open_list = deque([(self.initial_state, [])])
     visited = set()
-    visited.add(tuple(map(tuple, self.state)))
-    
+    visited.add(tuple(map(tuple, self.initial_state)))
     while open_list:
-        # Pop the first element (BFS uses FIFO)
         current_state, path = open_list.popleft()
-        
-        # Temporarily set the state to check if it's the goal
-        original_state = self.state
-        self.state = current_state
-        
-        # Check if current state is the goal state
-        if self.is_goal():
-            self.state = original_state
+        if current_state == self.goal_state:
             return path
-        
-        # Get all possible moves from current state
-        possible_moves = self.get_possible_moves()
-        
-        # Try each possible move
+        possible_moves = self.get_possible_moves(current_state)
         for move_direction in possible_moves:
-            # Make the move to get new state
-            new_state = self.move(move_direction)
-            
-            # Convert to tuple for hashing
-            state_tuple = tuple(map(tuple, new_state))
-            
-            # If this state hasn't been visited, add it to the queue
-            if state_tuple not in visited:
-                visited.add(state_tuple)
-                new_path = path + [move_direction]
-                open_list.append((new_state, new_path))
-        
-        # Restore original state
-        self.state = original_state
-    
-    # No solution found
+            new_state = self.move(current_state, move_direction)
+            new_state_tuple = tuple(map(tuple, new_state))
+            if new_state_tuple not in visited:
+                visited.add(new_state_tuple)
+                open_list.append((new_state, path + [move_direction]))
     return []

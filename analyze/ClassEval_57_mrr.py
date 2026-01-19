@@ -1,37 +1,45 @@
 def mrr(data):
     """
-    compute the MRR of the input data. MRR is a widely used evaluation index. It is the mean of reciprocal rank.
-    :param data: the data must be a tuple, list 0,1,eg.([1,0,...],5).  In each tuple (actual result,ground truth num),ground truth num is the total ground num.
-     ([1,0,...],5),
-    or list of tuple eg. [([1,0,1,...],5),([1,0,...],6),([0,0,...],5)].
-    1 stands for a correct answer, 0 stands for a wrong answer.
-    :return: if input data is list, return the recall of this list. if the input data is list of list, return the
-    average recall on all list. The second return value is a list of precision for each input.
-    >>> MetricsCalculator2.mrr(([1, 0, 1, 0], 4))
-    >>> MetricsCalculator2.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)])
+    इनपुट डेटा का MRR (Mean Reciprocal Rank) कैलकुलेट करें।
+    MRR एक आम तौर पर इस्तेमाल होने वाला इवैल्यूएशन इंडेक्स है, जो रेसिप्रोकल रैंक का मीन होता है।
+
+    :param data: डेटा एक टपल या टपल की लिस्ट हो सकता है।
+                 टपल का फ़ॉर्मेट: ([1, 0, ...], ground_truth_count)
+                 उदाहरण:
+                     ([1, 0, ...], 5)
+                     [([1, 0, 1, ...], 5), ([1, 0, ...], 6), ([0, 0, ...], 5)]
+                 1 सही जवाब दिखाता है, 0 गलत जवाब दिखाता है।
+
+    :return: 
+        - अगर इनपुट एक टपल है → उसकी MRR वैल्यू
+        - अगर इनपुट टपल की एक लिस्ट है → सभी की एवरेज MRR वैल्यू
+        - साथ में एक लिस्ट जिसमें हर इनपुट के लिए प्रिसिजन/रिसिप्रोकल रैंक शामिल हों।
+
+    >>> metrics_calculator.mrr(([1, 0, 1, 0], 4))
     1.0, [1.0]
+
+    >>> metrics_calculator.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)])
     0.75, [1.0, 0.5]
     """
-    def calculate_rr(result_list):
-        """Calculate reciprocal rank for a single list"""
-        for i, val in enumerate(result_list):
-            if val == 1:
-                return 1.0 / (i + 1)
-        return 0.0
-    
-    # Check if data is a single tuple or a list of tuples
-    if isinstance(data, tuple):
-        # Single tuple case
-        result_list, ground_truth_num = data
-        rr = calculate_rr(result_list)
-        return rr, [rr]
-    else:
-        # List of tuples case
-        rr_list = []
-        for result_list, ground_truth_num in data:
-            rr = calculate_rr(result_list)
-            rr_list.append(rr)
-        
-        # Calculate mean reciprocal rank
-        mean_rr = sum(rr_list) / len(rr_list) if rr_list else 0.0
-        return mean_rr, rr_list
+    if type(data) != list and type(data) != tuple:
+        raise Exception('the input must be a tuple([0,...,1,...],int) or a iteration of list of tuple')
+    if len(data) == 0:
+        return (0.0, [0.0])
+    if type(data) == tuple:
+        sub_list, total_num = data
+        reciprocal_rank = 0.0
+        for idx, value in enumerate(sub_list):
+            if value == 1:
+                reciprocal_rank = 1.0 / (idx + 1)
+                break
+        return (reciprocal_rank, [reciprocal_rank])
+    if type(data) == list:
+        separate_result = []
+        for sub_list, total_num in data:
+            reciprocal_rank = 0.0
+            for idx, value in enumerate(sub_list):
+                if value == 1:
+                    reciprocal_rank = 1.0 / (idx + 1)
+                    break
+            separate_result.append(reciprocal_rank)
+        return (np.mean(separate_result), separate_result)

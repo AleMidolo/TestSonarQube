@@ -1,76 +1,24 @@
 def calculate(self, expression):
     """
-    Calculate the result of the given postfix expression
-    :param expression: string, the postfix expression to be calculated
-    :return: float, the calculated result
+    दिए गए पोस्टफ़िक्स एक्सप्रेशन का रिज़ल्ट कैलकुलेट करें।
+
+    :param expression: string, कैलकुलेट करने के लिए पोस्टफ़िक्स एक्सप्रेशन
+    :return: float, कैलकुलेट किया गया रिज़ल्ट
+
     >>> expression_calculator = ExpressionCalculator()
     >>> expression_calculator.calculate("2 + 3 * 4")
     14.0
-
     """
-    # Note: The docstring says "postfix" but the example shows infix notation
-    # Based on the example, implementing infix expression evaluation
-    
-    def precedence(op):
-        if op in ['+', '-']:
-            return 1
-        if op in ['*', '/']:
-            return 2
-        return 0
-    
-    def apply_operation(operators, values):
-        operator = operators.pop()
-        right = values.pop()
-        left = values.pop()
-        
-        if operator == '+':
-            values.append(left + right)
-        elif operator == '-':
-            values.append(left - right)
-        elif operator == '*':
-            values.append(left * right)
-        elif operator == '/':
-            values.append(left / right)
-    
-    operators = []
-    values = []
-    i = 0
-    
-    while i < len(expression):
-        if expression[i] == ' ':
-            i += 1
-            continue
-        
-        # If current character is a number
-        if expression[i].isdigit() or expression[i] == '.':
-            num_str = ''
-            while i < len(expression) and (expression[i].isdigit() or expression[i] == '.'):
-                num_str += expression[i]
-                i += 1
-            values.append(float(num_str))
-            continue
-        
-        # If current character is an opening parenthesis
-        elif expression[i] == '(':
-            operators.append(expression[i])
-        
-        # If current character is a closing parenthesis
-        elif expression[i] == ')':
-            while operators and operators[-1] != '(':
-                apply_operation(operators, values)
-            operators.pop()  # Remove '('
-        
-        # If current character is an operator
-        elif expression[i] in ['+', '-', '*', '/']:
-            while (operators and operators[-1] != '(' and
-                   precedence(operators[-1]) >= precedence(expression[i])):
-                apply_operation(operators, values)
-            operators.append(expression[i])
-        
-        i += 1
-    
-    # Apply remaining operators
-    while operators:
-        apply_operation(operators, values)
-    
-    return values[0]
+    self.postfix_stack.clear()
+    expression = self.transform(expression)
+    self.prepare(expression)
+    op_stack = deque()
+    for token in self.postfix_stack:
+        if not self.is_operator(token):
+            op_stack.append(token)
+        else:
+            second_value = op_stack.pop()
+            first_value = op_stack.pop()
+            result = self._calculate(first_value, second_value, token)
+            op_stack.append(result)
+    return float(op_stack.pop())

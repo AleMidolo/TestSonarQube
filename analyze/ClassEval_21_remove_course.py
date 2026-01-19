@@ -1,10 +1,10 @@
 def remove_course(self, course):
     """
-    Remove course from self.courses list if the course was in it.
-    :param course: dict, information of the course, including 'start_time', 'end_time' and 'name'
-    >>> classroom = Classroom(1)
-    >>> classroom.add_course({'name': 'math', 'start_time': '8:00', 'end_time': '9:40'})
-    >>> classroom.add_course({'name': 'math', 'start_time': '8:00', 'end_time': '9:40'})
-    """
+        यदि पाठ्यक्रम self.courses सूची में था, तो उसे हटा दें।
+        :param course: dict, पाठ्यक्रम की जानकारी, जिसमें 'start_time', 'end_time' और 'name' शामिल हैं
+        >>> classroom = Classroom(1)
+        >>> classroom.add_course({'name': 'math', 'start_time': '8:00', 'end_time': '9:40'})
+        >>> classroom.remove_course({'name': 'math', 'start_time': '8:00', 'end_time': '9:40'})
+        """
     if course in self.courses:
         self.courses.remove(course)

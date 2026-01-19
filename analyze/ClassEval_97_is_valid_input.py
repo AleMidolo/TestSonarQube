@@ -1,33 +1,12 @@
 def is_valid_input(self, textnum):
     """
-    Check if the input text contains only valid words that can be converted into numbers.
-    :param textnum: The input text containing words representing numbers.
-    :return: True if input is valid, False otherwise.
-    >>> w2n = Words2Numbers()
-    >>> w2n.is_valid_input("thirty-two")
-    False
-    """
-    # Define valid number words
-    valid_words = {
-        'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
-        'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
-        'seventeen', 'eighteen', 'nineteen', 'twenty', 'thirty', 'forty', 'fifty',
-        'sixty', 'seventy', 'eighty', 'ninety', 'hundred', 'thousand', 'million',
-        'billion', 'trillion', 'and', 'point'
-    }
-    
-    # Clean and normalize the input
-    textnum = textnum.lower().strip()
-    
-    # Replace hyphens with spaces to split hyphenated words
-    textnum = textnum.replace('-', ' ')
-    
-    # Split into words
-    words = textnum.split()
-    
-    # Check if all words are valid
-    for word in words:
-        if word and word not in valid_words:
-            return False
-    
-    return True
+        जांचें कि इनपुट पाठ में केवल मान्य शब्द हैं जिन्हें संख्याओं में परिवर्तित किया जा सकता है।
+        :param textnum: इनपुट पाठ जिसमें संख्याओं का प्रतिनिधित्व करने वाले शब्द हैं।
+        :return: यदि इनपुट मान्य है तो True, अन्यथा False।
+        >>> w2n = Words2Numbers()
+        >>> w2n.is_valid_input("thirty-two")
+        False
+        """
+    valid_words = set(self.numwords.keys()).union(set(self.ordinal_words.keys()))
+    words = textnum.replace('-', ' ').split()
+    return all((word in valid_words for word in words))

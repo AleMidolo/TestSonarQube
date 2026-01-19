@@ -1,18 +1,15 @@
+@staticmethod
 def count(n, m=None):
     """
-    Counts the number of arrangements by choosing m items from n items (permutations).
-    If m is not provided or n equals m, returns factorial(n).
-    :param n: int, the total number of items.
-    :param m: int, the number of items to be chosen (default=None).
-    :return: int, the count of arrangements.
-    >>> ArrangementCalculator.count(5, 3)
-    60
+        n आइटम में से m आइटम चुनकर व्यवस्थाओं की संख्या गिनता है (परम्यूटेशन)।
+        यदि m प्रदान नहीं किया गया है या n, m के बराबर है, तो factorial(n) लौटाता है।
+        :param n: int, आइटम की कुल संख्या।
+        :param m: int, चुने जाने वाले आइटम की संख्या (डिफ़ॉल्ट=None)।
+        :return: int, व्यवस्थाओं की संख्या।
+        >>> ArrangementCalculator.count(5, 3)
+        60
 
-    """
-    import math
-    
+        """
     if m is None or n == m:
-        return math.factorial(n)
-    
-    # P(n, m) = n! / (n - m)!
-    return math.factorial(n) // math.factorial(n - m)
+        return ArrangementCalculator.factorial(n)
+    return ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)

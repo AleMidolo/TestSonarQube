@@ -1,14 +1,14 @@
 def play(self):
     """
-    Plays the current song in the playlist.
-    :return: The current song in the playlist, or False if there is no current song.
-    >>> musicPlayer = MusicPlayer()
-    >>> musicPlayer.playlist = ["song1", "song2"]
-    >>> musicPlayer.current_song = "song1"
-    >>> musicPlayer.play()
-    'song1'
-
-    """
-    if hasattr(self, 'current_song') and self.current_song:
+        प्लेलिस्ट में वर्तमान गीत चलाता है।
+        :return: प्लेलिस्ट में वर्तमान गीत, या यदि कोई वर्तमान गीत नहीं है तो False।
+        >>> musicPlayer = MusicPlayer()
+        >>> musicPlayer.playlist = ["song1", "song2"]
+        >>> musicPlayer.current_song = "song1"
+        >>> musicPlayer.play()
+        'song1'
+        """
+    if self.current_song:
         return self.current_song
-    return False
+    else:
+        return False

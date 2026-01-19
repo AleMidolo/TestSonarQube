@@ -1,10 +1,10 @@
 def send_to(self, recv, content, size):
     """
-    Sends an email to the given email address.
-    :param recv: The email address of the receiver, str.
-    :param content: The content of the email, str.
-    :param size: The size of the email, float.
-    :return: True if the email is sent successfully, False if the receiver's email box is full.
+    दिए गए ईमेल पते पर एक ईमेल भेजता है।
+    :param recv: रिसीवर का ईमेल पता, str.
+    :param content: ईमेल की सामग्री, str.
+    :param size: ईमेल का आकार, float.
+    :return: यदि ईमेल सफलतापूर्वक भेजा गया है तो True, यदि रिसीवर का ईमेल बॉक्स भरा हुआ है तो False.
     >>> sender = EmailClient('sender@example.com', 100)
     >>> receiver = EmailClient('receiver@example.com', 50)
     >>> sender.send_to(receiver, 'Hello', 10)
@@ -13,41 +13,8 @@ def send_to(self, recv, content, size):
     {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10, 'time': '2023-07-13 11:36:40', 'state': 'unread'}
 
     """
-    from datetime import datetime
-    
-    # Check if receiver has enough space in their inbox
-    current_size = sum(email.get('size', 0) for email in recv.inbox) if isinstance(recv.inbox, list) else recv.inbox.get('size', 0) if isinstance(recv.inbox, dict) else 0
-    
-    # If inbox is a list, calculate total size
-    if isinstance(recv.inbox, list):
-        current_size = sum(email.get('size', 0) for email in recv.inbox)
-    elif isinstance(recv.inbox, dict) and recv.inbox:
-        # If inbox already has an email as dict, we need to check capacity
-        current_size = recv.inbox.get('size', 0)
-    else:
-        current_size = 0
-    
-    # Check if adding this email would exceed capacity
-    if hasattr(recv, 'capacity') and current_size + size > recv.capacity:
+    if recv.is_full_with_one_more_email(size):
         return False
-    
-    # Create email object
-    email = {
-        'sender': self.email if hasattr(self, 'email') else 'sender@example.com',
-        'receiver': recv.email if hasattr(recv, 'email') else recv,
-        'content': content,
-        'size': size,
-        'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        'state': 'unread'
-    }
-    
-    # Add to receiver's inbox
-    if not hasattr(recv, 'inbox') or recv.inbox is None:
-        recv.inbox = email
-    elif isinstance(recv.inbox, list):
-        recv.inbox.append(email)
-    else:
-        # If inbox is a dict (single email), convert to list or replace
-        recv.inbox = email
-    
+    email = {'sender': self.addr, 'receiver': recv.addr, 'content': content, 'size': size, 'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'state': 'unread'}
+    recv.inbox.append(email)
     return True

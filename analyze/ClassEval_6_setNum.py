@@ -1,12 +1,13 @@
 def setNum(self):
     """
-    Calculate the size of each block and the remainder of the division.
-    :return: the size of each block and the remainder of the division, tuple.
-    >>> a = AvgPartition([1, 2, 3, 4], 2)
-    >>> a.setNum()
-    (2, 0)
+        हर ब्लॉक का साइज़ और डिवीज़न का बचा हुआ हिस्सा कैलकुलेट करें।
 
-    """
-    block_size = len(self.data) // self.num_partitions
-    remainder = len(self.data) % self.num_partitions
-    return (block_size, remainder)
+        :return: एक टपल जिसमें हर ब्लॉक का साइज़ और डिवीज़न का बचा हुआ हिस्सा हो।
+
+        >>> a = AvgPartition([1, 2, 3, 4], 2)
+        >>> a.setNum()
+        (2, 0)
+        """
+    size = len(self.lst) // self.limit
+    remainder = len(self.lst) % self.limit
+    return (size, remainder)

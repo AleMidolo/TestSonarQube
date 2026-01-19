@@ -1,11 +1,12 @@
-import math
-
 def calculate_annulus_area(self, inner_radius, outer_radius):
     """
-    calculate the area of annulus based on inner_radius and out_radius
-    :param inner_radius: inner radius of sector, float
-    :param outer_radius: outer radius of sector, float
-    :return: area of annulus, float
+    inner_radius और outer_radius के आधार पर एनलस का एरिया कैलकुलेट करें।
+
+    :param inner_radius: सेक्टर का इनर रेडियस, float
+    :param outer_radius: सेक्टर का आउटर रेडियस, float
+    :return: एनलस का एरिया, float
+
+    >>> areaCalculator = AreaCalculator(0)  # radius is not used in this method
     >>> areaCalculator.calculate_annulus_area(2, 3)
     15.707963267948966
     """

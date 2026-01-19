@@ -1,26 +1,20 @@
 def _select(self, dataIndex: int, resultList: List[str], resultIndex: int, result: List[List[str]]):
     """
-    Generate combinations with a specified number of elements by recursion.
-    :param dataIndex: The index of the data to be selected,int.
-    :param resultList: The list of elements in the combination,List[str].
-    :param resultIndex: The index of the element in the combination,int.
-    :param result: The list of combinations,List[List[str]].
-    :return: None.
-    >>> calc = CombinationCalculator(["A", "B", "C", "D"])
-    >>> result = []
-    >>> calc._select(0, [None] * 2, 0, result)
-    >>> result
-    [['A', 'B'], ['A', 'C'], ['A', 'D'], ['B', 'C'], ['B', 'D'], ['C', 'D']]
-
-    """
-    # Base case: if we've filled all positions in resultList, add a copy to result
+        पुनरावृत्ति द्वारा निर्दिष्ट संख्या के तत्वों के साथ संयोजन उत्पन्न करें।
+        :param dataIndex: चयनित डेटा का अनुक्रमांक, int.
+        :param resultList: संयोजन में तत्वों की सूची, List[str].
+        :param resultIndex: संयोजन में तत्व का अनुक्रमांक, int.
+        :param result: संयोजनों की सूची, List[List[str]].
+        :return: कुछ नहीं।
+        >>> calc = CombinationCalculator(["A", "B", "C", "D"])
+        >>> result = []
+        >>> calc._select(0, [None] * 2, 0, result)
+        >>> result
+        [['A', 'B'], ['A', 'C'], ['A', 'D'], ['B', 'C'], ['B', 'D'], ['C', 'D']]
+        """
     if resultIndex == len(resultList):
-        result.append(resultList[:])
+        result.append(resultList.copy())
         return
-    
-    # Recursive case: try each element from dataIndex onwards
-    for i in range(dataIndex, len(self.data)):
-        # Place the current element at resultIndex
-        resultList[resultIndex] = self.data[i]
-        # Recursively fill the next position, starting from i+1 to avoid duplicates
+    for i in range(dataIndex, len(self.datas)):
+        resultList[resultIndex] = self.datas[i]
         self._select(i + 1, resultList, resultIndex + 1, result)

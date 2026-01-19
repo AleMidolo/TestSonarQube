@@ -1,10 +1,10 @@
-import math
-
 def calculate_sector_area(self, angle):
     """
-    calculate the area of sector based on self.radius and angle
-    :param angle: angle of sector, float
-    :return: area of sector, float
+    self.radius और angle के आधार पर सेक्टर का एरिया कैलकुलेट करें।
+
+    :param angle: सेक्टर का एंगल, float
+    :return: सेक्टर का एरिया, float
+
     >>> areaCalculator = AreaCalculator(2)
     >>> areaCalculator.calculate_sector_area(math.pi)
     6.283185307179586

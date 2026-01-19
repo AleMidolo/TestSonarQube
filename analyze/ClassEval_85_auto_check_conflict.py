@@ -1,27 +1,15 @@
 def auto_check_conflict(self):
     """
-    Check if there is a conflict between the operating mode and the relationship between the current temperature and the target temperature.
-    If there is a conflict, the operating mode will be adjusted automatically.
-    :return: True if mode isn't conflict with the relationship between the current temperature and the target temperature, or False otherwise.
-    >>> thermostat = Thermostat(20.4, 37.5, 'cool')
-    >>> thermostat.auto_check_conflict()
-    False
-    >>> thermostat.mode
-    'heat'
-    """
-    # If current temp < target temp, we need to heat
-    # If current temp > target temp, we need to cool
-    
-    if self.current_temperature < self.target_temperature:
-        # Need heating
-        if self.mode == 'cool':
-            self.mode = 'heat'
-            return False
-    elif self.current_temperature > self.target_temperature:
-        # Need cooling
-        if self.mode == 'heat':
-            self.mode = 'cool'
-            return False
-    
-    # No conflict detected
+        जांचें कि क्या संचालन मोड और वर्तमान तापमान और लक्षित तापमान के बीच संबंध में कोई संघर्ष है।
+        यदि कोई संघर्ष है, तो संचालन मोड को स्वचालित रूप से समायोजित किया जाएगा।
+        :return: यदि मोड वर्तमान तापमान और लक्षित तापमान के बीच संबंध के साथ संघर्ष नहीं करता है, तो True, अन्यथा False।
+        >>> thermostat = Thermostat(20.4, 37.5, 'cool')
+        >>> thermostat.auto_check_conflict()
+        False
+        >>> thermostat.mode
+        'heat'
+        """
+    if self.mode == 'heat' and self.current_temperature >= self.target_temperature or (self.mode == 'cool' and self.current_temperature <= self.target_temperature):
+        self.auto_set_mode()
+        return False
     return True

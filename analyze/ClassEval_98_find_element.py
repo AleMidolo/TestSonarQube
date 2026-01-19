@@ -1,17 +1,15 @@
 def find_element(self, element_name):
     """
-    Finds the XML elements with the specified name.
-    :param element_name: string, the name of the elements to find.
-    :return: list, a list of found elements with the specified name.
-    >>> xml_processor = XMLProcessor('test.xml')
-    >>> root = xml_processor.read_xml()
-    >>> items = xml_processor.find_element('item')
-    >>> for item in items:
-    >>>     print(item.text)
-    apple
-    banana
-    orange
-    """
-    if hasattr(self, 'root') and self.root is not None:
-        return self.root.findall('.//' + element_name)
-    return []
+        निर्दिष्ट नाम के साथ XML तत्वों को खोजता है।
+        :param element_name: स्ट्रिंग, खोजने के लिए तत्वों का नाम।
+        :return: सूची, निर्दिष्ट नाम के साथ पाए गए तत्वों की सूची।
+        >>> xml_processor = XMLProcessor('test.xml')
+        >>> root = xml_processor.read_xml()
+        >>> items = xml_processor.find_element('item')
+        >>> for item in items:
+        >>>     print(item.text)
+        apple
+        banana
+        orange
+        """
+    return self.root.findall(element_name)

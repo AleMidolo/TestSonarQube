@@ -1,18 +1,14 @@
-import socket
-
 @staticmethod
 def get_hostname(ip_address):
     """
-    Get the hostname associated with the given IP address.
-    :param ip_address:string, the IP address to get the hostname for
-    :return: string, the hostname associated with the IP address
-    >>> IpUtil.get_hostname('110.242.68.3')
-    'www.baidu.com'
-    >>> IpUtil.get_hostname('10.0.0.1')
-
-    """
+        दिए गए IP पते से संबंधित होस्टनाम प्राप्त करें।
+        :param ip_address:string, होस्टनाम प्राप्त करने के लिए IP पता
+        :return: string, IP पते से संबंधित होस्टनाम
+        >>> IpUtil.get_hostname('110.242.68.3')
+        'www.baidu.com'
+        >>> IpUtil.get_hostname('10.0.0.1')
+        """
     try:
-        hostname = socket.gethostbyaddr(ip_address)[0]
-        return hostname
-    except (socket.herror, socket.gaierror, OSError):
+        return socket.gethostbyaddr(ip_address)[0]
+    except socket.herror:
         return None

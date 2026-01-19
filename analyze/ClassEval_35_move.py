@@ -1,42 +1,20 @@
 def move(self, state, direction):
     """
-    Find the blank block, then makes the board moves forward the given direction.
-    :param state: a 3*3 size list of Integer, stores the state before moving.
-    :param direction: str, only has 4 direction 'up', 'down', 'left', 'right'
-    :return new_state: a 3*3 size list of Integer, stores the state after moving.
+    खाली ब्लॉक को खोजें, फिर दिए गए दिशा में बोर्ड को आगे बढ़ाएं।
+    :param state: एक 3*3 आकार की Integer की सूची, जो चलने से पहले की स्थिति को संग्रहीत करती है।
+    :param direction: str, केवल 4 दिशाएँ 'up', 'down', 'left', 'right' हैं
+    :return new_state: एक 3*3 आकार की Integer की सूची, जो चलने के बाद की स्थिति को संग्रहीत करती है।
     >>> eightPuzzle.move([[2, 3, 4], [5, 8, 1], [6, 0, 7]], 'left')
     [[2, 3, 4], [5, 8, 1], [0, 6, 7]]
     """
-    # Create a deep copy of the state to avoid modifying the original
+    i, j = self.find_blank(state)
     new_state = [row[:] for row in state]
-    
-    # Find the position of the blank (0)
-    blank_row, blank_col = None, None
-    for i in range(3):
-        for j in range(3):
-            if state[i][j] == 0:
-                blank_row, blank_col = i, j
-                break
-        if blank_row is not None:
-            break
-    
-    # Determine the new position based on direction
-    # Note: moving the blank "left" means swapping with the tile to its left
-    if direction == 'left':
-        if blank_col > 0:
-            new_state[blank_row][blank_col] = new_state[blank_row][blank_col - 1]
-            new_state[blank_row][blank_col - 1] = 0
-    elif direction == 'right':
-        if blank_col < 2:
-            new_state[blank_row][blank_col] = new_state[blank_row][blank_col + 1]
-            new_state[blank_row][blank_col + 1] = 0
-    elif direction == 'up':
-        if blank_row > 0:
-            new_state[blank_row][blank_col] = new_state[blank_row - 1][blank_col]
-            new_state[blank_row - 1][blank_col] = 0
+    if direction == 'up':
+        new_state[i][j], new_state[i - 1][j] = (new_state[i - 1][j], new_state[i][j])
     elif direction == 'down':
-        if blank_row < 2:
-            new_state[blank_row][blank_col] = new_state[blank_row + 1][blank_col]
-            new_state[blank_row + 1][blank_col] = 0
-    
+        new_state[i][j], new_state[i + 1][j] = (new_state[i + 1][j], new_state[i][j])
+    elif direction == 'left':
+        new_state[i][j], new_state[i][j - 1] = (new_state[i][j - 1], new_state[i][j])
+    elif direction == 'right':
+        new_state[i][j], new_state[i][j + 1] = (new_state[i][j + 1], new_state[i][j])
     return new_state

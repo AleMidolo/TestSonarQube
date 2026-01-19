@@ -1,40 +1,21 @@
 def sell_stock(self, stock):
     """
-    Sell a stock and remove it from the portfolio and add the cash to the cash balance.
-    :param stock: a dictionary with keys "name", "price", and "quantity"
-    :param quantity: the quantity of the stock to sell,int.
-    :return: True if the stock was sold successfully, False if the quantity of the stock is not enough.
-    >>> tracker = StockPortfolioTracker(10000.0)
-    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
-    >>> tracker.sell_stock({"name": "AAPL", "price": 150.0, "quantity": 10})
-    True
-    >>> tracker.portfolio
-    []
-
-    """
-    name = stock["name"]
-    price = stock["price"]
-    quantity = stock["quantity"]
-    
-    # Find the stock in the portfolio
-    for portfolio_stock in self.portfolio:
-        if portfolio_stock["name"] == name:
-            # Check if we have enough quantity to sell
-            if portfolio_stock["quantity"] < quantity:
-                return False
-            
-            # Update the cash balance
-            self.cash_balance += price * quantity
-            
-            # Update or remove the stock from portfolio
-            if portfolio_stock["quantity"] == quantity:
-                # Remove the stock completely if selling all
-                self.portfolio.remove(portfolio_stock)
-            else:
-                # Reduce the quantity if selling partial
-                portfolio_stock["quantity"] -= quantity
-            
+        एक स्टॉक बेचें और इसे पोर्टफोलियो से हटा दें और नकद को नकद बैलेंस में जोड़ें।
+        :param stock: एक शब्दकोश जिसमें कुंजी "name", "price", और "quantity" हैं
+        :param quantity: बेचे जाने वाले स्टॉक की मात्रा, int.
+        :return: True यदि स्टॉक सफलतापूर्वक बेचा गया, False यदि स्टॉक की मात्रा पर्याप्त नहीं है।
+        >>> tracker = StockPortfolioTracker(10000.0)
+        >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+        >>> tracker.sell_stock({"name": "AAPL", "price": 150.0, "quantity": 10})
+        True
+        >>> tracker.portfolio
+        []
+        """
+    for pf in self.portfolio:
+        if pf['name'] == stock['name'] and pf['quantity'] >= stock['quantity']:
+            pf['quantity'] -= stock['quantity']
+            self.cash_balance += stock['price'] * stock['quantity']
+            if pf['quantity'] == 0:
+                self.portfolio.remove(pf)
             return True
-    
-    # Stock not found in portfolio
     return False

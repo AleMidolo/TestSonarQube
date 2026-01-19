@@ -1,39 +1,21 @@
 def format_line_html_text(self, html_text):
     """
-    get the html text without the code, and add the code tag -CODE- where the code is
-    :param html_text:string
-    :return:string
-    >>>htmlutil = HtmlUtil()
-    >>>htmlutil.format_line_html_text(<html>
-    >>> <body>
-    >>>    <h1>Title</h1>
-    >>>    <p>This is a paragraph.</p>
-    >>>    <pre>print('Hello, world!')</pre>
-    >>>    <p>Another paragraph.</p>
-    >>>    <pre><code>for i in range(5):
-    >>>    print(i)</code></pre>
-    >>>    </body>
-    >>>    </html>)
-    Title
-    This is a paragraph.
-    -CODE-
-    Another paragraph.
-    -CODE-
-    """
-    from bs4 import BeautifulSoup
-    
-    # Parse the HTML
-    soup = BeautifulSoup(html_text, 'html.parser')
-    
-    # Find all <pre> tags (which typically contain code)
-    for pre_tag in soup.find_all('pre'):
-        # Replace the pre tag with a placeholder
-        pre_tag.replace_with('-CODE-')
-    
-    # Get the text content
+        कोड के बिना एचटीएमएल टेक्स्ट प्राप्त करें, और जहां कोड है वहां -CODE- टैग जोड़ें
+        :param html_text:string
+        :return:string
+        >>>htmlutil = HtmlUtil()
+        >>>htmlutil.format_line_html_text('<html><body><h1>शीर्षक</h1><p>यह एक पैराग्राफ है।</p><pre>print('नमस्ते, दुनिया!')</pre><p>एक और पैराग्राफ।</p><pre><code>for i in range(5):
+    print(i)</code></pre></body></html>')
+        'शीर्षक
+यह एक पैराग्राफ है।
+-CODE-
+एक और पैराग्राफ।
+-CODE-
+'
+        """
+    soup = BeautifulSoup(html_text, 'lxml')
     text = soup.get_text()
-    
-    # Clean up extra whitespace while preserving the structure
-    lines = [line.strip() for line in text.split('\n') if line.strip()]
-    
-    return '\n'.join(lines)
+    code_tags = soup.find_all(['pre', 'code'])
+    for tag in code_tags:
+        text = text.replace(tag.get_text(), self.CODE_MARK)
+    return self.__format_line_feed(text)

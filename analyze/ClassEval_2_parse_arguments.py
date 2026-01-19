@@ -1,60 +1,26 @@
 def parse_arguments(self, command_string):
     """
-    Parses the given command line argument string and invoke _convert_type to stores the parsed result in specific type in the arguments dictionary.
-    Checks for missing required arguments, if any, and returns False with the missing argument names, otherwise returns True.
-    :param command_string: str, command line argument string, formatted like "python script.py --arg1=value1 -arg2 value2 --option1 -option2"
-    :return tuple: (True, None) if parsing is successful, (False, missing_args) if parsing fails,
-        where missing_args is a set of the missing argument names which are str.
-    >>> parser.parse_arguments("python script.py --arg1=value1 -arg2 value2 --option1 -option2")
-    (True, None)
-    >>> parser.arguments
-    {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
-    """
-    # Initialize arguments dictionary
-    self.arguments = {}
-    
-    # Split the command string into tokens
-    tokens = command_string.split()
-    
-    # Skip the first two tokens (python script.py)
-    i = 2
-    
-    while i < len(tokens):
-        token = tokens[i]
-        
-        # Check if token starts with -- or -
-        if token.startswith('--') or token.startswith('-'):
-            # Remove leading dashes
-            arg_name = token.lstrip('-')
-            
-            # Check if it's in format --arg=value
-            if '=' in arg_name:
-                parts = arg_name.split('=', 1)
-                arg_name = parts[0]
-                value = parts[1]
-                self.arguments[arg_name] = self._convert_type(value)
-                i += 1
-            else:
-                # Check if next token exists and is not an argument
-                if i + 1 < len(tokens) and not tokens[i + 1].startswith('-'):
-                    value = tokens[i + 1]
-                    self.arguments[arg_name] = self._convert_type(value)
-                    i += 2
-                else:
-                    # It's a flag/option (boolean)
-                    self.arguments[arg_name] = True
-                    i += 1
-        else:
-            i += 1
-    
-    # Check for missing required arguments
-    if hasattr(self, 'required_args'):
-        missing_args = set()
-        for req_arg in self.required_args:
-            if req_arg not in self.arguments:
-                missing_args.add(req_arg)
-        
-        if missing_args:
-            return (False, missing_args)
-    
+        दिए गए कमांड लाइन तर्क स्ट्रिंग का विश्लेषण करता है और _convert_type को कॉल करता है ताकि विश्लेषित परिणाम को तर्कों की शब्दकोश में विशिष्ट प्रकार में संग्रहीत किया जा सके।
+        यदि कोई आवश्यक तर्क गायब है, तो इसकी जांच करता है और गायब तर्क नामों के साथ False लौटाता है, अन्यथा True लौटाता है।
+        :param command_string: str, कमांड लाइन तर्क स्ट्रिंग, इस तरह से स्वरूपित "python script.py --arg1=value1 -arg2 value2 --option1 -option2"
+        :return tuple: (True, None) यदि विश्लेषण सफल है, (False, missing_args) यदि विश्लेषण विफल होता है,
+            जहाँ missing_args गायब तर्क नामों का एक सेट है जो str हैं।
+        >>> parser.parse_arguments("python script.py --arg1=value1 -arg2 value2 --option1 -option2")
+        (True, None)
+        >>> parser.arguments
+        {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
+        """
+    import re
+    parts = re.split('\\s+', command_string)
+    for part in parts:
+        if '=' in part:
+            key, value = part.split('=', 1)
+            key = key.lstrip('-')
+            self.arguments[key] = self._convert_type(key, value)
+        elif part.startswith('-'):
+            key = part.lstrip('-')
+            self.arguments[key] = True
+    missing_args = {arg for arg in self.required if arg not in self.arguments}
+    if missing_args:
+        return (False, missing_args)
     return (True, None)

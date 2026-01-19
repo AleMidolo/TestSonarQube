@@ -1,36 +1,16 @@
 def add_table(self, data):
     """
-    Adds a table to the Word document with the specified data.
-    :param data: list of lists, the data to populate the table.
-    :return: bool, True if the table is successfully added, False otherwise.
-    """
+        निर्दिष्ट डेटा के साथ Word दस्तावेज़ में एक तालिका जोड़ता है।
+        :param data: सूचियों की सूची, तालिका को भरने के लिए डेटा।
+        :return: bool, यदि तालिका सफलतापूर्वक जोड़ी गई है तो True, अन्यथा False।
+        """
     try:
-        if not data or not isinstance(data, list):
-            return False
-        
-        # Check if data is valid (list of lists)
-        if not all(isinstance(row, list) for row in data):
-            return False
-        
-        # Get dimensions
-        num_rows = len(data)
-        if num_rows == 0:
-            return False
-        
-        num_cols = len(data[0]) if data[0] else 0
-        if num_cols == 0:
-            return False
-        
-        # Create table
-        table = self.document.add_table(rows=num_rows, cols=num_cols)
-        
-        # Populate table with data
-        for i, row_data in enumerate(data):
-            row_cells = table.rows[i].cells
-            for j, cell_data in enumerate(row_data):
-                if j < num_cols:
-                    row_cells[j].text = str(cell_data) if cell_data is not None else ""
-        
+        doc = Document(self.file_path)
+        table = doc.add_table(rows=len(data), cols=len(data[0]))
+        for i, row in enumerate(data):
+            for j, cell in enumerate(row):
+                table.cell(i, j).text = str(cell)
+        doc.save(self.file_path)
         return True
-    except Exception:
+    except:
         return False

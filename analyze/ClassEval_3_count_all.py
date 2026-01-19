@@ -1,20 +1,11 @@
 @staticmethod
 def count_all(n):
     """
-    Counts the total number of all possible arrangements by choosing at least 1 item and at most n items from n items.
-    :param n: int, the total number of items.
-    :return: int, the count of all arrangements.
-    >>> ArrangementCalculator.count_all(4)
-    64
+        सभी संभावित व्यवस्थाओं की कुल संख्या की गणना करता है, जिसमें कम से कम 1 आइटम और अधिकतम n आइटम n आइटम से चुने जाते हैं।
+        :param n: int, आइटम की कुल संख्या।
+        :return: int, सभी व्यवस्थाओं की संख्या।
+        >>> ArrangementCalculator.count_all(4)
+        64
 
-    """
-    import math
-    
-    total = 0
-    # For each possible number of items to choose (from 1 to n)
-    for k in range(1, n + 1):
-        # Calculate the number of arrangements: P(n, k) = n! / (n-k)!
-        arrangements = math.factorial(n) // math.factorial(n - k)
-        total += arrangements
-    
-    return total
+        """
+    return sum((ArrangementCalculator.count(n, m) for m in range(1, n + 1)))

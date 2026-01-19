@@ -1,10 +1,10 @@
 def get_current_time(self):
     """
-    Return the current time in the format of '%H:%M:%S'
-    :return: string
-    >>> timeutils = TimeUtils()
-    >>> timeutils.get_current_time()
-    "19:19:22"
-    """
-    from datetime import datetime
-    return datetime.now().strftime('%H:%M:%S')
+        वर्तमान समय को '%H:%M:%S' के प्रारूप में लौटाएं
+        :return: स्ट्रिंग
+        >>> timeutils = TimeUtils()
+        >>> timeutils.get_current_time()
+        "19:19:22"
+        """
+    format = '%H:%M:%S'
+    return self.datetime.strftime(format)

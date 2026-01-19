@@ -1,32 +1,15 @@
 def get_jwt_user(self, request):
     """
-    Get the user information from the JWT token in the request.
-    :param request: dict, the incoming request details
-    :return: dict or None, the user information if the token is valid, None otherwise
-    >>> filter = AccessGatewayFilter()
-    >>> filter.get_jwt_user({'headers': {'Authorization': {'user': {'name': 'user1'}, 'jwt': 'user1'+str(datetime.date.today())}}})
-    {'user': {'name': 'user1'}
-
-    """
-    import datetime
-    
-    if not request or 'headers' not in request:
-        return None
-    
-    headers = request.get('headers', {})
-    authorization = headers.get('Authorization')
-    
-    if not authorization:
-        return None
-    
-    # Extract JWT token and user info
-    if isinstance(authorization, dict):
-        jwt_token = authorization.get('jwt', '')
-        user_info = authorization.get('user')
-        
-        # Validate JWT token (check if it contains today's date)
-        today_str = str(datetime.date.today())
-        if jwt_token and today_str in jwt_token:
-            return {'user': user_info} if user_info else None
-    
+        अनुरोध में JWT टोकन से उपयोगकर्ता की जानकारी प्राप्त करें।
+        :param request: dict, आने वाले अनुरोध का विवरण
+        :return: dict या None, यदि टोकन मान्य है तो उपयोगकर्ता की जानकारी, अन्यथा None
+        >>> filter = AccessGatewayFilter()
+        >>> filter.get_jwt_user({'headers': {'Authorization': {'user': {'name': 'user1'}, 'jwt': 'user1'+str(datetime.date.today())}}})
+        {'user': {'name': 'user1'}}
+        """
+    auth_header = request.get('headers', {}).get('Authorization', {})
+    jwt = auth_header.get('jwt')
+    if jwt:
+        user_info = auth_header.get('user')
+        return {'user': user_info}
     return None

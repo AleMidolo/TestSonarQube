@@ -1,7 +1,7 @@
 def add_song(self, song):
     """
-    Adds a song to the playlist.
-    :param song: The song to add to the playlist, str.
+    प्लेलिस्ट में एक गाना जोड़ता है।
+    :param song: प्लेलिस्ट में जोड़ने के लिए गाना, str.
     >>> musicPlayer = MusicPlayer()
     >>> musicPlayer.add_song("song1")
     >>> musicPlayer.playlist

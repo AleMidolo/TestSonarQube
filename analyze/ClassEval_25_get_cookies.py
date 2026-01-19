@@ -1,16 +1,12 @@
-def get_cookies(self, reponse):
+def get_cookies(self, response):
     """
-    Gets the cookies from the specified response,and save it to cookies_file.
-    :param reponse: The response to get cookies from, dict.
+    निर्दिष्ट प्रतिक्रिया से कुकीज़ प्राप्त करता है, और इसे cookies_file में सहेजता है।
+    :param response: वह प्रतिक्रिया जिससे कुकीज़ प्राप्त की जानी हैं, dict।
     >>> cookies_util = CookiesUtil('cookies.json')
     >>> cookies_util.get_cookies({'cookies': {'key1': 'value1', 'key2': 'value2'}})
     >>> cookies_util.cookies
     {'key1': 'value1', 'key2': 'value2'}
 
     """
-    if 'cookies' in reponse:
-        self.cookies = reponse['cookies']
-        # Save cookies to file
-        import json
-        with open(self.cookies_file, 'w') as f:
-            json.dump(self.cookies, f)
+    self.cookies = response.get('cookies', {})
+    self._save_cookies()

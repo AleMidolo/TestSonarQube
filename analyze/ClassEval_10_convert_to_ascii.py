@@ -1,16 +1,14 @@
 def convert_to_ascii(self):
     """
-    Convert the binary string to ascii string.
-    >>> bdp = BinaryDataProcessor("0110100001100101011011000110110001101111")
-    >>> bdp.convert_to_ascii()
-    'hello'
+        बाइनरी स्ट्रिंग को एएससीआईआई स्ट्रिंग में परिवर्तित करें।
+        >>> bdp = BinaryDataProcessor("0110100001100101011011000110110001101111")
+        >>> bdp.convert_to_ascii()
+        'hello'
 
-    """
-    result = ""
-    # Process the binary string in chunks of 8 bits
+        """
+    byte_array = bytearray()
     for i in range(0, len(self.binary_string), 8):
-        # Extract 8-bit chunk
-        byte = self.binary_string[i:i+8]
-        # Convert binary to decimal and then to ASCII character
-        result += chr(int(byte, 2))
-    return result
+        byte = self.binary_string[i:i + 8]
+        decimal = int(byte, 2)
+        byte_array.append(decimal)
+    return byte_array.decode('ascii')

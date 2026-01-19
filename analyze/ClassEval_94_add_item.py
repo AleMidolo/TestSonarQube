@@ -1,14 +1,13 @@
 def add_item(self, item_name, price, quantity):
     """
-    Adds a product to the vending machine's inventory.
-    :param item_name: The name of the product to be added, str.
-    :param price: The price of the product to be added, float.
-    :param quantity: The quantity of the product to be added, int.
-    :return: None
-    >>> vendingMachine = VendingMachine()
-    >>> vendingMachine.add_item('Coke', 1.25, 10)
-    >>> vendingMachine.inventory
-    {'Coke': {'price': 1.25, 'quantity': 10}}
-
-    """
+        वेंडिंग मशीन के इन्वेंटरी में एक उत्पाद जोड़ता है।
+        :param item_name: जो उत्पाद जोड़ा जाना है उसका नाम, str.
+        :param price: जो उत्पाद जोड़ा जाना है उसकी कीमत, float.
+        :param quantity: जो उत्पाद जोड़ा जाना है उसकी मात्रा, int.
+        :return: None
+        >>> vendingMachine = VendingMachine()
+        >>> vendingMachine.add_item('Coke', 1.25, 10)
+        >>> vendingMachine.inventory
+        {'Coke': {'price': 1.25, 'quantity': 10}}
+        """
     self.inventory[item_name] = {'price': price, 'quantity': quantity}

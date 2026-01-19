@@ -1,8 +1,8 @@
 def process_xml_data(self, file_name):
     """
-    Modifies the data in XML elements and writes the updated XML data to a new file.
-    :param file_name: string, the name of the file to write the modified XML data.
-    :return: bool, True if the write operation is successful, False otherwise.
+    XML तत्वों में डेटा को संशोधित करता है और अपडेटेड XML डेटा को एक नए फ़ाइल में लिखता है।
+    :param file_name: स्ट्रिंग, संशोधित XML डेटा को लिखने के लिए फ़ाइल का नाम।
+    :return: बूल, यदि लिखने का कार्य सफल होता है तो True, अन्यथा False।
     >>> xml_processor = XMLProcessor('test.xml')
     >>> root = xml_processor.read_xml()
     >>> success = xml_processor.process_xml_data('processed.xml')
@@ -10,25 +10,10 @@ def process_xml_data(self, file_name):
     True
     """
     try:
-        import xml.etree.ElementTree as ET
-        
-        # Get the root element (assuming it was read previously)
-        if not hasattr(self, 'root') or self.root is None:
-            return False
-        
-        # Process/modify the XML data
-        # Iterate through all elements and modify them as needed
-        for element in self.root.iter():
-            if element.text and element.text.strip():
-                # Example modification: you can customize this based on requirements
-                element.text = element.text.strip()
-        
-        # Create an ElementTree object from the root
+        for item in self.root.findall('item'):
+            item.text = 'modified_' + item.text
         tree = ET.ElementTree(self.root)
-        
-        # Write the modified XML to the new file
-        tree.write(file_name, encoding='utf-8', xml_declaration=True)
-        
+        tree.write(file_name)
         return True
-    except Exception as e:
+    except:
         return False

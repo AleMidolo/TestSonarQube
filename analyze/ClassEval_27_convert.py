@@ -1,31 +1,16 @@
 def convert(self, amount, from_currency, to_currency):
     """
-    Convert the value of a given currency to another currency type
-    :param amount: float, The value of a given currency
-    :param from_currency: string, source currency type
-    :param to_currency: string, target currency type
-    :return: float, value converted to another currency type
-    >>> cc = CurrencyConverter()
-    >>> cc.convert(64, 'CNY','USD')
-    10.0
-    """
-    # Based on the example: 64 CNY = 10 USD
-    # This implies CNY to USD rate is 10/64 = 0.15625
-    # Or USD to CNY rate is 64/10 = 6.4
-    
-    # Define exchange rates relative to USD as base currency
-    rates = {
-        'USD': 1.0,
-        'CNY': 6.4,
-        'EUR': 0.85,
-        'GBP': 0.73,
-        'JPY': 110.0,
-        'CAD': 1.25,
-        'AUD': 1.35
-    }
-    
-    # Convert from source currency to USD, then from USD to target currency
-    amount_in_usd = amount / rates[from_currency]
-    result = amount_in_usd * rates[to_currency]
-    
-    return result
+        एक दिए गए मुद्रा के मूल्य को दूसरे मुद्रा प्रकार में परिवर्तित करें
+        :param amount: float, एक दिए गए मुद्रा का मूल्य
+        :param from_currency: string, स्रोत मुद्रा प्रकार
+        :param to_currency: string, लक्ष्य मुद्रा प्रकार
+        :return: float, दूसरे मुद्रा प्रकार में परिवर्तित मूल्य
+        >>> cc = CurrencyConverter()
+        >>> cc.convert(64, 'CNY','USD')
+        10.0
+        """
+    if from_currency not in self.rates or to_currency not in self.rates:
+        raise ValueError('Unsupported currency type')
+    amount_in_usd = amount / self.rates[from_currency]
+    converted_amount = amount_in_usd * self.rates[to_currency]
+    return converted_amount

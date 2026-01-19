@@ -1,22 +1,17 @@
 def process_file(self):
     """
-    Read the self.file_path file and filter out non-alphabetic characters from the content string.
-    Overwrite the after-processed data into the same self.file_path file.
-    >>> textFileProcessor = TextFileProcessor('test.json')
-    >>> textFileProcessor.read_file()
-    '{\n    "name": "test",\n    "age": 12\n}'
-    >>> textFileProcessor.process_file()
-    'nametestage'
-    """
-    # Read the file content
-    with open(self.file_path, 'r') as file:
-        content = file.read()
-    
-    # Filter out non-alphabetic characters
-    processed_content = ''.join(char for char in content if char.isalpha())
-    
-    # Overwrite the file with processed data
-    with open(self.file_path, 'w') as file:
-        file.write(processed_content)
-    
-    return processed_content
+        self.file_path फ़ाइल को पढ़ें और सामग्री स्ट्रिंग से गैर-अक्षर वर्णों को फ़िल्टर करें।
+        प्रोसेस किए गए डेटा को उसी self.file_path फ़ाइल में ओवरराइट करें।
+        >>> textFileProcessor = TextFileProcessor('test.json')
+        >>> textFileProcessor.read_file()
+        '{
+    "name": "test",
+    "age": 12
+}'
+        >>> textFileProcessor.process_file()
+        'nametestage'
+        """
+    content = self.read_file()
+    filtered_content = ''.join(filter(str.isalpha, content))
+    self.write_file(filtered_content)
+    return filtered_content

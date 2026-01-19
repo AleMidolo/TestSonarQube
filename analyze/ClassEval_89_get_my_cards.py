@@ -1,10 +1,9 @@
 def get_my_cards(self):
     """
-    Get a list of four random numbers between 1 and 9 representing the player's cards.
-    :return: list of integers, representing the player's cards
-    >>> game = TwentyFourPointGame()
-    >>> game.get_my_cards()
-
-    """
-    import random
-    return [random.randint(1, 9) for _ in range(4)]
+        1 से 9 के बीच चार यादृच्छिक संख्याओं की एक सूची प्राप्त करें जो खिलाड़ी के कार्ड का प्रतिनिधित्व करती हैं।
+        :return: पूर्णांकों की सूची, जो खिलाड़ी के कार्ड का प्रतिनिधित्व करती है
+        >>> game = TwentyFourPointGame()
+        >>> game.get_my_cards()
+        """
+    self._generate_cards()
+    return self.nums

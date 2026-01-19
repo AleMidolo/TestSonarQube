@@ -1,38 +1,24 @@
 def vigenere_decipher(self, ciphertext):
     """
-    Deciphers the given ciphertext using the Vigenere cipher
-    :param ciphertext: The ciphertext to decipher,str.
-    :return: The deciphered plaintext,str.
-    >>> d = DecryptionUtils('key')
-    >>> d.vigenere_decipher('ifmmp')
-    'ybocl'
-
-    """
-    plaintext = []
-    key = self.key.lower()
+        दिए गए ciphertext को Vigenere cipher का उपयोग करके डिकोड करता है
+        :param ciphertext: डिकोड करने के लिए ciphertext, str.
+        :return: डिकोड किया गया plaintext, str.
+        >>> d = DecryptionUtils('key')
+        >>> d.vigenere_decipher('ifmmp')
+        'ybocl'
+        """
+    key = self.key
     key_length = len(key)
+    plaintext = ''
     key_index = 0
-    
     for char in ciphertext:
         if char.isalpha():
-            # Determine if uppercase or lowercase
-            is_upper = char.isupper()
-            char = char.lower()
-            
-            # Get the shift value from the key
-            shift = ord(key[key_index % key_length]) - ord('a')
-            
-            # Decipher by subtracting the shift
-            deciphered_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
-            
-            # Restore case if needed
-            if is_upper:
-                deciphered_char = deciphered_char.upper()
-            
-            plaintext.append(deciphered_char)
+            shift = ord(key[key_index % key_length].lower()) - ord('a')
+            if char.isupper():
+                plaintext += chr((ord(char) - shift - 65) % 26 + 65)
+            else:
+                plaintext += chr((ord(char) - shift - 97) % 26 + 97)
             key_index += 1
         else:
-            # Non-alphabetic characters are added as-is
-            plaintext.append(char)
-    
-    return ''.join(plaintext)
+            plaintext += char
+    return plaintext

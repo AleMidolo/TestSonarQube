@@ -1,50 +1,34 @@
 def book_room(self, room_type, room_number, name):
     """
-    Check if there are any rooms of the specified type available.
-    if rooms are adequate, modify available_rooms and booked_rooms and finish booking, or fail to book otherwise.
-    :param room_type: str
-    :param room_number: int, the expected number of specified type rooms to be booked
-    :param name: str, guest name
-    :return: if number of rooms about to be booked doesn't exceed the remaining rooms, return str 'Success!'
-            if exceeds but quantity of available rooms is not equal to zero, return int(the remaining quantity of this room type).
-            if exceeds and quantity is zero or the room_type isn't in available_room, return False.
-    >>> hotel = Hotel('peace hotel', {'single': 5, 'double': 3})
-    >>> hotel.book_room('single', 1, 'guest 1')
-    'Success!'
-    >>> hotel.book_room('single', 5, 'guest 1')
-    4
-    >>> hotel.book_room('single', 4, 'guest 1')
-    'Success!'
-    >>> hotel.book_room('single', 1, 'guest 1')
-    False
-    >>> hotel.book_room('triple', 1, 'guest 1')
-    False
-    """
-    # Check if room_type exists in available_rooms
-    if room_type not in self.available_rooms:
-        return False
-    
-    # Get the current available quantity
-    available_quantity = self.available_rooms[room_type]
-    
-    # If no rooms available, return False
-    if available_quantity == 0:
-        return False
-    
-    # If requested rooms exceed available rooms
-    if room_number > available_quantity:
-        return available_quantity
-    
-    # If we can book the rooms, proceed with booking
-    self.available_rooms[room_type] -= room_number
-    
-    # Add to booked_rooms
+        निर्दिष्ट प्रकार के कमरों की उपलब्धता की जांच करें।
+        यदि कमरे पर्याप्त हैं, तो उपलब्ध_rooms और booked_rooms को संशोधित करें और बुकिंग समाप्त करें, अन्यथा बुकिंग विफल करें।
+        :param room_type: str
+        :param room_number: int, बुक किए जाने वाले निर्दिष्ट प्रकार के कमरों की अपेक्षित संख्या
+        :param name: str, मेहमान का नाम
+        :return: यदि बुक किए जाने वाले कमरों की संख्या शेष कमरों से अधिक नहीं है, तो str 'Success!' लौटाएं।
+                यदि अधिक है लेकिन उपलब्ध कमरों की मात्रा शून्य के बराबर नहीं है, तो int (इस कमरे के प्रकार की शेष मात्रा) लौटाएं।
+                यदि अधिक है और मात्रा शून्य है या room_type उपलब्ध_room में नहीं है, तो False लौटाएं।
+        >>> hotel = Hotel('peace hotel', {'single': 5, 'double': 3})
+        >>> hotel.book_room('single', 1, 'guest 1')
+        'Success!'
+        >>> hotel.book_room('single', 5, 'guest 1')
+        4
+        >>> hotel.book_room('single', 4, 'guest 1')
+        'Success!'
+        >>> hotel.book_room('single', 1, 'guest 1')
+        False
+        >>> hotel.book_room('triple', 1, 'guest 1')
+        False
+        """
+    if room_type not in self.available_rooms or self.available_rooms[room_type] < room_number:
+        if room_type not in self.available_rooms or self.available_rooms[room_type] == 0:
+            return False
+        return self.available_rooms[room_type]
     if room_type not in self.booked_rooms:
         self.booked_rooms[room_type] = {}
-    
-    if name not in self.booked_rooms[room_type]:
-        self.booked_rooms[room_type][name] = 0
-    
-    self.booked_rooms[room_type][name] += room_number
-    
+    if name in self.booked_rooms[room_type]:
+        self.booked_rooms[room_type][name] += room_number
+    else:
+        self.booked_rooms[room_type][name] = room_number
+    self.available_rooms[room_type] -= room_number
     return 'Success!'

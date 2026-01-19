@@ -1,23 +1,10 @@
 def check_win(self):
     """
-    Check if the game is won. The game is won when all the boxes are placed on target positions.
-    And update the value of self.is_game_over.
-    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.
-    >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"]) 
-    >>> game.check_win()
-    """
-    # Check if all boxes are on target positions
-    # Assuming 'X' represents boxes and 'G' represents goals/targets
-    # When a box is on a target, it might be represented differently (e.g., as a combined state)
-    
-    # Count boxes not on targets and targets without boxes
-    for row in self.grid:
-        for cell in row:
-            # If there's a box not on target (X) or a target without box (G), game is not won
-            if cell == 'X' or cell == 'G':
-                self.is_game_over = False
-                return self.is_game_over
-    
-    # If we didn't find any standalone boxes or targets, all boxes are on targets
-    self.is_game_over = True
+        खेल जीतने की जांच करें। खेल तब जीता जाता है जब सभी बॉक्स लक्षित स्थानों पर रखे जाते हैं।
+        और self.is_game_over का मान अपडेट करें।
+        :return self.is_game_over: यदि सभी बॉक्स लक्षित स्थानों पर रखे गए हैं, तो True, अन्यथा False।
+        >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"]) 
+        >>> game.check_win()
+        """
+    self.is_game_over = all((box in self.targets for box in self.boxes))
     return self.is_game_over

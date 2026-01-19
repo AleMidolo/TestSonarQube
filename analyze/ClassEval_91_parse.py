@@ -1,29 +1,12 @@
 def parse(self, path, charset):
     """
-    Parses a given path string and populates the list of segments in the UrlPath.
-    :param path: str, the path string to parse.
-    :param charset: str, the character encoding of the path string.
-    >>> url_path = UrlPath()
-    >>> url_path.parse('/foo/bar/', 'utf-8')
+        दिए गए पथ स्ट्रिंग को पार्स करता है और UrlPath में खंडों की सूची को भरता है।
+        :param path: str, पार्स करने के लिए पथ स्ट्रिंग।
+        :param charset: str, पथ स्ट्रिंग का वर्णनात्मक एन्कोडिंग।
+        >>> url_path = UrlPath()
+        >>> url_path.parse('/foo/bar/', 'utf-8')
 
-    url_path.segments = ['foo', 'bar']
-    """
-    # Initialize segments list if it doesn't exist
-    if not hasattr(self, 'segments'):
-        self.segments = []
-    else:
-        self.segments = []
-    
-    # Handle empty or None path
-    if not path:
-        return
-    
-    # Remove leading and trailing slashes
-    path = path.strip('/')
-    
-    # If path is empty after stripping, return empty segments
-    if not path:
-        return
-    
-    # Split by '/' and filter out empty strings
-    self.segments = [segment for segment in path.split('/') if segment]
+        url_path.segments = ['foo', 'bar']
+        """
+    decoded_path = urllib.parse.unquote(path, encoding=charset)
+    self.segments = [self.fix_path(segment) for segment in decoded_path.split('/') if segment]
