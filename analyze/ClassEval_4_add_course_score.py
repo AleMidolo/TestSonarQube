@@ -2,8 +2,8 @@ def add_course_score(self, name, course, score):
     """
         Add score of specific course for student in self.students
         :param name: str, student name
-        :param course: str, course name
-        :param score: int, course score
+        :param cource: str, cource name
+        :param score: int, cource score
         >>> system.add_student('student 1', 3, 'SE')
         >>> system.add_course_score('student 1', 'math', 94)
         >>> system.students

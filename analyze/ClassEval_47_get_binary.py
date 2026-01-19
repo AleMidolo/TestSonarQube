@@ -7,6 +7,6 @@ def get_binary(self):
         "00001010.00001010.00001010.00001010"
         """
     if self.is_valid():
-        return '.'.join((format(int(octet), '08b') for octet in self.get_octets()))
+        return '.'.join((format(int(octet), '08b') for octet in self.ip_address.split('.')))
     else:
         return ''

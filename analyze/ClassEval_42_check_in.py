@@ -15,9 +15,7 @@ def check_in(self, room_type, room_number, name):
         >>> hotel.booked_rooms
         {'single': {}}
         """
-    if room_type not in self.booked_rooms or name not in self.booked_rooms[room_type]:
-        return False
-    if room_number > self.booked_rooms[room_type][name]:
+    if room_type not in self.booked_rooms or name not in self.booked_rooms[room_type] or room_number > self.booked_rooms[room_type][name]:
         return False
     if room_number == self.booked_rooms[room_type][name]:
         del self.booked_rooms[room_type][name]

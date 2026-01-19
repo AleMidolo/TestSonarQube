@@ -12,6 +12,7 @@ def add_employee(self, employee_id, name, position, department, salary):
         True
         >>> hrManagementSystem.add_employee(1, 'John', 'Manager', 'Sales', 100000)
         False
+
         """
     if employee_id in self.employees:
         return False

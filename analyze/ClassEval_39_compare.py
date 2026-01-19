@@ -10,3 +10,13 @@ def compare(self, cur, peek):
 
     """
     return self.operat_priority[self.get_operator_index(cur)] >= self.operat_priority[self.get_operator_index(peek)]
+
+@staticmethod
+def get_operator_index(op):
+    """
+    Get the index of the operator in the operator priority list
+    :param op: string, the operator
+    :return: int, the index of the operator
+    """
+    operators = {'+': 0, '-': 1, '*': 2, '\/': 3, '%': 4, '(': 5, ')': 6}
+    return operators.get(op, -1)
