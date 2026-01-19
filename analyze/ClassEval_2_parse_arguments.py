@@ -12,39 +12,24 @@ def parse_arguments(self, command_string):
         """
     self.arguments = {}
     tokens = command_string.split()
-    if len(tokens) > 0 and (tokens[0].endswith('.py') or tokens[0] == 'python'):
-        tokens = tokens[1:]
     i = 0
     while i < len(tokens):
         token = tokens[i]
-        if token.startswith('--') and '=' in token:
-            arg_name = token[2:token.index('=')]
-            arg_value = token[token.index('=') + 1:]
-            converted_value = self._convert_type(arg_name, arg_value)
-            self.arguments[arg_name] = converted_value
-        elif token.startswith('--'):
-            arg_name = token[2:]
-            if i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
-                arg_value = tokens[i + 1]
-                converted_value = self._convert_type(arg_name, arg_value)
+        if token.startswith('-'):
+            arg_name = token.lstrip('-')
+            if '=' in arg_name:
+                arg_name, value = arg_name.split('=', 1)
+                converted_value = self._convert_type(arg_name, value)
                 self.arguments[arg_name] = converted_value
-                i += 1
-            else:
-                self.arguments[arg_name] = True
-        elif token.startswith('-') and (not token.startswith('--')):
-            arg_name = token[1:]
-            if i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
-                arg_value = tokens[i + 1]
-                converted_value = self._convert_type(arg_name, arg_value)
+            elif i + 1 < len(tokens) and (not tokens[i + 1].startswith('-')):
+                value = tokens[i + 1]
+                converted_value = self._convert_type(arg_name, value)
                 self.arguments[arg_name] = converted_value
                 i += 1
             else:
                 self.arguments[arg_name] = True
         i += 1
-    missing_args = set()
-    for req_arg in self.required:
-        if req_arg not in self.arguments:
-            missing_args.add(req_arg)
+    missing_args = self.required - set(self.arguments.keys())
     if missing_args:
         return (False, missing_args)
     else:

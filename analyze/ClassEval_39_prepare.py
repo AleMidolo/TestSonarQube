@@ -8,28 +8,30 @@ def prepare(self, expression):
         """
     op_stack = deque()
     arr = list(expression)
-    current = ''
+    current_index = 0
+    count = 0
     i = 0
     while i < len(arr):
-        c = arr[i]
-        if not self.is_operator(c):
-            current = c
-            i += 1
-            while i < len(arr) and (not self.is_operator(arr[i])):
-                current += arr[i]
-                i += 1
-            self.postfix_stack.append(current)
-            continue
-        if c == '(':
-            op_stack.append(c)
-        elif c == ')':
-            while op_stack and op_stack[-1] != '(':
-                self.postfix_stack.append(op_stack.pop())
-            op_stack.pop()
+        current_char = arr[i]
+        if self.is_operator(current_char):
+            if count > 0:
+                self.postfix_stack.append(''.join(arr[current_index:current_index + count]))
+                count = 0
+            if current_char == '(':
+                op_stack.append(current_char)
+            elif current_char == ')':
+                while op_stack and op_stack[-1] != '(':
+                    self.postfix_stack.append(op_stack.pop())
+                op_stack.pop()
+            else:
+                while op_stack and op_stack[-1] != '(' and self.compare(current_char, op_stack[-1]):
+                    self.postfix_stack.append(op_stack.pop())
+                op_stack.append(current_char)
+            current_index = i + 1
         else:
-            while op_stack and op_stack[-1] != '(' and self.compare(c, op_stack[-1]):
-                self.postfix_stack.append(op_stack.pop())
-            op_stack.append(c)
+            count += 1
         i += 1
+    if count > 0:
+        self.postfix_stack.append(''.join(arr[current_index:current_index + count]))
     while op_stack:
         self.postfix_stack.append(op_stack.pop())

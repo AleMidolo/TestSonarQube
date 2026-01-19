@@ -9,17 +9,22 @@ def rail_fence_decipher(self, encrypted_text, rails):
         'Hello, World!'
 
         """
-    if rails == 1:
+    if rails <= 1:
         return encrypted_text
-    fence = [['' for _ in range(len(encrypted_text))] for _ in range(rails)]
+    fence = [['\n' for _ in range(len(encrypted_text))] for _ in range(rails)]
+    dir_down = None
     row, col = (0, 0)
-    down = False
     for i in range(len(encrypted_text)):
-        if row == 0 or row == rails - 1:
-            down = not down
+        if row == 0:
+            dir_down = True
+        if row == rails - 1:
+            dir_down = False
         fence[row][col] = '*'
         col += 1
-        row = row + 1 if down else row - 1
+        if dir_down:
+            row += 1
+        else:
+            row -= 1
     index = 0
     for i in range(rails):
         for j in range(len(encrypted_text)):
@@ -28,11 +33,16 @@ def rail_fence_decipher(self, encrypted_text, rails):
                 index += 1
     result = []
     row, col = (0, 0)
-    down = False
     for i in range(len(encrypted_text)):
-        if row == 0 or row == rails - 1:
-            down = not down
-        result.append(fence[row][col])
-        col += 1
-        row = row + 1 if down else row - 1
+        if row == 0:
+            dir_down = True
+        if row == rails - 1:
+            dir_down = False
+        if fence[row][col] != '\n':
+            result.append(fence[row][col])
+            col += 1
+        if dir_down:
+            row += 1
+        else:
+            row -= 1
     return ''.join(result)
