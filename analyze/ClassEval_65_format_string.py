@@ -1,50 +1,71 @@
 def format_string(self, x):
     """
-        Converte una rappresentazione stringa di un numero nella sua rappresentazione in parole.
-        :param x: str, la rappresentazione stringa di un numero
-        :return: str, il numero nel formato parole
-        >>> formatter = NumberWordFormatter()
-        >>> formatter.format_string("123456")
-        "UNO CENTO E VENTITRE MILA QUATTROCENTO E CINQUANTA SEI SOLO"
-        """
-    is_negative = False
-    if x.startswith('-'):
-        is_negative = True
-        x = x[1:]
-    decimal_part = ''
-    if '.' in x:
-        integer_part, decimal_part = x.split('.')
-        decimal_part = decimal_part.rstrip('0')
-        if decimal_part:
-            decimal_part = ' POINT ' + ' '.join((self.NUMBER[int(digit)] for digit in decimal_part))
+    Converte una rappresentazione stringa di un numero nella sua rappresentazione in parole.
+    :param x: str, la rappresentazione stringa di un numero
+    :return: str, il numero nel formato parole
+    >>> formatter = NumberWordFormatter()
+    >>> formatter.format_string("123456")
+    "UNO CENTO E VENTITRE MILA QUATTROCENTO E CINQUANTA SEI SOLO"
+    """
+    # Definizione delle parole per i numeri
+    unita = ["", "UNO", "DUE", "TRE", "QUATTRO", "CINQUE", "SEI", "SETTE", "OTTO", "NOVE"]
+    decine_speciali = ["DIECI", "UNDICI", "DODICI", "TREDICI", "QUATTORDICI", "QUINDICI", 
+                       "SEDICI", "DICIASSETTE", "DICIOTTO", "DICIANNOVE"]
+    decine = ["", "", "VENTI", "TRENTA", "QUARANTA", "CINQUANTA", "SESSANTA", "SETTANTA", "OTTANTA", "NOVANTA"]
+    
+    def converti_centinaia(num):
+        """Converte un numero da 0 a 999 in parole"""
+        if num == 0:
+            return ""
+        
+        risultato = []
+        
+        # Centinaia
+        centinaia = num // 100
+        if centinaia > 0:
+            risultato.append(unita[centinaia])
+            risultato.append("CENTO")
+        
+        # Decine e unità
+        resto = num % 100
+        if resto >= 10 and resto < 20:
+            if risultato:
+                risultato.append("E")
+            risultato.append(decine_speciali[resto - 10])
         else:
-            decimal_part = ''
-    else:
-        integer_part = x
-    integer_part = integer_part.lstrip('0')
-    if integer_part == '':
-        integer_part = '0'
-    if integer_part == '0':
-        return 'ZERO ONLY'
-    groups = []
-    while integer_part:
-        groups.append(integer_part[-3:])
-        integer_part = integer_part[:-3]
-    groups.reverse()
-    words = []
-    num_groups = len(groups)
-    for i, group in enumerate(groups):
-        if group == '000':
-            continue
-        group_words = self.trans_three(group.zfill(3))
-        magnitude = num_groups - i - 1
-        if magnitude > 0 and group_words:
-            group_words += ' ' + self.parse_more(magnitude)
-        words.append(group_words)
-    result = ' '.join(words)
-    if is_negative:
-        result = 'MINUS ' + result
-    if decimal_part:
-        result += decimal_part
-    result += ' ONLY'
-    return result
+            dec = resto // 10
+            uni = resto % 10
+            
+            if dec > 0:
+                if risultato:
+                    risultato.append("E")
+                risultato.append(decine[dec])
+            
+            if uni > 0:
+                risultato.append(unita[uni])
+        
+        return " ".join(risultato)
+    
+    # Converti la stringa in intero
+    numero = int(x)
+    
+    if numero == 0:
+        return "ZERO SOLO"
+    
+    risultato = []
+    
+    # Gestione migliaia
+    migliaia = numero // 1000
+    if migliaia > 0:
+        risultato.append(converti_centinaia(migliaia))
+        risultato.append("MILA")
+    
+    # Gestione centinaia
+    centinaia = numero % 1000
+    if centinaia > 0:
+        risultato.append(converti_centinaia(centinaia))
+    
+    # Aggiungi "SOLO" alla fine
+    risultato.append("SOLO")
+    
+    return " ".join(risultato)

@@ -1,32 +1,54 @@
 def text2int(self, textnum):
     """
-        Convertire la stringa di parole nel corrispondente numero intero
-        :param textnum: stringa, la stringa di parole da convertire
-        :return: stringa, la stringa finale convertita in numero intero
-        >>> w2n = Words2Numbers()
-        >>> w2n.text2int("thirty-two")
-        "32"
-        """
-    if not self.is_valid_input(textnum):
-        return None
-    textnum = textnum.lower().replace('-', ' ')
+    Convertire la stringa di parole nel corrispondente numero intero
+    :param textnum: stringa, la stringa di parole da convertire
+    :return: stringa, la stringa finale convertita in numero intero
+    >>> w2n = Words2Numbers()
+    >>> w2n.text2int("thirty-two")
+    "32"
+    """
+    ones = {
+        "zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+        "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+        "eleven": 11, "twelve": 12, "thirteen": 13, "fourteen": 14,
+        "fifteen": 15, "sixteen": 16, "seventeen": 17, "eighteen": 18,
+        "nineteen": 19
+    }
+    
+    tens = {
+        "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50,
+        "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90
+    }
+    
+    scales = {
+        "hundred": 100,
+        "thousand": 1000,
+        "million": 1000000,
+        "billion": 1000000000,
+        "trillion": 1000000000000
+    }
+    
+    textnum = textnum.lower().replace("-", " ").replace(" and ", " ")
     words = textnum.split()
-    current = 0
+    
+    if len(words) == 0:
+        return "0"
+    
     result = 0
+    current = 0
+    
     for word in words:
-        if word in self.ordinal_words:
-            current += self.ordinal_words[word]
-        else:
-            for ending, replacement in self.ordinal_endings:
-                if word.endswith(ending):
-                    word = word[:-len(ending)] + replacement
-                    break
-            if word not in self.numwords:
-                continue
-            scale, increment = self.numwords[word]
-            current = current * scale + increment
-            if scale > 100:
+        if word in ones:
+            current += ones[word]
+        elif word in tens:
+            current += tens[word]
+        elif word in scales:
+            if word == "hundred":
+                current *= scales[word]
+            else:
+                current *= scales[word]
                 result += current
                 current = 0
+    
     result += current
     return str(result)

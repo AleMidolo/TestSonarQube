@@ -1,34 +1,64 @@
 def calculate(self, expression):
     """
-        Calcola il risultato dell'espressione postfix fornita
-        :param expression: stringa, l'espressione postfix da calcolare
-        :return: float, il risultato calcolato
-        >>> expression_calculator = ExpressionCalculator()
-        >>> expression_calculator.calculate("2 + 3 * 4")
-        14.0
+    Calcola il risultato dell'espressione postfix fornita
+    :param expression: stringa, l'espressione postfix da calcolare
+    :return: float, il risultato calcolato
+    >>> expression_calculator = ExpressionCalculator()
+    >>> expression_calculator.calculate("2 + 3 * 4")
+    14.0
 
-        """
-    self.postfix_stack.clear()
-    transformed_expr = self.transform(expression)
-    self.prepare(transformed_expr)
-    result_stack = deque()
-    for token in self.postfix_stack:
-        if self.is_operator(token):
-            if token == '~':
-                if not result_stack:
-                    raise ValueError('Invalid expression: unary minus without operand')
-                operand = result_stack.pop()
-                result_stack.append(-Decimal(operand))
+    """
+    # Convert infix to postfix first, then evaluate
+    def precedence(op):
+        if op in ['+', '-']:
+            return 1
+        if op in ['*', '/']:
+            return 2
+        return 0
+    
+    def infix_to_postfix(expr):
+        output = []
+        stack = []
+        tokens = expr.replace('(', ' ( ').replace(')', ' ) ').split()
+        
+        for token in tokens:
+            if token.replace('.', '').replace('-', '').isdigit():
+                output.append(token)
+            elif token == '(':
+                stack.append(token)
+            elif token == ')':
+                while stack and stack[-1] != '(':
+                    output.append(stack.pop())
+                if stack:
+                    stack.pop()
+            elif token in ['+', '-', '*', '/']:
+                while stack and stack[-1] != '(' and precedence(stack[-1]) >= precedence(token):
+                    output.append(stack.pop())
+                stack.append(token)
+        
+        while stack:
+            output.append(stack.pop())
+        
+        return output
+    
+    def evaluate_postfix(postfix):
+        stack = []
+        for token in postfix:
+            if token in ['+', '-', '*', '/']:
+                b = stack.pop()
+                a = stack.pop()
+                if token == '+':
+                    stack.append(a + b)
+                elif token == '-':
+                    stack.append(a - b)
+                elif token == '*':
+                    stack.append(a * b)
+                elif token == '/':
+                    stack.append(a / b)
             else:
-                if len(result_stack) < 2:
-                    raise ValueError('Invalid expression: insufficient operands for operator')
-                second_value = result_stack.pop()
-                first_value = result_stack.pop()
-                result = self._calculate(first_value, second_value, token)
-                result_stack.append(result)
-        else:
-            result_stack.append(token)
-    if len(result_stack) != 1:
-        raise ValueError('Invalid expression: could not compute final result')
-    result = result_stack.pop()
-    return float(result)
+                stack.append(float(token))
+        
+        return stack[0]
+    
+    postfix = infix_to_postfix(expression)
+    return evaluate_postfix(postfix)

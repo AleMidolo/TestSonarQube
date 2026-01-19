@@ -1,30 +1,57 @@
 @staticmethod
 def multiply(num1, num2):
     """
-        Moltiplica due grandi numeri.
-        :param num1: Il primo numero da moltiplicare, str.
-        :param num2: Il secondo numero da moltiplicare, str.
-        :return: Il prodotto dei due numeri, str.
-        >>> bigNum = BigNumCalculator()
-        >>> bigNum.multiply("12345678901234567890", "98765432109876543210")
-        '1219326311370217952237463801111263526900'
-        """
-    if num1 == '0' or num2 == '0':
-        return '0'
-    len1, len2 = (len(num1), len(num2))
+    Moltiplica due grandi numeri.
+    :param num1: Il primo numero da moltiplicare, str.
+    :param num2: Il secondo numero da moltiplicare, str.
+    :return: Il prodotto dei due numeri, str.
+    >>> bigNum = BigNumCalculator()
+    >>> bigNum.multiply("12345678901234567890", "98765432109876543210")
+    '1219326311370217952237463801111263526900'
+
+    """
+    # Handle edge cases
+    if num1 == "0" or num2 == "0":
+        return "0"
+    
+    # Determine sign of result
+    negative = False
+    if num1[0] == '-':
+        negative = not negative
+        num1 = num1[1:]
+    if num2[0] == '-':
+        negative = not negative
+        num2 = num2[1:]
+    
+    # Initialize result array
+    len1, len2 = len(num1), len(num2)
     result = [0] * (len1 + len2)
-    for i in range(len1 - 1, -1, -1):
-        carry = 0
-        n1 = int(num1[i])
-        for j in range(len2 - 1, -1, -1):
-            n2 = int(num2[j])
-            temp_sum = n1 * n2 + result[i + j + 1] + carry
-            carry = temp_sum // 10
-            result[i + j + 1] = temp_sum % 10
-        result[i] += carry
-    start = 0
-    while start < len(result) and result[start] == 0:
-        start += 1
-    if start == len(result):
-        return '0'
-    return ''.join((str(x) for x in result[start:]))
+    
+    # Reverse the strings for easier processing (least significant digit first)
+    num1 = num1[::-1]
+    num2 = num2[::-1]
+    
+    # Multiply each digit of num1 with each digit of num2
+    for i in range(len1):
+        for j in range(len2):
+            digit1 = int(num1[i])
+            digit2 = int(num2[j])
+            result[i + j] += digit1 * digit2
+            
+            # Handle carry
+            result[i + j + 1] += result[i + j] // 10
+            result[i + j] %= 10
+    
+    # Convert result array to string
+    # Remove leading zeros
+    while len(result) > 1 and result[-1] == 0:
+        result.pop()
+    
+    # Reverse to get the correct order
+    result_str = ''.join(map(str, result[::-1]))
+    
+    # Add negative sign if needed
+    if negative:
+        result_str = '-' + result_str
+    
+    return result_str

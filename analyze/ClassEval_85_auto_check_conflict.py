@@ -1,26 +1,28 @@
 def auto_check_conflict(self):
     """
-        Controlla se c'è un conflitto tra la modalità operativa e la relazione tra la temperatura attuale e la temperatura target.
-        Se c'è un conflitto, la modalità operativa verrà regolata automaticamente.
-        :return: True se la modalità non è in conflitto con la relazione tra la temperatura attuale e la temperatura target, o False altrimenti.
-        >>> thermostat = Thermostat(20.4, 37.5, 'cool')
-        >>> thermostat.auto_check_conflict()
-        False
-        >>> thermostat.mode
-        'heat'
-        """
-    if self.mode == 'heat':
-        if self.current_temperature >= self.target_temperature:
-            self.auto_set_mode()
+    Controlla se c'è un conflitto tra la modalità operativa e la relazione tra la temperatura attuale e la temperatura target.
+    Se c'è un conflitto, la modalità operativa verrà regolata automaticamente.
+    :return: True se la modalità non è in conflitto con la relazione tra la temperatura attuale e la temperatura target, o False altrimenti.
+    >>> thermostat = Thermostat(20.4, 37.5, 'cool')
+    >>> thermostat.auto_check_conflict()
+    False
+    >>> thermostat.mode
+    'heat'
+    """
+    # Se la temperatura attuale è minore della temperatura target
+    if self.current_temperature < self.target_temperature:
+        # Dovremmo riscaldare (heat), quindi se siamo in 'cool' c'è conflitto
+        if self.mode == 'cool':
+            self.mode = 'heat'
             return False
-        else:
-            return True
-    elif self.mode == 'cool':
-        if self.current_temperature <= self.target_temperature:
-            self.auto_set_mode()
+        return True
+    # Se la temperatura attuale è maggiore della temperatura target
+    elif self.current_temperature > self.target_temperature:
+        # Dovremmo raffreddare (cool), quindi se siamo in 'heat' c'è conflitto
+        if self.mode == 'heat':
+            self.mode = 'cool'
             return False
-        else:
-            return True
+        return True
+    # Se le temperature sono uguali, non c'è conflitto
     else:
-        self.auto_set_mode()
-        return False
+        return True

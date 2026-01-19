@@ -1,10 +1,10 @@
 def get_primes(self):
     """
-        Ottieni l'elenco dei numeri primi generati.
-        :return: list, un elenco di numeri primi
-        >>> cs = ChandrasekharSieve(20)
-        >>> cs.get_primes()
-        [2, 3, 5, 7, 11, 13, 17, 19]
+    Ottieni l'elenco dei numeri primi generati.
+    :return: list, un elenco di numeri primi
+    >>> cs = ChandrasekharSieve(20)
+    >>> cs.get_primes()
+    [2, 3, 5, 7, 11, 13, 17, 19]
 
-        """
+    """
     return self.primes

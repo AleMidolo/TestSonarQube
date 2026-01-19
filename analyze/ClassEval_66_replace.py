@@ -1,40 +1,39 @@
 def replace(self, string):
     """
-        Sostituisce i riferimenti ai caratteri numerici (entità HTML) nella stringa di input con i loro corrispondenti caratteri Unicode.
-        :param string: str, la stringa di input contenente riferimenti ai caratteri numerici.
-        :return: str, la stringa di input con i riferimenti ai caratteri numerici sostituiti con i loro corrispondenti caratteri Unicode.
-        >>> unescaper = NumericEntityUnescaper()
-        >>> unescaper.replace("&#65;&#66;&#67;")
-        'ABC'
+    Sostituisce i riferimenti ai caratteri numerici (entità HTML) nella stringa di input con i loro corrispondenti caratteri Unicode.
+    :param string: str, la stringa di input contenente riferimenti ai caratteri numerici.
+    :return: str, la stringa di input con i riferimenti ai caratteri numerici sostituiti con i loro corrispondenti caratteri Unicode.
+    >>> unescaper = NumericEntityUnescaper()
+    >>> unescaper.replace("&#65;&#66;&#67;")
+    'ABC'
 
-        """
-    result = []
-    i = 0
-    n = len(string)
-    while i < n:
-        if string[i:i + 2] == '&#':
-            j = i + 2
-            is_hex = False
-            if j < n and string[j] == 'x':
-                is_hex = True
-                j += 1
-            start = j
-            while j < n and self.is_hex_char(string[j]):
-                j += 1
-            if j < n and string[j] == ';':
-                num_str = string[start:j]
-                if num_str:
-                    try:
-                        if is_hex:
-                            code_point = int(num_str, 16)
-                        else:
-                            code_point = int(num_str)
-                        if 0 <= code_point <= 1114111:
-                            result.append(chr(code_point))
-                            i = j + 1
-                            continue
-                    except ValueError:
-                        pass
-        result.append(string[i])
-        i += 1
-    return ''.join(result)
+    """
+    import re
+    
+    def replace_entity(match):
+        entity = match.group(0)
+        # Remove &#, &#x, or &# prefix and ; suffix
+        if entity.startswith('&#x') or entity.startswith('&#X'):
+            # Hexadecimal entity
+            num_str = entity[3:-1]
+            try:
+                char_code = int(num_str, 16)
+                return chr(char_code)
+            except (ValueError, OverflowError):
+                return entity
+        elif entity.startswith('&#'):
+            # Decimal entity
+            num_str = entity[2:-1]
+            try:
+                char_code = int(num_str, 10)
+                return chr(char_code)
+            except (ValueError, OverflowError):
+                return entity
+        return entity
+    
+    # Pattern to match numeric character references
+    # Matches &#digits; or &#xhexdigits; or &#Xhexdigits;
+    pattern = r'&#[xX]?[0-9a-fA-F]+;'
+    
+    result = re.sub(pattern, replace_entity, string)
+    return result

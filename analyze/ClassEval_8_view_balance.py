@@ -1,5 +1,5 @@
 def view_balance(self):
     """
-        Restituisce il saldo del conto.
-        """
+    Restituisce il saldo del conto.
+    """
     return self.balance

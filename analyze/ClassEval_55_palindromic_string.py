@@ -1,35 +1,53 @@
 def palindromic_string(self):
     """
-        Trova la sottostringa palindromica più lunga nella stringa fornita.
-        :return: La sottostringa palindromica più lunga, str.
-        >>> manacher = Manacher('ababaxse')
-        >>> manacher.palindromic_string()
-        'ababa'
+    Trova la sottostringa palindromica più lunga nella stringa fornita.
+    :return: La sottostringa palindromica più lunga, str.
+    >>> manacher = Manacher('ababaxse')
+    >>> manacher.palindromic_string()
+    'ababa'
 
-        """
-    if not self.input_string:
-        return ''
-    transformed = '|'.join(self.input_string)
-    transformed = '|' + transformed + '|'
+    """
+    if not self.string:
+        return ""
+    
+    # Transform string to handle even-length palindromes
+    # Insert '#' between characters
+    transformed = '#'.join('^{}$'.format(self.string))
     n = len(transformed)
-    palindrome_lengths = [0] * n
+    
+    # Array to store palindrome lengths
+    P = [0] * n
     center = 0
     right = 0
-    for i in range(n):
-        mirror = 2 * center - i
-        if i < right:
-            palindrome_lengths[i] = min(right - i, palindrome_lengths[mirror])
-        while i - palindrome_lengths[i] - 1 >= 0 and i + palindrome_lengths[i] + 1 < n and (transformed[i - palindrome_lengths[i] - 1] == transformed[i + palindrome_lengths[i] + 1]):
-            palindrome_lengths[i] += 1
-        if i + palindrome_lengths[i] > right:
-            center = i
-            right = i + palindrome_lengths[i]
+    
     max_len = 0
     center_index = 0
-    for i in range(n):
-        if palindrome_lengths[i] > max_len:
-            max_len = palindrome_lengths[i]
+    
+    for i in range(1, n - 1):
+        # Mirror of i with respect to center
+        mirror = 2 * center - i
+        
+        # If i is within the right boundary, use previously computed values
+        if i < right:
+            P[i] = min(right - i, P[mirror])
+        
+        # Attempt to expand palindrome centered at i
+        try:
+            while transformed[i + 1 + P[i]] == transformed[i - 1 - P[i]]:
+                P[i] += 1
+        except IndexError:
+            pass
+        
+        # If palindrome centered at i extends past right, adjust center and right
+        if i + P[i] > right:
+            center = i
+            right = i + P[i]
+        
+        # Track the longest palindrome
+        if P[i] > max_len:
+            max_len = P[i]
             center_index = i
+    
+    # Extract the longest palindrome from original string
     start = (center_index - max_len) // 2
-    end = start + max_len
-    return self.input_string[start:end]
+    return self.string[start:start + max_len]

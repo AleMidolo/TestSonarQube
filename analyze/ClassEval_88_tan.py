@@ -1,13 +1,14 @@
+import math
+
 def tan(self, x):
     """
-        Calcola il valore della tangente dell'angolo in gradi x
-        :param x: float
-        :return: float
-        >>> tricalculator.tan(45)
-        1.0
-        """
-    sin_val = self.sin(x)
-    cos_val = self.cos(x)
-    if fabs(cos_val) < 1e-10:
-        raise ValueError('Tangent is undefined for angle where cos(x) = 0')
-    return round(sin_val / cos_val, 10)
+    Calcola il valore della tangente dell'angolo in gradi x
+    :param x: float
+    :return: float
+    >>> tricalculator.tan(45)
+    1.0
+    """
+    # Converti l'angolo da gradi a radianti
+    x_radianti = math.radians(x)
+    # Calcola e restituisci la tangente
+    return math.tan(x_radianti)

@@ -1,26 +1,39 @@
 def process_excel_data(self, N, save_file_name):
     """
-        Cambia la colonna specificata nel file Excel in maiuscolo
-        :param N: int, Il numero seriale della colonna che si desidera cambiare
-        :param save_file_name: str, nome del file sorgente
-        :return:(int, str), Il primo è il valore di ritorno di write_excel, mentre il secondo è il nome del file salvato dei dati elaborati
-        >>> processor = ExcelProcessor()
-        >>> success, output_file = processor.process_excel_data(1, 'test_data.xlsx')
-        """
+    Cambia la colonna specificata nel file Excel in maiuscolo
+    :param N: int, Il numero seriale della colonna che si desidera cambiare
+    :param save_file_name: str, nome del file sorgente
+    :return:(int, str), Il primo è il valore di ritorno di write_excel, mentre il secondo è il nome del file salvato dei dati elaborati
+    >>> processor = ExcelProcessor()
+    >>> success, output_file = processor.process_excel_data(1, 'test_data.xlsx')
+    """
+    import openpyxl
+    import os
+    
+    # Read the Excel file
     try:
-        data = self.read_excel(save_file_name)
-        if data is None:
-            return (0, '')
-        processed_data = []
-        for row in data:
-            processed_row = list(row)
-            if N >= 1 and N <= len(processed_row):
-                cell_value = processed_row[N - 1]
-                if isinstance(cell_value, str):
-                    processed_row[N - 1] = cell_value.upper()
-            processed_data.append(tuple(processed_row))
-        output_file = f'processed_{save_file_name}'
-        result = self.write_excel(processed_data, output_file)
-        return (result, output_file)
-    except:
-        return (0, '')
+        workbook = openpyxl.load_workbook(save_file_name)
+        sheet = workbook.active
+        
+        # Convert the specified column (N) to uppercase
+        # N is 1-indexed (1 = column A, 2 = column B, etc.)
+        for row in range(1, sheet.max_row + 1):
+            cell = sheet.cell(row=row, column=N)
+            if cell.value is not None and isinstance(cell.value, str):
+                cell.value = cell.value.upper()
+        
+        # Generate output filename
+        base_name = os.path.splitext(save_file_name)[0]
+        extension = os.path.splitext(save_file_name)[1]
+        output_file_name = f"{base_name}_processed{extension}"
+        
+        # Save the modified workbook
+        workbook.save(output_file_name)
+        workbook.close()
+        
+        # Return success code (1 for success) and output filename
+        return (1, output_file_name)
+        
+    except Exception as e:
+        # Return failure code (0 for failure) and error message
+        return (0, str(e))

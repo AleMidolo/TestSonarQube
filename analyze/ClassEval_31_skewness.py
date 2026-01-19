@@ -1,21 +1,25 @@
 @staticmethod
 def skewness(data):
     """
-        Calcola la asimmetria di un insieme di dati.
-        :param data: La lista di dati in ingresso, list.
-        :return: L'asimmetria, float.
-        >>> DataStatistics4.skewness([1, 2, 5])
-        2.3760224064818463
+    Calcola la asimmetria di un insieme di dati.
+    :param data: La lista di dati in ingresso, list.
+    :return: L'asimmetria, float.
+    >>> DataStatistics4.skewness([1, 2, 5])
+    2.3760224064818463
 
-        """
+    """
     n = len(data)
-    if n < 3:
-        return math.nan
     mean = sum(data) / n
-    variance = sum(((x - mean) ** 2 for x in data)) / n
-    if variance == 0:
-        return math.nan
-    std_dev = math.sqrt(variance)
-    third_moment = sum((((x - mean) / std_dev) ** 3 for x in data)) / n
-    skewness_value = third_moment * (math.sqrt(n * (n - 1)) / (n - 2)) if n > 2 else third_moment
-    return skewness_value
+    
+    # Calculate standard deviation
+    variance = sum((x - mean) ** 2 for x in data) / n
+    std_dev = variance ** 0.5
+    
+    # Calculate skewness
+    if std_dev == 0:
+        return 0.0
+    
+    skew = sum((x - mean) ** 3 for x in data) / n
+    skewness = skew / (std_dev ** 3)
+    
+    return skewness

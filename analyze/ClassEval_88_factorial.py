@@ -1,14 +1,15 @@
 def factorial(self, a):
     """
-        Calcola il fattoriale di a
-        :param a: int
-        :return: int
-        >>> tricalculator = TriCalculator()
-        >>> tricalculator.factorial(5)
-        120
-        """
+    Calcola il fattoriale di a
+    :param a: int
+    :return: int
+    >>> tricalculator.factorial(5)
+    120
+    """
     if a < 0:
-        raise ValueError('Factorial is not defined for negative numbers')
+        raise ValueError("Il fattoriale non è definito per numeri negativi")
+    if a == 0 or a == 1:
+        return 1
     result = 1
     for i in range(2, a + 1):
         result *= i

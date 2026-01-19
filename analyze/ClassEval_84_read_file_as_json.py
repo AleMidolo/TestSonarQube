@@ -1,13 +1,16 @@
+import json
+
 def read_file_as_json(self):
     """
-        Leggi il file self.file_path in formato json.
-        Se il contenuto del file non rispetta il formato json, il codice solleverà un errore.
-        :return data: dict se il file è memorizzato in formato json, o str/int/float.. a seconda del contenuto del file altrimenti.
-        >>> textFileProcessor = TextFileProcessor('test.json')
-        >>> textFileProcessor.read_file_as_json()
-        {'name': 'test', 'age': 12}
-        >>> type(textFileProcessor.read_file_as_json())
-        <class 'dict'>
-        """
-    content = self.read_file()
-    return json.loads(content)
+    Leggi il file self.file_path in formato json.
+    Se il contenuto del file non rispetta il formato json, il codice solleverà un errore.
+    :return data: dict se il file è memorizzato in formato json, o str/int/float.. a seconda del contenuto del file altrimenti.
+    >>> textFileProcessor = TextFileProcessor('test.json')
+    >>> textFileProcessor.read_file_as_json()
+    {'name': 'test', 'age': 12}
+    >>> type(textFileProcessor.read_file_as_json())
+    <class 'dict'>
+    """
+    with open(self.file_path, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    return data
