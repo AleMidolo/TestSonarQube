@@ -12,7 +12,7 @@ def add_heading(self, heading, level=1):
             return False
         
         # Assuming this is a method of a class that has a document object
-        # Using python-docx library convention
+        # (e.g., using python-docx library)
         self.document.add_heading(heading, level=level)
         return True
     except Exception:

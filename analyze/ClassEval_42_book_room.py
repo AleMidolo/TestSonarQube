@@ -27,7 +27,7 @@ def book_room(self, room_type, room_number, name):
     # Get the current available quantity
     available_quantity = self.available_rooms[room_type]
     
-    # If no rooms available, return False
+    # If no rooms available
     if available_quantity == 0:
         return False
     
@@ -35,10 +35,11 @@ def book_room(self, room_type, room_number, name):
     if room_number > available_quantity:
         return available_quantity
     
-    # If we have enough rooms, proceed with booking
+    # If booking is successful
+    # Update available_rooms
     self.available_rooms[room_type] -= room_number
     
-    # Add to booked_rooms
+    # Update booked_rooms
     if room_type not in self.booked_rooms:
         self.booked_rooms[room_type] = {}
     

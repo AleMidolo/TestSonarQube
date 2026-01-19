@@ -22,10 +22,10 @@ def answer(self, expression):
         if nums_sorted != expr_sorted:
             return False
         
-        # Evaluate the expression
+        # Evaluate the expression and check if it equals 24
         result = eval(expression)
         
-        # Check if result equals 24 (with floating point tolerance)
+        # Check if result is 24 (with floating point tolerance)
         return abs(result - 24) < 1e-6
         
     except:

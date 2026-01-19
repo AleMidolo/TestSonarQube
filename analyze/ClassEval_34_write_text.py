@@ -11,7 +11,7 @@ def write_text(self, content, font_size=12, alignment='left'):
         from docx.shared import Pt
         from docx.enum.text import WD_ALIGN_PARAGRAPH
         
-        # Check if document exists, create if not
+        # Check if document exists, otherwise create new one
         if not hasattr(self, 'document') or self.document is None:
             self.document = Document()
         

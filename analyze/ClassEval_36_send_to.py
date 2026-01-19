@@ -16,16 +16,25 @@ def send_to(self, recv, content, size):
     from datetime import datetime
     
     # Check if receiver has enough space in their inbox
-    current_size = sum(email.get('size', 0) for email in recv.inbox) if isinstance(recv.inbox, list) else recv.inbox.get('size', 0) if isinstance(recv.inbox, dict) else 0
+    current_size = sum(email.get('size', 0) for email in (recv.inbox if isinstance(recv.inbox, list) else [recv.inbox]) if email)
     
-    # Assuming recv has a capacity attribute
+    # If recv.inbox is a dict (single email) or needs initialization
+    if not hasattr(recv, 'inbox'):
+        recv.inbox = []
+    elif isinstance(recv.inbox, dict):
+        recv.inbox = [recv.inbox] if recv.inbox else []
+    
+    # Calculate current inbox size
+    current_size = sum(email.get('size', 0) for email in recv.inbox)
+    
+    # Check if there's enough capacity
     if hasattr(recv, 'capacity'):
         if current_size + size > recv.capacity:
             return False
     
     # Create email object
     email = {
-        'sender': self.email,
+        'sender': self.email if hasattr(self, 'email') else 'sender@example.com',
         'receiver': recv.email if hasattr(recv, 'email') else recv,
         'content': content,
         'size': size,
@@ -33,10 +42,7 @@ def send_to(self, recv, content, size):
         'state': 'unread'
     }
     
-    # Add to receiver's inbox
-    if isinstance(recv.inbox, list):
-        recv.inbox.append(email)
-    else:
-        recv.inbox = email
+    # Based on the docstring example, it seems inbox should be a single dict
+    recv.inbox = email
     
     return True

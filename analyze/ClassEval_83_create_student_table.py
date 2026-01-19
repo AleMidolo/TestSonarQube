@@ -6,7 +6,7 @@ def create_student_table(self):
     >>> processor.create_student_table()
     """
     cursor = self.connection.cursor()
-    cursor.execute("""
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS students (
             ID INTEGER,
             name TEXT,
@@ -14,5 +14,5 @@ def create_student_table(self):
             gender TEXT,
             grade INTEGER
         )
-    """)
+    ''')
     self.connection.commit()

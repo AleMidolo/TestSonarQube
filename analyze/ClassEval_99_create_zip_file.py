@@ -24,10 +24,10 @@ def create_zip_file(self, files, output_file_name):
         with zipfile.ZipFile(output_file_name, 'w', zipfile.ZIP_DEFLATED) as zipf:
             for file in files:
                 if os.path.exists(file):
-                    # Add file to zip, using just the basename as the archive name
+                    # Add file to zip, using just the basename to avoid full path in archive
                     zipf.write(file, os.path.basename(file))
                 else:
-                    # If any file doesn't exist, return False
+                    # If a file doesn't exist, return False
                     return False
         
         return True

@@ -16,12 +16,13 @@ def get_gpa(self, name):
     
     student = self.students[name]
     
-    # Check if student has courses attribute and it's not empty
     if not hasattr(student, 'courses') or not student.courses:
         return None
     
-    # Calculate average grade
-    total_score = sum(student.courses.values())
-    num_courses = len(student.courses)
+    if len(student.courses) == 0:
+        return None
     
-    return float(total_score / num_courses)
+    total = sum(student.courses.values())
+    average = total / len(student.courses)
+    
+    return float(average)

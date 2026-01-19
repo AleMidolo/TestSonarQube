@@ -13,20 +13,20 @@ def interpret(self, display=False):
         return []
     
     # Split the score by whitespace
-    parts = self.score.split()
+    tokens = self.score.split()
     
     play_list = []
     
-    for part in parts:
+    for token in tokens:
         # Find where the chord (letters) ends and tune (numbers) begins
         chord = ''
         tune = ''
         
-        for i, char in enumerate(part):
+        for i, char in enumerate(token):
             if char.isdigit():
                 # Found the start of the tune
-                chord = part[:i]
-                tune = part[i:]
+                chord = token[:i]
+                tune = token[i:]
                 break
         
         # Only add if we found both chord and tune

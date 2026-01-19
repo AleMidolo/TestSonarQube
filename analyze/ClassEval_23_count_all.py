@@ -15,15 +15,10 @@ def count_all(n: int) -> int:
     
     # Check if 2^n - 1 would exceed the limit
     if n >= 63:
-        # For n >= 63, 2^n - 1 >= 2^63 - 1
-        # We need to check more carefully
-        if n > 63:
-            return float("inf")
-        elif n == 63:
-            # 2^63 - 1 exactly equals max_value, so it's still valid
-            return 2**n - 1
+        # 2^63 - 1 is the max, so 2^63 would already exceed it
+        return float("inf")
     
-    result = 2**n - 1
+    result = (2 ** n) - 1
     
     if result > max_value:
         return float("inf")

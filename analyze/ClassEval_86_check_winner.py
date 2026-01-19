@@ -9,9 +9,9 @@ def check_winner(self):
     'X'
     """
     # Check rows
-    for row in self.board:
-        if row[0] == row[1] == row[2] and row[0] is not None:
-            return row[0]
+    for row in range(3):
+        if self.board[row][0] == self.board[row][1] == self.board[row][2] and self.board[row][0] is not None:
+            return self.board[row][0]
     
     # Check columns
     for col in range(3):

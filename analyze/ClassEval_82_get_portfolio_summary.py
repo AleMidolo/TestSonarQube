@@ -9,11 +9,14 @@ def get_portfolio_summary(self):
 
     """
     summary_list = []
-    total_portfolio_value = self.cash
+    total_portfolio_value = 0.0
     
     for stock in self.portfolio:
         stock_value = stock['price'] * stock['quantity']
         summary_list.append({'name': stock['name'], 'value': stock_value})
         total_portfolio_value += stock_value
+    
+    # Add cash to total value
+    total_portfolio_value += self.cash
     
     return (total_portfolio_value, summary_list)

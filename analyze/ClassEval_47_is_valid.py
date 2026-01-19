@@ -9,17 +9,16 @@ def is_valid(self):
     try:
         parts = self.ip_address.split('.')
         
-        # Must have exactly 4 parts
         if len(parts) != 4:
             return False
         
         for part in parts:
-            # Each part must not be empty
-            if not part:
+            # Check if part is empty or not a valid number
+            if not part or (part[0] == '0' and len(part) > 1):
                 return False
             
-            # Each part must be a valid integer (no leading zeros except for '0' itself)
-            if len(part) > 1 and part[0] == '0':
+            # Check if all characters are digits
+            if not part.isdigit():
                 return False
             
             # Convert to integer and check range
@@ -28,5 +27,5 @@ def is_valid(self):
                 return False
         
         return True
-    except (ValueError, AttributeError):
+    except:
         return False

@@ -23,15 +23,16 @@ def sell_stock(self, stock):
             if portfolio_stock["quantity"] < quantity:
                 return False
             
-            # Update cash balance
+            # Update the cash balance
             self.cash_balance += price * quantity
             
             # Update or remove the stock from portfolio
-            portfolio_stock["quantity"] -= quantity
-            
-            # Remove the stock if quantity becomes 0
-            if portfolio_stock["quantity"] == 0:
+            if portfolio_stock["quantity"] == quantity:
+                # Remove the stock completely if selling all
                 self.portfolio.remove(portfolio_stock)
+            else:
+                # Reduce the quantity if selling partial
+                portfolio_stock["quantity"] -= quantity
             
             return True
     

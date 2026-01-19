@@ -28,7 +28,13 @@ def text2int(self, textnum):
         "trillion": 1000000000000
     }
     
-    textnum = textnum.lower().replace(" and ", " ").replace("-", " ")
+    textnum = textnum.lower().strip()
+    
+    if textnum in ones:
+        return str(ones[textnum])
+    
+    # Replace hyphens with spaces for easier parsing
+    textnum = textnum.replace("-", " ")
     words = textnum.split()
     
     result = 0

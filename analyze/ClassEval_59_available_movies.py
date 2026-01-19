@@ -18,12 +18,11 @@ def available_movies(self, start_time, end_time):
     
     available = []
     
-    # Iterate through all movies in the system
     for movie_name, movie_info in self.movies.items():
         movie_start = time_to_minutes(movie_info['start_time'])
         movie_end = time_to_minutes(movie_info['end_time'])
         
-        # Check if movie time falls within the specified range
+        # Check if movie's time range is within the specified time range
         if movie_start >= start_minutes and movie_end <= end_minutes:
             available.append(movie_name)
     

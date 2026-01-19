@@ -5,6 +5,12 @@ def remove_book(self, book_id):
     >>> book_db = BookManagementDB("test.db")
     >>> book_db.remove_book(1)
     """
-    cursor = self.connection.cursor()
+    import sqlite3
+    
+    conn = sqlite3.connect(self.db_name)
+    cursor = conn.cursor()
+    
     cursor.execute("DELETE FROM books WHERE id = ?", (book_id,))
-    self.connection.commit()
+    
+    conn.commit()
+    conn.close()

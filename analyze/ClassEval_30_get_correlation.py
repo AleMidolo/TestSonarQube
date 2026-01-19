@@ -6,32 +6,30 @@ def get_correlation(self):
     >>> ds2.get_correlation()
     1.0
     """
-    import math
+    import numpy as np
     
-    # For a single list, calculate correlation with its index (position)
-    # This is the correlation between x = [0, 1, 2, 3, ...] and y = data values
+    # Assuming self has data attribute that is a list or array
+    data = np.array(self.data if hasattr(self, 'data') else self)
     
-    n = len(self)
-    if n == 0:
-        return 0.0
+    # For a single series, calculate correlation with its index (position)
+    # This gives correlation between values and their positions
+    n = len(data)
+    x = np.arange(n)  # positions: 0, 1, 2, 3, ...
+    y = data
     
-    # Create x values (indices)
-    x = list(range(n))
-    y = list(self)
+    # Calculate Pearson correlation coefficient
+    if n < 2:
+        return 1.0
     
-    # Calculate means
-    mean_x = sum(x) / n
-    mean_y = sum(y) / n
+    mean_x = np.mean(x)
+    mean_y = np.mean(y)
     
-    # Calculate correlation coefficient
-    numerator = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
-    
-    sum_sq_x = sum((x[i] - mean_x) ** 2 for i in range(n))
-    sum_sq_y = sum((y[i] - mean_y) ** 2 for i in range(n))
-    
-    denominator = math.sqrt(sum_sq_x * sum_sq_y)
+    numerator = np.sum((x - mean_x) * (y - mean_y))
+    denominator = np.sqrt(np.sum((x - mean_x)**2) * np.sum((y - mean_y)**2))
     
     if denominator == 0:
-        return 0.0
+        return 1.0
     
-    return numerator / denominator
+    correlation = numerator / denominator
+    
+    return float(correlation)
