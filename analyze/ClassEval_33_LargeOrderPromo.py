@@ -11,4 +11,7 @@ def LargeOrderPromo(order):
         0.0
 
         """
-    return order.total() * 0.07 if len(order.cart) >= 10 else 0
+    discount = 0
+    if len(order.cart) >= 10:
+        discount = order.total() * 0.07
+    return discount

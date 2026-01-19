@@ -9,24 +9,24 @@ def format_string(self, x):
         """
     if not x.isdigit():
         return ''
-    x = x.split('.')
-    whole_part = x[0]
-    decimal_part = x[1] if len(x) > 1 else ''
-    words = []
-    length = len(whole_part)
-    if length > 0:
-        for i in range(length):
-            if length - i > 3:
-                words.append(self.trans_three(whole_part[i:i + 3]))
-                if (length - i - 3) // 3 >= 0:
-                    words.append(self.parse_more((length - i - 3) // 3))
-            elif length - i == 3:
-                words.append(self.trans_three(whole_part[i:i + 3]))
-            elif length - i == 2:
-                words.append(self.trans_two(whole_part[i:i + 2]))
-            elif length - i == 1:
-                words.append(self.NUMBER[int(whole_part[i])])
-    result = ' AND '.join(filter(None, words)).strip()
-    if decimal_part:
-        result += ' POINT ' + ' '.join((self.NUMBER[int(digit)] for digit in decimal_part if digit.isdigit()))
-    return result + ' ONLY' if result else ''
+    x = x.split('.')[0]
+    n = len(x)
+    if n == 0:
+        return 'ZERO ONLY'
+    result = []
+    index = 0
+    while n > 0:
+        part = x[max(0, n - 3):n]
+        if part:
+            if index > 0:
+                result.append(self.parse_more(index))
+            if len(part) == 3:
+                result.append(self.trans_three(part))
+            elif len(part) == 2:
+                result.append(self.trans_two(part))
+            else:
+                result.append(self.NUMBER[int(part)])
+        n -= 3
+        index += 1
+    result.reverse()
+    return ' AND '.join(result) + ' ONLY'
