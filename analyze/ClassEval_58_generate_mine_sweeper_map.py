@@ -21,8 +21,8 @@ def generate_mine_sweeper_map(self):
                         arr[i][j] += 1
     for i in range(self.n):
         for j in range(self.n):
-            if arr[i][j] != 'X':
+            if arr[i][j] == 0:
+                arr[i][j] = 0
+            elif arr[i][j] != 'X':
                 arr[i][j] = str(arr[i][j])
-            else:
-                arr[i][j] = 'X'
     return arr

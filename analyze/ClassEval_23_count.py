@@ -10,9 +10,9 @@ def count(n: int, m: int) -> int:
         """
     if m < 0 or m > n:
         return 0
-    if m > n - m:
+    if m > n // 2:
         m = n - m
     result = 1
     for i in range(1, m + 1):
-        result = result * (n - m + i) // i
+        result = result * (n - i + 1) // i
     return result

@@ -12,26 +12,28 @@ def create_board(self):
     rows, cols = self.BOARD_SIZE
     total_cells = rows * cols
     icon_count = len(self.ICONS)
-    icons_list = []
     if total_cells % 2 != 0:
-        total_cells += 1
-    pairs_needed = total_cells // 2
-    base_pairs_per_icon = pairs_needed // icon_count
-    extra_pairs = pairs_needed % icon_count
-    for i, icon in enumerate(self.ICONS):
-        pairs_for_this_icon = base_pairs_per_icon
-        if i < extra_pairs:
-            pairs_for_this_icon += 1
-        icons_list.extend([icon] * (pairs_for_this_icon * 2))
-    if len(icons_list) > rows * cols:
-        icons_list.pop()
-    random.shuffle(icons_list)
+        pairs_needed = total_cells // 2
+        icon_pairs = []
+        for i in range(pairs_needed):
+            icon_pairs.append(self.ICONS[i % icon_count])
+            icon_pairs.append(self.ICONS[i % icon_count])
+        if total_cells % 2 == 1:
+            icon_pairs.append(self.ICONS[0])
+        icons = icon_pairs
+    else:
+        pairs_needed = total_cells // 2
+        icons = []
+        for i in range(pairs_needed):
+            icon = self.ICONS[i % icon_count]
+            icons.extend([icon, icon])
+    random.shuffle(icons)
     board = []
     index = 0
     for i in range(rows):
         row = []
         for j in range(cols):
-            row.append(icons_list[index])
+            row.append(icons[index])
             index += 1
         board.append(row)
     return board
