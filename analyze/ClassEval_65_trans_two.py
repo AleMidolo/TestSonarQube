@@ -10,16 +10,15 @@ def trans_two(self, s):
     if not s or s == '00':
         return ''
     if len(s) == 1:
-        return self.NUMBER[int(s)]
+        s = '0' + s
     num = int(s)
     if num < 10:
         return self.NUMBER[num]
-    elif num < 20:
+    if 10 <= num <= 19:
         return self.NUMBER_TEEN[num - 10]
+    tens_digit = int(s[0])
+    ones_digit = int(s[1])
+    if ones_digit == 0:
+        return self.NUMBER_TEN[tens_digit - 1]
     else:
-        tens = self.NUMBER_TEN[int(s[0]) - 1]
-        ones = self.NUMBER[int(s[1])]
-        if ones:
-            return f'{tens} {ones}'
-        else:
-            return tens
+        return f'{self.NUMBER_TEN[tens_digit - 1]} {self.NUMBER[ones_digit]}'

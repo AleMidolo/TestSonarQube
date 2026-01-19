@@ -31,10 +31,11 @@ def subtract(num1, num2):
         digit1 = int(num1[i])
         digit2 = int(num2[i])
         digit1 -= borrow
-        borrow = 0
         if digit1 < digit2:
             digit1 += 10
             borrow = 1
+        else:
+            borrow = 0
         diff = digit1 - digit2
         result.insert(0, str(diff))
     while len(result) > 1 and result[0] == '0':

@@ -8,8 +8,6 @@ def merge_pdfs(self, output_filepath):
         >>> handler.merge_pdfs('out.pdf')
         PDFs combinados guardados en out.pdf
         """
-    if not self.readers:
-        return 'No PDF files to merge'
     merger = PyPDF2.PdfMerger()
     for reader in self.readers:
         merger.append(reader)

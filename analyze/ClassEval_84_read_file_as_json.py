@@ -10,4 +10,11 @@ def read_file_as_json(self):
         <class 'dict'>
         """
     content = self.read_file()
-    return json.loads(content)
+    try:
+        return json.loads(content)
+    except json.JSONDecodeError:
+        try:
+            import ast
+            return ast.literal_eval(content)
+        except (ValueError, SyntaxError):
+            return content

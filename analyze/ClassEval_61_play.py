@@ -7,7 +7,6 @@ def play(self):
         >>> musicPlayer.current_song = "canción1"
         >>> musicPlayer.play()
         'canción1'
-
         """
     if self.current_song:
         return self.current_song
