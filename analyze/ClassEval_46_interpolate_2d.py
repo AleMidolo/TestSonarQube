@@ -13,28 +13,35 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         [3.0, 7.0]
 
         """
-    import numpy as np
-    x = np.array(x)
-    y = np.array(y)
-    z = np.array(z)
-    x_interp = np.array(x_interp)
-    y_interp = np.array(y_interp)
-    if z.shape != (len(x), len(y)):
-        raise ValueError('z must be a 2D array with shape (len(x), len(y))')
-    results = []
+
+    def find_interval(val, arr):
+        """找到val在arr中的区间索引"""
+        for i in range(len(arr) - 1):
+            if arr[i] <= val <= arr[i + 1]:
+                return i
+        if val <= arr[0]:
+            return 0
+        else:
+            return len(arr) - 2
+    z_interp = []
     for xi, yi in zip(x_interp, y_interp):
-        i = np.searchsorted(x, xi) - 1
-        j = np.searchsorted(y, yi) - 1
-        i = max(0, min(i, len(x) - 2))
-        j = max(0, min(j, len(y) - 2))
-        x1, x2 = (x[i], x[i + 1])
-        y1, y2 = (y[j], y[j + 1])
-        z11 = z[i, j]
-        z12 = z[i, j + 1]
-        z21 = z[i + 1, j]
-        z22 = z[i + 1, j + 1]
-        z_y1 = z11 + (z21 - z11) * (xi - x1) / (x2 - x1)
-        z_y2 = z12 + (z22 - z12) * (xi - x1) / (x2 - x1)
-        z_interp = z_y1 + (z_y2 - z_y1) * (yi - y1) / (y2 - y1)
-        results.append(float(z_interp))
-    return results
+        i = find_interval(xi, x)
+        j = find_interval(yi, y)
+        z11 = z[j][i]
+        z12 = z[j][i + 1]
+        z21 = z[j + 1][i]
+        z22 = z[j + 1][i + 1]
+        if x[i + 1] != x[i]:
+            tx = (xi - x[i]) / (x[i + 1] - x[i])
+            z1 = z11 + (z12 - z11) * tx
+            z2 = z21 + (z22 - z21) * tx
+        else:
+            z1 = z11
+            z2 = z21
+        if y[j + 1] != y[j]:
+            ty = (yi - y[j]) / (y[j + 1] - y[j])
+            zi = z1 + (z2 - z1) * ty
+        else:
+            zi = z1
+        z_interp.append(zi)
+    return z_interp

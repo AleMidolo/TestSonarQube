@@ -10,8 +10,19 @@ def get_job_applicants(self, job):
         [{'name': 'Tom', 'skills': ['skill1', 'skill2'], 'experience': 'experience'}]
 
         """
-    matching_applicants = []
+
+    def matches_requirements(resume, job_requirements):
+        """
+            检查简历是否满足职位要求。
+            :param resume: 简历信息，dict。
+            :param job_requirements: 职位要求，list。
+            :return: 是否满足要求，bool。
+            """
+        resume_skills = set((skill.lower() for skill in resume['skills']))
+        job_reqs = set((req.lower() for req in job_requirements))
+        return job_reqs.issubset(resume_skills)
+    qualified_applicants = []
     for resume in self.resumes:
-        if self.matches_requirements(resume, job):
-            matching_applicants.append(resume)
-    return matching_applicants
+        if matches_requirements(resume, job['requirements']):
+            qualified_applicants.append(resume)
+    return qualified_applicants

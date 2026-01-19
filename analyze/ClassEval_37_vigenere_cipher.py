@@ -13,7 +13,7 @@ def vigenere_cipher(self, plaintext):
     for i, char in enumerate(plaintext):
         if char.isalpha():
             key_char = self.key[i % key_length]
-            key_shift = ord(key_char.lower()) - ord('a')
+            key_shift = ord(key_char.lower()) - 97
             if char.isupper():
                 ascii_offset = 65
                 base_char = char

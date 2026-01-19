@@ -20,4 +20,6 @@ def process_json(self, file_path, remove_key):
         return 0
     del data[remove_key]
     result = self.write_json(data, file_path)
-    return 1 if result == 1 else 0
+    if result == -1:
+        return 0
+    return 1
