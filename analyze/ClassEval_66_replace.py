@@ -8,20 +8,22 @@ def replace(self, string):
         'ABC'
 
         """
+    if not string:
+        return string
     result = []
     i = 0
     n = len(string)
     while i < n:
-        if string[i:i + 2] == '&#':
+        if string[i] == '&' and i + 1 < n and (string[i + 1] == '#'):
             j = i + 2
             is_hex = False
-            if j < n and string[j] in 'xX':
+            if j < n and (string[j] == 'x' or string[j] == 'X'):
                 is_hex = True
                 j += 1
             start_num = j
             while j < n and (string[j].isdigit() or (is_hex and self.is_hex_char(string[j]))):
                 j += 1
-            if j < n and string[j] == ';' and (start_num < j):
+            if j < n and string[j] == ';' and (j > start_num):
                 num_str = string[start_num:j]
                 try:
                     if is_hex:

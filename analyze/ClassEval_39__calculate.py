@@ -23,6 +23,8 @@ def _calculate(first_value, second_value, current_op):
             raise ZeroDivisionError('Division by zero')
         return first / second
     elif current_op == '%':
+        if second == 0:
+            raise ZeroDivisionError('Modulo by zero')
         return first % second
     else:
         raise ValueError(f'Unsupported operator: {current_op}')

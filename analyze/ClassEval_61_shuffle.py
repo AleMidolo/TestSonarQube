@@ -8,8 +8,7 @@ def shuffle(self):
         True
 
         """
-    if self.playlist:
-        random.shuffle(self.playlist)
-        return True
-    else:
+    if not self.playlist:
         return False
+    random.shuffle(self.playlist)
+    return True

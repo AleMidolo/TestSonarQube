@@ -14,5 +14,5 @@ def generate_primes(self):
     while numbers:
         p = numbers[0]
         primes.append(p)
-        numbers = [x for x in numbers if x % p != 0]
+        numbers = [num for num in numbers if num % p != 0]
     return primes

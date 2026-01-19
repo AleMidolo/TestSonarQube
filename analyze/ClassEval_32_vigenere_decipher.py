@@ -9,18 +9,20 @@ def vigenere_decipher(self, ciphertext):
 
         """
     plaintext = ''
-    key_repeated = (self.key * (len(ciphertext) // len(self.key) + 1))[:len(ciphertext)]
-    for i, char in enumerate(ciphertext):
+    key_length = len(self.key)
+    key_index = 0
+    for char in ciphertext:
         if char.isalpha():
-            key_char = key_repeated[i]
-            key_shift = ord(key_char.lower()) - 97
             if char.isupper():
                 ascii_offset = 65
-                plain_char = chr((ord(char) - ascii_offset - key_shift) % 26 + ascii_offset)
+                key_char = self.key[key_index % key_length].upper()
             else:
                 ascii_offset = 97
-                plain_char = chr((ord(char) - ascii_offset - key_shift) % 26 + ascii_offset)
-            plaintext += plain_char
+                key_char = self.key[key_index % key_length].lower()
+            key_shift = ord(key_char) - ascii_offset
+            decrypted_char = chr((ord(char) - ascii_offset - key_shift) % 26 + ascii_offset)
+            plaintext += decrypted_char
+            key_index += 1
         else:
             plaintext += char
     return plaintext

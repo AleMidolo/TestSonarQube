@@ -9,8 +9,8 @@ def process_data(self, string_list):
     words_list = []
     for string in string_list:
         cleaned_string = re.sub('[^a-zA-Z\\s]', '', string)
-        lower_string = cleaned_string.lower()
-        words = [word for word in lower_string.split() if word]
+        cleaned_string = cleaned_string.lower()
+        words = [word for word in cleaned_string.split() if word]
         if words:
             words_list.append(words)
     return words_list

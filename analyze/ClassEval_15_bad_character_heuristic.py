@@ -7,21 +7,20 @@ def bad_character_heuristic(self):
         [0, 3]
 
         """
-    if self.patLen == 0:
-        return []
     positions = []
-    currentPos = 0
-    while currentPos <= self.textLen - self.patLen:
-        mismatchPos = self.mismatch_in_text(currentPos)
-        if mismatchPos == -1:
-            positions.append(currentPos)
-            currentPos += 1
+    s = 0
+    while s <= self.textLen - self.patLen:
+        mismatch_pos = self.mismatch_in_text(s)
+        if mismatch_pos == -1:
+            positions.append(s)
+            s += 1
         else:
-            badChar = self.text[mismatchPos]
-            matchPos = self.match_in_pattern(badChar)
-            if matchPos == -1:
-                currentPos = mismatchPos + 1
+            bad_char = self.text[mismatch_pos]
+            rightmost_pos = self.match_in_pattern(bad_char)
+            if rightmost_pos == -1:
+                s = mismatch_pos + 1
             else:
-                shift = mismatchPos - (currentPos + matchPos)
-                currentPos += max(1, shift)
+                pattern_pos = mismatch_pos - s
+                shift = max(1, pattern_pos - rightmost_pos)
+                s += shift
     return positions
