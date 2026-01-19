@@ -7,21 +7,18 @@ def split_sentences(self, sentences_string):
         >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
-    pattern = '(?<!Sr)(?<!Sra)(?<!Dr)(?<!Prof)\\.|\\?(?=\\s|$)'
-    parts = re.split(f'({pattern})', sentences_string)
+    pattern = '(?<!Sr)(?<!Sra)(?<!Dr)(?<!Prof)(?<!Mr)(?<!Mrs)(?<!Ms)(?<!Jr)\\.\\s+|\\?\\s+'
+    parts = re.split(pattern, sentences_string)
     sentences = []
-    current_sentence = ''
-    i = 0
-    while i < len(parts):
-        current_sentence += parts[i]
-        if i + 1 < len(parts) and re.match(pattern, parts[i + 1]):
-            current_sentence += parts[i + 1]
-            sentences.append(current_sentence.strip())
-            current_sentence = ''
-            i += 2
-        else:
-            i += 1
-    if current_sentence.strip():
-        sentences.append(current_sentence.strip())
-    sentences = [s for s in sentences if s]
+    for i in range(len(parts)):
+        if i < len(parts) - 1:
+            match = re.search(pattern, sentences_string)
+            if match:
+                delimiter = match.group(0).strip()
+                sentences.append(parts[i] + delimiter[:-1])
+                sentences_string = sentences_string[match.end():]
+    if parts[-1].strip():
+        last_part = parts[-1].strip()
+        if last_part.endswith('.') or last_part.endswith('?'):
+            sentences.append(last_part)
     return sentences

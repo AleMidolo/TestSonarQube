@@ -16,7 +16,7 @@ def solve(self):
     queue = deque()
     queue.append((self.initial_state, []))
     visited = set()
-    visited.add(tuple((tuple(row) for row in self.initial_state)))
+    visited.add(tuple(map(tuple, self.initial_state)))
     while queue:
         current_state, path = queue.popleft()
         if current_state == self.goal_state:
@@ -24,7 +24,7 @@ def solve(self):
         possible_moves = self.get_possible_moves(current_state)
         for move in possible_moves:
             new_state = self.move(current_state, move)
-            state_tuple = tuple((tuple(row) for row in new_state))
+            state_tuple = tuple(map(tuple, new_state))
             if state_tuple not in visited:
                 visited.add(state_tuple)
                 queue.append((new_state, path + [move]))

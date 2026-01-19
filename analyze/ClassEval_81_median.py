@@ -9,7 +9,7 @@ def median(data):
         2.5
 
         """
-    if not data:
+    if len(data) == 0:
         return None
     sorted_data = sorted(data)
     n = len(sorted_data)

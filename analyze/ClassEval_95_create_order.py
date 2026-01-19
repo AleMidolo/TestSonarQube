@@ -20,4 +20,3 @@ def create_order(self, order_id, product_id, quantity):
         return False
     self.orders[order_id] = {'product_id': product_id, 'quantity': quantity, 'status': 'Shipped'}
     self.inventory[product_id]['quantity'] -= quantity
-    return True

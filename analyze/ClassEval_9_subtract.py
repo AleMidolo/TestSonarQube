@@ -25,8 +25,8 @@ def subtract(num1, num2):
     max_length = max(len(num1), len(num2))
     num1 = num1.zfill(max_length)
     num2 = num2.zfill(max_length)
-    result = []
     borrow = 0
+    result = []
     for i in range(max_length - 1, -1, -1):
         digit1 = int(num1[i])
         digit2 = int(num2[i])

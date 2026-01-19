@@ -13,7 +13,15 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         [3.0, 7.0]
 
         """
-    z_interp = []
+    import numpy as np
+    x = np.array(x, dtype=float)
+    y = np.array(y, dtype=float)
+    z = np.array(z, dtype=float)
+    x_interp = np.array(x_interp, dtype=float)
+    y_interp = np.array(y_interp, dtype=float)
+    if z.shape != (len(x), len(y)):
+        raise ValueError('z must be a 2D array with shape (len(x), len(y))')
+    results = []
     for xi, yi in zip(x_interp, y_interp):
         x_idx = None
         for i in range(len(x) - 1):
@@ -26,15 +34,15 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
                 y_idx = j
                 break
         if x_idx is None or y_idx is None:
-            raise ValueError('Interpolation point outside data range')
-        x1, x2 = (x[x_idx], x[x_idx + 1])
-        y1, y2 = (y[y_idx], y[y_idx + 1])
-        z11 = z[x_idx][y_idx]
-        z12 = z[x_idx][y_idx + 1]
-        z21 = z[x_idx + 1][y_idx]
-        z22 = z[x_idx + 1][y_idx + 1]
-        z_y1 = z11 + (z21 - z11) * (xi - x1) / (x2 - x1)
-        z_y2 = z12 + (z22 - z12) * (xi - x1) / (x2 - x1)
-        zi = z_y1 + (z_y2 - z_y1) * (yi - y1) / (y2 - y1)
-        z_interp.append(zi)
-    return z_interp
+            raise ValueError(f'Interpolation point ({xi}, {yi}) is outside the grid')
+        z00 = z[x_idx, y_idx]
+        z01 = z[x_idx, y_idx + 1]
+        z10 = z[x_idx + 1, y_idx]
+        z11 = z[x_idx + 1, y_idx + 1]
+        tx = (xi - x[x_idx]) / (x[x_idx + 1] - x[x_idx])
+        ty = (yi - y[y_idx]) / (y[y_idx + 1] - y[y_idx])
+        z0 = z00 * (1 - ty) + z01 * ty
+        z1 = z10 * (1 - ty) + z11 * ty
+        zi = z0 * (1 - tx) + z1 * tx
+        results.append(float(zi))
+    return results

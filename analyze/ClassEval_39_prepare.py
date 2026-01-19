@@ -7,51 +7,36 @@ def prepare(self, expression):
 
         expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
         """
-    op_stack = deque()
-    arr = list(expression)
-    current_index = 0
-    count = 0
-    while current_index < len(arr):
-        current_char = arr[current_index]
-        if current_char.isdigit() or current_char == '.' or current_char == '~':
-            if current_char == '~':
-                count = current_index
-                current_index += 1
-                temp = []
-                while current_index < len(arr):
-                    c = arr[current_index]
-                    if c.isdigit() or c == '.':
-                        temp.append(c)
-                        current_index += 1
-                    else:
-                        break
-                self.postfix_stack.append('~' + ''.join(temp))
-                continue
-            else:
-                count = current_index
-                temp = []
-                while current_index < len(arr):
-                    c = arr[current_index]
-                    if c.isdigit() or c == '.':
-                        temp.append(c)
-                        current_index += 1
-                    else:
-                        break
-                self.postfix_stack.append(''.join(temp))
-                continue
-        elif self.is_operator(current_char):
-            if current_char == '(':
-                op_stack.append(current_char)
-            elif current_char == ')':
-                while op_stack and op_stack[-1] != '(':
-                    self.postfix_stack.append(op_stack.pop())
-                op_stack.pop()
-            else:
-                while op_stack and op_stack[-1] != '(' and self.compare(current_char, op_stack[-1]):
-                    self.postfix_stack.append(op_stack.pop())
-                op_stack.append(current_char)
-            current_index += 1
+    operator_stack = deque()
+    self.postfix_stack.clear()
+    i = 0
+    while i < len(expression):
+        c = expression[i]
+        if c == ' ':
+            i += 1
             continue
-        current_index += 1
-    while op_stack:
-        self.postfix_stack.append(op_stack.pop())
+        if not self.is_operator(c):
+            if c == '~' or c.isdigit() or c == '.':
+                num_str = c if c != '~' else '-'
+                i += 1
+                while i < len(expression) and (expression[i].isdigit() or expression[i] == '.'):
+                    num_str += expression[i]
+                    i += 1
+                self.postfix_stack.append(num_str)
+                continue
+            else:
+                raise ValueError(f'Invalid character in expression: {c}')
+        if c == '(':
+            operator_stack.append(c)
+        elif c == ')':
+            while operator_stack and operator_stack[-1] != '(':
+                self.postfix_stack.append(operator_stack.pop())
+            if operator_stack:
+                operator_stack.pop()
+        else:
+            while operator_stack and operator_stack[-1] != '(' and self.compare(c, operator_stack[-1]):
+                self.postfix_stack.append(operator_stack.pop())
+            operator_stack.append(c)
+        i += 1
+    while operator_stack:
+        self.postfix_stack.append(operator_stack.pop())

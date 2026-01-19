@@ -18,10 +18,13 @@ def correlation_matrix(data):
             raise ValueError('All rows must have the same length')
     corr_matrix = [[0.0 for _ in range(n)] for _ in range(n)]
     for i in range(n):
-        for j in range(n):
-            if i == j:
-                corr_matrix[i][j] = 1.0
+        corr_matrix[i][i] = 1.0
+        for j in range(i + 1, n):
+            corr = Statistics3.correlation(data[i], data[j])
+            if corr is None:
+                corr_matrix[i][j] = 0.0
+                corr_matrix[j][i] = 0.0
             else:
-                corr = Statistics3.correlation(data[i], data[j])
-                corr_matrix[i][j] = corr if corr is not None else 0.0
+                corr_matrix[i][j] = corr
+                corr_matrix[j][i] = corr
     return corr_matrix

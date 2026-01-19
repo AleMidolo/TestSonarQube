@@ -13,13 +13,9 @@ def get_upcoming_events(self, num_events):
     now = datetime.now()
     future_events = []
     for event in self.events:
-        if 'start_time' in event:
-            event_time = event['start_time']
-        elif 'date' in event:
-            event_time = event['date']
-        else:
-            continue
-        if event_time >= now:
+        if 'start_time' in event and event['start_time'] >= now:
+            future_events.append(event)
+        elif 'date' in event and event['date'] >= now:
             future_events.append(event)
     future_events.sort(key=lambda x: x.get('start_time', x.get('date')))
     return future_events[:num_events]

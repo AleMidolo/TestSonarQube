@@ -8,34 +8,26 @@ def calculate(self, expression):
         14.0
 
         """
+    transformed_expr = self.transform(expression)
     self.postfix_stack.clear()
-    transformed_expression = self.transform(expression)
-    self.prepare(transformed_expression)
-    calc_stack = deque(self.postfix_stack.copy())
+    self.prepare(transformed_expr)
     result_stack = deque()
-    while calc_stack:
-        current = calc_stack.popleft()
-        if self.is_operator(current):
-            if current == '~':
-                if result_stack:
-                    operand = result_stack.pop()
-                    result_stack.append(str(-Decimal(operand)))
+    for token in self.postfix_stack:
+        if self.is_operator(token):
+            if token == '~':
+                if not result_stack:
+                    raise ValueError('Invalid expression: unary minus without operand')
+                operand = result_stack.pop()
+                result_stack.append(-Decimal(operand))
             else:
                 if len(result_stack) < 2:
-                    raise ValueError('Invalid expression: insufficient operands')
+                    raise ValueError('Invalid expression: insufficient operands for operator')
                 second_value = result_stack.pop()
                 first_value = result_stack.pop()
-                if first_value.startswith('~'):
-                    first_value = '-' + first_value[1:]
-                if second_value.startswith('~'):
-                    second_value = '-' + second_value[1:]
-                result = self._calculate(first_value, second_value, current)
-                result_stack.append(str(result))
+                result = self._calculate(first_value, second_value, token)
+                result_stack.append(result)
         else:
-            if current.startswith('~'):
-                current = '-' + current[1:]
-            result_stack.append(current)
+            result_stack.append(token)
     if len(result_stack) != 1:
         raise ValueError('Invalid expression: could not compute final result')
-    result = Decimal(result_stack.pop())
-    return float(result)
+    return float(result_stack.pop())

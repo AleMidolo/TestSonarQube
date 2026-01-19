@@ -6,7 +6,6 @@ def kurtosis(data):
         :return: La curtosis, float.
         >>> DataStatistics4.kurtosis([1, 20, 100])
         -1.5000000000000007
-
         """
     n = len(data)
     if n < 4:
