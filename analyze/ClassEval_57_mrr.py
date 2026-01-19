@@ -17,24 +17,21 @@ def mrr(data):
         return (0.0, [0.0])
     if type(data) == tuple:
         sub_list, total_num = data
-        sub_list = np.array(sub_list)
         if total_num == 0:
             return (0.0, [0.0])
-        else:
-            rank_sum = 0
-            for idx, value in enumerate(sub_list):
-                if value == 1:
-                    rank_sum += 1 / (idx + 1)
-            mrr_value = rank_sum / total_num
-            return (mrr_value, [mrr_value])
+        rank_sum = 0
+        for idx, value in enumerate(sub_list):
+            if value == 1:
+                rank_sum += 1 / (idx + 1)
+        mrr_value = rank_sum / total_num
+        return (mrr_value, [mrr_value])
     if type(data) == list:
         separate_result = []
         for sub_list, total_num in data:
-            sub_list = np.array(sub_list)
-            rank_sum = 0
             if total_num == 0:
                 mrr_value = 0.0
             else:
+                rank_sum = 0
                 for idx, value in enumerate(sub_list):
                     if value == 1:
                         rank_sum += 1 / (idx + 1)

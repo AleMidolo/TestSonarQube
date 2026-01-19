@@ -20,6 +20,6 @@ def get_most_popular_class_in_major(self, major):
                     class_count[class_name] += 1
                 else:
                     class_count[class_name] = 1
-    if class_count:
-        return max(class_count, key=class_count.get)
-    return ''
+    if not class_count:
+        return ''
+    return max(class_count, key=class_count.get)

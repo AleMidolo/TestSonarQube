@@ -10,9 +10,8 @@ def process_xml_data(self, file_name):
     True
     """
     try:
-        items = self.find_element('item')
-        for item in items:
+        for item in self.find_element('item'):
             item.text = 'modified_' + item.text
         return self.write_xml(file_name)
-    except:
+    except Exception as e:
         return False

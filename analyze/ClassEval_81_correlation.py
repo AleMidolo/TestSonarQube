@@ -1,14 +1,13 @@
 @staticmethod
 def correlation(x, y):
     """
-        计算给定列表的相关性。
-        :param x: 给定列表，list。
-        :param y: 给定列表，list。
-        :return: 给定列表的相关性，float。
+        calculates the correlation of the given lists.
+        :param x: the given list, list.
+        :param y: the given list, list.
+        :return: the correlation of the given lists, float.
         >>> statistics3 = Statistics3()
         >>> statistics3.correlation([1, 2, 3], [4, 5, 6])
         1.0
-
         """
     if len(x) != len(y):
         raise ValueError('Lists must be of the same length.')

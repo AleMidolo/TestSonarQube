@@ -10,4 +10,6 @@ def correlation_matrix(data):
 
         """
     import numpy as np
-    return np.corrcoef(data)
+    data_array = np.array(data)
+    correlation_matrix = np.corrcoef(data_array)
+    return correlation_matrix.tolist()
