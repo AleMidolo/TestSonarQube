@@ -3,6 +3,7 @@ def factorial(self, a):
         a का फैक्टोरियल निकालें
         :param a: int
         :return: int
+        >>> tricalculator = TriCalculator()
         >>> tricalculator.factorial(5)
         120
         """
