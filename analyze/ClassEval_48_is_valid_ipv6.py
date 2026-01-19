@@ -17,18 +17,17 @@ def is_valid_ipv6(ip_address):
     segments = ip_address.split(':')
     
     # IPv6 should have 8 segments (or less if using :: compression)
-    # Check for :: compression
+    # Check for :: (compression) - can only appear once
     if '::' in ip_address:
-        # :: can only appear once
+        # Count occurrences of '::'
         if ip_address.count('::') > 1:
             return False
         
-        # Split by :: to handle compression
+        # Split by '::' to handle compression
         parts = ip_address.split('::')
-        if len(parts) > 2:
+        if len(parts) != 2:
             return False
         
-        # Count total segments
         left_segments = parts[0].split(':') if parts[0] else []
         right_segments = parts[1].split(':') if parts[1] else []
         
@@ -36,28 +35,21 @@ def is_valid_ipv6(ip_address):
         left_segments = [s for s in left_segments if s]
         right_segments = [s for s in right_segments if s]
         
-        total_segments = len(left_segments) + len(right_segments)
-        
-        # With :: compression, total segments should be less than 8
-        if total_segments >= 8:
+        # Total segments should be less than 8 (since :: represents at least one group of zeros)
+        if len(left_segments) + len(right_segments) >= 8:
             return False
         
-        # Validate each segment
         all_segments = left_segments + right_segments
     else:
-        # Without compression, must have exactly 8 segments
+        # No compression, must have exactly 8 segments
         if len(segments) != 8:
             return False
         all_segments = segments
     
     # Validate each segment
     for segment in all_segments:
-        # Segment cannot be empty (unless using ::)
-        if not segment:
-            return False
-        
-        # Segment must be 1-4 hexadecimal characters
-        if len(segment) > 4:
+        # Each segment must be 1-4 hex characters
+        if not segment or len(segment) > 4:
             return False
         
         # Check if all characters are valid hexadecimal

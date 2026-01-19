@@ -8,5 +8,5 @@ def calculate_cylinder_area(self, height):
     62.83185307179586
     """
     import math
-    # Área total del cilindro = 2πr² + 2πrh = 2πr(r + h)
+    # Área del cilindro = 2πr² + 2πrh = 2πr(r + h)
     return 2 * math.pi * self.radius * (self.radius + height)

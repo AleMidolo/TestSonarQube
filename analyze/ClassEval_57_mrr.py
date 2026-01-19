@@ -13,7 +13,7 @@ def mrr(data):
     0.75, [1.0, 0.5]
     """
     def calculate_single_mrr(result_list, ground_truth):
-        # Find the position of the first correct answer (1)
+        # Find the position of the first correct answer (first 1)
         for i, val in enumerate(result_list):
             if val == 1:
                 # MRR is 1 / (rank), where rank starts at 1

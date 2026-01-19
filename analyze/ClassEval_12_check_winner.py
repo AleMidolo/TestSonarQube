@@ -41,9 +41,14 @@ def check_winner(self, player_hand, dealer_hand):
             return 'El jugador gana'
         else:
             return 'El dealer gana'
-    # De lo contrario, gana el que tenga el valor más bajo
-    else:
+    # Si ambos se pasan de 21, gana el que tenga el valor más bajo
+    elif player_value > 21 and dealer_value > 21:
         if player_value < dealer_value:
             return 'El jugador gana'
         else:
             return 'El dealer gana'
+    # Si solo uno se pasa de 21, gana el otro
+    elif player_value > 21:
+        return 'El dealer gana'
+    else:
+        return 'El jugador gana'

@@ -24,11 +24,17 @@ def process_xml_data(self, file_name):
             # Example: modify text content if it exists
             if element.text and element.text.strip():
                 element.text = element.text.strip()
+            
+            # Example: process attributes
+            for attr_name, attr_value in element.attrib.items():
+                if isinstance(attr_value, str):
+                    element.attrib[attr_name] = attr_value.strip()
         
         # Create an ElementTree object and write to file
         tree = ET.ElementTree(self.root)
         tree.write(file_name, encoding='utf-8', xml_declaration=True)
         
         return True
+        
     except Exception as e:
         return False

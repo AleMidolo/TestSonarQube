@@ -20,38 +20,27 @@ def format_line_html_text(self, html_text):
     Otro párrafo.
     -CODE-
     """
-    from html.parser import HTMLParser
+    from bs4 import BeautifulSoup
     
-    class CodeReplacer(HTMLParser):
-        def __init__(self):
-            super().__init__()
-            self.result = []
-            self.in_code_block = False
-            self.code_tags = {'pre', 'code'}
-            self.tag_stack = []
-        
-        def handle_starttag(self, tag, attrs):
-            self.tag_stack.append(tag)
-            if tag in self.code_tags:
-                self.in_code_block = True
-        
-        def handle_endtag(self, tag):
-            if self.tag_stack and self.tag_stack[-1] == tag:
-                self.tag_stack.pop()
-            
-            if tag in self.code_tags:
-                # Check if we're exiting all code blocks
-                if not any(t in self.code_tags for t in self.tag_stack):
-                    self.in_code_block = False
-                    self.result.append('-CODE-')
-        
-        def handle_data(self, data):
-            if not self.in_code_block:
-                text = data.strip()
-                if text:
-                    self.result.append(text)
+    # Parse the HTML
+    soup = BeautifulSoup(html_text, 'html.parser')
     
-    parser = CodeReplacer()
-    parser.feed(html_text)
+    # Find all <pre> and <code> tags and replace them with -CODE-
+    for tag in soup.find_all(['pre', 'code']):
+        # Replace the tag with a placeholder
+        tag.replace_with('-CODE-')
     
-    return '\n'.join(parser.result)
+    # Get the text content
+    text = soup.get_text()
+    
+    # Clean up the text: remove extra whitespace and blank lines
+    lines = []
+    for line in text.split('\n'):
+        stripped = line.strip()
+        if stripped:
+            lines.append(stripped)
+    
+    # Join lines and return
+    result = '\n'.join(lines)
+    
+    return result

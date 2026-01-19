@@ -24,7 +24,7 @@ def book_room(self, room_type, room_number, name):
     if room_type not in self.available_rooms:
         return False
     
-    # Obtener la cantidad disponible de este tipo de habitación
+    # Obtener la cantidad de habitaciones disponibles de este tipo
     available_count = self.available_rooms[room_type]
     
     # Si no hay habitaciones disponibles

@@ -9,6 +9,12 @@ def add(num1, num2):
     '111111111011111111100'
 
     """
+    # Handle empty strings
+    if not num1:
+        return num2 if num2 else "0"
+    if not num2:
+        return num1
+    
     # Make sure both numbers have the same length by padding with zeros
     max_len = max(len(num1), len(num2))
     num1 = num1.zfill(max_len)
@@ -24,8 +30,8 @@ def add(num1, num2):
         carry = digit_sum // 10
     
     # If there's a remaining carry, add it
-    if carry > 0:
+    if carry:
         result.append(str(carry))
     
-    # Reverse the result and join into a string
+    # Reverse the result and join
     return ''.join(reversed(result))

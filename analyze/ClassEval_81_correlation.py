@@ -25,6 +25,4 @@ def correlation(x, y):
     denominator = (sum_sq_x ** 0.5) * (sum_sq_y ** 0.5)
     
     # Return Pearson correlation coefficient
-    if denominator == 0:
-        return 0.0
     return numerator / denominator

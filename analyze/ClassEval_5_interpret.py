@@ -13,22 +13,22 @@ def interpret(self, display=False):
         return []
     
     # Split the partitura by spaces
-    tokens = self.partitura.strip().split()
+    parts = self.partitura.strip().split()
     
     result = []
     
-    for token in tokens:
-        if not token:  # Skip empty tokens
+    for part in parts:
+        if not part:  # Skip empty strings
             continue
         
         # Find where the chord ends and the melody begins
         # The chord is the initial letters, the melody is the numbers
         i = 0
-        while i < len(token) and not token[i].isdigit():
+        while i < len(part) and not part[i].isdigit():
             i += 1
         
-        acorde = token[:i]
-        melodia = token[i:]
+        acorde = part[:i]
+        melodia = part[i:]
         
         # Only add if we have both chord and melody
         if acorde and melodia:

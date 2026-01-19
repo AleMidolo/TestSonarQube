@@ -9,7 +9,6 @@ def available_movies(self, start_time, end_time):
     ['Batman']
     """
     def time_to_minutes(time_str):
-        """Convierte una hora en formato HH:MM a minutos desde medianoche"""
         hours, minutes = map(int, time_str.split(':'))
         return hours * 60 + minutes
     
@@ -18,15 +17,12 @@ def available_movies(self, start_time, end_time):
     
     available = []
     
-    # Asumiendo que self.movies es un diccionario o lista que contiene las películas
-    # con información sobre su horario de inicio y fin
-    if hasattr(self, 'movies'):
-        for movie_name, movie_info in self.movies.items():
-            movie_start = time_to_minutes(movie_info['start_time'])
-            movie_end = time_to_minutes(movie_info['end_time'])
-            
-            # La película está disponible si su horario está completamente dentro del rango
-            if start_minutes <= movie_start and movie_end <= end_minutes:
-                available.append(movie_name)
+    for movie_name, movie_data in self.movies.items():
+        movie_start = time_to_minutes(movie_data['start_time'])
+        movie_end = time_to_minutes(movie_data['end_time'])
+        
+        # Check if movie's time range is within the specified range
+        if movie_start >= start_minutes and movie_end <= end_minutes:
+            available.append(movie_name)
     
     return available

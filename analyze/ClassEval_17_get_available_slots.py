@@ -13,8 +13,7 @@ def get_available_slots(self, date):
     
     # Define el inicio y fin del día
     day_start = datetime(date.year, date.month, date.day, 0, 0)
-    day_end = datetime(date.year, date.month, date.day, 23, 59, 59)
-    day_end = day_start + timedelta(days=1)
+    day_end = datetime(date.year, date.month, date.day, 0, 0) + timedelta(days=1)
     
     # Filtra eventos que ocurren en la fecha dada
     events_on_date = []

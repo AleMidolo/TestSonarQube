@@ -28,6 +28,7 @@ def _check_five_in_a_row(self, row, col, direction):
     # Check in the positive direction
     current_row = row + dx
     current_col = col + dy
+    
     while (0 <= current_row < len(self.board) and 
            0 <= current_col < len(self.board[0]) and 
            self.board[current_row][current_col] == player):
@@ -38,6 +39,7 @@ def _check_five_in_a_row(self, row, col, direction):
     # Check in the negative direction
     current_row = row - dx
     current_col = col - dy
+    
     while (0 <= current_row < len(self.board) and 
            0 <= current_col < len(self.board[0]) and 
            self.board[current_row][current_col] == player):

@@ -21,7 +21,7 @@ def move(self, direction):
         # Generar nueva posición de comida
         self.generate_food()
     # Verificar si la nueva posición coincide con el cuerpo (colisión)
-    elif new_head in self.positions:
+    elif new_head in self.positions[1:]:
         # Reiniciar el juego
         self.reset()
     else:

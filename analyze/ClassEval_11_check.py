@@ -12,6 +12,6 @@ def check(args):
     """
     for arg in args:
         if arg < 0:
-            raise ValueError(f"{arg} no es mayor o igual a 0")
+            raise ValueError(f"{arg} debe ser mayor o igual a 0")
         if arg % 2 != 0:
             raise ValueError(f"{arg} no es par")

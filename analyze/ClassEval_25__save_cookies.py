@@ -8,8 +8,8 @@ def _save_cookies(self):
     True
 
     """
+    import json
     try:
-        import json
         with open(self.cookies_file, 'w') as f:
             json.dump(self.cookies, f)
         return True

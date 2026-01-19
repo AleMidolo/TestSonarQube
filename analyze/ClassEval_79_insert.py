@@ -12,7 +12,7 @@ def insert(self, data):
     # Obtener las columnas y valores
     columns = ', '.join(data.keys())
     
-    # Formatear los valores - agregar comillas simples a los strings
+    # Formatear los valores: agregar comillas simples a strings
     values = []
     for value in data.values():
         if isinstance(value, str):
@@ -28,7 +28,7 @@ def insert(self, data):
     
     values_str = ', '.join(values)
     
-    # Asumir que self.table contiene el nombre de la tabla
-    table_name = getattr(self, 'table', 'table1')
+    # Asumir que self.table_name contiene el nombre de la tabla
+    table_name = getattr(self, 'table_name', 'table1')
     
     return f"INSERT INTO {table_name} ({columns}) VALUES ({values_str});"

@@ -22,7 +22,7 @@ def extract_file(self, file_name, output_path):
             
             # Extraer el archivo específico
             zip_ref.extract(file_name, output_path)
+            return True
             
-        return True
     except Exception as e:
         return False

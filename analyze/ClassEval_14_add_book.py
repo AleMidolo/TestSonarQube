@@ -10,7 +10,7 @@ def add_book(self, title, author):
     """
     cursor = self.connection.cursor()
     cursor.execute(
-        "INSERT INTO books (title, author, available) VALUES (?, ?, ?)",
-        (title, author, 1)
+        "INSERT INTO books (title, author, available) VALUES (?, ?, 1)",
+        (title, author)
     )
     self.connection.commit()

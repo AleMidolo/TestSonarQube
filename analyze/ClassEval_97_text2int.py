@@ -43,12 +43,13 @@ def text2int(self, textnum):
             current += ones[word]
         elif word in tens:
             current += tens[word]
-        elif word == "hundred":
-            current *= 100
         elif word in scales:
-            current *= scales[word]
-            result += current
-            current = 0
+            if word == "hundred":
+                current *= scales[word]
+            else:
+                current *= scales[word]
+                result += current
+                current = 0
     
     result += current
     

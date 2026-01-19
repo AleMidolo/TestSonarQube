@@ -34,10 +34,10 @@ def fleiss_kappa(testData, N, k, n):
     # Calculate P_j (proportion of ratings in each category)
     P_j_sum = 0.0
     for j in range(k):
-        sum_category = 0.0
+        n_j = 0.0
         for i in range(N):
-            sum_category += testData[i][j]
-        P_j = sum_category / (N * n)
+            n_j += testData[i][j]
+        P_j = n_j / (N * n)
         P_j_sum += P_j ** 2
     
     # Calculate P_e_bar (expected agreement by chance)

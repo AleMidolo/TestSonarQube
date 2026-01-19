@@ -14,10 +14,11 @@ def process_text_file(self, sentences_string):
     max_words = 0
     
     for sentence in sentences:
-        # Strip whitespace and split by spaces to count words
+        # Strip whitespace and split by spaces to get words
         words = sentence.strip().split()
+        # Count words in this sentence
         word_count = len(words)
-        
+        # Update max if this sentence has more words
         if word_count > max_words:
             max_words = word_count
     

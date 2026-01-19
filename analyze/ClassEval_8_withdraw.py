@@ -7,9 +7,7 @@ def withdraw(self, amount):
     """
     if amount < 0:
         raise ValueError("Cantidad inválida")
-    
     if amount > self.balance:
         raise ValueError("Saldo insuficiente.")
-    
     self.balance -= amount
     return self.balance

@@ -8,14 +8,14 @@ def calculate_calorie_intake(self):
 
     """
     # Calculate BMR based on gender
-    if self.gender == "male":
+    if self.gender.lower() == "male":
         bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5
     else:  # female
         bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161
     
     # Get user condition (assuming there's a method or attribute for this)
-    # Based on the context, we need to determine if user is overweight, underweight, or normal
-    # This likely uses BMI or similar calculation
+    # We need to determine if user is overweight, underweight, or normal
+    # This likely uses BMI or another method
     condition = self.get_condition() if hasattr(self, 'get_condition') else self.condition
     
     # Calculate calorie intake based on condition
