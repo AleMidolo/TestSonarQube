@@ -10,8 +10,10 @@ def process_xml_data(self, file_name):
         True
         """
     try:
-        for item in self.find_element('item'):
+        for item in self.root.findall('item'):
             item.text = item.text.upper()
-        return self.write_xml(file_name)
+        tree = ET.ElementTree(self.root)
+        tree.write(file_name)
+        return True
     except:
         return False
