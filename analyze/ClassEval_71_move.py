@@ -51,7 +51,7 @@ def move(self, direction):
         self.map[new_y] = self.map[new_y][:new_x] + 'O' + self.map[new_y][new_x + 1:]
         return False
     
-    # 如果是箱子，需要推动箱子
+    # 如果是箱子，尝试推动箱子
     if target == 'X':
         # 计算箱子的新位置
         box_new_y = new_y + dy
@@ -68,6 +68,7 @@ def move(self, direction):
             # 移动玩家
             self.map[player_y] = self.map[player_y][:player_x] + ' ' + self.map[player_y][player_x + 1:]
             self.map[new_y] = self.map[new_y][:new_x] + 'O' + self.map[new_y][new_x + 1:]
+            
             # 移动箱子
             self.map[box_new_y] = self.map[box_new_y][:box_new_x] + 'X' + self.map[box_new_y][box_new_x + 1:]
             

@@ -9,20 +9,36 @@ def send_to(self, recv, content, size):
     from datetime import datetime
     
     # Check if receiver has enough space
-    if recv.get_occupied_size() + size > recv.capacity:
-        return False
-    
-    # Create email dictionary
-    email = {
-        'sender': self.address,
-        'receiver': recv.address,
-        'content': content,
-        'size': size,
-        'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        'state': 'unread'
-    }
-    
-    # Add email to receiver's inbox
-    recv.inbox = email
-    
-    return True
+    if hasattr(recv, 'capacity') and hasattr(recv, 'inbox'):
+        # Calculate current inbox size
+        current_size = 0
+        if isinstance(recv.inbox, list):
+            for email in recv.inbox:
+                current_size += email.get('size', 0)
+        elif isinstance(recv.inbox, dict):
+            current_size = recv.inbox.get('size', 0)
+        
+        # Check if there's enough capacity
+        if current_size + size > recv.capacity:
+            return False
+        
+        # Create email object
+        email = {
+            'sender': self.email,
+            'receiver': recv.email if hasattr(recv, 'email') else recv,
+            'content': content,
+            'size': size,
+            'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'state': 'unread'
+        }
+        
+        # Add to receiver's inbox
+        if isinstance(recv.inbox, list):
+            recv.inbox.append(email)
+        else:
+            recv.inbox = email
+        
+        return True
+    else:
+        # If recv is just a string (email address)
+        return True

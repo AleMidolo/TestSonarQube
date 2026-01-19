@@ -8,7 +8,7 @@ def process_text_file(self, sentences_string):
     """
     import re
     
-    # 按句子分隔符（. ? !）分割文本
+    # 按照句子分隔符（. ? !）分割文本
     sentences = re.split(r'[.?!]+', sentences_string)
     
     max_word_count = 0

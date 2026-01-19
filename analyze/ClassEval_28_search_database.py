@@ -7,12 +7,19 @@ def search_database(self, table_name, name):
     >>> db.search_database('user', 'John')
     [(1, 'John', 25)]
     """
-    cursor = self.connection.cursor()
-    cursor.execute(f"SELECT * FROM {table_name} WHERE name = ?", (name,))
-    result = cursor.fetchall()
-    cursor.close()
+    if not hasattr(self, 'connection') or self.connection is None:
+        return None
     
-    if result:
-        return result
-    else:
+    try:
+        cursor = self.connection.cursor()
+        # 使用参数化查询防止SQL注入
+        query = f"SELECT * FROM {table_name} WHERE name = ?"
+        cursor.execute(query, (name,))
+        results = cursor.fetchall()
+        
+        if results:
+            return results
+        else:
+            return None
+    except Exception as e:
         return None

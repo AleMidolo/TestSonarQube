@@ -6,7 +6,7 @@ def map(data):
     ([1,0,...],5)，
     或者元组的列表，例如 [([1,0,1,...],5),([1,0,...],6),([0,0,...],5)]。
     1代表正确答案，0代表错误答案。
-    :return: 如果输入数据是列表，则返回该列表的召回率。如果输入数据是元组，则返回该元组的AP。如果输入数据是列表的列表，则返回所有列表的平均召回率。第二个返回值是每个输入的精度列表。
+    :return: 如果输入数据是列表，则返回该列表的召回率。如果输入数据是列表的列表，则返回所有列表的平均召回率。第二个返回值是每个输入的精度列表。
     >>> MetricsCalculator2.map(([1, 0, 1, 0], 4))
     >>> MetricsCalculator2.map([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)])
     0.41666666666666663, [0.41666666666666663]
@@ -26,10 +26,10 @@ def map(data):
                 precision_at_i = num_correct / (i + 1)
                 ap += precision_at_i
         
-        if num_correct == 0:
-            return 0.0
+        if total_relevant > 0:
+            ap /= total_relevant
         
-        return ap / total_relevant
+        return ap
     
     # 检查输入是单个元组还是元组列表
     if isinstance(data, tuple):

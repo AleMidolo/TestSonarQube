@@ -8,10 +8,10 @@ def apply_operator(self, operand_stack, operator_stack):
     >>> calculator.apply_operator([1, 2, 3], ['+', '-'])
     ([1, -1], ['-'])
     """
-    if len(operand_stack) < 2 or len(operator_stack) == 0:
+    if len(operand_stack) < 2 or len(operator_stack) < 1:
         return operand_stack, operator_stack
     
-    # 从操作符栈弹出顶部操作符
+    # 从操作符栈弹出操作符
     operator = operator_stack.pop()
     
     # 从操作数栈弹出两个操作数（注意顺序：后弹出的是左操作数）
@@ -27,8 +27,13 @@ def apply_operator(self, operand_stack, operator_stack):
         result = left_operand * right_operand
     elif operator == '/':
         result = left_operand / right_operand
+    elif operator == '//':
+        result = left_operand // right_operand
+    elif operator == '%':
+        result = left_operand % right_operand
+    elif operator == '**':
+        result = left_operand ** right_operand
     else:
-        # 如果遇到未知操作符，可以选择抛出异常或返回原栈
         result = 0
     
     # 将结果压入操作数栈

@@ -6,11 +6,14 @@ def bad_character_heuristic(self):
     >>> boyerMooreSearch.bad_character_heuristic()
     [0, 3]
     """
+    result = []
     text = self.text
     pattern = self.pattern
     m = len(pattern)
     n = len(text)
-    result = []
+    
+    if m == 0 or n == 0 or m > n:
+        return result
     
     # 构建坏字符表
     bad_char = {}
@@ -22,17 +25,20 @@ def bad_character_heuristic(self):
     while s <= n - m:
         j = m - 1
         
-        # 从右向左比较模式和文本
+        # 从右向左匹配模式
         while j >= 0 and pattern[j] == text[s + j]:
             j -= 1
         
-        # 如果模式完全匹配
         if j < 0:
+            # 找到匹配
             result.append(s)
-            # 移动模式,使下一个字符对齐
-            s += m - bad_char.get(text[s + m], -1) if s + m < n else 1
+            # 移动到下一个可能的位置
+            if s + m < n:
+                s += m - bad_char.get(text[s + m], -1)
+            else:
+                s += 1
         else:
-            # 使用坏字符规则计算移动距离
+            # 发生不匹配,使用坏字符规则
             bad_char_shift = j - bad_char.get(text[s + j], -1)
             s += max(1, bad_char_shift)
     

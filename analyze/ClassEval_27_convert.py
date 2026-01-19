@@ -9,10 +9,11 @@ def convert(self, amount, from_currency, to_currency):
     >>> cc.convert(64, 'CNY','USD')
     10.0
     """
-    # 假设存在一个汇率字典，存储各货币相对于基准货币(如USD)的汇率
-    # 根据示例: 64 CNY = 10 USD, 所以 1 USD = 6.4 CNY
+    # 假设存在汇率字典，从示例可以推断 CNY 到 USD 的汇率
+    # 64 CNY = 10 USD，所以 1 USD = 6.4 CNY
+    
+    # 定义汇率字典（以 USD 为基准）
     if not hasattr(self, 'rates'):
-        # 默认汇率表 (相对于USD)
         self.rates = {
             'USD': 1.0,
             'CNY': 6.4,
@@ -21,9 +22,8 @@ def convert(self, amount, from_currency, to_currency):
             'JPY': 110.0
         }
     
-    # 先转换为USD，再转换为目标货币
-    # amount (from_currency) -> USD -> to_currency
-    usd_amount = amount / self.rates[from_currency]
-    result = usd_amount * self.rates[to_currency]
+    # 先转换为 USD（基准货币），再转换为目标货币
+    amount_in_usd = amount / self.rates[from_currency]
+    result = amount_in_usd * self.rates[to_currency]
     
     return result

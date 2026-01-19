@@ -6,10 +6,11 @@ def random_food_position(self):
     import random
     
     while True:
-        x = random.randint(0, self.width - 1)
-        y = random.randint(0, self.height - 1)
+        # 生成随机位置
+        new_food_x = random.randint(0, self.width - 1)
+        new_food_y = random.randint(0, self.height - 1)
         
-        # 检查这个位置是否在蛇身上
-        if (x, y) not in self.snake_body:
-            self.food_position = (x, y)
+        # 检查新位置是否在蛇身上
+        if (new_food_x, new_food_y) not in self.snake_body:
+            self.food_position = (new_food_x, new_food_y)
             break

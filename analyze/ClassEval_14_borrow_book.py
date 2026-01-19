@@ -10,7 +10,7 @@ def borrow_book(self, book_id):
     conn = sqlite3.connect(self.db_name)
     cursor = conn.cursor()
     
-    cursor.execute("UPDATE books SET status = 'borrowed' WHERE id = ?", (book_id,))
+    cursor.execute("UPDATE books SET is_borrowed = 1 WHERE id = ?", (book_id,))
     
     conn.commit()
     conn.close()

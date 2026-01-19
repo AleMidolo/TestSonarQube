@@ -19,18 +19,17 @@ def get_jwt_user(self, request):
     if not authorization:
         return None
     
-    # 如果Authorization是字典类型（根据doctest示例）
+    # 如果Authorization是字典类型
     if isinstance(authorization, dict):
         jwt_token = authorization.get('jwt')
         user_info = authorization.get('user')
         
-        if not jwt_token or not user_info:
-            return None
-        
-        # 验证JWT令牌（根据示例，令牌格式为 username + 今天的日期）
-        expected_token = user_info.get('name', '') + str(datetime.date.today())
-        
-        if jwt_token == expected_token:
-            return {'user': user_info}
+        if jwt_token and user_info:
+            # 验证JWT令牌（根据示例，令牌格式为 username + 今天的日期）
+            username = user_info.get('name', '')
+            expected_token = username + str(datetime.date.today())
+            
+            if jwt_token == expected_token:
+                return {'user': user_info}
     
     return None

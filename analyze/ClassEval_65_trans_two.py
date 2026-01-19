@@ -7,34 +7,24 @@ def trans_two(self, s):
     >>> formatter.trans_two("23")
     "TWENTY THREE"
     """
-    if not s or s == "00":
-        return ""
-    
-    # Define mappings
     ones = ["", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]
     teens = ["TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", 
              "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"]
     tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"]
     
-    # Handle single digit (0X format)
-    if len(s) == 1 or s[0] == '0':
-        digit = int(s[-1])
-        return ones[digit]
+    if not s or s == "00":
+        return ""
     
-    # Get the two digits
-    ten_digit = int(s[0])
-    one_digit = int(s[1])
+    num = int(s)
     
-    # Handle teens (10-19)
-    if ten_digit == 1:
-        return teens[one_digit]
-    
-    # Handle other two-digit numbers
-    result = tens[ten_digit]
-    if one_digit > 0:
-        if result:
-            result += " " + ones[one_digit]
+    if num < 10:
+        return ones[num]
+    elif num < 20:
+        return teens[num - 10]
+    else:
+        ten_digit = num // 10
+        one_digit = num % 10
+        if one_digit == 0:
+            return tens[ten_digit]
         else:
-            result = ones[one_digit]
-    
-    return result
+            return tens[ten_digit] + " " + ones[one_digit]

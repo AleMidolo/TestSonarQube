@@ -22,14 +22,14 @@ def book_ticket(self, name, seats_to_book):
     
     # First, check if all requested seats are available (value is 0)
     for row, col in seats_to_book:
-        # Check if seat coordinates are valid
+        # Check if indices are valid
         if row < 0 or row >= len(seats) or col < 0 or col >= len(seats[0]):
             return "Booking failed."
-        # Check if seat is already booked (value is 1)
-        if seats[row][col] == 1:
+        # Check if seat is already booked (not 0)
+        if seats[row][col] != 0:
             return "Booking failed."
     
-    # If all seats are available, book them (set value to 1)
+    # If all seats are available, book them (set to 1)
     for row, col in seats_to_book:
         seats[row][col] = 1
     

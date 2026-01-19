@@ -9,8 +9,8 @@ def add_user(self, username):
     >>> signInSystem.add_user("mike")
     False
     """
-    if username not in self.users:
+    if username in self.users:
+        return False
+    else:
         self.users[username] = False
         return True
-    else:
-        return False

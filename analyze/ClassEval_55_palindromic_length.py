@@ -14,7 +14,7 @@ def palindromic_length(self, center, diff, string):
     left = center - diff
     right = center + diff
     
-    # 如果超出边界，返回0
+    # 如果超出字符串边界，返回0
     if left < 0 or right >= len(string):
         return 0
     
@@ -22,5 +22,5 @@ def palindromic_length(self, center, diff, string):
     if string[left] != string[right]:
         return 0
     
-    # 如果字符相等，递归检查下一层，并加上当前这一对字符的贡献
-    return 2 + self.palindromic_length(center, diff + 1, string)
+    # 如果左右字符相等，递归检查下一层，并加1
+    return 1 + self.palindromic_length(center, diff + 1, string)

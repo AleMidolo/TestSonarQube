@@ -11,7 +11,7 @@ def extract_file(self, file_name, output_path):
     import os
     
     try:
-        # 确保输出目录存在
+        # 确保输出路径存在
         os.makedirs(output_path, exist_ok=True)
         
         # 打开zip文件
@@ -23,6 +23,5 @@ def extract_file(self, file_name, output_path):
             # 提取指定文件到输出路径
             zip_ref.extract(file_name, output_path)
             return True
-            
-    except (zipfile.BadZipFile, FileNotFoundError, PermissionError, Exception):
+    except Exception as e:
         return False

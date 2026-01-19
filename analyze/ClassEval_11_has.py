@@ -10,8 +10,4 @@ def has(states, stat):
     True
 
     """
-    if not isinstance(states, int) or not isinstance(stat, int):
-        return False
-    if states < 0 or stat < 0:
-        return False
     return (states & stat) == stat

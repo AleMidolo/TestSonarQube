@@ -21,22 +21,22 @@ def get_available_slots(self, date):
     for event in self.events:
         event_date = event['date']
         if event_date.year == date.year and event_date.month == date.month and event_date.day == date.day:
-            day_events.append(event)
+            day_events.append((event['start_time'], event['end_time']))
     
-    # 按开始时间排序事件
-    day_events.sort(key=lambda x: x['start_time'])
+    # 按开始时间排序
+    day_events.sort(key=lambda x: x[0])
     
     # 找出可用时间段
     available_slots = []
     current_time = day_start
     
-    for event in day_events:
+    for start_time, end_time in day_events:
         # 如果当前时间早于事件开始时间，则有可用时间段
-        if current_time < event['start_time']:
-            available_slots.append((current_time, event['start_time']))
-        # 更新当前时间为事件结束时间
-        if event['end_time'] > current_time:
-            current_time = event['end_time']
+        if current_time < start_time:
+            available_slots.append((current_time, start_time))
+        # 更新当前时间为事件结束时间（如果事件结束时间更晚）
+        if end_time > current_time:
+            current_time = end_time
     
     # 检查最后一个事件之后到一天结束是否有可用时间
     if current_time < day_end:

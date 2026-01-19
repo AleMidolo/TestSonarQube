@@ -7,16 +7,17 @@ def count(n: int, m: int) -> int:
     >>> CombinationCalculator.count(4, 2)
     6
     """
+    # Handle edge cases
     if m > n or m < 0 or n < 0:
         return 0
     if m == 0 or m == n:
         return 1
     
-    # 优化：C(n, m) = C(n, n-m)，选择较小的m来减少计算
+    # Optimize by using the smaller of m and n-m
     m = min(m, n - m)
     
-    # 计算组合数 C(n, m) = n! / (m! * (n-m)!)
-    # 使用迭代方式避免大数阶乘溢出
+    # Calculate C(n, m) = n! / (m! * (n-m)!)
+    # Using iterative multiplication to avoid overflow with factorials
     result = 1
     for i in range(m):
         result = result * (n - i) // (i + 1)

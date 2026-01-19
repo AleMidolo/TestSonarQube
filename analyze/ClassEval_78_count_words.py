@@ -13,8 +13,8 @@ def count_words(self, sentence):
     count = 0
     
     for word in words:
-        # 检查是否包含至少一个字母字符
-        if any(c.isalpha() for c in word):
+        # 检查单词是否只包含字母
+        if word.isalpha():
             count += 1
     
     return count

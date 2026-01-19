@@ -8,14 +8,13 @@ def get(self, index):
     [1, 2]
 
     """
+    # Assuming self.data is the list to partition and self.num_partitions is the number of partitions
     total_length = len(self.data)
-    num_partitions = self.num_partitions
+    base_size = total_length // self.num_partitions
+    remainder = total_length % self.num_partitions
     
-    # 计算每个块的基本大小和余数
-    base_size = total_length // num_partitions
-    remainder = total_length % num_partitions
-    
-    # 前 remainder 个分区会多分配一个元素
+    # Calculate start position for this partition
+    # First 'remainder' partitions get one extra element
     if index < remainder:
         start = index * (base_size + 1)
         end = start + base_size + 1

@@ -8,12 +8,14 @@ def string_to_datetime(self, string):
     """
     from datetime import datetime
     
-    # 尝试解析常见的日期时间格式
+    # 尝试多种常见的日期时间格式
     formats = [
         "%Y-%m-%d %H:%M:%S",
         "%Y-%m-%d %H:%M:%S.%f",
         "%Y/%m/%d %H:%M:%S",
         "%Y/%m/%d %H:%M:%S.%f",
+        "%Y-%m-%d",
+        "%Y/%m/%d",
     ]
     
     # 首先尝试标准格式
@@ -23,38 +25,25 @@ def string_to_datetime(self, string):
         except ValueError:
             continue
     
-    # 如果标准格式失败，尝试处理不带前导零的格式（如示例中的 "2001-7-18 1:1:1"）
-    # 将字符串标准化，添加前导零
+    # 如果标准格式都失败，尝试处理不规则格式（如 "2001-7-18 1:1:1"）
+    # 将单个数字的月、日、时、分、秒补零
     import re
     
-    # 分离日期和时间部分
-    parts = string.strip().split()
-    if len(parts) >= 1:
-        date_part = parts[0]
-        time_part = parts[1] if len(parts) > 1 else "0:0:0"
-        
-        # 处理日期部分（支持 - 或 / 分隔符）
-        if '-' in date_part:
-            date_components = date_part.split('-')
-            separator = '-'
-        else:
-            date_components = date_part.split('/')
-            separator = '/'
-        
-        # 补齐日期部分的前导零
-        if len(date_components) == 3:
-            year, month, day = date_components
-            date_part = f"{year.zfill(4)}{separator}{month.zfill(2)}{separator}{day.zfill(2)}"
-        
-        # 处理时间部分
-        time_components = time_part.split(':')
-        if len(time_components) >= 2:
-            hour = time_components[0].zfill(2)
-            minute = time_components[1].zfill(2)
-            second = time_components[2].zfill(2) if len(time_components) > 2 else "00"
-            time_part = f"{hour}:{minute}:{second}"
-        
-        normalized_string = f"{date_part} {time_part}"
-        return datetime.strptime(normalized_string, "%Y{0}%m{0}%d %H:%M:%S".format(separator))
+    # 匹配日期时间模式并规范化
+    pattern = r'(\d{4})[/-](\d{1,2})[/-](\d{1,2})(?:\s+(\d{1,2}):(\d{1,2}):(\d{1,2})(?:\.(\d+))?)?'
+    match = re.match(pattern, string.strip())
     
+    if match:
+        year, month, day, hour, minute, second, microsecond = match.groups()
+        year = int(year)
+        month = int(month)
+        day = int(day)
+        hour = int(hour) if hour else 0
+        minute = int(minute) if minute else 0
+        second = int(second) if second else 0
+        microsecond = int(microsecond.ljust(6, '0')[:6]) if microsecond else 0
+        
+        return datetime(year, month, day, hour, minute, second, microsecond)
+    
+    # 如果所有方法都失败，抛出异常
     raise ValueError(f"Unable to parse datetime string: {string}")

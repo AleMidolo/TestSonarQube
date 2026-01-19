@@ -30,7 +30,7 @@ def process_excel_data(self, N, save_file_name):
     workbook.close()
     
     # 调用write_excel方法(假设该方法存在于self中)
-    # 返回其结果和输出文件名
+    # 返回其返回值和输出文件名
     if hasattr(self, 'write_excel'):
         result = self.write_excel(output_file_name)
     else:

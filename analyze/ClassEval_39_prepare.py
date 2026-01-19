@@ -17,11 +17,12 @@ def prepare(self, expression):
     # 移除空格
     expression = expression.replace(' ', '')
     
+    # 解析表达式
     i = 0
     while i < len(expression):
         char = expression[i]
         
-        # 如果是数字（包括多位数和小数）
+        # 如果是数字，提取完整的数字（包括多位数和小数）
         if char.isdigit() or char == '.':
             num = ''
             while i < len(expression) and (expression[i].isdigit() or expression[i] == '.'):
@@ -39,12 +40,12 @@ def prepare(self, expression):
             while operator_stack and operator_stack[-1] != '(':
                 output.append(operator_stack.pop())
             if operator_stack:
-                operator_stack.pop()  # 弹出左括号
+                operator_stack.pop()  # 移除左括号
         
         # 如果是运算符
         elif char in precedence:
             while (operator_stack and 
-                   operator_stack[-1] != '(' and
+                   operator_stack[-1] != '(' and 
                    operator_stack[-1] in precedence and
                    precedence[operator_stack[-1]] >= precedence[char]):
                 output.append(operator_stack.pop())
