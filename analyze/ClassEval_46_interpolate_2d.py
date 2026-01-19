@@ -31,7 +31,4 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
                         ((x[i + 1] - x[i]) * (y[j + 1] - y[j]))
                     )
                     break
-            else:
-                continue
-            break
     return z_interp

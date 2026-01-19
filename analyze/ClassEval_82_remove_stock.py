@@ -16,7 +16,8 @@ def remove_stock(self, stock):
                 return False
             elif pf['quantity'] == stock['quantity']:
                 self.portfolio.remove(pf)
+                return True
             else:
                 pf['quantity'] -= stock['quantity']
-            return True
+                return True
     return False

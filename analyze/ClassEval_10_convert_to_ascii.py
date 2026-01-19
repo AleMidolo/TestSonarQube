@@ -1,11 +1,11 @@
 def convert_to_ascii(self):
     """
-    Convierte la cadena binaria a una cadena ascii.
-    >>> bdp = BinaryDataProcessor("0110100001100101011011000110110001101111")
-    >>> bdp.convert_to_ascii()
-    'hello'
+        Convierte la cadena binaria a una cadena ascii.
+        >>> bdp = BinaryDataProcessor("0110100001100101011011000110110001101111")
+        >>> bdp.convert_to_ascii()
+        'hello'
 
-    """
+        """
     byte_array = bytearray()
     for i in range(0, len(self.binary_string), 8):
         byte = self.binary_string[i:i + 8]

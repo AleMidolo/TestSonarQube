@@ -13,8 +13,8 @@ def process_excel_data(self, N, save_file_name):
     for i in range(1, len(data)):
         row = list(data[i])
         if N < len(row):
-            row[N] = row[N].upper() if isinstance(row[N], str) else row[N]
+            row[N] = row[N].upper()
         data[i] = tuple(row)
-    output_file_name = 'processed_' + save_file_name
+    output_file_name = f'processed_{save_file_name}'
     success = self.write_excel(data, output_file_name)
     return (success, output_file_name)

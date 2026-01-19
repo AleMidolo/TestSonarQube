@@ -1,6 +1,6 @@
 def create_table(self):
     """
-        Creates a "tickets" table in the database if it does not already exist. 
+        Creates a table "tickets" in the database if it does not already exist. 
         The fields include ID of type int, movie name of type str, theater name of type str, 
         seat number of type str, and customer name of type str.
         :return: None

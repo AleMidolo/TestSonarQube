@@ -7,7 +7,7 @@ def count(n: int, m: int) -> int:
     >>> CombinationCalculator.count(4, 2)
     6
     """
-    if m > n or m < 0 or n < 0:
+    if m < 0 or m > n:
         return 0
     if m == 0 or m == n:
         return 1
