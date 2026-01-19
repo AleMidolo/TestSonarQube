@@ -12,4 +12,4 @@ def format(self, x):
     elif isinstance(x, float):
         return self.format_string(str(x))
     else:
-        raise TypeError('x must be int or float')
+        raise TypeError('El parámetro x debe ser int o float')

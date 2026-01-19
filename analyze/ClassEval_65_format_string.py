@@ -16,35 +16,47 @@ def format_string(self, x):
     if '.' in x:
         integer_part, decimal_part = x.split('.')
         decimal_part = decimal_part.rstrip('0')
+    integer_part = integer_part.lstrip('0')
+    if integer_part == '':
+        integer_part = '0'
     if integer_part == '0':
-        result = 'ZERO'
+        integer_words = 'ZERO'
     else:
-        integer_part = integer_part.lstrip('0')
         groups = []
-        while integer_part:
-            groups.append(integer_part[-3:])
-            integer_part = integer_part[:-3]
-        groups.reverse()
-        words = []
+        temp = integer_part
+        while len(temp) > 3:
+            groups.insert(0, temp[-3:])
+            temp = temp[:-3]
+        if temp:
+            groups.insert(0, temp)
+        group_words = []
         for i, group in enumerate(groups):
             if group == '000':
                 continue
-            group_words = self.trans_three(group.zfill(3))
-            magnitude = self.parse_more(len(groups) - i - 1)
-            if group_words:
-                if magnitude:
-                    words.append(f'{group_words} {magnitude}')
-                else:
-                    words.append(group_words)
-        result = ' '.join(words)
+            group_num = int(group)
+            if group_num == 0:
+                continue
+            group_str = group.zfill(3)
+            words = self.trans_three(group_str)
+            magnitude_index = len(groups) - i - 1
+            if magnitude_index > 0 and words:
+                magnitude_word = self.parse_more(magnitude_index)
+                if magnitude_word:
+                    words += ' ' + magnitude_word
+            group_words.append(words)
+        integer_words = ' '.join(group_words)
+    decimal_words = ''
     if decimal_part:
-        decimal_words = []
+        decimal_words = ' AND '
+        digit_words = []
         for digit in decimal_part:
             if digit == '0':
-                decimal_words.append('ZERO')
+                digit_words.append('ZERO')
             else:
-                decimal_words.append(self.NUMBER[int(digit)])
-        result = f"{result} AND {' '.join(decimal_words)}"
+                digit_words.append(self.NUMBER[int(digit)])
+        decimal_words += ' '.join(digit_words)
+        decimal_words += ' CENTS'
+    result = integer_words + decimal_words + ' ONLY'
     if is_negative:
-        result = f'NEGATIVE {result}'
-    return f'{result} ONLY'
+        result = 'MINUS ' + result
+    return result

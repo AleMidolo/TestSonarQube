@@ -4,6 +4,6 @@ def __format_line_feed(self, text):
         :param text: cadena con saltos de línea consecutivos
         :return: cadena, texto reemplazado con un solo salto de línea
         """
-    if not text:
-        return text
+    if text is None:
+        return ''
     return re.sub('\\n+', '\n', text).strip()

@@ -8,12 +8,11 @@ def merge_pdfs(self, output_filepath):
         >>> handler.merge_pdfs('out.pdf')
         PDFs combinados guardados en out.pdf
         """
-    if not self.readers:
-        raise ValueError('No PDF readers available to merge')
-    merger = PyPDF2.PdfMerger()
+    pdf_writer = PyPDF2.PdfFileWriter()
     for reader in self.readers:
-        merger.append(reader)
+        for page_num in range(len(reader.pages)):
+            page = reader.pages[page_num]
+            pdf_writer.addPage(page)
     with open(output_filepath, 'wb') as output_file:
-        merger.write(output_file)
-    merger.close()
+        pdf_writer.write(output_file)
     return f'PDFs combinados guardados en {output_filepath}'

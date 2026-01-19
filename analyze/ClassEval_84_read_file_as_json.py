@@ -14,6 +14,7 @@ def read_file_as_json(self):
         return json.loads(content)
     except json.JSONDecodeError:
         try:
-            return eval(content)
-        except:
+            import ast
+            return ast.literal_eval(content)
+        except (ValueError, SyntaxError):
             return content

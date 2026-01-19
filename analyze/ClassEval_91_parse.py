@@ -10,10 +10,10 @@ def parse(self, path, charset):
         """
     if not path:
         return
-    fixed_path = self.fix_path(path)
-    if not fixed_path:
+    cleaned_path = path.strip('/')
+    if not cleaned_path:
         return
-    path_segments = fixed_path.split('/')
+    path_segments = cleaned_path.split('/')
     for segment in path_segments:
         if segment:
             try:
@@ -21,4 +21,5 @@ def parse(self, path, charset):
                 self.segments.append(decoded_segment)
             except (UnicodeDecodeError, LookupError):
                 self.segments.append(segment)
-    self.with_end_tag = path.endswith('/')
+    if path.endswith('/'):
+        self.with_end_tag = True

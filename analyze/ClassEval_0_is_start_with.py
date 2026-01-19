@@ -7,5 +7,6 @@ def is_start_with(self, request_uri):
         >>> filter = AccessGatewayFilter()
         >>> filter.is_start_with('/api/data')
         True
+
         """
     return request_uri.startswith('/api') or request_uri.startswith('/login')
