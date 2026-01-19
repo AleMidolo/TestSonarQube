@@ -18,5 +18,4 @@ def correlation_coefficient(data1, data2):
     denominator2 = math.sqrt(sum(((data2[i] - mean2) ** 2 for i in range(n))))
     if denominator1 == 0 or denominator2 == 0:
         return 0.0
-    correlation = numerator / (denominator1 * denominator2)
-    return correlation
+    return numerator / (denominator1 * denominator2)

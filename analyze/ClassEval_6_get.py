@@ -8,6 +8,6 @@ def get(self, index):
         [1, 2]
         """
     size, remainder = self.setNum()
-    start = index * size
+    start = index * size + min(index, remainder)
     end = start + size + (1 if index < remainder else 0)
     return self.lst[start:end]
