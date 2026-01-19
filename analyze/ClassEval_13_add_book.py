@@ -9,5 +9,5 @@ def add_book(self, title, quantity=1):
     else:
         self.inventory[title] = quantity
     
-    # Sort the inventory by title
+    # Sort the inventory by book title
     self.inventory = dict(sorted(self.inventory.items()))

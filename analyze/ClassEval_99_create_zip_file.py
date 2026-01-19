@@ -1,3 +1,6 @@
+import zipfile
+import os
+
 def create_zip_file(self, files, output_file_name):
     """
     निर्दिष्ट फ़ाइल सूची को एक ज़िप फ़ाइल में संकुचित करें और इसे निर्दिष्ट पथ में रखें
@@ -7,9 +10,6 @@ def create_zip_file(self, files, output_file_name):
     >>> zfp = ZipFileProcessor("aaa.zip")
     >>> zfp.create_zip_file(["bbb.txt", "ccc,txt", "ddd.txt"], "output/bcd")
     """
-    import zipfile
-    import os
-    
     try:
         # Ensure output directory exists
         output_dir = os.path.dirname(output_file_name)
@@ -32,7 +32,6 @@ def create_zip_file(self, files, output_file_name):
                     return False
         
         return True
-    
     except Exception as e:
-        # If any error occurs, return False
+        # Return False if any error occurs
         return False

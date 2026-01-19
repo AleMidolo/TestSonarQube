@@ -30,7 +30,7 @@ def lemmatize_sentence(self, sentence):
     # Initialize lemmatizer
     lemmatizer = WordNetLemmatizer()
     
-    # Helper function to convert Penn Treebank tags to WordNet tags
+    # Helper function to convert NLTK POS tags to WordNet POS tags
     def get_wordnet_pos(treebank_tag):
         if treebank_tag.startswith('J'):
             return wordnet.ADJ

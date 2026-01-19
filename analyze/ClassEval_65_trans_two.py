@@ -19,23 +19,20 @@ def trans_two(self, s):
     if len(s) == 1:
         s = "0" + s
     
-    tens_digit = int(s[0])
-    ones_digit = int(s[1])
+    num = int(s)
     
-    # Handle 00
-    if tens_digit == 0 and ones_digit == 0:
+    if num == 0:
         return ""
     
-    # Handle 10-19
-    if tens_digit == 1:
-        return teens[ones_digit]
-    
-    # Handle other cases
-    result = tens[tens_digit]
-    if ones_digit > 0:
-        if result:
-            result += " " + ones[ones_digit]
+    if num < 10:
+        return ones[num]
+    elif num < 20:
+        return teens[num - 10]
+    else:
+        tens_digit = int(s[0])
+        ones_digit = int(s[1])
+        
+        if ones_digit == 0:
+            return tens[tens_digit]
         else:
-            result = ones[ones_digit]
-    
-    return result
+            return tens[tens_digit] + " " + ones[ones_digit]

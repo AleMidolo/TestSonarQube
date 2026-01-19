@@ -50,23 +50,25 @@ def format(self, x):
         return convert_below_thousand(x) + " ONLY"
     
     # Handle thousands and above
-    parts = []
+    crore = x // 10000000
+    x %= 10000000
+    lakh = x // 100000
+    x %= 100000
+    thousand = x // 1000
+    x %= 1000
     
-    # Millions
-    if x >= 1000000:
-        millions = x // 1000000
-        parts.append(convert_below_thousand(millions) + " MILLION")
-        x %= 1000000
+    result = []
     
-    # Thousands
-    if x >= 1000:
-        thousands = x // 1000
-        parts.append(convert_below_thousand(thousands) + " THOUSAND")
-        x %= 1000
+    if crore > 0:
+        result.append(convert_below_thousand(crore) + " CRORE")
     
-    # Remaining hundreds
+    if lakh > 0:
+        result.append(convert_below_thousand(lakh) + " LAKH")
+    
+    if thousand > 0:
+        result.append(convert_below_thousand(thousand) + " THOUSAND")
+    
     if x > 0:
-        parts.append(convert_below_thousand(x))
+        result.append(convert_below_thousand(x))
     
-    result = " ".join(parts) + " ONLY"
-    return result
+    return " ".join(result) + " ONLY"

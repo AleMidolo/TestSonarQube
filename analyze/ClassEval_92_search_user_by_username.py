@@ -12,5 +12,4 @@ def search_user_by_username(self, username):
     cursor = self.connection.cursor()
     cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
     result = cursor.fetchall()
-    cursor.close()
     return result

@@ -10,7 +10,7 @@ def shuffle(self):
     """
     import random
     
-    if not self.playlist or len(self.playlist) == 0:
+    if not self.playlist:
         return False
     
     random.shuffle(self.playlist)

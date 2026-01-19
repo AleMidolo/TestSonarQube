@@ -11,23 +11,23 @@ def calculate_hand_value(self, hand):
     40
     """
     total_value = 0
-    aces_count = 0
+    ace_count = 0
     
     for card in hand:
         # Extract the rank (first character(s) of the card)
         rank = card[:-1]  # All characters except the last one (suit)
         
         if rank == 'A':
-            aces_count += 1
+            ace_count += 1
             total_value += 11
         elif rank in ['J', 'Q', 'K']:
             total_value += 10
         else:
             total_value += int(rank)
     
-    # Adjust for aces if total value exceeds 21
-    while total_value > 21 and aces_count > 0:
+    # Adjust for aces if total_value > 21
+    while total_value > 21 and ace_count > 0:
         total_value -= 10  # Convert an ace from 11 to 1
-        aces_count -= 1
+        ace_count -= 1
     
     return total_value

@@ -19,6 +19,6 @@ def read_json(self, file_path):
         with open(file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
         return data
-    except Exception:
+    except Exception as e:
         # Return -1 if any error occurs during reading
         return -1

@@ -8,18 +8,14 @@ def check_balanced_brackets(self):
 
     """
     stack = []
-    brackets = {
-        '(': ')',
-        '[': ']',
-        '{': '}'
-    }
-    closing_brackets = set(brackets.values())
+    brackets = {')': '(', '}': '{', ']': '['}
     
     for char in self.expression:
-        if char in brackets:
+        if char in '({[':
             stack.append(char)
-        elif char in closing_brackets:
-            if not stack or brackets[stack.pop()] != char:
+        elif char in ')}]':
+            if not stack or stack[-1] != brackets[char]:
                 return False
+            stack.pop()
     
     return len(stack) == 0

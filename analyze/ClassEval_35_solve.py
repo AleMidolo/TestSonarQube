@@ -20,36 +20,35 @@ def solve(self):
     """
     from collections import deque
     
-    # Initialize open_list as a queue with the initial state
-    # Each element is a tuple: (current_state, path_to_reach_this_state)
-    open_list = [(self, [])]
+    # Initialize open_list as a queue with initial state and empty path
+    open_list = deque([(self, [])])
     
     # Keep track of visited states to avoid cycles
     visited = set()
     visited.add(str(self.state))
     
     while open_list:
-        # Pop the first element (BFS - FIFO)
-        current_puzzle, path = open_list.pop(0)
+        # Pop the first element (index 0) from the queue
+        current_state, path = open_list.popleft()
         
         # Check if current state is the goal state
-        if current_puzzle.is_goal():
+        if current_state.is_goal():
             return path
         
         # Get all possible moves from current state
-        possible_moves = current_puzzle.get_possible_moves()
+        possible_moves = current_state.get_possible_moves()
         
-        # Traverse through all possible moves
+        # Traverse through possible moves
         for direction in possible_moves:
             # Create a new state by making the move
-            new_puzzle = current_puzzle.move(direction)
+            new_state = current_state.move(direction)
             
-            # Check if this state has been visited before
-            state_str = str(new_puzzle.state)
+            # Check if this state has been visited
+            state_str = str(new_state.state)
             if state_str not in visited:
                 visited.add(state_str)
-                # Add the new state to open_list with updated path
-                open_list.append((new_puzzle, path + [direction]))
+                # Add new state to open_list with updated path
+                open_list.append((new_state, path + [direction]))
     
-    # If open_list is empty and goal not found, return empty list
+    # If open_list is empty and no solution found
     return []

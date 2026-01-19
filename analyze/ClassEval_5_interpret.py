@@ -22,7 +22,7 @@ def interpret(self, display=False):
             continue
         
         # Find where the chord ends and tune begins
-        # Chord consists of letters (and possibly # or b), tune consists of digits
+        # Chord consists of letters (and possibly #, b, m), tune consists of digits
         chord_end = 0
         for i, char in enumerate(token):
             if char.isdigit():

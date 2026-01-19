@@ -7,13 +7,10 @@ def format_string(self, x):
     >>> formatter.format_string("123456")
     "एक सौ और तेईस हजार चार सौ और छप्पन केवल"
     """
-    # Hindi number words mapping
     ones = ["", "एक", "दो", "तीन", "चार", "पांच", "छह", "सात", "आठ", "नौ"]
     teens = ["दस", "ग्यारह", "बारह", "तेरह", "चौदह", "पंद्रह", "सोलह", "सत्रह", "अठारह", "उन्नीस"]
-    twenties = ["", "", "बीस", "तीस", "चालीस", "पचास", "साठ", "सत्तर", "अस्सी", "नब्बे"]
-    
-    # Special two-digit numbers (21-99)
-    two_digit_special = {
+    tens = ["", "", "बीस", "तीस", "चालीस", "पचास", "साठ", "सत्तर", "अस्सी", "नब्बे"]
+    twenty_to_ninety_nine = {
         21: "इक्कीस", 22: "बाईस", 23: "तेईस", 24: "चौबीस", 25: "पच्चीस",
         26: "छब्बीस", 27: "सत्ताईस", 28: "अट्ठाईस", 29: "उनतीस",
         31: "इकतीस", 32: "बत्तीस", 33: "तैंतीस", 34: "चौंतीस", 35: "पैंतीस",
@@ -32,33 +29,26 @@ def format_string(self, x):
         96: "छियानवे", 97: "सत्तानवे", 98: "अट्ठानवे", 99: "निन्यानवे"
     }
     
-    def convert_two_digit(n):
+    def convert_two_digits(n):
         if n == 0:
             return ""
         elif n < 10:
             return ones[n]
         elif n < 20:
             return teens[n - 10]
-        elif n in two_digit_special:
-            return two_digit_special[n]
+        elif n in twenty_to_ninety_nine:
+            return twenty_to_ninety_nine[n]
         else:
-            return twenties[n // 10] + (" " + ones[n % 10] if n % 10 != 0 else "")
+            return tens[n // 10] + (" " + ones[n % 10] if n % 10 != 0 else "")
     
-    def convert_three_digit(n):
-        if n == 0:
-            return ""
+    def convert_hundreds(n):
         result = []
-        hundreds = n // 100
-        remainder = n % 100
-        
-        if hundreds > 0:
-            result.append(ones[hundreds] + " सौ")
-        
-        if remainder > 0:
-            if hundreds > 0:
+        if n >= 100:
+            result.append(ones[n // 100] + " सौ")
+            if n % 100 != 0:
                 result.append("और")
-            result.append(convert_two_digit(remainder))
-        
+        if n % 100 != 0:
+            result.append(convert_two_digits(n % 100))
         return " ".join(result)
     
     num = int(x)
@@ -67,20 +57,20 @@ def format_string(self, x):
     
     result = []
     
-    # Handle lakhs (100000s)
+    # लाख (100000)
     if num >= 100000:
         lakhs = num // 100000
-        result.append(convert_two_digit(lakhs) + " लाख")
+        result.append(convert_hundreds(lakhs) + " लाख")
         num %= 100000
     
-    # Handle thousands (1000s)
+    # हजार (1000)
     if num >= 1000:
         thousands = num // 1000
-        result.append(convert_three_digit(thousands) + " हजार")
+        result.append(convert_hundreds(thousands) + " हजार")
         num %= 1000
     
-    # Handle remaining (0-999)
+    # सैकड़े और शेष
     if num > 0:
-        result.append(convert_three_digit(num))
+        result.append(convert_hundreds(num))
     
     return " ".join(result) + " केवल"

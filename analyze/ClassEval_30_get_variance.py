@@ -12,7 +12,7 @@ def get_variance(self):
     # Calculate mean
     mean = sum(self) / len(self)
     
-    # Calculate variance (sum of squared differences from mean divided by n)
+    # Calculate variance: average of squared differences from mean
     variance = sum((x - mean) ** 2 for x in self) / len(self)
     
     # Round to 2 decimal places

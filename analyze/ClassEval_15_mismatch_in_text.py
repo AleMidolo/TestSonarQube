@@ -9,15 +9,12 @@ def mismatch_in_text(self, currentPos):
 
     """
     # Compare pattern with text from right to left
-    # Starting from the end of the pattern
     for i in range(len(self.pattern) - 1, -1, -1):
         # Check if we're within text bounds
         if currentPos + i >= len(self.text):
             return i
-        
-        # If characters don't match, return the position in pattern
+        # Check for mismatch
         if self.pattern[i] != self.text[currentPos + i]:
             return i
-    
-    # If all characters match, return -1
+    # No mismatch found, pattern matches completely
     return -1

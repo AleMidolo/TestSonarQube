@@ -29,5 +29,5 @@ def create_order(self, order_id, product_id, quantity):
         'status': 'Shipped'
     }
     
-    # Reduce the inventory quantity
-    self.inventory[product_id]['quantity'] -= quantity
+    # Optionally reduce inventory (based on the context, this might be needed)
+    # self.inventory[product_id]['quantity'] -= quantity
