@@ -25,4 +25,4 @@ def _calculate(first_value, second_value, current_op):
     elif current_op == '%':
         return first_num % second_num
     else:
-        raise ValueError(f"Unknown operator: {current_op}")
+        raise ValueError("Invalid operator")

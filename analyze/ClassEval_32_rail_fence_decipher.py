@@ -35,7 +35,7 @@ def rail_fence_decipher(self, encrypted_text, rails):
             dir_down = True
         if row == rails - 1:
             dir_down = False
-        if rail[row][col] != '\n':
+        if rail[row][col] != '*':
             result.append(rail[row][col])
             col += 1
         if dir_down:

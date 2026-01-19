@@ -15,22 +15,20 @@ def format_string(self, x):
     words = []
     length = len(whole_part)
     for i in range(length):
-        if length - i > 3:
+        if length - i - 1 > 2:
             part = whole_part[max(0, length - i - 3):length - i]
             if part:
                 words.append(self.trans_three(part))
                 words.append(self.parse_more((length - i - 1) // 3))
-        elif length - i == 3:
-            part = whole_part[length - i - 3:length - i]
-            words.append(self.trans_three(part))
-        elif length - i == 2:
-            part = whole_part[length - i - 2:length - i]
-            words.append(self.trans_two(part))
-        elif length - i == 1:
-            part = whole_part[length - i - 1:length - i]
-            words.append(self.NUMBER[int(part)])
+        elif length - i - 1 == 2:
+            part = whole_part[max(0, length - i - 3):length - i]
+            if part:
+                words.append(self.trans_three(part))
+        elif length - i - 1 == 1:
+            part = whole_part[max(0, length - i - 2):length - i]
+            if part:
+                words.append(self.trans_two(part))
+    result = ' AND '.join(words).strip()
     if decimal_part:
-        words.append('AND')
-        words.append(self.trans_two(decimal_part))
-    words.append('ONLY')
-    return ' '.join(filter(None, words)).strip()
+        result += ' POINT ' + ' '.join((self.NUMBER[int(digit)] for digit in decimal_part))
+    return result + ' ONLY' if result else ''
