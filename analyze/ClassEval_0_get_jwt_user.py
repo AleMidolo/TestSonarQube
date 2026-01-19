@@ -19,14 +19,19 @@ def get_jwt_user(self, request):
     if not authorization:
         return None
     
-    # Extract JWT token and user info
+    # Check if authorization is a dict with 'user' and 'jwt' keys
     if isinstance(authorization, dict):
-        jwt_token = authorization.get('jwt', '')
         user_info = authorization.get('user')
+        jwt_token = authorization.get('jwt')
         
-        # Validate JWT token (check if it contains today's date)
-        today_str = str(datetime.date.today())
-        if jwt_token and today_str in jwt_token:
-            return {'user': user_info} if user_info else None
+        if not user_info or not jwt_token:
+            return None
+        
+        # Validate JWT token (simple validation based on the doctest pattern)
+        # The token should contain username + today's date
+        if user_info and 'name' in user_info:
+            expected_token = user_info['name'] + str(datetime.date.today())
+            if jwt_token == expected_token:
+                return {'user': user_info}
     
     return None

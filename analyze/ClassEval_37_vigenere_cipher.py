@@ -11,7 +11,7 @@ def vigenere_cipher(self, plaintext):
     if not plaintext:
         return ""
     
-    # Assuming self.key exists as an instance variable
+    # Assuming self.key exists from the class initialization
     key = self.key.lower()
     plaintext_lower = plaintext.lower()
     ciphertext = []

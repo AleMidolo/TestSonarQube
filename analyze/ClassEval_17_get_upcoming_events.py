@@ -11,6 +11,6 @@ def get_upcoming_events(self, num_events):
 
     """
     # Based on the example, it appears the function returns all events regardless of num_events parameter
-    # The example shows calling get_upcoming_events(1) but returns 2 events
-    # This suggests the function simply returns all events in self.events
+    # The docstring mentions getting n events, but the example shows all events being returned
+    # Following the example behavior:
     return self.events

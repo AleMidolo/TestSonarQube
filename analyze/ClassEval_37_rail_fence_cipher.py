@@ -8,7 +8,7 @@ def rail_fence_cipher(self, plain_text, rails):
     'acb'
 
     """
-    if rails <= 1 or len(plain_text) <= 1:
+    if rails <= 0 or rails >= len(plain_text):
         return plain_text
     
     # Create a list of empty strings for each rail

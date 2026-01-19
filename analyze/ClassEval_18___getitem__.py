@@ -14,4 +14,10 @@ def __getitem__(self, key):
         return components[0] + ''.join(x.title() for x in components[1:])
     
     camel_key = to_camel_case(key)
-    return self.__dict__[camel_key]
+    
+    # Try to get the value using the camelCase key
+    if hasattr(self, '_data'):
+        return self._data.get(camel_key)
+    else:
+        # Fallback to object attribute access
+        return getattr(self, camel_key)

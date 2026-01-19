@@ -9,6 +9,6 @@ def play(self):
     'song1'
 
     """
-    if self.current_song:
+    if hasattr(self, 'current_song') and self.current_song:
         return self.current_song
     return False

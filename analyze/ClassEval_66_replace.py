@@ -19,9 +19,13 @@ def replace(self, string):
             # Decimal (&#DDDD;)
             code_point = int(entity[2:-1], 10)
         
-        return chr(code_point)
+        try:
+            return chr(code_point)
+        except (ValueError, OverflowError):
+            # If invalid code point, return original entity
+            return entity
     
-    # Pattern matches &#digits; or &#xhex; or &#Xhex;
+    # Pattern matches &#DDDD; (decimal) or &#xHHHH; or &#XHHHH; (hexadecimal)
     pattern = r'&#[xX]?[0-9a-fA-F]+;'
     result = re.sub(pattern, replace_entity, string)
     

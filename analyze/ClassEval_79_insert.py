@@ -16,7 +16,9 @@ def insert(self, data):
     formatted_values = []
     for value in data.values():
         if isinstance(value, str):
-            formatted_values.append(f"'{value}'")
+            # Escape single quotes in strings
+            escaped_value = value.replace("'", "''")
+            formatted_values.append(f"'{escaped_value}'")
         elif value is None:
             formatted_values.append('NULL')
         else:
@@ -24,8 +26,7 @@ def insert(self, data):
     
     values = ', '.join(formatted_values)
     
-    # Construct the INSERT statement
-    # Assuming self has a table_name attribute (e.g., self.table_name = 'table1')
-    sql_statement = f"INSERT INTO {self.table_name} ({columns}) VALUES ({values});"
+    # Assuming self has a table_name attribute based on the example
+    table_name = getattr(self, 'table_name', 'table1')
     
-    return sql_statement
+    return f"INSERT INTO {table_name} ({columns}) VALUES ({values});"

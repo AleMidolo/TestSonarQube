@@ -16,15 +16,20 @@ def simulate_operation(self):
     while self.current_temp != self.target_temp:
         if self.mode == 'cool':
             # Cooling: decrease temperature
-            self.current_temp -= 0.5
-            if self.current_temp < self.target_temp:
-                self.current_temp = self.target_temp
+            if self.current_temp > self.target_temp:
+                self.current_temp -= 1
+                time += 1
+            else:
+                break
         elif self.mode == 'heat':
             # Heating: increase temperature
-            self.current_temp += 0.5
-            if self.current_temp > self.target_temp:
-                self.current_temp = self.target_temp
-        
-        time += 1
+            if self.current_temp < self.target_temp:
+                self.current_temp += 1
+                time += 1
+            else:
+                break
+        else:
+            # Mode is 'off' or unknown, no adjustment
+            break
     
     return time

@@ -8,12 +8,15 @@ def process_file(self):
     >>> textFileProcessor.process_file()
     'nametestage'
     """
+    # Read the file content
     with open(self.file_path, 'r') as file:
         content = file.read()
     
-    filtered_content = ''.join(char for char in content if char.isalpha())
+    # Filter out non-alphabetic characters
+    processed_content = ''.join(char for char in content if char.isalpha())
     
+    # Overwrite the file with processed content
     with open(self.file_path, 'w') as file:
-        file.write(filtered_content)
+        file.write(processed_content)
     
-    return filtered_content
+    return processed_content

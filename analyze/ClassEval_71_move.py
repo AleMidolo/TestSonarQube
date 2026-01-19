@@ -36,35 +36,55 @@ def move(self, direction):
     
     dy, dx = directions[direction]
     
-    # Find current player position
-    player_y, player_x = self.player_pos
+    # Calculate new player position
+    new_player_y = self.player_pos[0] + dy
+    new_player_x = self.player_pos[1] + dx
     
-    # Calculate new position
-    new_y = player_y + dy
-    new_x = player_x + dx
-    
-    # Check if new position is valid (not a wall)
-    if self.map[new_y][new_x] == '#':
+    # Check if new position is within bounds
+    if (new_player_y < 0 or new_player_y >= len(self.map) or 
+        new_player_x < 0 or new_player_x >= len(self.map[0])):
         return False
     
-    # Check if there's a box at the new position
-    if self.map[new_y][new_x] == 'X':
-        # Calculate box's new position
-        box_new_y = new_y + dy
-        box_new_x = new_x + dx
+    # Check what's at the new position
+    target_cell = self.map[new_player_y][new_player_x]
+    
+    # If it's a wall, can't move
+    if target_cell == '#':
+        return False
+    
+    # If it's empty space or goal, just move
+    if target_cell == ' ' or target_cell == 'G':
+        self.map[self.player_pos[0]][self.player_pos[1]] = ' '
+        self.map[new_player_y][new_player_x] = 'O'
+        self.player_pos = (new_player_y, new_player_x)
+    
+    # If it's a box, try to push it
+    elif target_cell == 'X':
+        # Calculate position behind the box
+        box_new_y = new_player_y + dy
+        box_new_x = new_player_x + dx
         
-        # Check if box can be pushed (destination is not wall or another box)
-        if self.map[box_new_y][box_new_x] == '#' or self.map[box_new_y][box_new_x] == 'X':
+        # Check if box can be pushed
+        if (box_new_y < 0 or box_new_y >= len(self.map) or 
+            box_new_x < 0 or box_new_x >= len(self.map[0])):
             return False
         
-        # Move the box
-        self.map[box_new_y][box_new_x] = 'X'
-        self.map[new_y][new_x] = ' '
+        box_target_cell = self.map[box_new_y][box_new_x]
+        
+        # Box can only be pushed to empty space or goal
+        if box_target_cell == ' ' or box_target_cell == 'G':
+            # Move the box
+            self.map[box_new_y][box_new_x] = 'X'
+            # Move the player
+            self.map[self.player_pos[0]][self.player_pos[1]] = ' '
+            self.map[new_player_y][new_player_x] = 'O'
+            self.player_pos = (new_player_y, new_player_x)
+            
+            # Check if box is on goal
+            if box_target_cell == 'G':
+                return True
+        else:
+            # Can't push box (blocked by wall or another box)
+            return False
     
-    # Move the player
-    self.map[player_y][player_x] = ' '
-    self.map[new_y][new_x] = 'O'
-    self.player_pos = (new_y, new_x)
-    
-    # Check if game is won (box is on goal)
-    return self.check_win()
+    return False

@@ -16,6 +16,7 @@ def taylor(self, x, n):
     result = 0.0
     
     for k in range(n + 1):
+        # Calculate (-1)^k * x^(2k) / (2k)!
         term = ((-1) ** k) * (x_rad ** (2 * k)) / math.factorial(2 * k)
         result += term
     

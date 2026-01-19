@@ -16,15 +16,15 @@ def correlation(x, y):
     mean_x = sum(x) / n
     mean_y = sum(y) / n
     
-    # Calculate numerator (covariance)
+    # Calculate numerator: sum of (x - mean_x) * (y - mean_y)
     numerator = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
     
-    # Calculate denominator (product of standard deviations)
+    # Calculate denominator: sqrt(sum of (x - mean_x)^2) * sqrt(sum of (y - mean_y)^2)
     sum_sq_x = sum((x[i] - mean_x) ** 2 for i in range(n))
     sum_sq_y = sum((y[i] - mean_y) ** 2 for i in range(n))
-    denominator = (sum_sq_x * sum_sq_y) ** 0.5
+    denominator = (sum_sq_x ** 0.5) * (sum_sq_y ** 0.5)
     
-    # Return Pearson correlation coefficient
+    # Return correlation coefficient
     if denominator == 0:
         return 0.0
     return numerator / denominator

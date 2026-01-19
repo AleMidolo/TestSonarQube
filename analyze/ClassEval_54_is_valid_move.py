@@ -25,5 +25,9 @@ def is_valid_move(self, pos1, pos2):
     if self.board[y1][x1] != self.board[y2][x2]:
         return False
     
+    # Check if either position is empty (already removed)
+    if self.board[y1][x1] is None or self.board[y2][x2] is None:
+        return False
+    
     # Check if there is a valid path between the two positions
     return self.has_valid_path(pos1, pos2)

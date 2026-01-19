@@ -6,15 +6,14 @@ def convert_to_utf8(self):
     'hello'
 
     """
-    # Split binary string into 8-bit chunks
+    # Split the binary string into chunks of 8 bits (1 byte each)
     binary_str = self.binary_string
     bytes_list = []
     
     for i in range(0, len(binary_str), 8):
         byte = binary_str[i:i+8]
-        if len(byte) == 8:
-            # Convert 8-bit binary to integer, then to character
-            bytes_list.append(int(byte, 2))
+        # Convert each 8-bit chunk to an integer, then to a character
+        bytes_list.append(int(byte, 2))
     
-    # Convert list of byte values to bytes object, then decode to UTF-8
+    # Convert the list of byte values to a UTF-8 string
     return bytes(bytes_list).decode('utf-8')

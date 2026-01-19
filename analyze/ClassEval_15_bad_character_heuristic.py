@@ -34,7 +34,7 @@ def bad_character_heuristic(self):
         # If pattern is found
         if j < 0:
             results.append(s)
-            # Shift pattern to align with next character
+            # Shift pattern to align with next possible match
             s += 1
         else:
             # Shift pattern based on bad character heuristic

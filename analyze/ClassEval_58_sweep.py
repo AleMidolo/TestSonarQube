@@ -20,7 +20,6 @@ def sweep(self, x, y):
     
     # If the cell is 0, recursively reveal adjacent cells
     if self.minesweeper_map[x][y] == 0:
-        # Check all 8 adjacent cells
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
                 if dx == 0 and dy == 0:
@@ -33,9 +32,9 @@ def sweep(self, x, y):
                         self.sweep(nx, ny)
     
     # Check if the player has won (all non-mine cells revealed)
-    for i in range(len(self.player_map)):
-        for j in range(len(self.player_map[0])):
-            if self.player_map[i][j] == '-' and self.minesweeper_map[i][j] != 'X':
+    for i in range(len(self.minesweeper_map)):
+        for j in range(len(self.minesweeper_map[0])):
+            if self.minesweeper_map[i][j] != 'X' and self.player_map[i][j] == '-':
                 return self.player_map
     
     return True

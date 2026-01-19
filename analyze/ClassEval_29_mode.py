@@ -18,7 +18,7 @@ def mode(self, data):
     # Find the maximum frequency
     max_freq = max(frequency.values())
     
-    # Find all values with maximum frequency
+    # Get all values with maximum frequency
     modes = [key for key, freq in frequency.items() if freq == max_freq]
     
     # Sort the modes for consistent output

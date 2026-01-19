@@ -6,12 +6,14 @@ def calculate_binary_info(self):
     {'Zeroes': 0.475, 'Ones': 0.525, 'Bit length': 40}
 
     """
-    total_length = len(self)
+    binary_string = self.binary_string
+    total_length = len(binary_string)
+    
     if total_length == 0:
         return {'Zeroes': 0.0, 'Ones': 0.0, 'Bit length': 0}
     
-    count_zeros = self.count('0')
-    count_ones = self.count('1')
+    count_zeros = binary_string.count('0')
+    count_ones = binary_string.count('1')
     
     percentage_zeros = count_zeros / total_length
     percentage_ones = count_ones / total_length

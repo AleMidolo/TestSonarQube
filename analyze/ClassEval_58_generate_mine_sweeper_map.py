@@ -13,19 +13,22 @@ def generate_mine_sweeper_map(self):
     board = [[0 for _ in range(self.n)] for _ in range(self.n)]
     
     # Randomly place k mines on the board
-    positions = [(i, j) for i in range(self.n) for j in range(self.n)]
-    mine_positions = random.sample(positions, self.k)
-    
-    # Place mines on the board
-    for row, col in mine_positions:
-        board[row][col] = 'X'
+    mines_placed = 0
+    while mines_placed < self.k:
+        row = random.randint(0, self.n - 1)
+        col = random.randint(0, self.n - 1)
+        
+        # Only place mine if position doesn't already have one
+        if board[row][col] != 'X':
+            board[row][col] = 'X'
+            mines_placed += 1
     
     # Calculate numbers for non-mine cells
     for i in range(self.n):
         for j in range(self.n):
             if board[i][j] != 'X':
-                # Count adjacent mines
-                count = 0
+                # Count mines in surrounding cells
+                mine_count = 0
                 for di in [-1, 0, 1]:
                     for dj in [-1, 0, 1]:
                         if di == 0 and dj == 0:
@@ -33,7 +36,7 @@ def generate_mine_sweeper_map(self):
                         ni, nj = i + di, j + dj
                         if 0 <= ni < self.n and 0 <= nj < self.n:
                             if board[ni][nj] == 'X':
-                                count += 1
-                board[i][j] = count
+                                mine_count += 1
+                board[i][j] = mine_count
     
     return board

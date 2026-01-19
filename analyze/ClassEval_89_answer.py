@@ -12,22 +12,21 @@ def answer(self, expression):
     try:
         # Extract all numbers from the expression
         import re
-        numbers_in_expr = []
-        for num in re.findall(r'\d+', expression):
-            numbers_in_expr.append(int(num))
-        
-        # Sort both lists to compare
-        numbers_in_expr.sort()
-        nums_sorted = sorted(self.nums)
+        numbers_in_expr = re.findall(r'\d+', expression)
+        numbers_in_expr = [int(n) for n in numbers_in_expr]
         
         # Check if the numbers used match the available cards
-        if numbers_in_expr != nums_sorted:
+        nums_sorted = sorted(self.nums)
+        expr_sorted = sorted(numbers_in_expr)
+        
+        if nums_sorted != expr_sorted:
             return False
         
         # Evaluate the expression
         result = eval(expression)
         
         # Check if result equals 24 (with floating point tolerance)
-        return abs(result - 24) < 1e-9
+        return abs(result - 24) < 1e-6
+        
     except:
         return False

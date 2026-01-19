@@ -10,6 +10,5 @@ def insert_coin(self, amount):
     """
     if not hasattr(self, 'balance'):
         self.balance = 0.0
-    
     self.balance += amount
     return self.balance

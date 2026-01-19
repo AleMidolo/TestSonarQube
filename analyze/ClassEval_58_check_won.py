@@ -12,9 +12,7 @@ def check_won(self, map):
     for i in range(len(map)):
         for j in range(len(map[i])):
             if map[i][j] == '-':
-                # Check if this unrevealed cell corresponds to a mine in the minesweeper_map
+                # Check if the corresponding cell in minesweeper_map is a mine
                 if self.minesweeper_map[i][j] != 'X':
-                    # There's an unrevealed cell that's not a mine, so game is not won
                     return False
-    # All unrevealed cells are mines, so player has won
     return True
