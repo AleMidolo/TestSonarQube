@@ -7,29 +7,20 @@ def process_excel_data(self, N, save_file_name):
     >>> processor = ExcelProcessor()
     >>> success, output_file = processor.process_excel_data(1, 'test_data.xlsx')
     """
-    import openpyxl
-    
     # Read the Excel file
-    try:
-        workbook = openpyxl.load_workbook(save_file_name)
-        sheet = workbook.active
-        
-        # Process the specified column (N is 1-indexed)
-        for row in sheet.iter_rows(min_row=1, min_col=N, max_col=N):
-            for cell in row:
-                if cell.value is not None:
-                    # Convert cell value to uppercase if it's a string
-                    if isinstance(cell.value, str):
-                        cell.value = cell.value.upper()
-        
-        # Save the modified workbook
-        output_file_name = f"processed_{save_file_name}"
-        workbook.save(output_file_name)
-        workbook.close()
-        
-        # Assuming write_excel returns 1 for success
-        return (1, output_file_name)
+    data = self.read_excel()
     
-    except Exception as e:
-        # Return 0 for failure
+    if data is None or len(data) == 0:
         return (0, save_file_name)
+    
+    # Process the specified column (N is 1-indexed)
+    # Convert column N to uppercase
+    for row in data:
+        if len(row) >= N and row[N-1] is not None:
+            if isinstance(row[N-1], str):
+                row[N-1] = row[N-1].upper()
+    
+    # Write the processed data to the save file
+    result = self.write_excel(data, save_file_name)
+    
+    return (result, save_file_name)

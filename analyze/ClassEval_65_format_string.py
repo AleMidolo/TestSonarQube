@@ -7,53 +7,61 @@ def format_string(self, x):
     >>> formatter.format_string("123456")
     "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
     """
+    # Define word mappings
     ones = ["", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]
     teens = ["TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", 
              "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"]
     tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"]
     
-    def convert_below_thousand(num):
-        if num == 0:
+    def convert_below_thousand(n):
+        """Convert numbers below 1000 to words"""
+        if n == 0:
             return ""
-        elif num < 10:
-            return ones[num]
-        elif num < 20:
-            return teens[num - 10]
-        elif num < 100:
-            return tens[num // 10] + (" " + ones[num % 10] if num % 10 != 0 else "")
+        elif n < 10:
+            return ones[n]
+        elif n < 20:
+            return teens[n - 10]
+        elif n < 100:
+            result = tens[n // 10]
+            if n % 10 != 0:
+                result += " " + ones[n % 10]
+            return result
         else:
-            hundred_part = ones[num // 100] + " HUNDRED"
-            remainder = num % 100
-            if remainder == 0:
-                return hundred_part
-            else:
-                return hundred_part + " AND " + convert_below_thousand(remainder)
+            result = ones[n // 100] + " HUNDRED"
+            remainder = n % 100
+            if remainder != 0:
+                result += " AND " + convert_below_thousand(remainder)
+            return result
     
-    # Remove leading zeros and handle empty string
-    x = x.lstrip('0') or '0'
+    # Handle zero case
     num = int(x)
-    
     if num == 0:
         return "ZERO ONLY"
     
-    # Split number into groups of thousands
-    billion = num // 1000000000
-    million = (num % 1000000000) // 1000000
-    thousand = (num % 1000000) // 1000
-    remainder = num % 1000
+    # Process the number in groups of thousands
+    result_parts = []
     
-    result = []
+    # Billions
+    if num >= 1000000000:
+        billions = num // 1000000000
+        result_parts.append(convert_below_thousand(billions) + " BILLION")
+        num %= 1000000000
     
-    if billion > 0:
-        result.append(convert_below_thousand(billion) + " BILLION")
+    # Millions
+    if num >= 1000000:
+        millions = num // 1000000
+        result_parts.append(convert_below_thousand(millions) + " MILLION")
+        num %= 1000000
     
-    if million > 0:
-        result.append(convert_below_thousand(million) + " MILLION")
+    # Thousands
+    if num >= 1000:
+        thousands = num // 1000
+        result_parts.append(convert_below_thousand(thousands) + " THOUSAND")
+        num %= 1000
     
-    if thousand > 0:
-        result.append(convert_below_thousand(thousand) + " THOUSAND")
+    # Hundreds, tens, ones
+    if num > 0:
+        result_parts.append(convert_below_thousand(num))
     
-    if remainder > 0:
-        result.append(convert_below_thousand(remainder))
-    
-    return " ".join(result) + " ONLY"
+    result = " ".join(result_parts)
+    return result + " ONLY"

@@ -19,9 +19,8 @@ def _select(self, dataIndex: int, resultList: List[str], resultIndex: int, resul
         return
     
     # Recursive case: try each element from dataIndex onwards
-    # We need to ensure we have enough elements left to fill the remaining positions
-    # Elements needed = len(resultList) - resultIndex
-    # Elements available = len(self.data) - dataIndex
-    for i in range(dataIndex, len(self.data) - (len(resultList) - resultIndex) + 1):
+    for i in range(dataIndex, len(self.data)):
+        # Place the current element at resultIndex
         resultList[resultIndex] = self.data[i]
+        # Recursively fill the next position, starting from i+1 to avoid duplicates
         self._select(i + 1, resultList, resultIndex + 1, result)

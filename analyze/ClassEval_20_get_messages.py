@@ -11,7 +11,4 @@ def get_messages(self, username):
     []
 
     """
-    if username in self.users:
-        return self.users[username]
-    else:
-        return []
+    return self.users.get(username, [])

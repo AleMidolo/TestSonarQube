@@ -13,17 +13,17 @@ def is_valid(self):
             return False
         
         for part in parts:
-            # Check if part is empty or not a valid number
-            if not part or (part[0] == '0' and len(part) > 1):
+            if not part:
                 return False
             
-            # Check if all characters are digits
             if not part.isdigit():
                 return False
             
-            # Convert to integer and check range
             num = int(part)
             if num < 0 or num > 255:
+                return False
+            
+            if len(part) > 1 and part[0] == '0':
                 return False
         
         return True

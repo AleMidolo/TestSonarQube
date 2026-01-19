@@ -9,23 +9,29 @@ def add(num1, num2):
     '111111111011111111100'
 
     """
-    # Make sure both numbers have the same length by padding with zeros
-    max_len = max(len(num1), len(num2))
-    num1 = num1.zfill(max_len)
-    num2 = num2.zfill(max_len)
+    # Make num1 the longer number
+    if len(num1) < len(num2):
+        num1, num2 = num2, num1
+    
+    # Reverse both strings for easier addition from right to left
+    num1 = num1[::-1]
+    num2 = num2[::-1]
     
     result = []
     carry = 0
     
-    # Add from right to left
-    for i in range(max_len - 1, -1, -1):
-        digit_sum = int(num1[i]) + int(num2[i]) + carry
-        result.append(str(digit_sum % 10))
-        carry = digit_sum // 10
+    # Add digits from both numbers
+    for i in range(len(num1)):
+        digit1 = int(num1[i])
+        digit2 = int(num2[i]) if i < len(num2) else 0
+        
+        total = digit1 + digit2 + carry
+        result.append(str(total % 10))
+        carry = total // 10
     
-    # If there's a remaining carry, add it
+    # Add remaining carry if any
     if carry > 0:
         result.append(str(carry))
     
-    # Reverse the result and join into a string
-    return ''.join(reversed(result))
+    # Reverse the result to get the final answer
+    return ''.join(result[::-1])

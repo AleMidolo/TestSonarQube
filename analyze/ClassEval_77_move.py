@@ -18,20 +18,17 @@ def move(self, direction):
         self.length = 1
         self.positions = [self.positions[0]]
         self.score = 0
-        return
-    
-    # Add new head position
-    self.positions.insert(0, new_head)
-    
-    # Check if snake ate food
-    if hasattr(self, 'food') and new_head == self.food:
-        # Eat the food - increase length and score
+    # Check if new head position is at food location
+    elif hasattr(self, 'food') and new_head == self.food:
+        # Eat the food
+        self.positions.insert(0, new_head)
         self.length += 1
         self.score += 10
         # Generate new food position (assuming there's a method for this)
         if hasattr(self, 'generate_food'):
             self.generate_food()
     else:
-        # No food eaten - remove tail to maintain length
+        # Normal move - add new head and remove tail
+        self.positions.insert(0, new_head)
         if len(self.positions) > self.length:
             self.positions.pop()

@@ -7,30 +7,34 @@ def split_sentences(self, sentences_string):
     >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
     ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
     """
-    if not sentences_string:
+    import re
+    
+    # Handle edge cases
+    if not sentences_string or not sentences_string.strip():
         return []
     
+    # Pattern explanation:
+    # (?<!Mr)  - Negative lookbehind: not preceded by "Mr"
+    # [.?]     - Match . or ?
+    # (?=\s|$) - Positive lookahead: followed by whitespace or end of string
+    pattern = r'(?<!Mr)[.?](?=\s|$)'
+    
+    # Split by the pattern but keep the delimiters
+    parts = re.split(pattern, sentences_string)
+    
+    # Find all sentence-ending punctuation marks
+    delimiters = re.findall(pattern, sentences_string)
+    
+    # Reconstruct sentences by combining parts with their delimiters
     sentences = []
-    current_sentence = []
-    words = sentences_string.split()
-    
-    for i, word in enumerate(words):
-        current_sentence.append(word)
-        
-        # Check if word ends with . or ?
-        if word.endswith('.') or word.endswith('?'):
-            # Check if it's not "Mr." (or similar titles)
-            # Mr. is not a sentence ending if there are more words after it
-            if word.endswith('.') and word == "Mr.":
-                # Don't end the sentence here
-                continue
+    for i, part in enumerate(parts):
+        if part.strip():  # Only process non-empty parts
+            if i < len(delimiters):
+                # Add the delimiter back to the sentence
+                sentence = part.strip() + delimiters[i]
             else:
-                # This is a sentence ending
-                sentences.append(' '.join(current_sentence))
-                current_sentence = []
-    
-    # Add any remaining words as a sentence
-    if current_sentence:
-        sentences.append(' '.join(current_sentence))
+                # Last part might not have a delimiter
+                sentence = part.strip()
+            sentences.append(sentence)
     
     return sentences

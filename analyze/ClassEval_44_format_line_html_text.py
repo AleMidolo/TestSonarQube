@@ -27,10 +27,10 @@ def format_line_html_text(self, html_text):
     
     # Find all <pre> tags (which typically contain code)
     for pre_tag in soup.find_all('pre'):
-        # Replace the <pre> tag with -CODE- placeholder
+        # Replace the pre tag with a placeholder
         pre_tag.replace_with('-CODE-')
     
-    # Get the text content, which will strip HTML tags
+    # Get the text content
     text = soup.get_text()
     
     # Clean up extra whitespace while preserving the structure

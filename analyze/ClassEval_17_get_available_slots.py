@@ -13,15 +13,17 @@ def get_available_slots(self, date):
     
     # Define the start and end of the day
     day_start = datetime(date.year, date.month, date.day, 0, 0)
-    day_end = datetime(date.year, date.month, date.day, 23, 59, 59)
-    # For consistency with the example, use next day midnight
-    day_end = day_start + timedelta(days=1)
+    day_end = datetime(date.year, date.month, date.day, 0, 0) + timedelta(days=1)
     
     # Get all events on the given date
     events_on_date = []
     for event in self.events:
-        event_date = event['start_time']
-        if event_date.year == date.year and event_date.month == date.month and event_date.day == date.day:
+        event_start = event['start_time']
+        event_end = event['end_time']
+        
+        # Check if event overlaps with the given date
+        if event_start.date() == date.date() or event_end.date() == date.date() or \
+           (event_start.date() < date.date() < event_end.date()):
             events_on_date.append(event)
     
     # Sort events by start time
@@ -32,13 +34,17 @@ def get_available_slots(self, date):
     current_time = day_start
     
     for event in events_on_date:
-        # If there's a gap between current_time and event start, it's available
-        if current_time < event['start_time']:
-            available_slots.append((current_time, event['start_time']))
+        event_start = max(event['start_time'], day_start)
+        event_end = min(event['end_time'], day_end)
+        
+        # If there's a gap before this event
+        if current_time < event_start:
+            available_slots.append((current_time, event_start))
+        
         # Move current_time to the end of this event
-        current_time = max(current_time, event['end_time'])
+        current_time = max(current_time, event_end)
     
-    # Check if there's time left at the end of the day
+    # Check if there's time remaining at the end of the day
     if current_time < day_end:
         available_slots.append((current_time, day_end))
     

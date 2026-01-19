@@ -11,8 +11,8 @@ def add_heading(self, heading, level=1):
         if not isinstance(level, int) or level < 1:
             return False
         
-        # Assuming this is a method of a class that has a document object
-        # (e.g., using python-docx library)
+        # Assuming this is part of a class that has a document object (e.g., python-docx)
+        # self.document should be a Document instance from python-docx
         self.document.add_heading(heading, level=level)
         return True
     except Exception:

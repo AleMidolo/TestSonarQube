@@ -16,21 +16,20 @@ def send_to(self, recv, content, size):
     from datetime import datetime
     
     # Check if receiver has enough space in their inbox
-    current_size = sum(email.get('size', 0) for email in (recv.inbox if isinstance(recv.inbox, list) else [recv.inbox]) if email)
+    current_size = sum(email.get('size', 0) for email in recv.inbox) if isinstance(recv.inbox, list) else recv.inbox.get('size', 0) if isinstance(recv.inbox, dict) else 0
     
-    # If recv.inbox is a dict (single email) or needs initialization
-    if not hasattr(recv, 'inbox'):
-        recv.inbox = []
-    elif isinstance(recv.inbox, dict):
-        recv.inbox = [recv.inbox] if recv.inbox else []
+    # If inbox is a list, calculate total size
+    if isinstance(recv.inbox, list):
+        current_size = sum(email.get('size', 0) for email in recv.inbox)
+    elif isinstance(recv.inbox, dict) and recv.inbox:
+        # If inbox already has an email as dict, we need to check capacity
+        current_size = recv.inbox.get('size', 0)
+    else:
+        current_size = 0
     
-    # Calculate current inbox size
-    current_size = sum(email.get('size', 0) for email in recv.inbox)
-    
-    # Check if there's enough capacity
-    if hasattr(recv, 'capacity'):
-        if current_size + size > recv.capacity:
-            return False
+    # Check if adding this email would exceed capacity
+    if hasattr(recv, 'capacity') and current_size + size > recv.capacity:
+        return False
     
     # Create email object
     email = {
@@ -42,7 +41,13 @@ def send_to(self, recv, content, size):
         'state': 'unread'
     }
     
-    # Based on the docstring example, it seems inbox should be a single dict
-    recv.inbox = email
+    # Add to receiver's inbox
+    if not hasattr(recv, 'inbox') or recv.inbox is None:
+        recv.inbox = email
+    elif isinstance(recv.inbox, list):
+        recv.inbox.append(email)
+    else:
+        # If inbox is a dict (single email), convert to list or replace
+        recv.inbox = email
     
     return True

@@ -9,27 +9,13 @@ def get_correlation(self):
     import numpy as np
     
     # Assuming self has data attribute that is a list or array
-    data = np.array(self.data if hasattr(self, 'data') else self)
+    data = np.array(self.data)
     
-    # For a single series, calculate correlation with its index (position)
+    # For a single dataset, calculate correlation with its index (position)
     # This gives correlation between values and their positions
-    n = len(data)
-    x = np.arange(n)  # positions: 0, 1, 2, 3, ...
-    y = data
+    indices = np.arange(len(data))
     
-    # Calculate Pearson correlation coefficient
-    if n < 2:
-        return 1.0
+    # Calculate correlation coefficient
+    correlation = np.corrcoef(indices, data)[0, 1]
     
-    mean_x = np.mean(x)
-    mean_y = np.mean(y)
-    
-    numerator = np.sum((x - mean_x) * (y - mean_y))
-    denominator = np.sqrt(np.sum((x - mean_x)**2) * np.sum((y - mean_y)**2))
-    
-    if denominator == 0:
-        return 1.0
-    
-    correlation = numerator / denominator
-    
-    return float(correlation)
+    return correlation

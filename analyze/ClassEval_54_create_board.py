@@ -11,31 +11,29 @@ def create_board(self):
     """
     import random
     
-    rows, cols = self.board_size
+    rows, cols = self.board_size[0], self.board_size[1]
     total_cells = rows * cols
     
     # Calculate how many pairs we need
     num_pairs = total_cells // 2
     
-    # Create a list of icons, repeating each icon twice to form pairs
-    icons_list = []
+    # Create a flat list with pairs of icons
+    flat_board = []
     icon_index = 0
     for _ in range(num_pairs):
-        icons_list.append(self.icons[icon_index % len(self.icons)])
-        icons_list.append(self.icons[icon_index % len(self.icons)])
+        icon = self.icons[icon_index % len(self.icons)]
+        flat_board.extend([icon, icon])
         icon_index += 1
     
-    # Shuffle the icons
-    random.shuffle(icons_list)
+    # Shuffle the flat list
+    random.shuffle(flat_board)
     
-    # Create the 2D board
+    # Convert to 2D board
     board = []
-    index = 0
     for i in range(rows):
         row = []
         for j in range(cols):
-            row.append(icons_list[index])
-            index += 1
+            row.append(flat_board[i * cols + j])
         board.append(row)
     
     self.board = board

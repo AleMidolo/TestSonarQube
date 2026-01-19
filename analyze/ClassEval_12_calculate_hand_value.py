@@ -27,7 +27,7 @@ def calculate_hand_value(self, hand):
     
     # Adjust for Aces if total exceeds 21
     while total_value > 21 and ace_count > 0:
-        total_value -= 10  # Convert one Ace from 11 to 1
+        total_value -= 10  # Convert an Ace from 11 to 1
         ace_count -= 1
     
     return total_value

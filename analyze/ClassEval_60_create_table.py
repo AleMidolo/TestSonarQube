@@ -6,7 +6,7 @@ def create_table(self):
     cursor = self.conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS tickets (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
             movie_name TEXT NOT NULL,
             theater_name TEXT NOT NULL,
             seat_number TEXT NOT NULL,

@@ -48,6 +48,6 @@ def palindromic_string(self):
             max_len = P[i]
             center_index = i
     
-    # Extract the longest palindromic substring from original string
+    # Extract the longest palindrome from original string
     start = (center_index - max_len) // 2
     return self.string[start:start + max_len]

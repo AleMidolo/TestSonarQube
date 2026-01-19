@@ -10,33 +10,32 @@ def correlation_matrix(data):
 
     """
     n = len(data)
-    if n == 0:
-        return []
+    
+    # Calculate means for each row
+    means = []
+    for row in data:
+        means.append(sum(row) / len(row))
+    
+    # Calculate standard deviations for each row
+    std_devs = []
+    for i, row in enumerate(data):
+        variance = sum((x - means[i]) ** 2 for x in row) / len(row)
+        std_devs.append(variance ** 0.5)
     
     # Initialize correlation matrix
     corr_matrix = [[0.0 for _ in range(n)] for _ in range(n)]
     
-    # Calculate correlation for each pair of rows
+    # Calculate correlation coefficients
     for i in range(n):
         for j in range(n):
-            # Calculate means
-            mean_i = sum(data[i]) / len(data[i])
-            mean_j = sum(data[j]) / len(data[j])
-            
-            # Calculate numerator (covariance)
-            numerator = sum((data[i][k] - mean_i) * (data[j][k] - mean_j) 
-                          for k in range(len(data[i])))
-            
-            # Calculate denominator (product of standard deviations)
-            sum_sq_i = sum((data[i][k] - mean_i) ** 2 for k in range(len(data[i])))
-            sum_sq_j = sum((data[j][k] - mean_j) ** 2 for k in range(len(data[j])))
-            
-            denominator = (sum_sq_i * sum_sq_j) ** 0.5
-            
-            # Calculate correlation coefficient
-            if denominator == 0:
-                corr_matrix[i][j] = 1.0 if i == j else 0.0
+            if std_devs[i] == 0 or std_devs[j] == 0:
+                # If standard deviation is 0, correlation is 1 (perfect correlation with itself)
+                corr_matrix[i][j] = 1.0
             else:
-                corr_matrix[i][j] = numerator / denominator
+                # Calculate covariance
+                covariance = sum((data[i][k] - means[i]) * (data[j][k] - means[j]) 
+                               for k in range(len(data[i]))) / len(data[i])
+                # Calculate correlation coefficient
+                corr_matrix[i][j] = covariance / (std_devs[i] * std_devs[j])
     
     return corr_matrix

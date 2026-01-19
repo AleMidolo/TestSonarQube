@@ -8,7 +8,7 @@ def check_win(self):
     """
     # Check if all boxes are on target positions
     # Assuming 'X' represents boxes and 'G' represents goals/targets
-    # When a box is on a target, it might be represented differently (e.g., '*' or we need to track positions)
+    # When a box is on a target, it might be represented differently (e.g., as a combined state)
     
     # Count boxes not on targets and targets without boxes
     for row in self.grid:

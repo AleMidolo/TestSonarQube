@@ -18,7 +18,7 @@ def calculate(self, expression):
             return 2
         return 0
     
-    def apply_operator(operators, values):
+    def apply_operation(operators, values):
         operator = operators.pop()
         right = values.pop()
         left = values.pop()
@@ -57,20 +57,20 @@ def calculate(self, expression):
         # If current character is a closing parenthesis
         elif expression[i] == ')':
             while operators and operators[-1] != '(':
-                apply_operator(operators, values)
+                apply_operation(operators, values)
             operators.pop()  # Remove '('
         
         # If current character is an operator
         elif expression[i] in ['+', '-', '*', '/']:
             while (operators and operators[-1] != '(' and
                    precedence(operators[-1]) >= precedence(expression[i])):
-                apply_operator(operators, values)
+                apply_operation(operators, values)
             operators.append(expression[i])
         
         i += 1
     
     # Apply remaining operators
     while operators:
-        apply_operator(operators, values)
+        apply_operation(operators, values)
     
     return values[0]

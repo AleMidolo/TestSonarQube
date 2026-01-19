@@ -19,10 +19,10 @@ def insert_into_database(self, table_name, data):
     # Prepare the SQL INSERT statement
     sql = f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})"
     
-    # Extract values from each dictionary in the same order as columns
+    # Extract values for each row
     values_list = []
     for row in data:
-        values = [row[col] for col in columns]
+        values = [row.get(col) for col in columns]
         values_list.append(tuple(values))
     
     # Execute the insert statement
