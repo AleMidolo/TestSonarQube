@@ -5,7 +5,7 @@ def read_excel(self, file_name):
         :return:list di dati, Dati in Excel
         """
     try:
-        workbook = openpyxl.load_workbook(file_name)
+        workbook = openpyxl.load_workbook(file_name, data_only=True)
         sheet = workbook.active
         data = []
         for row in sheet.iter_rows(values_only=True):

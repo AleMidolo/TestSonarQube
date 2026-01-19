@@ -9,5 +9,8 @@ def read_file_as_json(self):
         >>> type(textFileProcessor.read_file_as_json())
         <class 'dict'>
         """
-    with open(self.file_path, 'r') as file:
-        return json.load(file)
+    content = self.read_file()
+    try:
+        return json.loads(content)
+    except json.JSONDecodeError as e:
+        raise ValueError(f'Invalid JSON format in file {self.file_path}: {e}')

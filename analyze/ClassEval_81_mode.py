@@ -9,9 +9,9 @@ def mode(data):
         [3]
 
         """
-    from collections import Counter
     if not data:
-        return []
+        return None
     count = Counter(data)
     max_count = max(count.values())
-    return [num for num, freq in count.items() if freq == max_count]
+    modes = [value for value, freq in count.items() if freq == max_count]
+    return sorted(modes)

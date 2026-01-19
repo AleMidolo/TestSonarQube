@@ -1,9 +1,11 @@
 def _validate_phoneNumber(self, phoneNumber: str) -> str:
     """
-        Validate the phone number and return it. If phoneNumber is empty or not an 11-digit number, set to None.
-        :param phoneNumber: str, the phone number to validate
-        :return: str, the validated phone number or None if invalid
+        Valida il numero di telefono e lo restituisce. Se phoneNumber è vuoto o non è un numero di 11 cifre, imposta a None.
+        :param phoneNumber: str, il numero di telefono da validare
+        :return: str, il numero di telefono validato o None se non valido
         """
-    if not phoneNumber or not phoneNumber.isdigit() or len(phoneNumber) != 11:
+    if not phoneNumber:
+        return None
+    if len(phoneNumber) != 11 or not phoneNumber.isdigit():
         return None
     return phoneNumber

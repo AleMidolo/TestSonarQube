@@ -4,11 +4,10 @@ def _get_alignment_value(self, alignment):
         :param alignment: str, la stringa di allineamento ('sinistra', 'centro' o 'destra').
         :return: int, il valore di allineamento.
         """
-    if alignment == 'left':
-        return WD_PARAGRAPH_ALIGNMENT.LEFT
-    elif alignment == 'center':
+    alignment = alignment.lower()
+    if alignment == 'center' or alignment == 'centro':
         return WD_PARAGRAPH_ALIGNMENT.CENTER
-    elif alignment == 'right':
+    elif alignment == 'right' or alignment == 'destra':
         return WD_PARAGRAPH_ALIGNMENT.RIGHT
     else:
-        raise ValueError("Invalid alignment value. Use 'left', 'center', or 'right'.")
+        return WD_PARAGRAPH_ALIGNMENT.LEFT

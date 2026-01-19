@@ -9,9 +9,17 @@ def create_board(self):
                     ['a', 'b', 'c', 'a'],
                     ['a', 'b', 'c', 'a']]
         """
-    num_icons = len(self.ICONS)
-    total_tiles = self.BOARD_SIZE[0] * self.BOARD_SIZE[1]
-    icons_to_place = (self.ICONS * (total_tiles // num_icons))[:total_tiles]
-    random.shuffle(icons_to_place)
-    board = [icons_to_place[i:i + self.BOARD_SIZE[1]] for i in range(0, total_tiles, self.BOARD_SIZE[1])]
+    rows, cols = self.BOARD_SIZE
+    total_cells = rows * cols
+    icon_pairs = []
+    for icon in self.ICONS:
+        icon_pairs.extend([icon, icon])
+    while len(icon_pairs) < total_cells:
+        icon_pairs.extend(icon_pairs)
+    icons_to_use = icon_pairs[:total_cells]
+    random.shuffle(icons_to_use)
+    board = []
+    for i in range(rows):
+        row = icons_to_use[i * cols:(i + 1) * cols]
+        board.append(row)
     return board

@@ -10,6 +10,6 @@ def format(self, x):
     if isinstance(x, int):
         return self.format_string(str(x))
     elif isinstance(x, float):
-        return self.format_string(f'{x:.2f}')
+        return self.format_string(str(x))
     else:
-        raise ValueError('Input must be an integer or float.')
+        raise TypeError('Input must be int or float')

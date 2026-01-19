@@ -8,8 +8,8 @@ def accuracy(self, predicted_labels, true_labels):
         >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])
         0.5
         """
-    correct_predictions = self.true_positives + self.true_negatives
-    total_predictions = len(predicted_labels)
-    if total_predictions == 0:
+    self.update(predicted_labels, true_labels)
+    total = self.true_positives + self.false_positives + self.false_negatives + self.true_negatives
+    if total == 0:
         return 0.0
-    return correct_predictions / total_predictions
+    return (self.true_positives + self.true_negatives) / total

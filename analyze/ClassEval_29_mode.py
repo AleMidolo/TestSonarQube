@@ -7,7 +7,9 @@ def mode(self, data):
         >>> ds.mode([2, 2, 3, 3, 4])
         [2, 3]
         """
-    count = Counter(data)
-    max_freq = max(count.values())
-    modes = [key for key, freq in count.items() if freq == max_freq]
-    return modes
+    if not data:
+        return []
+    counter = Counter(data)
+    max_count = max(counter.values())
+    modes = [value for value, count in counter.items() if count == max_count]
+    return sorted(modes)

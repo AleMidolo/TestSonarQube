@@ -7,4 +7,12 @@ def cos(self, x):
         >>> tricalculator.cos(60)
         0.5
         """
-    return self.taylor(x, 50)
+    x = x / 180 * pi
+    g = 0
+    t = 1
+    n = 1
+    while fabs(t) >= 1e-15:
+        g += t
+        n += 1
+        t = -t * x * x / (2 * n - 1) / (2 * n - 2)
+    return round(g, 10)

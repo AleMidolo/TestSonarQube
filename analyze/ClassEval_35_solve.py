@@ -7,17 +7,21 @@ def solve(self):
         ['destra']
         """
     from collections import deque
-    open_list = deque([(self.initial_state, [])])
+    if self.initial_state == self.goal_state:
+        return []
+    queue = deque()
+    queue.append((self.initial_state, []))
     visited = set()
-    visited.add(tuple(map(tuple, self.initial_state)))
-    while open_list:
-        current_state, path = open_list.popleft()
+    visited.add(tuple((tuple(row) for row in self.initial_state)))
+    while queue:
+        current_state, path = queue.popleft()
         if current_state == self.goal_state:
             return path
-        for move_direction in self.get_possible_moves(current_state):
-            new_state = self.move(current_state, move_direction)
-            new_path = path + [move_direction]
-            if tuple(map(tuple, new_state)) not in visited:
-                visited.add(tuple(map(tuple, new_state)))
-                open_list.append((new_state, new_path))
-    return []
+        possible_moves = self.get_possible_moves(current_state)
+        for move in possible_moves:
+            new_state = self.move(current_state, move)
+            state_tuple = tuple((tuple(row) for row in new_state))
+            if state_tuple not in visited:
+                visited.add(state_tuple)
+                queue.append((new_state, path + [move]))
+    return None

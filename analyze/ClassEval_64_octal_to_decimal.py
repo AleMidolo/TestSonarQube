@@ -1,9 +1,9 @@
 @staticmethod
 def octal_to_decimal(octal_num):
     """
-        Convert a number from octal format to decimal format.
-        :param octal_num: str, octal number
-        :return: int, the decimal representation of octal number str.
+        Converti un numero dal formato ottale al formato decimale.
+        :param octal_num: str, numero ottale
+        :return: int, la rappresentazione decimale del numero ottale str.
         >>> NumberConverter.octal_to_decimal('122667')
         42423
         """

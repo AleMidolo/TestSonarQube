@@ -6,6 +6,7 @@ def match_in_pattern(self, char):
         >>> boyerMooreSearch = BoyerMooreSearch("ABAABA", "AB")
         >>> boyerMooreSearch.match_in_pattern("A")
         0
+
         """
     for i in range(self.patLen - 1, -1, -1):
         if self.pattern[i] == char:

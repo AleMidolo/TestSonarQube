@@ -10,8 +10,10 @@ def make_move(self, row, col):
         >>> ttt.current_player
         'O'
         """
-    if self.board[row][col] == ' ':
-        self.board[row][col] = self.current_player
-        self.current_player = 'O' if self.current_player == 'X' else 'X'
-        return True
-    return False
+    if row < 0 or row >= 3 or col < 0 or (col >= 3):
+        return False
+    if self.board[row][col] != ' ':
+        return False
+    self.board[row][col] = self.current_player
+    self.current_player = 'O' if self.current_player == 'X' else 'X'
+    return True

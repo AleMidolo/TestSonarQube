@@ -7,9 +7,9 @@ def process_text_file(self, sentences_string):
         4
         """
     sentences = self.split_sentences(sentences_string)
-    max_words = 0
+    max_word_count = 0
     for sentence in sentences:
         word_count = self.count_words(sentence)
-        if word_count > max_words:
-            max_words = word_count
-    return max_words
+        if word_count > max_word_count:
+            max_word_count = word_count
+    return max_word_count
