@@ -26,8 +26,8 @@ def mrr(data):
         if len(positions) == 0:
             mrr_value = 0.0
         else:
-            first_correct_rank = positions[0] + 1
-            mrr_value = 1.0 / first_correct_rank
+            first_correct_pos = positions[0] + 1
+            mrr_value = 1.0 / first_correct_pos
         return (mrr_value, [mrr_value])
     if type(data) == list:
         separate_result = []
@@ -40,7 +40,7 @@ def mrr(data):
                 if len(positions) == 0:
                     mrr_value = 0.0
                 else:
-                    first_correct_rank = positions[0] + 1
-                    mrr_value = 1.0 / first_correct_rank
+                    first_correct_pos = positions[0] + 1
+                    mrr_value = 1.0 / first_correct_pos
             separate_result.append(mrr_value)
         return (np.mean(separate_result), separate_result)

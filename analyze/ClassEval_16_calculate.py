@@ -30,15 +30,16 @@ def calculate(self, expression):
         elif expression[i] in self.operators:
             if expression[i] == '-' and (i == 0 or expression[i - 1] in self.operators or expression[i - 1] == '('):
                 j = i + 1
-                while j < n and (expression[j].isdigit() or expression[j] == '.'):
-                    j += 1
-                try:
-                    num = float(expression[i:j])
-                except ValueError:
-                    return None
-                operand_stack.append(num)
-                i = j
-                continue
+                if j < n and expression[j].isdigit():
+                    while j < n and (expression[j].isdigit() or expression[j] == '.'):
+                        j += 1
+                    try:
+                        num = -float(expression[i + 1:j])
+                    except ValueError:
+                        return None
+                    operand_stack.append(num)
+                    i = j
+                    continue
             while operator_stack and operator_stack[-1] != '(' and (self.precedence(operator_stack[-1]) >= self.precedence(expression[i])):
                 operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
             operator_stack.append(expression[i])

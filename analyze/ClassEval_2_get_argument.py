@@ -8,4 +8,4 @@ def get_argument(self, key):
         >>> parser.get_argument('arg2')
         'value2'
         """
-    return self.arguments.get(key)
+    return self.arguments.get(key, None)

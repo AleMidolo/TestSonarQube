@@ -10,13 +10,14 @@ def palindromic_string(self):
     if not self.input_string:
         return ''
     transformed = '|'.join(self.input_string)
+    transformed = '|' + transformed + '|'
     max_length = 0
-    center_index = 0
-    for i in range(len(transformed)):
-        length = self.palindromic_length(i, 1, transformed)
+    max_center = 0
+    for center in range(len(transformed)):
+        length = self.palindromic_length(center, 1, transformed)
         if length > max_length:
             max_length = length
-            center_index = i
-    start = (center_index - max_length) // 2
+            max_center = center
+    start = (max_center - max_length) // 2
     end = start + max_length
     return self.input_string[start:end]

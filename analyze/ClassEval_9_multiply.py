@@ -11,7 +11,8 @@ def multiply(num1, num2):
         """
     if num1 == '0' or num2 == '0':
         return '0'
-    len1, len2 = (len(num1), len(num2))
+    len1 = len(num1)
+    len2 = len(num2)
     result = [0] * (len1 + len2)
     for i in range(len1 - 1, -1, -1):
         carry = 0
@@ -21,7 +22,8 @@ def multiply(num1, num2):
             temp_sum = n1 * n2 + result[i + j + 1] + carry
             carry = temp_sum // 10
             result[i + j + 1] = temp_sum % 10
-        result[i] += carry
+        if carry > 0:
+            result[i] += carry
     result_str = ''.join(map(str, result))
     result_str = result_str.lstrip('0')
     return result_str if result_str else '0'

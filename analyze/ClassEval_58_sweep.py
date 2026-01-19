@@ -16,10 +16,7 @@ def sweep(self, x, y):
     if self.player_map[y][x] != '-':
         return self.player_map
     if self.minesweeper_map[y][x] == 'X':
-        for i in range(self.n):
-            for j in range(self.n):
-                if self.minesweeper_map[i][j] == 'X':
-                    self.player_map[i][j] = 'X'
+        self.player_map[y][x] = 'X'
         return False
     self.player_map[y][x] = self.minesweeper_map[y][x]
     if self.minesweeper_map[y][x] == 0:

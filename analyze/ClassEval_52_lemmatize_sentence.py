@@ -24,6 +24,11 @@ def lemmatize_sentence(self, sentence):
             pos = 'r'
         else:
             pos = 'n'
-        lemmatized_word = self.lemmatizer.lemmatize(word, pos=pos)
-        lemmatized_words.append(lemmatized_word)
+        if tag == 'PRP' or tag == 'PRP$':
+            lemmatized_words.append(word.lower() if word.lower() == 'i' else word)
+        else:
+            lemmatized_word = self.lemmatizer.lemmatize(word.lower(), pos)
+            if word == 'I':
+                lemmatized_word = 'I'
+            lemmatized_words.append(lemmatized_word)
     return lemmatized_words

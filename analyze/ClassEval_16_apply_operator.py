@@ -18,4 +18,6 @@ def apply_operator(self, operand_stack, operator_stack):
         operand_stack.append(result)
     except ZeroDivisionError:
         operand_stack.append(float('inf'))
+    except Exception:
+        operand_stack.append(float('nan'))
     return (operand_stack, operator_stack)

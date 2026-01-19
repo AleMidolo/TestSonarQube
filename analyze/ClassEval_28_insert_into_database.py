@@ -10,7 +10,7 @@ def insert_into_database(self, table_name, data):
         """
     conn = sqlite3.connect(self.database_name)
     cursor = conn.cursor()
-    if data and isinstance(data, list) and isinstance(data[0], dict):
+    if data and len(data) > 0:
         columns = list(data[0].keys())
         placeholders = ', '.join(['?' for _ in columns])
         column_names = ', '.join(columns)
@@ -18,5 +18,5 @@ def insert_into_database(self, table_name, data):
         for row in data:
             values = [row[col] for col in columns]
             cursor.execute(insert_query, values)
-    conn.commit()
+        conn.commit()
     conn.close()

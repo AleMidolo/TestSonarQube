@@ -13,6 +13,6 @@ def add_argument(self, arg, required=False, arg_type=str):
         >>> parser.types
         {'arg1': 'int'}
         """
+    self.types[arg] = arg_type
     if required:
         self.required.add(arg)
-    self.types[arg] = arg_type

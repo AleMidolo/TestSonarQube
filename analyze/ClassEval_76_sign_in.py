@@ -10,6 +10,5 @@ def sign_in(self, username):
         """
     if username not in self.users:
         return False
-    else:
-        self.users[username] = True
-        return True
+    self.users[username] = True
+    return True
