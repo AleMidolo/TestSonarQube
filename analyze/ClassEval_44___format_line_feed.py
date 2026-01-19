@@ -6,4 +6,5 @@ def __format_line_feed(self, text):
         """
     if text is None:
         return ''
-    return re.sub('\\n+', '\n', text).strip()
+    formatted_text = re.sub('\\n+', '\n', text)
+    return formatted_text.strip()

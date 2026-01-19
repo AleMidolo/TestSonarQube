@@ -14,21 +14,16 @@ def lemmatize_sentence(self, sentence):
     tagged_words = pos_tag(words)
     lemmatized_words = []
     for word, tag in tagged_words:
-        if tag.startswith('V'):
-            pos = 'v'
-        elif tag.startswith('J'):
+        if tag.startswith('J'):
             pos = 'a'
-        elif tag.startswith('R'):
-            pos = 'r'
+        elif tag.startswith('V'):
+            pos = 'v'
         elif tag.startswith('N'):
             pos = 'n'
+        elif tag.startswith('R'):
+            pos = 'r'
         else:
             pos = 'n'
-        if word.lower() == 'am' and tag == 'VBP':
-            lemmatized_words.append('be')
-        elif word == 'I' and tag == 'PRP':
-            lemmatized_words.append('I')
-        else:
-            lemmatized_word = self.lemmatizer.lemmatize(word, pos=pos)
-            lemmatized_words.append(lemmatized_word)
+        lemmatized_word = self.lemmatizer.lemmatize(word, pos=pos)
+        lemmatized_words.append(lemmatized_word)
     return lemmatized_words

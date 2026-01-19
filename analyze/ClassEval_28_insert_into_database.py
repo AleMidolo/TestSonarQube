@@ -18,5 +18,5 @@ def insert_into_database(self, table_name, data):
         for row in data:
             values = [row[col] for col in columns]
             cursor.execute(insert_query, values)
-    conn.commit()
+        conn.commit()
     conn.close()

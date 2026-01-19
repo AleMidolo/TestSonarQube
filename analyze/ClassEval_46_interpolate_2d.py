@@ -13,38 +13,22 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         [3.0, 7.0]
 
         """
-    import numpy as np
-    x = np.array(x, dtype=float)
-    y = np.array(y, dtype=float)
-    z = np.array(z, dtype=float)
-    x_interp = np.array(x_interp, dtype=float)
-    y_interp = np.array(y_interp, dtype=float)
-    if z.shape != (len(y), len(x)):
-        raise ValueError(f'z must have shape ({len(y)}, {len(x)}), but has shape {z.shape}')
-    if len(x_interp) != len(y_interp):
-        raise ValueError(f'x_interp and y_interp must have the same length, but got {len(x_interp)} and {len(y_interp)}')
-    results = []
+    z_interp = []
     for xi, yi in zip(x_interp, y_interp):
-        x_idx = None
         for i in range(len(x) - 1):
             if x[i] <= xi <= x[i + 1]:
-                x_idx = i
+                for j in range(len(y) - 1):
+                    if y[j] <= yi <= y[j + 1]:
+                        x1, x2 = (x[i], x[i + 1])
+                        y1, y2 = (y[j], y[j + 1])
+                        q11 = z[j][i]
+                        q12 = z[j + 1][i]
+                        q21 = z[j][i + 1]
+                        q22 = z[j + 1][i + 1]
+                        f_y1 = q11 + (q21 - q11) * (xi - x1) / (x2 - x1)
+                        f_y2 = q12 + (q22 - q12) * (xi - x1) / (x2 - x1)
+                        zi = f_y1 + (f_y2 - f_y1) * (yi - y1) / (y2 - y1)
+                        z_interp.append(zi)
+                        break
                 break
-        y_idx = None
-        for j in range(len(y) - 1):
-            if y[j] <= yi <= y[j + 1]:
-                y_idx = j
-                break
-        if x_idx is None or y_idx is None:
-            raise ValueError(f'Interpolation point ({xi}, {yi}) is outside the grid range')
-        x1, x2 = (x[x_idx], x[x_idx + 1])
-        y1, y2 = (y[y_idx], y[y_idx + 1])
-        z11 = z[y_idx, x_idx]
-        z12 = z[y_idx, x_idx + 1]
-        z21 = z[y_idx + 1, x_idx]
-        z22 = z[y_idx + 1, x_idx + 1]
-        z_y1 = z11 + (z12 - z11) * (xi - x1) / (x2 - x1)
-        z_y2 = z21 + (z22 - z21) * (xi - x1) / (x2 - x1)
-        z_interp = z_y1 + (z_y2 - z_y1) * (yi - y1) / (y2 - y1)
-        results.append(float(z_interp))
-    return results
+    return z_interp

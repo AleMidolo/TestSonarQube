@@ -11,16 +11,18 @@ def interpret(self, display=False):
     if not self.play_text or self.play_text.isspace():
         return []
     result = []
-    chords = self.play_text.split()
-    for chord in chords:
-        i = 0
-        while i < len(chord) and (not chord[i].isdigit()):
-            i += 1
-        if i == 0:
-            continue
-        chord_name = chord[:i]
-        melody = chord[i:] if i < len(chord) else ''
-        result.append({'Acorde': chord_name, 'Melodía': melody})
+    items = self.play_text.split()
+    for item in items:
+        chord = ''
+        melody = ''
+        split_index = 0
+        for i, char in enumerate(item):
+            if char.isdigit():
+                split_index = i
+                break
+        chord = item[:split_index]
+        melody = item[split_index:]
+        result.append({'Acorde': chord, 'Melodía': melody})
         if display:
-            print(self.display(chord_name, melody))
+            print(self.display(chord, melody))
     return result

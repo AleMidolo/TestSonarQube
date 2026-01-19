@@ -12,6 +12,7 @@ def track_order(self, order_id):
         status = self.orders[order_id]['status']
         if status == 'Shipped':
             return 'Enviado'
-        return status
+        else:
+            return status
     else:
         return False

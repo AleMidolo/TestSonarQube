@@ -7,6 +7,7 @@ def fix_path(path):
         >>> url_path = UrlPath()
         >>> url_path.fix_path('/foo/bar/')
         'foo/bar'
+
         """
     if not path:
         return ''

@@ -13,17 +13,22 @@ def prepare(self, expression):
     while i < len(expression):
         c = expression[i]
         if c.isdigit() or c == '.' or c == '~':
-            num_str = ''
             if c == '~':
-                num_str += '-'
-                i += 1
-                if i < len(expression):
-                    c = expression[i]
-            while i < len(expression) and (expression[i].isdigit() or expression[i] == '.'):
-                num_str += expression[i]
-                i += 1
-            self.postfix_stack.append(num_str)
-            continue
+                j = i + 1
+                while j < len(expression) and (expression[j].isdigit() or expression[j] == '.'):
+                    j += 1
+                num = expression[i:j]
+                self.postfix_stack.append(num)
+                i = j
+                continue
+            else:
+                j = i
+                while j < len(expression) and (expression[j].isdigit() or expression[j] == '.'):
+                    j += 1
+                num = expression[i:j]
+                self.postfix_stack.append(num)
+                i = j
+                continue
         elif self.is_operator(c):
             if c == '(':
                 operator_stack.append(c)
@@ -36,6 +41,8 @@ def prepare(self, expression):
                 while operator_stack and operator_stack[-1] != '(' and self.compare(c, operator_stack[-1]):
                     self.postfix_stack.append(operator_stack.pop())
                 operator_stack.append(c)
-        i += 1
+            i += 1
+        else:
+            i += 1
     while operator_stack:
         self.postfix_stack.append(operator_stack.pop())

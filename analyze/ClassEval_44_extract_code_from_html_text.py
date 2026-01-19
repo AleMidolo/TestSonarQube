@@ -23,7 +23,8 @@ def extract_code_from_html_text(self, html_text):
     code_elements = soup.find_all(['pre', 'code'])
     extracted_codes = []
     for element in code_elements:
-        code_text = element.get_text()
-        if code_text.strip():
+        code_text = element.get_text(strip=False)
+        if code_text:
+            code_text = code_text.strip()
             extracted_codes.append(code_text)
     return extracted_codes

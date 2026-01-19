@@ -1,8 +1,8 @@
 def insert_user(self, username, password):
     """
-        Inserts a new user into the "users" table.
-        :param username: str, the username of the user.
-        :param password: str, the password of the user.
+        Inserta un nuevo usuario en la tabla "users".
+        :param username: str, el nombre de usuario del usuario.
+        :param password: str, la contraseña del usuario.
         :return: None
         >>> user_db = UserLoginDB("user_database.db")
         >>> user_db.create_table()
