@@ -10,7 +10,10 @@ def select_all(self) -> List[List[str]]:
     [['A'], ['B'], ['C'], ['D'], ['A', 'B'], ['A', 'C'], ['A', 'D'], ['B', 'C'], ['B', 'D'], ['C', 'D'], ['A', 'B', 'C'], ['A', 'B', 'D'], ['A', 'C', 'D'], ['B', 'C', 'D'], ['A', 'B', 'C', 'D']]
     """
     result = []
-    for r in range(1, len(self.data) + 1):
+    n = len(self.data)
+    
+    for r in range(1, n + 1):
         for combo in combinations(self.data, r):
             result.append(list(combo))
+    
     return result

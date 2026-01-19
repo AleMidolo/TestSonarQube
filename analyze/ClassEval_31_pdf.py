@@ -14,9 +14,9 @@ def pdf(data, mu, sigma):
     """
     result = []
     for x in data:
-        # Normal distribution PDF formula: (1 / (sigma * sqrt(2*pi))) * exp(-((x - mu)^2) / (2 * sigma^2))
+        # Normal distribution PDF formula: (1 / (sigma * sqrt(2*pi))) * exp(-0.5 * ((x - mu) / sigma)^2)
         coefficient = 1 / (sigma * math.sqrt(2 * math.pi))
-        exponent = -((x - mu) ** 2) / (2 * sigma ** 2)
+        exponent = -0.5 * ((x - mu) / sigma) ** 2
         pdf_value = coefficient * math.exp(exponent)
         result.append(pdf_value)
     return result

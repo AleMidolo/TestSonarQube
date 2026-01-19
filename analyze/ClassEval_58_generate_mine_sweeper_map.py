@@ -20,10 +20,9 @@ def generate_mine_sweeper_map(self):
     positions = [(i, j) for i in range(self.n) for j in range(self.n)]
     random.shuffle(positions)
     
-    for i in range(min(self.k, len(positions))):
+    for i in range(self.k):
         row, col = positions[i]
         board[row][col] = 'X'
-        mines_placed += 1
     
     # Calculate numbers for non-mine cells
     directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
