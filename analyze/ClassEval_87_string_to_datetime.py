@@ -6,38 +6,38 @@ def string_to_datetime(self, string):
         >>> timeutils.string_to_datetime("2001-7-18 1:1:1")
         2001-07-18 01:01:01
         """
-    formats = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M:%S', '%Y/%m/%d %H:%M', '%Y.%m.%d %H:%M:%S', '%Y.%m.%d %H:%M', '%Y-%m-%d', '%Y/%m/%d', '%Y.%m.%d']
+    formats = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d', '%Y/%m/%d %H:%M:%S', '%Y/%m/%d %H:%M', '%Y/%m/%d', '%Y.%m.%d %H:%M:%S', '%Y.%m.%d %H:%M', '%Y.%m.%d', '%d-%m-%Y %H:%M:%S', '%d-%m-%Y %H:%M', '%d-%m-%Y', '%d/%m/%Y %H:%M:%S', '%d/%m/%Y %H:%M', '%d/%m/%Y', '%d.%m.%Y %H:%M:%S', '%d.%m.%Y %H:%M', '%d.%m.%Y']
     for fmt in formats:
         try:
             return datetime.datetime.strptime(string, fmt)
         except ValueError:
             continue
-    normalized = string.strip()
-    while '  ' in normalized:
-        normalized = normalized.replace('  ', ' ')
+    string = string.strip()
     try:
-        from dateutil import parser
-        return parser.parse(normalized)
-    except ImportError:
-        parts = normalized.split()
-        date_part = parts[0]
-        time_part = parts[1] if len(parts) > 1 else '00:00:00'
-        date_formats = ['%Y-%m-%d', '%Y/%m/%d', '%Y.%m.%d', '%m/%d/%Y', '%d/%m/%Y']
-        for fmt in date_formats:
-            try:
-                date_obj = datetime.datetime.strptime(date_part, fmt).date()
-                break
-            except ValueError:
-                continue
+        if ' ' in string:
+            date_part, time_part = string.split(' ', 1)
         else:
-            raise ValueError(f'Unable to parse date string: {string}')
-        time_formats = ['%H:%M:%S', '%H:%M', '%H.%M.%S', '%H.%M']
-        for fmt in time_formats:
-            try:
-                time_obj = datetime.datetime.strptime(time_part, fmt).time()
-                break
-            except ValueError:
-                continue
+            date_part = string
+            time_part = '00:00:00'
+        date_parts = date_part.replace('-', ' ').replace('/', ' ').replace('.', ' ').split()
+        year = int(date_parts[0])
+        month = int(date_parts[1])
+        day = int(date_parts[2])
+        time_parts = time_part.replace(':', ' ').split()
+        if len(time_parts) == 3:
+            hour = int(time_parts[0])
+            minute = int(time_parts[1])
+            second = int(time_parts[2])
+        elif len(time_parts) == 2:
+            hour = int(time_parts[0])
+            minute = int(time_parts[1])
+            second = 0
+        elif len(time_parts) == 1:
+            hour = int(time_parts[0])
+            minute = 0
+            second = 0
         else:
-            time_obj = datetime.time(0, 0, 0)
-        return datetime.datetime.combine(date_obj, time_obj)
+            hour = minute = second = 0
+        return datetime.datetime(year, month, day, hour, minute, second)
+    except (ValueError, IndexError):
+        raise ValueError(f'Unable to parse time string: {string}')

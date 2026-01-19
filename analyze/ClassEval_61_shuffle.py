@@ -14,6 +14,4 @@ def shuffle(self):
     random.shuffle(self.playlist)
     if current_song_before_shuffle and current_song_before_shuffle in self.playlist:
         self.current_song = current_song_before_shuffle
-    else:
-        self.current_song = None
     return True

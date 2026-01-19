@@ -7,18 +7,15 @@ def split_sentences(self, sentences_string):
         >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
-    abbreviations = ['Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Prof.', 'St.', 'Ave.', 'Blvd.', 'Rd.']
-    placeholder_map = {}
-    for i, abbr in enumerate(abbreviations):
-        placeholder = f'__ABBR{i}__'
-        placeholder_map[placeholder] = abbr
-        sentences_string = sentences_string.replace(abbr, placeholder)
-    sentence_pattern = '(?<=[.?])\\s+'
-    sentences = re.split(sentence_pattern, sentences_string)
+    pattern = '(?<!Mr)(?<!Mrs)(?<!Ms)(?<!Dr)\\.\\s+|\\?\\s+'
+    sentences = re.split(pattern, sentences_string)
     result = []
-    for sentence in sentences:
-        if sentence:
-            for placeholder, abbr in placeholder_map.items():
-                sentence = sentence.replace(placeholder, abbr)
+    matches = list(re.finditer(pattern, sentences_string))
+    for i, sentence in enumerate(sentences):
+        if i < len(matches):
+            punct = matches[i].group().strip()
+            result.append(sentence + punct)
+        elif sentence.strip():
             result.append(sentence.strip())
+    result = [s.strip() for s in result if s.strip()]
     return result

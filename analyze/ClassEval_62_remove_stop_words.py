@@ -8,8 +8,8 @@ def remove_stop_words(self, string_list, stop_word_list):
         [['This', 'is', 'test.']]
         """
     result = []
-    for s in string_list:
-        words = s.split()
+    for text in string_list:
+        words = text.split()
         filtered_words = [word for word in words if word.lower() not in stop_word_list]
         result.append(filtered_words)
     return result

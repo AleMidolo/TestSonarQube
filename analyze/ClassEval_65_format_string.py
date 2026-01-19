@@ -7,50 +7,19 @@ def format_string(self, x):
         >>> formatter.format_string("123456")
         "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
         """
-    is_negative = False
     if x.startswith('-'):
-        is_negative = True
-        x = x[1:]
-    parts = x.split('.')
-    integer_part = parts[0]
-    decimal_part = parts[1] if len(parts) > 1 else ''
-    integer_part = integer_part.lstrip('0')
-    if integer_part == '':
-        integer_part = '0'
-    integer_words = []
-    if integer_part == '0':
-        integer_words.append('ZERO')
+        return 'MINUS ' + self.format_string(x[1:])
+    if '.' in x:
+        integer_part, decimal_part = x.split('.')
+        integer_words = self._format_integer_part(integer_part)
+        decimal_words = self._format_decimal_part(decimal_part)
+        if integer_words:
+            return f'{integer_words} AND {decimal_words} ONLY'
+        else:
+            return f'{decimal_words} ONLY'
     else:
-        groups = []
-        temp = integer_part
-        while len(temp) > 3:
-            groups.insert(0, temp[-3:])
-            temp = temp[:-3]
-        groups.insert(0, temp)
-        for i, group in enumerate(groups):
-            group_words = self.trans_three(group.zfill(3))
-            if group_words.strip():
-                magnitude = len(groups) - i - 1
-                if magnitude > 0 and group != '000':
-                    integer_words.append(group_words + ' ' + self.parse_more(magnitude))
-                elif magnitude == 0:
-                    integer_words.append(group_words)
-    decimal_words = []
-    if decimal_part:
-        decimal_part = decimal_part.rstrip('0')
-        if decimal_part:
-            decimal_words.append('AND CENTS')
-            if len(decimal_part) == 1:
-                decimal_words.append(self.trans_two(decimal_part + '0'))
-            else:
-                decimal_words.append(self.trans_two(decimal_part[:2].zfill(2)))
-    result_parts = []
-    if is_negative:
-        result_parts.append('MINUS')
-    result_parts.extend(integer_words)
-    result_parts.extend(decimal_words)
-    result_parts.append('ONLY')
-    result = ' '.join(result_parts)
-    result = ' '.join(result.split())
-    result = result.replace('AND AND', 'AND')
-    return result
+        integer_words = self._format_integer_part(x)
+        if integer_words:
+            return f'{integer_words} ONLY'
+        else:
+            return 'ZERO ONLY'

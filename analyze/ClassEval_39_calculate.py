@@ -9,8 +9,8 @@ def calculate(self, expression):
 
         """
     self.postfix_stack.clear()
-    transformed_expression = self.transform(expression)
-    self.prepare(transformed_expression)
+    transformed_expr = self.transform(expression)
+    self.prepare(transformed_expr)
     calc_stack = deque()
     for token in self.postfix_stack:
         if self.is_operator(token):
@@ -30,6 +30,6 @@ def calculate(self, expression):
         else:
             calc_stack.append(token)
     if len(calc_stack) != 1:
-        raise ValueError('Invalid expression: could not compute final result')
+        raise ValueError('Invalid expression: too many operands or operators')
     result_decimal = Decimal(calc_stack.pop())
     return float(result_decimal)

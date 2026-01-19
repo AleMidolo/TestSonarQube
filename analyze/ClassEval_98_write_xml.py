@@ -10,10 +10,9 @@ def write_xml(self, file_name):
         True
         """
     try:
-        if self.root is None:
-            return False
         tree = ET.ElementTree(self.root)
         tree.write(file_name, encoding='utf-8', xml_declaration=True)
         return True
     except Exception as e:
+        print(f'Error writing XML file: {e}')
         return False
