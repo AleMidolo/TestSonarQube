@@ -9,4 +9,6 @@ def parse(self, path, charset):
         url_path.segments = ['foo', 'bar']
         """
     decoded_path = urllib.parse.unquote(path, encoding=charset)
-    self.segments = [self.fix_path(segment) for segment in decoded_path.split('/') if segment]
+    for segment in decoded_path.split('/'):
+        if segment:
+            self.add(segment)

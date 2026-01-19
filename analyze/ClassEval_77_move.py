@@ -1,16 +1,14 @@
 def move(self, direction):
     """
-        Move the snake in the specified direction. If the new position of the snake's head equals the food position, eat the food; if the new position equals any part of the snake's body, reset; otherwise, add to its own length.
-        :param direction: tuple, representing the direction of movement (x, y).
+        निर्दिष्ट दिशा में सांप को चलाएं। यदि सांप के सिर की नई स्थिति भोजन की स्थिति के बराबर है, तो भोजन खा लें; यदि सांप के सिर की स्थिति उसके शरीर की स्थिति के बराबर है, तो फिर से शुरू करें, अन्यथा इसकी अपनी लंबाई में एक जोड़ें।
+        :param direction: tuple, जो गति की दिशा का प्रतिनिधित्व करता है (x, y)।
         :return: None
         >>> snake.move((1,1))
         self.length = 1
         self.positions = [(51, 51), (50, 50)]
         self.score = 10
         """
-    new_head_x = self.positions[0][0] + direction[0] * self.BLOCK_SIZE
-    new_head_y = self.positions[0][1] + direction[1] * self.BLOCK_SIZE
-    new_head = (new_head_x, new_head_y)
+    new_head = (self.positions[0][0] + direction[0] * self.BLOCK_SIZE, self.positions[0][1] + direction[1] * self.BLOCK_SIZE)
     if new_head == self.food_position:
         self.eat_food()
     elif new_head in self.positions:

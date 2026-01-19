@@ -27,16 +27,20 @@ def mrr(data):
     if len(data) == 0:
         return (0.0, [])
     if type(data) == tuple:
-        data = [data]
-    reciprocal_ranks = []
-    for sub_list, total_num in data:
-        if total_num == 0:
-            reciprocal_ranks.append(0.0)
-            continue
-        try:
-            first_correct_index = sub_list.index(1)
-            reciprocal_rank = 1.0 / (first_correct_index + 1)
-        except ValueError:
+        sub_list, total_num = data
+        reciprocal_rank = 0.0
+        for idx, value in enumerate(sub_list):
+            if value == 1:
+                reciprocal_rank = 1.0 / (idx + 1)
+                break
+        return (reciprocal_rank, [reciprocal_rank])
+    if type(data) == list:
+        reciprocal_ranks = []
+        for sub_list, total_num in data:
             reciprocal_rank = 0.0
-        reciprocal_ranks.append(reciprocal_rank)
-    return (np.mean(reciprocal_ranks), reciprocal_ranks)
+            for idx, value in enumerate(sub_list):
+                if value == 1:
+                    reciprocal_rank = 1.0 / (idx + 1)
+                    break
+            reciprocal_ranks.append(reciprocal_rank)
+        return (np.mean(reciprocal_ranks), reciprocal_ranks)

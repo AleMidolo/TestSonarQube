@@ -14,6 +14,7 @@ def process_excel_data(self, N, save_file_name):
         if len(data[i]) > N:
             data[i] = list(data[i])
             data[i][N] = str(data[i][N]).upper()
+            data[i] = tuple(data[i])
     output_file_name = 'processed_' + save_file_name
     success = self.write_excel(data, output_file_name)
     return (success, output_file_name)

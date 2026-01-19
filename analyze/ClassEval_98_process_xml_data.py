@@ -10,9 +10,8 @@ def process_xml_data(self, file_name):
     True
     """
     try:
-        new_element = ET.Element('new_item')
-        new_element.text = 'new_value'
-        self.root.append(new_element)
+        for item in self.root.findall('item'):
+            item.text = 'modified_' + item.text
         tree = ET.ElementTree(self.root)
         tree.write(file_name)
         return True

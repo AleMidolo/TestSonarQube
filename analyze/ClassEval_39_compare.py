@@ -10,3 +10,12 @@ def compare(self, cur, peek):
 
     """
     return self.operat_priority[self.get_operator_index(cur)] >= self.operat_priority[self.get_operator_index(peek)]
+
+def get_operator_index(self, operator):
+    """
+    ऑपरेटर के लिए प्राथमिकता सूची में इंडेक्स प्राप्त करें
+    :param operator: स्ट्रिंग, ऑपरेटर
+    :return: int, ऑपरेटर का इंडेक्स
+    """
+    operators = {'+': 0, '-': 1, '*': 2, '\/': 3, '%': 4, '(': 5, ')': 6}
+    return operators.get(operator, -1)
